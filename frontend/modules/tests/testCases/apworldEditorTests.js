@@ -12650,3 +12650,135 @@ for (const [id, name, testFunction] of M2_TESTS) {
         enabled: false, // off by default — runs only in the test-substrates mode
     });
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+ * APWORLD SUBSTRATE CHANGE M3 (R8, the name-free rule; ⚖ user 2026-09-27,
+ * plan §25.9–§25.10) — THE DECLARED START IS THE MENU, WHATEVER IT IS CALLED.
+ * The layout strips it only when it is a PURE hub (exits, no locations); any
+ * other start is a room that is also the menu: it gets a cell, and the
+ * preview names no hub clause. Two documents, each premise asserted off the
+ * document: `apcalc` (start `C`, 4 exits, 1 location) and `shapez` (a `Menu`
+ * with 4 exits AND 3 locations — a cell since M3), the latter as
+ * `text_adventure` (as maze its realise is 36–48 s headless, plan §28.0).
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { isVirtualStart as m3IsVirtualStart } from '../../procgenPipeline/procgenPipelineEngine.js';
+
+const M3_SHAPEZ_PATH = './presets/shapez/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/** ⛓ The M2 preview's hub clause (*"; Menu: 13 exits → 13 roots"*) — present only for a stripped start. */
+const M3_HUB_CLAUSE = /: \d+ exits? → \d+ roots?$/;
+
+/**
+ * ⛓ Open the door on `path` (optionally picking `target`), check the premise
+ * (the declared start is a ROOM: not a pure hub) and the preview (no hub
+ * clause, every region placed), then press Generate; → {panel, p, start} or null.
+ */
+async function m3InitialiseARoomStart(testController, path, target = null) {
+    const panel = await openInitialiseForm(testController, path);
+    if (!panel) return null;
+    const p = String(panel.playerId);
+    if (target) {
+        const sub = initSection().querySelector('.apworld-initialise-substrate');
+        sub.value = target;
+        sub.dispatchEvent(new Event('change', { bubbles: true }));
+        testController.reportCondition(`the form's substrate is \`${target}\``, await testController.pollForCondition(
+            () => panel._initialise?.state?.substrate === target, `the form holds \`${target}\``, 8000, 50));
+    }
+    const doc0 = panel.rulesDoc;
+    const { start, exits } = m2StartOf(doc0, p);
+    const region = doc0.regions[p][start];
+    testController.reportCondition(`⛓ premise: the declared start "${start}" is a ROOM (${exits.length} exits, `
+        + `${(region.locations ?? []).length} locations) — not a pure hub`, exits.length > 0 && !m3IsVirtualStart(region));
+    const plan = initPlan(doc0, p, { gridDims: { width: panel._initialise.state.side, height: panel._initialise.state.side } });
+    testController.reportCondition('⛓ the plan strips nothing and places every region, the start included',
+        plan.ok && plan.menu === null && plan.start === start && plan.placed === Object.keys(doc0.regions[p]).length);
+    const pv = initSection().querySelector('.apworld-initialise-preview');
+    testController.assertEqual('the preview is the page\'s own plan, verbatim',
+        initialisePreview(doc0, p, panel._initialise.state).text, pv?.textContent);
+    testController.reportCondition(`⛓⛓ the preview has NO hub clause (a placed start is a region like any other): "${pv?.textContent}"`,
+        !!pv && !M3_HUB_CLAUSE.test(pv.textContent));
+    const run = await pressInitialise(testController, panel);
+    testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+    if (!run?.outcome?.ok) return null;
+    const entry = panel.rulesDoc.preset_sidecars?.[p]?.[start];
+    testController.reportCondition(`⛓⛓ Generate lands the start "${start}" as a CELL (its own sidecar entry at a grid cell)`,
+        !!entry?.grid_cell);
+    testController.assertEqual('…and the slot has 0 sidecar errors', '0',
+        String(sidecarIssues(panel.rulesDoc, p).filter((i) => i.severity === 'error').length));
+    return { panel, p, start, entry };
+}
+
+/** ⛓ The Map's marker for the landed start: every exit listed, every target placed (derived). */
+async function m3MarkerListsTheStartExits(testController, panel, p, start) {
+    const want = menuMarkerFor(panel.rulesDoc, p);
+    selectTab(panel, 'map');
+    const marker = await m2SettledMarker(testController, 'the Menu marker beside the grid');
+    testController.assertEqual('⛓ the marker names the declared start', start, marker?.dataset.name);
+    testController.assertEqual('…one entry per exit (derived)', String(want?.exits.length), marker?.dataset.exits);
+    testController.assertEqual('…every target placed', String(want?.exits.length), marker?.dataset.placed);
+}
+
+/**
+ * ⛓⛓ **(M3-i) A NON-MENU START IS A CELL AND THE MENU** — `apcalc` (start `C`):
+ * the door, a preview with no hub clause, Generate lands `C` as a cell, the
+ * marker lists C's exits.
+ */
+export async function apworldM3ANonMenuStartIsACellAndTheMenu(testController) {
+    try {
+        const got = await m3InitialiseARoomStart(testController, INIT_APCALC_PATH);
+        if (!got) return testController.getOverallResult();
+        await m3MarkerListsTheStartExits(testController, got.panel, got.p, got.start);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('non-Menu start test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * ⛓⛓ **(M3-ii) A MENU WITH LOCATIONS IS A ROOM** — `shapez` as `text_adventure`:
+ * the Menu gets a cell and a block on the Regions tab, its locations are in its
+ * room's payload (the document's own names, derived), the marker lists its exits.
+ */
+export async function apworldM3AMenuWithLocationsIsARoom(testController) {
+    try {
+        const got = await m3InitialiseARoomStart(testController, M3_SHAPEZ_PATH, 'text_adventure');
+        if (!got) return testController.getOverallResult();
+        const { panel, p, start, entry } = got;
+        const want = (panel.rulesDoc.regions[p][start].locations ?? []).map((l) => l.name);
+        testController.reportCondition(`⛓ premise: the start is the document's "${start}" with ${want.length} locations`,
+            want.length > 0);
+        testController.assertEqual('⛓⛓ its locations are in ITS room (the payload\'s own list)',
+            JSON.stringify(want), JSON.stringify((entry?.playable_payload?.locations ?? []).map((l) => l.name)));
+        selectTab(panel, 'regions');
+        const block = await testController.pollForValue(() => document.querySelector(
+            `${PANEL_SELECTOR} .apworld-region-block[data-region-name="${start}"] .apworld-sidecar-block`),
+        `the Regions tab's sidecar block under "${start}"`, 8000, 50);
+        testController.reportCondition(`⛓ the Regions tab draws a sidecar block under "${start}"`, !!block);
+        await m3MarkerListsTheStartExits(testController, panel, p, start);
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('Menu-with-locations test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+const M3_TESTS = [
+    ['apworld-m3-a-non-menu-start-is-a-cell-and-the-menu',
+        'APWorld hub: a start NOT named Menu (apcalc\'s C) is a room — no hub clause in the preview, Generate lands it as a cell, the marker lists its exits',
+        apworldM3ANonMenuStartIsACellAndTheMenu],
+    ['apworld-m3-a-menu-with-locations-is-a-room',
+        'APWorld hub: a Menu WITH locations (shapez, as text_adventure) is a room — a cell, a Regions block, its locations in its payload, the marker lists its exits',
+        apworldM3AMenuWithLocationsIsARoom],
+];
+for (const [id, name, testFunction] of M3_TESTS) {
+    registerTest({
+        id,
+        name,
+        description: `APWORLD SUBSTRATE CHANGE M3. ${name}. See the row's docblock in apworldEditorTests.js.`,
+        testFunction,
+        category: 'apworldEditor',
+        enabled: false, // off by default — runs only in the test-substrates mode
+    });
+}

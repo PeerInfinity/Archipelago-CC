@@ -104,6 +104,9 @@ export const INITIALISE_BLOCKERS = Object.freeze({
     HAS_ENTRIES: 'has-entries',
     NO_START: 'no-start',
     HAS_METADATA: 'has-metadata',
+    // ⛓ M3 — more than one declared start: the layout takes one (it throws
+    // `TOPDOWN_START_REFUSALS.multiStart`); the op refuses first, by name.
+    MULTI_START: 'multi-start',
 });
 
 /** ⛓ The slot's sidecar entries (an object; `{}` when the slot has none). */
@@ -113,9 +116,10 @@ const entriesOf = (doc, player) => {
 };
 
 /**
- * ⛓ The declared start as the layout resolves it: a `Menu`-like start with an
- * exit hands the start to its first exit's target — the engine's own rule
- * (`resolveTopDownStart`), imported (R9).
+ * ⛓ The declared start as the layout resolves it: a PURE hub (exits, no
+ * locations — whatever it is called) hands the start to its first exit's
+ * target, any other start is the start — the engine's own rule
+ * (`resolveTopDownStart`), imported (R9; name-free since M3).
  */
 function resolvedStart(regions, declared) {
     const r = resolveTopDownStart(regions, declared);
@@ -125,7 +129,8 @@ function resolvedStart(regions, declared) {
 /**
  * ⛓⛓ **CAN THIS SLOT BE INITIALISED?** — the facts the door and the op read.
  *
- * @returns {{player: string, regions: number, entries: number, start: string|null,
+ * @returns {{player: string, regions: number, entries: number, declaredStart: string|null,
+ *   declaredStarts: string[], start: string|null,
  *   menu: string|null, bare: boolean, blocker: string|null}}
  *   `blocker` is one of `INITIALISE_BLOCKERS`, or null when the slot can be
  *   initialised. `bare` = the slot carries no sidecar entry (the door's test).
@@ -135,14 +140,19 @@ export function initialiseFacts(doc, player) {
     const regions = regionsOf(doc, p);
     const n = Object.keys(regions).length;
     const entries = Object.keys(entriesOf(doc, p)).length;
-    const [declared = null] = startRegionsOf(doc, p).default;
+    // ⛓ M3 — the WHOLE list: the layout refuses more than one declared start.
+    const declaredStarts = [...startRegionsOf(doc, p).default];
+    const [declared = null] = declaredStarts;
     const { start, menu } = resolvedStart(regions, declared);
     let blocker = null;
     if (n === 0) blocker = INITIALISE_BLOCKERS.NO_REGIONS;
     else if (entries > 0) blocker = INITIALISE_BLOCKERS.HAS_ENTRIES;
+    else if (declaredStarts.length > 1) blocker = INITIALISE_BLOCKERS.MULTI_START;
     else if (!start) blocker = INITIALISE_BLOCKERS.NO_START;
     else if (doc?.procgen_metadata !== undefined) blocker = INITIALISE_BLOCKERS.HAS_METADATA;
-    return { player: p, regions: n, entries, declaredStart: declared, start, menu, bare: entries === 0, blocker };
+    return {
+        player: p, regions: n, entries, declaredStart: declared, declaredStarts, start, menu, bare: entries === 0, blocker,
+    };
 }
 
 /** ⛓ The grid side the auto rule STARTS from for a slot of `n` regions — the hand-off's rule (`topDownGridSide`). */

@@ -3,10 +3,13 @@
 **Module ID:** `menuPanel` · **Panel:** `menuPanel` (title "Menu", default layout, beside Loops)
 
 **Purpose:** the **start region's substrate**. Every `rules.json` declares a start
-region — `start_regions[<player>].default`, called `Menu` in all 212 committed
-presets — with exits and no locations. This panel is what "plays" it: one button
-per exit, a Restart that works outside loop mode, and the **skip the menu**
-setting.
+region — `start_regions[<player>].default` — and **the declared start IS the menu,
+named or not; the top-down layout strips it only when it is a pure hub (exits, no
+locations)** (M3). Measured over the 205 committed player-1 slots (2026-09-27): 189
+call it `Menu` (178 with exits and no locations, 7 with locations too, 4 with no
+exit) and 16 do not (`apcalc`'s `C`, `satisfactory`'s `Overworld`, …), every one of
+those a room with locations. This panel is what "plays" it: one button per exit, a
+Restart that works outside loop mode, and the **skip the menu** setting.
 
 - User guide: _not yet written_ — see [TODO](../user/modules/TODO.md)
 - Record in the cross-arc queue (an untracked record kept outside the repository since 2026-09-14) §5p.

@@ -2968,6 +2968,11 @@ export function initialiseOpRefusal(doc, args) {
         return `apworld: player ${p} already carries ${facts.entries} sidecar `
             + `${facts.entries === 1 ? 'entry' : 'entries'}. ${INITIALISE_BARE_ONLY}`;
     }
+    if (facts.blocker === INITIALISE_BLOCKERS.MULTI_START) {
+        return `apworld: player ${p} declares ${facts.declaredStarts.length} start regions (\`start_regions.${p}\` `
+            + `names ${facts.declaredStarts.map((s) => `"${s}"`).join(', ')}) — the layout grows the grid outward `
+            + 'from ONE start, which is also the menu; a combined menu for several is not built yet.';
+    }
     if (facts.blocker === INITIALISE_BLOCKERS.NO_START) {
         return `apworld: player ${p} has no usable start region (\`start_regions.${p}\` names `
             + `${facts.declaredStart === null ? 'none' : `"${facts.declaredStart}", which is not one of its regions`}) — `

@@ -102,10 +102,17 @@ function hubSource() {
 }
 
 describe('M1 — a ONE-exit Menu lays out exactly as before', () => {
-    for (const [game, side] of [['adventure', 4], ['bumpstik', 5], ['shorthike', 6]]) {
+    // ⛓ M3 — every subject's Menu is a PURE hub (1 exit, no locations) and its
+    // target a ROOM (locations), so the Menu-less control places that target
+    // rather than stripping it in turn: bumpstik's Menu carries 21 locations
+    // (since M3 a cell — topDownStartShape.test.js).
+    for (const [game, side] of [['adventure', 4], ['saving_princess', 5], ['shorthike', 6]]) {
         it(`${game}: placement, cells, teleporters and rng state equal the Menu-less document's`, () => {
             const doc = preset(game);
             expect(doc.regions['1'].Menu.exits).toHaveLength(1);
+            expect(doc.regions['1'].Menu.locations ?? []).toEqual([]);
+            const target = doc.regions['1'][doc.regions['1'].Menu.exits[0].connected_region];
+            expect((target.locations ?? []).length).toBeGreaterThan(0);
             const withMenu = layoutOf(doc, side);
             const bare = layoutOf(withoutMenu(doc), side);
             expect(placement(withMenu.layout)).toBe(placement(bare.layout));
