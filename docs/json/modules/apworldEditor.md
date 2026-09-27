@@ -180,6 +180,17 @@ first's issues — measured on `procgen_maze`, where the two states read 1 issue
 and 0 issues at the same count of 1. ⛔ `validateRules` itself is untouched: this
 changes WHEN it runs, never what it reports.
 
+**What it reads (T1).** Every rule node `rulesGraph.walkRuleTree` reaches —
+children, and every rule-valued slot under `args` / `kwargs` (a `Conditional`'s
+branches, a `Not`'s condition, a helper call's arguments), recognised by shape —
+and on each node the item names by ARG (`ruleItemNames.ownItemNames`: `item_name`
+/ `item`, `item_names` / `items`), not by a list of rule kinds. So its
+`unknown item` names equal `undefinedRuleItems`' on every committed document.
+Before T1 it read children and a `Compare`'s operands only, and five kinds; the
+widening moved exactly one committed document — terraria, +16 issues, four NPC
+names under a `HasFromListUnique` the source never defines
+(`procgenCore/ruleTreeSlots.test.js` pins the list).
+
 Measured on stardew (209 regions, 1,073 items): `_renderChrome` **2.2–4.0 ms →
 0.3–0.7 ms**. See the correction under the Map tab for why that is milliseconds
 and not the seconds a tab switch costs.
