@@ -116,7 +116,18 @@ export const BOOT_COST_FRAMES = LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES;
 /**
  * The build `watch.html` ships to.
  *
- * ⛓⛓ p4d SINCE EDITOR INTEGRATION SLICE P2 (⚖ user, 2026-08-30: *"I want to
+ * ⛓⛓⛓ p4e SINCE R9 SLICE DEF (⚖ user, 2026-09-27: *"I agree with those
+ * recommendations"* — the p4d → p4e default move), AND AGAIN THE LICENCE IS A
+ * MEASUREMENT: p4e is p4d plus `hold` and `tag` (kickoff §62), both inert for
+ * every tape below version 12 and every untagged level, and the CI full tier
+ * on p4e (run 36350758799 — 154 tapes, 3745 PASS / 0 FAIL / 46 SKIP, every
+ * committed tape the same verdict) is the proof. What moves is what the build
+ * DECLARES: the director now reads `hold` off THIS entry and holds every
+ * window with a successor in production. ⛓ p4d stays pinned as the CONTROL for
+ * the two absent-capability branches (`flashPanel/README.md`, "the pin
+ * policy") — a default move is not a retirement.
+ *
+ * ⛓⛓ p4d FROM EDITOR INTEGRATION SLICE P2 (⚖ user, 2026-08-30: *"I want to
  * make p4d the default"*), AND THE LICENCE IS A MEASUREMENT RATHER THAN A
  * PREFERENCE. p4d is p4c plus `Pickups/APItem.as` and the two report seams;
  * the differential gate's oracle recordings were made on the p4b/p4c lineages,
@@ -148,15 +159,16 @@ export const BOOT_COST_FRAMES = LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES;
  * would be invisible to it and could clear the build for retirement while this
  * page still loaded it (§18.14.5, trap 411).
  */
-export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4d/game.html';
+export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4e/game.html';
 
 /** The pin manifest beside the builds — the capabilities are read from it. */
 export const WASM_MANIFEST = '../flashPanel/wasm/builds.json';
 
 /**
  * ⛓ R9 slice P4E — WHICH BUILD A SHIP DRIVES. `?wasm=<build directory>` names
- * another build in the same submodule (the p4e hold proof drives the director
- * on it while `WASM_PAGE` stays the default); anything else — absent, empty or
+ * another build in the same submodule (P4E drove the director on the p4e
+ * candidate this way; since slice DEF p4e IS the default and `?wasm=` reaches
+ * the p4d CONTROL — a director that does not hold); anything else — absent, empty or
  * not a plain directory name — is the default. ⛔ The page never guesses what a
  * named build can do: `shipToWasm` reads its `capabilities` from the manifest.
  * @param {string} search a `location.search`
