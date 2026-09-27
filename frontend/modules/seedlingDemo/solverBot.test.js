@@ -44,6 +44,8 @@ import { dirname, join } from 'node:path';
 import { parseTape } from './tapeFormat.js';
 import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
+import { loadTape } from './fixtures/index.js';
+import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { buildTape } from './botDriverV1.js';
 import { plannerObstacleAt, planWaypoints } from './botDriverV2.js';
 // ⛓ R9 slice 12d′: the chest control derives its band from the mechanism.
@@ -3299,6 +3301,33 @@ describe('R9 12d″: the touch lean is the mechanism OWN probe', () => {
         const run = at(168.12, 24.44);
         expect(() => STRATEGY_EXECUTORS.touch(run, [], order(run, { tag: 'lock' }),
             { what: 'fixture' })).toThrow(/is a `lock`, and .*carries no PROBE for that class/s);
+    });
+});
+
+/**
+ * ⛓ R9 SLICE L16 — **A MISSING SHIELD IS A REFUSAL ABOUT THE LEVEL, NOT A
+ * THROW.** The parallel elements slice's W0 measured `execTouch`'s
+ * `held: false` arm raising a `SolverBotError` (with `undefined` where the
+ * lock's id belonged), which `procgenOracle.solve` re-throws, so a generated
+ * room's without-shield arm graded WEAK and `require: ['hasShield']` could
+ * never be met. The corridor is `r8-d2-20`'s own: its boot holds no shield,
+ * and the way out to L13 crosses `shieldlocknorm@176,16`.
+ */
+describe('R9 L16: a touch lock without its item REFUSES by name', () => {
+    it('⛓ r8-d2-20\'s boot, straight for the L13 exit: a SolverRefusal naming Player.hasShield', () => {
+        const tape = loadTape('r8-d2-20');
+        const run = createRunForStaging(stagingFromTape(tape), levelSource);
+        expect(run.inventory.hasShield).toBe(false);
+        const exit = levelSource(20).entities.find((e) => Number(e.attrs?.to) === 13
+            && ['stairsup', 'stairsdown', 'teleporter'].includes(e.type));
+        let err = null;
+        try {
+            solveSegment({ run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
+                name: 'l16-touch-refusal', boot: tape.boot });
+        } catch (e) { err = e; }
+        expect(err).toBeInstanceOf(SolverRefusal);
+        expect(err.message).toMatch(/touch: shieldlocknorm@176,16 needs `Player\.hasShield`/);
+        expect(err.obstacle).toEqual({ kind: 'solid', id: 'shieldlocknorm@176,16' });
     });
 });
 
