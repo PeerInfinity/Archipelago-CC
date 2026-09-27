@@ -33,6 +33,7 @@ import {
     MODELLED_TILE_TYPES,
     PICKUP_CLEARS_OWN_TAG,
     PICKUP_WRITES_NO_TAG,
+    PICKUP_CLEARS_OPTIONAL_TAG,
     PLAYER_SOLID_TYPES,
     PUSHABLE_FAMILIES,
     PRE_R5_ROLES,
@@ -1992,6 +1993,18 @@ describe('a pickup\'s own persistence tag (R6 debt 2)', () => {
         // could accidentally bank; `undefined` cannot be banked by mistake.
         expect(key.persistTag).toBeUndefined();
         expect('persistTag' in key).toBe(false);
+    });
+
+    it('⛓ P4E — a HOST-TAGGED bosskey carries its tag; the optional table ⊂ the no-tag one', () => {
+        for (const t of Object.keys(PICKUP_CLEARS_OPTIONAL_TAG)) {
+            expect(Object.keys(PICKUP_WRITES_NO_TAG)).toContain(t);
+        }
+        const room = atlasLevelSource()(19);
+        const tagged = { ...room, entities: room.entities.map((e) => (e.type === 'bosskey'
+            ? { ...e, attrs: { ...e.attrs, tag: '7' } } : e)) };
+        const key = buildLevelWorld(tagged, { roles: ROLES })
+            .pickups.find((p) => p.tag === 'bosskey');
+        expect(key.persistTag).toBe(7);
     });
 });
 

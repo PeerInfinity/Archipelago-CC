@@ -47,6 +47,11 @@
  *      tag for these and writes it into the rewritten `apitem`; without a
  *      rewrite the entity keeps its absent tag and `setPersistence` is never
  *      called, so an allocated tag here would be an address nothing reports.
+ *      ⛓ R9 slice P4E: CONDITIONAL NOW — on a build declaring `tag` the three
+ *      read an optional `@tag`, so the caller hands `allocateTag` and the table
+ *      BINDS them at an allocated tag, listing each in `retags`; the caller
+ *      then delivers the rooms with those tags written
+ *      (`apPlacementRewriter.retagRecordSet`). On any other build: refused.
  *   2. **reported by the property path too** — the adapter's
  *      `propertyToLocationFlash` watches eleven `Main.*` flags (`hasSword`,
  *      `hasWand`, …). Collecting that vanilla pickup would fire the check here
@@ -156,12 +161,23 @@ export function atlasRoomRegions(rules) {
  * @param {(entity: object) => (string|undefined)} args.itemOfEntity
  * @param {(entity: object) => (string|null)} [args.propertyLocationOf]
  *   the AP name the adapter's property path would dispatch for this entity, or null
+ * @param {((room: object, reserved: number[]) => number)|null} [args.allocateTag]
+ *   ⛓ R9 slice P4E — present ONLY when the build declares the `tag` capability
+ *   (`procgenSeedling.placementTagId`, the repo's one allocator, refusing past
+ *   `tagsPerLevel`). An untagged entity of an `optionalTagTypes` class is then
+ *   BOUND at an allocated tag instead of refused, and listed in `retags` — the
+ *   caller must deliver the room with that `@tag` written, or the address is one
+ *   nothing reports.
+ * @param {string[]} [args.optionalTagTypes] the classes whose ctor reads an
+ *   optional `@tag` (`levelWorld.PICKUP_CLEARS_OPTIONAL_TAG`'s keys)
  * @returns {{table: Map<string, object>, entries: object[],
- *   refused: {location: string, region: string, why: string}[], census: object}}
+ *   refused: {location: string, region: string, why: string}[], census: object,
+ *   retags: {level: number, type: string, x: number, y: number, tag: number}[]}}
  */
 export function buildAtlasCheckTable({
     rules, atlasDoc, mapDoc, locationItemOf, selfPlayer = null,
     placementKey, tagOf, itemOfEntity, propertyLocationOf = () => null,
+    allocateTag = null, optionalTagTypes = [],
 } = {}) {
     for (const [name, fn] of [['locationItemOf', locationItemOf], ['placementKey', placementKey],
         ['tagOf', tagOf], ['itemOfEntity', itemOfEntity]]) {
@@ -183,8 +199,11 @@ export function buildAtlasCheckTable({
     const entries = [];
     const refused = [];
     const census = { regions: 0, locations: 0, bound: 0, refused: 0, byEntity: {} };
+    const retags = [];
+    /** level -> the tags this table has already allocated there */
+    const allocated = new Map();
     const count = (type, field) => {
-        census.byEntity[type] ??= { bound: 0, untagged: 0, propertyPath: 0 };
+        census.byEntity[type] ??= { bound: 0, untagged: 0, propertyPath: 0, allocated: 0 };
         census.byEntity[type][field] += 1;
     };
 
@@ -213,7 +232,18 @@ export function buildAtlasCheckTable({
                 continue;
             }
             const [entity] = granting;
-            const tag = tagOf(entity.type, entity.attrs);
+            let tag = tagOf(entity.type, entity.attrs);
+            let retag = null;
+            if ((!Number.isInteger(tag) || tag < 0)
+                && typeof allocateTag === 'function' && optionalTagTypes.includes(entity.type)) {
+                // ⛓ P4E: the build reads an optional `@tag` on this class, so
+                // the room is delivered with one — allocated against the
+                // record's own tags and every tag this table already took there.
+                const reserved = allocated.get(level) ?? [];
+                tag = allocateTag(room, reserved);
+                allocated.set(level, [...reserved, tag]);
+                retag = { level, type: entity.type, x: entity.x, y: entity.y, tag };
+            }
             if (!Number.isInteger(tag) || tag < 0) {
                 count(entity.type, 'untagged');
                 refuse(refusalsOf.untagged(entity.type, level));
@@ -247,9 +277,13 @@ export function buildAtlasCheckTable({
             table.set(key, entry);
             entries.push({ key, ...entry });
             count(entity.type, 'bound');
+            if (retag) {
+                retags.push(retag);
+                count(entity.type, 'allocated');
+            }
         }
     }
     census.bound = entries.length;
     census.refused = refused.length;
-    return { table, entries, refused, census };
+    return { table, entries, refused, census, retags };
 }

@@ -436,6 +436,62 @@ export function rewriteRecordSet(vanillaSet, table) {
 }
 
 /**
+ * ⛓ R9 slice P4E (C4) — **THE ATLAS ARM'S ONE EDIT: a `@tag` on an entity that
+ * keeps its class.** On a build declaring `tag`, `bosskey`/`totempart`/`seed`
+ * read an optional `@tag` and clear it on collection, so a location bound to
+ * one (`seedlingAtlasCheckTable`'s `retags`) needs the room delivered with the
+ * allocated tag WRITTEN — nothing else moves: the entity is the vanilla one
+ * and still grants the vanilla item.
+ * ⛔ `tag` is written LAST among the attributes, so the element's existing
+ * attribute bytes keep their order.
+ * @param {object} vanillaSet a `record`-sourced set (`levelSetExporter.vanillaRecordSet`)
+ * @param {{level: number, type: string, x: number, y: number, tag: number}[]} retags
+ * @returns {{set: object, retagged: number}}
+ */
+export function retagRecordSet(vanillaSet, retags) {
+    if (!Array.isArray(vanillaSet?.rooms)) {
+        fail('apPlacementRewriter: retagRecordSet needs a level set with `rooms`');
+    }
+    if (!Array.isArray(retags) || retags.length === 0) {
+        fail('apPlacementRewriter: retagRecordSet needs at least one retag');
+    }
+    const set = cloneKeepingKeyOrder(vanillaSet);
+    let retagged = 0;
+    for (const r of retags) {
+        const rooms = set.rooms.filter((room) => room?.id === r.level && room?.source?.record);
+        if (rooms.length !== 1) {
+            fail(`apPlacementRewriter: retag ${r.type}@(${r.x},${r.y}) names level ${r.level}, which `
+                + `${rooms.length === 0 ? 'no room' : `${rooms.length} rooms`} of the set carries`);
+        }
+        const record = rooms[0].source.record;
+        const at = (record.entities ?? []).findIndex((e) => e.type === r.type
+            && e.x === r.x && e.y === r.y);
+        if (at < 0) {
+            fail(`apPlacementRewriter: retag ${r.type}@(${r.x},${r.y}) is not in room ${r.level} — `
+                + 'the table was built against a different corpus');
+        }
+        const old = record.entities[at];
+        if (old.attrs?.tag !== undefined) {
+            fail(`apPlacementRewriter: ${r.type}@(${r.x},${r.y}) in room ${r.level} already carries `
+                + `tag ${old.attrs.tag}; a retag is only for an UNTAGGED entity`);
+        }
+        record.entities[at] = { ...old, attrs: { ...(old.attrs ?? {}), tag: String(r.tag) } };
+        retagged += 1;
+    }
+    set.provenance = {
+        ...(set.provenance ?? {}),
+        generator: 'seedlingDemo/apPlacementRewriter.retagRecordSet',
+        derived_from: {
+            set_id: vanillaSet.set_id ?? null,
+            content_hash: vanillaSet.provenance?.content_hash ?? null,
+        },
+        ap_placement: { retagged },
+    };
+    stampLevelSetIdentity(set, AP_RECORD_SET_ID_BASE);
+    return { set, retagged };
+}
+
+/**
  * ⛓⛓ **WHAT A REWRITE DOES TO THE 24 VANILLA AP REFERENCES**
  * (`levelSetExporter.VANILLA_AP_REFERENCES`, plan §6.1) — MEASURED, and the
  * answer is not "none".

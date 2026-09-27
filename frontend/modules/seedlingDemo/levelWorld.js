@@ -700,11 +700,31 @@ export const PICKUP_CLEARS_OWN_TAG = Object.freeze({
     darksword: 'Pickups/DarkSword.as:49',
 });
 
-/** The three placed pickup classes that write no persistence, and why. */
+/**
+ * The three placed pickup classes that write no persistence IN THE VANILLA
+ * GAME, and why. ⛓ R9 slice P4E: a build declaring the `tag` capability
+ * gives all three an OPTIONAL `@tag` — see `PICKUP_CLEARS_OPTIONAL_TAG` — but
+ * no vanilla `.oel` carries one, so on every vanilla level this table is
+ * still the whole truth.
+ */
 export const PICKUP_WRITES_NO_TAG = Object.freeze({
     bosskey: 'BossKey.removed() writes Player.hasKeySet(keyType, true) instead',
     totempart: 'BossTotemPart.removed() writes Player.hasTotemPartSet instead',
     seed: 'Seed ends the game; Pickups/Seed.as:73,80,85 reboot the world',
+});
+
+/**
+ * ⛓ R9 slice P4E (C4, plan ⚖ Q3 option B) — the same three, on a build
+ * declaring `tag`: each ctor takes `_tag:int = -1` (`Game.optionalTag`,
+ * `-1` for an absent attribute, never `int("") = 0`), and collection writes
+ * `Game.setPersistence(tag, false)` when `tag >= 0` — the `pendingCheck`
+ * choke point. A HOST writes the tag (`seedlingAtlasCheckTable`'s
+ * `allocateTag`); the vanilla map document carries none.
+ */
+export const PICKUP_CLEARS_OPTIONAL_TAG = Object.freeze({
+    bosskey: 'Pickups/BossKey.as removed(), after hasKeySet — iff @tag >= 0',
+    totempart: 'Pickups/BossTotemPart.as removed(), after hasTotemPartSet — iff @tag >= 0',
+    seed: 'Pickups/Seed.as removeSelf(), before the freeze — iff @tag >= 0',
 });
 
 const pickup = (as3, src, w, h, originX, originY) => Object.freeze({
@@ -4265,7 +4285,11 @@ export function buildLevelWorld(levelRecord, {
                 // carried only for the fourteen classes whose `removed()`
                 // writes it — so a missing field on a `bosskey` is a loud
                 // absence rather than a `{19,-1}` nobody would notice.
+                // ⛓ P4E: and for the three OPTIONAL-tag classes only when the
+                // placement carries one (never on a vanilla level).
                 ...(PICKUP_CLEARS_OWN_TAG[e.type] !== undefined
+                    || (PICKUP_CLEARS_OPTIONAL_TAG[e.type] !== undefined
+                        && tagOf(e.type, e.attrs) >= 0)
                     ? { persistTag: tagOf(e.type, e.attrs) } : {}),
                 // R4: a `BossKey`'s `removed()` writes `Player.hasKeySet`
                 // rather than one of the fourteen item properties, so WHICH

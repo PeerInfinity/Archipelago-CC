@@ -27,6 +27,7 @@ import {
     buildPlacementTable,
     placementKey,
     referenceImpactOf,
+    retagRecordSet,
     rewriteRecordSet,
 } from './apPlacementRewriter.js';
 import { vanillaRecordSet } from './levelSetExporter.js';
@@ -379,5 +380,34 @@ describe('what a rewrite does to the 24 vanilla AP references', () => {
         expect(new Set(impact.falsified.map((f) => f.table))).toEqual(new Set(['location_coords']));
         expect(impact.checked).toBe(Object.keys(config.region_coords).length
             + Object.keys(config.location_coords).length);
+    });
+});
+
+describe('retagRecordSet — R9 slice P4E: the atlas arm writes a @tag and nothing else', () => {
+    it('writes the tag LAST on exactly the named entity, and the OEL carries it', () => {
+        const v = vanillaSet();
+        const room = v.rooms.find((r) => r.id === 19);
+        const key = room.source.record.entities.find((e) => e.type === 'bosskey');
+        const { set, retagged } = retagRecordSet(v,
+            [{ level: 19, type: 'bosskey', x: key.x, y: key.y, tag: 7 }]);
+        expect(retagged).toBe(1);
+        const after = set.rooms.find((r) => r.id === 19).source.record.entities
+            .find((e) => e.type === 'bosskey');
+        expect(Object.keys(after.attrs).at(-1)).toBe('tag');
+        expect(after.attrs).toEqual({ ...key.attrs, tag: '7' });
+        expect(recordToOel(set.rooms.find((r) => r.id === 19).source.record)).toMatch(/<bosskey [^>]*tag="7"/);
+        // …and the input set is untouched, and no other room moved
+        expect(key.attrs.tag).toBeUndefined();
+        const others = (s) => JSON.stringify(s.rooms.filter((r) => r.id !== 19));
+        expect(others(set)).toBe(others(v));
+    });
+
+    it('refuses an entity that is not there, or one already tagged', () => {
+        expect(() => retagRecordSet(vanillaSet(), [{ level: 19, type: 'bosskey', x: -1, y: -1, tag: 7 }]))
+            .toThrow(/not in room 19/);
+        const v = vanillaSet();
+        const chest = v.rooms.find((r) => r.id === 86).source.record.entities.find((e) => e.type === 'chest');
+        expect(() => retagRecordSet(v, [{ level: 86, type: 'chest', x: chest.x, y: chest.y, tag: 3 }]))
+            .toThrow(/already carries/);
     });
 });
