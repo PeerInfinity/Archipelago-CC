@@ -118,6 +118,14 @@ jobs:
         run: |
           npm test -- --mode=test-regression
 
+      # The same roster on the BUNDLED boot (frontend/dist/bundle.js) — what a
+      # deployed site serves first. `--bundled` builds the bundle itself before
+      # Playwright starts; its results file is flavour-stamped, so it lands in
+      # test-results/ beside the unbundled one without being compared to it.
+      - name: Run regression tests (bundled boot)
+        run: |
+          npm test -- --mode=test-regression --bundled
+
       - name: Run substrate tests
         run: |
           npm test -- --mode=test-substrates
