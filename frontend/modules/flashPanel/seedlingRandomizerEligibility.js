@@ -16,6 +16,9 @@
  *   (ii)  the build the preset names DECLARES `apitem` in `builds.json`
  *   (v)   the rules carry GENERATED Seedling rooms — ⛓ a DIVERTING check,
  *         declared between (ii) and (iii); see below
+ *   (vi)  the rules carry REAL Seedling rooms the goal ledger cannot name — a
+ *         second DIVERTING check (G7), declared just before (iii) and decided
+ *         by (iii)'s own count; see `checkAtlas`
  *   (iii) at least one goal-ledger location resolves against the loaded
  *         Archipelago placement
  *   (iv)  the vanilla record set and the room map are reachable
@@ -120,13 +123,16 @@ export const WASM_BUILD_CAPABILITIES = Object.freeze(
 
 /** The ids the five checks report themselves by, in the ruled order. */
 export const ELIGIBILITY_CHECK_IDS = Object.freeze(
-    ['transport', 'capability', 'generated', 'placement', 'assets']);
+    ['transport', 'capability', 'generated', 'atlas', 'placement', 'assets']);
 
 /** The checks whose PASS is a `divert`: the verdict is decided there, on another arm. */
-export const DIVERTING_CHECK_IDS = Object.freeze(['generated']);
+export const DIVERTING_CHECK_IDS = Object.freeze(['generated', 'atlas']);
 
 /** Which load an eligible verdict names. */
-export const RANDOMIZER_ARMS = Object.freeze({ VANILLA: 'vanilla', GENERATED: 'generated' });
+export const RANDOMIZER_ARMS = Object.freeze({ VANILLA: 'vanilla', GENERATED: 'generated', ATLAS: 'atlas' });
+
+/** The arm each diverting check decides. */
+const ARM_OF_DIVERT = Object.freeze({ generated: RANDOMIZER_ARMS.GENERATED, atlas: RANDOMIZER_ARMS.ATLAS });
 
 /**
  * The build directory a `flash_panel.wasm` wiring names.
@@ -254,6 +260,48 @@ function checkGenerated({ generated }) {
 }
 
 /**
+ * ── (vi) REAL ROOMS THE LEDGER CANNOT NAME — the second diverting check ──
+ * (seedling generated G7; plan §12.4, §13.)
+ *
+ * A world the pipeline built from REAL atlas rooms (`flash_seedling`
+ * sidecars) names its locations by atlas region (`Starting House - Chest`), so
+ * the vanilla ledger resolves 0 of 41 and (iii) would refuse it — and the chest
+ * in it fired a check nobody bound. This check diverts exactly that world to the
+ * `atlas` arm, which binds the rooms' own locations WITHOUT a rewrite.
+ *
+ * ⛔ THE COUNT DECIDES, NOT THE SIDECARS ALONE. `seedling_playthrough` carries
+ * 250 `flash_seedling` sidecars and resolves all 41 ledger rows: it IS the
+ * vanilla arm's world, so any resolved row keeps the vanilla facts in charge.
+ * ⇒ `unknown` until (iii)'s count exists — the cheap call stays `undecided`,
+ * as it was — and `divert` only on real rooms AND zero resolved.
+ *
+ *   pass     no real-room census supplied, none in the rules, or the ledger resolves ≥1
+ *   unknown  real rooms, and the ledger has not been resolved yet
+ *   divert   real rooms, and 0 ledger rows resolve
+ *
+ * ⚠ (i) and (ii) are still asked first, and (ii) asks for `apitem` although
+ * this arm places none: what it needs is the `pendingCheck` seam, which ships
+ * in the same build and has no capability name of its own (plan §13 Open).
+ */
+function checkAtlas({ atlas, placement }) {
+    if (atlas === undefined) return pass('no real-room census was supplied — the vanilla facts decide');
+    const rooms = Array.isArray(atlas?.rooms) ? atlas.rooms : [];
+    if (rooms.length === 0) return pass('the rules carry no real Seedling rooms');
+    if (placement === undefined) {
+        return unknown(`the rules carry ${rooms.length} real Seedling room(s), and the goal ledger `
+            + 'has not been resolved yet');
+    }
+    const resolved = Number(placement.resolved);
+    if (resolved > 0) {
+        return pass(`the rules carry ${rooms.length} real Seedling room(s) and ${resolved} goal-ledger `
+            + 'location(s) resolve — the vanilla placement applies');
+    }
+    return divert(`the rules carry ${rooms.length} real Seedling room(s) (${rooms.join(', ')}) and 0 `
+        + 'goal-ledger locations resolve — their locations are named by the atlas, so they are bound '
+        + 'where they stand, with no rewrite and no delivery');
+}
+
+/**
  * ── (iii) THE PLACEMENT ─────────────────────────────────────────────────
  *
  * ⛓ THE COUNT IS REPORTED EITHER WAY, and zero is the only refusal. A preset
@@ -294,6 +342,7 @@ const CHECKS = Object.freeze([
     ['transport', checkTransport],
     ['capability', checkCapability],
     ['generated', checkGenerated],
+    ['atlas', checkAtlas],
     ['placement', checkPlacement],
     ['assets', checkAssets],
 ]);
@@ -309,8 +358,9 @@ const CHECKS = Object.freeze([
  * @param {{recordSet: {url: string, ok: boolean},
  *          map: {url: string, ok: boolean, source: string}}} [inputs.assets]
  * @param {{rooms: string[], mixed: string[]}} [inputs.generated]  `generatedRoomCensus(rules)`
+ * @param {{rooms: string[]}} [inputs.atlas]  the rules' real-room (`flash_seedling`) regions
  * @returns {{eligible: boolean, verdict: 'eligible'|'ineligible'|'undecided',
- *           arm: 'vanilla'|'generated'|null, failed: string|null, why: string, checks: object[]}}
+ *           arm: 'vanilla'|'generated'|'atlas'|null, failed: string|null, why: string, checks: object[]}}
  */
 export function seedlingRandomizerEligibility(inputs = {}) {
     // ⛓ A DIVERT ENDS THE EVALUATION: the checks after it are the other arm's.
@@ -350,7 +400,7 @@ export function seedlingRandomizerEligibility(inputs = {}) {
     return {
         eligible: true,
         verdict: 'eligible',
-        arm: diverted ? RANDOMIZER_ARMS.GENERATED : RANDOMIZER_ARMS.VANILLA,
+        arm: diverted ? ARM_OF_DIVERT[diverted.id] : RANDOMIZER_ARMS.VANILLA,
         failed: null,
         why: checks.filter((c) => c.status !== 'skipped').map((c) => `${c.id}: ${c.why}`).join(' · '),
         checks,

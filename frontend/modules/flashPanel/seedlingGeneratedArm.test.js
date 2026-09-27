@@ -56,9 +56,11 @@ const WASM = { cheap: {
 const ROOMS = { rooms: ['region_0_0', 'region_0_1'], mixed: [] };
 
 describe('the fifth fact — `generated`, a DIVERTING check', () => {
-    it('is declared between the capability and the placement, and is the only diverting one', () => {
-        expect(ELIGIBILITY_CHECK_IDS).toEqual(['transport', 'capability', 'generated', 'placement', 'assets']);
-        expect(DIVERTING_CHECK_IDS).toEqual(['generated']);
+    // ⛓ G7 added the second diverting check, `atlas`, just before `placement`
+    // (seedlingAtlasArm.test.js owns its rows); `generated` still diverts FIRST.
+    it('is declared between the capability and the placement, and diverts before `atlas`', () => {
+        expect(ELIGIBILITY_CHECK_IDS).toEqual(['transport', 'capability', 'generated', 'atlas', 'placement', 'assets']);
+        expect(DIVERTING_CHECK_IDS).toEqual(['generated', 'atlas']);
     });
 
     it('generated rooms DECIDE the verdict at the CHEAP call: eligible, the generated arm, the rest skipped', () => {
@@ -66,7 +68,7 @@ describe('the fifth fact — `generated`, a DIVERTING check', () => {
         expect(v).toMatchObject({ eligible: true, verdict: 'eligible', arm: RANDOMIZER_ARMS.GENERATED, failed: null });
         expect(v.checks.map((c) => [c.id, c.status])).toEqual([
             ['transport', 'pass'], ['capability', 'pass'], ['generated', 'divert'],
-            ['placement', 'skipped'], ['assets', 'skipped']]);
+            ['atlas', 'skipped'], ['placement', 'skipped'], ['assets', 'skipped']]);
         expect(v.why).toMatch(/^transport: .* · capability: .* · generated: the rules carry 2 generated Seedling room\(s\) \(region_0_0, region_0_1\)/);
         expect(v.why).not.toMatch(/placement: |assets: /);
     });

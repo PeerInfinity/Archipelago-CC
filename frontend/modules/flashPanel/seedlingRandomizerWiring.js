@@ -82,7 +82,15 @@ import {
 import { GEN_ROOM_TILE_SIZE, generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
 import { SeedlingLevelSetDelivery } from './seedlingLevelSetDelivery.js';
-import { ATLAS_DIR, mapDocumentPath } from './mapDocumentPath.js';
+import { ATLAS_DIR, atlasIndexPath, atlasPathInIndex, mapDocumentPath } from './mapDocumentPath.js';
+// ⛓ G7 — DEPENDENCY-FREE (it imports nothing), so a static import costs this
+// lazy module one small file and the panel's static closure nothing.
+import {
+    atlasRoomRegions,
+    buildAtlasCheckTable,
+    itemOfEntityFrom,
+    propertyLocationOfFrom,
+} from '../seedlingDemo/seedlingAtlasCheckTable.js';
 
 /**
  * The four modules the rewrite needs, as DOCUMENT-relative specifiers. ⛔ They
@@ -106,6 +114,15 @@ export const AP_MODULE_PATHS = Object.freeze({
 export const AP_GENERATED_MODULE_PATHS = Object.freeze({
     generatedSet: 'modules/seedlingDemo/seedlingGeneratedSet.js',
     validator: AP_MODULE_PATHS.validator,
+});
+
+/**
+ * ⛓ THE ATLAS ARM'S ONE EXTRA MODULE (seedling generated G7): the engine's
+ * `tagOf`. Already inside the rewriter's closure (`procgenSeedling.js` imports
+ * it), so it adds no download to a page that reached the vanilla load.
+ */
+export const AP_ATLAS_MODULE_PATHS = Object.freeze({
+    levelWorld: 'modules/seedlingDemo/levelWorld.js',
 });
 
 /**
@@ -453,6 +470,20 @@ export async function runSeedlingRandomizerLoad({
     const steps = [];
     const step = (name, detail) => { steps.push({ name, detail }); };
 
+    /**
+     * ⛓ G7 — A LOAD WITH NO DELIVERY (the atlas arm) ONLY BINDS. There are no
+     * rooms to mount and so no reset to make: the player is already in the
+     * rooms the table addresses. ⛔ No overlay either — *"delivering 0 rooms"*
+     * over a game that is not waiting on anything would be a false sentence.
+     */
+    if (loaded.delivery == null) {
+        glue.setCheckBinding(loaded.checkBinding);
+        step('bind', { delivery: null, bound: loaded.table?.size ?? 0 });
+        log(`[ap placement] ${loaded.table?.size ?? 0} location(s) bound on the ${loaded.arm ?? 'loaded'} `
+            + 'arm — nothing delivered, nothing reset');
+        return { ok: true, why: null, reset: null, steps, delivered: null };
+    }
+
     overlay.show();
     overlay.setText('preparing randomized rooms…');
     step('overlay-on');
@@ -728,10 +759,19 @@ export async function loadSeedlingRandomizer({
         flashPanel,
         transport: 'wasm',
         manifest,
+        // ⛓ G7: the real rooms, so a world the ledger cannot name DIVERTS
+        // (check `atlas`) instead of failing (iii).
+        atlas: { rooms: atlasRoomRegions(rawRules).map((r) => r.region) },
         placement: { resolved: census.direct + census.viaApId, total: census.total,
             unresolved: census.unjoined },
         assets,
     });
+    if (eligibility.arm === RANDOMIZER_ARMS.ATLAS) {
+        return loadSeedlingAtlas({
+            eligibility, rawRules, locations, playerId, gameConfig, mapDoc, assets,
+            modules: { rewriter, derivation }, baseUrl, fetchJson, importModule, log,
+        });
+    }
     if (!eligibility.eligible) return refuse(eligibility, { census, assets });
 
     const selfPlayer = selfPlayerOf(playerId);
@@ -906,6 +946,134 @@ export async function loadSeedlingGenerated({
         selfPlayer,
         /** ⛓ The generated rooms' own grid (G1's payload `tile_size`). */
         tileSize: GEN_ROOM_TILE_SIZE,
+        capability: AP_ITEM_CAPABILITY,
+    };
+}
+
+/**
+ * ⛓⛓ **THE ATLAS ARM** (seedling generated G7; plan §12.4, §13): a world of
+ * REAL atlas rooms the pipeline built, whose locations the atlas compiler named
+ * (`Starting House - Chest`) and the goal ledger therefore cannot. Nothing is
+ * rewritten and nothing is delivered — the rooms are the vanilla levels the game
+ * already holds — so this arm only BINDS: the `(level|tag)` → atlas-location
+ * table (`seedlingAtlasCheckTable.js`) behind the same `SeedlingCheckBinding`,
+ * whose `hostOwnedLocations()` stands the adapter down on exactly those names.
+ *
+ * ⛓ REACHED FROM `loadSeedlingRandomizer`, which decides it: the diverting
+ * check `atlas` needs the ledger's resolved COUNT, and that load has already
+ * fetched the map document and imported the rewriter (`placementKey`) and the
+ * derivation (the item tables) to compute it — so they are handed in, not
+ * fetched twice. ⛔ The verdict is taken as handed only if it names THIS arm.
+ *
+ * ⛔ A refused location is LOGGED BY NAME, one line each, and the world still
+ * binds the ones it can — the check that cannot fire is the one thing never
+ * bound.
+ *
+ * It returns the shape the other two arms do, with `delivery: null`, `set:
+ * null`, `replaced: 0` — `runSeedlingRandomizerLoad` binds such a load at once,
+ * with no overlay and no reset.
+ */
+export async function loadSeedlingAtlas({
+    eligibility,
+    rawRules = null,
+    locations,
+    playerId,
+    gameConfig,
+    mapDoc,
+    assets = null,
+    modules,
+    baseUrl,
+    fetchJson = defaultFetchJson,
+    importModule = defaultImportModule,
+    log = () => {},
+} = {}) {
+    const url = (rel) => new URL(rel, baseUrl).href;
+    const refuse = (why, extra = {}) => ({
+        verdict: 'ineligible',
+        why,
+        eligibility: { ...(eligibility ?? {}), eligible: false, verdict: 'ineligible', arm: null,
+            failed: 'atlas', why },
+        arm: RANDOMIZER_ARMS.ATLAS,
+        delivery: null,
+        checkBinding: null,
+        table: null,
+        replaced: 0,
+        set: null,
+        invalidation: null,
+        census: null,
+        assets,
+        selfPlayer: null,
+        ...extra,
+    });
+    if (eligibility?.arm !== RANDOMIZER_ARMS.ATLAS || !eligibility.eligible) {
+        return refuse('atlas: the verdict handed in does not name the atlas arm — '
+            + 'this is not a world of real rooms the goal ledger cannot name');
+    }
+    const selfPlayer = selfPlayerOf(playerId);
+    if (selfPlayer === null) {
+        return refuse(`atlas: the loaded slot ${JSON.stringify(playerId)} is not an integer player id — `
+            + 'the check readout names whose item was found relative to it');
+    }
+
+    // ── the atlas document the rules name, through the served index ─────
+    const atlasId = rawRules?.region_atlas?.atlas_id ?? null;
+    let atlasDoc = null;
+    let atlasUrl = null;
+    try {
+        const index = await fetchJson(url(atlasIndexPath()));
+        const rel = atlasPathInIndex(index, atlasId);
+        if (!rel) {
+            return refuse(`atlas: the atlas index lists no atlas ${JSON.stringify(atlasId)} — `
+                + 'the rules name a region atlas this page does not serve');
+        }
+        atlasUrl = url(rel);
+        atlasDoc = await fetchJson(atlasUrl);
+    } catch (e) {
+        return refuse(`atlas: the region atlas ${JSON.stringify(atlasId)} could not be read — ${e.message}`);
+    }
+
+    const levelWorld = await importModule(url(AP_ATLAS_MODULE_PATHS.levelWorld));
+    const { rewriter, derivation } = modules;
+    const byName = locations instanceof Map ? locations : new Map(Object.entries(locations ?? {}));
+    const { table, entries, refused, census } = buildAtlasCheckTable({
+        rules: rawRules,
+        atlasDoc,
+        mapDoc,
+        locationItemOf: (name) => itemOfRecord(byName.get(name)),
+        selfPlayer,
+        placementKey: rewriter.placementKey,
+        tagOf: levelWorld.tagOf,
+        itemOfEntity: itemOfEntityFrom({ itemForTag: derivation.ITEM_FOR_TAG,
+            itemForKey: derivation.ITEM_FOR_KEY, victoryItem: derivation.VICTORY_ITEM }),
+        propertyLocationOf: propertyLocationOfFrom(gameConfig, derivation.ITEM_FOR_TAG),
+    });
+    for (const r of refused) {
+        log(`[ap placement] atlas arm: "${r.location}" (${r.region}) is NOT bound — ${r.why}`, 'warn');
+    }
+    log(`[ap placement] atlas arm: ${census.regions} real room(s), ${census.bound} of `
+        + `${census.locations} location(s) bound where they stand (no rewrite, no delivery)`
+        + `${census.refused > 0 ? `; ${census.refused} refused by name` : ''}`);
+
+    const checkBinding = new SeedlingCheckBinding({
+        table, placementKey: rewriter.placementKey, selfPlayer,
+    });
+    return {
+        verdict: 'eligible',
+        why: eligibility.why,
+        eligibility,
+        arm: RANDOMIZER_ARMS.ATLAS,
+        delivery: null,
+        checkBinding,
+        table,
+        entries,
+        refused,
+        replaced: 0,
+        set: null,
+        invalidation: null,
+        census,
+        assets: { ...(assets ?? {}), atlas: { url: atlasUrl, ok: true, atlasId } },
+        selfPlayer,
+        tileSize: mapDoc?.tile_size,
         capability: AP_ITEM_CAPABILITY,
     };
 }

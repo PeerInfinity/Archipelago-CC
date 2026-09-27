@@ -264,7 +264,9 @@ describe('the REAL stateManager builder, driven in node', () => {
         const want = {
             seedling: { verdict: 'eligible', direct: 0, viaApId: 40 },
             seedling_playthrough: { verdict: 'eligible', direct: 41, viaApId: 0 },
-            seedling_atlas: { verdict: 'ineligible', direct: 0, viaApId: 0 },
+            // ⛓ G7: `seedling_atlas` was refused here by (iii) — the defect of
+            // plan §12.4. Its one location is now bound on the ATLAS arm.
+            seedling_atlas: { verdict: 'eligible', arm: 'atlas' },
         };
         for (const [preset, expected] of Object.entries(want)) {
             const sd = await staticDataFor(preset);
@@ -280,7 +282,10 @@ describe('the REAL stateManager builder, driven in node', () => {
                 importModule: (u) => import(/* @vite-ignore */ u),
             });
             expect(r.verdict, `${preset}: ${r.why}`).toBe(expected.verdict);
-            if (expected.verdict === 'eligible') {
+            if (expected.arm) {
+                expect(r.arm, preset).toBe(expected.arm);
+                expect([...r.table.keys()], preset).toEqual(['86|0']);
+            } else if (expected.verdict === 'eligible') {
                 expect(r.census, preset).toMatchObject(
                     { direct: expected.direct, viaApId: expected.viaApId });
             }
@@ -364,8 +369,16 @@ describe('the whole construction, driven in node', () => {
         expect([...pt.checkBinding.hostOwnedLocations()].some((n) => /The Seed/.test(n))).toBe(true);
     });
 
-    it('seedling_atlas refuses at PLACEMENT, and the refusal carries the count', async () => {
-        const r = await load('seedling_atlas');
+    /**
+     * ⛓ G7: `seedling_atlas` itself now DIVERTS to the atlas arm (its real
+     * rooms carry the one location the ledger cannot name). The placement
+     * refusal is unchanged for rules with NO real rooms — shown here on the
+     * same rules with their sidecars removed.
+     */
+    it('0 of 41 and no real rooms refuses at PLACEMENT, and the refusal carries the count', async () => {
+        const noRooms = structuredClone(RULES.seedling_atlas);
+        delete noRooms.preset_sidecars;
+        const r = await load('seedling_atlas', { rawRules: noRooms });
         expect(r.verdict).toBe('ineligible');
         expect(r.eligibility.failed).toBe('placement');
         expect(r.why).toMatch(/0 of 41/);
