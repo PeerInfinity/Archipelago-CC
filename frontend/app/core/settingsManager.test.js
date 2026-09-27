@@ -869,3 +869,44 @@ describe('SettingsManager — disk-defaults loading for resetToDefaults', () => 
     expect(globalThis.fetch).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('SettingsManager — a full origin is reported, not only logged (local-storage V1)', () => {
+  let sm;
+  let unsubscribe;
+  const notices = [];
+  beforeEach(async () => {
+    const { onStorageWriteFailure } = await import('./storageQuota.js');
+    notices.length = 0;
+    unsubscribe = onStorageWriteFailure((n) => notices.push(n));
+    const stub = makeLocalStorageStub();
+    stub.length = 0;
+    stub.key = () => null;
+    stub.setItem = () => {
+      const e = new Error('Setting the value exceeded the quota.');
+      e.name = 'QuotaExceededError';
+      throw e;
+    };
+    globalThis.localStorage = stub;
+    sm = new SettingsManager();
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+  });
+  afterEach(() => {
+    unsubscribe();
+    delete globalThis.localStorage;
+  });
+
+  it('a QuotaExceededError in _doSaveSettings reaches the write-failure listener with the key and its size', () => {
+    sm._doSaveSettings();
+    expect(notices).toHaveLength(1);
+    expect(notices[0].key).toBe('archipelagoToolSuite_modeData_default');
+    expect(notices[0].owner).toBe('Settings');
+    expect(notices[0].attemptedChars).toBeGreaterThan(notices[0].key.length);
+    expect(notices[0].message).toMatch(/was NOT saved/);
+  });
+
+  it('the dirty paths stay dirty after a failed save, so the next save retries them', () => {
+    sm._markDirty(['generalSettings', 'theme']);
+    sm._doSaveSettings();
+    expect(sm._dirtyPaths.size).toBe(1);
+  });
+});

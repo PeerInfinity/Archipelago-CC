@@ -1,6 +1,7 @@
 import eventBus from './eventBus.js';
 import { centralRegistry } from './centralRegistry.js';
 import { deepMerge } from '../../utils/settingsMerger.js';
+import { reportStorageWriteFailure } from './storageQuota.js';
 
 
 // Helper function for logging with fallback
@@ -377,13 +378,17 @@ export class SettingsManager {
       userSettings,
     };
 
+    const serialized = JSON.stringify(blob);
     try {
-      localStorage.setItem(key, JSON.stringify(blob));
+      localStorage.setItem(key, serialized);
       log('info', `Settings persisted to mode '${this._currentMode}' (${wholeTree ? 'whole tree' : `${this._dirtyPaths.size} changed path(s)`})`);
       this._dirtyPaths.clear();
       this._replaceAllPending = false;
     } catch (e) {
       log('error', 'Error saving settings to localStorage:', e);
+      // A full origin is shown to the person (the Storage panel's notice), not
+      // only logged: the dirty paths stay dirty, so the next save retries them.
+      reportStorageWriteFailure({ key, value: serialized, error: e, owner: 'Settings' });
     }
   }
 
