@@ -37,7 +37,18 @@ All test workflows can be triggered manually from the GitHub Actions tab:
 
 **Tests:**
 - ALTTP template generation and spoiler test
-- Regression tests
+- Regression tests (the ES-module boot, then the bundled boot)
+- Substrate tests, `--batch=fast` only (every category except the real-time omsi bot walks)
+
+---
+
+### Substrate tests — bot walks
+
+**File:** `test-substrates-bot-walks.yml`
+
+**Triggers:** Manual only (`workflow_dispatch`; the user ruled the bot walks manual-only, 2026-09-27)
+
+**Purpose:** The `bot-walks` batch of `npm test -- --mode=test-substrates` — the real-time omsi bot walks, minutes each by design, which `test-templates.yml` no longer runs. A `batch` input (default `bot-walks`) selects any batch in `frontend/modules/tests/testBatches.js`.
 
 ---
 

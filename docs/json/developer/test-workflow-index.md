@@ -13,7 +13,8 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 |----------|------|---------|-------------|
 | Unit Tests | `unittests.yml` | push, PR | Python pytest (`pytest -n auto`) |
 | JavaScript Unit Tests | `unittests_frontend.yml` | push, PR, dispatch | JS Vitest (`npm run test:unit`) |
-| Test ALTTP & Regression | `test-templates.yml` | push (main), PR | Spoiler test + frontend regression |
+| Test ALTTP & Regression | `test-templates.yml` | push (main), PR, dispatch | Spoiler test + frontend regression (both boots) + substrate tests (`--batch=fast`) |
+| Substrate tests — bot walks | `test-substrates-bot-walks.yml` | dispatch | The `bot-walks` substrate batch (real-time omsi bot walks), manual only |
 | Test All Templates (Sequential) | `test-all-sequential.yml` | dispatch | Comprehensive: spoilers, multiclient, multiworld (original/worldgen/apworld) |
 | Test UT Fuzzer | `test-ut-fuzz.yml` | dispatch | UT fuzz across all modes, 10-way parallel split |
 | Test UT Fuzzer (Single Game) | `test-ut-fuzz-single-game.yml` | dispatch | Single-game UT fuzz |
@@ -52,7 +53,7 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 
 | Script | Workflow(s) | Notes |
 |--------|-------------|-------|
-| `run-tests.js` | `test-templates.yml`, `test-all-sequential.yml` | Called via `npm test` |
+| `run-tests.js` | `test-templates.yml`, `test-substrates-bot-walks.yml`, `test-all-sequential.yml` | Called via `npm test` |
 | `analyze-test-results.js` | **No workflow** | Post-hoc analysis of Playwright results |
 | `test-health-check.js` | **No workflow** | Environment sanity check |
 | `test-seed-range.js` | **No workflow** | Seed range generation test |
@@ -67,6 +68,8 @@ Maps every test script and validation tool to the GitHub Actions workflow(s) tha
 | Vitest benchmarks | `npm run bench` | **No workflow** | Performance benchmarks |
 | Playwright (spoilers) | `npm test -- --mode=test-spoilers` | `test-templates.yml` + others | Invoked indirectly by Python test scripts |
 | Playwright (regression) | `npm test -- --mode=test-regression` | `test-templates.yml` | push/PR trigger |
+| Playwright (substrates, fast batch) | `npm test -- --mode=test-substrates --batch=fast` | `test-templates.yml` | push/PR trigger |
+| Playwright (substrates, bot walks) | `npm test -- --mode=test-substrates --batch=bot-walks` | `test-substrates-bot-walks.yml` | manual only |
 | Playwright (multiclient) | `npm run test:multiclient` | `test-all-sequential.yml` | dispatch only |
 | Health check | `npm run test:health` | **No workflow** | |
 | Full suite | `npm run test:full-suite` | **No workflow** | Compound: health + tests + analysis |
