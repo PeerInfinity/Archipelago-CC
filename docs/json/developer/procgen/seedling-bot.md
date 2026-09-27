@@ -14369,6 +14369,64 @@ first divergence (tick 133, y 90.3624123755513), and it still reaches L19
 where the game stays in L18. So the gap moves more than the spinners, and the
 model's stepping over a long gap is unverified.
 
+### R9 slice P4E: HOLD-AFTER-LATCH — the candidate build `seedling_bot_ap_p4e` holds the room at the latch, and every boundary agrees by law
+
+⚖ 72 (a′), the user's (2026-09-27). One AS3 batch on the fork's `ap-m1`
+(`a0ec864` → `b2cb331` C1 → `e1e6b24` C4), built on p4d's own recompiler
+(SWFRecomp-CC `bdf734c46`) after a CONTROL build of the unchanged source
+through the same toolchain. The build is pinned BESIDE p4d as the
+`candidate` (`builds.json` `role`); every default still names p4d.
+
+- **C1 `hold`.** A tape_version 12 `hold: true` sets `Bot.holding` at the seam
+  latch, and `Main.update` skips `super.update()` AND `Music.update()` while it
+  is set — including the finish frame's own world step, the one no page seam
+  could reach. `botStart`, `botReset` and `botLoadLevels` release it;
+  `botLoadTape` does not, so the director loads the next window while the room
+  is held. `botStatus.held` reports it. The fork accepts versions 1–8 and 12;
+  9–11 add only model-only fields and never reach it. On the host the field is
+  GAME-VISIBLE (`tapeFormat.GAME_VISIBLE_KEEPS`): `gameVisibleTape` carries a
+  holding tape as a real v12 projection and drops `hold: false`, so no
+  committed tape's projected bytes moved. `watchWasm.shipToWasm` stamps it
+  (`holdingWindowTape`) on every window WITH a successor, only when the build's
+  manifest entry declares `hold`; `?wasm=<build>` picks the build a ship drives.
+- **C2 `clock` — NOT BUILT, measured unneeded.** `botStatus.arm.armed_at` is
+  `Game.time` on the frame `armed` flips, on the skip path and the swap path,
+  so the producer already reads the clock at arm.
+- **C3 `seam` — NOT BUILT; ⚖ 66 (i) DISCHARGED by C1.** With the mixer held
+  there is no drain between the latch and the next `botStart`: the successor's
+  latch reads the first latch's `static.Music.currentSet/Index`.
+- **C4 `tag`.** `bosskey`, `totempart` and `seed` take an OPTIONAL `@tag`
+  (`Game.optionalTag`: absent is -1, never `int("") = 0`); collection writes
+  `Game.setPersistence(tag, false)`. The atlas arm allocates a tag for such a
+  location on a `tag` build and delivers the vanilla set with it written
+  (`flash.md` § *The atlas arm*).
+
+Measured, headless logic-only:
+
+| | control (unchanged AS3) | `seedling_bot_ap_p4e` |
+|---|---|---|
+| SWF (injected) | 9,743,894 B | 9,744,609 B |
+| classes / methods / bodies | 724 / 3917 / 3807 | 724 / 3918 / 3808 (+`Game.optionalTag`) |
+| wasm | 34,039,970 B | 34,065,181 B (+25,211) |
+| `--tier=campaign` | 819 PASS / 0 FAIL / 69 SKIP | 819 / 0 / 69 — line-identical but 23 free-running `game_time` readouts |
+
+`probe-seedling-hold.mjs` (window `r9-solve-14`, then a 0-tick successor at
+the latch's spawn — the director's skip path): held, `game_time` stays **8952**
+at the finish, 3 s later and after the next `botLoadTape` — the latch's
+`save.time`; the successor's latch is **8952** too (Δ0), `armed_at` 8952,
+`rng.gameplay` and the bodies unmoved, music `Enemy Hop/0` both. The free
+control runs **+140** frames across the same boundary. On p4d the loader
+refuses tape_version 12 by name.
+
+`check-seedling-wasm-ship.mjs` with `SEEDLING_PAGE=seedling_bot_ap_p4e`: the
+CHAIN arm (3 windows) and the CAMPAIGN arm (18 windows) hold every window with
+a successor (2 + 17) and not the last; all 21 windows and both concatenations
+(1,792 and 4,413 observations) agree per tick; the tick-0 clock law
+`declared + 21` holds at all 19 boundaries (unchanged: the page WRITES the
+tick-0 clock, and the hold only stops the live clock before that write);
+CLAIM 6 unmoved. The 19 boundaries were green by geometry on p4d (§ above);
+on the candidate they are green because nothing moves.
+
 ### R9 slice 13: THE WATCH-PAGE FIVE — the ladder becomes a link, sand traps become visible, and seven typed numbers stop lying
 
 ⚖ Ruling 29's watch-page items, all five, tape-inert. `a535bdb13` … `fa547ddaf`.
