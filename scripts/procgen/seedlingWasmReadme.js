@@ -81,6 +81,10 @@ export const BUILD_ROLES = {
     demo: 'here to be PLAYED, by a person, at a URL — no instrument drives it',
     default: 'what the app and the instruments load — `WASM_PAGE` and the '
         + '`SEEDLING_PAGE` defaults name it',
+    // ⛓ R9 slice P4E (planner ruling 2026-09-27, the M1→P2 precedent): a new
+    // build pinned BESIDE the default until the user rules the default move.
+    candidate: 'the NEXT default, pinned beside it — every capability the default has and '
+        + 'more; driven by explicit selection (`SEEDLING_PAGE=<name>`, `?wasm=<name>`)',
 };
 const ROLE_ORDER = Object.keys(BUILD_ROLES);
 
@@ -252,6 +256,23 @@ export function roleProblems(manifest, { defaultBuild }) {
             + 'the table publishes a claim nothing checks');
     };
     one('default', defaultBuild, '`WASM_PAGE`');
+    /**
+     * ⛓ P4E — `candidate` is TRUE iff the build is not the default and
+     * declares a STRICT SUPERSET of the default's capabilities: a build that
+     * could not replace the default without losing something is not its
+     * candidate, whatever the label says.
+     */
+    const defaultCaps = manifest.builds.find((b) => b.name === defaultBuild)?.capabilities ?? null;
+    for (const b of manifest.builds.filter((x) => x.role === 'candidate')) {
+        const caps = b.capabilities ?? [];
+        if (b.name === defaultBuild) {
+            out.push(`${b.name}: \`role: candidate\` but \`WASM_PAGE\` already names it — it IS the default`);
+        } else if (defaultCaps && (!defaultCaps.every((c) => caps.includes(c))
+            || caps.length <= defaultCaps.length)) {
+            out.push(`${b.name}: \`role: candidate\` declares [${caps.join(', ')}], which is not a strict `
+                + `superset of the default's [${defaultCaps.join(', ')}]`);
+        }
+    }
     for (const b of manifest.builds) {
         if ((b.role === 'demo') !== (b.demo === true)) {
             out.push(`${b.name}: \`role: ${b.role}\` and \`demo: ${b.demo === true}\` disagree — `
