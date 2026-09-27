@@ -319,8 +319,6 @@ describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the
      * is a fact about (d′)'s JS half twice over: there is nothing to bump, and
      * nothing that reads it (`clock.now()` reaches only the spinner hammer, and
      * the campaign's rooms have none).
-     * ⛓ R9 SLICE L16: the campaign reaches L18's spinners now, and a resumed
-     * window ADOPTS its own boot's clock — see the row below this one.
      */
     it('the sweep names what it measures AND what it cannot', () => {
         expect(continuable.map((c) => c.id)).toEqual(['r8-d2']);
@@ -338,28 +336,14 @@ describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the
         }
     });
 
-    /**
-     * ⛓⛓ R9 SLICE L16 OVERTURNED THIS ROW, AND THE NEW ONE IS STRONGER. It read
-     * *"a chain booting the TRUE START reads `null` at every boundary"*, which
-     * was true while nothing on the chain read the clock — and L18's spinners
-     * (the campaign's nineteenth room) do. A resumed window now ADOPTS the
-     * clock its own fresh boot counts when the run's is unknown
-     * (`levelRun.adoptWindowClock`), so only the FIRST boundary is still
-     * `null` (sampled before `r8-solve-2` resumes), and from the second on the
-     * adopted clock lands on `declared + BOOT_COST_FRAMES` at EVERY boundary —
-     * the same law the fully-declared chain above obeys, over sixteen
-     * game-measured declarations it was never handed.
-     */
-    it('⛓ a chain booting the TRUE START: `null` at its first boundary, then declared + 21 at every one', () => {
+    it('⛔ a chain booting the TRUE START reads `null` at every boundary, by name', () => {
+        // ⛓ R9 slice 7: `r9-campaign` replaces the retired `act2-the-sword`
+        //   as the chain that boots the TRUE START — fifteen segments, so
+        //   this now sweeps fourteen boundaries rather than ten.
         const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
         const rows = boundariesOf(chain);
         expect(rows.length).toBe(chain.segments.length - 1);
-        expect(rows[0].live).toBe(null);
-        expect(rows.length).toBeGreaterThan(2);
-        for (const r of rows.slice(1)) {
-            expect(`${r.boundary}: ${r.live}`)
-                .toBe(`${r.boundary}: ${r.declared + BOOT_COST_FRAMES}`);
-        }
+        expect(rows.map((r) => r.live)).toEqual(rows.map(() => null));
     });
 
     it.each(continuable.map((c) => ({ id: c.id, chain: c })))(
@@ -461,74 +445,5 @@ describe('trueStartWindowDeadFrames — k is read off the game clock, never type
         expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: PAGE_BOOT_TIME, deadFrames: SHARE }))
             .toMatchObject({ ok: false, k: 0 });
         expect(trueStartWindowDeadFrames({ share: SHARE, armedAt: null, deadFrames: 39 }).ok).toBe(false);
-    });
-});
-
-/**
- * ⛓⛓ R9 SLICE L16 — A RESUMED WINDOW ADOPTS THE CLOCK ITS OWN FRESH BOOT COUNTS.
- *
- * The campaign chain starts at the true start, whose boot declares no
- * `save.time`, so a continuation's `Game.time` stayed `null` into L18 — the
- * first campaign room whose hazard reads it — and every continuation consumer
- * refused a spinner contact the window prices exactly on its own. The pair here
- * is the chain's own first boundary: `r8-solve-1` (no clock) → `r8-solve-2`
- * (`save.time` 5002).
- */
-describe('R9 L16: a resumed window adopts an UNKNOWN clock, and only an unknown one', () => {
-    const levelSource = atlasLevelSource();
-
-    it('⛓ the continuation reads, at the window\'s tick 0, what the window\'s fresh boot reads', () => {
-        let live = null;
-        const first = createTapeStepper(loadTape('r8-solve-1'),
-            { levelSource, onTick: (a, b, c, r) => { live = r; } });
-        for (let r = first.next(); !r.done; r = first.next()) { /* step */ }
-        expect(live.gameTime).toBe(null);
-        let resumedAt0 = null;
-        const second = createTapeStepper(loadTape('r8-solve-2'), {
-            run: live,
-            onTick: (tick, s, h, r) => { if (tick === 0) resumedAt0 = r.gameTime; },
-        });
-        second.next();
-        let freshAt0 = null;
-        const fresh = createTapeStepper(loadTape('r8-solve-2'), {
-            levelSource, onTick: (tick, s, h, r) => { if (tick === 0) freshAt0 = r.gameTime; },
-        });
-        fresh.next();
-        expect(freshAt0).not.toBe(null);
-        expect(resumedAt0).toBe(freshAt0);
-        expect(live.gameTimeRefusal).toBe(null);
-    });
-
-    it('⛔ a clock that already counts is NOT overwritten — the admission compares it, not this', () => {
-        const fresh = createTapeStepper(loadTape('r8-solve-2'), { levelSource });
-        let run = null;
-        const st = createTapeStepper(loadTape('r8-solve-2'),
-            { levelSource, onTick: (a, b, c, r) => { run = r; } });
-        st.next();
-        const before = run.gameTime;
-        expect(before).not.toBe(null);
-        expect(run.adoptWindowClock(loadTape('r8-solve-3')))
-            .toEqual({ adopted: false, why: 'the run already counts `Game.time`' });
-        expect(run.gameTime).toBe(before);
-        expect(fresh).toBeTruthy();
-    });
-
-    it('⛔ a window whose boot the clock cannot count leaves it unknown, with the boot\'s own reason', () => {
-        let live = null;
-        const first = createTapeStepper(loadTape('r8-solve-1'),
-            { levelSource, onTick: (a, b, c, r) => { live = r; } });
-        first.next();
-        expect(live.adoptWindowClock(loadTape('r8-solve-1')))
-            .toEqual({ adopted: false, why: 'the boot block declares no `save.time`' });
-        expect(live.gameTime).toBe(null);
-    });
-
-    it('⛔ gameClock.adopt refuses a second writer', () => {
-        const c = createGameClock({ bootTime: 100 });
-        expect(() => c.adopt(200)).toThrow(/already counts \(100\)/);
-        const u = createGameClock({ bootTime: null });
-        u.adopt(200);
-        expect(u.now()).toBe(200);
-        expect(u.adopted).toBe(200);
     });
 });

@@ -632,19 +632,8 @@ for (let i = 0; i < SEGMENTS.length; i += 1) {
      * row at all and `solveSegment` is the whole answer.
      */
     const committedPath = join(TAPES, `${seg.name}.json`);
-    /**
-     * ⛓ R9 SLICE L16 — AND A SEGMENT WITH NO TAPE YET GOES THROUGH THE LOOP TOO.
-     * "Does this room owe a timed clear" was read off the COMMITTED tape, so a
-     * GROWN segment — which has none — was always solved single-pass, and a
-     * kill-lock room could never be grown: `r9-solve-18` (L18, a spinner
-     * kill lock) died on `undeclaredKillLock` where the survey, which drives
-     * the two-pass loop, had solved it. For a new room that question is exactly
-     * what the loop's discovery pass answers; a room owing nothing solves in
-     * its first pass. Committed segments keep the committed tape's answer, so
-     * `--check` is untouched.
-     */
-    const needsTwoPass = !existsSync(committedPath)
-        || (parseTape(JSON.parse(readFileSync(committedPath, 'utf8'))).persistence ?? [])
+    const needsTwoPass = existsSync(committedPath)
+        && (parseTape(JSON.parse(readFileSync(committedPath, 'utf8'))).persistence ?? [])
             .some((c) => c.at !== undefined);
     let out;
     let solvedPersistence = state.persistence;

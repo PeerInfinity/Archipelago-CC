@@ -513,20 +513,6 @@ export function createTapeStepper(tape, opts = {}) {
     // IS a staging block plus inputs, so it is passed straight through.
     const run = resumeRun
         ?? (levelSource ? createRunForStaging(t, levelSource, { scratchPersistence }) : null);
-    /**
-     * ⛓⛓ R9 SLICE L16 — THE ONE STATE A RESUME DOES ADOPT: a clock the run
-     * never knew. A chain from the true start boots with no `save.time`, so
-     * the resumed run's `Game.time` stayed `null` into L18 — the first campaign
-     * room whose hazard reads it (the spinner's hammer) — and every continuation
-     * consumer (the page, the ship gate's model shares, the census) refused a
-     * contact the window prices exactly on its own. `adoptWindowClock` fills
-     * ONLY an unknown clock, with the value this window's own fresh boot counts;
-     * a known clock is untouched and stays the admission's to compare. Inert in
-     * every room that reads no clock, which before L18 is all of them.
-     */
-    if (resumeRun && typeof resumeRun.adoptWindowClock === 'function') {
-        resumeRun.adoptWindowClock(t);
-    }
     if (!levelSource && !resumeRun && t.grants.length > 0) {
         throw new Error(
             'runTape: the tape declares grants but no opts.levelSource was given. The v1 '
