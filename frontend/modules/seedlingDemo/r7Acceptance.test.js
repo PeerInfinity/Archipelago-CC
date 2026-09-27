@@ -762,7 +762,10 @@ describe('R7 slice 1 — tape v8, both-sided', () => {
         // `seam.time`, so it LOOKS like a seam channel. It is not: it is a
         // SECOND READING of channels that already exist, taken one build and
         // one fade later. A new instant, not a new field.
-        expect(TAPE_VERSION).toBe(11);
+        // ⛓ R9 slice P4E: v12 added `hold` — GAME-VISIBLE, the first above 8,
+        // and still not a seam channel: it says when the room stops, not what
+        // the room is. The seam block did not move.
+        expect(TAPE_VERSION).toBe(12);
         expect(parseTape({ ...base, seam: { hits_max: 4 } }).seam.hits_max).toBe(4);
     });
 
