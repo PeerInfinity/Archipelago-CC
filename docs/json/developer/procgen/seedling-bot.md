@@ -932,10 +932,14 @@ out* — the builds ship in `PeerInfinity/seedling-wasm` at
 `frontend/modules/flashPanel/wasm/`, and CI does check them out
 (`.github/workflows/seedling-wasm.yml`).
 
-⛓ **The build it runs against is the manifest's `default` — `seedling_bot_ap_p4d`
-since EDITOR INTEGRATION slice P2, and the ONLY bot build since the p4b/p4c
-controls retired (SEEDLING HEADLESS WEBGPU slice R2, 2026-09-12, ⚖ user: *"I
-think it just needs to behave correctly with the new build"*).** Its first move,
+⛓ **The build it runs against is the manifest's `default` — `seedling_bot_ap_p4e`
+since R9 slice DEF (⚖ user, 2026-09-27; licence: the CI full tier on p4e, run
+36350758799, 154 tapes 3745/0/46), `seedling_bot_ap_p4d` before it from EDITOR
+INTEGRATION slice P2.** p4d was the only bot build from the p4b/p4c
+retirement (SEEDLING HEADLESS WEBGPU slice R2, 2026-09-12, ⚖ user: *"I think it
+just needs to behave correctly with the new build"*) until P4E pinned p4e
+beside it; since DEF p4d stays pinned as the `hold`/`tag` CONTROL
+(`SEEDLING_PAGE=seedling_bot_ap_p4d` drives it). Its first move,
 onto `seedling_bot_ap_p4b`, was itself a measurement. It defaulted to
 `seedling_bot_ap` — the R8 bot build
 every expectation under `fixtures/expectations/` was recorded from — until

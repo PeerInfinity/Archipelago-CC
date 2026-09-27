@@ -468,6 +468,12 @@ const SELF_TEST_README = [
 const withRole = (role, extra = {}) => ({
     builds: [{ ...PROBE_MANIFEST.builds[0], role, demo: role === 'demo', ...extra }],
 });
+/** A default `_x` declaring [arm, tag] beside a `control` `_y` declaring `caps`. */
+const withControl = (caps) => ({ builds: [
+    { ...PROBE_MANIFEST.builds[0], role: 'default', demo: false, capabilities: ['arm', 'tag'] },
+    { ...PROBE_MANIFEST.builds[0], name: 'seedling_probe_y', role: 'control', demo: false,
+        capabilities: caps },
+] });
 const SELF_TEST_ROLE = [
     { why: '`role: default` on the build `WASM_PAGE` NAMES — clear', m: withRole('default'),
         read: { defaultBuild: 'seedling_probe_x' }, wantProblems: 0 },
@@ -480,6 +486,14 @@ const SELF_TEST_ROLE = [
     { why: 'a retired control role (`apitem-control`) is outside the vocabulary now',
         m: withRole('apitem-control'),
         read: { defaultBuild: null }, wantProblems: 0, wantFieldProblems: 1 },
+    // ⛓ DEF — the generic `control` role: TRUE iff a strict capability subset
+    // of the default's.
+    { why: '`role: control` on a strict capability SUBSET of the default — clear',
+        m: withControl(['arm']), read: { defaultBuild: 'seedling_probe_x' }, wantProblems: 0 },
+    { why: '`role: control` declaring EVERYTHING the default does — it controls nothing',
+        m: withControl(['arm', 'tag']), read: { defaultBuild: 'seedling_probe_x' }, wantProblems: 1 },
+    { why: '`role: control` declaring a capability the default LACKS — not a subset',
+        m: withControl(['arm', 'hold']), read: { defaultBuild: 'seedling_probe_x' }, wantProblems: 1 },
 ];
 const SELF_TEST_FIELDS = [
     { why: 'all three fields present and shaped — clear', m: withRole('demo'), want: 0 },
@@ -1120,6 +1134,15 @@ const NAMED_CERTIFIERS = [
         const found = capabilityControlProblems(ctrl, { code, manifest, labBuild: labBuildName,
             onDisk: (n) => existsSync(join(SUB, n, 'game.html')) });
         for (const p of found) fail(p);
+        /** ⛓ …and the manifest SAYS so: the build a declared control drives
+         *  carries `role: control`, whose own truth row (i)'s `roleProblems`
+         *  checks — the file and the manifest are independent sources. */
+        const [named] = controlNamesIn(code);
+        const role = manifest.builds.find((b) => b.name === named)?.role;
+        if (found.length === 0 && role !== 'control') {
+            fail(`${ctrl.file}: the control ${named} carries \`role: ${role}\` in the manifest — `
+                + 'a build a declared control drives is `role: control`');
+        }
         if (found.length === 0) {
             const [name] = controlNamesIn(code);
             const caps = manifest.builds.find((b) => b.name === name)?.capabilities ?? [];

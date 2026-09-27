@@ -45,6 +45,12 @@
  * regression in such a branch is undetectable from here on — by design, since
  * no shipped build reaches one.
  *
+ * ⛓ A CONTROL ROLE AGAIN, ONE BUILD LATER (R9 slice DEF, 2026-09-27). When p4e
+ * became the default, p4d stayed pinned as the negative arm for `hold` and
+ * `tag` (⚖ user — the move is a DEFAULT move, not a retirement). One generic
+ * `control` role, TRUE iff a strict capability subset of the default's, rather
+ * than one role per capability as before.
+ *
  * ⛔ THE ROLE ORDER IS THE TABLE ORDER, and it is declared rather than
  * alphabetical: a visitor wants the playable original first and the build the
  * app actually loads second.
@@ -85,6 +91,12 @@ export const BUILD_ROLES = {
     // build pinned BESIDE the default until the user rules the default move.
     candidate: 'the NEXT default, pinned beside it — every capability the default has and '
         + 'more; driven by explicit selection (`SEEDLING_PAGE=<name>`, `?wasm=<name>`)',
+    // ⛓ R9 slice DEF (⚖ user 2026-09-27, the p4d → p4e default move — "a default
+    // move is not a retirement"): the retired build stays as the NEGATIVE arm for
+    // the capabilities its successor added.
+    control: 'the NEGATIVE arm, pinned beside the default — it LACKS capabilities the default '
+        + 'declares, so a gate can show what they remove; driven by name only where '
+        + '`check-seedling-wasm-pins.mjs` row (j) declares it, otherwise by override',
 };
 const ROLE_ORDER = Object.keys(BUILD_ROLES);
 
@@ -271,6 +283,22 @@ export function roleProblems(manifest, { defaultBuild }) {
             || caps.length <= defaultCaps.length)) {
             out.push(`${b.name}: \`role: candidate\` declares [${caps.join(', ')}], which is not a strict `
                 + `superset of the default's [${defaultCaps.join(', ')}]`);
+        }
+    }
+    /**
+     * ⛓ DEF — `control` is TRUE iff the build is not the default and declares a
+     * STRICT SUBSET of the default's capabilities: it must lack something the
+     * default has (or it controls nothing) and carry nothing the default lacks
+     * (or its absent arm differs from the default in two ways at once).
+     */
+    for (const b of manifest.builds.filter((x) => x.role === 'control')) {
+        const caps = b.capabilities ?? [];
+        if (b.name === defaultBuild) {
+            out.push(`${b.name}: \`role: control\` but \`WASM_PAGE\` names it — it IS the default`);
+        } else if (defaultCaps && (!caps.every((c) => defaultCaps.includes(c))
+            || caps.length >= defaultCaps.length)) {
+            out.push(`${b.name}: \`role: control\` declares [${caps.join(', ')}], which is not a strict `
+                + `subset of the default's [${defaultCaps.join(', ')}]`);
         }
     }
     for (const b of manifest.builds) {
