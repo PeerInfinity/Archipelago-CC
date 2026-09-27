@@ -2493,6 +2493,33 @@ registerTest({
  * ══════════════════════════════════════════════════════════════════════ */
 
 /** ⛓ The Document tab's door for one key, through the real button. */
+/**
+ * ⛓⛓ **P1b′ — WAIT FOR THIS ROW'S OWN HAND-OFF** (trap 1478). The debugger's
+ * status line keeps the previous row's `[working copy …]` prefix until the new
+ * adoption lands (the door's `open()` awaits an import before it publishes, and
+ * the adoption awaits `documentStateManager`), so a wait on the prefix alone
+ * matched the ROW BEFORE's adoption: measured, the L4 Send row then pressed Load
+ * on rows 24/25's JtA document and its own omsi adoption landed after, dropping
+ * the plan (1 red in 136, P1a and again at P1b′'s start). The panel exposes
+ * itself as `__costDebugger`; the working copy's `jsonData` is the very object
+ * the hub handed over. → the status element, or null.
+ */
+async function debuggerAdoptedHandOff(testController, handed) {
+    return testController.pollForValue(
+        () => {
+            const root = [...document.querySelectorAll('.cost-debugger-panel')]
+                .find((el) => el.__costDebugger?._workingCopy?.jsonData === handed);
+            const el = root?.querySelector('.cd-status');
+            // ⛔ `[working copy` — the BRACKETED prefix, which only the finished
+            //   adoption prints; the progress line names the door but not the counts.
+            return el && el.textContent.includes('[working copy') ? el : null;
+        },
+        'the cost debugger, planning THIS row\'s working copy',
+        8000,
+        50,
+    );
+}
+
 async function pressDocumentKeyEditor(testController, panel, key) {
     selectTab(panel, 'document');
     const btn = await testController.pollForValue(
@@ -2669,23 +2696,11 @@ export async function apworldLoopCostsDoorHandsTheWorkingCopyToTheDebugger(testC
             String(!!summary && summary.textContent.startsWith(
                 `${Object.keys(panel.rulesDoc.loop_costs[panel.playerId].regions ?? {}).length} of ${regionCount} region`)));
 
+        // ⛓ P1b′ (trap 1478) — the document THIS row hands over, so the wait below is for its
+        //   own adoption and not for a previous row's, which prints the same status prefix.
+        const handed = panel.rulesDoc;
         await pressDocumentKeyEditor(testController, panel, 'loop_costs');
-
-        const status = await testController.pollForValue(
-            () => {
-                const el = document.querySelector('.cost-debugger-panel .cd-status');
-                // ⛔ `[working copy` — the BRACKETED prefix, which only the
-                //   finished adoption prints. A poll for the bare words was
-                //   satisfied by the panel's own progress line ("Adopting the
-                //   working copy · … for player 1…"), which names the door but
-                //   not yet the counts: measured, the first shape of this row
-                //   read that line and then failed on the region count.
-                return el && el.textContent.includes('[working copy') ? el : null;
-            },
-            'the cost debugger, planning the working copy',
-            8000,
-            50,
-        );
+        const status = await debuggerAdoptedHandOff(testController, handed);
         testController.reportCondition('the debugger adopted the working copy', !!status);
         if (!status) return testController.getOverallResult();
 
@@ -2733,19 +2748,11 @@ export async function apworldLoopCostsPanelSaysWhichNumbersTheBlockCarries(testC
         if (!panel) return testController.getOverallResult();
         await testController.pollForCondition(
             () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        // ⛓ P1b′ (trap 1478) — the document THIS row hands over, so the wait below is for its
+        //   own adoption and not for a previous row's, which prints the same status prefix.
+        const handed = panel.rulesDoc;
         await pressDocumentKeyEditor(testController, panel, 'loop_costs');
-
-        // ⛔ `[working copy` — the bracketed prefix only the FINISHED adoption
-        //    prints; the progress line names the door but not the counts.
-        const status = await testController.pollForValue(
-            () => {
-                const el = document.querySelector('.cost-debugger-panel .cd-status');
-                return el && el.textContent.includes('[working copy') ? el : null;
-            },
-            'the cost debugger, planning the working copy',
-            8000,
-            50,
-        );
+        const status = await debuggerAdoptedHandOff(testController, handed);
         testController.reportCondition('the debugger adopted the working copy', !!status);
         // ⛔ `reportCondition` returns undefined — the guard reads the VALUE.
         if (!status) return testController.getOverallResult();
@@ -2908,17 +2915,11 @@ export async function apworldLoopCostsSendWritesThePlanAsOneOp(testController) {
             'Enable rebuilt an EMPTY block — the premise, MADE rather than borrowed',
             '0', String(Object.keys(panel.rulesDoc.loop_costs?.[panel.playerId]?.regions ?? {}).length));
 
+        // ⛓ P1b′ (trap 1478) — the document THIS row hands over, so the wait below is for its
+        //   own adoption and not for a previous row's, which prints the same status prefix.
+        const handed = panel.rulesDoc;
         await pressDocumentKeyEditor(testController, panel, 'loop_costs');
-
-        const status = await testController.pollForValue(
-            () => {
-                const el = document.querySelector('.cost-debugger-panel .cd-status');
-                return el && el.textContent.includes('[working copy') ? el : null;
-            },
-            'the cost debugger, planning the working copy',
-            8000,
-            50,
-        );
+        const status = await debuggerAdoptedHandOff(testController, handed);
         testController.reportCondition('the debugger adopted the working copy', !!status);
         if (!status) return testController.getOverallResult();
 
@@ -3333,13 +3334,11 @@ export async function apworldSendIntoAReplacedDocumentIsRefused(testController) 
             () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
         const tokenAtHandOff = panel._documentToken;
 
+        // ⛓ P1b′ (trap 1478) — the document THIS row hands over, so the wait below is for its
+        //   own adoption and not for a previous row's, which prints the same status prefix.
+        const handed = panel.rulesDoc;
         await pressDocumentKeyEditor(testController, panel, 'loop_costs');
-        const status = await testController.pollForValue(
-            () => {
-                const el = document.querySelector('.cost-debugger-panel .cd-status');
-                return el && el.textContent.includes('[working copy') ? el : null;
-            },
-            'the cost debugger, planning the working copy', 8000, 50);
+        const status = await debuggerAdoptedHandOff(testController, handed);
         testController.reportCondition('the debugger adopted the working copy', !!status);
         if (!status) return testController.getOverallResult();
 

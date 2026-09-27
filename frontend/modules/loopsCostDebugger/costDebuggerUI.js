@@ -107,6 +107,15 @@ export function sendCostsRefusal({ workingCopy = null, planner = null } = {}) {
 /**
  * CostDebuggerUI - GoldenLayout panel component
  */
+/**
+ * ⛓ P1b′ — how the adoption log names a hand-off: its number, the document's
+ * game and the slot (`hand-off #3 ("JtA Schedule Test", player 1)`).
+ */
+function handOffName(seq, jsonData, playerId) {
+  const game = jsonData?.game_name ?? jsonData?.world?.[playerId]?.game ?? 'a document';
+  return `hand-off #${seq} (${JSON.stringify(String(game))}, player ${playerId})`;
+}
+
 export class CostDebuggerUI {
   constructor(container, componentState) {
     this.container = container;
@@ -137,8 +146,22 @@ export class CostDebuggerUI {
      * the object instead of assigning into it).
      */
     this._workingCopy = null;
+    /**
+     * ⛓⛓ **P1b′ — THE LATEST HAND-OFF, BY NUMBER** (trap 1478). Every
+     * `_adoptWorkingCopy` call takes the next number, and so does "Use applied
+     * state"; an adoption whose number is no longer the latest when its
+     * translation resolves is DROPPED rather than landed. `_latestHandOff` is
+     * what the drop names.
+     */
+    this._adoptSeq = 0;
+    this._latestHandOff = null;
 
     this.rootElement = this._createRootElement();
+    // ⛓ P1b′ — the in-app rows wait on THEIR OWN hand-off's adoption (the working
+    //   copy's `jsonData` is the document they handed over), not on status text a
+    //   previous row's adoption also prints. The hub's panel exposes itself the
+    //   same way (`__panel`).
+    this.rootElement.__costDebugger = this;
     this.container.element.appendChild(this.rootElement);
 
     this._subscribeToEvents();
@@ -306,6 +329,16 @@ export class CostDebuggerUI {
    * ⛔ AND IT DOES NOT PLAN. Adoption re-points the planner and drops the old
    * plan; Load is the person's gesture, and the log it would use is a separate
    * refusal this panel has to be able to state (`documentSphereLog`).
+   *
+   * ⛓⛓⛓ **P1b′ — THE LATER HAND-OFF WINS** (trap 1478). The translation takes
+   * 4–306 ms, so two hand-offs close together can RESOLVE out of order; until
+   * P1b′ the earlier, slower one landed last and replaced the later one — the
+   * panel planned a document that was not the most recent hand-off, and a Send
+   * from it went to the hub under the wrong document. Each call takes a number
+   * before its `await`; after it, a call whose number is no longer the latest
+   * (another hand-off, or "Use applied state", came in while it was reading)
+   * drops its result — the planner is not re-pointed, the working copy and the
+   * status are left to the later one — and says so in the log, naming both.
    */
   async _adoptWorkingCopy(jsonData, source, player, onSave = null) {
     const planner = getCostPlanner();
@@ -315,14 +348,22 @@ export class CostDebuggerUI {
     }
     const playerId = player ? String(player) : documentPlayerId(jsonData);
     const label = source ? `working copy · ${source}` : 'working copy';
+    const seq = ++this._adoptSeq;
+    const handOff = handOffName(seq, jsonData, playerId);
+    this._latestHandOff = handOff;
     this._setStatus(`Adopting the ${label} for player ${playerId}…`);
     try {
       const sm = await documentStateManager(jsonData, playerId);
+      if (seq !== this._adoptSeq) {
+        log('info', `Dropped ${handOff}: ${this._latestHandOff ?? 'a return to applied state'} `
+          + 'arrived while it was being read, and the later one is what this panel plans.');
+        return;
+      }
       planner.useStateManager(sm, { playerId });
       // ⛓ L4 — REBUILT, never merged: a hand-off that carries no return path
       //   must not inherit the previous one (`onSave` defaults to null here for
       //   exactly that reason).
-      this._workingCopy = { jsonData, source, player: playerId, stats: sm.stats, onSave };
+      this._workingCopy = { jsonData, source, player: playerId, stats: sm.stats, onSave, seq };
       this._isStale = false;
       this.verificationResults = [];
       this.selectedStepIndex = -1;
@@ -334,6 +375,11 @@ export class CostDebuggerUI {
       log('info', `Adopted a working copy: ${sm.stats.regions} regions, `
         + `${sm.stats.locations} locations, ${sm.stats.ms} ms`);
     } catch (e) {
+      if (seq !== this._adoptSeq) {
+        log('info', `Dropped ${handOff}'s failure (${e.message}): `
+          + `${this._latestHandOff ?? 'a return to applied state'} arrived while it was being read.`);
+        return;
+      }
       log('error', 'working-copy adoption failed', e);
       this._setStatus(`Could not read that working copy: ${e.message}`);
     }
@@ -348,6 +394,9 @@ export class CostDebuggerUI {
   _useAppliedState() {
     const planner = getCostPlanner();
     if (!planner) return;
+    // ⛓ P1b′ — a gesture, so it outranks a hand-off still being read.
+    this._adoptSeq += 1;
+    this._latestHandOff = null;
     planner.useStateManager(stateManagerProxySingleton, { playerId: null });
     this._workingCopy = null;
     this._isStale = false;
