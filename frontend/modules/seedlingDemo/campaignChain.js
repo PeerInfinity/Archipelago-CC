@@ -149,6 +149,12 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
             + 'onto the button, the lock fades while the block presses, and the walk '
             + 'crosses — one block-route search, five orders, no hit',
     }),
+    Object.freeze({
+        name: 'r9-solve-16', level: 16, to: 18,
+        why: 'L16 — grown by `rerecord-seedling-campaign.mjs --grow` at route step '
+            + '18: stairsup@352,80 → L18. The survey\'s own solve is 625 tick(s), 5 '
+            + 'decision(s), 0 re-plan(s), passes [solve]',
+    }),
 ]);
 
 /** The chain's id — the thing `?tapes=` names and a page expands. */

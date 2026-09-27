@@ -725,6 +725,23 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'own slice (⚖ 65 (c)/(d)).',
         }),
         /**
+         * ⛓⛓⛓ R9 SLICE L16 — the eighteenth room, and the FIRST campaign segment
+         * that WALKS a bridged trap room: L16's roster is STEPPED now (D3, the
+         * static sandtraps stand outside every lane), so its seven bobs chase
+         * the walk and the walk meets them. Sealed from the committed tape: 36
+         * landed presses; `bob@48,96` knocked into the water (t=106),
+         * `bob@192,80` and `bob@208,32` into pits (t=182, t=229), `bob@224,96`
+         * killed by a press during the weigh's armed idle span (t=451); three
+         * survive; the player is never hit. L18 holds no `bob`.
+         */
+        Object.freeze({
+            name: 'r9-solve-16', levels: Object.freeze([16]), bobs: 7, ticks: 625,
+            addedBy: 'R9 slice L16 (the rope pull; the L16 crossing)',
+            why: '⛓ THE EXPOSURE IS THE WALK. The leg is L16 → L18 and it crosses the whole '
+                + 'of L16 — the rope, the lanes, the block and the lock — with the room\'s '
+                + 'seven bobs stepped and chasing. The LEVELS are [16]: L18 holds no bob.',
+        }),
+        /**
          * ⛓⛓⛓ R9 SLICE 12c — **THE SEVENTH SLICE RUNNING** (trap 89). The guard
          * named it by name on the first unfiltered run after the tape landed, and
          * it is the SECOND thing this slice learned from a check it did not write.

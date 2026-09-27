@@ -12308,7 +12308,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **17 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L16** arrival, **3787 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **18 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L18** arrival, **4412 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12329,8 +12329,9 @@ its byte-frozen free oracle is compared against.
 | 15 | `r9-solve-13` | L13 → L14 | 36 | — |
 | 16 | `r9-solve-14` | L14 → L15 | 118 | — |
 | 17 | `r9-solve-15` | L15 → L16 | 456 | — |
+| 18 | `r9-solve-16` | L16 → L18 | 625 | — |
 
-**STOP — route step 18, L16.** The chain ends at the last step the survey SOLVES; the first one it refuses is the next work order: *BRIDGE+KILL_ARM — the room's CHASER ROSTER is refused, so the body has no live position: `bait` has no line to move it along and `kill` has no removal to watch. `KILL_ARM_POLICY.Bob` is `modelled` (R9 slice 12), so the press arm is NOT what is missing here — the ROSTER refusal is*.
+**No frontier is committed**, so what is in front of the chain is unstated — run `census-seedling-campaign.mjs --write-frontier`.
 
 <!-- GENERATED:campaign-chain END -->
 
