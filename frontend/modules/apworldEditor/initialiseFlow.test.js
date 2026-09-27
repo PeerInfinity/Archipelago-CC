@@ -14,9 +14,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { INITIALISE_BARE_ONLY, initialiseOpRefusal } from './rulesDocOps.js';
 import {
-    BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, INITIALISE_SIZE_KEYS, autoGridSide, initialiseTargets,
-    planInitialise,
+    BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, INITIALISE_SIZE_KEYS, UNPLACED_WHY, autoGridSide,
+    initialiseGridSide, initialiseTargets, planInitialise,
 } from './slotInitialise.js';
+import { startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { regionSizeFor } from './regionRegenerate.js';
 import {
@@ -38,6 +39,7 @@ for (const rel of REGISTRY_LIBRARIES) {
 const read = (rel) => JSON.parse(readFileSync(join(ROOT, 'frontend', 'presets', rel), 'utf8'));
 const APCALC = read('apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json');
 const ADVENTURE = read('adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json');
+const MM3 = read('mm3/AP_14089154938208861744/AP_14089154938208861744_rules.json');
 const FOUR = read('multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json');
 const P = '1';
 
@@ -155,6 +157,24 @@ describe('the preview', () => {
         expect(plan.returnExits).toBeGreaterThan(0);
         expect(pv.text).toBe(`${plan.placed} regions placed on ${st.side}×${st.side}, ${plan.teleporters} teleporters; `
             + `${plan.returnExits} return exits will be added; 0 unplaceable`);
+    });
+
+    it('⛓ M2 — a stripped Menu is the HUB: the sentence says its exits → the roots (mm3), and nothing when none (apcalc)', () => {
+        const st = initialiseFormDefaults(MM3, P);
+        const pv = initialisePreview(MM3, P, st);
+        const { plan } = pv;
+        const [menu] = startRegionsOf(MM3, P).default;
+        const exits = MM3.regions[P][menu].exits.length;
+        expect(plan.menu).toBe(menu);
+        expect(plan.menuExits).toBe(exits);
+        expect(plan.menuRoots.length).toBe(exits);
+        expect(pv.text.endsWith(`; ${menu}: ${exits} exits → ${exits} roots`)).toBe(true);
+        // ⛓ a side too small for every root: fewer roots than exits, the shortage named.
+        const small = initialisePreview(MM3, P, { ...st, sideAuto: false, side: initialiseGridSide(Object.keys(MM3.regions[P]).length) });
+        expect(small.plan.menuRoots.length).toBeLessThan(exits);
+        expect(small.text).toContain(`${menu}: ${exits} exits → ${small.plan.menuRoots.length} roots`);
+        expect(small.text).toContain(`(${UNPLACED_WHY.NO_FREE_CELL})`);
+        expect(initialisePreview(APCALC, P, initialiseFormDefaults(APCALC, P)).text).not.toContain('→');
     });
 
     it('⛓ return exits OFF says so, and a too-small grid NAMES the unplaceable with their why', () => {

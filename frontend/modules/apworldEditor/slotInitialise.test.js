@@ -219,8 +219,8 @@ describe('the regions the layout cannot place — NAMED, each with a derived why
     /**
      * ⛓ Re-derived by APWORLD SUBSTRATE CHANGE M1 under M2's authority (plan §26.2):
      * the layout now roots every Menu exit's target (R8, shape A), so the regions this
-     * row once named ONLY_FROM_MENU are placed. M2 owns the whys; this row only holds
-     * what the layout now says.
+     * row once named ONLY_FROM_MENU are placed. M2 owns the whys (and retired that one,
+     * plan §27.0); this row holds what the layout now says.
      */
     it('⛓ pokemon_rb (layout only): every region is placed — the Menu\'s exits are roots, nothing is ONLY FROM MENU', () => {
         const doc = DOCS.pokemon_rb;
@@ -228,8 +228,10 @@ describe('the regions the layout cannot place — NAMED, each with a derived why
         const { menu } = initialiseFacts(doc, P);
         expect(menu).toBeTruthy();
         expect(plan.unplaced).toEqual([]);
-        expect(plan.unplaced.some((u) => u.why === UNPLACED_WHY.ONLY_FROM_MENU)).toBe(false);
         expect(plan.placed).toBe(plan.total);
+        // ⛓ M2 — the plan names the hub: every root a Menu exit fed, each placed.
+        expect(plan.menuRoots.length).toBeGreaterThan(1);
+        expect(plan.menuRoots.length).toBeLessThanOrEqual(plan.menuExits);
     });
 
     it('⛓ a 1×1 grid: the region with a placed parent has NO FREE CELL, its child ONLY FROM UNPLACED', () => {
@@ -250,6 +252,69 @@ describe('the regions the layout cannot place — NAMED, each with a derived why
         ]);
         const layout = layoutTopDown(doc, { playerId: P, gridDims: { width: 1, height: 1 } }, createRng(1));
         expect(unplacedRegions(doc, P, layout)).toEqual(plan.unplaced);
+    });
+});
+
+/**
+ * ⛓⛓ M2 — **THE MENU IS THE HUB: A CELL-LESS MENU ROOT IS A CELL SHORTAGE.**
+ * The subjects are DERIVED: the first committed bare slot (≤ the population's
+ * size) whose auto START side leaves a Menu exit's target without a cell.
+ */
+const menuFedTargets = (doc, menu) => new Set((doc.regions[P][menu]?.exits ?? [])
+    .map((e) => e.connected_region).filter((t) => t !== menu && doc.regions[P][t]));
+
+describe('M2 — the stripped Menu\'s roots: the why, the growth, the plan', () => {
+    const MM3 = read(seed1('mm3'));
+
+    it('⛓ mm3: the start side leaves a Menu root without a cell — NO FREE CELL, and the engine counted the skip', () => {
+        const { menu } = initialiseFacts(MM3, P);
+        const start = initialiseGridSide(Object.keys(MM3.regions[P]).length);
+        const opts = { playerId: P, gridDims: { width: start, height: start } };
+        const layout = layoutTopDown(MM3, opts, createRng(1));
+        const fed = menuFedTargets(MM3, menu);
+        const cellLessRoots = [...fed].filter((t) => !layout.cellsByName.has(t));
+        expect(cellLessRoots.length).toBeGreaterThan(0);
+        expect(layout.stats.regionsSkipped).toBeGreaterThanOrEqual(cellLessRoots.length);
+        const whys = new Map(unplacedRegions(MM3, P, layout).map((u) => [u.region, u.why]));
+        for (const t of cellLessRoots) expect(whys.get(t), t).toBe(UNPLACED_WHY.NO_FREE_CELL);
+        // ⛓ its descendants, which only it reaches, are ONLY FROM UNPLACED.
+        for (const [r, why] of whys) if (!fed.has(r)) expect(why, r).toBe(UNPLACED_WHY.ONLY_FROM_UNPLACED);
+    });
+
+    it('⛓ mm3: the auto side GROWS for the Menu roots and places every region (side = the first that does)', () => {
+        const auto = autoGridSide(MM3, P, { seed: 1 });
+        const plan = planInitialise(MM3, P);
+        expect(auto.grown).toBeGreaterThan(0);
+        expect(plan.gridDims.width).toBe(auto.side);
+        expect(plan.placed).toBe(plan.total);
+        expect(plan.unplaced).toEqual([]);
+        const below = planInitialise(MM3, P, { gridDims: { width: auto.side - 1, height: auto.side - 1 } });
+        expect(below.placed).toBeLessThan(below.total);
+        // ⛓ the plan's hub: every Menu exit's target a root, each with a cell, in Menu-exit order.
+        const { menu } = initialiseFacts(MM3, P);
+        const fed = [...menuFedTargets(MM3, menu)];
+        expect(plan.menuExits).toBe(fed.length);
+        expect(plan.menuRoots.map((r) => r.name)).toEqual(fed);
+        expect(plan.menuRoots.map((r) => r.exit_id)).toEqual(MM3.regions[P][menu].exits.map((e) => e.name));
+    });
+
+    it('⛓ mm3 on a 1×1 grid: one region placed, the rest NAMED — every Menu root NO FREE CELL, the others only from unplaced', () => {
+        const plan = planInitialise(MM3, P, { gridDims: { width: 1, height: 1 } });
+        const { menu } = initialiseFacts(MM3, P);
+        const fed = menuFedTargets(MM3, menu);
+        expect(plan.placed).toBe(1);
+        expect(plan.placed + plan.unplaced.length).toBe(plan.total);
+        expect(plan.menuRoots.map((r) => r.name)).toEqual([plan.start]);
+        for (const u of plan.unplaced) {
+            expect(u.why, u.region).toBe(fed.has(u.region) ? UNPLACED_WHY.NO_FREE_CELL : UNPLACED_WHY.ONLY_FROM_UNPLACED);
+        }
+    });
+
+    it('⛓ a slot with no stripped Menu: menuExits 0, menuRoots [] (apcalc — its declared start is a cell)', () => {
+        const plan = planInitialise(DOCS.apcalc, P);
+        expect(plan.menu).toBeNull();
+        expect(plan.menuExits).toBe(0);
+        expect(plan.menuRoots).toEqual([]);
     });
 });
 
@@ -287,13 +352,44 @@ describe('the population — every committed bare slot, at the layout', () => {
             expect(plan.total + (facts.menu ? 1 : 0), `${f} ${p}`).toBe(facts.regions);
             expect(plan.unplaced.filter((u) => u.why === UNPLACED_WHY.NO_FREE_CELL), `${f} ${p}`).toEqual([]);
             const regions = doc.regions[p];
+            const unplacedSet = new Set(plan.unplaced.map((u) => u.region));
             for (const u of plan.unplaced) {
                 const from = Object.entries(regions).filter(([n, r]) => n !== u.region
                     && (r.exits ?? []).some((e) => e.connected_region === u.region)).map(([n]) => n);
                 if (u.why === UNPLACED_WHY.NO_INCOMING) expect(from, `${f} ${u.region}`).toEqual([]);
-                if (u.why === UNPLACED_WHY.ONLY_FROM_MENU) expect(from, `${f} ${u.region}`).toEqual([facts.menu]);
+                // ⛓ M2 — every remaining why confirmed by the independent incoming-exit derivation:
+                // ONLY FROM UNPLACED = every incoming is an unplaced region, never the hub.
+                if (u.why === UNPLACED_WHY.ONLY_FROM_UNPLACED) {
+                    expect(from.length, `${f} ${u.region}`).toBeGreaterThan(0);
+                    for (const x of from) expect(unplacedSet.has(x) && x !== facts.menu, `${f} ${u.region} ← ${x}`).toBe(true);
+                }
+                expect(Object.values(UNPLACED_WHY), `${f} ${u.region}`).toContain(u.why);
             }
         }
+    });
+
+    it('⛓ M2 — at the auto START side a Menu root without a cell is NO FREE CELL, and the auto side places it', () => {
+        let rootsShort = 0;
+        let slotsShort = 0;
+        for (const { f, p, doc, facts } of slots) {
+            if (!facts.menu) continue;
+            const start = initialiseGridSide(facts.regions);
+            const layout = layoutTopDown(doc, { playerId: p, gridDims: { width: start, height: start } }, createRng(1));
+            const fed = new Set((doc.regions[p][facts.menu].exits ?? []).map((e) => e.connected_region)
+                .filter((t) => t !== facts.menu && doc.regions[p][t]));
+            const short = [...fed].filter((t) => !layout.cellsByName.has(t));
+            if (short.length === 0) continue;
+            slotsShort += 1;
+            rootsShort += short.length;
+            expect(layout.stats.regionsSkipped, `${f} ${p}`).toBeGreaterThanOrEqual(short.length);
+            const whys = new Map(unplacedRegions(doc, p, layout).map((u) => [u.region, u.why]));
+            for (const t of short) expect(whys.get(t), `${f} ${t}`).toBe(UNPLACED_WHY.NO_FREE_CELL);
+            const plan = planInitialise(doc, p);
+            for (const t of short) expect(plan.unplaced.some((u) => u.region === t), `${f} ${t} at the auto side`).toBe(false);
+        }
+        // ⛓ the measured population has such slots (plan §27.0) — a row over none proves nothing.
+        expect(slotsShort).toBeGreaterThan(0);
+        expect(rootsShort).toBeGreaterThanOrEqual(slotsShort);
     });
 });
 

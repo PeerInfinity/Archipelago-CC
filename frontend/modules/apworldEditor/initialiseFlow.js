@@ -120,7 +120,8 @@ export function initialiseJob(doc, player, state) {
  * ⛓⛓ **THE PREVIEW** — the op's refusal when it would refuse (the form then
  * draws no Generate), else the layout's plan and its sentence:
  * *"81 regions placed on 13×13, 53 teleporters; 80 return exits will be added;
- * 0 unplaceable"*, the unplaceable NAMED with their why when any.
+ * 0 unplaceable"*, the unplaceable NAMED with their why when any — and, when
+ * the layout stripped a Menu (M2), *"; Menu: 13 exits → 13 roots"*.
  *
  * @returns {{refusal: string|null, plan: object|null, text: string}}
  */
@@ -135,12 +136,18 @@ export function initialisePreview(doc, player, state) {
         : `${plan.returnExits} return exit${plan.returnExits === 1 ? '' : 's'} will be added`;
     const names = plan.unplaced.length
         ? `: ${plan.unplaced.map((u) => `${u.region} (${u.why})`).join(', ')}` : '';
+    // ⛓ M2 — the HUB (R8): a stripped Menu's exits each feed a root; say how
+    // many exits and how many roots got a cell (they differ by the shortage).
+    const hub = plan.menu
+        ? `; ${plan.menu}: ${plan.menuExits} exit${plan.menuExits === 1 ? '' : 's'} → `
+            + `${plan.menuRoots.length} root${plan.menuRoots.length === 1 ? '' : 's'}`
+        : '';
     return {
         refusal: null,
         plan,
         text: `${plan.placed} region${plan.placed === 1 ? '' : 's'} placed on ${args.gridDims.width}×${args.gridDims.height}, `
             + `${plan.teleporters} teleporter${plan.teleporters === 1 ? '' : 's'}; ${back}; `
-            + `${plan.unplaced.length} unplaceable${names}`,
+            + `${plan.unplaced.length} unplaceable${names}${hub}`,
     };
 }
 
