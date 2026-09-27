@@ -1457,19 +1457,19 @@
       "total": "success"
     },
     "roster: --tier=full": {
-      "value": "150 tapes 3259/0/3",
+      "value": "151 tapes 3462/0/69",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 26 tape(s) 616/0/3 MEASURED @9ba9b4918e1027c8879d74b5bf97996ab54b10b9 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @9ba9b4918e1027c8879d74b5bf97996ab54b10b9 [channel: headless] · mechanic 103 tape(s) 2194/0/0 MEASURED @9ba9b4918e1027c8879d74b5bf97996ab54b10b9 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: QUOTED at the history-SHED gitlink bump (seedling-wasm 7ae2d5a -> 8c20769, ⚖ user 2026-09-14 'Yes, please do the force push.'): the submodule tree is BYTE-IDENTICAL to 7ae2d5a apart from docs/history.md's dated section (git diff --stat 7ae2d5a 8c20769 -- . ':!docs/history.md' EMPTY; per-file md5s differ on that file alone), so the wasm that was driven is the wasm at this head. The verdict is CI run 34791653160 on branch pins-r3 @73d36a0c32 (10 shards headless logic-only, ALL CHECKS PASSED 3635/0/46; 150/150 tapes the same verdict and ordered check set as run 34750970611), quoted by seedling-headless-R3 at 6d8b2b0eaf and re-quoted here by the planner because check-seedling-full-tier-owed compares gitlink SHAs, not trees (plan §17.1 (2), §21.3). Not re-driven: the same bytes..",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 27 tape(s) 819/0/69 MEASURED @54c83c063fd895b5fc279d392de0d9cbb4b4f159 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @9ba9b4918e1027c8879d74b5bf97996ab54b10b9 [channel: headless] · mechanic 103 tape(s) 2194/0/0 MEASURED @9ba9b4918e1027c8879d74b5bf97996ab54b10b9 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all. ⛓ Carried by: CI run 36298832080 @54c83c063f (seedling-full-tier.yml, tier=campaign, 4 shards, headless logic-only; merge ALL CHECKS PASSED, RESUME reused 27/27, 0 to replay; counts = the merge log's own PASS:/FAIL:/SKIP: lines) ; QUOTED at the history-SHED gitlink bump (seedling-wasm 7ae2d5a -> 8c20769, ⚖ user 2026-09-14 'Yes, please do the force push.'): the submodule tree is BYTE-IDENTICAL to 7ae2d5a apart from docs/history.md's dated section (git diff --stat 7ae2d5a 8c20769 -- . ':!docs/history.md' EMPTY; per-file md5s differ on that file alone), so the wasm that was driven is the wasm at this head. The verdict is CI run 34791653160 on branch pins-r3 @73d36a0c32 (10 shards headless logic-only, ALL CHECKS PASSED 3635/0/46; 150/150 tapes the same verdict and ordered check set as run 34750970611), quoted by seedling-headless-R3 at 6d8b2b0eaf and re-quoted here by the planner because check-seedling-full-tier-owed compares gitlink SHAs, not trees (plan §17.1 (2), §21.3). Not re-driven: the same bytes..",
       "measuredAt": "9ba9b4918e1027c8879d74b5bf97996ab54b10b9",
       "categories": {
         "campaign": {
-          "tapes": 26,
-          "value": "616/0/3",
-          "measuredAt": "9ba9b4918e1027c8879d74b5bf97996ab54b10b9",
-          "coveredBy": "QUOTED at the history-SHED gitlink bump (seedling-wasm 7ae2d5a -> 8c20769, ⚖ user 2026-09-14 'Yes, please do the force push.'): the submodule tree is BYTE-IDENTICAL to 7ae2d5a apart from docs/history.md's dated section (git diff --stat 7ae2d5a 8c20769 -- . ':!docs/history.md' EMPTY; per-file md5s differ on that file alone), so the wasm that was driven is the wasm at this head. The verdict is CI run 34791653160 on branch pins-r3 @73d36a0c32 (10 shards headless logic-only, ALL CHECKS PASSED 3635/0/46; 150/150 tapes the same verdict and ordered check set as run 34750970611), quoted by seedling-headless-R3 at 6d8b2b0eaf and re-quoted here by the planner because check-seedling-full-tier-owed compares gitlink SHAs, not trees (plan §17.1 (2), §21.3). Not re-driven: the same bytes.",
+          "tapes": 27,
+          "value": "819/0/69",
+          "measuredAt": "54c83c063fd895b5fc279d392de0d9cbb4b4f159",
+          "coveredBy": "CI run 36298832080 @54c83c063f (seedling-full-tier.yml, tier=campaign, 4 shards, headless logic-only; merge ALL CHECKS PASSED, RESUME reused 27/27, 0 to replay; counts = the merge log's own PASS:/FAIL:/SKIP: lines)",
           "channel": "headless"
         },
         "map-walk": {
