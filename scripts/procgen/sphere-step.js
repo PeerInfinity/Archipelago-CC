@@ -312,7 +312,7 @@ async function main() {
     if (sub === 'append') {
         if (!args.input) throw new Error('append requires -i <rules.json | envelope.json>');
         const raw = readJson(args.input);
-        env = raw.procgen_metadata
+        env = raw.procgen_metadata?.['1']
             ? rebuildEnvelopeFromRulesJson(raw, {
                 ...(Object.keys(args.quotas).length ? { substrateQuotas: args.quotas } : {}),
                 maxItemsPerRegion: args.maxItemsPerRegion,

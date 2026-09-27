@@ -4397,7 +4397,7 @@ export function parentExitIdTowardChild(parentRegion, node) {
  */
 export function sphereRebuildRefusal(rulesJson, opts = {}) {
     const playerId = opts.playerId ?? '1';
-    const meta = rulesJson?.procgen_metadata;
+    const meta = rulesJson?.procgen_metadata?.[playerId];
     if (meta?.driver !== 'sphere-growth' && meta?.driver !== 'top-down-sphere') {
         return SPHERE_REBUILD_REFUSALS.notSphere();
     }
@@ -4429,7 +4429,7 @@ export function sphereRebuildRefusal(rulesJson, opts = {}) {
 
 export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     const playerId = opts.playerId ?? '1';
-    const meta = rulesJson?.procgen_metadata;
+    const meta = rulesJson?.procgen_metadata?.[playerId];
     // 'top-down-sphere' is a top-down realisation enriched with sphere
     // metadata from an authoritative sphere log (§3) — it carries the same
     // sphere_tree + sphere_plan + procedural (maze) substrates this path
@@ -4535,7 +4535,7 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         exclusiveSpheres: {},
         startingItems,
         lockedCanonicalItems: [],
-        enableLoopMode: !!rulesJson.loop_costs,
+        enableLoopMode: !!rulesJson.loop_costs?.[playerId],
         regionXpEffect: opts.regionXpEffect ?? 'cost',
         itemPool,
     };
@@ -6968,7 +6968,9 @@ export function buildRulesJson(grid, opts = {}) {
             if (cell.gx > maxGx) maxGx = cell.gx;
             if (cell.gy > maxGy) maxGy = cell.gy;
         }
-        scaffold.procgen_metadata = {
+        // ⛓ P1a (⚖ user 2026-09-27) — the block is the SLOT's: `{[playerId]: block}`,
+        //   the shape `preset_sidecars` has.
+        const slotMetadata = {
             ...procgenMetadata,
             region_count: allRegions.length,
             grid_dims: {
@@ -6976,6 +6978,7 @@ export function buildRulesJson(grid, opts = {}) {
                 height: maxGy >= 0 ? maxGy + 1 : 0,
             },
         };
+        scaffold.procgen_metadata = { [String(playerId)]: slotMetadata };
         // ⛓⛓ APWORLD SUBSTRATE CHANGE R6b — the config each content source was
         // installed with, for every source that declares
         // `recordablePipelineConfig` AND realised ≥1 region here (the same
@@ -6988,7 +6991,7 @@ export function buildRulesJson(grid, opts = {}) {
                     + 'which the compile writes from the installed sources — two writers of one block would '
                     + 'overwrite each other silently, so the compile refuses rather than pick one.');
             }
-            scaffold.procgen_metadata[SUBSTRATE_CONFIGS_KEY] = configs;
+            slotMetadata[SUBSTRATE_CONFIGS_KEY] = configs;
         }
     }
 
@@ -7052,20 +7055,22 @@ export function buildRulesJson(grid, opts = {}) {
     // `shared/` submodule, and other writers (the Loops panel's defaults, the
     // JtA cost planner) still stamp one, which is why the schema keeps the field
     // optional. `version` and `generatedFrom` are deterministic and kept.
+    // ⛓ P1a — the block is the SLOT's: `loop_costs[playerId]`.
     if (enableLoopMode && embedSphereLog && Array.isArray(scaffold.sphere_log)) {
+        let block;
         try {
-            scaffold.loop_costs = generateLoopCosts({
+            block = generateLoopCosts({
                 rulesJson: scaffold,
                 sphereLog: scaffold.sphere_log,
                 playerId,
                 regionXpEffect,
                 sourceFileName: seedName || `seed_${seed}`,
             });
-            delete scaffold.loop_costs.generatedAt;
+            delete block.generatedAt;
         } catch (e) {
             // Match the sphere-log error pattern: don't fail the build,
             // emit a marker the loader will warn about. No generatedAt (above).
-            scaffold.loop_costs = {
+            block = {
                 version: '1.0',
                 error: `loopCostGenerator failed: ${e?.message ?? String(e)}`,
                 regions: {},
@@ -7074,6 +7079,7 @@ export function buildRulesJson(grid, opts = {}) {
                 defaultLocationCost: DEFAULT_LOCATION_COST,
             };
         }
+        scaffold.loop_costs = { [String(playerId)]: block };
     }
 
     return scaffold;

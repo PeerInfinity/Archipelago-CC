@@ -172,7 +172,7 @@ describe('sphereSteps runner', () => {
     it('embeds a compact sphere_tree (no grid) sufficient to resume wiring', async () => {
         const config = makeConfig();
         const env = await runToStep(newEnvelope(config));
-        const meta = env.compile.rulesJson.procgen_metadata;
+        const meta = env.compile.rulesJson.procgen_metadata['1'];
         const tree = meta.sphere_tree;
         expect(tree).toBeTruthy();
         expect(tree.nodes.length).toBe(env.nodes.length);
@@ -528,6 +528,28 @@ describe('appendSphere (envelope path)', () => {
         // Reconstructed env is append-ready.
         await appendSphere(env, { items: ['key_red'] });
         expect(env.compile.oracleErrors).toEqual([]);
+    });
+
+    /**
+     * ⛓⛓ P1a — the rules.json branch reads `procgen_metadata[opts.playerId]`:
+     * the same world relabelled to slot 2 reconstructs for slot 2, and is NOT
+     * a rules.json for slot 1 (its metadata is slot 2's). The relabel is derived
+     * — every top-level map keyed by the slot id moves.
+     */
+    it('⛓⛓ P1a — importSphereEnvelope reads the slot opts.playerId names', async () => {
+        const src = await runToStep(newEnvelope(makeConfig()));
+        const rj = JSON.parse(JSON.stringify(src.compile.rulesJson));
+        for (const [k, v] of Object.entries(rj)) {
+            if (v && typeof v === 'object' && !Array.isArray(v) && Object.hasOwn(v, '1')) {
+                rj[k] = Object.fromEntries(Object.entries(v).map(([p, x]) => [p === '1' ? '2' : p, x]));
+            }
+        }
+        expect(Object.keys(rj.procgen_metadata)).toEqual(['2']);
+        const { env, fromRulesJson } = importSphereEnvelope(rj, { playerId: '2' });
+        expect(fromRulesJson).toBe(true);
+        expect(env.nodes.length).toBe(src.nodes.length);
+        expect(env.config.regionSize).toEqual(makeConfig().regionSize);
+        expect(importSphereEnvelope(rj).fromRulesJson).toBe(false);
     });
 
     it('importSphereEnvelope deserializes a serialized envelope unchanged', async () => {
@@ -1028,7 +1050,7 @@ describe('sphereSteps — recorded layout edits', () => {
     it('procgen_metadata carries the recording — and omits it when unedited', async () => {
         const clean = newEnvelope(bounceConfig());
         await runToStep(clean, 'compile');
-        expect('edits' in clean.compile.rulesJson.procgen_metadata).toBe(false);
+        expect('edits' in clean.compile.rulesJson.procgen_metadata['1']).toBe(false);
 
         const env = await grownEnv();
         const mover = env.grow.grid.allRegions()[1];
@@ -1036,7 +1058,7 @@ describe('sphereSteps — recorded layout edits', () => {
             op: 'move-region', from: { ...mover.cell }, to: emptyCell(env.grow.grid),
         }, SPHERE_EDIT_BINDING);
         await runToStep(env, 'compile');
-        expect(env.compile.rulesJson.procgen_metadata.edits).toEqual(env.edits);
+        expect(env.compile.rulesJson.procgen_metadata['1'].edits).toEqual(env.edits);
     });
 
     // The measured round-trip. Maze, because rebuildEnvelopeFromRulesJson

@@ -335,19 +335,39 @@ describe('CostDataManager — tryLoadEmbedded path filtering', () => {
     ]);
   });
 
-  it('fetches and applies embedded loop_costs when the URL resolves', async () => {
+  it('fetches and applies the loaded slot\'s embedded loop_costs when the URL resolves', async () => {
     globalThis.fetch = vi.fn(async () => ({
       ok: true,
-      json: async () => ({ loop_costs: validData() }),
+      json: async () => ({ loop_costs: { 1: validData() } }),
     }));
-    expect(await mgr.tryLoadEmbedded('/path/to/rules.json')).toBe(true);
+    expect(await mgr.tryLoadEmbedded('/path/to/rules.json', '1')).toBe(true);
     expect(mgr.isLoaded()).toBe(true);
     expect(mgr.loadedFrom).toBe('embedded:/path/to/rules.json');
   });
 
+  /**
+   * ⛓⛓ P1a (⚖ user 2026-09-27) — `loop_costs` is per player and the runtime
+   * reads the LOADED slot's block: player 2 loads slot 2's, and a document
+   * that carries only slot 1's loads NOTHING for player 2 — loop mode OFF for
+   * that player. ⛔ No fallback to another present slot (the ruling).
+   */
+  it('⛓⛓ P1a — player 2 loads slot 2\'s block; with only slot 1\'s, player 2 loads nothing (loop mode OFF for player 2)', async () => {
+    const two = { ...validData(), defaultRegionCost: 77 };
+    globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => ({ loop_costs: { 1: validData(), 2: two } }) }));
+    expect(await mgr.tryLoadEmbedded('/path/to/rules.json', '2')).toBe(true);
+    expect(mgr.getCostData().defaultRegionCost).toBe(77);
+
+    const fresh = new CostDataManager(makeBus());
+    globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => ({ loop_costs: { 1: validData() } }) }));
+    expect(await fresh.tryLoadEmbedded('/path/to/rules.json', '2')).toBe(false);
+    expect(fresh.isLoaded()).toBe(false);
+    expect(await fresh.tryLoadEmbedded('/path/to/rules.json', 2)).toBe(false);
+    expect(await fresh.tryLoadEmbedded('/path/to/rules.json', 1)).toBe(true);
+  });
+
   it('returns false (no apply) when rules.json has no loop_costs', async () => {
     globalThis.fetch = vi.fn(async () => ({ ok: true, json: async () => ({}) }));
-    expect(await mgr.tryLoadEmbedded('/path/to/rules.json')).toBe(false);
+    expect(await mgr.tryLoadEmbedded('/path/to/rules.json', '1')).toBe(false);
     expect(mgr.isLoaded()).toBe(false);
   });
 

@@ -93,9 +93,11 @@ async function main() {
             procgenMetadata: { driver: 'shuffled-spiral', stop_reason: stats.stopReason },
         });
         rules.loop_costs = {
-            regions: {}, locations: {},
-            defaultRegionCost: DEFAULT_REGION_COST,
-            defaultLocationCost: DEFAULT_LOCATION_COST,
+            1: {
+                regions: {}, locations: {},
+                defaultRegionCost: DEFAULT_REGION_COST,
+                defaultLocationCost: DEFAULT_LOCATION_COST,
+            },
         };
         return JSON.stringify(rules, null, 2) + '\n';
     };

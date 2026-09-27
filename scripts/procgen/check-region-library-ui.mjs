@@ -478,7 +478,7 @@ await sp.waitForTimeout(400);
 // D4 — Generate WITH the library ("Run all"); a sphere-growth world compiles.
 assert(await sRunAll(), 'Phase D: ran the sphere pipeline to a compiled result (with library)');
 const rjWith = await sExtractRulesJson();
-assert(rjWith.procgen_metadata?.driver === 'sphere-growth',
+assert(rjWith.procgen_metadata?.['1']?.driver === 'sphere-growth',
     'Phase D: with-library world is a sphere-growth build');
 const regionsWith = Object.values(rjWith.regions ?? {}).reduce((n, byName) => n + Object.keys(byName).length, 0);
 assert(regionsWith >= 2, `Phase D: with-library sphere world has ${regionsWith} regions (≥2)`);
@@ -514,7 +514,7 @@ assert(await sClickByText('Reset'), 'Phase D: reset the sphere pipeline before t
 await sp.waitForTimeout(400);
 assert(await sRunAll(), 'Phase D: ran the sphere pipeline to a compiled result (no library)');
 const rjNo = await sExtractRulesJson();
-assert(rjNo.procgen_metadata?.driver === 'sphere-growth',
+assert(rjNo.procgen_metadata?.['1']?.driver === 'sphere-growth',
     'Phase D: no-library world is a sphere-growth build');
 assert(canon(rjWith) !== canon(rjNo),
     'Phase D: the bounce library materially changed the grown world (selection reached the sphere config)');

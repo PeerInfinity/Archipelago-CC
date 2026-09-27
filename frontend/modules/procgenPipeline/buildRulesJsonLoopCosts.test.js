@@ -61,9 +61,9 @@ describe('buildRulesJson — loop_costs is deterministic', () => {
         const b = JSON.parse(JSON.stringify(
             buildRulesJson(second.grid, { startCell: second.startCell, enableLoopMode: true })));
         expect(differingPaths(a, b)).toEqual([]);
-        expect(a.loop_costs.version).toBe('1.0');
-        expect(a.loop_costs.generatedFrom).toBeTruthy();
-        expect(a.loop_costs).not.toHaveProperty('generatedAt');
+        expect(a.loop_costs['1'].version).toBe('1.0');
+        expect(a.loop_costs['1'].generatedFrom).toBeTruthy();
+        expect(a.loop_costs['1']).not.toHaveProperty('generatedAt');
     });
 
     it('the failure marker written when the generator throws carries no generatedAt either', async () => {
@@ -83,8 +83,8 @@ describe('buildRulesJson — loop_costs is deterministic', () => {
             regionParams: {},
         });
         const out = engine.buildRulesJson(grid, { startCell, enableLoopMode: true });
-        expect(out.loop_costs.error).toBe('loopCostGenerator failed: probe');
-        expect(out.loop_costs.version).toBe('1.0');
-        expect(out.loop_costs).not.toHaveProperty('generatedAt');
+        expect(out.loop_costs['1'].error).toBe('loopCostGenerator failed: probe');
+        expect(out.loop_costs['1'].version).toBe('1.0');
+        expect(out.loop_costs['1']).not.toHaveProperty('generatedAt');
     });
 });

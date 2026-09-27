@@ -479,7 +479,7 @@ async function main() {
             process.stderr.write(`[spiral-step] rules.json → ${abs}\n`);
         }
         const regions = Object.keys(rulesJson.regions?.['1'] ?? {}).length;
-        process.stderr.write(`[spiral-step] driver ${rulesJson.procgen_metadata?.driver} · ${regions} regions\n`);
+        process.stderr.write(`[spiral-step] driver ${rulesJson.procgen_metadata?.['1']?.driver} · ${regions} regions\n`);
     }
 }
 

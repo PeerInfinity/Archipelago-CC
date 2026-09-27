@@ -272,7 +272,7 @@ async function main() {
             process.stderr.write(`[topdown-step] rules.json → ${abs}\n`);
         }
         const regions = Object.keys(rulesJson.regions?.['1'] ?? {}).length;
-        process.stderr.write(`[topdown-step] driver ${rulesJson.procgen_metadata?.driver} · ${regions} regions\n`);
+        process.stderr.write(`[topdown-step] driver ${rulesJson.procgen_metadata?.['1']?.driver} · ${regions} regions\n`);
     }
 }
 

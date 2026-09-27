@@ -497,7 +497,7 @@ async function main() {
         console.log(`  starting items: ${startingItems.join(', ')}`);
     }
     if (config.enableLoopMode) {
-        const lc = rulesJson.loop_costs;
+        const lc = rulesJson.loop_costs?.['1'];
         console.log(`  loop mode: ON — loop_costs ${lc ? 'embedded' : 'MISSING'}`
             + (lc ? ` (${Object.keys(lc.regions ?? {}).length} regions,`
                 + ` ${Object.keys(lc.locations ?? {}).length} locations,`

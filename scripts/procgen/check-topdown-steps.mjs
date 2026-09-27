@@ -97,7 +97,7 @@ function check(label, source, opts) {
         const wellFormed = !!rj && !!rj.regions && Object.keys(rj.regions['1'] ?? {}).length > 0;
         const ok = sameGrid && sameStats && wellFormed;
         console.log(`${ok ? '✅' : '❌'} ${label}: grid=${sameGrid} stats=${sameStats} rulesJson=${wellFormed}`
-            + ` (driver=${rj?.procgen_metadata?.driver}, regions=${Object.keys(rj?.regions?.['1'] ?? {}).length})`);
+            + ` (driver=${rj?.procgen_metadata?.['1']?.driver}, regions=${Object.keys(rj?.regions?.['1'] ?? {}).length})`);
         return ok;
     });
 }

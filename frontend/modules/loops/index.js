@@ -100,12 +100,14 @@ let _freshInMemoryCostLoad = false;
 // finishes loading them. Fires for editor / procgenPipeline paths where
 // there's no URL to refetch from. A payload WITHOUT loop_costs clears
 // any previous preset's cost data — the new world wasn't generated with
-// loop mode in mind.
+// loop mode in mind. ⛓ P1a — `loop_costs` is per player: the block read is
+// the LOADED slot's (`selectedPlayerId`, which every publisher carries); a
+// document whose map has no entry for that slot runs with loop mode OFF.
 function handleFilesJsonLoaded(eventData) {
   if (!_costDataManager) return;
   const jsonData = eventData?.jsonData;
   const sourceName = eventData?.sourceName ?? 'unknown';
-  const embedded = jsonData?.loop_costs;
+  const embedded = jsonData?.loop_costs?.[String(eventData?.selectedPlayerId)];
   if (embedded) {
     _costDataManager.applyEmbeddedLoopCosts(embedded, sourceName);
     _freshInMemoryCostLoad = true;
@@ -136,7 +138,7 @@ async function handleRulesLoaded(eventData) {
     let loadedNow = false;
     if (typeof rulesPath === 'string' && rulesPath.length > 0) {
       try {
-        loadedNow = await _costDataManager.tryLoadEmbedded(rulesPath);
+        loadedNow = await _costDataManager.tryLoadEmbedded(rulesPath, eventData?.playerId);
       } catch (err) {
         log('warn', '[Loops Module] tryLoadEmbedded threw:', err);
       }

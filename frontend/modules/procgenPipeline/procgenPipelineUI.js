@@ -4001,8 +4001,8 @@ export class ProcgenPipelineUI {
         const wrap = document.createElement('div');
         wrap.style.cssText = 'font-size:12px;color:#bbb;';
         const rj = compile.rulesJson;
-        const regionCount = Object.keys(rj.regions?.['1'] ?? {}).length;
-        wrap.textContent = `driver ${rj.procgen_metadata?.driver} · ${regionCount} regions`;
+        const regionCount = Object.keys(rj.regions?.[HANDOFF_REALISED_SLOT] ?? {}).length;
+        wrap.textContent = `driver ${rj.procgen_metadata?.[HANDOFF_REALISED_SLOT]?.driver} · ${regionCount} regions`;
         return wrap;
     }
 
@@ -4411,7 +4411,7 @@ export class ProcgenPipelineUI {
     //
     // Accepts two shapes (§2.3):
     //   • a serialized envelope (has a `config` block) — deserialised verbatim;
-    //   • a finalized sphere-growth rules.json (has `procgen_metadata`, no
+    //   • a finalized sphere-growth rules.json (has `procgen_metadata[slot]`, no
     //     `config`) — reconstructed into an append-ready envelope via
     //     rebuildEnvelopeFromRulesJson. This is what the APWorld Editor emits,
     //     so an edited world can be grown further without a saved envelope.
@@ -4419,7 +4419,7 @@ export class ProcgenPipelineUI {
     //     clear message (no path extractor — append from a saved envelope).
     _applyImportedEnvelope(rawJson) {
         const { env, fromRulesJson: isRulesJson } = importSphereEnvelope(
-            rawJson, { itemLib: DEFAULT_ITEMS, obstacleLib: DEFAULT_OBSTACLES });
+            rawJson, { itemLib: DEFAULT_ITEMS, obstacleLib: DEFAULT_OBSTACLES, playerId: HANDOFF_REALISED_SLOT });
         const config = env.config;
         if (!config || !config.regionSize) {
             throw new Error(isRulesJson
@@ -4918,9 +4918,9 @@ export class ProcgenPipelineUI {
         const wrap = document.createElement('div');
         wrap.style.cssText = 'font-size:12px;color:#bbb;';
         const rj = compile.rulesJson;
-        const regionCount = Object.keys(rj.regions?.['1'] ?? {}).length;
+        const regionCount = Object.keys(rj.regions?.[HANDOFF_REALISED_SLOT] ?? {}).length;
         const hasLog = Array.isArray(rj.sphere_log) && rj.sphere_log.length > 0;
-        wrap.textContent = `driver ${rj.procgen_metadata?.driver} · ${regionCount} regions · `
+        wrap.textContent = `driver ${rj.procgen_metadata?.[HANDOFF_REALISED_SLOT]?.driver} · ${regionCount} regions · `
             + `sphere_log ${hasLog ? 'embedded' : 'absent'} · full rules.json in Compiled output below`;
         return wrap;
     }

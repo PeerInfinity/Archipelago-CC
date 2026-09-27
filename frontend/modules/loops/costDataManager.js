@@ -233,17 +233,21 @@ export class CostDataManager {
    * — those don't resolve as URLs. Use applyEmbeddedLoopCosts directly
    * with the in-memory jsonData for those flows.
    *
+   * ⛓ P1a — `loop_costs` is per player: the block loaded is `playerId`'s. A
+   * document with no entry for that slot loads nothing (loop mode OFF for it).
+   *
    * @param {string} rulesPath - URL/path to the rules.json
+   * @param {string|number} playerId - the loaded slot (`stateManager:rulesLoaded`'s `playerId`)
    * @returns {Promise<boolean>} true if embedded loop_costs were found and loaded
    */
-  async tryLoadEmbedded(rulesPath) {
+  async tryLoadEmbedded(rulesPath, playerId) {
     if (!rulesPath || typeof fetch !== 'function') return false;
     if (!_looksLikeRulesPath(rulesPath)) return false;
     try {
       const response = await fetch(rulesPath);
       if (!response.ok) return false;
       const rulesDoc = await response.json();
-      return this.applyEmbeddedLoopCosts(rulesDoc?.loop_costs, rulesPath);
+      return this.applyEmbeddedLoopCosts(rulesDoc?.loop_costs?.[String(playerId)], rulesPath);
     } catch (err) {
       logger.warn(`Could not load embedded loop_costs from ${rulesPath}: ${err.message}`);
       return false;

@@ -1946,15 +1946,37 @@ describe('buildRulesJson', () => {
         const { grid, startCell } = smallGrid();
         const out = buildRulesJson(grid, { startCell, enableLoopMode: true });
         expect(out).toHaveProperty('loop_costs');
-        expect(out.loop_costs.regions).toBeDefined();
-        expect(out.loop_costs.locations).toBeDefined();
+        expect(out.loop_costs['1'].regions).toBeDefined();
+        expect(out.loop_costs['1'].locations).toBeDefined();
         // Start region (Menu) is always free
-        expect(out.loop_costs.regions.Menu).toEqual({ moveCost: 0, xpEffect: 'cost' });
+        expect(out.loop_costs['1'].regions.Menu).toEqual({ moveCost: 0, xpEffect: 'cost' });
         // Default regionXpEffect is 'cost' and is also recorded at the
         // sidecar root for fallback.
-        expect(out.loop_costs.defaultRegionXpEffect).toBe('cost');
+        expect(out.loop_costs['1'].defaultRegionXpEffect).toBe('cost');
         // Pipeline records the seed_name as the source
-        expect(out.loop_costs.generatedFrom).toBeTruthy();
+        expect(out.loop_costs['1'].generatedFrom).toBeTruthy();
+    });
+
+    /**
+     * ⛓⛓ P1a (⚖ user 2026-09-27, shape (A)) — both blocks are the SLOT's: a
+     * compile for player 3 writes `procgen_metadata["3"]` and `loop_costs["3"]`
+     * and NOTHING at the old document-level position (no block key sits beside
+     * the slot id). ⛔ Mutant: the writer at the old position reds here.
+     */
+    it('⛓⛓ P1a — writes procgen_metadata[playerId] and loop_costs[playerId] for a non-1 player, nothing at the old position', () => {
+        const { grid, startCell, stats } = smallGrid();
+        const out = buildRulesJson(grid, {
+            startCell, playerId: '3', enableLoopMode: true,
+            procgenMetadata: { driver: 'grid-growth', stop_reason: stats.stopReason },
+        });
+        expect(Object.keys(out.procgen_metadata)).toEqual(['3']);
+        expect(Object.keys(out.loop_costs)).toEqual(['3']);
+        expect(out.procgen_metadata['3'].driver).toBe('grid-growth');
+        expect(out.procgen_metadata['3'].region_count).toBe([...grid.allRegions()].length);
+        expect(Object.keys(out.loop_costs['3'].regions).sort())
+            .toEqual(Object.keys(out.regions['3']).filter((n) => out.loop_costs['3'].regions[n]).sort());
+        expect(out.loop_costs['3'].regions).toBeDefined();
+        expect(out.loop_costs['3'].error).toBeUndefined();
     });
 
     it('skips loop_costs when sphere log embedding is disabled', () => {
@@ -1977,18 +1999,18 @@ describe('buildRulesJson', () => {
             },
         });
         expect(out.procgen_metadata).toBeDefined();
-        expect(out.procgen_metadata.driver).toBe('grid-growth');
-        expect(out.procgen_metadata.stop_reason).toBe(stats.stopReason);
+        expect(out.procgen_metadata['1'].driver).toBe('grid-growth');
+        expect(out.procgen_metadata['1'].stop_reason).toBe(stats.stopReason);
         // Auto-derived from the grid: region_count matches allRegions
         // length, grid_dims is max gx+1 by max gy+1 over occupied cells.
         const allRegions = [...grid.allRegions()];
-        expect(out.procgen_metadata.region_count).toBe(allRegions.length);
+        expect(out.procgen_metadata['1'].region_count).toBe(allRegions.length);
         let maxGx = -1, maxGy = -1;
         for (const r of allRegions) {
             if (r.cell.gx > maxGx) maxGx = r.cell.gx;
             if (r.cell.gy > maxGy) maxGy = r.cell.gy;
         }
-        expect(out.procgen_metadata.grid_dims).toEqual({
+        expect(out.procgen_metadata['1'].grid_dims).toEqual({
             width: maxGx + 1,
             height: maxGy + 1,
         });
@@ -2005,12 +2027,12 @@ describe('buildRulesJson', () => {
                 stop_reason: 'all_placed',
             },
         });
-        expect(out.procgen_metadata.driver).toBe('top-down');
-        expect(out.procgen_metadata.source_game).toBe('Adventure');
-        expect(out.procgen_metadata.source_counts).toEqual({
+        expect(out.procgen_metadata['1'].driver).toBe('top-down');
+        expect(out.procgen_metadata['1'].source_game).toBe('Adventure');
+        expect(out.procgen_metadata['1'].source_counts).toEqual({
             regions: 6, locations: 25, exits: 17, logic_gates: 12,
         });
-        expect(out.procgen_metadata.stop_reason).toBe('all_placed');
+        expect(out.procgen_metadata['1'].stop_reason).toBe('all_placed');
     });
 
     it('back-exits inherit their forward exit access_rule', () => {
@@ -2278,12 +2300,12 @@ describe('topDownFromRulesJson — sphere-log attribution', () => {
                 sphere_plan: spherePlan,
             },
         });
-        expect(out.procgen_metadata.driver).toBe('top-down-sphere');
+        expect(out.procgen_metadata['1'].driver).toBe('top-down-sphere');
         // The embedded log is the authoritative one, NOT a JS re-derivation.
         // (The grid-growth log already leads with a metadata header.)
         expect(sphereLog[0].type).toBe('metadata');
         expect(out.sphere_log).toEqual(sphereLog);
-        expect(out.procgen_metadata.sphere_tree.nodes[0].region_id).toBeDefined();
+        expect(out.procgen_metadata['1'].sphere_tree.nodes[0].region_id).toBeDefined();
     });
 
     it('synthesizes the metadata header when the supplied log lacks one', () => {

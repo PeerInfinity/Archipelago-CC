@@ -113,7 +113,7 @@ const PER_TILE_CAP = (() => {
     const perTile = [];
     for (const [region, side] of Object.entries(sidecars)) {
         const lsp = side?.playable_payload?.longestShortestPath;
-        const moveCost = doc.loop_costs?.regions?.[region]?.moveCost;
+        const moveCost = doc.loop_costs?.['1']?.regions?.[region]?.moveCost;
         if (typeof lsp === 'number' && lsp > 0 && typeof moveCost === 'number') {
             perTile.push({ region, cost: moveCost / lsp, moveCost, lsp });
         }
