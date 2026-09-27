@@ -173,14 +173,28 @@ describe('top-down over the seedling_atlas source, mix {flash_seedling_gen: 1}',
         expect(generated).toHaveLength(Object.keys(SEEDLING_ATLAS.regions['1']).length - 1); // all but Menu
         const start = rulesJson.preset_sidecars['1'].overworld_start__r8c0.playable_payload;
         expect(start.exits).toHaveLength(7);
+        // ⛓ G8: the seven-door room seats at 10x10 within its budget — it does NOT grow
+        expect(start.size).toEqual({ width: 10, height: 10 });
+        expect(start.generation.grownFrom).toBeUndefined();
         // the source's one location keeps its name, on its room's goal cell
         const house = rulesJson.preset_sidecars['1'].starting_house.playable_payload;
         expect(house.locations.map((l) => l.name)).toEqual(['Starting House - Chest']);
     }, 60_000);
 
-    it('at the default 8x6 the seven doors do not fit — REFUSED by name, saying what to raise', async () => {
-        await expect(topDown(1, {})).rejects.toThrow(
-            /generated Seedling room 'overworld_start__r8c0' \(seed \d+, 8x6\) must hold 7 door\(s\), one per exit.*Raise the region size/);
+    /**
+     * ⛓ Until G8 the default 8x6 REFUSED here (the start room's doors did not fit).
+     * Since G8 the start room GROWS — MEASURED: to 12x10 on attempt 18 (two budgets
+     * spent), every other room at 8x6. At 10x10 (the row above) nothing grows.
+     */
+    it('at the default 8x6 the start room GROWS (G8) — to 12x10; nothing else grows', async () => {
+        const { rulesJson } = await topDown(1, {});
+        const start = rulesJson.preset_sidecars['1'].overworld_start__r8c0.playable_payload;
+        expect(start.size).toEqual({ width: 12, height: 10 });
+        expect(start.generation).toMatchObject({ rerolls: 18, grownFrom: { width: 8, height: 6 } });
+        for (const [id, s] of Object.entries(rulesJson.preset_sidecars['1'])) {
+            if (s.substrate !== FLASH_SEEDLING_GEN_SUBSTRATE_ID || id === 'overworld_start__r8c0') continue;
+            expect([id, s.playable_payload.size, s.playable_payload.generation.grownFrom]).toEqual([id, { width: 8, height: 6 }, undefined]);
+        }
     }, 60_000);
 });
 
