@@ -3459,6 +3459,186 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+/* ══════════════════════════════════════════════════════════════════════
+ * T1 — THE PIPELINE PANEL'S TOP-DOWN, DRIVEN IN THE PAGE (the substrate-change
+ * plan §30.7 #4). Before T1 no in-app row pressed the pipeline's Generate on a
+ * hand-off at all; its compile message's `menuWarnings` (M1) and
+ * `ruleItemWarnings` (B1) were asserted only headless.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/**
+ * ⛓ The two subjects, MEASURED at T1 (scratch `td.mjs` / `menu.mjs`, seed 1,
+ * `topDownGridSide(n)`, every committed player-1 source): the smallest source
+ * whose top-down compile carries a `ruleItemWarnings` case that compiles in
+ * seconds is `seedling_atlas/AP_1` (11 regions, ~0.1 s headless, 3 names —
+ * terraria (1 region) and rulebuilder_test (2) stall > 100 s in realise); the
+ * smallest with a `menuWarnings` case is this depgraph seed (16 regions,
+ * ~0.16 s, 2 exits — 16 of 205 sources carry one at the auto side).
+ */
+const TOPDOWN_RULE_ITEMS_PRESET_PATH = SEEDLING_PRESET_PATH;
+const TOPDOWN_MENU_PRESET_PATH =
+    './presets/depgraph/AP_00679259829289197625/AP_00679259829289197625_rules.json';
+
+/**
+ * ⛓ No budget setting exists on the panel (measured: nothing in
+ * `procgenPipelineUI.js` or `presetRun.DEFAULT_PARAMS` bounds a run's time), so
+ * the poll's budget is the measured headless compile (≤ 0.2 s) with room for
+ * the page's default substrate mix and a shared box; the log prints the time.
+ */
+const TOPDOWN_RUN_BUDGET_MS = 60000;
+
+/** Hand the hub's working copy to the pipeline, press Generate, and wait for
+ *  the run to finish. Returns `{pp, source, compiled, message}` or null. */
+async function handOffAndGenerate(testController, presetPath, label) {
+    const hub = await openHub(testController, presetPath);
+    if (!hub) return null;
+    await testController.pollForCondition(
+        () => !!hub._rulesSchema, `${label}: the panel loaded rules.schema.json`, 8000, 50);
+    const source = hub.rulesDoc;
+    await pressDocumentKeyEditor(testController, hub, 'procgen_metadata');
+    const pp = await testController.pollForValue(() => {
+        const el = document.querySelector('.procgen-pipeline-panel');
+        const p = el?.__panel;
+        return p && p.topDownSource === source ? p : null;
+    }, `${label}: the pipeline adopted the hand-off`, 8000, 50);
+    testController.reportCondition(`${label}: the pipeline adopted THIS document`, !!pp);
+    if (!pp) return null;
+    testController.assertEqual(`${label}: it is in top-down mode`, 'topDown', String(pp.mode));
+    testController.reportCondition(`${label}: …under the hand-off label`,
+        String(pp.topDownSourceLabel).startsWith('hand-off ('));
+    const gen = document.querySelector('.procgen-pipeline-panel .procgen-pipeline-btn-primary');
+    testController.assertEqual(`${label}: the primary button reads Generate`, 'Generate',
+        String(gen?.textContent));
+    if (!gen) return null;
+    const before = pp._tdState;
+    const t0 = performance.now();
+    gen.click();
+    const done = await testController.pollForCondition(
+        () => !pp.isGenerating && pp._tdState && pp._tdState !== before && !!pp._tdState.compile?.rulesJson,
+        `${label}: the top-down run completed`, TOPDOWN_RUN_BUDGET_MS, 100);
+    testController.log(`${label}: the top-down run took ${Math.round(performance.now() - t0)} ms`);
+    testController.reportCondition(`${label}: the top-down run completed`, done);
+    if (!done) return null;
+    const message = document.querySelector('.procgen-pipeline-panel .procgen-pipeline-message')?.textContent ?? '';
+    return { pp, source, compiled: pp._tdState.compile.rulesJson, message };
+}
+
+export async function apworldPipelineTopDownCompileMessageNamesItsWarnings(testController) {
+    let pp = null;
+    try {
+        const { HANDOFF_REALISED_SLOT } = await import('../../procgenPipeline/procgenPipelineUI.js');
+        const { undefinedRuleItems } = await import('../../procgenCore/ruleItemNames.js');
+        const slot = String(HANDOFF_REALISED_SLOT);
+
+        /* ── the rule-item subject ── */
+        const a = await handOffAndGenerate(testController, TOPDOWN_RULE_ITEMS_PRESET_PATH, 'rule items');
+        if (!a) return testController.getOverallResult();
+        pp = a.pp;
+        testController.reportCondition('no ERROR in the compile message', !a.message.startsWith('ERROR'));
+        // ⛓ DERIVED: what the compiled document's rules reference minus what its
+        //   items define — `itemReferencesInDocument` minus `items[p]`.
+        const names = undefinedRuleItems(a.compiled, slot).map((r) => r.name);
+        testController.reportCondition('⛓ premise: the compiled document names items it never defines',
+            names.length > 0);
+        testController.reportCondition('…and every one is the SOURCE\'s own gap',
+            names.every((n) => !Object.hasOwn(a.source.items?.[slot] ?? {}, n)));
+        testController.reportCondition(`⛓⛓ the message counts them: "rule items: ${names.length} undefined"`,
+            a.message.includes(`rule items: ${names.length} undefined`));
+        for (const n of names.slice(0, 3)) {
+            testController.reportCondition(`⛓⛓ …and names "${n}"`, a.message.includes(`Rule item "${n}"`));
+        }
+
+        /* ── the Menu subject ── */
+        const b = await handOffAndGenerate(testController, TOPDOWN_MENU_PRESET_PATH, 'menu');
+        if (!b) return testController.getOverallResult();
+        const menuName = m2StartRegionsOf(b.source, slot).default[0];
+        const menu = b.source.regions?.[slot]?.[menuName];
+        const placed = new Set(Object.keys(b.compiled.regions?.[slot] ?? {}));
+        // ⛓ DERIVED: the source Menu's exits whose target the compiled document
+        //   does not carry (the Menu itself is kept).
+        const dropped = (menu?.exits ?? []).filter((e) => e?.connected_region !== menuName
+            && !placed.has(e?.connected_region));
+        testController.reportCondition(`⛓ premise: the compile kept the source Menu "${menuName}"`,
+            placed.has(menuName));
+        testController.reportCondition('⛓ premise: some Menu exit\'s target got no cell', dropped.length > 0);
+        testController.reportCondition(`⛓⛓ the message counts them: "Menu: ${dropped.length} exit(s) dropped"`,
+            b.message.includes(`Menu: ${dropped.length} exit(s) dropped`));
+        for (const e of dropped.slice(0, 3)) {
+            testController.reportCondition(`⛓⛓ …and names "${e.name}" → "${e.connected_region}"`,
+                b.message.includes(`Menu exit "${e.name}" → "${e.connected_region}" dropped`));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('pipeline top-down test error-free', false);
+    } finally {
+        // ⛓ CLEAN UP: the pipeline keeps no run of this row's.
+        if (pp && !pp.isGenerating) pp._resetTDSteps();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-pipeline-topdown-compile-message-names-its-warnings',
+    name: 'APWorld hub → pipeline: a hand-off, Generate in top-down, and the compile message names its warnings',
+    description: 'T1 (plan §30.7 #4). Through the procgen_metadata door, the pipeline adopts the '
+               + 'working copy in top-down mode under the hand-off label; its own Generate button '
+               + 'runs the four steps; the compile message then counts and names (a) the rule '
+               + 'items the compiled document references but never defines (seedling_atlas/AP_1; '
+               + 'derived from the compiled document, never typed) and (b) the source Menu exits '
+               + 'whose target got no cell (a depgraph seed; derived from the source and the '
+               + 'compiled regions). Mutant: the message drops ruleItemWarnings / menuWarnings.',
+    testFunction: apworldPipelineTopDownCompileMessageNamesItsWarnings,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/**
+ * ⛓ T1 (plan §30.7 #3) — the one committed document the widened reading moves
+ * (`procgenCore/ruleTreeSlots.test.js` pins it: +16 issues, four names that sit
+ * in a rule kind the old five-kind list never read).
+ */
+const VALIDITY_MOVED_PRESET_PATH =
+    './presets/terraria/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+
+export async function apworldValidityReportNamesEveryUndefinedRuleItem(testController) {
+    try {
+        const panel = await openHub(testController, VALIDITY_MOVED_PRESET_PATH);
+        if (!panel) return testController.getOverallResult();
+        const { undefinedRuleItems } = await import('../../procgenCore/ruleItemNames.js');
+        const names = undefinedRuleItems(panel.rulesDoc, String(panel.playerId)).map((r) => r.name);
+        testController.reportCondition('⛓ premise: the rules name items the document never defines',
+            names.length > 0);
+        if (!panel.issuesExpanded) panel.validationBar.firstElementChild?.click();
+        const rows = await testController.pollForValue(() => {
+            const r = [...panel.validationBar.querySelectorAll('.apworld-validation-issue')];
+            return r.length ? r : null;
+        }, 'the validity report\'s issue rows', 8000, 50);
+        testController.reportCondition('the report lists its issues', !!rows);
+        if (!rows) return testController.getOverallResult();
+        const text = rows.map((r) => r.textContent);
+        const missing = names.filter((n) => !text.some((t) => t.includes(`unknown item "${n}"`)));
+        testController.assertEqual(
+            `⛓⛓ every one of the ${names.length} undefined rule items is named in the hub's report`,
+            '[]', JSON.stringify(missing));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('validity-report test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-validity-report-names-every-undefined-rule-item',
+    name: 'APWorld hub: the validity report names every item a rule references and the document never defines',
+    description: 'T1 (plan §30.7 #3). On the one committed document the widened validateRules moves '
+               + '(terraria: four names under a HasFromListUnique the old kind list never read), the '
+               + 'hub\'s expanded validity report carries an `unknown item` row for EVERY name '
+               + '`undefinedRuleItems` derives. Mutant: validateRules back to its kind list.',
+    testFunction: apworldValidityReportNamesEveryUndefinedRuleItem,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 registerTest({
     id: 'apworld-loop-costs-door-hands-the-working-copy-to-the-debugger',
     name: 'APWorld hub: the loop_costs door makes the cost debugger plan the WORKING COPY',
