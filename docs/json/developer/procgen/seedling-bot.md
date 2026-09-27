@@ -14331,14 +14331,43 @@ never two-passing a grown segment; a continuation from the true start never
 knowing `Game.time` (L18's spinners are the chain's first clock reader) —
 and recorded fresh on the game (395 observations, the model reproducing
 it). On the page's CAMPAIGN continuation window 19 then diverged at its tick
-133 (game y = 90.3624123755513, model 88.416; one hit; the walk ends in L18),
-with boundary 18/19 admitting and every seam row equal. Stepping L18's
-spinners ONE extra live frame before the window makes the model reproduce
-the game's continuation to the last digit: the page arms a continuation
-window one live frame after the world swap, always-moving bodies take that
-frame, and the tick-0 clock write hides it. The D2 chain never showed it
-because it starts FRESH at L18. `r9-solve-18` and the three fixes were not
-landed (the honest split); the ruling is the user's.
+133 (game y = 90.3624123755513, model 87.616; one hit; the walk ends in L18
+at (141.33, 123.96)), with boundary 18/19 admitting and every seam row equal.
+The D2 chain never showed it because it starts FRESH at L18. `r9-solve-18`
+and the three fixes were not landed (the honest split); the ruling is the
+user's.
+
+⛔ **The mechanism this paragraph first gave is overturned (slice L18 W0,
+below).** It said "stepping L18's spinners one extra live frame reproduces the
+game's continuation to the last digit; the page arms one frame after the world
+swap". At k = 1 the model's first divergence is at tick 138, not 133, and no
+k in 0–207 reproduces the game's end state.
+
+#### ⛔ R9 slice L18, W0: the continuation gap is the page's wall clock, and only AS3 can close it
+
+Measured on the game (headless logic-only), `Game.time` ran **36** and **38**
+live frames between a window's latch and the next `botStart` (boundaries into
+L15 and L16; latch → first status read alone was 22 vs 27 frames). A director
+boundary takes `botStart`'s skip path, so there is no world swap to arm after.
+The room stays live while the page polls (250 ms), releases held keys (a
+400 ms wait) and admits the seam. The tick-0 write restores the streams and
+the clock but no body's position. Eighteen boundaries agreed per tick because
+nothing the gap moved was touched by the walk.
+
+The page cannot close the gap:
+
+- `Bot.update` latches and disarms at `tick == tick_count`, then that same
+  frame's `super.update()` steps the room once more (`Main.as:61-68`).
+- The bridge is callable only between frames.
+- No verb, tape field or pin holds the world.
+
+A fresh boot's tick 0 has had zero room updates. So continuation == fresh in
+the game needs an AS3 change: a hold-after-latch, or an in-frame chained arm.
+The slice stopped there, with nothing cherry-picked and no tape moved.
+Offline, over k = 0–207 extra spinner steps, only k = 6 reproduces the game's
+first divergence (tick 133, y 90.3624123755513), and it still reaches L19
+where the game stays in L18. So the gap moves more than the spinners, and the
+model's stepping over a long gap is unverified.
 
 ### R9 slice 13: THE WATCH-PAGE FIVE — the ladder becomes a link, sand traps become visible, and seven typed numbers stop lying
 
