@@ -50,6 +50,7 @@ Modules marked *(disabled)* are present in the codebase but not enabled in the d
 ## Data and Configuration Panels
 
 - [JSON](./json.md)
+- [Storage](../user/modules/storagePanel.md) (`storagePanel`) — every key this site keeps in the browser's local storage, with its owner (from each module's `moduleInfo.storage`), kind and size; Clear per row, per section and per declared family; the banner shown when a save does not fit (`app/core/storageQuota.js`). Code: `frontend/modules/storagePanel/`.
 - [Presets](./presets.md)
 - [Settings](./settings.md)
 - **Options Panel** (`optionsPanel`) — general application settings and preferences, including the auto-generated All Settings view.

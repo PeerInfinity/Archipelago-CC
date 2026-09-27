@@ -50,6 +50,7 @@ The console in the center panel accepts a few client-specific commands, even whe
 - An address that names a mode (`?mode=loops`) always loads that mode's saved settings, whether Auto-load is on or off.
 - **Starting fresh:** `?reset=true` clears the saved data of the mode it opens (`?reset=true&mode=loops` for another mode) and forgets the last active mode; `?mode=reset` does the same for the `default` mode, as does the JSON panel's *Reset Default Mode*. The Options panel's *Reset to Defaults* replaces the current mode's saved settings with the defaults.
 - **Running a test mode by hand:** the `test-*` modes (for example `?mode=test-regression`) keep saved settings too, and the tests change settings while they run. So the second time you open that address in the same browser, it starts from whatever the first run left behind. Open `?reset=true&mode=test-regression` instead to run it from a clean state. The automated test runs (`npm test`) open a fresh browser every time and are not affected.
+- **Seeing and clearing what is stored:** the [Storage panel](./modules/storagePanel.md) (next to the JSON panel) lists every key this site keeps in your browser: whose it is, whether it is your data, settings or a cache, and how big it is. It has a **Clear** per row and per section, plus **Clear all saved modes**. When the browser's storage for the site is full, a banner names what could not be saved and opens that panel. Each site address (`localhost:8000`, another port, the published site) has its own storage.
 
 ## Frequently Asked Questions (FAQs)
 

@@ -1,0 +1,100 @@
+.storage-panel {
+    padding: 6px 8px;
+    font-size: 13px;
+    overflow: auto;
+    height: 100%;
+    box-sizing: border-box;
+}
+.storage-panel .sp-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 4px;
+}
+.storage-panel .sp-header {
+    font-weight: bold;
+    margin-right: auto;
+}
+.storage-panel .sp-note:empty {
+    display: none;
+}
+.storage-panel .sp-note {
+    color: #e0a040;
+    margin-bottom: 4px;
+}
+.storage-panel .sp-section {
+    border-top: 1px solid #555;
+    padding-top: 4px;
+    margin-top: 6px;
+}
+.storage-panel .sp-section[data-section="unknown"] .sp-section-title {
+    color: #e0a040;
+}
+.storage-panel .sp-section-head,
+.storage-panel .sp-group-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+.storage-panel .sp-section-title {
+    font-size: 14px;
+    margin: 2px auto 2px 0;
+}
+.storage-panel .sp-blurb,
+.storage-panel .sp-empty {
+    margin: 2px 0 4px;
+    color: #aaa;
+}
+.storage-panel .sp-group {
+    margin: 4px 0 6px 6px;
+}
+.storage-panel .sp-owner {
+    font-weight: bold;
+    margin-right: auto;
+}
+.storage-panel .sp-rows {
+    border-collapse: collapse;
+    width: 100%;
+}
+.storage-panel .sp-rows td {
+    padding: 1px 4px;
+    vertical-align: top;
+}
+.storage-panel .sp-key {
+    font-family: monospace;
+    word-break: break-all;
+}
+.storage-panel .sp-label {
+    color: #aaa;
+}
+.storage-panel .sp-chars,
+.storage-panel .sp-pct {
+    text-align: right;
+    white-space: nowrap;
+}
+.storage-panel .sp-actions {
+    white-space: nowrap;
+    text-align: right;
+}
+
+.storage-quota-notice {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 10px;
+    background: #7a2e0e;
+    color: #fff;
+    font-size: 13px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.storage-quota-notice-text {
+    flex: 1 1 300px;
+}

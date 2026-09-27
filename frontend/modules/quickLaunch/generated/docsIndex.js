@@ -822,6 +822,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The Spoiler Test panel validates that the frontend logic engine correctly reproduces the game's intended progression. It replays a spoiler log sphere-by-sphere, checking that the state manager…"
     },
     {
+        "path": "docs/json/user/modules/storagePanel.md",
+        "title": "Storage Panel",
+        "section": "user/modules",
+        "summary": "The Storage panel lists every key this site keeps in your browser's local storage. For each key it shows which part of the app owns it, what kind of data it is and how big it is. It lets you clear…"
+    },
+    {
         "path": "docs/json/user/modules/textAdventure.md",
         "title": "Text Adventure Panel",
         "section": "user/modules",
@@ -909,6 +915,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/user/modules/settings.md",
             "docs/json/user/modules/spoilerChecklist.md",
             "docs/json/user/modules/spoilerTest.md",
+            "docs/json/user/modules/storagePanel.md",
             "docs/json/user/modules/textAdventure.md",
             "docs/json/user/modules/timerPanel.md",
             "docs/json/user/modules/windowManagerPanel.md",

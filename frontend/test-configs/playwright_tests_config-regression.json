@@ -450,6 +450,34 @@
       "order": 54,
       "category": "JSON Panel",
       "_comment": "Quick Launch Q1b (2026-09-24), trap 1424: a live layout import (applyLayoutConfig) must leave every module with a panel enabled exactly when its tab exists and disable nothing; a layout without Events disables it and the original re-enables it; enableModule then activates the existing tab instead of adding a second. Self-contained (ends on the layout it started with)."
+    },
+    {
+      "id": "storage-panel-lists-every-key-with-owner-and-size",
+      "enabled": true,
+      "order": 55,
+      "category": "Storage",
+      "_comment": "local-storage V1 (2026-09-27): the Storage panel (declared keys, sections Unknown-first, Clear per row/section) and the quota notice. ⚖ RULED: each row sets its own state and restores the origin; the quota row is LAST in its group. Enrolled here (defaultEnabledState is false)."
+    },
+    {
+      "id": "storage-panel-row-clear-removes-the-key",
+      "enabled": true,
+      "order": 56,
+      "category": "Storage",
+      "_comment": "local-storage V1 (2026-09-27): the Storage panel (declared keys, sections Unknown-first, Clear per row/section) and the quota notice. ⚖ RULED: each row sets its own state and restores the origin; the quota row is LAST in its group. Enrolled here (defaultEnabledState is false)."
+    },
+    {
+      "id": "storage-panel-section-clear-spares-user-data",
+      "enabled": true,
+      "order": 57,
+      "category": "Storage",
+      "_comment": "local-storage V1 (2026-09-27): the Storage panel (declared keys, sections Unknown-first, Clear per row/section) and the quota notice. ⚖ RULED: each row sets its own state and restores the origin; the quota row is LAST in its group. Enrolled here (defaultEnabledState is false)."
+    },
+    {
+      "id": "settings-save-quota-error-notifies",
+      "enabled": true,
+      "order": 58,
+      "category": "Storage",
+      "_comment": "local-storage V1 (2026-09-27): the Storage panel (declared keys, sections Unknown-first, Clear per row/section) and the quota notice. ⚖ RULED: each row sets its own state and restores the origin; the quota row is LAST in its group. Enrolled here (defaultEnabledState is false)."
     }
   ]
 }

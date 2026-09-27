@@ -29,6 +29,11 @@
             },
             {
               "type": "component",
+              "componentType": "storagePanel",
+              "title": "Storage"
+            },
+            {
+              "type": "component",
               "componentType": "modulesPanel",
               "title": "Modules"
             },
@@ -380,6 +385,11 @@
             },
             {
               "type": "component",
+              "componentType": "storagePanel",
+              "title": "Storage"
+            },
+            {
+              "type": "component",
               "componentType": "modulesPanel",
               "title": "Modules"
             }
@@ -452,6 +462,11 @@
               "type": "component",
               "componentType": "jsonPanel",
               "title": "JSON"
+            },
+            {
+              "type": "component",
+              "componentType": "storagePanel",
+              "title": "Storage"
             },
             {
               "type": "component",
@@ -550,6 +565,11 @@
             },
             {
               "type": "component",
+              "componentType": "storagePanel",
+              "title": "Storage"
+            },
+            {
+              "type": "component",
               "componentType": "modulesPanel",
               "title": "Modules"
             }
@@ -622,6 +642,11 @@
               "type": "component",
               "componentType": "jsonPanel",
               "title": "JSON"
+            },
+            {
+              "type": "component",
+              "componentType": "storagePanel",
+              "title": "Storage"
             },
             {
               "type": "component",
@@ -739,6 +764,11 @@
             },
             {
               "type": "component",
+              "componentType": "storagePanel",
+              "title": "Storage"
+            },
+            {
+              "type": "component",
               "componentType": "modulesPanel",
               "title": "Modules"
             }
@@ -806,6 +836,11 @@
               "type": "component",
               "componentType": "jsonPanel",
               "title": "JSON"
+            },
+            {
+              "type": "component",
+              "componentType": "storagePanel",
+              "title": "Storage"
             },
             {
               "type": "component",

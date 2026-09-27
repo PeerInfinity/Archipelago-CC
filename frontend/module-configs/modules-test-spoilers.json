@@ -12,6 +12,10 @@
       "path": "./modules/json/index.js",
       "enabled": false
     },
+    "storagePanel": {
+      "path": "./modules/storagePanel/index.js",
+      "enabled": false
+    },
     "events": {
       "path": "./modules/events/index.js",
       "enabled": false
@@ -229,6 +233,7 @@
     "modules",
     "quickLaunch",
     "json",
+    "storagePanel",
     "events",
     "stateManager",
     "client",
