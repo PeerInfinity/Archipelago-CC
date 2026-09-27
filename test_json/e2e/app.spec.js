@@ -398,53 +398,14 @@ test.describe('Application End-to-End Tests', () => {
       // This is acceptable - the system should handle no enabled tests gracefully
     }
 
-    // Check for test case results from testCasePanelRunAll
-    const testCaseResultsString = await page.evaluate(() =>
-      localStorage.getItem('__testCaseResults__')
-    );
-
-    if (testCaseResultsString) {
-      console.log('PW DEBUG: Test case results found in localStorage.');
-      const testCaseResults = JSON.parse(testCaseResultsString);
-
-      console.log(
-        'PW DEBUG: Test Case Results Summary:',
-        `Total: ${testCaseResults.total}, ` +
-          `Passed: ${testCaseResults.passed}, ` +
-          `Failed: ${testCaseResults.failed}, ` +
-          `Cancelled: ${testCaseResults.cancelled}`
-      );
-
-      // Log failed tests for debugging
-      if (testCaseResults.failed > 0) {
-        console.log('PW DEBUG: Failed test cases:');
-        testCaseResults.details.forEach((test) => {
-          if (test.status === 'failed' || test.status === 'error') {
-            console.log(`  - ${test.locationName}: ${test.message}`);
-          }
-        });
-      }
-
-      // Report test case results (but don't fail the Playwright test if some test cases fail)
-      // This allows us to see the results even if there are failing test cases
-      console.log(
-        `PW DEBUG: Test case validation completed. ${testCaseResults.passed}/${testCaseResults.total} test cases passed.`
-      );
-
-      // Optionally, you can uncomment the line below to make Playwright fail if any test cases fail:
-      // expect(testCaseResults.failed).toBe(0);
-    } else {
-      console.log('PW DEBUG: No test case results found in localStorage.');
-    }
+    // (Removed, local-storage V1: the reads of localStorage '__testCaseResults__' and
+    // '__spoilerTestResults__' — nothing in the app writes either key; the spoiler
+    // results are read from window.__spoilerTestResults__ below. Plan §37.7.6.)
 
     // Check for detailed spoiler test results
     const spoilerTestResults = await page.evaluate(() => {
       const windowResults = typeof window !== 'undefined' && window.__spoilerTestResults__ ? window.__spoilerTestResults__ : null;
-      const localStorageResults = localStorage.getItem('__spoilerTestResults__');
-      return {
-        windowResults,
-        localStorageResults: localStorageResults ? JSON.parse(localStorageResults) : null
-      };
+      return { windowResults };
     });
 
     if (spoilerTestResults.windowResults) {
@@ -474,12 +435,6 @@ test.describe('Application End-to-End Tests', () => {
       }
     } else {
       console.log('PW DEBUG: No detailed spoiler test results found in window.__spoilerTestResults__.');
-    }
-
-    if (spoilerTestResults.localStorageResults) {
-      console.log(`PW DEBUG: Detailed spoiler test results from localStorage: ${JSON.stringify(spoilerTestResults.localStorageResults, null, 2)}`);
-    } else {
-      console.log('PW DEBUG: No detailed spoiler test results found in localStorage.__spoilerTestResults__.');
     }
 
     // Capture and log profiling data if available
