@@ -161,6 +161,13 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
             + '19: teleporter@176,112 → L19. The survey\'s own solve is 485 tick(s), '
             + '2 decision(s), 0 re-plan(s), passes [discover, measure, solve]',
     }),
+    Object.freeze({
+        name: 'r9-solve-19', level: 19, to: 20, collects: Object.freeze(['bosskey']),
+        why: 'L19 — grown by `rerecord-seedling-campaign.mjs --grow` at route step '
+            + '20: Level 019 - Boss Key 0 (sphere 1.2) → Red Key; stairsup@16,96 → '
+            + 'L20. The survey\'s own solve is 746 tick(s), 5 decision(s), 0 '
+            + 're-plan(s), passes [solve]',
+    }),
 ]);
 
 /** The chain's id — the thing `?tapes=` names and a page expands. */

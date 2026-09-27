@@ -149,8 +149,8 @@ describe('the roster categories (⚖ 70)', () => {
         // single-room pickups no route produces. This row is the pin that
         // makes a change to a route fixture visible.
         expect(cats['map-walk'].length).toBe(21);
-        expect(cats.campaign.length).toBe(28);
-        expect(cats.mechanic.length).toBe(roster.length - 49);
+        expect(cats.campaign.length).toBe(29);
+        expect(cats.mechanic.length).toBe(roster.length - 50);
     });
 
     it('`campaign` is CHAIN-CLOSED — every tape a chain owns, headlines included', () => {
