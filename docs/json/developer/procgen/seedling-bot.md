@@ -14194,6 +14194,90 @@ by the engine's grid ((16,6) and (16,3) are Stone); L16's weigh is `E1 from
 the sword-press rope arm that deactivates the arrow traps (⚖ 65 (d)) and the
 seven-Bob roster are that room's own slice — route step 18's work order.
 
+### R9 slice L16: THE ROPE SILENCES THE LANES — eighteen rooms play, and the chain stops one room short of the shield on a continuation frame
+
+**`r9-solve-16` is on disk, recorded headless on the game and reproduced per
+tick by the model, and the campaign chain is eighteen segments** — `new
+Game(0,80,128)` to the **L18 arrival**, 4412 ticks. Route step 18 (L16) had
+refused since slice 12b″ with the chaser roster refused. The rope is the
+switch: its group is the three arrow traps' group, `shootDefault` makes
+them fire until it is published, and one sword swing publishes it.
+
+| | before | after |
+|---|---|---|
+| chain segments | 17 | **18** |
+| chain ticks | 3787 | **4412** |
+| route survey | 25 / 29 | **26 / 29** |
+| frontier | step 18, L16, BRIDGE+KILL_ARM | **covered 18 — a gap list (steps 19–21 all solve on the survey's staged boots)** |
+| tape roster | 150 | **151** |
+| `roster: --tier=full` | 150 tapes (mixed heads) | **151 tapes 3264/0/0** — CI run 36302890473, 10 shards, headless logic-only, all three categories at one head |
+
+#### Three transcription rows and one verb
+
+- **The sword pulls the rope.** `PRESS_ARM_POLICY.RopeStart` is `modelled`;
+  its body is the fire arm's (R5 slice 7), hoisted into `levelRun`'s
+  `pullRope` so both weapons run one transcription. What a sword adds is
+  `Player.slash`'s filter: the reach gate applies, the line-of-sight gate is
+  waived for `type == "Rope"` (`Player.as:916`, `presses.ROPE_LINE_WAIVED`).
+  `ropeSword.test.js` presses L39's rope through a Blue Wall to say so.
+- **The roster predicate asks one rect deeper.** `chaserRoomVerdict` refuses
+  a trap room only when a static, un-bridged body's own box stands in a lane
+  (`lanesOver` at the census centre). Over the whole atlas exactly one room
+  moves — L16 (sandtraps x 32–63, lanes 90–134) — and L8's refusal text is
+  byte-identical.
+- **The PULL rung.** Between AVOID and TIME, and CONDITIONAL: it exists only
+  where the room holds the lane's silencer (`deriveLaneSilencer` — a
+  `RopeStart` of the trap's own `t` whose latch makes `activate XOR
+  shootDefault` false). A room without one climbs byte-identically, and
+  `assertEscalationIsOrdered` accepts a skip of a conditional rung and of no
+  other. The stance is `break`'s press-at-rect derivation (hoisted into
+  `deriveSwingStance`) plus a danger admit — its first pick was the
+  sandtrap's own cell. `execPull` asserts `run.latchedGroups.has(t)` on the
+  live run, FIRST (a sword-dash press on the approach pulled the rope at
+  t=88 before the verb arrived) and by name after its bound.
+- **The lanes leave the danger map on their own**: `armedArrowTraps` already
+  applies the latch through the XOR, so no consumer changed.
+- **The weigh's idle ticks are armed** (⚖ 30(b)): each lean's settle, each
+  break's wait and the fade carry one strike policy. Unarmed, `bob@224,96`
+  walked into contact during the last settle and hit the fade.
+
+#### The walk, as recorded
+
+The pull from (5,2), the trap row crossed east, the block route `E1 · break
+breakablerock@304,64 · N2` (§55's measurement), the fade, the stairs: 625
+ticks, 36 landed presses, three bobs knocked into water and pits by the
+walk's own strikes and one killed in the weigh's armed span, the player
+never hit. The seam latch carries the rope's `{16,0}`, the rocks' `{16,3}`,
+`{16,4}`, `{16,6}` and the lock's `{16,7}`.
+
+#### The recording channel is headless now
+
+The pipeline still spelled Windows in three places — the producer's latch
+drive, S1/S2's, and S3's `--win --record` — and every page URL was `:8000`.
+All three run the same `seedling-bot-replay-win.py` through
+`seedlingDriver.driverChannel` on `HEADLESS_LOGIC_ONLY_ARGS` (`--win` opts
+into the real-GPU arm), against `SEEDLING_PORT`; the latch cache is keyed on
+the bytes the game is handed and did not move. `r9-solve-15`'s latch was the
+chain's first driven headless (457 observations, 24 s).
+
+#### ⛔ Where the chain stops: step 19, L18 — a continuation arm-frame divergence
+
+`r9-solve-18` (L18 → L19) solved from `r9-solve-16`'s measured latch once
+three defects were fixed — the spinner press train checked at the box the
+player stands in rather than where the aim tick moves them; the producer
+never two-passing a grown segment; a continuation from the true start never
+knowing `Game.time` (L18's spinners are the chain's first clock reader) —
+and recorded fresh on the game (395 observations, the model reproducing
+it). On the page's CAMPAIGN continuation window 19 then diverged at its tick
+133 (game y = 90.3624123755513, model 88.416; one hit; the walk ends in L18),
+with boundary 18/19 admitting and every seam row equal. Stepping L18's
+spinners ONE extra live frame before the window makes the model reproduce
+the game's continuation to the last digit: the page arms a continuation
+window one live frame after the world swap, always-moving bodies take that
+frame, and the tick-0 clock write hides it. The D2 chain never showed it
+because it starts FRESH at L18. `r9-solve-18` and the three fixes were not
+landed (the honest split); the ruling is the user's.
+
 ### R9 slice 13: THE WATCH-PAGE FIVE — the ladder becomes a link, sand traps become visible, and seven typed numbers stop lying
 
 ⚖ Ruling 29's watch-page items, all five, tape-inert. `a535bdb13` … `fa547ddaf`.
