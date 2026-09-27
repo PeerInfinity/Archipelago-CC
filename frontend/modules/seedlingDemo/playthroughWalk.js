@@ -1271,6 +1271,22 @@ const CHAIN_DECLARATIONS = Object.freeze([
                         + 'measured on both sides rather than a poll',
                 }),
             }),
+            /**
+             * ⛓ R9 SLICE L16 — L18's kill lock, the first timed clear a GROWN
+             * segment declares (`r9-solve-18`, authored through the two-pass
+             * loop). The model computes it — `r8-solve-18`'s own law, one chain
+             * over — and the recording agreed per tick (395 observations).
+             */
+            Object.freeze({
+                level: 18, tag: 0, source: 'model',
+                evidence: Object.freeze({
+                    removedAt: 241,
+                    fade: 101,
+                    why: '`spinnerKillLockOpens`\'s removal (the second spinner dies to '
+                        + 'the player\'s presses and `Game.totalEnemies()` reaches zero) '
+                        + 'plus `activators.opensOnTick(0.01)`',
+                }),
+            }),
         ]),
         /**
          * ⛔ THE CUTS ARE THE HEADLINE'S OWN ARRIVALS, printed by

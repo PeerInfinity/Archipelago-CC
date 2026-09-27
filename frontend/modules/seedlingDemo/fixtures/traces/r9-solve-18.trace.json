@@ -1,0 +1,138 @@
+{
+    "trace_version": 1,
+    "tape": "r9-solve-18",
+    "tick_count": 394,
+    "boot": {
+        "level": 18,
+        "x": 16,
+        "y": 32
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 18,
+                "x": 24,
+                "y": 40,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 184,
+                    "y": 120
+                }
+            },
+            "obstacle": {
+                "kind": "solid",
+                "id": "lock@144,112"
+            },
+            "strategy": {
+                "verb": "kill",
+                "postCondition": "kill-lock"
+            },
+            "rejected": [
+                {
+                    "option": "kill by the room's own ceiling",
+                    "why": "level 18 has 0 arrow trap(s), so there is no ceiling to arm — the weapon is the player's own press, which `KILL_ARM_POLICY` calls `modelled` for [Spinner, Spinner]"
+                },
+                {
+                    "option": "hold",
+                    "why": "lock@144,112 carries `tset == -1`, so NO button in the game answers it — `checkEnemies()` opens it when `Game.totalEnemies()` reaches zero (§12.8)."
+                }
+            ],
+            "keys": [
+                "down",
+                "right"
+            ]
+        },
+        {
+            "tick": 343,
+            "saw": {
+                "level": 18,
+                "x": 104.31479227936349,
+                "y": 72.18213868092909,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 184,
+                    "y": 120
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 2,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 51,
+                    "baseline": 80,
+                    "saved": 29,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 27,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 47,
+                            "prefix": [
+                                0,
+                                2
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        30,
+                        21
+                    ],
+                    "scanned": 40,
+                    "why": null
+                }
+            },
+            "path": [
+                {
+                    "x": 136,
+                    "y": 120
+                },
+                {
+                    "x": 184,
+                    "y": 120
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "32 of 40 scanned preview(s) — first at walk-offset 0: 80 tick(s) against 80 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
+            "keys": [
+                "down",
+                "primary",
+                "right"
+            ]
+        }
+    ]
+}
