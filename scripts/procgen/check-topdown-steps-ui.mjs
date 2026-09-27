@@ -28,6 +28,7 @@
 import { chromium } from 'playwright';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { clickPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -124,12 +125,7 @@ await page.addInitScript(() => {
 await page.goto(`${HOST}/frontend/`);
 await page.waitForTimeout(8000);
 
-const activated = await page.evaluate(() => {
-    const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Procgen Pipeline');
-    if (!tab) return false;
-    tab.click();
-    return true;
-});
+const activated = await clickPanelTab(page, PROCGEN_PIPELINE_PANEL);
 if (!activated) { console.log(checkLine(false, 'could not activate Procgen Pipeline panel')); console.log(logs.join('\n')); await browser.close(); console.log(totalLine(1)); process.exit(1); }
 await page.waitForTimeout(1500);
 

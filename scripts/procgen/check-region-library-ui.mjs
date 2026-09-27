@@ -25,9 +25,9 @@
  *     (check-region-library-sphere-roundtrip.mjs + sphereLibrary.slow.test.js);
  *     Phase D proves the PANEL delivers it.
  *
- * Prereq: dev server on :8000 (localhost → unbundled ES modules, so source edits
+ * Prereq: dev server on :8000, or `--host=<origin>` (localhost → unbundled ES modules, so source edits
  * are picked up). Run: node scripts/procgen/check-region-library-ui.mjs
- * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere.
+ * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at `localhost:8000` by default and it reads `--host=` by hand, not in the roster's one flag spelling, so the roster cannot point it elsewhere.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
 import fs from 'node:fs';
@@ -36,6 +36,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
 import { stableStringify } from '../../frontend/modules/procgenCore/contentIdentity.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { clickPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -51,6 +52,15 @@ import { failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-region-library-ui.mjs', kind: 'browser' });
+
+/**
+ * ⛓ QUICK LAUNCH P8 — `--host=<origin>`, the wasm-bridge gate's pattern: the
+ * default is unchanged (`http://localhost:8000`), so every existing caller
+ * behaves as before, and a worktree serving its own port can run this gate
+ * against ITS OWN tree (:8000 serves the primary, trap 1003).
+ */
+const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http://localhost:8000')
+    .slice('--host='.length).replace(/\/+$/, '');
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
@@ -172,12 +182,7 @@ const extractRulesJson = async () => JSON.parse(await extractDownload(() => clic
 async function activatePanel() {
     let activated = false;
     for (let i = 0; i < 40 && !activated; i++) {
-        activated = await page.evaluate(() => {
-            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Procgen Pipeline');
-            if (!tab) return false;
-            tab.click();
-            return true;
-        });
+        activated = await clickPanelTab(page, PROCGEN_PIPELINE_PANEL);
         if (!activated) await page.waitForTimeout(500);
     }
     if (!activated) throw new Error('could not activate Procgen Pipeline panel');
@@ -210,7 +215,7 @@ async function waitForSelectedLibrary() {
 }
 
 // --- Phase A — F3 selection + generate ------------------------------
-await page.goto('http://localhost:8000/frontend/');
+await page.goto(`${HOST}/frontend/`);
 await page.waitForTimeout(8000);
 await activatePanel();
 
@@ -392,18 +397,13 @@ const sExtractRulesJson = async () => {
     return JSON.parse(Buffer.concat(chunks).toString('utf8'));
 };
 
-await sp.goto('http://localhost:8000/frontend/');
+await sp.goto(`${HOST}/frontend/`);
 await sp.waitForTimeout(8000);
 // Activate the panel (same handshake as activatePanel, bound to sp).
 {
     let activated = false;
     for (let i = 0; i < 40 && !activated; i++) {
-        activated = await sp.evaluate(() => {
-            const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Procgen Pipeline');
-            if (!tab) return false;
-            tab.click();
-            return true;
-        });
+        activated = await clickPanelTab(sp, PROCGEN_PIPELINE_PANEL);
         if (!activated) await sp.waitForTimeout(500);
     }
     assert(activated, 'Phase D: activated the Procgen Pipeline panel in sphere mode');

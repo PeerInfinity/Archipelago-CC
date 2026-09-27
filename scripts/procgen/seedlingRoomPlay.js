@@ -28,6 +28,20 @@
  */
 export const FLASH_PANEL = 'flashPanel';
 export const MAZE_ROOM_PANEL = 'mazeRoomPanel';
+/**
+ * ⛓ QUICK LAUNCH P8 — the rest of the procgen gates moved onto the same lookup
+ * (fourteen files found their tab by the title "Procgen Pipeline", "Presets",
+ * "Region Marking Tool" or "APWorld Editor"). Each value is read off the
+ * module's own `moduleInfo.componentType`:
+ */
+/** `frontend/modules/procgenPipeline/index.js` moduleInfo.componentType. */
+export const PROCGEN_PIPELINE_PANEL = 'procgenPipelinePanel';
+/** `frontend/modules/presets/index.js` moduleInfo.componentType. */
+export const PRESETS_PANEL = 'presetsPanel';
+/** `frontend/modules/regionMarkingTool/index.js` moduleInfo.componentType (`REGION_MARKING_COMPONENT_TYPE`). */
+export const REGION_MARKING_TOOL_PANEL = 'regionMarkingTool';
+/** `frontend/modules/apworldEditor/index.js` moduleInfo.componentType (`APWORLD_EDITOR_PANEL_ID`). */
+export const APWORLD_EDITOR_PANEL = 'apworldEditorPanel';
 
 /**
  * IN-PAGE, self-contained (it is serialised into the page — no closures): the

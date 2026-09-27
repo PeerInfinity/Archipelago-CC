@@ -59,6 +59,7 @@ import { chromium } from 'playwright';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { clickPanelTab, APWORLD_EDITOR_PANEL } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -176,12 +177,7 @@ async function main() {
         await page.goto(`${HOST}/frontend/`, { waitUntil: 'domcontentloaded' });
         await page.waitForSelector('.apworld-editor-panel', { state: 'attached', timeout: 60000 });
         // The hub mounts inside a stack; bring its tab forward the way a user would.
-        await page.evaluate(() => {
-            const tab = [...document.querySelectorAll('.lm_tab .lm_title')]
-                .find((t) => t.textContent.trim() === 'APWorld Editor');
-            if (!tab) throw new Error('no "APWorld Editor" tab in the default layout');
-            tab.click();
-        });
+        if (!await clickPanelTab(page, APWORLD_EDITOR_PANEL)) throw new Error(`no ${APWORLD_EDITOR_PANEL} tab in the default layout`);
         await page.waitForSelector('.apworld-editor-panel', { state: 'visible', timeout: 30000 });
 
         for (const pick of picks) {

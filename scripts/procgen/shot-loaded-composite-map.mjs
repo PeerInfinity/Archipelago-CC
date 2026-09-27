@@ -22,6 +22,7 @@ import { chromium } from 'playwright';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { findPanelTab, PROCGEN_PIPELINE_PANEL, PRESETS_PANEL } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -56,29 +57,28 @@ async function main() {
    * settles. `check-sphere-steps-ui.mjs` dispatches the events itself, and this
    * follows it rather than inventing a second answer.
    */
-  const goTab = (title) => page.evaluate((t) => {
-    const x = [...document.querySelectorAll('.lm_tab')].find((e) => e.title === t);
-    if (!x) return false;
-    x.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    x.click();
+  const goTab = async (componentType) => {
+    const tab = await findPanelTab(page, componentType);
+    if (!tab) return false;
+    await tab.evaluate((x) => { x.dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); x.click(); });
     return true;
-  }, title);
+  };
 
   // ⛓ MOUNT THE PIPELINE PANEL FIRST. Its loaded-preset intake is a subscription
   //   to `stateManager:rawJsonDataLoaded` taken in `initialize()`, and
   //   GoldenLayout constructs a panel when its tab is first shown — a preset
   //   loaded before the panel exists reaches nobody and no canvas ever appears.
-  if (!await goTab('Procgen Pipeline')) throw new Error('Procgen Pipeline tab not found');
+  if (!await goTab(PROCGEN_PIPELINE_PANEL)) throw new Error('Procgen Pipeline tab not found');
   await page.waitForTimeout(1500);
 
-  if (!await goTab('Presets')) throw new Error('Presets tab not found');
+  if (!await goTab(PRESETS_PANEL)) throw new Error('Presets tab not found');
   await page.waitForSelector('.game-row', { timeout: 15000 });
   await page.waitForSelector('button[data-game-directory="procgen_maze"][data-seed-name="AP_1"]',
     { timeout: 15000 });
   await page.click('button[data-game-directory="procgen_maze"][data-seed-name="AP_1"]');
   await page.waitForTimeout(2500);
 
-  await goTab('Procgen Pipeline');
+  await goTab(PROCGEN_PIPELINE_PANEL);
   await page.waitForTimeout(2000);
   const canvas = page.locator('.procgen-pipeline-canvas').first();
   if (await canvas.count() === 0) throw new Error('no composite canvas — the panel has no result');

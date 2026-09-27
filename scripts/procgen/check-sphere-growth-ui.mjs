@@ -20,9 +20,9 @@
  * first (same seed/params ⇒ identical output — determinism is part of
  * what this asserts).
  *
- * Prereq: dev server on :8000 (python -m http.server 8000).
+ * Prereq: dev server on :8000, or `--host=<origin>` (python -m http.server 8000).
  * Run: node scripts/procgen/check-sphere-growth-ui.mjs
- * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere.
+ * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at `localhost:8000` by default and it reads `--host=` by hand, not in the roster's one flag spelling, so the roster cannot point it elsewhere.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
 import { chromium } from 'playwright';
@@ -61,6 +61,7 @@ import {
     DEFAULT_BOUNCE_PROCGEN_PARAMS,
 } from '../../frontend/modules/bounceDemo/bounceProcgenParams.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { findPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -71,6 +72,15 @@ import { takeBoxLockOrExit } from './boxLock.js';
  * through. `--wait-for-box=<sec>` queues instead of refusing.
  */
 takeBoxLockOrExit({ name: 'check-sphere-growth-ui.mjs', kind: 'browser' });
+
+/**
+ * ⛓ QUICK LAUNCH P8 — `--host=<origin>`, the wasm-bridge gate's pattern: the
+ * default is unchanged (`http://localhost:8000`), so every existing caller
+ * behaves as before, and a worktree serving its own port can run this gate
+ * against ITS OWN tree (:8000 serves the primary, trap 1003).
+ */
+const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http://localhost:8000')
+    .slice('--host='.length).replace(/\/+$/, '');
 const itemPool = { ...ITEM_POOL };
 const prep = prepareBounceSphereGrowth({
     itemPool, quotas: { bounce: 99 }, startSubstrate: null,
@@ -135,7 +145,7 @@ await page.addInitScript(({ params, items }) => {
     }));
 }, { params: PANEL_PARAMS, items: ITEM_POOL });
 
-await page.goto('http://localhost:8000/frontend/');
+await page.goto(`${HOST}/frontend/`);
 await page.waitForTimeout(8000);
 
 async function publish(event, payload) {
@@ -148,14 +158,9 @@ async function publish(event, payload) {
 // Bring the pipeline panel forward. The tab may sit in GoldenLayout's
 // overflow dropdown (the layout has many panels), so dispatch the
 // click programmatically rather than requiring screen visibility.
-const activated = await page.evaluate(() => {
-    const tab = [...document.querySelectorAll('.lm_tab')]
-        .find((t) => t.title === 'Procgen Pipeline');
-    if (!tab) return false;
-    tab.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    tab.click();
-    return true;
-});
+const tab = await findPanelTab(page, PROCGEN_PIPELINE_PANEL);
+if (tab) await tab.evaluate((t) => { t.dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); t.click(); });
+const activated = !!tab;
 if (!activated) throw new Error('Procgen Pipeline tab not found');
 await page.waitForTimeout(1500);
 

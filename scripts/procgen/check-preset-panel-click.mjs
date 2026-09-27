@@ -20,13 +20,14 @@
  * other pageerrors are listed but only warn (known-harmless noise exists in
  * unrelated iframes).
  *
- * Prereq: dev server on :8000. Run:
+ * Prereq: dev server on :8000, or `--host=<origin>`. Run:
  *   node scripts/procgen/check-preset-panel-click.mjs
- * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere.
+ * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at `localhost:8000` by default and it reads `--host=` by hand, not in the roster's one flag spelling, so the roster cannot point it elsewhere.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
 import { chromium } from 'playwright';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { findPanelTab, PRESETS_PANEL } from './seedlingRoomPlay.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -41,6 +42,15 @@ import { argvHelp } from './argvHelp.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-preset-panel-click.mjs', kind: 'browser' });
+
+/**
+ * ⛓ QUICK LAUNCH P8 — `--host=<origin>`, the wasm-bridge gate's pattern: the
+ * default is unchanged (`http://localhost:8000`), so every existing caller
+ * behaves as before, and a worktree serving its own port can run this gate
+ * against ITS OWN tree (:8000 serves the primary, trap 1003).
+ */
+const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http://localhost:8000')
+    .slice('--host='.length).replace(/\/+$/, '');
 
 const TARGETS = [
   { dir: 'procgen_topdown', seed: 'AP_1' },
@@ -67,13 +77,13 @@ const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 const pageErrors = [];
 page.on('pageerror', (e) => pageErrors.push(String(e)));
 
-await page.goto('http://localhost:8000/frontend/', { waitUntil: 'domcontentloaded' });
+await page.goto(`${HOST}/frontend/`, { waitUntil: 'domcontentloaded' });
 await page.waitForSelector('.lm_tab', { timeout: 60000 });
 await page.waitForTimeout(2000);
 
-const tab = page.locator('.lm_tab', { hasText: 'Presets' }).first();
-check('Presets tab present', (await tab.count()) > 0);
-await tab.click();
+const tab = await findPanelTab(page, PRESETS_PANEL);
+check('Presets tab present', tab !== null);
+if (tab) await tab.click();
 await page.waitForSelector('.game-row', { timeout: 15000 });
 
 for (const t of TARGETS) {

@@ -48,6 +48,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import fs from 'node:fs';
 import { chromium } from 'playwright';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { clickPanelTab, REGION_MARKING_TOOL_PANEL, APWORLD_EDITOR_PANEL } from './seedlingRoomPlay.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -165,12 +166,7 @@ try {
     await page.waitForSelector('.rmt-panel', { state: 'attached', timeout: 30000 });
     // The layout preset puts the tool in a component stack, so it mounts behind
     // whichever tab is active. Bring it forward the way a user would.
-    await page.evaluate(() => {
-        const tab = [...document.querySelectorAll('.lm_tab .lm_title')]
-            .find((t) => t.textContent.trim() === 'Region Marking Tool');
-        if (!tab) throw new Error('no "Region Marking Tool" tab in the layout');
-        tab.click();
-    });
+    if (!await clickPanelTab(page, REGION_MARKING_TOOL_PANEL)) throw new Error(`no ${REGION_MARKING_TOOL_PANEL} tab in the layout`);
     await page.waitForSelector('.rmt-panel', { state: 'visible', timeout: 15000 });
     check('Phase A: panel mounts under ?mode=flash and its tab activates', true);
 
@@ -432,12 +428,7 @@ try {
     //
     // Phase F's `ui:activatePanel` handed focus to the editor, so the tool's tab
     // has to come back forward before anything can be clicked on it.
-    await page.evaluate(() => {
-        const tab = [...document.querySelectorAll('.lm_tab .lm_title')]
-            .find((t) => t.textContent.trim() === 'Region Marking Tool');
-        if (!tab) throw new Error('no "Region Marking Tool" tab in the layout');
-        tab.click();
-    });
+    if (!await clickPanelTab(page, REGION_MARKING_TOOL_PANEL)) throw new Error(`no ${REGION_MARKING_TOOL_PANEL} tab in the layout`);
     await page.waitForSelector('.rmt-panel select', { state: 'visible', timeout: 15000 });
 
     // The prompt queue from Phase A is exhausted, so it is re-armed with the
@@ -645,21 +636,12 @@ try {
     // ⛓ It runs LAST on purpose: Apply republishes `files:jsonLoaded`, which is
     //   an app-wide rules reload, and nothing above it should be measured
     //   downstream of that.
-    await page.evaluate(() => {
-        const tab = [...document.querySelectorAll('.lm_tab .lm_title')]
-            .find((t) => t.textContent.trim() === 'APWorld Editor');
-        if (!tab) throw new Error('no "APWorld Editor" tab in the layout');
-        tab.click();
-    });
+    if (!await clickPanelTab(page, APWORLD_EDITOR_PANEL)) throw new Error(`no ${APWORLD_EDITOR_PANEL} tab in the layout`);
     await page.waitForSelector('.apworld-editor-panel', { state: 'visible', timeout: 15000 });
 
     // Hand the compiled world over AGAIN, now that the panel is mounted: this is
     // the live-adopt arm (`_adoptHandoffRules`), where Phase F took the stash.
-    await page.evaluate(() => {
-        const tab = [...document.querySelectorAll('.lm_tab .lm_title')]
-            .find((t) => t.textContent.trim() === 'Region Marking Tool');
-        tab.click();
-    });
+    if (!await clickPanelTab(page, REGION_MARKING_TOOL_PANEL)) throw new Error(`no ${REGION_MARKING_TOOL_PANEL} tab in the layout`);
     await page.waitForSelector('.rmt-panel', { state: 'visible', timeout: 15000 });
     await clickToolbar('Open in APWorld Editor');
     await page.waitForSelector('.apworld-editor-panel', { state: 'visible', timeout: 15000 });

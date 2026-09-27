@@ -13,8 +13,8 @@
  *     produces a terminal compiled result + the composite grid canvas, and that
  *     rules.json ALSO === the monolith (the Run-all path).
  *
- * Prereq: dev server on :8000. Run: node scripts/procgen/check-spiral-steps-ui.mjs
- * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere.
+ * Prereq: dev server on :8000, or `--host=<origin>`. Run: node scripts/procgen/check-spiral-steps-ui.mjs
+ * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at `localhost:8000` by default and it reads `--host=` by hand, not in the roster's one flag spelling, so the roster cannot point it elsewhere.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
 import { chromium } from 'playwright';
@@ -28,6 +28,7 @@ import {
 } from '../../frontend/modules/procgenPipeline/procgenPipelineEngine.js';
 import { substrateRegistry } from '../../frontend/modules/shared/procgen/substrateRegistry.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { clickPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -43,6 +44,15 @@ import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-spiral-steps-ui.mjs', kind: 'browser' });
+
+/**
+ * ⛓ QUICK LAUNCH P8 — `--host=<origin>`, the wasm-bridge gate's pattern: the
+ * default is unchanged (`http://localhost:8000`), so every existing caller
+ * behaves as before, and a worktree serving its own port can run this gate
+ * against ITS OWN tree (:8000 serves the primary, trap 1003).
+ */
+const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http://localhost:8000')
+    .slice('--host='.length).replace(/\/+$/, '');
 
 // The panel seeds these params into localStorage; the headless monolith below
 // mirrors EXACTLY what _buildSpiralEnvelope builds from them, so the only
@@ -112,15 +122,10 @@ await page.addInitScript(({ seed, region, maxItems, quotas }) => {
     }));
 }, { seed: SEED, region: REGION, maxItems: MAX_ITEMS, quotas: QUOTAS });
 
-await page.goto('http://localhost:8000/frontend/');
+await page.goto(`${HOST}/frontend/`);
 await page.waitForTimeout(8000);
 
-const activated = await page.evaluate(() => {
-    const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Procgen Pipeline');
-    if (!tab) return false;
-    tab.click();
-    return true;
-});
+const activated = await clickPanelTab(page, PROCGEN_PIPELINE_PANEL);
 if (!activated) { console.log(checkLine(false, 'could not activate Procgen Pipeline panel')); console.log(logs.join('\n')); await browser.close(); console.log(totalLine(1)); process.exit(1); }
 await page.waitForTimeout(1500);
 

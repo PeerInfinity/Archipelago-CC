@@ -33,6 +33,7 @@
  */
 import { chromium } from 'playwright';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { findPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -82,13 +83,9 @@ await page.addInitScript(({ params, items }) => {
 await page.goto(`${HOST}/frontend/`);
 await page.waitForTimeout(8000);
 
-const activated = await page.evaluate(() => {
-    const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Procgen Pipeline');
-    if (!tab) return false;
-    tab.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    tab.click();
-    return true;
-});
+const tab = await findPanelTab(page, PROCGEN_PIPELINE_PANEL);
+if (tab) await tab.evaluate((t) => { t.dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); t.click(); });
+const activated = !!tab;
 if (!activated) throw new Error('Procgen Pipeline tab not found');
 await page.waitForTimeout(1500);
 
@@ -389,14 +386,11 @@ const mapSig = () => page.evaluate(() => {
     return `${url.length}:${h}`;
 });
 
-function goTab(title) {
-    return page.evaluate((t) => {
-        const x = [...document.querySelectorAll('.lm_tab')].find((e) => e.title === t);
-        if (!x) return false;
-        x.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-        x.click();
-        return true;
-    }, title);
+async function goTab(componentType) {
+    const tab = await findPanelTab(page, componentType);
+    if (!tab) return false;
+    await tab.evaluate((x) => { x.dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); x.click(); });
+    return true;
 }
 async function stepToCompiled() {
     await clickBtn('Reset');
@@ -461,7 +455,7 @@ const saveMsg = await page.evaluate(() =>
 if (!saveMsg.includes('back to the pipeline')) {
     throw new Error(`G: editor save did not write back: "${saveMsg}"`);
 }
-await goTab('Procgen Pipeline');
+await goTab(PROCGEN_PIPELINE_PANEL);
 await page.waitForTimeout(800);
 await clickBtn('Run 4 Compile');
 await page.waitForTimeout(2000);
@@ -602,7 +596,7 @@ const gpSaveMsg = await page.evaluate(() =>
 if (!gpSaveMsg.includes('back to the pipeline')) {
     throw new Error(`G': editor save did not write back: "${gpSaveMsg}"`);
 }
-await goTab('Procgen Pipeline');
+await goTab(PROCGEN_PIPELINE_PANEL);
 await page.waitForTimeout(800);
 await clickBtn('Run 4 Compile');
 await page.waitForTimeout(2000);
@@ -728,7 +722,7 @@ await page.evaluate(() => {
         .find((e) => e.textContent.trim() === 'Save')?.click();
 });
 await page.waitForTimeout(700);
-await goTab('Procgen Pipeline');
+await goTab(PROCGEN_PIPELINE_PANEL);
 await page.waitForTimeout(800);
 await clickBtn('Run 4 Compile');
 await page.waitForTimeout(2000);

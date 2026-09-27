@@ -46,6 +46,7 @@ import { fileURLToPath } from 'node:url';
 
 import { chromium } from 'playwright';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { findPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
 import {
     SHIPPED_PRESETS, PRESET_GROUPS, PRESET_GROUP_ORDER, PRESET_HEADLESS_BUDGET_MS,
 } from '../../frontend/modules/procgenPipeline/presetDefs.js';
@@ -180,14 +181,9 @@ await page.addInitScript((dirty) => {
 async function openPanel() {
     await page.goto(PAGE_URL);
     await page.waitForTimeout(8000);
-    const activated = await page.evaluate(() => {
-        const tab = [...document.querySelectorAll('.lm_tab')]
-            .find((t) => t.title === 'Procgen Pipeline');
-        if (!tab) return false;
-        tab.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-        tab.click();
-        return true;
-    });
+    const tab = await findPanelTab(page, PROCGEN_PIPELINE_PANEL);
+    if (tab) await tab.evaluate((t) => { t.dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); t.click(); });
+    const activated = !!tab;
     if (!activated) throw new Error('Procgen Pipeline tab not found');
     await page.waitForTimeout(1500);
     const panel = page.locator('.procgen-pipeline-panel');

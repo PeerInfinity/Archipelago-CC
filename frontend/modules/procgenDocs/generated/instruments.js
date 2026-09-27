@@ -210,7 +210,7 @@ export const INSTRUMENTS = frz({
         "files": 278,
         "lineStyle": 11,
         "withDocblock": 278,
-        "withFlags": 192
+        "withFlags": 200
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1275,7 +1275,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-dj-swf-patch.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [],
@@ -1284,7 +1286,14 @@ export const INSTRUMENTS = frz({
                 "host"
             ],
             "file": "check-grid-growth-ui.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -1669,14 +1678,23 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-preset-bundle-load.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-preset-panel-click.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -2143,14 +2161,23 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-region-library-sphere-roundtrip.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-region-library-ui.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -2216,7 +2243,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-region-step-editing.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [],
@@ -2225,7 +2254,14 @@ export const INSTRUMENTS = frz({
                 "host"
             ],
             "file": "check-rule-gated-portals.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -3956,14 +3992,23 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-slice-records.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-sphere-batch-stepping.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -3978,14 +4023,23 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-sphere-batch-stepping.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-sphere-envelope-resume.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -4000,7 +4054,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-sphere-envelope-resume.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [],
@@ -4009,7 +4065,14 @@ export const INSTRUMENTS = frz({
                 "host"
             ],
             "file": "check-sphere-growth-ui.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",
@@ -4077,14 +4140,23 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-spiral-byteidentity.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "HOST"
+            ],
             "browser": true,
             "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-spiral-steps-ui.mjs",
-            "flags": [],
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "host"
+                }
+            ],
             "inheritedFlags": [
                 {
                     "from": "argvHelp.js",

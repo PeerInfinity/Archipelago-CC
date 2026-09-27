@@ -11,8 +11,8 @@
  *     "resume from regions" (the first step with missing output) WITHOUT the
  *     user choosing a step, then Run all and assert the same realised plan.
  *
- * Prereq: dev server on :8000. Run: node scripts/procgen/check-sphere-envelope-resume.mjs
- * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at a hardcoded `localhost:8000` and it takes no `--host=` at all, so the roster cannot point it elsewhere.
+ * Prereq: dev server on :8000, or `--host=<origin>`. Run: node scripts/procgen/check-sphere-envelope-resume.mjs
+ * @ci-box V3b adopted this script's NAME, not its RUN: it drives a repo-root dev server at `localhost:8000` by default and it reads `--host=` by hand, not in the roster's one flag spelling, so the roster cannot point it elsewhere.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
 import { chromium } from 'playwright';
@@ -20,6 +20,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { findPanelTab, PROCGEN_PIPELINE_PANEL } from './seedlingRoomPlay.js';
 
 /**
  * ⛓ R9 P3b, ⚖ 54 (7); ⚖ 62 at 12j — **THE BOX LOCK.** This instrument drives
@@ -36,6 +37,15 @@ import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 argvHelp(import.meta.url);
 failOnCrash();
 takeBoxLockOrExit({ name: 'check-sphere-envelope-resume.mjs', kind: 'browser' });
+
+/**
+ * ⛓ QUICK LAUNCH P8 — `--host=<origin>`, the wasm-bridge gate's pattern: the
+ * default is unchanged (`http://localhost:8000`), so every existing caller
+ * behaves as before, and a worktree serving its own port can run this gate
+ * against ITS OWN tree (:8000 serves the primary, trap 1003).
+ */
+const HOST = (process.argv.find((a) => a.startsWith('--host=')) ?? '--host=http://localhost:8000')
+    .slice('--host='.length).replace(/\/+$/, '');
 
 const SEED = 1;
 // Maze-only world — deterministic, fast, and free of the bounce arrow-entry
@@ -60,16 +70,12 @@ await page.addInitScript(({ params, items }) => {
     }));
 }, { params: PANEL_PARAMS, items: ITEM_POOL });
 
-await page.goto('http://localhost:8000/frontend/');
+await page.goto(`${HOST}/frontend/`);
 await page.waitForTimeout(8000);
 
-const activated = await page.evaluate(() => {
-    const tab = [...document.querySelectorAll('.lm_tab')].find((t) => t.title === 'Procgen Pipeline');
-    if (!tab) return false;
-    tab.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-    tab.click();
-    return true;
-});
+const tab = await findPanelTab(page, PROCGEN_PIPELINE_PANEL);
+if (tab) await tab.evaluate((t) => { t.dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); t.click(); });
+const activated = !!tab;
 if (!activated) throw new Error('Procgen Pipeline tab not found');
 await page.waitForTimeout(1500);
 if (await page.locator('.procgen-pipeline-panel').count() === 0) {
