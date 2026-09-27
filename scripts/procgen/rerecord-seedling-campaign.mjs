@@ -84,7 +84,8 @@
  *               order, fresh page per segment + a zero-tick run per
  *               segment; every boot field from the envelope.
  *   S2 WRITE    surgical text edits of exactly the predicted set.
- *   S3 RECORD   ONE `--win --record --only=<set>`; the producers' `--check`.
+ *   S3 RECORD   ONE `--record --only=<set>` (headless; `--win` opts into the real-GPU
+ *               channel — R9 slice L16); the producers' `--check`.
  *   S4 PROVE    the JS sequence gate · the wasm chain arms · the census.
  *   S5 REPORT   the sealed table with its measured column.
  *
@@ -137,6 +138,8 @@ import {
     REHEARSAL_PLAN, buildRehearsalTree, readRehearsalMarker,
 } from './rehearsalTree.js';
 import { takeBoxLock } from './boxLock.js';
+import { driverChannel } from './seedlingDriver.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 
 
 import { argvHelp } from './argvHelp.js';
@@ -502,7 +505,7 @@ async function buildContext(overrides = {}) {
         return { ref, asked: 'HEAD', source: "the head S0 was first flushed at" };
     });
     ctx.driveLatch = overrides.driveLatch
-        ?? ((label, completeTape) => windowsDriveLatch(ctx, label, completeTape));
+        ?? ((label, completeTape) => driveLatchOnChannel(ctx, label, completeTape));
 
     mkdirSync(ctx.runDir, { recursive: true });
     return ctx;
@@ -514,8 +517,8 @@ async function buildContext(overrides = {}) {
  * `tapeFormat`/`r7Acceptance`/`seamPosture`/`levelSource` functions — the
  * rehearsal exists to run THOSE against a subject it controls.
  *
- * ⛔⛔ AND THE WINDOWS DRIVER IS MADE UNREACHABLE BY NAME, not merely unused.
- * `ctx.rehearsal` is the tree's path, and `windowsDriveLatch` refuses when it
+ * ⛔⛔ AND THE LATCH DRIVER IS MADE UNREACHABLE BY NAME, not merely unused.
+ * `ctx.rehearsal` is the tree's path, and `driveLatchOnChannel` refuses when it
  * is set: the machine-global cache under `/mnt/c/playwright/` is shared across
  * trees and sessions (⚖ 47b (5)), so a rehearsal that reached it would write
  * latch files for tapes that do not exist.
@@ -1013,11 +1016,24 @@ async function predict(ctx) {
     return s0State;
 }
 
-// ── THE WINDOWS CHANNEL ───────────────────────────────────────────────
+// ── THE DRIVER CHANNEL ────────────────────────────────────────────────
+/**
+ * ⛓⛓ R9 SLICE L16 (kickoff §59.4 D5) — HEADLESS LOGIC-ONLY BY DEFAULT, `--win`
+ * FOR THE REAL-GPU ARM. The 2026-09-12 ruling made headless the default and
+ * `seedlingDriver.driverChannel` runs the SAME `seedling-bot-replay-win.py` on
+ * either channel; S1/S2's latch drive and S3's `--record` were the pipeline's
+ * last Windows-only spellings. The page is the one `SEEDLING_PORT` serves (the
+ * differential's spelling), and S4's two `--host` gates are handed the same
+ * origin — a pipeline run from a worktree must drive ITS tree. ⛔ The latch
+ * CACHE is unchanged and machine-global: a latch is a pure function of the
+ * bytes the game is handed, not of the channel that measured it.
+ */
+const WIN = process.argv.includes('--win');
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
-const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+const PAGE_PORT = process.env.SEEDLING_PORT || '8000';
+const PAGE_HOST = `http://localhost:${PAGE_PORT}`;
+const PAGE_URL = `${PAGE_HOST}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const WSL = '/mnt/c/playwright';
-const DOS = 'C:\\playwright';
 const CACHE = join(WSL, 'rerecord-cache');
 
 /**
@@ -1045,7 +1061,7 @@ const CACHE = join(WSL, 'rerecord-cache');
  * says it did. The legacy arm therefore converges instead of decaying — and
  * nothing is ever deleted.
  */
-function windowsDriveLatch(ctx, label, completeTape) {
+function driveLatchOnChannel(ctx, label, completeTape) {
     /**
      * ⛔⛔ ASSERTED, NOT ASSUMED. A rehearsal supplies its own `driveLatch`, so
      * this is unreachable — and "unreachable" is exactly the kind of claim that
@@ -1054,7 +1070,7 @@ function windowsDriveLatch(ctx, label, completeTape) {
      * tapes that exist in no tree.
      */
     if (ctx.rehearsal) {
-        throw new Error(`⛔ ${label}: the WINDOWS latch driver was reached from a REHEARSAL `
+        throw new Error(`⛔ ${label}: the latch driver was reached from a REHEARSAL `
             + `(tree ${ctx.rehearsal}). A rehearsal spends no GPU and never touches the `
             + 'machine-global latch cache; reaching here means the fake driver was not '
             + 'installed on the context.');
@@ -1076,34 +1092,36 @@ function windowsDriveLatch(ctx, label, completeTape) {
     }
     const cached = join(ctx.cacheDir, `latch-${label}-${key}.json`);
     const shipped = JSON.stringify(projected);
-    mkdirSync(WSL, { recursive: true });
-    writeFileSync(join(WSL, 'seedling-bot-replay-win.py'),
-        readFileSync(join(HERE, 'seedling-bot-replay-win.py')));
-    writeFileSync(join(WSL, `rr-tape-${label}.json`), shipped);
-    const outWsl = join(WSL, `rr-stream-${label}.json`);
-    try { unlinkSync(outWsl); } catch { /* first run */ }
+    const channel = driverChannel({ win: WIN, winPy: '/mnt/c/Windows/py.exe',
+        driver: join(HERE, 'seedling-bot-replay-win.py'), chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
+    channel.write(`rr-tape-${label}.json`, shipped);
+    channel.clear(`rr-stream-${label}.json`);
     const t0 = Date.now();
     let out;
     try {
-        out = ctx.exec('/mnt/c/Windows/py.exe', [
-            '-3.12', `${DOS}\\seedling-bot-replay-win.py`,
+        out = channel.run([
             '--url', PAGE_URL,
-            '--tape', `${DOS}\\rr-tape-${label}.json`,
-            '--out', `${DOS}\\rr-stream-${label}.json`,
+            '--tape', channel.path(`rr-tape-${label}.json`),
+            '--out', channel.path(`rr-stream-${label}.json`),
             '--deadline-sec', String(Math.ceil(parsed.tick_count * 1.5) + 180),
-        ], { cwd: WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+        ], { stdio: ['ignore', 'pipe', 'pipe'] });
     } catch (e) {
-        throw new Error(`${label}: the Windows driver failed — ${e.message}\n`
+        channel.close({ keep: true });
+        throw new Error(`${label}: the ${channel.name} driver failed — ${e.message}\n`
             + [e.stdout, e.stderr].filter(Boolean).join('\n'));
     }
     out.replace(/\r/g, '').split('\n')
         .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l))
         .forEach((l) => console.log(`      ${l}`));
-    if (!existsSync(outWsl)) throw new Error(`${label}: the driver wrote no stream`);
-    const got = JSON.parse(readFileSync(outWsl, 'utf8'));
+    if (!existsSync(channel.local(`rr-stream-${label}.json`))) {
+        channel.close({ keep: true });
+        throw new Error(`${label}: the driver wrote no stream`);
+    }
+    const got = JSON.parse(channel.read(`rr-stream-${label}.json`));
+    channel.close();
     console.log(`    ${label}: ${got.stream.ticks.length} observations, `
         + `${got.status.dead_frames} dead, ${((Date.now() - t0) / 1000).toFixed(0)}s, `
-        + `key=${key}`);
+        + `key=${key} (${channel.name})`);
     if (!got.seam) throw new Error(`${label}: the driver returned no seam envelope`);
     const record = {
         envelope: got.seam,
@@ -1627,8 +1645,8 @@ function record(ctx, s0, s1, s2) {
         return;
     }
     shell(ctx, 'the differential RECORDS the derived set', 'node',
-        [ctx.scriptPath('check-seedling-bot-differential.mjs'), '--win', '--record',
-            `--only=${set.join(',')}`]);
+        [ctx.scriptPath('check-seedling-bot-differential.mjs'), ...(WIN ? ['--win'] : []),
+            '--record', `--only=${set.join(',')}`]);
     flush(ctx, 'S3', { set, moved, appeared, vanished });
 }
 
@@ -1721,11 +1739,12 @@ function prove(ctx) {
     console.log('\n# S4 · PROVE — the chains play\n');
     const rows = [];
     rows.push(['the JS sequence gate', shell(ctx, 'the JS sequence gate', 'node',
-        [ctx.scriptPath('check-seedling-editor-sequence.mjs')]).ok]);
+        [ctx.scriptPath('check-seedling-editor-sequence.mjs'), `--host=${PAGE_HOST}`]).ok]);
     rows.push(['the census CONTINUES on every pair', shell(ctx, 'the census', 'node',
         [ctx.scriptPath('census-seedling-campaign.mjs')]).ok]);
     rows.push(['the wasm ship gate (CAMPAIGN arm)', shell(ctx, 'the wasm ship gate', 'node',
-        [ctx.scriptPath('check-seedling-wasm-ship.mjs')]).ok]);
+        [ctx.scriptPath('check-seedling-wasm-ship.mjs'), `--host=${PAGE_HOST}`,
+            ...(WIN ? ['--win'] : [])]).ok]);
     /**
      * ⛓⛓⛓ THE SOLVER-ROSTER GATE IS THE GAME-INVISIBILITY CLAIM, and the
      * roster is DERIVED from the tapes' own provenance (a solver-authored
