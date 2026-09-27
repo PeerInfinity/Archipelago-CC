@@ -2554,6 +2554,16 @@ export const R8_D2_SHIELD = Object.freeze({
                     + 'the roster (trap 89), so a tape that quietly grew a spinner press '
                     + 'is named rather than absorbed — which is exactly what happened.',
             }),
+            Object.freeze({
+                name: 'r9-solve-18',
+                level: 18,
+                addedBy: 'R9 slice L18b (the campaign grows into L18)',
+                why: 'the campaign\'s own L18 segment, grown from `r9-solve-16`\'s MEASURED '
+                    + 'latch: the same two spinners killed by the player\'s presses and '
+                    + '`lock@144,112` opened by `Game.totalEnemies()` reaching zero (its '
+                    + '`{18,0}@342` model-sourced). Named by this assertion driving the '
+                    + 'roster, the same way `r8-d2` was.',
+            }),
         ]),
     }),
 
