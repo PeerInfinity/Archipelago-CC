@@ -24,8 +24,8 @@ import { GEN_ROOM_DEFAULTS, GEN_ROOM_REROLL_CAUSES, generateGenRoom } from './se
 import { buildSeedlingGenRegionParams } from '../flashPanel/flashSeedlingGenLibrary.js';
 import { createRng } from '../shared/rng.js';
 
-const room = (seed, seedlingGen) => generateGenRoom({ region_id: 'req', exits: [{ exit_id: 'a' }],
-    size: { width: 10, height: 10 }, rng: createRng(seed), params: { seedlingGen } }).world;
+const room = (seed, seedlingGen, size = { width: 10, height: 10 }) => generateGenRoom({
+    region_id: 'req', exits: [{ exit_id: 'a' }], size, rng: createRng(seed), params: { seedlingGen } }).world;
 
 describe('⛓⛓ the `require` knob — absent is byte-identical, given is honoured', () => {
     it('the default is the empty string, and an absent knob adds NO `require` to `generation`', () => {
@@ -51,8 +51,14 @@ describe('⛓⛓ the `require` knob — absent is byte-identical, given is honou
         expect(req.generation.rerollCause).toBe(GEN_ROOM_REROLL_CAUSES.require);
     }, 120000);
 
+    /** ⛓ The example moved at the L16 merge (2026-09-27): at 10×10 `hasShield` was
+     *  "no draw can meet" only while `execTouch` THREW without the shield (the
+     *  tripwire in `procgenDoorElements.test.js`); once L16's refusal landed the
+     *  directive is MET at 10×10. A 5×4 room cannot seat a `shieldgate` (no cut
+     *  with a west approach) in any of the 8 re-rolls — measured 302 ms — so the
+     *  BUDGET path keeps a witness that no future solver line can satisfy. */
     it('⛔ a directive no draw can meet is REFUSED BY NAME after the budget — never spun', () => {
-        expect(() => room(1, { biome: 'post-shield', require: 'hasShield' }))
+        expect(() => room(1, { biome: 'post-shield', require: 'hasShield' }, { width: 5, height: 4 }))
             .toThrow(/asked to REQUIRE \[hasShield\] and no draw met the directive in 8 re-roll\(s\)/);
     }, 120000);
 
