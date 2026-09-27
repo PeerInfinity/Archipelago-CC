@@ -3471,8 +3471,19 @@ function runShove(run, perTick, shove, what) {
     };
     let rested = false;
     for (let i = 1; i <= settleWindow; i += 1) {
-        perTick.push(NO_HELD);
-        const { transition } = run.advance(NO_HELD);
+        /**
+         * ⛓ R9 SLICE L16 — A WEIGH ROUTE'S SETTLE IS ARMED (`shove.strike`,
+         * handed only by `solverBot.execWeigh`): the opportunistic strike of
+         * ⚖ ruling 30(b) on a tick whose own keys are EMPTY. Absent, this is
+         * the release's coast exactly as before; the over-travel assertion
+         * below still refuses a strike aim that re-contacts the block.
+         */
+        const held = shove.strike && !run.state.fall
+            ? shove.strike.decide(run.state, run.strikeBodies, run.ticksCompleted, NO_HELD,
+                { slash: run.slashInfo }).held
+            : NO_HELD;
+        perTick.push(held);
+        const { transition } = run.advance(held);
         if (transition) {
             fail(`${what}: settle tick ${i} crossed from level ${transition.from_level} `
                 + `to ${transition.to_level}. The player coasts after a release and a `

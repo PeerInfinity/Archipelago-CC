@@ -1467,6 +1467,22 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
             tool: 'a static re-plan with the danger map\'s hard verdicts forbidden',
             refusesWith: 'no admissible corridor exists with the threatened cells removed',
         }),
+        /**
+         * ⛓⛓⛓ R9 SLICE L16 (kickoff §59.4 D2) — THE FIRST CONDITIONAL RUNG. It
+         * exists only where the room holds the lane's SILENCER (a `RopeStart` of
+         * the trap's own group whose latch silences it), so a climb in any other
+         * room skips it with no row — and `assertEscalationIsOrdered` accepts a
+         * skip of a `conditional` rung and of no other.
+         */
+        Object.freeze({
+            rung: 'pull',
+            conditional: true,
+            tool: 'a sword swing at the lane\'s SILENCER — the `RopeStart` publishing the '
+                + 'trap\'s own group, stance by `break`\'s press-at-rect derivation — '
+                + 'with `latchedGroups.has(t)` asserted on the live run',
+            refusesWith: 'no reachable stance puts the swing on the rope (the rung is ABSENT, '
+                + 'not refused, when no lane on the corridor has a silencer in the room)',
+        }),
         Object.freeze({
             rung: 'time',
             tool: '`mover.findEarliestArrival` with `forbiddenByDanger` as `forbiddenAt` '
@@ -1791,7 +1807,17 @@ export function assertEscalationIsOrdered(escalations, what = 'the combat ladder
                 + `${last} — the ladder is CHEAPEST FIRST and an escalation that goes `
                 + 'down it, or sideways, is a policy choosing rather than escalating.');
         }
-        if (i > 0 && !(e.refused && e.refused.rung === order[i - 1])) {
+        /**
+         * ⛓ R9 SLICE L16 — the cheaper rung is the nearest one BELOW that was
+         * not skipped, and only a `conditional` rung may be skipped: a room with
+         * no silencer has no PULL rung to refuse.
+         */
+        let below = i - 1;
+        while (below > 0 && R8_STRATEGY_EXECUTORS.ladder[below].conditional === true
+            && !(e.refused && e.refused.rung === order[below])) {
+            below -= 1;
+        }
+        if (i > 0 && !(e.refused && e.refused.rung === order[below])) {
             throw new Error(`${what}: the escalation to "${e.rung}" does not name the `
                 + `cheaper rung it refused. ⚖ §11.8a: every escalation is a trace row `
                 + `carrying the refused rung's reason; got `
