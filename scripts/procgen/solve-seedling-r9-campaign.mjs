@@ -95,8 +95,7 @@
 
 import { dirname, join } from 'node:path';
 import { createHash } from 'node:crypto';
-import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
@@ -137,6 +136,8 @@ if (DASH_NOTE) console.error(DASH_NOTE);
 import { CAMPAIGN_SEGMENTS, CAMPAIGN_RNG_SPLIT } from
     '../../frontend/modules/seedlingDemo/campaignChain.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { driverChannel } from './seedlingDriver.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
@@ -214,11 +215,27 @@ const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
 const { declaredSeamTimeAfter } = await import(join(MODULE, 'gameClock.js'));
 
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4d';
-const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+/**
+ * ⛓ R9 SLICE L16 — the page is the one `SEEDLING_PORT` serves (the
+ * differential's own spelling), so a worktree's growth drives ITS tree and not
+ * whatever answers on :8000 (`--grow`'s own law: a browser stage entered from a
+ * second tree reports about the wrong subject).
+ */
+const PAGE_PORT = process.env.SEEDLING_PORT || '8000';
+const PAGE_URL = `http://localhost:${PAGE_PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const WIN_SCRATCH_WSL = '/mnt/c/playwright';
-const WIN_SCRATCH_DOS = 'C:\\playwright';
 const WIN_PY = '/mnt/c/Windows/py.exe';
 const WIN_DRIVER = join(HERE, 'seedling-bot-replay-win.py');
+/**
+ * ⛓⛓ R9 SLICE L16 (kickoff §59.4 D5) — THE LATCH IS DRIVEN HEADLESS BY DEFAULT.
+ * The 2026-09-12 ruling made headless logic-only the default channel and H2
+ * gave every `seedling-*-win.py` driver one switch for it (`seedlingDriver
+ * .driverChannel`); this producer still spelled the Windows launcher inline.
+ * `--win` keeps the real-GPU arm. ⛔ THE CACHE IS UNCHANGED — keyed on the bytes
+ * the game is handed and machine-global — because a latch is a pure function
+ * of those bytes, not of the channel that measured it.
+ */
+const WIN = process.argv.includes('--win');
 
 let failures = 0;
 const check = (name, ok, detail) => {
@@ -250,31 +267,33 @@ function latchOf(label, tapeObj) {
             + 'unchanged, and a latch is a pure function of them)');
         return JSON.parse(readFileSync(cached, 'utf8'));
     }
-    writeFileSync(join(WIN_SCRATCH_WSL, 'seedling-bot-replay-win.py'),
-        readFileSync(WIN_DRIVER));
-    const outWsl = join(WIN_SCRATCH_WSL, `stream-${label}.json`);
-    writeFileSync(join(WIN_SCRATCH_WSL, `tape-${label}.json`),
-        JSON.stringify(gameVisibleTape(parseTape(tapeObj))));
-    try { unlinkSync(outWsl); } catch { /* first run */ }
+    const channel = driverChannel({ win: WIN, winPy: WIN_PY, driver: WIN_DRIVER,
+        chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
+    channel.write(`tape-${label}.json`, JSON.stringify(gameVisibleTape(parseTape(tapeObj))));
+    channel.clear(`stream-${label}.json`);
     const t0 = Date.now();
     let out;
     try {
-        out = execFileSync(WIN_PY, [
-            '-3.12', `${WIN_SCRATCH_DOS}\\seedling-bot-replay-win.py`,
+        out = channel.run([
             '--url', PAGE_URL,
-            '--tape', `${WIN_SCRATCH_DOS}\\tape-${label}.json`,
-            '--out', `${WIN_SCRATCH_DOS}\\stream-${label}.json`,
+            '--tape', channel.path(`tape-${label}.json`),
+            '--out', channel.path(`stream-${label}.json`),
             '--deadline-sec', String(Math.ceil(tapeObj.tick_count * 1.5) + 180),
-        ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+        ], { stdio: ['ignore', 'pipe', 'pipe'] });
     } catch (e) {
         const said = [e.stdout, e.stderr].filter(Boolean).join('\n').trim();
+        channel.close({ keep: true });
         throw new Error(`${e.message}${said ? `\n${said}` : ''}`);
     }
     out.replace(/\r/g, '').split('\n')
         .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l))
         .forEach((l) => console.log(`    ${l}`));
-    if (!existsSync(outWsl)) throw new Error(`windows driver wrote no stream for ${label}`);
-    const got = JSON.parse(readFileSync(outWsl, 'utf8'));
+    if (!existsSync(channel.local(`stream-${label}.json`))) {
+        channel.close({ keep: true });
+        throw new Error(`the ${channel.name} driver wrote no stream for ${label}`);
+    }
+    const got = JSON.parse(channel.read(`stream-${label}.json`));
+    channel.close();
     // ⛔ THE DURATION IS A WALL CLOCK, SO IT IS NOT PRINTED UNDER `--check`.
     // ⚖ Ruling 8 publishes a producer's `--check` stdout md5 as a byte-inertia
     // fingerprint, and R9 slice 9 caught this line moving one of them with
