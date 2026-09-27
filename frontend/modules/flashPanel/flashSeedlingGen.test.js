@@ -456,7 +456,9 @@ describe('the per-region generation knobs', () => {
         expect(ENTRY.defaultProcgenParams).toBe(DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS);
         // ⛓ G4: `hostChildren` rides beside the room's knobs (it steers the tree, not the generator)
         expect(buildSeedlingGenRegionParams({ params: {} }))
-            .toEqual({ seedlingGen: { ...GEN_ROOM_DEFAULTS, saturationK: undefined, hostChildren: true } });
+            // ⛓ S1, D4: `require` is carried ONLY WHEN GIVEN, so the bare bag has none.
+            .toEqual({ seedlingGen: { ...GEN_ROOM_DEFAULTS, saturationK: undefined, require: undefined,
+                hostChildren: true } });
         const p = buildSeedlingGenRegionParams({ params: { seedlingGenObstacleTarget: 2, seedlingGenFill: 'shell' } });
         expect(p.seedlingGen).toMatchObject({ obstacleTarget: 2, fill: 'shell', biome: 'pre-sword' });
     });

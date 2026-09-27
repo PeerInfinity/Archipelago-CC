@@ -79,7 +79,9 @@ import { coreLevelRecord } from './levelSetValidator.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
-import { parseElementSpec } from '../procgenCore/elementSpec.js';
+import {
+    REQUIRE_DIRECTIVE_REFUSALS, parseElementSpec, parseItemRequireList,
+} from '../procgenCore/elementSpec.js';
 import { parseAreaSpec } from '../procgenCore/areaSpec.js';
 import {
     GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
@@ -118,6 +120,9 @@ function knobsOf(params) {
         elements: String(bag.elements ?? '').trim(),
         areas: String(bag.areas ?? '').trim(),
         fill: String(bag.fill ?? 'dense'),
+        /** ⛓ S1, D4 — ONLY WHEN GIVEN: an absent (or empty) `require` adds no key,
+         *  so `generation` — which spreads these knobs — is byte-identical. */
+        ...(String(bag.require ?? '').trim() !== '' ? { require: String(bag.require).trim() } : {}),
     };
 }
 
@@ -152,6 +157,9 @@ function generatorInput(regionId, seed, size, knobs) {
         elements: parsed('elements', parseElementSpec),
         areas: parsed('areas', parseAreaSpec),
         ...(knobs.fill !== 'dense' ? { fill: knobs.fill } : {}),
+        /** ⛓ S1, D4 — through the CLI's ONE parser, and only when given. */
+        ...(knobs.require !== undefined
+            ? { require: parsed('require', parseItemRequireList) } : {}),
     };
 }
 
@@ -198,6 +206,8 @@ export const GEN_ROOM_DOOR_REROLLS = 8;
  */
 export const GEN_ROOM_REROLL_CAUSES = Object.freeze({
     doors: 'doors',
+    /** ⛓ S1, D4 — the draw's `require` directive was not met (see `drawRoom`). */
+    require: 'require',
     engineDoors: 'engine-added door',
     locations: 'locations',
 });
@@ -355,6 +365,27 @@ function drawRoom(regionId, drawn, k, size, knobs, doorCount) {
         throw new Error(GEN_ROOM_REFUSALS.generator(regionId, seed, size, e.message));
     }
     const record = coreLevelRecord(out.record);
+    /**
+     * ⛓⛓ S1, D4 — A DIRECTIVE THIS DRAW DID NOT MEET IS A RE-ROLL, like a door
+     * that would not seat: the room the preset asked for is one the differential
+     * grades REQUIRED, and a draw that is not is not that room. ⛔ Marked
+     * `requireUnmet` so the caller can bound it and name it (a directive that
+     * can never be met must not spin through every size the room could grow to).
+     */
+    /** ⛔ A directive refused at RESOLUTION (an item no element needs, a biome
+     *  that lacks it, …) is the KNOB's fault on every draw — refused at once,
+     *  never re-rolled (`elementSpec.REQUIRE_DIRECTIVE_REFUSALS`). */
+    if (out.require && REQUIRE_DIRECTIVE_REFUSALS.includes(out.require.refused?.reason)) {
+        throw new Error(GEN_ROOM_REFUSALS.badKnob(regionId, 'require', knobs.require,
+            `${out.require.refused.reason}: ${out.require.refused.detail}`));
+    }
+    if (out.require && out.require.met !== true) {
+        const why = `${out.require.refused?.reason ?? 'not met'}`;
+        const err = new Error(`seedlingGenRoom: room '${regionId}' seed ${seed}: require `
+            + `[${knobs.require}] not met — ${why}`);
+        err.requireUnmet = why;
+        return { seed, out, record, err };
+    }
     const start = { ...out.summary.startCell };
     const goalCell = { ...out.summary.goalCell };
     let doors;
@@ -410,12 +441,20 @@ export function generateGenRoom(input = {}) {
     // ⛓ G8: after the budget at a size, the room GROWS (`sizeOfAttempt`) and the
     //   same sequence runs on — still inside this one core call, never short.
     const last = lastAttempt(size);
+    let cause = GEN_ROOM_REROLL_CAUSES.doors;
     for (let k = 0; k <= last; k += 1) {
         const at = sizeOfAttempt(size, k);
         draw = roomCanHold(at, exits.length) || !inContract(at)
             ? drawRoom(regionId, drawn, k, at, knobs, exits.length)
             : { seed: rerollSeed(drawn, k), record: at, err: cannotHold(regionId, at, exits.length) };
         if (!draw.err) { rerolls = k; break; }
+        /** ⛓ S1, D4 — a `require` gets the per-size budget and no growth (a bigger
+         *  room is not a likelier sword gate), then it is refused BY NAME. */
+        cause = draw.err.requireUnmet ? GEN_ROOM_REROLL_CAUSES.require : GEN_ROOM_REROLL_CAUSES.doors;
+        if (draw.err.requireUnmet && k >= GEN_ROOM_DOOR_REROLLS) {
+            throw new Error(GEN_ROOM_REFUSALS.requireNotMet(regionId, draw.seed, draw.record, knobs.require,
+                GEN_ROOM_DOOR_REROLLS, draw.err.requireUnmet));
+        }
     }
     if (draw.err) {
         throw new Error(GEN_ROOM_REFUSALS.tooManyDoors(regionId, draw.seed, draw.record, exits.length, draw.err.message,
@@ -447,7 +486,7 @@ export function generateGenRoom(input = {}) {
             start,
             goalCell,
             // ⛓ `rerolls`: how many re-rolls it took (0 = the first draw) — `seed` is the one used.
-            generation: generationAfter(knobs, rerolls, GEN_ROOM_REROLL_CAUSES.doors, size, record),
+            generation: generationAfter(knobs, rerolls, cause, size, record),
             // ⛓ G5: the drawn seed, so a later re-roll (a location the room cannot
             //   seat, an engine-added door) continues THIS room's sequence. Never serialized.
             drawnSeed: drawn,

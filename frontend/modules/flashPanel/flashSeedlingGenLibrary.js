@@ -255,6 +255,9 @@ const KNOB_OF = Object.freeze({
  * (the committed `seedling_generated_leaf` does, which is what keeps its bytes).
  */
 export const SEEDLING_GEN_HOST_CHILDREN_KEY = 'seedlingGenHostChildren';
+
+/** ⛓ S1, D4 — the bag key of the room's `require` directive (`--require=`'s grammar). */
+export const SEEDLING_GEN_REQUIRE_KEY = 'seedlingGenRequire';
 export const hostsChildren = (regionParams) => regionParams?.seedlingGen?.hostChildren !== false;
 
 /**
@@ -269,6 +272,12 @@ export function buildSeedlingGenRegionParams({ params = {} } = {}) {
         seedlingGen[knob] = params[bagKey] ?? DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS[bagKey];
     }
     seedlingGen.hostChildren = params[SEEDLING_GEN_HOST_CHILDREN_KEY] !== false;
+    /** ⛓ S1, D4 — the `require` directive, ONLY WHEN GIVEN: it is not in
+     *  `KNOB_OF`'s every-knob loop, so a bag without it builds the regionParams
+     *  it always built. */
+    if (String(params[SEEDLING_GEN_REQUIRE_KEY] ?? '').trim() !== '') {
+        seedlingGen.require = String(params[SEEDLING_GEN_REQUIRE_KEY]).trim();
+    }
     return { seedlingGen };
 }
 
@@ -278,6 +287,7 @@ export function seedlingGenProcgenParamsFromPayload(payload) {
     if (!g || typeof g !== 'object') return {};
     const out = {};
     for (const [bagKey, knob] of Object.entries(KNOB_OF)) if (knob in g) out[bagKey] = g[knob];
+    if ('require' in g) out[SEEDLING_GEN_REQUIRE_KEY] = g.require;
     return out;
 }
 
@@ -322,6 +332,9 @@ export function renderSeedlingGenProcgenParams({ params, onChange = () => {} } =
         'The lab page\'s `?elements=` grammar; empty = the biome default', onChange));
     wrap.appendChild(textRow(params, 'seedlingGenAreas', 'Areas',
         'The lab page\'s `?areas=` grammar (`<keys>[;key=value]…`); empty = no area graph', onChange));
+    wrap.appendChild(textRow(params, SEEDLING_GEN_REQUIRE_KEY, 'Require',
+        'The `?require=` grammar (`hasSword`, `hasShield`): a room the differential grades that item '
+        + 'REQUIRED; empty = no directive', onChange));
     wrap.appendChild(selectRow(params, 'seedlingGenFill', 'Fill',
         'dense keeps every wall; shell strips walls no floor touches', ['dense', 'shell'], onChange));
     return wrap;

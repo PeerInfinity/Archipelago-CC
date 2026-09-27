@@ -142,8 +142,10 @@ function assertRoomLawful(id, p) {
 }
 
 describe('the re-roll\'s record — one counter, one cause, nothing on a first draw', () => {
-    it('the causes are three SPELLED sentences; the budget is still G2\'s K', () => {
-        expect(GEN_ROOM_REROLL_CAUSES).toEqual({ doors: 'doors', engineDoors: 'engine-added door', locations: 'locations' });
+    it('the causes are four SPELLED sentences; the budget is still G2\'s K', () => {
+        // ⛓ S1, D4 added `require` (a draw whose directive the differential did not meet).
+        expect(GEN_ROOM_REROLL_CAUSES).toEqual({ doors: 'doors', require: 'require',
+            engineDoors: 'engine-added door', locations: 'locations' });
         expect(GEN_ROOM_DOOR_REROLLS).toBe(8);
     });
 

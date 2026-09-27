@@ -38,6 +38,14 @@ export const GEN_ROOM_DEFAULTS = Object.freeze({
     elements: '',
     areas: '',
     fill: 'dense',
+    /**
+     * ⛓ S1, D4 — the `require` directive (`--require=`'s grammar,
+     * `elementSpec.parseItemRequireList`): `hasSword` asks for a room the
+     * differential grades sword-REQUIRED. ⛔ `''` reaches the room as ABSENT —
+     * no `require` in the knobs, none in `generation` — so every committed room
+     * is byte-identical.
+     */
+    require: '',
 });
 
 /**
@@ -92,6 +100,12 @@ export const GEN_ROOM_REFUSALS = Object.freeze({
         + `area cannot seat them apart without sealing an approach (${message.replace(/^levelSetExits: /, '')})`
         + (grown == null ? '' : ` — the room was re-rolled up to ${grown.budget} time(s)${grownClause(grown)}`)
         + `. ${grown == null ? RAISE_THE_SIZE : FEWER_EXITS}`,
+    /** ⛓ S1, D4 — the room's `require` directive was not met in any draw of its budget. */
+    requireNotMet: (regionId, seed, size, require, budget, why) => `generated Seedling room '${regionId}' `
+        + `(seed ${seed}, ${size.width}x${size.height}) was asked to REQUIRE [${require}] and no draw met the `
+        + `directive in ${budget} re-roll(s) — the last one: ${why}. A \`require\` is MET only when the `
+        + 'differential grades the item REQUIRED on the finished room (STRONG or BOUND-DEPENDENT). Choose '
+        + 'a biome that grants the item and an element that needs it, or drop the directive.',
     /** ⛓ G5 — case 1 exhausted: an exit the ENGINE added after the room was built finds no unsealing door. */
     engineDoors: (regionId, seed, size, want, engineAdded, grown, message) => `generated Seedling room `
         + `'${regionId}' (seed ${seed}, ${size.width}x${size.height}) must hold ${want} door(s), one per exit, `
