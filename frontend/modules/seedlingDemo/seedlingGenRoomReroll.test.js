@@ -434,11 +434,15 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      * budget, so no attempt past K was drawn. The md5 (first 8) of the whole
      * rules.json, MEASURED at the base `1fd1f66317` (the census): the worst re-roll
      * counts there (grid 8×6 seed 2 has a room at re-roll 8, the budget's last).
+     * ⛓ RE-MEASURED at APWORLD SUBSTRATE CHANGE P1a (2026-09-27): `procgen_metadata`
+     * became `{"1": block}`; with slot 1's block unwrapped each build still hashes to
+     * its base value (174df082 / 00589206 / c4aba6c4 — measured), so the wrap is the
+     * whole move and the property this row pins is unchanged.
      */
     it.each([
-        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '174df082'],
-        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '00589206'],
-        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), 'c4aba6c4'],
+        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '9af2ee8e'],
+        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '3601cc0d'],
+        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), '638b4110'],
     ])('%s built before G8: byte-identical', async (_name, state, md5) => {
         const rulesJson = await build(state());
         expect(createHash('md5').update(JSON.stringify(rulesJson)).digest('hex').slice(0, 8)).toBe(md5);
