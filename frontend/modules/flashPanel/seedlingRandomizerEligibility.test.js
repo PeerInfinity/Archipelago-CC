@@ -264,9 +264,12 @@ describe('the THREE SHIPPED PRESETS against the SHIPPED manifest', () => {
             expect(Array.isArray(b.capabilities), `${b.name} has no capabilities array`).toBe(true);
             for (const cap of b.capabilities) expect(WASM_BUILD_CAPABILITIES).toContain(cap);
         }
-        // ⛓ Exactly one build carries the class; a second would mean a default
-        // moved without anyone saying so.
-        const capable = manifest.builds.filter((b) => b.capabilities?.includes(AP_ITEM_CAPABILITY));
+        // ⛓ Exactly one NON-candidate build carries the class; a second would
+        // mean a default moved without anyone saying so. ⛓ R9 slice P4E: a
+        // `candidate` (the next default, pinned beside it) carries every
+        // capability the default does, so it is counted apart.
+        const capable = manifest.builds.filter((b) => b.capabilities?.includes(AP_ITEM_CAPABILITY)
+            && b.role !== 'candidate');
         expect(capable.map((b) => b.name)).toHaveLength(1);
     });
 });
