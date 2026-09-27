@@ -76,6 +76,15 @@
       "enabled": true,
       "order": 7,
       "category": "loops"
+    },
+    {
+      "id": "loops-reset-lands-on-the-declared-start-of-a-multi-exit-world",
+      "name": "Loop Reset Lands On The Declared Start",
+      "description": "S3 (§27.6 #1): mm3 initialised in the APWorld hub WITH loop mode and applied (its loop_costs turns loop mode on); many exits, so the player starts at the declared start; a menu press moves away; Clear Queue returns to the DECLARED start, not procgenPlayer's resolved start",
+      "functionName": "loopsResetLandsOnTheDeclaredStartOfAMultiExitWorld",
+      "enabled": true,
+      "order": 8,
+      "category": "loops"
     }
   ]
 }

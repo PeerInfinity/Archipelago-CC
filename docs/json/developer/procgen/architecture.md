@@ -177,8 +177,9 @@ real region` move fires only when *skip the menu* is on — the setting
 publishers read; a start with several exits is a choice, never skipped). Skip off,
 or several exits ⇒ procgenPlayer publishes nothing and
 the player stays at the AP-declared start for the panel to play; the cached
-`getResolvedStartRegion()` survives either way, because loop resets teleport to
-it regardless. On a world procgenPlayer does NOT claim, the same setting makes the
+`getResolvedStartRegion()` survives either way, and loop resets teleport to it
+exactly when the load did — the loops read the same `skipsStart` (S3), so a start
+with several exits resets to the declared start. On a world procgenPlayer does NOT claim, the same setting makes the
 Menu panel publish the hop instead — exactly one publisher per load, decided by
 asking `getResolvedStartRegion()` rather than by inspecting the document. With
 `menuPanel` absent from the module set the answer is the schema default, i.e.

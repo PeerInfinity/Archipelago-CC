@@ -12,9 +12,13 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it, vi } from 'vitest';
 
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
-import { INITIALISE_BARE_ONLY, initialiseOpRefusal } from './rulesDocOps.js';
 import {
-    BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, INITIALISE_SIZE_KEYS, UNPLACED_WHY, autoGridSide,
+    INITIALISE_BARE_ONLY, INITIALISE_LOOP_MODE_ON, initialiseFailureSentence, initialiseOpRefusal,
+    initialiseSphereLogRefusal,
+} from './rulesDocOps.js';
+import {
+    BACK_EXITS, DEFAULT_REGION_XP_EFFECT, DEFAULT_SUBSTRATE_ID, INITIALISE_FIRST_SEED, INITIALISE_SIZE_KEYS,
+    INITIALISE_STAGES, INITIALISE_XP_EFFECTS, SPHERE_LOG_SOURCE, UNPLACED_WHY, autoGridSide,
     initialiseGridSide, initialiseTargets, planInitialise,
 } from './slotInitialise.js';
 import { startRegionsOf } from '../procgenCore/rulesGraph.js';
@@ -27,7 +31,7 @@ import ApworldEditorUI from './apworldEditorUI.js';
 import {
     INITIALISE_DOOR_LABEL, initialiseAnswer, initialiseArgs, initialiseDoorShown, initialiseFormDefaults,
     initialiseJob, initialisePreview, initialiseTickerText, withAutoSide,
-    initialiseBagFor, withInitialisePatch,
+    initialiseBagFor, withInitialisePatch, initialiseLoopToggle,
 } from './initialiseFlow.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -66,13 +70,15 @@ describe('the door', () => {
 });
 
 describe('the form', () => {
-    it('⛓ opens on the engine\'s default substrate, the AUTO side, the first seed, return exits ON', () => {
+    it('⛓ opens on the engine\'s default substrate, the AUTO side, the first seed, return exits ON, loop mode OFF', () => {
         const st = initialiseFormDefaults(APCALC, P);
         const bag = initialiseBagFor(APCALC, P, DEFAULT_SUBSTRATE_ID);
         expect(st).toEqual({
             substrate: DEFAULT_SUBSTRATE_ID, seed: INITIALISE_FIRST_SEED, backExits: BACK_EXITS.ADD, sideAuto: true,
             side: autoGridSide(APCALC, P, { substrate: DEFAULT_SUBSTRATE_ID, seed: INITIALISE_FIRST_SEED, bag }).side,
             bag,
+            // ⛓ S3 — off by default (the pipeline's `enableLoopMode: false`), the generator's default effect.
+            loopMode: { enabled: false, regionXpEffect: DEFAULT_REGION_XP_EFFECT },
         });
     });
 
@@ -284,5 +290,67 @@ describe('the panel stops the initialise run and its ticker at every boundary', 
         expect(door.textContent).toBe(INITIALISE_DOOR_LABEL);
         expect(door.disabled).toBe(false);
         expect(mk(APCALC, '1', true).disabled).toBe(true);
+    });
+});
+
+/* ── S3: loop mode on the form ──────────────────────────────────────────── */
+
+describe('S3 — loop mode on the form', () => {
+    const ADV_LOG = readFileSync(join(ROOT, 'frontend', 'presets',
+        'adventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl'), 'utf8')
+        .trim().split('\n').map((l) => JSON.parse(l));
+    const on = (st, fx = DEFAULT_REGION_XP_EFFECT) => ({ ...st, loopMode: { enabled: true, regionXpEffect: fx } });
+
+    it('⛓⛓ OFF (the default) sends the pre-S3 args and job exactly — no `loopMode`, no log, even with a page log', () => {
+        const st = initialiseFormDefaults(ADVENTURE, P);
+        expect(st.loopMode.enabled).toBe(false);
+        const args = initialiseArgs(P, st);
+        expect(Object.hasOwn(args, 'loopMode')).toBe(false);
+        const job = initialiseJob(ADVENTURE, P, st, ADV_LOG);
+        expect(Object.hasOwn(job, 'loopMode')).toBe(false);
+        expect(Object.hasOwn(job, 'sphereLog')).toBe(false);
+        expect(initialisePreview(ADVENTURE, P, st, ADV_LOG)).toEqual(initialisePreview(ADVENTURE, P, st));
+    });
+
+    it('⛓ ON: the args carry a COPY of {enabled, regionXpEffect}; the job carries the page\'s entries as data', () => {
+        const st = on(initialiseFormDefaults(ADVENTURE, P), INITIALISE_XP_EFFECTS.at(-1));
+        const args = initialiseArgs(P, st);
+        expect(args.loopMode).toEqual(st.loopMode);
+        expect(args.loopMode).not.toBe(st.loopMode);
+        const job = initialiseJob(ADVENTURE, P, st, ADV_LOG);
+        expect(job.sphereLog).toBe(ADV_LOG);
+        expect(Object.hasOwn(initialiseJob(ADVENTURE, P, st, []), 'sphereLog')).toBe(false);
+        expect(Object.hasOwn(initialiseJob(ADVENTURE, P, st, null), 'sphereLog')).toBe(false);
+    });
+
+    it('⛓⛓ the toggle: DISABLED with the op\'s own sentence when no log is reachable; the page\'s, else the embedded one', () => {
+        const none = initialiseLoopToggle(ADVENTURE, P, null);
+        expect(none.refusal).toBe(initialiseSphereLogRefusal(ADVENTURE, { player: P, loopMode: { enabled: true } }));
+        expect(none.refusal).toContain('none is loaded and the document embeds none');
+        expect(initialiseLoopToggle(ADVENTURE, P, ADV_LOG)).toEqual({
+            refusal: null, source: SPHERE_LOG_SOURCE.PAGE, entries: ADV_LOG.length,
+        });
+        const embedded = { ...ADVENTURE, sphere_log: ADV_LOG };
+        expect(initialiseLoopToggle(embedded, P, null).source).toBe(SPHERE_LOG_SOURCE.EMBEDDED);
+    });
+
+    it('⛓ the preview: loop mode ON with no log is the op\'s refusal (no Generate); with one, the plan names the log', () => {
+        const st = on(initialiseFormDefaults(ADVENTURE, P));
+        const pv = initialisePreview(ADVENTURE, P, st, null);
+        expect(pv.plan).toBeNull();
+        expect(pv.refusal).toBe(initialiseLoopToggle(ADVENTURE, P, null).refusal);
+        const ok = initialisePreview(ADVENTURE, P, st, ADV_LOG);
+        expect(ok.refusal).toBeNull();
+        expect(ok.text).toBe(`${initialisePreview(ADVENTURE, P, { ...st, loopMode: { enabled: false } }).text}; `
+            + `${INITIALISE_LOOP_MODE_ON} (${DEFAULT_REGION_XP_EFFECT}), priced from the loaded sphere log`);
+        const held = { ...ADVENTURE, loop_costs: { regions: {}, locations: {} } };
+        expect(initialisePreview(held, P, st, ADV_LOG).refusal).toContain('already carries a `loop_costs` block');
+    });
+
+    it('⛓ a generator throw is answered in the op\'s words — not as the realiser\'s', () => {
+        const res = { ok: false, why: 'boom', stage: INITIALISE_STAGES.LOOP_COSTS };
+        const a = initialiseAnswer({ substrate: DEFAULT_SUBSTRATE_ID, player: P }, res, 60);
+        expect(a).toEqual({ landed: false, text: `${initialiseFailureSentence(DEFAULT_SUBSTRATE_ID, res)} Nothing was recorded.` });
+        expect(a.text).not.toContain('realiser threw');
     });
 });

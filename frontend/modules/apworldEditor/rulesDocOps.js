@@ -97,8 +97,9 @@ import {
 // ⛓ APWORLD SUBSTRATE CHANGE R7 — a bare slot laid out and realised in place
 //   (`slotInitialise.js`: the engine's four top-down stages; the sentences stay here).
 import {
-    BACK_EXITS, INITIALISE_BLOCKERS, INITIALISE_OP, INITIALISE_SIZE_KEYS, initialiseFacts, initialiseOpFor,
-    initialiseSlot,
+    BACK_EXITS, INITIALISE_BLOCKERS, INITIALISE_OP, INITIALISE_SIZE_KEYS, INITIALISE_STAGES, INITIALISE_XP_EFFECTS,
+    SPHERE_LOG_SOURCE,
+    initialiseFacts, initialiseOpFor, initialiseSlot, initialiseSphereLog,
 } from './slotInitialise.js';
 import {
     SIDE_WORDS, exitSideVerdicts, exitSidesOfSubstrate, layoutChange, occupantAt, pairLinkFlips,
@@ -2949,12 +2950,59 @@ export function grantsClause(names) {
         : `no library items ${GRANTED_AS_STARTING}`;
 }
 
+/* ── loop mode on an initialise (APWORLD SUBSTRATE CHANGE S3) ──────────── */
+
+/** ⛓ The loop-mode clause's words. EXPORTED for the rows and the form. */
+export const INITIALISE_LOOP_MODE_ON = 'loop mode on';
+export const INITIALISE_MANA_ON_EVERY_PAYLOAD = 'mana enabled on every payload';
+
+/** ⛓ Two writers of the document-level `loop_costs` block (the blocks' rule). */
+function heldLoopCostsSentence(doc) {
+    const n = Object.keys(isPlainObj(doc?.loop_costs?.regions) ? doc.loop_costs.regions : {}).length;
+    return `apworld: the document already carries a \`loop_costs\` block (${plural(n, 'region')} priced) — it is `
+        + 'DOCUMENT-level, and loop mode on an initialise writes one; two writers of one block would overwrite '
+        + 'each other silently, so the op refuses rather than pick one. Turn loop mode off, or delete the block '
+        + 'on the Document tab first.';
+}
+
+/**
+ * ⛓⛓ **LOOP MODE NEEDS THE SLOT'S SPHERE LOG** — the op's refusal when loop mode
+ * is on and neither the page (`args.sphereLog`) nor the document (`sphere_log`)
+ * holds a usable one (`initialiseSphereLog`'s precedence). EXPORTED so the form
+ * draws its toggle DISABLED with this very sentence (1305). `null` = a log is
+ * reachable, or loop mode is off.
+ */
+export function initialiseSphereLogRefusal(doc, args) {
+    if (args?.loopMode?.enabled !== true) return null;
+    const p = String(args?.player ?? DEFAULT_PLAYER_ID);
+    const log = initialiseSphereLog(doc, p, args?.sphereLog);
+    if (!log.entries) {
+        return 'apworld: loop mode needs the slot\'s sphere log to price its regions; none is loaded and the '
+            + 'document embeds none (`sphere_log`).';
+    }
+    if (!log.forPlayer) {
+        return `apworld: loop mode needs the slot's sphere log, and the ${log.source === SPHERE_LOG_SOURCE.PAGE ? 'loaded' : 'embedded'} `
+            + `one has no entry for player ${p} — it is another document's, so it would price nothing.`;
+    }
+    return null;
+}
+
+/** ⛓ `; loop mode on: loop_costs written (10 regions, 24 locations), mana enabled on every payload`, or nothing. */
+export function loopModeClause(loopCosts) {
+    if (!isPlainObj(loopCosts)) return '';
+    const r = Object.keys(isPlainObj(loopCosts.regions) ? loopCosts.regions : {}).length;
+    const l = Object.keys(isPlainObj(loopCosts.locations) ? loopCosts.locations : {}).length;
+    return `, ${INITIALISE_LOOP_MODE_ON}: loop_costs written (${plural(r, 'region')}, ${plural(l, 'location')}), `
+        + INITIALISE_MANA_ON_EVERY_PAYLOAD;
+}
+
 /**
  * ⛓⛓ **EVERY REFUSAL `initialise-procgen-layout` CAN NAME BEFORE THE ENGINE
  * RUNS** — the op's own, EXPORTED so the hub's form prints the op's sentence
  * and draws no Generate (1305: the op is the authority, the form a courtesy).
- * `args` = `{player, substrate, gridDims, seed, backExits, bag?}`. `null` = the op
- * would lay the slot out.
+ * `args` = `{player, substrate, gridDims, seed, backExits, bag?, loopMode?}`. `null` = the op
+ * would lay the slot out. (S3: the sphere-log refusal is `initialiseSphereLogRefusal`
+ * — a record's result carries its block, so only a build needs the log.)
  *
  * @returns {string|null}
  */
@@ -3027,6 +3075,20 @@ export function initialiseOpRefusal(doc, args) {
                 + `${describeValue(bag[key])}.`;
         }
     }
+    // ⛓ S3 — loop mode is optional (absent = off, the pre-S3 op); when present it
+    //   is {enabled, regionXpEffect} with an effect the generator knows (it would
+    //   silently normalise a stranger to its default — the op names it instead).
+    const loopMode = args?.loopMode;
+    if (loopMode !== undefined) {
+        if (!isPlainObj(loopMode) || typeof loopMode.enabled !== 'boolean') {
+            return `apworld: ${INITIALISE_OP}'s \`loopMode\` is {enabled, regionXpEffect}, got ${describeValue(loopMode)}.`;
+        }
+        if (loopMode.regionXpEffect !== undefined && !INITIALISE_XP_EFFECTS.includes(loopMode.regionXpEffect)) {
+            return `apworld: loop mode's \`regionXpEffect\` is one of [${INITIALISE_XP_EFFECTS.join(', ')}], got `
+                + `${describeValue(loopMode.regionXpEffect)}.`;
+        }
+        if (loopMode.enabled && Object.hasOwn(doc ?? {}, 'loop_costs')) return heldLoopCostsSentence(doc);
+    }
     return null;
 }
 
@@ -3079,7 +3141,41 @@ function initialiseResultRefusal(doc, p, result) {
             + 'the document already carries — two writers of one block would overwrite each other silently, '
             + 'so the op refuses rather than pick one.';
     }
+    // ⛓ S3 — a record made before S3 (or with loop mode off) carries no block.
+    const costs = result.loop_costs;
+    if (costs !== undefined) {
+        if (!isPlainObj(costs) || !isPlainObj(costs.regions) || !isPlainObj(costs.locations)) {
+            return `apworld: \`loop_costs\` is the cost block {version, regions, locations, …}, got ${describeValue(costs)}.`;
+        }
+        if (Object.hasOwn(doc, 'loop_costs')) return heldLoopCostsSentence(doc);
+    }
+    // ⛓ The block and the payloads' mana flag are ONE setting: a result with one
+    //   and not the other was not built by loop mode (or not built for it).
+    const unflagged = Object.entries(result.entries)
+        .filter(([, e]) => isPlainObj(e.playable_payload) && (e.playable_payload.manaEnabled === true) !== (costs !== undefined))
+        .map(([n]) => n);
+    if (unflagged.length) {
+        return costs !== undefined
+            ? `apworld: the result carries \`loop_costs\` but ${listNames(unflagged)} ${unflagged.length === 1 ? 'is' : 'are'} `
+                + 'built without mana — loop mode is one setting for the block and every payload.'
+            : `apworld: ${listNames(unflagged)} ${unflagged.length === 1 ? 'is' : 'are'} built with mana but the result `
+                + 'carries no `loop_costs` — loop mode is one setting for the block and every payload.';
+    }
     return null;
+}
+
+/**
+ * ⛓ A build that did not land, in the op's words (without the "nothing was …"
+ * tail the op and the form each add): the realiser threw, or (S3) the loop-cost
+ * generator did. ⛔ The pipeline writes an `{error, regions: {}}` marker block
+ * on a generator throw so a NEW document still compiles; the hub edits an
+ * existing one and can simply refuse, so it does — nothing half-built lands.
+ */
+export function initialiseFailureSentence(substrate, res) {
+    if (res?.stage === INITIALISE_STAGES.LOOP_COSTS) {
+        return `apworld: loop mode's cost generator (\`generateLoopCosts\`) threw — ${res.why}.`;
+    }
+    return `apworld: the \`${substrate}\` realiser threw${res?.region ? ` on region "${res.region}"` : ''} — ${res?.why}.`;
 }
 
 /**
@@ -3101,8 +3197,8 @@ export function describeInitialise({ player, substrate, gridDims, backExits, res
             .map(([why, names]) => `${why}: ${listNames(names)}`).join('; ')})`
         : `0 regions ${INITIALISE_UNPLACED}`;
     return `slot ${player} initialised as \`${substrate}\`: ${plural(placed, 'region')} on a `
-        + `${gridDims.width}×${gridDims.height} grid (${plural(tele, 'teleporter')}), ${back}, ${grants}, `
-        + `${unplacedClause} — `
+        + `${gridDims.width}×${gridDims.height} grid (${plural(tele, 'teleporter')}), ${back}, ${grants}`
+        + `${loopModeClause(result.loop_costs)}, ${unplacedClause} — `
         + `${INITIALISE_RULES_UNCHANGED}`
         + (Number.isFinite(ms) ? ` — built in the generation worker (${(ms / 1000).toFixed(1)} s)` : '');
 }
@@ -3128,7 +3224,9 @@ export function describeInitialise({ player, substrate, gridDims, backExits, res
  * own edit, with the forward exit's rule), and (S1) the GRANTS: a def per
  * granted library item in `items[p]` and the names appended to
  * `starting_items[p]` — the realiser was handed them free (the pipeline's
- * `grantedLibraryItems`), so the document must hold them. NOTHING else: no
+ * `grantedLibraryItems`), so the document must hold them; (S3, loop mode on)
+ * the top-level `loop_costs` block, the payloads carrying `manaEnabled: true`
+ * — REFUSED when the document already holds a `loop_costs`. NOTHING else: no
  * location, placement, existing item or existing rule moves.
  */
 function opInitialiseProcgenLayout(doc, op) {
@@ -3149,12 +3247,12 @@ function opInitialiseProcgenLayout(doc, op) {
     let resolved = op;
     let unplaced = Array.isArray(prov?.unplaced) ? prov.unplaced : [];
     if (!inline) {
+        const noLog = initialiseSphereLogRefusal(doc, args);
+        if (noLog) return refuse(noLog);
         const res = initialiseSlot({ doc, player: p, substrate: args.substrate, gridDims: args.gridDims,
-            seed: args.seed, backExits: args.backExits, ...(args.bag !== undefined ? { bag: args.bag } : {}) });
-        if (!res.ok) {
-            return refuse(`apworld: the \`${args.substrate}\` realiser threw${res.region ? ` on region "${res.region}"` : ''} `
-                + `— ${res.why}. Nothing was written.`);
-        }
+            seed: args.seed, backExits: args.backExits, ...(args.bag !== undefined ? { bag: args.bag } : {}),
+            ...(args.loopMode !== undefined ? { loopMode: args.loopMode, sphereLog: args.sphereLog } : {}) });
+        if (!res.ok) return refuse(`${initialiseFailureSentence(args.substrate, res)} Nothing was written.`);
         resolved = initialiseOpFor(args, res);
         result = resolved.result;
         unplaced = res.unplaced;
@@ -3170,6 +3268,7 @@ function opInitialiseProcgenLayout(doc, op) {
         next = withRegion(next, p, region, withKey(r, 'exits', [...(r.exits ?? []), exit]));
     }
     next = withGrants(next, p, result.grantedItems ?? [], result.grantedDefs ?? {});
+    if (result.loop_costs !== undefined) next = setPath(next, ['loop_costs'], result.loop_costs);
     const description = describeInitialise({
         player: p, substrate: args.substrate, gridDims: args.gridDims, backExits: args.backExits,
         result, unplaced, ...(inline && Number.isFinite(prov.ms) ? { ms: prov.ms } : {}),

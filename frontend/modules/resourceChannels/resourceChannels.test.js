@@ -6,6 +6,7 @@ import {
     _testOnly_resetGameStateSingleton,
 } from '../gameState/singleton.js';
 import { applyRegionXpCostEffect } from '../loops/xpFormulas.js';
+import { centralRegistry } from '../../app/core/centralRegistry.js';
 import {
     initResourceChannelsLibrary,
     _testOnly_resetResourceChannelsLibrary,
@@ -225,6 +226,42 @@ describe('fireLoopResetTeleport', () => {
         gs.startRegions = ['Start'];
         expect(resolveStartRegion({ fallbackToDeclaredStart: false })).toBeNull();
         expect(resolveStartRegion()).toBe('Start');
+    });
+});
+
+/**
+ * ⛓ APWORLD SUBSTRATE CHANGE S3 — the mana-out reset asks the LOOPS where the
+ * loop starts (`loops.getLoopStartRegion`, the one rule) instead of preferring
+ * procgenPlayer's resolved start outright; without the loops module, as before.
+ */
+describe('resolveStartRegion — the loop start is the loops\' rule (S3)', () => {
+    const set = (mod, fn, value) => centralRegistry.registerPublicFunction(mod, fn, () => value);
+    afterEach(() => {
+        set('procgenPlayer', 'getResolvedStartRegion', null);
+        centralRegistry.registerPublicFunction('loops', 'getLoopStartRegion', undefined);
+    });
+
+    it('⛓⛓ a procgen world: the loops\' answer (the DECLARED start of a multi-exit menu), not the first placed region', () => {
+        const gs = createGameStateSingleton(null);
+        gs.startRegions = ['Menu'];
+        set('procgenPlayer', 'getResolvedStartRegion', 'region_0_0');
+        set('loops', 'getLoopStartRegion', 'Menu');
+        expect(resolveStartRegion()).toBe('Menu');
+        expect(resolveStartRegion({ fallbackToDeclaredStart: false })).toBe('Menu');
+        const dispatcher = makeFakeDispatcher();
+        expect(fireLoopResetTeleport({ sourceRegion: 'Deep', dispatcher })).toBe('Menu');
+        expect(dispatcher.published[0].data.targetRegion).toBe('Menu');
+    });
+
+    it('⛓ without the loops module, the resolved start as before; no procgen start → the pre-S3 fallback', () => {
+        const gs = createGameStateSingleton(null);
+        gs.startRegions = ['Start'];
+        set('procgenPlayer', 'getResolvedStartRegion', 'region_0_0');
+        expect(resolveStartRegion()).toBe('region_0_0');
+        set('procgenPlayer', 'getResolvedStartRegion', null);
+        set('loops', 'getLoopStartRegion', 'Menu');
+        expect(resolveStartRegion()).toBe('Start');
+        expect(resolveStartRegion({ fallbackToDeclaredStart: false })).toBeNull();
     });
 });
 

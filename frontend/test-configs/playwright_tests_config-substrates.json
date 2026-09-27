@@ -1035,6 +1035,12 @@
             "_comment": "M2. mm3 initialised + Apply (skip ON): no hop (many exits) - the player at the declared start, the menu panel raised with every exit; a press takes the last exit; Restart -> the DECLARED start, path cleared (not procgenPlayer's resolved start). adventure initialised + Apply: one exit, the hop fires."
         },
         {
+            "id": "apworld-initialise-loop-mode-writes-loop-costs",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "S3. adventure: the page holds the jsonl beside the preset; the loop-mode toggle (OFF by default) ON with the last XP effect -> Generate lands ONE op: loop_costs (no generatedAt, the chosen effect, every placed region priced), manaEnabled on every payload, provenance.loopMode, the op's loop clause as the answer, the Document tab's loop_costs row; Undo takes it back byte for byte; OFF -> no key, no flag."
+        },
+        {
             "id": "apworld-m3-a-non-menu-start-is-a-cell-and-the-menu",
             "enabled": true,
             "category": "apworldEditor",

@@ -31,9 +31,9 @@ document.
 | `librarySourcePicker.js` | (substrate change R5a) the form's **Library entry** picker — `createServedLibraryCatalog` / `servedLibraryCatalog` (the served index fetched ONCE per page, the packs on demand, through the pipeline's `regionLibraryLoader`; base path `LIBRARY_BASE_PATH`, the pipeline panel's `'./'` rule), `libraryPickerOptions` (the target's entries, disabled with the op's own refusal), `loadLibraryOptions` (never throws: `libraryFetchFailureSentence`) |
 | `regionContent.js` | (substrate change R5b) a region's CONTENT **replaced by a zone** — the op `replace-region-content`'s mechanics and sentences: `zoneSourceFacts` (the channel + the read-back), `installedZoneConfigFrom` (the target's `zoneConfigFromSlot` — no install), `zoneHeldBy` / `zoneOfRegion` / `zoneOptions`, `zoneSourceRefusal`, `zoneContentFor` (install + verify + extract: worker or Node only), `applyZoneContent` (the pure cascade), `describeZoneReplacement`, `unplacedPoolItems` (the Placements tab's readout), `zoneJobAnswer` (the worker's answer); since R5c `resolveZoneFetches` (the served documents a read-back names, fetched and asked again) and `zoneSourceLabelOf` (the Source row's word) |
 | `regionGenerationRun.js` | (R2) the **time-limit setting** (`regionGenerationTimeoutSeconds`, `REGION_GENERATION_TIMEOUT_DEFAULT_S`; R7's whole-slot `initialiseTimeoutSeconds`, `INITIALISE_TIMEOUT_DEFAULT_S`) and the **worker** protocol (R7: a job's `{type: 'progress', event}` messages → `onProgress`): `runRegenerateJob` (the worker's side) and `runRegenerateInWorker` (the page's: the budget, Cancel, `terminate()`), the timeout and Cancel sentences |
-| `slotInitialise.js` | (substrate change R7) a BARE slot's procgen data **built in place** — the engine's four top-down stages (`layoutTopDown` → `realiseTopDownGen` → `finalizeTopDown` → `buildPresetSidecars`) on the current document: `initialiseFacts` (bare? the blockers as data), `initialiseGridSide` / `autoGridSide` (the hand-off's side, grown while a region lacks a cell), `planInitialise` (the layout only — the form's preview), `unplacedRegions` (each with a why DERIVED from the graph, `UNPLACED_WHY`), `returnExitsOf`, `initialiseSlot` (the result the op lands — since S1 with the grants), `initialiseOpFor`; (S2) `initialiseKnobs(substrate, bag)` / `initialiseRegionSize` / `INITIALISE_SIZE_KEYS` — the build and the layout under the form's settings bag, absent = the target's defaults and the slot's size; the start is the engine's exported `resolveTopDownStart` (S1, R9); the op and its sentences are `rulesDocOps.js`'s `initialise-procgen-layout` |
+| `slotInitialise.js` | (substrate change R7) a BARE slot's procgen data **built in place** — the engine's four top-down stages (`layoutTopDown` → `realiseTopDownGen` → `finalizeTopDown` → `buildPresetSidecars`) on the current document: `initialiseFacts` (bare? the blockers as data), `initialiseGridSide` / `autoGridSide` (the hand-off's side, grown while a region lacks a cell), `planInitialise` (the layout only — the form's preview), `unplacedRegions` (each with a why DERIVED from the graph, `UNPLACED_WHY`), `returnExitsOf`, `initialiseSlot` (the result the op lands — since S1 with the grants), `initialiseOpFor`; (S2) `initialiseKnobs(substrate, bag)` / `initialiseRegionSize` / `INITIALISE_SIZE_KEYS` — the build and the layout under the form's settings bag, absent = the target's defaults and the slot's size; the start is the engine's exported `resolveTopDownStart` (S1, R9); (S3) loop mode — `initialiseSphereLog` (the log's precedence: the page's, else the embedded one), `initialiseLoopCosts` (the pipeline's `generateLoopCosts` over the built copy, `generatedAt` deleted), `INITIALISE_XP_EFFECTS` (the generator's own values), `INITIALISE_STAGES`; the op and its sentences are `rulesDocOps.js`'s `initialise-procgen-layout` |
 | `initialiseDriver.js` | (S1) `INITIALISE_DRIVER`, the `procgen_metadata.driver` an initialised slot records — its own module so the preset card imports it without the engine |
-| `initialiseFlow.js` | (R7) what the **Initialise procgen data** form says and sends — `initialiseDoorShown`, `initialiseFormDefaults` / `withAutoSide`, (S2) `initialiseBagFor` / `withInitialisePatch` (the settings bag; a substrate change resets it, the size kept), `initialisePreview` (the op's refusal, or the plan's sentence), `initialiseJob`, `initialiseTickerText`, `initialiseAnswer` |
+| `initialiseFlow.js` | (R7) what the **Initialise procgen data** form says and sends — `initialiseDoorShown`, `initialiseFormDefaults` / `withAutoSide`, (S2) `initialiseBagFor` / `withInitialisePatch` (the settings bag; a substrate change resets it, the size kept), `initialisePreview` (the op's refusal, or the plan's sentence), `initialiseJob`, `initialiseTickerText`, `initialiseAnswer`; (S3) `initialiseLoopToggle` (the toggle's enabled/disabled, asked of the op's own sphere-log refusal) and the job's `sphereLog` (the page's entries, as data) |
 | `menuMarker.js` | (substrate change M2) the Map's **Menu marker** — `menuMarkerFor(doc, player)` (the declared start and its exits, each target's `grid_cell` read off the slot's entries; the exits are the menu panel's own `exitsOf`), the setting `showMenuOnMap` (`SHOW_MENU_ON_MAP_KEY` / `_SETTING` / `_DEFAULT` / `_SCHEMA`, registered by `index.js`) |
 | `regionRegenerateWorker.js` | (R2) the MODULE WORKER one Generate runs in — imports the eight registry libraries into its own registry, then `regionRegenerate.js`. ⛔ A worker cannot be bundled into `bundle.js`: `scripts/build/bundle-frontend.js` copies it into `dist/` (beside `stateManagerWorker.js` and `balanceWorker.js`), and in bundled mode the page resolves it at its SOURCE location, `stateManagerProxy`'s rule |
 | `startingInventoryBlock.js` | (substrate change R3) the **Starting inventory** block as data — `startingInventoryList` (the list as `{name, count}`), `substratesInSlot`, `startingNeedRows` (each substrate's registry `startingInventory` needs against the list, with a grant op per candidate), `startingGrantOp` (`set-starting-count` at current + 1), `needSentence`; the panel draws what these answer, on the Items tab and in the Region generation form |
@@ -2199,6 +2199,7 @@ one. On such a slot (`initialiseDoorShown`: no entry, some regions) the Map's
 | **Grid side** + *auto* | auto = the pipeline hand-off's side (`topDownGridSide`, `⌈√(1.5 n)⌉`, shared with the pipeline panel), GROWN one at a time while the layout leaves a region for want of a cell (`autoGridSide`) — M2: a Menu root without a cell counts (`mm3` 6 → 7) — typing a side turns auto off |
 | **Seed** | the layout's and every region's (the engine's per-region sub-seed) |
 | **Add return exits** | default ON (⚖ #1) — see below |
+| **Loop mode** + **XP effect** (S3) | OFF by default (the pipeline's `enableLoopMode: false`, ⚖ Q4); ON writes a `loop_costs` block and `manaEnabled` on every payload — see *Loop mode* below. The XP effect select is drawn only when on, over the generator's own `VALID_REGION_XP_EFFECTS` (default first) |
 | **the generation settings** (S2) | R1's per-region form, `renderRegionGenerationForm` — the SAME module R2's block form and the pipeline's Parameters draw from, with `fields: REGION_GENERATION_OP_FIELDS`: **Region width / height** for a TILES target (`regionGeometry`), then the target's own `renderProcgenParams` node under *"<target> parameters"* (maze, bounce, runner, flash_seedling_gen draw one; text_adventure and flash_seedling none — the node's `data-procgen-params` says `drawn` / `none`) |
 
 **Per-WORLD vs per-REGION** (the pipeline's split, §1.8 of the plan): the rows
@@ -2217,8 +2218,39 @@ reaches the realiser alone (a row holds `planInitialise` equal under two bags
 that differ in one). Not every knob reaches a top-down build — maze's
 `mazeRequireSameWall` does not; bounce's `bounceBraidWidth` does (the in-app
 row derives its knob by asking `assembleRegionParams`). `maxItemsPerRegion` is
-not drawn (R2's reason: the region's locations decide), nor a loop-mode toggle,
-nor a non-square grid (⚖ Q5).
+not drawn (R2's reason: the region's locations decide), nor a non-square grid
+(⚖ Q5).
+
+**Loop mode** (S3, plan §22.1: *"a SETTING, not an omission"* — the pipeline
+writes these two only under `enableLoopMode`). ON, the payloads are built with
+`manaEnabled: true` and the op writes a top-level **`loop_costs`** block — whose
+PRESENCE is what enables loop mode for the world at load
+([Loops › Cost Data System](../features/loops.md#cost-data-system)). The block is
+the pipeline's own producer, `generateLoopCosts` (`shared/procgen/loopCostGenerator.js`),
+run over a COPY of the document that already holds the slot's new entries and
+return exits (the generator walks `regions[p]` and classifies each region by its
+sidecar's substrate), under the chosen XP effect, `generatedFrom` the document's
+`seed_name`, and **without `generatedAt`** (the pipeline's P0 rule: the stamp would
+make two initialises of one slot differ). It prices from **the slot's sphere log**,
+by precedence (`initialiseSphereLog`): **the page's loaded log** —
+`sphereState.getRawSphereLog()`, its `state_update` entries; for a classic preset
+that is the `_sphere_log.jsonl` BESIDE it, which the hub cannot fetch (it does not
+know the document's path) — handed to the worker job as data; else the document's
+**embedded `sphere_log`**; else the op refuses (*"loop mode needs the slot's sphere
+log to price its regions; none is loaded and the document embeds none"*), and the
+form draws the toggle DISABLED with that very sentence under it. A log with no
+entry for the slot is refused too (it is another document's). `adventure`: 10
+regions (its `Menu` included) and 24 locations priced in ≈11 ms. The record carries
+the block INLINE and `provenance.loopMode = {enabled, regionXpEffect}` — never the
+log, so a replay needs none; OFF, the args carry no `loopMode` at all and the op,
+its record and the document are the pre-S3 bytes (measured on every target). The
+description gains *"…, loop mode on: loop_costs written (10 regions, 24
+locations), mana enabled on every payload"*. ⛔ The pipeline writes an
+`{error, regions: {}}` marker block when the generator throws, so a NEW document
+still compiles; the hub edits an existing one and simply refuses — nothing is
+written. `loop_costs` is document-level like `procgen_metadata`, so a second
+slot's initialise with loop mode on is refused by the held-key rule (the per-slot
+question is P1's).
 
 Under them, the **preview**, re-planned on every change from the LAYOUT alone
 (`planInitialise`, milliseconds even at 445 regions): *"81 regions placed on
@@ -2289,7 +2321,7 @@ result carries `grantedItems` + `grantedDefs` inline; an inlined grant naming an
 item the slot already defines or holds, or taking a used id, is refused; a
 record made before S1 (no grants) replays as it was. **Never**: a location, an
 existing item, a placement, an existing rule, or `assume_bidirectional_exits`
-(⚖ Q2 — the runtime auto-detects, and the return exits carry the forward rule). Location names ride into the payloads verbatim
+(⚖ Q2 — the runtime auto-detects, and the return exits carry the forward rule). With loop mode on (S3) it also writes `loop_costs` and the payloads carry `manaEnabled: true` (above). Location names ride into the payloads verbatim
 (`useSourceLocationName`), so the placements, the sphere log and the loop costs
 still name what the rooms carry. Undo takes the whole thing back in one step.
 
@@ -2335,9 +2367,17 @@ door still shows and the form prints the sentence); no usable start region; a
 document-level `procgen_metadata` already present (another slot's, or the
 pipeline's — two writers of one block); an unregistered, unplayable or
 realiser-less substrate; `gridDims` not whole numbers ≥ 1; a non-integer seed;
-`backExits` not `add`/`none`. An inlined result is checked too: entries only for
+`backExits` not `add`/`none`; (S3) `loopMode` not `{enabled, regionXpEffect}`, an
+XP effect the generator does not know (it would silently normalise it to its
+default — the op names it instead), loop mode on a document that already holds a
+`loop_costs` block (two writers of one block), and — for a BUILD, not a record —
+no reachable sphere log, or one without the slot's entries
+(`initialiseSphereLogRefusal`); a generator throw refuses the build in its own
+words. An inlined result is checked too: entries only for
 the slot's regions, return exits only between them and under names they do not
-already use, top-level blocks the document does not already carry.
+already use, top-level blocks the document does not already carry, a `loop_costs`
+that is a cost block and agrees with the payloads' mana flag (loop mode is ONE
+setting for the block and every payload).
 
 ### The four-player fixture
 
@@ -2683,12 +2723,12 @@ The import is free in both modes, measured:
 
 | Suite | Where |
 |-------|-------|
-| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js`, `regionRegenerate.test.js`, `regionGenerationRun.test.js` (R2: the setting, the worker protocol with a fake worker — budget, load bound, Cancel, `terminate()`), `regionGenerationFlow.test.js` (R2: the plan, the args, the worker ≡ the op, the free-item clause, the panel's teardown), `slotInitialise.test.js` (R7: the population at the layout — every committed bare slot ≤ 100 regions; the probed documents built in full with 0 report errors both ways; the unplaced and their whys; preview ≡ build; the op's deep diff, Undo, refusals, the refold; S1: R9's two rules ≡ the pipeline's, the grants' deep diff, the need rows met, the pipeline-vs-hub audit as a row; S2: the bag ≡ the defaults, the first knob against `assembleRegionParams`, the size in every payload, `provenance.bag` and the pre-S2 replay, the bag refusals), `initialiseFlow.test.js` (R7: the door, the form, the preview, the ticker, the answers; S2: the bag, the substrate-change reset, a hook knob leaves the plan) | vitest, `frontend/modules/apworldEditor/` |
+| `rulesDocOps.test.js`, `rulesEditAdapter.test.js`, `rulesUtils.test.js`, `documentKeys.test.js`, `documentLinks.test.js`, `hubExits.test.js`, `regionRoundTrip.test.js`, `regionRederive.test.js`, `regionLayout.test.js` (M2: every move and swap of two fixture slots, the refusals, the corpus control, the side law's census), `exitSides.test.js` (M3: the exit-side corpus control, the exhaustive deep diff over every side move and swap, the back exit, every refusal, ONE-WAY, Undo), `reverseLinks.test.js`, `sidecarIssues.test.js`, `sidecarForm.test.js`, `regionRegenerate.test.js`, `regionGenerationRun.test.js` (R2: the setting, the worker protocol with a fake worker — budget, load bound, Cancel, `terminate()`), `regionGenerationFlow.test.js` (R2: the plan, the args, the worker ≡ the op, the free-item clause, the panel's teardown), `slotInitialise.test.js` (R7: the population at the layout — every committed bare slot ≤ 100 regions; the probed documents built in full with 0 report errors both ways; the unplaced and their whys; preview ≡ build; the op's deep diff, Undo, refusals, the refold; S1: R9's two rules ≡ the pipeline's, the grants' deep diff, the need rows met, the pipeline-vs-hub audit as a row; S2: the bag ≡ the defaults, the first knob against `assembleRegionParams`, the size in every payload, `provenance.bag` and the pre-S2 replay, the bag refusals), `initialiseFlow.test.js` (R7: the door, the form, the preview, the ticker, the answers; S2: the bag, the substrate-change reset, a hook knob leaves the plan; S3: OFF sends the pre-S3 args, ON the page's log as data, the toggle's disabled sentence, the preview's log clause) — and in `slotInitialise.test.js` S3: OFF byte-inert, ON every payload flagged and the block ≡ the generator over the built copy, the deep diff, each XP effect, the held-key / no-log / other-player / stranger-effect / throw / disagreeing-record refusals, the embedded precedence, Undo | vitest, `frontend/modules/apworldEditor/` |
 | `check-sidecar-fields.mjs` (+ `checkSidecarFields.test.js`) | `scripts/procgen/` — the corpus gate: every committed entry against its declaration, (V0) `sidecarIssues` per slot as its second layer, and (G2b-1) `regionRuleAgreement` per region as its third |
 | `../procgenCore/compositeMapRenderer.test.js` | vitest — the Map tab's renderer, driven by a TOY substrate |
 | `../procgenPipeline/compositeMapDocument.test.js` | vitest — `preset_sidecars` → `Grid`, including the player slot; (M2) `mapBoundsFor` |
 | `../procgenPipeline/procgenPipelineUI.test.js` | vitest — (H5) the hand-off answer's three outcomes; (M1) the carried slot named when it is not the built one, the top-down cost clause, the sphere answer unchanged, and the block's Regenerate note held to `HANDOFF_REALISED_SLOT` |
 | `presetUI.test.js` | vitest — the "Open in APWorld Editor" descriptor |
 | `measure-apworld-raw-view.mjs` | `scripts/procgen/` — the browser measurement; `--all` opens the raw tab over every committed preset, which is what RETIRED `RAW_VIEW_LIMIT_BYTES` |
-| `apworldEditorTests.js` | the in-app runner, category `apworldEditor`, enabled in `playwright_tests_config-substrates.json` (`npm test -- --mode=test-substrates --batch=fast`) |
+| `apworldEditorTests.js` | the in-app runner, category `apworldEditor`, enabled in `playwright_tests_config-substrates.json` (`npm test -- --mode=test-substrates --batch=fast`); S3's `apworld-initialise-loop-mode-writes-loop-costs` (adventure: the toggle ON → `loop_costs` + every payload flagged, the Document tab's row, Undo; OFF → neither), and one row in category `loops` (the loop reset on `mm3`, `--mode=test-loops-only`) |
 | `check-procgen-lab-hosting.mjs` claim 12 | `scripts/procgen/` — the reverse link end to end, from a button inside an iframe to a session in this panel |

@@ -162,18 +162,36 @@ export function setMaxManaBonus(substrateId, bonus) {
 }
 
 /**
- * Resolve the loop-reset teleport target: procgenPlayer's resolved
- * start region when available, optionally falling back to the first
- * declared start region (all legs but the textAdventure wrapper use
- * the fallback — it passes fallbackToDeclaredStart:false for parity).
+ * Resolve the loop-reset teleport target: in a procgen world, WHERE THE LOAD
+ * PUT THE PLAYER — the loops' own rule (`loops.getLoopStartRegion`, i.e.
+ * `LoopState._resolveLoopStartRegion`: procgenPlayer's resolved start only when
+ * the declared start is skipped, else the declared start); optionally falling
+ * back to the first declared start region when procgenPlayer resolved none
+ * (all legs but the textAdventure wrapper use the fallback — it passes
+ * fallbackToDeclaredStart:false for parity).
+ *
+ * ⛓ APWORLD SUBSTRATE CHANGE S3: until S3 this preferred the resolved start
+ * outright — a SECOND copy of the rule the loops' Clear Queue reads, so a
+ * multi-exit world's mana-out reset landed on the first placed region while
+ * its Clear Queue landed on the menu. It asks the loops now (one rule, trap
+ * 1438); without the loops module, the resolved start as before.
  */
 export function resolveStartRegion({ fallbackToDeclaredStart = true } = {}) {
+    let resolved = null;
     try {
         const fn = centralRegistry.getPublicFunction?.('procgenPlayer', 'getResolvedStartRegion');
-        const resolved = fn?.();
-        if (resolved) return resolved;
+        resolved = fn?.() ?? null;
     } catch {
         // procgenPlayer not loaded (standalone flows); fall through.
+    }
+    if (resolved) {
+        try {
+            const loopStart = centralRegistry.getPublicFunction?.('loops', 'getLoopStartRegion')?.();
+            if (loopStart) return loopStart;
+        } catch {
+            // loops not loaded; the resolved start, as before.
+        }
+        return resolved;
     }
     if (!fallbackToDeclaredStart) return null;
     return _gs()?.startRegions?.[0] ?? null;

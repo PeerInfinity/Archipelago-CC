@@ -136,7 +136,7 @@ import {
  * place that knows: a module that never loaded never registered its panel.
  */
 import { centralRegistry } from '../../app/core/centralRegistry.js';
-import { applyRulesDocOp, initialiseOpRefusal } from './rulesDocOps.js';
+import { applyRulesDocOp, initialiseOpRefusal, initialiseSphereLogRefusal } from './rulesDocOps.js';
 /**
  * ⛓⛓ APWORLD SUBSTRATE CHANGE R2 — the block's **Region generation** form: the
  * shared per-region form (R1), what it opens on and sends (`regionGenerationFlow`),
@@ -167,10 +167,10 @@ import {
 //   door, the form's preview and answers (`initialiseFlow`), the op's record.
 import {
   INITIALISE_DOOR_LABEL, initialiseAnswer, initialiseArgs, initialiseDoorShown, initialiseFormDefaults,
-  initialiseJob, initialisePreview, initialiseTickerText, withInitialisePatch,
+  initialiseJob, initialiseLoopToggle, initialisePreview, initialiseTickerText, withInitialisePatch,
 } from './initialiseFlow.js';
 import {
-  BACK_EXITS, initialiseOpFor, initialiseRegionSize, initialiseTargets,
+  BACK_EXITS, INITIALISE_XP_EFFECTS, SPHERE_LOG_SOURCE, initialiseOpFor, initialiseRegionSize, initialiseTargets,
 } from './slotInitialise.js';
 // ⛓ PRESET SIDECARS M3 — the exit-side control reads the declaration the op reads.
 import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
@@ -709,6 +709,15 @@ class ApworldEditorUI {
       if ((key === '*' || key === SHOW_MENU_ON_MAP_SETTING) && this.activeTab === 'map') this._render();
     });
 
+    /**
+     * ⛓ S3 — the Initialise form's loop-mode toggle reads the page's sphere log
+     * at DRAW; a log that arrives while the form is open re-plans and re-draws
+     * it. Unsubscribed in `onPanelDestroy` (a remounted panel keeps no listener).
+     */
+    this.sphereLogUnsubscribe = this.eventBus.subscribe('sphereState:dataLoaded', () => {
+      if (this._initialise && !this._initialise.run) this._setInitialiseState({});
+    });
+
     // If rules were loaded before the panel opened, pick them up now: first a
     // hand-off stashed by the load-rules channel, else the app-wide cache.
     const pending = consumePendingEditorRules();
@@ -1093,6 +1102,10 @@ class ApworldEditorUI {
     if (this.settingsUnsubscribe) {
       try { this.settingsUnsubscribe(); } catch (_) { /* noop */ }
       this.settingsUnsubscribe = null;
+    }
+    if (this.sphereLogUnsubscribe) {
+      try { this.sphereLogUnsubscribe(); } catch (_) { /* noop */ }
+      this.sphereLogUnsubscribe = null;
     }
   }
 
@@ -7428,7 +7441,7 @@ class ApworldEditorUI {
     const ini = this._initialise;
     if (!ini || ini.player !== String(this.playerId)) return null;
     if (!ini.run && ini.previewDoc !== this.rulesDoc) {
-      ini.preview = initialisePreview(this.rulesDoc, ini.player, ini.state);
+      ini.preview = initialisePreview(this.rulesDoc, ini.player, ini.state, this._pageSphereLog());
       ini.previewDoc = this.rulesDoc;
     }
     return this._makeInitialiseSection(ini);
@@ -7439,7 +7452,8 @@ class ApworldEditorUI {
     const player = String(this.playerId);
     const state = initialiseFormDefaults(this.rulesDoc, player);
     this._initialise = {
-      player, state, preview: initialisePreview(this.rulesDoc, player, state), previewDoc: this.rulesDoc,
+      player, state, preview: initialisePreview(this.rulesDoc, player, state, this._pageSphereLog()),
+      previewDoc: this.rulesDoc,
       run: null, progress: null,
     };
     this._render();
@@ -7454,9 +7468,24 @@ class ApworldEditorUI {
     const ini = this._initialise;
     if (!ini || ini.run) return;
     ini.state = withInitialisePatch(this.rulesDoc, ini.player, ini.state, patch);
-    ini.preview = initialisePreview(this.rulesDoc, ini.player, ini.state);
+    ini.preview = initialisePreview(this.rulesDoc, ini.player, ini.state, this._pageSphereLog());
     ini.previewDoc = this.rulesDoc;
     this._render();
+  }
+
+  /**
+   * ⛓ S3 — the sphere log the PAGE holds (`sphereState`'s raw entries: for a
+   * classic preset the `_sphere_log.jsonl` beside it, which this panel cannot
+   * fetch — it does not know the document's path). `null` when none is loaded
+   * or the module is absent; the document's embedded log is the op's fallback.
+   */
+  _pageSphereLog() {
+    try {
+      const entries = centralRegistry.getPublicFunction('sphereState', 'getRawSphereLog')?.();
+      return Array.isArray(entries) && entries.length > 0 ? entries : null;
+    } catch (_) {
+      return null;
+    }
   }
 
   /** ⛓ Close the form and stop its run SILENTLY (a boundary, not a reader's Cancel). */
@@ -7602,6 +7631,49 @@ class ApworldEditorUI {
       + 'exit back to the region the layout reached it from (the forward exit\'s rule), as the pipeline '
       + 'writes; off, the rooms keep the document\'s one-way links'));
 
+    // ⛓⛓ S3 — LOOP MODE (off by default) and, when on, its XP effect (the
+    //   generator's own values). Drawn DISABLED with the op's sentence when no
+    //   sphere log is reachable — unless it is already on, so it can be turned off.
+    const toggle = initialiseLoopToggle(this.rulesDoc, ini.player, this._pageSphereLog());
+    const loopOn = st.loopMode?.enabled === true;
+    const loopRow = row('');
+    loopRow.classList.add('apworld-initialise-loop-row');
+    const loop = document.createElement('input');
+    loop.type = 'checkbox';
+    loop.className = 'apworld-initialise-loop-mode';
+    loop.checked = loopOn;
+    loop.disabled = running || (!loopOn && !!toggle.refusal);
+    loop.title = toggle.refusal ?? `Priced from the ${toggle.source === SPHERE_LOG_SOURCE.PAGE ? 'loaded' : 'embedded'} `
+      + `sphere log (${toggle.entries} entries).`;
+    loop.addEventListener('change', () => this._setInitialiseState({
+      loopMode: { ...st.loopMode, enabled: loop.checked },
+    }));
+    loopRow.insertBefore(loop, loopRow.firstChild);
+    loopRow.appendChild(document.createTextNode('Loop mode — writes a `loop_costs` block priced from the slot\'s '
+      + 'sphere log and enables mana on every room'));
+    if (loopOn) {
+      const xp = document.createElement('select');
+      xp.className = 'apworld-initialise-xp-effect';
+      for (const id of INITIALISE_XP_EFFECTS) {
+        const o = document.createElement('option');
+        o.value = id;
+        o.textContent = id;
+        xp.appendChild(o);
+      }
+      xp.value = st.loopMode.regionXpEffect;
+      xp.disabled = running;
+      xp.addEventListener('change', () => this._setInitialiseState({
+        loopMode: { ...st.loopMode, regionXpEffect: xp.value },
+      }));
+      row('XP effect').appendChild(xp);
+    } else if (toggle.refusal) {
+      const why = document.createElement('div');
+      why.className = 'apworld-initialise-loop-refusal';
+      why.textContent = toggle.refusal;
+      Object.assign(why.style, { color: '#a99', margin: '0 0 2px 20px' });
+      sec.appendChild(why);
+    }
+
     const pv = ini.preview;
     const line = document.createElement('div');
     line.className = pv.refusal ? 'apworld-initialise-refusal' : 'apworld-initialise-preview';
@@ -7668,7 +7740,9 @@ class ApworldEditorUI {
     const doc = this.rulesDoc;
     const args = initialiseArgs(ini.player, ini.state);
     const said = (text) => { this._opMessage = `Refused: ${text}`; };
-    const refusal = initialiseOpRefusal(doc, args);
+    const pageLog = this._pageSphereLog();
+    const refusal = initialiseOpRefusal(doc, args)
+      ?? initialiseSphereLogRefusal(doc, { ...args, sphereLog: pageLog });
     if (refusal) {
       said(refusal);
       this._render();
@@ -7678,7 +7752,7 @@ class ApworldEditorUI {
       INITIALISE_TIMEOUT_SETTING, INITIALISE_TIMEOUT_DEFAULT_S));
     if (this._initialise !== ini || ini.run) return null;
     const run = { budgetS, args, progress: null, handle: null };
-    run.handle = runRegenerateInWorker(initialiseJob(doc, ini.player, ini.state), {
+    run.handle = runRegenerateInWorker(initialiseJob(doc, ini.player, ini.state, pageLog), {
       timeoutMs: budgetS * 1000,
       onPhase: () => this._paintInitialiseElapsed(),
       onProgress: (ev) => { if (ev?.type === 'region') run.progress = ev; },

@@ -35,14 +35,18 @@ import {
     INITIALISE_BARE_ONLY, INITIALISE_RETURN_EXITS_ADDED, INITIALISE_RETURN_EXITS_OFF,
     INITIALISE_RULES_UNCHANGED, INITIALISE_UNPLACED, REGENERATE_SEED_REQUIRED, RULES_OP_KINDS,
     GRANTED_AS_STARTING, applyRulesDocOp, canonicalPlacementIssues, describeInitialise, grantsClause,
-    initialiseOpRefusal,
+    initialiseOpRefusal, INITIALISE_LOOP_MODE_ON, INITIALISE_MANA_ON_EVERY_PAYLOAD, initialiseFailureSentence,
+    initialiseSphereLogRefusal, loopModeClause,
 } from './rulesDocOps.js';
+import { VALID_REGION_XP_EFFECTS, generateLoopCosts } from '../shared/procgen/loopCostGenerator.js';
 import { startingNeedRows } from './startingInventoryBlock.js';
 import {
     BACK_EXITS, DEFAULT_SUBSTRATE_ID, INITIALISE_BLOCKERS, INITIALISE_DRIVER, INITIALISE_GRID_GROWTH_LIMIT,
     INITIALISE_OP, UNPLACED_WHY, autoGridSide, initialiseFacts, initialiseGridSide, initialiseKnobs, initialiseOpFor,
     initialiseSlot, initialiseTargets, planInitialise, unplacedRegions,
     INITIALISE_SIZE_KEYS, initialiseRegionSize,
+    DEFAULT_REGION_XP_EFFECT, INITIALISE_STAGES, INITIALISE_XP_EFFECTS, SPHERE_LOG_SOURCE, initialiseLoopCosts,
+    initialiseSphereLog,
 } from './slotInitialise.js';
 import { assembleRegionParams } from '../procgenPipeline/sphereConfigHooks.js';
 import { effectiveHazardOpts } from '../procgenPipeline/presetRun.js';
@@ -994,5 +998,199 @@ describe('S2 — the generation settings bag in the build and the op', () => {
             op: INITIALISE_OP, player: P, substrate: DEFAULT_SUBSTRATE_ID, gridDims: GRID4, seed: 1,
             backExits: BACK_EXITS.ADD, bag: 'x',
         }).error).toContain('`bag`');
+    });
+});
+
+/* ── S3: loop mode on an initialise ─────────────────────────────────────── */
+
+/** ⛓ adventure's own sphere log — the `_sphere_log.jsonl` BESIDE the preset (what the page's `sphereState` holds). */
+const ADV_LOG = readFileSync(join(PRESETS, 'adventure/AP_14089154938208861744/AP_14089154938208861744_sphere_log.jsonl'),
+    'utf8').trim().split('\n').map((l) => JSON.parse(l));
+const S3_ARGS = { player: P, substrate: DEFAULT_SUBSTRATE_ID, gridDims: GRID4, seed: 1, backExits: BACK_EXITS.ADD };
+const LOOP_ON = { enabled: true, regionXpEffect: DEFAULT_REGION_XP_EFFECT };
+const noMs = (res) => ({ ...res, ms: 0 });
+const s3cache = new Map();
+/** ⛓ adventure initialised under `loopMode` (with the page's log), the op landed; `null` = no loopMode at all (pre-S3). */
+function loopInitialised(loopMode = LOOP_ON, sphereLog = ADV_LOG) {
+    const key = JSON.stringify(loopMode) + (sphereLog ? sphereLog.length : 0);
+    if (!s3cache.has(key)) {
+        const doc = DOCS.adventure;
+        const extra = loopMode === null ? {} : { loopMode, sphereLog };
+        const res = initialiseSlot({ doc, ...S3_ARGS, ...extra });
+        const op = initialiseOpFor({ ...S3_ARGS, ...(loopMode ? { loopMode } : {}) }, res);
+        s3cache.set(key, { res, op, out: applyRulesDocOp(doc, op) });
+    }
+    return s3cache.get(key);
+}
+/** ⛓ `doc` with the block and every payload's mana flag taken back out (a copy). */
+function withoutLoopMode(doc) {
+    const c = JSON.parse(JSON.stringify(doc));
+    delete c.loop_costs;
+    for (const e of Object.values(c.preset_sidecars[P])) delete e.playable_payload.manaEnabled;
+    return c;
+}
+
+describe('S3 — loop mode on an initialise: the build and the op', () => {
+    it('⛓ the premises: adventure embeds no log, its jsonl has player 1\'s slice; the effects are the generator\'s', () => {
+        expect(DOCS.adventure.sphere_log).toBeUndefined();
+        expect(Object.hasOwn(DOCS.adventure, 'loop_costs')).toBe(false);
+        expect(ADV_LOG.some((e) => e?.player_data?.[P])).toBe(true);
+        expect([...INITIALISE_XP_EFFECTS].sort()).toEqual([...VALID_REGION_XP_EFFECTS].sort());
+        expect(INITIALISE_XP_EFFECTS[0]).toBe(DEFAULT_REGION_XP_EFFECT);
+    });
+
+    it('⛓⛓ OFF is byte-inert: absent ≡ {enabled: false} — the result, the op, the document; no block, no flag', () => {
+        const pre = loopInitialised(null);
+        const off = initialiseSlot({ doc: DOCS.adventure, ...S3_ARGS, loopMode: { enabled: false } });
+        expect(bytes(noMs(off))).toBe(bytes(noMs(pre.res)));
+        const opOff = initialiseOpFor({ ...S3_ARGS, loopMode: { enabled: false } }, off);
+        expect(bytes({ ...opOff, provenance: { ...opOff.provenance, ms: 0 } }))
+            .toBe(bytes({ ...pre.op, provenance: { ...pre.op.provenance, ms: 0 } }));
+        expect(Object.hasOwn(pre.op.provenance, 'loopMode')).toBe(false);
+        expect(Object.hasOwn(pre.op.result, 'loop_costs')).toBe(false);
+        expect(Object.hasOwn(pre.out.doc, 'loop_costs')).toBe(false);
+        for (const e of Object.values(pre.out.doc.preset_sidecars[P])) {
+            expect(Object.hasOwn(e.playable_payload, 'manaEnabled')).toBe(false);
+        }
+        expect(pre.out.description).not.toContain(INITIALISE_LOOP_MODE_ON);
+    });
+
+    it('⛓⛓ ON: every payload manaEnabled, loop_costs with no generatedAt, the generator\'s block over the built copy', () => {
+        const { res, op, out } = loopInitialised();
+        expect(out.ok, out.error).toBe(true);
+        const entries = out.doc.preset_sidecars[P];
+        expect(Object.keys(entries).length).toBeGreaterThan(0);
+        for (const [n, e] of Object.entries(entries)) expect(e.playable_payload.manaEnabled, n).toBe(true);
+        const lc = out.doc.loop_costs;
+        expect(lc).toEqual(op.result.loop_costs);
+        expect(Object.hasOwn(lc, 'generatedAt')).toBe(false);
+        // ⛓ the oracle: the pipeline's producer over the document AS BUILT (entries + return exits), stamp deleted
+        const built = JSON.parse(JSON.stringify(DOCS.adventure));
+        built.preset_sidecars = { [P]: res.entries };
+        for (const { region, exit } of res.returnExits) built.regions[P][region].exits.push(exit);
+        const want = generateLoopCosts({ rulesJson: built, sphereLog: ADV_LOG, playerId: P,
+            regionXpEffect: DEFAULT_REGION_XP_EFFECT, sourceFileName: DOCS.adventure.seed_name });
+        delete want.generatedAt;
+        expect(lc).toEqual(want);
+        // ⛓ every placed region is priced; locations too
+        for (const n of Object.keys(entries)) expect(Object.hasOwn(lc.regions, n), n).toBe(true);
+        expect(Object.keys(lc.locations).length).toBeGreaterThan(0);
+        expect(lc.defaultRegionXpEffect).toBe(DEFAULT_REGION_XP_EFFECT);
+        expect(out.description).toContain(loopModeClause(lc));
+        expect(out.description).toContain(`${INITIALISE_LOOP_MODE_ON}: loop_costs written (`
+            + `${Object.keys(lc.regions).length} regions, ${Object.keys(lc.locations).length} locations), `
+            + INITIALISE_MANA_ON_EVERY_PAYLOAD);
+    });
+
+    it('⛓⛓ the deep diff: ON − OFF = the `loop_costs` key + the payloads\' flag; ON vs the source = the R7 set + `loop_costs`', () => {
+        const on = loopInitialised().out.doc;
+        const off = loopInitialised(null).out.doc;
+        expect(changedPaths(off, on)).toEqual(['loop_costs', 'preset_sidecars.1']);
+        expect(bytes(withoutLoopMode(on))).toBe(bytes(off));
+        const gained = [...new Set(loopInitialised().op.result.returnExits.map((r) => r.region))].sort();
+        expect(changedPaths(DOCS.adventure, on)).toEqual(['loop_costs', 'preset_sidecars.1', 'procgen_metadata',
+            ...gained.map((r) => `regions.1.${r}.exits`)].sort());
+    });
+
+    it('⛓ every XP effect the form offers reaches the block; a stranger is refused by name, never normalised', () => {
+        for (const fx of INITIALISE_XP_EFFECTS) {
+            const r = initialiseSlot({ doc: DOCS.adventure, ...S3_ARGS, loopMode: { enabled: true, regionXpEffect: fx },
+                sphereLog: ADV_LOG });
+            expect(r.loop_costs.defaultRegionXpEffect, fx).toBe(fx);
+        }
+        const bad = { ...S3_ARGS, loopMode: { enabled: true, regionXpEffect: 'bogus' } };
+        expect(initialiseOpRefusal(DOCS.adventure, bad)).toContain('`regionXpEffect` is one of');
+        expect(applyRulesDocOp(DOCS.adventure, { op: INITIALISE_OP, ...bad, sphereLog: ADV_LOG }).error)
+            .toContain('"bogus"');
+        for (const shape of ['on', true, { enabled: 'yes' }, null]) {
+            expect(initialiseOpRefusal(DOCS.adventure, { ...S3_ARGS, loopMode: shape }), String(shape))
+                .toContain('`loopMode` is {enabled, regionXpEffect}');
+        }
+    });
+
+    it('⛔ a document that already HOLDS `loop_costs` is refused by name — pre-engine and on a record; off, it is kept', () => {
+        const held = { ...JSON.parse(JSON.stringify(DOCS.adventure)), loop_costs: { version: '1.0', regions: {}, locations: {} } };
+        const on = { ...S3_ARGS, loopMode: LOOP_ON };
+        expect(initialiseOpRefusal(held, on)).toContain('already carries a `loop_costs` block');
+        expect(applyRulesDocOp(held, loopInitialised().op).error).toContain('already carries a `loop_costs` block');
+        // ⛓ the RESULT's own guard, apart from the args' (a record whose provenance lost its loopMode)
+        const rec = loopInitialised().op;
+        const noProv = { ...rec, provenance: { ...rec.provenance, loopMode: undefined } };
+        expect(applyRulesDocOp(held, noProv).error).toContain('already carries a `loop_costs` block');
+        const offOut = applyRulesDocOp(held, loopInitialised(null).op);
+        expect(offOut.ok, offOut.error).toBe(true);
+        expect(offOut.doc.loop_costs).toEqual(held.loop_costs);
+    });
+
+    it('⛔ NO LOG — neither the page\'s nor an embedded one — is refused by name; a log for another player too', () => {
+        const on = { ...S3_ARGS, loopMode: LOOP_ON };
+        const sentence = initialiseSphereLogRefusal(DOCS.adventure, on);
+        expect(sentence).toBe('apworld: loop mode needs the slot\'s sphere log to price its regions; none is loaded '
+            + 'and the document embeds none (`sphere_log`).');
+        expect(applyRulesDocOp(DOCS.adventure, { op: INITIALISE_OP, ...on }).error).toBe(sentence);
+        expect(applyRulesDocOp(DOCS.adventure, { op: INITIALISE_OP, ...on, sphereLog: [] }).error).toBe(sentence);
+        const other = ADV_LOG.map((e) => (e?.player_data ? { ...e, player_data: { 9: e.player_data[P] } } : e));
+        expect(initialiseSphereLogRefusal(DOCS.adventure, { ...on, sphereLog: other })).toContain('no entry for player 1');
+        expect(initialiseSphereLogRefusal(DOCS.adventure, { ...S3_ARGS })).toBeNull();
+        // ⛓ the record replays WITHOUT a log: its result carries the block
+        const replay = applyRulesDocOp(DOCS.adventure, loopInitialised().op);
+        expect(replay.ok, replay.error).toBe(true);
+        expect(bytes(replay.doc)).toBe(bytes(loopInitialised().out.doc));
+    });
+
+    it('⛓ the precedence: the page\'s log, else the embedded one — and the embedded one prices the same block', () => {
+        const embedded = { ...JSON.parse(JSON.stringify(DOCS.adventure)), sphere_log: ADV_LOG };
+        expect(initialiseSphereLog(embedded, P, ADV_LOG).source).toBe(SPHERE_LOG_SOURCE.PAGE);
+        expect(initialiseSphereLog(embedded, P, null).source).toBe(SPHERE_LOG_SOURCE.EMBEDDED);
+        expect(initialiseSphereLog(DOCS.adventure, P, null)).toEqual({ entries: null, source: null, forPlayer: false });
+        const script = applyRulesDocOp(embedded, { op: INITIALISE_OP, ...S3_ARGS, loopMode: LOOP_ON });
+        expect(script.ok, script.error).toBe(true);
+        expect(script.doc.loop_costs).toEqual(loopInitialised().out.doc.loop_costs);
+        expect(script.op.provenance.loopMode).toEqual(LOOP_ON);
+        expect(Object.hasOwn(script.op, 'sphereLog')).toBe(false);
+        expect(Object.hasOwn(script.op.provenance, 'sphereLog')).toBe(false);
+    });
+
+    it('⛔ a generator THROW refuses the op by name — nothing written (no marker block: the hub edits, it does not compile)', () => {
+        const broken = [...ADV_LOG, null];
+        const res = initialiseSlot({ doc: DOCS.adventure, ...S3_ARGS, loopMode: LOOP_ON, sphereLog: broken });
+        expect(res.ok).toBe(false);
+        expect(res.stage).toBe(INITIALISE_STAGES.LOOP_COSTS);
+        const out = applyRulesDocOp(DOCS.adventure, { op: INITIALISE_OP, ...S3_ARGS, loopMode: LOOP_ON, sphereLog: broken });
+        expect(out.ok).toBe(false);
+        expect(out.error).toBe(`${initialiseFailureSentence(DEFAULT_SUBSTRATE_ID, res)} Nothing was written.`);
+        expect(out.error).toContain('`generateLoopCosts`) threw');
+    });
+
+    it('⛔ a record whose block and payload flags DISAGREE is refused — loop mode is one setting', () => {
+        const { op } = loopInitialised();
+        const unflagged = JSON.parse(JSON.stringify(op));
+        const [first] = Object.keys(unflagged.result.entries);
+        delete unflagged.result.entries[first].playable_payload.manaEnabled;
+        expect(applyRulesDocOp(DOCS.adventure, unflagged).error).toContain('built without mana');
+        const noBlock = JSON.parse(JSON.stringify(op));
+        delete noBlock.result.loop_costs;
+        expect(applyRulesDocOp(DOCS.adventure, noBlock).error).toContain('carries no `loop_costs`');
+        const badBlock = JSON.parse(JSON.stringify(op));
+        badBlock.result.loop_costs = { regions: [] };
+        expect(applyRulesDocOp(DOCS.adventure, badBlock).error).toContain('`loop_costs` is the cost block');
+    });
+
+    it('⛓ ONE undo takes the block back with everything else', () => {
+        const session = createEditSession(rulesEditAdapter, DOCS.adventure);
+        const before = bytes(session.record());
+        session.apply(loopInitialised().op);
+        expect(Object.hasOwn(session.record(), 'loop_costs')).toBe(true);
+        expect(session.undo()).toBe(true);
+        expect(bytes(session.record())).toBe(before);
+    });
+
+    it('⛓ the block is written by the helper the build calls, deterministically (two builds, one byte string)', () => {
+        const { res } = loopInitialised();
+        const a = initialiseLoopCosts(DOCS.adventure, P, { entries: res.entries, returnExits: res.returnExits,
+            sphereLog: ADV_LOG, regionXpEffect: DEFAULT_REGION_XP_EFFECT });
+        const b = initialiseSlot({ doc: DOCS.adventure, ...S3_ARGS, loopMode: LOOP_ON, sphereLog: ADV_LOG }).loop_costs;
+        expect(bytes(a)).toBe(bytes(res.loop_costs));
+        expect(bytes(b)).toBe(bytes(res.loop_costs));
     });
 });

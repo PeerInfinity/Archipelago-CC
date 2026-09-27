@@ -8,6 +8,7 @@ import {
 import { GameState } from '../gameState/state.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { SKIP_MENU_DEFAULT } from '../menuPanel/menuPanelEngine.js';
 
 // The delegation check reads the substrate's registry-declared
 // loop-action-delegation capability (sharing.mana.loopActionDelegation)
@@ -54,8 +55,7 @@ function makeStubDispatcher() {
  * to the GameState instance so consumers see the same observable
  * behavior the runtime gives them.
  */
-function makeWiredLoopState({ withDispatcher = false } = {}) {
-  const bus = makeBus();
+function makeWiredLoopState({ withDispatcher = false, bus = makeBus() } = {}) {
   const gs = new GameState(bus);
   const loopState = new LoopState();
   const dispatcher = withDispatcher ? makeStubDispatcher() : null;
@@ -327,6 +327,92 @@ describe('LoopState — clearQueue (Phase 6g)', () => {
       (c) => c.eventName === 'user:regionMove',
     );
     expect(teleport).toBeUndefined();
+  });
+});
+
+/**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE S3 (plan §27.6 #1) — THE LOOP RESET LANDS WHERE
+ * THE LOAD PUT THE PLAYER, by the ONE start-hop rule (`menuPanelEngine.skipsStart`:
+ * the *Skip the menu* setting AND exactly one exit). The rules arrive the way
+ * the runtime delivers them — `stateManager:rawJsonDataLoaded` on the bus — and
+ * the setting through `menuPanel.isSkipMenuEnabled`, the channel procgenPlayer reads.
+ */
+describe('LoopState — the loop start follows skipsStart (S3)', () => {
+  let loopState, gs, dispatcher, bus;
+  const PLAYER = '2';
+  const docWith = (startExits) => ({
+    regions: {
+      [PLAYER]: {
+        Menu: { exits: startExits.map((t, i) => ({ name: `to ${t} ${i}`, connected_region: t })) },
+        region_0_0: { exits: [] },
+        region_1_0: { exits: [] },
+      },
+    },
+  });
+  function makeDispatchingBus() {
+    const handlers = new Map();
+    return {
+      events: [],
+      publish(name, data) { this.events.push({ name, data }); for (const h of handlers.get(name) ?? []) h(data); },
+      subscribe: (name, h) => {
+        handlers.set(name, [...(handlers.get(name) ?? []), h]);
+        return () => {};
+      },
+    };
+  }
+  const setFn = (mod, fn, value) => centralRegistry.registerPublicFunction(mod, fn, () => value);
+  const reset = () => dispatcher.calls.find((c) => c.eventName === 'user:regionMove')?.eventData?.targetRegion;
+  function load(doc) {
+    bus.publish('stateManager:rawJsonDataLoaded', { rawJsonData: doc, selectedPlayerInfo: { playerId: PLAYER } });
+    gs.setStartRegions(['Menu']);
+    gs.setCurrentRegion('region_1_0');
+  }
+
+  beforeEach(() => {
+    bus = makeDispatchingBus();
+    ({ loopState, gs, dispatcher } = makeWiredLoopState({ withDispatcher: true, bus }));
+    setFn('procgenPlayer', 'getResolvedStartRegion', 'region_0_0');
+  });
+  afterEach(() => {
+    setFn('procgenPlayer', 'getResolvedStartRegion', null);
+    setFn('menuPanel', 'isSkipMenuEnabled', SKIP_MENU_DEFAULT);
+  });
+
+  it('⛓ a ONE-exit start with skip ON is skipped: the reset lands on the resolved start', () => {
+    setFn('menuPanel', 'isSkipMenuEnabled', true);
+    load(docWith(['region_0_0']));
+    loopState.clearQueue();
+    expect(reset()).toBe('region_0_0');
+  });
+
+  it('⛓⛓ a MULTI-exit start is never skipped: the reset lands on the DECLARED start (mm3\'s shape)', () => {
+    setFn('menuPanel', 'isSkipMenuEnabled', true);
+    load(docWith(['region_0_0', 'region_1_0']));
+    loopState.clearQueue();
+    expect(reset()).toBe('Menu');
+  });
+
+  it('⛓ skip OFF: the player began at the declared start, so the reset returns there', () => {
+    setFn('menuPanel', 'isSkipMenuEnabled', false);
+    load(docWith(['region_0_0']));
+    loopState.clearQueue();
+    expect(reset()).toBe('Menu');
+  });
+
+  it('⛓ the rule reads the LOADED slot (the event\'s player), not player 1', () => {
+    setFn('menuPanel', 'isSkipMenuEnabled', true);
+    const doc = docWith(['region_0_0']);
+    doc.regions['1'] = { Menu: { exits: [{ connected_region: 'a' }, { connected_region: 'b' }] } };
+    load(doc);
+    loopState.clearQueue();
+    expect(reset()).toBe('region_0_0');
+  });
+
+  it('⛓ a warehoused START is its own resolved start — nothing to decide', () => {
+    setFn('procgenPlayer', 'getResolvedStartRegion', 'Menu');
+    load(docWith(['region_0_0', 'region_1_0']));
+    loopState.clearQueue();
+    expect(reset()).toBe('Menu');
   });
 });
 

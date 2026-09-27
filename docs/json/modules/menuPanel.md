@@ -149,9 +149,11 @@ procgen world Restart never reached the menu (measured on `mm3` initialised:
 Restart → *Needle Man Stage*, the first placed stage). It now lands on the
 declared start in every world, where the panel lists every exit again. The
 convention it embodies, written nowhere else: **the declared start is always
-accessible** (it is where every AP world's reachability starts). ⚠ The loops
-module's own reset (`loopState._resolveLoopStartRegion`) still prefers the
-resolved start — the loops' concern, not this panel's.
+accessible** (it is where every AP world's reachability starts). The loops
+module's own reset (`loopState._resolveLoopStartRegion`, S3) follows the same
+place by this module's rule: the resolved start only when `skipsStart` says the
+load skipped the declared start, the declared start otherwise — see
+[Loops › Where a reset puts you](../features/loops.md#where-a-reset-puts-you).
 
 Substrate panels bail out of their mana deduction on `fromReset`, and
 `procgenPlayer` reloads the substrate's payload, so the panel matches the
@@ -191,5 +193,7 @@ self-append** (the factory appends it).
 | `index.test.js` | the load handshake in either order, the one-publisher hand-off, skip OFF, a many-exit / no-exit start not skipped, the exit press, Restart in both modes (to the declared start even with a resolved start registered) |
 | `procgenPlayer/index.test.js` | the other publisher's side of the setting, and of `skipsStart` (the hop fires iff the rule answers true) |
 | `tests/testCases/apworldEditorTests.js` | (M2, category `apworldEditor` — the panel has no in-app category of its own) `apworld-menu-hub-restart-returns-to-the-declared-start`: `mm3` initialised + Apply → no hop, the panel lists 13 exits, a press moves, Restart → the declared start; `adventure` initialised → the hop fires |
+| `loops/loopState.test.js` (S3) | the loop start follows `skipsStart`: a one-exit start with skip ON → the resolved start; many exits, or skip OFF → the declared start; the loaded slot, not player 1 |
+| `tests/testCases/apworldEditorTests.js` (S3, category `loops`, `--mode=test-loops-only`) | `loops-reset-lands-on-the-declared-start-of-a-multi-exit-world`: `mm3` initialised WITH loop mode + Apply → loop mode on, a menu press moves, the loops panel's Clear Queue → the declared start |
 | `loops/loopModeExemptions.test.js` | `menuPanel-*` classified as authoring |
 | `tests/testCases/loopsPanelTests.js` | `loops-real-actions-processed` drives Restart → exit press (in loop mode) → queue → processed; `loops-mana-consumption` drives the Start/Pause labels and asserts mana moves |
