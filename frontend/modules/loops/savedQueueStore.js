@@ -334,3 +334,24 @@ export function _testOnly_clearAll() {
         try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
     }
 }
+
+/**
+ * Test-only — the stored map exactly as it is in storage (the raw string, or
+ * null when the key is absent). With `_testOnly_restoreRaw` it lets an in-app
+ * row that records queues put the person's saved queues back as it found them
+ * (modules/tests/savedQueueIsolation.js; plan §37.7.4).
+ */
+export function _testOnly_snapshotRaw() {
+    if (typeof localStorage === 'undefined') return null;
+    try { return localStorage.getItem(STORAGE_KEY); } catch { return null; }
+}
+
+/** Test-only — put the raw string back (null removes the key) and drop the in-memory cache. */
+export function _testOnly_restoreRaw(raw) {
+    _cache = null;
+    if (typeof localStorage === 'undefined') return;
+    try {
+        if (raw === null) localStorage.removeItem(STORAGE_KEY);
+        else localStorage.setItem(STORAGE_KEY, raw);
+    } catch { /* ignore */ }
+}

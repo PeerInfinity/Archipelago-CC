@@ -27,6 +27,7 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import { restoresSavedQueues } from '../savedQueueIsolation.js';
 import { generateLoopCosts } from '../../shared/procgen/loopCostGenerator.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import loopStateSingleton from '../../loops/loopStateSingleton.js';
@@ -449,7 +450,7 @@ registerTest({
                + 'same block: the apply must spend exactly the REPRICED envelope, '
                + 'refire the check and cross the departure with fromLoop — while the '
                + 'game replays nothing (walkTo never called).',
-    testFunction: summaryRecordThenInstantPlayback,
+    testFunction: restoresSavedQueues(summaryRecordThenInstantPlayback),
     category: 'Runner block modes',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

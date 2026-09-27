@@ -11,6 +11,8 @@ import {
     hasSummaryRecording,
     _testOnly_clearAll,
     _testOnly_resetCache,
+    _testOnly_snapshotRaw,
+    _testOnly_restoreRaw,
 } from './savedQueueStore.js';
 
 const RULES_HASH = 'a1b2c3d4';
@@ -435,5 +437,42 @@ describe('savedQueueStore — the legacy-maze filter (Q-b)', () => {
         seed({ [`h1|maze|Forest`]: [currentMaze] });
         getSavedQueues('h1', 'Forest', 'maze');
         expect([...store.keys()]).toEqual(['loops:savedQueues:v1']);
+    });
+});
+
+describe('_testOnly_snapshotRaw / _testOnly_restoreRaw — an in-app row puts the saved queues back (local-storage V1)', () => {
+    let store;
+    let real;
+    beforeEach(() => {
+        store = new Map();
+        real = globalThis.localStorage;
+        globalThis.localStorage = {
+            getItem: (k) => (store.has(k) ? store.get(k) : null),
+            setItem: (k, v) => store.set(k, String(v)),
+            removeItem: (k) => store.delete(k),
+        };
+        _testOnly_resetCache();
+    });
+    afterEach(() => {
+        globalThis.localStorage = real;
+        _testOnly_resetCache();
+    });
+
+    it('a row that records a queue leaves the store byte-identical to what it found', () => {
+        saveQueue(RULES_HASH, makeQueue({ regionName: 'mine' }));
+        const raw = _testOnly_snapshotRaw();
+        saveQueue('otherhash', makeQueue({ regionName: 'test_region' }));
+        _testOnly_restoreRaw(raw);
+        expect(store.get('loops:savedQueues:v1')).toBe(raw);
+        expect(getSavedQueues('otherhash', 'test_region', 'maze')).toEqual([]);
+        expect(getSavedQueues(RULES_HASH, 'mine', 'maze')).toHaveLength(1);
+    });
+
+    it('an absent key stays absent', () => {
+        const raw = _testOnly_snapshotRaw();
+        expect(raw).toBe(null);
+        saveQueue(RULES_HASH, makeQueue());
+        _testOnly_restoreRaw(raw);
+        expect(store.has('loops:savedQueues:v1')).toBe(false);
     });
 });

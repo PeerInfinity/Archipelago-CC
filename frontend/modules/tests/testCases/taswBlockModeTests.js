@@ -37,6 +37,7 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import { restoresSavedQueues } from '../savedQueueIsolation.js';
 import {
     arrangeShuffledSpiral,
     buildRulesJson,
@@ -483,7 +484,7 @@ registerTest({
                + 'departs through the planned exit, and asserts the loops-owned '
                + 'coarse capture rewrote the block interior to the performed actions '
                + 'and the block auto-switched to Playback.',
-    testFunction: recordCoarseAutoswitch,
+    testFunction: restoresSavedQueues(recordCoarseAutoswitch),
     category: 'TA block modes',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

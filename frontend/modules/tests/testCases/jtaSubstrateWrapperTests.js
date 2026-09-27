@@ -33,6 +33,7 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import { restoresSavedQueues } from '../savedQueueIsolation.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import { centralRegistry } from '../../../app/core/centralRegistry.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
@@ -1602,7 +1603,7 @@ registerTest({
                + 'jtaQueueEngine executor and crosses the zone boundary again. Also '
                + 'asserts the starting-energy bonus raises the shared pool the '
                + 'recorded run is played against (energyBonusSync).',
-    testFunction: recordPlaybackCrossesZoneBoundary,
+    testFunction: restoresSavedQueues(recordPlaybackCrossesZoneBoundary),
     category: 'JtA substrate',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

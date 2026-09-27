@@ -40,6 +40,7 @@
  */
 
 import { registerTest } from '../testRegistry.js';
+import { restoresSavedQueues } from '../savedQueueIsolation.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
 import {
@@ -1189,7 +1190,7 @@ registerTest({
                + 'installs the plan with the departure queued last, forces the loop to recompile, '
                + 'and the fork grinds until the recorded action opens an exit gate that was CLOSED '
                + 'when the replay started.',
-    testFunction: recordPlaybackCrossesRegion,
+    testFunction: restoresSavedQueues(recordPlaybackCrossesRegion),
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
@@ -1205,7 +1206,7 @@ registerTest({
                + 'walks the maze approach block each run (the player walking back) and asserts the '
                + 'reset really interrupted the replay, that the queue re-parked on index 0 each time, '
                + 'and that the fork ground more than one run\'s worth of actions.',
-    testFunction: multiRunReplayRetry,
+    testFunction: restoresSavedQueues(multiRunReplayRetry),
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
@@ -1859,7 +1860,7 @@ registerTest({
                + 'exactly zero pump ticks — and that both replays produced the SAME effects: same '
                + 'fork actions completed, same Explore level, same exit crossed. The in-app echo of '
                + 'the byte-identity contract clockGate.test.js pins headlessly.',
-    testFunction: omsiPlaybackInstant,
+    testFunction: restoresSavedQueues(omsiPlaybackInstant),
     category: 'Omsi substrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
