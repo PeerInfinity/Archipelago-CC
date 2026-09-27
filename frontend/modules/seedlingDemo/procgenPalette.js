@@ -1371,6 +1371,31 @@ export const POST_SWORD_PALETTE = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ **THE POST-SHIELD BIOME** (seedling substrate S1, D3; plan §2.1 G-c).
+ * The boot is the whole difference, exactly as post-sword's was: the SWORD and
+ * the plain SHIELD (`Player.hasShield`, AP `Progressive Shield`), so the
+ * `shieldgate` element — a `shieldlocknorm` on a cut — can certify. ⛔ THE
+ * ROSTER IS POST-SWORD'S, BY REFERENCE: the shield gates no pass-2 template,
+ * and a second roster would be a second list to keep in step with the first.
+ *
+ * ⚠ DECLARED, NOT EARNED. The bot campaign does not hold the shield yet (L20
+ * is three rooms past its frontier; plan §0 #5), so this biome's boot is a
+ * claim about a player the chain has not produced — the same standing the
+ * post-sword boot had before the campaign reached L10. ⛔ OPT-IN: no default
+ * reads it (the censuses and the acceptance batch iterate
+ * `watchGenerate.DEFAULT_CENSUS_BIOMES`, which does not name it), so every
+ * committed identity is untouched by its existing.
+ */
+export const POST_SHIELD_ITEMS = Object.freeze({ hasSword: true, hasShield: true });
+
+export const POST_SHIELD_PALETTE = Object.freeze({
+    name: 'post-shield',
+    items: POST_SHIELD_ITEMS,
+    templates: POST_SWORD_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
+/**
  * ⛔⛔⛔ THE GROUP SLOT'S OWN INVARIANTS — three, and every one of them exists
  * because the shape it forbids would look FIXED AND BEHAVE BROKEN.
  *

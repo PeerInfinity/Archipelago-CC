@@ -28,7 +28,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    BIOME_NAMES, DEFAULT_SKELETON, DIRECTED_ANCHOR_TRIES, ELEMENTS_CONTROL_DEFAULT,
+    BIOME_NAMES, DEFAULT_CENSUS_BIOMES, DEFAULT_SKELETON, DIRECTED_ANCHOR_TRIES, ELEMENTS_CONTROL_DEFAULT,
     ELEMENTS_CONTROL_LIST, GENERATE_BIOMES, agreementWithPayload,
     agreementWithTrace, applyDirective, describeKeptKind, describeState, directedCost,
     displaySolve, displayStaging, elementsAskSpelling, elementsControlValue, elementsFromControl,
@@ -56,10 +56,19 @@ import { DIRECTIVE_KEEP_POLICY } from '../procgenCore/urlParams.js';
 const json = (v) => JSON.stringify(v);
 
 describe('the biome map — ONE map, two readers', () => {
-    it('holds exactly the two biomes the arc ships, by identity', () => {
-        expect(BIOME_NAMES).toEqual(['pre-sword', 'post-sword']);
+    it('holds exactly the biomes the arc ships, by identity — S1 added `post-shield`', () => {
+        expect(BIOME_NAMES).toEqual(['pre-sword', 'post-sword', 'post-shield']);
         expect(paletteFor('pre-sword')).toBe(PRE_SWORD_PALETTE);
         expect(paletteFor('post-sword')).toBe(POST_SWORD_PALETTE);
+        expect(paletteFor('post-shield').items).toEqual({ hasSword: true, hasShield: true });
+        // ⛓ its roster IS post-sword's, by reference — no second list to keep in step
+        expect(paletteFor('post-shield').templates).toBe(POST_SWORD_PALETTE.templates);
+    });
+
+    /** ⛔ S1 — a census/batch that runs "every biome" by default would move its
+     *  committed identity the day a biome is added; they read this instead. */
+    it('the CENSUS default is the two pre-S1 biomes, not every biome', () => {
+        expect(DEFAULT_CENSUS_BIOMES).toEqual(['pre-sword', 'post-sword']);
     });
 
     /**
@@ -68,7 +77,8 @@ describe('the biome map — ONE map, two readers', () => {
      * of that level would be about a run nobody asked for.
      */
     it('refuses an unknown biome BY NAME rather than falling through', () => {
-        expect(() => paletteFor('post-shield')).toThrow(/not one of \[pre-sword, post-sword\]/);
+        expect(() => paletteFor('post-dark-shield'))
+            .toThrow(/not one of \[pre-sword, post-sword, post-shield\]/);
         expect(() => paletteFor(undefined)).toThrow(/watchGenerate: biome/);
     });
 

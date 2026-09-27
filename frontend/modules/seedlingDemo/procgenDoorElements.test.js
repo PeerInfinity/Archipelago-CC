@@ -15,13 +15,15 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    SEEDLING_DEFAULTS, carveLawRefusal, defaultElementsFor, doorLawRefusal, seedlingModel,
-    seedlingSeam,
+    SEEDLING_DEFAULTS, carveLawRefusal, defaultElementsFor, doorLawRefusal, generateSeedlingLevel,
+    seedlingModel, seedlingSeam,
 } from './procgenSeedling.js';
 import {
     compositeSeedlingOnConnector, liftedClaimFor, seedlingOnConnectorEntities,
 } from './procgenSeedlingElements.js';
-import { POST_SWORD_ITEMS, PRE_SWORD_ITEMS } from './procgenPalette.js';
+import {
+    POST_SHIELD_ITEMS, POST_SHIELD_PALETTE, POST_SWORD_ITEMS, PRE_SWORD_ITEMS,
+} from './procgenPalette.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
 import {
     ELEMENT_NAMES, formatElementSpec, isElementList, parseElementSpec,
@@ -37,10 +39,10 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
         /** ⛓ arc 5 slice 3 added the `chamber` head and slice 4 the `arena` —
          *  the roster is asserted LITERALLY (never `toContain`) so a head
          *  arriving without a decision reds a row rather than sliding in.
-         *  ⛓ Seedling substrate S1 added `rockgate` and `shortcut` (plan §2.1 G-a, G-b). */
+         *  ⛓ Seedling substrate S1 added `rockgate`, `shortcut`, `shieldgate` (plan §2.1 G-a..G-c). */
         expect(ELEMENT_NAMES).toEqual([
             'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
-            'shortcut',
+            'shortcut', 'shieldgate',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
@@ -402,6 +404,18 @@ describe('⛓⛓ THE MAPPING — ids to Seedling parts, and ONE tag not three', 
         ]);
     });
 
+    /** ⛓ S1, D3 — the PLAIN shield's lock (`shieldlocknorm`), with a tag. */
+    it('`shieldgate_door` -> `shieldlocknorm` with its own tag', () => {
+        const out = seedlingOnConnectorEntities({
+            placed: { entities: [{ role: 'obstacle', x: 6, y: 3, id: 'shieldgate_door' }] },
+            tagFor: () => 5,
+        });
+        expect(out.entities).toEqual([
+            { type: 'shieldlocknorm', tx: 6, ty: 3, attrs: { tag: '5' } },
+        ]);
+        expect(out.tags).toEqual({ lock: 5 });
+    });
+
     /** ⛔ AN ID THE TABLE DOES NOT CARRY IS A THROW, never a dropped entity. */
     it('an unknown id THROWS rather than dropping the entity', () => {
         expect(() => seedlingOnConnectorEntities({
@@ -530,6 +544,49 @@ describe('⛓⛓⛓ THE SEAM — the item gate, and the two elements certifying'
         expect(placed.entities).toHaveLength(1);
         expect(placed.tags.rock).toBeGreaterThanOrEqual(0);
     });
+
+    /**
+     * ⛓⛓⛓ SEEDLING SUBSTRATE S1, D3 — THE SHIELD GATE, THE FIRST NON-SWORD
+     * GATE. ⛔ MUTANT (c) of the slice — the shield absent from the boot — is
+     * the post-sword row: the seam refuses BY NAME and for free, never by a
+     * spent solver budget (the touch verb would otherwise THROW on its
+     * no-shield arm, below).
+     */
+    it('post-sword: the SHIELD gate refuses `the-element-needs-an-item-…` with NO solve', () => {
+        const out = seedlingSeam({ seed: 1, items: POST_SWORD_ITEMS,
+            elements: { name: 'shieldgate' } });
+        expect(out.certification.gap).toBe('the-element-needs-an-item-this-biome-does-not-grant');
+        expect(out.certification.needs).toEqual(['hasShield']);
+        expect(out.certification.verdict).toBe(null);
+        expect(out.model.elements.ran).toBe(false);
+    });
+
+    it('post-shield: the SHIELD gate certifies with `touch`, entered from the WEST', () => {
+        const out = seedlingSeam({ seed: 1, items: POST_SHIELD_ITEMS,
+            elements: { name: 'shieldgate' } });
+        expect(out.certification.certified).toBe(true);
+        expect(out.certification.strategies).toContain('touch');
+        const placed = out.model.elements.placed[0];
+        expect(placed.family).toBe('shieldgate');
+        expect(placed.clearer).toEqual([{ x: placed.doorCell.x - 1, y: placed.doorCell.y }]);
+    });
+
+    /**
+     * ⛔⛔ THE MEASURED LIMIT, PINNED AS A TRIPWIRE (the planner's routing,
+     * 2026-09-26): `require:['hasShield']` is NOT MET today because
+     * `solverBot.execTouch`'s no-shield arm `fail()`s — a `SolverBotError`, which
+     * `procgenOracle.solve` re-throws — so the without-arm grades WEAK. The cure
+     * is one line in L16's file (raise a `SolverRefusal`, as `execBreak` does).
+     * ⇒ THIS ROW REDS THE DAY IT LANDS, and the re-measure is to flip it to
+     * `met: true`, `grade: 'STRONG'`.
+     */
+    it('post-shield: `require:[hasShield]` grades WEAK — the execTouch throw (routed to L16)', () => {
+        const out = generateSeedlingLevel({ seed: 1, palette: POST_SHIELD_PALETTE,
+            bounds: { obstacleTarget: 1, triesPerStep: 1, saturationK: 1 }, require: ['hasShield'] });
+        expect(out.require.element).toBe('shieldgate');
+        expect(out.require.met).toBe(false);
+        expect(out.require.grade).toBe('WEAK');
+    }, 60000);
 
     /**
      * ⛓ THE CHEAPEST CERTIFYING CELL IN THE TABLE, and the choice is a

@@ -40,6 +40,13 @@ export const GEN_ROOM_DEFAULTS = Object.freeze({
     fill: 'dense',
 });
 
+/**
+ * ⛓ The biomes a generated room may be built in, by NAME — the keys of
+ * `seedlingGenRoom.GEN_ROOM_BIOMES` (asserted equal there), spelled here so the
+ * panel's select can offer them without importing the generator.
+ */
+export const GEN_ROOM_BIOME_NAMES = Object.freeze(['pre-sword', 'post-sword', 'post-shield']);
+
 /** The tile size every Seedling payload is written in (the game's 16 px grid). */
 export const GEN_ROOM_TILE_SIZE = 16;
 

@@ -110,7 +110,7 @@ import {
     SHORTCUT_BODY_ID, SHORTCUT_DOOR_ID,
 } from '../procgenCore/elements/shortcut.js';
 import {
-    ROCK_GATE_DOOR_ID, ROCK_SHORTCUT_DOOR_ID,
+    ROCK_GATE_DOOR_ID, ROCK_SHORTCUT_DOOR_ID, SHIELD_GATE_DOOR_ID,
 } from '../procgenCore/elements/soloDoor.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
@@ -1015,6 +1015,19 @@ export function seedlingOnConnectorEntities({ placed, tagFor }) {
             const tag = tagFor();
             tags.rock = tag;
             entities.push({ type: 'breakablerock', tx: e.x, ty: e.y,
+                attrs: { tag: String(tag) } });
+            continue;
+        }
+        /**
+         * ⛓⛓ S1, D3 — THE SHIELD GATE'S ONE OBSTACLE: a `shieldlocknorm`
+         * (`new ShieldLock(x, y, tag, 0)`, `Game.as:2323` — the PLAIN shield;
+         * `shieldlock` is the dark one). ⛓ A `Lock` with `tSet` forced to -2, so
+         * it takes a tag of its own like every lock here, and nothing else.
+         */
+        if (e.id === SHIELD_GATE_DOOR_ID) {
+            const tag = tagFor();
+            tags.lock = tag;
+            entities.push({ type: 'shieldlocknorm', tx: e.x, ty: e.y,
                 attrs: { tag: String(tag) } });
             continue;
         }

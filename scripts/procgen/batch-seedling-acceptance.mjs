@@ -130,7 +130,9 @@ const CORE = (p) => import(join(REPO, 'frontend/modules/procgenCore', p));
 
 const { DEFAULT_BOUNDS, STOP } = await CORE('levelGenerator.js');
 const { DEFAULT_BUDGET, bootStaging, solve } = await M('procgenOracle.js');
-const { GENERATE_BIOMES, generateStep, keptTemplatesOf } = await M('watchGenerate.js');
+const {
+    DEFAULT_CENSUS_BIOMES, GENERATE_BIOMES, generateStep, keptTemplatesOf,
+} = await M('watchGenerate.js');
 // ⛓ SLICE 5: ⚖ §12.1's discharge test lives in the palette now — this file
 // held one of THREE identical copies of the family→strategy table, and verb 2
 // needed the same test in a browser module. The convergence was checked
@@ -394,7 +396,8 @@ if (OUT_DIR) mkdirSync(OUT_DIR, { recursive: true });
 
 const report = { bounds: BOUNDS, budget: BUDGET, biomes: {} };
 
-for (const biome of Object.keys(GENERATE_BIOMES)) {
+// ⛓ S1: the two biomes this batch has always run — a new biome is not an identity move.
+for (const biome of DEFAULT_CENSUS_BIOMES) {
     const accepted = [];
     const touched = [];
     for (const phase of PHASES[biome]) {
@@ -580,7 +583,7 @@ if (CENSUS > 0) {
     say('| biome | seeds | ABORTED | saturated short of target | clean |');
     say('|---|---|---|---|---|');
     const censusRows = [];
-    for (const biome of Object.keys(GENERATE_BIOMES)) {
+    for (const biome of DEFAULT_CENSUS_BIOMES) {
         let aborted = 0;
         let saturated = 0;
         const aborts = [];

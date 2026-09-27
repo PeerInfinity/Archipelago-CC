@@ -28,9 +28,9 @@ const TWO = Object.freeze({
 const SWORD = Object.freeze({ hasSword: true, hasShield: false });
 
 describe('the item vocabulary, read from the table', () => {
-    it('ITEMS_ELEMENTS_NEED is the UNION of every head\'s `needs`, and today that is the sword',
+    it('ITEMS_ELEMENTS_NEED is the UNION of every head\'s `needs` — the sword and (S1) the shield',
         () => {
-            expect(ITEMS_ELEMENTS_NEED).toEqual(['hasSword']);
+            expect(ITEMS_ELEMENTS_NEED).toEqual(['hasShield', 'hasSword']);
             // ⛔ DERIVED, not spelled: the union really comes off the table.
             expect(ITEMS_ELEMENTS_NEED).toEqual([...new Set(
                 Object.values(ELEMENT_TABLE).flatMap((e) => e.needs ?? []))].sort());
@@ -53,7 +53,8 @@ describe('the item vocabulary, read from the table', () => {
      */
     it('headsNeeding answers the SHIPPED table with exactly `killgate`, `arena`, `rockgate`', () => {
         expect(headsNeeding('hasSword')).toEqual(['killgate', 'arena', 'rockgate']);
-        expect(headsNeeding('hasShield')).toEqual([]);
+        // ⛓ S1, D3: the shield gate is the one head the shield opens.
+        expect(headsNeeding('hasShield')).toEqual(['shieldgate']);
     });
 
     /**
@@ -123,7 +124,8 @@ describe('the directive resolves against `needs`, the biome and the caller\'s sp
     });
 
     it('refuses `no-element-needs-this-item` when nothing in the table is gated on it', () => {
-        const d = resolveRequireDirective({ require: ['hasShield'], items: { hasShield: true } });
+        // ⛓ S1: `hasShield` is gated now (the shield gate), so the row asks the swim.
+        const d = resolveRequireDirective({ require: ['canSwim'], items: { canSwim: true } });
         expect(d.refused.reason).toBe('no-element-needs-this-item');
         expect(d.refused.detail).toMatch(/hasSword/);
     });
