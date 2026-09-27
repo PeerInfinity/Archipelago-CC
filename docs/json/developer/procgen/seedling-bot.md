@@ -11286,6 +11286,68 @@ items are the per-spec parameter DOMAIN, removing `KEEP_POLICY`/`KEPT_KIND` from
 the loop core now that both substrates have retired them, whether `arena` joins
 the biome default once its lock can grow a wall, and arc 3's own A3/A5 pair.
 
+### Seedling substrate S1 — the three FREE elements: the ROCK GATE, the SHORTCUT registered as a ROCK, the SHIELD GATE, and `require` through the pipeline (2026-09-26)
+
+**The solver was ahead of the palette.** R9 slice L15 gave the solver a derived
+`break` (`solver:breakablerock → break`), `touch` already opened a shield lock,
+and the boot carried `hasShield` — yet the catalogue had five heads, all sword or
+nothing, and the palette still excluded `breakable-rock` as *"VERB-MISSING"*.
+This slice (plan `seedling-substrate-plan.md` §2.1 G-a..G-d, as-built §5) spent
+those verbs. ⛔ **Every new head and the new biome are OPT-IN** (⚖ Q5): no biome
+default moved, and every committed identity is byte-identical to the base.
+
+**THE ONE-OBSTACLE DOORS — `procgenCore/elements/soloDoor.js`.** A door that is
+ONE obstacle opened by the player standing next to it: no body, so no pocket and
+no A10. The opener's cell is the door's start-side path neighbour, and the
+kill gate's candidate list, grown wall and ONE draw are reused as they are.
+- **`rockgate`** — a rockType-0 `breakablerock` on a cut, `needs: ['hasSword']`,
+  certified by `break`. The rock takes its OWN tag: `BreakableRock.endAnim`
+  writes `setPersistence(tag, false)` unconditionally, so a `tag = -1` rock would
+  write out of band. Yield (7 kinds × 10×10/14×14 × seeds 1–12, post-sword):
+  **placed 146/168, certified 136/146**; `--require=hasSword --elements=rockgate`
+  grades **STRONG**. The 10 drops are all one-wide corridor cuts where the solve
+  names the goal PICKUP as the obstacle and never selects `break`
+  (`the-goal-approach-is-blocked`) — a solver finding, published.
+- **`shortcut`** — the ROCK on a cycle's short arc (law `shortcut`). Arc 5 slice 5
+  refuted the Seedling shortcut on three walls; the first (*"the solver derives
+  no break"*) moved at L15, and the other two are about a KILL lock's body. So the
+  head is the rock and `shortcut.js` stays the unregistered kill-lock element:
+  registered instead, it THROWS A10 at the dialogued goal (mutant (b), verbatim).
+  **SHORTENS IS REACHED ON SEEDLING** — witness `loopy` 10×10 seed 3 (110 ticks
+  with the sword, 181 without, both SOLVED). ⛓⛓ The first build graded **51
+  SHORTENS / 34 STRONG** of 87: pass-2 furniture painted the LONG arc shut (arc
+  5's residue #5, arriving). The shortcut now DEMANDS one shortest walled route
+  stay floor → **87/87 SHORTENS, 0 STRONG**. A shortcut-law head is never a
+  `require` head (`headsNeeding` reads the element's declared law): it grades
+  SHORTENS by definition.
+- **`shieldgate`** — a **`shieldlocknorm`** (`Game.as:2323`, the PLAIN shield; the
+  class the plan named, `shieldlock`, is the DARK shield's lock) on a cut
+  entered from the WEST: `ShieldLock.update` collides at `x - 1`, and an east
+  approach is unopenable (measured). A path cell entered any other way refuses
+  `the-door-has-no-west-approach`. `needs: ['hasShield']`, certified by `touch`.
+  Yield (post-shield): **placed 114/168, certified 104/114**.
+
+**THE `post-shield` BIOME** — boot `{hasSword, hasShield}`, the post-sword roster
+by reference. ⛔ The censuses that iterated "every biome" (the acceptance batch,
+the kind-pairs dump, the pairs-cost attribution) now default to
+`watchGenerate.DEFAULT_CENSUS_BIOMES` (pre-/post-sword), so the new biome moves no
+committed md5. ⚠ **`require:['hasShield']` grades WEAK today**:
+`solverBot.execTouch`'s no-shield arm `fail()`s (a `SolverBotError`), so the
+without-arm throws. One line in the solver, routed to the L16 slice; a tripwire
+row reds the day it lands.
+
+**`require` THROUGH THE PIPELINE.** `GEN_ROOM_DEFAULTS.require` (`--require=`'s
+grammar), passed only when given, so an absent knob is byte-identical. A draw the
+differential does not grade REQUIRED is re-rolled (`rerollCause: 'require'`)
+within the per-size budget, then refused by name. A directive refused at
+resolution is a bad knob at once. The panel's bag key is `seedlingGenRequire`.
+
+**Also.** `--require=hasSword` now forces `killgate+arena+rockgate` (trap 457's
+move, predicted and re-pinned; demo 7's seed 25 still grades STRONG). A
+pre-existing pass-2 abort was met and not caused (`pit-patch` → *"the player fell
+into a pit … no control block"*, e.g. `winding` 14×14 seed 9 at bounds 3/4/3 —
+also with `--elements=none`).
+
 ## ▶ LOAD IN WASM — what this page holds, run in the REAL recompiled game (TOOLING; ⚖ user, 2026-08-19)
 
 `watch.html` has always been able to run a **committed tape** in the real
