@@ -2230,6 +2230,28 @@ async function grow(ctx) {
      * tapes, restoring the declaration would be a lie about what is on disk;
      * from there the growth is RESUMABLE and says so.
      */
+    /**
+     * ⛓ R9 SLICE L18b — A GROWTH IS A HOLDER, like the pipeline below. Its
+     * producer drives the game for the predecessor's latch, and each shelled
+     * stage used to take the box on its own: with the box held, `--wait-for-box`
+     * reached no child and the producer refused at once (measured — the append
+     * reverted, nothing written). Taken ONCE here, above the append, the token
+     * is inherited by every stage, so there is no gap between the producer and
+     * the pipeline for another session to win either. ⛔ Never in a rehearsal
+     * tree: its `exec` is stubbed and it spends nothing (the SPENDS_BOX law).
+     */
+    if (!REHEARSE_TREE) {
+        try {
+            takeBoxLock({ name: `rerecord-seedling-campaign --grow ${plan.newName} — the `
+                + 'producer and the pipeline spend the machine',
+            kind: 'measure',
+            repo: ROOT,
+            waitSec: Number(arg('wait-for-box', '0')) || 0 });
+        } catch (e) {
+            console.log(e.message);
+            process.exit(1);
+        }
+    }
     const before = readFileSync(CHAIN_DECL, 'utf8');
     appendSegment(plan);
     console.log(`\n  wrote ${CHAIN_DECL} — ${names.length} → ${names.length + 1} segments`);
