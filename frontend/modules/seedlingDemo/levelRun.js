@@ -193,7 +193,8 @@ import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './p
 // `activators`.
 import {
     ARROW, ARROW_ENEMY_HIT, ARROW_KILL_PLAN, ARROW_PLAYER_ARM, arrowRect,
-    arrowTrapFires, createArrow, createArrowTrap, lanesOver, shadowOf, stepArrow,
+    arrowLaneForPlacement, arrowTrapFires, createArrow, createArrowTrap, lanesOver,
+    shadowOf, stepArrow,
     stepArrowTrap,
 } from './arrowTrap.js';
 import {
@@ -2790,12 +2791,31 @@ export function createLevelRun({
      * measurement `R8_ARROW_ENEMY.roomScope` banks. A room that mixed them
      * would fail here rather than silently.
      */
+    /**
+     * ⛓⛓⛓ R9 SLICE L16 (kickoff §59.4 D3) — THE PREDICATE ASKS ONE RECT
+     * DEEPER, AND ONLY OF THE BODY THAT DOES NOT WALK.
+     *
+     * "Whether a chaser wanders into a lane is a question about a walk nobody
+     * has run" is a claim about CHASERS, and R8 slice 3 already answered it by
+     * stepping them. What was left refused is the STATIC body — and a static
+     * body's position is not a walk: it is the level record, and so is the
+     * lane. So the stopper question is asked of the one thing the record CAN
+     * support: does this body's own box stand in a lane (`lanesOver`, the
+     * transcription's own test, against `ENEMY_CLASSES`' hitbox at the census
+     * centre). A body no lane reaches cannot stop an arrow, so it cannot shadow
+     * one, and the room's roster is stepped. ⛔ No death is staged — a body
+     * that DOES stand in a lane still refuses the room with the text below,
+     * unchanged (L8: `sandtrap@96,80` spans x 96–111 inside `arrowtrap@96,16`'s
+     * 90–102). L16's sandtraps span x 32–63 against lanes 90–134.
+     */
     const chaserRoomVerdict = (n) => {
         const w = worldFor(n);
         const traps = (w.arrowTraps ?? []);
         if (traps.length === 0) return { stepped: true, why: null };
+        const lanes = traps.map((t) => arrowLaneForPlacement(t));
         const unstaged = (w.combat?.enemies ?? [])
-            .filter((e) => !isBridgedChaser(e.tag) && e.row.speed === 0);
+            .filter((e) => !isBridgedChaser(e.tag) && e.row.speed === 0)
+            .filter((e) => lanesOver(chaserBoxAt(e.tag, e.cx, e.cy), lanes).length > 0);
         if (unstaged.length > 0) {
             return {
                 stepped: false,
@@ -4280,6 +4300,145 @@ export function createLevelRun({
      * leg (`presses.auditPress`).
      */
     /**
+     * ⛓⛓⛓ THE ROPE PULL — ONE BODY, TWO WEAPONS (R9 slice L16, kickoff §59.4 D1).
+     *
+     * `Player.genericHit`'s `else if (e is RopeStart) (e as RopeStart).hit()`
+     * (`Player.as:1093-1095`) takes no `t`, so a SWORD press and a FIRE press
+     * run the same method: shrink to the pulley cell, `Game.setPersistence(tag,
+     * false)`, and `set activate` publishes the rope's group. R5 slice 7 built
+     * it inside `applyFire`; it is hoisted here UNCHANGED so `applyThrust`'s
+     * sword arm is this function and not a copy of it. `r` is the press
+     * responder (its `persistTag`); `id` is the OEL id (`rope@x,y`), which is
+     * what `world.solids[].ropeId` is keyed on.
+     */
+    const pullRope = (r, id) => {
+        const pulled = ropeStateFor(level);
+        if (pulled.has(id)) {
+            // `hit()`'s whole body is `if (!activate)`, so a second
+            // press is a real no-op rather than a second write.
+            return { as3: 'RopeStart', id, pulled: false, why: 'already pulled' };
+        }
+        pulled.add(id);
+        // `Game.setPersistence(tag, false)` — an EARNED CLEAR, and
+        // the tag can be -1, in which case it lands in another level
+        // through the out-of-band family.
+        const tag = r.persistTag ?? -1;
+        const flag = tag < 0
+            ? outOfBandFlagForWriter({ as3: 'RopeStart', level, tag })
+            : outOfBandFlagFor(level, tag);
+        if (!pendingEarnedClears.has(flag.level)) {
+            pendingEarnedClears.set(flag.level, new Set());
+        }
+        pendingEarnedClears.get(flag.level).add(flag.tag);
+        ropePulls.push({ id, level, t: ticksCompleted, flag });
+        // ── ⛓⛓ R5 SLICE 10: AND THE PULL PUBLISHES TO ITS GROUP ──
+        //
+        // `RopeStart.set activate` (`:79-91`) walks every
+        // `Activators` sharing `t` and assigns the flag on. Four
+        // slices of audit read that as "the pulser arms, and the
+        // fallrock is a no-op"; the game's ledger said {39,10} and
+        // this is the line that was missing.
+        //
+        // ⚠ IT GOES IN `latched`, which is where a `room = -1`
+        // ButtonRoom's publish already goes — same shape (no
+        // republication can ever clear it), so the consumers
+        // (`stepActivators`, `stepPulsersNow`) need no second map.
+        // ⚠ `r.t` IS THE WEAPON TYPE ("Fire") ON A PRESS RESPONDER,
+        // not the activator group — the two fields are both called
+        // `t` and mean different things. The group comes off the
+        // SOLID, keyed on the same `ropeId` the geometry query uses.
+        const ropeSolid = world.solids.find((s) => s.ropeId === id);
+        const pub = ropePublish({ as3: 'RopeStart', t: ropeSolid?.ropeT ?? -1 });
+        if (pub) {
+            activatorStateFor(level).latched.set(pub.group, pub.value);
+            // …and the members whose own `set activate` DOES
+            // something the latch alone cannot express.
+            const rocks = fallRockStateFor(level);
+            for (const [rid, rock] of rocks) {
+                if (rock.t !== pub.group || rock.landed) continue;
+                const dropped = dropRock(rock, rid);
+                if (!dropped.fell) continue;
+                rocks.set(rid, dropped.state);
+                // `fall()`'s FIRST line is the persistence write, at
+                // TRIGGER time — 197 frames before the landing. The
+                // run banks it as an earned clear like any other.
+                if (dropped.write) {
+                    const rf = outOfBandFlagFor(level, dropped.write.tag);
+                    if (!pendingEarnedClears.has(rf.level)) {
+                        pendingEarnedClears.set(rf.level, new Set());
+                    }
+                    pendingEarnedClears.get(rf.level).add(rf.tag);
+                }
+                // ⛔ AND THE SNAP, IF THE PULL WAS MADE STANDING IN
+                // THE ROCK'S CELL. There is no deferring it by a tick
+                // the way a ShieldLock's is deferred: the whole span
+                // is frozen, so the game's LAST snap of the span is
+                // the position the next live tick starts from.
+                // ⛔⛔ AND THE FREEZE ADVANCES EVERY PULSER, because a
+                // `Pulser` is an `Activators` and NOT a `Mobile`:
+                // `Mobile.mobileUpdate`'s `if (!Game.freezeObjects)`
+                // guard is the one thing a frozen frame skips, and a
+                // Pulser has no part of it. So its cycle runs for the
+                // whole span while the tape's tick index does not —
+                // and a model that stepped it once per TAPE tick puts
+                // its ring `frames` out of phase, permanently.
+                //
+                // ⚠ 197 mod 51 = 44, so this is not a small error and
+                // it is not a rounding one. Same family as
+                // `Game.time`'s (`fallRock.TIME_COUPLED`); different
+                // clock, and this one the model owns.
+                const pst = pulserStateFor(level);
+                for (const [pid, p] of pst) {
+                    if (p.t !== pub.group) continue;
+                    // ⛓ NOTHING MOVES DURING THE SPAN, and the hit
+                    // test is a FIXED 22 px ring (`radiusHit`, not
+                    // the growing radius) — so ONE clearance check
+                    // covers all 197 frames rather than 197 of them.
+                    const frozen = [
+                        ...[...pushableRects(pushableStateFor(level))]
+                            .filter(([, r]) => !r.removed)
+                            .map(([bid, r]) => ({
+                                id: bid, type: 'Solid', as3: 'PushableBlockFire',
+                                x: r.rect.x + 8, y: r.rect.y + 8,
+                                originX: 8, originY: 8, w: 16, h: 16,
+                            })),
+                        {
+                            id: 'player', type: 'Player', as3: 'Player',
+                            x: state.x, y: state.y,
+                            originX: 2, originY: 2, w: 4, h: 5,
+                        },
+                    ];
+                    const reached = pulseReaches(p, frozen)
+                        .filter((c) => !(c.arm === 'player' && noDamage));
+                    if (reached.length > 0) {
+                        throw new Error(`levelRun: ${pid}'s ring reaches `
+                            + `[${reached.map((c) => c.id).join(', ')}] during the `
+                            + `${dropped.frames}-frame freeze ${rid} holds. Nothing `
+                            + 'can move out of it — the whole span is frozen — so '
+                            + 'this rung refuses the stance rather than modelling '
+                            + 'a pulse chain nobody can observe.');
+                    }
+                    let s = p;
+                    for (let i = 0; i < dropped.frames; i += 1) {
+                        s = stepPulser(s, true).state;
+                    }
+                    pst.set(pid, s);
+                }
+                if (dropped.snapY !== null) {
+                    throw new Error(`levelRun: ${rid} landed on the player at tick `
+                        + `${ticksCompleted} in level ${level} and wrote y = `
+                        + `${dropped.snapY}. \`FallRock.update\` snaps an `
+                        + 'overlapping player to the rock\'s top on every tick of '
+                        + 'a span the player cannot move during, and this rung '
+                        + 'does not model a route that pulls a rope while standing '
+                        + 'where the rock lands. Move the stance.');
+                }
+            }
+        }
+        return { as3: 'RopeStart', id, pulled: true, why: null };
+    };
+
+    /**
      * ── ⛓⛓ THE FIRE PRESS (R5 slice 7) ────────────────────────────────
      *
      * Not a variant of `applyThrust`. The differences are all four of the
@@ -4431,131 +4590,7 @@ export function createLevelRun({
                 // OEL one. Rebuilding it from the rewritten fields gave
                 // `rope@104,392` — a key nothing else in the run shares.
                 const id = r.id;
-                const pulled = ropeStateFor(level);
-                if (pulled.has(id)) {
-                    // `hit()`'s whole body is `if (!activate)`, so a second
-                    // press is a real no-op rather than a second write.
-                    hits.push({ as3: 'RopeStart', id, pulled: false, why: 'already pulled' });
-                    continue;
-                }
-                pulled.add(id);
-                // `Game.setPersistence(tag, false)` — an EARNED CLEAR, and
-                // the tag can be -1, in which case it lands in another level
-                // through the out-of-band family.
-                const tag = r.persistTag ?? -1;
-                const flag = tag < 0
-                    ? outOfBandFlagForWriter({ as3: 'RopeStart', level, tag })
-                    : outOfBandFlagFor(level, tag);
-                if (!pendingEarnedClears.has(flag.level)) {
-                    pendingEarnedClears.set(flag.level, new Set());
-                }
-                pendingEarnedClears.get(flag.level).add(flag.tag);
-                ropePulls.push({ id, level, t: ticksCompleted, flag });
-                // ── ⛓⛓ R5 SLICE 10: AND THE PULL PUBLISHES TO ITS GROUP ──
-                //
-                // `RopeStart.set activate` (`:79-91`) walks every
-                // `Activators` sharing `t` and assigns the flag on. Four
-                // slices of audit read that as "the pulser arms, and the
-                // fallrock is a no-op"; the game's ledger said {39,10} and
-                // this is the line that was missing.
-                //
-                // ⚠ IT GOES IN `latched`, which is where a `room = -1`
-                // ButtonRoom's publish already goes — same shape (no
-                // republication can ever clear it), so the consumers
-                // (`stepActivators`, `stepPulsersNow`) need no second map.
-                // ⚠ `r.t` IS THE WEAPON TYPE ("Fire") ON A PRESS RESPONDER,
-                // not the activator group — the two fields are both called
-                // `t` and mean different things. The group comes off the
-                // SOLID, keyed on the same `ropeId` the geometry query uses.
-                const ropeSolid = world.solids.find((s) => s.ropeId === id);
-                const pub = ropePublish({ as3: 'RopeStart', t: ropeSolid?.ropeT ?? -1 });
-                if (pub) {
-                    activatorStateFor(level).latched.set(pub.group, pub.value);
-                    // …and the members whose own `set activate` DOES
-                    // something the latch alone cannot express.
-                    const rocks = fallRockStateFor(level);
-                    for (const [rid, rock] of rocks) {
-                        if (rock.t !== pub.group || rock.landed) continue;
-                        const dropped = dropRock(rock, rid);
-                        if (!dropped.fell) continue;
-                        rocks.set(rid, dropped.state);
-                        // `fall()`'s FIRST line is the persistence write, at
-                        // TRIGGER time — 197 frames before the landing. The
-                        // run banks it as an earned clear like any other.
-                        if (dropped.write) {
-                            const rf = outOfBandFlagFor(level, dropped.write.tag);
-                            if (!pendingEarnedClears.has(rf.level)) {
-                                pendingEarnedClears.set(rf.level, new Set());
-                            }
-                            pendingEarnedClears.get(rf.level).add(rf.tag);
-                        }
-                        // ⛔ AND THE SNAP, IF THE PULL WAS MADE STANDING IN
-                        // THE ROCK'S CELL. There is no deferring it by a tick
-                        // the way a ShieldLock's is deferred: the whole span
-                        // is frozen, so the game's LAST snap of the span is
-                        // the position the next live tick starts from.
-                        // ⛔⛔ AND THE FREEZE ADVANCES EVERY PULSER, because a
-                        // `Pulser` is an `Activators` and NOT a `Mobile`:
-                        // `Mobile.mobileUpdate`'s `if (!Game.freezeObjects)`
-                        // guard is the one thing a frozen frame skips, and a
-                        // Pulser has no part of it. So its cycle runs for the
-                        // whole span while the tape's tick index does not —
-                        // and a model that stepped it once per TAPE tick puts
-                        // its ring `frames` out of phase, permanently.
-                        //
-                        // ⚠ 197 mod 51 = 44, so this is not a small error and
-                        // it is not a rounding one. Same family as
-                        // `Game.time`'s (`fallRock.TIME_COUPLED`); different
-                        // clock, and this one the model owns.
-                        const pst = pulserStateFor(level);
-                        for (const [pid, p] of pst) {
-                            if (p.t !== pub.group) continue;
-                            // ⛓ NOTHING MOVES DURING THE SPAN, and the hit
-                            // test is a FIXED 22 px ring (`radiusHit`, not
-                            // the growing radius) — so ONE clearance check
-                            // covers all 197 frames rather than 197 of them.
-                            const frozen = [
-                                ...[...pushableRects(pushableStateFor(level))]
-                                    .filter(([, r]) => !r.removed)
-                                    .map(([bid, r]) => ({
-                                        id: bid, type: 'Solid', as3: 'PushableBlockFire',
-                                        x: r.rect.x + 8, y: r.rect.y + 8,
-                                        originX: 8, originY: 8, w: 16, h: 16,
-                                    })),
-                                {
-                                    id: 'player', type: 'Player', as3: 'Player',
-                                    x: state.x, y: state.y,
-                                    originX: 2, originY: 2, w: 4, h: 5,
-                                },
-                            ];
-                            const reached = pulseReaches(p, frozen)
-                                .filter((c) => !(c.arm === 'player' && noDamage));
-                            if (reached.length > 0) {
-                                throw new Error(`levelRun: ${pid}'s ring reaches `
-                                    + `[${reached.map((c) => c.id).join(', ')}] during the `
-                                    + `${dropped.frames}-frame freeze ${rid} holds. Nothing `
-                                    + 'can move out of it — the whole span is frozen — so '
-                                    + 'this rung refuses the stance rather than modelling '
-                                    + 'a pulse chain nobody can observe.');
-                            }
-                            let s = p;
-                            for (let i = 0; i < dropped.frames; i += 1) {
-                                s = stepPulser(s, true).state;
-                            }
-                            pst.set(pid, s);
-                        }
-                        if (dropped.snapY !== null) {
-                            throw new Error(`levelRun: ${rid} landed on the player at tick `
-                                + `${ticksCompleted} in level ${level} and wrote y = `
-                                + `${dropped.snapY}. \`FallRock.update\` snaps an `
-                                + 'overlapping player to the rock\'s top on every tick of '
-                                + 'a span the player cannot move during, and this rung '
-                                + 'does not model a route that pulls a rope while standing '
-                                + 'where the rock lands. Move the stance.');
-                        }
-                    }
-                }
-                hits.push({ as3: 'RopeStart', id, pulled: true, why: null });
+                hits.push(pullRope(r, id));
                 continue;
             }
             throw new Error(`levelRun: \`FIRE_ARM_POLICY\` calls ${r.as3} modelled and `
@@ -4752,6 +4787,40 @@ export function createLevelRun({
                     // no-op it is rather than as a shorter break.
                     why: started ? null : 'already breaking — `play("break")` early-returns',
                 });
+            } else if (r.as3 === 'RopeStart') {
+                /**
+                 * ── ⛓⛓⛓ R9 SLICE L16: THE SWORD PULLS THE ROPE ─────────
+                 *
+                 * The same `(e as RopeStart).hit()` the fire arm has driven
+                 * since R5 slice 7 — `pullRope` is that arm's body, hoisted,
+                 * so the shrink, the persistence write and the group publish
+                 * are ONE transcription for both weapons.
+                 *
+                 * What differs is `Player.slash`'s filter IN FRONT of
+                 * `genericHit`, and it has two halves:
+                 *   · the REACH — `FP.distanceRectPoint(x, y, <the rope's
+                 *     hitbox>) <= slashingSprite.width * scaleX` — applied;
+                 *   · the LINE — `!collideLine("Solid", x, y, v.x, v.y) || …
+                 *     || v[i].type == "Rope"` (`Player.as:916`) — WAIVED, a
+                 *     declared fact: a rope is `type = "Rope"` (`RopeStart
+                 *     .as:25`), so a wall between the player and the pulley
+                 *     never refuses the swing. `ROPE_LINE_WAIVED` names it.
+                 * `Player.spear` has neither filter (the rect alone decides),
+                 * so the reach is the sword's only.
+                 */
+                const id = `${r.tag}@${r.x},${r.y}`;
+                if (weapon === 'sword') {
+                    const reach = distanceRectPoint(state.x, state.y, r.rect);
+                    if (reach > reachLimit) {
+                        hits.push({
+                            as3: 'RopeStart', id, pulled: false,
+                            why: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit} — `
+                                + 'the rect reached the rope and `slash()`\'s own gate did not',
+                        });
+                        continue;
+                    }
+                }
+                hits.push(pullRope(r, id));
             } else if (r.as3 === 'LightPole') {
                 const id = `${r.tag}@${r.x},${r.y}`;
                 const pole = poleStateFor(level).get(id);
@@ -11818,6 +11887,21 @@ export function createLevelRun({
                 if (arrowTrapFires(trap, group)) armed.add(id);
             }
             return armed;
+        },
+        /**
+         * ⛓⛓⛓ R9 SLICE L16 — THE GROUPS A PUBLICATION HAS LATCHED, THIS VISIT.
+         *
+         * `activators.latched` is where a `room = -1` ButtonRoom's publish and
+         * a pulled rope's `set activate` both land (no republication clears
+         * either). The solver's `pull` asserts its post-condition against THIS
+         * — the live run's own map, never a flag the verb set itself. `null`
+         * under `noclip`, like its neighbours.
+         */
+        get latchedGroups() {
+            if (noclip) return null;
+            const out = new Set();
+            for (const [g, v] of activatorStateFor(level).latched) if (v === true) out.add(g);
+            return out;
         },
         /** One per volley an arrow trap fired — `{t, level, id, arrows}`. */
         get arrowVolleys() { return arrowVolleysFired.map((v) => ({ ...v })); },

@@ -803,29 +803,34 @@ describe('slice 8 — the hitboxes `why` channel', () => {
 
     /**
      * ⛓⛓⛓ THE DRIVEN CASE, and it is a PAIR because one picture proves
-     * nothing. L14 draws six boxes for six census bodies; L16 next door draws
-     * ZERO for NINE, and before this channel the two empty-looking outcomes
-     * were indistinguishable on the page.
+     * nothing. L14 draws six boxes for six census bodies; L8 draws ZERO for
+     * TWO, and before this channel the two empty-looking outcomes were
+     * indistinguishable on the page.
+     *
+     * ⛓ R9 SLICE L16 (kickoff §59.4 D3): this pair was L14 / L16 (0 of 9). L16's
+     * roster is STEPPED now — its sandtraps stand outside every lane, so the
+     * predicate no longer refuses it — and L8 is the one trap room the atlas
+     * still refuses (its sandtraps stand IN `arrowtrap@96,16`'s lane).
      */
-    it('⛓⛓⛓ L16 draws 0 of 9 and says WHY — while L14 draws 6 of 6 and says nothing', () => {
+    it('⛓⛓⛓ L8 draws 0 of 2 and says WHY — while L14 draws 6 of 6 and says nothing', () => {
         const l14 = sampleAt(14);
-        const l16 = sampleAt(16);
+        const l8 = sampleAt(8);
         // the populations, measured rather than quoted
         expect(l14.census.enemies).toBe(6);
-        expect(l16.census.enemies).toBe(9);
+        expect(l8.census.enemies).toBe(2);
         expect(l14.census.stepped).toBe(true);
-        expect(l16.census.stepped).toBe(false);
+        expect(l8.census.stepped).toBe(false);
 
         const drawn14 = bodiesAt([l14], 0, 14);
         expect(drawn14.bodies).toHaveLength(6);
         // ⛔ A ROOM THAT DREW EVERYTHING HAS NOTHING TO EXPLAIN. A `why` that
         // were always present would be noise, and a check that only asserted
-        // the L16 string would pass on a page that printed it everywhere.
+        // the L8 string would pass on a page that printed it everywhere.
         expect(drawn14.why).toBe(null);
 
-        const drawn16 = bodiesAt([l16], 0, 16);
-        expect(drawn16.bodies).toEqual([]);
-        expect(drawn16.why).toMatch(/^room refused: 9 census bod\(ies\)/);
+        const drawn8 = bodiesAt([l8], 0, 8);
+        expect(drawn8.bodies).toEqual([]);
+        expect(drawn8.why).toMatch(/^room refused: 2 census bod\(ies\)/);
     });
 
     /**
@@ -834,10 +839,10 @@ describe('slice 8 — the hitboxes `why` channel', () => {
      */
     it('⛓ the refusal text is `chaserRoomVerdict`\'s own, not a paraphrase', () => {
         const run = createLevelRun({
-            levelSource: atlasLevelSource(), boot: { level: 16, x: 16, y: 16 }, roles: ROLES,
+            levelSource: atlasLevelSource(), boot: { level: 8, x: 16, y: 16 }, roles: ROLES,
         });
-        const verdict = run.chaserRoomVerdict(16);
-        const why = bodiesAt([sampleMovers(run)], 0, 16).why;
+        const verdict = run.chaserRoomVerdict(8);
+        const why = bodiesAt([sampleMovers(run)], 0, 8).why;
         expect(verdict.stepped).toBe(false);
         expect(why.endsWith(verdict.why)).toBe(true);
     });
