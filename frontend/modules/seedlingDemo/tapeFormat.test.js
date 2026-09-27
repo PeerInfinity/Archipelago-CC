@@ -43,6 +43,8 @@ import {
     rngBlockDeclaresAnything,
     RNG_SEED_MAX,
     requiredTapeVersion,
+    GAME_VISIBLE_KEEPS,
+    holdingWindowTape,
 } from './tapeFormat.js';
 import { stagingFromTape } from './tapeRunner.js';
 import { TILE_TYPE_NAMES } from '../flashPanel/seedlingSemantics.js';
@@ -288,7 +290,7 @@ describe('serialization', () => {
         // fixture file changes for no change in meaning.
         expect(JSON.parse(serializeTape(base)).tape_version).toBe(1);
         expect(JSON.parse(serializeTape(v2Base)).tape_version).toBe(2);
-        expect(TAPE_VERSION).toBe(11);
+        expect(TAPE_VERSION).toBe(12);
     });
 
     it('writes NO persistence field into a v1 or v2 tape either', () => {
@@ -710,7 +712,7 @@ describe('the game\'s stream, out of botDrain', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -1246,8 +1248,8 @@ describe('version 7: the RNG state', () => {
     });
 
     it('TAPE_VERSION and SUPPORTED_TAPE_VERSIONS carry the bump', () => {
-        expect(TAPE_VERSION).toBe(11);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        expect(TAPE_VERSION).toBe(12);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     });
 });
 
@@ -1335,8 +1337,10 @@ describe('version 9: the witnessed mid-run clear', () => {
         // a tape that declares none — `parseTape` normalises the field to
         // `null` and the projection DELETES the key — which is the same
         // shape-not-content rule `despawn` follows two lines up.
+        // ⛓ R9 slice P4E: `hold` — normalised to `false` and DELETED by the
+        // projection unless true (the same shape-not-content rule).
         expect(differing.sort()).toEqual(
-            ['despawn', 'persistence', 'tape_version', 'tick0']);
+            ['despawn', 'hold', 'persistence', 'tape_version', 'tick0']);
         // …and the projection is a real v8 tape, which is the whole claim:
         // "declaring it v8 is a true statement about its contents".
         expect(() => parseTape(g)).not.toThrow();
@@ -1403,7 +1407,7 @@ describe('version 9: the witnessed mid-run clear', () => {
         // which a sub-v9 projection does not move.
         const differing = Object.keys(v8).filter(
             (k) => JSON.stringify(v8[k]) !== JSON.stringify(g[k]));
-        expect(differing.sort()).toEqual(['despawn', 'tick0']);
+        expect(differing.sort()).toEqual(['despawn', 'hold', 'tick0']);
         expect(() => parseTape(g)).not.toThrow();
     });
 
@@ -1548,8 +1552,10 @@ describe('version 10: the witnessed mid-run enemy removal', () => {
         // a tape that declares none — `parseTape` normalises the field to
         // `null` and the projection DELETES the key — which is the same
         // shape-not-content rule `despawn` follows two lines up.
+        // ⛓ R9 slice P4E: `hold` — normalised to `false` and DELETED by the
+        // projection unless true (the same shape-not-content rule).
         expect(differing.sort()).toEqual(
-            ['despawn', 'persistence', 'tape_version', 'tick0']);
+            ['despawn', 'hold', 'persistence', 'tape_version', 'tick0']);
         expect(() => parseTape(g)).not.toThrow();
     });
 
@@ -1698,5 +1704,55 @@ describe('version 11 — the tick-0 latch', () => {
         // `tick0` to `stagingFromTape`'s allowlist.
         expect(staging.rng).toEqual(t.rng);
         expect(staging.seam).toEqual(t.seam);
+    });
+});
+
+describe('version 12: HOLD-AFTER-LATCH (R9 slice P4E, ⚖ 72 (a′))', () => {
+    // A real v8 tape — every block its version requires.
+    const v8 = (over = {}) => ({
+        tape_version: 8, game: 'seedling', boot: { level: 6, x: 32, y: 16 },
+        noclip: false, noDamage: false, noHazards: [], grants: [], persistence: [],
+        equips: [], pins: [], save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: { seed: 514746467, split: false, cosmetic: 0, fp: 341033166 },
+        seam: { time: 6187 }, tick_count: 3, inputs: [], ...over,
+    });
+
+    it('normalises `hold: false` onto every tape and refuses `true` below 12', () => {
+        expect(parseTape(v8()).hold).toBe(false);
+        expect(parseTape(v8({ hold: false })).hold).toBe(false);
+        expect(() => parseTape(v8({ hold: true }))).toThrow(/versions below 12 mean hold: false/);
+        expect(() => parseTape(v8({ tape_version: 12, despawn: [], hold: 'yes' }))).toThrow(/hold must be a boolean/);
+        expect(parseTape(v8({ tape_version: 12, despawn: [], hold: true })).hold).toBe(true);
+        expect(parseTape(v8({ tape_version: 12, despawn: [] })).hold).toBe(false);
+    });
+
+    it('is GAME-VISIBLE: the projection carries it as the game\'s version 12', () => {
+        const g = gameVisibleTape(parseTape(v8({ tape_version: 12, despawn: [], hold: true })));
+        expect(g.hold).toBe(true);
+        expect(g.tape_version).toBe(12);
+        expect(() => parseTape(g)).not.toThrow();
+        // …and a non-holding tape's projection has NO `hold` key at all, so its
+        // bytes (the latch cache's key) did not move at this bump.
+        expect(gameVisibleTape(parseTape(v8()))).not.toHaveProperty('hold');
+        expect(GAME_VISIBLE_KEEPS).toEqual(['hold']);
+    });
+
+    it('`holdingWindowTape` re-versions and declares; `requiredTapeVersion` says 12', () => {
+        const h = holdingWindowTape(v8());
+        expect(h.tape_version).toBe(12);
+        expect(h.hold).toBe(true);
+        expect(requiredTapeVersion(h)).toBe(12);
+        expect(requiredTapeVersion(parseTape(v8()))).toBe(8);
+        // a v11 window keeps its tick-0 block through the stamp
+        expect(holdingWindowTape(parseTape(v8({ tape_version: 11, despawn: [],
+            tick0: { rng: { seed: 5, split: false, cosmetic: 0, fp: 0 }, seam: { time: 600 } },
+        })))).toHaveProperty('tick0.seam.time', 600);
+    });
+
+    it('round-trips, and writes NO hold unless declared', () => {
+        const h = holdingWindowTape(v8());
+        expect(JSON.parse(serializeTape(h)).hold).toBe(true);
+        expect(serializeTape(parseTape(JSON.parse(serializeTape(h))))).toBe(serializeTape(h));
+        expect(JSON.parse(serializeTape(parseTape(v8())))).not.toHaveProperty('hold');
     });
 });

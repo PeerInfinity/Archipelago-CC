@@ -437,7 +437,25 @@ closeChannelOnExit(channel);
  * @returns {object|null} the driver's own results record, or null if it died
  *   before writing one — which is a RESULT and is claimed as such.
  */
-function drive(label, url, steps, stem) {
+/**
+ * ⛓ R9 slice P4E — WHICH BUILD EVERY SHIP DRIVES. `SEEDLING_PAGE=<build>` (the
+ * differential's own spelling) appends `&wasm=<build>` to every page this gate
+ * opens, and `watchWasm.wasmPageFor` points the iframe there; unset, the page's
+ * default (`WASM_PAGE`). It is how a candidate build is put through this whole
+ * gate before it is anybody's default — and the director reads that build's
+ * `capabilities` from the manifest, so a build declaring `hold` is driven WITH
+ * the hold on the chain arms.
+ */
+const SHIP_BUILD = process.env.SEEDLING_PAGE || null;
+if (SHIP_BUILD && !/^[a-z0-9_]+$/.test(SHIP_BUILD)) {
+    console.error(`SEEDLING_PAGE must be a build directory name, got ${JSON.stringify(SHIP_BUILD)}`);
+    process.exit(2);
+}
+const withBuild = (url) => (SHIP_BUILD ? `${url}${url.includes('?') ? '&' : '?'}wasm=${SHIP_BUILD}`
+    : url);
+
+function drive(label, urlIn, steps, stem) {
+    const url = withBuild(urlIn);
     channel.write(`${stem}-plan.json`, JSON.stringify({ url, steps }));
     channel.clear(`${stem}-results.json`);
 
@@ -867,8 +885,18 @@ const { VERDICT_SCOPE: VERDICT_SCOPE_TEXT } = await import(
  */
 const { PAGE_CHAINS } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/director.js'));
-const { stagesOf, BOOT_COST_FRAMES } = await import(
+const { stagesOf, BOOT_COST_FRAMES, WASM_PAGE, wasmPageFor, holdCapabilityOf } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/watchWasm.js'));
+/**
+ * ⛓ R9 slice P4E — does the build this run drives HOLD after the latch? Read
+ * from the SAME manifest the page reads, by the SAME function, so the gate's
+ * expectation and the page's decision cannot disagree about the data — only
+ * about what the page then DID, which is what the HOLD claim below asserts.
+ */
+const SHIP_HOLD = holdCapabilityOf(
+    JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/wasm/builds.json'), 'utf8')),
+    SHIP_BUILD ? wasmPageFor(`?wasm=${SHIP_BUILD}`) : WASM_PAGE);
+console.log(`BUILD: ${SHIP_HOLD.build} — ${SHIP_HOLD.why}`);
 const { loadTape } = await import(
     join(REPO, 'frontend/modules/seedlingDemo/fixtures/index.js'));
 const { createTapeStepper } = await import(
@@ -1611,6 +1639,23 @@ function runChainArm(ARM, CHAIN_ID, WINDOWS, REFUSES_AT = null) {
         check((wins[0] ?? {}).tick0Applied === null,
         `${ARM}: ⛔ WINDOW 1 IS UNTOUCHED — a fresh boot applies everything it declares`,
         `tick0Applied ${JSON.stringify(wins[0]?.tick0Applied)}`);
+
+        /**
+         * ⛓ R9 slice P4E — THE HOLD. On a build declaring `hold` every window
+         * with a successor is stamped and the GAME reports `held: true` at its
+         * finish poll; the last window is never held. On a build without it
+         * nothing is stamped and nothing is held (p4d has no `held` field:
+         * null). ⛔ Asserted from the page's FIELDS, not from the stamp's code.
+         */
+        check(wasm?.hold?.capable === SHIP_HOLD.capable,
+            `${ARM}: ⛓ P4E — the director read the build's \`hold\` capability `
+                + `(${SHIP_HOLD.build}: ${SHIP_HOLD.capable})`, JSON.stringify(wasm?.hold ?? null));
+        wins.forEach((w, k) => {
+            const want = SHIP_HOLD.capable && k < N - 1;
+            check(w.hold === want && (want ? w.heldAtFinish === true : w.heldAtFinish !== true),
+                `${ARM}: ⛓ P4E — window ${k + 1} ${want ? 'is HELD at its latch' : 'is not held'}`,
+                `hold ${w.hold} · held at finish ${w.heldAtFinish}`);
+        });
 
         /**
          * ⛔⛔ CLAIM 5 — ALL THREE WINDOWS AGREE WITH THEIR OWN MODEL PER TICK,

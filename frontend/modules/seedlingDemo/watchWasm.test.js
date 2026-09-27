@@ -27,6 +27,7 @@ import {
     perTickVerdictOf, remapStreamRooms, roomOfGeneratedLevel, stagesOf, VERDICT_SCOPE,
     verdictBlock, verdictLine, verdictOf, WASM_PAGE, WASM_STAGES, concatDrains,
     continuationTape,
+    wasmPageFor, holdCapabilityOf,
 } from './watchWasm.js';
 import { frameWindow, gameUp, runtimeUp } from '../flashPanel/wasmGamePage.js';
 import { LOAD_FADE_FRAMES } from './gameClock.js';
@@ -359,10 +360,12 @@ describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the r
             expect(line).not.toMatch(/JSON\.stringify\(w\.tape\)/);
         }
         // ⛔ …and BOTH projections are on the path, by name — one per window kind
-        const chose = live.filter((l) => /continuationTape\(w\.tape\)/.test(l));
+        // ⛓ R9 slice P4E: the window tape is `wTape` — `w.tape`, or its
+        // `holdingWindowTape` stamp on a build that holds.
+        const chose = live.filter((l) => /continuationTape\(wTape\)/.test(l));
         expect(chose.length).toBeGreaterThan(0);
         expect(chose.join('\n')).toMatch(/k > 0/);
-        expect(live.filter((l) => /gameVisibleTape\(w\.tape\)/.test(l)).length)
+        expect(live.filter((l) => /gameVisibleTape\(wTape\)/.test(l)).length)
             .toBeGreaterThan(0);
     });
 
@@ -409,7 +412,9 @@ describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the r
         expect(g8.tape_version).toBe(8);
         expect(g8).not.toHaveProperty('despawn');
         expect(g8).not.toHaveProperty('tick0');
-        const { despawn, tick0, ...rest } = v8;
+        // ⛓ R9 slice P4E: `hold: false` is dropped too (a non-holding tape).
+        expect(g8).not.toHaveProperty('hold');
+        const { despawn, tick0, hold, ...rest } = v8;
         expect(JSON.stringify(g8)).toBe(JSON.stringify(rest));
     });
 
@@ -888,7 +893,7 @@ describe('⛓⛓⛓ the continuation projection — the TICK-0 WRITE, AFTER the 
         // Asserted at the call site rather than here: `shipToWasm` uses
         // `gameVisibleTape` for window 1 and `continuationTape` only for k > 0.
         const body = source('watchWasm.js');
-        expect(body).toMatch(/k > 0 \? continuationTape\(w\.tape\)/);
+        expect(body).toMatch(/k > 0 \? continuationTape\(wTape\)/);
     });
 
     it('⛓ the write COMPOSES with the timed-row withholding', () => {
@@ -1049,5 +1054,35 @@ describe('the `levels` stage delegates the contract, and keeps its own codes', (
         expect(REFUSES_PENDING.test(mutant)).toBe(true);
         expect(INLINE_LOOP.test(mutant)).toBe(true);
         expect(/deliverChunks\(\{/.test(mutant)).toBe(false);
+    });
+});
+
+describe('R9 slice P4E — the director HOLDS on a build that declares it', () => {
+    const manifest = { builds: [
+        { name: 'seedling_bot_ap_p4d', capabilities: ['arm', 'apitem'] },
+        { name: 'seedling_bot_ap_p4e', capabilities: ['arm', 'apitem', 'hold', 'tag'] },
+    ] };
+
+    it('`wasmPageFor` names another build only by a plain directory name', () => {
+        expect(wasmPageFor('')).toBe(WASM_PAGE);
+        expect(wasmPageFor('?wasm=seedling_bot_ap_p4e'))
+            .toBe('../flashPanel/wasm/seedling_bot_ap_p4e/game.html');
+        expect(wasmPageFor('?wasm=../../etc')).toBe(WASM_PAGE);
+        expect(wasmPageFor('?wasm=')).toBe(WASM_PAGE);
+    });
+
+    it('`holdCapabilityOf` reads the manifest — never the name', () => {
+        expect(holdCapabilityOf(manifest, WASM_PAGE).capable).toBe(false);
+        expect(holdCapabilityOf(manifest, wasmPageFor('?wasm=seedling_bot_ap_p4e')).capable)
+            .toBe(true);
+        const none = holdCapabilityOf(null, wasmPageFor('?wasm=seedling_bot_ap_p4e'));
+        expect(none.capable).toBe(false);
+        expect(none.why).toMatch(/no entry/);
+    });
+
+    it('the stamp is on windows WITH a successor, and only when capable (source)', () => {
+        const body = source('watchWasm.js');
+        expect(body).toMatch(/rec\.hold = state\.hold\.capable && k < windows\.length - 1;/);
+        expect(body).toMatch(/const wTape = rec\.hold \? holdingWindowTape\(w\.tape\) : w\.tape;/);
     });
 });

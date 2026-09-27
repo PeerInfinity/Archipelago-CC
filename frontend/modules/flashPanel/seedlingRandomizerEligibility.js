@@ -114,12 +114,31 @@ export const AP_ITEM_CAPABILITY = 'apitem';
 export const ARM_CAPABILITY = 'arm';
 
 /**
+ * ⛓ R9 slice P4E (⚖ 72 (a′)): HOLD-AFTER-LATCH. A build declaring `hold`
+ * reads a tape_version 12 `hold: true` and freezes the room at the tape's seam
+ * latch until the next `botStart` (fork `Bot.holding`, read in `Main.update`).
+ * `watchWasm.shipToWasm` stamps it on every window that HAS a successor, and
+ * only on a build that declares it — a build without it refuses tape_version 12
+ * by name.
+ */
+export const HOLD_CAPABILITY = 'hold';
+
+/**
+ * ⛓ R9 slice P4E (plan ⚖ Q3 option B): `bosskey`, `totempart` and `seed` take
+ * an OPTIONAL `@tag`, and collecting a tagged one writes
+ * `Game.setPersistence(tag, false)` — the `pendingCheck` choke point. Without
+ * it the three are untagged in every level set and the atlas check table
+ * refuses them by name.
+ */
+export const TAG_CAPABILITY = 'tag';
+
+/**
  * ⛓ THE DECLARED VOCABULARY. A manifest entry may only name capabilities from
  * this list — otherwise `"apitm"` would silently mean "this build does not
  * have it" and the feature would vanish with no error anywhere.
  */
 export const WASM_BUILD_CAPABILITIES = Object.freeze(
-    [AP_ITEM_CAPABILITY, ARM_CAPABILITY]);
+    [AP_ITEM_CAPABILITY, ARM_CAPABILITY, HOLD_CAPABILITY, TAG_CAPABILITY]);
 
 /** The ids the five checks report themselves by, in the ruled order. */
 export const ELIGIBILITY_CHECK_IDS = Object.freeze(
