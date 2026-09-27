@@ -245,8 +245,10 @@ describe('⛓ the links the render emits', () => {
         //   245 → 250: G6's two `sphere-growth.md` → `flash.md` links and three
         //   inside `flash.md` to and from § Host-enforced gates: real rooms (G6).
         //   250 → 253: G7's three inside `flash.md` to § The atlas arm (G7)
-        //   (`sphere-growth.md`'s link to `flash.md` retargeted, not added).
-        expect(checked).toBe(253);
+        //   (`sphere-growth.md`'s link to `flash.md` retargeted, not added);
+        //   253 → 254: seedling substrate S1's `flash.md` → `seedling-bot.md`
+        //   § Seedling substrate S1.
+        expect(checked).toBe(254);
     });
 
     it('tags each link with the kind that produced it', () => {
