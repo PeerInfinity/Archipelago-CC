@@ -49,7 +49,9 @@ export async function applyLoadedData(loadedData, sourceName) {
     } else if (dataKey === 'userSettings' && loadedData.userSettings) {
       log('info', 'Found userSettings, applying settings...');
       try {
-        await settingsManager.updateSettings(loadedData.userSettings);
+        // A chosen file is a whole settings document: it REPLACES the stored
+        // userSettings rather than being saved key by key.
+        await settingsManager.updateSettings(loadedData.userSettings, { replaceAll: true });
         log('info', 'Settings applied successfully');
       } catch (e) {
         log('error', 'Error applying settings:', e);

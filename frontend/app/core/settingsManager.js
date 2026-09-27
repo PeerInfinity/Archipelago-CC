@@ -18,8 +18,58 @@ function log(level, message, ...data) {
 // userSettings alongside other mode-scoped fields (rulesConfig,
 // moduleConfig, layoutConfig, ...) written by the JSON panel's
 // "Save to LocalStorage" flow. Our auto-save preserves those other
-// fields by reading the existing blob and only replacing userSettings.
+// fields by reading the existing blob, and inside userSettings it
+// writes only the paths this session changed (per-key saves) — see
+// _doSaveSettings.
 const LOCAL_STORAGE_MODE_PREFIX = 'archipelagoToolSuite_modeData_';
+
+const isPlainObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+const deepCopy = (v) => (v === undefined ? undefined : JSON.parse(JSON.stringify(v)));
+
+/**
+ * Leaf paths (arrays of keys) whose values differ between two settings
+ * trees. Plain objects are recursed into; anything else (scalars, arrays)
+ * is compared whole. A key present in `before` but absent from `after`
+ * is reported too (a removal).
+ */
+function diffPaths(before, after, prefix = [], out = []) {
+  const keys = new Set([...Object.keys(before || {}), ...Object.keys(after || {})]);
+  for (const k of keys) {
+    const b = before?.[k];
+    const a = after?.[k];
+    if (isPlainObject(b) && isPlainObject(a)) {
+      diffPaths(b, a, [...prefix, k], out);
+    } else if (JSON.stringify(b) !== JSON.stringify(a)) {
+      out.push([...prefix, k]);
+    }
+  }
+  return out;
+}
+
+/**
+ * Copy the value at `path` in `source` into `target`, creating (or
+ * replacing non-object) containers on the way. When `source` has no
+ * value at `path`, the key is removed from `target` instead.
+ */
+function copyPath(target, source, path) {
+  let src = source;
+  for (const k of path) {
+    if (!isPlainObject(src) || !(k in src)) { src = undefined; break; }
+    src = src[k];
+  }
+  let dst = target;
+  for (let i = 0; i < path.length - 1; i++) {
+    const k = path[i];
+    if (!isPlainObject(dst[k])) {
+      if (src === undefined) return; // nothing to remove below a missing container
+      dst[k] = {};
+    }
+    dst = dst[k];
+  }
+  const last = path[path.length - 1];
+  if (src === undefined) delete dst[last];
+  else dst[last] = deepCopy(src);
+}
 
 // Debounce window for auto-save: a flurry of updateSetting calls
 // (e.g. dragging a slider, bulk JSON apply firing many writes)
@@ -39,6 +89,17 @@ export class SettingsManager {
     // happens during app initialization, before any UI can drive a save).
     this._currentMode = 'default';
     this._saveTimeoutId = null;
+
+    // Per-key saves. The paths (arrays of keys) written since the last
+    // successful save; _doSaveSettings copies ONLY these from
+    // this.settings into the stored blob's userSettings, so a page that
+    // booted without loading the blob (from settings.json) cannot replace
+    // the saved settings wholesale. `_replaceAllPending` marks the two
+    // deliberate full-replace intents — resetToDefaults and an explicit
+    // updateSettings(..., { replaceAll: true }) (the JSON panel's import /
+    // load-file) — after which the whole in-memory tree is written.
+    this._dirtyPaths = new Map();
+    this._replaceAllPending = false;
 
     // Session-only overrides. Keyed by full dotted path (same shape
     // as updateSetting's key). Reads via getSetting fall back to
@@ -209,21 +270,38 @@ export class SettingsManager {
   }
 
   /**
-   * Schedule a debounced write of `this.settings` to the current mode's
-   * localStorage blob. Multiple calls within SAVE_DEBOUNCE_MS coalesce
-   * into one write. Called from updateSetting / updateSettings /
+   * Record a settings path (array of keys) as changed since the last
+   * save, so the next save copies it into the stored blob.
+   * @private
+   */
+  _markDirty(path) {
+    if (Array.isArray(path) && path.length > 0) {
+      this._dirtyPaths.set(JSON.stringify(path), path);
+    }
+  }
+
+  /**
+   * Schedule a debounced write of the changed settings to the current
+   * mode's localStorage blob. Multiple calls within SAVE_DEBOUNCE_MS
+   * coalesce into one write. Called from updateSetting / updateSettings /
    * resetToDefaults; callers don't need to await — the in-memory
    * cache and `settings:changed` events are already synchronous, the
    * persistence is fire-and-forget.
    *
+   * @param {Object} [options]
+   * @param {boolean} [options.replaceAll=false] - write the WHOLE
+   *   in-memory tree as the stored userSettings instead of only the
+   *   changed paths. Only the explicit full-replace intents pass it.
+   *
    * Returns the (resolved) Promise that callers awaited under the old
    * stub API, for backwards compatibility.
    */
-  async saveSettings() {
+  async saveSettings({ replaceAll = false } = {}) {
     if (this.isLoading) {
       log('warn', 'Settings not loaded yet, cannot save.');
       return;
     }
+    if (replaceAll) this._replaceAllPending = true;
     if (this._saveTimeoutId !== null) {
       clearTimeout(this._saveTimeoutId);
     }
@@ -248,9 +326,16 @@ export class SettingsManager {
   /**
    * Synchronous core of the save. Reads the current mode's existing
    * blob (so we preserve sibling fields like rulesConfig / layoutConfig
-   * written by the JSON panel), replaces the userSettings field, and
-   * writes back. Updates lastActiveMode to match what JsonUI's manual
-   * save does.
+   * written by the JSON panel) and writes back its userSettings:
+   *   - per-key (the default): the STORED userSettings with only the
+   *     paths changed since the last save copied in from this.settings.
+   *     Every other stored key is left exactly as it was, whatever this
+   *     page loaded at boot.
+   *   - whole tree: when a full replace is pending (resetToDefaults, an
+   *     import), or when the blob has no userSettings object yet —
+   *     nothing is stored to preserve, and the loader reads a blob's
+   *     userSettings INSTEAD of settings.json, so it must be complete.
+   * It does not touch lastActiveMode.
    * @private
    */
   _doSaveSettings() {
@@ -267,19 +352,31 @@ export class SettingsManager {
       existing = {};
     }
 
+    // Deep copies throughout so subsequent in-memory mutations don't
+    // bleed into the just-written blob.
+    const wholeTree = this._replaceAllPending || !isPlainObject(existing.userSettings);
+    let userSettings;
+    if (wholeTree) {
+      userSettings = deepCopy(this.settings);
+    } else {
+      userSettings = deepCopy(existing.userSettings);
+      for (const path of this._dirtyPaths.values()) {
+        copyPath(userSettings, this.settings, path);
+      }
+    }
+
     const blob = {
       ...existing,
       modeName: this._currentMode,
       savedTimestamp: new Date().toISOString(),
-      // Deep copy so subsequent in-memory mutations don't bleed into
-      // the just-written blob (existing settings:changed semantics
-      // don't promise a fresh-snapshot otherwise).
-      userSettings: JSON.parse(JSON.stringify(this.settings)),
+      userSettings,
     };
 
     try {
       localStorage.setItem(key, JSON.stringify(blob));
-      log('info', `Settings persisted to mode '${this._currentMode}'`);
+      log('info', `Settings persisted to mode '${this._currentMode}' (${wholeTree ? 'whole tree' : `${this._dirtyPaths.size} changed path(s)`})`);
+      this._dirtyPaths.clear();
+      this._replaceAllPending = false;
     } catch (e) {
       log('error', 'Error saving settings to localStorage:', e);
     }
@@ -461,6 +558,7 @@ export class SettingsManager {
     if (typeof current === 'object' && current !== null) {
       if (current[finalKey] !== value) {
         current[finalKey] = value;
+        this._markDirty(keys);
         log('info', `Setting updated: ${key} =`, value);
         eventBus.publish('settings:changed', {
           key,
@@ -544,14 +642,32 @@ export class SettingsManager {
     return snapshot;
   }
 
-  // Merges user-provided settings on top of defaults, ensuring new default keys
-  // are never lost when the user applies partial or edited settings.
-  async updateSettings(newSettings) {
+  /**
+   * Replace the in-memory settings with `newSettings` merged over the disk
+   * defaults (so keys the caller omitted fall back to their defaults rather
+   * than being deleted).
+   *
+   * What reaches localStorage depends on the intent:
+   *   - default (a JSON editor's Apply): only the paths whose value CHANGED
+   *     are saved. Both sides are compared as getSettings() shows them
+   *     (schema defaults merged under), so the schema defaults an editor
+   *     displays are not mistaken for edits.
+   *   - `{ replaceAll: true }` (the JSON panel's import / load-file — the
+   *     person chose a whole file): the whole tree becomes the stored
+   *     userSettings.
+   *
+   * @param {object} newSettings
+   * @param {Object} [options]
+   * @param {boolean} [options.replaceAll=false]
+   */
+  async updateSettings(newSettings, { replaceAll = false } = {}) {
     await this.ensureLoaded();
     if (typeof newSettings !== 'object' || newSettings === null) {
       log('error', 'updateSettings received invalid input:', newSettings);
       return;
     }
+    const schemaDefaults = this._buildSchemaDefaults();
+    const beforeView = deepMerge(schemaDefaults, this.settings);
     // Merge user settings on top of defaults so that any keys the user omitted
     // fall back to their default values rather than being deleted.
     if (this._defaultSettings) {
@@ -559,13 +675,18 @@ export class SettingsManager {
     } else {
       this.settings = JSON.parse(JSON.stringify(newSettings));
     }
+    if (!replaceAll) {
+      for (const path of diffPaths(beforeView, deepMerge(schemaDefaults, this.settings))) {
+        this._markDirty(path);
+      }
+    }
     log('info', 'Settings object updated:', this.settings);
     eventBus.publish('settings:changed', {
       key: '*', // Indicate general change
       value: this.settings,
       settings: await this.getSettings(),
     }, 'core');
-    await this.saveSettings();
+    await this.saveSettings({ replaceAll });
   }
 
   // --- New methods based on plan ---
@@ -600,6 +721,7 @@ export class SettingsManager {
     const moduleSettings = this.settings.moduleSettings[moduleId];
     if (moduleSettings[key] !== value) {
       moduleSettings[key] = value;
+      this._markDirty(['moduleSettings', moduleId, key]);
       log('info', `Module setting updated: ${moduleId}.${key} =`, value);
       eventBus.publish('settings:changed', {
         key: `moduleSettings.${moduleId}.${key}`, // More specific key
@@ -643,7 +765,9 @@ export class SettingsManager {
   }
 
   /**
-   * Resets in-memory settings to the defaults loaded from settings.json.
+   * Resets settings to the defaults loaded from settings.json — in memory
+   * AND in the current mode's stored userSettings, which is replaced
+   * whole (a deliberate full replace: "Reset all settings to defaults").
    * Publishes 'settings:changed' event.
    * @returns {Promise<void>}
    */
@@ -669,7 +793,7 @@ export class SettingsManager {
       value: this.settings,
       settings: await this.getSettings(),
     }, 'core');
-    await this.saveSettings();
+    await this.saveSettings({ replaceAll: true });
   }
 }
 

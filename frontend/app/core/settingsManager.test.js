@@ -137,14 +137,15 @@ describe('SettingsManager — mode blob shape', () => {
   });
 
   it('preserves sibling fields in the existing mode blob (rulesConfig, layoutConfig, etc.)', () => {
-    // Simulate a prior JSON-panel save that wrote rulesConfig + layoutConfig.
+    // Simulate a prior JSON-panel save that wrote rulesConfig + layoutConfig
+    // with the Settings section unchecked (no userSettings yet → the save
+    // writes the whole tree; see the per-key describe for a stored one).
     localStorage.setItem(sm.getStorageKey(), JSON.stringify({
       modeName: 'default',
       savedTimestamp: '2026-05-01T00:00:00Z',
       rulesConfig: { game: 'alttp', seed: 1 },
       layoutConfig: { root: { type: 'stack' } },
       moduleConfig: { foo: 'bar' },
-      userSettings: { /* will be overwritten */ },
     }));
 
     sm._doSaveSettings();
@@ -252,6 +253,160 @@ describe('SettingsManager — updateSetting / updateSettings / resetToDefaults t
     sm.flushPendingSave();
     // Nothing scheduled; localStorage still empty.
     expect(localStorage.getItem(sm.getStorageKey())).toBeNull();
+  });
+});
+
+describe('SettingsManager — per-key saves (settings-persistence S2)', () => {
+  // A page that booted WITHOUT loading the stored blob (bare URL, auto-load
+  // off) holds settings.json in memory. Its first write used to replace the
+  // stored userSettings wholesale; now only the changed path reaches it.
+  const KEY = 'archipelagoToolSuite_modeData_default';
+  const STORED = {
+    modeName: 'default',
+    savedTimestamp: '2026-09-01T00:00:00Z',
+    layoutConfig: { marker: 'L1' },
+    userSettings: {
+      generalSettings: { theme: 'light', probeMarker: 'kept' },
+      moduleSettings: { quickLaunch: { tree: [{ id: 'a' }, { id: 'b' }] }, loops: { autoRestart: true } },
+      playerName: 'Saved',
+    },
+  };
+  const stored = () => JSON.parse(localStorage.getItem(KEY));
+  let sm;
+  beforeEach(() => {
+    globalThis.localStorage = makeLocalStorageStub();
+    localStorage.setItem(KEY, JSON.stringify(STORED));
+    sm = new SettingsManager();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    delete globalThis.localStorage;
+  });
+
+  it('a page that never loaded the blob writes ONE key → every other stored key survives', async () => {
+    sm.setInitialSettings(SAMPLE_SETTINGS); // the settings.json tree, not the blob
+    await sm.updateSetting('moduleSettings.loops.defaultSpeed', 250);
+    sm.flushPendingSave();
+    const expected = JSON.parse(JSON.stringify(STORED.userSettings));
+    expected.moduleSettings.loops.defaultSpeed = 250;
+    expect(stored().userSettings).toEqual(expected);
+    expect(stored().layoutConfig).toEqual({ marker: 'L1' });
+  });
+
+  it('a page that loaded the blob writes exactly what the whole-tree save wrote', async () => {
+    sm.setInitialSettings(STORED.userSettings);
+    await sm.updateSetting('generalSettings.theme', 'dark');
+    await sm.updateModuleSetting('quickLaunch', 'tree', [{ id: 'c' }]);
+    sm.flushPendingSave();
+    expect(stored().userSettings).toEqual(sm.settings); // the old save's result
+  });
+
+  it('a dirty path under a container the blob lacks creates the containers', async () => {
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+    await sm.updateModuleSetting('brandNewMod', 'deep', { x: 1 });
+    await sm.updateSetting('colorblindMode.loops', true);
+    sm.flushPendingSave();
+    expect(stored().userSettings.moduleSettings.brandNewMod).toEqual({ deep: { x: 1 } });
+    expect(stored().userSettings.colorblindMode).toEqual({ loops: true });
+    expect(stored().userSettings.generalSettings).toEqual(STORED.userSettings.generalSettings);
+  });
+
+  it('resetToDefaults is a full replace: the stored userSettings become the defaults', async () => {
+    sm.setInitialSettings(SAMPLE_SETTINGS); // fetch fails in the test env → defaults = this snapshot
+    await sm.resetToDefaults();
+    sm.flushPendingSave();
+    expect(stored().userSettings).toEqual(SAMPLE_SETTINGS);
+    expect(stored().layoutConfig).toEqual({ marker: 'L1' }); // siblings still kept
+  });
+
+  it('updateSettings(..., { replaceAll: true }) (an import) is a full replace', async () => {
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+    const imported = { generalSettings: { theme: 'imported' } };
+    await sm.updateSettings(imported, { replaceAll: true });
+    sm.flushPendingSave();
+    expect(stored().userSettings).toEqual(sm.settings);
+    expect(stored().userSettings.playerName).toBeUndefined();
+    expect(stored().userSettings.generalSettings.probeMarker).toBeUndefined();
+  });
+
+  it('updateSettings without replaceAll (a JSON editor Apply) saves only the changed paths', async () => {
+    centralRegistry.settingsSchemas.set('pkMod', {
+      type: 'object', properties: { speed: { type: 'number', default: 7 } },
+    });
+    try {
+      sm.setInitialSettings(SAMPLE_SETTINGS);
+      // The editor shows getSettings() (schema defaults merged in) and the
+      // person changes one value.
+      const edited = await sm.getSettings();
+      edited.generalSettings.theme = 'solarized';
+      await sm.updateSettings(edited);
+      sm.flushPendingSave();
+      const us = stored().userSettings;
+      expect(us.generalSettings).toEqual({ theme: 'solarized', probeMarker: 'kept' });
+      expect(us.moduleSettings).toEqual(STORED.userSettings.moduleSettings); // no schema default written
+      expect(us.playerName).toBe('Saved');
+    } finally {
+      centralRegistry.settingsSchemas.delete('pkMod');
+    }
+  });
+
+  it('a key removed in a JSON editor Apply is removed from the stored blob', async () => {
+    sm.setInitialSettings(STORED.userSettings);
+    // The merge base is settings.json (which lacks the key), as in the app;
+    // the test env's fetch fails, so set it rather than fall back to the blob.
+    await sm._ensureDefaultsLoaded();
+    sm._defaultSettings = JSON.parse(JSON.stringify(SAMPLE_SETTINGS));
+    const edited = await sm.getSettings();
+    delete edited.generalSettings.probeMarker;
+    await sm.updateSettings(edited);
+    sm.flushPendingSave();
+    const gs = stored().userSettings.generalSettings;
+    expect('probeMarker' in gs).toBe(false);
+    expect(gs.theme).toBe('light');
+  });
+
+  it('the debounce still coalesces several keys into one write', async () => {
+    vi.useFakeTimers();
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+    const spy = vi.spyOn(localStorage, 'setItem');
+    await sm.updateSetting('generalSettings.theme', 'a');
+    await sm.updateSetting('moduleSettings.loops.defaultSpeed', 5);
+    expect(spy).not.toHaveBeenCalled();
+    vi.advanceTimersByTime(100);
+    expect(spy).toHaveBeenCalledTimes(1);
+    const us = stored().userSettings;
+    expect(us.generalSettings.theme).toBe('a');
+    expect(us.moduleSettings.loops).toEqual({ autoRestart: true, defaultSpeed: 5 });
+  });
+
+  it('a saved path is not re-written by the next save (another writer\'s value survives)', async () => {
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+    await sm.updateSetting('generalSettings.theme', 'mine');
+    sm.flushPendingSave();
+    // Another tab / the JSON panel changes the stored theme afterwards.
+    const b = stored(); b.userSettings.generalSettings.theme = 'theirs';
+    localStorage.setItem(KEY, JSON.stringify(b));
+    await sm.updateSetting('playerName', 'P2');
+    sm.flushPendingSave();
+    expect(stored().userSettings.generalSettings.theme).toBe('theirs');
+    expect(stored().userSettings.playerName).toBe('P2');
+  });
+
+  it('a blob without userSettings gets the whole tree (nothing stored to preserve)', async () => {
+    localStorage.setItem(KEY, JSON.stringify({ modeName: 'default', layoutConfig: { m: 1 } }));
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+    await sm.updateSetting('generalSettings.theme', 'x');
+    sm.flushPendingSave();
+    expect(stored().userSettings).toEqual(sm.settings);
+    expect(stored().layoutConfig).toEqual({ m: 1 });
+  });
+
+  it('session overrides still never reach the stored blob', async () => {
+    sm.setInitialSettings(SAMPLE_SETTINGS);
+    await sm.updateSetting('generalSettings.probeMarker', 'override', { persist: false });
+    await sm.updateSetting('generalSettings.theme', 'real');
+    sm.flushPendingSave();
+    expect(stored().userSettings.generalSettings).toEqual({ theme: 'real', probeMarker: 'kept' });
   });
 });
 
