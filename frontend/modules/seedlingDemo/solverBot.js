@@ -100,7 +100,7 @@ import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
 } from './dangerMap.js';
 import { planDash } from './mover.js';
-import { ARROW, arrowLaneForPlacement, arrowLaneRect } from './arrowTrap.js';
+import { ARROW, arrowLaneForPlacement, arrowLaneRect, arrowTrapFires } from './arrowTrap.js';
 import { bridgedChaserTags, chaserBoxAt, killWindowTicks } from './chasers.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import { DESTROYING_TILE_TYPES } from './pushables.js';
@@ -4575,6 +4575,7 @@ function execRoute(run, perTick, resolved, ctx, what) {
             last = runShove(run, perTick, {
                 block: resolved.shove.block, dir: step.dir, to: step.to,
                 ...(step.destroys ? { destroys: true } : {}),
+                ...(ctx.idleStrike ? { strike: ctx.idleStrike } : {}),
             }, label);
             const live = run.pushables.get(blockRow());
             if (step.destroys ? !live?.removed
@@ -4648,8 +4649,27 @@ function execWeigh(run, perTick, resolved, ctx) {
      * presser and the player waited out the fade", and whether the Solid had to
      * be pushed there is a fact about the ROOM, not about the verb.
      */
+    /**
+     * ⛓⛓⛓ R9 SLICE L16 — THE FADE IS ARMED (⚖ ruling 30(b): the opportunistic
+     * strike is a per-tick policy on EVERY walk, and a fade the player stands
+     * through is one). L16's fade is waited out at (280.8,80) with `bob@224,96`
+     * chasing along the wall below: unarmed, the dwell was HIT on its sixth
+     * tick. `strikePolicyFor` is `null` in a room with no strike bodies, so a
+     * fade in an empty room (L15's) spends exactly the ticks it always did.
+     *
+     * ⛔ AND THE ROUTE'S OWN IDLE TICKS WITH IT. Arming only the fade was
+     * measured too late: the player stood unarmed through the last lean's
+     * SETTLE (28 ticks at (280.8,80)) while the bob walked into contact range,
+     * and the fade was hit on its second tick. So ONE policy covers the verb's
+     * idle spans — each lean's settle window and each break's wait
+     * (`ctx.idleStrike`) and the fade — and never a LEAN tick, whose held key
+     * is the push. A plain `shove`/`break` is handed none.
+     */
+    const strike = strikePolicyFor(run, { dashMode: ctx.dashMode ?? DEFAULT_DASH_MODE });
+    const armed = (d) => (strike ? { ...d, strike } : d);
     if (resolved.dwellOnly) {
-        const only = runDwell(run, perTick, resolved.dwell, `${ctx.what} (fade, block already home)`);
+        const only = runDwell(run, perTick, armed(resolved.dwell),
+            `${ctx.what} (fade, block already home)`);
         return {
             kind: 'weigh',
             postCondition: 'press',
@@ -4660,8 +4680,8 @@ function execWeigh(run, perTick, resolved, ctx) {
             ticks: only.ticks ?? 0,
         };
     }
-    const shove = execRoute(run, perTick, resolved, ctx, `${ctx.what} (park the block)`);
-    const dwell = runDwell(run, perTick, resolved.dwell, `${ctx.what} (fade)`);
+    const shove = execRoute(run, perTick, resolved, { ...ctx, idleStrike: strike }, `${ctx.what} (park the block)`);
+    const dwell = runDwell(run, perTick, armed(resolved.dwell), `${ctx.what} (fade)`);
     return {
         kind: 'weigh',
         postCondition: 'press',
@@ -7405,7 +7425,18 @@ function breakStanceUnder(run, rock, contacts, from, bag,
     return undefined;
 }
 
-function deriveBreakStance(run, rock, contacts, blocked = []) {
+/**
+ * ⛓⛓⛓ R9 SLICE L16 (kickoff §59.4 D2) — THE PRESS-AT-RECT HALF OF
+ * `deriveBreakStance`, HOISTED: a REACHABLE cell from which a swing lands on
+ * `target.rect` (`swingReaches` / `breakStanceCandidates`, unchanged), asked of
+ * the live position first. ONE derivation for every verb whose whole act is
+ * "stand in reach and swing" — `break` (a rock) and `pull` (a rope). The
+ * refusal is the caller's sentence, so each verb still says what it was for.
+ * `admit` is an optional per-cell predicate the caller adds (`pull`'s: the cell
+ * stands in no danger volume — a rope hangs in rooms with a sandtrap beside
+ * it; `break` passes none, so its stances cannot move).
+ */
+function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null) {
     /**
      * ⛓⛓⛓ **THE CHEAPEST STANCE IS THE ONE THE WALK IS ALREADY STANDING IN,
      * AND ROUTE STEP 12 IS WHY IT IS ASKED FIRST.**
@@ -7430,25 +7461,32 @@ function deriveBreakStance(run, rock, contacts, blocked = []) {
      * the one case where it is safe is the case where the run is demonstrably
      * already in it and has not transitioned.
      */
-    if (swingReaches(run.state, rock)) {
+    if (swingReaches(run.state, target)) {
         return { stance: null, discharged: [] };
     }
-    const { candidates, outOfReach, noRect } = breakStanceCandidates(run, rock,
+    const { candidates, outOfReach, noRect } = breakStanceCandidates(run, target,
         solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }));
     const hypothesis = stanceHypothesis(run, blocked, contacts);
+    let unsafe = 0;
     for (const c of candidates) {
+        if (admit && !admit(c)) { unsafe += 1; continue; }
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
     }
-    throw new SolverRefusal(
-        `solverBot: no REACHABLE stance for a swing at ${rock.rockId} in level `
-        + `${run.level} — ${candidates.length} cell(s) put the slash rect on the rock and `
-        + `none plans a corridor from (${run.state.x},${run.state.y}); ${outOfReach} more `
-        + `were beyond SLASH_REACH (${SLASH_REACH} px) and ${noRect} were in reach with the `
-        + 'rect pointing elsewhere. ⇒ the rock is on the frontier and the room offers '
-        + 'nowhere to stand and swing: the next work order is a way to REACH one of those '
-        + 'cells, not a bigger budget.',
-        { obstacle: { kind: 'solid', id: rock.rockId } });
+    throw new SolverRefusal(refusal({ candidates, outOfReach, noRect, unsafe }),
+        { obstacle: { kind: 'solid', id: target.id } });
+}
+
+function deriveBreakStance(run, rock, contacts, blocked = []) {
+    return deriveSwingStance(run, { rect: rock.rect, id: rock.rockId }, contacts, blocked,
+        ({ candidates, outOfReach, noRect }) => 'solverBot: no REACHABLE stance for a '
+            + `swing at ${rock.rockId} in level `
+            + `${run.level} — ${candidates.length} cell(s) put the slash rect on the rock and `
+            + `none plans a corridor from (${run.state.x},${run.state.y}); ${outOfReach} more `
+            + `were beyond SLASH_REACH (${SLASH_REACH} px) and ${noRect} were in reach with the `
+            + 'rect pointing elsewhere. ⇒ the rock is on the frontier and the room offers '
+            + 'nowhere to stand and swing: the next work order is a way to REACH one of those '
+            + 'cells, not a bigger budget.');
 }
 
 /**
@@ -7514,7 +7552,11 @@ function execBreak(run, perTick, resolved, ctx) {
             return { verb: 'break', target: resolved.rock, from,
                 ticks: perTick.length - from, pressedAt, stance: resolved.stance };
         }
-        let held = NO_KEYS;
+        // ⛓ R9 slice L16 — a weigh route's break waits ARMED (`execWeigh`).
+        let held = pressedAt !== null && ctx.idleStrike && !run.state.fall
+            ? ctx.idleStrike.decide(run.state, run.strikeBodies, run.ticksCompleted, NO_KEYS,
+                { slash: run.slashInfo }).held
+            : NO_KEYS;
         if (pressedAt === null) {
             const want = facingToward(run.state, resolved.target);
             const inReach = distanceRectPoint(run.state.x, run.state.y, resolved.target)
@@ -7560,17 +7602,163 @@ function execBreak(run, perTick, resolved, ctx) {
 }
 
 /**
+ * ⛓⛓⛓ R9 SLICE L16 (kickoff §59.4 D2) — **THE LANE'S SILENCER, DERIVED FROM
+ * THE ROOM.** A lane is an obstacle with an off switch when (a) the danger on
+ * the corridor is an ARMED trap's lane, (b) a `RopeStart` in the same room
+ * publishes that trap's own group `t` (`RopeStart.set activate` walks every
+ * `Activators` sharing `t` — `RopeStart.as:79-91`), and (c) the latch that
+ * publication writes is the one that SILENCES the trap: `arrowTrapFires(trap,
+ * true)` is false, i.e. `activate XOR shootDefault` with `shootDefault` set
+ * (L16's three). A rope whose latch would ARM its group is no silencer, and a
+ * room with no such rope has no PULL rung at all — nothing here is a list.
+ *
+ * @returns `null` when the rung does not apply (no lane on this corridor has a
+ *   silencer in the room — the ladder then skips it WITHOUT a row, so a room
+ *   with no rope climbs exactly as it always has), else `{rope, group, traps}`.
+ *   ⛔ A lane that is still priced while its silencer is already LATCHED is a
+ *   contradiction between the danger map and the run, and throws by name: a
+ *   lane that fires while its group is latched is the tell of a model that
+ *   stopped reading `latched` (§59.6 m5).
+ *
+ * `pulling` holds the ropes whose stance the solve is walking to RIGHT NOW. From
+ * the far side of the lanes the stance is itself across them, so the walk to it
+ * climbs this ladder again — and offering the same rope there would recurse for
+ * ever. Skipped, the nested climb escalates past PULL like any other.
+ */
+function deriveLaneSilencer(run, hit, what, pulling = new Set()) {
+    const laneIds = new Set((hit?.sources ?? [])
+        .filter((x) => x.kind === 'arrowLane').map((x) => x.id));
+    if (laneIds.size === 0) return null;
+    const traps = (run.world.arrowTraps ?? []).filter((t) => laneIds.has(t.id));
+    const ropes = (run.world.solids ?? []).filter((x) => x.ropeId);
+    const latched = run.latchedGroups ?? new Set();
+    for (const t of traps) {
+        if (arrowTrapFires(t, true)) continue;
+        const rope = ropes.find((r) => r.ropeT === t.t);
+        if (!rope) continue;
+        // ⛔ A rope this solve is already walking to pull is not a silencer for
+        // the corridor TO it (see `pulling` in the rung).
+        if (pulling.has(rope.ropeId)) continue;
+        if (latched.has(t.t)) {
+            throw new SolverRefusal(`${what}: ${t.id}'s lane is priced as danger while its `
+                + `group t=${t.t} is LATCHED in the live run (${rope.ropeId} has published `
+                + 'it). `activate XOR shootDefault` with the latch set and `shootDefault` '
+                + 'true is FALSE — the trap is silent in the game — so a lane that fires '
+                + 'while its group is latched is a model that stopped reading the latch, not '
+                + 'a corridor fact.', { obstacle: { kind: 'danger', id: t.id } });
+        }
+        const group = t.t;
+        // What the latch silences is the ROOM's, not the corridor's: every trap
+        // of the group whose `activate XOR shootDefault` the latch turns false.
+        return {
+            rope, group,
+            traps: (run.world.arrowTraps ?? [])
+                .filter((x) => x.t === group && !arrowTrapFires(x, true)).map((x) => x.id),
+        };
+    }
+    return null;
+}
+
+/**
+ * Executor: the `pull` verb — AIM, SWING, and assert the LATCH on the live run.
+ *
+ * `execBreak`'s aim/press alternation, verbatim in shape (the press consumes the
+ * previous tick's facing), against the rope's own rect. ⛔ THE POST-CONDITION IS
+ * THE WORLD'S: `run.latchedGroups.has(group)` — the same map
+ * `armedArrowTraps` reads — never "the verb pressed". A rope that publishes
+ * nothing leaves the lanes firing, and this refuses BY NAME at the pull step
+ * rather than letting the next corridor walk into them (§59.6 m4). The bound
+ * is the mechanism's: the aim tick, the press tick, the swing's
+ * `SLASH_HIT_TICKS`, plus one re-aim.
+ */
+function execPull(run, perTick, resolved, ctx) {
+    const refuse = (why) => {
+        throw new SolverRefusal(why, { obstacle: { kind: 'solid', id: resolved.rope } });
+    };
+    const NO_KEYS = new Set();
+    const PRESS = new Set(['primary']);
+    const from = perTick.length;
+    const latched = () => (run.latchedGroups ?? NO_KEYS).has(resolved.group);
+    /**
+     * ⛓ THE APPROACH MAY HAVE PULLED IT ALREADY. The walk to the stance carries
+     * the strike policy and the dash windows, and a swing up the handle's column
+     * reaches the rope's rect as surely as this verb's would (measured on L16:
+     * a dash press at t=88 pulled `rope@32,16` twelve ticks before the stance).
+     * The post-condition is the world's, so it is asked FIRST — a press after the
+     * latch is `hit()`'s real no-op, and spending ticks on it proves nothing.
+     */
+    if (latched()) {
+        const pull = (run.ropePulls ?? []).find((p) => p.id === resolved.rope) ?? null;
+        return { verb: 'pull', target: resolved.rope, group: resolved.group, from,
+            ticks: 0, pressedAt: null, stance: resolved.stance, silenced: resolved.traps,
+            pulledBy: `the approach — ${resolved.rope} was pulled at tick `
+                + `${pull ? pull.t : '?'} by a swing of the walk to the stance` };
+    }
+    const bound = 2 * (2 + SLASH_HIT_TICKS);
+    let pressedAt = null;
+    let aimed = false;
+    for (let spent = 0; spent <= bound; spent += 1) {
+        if (pressedAt !== null && latched()) {
+            return { verb: 'pull', target: resolved.rope, group: resolved.group, from,
+                ticks: perTick.length - from, pressedAt, stance: resolved.stance,
+                silenced: resolved.traps };
+        }
+        let held = NO_KEYS;
+        if (pressedAt === null) {
+            const want = facingToward(run.state, resolved.target);
+            const inReach = distanceRectPoint(run.state.x, run.state.y, resolved.target)
+                <= SLASH_REACH
+                && rectsOverlapLocal(slashRect(run.state.x, run.state.y, want),
+                    resolved.target);
+            if (!inReach) {
+                refuse(`${ctx.what}: the walk arrived at (${run.state.x},${run.state.y}) and `
+                    + `${resolved.rope} is not in reach of a swing from there `
+                    + `(SLASH_REACH ${SLASH_REACH} px). The stance this verb derived was `
+                    + `${resolved.stance
+                        ? `(${resolved.stance.x},${resolved.stance.y})`
+                        : 'THE LIVE POSITION'} — a walk that ends somewhere else is a `
+                    + 'corridor finding, not a rope one.');
+            }
+            if (aimed || run.direction === want) {
+                held = PRESS;
+                pressedAt = run.ticksCompleted;
+            } else {
+                held = new Set([FACING_KEYS[want]]);
+                aimed = true;
+            }
+        }
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) {
+            refuse(`${ctx.what}: the run crossed to level ${transition.to_level} while `
+                + `pulling ${resolved.rope}.`);
+        }
+    }
+    return refuse(`${ctx.what}: pressed ${resolved.rope} at tick `
+        + `${pressedAt === null ? 'NEVER — the aim never resolved' : pressedAt} and group `
+        + `t=${resolved.group} is NOT latched in the live run ${bound} ticks later `
+        + `(latched: [${[...(run.latchedGroups ?? [])].join(', ')}]). The rope's `
+        + '`set activate` publishes its group on the swing that lands; a pull that '
+        + `latches nothing leaves [${resolved.traps.join(', ')}] firing, so the corridor `
+        + 'this rung promised does not exist.');
+}
+
+/**
  * ⛓⛓⛓ ⚖ §11.8a RULING 2's LADDER — THE COMBAT POLICY'S DECISION ORDER.
  *
  *   AVOID -> TIME -> BAIT -> KILL, cheapest first, and every escalation is a
  *   trace row carrying the refused cheaper rung's reason.
+ *
+ * ⛓ R9 SLICE L16 — AND `pull` BETWEEN AVOID AND TIME, CONDITIONALLY: it exists
+ * only in a room that holds a lane's silencer (`deriveLaneSilencer`), and a
+ * climb in any other room skips it without a row.
  *
  * The list is EXPORTED so `r8Acceptance.assertEscalationIsOrdered` checks a
  * run's escalations against the RUNNING order rather than against a copy
  * typed beside the ruling (trap 89). A rung's own implementation is one
  * function below; the order is here and nowhere else.
  */
-export const ESCALATION_LADDER = Object.freeze(['avoid', 'time', 'bait', 'kill']);
+export const ESCALATION_LADDER = Object.freeze(['avoid', 'pull', 'time', 'bait', 'kill']);
 
 /**
  * The mover's search is SHORT — `mover.MOVER_RANGE`: tick-exact to ~8 px, an
@@ -8832,6 +9020,8 @@ export function solveSegment({
      * without ever asking `avoid` is four policies wearing one name, and
      * `r8Acceptance.assertEscalationIsOrdered` is what says so.
      */
+    /** ⛓ R9 slice L16 — the ropes whose pull stance a walk is heading for now. */
+    const pullingRopes = new Set();
     const climbLadder = ({ goal, aim, contacts, allowTeleporter, what, hit,
         dangerExcept = null }) => {
         const escalations = [];
@@ -8894,6 +9084,80 @@ export function solveSegment({
                 + 'carry (a disc hazard); that gap is why the ladder has a second rung.' };
         }
         rowFor('avoid', null, { refusedWith: refused.why.slice(0, 120) });
+
+        /**
+         * ── rung 1½: PULL — the lane's own off switch (R9 slice L16, §59.4 D2) ──
+         *
+         * Cheapest after AVOID: a walk and ONE swing, and the lanes are gone
+         * for the rest of the visit (the latch is never republished, and the
+         * rope's persistence write keeps them silent on re-entry). A NESTED
+         * OPENER in L15's `break` shape: the stance is the press-at-rect
+         * derivation `break` uses, the walk to it is the ladder's own, and the
+         * post-condition is asserted on the live run. Then the caller
+         * re-plans, and AVOID sees a danger map whose lanes the run's own
+         * `armedArrowTraps` no longer holds.
+         *
+         * ⛔ CONDITIONAL, AND SAYS SO: in a room with no silencer for a lane
+         * on this corridor the rung does not exist — no row, no escalation —
+         * which is what keeps every other room's climb byte-identical
+         * (`R8_STRATEGY_EXECUTORS.ladder` marks it `conditional`, and
+         * `assertEscalationIsOrdered` lets an escalation skip only that kind).
+         */
+        const silencer = deriveLaneSilencer(run, hit, what, pullingRopes);
+        if (silencer) {
+            const ropeId = silencer.rope.ropeId;
+            let pull = null;
+            let pullWhy = null;
+            const weapon = run.primaryWeapon;
+            if (weapon !== 'sword') {
+                // ⛔ `break`'s own gate: the pull this rung derives is a SWORD swing.
+                pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
+                    + `t=${silencer.group}), but the run's \`primary\` slot `
+                    + `${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``} — the `
+                    + 'pull this rung derives is a SWORD swing (`FIRE_ARM_POLICY.RopeStart` '
+                    + 'is modelled too, but no rung of this ladder fires). The sword is a '
+                    + 'SUB-ORDER the macro layer owes.';
+            } else {
+                try {
+                    pull = deriveSwingStance(run, { rect: silencer.rope.rect, id: ropeId },
+                        contacts, [], ({ candidates, outOfReach, noRect, unsafe }) => 'solverBot: '
+                            + `no REACHABLE stance for a swing at ${ropeId} in level ${run.level} — `
+                            + `${candidates.length} cell(s) put the slash rect on the rope, `
+                            + `${unsafe} of them inside a danger volume, and none of the rest plans `
+                            + `a corridor from (${run.state.x},${run.state.y}); ${outOfReach} more `
+                            + `were beyond SLASH_REACH (${SLASH_REACH} px) and ${noRect} were in `
+                            + 'reach with the rect pointing elsewhere.',
+                        // ⛔ THE STANCE IS STOOD IN FOR A SWING, so it must be out of every
+                        // static danger volume — the same map AVOID forbids.
+                        (c) => !dangerVolumes(run, 0).some((v) => rectsOverlapLocal(
+                            playerBoxAt(c.x, c.y), v.rect)));
+                } catch (e) {
+                    if (!(e instanceof SolverRefusal)) throw e;
+                    pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `
+                        + `t=${silencer.group}), but ${e.message}`;
+                }
+            }
+            if (pull) {
+                rowFor('pull', refused, { target: ropeId, group: silencer.group,
+                    stance: pull.stance });
+                if (pull.stance) {
+                    pullingRopes.add(ropeId);
+                    try {
+                        walkTo(goal, pull.stance, { what: `${what} -> pull (${ropeId}) stance` });
+                    } finally {
+                        pullingRopes.delete(ropeId);
+                    }
+                }
+                const record = execPull(run, perTick, {
+                    rope: ropeId, group: silencer.group, traps: silencer.traps,
+                    target: silencer.rope.rect, stance: pull.stance,
+                }, { what: `${what} -> pull (${ropeId})` });
+                records.push({ goal: goal.kind, strategy: 'pull', ...record });
+                return { escalations };
+            }
+            rowFor('pull', refused);
+            refused = { rung: 'pull', why: pullWhy };
+        }
 
         // ── rung 2: TIME — the mover, against the danger TIMELINE ──────────
         const timeline = `dangerMap over L${run.level} at model tick `
@@ -9425,6 +9689,7 @@ export function solveSegment({
                 const record = STRATEGY_EXECUTORS[plan.strategy](run, perTick, plan.resolved, {
                     maxTicksPerTarget,
                     economies,
+                    dashMode,
                     what: `${what} -> ${plan.strategy}`,
                     before: beforeStrategy,
                     /**
@@ -9692,8 +9957,8 @@ export function solveSegment({
                 });
             }
             const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
-                maxTicksPerTarget, economies, what: `${what} -> ${strategy}`, before: null,
-                walkTo, goal,
+                maxTicksPerTarget, economies, dashMode, what: `${what} -> ${strategy}`,
+                before: null, walkTo, goal,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
             for (const c of resolvedBlocker.exempt ?? []) exemptions.add(c);
@@ -9732,7 +9997,7 @@ export function solveSegment({
             });
         }
         const record = exec(run, perTick, resolved, {
-            maxTicksPerTarget, economies, what, before, walkTo, goal,
+            maxTicksPerTarget, economies, dashMode, what, before, walkTo, goal,
         });
         records.push({ goal: 'collect-placement', strategy: resolved.strategy, ...record });
         if (perTick.length === verbTick) {

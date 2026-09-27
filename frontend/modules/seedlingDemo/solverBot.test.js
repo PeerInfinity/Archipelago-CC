@@ -1110,18 +1110,23 @@ describe('⚖ slice 10: `SolverRefusal` carries the danger record', () => {
     /**
      * ⛔ NON-VACUOUS: the refusal must carry a POSITIVE population, or the
      * test would pass just as well against a field nobody ever filled. The
-     * driven case is the route's own step 18 — L16, whose CLIMB reaches every
-     * rung of the ladder and refuses at the top (`refuse()` inside
-     * `climbLadder`, which is a closure arm and therefore one that CAN see
-     * the recorder). Its boot is the survey's staged construction: the
-     * campaign's own post-sword block re-pointed at the room's arrival.
+     * driven case is L16, whose CLIMB reaches every rung of the ladder and
+     * refuses at the top (`refuse()` inside `climbLadder`, which is a closure
+     * arm and therefore one that CAN see the recorder).
+     *
+     * ⛓ R9 SLICE L16 MOVED IT: this was route step 18 from the campaign's
+     * POST-sword block, and the rope's PULL now SOLVES that room. The same
+     * arrival from the PRE-sword block (`r8-solve-10`'s — the campaign's own
+     * state before L10), aiming at the L17 stairs under the lanes, still climbs
+     * AVOID → TIME → BAIT → KILL and refuses at the top: no sword means no
+     * press arm for the bobs and no swing at the rope.
      */
     const L16_BOOT = { level: 16, x: 32, y: 64 };
     const refuseInL16 = () => {
-        const { run } = runFromCommitted('r8-solve-11', { boot: { ...L16_BOOT } });
+        const { run } = runFromCommitted('r8-solve-10', { boot: { ...L16_BOOT } });
         try {
             solveSegment({
-                run, goals: [{ kind: 'reach-exit', exit: { x: 352, y: 80 } }],
+                run, goals: [{ kind: 'reach-exit', exit: { x: 112, y: 64 } }],
                 name: 'slice10-danger-on-refusal', boot: { ...L16_BOOT },
             });
         } catch (e) { return e; }

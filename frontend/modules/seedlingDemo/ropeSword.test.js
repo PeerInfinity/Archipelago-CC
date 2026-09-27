@@ -22,6 +22,10 @@ import { fileURLToPath } from 'node:url';
 
 import { atlasLevelSource } from './levelSource.js';
 import { createLevelRun } from './levelRun.js';
+import { loadTape } from './fixtures/index.js';
+import { parseTape } from './tapeFormat.js';
+import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
+import { ESCALATION_LADDER, solveSegment } from './solverBot.js';
 import { ROLES, buildLevelWorld } from './levelWorld.js';
 import {
     FIRE_ARM_POLICY, PRESS_ARM_POLICY, ROPE_LINE_WAIVED, SLASH_REACH, UP,
@@ -163,4 +167,58 @@ describe('D3 — the roster predicate, one rect deeper', () => {
         expect(n).toBeGreaterThan(100);
         expect(refused).toEqual([8]);
     });
+});
+
+describe('D2 — the PULL rung: the silencer is derived, the latch is asserted on the live run', () => {
+    /**
+     * ⛓ The survey's staged boot for route step 18 (`r8-solve-11`'s block — the
+     * campaign's post-sword latch — re-pointed at L16's arrival (32,64)), and
+     * the room's OTHER exit: `stairsdown@112,64` → L17 stands at (7,4), UNDER
+     * `arrowtrap@112,32`'s lane (x 106–118). There is no reaching it without
+     * standing in a lane, so the ladder's cheapest move is to silence them.
+     */
+    const solveToEastOfLanes = () => {
+        const base = parseTape(loadTape('r8-solve-11'));
+        const staging = solveStaging(stagingFromTape(base));
+        staging.boot = { level: 16, x: 32, y: 64 };
+        staging.persistence = (staging.persistence ?? []).filter((r) => r.at === undefined);
+        const run = createRunForStaging(staging, levelSource);
+        const out = solveSegment({
+            run, goals: [{ kind: 'reach-exit', exit: { x: 112, y: 64 } }],
+            name: 'l16-pull', boot: staging.boot,
+        });
+        return { run, out };
+    };
+
+    it('⛓⛓⛓ climbs AVOID → PULL: one swing at rope@32,16 from (5,2), group 0 latched, the lanes gone, no hit', () => {
+        const { run, out } = solveToEastOfLanes();
+        const pulls = out.records.filter((r) => r.strategy === 'pull');
+        expect(pulls).toHaveLength(1);
+        expect(pulls[0]).toMatchObject({
+            verb: 'pull', target: 'rope@32,16', group: 0, stance: { x: 88, y: 40 },
+            silenced: ['arrowtrap@96,32', 'arrowtrap@112,32', 'arrowtrap@128,32'],
+        });
+        // The run has LEFT L16 by now (`latchedGroups` is per visit), so the latch
+        // is read off the run's own ledger: one pull, its persistence write
+        // {16,0} — what keeps the lanes silent on a re-entry — on the pull tick.
+        expect(run.ropePulls).toHaveLength(1);
+        expect(run.ropePulls[0]).toMatchObject({ id: 'rope@32,16', level: 16,
+            flag: { level: 16, tag: 0, outOfBand: false } });
+        // ⛓ MEASURED: the APPROACH pulled it — a sword-dash press walking up the
+        // handle's column swung into the rope's rect at t=88, before the stance.
+        // The verb asks its post-condition first, finds the group latched, and
+        // spends NO tick on a press `hit()`'s `if (!activate)` would make a no-op.
+        expect(pulls[0]).toMatchObject({ ticks: 0, pressedAt: null });
+        expect(pulls[0].pulledBy).toMatch(/^the approach — rope@32,16 was pulled at tick 88/);
+        expect(run.ropePulls[0].t).toBeLessThanOrEqual(pulls[0].from);
+        expect(run.playerHits).toEqual([]);
+        // …and the walk reached the stairs: the one transition is into L17.
+        expect(run.transitions.map((t) => t.to_level)).toEqual([17]);
+        // The climb is the RUNNING ladder's own order — PULL named AVOID.
+        const climbRows = out.trace.rows.filter((r) => r.strategy?.rung === 'pull');
+        expect(climbRows).toHaveLength(1);
+        expect(climbRows[0].rejected.map((j) => j.option)
+            .filter((o) => ESCALATION_LADDER.includes(o))).toEqual(['avoid']);
+        expect(climbRows[0].obstacle).toEqual({ kind: 'danger', id: 'arrowtrap@96,32' });
+    }, 60000);
 });

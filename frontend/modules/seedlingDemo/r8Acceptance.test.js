@@ -1263,9 +1263,12 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
         })).toThrow(/Registered with no derivation row: teleport/);
     });
 
-    it('the ladder is AVOID -> TIME -> BAIT -> KILL and every rung names its tool', () => {
+    it('the ladder is AVOID -> (PULL) -> TIME -> BAIT -> KILL and every rung names its tool', () => {
+        // ⛓ R9 slice L16: PULL is the one CONDITIONAL rung (§59.4 D2).
         expect(R8_STRATEGY_EXECUTORS.ladder.map((r) => r.rung))
-            .toEqual(['avoid', 'time', 'bait', 'kill']);
+            .toEqual(['avoid', 'pull', 'time', 'bait', 'kill']);
+        expect(R8_STRATEGY_EXECUTORS.ladder.filter((r) => r.conditional).map((r) => r.rung))
+            .toEqual(['pull']);
         for (const r of R8_STRATEGY_EXECUTORS.ladder) {
             expect(r.tool.length).toBeGreaterThan(20);
             expect(r.refusesWith.length).toBeGreaterThan(20);
@@ -1298,6 +1301,30 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
         // something" and "I refused the rung below me" are different claims.
         expect(() => assertEscalationIsOrdered([
             { rung: 'kill', refused: { rung: 'avoid', why: 'x' } },
+        ])).toThrow(/does not name the cheaper rung it refused/);
+    });
+
+    /**
+     * ⛓ R9 SLICE L16 — A CONDITIONAL RUNG MAY BE SKIPPED, AND ONLY THAT KIND. A
+     * room with no silencer has no PULL rung, so TIME names AVOID; a room with
+     * one names PULL; and a skipped TIME is still a named failure.
+     */
+    it('⛓ accepts TIME naming AVOID (no silencer: PULL absent) and TIME naming PULL', () => {
+        expect(assertEscalationIsOrdered([
+            { rung: 'avoid' },
+            { rung: 'time', refused: { rung: 'avoid', why: 'no admissible corridor' } },
+        ])).toEqual({ rungs: 2, deepest: 'time' });
+        expect(assertEscalationIsOrdered([
+            { rung: 'avoid' },
+            { rung: 'pull', refused: { rung: 'avoid', why: 'no admissible corridor' } },
+            { rung: 'time', refused: { rung: 'pull', why: 'no reachable stance' } },
+        ])).toEqual({ rungs: 3, deepest: 'time' });
+    });
+
+    it('⛔ …and still refuses a skip of a rung that is not conditional', () => {
+        expect(() => assertEscalationIsOrdered([
+            { rung: 'avoid' },
+            { rung: 'bait', refused: { rung: 'pull', why: 'x' } },
         ])).toThrow(/does not name the cheaper rung it refused/);
     });
 
@@ -1353,7 +1380,7 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
  * 13. register an executor without a derivation row (or delete a row)
  *       → `the derivation table and the RUNNING registry are one key set` reds
  * 14. reorder `ladder` (e.g. bait before time)
- *       → `the ladder is AVOID -> TIME -> BAIT -> KILL …` reds
+ *       → `the ladder is AVOID -> (PULL) -> TIME -> BAIT -> KILL …` reds
  * 15. register `touch`
  *       → `keeps `touch` refused AS THE LIVE CONTROL` reds — the control is
  *         asserted against the RUNNING registry, not against its own sentence
