@@ -227,11 +227,26 @@ function analyzePlaywrightReport(reportPath = 'playwright-report.json') {
   }
 }
 
-function extractInAppTestResults(report) {
-  // Look for the __playwrightTestResults__ in stdout
+const SAVED_TO = 'PW DEBUG: Test results saved to: ';
+
+export function extractInAppTestResults(report) {
   const stdout = report.suites?.[0]?.suites?.[0]?.specs?.[0]?.tests?.[0]?.results?.[0]?.stdout;
   if (!stdout) return null;
-  
+
+  // The spec saves __playwrightTestResults__ to a file and prints its path
+  // (the log itself carries only a per-row summary — scripts/test/inAppSummary.js).
+  for (const log of stdout) {
+    const at = log.text?.indexOf(SAVED_TO) ?? -1;
+    if (at === -1) continue;
+    const file = log.text.substring(at + SAVED_TO.length).split('\n')[0].trim();
+    try {
+      return JSON.parse(fs.readFileSync(file, 'utf8'));
+    } catch (e) {
+      console.error(`In-app results file named in the report could not be read: ${file} (${e.message})`);
+    }
+  }
+
+  // Reports from before 2026-09-27 carry the whole payload inline instead.
   for (const log of stdout) {
     if (log.text.includes('Full in-app test results:')) {
       try {

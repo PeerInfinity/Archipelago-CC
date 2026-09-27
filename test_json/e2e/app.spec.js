@@ -3,6 +3,7 @@ import { TEST_FLAVOUR, TEST_FRONTEND_URL, flavourUrlParam } from '../../scripts/
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import { formatFailedTests, formatInAppSummary } from '../../scripts/test/inAppSummary.js';
 
 /**
  * Machine load, sampled at run start and again when a test fails.
@@ -66,9 +67,21 @@ test.describe('Application End-to-End Tests', () => {
   }
 
   test('run in-app tests and check results', async ({ page }) => {
+    // Counted for the summary: a green run can hide a thrown handler, and the
+    // only trace is a browser line in the middle of thousands.
+    let consoleErrors = 0;
+    const pageErrors = [];
+    // Uncaught exceptions are not console messages — without this listener
+    // they never reached the log at all.
+    page.on('pageerror', (err) => {
+      pageErrors.push(err.message);
+      console.log(`BROWSER PAGE ERROR (uncaught): ${err.stack || err.message}`);
+    });
+
     // Listen for console logs from the page and relay them to Playwright's output
     page.on('console', (msg) => {
       const text = msg.text();
+      if (msg.type() === 'error') consoleErrors += 1;
       // The in-app runner's per-case heartbeat (testLogic.js). Relayed
       // bare, so a run in flight can be read at a glance — without it
       // the only per-case signal in the log is buried in thousands of
@@ -215,15 +228,12 @@ test.describe('Application End-to-End Tests', () => {
       'PW DEBUG: __playwrightTestResults__ retrieved from window object.'
     );
 
-    // Results are already parsed from window object (no need for JSON.parse)
-    // Log only summary to keep PW console cleaner, full log is in playwright-report.json
-    // console.log('PW DEBUG: In-app test results summary:', results.summary);
-    console.log(
-      'PW DEBUG: Full in-app test results:',
-      JSON.stringify(results, null, 2)
-    );
-
-    // Save the test results to a file
+    // The full results go to a FILE, and the log gets a per-row summary
+    // (scripts/test/inAppSummary.js): printing the whole payload here cost
+    // 1–3 MB per CI run and the GitHub log viewer cut the step off mid-dump,
+    // losing its verdict (trap 1439).
+    let resultsFile = null;
+    let saveError = null;
     try {
       const outputDir = path.join(process.cwd(), 'test-results', 'in-app-tests');
       if (!fs.existsSync(outputDir)) {
@@ -259,6 +269,7 @@ test.describe('Application End-to-End Tests', () => {
           2
         )
       );
+      resultsFile = outputFile;
       console.log(`PW DEBUG: Test results saved to: ${outputFile}`);
 
       // These files now survive across runs (see outputDir in
@@ -273,7 +284,12 @@ test.describe('Application End-to-End Tests', () => {
         console.log(`PW DEBUG: Pruned ${stale.length} result file(s) older than the last ${KEEP_RUNS} runs.`);
       }
     } catch (error) {
+      saveError = error.message;
       console.error('PW DEBUG: Failed to save test results to file:', error);
+    }
+
+    for (const line of formatInAppSummary(results, { resultsFile, saveError, consoleErrors, pageErrors })) {
+      console.log(line);
     }
 
     // Failure summary. Printed BEFORE the assertions below, which throw
@@ -281,22 +297,8 @@ test.describe('Application End-to-End Tests', () => {
     // Playwright's own "1 failed" and the actual in-app leg — and the
     // condition it died on — is visible only by digging through the
     // saved JSON.
-    const failedTests = (results.testDetails || []).filter((t) => t.status === 'failed');
-    if (failedTests.length > 0) {
-      console.log(`\nPW DEBUG: ===== ${failedTests.length} IN-APP TEST(S) FAILED =====`);
-      console.log(`  machine at failure: ${loadSnapshot()}`);
-      for (const t of failedTests) {
-        const secs = t.durationMs != null ? ` after ${(t.durationMs / 1000).toFixed(1)}s` : '';
-        console.log(`  FAILED: ${t.id}${secs}`);
-        const failedConditions = (t.conditions || []).filter((c) => c.status === 'failed');
-        for (const c of failedConditions) {
-          console.log(`    condition: ${c.description}`);
-        }
-        if (failedConditions.length === 0) {
-          console.log('    (no failed condition recorded — the test died before asserting)');
-        }
-      }
-      console.log('PW DEBUG: =========================================\n');
+    for (const line of formatFailedTests(results, loadSnapshot())) {
+      console.log(line);
     }
 
     // Truncation guard. The in-app runner races the whole suite against a
