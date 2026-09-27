@@ -1029,6 +1029,18 @@
             "_comment": "M2. mm3 initialised + Apply (skip ON): no hop (many exits) - the player at the declared start, the menu panel raised with every exit; a press takes the last exit; Restart -> the DECLARED start, path cleared (not procgenPlayer's resolved start). adventure initialised + Apply: one exit, the hop fires."
         },
         {
+            "id": "apworld-m3-a-non-menu-start-is-a-cell-and-the-menu",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "M3. apcalc (start C: 4 exits, 1 location - a room, not a pure hub): the door, a preview with no hub clause, the plan places every region, Generate lands C as a cell (its own sidecar entry), 0 sidecar errors, the Map marker names C and lists its exits, all placed."
+        },
+        {
+            "id": "apworld-m3-a-menu-with-locations-is-a-room",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "M3. shapez as text_adventure (Menu: 4 exits AND 3 locations - a cell since M3): no hub clause, Menu lands as a cell with a Regions-tab sidecar block, its 3 locations in its payload (derived names), the marker lists its 4 exits."
+        },
+        {
             "id": "apworld-the-preset-sidecars-door-lands-on-the-sidecars-tab",
             "enabled": true,
             "category": "apworldEditor",
