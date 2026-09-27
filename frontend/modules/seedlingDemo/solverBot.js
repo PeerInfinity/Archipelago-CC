@@ -7008,6 +7008,7 @@ function resolveTouchStrategy(run, obstacle, contacts, blocked = []) {
             strategy: 'touch',
             held: false,
             need,
+            lock: obstacle.id,
             rejected: [{
                 option: `touch ${obstacle.id}`,
                 why: `\`ShieldLock.update\`'s arm is \`if (p && !activate && `
@@ -7116,9 +7117,22 @@ function deriveTouchStance(run, row, contacts, blocked = []) {
  * cheap: 101 ticks of a released key is ONE span (trap 16 / §15.4).
  */
 function execTouch(run, perTick, resolved, ctx) {
+    /**
+     * ⛓ R9 SLICE L16 (the parallel elements slice's W0 finding, via the
+     * planner) — **A `SolverRefusal`, for `execBreak`'s reason.** This arm
+     * used to `fail()`, which raises a `SolverBotError`; `procgenOracle.solve`
+     * re-throws one rather than classifying it, so a generated room's
+     * WITHOUT-shield arm came back `THREW:*`, `differentialGrade` called it
+     * WEAK, and `require: ['hasShield']` could never be met. Missing the item
+     * IS the claim about the level. ⚠ `resolveTouchStrategy`'s `held: false`
+     * record now carries `lock` too — this message printed `undefined` for it.
+     * `execKeylock`'s twin arm is left as `execBreak`'s docblock names it.
+     */
     if (resolved.held === false) {
-        return fail(`${ctx.what}: ${resolved.lock} needs \`Player.${resolved.need}\`, `
-            + 'which this run does not hold.');
+        throw new SolverRefusal(`${ctx.what}: ${resolved.lock} needs `
+            + `\`Player.${resolved.need}\`, which this run does not hold — `
+            + `${resolved.rejected[0].why}`,
+        { obstacle: { kind: 'solid', id: resolved.lock } });
     }
     const NO_KEYS = new Set();
     /**
