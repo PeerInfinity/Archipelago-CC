@@ -256,6 +256,12 @@ function reduce(text, bind) {
     const absentIdiom = /^String\s*\(\s*o\.@(\w+)\s*\)\s*==\s*""\s*\?\s*(-?\d+)\s*:\s*o\.@\1$/
         .exec(t);
     if (absentIdiom) return { ...attr(absentIdiom[1]), absentDefault: Number(absentIdiom[2]) };
+    // ⛓ R9 slice P4E — THE SAME IDIOM, AS A HELPER. The `tag` build's XML loop
+    // passes `optionalTag(o.@tag)` for `bosskey`/`totempart`/`seed`, and
+    // `Game.optionalTag` is the longhand above in a function: an absent (or
+    // empty) attribute is -1, anything else `int()` of it — `tagOf`'s rule.
+    const helper = /^(?:Game\.)?optionalTag\s*\(\s*o\.@(\w+)\s*\)$/.exec(t);
+    if (helper) return { ...attr(helper[1]), absentDefault: -1 };
     return expr(t);
 }
 

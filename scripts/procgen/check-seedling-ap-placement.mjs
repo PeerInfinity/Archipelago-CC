@@ -1559,7 +1559,10 @@ if (WIN) {
         [{ level: KEY_LEVEL, type: 'bosskey', x: KEY.x, y: KEY.y, tag: KEY_TAG }]).set : null;
     console.log(`\n# C4 on ${TAG_PAGE}: the L${KEY_LEVEL} boss key @(${KEY?.x},${KEY?.y}) `
         + `keyType ${KEY?.attrs?.keyType ?? 0}, allocated tag ${KEY_TAG}`);
-    const onKey = { level: KEY_LEVEL, x: KEY?.x, y: KEY?.y };
+    // ⚠ ON THE KEY'S CENTRE: `BossKey` adds `Tile.w/2` to the `.oel` point and
+    // takes an 8x8 hitbox about it, so a boot at the `.oel` corner does not
+    // overlap it — measured: keyMask stayed 0 on all three arms.
+    const onKey = { level: KEY_LEVEL, x: (KEY?.x ?? 0) + TILE_HALF, y: (KEY?.y ?? 0) + TILE_HALF };
     const C4_ARMS = [
         armPlan('c4-tagged', { set: TAGGED_SET, boot: onKey, ticks: 10, awaitFinish: true, url: TAG_URL }),
         armPlan('c4-vanilla', { set: VANILLA_SET, boot: onKey, ticks: 10, awaitFinish: true, url: TAG_URL }),
