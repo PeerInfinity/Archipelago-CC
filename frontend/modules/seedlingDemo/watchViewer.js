@@ -10044,6 +10044,12 @@ function publishShip(state, source, lifetime) {
          * shape up.
          */
         windows: state.windows ?? [],
+        /**
+         * ⛓ R9 slice P4E — `{build, capable, why}`: whether the build this
+         * ship drives HOLDS after the latch (read from its manifest entry). The
+         * per-window `hold`/`heldAtFinish` ride `windows` above.
+         */
+        hold: state.hold ?? null,
     };
     if (lifetime.alive()) publishWatch(source);
 }

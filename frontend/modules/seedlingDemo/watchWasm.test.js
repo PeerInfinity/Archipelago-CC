@@ -322,6 +322,12 @@ describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the r
         expect(projectionKeys()).toContain('note');
     });
 
+    it('⛓ R9 slice P4E: carries `hold` — measured MISSING on the first p4e ship-gate run '
+        + '(the CHAIN arm read `wasm.hold` null while every window reported its hold)', () => {
+        expect(projectionKeys()).toContain('hold');
+        expect(projectionKeys()).toContain('windows');
+    });
+
     /**
      * ⛔⛔⛔ R9 SLICE 3 — **THE GAME-VISIBLE PROJECTION, ON THE SHIP PATH.**
      *
@@ -426,7 +432,7 @@ describe('E3 — `publishShip` projects the verdict NOTE, so a claim about the r
      */
     it('⛔ and the projection is these keys, exactly', () => {
         expect(projectionKeys().sort()).toEqual([
-            'drain', 'label', 'note', 'reached', 'refusal', 'scope', 'set', 'stage',
+            'drain', 'hold', 'label', 'note', 'reached', 'refusal', 'scope', 'set', 'stage',
             'stages', 'status', 'verdict',
             // ⛓ R9 slice 2: the SEQUENCE's per-window rows — admission, the
             // per-window verdict, `continuationFindings`, the keys the boundary
