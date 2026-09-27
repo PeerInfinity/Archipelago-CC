@@ -3,6 +3,9 @@ import { TEST_FLAVOUR, TEST_FRONTEND_URL, flavourUrlParam } from '../../scripts/
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import {
+  clearBudgetExpiry, earlierBudgetExpiry, ranOutOfBudget, recordBudgetExpiry, refusedRetryMessage,
+} from '../../scripts/test/budgetRetryGuard.js';
 
 /**
  * Machine load, sampled at run start and again when a test fails.
@@ -65,7 +68,23 @@ test.describe('Application End-to-End Tests', () => {
     APP_URL += `&autoStartTimeoutMs=${encodeURIComponent(autoStartTimeoutMs)}`;
   }
 
-  test('run in-app tests and check results', async ({ page }) => {
+  test('run in-app tests and check results', async ({ page }, testInfo) => {
+    // An attempt that ran out of the in-app budget is not retried: the retry
+    // would run the same roster against the same budget (scripts/test/
+    // budgetRetryGuard.js — on CI, three such attempts outran the job cap).
+    // Every other failure still retries as playwright.config.js says.
+    const budgetGuard = {
+      dir: path.join(process.cwd(), 'test-results', 'in-app-tests'),
+      runnerPid: process.ppid,
+      testTitle: testInfo.title,
+    };
+    if (testInfo.retry === 0) {
+      clearBudgetExpiry(budgetGuard.dir);
+    } else {
+      const earlier = earlierBudgetExpiry(budgetGuard);
+      if (earlier) throw new Error(refusedRetryMessage(earlier, testInfo.retry));
+    }
+
     // Listen for console logs from the page and relay them to Playwright's output
     page.on('console', (msg) => {
       const text = msg.text();
@@ -211,6 +230,9 @@ test.describe('Application End-to-End Tests', () => {
 
     const results = await page.evaluate(() => window.__playwrightTestResults__);
     expect(results).toBeTruthy();
+    if (ranOutOfBudget(results)) {
+      recordBudgetExpiry({ ...budgetGuard, retry: testInfo.retry, summary: results.summary });
+    }
     console.log(
       'PW DEBUG: __playwrightTestResults__ retrieved from window object.'
     );
