@@ -1228,7 +1228,7 @@ const CHAIN_DECLARATIONS = Object.freeze([
          * (the ShieldBoss's room), the chain's first `save.keys` write, and the
          * solver-roster differential measured it EARNED before it was declared.
          */
-        earns: Object.freeze(['sword@L10', 'chest@L11', 'bosskey0@L19']),
+        earns: Object.freeze(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20']),
         /**
          * ⛓⛓ THE TIMED CLEARS, WITH THE INSTRUMENT THAT MEASURED EACH — THREE
          * ROWS FOR THREE CLEARS, one per `{level,tag}@at` a SEGMENT declares.

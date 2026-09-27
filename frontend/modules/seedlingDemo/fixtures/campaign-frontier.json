@@ -22,7 +22,8 @@
     "r9-solve-15",
     "r9-solve-16",
     "r9-solve-18",
-    "r9-solve-19"
+    "r9-solve-19",
+    "r9-solve-20"
   ],
   "arrivals": [
     2,
@@ -44,6 +45,7 @@
     16,
     18,
     19,
+    20,
     20
   ],
   "sources": {
@@ -52,12 +54,13 @@
     "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "03f215201a5a64c472fa5cc51c51ee98"
   },
   "lastArrival": {
-    "step": 20,
+    "step": 21,
     "level": 20,
-    "segment": "r9-solve-19"
+    "segment": "r9-solve-20"
   },
   "nextStep": null,
   "refusal": null,
-  "covered": 20,
-  "why": "no route step after the chain is refused by the survey — every remaining step SOLVES today, so the frontier is a GAP LIST rather than a refusal and this is a finding, not a stop"
+  "covered": 21,
+  "complete": true,
+  "why": "the chain walks all 21 route steps, from the true start to route step 21 in L20 (Level 020 - Shield (sphere 2.1) → Progressive Shield); there is no next room on this route"
 }

@@ -54,6 +54,7 @@ import {
 import {
     PLAYTHROUGH_CHAINS, TRUE_INITIAL_BOOT, chainKind, chainPolicy, chainTapeNames,
 } from './playthroughWalk.js';
+import { isTerminalSegment } from './campaignChain.js';
 
 /**
  * Two LATCHES compared field by field — the ending-state claim, and the
@@ -782,9 +783,15 @@ export function chainFindings(chain, tapes, replayed) {
         // committed fixture ends at an arrival, and a segment claims one by
         // construction. The six invariants are already written and already
         // mutation-tested — consumed here, not restated.
-        const calm = seamLatchFindings(here.seam ?? null, { requireCalm: true });
+        // ⛓ R9 slice L18b: a TERMINAL segment claims no arrival (nothing boots
+        // from its latch) — its latch must still fire WHOLE, and the calm
+        // invariants are REPORTED rather than required (`isTerminalSegment`).
+        const terminal = isTerminalSegment(name);
+        const calm = seamLatchFindings(here.seam ?? null, { requireCalm: !terminal });
         const notCalm = calm.filter((r) => !r.ok);
-        add(`chain ${chain.id}: ${name} ends at a CALM ARRIVAL`,
+        add(terminal
+            ? `chain ${chain.id}: ${name} is TERMINAL — its latch fires whole (calm REPORTED, not required: no successor boots from it)`
+            : `chain ${chain.id}: ${name} ends at a CALM ARRIVAL`,
             notCalm.length === 0,
             notCalm.length === 0
                 ? `${calm.length - 1} signature rows latched at tick `
