@@ -16,9 +16,7 @@ their own players), the generator's write half on the committed four-player
 fixture (slot 2 carries a block, slot 3 does not), and the exporter's key
 lists (both keys ordered, both sliced per player).
 """
-import ast
 import importlib
-import inspect
 import json
 import sys
 from pathlib import Path
@@ -128,15 +126,11 @@ def test_no_key_when_the_package_ships_none(tmp_path, cleanup_fake_module):
 
 
 def _export_key_lists():
-    """The exporter's `desired_key_order` and `player_specific_keys`, read off
-    its source as literals (they are locals of the export function)."""
-    import exporter.exporter as exporter_mod
-    lists = {}
-    for node in ast.walk(ast.parse(inspect.getsource(exporter_mod))):
-        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name) \
-                and node.targets[0].id in ("desired_key_order", "player_specific_keys"):
-            lists[node.targets[0].id] = ast.literal_eval(node.value)
-    return lists
+    """The exporter's key order and per-player key list — module-level since
+    P1b′ lifted them out of the export function (they were locals, read off
+    its source as literals until then)."""
+    from exporter.exporter import DESIRED_KEY_ORDER, PLAYER_SPECIFIC_KEYS
+    return {"desired_key_order": DESIRED_KEY_ORDER, "player_specific_keys": PLAYER_SPECIFIC_KEYS}
 
 
 def test_both_keys_ordered_and_sliced_per_player():

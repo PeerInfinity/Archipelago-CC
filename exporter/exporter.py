@@ -2705,6 +2705,122 @@ def _collect_preset_source_files(output_dir: str, staging_dir: Optional[str], fi
     return [sources[name] for name in sorted(sources)]
 
 
+# --- The export's key order and its per-player slicing (module scope) ---
+# ⛓ APWORLD SUBSTRATE CHANGE P1b′ — lifted out of `export_game_rules`, where they
+# were locals, so a test can slice a committed document through the exporter's
+# OWN logic (`test/test_export_player_slicing.py` holds the `_P<n>` files to it).
+# Byte-inert: the export writes exactly what it wrote when they were nested.
+
+DESIRED_KEY_ORDER = [
+    'schema_version',
+    'game_name',
+    'game_directory',
+    'playerId',  # Player ID for player-specific exports
+    'archipelago_version',
+    'generation_seed',
+    'seed_name',
+    'player_names',
+    'regions',
+    'dungeons',
+    'start_regions',
+    'items',
+    'item_groups',
+    'itempool_counts',
+    'canonical_placements',
+    'progression_mapping',
+    'starting_items',
+    'preset_sidecars',
+    'procgen_metadata',
+    'loop_costs',
+    'world',
+    'exporter',
+    'game_info',
+    'helpers'
+]
+
+# Player-specific keys contain data nested under player IDs
+PLAYER_SPECIFIC_KEYS = [
+    'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
+    'world', 'exporter', 'start_regions', 'itempool_counts',
+    'canonical_placements', 'game_info', 'starting_items', 'preset_sidecars',
+    # APWORLD SUBSTRATE CHANGE P1a: both blocks are per-player maps now
+    # (`{"<p>": block}`), so a per-player export slices them like the rest.
+    'procgen_metadata', 'loop_costs',
+]
+
+
+def create_ordered_export_data(data, game_name=None, player_id=None):
+    """
+    Create an ordered dictionary with fields in the desired order.
+    
+    Args:
+        data: The data to order
+        game_name: Game name to include (if provided)
+        player_id: If provided, extract only this player's data from player-specific fields
+        
+    Returns:
+        Dict with fields in desired order (Python 3.7+ maintains insertion order)
+    """
+    ordered_data = {}
+    
+    # Process each key in the desired order
+    for key in DESIRED_KEY_ORDER:
+        # Special handling for game_name
+        if key == 'game_name':
+            if game_name:
+                ordered_data[key] = game_name
+            continue
+
+        # Special handling for game_directory
+        if key == 'game_directory':
+            if game_name:
+                # Use the get_world_directory_name function to get the directory name
+                game_directory = get_world_directory_name(game_name)
+                ordered_data[key] = game_directory
+            continue
+
+        # Special handling for playerId - only include in player-specific exports
+        if key == 'playerId':
+            if player_id is not None:
+                ordered_data[key] = player_id
+            continue
+
+        # Special handling for dungeons (only include if it exists)
+        if key == 'dungeons':
+            if key in data:
+                if player_id is not None:
+                    # For player-specific exports, only include this player's dungeons
+                    if player_id in data[key]:
+                        ordered_data[key] = {player_id: data[key][player_id]}
+                else:
+                    # For combined exports, include all dungeons
+                    ordered_data[key] = data[key]
+            continue
+            
+        # Handle player-specific fields
+        if key in PLAYER_SPECIFIC_KEYS and key in data:
+            if player_id is not None:
+                # For player-specific exports, only include this player's data
+                if player_id in data[key]:
+                    ordered_data[key] = {player_id: data[key][player_id]}
+            else:
+                # For combined exports, include all data
+                ordered_data[key] = data[key]
+            continue
+            
+        # Handle normal fields
+        if key in data:
+            ordered_data[key] = data[key]
+    
+    # Add any keys not in the desired order at the end
+    for key, value in data.items():
+        if key not in ordered_data and key not in PLAYER_SPECIFIC_KEYS:
+            ordered_data[key] = value
+            logger.warning(f"Key '{key}' was not in DESIRED_KEY_ORDER, added to end of export")
+            
+    return ordered_data
+
+
 # --- Game Rules Export ---
 def export_game_rules(multiworld, output_dir: str, filename_base: str, save_presets: bool = False, skip_preset_copy_if_rules_identical: bool = False, rules_json_format: str = "rule_builder", cleanup_multiworld: bool = False, clear_game_presets: bool = False, clear_all_presets: bool = False, staging_dir: Optional[str] = None) -> Dict[str, str]:
     """
@@ -2751,44 +2867,9 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
     # --- Configuration for Excluded Fields (now defined globally) ---
     
     # --- Field Exclusion Helpers (now defined globally) --- 
-    
-    # --- Define key categories and order ---
-    desired_key_order = [
-        'schema_version',
-        'game_name',
-        'game_directory',
-        'playerId',  # Player ID for player-specific exports
-        'archipelago_version',
-        'generation_seed',
-        'seed_name',
-        'player_names',
-        'regions',
-        'dungeons',
-        'start_regions',
-        'items',
-        'item_groups',
-        'itempool_counts',
-        'canonical_placements',
-        'progression_mapping',
-        'starting_items',
-        'preset_sidecars',
-        'procgen_metadata',
-        'loop_costs',
-        'world',
-        'exporter',
-        'game_info',
-        'helpers'
-    ]
 
-    # Player-specific keys contain data nested under player IDs
-    player_specific_keys = [
-        'regions', 'dungeons', 'items', 'item_groups', 'progression_mapping',
-        'world', 'exporter', 'start_regions', 'itempool_counts',
-        'canonical_placements', 'game_info', 'starting_items', 'preset_sidecars',
-        # APWORLD SUBSTRATE CHANGE P1a: both blocks are per-player maps now
-        # (`{"<p>": block}`), so a per-player export slices them like the rest.
-        'procgen_metadata', 'loop_costs',
-    ]
+    # --- Key order and per-player slicing: DESIRED_KEY_ORDER, PLAYER_SPECIFIC_KEYS,
+    #     create_ordered_export_data (module scope, above) ---
 
     # Prepare the combined export data for all players using the helper
     with profiler.section("get_cleaned_rules_data"):
@@ -2833,78 +2914,6 @@ def export_game_rules(multiworld, output_dir: str, filename_base: str, save_pres
                     logger.warning("Skipping Rule Builder output due to conversion error")
                     rb_data = None
 
-    # --- Helper function to create an ordered dictionary with proper field ordering ---
-    def create_ordered_export_data(data, game_name=None, player_id=None):
-        """
-        Create an ordered dictionary with fields in the desired order.
-        
-        Args:
-            data: The data to order
-            game_name: Game name to include (if provided)
-            player_id: If provided, extract only this player's data from player-specific fields
-            
-        Returns:
-            Dict with fields in desired order (Python 3.7+ maintains insertion order)
-        """
-        ordered_data = {}
-        
-        # Process each key in the desired order
-        for key in desired_key_order:
-            # Special handling for game_name
-            if key == 'game_name':
-                if game_name:
-                    ordered_data[key] = game_name
-                continue
-
-            # Special handling for game_directory
-            if key == 'game_directory':
-                if game_name:
-                    # Use the get_world_directory_name function to get the directory name
-                    game_directory = get_world_directory_name(game_name)
-                    ordered_data[key] = game_directory
-                continue
-
-            # Special handling for playerId - only include in player-specific exports
-            if key == 'playerId':
-                if player_id is not None:
-                    ordered_data[key] = player_id
-                continue
-
-            # Special handling for dungeons (only include if it exists)
-            if key == 'dungeons':
-                if key in data:
-                    if player_id is not None:
-                        # For player-specific exports, only include this player's dungeons
-                        if player_id in data[key]:
-                            ordered_data[key] = {player_id: data[key][player_id]}
-                    else:
-                        # For combined exports, include all dungeons
-                        ordered_data[key] = data[key]
-                continue
-                
-            # Handle player-specific fields
-            if key in player_specific_keys and key in data:
-                if player_id is not None:
-                    # For player-specific exports, only include this player's data
-                    if player_id in data[key]:
-                        ordered_data[key] = {player_id: data[key][player_id]}
-                else:
-                    # For combined exports, include all data
-                    ordered_data[key] = data[key]
-                continue
-                
-            # Handle normal fields
-            if key in data:
-                ordered_data[key] = data[key]
-        
-        # Add any keys not in the desired order at the end
-        for key, value in data.items():
-            if key not in ordered_data and key not in player_specific_keys:
-                ordered_data[key] = value
-                logger.warning(f"Key '{key}' was not in desired_key_order, added to end of export")
-                
-        return ordered_data
-    
     # --- Helper function to write export data to a file ---
     def write_export_data(data, filepath):
         """
