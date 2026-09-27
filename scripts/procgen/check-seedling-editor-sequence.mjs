@@ -747,11 +747,21 @@ if (control.disabled) {
     `⛓⛓ …and the NEXT WORK ORDER is the artifact's, verbatim — route step `
         + `${frontier.nextStep?.step} (L${frontier.nextStep?.level})`,
     `${camp.camp.frontier.refusal?.family?.slice(0, 70)}…`);
+    /**
+     * ⛓ R9 SLICE L18b — A FRONTIER WITH NO REFUSAL IS A SHAPE, NOT A CRASH.
+     * Since L16 the committed frontier is a GAP LIST (`refusal: null`, its
+     * `why` the sentence), and this row read `frontier.refusal.text` and threw
+     * — measured on the L18 growth's S4, after CLAIMS 9–13 had all passed. The
+     * page renders `no work order — <why>` for that shape (`renderCampaign`),
+     * so the reader is owed THAT sentence, verbatim.
+     */
+    const owed = frontier.refusal ? frontier.refusal.text : frontier.why;
     check(camp.readoutHidden === false
         && camp.readout.includes(`${mine.length} / ${R7_GOAL_LEDGER.length}`)
-        && camp.readout.includes(frontier.refusal.text),
+        && typeof owed === 'string' && camp.readout.includes(owed),
     '⛔ …and the READER SEES IT: `#campaignReadout` is visible and carries the '
-        + 'same ledger line and the same refusal sentence',
+        + 'same ledger line and the frontier\'s own sentence (the refusal, or the '
+        + '`why` when there is none)',
     `hidden=${camp.readoutHidden}, ${camp.readout.length} chars`);
 
     /**
@@ -765,8 +775,10 @@ if (control.disabled) {
     '⛔ …and the DETACHED TAIL is NOT offered — ⚖ ruling 19 scopes the player to '
         + 'what plays continuously from a fresh game start',
     'no `r8-d2` / `r8-solve-18` anywhere in the readout or in `__campaign`');
-    check(/unsolved/i.test(camp.readout),
-        '⛓ …but the readout SAYS the rooms beyond the arrival are unsolved',
+    check(frontier.nextStep ? /unsolved/i.test(camp.readout) : /no work order/i.test(camp.readout),
+        frontier.nextStep
+            ? '⛓ …but the readout SAYS the rooms beyond the arrival are unsolved'
+            : '⛓ …and with no refused step the readout SAYS there is no work order',
         camp.readout.slice(-160));
     }
 }
