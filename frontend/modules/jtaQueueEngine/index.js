@@ -1,12 +1,17 @@
 // jtaQueueEngine module entry point — headless engine for JTA action queue
 import { JTAQueueEngine } from './jtaQueueEngine.js';
 import eventBus from '../../app/core/eventBus.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export const moduleInfo = {
     name: 'jtaQueueEngine',
     title: 'JtA Queue Engine',
     description: 'Headless engine for JtA action queue execution, strategy, and predictions.',
     requires: ['iframeAdapter', 'iframePanel'],
+    storage: [
+        { key: 'jta-aq-settings', kind: STORAGE_KINDS.state, label: 'JtA queue settings' },
+        { key: 'jta-action-loadouts', kind: STORAGE_KINDS.user, label: 'Your JtA queue loadouts' },
+    ],
 };
 
 function log(level, message, ...data) {

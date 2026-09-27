@@ -18,6 +18,13 @@ export const moduleInfo = {
   category: 'Loop Mode Modules',
   description: 'Queues moves, explores and location checks to run against a mana bar, with speed, save and reset controls.',
   requires: ['stateManager', 'discovery'],
+  storage: [
+    { key: 'archipelago_loop_state', kind: STORAGE_KINDS.state, label: 'Loop state (mana, XP, queue progress; saved every minute, read by Load Game)' },
+    { key: 'loops:savedQueues:v1', kind: STORAGE_KINDS.user, label: 'Your saved queues, per region' },
+    { key: 'hideDoubleMovementWarning', kind: STORAGE_KINDS.state, label: '"Don\'t show again": double movement warning' },
+    { key: 'hideDoubleDestinationWarning', kind: STORAGE_KINDS.state, label: '"Don\'t show again": double destination warning' },
+    { key: 'archipelago_loop_settings', kind: STORAGE_KINDS.state, label: 'Legacy loop settings (removed when Loops starts)' },
+  ],
 };
 
 // Other dependencies
@@ -73,6 +80,7 @@ let loopUnsubscribeHandles = [];
 // --- Import the actual singletons needed for injection ---
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import eventBus from '../../app/core/eventBus.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {

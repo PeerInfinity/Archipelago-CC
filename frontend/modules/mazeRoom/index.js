@@ -12,6 +12,7 @@ import { MazeRoomUI } from './mazeRoomUI.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateRegistryEntry } from './mazeRoomLibrary.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export * from './mazeRoomEngine.js';
 export { substrateRegistryEntry } from './mazeRoomLibrary.js';
@@ -25,6 +26,10 @@ export const moduleInfo = {
     category: 'Procgen Substrate Panels',
     description: 'Generates maze rooms by seed, size and biome, or loads a region\'s room, and plays it with arrow keys or WASD.',
     requires: [],
+    storage: [
+        { key: 'mazeRoom_params', kind: STORAGE_KINDS.state, label: 'Maze Room parameters' },
+        { key: 'mazeRoom_view', kind: STORAGE_KINDS.state, label: 'Maze Room view' },
+    ],
 };
 
 let panelInstance = null;

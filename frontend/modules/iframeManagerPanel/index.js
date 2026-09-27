@@ -2,6 +2,7 @@
 import { IframeManagerUI } from './iframeManagerUI.js';
 import eventBus from '../../app/core/eventBus.js';
 import { knownIframePages } from '../../app/config/knownIframePages.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 // --- Module Info ---
 export const moduleInfo = {
@@ -14,6 +15,12 @@ export const moduleInfo = {
   category: 'Embedding and Windows',
   description: 'Loads a known page or typed URL into the open Iframe panels, unloads them, and lists connected pages.',
   requires: ['iframeAdapter', 'iframePanel'],
+  storage: [
+    { key: 'incrementalGameSave', kind: STORAGE_KINDS.user, label: 'Journey to Ascension game save (the iframe page)' },
+    { key: 'a-mazing-idle', kind: STORAGE_KINDS.user, label: 'A-Mazing-Idle game save (the iframe page)' },
+    { key: 'a-mazing-idle-disable-biome-check', kind: STORAGE_KINDS.state, label: 'A-Mazing-Idle: one-shot flag across a reload' },
+    { key: 'externalModule.customUrlWarning.suppressed', kind: STORAGE_KINDS.state, label: '"Don\'t warn again" for custom page addresses' },
+  ],
 };
 
 // Helper function for logging with fallback

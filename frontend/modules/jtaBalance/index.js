@@ -54,6 +54,7 @@ import {
     cacheKey,
     partitionPatchesByRegion,
 } from './hostGlue.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 // --- Module info ------------------------------------------------------------
 export const moduleInfo = {
@@ -63,6 +64,9 @@ export const moduleInfo = {
     // sphere log (sphereState), rules payload (stateManager).
     requires: ['stateManager', 'procgenPlayer', 'sphereState'],
     // NO componentType — headless, no panel.
+    storage: [
+        { prefix: 'jtaBalance_patches_v1_', kind: STORAGE_KINDS.cache, label: 'Balance cost patches, one per seed (and dataset)' },
+    ],
 };
 
 const ENABLED_SETTING_KEY = 'moduleSettings.jtaBalance.enabled';

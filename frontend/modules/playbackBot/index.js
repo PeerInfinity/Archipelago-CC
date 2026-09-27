@@ -20,6 +20,7 @@
  */
 
 import { PlaybackBotPanel } from './playbackBotPanel.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export const moduleInfo = {
     name: 'playbackBot',
@@ -30,6 +31,10 @@ export const moduleInfo = {
     category: 'Procgen Infrastructure Panels',
     description: 'Replays a sphere log\'s playthrough by driving the current region\'s game, with play, step, speed and walk-to.',
     requires: [],
+    storage: [
+        { key: 'playbackBot_intercept', kind: STORAGE_KINDS.state, label: 'Playback Bot: intercept toggle' },
+        { key: 'playbackBot_mazeCollect', kind: STORAGE_KINDS.state, label: 'Playback Bot: maze collect policy' },
+    ],
 };
 
 // Active-panel singleton. Set by the panel constructor on mount,

@@ -15,6 +15,7 @@ import messageHandler, {
 import LocationManager from './core/locationManager.js';
 import stateManagerProxySingleton from '../stateManager/stateManagerProxySingleton.js';
 import eventBus from '../../app/core/eventBus.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -43,6 +44,11 @@ export const moduleInfo = {
   category: 'Core Service Modules',
   description: 'Connect to an Archipelago server by address, follow its message log, and type local or ! server commands.',
   requires: ['stateManager'],
+  storage: [
+    { key: 'clientSettings', kind: STORAGE_KINDS.state, label: 'Server address and player name' },
+    { key: 'clientId', kind: STORAGE_KINDS.state, label: 'Client id sent to the server' },
+    { key: '__storage_test__', kind: STORAGE_KINDS.state, label: 'Storage availability probe (removed at once)' },
+  ],
 };
 
 // --- Settings Schema --- //

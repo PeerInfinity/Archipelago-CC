@@ -34,6 +34,7 @@ import {
 } from './omsiSubstrateWrapperLibrary.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
 import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export const moduleInfo = {
     name: 'omsiSubstrateWrapper',
@@ -44,6 +45,18 @@ export const moduleInfo = {
     category: 'Procgen Substrate Panels',
     description: 'Plays Idle Loops (the omsi-loops fork): queue actions that run until the loop\'s shared mana runs out.',
     requires: ['stateManager', 'gameState', 'iframeAdapter'],
+    storage: [
+        { key: 'idleLoops1', kind: STORAGE_KINDS.user, label: 'Idle Loops game save' },
+        { key: 'idleLoopsChallenge', kind: STORAGE_KINDS.user, label: 'Idle Loops challenge save' },
+        { key: 'prestigeBackup', kind: STORAGE_KINDS.user, label: 'Idle Loops prestige backup save' },
+        { key: 'idleLoops_substrate', kind: STORAGE_KINDS.state, label: 'Idle Loops in-app (substrate) slot' },
+        { key: 'updateRate', kind: STORAGE_KINDS.state, label: 'Idle Loops option: update rate' },
+        { key: 'latestTheme', kind: STORAGE_KINDS.state, label: 'Idle Loops option: theme' },
+        { key: 'loadingText', kind: STORAGE_KINDS.state, label: 'Idle Loops loading text' },
+        { key: 'loadPredictor', kind: STORAGE_KINDS.state, label: 'Idle Loops option: predictor' },
+        { key: 'disabledMenus', kind: STORAGE_KINDS.state, label: 'Idle Loops option: hidden menus' },
+        { key: 'actionListHeight', kind: STORAGE_KINDS.state, label: 'Idle Loops option: action list height' },
+    ],
 };
 
 const INITIAL_STATE_EVENT = 'omsiSubstrateWrapper:initialState';

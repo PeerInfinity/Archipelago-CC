@@ -35,6 +35,7 @@ import {
     BOUNCE_IFRAME_ID,
     BOUNCE_RENDERER_CHANGED_EVENT,
 } from './bounceDemoLibrary.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 // Which renderer bounce region loads route to: 'js' (canvas renderer,
 // default), or the real-DJ page below with an explicit player tier —
@@ -119,6 +120,9 @@ export const moduleInfo = {
     category: 'Procgen Substrate Panels',
     description: 'Plays each region as a Doodle-Jump-style climb to pickups and exit portals; its rules come from the physics.',
     requires: ['stateManager', 'iframeAdapter'],
+    storage: [
+        { key: 'bounceDjReal.player', kind: STORAGE_KINDS.state, label: 'Bounce DJ Real player choice' },
+    ],
 };
 
 let _initApi = null;

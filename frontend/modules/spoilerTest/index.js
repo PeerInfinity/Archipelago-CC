@@ -1,6 +1,7 @@
 // frontend/modules/spoilerTest/index.js
 import { TestSpoilerUI } from './testSpoilerUI.js';
 import eventBus from '../../app/core/eventBus.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 // Helper function for logging with fallback
 function log(level, message, ...data) {
@@ -23,6 +24,9 @@ export const moduleInfo = {
   column: 2, // Middle column,
   category: 'Developer and Testing Panels',
   description: 'Replays a seed\'s sphere log step by step, flagging any sphere whose reachable locations differ from the log.',
+  storage: [
+    { key: 'frontendProfiling', kind: STORAGE_KINDS.state, label: 'Profiling switch (set by hand, "1" = on)' },
+  ],
 };
 
 // --- Module Scope Variables ---

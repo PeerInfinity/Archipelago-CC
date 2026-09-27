@@ -9,6 +9,7 @@
 import { VibeCodingSimUI } from './vibeCodingSimUI.js';
 import { GameState, SimulationConfig } from './simEngine.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export const moduleInfo = {
     name: 'vibeCodingSim',
@@ -19,6 +20,9 @@ export const moduleInfo = {
     category: 'Non-procgen Games',
     description: 'Assign unreliable AI agents doc, code, test and review tasks per feature, and uncover their real quality.',
     requires: ['stateManager'],
+    storage: [
+        { key: 'vcs-config', kind: STORAGE_KINDS.state, label: 'Vibe Coding Simulator configuration' },
+    ],
 };
 
 let panelInstance = null;

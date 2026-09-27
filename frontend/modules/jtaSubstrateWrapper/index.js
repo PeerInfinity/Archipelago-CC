@@ -26,6 +26,7 @@ import { getGameStateSingleton } from '../gameState/singleton.js';
 import { PlaybackProxy } from '../textAdventureSubstrateWrapper/playbackProxy.js';
 import { getEngine } from '../jtaQueueEngine/index.js';
 import settingsManager from '../../app/core/settingsManager.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export const moduleInfo = {
     name: 'jtaSubstrateWrapper',
@@ -36,6 +37,9 @@ export const moduleInfo = {
     category: 'Procgen Substrate Panels',
     description: 'Plays Journey to Ascension with each region as one zone: work its tasks, then travel or take an exit task.',
     requires: ['stateManager', 'gameState', 'iframeAdapter'],
+    storage: [
+        { prefix: 'incrementalGameSave_substrate', kind: STORAGE_KINDS.state, label: 'Journey to Ascension in-app (substrate) slots, one per dataset' },
+    ],
 };
 
 const INITIAL_STATE_EVENT = 'jtaSubstrateWrapper:initialState';

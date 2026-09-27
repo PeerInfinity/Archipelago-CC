@@ -1,5 +1,6 @@
 import { PresetUI } from './presetUI.js';
 import eventBus from '../../app/core/eventBus.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 let _moduleEventBus = null;
 
@@ -37,6 +38,10 @@ export const moduleInfo = {
   column: 2, // Middle column
   category: 'Data and Configuration Panels',
   description: 'Pick a game and seed to load its rules, with test-result badges per seed, or load a rules file from disk.',
+  storage: [
+    { key: 'presetUI_toolbar', kind: STORAGE_KINDS.state, label: 'Presets toolbar filters' },
+    { key: 'presetUI_view', kind: STORAGE_KINDS.state, label: 'Presets panel view' },
+  ],
 };
 
 /**

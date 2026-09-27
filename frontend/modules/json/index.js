@@ -1,5 +1,6 @@
 import { JsonUI } from './jsonUI.js';
 import eventBus from '../../app/core/eventBus.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 let _moduleEventBus = null;
 
@@ -37,6 +38,10 @@ export const moduleInfo = {
   column: 1, // Left column,
   category: 'Data and Configuration Panels',
   description: 'Pick rules, modules, layout, settings or game state to save or load as a file, a browser mode or editor text.',
+  storage: [
+    { prefix: 'archipelagoToolSuite_modeData_', kind: STORAGE_KINDS.state, label: 'Saved mode: settings (and whatever the JSON panel saved with them), one per mode', clearAll: 'Clear all saved modes', clearsWith: ['archipelagoToolSuite_lastActiveMode'] },
+    { key: 'archipelagoToolSuite_lastActiveMode', kind: STORAGE_KINDS.state, label: 'Last active mode (what a plain address reopens)' },
+  ],
 };
 
 /**

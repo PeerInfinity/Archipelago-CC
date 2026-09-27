@@ -11,6 +11,7 @@
  */
 
 import { ProcgenPipelineUI } from './procgenPipelineUI.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 export const moduleInfo = {
     name: 'procgenPipeline',
@@ -21,6 +22,12 @@ export const moduleInfo = {
     category: 'Procgen Infrastructure Panels',
     description: 'Generates a multi-region world from a mode, seed and substrate mix, draws its map, and loads it to play.',
     requires: [],
+    storage: [
+        { key: 'procgenPipeline_params', kind: STORAGE_KINDS.state, label: 'Pipeline parameters (mode, seed, substrate mix)' },
+        { key: 'procgenPipeline_view', kind: STORAGE_KINDS.state, label: 'Pipeline panel view (folded sections)' },
+        { key: 'procgenPipeline_workingLibrary', kind: STORAGE_KINDS.user, label: 'Working region library (captured regions)' },
+        { key: 'procgenPipeline_presets', kind: STORAGE_KINDS.user, label: 'Your saved pipeline presets' },
+    ],
 };
 
 /**

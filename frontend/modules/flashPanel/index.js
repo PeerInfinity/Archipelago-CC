@@ -18,6 +18,7 @@ import {
 import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
+import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 
 let moduleDispatcher = null;
 let _moduleEventBus = null;
@@ -54,6 +55,9 @@ export const moduleInfo = {
   category: 'Embedding and Windows',
   description: 'Plays the preset\'s Flash game (Seedling, Robot Wants Kitty), turning pickups into checks and delivering items.',
   requires: ['stateManager'],
+  storage: [
+    { pattern: '/shrumsave$', kind: STORAGE_KINDS.user, label: 'Seedling save (a Ruffle SharedObject; the key starts with the host and SWF path)' },
+  ],
 };
 
 /**
