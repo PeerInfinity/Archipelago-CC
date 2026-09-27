@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { TEST_FRONTEND_URL } from '../../scripts/test/testServer.js';
+import { TEST_FLAVOUR, TEST_FRONTEND_URL, flavourUrlParam } from '../../scripts/test/testServer.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -28,8 +28,9 @@ test.describe('Application End-to-End Tests', () => {
   const testBatch = process.env.TEST_BATCH; // Optional roster subset (see modules/tests/testBatches.js)
   const testIds = process.env.TEST_IDS; // Optional explicit id list (--test=), for solo flake triage
 
-  // Build URL with all optional parameters
-  let APP_URL = `${TEST_FRONTEND_URL}?mode=${testMode}`;
+  // Build URL with all optional parameters. The flavour (`--bundled`) is part
+  // of the base: it selects which boot the whole run measures.
+  let APP_URL = `${TEST_FRONTEND_URL}?mode=${testMode}${flavourUrlParam(TEST_FLAVOUR)}`;
   if (testGame) {
     APP_URL += `&game=${encodeURIComponent(testGame)}`;
   }
@@ -81,6 +82,7 @@ test.describe('Application End-to-End Tests', () => {
     console.log(`PW DEBUG: Navigating to application with parameters:`);
     console.log(`  - machine: ${loadSnapshot()}`);
     console.log(`  - mode: ${testMode}`);
+    console.log(`  - flavour: ${TEST_FLAVOUR}`);
     if (testGame) {
       console.log(`  - game: ${testGame}`);
     }
@@ -231,7 +233,9 @@ test.describe('Application End-to-End Tests', () => {
       // explicit id list is stamped for the third time for the same reason,
       // and it is the sharpest case: a one-test solo run left unstamped would
       // become the baseline for the next full run and report sixty tests as
-      // ADDED — and the solo run itself as sixty REMOVED.
+      // ADDED — and the solo run itself as sixty REMOVED. The flavour is the
+      // fourth: bundled and unbundled boot differently (trap 1426), so a
+      // bundled red diffed against an unbundled green is not a regression.
       fs.writeFileSync(
         outputFile,
         JSON.stringify(
@@ -239,6 +243,7 @@ test.describe('Application End-to-End Tests', () => {
             mode: testMode,
             batch: testBatch || null,
             testIds: testIds || null,
+            flavour: TEST_FLAVOUR,
             ...results,
           },
           null,

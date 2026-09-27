@@ -16,7 +16,9 @@ import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DEFAULT_TEST_PORT, resolveTestPort } from './testServer.js';
+import {
+  DEFAULT_TEST_PORT, flavourUrlParam, resolveTestFlavour, resolveTestPort,
+} from './testServer.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', '..');
@@ -108,5 +110,22 @@ describe('the census: no entry point spells the port any more', () => {
     const offending = readFileSync(path.join(ROOT, rel), 'utf8').split('\n')
       .map((line, i) => [i + 1, line]).filter(([, line]) => LITERAL.test(line));
     expect(offending, `${rel} — the port comes from TEST_PORT (scripts/test/testServer.js / test_utils.test_port)`).toEqual([]);
+  });
+});
+
+describe('resolveTestFlavour', () => {
+  it('unset, empty or 0 is the unbundled boot (every existing invocation)', () => {
+    expect(resolveTestFlavour({})).toBe('unbundled');
+    expect(resolveTestFlavour({ TEST_BUNDLED: '' })).toBe('unbundled');
+    expect(resolveTestFlavour({ TEST_BUNDLED: '0' })).toBe('unbundled');
+  });
+  it('1 is the bundled boot, and the page URL says so', () => {
+    expect(resolveTestFlavour({ TEST_BUNDLED: '1' })).toBe('bundled');
+    expect(flavourUrlParam('bundled')).toBe('&bundled=true');
+    expect(flavourUrlParam('unbundled')).toBe('');
+  });
+  it('anything else is refused by name, never read as a default', () => {
+    expect(() => resolveTestFlavour({ TEST_BUNDLED: 'yes' })).toThrow(/TEST_BUNDLED must be 1 or 0/);
+    expect(() => flavourUrlParam('dev')).toThrow(/unknown flavour "dev"/);
   });
 });

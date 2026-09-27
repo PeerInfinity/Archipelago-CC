@@ -63,7 +63,7 @@
 
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, linkSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { homedir, hostname } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -230,19 +230,54 @@ export function takeBoxLock({ name, kind, repo = BOX_LOCK_REPO, waitSec = 0,
         /* ⛓ …and BEFORE anything is written, so a signal from here on releases. */
         attachSignalRelease();
         if (cur) {
-            /* ── rule 2: a dead holder is reclaimed, LOUDLY ── */
+            /**
+             * ── rule 2: a dead holder is reclaimed, LOUDLY ── by DELETING its
+             * file and then racing for an ATOMIC create like any other taker.
+             * The file is removed only if it is still the dead holder's (token
+             * re-read): a second reclaimer that lost the race must not delete
+             * the winner's fresh lock.
+             */
             say(`# box lock: RECLAIMED a stale lock from ${cur.name} (pid ${cur.pid}, `
                 + `${cur.kind}, since ${cur.since}) — that pid no longer exists`);
+            const still = readLock();
+            if (still && still.token === cur.token) rmSync(BOX_LOCK_FILE, { force: true });
         }
         const token = createHash('md5')
             .update(`${process.pid}:${name}:${process.hrtime.bigint()}`).digest('hex');
         const frozen = treeState({ repo });
         const entry = { token, pid: process.pid, name, kind, repo,
             hostname: hostname(), since: new Date().toISOString(), frozen };
-        writeFileSync(BOX_LOCK_FILE, `${JSON.stringify(entry, null, 2)}\n`);
-        /** ⛔ RE-READ: two takers that raced both wrote; only one is on disk. */
+        /**
+         * ⛔⛔ THE TAKE IS AN ATOMIC CREATE (trap 1435). It used to be
+         * `writeFileSync` then a re-read "did I win?" — and two takers that both
+         * read "free" each wrote and each re-read THEIR OWN token before the
+         * other wrote, so both won. Measured 2026-09-26: two `npm test` runs
+         * queued behind one holder both logged TAKEN and ran at once.
+         * Now the full entry is written to a private file and `link`ed into
+         * place: link(2) fails with EEXIST when the lock exists, so exactly one
+         * taker creates it, and a reader never sees a half-written file.
+         */
+        const mine = `${BOX_LOCK_FILE}.${process.pid}.${token}.tmp`;
+        writeFileSync(mine, `${JSON.stringify(entry, null, 2)}\n`);
+        let created = false;
+        try {
+            linkSync(mine, BOX_LOCK_FILE);
+            created = true;
+        } catch (e) {
+            if (e.code !== 'EEXIST') throw e;
+        } finally {
+            rmSync(mine, { force: true });
+        }
+        if (!created) {
+            /* ⛓ lost the race: back to the top — queue behind the winner, or
+             *  refuse by name. Nothing is held, so a signal ends us (trap 1338). */
+            detachSignalRelease();
+            execFileSync('sleep', ['0.1']);
+            continue;
+        }
+        /** ⛓ Belt and braces: the file on disk must be OURS. */
         const won = readLock();
-        if (!won || won.token !== token) continue;
+        if (!won || won.token !== token) { detachSignalRelease(); continue; }
         HELD = entry;
         process.env[BOX_LOCK_TOKEN_ENV] = token;
         if (!quiet) {

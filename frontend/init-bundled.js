@@ -140,7 +140,9 @@ import * as bounceRegionEditorModule from './modules/bounceRegionEditor/index.js
 import * as playbackBotModule from './modules/playbackBot/index.js';
 
 // ============================================================================
-// STATIC TEST CASE IMPORTS - These get bundled and self-register on import
+// STATIC TEST CASE IMPORTS - These get bundled and self-register on import.
+// The SAME files, in the same order, as TEST_CASE_FILES in
+// modules/tests/testDiscovery.js (bundledTestCases.test.js fails on drift).
 // ============================================================================
 import './modules/tests/testCases/coreTests.js';
 import './modules/tests/testCases/locationPanelTests.js';
@@ -163,6 +165,20 @@ import './modules/tests/testCases/playbackBotTests.js';
 import './modules/tests/testCases/textAdventureWrapperTests.js';
 import './modules/tests/testCases/flashSubstrateTests.js';
 import './modules/tests/testCases/runnerDemoTests.js';
+import './modules/tests/testCases/runnerBlockModeTests.js';
+import './modules/tests/testCases/jtaSubstrateWrapperTests.js';
+import './modules/tests/testCases/omsiSubstrateWrapperTests.js';
+import './modules/tests/testCases/jtaBalanceTests.js';
+import './modules/tests/testCases/jtaDatasetTests.js';
+import './modules/tests/testCases/jtaScheduleTests.js';
+import './modules/tests/testCases/omsiScheduleTests.js';
+import './modules/tests/testCases/omsiUnlockTests.js';
+import './modules/tests/testCases/omsiRegionSplitTests.js';
+import './modules/tests/testCases/mazeConsumableTileTests.js';
+import './modules/tests/testCases/mazeBlockModeTests.js';
+import './modules/tests/testCases/seedlingAtlasMazeTests.js';
+import './modules/tests/testCases/taswBlockModeTests.js';
+import './modules/tests/testCases/apworldEditorTests.js';
 import './modules/tests/testCases/substrateRegistryPanelTests.js';
 import './modules/tests/testCases/quickLaunchTests.js';
 

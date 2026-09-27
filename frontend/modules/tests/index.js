@@ -118,10 +118,17 @@ export function register(registrationApi) {
         testLogic.shouldAutoStartTests()
       );
 
-      // Optionally, trigger a UI refresh if the panel might already be open
-      _moduleEventBus.publish('tests:listUpdated', {
-        tests: await testLogic.getTests(),
-      });
+      // Optionally, trigger a UI refresh if the panel might already be open.
+      // Init applies mode data (phase 6) BEFORE it initialises modules, so
+      // when applyLoadedState resolves before initialize() — bundled, where
+      // discovery is instant — there is no bus yet, and no panel to refresh
+      // either (it mounts later and reads the list itself). Publishing on the
+      // null bus threw "Cannot read properties of null (reading 'publish')".
+      if (_moduleEventBus) {
+        _moduleEventBus.publish('tests:listUpdated', {
+          tests: await testLogic.getTests(),
+        });
+      }
     },
   });
 

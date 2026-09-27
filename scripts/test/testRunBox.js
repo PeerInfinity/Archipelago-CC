@@ -45,8 +45,9 @@ export const CHILD_GRACE_SEC = 20;
 export const RESULTS_SUBDIR = join('test-results', 'in-app-tests');
 
 /** The lock's `name` for a run — what the NEXT taker's refusal prints. */
-export function runLockName({ mode, batch, testIds }) {
-  return `npm test ${mode}${batch ? ` batch=${batch}` : ''}${testIds ? ` test=${testIds}` : ''}`;
+export function runLockName({ mode, batch, testIds, flavour }) {
+  return `npm test ${mode}${flavour === 'bundled' ? ' bundled' : ''}`
+    + `${batch ? ` batch=${batch}` : ''}${testIds ? ` test=${testIds}` : ''}`;
 }
 
 /**

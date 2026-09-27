@@ -40,3 +40,31 @@ export const TEST_BASE_URL = `http://localhost:${TEST_PORT}`;
 export const TEST_FRONTEND_URL = `${TEST_BASE_URL}/frontend/`;
 /** The command that serves the repo root on TEST_PORT (what the remedies print). */
 export const SERVER_COMMAND = `python -m http.server ${TEST_PORT}`;
+
+/**
+ * The frontend FLAVOUR a run drives. `unbundled` (the default) loads the ES
+ * modules straight from the tree; `bundled` loads `frontend/dist/bundle.js`
+ * through `?bundled=true` — the flavour a deployed site serves first
+ * (frontend/index.html). They boot in a different order (bundled pre-imports
+ * every module and test case), which is exactly why a run must say which one
+ * it measured: trap 1426's overlapped rows existed only in the bundled one.
+ * Set by `npm test -- --bundled` through `TEST_BUNDLED=1`.
+ */
+export const TEST_FLAVOURS = Object.freeze(['unbundled', 'bundled']);
+
+export function resolveTestFlavour(env = process.env) {
+  const raw = env.TEST_BUNDLED;
+  if (raw === undefined || raw === '' || raw === '0') return 'unbundled';
+  if (raw === '1') return 'bundled';
+  throw new Error(`TEST_BUNDLED must be 1 or 0 (or unset), got ${JSON.stringify(raw)}`);
+}
+
+export const TEST_FLAVOUR = resolveTestFlavour();
+
+/** The page-URL parameter that selects a flavour (frontend/index.html reads it). */
+export function flavourUrlParam(flavour) {
+  if (!TEST_FLAVOURS.includes(flavour)) {
+    throw new Error(`unknown flavour ${JSON.stringify(flavour)} — one of ${TEST_FLAVOURS.join(', ')}`);
+  }
+  return flavour === 'bundled' ? '&bundled=true' : '';
+}

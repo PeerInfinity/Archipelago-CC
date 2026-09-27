@@ -23,7 +23,10 @@ function log(level, message, ...data) {
 }
 
 // List of test case files to import (this is the only manual part)
-const TEST_CASE_FILES = [
+// Exported for the bundled-list check (scripts/build/bundledTestCases.js):
+// init-bundled.js must import every one of these statically, or a bundled
+// run silently lacks their rows.
+export const TEST_CASE_FILES = [
   './testCases/coreTests.js',
   './testCases/locationPanelTests.js',
   './testCases/exitPanelTests.js',
