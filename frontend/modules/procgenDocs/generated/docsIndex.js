@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 22,
-        "headings": 859,
+        "headings": 862,
         "indexHeadings": 2,
-        "lines": 20187,
+        "lines": 19102,
         "pages": 4,
-        "words": 224520
+        "words": 218081
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -307,16 +307,20 @@ export const DOCS_INDEX = frz({
             "words": 809
         },
         {
-            "description": "How we drive the **real recompiled Seedling** with a scripted input tape and check a JavaScript model of its physics against what the game actually did — movement, collision, room transitions and A\\* pathing. This file is also the tracked record of the procgen arcs built on `watch.html`, § *The procgen ELEMENTS design* being the current one.",
+            "description": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md).",
             "file": "seedling-bot.md",
-            "h1": "The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`",
-            "headings": 33,
-            "lines": 1624,
+            "h1": "The Seedling Real-Game Bot",
+            "headings": 36,
+            "lines": 539,
             "links": [
-                "maze.md"
+                "architecture.md",
+                "flash.md",
+                "maze.md",
+                "seedling-bot-log.md",
+                "seedling-editor.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 15616
+            "words": 9177
         },
         {
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",

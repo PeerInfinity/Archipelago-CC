@@ -463,9 +463,9 @@ export const DOCS_INDEX = Object.freeze([
     },
     {
         "path": "docs/json/developer/procgen/seedling-bot.md",
-        "title": "The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`",
+        "title": "The Seedling Real-Game Bot",
         "section": "developer/procgen",
-        "summary": "How we drive the real recompiled Seedling with a scripted input tape and check a JavaScript model of its physics against what the game actually did — movement, collision, room transitions and A\\*…"
+        "summary": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological…"
     },
     {
         "path": "docs/json/developer/procgen/seedling-editor.md",

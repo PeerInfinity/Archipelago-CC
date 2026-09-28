@@ -197,22 +197,25 @@ describe('the corpus census — printed, then pinned', () => {
          *              seedling-bot-log.md: the README row for the new file
          *              and its pointer back, and one same-doc link that now
          *              crosses files (`doc` 219 → 222, `same-doc` 15 → 14).
+         *   293 → 300  seedling-bot.md rewritten to present state; it now
+         *              points at the log, architecture, maze, flash and the
+         *              Seedling editor (`doc` 222 → 229).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
             'same-doc': 14,
-            doc: 222,
+            doc: 229,
             external: 22,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(293);
+        expect(CORPUS.length).toBe(300);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(222);
+        expect(docs).toHaveLength(229);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

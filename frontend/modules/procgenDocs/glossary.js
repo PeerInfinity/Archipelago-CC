@@ -2272,7 +2272,7 @@ export const TERMS = Object.freeze([
             + 'the staging block the page\'s SOLVE and MANUAL arms both boot from). ⛔ The '
             + 'watch page NEVER writes `fixtures/` — a generated or directed level lives in '
             + 'the tab, the save box and the Download button.',
-        where: [{ label: 'seedling-bot.md § The tape', doc: `${SEEDLING}#the-tape` }],
+        where: [{ label: 'seedling-bot.md § The tape format', doc: `${SEEDLING}#the-tape-format` }],
         seeAlso: ['seedling', 'seedling-differential', 'arm', 'lab-page'],
     }),
     t({
@@ -2292,7 +2292,7 @@ export const TERMS = Object.freeze([
             + 'live world does not already hold — a persistence list that differs by one '
             + 'flag either clears one the world never earned or takes back one it did, and '
             + 'both are rebuilds in disguise. It is REFUSED BY NAME, never silently rebuilt.',
-        where: [{ label: 'seedling-bot.md § The tape', doc: `${SEEDLING}#the-tape` }],
+        where: [{ label: 'seedling-bot.md § The tape format', doc: `${SEEDLING}#the-tape-format` }],
         seeAlso: ['tape', 'seedling', 'arm'],
     }),
     t({
