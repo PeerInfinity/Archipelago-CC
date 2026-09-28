@@ -211,7 +211,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 270,
         "browser": 84,
-        "cited": 111,
+        "cited": 113,
         "files": 281,
         "lineStyle": 11,
         "withDocblock": 281,
@@ -240,7 +240,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "attribute",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -401,7 +401,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "batch",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -501,7 +501,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -619,7 +619,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -708,7 +708,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -855,7 +855,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -907,7 +907,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -966,7 +966,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -1050,7 +1050,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -1105,7 +1105,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -1724,7 +1724,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [
                 "docs/json/developer/procgen/architecture.md",
                 "docs/json/developer/procgen/demos.md",
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -1773,7 +1773,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -1815,7 +1815,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -1896,7 +1896,7 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/maze-lab.md",
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -1966,7 +1966,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -2389,6 +2389,7 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -2601,6 +2602,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -2711,7 +2713,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -2746,7 +2748,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -2781,7 +2783,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -2816,7 +2818,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -2891,7 +2893,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -3050,7 +3052,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -3097,7 +3099,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -3174,6 +3176,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -3209,7 +3212,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -3476,7 +3479,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -3796,6 +3799,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -3890,6 +3894,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -3984,7 +3989,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "json",
@@ -4502,7 +4509,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "derive",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -4624,7 +4631,7 @@ export const INSTRUMENTS = frz({
             "category": "dump",
             "citedBy": [
                 "docs/json/developer/procgen/gotchas.md",
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -4831,7 +4838,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "export",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -4990,7 +4997,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "find",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -5091,7 +5098,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "no prefix",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -5159,7 +5166,7 @@ export const INSTRUMENTS = frz({
                 "docs/json/developer/procgen/architecture.md",
                 "docs/json/developer/procgen/maze-lab.md",
                 "docs/json/developer/procgen/maze.md",
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -5297,7 +5304,7 @@ export const INSTRUMENTS = frz({
                 "docs/json/developer/procgen/README.md",
                 "docs/json/developer/procgen/architecture.md",
                 "docs/json/developer/procgen/maze-lab.md",
-                "docs/json/developer/procgen/seedling-bot.md",
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/substrate-registry.md"
             ],
             "docblockStyle": "block",
@@ -5346,7 +5353,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [
                 "docs/json/developer/procgen/architecture.md",
                 "docs/json/developer/procgen/maze.md",
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -5540,7 +5547,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "harvest",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -5604,7 +5611,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "lint",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -6029,6 +6036,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "plan",
             "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -6074,7 +6082,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "plan",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -6907,7 +6915,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "plan",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -7130,7 +7138,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -7173,7 +7181,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -7422,7 +7430,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -7563,7 +7571,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -7587,7 +7595,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -7814,7 +7822,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -7957,7 +7965,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -8218,7 +8226,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -8564,7 +8572,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -8706,7 +8714,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "probe",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -8798,7 +8806,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "reach",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -8858,7 +8866,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "recon",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -8933,7 +8941,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "recon",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -9205,7 +9213,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "record",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "body-file",
@@ -9635,7 +9645,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "rerecord",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -9837,7 +9847,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "seedling",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -9960,7 +9970,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "solve",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -10193,7 +10203,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "solve",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -10248,7 +10258,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "solve",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -10302,7 +10312,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "standing",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -10397,7 +10407,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "survey",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -10655,7 +10665,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "sweep",
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -10717,7 +10727,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [
                 "docs/json/developer/procgen/architecture.md",
                 "docs/json/developer/procgen/maze.md",
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -10850,13 +10860,13 @@ export const INSTRUMENTS = frz({
     "unresolvedByDesign": [
         {
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "name": "plan-seedling-r7-act2.mjs"
         },
         {
             "citedBy": [
-                "docs/json/developer/procgen/seedling-bot.md"
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "name": "plan-seedling-segment.mjs"
         }

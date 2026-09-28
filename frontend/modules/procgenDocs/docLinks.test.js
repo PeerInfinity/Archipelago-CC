@@ -193,22 +193,26 @@ describe('the corpus census — printed, then pinned', () => {
          *              maze-lab.md, gotchas.md rewritten — the new documents
          *              link to each other and back (`doc` 167 → 219,
          *              `same-doc` 13 → 15).
+         *   291 → 293  the build log split out of seedling-bot.md into
+         *              seedling-bot-log.md: the README row for the new file
+         *              and its pointer back, and one same-doc link that now
+         *              crosses files (`doc` 219 → 222, `same-doc` 15 → 14).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
-            'same-doc': 15,
-            doc: 219,
+            'same-doc': 14,
+            doc: 222,
             external: 22,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(291);
+        expect(CORPUS.length).toBe(293);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(219);
+        expect(docs).toHaveLength(222);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

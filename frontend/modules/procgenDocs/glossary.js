@@ -136,6 +136,7 @@ const ARCH = 'docs/json/developer/procgen/architecture.md';
 const GOTCHAS = 'docs/json/developer/procgen/gotchas.md';
 const MAZE = 'docs/json/developer/procgen/maze.md';
 const SEEDLING = 'docs/json/developer/procgen/seedling-bot.md';
+const SEEDLING_LOG = 'docs/json/developer/procgen/seedling-bot-log.md';
 const REGISTRY = 'docs/json/developer/procgen/substrate-registry.md';
 const SPHERE = 'docs/json/developer/procgen/sphere-growth.md';
 const STEPPED = 'docs/json/developer/procgen/stepped-pipeline.md';
@@ -156,9 +157,9 @@ const TWO_PASS = `${ARCH}#level-generation-two-passes-over-one-loop-core`;
 const PASS1 = `${ARCH}#pass-1--the-skeleton-in-draw-order`;
 const PASS2 = `${ARCH}#pass-2--the-keep-or-revert-loop-site-typed`;
 const LEDGER_SEC = `${ARCH}#the-ledger-the-step-through-and-the-instruments`;
-const ELEMENTS_SEC = `${SEEDLING}#the-procgen-elements-design--pass-1--elements--connectors-an-intra-level-area-graph-pass-2-site-typed-designed-2026-08-15-arcs-1-2-and-3-are-closed--arcs-12-on-the-maze-see-mazemdmazemd-arc-3--seedling-closed-2026-08-18-over-fourteen-slices-and--arc-3-is-closed-at-the-end-of-this--is-its-summary-arc-4--the-chain--ask-first-arc-5--shortcuts--density--arenas`;
-const URL_TABLE = `${SEEDLING}#the-url-parameters-whole-and-current`;
-const STANDING_LAWS = `${SEEDLING}#the-standing-laws`;
+const ELEMENTS_SEC = `${SEEDLING_LOG}#the-procgen-elements-design--pass-1--elements--connectors-an-intra-level-area-graph-pass-2-site-typed-designed-2026-08-15-arcs-1-2-and-3-are-closed--arcs-12-on-the-maze-see-mazemdmazemd-arc-3--seedling-closed-2026-08-18-over-fourteen-slices-and--arc-3-is-closed-at-the-end-of-this--is-its-summary-arc-4--the-chain--ask-first-arc-5--shortcuts--density--arenas`;
+const URL_TABLE = `${SEEDLING_LOG}#the-url-parameters-whole-and-current`;
+const STANDING_LAWS = `${SEEDLING_LOG}#the-standing-laws`;
 const MAZE_AREAS = `${MAZE}#the-area-graph`;
 const MAZE_ELEMENT = `${MAZE}#the-first-element`;
 const MAZE_LAB = `${MAZE}#the-maze-lab-page-frontendmodulesmazeroomlabhtml`;
@@ -604,7 +605,7 @@ export const TERMS = Object.freeze([
             + '`guard;len=2` are different runs even when `len` resolves to 2.',
         where: [
             { label: 'gotchas.md § "The `empty` pairs are UNCHANGED" is a gate only for a change that spends no draw', doc: `${GOTCHAS}#the-empty-pairs-are-unchanged-is-a-gate-only-for-a-change-that-spends-no-draw` },
-            { label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE },
+            { label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE },
         ],
         seeAlso: ['rng-stream', 'byte-inert', 'control-arm', 'counting-spy'],
     }),
@@ -619,7 +620,7 @@ export const TERMS = Object.freeze([
             + '⚠ **A ladder RESETS when its identity changes** — a new seed, a new biome, or '
             + 'any [directive](#directive) — and the page says so BEFORE the press. Each '
             + 'region in a top-down build realises from its own sub-seed.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['rng-stream', 'biome', 'skeleton', 'determinism'],
     }),
     t({
@@ -1025,7 +1026,7 @@ export const TERMS = Object.freeze([
             + 'and omitting it spends one.',
         where: [
             { label: 'architecture.md § Pass 1', doc: PASS1 },
-            { label: 'seedling-bot.md § The procgen ELEMENTS design', doc: SEEDLING },
+            { label: 'seedling-bot-log.md § The procgen ELEMENTS design', doc: SEEDLING_LOG },
         ],
         seeAlso: ['skeleton', 'skeleton-kind', 'room-fill', 'draw'],
     }),
@@ -1049,7 +1050,7 @@ export const TERMS = Object.freeze([
             + 'room and **~50-82%** of the record\'s bytes on a carved one.',
         where: [
             { label: 'architecture.md § Pass 1', doc: PASS1 },
-            { label: 'seedling-bot.md § The procgen ELEMENTS design', doc: SEEDLING },
+            { label: 'seedling-bot-log.md § The procgen ELEMENTS design', doc: SEEDLING_LOG },
         ],
         seeAlso: ['room-size', 'level', 'skeleton', 'graded-refusal'],
     }),
@@ -1070,7 +1071,7 @@ export const TERMS = Object.freeze([
         where: [
             { label: 'the REFERENCE page § Skeleton kinds — codec vs EFFECTIVE defaults per substrate, generated', code: REFERENCE },
             { label: 'maze.md § Kind parameters', doc: `${MAZE}#kind-parameters` },
-            { label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE },
+            { label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE },
         ],
         seeAlso: ['the-carve', 'chambers', 'biome', 'skeleton'],
     }),
@@ -1162,7 +1163,7 @@ export const TERMS = Object.freeze([
         where: [
             { label: 'the REFERENCE page § Elements — every head, its `needs` and its parameters, generated', code: REFERENCE },
             { label: 'architecture.md § Pass 1', doc: PASS1 },
-            { label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE },
+            { label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE },
         ],
         seeAlso: ['element-head', 'guard', 'kill-gate', 'block-pocket', 'certification'],
     }),
@@ -1444,7 +1445,7 @@ export const TERMS = Object.freeze([
             + 'legality rule** — nothing is refused for standing off one.',
         where: [
             { label: 'architecture.md § Pass 2', doc: PASS2 },
-            { label: 'seedling-bot.md § arc 3, slice 1', doc: `${SEEDLING}#arc-3-slice-1--arrow-lane-out-and-pass-2-learns-sites-2026-08-16` },
+            { label: 'seedling-bot-log.md § arc 3, slice 1', doc: `${SEEDLING_LOG}#arc-3-slice-1--arrow-lane-out-and-pass-2-learns-sites-2026-08-16` },
             { label: 'procgenCore/sites.js', code: 'frontend/modules/procgenCore/sites.js' },
         ],
         seeAlso: ['chamber', 'corridor', 'anchor', 'byte-inert', 'overlay-layer'],
@@ -1761,7 +1762,7 @@ export const TERMS = Object.freeze([
         where: [
             { label: 'the REFERENCE page § The refusal vocabulary — every name a run can refuse by, generated', code: REFERENCE },
             { label: 'maze.md § The area graph', doc: MAZE_AREAS },
-            { label: 'seedling-bot.md § The standing laws', doc: STANDING_LAWS },
+            { label: 'seedling-bot-log.md § The standing laws', doc: STANDING_LAWS },
         ],
         seeAlso: ['certification', 'require-directive', 'grade', 'realisation'],
     }),
@@ -1779,7 +1780,7 @@ export const TERMS = Object.freeze([
             + '`instance` (the derived label, `wall-segment(ori=v,len=4)`). ⚠ `params` means '
             + 'the SCHEMA ARRAY on a base and the VALUES OBJECT on an instance.',
         where: [
-            { label: 'the REFERENCE page § Templates — every roster row with its parameter domains, generated', code: REFERENCE },{ label: 'seedling-bot.md § What the arm is now', doc: `${SEEDLING}#what-the-arm-is-now` }],
+            { label: 'the REFERENCE page § Templates — every roster row with its parameter domains, generated', code: REFERENCE },{ label: 'seedling-bot-log.md § What the arm is now', doc: `${SEEDLING_LOG}#what-the-arm-is-now` }],
         seeAlso: ['instantiation', 'family', 'palette', 'roster', 'anchor'],
     }),
     t({
@@ -1795,7 +1796,7 @@ export const TERMS = Object.freeze([
             + 'instantiations are walked through `assertPalette` at module load.** ⛓ '
             + '`instantiateKept` rebuilds one from `{template, params}` and passes NO rng, so a '
             + 'dropped parameter REFUSES rather than silently becoming the default.',
-        where: [{ label: 'seedling-bot.md § The standing laws', doc: STANDING_LAWS }],
+        where: [{ label: 'seedling-bot-log.md § The standing laws', doc: STANDING_LAWS }],
         seeAlso: ['template', 'roster', 'anchor', 'graded-refusal'],
     }),
     t({
@@ -1824,7 +1825,7 @@ export const TERMS = Object.freeze([
             + '[biome](#biome) palettes now differ only in `items`. `procgenPalette` is also '
             + 'the single home of the [discharge](#discharge) test that the batch, both sweeps '
             + 'and the page all ask.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['biome', 'roster', 'template', 'discharge'],
     }),
     t({
@@ -1841,7 +1842,7 @@ export const TERMS = Object.freeze([
             + '`measured` + `wouldNeed` VERBATIM and no input on them.',
         where: [
             { label: 'architecture.md § Pass 2', doc: PASS2 },
-            { label: 'seedling-bot.md § What the arm is now', doc: `${SEEDLING}#what-the-arm-is-now` },
+            { label: 'seedling-bot-log.md § What the arm is now', doc: `${SEEDLING_LOG}#what-the-arm-is-now` },
         ],
         seeAlso: ['template', 'family', 'restrict', 'palette'],
     }),
@@ -1855,7 +1856,7 @@ export const TERMS = Object.freeze([
             + 'SHAPE**, so the restriction is an ARGUMENT and the [loop core](#loop-core) is '
             + 'untouched. Spelled `?families=` / `?templates=` (comma lists): ABSENT is the '
             + 'whole roster, an EMPTY value REFUSES, and ⛔ **both present REFUSES**.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['roster', 'family', 'template', 'url-parameter'],
     }),
     t({
@@ -1870,7 +1871,7 @@ export const TERMS = Object.freeze([
             + '`?anchors=`, which is the domain sweep\'s enumeration mode. On the page, AT… '
             + 'arms a canvas click and the clicked TILE becomes the explicit anchor of ONE '
             + '[directed attempt](#directed-attempt).',
-        where: [{ label: 'seedling-bot.md § What the arm is now', doc: `${SEEDLING}#what-the-arm-is-now` }],
+        where: [{ label: 'seedling-bot-log.md § What the arm is now', doc: `${SEEDLING_LOG}#what-the-arm-is-now` }],
         seeAlso: ['anchor-search', 'directed-attempt', 'template', 'byte-inert'],
     }),
     t({
@@ -1885,7 +1886,7 @@ export const TERMS = Object.freeze([
             + 'because the first legal anchor SOLVES at 23 of 24 rows — a first-solve stop '
             + 'never walks to the discharging one. It bought placeability, not '
             + 'informativeness.',
-        where: [{ label: 'seedling-bot.md § The three findings worth carrying off the arc', doc: `${SEEDLING}#the-three-findings-worth-carrying-off-the-arc` }],
+        where: [{ label: 'seedling-bot-log.md § The three findings worth carrying off the arc', doc: `${SEEDLING_LOG}#the-three-findings-worth-carrying-off-the-arc` }],
         seeAlso: ['anchor', 'discharge', 'keep-or-revert'],
     }),
     t({
@@ -1916,7 +1917,7 @@ export const TERMS = Object.freeze([
             + '`?k=` consecutive failures the run reports SATURATED rather than pretending it '
             + 'met the target. ⛔ It says so by name — the four attempt outcomes are never '
             + 'blurred.',
-        where: [{ label: 'seedling-bot.md § The standing laws', doc: STANDING_LAWS }],
+        where: [{ label: 'seedling-bot-log.md § The standing laws', doc: STANDING_LAWS }],
         seeAlso: ['keep-or-revert', 'obstacle-target', 'graded-refusal'],
     }),
     t({
@@ -1932,7 +1933,7 @@ export const TERMS = Object.freeze([
             + 'ONLY**: `levelGenerator` refuses `obstacleTarget: 0` by name (*"there is no '
             + 'default that means unbounded"*), so the CLI\'s headless twin of a `count=0` '
             + 'URL is `--count=1`.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['keep-or-revert', 'saturation', 'obstacle', 'url-parameter'],
     }),
     t({
@@ -1958,7 +1959,7 @@ export const TERMS = Object.freeze([
             + '20x20), while [`fill=shell`](#room-fill) buys 15–18% of the record\'s cells '
             + 'and changes nothing else.',
         where: [
-            { label: 'seedling-bot.md § The procgen ELEMENTS design', doc: SEEDLING },
+            { label: 'seedling-bot-log.md § The procgen ELEMENTS design', doc: SEEDLING_LOG },
             { label: 'architecture.md § Pass 1', doc: PASS1 },
         ],
         seeAlso: ['obstacle-target', 'room-size', 'room-fill', 'chambers', 'element-head',
@@ -1976,7 +1977,7 @@ export const TERMS = Object.freeze([
             + 'loop keeps FIRST-SOLVED*. The readout says WHICH KIND of keep it was, and '
             + '`KEPT_KIND` has THREE members — `discharged` / `solved-only` / '
             + '`solved-no-verb` — because a wall has no verb to fall short of.',
-        where: [{ label: 'seedling-bot.md § What the arm is now', doc: `${SEEDLING}#what-the-arm-is-now` }],
+        where: [{ label: 'seedling-bot-log.md § What the arm is now', doc: `${SEEDLING_LOG}#what-the-arm-is-now` }],
         seeAlso: ['directive', 'discharge', 'anchor', 'payload'],
     }),
     t({
@@ -1992,7 +1993,7 @@ export const TERMS = Object.freeze([
             + 'channels: the CLI `--directed=` flag, the page\'s ATTEMPT / AT… buttons, and '
             + '`payload.directives`. ⛓ A level that was directed or edited has a FILE for its '
             + 'identity, not a URL — see [the payload](#payload).',
-        where: [{ label: 'seedling-bot.md § The URL parameters — the URL diet § follows it', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters — the URL diet § follows it', doc: URL_TABLE }],
         seeAlso: ['directed-attempt', 'payload', 'url-parameter', 'seed'],
     }),
     t({
@@ -2007,7 +2008,7 @@ export const TERMS = Object.freeze([
             + 'of reporting a shortfall that could not exist. ⛔ **ONE DISCHARGE TEST** — '
             + '`procgenPalette`\'s `CLEARER_STRATEGY` / `verbOf` / `dischargesVerb`, which the '
             + 'batch, both sweeps and the page all ask.',
-        where: [{ label: 'seedling-bot.md § The standing laws', doc: STANDING_LAWS }],
+        where: [{ label: 'seedling-bot-log.md § The standing laws', doc: STANDING_LAWS }],
         seeAlso: ['directed-attempt', 'keep-or-revert', 'lifted-claim', 'anchor-search'],
     }),
     t({
@@ -2025,7 +2026,7 @@ export const TERMS = Object.freeze([
             + '(following the CLI); **the maze shows nothing at all**, because there the graph '
             + 'IS the level\'s structure.',
         where: [
-            { label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE },
+            { label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE },
             { label: 'maze.md § The area graph', doc: MAZE_AREAS },
         ],
         seeAlso: ['grade', 'requirements-differential', 'element-head', 'graded-refusal', 'symbol'],
@@ -2119,7 +2120,7 @@ export const TERMS = Object.freeze([
             + 'without spending a solve — and the two Seedling palettes now differ ONLY in '
             + 'their `items`. ⛔ Do not confuse with a [skeleton kind](#skeleton-kind), even '
             + 'though the kinds ARE the maze\'s own biome names.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['palette', 'boot-items', 'skeleton-kind', 'element-head'],
     }),
     t({
@@ -2133,7 +2134,7 @@ export const TERMS = Object.freeze([
             + 'they are what a [`?require=`](#require-directive) directive is checked against '
             + 'BEFORE a room exists — a pre-sword boot does not grant `hasSword`, so the '
             + 'directive is refused by name (`the-biome-lacks-the-item`) with exit 6.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['biome', 'element-head', 'require-directive', 'arm'],
     }),
     t({
@@ -2219,7 +2220,7 @@ export const TERMS = Object.freeze([
             + 'landing on one the law would refuse would be a draw spent to fail. ⚠ '
             + '`cost.candidates` on the payload carries only the LAST number; the three lines '
             + 'are the only place the whole funnel is visible.',
-        where: [{ label: 'seedling-bot.md § arc 3, slice 5b', doc: `${SEEDLING}#arc-3-slice-5b--the-demo-catalogue-and-the-four-intermediate-results` }],
+        where: [{ label: 'seedling-bot-log.md § arc 3, slice 5b', doc: `${SEEDLING_LOG}#arc-3-slice-5b--the-demo-catalogue-and-the-four-intermediate-results` }],
         seeAlso: ['on-connector-element', 'paintable', 'ledger', 'draw'],
     }),
     t({
@@ -2321,7 +2322,7 @@ export const TERMS = Object.freeze([
             + '**solver** bot. R9 is next. ⛓ A [certification](#certification) '
             + '[solver](#solver) capability landed OUTSIDE the rung during arc 3 (nested '
             + 'openers, depth 2), which R9 inherits along with three named residues.',
-        where: [{ label: 'seedling-bot.md § R8: the live solver bot, as built', doc: `${SEEDLING}#r8-the-live-solver-bot-as-built-closed-2026-08-11` }],
+        where: [{ label: 'seedling-bot-log.md § R8: the live solver bot, as built', doc: `${SEEDLING_LOG}#r8-the-live-solver-bot-as-built-closed-2026-08-11` }],
         seeAlso: ['seedling', 'solver', 'certification'],
     }),
     t({
@@ -2339,7 +2340,7 @@ export const TERMS = Object.freeze([
             + 'at follows you between modes. The GENERATE arm can hand its level to the other '
             + 'two in memory and in place, and to [EDIT](#edit-arm) the same way — *"open in '
             + 'editor"*, which is the one thing a URL cannot carry.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['lab-page', 'boot-items', 'tape', 'url-parameter', 'edit-arm'],
     }),
     t({
@@ -2355,7 +2356,7 @@ export const TERMS = Object.freeze([
             + '0 rather than spelt `run=0`. ⚠ **Not the same thing as the '
             + '[phase ladder](#phase-ladder)**, which steps pass 1 and is a read-only replay; '
             + 'the phase ladder hands over to this one at the last pass-1 row.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['phase-ladder', 'keep-or-revert', 'obstacle-target', 'url-parameter'],
     }),
     /* ══════════ THE EDITOR — `?source=edit` AND WHAT IT HOLDS ═══════
@@ -2574,7 +2575,7 @@ export const TERMS = Object.freeze([
             + 'being indistinguishable from "your browser did not re-fetch".',
         where: [
             { label: 'maze.md § The maze lab page', doc: MAZE_LAB },
-            { label: 'seedling-bot.md § The editor arc — `watch.html` becomes the lab page', doc: `${SEEDLING}#the-editor-arc--watchhtml-becomes-the-lab-page-tooling-closed-2026-08-12` },
+            { label: 'seedling-bot-log.md § The editor arc — `watch.html` becomes the lab page', doc: `${SEEDLING_LOG}#the-editor-arc--watchhtml-becomes-the-lab-page-tooling-closed-2026-08-12` },
         ],
         seeAlso: ['maze-lab', 'readout', 'arm', 'github-pages', 'demo-catalogue'],
     }),
@@ -2663,7 +2664,7 @@ export const TERMS = Object.freeze([
             + 'regenerates. A demo catalogue entry names the fact lines to tick and the '
             + '[browser row](#browser-row) really ticks them before it asserts, so an entry '
             + 'naming a fact id the phase did not record FAILS.',
-        where: [{ label: 'seedling-bot.md § arc 3, slice 5b', doc: `${SEEDLING}#arc-3-slice-5b--the-demo-catalogue-and-the-four-intermediate-results` }],
+        where: [{ label: 'seedling-bot-log.md § arc 3, slice 5b', doc: `${SEEDLING_LOG}#arc-3-slice-5b--the-demo-catalogue-and-the-four-intermediate-results` }],
         seeAlso: ['paintable', 'view-setting', 'phase-ladder', 'browser-row'],
     }),
     t({
@@ -2737,8 +2738,8 @@ export const TERMS = Object.freeze([
             + 'are NOT parameters.',
         where: [
             { label: 'the REFERENCE page § The URL grammar — every parameter of both lab pages, generated', code: REFERENCE },
-            { label: 'seedling-bot.md § The URL parameters, whole and current', doc: URL_TABLE },
-            { label: 'seedling-bot.md § The URL parameters — the URL diet § follows it', doc: URL_TABLE },
+            { label: 'seedling-bot-log.md § The URL parameters, whole and current', doc: URL_TABLE },
+            { label: 'seedling-bot-log.md § The URL parameters — the URL diet § follows it', doc: URL_TABLE },
         ],
         seeAlso: ['view-setting', 'payload', 'seed', 'demo-catalogue'],
     }),
@@ -2753,7 +2754,7 @@ export const TERMS = Object.freeze([
             + '[URL parameter](#url-parameter)**: they re-DRAW, they never regenerate, they do '
             + 'not touch the ladder, and none is written to the bar — a phase index in a link '
             + 'would name a PICTURE rather than a run, and a run is what a link is for.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['url-parameter', 'phase-ladder', 'overlay-layer', 'fact-line'],
     }),
     t({
@@ -2769,7 +2770,7 @@ export const TERMS = Object.freeze([
             + 'says so where it states the identity — *"⚠ the URL is NOT a reproduction of '
             + 'this construction — it names the LADDER alone; the PAYLOAD is"*. `?gen=PATH` is '
             + 'a determinism check across node and the browser, not a picture of a file.',
-        where: [{ label: 'seedling-bot.md § The URL parameters — the URL diet § follows it', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters — the URL diet § follows it', doc: URL_TABLE }],
         seeAlso: ['url-parameter', 'directive', 'determinism', 'preset-sidecars'],
     }),
     t({
@@ -2846,7 +2847,7 @@ export const TERMS = Object.freeze([
             + 'recorded, so nothing it does can reach a [tape](#tape) or a claim about one. '
             + '⚠ Not to be confused with a [browser row](#browser-row)\'s wall-clock cost — a '
             + 'wasm differential leg runs at ~0.5 frames/sec whatever this says.',
-        where: [{ label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE }],
+        where: [{ label: 'seedling-bot-log.md § The URL parameters', doc: URL_TABLE }],
         seeAlso: ['url-parameter', 'view-setting', 'tick', 'tape'],
     }),
     t({
@@ -3096,7 +3097,7 @@ export const TERMS = Object.freeze([
             + 'to make a number look better.',
         where: [
             { label: 'architecture.md § The ledger, the step-through and the instruments', doc: LEDGER_SEC },
-            { label: 'seedling-bot.md § slice 6 — the yield table and the connectivity pre-check', doc: `${SEEDLING}#slice-6--the-yield-table-and-the-connectivity-pre-check` },
+            { label: 'seedling-bot-log.md § slice 6 — the yield table and the connectivity pre-check', doc: `${SEEDLING_LOG}#slice-6--the-yield-table-and-the-connectivity-pre-check` },
         ],
         seeAlso: ['census', 'sweep', 'chambers', 'area-graph'],
     }),

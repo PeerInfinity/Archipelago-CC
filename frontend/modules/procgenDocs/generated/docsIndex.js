@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 21,
-        "headings": 858,
+        "docs": 22,
+        "headings": 859,
         "indexHeadings": 2,
-        "lines": 20181,
+        "lines": 20187,
         "pages": 4,
-        "words": 224422
+        "words": 224520
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
@@ -310,15 +310,28 @@ export const DOCS_INDEX = frz({
             "description": "How we drive the **real recompiled Seedling** with a scripted input tape and check a JavaScript model of its physics against what the game actually did — movement, collision, room transitions and A\\* pathing. This file is also the tracked record of the procgen arcs built on `watch.html`, § *The procgen ELEMENTS design* being the current one.",
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`",
-            "headings": 519,
-            "lines": 16620,
+            "headings": 33,
+            "lines": 1624,
             "links": [
-                "architecture.md",
-                "demos.md",
                 "maze.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 168379
+            "words": 15616
+        },
+        {
+            "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
+            "file": "seedling-bot-log.md",
+            "h1": "Seedling Bot and Procgen Arcs: the Build Log",
+            "headings": 487,
+            "lines": 15002,
+            "links": [
+                "architecture.md",
+                "demos.md",
+                "maze.md",
+                "seedling-bot.md"
+            ],
+            "path": "docs/json/developer/procgen/seedling-bot-log.md",
+            "words": 152861
         },
         {
             "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",

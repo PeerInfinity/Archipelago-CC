@@ -32,7 +32,7 @@ import { join } from 'node:path';
 import { REPO } from './lib.mjs';
 
 /** The document this region lives in. */
-export const CAMPAIGN_DOC = 'docs/json/developer/procgen/seedling-bot.md';
+export const CAMPAIGN_DOC = 'docs/json/developer/procgen/seedling-bot-log.md';
 
 const MODULE = join(REPO, 'frontend/modules/seedlingDemo');
 const TAPES = join(MODULE, 'fixtures/tapes');

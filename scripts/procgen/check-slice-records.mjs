@@ -128,7 +128,7 @@ import { join } from 'node:path';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import {
-    DOCS_INDEX, LADDER_FROZEN_AT, QUEUE_DOC, REPO, TRACKED_DOC,
+    DOCS_INDEX, LADDER_FROZEN_AT, QUEUE_DOC, REPO, TRACKED_DOC, TRACKED_DOC_HISTORY,
     deriveFromGit, memoryDir, parseSection, shallowRefusal,
 } from './sliceRecords.js';
 import { trapFiles, trapsCitedIn } from './sliceTraps.js';
@@ -256,7 +256,7 @@ const queueAt = (id) => queueLines.findIndex((l) => idRe(id).test(l) && CLOSE_RE
 
 /** ⛓ The heading's introducing commit and ITS date, measured once per slice. */
 for (const s of slices) {
-    const introduced = git(['log', '--format=%h', '-S', `### R9 slice ${s.id}:`, '--', TRACKED_DOC]);
+    const introduced = git(['log', '--format=%h', '-S', `### R9 slice ${s.id}:`, '--', ...TRACKED_DOC_HISTORY]);
     s.sha = introduced ? introduced.split('\n').filter(Boolean).pop() ?? null : null;
     s.at = queueAt(s.id);
     s.when = s.sha ? Number(git(['log', '-1', '--format=%ct', s.sha])) : null;

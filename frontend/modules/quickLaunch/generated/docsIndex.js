@@ -456,6 +456,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Runner (substrate id runner, in frontend/modules/runnerDemo/) is an auto-runner platformer: the player always runs right. Each region is one level, a left-to-right strip from the entrance to pickups…"
     },
     {
+        "path": "docs/json/developer/procgen/seedling-bot-log.md",
+        "title": "Seedling Bot and Procgen Arcs: the Build Log",
+        "section": "developer/procgen",
+        "summary": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on watch.html — each slice as it was built, with its findings, decisions and handed-on…"
+    },
+    {
         "path": "docs/json/developer/procgen/seedling-bot.md",
         "title": "The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`",
         "section": "developer/procgen",
@@ -1320,6 +1326,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/pipeline-presets.md",
             "docs/json/developer/procgen/playback-and-debugging.md",
             "docs/json/developer/procgen/runner.md",
+            "docs/json/developer/procgen/seedling-bot-log.md",
             "docs/json/developer/procgen/seedling-bot.md",
             "docs/json/developer/procgen/seedling-editor.md",
             "docs/json/developer/procgen/sphere-growth.md",

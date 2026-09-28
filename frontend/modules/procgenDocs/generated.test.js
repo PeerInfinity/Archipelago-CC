@@ -814,11 +814,11 @@ describe('the instruments index is one row per file in scripts/procgen', () => {
             'plan-seedling-segment.mjs',
         ]);
         for (const row of INSTRUMENTS.unresolvedByDesign) {
-            expect(row.citedBy).toEqual(['docs/json/developer/procgen/seedling-bot.md']);
+            expect(row.citedBy).toEqual(['docs/json/developer/procgen/seedling-bot-log.md']);
         }
         /* ⛓ asked of the DOCUMENT: each row really does carry both the name and
          * a marker, on one line, within the declared window. */
-        const doc = readFileSync(join(ROOT, DOC_DIR, 'seedling-bot.md'), 'utf8');
+        const doc = readFileSync(join(ROOT, DOC_DIR, 'seedling-bot-log.md'), 'utf8');
         for (const [name, marker] of [
             ['plan-seedling-segment.mjs', '(never written)'],
             ['plan-seedling-r7-act2.mjs', '(retired)'],
@@ -832,7 +832,7 @@ describe('the instruments index is one row per file in scripts/procgen', () => {
         const marked = readdirSync(join(ROOT, DOC_DIR)).filter((f) => f.endsWith('.md'))
             .filter((f) => /\((?:never written|retired)\)/
                 .test(readFileSync(join(ROOT, DOC_DIR, f), 'utf8')));
-        expect(marked).toEqual(['seedling-bot.md']);
+        expect(marked).toEqual(['seedling-bot-log.md']);
     });
 });
 

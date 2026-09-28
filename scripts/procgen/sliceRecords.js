@@ -89,7 +89,14 @@ export const REPO = join(HERE, '..', '..');
  * where it is present. ⛓ Untracked also means `rowInputKey`'s path-literal
  * rule (tracked files only) no longer keys any row on the queue's bytes.
  */
-export const TRACKED_DOC = 'docs/json/developer/procgen/seedling-bot.md';
+export const TRACKED_DOC = 'docs/json/developer/procgen/seedling-bot-log.md';
+/**
+ * The paths the tracked record has lived at, newest first. The build log was
+ * split out of `seedling-bot.md` by the procgen docs cleanup (2026-09-28), so a
+ * heading's INTRODUCING commit is found by searching both — `git log -S` over
+ * the new path alone would name the split commit for every slice.
+ */
+export const TRACKED_DOC_HISTORY = Object.freeze([TRACKED_DOC, 'docs/json/developer/procgen/seedling-bot.md']);
 export const QUEUE_DOC = 'NewDocs/plans/fable-to-opus-handoff-2026-07.md';
 /** ⛓ The artifact ⚖ 22 requires in the SAME commit as a procgen-doc edit. */
 export const DOCS_INDEX = 'frontend/modules/procgenDocs/generated/docsIndex.js';
@@ -551,7 +558,7 @@ export function deriveFromGit(parsed, { repo = REPO, head = null } = {}) {
         if (at >= 0) {
             tracked.line = at + 1;
             tracked.heading = docLines[at];
-            const introduced = git(repo, ['log', '--format=%h', '-S', headingPrefix, '--', TRACKED_DOC]);
+            const introduced = git(repo, ['log', '--format=%h', '-S', headingPrefix, '--', ...TRACKED_DOC_HISTORY]);
             const sha = ok(introduced) ? introduced.split('\n').filter(Boolean).pop() ?? null : null;
             tracked.commit = sha;
             if (sha) {

@@ -249,8 +249,9 @@ describe('⛓ the links the render emits', () => {
         //   253 → 254: seedling substrate S1's `flash.md` → `seedling-bot.md`
         //   § Seedling substrate S1; 254 → 237: the procgen docs cleanup's
         //   present-state rewrite of twelve docs (see docLinks.test.js); 237 → 291:
-        //   pass 3's split of architecture.md and maze.md into five documents.
-        expect(checked).toBe(291);
+        //   pass 3's split of architecture.md and maze.md into five documents;
+        //   291 → 293: the build log split out of seedling-bot.md.
+        expect(checked).toBe(293);
     });
 
     it('tags each link with the kind that produced it', () => {
@@ -321,13 +322,13 @@ describe('⛓ the constructs the corpus is actually made of', () => {
      * ⚖ **THE PLACEHOLDER CENSUS, AND WHY IT IS ZERO.** A real renderer eats
      * `<a placeholder>` the way GitHub does. P4's first scan said the corpus
      * had none, using a regex that only matched single-word tags — and it was
-     * wrong: `seedling-bot.md` writes `<repo-relative json>` three times. They
+     * wrong: `seedling-bot-log.md` writes `<repo-relative json>` three times. They
      * survive because all three are inside INDENTED code blocks, which the
      * first scan also did not strip. The number is the same; the reason is
      * not, and only rendering the documents says which.
      */
     it('⚖ no prose text is EATEN as a tag — the 3 placeholders are inside code', () => {
-        const html = RENDERS.get('seedling-bot.md').html;
+        const html = RENDERS.get('seedling-bot-log.md').html;
         for (const p of ['&lt;repo-relative json&gt;', '&lt;a generate-seedling-level payload&gt;']) {
             expect(html, `${p} was swallowed`).toContain(p);
         }
@@ -358,7 +359,9 @@ describe('⛓ the biggest document — the one the budget is about', () => {
      * silently, and a test NAME is a label. The counts live in the `expect`s,
      * which are the only place that can red.
      */
-    it('seedling-bot.md renders its headings and its slugs are unique', () => {
+    // ⛓ The procgen docs cleanup moved the build log out of seedling-bot.md
+    //   into seedling-bot-log.md; this block follows the biggest document.
+    it('seedling-bot-log.md renders its headings and its slugs are unique', () => {
         // ⚠ 405 → 407: R9 slice 2's own § plus the ⛓ line under the R5
         // director's §, which is where the sequence's LINEAGE belongs.
         // ⚠ 402 → 405: SEEDLING BOT R9 slice 1's § *R9 — the solver rung, opened
@@ -424,20 +427,20 @@ describe('⛓ the biggest document — the one the budget is about', () => {
         // ⛓⛓⛓ **NO FURTHER RE-PINS: THE VALUE IS READ FROM THE REFERENCE**
         //   (R9 slice 12e) — the same staleness claim as the corpus total, one
         //   document narrower. The ledger above stays as history.
-        const want = DOCS_INDEX.docs.find((d) => d.file === 'seedling-bot.md').headings;
-        const ids = idsOf(RENDERS.get('seedling-bot.md').html);
+        const want = DOCS_INDEX.docs.find((d) => d.file === 'seedling-bot-log.md').headings;
+        const ids = idsOf(RENDERS.get('seedling-bot-log.md').html);
         expect(ids).toHaveLength(want);
         expect(new Set(ids).size).toBe(want);
         expect(ids.filter((i) => i !== ghSlug(i))).toEqual([]);
     });
 
     it('prints what it costs to render, so a page budget is not a guess', () => {
-        const md = read('seedling-bot.md');
+        const md = read('seedling-bot-log.md');
         const t0 = performance.now();
-        renderDoc(md, { doc: 'seedling-bot.md', siteRoot: '' });
+        renderDoc(md, { doc: 'seedling-bot-log.md', siteRoot: '' });
         const ms = performance.now() - t0;
         // eslint-disable-next-line no-console
-        console.log(`seedling-bot.md: ${md.length} bytes, ${md.split('\n').length} lines `
+        console.log(`seedling-bot-log.md: ${md.length} bytes, ${md.split('\n').length} lines `
             + `→ ${ms.toFixed(0)}ms in node`);
         expect(ms).toBeLessThan(10000);
     });
