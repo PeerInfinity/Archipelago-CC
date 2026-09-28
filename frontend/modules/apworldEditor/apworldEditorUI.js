@@ -188,6 +188,7 @@ import {
   SIDECARS_TAB_ID,
   SIDECARS_TAB_SUMMARY_KEY,
   playerSlotsWaitSentence,
+  RULES_SCHEMA_URL,
 } from './documentKeys.js';
 import { buildLinkRows, DOCUMENT_LINKS } from './documentLinks.js';
 /**
@@ -287,10 +288,6 @@ const TABS = [
   { id: 'links', label: 'Links' },
   { id: 'raw', label: 'Raw JSON' },
 ];
-
-
-/** ⛓ Where the page fetches the schema the Document tab is DERIVED from. */
-const RULES_SCHEMA_URL = './schema/rules.schema.json';
 
 /**
  * ⛓⛓ **THE STALE-DOCUMENT REFUSAL, AS ONE SENTENCE** (R-a). It reaches a person

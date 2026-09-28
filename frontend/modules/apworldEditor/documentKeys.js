@@ -670,6 +670,13 @@ export function playerSlotsOf(doc, schema) {
 }
 
 /**
+ * ⛓ Where the page fetches the schema the Document tab is DERIVED from — here
+ * rather than in the panel so a caller that derives slots without a panel (the
+ * P1b′ in-app row's subject) reads the same URL without importing the UI.
+ */
+export const RULES_SCHEMA_URL = './schema/rules.schema.json';
+
+/**
  * ⛓⛓ APWORLD SUBSTRATE CHANGE R6 — **WHAT THE SLOT SELECTOR SAYS WHILE IT
  * CANNOT DERIVE THE SLOTS.** `playerSlotsOf` answers `[]` without a schema (the
  * H1 row below: an answer, not a throw), and the panel then offered ONE slot —

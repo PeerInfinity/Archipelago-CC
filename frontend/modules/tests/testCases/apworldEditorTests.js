@@ -13343,3 +13343,249 @@ registerTest({
     category: 'loops',
     enabled: false, // off by default — runs only in the loops mode
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+ * APWORLD SUBSTRATE CHANGE P1b′ — TWO SLOTS OF ONE DOCUMENT INITIALISED IN
+ * TURN (plan §38.2 #1). P1a made `procgen_metadata` / `loop_costs` per-player
+ * maps; the planner measured a second slot's Initialise working live (§38.1).
+ * This is the in-app row that holds it: on a committed CLASSIC multi-slot
+ * document, two bare slots, the second with loop mode ON — each slot's own
+ * blocks, the first slot's untouched by the second, the Map and the loop-mode
+ * sentence per slot, and two Undos back to the document byte for byte.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { UNPLACED_WHY as P1B_UNPLACED_WHY } from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { playerSlotsOf as p1bPlayerSlotsOf } from '../../apworldEditor/documentKeys.js';
+// eslint-disable-next-line import/first
+import { RULES_SCHEMA_URL as P1B_SCHEMA_URL } from '../../apworldEditor/documentKeys.js';
+
+/** ⛓ The committed preset index (the one `presetUI` reads) — the corpus the subject is derived from. */
+const P1B_PRESET_INDEX = './presets/preset_files.json';
+
+/**
+ * ⛓⛓ **THE MAZE LOCATION CLIFF, AS A BOUND ON THE SUBJECT** — a slot is a
+ * candidate only while its LARGEST region holds FEWER locations than this.
+ * Measured 2026-09-27 (P1b′ task 0, plan §39.0) by a timed Initialise through
+ * the real form, auto grid side, maze, 60 s cap, largest-room location count →
+ * outcome: 8 → 4.5 s, 9 (238 regions) → 5.7 s, 11 → 3.7 s / 4.8 s, 12 → 5.3 s /
+ * 11.2 s, 13 → 6.7 s — every one ≤ 13 finished; 16 → 4.0 s, 16.8 s and a
+ * TIMEOUT, 17 → 6.5 s, 24 → 5.8 s and a TIMEOUT, 38 → TIMEOUT; 131 did not
+ * finish in 120 s (the planner, §38.1).
+ * So 14 is the smallest bound under which every measured slot finished; above
+ * it the cliff is not a function of the count alone (§28.6 #1, the planner's
+ * cliff conversation). ⛔ Not a claim that 14–15 are safe — none was measured.
+ */
+const P1B_ROOM_LOCATION_BOUND = 14;
+
+/** ⛓ The largest location count any one region of slot `p` holds. */
+const p1bLargestRoom = (doc, p) => Math.max(0, ...Object.values(doc?.regions?.[p] ?? {})
+    .map((r) => (r?.locations ?? []).length));
+
+/**
+ * ⛓ A slot is a candidate when it is BARE (no sidecar entry — the door's own
+ * premise), the layout places every region the graph can reach (the only
+ * unplaced ones have NO incoming exit, which no layout could place), and its
+ * largest room is under the cliff bound.
+ */
+function p1bCandidate(doc, p) {
+    if (Object.keys(doc?.preset_sidecars?.[p] ?? {}).length > 0) return null;
+    const plan = initPlan(doc, p);
+    if (!plan.ok || plan.placed === 0) return null;
+    if (plan.unplaced.some((u) => u.why !== P1B_UNPLACED_WHY.NO_INCOMING)) return null;
+    if (p1bLargestRoom(doc, p) >= P1B_ROOM_LOCATION_BOUND) return null;
+    return { slot: p, regions: Object.keys(doc.regions[p]).length };
+}
+
+/**
+ * ⛓⛓ **THE SUBJECT, DERIVED.** The committed documents with more than one slot
+ * (`playerSlotsOf`, over the index's folders that list more than one game),
+ * keeping the CLASSIC ones — every slot bare — and the first (by path) with two
+ * candidate slots; the two are initialised in slot order.
+ * → `{path, slots: [a, b], considered}` or `{path: null, considered}`.
+ */
+async function p1bTwoSlotSubject() {
+    const index = await (await fetch(P1B_PRESET_INDEX)).json();
+    const schema = await (await fetch(P1B_SCHEMA_URL)).json();
+    const paths = [];
+    for (const [dir, entry] of Object.entries(index ?? {})) {
+        for (const [folder, f] of Object.entries(entry?.folders ?? {})) {
+            if ((f?.games ?? []).length > 1 && (f?.files ?? []).includes(`${folder}_rules.json`)) {
+                paths.push(`./presets/${dir}/${folder}/${folder}_rules.json`);
+            }
+        }
+    }
+    paths.sort();
+    const considered = [];
+    for (const path of paths) {
+        const doc = await (await fetch(path)).json();
+        const slots = p1bPlayerSlotsOf(doc, schema);
+        const classic = slots.length > 1 && slots.every((p) => Object.keys(doc.preset_sidecars?.[p] ?? {}).length === 0);
+        const candidates = classic ? slots.map((p) => p1bCandidate(doc, p)).filter(Boolean) : [];
+        considered.push(`${path.split('/').at(-1)}: ${slots.length} slots, ${classic ? `candidates [${candidates.map((c) => c.slot)}]` : 'not classic'}`);
+        if (candidates.length >= 2) {
+            return { path, slots: candidates.slice(0, 2).map((c) => c.slot), considered };
+        }
+    }
+    return { path: null, considered };
+}
+
+/** ⛓ Select `slot` through the real toolbar control and wait for the hub to hold it. */
+async function p1bSelect(testController, panel, slot) {
+    const select = document.querySelector(`${PANEL_SELECTOR} .apworld-player-select`);
+    if (!select) return false;
+    selectPlayer(select, slot);
+    return testController.pollForCondition(() => String(panel.playerId) === String(slot),
+        `the hub selected slot ${slot}`, 8000, 50);
+}
+
+/** ⛓ The Map canvas's drawn region count for the selected slot. */
+async function p1bMapRegions(testController, panel) {
+    selectTab(panel, 'map');
+    const canvas = await testController.pollForValue(
+        () => document.querySelector(`${PANEL_SELECTOR} .apworld-map-canvas`), 'the Map canvas', 8000, 50);
+    return canvas?.dataset.regions ?? null;
+}
+
+/** ⛓ The Sidecars tab's loop-mode sentence for the selected slot. */
+async function p1bSwitchSentence(testController, panel) {
+    selectTab(panel, 'sidecars');
+    const el = await testController.pollForValue(() => document.querySelector(
+        `${PANEL_SELECTOR} .apworld-doc-row[data-doc-key="loop_costs"] .apworld-loop-costs-switch`),
+    'the Sidecars tab\'s loop-mode sentence', 8000, 50);
+    return el?.textContent ?? '';
+}
+
+/** ⛓ `JSON.stringify` of slot `p`'s two per-player blocks. */
+const p1bBlocksOf = (doc, p) => JSON.stringify([doc.procgen_metadata?.[p] ?? null, doc.loop_costs?.[p] ?? null]);
+
+/**
+ * ⛓⛓⛓ **(P1b′) TWO SLOTS, INITIALISED IN TURN, EACH WITH ITS OWN BLOCKS.**
+ * The subject is derived (above). Slot A through the (Sidecars tab's) door with loop mode OFF,
+ * then slot B with loop mode ON; after each run the slot's
+ * `procgen_metadata[p]` (and, for B, `loop_costs[p]`) are the op's result
+ * verbatim and NO block exists under any other slot; slot A's blocks are
+ * byte-identical after B's run; the Map draws each slot's placed count; the
+ * Sidecars tab's loop-mode sentence names the SELECTED slot; two Undos restore
+ * the document byte for byte.
+ */
+export async function apworldTwoSlotsInitialiseInTurn(testController) {
+    try {
+        const subject = await p1bTwoSlotSubject();
+        testController.log(`P1b′ subject: ${subject.considered.join(' · ')}`);
+        testController.reportCondition(`⛓ premise: a committed classic multi-slot document with two candidate `
+            + `slots (largest room < ${P1B_ROOM_LOCATION_BOUND} locations) — ${subject.path} [${subject.slots}]`,
+        !!subject.path);
+        if (!subject.path) return testController.getOverallResult();
+        const [a, b] = subject.slots;
+
+        // ⛔ A multi-slot document's worker load outlasts openHub's default 8 s ping.
+        const panel = await openHub(testController, subject.path, 30000);
+        if (!panel) return testController.getOverallResult();
+        // ⛔ Trap 1419: before the schema lands the selector offers only the default slot.
+        await testController.pollForCondition(
+            () => !!panel._rulesSchema, 'the panel loaded rules.schema.json', 8000, 50);
+        const slots = p1bPlayerSlotsOf(panel.rulesDoc, panel._rulesSchema);
+        testController.reportCondition(`⛓ premise: the hub offers slots [${slots}], both of ours among them`,
+            slots.includes(a) && slots.includes(b));
+        const before = JSON.stringify(panel.rulesDoc);
+        const opsBefore = panel.session.ops().length;
+        testController.reportCondition('⛓ premise: no slot carries `procgen_metadata` or `loop_costs` yet',
+            Object.keys(panel.rulesDoc.procgen_metadata ?? {}).length === 0
+            && Object.keys(panel.rulesDoc.loop_costs ?? {}).length === 0);
+
+        const placed = {};
+        for (const [slot, loopMode] of [[a, false], [b, true]]) {
+            if (!await p1bSelect(testController, panel, slot)) return testController.getOverallResult();
+            /**
+             * ⛔ THE SIDECARS TAB'S DOOR, NOT THE MAP'S. Measured in this row's first run:
+             * once slot A carries entries, the Map tab for bare slot B draws slot A's map
+             * (`reconstructResultFromSidecars` falls back to the first slot that has
+             * entries — H3's pinned, REPORTED fallback: the status reads "(slot A)"), so
+             * its "No map" state and the door in it never appear. The Sidecars tab's empty
+             * list draws the same door (`_makeInitialiseDoor`, gated per slot). ⚖ OPEN
+             * for the planner (plan §39): whether the hub should ask for no fallback.
+             */
+            selectTab(panel, 'sidecars');
+            const door = await testController.pollForValue(initDoor, `slot ${slot}'s Initialise door`, 8000, 50);
+            testController.reportCondition(`slot ${slot} is bare: the Sidecars tab offers the door`, !!door);
+            if (!door) return testController.getOverallResult();
+            door.click();
+            if (!await testController.pollForValue(initSection, 'the Initialise form', 8000, 50)) {
+                return testController.getOverallResult();
+            }
+            const st = panel._initialise.state;
+            const plan = initPlan(panel.rulesDoc, slot, { gridDims: { width: st.side, height: st.side } });
+            testController.reportCondition(`⛓ slot ${slot}: the form's layout places every reachable region `
+                + `(${plan.placed}/${plan.total})`, plan.ok && plan.placed > 0
+                && plan.unplaced.every((u) => u.why === P1B_UNPLACED_WHY.NO_INCOMING));
+            if (loopMode) {
+                if (!await s3LogAndToggle(testController, panel, subject.path)) return testController.getOverallResult();
+                if (!await s3TurnOn(testController, panel)) return testController.getOverallResult();
+            }
+            const aBefore = p1bBlocksOf(panel.rulesDoc, a);
+            const run = await pressInitialise(testController, panel, 60000);
+            testController.reportCondition(`slot ${slot}: the build succeeded`, run?.outcome?.ok === true);
+            if (!run?.outcome?.ok) return testController.getOverallResult();
+            const op = panel.session.ops().at(-1);
+            const doc = panel.rulesDoc;
+            testController.assertEqual(`⛓⛓ slot ${slot}: procgen_metadata[${slot}] is the op's result`,
+                JSON.stringify(op?.result?.procgen_metadata), JSON.stringify(doc.procgen_metadata?.[slot]));
+            testController.assertEqual(`⛓⛓ slot ${slot}: loop_costs[${slot}] is the op's result (${loopMode ? 'ON' : 'OFF — absent'})`,
+                JSON.stringify(op?.result?.loop_costs ?? null), JSON.stringify(doc.loop_costs?.[slot] ?? null));
+            testController.reportCondition(`slot ${slot}: loop mode ${loopMode ? 'wrote' : 'did not write'} the block`,
+                Object.hasOwn(doc.loop_costs ?? {}, slot) === loopMode);
+            const done = slot === a ? [a] : [a, b];
+            testController.assertEqual('⛓⛓ no `procgen_metadata` block under any other slot',
+                done.join(','), Object.keys(doc.procgen_metadata ?? {}).sort((x, y) => x - y).join(','));
+            testController.assertEqual('⛓⛓ …nor `loop_costs`', loopMode ? String(slot) : '',
+                Object.keys(doc.loop_costs ?? {}).join(','));
+            testController.assertEqual('…nor sidecar entries', done.join(','),
+                Object.keys(doc.preset_sidecars ?? {}).filter((p) => Object.keys(doc.preset_sidecars[p] ?? {}).length > 0)
+                    .sort((x, y) => x - y).join(','));
+            if (slot === b) {
+                testController.assertEqual(`⛓⛓ slot ${a}'s blocks are byte-identical after slot ${b}'s run`,
+                    aBefore, p1bBlocksOf(doc, a));
+            }
+            placed[slot] = Object.keys(doc.preset_sidecars?.[slot] ?? {}).length;
+            testController.assertEqual(`slot ${slot}: one sidecar entry per placed region`, String(plan.placed), String(placed[slot]));
+        }
+        testController.assertEqual('⛓ TWO ops landed', String(opsBefore + 2), String(panel.session.ops().length));
+
+        // ⛓ The Map and the loop-mode sentence, per slot — read with each slot selected in turn.
+        for (const slot of [a, b]) {
+            if (!await p1bSelect(testController, panel, slot)) return testController.getOverallResult();
+            testController.assertEqual(`⛓ slot ${slot}: the Map draws its placed regions`,
+                String(placed[slot]), await p1bMapRegions(testController, panel));
+            const sentence = await p1bSwitchSentence(testController, panel);
+            const other = slot === a ? b : a;
+            testController.reportCondition(`⛓⛓ slot ${slot}: the loop-mode sentence names player ${slot}, `
+                + `not ${other}: "${sentence.slice(0, 90)}…"`,
+            new RegExp(`\\b[Pp]layer ${slot}\\b`).test(sentence) && !new RegExp(`\\b[Pp]layer ${other}\\b`).test(sentence));
+            testController.reportCondition(`…and says loop mode is ${slot === b ? 'ON' : 'OFF'} for it`,
+                sentence.includes(slot === b ? 'enables loop mode' : 'loop mode is OFF'));
+        }
+
+        const undo = document.querySelector(`${PANEL_SELECTOR} .apworld-undo`);
+        undo?.click();
+        undo?.click();
+        const back = await testController.pollForCondition(() => JSON.stringify(panel.rulesDoc) === before,
+            'two Undos restored the document', 8000, 50);
+        testController.reportCondition('⛓⛓ Undo ×2 restores the document byte for byte', back);
+        testController.assertEqual('…and the op list', String(opsBefore), String(panel.session.ops().length));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('two-slot initialise test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-two-slots-initialise-in-turn',
+    name: 'APWorld hub: two bare slots of a classic multi-slot document initialised in turn (the second with loop mode) — each slot\'s own blocks, the first untouched, Map and loop-mode sentence per slot, Undo ×2',
+    description: 'APWORLD SUBSTRATE CHANGE P1b′. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldTwoSlotsInitialiseInTurn,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
