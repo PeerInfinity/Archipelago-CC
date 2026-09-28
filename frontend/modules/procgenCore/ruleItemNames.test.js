@@ -149,7 +149,13 @@ describe('the corpus — every committed document, every player', () => {
         // AST_count_item, AST_placement_search .item) + the typed item_check.
         // A new shape is walked already when it rides one of the keys; this
         // count reds so its arrival is READ, not assumed.
-        expect([...shapes.keys()].sort()).toHaveLength(11);
+        // ⛓ RE-QUOTED by APWORLD SUBSTRATE CHANGE P1b′ (2026-09-27): 10. The one
+        // carrier of `HasFromListUnique .items` was `jta_substrate_test`, a
+        // pre-0.6.8 export of `jta_vanilla` gone stale against its own writer;
+        // re-recorded BY the writer, its 15 exits read `.item_names` like the
+        // source's. The walker still reads `.items` (the unit row above) — the
+        // CORPUS no longer carries it, and this count says so.
+        expect([...shapes.keys()].sort()).toHaveLength(10);
     });
 
     it('⛓ the verdict agrees: every `unknown item` validateRules raises on a committed document is one undefinedRuleItems names', () => {
