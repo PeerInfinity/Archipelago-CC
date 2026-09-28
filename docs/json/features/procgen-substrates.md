@@ -2,7 +2,7 @@
 
 A **substrate** is the small game engine that owns one region of a generated world — a maze, a platformer level, a text adventure room, an embedded game. They are not interchangeable: some can be walked by the Playback Bot, some can be grown to order by the pipeline, some only run in loop mode. This page says what you can do with each one.
 
-How to read a cell: **✓** is always something you *can* do — no row is phrased as a limitation — and a word or number next to it says how, or how much. **✗** means you cannot, with the reason when the substrate declares one. A cell that is only a phrase is a partial answer. **n/a** means the row does not apply because a row it depends on is ✗ (there is no "how a replay works" for a substrate you cannot record).
+How to read a cell: **✓** is always something you *can* do — no row is phrased as a limitation — and a word or number next to it says how, or how much. **✗** means you cannot, with the reason when the substrate declares one. **◐** is a partial answer, with the degree beside it. **n/a** means the row does not apply because a row it depends on is ✗ (there is no "how a replay works" for a substrate you cannot record).
 
 Everything below this paragraph is generated from the code: each row is a question put to every substrate's registry entry, so the chart changes when a substrate does. The field-by-field view a developer reads is the capability matrix in the [substrate registry reference](../developer/procgen/substrate-registry.md#capability-matrix).
 
@@ -58,7 +58,7 @@ Everything below this paragraph is generated from the code: each row is a questi
 |---|---|---|---|---|---|---|---|---|---|---|
 | E1 | Its rooms can be edited | ✓ on a lab page | ✗ | ✓ in a panel | ✗ | ✗ | ✓ on a lab page | ✓ on a lab page | ✗ | ✗ |
 | E2 | A region of a saved world round-trips through that editor | ✓ | ✗ | ✓ | ✗ | ✓ | ✗ (note 1) | ✗ | ✗ | ✗ |
-| E3 | An exit can be moved to another side (and a side can hold more than one) | ✗ | ✗ | one exit per side | one exit per side | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one |
+| E3 | An exit can be moved to another side (and a side can hold more than one) | ✗ | ✗ | ◐ one exit per side | ◐ one exit per side | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one |
 | E4 | The editor's validity report checks its location and exit names | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✓ | ✓ |
 
 1. Seedling (region atlas): a Seedling sidecar payload is an ATLAS REFERENCE (`atlas_ref` / `atlas_region` / `atlas_sub_region` / `level`), not an authored room record — the room lives in the level set and the atlas that the region marking tool and `watch.html` own, and a rules.json carries neither, so there is no one-room document to hand the lab's edit arm.

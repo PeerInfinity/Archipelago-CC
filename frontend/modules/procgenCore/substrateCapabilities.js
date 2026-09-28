@@ -49,6 +49,28 @@ export const CAPABILITY_GROUPS = Object.freeze([
 /** ⛓ What a cell can say. */
 export const CELL_KINDS = Object.freeze({ YES: 'yes', NO: 'no', PARTIAL: 'partial', NA: 'na' });
 
+/**
+ * ⛓ THE MARK EACH KIND PRINTS, keyed by the `CELL_KINDS` values — ONE rendering
+ * rule for both renderers (the generated page's `capabilitiesMarkdown` and the
+ * Substrate Registry panel's Plain mode). A partial is ◐ followed by its degree.
+ */
+export const CELL_MARKS = Object.freeze({
+    [CELL_KINDS.YES]: '✓', [CELL_KINDS.NO]: '✗', [CELL_KINDS.PARTIAL]: '◐', [CELL_KINDS.NA]: 'n/a',
+});
+
+/**
+ * ⛓ THE LIVE ANSWERS a statement may declare (`live: LIVE_ANSWERS.x`) where its
+ * headless answer is a stand-in for what only a running app can say. The values
+ * ARE the keys of the Substrate Registry panel's `vm.answers[id]`
+ * (`substrateRegistryPanelLibrary.js` `describeRegistry`), so the panel overlays
+ * a cell by `answers[entry.id][statement.live]` — by declaration, never by
+ * statement id. The generated page has no running app and prints the stand-in.
+ */
+export const LIVE_ANSWERS = Object.freeze({ itemTypes: 'itemTypes', playbackController: 'playbackController' });
+
+/** ⛓ The `playbackController` live answers `applyLiveAnswer` refines a cell by. */
+export const PLAYBACK_LIVE = Object.freeze({ controller: 'controller', none: 'null', absent: 'absent' });
+
 /** ⛓ The feature id of an item-locked gate — the shared obstacle library's own. */
 export const LOGIC_GATE_FEATURE = DEFAULT_OBSTACLES.logic_gate.feature;
 
@@ -107,6 +129,7 @@ export const CELL_WORDING = Object.freeze({
     instantToggle: 'a per-block toggle',
     itemsOfItsOwn: (n) => `${n} item${n === 1 ? '' : 's'} of its own`,
     itemTypes: (n) => `${n} item type${n === 1 ? '' : 's'}`,
+    itemTypesListed: (types) => `${CELL_WORDING.itemTypes(types.length)}${types.length ? `: ${types.join(', ')}` : ''}`,
     itemTypesLive: 'its list comes from the running game — see the Substrate Registry panel',
     loopModeOnly: (field) => `loop mode stays on — it declares \`${field}\``,
     realiserNone: 'only as content from its own game',
@@ -115,6 +138,8 @@ export const CELL_WORDING = Object.freeze({
     onePerSide: 'one exit per side',
     sideSharing: 'and a side can hold more than one',
     malformedSides: (m) => `its exit-side declaration is malformed: ${m}`,
+    controllerMounted: 'a controller is mounted now',
+    noPanelMounted: 'no panel mounted now',
 });
 
 /** ⛓ The field whose `true` keeps loop mode on (L8). */
@@ -141,7 +166,7 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         answer: (e) => yesNo(typeof e.panelComponentType === 'string' && isFn(e.deserializeWorld)),
     },
     {
-        id: 'P2', group: 'play',
+        id: 'P2', group: 'play', live: LIVE_ANSWERS.playbackController,
         statement: "The Playback Bot can walk it (replaying a world's solution)",
         fields: ['getPlaybackController'],
         answer: (e) => yesNo(isFn(e.getPlaybackController)),
@@ -230,7 +255,7 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         answer: (e) => yesNo(!!e.sharing?.mana && typeof e.sharing.mana === 'object'),
     },
     {
-        id: 'L10', group: 'loop',
+        id: 'L10', group: 'loop', live: LIVE_ANSWERS.itemTypes,
         statement: 'It shares consumable items with other substrates',
         fields: ['sharing.items'],
         answer: (e) => {
@@ -350,6 +375,40 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         answer: (e) => yesNo(isFn(e.apLocationNamesOf) && isFn(e.apExitNamesOf)),
     },
 ].map((s) => Object.freeze({ ...s, fields: Object.freeze([...s.fields]) })));
+
+/**
+ * ⛓ **A LIVE ANSWER OVER A CELL** — pure: a NEW cell, the input untouched. The
+ * KIND is the declaration's (a substrate that declares the hook but has no
+ * panel open is still ✓); the live answer refines only the TEXT, and the new
+ * cell carries `live: {key, value}` so a renderer can show the raw answer.
+ * - `itemTypes`: an array → *<n> item types: a, b, …* on a ✓ cell; anything
+ *   else a `describeRegistry` produces (`'absent'`) → unchanged.
+ * - `playbackController`: `'controller'` / `'null'` → the mounted / not-mounted
+ *   wording; `'absent'` → unchanged; any other string (a `threw: …` or a
+ *   `returned …`) → that string as the text.
+ * An `n/a` cell, an undeclared statement and a missing answer are unchanged.
+ *
+ * @param {{kind: string, text: string|null}} cell
+ * @param {{live?: string}} statement
+ * @param {*} answer `vm.answers[entry.id][statement.live]`
+ */
+export function applyLiveAnswer(cell, statement, answer) {
+    const key = statement?.live;
+    if (!key || answer === undefined || cell.kind === CELL_KINDS.NA) return cell;
+    const value = Array.isArray(answer) ? answer.join(', ') : String(answer);
+    const refined = (text) => ({ ...cell, text, live: { key, value } });
+    if (key === LIVE_ANSWERS.itemTypes) {
+        if (!Array.isArray(answer) || cell.kind !== CELL_KINDS.YES) return cell;
+        return refined(CELL_WORDING.itemTypesListed(answer.map(String)));
+    }
+    if (key === LIVE_ANSWERS.playbackController) {
+        if (answer === PLAYBACK_LIVE.absent || typeof answer !== 'string') return cell;
+        if (answer === PLAYBACK_LIVE.controller) return refined(CELL_WORDING.controllerMounted);
+        if (answer === PLAYBACK_LIVE.none) return refined(CELL_WORDING.noPanelMounted);
+        return refined(answer);
+    }
+    return cell;
+}
 
 /** ⛓ The value of each named field, in the code's short words. */
 const whyOf = (entry, fields) => fields.map((field) => ({ field, value: cellOf(digTwo(entry, field)).short }));
