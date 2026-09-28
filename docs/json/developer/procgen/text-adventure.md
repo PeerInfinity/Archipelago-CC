@@ -12,7 +12,7 @@ A substrate panel shows `SubstrateInactiveOverlay` when some *other* substrate o
 
 The wrapper panel therefore **skips the overlay entirely when the loaded rules carry no `preset_sidecars` for the player**, tracked from the host's `initialState` snapshot. `procgen:activeSubstrateChanged` cannot answer this — it is `null` both for "standalone preset" and for "procgen world whose current region isn't mine".
 
-This is what unblocked `?mode=textadventure`, the [documented live demo](../../games/text-adventure/README.md), which plays the non-procgen Adventure preset. It previously ran on the deprecated module and was hiding a *working* text adventure behind "No procgen substrate is active for the current region". Migrating it also needed the `textadventure` layout preset's component type swapped and `iframeAdapter` enabled in `modules-textadventure.json`.
+This is what unblocked `?mode=textadventure`, the [documented live demo](../../games/text-adventure/README.md), which plays the non-procgen Adventure preset. It previously ran on the deprecated module and was hiding a *working* text adventure behind "No procgen substrate is active for the current region". Migrating it also needed the `textadventure` layout preset's component type swapped and `iframeAdapter` enabled in `frontend/module-configs/modules-textadventure.json`.
 
 That migration also fixed the deployed site, where the mode was already broken for a different reason: the deprecated module is not bundled, so `?mode=textadventure` showed a dead "Waiting for region…" panel there while working in local dev.
 

@@ -11,7 +11,7 @@ A sphere-log-driven walker that auto-drives substrate panels through a recorded 
 - The module owns the `playbackBotPanel` Golden Layout panel, registers the `playback:command` publisher, and subscribes to `user/system:locationCheck` and `user:regionMove` on the dispatcher, forwarding them to the active panel's bot. An active-panel singleton (`setActivePanel`/`getActivePanel`) lets those dispatcher receivers reach the bot without circular imports — the same pattern mazeRoom and procgenPipeline use.
 - A persisted click-intercept toggle (`playbackBot_intercept`, off by default) and a bounded dispatcher event log (last 200 events) live in the panel UI.
 
-When no sphere log is loaded, target selection falls to the forward simulator's `pickNextTarget` (below), so bot, visualizer, and log generator never re-implement "what should be sought next".
+When no sphere log is loaded, the bot acts as a plain remote control: it starts the substrate's own clock and leaves target choice to the substrate (the maze visualizer picks the alphabetically-first uncollected item or unvisited exit in the current region).
 
 ## The PlaybackController contract and iframe proxies
 
@@ -33,7 +33,7 @@ Both live in the `shared/` git submodule.
 A substrate-neutral playthrough walker over `rules.json`, with two entry points sharing one set of accessibility primitives:
 
 - `generateSphereLog(rulesDoc, opts)` — runs a full walk and returns a sphere log as JSONL-compatible entries. This is how the procgen pipeline embeds a sphere log into a compiled `rules.json`.
-- `pickNextTarget(model, state)` — given current inventory and checked locations, returns the next `{ region, location, item, accessRule }` to seek. Used by the playthrough visualizer and the playback bot when no recorded log is loaded.
+- `pickNextTarget(model, state)` — given current inventory and checked locations, returns the next `{ region, location, item, accessRule }` to seek. Nothing in the app calls it yet — neither the visualizer nor the playback bot uses it.
 
 Its faithfulness contract against Python: **integer-sphere contents must match `MultiWorld.get_spheres` exactly** (sphere boundaries snapshot reachability at sphere start; locations that become reachable mid-sphere belong to the next sphere), while fractional ordering *within* a sphere may differ (the walker picks alphabetically). The emitted format matches `exporter/sphere_logger.py`: a metadata entry, a `0` integer-header with initial accessibility sets, then one fractional entry per advancement-item pickup; filler items never appear as `sphere_locations`.
 
@@ -53,7 +53,7 @@ The maze panel's playthrough visualizer (`frontend/modules/mazeRoom/mazeRoomVisu
 
 ## Headless verification
 
-The `scripts/procgen/` CLIs are the non-interactive counterparts: the dump scripts print a driver's full output, the `*-step.js` drivers expose the stepped pipelines, `verify-*.mjs` scripts check byte-identity, and `check-bounce-embed.mjs` drives the real frontend with Playwright. See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
+The `scripts/procgen/` CLIs are the non-interactive counterparts: the dump scripts print a driver's full output, the `*-step.js` drivers expose the stepped pipelines, `dump-*-byteidentity.mjs` and `check-spiral-byteidentity.mjs` check byte-identity, and `check-bounce-embed.mjs` drives the real frontend with Playwright. See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
 
 ## Related documentation
 

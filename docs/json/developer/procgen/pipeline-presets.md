@@ -77,6 +77,6 @@ What a preset does not carry is session state: the composite map's interaction m
 ## What no preset can show yet
 
 - **A named top-down source.** A top-down preset realises whatever world is loaded; carrying a source by name, the way a served region library is carried, is not built.
-- **The Seedling atlas pool.** Seedling reaches a world only as an atlas content source of sphere growth, and the panel has no atlas picker, so no preset can select a pool.
+- **The Seedling atlas pool.** Sphere growth can draw on a region-atlas content pool (`procgenPipeline/regionAtlasPool.js`), but the panel has no atlas picker, so no preset can select a pool. (Seedling rooms themselves do reach presets, through `flash_seedling` and `flash_seedling_gen` — the rows above.)
 - **A jta or omsi `substrateConfig`** — a JtA dataset, emitted zone locations, an omsi region split (which is why the omsi preset's region is the whole town). The engine's seam exists; the panel builds no such config, so a preset has nothing to carry it in.
-- **`flash`**, the generic Flash substrate, has no generation route in any mode: it declares no build-time hook. `flash_seedling` has one, as a content source of the shuffled spiral (`seedling-spiral-room-demo` above), and generates nothing: it places rooms of the real map.
+- **`flash`**, the generic Flash substrate, has no generation route in any mode: it declares no build-time hook. `flash_seedling` has routes — as a content source of the shuffled spiral (`seedling-spiral-room-demo` above) and as a sphere-growth quota (`seedling-sphere-room-demo`) — but generates nothing: it places rooms of the real map. `flash_seedling_gen` is the entry that generates Seedling rooms.

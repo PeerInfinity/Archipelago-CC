@@ -1,6 +1,6 @@
 # Maze Substrate
 
-The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles on the perimeter. It is the most fully-featured substrate — the only one supporting every loop-queue action type and saved custom queues — and its tile-grid engine lives in the shared implementation (`shared/procgen/adapterPrimitives.js`) — which the text-adventure substrate also built on until PRESET SIDECARS G2a gave it its own room.
+The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles on the perimeter. It is the most fully-featured substrate — it supports every loop-queue action type (as the text adventure does) and is the only one with saved custom queues — and its tile-grid engine lives in the shared implementation (`shared/procgen/adapterPrimitives.js`) — which the text-adventure substrate also built on until PRESET SIDECARS G2a gave it its own room.
 
 The module splits cleanly: `mazeRoomEngine.js` is headless (no DOM, no eventBus), `mazeRoomUI.js` is the panel, `mazeRoomLibrary.js` is the registry entry, and `index.js` wires registration and re-exports the engine surface.
 
@@ -162,7 +162,7 @@ Above the carve sits an optional **lock-and-key layer**: the carved room is
 partitioned into AREAS, `procgenCore/areaGraph.js` (the JS re-implementation of
 MetaZelda's logic) grows a tree over them in KEY LEVELS, and the binding
 realises each level as `door_K` obstacles and `key_K` items on the grid. It is
-off by default and it is the MAZE's only — Seedling gets it in a later arc.
+off by default. Seedling's generator uses the same module (`seedlingDemo/procgenSeedling.js` imports `buildAreaGraph`).
 
 **The knob** is one string through one codec (`procgenCore/areaSpec.js`,
 `parseAreaSpec` / `formatAreaSpec` / `normalizeAreaSpec`), spoken by the CLI
@@ -174,7 +174,12 @@ off by default and it is the MAZE's only — Seedling gets it in a later arc.
 
 `keys` is the key-count TARGET (domain 0–3); `graphify` is MetaZelda's
 extra-edge probability (default 0.2); `goalShortcut` admits the post-solve
-entrance↔exit shortcut (default on). **At `keys: 0` — the default — nothing
+entrance↔exit shortcut (default on); `partition` names how the carved room
+becomes areas (its one value, and default, is `chambers` — the rule below,
+implemented in `procgenCore/areaPartition.js`); `shortcut=1` realises one
+recorded `graphify` edge as an item-locked shortcut, a `door_SC` off the cut
+with a `key_SC` the player can reach without it (default 0, which spends no
+draw). **At `keys: 0` — the default — nothing
 here runs at all**: no partition is computed, the module is not called, no draw
 is spent, and every seed→level pair the maze had before is byte-identical.
 
@@ -895,7 +900,7 @@ node-tested with no page) and the two pipeline functions the mount refuses to
 import for itself.
 
 `SET` joins `SOURCES` rather than bypassing it, so `?source=` still refuses a
-typo and now names all four. A library arrives four ways and through ONE intake
+typo and names every arm in its refusal (`SOURCES` in `mazeRoom/mazeLab.js`). A library arrives four ways and through ONE intake
 per document kind: pasted into the arm's own box, uploaded (`.json` or a `.zip`
 BUNDLE, sniffed by the `PK` magic), picked from the served index filtered to the
 packs whose own `substrates` include `maze`, or fetched by `?library=<url>`.
@@ -996,14 +1001,14 @@ The per-tile verbs make the maze the reference **fine-grained** substrate under 
 
 ## Content modules (hazards)
 
-Content modules add gameplay content to a region without touching core substrate code. The registry (`shared/procgen/contentModules/registry.js`) sits alongside the wall-backend registry and shares its shape; a module declares any subset of the hook contract:
+Content modules add gameplay content to a region without touching core substrate code. A registry (`shared/procgen/contentModules/registry.js`) sits alongside the wall-backend registry and shares its shape, and defines the hook contract a module may declare any subset of — but no production code registers a module in it today (`registerContentModule` has only test callers):
 
 - **Build time:** `generate(world, opts, rng)` (called after wall layout and placement), `serialize(world)` / `deserialize(sidecar, world)` for the per-region sidecar payload, `procgenSettingsSchema` for auto-generated authoring controls.
 - **Runtime:** `tickRuntime` (advance one turn), `validateMove` (veto a proposed move — multiple modules' vetoes are conjunctive), `onMove` (side effects after an allowed move), `render` (canvas overlay between the substrate render and the player sprite), `resetOnEntry` (region content is fresh on every entry).
 
-The maze's registry entry exposes `applyContentModules`, which the pipeline engine calls after the base region build; substrates that don't declare it skip the pass.
+The maze's registry entry exposes `applyContentModules` (`applyMazeContentModules` in `mazeRoomLibrary.js`), which the pipeline engine calls after the base region build and which calls the maze's modules directly; substrates that don't declare it skip the pass.
 
-The one shipped content module is **hazards** — patrolling dangers that cycle along generated paths. It is split into three pure pieces: `hazardPathGen.js` (geometry only — the tile sequence a hazard cycles along), `hazardRuntime.js` (cycle position, facing, move-validity checks), and `hazardRender.js` (overlay drawing). Pathfinding is hazard-aware and wait-aware: the autopather can plan routes that deliberately wait out a hazard's cycle.
+Two content modules ship. The second is **cross-game consumable tiles** (`contentModules/consumableTileGen.js`), which runs after hazards and draws no rng when inactive. The first is **hazards** — patrolling dangers that cycle along generated paths. It is split into three pure pieces: `hazardPathGen.js` (geometry only — the tile sequence a hazard cycles along), `hazardRuntime.js` (cycle position, facing, move-validity checks), and `hazardRender.js` (overlay drawing). Pathfinding is hazard-aware and wait-aware: the autopather can plan routes that deliberately wait out a hazard's cycle.
 
 ## The autopather (`mazeAutopather.js`)
 

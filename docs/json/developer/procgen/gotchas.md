@@ -12,8 +12,13 @@ The pipeline's Mode toggle offers exactly four drivers (grid growth, sphere grow
 
 ## Substrate libraries register on IMPORT — headless scripts depend on it
 
-`mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibrary.js` and
-`textAdventureSubstrateWrapperLibrary.js` all end with the same block:
+Every substrate library that owns a registry entry — `mazeRoomLibrary.js`,
+`bounceDemoLibrary.js`, `runnerDemoLibrary.js`,
+`textAdventureSubstrateWrapperLibrary.js`, `flashSubstrateLibrary.js`,
+`jtaSubstrateWrapperLibrary.js`, `omsiSubstrateWrapperLibrary.js`,
+`flashSeedlingLibrary.js` and `flashSeedlingGenLibrary.js` — ends with the same
+block (`grep -arn "substrateRegistry.register(substrateRegistryEntry)" frontend/modules`
+lists them):
 
 ```js
 if (!substrateRegistry.has(substrateRegistryEntry.id)) {
@@ -114,7 +119,7 @@ The module that recognizes a procgen `rules.json` and routes every region transi
 
 ## Byte-identity is a load-bearing invariant
 
-The stepped pipeline (panel steps and the `scripts/procgen/*-step.js` CLIs) must reproduce the monolithic drivers' output **byte-for-byte** at default batching. This holds because all randomness is one continuous seeded rng stream consumed in the monolithic order, with snapshots threaded across step boundaries (`frontend/modules/procgenPipeline/sphereSteps.js` — its header documents the threading rules). Adding, removing, or reordering rng draws anywhere in the engine or step-runners breaks the contract silently; `scripts/procgen/verify-*.mjs` and the step-runner tests are what catch it. Treat any new `rng()` call in generation code as a change that needs those verifiers re-run.
+The stepped pipeline (panel steps and the `scripts/procgen/*-step.js` CLIs) must reproduce the monolithic drivers' output **byte-for-byte** at default batching. This holds because all randomness is one continuous seeded rng stream consumed in the monolithic order, with snapshots threaded across step boundaries (`frontend/modules/procgenPipeline/sphereSteps.js` — its header documents the threading rules). Adding, removing, or reordering rng draws anywhere in the engine or step-runners breaks the contract silently; the byte-identity scripts (`scripts/procgen/dump-*-byteidentity.mjs`, `check-spiral-byteidentity.mjs`) and the step-runner tests are what catch it. Treat any new `rng()` call in generation code as a change that needs those verifiers re-run.
 
 ## Generation used to be non-deterministic under load — FIXED 2026-08-14, and the shape of the fix is the lesson
 
@@ -252,7 +257,8 @@ An artifact hash that moves tells you *something* changed; it does not tell you 
 
 The maze's edit vocabulary has `clearEntity`, so a paste can make a cell look
 exactly like the descriptor it was handed. Seedling's has `remove`, which takes
-*the last entity in the cell* one at a time and refuses an empty cell — and
+one entity at a time — *the last in the cell* unless a `which` ordinal names
+another (the ordinal entry further down) — and refuses an empty cell — and
 `writeOps` is handed a DESCRIPTOR, not a record, so it cannot know how many to
 emit. A paste onto an empty cell therefore reproduces it exactly, and a paste
 onto an occupied cell leaves both sets of bodies. The read → write → read fixed
@@ -340,7 +346,7 @@ the arm has built a record, takes the whole arm down with a `TypeError` on
 
 ## A module-level `const` cannot read one declared below it
 
-`watchViewer.js` is 10,000 lines and its constants are grouped by topic, which
+`watchViewer.js` is over ten thousand lines long and its constants are grouped by topic, which
 makes it easy to declare a path constant beside its first reader. A second
 module-level `const` that interpolates it then hits a temporal dead zone at LOAD
 — not a hoist — and the page goes blank with one console line. `?.` does not
@@ -933,10 +939,12 @@ stray NUL bytes**. `grep` therefore classifies it as BINARY, and `grep -I`
 1, no warning**. A census that shells out to `grep` reports such a file clean
 and cannot tell that apart from the file having nothing to report.
 
-Measured 2026-08-26, five tracked `.js`/`.mjs` sources are invisible this way:
-`procgenPipeline/procgenPipelineUI.js`, `procgenPipeline/regionAtlasAnalyzer.js`,
-`regionMarkingTool/regionMarkingToolUI.js`, `scripts/procgen/check-procgen-docs.mjs`,
-`scripts/procgen/probe-seedling-killlock-span1.mjs`.
+The set of NUL-bearing tracked sources moves as files are edited, so measure it
+rather than trust a list — the repo's `CLAUDE.md` carries a one-line Python
+census over `git ls-files`. (On 2026-09-28 it named
+`procgenPipeline/regionAtlasAnalyzer.js`, `regionMarkingTool/regionMarkingToolUI.js`,
+`scripts/procgen/check-procgen-docs.mjs` and
+`scripts/procgen/probe-seedling-killlock-span1.mjs`.)
 
 ⇒ `grep -a` finds them. But a sweep whose ANSWER is load-bearing — "every caller
 passes X", "no module imports Y" — should read files itself (`readFileSync`)

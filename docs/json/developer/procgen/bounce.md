@@ -108,6 +108,8 @@ The economy is **time**: a per-second drain (`timeDrainPerSecond`, per region, d
 - `scripts/procgen/dump-bounce-level.js` — one generated level: platform geometry, physics config, compiled rules.
 - `scripts/procgen/dump-bounce-region.js` — per-platform requirement data / region report for a gated braid (verified vs authored).
 - `scripts/procgen/check-bounce-embed.mjs` — Playwright round-trip of a bounce world through the real frontend, first check to Victory.
+- `scripts/procgen/check-bounce-touch.mjs` — Playwright: the standalone bounce page's touch controls in a `hasTouch` context.
+- `scripts/procgen/make-demo-bounce-pack.mjs` — generates the committed demo bounce region-library pack and registers it in the index.
 
 See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
 

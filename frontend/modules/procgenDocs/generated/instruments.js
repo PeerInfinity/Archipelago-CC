@@ -211,7 +211,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 270,
         "browser": 84,
-        "cited": 106,
+        "cited": 110,
         "files": 281,
         "lineStyle": 11,
         "withDocblock": 281,
@@ -1189,7 +1189,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/bounce.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-bounce-touch.mjs",
@@ -2133,7 +2135,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/runner.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-region-library-sphere-roundtrip-runner.mjs",
@@ -4173,6 +4177,9 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/architecture.md",
+                "docs/json/developer/procgen/gotchas.md",
+                "docs/json/developer/procgen/playback-and-debugging.md",
                 "docs/json/developer/procgen/stepped-pipeline.md"
             ],
             "docblockStyle": "block",
@@ -5663,7 +5670,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/bounce.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "make-demo-bounce-pack.mjs",
@@ -5681,7 +5690,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/runner.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "make-demo-runner-pack.mjs",

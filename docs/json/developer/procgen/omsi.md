@@ -1,10 +1,10 @@
 # Omsi Substrate (Idle Loops)
 
-The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) hosts the **`PeerInfinity/omsi-loops` fork of dmchurch's Idle Loops** — included as the `frontend/modules/omsi-loops/` git submodule, pinned at `2bda39b` — in a same-origin iframe as a loop-mode substrate.
+The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) hosts the **`PeerInfinity/omsi-loops` fork of dmchurch's Idle Loops** — included as the `frontend/modules/omsi-loops/` git submodule (its pinned commit is whatever `git submodule status frontend/modules/omsi-loops` reports) — in a same-origin iframe as a loop-mode substrate.
 
 Idle Loops is itself a loop game: you author a **queue of actions**, the game grinds it until the per-loop mana budget runs out, and then it restarts with the progression (skills, talents, discovered quantities) you earned. That genre shapes everything below — the substrate declares `requiresLoopMode`, its native "budget out → restart" *is* the host's loop reset, and what it records for Playback is a **plan**, not a performed-action log.
 
-The iframe boots with `?managed=1`, which makes the fork call `IdleLoopsManaged.boot()`: a dedicated `idleLoops_substrate` save slot and **no game clock at all**. The host owns time. Four arcs built the substrate out:
+The iframe boots with `?managed=1`, which makes the fork call `IdleLoopsManaged.boot()`: a dedicated `idleLoops_substrate` save slot and **no game clock at all**. The host owns time. Four arcs (A–D, with D in two parts) built the substrate out:
 
 | Arc | What it did | Where the work lives |
 |---|---|---|
@@ -280,7 +280,7 @@ Arc C's swappable-region seam came free from this: the evaluator resolves a town
 | `omsi_scaled_test` | arc A `unlockScale` 0.2 (18 supply locations) |
 | `omsi_region_split_test` | arc C region split, per-region queues, and the arc-D Record/Playback legs |
 
-In-app legs (they run in `test-substrates` mode, whose config **enumerates test ids** — a new leg needs a config entry). On `omsi_substrate_test`: `omsi-clock-runs-only-in-region`, `omsi-budget-mirrors-pool-both-ways`, `omsi-native-budget-raises-pool`, `omsi-out-of-mana-loop-reset`, `omsi-loop-exhaustion-single-reset`, `omsi-victory-start-journey`, `omsi-cross-substrate-item-grant`, `omsi-step-gate-parks-the-clock`, `omsi-play-pause-controls-the-clock`. On `omsi_schedule_test`: `omsi-award-schedule`. On the randomized/scaled presets: the seven `omsi-unlock-*` legs. On `omsi_region_split_test`: `omsi-region-split-round-trip`, `omsi-region-split-per-region-queues`, `omsi-record-playback-crosses-region`, `omsi-multi-run-replay-retry`, `omsi-bot-crosses-region`, `omsi-bot-multi-reset-walk`.
+In-app legs (they run in `test-substrates` mode, whose config **enumerates test ids** — a new leg needs a config entry). On `omsi_substrate_test`: `omsi-clock-runs-only-in-region`, `omsi-budget-mirrors-pool-both-ways`, `omsi-native-budget-raises-pool`, `omsi-out-of-mana-loop-reset`, `omsi-loop-exhaustion-single-reset`, `omsi-victory-start-journey`, `omsi-cross-substrate-item-grant`, `omsi-step-gate-parks-the-clock`, `omsi-play-pause-controls-the-clock`. On `omsi_schedule_test`: `omsi-award-schedule`. On the randomized/scaled presets: the seven `omsi-unlock-*` legs. On `omsi_region_split_test`: `omsi-region-split-round-trip`, `omsi-region-split-per-region-queues`, `omsi-record-playback-crosses-region`, `omsi-multi-run-replay-retry`, `omsi-bot-crosses-region`, `omsi-bot-multi-reset-walk`, `omsi-playback-instant`, `omsi-bot-instant-multi-reset-walk`.
 
 ⚠ The two bot legs cost **~85 s and ~285 s**, and that is structural rather than fixable: see [round-trip pacing](#pacing-a-bot-walk-is-a-chain-of-host-round-trips). Playwright's per-test timeout was raised 300 s → 900 s to fit them (one Playwright test wraps the whole in-app suite). It is a ceiling, not a cost — and the layers below it, `[PROGRESS]` liveness lines and the polls' own STUCK/STARVED/CHECK-BOUND classification, are what actually diagnose a hang.
 
