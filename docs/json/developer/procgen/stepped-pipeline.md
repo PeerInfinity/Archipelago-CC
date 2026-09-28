@@ -1,92 +1,180 @@
 # The Stepped Pipeline
 
-Sphere growth, top-down, and shuffled-spiral can run as monolithic calls or as a sequence of discrete, inspectable, editable steps. The stepped form is what the Procgen Pipeline panel's step buttons drive and what the per-step CLIs expose; each driver has one per-mode step-runner module — `frontend/modules/procgenPipeline/sphereSteps.js`, `topDownSteps.js`, and `spiralSteps.js` — so the step wiring (rng threading, prebuilt-tree handoff, compile options) lives in exactly one place and panel and CLI cannot drift.
+Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.
 
-⚠ **This is the WORLD pipeline's step list, and there is a second, unrelated one.** A single region's *level* generation also has a step-through — the generation **ledger**'s phase ladder on the two lab pages (`goal · element-head · pre-carve · carve · on-connector · composite · partition · graph · realisation · certification`, then pass 2's own steps). The two do not interact and are editable in opposite senses: an envelope step is EDITABLE and re-runnable, while the ledger ladder is a read-only replay of a construction that already happened (it rebuilds phase *k* from row deltas and re-draws — nothing is re-run). See [Architecture](./architecture.md#level-generation-two-passes-over-one-loop-core).
+Each mode has one step-runner module in `frontend/modules/procgenPipeline/`: `sphereSteps.js`, `topDownSteps.js` and `spiralSteps.js`. The step wiring (rng threading, handing a prebuilt tree along, compile options) lives only there, so the panel and the CLIs cannot drift apart.
 
-⛓ **Every word this document uses as vocabulary — *the envelope*, *the stepped pipeline*, *a content source*, *byte-identity*, *the shuffled-spiral driver*, *sphere growth*, *the rng stream* — is defined in [the procgen glossary](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html)**, one plain-language sentence before the rule; the data is [`frontend/modules/procgenDocs/glossary.js`](../../../../frontend/modules/procgenDocs/glossary.js).
+This is the step list for a whole world. A single region's level generation has a separate, unrelated step-through: the phase ladder on the two lab pages, which replays a finished construction read-only instead of re-running anything. See [Architecture](./architecture.md).
+
+The terms used here (*envelope*, *content source*, *byte-identity*, *rng stream*) are defined in the [procgen glossary](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html).
 
 ## The shared harness
 
-All three per-mode modules are thin clients of **one** generic engine, `frontend/modules/procgenPipeline/steppedPipeline.js`. Each mode supplies a **descriptor** — `{ steps, runners, present, codecs, nextStep }`, plus the optional `editBinding` + `dropOutputs` that turn on recorded hand edits (below) — and the harness provides the driver/resume/serde skeleton (`runStep`, `runToStep`, `detectCompleted`, `resumeEnvelope`, `newEnvelope`, `serialize`/`deserializeEnvelope`, `invalidateFromStep`) once. What genuinely differs per mode is the descriptor: the step list + runner functions, the presence probes, the non-plain artifact codecs, and the loop shape (`nextStep` — linear for top-down/spiral, batch-looping for sphere). The codecs are per-field `{ encode(value, env), decode(value, out, obj) }` applied in **declaration order**, so a field's decode can reconnect a cross-field alias off the already-decoded `out` (top-down's single Grid is aliased by layout/realise/finalize and is mutated in place, so decode reconnects the *same* object; sphere's `tree.nodes` re-aliases the decoded `nodes`). The harness only relocates the orchestration wrapper — the per-mode runner logic and rng draw order are what preserve byte-identity.
+All three step modules are clients of one generic engine, `frontend/modules/procgenPipeline/steppedPipeline.js`. The engine provides the run/resume/serialise skeleton once: `runStep`, `runToStep`, `detectCompleted`, `resumeEnvelope`, `newEnvelope`, `serializeEnvelope` / `deserializeEnvelope` and `invalidateFromStep`.
+
+Each mode supplies a **descriptor** with what actually differs:
+
+| Field | Purpose |
+|---|---|
+| `steps`, `runners` | The step list and the function for each step |
+| `present` | Probes that tell whether a step's output already exists |
+| `codecs` | Per-field `{ encode, decode }` for values that are not plain JSON |
+| `nextStep` | The loop shape: linear for top-down and spiral, batch-looping for sphere |
+| `editBinding`, `dropOutputs` | Optional; turn on recorded hand edits (below) |
+
+Codecs run in declaration order, so a later field's decode can reconnect an alias to an object decoded earlier (top-down's one shared `Grid`, sphere's `tree.nodes`).
 
 ## The envelope
 
-The unit of state is an **envelope** — a plain, serializable object that each step reads from and merges into. `serializeEnvelope`/`deserializeEnvelope` cross a process boundary losslessly, so the CLI can run every step in its own invocation with the envelope as a JSON file on disk, and you can hand-edit it between steps. Editing is intended at the step-output altitude — the plan, the allocation, the topology, the item assignment — not the grown grid, which crosses the boundary in a structural (tagged) form precisely so it isn't hand-edited. The grid IS editable, but through **recorded ops** rather than by hand (below).
+The unit of state is an **envelope**: a plain, serialisable object that each step reads from and merges into. `serializeEnvelope` / `deserializeEnvelope` cross a process boundary losslessly, so a CLI can run each step in its own invocation with the envelope as a JSON file on disk, and you can edit that file between steps.
+
+Hand edits are meant for step outputs: the plan, the allocation, the topology, the item assignment. The grown grid is stored in a tagged structural form so that it is not edited by hand; to change it, use the recorded edit ops described below.
 
 ## Sphere mode — six steps
 
-`plan → allocate → topology → items → regions → compile` (`SPHERE_STEPS`), surfaced in the panel as ① ②a ②b ②c ③ ④. One global `spheresPerBatch` knob turns the middle into a per-batch loop — ① plan once → per batch [②a → ②b → ②c → ③] → ④ compile once — with the loop-back decided by `nextSphereStep(env)`. The default (one batch covering every wave) is the step-major path and is byte-identical to monolithic `growSpheres`; smaller batches grow sphere-major and diverge by design.
+`plan → allocate → topology → items → regions → compile` (`SPHERE_STEPS`), shown in the panel as ① ②a ②b ②c ③ ④.
 
-The envelope carries the cross-batch state (accumulated nodes, substrate counts, the grown grid, placement indices, batch cursor) and a **continuous rng snapshot threaded after every rng-consuming step**. The rng discipline that makes editing safe: ②b for the *first* batch re-derives the rng position from the seed (so an allocation edit plus re-run stays correct without depending on a snapshot a later step advanced), later batches restore the threaded snapshot, and ②c consumes no rng at all. The phase split itself and why it preserves byte-identity is covered in [Sphere-Driven Growth](./sphere-growth.md#the-three-phase-split-and-the-rng-discipline).
+The `spheresPerBatch` knob turns the middle into a loop: ① plan once, then per batch ②a → ②b → ②c → ③, then ④ compile once. `nextSphereStep(env)` decides the loop-back. The default is one batch covering every sphere, which matches monolithic `growSpheres` byte for byte; smaller batches grow sphere by sphere and produce a different world by design.
+
+The envelope carries the state shared across batches (accumulated nodes, substrate counts, the grown grid, placement indices, the batch cursor) and an rng snapshot saved after every step that draws from it. The rules that keep edits safe:
+
+- ②b in the first batch re-derives its rng position from the seed, so editing the allocation and re-running stays correct.
+- Later batches restore the saved snapshot.
+- ②c draws no rng at all.
+
+Why the phase split preserves byte-identity is covered in [Sphere-Driven Growth](./sphere-growth.md#the-three-phase-split-and-the-rng-discipline).
 
 ## Top-down mode — four steps
 
-`layout → realise → finalize → compile` (`TOPDOWN_STEPS`), mapping onto `topDownFromRulesJson`'s phases. The source `rules.json` is read-only, so there is no editable plan step. ① BFS-places each source region into a grid cell and assigns per-region substrates and **sub-seeds**; ② realises each region from its own sub-seed (a generator, drained with a yield per region so the panel's progress repaints); ③ finalize (teleporters, back-exits, wall-off, entrance resolution, sphere-log metadata) and ④ compile are rng-free. Because ② never consumes ①'s rng stream, re-running ② after a hand-edit is deterministic without any rng restore.
+`layout → realise → finalize → compile` (`TOPDOWN_STEPS`), the phases of `topDownFromRulesJson`. The source `rules.json` is read-only, so there is no editable plan step.
+
+| Step | What it does |
+|---|---|
+| ① layout | Places each source region in a grid cell by BFS and assigns each region a substrate and a sub-seed |
+| ② realise | Builds each region from its own sub-seed, yielding once per region so the panel's progress repaints |
+| ③ finalize | Teleporters, back exits, wall-off, entrance resolution, sphere-log metadata; no rng |
+| ④ compile | Writes `rules.json`; no rng |
+
+Because ② never draws from ①'s rng stream, re-running ② after a hand edit is deterministic without restoring any rng state.
 
 ## Spiral mode — four steps
 
-`arrange → content → regions → compile` (`SPIRAL_STEPS`), splitting monolithic `arrangeShuffledSpiral` (now `arrangeSpiralPlan` + `realiseSpiralRegions` in the engine) plus `buildRulesJson`. ① **arrange** installs each quota substrate's pipeline config (`applySubstrateConfig` → `adapter.applyPipelineConfig`) so the quota-vs-`zoneCount` validation sees a configured dataset's real zone count, then validates, builds the shuffled substrate sequence — the *only* pre-loop rng draw — and auto-sizes the grid, yielding an editable placement plan (`sequence`, `cells`, `startCell`, `gridDims`) and a post-shuffle rng snapshot. ② **content** materialises a content source's installed document onto `env.content` as the editable artifact; it is a **byte-identical no-op for every document-less world**. A world "has content" only when a content source declares `adapter.emitsSpiralContent` **and** its `substrateConfig[id]` carries a document under the source's `spiralContentConfigKey` (default `datasetDoc`) — so a dataset-less jta world (which declares `emitsSpiralContent` unconditionally) still reads as no-content and the presence probe (`!worldHasContentSubstrate(e) || !!e.content`) reports *completed* without stalling `detectCompleted`'s contiguous walk. That config-field name is a source property (region-library C3) precisely so a **second content kind** — a loaded region library, keyed `library:<id>` with its own field/id — rides the same ② seam as jta's dataset. The descriptor's `onContentEdit` runs on every deserialize: it re-installs the config's globals (they don't cross a process boundary — from the edited `env.content` when present, else the config's carried document), restamps a hand-edited document (content-hash → new id: `dataset_id` for a jta dataset, `library_id` for a library), and clears the downstream `regions`/`compile` when that id changes so an auto-resume regenerates against the edit. ③ **regions** restores the post-shuffle rng and spiral-walks region synthesis + stitch/reconcile/wall-off; procedural substrates (maze) draw rng in the exact monolithic order, content sources (jta, library) draw none, so a content-only walk's ③ is rng-free. ④ **compile** is `buildRulesJson` (driver `shuffled-spiral`). Since APWORLD SUBSTRATE CHANGE R6b the compile also **records each content source's installed config**: whenever it writes `procgen_metadata` (any driver), every source that declares `recordablePipelineConfig` and realised ≥1 region of the grid gets `procgen_metadata[p].substrate_configs[id]` (the metadata is a per-player map) — jta's `{emitZoneLocations, goalZone, freeZones, startingPerks, perkShuffleSeed}`, omsi's `{towns, emitUnlockLocations, unlockScale, regionSplit}` — read from the module state ① installed, so the document carries the fields a reader could not otherwise recover (the APWorld hub's *Zone N* read-back prefers them over its assumption; `procgenCore/substrateConfigRecord.js`, `substrate-registry.md` § *Build-time — content sources*). No declaring source realised ⇒ no key; no `procgenMetadata` ⇒ nothing, so the byte-identity dumps are unchanged. ⚠ The jta fixture generator `scripts/test/generate-jta-locations-test-preset.mjs` passes the same metadata since R6b (`--out <dir>` writes a scratch copy); its five committed fixtures carry the record since the R6c re-record. The panel drives the stepped form (Part 2c); the headless `spiral-step` CLI runs each step cross-process (its `--jta-*` flags mint a jta-dataset world — generation is Node-only, the profile/vanilla fixtures are not bundled).
+`arrange → content → regions → compile` (`SPIRAL_STEPS`). These split the monolithic `arrangeShuffledSpiral` (in the engine, `arrangeSpiralPlan` + `realiseSpiralRegions`) plus `buildRulesJson`.
 
-**JtA dataset residency (reshaped Phase B).** JtA's synthetic dataset is the first ② content document. A preset carries `growthParams.substrateConfig.jta = { datasetDoc, emitZoneLocations, goalZone, freeZones, startingPerks, perkShuffleSeed }`; ① installs it, ② lands the editable copy on `env.content`, ③ synthesises the zone regions (single full-doc carrier + a `jta_dataset_ref` on every jta region), and `onContentEdit` keeps a hand edit's `(seed, dataset_id)` Pass-B cache + id-keyed save slot honest. Gates: `check-spiral-byteidentity.mjs` (dataset-less byte-identity), `check-jta-locations-roundtrip.mjs` `JTA_RT_PIPELINE=1` (a pipeline-initiated dataset survives world_generator + Generate.py), `check-jta-dataset-pipeline-preset.mjs` (the pipeline reproduces the committed playable `jta_dataset_test` preset the in-app test solves), and `spiralSteps.dataset.test.js` (edit → new id → fresh solve).
+**① arrange** first installs each quota substrate's pipeline config through its registry entry's `applyPipelineConfig`, so that validating quotas against `zoneCount` sees a configured dataset's real zone count. It then builds the shuffled substrate sequence (the only rng draw before the loop) and sizes the grid. The output is an editable placement plan (`sequence`, `cells`, `startCell`, `gridDims`) plus the post-shuffle rng snapshot.
+
+**② content** copies a content source's installed document onto `env.content`, where it can be edited. For a world with no content document it does nothing and stays byte-identical. A world has content only when a source declares `emitsSpiralContent` and its `substrateConfig[id]` carries a document under the source's `spiralContentConfigKey` (default `datasetDoc`). So a jta world with no dataset reads as content-free, and the step's presence probe reports it complete.
+
+The config key is a property of the source so that more than one kind of content can use this step. JtA's synthetic dataset uses `datasetDoc`; a loaded region library uses `libraryDoc`, keyed `library:<id>`.
+
+After every deserialise, the descriptor's `onContentEdit` re-installs the config's globals (they do not cross a process boundary). If the document was hand-edited, it gets a new content-hash id (`dataset_id` for a jta dataset, `library_id` for a library), and when the id changes, `regions` and `compile` are cleared so that a resume regenerates against the edit.
+
+**③ regions** restores the post-shuffle rng and walks the spiral: region synthesis, stitching, reconciliation and wall-off. Procedural substrates (the maze) draw rng in exactly the monolithic order; content sources (jta, library) draw none.
+
+**④ compile** is `buildRulesJson` with driver `shuffled-spiral`. Whenever any driver writes `procgen_metadata`, it also records each content source's installed config: every source that declares `recordablePipelineConfig` and realised at least one region gets `procgen_metadata[p].substrate_configs[id]` (the metadata is keyed per player). This keeps fields a reader could not otherwise recover, such as jta's zone settings or omsi's town settings. See `frontend/modules/procgenCore/substrateConfigRecord.js` and [Substrate Registry](./substrate-registry.md) for the content-source contract.
+
+### JtA datasets in the spiral
+
+A preset carries `growthParams.substrateConfig.jta = { datasetDoc, emitZoneLocations, goalZone, freeZones, startingPerks, perkShuffleSeed }`. ① installs it, ② puts the editable copy on `env.content`, and ③ builds the zone regions, each carrying a `jta_dataset_ref`. Generating a dataset runs in Node only; `spiral-step.js`'s `--jta-*` flags create a jta-dataset world headlessly.
+
+| Check | What it covers |
+|---|---|
+| `scripts/procgen/check-spiral-byteidentity.mjs` | Dataset-less byte-identity |
+| `scripts/procgen/check-jta-locations-roundtrip.mjs` with `JTA_RT_PIPELINE=1` | A pipeline-built dataset survives `world_generator` and `Generate.py` |
+| `scripts/procgen/check-jta-dataset-pipeline-preset.mjs` | The pipeline reproduces the committed `jta_dataset_test` preset |
+| `frontend/modules/procgenPipeline/spiralSteps.dataset.test.js` | Edit → new id → fresh solve |
 
 ## The byte-identity contract
 
-Running the stepped pipeline — in-process or across serialized boundaries — reproduces the monolithic driver's output **byte-for-byte** at default batching. This is the invariant that makes the stepped form trustworthy: an edit changes exactly what you edited, nothing else. An envelope with no recorded layout edits takes no replay code path at all, so the contract is stated over the unedited world and the guards below measure it there. It holds because the rng is a single continuous stream consumed in the monolithic order; any added, removed, or reordered draw in the engine or a step runner breaks it silently. The guards are the step-runner test suites (`sphereSteps.test.js`) and the headless byte-identity scripts (`scripts/procgen/dump-{maze,sphere,topdown}-byteidentity.mjs` and `check-spiral-byteidentity.mjs`).
+Running the stepped pipeline, in one process or across serialised boundaries, reproduces the monolithic driver's output byte for byte at default batching. This is what makes the stepped form trustworthy: an edit changes exactly what you edited and nothing else.
+
+The contract is stated over the unedited world; an envelope with no recorded edits never enters the replay code. It holds because the rng is one continuous stream consumed in the monolithic order.
+
+**Warning:** any added, removed or reordered rng draw in the engine or a step runner breaks the contract silently. Run the guards after touching either.
+
+| Guard | Covers |
+|---|---|
+| `sphereSteps.test.js`, `topDownSteps.test.js` (in `frontend/modules/procgenPipeline/`) | Stepped vs monolithic, in process |
+| `scripts/procgen/dump-maze-byteidentity.mjs`, `dump-sphere-byteidentity.mjs`, `dump-topdown-byteidentity.mjs` | Headless dumps compared across changes |
+| `scripts/procgen/check-spiral-byteidentity.mjs`, `check-topdown-steps.mjs` | Spiral and top-down, stepped vs monolithic |
+| `frontend/modules/procgenPipeline/presetDefs.generate.slow.test.js` | Every shipped preset generated twice, byte-identical |
 
 ## Hand edits are recorded
 
-The composite-grid **layout editor** (the panel's Move Region / Move Exits modes) and the two scalar per-region gestures (Re-roll 🎲, the substrate `<select>`) do not mutate-and-forget. Each one is an **op appended to `env.edits[]`** — `frontend/modules/procgenPipeline/layoutEdits.js` — so a hand-edited world is `config + seed + edits`, and the panel, the CLI and a re-run all reproduce the same world from that recording.
+The panel's layout editor (Move Region, Move Exits) and the per-region Re-roll 🎲 and substrate `<select>` each append an op to `env.edits[]` (`frontend/modules/procgenPipeline/layoutEdits.js`), so an edited world is `config + seed + edits`, and the panel, the CLI and a re-run all reproduce it from that recording.
 
-The vocabulary is six ops, one spec table: `move-region {from, to}`, `swap-regions {a, b}`, `move-exit-side {cell, exitId, side}`, `swap-exit-sides {cell, exitA, exitB}`, `re-roll {region_id, n}`, `set-substrate {region_id, substrate}`. The four layout ops call the existing engine mutators; the two scalars go through the mode's binding. The two exit-side ops relabel an exit through its substrate's DECLARED `exitSides.relabel` (PIPELINE RELAYOUT R2 — `regionExitSides(region)` reads it through the registry: the flash-zone family renames `params.sidePortals` in place and moves `backExitSide` with a back exit, so a move and its move back are byte-identical; a substrate that declares nothing, like the maze, is refused by that absence), and a side that already holds an exit takes another iff `sideMayHoldAnotherExit` says so (a keyless declaration — the text adventure, jta, omsi); the panel's Move Exits second click on another exit's square swaps with THAT exit, and anywhere else moves to the nearest side. On a substrate that declares `regionGeometry: 'sides'` (bounce, runner) they write the new `side` and no tile, and drop a stale one ([Substrate Registry § *Build-time — region geometry*](./substrate-registry.md#build-time--region-geometry), PRESET SIDECARS G1).
+| Op | Fields | Applied by |
+|---|---|---|
+| `move-region` | `from, to` | engine mutator |
+| `swap-regions` | `a, b` | engine mutator |
+| `move-exit-side` | `cell, exitId, side` | engine mutator |
+| `swap-exit-sides` | `cell, exitA, exitB` | engine mutator |
+| `re-roll` | `region_id, n` | mode's edit binding |
+| `set-substrate` | `region_id, substrate` | mode's edit binding |
 
-**Where each op replays.** The runner replays an edit immediately after the step that PRODUCES the artifact it mutates, and before the next step starts. The stages are not a convention — they are the panel's own write-back depths:
+The exit-side ops relabel an exit through the substrate's declared `exitSides.relabel`, read by `regionExitSides(region)`; a substrate that declares none (the maze) refuses them. Whether a side that already holds an exit may take another is `sideMayHoldAnotherExit` (`frontend/modules/procgenCore/exitSides.js`). On a substrate with `regionGeometry: 'sides'` (bounce, runner) the ops write the new `side` and no tile; see [Substrate Registry](./substrate-registry.md#build-time--region-geometry).
 
-| op | sphere | top-down |
+### Where each op replays
+
+An edit replays right after the step that produces the artifact it changes, before the next step starts:
+
+| Op | Sphere | Top-down |
 |---|---|---|
 | `move-region`, `swap-regions`, `move-exit-side`, `swap-exit-sides` | after ③ regions | after ③ finalize |
 | `re-roll` | after ③ regions | after ① layout |
 | `set-substrate` | after ②c items | after ① layout |
 
-Top-down's layout ops replay *after* ③ because `finalizeTopDown` derives back-exits through `layout.cellsByName`: run the move first and the moved region gets no back-exit at all. That is also the one place where the replay stage and the **undo** step diverge — the grid top-down moves regions on is built by ①, so undoing a top-down layout edit rewinds to ①, while sphere's ③ builds its own grid and the two coincide.
+Top-down layout ops replay after ③ because `finalizeTopDown` derives back exits from `layout.cellsByName`; a move applied earlier would leave the moved region without a back exit. Undo still rewinds a top-down layout edit to ①, because ① builds the grid; in sphere mode ③ builds its own grid, so replay and undo happen at the same step.
 
-**A layout op re-derives every link from the exits.** All four layout ops end in `relayoutSphereGrid`: it captures each forward exit's region, exit id, side and target, rebuilds `Grid.teleporters` with one entry per teleporter **exit** (keyed `cell:exit_id`) for every link whose ends are no longer neighbours on its side, re-stitches, and then sets every exit's `isTeleporter`, back exits included, by the side law `linkIsAdjacentOnSide`. Until PIPELINE RELAYOUT R1 the table was keyed `cell:side` and kept one target per side. On the top-down APCalc world (seed 4, 10×10, 81 regions, 51 forward teleporter exits held in 26 entries), Move Region (4,5)→(2,0) and back left 28 forward exits on 16 regions pointing at the wrong region. Keyed by exit, that round trip and a swap and swap back change no exit and no compiled `regions` byte. Nor does either move the compiled document's key order: a move or swap re-keys the region where it stands in the grid's cell `Map` (`Grid.relocateRegions`), and that `Map`'s order is the key order of `preset_sidecars`. Until PIPELINE RELAYOUT C1 a move removed and re-placed the region, so it came back last — move and back put `Region 1` at the end of the 81 keys, while every record stayed unchanged. The compiled `rules.json` of a move and back, and of a swap and swap back, is now the never-edited one as a string (less `procgen_metadata.edits`).
+### Rules the replay follows
 
-**Undo is a pop.** Drop the last edit, `invalidateFromStep` the step it rewinds to, resume: determinism does the rest. The claim, pinned on both drivers, is *N edits → undo ×N → the never-edited world, byte for byte*.
+- **Links are re-derived from the exits.** Every layout op ends in `relayoutSphereGrid`, which rebuilds `Grid.teleporters` with one entry per teleporter exit (keyed `cell:exit_id`), re-stitches, and sets each exit's `isTeleporter` from `linkIsAdjacentOnSide`. A move and its move back, or a swap and its swap back, therefore leave every exit and every compiled `regions` byte unchanged.
+- **Key order is kept.** A move re-keys the region in place in the grid's cell `Map` (`Grid.relocateRegions`), and that order is the key order of `preset_sidecars`. The compiled `rules.json` after a move and back is the never-edited one as a string, apart from `procgen_metadata.edits`.
+- **Undo is a pop.** Drop the last edit, `invalidateFromStep` to the step it rewinds to, and resume. N edits followed by N undos give the never-edited world, byte for byte, on both drivers.
+- **Identity differs by mode.** Top-down regions keep their source names. Sphere edits name regions `#<node index>`, because the canonical `region_<gx>_<gy>` only exists after ③ while `set-substrate` applies before it. A `re-roll`'s `n` counts the earlier re-rolls of that region in the recording, never a session counter, so undo rewinds it.
+- **No rng.** Replaying draws nothing: the mutators relabel and re-stitch, `set-substrate` writes a field, and a re-roll derives its seed from `(seed, region_id, n)`.
 
-**Identity differs by mode.** Top-down regions keep their source names. Sphere edits name `#<node index>`, because the canonical `region_<gx>_<gy>` is derived from a cell that only exists after ③ while `set-substrate` must apply before ③. A `re-roll`'s `n` is derived from the recording (how many re-rolls of that region precede it), never from a session counter — which is what makes undo rewind the count.
+The recording travels in the envelope, and compile copies it to `procgen_metadata[p].edits` in `rules.json` as provenance (omitted when nothing was edited).
 
-**No rng.** A replay draws nothing: the four mutators relabel and re-stitch, `set-substrate` writes a field, and a re-roll derives its seed from `(seed, region_id, n)`. With `edits` absent or empty the replay is not entered.
+**Note:** an edit applies once each time its artifact is produced. `run -i env.json` that resumes past an edit's stage will not re-apply it, which is correct for a panel export (its edits are already applied); a hand-added edit needs `--from <its stage>`. Both CLIs print the recorded edits and name any their start point has already passed.
 
-**Export and reproduction.** `serializeEnvelope` carries the recording for free (it is plain JSON), so a CLI chain and a panel export both round-trip it; `procgen_metadata[p].edits` carries it into the compiled `rules.json` as **provenance** (additive — omitted when nothing was edited). ⚠ An edit applies exactly once per production of its artifact, so a `run -i env.json` that auto-resumes *past* an edit's stage will not re-apply it — which is correct (a panel export's edits are already applied), but means a hand-added edit needs `--from <its stage>`. Both CLIs print the recorded edits and name any their start point is already past.
-
-Guards: `layoutEdits.test.js`, the recorded-edit blocks in `sphereSteps.test.js` and `topDownSteps.test.js`; `topDownRelayoutIdentity.test.js` for the move-and-back identity, which `check-topdown-steps-ui.mjs` Phase D also asserts through the panel's own clicks.
+Tests: `layoutEdits.test.js`, the recorded-edit blocks in `sphereSteps.test.js` and `topDownSteps.test.js`, and `topDownRelayoutIdentity.test.js` for move-and-back identity (also asserted through the panel by `scripts/procgen/check-topdown-steps-ui.mjs`).
 
 ## Region editors (③ Edit ▸)
 
-The panel's per-region "Edit ▸" is substrate-agnostic via `frontend/modules/procgenPipeline/regionEditors.js`, which RESOLVES rather than registers: the launcher for `region.substrate` is **any substrate whose entry declares `roomEditor`** on the substrate registry ([Substrate registry](./substrate-registry.md) § *Entry contract* → *Editing*), and a substrate that declares none is the graceful "no editor for this substrate" fallback. The contract is `open({ region \| record, base?, contract?, onSave })`; `contract` carries what the realiser used (side portals, exit/location specs, physics profile, braid layout, …); in pipeline mode `onSave` splices the edited region back into the grid and invalidates ④.
+The panel's per-region Edit ▸ button is substrate-agnostic. `frontend/modules/procgenPipeline/regionEditors.js` looks up the substrate registry: any substrate whose entry declares `roomEditor` has an editor, and one that declares none shows a "no editor for this substrate" message. See [Substrate Registry](./substrate-registry.md) (*Entry contract*, *Editing*).
 
-(It WAS a registry — a module-level table each editor wrote itself into at `initialize()` time — until the editor-integration arc's slice W3. The reason it could not stay one: the maze's and Seedling's room editors are LAB PAGES, and a page never calls `initialize()`. A DECLARATION on the entry is also readable headless, so the capability matrix and the `check-*.mjs` gates can ask which substrates have an editor with no browser. `registerRegionEditor` survives as a deprecated runtime override for one release; nothing in the repository calls it.)
+The editor contract is `open({ region | record, base?, contract?, onSave })`. `contract` carries what the realiser used (side portals, exit and location specs, physics profile, braid layout, and so on). In pipeline mode, `onSave` splices the edited region back into the grid and invalidates ④.
 
-Three editors exist today, declared by four entries (`flash_seedling_gen` declares the same Seedling editor as `flash_seedling`). **bounceRegionEditor** (`frontend/modules/bounceRegionEditor/`, panel 🪀) is the `panel` kind: launched from Edit ▸ with a session, or standalone with a fixture when no session is pending, editing one bounce region's geometry against the verified-vs-authored region report. The **maze** and **Seedling** are the `lab` kind — their editors are `mazeRoom/lab.html`'s SET arm and `seedlingDemo/watch.html`'s EDIT arm, opened inside `procgenLabPanel` by `procgenLabPanel/labRoomEditor.js` over the existing `procgenLab:` vocabulary: a document in over `load`, ONE room over `navigate` with `?source=<arm>&room=<n>`, and the folded document back out over `levelChanged`.
+| Substrate | Kind | Editor |
+|---|---|---|
+| `bounce` | `panel` | `frontend/modules/bounceRegionEditor/` (panel 🪀), opened from Edit ▸ or standalone with a fixture |
+| `maze` | `lab` | `mazeRoom/lab.html`, SET arm |
+| `flash_seedling`, `flash_seedling_gen` | `lab` | `seedlingDemo/watch.html`, EDIT arm (the same editor) |
+
+Lab editors open inside `procgenLabPanel` through `frontend/modules/procgenLabPanel/labRoomEditor.js`: the document goes in over `load`, one room is opened over `navigate` with `?source=<arm>&room=<n>`, and the edited document comes back over `levelChanged`. `registerRegionEditor` remains as a deprecated runtime override; nothing in the repository calls it.
 
 ## Rebuilding an envelope from a compiled world
 
-`rebuildEnvelopeFromRulesJson` (pipeline engine) reconstructs a sphere-mode envelope from a compiled `rules.json`, using the slot's `procgen_metadata[p].sphere_tree` (`opts.playerId`, default `'1'`) and the preserved `preset_sidecars` — which is what makes an already-compiled world re-growable and appendable (add spheres to an existing world) rather than a dead end. This is why editors must round-trip `procgen_metadata` untouched ([Sphere-Driven Growth](./sphere-growth.md#editing-and-round-tripping-grown-worlds)).
+`rebuildEnvelopeFromRulesJson` (in `procgenPipelineEngine.js`) reconstructs a sphere-mode envelope from a compiled `rules.json`, using the player's `procgen_metadata[p].sphere_tree` (`opts.playerId`, default `'1'`) and the preserved `preset_sidecars`. This lets you re-grow a compiled world or add spheres to it. It is why editors must round-trip `procgen_metadata` untouched; see [Sphere-Driven Growth](./sphere-growth.md#editing-and-round-tripping-grown-worlds).
 
-## CLIs
+## CLIs and headless runs
 
-- `scripts/procgen/sphere-step.js` — one sphere step (or a range) per invocation; `--params FILE` merges config overrides mid-pipeline; compile exits non-zero on a sphere-oracle mismatch.
-- `scripts/procgen/topdown-step.js` — the top-down analogue.
-- `scripts/procgen/spiral-step.js` — the shuffled-spiral analogue (`arrange → content → regions → compile`).
-- `scripts/procgen/check-topdown-steps.mjs`, `dump-*-byteidentity.mjs`, `check-spiral-byteidentity.mjs` — the byte-identity checks.
+| Script (`scripts/procgen/`) | Purpose |
+|---|---|
+| `sphere-step.js` | One sphere step or a range per invocation; `--params FILE` merges config overrides; `compile` exits non-zero on a sphere-oracle mismatch |
+| `topdown-step.js` | The top-down equivalent |
+| `spiral-step.js` | The shuffled-spiral equivalent |
 
 See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
 
-**The panel's run assembly is a module, and the presets are generated per CI run.** What the panel hands each step runner — the sphere `cfg` + pre-plan `prep` + flat `config`, the spiral `{ config, compileIn }`, the top-down envelope input, grid growth's grow + compile inputs — is assembled by `frontend/modules/procgenPipeline/presetRun.js` (`buildRunFromState`), a pure function of the panel's state; the panel's Generate calls it over `this`, and `runPresetHeadless` drives the same run to its `rules.json` with no browser. ⚠ The CLIs above do **not** go through it: they build their config from flags over the same hooks (`sphereConfigHooks.js`) and step runners, so they are a second caller of the runners, not of the assembly — measured at P0 against `presetRun.js`, `dump-sphere-growth.js` reproduces `bounce-sphere-demo` and both runner sphere presets byte-for-byte, and `dump-shuffled-spiral.js` reproduces `jta-zone-demo` except `procgen_metadata`, which that CLI does not write. `presetDefs.generate.slow.test.js` (slow tier) generates every entry of `SHIPPED_PRESETS` twice per CI run — byte-identical, a world beyond Menu, each run within `PRESET_HEADLESS_BUDGET_MS` — except the presets naming a substrate that declares `generationCost: 'heavy'` (`substrate-registry.md` § *Build-time — generation cost*), which it skips by name against the `PRESETS_SKIPPED_AS_HEAVY` allowlist.
+The panel's Generate builds each step runner's input with `buildRunFromState` in `frontend/modules/procgenPipeline/presetRun.js`, a pure function of the panel state; `runPresetHeadless` drives the same run to `rules.json` with no browser. The CLIs do not use `presetRun.js`: they build their config from flags over the same hooks (`sphereConfigHooks.js`) and call the same step runners.
+
+`presetDefs.generate.slow.test.js` generates every entry of `SHIPPED_PRESETS` twice per CI run and requires identical bytes, a world beyond Menu, and each run within `PRESET_HEADLESS_BUDGET_MS`. Presets that name a substrate declaring `generationCost: 'heavy'` are skipped, and must be listed in `PRESETS_SKIPPED_AS_HEAVY`.
 
 ## Related documentation
 
 - [Architecture](./architecture.md) — the stepped pipeline in context
 - [Sphere-Driven Growth](./sphere-growth.md) — the phase split and rng discipline in depth
+- [Pipeline Presets](./pipeline-presets.md) — the shipped configurations
 - [Bounce Substrate](./bounce.md) — the region contract the bounce editor consumes

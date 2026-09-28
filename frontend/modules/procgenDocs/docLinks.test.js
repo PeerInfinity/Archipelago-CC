@@ -184,22 +184,26 @@ describe('the corpus census — printed, then pinned', () => {
          *   253 → 254  SEEDLING SUBSTRATE S1 (2026-09-26): `flash.md`'s knob
          *              sentence points at `seedling-bot.md` § Seedling substrate
          *              S1 (`doc` 174 → 175).
+         *   254 → 237  PROCGEN DOCS CLEANUP pass 2 (2026-09-28): twelve docs
+         *              rewritten to present state; history-only cross-links
+         *              went with the history (`doc` 175 → 167, `same-doc`
+         *              21 → 13, `external` 23 → 22; `repo` unmoved at 35).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
         expect(by).toEqual({
-            'same-doc': 21,
-            doc: 175,
-            external: 23,
+            'same-doc': 13,
+            doc: 167,
+            external: 22,
             repo: 35,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(254);
+        expect(CORPUS.length).toBe(237);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(175);
+        expect(docs).toHaveLength(167);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

@@ -375,19 +375,19 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/developer/procgen/bounce.md",
         "title": "Bounce Substrate",
         "section": "developer/procgen",
-        "summary": "Bounce (\"Bounce Demo\", substrate id bounce) is a Doodle-Jump-style vertical platformer substrate in frontend/modules/bounceDemo/. There is no jump button: landing on a platform from above bounces…"
+        "summary": "Bounce (substrate id bounce, in frontend/modules/bounceDemo/) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its…"
     },
     {
         "path": "docs/json/developer/procgen/demos.md",
         "title": "Procgen demonstrations — a catalogue",
         "section": "developer/procgen",
-        "summary": "Every demonstrable feature of the two procgen lab pages, one entry each, with the link that shows it, the CLI command that reproduces it in node, which control to press, and what you are looking at."
+        "summary": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The…"
     },
     {
         "path": "docs/json/developer/procgen/flash.md",
         "title": "Flash Substrate",
         "section": "developer/procgen",
-        "summary": "The flash substrate (frontend/modules/flashSubstrate/, id flash) hosts recompiled Flash games — SWF → C → WASM via SWFRecomp-CC — in a same-origin iframe as procgen regions. The module ships a…"
+        "summary": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (flashSubstrate/) and the two Seedling entries…"
     },
     {
         "path": "docs/json/developer/procgen/gotchas.md",
@@ -399,13 +399,13 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/developer/procgen/jta.md",
         "title": "JtA Substrate",
         "section": "developer/procgen",
-        "summary": "The JtA substrate (frontend/modules/jtaSubstrateWrapper/, id jta) hosts the Journey to Ascension fork — an incremental/idle game in the frontend/modules/journey-to-ascension/ submodule — in a…"
+        "summary": "The JtA substrate (frontend/modules/jtaSubstrateWrapper/, id jta) runs the Journey to Ascension fork, an incremental game in the frontend/modules/journey-to-ascension/ submodule, in a same-origin…"
     },
     {
         "path": "docs/json/developer/procgen/loop-recording.md",
         "title": "Loop Recording and Block Modes",
         "section": "developer/procgen",
-        "summary": "How loop mode captures what a player does in a region and plays it back: the per-block mode system (Manual / Record / Playback / Bot), the per-block Instant toggle, the saved-recording store, the…"
+        "summary": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that…"
     },
     {
         "path": "docs/json/developer/procgen/maze.md",
@@ -417,7 +417,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/developer/procgen/omsi.md",
         "title": "Omsi Substrate (Idle Loops)",
         "section": "developer/procgen",
-        "summary": "The omsi substrate (frontend/modules/omsiSubstrateWrapper/, id omsi) hosts the PeerInfinity/omsi-loops fork of dmchurch's Idle Loops — included as the frontend/modules/omsi-loops/ git submodule…"
+        "summary": "The omsi substrate (frontend/modules/omsiSubstrateWrapper/, id omsi) runs the PeerInfinity/omsi-loops fork of Idle Loops, from the frontend/modules/omsi-loops/ submodule, in a same-origin iframe as…"
     },
     {
         "path": "docs/json/developer/procgen/paths-and-obstacles.md",
@@ -429,19 +429,19 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/developer/procgen/pipeline-presets.md",
         "title": "Pipeline Presets",
         "section": "developer/procgen",
-        "summary": "The Procgen Pipeline panel's Preset drop-down applies a shipped configuration — a mode, a seed, substrate quotas or a mix, the mode's knobs and an item pool — so that Generate builds a world that…"
+        "summary": "The Procgen Pipeline panel's Preset drop-down applies a shipped configuration (mode, seed, substrates, knobs and item pool) so that Generate builds a world demonstrating one feature. CI generates…"
     },
     {
         "path": "docs/json/developer/procgen/playback-and-debugging.md",
         "title": "Playback and Debugging Tools",
         "section": "developer/procgen",
-        "summary": "The procgen stack ships a family of tools for *watching a world play itself*: a playback bot that walks recorded playthroughs, a substrate-neutral controller contract with iframe proxies, shared…"
+        "summary": "Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward…"
     },
     {
         "path": "docs/json/developer/procgen/runner.md",
         "title": "Runner Substrate",
         "section": "developer/procgen",
-        "summary": "Runner (\"Runner Demo\", substrate id runner) is an auto-runner platformer substrate in frontend/modules/runnerDemo/. The player permanently runs right; the only inputs are jump (with variable hold…"
+        "summary": "Runner (substrate id runner, in frontend/modules/runnerDemo/) is an auto-runner platformer: the player always runs right. Each region is one level, a left-to-right strip from the entrance to pickups…"
     },
     {
         "path": "docs/json/developer/procgen/seedling-bot.md",
@@ -459,19 +459,19 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/developer/procgen/stepped-pipeline.md",
         "title": "The Stepped Pipeline",
         "section": "developer/procgen",
-        "summary": "Sphere growth, top-down, and shuffled-spiral can run as monolithic calls or as a sequence of discrete, inspectable, editable steps. The stepped form is what the Procgen Pipeline panel's step buttons…"
+        "summary": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline…"
     },
     {
         "path": "docs/json/developer/procgen/substrate-registry.md",
         "title": "Substrate Registry Reference",
         "section": "developer/procgen",
-        "summary": "frontend/modules/shared/procgen/substrateRegistry.js is the dispatch hub between the pipeline, the runtime player and the substrates: each registers an entry, and consumers look entries up by id…"
+        "summary": "frontend/modules/shared/procgen/substrateRegistry.js connects the pipeline, the runtime player and the substrates: each substrate registers an entry, and consumers look entries up by id instead of…"
     },
     {
         "path": "docs/json/developer/procgen/text-adventure.md",
         "title": "Text Adventure Substrate",
         "section": "developer/procgen",
-        "summary": "The text-adventure substrate (id text_adventure) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations. Under the hood a region is a…"
+        "summary": "The text-adventure substrate (id text_adventure) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits…"
     },
     {
         "path": "docs/json/developer/reference/alttp-specific-data.md",

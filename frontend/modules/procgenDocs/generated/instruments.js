@@ -211,7 +211,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 270,
         "browser": 84,
-        "cited": 110,
+        "cited": 111,
         "files": 281,
         "lineStyle": 11,
         "withDocblock": 281,
@@ -2438,7 +2438,6 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/flash.md",
-                "docs/json/developer/procgen/pipeline-presets.md",
                 "docs/json/developer/procgen/sphere-growth.md"
             ],
             "docblockStyle": "block",
@@ -2481,8 +2480,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/flash.md",
-                "docs/json/developer/procgen/pipeline-presets.md"
+                "docs/json/developer/procgen/flash.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -3286,7 +3284,6 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/flash.md",
-                "docs/json/developer/procgen/pipeline-presets.md",
                 "docs/json/developer/procgen/sphere-growth.md"
             ],
             "docblockStyle": "block",
@@ -3330,7 +3327,6 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/flash.md",
-                "docs/json/developer/procgen/pipeline-presets.md",
                 "docs/json/developer/procgen/sphere-growth.md"
             ],
             "docblockStyle": "block",
@@ -3373,8 +3369,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/flash.md",
-                "docs/json/developer/procgen/pipeline-presets.md"
+                "docs/json/developer/procgen/flash.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -3563,7 +3558,7 @@ export const INSTRUMENTS = frz({
             "category": "check",
             "citedBy": [
                 "docs/json/developer/procgen/flash.md",
-                "docs/json/developer/procgen/pipeline-presets.md"
+                "docs/json/developer/procgen/sphere-growth.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -3605,8 +3600,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/flash.md",
-                "docs/json/developer/procgen/pipeline-presets.md"
+                "docs/json/developer/procgen/flash.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -4232,9 +4226,7 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
-            "citedBy": [
-                "docs/json/developer/procgen/text-adventure.md"
-            ],
+            "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
                 "host"
@@ -4612,7 +4604,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "dump",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/stepped-pipeline.md"
+            ],
             "docblockStyle": "line",
             "documentedFlags": [],
             "file": "dump-maze-byteidentity.mjs",
@@ -4690,7 +4684,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "dump",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/stepped-pipeline.md"
+            ],
             "docblockStyle": "line",
             "documentedFlags": [],
             "file": "dump-sphere-byteidentity.mjs",
@@ -4708,7 +4704,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "dump",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/stepped-pipeline.md"
+            ],
             "docblockStyle": "line",
             "documentedFlags": [],
             "file": "dump-topdown-byteidentity.mjs",
@@ -4734,8 +4732,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "export",
             "citedBy": [
-                "docs/json/developer/procgen/architecture.md",
-                "docs/json/developer/procgen/flash.md"
+                "docs/json/developer/procgen/architecture.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -5303,7 +5300,6 @@ export const INSTRUMENTS = frz({
             "citedBy": [
                 "docs/json/developer/procgen/README.md",
                 "docs/json/developer/procgen/architecture.md",
-                "docs/json/developer/procgen/demos.md",
                 "docs/json/developer/procgen/maze.md",
                 "docs/json/developer/procgen/seedling-bot.md",
                 "docs/json/developer/procgen/substrate-registry.md"
@@ -9617,9 +9613,7 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "region",
-            "citedBy": [
-                "docs/json/developer/procgen/substrate-registry.md"
-            ],
+            "citedBy": [],
             "docblockStyle": "line",
             "documentedFlags": [],
             "file": "region-library-validate.mjs",

@@ -1,6 +1,8 @@
 # Playback and Debugging Tools
 
-The procgen stack ships a family of tools for *watching a world play itself*: a playback bot that walks recorded playthroughs, a substrate-neutral controller contract with iframe proxies, shared timing/UI primitives, a forward simulator that generates sphere logs, and per-substrate visualizers. The common thread is the **sphere log** — the recorded order in which a playthrough collects progression items (the same JSONL format `exporter/sphere_logger.py` emits during seed generation).
+Tools for watching a generated world play itself: a playback bot that walks recorded playthroughs, the controller contract and iframe proxies it drives, shared timing and UI widgets, a forward simulator that writes sphere logs, and per-substrate visualizers.
+
+Most of them are driven by a **sphere log**: the recorded order in which a playthrough collects progression items, in the JSONL format `exporter/sphere_logger.py` writes during seed generation.
 
 ## The playback bot (`frontend/modules/playbackBot/`)
 
@@ -19,7 +21,7 @@ Substrates expose playback through `getPlaybackController()` on their registry e
 
 For in-process substrates (maze), the controller is the live panel's own object. For iframe-hosted substrates there is no host-side object to call, so `textAdventureSubstrateWrapper/playbackProxy.js` provides the host-side **PlaybackProxy**: each method publishes the invocation as an eventBus event, and the in-iframe `playbackBridge.js` subscribes and executes it. Methods are fire-and-forget — the bot never awaits them; progress comes back through the ordinary dispatcher events (`user:locationCheck`, `user:regionMove`), identically for in-process and iframe substrates.
 
-The proxy is deliberately reusable: it takes a `controlEvent` parameter, so other iframe substrates use the same class on their own channel — bounce constructs one on `bounce:playbackControl`, received by the shared flash bridge's playback receiver and translated into bot-driver targets ([Bounce Substrate](./bounce.md)).
+The proxy is reusable: it takes a `controlEvent` parameter, so other iframe substrates use the same class on their own channel — bounce constructs one on `bounce:playbackControl`, received by the shared flash bridge's playback receiver and translated into bot-driver targets ([Bounce Substrate](./bounce.md)).
 
 ## Shared timing and UI primitives (`frontend/modules/shared/`)
 
@@ -33,7 +35,7 @@ Both live in the `shared/` git submodule.
 A substrate-neutral playthrough walker over `rules.json`, with two entry points sharing one set of accessibility primitives:
 
 - `generateSphereLog(rulesDoc, opts)` — runs a full walk and returns a sphere log as JSONL-compatible entries. This is how the procgen pipeline embeds a sphere log into a compiled `rules.json`.
-- `pickNextTarget(model, state)` — given current inventory and checked locations, returns the next `{ region, location, item, accessRule }` to seek. Nothing in the app calls it yet — neither the visualizer nor the playback bot uses it.
+- `pickNextTarget(model, state)` — given current inventory and checked locations, returns the next `{ region, location, item, accessRule }` to seek. Nothing in the app calls it; the maze visualizer and the playback bot choose targets themselves.
 
 Its faithfulness contract against Python: **integer-sphere contents must match `MultiWorld.get_spheres` exactly** (sphere boundaries snapshot reachability at sphere start; locations that become reachable mid-sphere belong to the next sphere), while fractional ordering *within* a sphere may differ (the walker picks alphabetically). The emitted format matches `exporter/sphere_logger.py`: a metadata entry, a `0` integer-header with initial accessibility sets, then one fractional entry per advancement-item pickup; filler items never appear as `sphere_locations`.
 
@@ -43,7 +45,7 @@ Genre-agnostic search machinery shared by playbots, reachability analyzers, and 
 
 - `reach(world, solver, startState, goalPred, options)` — a query wrapper over a pluggable solver.
 - `makeBfsSolver({ step, inputs, visitedKey })` — a generic-search **feasibility** oracle closed over a per-game step function; bounce's `canJump` and the maze autopather both plug into it. A returned plan is the input sequence itself.
-- A random-walker solver factory — a **difficulty** oracle: runs randomized trials through `step` and reports what fraction reach the goal within a step budget. Feasibility and difficulty are deliberately separate oracles used together.
+- A random-walker solver factory — a **difficulty** oracle: runs randomized trials through `step` and reports what fraction reach the goal within a step budget. Feasibility and difficulty are separate oracles, used together.
 
 World/state/input shapes, step functions, and goal predicates are all per-game; only the contract is shared.
 
@@ -53,7 +55,7 @@ The maze panel's playthrough visualizer (`frontend/modules/mazeRoom/mazeRoomVisu
 
 ## Headless verification
 
-The `scripts/procgen/` CLIs are the non-interactive counterparts: the dump scripts print a driver's full output, the `*-step.js` drivers expose the stepped pipelines, `dump-*-byteidentity.mjs` and `check-spiral-byteidentity.mjs` check byte-identity, and `check-bounce-embed.mjs` drives the real frontend with Playwright. See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
+The `scripts/procgen/` CLIs are the non-interactive counterparts: the dump scripts print a driver's full output, the `*-step.js` drivers expose the stepped pipelines, `dump-*-byteidentity.mjs` and `check-spiral-byteidentity.mjs` check the [byte-identity contract](./stepped-pipeline.md#the-byte-identity-contract), and `check-bounce-embed.mjs` drives the real frontend with Playwright. See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
 
 ## Related documentation
 

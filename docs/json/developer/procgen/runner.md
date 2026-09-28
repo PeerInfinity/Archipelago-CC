@@ -1,114 +1,215 @@
 # Runner Substrate
 
-Runner ("Runner Demo", substrate id `runner`) is an auto-runner platformer substrate in `frontend/modules/runnerDemo/`. The player permanently runs right; the only inputs are jump (with variable hold height), a second air jump when the Double Jump item is held, drop-through on one-way platforms, and a reset key that respawns at the entrance. Each generated region is one level — a horizontal left-to-right strip from a bottom-left entrance to pickups and exit portals — whose access rules are *derived from the physics*, not authored.
+Runner (substrate id `runner`, in `frontend/modules/runnerDemo/`) is an auto-runner platformer: the player always runs right. Each region is one level, a left-to-right strip from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.
 
-Like bounce, every layer is built on one physics function and one verifier, so the generator, the solver, the runtime, and the emitted Archipelago rules cannot disagree with each other. The auto-run premise is what makes the solver tractable: a player who always holds right has `vx` converging to `maxSpeed` as a deterministic function of distance run since landing, so the per-hop state collapses to (landing x, arrival vx) with no free velocity dimension, and the input space per hop collapses to jump timings and hold lengths.
+The only inputs are jump (hold for height), a second air jump when Double Jump is held, drop-through on one-way platforms, and a reset key that respawns at the entrance.
 
-**Nothing in a level persists between attempts.** All level state resets on region entry and on every respawn (death, kill floor, or reset key); the only persistent state is collected items, which live in host/AP state. New stateful content must route through this same per-attempt reset path.
+As in [bounce](./bounce.md), every layer (generator, solver, runtime and emitted rules) is built on one physics function and one verifier, so they cannot disagree. Auto-run is what keeps the solver small: with right always held, `vx` is a fixed function of distance run since landing. A hop's state is just (landing x, arrival vx), and its inputs are just jump timings and hold lengths.
+
+**Nothing in a level persists between attempts.** All level state resets on region entry and on every respawn (death, kill floor or reset key). The only lasting state is collected items, held by the host. New stateful content must use the same per-attempt reset.
+
+## Files
+
+Each of `physics.js`, `suppression.js`, `level.js`, `canRun.js`, `deriveRules.js`, `generator.js`, `apRules.js`/`zoneRules.js` and `botDriver.js` has its own section below. The rest:
+
+| File | Role |
+|------|------|
+| `vendor/toolkit-physics-original.js` | Upstream toolkit source, used by `parity.test.js`. |
+| `gameCore.js` | `ABILITY_ITEM_NAMES`, `VICTORY_ITEM_NAME`, the game session. |
+| `witnessSearch.js` | Test-only forward-search oracle. |
+| `verifyObstacles.js` | `verifyObstacleGating`. |
+| `runnerDemoLibrary.js` | The registry entry (`createRunnerSubstrateEntry`) and its hooks. |
+| `runnerLibraryEntry.js` | Capture and instantiate region-library entries. |
+| `runnerProcgenParams.js` | Pipeline knobs (`DEFAULT_RUNNER_PROCGEN_PARAMS`). |
+| `fixtures.js` | Hand-authored test levels (`FIXTURES`). |
+| `game/`, `index.js` | The game page and module registration. |
 
 ## Physics core (`physics.js`)
 
-`step(state, input, level, abilities, constants)` advances one tick at `TICK_HZ: 50` and is the single source of truth: the in-browser game loop runs it, the solver samples it, and the bot driver forward-simulates with it. It is a faithful port of the GMTK Platformer Toolkit (MIT), pinned per-tick to a vendored copy of the upstream source (`vendor/toolkit-physics-original.js`) by `parity.test.js` under identical input tapes.
+`step(state, input, level, abilities, constants)` advances one tick at `TICK_HZ` (50). The game loop runs it, the solver samples it and the bot forward-simulates with it. It is a port of the GMTK Platformer Toolkit (MIT); `parity.test.js` checks it tick by tick against the vendored upstream source under the same input tapes.
 
-Conventions — and the gotcha-class difference from bounce: runner uses the toolkit's **Unity-native units with +y up** (`GRAVITY: -9.81`), not bounce's y-down pixels. Platform x/y is the bottom-left corner; the renderer scales by `UNIT` at draw time only.
+**Warning:** runner uses the toolkit's Unity units with +y up (`GRAVITY` is negative), unlike bounce's y-down pixels. A platform's x/y is its bottom-left corner; the renderer scales by `UNIT` only when drawing.
 
-The engine adds what the toolkit lacks: auto-run (`directionX` forced to `+1`; left/right input is ignored), one-way platforms with drop-through, non-solid hazard AABBs (touch → death → respawn with per-attempt state reset), coyote time and jump buffering (0.15s each), `standingOn`/`landedOn` bookkeeping for the solver and bot, and a `state.hits` hook reserved for the hit-budget feature (any hit kills today).
+The engine adds what the toolkit lacks: auto-run (left/right input is ignored), one-way platforms with drop-through, non-solid hazard boxes (touch means death and respawn), coyote time and jump buffering (`coyoteTime`, `jumpBuffer`), `standingOn`/`landedOn` bookkeeping for the solver and bot, and a hit counter for the Shield.
 
-**Physics profiles are pure data.** `PROFILES` exposes `toolkit`, `celeste` (the default), `nsmbu`, `sonic`, and `meatboy` — the toolkit's measured presets as verbatim constant overrides. Constants are logic-affecting and are stamped into every generated payload (`physicsStampFor` / `resolvePhysicsStamp`); the runtime trusts the embedded constants, never a profile name lookup.
+`PROFILES` holds `toolkit`, `celeste` (the default, `DEFAULT_PROFILE_ID`), `nsmbu`, `sonic` and `meatboy`: the toolkit's presets as constant overrides. Constants affect logic, so every generated payload carries them (`physicsStampFor` / `resolvePhysicsStamp`). The runtime uses the embedded constants, never a profile-name lookup.
 
 ## Ability items and suppression (`suppression.js`, `gameCore.js`)
 
-Five ability items gate progression, via the two monotone-by-construction mechanisms:
+Five abilities gate progress. Each is monotone by construction: gaining it can only add routes.
 
 | Ability | AP item | Mechanism |
 |---|---|---|
-| `doubleJump` | Double Jump | Effective params: overlays `maxAirJumps: 1`. Voluntary — any trajectory possible without it survives gaining it. |
-| `blue` | Blue Platforms | Existence: `blue` platforms are one-way with drop-through, so their appearance never removes a route. |
-| `spring` | Springs | Existence: `spring` platforms launch on catch (a deterministic cut-gravity bounce rising `SPRING_RISE`; the player never stands on one) and stay refusable via the same drop-through. Springs are mid-leg geometry, never solver graph nodes, and can never host goals. |
-| `glide` | Glide | Existence: `glider` pads are one-way with drop-through. Holding jump during a **non-jump fall whose flight launched from a pad** caps fall speed at `GLIDE_FALL_CAP` (2 u/s — a ~4.5:1 glide slope on celeste); jump descents and spring flights own their arcs and never glide. The behavior needs no params overlay: a flight can only launch from a pad that exists, so the existence gate does all the work, and baseline physics is bit-identical. Design note: an "anytime" glide (any airborne descent) was swept and rejected — it composes with Double Jump past the spring/stone gate windows' hard caps, destroying their exactly-`[S]` derivations; pad-scoped glide leaves every existing window untouched (swept: flat `{glide}` = single 6.69, `{dj,glide}` = dj 11.40, `{spring,glide}` spring total = 13.49). |
-| `shield` | Shield | Effective params, on the **death threshold** instead of movement (plan §4.10 — the hit budget): overlays `MAX_HITS` to the collected count (v1: 1). Hazard charging is contact-edge (`state.hazardContacts`; one hit per contact episode per hazard), so one budgeted crossing spends one hit; the budget refills with the rest of the per-attempt state on every respawn/region entry (§8.0). Count-not-1+count is what makes the gate derive: zero Shields keep any hit lethal (v1 byte-identical), and ONE unavoidable hazard derives `[shield]` instead of `[]`. Trajectories never change — a hit is a knockback-free counter tick — so gaining it only adds survivable outcomes. |
+| `doubleJump` | Double Jump | Params overlay: `maxAirJumps: 1`. Using it is optional, so every route without it survives. |
+| `blue` | Blue Platforms | Existence: `blue` platforms are one-way with drop-through, so they never block a route. |
+| `spring` | Springs | Existence: `spring` platforms launch the player on contact (rising `SPRING_RISE`) and can be refused with drop-through. They are mid-leg geometry, never graph nodes, and never host goals. |
+| `glide` | Glide | Existence: `glider` pads are one-way. Holding jump during a non-jump fall that left a pad caps fall speed at `GLIDE_FALL_CAP`. No params overlay is needed, because a glide can only start from a pad that exists. |
+| `shield` | Shield | Params overlay on the death threshold: `MAX_HITS` becomes the number of Shields held. Trajectories never change; a hit only increments a counter, so more hits allowed can only add outcomes. |
 
-There is also an ungated `oneway` platform type (always exists, drop-through) — the reward-shelf platform; it mints no item.
+An ungated `oneway` platform type (always present, drop-through) is used for reward shelves.
 
-`suppression.js` is the one shared answer to "does this platform exist / what are the physics params under this ability set" — solver, verifier, generator, and renderer all go through it so they cannot diverge. Pickups, portals, and hazards are never suppressed. `gameCore.js` owns `ABILITY_ITEM_NAMES` and `VICTORY_ITEM_NAME`; rule emission imports from there. (A per-platform `gate` override field exists solely so tests can plant a non-monotone level for the verifier's tripwire; production levels never set it.)
+Solver, verifier, generator and renderer all ask `suppression.js` whether a platform exists and which params apply, so they cannot diverge. Pickups, portals and hazards are never suppressed. A per-platform `gate` field overrides the type's gate; only tests use it, to build a non-monotone level for the verifier to catch.
 
 ## Level model (`level.js`)
 
-A level is authored geometry: `platforms` (typed: `ground` solid; `blue` gated one-way; `spring` gated launcher; `glider` gated glide pad; `oneway` ungated drop-through), `hazards` (static kill AABBs — spike patches on floors, saw blades under shelves, ceiling slabs over run gaps, and `bed` volumes filling shield-gate gaps; the type string affects rendering, and `bed` additionally pulls `shield` into the verifier's ability universe), `pickups`, `portals` (with an `arrow` and an `exitName`), and `spawn`. Gaps are not entities — they are the empty space between floors, and the kill floor below ends any fall.
+A level is stored geometry:
 
-The key placement rule is the **goal-wake invariant**: every pickup and portal sits in the auto-run wake of its host platform — overlapping the standing box near the host's right end, with the host's run corridor free of solid blocks and hazards — so that *any* landing on the host followed by default auto-run collects the goal. Goal-reachable ⇔ host-platform-reachable, and the verifier needs no trajectory-level goal checks. `validateLevel` enforces this plus structural stuck-freedom (no full-height wall pockets, no fully-lethal walk surfaces, solid ground under the spawn).
+- `platforms`, typed by `KNOWN_PLATFORM_TYPES`: `ground` (solid), `blue`, `spring`, `glider`, `oneway`.
+- `hazards`: static kill boxes. The type (`spikes`, `saw`, `ceiling`, `bed`) affects rendering; `bed` also adds `shield` to the verifier's ability universe.
+- `pickups`, `portals` (with an `arrow` and an `exitName`), and `spawn`.
+
+Gaps are not entities: they are empty space between floors, and the kill floor ends any fall.
+
+The key placement rule is the **goal-wake rule**. Every pickup and portal sits in the auto-run path just past its host platform's right end, with that path clear of solids and hazards. Any landing on the host followed by plain auto-run collects the goal, so a goal is reachable exactly when its host is. `validateLevel` enforces this, plus: no full-height wall pockets, no fully lethal walk surfaces, and solid ground under the spawn.
 
 ## The `canRun` solver (`canRun.js`)
 
-A conservative forward-query sampler of `step` — it never simulates physics of its own. The edge A→B exists iff from *every* sampled arrival condition on A (landing x across the stand span × arrival-vx fractions of `maxSpeed`), *some* sampled input policy makes the player's next **support** be B. Legs end when `standingOn` switches to a foreign platform, which covers both airborne landings and auto-running across flush platform boundaries (those never fire `landedOn` — and they cross by *walking*, so the policy family always includes the no-input candidate). The policy family is finite and cheapest-first: `none`, position-triggered jumps × holds {tap, mid, full}, second-press timings when Double Jump is held, drop-through on one-way hosts, hazard-lead triggers placed a closed-form ascent ahead of each hazard, and — on `glider`-pad legs ONLY — glide holds: past-lip press-and-hold (the press is inert past the lip: no coyote yet under 0.03s, window closed past 0.15s, no banked air jump off a run-off) and hop-and-hold (an early tap whose landing keeps the button held, so the run-off glides from full pad height — the solver's synthesis of "arrive on the pad holding"; lip-adjacent arrivals that cannot hop are doomed at wide chasms and excluded from the ∀ exactly as the doom model intends). Pessimism is the safe direction: derived rules never claim a jump the player can't make.
+`canRun` samples `step`; it has no physics of its own. An edge A→B exists if, from every sampled arrival on A (landing x across the stand span × arrival speeds as fractions of `maxSpeed`), some sampled input policy makes the player's next support be B.
 
-The refinement that makes corridor hazards and pre-gate goals verifiable is the **doom/touch/launch model** (the `canRun.js` header is the authoritative statement). An arrival is LIVE if some policy from it avoids death, DOOMED otherwise. Edges come in two grades: a TOUCH edge is enough to grant the target's wake goals even if the player dies right after — which is how a pickup on a doomed pre-gate floor derives its true requirement instead of circularly requiring the gate's own item — while only LAUNCH edges (whose witness landing is itself live) chain onward. Death costs nothing permanent (per-attempt reset, monotone world), so accessibility means "some spawn trajectory reaches the goal".
+A leg ends when `standingOn` switches platform. That covers airborne landings and also running across flush platform edges, which never fire `landedOn`; this is why the policy set always includes "no input".
 
-The graph feeds the shared BFS in `frontend/modules/shared/simulatorCore.js`. On generated levels the full N² graph is replaced by `reachableRunPlatforms`, a lazy left-to-right layered flood with an x-monotonicity prune (auto-run `vx` is never negative) that is verdict-identical on this geometry. Edge queries share two per-evaluation memos: a doom cache (survival scans keyed by rounded landing state) and a leg cache (a leg's outcome is target-independent — the sim ends when support switches to *any* platform — so sims are reused across the candidate targets a source is probed against). Node keys carry a `hitsRemaining` dimension — reserved from day one, ACTIVE since the §4.10 hit budget: a node is (platform, budget remaining), arrivals carry the spent hits into the sims (`opts.hits0`), an edge's `spend` is its worst witness spend, and both memos key on the spent hits (survival before an unavoidable hazard genuinely differs by budget). At budget 0 — every non-Shield ability set — the graph and flood are byte-identical to the pre-budget ones. An arrival with 0 remaining before a spike bed is a doomed pre-gate arrival, exactly like one before an uncrossable gap; its wake pickups still derive via the touch grade. `witnessSearch.js` is a test-only forward-search oracle — sound and more complete than the policy family (`s.hits` rides its dedup key, so budgeted states explore correctly with zero changes) — used in slow tests to measure the conservatism gap (solver ⊆ oracle).
+The policy set (`policiesFor`) is finite and ordered cheapest-first:
+
+- no input;
+- position-triggered jumps × holds (tap, mid, full);
+- second-press timings, when Double Jump is held;
+- drop-through, on one-way hosts;
+- hazard-lead jumps placed just ahead of each hazard;
+- on `glider` pads only: press-and-hold past the lip, and hop-and-hold (a short hop whose landing keeps jump held).
+
+A finite set can miss real edges. That is the safe direction: derived rules never claim a jump the player cannot make.
+
+### Doom, touch and launch
+
+The `canRun.js` header is the authoritative statement of this model. An arrival is **live** if some policy from it avoids death, **doomed** otherwise (`survivesFrom`).
+
+- A **touch** edge is enough to collect the target's wake goals, even if the player dies right after.
+- Only **launch** edges, whose landing is live, chain onward.
+
+This lets a pickup on a doomed floor just before a gate derive its real requirement, instead of circularly requiring the gate's own item. Death costs nothing permanent, so "accessible" means "some trajectory from spawn reaches the goal".
+
+### Graph and hit budget
+
+Nodes are (platform, hits remaining) pairs (`nodeKey`); an edge's cost is the worst hit spend among its witnesses. With no Shield the budget is always 0 and the graph has one node per platform.
+
+`buildRunGraph` builds the full graph for the shared BFS in `frontend/modules/shared/simulatorCore.js`. Generated levels use `reachableRunPlatforms` instead: a lazy left-to-right flood that prunes by x (auto-run never moves left) and reaches the same verdicts. Two caches are shared within an evaluation: a doom cache (survival scans) and a leg cache (a leg's outcome does not depend on the target, so one simulation serves every candidate target).
+
+`witnessSearch.js` is a test-only forward search, more complete than the policy set. Slow tests use it to check that everything the solver finds, the oracle finds too.
 
 ## The derive-rules verifier (`deriveRules.js`)
 
-Runs reachability under every subset of the level's ability universe (`doubleJump` always; gated platform types only when present), with signature dedup (subsets with identical active geometry *and* identical effective params share one evaluation), and derives per goal the **minimal ability sets**. Goals are pickups and portals only; plain platforms may be unreachable decoration. Goal derivation consumes touch-reach; chaining uses launch edges.
+`deriveAccessRules` runs reachability under every subset of the level's ability universe (`abilityUniverse`: `doubleJump` always, gated types only when present) and returns per goal the minimal ability sets. Subsets with identical active geometry and identical params share one evaluation. Goals are pickups and portals; plain platforms may be unreachable decoration. Goals use touch reach; chaining uses launch edges.
 
-The verifier also checks **monotonicity** — gaining an item must never make a goal unreachable. Runner's vocabulary is monotone by construction (voluntary abilities, one-way gated platforms, non-solid hazards), so the check is a tripwire that should never fire; a violation is a generator defect, not repairable at emission.
+It also checks monotonicity: gaining an item must never make a goal unreachable. Runner's content is monotone by construction, so this is a tripwire. A violation is a generator bug.
 
 ## Level generation (`generator.js`)
 
-Generate-and-test: `generateLevel` proposes a strip for a target requirement and verifies it with the same derive-rules path the pipeline uses (`deriveGeneratedRules`) — every pickup and exit must derive minimal sets of exactly `[S]`, zero defects; failed proposals retry with a perturbed seed. Geometry is stored explicitly; the seed drives nothing at runtime.
+`generateLevel` proposes a strip for a target requirement and verifies it with `deriveGeneratedRules`: every pickup and exit must derive exactly `[S]`, with no defects. A failed proposal retries with a perturbed seed. Geometry is stored in the payload; the seed only drives generation.
 
-The strip proposer chains floors separated by gap kinds: `run` (plain, clearable by a grounded full-hold jump), `dj` (wider than any single jump, within double-jump reach), `stone` (a double-wide gap with a one-way `blue` stepping stone mid-gap — suppressed without the item, the gap is uncrossable), `spring` (a dj-proof TOTAL gap crossed by the deterministic spring bounce — the crossable quantity is near + spring + far, invariant in the split), `glide` (a 3-step ramp — the split segments' RAMP windows — to a `glider` pad one more step up, over an extra-wide DROP chasm: without the item the pad is absent and the chasm is dj-proof from the lower ramp top, `GLIDE_DJ_MAX` swept at the worst case; with it, running off the pad holding jump sails down at the fall cap, `sweepGlideChasm`. The landing floor is widened by `GLIDE_LAND_PAD` so the longest glide still lands ON it — the containment guarantee that a glide can never overfly a later gate — and stays hazard-free. The natural play tape is "jump onto the pad holding, keep holding, run off"; the solver synthesizes the same held state with a hop — see the hop-and-hold policy in `canRun.js`), `bed` (the shield gate, §4.10: a plain-jump gap whose airspace is ONE budgeted `bed` kill volume — from below the floor line up past the double-jump overfly bound `BED_TOP`, inset `BED_INSET` from both lips so grounded stands never touch it. Every crossing arc passes through it: **unavoidable by construction**, never proven unavoidable by the solver — the solver just charges the crossing one hit, so goals past it derive exactly prefix ∪ {shield}. One budgeted hazard per strip: `shield` can appear once per nested chain, and chaining N beds would need count-aware rules — out of scope), and `branch` (a widened plain gap with an elevated tip platform hosting a surplus exit). Gate windows are derived-then-swept: closed forms where clean, solver-swept horizontal reach (`sweepMaxGap`, `sweepSpringTotal`) and landable rise (`sweepMaxRise`) where not — the sweeps are coyote-inclusive, and `sonic`/`meatboy` saturate the gap-sweep cap (`SWEEP_SATURATING_PROFILES`), so physics gates are refused on those profiles rather than emitted unverifiably. Static spike patches decorate floors outside gate margins, with flush partner floors where a spiked floor ends in a gap; the end-of-proposal verify run is the gatekeeper. Landing corridors are **hazard-exempt**: shelf fall-off floors, split merges, ceiling flanks, glide landings, **bed landing floors** (crossings land with the budget already spent), and **branch-tip landing floors** — the tip's portal box spans its wake, so the only portal-clean crossings are jumps off the tip's left half, whose landings cluster on the next floor's left end; a spike patch there is a doom window the verifier cannot see (touching an open portal is travel, not death, so the logic is satisfied while actual play is trapped).
+The strip is a chain of floors separated by gaps. Gap kinds:
 
-**Reward shelves** (v1 lanes): with probability `shelfChance` (default 0.6) an eligible level hangs one always-active `oneway` shelf in its **last** gate's descent corridor — spring and dj gates only. The crossing arc lands on the shelf, its wake collects the shelf's pickup, and running off the right end drops onto the gate's landing floor (widened by `SHELF_PAD` and kept hazard-free); holding drop refuses the whole detour. Shelf rises are calibrated against the swept rises so the shelf gates on exactly the gate's ability (a spring shelf sits above the dj-landable rise; a dj shelf strictly between the single and dj rises). Because the shelf rides the *last* gate, its pickup derives the level's full requirement and `planStripSpecs` needed no changes — in the spec path each requirement window may shelve its last added gate the same way, carrying the window's first pickup. Spring shelves may hang a `saw` hazard under their right half: off every mandatory trajectory (arcs are caught above it, the fall-off starts right of it), lethal only to a voluntary drop-refusal.
+| Kind | Crossing | Gates on |
+|---|---|---|
+| `run` | A grounded full-hold jump. | nothing |
+| `dj` | Wider than any single jump, within double-jump reach. | `doubleJump` |
+| `stone` | A double-wide gap with a `blue` stepping stone mid-gap. | `blue` |
+| `spring` | A gap too wide for double jump, crossed by a spring bounce. | `spring` |
+| `glide` | A ramp up to a `glider` pad over a drop too wide for double jump; running off the pad holding jump glides across. The landing floor is widened so a glide never overflies it. | `glide` |
+| `bed` | A plain-jump gap filled by one `bed` hazard that every crossing arc passes through, so crossing costs one hit. At most one per strip. | `shield` |
+| `branch` | A widened plain gap with a raised tip platform holding a surplus exit. | nothing |
 
-**Ceiling hazards** (§8.7 step 3): with per-plains-slot probability `ceilingChance` (default 0) a kill slab is hung over its own short gap — a PINNED window (`CEIL_GAP`, never stretched by `gapMargin`) with the slab bottom drawn from a calibrated band (`CEIL_RISE`): above the swept crossing minimum (`sweepCeilingMin` — entry-inclusive and maximized over lattice-shaking run-up widths) and below the full-hold player top, so naive full-height jumps clip it and die while taps cross underneath. `ceilingMargin` (default **1**) picks the crossing technique: at 1, `applyCeilingMargin` narrows the gap to grounded-tap range and lifts the band above the grounded-tap apex (the engine-measured `TAP` anchor), so a plain short hop pressed before the lip crosses and coyote time is spare forgiveness rather than a requirement; at 0 the pinned expert windows apply, where the wider gap admits only run-off coyote taps. The band max never moves — mid and full holds are punished at every margin. Jump *modulation* as difficulty: no items, no new solver machinery — ceilings sit above head height, so the hazard-lead trigger pass skips them and avoidance falls out of the existing trigger-grid × holds family. Both flanking floors stay base-anchored and spike-free (the crossing is calibrated on flat unspiked lips), and the slab is thick enough that double-jump arcs cannot overfly it. A profile whose punish window collapses (nsmbu — floaty taps) *refuses* ceilings (`CEIL_RISE` null) and plants none. Saws also hang under **dj** shelves now (deferred from step 2): the draw is rise-guarded (`DJ_SAW_MIN_RISE`) so the saw's underside clears the landing floor's run corridor.
+Gate widths come from closed forms where possible and from solver sweeps otherwise (`sweepMaxGap`, `sweepSpringTotal`, `sweepMaxRise`, `sweepGlideChasm`, `sweepCeilingMin`). `sonic` and `meatboy` saturate the gap sweep (`SWEEP_SATURATING_PROFILES`), so physics gates are refused on those profiles rather than emitted unverified.
 
-The wall-clamped main exit (`exit_main`) sits at the strip's right end; surplus exits ride branch tips (`exit_br0..N`). `generateZoneSet` builds a whole winnable zone table (zone 0 requires nothing and grants the first item; fillers grant nothing; the final pickup is Victory) and stamps each zone's generation `spec` so `extractZoneRules` can regenerate with matching branch count.
+Spike patches decorate floors outside gate margins. Landing floors are kept hazard-free wherever a crossing lands in a narrow window: after shelves, split merges, ceilings, glides, beds and branch tips.
 
-For sphere-grown worlds, `planStripSpecs` is the requirement-targeted planner (the analog of bounce's gated braid chain): the distinct physics requirements must form one **nested chain** (∅ ⊂ R1 ⊂ … ⊂ Rk — a strip realises gates sequentially), the maximal requirement must belong to an exit (it becomes `exit_main`), and every other exit rides a branch tip inside its requirement window. A requirement-`[]` exit lands on a tip *before* the first gate — which is exactly how the sphere engine's ungated entrance-side back portal is realised; it is not a separate primitive. Incomparable requirements decline the spec.
+**Note:** keep branch-tip landing floors spike-free. A tip's portal box covers its wake, so clean crossings jump from the tip's left half and land on the next floor's left end. Spikes there trap real play while the logic, which treats touching an open portal as travel, still passes.
+
+### Optional features
+
+These draw from the rng only when their chance is non-zero, so with all at 0 the generator reproduces the plain layout draw for draw.
+
+- **Reward shelves** (`shelfChance`): a `oneway` shelf in the last spring or dj gate's descent, holding a pickup. The crossing arc lands on it; running off drops to the landing floor, and holding drop skips it. Its height is set so it needs exactly that gate's ability. Spring shelves may hang a `saw` underneath, off every required path.
+- **Ceiling hazards** (`ceilingChance`): a kill slab over a short gap, low enough that a full-height jump dies and a short hop passes under. `ceilingMargin` 1 (default) makes a grounded short hop enough; 0 requires a coyote-time tap off the edge. A profile where no hold height separates the two (`nsmbu`) refuses ceilings.
+- **Jitter**: plain floors rise by a random amount; gate, branch, entrance and exit floors stay at base height because gate widths are calibrated on flat ground.
+- **Splits**: a ramp climbs to a fork where jumping catches a one-way upper lane and running on falls to the lower floor. Both lanes are plain geometry, so requirements do not change.
+
+### Exits, zone tables and specs
+
+The main exit `exit_main` sits at the strip's right end; surplus exits sit on branch tips (`exit_br0`, `exit_br1`, …).
+
+`generateZoneSet` builds a winnable zone table: zone 0 requires nothing and grants the first item, fillers grant nothing, and the last pickup is Victory. Each zone records its generation `spec` so `extractZoneRules` can regenerate it.
+
+For sphere growth, `planStripSpecs` plans a strip for requirements the engine computed. The requirements must form one nested chain (∅ ⊂ R1 ⊂ … ⊂ Rk), because a strip realises gates in order. The largest must belong to an exit, which becomes `exit_main`; every other exit sits on a branch tip inside its requirement window. An exit with requirement `[]` lands on a tip before the first gate, which is how the engine's ungated back portal is realised. Incomparable requirements decline the spec.
 
 ## Rule emission (`apRules.js`, `zoneRules.js`)
 
-Minimal ability sets become OR-of-paths of physics obstacle ids `runner_gate_<ability>` in the shared paths-and-obstacles vocabulary; authored non-physics terms (foreign items, counts > 1) become per-term `logic_gate` obstacles ANDed onto every path and ride the payload as `gate_rules` for bridge evaluation — this is what makes runner regions work in mixed-substrate sphere worlds. Empty-case conventions: `[] → False_`, `[[]] → True_`. `zoneRules.js` (`assembleRunnerRegion`) is the shared emission tail for both the zone-table and spec paths: it maps requested exit sides to portals (first/'E' side → `exit_main`, surplus → `exit_br*`), re-derives and re-validates before emitting (fail-loudly), and builds the game payload (level + side portals + the physics stamp, always embedded).
+Minimal ability sets become an OR of paths over physics obstacle ids `runner_gate_<ability>`, in the shared [paths-and-obstacles](./paths-and-obstacles.md) vocabulary. Authored non-physics terms (foreign items, counts above 1) become `logic_gate` obstacles ANDed onto every path, and travel in the payload as `gate_rules` for the bridge to evaluate. This is what lets runner regions sit in mixed-substrate worlds. `[]` becomes `False_`; `[[]]` becomes `True_`.
 
-## Runtime: panel, game page, playback (`runnerDemoLibrary.js`, `index.js`, `game/`, `botDriver.js`)
+`assembleRunnerRegion` in `zoneRules.js` is the shared tail for the zone-table and spec paths. It maps exit sides to portals (`assignSidePortals`: the first side to `exit_main`, the rest to `exit_br*`), re-derives and re-validates before emitting, and builds the payload (level, side portals, physics stamp).
 
-Runner rides `flashSubstrate`'s machinery as shared code with its own identity, exactly like bounce: `createRunnerSubstrateEntry` builds on `createFlashSubstrateEntry` with component type `runnerDemoPanel`, load event `runner:loadRegion`, iframe id `runnerDemo`, playback event `runner:playbackControl`. The game page (`game/`) is a canvas renderer speaking the `__swfBridge` contract, with render-side juice and built-in touch controls (the whole panel is the jump area — tap = buffered press, hold = variable jump, release = cut — plus a corner drop button; visibility follows coarse-pointer detection with a host `moduleSettings` override). The default entry's zone table is built lazily on first use (`RUNNER_ZONE_COUNT` 6 = five feature zones + Victory since the Shield; a minute-ish of solver time) and cached.
+## Runtime: panel, game page, playback
 
-**Playback.** The registry entry's `getPlaybackController` returns a host-side `PlaybackProxy`; the in-iframe bridge hands `walkTo` targets to `botDriver.js` — a greedy re-plan controller that, on every landing edge (`landedOn` *or* a `standingOn` switch), recomputes the shortest path over a lazily-expanded, cached `canRun` graph and picks a policy by forward-simulating candidates from the live state. Routing is **budget-aware** (§4.10): route nodes are (platform, hits spent) pairs and edges land at spent + their worst witness spend — a budget-naive route admits legs whose witnesses eat a hit the player no longer has (e.g. a dj shortcut launchable only past a spike patch, proposed after the mandatory bed spent the Shield), which parks the bot on an uncompletable leg and death-loops, since every respawn refills the budget and reproduces the identical mis-route. Candidate selection is doom-aware: a completion must land in a `survivesFrom`-LIVE state (the same discipline the solver's witnesses obey), and the fallback order is clean+live > dirty (fires a foreign portal — exits the region, recoverable) > clean-but-doomed (a guaranteed death, last resort only). A goal behind the player (auto-run cannot go left) routes via the implicit reset edge — one respawn — taken only when the entrance can actually route there. Hosts of open non-target portals are avoided at both route and candidate level, with legs into such hosts preferring the leftmost clean landing (jump off a tip before its portal box). A locked target is handled by driving to its host and parking (wall-pinned on `exit_main` — zero deaths), then synthesizing one full re-enter jump when the gate opens, because goal events fire on touch-*enter*; interior locked hosts cannot park under auto-run, and the die-retry loop is the accepted behavior there. Loop mode queues `regionMove`/`locationCheck` with `executeVia: 'solver'`, same as bounce — that `solver` is **the loops solver** (the per-action agent that drives `walkTo`), not the spec solver of §4 above.
+Runner reuses `flashSubstrate` code with its own identity, like bounce: `createRunnerSubstrateEntry` builds on `createFlashSubstrateEntry` with component type `runnerDemoPanel`, load event `runner:loadRegion`, iframe id `runnerDemo` and playback event `runner:playbackControl`.
 
-**Loop mode: the SUMMARY capture category (M5, 2026-07-23).** Runner is one of the two *summary* substrates — a third capture contract beside coarse-only and fine-grained. Its play is real-time and its action stream is not worth replaying, so **Record** captures the visit's net RESULT (duration in drain seconds, the checks performed, the actions that carried an explicit cost, the exit crossed) and **Playback** applies that envelope instantly: deduct the repriced mana, refire the checks, cross the departure. The game replays nothing and the player character stays where it is — that is the design of the category, not a bug.
+The game page (`game/`) is a canvas renderer speaking the `__swfBridge` contract. It has touch controls: the whole panel is the jump area (tap, hold, release) plus a corner drop button. They show on coarse-pointer devices unless `moduleSettings.runnerDemo.touchControls` overrides that. The default entry's zone table (`RUNNER_ZONE_COUNT` zones) is built lazily on first use and cached.
 
-The economy is **time**: a per-second drain (`timeDrainPerSecond`, per region, default 1/s, XP-discounted like every other cost) is charged for every second the queue is parked on a Manual or Record block here, and per-action costs apply only where the `loop_costs` data names one explicitly. Playback prices at replay time (recorded seconds × the *current* rate), so region XP keeps mattering. The per-block Instant checkbox is hidden — summary playback is inherently instant.
+### The bot (`botDriver.js`)
 
-**Bot (M6).** `executeVia: 'solver'` is reached only by a **Bot**-mode block — never as a Playback fallback. A Bot block hands the queued `regionMove`/`locationCheck` to the `walkTo` solver (that `solver` is **the loops solver**, the per-action agent driving `walkTo` — not the runner *generator's* spec solver, *The `canRun` solver* above). The auto-runner plays the level on real physics and the queue parks until the crossing arrives. The economy is the same **time** drain, charged while the bot drives just as it is during parked live play (the two are mutually exclusive, so neither double-charges); a summary Bot's completion adds only explicitly-costed actions on top, never a per-action default. The per-block **Instant** checkbox is hidden for a Bot block too — runner plays real-time physics with no instant variant (`regionBotHonorsInstant` is false). If a Bot walk ever outran a pool it would retry via the generic queue-restart path (runner's bridge holds no pending walk, unlike jta — see [jta.md](./jta.md#playback--bot-execution)); a flat strip drains too little to reach that, so it stays unit-pinned. Runner does *not* declare `requiresLoopMode` — it is not a loop game. Full contract: [Loop Recording and Block Modes](./loop-recording.md#the-bot-flow-m6).
+`getPlaybackController` returns a host-side proxy; the in-iframe bridge hands `walkTo` targets to `createBotDriver`. On every landing (`landedOn` or a `standingOn` switch) the bot finds the shortest path over a lazily built, cached `canRun` graph and picks a policy by forward-simulating candidates from the live state.
 
+- **Budget-aware routing.** Route nodes carry hits spent. Without this the bot can pick a leg whose witness needs a hit the player no longer has, die, respawn with a full budget and repeat the same route forever.
+- **Doom-aware choice.** A candidate must land in a live state. Fallback order: clean and live, then one that touches a foreign portal (leaves the region, recoverable), then a doomed one.
+- **Goals behind the player** are reached by respawning, only when the entrance can route there.
+- **Open portals** that are not the target are avoided when routing and when choosing candidates.
+- **Locked targets:** the bot drives to the host and waits (pinned against the wall on `exit_main`), then jumps back in once the gate opens, because goal events fire on entering. Interior locked hosts cannot hold position under auto-run, so there the bot dies and retries.
+
+### Loop mode
+
+Runner is a summary substrate (`summaryRecording: true`): Record keeps a visit's net result and Playback applies it instantly, with time-based costs. A Bot block runs the bot through the loops solver (`executeVia: 'solver'`), which is not this page's `canRun` solver. See [Loop Recording and Block Modes](./loop-recording.md).
 
 ## Sphere-growth integration
 
-The registry entry exposes the requirement-targeted hooks to the generic engine: `buildZoneSpecs` / `generateZoneForSpecs` (+ the stepped-flow `…Gen` variant), `canHostExitGates` / `exitGateVeto` / `gateHostingHint` (gates must nest along the strip; all physics gates are vetoed on sweep-saturating profiles), `backPortalGated → false`, and `buildRegionContract` for the panel's "Edit ▸" flow. A runner zone is SIDES-only, as bounce's is: the entry declares `regionGeometry: 'sides'`, so the pipeline writes no exit tile and no `entrance` for it ([Substrate Registry § *Build-time — region geometry*](./substrate-registry.md#build-time--region-geometry), PRESET SIDECARS G1). `gateableItems` is constrained to the ability items (`ABILITY_ITEM_NAMES` — it grows automatically with the vocabulary). Pipeline panel params are runner-prefixed to survive mixed-substrate merging: `runnerPhysicsProfile`, `runnerGapMargin` (how close plain run gaps sit to max grounded jump — gate windows are pinned and never move), `runnerHazardDensity`, `runnerLengthSteps`, `runnerJitter` (vertical placement jitter 0–1: plain floors rise up to `JITTER_MAX` above the base line; gate/branch/entrance/exit floors stay base-anchored because gap windows are calibrated flat — the up-crossing safety bound is the swept `REACH.singleUp`), `runnerSplitChance` (split-segment probability per plains slot: a gradual ramp climbs `RAMP_STEP` per floor to a split, where jumping catches a one-way TOP lane and running off — or dropping — falls onto the base-height bottom floor, which also catches the lane's fall-off merge; requirement-neutral by construction, since both lanes are plain geometry — the OR-logic lane tier is §8.7 step 6), `runnerCeilingDensity` (ceiling-hazard probability per plains slot — see the generator section), and `runnerCeilingMargin` (margin of error under ceilings, default 1 = a grounded short hop crosses, 0 = expert coyote-tap windows; only meaningful when ceilings draw). The three chance knobs draw rng ONLY when non-zero, so 0 is draw-for-draw identical to the flat generator and untouched worlds reproduce byte-identically.
+The registry entry exposes requirement-targeted hooks: `buildZoneSpecs`, `generateZoneForSpecs` (and `generateZoneForSpecsGen` for the stepped flow), `canHostExitGates`, `exitGateVeto` and `gateHostingHint` (gates must nest along the strip; all physics gates are vetoed on sweep-saturating profiles), `backPortalGated` (always false), `hostsSurplusExitsNatively`, and `buildRegionContract` for the panel's **Edit** flow. `gateableItems` is limited to the ability items.
+
+A runner zone declares `regionGeometry: SIDES`: the pipeline writes no exit tile and no `entrance` for it. The entry declares `generationCost: 'heavy'`, so the CI preset test skips runner presets ([Pipeline Presets](./pipeline-presets.md)).
+
+Pipeline params are prefixed so they survive mixed-substrate merging (defaults in `DEFAULT_RUNNER_PROCGEN_PARAMS`):
+
+| Param | Meaning |
+|---|---|
+| `runnerPhysicsProfile` | Physics profile. |
+| `runnerGapMargin` | How close plain run gaps sit to the maximum grounded jump (0–1). Gate widths never move. |
+| `runnerHazardDensity` | Spike-patch chance per eligible plain floor. |
+| `runnerLengthSteps` | Maximum plain floors between features. |
+| `runnerJitter` | Vertical jitter of plain floors (0–1). |
+| `runnerSplitChance` | Split-segment chance per plain slot. |
+| `runnerCeilingDensity` | Ceiling-hazard chance per plain slot. |
+| `runnerCeilingMargin` | 1 = a grounded short hop crosses ceilings; 0 = coyote-tap only. |
 
 ## CLI tools
 
-- `scripts/procgen/dump-runner-level.js` — fixture/generated levels: geometry, derived rules per ability set, JSON export.
-- `scripts/procgen/check-runner-game.mjs` — Playwright: keyboard and touch input tapes on the standalone game page.
-- `scripts/procgen/check-runner-smoke.mjs` — Playwright: a runner world through the real frontend, solver-witness tape to a real check.
-- `scripts/procgen/check-runner-bot.mjs` — Playwright: bot `walkTo` through the playback controller surface.
-- `scripts/procgen/check-runner-embed.mjs` — Playwright round-trip of a sphere-grown runner world, first check to Victory, bot-driven.
-- `scripts/procgen/check-region-library-sphere-roundtrip-runner.mjs` — a sphere world mixing a committed runner library entry with generated runner regions, through world_generator and Generate.py, to a winnable seed.
-- `scripts/procgen/make-demo-runner-pack.mjs` — generates the committed demo runner region-library pack (`frontend/region-libraries/demo-runner-pack.json`) and registers it in the index.
+| Script | Purpose |
+|---|---|
+| `scripts/procgen/dump-runner-level.js` | Fixture or generated levels: geometry, derived rules per ability set, JSON export. |
+| `scripts/procgen/check-runner-game.mjs` | Playwright: keyboard and touch input on the standalone game page. |
+| `scripts/procgen/check-runner-smoke.mjs` | Playwright: a runner world in the real frontend, a solver-witness tape to a real check. |
+| `scripts/procgen/check-runner-bot.mjs` | Playwright: bot `walkTo` through the playback controller. |
+| `scripts/procgen/check-runner-embed.mjs` | Playwright: a sphere-grown runner world, bot-driven from first check to Victory. |
+| `scripts/procgen/check-region-library-sphere-roundtrip-runner.mjs` | A sphere world mixing a committed runner library entry with generated runner regions, through `world_generator` and `Generate.py`, to a winnable seed. |
+| `scripts/procgen/make-demo-runner-pack.mjs` | Generates the committed demo runner pack (`frontend/region-libraries/demo-runner-pack.json`). |
 
-Substrate tests run in the **test-substrates** config (the regression config lacks substrate runtimes).
+The four `check-runner-*.mjs` Playwright scripts need a dev server on port 8000.
 
-⛔ **THE RUNNER'S SLOW TIER IS DISABLED** (⚖ user, 2026-08-20), ahead of a major redesign of this substrate that will make the current generate-and-verify batteries irrelevant. `vitest.slow.config.js` now excludes `runnerDemo/**/*.slow.test.js` and `procgenPipeline/runnerSphereGrowth.slow.test.js` — eight files, **2380 s of the suite's 2569 s (92.6%)**, one of them already red on a 300 s test timeout. Measured after: 12 files / 217 tests / **178 s**, all green — and the CI `JavaScript Unit Tests` job went **15m52s → 3m20s** across that one commit. The files are DISABLED, not deleted: they stay on disk as the record of what the current generator, solver and oracle were held to, and the redesign's own suite replaces them. Reverting is deleting the two patterns from that config's `exclude`.
+## Tests
 
-⛓ Still running, and untouched by that change: the runner's DEFAULT-tier `*.test.js` under `npm run test:unit` (apRules, botDriver, canRun, deriveRules, gameCore, generator, level, parity, physics, runnerDemoLibrary, zoneRules); `runnerDemo/generator.calib.test.js` in the manual calibration tier (`npm run test:unit:calib`); the in-app runner substrate tests.
-
-⚠ **This paragraph used to end "…and the `verify-runner-*.mjs` Playwright instruments above", and that half was FALSE.** The verify-tier survey (`CC/docs/procgen-verify-tier.md`) measured it: all four were in no battery of any kind, and the survey's own hand-run is the first any record can evidence. They pass — the claim was wrong about the *mechanism*, not the state. V3b renamed them `check-runner-*.mjs`, which is the one membership rule the gate roster keys on, so they are on it now; each declares `@ci-box`, so the box answers them and CI does not.
+- Unit tests (`*.test.js`) run in `npm run test:unit`; `generator.calib.test.js` runs only in `npm run test:unit:calib`.
+- The runner's `*.slow.test.js` files are excluded by `vitest.slow.config.js`; its comment explains why.
+- In-app runner tests run in the `test-substrates` config (the regression config has no substrate runtimes).
 
 ## Related documentation
 
 - [Architecture](./architecture.md) — where runner sits in the pipeline
-- [Substrate Registry Reference](./substrate-registry.md) — the entry contract and runner's adapter hooks
-- [Bounce Substrate](./bounce.md) — the sibling substrate most of runner's patterns port from
+- [Substrate Registry Reference](./substrate-registry.md) — the entry contract and runner's hooks
+- [Bounce Substrate](./bounce.md) — the sibling substrate most of runner's patterns come from
 - [Sphere-Driven Growth](./sphere-growth.md) — the driver runner's spec generation serves
 - [Paths and Obstacles](./paths-and-obstacles.md) — the rule vocabulary runner emits into

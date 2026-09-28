@@ -1,120 +1,158 @@
 # Bounce Substrate
 
-Bounce ("Bounce Demo", substrate id `bounce`) is a Doodle-Jump-style vertical platformer substrate in `frontend/modules/bounceDemo/`. There is no jump button: landing on a platform from above bounces the player automatically, springs and jetpacks boost the launch, collision is one-way (rising passes through platforms), and the screen wraps horizontally. Each generated region is one level — a climb from a bottom-center entrance to pickups and exit portals — whose access rules are *derived from the physics*, not authored.
+Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.
 
-The substrate's defining property is that every layer is built on one physics function and one verifier, so the generator, the solver, the runtime, and the emitted Archipelago rules cannot disagree with each other. This page walks the layers bottom-up.
+There is no jump button: landing on a platform from above bounces the player, springs and jetpacks boost the launch, platforms are one-way (rising passes through them), and the screen wraps horizontally.
+
+Every layer (generator, solver, runtime and emitted rules) is built on one physics function and one verifier, so they cannot disagree. This page walks the layers bottom-up.
+
+## Files
+
+| File | Role |
+|------|------|
+| `physics.js` | `step`, `PROFILES`, `simulate`, `launchRise`: the physics. |
+| `suppression.js` | Which platforms, springs and jetpacks exist under an ability set. |
+| `apRules.js` | Ability to AP item mapping, `VICTORY_ITEM_NAME`, rule and obstacle emission. |
+| `canJump.js` | The jump solver and platform graph. |
+| `deriveRules.js` | The derive-rules verifier (`deriveAccessRules`, `deriveBraidAccessRules`). |
+| `generator.js` | Level generation: column and braid proposers, per-profile geometry. |
+| `sideExits.js` | Attaches one exit portal per requested side; maps portals to sides. |
+| `level.js` | Structural invariants (`validateLevel`, `braidBlueInvariantErrors`). |
+| `regionReport.js` | `formatRegionReport`: text report of a region, per-row requirements included. |
+| `verifyObstacles.js` | `verifyObstacleGating`. |
+| `bounceDemoLibrary.js` | The registry entry (`createBounceSubstrateEntry`) and its hooks. |
+| `bounceLibraryEntry.js` | Capture and instantiate region-library entries. |
+| `bounceProcgenParams.js` | Pipeline knobs and defaults (`DEFAULT_BOUNCE_PROCGEN_PARAMS`). |
+| `botDriver.js` | The playback bot. |
+| `gameCore.js`, `game/` | The in-browser game session and canvas renderer. |
+| `djReal/` | The real-Doodle-Jump renderer page. |
+| `index.js` | Module registration and the panel class. |
+
+The region editor lives separately in `frontend/modules/bounceRegionEditor/`.
 
 ## Physics core (`physics.js`)
 
-`step(state, input, level, abilities, constants)` advances one logical frame and is the single source of truth: the in-browser game loop runs it, the solver samples it, and the bot driver forward-simulates with it — all importing this one dependency-free module.
+`step(state, input, level, abilities, constants)` advances one logical frame. The in-browser game loop runs it, the solver samples it, and the bot forward-simulates with it.
 
-Conventions: y increases downward (screen-style; launches are negative `vy`), platform/pickup/portal positions are centers, and the module uses no RNG and no clock — determinism is a design principle (no algorithm may rely on RNG determinism, so there is none to begin with).
+Conventions: y increases downward (a launch is negative `vy`); platform, pickup and portal positions are centres. The module uses no RNG and no clock, so it is deterministic.
 
-**Physics profiles are pure data.** `PROFILES` exposes two constant sets:
+`PROFILES` holds two sets of constants, as plain data:
 
-- `experimental` — the original engine constants (`DEFAULTS`): 60 ticks/s, gravity 0.5, plain bounce `vy −13` (apex ≈ 169px), spring `−22` (≈ 484px), jetpack `−36` (≈ 1296px), momentum-based air control, modular screen wrap.
-- `dj` — constants measured from the real Doodle Jump: 20 ticks/s, constant gravity 4, flat (momentum-free) air control, "latched" landings (catch is a one-tick lookahead that zeroes `vy` in place; the impulse applies next tick), edge-teleport wrap.
+- `experimental` — the original constants (`DEFAULTS`): 60 ticks/s, momentum-based air control, modular screen wrap.
+- `dj` — constants taken from the real Doodle Jump: 20 ticks/s, constant gravity, flat air control, latched landings (the catch zeroes `vy` and the impulse applies next tick), and edge-teleport wrap.
 
-The differences are expressed entirely through structural behavior fields (`AIR_CONTROL: 'accel' | 'flat'`, `LANDING: 'immediate' | 'latched'`, `WRAP: 'modular' | 'edge'`, impulse/thrust values) — `step` branches on the specific field, never on a profile name, so a profile serializes into the region payload as plain data. The pipeline's default for new worlds is `dj` (`bounceProcgenParams.js`).
+`step` branches on behaviour fields (`AIR_CONTROL`, `LANDING`, `WRAP`, impulse and thrust values), never on a profile name, so a profile serializes into the region payload as data. New worlds default to `dj` (`bounceProcgenParams.js`). An `experimental` world stores no profile stamp; an absent stamp means `experimental`.
 
 ## Ability items and suppression (`apRules.js`, `suppression.js`)
 
-Six ability items gate movement, by gating the *existence* of geometry rather than by rule checks:
+Six abilities gate movement by controlling whether geometry exists, not by rule checks:
 
-| Ability | AP item | What it unlocks |
+| Ability | AP item | Unlocks |
 |---|---|---|
-| `left` / `right` | Left arrow / Right arrow | Holding that movement direction |
-| `springs` | Springs | Springs exist (host platform must also exist) |
+| `left` / `right` | Left arrow / Right arrow | Holding that direction |
+| `springs` | Springs | Springs exist (their host platform must exist too) |
 | `jetpacks` | Jetpacks | Jetpacks exist (same host rule) |
 | `blue` | Blue platforms | Blue platforms exist |
 | `brown` | Brown platforms | Brown platforms exist |
 
-`suppression.js` is the one shared answer to "does this platform/spring/jetpack exist under this ability set" — both the solver and the runtime renderer must go through it, precisely so they cannot diverge. Pickups and portals are never suppressed; their accessibility is derived from reachability. `apRules.js` owns the ability↔AP-item mapping, the `Victory` item name, and the emission of derived rules into the shared paths-and-obstacles vocabulary (physics obstacle ids `bounce_gate_<ability>`; authored non-physics terms become `logic_gate` obstacles ANDed onto every path).
+The solver and the renderer both go through `suppression.js`, so they cannot diverge. Pickups and portals are never suppressed; whether they are reachable is derived.
+
+`apRules.js` emits derived rules in the shared [paths-and-obstacles](./paths-and-obstacles.md) vocabulary. Physics obstacle ids are `bounce_gate_<ability>`. Authored non-physics terms (foreign items, counts above 1) become `logic_gate` obstacles ANDed onto every path.
 
 ## The `canJump` solver (`canJump.js`)
 
-A conservative forward-query sampler of `step` — it never simulates physics of its own, so solver and engine cannot disagree by construction. The jump edge A→B exists iff from *every* sampled launch x across A's catch span, *some* sampled input policy makes the player's next landing on a different platform be B (∀ arrival position because the player can't always choose where they arrive; ∃ policy because they choose the inputs). The policy family is finite, so the solver can miss real edges — pessimistic, which is the safe direction: derived rules never claim a jump the player can't make.
+`canJump` samples `step`; it has no physics of its own. A jump edge A→B exists if, from every sampled launch x across A's catch span, some sampled input policy makes the player's next landing on another platform be B. "Every x" because the player cannot always choose where they land; "some policy" because they choose the inputs.
 
-Details that matter downstream: the graph has a synthetic `ENTRANCE` node; teleport-to-start hosts are terminals with an edge back to `ENTRANCE` (landing there sends the player home); and under the `dj` profile edges are *phase-dependent* (moving blue platforms, breaking browns), handled by the phase machinery. The graph feeds the shared BFS solver in `frontend/modules/shared/simulatorCore.js`, and a returned plan is the platform sequence itself — the same data the playback bot replays.
+The policy set is finite, so the solver can miss real edges. That is the safe direction: derived rules never claim a jump the player cannot make.
+
+The graph has a synthetic `ENTRANCE` node. Teleport-to-start hosts (`isTeleportHost`) are terminals with an edge back to `ENTRANCE`. Under the `dj` profile, moving blue and breaking brown platforms make edges phase-dependent. `buildPlatformGraph` feeds the BFS solver in `frontend/modules/shared/simulatorCore.js`; a returned plan is the platform sequence the playback bot follows.
 
 ## The derive-rules verifier (`deriveRules.js`)
 
-Runs reachability under every subset of the level's *ability universe* (arrows always; springs/jetpacks/blue/brown only when the level contains the corresponding geometry) and derives, per goal, the **minimal ability sets** that make it reachable. Goals are pickups and exit portals only — both are landing-triggered on their host platform, so goal-reachable ⇔ host-platform-reachable; plain platforms are allowed to be unreachable decoration.
+`deriveAccessRules` runs reachability under every subset of the level's ability universe (`abilityUniverse`: both arrows, plus springs/jetpacks/blue/brown only when the level contains them) and returns, per goal, the minimal ability sets that make it reachable. Goals are pickups and exit portals; plain platforms may be unreachable decoration.
 
-The verifier also checks **monotonicity**: an Archipelago access rule means "has these items ⇒ accessible", so gaining an item must never make a goal *un*reachable. Suppression can violate this — an unlocked blue/brown platform can intercept a boosted launch that previously sailed past it. Violations are reported as defects that the generator must design away; they are not repairable at rule-emission time.
+It also checks monotonicity. An access rule means "has these items ⇒ reachable", so gaining an item must never make a goal unreachable. Suppression can break this: an unlocked blue or brown platform can catch a boosted launch that used to sail past. Violations are reported as defects the generator must avoid; they cannot be fixed when emitting rules.
 
-`deriveAccessRules({ includePlatforms: true })` additionally exposes per-platform minimal sets ("items required to reach this row"), which the region report and the `dump-bounce-region.js` CLI surface as a verified-vs-authored side-by-side.
+With `{ includePlatforms: true }` it also returns per-platform minimal sets, which `regionReport.js` shows next to the authored intent.
 
 ## Level generation (`generator.js`)
 
-Generate-and-test: `generateLevel` *proposes* a platform arrangement for a target requirement ("this level needs ability set S") and *verifies* it with the same derive-rules verifier the pipeline uses — every pickup and the top exit must derive minimal sets of exactly `[S]`, with no defects. Failed proposals retry with a perturbed seed. Geometry is stored explicitly; the seed only drives generation, nothing at runtime replays it.
+`generateLevel` proposes a platform layout for a target requirement ("this level needs ability set S") and verifies it with the derive-rules verifier: every pickup and the top exit must derive exactly `[S]`, with no defects. A failed proposal retries with a perturbed seed. Geometry is stored in the payload; the seed only drives generation.
 
-The column proposer builds a vertical climb with one **gate segment** per required ability, separated by plain bounce steps, and the spacing is a function of the physics constants (a gap only gates if the failing launch's apex can't clear it):
+The column proposer builds a climb with one gate segment per required ability, separated by plain bounce steps. A gap gates only if the failing launch cannot clear it. Under `experimental` (`EXPERIMENTAL_GEOMETRY`):
 
-| Gate | Geometry (experimental profile) |
+| Gate | Geometry |
 |---|---|
-| springs | 380–440px gap above a spring — plain apex 169 fails, spring apex 484 clears |
-| jetpacks | 1180–1240px gap above a jetpack — spring 484 fails, jetpack 1296 clears |
-| blue / brown | A colored stepping stone mid-gap (240px total): plain bounce can't skip it; with the item it's two 120px steps |
-| left / right | A 140px column shift — the catch span is 42px, so the matching arrow is required |
+| springs | 380–440px gap above a spring: a plain bounce falls short, a spring clears it |
+| jetpacks | 1180–1240px gap above a jetpack: a spring falls short, a jetpack clears it |
+| blue / brown | A coloured stepping stone mid-gap: without the item the gap is too wide |
+| left / right | A 140px column shift, wider than the catch span, so the matching arrow is required |
 
-Per-profile geometry is either apex-derived (recomputed from the constants via apex = vy²/2g) or sweep-calibrated (empirical, e.g. the 600px width floor below which single-arrow gating collapses under screen wrap); the experimental profile's table is pinned to legacy literals so committed presets reproduce byte-identically, and the generate-verify loop remains the gatekeeper either way. Multi-target levels use a fixed 700px width so the wrap point and renderer zoom never depend on placement.
+`EXPERIMENTAL_GEOMETRY` is fixed so committed presets reproduce byte-identically. Other profiles derive theirs with `deriveGeometry` from rises measured by `launchRise`, which runs `step`. `validateGeometry` checks both. Multi-target levels use a fixed width (`FIXED_WIDTH`) so the wrap point and renderer zoom do not depend on placement.
 
-`generateZoneSet` builds a whole winnable zone table for the substrate factory: zone 0 grants both arrows with no requirement, each later non-filler zone requires a subset of already-granted abilities and grants the next item, fillers grant nothing, and the final zone's pickup is Victory.
+`generateZoneSet` builds a winnable zone table: zone 0 grants both arrows with no requirement, each later zone requires already-granted abilities and grants the next item, fillers grant nothing, and the last zone's pickup is Victory. `generateLevelFromSpecs` builds a level for requirements the pipeline computed.
 
 ## Braid generators
 
-Braids are an alternative proposer producing 2-wide branching-path geometry instead of a single column. Two regimes, selected by whether abilities are free or gated:
+A braid is an alternative to the column: 2-wide branching geometry. `generator.js` has one proposer per regime.
 
-**Regime 1 — arrows free** (top-down regions where the player holds both arrows as starting inventory). Nothing needs to gate; the geometry only has to be *traversable* with `{left, right}`. The braid is a vertical state machine over 1–2 active lanes (a 1-lane row meanders or forks; a 2-lane row shifts rigidly or merges) living directly on the wrap ring, which frees it from the column's symmetric width-fit wall — it fits widths down to ~2× the catch span. Portals ride fork branches or the single-lane capstone.
+**`proposeBraidLevel` (arrows free).** Used when the player holds both arrows from the start, as in top-down worlds. Nothing needs gating; the geometry only has to be climbable with `{left, right}`. The braid is a row-by-row state machine over one or two lanes on the wrap ring (one lane meanders or forks; two lanes shift together or merge). Portals sit on fork branches or the single-lane top.
 
-**Regime 2 — gated chain** (sphere growth, where abilities are gated items). The Regime-1 fork can't gate by arrow — its two branches are within one wrapped hop of each other, so one arrow *leaks* to the other branch. Regime 2 therefore uses a fork-free single-climbable-platform-per-row chain, with these gating primitives:
+**`proposeBraidLevelGated` (gated chain).** Used in sphere growth, where abilities are items. A fork cannot gate by arrow, because its two branches are within one wrapped hop, so this proposer builds a fork-free chain with one climbable platform per row. `planBraidGatedChain` validates the goal set first. Gating primitives:
 
-- **Arrow gate row**: the climbable platform offsets toward the gating arrow; a teleport-to-start host sits at the mirror position where a wrong-arrow player drifts (landing there sends them home — no soft-lock). At most one distinct arrow gates per region.
-- **Blue gate**: a blue stepping stone under a plain landing — without the item the stone is suppressed and the doubled gap can't be cleared.
-- **Spring / jetpack gate**: a launchable host below a gap a plain bounce can't clear.
-- **Brown gate**: brown breaks on landing (terminal), so it can only host a *ceiling* goal — the chain's topmost.
-- Gates compose as a **nested chain** (each goal's requirement a prefix of the cumulative gate set below it). Requirement sets that can't nest — two arrows, incomparable requirements, a non-ceiling brown — make the braid decline, and the region falls back to a column.
+- **Arrow gate row:** the climbable platform shifts toward the gating arrow, and a teleport-to-start host sits where a wrong-arrow player drifts, so nobody soft-locks. At most one arrow gates per region.
+- **Blue gate:** a blue stepping stone under a plain landing; without it the doubled gap cannot be cleared.
+- **Spring / jetpack gate:** a launch host below a gap a plain bounce cannot clear.
+- **Brown gate:** brown breaks on landing, so it can only host the topmost goal.
 
-Jitter is arrow-directional: the arrow-free spine stays straight (so arrow-free goals derive exactly `[]`); rungs above an arrow gate may drift toward it.
+Gates nest: each goal's requirement is a prefix of the cumulative gate set below it. A set that cannot nest (both arrows, incomparable requirements, a brown that is not the top goal) makes the braid decline, and the region falls back to a column.
 
-Braid verification uses `deriveBraidAccessRules`, a row-aware reachability that is verdict-identical to the full solver on this geometry but much cheaper; an opt-in `suppressBlues` mode treats blue platforms purely as green→blue→green stepping stones to keep the subset enumeration tractable. `level.js` (`validateLevel`, `braidBlueInvariantErrors`) holds the structural invariants.
+Jitter only moves rungs above an arrow gate toward that arrow, so arrow-free goals still derive exactly `[]`.
+
+Braids are verified with `deriveBraidAccessRules`, a row-aware reachability check that gives the same verdict as the full solver on this geometry at a fraction of the cost. Its `suppressBlues` option treats blue platforms as green→blue→green stepping stones to keep subset enumeration small; the bot sets it when `braidBlueInvariantErrors` finds no violations.
 
 ## Sphere-growth integration
 
-For sphere-grown worlds, the registry entry exposes requirement-targeted generation to the generic engine: `generateZoneForSpecs` / `buildZoneSpecs` produce zones whose goals carry the engine's computed requirements, and the structural hooks (`canHostExitGates`, `exitGateVeto`, `backPortalGated`, `gateHostingHint`, …) let the engine ask bounce what gate combinations its geometry can realise instead of hard-coding the answer. Non-geometry gate terms (foreign items, counts > 1) are realised as bridge-evaluated `logic_gate` locks rather than physics. `buildRegionContract` backs the pipeline panel's "Edit ▸" flow, and the authored per-platform build intent (`authoredReqs`) rides alongside the payload for the verified-vs-authored region report — it is never merged into generated worlds. A bounce zone is SIDES-only: the entry declares `regionGeometry: 'sides'`, so the pipeline writes no exit tile (`x`/`y`, `tile_position`, `position`) and no `entrance` for it — the bridge routes an exit by its `side` through `params.sidePortals` ([Substrate Registry § *Build-time — region geometry*](./substrate-registry.md#build-time--region-geometry), PRESET SIDECARS G1).
+The registry entry exposes requirement-targeted generation to the engine: `buildZoneSpecs` and `generateZoneForSpecs` produce zones whose goals carry the engine's computed requirements. Structural hooks (`canHostExitGates`, `exitGateVeto`, `backPortalGated`, `gateHostingHint`, `hostsSurplusExitsNatively`) let the engine ask what gate combinations bounce geometry can realise. Gate terms that are not abilities become `logic_gate` locks evaluated by the bridge.
 
-**Exit ids on the way back in.** `assembleBounceRegionFromLevel` is the re-assembly path — the level is in hand and already carries its portals, so an exit's id is read off the level (`sideExits.portalIdsBySide`) rather than minted from its side. That matters because a level's north portal is often AUTHORED under its own name: `generator.js` writes `exit_up` for a climb's top exit and `attachSideExits` deliberately reuses it. Minting `side_exit_<side>` unconditionally (what this did before 2026-09-05) missed `derived.exits[id]`, so the exit's rule silently became `False_`, and wrote a `sidePortals` naming a portal the level does not contain — measured, 10 of the 25 committed bounce sidecar regions could not survive an unedited open-and-save. `side_exit_<side>` remains the fallback for a side the level has no portal for, which is the contract-breaking edit ②'s oracle flags. `sideExits.portalSide` is the one reader of "which side is this portal on", shared with the region editor; it reads the portal's `direction` arrow first, because `bounceLibraryEntry` relabels a captured portal onto a new side by re-pointing the arrow and leaving the minted id in place. The full hook list is in the [Substrate Registry Reference](./substrate-registry.md).
+`buildBounceRegionContract` backs the panel's **Edit** flow. The entry also declares a `roomEditor` and a `regionRoundTrip`, both in `bounceRegionEditor/`. The gated braid's per-platform intent (`authoredReqs`) travels alongside the payload for the region report; it is never merged into a world.
 
-## Runtime: panel, renderers, playback (`index.js`, `bounceDemoLibrary.js`, `botDriver.js`)
+A bounce zone declares `regionGeometry: SIDES`: the pipeline writes no exit tile and no `entrance`, and the bridge routes an exit by its side through the payload's `sidePortals` map. See [Substrate Registry Reference](./substrate-registry.md) for the full hook list.
 
-Bounce rides `flashSubstrate`'s machinery as shared **code**, not shared instances: the panel class comes from `flashSubstratePanel.js`'s factory and the injected bridge is `flashSubstrate/bridge.js` itself (the game page speaks the same `__swfBridge` contract). Bounce owns its identity — component type `bounceDemoPanel`, load event `bounce:loadRegion`, iframe id `bounceDemo` — so flash and bounce region loads configure different iframes and host activation brings the right panel forward.
+### Exit ids and sides (`sideExits.js`)
 
-**Renderers.** The `moduleSettings.bounceDemo.renderer` setting routes region loads to one of: `js` (the canvas renderer, default), or the real-Doodle-Jump page (`djReal/`) under a player tier — `ruffle`, `swfrecomp` (browser WASM), `flash` (native NPAPI, needs a Flash-capable browser), or legacy `dj` (auto). The single panel swaps its own iframe src between the two pages; both load under the same iframe id and speak the same bridge contract, so the registry identity stays constant and the renderer choice is panel-local. The tier is relayed to the dj page via localStorage.
+`attachSideExits` adds one exit platform and portal per requested side, and returns `{ level, sidePortals }`. In the default `directional` placement, N reuses the level's own `up` portal when there is one; `generator.js` names a climb's top exit `exit_up`, so that id survives. The `arbitrary` placement drops authored portals and puts every side at an interior spot.
 
-**Playback.** The registry entry's `getPlaybackController` returns a host-side `PlaybackProxy` that publishes controller commands on `bounce:playbackControl`; the in-iframe bridge translates `walkTo` targets and hands them to `botDriver.js` — a greedy re-plan controller that, on every landing, recomputes the shortest path over the canJump graph and picks an input policy by forward-simulating candidates from the live state through the real `step`. There is no stored plan; divergence just means the next landing re-plans. On-column legs synthesize no input (the cheapest policy), so the familiar auto-climb of sphere worlds is this driver's degenerate case, not a separate mode. Since bounce physics can't descend a column, a goal below the player is recovered by returning to the entrance — via a teleport host edge when the level has one (braids), or by deliberately falling off the level (legacy columns).
+`assembleBounceRegionFromLevel` rebuilds a region from a level that already has portals. It reads each exit's id from the level (`portalIdsBySide`) and uses `side_exit_<side>` only for a side with no portal.
 
-Loop mode: bounce regions queue `regionMove` and `locationCheck` actions with `executeVia: 'solver'` — the loops queue parks while the bot plays the action, then charges its `loop_costs` value.
+**Warning:** do not mint `side_exit_<side>` for a side whose portal already exists. The derived rule is looked up by portal id, so a minted id finds no rule, becomes `False_`, and `sidePortals` names a portal the level lacks.
 
-**Loop mode: the SUMMARY capture category (M5, 2026-07-23).** Bounce is one of the two *summary* substrates — a third capture contract beside coarse-only and fine-grained. Its play is real-time and its action stream is not worth replaying, so **Record** captures the visit's net RESULT (duration in drain seconds, the checks performed, the actions that carried an explicit cost, the exit crossed) and **Playback** applies that envelope instantly: deduct the repriced mana, refire the checks, cross the departure. The game replays nothing and the player character stays where it is — that is the design of the category, not a bug.
+`portalSide` is the one answer to "which side is this portal on", shared with the region editor. It reads the portal's `direction` arrow first, because `bounceLibraryEntry.js` moves a captured portal to a new side by changing the arrow and keeping the id.
 
-The economy is **time**: a per-second drain (`timeDrainPerSecond`, per region, default 1/s, XP-discounted like every other cost) is charged for every second the queue is parked on a Manual or Record block here, and per-action costs apply only where the `loop_costs` data names one explicitly. Playback prices at replay time (recorded seconds × the *current* rate), so region XP keeps mattering. The per-block Instant checkbox is hidden — summary playback is inherently instant.
+## Runtime: panel, renderers, playback
 
-**Bot (M6).** `executeVia: 'solver'` is reached only by a **Bot**-mode block — never as a Playback fallback. A Bot block hands the queued `regionMove`/`locationCheck` to the loops `walkTo` solver; the bot climbs on real physics and the queue parks until the crossing arrives. The economy is the same **time** drain, charged while the bot drives exactly as during parked live play; a summary Bot's completion adds only explicitly-costed actions, never a per-action default. The per-block **Instant** checkbox is hidden for a Bot block — bounce plays real-time physics with no instant variant (`regionBotHonorsInstant` is false). A Bot walk that outran a pool would retry via the generic queue-restart path (bounce's bridge holds no pending walk — see [jta.md](./jta.md#playback--bot-execution)). Bounce does *not* declare `requiresLoopMode` — it is not a loop game. Full contract: [Loop Recording and Block Modes](./loop-recording.md#the-bot-flow-m6).
+Bounce reuses `flashSubstrate` code, not its instances: the panel class comes from the shared iframe-panel factory and the bridge is `flashSubstrate/bridge.js` (the game page speaks the same `__swfBridge` contract). Bounce has its own component type `bounceDemoPanel`, load event `bounce:loadRegion` and iframe id `bounceDemo`, so flash and bounce loads target different iframes.
 
+**Renderers.** The `moduleSettings.bounceDemo.renderer` setting picks `js` (the canvas renderer, default) or the real-Doodle-Jump page `djReal/` under a player tier: `ruffle`, `swfrecomp` (browser WASM), `flash` (native, needs a Flash-capable browser) or `dj` (auto). The panel swaps its own iframe source; both pages use the same iframe id and bridge contract, so the registry identity does not change.
+
+**Playback.** `getPlaybackController` returns a host-side proxy that publishes commands on `bounce:playbackControl`. The in-iframe bridge hands `walkTo` targets to `botDriver.js` (`createBotDriver`), which re-plans on every landing: it finds the shortest path over the `canJump` graph and picks an input by forward-simulating candidates through `step`. There is no stored plan. A goal below the player is reached by returning to the entrance, through a teleport host (braids) or by falling off the level (columns).
+
+**Loop mode.** Bounce is a summary substrate (`summaryRecording: true`): Record keeps a visit's net result and Playback applies it instantly, with time-based costs; a Bot block runs the bot with `executeVia: 'solver'`. See [Loop Recording and Block Modes](./loop-recording.md).
 
 ## CLI tools
 
-- `scripts/procgen/dump-bounce-level.js` — one generated level: platform geometry, physics config, compiled rules.
-- `scripts/procgen/dump-bounce-region.js` — per-platform requirement data / region report for a gated braid (verified vs authored).
-- `scripts/procgen/check-bounce-embed.mjs` — Playwright round-trip of a bounce world through the real frontend, first check to Victory.
-- `scripts/procgen/check-bounce-touch.mjs` — Playwright: the standalone bounce page's touch controls in a `hasTouch` context.
-- `scripts/procgen/make-demo-bounce-pack.mjs` — generates the committed demo bounce region-library pack and registers it in the index.
+| Script | Purpose |
+|---|---|
+| `scripts/procgen/dump-bounce-level.js` | One generated level: geometry, physics config, compiled rules. |
+| `scripts/procgen/dump-bounce-region.js` | Region report for a gated braid, verified vs authored. |
+| `scripts/procgen/check-bounce-embed.mjs` | Playwright: a bounce world through the real frontend, first check to Victory. |
+| `scripts/procgen/check-bounce-touch.mjs` | Playwright: the standalone page's touch controls. |
+| `scripts/procgen/make-demo-bounce-pack.mjs` | Generates the committed demo bounce region-library pack. |
 
 See [scripts/procgen/README.md](../../../../scripts/procgen/README.md).
 
 ## Related documentation
 
 - [Architecture](./architecture.md) — where bounce sits in the pipeline
-- [Substrate Registry Reference](./substrate-registry.md) — the entry contract and bounce's adapter hooks
+- [Substrate Registry Reference](./substrate-registry.md) — the entry contract and bounce's hooks
 - [Gotchas](./gotchas.md) — bounce/flash code sharing, braid-vs-driver naming

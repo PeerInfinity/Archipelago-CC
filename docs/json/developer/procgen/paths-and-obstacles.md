@@ -1,8 +1,8 @@
 # Paths and Obstacles
 
-Paths-and-obstacles is the intermediate representation procgen uses for access rules. Substrates reason spatially — "to reach this goal you cross these obstacles" — while Archipelago reasons in Boolean item logic. This representation is the bridge: rules are *authored* as paths of obstacles during generation, verified against the actual geometry, and *compiled* to Rule Builder JSON only at the end.
+Paths-and-obstacles is the intermediate representation procgen uses for access rules. Substrates reason spatially — "to reach this goal you cross these obstacles" — while Archipelago reasons in Boolean item logic. This representation is the bridge: rules are *authored* as paths of obstacles during generation, verified against the geometry, and *compiled* to Rule Builder JSON only at the end.
 
-⛓ **Every word this document uses as vocabulary — *obstacle*, *clearer*, *goal*, *requirement*, *region*, *`rules.json`* — is defined in [the procgen glossary](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html)**, one plain-language sentence before the rule; the data is [`frontend/modules/procgenDocs/glossary.js`](../../../../frontend/modules/procgenDocs/glossary.js).
+The terms used here (*obstacle*, *clearer*, *goal*, *requirement*, *region*) are defined in the [procgen glossary](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/glossary.html) (data: [`frontend/modules/procgenDocs/glossary.js`](../../../../frontend/modules/procgenDocs/glossary.js)).
 
 The shape:
 
@@ -17,18 +17,25 @@ The shape:
 - **`combo_list`** (default) — `clear_set` is an OR of AND-combinations: `[["key_red"]]` clears with the red key; `[["jump"], ["fly"], ["rocket"]]` clears with any one; `[["red_key", "keycard"]]` requires both.
 - **`rule`** — `clear_rule` is a Rule Builder JSON expression evaluated against the player's inventory. This is the **`logic_gate`** obstacle: an arbitrary AP access rule expressed as an in-world gate, which is how any item — foreign multiworld items included — can gate any substrate's geometry.
 
-Two semantic notes baked into the library: AP's `has()` is *permanent* (a picked-up key keeps its doors open forever, so pools supply one key per color and any number of doors), and the `victory` item is special — when present in a pool, drivers wire a `state.has(victory)` completion condition instead of the constant-true placeholder, and the scenario pool defers its placement so it lands in a leaf region gated on the rest of the inventory. Substrates extend the ITEM vocabulary via `libraryItems` on their registry entries, merged with the defaults by the pipeline. Their obstacles travel per region instead: a zone substrate's physics gates (bounce's `bounce_gate_<ability>`) arrive as the region's own `obstacle_defs`, which `compileRegionGraph` merges over the shared library when it compiles that region.
+Two rules are built into the library:
 
-⚠ **Updated 2026-08-18 — "one key per COLOUR" is the vanilla maze's rule, not the level generator's.** The procgen ELEMENTS arcs replaced the fixed colour list with **per-instance** ids: the area graph mints `door_K{n}` / `key_K{n}` per placement (⚖ design ruling 21), so the colour library is cosmetic and a level may hold many independent lock groups. On **Seedling** there are no key items at all — a key symbol is realised as a `ButtonRoom` **FLAG** (a step-on latch writing one of the level's 30 persistence tags) whose press opens every `lock` of its group; permanence comes from the flag, not from an inventory item. Two tags per key, worst case 8 of 30. See [Maze Substrate](./maze.md) § *The area graph* and [Seedling Real-Game Bot](./seedling-bot.md) § *The procgen ELEMENTS design* → *Arc 3, slice 4b*.
+- **Items are permanent.** Archipelago's `has()` never becomes false again, so a picked-up key keeps its doors open for the rest of the game.
+- **`victory` is special.** When the pool holds a `victory` item, drivers wire a `state.has(victory)` completion condition instead of the constant-true placeholder, and the scenario pool places it last, so it lands in a leaf region gated on the rest of the inventory.
+
+Substrates add items through `libraryItems` on their registry entries, which the pipeline merges with the defaults. Obstacles travel per region instead: a zone substrate's physics gates (bounce's `bounce_gate_<ability>`) arrive as the region's own `obstacle_defs`, which `compileRegionGraph` merges over the shared library when it compiles that region.
+
+**Keys and doors are per instance, not per colour.** The fixed colour list in the library is what the vanilla maze uses. The level generator's area graph instead names each lock group with its own symbol (`K0`, `K1`, …), and the maze turns a symbol into a `door_K{n}` obstacle and a `key_K{n}` item (`doorIdFor` / `keyIdFor` in `frontend/modules/mazeRoom/procgenMaze.js`), so a level can hold many independent lock groups and the colours are cosmetic. Seedling has no key items: a key is a `ButtonRoom` flag that the player steps on, and it opens every lock in its group by writing a level persistence tag. Each key group costs two of the level's 30 tags. See [Maze Substrate](./maze.md#the-area-graph) and [Flash Substrate](./flash.md).
 
 ## Producers
 
 Each substrate extracts paths-and-obstacles from its *built* geometry, so the emitted rules describe what the world actually enforces:
 
-- **Maze** (`mazeRoomEngine.js`, "Paths-and-obstacles extraction"): for each target (the exits and every item pickup), an obstacle-transparent BFS from the entrance, annotated with the obstacles the path crosses. One path per target. ⚠ This extractor is the reason a generated **button** lives in its own `world.buttons` map rather than in `world.items`: `world.items` is what this function publishes as AP LOCATIONS, so a button filed there would invent a phantom check (⚖ arc 2 slice 1 Q1). Same reason `world.exits` is the AP location set and not a place to hide an element's port.
-- **Bounce** (`apRules.js`): the physics-derived minimal ability sets become an OR of paths of physics-obstacle ids, and authored non-physics terms (foreign items, counts > 1) become per-term `logic_gate` obstacles ANDed onto every path — physics-first, logic-gate fallback. The obstacle id is the through-line tying the geometry template, the verifier, and the emitted path together.
+- **Maze** (`mazeRoomEngine.js`, "Paths-and-obstacles extraction"): for each target (the exits and every item pickup), an obstacle-transparent BFS from the entrance, annotated with the obstacles the path crosses. One path per target.
 
-Empty-case conventions are load-bearing at both ends: no paths ⇒ unreachable ⇒ `False_`; one path with no obstacles ⇒ always reachable ⇒ `True_`; an obstacle with an empty `clear_set` ⇒ never clearable ⇒ `False_`; an empty combination ⇒ clears for free ⇒ `True_`.
+  **Note:** `world.items` and `world.exits` are exactly what this extractor publishes as Archipelago locations, so anything that is not a check (a generated button, an element's port) must live elsewhere, such as the separate `world.buttons` map. Filing it in `world.items` would create a phantom location.
+- **Bounce** (`apRules.js`): the physics-derived minimal ability sets become an OR of paths of physics-obstacle ids, and authored non-physics terms (foreign items, counts > 1) become per-term `logic_gate` obstacles ANDed onto every path — physics first, logic gates as the fallback. The obstacle id ties the geometry template, the verifier, and the emitted path together.
+
+The empty cases matter at both ends: no paths ⇒ unreachable ⇒ `False_`; one path with no obstacles ⇒ always reachable ⇒ `True_`; an obstacle with an empty `clear_set` ⇒ never clearable ⇒ `False_`; an empty combination ⇒ clears for free ⇒ `True_`.
 
 ## The compiler (`frontend/modules/shared/procgen/pathsAndObstaclesCompiler.js`)
 

@@ -1,50 +1,74 @@
 # Text Adventure Substrate
 
-The text-adventure substrate (id `text_adventure`) renders a procgen region as prose: a textual description with compass-labelled clickable exits and clickable locations. Under the hood a region is a *room*, not a tile grid: its exits stand on their compass sides, and its locations and gates are the document's own rules — no tiles, no entrance, no rng draw. Since PRESET SIDECARS G2a (2026-09-13) it has its own build-time hooks and its own sidecar payload; until then it reused the maze's hooks and serializer, and every text-adventure region grew a maze that nothing at play read.
+The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.
 
-One module implements it: **`textAdventureSubstrateWrapper`**, an iframe-hosted engine with a host↔iframe bridge.
-
-A second implementation, the direct-panel `textAdventureSubstrate`, was **deleted 2026-07-26** after `?mode=textadventure` migrated onto the wrapper. It had registered the same substrate id and, because it loaded first, won that id wherever both were enabled — silently downgrading loop support, since its entry declared no `record`/`playback`/`instant`. If you find a reference to it, it is stale.
-
-### Standalone play, and why the overlay steps aside for it
-
-A substrate panel shows `SubstrateInactiveOverlay` when some *other* substrate owns the current region — a question that only means anything inside a procgen world. With a plain AP `rules.json` there is no substrate routing at all: the bridge builds the engine's world from the whole `staticData` region set (the sidecar filter is bypassed) and follows `gameState:regionChanged`, so the engine has something to show for every region.
-
-The wrapper panel therefore **skips the overlay entirely when the loaded rules carry no `preset_sidecars` for the player**, tracked from the host's `initialState` snapshot. `procgen:activeSubstrateChanged` cannot answer this — it is `null` both for "standalone preset" and for "procgen world whose current region isn't mine".
-
-This is what unblocked `?mode=textadventure`, the [documented live demo](../../games/text-adventure/README.md), which plays the non-procgen Adventure preset. It previously ran on the deprecated module and was hiding a *working* text adventure behind "No procgen substrate is active for the current region". Migrating it also needed the `textadventure` layout preset's component type swapped and `iframeAdapter` enabled in `frontend/module-configs/modules-textadventure.json`.
-
-That migration also fixed the deployed site, where the mode was already broken for a different reason: the deprecated module is not bundled, so `?mode=textadventure` showed a dead "Waiting for region…" panel there while working in local dev.
+It is implemented by one module, `textAdventureSubstrateWrapper`, which hosts a separate engine in an iframe.
 
 ## The engine (`frontend/modules/textAdventureEngine/` — git submodule)
 
-`TextAdventureEngine` is a synthetic, deliberately **Archipelago-naive** text-adventure renderer and command parser. It runs in two modes: standalone (loads bundled sample worlds and mutates its own state — how the engine repo is developed and demoed) and managed (emits events and lets a wrapper drive all state — how it runs inside this app). The engine knows nothing about AP items, regions, or rules; that separation is the point of the wrapper pattern.
+`TextAdventureEngine` is a text-adventure renderer and command parser that knows nothing about Archipelago items, regions or rules. It runs standalone (loading its own sample worlds, which is how the engine repo is developed) or managed (emitting events and letting a wrapper drive all state, which is how it runs in this app).
 
 ## The wrapper (`frontend/modules/textAdventureSubstrateWrapper/`)
 
-The wrapper mounts the engine in a same-origin iframe and owns everything Archipelago-shaped:
+The wrapper mounts the engine in a same-origin iframe and owns everything Archipelago-specific:
 
-- **`bridge.js`** (in-iframe) translates host AP state into engine API calls and engine interactions back into dispatcher events.
-- **`playbackProxy.js` / `playbackBridge.js`** implement the PlaybackController contract across the iframe boundary ([Playback and Debugging Tools](./playback-and-debugging.md#the-playbackcontroller-contract-and-iframe-proxies)).
-- **`mana.js`** wires loop-mode mana display into the engine's header (and out-of-loop-mode deduction; loop-mode live play is charged host-side by loops).
-- Module settings: scrollback limit, input auto-focus, and a custom-data URL override (empty = auto-detect by game name).
+| File | Role |
+|------|------|
+| `bridge.js` | Runs inside the iframe. Turns host AP state into engine calls, and engine clicks into dispatcher events. |
+| `playbackProxy.js` / `playbackBridge.js` | The PlaybackController contract across the iframe boundary, used by the playback bot ([Playback and Debugging Tools](./playback-and-debugging.md#the-playbackcontroller-contract-and-iframe-proxies)). |
+| `mana.js` | Shows loop-mode mana in the engine header, and charges a region's move cost on departure when loop mode is off. |
+| `textAdventureRoom.js` | Build-time hooks and the payload serializer (below). |
+| `textAdventureRegionRoundTrip.js` | Document round trip for the APWorld hub. |
+| `textAdventureCompositeMap.js` | Composite-map painter. |
+
+Module settings: `messageHistoryLimit` (scrollback length), `autoFocusCommandInput`, and `autoLoadCustomData` (custom-data URL override; empty means detect by game name).
+
+### Standalone play
+
+With a plain AP `rules.json` there is no substrate routing. The bridge builds the engine's world from every region in `staticData` and follows `gameState:regionChanged`. The panel therefore skips `SubstrateInactiveOverlay` when the loaded rules carry no `preset_sidecars` for the player.
+
+**Note:** `procgen:activeSubstrateChanged` cannot make this decision. It is `null` both for a standalone preset and for a procgen world whose current region belongs to another substrate.
+
+This is how `?mode=textadventure` plays the non-procgen Adventure preset ([live demo](../../games/text-adventure/README.md)); its modules are listed in `frontend/module-configs/modules-textadventure.json`.
 
 ## The room and its payload
 
-`textAdventureSubstrateWrapper/textAdventureRoom.js` is what a text-adventure region is at build time. `generateRegionCore` makes one exit record per requested exit on its requested side (a side-less exit — a teleporter — takes the still-free sides clockwise, then cycles), and no location; `placeFromRules` records each exit's and location's AUTHORED rule on it (`True_` as absent); `placeFromItems` (the spiral's placer) turns each item into a location holding it and places no obstacle, because a key/door pair has no geometry to stand between in a room; `extractPathsAndObstacles` hands the rules back verbatim, with `True_` written explicitly (the compiler turns an absent rule with no paths into `False_`).
+The hooks in `textAdventureRoom.js`:
 
-The payload is `{exits, exitGates, locations}` plus the engine's `fogEnabled` (and `manaEnabled` in loop mode). `exits` is the envelope's sided exit list; `exitGates` maps each GATED exit's `exit_id` to its rule, a sibling of `exits` because a substrate may not add a field to the envelope's exit record; `locations` is `{name, item?, access_rule?}` with the AP location name baked in at serialize. `deserializeWorld` returns `{exits: Map, locations}` (a clone), and a rebuild re-emits the document's rules from it. It also carries the engine's `manaEnabled: true` onto the world (absent otherwise), because play reads the flag off the world, not the payload: `procgenPlayer.getRegionInfo` answers it to `mana.js`, which charges the region's move cost on departure when loop mode is off (`check-ta-mana-leg.mjs`). `fogEnabled` stays on the payload — no text-adventure reader takes it off a world. There is one format: a payload that is not a room — the tile-grid shape written before G2a, carrying `tiles`/`items`/… and no `exitGates`/`locations` — is refused with a sentence naming those keys (`textAdventureRoomRefusal`), never read as a room with no locations; every committed text-adventure payload was regenerated in the room format. The entry declares all of this — its own `sidecarFields`, `apLocationNamesOf` over `locations[].name`, and `exitSides` with an empty `keys` list: the side is where an exit is listed and nothing else in the payload is keyed by one.
+| Hook | What it does |
+|------|--------------|
+| `generateRegionCore` | One exit per requested exit, on its requested side. A side-less exit (a teleporter) takes the free sides clockwise, then cycles. No locations. |
+| `placeFromRules` | Records each exit's and location's authored rule on it (`True_` is stored as absent). |
+| `placeFromItems` | Used by the spiral driver. Turns each item into a location holding it; places no obstacle, since a room has no geometry for a key/door pair. |
+| `extractPathsAndObstacles` | Returns the rules unchanged, writing `True_` explicitly (the compiler would turn an absent rule with no paths into `False_`). |
 
-The entry also declares a document round trip (`regionRoundTrip`, `textAdventureRegionRoundTrip.js`, PRESET SIDECARS G2b-1): `open` deserializes the room, `save` serializes it back, re-appends the engine's `fogEnabled`/`manaEnabled`, and compiles the rules — so the APWorld hub's **Re-derive rules ▸** reaches every text-adventure region (an unedited round trip moves no byte, and every exit and location re-emits the document's own rule). It declares `rules: 'authored'`: the room's gates ARE the document's rules, so `check-sidecar-fields.mjs` fails a document rule the payload does not carry. Edit ▸ stays disabled — there is no `roomEditor`. At play, in-app row `tasw-gate-holds-in-play` loads the gated top-down fixture and holds its exit and location gates.
+The serialized payload has these fields:
 
-Two consumers read the room. The bridge re-applies each exit's side (from the deserialized world's exit Map, sent on `textAdventure:loadRegion`) to the rooms it builds from `staticData`, which carry no side; that is what makes the engine draw its 3×3 compass grid for a procgen world — in-app row `tasw-compass-grid-renders-procgen-sides`. The composite-map painter (`textAdventureCompositeMap.js`) paints the room with no payload key of its own: exits on their sides, the location count and names, and a gate drawn closed when its authored rule does not hold on an empty inventory.
+- `exits` — the envelope's sided exit list.
+- `exitGates` — `{exit_id: rule}` for gated exits only. It is a sibling of `exits` because a substrate may not add fields to the envelope's exit record.
+- `locations` — `{name, item?, access_rule?}`, with the AP location name filled in at serialize time.
+- `fogEnabled` — engine flag, always present.
+- `manaEnabled` — engine flag, present in loop mode.
+
+`deserializeWorld` returns `{exits: Map, locations}`. It copies `manaEnabled: true` onto the world, because play reads the flag from the world: `procgenPlayer.getRegionInfo` passes it to `mana.js`. `fogEnabled` is not copied; nothing reads it from a world.
+
+A payload that is not a room (a tile-grid shape with `tiles`/`items` and no `exitGates`/`locations`) is refused with a message naming those keys (`textAdventureRoomRefusal`), rather than read as a room with no locations.
 
 ## Registry entry
 
-The entry declares `textAdventure:loadRegion`, `regionGeometry: 'sides'`, the room's hooks and serializer pair above, its payload declarations, and the composite-map painter. Loop support: `regionMove`/`locationCheck`/`explore` queue actions, manual play, and `record`/`playback`/`instant`, but **no custom queues** — a deliberate decision, since the engine's actions are exactly the basic loop-queue actions, so a recorded queue would duplicate what the loops queue already expresses. Full contract: [Substrate Registry Reference](./substrate-registry.md).
+The entry (in `textAdventureSubstrateWrapperLibrary.js`) declares `textAdventure:loadRegion`, `regionGeometry: SIDES`, the hooks and serializer above, `sidecarFields`, `apLocationNamesOf` (every `locations[].name`), `exitSides` with no side-keyed payload fields, and the composite-map painter. Full contract: [Substrate Registry Reference](./substrate-registry.md).
 
-That same reasoning extends to recording: the text adventure is the reference **coarse-only** substrate under the [loop-recording capture contract](./loop-recording.md#the-capture-contract-coarse-only-vs-fine-grained-vs-summary-substrates) — every action it has is queue-grade, so a recorded visit carries no information the block's own queue interior doesn't. The M3b refactor (2026-07-22) therefore removed the M2-era wrapper recorder (`recorder.js`, the `textAdventure:commandRecorded` side-channel, and the replay half of `playbackBridge.js`/`playbackProxy.js`): loops owns coarse capture during parked Record blocks and runs Playback interiors through its generic executor host-side ([`CC/docs/plans/loops-coarse-capture-plan.md`](../../../../CC/docs/plans/loops-coarse-capture-plan.md)). The `walkTo`/bot half of `playbackBridge.js` and `playbackProxy.js` remains — the playback bot rides it independently of recordings.
+`regionRoundTrip` lets the APWorld hub's **Re-derive rules** reach every text-adventure region: `open` deserializes the room; `save` serializes it, re-adds `fogEnabled`/`manaEnabled`, and compiles the rules. It declares `rules: 'authored'`, so `scripts/procgen/check-sidecar-fields.mjs` fails a document rule the payload does not carry. **Edit** stays disabled because the entry has no `roomEditor`.
+
+Loop support: `regionMove`/`locationCheck`/`explore` queue actions, manual play, and `record`/`playback`/`instant`, with `customQueues: false`. Every engine action is already a basic loop-queue action, so a custom queue would add nothing. For the same reason this is a coarse-only substrate for recording; see [Loop recording](./loop-recording.md#the-capture-contract-coarse-only-vs-fine-grained-vs-summary-substrates).
+
+## Who reads the room
+
+- **The bridge** re-applies each exit's side (sent with `textAdventure:loadRegion`) to the rooms it builds from `staticData`, which carry no sides. That is what makes the engine draw its 3×3 compass grid in a procgen world.
+- **The composite-map painter** draws exits on their sides, the location count and names, and a gate as closed when its rule fails on an empty inventory.
+
+In-app tests (`frontend/modules/tests/testCases/textAdventureWrapperTests.js`): `tasw-compass-grid-renders-procgen-sides` and `tasw-gate-holds-in-play`.
 
 ## Related documentation
 
-- [Architecture](./architecture.md) · [Substrate Registry Reference](./substrate-registry.md) · [Maze Substrate](./maze.md) (the tile-grid substrate this one used to reuse)
+- [Architecture](./architecture.md) · [Substrate Registry Reference](./substrate-registry.md) · [Maze Substrate](./maze.md)
