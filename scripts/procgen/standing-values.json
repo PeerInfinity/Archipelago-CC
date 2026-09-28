@@ -1445,13 +1445,14 @@
       "why": "not re-read at c7b2e34553aa7b3b01b467f08442b88039cba024: `node scripts/procgen/ci-summary.mjs --gate=\"gate: seedling-wasm-ship\" --json` exited 3 (the run for this SHA has not concluded) — ⚖ ruling 52"
     },
     "suite: vitest (unfiltered)": {
-      "value": "549/15730",
+      "value": "553/15778",
       "command": null,
       "kind": "suite",
       "cheap": false,
       "quoted": true,
-      "why": "CI run 36352772335 at 26f71a5e3a (JavaScript Unit Tests → Vitest, success): 15730 passed · 0 skipped · 0 failed; slow battery 13/241. The push at 8b4a511391 (run 36351121939) read 4 reds past the bounded reach, repaired in 26f71a5e3a.",
-      "measuredAt": "26f71a5e3a57202f60e31f7cc0d567ae9b81574e"
+      "why": "CI run 36361455372 @b7a5fdf294 (JavaScript Unit Tests): 15778 passed · 0 skipped · 0 failed; slow battery 13/241 (241 passed). ⚖ 52 — quoted from CI by SHA, never a local unfiltered run. The push at 4e54ceb634 read 4 reds past the bounded reach (run 36358051029), repaired in 1e768babbd.",
+      "measuredAt": "b7a5fdf29416298b631e16ec6e0769118ac3815c",
+      "channel": "headless"
     },
     "roster: --tier=full": {
       "value": "154 tapes 3334/0/0",
