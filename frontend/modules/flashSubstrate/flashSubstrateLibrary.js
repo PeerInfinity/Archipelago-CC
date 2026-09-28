@@ -24,7 +24,7 @@
  *
  * v1 scope: minimal supportedFeatures (arbitrary_ap_locations only — a
  * minigame region is opaque), no build-time procgen hooks, playback
- * deferred (getPlaybackController returns null). The sidecar carries a
+ * deferred (no getPlaybackController at all). The sidecar carries a
  * per-region gameId + optional params and the location<->objective map.
  */
 
@@ -348,11 +348,13 @@ export function createFlashSubstrateEntry({
         apLocationNamesOf,
         apExitNamesOf,
 
-        // Playback bot integration is deferred (Mode 1 / v1). Until then
-        // getPlaybackController returns null and the bot no-ops on flash
-        // regions. When it lands, drive the logic-only / stub backend
-        // headless so the test harness never needs WebGPU.
-        getPlaybackController: () => null,
+        // ⛔ NO `getPlaybackController`: playback bot integration is deferred
+        // (Mode 1 / v1), and the field's ABSENCE is what says so — every
+        // reader optional-chains it, so the bot no-ops on flash regions, and
+        // the capability chart reads "the Playback Bot can walk it" off the
+        // field's presence (substrate chart S1). A per-game entry that gains
+        // a controller declares it. When it lands, drive the logic-only / stub
+        // backend headless so the test harness never needs WebGPU.
 
         // Loop-mode capabilities: manual play only for now (user
         // decision, 2026-06-12). Region traversal stays queueable;
