@@ -576,6 +576,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Live demo: Standard | With Loops"
     },
     {
+        "path": "docs/json/features/procgen-substrates.md",
+        "title": "What each substrate can do",
+        "section": "features",
+        "summary": "A substrate is the small game engine that owns one region of a generated world — a maze, a platformer level, a text adventure room, an embedded game. They are not interchangeable: some can be walked…"
+    },
+    {
         "path": "docs/json/features/procgen.md",
         "title": "Procedural Generation",
         "section": "features",
@@ -948,6 +954,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/features/fuzzer.md",
             "docs/json/features/loops.md",
             "docs/json/features/maze-metagame.md",
+            "docs/json/features/procgen-substrates.md",
             "docs/json/features/procgen.md",
             "docs/json/features/skip-required-files.md",
             "docs/json/features/universal-tracker.md"

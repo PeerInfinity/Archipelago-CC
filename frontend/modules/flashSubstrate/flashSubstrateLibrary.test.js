@@ -28,8 +28,9 @@ describe('flashSubstrateLibrary substrateRegistryEntry', () => {
         expect(substrateRegistry.get('flash')).toBe(substrateRegistryEntry);
     });
 
-    it('defers playback (getPlaybackController returns null in v1)', () => {
-        expect(substrateRegistryEntry.getPlaybackController()).toBeNull();
+    it('defers playback: NO getPlaybackController at all (its absence is the capability readout)', () => {
+        expect(substrateRegistryEntry.getPlaybackController).toBeUndefined();
+        expect('getPlaybackController' in substrateRegistryEntry).toBe(false);
     });
 
     it('omits build-time procgen hooks in Mode 1', () => {
@@ -121,7 +122,7 @@ describe('createFlashSubstrateEntry (Shape 1 — per-game entry factory)', () =>
         const w = e.deserializeWorld({ gameId: 'g', exits: [{ exitName: 'n', targetRegion: 'R' }] });
         expect(w.exits).toBeInstanceOf(Map);
         expect(e.serializeWorld(w).exits[0].exitName).toBe('n');
-        expect(e.getPlaybackController()).toBeNull();
+        expect(e.getPlaybackController).toBeUndefined();
     });
 
     it('multiple per-game entries can register alongside the default in one registry', () => {

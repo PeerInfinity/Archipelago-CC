@@ -88,9 +88,11 @@ const REGISTRY_MODULE = 'frontend/modules/shared/procgen/substrateRegistry.js';
 
 /**
  * Import every library, recording which entries each one brought and which
- * ones REFUSED to load headless.
+ * ones REFUSED to load headless. ⛓ Exported for `capabilities.mjs`, which asks
+ * the same entries its own question (the libraries are imported once; a second
+ * call finds them registered and reports `registered: []` per library).
  */
-async function loadRegistry() {
+export async function loadRegistry() {
     const { substrateRegistry } = await import(join(REPO, REGISTRY_MODULE));
     const libraries = [];
     for (const rel of REGISTRY_LIBRARIES) {

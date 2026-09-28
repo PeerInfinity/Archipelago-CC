@@ -54,6 +54,7 @@ import { apExitNameCandidates } from '../procgenCore/apLocationNaming.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { SIDE_SHARING, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
+import { REALISER_KINDS, regionRealiserKind } from '../procgenCore/substratePredicates.js';
 import { ownedCounts, ruleWithOwned } from '../procgenCore/ruleWithOwned.js';
 import { SIDE_WORDS, slotLayout } from './regionLayout.js';
 
@@ -64,23 +65,13 @@ import { SIDE_WORDS, slotLayout } from './regionLayout.js';
  */
 export const REGENERATE_BASE_REGION_PARAMS = Object.freeze({ maxIterations: 0 });
 
-/** ⛓ The three realiser kinds, as data. `null` = the entry has none. */
-export const REALISER_KINDS = Object.freeze({ PROCEDURAL: 'procedural', ZONE: 'zone' });
-
 /**
- * ⛓⛓ **DOES THIS REGISTRY ENTRY BUILD A REGION FROM A SPEC?** The engine's own
- * dispatch (`generateRegionGen`: `generateRegionCore` first, else a zone
- * generator) and the pipeline's `_sphereCapableSubstrates` test — the same three
- * slots, so the hub offers exactly the targets the pipeline realises.
- *
- * @returns {'procedural'|'zone'|null}
+ * ⛓ The realiser kinds and `regionRealiserKind` live in `procgenCore/
+ * substratePredicates.js` (substrate chart S1) so the user-facing capability
+ * chart answers "the pipeline can build regions of it" with the SAME function;
+ * re-exported here for this module's importers.
  */
-export function regionRealiserKind(entry) {
-    if (typeof entry?.generateRegionCore === 'function') return REALISER_KINDS.PROCEDURAL;
-    if (typeof entry?.generateZoneForSpecs === 'function'
-        || typeof entry?.generateZoneForSpecsGen === 'function') return REALISER_KINDS.ZONE;
-    return null;
-}
+export { REALISER_KINDS, regionRealiserKind };
 
 /**
  * ⛓ What the op's refusals read off a target id's registry entry — the facts,

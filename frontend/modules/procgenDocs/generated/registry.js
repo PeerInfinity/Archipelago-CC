@@ -30,7 +30,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
         },
         {
-            "fields": 13,
+            "fields": 12,
             "id": "flash",
             "label": "Flash",
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
@@ -54,13 +54,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 28,
+            "fields": 27,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 27,
+            "fields": 26,
             "id": "flash_seedling_gen",
             "label": "Seedling (generated room)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
@@ -2561,12 +2561,9 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "maze",
-                "flash",
                 "bounce",
                 "runner",
                 "text_adventure",
-                "flash_seedling",
-                "flash_seedling_gen",
                 "jta",
                 "omsi"
             ],
@@ -2580,9 +2577,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
@@ -2608,16 +2605,16 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "present": true,
-                    "short": "fn",
-                    "type": "function",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
                     "value": null
                 },
                 {

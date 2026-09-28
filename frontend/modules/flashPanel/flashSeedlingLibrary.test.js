@@ -34,7 +34,7 @@ describe('flash_seedling substrate entry', () => {
 
     it('inherits the flash family runtime plumbing unchanged', () => {
         expect(substrateRegistryEntry.supportedFeatures).toEqual(['arbitrary_ap_locations']);
-        expect(substrateRegistryEntry.getPlaybackController()).toBeNull();
+        expect(substrateRegistryEntry.getPlaybackController).toBeUndefined();
         expect(substrateRegistryEntry.loopSupport.queueActions).toEqual(['regionMove']);
         expect(substrateRegistryEntry.generateRegionCore).toBeUndefined();
     });

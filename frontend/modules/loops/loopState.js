@@ -19,6 +19,9 @@ import { ActionQueueManager } from './actionQueueManager.js';
 import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import {
+  botHonorsInstant, captureShapeOf, offersPlayback, solverKindOf, SOLVER_KINDS,
+} from '../procgenCore/substratePredicates.js';
 import { blockKeyOf, resolveQueueBlocks, assignRecordingTags } from './blockIdentity.js';
 import {
   getSavedQueues, getSavedQueueByTag, saveQueue, hasPlayableRecording, hasSummaryRecording,
@@ -2173,18 +2176,26 @@ export class LoopState {
    * AP-native (null) and NO_LOOP_SUPPORT (empty) regions get no row.
    */
   _regionOffersPlayback(region) {
-    const ls = this._loopSupportFor(region);
-    return !!ls && (ls.manual || (ls.queueActions?.length > 0) || !!ls.executeVia);
+    return offersPlayback(this._entryFor(region));
   }
 
   /** loopSupport for a region's substrate, or null (AP-native / lookup unavailable). */
   _loopSupportFor(region) {
+    return this._entryFor(region)?.loopSupport ?? null;
+  }
+
+  /**
+   * The registry ENTRY of a region's substrate, or null (AP-native / lookup
+   * unavailable). The capability predicates (procgenCore/substratePredicates.js)
+   * take the entry, so the chart and these controls ask one function.
+   */
+  _entryFor(region) {
     if (!region) return null;
     try {
       const fn = centralRegistry?.getPublicFunction?.('procgenPlayer', 'getRegionInfo');
       const sub = fn?.(region)?.substrate;
       if (!sub) return null;
-      return substrateRegistry.get(sub)?.loopSupport ?? null;
+      return substrateRegistry.get(sub) ?? null;
     } catch {
       return null;
     }
@@ -2228,11 +2239,11 @@ export class LoopState {
    */
   _captureShapeFor(substrateId) {
     if (!substrateId) return 'coarse';
-    if (this._substrateHasRecorder(substrateId)) return 'fine';
+    let entry = null;
     try {
-      if (substrateRegistry?.get?.(substrateId)?.loopSupport?.summaryRecording) return 'summary';
-    } catch { /* fall through to coarse */ }
-    return 'coarse';
+      entry = substrateRegistry?.get?.(substrateId) ?? null;
+    } catch { /* no entry → coarse */ }
+    return captureShapeOf(entry);
   }
 
   /** The capture shape of a REGION's substrate (see _captureShapeFor). */
@@ -2294,9 +2305,11 @@ export class LoopState {
    */
   regionSolver(region) {
     if (!region) return null;
-    if (this._loopSupportFor(region)?.executeVia === 'solver') return 'walkTo';
-    if (this._regionSupportsDelegation(region)) return 'delegation';
-    return null;
+    const kind = solverKindOf(this._entryFor(region));
+    if (kind === SOLVER_KINDS.DELEGATION) {
+      return this._regionSupportsDelegation(region) ? kind : null;
+    }
+    return kind;
   }
 
   /**
@@ -2343,9 +2356,7 @@ export class LoopState {
    *     scope for this arc.
    */
   regionBotHonorsInstant(region) {
-    if (!this._regionSupportsInstant(region)) return false;
-    if (this.regionSolver(region) !== 'walkTo') return false;
-    return this._captureShapeForRegion(region) === 'fine';
+    return botHonorsInstant(this._entryFor(region));
   }
 
   /**

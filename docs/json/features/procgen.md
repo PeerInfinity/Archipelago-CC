@@ -12,6 +12,8 @@ A generated world is a graph of connected regions, each rendered by a **substrat
 - **Flash** — a recompiled Flash game embedded as a region
 - **Journey to Ascension** — zones of the idle game as regions
 
+What each one lets you do — play by hand, record and replay in loop mode, hand to the Playback Bot, grow to order, edit — differs from substrate to substrate; [What each substrate can do](./procgen-substrates.md) has the chart, generated from the code.
+
 One world can mix substrates freely — a maze region can lead to a platformer region. Access rules aren't just written down; for substrates like bounce they are *derived from the actual physics* and verified, so if the logic says you need Springs to reach an exit, that's genuinely true in play.
 
 ## Generating and playing

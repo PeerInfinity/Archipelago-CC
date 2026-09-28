@@ -62,6 +62,7 @@ import {
 import { reconstructResultFromSidecars, refusedRegionsNote } from './compositeMapDocument.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { regionRealiserKind } from '../procgenCore/substratePredicates.js';
 import {
     REGION_GENERATION_FIELDS, bagIntegerField, renderRegionGenerationForm,
 } from '../procgenCore/regionGenerationForm.js';
@@ -3006,12 +3007,12 @@ export class ProcgenPipelineUI {
     // (generateRegionCore) or spec-targeted zone (generateZoneForSpecs[Gen]). NOT
     // limited to the quota mix, so a per-region override can pick any usable
     // substrate. Excludes zone-count-only (jta) and opaque (flash) substrates,
-    // which the grow loop rejects.
+    // which the grow loop rejects. The test is procgenCore's
+    // regionRealiserKind — the hub's Initialise targets and the capability
+    // chart ask the same function.
     _sphereCapableSubstrates() {
         return substrateRegistry.getAll()
-            .filter((s) => typeof s.generateRegionCore === 'function'
-                || typeof s.generateZoneForSpecs === 'function'
-                || typeof s.generateZoneForSpecsGen === 'function')
+            .filter((s) => regionRealiserKind(s) !== null)
             .map((s) => s.id);
     }
 
