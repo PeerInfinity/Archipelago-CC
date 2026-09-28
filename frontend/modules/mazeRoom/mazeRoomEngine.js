@@ -1011,12 +1011,6 @@ function ghostStep(world, state, input) {
     return next;
 }
 
-const ghostBfsSolver = makeBfsSolver({
-    step: ghostStep,
-    inputs: INPUTS,
-    visitedKey: (s) => `${s.player_pos.x},${s.player_pos.y}`,
-});
-
 // --- Paths-and-obstacles extraction ---
 //
 // Produces the central paths-and-obstacles representation
@@ -1041,17 +1035,56 @@ function obstaclesAlongPath(world, startState, plan) {
     return seen;
 }
 
-function pathsToTarget(world, position) {
+/**
+ * ⛓ ONE ghost BFS from the entrance serves every target (C0, plan §41). Each
+ * target used to get its own `reach` over a `makeBfsSolver` of `ghostStep`
+ * keyed by position — N exits + M pickups BFS runs over the same tree. That
+ * solver checks the goal at DISCOVERY and extends the plan of the state that
+ * discovered it, so the plan it returned for any target is the path down the
+ * first-discovery tree: the tree this builds once, in the same FIFO order and
+ * `INPUTS` order. `plans(position)` answers what that `reach` answered: `[]`
+ * for the entrance itself, `null` for a tile the tree never reached.
+ */
+function ghostPlansFromEntrance(world) {
     const start = createState(world);
-    const result = reach(world, ghostBfsSolver, start,
-        (s) => s.player_pos.x === position.x && s.player_pos.y === position.y);
-    if (!result.ok) return [];
-    const obstacles = obstaclesAlongPath(world, start, result.plan);
+    const key = (x, y) => `${x},${y}`;
+    const origin = key(start.player_pos.x, start.player_pos.y);
+    const parent = new Map([[origin, null]]);
+    const queue = [start];
+    for (let head = 0; head < queue.length; head++) {
+        const s = queue[head];
+        const from = key(s.player_pos.x, s.player_pos.y);
+        for (const input of INPUTS) {
+            const next = ghostStep(world, s, input);
+            if (!next) continue;
+            const k = key(next.player_pos.x, next.player_pos.y);
+            if (parent.has(k)) continue;
+            parent.set(k, { from, input });
+            queue.push(next);
+        }
+    }
+    return (position) => {
+        let at = key(position.x, position.y);
+        if (!parent.has(at)) return null;
+        const plan = [];
+        for (let link = parent.get(at); link !== null; link = parent.get(at)) {
+            plan.push(link.input);
+            at = link.from;
+        }
+        return plan.reverse();
+    };
+}
+
+function pathsToTarget(world, position, plans) {
+    const plan = plans(position);
+    if (plan === null) return [];
+    const obstacles = obstaclesAlongPath(world, createState(world), plan);
     return [{ path_id: 'p1', obstacles }];
 }
 
 export function extractPathsAndObstacles(world, opts = {}) {
     const regionId = opts.regionId ?? 'maze_room';
+    const plans = ghostPlansFromEntrance(world);
 
     // Exits are region-to-region connections; one entry per exit tile
     // in `world.exits`. Target region resolution (for multi-region
@@ -1062,7 +1095,7 @@ export function extractPathsAndObstacles(world, opts = {}) {
             id: exit.exit_id,
             position: { x: exit.x, y: exit.y },
             target_region: exit.targetRegion ?? null,
-            paths: pathsToTarget(world, { x: exit.x, y: exit.y }),
+            paths: pathsToTarget(world, { x: exit.x, y: exit.y }, plans),
         });
     }
 
@@ -1076,7 +1109,7 @@ export function extractPathsAndObstacles(world, opts = {}) {
             id: `${itemId}_pickup`,
             position: { x, y },
             item: itemId,
-            paths: pathsToTarget(world, { x, y }),
+            paths: pathsToTarget(world, { x, y }, plans),
         });
     }
 
@@ -1161,25 +1194,43 @@ function tracePath(world, startState, plan) {
 // current world and inventory. Stand-alone from bfsSolver because we
 // want the full set, not a single goal-directed plan.
 //
-// ⛓ ON A WORLD WITH BLOCKS this is a full-state BFS whose output is the
-// PROJECTION onto player positions: a tile is listed once per distinct
-// (inventory, block layout) it was first reached under, so the list can repeat
-// a tile — as it already could for two different inventories before arc 2. The
-// callers that pick a random element from it (pickReachableFloorTile,
-// placeGateAndKey's key candidates) therefore weight repeated tiles more
-// heavily; that is pre-existing behaviour and deduplicating it would move
-// generated levels, so it is left exactly as it was.
+// ⛓ THE LIST IS A PROJECTION OF A FULL-STATE BFS onto player positions: a tile
+// is listed once per distinct (inventory, block layout) it was first reached
+// under, so the list repeats a tile. The callers that pick a random element
+// from it (pickReachableFloorTile, placeGateAndKey's key candidates) therefore
+// weight repeated tiles more heavily; that is pre-existing behaviour, and the
+// multiset's SIZE and ORDER both feed the pick, so deduplicating it — or keying
+// it on anything coarser than the full inventory — moves generated levels
+// (measured, plan §41). It is left exactly as it was.
 //
-// ⛔ NO NODE CAP. `bfsSolver` refuses by name at `budget` expansions; this
-// function runs to exhaustion, and the block state space is what makes that
-// dangerous (see the node-count table in the arc-2 kickoff §8). Nothing that
-// places blocks may call it without bounding the block count first.
+// ⛔ NO NODE CAP, AND THE STATE SPACE IS EXPONENTIAL IN THE PICKUPS. `bfsSolver`
+// refuses by name at `budget` expansions; this function runs to exhaustion.
+// Every item on a tile is picked up on arrival, so with u pickups the player can
+// collect without passing a gate the BFS visits up to (floor tiles) × 2^u
+// states — an open 8×6 room holds 48 × 2^u — and it runs once per placement.
+// That is the maze location cliff (plan §40–§41): C0 made each state cheap
+// (`reachableTileOrder`: integer states, a pickup bitmask, memoised
+// clearances), not fewer. The block state space is the same danger (see the
+// node-count table in the arc-2 kickoff §8): nothing that places blocks may call
+// this without bounding the block count first.
 function reachableTiles(world, startState) {
+    const order = reachableTileOrder(world, startState);
+    if (order === null) return reachableTilesByKey(world, startState);
+    const width = world.width;
+    return order.map((cell) => ({ x: cell % width, y: Math.floor(cell / width) }));
+}
+
+// The general form — the BFS over `step`, keyed by `mazeVisitedKey`. It is the
+// only form for a world with blocks or buttons, and the REFERENCE the integer
+// form is held to (`_testOnly_reachableTileOrders`). The queue is read by a
+// head index, not `shift()`: the same FIFO order, without the O(n) shift that
+// made a large frontier quadratic.
+function reachableTilesByKey(world, startState) {
     const visited = new Set([mazeVisitedKey(startState)]);
     const queue = [startState];
     const out = [{ x: startState.player_pos.x, y: startState.player_pos.y }];
-    while (queue.length > 0) {
-        const s = queue.shift();
+    for (let head = 0; head < queue.length; head++) {
+        const s = queue[head];
         for (const input of INPUTS) {
             const next = step(world, s, input);
             if (!next) continue;
@@ -1191,6 +1242,144 @@ function reachableTiles(world, startState) {
         }
     }
     return out;
+}
+
+// ⛓ The most distinct pickups the integer form tracks: one bit each, in a
+// 32-bit mask whose sign bit stays clear. Past it the general form runs — and
+// at 2^31 inventories per tile neither form finishes.
+const MASK_PICKUP_LIMIT = 30;
+// ⛓ The largest visited set kept as a bitmap (bits); a bigger one is a Set.
+const VISITED_BITMAP_LIMIT = 2 ** 30;
+
+/**
+ * ⛓⛓⛓ THE SAME BFS AS `reachableTilesByKey`, ON INTEGERS (C0, plan §41) — the
+ * discovery order of every (tile, inventory) state, as tile indices
+ * (`y * width + x`); `null` when the world needs the general form (blocks or
+ * buttons — the key then carries the block layout, and a held token depends on
+ * the stance — or more than `MASK_PICKUP_LIMIT` distinct pickups).
+ *
+ * Why it is the SAME list, element for element:
+ *   · the state: the inventory is the start state's carried set plus the
+ *     pickups collected, so a bitmask over the pickup ids NOT already carried
+ *     names every inventory `step` can build, one mask per inventory — the
+ *     SAME partition `mazeVisitedKey` draws (position | sorted inventory);
+ *   · the successor: `step` without an override and without blocks or buttons
+ *     is — a floor tile in the grid, an obstacle cleared by the inventory
+ *     (`isObstacleCleared` is a function of (obstacle, inventory), so its
+ *     answer is memoised per (obstacle, mask)), then the pickup added;
+ *   · the order: a FIFO queue, the inputs in `INPUTS` order (N, S, E, W).
+ * Only the representation changes: no key string, no Set clone per step, no
+ * `shift()`. The count of states is unchanged — it is still exponential in the
+ * pickups (see `reachableTiles`).
+ */
+function reachableTileOrder(world, startState) {
+    if (startState.blocks !== undefined) return null;
+    if (world.buttons?.size) return null;
+    const { width, height } = world;
+    const cells = width * height;
+    // A Map key `step` would read (`posKey`) → its cell; -1 when no step ever
+    // reads it (off the grid, or not spelled the way posKey spells it).
+    const cellOf = (key) => {
+        const comma = key.indexOf(',');
+        const x = Number(key.slice(0, comma));
+        const y = Number(key.slice(comma + 1));
+        if (!(x >= 0 && x < width && y >= 0 && y < height) || posKey(x, y) !== key) return -1;
+        return y * width + x;
+    };
+    const carried = startState.inventory;
+    const bitOf = new Map();
+    const bitItems = [];
+    const pickupBit = new Int32Array(cells);
+    for (const [key, itemId] of world.items) {
+        // `step` adds a TRUTHY id not already held; anything else changes nothing.
+        const cell = cellOf(key);
+        if (cell < 0 || !itemId || carried.has(itemId)) continue;
+        let bit = bitOf.get(itemId);
+        if (bit === undefined) {
+            if (bitItems.length === MASK_PICKUP_LIMIT) return null;
+            bit = 1 << bitItems.length;
+            bitOf.set(itemId, bit);
+            bitItems.push(itemId);
+        }
+        pickupBit[cell] = bit;
+    }
+    const obstacleAt = new Array(cells).fill(undefined);
+    for (const [key, obstacleId] of world.obstacles) {
+        const cell = cellOf(key);
+        if (cell >= 0) obstacleAt[cell] = obstacleId;
+    }
+    const inventories = new Map();
+    const inventoryOf = (mask) => {
+        let inventory = inventories.get(mask);
+        if (inventory === undefined) {
+            inventory = new Set(carried);
+            for (let i = 0; i < bitItems.length; i++) if (mask & (1 << i)) inventory.add(bitItems[i]);
+            inventories.set(mask, inventory);
+        }
+        return inventory;
+    };
+    const clearances = new Map();
+    const cleared = (obstacleId, mask) => {
+        let byMask = clearances.get(obstacleId);
+        if (byMask === undefined) clearances.set(obstacleId, byMask = new Map());
+        let answer = byMask.get(mask);
+        if (answer === undefined) {
+            answer = isObstacleCleared(obstacleId, inventoryOf(mask), world.obstacleLib);
+            byMask.set(mask, answer);
+        }
+        return answer;
+    };
+    const bits = cells * 2 ** bitItems.length;
+    const bitmap = bits <= VISITED_BITMAP_LIMIT ? new Uint8Array(Math.ceil(bits / 8)) : null;
+    const seen = bitmap ? null : new Set();
+    // visited(k) marks k and answers whether it was ALREADY marked.
+    const visited = bitmap
+        ? (k) => {
+            const byte = k >>> 3;
+            const flag = 1 << (k & 7);
+            if (bitmap[byte] & flag) return true;
+            bitmap[byte] |= flag;
+            return false;
+        }
+        : (k) => (seen.has(k) ? true : (seen.add(k), false));
+    const start = startState.player_pos.y * width + startState.player_pos.x;
+    visited(start);
+    const order = [start];
+    const masks = [0];
+    for (let head = 0; head < order.length; head++) {
+        const cell = order[head];
+        const mask = masks[head];
+        const x = cell % width;
+        const y = (cell - x) / width;
+        for (const input of INPUTS) {
+            const { dx, dy } = DELTAS[input];
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+            const next = ny * width + nx;
+            if (world.tiles[next] !== TILE_FLOOR) continue;
+            const obstacleId = obstacleAt[next];
+            if (obstacleId && !cleared(obstacleId, mask)) continue;
+            const nextMask = mask | pickupBit[next];
+            if (visited(nextMask * cells + next)) continue;
+            order.push(next);
+            masks.push(nextMask);
+        }
+    }
+    return order;
+}
+
+/**
+ * ⛔ TEST ONLY — both forms' discovery order, as tile indices, for the row that
+ * holds the integer form to the general one (`byMask` null when the world needs
+ * the general form).
+ */
+export function _testOnly_reachableTileOrders(world, startState) {
+    const width = world.width;
+    return {
+        byMask: reachableTileOrder(world, startState),
+        byKey: reachableTilesByKey(world, startState).map((t) => t.y * width + t.x),
+    };
 }
 
 // Floor-only flood fill from the entrance: walls block, obstacles are
@@ -1444,18 +1633,39 @@ export function generateMaze(config) {
 // of this file.
 
 function pickReachableFloorTile(world, rng, excluded) {
+    const width = world.width;
+    const start = createState(world);
+    // ⛓ The reachable list as tile indices, in discovery order, repeats and all
+    // (see `reachableTiles`) — the draw below is over exactly that multiset.
+    const order = reachableTileOrder(world, start)
+        ?? reachableTilesByKey(world, start).map((t) => t.y * width + t.x);
     const excludedKeys = new Set(excluded.map((p) => `${p.x},${p.y}`));
-    const tiles = reachableTiles(world, createState(world));
-    const candidates = tiles.filter((t) => {
-        if (t.x === world.entrance.x && t.y === world.entrance.y) return false;
-        if (isExit(world, t.x, t.y)) return false;
-        if (excludedKeys.has(`${t.x},${t.y}`)) return false;
-        if (getItem(world, t.x, t.y)) return false;
-        if (getObstacle(world, t.x, t.y)) return false;
-        return true;
-    });
-    if (candidates.length === 0) return null;
-    return candidates[Math.floor(rng.next() * candidates.length)];
+    // The candidate test is a property of the TILE, asked once per tile.
+    const verdicts = new Map();
+    const isCandidate = (cell) => {
+        let verdict = verdicts.get(cell);
+        if (verdict === undefined) {
+            const x = cell % width;
+            const y = (cell - x) / width;
+            verdict = !(x === world.entrance.x && y === world.entrance.y)
+                && !isExit(world, x, y)
+                && !excludedKeys.has(`${x},${y}`)
+                && !getItem(world, x, y)
+                && !getObstacle(world, x, y);
+            verdicts.set(cell, verdict);
+        }
+        return verdict;
+    };
+    let count = 0;
+    for (const cell of order) if (isCandidate(cell)) count++;
+    if (count === 0) return null;
+    let pick = Math.floor(rng.next() * count);
+    for (const cell of order) {
+        if (!isCandidate(cell)) continue;
+        if (pick === 0) return { x: cell % width, y: Math.floor(cell / width) };
+        pick--;
+    }
+    return null;
 }
 
 // Single-key gate pairs the placer tries to realise via the cut-vertex
