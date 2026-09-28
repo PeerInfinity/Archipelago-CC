@@ -1,7 +1,13 @@
 /**
  * substrateRegistryPanel/substrateRegistryPanelUI — **THE DOM.** Draws the
  * view-model `describeRegistry` makes of the LIVE `substrateRegistry` and the
- * checked-in snapshot, in one of two MODES:
+ * checked-in snapshot, in one of three MODES:
+ * - **Plain**: the capability statements of `procgenCore/substrateCapabilities.js`
+ *   (the same vocabulary the generated page `features/procgen-substrates.md`
+ *   prints), one table per group, entries across, each cell a mark from
+ *   `CELL_MARKS` and its degree (`plainOf`); a statement that declares a
+ *   `live` answer shows what the running app says. Groups collapse, the filter
+ *   narrows by statement, and the Columns controls apply as in the Matrix.
  * - **Matrix** (the default): one table, fields and their feature rows down,
  *   entries across, each cell ✓ / ✗ / a number (`matrixOf`); groups collapse,
  *   a filter narrows the rows by name, and a collapsible Columns section
@@ -21,20 +27,22 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGISTRY } from '../procgenDocs/generated/registry.js';
+import { capabilityRows } from '../procgenCore/substrateCapabilities.js';
 import {
-    applyColumnControls, describeRegistry, driftIsEmpty, fullValueText, GLYPH, matrixOf, reorderIds, ROW_KINDS,
+    applyColumnControls, describeRegistry, driftIsEmpty, fullValueText, GLYPH, matrixOf, PLAIN_LEGEND, plainOf,
+    reorderIds, ROW_KINDS, uncoveredLine,
 } from './substrateRegistryPanelLibrary.js';
 
 /** ⛓ Where the snapshot's own full reading lives, relative to `frontend/`. */
 export const REFERENCE_HREF = 'modules/procgenDocs/reference.html#section-registry';
 
-/** ⛓ The panel's view modes; the button for each carries `data-mode`. */
-export const MODES = Object.freeze({ matrix: 'matrix', detail: 'detail' });
+/** ⛓ The panel's view modes, in button order; the button for each carries `data-mode`. */
+export const MODES = Object.freeze({ plain: 'plain', matrix: 'matrix', detail: 'detail' });
 
 /** ⛓ The mode the panel opens in — the matrix is what was asked for. */
 export const DEFAULT_MODE = MODES.matrix;
 
-const MODE_LABELS = Object.freeze({ [MODES.detail]: 'Detail', [MODES.matrix]: 'Matrix' });
+const MODE_LABELS = Object.freeze({ [MODES.plain]: 'Plain', [MODES.detail]: 'Detail', [MODES.matrix]: 'Matrix' });
 
 /** ⛓ The Matrix mode's one-line key. */
 export const LEGEND = `${GLYPH.yes} carried / true · ${GLYPH.no} absent / false · a number: its value, `
@@ -145,19 +153,27 @@ export class SubstrateRegistryPanelUI {
 
     /** Re-read the registry and redraw everything. */
     render() {
-        const vm = describeRegistry(substrateRegistry.getAll(), REGISTRY);
+        const entries = substrateRegistry.getAll();
+        const vm = describeRegistry(entries, REGISTRY);
         this.viewModel = vm;
         this.headerEl.textContent = `${vm.columns.length} entries · ${vm.rows.length} fields · `
             + `snapshot: ${vm.snapshotCount} entries`;
         const matrix = this.mode === MODES.matrix;
+        const plain = this.mode === MODES.plain;
         for (const b of this.modeButtons) b.setAttribute('aria-pressed', String(b.dataset.mode === this.mode));
-        this.filterInput.hidden = !matrix;
-        this.legendEl.hidden = !matrix;
-        this.controlsEl.hidden = !matrix;
+        this.filterInput.hidden = !matrix && !plain;
+        this.filterInput.placeholder = plain ? 'filter statements' : 'filter rows';
+        this.legendEl.hidden = !matrix && !plain;
+        this.legendEl.textContent = plain ? PLAIN_LEGEND : LEGEND;
+        this.controlsEl.hidden = !matrix && !plain;
         this.matrixGroups = [];
         if (matrix) {
             this._controls(vm);
             this.bodyEl.replaceChildren(this._matrix(vm));
+        }
+        else if (plain) {
+            this._controls(vm);
+            this.bodyEl.replaceChildren(...this._plain(vm, capabilityRows(entries)));
         }
         else this.bodyEl.replaceChildren(this._drift(vm), ...vm.columns.map((c) => this._entry(vm, c)));
     }
@@ -210,6 +226,59 @@ export class SubstrateRegistryPanelUI {
         return t;
     }
 
+    /** One table per capability group: statements down, entries across, each
+     *  cell its mark and degree; then the uncovered-fields line. */
+    _plain(vm, rows) {
+        const p = plainOf(vm, rows, { hidden: this.hidden, order: this.order });
+        const out = [];
+        for (const g of p.groups) {
+            const t = el('table', 'srp-plain');
+            t.dataset.group = g.id;
+            const thead = el('thead');
+            const header = el('tr', 'srp-plain-group');
+            const gth = el('th', null, g.title);
+            gth.addEventListener('click', () => {
+                if (this.collapsed.has(g.title)) this.collapsed.delete(g.title);
+                else this.collapsed.add(g.title);
+                this._applyMatrixState();
+            });
+            header.appendChild(gth);
+            for (const c of p.columns) {
+                const th = el('th', 'srp-plain-col', c.label);
+                th.dataset.substrateId = c.id;
+                th.title = c.title;
+                header.appendChild(th);
+            }
+            thead.appendChild(header);
+            t.appendChild(thead);
+            const tbody = el('tbody');
+            const drawn = g.rows.map((r) => {
+                const tr = el('tr', 'srp-plain-row');
+                tr.dataset.statementId = r.id;
+                const name = el('th', 'srp-plain-statement');
+                name.append(el('span', 'srp-plain-id', r.id), document.createTextNode(r.statement));
+                tr.appendChild(name);
+                for (const c of r.cells) {
+                    const td = el('td', `srp-plain-cell srp-${c.kind}`, c.text);
+                    td.dataset.substrateId = c.id;
+                    td.dataset.kind = c.kind;
+                    td.title = c.title;
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+                return { tr, name: `${r.id} ${r.statement}`.toLowerCase() };
+            });
+            t.appendChild(tbody);
+            this.matrixGroups.push({ title: g.title, header, rows: drawn, table: t });
+            out.push(t);
+        }
+        const un = el('div', 'srp-plain-uncovered', uncoveredLine(p.uncovered.length));
+        un.title = p.uncovered.join('\n');
+        out.push(un);
+        this._applyMatrixState();
+        return out;
+    }
+
     /** The Columns section: one line per live entry in the CURRENT display
      *  order — tick, id, label, ▲ ▼ — then All · None · Registry order. */
     _controls(vm) {
@@ -260,7 +329,8 @@ export class SubstrateRegistryPanelUI {
         this.order = next;
     }
 
-    /** Collapse and filter, over the drawn rows — no redraw. */
+    /** Collapse and filter, over the drawn rows (the Matrix's or the Plain
+     *  mode's) — no redraw. */
     _applyMatrixState() {
         const needle = this.filterText.trim().toLowerCase();
         for (const g of this.matrixGroups ?? []) {
@@ -274,6 +344,7 @@ export class SubstrateRegistryPanelUI {
                 if (!filtered) visible += 1;
             }
             g.header.hidden = visible === 0;
+            if (g.table) g.table.hidden = visible === 0;
         }
     }
 

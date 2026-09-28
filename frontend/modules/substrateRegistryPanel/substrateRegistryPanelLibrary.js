@@ -16,6 +16,9 @@
  */
 
 import { cellOf, digTwo, fieldNamesOf, shapeRows } from '../procgenDocs/registryShape.js';
+import {
+    CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, applyLiveAnswer, cardOf, uncoveredFields,
+} from '../procgenCore/substrateCapabilities.js';
 
 /** ⛓ The group a live field lands in when the snapshot has no row for it. */
 export const UNSNAPSHOTTED_GROUP = 'Not in the snapshot — no row at its last regeneration';
@@ -312,5 +315,79 @@ export function applyColumnControls(matrix, { hidden = new Set(), order = [] } =
             ...g,
             rows: g.rows.map((r) => ({ ...r, cells: at.map((i) => r.cells[i]) })),
         })),
+    };
+}
+
+/* ─── THE PLAIN MODE — the capability statements × substrates ────────────── */
+
+/** ⛓ The Plain mode's one-line key — the vocabulary's own marks. */
+export const PLAIN_LEGEND = `${CELL_MARKS[CELL_KINDS.YES]} it can · ${CELL_MARKS[CELL_KINDS.NO]} it cannot · `
+    + `${CELL_MARKS[CELL_KINDS.PARTIAL]} partly · ${CELL_MARKS[CELL_KINDS.NA]} does not apply · `
+    + 'hover a cell for the fields it read, a column head for the substrate\'s card';
+
+/** ⛓ The line under the Plain tables: the fields no statement reads yet. */
+export const uncoveredLine = (n) => `${n} registry field${n === 1 ? '' : 's'} no statement reads yet`;
+
+/** A cell's text as drawn: its mark, then its degree / reason. */
+export const plainCellText = (c) => (c.text ? `${CELL_MARKS[c.kind]} ${c.text}` : CELL_MARKS[c.kind]);
+
+/** A cell's hover: `field = value` per field it read, and the live answer when overlaid. */
+function plainCellTitle(c) {
+    const lines = c.why.map((w) => `${w.field} = ${w.value}`);
+    if (c.live) lines.push(`live ${c.live.key} = ${c.live.value}`);
+    return lines.join('\n');
+}
+
+/**
+ * ⛓ THE PLAIN MODE over a view-model — pure. `rows` is
+ * `capabilityRows(entries)` for the SAME entries `vm` describes; each cell of a
+ * statement that declares `live` is overlaid with `vm.answers[id][live]`
+ * (`applyLiveAnswer` — by declaration, never by statement id). Columns go
+ * through the Matrix's own rule (`reorderIds`, then `hidden` stripped), so the
+ * Columns controls apply here unchanged; each column carries its card
+ * (`cardOf` over the overlaid rows) as the header's hover. The uncovered
+ * fields are measured against `vm.rows`, the field universe the Matrix draws.
+ *
+ * @param {ReturnType<typeof describeRegistry>} vm
+ * @param {ReturnType<import('../procgenCore/substrateCapabilities.js').capabilityRows>} rows
+ * @param {{ hidden?: Set<string>, order?: string[] }} [controls]
+ */
+export function plainOf(vm, rows, { hidden = new Set(), order = [] } = {}) {
+    const statementOf = new Map(CAPABILITY_STATEMENTS.map((s) => [s.id, s]));
+    const live = rows.map((r) => ({
+        ...r,
+        cells: r.cells.map((c) => {
+            const s = statementOf.get(r.id);
+            return applyLiveAnswer(c, s, s?.live ? vm.answers[c.id]?.[s.live] : undefined);
+        }),
+    }));
+    const groupLabel = new Map(CAPABILITY_GROUPS.map((g) => [g.id, g.label]));
+    const ids = reorderIds(vm.columns.map((c) => c.id), order).filter((id) => !hidden.has(id));
+    const columns = ids.map((id) => {
+        const col = vm.columns.find((c) => c.id === id);
+        const card = cardOf(col, live);
+        return {
+            id,
+            label: card.label,
+            title: [card.label, ...card.lines.map((l) => `${groupLabel.get(l.group)} — ${l.statement}`
+                + `${l.text ? `: ${l.text}` : ''}`)].join('\n'),
+        };
+    });
+    const uncovered = uncoveredFields(vm.rows.map((r) => r.name), rows);
+    return {
+        columns,
+        groups: CAPABILITY_GROUPS.map((g) => ({
+            id: g.id,
+            title: g.label,
+            rows: live.filter((r) => r.group === g.id).map((r) => ({
+                id: r.id,
+                statement: r.statement,
+                cells: ids.map((id) => {
+                    const c = r.cells.find((x) => x.id === id);
+                    return { id, kind: c.kind, text: plainCellText(c), title: plainCellTitle(c) };
+                }),
+            })),
+        })).filter((g) => g.rows.length),
+        uncovered,
     };
 }
