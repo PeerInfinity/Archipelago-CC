@@ -42,11 +42,13 @@
  * are that package's world; slots 3–4 are `bounce_worldgen`'s, which ships no
  * metadata file. So the table writes what the MOVED exporter
  * (`handler.py`: `export_data[KEY][str(player)] = block`, and both keys in
- * `player_specific_keys`) writes for that generation: the combined file
+ * `PLAYER_SPECIFIC_KEYS`) writes for that generation: the combined file
  * `{"1": b, "2": b}`, `_P1` `{"1": b}`, `_P2` `{"2": b}`, and `_P3` / `_P4`
  * carry NO key (a per-player export slices a player-specific key to its own
  * slot's entry, and those slots have none). Task 6b of P1a regenerates that
- * document and asserts exactly this.
+ * document and asserts exactly this; since P1b′ the committed row
+ * `test/test_export_player_slicing.py` holds the table to the exporter's own
+ * `create_ordered_export_data` without a regeneration.
  */
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';

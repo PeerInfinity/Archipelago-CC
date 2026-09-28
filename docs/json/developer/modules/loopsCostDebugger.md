@@ -113,6 +113,27 @@ divides that cost by the room's longest shortest path and charges it natively).
 The panel's Simulated Queue therefore carries a **Charged by** column — *the
 queue* / *the substrate* / *time (drain)* — separate from whether a cost exists.
 
+### Adoption: the later hand-off wins (P1b′)
+
+Adopting a hand-off is ASYNC — `_adoptWorkingCopy` awaits `documentStateManager`
+(4–306 ms over the committed corpus) before it re-points the planner — so two
+hand-offs close together can resolve OUT OF ORDER. Every call takes the next
+number before its `await` (so does **Use applied state**, a gesture that
+outranks a hand-off still being read); a completion whose number is no longer
+the latest is **dropped**: the planner is not re-pointed, the working copy and
+the status stay the later one's, and the panel logs one `info` line naming both
+(*"Dropped hand-off #3 ("JtA Schedule Test", player 1): hand-off #4 ("Omsi
+Substrate Test", player 1) arrived while it was being read …"*). A stale
+FAILURE is dropped the same way. Pinned by `costDebuggerAdoption.test.js`.
+
+⚠ **The status prefix is not an adoption signal.** The `[working copy · … —
+N regions, M locations]` prefix stays on screen from the PREVIOUS adoption until
+the next one lands (the hub's door awaits an import before it publishes), so a
+driver that waits on the prefix alone reads the previous hand-off. The in-app
+rows wait for `el.__costDebugger._workingCopy.jsonData` to BE the document they
+handed over (`debuggerAdoptedHandOff`); the working copy also records its `seq`.
+This is what made the L4 Send row red about 1 run in 3 (trap 1478).
+
 ### Sending a plan back to a document (L4)
 
 ⚖ *(user, 2026-09-06)* **"the debugger's plan comes back as ONE op"**. When the

@@ -130,20 +130,20 @@ def _export_key_lists():
     P1b′ lifted them out of the export function (they were locals, read off
     its source as literals until then)."""
     from exporter.exporter import DESIRED_KEY_ORDER, PLAYER_SPECIFIC_KEYS
-    return {"desired_key_order": DESIRED_KEY_ORDER, "player_specific_keys": PLAYER_SPECIFIC_KEYS}
+    return {"DESIRED_KEY_ORDER": DESIRED_KEY_ORDER, "PLAYER_SPECIFIC_KEYS": PLAYER_SPECIFIC_KEYS}
 
 
 def test_both_keys_ordered_and_sliced_per_player():
     """Both keys are in the ORDERED list (no not-in-order warning; the
     pipeline's order, procgen_metadata before loop_costs) and in
-    `player_specific_keys`, which is what makes a `_P<n>` export slice them
+    `PLAYER_SPECIFIC_KEYS`, which is what makes a `_P<n>` export slice them
     to its own slot's entry — or drop the key when the slot has none."""
     lists = _export_key_lists()
-    order = lists["desired_key_order"]
+    order = lists["DESIRED_KEY_ORDER"]
     assert order.index("procgen_metadata") + 1 == order.index("loop_costs")
     assert order.index("preset_sidecars") < order.index("procgen_metadata")
     for key in ("procgen_metadata", "loop_costs"):
-        assert key in lists["player_specific_keys"], key
+        assert key in lists["PLAYER_SPECIFIC_KEYS"], key
 
 
 FOUR = ROOT / "frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311_rules.json"
