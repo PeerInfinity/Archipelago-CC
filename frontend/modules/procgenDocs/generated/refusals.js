@@ -1453,6 +1453,21 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`",
+            "constant": "MAZE_REFUSALS",
+            "file": "frontend/modules/mazeRoom/procgenMaze.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "\"…\" is a declared element, but the maze binds only […]; the other heads are Seedling's. Use --elements=… (or none) here, or build the level on the Seedling substrate.",
+            "name": "the-element-is-not-a-maze-element",
+            "named": true,
+            "scanFound": true,
+            "source": "maze-area-binding",
+            "sourceTitle": "The MAZE area + element binding",
+            "where": "procgenMaze.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "`summary.elementInfo.refused` on `watch.html`; `generate-seedling-level.mjs --json` `elementInfo.refused`",
             "constant": "SEEDLING_ELEMENT_REFUSALS",
             "file": "frontend/modules/seedlingDemo/procgenSeedlingElements.js",
@@ -2170,14 +2185,14 @@ export const REFUSALS = frz({
         {
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `lab.html`",
             "constant": "MAZE_REFUSALS",
-            "declaredCount": 18,
+            "declaredCount": 19,
             "file": "frontend/modules/mazeRoom/procgenMaze.js",
             "id": "maze-area-binding",
             "kind": "constant",
             "patterns": [
                 "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
             ],
-            "scannedCount": 18,
+            "scannedCount": 19,
             "spansModules": false,
             "title": "The MAZE area + element binding",
             "where": "procgenMaze.js (the whole module)"

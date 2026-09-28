@@ -128,7 +128,7 @@ A **flag** (`flag_K0`) is an ordinary item whose library entry has `kind: 'flag'
 
 An **element** (`procgenCore/elements.js`, one module per element in `procgenCore/elements/`) is a template placed in pass 1. `defineElement` gives it a `phase`: a **`pre-carve`** element is built before the carve inside a rectangle the binding offers, writes its own floor and wall, and declares its **ports**, the outside cells it needs kept (`demand`), and the **area** it is; an **`on-connector`** element is built after the carve with a read-only room probe, writes sparsely and has `area: null` (a door cuts an area, it does not make one).
 
-The heads are `ELEMENT_TABLE` in `procgenCore/elementSpec.js`. **The maze binds only `guard`**, the pre-carve **reverse-pull block gadget** (`procgenCore/elements/reversePullBlock.js`); the other heads are Seedling's ([Flash Substrate](./flash.md)) and the maze refuses them. The gadget is a block put on its button and pulled backwards `len` steps with `turns` direction changes. Reversed, that walk is a legal push sequence, so the gadget is solvable by construction, and the BFS certifies it anyway.
+The heads are `ELEMENT_TABLE` in `procgenCore/elementSpec.js`. **The maze binds only `guard`**, the pre-carve **reverse-pull block gadget** (`procgenCore/elements/reversePullBlock.js`); the other heads are Seedling's ([Flash Substrate](./flash.md)) and the maze refuses them as `the-element-is-not-a-maze-element`, spending no draw. The gadget is a block put on its button and pulled backwards `len` steps with `turns` direction changes. Reversed, that walk is a legal push sequence, so the gadget is solvable by construction, and the BFS certifies it anyway.
 
 ### The spec
 

@@ -133,6 +133,13 @@ export const MAZE_REQUIRE_REFUSALS = Object.freeze([
 ]);
 
 /**
+ * The `ELEMENT_TABLE` heads the maze can build (maze.md § The first element).
+ * The table is shared with Seedling; every other head refuses as
+ * `the-element-is-not-a-maze-element`.
+ */
+export const MAZE_ELEMENT_HEADS = Object.freeze(['guard']);
+
+/**
  * ⛓⛓⛓ **THE CENSUS KEY FOR THIS MODULE** — every refusal name
  * `procgenMaze.js` can raise, the directive's five included (PROCGEN DOCS ·
  * P5).
@@ -147,6 +154,7 @@ export const MAZE_REQUIRE_REFUSALS = Object.freeze([
  */
 export const MAZE_REFUSALS = Object.freeze([
     ...MAZE_REQUIRE_REFUSALS,
+    'the-element-is-not-a-maze-element',
     'no-area-holds-this-symbol',
     'no-site-fits-this-room',
     'the-cell-beyond-the-guard-door-is-not-floor',
@@ -1555,7 +1563,21 @@ export function mazeModel({
     const goalPos = { x: goalCell.tx, y: goalCell.ty };
     let elementPlan = null;
     let elementRefusal = null;
-    if (elementValues.name !== ELEMENTS_NONE) {
+    if (elementValues.name !== ELEMENTS_NONE
+        && !MAZE_ELEMENT_HEADS.includes(elementValues.name)) {
+        /**
+         * ⛔ A HEAD THE MAZE DOES NOT BIND is refused BY NAME, before anything
+         * is instantiated and with no draw spent. `ELEMENT_TABLE` is shared
+         * with Seedling, so `killgate` / `chamber` / … parse fine here; before
+         * this branch they fell through to the guard's sizing and refused as
+         * "a len=undefined gadget needs a NaNxNaN site".
+         */
+        elementRefusal = { reason: 'the-element-is-not-a-maze-element',
+            detail: `"${elementValues.name}" is a declared element, but the maze binds only `
+                + `[${MAZE_ELEMENT_HEADS.join(', ')}]; the other heads are Seedling's. `
+                + `Use --elements=${MAZE_ELEMENT_HEADS[0]} (or none) here, or build the `
+                + 'level on the Seedling substrate.' };
+    } else if (elementValues.name !== ELEMENTS_NONE) {
         const entry = ELEMENT_TABLE[elementValues.name];
         const drawsBefore = roomRng.draws;
         const concrete = entry.element.instantiate(roomRng,

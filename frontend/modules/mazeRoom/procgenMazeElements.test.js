@@ -51,7 +51,8 @@ const {
 const { rngFor } = await import('./procgenRng.js');
 const {
     SITE_MARGIN, cloneWorld, deserializeMazeLevel, elementSiteCandidates, elementSummaryOf,
-    generateMazeLevel, guardIdsFor, guardIsCut, mazeCostRecords, mazeModel, partitionMazeAreas,
+    MAZE_ELEMENT_HEADS, generateMazeLevel, guardIdsFor, guardIsCut, mazeCostRecords, mazeModel,
+    partitionMazeAreas,
     reservedRect, serializeMazeLevel,
 } = await import('./procgenMaze.js');
 
@@ -356,6 +357,24 @@ describe('the site', () => {
         const w = m.skeleton();
         expect(connected(w.width, w.height, (x, y) => getTile(w, x, y) === TILE_FLOOR,
             w.entrance, m.goalPos)).toBe(true);
+    });
+
+    /** ⛔ `ELEMENT_TABLE` is shared with Seedling: every head but the maze's own
+     *  parses, and must refuse BY NAME — not fall into the guard's `len` sizing
+     *  ("a len=undefined gadget needs a NaNxNaN site"). */
+    it('REFUSES a head the maze does not bind, by name and with no draw spent', () => {
+        const others = Object.keys(ELEMENT_TABLE).filter((h) => !MAZE_ELEMENT_HEADS.includes(h));
+        expect(others).toEqual(expect.arrayContaining(['killgate', 'chamber']));
+        const none = modelAt(1, { elements: { name: 'none' } });
+        for (const name of others) {
+            const m = modelAt(1, { elements: { name } });
+            expect(m.elements.ran).toBe(false);
+            expect(m.elements.refused.reason).toBe('the-element-is-not-a-maze-element');
+            expect(m.elements.refused.detail).toContain(`"${name}"`);
+            expect(m.elements.refused.detail).not.toMatch(/undefined|NaN/);
+            expect(serializeMazeLevel(m.skeleton())).toEqual(serializeMazeLevel(none.skeleton()));
+        }
+        expect(calls.instantiate).toBe(0);
     });
 
     /** ⛔ A REFUSED `construct` is the model's refusal with the element's own
