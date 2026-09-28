@@ -94,12 +94,8 @@ jobs:
         # Python 3.13 uses UTF-8 by default and is unaffected.
         PYTHONUTF8: "1"
         PYTHONIOENCODING: "utf-8"
-      # `--dist loadgroup` = the default `load` plus xdist_group marks; the root
-      # conftest.py groups test/webhost's two static-docs writers onto one
-      # worker, which `load` would ignore (a race that depends on how many
-      # workers `-n auto` gets from the runner's core count).
       run: |
-        pytest -n auto --dist loadgroup
+        pytest -n auto
 
   hosting:
     runs-on: ${{ matrix.os }}

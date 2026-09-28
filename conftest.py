@@ -51,8 +51,6 @@ from __future__ import annotations
 # could actually clobber host.yaml with in-memory test state. Setting this
 # flag before any Settings instance is constructed both skips the atexit
 # registration and turns autosave() into a no-op.
-import pytest
-
 import settings as _settings  # noqa: E402 — imported for side-effect-free flag set
 _settings.skip_autosave = True
 del _settings
@@ -146,30 +144,62 @@ def pytest_configure(config) -> None:  # noqa: ARG001 — pytest hook signature
             AutoPatchExtensionRegister.extension_types.pop(game, None)
 
 
-# test/webhost/test_docs.py and test_sitemap.py each call
-# WebHost.copy_tutorials_files_to_static(), which rmtree()s and rebuilds
-# WebHostLib/static/generated/docs. On two xdist workers one deletes the files
-# the other is reading (measured: test_sitemap_links FileNotFoundError on
-# .../generated/docs/<game>/setup_en.md, 1 run in 7 at -n 5). One group = one
-# worker, so the rebuilds run in sequence — under `--dist loadgroup` only
-# (`-n N` alone is `--dist load`, which ignores the mark; CI passes it in
-# .github/workflows/unittests.yml). It cannot be switched on from here: xdist
-# workers re-parse argv, so a changed config.option.dist never reaches them.
-_WEBHOST_STATIC_DOCS_GROUP = "webhost-static-docs"
-_WEBHOST_STATIC_DOCS_FILES = frozenset({"test_docs.py", "test_sitemap.py"})
-
-
 def _is_webhost_test(item) -> bool:
     parts = item.path.parts
     return len(parts) >= 2 and parts[-2] == "webhost" and "test" in parts
 
 
-@pytest.hookimpl(tryfirst=True)  # before xdist's own hook reads the marks
+def _copy_static_docs_once_per_run(real_copy):
+    """Run ``copy_tutorials_files_to_static`` once per xdist run, not per worker.
+
+    ``test/webhost/test_docs.py`` and ``test_sitemap.py`` each call it, and it
+    ``rmtree()``s and rebuilds ``WebHostLib/static/generated/docs``. On two
+    workers one deletes the files the other is reading (measured at ``-n 5``:
+    ``test_sitemap_links`` FileNotFoundError on
+    ``.../generated/docs/<game>/setup_en.md``, 4 runs in 10). The first worker
+    to arrive builds the directory; the others wait for it and reuse it. The
+    handshake is two empty files per run in the temp dir, named for xdist's
+    run id.
+
+    ⛔ Not ``xdist_group`` + ``--dist loadgroup``: that mode is ``loadscope``
+    plus groups, so it moves whole modules between workers, and measured on
+    CI it made ``worlds/seedling``'s MultiWorld leak check fail on every
+    ubuntu job (never seen in 40 ``load`` runs). The fix stays out of the
+    scheduling.
+    """
+    import os
+    import tempfile
+    import time
+
+    run_id = os.environ.get("PYTEST_XDIST_TESTRUNUID")
+    if run_id is None:  # one process: nothing to race with
+        return real_copy
+    base = os.path.join(tempfile.gettempdir(), f"archipelago-cc-static-docs-{run_id}")
+    done_path = base + ".done"
+
+    def copy_once() -> None:
+        try:
+            os.close(os.open(base + ".lock", os.O_CREAT | os.O_EXCL | os.O_WRONLY))
+        except FileExistsError:
+            deadline = time.monotonic() + 600
+            while not os.path.exists(done_path):
+                if time.monotonic() > deadline:
+                    raise TimeoutError(f"another xdist worker never finished {real_copy.__name__} "
+                                       f"({done_path} missing after 600 s)")
+                time.sleep(0.1)
+            return
+        real_copy()
+        with open(done_path, "w", encoding="utf-8"):
+            pass
+
+    return copy_once
+
+
 def pytest_collection_modifyitems(config, items) -> None:  # noqa: ARG001 — pytest hook signature
     """Keep ``test/webhost`` independent of how xdist splits it across workers.
 
-    Groups the two static-docs writers (above), and makes
-    ``WebHost.get_app()`` idempotent:
+    Guards the static-docs rebuild (``_copy_static_docs_once_per_run``), and
+    makes ``WebHost.get_app()`` idempotent:
 
     ``test/webhost/__init__.py`` (upstream) calls ``get_app()`` in every test
     class's ``setUpClass``, and each call re-registers the ``api`` blueprint on
@@ -190,18 +220,14 @@ def pytest_collection_modifyitems(config, items) -> None:  # noqa: ARG001 — py
     first app on every later call.
     """
     del config
-    webhost_items = [item for item in items if _is_webhost_test(item)]
-    if not webhost_items:
+    if not any(_is_webhost_test(item) for item in items):
         return
-    for item in webhost_items:
-        if item.path.name in _WEBHOST_STATIC_DOCS_FILES:
-            item.add_marker(pytest.mark.xdist_group(_WEBHOST_STATIC_DOCS_GROUP))
 
     import WebHost
 
-    real_get_app = WebHost.get_app
-    if getattr(real_get_app, "_archipelago_cc_memoized", False):
+    if getattr(WebHost.get_app, "_archipelago_cc_patched", False):
         return
+    real_get_app = WebHost.get_app
     apps: list = []
 
     def get_app_once():
@@ -209,5 +235,7 @@ def pytest_collection_modifyitems(config, items) -> None:  # noqa: ARG001 — py
             apps.append(real_get_app())
         return apps[0]
 
-    get_app_once._archipelago_cc_memoized = True
+    get_app_once._archipelago_cc_patched = True
     WebHost.get_app = get_app_once
+    WebHost.copy_tutorials_files_to_static = _copy_static_docs_once_per_run(
+        WebHost.copy_tutorials_files_to_static)
