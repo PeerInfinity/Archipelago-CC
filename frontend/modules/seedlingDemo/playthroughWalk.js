@@ -3,7 +3,7 @@
  *
  * Brief: the R7 kickoff §3.1 (the segment,
  * defined), §3.2 (the seam), §4 slice 2. Precedent: `r1Walk.js`'s six
- * ENDS-MEET segments (`docs/json/developer/procgen/seedling-bot.md`, "The
+ * ENDS-MEET segments (`docs/json/developer/procgen/seedling-bot-log.md`, "The
  * six segments, and why ENDS-MEET is the load-bearing part").
  *
  * ── WHAT R1 PROVED, AND WHAT THIS UPGRADES ────────────────────────────
@@ -199,7 +199,7 @@ export const L5_ARROW_BAIT = Object.freeze({
         arm: 'bait',
         controls: Object.freeze(['off — HOLDS: nothing pressed, nothing armed',
             'stand — HOLDS: the third bob parks in the one column no trap covers']),
-        record: 'docs/json/developer/procgen/seedling-bot.md § "R7: the honest playthrough, as built" (the R7 kickoff §15.3)',
+        record: 'docs/json/developer/procgen/seedling-bot-log.md § "R7: the honest playthrough, as built" (the R7 kickoff §15.3)',
     }),
     /** ⚠ BOOT-FORM (the `Game` ctor adds a half-tile), asserted against the
      *  preceding legs' own final arrival. */
@@ -340,7 +340,7 @@ export const L6_BOB_DROWN = Object.freeze({
             'south — HOLDS: one row down, the same bob\'s line crosses row 2 WEST of '
                 + 'the water and it lives',
         ]),
-        record: 'docs/json/developer/procgen/seedling-bot.md § "R7: the honest playthrough, as built" (the R7 kickoff §19)',
+        record: 'docs/json/developer/procgen/seedling-bot-log.md § "R7: the honest playthrough, as built" (the R7 kickoff §19)',
     }),
     /** BOOT-FORM: `teleporter@48,112` in L5 declares `playerx 32, playery 16`. */
     startsAt: Object.freeze({ level: 6, x: 32, y: 16 }),
@@ -442,7 +442,7 @@ export const L8_ARROWS_SANDTRAP_1 = Object.freeze({
             'block-onto-button — ⛔ REFUTES §18.6\'s first move: the planner\'s settle '
                 + 'wait stands the player in the lane and the GAME charges `hits 1`',
         ]),
-        record: 'docs/json/developer/procgen/seedling-bot.md § "R7: the honest playthrough, as built" (the R7 kickoff §20)',
+        record: 'docs/json/developer/procgen/seedling-bot-log.md § "R7: the honest playthrough, as built" (the R7 kickoff §20)',
     }),
     /**
      * ⛔ BOOT-FORM, AND IT IS A FLOAT BECAUSE IT IS A MEASUREMENT. The two
@@ -522,7 +522,7 @@ export const L8_ARROWS_SANDTRAP_2 = Object.freeze({
                 + 'and leave {8,1} SET, which is what makes the sink load-bearing',
             'kill1-short — HOLDS: a 40-tick hold clears nothing at all',
         ]),
-        record: 'docs/json/developer/procgen/seedling-bot.md § "R7: the honest playthrough, as built" (the R7 kickoff §20)',
+        record: 'docs/json/developer/procgen/seedling-bot-log.md § "R7: the honest playthrough, as built" (the R7 kickoff §20)',
     }),
     /** BOOT-FORM, where the sink leg leaves the player — a float, for the
      *  reason `L8_ARROWS_SANDTRAP_1.startsAt` gives. Tile (7,7). */
