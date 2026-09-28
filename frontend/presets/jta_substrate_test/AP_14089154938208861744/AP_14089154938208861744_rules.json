@@ -2,7 +2,7 @@
   "schema_version": 3,
   "game_name": "Journey to Ascension",
   "game_directory": "jta",
-  "archipelago_version": "0.6.7",
+  "archipelago_version": "0.6.8",
   "generation_seed": 1,
   "seed_name": "14089154938208861744",
   "player_names": {
@@ -32,7 +32,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -86,7 +86,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -140,7 +140,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -208,7 +208,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -262,7 +262,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -330,7 +330,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -398,7 +398,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -452,7 +452,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -520,7 +520,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -574,7 +574,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -628,7 +628,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -696,7 +696,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -750,7 +750,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -818,7 +818,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -872,7 +872,7 @@
             "access_rule": {
               "rule": "HasFromListUnique",
               "args": {
-                "items": [
+                "item_names": [
                   "How to Read",
                   "How to Write",
                   "Villager Gratitude",
@@ -1563,244 +1563,6 @@
   "starting_items": {
     "1": []
   },
-  "world": {
-    "1": {
-      "game": "Journey to Ascension",
-      "world_class_name": "JTAWorld",
-      "options": {
-        "accessibility": 0,
-        "auto_cost_adjust": true,
-        "automation_auto_queue": true,
-        "automation_auto_reset": true,
-        "automation_drain_strategy": true,
-        "automation_loadout_sequencing": true,
-        "costgen_artifacts": true,
-        "costgen_grind_with_push_collect": true,
-        "costgen_item_collection": true,
-        "costgen_mode": 2,
-        "costgen_normal_attempts": 2,
-        "costgen_perk_attempts": 5,
-        "costgen_push_collect": true,
-        "costgen_traversal_attempts": 5,
-        "exclude_locations": [],
-        "free_zones": 1,
-        "game_data_file": "",
-        "goal_zone": 15,
-        "item_links": [],
-        "local_items": [],
-        "non_local_items": [],
-        "plando_items": [],
-        "priority_locations": [],
-        "progression_balancing": 50,
-        "resets_per_sphere": 5,
-        "start_hints": [],
-        "start_inventory": {},
-        "start_location_hints": [],
-        "starting_perk_list": [],
-        "starting_perks": 0,
-        "vanilla_placement": true
-      },
-      "option_definitions": {
-        "accessibility": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "full",
-            "2": "minimal"
-          },
-          "default": 0,
-          "display_name": "Accessibility"
-        },
-        "auto_cost_adjust": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Auto Cost Adjust"
-        },
-        "automation_auto_queue": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Automation: Auto Queue"
-        },
-        "automation_auto_reset": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Automation: Auto Reset"
-        },
-        "automation_drain_strategy": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Automation: Drain Strategy"
-        },
-        "automation_loadout_sequencing": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Automation: Loadout Sequencing"
-        },
-        "costgen_artifacts": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Cost Gen: Artifact Usage"
-        },
-        "costgen_grind_with_push_collect": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Cost Gen: Grind with Push/Collect"
-        },
-        "costgen_item_collection": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Cost Gen: Item Collection"
-        },
-        "costgen_mode": {
-          "type": "range",
-          "range_start": 0,
-          "range_end": 2,
-          "default": 2,
-          "display_name": "Cost Gen Mode"
-        },
-        "costgen_normal_attempts": {
-          "type": "range",
-          "range_start": 1,
-          "range_end": 10,
-          "default": 2,
-          "display_name": "Cost Gen: Normal Attempts"
-        },
-        "costgen_perk_attempts": {
-          "type": "range",
-          "range_start": 1,
-          "range_end": 20,
-          "default": 5,
-          "display_name": "Cost Gen: Perk Attempts"
-        },
-        "costgen_push_collect": {
-          "type": "default_on_toggle",
-          "default": true,
-          "display_name": "Cost Gen: Push/Collect"
-        },
-        "costgen_traversal_attempts": {
-          "type": "range",
-          "range_start": 1,
-          "range_end": 20,
-          "default": 5,
-          "display_name": "Cost Gen: Traversal Attempts"
-        },
-        "free_zones": {
-          "type": "range",
-          "range_start": 1,
-          "range_end": 15,
-          "default": 1,
-          "display_name": "Free Zones"
-        },
-        "game_data_file": {
-          "type": "freetext",
-          "default": "",
-          "display_name": "Game Data File"
-        },
-        "goal_zone": {
-          "type": "range",
-          "range_start": 1,
-          "range_end": 27,
-          "default": 15,
-          "display_name": "Goal Zone"
-        },
-        "progression_balancing": {
-          "type": "range",
-          "range_start": 0,
-          "range_end": 99,
-          "default": 50,
-          "display_name": "Progression Balancing"
-        },
-        "resets_per_sphere": {
-          "type": "range",
-          "range_start": 1,
-          "range_end": 20,
-          "default": 5,
-          "display_name": "Resets Per Sphere"
-        },
-        "starting_perks": {
-          "type": "range",
-          "range_start": 0,
-          "range_end": 15,
-          "default": 0,
-          "display_name": "Starting Perks"
-        },
-        "vanilla_placement": {
-          "type": "toggle",
-          "default": false,
-          "display_name": "Vanilla Placement"
-        }
-      },
-      "is_vanilla": true,
-      "world_description": "Journey to Ascension is an incremental/idle game where you progress\nthrough zones by completing tasks, leveling skills, and collecting perks.\nThis randomizer shuffles perk placements across tasks.",
-      "slot_data": {
-        "game": "Journey to Ascension",
-        "version": "0.5.0",
-        "goalZone": 15,
-        "resetsPerSphere": 5,
-        "costGenFactors": {
-          "itemCollection": true,
-          "pushCollect": true,
-          "grindWithPushCollect": true,
-          "artifacts": true
-        },
-        "automation": {
-          "autoQueue": true,
-          "autoReset": true,
-          "drainStrategy": true,
-          "loadoutSequencing": true
-        },
-        "perkPlacements": {
-          "13": "How to Read",
-          "27": "How to Write",
-          "34": "Villager Gratitude",
-          "37": "Village Hero",
-          "43": "Mysterious Amulet",
-          "54": "Energetic Spell",
-          "58": "Goblin Scourge",
-          "64": "Experienced Traveler",
-          "69": "Understanding of the Reset",
-          "74": "Underground Connection",
-          "84": "Minor Time Compression",
-          "89": "Purged Bureaucracy",
-          "90": "High Altitude Climbing",
-          "104": "Attunement",
-          "114": "Sunken Treasure",
-          "118": "Deep Sea Diving",
-          "124": "Found Lost Temple",
-          "134": "Walk Without Rhythm",
-          "138": "The Worm",
-          "144": "Reflections on the Journey",
-          "155": "Energetic Memory"
-        }
-      },
-      "web": {
-        "theme": "ocean",
-        "tutorials": [
-          {
-            "name": "Setup Guide",
-            "description": "A guide to setting up Journey to Ascension for Archipelago multiworld.",
-            "language": "English",
-            "file_name": "setup_en.md",
-            "link": "setup/en",
-            "authors": [
-              "Archipelago Team"
-            ]
-          }
-        ]
-      },
-      "world_directory": "jta"
-    }
-  },
-  "exporter": {},
-  "game_info": {
-    "1": {
-      "completion_condition": {
-        "type": "item_check",
-        "item": "Victory"
-      }
-    }
-  },
-  "helpers": {},
-  "is_vanilla": true,
   "preset_sidecars": {
     "1": {
       "The Village": {
@@ -2099,6 +1861,244 @@
       }
     }
   },
+  "world": {
+    "1": {
+      "game": "Journey to Ascension",
+      "world_class_name": "JTAWorld",
+      "options": {
+        "accessibility": 0,
+        "auto_cost_adjust": true,
+        "automation_auto_queue": true,
+        "automation_auto_reset": true,
+        "automation_drain_strategy": true,
+        "automation_loadout_sequencing": true,
+        "costgen_artifacts": true,
+        "costgen_grind_with_push_collect": true,
+        "costgen_item_collection": true,
+        "costgen_mode": 2,
+        "costgen_normal_attempts": 2,
+        "costgen_perk_attempts": 5,
+        "costgen_push_collect": true,
+        "costgen_traversal_attempts": 5,
+        "exclude_locations": [],
+        "free_zones": 1,
+        "game_data_file": "",
+        "goal_zone": 15,
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "resets_per_sphere": 5,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "starting_perk_list": [],
+        "starting_perks": 0,
+        "vanilla_placement": true
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "auto_cost_adjust": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Auto Cost Adjust"
+        },
+        "automation_auto_queue": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Automation: Auto Queue"
+        },
+        "automation_auto_reset": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Automation: Auto Reset"
+        },
+        "automation_drain_strategy": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Automation: Drain Strategy"
+        },
+        "automation_loadout_sequencing": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Automation: Loadout Sequencing"
+        },
+        "costgen_artifacts": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Cost Gen: Artifact Usage"
+        },
+        "costgen_grind_with_push_collect": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Cost Gen: Grind with Push/Collect"
+        },
+        "costgen_item_collection": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Cost Gen: Item Collection"
+        },
+        "costgen_mode": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 2,
+          "default": 2,
+          "display_name": "Cost Gen Mode"
+        },
+        "costgen_normal_attempts": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 10,
+          "default": 2,
+          "display_name": "Cost Gen: Normal Attempts"
+        },
+        "costgen_perk_attempts": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 20,
+          "default": 5,
+          "display_name": "Cost Gen: Perk Attempts"
+        },
+        "costgen_push_collect": {
+          "type": "default_on_toggle",
+          "default": true,
+          "display_name": "Cost Gen: Push/Collect"
+        },
+        "costgen_traversal_attempts": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 20,
+          "default": 5,
+          "display_name": "Cost Gen: Traversal Attempts"
+        },
+        "free_zones": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 15,
+          "default": 1,
+          "display_name": "Free Zones"
+        },
+        "game_data_file": {
+          "type": "freetext",
+          "default": "",
+          "display_name": "Game Data File"
+        },
+        "goal_zone": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 27,
+          "default": 15,
+          "display_name": "Goal Zone"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "resets_per_sphere": {
+          "type": "range",
+          "range_start": 1,
+          "range_end": 20,
+          "default": 5,
+          "display_name": "Resets Per Sphere"
+        },
+        "starting_perks": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 15,
+          "default": 0,
+          "display_name": "Starting Perks"
+        },
+        "vanilla_placement": {
+          "type": "toggle",
+          "default": false,
+          "display_name": "Vanilla Placement"
+        }
+      },
+      "is_vanilla": true,
+      "world_description": "Journey to Ascension is an incremental/idle game where you progress\nthrough zones by completing tasks, leveling skills, and collecting perks.\nThis randomizer shuffles perk placements across tasks.",
+      "slot_data": {
+        "game": "Journey to Ascension",
+        "version": "0.5.0",
+        "goalZone": 15,
+        "resetsPerSphere": 5,
+        "costGenFactors": {
+          "itemCollection": true,
+          "pushCollect": true,
+          "grindWithPushCollect": true,
+          "artifacts": true
+        },
+        "automation": {
+          "autoQueue": true,
+          "autoReset": true,
+          "drainStrategy": true,
+          "loadoutSequencing": true
+        },
+        "perkPlacements": {
+          "13": "How to Read",
+          "27": "How to Write",
+          "34": "Villager Gratitude",
+          "37": "Village Hero",
+          "43": "Mysterious Amulet",
+          "54": "Energetic Spell",
+          "58": "Goblin Scourge",
+          "64": "Experienced Traveler",
+          "69": "Understanding of the Reset",
+          "74": "Underground Connection",
+          "84": "Minor Time Compression",
+          "89": "Purged Bureaucracy",
+          "90": "High Altitude Climbing",
+          "104": "Attunement",
+          "114": "Sunken Treasure",
+          "118": "Deep Sea Diving",
+          "124": "Found Lost Temple",
+          "134": "Walk Without Rhythm",
+          "138": "The Worm",
+          "144": "Reflections on the Journey",
+          "155": "Energetic Memory"
+        }
+      },
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Setup Guide",
+            "description": "A guide to setting up Journey to Ascension for Archipelago multiworld.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Archipelago Team"
+            ]
+          }
+        ]
+      },
+      "world_directory": "jta"
+    }
+  },
+  "exporter": {},
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "is_vanilla": true,
   "loop_costs": {
     "1": {
       "regions": {},
