@@ -184,6 +184,10 @@ describe('the corpus census — printed, then pinned', () => {
          *   253 → 254  SEEDLING SUBSTRATE S1 (2026-09-26): `flash.md`'s knob
          *              sentence points at `seedling-bot.md` § Seedling substrate
          *              S1 (`doc` 174 → 175).
+         *   254 → 255  SUBSTRATE CHART S2 (2026-09-27): `substrate-registry.md`
+         *              § *Capability matrix* points at the user chart
+         *              `../../features/procgen-substrates.md` — outside this
+         *              corpus, so a GitHub link (`repo` 35 → 36).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
          */
@@ -191,10 +195,10 @@ describe('the corpus census — printed, then pinned', () => {
             'same-doc': 21,
             doc: 175,
             external: 23,
-            repo: 35,
+            repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(254);
+        expect(CORPUS.length).toBe(255);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -208,7 +212,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(35);
+        expect(repo).toHaveLength(36);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();

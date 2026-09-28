@@ -247,8 +247,9 @@ describe('⛓ the links the render emits', () => {
         //   250 → 253: G7's three inside `flash.md` to § The atlas arm (G7)
         //   (`sphere-growth.md`'s link to `flash.md` retargeted, not added);
         //   253 → 254: seedling substrate S1's `flash.md` → `seedling-bot.md`
-        //   § Seedling substrate S1.
-        expect(checked).toBe(254);
+        //   § Seedling substrate S1; 254 → 255: substrate chart S2's
+        //   `substrate-registry.md` → `../../features/procgen-substrates.md`.
+        expect(checked).toBe(255);
     });
 
     it('tags each link with the kind that produced it', () => {

@@ -1201,6 +1201,12 @@
             "enabled": true,
             "category": "substrateRegistry",
             "_comment": "SUBSTRATE REGISTRY PANEL R3. The Columns section: untick the first live id (header n-1, lacks it); ▼ on the next line (header's first two swap); All + Registry order (header == getAll() ids again). Restores the default columns at the end."
+        },
+        {
+            "id": "substrate-registry-panel-plain-mode",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "SUBSTRATE CHART S2. The Plain mode: one row per capabilityRows(getAll()) statement, one cell per live entry, each cell's mark == CELL_MARKS[kind] of the vocabulary's answer, declared live answers overlaid, no console error. Restores Matrix mode at the end."
         }
     ]
 }
