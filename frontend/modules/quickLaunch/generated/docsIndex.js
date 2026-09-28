@@ -369,7 +369,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/developer/procgen/architecture.md",
         "title": "Procedural Generation Architecture",
         "section": "developer/procgen",
-        "summary": "This is the orientation document for the procedural-generation (\"procgen\") system: the pipeline, the four layout drivers, level generation's two passes (elements and the certified area graph, then…"
+        "summary": "The orientation document for the procedural-generation (\"procgen\") system: how a world is generated and compiled to rules.json, how a single region's level is built, what the substrates are, and how…"
     },
     {
         "path": "docs/json/developer/procgen/bounce.md",
@@ -384,6 +384,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The…"
     },
     {
+        "path": "docs/json/developer/procgen/editing-core.md",
+        "title": "Procgen Editing Core",
+        "section": "developer/procgen",
+        "summary": "The substrate-free editing machinery in frontend/modules/procgenCore/: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared…"
+    },
+    {
         "path": "docs/json/developer/procgen/flash.md",
         "title": "Flash Substrate",
         "section": "developer/procgen",
@@ -393,7 +399,7 @@ export const DOCS_INDEX = Object.freeze([
         "path": "docs/json/developer/procgen/gotchas.md",
         "title": "Procgen Gotchas and Disambiguations",
         "section": "developer/procgen",
-        "summary": "Short entries for the things most likely to mislead someone orienting in the procgen code. Each is a present-state fact with file pointers, not a bug report."
+        "summary": "Short entries for the things most likely to mislead someone working in the procgen code: each names the misreading, states the fact, and points at the file or doc that owns it."
     },
     {
         "path": "docs/json/developer/procgen/jta.md",
@@ -408,10 +414,16 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that…"
     },
     {
+        "path": "docs/json/developer/procgen/maze-lab.md",
+        "title": "The Maze Lab Page",
+        "section": "developer/procgen",
+        "summary": "The maze lab page (frontend/modules/mazeRoom/lab.html) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and…"
+    },
+    {
         "path": "docs/json/developer/procgen/maze.md",
         "title": "Maze Substrate",
         "section": "developer/procgen",
-        "summary": "The maze substrate (frontend/modules/mazeRoom/, substrate id maze) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and…"
+        "summary": "The maze substrate (frontend/modules/mazeRoom/, substrate id maze) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and…"
     },
     {
         "path": "docs/json/developer/procgen/omsi.md",
@@ -448,6 +460,12 @@ export const DOCS_INDEX = Object.freeze([
         "title": "The Seedling Real-Game Bot, and the tracked record of the procgen arcs on `watch.html`",
         "section": "developer/procgen",
         "summary": "How we drive the real recompiled Seedling with a scripted input tape and check a JavaScript model of its physics against what the game actually did — movement, collision, room transitions and A\\*…"
+    },
+    {
+        "path": "docs/json/developer/procgen/seedling-editor.md",
+        "title": "The Seedling Editor",
+        "section": "developer/procgen",
+        "summary": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set…"
     },
     {
         "path": "docs/json/developer/procgen/sphere-growth.md",
@@ -1290,10 +1308,12 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/architecture.md",
             "docs/json/developer/procgen/bounce.md",
             "docs/json/developer/procgen/demos.md",
+            "docs/json/developer/procgen/editing-core.md",
             "docs/json/developer/procgen/flash.md",
             "docs/json/developer/procgen/gotchas.md",
             "docs/json/developer/procgen/jta.md",
             "docs/json/developer/procgen/loop-recording.md",
+            "docs/json/developer/procgen/maze-lab.md",
             "docs/json/developer/procgen/maze.md",
             "docs/json/developer/procgen/omsi.md",
             "docs/json/developer/procgen/paths-and-obstacles.md",
@@ -1301,6 +1321,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/playback-and-debugging.md",
             "docs/json/developer/procgen/runner.md",
             "docs/json/developer/procgen/seedling-bot.md",
+            "docs/json/developer/procgen/seedling-editor.md",
             "docs/json/developer/procgen/sphere-growth.md",
             "docs/json/developer/procgen/stepped-pipeline.md",
             "docs/json/developer/procgen/substrate-registry.md",

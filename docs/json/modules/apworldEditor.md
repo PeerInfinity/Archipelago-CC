@@ -2510,7 +2510,7 @@ is closed in exactly two places: when a second room is opened, and on
 Rows come from three places, and only one of them is a hand-written list:
 
 - **substrate rows**, derived from the substrate registry's own `roomEditor`
-  declarations (see [`regionEditors`](../developer/procgen/architecture.md));
+  declarations (see [`regionEditors`](../developer/procgen/stepped-pipeline.md));
 - **block-editor rows**, derived from `DOCUMENT_KEY_EDITORS` (H5) — so the
   Links row and the Document row carry the **same label** and resolve the
   **same `open`**, rather than being two lists that agree until somebody adds a
@@ -2545,7 +2545,7 @@ until H4c.
 The two lab pages are **standalone documents** as well as hosted frames, so their
 button is **hidden** — not disabled — when the page has no host: there is no app
 on the other side to open, and the transport is not even fetched
-([the maze page](../developer/procgen/maze.md) § *Hosted in the frontend*). The
+([the maze lab page](../developer/procgen/maze-lab.md) § *Hosted in the frontend*). The
 button's DISABLED half is the shared set editor's existing rule: the same three
 conditions that refuse `Download rules.json` refuse the hand-off, because a graph
 that does not close has no compiled document to hand anybody.

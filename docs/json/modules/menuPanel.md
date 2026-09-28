@@ -42,7 +42,7 @@ Before it, nothing owned that region.
 The panel's whole state machine is `gameState.isStartRegion(currentRegion)`
 (`describeMenu`'s `atStartRegion`). A world may call its start region anything,
 and `start_regions` is read through
-[`procgenCore/rulesGraph.startRegionsOf`](../developer/procgen/architecture.md) —
+[`procgenCore/rulesGraph.startRegionsOf`](../developer/procgen/editing-core.md) —
 the one reader for both committed shapes.
 
 ## What it shows, and where each field comes from

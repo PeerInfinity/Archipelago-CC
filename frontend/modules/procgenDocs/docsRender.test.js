@@ -248,8 +248,9 @@ describe('⛓ the links the render emits', () => {
         //   (`sphere-growth.md`'s link to `flash.md` retargeted, not added);
         //   253 → 254: seedling substrate S1's `flash.md` → `seedling-bot.md`
         //   § Seedling substrate S1; 254 → 237: the procgen docs cleanup's
-        //   present-state rewrite of twelve docs (see docLinks.test.js).
-        expect(checked).toBe(237);
+        //   present-state rewrite of twelve docs (see docLinks.test.js); 237 → 291:
+        //   pass 3's split of architecture.md and maze.md into five documents.
+        expect(checked).toBe(291);
     });
 
     it('tags each link with the kind that produced it', () => {

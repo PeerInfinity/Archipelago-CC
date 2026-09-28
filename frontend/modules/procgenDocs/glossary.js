@@ -163,7 +163,7 @@ const MAZE_AREAS = `${MAZE}#the-area-graph`;
 const MAZE_ELEMENT = `${MAZE}#the-first-element`;
 const MAZE_LAB = `${MAZE}#the-maze-lab-page-frontendmodulesmazeroomlabhtml`;
 /** ⛓ S2b — the MANUAL arm's own section, for `walk` and `witness`. */
-const MAZE_MANUAL = `${MAZE}#the-manual-arm-sourcemanual--the-keyboard-authors-a-recording`;
+const MAZE_MANUAL = 'docs/json/developer/procgen/maze-lab.md#the-manual-arm-sourcemanual';
 
 export const TERMS = Object.freeze([
 
@@ -563,7 +563,7 @@ export const TERMS = Object.freeze([
             + 'default budget entirely and `assertBudget` REFUSES a budget still carrying it. '
             + 'Every remaining bound is a property of the candidate.',
         where: [
-            { label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-used-to-be-non-deterministic-under-load--fixed-2026-08-14-and-the-shape-of-the-fix-is-the-lesson` },
+            { label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-budgets-count-ticks-not-wall-clock-time` },
             { label: 'architecture.md § Determinism and verification', doc: `${ARCH}#determinism-and-verification` },
         ],
         seeAlso: ['rng-stream', 'byte-identity', 'tick-budget', 'control-arm'],
@@ -995,7 +995,7 @@ export const TERMS = Object.freeze([
             + 'the accusation a wall-clock budget once made on behalf of a busy machine.',
         where: [
             { label: 'architecture.md § Pass 1', doc: PASS1 },
-            { label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-used-to-be-non-deterministic-under-load--fixed-2026-08-14-and-the-shape-of-the-fix-is-the-lesson` },
+            { label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-budgets-count-ticks-not-wall-clock-time` },
         ],
         seeAlso: ['skeleton-kind', 'the-carve', 'control-arm', 'pass-1'],
     }),
@@ -1069,7 +1069,7 @@ export const TERMS = Object.freeze([
             + 'ladder is built in is part of the level\'s identity.',
         where: [
             { label: 'the REFERENCE page § Skeleton kinds — codec vs EFFECTIVE defaults per substrate, generated', code: REFERENCE },
-            { label: 'maze.md § Kind parameters', doc: `${MAZE}#kind-parameters-constructive-mode-slice-7` },
+            { label: 'maze.md § Kind parameters', doc: `${MAZE}#kind-parameters` },
             { label: 'seedling-bot.md § The URL parameters', doc: URL_TABLE },
         ],
         seeAlso: ['the-carve', 'chambers', 'biome', 'skeleton'],
@@ -2150,7 +2150,7 @@ export const TERMS = Object.freeze([
             + 'analogue of the old provenance of ~5,360. ⛔ Threading `planDash`\'s '
             + '`maxExpansions` up into the budget was refused twice — it binds in 1 solve of '
             + '326, and when it fires it is one rung\'s sub-reason inside a ladder refusal.',
-        where: [{ label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-used-to-be-non-deterministic-under-load--fixed-2026-08-14-and-the-shape-of-the-fix-is-the-lesson` }],
+        where: [{ label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-budgets-count-ticks-not-wall-clock-time` }],
         seeAlso: ['determinism', 'bfs-oracle', 'solver', 'control-arm'],
     }),
     t({
@@ -2166,7 +2166,7 @@ export const TERMS = Object.freeze([
             + 'row carries the route with its gaps counted and NAMED rather than bridged.',
         where: [
             { label: 'architecture.md § Pass 1', doc: PASS1 },
-            { label: 'maze.md § Identity and certification', doc: `${MAZE}#identity-and-certification` },
+            { label: 'maze-lab.md § Identity and certification', doc: `docs/json/developer/procgen/maze-lab.md#identity-and-certification` },
         ],
         seeAlso: ['certification', 'oracle', 'bfs-oracle', 'paintable', 'seedling'],
     }),
@@ -2184,7 +2184,7 @@ export const TERMS = Object.freeze([
             + 'MACHINE\'s reasons will eventually accuse your code of the machine\'s problem.',
         where: [
             { label: 'architecture.md § Determinism and verification', doc: `${ARCH}#determinism-and-verification` },
-            { label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-used-to-be-non-deterministic-under-load--fixed-2026-08-14-and-the-shape-of-the-fix-is-the-lesson` },
+            { label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-budgets-count-ticks-not-wall-clock-time` },
         ],
         seeAlso: ['solver', 'sphere-plan', 'control-arm', 'certification'],
     }),
@@ -2518,7 +2518,7 @@ export const TERMS = Object.freeze([
             + 'ticks the hazards and dropping it would shift every later phase. Replaying '
             + 'one on a level it was not driven on refuses BY NAME at the turn index.',
         where: [
-            { label: 'maze.md § The MANUAL arm', doc: MAZE_MANUAL },
+            { label: 'maze-lab.md § The MANUAL arm', doc: MAZE_MANUAL },
             { label: 'loop-recording.md § Recordings and the saved-queue store', doc: `${LOOPREC}#recordings-and-the-saved-queue-store` },
         ],
         seeAlso: ['maze-lab', 'witness', 'lab-page'],
@@ -2537,7 +2537,7 @@ export const TERMS = Object.freeze([
             + 'left exactly as it was. ⛔ If the oracle REFUSED a level and a hand walk then '
             + 'reaches its goal, one of the two is wrong and it is not the person: the page '
             + 'prints a SEAM in red.',
-        where: [{ label: 'maze.md § The MANUAL arm', doc: MAZE_MANUAL }],
+        where: [{ label: 'maze-lab.md § The MANUAL arm', doc: MAZE_MANUAL }],
         seeAlso: ['walk', 'certification', 'bfs-oracle', 'maze-lab'],
     }),
     t({
@@ -2552,7 +2552,7 @@ export const TERMS = Object.freeze([
             + 'than an estimate — which is why **STRONG is the only [grade](#grade) reachable '
             + 'on the maze**, and why the graded half of the certification scale is exercised '
             + 'there only in its trivial case. `?expansions=` bounds it.',
-        where: [{ label: 'maze.md § Identity and certification', doc: `${MAZE}#identity-and-certification` }],
+        where: [{ label: 'maze-lab.md § Identity and certification', doc: `docs/json/developer/procgen/maze-lab.md#identity-and-certification` }],
         seeAlso: ['solver', 'grade', 'requirements-differential', 'maze-lab', 'tick-budget'],
     }),
 
@@ -2697,7 +2697,7 @@ export const TERMS = Object.freeze([
             + 'to 50 over eight 15×15 cells). It is DERIVED from the groups the draw actually '
             + 'painted, so the page cannot name a symbol the draw did not paint, and a '
             + '[refusal](#graded-refusal) appears here as a NOTE row rather than as a picture.',
-        where: [{ label: 'maze.md § The area-graph overlay', doc: `${MAZE}#the-area-graph-overlay` }],
+        where: [{ label: 'maze-lab.md § The area-graph overlay', doc: `docs/json/developer/procgen/maze-lab.md#the-area-graph-overlay` }],
         seeAlso: ['overlay-layer', 'graded-refusal', 'readout'],
     }),
     t({
@@ -2715,7 +2715,7 @@ export const TERMS = Object.freeze([
             + 'PRE-CONDITION and never on existence: both pages publish at the '
             + '[skeleton](#skeleton), before `?run=1`\'s ladder has run a rung.',
         where: [
-            { label: 'maze.md § The browser row', doc: `${MAZE}#the-browser-row` },
+            { label: 'maze-lab.md § The browser row', doc: `docs/json/developer/procgen/maze-lab.md#the-browser-row` },
             { label: 'check-procgen-demos.mjs', code: 'scripts/procgen/check-procgen-demos.mjs' },
         ],
         seeAlso: ['browser-row', 'claim', 'lab-page', 'legend'],
@@ -2906,7 +2906,7 @@ export const TERMS = Object.freeze([
             + 'reader tolerates the old key on purpose — a stale link should say where its '
             + 'bound went, not fail — which is the opposite of `?directed=`, a key whose '
             + 'CHANNEL moved and which therefore refuses by name.',
-        where: [{ label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-used-to-be-non-deterministic-under-load--fixed-2026-08-14-and-the-shape-of-the-fix-is-the-lesson` }],
+        where: [{ label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-budgets-count-ticks-not-wall-clock-time` }],
         seeAlso: ['tick-budget', 'determinism', 'url-parameter', 'keep-or-revert'],
     }),
     t({
@@ -2963,7 +2963,7 @@ export const TERMS = Object.freeze([
             + 'claim; the counts quoted in the records (`check-maze-lab` 122/0, '
             + '`check-procgen-demos` 94/0) are those lines.',
         where: [
-            { label: 'maze.md § The browser row', doc: `${MAZE}#the-browser-row` },
+            { label: 'maze-lab.md § The browser row', doc: `docs/json/developer/procgen/maze-lab.md#the-browser-row` },
             { label: 'check-procgen-demos.mjs', code: 'scripts/procgen/check-procgen-demos.mjs' },
         ],
         seeAlso: ['claim', 'readout', 'gate', 'demo-catalogue'],
@@ -2996,7 +2996,7 @@ export const TERMS = Object.freeze([
             + 'at quiet-box speeds. ⇒ run the baseline against a '
             + '[mutant](#mutant) before reading a stationary digest as either a pass or a '
             + 'finding.',
-        where: [{ label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-used-to-be-non-deterministic-under-load--fixed-2026-08-14-and-the-shape-of-the-fix-is-the-lesson` }],
+        where: [{ label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-budgets-count-ticks-not-wall-clock-time` }],
         seeAlso: ['mutant', 'browser-row', 'control-arm', 'claim'],
     }),
     t({
@@ -3011,7 +3011,7 @@ export const TERMS = Object.freeze([
             + 'unseen is written down. ⛓ It is the only answer to *"would this have caught '
             + 'it?"* — and a mutant\'s PREDICTED witness is a hypothesis; the row that '
             + 'actually reddens tells you more.',
-        where: [{ label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-used-to-be-non-deterministic-under-load--fixed-2026-08-14-and-the-shape-of-the-fix-is-the-lesson` }],
+        where: [{ label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-budgets-count-ticks-not-wall-clock-time` }],
         seeAlso: ['gate', 'browser-row', 'control-arm'],
     }),
     t({
@@ -3029,7 +3029,7 @@ export const TERMS = Object.freeze([
             + 'claim you want is carried by a control run **in the same tree** (a `git '
             + 'worktree` at the base commit) rather than by a tile comparison.',
         where: [
-            { label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-used-to-be-non-deterministic-under-load--fixed-2026-08-14-and-the-shape-of-the-fix-is-the-lesson` },
+            { label: 'gotchas.md § Generation used to be non-deterministic under load', doc: `${GOTCHAS}#generation-budgets-count-ticks-not-wall-clock-time` },
             { label: 'gotchas.md § "The `empty` pairs are UNCHANGED"', doc: `${GOTCHAS}#the-empty-pairs-are-unchanged-is-a-gate-only-for-a-change-that-spends-no-draw` },
         ],
         seeAlso: ['byte-inert', 'draw', 'gate', 'skeleton', 'counting-spy'],

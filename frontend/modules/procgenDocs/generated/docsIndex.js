@@ -22,32 +22,36 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 18,
-        "headings": 848,
+        "docs": 21,
+        "headings": 858,
         "indexHeadings": 2,
-        "lines": 22049,
+        "lines": 20181,
         "pages": 4,
-        "words": 252316
+        "words": 224422
     },
     "descriptionRule": "the document's OWN first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence. ⛔ Never a hand-written summary — if an entry reads thin, the fix is a better opening paragraph in the document.",
     "dir": "docs/json/developer/procgen",
     "docs": [
         {
-            "description": "This is the orientation document for the procedural-generation (\"procgen\") system: the pipeline, the four layout drivers, **level generation's two passes** (elements and the certified area graph, then the site-typed keep-or-revert loop), the substrates, what a world compiles to, and how it is played back. Read this first; the rest of this section goes deeper on individual pieces.",
+            "description": "The orientation document for the procedural-generation (\"procgen\") system: how a world is generated and compiled to `rules.json`, how a single region's level is built, what the substrates are, and how a generated world is played back and round-tripped through Python. Read this first; the other procgen documents go deeper on individual pieces.",
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
-            "headings": 24,
-            "lines": 929,
+            "headings": 18,
+            "lines": 256,
             "links": [
                 "demos.md",
-                "gotchas.md",
+                "editing-core.md",
+                "loop-recording.md",
                 "maze.md",
+                "playback-and-debugging.md",
                 "seedling-bot.md",
+                "seedling-editor.md",
+                "sphere-growth.md",
                 "stepped-pipeline.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 23068
+            "words": 3799
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate.",
@@ -76,21 +80,53 @@ export const DOCS_INDEX = frz({
             "words": 372
         },
         {
-            "description": "Short entries for the things most likely to mislead someone orienting in the procgen code. Each is a present-state fact with file pointers, not a bug report.",
+            "description": "Short entries for the things most likely to mislead someone working in the procgen code: each names the misreading, states the fact, and points at the file or doc that owns it.",
             "file": "gotchas.md",
             "h1": "Procgen Gotchas and Disambiguations",
-            "headings": 64,
-            "lines": 1183,
+            "headings": 39,
+            "lines": 211,
             "links": [
                 "architecture.md",
                 "jta.md",
                 "loop-recording.md",
-                "omsi.md",
+                "maze.md",
                 "seedling-bot.md",
+                "stepped-pipeline.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/gotchas.md",
-            "words": 13820
+            "words": 3140
+        },
+        {
+            "description": "The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms.",
+            "file": "editing-core.md",
+            "h1": "Procgen Editing Core",
+            "headings": 22,
+            "lines": 213,
+            "links": [
+                "architecture.md",
+                "maze.md",
+                "seedling-editor.md",
+                "stepped-pipeline.md",
+                "substrate-registry.md"
+            ],
+            "path": "docs/json/developer/procgen/editing-core.md",
+            "words": 3745
+        },
+        {
+            "description": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set documents, and the EDIT arm of `seedlingDemo/watch.html` that puts them on a page.",
+            "file": "seedling-editor.md",
+            "h1": "The Seedling Editor",
+            "headings": 14,
+            "lines": 187,
+            "links": [
+                "architecture.md",
+                "editing-core.md",
+                "flash.md",
+                "seedling-bot.md"
+            ],
+            "path": "docs/json/developer/procgen/seedling-editor.md",
+            "words": 4247
         },
         {
             "description": "Bounce (substrate id `bounce`, in `frontend/modules/bounceDemo/`) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its access rules are derived from the physics rather than authored.",
@@ -162,20 +198,38 @@ export const DOCS_INDEX = frz({
             "words": 4121
         },
         {
-            "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders regions as grid-of-tiles maze rooms: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles on the perimeter.",
+            "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",
             "file": "maze.md",
             "h1": "Maze Substrate",
-            "headings": 35,
-            "lines": 1116,
+            "headings": 24,
+            "lines": 267,
             "links": [
                 "architecture.md",
+                "flash.md",
                 "loop-recording.md",
+                "maze-lab.md",
+                "paths-and-obstacles.md",
                 "playback-and-debugging.md",
-                "seedling-bot.md",
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/maze.md",
-            "words": 13488
+            "words": 4600
+        },
+        {
+            "description": "The maze lab page (`frontend/modules/mazeRoom/lab.html`) is a standalone static page that generates, edits, solves and hand-drives maze levels from URL parameters alone, and edits region libraries and worlds. It is the maze's counterpart of Seedling's `seedlingDemo/watch.html`, and it also runs inside the frontend in a Golden Layout panel.",
+            "file": "maze-lab.md",
+            "h1": "The Maze Lab Page",
+            "headings": 16,
+            "lines": 226,
+            "links": [
+                "architecture.md",
+                "flash.md",
+                "gotchas.md",
+                "loop-recording.md",
+                "maze.md"
+            ],
+            "path": "docs/json/developer/procgen/maze-lab.md",
+            "words": 2951
         },
         {
             "description": "Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent.",

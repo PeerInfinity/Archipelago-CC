@@ -1568,7 +1568,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/maze.md"
+                "docs/json/developer/procgen/maze-lab.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -1773,7 +1773,6 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -1896,7 +1895,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/maze.md",
+                "docs/json/developer/procgen/maze-lab.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -2677,8 +2676,7 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/architecture.md",
-                "docs/json/developer/procgen/gotchas.md"
+                "docs/json/developer/procgen/seedling-editor.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -2818,7 +2816,6 @@ export const INSTRUMENTS = frz({
             "browser": true,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -4171,8 +4168,6 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "check",
             "citedBy": [
-                "docs/json/developer/procgen/architecture.md",
-                "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/playback-and-debugging.md",
                 "docs/json/developer/procgen/stepped-pipeline.md"
             ],
@@ -5162,6 +5157,7 @@ export const INSTRUMENTS = frz({
             "category": "generate",
             "citedBy": [
                 "docs/json/developer/procgen/architecture.md",
+                "docs/json/developer/procgen/maze-lab.md",
                 "docs/json/developer/procgen/maze.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
@@ -5300,7 +5296,7 @@ export const INSTRUMENTS = frz({
             "citedBy": [
                 "docs/json/developer/procgen/README.md",
                 "docs/json/developer/procgen/architecture.md",
-                "docs/json/developer/procgen/maze.md",
+                "docs/json/developer/procgen/maze-lab.md",
                 "docs/json/developer/procgen/seedling-bot.md",
                 "docs/json/developer/procgen/substrate-registry.md"
             ],
@@ -5707,8 +5703,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "make",
             "citedBy": [
-                "docs/json/developer/procgen/architecture.md",
-                "docs/json/developer/procgen/gotchas.md"
+                "docs/json/developer/procgen/gotchas.md",
+                "docs/json/developer/procgen/seedling-editor.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [],
@@ -5840,7 +5836,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "make",
             "citedBy": [
-                "docs/json/developer/procgen/architecture.md"
+                "docs/json/developer/procgen/seedling-editor.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -7489,9 +7485,7 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/gotchas.md"
-            ],
+            "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "probe-seedling-killlock-span1.mjs",
@@ -9898,7 +9892,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "no prefix",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/gotchas.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "seedlingRouteGraph.mjs",
@@ -9964,7 +9960,6 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "solve",
             "citedBy": [
-                "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
@@ -10307,7 +10302,6 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "standing",
             "citedBy": [
-                "docs/json/developer/procgen/gotchas.md",
                 "docs/json/developer/procgen/seedling-bot.md"
             ],
             "docblockStyle": "block",
