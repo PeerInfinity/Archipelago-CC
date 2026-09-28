@@ -62,12 +62,16 @@
     padding: 1px 4px;
     vertical-align: top;
 }
+.storage-panel .sp-key-cell {
+    width: 100%;
+}
 .storage-panel .sp-key {
     font-family: monospace;
-    word-break: break-all;
+    overflow-wrap: anywhere;
 }
 .storage-panel .sp-label {
     color: #aaa;
+    font-size: 12px;
 }
 .storage-panel .sp-chars,
 .storage-panel .sp-pct {

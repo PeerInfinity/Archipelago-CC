@@ -158,10 +158,12 @@ export class StoragePanelUI {
         for (const row of group.rows) {
             const tr = el('tr', CONTROLS.row);
             tr.dataset.key = row.key;
-            const keyCell = el('td', 'sp-key', row.key);
-            if (row.label) keyCell.title = row.label;
+            // The label sits under the key in one cell: a separate column squeezed the
+            // key to a couple of characters in a narrow panel.
+            const keyCell = el('td', 'sp-key-cell');
+            keyCell.appendChild(el('div', 'sp-key', row.key));
+            if (row.label) keyCell.appendChild(el('div', 'sp-label', row.label));
             tr.appendChild(keyCell);
-            tr.appendChild(el('td', 'sp-label', row.label ?? ''));
             tr.appendChild(el('td', 'sp-chars', formatChars(row.chars)));
             tr.appendChild(el('td', 'sp-pct', row.pctOfQuota));
             const actions = el('td', 'sp-actions');
