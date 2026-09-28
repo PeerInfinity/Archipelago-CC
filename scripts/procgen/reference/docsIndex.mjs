@@ -230,13 +230,11 @@ export function buildDocsIndex() {
             headings: docs.reduce((a, d) => a + d.headings, 0)
                 + M.ghSlug.headingsOf(src(INDEX_DOC)).length,
         },
-        orderRule: '`README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — today\'s '
-            + 'reading order, declared. A file in the directory that is not in that list is a '
-            + 'HARD ERROR, so a new document cannot arrive unindexed.',
-        descriptionRule: 'the document\'s OWN first paragraph, collapsed onto one line; past '
-            + `${DESCRIPTION_LIMIT} characters it is cut to its first sentence. ⛔ Never a `
-            + 'hand-written summary — if an entry reads thin, the fix is a better opening '
-            + 'paragraph in the document.',
+        orderRule: '`README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — the reading '
+            + 'order. A document missing from that list fails the generator, so every document '
+            + 'is indexed.',
+        descriptionRule: 'the document\'s own first paragraph, collapsed onto one line; past '
+            + `${DESCRIPTION_LIMIT} characters it is cut to its first sentence.`,
     };
 }
 
