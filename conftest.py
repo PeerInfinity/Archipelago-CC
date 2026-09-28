@@ -51,6 +51,8 @@ from __future__ import annotations
 # could actually clobber host.yaml with in-memory test state. Setting this
 # flag before any Settings instance is constructed both skips the atexit
 # registration and turns autosave() into a no-op.
+import pytest
+
 import settings as _settings  # noqa: E402 — imported for side-effect-free flag set
 _settings.skip_autosave = True
 del _settings
@@ -142,3 +144,70 @@ def pytest_configure(config) -> None:  # noqa: ARG001 — pytest hook signature
     for game, ext_type in list(AutoPatchExtensionRegister.extension_types.items()):
         if _is_excluded_world_module(ext_type.__module__):
             AutoPatchExtensionRegister.extension_types.pop(game, None)
+
+
+# test/webhost/test_docs.py and test_sitemap.py each call
+# WebHost.copy_tutorials_files_to_static(), which rmtree()s and rebuilds
+# WebHostLib/static/generated/docs. On two xdist workers one deletes the files
+# the other is reading (measured: test_sitemap_links FileNotFoundError on
+# .../generated/docs/<game>/setup_en.md, 1 run in 7 at -n 5). One group = one
+# worker, so the rebuilds run in sequence — under `--dist loadgroup` only
+# (`-n N` alone is `--dist load`, which ignores the mark; CI passes it in
+# .github/workflows/unittests.yml). It cannot be switched on from here: xdist
+# workers re-parse argv, so a changed config.option.dist never reaches them.
+_WEBHOST_STATIC_DOCS_GROUP = "webhost-static-docs"
+_WEBHOST_STATIC_DOCS_FILES = frozenset({"test_docs.py", "test_sitemap.py"})
+
+
+def _is_webhost_test(item) -> bool:
+    parts = item.path.parts
+    return len(parts) >= 2 and parts[-2] == "webhost" and "test" in parts
+
+
+@pytest.hookimpl(tryfirst=True)  # before xdist's own hook reads the marks
+def pytest_collection_modifyitems(config, items) -> None:  # noqa: ARG001 — pytest hook signature
+    """Keep ``test/webhost`` independent of how xdist splits it across workers.
+
+    Groups the two static-docs writers (above), and makes
+    ``WebHost.get_app()`` idempotent:
+
+    ``test/webhost/__init__.py`` (upstream) calls ``get_app()`` in every test
+    class's ``setUpClass``, and each call re-registers the ``api`` blueprint on
+    the one global Flask app. It only tolerates the repeat when the app has
+    already served a request: Flask then raises an ``AssertionError`` that the
+    base class catches. If the first class a process runs makes no request
+    (``TestSUUID`` makes none), the next class gets Flask's ``ValueError: The
+    name 'api' is already registered for this blueprint`` instead, which is not
+    caught, and every test in that class errors in setup.
+
+    Whether that happens depends on which classes share a process, i.e. on
+    ``pytest -n auto``'s worker count, i.e. on the CI runner's core count
+    (main ``04835362a3``: macOS py3.13, 5 workers, 30 errors; the same SHA
+    passed with 3). It reproduces in ONE process:
+    ``pytest test/webhost/test_suuid.py test/webhost/test_tracker.py``.
+    ``--dist loadfile`` would not fix it — two files on one worker still
+    collide. The base class assumes one app with one config, so return the
+    first app on every later call.
+    """
+    del config
+    webhost_items = [item for item in items if _is_webhost_test(item)]
+    if not webhost_items:
+        return
+    for item in webhost_items:
+        if item.path.name in _WEBHOST_STATIC_DOCS_FILES:
+            item.add_marker(pytest.mark.xdist_group(_WEBHOST_STATIC_DOCS_GROUP))
+
+    import WebHost
+
+    real_get_app = WebHost.get_app
+    if getattr(real_get_app, "_archipelago_cc_memoized", False):
+        return
+    apps: list = []
+
+    def get_app_once():
+        if not apps:
+            apps.append(real_get_app())
+        return apps[0]
+
+    get_app_once._archipelago_cc_memoized = True
+    WebHost.get_app = get_app_once
