@@ -27,6 +27,7 @@ An overview of the major features in the Archipelago JSON Export Tools project.
 | Feature | Description | Overview |
 |---------|-------------|----------|
 | **Procgen Pipeline** | Generates complete playable randomizer worlds in the browser — mixed-substrate regions (maze, platformer, text adventure, Flash, idle game) with physics-verified access rules, compiled to standard `rules.json` | [procgen.md](procgen.md) |
+| **Substrate capabilities** | What you can do with each substrate — play, loop mode, generation, editing — as a chart generated from the substrate registry | [procgen-substrates.md](procgen-substrates.md) |
 
 ## New Games & Modes
 

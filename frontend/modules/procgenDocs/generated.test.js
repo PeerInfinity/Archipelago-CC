@@ -63,6 +63,11 @@ import { DOCS_INDEX } from './generated/docsIndex.js';
 import { INSTRUMENTS } from './generated/instruments.js';
 import { REGISTRY } from './generated/registry.js';
 import { URL_GRAMMAR } from './generated/urlGrammar.js';
+import { CAPABILITIES } from './generated/capabilities.js';
+import { CAPABILITY_STATEMENTS } from '../procgenCore/substrateCapabilities.js';
+import {
+    CAPABILITIES_DOC, CAPABILITIES_TABLE, buildCapabilities, capabilitiesMarkdown,
+} from '../../../scripts/procgen/reference/capabilities.mjs';
 
 /** ⛓ Repo root from this file: `frontend/modules/procgenDocs/` → up three. */
 const ROOT = new URL('../../../', import.meta.url).pathname;
@@ -76,6 +81,7 @@ const MODULES = [
     { file: 'registry.js', value: REGISTRY },
     { file: 'instruments.js', value: INSTRUMENTS },
     { file: 'docsIndex.js', value: DOCS_INDEX },
+    { file: 'capabilities.js', value: CAPABILITIES },
 ];
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -94,6 +100,8 @@ describe('the generated modules ARE what the code says', () => {
         }
         expect(`${code}\n${out}`).toContain('GENERATED MODULES AND');
         expect(`${code}\n${out}`).toContain('MATCH THE CODE');
+        /* ⛓ the capability chart's region is one of the regions it checked */
+        expect(out).toContain(`PASS: ${CAPABILITIES_DOC} § GENERATED:${CAPABILITIES_TABLE} is what the code says`);
         expect(code).toBe(0);
     });
 
@@ -662,6 +670,50 @@ describe('the registry matrix is one column per ENTRY and one row per FIELD', ()
             expect(grouped.get(f), f)
                 .toBe('Build-time — content sources (zone-based substrates)');
         }
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ NON-VACUITY — THE CAPABILITY CHART (substrate chart S1)
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * ⛔ The expectations come from the SOURCE vocabulary module and the REAL
+ * registry, never from `capabilities.js` alone: every statement the module
+ * declares must be in the page, and every entry the registry holds must head
+ * a card there.
+ */
+
+describe('the capability chart is every statement × every registered entry', () => {
+    let entries = null;
+    let page = null;
+
+    beforeAll(async () => {
+        for (const rel of REGISTRY_LIBRARIES) {
+            // eslint-disable-next-line no-await-in-loop
+            await import(join(ROOT, rel));
+        }
+        const { substrateRegistry } = await import('../shared/procgen/substrateRegistry.js');
+        entries = substrateRegistry.getAll();
+        page = readFileSync(join(ROOT, CAPABILITIES_DOC), 'utf8');
+    }, 60_000);
+
+    it('⛓⛓ every statement id of the SOURCE module is a row of the page\'s tables', () => {
+        const missing = CAPABILITY_STATEMENTS
+            .filter((s) => !page.includes(`| ${s.id} | ${s.statement.replace(/\|/g, '\\|')} |`))
+            .map((s) => s.id);
+        expect(missing).toEqual([]);
+        expect(CAPABILITY_STATEMENTS.length).toBeGreaterThan(20);
+    });
+
+    it('⛓⛓ every loaded entry\'s label heads a card, and is a column, in registry order', () => {
+        for (const e of entries) expect(page, e.id).toContain(`\n### ${e.label}\n`);
+        expect(CAPABILITIES.columns.map((c) => c.id)).toEqual(entries.map((e) => e.id));
+    });
+
+    it('⛓ the checked-in module equals the in-memory build, and the region is its markdown', async () => {
+        const built = await buildCapabilities(REGISTRY);
+        expect(JSON.parse(JSON.stringify(built))).toEqual(JSON.parse(JSON.stringify(CAPABILITIES)));
+        expect(findMarkdownRegion(page, CAPABILITIES_TABLE).body).toBe(capabilitiesMarkdown(built));
     });
 });
 

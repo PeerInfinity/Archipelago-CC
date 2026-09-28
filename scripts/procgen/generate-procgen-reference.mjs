@@ -84,6 +84,9 @@ import {
 } from './reference/instruments.mjs';
 
 import { INDEX_DOC, buildDocsIndex, docsIndexMarkdown } from './reference/docsIndex.mjs';
+import {
+    CAPABILITIES_DOC, CAPABILITIES_TABLE, buildCapabilities, capabilitiesMarkdown,
+} from './reference/capabilities.mjs';
 /**
  * ⛓ R9 slice 12d (⚖ ruling 38 (1)): the campaign chain's table. The one
  * place the whole chain was written out for a human, kept current BY HAND
@@ -99,6 +102,7 @@ import { argvHelp } from './argvHelp.js';
 
 argvHelp(import.meta.url);
 const REGISTRY = await buildRegistry();
+const CAPABILITIES = await buildCapabilities(REGISTRY);
 const INSTRUMENTS = buildInstruments();
 const DOCS_INDEX = buildDocsIndex();
 const CAMPAIGN_CHAIN = await buildCampaignChain();
@@ -167,6 +171,16 @@ const files = [
             + '`frontend/modules/procgenDocs/`, which are not `.md` files at all.',
         value: DOCS_INDEX,
     },
+    {
+        file: 'capabilities.js',
+        exportName: 'CAPABILITIES',
+        doc: '**THE SUBSTRATE CAPABILITY CHART** — what a person can do with each '
+            + 'substrate: one row per statement of `procgenCore/substrateCapabilities.js` '
+            + '(grouped Play · Loop mode · Generate · Edit), one cell per registry entry in '
+            + 'registration order with the fields and values it read, one card per entry (its '
+            + 'yes and degree cells), and the fields of the developer matrix no statement reads.',
+        value: CAPABILITIES,
+    },
 ].map((f) => ({ ...f, text: moduleText(f) }));
 
 /**
@@ -194,6 +208,11 @@ const regions = [
         file: CAMPAIGN_DOC,
         table: 'campaign-chain',
         body: campaignChainMarkdown(CAMPAIGN_CHAIN),
+    },
+    {
+        file: CAPABILITIES_DOC,
+        table: CAPABILITIES_TABLE,
+        body: capabilitiesMarkdown(CAPABILITIES),
     },
 ].map((r) => ({ ...r, path: join(REPO, r.file) }));
 
@@ -305,6 +324,9 @@ console.log(`instruments: ${INSTRUMENTS.counts.files} files over `
 for (const f of INSTRUMENTS.findings) {
     console.log(`  FINDING [instruments] ${f.name} — ${f.severity}`);
 }
+console.log(`capabilities: ${CAPABILITIES.counts.statements} statements × `
+    + `${CAPABILITIES.counts.substrates} substrates, ${CAPABILITIES.counts.fieldsRead} fields read, `
+    + `${CAPABILITIES.counts.fieldsUnread} not yet read`);
 console.log(`docsIndex:  ${DOCS_INDEX.counts.docs} documents (`
     + `${DOCS_INDEX.counts.words.toLocaleString('en-US')} words) + `
     + `${DOCS_INDEX.counts.pages} pages`);

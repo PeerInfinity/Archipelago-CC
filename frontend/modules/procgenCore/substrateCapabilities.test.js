@@ -98,8 +98,11 @@ describe('the vocabulary', () => {
         expect(CAPABILITY_STATEMENTS.filter((s) => NEGATION.test(s.statement)).map((s) => s.id)).toEqual([]);
     });
 
-    it('(v) ⛔ the module names no registered substrate id (its SOURCE, read)', () => {
-        let src = readFileSync(join(HERE, 'substrateCapabilities.js'), 'utf8');
+    it.each([
+        ['frontend/modules/procgenCore/substrateCapabilities.js'],
+        ['scripts/procgen/reference/capabilities.mjs'],
+    ])('(v) ⛔ %s names no registered substrate id (its SOURCE, read)', (rel) => {
+        let src = readFileSync(join(ROOT, rel), 'utf8');
         /* ⛓ The feature-id phrases are the shared library's FEATURE vocabulary
          * put into words (`runner_abilities` → 'runner abilities'); a feature
          * id that carries a substrate's name is the library's naming, not this
