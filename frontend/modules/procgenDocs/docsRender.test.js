@@ -253,8 +253,9 @@ describe('⛓ the links the render emits', () => {
         //   291 → 293: the build log split out of seedling-bot.md; 293 → 300:
         //   seedling-bot.md's present-state rewrite; 300 → 301: substrate chart S2's
         //   `substrate-registry.md` → `../../features/procgen-substrates.md`; 301 → 302:
-        //   seedling swim S2 D1's `pipelineConfigFromParams` row → flash.md.
-        expect(checked).toBe(302);
+        //   seedling swim S2 D1's `pipelineConfigFromParams` row → flash.md; 302 → 303:
+        //   C2's `maze.md` room-size paragraph → substrate-registry.md.
+        expect(checked).toBe(303);
     });
 
     it('tags each link with the kind that produced it', () => {

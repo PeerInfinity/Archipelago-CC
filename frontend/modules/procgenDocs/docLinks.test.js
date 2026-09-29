@@ -208,20 +208,23 @@ describe('the corpus census — printed, then pinned', () => {
          *   301 → 302  seedling swim S2 D1 (2026-09-29): `substrate-registry.md`'s
          *              `pipelineConfigFromParams` row points at flash.md's
          *              atlas-knob section (`doc` 229 → 230).
+         *   302 → 303  APWORLD SUBSTRATE CHANGE C2 (2026-09-28): `maze.md`'s
+         *              "How big a room is built" points at substrate-registry.md's
+         *              location-capacity section (`doc` 230 → 231).
          */
         expect(by).toEqual({
             'same-doc': 14,
-            doc: 230,
+            doc: 231,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(302);
+        expect(CORPUS.length).toBe(303);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(230);
+        expect(docs).toHaveLength(231);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
