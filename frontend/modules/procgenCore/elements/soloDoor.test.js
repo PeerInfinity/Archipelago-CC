@@ -9,9 +9,10 @@ import { describe, expect, it } from 'vitest';
 import { ProcgenRng } from '../procgenRng.js';
 import { shortcutLawRefusal } from '../gridFlood.js';
 import {
-    APPROACH_WEST, ROCK_GATE, ROCK_GATE_DOOR_ID, ROCK_GATE_REFUSALS, ROCK_SHORTCUT,
+    APPROACH_SOUTH, APPROACH_WEST, ROCK_GATE, ROCK_GATE_DOOR_ID, ROCK_GATE_REFUSALS, ROCK_SHORTCUT,
     ROCK_SHORTCUT_DOOR_ID, ROCK_SHORTCUT_REFUSALS, SHIELD_GATE, SHIELD_GATE_DOOR_ID,
-    SHIELD_GATE_REFUSALS, SOLO_DOOR_REFUSALS, buildSoloDoor, assertSoloPlacement,
+    SHIELD_GATE_REFUSALS, SOLO_DOOR_REFUSALS, WATERFALL_GATE, WATERFALL_GATE_DOOR_ID,
+    WATERFALL_GATE_REFUSALS, buildSoloDoor, assertSoloPlacement,
 } from './soloDoor.js';
 import { LAW_CUT, LAW_SHORTCUT } from '../elements.js';
 import { TILE_FLOOR } from '../../shared/procgen/mazeAlgorithms/gridTiles.js';
@@ -286,6 +287,43 @@ describe('the SHIELD GATE — a cut entered from the WEST, and only there', () =
             expect(SHIELD_GATE_REFUSALS).toContain(out.refused.reason);
             // the ROCK gate, which has no approach rule, places on the same room
             expect(buildSoloDoor(probeFor(room)).refused).toBeUndefined();
+        });
+    }
+});
+
+/** ⛓ Swim T2 — the NORTH-TO-SOUTH corridor run the other way: every cell is
+ *  entered from BELOW, which is the one approach a waterfall gates. */
+const CORRIDOR_SN = { ...CORRIDOR_NS, start: { x: 1, y: 8 }, goal: { x: 1, y: 1 } };
+
+describe('⛓⛓⛓ the WATERFALL GATE — a cut entered from BELOW, and only there (swim T2, D3)', () => {
+    it('declares itself: on-connector, the cut law, its own door id and refusals', () => {
+        expect(WATERFALL_GATE.family).toBe('waterfallgate');
+        expect(WATERFALL_GATE.phase).toBe('on-connector');
+        expect(WATERFALL_GATE.law ?? LAW_CUT).toBe(LAW_CUT);
+        expect(WATERFALL_GATE_DOOR_ID).toBe('waterfallgate_door');
+        for (const name of WATERFALL_GATE_REFUSALS) expect(SOLO_DOOR_REFUSALS).toContain(name);
+        expect(WATERFALL_GATE_REFUSALS).toContain('the-door-has-no-south-approach');
+    });
+
+    it('⛓⛓ it places on a south-to-north corridor, the clearer directly BELOW the door', () => {
+        const p = WATERFALL_GATE.instantiate(rngFor(4), {}).construct(site(probeFor(CORRIDOR_SN)));
+        expect(p.entities.obstacles[0].id).toBe(WATERFALL_GATE_DOOR_ID);
+        const [door] = p.doorCells;
+        expect(p.clearer).toEqual([{ x: door.x, y: door.y + 1 }]);
+    });
+
+    /**
+     * ⛔⛔ A waterfall crossed DOWNWARD or ACROSS is ordinary floor to the
+     * planner without the feather (`climbsArmedWaterfall` refuses only an
+     * upward step), so a door entered from above or the side is not a gate.
+     * ⛔ MUTANT (c) — the approach check dropped — places on all three.
+     */
+    for (const [label, room] of [['north-to-south', CORRIDOR_NS], ['west-to-east', CORRIDOR_WE],
+        ['east-to-west', CORRIDOR_EW]]) {
+        it(`⛔ on a ${label} corridor it refuses \`the-door-has-no-south-approach\``, () => {
+            const out = buildSoloDoor(probeFor(room), { approach: APPROACH_SOUTH });
+            expect(out.refused?.reason).toBe('the-door-has-no-south-approach');
+            expect(out.refused.detail).toMatch(/entered from BELOW/);
         });
     }
 });

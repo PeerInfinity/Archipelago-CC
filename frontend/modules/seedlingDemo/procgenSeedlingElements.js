@@ -111,7 +111,7 @@ import {
 } from '../procgenCore/elements/shortcut.js';
 import {
     ROCK_GATE_DOOR_ID, ROCK_SHORTCUT_DOOR_ID, SHIELD_GATE_DOOR_ID, WATER_GATE_DOOR_ID,
-    WATER_SHORTCUT_DOOR_ID,
+    WATER_SHORTCUT_DOOR_ID, WATERFALL_GATE_DOOR_ID,
 } from '../procgenCore/elements/soloDoor.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
@@ -763,7 +763,20 @@ export function compositeSeedlingElement({
  * (`paintedFor(null)`) and a water cell is not `ground` to the flood — the
  * door's closed half is `doorKeys`, exactly as it is for a rock.
  */
-export const WATER_DOOR_IDS = Object.freeze([WATER_GATE_DOOR_ID, WATER_SHORTCUT_DOOR_ID]);
+export const WATER_DOOR_IDS = Object.freeze([WATER_GATE_DOOR_ID, WATER_SHORTCUT_DOOR_ID,
+    WATERFALL_GATE_DOOR_ID]);
+
+/**
+ * ⛓ Swim T2 (D3) — WHICH terrain each terrain door paints. The water doors
+ * are one `water` cell; the waterfall gate's door is one `waterfall` cell
+ * (`procgenLevel.TERRAIN.waterfall`, level 0's own column). Keyed by the
+ * same ids as `WATER_DOOR_IDS`, and a unit row holds the two equal.
+ */
+export const DOOR_TERRAIN = Object.freeze({
+    [WATER_GATE_DOOR_ID]: 'water',
+    [WATER_SHORTCUT_DOOR_ID]: 'water',
+    [WATERFALL_GATE_DOOR_ID]: 'waterfall',
+});
 
 /**
  * ⛓⛓⛓ **THE `on-connector` COMPOSITE — EVERY CHECK THE BINDING OWES A ROOM-
@@ -907,7 +920,7 @@ export function compositeSeedlingOnConnector({
 
     /** ⛓ Swim S1 — the water door's cell, painted only now (see `WATER_DOOR_IDS`). */
     for (const o of placement.entities.obstacles) {
-        if (WATER_DOOR_IDS.includes(o.id)) painted.set(`${o.x},${o.y}`, 'water');
+        if (WATER_DOOR_IDS.includes(o.id)) painted.set(`${o.x},${o.y}`, DOOR_TERRAIN[o.id]);
     }
 
     return { placed: Object.freeze({

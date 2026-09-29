@@ -46,7 +46,7 @@ import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import {
-    ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
+    ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT, WATERFALL_GATE,
 } from './elements/soloDoor.js';
 import { LAW_SHORTCUT } from './elements.js';
 import { parseRequireList } from './areaSpec.js';
@@ -339,6 +339,27 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'with it the player swims across. The differential grades the conch SHORTENS.',
         extra: Object.freeze([]),
         needs: Object.freeze(['canSwim']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE WATERFALL GATE — THE FEATHER'S GATE** (seedling swim T2, D3).
+     * One waterfall cell on a cut whose start side is the cell BELOW it: without
+     * the feather the climb is refused (`botDriverV2.climbsArmedWaterfall`, the
+     * planner's one directed edge rule; the game stalls the swimmer on the
+     * face), with it the player climbs through. No entity, no tag — the binding
+     * paints the door as terrain (`procgenSeedlingElements.WATER_DOOR_IDS`).
+     *
+     * ⛓ `needs: ['hasFeather']` — the seam refuses it BY NAME on every biome but
+     * `post-feather`, and `headsNeeding('hasFeather')` is exactly this head.
+     * ⛔ IN NO BIOME DEFAULT.
+     */
+    waterfallgate: Object.freeze({
+        element: WATERFALL_GATE,
+        why: 'The WATERFALL GATE (seedling swim T2): one waterfall cell on a main-path cut '
+            + 'entered from BELOW, its wall GROWN to seal the room, climbed only holding the '
+            + 'feather (`hasFeather`, the second AP `Progressive Swim`). Certified by the '
+            + 'solver WALKING it — no verb, the boot is the key.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasFeather']),
     }),
 });
 

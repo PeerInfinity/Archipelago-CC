@@ -1416,6 +1416,25 @@ export const POST_SWIM_PALETTE = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ **THE POST-FEATHER BIOME** (seedling swim T2, D3) — post-swim's boot plus
+ * the FEATHER (`Player.hasFeather`, the SECOND AP `Progressive Swim`), so the
+ * `waterfallgate` element can certify. ⛔ The feather is progressive over the
+ * conch, so this boot holds BOTH; a feather without the conch is not a boot the
+ * game can produce. The roster is post-sword's BY REFERENCE, as post-swim's is.
+ *
+ * ⚠ DECLARED, NOT EARNED — the campaign holds neither. ⛔ OPT-IN: not in
+ * `watchGenerate.DEFAULT_CENSUS_BIOMES`, so no committed identity iterates it.
+ */
+export const POST_FEATHER_ITEMS = Object.freeze({ ...POST_SWIM_ITEMS, hasFeather: true });
+
+export const POST_FEATHER_PALETTE = Object.freeze({
+    name: 'post-feather',
+    items: POST_FEATHER_ITEMS,
+    templates: POST_SWORD_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
+/**
  * ⛔⛔⛔ THE GROUP SLOT'S OWN INVARIANTS — three, and every one of them exists
  * because the shape it forbids would look FIXED AND BEHAVE BROKEN.
  *

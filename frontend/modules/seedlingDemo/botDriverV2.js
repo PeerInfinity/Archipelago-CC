@@ -866,6 +866,9 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
     const cameFrom = new Map();
     const open = [{ ...start, f: h(start.tx, start.ty), g: 0 }];
     const closed = new Set();
+    // ⛓ T2 D3 — how many steps the directed rule refused, so a refusal can
+    // say it was the CLIMB and not the generic component split.
+    let climbsRefused = 0;
 
     while (open.length > 0) {
         let bi = 0;
@@ -910,7 +913,10 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
             // STEP. The goal is NOT exempt here: exempting it would let a leg
             // end one tile up a waterfall, which is a stall rather than a
             // tight fit.
-            if (climbsArmedWaterfall(level, cur, { tx: nx, ty: ny }, opts)) continue;
+            if (climbsArmedWaterfall(level, cur, { tx: nx, ty: ny }, opts)) {
+                climbsRefused += 1;
+                continue;
+            }
             const g = cur.g + stepCost(nx, ny);
             if (gScore.has(nk) && gScore.get(nk) <= g) continue;
             gScore.set(nk, g);
@@ -920,7 +926,14 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
     }
 
     fail(`no walkable tile path in level ${level.level} from tile `
-        + `(${start.tx},${start.ty}) to (${goal.tx},${goal.ty}). The two are in different `
+        + `(${start.tx},${start.ty}) to (${goal.tx},${goal.ty}). `
+        // ⛓ T2 D3 — named only when it fired, so every other refusal reads as
+        // before; and FIRST, because `solverBot` quotes this message cut to 300
+        // characters and a clause at the end would be cut off.
+        + (climbsRefused > 0 ? `⛓ The search refused ${climbsRefused} UPWARD step(s) into or `
+            + 'out of an armed waterfall (`climbsArmedWaterfall`): without the feather the '
+            + 'push (`v.y += 0.8`) beats the climb, so a waterfall is one-way DOWN. ' : '')
+        + 'The two are in different '
         + 'connected components of the tiles the player box fits in — which at the v2 '
         + 'rung includes being separated by water, a pixelmask or a teleporter volume, '
         + 'none of which is a wall in the game.');

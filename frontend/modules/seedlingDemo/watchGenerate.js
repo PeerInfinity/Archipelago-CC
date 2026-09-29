@@ -92,8 +92,8 @@ import {
     writeRosterParam, writeRunFlag, writeSizeParams, writeSkeletonParam,
 } from '../procgenCore/urlParams.js';
 import {
-    POST_SHIELD_PALETTE, POST_SWIM_PALETTE, POST_SWORD_PALETTE, PRE_SWORD_PALETTE, instantiateKept, normalizeRoster,
-    restrictPalette,
+    POST_FEATHER_PALETTE, POST_SHIELD_PALETTE, POST_SWIM_PALETTE, POST_SWORD_PALETTE, PRE_SWORD_PALETTE,
+    instantiateKept, normalizeRoster, restrictPalette,
 } from './procgenPalette.js';
 import {
     DEFAULT_SKELETON, DEFAULT_SKELETON_KIND, assertKind, formatSkeleton, normalizeSkeleton,
@@ -147,6 +147,8 @@ export const GENERATE_BIOMES = Object.freeze({
     'post-shield': POST_SHIELD_PALETTE,
     /** ⛓ seedling swim S1 (D3) — the conch in the boot; opt-in. */
     'post-swim': POST_SWIM_PALETTE,
+    /** ⛓ seedling swim T2 (D3) — the feather (and the conch) in the boot; opt-in. */
+    'post-feather': POST_FEATHER_PALETTE,
 });
 
 export const BIOME_NAMES = Object.freeze(Object.keys(GENERATE_BIOMES));

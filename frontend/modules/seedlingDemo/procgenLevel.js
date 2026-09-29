@@ -288,6 +288,14 @@ export const TERRAIN = Object.freeze({
     wall: Object.freeze({ name: 'wall', column: 3, type: 2 }),
     water: Object.freeze({ name: 'water', column: 2, type: 1 }),
     pit: Object.freeze({ name: 'pit', column: 7, type: 6 }),
+    /**
+     * ⛓ Swim T2 (D3) — the WATERFALL, for the `waterfallgate` element. Column 32
+     * is what level 0's own waterfall at (13,7) is painted with
+     * (`seedling-map.json`, measured at T2's D3; L0 holds two such tiles, both
+     * column 32). Columns 27..32 all build type 25 and differ only in
+     * `TILE_COLUMN_VARIANTS`' cosmetic pit/continuous/spray flags.
+     */
+    waterfall: Object.freeze({ name: 'waterfall', column: 32, type: 25 }),
 });
 
 export const TERRAIN_NAMES = Object.freeze(Object.keys(TERRAIN));
@@ -568,10 +576,16 @@ export function terrainAt(record, tx, ty) {
  * the fact `stepV2`'s wet-tick refusal is about. A record that holds one owes
  * the staging `'sound'` (`procgenSeedling.pinsForRecord`), whoever wrote it: a
  * template, the water gate's realiser, or a hand repaint.
+ *
+ * ⛓ Swim T2 (D3) — AND A WATERFALL CELL. `hazardFlagsFor` sets `inWater` for
+ * type 25 as well as type 1 (`eff == 1 || eff == 25`), so a waterfall tick
+ * runs the swim term too, and `stepV2` refuses it without the pin just as it
+ * refuses a water tick.
  */
 export function recordHoldsWater(record) {
-    return tilesLayer(record).tiles.some((t) => columnTerrainName(
-        Math.floor(t[2] / TILE_SIZE)) === TERRAIN.water.name);
+    const wet = new Set([TERRAIN.water.name, TERRAIN.waterfall.name]);
+    return tilesLayer(record).tiles.some((t) => wet.has(columnTerrainName(
+        Math.floor(t[2] / TILE_SIZE))));
 }
 
 /**

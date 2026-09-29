@@ -1273,7 +1273,8 @@ export const CATALOGUE = frz({
         "shortcut",
         "shieldgate",
         "watergate",
-        "watershortcut"
+        "watershortcut",
+        "waterfallgate"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -1452,10 +1453,20 @@ export const CATALOGUE = frz({
             ],
             "params": [],
             "why": "The WATER SHORTCUT (seedling swim S1): one water cell on the SHORT ARC of a cycle the room already has — without the conch the goal is reachable the long way, with it the player swims across. The differential grades the conch SHORTENS."
+        },
+        {
+            "head": "waterfallgate",
+            "module": "waterfall-gate",
+            "needs": [
+                "hasFeather"
+            ],
+            "params": [],
+            "why": "The WATERFALL GATE (seedling swim T2): one waterfall cell on a main-path cut entered from BELOW, its wall GROWN to seal the room, climbed only holding the feather (`hasFeather`, the second AP `Progressive Swim`). Certified by the solver WALKING it — no verb, the boot is the key."
         }
     ],
     "itemsElementsNeed": [
         "canSwim",
+        "hasFeather",
         "hasShield",
         "hasSword"
     ],

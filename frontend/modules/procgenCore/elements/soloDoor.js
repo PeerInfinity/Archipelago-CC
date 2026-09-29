@@ -100,10 +100,16 @@ export const SHIELD_GATE_DOOR_ID = 'shieldgate_door';
  *  `WATER_DOOR_IDS` is the one table that says so. */
 export const WATER_GATE_DOOR_ID = 'watergate_door';
 export const WATER_SHORTCUT_DOOR_ID = 'watershortcut_door';
+/** ⛓ Seedling swim T2 (D3) — the WATERFALL door, realised as terrain like the
+ *  water doors (the binding's `WATER_DOOR_IDS` maps it to `waterfall`). */
+export const WATERFALL_GATE_DOOR_ID = 'waterfallgate_door';
 
 /** Where the opener must stand, relative to the door: `null` (anywhere
  *  start-side) or `'west'` (the shield lock's one-pixel west probe). */
 export const APPROACH_WEST = 'west';
+/** ⛓ Swim T2 (D3) — `'south'`: the door is entered from BELOW, the one
+ *  direction a waterfall refuses without the feather. */
+export const APPROACH_SOUTH = 'south';
 
 /**
  * ⛓ EVERY REFUSAL THIS FILE CAN PRODUCE, BY NAME — the census key for the
@@ -111,6 +117,7 @@ export const APPROACH_WEST = 'west';
  */
 export const SOLO_DOOR_REFUSALS = Object.freeze([
     'no-cut-cell', 'no-path-cell', 'goal-too-close', 'the-door-has-no-west-approach',
+    'the-door-has-no-south-approach',
     'wall-does-not-seal', 'the-shortcut-is-a-cut', 'the-shortcut-does-not-shorten',
 ]);
 export const ROCK_GATE_REFUSALS = Object.freeze([
@@ -126,6 +133,10 @@ export const SHIELD_GATE_REFUSALS = Object.freeze([
  *  refusals are the rock doors' lists. */
 export const WATER_GATE_REFUSALS = ROCK_GATE_REFUSALS;
 export const WATER_SHORTCUT_REFUSALS = ROCK_SHORTCUT_REFUSALS;
+/** ⛓ Swim T2 — the shield gate's list with the approach turned to the south. */
+export const WATERFALL_GATE_REFUSALS = Object.freeze([
+    'no-cut-cell', 'goal-too-close', 'the-door-has-no-south-approach', 'wall-does-not-seal',
+]);
 
 /**
  * ⛓ The refusal a run of candidates deserves: the DEEPEST stage any reached,
@@ -134,7 +145,7 @@ export const WATER_SHORTCUT_REFUSALS = ROCK_SHORTCUT_REFUSALS;
  */
 const STAGES = Object.freeze({
     [LAW_CUT]: Object.freeze(['goal-too-close', 'the-door-has-no-west-approach',
-        'wall-does-not-seal']),
+        'the-door-has-no-south-approach', 'wall-does-not-seal']),
     [LAW_SHORTCUT]: Object.freeze(['goal-too-close', 'the-shortcut-is-a-cut',
         'the-shortcut-does-not-shorten']),
 });
@@ -152,7 +163,7 @@ const noteClause = (seen, why) => {
  *
  * @param {object} room the `elements.assertRoomProbe` probe (with `shortcutLaw`
  *   for `law: 'shortcut'`)
- * @param {{law?: string, approach?: null|'west'}} [o]
+ * @param {{law?: string, approach?: null|'west'|'south'}} [o]
  * @returns {{candidates}|{refused:{reason, detail}}}
  */
 export function buildSoloDoor(room, { law = LAW_CUT, approach = null } = {}) {
@@ -170,6 +181,21 @@ export function buildSoloDoor(room, { law = LAW_CUT, approach = null } = {}) {
         if (approach === APPROACH_WEST
             && !(cand.before.x === cand.cell.x - 1 && cand.before.y === cand.cell.y)) {
             seen.add('the-door-has-no-west-approach');
+            continue;
+        }
+        /**
+         * ⛓ Swim T2 (D3) — THE DIRECTED RULE, as geometry. The start side must
+         * be the cell BELOW the door (`before = cell + (0, 1)`), so the route
+         * CLIMBS into the waterfall: `Player.input()` adds 0.8 to `v.y` on a
+         * waterfall unless the feather is held and the player moves up, and the
+         * swim speed is below 0.8. A door entered from above or from the side
+         * is a cell the route crosses DOWNWARD or across, which the planner
+         * (`botDriverV2.climbsArmedWaterfall`) allows without the feather — not
+         * a gate at all.
+         */
+        if (approach === APPROACH_SOUTH
+            && !(cand.before.x === cand.cell.x && cand.before.y === cand.cell.y + 1)) {
+            seen.add('the-door-has-no-south-approach');
             continue;
         }
         const arms = law === LAW_SHORTCUT
@@ -205,7 +231,10 @@ export function buildSoloDoor(room, { law = LAW_CUT, approach = null } = {}) {
                 + `stage any reached was "${reason}".`
                 + (approach === APPROACH_WEST ? ' ⛓ The shield lock opens only from its WEST '
                     + 'face (`ShieldLock.update` collides at `x - 1`), so only a path cell '
-                    + 'entered from the west is offered.' : '') } };
+                    + 'entered from the west is offered.' : '')
+                + (approach === APPROACH_SOUTH ? ' ⛓ A waterfall refuses only a CLIMB '
+                    + '(`Player.input()` pushes `v.y` down by 0.8 unless the feather is held), '
+                    + 'so only a path cell entered from BELOW is offered.' : '') } };
     }
     return { candidates: Object.freeze(ok) };
 }
@@ -387,4 +416,28 @@ export const WATER_SHORTCUT = defineElement({
     construct: soloConstruct(WATER_SHORTCUT_DOOR_ID, { law: LAW_SHORTCUT }),
     assertPlacement: assertSoloPlacement('waterShortcut', WATER_SHORTCUT_DOOR_ID,
         { shortcut: true }),
+});
+
+/**
+ * ⛓⛓⛓ **THE WATERFALL GATE** (seedling swim T2, D3) — the shield gate's shape
+ * (a cut entered from ONE side) with the door a WATERFALL tile entered from
+ * BELOW. `Player.input()`'s last act is `if (onWaterfall && (!hasFeather ||
+ * v.y >= 0)) v.y += 0.8`, and the waterfall's move speed (half the water
+ * speed, plus the swim burst) is below 0.8, so a featherless player stalls on
+ * the face and a feather-holder climbs through (`r5-waterfall-shut` /
+ * `r5-waterfall-climb`). The planner's one DIRECTED edge rule
+ * (`climbsArmedWaterfall`) refuses the upward step without `hasFeather`; ⛔ the
+ * stall is not a death — `checkDrowning` tests water, not the waterfall.
+ */
+export const WATERFALL_GATE = defineElement({
+    name: 'waterfall-gate',
+    family: 'waterfallgate',
+    phase: 'on-connector',
+    why: 'ONE waterfall cell on a main-path CUT whose START side is the cell BELOW it, its '
+        + 'wall grown to seal the room — on Seedling a `TERRAIN.waterfall` tile the player '
+        + 'climbs only holding the feather (`hasFeather`, the second AP `Progressive Swim`). '
+        + 'No entity and no tag: the door is terrain.',
+    params: [],
+    construct: soloConstruct(WATERFALL_GATE_DOOR_ID, { law: LAW_CUT, approach: APPROACH_SOUTH }),
+    assertPlacement: assertSoloPlacement('waterfallGate', WATERFALL_GATE_DOOR_ID),
 });

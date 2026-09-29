@@ -56,8 +56,9 @@ import { DIRECTIVE_KEEP_POLICY } from '../procgenCore/urlParams.js';
 const json = (v) => JSON.stringify(v);
 
 describe('the biome map — ONE map, two readers', () => {
-    it('holds exactly the biomes the arc ships, by identity — S1 added `post-shield`, swim S1 `post-swim`', () => {
-        expect(BIOME_NAMES).toEqual(['pre-sword', 'post-sword', 'post-shield', 'post-swim']);
+    it('holds exactly the biomes the arc ships, by identity — S1 added `post-shield`, swim S1 `post-swim`, swim T2 `post-feather`', () => {
+        expect(BIOME_NAMES).toEqual(['pre-sword', 'post-sword', 'post-shield', 'post-swim',
+            'post-feather']);
         expect(paletteFor('pre-sword')).toBe(PRE_SWORD_PALETTE);
         expect(paletteFor('post-sword')).toBe(POST_SWORD_PALETTE);
         expect(paletteFor('post-shield').items).toEqual({ hasSword: true, hasShield: true });
@@ -65,6 +66,9 @@ describe('the biome map — ONE map, two readers', () => {
         expect(paletteFor('post-shield').templates).toBe(POST_SWORD_PALETTE.templates);
         expect(paletteFor('post-swim').items).toEqual({ hasSword: true, hasShield: true, canSwim: true });
         expect(paletteFor('post-swim').templates).toBe(POST_SWORD_PALETTE.templates);
+        expect(paletteFor('post-feather').items)
+            .toEqual({ hasSword: true, hasShield: true, canSwim: true, hasFeather: true });
+        expect(paletteFor('post-feather').templates).toBe(POST_SWORD_PALETTE.templates);
     });
 
     /** ⛔ S1 — a census/batch that runs "every biome" by default would move its
@@ -80,7 +84,7 @@ describe('the biome map — ONE map, two readers', () => {
      */
     it('refuses an unknown biome BY NAME rather than falling through', () => {
         expect(() => paletteFor('post-dark-shield'))
-            .toThrow(/not one of \[pre-sword, post-sword, post-shield, post-swim\]/);
+            .toThrow(/not one of \[pre-sword, post-sword, post-shield, post-swim, post-feather\]/);
         expect(() => paletteFor(undefined)).toThrow(/watchGenerate: biome/);
     });
 

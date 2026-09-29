@@ -1444,6 +1444,21 @@ export const REFUSALS = frz({
             "inTheConstant": true,
             "kind": "constant",
             "meaning": null,
+            "name": "the-door-has-no-south-approach",
+            "named": true,
+            "scanFound": true,
+            "source": "solo-door",
+            "sourceTitle": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
+            "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "SOLO_DOOR_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/soloDoor.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
             "name": "the-door-has-no-west-approach",
             "named": true,
             "scanFound": true,
@@ -2306,14 +2321,14 @@ export const REFUSALS = frz({
         {
             "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
             "constant": "SOLO_DOOR_REFUSALS",
-            "declaredCount": 7,
+            "declaredCount": 8,
             "file": "frontend/modules/procgenCore/elements/soloDoor.js",
             "id": "solo-door",
             "kind": "constant",
             "patterns": [
                 "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
             ],
-            "scannedCount": 7,
+            "scannedCount": 8,
             "spansModules": false,
             "title": "The ONE-OBSTACLE doors — the ROCK GATE, the ROCK SHORTCUT, the SHIELD GATE",
             "where": "frontend/modules/procgenCore/elements/soloDoor.js — `SOLO_DOOR_REFUSALS`"

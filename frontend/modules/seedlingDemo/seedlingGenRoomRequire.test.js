@@ -71,8 +71,9 @@ describe('⛓⛓ the `require` knob — absent is byte-identical, given is honou
      *  times (~20 s) for a directive no draw can ever meet. */
     it('⛔ a directive refused at RESOLUTION is a bad knob at once — never re-rolled', () => {
         // ⛓ swim S1: `canSwim` is gated now (the water gate) — the feather is not.
-        expect(() => room(1, { biome: 'post-sword', require: 'hasFeather' }))
-            .toThrow(/knob `require` = "hasFeather" is not usable — no-element-needs-this-item/);
+        // ⛓ swim T2: the feather is gated now (the waterfall gate) — the dark suit is not.
+        expect(() => room(1, { biome: 'post-sword', require: 'hasDarkSuit' }))
+            .toThrow(/knob `require` = "hasDarkSuit" is not usable — no-element-needs-this-item/);
         expect(() => room(1, { biome: 'pre-sword', require: 'hasSword' }))
             .toThrow(/knob `require` = "hasSword" is not usable — the-biome-lacks-the-item/);
     }, 30000);
