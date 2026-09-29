@@ -14,7 +14,7 @@ source .venv/bin/activate
 | Spoiler test only | `npm test -- --mode=test-spoilers --game=[gamename] --seed=1` |
 | Regression test | `npm test --mode=test-regression` |
 | Check if dev server is running | `ss -ltn \| grep ":8000"` (or `pgrep -af "[h]ttp.server"` — note the brackets) |
-| Start dev server | `python -m http.server 8000` (only if not already running) |
+| Start dev server | `python scripts/serve-nocache.py 8000` (only if not already running) — no stale cached merge halves |
 | Test against ANOTHER server (a worktree) | `npm test -- --port=8123 …` or `TEST_PORT=8123` — one variable moves the page URL, Playwright's probe, the health check and the Python drivers (`scripts/test/testServer.js` / `test_utils.test_port()`); no port is hardcoded in the harness |
 | Test the BUNDLED boot (what a deployed site serves) | `npm test -- --bundled …` — runs `npm run build` first (under the box lock; `--no-build` reuses `frontend/dist/bundle.js`) and drives `?bundled=true` instead of the ES modules. The results JSON is stamped `flavour`; `compare-runs.js` refuses to diff a bundled run against an unbundled one. Detail: `docs/json/developer/guides/testing-pipeline.md` § *The bundled boot* |
 | `npm test` TAKES THE BOX LOCK | `scripts/test/run-tests.js` takes `~/.cache/seedling-box/lock.json` (kind `browser`, name `npm test <mode>[ batch=][ test=]`) before Playwright starts. A held box → it refuses by name, exit 1; `npm test -- --wait-for-box=<sec> …` queues instead. Under a holder that exported its token it passes through. The results JSON records `frozen` (the head it ran at) and `treeMoved`; `compare-runs.js` warns on a moved tree |
