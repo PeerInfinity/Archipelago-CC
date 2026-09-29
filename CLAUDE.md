@@ -233,6 +233,11 @@ grep '^\[PROGRESS' <logfile>     # [PROGRESS 24/50] omsi-out-of-mana-loop-reset 
 Use it to tell a run in flight from a stalled one. A red run prints an
 `IN-APP TEST(S) FAILED` block naming each failing test and the condition it died
 on, before Playwright's own output.
+A subscriber that threw inside the event bus fails the run even when every row is
+green (zero tolerance): an `IN-APP HANDLER ERRORS` block names the row(s). A flake's
+RATE comes from CI, not the box: dispatch `test-substrates-repeat.yml` (`-f test=<id>
+-f repeat=8`; its summary's first line is `Rate: k/N passed` — a green job only means
+it ran N times). Detail: `docs/json/developer/guides/testing-pipeline.md`.
 
 A poll that times out reports why, so a red run does not need a rerun to
 attribute:
