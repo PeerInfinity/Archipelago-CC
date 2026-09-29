@@ -102,6 +102,16 @@ describe('formatRepeatSummary', () => {
     expect(md).toMatch(/\| 1 \| PASS \| 150s \| 2\/2 \|/);
   });
 
+  it('in a batch, the target column carries only the FAILED rows\' lines', () => {
+    const green = { id: 'green-row', status: 'passed', durationMs: 10, conditions: [], logs: [log('target: noise')] };
+    const r = describeRun({ run: 1, exit: 1, seconds: 150 },
+      results({ status: 'failed', target: 'runner', failedCondition: 'the build succeeded', extraRows: [green] }));
+    expect(r.targets).toHaveLength(1);
+    expect(r.targets[0]).toMatch(new RegExp(`^${ROW}: .*\\(runner\\)`));
+    const allGreen = describeRun({ run: 2, exit: 0, seconds: 150 }, results({ extraRows: [green] }));
+    expect(allGreen.targets).toEqual([]);
+  });
+
   it('escapes a pipe in a condition so the table keeps its columns', () => {
     const md = formatRepeatSummary([describeRun({ run: 1, exit: 1, seconds: 1 },
       results({ status: 'failed', failedCondition: 'a | b' }))]);

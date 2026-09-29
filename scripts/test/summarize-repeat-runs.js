@@ -50,8 +50,10 @@ export function describeRun(meta, results) {
     .flatMap((r) => (r.conditions || []).filter((c) => c.status === 'failed').map((c) => `${r.id}: ${c.description}`))[0]
     ?? (failed[0] ? `${failed[0].id}: (died before asserting)` : null);
   const handler = results?.pageDiagnostics?.handlerErrors ?? null;
+  // A solo row's target lines always; in a batch only the FAILED rows' — every
+  // row that names a "target" would otherwise bury the one that matters.
   const targets = [];
-  for (const r of rows) {
+  for (const r of (rows.length > 1 ? failed : rows)) {
     for (const entry of r.logs || []) {
       const msg = typeof entry === 'string' ? entry : entry?.message;
       if (typeof msg === 'string' && TARGET_LINE.test(msg)) targets.push(rows.length > 1 ? `${r.id}: ${msg}` : msg);
