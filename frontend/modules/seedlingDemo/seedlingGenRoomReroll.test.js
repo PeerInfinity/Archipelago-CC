@@ -17,7 +17,9 @@
  * a side (capped at the room contract's 60) and the same sequence runs on, inside
  * the one core call. The census's last refusals — a room too SMALL for its doors
  * (grid growth 8×6 seeds 1/3/6, the host state at 8×6 seeds 26/27/36/39) — and
- * G5's own refusal rows below now BUILD, each at the size it grew to.
+ * G5's own refusal rows below now BUILD, each at the size it grew to. (Since
+ * APWORLD SUBSTRATE CHANGE H1 the G8 row FINDS its growers by census rather than
+ * listing those seeds — see `growerCensus`.)
  */
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
@@ -85,6 +87,36 @@ async function spied(state, ctx) {
     } finally {
         installSeedlingGenRoom(room);
     }
+}
+
+/**
+ * ⛓ G8's census (H1). `GROWERS_WANTED` per state; the scan's bound is DERIVED from
+ * that count and the widest gap between consecutive growers measured over seeds
+ * 1–40 at H1 (2026-09-29, main `279d75d451`): grid growth 3×3 at 8×6 grew at 12
+ * seeds (3, 6, 9, 10, 18, 19, 20, 24, 27, 32, 35, 36), the host state at 8×6 at 4
+ * (26, 27, 36, 39) — the widest gap is the host's first, 26 seeds. Doubled, so the
+ * bound binds only where the growers have thinned to half that density; within it
+ * the scan stops at the count wanted, so the bound costs nothing while they are there.
+ */
+const GROWERS_WANTED = 4;
+const WIDEST_GROWER_GAP = 26;
+const growerSeedBound = (want) => want * WIDEST_GROWER_GAP * 2;
+/** The first `want` seeds of `make(seed)` whose world holds a GROWN generated room (at most `growerSeedBound(want)` scanned). */
+async function growerCensus(make, want) {
+    const found = [];
+    let seed = 0;
+    while (found.length < want && seed < growerSeedBound(want)) {
+        seed += 1;
+        // eslint-disable-next-line no-await-in-loop
+        const { calls, rulesJson, error } = await spied(make(seed));
+        if (error) throw new Error(`G8 census: seed ${seed} did not build — ${error.message}`);
+        const grown = Object.fromEntries(rooms(rulesJson).filter(([, p]) => p.generation.grownFrom)
+            .map(([id, p]) => [id, { rerolls: p.generation.rerolls, cause: p.generation.rerollCause,
+                size: `${p.size.width}x${p.size.height}` }]));
+        if (Object.keys(grown).length) found.push({ seed, calls, rulesJson, grown });
+    }
+    found.scanned = seed;
+    return found;
 }
 
 const key = (c) => `${c.tx},${c.ty}`;
@@ -393,49 +425,56 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
     });
 
     /**
-     * ⛓ MEASURED (the census at `1fd1f66317`, plan §14 W0): each of these REFUSED —
-     * a room too SMALL for its doors, its budget spent at 8×6. Each builds now, the
-     * rooms that grew at 10×8 on the attempt measured (`rerolls` counts across the
-     * sizes: attempt 9 is the first draw at 10×8), every other room at 8×6, every
-     * room lawful and re-certified on its FINAL record, and the core called ONCE per
-     * region (growth is inside the room's call — the engine's own loop never entered).
-     * ⛓ RE-MEASURED at APWORLD SUBSTRATE CHANGE C1 (2026-09-28, plan §42): grid seeds
-     * 1 and 8 LEFT the population — the maze's gate-and-key placement no longer
-     * drops a key on a tile holding an item or an exit (PM0's finding), which
-     * shortens the key's candidate list, so their draws moved and neither world
-     * spends a room's budget any more (seed 8's base build had also LOST a
-     * location that way: 2 of 3 — as had seeds 3, 7 and 20 of the 40). Seeds 9 and 35 took their places: the grown rooms below, measured
-     * identical at the C1 base `34f32cf324` and after (a census over grid seeds
-     * 1–40, both engines).
+     * ⛓⛓ THE POPULATION, BY CENSUS (APWORLD SUBSTRATE CHANGE H1, plan §46; trap
+     * 1464). Until H1 this row LISTED its worlds — the census's refusals at
+     * `1fd1f66317` (plan §14 W0: a room too SMALL for its doors, its budget spent at
+     * 8×6), grid seeds 1/3/6/8 and host seeds 26/27/36/39. C1 (plan §42) moved the
+     * list by hand when the maze's key filter moved the draws (grid 1, 8 → 9, 35;
+     * trap 1506), and the next placer change would have moved it again. The row now
+     * FINDS its worlds: per state, the first `GROWERS_WANTED` seeds in which some
+     * generated room grew, scanning at most `growerSeedBound(GROWERS_WANTED)` seeds.
+     *
+     * What each grower's readers see is asserted unchanged in meaning: the world
+     * builds; the core ran ONCE per region (growth is inside the room's call — the
+     * engine's own loop never entered); every grown room was asked at 8×6, spent a
+     * whole budget there (its attempt is past `GEN_ROOM_DOOR_REROLLS`), names a
+     * re-roll cause, and is built at the size of that attempt (`sizeOfAttempt` —
+     * 10×8 for every grower measured); every other room is 8×6; every room lawful.
      */
     const HOST = (seed) => withSeed(SEEDLING_GENERATED_HOST_STATE, seed, { regionWidth: 8, regionHeight: 6 });
+    const ASKED = { width: 8, height: 6 };
     it.each([
-        ['grid 8x6 seed 3', () => GRID(3, 8, 6), { region_1_1: [11, 'doors'], region_2_1: [9, 'engineDoors'] }],
-        ['grid 8x6 seed 6', () => GRID(6, 8, 6), { region_1_1: [10, 'doors'] }],
-        ['grid 8x6 seed 9', () => GRID(9, 8, 6), { region_1_0: [9, 'doors'], region_0_1: [9, 'engineDoors'] }],
-        ['grid 8x6 seed 35', () => GRID(35, 8, 6), { region_1_0: [14, 'engineDoors'] }],
-        ['host 8x6 seed 26', () => HOST(26), { region_2_2: [9, 'doors'] }],
-        ['host 8x6 seed 27', () => HOST(27), { region_2_2: [9, 'doors'] }],
-        ['host 8x6 seed 36', () => HOST(36), { region_2_2: [11, 'doors'] }],
-        ['host 8x6 seed 39', () => HOST(39), { region_2_2: [9, 'doors'] }],
-    ])('%s (refused at the base): builds — the room GROWS to 10x8', async (_name, state, grown) => {
-        const { calls, rulesJson, error } = await spied(state());
-        expect(error).toBeUndefined();
-        const generated = rooms(rulesJson);
-        for (const [id] of generated) expect(calls[id], id).toBe(1);
-        const seen = {};
-        for (const [id, p] of generated) {
-            if (p.generation.grownFrom) {
-                seen[id] = [p.generation.rerolls, Object.keys(GEN_ROOM_REROLL_CAUSES).find((c) => GEN_ROOM_REROLL_CAUSES[c] === p.generation.rerollCause)];
-                expect(p.generation.grownFrom, id).toEqual({ width: 8, height: 6 });
-                expect(p.size, id).toEqual({ width: 10, height: 8 });
-            } else {
-                expect(p.size, id).toEqual({ width: 8, height: 6 });
+        ['grid growth 3x3 at 8x6', (seed) => GRID(seed, ASKED.width, ASKED.height)],
+        ['the host state at 8x6', HOST],
+    ])('%s: the first worlds whose room GROWS (found by census) build — each grown room at the size of its attempt', async (name, make) => {
+        const found = await growerCensus(make, GROWERS_WANTED);
+        // eslint-disable-next-line no-console
+        console.log(`G8 census, ${name}: ${found.map((f) => `seed ${f.seed} (${Object.entries(f.grown)
+            .map(([id, g]) => `${id} ${g.rerolls}/${g.cause} → ${g.size}`).join(', ')})`).join('; ')}`
+            + ` — ${found.scanned} seeds scanned`);
+        expect(found.map((f) => f.seed), `${name}: ${GROWERS_WANTED} growers within ${growerSeedBound(GROWERS_WANTED)} seeds`)
+            .toHaveLength(GROWERS_WANTED);
+        for (const { seed, calls, rulesJson } of found) {
+            const generated = rooms(rulesJson);
+            let grew = 0;
+            for (const [id, p] of generated) {
+                const at = `${name} seed ${seed} ${id}`;
+                expect(calls[id], at).toBe(1);
+                if (p.generation.grownFrom) {
+                    grew += 1;
+                    expect(p.generation.grownFrom, at).toEqual(ASKED);
+                    expect(p.generation.rerolls, `${at}: a grown room spent a whole budget`).toBeGreaterThan(GEN_ROOM_DOOR_REROLLS);
+                    expect(Object.values(GEN_ROOM_REROLL_CAUSES), at).toContain(p.generation.rerollCause);
+                    expect(p.size, at).toEqual(sizeOfAttempt(ASKED, p.generation.rerolls));
+                    expect(p.size, at).not.toEqual(ASKED);
+                } else {
+                    expect(p.size, at).toEqual(ASKED);
+                }
+                assertRoomLawful(id, p);
             }
-            assertRoomLawful(id, p);
+            expect(grew, `${name} seed ${seed}: the census found a world with a GROWN room`).toBeGreaterThan(0);
         }
-        expect(seen).toEqual(grown);
-    }, 60_000);
+    }, 300_000);
 
     /**
      * ⛓ A world that built BEFORE G8 is byte-identical — its rooms never spent a
