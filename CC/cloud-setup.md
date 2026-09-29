@@ -6,6 +6,30 @@ This guide provides instructions for setting up the Archipelago JSON Export Tool
 
 When working in the Claude Code cloud interface, you'll be setting up your development environment from scratch in a fresh container. This guide walks you through the complete setup process needed before you can begin working on game implementations or debugging.
 
+## Preferred: a cloud environment with a setup script
+
+Two versioned scripts do all of the steps below:
+
+- **`scripts/cloud/env_setup.sh`** — paste it into claude.ai/code → cloud icon →
+  environment → *Setup script* (network: Trusted or wider). It runs as root before
+  Claude starts and its result is cached. It builds a venv, `node_modules`,
+  Playwright's Chromium (with its apt deps) and a mirror of
+  `PeerInfinity/archipelago-shared` under `/root/CC`, without needing the repo
+  checkout. Re-paste it whenever the file changes. Status is in `/root/CC/SETUP_STATUS`.
+- **`scripts/cloud/session_bootstrap.sh`** — run it from the repo root at the start
+  of the session. It links the cached pieces in and repairs whatever moved since
+  the cache was built (requirements, lockfile, the submodule pin). It also writes
+  `Players/Templates` and `host.yaml` and prints `READY` or what is missing. It
+  falls back to installing from scratch when no setup script ran.
+
+Measured locally 2026-09-28: the environment script took 108 s (excluding Chromium),
+and the bootstrap took 44 s, after which `test-all-templates.py` passed APQuest and
+A Short Hike. The manual steps below are the same work, done by hand in-session.
+
+⚠ `requirements.txt` has TWO kivymd lines: the `git+` one and `kivymd>=2.0.1.dev0`,
+a dev release PyPI does not carry. Both must be commented out (the sed below does
+both), or `pip install` aborts on a fresh machine.
+
 ## Prerequisites
 
 The cloud environment comes pre-installed with:
@@ -56,8 +80,8 @@ source .venv/bin/activate
 
 # Cloud-only: disable git-sourced deps the sandbox git relay can't clone (403).
 for f in requirements.txt worlds/*/requirements.txt; do
-  if grep -qE 'git\+' "$f" 2>/dev/null; then
-    sed -i -E 's|^([^#].*git\+)|# \1|' "$f"
+  if grep -qE '^([^#].*git\+|kivymd)' "$f" 2>/dev/null; then
+    sed -i -E 's/^([^#].*git\+|kivymd)/# \1/' "$f"
     git update-index --skip-worktree "$f"   # keep the edit local & uncommittable
   fi
 done
@@ -400,8 +424,8 @@ source .venv/bin/activate
 # AND stops Generate.py's ModuleUpdate check from prompting. Kept local via
 # skip-worktree (do NOT commit). See Step 2.
 for f in requirements.txt worlds/*/requirements.txt; do
-  if grep -qE 'git\+' "$f" 2>/dev/null; then
-    sed -i -E 's|^([^#].*git\+)|# \1|' "$f"
+  if grep -qE '^([^#].*git\+|kivymd)' "$f" 2>/dev/null; then
+    sed -i -E 's/^([^#].*git\+|kivymd)/# \1/' "$f"
     git update-index --skip-worktree "$f"
   fi
 done
