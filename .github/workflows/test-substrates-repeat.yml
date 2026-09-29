@@ -29,6 +29,14 @@ name: In-app tests — repeat run (manual)
 # they share a runner population.
 
 on:
+  # ⚠ TEMPORARY (CI1 task 3): registers this workflow so it can be dispatched
+  # on the branch (a new workflow file 404s until registered); REVERTED by the
+  # next commit. The push run refuses at "Check the inputs" (no selector).
+  push:
+    branches:
+      - apworld-substrate-ci1
+    paths:
+      - '.github/workflows/test-substrates-repeat.yml'
   workflow_dispatch:
     inputs:
       mode:
