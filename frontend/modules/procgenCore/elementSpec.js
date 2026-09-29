@@ -45,7 +45,9 @@ import { BLOCK_POCKET } from './elements/blockPocket.js';
 import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
-import { ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE } from './elements/soloDoor.js';
+import {
+    ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
+} from './elements/soloDoor.js';
 import { LAW_SHORTCUT } from './elements.js';
 import { parseRequireList } from './areaSpec.js';
 import {
@@ -320,6 +322,21 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'wall GROWN to seal the room, crossed only holding the conch (`canSwim`, AP '
             + '`Progressive Swim`). Certified by the solver WALKING it — no verb, the boot is '
             + 'the key.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['canSwim']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE WATER SHORTCUT** (seedling swim S1, D4) — the `shortcut`
+     * head's rock swapped for one water cell on the cycle's short arc. ⛓
+     * `needs: ['canSwim']` is the SEAM's gate, and — as for `shortcut` — NOT a
+     * requirement: `headsNeeding` excludes it by its declared law, because a
+     * shortcut grades SHORTENS by definition, never STRONG.
+     */
+    watershortcut: Object.freeze({
+        element: WATER_SHORTCUT,
+        why: 'The WATER SHORTCUT (seedling swim S1): one water cell on the SHORT ARC of a cycle '
+            + 'the room already has — without the conch the goal is reachable the long way, '
+            + 'with it the player swims across. The differential grades the conch SHORTENS.',
         extra: Object.freeze([]),
         needs: Object.freeze(['canSwim']),
     }),

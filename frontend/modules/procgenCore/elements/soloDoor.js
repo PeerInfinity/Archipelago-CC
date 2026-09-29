@@ -366,3 +366,25 @@ export const WATER_GATE = defineElement({
     construct: soloConstruct(WATER_GATE_DOOR_ID, { law: LAW_CUT }),
     assertPlacement: assertSoloPlacement('waterGate', WATER_GATE_DOOR_ID),
 });
+
+/**
+ * ⛓⛓⛓ **THE WATER SHORTCUT** (seedling swim S1, D4) — the ROCK SHORTCUT with
+ * the rock swapped for one water cell: the cell stands on a cycle's SHORT arc,
+ * so without the conch the goal is still reachable the long way, and with it
+ * the swimmer cuts across. ⛓ The rock shortcut's `longWayDemand` rides along
+ * unchanged (`buildSoloDoor`'s shortcut arm), for the rock's W2 reason: pass 2
+ * must not paint the long way shut.
+ */
+export const WATER_SHORTCUT = defineElement({
+    name: 'water-shortcut',
+    family: 'watershortcut',
+    phase: 'on-connector',
+    law: LAW_SHORTCUT,
+    why: 'The WATER GATE with the law swapped: one water cell on the SHORT ARC of a cycle the '
+        + 'room already has, so without the conch the goal is still reachable, the long way, '
+        + 'and with it the player swims across. The differential grades the conch SHORTENS.',
+    params: [],
+    construct: soloConstruct(WATER_SHORTCUT_DOOR_ID, { law: LAW_SHORTCUT }),
+    assertPlacement: assertSoloPlacement('waterShortcut', WATER_SHORTCUT_DOOR_ID,
+        { shortcut: true }),
+});
