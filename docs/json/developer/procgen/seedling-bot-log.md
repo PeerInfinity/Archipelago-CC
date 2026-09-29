@@ -10297,6 +10297,77 @@ the tick.
 - The gen room needs `post-feather` in `GEN_ROOM_BIOMES`, one line in T1's file.
 - The three pit-death aborts are pass 2's to attribute.
 
+### Seedling substrate T3-swim — the fallrock responder and the survey's pit edge (2026-09-29)
+
+A model arm and a survey. The campaign is read-only here: no tape moves, and
+nothing in `fixtures/` or `campaign-frontier.json` changes. The route stays at
+sphere 2.1 (⚖ Q14).
+
+**What the brief got wrong, measured.** `FallRock.as` is in `Scenery/`, not
+`Puzzlements/`. The L29 refusal is raised by `botDriverV2.runHold`'s group check
+(T2's file), and it fires before any tick runs, so a responder row alone cannot
+move step 27. The press is not needed to reach the key either. The corridor is
+16 px and the button rect is 8 px wide (`[116,124)`), so a 4 px player box
+hugging either wall walks past it unpressed. The model reaches y=66.6 beside
+`bosskey@112,64` from x=114 or x=126. What refuses is the planner's whole-tile
+read of the button as an avoid volume (`proximity-hazard:button → hold`).
+
+**W0** (clean tree, `279d75d`). Steps 24/25/27/29 re-run byte-identical to S2's
+texts. Campaign census exit 0 with *NO CHAIN ROOM MOVES* (md5 `88fa2333…`). The
+six r8/r9 `--check`s exit 0. Survey default mode `27ff43db…` / `1e08f9ad…`.
+Bounded vitest: 5 files, 302 tests.
+
+**D1 — the responder and the run arm.** `activators.FALL_RESPONDERS` covers
+`fallrock` only; `fallrocklarge` is left out because the run builds 16x16 rock
+state. `FALL_RESPONDER_ROOMS` is a map census of the rooms where a local presser
+shares a rock's group: **L29 and L74 only**. `groupResponders(world, t)` spans all
+four lanes, and `fallRocksArmedBy` is the press test. It is not a `RESPONDERS`
+row, because the sign is inverted: a rock is passable until published and Solid
+after.
+
+In `levelRun`, the arm is set at the end of the pressing tick and resolved at the
+top of the next. `Game.as` adds buttons at `:2318` and fallrocks at `:2330`, and
+`addUpdate` prepends, so the rock updates before the press. The press frame is
+therefore live to the tape and frozen to the player. It is followed by the
+wand's dead span (`dropRocksTogether`, 172 frames for `fallTo` 120) and its ghost
+step. The arm refuses four cases: a snap, a pulser in the group, a boss in the
+room, and a press made during another freeze.
+
+The arm is UNWITNESSED: no fixture comes within 63.9 px of either button.
+Byte-inert: the census and all six `--check`s are `cmp`-identical to W0, and
+`r5Acceptance` + `deadFrameBand` + `tapeRunner` pass 459/459. Mutant (a), the
+row removed: 4 of 5 new rows red, as predicted. Mutant (a2), the arm call
+removed: 1 row red.
+
+**D2 — step 27.** REFUSED, text byte-identical to S2's (predicted).
+
+**D3 — the pit edge** (`--through` only). The hop comes from the level's
+`control` block through `playerPhysicsV2.fallDestination`. It is cross-checked
+against the AP sidecar's single `out_pit_*` tile and its `target_spawn`:
+L12 (36,43) → L21@80,80 by both sources.
+
+- Step 24 moves NO-EDGE → REFUSED on the solver's own *unknown goal kind
+  "reach-pit"*.
+- Step 25 moves NO-ARRIVAL → **SOLVED, 26 ticks**. It is staged on the ground,
+  not as the ceiling descent, and the boot note says so.
+- Mutant (b), the edge disabled: S2's two texts return verbatim.
+
+**D4 — step 29 with the Green Key.** `save.keys: [1]` is staged at L30@64,16
+through one arrival-keyed row. It refuses by a NEW name: `keylock(bosslock@64,32)`
+applied four times, and the corridor never plans. The lock's key line is the row
+BELOW it (y=49), and L22's arrival pocket is the one tile NORTH of it. The AP
+export gates `level_30__r0c4 ↔ r2c10` on `Has(Green Key)` in both directions; the
+game opens that door only from the south.
+
+**The close.** The report is `CC/docs/cloud-reports/seedling-swim-t3.md`. Three
+owners:
+
+- the planner, for the wall-hug past a button (T2's `botDriverV2`/`solverBot`);
+- a `reach-pit` goal in the solver (T2);
+- the AP/atlas rule for a one-sided BossLock (the atlas derivation).
+
+L32 stays refused (R-f is a design).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

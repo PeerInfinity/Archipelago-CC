@@ -1098,9 +1098,19 @@
           "x": 16,
           "y": 80
         },
-        "goals": [],
+        "goals": [
+          {
+            "kind": "reach-pit",
+            "pit": {
+              "tx": 36,
+              "ty": 43,
+              "x": 576,
+              "y": 688
+            },
+            "why": "pit@576,688 (out_pit_5_5, tile 36,43) → L21"
+          }
+        ],
         "crossesTo": 21,
-        "crossingRefusal": "the atlas has 0 edges L12 -> L21 (none). A route hop with more than one door has an ambiguous `reach-exit` goal and the survey will not pick one for you.",
         "boot": {
           "kind": "staged",
           "source": "r8-solve-11",
@@ -1112,7 +1122,10 @@
         "step": 25,
         "level": 21,
         "visit": 1,
-        "arrival": null,
+        "arrival": {
+          "x": 80,
+          "y": 80
+        },
         "goals": [
           {
             "kind": "reach-exit",
@@ -1124,11 +1137,11 @@
           }
         ],
         "crossesTo": 22,
-        "arrivalRefusal": "the atlas has 0 edges L12 -> L21 (none). A route hop with more than one door has an ambiguous `reach-exit` goal and the survey will not pick one for you.",
+        "arrivalVia": "pit@576,688 (out_pit_5_5, tile 36,43)",
         "boot": {
-          "kind": "no-arrival",
-          "source": null,
-          "note": "no boot: the atlas has 0 edges L12 -> L21 (none). A route hop with more than one door has an ambiguous `reach-exit` goal and the survey will not pick one for you."
+          "kind": "staged",
+          "source": "r8-solve-11",
+          "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L21@80,80 — R8 slice 8's construction for r8-solve-18; the arrival is a PIT landing (pit@576,688 (out_pit_5_5, tile 36,43)), staged on the ground at the fall's ctor args rather than as the ceiling descent"
         },
         "known": null
       },
@@ -1966,6 +1979,119 @@
   },
   "rows": [
     {
+      "step": 24,
+      "level": 12,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L12@16,80 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 12,
+          "x": 16,
+          "y": 80
+        },
+        "check": null,
+        "strippedTimedClears": []
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "reach-pit",
+          "pit": {
+            "tx": 36,
+            "ty": 43,
+            "x": 576,
+            "y": 688
+          },
+          "why": "pit@576,688 (out_pit_5_5, tile 36,43) → L21"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-24-boot.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "REFUSED",
+      "refusal": "solverBot: goals[0]: unknown goal kind \"reach-pit\". Slice 2 owns 'reach-exit' and 'collect-placement'; a new kind is a policy addition, not a free string here — the trace's vocabulary is open, the solver's is not.",
+      "ticks": null,
+      "traceRows": null,
+      "replans": null,
+      "passes": null,
+      "declarations": null,
+      "replay": null,
+      "ms": 5,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 1,
+      "family": "unclassified — see the refusal text"
+    },
+    {
+      "step": 25,
+      "level": 21,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L21@80,80 — R8 slice 8's construction for r8-solve-18; the arrival is a PIT landing (pit@576,688 (out_pit_5_5, tile 36,43)), staged on the ground at the fall's ctor args rather than as the ceiling descent",
+        "block": {
+          "level": 21,
+          "x": 80,
+          "y": 80
+        },
+        "check": null,
+        "strippedTimedClears": []
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "exit": {
+            "x": 80,
+            "y": 160
+          },
+          "why": "teleporter@80,160 → L22"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-25-boot.json",
+        "walk": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-25-walk.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "SOLVED",
+      "refusal": null,
+      "ticks": 26,
+      "traceRows": 1,
+      "replans": 0,
+      "passes": [
+        {
+          "pass": 1,
+          "kind": "solve",
+          "ticks": 26
+        }
+      ],
+      "declarations": [],
+      "replay": {
+        "hits": 0,
+        "deaths": 0,
+        "endLevel": 22,
+        "transitions": [
+          "undefined->undefined@26"
+        ],
+        "earnedClears": []
+      },
+      "ms": 44,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 1,
+      "family": null
+    },
+    {
       "step": 27,
       "level": 29,
       "boot": {
@@ -2014,7 +2140,61 @@
       "passes": null,
       "declarations": null,
       "replay": null,
-      "ms": 269,
+      "ms": 289,
+      "knownAnswer": null,
+      "knownTicks": null,
+      "agreesWithKnown": null,
+      "visit": 1,
+      "family": "unclassified — see the refusal text"
+    },
+    {
+      "step": 29,
+      "level": 30,
+      "boot": {
+        "kind": "staged",
+        "source": "r8-solve-11",
+        "note": "r8-solve-11's committed v8 block (the campaign's own post-sword latch) re-pointed at L30@64,16 — R8 slice 8's construction for r8-solve-18",
+        "block": {
+          "level": 30,
+          "x": 64,
+          "y": 16
+        },
+        "check": null,
+        "strippedTimedClears": [],
+        "saveGrant": {
+          "keys": [
+            1
+          ],
+          "why": "the Green Key (bosskey@112,64 in L29, keyType 1) the route collects at step 27"
+        }
+      },
+      "withCommittedDeclarations": null,
+      "goals": [
+        {
+          "kind": "reach-exit",
+          "exit": {
+            "x": 224,
+            "y": 160
+          },
+          "why": "stairsup@224,160 → L32"
+        }
+      ],
+      "views": {
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-29-boot.json"
+      },
+      "clock": {
+        "gameTime": 8607,
+        "refusal": null
+      },
+      "verdict": "REFUSED",
+      "refusal": "solverBot(survey-step-29) reach-exit (224,160)->L32 -> keylock stance (bosslock@64,32) -> keylock stance (bosslock@64,32) -> keylock stance (bosslock@64,32) -> keylock stance (bosslock@64,32): applied 4 strategies for one goal [keylock(bosslock@64,32), keylock(bosslock@64,32), keylock(bosslock@64,32), keylock(bosslock@64,32)] and the corridor still does not plan. A policy that keeps clearing obstacles without a corridor appearing is not making progress.",
+      "ticks": null,
+      "traceRows": null,
+      "replans": null,
+      "passes": null,
+      "declarations": null,
+      "replay": null,
+      "ms": 30,
       "knownAnswer": null,
       "knownTicks": null,
       "agreesWithKnown": null,
