@@ -154,6 +154,16 @@ A source that feeds a *document* into the pipeline (jta's dataset) declares `emi
 |-------|------|---------|
 | `generationCost` | `'light'` \| `'heavy'` (optional) | `'heavy'` means seconds per region, so the CI row `procgenPipeline/presetDefs.generate.slow.test.js` skips presets that use the substrate and requires the skipped set to equal `PRESETS_SKIPPED_AS_HEAVY`. Default `'light'`. Read by `procgenPipeline/presetRun.js` (`substrateGenerationCost`, `heavySubstrateIds`). |
 
+### Build-time — location capacity
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `locationCapacity` | `{kind: 'unbounded'}` \| `{kind: 'tiles', capacityAt(size, params, demand)}` (optional) | How many locations a room of this substrate holds. `'unbounded'`: any number at any size (`text_adventure` lists its locations). `'tiles'`: `capacityAt` returns `{locations, gated}` for a room of `size`, or `null` where the floor is not a function of the size. `demand` carries the room's `exits` and `biome`. |
+
+The vocabulary is `procgenCore/locationCapacity.js`. `locationDemandOf(spec)` counts what a realiser spec asks for: locations that take a tile (one with an item or a rule that is not `True_`; an item-less `True_` location puts nothing on its tile and can share one), how many of those are gated, and the exits. `sizeForLocations(entry, start, params, demand)` returns the first size on the realiser's grow ladder (`start`, then `+REGION_GROW_STEP` per axis) whose capacity holds the demand. It returns `null` when the entry declares nothing or cannot answer. `generateRegionProcedural` starts a room at that size instead of re-rolling four times and growing a step per attempt. It never goes below the size asked for, and it keeps the retry-then-grow as a fallback. The spec field `sizeFromCapacity: false` builds at the size asked for. `topDownRoomSizes(layout)` gives the same size per placed region from the layout alone; the APWorld editor's Initialise preview prints it.
+
+The maze declares `mazeCapacityAt` (`mazeRoom/mazeLocationCapacity.js`). In an open room (the classic biome with `maxIterations: 0`, as top-down and the hub realise, or a room with no exit) every tile but the entrance and the exits is floor: `width × height − 1 − exits`. At most the site-percolation share `1 − 0.592746` of that floor may be gated, because a gate on a location's tile is a wall to the placer's reach. A walled room answers `null`. `mazeRoom/mazeLocationCapacity.test.js` holds the floor to what the placer lands. `apworldEditor/locationCapacity.slow.test.js` holds the gated share to the realiser's own growth over every committed classic slot: 11,422 of 11,442 rooms exact, the rest within −1 … +2 grow steps. `flash_seedling_gen` declares nothing: its realiser never re-rolls, and it refuses a level past its persistence-tag budget instead of growing.
+
 ### Build-time — region library entries (capture / instantiate / validate)
 
 A **region library** stores a generated region as an entry and re-instantiates it into a later world. Implementations are in `mazeLibraryEntry.js`, `bounceLibraryEntry.js` and `runnerLibraryEntry.js`; the atlas pool is `procgenPipeline/regionAtlasPool.js`.
@@ -199,7 +209,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 82 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 83 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -321,6 +331,12 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|---|
 | `generationCost` | — | — | — | heavy | — | — | — | — | — |
+
+**Build-time — location capacity**
+
+| Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
+|---|---|---|---|---|---|---|---|---|---|
+| `locationCapacity` | {capacityAt, kind} | — | — | — | {kind} | — | — | — | — |
 
 **Build-time — region library entries (capture / instantiate / validate)**
 

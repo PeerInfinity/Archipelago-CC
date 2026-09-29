@@ -53,7 +53,7 @@
 
 import {
     DEFAULT_SUBSTRATE_ID, buildPresetSidecars, computeSourceCounts, finalizeTopDown, getRegionExits, layoutTopDown,
-    realiseTopDownGen, resolveTopDownStart,
+    realiseTopDownGen, resolveTopDownStart, topDownRoomSizes,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { assembleRegionParams, mergeSubstrateItemLib } from '../procgenPipeline/sphereConfigHooks.js';
 import { effectiveHazardOpts, topDownGridSide } from '../procgenPipeline/presetRun.js';
@@ -429,9 +429,16 @@ function normalise(doc, player, { substrate, gridDims, seed, backExits, bag, loo
  * ⛓⛓ **WHAT GENERATE WOULD DO, FROM THE LAYOUT ALONE** (fast: ① only) — the
  * preview the form re-plans on every change.
  *
+ * ⛓⛓ C2 — `grown`: the placed rooms whose substrate's declared location
+ * capacity says they will be built ABOVE the region size (`regionSize`), each
+ * with its demand and that size (`topDownRoomSizes` — the numbers the realiser
+ * sizes by). A HINT, never a refusal (⚖ the user, 2026-09-28): the room still
+ * builds, at that size.
+ *
  * @returns {{ok: true, placed: number, total: number, unplaced: Array<{region, why}>,
  *   returnExits: number, teleporters: number, gridDims: {width, height}, menu: string|null,
- *   start: string, menuExits: number, menuRoots: Array<{name, exit_id}>} | {ok: false, threw: string}}
+ *   start: string, menuExits: number, menuRoots: Array<{name, exit_id}>,
+ *   regionSize: {width, height}, grown: Array<{region, demand, size, steps}>} | {ok: false, threw: string}}
  */
 export function planInitialise(doc, player, opts = {}) {
     const a = normalise(doc, player, opts);
@@ -456,6 +463,10 @@ export function planInitialise(doc, player, opts = {}) {
         // target left without one is absent there and `NO_FREE_CELL` above).
         menuExits: menuFedOf(regionsOf(doc, a.player), layout.menuName).size,
         menuRoots: layout.menuRoots.map((r) => ({ ...r })),
+        regionSize: { ...layout.uniformSize },
+        grown: topDownRoomSizes(layout, { regionParams: initialiseKnobs(a.substrate, a.bag).regionParams })
+            .filter((r) => r.steps > 0)
+            .map(({ region, demand, size, steps }) => ({ region, demand, size, steps })),
     };
 }
 

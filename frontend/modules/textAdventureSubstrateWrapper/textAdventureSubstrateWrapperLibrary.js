@@ -32,6 +32,7 @@ import { getPlaybackProxy } from './index.js';
 import { drawTextAdventureCompositeRegion } from './textAdventureCompositeMap.js';
 import { textAdventureRegionRoundTrip } from './textAdventureRegionRoundTrip.js';
 import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
+import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -136,6 +137,12 @@ export const substrateRegistryEntry = Object.freeze({
     // stays disabled by name.
     regionRoundTrip: textAdventureRegionRoundTrip,
     apExitNamesOf: envelopeExitNames,
+    // ⛓ APWORLD SUBSTRATE CHANGE C2 — a room LISTS its locations: it has no
+    // floor to run out of, so it holds any number at any size (131 locations
+    // in 38 ms, 340 in 27 ms, placed on the first attempt — measured). The
+    // Initialise form offers it by this declaration for a room above a tile
+    // substrate's capacity (`procgenCore/locationCapacity.js`).
+    locationCapacity: Object.freeze({ kind: LOCATION_CAPACITY_KINDS.UNBOUNDED }),
 });
 
 // Side-effect on import: register the substrate, matching mazeRoomLibrary.js,

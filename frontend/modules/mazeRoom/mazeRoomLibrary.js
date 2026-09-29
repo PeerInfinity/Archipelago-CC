@@ -45,6 +45,8 @@ import { describeMazeAction } from './mazeKeys.js';
 import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
 import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
 import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames } from './mazeSerializer.js';
+import { mazeCapacityAt } from './mazeLocationCapacity.js';
+import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
 import {
     DEFAULT_MAZE_PROCGEN_PARAMS,
@@ -263,6 +265,12 @@ export const substrateRegistryEntry = Object.freeze({
     // crossing by name (`exit_tile_collision`), which the report then shows.
     apLocationNamesOf: tileGridApLocationNames,
     apExitNamesOf: envelopeExitNames,
+    // ⛓ APWORLD SUBSTRATE CHANGE C2 — how many locations a room holds at a
+    // size (`mazeLocationCapacity.js`): an OPEN room's floor, of which the
+    // gated ones may take the percolation share; `null` for a walled room.
+    // The realiser sizes a room once from it and the Initialise form prints
+    // the grown size (`procgenCore/locationCapacity.js`).
+    locationCapacity: Object.freeze({ kind: LOCATION_CAPACITY_KINDS.TILES, capacityAt: mazeCapacityAt }),
 
     // Content-module pass (hazards). The generic engine calls this after the
     // base region build at both build sites; substrates that don't declare it

@@ -38,6 +38,7 @@ import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js
 import { itemNamesInDocument, undefinedRuleItems } from '../procgenCore/ruleItemNames.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
+import { locationDemandOf, sizeForLocations } from '../procgenCore/locationCapacity.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 
 function getAdapter(substrateId) {
@@ -1992,6 +1993,46 @@ function buildTopDownRegionSpec(layout, name, exitSidesByExit) {
     return { entrances, exitSpecs, locationSpecs };
 }
 
+/**
+ * ⛓⛓ APWORLD SUBSTRATE CHANGE C2 — **THE SIZE EACH PLACED REGION WILL BE BUILT
+ * AT**, from ① alone: per region in BFS order, the demand of the spec ② hands
+ * the realiser (`buildTopDownRegionSpec` — the same locations and exits; the
+ * entrance takes one tile wherever it lands, so it is resolved against an empty
+ * exit map) and the size its substrate's declared `locationCapacity` gives it on
+ * the realiser's grow ladder from `uniformSize` (`sizeForLocations`, which
+ * `generateRegionProcedural` sizes by). `size` is `null` where the substrate
+ * declares nothing it can answer for these params; `steps` is how many grow
+ * steps above the uniform size it lands. The Initialise form prints the rooms
+ * with `steps > 0`.
+ *
+ * @returns {Array<{region: string, substrate: string,
+ *   demand: {locations: number, gated: number, exits: number},
+ *   start: {width: number, height: number},
+ *   size: {width: number, height: number}|null, steps: number|null}>}
+ */
+export function topDownRoomSizes(layout, { regionParams = { maxIterations: 0 } } = {}) {
+    const { placementOrder, sourceRegions, uniformSize, substrateByRegion = {} } = layout;
+    const out = [];
+    for (const { name } of placementOrder) {
+        const sourceRegion = sourceRegions[name];
+        if (!sourceRegion) continue;
+        const substrate = substrateByRegion[name] ?? DEFAULT_SUBSTRATE_ID;
+        const { exitSpecs, locationSpecs } = buildTopDownRegionSpec(layout, name, new Map());
+        const demand = locationDemandOf({ locations: locationSpecs, exits: exitSpecs });
+        const sized = sizeForLocations(substrateRegistry.get(substrate), uniformSize, regionParams,
+            { ...demand, biome: sourceRegion.biome ?? null });
+        out.push({
+            region: name,
+            substrate,
+            demand,
+            start: { width: uniformSize.width, height: uniformSize.height },
+            size: sized ? { width: sized.width, height: sized.height } : null,
+            steps: sized ? sized.steps : null,
+        });
+    }
+    return out;
+}
+
 // ----- ② Realise each region. A generator: it yields a { type:'region', … }
 // progress event per region (the stepped panel drains it with a setTimeout(0)
 // yield so the UI repaints), then realises that region's recorded substrate from
@@ -2979,6 +3020,7 @@ export function assembleZoneRegion({
 //                 access_rule? }],
 //   locations: [{ id, item?, access_rule? }],
 //   useSourceLocationName,   // stamp loc.global_name = id (top-down)
+//   sizeFromCapacity,        // default true; false = start at `size` (C2)
 // }
 //
 // Two branches by substrate kind:
@@ -3047,6 +3089,24 @@ function generateRegionProcedural(spec) {
     // fits on attempt 0) the loop runs exactly once, leaving rng draws and
     // geometry identical to the pre-retry behaviour.
     let size = { width: spec.size.width, height: spec.size.height };
+    // ⛓⛓ APWORLD SUBSTRATE CHANGE C2 — SIZE THE ROOM ONCE. A substrate that
+    // declares its `locationCapacity` (`procgenCore/locationCapacity.js`) says
+    // the size a room of these locations needs, on this loop's own grow ladder;
+    // the room starts there instead of failing four re-rolls at a size that
+    // cannot hold it and growing a step per attempt (a 340-location room was
+    // built nine times to reach 27×27). Never smaller than the size asked for,
+    // so a room that fits is untouched — measured byte-inert over every
+    // committed maze room (C2 §45.0: 0 of 2,360 producer builds, 0 of 1,063
+    // committed entries at their own size). The retry-then-grow below stays:
+    // the declaration is the percolation threshold of a random layout, so a
+    // room can still need one more step. `sizeFromCapacity: false` builds from
+    // the size asked for, which is how the agreement rows get the realiser's
+    // own answer to compare the declaration with.
+    if (spec.sizeFromCapacity !== false) {
+        const sized = sizeForLocations(adapter, size, spec.params,
+            { ...locationDemandOf(spec), biome: spec.biome ?? null });
+        if (sized) size = { width: sized.width, height: sized.height };
+    }
     let core = null;
     let placement = null;
     let exit_rules = null;

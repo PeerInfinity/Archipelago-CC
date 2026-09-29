@@ -24,7 +24,7 @@ export const REGISTRY = frz({
     "columnOrder": "the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported",
     "columns": [
         {
-            "fields": 33,
+            "fields": 34,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
@@ -48,7 +48,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
         },
         {
-            "fields": 21,
+            "fields": 22,
             "id": "text_adventure",
             "label": "Text Adventure",
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
@@ -194,6 +194,12 @@ export const REGISTRY = frz({
                 "generationCost"
             ],
             "title": "Build-time — generation cost"
+        },
+        {
+            "rows": [
+                "locationCapacity"
+            ],
+            "title": "Build-time — location capacity"
         },
         {
             "rows": [
@@ -3543,6 +3549,85 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Runtime",
             "name": "loadRegionEvent"
+        },
+        {
+            "carriedBy": [
+                "maze",
+                "text_adventure"
+            ],
+            "cells": [
+                {
+                    "id": "maze",
+                    "present": true,
+                    "short": "{capacityAt, kind}",
+                    "type": "object",
+                    "value": [
+                        "capacityAt",
+                        "kind"
+                    ]
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "{kind}",
+                    "type": "object",
+                    "value": [
+                        "kind"
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — location capacity",
+            "name": "locationCapacity"
         },
         {
             "carriedBy": [
