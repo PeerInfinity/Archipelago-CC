@@ -42,7 +42,7 @@ import {
     planInitialise,
 } from './slotInitialise.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
-import { unboundedCapacityIds } from '../procgenCore/locationCapacity.js';
+import { LOCATION_CEILING_WORDING, unboundedCapacityIds } from '../procgenCore/locationCapacity.js';
 import {
     INITIALISE_JOB, REGION_GENERATION_CANCELLED, initialiseTimeoutSentence, regionGenerationLoadTimeoutSentence,
 } from './regionGenerationRun.js';
@@ -193,6 +193,31 @@ export function initialiseGrownText(plan, substrate) {
 }
 
 /**
+ * ⛓⛓ G9 — **A ROOM PAST ITS SUBSTRATE'S CEILING REFUSES THE PREVIEW, BY NAME**
+ * (the plan's `overCeiling`): *"flash_seedling_gen: at most 30 locations per
+ * room (the game's 30 persistence tags) — 'Ingame' lists 60, …"*, one clause
+ * per room, grouped by substrate — or `null` when every room is within it. No
+ * size holds such a room, so the form draws no Generate rather than building
+ * and failing after the draw.
+ */
+export function initialiseCeilingRefusal(plan) {
+    const over = plan?.overCeiling ?? [];
+    if (!over.length) return null;
+    const bySubstrate = new Map();
+    for (const r of over) {
+        if (!bySubstrate.has(r.substrate)) bySubstrate.set(r.substrate, []);
+        bySubstrate.get(r.substrate).push(r);
+    }
+    return `apworld: ${[...bySubstrate].map(([id, rooms]) => `${LOCATION_CEILING_WORDING.limit(id, rooms[0].ceiling)} — `
+        + `${rooms.map((r) => `'${r.region}' lists ${r.demand.listed}`).join(', ')}`).join('; ')}`
+        + `. ${INITIALISE_CEILING_ADVICE}`;
+}
+
+/** ⛓ G9 — what the ceiling refusal tells the reader to do. */
+export const INITIALISE_CEILING_ADVICE = 'Growth does not lift this bound: choose a substrate whose rooms hold '
+    + 'more, or give those regions fewer locations.';
+
+/**
  * ⛓⛓ **THE PREVIEW** — the op's refusal when it would refuse (the form then
  * draws no Generate), else the layout's plan and its sentence:
  * *"81 regions placed on 13×13, 53 teleporters; 80 return exits will be added;
@@ -209,6 +234,8 @@ export function initialisePreview(doc, player, state, pageLog = null) {
     if (refusal) return { refusal, plan: null, text: refusal };
     const plan = planInitialise(doc, args.player, args);
     if (!plan.ok) return { refusal: `apworld: the layout threw — ${plan.threw}`, plan: null, text: plan.threw };
+    const ceiling = initialiseCeilingRefusal(plan);
+    if (ceiling) return { refusal: ceiling, plan: null, text: ceiling };
     const back = state.backExits === BACK_EXITS.NONE
         ? 'no return exits (off)'
         : `${plan.returnExits} return exit${plan.returnExits === 1 ? '' : 's'} will be added`;

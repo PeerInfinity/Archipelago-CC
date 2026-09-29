@@ -27,6 +27,13 @@
  *       draw, not a function of the size). `demand` carries the room's
  *       `exits` (and `biome`), which take floor of their own.
  *
+ *       ⛓⛓ G9 — THE ANSWER MAY CARRY A CEILING: `ceiling: {locations, why}`,
+ *       the most locations a room of these `params` holds AT ANY SIZE — a
+ *       budget of the game's that growth does not lift (`why` names it, in
+ *       the substrate's words). It bounds EVERY location the room lists
+ *       (`demand.listed`), not only the ones that take a tile: a budget spent
+ *       per location is spent by an item-less one too.
+ *
  * ⛔ NO LITERAL TABLE. A capacity is a FUNCTION the substrate owns, held to its
  * realiser by a row that builds rooms (`locationCapacity.test.js`, and the
  * slow census row over the committed slots). An entry with no declaration
@@ -34,6 +41,13 @@
  *
  * ⛔ A HINT, NOT A REFUSAL (the ruling). Nothing in this module refuses a room:
  * a room above its capacity still builds — it grows.
+ * ⛓ G9 — THE ONE EXCEPTION IS A DECLARED CEILING, and it is not this module's
+ * refusal but the substrate's: a room past it cannot build at any size, so its
+ * callers refuse it BY NAME before the build (`exceedsCeiling`, in
+ * `LOCATION_CEILING_WORDING`'s words) instead of growing it until the build
+ * says so. Without the signal the grow ladder met a flat capacity, answered
+ * `null` — "cannot say", which every caller reads as undeclared — and the
+ * refusal came after the build (the apworld arc measured 38 of 60 slots).
  *
  * ⛔ PURE AND BROWSER-SAFE: every function takes an ENTRY (or `null`); no
  * registry import, no substrate name.
@@ -74,13 +88,52 @@ export function locationDemandOf({ locations = [], exits = [] } = {}) {
         if (isGated) gated += 1;
         if (isGated || loc?.item != null) tiled += 1;
     }
-    return { locations: tiled, gated, exits: exits.length };
+    // ⛓ G9 — `listed`: every distinct location, tile or not — what a ceiling bounds.
+    return { locations: tiled, gated, exits: exits.length, listed: seen.size };
 }
 
 /** ⛓ The entry's declaration kind, or `null` when it declares none. */
 export function locationCapacityKind(entry) {
     const kind = entry?.locationCapacity?.kind;
     return Object.values(LOCATION_CAPACITY_KINDS).includes(kind) ? kind : null;
+}
+
+/**
+ * ⛓⛓ G9 — **THE CEILING NO SIZE LIFTS**, when the entry's `capacityAt` answer
+ * declares one: `{locations, why}`, else `null` (no declaration, no answer, or
+ * an answer without a ceiling — the maze and the text adventure).
+ */
+export function locationCeiling(entry, size, params, demand) {
+    if (locationCapacityKind(entry) !== LOCATION_CAPACITY_KINDS.TILES) return null;
+    const ceiling = entry.locationCapacity.capacityAt(size, params ?? {}, demand)?.ceiling;
+    if (!ceiling || !Number.isInteger(ceiling.locations)) return null;
+    return { locations: ceiling.locations, why: String(ceiling.why ?? '') };
+}
+
+/** ⛓ The locations a ceiling bounds: every one the room lists (`locationDemandOf`'s `listed`). */
+const listedOf = (demand) => demand.listed ?? demand.locations;
+
+/**
+ * ⛓⛓ G9 — **DOES `demand` EXCEED THE CEILING?** The ceiling (`{locations,
+ * why}`) when the room lists more locations than it, else `null`. A room past
+ * it is refused at any size, so a caller asks this BEFORE it builds.
+ */
+export function exceedsCeiling(entry, size, params, demand) {
+    const ceiling = locationCeiling(entry, size, params, demand);
+    return ceiling && listedOf(demand) > ceiling.locations ? ceiling : null;
+}
+
+/** ⛓ G9 — the words of a ceiling refusal: *"<id>: at most N locations per room (<why>)"*, then the room's ask. */
+export const LOCATION_CEILING_WORDING = Object.freeze({
+    limit: (id, ceiling) => `${id}: at most ${ceiling.locations} location${ceiling.locations === 1 ? '' : 's'} per room`
+        + `${ceiling.why ? ` (${ceiling.why})` : ''}`,
+    refusal: (id, ceiling, region, listed) => `${LOCATION_CEILING_WORDING.limit(id, ceiling)} — `
+        + `'${region}' lists ${listed}, and no room size holds more (growth does not lift this bound)`,
+});
+
+/** ⛓ G9 — the refusal sentence for a room past its ceiling (`exceedsCeiling`'s answer). */
+export function locationCeilingRefusal(id, ceiling, region, demand) {
+    return LOCATION_CEILING_WORDING.refusal(id, ceiling, region, listedOf(demand));
 }
 
 /**
@@ -104,6 +157,9 @@ export function roomHolds(entry, size, params, demand) {
  * @returns {{width: number, height: number, steps: number}|null}
  */
 export function sizeForLocations(entry, start, params, demand) {
+    // ⛓ G9 — past a declared ceiling no rung holds it: `null`, and the caller
+    // that must say why asks `exceedsCeiling` (the grow ladder is not the place).
+    if (exceedsCeiling(entry, start, params, demand)) return null;
     let size = { width: start.width, height: start.height };
     let last = null;
     for (let steps = 0; ; steps += 1) {

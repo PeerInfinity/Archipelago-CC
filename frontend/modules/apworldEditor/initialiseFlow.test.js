@@ -32,6 +32,7 @@ import {
     INITIALISE_DOOR_LABEL, initialiseAnswer, initialiseArgs, initialiseDoorShown, initialiseFormDefaults,
     initialiseJob, initialisePreview, initialiseTickerText, withAutoSide,
     initialiseBagFor, withInitialisePatch, initialiseLoopToggle,
+    INITIALISE_CEILING_ADVICE, initialiseCeilingRefusal,
 } from './initialiseFlow.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -352,5 +353,20 @@ describe('S3 — loop mode on the form', () => {
         const a = initialiseAnswer({ substrate: DEFAULT_SUBSTRATE_ID, player: P }, res, 60);
         expect(a).toEqual({ landed: false, text: `${initialiseFailureSentence(DEFAULT_SUBSTRATE_ID, res)} Nothing was recorded.` });
         expect(a.text).not.toContain('realiser threw');
+    });
+});
+
+describe('G9 — a room past its substrate\'s declared ceiling refuses the preview BY NAME', () => {
+    it('⛓ one clause per substrate, naming N, why and every room past it; null when none is', () => {
+        expect(initialiseCeilingRefusal(null)).toBeNull();
+        expect(initialiseCeilingRefusal({ overCeiling: [] })).toBeNull();
+        const c = { locations: 30, why: 'the game\'s 30 persistence tags' };
+        const text = initialiseCeilingRefusal({ overCeiling: [
+            { region: 'Ingame', substrate: 'gen', demand: { locations: 40, listed: 60 }, ceiling: c },
+            { region: 'Pond', substrate: 'gen', demand: { locations: 31, listed: 31 }, ceiling: c },
+            { region: 'Lab', substrate: 'other', demand: { locations: 3, listed: 4 }, ceiling: { locations: 3, why: '' } },
+        ] });
+        expect(text).toBe("apworld: gen: at most 30 locations per room (the game's 30 persistence tags) — 'Ingame' lists 60, "
+            + "'Pond' lists 31; other: at most 3 locations per room — 'Lab' lists 4. " + INITIALISE_CEILING_ADVICE);
     });
 });

@@ -16,8 +16,8 @@ import { createRng } from '../shared/rng.js';
 import { generateRegionCore, placeFromRules } from '../mazeRoom/mazeRoomEngine.js';
 import { generateRegion } from '../procgenPipeline/procgenPipelineEngine.js';
 import {
-    LOCATION_CAPACITY_KINDS, locationCapacityKind, locationDemandOf, roomHolds, sizeForLocations,
-    unboundedCapacityIds,
+    LOCATION_CAPACITY_KINDS, LOCATION_CEILING_WORDING, exceedsCeiling, locationCapacityKind, locationCeiling,
+    locationCeilingRefusal, locationDemandOf, roomHolds, sizeForLocations, unboundedCapacityIds,
 } from './locationCapacity.js';
 
 const maze = () => substrateRegistry.get('maze');
@@ -123,5 +123,101 @@ describe('generateRegion sizes a room ONCE from the declaration', () => {
         const b = generateRegion(spec(locations, { sizeFromCapacity: false }));
         expect(JSON.stringify(a)).toBe(JSON.stringify(b));
         expect(dims(a)).toEqual({ width: 8, height: 6 });
+    });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ G9 (SEEDLING GENERATED; plan §15–§16) — A CEILING NO SIZE LIFTS. A
+ * fixture whose floor grows with the room but whose budget does not: before
+ * the signal, the grow ladder met the flat capacity and answered `null`, the
+ * same "cannot say" an undeclared entry answers — so no caller could refuse
+ * the room by name, and the refusal came after the build.
+ * ══════════════════════════════════════════════════════════════════════ */
+describe('G9 — a declared ceiling', () => {
+    const BUDGET = 12;
+    const floorOf = (size, demand) => size.width * size.height - 1 - (demand.exits ?? 0);
+    const budgeted = (withCeiling = true) => ({
+        id: 'budgeted',
+        locationCapacity: {
+            kind: LOCATION_CAPACITY_KINDS.TILES,
+            capacityAt: (size, _params, demand) => {
+                const n = Math.min(floorOf(size, demand), BUDGET);
+                return { locations: n, gated: n, ...(withCeiling ? { ceiling: { locations: BUDGET, why: 'the budget' } } : {}) };
+            },
+        },
+    });
+    const start = { width: 3, height: 3 };
+
+    it('⛓ within the ceiling the ladder still grows the room to the rung that holds', () => {
+        const demand = { locations: 10, gated: 0, exits: 1, listed: 10 };
+        const sized = sizeForLocations(budgeted(), start, {}, demand);
+        expect(sized).toEqual({ width: 5, height: 5, steps: 1 });
+        expect(roomHolds(budgeted(), sized, {}, demand)).toBe(true);
+        expect(exceedsCeiling(budgeted(), start, {}, demand)).toBeNull();
+    });
+
+    it('⛓⛓ past it: no size, and the ceiling NAMED — the refusal sentence carries the id, N, why, the room and its ask', () => {
+        const demand = { locations: 13, gated: 0, exits: 1, listed: 13 };
+        expect(sizeForLocations(budgeted(), start, {}, demand)).toBeNull();
+        expect(exceedsCeiling(budgeted(), start, {}, demand)).toEqual({ locations: BUDGET, why: 'the budget' });
+        expect(locationCeiling(budgeted(), start, {}, demand)).toEqual({ locations: BUDGET, why: 'the budget' });
+        expect(locationCeilingRefusal('budgeted', { locations: BUDGET, why: 'the budget' }, 'Ingame', demand))
+            .toBe("budgeted: at most 12 locations per room (the budget) — 'Ingame' lists 13, and no room size holds "
+                + 'more (growth does not lift this bound)');
+        expect(LOCATION_CEILING_WORDING.limit('x', { locations: 1, why: '' })).toBe('x: at most 1 location per room');
+    });
+
+    it('⛔ THE DEFECT, PINNED: without the signal the same capacity answers the silent `null` an undeclared entry does', () => {
+        const demand = { locations: 13, gated: 0, exits: 1, listed: 13 };
+        expect(sizeForLocations(budgeted(false), start, {}, demand)).toBeNull();
+        expect(sizeForLocations({ id: 'undeclared' }, start, {}, demand)).toBeNull();
+        expect(exceedsCeiling(budgeted(false), start, {}, demand)).toBeNull();
+    });
+
+    it('⛓ a ceiling bounds EVERY listed location — an item-less True_ one takes no tile but spends the budget', () => {
+        const locations = locs({ items: 5, bare: 8 });
+        const demand = locationDemandOf({ locations, exits: [{}] });
+        expect(demand).toEqual({ locations: 5, gated: 0, exits: 1, listed: 13 });
+        expect(exceedsCeiling(budgeted(), start, {}, demand)).toEqual({ locations: BUDGET, why: 'the budget' });
+        // a hand-built demand without `listed` is bounded by its `locations`
+        expect(exceedsCeiling(budgeted(), start, {}, { locations: 13, gated: 0, exits: 1 })).not.toBeNull();
+    });
+
+    it('⛔ the maze and the text adventure declare no ceiling, so nothing of theirs refuses', () => {
+        const big = { locations: 10_000, gated: 0, exits: 1, listed: 10_000 };
+        expect(locationCeiling(maze(), { width: 8, height: 6 }, OPEN, big)).toBeNull();
+        expect('ceiling' in maze().locationCapacity.capacityAt({ width: 8, height: 6 }, OPEN, big)).toBe(false);
+        expect(exceedsCeiling(substrateRegistry.get('text_adventure'), { width: 8, height: 6 }, {}, big)).toBeNull();
+        expect(exceedsCeiling({ id: 'x' }, { width: 8, height: 6 }, {}, big)).toBeNull();
+    });
+
+    it('⛓⛓ generateRegion refuses a room past the ceiling BY NAME, before the core runs', () => {
+        const base = maze();
+        let cores = 0;
+        const capped = {
+            ...base,
+            id: 'capped_probe',
+            generateRegionCore: (input) => { cores += 1; return base.generateRegionCore(input); },
+            locationCapacity: {
+                kind: LOCATION_CAPACITY_KINDS.TILES,
+                capacityAt: (size, params, demand) => ({
+                    ...base.locationCapacity.capacityAt(size, params, demand), ceiling: { locations: 5, why: 'five' },
+                }),
+            },
+        };
+        substrateRegistry.entries.set(capped.id, capped);
+        try {
+            const spec = (n) => ({
+                substrate: capped.id, region_id: 'r', size: { width: 8, height: 6 }, entrances: [],
+                exits: [{ exit_id: 'e', side: 'E' }], locations: locs({ items: n }), rng: createRng(5), params: OPEN,
+            });
+            expect(() => generateRegion(spec(6))).toThrow(
+                "capped_probe: at most 5 locations per room (five) — 'r' lists 6, and no room size holds more");
+            expect(cores).toBe(0);
+            expect(generateRegion(spec(5)).extracted_rules.locations.length).toBe(5);
+            expect(cores).toBe(1);
+        } finally {
+            substrateRegistry.entries.delete(capped.id);
+        }
     });
 });

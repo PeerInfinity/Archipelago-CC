@@ -38,7 +38,9 @@ import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js
 import { itemNamesInDocument, undefinedRuleItems } from '../procgenCore/ruleItemNames.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
-import { locationDemandOf, sizeForLocations } from '../procgenCore/locationCapacity.js';
+import {
+    exceedsCeiling, locationCeilingRefusal, locationDemandOf, sizeForLocations,
+} from '../procgenCore/locationCapacity.js';
 import { isAtlasSourceId, atlasSourceGame, requirementDnf } from './regionAtlasPool.js';
 
 function getAdapter(substrateId) {
@@ -2003,12 +2005,14 @@ function buildTopDownRegionSpec(layout, name, exitSidesByExit) {
  * `generateRegionProcedural` sizes by). `size` is `null` where the substrate
  * declares nothing it can answer for these params; `steps` is how many grow
  * steps above the uniform size it lands. The Initialise form prints the rooms
- * with `steps > 0`.
+ * with `steps > 0`. ⛓ G9 — `ceiling`: the declared ceiling the room exceeds
+ * (`exceedsCeiling`), else null; the form refuses such a room BY NAME.
  *
  * @returns {Array<{region: string, substrate: string,
  *   demand: {locations: number, gated: number, exits: number},
  *   start: {width: number, height: number},
- *   size: {width: number, height: number}|null, steps: number|null}>}
+ *   size: {width: number, height: number}|null, steps: number|null,
+ *   ceiling: {locations: number, why: string}|null}>}
  */
 export function topDownRoomSizes(layout, { regionParams = { maxIterations: 0 } } = {}) {
     const { placementOrder, sourceRegions, uniformSize, substrateByRegion = {} } = layout;
@@ -2019,8 +2023,9 @@ export function topDownRoomSizes(layout, { regionParams = { maxIterations: 0 } }
         const substrate = substrateByRegion[name] ?? DEFAULT_SUBSTRATE_ID;
         const { exitSpecs, locationSpecs } = buildTopDownRegionSpec(layout, name, new Map());
         const demand = locationDemandOf({ locations: locationSpecs, exits: exitSpecs });
-        const sized = sizeForLocations(substrateRegistry.get(substrate), uniformSize, regionParams,
-            { ...demand, biome: sourceRegion.biome ?? null });
+        const entry = substrateRegistry.get(substrate);
+        const asked = { ...demand, biome: sourceRegion.biome ?? null };
+        const sized = sizeForLocations(entry, uniformSize, regionParams, asked);
         out.push({
             region: name,
             substrate,
@@ -2028,6 +2033,8 @@ export function topDownRoomSizes(layout, { regionParams = { maxIterations: 0 } }
             start: { width: uniformSize.width, height: uniformSize.height },
             size: sized ? { width: sized.width, height: sized.height } : null,
             steps: sized ? sized.steps : null,
+            // ⛓ G9 — the declared ceiling this room exceeds (`{locations, why}`), else null.
+            ceiling: exceedsCeiling(entry, uniformSize, regionParams, asked),
         });
     }
     return out;
@@ -3102,9 +3109,15 @@ function generateRegionProcedural(spec) {
     // room can still need one more step. `sizeFromCapacity: false` builds from
     // the size asked for, which is how the agreement rows get the realiser's
     // own answer to compare the declaration with.
+    const demand = { ...locationDemandOf(spec), biome: spec.biome ?? null };
+    // ⛓⛓ G9 — A DECLARED CEILING IS REFUSED BY NAME, BEFORE THE CORE RUNS: no
+    // size holds a room past it, so building it would only reach the
+    // substrate's own refusal after the draw (and growth would walk every size
+    // first). The sentence is the declaration's (`locationCeilingRefusal`).
+    const over = exceedsCeiling(adapter, size, spec.params, demand);
+    if (over) throw new Error(locationCeilingRefusal(spec.substrate, over, spec.region_id, demand));
     if (spec.sizeFromCapacity !== false) {
-        const sized = sizeForLocations(adapter, size, spec.params,
-            { ...locationDemandOf(spec), biome: spec.biome ?? null });
+        const sized = sizeForLocations(adapter, size, spec.params, demand);
         if (sized) size = { width: sized.width, height: sized.height };
     }
     let core = null;
