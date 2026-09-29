@@ -827,83 +827,6 @@
       }
     }
   },
-  "world": {
-    "1": {
-      "game": "Runner Sphere WorldGen",
-      "world_class_name": "ProcgenMazeWorld",
-      "count_non_advancement_items": true,
-      "options": {
-        "accessibility": 0,
-        "exclude_locations": [],
-        "item_links": [],
-        "local_items": [],
-        "non_local_items": [],
-        "plando_items": [],
-        "priority_locations": [],
-        "progression_balancing": 50,
-        "randomize_items": false,
-        "start_hints": [],
-        "start_inventory": {},
-        "start_location_hints": [],
-        "use_canonical_options": true
-      },
-      "option_definitions": {
-        "accessibility": {
-          "type": "choice",
-          "name_lookup": {
-            "0": "full",
-            "2": "minimal"
-          },
-          "default": 0,
-          "display_name": "Accessibility"
-        },
-        "progression_balancing": {
-          "type": "range",
-          "range_start": 0,
-          "range_end": 99,
-          "default": 50,
-          "display_name": "Progression Balancing"
-        },
-        "randomize_items": {
-          "type": "toggle",
-          "default": true,
-          "display_name": "Randomize Items"
-        },
-        "use_canonical_options": {
-          "type": "toggle",
-          "default": true,
-          "display_name": "Use Canonical Options"
-        }
-      },
-      "world_description": "Runner Sphere WorldGen for Archipelago.\n\nAuto-generated world implementation.",
-      "web": {
-        "theme": "ocean",
-        "tutorials": [
-          {
-            "name": "Multiworld Setup Guide",
-            "description": "A guide to setting up the Runner Sphere WorldGen world for Archipelago.",
-            "language": "English",
-            "file_name": "setup_en.md",
-            "link": "setup/en",
-            "authors": [
-              "Auto-generated"
-            ]
-          }
-        ]
-      },
-      "world_directory": "runner_sphere_worldgen"
-    }
-  },
-  "exporter": {},
-  "game_info": {
-    "1": {
-      "completion_condition": {
-        "type": "item_check",
-        "item": "Victory"
-      }
-    }
-  },
-  "helpers": {},
   "procgen_metadata": {
     "1": {
       "driver": "sphere-growth",
@@ -1026,5 +949,82 @@
       }
     }
   },
+  "world": {
+    "1": {
+      "game": "Runner Sphere WorldGen",
+      "world_class_name": "ProcgenMazeWorld",
+      "count_non_advancement_items": true,
+      "options": {
+        "accessibility": 0,
+        "exclude_locations": [],
+        "item_links": [],
+        "local_items": [],
+        "non_local_items": [],
+        "plando_items": [],
+        "priority_locations": [],
+        "progression_balancing": 50,
+        "randomize_items": false,
+        "start_hints": [],
+        "start_inventory": {},
+        "start_location_hints": [],
+        "use_canonical_options": true
+      },
+      "option_definitions": {
+        "accessibility": {
+          "type": "choice",
+          "name_lookup": {
+            "0": "full",
+            "2": "minimal"
+          },
+          "default": 0,
+          "display_name": "Accessibility"
+        },
+        "progression_balancing": {
+          "type": "range",
+          "range_start": 0,
+          "range_end": 99,
+          "default": 50,
+          "display_name": "Progression Balancing"
+        },
+        "randomize_items": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Randomize Items"
+        },
+        "use_canonical_options": {
+          "type": "toggle",
+          "default": true,
+          "display_name": "Use Canonical Options"
+        }
+      },
+      "world_description": "Runner Sphere WorldGen for Archipelago.\n\nAuto-generated world implementation.",
+      "web": {
+        "theme": "ocean",
+        "tutorials": [
+          {
+            "name": "Multiworld Setup Guide",
+            "description": "A guide to setting up the Runner Sphere WorldGen world for Archipelago.",
+            "language": "English",
+            "file_name": "setup_en.md",
+            "link": "setup/en",
+            "authors": [
+              "Auto-generated"
+            ]
+          }
+        ]
+      },
+      "world_directory": "runner_sphere_worldgen"
+    }
+  },
+  "exporter": {},
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
   "is_canonical": true
 }

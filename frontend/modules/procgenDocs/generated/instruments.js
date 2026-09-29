@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 59,
-            "count": 96,
+            "count": 97,
             "id": "check"
         },
         {
@@ -209,12 +209,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 273,
+        "blockStyle": 274,
         "browser": 85,
         "cited": 116,
-        "files": 284,
+        "files": 285,
         "lineStyle": 11,
-        "withDocblock": 284,
+        "withDocblock": 285,
         "withFlags": 206
     },
     "dir": "scripts/procgen",
@@ -4455,6 +4455,24 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "In-app end-to-end verify for \"World persistence across reloads\".",
             "path": "scripts/procgen/check-world-persistence-reload.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "check-worldgen-package-sidecars.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "check-worldgen-package-sidecars — **DOES EVERY WORLDGEN PACKAGE CARRY THE SIDECARS ITS COMMITTED PRESETS CARRY?**",
+            "path": "scripts/procgen/check-worldgen-package-sidecars.mjs"
         },
         {
             "argvHelpers": [

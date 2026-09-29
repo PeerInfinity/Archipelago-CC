@@ -255,3 +255,16 @@ once AP_3 was re-recorded from the recipe; it runs in CI's headless gates step.
 ```
 node scripts/procgen/check-procgen-maze-recipe.mjs [--seeds 1,2] [--keep]
 ```
+
+## check-worldgen-package-sidecars.mjs
+
+Does every worldgen package (`worlds/<pkg>/_worldgen_sidecars.json`) carry exactly the sidecars its committed presets carry?
+`Generate.py` copies a package's sidecars into `preset_sidecars[<slot>]`, so a package that drifts from its presets makes a
+re-record by command change them (measured 2026-09-29: +56 exit `x`/`y` over four presets, after the 2026-09-12 strip reached
+the presets but not the packages). Pairs are derived: the package's game from its `archipelago.json`, the documents from
+`frontend/presets/preset_files.json` (every slot of that game); key order is ignored. A package no committed document carries
+sidecars for is named, not passed. No `Generate.py` run — milliseconds.
+
+```bash
+node scripts/procgen/check-worldgen-package-sidecars.mjs
+```
