@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 22,
         "headings": 866,
         "indexHeadings": 2,
-        "lines": 19282,
+        "lines": 19283,
         "pages": 4,
-        "words": 220750
+        "words": 220784
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -283,12 +283,12 @@ export const DOCS_INDEX = frz({
             "file": "pipeline-presets.md",
             "h1": "Pipeline Presets",
             "headings": 11,
-            "lines": 111,
+            "lines": 112,
             "links": [
                 "flash.md"
             ],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 1409
+            "words": 1443
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",

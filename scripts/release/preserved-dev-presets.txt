@@ -43,6 +43,7 @@ seedling_atlas_sphere
 seedling_generated_host
 seedling_generated_leaf
 seedling_generated_room
+seedling_generated_swim
 seedling_playthrough
 seedling_sphere_room
 seedling_spiral_room

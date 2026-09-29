@@ -21,6 +21,10 @@
  *            START is a GENERATED Seedling room HOSTING a maze child behind
  *            `Has(key_blue)` — the host enforces the door's gate (seedling
  *            generated G4), from `SEEDLING_GENERATED_HOST_STATE`;
+ *   generated-swim → `seedling_generated_swim`: the sphere-growth world whose
+ *            maze START holds `Progressive Swim` and whose GENERATED `post-swim`
+ *            room behind `Has(Progressive Swim)` holds victory past its
+ *            `watergate` (seedling swim T1), from `SEEDLING_GENERATED_SWIM_STATE`;
  *   atlas-host → `seedling_atlas_host`: the sphere-growth world (maze START)
  *            whose REAL two-door room `overworld_start__r8c0` HOSTS a maze child
  *            behind `Has(key_red)`, its back door gated `Has(key_blue)` — the host
@@ -32,7 +36,7 @@
  *            chest is an atlas-named location the ATLAS arm binds where it stands
  *            (seedling generated G7), from `SEEDLING_ATLAS_LOCATION_STATE`.
  *
- * ONE recipe, seven states: the same assembly, the same bytes rule, the same
+ * ONE recipe, eight states: the same assembly, the same bytes rule, the same
  * `--check`.
  *
  * The preset is a FUNCTION of that committed state, never a hand edit: this
@@ -51,11 +55,11 @@
  * `preset_files.live.json`. The box gates that PLAY them are
  * `check-seedling-spiral-room-play.mjs`, `check-seedling-sphere-room-play.mjs`,
  * `check-seedling-generated-room-play.mjs`, `check-seedling-generated-leaf-play.mjs`,
- * `check-seedling-generated-host-play.mjs`, `check-seedling-atlas-host-play.mjs` and
- * `check-seedling-atlas-location-play.mjs`.
+ * `check-seedling-generated-host-play.mjs`, `check-seedling-generated-swim-play.mjs`,
+ * `check-seedling-atlas-host-play.mjs` and `check-seedling-atlas-location-play.mjs`.
  *
  * Usage:
- *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host|atlas-host|atlas-location] [--check]
+ *   node scripts/procgen/make-seedling-spiral-room-preset.mjs [--state=spiral|sphere|generated|generated-leaf|generated-host|generated-swim|atlas-host|atlas-location] [--check]
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -73,6 +77,7 @@ const PRESETS = Object.freeze({
     generated: Object.freeze({ stateExport: 'SEEDLING_GENERATED_ROOM_STATE', gameId: 'seedling_generated_room' }),
     'generated-leaf': Object.freeze({ stateExport: 'SEEDLING_GENERATED_LEAF_STATE', gameId: 'seedling_generated_leaf' }),
     'generated-host': Object.freeze({ stateExport: 'SEEDLING_GENERATED_HOST_STATE', gameId: 'seedling_generated_host' }),
+    'generated-swim': Object.freeze({ stateExport: 'SEEDLING_GENERATED_SWIM_STATE', gameId: 'seedling_generated_swim' }),
     'atlas-host': Object.freeze({ stateExport: 'SEEDLING_ATLAS_HOST_STATE', gameId: 'seedling_atlas_host' }),
     'atlas-location': Object.freeze({ stateExport: 'SEEDLING_ATLAS_LOCATION_STATE',
         gameId: 'seedling_atlas_location' }),

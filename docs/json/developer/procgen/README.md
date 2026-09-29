@@ -8,7 +8,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**22 documents · 4 pages · 220,750 words.**
+**22 documents · 4 pages · 220,784 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — the reading order. A document missing from that list fails the generator, so every document is indexed.
 
@@ -31,7 +31,7 @@ Descriptions: the document's own first paragraph, collapsed onto one line; past 
 | [Sphere-Driven Growth](./sphere-growth.md) | Sphere growth is the primary procgen driver: instead of growing a world and then discovering its progression structure, it **plans the progression first** — which items belong to which sphere — and then grows a world guaranteed to realise that plan. The plan doubles as a verification oracle, so every generated world ships with a proof that its progression matches the intent. | 1882 |
 | [Paths and Obstacles](./paths-and-obstacles.md) | Paths-and-obstacles is the intermediate representation procgen uses for access rules. Substrates reason spatially — "to reach this goal you cross these obstacles" — while Archipelago reasons in Boolean item logic. This representation is the bridge: rules are *authored* as paths of obstacles during generation, verified against the geometry, and *compiled* to Rule Builder JSON only at the end. | 888 |
 | [The Stepped Pipeline](./stepped-pipeline.md) | Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte. | 2323 |
-| [Pipeline Presets](./pipeline-presets.md) | The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration (mode, seed, substrates, knobs and item pool) so that Generate builds a world demonstrating one feature. CI generates every preset that names no heavy substrate headless, twice, and requires the two runs to be byte-identical. | 1409 |
+| [Pipeline Presets](./pipeline-presets.md) | The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration (mode, seed, substrates, knobs and item pool) so that Generate builds a world demonstrating one feature. CI generates every preset that names no heavy substrate headless, twice, and requires the two runs to be byte-identical. | 1443 |
 | [Text Adventure Substrate](./text-adventure.md) | The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules. | 809 |
 | [The Seedling Real-Game Bot](./seedling-bot.md) | How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md). | 9177 |
 | [Seedling Bot and Procgen Arcs: the Build Log](./seedling-bot-log.md) | This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts. | 154360 |

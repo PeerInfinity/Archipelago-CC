@@ -207,6 +207,35 @@ export const SEEDLING_GENERATED_HOST_STATE = Object.freeze({
 });
 
 /**
+ * ⛓⛓ SEEDLING SWIM T1 — **A GENERATED ROOM WHOSE GATE IS WATER, SPELLED ONCE.**
+ * Seed 1, 2 spheres, no filler, one item per region, starting in a MAZE: the tree
+ * puts the AP item `Progressive Swim` (the conch — the bridge grants `canSwim` on
+ * the first one) in the maze START and a GENERATED Seedling room behind the
+ * maze's exit gated `Has(Progressive Swim)`, holding `victory` on its goal cell.
+ * The room is `post-swim` with a `watergate` and `require: canSwim`, so the
+ * generator's differential grades the conch REQUIRED for the goal: the water in
+ * the room is the tree's gate made physical — the arrival lands on the dry side
+ * of it (`seedlingGenRoom.pickGenRoomDoors`) and only a swimmer reaches victory.
+ * Its readers: `flashPanel/seedlingGeneratedSwimWorld.test.js`, the committed
+ * preset `seedling_generated_swim` and its box gate
+ * `check-seedling-generated-swim-play.mjs`.
+ */
+export const SEEDLING_GENERATED_SWIM_STATE = Object.freeze({
+    mode: 'sphereGrowth',
+    params: Object.freeze({
+        seed: 1, startSubstrate: 'maze', sphereCount: 2, fillerCount: 0, maxItemsPerRegion: 1,
+        seedlingGenBiome: 'post-swim', seedlingGenElements: 'watergate', seedlingGenRequire: 'canSwim',
+    }),
+    scenario: Object.freeze({
+        items: Object.freeze({ 'Progressive Swim': 1, victory: 1 }),
+        obstacles: Object.freeze({}),
+    }),
+    substrateQuotas: Object.freeze({ maze: 1, flash_seedling_gen: 1 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
  * ⛓⛓ SEEDLING GENERATED LEVELS G6 — **A REAL SEEDLING ROOM THAT HOSTS A CHILD
  * BEHIND AN AP GATE, SPELLED ONCE: T3's SPHERE-ROOM WORLD WITHOUT ITS KNOB.**
  * The same seed, spheres, filler and quotas as `SEEDLING_SPHERE_ROOM_STATE`; with
@@ -616,6 +645,19 @@ export const SHIPPED_PRESETS = Object.freeze([
             + 'exitGates carries the door\'s rule). The same world is committed as the '
             + 'seedling_generated_host preset, which plays in the Seedling wasm.',
         state: SEEDLING_GENERATED_HOST_STATE,
+    },
+    {
+        id: 'shipped:seedling-generated-swim-demo',
+        label: 'Generated Seedling room gated by water',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'A room the Seedling level GENERATOR builds to the pipeline\'s spec, in the post-swim biome '
+            + 'with a watergate: the maze START holds Progressive Swim (the conch), and its exit into the '
+            + 'generated room is gated on it. Inside, the player lands on the dry side of the water and '
+            + 'victory stands on the goal cell past it — the generator certified that goal REQUIRES '
+            + 'the swim, so the water is the tree\'s gate made physical. Look at the composite map and at '
+            + 'the flash_seedling_gen sidecar (its generation carries biome, elements and require). The '
+            + 'same world is committed as the seedling_generated_swim preset, which plays in the Seedling wasm.',
+        state: SEEDLING_GENERATED_SWIM_STATE,
     },
     {
         id: 'shipped:seedling-atlas-host-demo',
