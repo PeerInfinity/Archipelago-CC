@@ -1,0 +1,180 @@
+name: In-app tests — repeat run (manual)
+
+# ⛓ ONE IN-APP RUN, N TIMES OVER, AS A RATE — ON DEMAND ONLY (slice CI1,
+# 2026-09-29; plan apworld-substrate-change-plan.md §48–§49).
+#
+# ⚖ USER RULING (2026-09-29): "a manual-dispatch input naming one row and a
+# count, running it solo N times and reporting pass/fail per run with duration
+# and whatever the row logs about its target … case by case it can also take a
+# whole batch times N for a suspected flake. It must not run per push." ⇒
+# `workflow_dispatch:` and NOTHING ELSE. The per-push browser shards are at
+# their bound; this is where a flake's RATE comes from instead of the box.
+#
+# ⚠ THE JOB'S GREEN MEANS "IT RAN N TIMES", NOT "N PASSED". A rate is
+# information, not a verdict: the loop never stops on a red run, and the job
+# fails only when it could not run (bad inputs, setup). The verdict is the
+# run page's summary, whose FIRST line is the rate ("Rate: k/N passed").
+#
+# A separate workflow rather than test-substrates-bot-walks.yml grown: that one
+# runs one batch once and its red IS the verdict; this one loops, keeps each
+# run's files by index and summarises — a different shape, and a dispatch of
+# either should not have to know about the other's inputs.
+#
+# Dispatch (from any branch — the trial of a change runs from its own):
+#   gh workflow run test-substrates-repeat.yml -R PeerInfinity/Archipelago-CC \
+#     -r <branch> -f test=<row id> -f repeat=8
+#   gh workflow run test-substrates-repeat.yml -R PeerInfinity/Archipelago-CC \
+#     -r <branch> -f batch=apworld -f repeat=3
+# Two arms of a comparison (control vs fix) must both come from THIS job, so
+# they share a runner population.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: The in-app mode (npm test --mode=).
+        type: choice
+        options: [test-substrates, test-regression]
+        default: test-substrates
+      test:
+        description: >-
+          One row id (or a comma-separated few) to run SOLO each time
+          (npm test --test=). Give this OR batch, not both.
+        type: string
+        default: ''
+      batch:
+        description: >-
+          A batch to run each time instead (testBatches.js: fast, apworld,
+          bot-walks). Give this OR test, not both.
+        type: string
+        default: ''
+      repeat:
+        description: >-
+          How many sequential runs, 1–20. 20 × the slowest batch (bot-walks,
+          ~375 s + ~40 s per-run overhead) fits the 180-minute cap.
+        type: number
+        default: 3
+      bundled:
+        description: Drive the bundled boot (npm test --bundled; built once, reused).
+        type: boolean
+        default: false
+
+jobs:
+  repeat:
+    name: Repeat ×${{ inputs.repeat }} — ${{ inputs.test || inputs.batch }} (${{ inputs.mode }}${{ inputs.bundled && ', bundled' || '' }})
+    runs-on: ubuntu-latest
+    # 20 runs × (bot-walks 375 s in-app + ~40 s launch) ≈ 140 min, plus setup.
+    # A solo row is ~30–60 s a run, so the cap only binds on a batch.
+    timeout-minutes: 180
+
+    steps:
+      # Refuse before any setup: an empty selector would run the WHOLE roster
+      # N times (npm test with neither --test nor --batch), past any cap.
+      - name: Check the inputs
+        env:
+          TEST_IDS: ${{ inputs.test }}
+          BATCH: ${{ inputs.batch }}
+          REPEAT: ${{ inputs.repeat }}
+        run: |
+          if [ -n "$TEST_IDS" ] && [ -n "$BATCH" ]; then
+            echo "::error::give test OR batch, not both"; exit 2
+          fi
+          if [ -z "$TEST_IDS" ] && [ -z "$BATCH" ]; then
+            echo "::error::give test (a row id) or batch — an empty selector runs the whole roster"; exit 2
+          fi
+          case "$REPEAT" in
+            ''|*[!0-9]*) echo "::error::repeat must be a whole number, got '$REPEAT'"; exit 2 ;;
+          esac
+          if [ "$REPEAT" -lt 1 ] || [ "$REPEAT" -gt 20 ]; then
+            echo "::error::repeat must be 1–20, got $REPEAT"; exit 2
+          fi
+
+      # ── the same setup as test-substrates-bot-walks.yml ─────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '~3.12.7'
+          check-latest: true
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v6.1.0
+        id: cache-node
+        with:
+          path: node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Node.js dependencies
+        if: steps.cache-node.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6.1.0
+        id: cache-playwright
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.cache-playwright.outputs.cache-hit != 'true'
+        run: |
+          npx playwright install chromium
+
+      # Sequential, never in parallel (a rate measured on a loaded runner is a
+      # different rate), never with Playwright retries (playwright.config.js
+      # has none). Each run's results file is MOVED to repeat/run-<i>.json as
+      # soon as it exits, so the spec's KEEP_RUNS pruning (30 files) can never
+      # reach it and runs cannot be confused by timestamp. The full log goes to
+      # repeat/run-<i>.log (uploaded); the step output keeps the non-browser
+      # lines only, so the viewer does not truncate N × MBs (trap 1439).
+      - name: Run it ${{ inputs.repeat }} times
+        env:
+          MODE: ${{ inputs.mode }}
+          TEST_IDS: ${{ inputs.test }}
+          BATCH: ${{ inputs.batch }}
+          REPEAT: ${{ inputs.repeat }}
+          BUNDLED: ${{ inputs.bundled }}
+        run: |
+          mkdir -p repeat test-results/in-app-tests
+          if [ -n "$TEST_IDS" ]; then SEL="--test=$TEST_IDS"; else SEL="--batch=$BATCH"; fi
+          for i in $(seq 1 "$REPEAT"); do
+            FLAVOUR=()
+            if [ "$BUNDLED" = "true" ]; then
+              # Build once; later runs reuse the same tree's bundle.
+              if [ "$i" -eq 1 ]; then FLAVOUR=(--bundled); else FLAVOUR=(--bundled --no-build); fi
+            fi
+            before=$(ls test-results/in-app-tests/ 2>/dev/null | sort)
+            echo "::group::run $i/$REPEAT — npm test -- --mode=$MODE $SEL ${FLAVOUR[*]}"
+            start=$(date +%s)
+            set +e
+            npm test -- --mode="$MODE" "$SEL" "${FLAVOUR[@]}" > "repeat/run-$i.log" 2>&1
+            code=$?
+            set -e
+            secs=$(( $(date +%s) - start ))
+            grep -av '^BROWSER LOG' "repeat/run-$i.log" | tail -n 200 || true
+            echo "::endgroup::"
+            new=$(comm -13 <(echo "$before") <(ls test-results/in-app-tests/ 2>/dev/null | sort) | grep -a '^test-results-.*\.json$' | tail -n 1 || true)
+            if [ -n "$new" ]; then mv "test-results/in-app-tests/$new" "repeat/run-$i.json"; fi
+            printf '{"exit": %d, "seconds": %d}\n' "$code" "$secs" > "repeat/run-$i.meta.json"
+            echo "run $i/$REPEAT: exit $code in ${secs}s${new:+ (results $new)}"
+          done
+
+      - name: Summarise the rate
+        if: ${{ always() }}
+        env:
+          TITLE: "${{ inputs.mode }} · ${{ inputs.test && format('test {0}', inputs.test) || format('batch {0}', inputs.batch) }} · ×${{ inputs.repeat }}${{ inputs.bundled && ' · bundled' || '' }}"
+        run: |
+          mkdir -p repeat
+          node scripts/test/summarize-repeat-runs.js repeat --title="$TITLE" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the runs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: repeat-runs
+          path: repeat/
+          retention-days: 14
