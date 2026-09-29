@@ -193,6 +193,13 @@ The entry's `zoneConfigFromSlot` and `zoneOfPayload` let the APWorld hub's `repl
 - **Blocks.** `rulesJsonBlocks()` answers `flash_panel` only (`seedlingFlashPanelBlock()`); a generated world has no map, so no `region_atlas`. A world with both Seedling entries would ask for `flash_panel` twice, and `buildRulesJson` refuses that.
 - **Knobs.** `renderProcgenParams` draws the generator's knobs in the pipeline panel and in the APWorld editor's region form (read back with `procgenParamsFromPayload`). Every driver passes them through `buildRegionParams`.
 
+### Declarations (G9)
+
+- **`generationCost: 'light'`**, declared explicitly. A room costs 0.1–1.5 s at 10×10, and the committed generated presets build in 0.3–0.7 s, so its presets stay in CI's slow battery.
+- **`locationCapacity`: tiles, with a ceiling** (`seedlingDemo/seedlingGenCapacity.js`). The floor bound is the room's interior less the start and the doors, which growth lifts. The ceiling is **30 locations**, the game's 30 persistence tags, one per location's pickup. No size adds tags. Location 0 takes the goal's own tag, so the ceiling is 30, not 29. The Initialise preview refuses a slot past it by name before building, for example *"flash_seedling_gen: at most 30 locations per room (the game's 30 persistence tags) — 'Act 2' lists 52"*, and the engine refuses such a room before its core runs.
+- **The ceiling is the certain bound, not the worst case.** A room's own elements spend tags too: a guard 3, a kill, rock or shield gate 1. The biome-default element list places a guard in about 1 pre-sword draw in 60. A draw that leaves too few tags is re-rolled like one short of cells, so every draw seed seats 30 at the defaults. The slow census, drawn seeds 1–60 in pre-sword and post-sword, seats 30 at every seed and refuses 31 at every seed.
+- **`procgenParamsFromPayload({})` answers `{}`**: a payload without `generation` is not a generated room, so no default is invented. A built payload reads every knob back. The APWorld S2 read-back row names its knob from the empty-payload answer, so it skips this entry. Making the entry eligible was measured and not done: with the biome moved to `post-sword` by the row's control, an Initialise of the row's Adventure document is refused by the generator (`Overworld` at 8×6).
+
 ### The payload
 
 The sidecar payload is `{gameId: 'seedling', generated: true, seed, size, record, start, goal_cell, generation, locations, level, tile_size: 16, exits, exitGates}`.
@@ -230,14 +237,14 @@ A room that cannot meet the rules is drawn again rather than refused. There are 
 |---|---|
 | `doors` — the core cannot seat its own doors | In the core. |
 | `engine-added door` — no door fits an exit added after the core | `serializeGenRoom`: first the room as built (`bindAllDoors`), then a re-roll over the final exit list. The serializer is pure. |
-| `locations` — the safe reach cannot seat the requested locations | `addLocations`, called by `placeGenItems` and `placeGenRules`; the room is regenerated in place so the engine's world and exit objects keep their identity. |
+| `locations` — the safe reach cannot seat the requested locations, or (G9) the draw's own elements leave too few of the 30 persistence tags | `addLocations`, called by `placeGenItems` and `placeGenRules`; the room is regenerated in place so the engine's world and exit objects keep their identity. |
 | `require` — the draw missed the room's `require` directive | In the core; the per-size budget only, no growth. |
 
 `seedlingGenRoom.rerollGenRoom` continues the room's own sequence, `rerollSeed(drawnSeed, k)`, up to `GEN_ROOM_DOOR_REROLLS` per size. No engine rng is used, so no other region moves. A re-roll moves cells, tags, seed and record, never an exit's or location's name, target, item or rule, so the rules.json outside the sidecars is unchanged.
 
 After the budget at a size, the room grows by `GEN_ROOM_GROW_STEP` tiles on each side, capped at `GEN_ROOM_MAX_SIDE` (`procgenLevel.ROOM_TILES_MAX`), and the budget runs again. Attempt `a` uses `sizeOfAttempt(origin, a)` and seed `rerollSeed(drawn, a)`, so the first attempts are unchanged by growth. `generation.grownFrom` records the requested size. Nothing outside the room reads its size (sides geometry), so a grown room moves nothing else.
 
-A room no size seats is refused with a sentence naming the cause, every size tried, and what to lower (`maxItemsPerRegion`, the quota, or the exits). A size that cannot hold the demand (`roomCanHold`) is skipped without a draw. A placer never returns short, so the engine's retry-then-grow loop (which would consume fresh rng) is never entered. **Note:** generating a large room takes seconds or more.
+A room no size seats is refused with a sentence naming the cause, every size tried, and what to lower (`maxItemsPerRegion`, the quota, or the exits). A room asked for more than 30 locations is refused at once (`tagBudget`), never re-rolled or grown, because no size adds a persistence tag. A size that cannot hold the demand (`roomCanHold`) is skipped without a draw. A placer never returns short, so the engine's retry-then-grow loop (which would consume fresh rng) is never entered. **Note:** generating a large room takes seconds or more.
 
 ### Delivery and play
 
