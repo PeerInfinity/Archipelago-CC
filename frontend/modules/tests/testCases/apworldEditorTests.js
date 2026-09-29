@@ -12021,8 +12021,17 @@ registerTest({
  * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE R7 — INITIALISE PROCGEN DATA (plan §19,
  * ⚖ user 2026-09-26). A BARE slot's door, the form's preview, Generate in the
  * worker, ONE op, the Map and the Regions tab after, Undo, Cancel, the budget.
- * ⚠ Small documents only (`adventure`, `apcalc`); the Cancel/timeout rows use
- * `bomb_rush_cyberfunk` (30 regions) because its build is slow enough to stop.
+ * ⚠ Small documents only (`adventure`, `apcalc`); the Cancel/timeout rows need a
+ * build slow enough to stop, and since APWORLD SUBSTRATE CHANGE C1 (plan §42)
+ * made the maze placer polynomial NO committed slot is one at its own region
+ * size: `bomb_rush_cyberfunk` (the rows' document until C1) went 914 ms →
+ * 167 ms in node, every many-region slot builds in 0.7–1.9 s, and the slowest
+ * (`soe`, ≈5 s) is ONE region, so its ticker never reads *built N / M* mid-run.
+ * So the rows make the premise: `pokemon_rb` (445 regions — the ticker moves
+ * from the first) with the form's region size raised to `INIT_SLOW_REGION_SIDE`
+ * — measured in node at C1 (load ≈4): 8×6 0.8 s, 32×32 3.3 s, 40×40 4.4 s,
+ * 48×48 6.0 s, 56×56 7.7 s, 64×64 10.1 s (the side 64 is ≈5× the timeout row's
+ * 2 s budget; the cancel row reads *built 5 / 444* about 2 s in).
  * ══════════════════════════════════════════════════════════════════════ */
 
 // eslint-disable-next-line import/first
@@ -12038,7 +12047,18 @@ import { INITIALISE_RETURN_EXITS_ADDED, INITIALISE_RETURN_EXITS_OFF } from '../.
 
 const INIT_ADVENTURE_PATH = './presets/adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 const INIT_APCALC_PATH = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
-const INIT_SLOW_PATH = './presets/bomb_rush_cyberfunk/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+const INIT_SLOW_PATH = './presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+/** ⛓ The region side the slow rows set in the form's bag (see the section note). */
+const INIT_SLOW_REGION_SIDE = 64;
+
+/** ⛓ Raise the open form's region size to `INIT_SLOW_REGION_SIDE` (the slow rows' premise). */
+function slowInitialiseSize(testController, panel) {
+    panel._setInitialiseState({ bag: { ...panel._initialise.state.bag,
+        [INITIALISE_SIZE_KEYS.width]: INIT_SLOW_REGION_SIDE, [INITIALISE_SIZE_KEYS.height]: INIT_SLOW_REGION_SIDE } });
+    const bag = panel._initialise.state.bag;
+    testController.reportCondition(`⛓ premise: the form builds ${INIT_SLOW_REGION_SIDE}×${INIT_SLOW_REGION_SIDE} regions`,
+        bag[INITIALISE_SIZE_KEYS.width] === INIT_SLOW_REGION_SIDE && bag[INITIALISE_SIZE_KEYS.height] === INIT_SLOW_REGION_SIDE);
+}
 
 const initSection = () => document.querySelector(`${PANEL_SELECTOR} .apworld-initialise`);
 const initDoor = () => document.querySelector(`${PANEL_SELECTOR} .apworld-initialise-door`);
@@ -12250,9 +12270,10 @@ export async function apworldInitialiseCancelLandsNothing(testController) {
         door?.click();
         const sec = await testController.pollForValue(initSection, 'the form under the summary', 8000, 50);
         if (!sec) return testController.getOverallResult();
+        slowInitialiseSize(testController, panel);
         const before = JSON.stringify(panel.rulesDoc);
         const opsBefore = panel.session.ops().length;
-        sec.querySelector('.apworld-initialise-generate').click();
+        initSection().querySelector('.apworld-initialise-generate').click();
         const ticking = await testController.pollForCondition(
             () => /^built [1-9]\d* \/ \d+ · /.test(initSection()?.querySelector('.apworld-initialise-elapsed')?.textContent ?? ''),
             'the ticker reads built N / M', 60000, 50);
@@ -12286,6 +12307,7 @@ export async function apworldInitialiseRunsOutOfTimeRecordsNothing(testControlle
         await settingsManager.updateSetting(INITIALISE_TIMEOUT_SETTING, 2, { persist: false });
         const panel = await openInitialiseForm(testController, INIT_SLOW_PATH);
         if (!panel) return testController.getOverallResult();
+        slowInitialiseSize(testController, panel);
         const opsBefore = panel.session.ops().length;
         const state = panel._initialise.state;
         const run = await pressInitialise(testController, panel, 60000);
