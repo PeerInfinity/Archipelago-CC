@@ -10060,6 +10060,68 @@ on `doors` (83 times, growing from 10×10 to 28×28), and `require=canSwim`
 refuses after its 8 re-rolls. The fix is a boot-aware hazard set. That is a seam
 this slice did not own, so it is routed rather than widened.
 
+### Seedling substrate S2-swim — the playthrough atlas as a supply (2026-09-29)
+
+**What the brief got wrong, measured.** The plan assumed that installing the
+playthrough atlas (`seedling-ae833c1e`) would make its 216 `Progressive Swim`
+internal exits pipeline doors, host-enforced by the G6 gate. It does not.
+`flash_seedling` places ONE sub-region per AP region; a placed room's doors are
+the level's teleporters (`boundaryRule` over `region.exits`, which carry no
+rules in this atlas), and a crossing between two sub-regions of one level stays
+geometry inside the room. The content source's zones carry **0** swim rules
+(D2's census). In L47 only one of nine sub-regions is placeable
+(`level_47__r2c9`, four doors, holding the `r5-swim-cross` boot tile (13,8)); the
+eight swim-side sub-regions are all doorless, so no world can put a region on the
+far side of that water. Four more premises moved: the witness tapes are 9 across
+5 levels, not "3 R5 tapes ⇒ L47/L48" (L48 is uncertified at the boot-level
+bound); L32 needs the Sword AND the Green Key from the start
+(`level_0__r8c0 → r11c19` is `Or(Sword, Ghost Spear)`), not the Green Key alone;
+the survey had no `--out=` flag; and 13 seedling `*_rules.json` sit on disk, not 21.
+
+**W0.** Sphere growth never calls `applyPipelineConfig` (it uses whatever the
+module last installed); the spiral calls it with `substrateConfig[id]`, which
+`presetRun.buildSpiralRun` filled only from region libraries. `atlas_files.json`
+is fetched only by the hub's read-back and the atlas arm; the pipeline imports the
+starter statically. Seven `make-seedling-spiral-room-preset --state=… --check`: OK;
+`check-seedling-generated-set --seeds=1-6`: OK; `check-sidecar-fields`: ALL PASS
+(1417 entries). Bounded vitest before: 35 files, 658 tests, green.
+
+**D1 — the knob.** `seedlingAtlasId` (bag key; absent = the starter). The
+playthrough is a static JSON import beside the starter (275 KB; the jta dataset
+precedent), because every install seam is synchronous. Sphere growth installs it in
+`prepareSphereGrowth`; the spiral through a new registry hook
+`pipelineConfigFromParams` → `substrateConfig.flash_seedling.atlasId` →
+`applyPipelineConfig`; top-down and the hub's initialise through `buildZoneSpecs`.
+The panel draws an *Atlas* picker. Mutant (a), predicted "the picker changes
+nothing": with only `prepareSphereGrowth`'s install removed the sphere row stayed
+GREEN (the realise-time `buildZoneSpecs` route installs too), so a row isolating
+the plan-time install was added; with both it and the spiral merge removed, 2
+rows red. Restored, md5-identical.
+
+**D2 — the census.** `census-seedling-atlas-doors.mjs`: 113 regions, 52 with a
+subgraph, 189 sub-regions, 285 internal exits, 216 swim rows over 23 levels.
+WITNESSED (boots there, water armed, a swim tag granted): L0, L37, L47, L87,
+L115, covering 82 rows. BOT-UNCERTIFIED: the other 18 levels, including L54 (36),
+L89 (23), L94 (20) and L58 (18).
+
+**D3/D4 — STOPPED, measured.** No committed swim world and no play gate: the
+crossing the demo was to show is not a pipeline door, and its far side cannot be
+placed. `Progressive Swim` is not in the merged item library, but a scenario that
+names it builds anyway (the item name was never the blocker).
+
+**D5 — the survey to 2.2.** `survey-seedling-route.mjs --through=2.2 --out=…`
+(the default mode is byte-identical): 5/10 new steps SOLVE. L12 → L21 is a pit
+(`in_pit_L12_5_5`) the survey's `to`-edge vocabulary cannot express (NO-EDGE /
+NO-ARRIVAL). L29 refuses at `button@112,128` (*"NO responder in level 29"*), not
+at its turrets. L30 refuses on the Green-Key lock, because the staged boot holds
+no Green Key. L32 refuses because the Bob Boss tile *"resolves to NOTHING"*: an
+encounter is no placement.
+
+**The close.** The report is `CC/docs/cloud-reports/seedling-swim-s2.md`. Next:
+a swim crossing becomes a pipeline door only when a placed room can span
+sub-regions, or the content source emits internal exits as gated sides. That is
+a substrate design question.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

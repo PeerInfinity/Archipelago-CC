@@ -622,7 +622,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "census",
             "citedBy": [
-                "docs/json/developer/procgen/flash.md"
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/seedling-bot-log.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
