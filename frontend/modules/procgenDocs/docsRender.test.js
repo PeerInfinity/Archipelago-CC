@@ -251,8 +251,9 @@ describe('⛓ the links the render emits', () => {
         //   present-state rewrite of twelve docs (see docLinks.test.js); 237 → 291:
         //   pass 3's split of architecture.md and maze.md into five documents;
         //   291 → 293: the build log split out of seedling-bot.md; 293 → 300:
-        //   seedling-bot.md's present-state rewrite.
-        expect(checked).toBe(300);
+        //   seedling-bot.md's present-state rewrite; 300 → 301: substrate chart S2's
+        //   `substrate-registry.md` → `../../features/procgen-substrates.md`.
+        expect(checked).toBe(301);
     });
 
     it('tags each link with the kind that produced it', () => {

@@ -13,7 +13,8 @@
  * the Matrix row presses `Matrix` first — each is green whatever mode the row
  * before it left the panel in. The Columns row ends (pass or fail) by pressing
  * `All` and `Registry order` and closing the section, so the row after it
- * inherits the default columns.
+ * inherits the default columns. The Plain row presses `Plain` and ends (pass or
+ * fail) by pressing `Matrix`, the mode the panel opens in.
  */
 
 import { registerTest } from '../testRegistry.js';
@@ -22,6 +23,9 @@ import { REGISTRY } from '../../procgenDocs/generated/registry.js';
 import {
     describeRegistry, GLYPH, matrixOf,
 } from '../../substrateRegistryPanel/substrateRegistryPanelLibrary.js';
+import {
+    applyLiveAnswer, CAPABILITY_STATEMENTS, capabilityRows, CELL_MARKS, CELL_KINDS,
+} from '../../procgenCore/substrateCapabilities.js';
 import {
     COLUMN_ACTIONS, columnsSummary, MODES,
 } from '../../substrateRegistryPanel/substrateRegistryPanelUI.js';
@@ -201,6 +205,111 @@ registerTest({
                + 'ids swap), then presses All and Registry order and asserts the header is '
                + '`substrateRegistry.getAll()`\'s ids in order again. Ids read live.',
     testFunction: substrateRegistryPanelColumnsCanBeHiddenAndReordered,
+    category: 'substrateRegistry',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+async function substrateRegistryPanelPlainMode(testController) {
+    const root = await mountPanel(testController);
+    if (!root) return testController.getOverallResult();
+    /* ⛓ Errors the PAGE raised during the row. The runner's own failure lines
+     * go through console.error too (`[TestRunner/<id>]`) — those are this row's
+     * assertions, not the panel's errors, and are not collected. The list is
+     * read once, after console.error is restored, so reporting it cannot grow
+     * it. */
+    const errors = [];
+    const origError = console.error;
+    const onError = (ev) => errors.push(`error: ${ev.message ?? ev}`);
+    const onRejection = (ev) => errors.push(`unhandledrejection: ${ev.reason?.message ?? ev.reason}`);
+    console.error = (...args) => {
+        const text = args.map(String).join(' ');
+        if (!text.includes('[TestRunner/')) errors.push(`console.error: ${text}`);
+        return origError.apply(console, args);
+    };
+    window.addEventListener('error', onError);
+    window.addEventListener('unhandledrejection', onRejection);
+    try {
+        if (!pressMode(testController, root, MODES.plain)) return testController.getOverallResult();
+        root.querySelector('.srp-refresh').click();
+
+        // ⛓ The oracle is the vocabulary module over the LIVE registry — never a typed count.
+        const entries = substrateRegistry.getAll();
+        const live = entries.map((e) => e.id);
+        const rows = capabilityRows(entries);
+        const vm = describeRegistry(entries, REGISTRY);
+        testController.log(`live registry: ${live.length} entries; ${rows.length} capability statements`);
+        const drawn = await testController.pollForValue(() => {
+            const trs = root.querySelectorAll('tr.srp-plain-row');
+            return trs.length === rows.length ? [...trs] : null;
+        }, `one Plain row per capabilityRows(getAll()) row (${rows.length})`, 5000, 50);
+        testController.reportCondition(`one .srp-plain-row per capability statement (${rows.length})`, !!drawn);
+        if (!drawn) return testController.getOverallResult();
+        testController.assertEqual('Plain rows are the statements, in the vocabulary\'s order',
+            rows.map((r) => r.id).join(', '), drawn.map((tr) => tr.dataset.statementId).join(', '));
+
+        const statementOf = new Map(CAPABILITY_STATEMENTS.map((st) => [st.id, st]));
+        const wrongCount = [];
+        const wrongMark = [];
+        const overlays = [];
+        const wrongOverlay = [];
+        for (const r of rows) {
+            const tr = drawn.find((x) => x.dataset.statementId === r.id);
+            const tds = [...(tr?.querySelectorAll('td.srp-plain-cell') ?? [])];
+            if (tds.map((td) => td.dataset.substrateId).join(',') !== live.join(',')) wrongCount.push(r.id);
+            const st = statementOf.get(r.id);
+            for (const c of r.cells) {
+                const td = tds.find((x) => x.dataset.substrateId === c.id);
+                const mark = CELL_MARKS[c.kind];
+                const text = td?.textContent ?? '';
+                if (!td || td.dataset.kind !== c.kind || !(text === mark || text.startsWith(`${mark} `))) {
+                    wrongMark.push(`${r.id}×${c.id}: want ${mark}, drew "${text.slice(0, 40)}"`);
+                }
+                if (!st.live) continue;
+                const over = applyLiveAnswer(c, st, vm.answers[c.id]?.[st.live]);
+                if (over === c) continue;
+                overlays.push(`${r.id}×${c.id}`);
+                if (text !== `${CELL_MARKS[over.kind]} ${over.text}`) {
+                    wrongOverlay.push(`${r.id}×${c.id}: want "${over.text.slice(0, 40)}", drew "${text.slice(0, 40)}"`);
+                }
+            }
+        }
+        testController.assertEqual('every Plain row has one cell per live entry, in order (rows that do not)',
+            '', wrongCount.join(', '));
+        testController.assertEqual('every cell\'s mark is CELL_MARKS[kind] of the module\'s answer (mismatches)',
+            '', wrongMark.slice(0, 5).join(' | '));
+        const listed = rows.flatMap((r) => (statementOf.get(r.id).live ? r.cells.map((c) => ({ r, c })) : []))
+            .filter(({ r, c }) => Array.isArray(vm.answers[c.id]?.[statementOf.get(r.id).live])
+                && c.kind === CELL_KINDS.YES);
+        testController.log(`live overlays drawn: ${overlays.join(', ')}`);
+        testController.reportCondition('at least one declared live cell has a LIST answer to overlay', listed.length > 0);
+        testController.assertEqual('every live overlay shows the answer\'s text (mismatches)',
+            '', wrongOverlay.slice(0, 5).join(' | '));
+
+        const un = root.querySelector('.srp-plain-uncovered');
+        testController.reportCondition(`the uncovered-fields line is drawn ("${un?.textContent ?? ''}")`, !!un);
+    } finally {
+        console.error = origError;
+        window.removeEventListener('error', onError);
+        window.removeEventListener('unhandledrejection', onRejection);
+        root.querySelector(`.srp-mode[data-mode="${MODES.matrix}"]`)?.click();
+    }
+    const seen = [...errors];
+    testController.assertEqual('no console error / page error during the row', '0', String(seen.length));
+    for (const e of seen.slice(0, 5)) testController.log(`error seen: ${e}`, 'error');
+    testController.reportCondition('the panel is back in Matrix mode',
+        root.querySelector('table.srp-matrix') !== null && root.querySelector('table.srp-plain') === null);
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'substrate-registry-panel-plain-mode',
+    name: 'Substrate Registry panel: the Plain mode draws every capability statement',
+    description: 'Presses the Substrate Registry panel\'s Plain mode and Refresh, and asserts one row per '
+               + '`capabilityRows(substrateRegistry.getAll())` statement, one cell per live entry, each '
+               + 'cell\'s mark the vocabulary\'s `CELL_MARKS[kind]`, every declared live answer overlaid '
+               + '(`applyLiveAnswer` over the panel\'s own view-model), and no console error; then '
+               + 'restores the Matrix mode. The module is the oracle, the panel the subject.',
+    testFunction: substrateRegistryPanelPlainMode,
     category: 'substrateRegistry',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

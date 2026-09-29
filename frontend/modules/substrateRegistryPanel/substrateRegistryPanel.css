@@ -115,3 +115,34 @@
     font: inherit;
 }
 .srp-controls button:disabled { color: #4a4a54; cursor: default; }
+
+/* ─── the Plain mode: capability statements × substrates ─── */
+/* Fixed layout: every group's table gets the same column widths, so the
+ * columns line up down the page although each group is its own table. */
+.srp-plain { border-collapse: separate; border-spacing: 0; margin-bottom: 8px; table-layout: fixed; width: max-content; }
+.srp-plain[hidden] { display: none; }
+.srp-plain th, .srp-plain td {
+    padding: 2px 6px;
+    border-bottom: 1px solid #1c1c22;
+    vertical-align: top;
+    text-align: left;
+}
+.srp-plain-group th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #16161c;
+    font-weight: normal;
+    border-bottom: 1px solid #34343e;
+}
+.srp-plain-group th:first-child { color: #c8b060; cursor: pointer; width: 24em; }
+.srp-plain-group th:first-child::before { content: '▾ '; }
+.srp-plain-group[data-collapsed] th:first-child::before { content: '▸ '; }
+.srp-plain-col { color: #7fe0ff; cursor: help; width: 13em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.srp-plain-statement { font-weight: normal; color: #d8d8e0; }
+.srp-plain-id { color: #6a6a76; font-size: 10px; margin-right: 0.6em; }
+.srp-plain-cell { overflow-wrap: break-word; }
+.srp-plain-row[data-collapsed], .srp-plain-row[data-filtered] { display: none; }
+.srp-partial { color: #c8b060; }
+.srp-na { color: #5a5a66; }
+.srp-plain-uncovered { color: #8a8a96; font-style: italic; cursor: help; padding: 2px 0 6px; }

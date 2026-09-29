@@ -202,15 +202,18 @@ describe('the corpus census — printed, then pinned', () => {
          *              Seedling editor (`doc` 222 → 229).
          * ⛔ That is the pin working, not the pin being noisy: a census nobody
          * has to update is a census that stopped being measured.
+         *   300 → 301  substrate chart S2 (2026-09-28): `substrate-registry.md`
+         *              points at the user chart `../../features/procgen-substrates.md`
+         *              (`repo` 35 → 36).
          */
         expect(by).toEqual({
             'same-doc': 14,
             doc: 229,
             external: 22,
-            repo: 35,
+            repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(300);
+        expect(CORPUS.length).toBe(301);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
@@ -224,7 +227,7 @@ describe('the corpus census — printed, then pinned', () => {
 
     it('sends every other repo path to GitHub, fragment kept', () => {
         const repo = RESOLVED.filter((r) => r.kind === 'repo');
-        expect(repo).toHaveLength(35);
+        expect(repo).toHaveLength(36);
         for (const r of repo) expect(r.href.startsWith(`${REPO_URL}/`), r.href).toBe(true);
         /** ⛓ The four families the corpus actually names. */
         const tops = [...new Set(repo.map((r) => r.repoPath.split('/')[0]))].sort();

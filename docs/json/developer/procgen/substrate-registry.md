@@ -194,7 +194,7 @@ node scripts/procgen/generate-procgen-reference.mjs --check
 
 Rows are grouped by the [Entry contract](#entry-contract) heading that documents each field, so renaming a heading changes the table. The [reference page](https://peerinfinity.github.io/Archipelago-CC/modules/procgenDocs/reference.html#section-registry) shows full values.
 
-In the running app, the **Substrate Registry** panel (`frontend/modules/substrateRegistryPanel/`) shows the live registry for the current mode and its drift from this snapshot, formatted by the same code (`frontend/modules/procgenDocs/registryShape.js`).
+In the running app, the **Substrate Registry** panel (`frontend/modules/substrateRegistryPanel/`) shows the live registry for the current mode and its drift from this snapshot, formatted by the same code (`frontend/modules/procgenDocs/registryShape.js`). It has three modes: **Matrix** (one row per field, ✓/✗/a number per entry), **Detail** (one block per entry) and **Plain**, which draws the capability statements of `frontend/modules/procgenCore/substrateCapabilities.js` — one table per group, each cell ✓, ✗, ◐ (partly) or n/a with its degree, filled from the running app where a statement declares a live answer (the mounted playback controller, a `getTypes()` item list). Those statements are the ones the user-facing chart [What each substrate can do](../../features/procgen-substrates.md) is generated from, so Plain is that page read against this app's registry.
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 

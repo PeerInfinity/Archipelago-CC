@@ -10,8 +10,12 @@ import { describe, expect, it } from 'vitest';
 import { cellOf, fieldNamesOf, shapeRows } from '../procgenDocs/registryShape.js';
 import {
     applyColumnControls, describeRegistry, driftIsEmpty, FEATURE_SEPARATOR, featureRowsOf, fullValueText, GLYPH, MATRIX_KINDS,
-    matrixCell, matrixOf, reorderIds, ROW_KINDS, snapshotExpandable, THREW_PREFIX, UNSNAPSHOTTED_GROUP,
+    matrixCell, matrixOf, PLAIN_LEGEND, plainCellText, plainOf, reorderIds, ROW_KINDS, snapshotExpandable, THREW_PREFIX,
+    UNSNAPSHOTTED_GROUP, uncoveredLine,
 } from './substrateRegistryPanelLibrary.js';
+import {
+    CAPABILITY_GROUPS, CELL_KINDS, CELL_MARKS, CELL_WORDING, capabilityRows, uncoveredFields,
+} from '../procgenCore/substrateCapabilities.js';
 
 const controller = { play() {}, stop() {} };
 
@@ -280,5 +284,89 @@ describe('the column controls', () => {
         const before = structuredClone(m);
         applyColumnControls(m, { hidden: new Set([ids(m)[1]]), order: [...ids(m)].reverse() });
         expect(m).toEqual(before);
+    });
+});
+
+describe('the plain mode (plainOf)', () => {
+    /* ⛓ delta keys its sides (E3 → partial) and records a visit (L3 ✓), so the
+     * fixture population holds every kind: gamma has no L3 → L4 reads n/a. */
+    const delta = {
+        id: 'delta',
+        label: 'Delta',
+        exitSides: { keys: ['params.sidePortals'], relabel: () => {} },
+        loopSupport: { record: true, playback: true },
+    };
+    const entries = [alpha, beta, gamma, delta];
+    const snap = fixtureSnapshot();
+    const vm = describeRegistry(entries, snap);
+    const rows = capabilityRows(entries);
+    const p = plainOf(vm, rows);
+    const cellAt = (plain, rowId, id) => plain.groups.flatMap((g) => g.rows)
+        .find((r) => r.id === rowId).cells.find((c) => c.id === id);
+
+    it('one group per capability group that has rows, in order; every capability row, in order', () => {
+        expect(p.groups.map((g) => g.id)).toEqual(CAPABILITY_GROUPS.map((g) => g.id));
+        expect(p.groups.flatMap((g) => g.rows.map((r) => r.id))).toEqual(rows.map((r) => r.id));
+        for (const g of p.groups) for (const r of g.rows) expect(r.cells.map((c) => c.id)).toEqual(entries.map((e) => e.id));
+    });
+
+    it('each cell is its mark then its text, the kind the vocabulary answered', () => {
+        for (const r of rows) {
+            for (const c of r.cells) {
+                const drawn = cellAt(p, r.id, c.id);
+                expect(drawn.kind, `${r.id} × ${c.id}`).toBe(c.kind);
+                expect(drawn.text.startsWith(CELL_MARKS[c.kind]), `${r.id} × ${c.id}`).toBe(true);
+            }
+        }
+    });
+
+    it('a partial cell: ◐ and its degree', () => {
+        expect(cellAt(p, 'E3', 'delta')).toMatchObject({
+            kind: CELL_KINDS.PARTIAL, text: `${CELL_MARKS[CELL_KINDS.PARTIAL]} ${CELL_WORDING.onePerSide}`,
+        });
+    });
+
+    it('an n/a cell: the mark alone, and its hover still names the fields read', () => {
+        const c = cellAt(p, 'L4', 'gamma');
+        expect(c).toMatchObject({ kind: CELL_KINDS.NA, text: CELL_MARKS[CELL_KINDS.NA] });
+        expect(c.title).toContain('takeLastRecording = ');
+    });
+
+    it('a live overlay: the answer refines the text, the hover carries the raw answer, the kind stays', () => {
+        expect(cellAt(p, 'P2', 'alpha')).toMatchObject({
+            kind: CELL_KINDS.YES, text: `${CELL_MARKS[CELL_KINDS.YES]} ${CELL_WORDING.controllerMounted}`,
+        });
+        expect(cellAt(p, 'P2', 'alpha').title).toContain('live playbackController = controller');
+        expect(cellAt(p, 'P2', 'beta').text).toBe(`${CELL_MARKS[CELL_KINDS.YES]} ${CELL_WORDING.noPanelMounted}`);
+        expect(cellAt(p, 'P2', 'gamma')).toMatchObject({ kind: CELL_KINDS.NO, text: CELL_MARKS[CELL_KINDS.NO] });
+        expect(cellAt(p, 'L10', 'alpha').text)
+            .toBe(`${CELL_MARKS[CELL_KINDS.YES]} ${CELL_WORDING.itemTypes(2)}: coin, gem`);
+        expect(cellAt(p, 'L10', 'alpha').title).toContain('live itemTypes = coin, gem');
+    });
+
+    it('a hidden column is never produced; a reordered column moves in the header AND every row', () => {
+        const q = plainOf(vm, rows, { hidden: new Set(['beta']), order: ['delta', 'alpha'] });
+        expect(q.columns.map((c) => c.id)).toEqual(['delta', 'alpha', 'gamma']);
+        for (const g of q.groups) for (const r of g.rows) expect(r.cells.map((c) => c.id)).toEqual(['delta', 'alpha', 'gamma']);
+        expect(cellAt(q, 'E3', 'delta').kind).toBe(CELL_KINDS.PARTIAL);
+    });
+
+    it('the column hover is the card: label, then one line per ✓ / ◐ statement', () => {
+        const d = p.columns.find((c) => c.id === 'delta');
+        const lines = d.title.split('\n');
+        expect(lines[0]).toBe('Delta');
+        expect(lines.some((l) => l.includes(rows.find((r) => r.id === 'E3').statement))).toBe(true);
+        expect(p.columns.find((c) => c.id === 'gamma').label).toBe('gamma');
+    });
+
+    it('the uncovered fields are measured against the view-model\'s field universe', () => {
+        expect(p.uncovered).toEqual(uncoveredFields(vm.rows.map((r) => r.name), rows));
+        expect(p.uncovered).toContain('features');
+        expect(uncoveredLine(1)).toBe('1 registry field no statement reads yet');
+    });
+
+    it('the legend names every mark; plainCellText is mark-only without text', () => {
+        for (const m of Object.values(CELL_MARKS)) expect(PLAIN_LEGEND).toContain(m);
+        expect(plainCellText({ kind: CELL_KINDS.NA, text: null })).toBe(CELL_MARKS[CELL_KINDS.NA]);
     });
 });

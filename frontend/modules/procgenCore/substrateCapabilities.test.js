@@ -19,11 +19,17 @@ import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { fieldNamesOf } from '../procgenDocs/registryShape.js';
 import { REGISTRY } from '../procgenDocs/generated/registry.js';
-import { snapshotExpandable } from '../substrateRegistryPanel/substrateRegistryPanelLibrary.js';
+import {
+    describeRegistry, snapshotExpandable, THREW_PREFIX,
+} from '../substrateRegistryPanel/substrateRegistryPanelLibrary.js';
+import {
+    buildCapabilities, capabilitiesMarkdown,
+} from '../../../scripts/procgen/reference/capabilities.mjs';
 import { declaredStartingNeeds } from './startingInventory.js';
 import {
-    CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, FEATURE_WORDING, REQUIRES_LOOP_MODE_FIELD,
-    capabilityRows, cardOf, uncoveredFields,
+    CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, CELL_WORDING, FEATURE_WORDING,
+    LIVE_ANSWERS, PLAYBACK_LIVE, REQUIRES_LOOP_MODE_FIELD,
+    applyLiveAnswer, capabilityRows, cardOf, uncoveredFields,
 } from './substrateCapabilities.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -191,5 +197,94 @@ describe('the feature wording and the uncovered fields', () => {
         /* non-vacuity: the universe is wider than the vocabulary today */
         expect(un.length).toBeGreaterThan(0);
         expect(un).toContain('loopSupport.customQueues');
+    });
+});
+
+describe('the live declarations and the marks (substrate chart S2)', () => {
+    it('every `live` key is a member of LIVE_ANSWERS, and every LIVE_ANSWERS value is declared by ≥1 statement', () => {
+        const members = new Set(Object.values(LIVE_ANSWERS));
+        const declared = CAPABILITY_STATEMENTS.filter((s) => 'live' in s);
+        for (const s of declared) expect(members.has(s.live), s.id).toBe(true);
+        expect(new Set(declared.map((s) => s.live))).toEqual(members);
+    });
+
+    it('LIVE_ANSWERS are keys of the panel\'s `vm.answers[id]` — the overlay key is the view-model\'s own', () => {
+        const vm = describeRegistry(ENTRIES, REGISTRY, { call: () => null });
+        for (const e of ENTRIES) {
+            for (const key of Object.values(LIVE_ANSWERS)) expect(vm.answers[e.id], `${e.id}.${key}`).toHaveProperty(key);
+        }
+    });
+
+    it('CELL_MARKS has one mark per CELL_KINDS value, and no other', () => {
+        expect(Object.keys(CELL_MARKS).sort()).toEqual(Object.values(CELL_KINDS).sort());
+    });
+
+    it('◐ appears in the generated markdown exactly where a cell is partial', async () => {
+        const v = await buildCapabilities({ rows: NAMES.map((name) => ({ name })) });
+        const md = capabilitiesMarkdown(v);
+        const partials = v.rows.flatMap((r) => r.cells.filter((c) => c.kind === CELL_KINDS.PARTIAL)
+            .map(() => `${CELL_MARKS[CELL_KINDS.PARTIAL]} `));
+        expect(partials.length).toBeGreaterThan(0);
+        const tableLines = md.split('\n').filter((l) => /^\| [A-Z]\d+ \|/.test(l));
+        const inTables = tableLines.join('\n').split(CELL_MARKS[CELL_KINDS.PARTIAL]).length - 1;
+        expect(inTables).toBe(partials.length);
+        for (const r of v.rows) {
+            const line = tableLines.find((l) => l.startsWith(`| ${r.id} |`));
+            const n = r.cells.filter((c) => c.kind === CELL_KINDS.PARTIAL).length;
+            expect(line.split(CELL_MARKS[CELL_KINDS.PARTIAL]).length - 1, r.id).toBe(n);
+        }
+    });
+});
+
+describe('applyLiveAnswer — fixtures', () => {
+    const items = { live: LIVE_ANSWERS.itemTypes };
+    const play = { live: LIVE_ANSWERS.playbackController };
+    const yes = { kind: CELL_KINDS.YES, text: CELL_WORDING.itemTypesLive, why: [] };
+
+    it('itemTypes: a list refines a ✓ cell\'s text with the same count wording the static case uses', () => {
+        const out = applyLiveAnswer(yes, items, ['Food', 'Arrow']);
+        expect(out).not.toBe(yes);
+        expect(out.kind).toBe(CELL_KINDS.YES);
+        expect(out.text).toBe(`${CELL_WORDING.itemTypes(2)}: Food, Arrow`);
+        expect(out.live).toEqual({ key: LIVE_ANSWERS.itemTypes, value: 'Food, Arrow' });
+        expect(yes.text).toBe(CELL_WORDING.itemTypesLive); // the input is untouched
+        expect(applyLiveAnswer(yes, items, []).text).toBe(CELL_WORDING.itemTypes(0));
+    });
+
+    it('itemTypes: `absent`, a threw, or a ✗ cell → the SAME cell', () => {
+        const no = { kind: CELL_KINDS.NO, text: null };
+        expect(applyLiveAnswer(yes, items, 'absent')).toBe(yes);
+        expect(applyLiveAnswer(yes, items, `${THREW_PREFIX}boom`)).toBe(yes);
+        expect(applyLiveAnswer(no, items, ['x'])).toBe(no);
+    });
+
+    it('playbackController: the kind is the declaration\'s, the answer refines the text', () => {
+        const c = { kind: CELL_KINDS.YES, text: null };
+        expect(applyLiveAnswer(c, play, PLAYBACK_LIVE.controller))
+            .toMatchObject({ kind: CELL_KINDS.YES, text: CELL_WORDING.controllerMounted });
+        expect(applyLiveAnswer(c, play, PLAYBACK_LIVE.none))
+            .toMatchObject({ kind: CELL_KINDS.YES, text: CELL_WORDING.noPanelMounted, live: { value: 'null' } });
+        expect(applyLiveAnswer(c, play, `${THREW_PREFIX}boom`).text).toBe(`${THREW_PREFIX}boom`);
+        const no = { kind: CELL_KINDS.NO, text: null };
+        expect(applyLiveAnswer(no, play, PLAYBACK_LIVE.absent)).toBe(no);
+    });
+
+    it('an n/a cell, an undeclared statement, a missing answer → the SAME cell', () => {
+        const na = { kind: CELL_KINDS.NA, text: null };
+        expect(applyLiveAnswer(na, play, PLAYBACK_LIVE.controller)).toBe(na);
+        expect(applyLiveAnswer(yes, {}, ['x'])).toBe(yes);
+        expect(applyLiveAnswer(yes, items, undefined)).toBe(yes);
+    });
+
+    it('over the REAL registry with fake live answers: only declared statements change, and only their text', () => {
+        const vm = describeRegistry(ENTRIES, REGISTRY, { call: () => ['a', 'b'] });
+        for (const s of CAPABILITY_STATEMENTS) {
+            const row = rowOf(s.id);
+            for (const c of row.cells) {
+                const out = applyLiveAnswer(c, s, s.live ? vm.answers[c.id][s.live] : undefined);
+                expect(out.kind, `${s.id} × ${c.id}`).toBe(c.kind);
+                if (!s.live) expect(out, `${s.id} × ${c.id}`).toBe(c);
+            }
+        }
     });
 });

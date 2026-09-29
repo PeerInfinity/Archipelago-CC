@@ -16,7 +16,7 @@
 
 import { loadRegistry } from './registry.mjs';
 import {
-    CAPABILITY_GROUPS, CELL_KINDS, capabilityRows, cardOf, uncoveredFields,
+    CAPABILITY_GROUPS, CELL_KINDS, CELL_MARKS, capabilityRows, cardOf, uncoveredFields,
 } from '../../../frontend/modules/procgenCore/substrateCapabilities.js';
 
 /** ⛓ The user page this table lives in, and its region. */
@@ -64,9 +64,8 @@ const mdCell = (s) => String(s).replace(/\|/g, '\\|').replace(/\n/g, ' ');
 
 /** ⛓ One cell's markdown, and the note it pushes when its text is long. */
 function cellMarkdown(c, label, notes) {
-    if (c.kind === CELL_KINDS.NA) return 'n/a';
-    if (c.kind === CELL_KINDS.PARTIAL) return mdCell(c.text ?? '');
-    const mark = c.kind === CELL_KINDS.YES ? '✓' : '✗';
+    const mark = CELL_MARKS[c.kind];
+    if (c.kind === CELL_KINDS.NA) return mark;
     if (!c.text) return mark;
     if (c.kind === CELL_KINDS.NO && c.text.length > INLINE_NOTE_LIMIT) {
         notes.push(`${label}: ${c.text}`);
