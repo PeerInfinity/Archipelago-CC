@@ -327,7 +327,7 @@ export function goalHoldsWithDoorsAsWalls(out, doors, items) {
  * lava is not when `items.hasDarkSuit` — the planner's own arm
  * (`botDriverV2.js`, `lethalSafe`); pits always are. Without it a `post-swim`
  * room's `watergate` sealed its goal off on every draw (S1's residue: 83
- * re-rolls, grown 10×10 → 28×28). No other biome grants either, so every other
+ * re-rolls, grown 10×10 → 28×28; T1's W0 draw: 173, grown to 48×48). No other biome grants either, so every other
  * room reads the set it always read.
  *
  * ⛔ The boot-aware set is for the SEAL floods only (may the goal, a location, be

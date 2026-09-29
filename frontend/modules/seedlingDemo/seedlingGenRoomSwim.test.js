@@ -1,8 +1,8 @@
 /**
  * ⛓⛓ SEEDLING SWIM T1, D1 — **THE BOOT-AWARE HAZARD SET.** S1's residue: a
- * `post-swim` generated room with a `watergate` re-rolled forever (83 re-rolls,
- * grown 10×10 → 28×28) and `require: 'canSwim'` was refused
- * `wall-does-not-seal`, because `hazardCells` walled every water cell whatever the
+ * `post-swim` generated room with a `watergate` re-rolled through every size
+ * (S1: 83 re-rolls, grown to 28×28; T1's W0 on THIS room: 173, grown to 48×48,
+ * 37 min) and `require: 'canSwim'` never came back (900 s), because `hazardCells` walled every water cell whatever the
  * boot granted. Now water is not a hazard when the biome's items grant `canSwim`,
  * lava when they grant `hasDarkSuit`, pits always are — for the SEAL floods; a
  * door, its approach and a location still never stand on a lethal cell, and the
@@ -115,12 +115,12 @@ describe('SWIM T1 D1 — a post-swim watergate room builds, and its gate is betw
             GEN_ROOM_BIOMES['post-swim'].items, "'swim'");
         expect(doors.map(key)).toEqual(['1,8']);
     });
-    it('`{biome: post-swim, elements: watergate}` builds at re-roll 0 (was 83, grown to 28×28)', () => {
+    it('`{biome: post-swim, elements: watergate}` builds at re-roll 0 (W0: 173 re-rolls, grown to 48×48)', () => {
         const w = room();
         expect(w.generation.rerolls).toBe(0);
         expect(w.size).toEqual({ width: 10, height: 10 });
     });
-    it('`require: canSwim` is MET at re-roll 0 (was refused `wall-does-not-seal` after 8)', () => {
+    it('`require: canSwim` is MET at re-roll 0 (W0: no answer in 900 s)', () => {
         const w = room({ require: 'canSwim' });
         expect(w.generation.require).toBe('canSwim');
         expect(w.generation.rerolls).toBe(0);

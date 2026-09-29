@@ -10126,10 +10126,11 @@ a substrate design question.
 
 **W0.** S1's residue reproduced on the clean tree (`279d75d451`), scratch
 `generateGenRoom({region_id, exits: [{}], size: 10×10, rng: drawn 16807,
-params: {seedlingGen: {biome: 'post-swim', elements: 'watergate'}}})`: the call
-did not return in 26+ minutes (the room re-rolls through every size up to the
-cap, generating ever larger rooms). With `require: 'canSwim'` it had not returned
-after 900 s (`timeout` exit 124). A draw that meets the directive fails the door
+params: {seedlingGen: {biome: 'post-swim', elements: 'watergate'}}})` returned
+after 2,234,841 ms: `rerolls: 173, rerollCause: 'doors'`, grown 10×10 → 48×48
+(S1 measured 83 re-rolls and 28×28 on its draw). With `require: 'canSwim'` the
+call had not returned after 900 s (`timeout` exit 124), nor after about 31
+minutes in a second run. A draw that meets the directive fails the door
 pick, which resets the cause to `doors`, and growth continues. Seven
 `make-seedling-spiral-room-preset --state=… --check`: OK;
 `check-seedling-generated-set --seeds=1-6`: OK; `check-sidecar-fields`: ALL PASS
@@ -10144,7 +10145,8 @@ door's approach must be reached from the start without crossing water
 (`pickDoorCells`' new `keepReachable.approachWalls`). The arrival lands with
 whatever the player holds; a door past the water gates nothing.
 
-The same room now builds at re-roll 0, door (1,8), and `require` is MET. Rows are
+The same room now builds at re-roll 0 in about 300 ms, door (1,8), and
+`require` is MET. Rows are
 in `seedlingGenRoomSwim.test.js` (10). Mutant (a), the boot items dropped at the
 door picker: predicted to red the picker row by name; measured
 `LevelSetExitError … offers 0 usable cell(s)`. Mutant (b), `approachWalls`
