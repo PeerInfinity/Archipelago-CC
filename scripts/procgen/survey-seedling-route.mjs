@@ -227,6 +227,75 @@ function edgeFor(from, to) {
     return hits[0];
 }
 
+/**
+ * ⛓⛓ SWIM T3 D3 — **THE PIT HOP**, the one crossing the `to` vocabulary
+ * cannot name.
+ *
+ * A pit is not an entity with a `to`: it is floor, and where it goes is the
+ * level's `control` block (`Game.as:2050-2054` → `Game.fallthrough*`). The
+ * MODEL already resolves it — `levelWorld` reads the block into
+ * `world.fallthrough`, and `playerPhysicsV2.fallDestination` is the very
+ * function the run calls when the player drops (`new Game(fallthroughLevel,
+ * …)`, snapped to the tile). So the landing here is THAT function's answer,
+ * not a transcription of it, and it is cross-checked against the AP export's
+ * sidecar exit (`out_pit_*`, whose `target_spawn` is the atlas's own
+ * derivation) — two sources that must agree or the hop refuses.
+ *
+ * ⚠ `--through` ONLY. `MODEL` is imported under the flag and nothing on the
+ * default path calls this, so the default survey is byte-identical by
+ * construction (and by md5, in the T3 report).
+ *
+ * @returns {?object} null when no pit in `from` falls to `to`
+ */
+const MODEL = THROUGH ? {
+    ...(await import(join(MODULE, 'levelWorld.js'))),
+    ...(await import(join(MODULE, 'levelSource.js'))),
+    ...(await import(join(MODULE, 'playerPhysicsV2.js'))),
+} : null;
+function pitEdgeFor(from, to) {
+    const world = MODEL.buildLevelWorld(MODEL.atlasLevelSource()(from));
+    if (!world.fallthrough || world.fallthrough.level !== to) return null;
+    const exits = [];
+    for (const [region, side] of Object.entries(apRules.preset_sidecars?.['1'] ?? {})) {
+        if (levelOfRegion(region) !== from) continue;
+        for (const e of side?.playable_payload?.exits ?? []) {
+            if (/^out_pit_/.test(e.exit_id ?? '') && e.target_level === to) exits.push({ region, ...e });
+        }
+    }
+    const tiles = exits.flatMap((e) => e.exit_tiles.map(([tx, ty]) => ({ tx, ty, e })));
+    if (tiles.length !== 1) {
+        throw new Error(`L${from} falls to L${to} (its control block), and the AP export names `
+            + `${tiles.length} pit exit tile(s) for that hop `
+            + `(${tiles.map((t) => `${t.e.exit_id}@${t.tx},${t.ty}`).join(', ') || 'none'}). A pit `
+            + 'hop with more than one tile has an ambiguous landing and the survey will not '
+            + 'pick one for you.');
+    }
+    const { tx, ty, e } = tiles[0];
+    const tile = world.pitTiles.find((t) => t.tx === tx && t.ty === ty);
+    if (!tile) {
+        throw new Error(`the AP export's ${e.exit_id} names tile (${tx},${ty}) in L${from}, `
+            + 'which the model does not build as a pit tile — the two sources disagree.');
+    }
+    const { ctor } = MODEL.fallDestination(world, {
+        x: tile.rect.x + tile.rect.w / 2, y: tile.rect.y + tile.rect.h / 2,
+    });
+    if (ctor.x !== e.target_spawn?.x || ctor.y !== e.target_spawn?.y) {
+        throw new Error(`the pit (${tx},${ty}) in L${from} lands at (${ctor.x},${ctor.y}) by `
+            + '`fallDestination` and at '
+            + `(${e.target_spawn?.x},${e.target_spawn?.y}) by the AP export's ${e.exit_id} — `
+            + 'the two sources disagree.');
+    }
+    return {
+        kind: 'pit',
+        from,
+        to,
+        via: `pit@${tile.rect.x},${tile.rect.y} (${e.exit_id}, tile ${tx},${ty})`,
+        exit: null,
+        pit: { tx, ty, x: tile.rect.x, y: tile.rect.y },
+        arrival: { x: ctor.x, y: ctor.y },
+    };
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // 2. THE ROUTE — three BFS legs over AP's own region graph
 // ─────────────────────────────────────────────────────────────────────
@@ -491,18 +560,27 @@ function buildSteps(visits, legs, id) {
         if (next) {
             try { edge = edgeFor(v.level, next.level); } catch (e) {
                 if (!THROUGH) throw e;
-                crossingRefusal = e.message;
+                // ⛓ SWIM T3 D3: no `to` entity — but a pit may be the hop.
+                edge = pitEdgeFor(v.level, next.level);
+                if (!edge) crossingRefusal = e.message;
             }
-            if (edge) goals.push({ kind: 'reach-exit', exit: edge.exit, why: `${edge.via} → L${next.level}` });
+            if (edge?.kind === 'pit') {
+                goals.push({ kind: 'reach-pit', pit: { ...edge.pit }, why: `${edge.via} → L${next.level}` });
+            } else if (edge) {
+                goals.push({ kind: 'reach-exit', exit: edge.exit, why: `${edge.via} → L${next.level}` });
+            }
         }
         const prev = visits[i - 1];
         let arrival = { x: 80, y: 128 };
         let arrivalRefusal = null;
+        let arrivalVia = null;
         if (prev) {
             try { arrival = edgeFor(prev.level, v.level).arrival; } catch (e) {
                 if (!THROUGH) throw e;
-                arrival = null;
-                arrivalRefusal = e.message;
+                const pit = pitEdgeFor(prev.level, v.level);
+                arrival = pit ? pit.arrival : null;
+                if (pit) arrivalVia = pit.via;
+                else arrivalRefusal = e.message;
             }
         }
         return {
@@ -514,6 +592,7 @@ function buildSteps(visits, legs, id) {
             crossesTo: next ? next.level : null,
             ...(crossingRefusal ? { crossingRefusal } : {}),
             ...(arrivalRefusal ? { arrivalRefusal } : {}),
+            ...(arrivalVia ? { arrivalVia } : {}),
         };
     });
 }
@@ -644,7 +723,13 @@ function bootFor(step) {
         kind: 'staged',
         source: STAGED_BASE,
         note: `${STAGED_BASE}'s committed v8 block (the campaign's own post-sword latch) `
-            + `re-pointed at ${key} — R8 slice 8's construction for r8-solve-18`,
+            + `re-pointed at ${key} — R8 slice 8's construction for r8-solve-18`
+            // ⛓ SWIM T3 D3: a pit landing is staged as a plain `new Game`
+            // at the fall's ctor args — on the ground, NOT the 83 px ceiling
+            // descent the fall itself plays (`arriveFromFall`). Named, because
+            // it is a bound on what a SOLVED row here claims.
+            + (step.arrivalVia ? `; the arrival is a PIT landing (${step.arrivalVia}), staged `
+                + 'on the ground at the fall\'s ctor args rather than as the ceiling descent' : ''),
     };
 }
 
@@ -750,7 +835,11 @@ async function solveOneStep(step) {
     }
 
     const known = KNOWN_ANSWERS.get(bootKey(step.level, step.arrival.x, step.arrival.y)) ?? null;
-    const goals = step.goals.map((g) => (g.kind === 'reach-exit'
+    // ⛓ SWIM T3 D3: a `reach-pit` goal is handed to the solver AS IS — it is
+    // not a kind the solver owns, and its refusal saying so is the measurement.
+    const goals = step.goals.map((g) => (g.kind === 'reach-pit'
+        ? { kind: 'reach-pit', pit: { ...g.pit } }
+        : g.kind === 'reach-exit'
         ? { kind: 'reach-exit', exit: { ...g.exit } }
         : { kind: 'collect-placement', placement: { ...g.placement } }));
 
@@ -1232,7 +1321,7 @@ const SURVEY_FILE = OUT_FILE ? resolvePath(OUT_FILE) : join(OUT_DIR, 'survey.jso
  * the addendum cheap.
  */
 const identityOf = (s) => `L${s.level}@${s.arrival?.x},${s.arrival?.y}:`
-    + s.goals.map((g) => `${g.kind}(${JSON.stringify(g.exit ?? g.placement)})`).join('+');
+    + s.goals.map((g) => `${g.kind}(${JSON.stringify(g.exit ?? g.placement ?? g.pit)})`).join('+');
 const chosenIdentities = new Set(route.steps.map(identityOf));
 const addendum = (alternative?.steps ?? []).filter((s) => !chosenIdentities.has(identityOf(s)));
 console.log(`\n## THE ADDENDUM — ${addendum.length} step(s) of the alternative leg 2 that `
