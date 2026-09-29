@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 58,
-            "count": 95,
+            "browser": 59,
+            "count": 96,
             "id": "check"
         },
         {
@@ -209,13 +209,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 272,
-        "browser": 84,
-        "cited": 115,
-        "files": 283,
+        "blockStyle": 273,
+        "browser": 85,
+        "cited": 116,
+        "files": 284,
         "lineStyle": 11,
-        "withDocblock": 283,
-        "withFlags": 205
+        "withDocblock": 284,
+        "withFlags": 206
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -3526,6 +3526,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-seedling-generated-set — THE PHASE 5 ROUND TRIP.",
             "path": "scripts/procgen/check-seedling-generated-set.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "game",
+                "host"
+            ],
+            "file": "check-seedling-generated-swim-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "game"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling swim T1: a GENERATED Seedling room whose gate is WATER, played end to end.",
+            "path": "scripts/procgen/check-seedling-generated-swim-play.mjs"
         },
         {
             "argvHelpers": [],

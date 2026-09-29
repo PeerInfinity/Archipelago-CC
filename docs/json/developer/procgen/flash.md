@@ -213,8 +213,9 @@ Doors are minted by the level linker's rule, `levelSetExits.pickDoorCells`: one 
 
 - **No door may seal an approach.** With every door cell a wall, the start must still reach every door's approach cell and the goal; the generator's own solver re-certifies the goal with the doors as walls.
 - **No door, approach or location on a hazard.** Water, lava and pits (`seedlingGenRoom.hazardCells`) are not solid but kill or respawn the player.
+- **The hazard set is boot-aware (swim T1).** `hazardCells(record, items)` leaves water out when the biome's items grant `canSwim` and lava when they grant `hasDarkSuit`; pits always count. The seal floods read it with the room's biome items (`GEN_ROOM_BIOMES[biome].items`): the door picker's kept goal, `safeReach` and `bindAllDoors`. A door, its approach and a location still never stand on a lethal cell. A door's approach must also be reached from the start without crossing one (`pickDoorCells`' `keepReachable.approachWalls`, via `pickGenRoomDoors`), because an arrival lands with whatever the player holds, not with the biome's boot. No other biome grants either item, so every other room reads the set it always read.
 
-The `post-swim` biome adds `Progressive Swim` (the conch, `canSwim`) to the boot, making water the third physical gate after the sword and the shield. Its `watergate` element does not survive a generated room yet: `hazardCells` counts water as a wall whatever the boot grants, so the goal behind the gate is never safely reachable.
+The `post-swim` biome adds `Progressive Swim` (the conch, `canSwim`) to the boot, making water the third physical gate after the sword and the shield. Its `watergate` builds in a generated room at re-roll 0, with `require: canSwim` met. Before the boot-aware set it re-rolled 83 times and grew from 10×10 to 28×28.
 
 `entrance_spawn` is the flood cell the door was reached from, never the door tile, for the same `check()` latch reason as real rooms. The first location stands on the generator's goal cell; the rest take the cells nearest the start that are safely reachable, never on the start, a door or a door's neighbour.
 
@@ -260,6 +261,16 @@ A generated or real room can host children behind any AP item. The game cannot e
 
 Nothing in the app exposes a goal-reached state, so the host-world gates evaluate the rules' `game_info[p].completion_condition` against the live snapshot.
 
+### The water-gated world (swim T1)
+
+`SEEDLING_GENERATED_SWIM_STATE` (`seedling_generated_swim`) is a maze START holding the AP item `Progressive Swim`. Its exit is gated `Has(Progressive Swim)` and leads into a `post-swim` generated room (`elements: watergate`, `require: canSwim`) that holds `victory` on its goal cell. The tree's gate and the room's requirement are one item, since the bridge grants `canSwim` on the first `Progressive Swim`.
+
+The boot-aware hazard set seats the room's door on the dry side of the water. The arrival lands at (5,1), one water cell (1,2) separates it from the goal (2,3), and the generator certified that goal REFUSED without the conch.
+
+`check-seedling-generated-swim-play.mjs` plays it with real keys: the conch in the maze, the gated exit, the arrival (`canSwim` true, `botStatus.drown_timer` 0), the swim with `drown_timer` 0 on every sampled step, the victory, and the completion condition.
+
+It has no refusal phase, and that is measured, not skipped. Every maze path from the START's entrance to the gated exit crosses the conch's cell, which the maze collects on step (seeds 1–12 of the state alike). So no player meets the maze's gate or the water without the item.
+
 ## Committed worlds and gates
 
 Each world is written by `scripts/procgen/make-seedling-spiral-room-preset.mjs --state=<name>` from a state in `procgenPipeline/presetDefs.js`, and opened as `frontend/?game=<preset>&seed=1`. The box gates in `scripts/procgen/` play them in the real game and skip when the wasm artifact is absent; they share their helpers (including the hazard-aware walker `roomPath`) in `scripts/procgen/seedlingRoomPlay.js`.
@@ -273,8 +284,9 @@ Each world is written by `scripts/procgen/make-seedling-spiral-room-preset.mjs -
 | `seedling_generated_room` (`generated`) | `SEEDLING_GENERATED_ROOM_STATE` | Two generated rooms in a spiral; delivery, check, room to room. | `check-seedling-generated-room-play.mjs` |
 | `seedling_generated_leaf` (`generated-leaf`) | `SEEDLING_GENERATED_LEAF_STATE` | A generated sphere leaf holding `victory`. | `check-seedling-generated-leaf-play.mjs` |
 | `seedling_generated_host` (`generated-host`) | `SEEDLING_GENERATED_HOST_STATE` | A generated start room hosting a gated door. | `check-seedling-generated-host-play.mjs` |
+| `seedling_generated_swim` (`generated-swim`) | `SEEDLING_GENERATED_SWIM_STATE` | A generated `post-swim` room behind a maze gate on `Progressive Swim`; its watergate swum to `victory`. | `check-seedling-generated-swim-play.mjs` |
 
-The compiled starter atlas (`seedling_atlas`) is played by `check-seedling-atlas-play.mjs`. Several states also ship as pipeline-panel presets (`shipped:seedling-generated-room-demo`, `shipped:seedling-generated-leaf-demo`, `shipped:seedling-generated-host-demo`, `shipped:seedling-atlas-host-demo`); see [Pipeline Presets](./pipeline-presets.md).
+The compiled starter atlas (`seedling_atlas`) is played by `check-seedling-atlas-play.mjs`. Several states also ship as pipeline-panel presets (`shipped:seedling-generated-room-demo`, `shipped:seedling-generated-leaf-demo`, `shipped:seedling-generated-host-demo`, `shipped:seedling-generated-swim-demo`, `shipped:seedling-atlas-host-demo`); see [Pipeline Presets](./pipeline-presets.md).
 
 Headless rows sit beside the code, e.g. `flashPanel/seedling*World.test.js`, `seedlingDoorGate.test.js` and `seedlingDemo/seedlingGenRoom*.test.js`.
 

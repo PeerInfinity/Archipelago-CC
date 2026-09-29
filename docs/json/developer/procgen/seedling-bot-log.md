@@ -10122,6 +10122,61 @@ a swim crossing becomes a pipeline door only when a placed room can span
 sub-regions, or the content source emits internal exits as gated sides. That is
 a substrate design question.
 
+### Seedling substrate T1-swim — option B end to end (2026-09-29)
+
+**W0.** S1's residue reproduced on the clean tree (`279d75d451`), scratch
+`generateGenRoom({region_id, exits: [{}], size: 10×10, rng: drawn 16807,
+params: {seedlingGen: {biome: 'post-swim', elements: 'watergate'}}})`: the call
+did not return in 26+ minutes (the room re-rolls through every size up to the
+cap, generating ever larger rooms). With `require: 'canSwim'` it had not returned
+after 900 s (`timeout` exit 124). A draw that meets the directive fails the door
+pick, which resets the cause to `doors`, and growth continues. Seven
+`make-seedling-spiral-room-preset --state=… --check`: OK;
+`check-seedling-generated-set --seeds=1-6`: OK; `check-sidecar-fields`: ALL PASS
+(1417 entries); bounded vitest before: 9 files, 173 tests.
+
+**D1 — the boot-aware hazard set.** `hazardCells(record, items = null)`: water is
+not a hazard when `items.canSwim`, lava when `items.hasDarkSuit`, pits always
+are. The seal floods read it with the biome's items: `pickGenRoomDoors` (the
+core's door pick, lifted out of `drawRoom`), `safeReach` and `bindAllDoors`. The
+cells a door, its approach and a location STAND on keep the item-less set, and a
+door's approach must be reached from the start without crossing water
+(`pickDoorCells`' new `keepReachable.approachWalls`). The arrival lands with
+whatever the player holds; a door past the water gates nothing.
+
+The same room now builds at re-roll 0, door (1,8), and `require` is MET. Rows are
+in `seedlingGenRoomSwim.test.js` (10). Mutant (a), the boot items dropped at the
+door picker: predicted to red the picker row by name; measured
+`LevelSetExitError … offers 0 usable cell(s)`. Mutant (b), `approachWalls`
+dropped: predicted to seat the door past the water; measured
+`expected ['8,8'] to deeply equal ['1,8']` and the dry-side row red. No other
+biome grants either item: every `--check` and all 13 md5s are identical.
+
+**D2 — the world.** `SEEDLING_GENERATED_SWIM_STATE` → `seedling_generated_swim`
+(`--state=generated-swim`, `shipped:seedling-generated-swim-demo`): seed 1, 2
+spheres, a maze START holding `Progressive Swim`, its exit gated on it into an
+8×6 `post-swim` room (`watergate`, `require: canSwim`, re-roll 0) holding
+`victory` on (2,3). The water (1,2) stands between the approach (5,1) and the
+goal. The rules' item library carries `Progressive Swim` as progression. Seeds
+1–12 of the state all build (re-rolls 0 or 1). Enrolled:
+
+- `preset_files.json` and `preserved-dev-presets.txt`;
+- `pipeline-presets.md`;
+- `check-sidecar-fields`: 218 documents, 1419 entries, ALL PASS;
+- `check-canonical-placements`: ALL PASS.
+
+`builds.json`'s `namedBy` preset list is in the wasm submodule and was not
+edited.
+
+**D3 — the play gate.** `check-seedling-generated-swim-play.mjs`, phases A, K,
+E, S, V and C: **25 PASS, ALL CHECKS PASSED**. The arrival is `canSwim` true with
+`drown_timer` 0, and the swim over (1,2) keeps `drown_timer` 0 for 61 samples.
+The brief's refusal phase W is unreachable, measured: every maze path to the
+gated exit crosses the conch's cell (collected on step; seeds 1–12 alike), so no
+player meets either gate without the item.
+
+**The close.** The report is `CC/docs/cloud-reports/seedling-swim-t1.md`.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
