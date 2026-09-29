@@ -1194,35 +1194,41 @@ function tracePath(world, startState, plan) {
 // current world and inventory. Stand-alone from bfsSolver because we
 // want the full set, not a single goal-directed plan.
 //
-// ⛓ THE LIST IS A PROJECTION OF A FULL-STATE BFS onto player positions: a tile
-// is listed once per distinct (inventory, block layout) it was first reached
-// under, so the list repeats a tile. The callers that pick a random element
-// from it (pickReachableFloorTile, placeGateAndKey's key candidates) therefore
-// weight repeated tiles more heavily; that is pre-existing behaviour, and the
-// multiset's SIZE and ORDER both feed the pick, so deduplicating it — or keying
-// it on anything coarser than the full inventory — moves generated levels
-// (measured, plan §41). It is left exactly as it was.
+// ⛓ THE LIST IS THE REACHABLE SET, EACH TILE ONCE (C1, plan §42): on a world
+// without blocks or buttons it is `reachableTileFixpoint`'s — every tile the
+// player can stand on, in the discovery order of a BFS from the start under
+// everything collectable — so a pick from it (pickReachableFloorTile,
+// placeGateAndKey's key candidates) is UNIFORM over reachable tiles. Until C1
+// the list was the projection of the full-state BFS below and repeated a tile
+// once per distinct inventory it was first reached under, which weighted the
+// pick; C1 changed that, and re-recorded the generated levels it moved
+// (`procgen_topdown` AP_1–12 and `seedling_atlas_sphere`, with their producers,
+// in the same slice). A world with blocks or buttons still gets the general
+// form's list, repeats and all.
 //
-// ⛔ NO NODE CAP, AND THE STATE SPACE IS EXPONENTIAL IN THE PICKUPS. `bfsSolver`
-// refuses by name at `budget` expansions; this function runs to exhaustion.
-// Every item on a tile is picked up on arrival, so with u pickups the player can
-// collect without passing a gate the BFS visits up to (floor tiles) × 2^u
-// states — an open 8×6 room holds 48 × 2^u — and it runs once per placement.
-// That is the maze location cliff (plan §40–§41): C0 made each state cheap
-// (`reachableTileOrder`: integer states, a pickup bitmask, memoised
-// clearances), not fewer. The block state space is the same danger (see the
-// node-count table in the arc-2 kickoff §8): nothing that places blocks may call
-// this without bounding the block count first.
+// ⛔ NO NODE CAP. `bfsSolver` refuses by name at `budget` expansions; this runs
+// to exhaustion. The fixpoint is O(floor tiles × passes), passes ≤ distinct
+// pickups + 1, once per placement — polynomial. The general form is not: it
+// visits up to (floor tiles) × 2^u states for u pickups collectable without a
+// gate (the maze location cliff, plan §40–§41), and its block state space is
+// the same danger (see the node-count table in the arc-2 kickoff §8): nothing
+// that places blocks may call this without bounding the block count first.
 function reachableTiles(world, startState) {
-    const order = reachableTileOrder(world, startState);
-    if (order === null) return reachableTilesByKey(world, startState);
     const width = world.width;
-    return order.map((cell) => ({ x: cell % width, y: Math.floor(cell / width) }));
+    return reachableTileCells(world, startState).map((cell) => ({ x: cell % width, y: Math.floor(cell / width) }));
+}
+
+/** The placer's reachable list as tile indices (`y * width + x`) — see `reachableTiles`. */
+function reachableTileCells(world, startState) {
+    const cells = reachableTileFixpoint(world, startState);
+    if (cells !== null) return cells;
+    const width = world.width;
+    return reachableTilesByKey(world, startState).map((t) => t.y * width + t.x);
 }
 
 // The general form — the BFS over `step`, keyed by `mazeVisitedKey`. It is the
-// only form for a world with blocks or buttons, and the REFERENCE the integer
-// form is held to (`_testOnly_reachableTileOrders`). The queue is read by a
+// only form for a world with blocks or buttons, and the REFERENCE the fixpoint
+// is held to (`_testOnly_reachableTileOrders`). The queue is read by a
 // head index, not `shift()`: the same FIFO order, without the O(n) shift that
 // made a large frontier quadratic.
 function reachableTilesByKey(world, startState) {
@@ -1244,35 +1250,34 @@ function reachableTilesByKey(world, startState) {
     return out;
 }
 
-// ⛓ The most distinct pickups the integer form tracks: one bit each, in a
-// 32-bit mask whose sign bit stays clear. Past it the general form runs — and
-// at 2^31 inventories per tile neither form finishes.
-const MASK_PICKUP_LIMIT = 30;
-// ⛓ The largest visited set kept as a bitmap (bits); a bigger one is a Set.
-const VISITED_BITMAP_LIMIT = 2 ** 30;
-
 /**
- * ⛓⛓⛓ THE SAME BFS AS `reachableTilesByKey`, ON INTEGERS (C0, plan §41) — the
- * discovery order of every (tile, inventory) state, as tile indices
- * (`y * width + x`); `null` when the world needs the general form (blocks or
- * buttons — the key then carries the block layout, and a held token depends on
- * the stance — or more than `MASK_PICKUP_LIMIT` distinct pickups).
+ * ⛓⛓⛓ THE REACHABLE SET AS A FIXPOINT (C1, plan §42) — every tile the player
+ * can reach, once each, as tile indices (`y * width + x`); `null` when the world
+ * needs the general form (blocks or buttons).
  *
- * Why it is the SAME list, element for element:
- *   · the state: the inventory is the start state's carried set plus the
- *     pickups collected, so a bitmask over the pickup ids NOT already carried
- *     names every inventory `step` can build, one mask per inventory — the
- *     SAME partition `mazeVisitedKey` draws (position | sorted inventory);
- *   · the successor: `step` without an override and without blocks or buttons
- *     is — a floor tile in the grid, an obstacle cleared by the inventory
- *     (`isObstacleCleared` is a function of (obstacle, inventory), so its
- *     answer is memoised per (obstacle, mask)), then the pickup added;
- *   · the order: a FIFO queue, the inputs in `INPUTS` order (N, S, E, W).
- * Only the representation changes: no key string, no Set clone per step, no
- * `shift()`. The count of states is unchanged — it is still exponential in the
- * pickups (see `reachableTiles`).
+ * A pass is a BFS over POSITIONS from the start, every obstacle judged against
+ * one fixed inventory: the carried set plus every pickup an earlier pass stood
+ * on. When a pass stands on a pickup the inventory lacks, the next pass runs
+ * with it; the pass that adds nothing is the answer, and its discovery order is
+ * the list (FIFO, the inputs in `INPUTS` order). The inventory only grows, so
+ * there are at most (distinct pickups + 1) passes, each O(tiles).
+ *
+ * Why it is the SAME SET as the full-state BFS (`reachableTilesByKey`):
+ *   · every tile it lists is reachable — the player collects the pickups in
+ *     pass order, each on a route an earlier inventory already opened, and a
+ *     route walked back is open again (a wall is symmetric; a cleared obstacle
+ *     stays cleared, since the inventory only grows);
+ *   · every reachable tile is listed — any real walk holds, at each step, a
+ *     subset of the final inventory, so each of its steps is open in the last
+ *     pass too.
+ * Both halves need clearance to be MONOTONE in the inventory (more items never
+ * close a passage). `isObstacleCleared` is, over every construct
+ * `evaluateRuleAgainstInventory` knows (no rule negates; an unknown construct
+ * is a constant `false`). A BUTTON is not — a token held only while standing on
+ * it, or while a block rests there — and a BLOCK changes the grid, so both keep
+ * the general form.
  */
-function reachableTileOrder(world, startState) {
+function reachableTileFixpoint(world, startState) {
     if (startState.blocks !== undefined) return null;
     if (world.buttons?.size) return null;
     const { width, height } = world;
@@ -1286,102 +1291,73 @@ function reachableTileOrder(world, startState) {
         if (!(x >= 0 && x < width && y >= 0 && y < height) || posKey(x, y) !== key) return -1;
         return y * width + x;
     };
-    const carried = startState.inventory;
-    const bitOf = new Map();
-    const bitItems = [];
-    const pickupBit = new Int32Array(cells);
+    // `step` adds a TRUTHY id on arrival; anything else changes nothing.
+    const pickupAt = new Array(cells).fill(undefined);
     for (const [key, itemId] of world.items) {
-        // `step` adds a TRUTHY id not already held; anything else changes nothing.
         const cell = cellOf(key);
-        if (cell < 0 || !itemId || carried.has(itemId)) continue;
-        let bit = bitOf.get(itemId);
-        if (bit === undefined) {
-            if (bitItems.length === MASK_PICKUP_LIMIT) return null;
-            bit = 1 << bitItems.length;
-            bitOf.set(itemId, bit);
-            bitItems.push(itemId);
-        }
-        pickupBit[cell] = bit;
+        if (cell >= 0 && itemId) pickupAt[cell] = itemId;
     }
     const obstacleAt = new Array(cells).fill(undefined);
     for (const [key, obstacleId] of world.obstacles) {
         const cell = cellOf(key);
         if (cell >= 0) obstacleAt[cell] = obstacleId;
     }
-    const inventories = new Map();
-    const inventoryOf = (mask) => {
-        let inventory = inventories.get(mask);
-        if (inventory === undefined) {
-            inventory = new Set(carried);
-            for (let i = 0; i < bitItems.length; i++) if (mask & (1 << i)) inventory.add(bitItems[i]);
-            inventories.set(mask, inventory);
-        }
-        return inventory;
-    };
-    const clearances = new Map();
-    const cleared = (obstacleId, mask) => {
-        let byMask = clearances.get(obstacleId);
-        if (byMask === undefined) clearances.set(obstacleId, byMask = new Map());
-        let answer = byMask.get(mask);
-        if (answer === undefined) {
-            answer = isObstacleCleared(obstacleId, inventoryOf(mask), world.obstacleLib);
-            byMask.set(mask, answer);
-        }
-        return answer;
-    };
-    const bits = cells * 2 ** bitItems.length;
-    const bitmap = bits <= VISITED_BITMAP_LIMIT ? new Uint8Array(Math.ceil(bits / 8)) : null;
-    const seen = bitmap ? null : new Set();
-    // visited(k) marks k and answers whether it was ALREADY marked.
-    const visited = bitmap
-        ? (k) => {
-            const byte = k >>> 3;
-            const flag = 1 << (k & 7);
-            if (bitmap[byte] & flag) return true;
-            bitmap[byte] |= flag;
-            return false;
-        }
-        : (k) => (seen.has(k) ? true : (seen.add(k), false));
+    const inventory = new Set(startState.inventory);
     const start = startState.player_pos.y * width + startState.player_pos.x;
-    visited(start);
-    const order = [start];
-    const masks = [0];
-    for (let head = 0; head < order.length; head++) {
-        const cell = order[head];
-        const mask = masks[head];
-        const x = cell % width;
-        const y = (cell - x) / width;
-        for (const input of INPUTS) {
-            const { dx, dy } = DELTAS[input];
-            const nx = x + dx;
-            const ny = y + dy;
-            if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
-            const next = ny * width + nx;
-            if (world.tiles[next] !== TILE_FLOOR) continue;
-            const obstacleId = obstacleAt[next];
-            if (obstacleId && !cleared(obstacleId, mask)) continue;
-            const nextMask = mask | pickupBit[next];
-            if (visited(nextMask * cells + next)) continue;
-            order.push(next);
-            masks.push(nextMask);
+    for (;;) {
+        // `isObstacleCleared` is a function of (obstacle, inventory), and the
+        // inventory is fixed for the pass: one answer per obstacle per pass.
+        const clearances = new Map();
+        const cleared = (obstacleId) => {
+            let answer = clearances.get(obstacleId);
+            if (answer === undefined) {
+                answer = isObstacleCleared(obstacleId, inventory, world.obstacleLib);
+                clearances.set(obstacleId, answer);
+            }
+            return answer;
+        };
+        const seen = new Uint8Array(cells);
+        seen[start] = 1;
+        const order = [start];
+        const found = [];
+        for (let head = 0; head < order.length; head++) {
+            const cell = order[head];
+            const x = cell % width;
+            const y = (cell - x) / width;
+            for (const input of INPUTS) {
+                const { dx, dy } = DELTAS[input];
+                const nx = x + dx;
+                const ny = y + dy;
+                if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+                const next = ny * width + nx;
+                if (seen[next] || world.tiles[next] !== TILE_FLOOR) continue;
+                const obstacleId = obstacleAt[next];
+                if (obstacleId && !cleared(obstacleId)) continue;
+                seen[next] = 1;
+                order.push(next);
+                const itemId = pickupAt[next];
+                if (itemId && !inventory.has(itemId)) found.push(itemId);
+            }
         }
+        if (found.length === 0) return order;
+        for (const itemId of found) inventory.add(itemId);
     }
-    return order;
 }
 
 /**
- * ⛔ TEST ONLY — both forms' discovery order, as tile indices, for the row that
- * holds the integer form to the general one (`byMask` null when the world needs
- * the general form).
+ * ⛔ TEST ONLY — the placer's reachable list and its references, as tile
+ * indices: `fixpoint` (null when the world needs the general form), `byKey`
+ * (the general form's list, a tile once per inventory it was reached under) and
+ * `placer` (what `pickReachableFloorTile` draws over).
  */
 export function _testOnly_reachableTileOrders(world, startState) {
     const width = world.width;
     return {
-        byMask: reachableTileOrder(world, startState),
+        fixpoint: reachableTileFixpoint(world, startState),
         byKey: reachableTilesByKey(world, startState).map((t) => t.y * width + t.x),
+        placer: reachableTileCells(world, startState),
     };
 }
-
 // Floor-only flood fill from the entrance: walls block, obstacles are
 // transparent. This matches what extractPathsAndObstacles consumes
 // (ghostStep semantics) — a target tile in this set is guaranteed to
@@ -1458,7 +1434,8 @@ function placeGateAndKey(world, rng, params, { door_id = 'door_red', key_id = 'k
         setObstacle(world, doorPos.x, doorPos.y, door_id);
 
         // With empty inventory the door acts as a wall, so `reachableTiles`
-        // returns exactly the pre-door region.
+        // returns exactly the pre-door region — each tile once (since C1), so
+        // the key's draw below is uniform over it.
         const beforeDoor = reachableTiles(world, createState(world));
 
         // Door must be a *cut vertex* — a position that every entrance→
@@ -1472,9 +1449,14 @@ function placeGateAndKey(world, rng, params, { door_id = 'door_red', key_id = 'k
             continue;
         }
 
+        // ⛔ Not a tile that already holds an item or an exit: `setItem` would
+        // overwrite a placed item (an earlier pair's key — a location silently
+        // lost; PM0's finding, fixed at C1, plan §42) or put a pickup on an exit.
         const keyCandidates = beforeDoor.filter((p) =>
             !(p.x === world.entrance.x && p.y === world.entrance.y)
-            && !(p.x === doorPos.x && p.y === doorPos.y),
+            && !(p.x === doorPos.x && p.y === doorPos.y)
+            && !getItem(world, p.x, p.y)
+            && !isExit(world, p.x, p.y),
         );
         if (keyCandidates.length < params.gateKeyMinBeforeDoor) {
             clearObstacle(world, doorPos.x, doorPos.y);
@@ -1634,11 +1616,11 @@ export function generateMaze(config) {
 
 function pickReachableFloorTile(world, rng, excluded) {
     const width = world.width;
-    const start = createState(world);
-    // ⛓ The reachable list as tile indices, in discovery order, repeats and all
-    // (see `reachableTiles`) — the draw below is over exactly that multiset.
-    const order = reachableTileOrder(world, start)
-        ?? reachableTilesByKey(world, start).map((t) => t.y * width + t.x);
+    // ⛓ The reachable list as tile indices, in discovery order (see
+    // `reachableTiles`): each reachable tile once, so the ONE draw below is
+    // uniform over the reachable candidates (since C1; before it the list
+    // repeated a tile once per inventory, and the draw weighted it).
+    const order = reachableTileCells(world, createState(world));
     const excludedKeys = new Set(excluded.map((p) => `${p.x},${p.y}`));
     // The candidate test is a property of the TILE, asked once per tile.
     const verdicts = new Map();

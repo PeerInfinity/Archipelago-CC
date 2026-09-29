@@ -1,15 +1,18 @@
 /**
- * The placer's reachable-tile BFS on integers (APWORLD SUBSTRATE CHANGE C0, plan
- * §41) — held to the general form it replaced, element for element.
+ * The placer's reachable list (APWORLD SUBSTRATE CHANGE C0 → C1, plan §41–§42).
  *
- * `reachableTileOrder` must return EXACTLY the list `reachableTilesByKey` does:
- * the same states in the same discovery order. The list is a multiset whose size
- * and order feed the placer's rng draw, so "the same set of tiles" is not the
- * bar — a list one repeat shorter moves every generated room (plan §40.1).
+ * Since C1 the placer draws over `reachableTileFixpoint`'s list — every
+ * reachable tile ONCE, in the discovery order of a position BFS under everything
+ * collectable — not over the full-state BFS's projection, which repeated a tile
+ * once per inventory it was first reached under (the multiset C0 kept
+ * byte-identical, and whose 2^u states were the maze location cliff).
  *
- * The reference is the general form itself — the BFS over `step` keyed by
- * `mazeVisitedKey`, unchanged but for a head-index queue — so the property does
- * not share the subject's representation (trap 1430).
+ * The references are built from `step` itself, never from the subject's
+ * representation (trap 1430):
+ *   · the SET — the general form (`reachableTilesByKey`, the BFS over `step`
+ *     keyed by `mazeVisitedKey`), deduplicated;
+ *   · the ORDER — a position-keyed BFS over `step` with `inventoryOverride` set
+ *     to the carried items plus every pickup standing on that set.
  */
 import { describe, it, expect } from 'vitest';
 
@@ -17,13 +20,13 @@ import { createRng } from '../shared/rng.js';
 import { reach, makeBfsSolver } from '../shared/simulatorCore.js';
 import {
     TILE_WALL, INPUTS, INPUT_N, INPUT_S, INPUT_E, INPUT_W,
-    createWorld, createState, isFloor, getObstacle,
+    createWorld, createState, isFloor, getObstacle, step,
     extractPathsAndObstacles,
-    setTile, setItem, setObstacle, setButton, setBlock,
-    placeFromItems,
+    setTile, setItem, setObstacle, setButton, setBlock, clearItem, clearObstacle,
+    generateRegionCore, placeFromItems,
     _testOnly_reachableTileOrders,
 } from './mazeRoomEngine.js';
-import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { DEFAULT_OBSTACLES, isObstacleCleared } from '../shared/procgen/library.js';
 
 const PICKUP_IDS = ['key_a', 'key_b', 'key_c', 'gem', 'coin'];
 const ABSENT_ID = 'never_placed';
@@ -81,68 +84,116 @@ function randomWorld(rng) {
     return world;
 }
 
-describe('reachableTileOrder — the integer BFS is the general BFS, element for element', () => {
-    it('matches the key-form discovery order over random worlds, and the population exercises repeats, gates opened by a pickup, and a carried start', () => {
-        const rng = createRng(20260928);
-        const covered = { repeatedTile: 0, gateCrossed: 0, carriedStart: 0 };
-        for (let i = 0; i < 300; i++) {
-            const world = randomWorld(rng);
-            const start = createState(world);
-            if (rng.next() < 0.25) {
-                start.inventory.add(PICKUP_IDS[Math.floor(rng.next() * PICKUP_IDS.length)]);
-                covered.carriedStart++;
-            }
-            const { byMask, byKey } = _testOnly_reachableTileOrders(world, start);
-            expect(byMask, `world ${i}`).toEqual(byKey);
+/** Random worlds, a quarter of them with a carried start item. */
+function* randomCases(seed, n) {
+    const rng = createRng(seed);
+    for (let i = 0; i < n; i++) {
+        const world = randomWorld(rng);
+        const start = createState(world);
+        const carried = rng.next() < 0.25;
+        if (carried) start.inventory.add(PICKUP_IDS[Math.floor(rng.next() * PICKUP_IDS.length)]);
+        yield { i, world, start, carried };
+    }
+}
+
+const cellKey = (world, cell) => `${cell % world.width},${Math.floor(cell / world.width)}`;
+
+/**
+ * The ORDER reference: the carried items plus every pickup on the general
+ * form's reachable set, then ONE position-keyed BFS over `step` with that
+ * inventory as its override (FIFO, `INPUTS` order).
+ */
+function positionBfsUnderEverything(world, start, byKey) {
+    const inventory = new Set(start.inventory);
+    for (const cell of byKey) {
+        const itemId = world.items.get(cellKey(world, cell));
+        if (itemId) inventory.add(itemId);
+    }
+    const width = world.width;
+    const first = start.player_pos.y * width + start.player_pos.x;
+    const seen = new Set([first]);
+    const queue = [start];
+    const out = [first];
+    for (let head = 0; head < queue.length; head++) {
+        for (const input of INPUTS) {
+            const next = step(world, queue[head], input, inventory);
+            if (!next) continue;
+            const cell = next.player_pos.y * width + next.player_pos.x;
+            if (seen.has(cell)) continue;
+            seen.add(cell);
+            queue.push(next);
+            out.push(cell);
+        }
+    }
+    return out;
+}
+
+describe('reachableTileFixpoint — the general form\'s reachable SET, each tile once', () => {
+    it('lists exactly the tiles the full-state BFS reaches, none twice, and the placer draws over it — over random worlds whose population opens gates with pickups, repeats tiles, and carries a start item', () => {
+        const covered = { repeatedTile: 0, gateCrossed: 0, keyBehindDoor: 0, carriedStart: 0 };
+        for (const { i, world, start, carried } of randomCases(20260928, 300)) {
+            const { fixpoint, byKey, placer } = _testOnly_reachableTileOrders(world, start);
+            expect(fixpoint, `world ${i}`).not.toBeNull();
+            expect(new Set(fixpoint).size, `world ${i}: no tile twice`).toBe(fixpoint.length);
+            expect([...fixpoint].sort((a, b) => a - b), `world ${i}`).toEqual([...new Set(byKey)].sort((a, b) => a - b));
+            expect(placer, `world ${i}`).toEqual(fixpoint);
+            if (carried) covered.carriedStart++;
             if (new Set(byKey).size < byKey.length) covered.repeatedTile++;
-            const width = world.width;
-            const gated = byKey.some((c) => world.obstacles.has(`${c % width},${Math.floor(c / width)}`)
-                && world.obstacleLib[world.obstacles.get(`${c % width},${Math.floor(c / width)}`)]);
-            if (gated) covered.gateCrossed++;
+            const gates = fixpoint.map((c) => world.obstacles.get(cellKey(world, c)))
+                .filter((id) => id && world.obstacleLib[id]);
+            if (gates.length) covered.gateCrossed++;
+            // A gate the START inventory does not clear, on the list: only a
+            // pickup collected on the way opened it.
+            if (gates.some((id) => !isObstacleCleared(id, start.inventory, world.obstacleLib))) covered.keyBehindDoor++;
         }
         // The property is only as good as the worlds it ran on.
         expect(covered.repeatedTile).toBeGreaterThan(0);
         expect(covered.gateCrossed).toBeGreaterThan(0);
+        expect(covered.keyBehindDoor).toBeGreaterThan(0);
         expect(covered.carriedStart).toBeGreaterThan(0);
     });
 
-    it('hands a world with blocks or buttons to the general form', () => {
-        const buttons = createWorld(4, 3, { entrance: { x: 0, y: 0 } });
-        setButton(buttons, 2, 1, 'button_A');
-        expect(_testOnly_reachableTileOrders(buttons, createState(buttons)).byMask).toBeNull();
-        const blocks = createWorld(4, 3, { entrance: { x: 0, y: 0 } });
-        setBlock(blocks, 2, 1);
-        expect(_testOnly_reachableTileOrders(blocks, createState(blocks)).byMask).toBeNull();
+    it('lists them in the order of ONE position BFS under everything collectable (the draw reads the order too)', () => {
+        let differsFromFirstSeen = 0;
+        for (const { i, world, start } of randomCases(9282026, 300)) {
+            const { fixpoint, byKey } = _testOnly_reachableTileOrders(world, start);
+            expect(fixpoint, `world ${i}`).toEqual(positionBfsUnderEverything(world, start, byKey));
+            // …which is NOT the general form's first-seen order in general, so
+            // this row says something the set row does not.
+            if (JSON.stringify(fixpoint) !== JSON.stringify([...new Set(byKey)])) differsFromFirstSeen++;
+        }
+        expect(differsFromFirstSeen).toBeGreaterThan(0);
     });
 
-    it('tracks distinct pickups up to its mask width, then hands the world to the general form — the width derived by probing', () => {
-        // Pickups on walled-off cells: never collected, so the key form stays
-        // cheap while the integer form still has to give each id a bit.
-        const worldWith = (n) => {
-            const width = n + 2;
-            const world = createWorld(width, 3, { entrance: { x: 0, y: 0 } });
-            for (let x = 0; x < width; x++) setTile(world, x, 1, TILE_WALL);
-            for (let x = 0; x < n; x++) setItem(world, x, 2, `pickup_${x}`);
-            setItem(world, 1, 0, 'pickup_0');
-            return world;
-        };
-        let limit = null;
-        for (let n = 1; n <= 64 && limit === null; n++) {
-            const world = worldWith(n);
-            const { byMask, byKey } = _testOnly_reachableTileOrders(world, createState(world));
-            if (byMask === null) limit = n - 1;
-            else expect(byMask).toEqual(byKey);
-        }
-        expect(limit).not.toBeNull();
-        expect(limit).toBeGreaterThan(0);
+    it('hands a world with blocks or buttons to the general form — a HELD button is not monotone, and the fixpoint would lose the door it holds', () => {
+        // Row 0: entrance · button_A · door_A · floor (rows 1–2 wall). Standing
+        // on the button holds `sw_A`, which opens the door for the step off it
+        // (see `step`).
+        const buttons = createWorld(4, 3, {
+            entrance: { x: 0, y: 0 }, buttonLib: { button_A: { kind: 'button', holds: 'sw_A' } },
+        });
+        for (let x = 0; x < 4; x++) for (const y of [1, 2]) setTile(buttons, x, y, TILE_WALL);
+        buttons.obstacleLib = { ...DEFAULT_OBSTACLES, door_A: { clear_set_type: 'combo_list', clear_set: [['sw_A']] } };
+        setButton(buttons, 1, 0, 'button_A');
+        setObstacle(buttons, 2, 0, 'door_A');
+        const held = _testOnly_reachableTileOrders(buttons, createState(buttons));
+        expect(held.fixpoint).toBeNull();
+        expect(held.placer).toEqual(held.byKey);
+        expect(held.placer).toContain(2);
+        expect(held.placer).toContain(3);
+        const blocks = createWorld(4, 3, { entrance: { x: 0, y: 0 } });
+        setBlock(blocks, 2, 1);
+        const pushed = _testOnly_reachableTileOrders(blocks, createState(blocks));
+        expect(pushed.fixpoint).toBeNull();
+        expect(pushed.placer).toEqual(pushed.byKey);
     });
 });
 
 /** An open room (no walls) holding `u` distinct pickups no gate stands on. */
-function openRoomWithPickups(u) {
-    const world = createWorld(8, 6, { entrance: { x: 4, y: 3 } });
+function openRoomWithPickups(u, width = 8, height = 6) {
+    const world = createWorld(width, height, { entrance: { x: Math.floor(width / 2), y: Math.floor(height / 2) } });
     world.obstacleLib = { ...DEFAULT_OBSTACLES };
-    for (let i = 0; i < u; i++) setItem(world, i % 8, Math.floor(i / 8), `pickup_${i}`);
+    for (let i = 0; i < u; i++) setItem(world, i % width, Math.floor(i / width), `pickup_${i}`);
     return world;
 }
 
@@ -152,16 +203,18 @@ function countingRng(seed) {
     return { next: () => { draws++; return rng.next(); }, get draws() { return draws; } };
 }
 
-describe('pickReachableFloorTile — the draw is over the SAME multiset', () => {
-    it('places pickups where a pick over the key-form list would, with the same number of rng draws', () => {
-        // The reference placer: the pre-C0 pickReachableFloorTile over the key
-        // form's list (every repeat kept), one draw per placement.
+describe('pickReachableFloorTile — one draw, uniform over the reachable tiles', () => {
+    it('places pickups where a pick over the ORDER reference would, one rng draw per placement', () => {
+        // The reference placer: one draw per placement over the reference list,
+        // the candidate test applied per tile.
         const referencePlace = (world, items, rng) => {
             const placed = [];
             for (const item_id of items) {
                 const excluded = new Set(placed.map((p) => `${p.position.x},${p.position.y}`));
                 const width = world.width;
-                const candidates = _testOnly_reachableTileOrders(world, createState(world)).byKey
+                // An open room: no gate, so the ORDER reference needs no inventory
+                // (and the full-state list it would be read from is 2^u long).
+                const candidates = positionBfsUnderEverything(world, createState(world), [])
                     .map((c) => ({ x: c % width, y: Math.floor(c / width) }))
                     .filter((t) => !(t.x === world.entrance.x && t.y === world.entrance.y)
                         && ![...world.exits.values()].some((e) => e.x === t.x && e.y === t.y)
@@ -176,27 +229,31 @@ describe('pickReachableFloorTile — the draw is over the SAME multiset', () => 
             return placed;
         };
         const items = Array.from({ length: 8 }, (_, i) => `loc_item_${i}`);
-        for (const seed of [1, 2, 3]) {
+        // Pickups already in the room, so the full-state list repeats tiles and a
+        // draw over it would land elsewhere.
+        for (const [seed, before] of [[1, 0], [2, 3], [3, 5]]) {
             const subjectRng = countingRng(seed);
             const referenceRng = countingRng(seed);
-            const subject = placeFromItems(openRoomWithPickups(0), { items_to_place: items, rng: subjectRng });
-            const reference = referencePlace(openRoomWithPickups(0), items, referenceRng);
+            const subject = placeFromItems(openRoomWithPickups(before), { items_to_place: items, rng: subjectRng });
+            const reference = referencePlace(openRoomWithPickups(before), items, referenceRng);
             expect(subject.placed_items, `seed ${seed}`).toEqual(reference);
-            expect(subjectRng.draws, `seed ${seed}: draws`).toBe(referenceRng.draws);
             expect(subject.placed_items.length).toBe(items.length);
+            expect(subjectRng.draws, `seed ${seed}: draws`).toBe(referenceRng.draws);
+            expect(subjectRng.draws, `seed ${seed}: one draw per placement`).toBe(items.length);
         }
     });
 
-    it('places u open-room pickups for under a quarter of ONE key-form BFS over the finished room (the cliff\'s constant, as a relation)', () => {
-        // With the key form, placing u pickups costs a BFS per placement over up to
-        // floor × 2^k states (k placed so far): Σ 2^k ≈ 2^u, about ONE key-form BFS
-        // over the finished room (measured: the pre-C0 path sits AT this bound).
-        // The integer form must bring the whole placement under a QUARTER of it
-        // (measured 14–20× under at C0; the margin absorbs a loaded machine).
-        const u = 9;
+    it('places u open-room pickups for under 4·u position BFSs over the finished room — polynomial, where the full-state list costs about 2^u of them', () => {
+        // The fixpoint costs (passes ≤ 2 in an open room) × tiles per placement,
+        // so u placements sit at a small multiple of u position BFSs (measured at
+        // C1: 3.4–8.6 of them for u = 10–14); the full-state list costs
+        // Σ 2^k·tiles ≈ 2^u of them (the cliff). The bound — 4·u reference BFSs
+        // over `step` — sits between the two orders, far from both (trap 1498;
+        // the mutant's measurement is in plan §42.1).
+        const u = 12;
         const best = (fn) => {
             let ms = Infinity;
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 5; i++) {
                 const t0 = performance.now();
                 fn();
                 ms = Math.min(ms, performance.now() - t0);
@@ -204,12 +261,60 @@ describe('pickReachableFloorTile — the draw is over the SAME multiset', () => 
             return ms;
         };
         const items = Array.from({ length: u }, (_, i) => `loc_item_${i}`);
-        const placeMs = best(() => placeFromItems(openRoomWithPickups(0), { items_to_place: items, rng: createRng(1) }));
-        const finished = openRoomWithPickups(u);
-        const { byKey } = _testOnly_reachableTileOrders(finished, createState(finished));
-        expect(byKey.length).toBeGreaterThan(finished.width * finished.height * 2 ** (u - 1));
-        const oneKeyBfsMs = best(() => _testOnly_reachableTileOrders(finished, createState(finished)));
-        expect(placeMs * 4).toBeLessThan(oneKeyBfsMs);
+        const placeMs = best(() => placeFromItems(openRoomWithPickups(0, 16, 16), { items_to_place: items, rng: createRng(1) }));
+        // No gate stands in the room, so the reference needs no inventory (and
+        // asking the full-state BFS for one here would be the cliff itself).
+        const finished = openRoomWithPickups(u, 16, 16);
+        const start = createState(finished);
+        expect(positionBfsUnderEverything(finished, start, []).length).toBe(finished.width * finished.height);
+        const onePositionBfsMs = best(() => positionBfsUnderEverything(finished, start, []));
+        expect(placeMs).toBeLessThan(4 * u * onePositionBfsMs);
+    });
+});
+
+describe('placeGateAndKey — a key never lands on a tile that already holds an item', () => {
+    it('keeps every earlier placement over corridor rooms with three key/door pairs — a population where the key\'s draw region held an earlier key', () => {
+        // PM0's finding (plan §42): the key's candidates excluded only the
+        // entrance and the door, so a later pair's key could be dropped onto an
+        // earlier pair's key and `setItem` overwrote it — a location lost.
+        const pairs = [['key_red', 'door_red'], ['key_green', 'door_green'], ['key_blue', 'door_blue']];
+        let rooms = 0;
+        let couldHaveHit = 0;
+        for (let seed = 1; seed <= 150; seed++) {
+            const width = 6 + (seed % 5);
+            const height = 5 + (seed % 4);
+            const { world } = generateRegionCore({
+                region_id: 'r', size: { width, height }, params: {}, rng: createRng(seed),
+                entrances: [{ side: 'W', tile: { x: 0, y: Math.floor(height / 2) } }], exits: [{ side: 'E' }],
+            });
+            const out = placeFromItems(world, {
+                items_to_place: [...pairs.map(([key]) => key), 'coin'],
+                obstacles_to_place: pairs.map(([, door]) => door),
+                rng: createRng(seed * 7),
+            });
+            rooms++;
+            // Every placement is still standing where it was put.
+            for (const { item_id, position } of out.placed_items) {
+                expect(world.items.get(`${position.x},${position.y}`), `seed ${seed} ${item_id}`).toBe(item_id);
+            }
+            // Coverage: rebuild the world as it stood at each pair's key draw
+            // (the later pairs and this key not yet placed) and ask whether an
+            // earlier key stood in the region the key was drawn from.
+            const placedPairs = out.placed_obstacles.map((o) => [o, out.placed_items.find((i) => i.item_id === pairs.find(([, d]) => d === o.obstacle_id)[0])]);
+            for (let k = 1; k < placedPairs.length; k++) {
+                const then = structuredClone(world);
+                for (const [door, key] of placedPairs.slice(k + 1)) {
+                    clearObstacle(then, door.position.x, door.position.y);
+                    clearItem(then, key.position.x, key.position.y);
+                }
+                clearItem(then, placedPairs[k][1].position.x, placedPairs[k][1].position.y);
+                clearItem(then, ...Object.values(out.placed_items.find((i) => i.item_id === 'coin')?.position ?? { x: -1, y: -1 }));
+                const region = new Set(_testOnly_reachableTileOrders(then, createState(then)).placer);
+                if (placedPairs.slice(0, k).some(([, key]) => region.has(key.position.y * width + key.position.x))) couldHaveHit++;
+            }
+        }
+        expect(rooms).toBeGreaterThan(0);
+        expect(couldHaveHit).toBeGreaterThan(0);
     });
 });
 

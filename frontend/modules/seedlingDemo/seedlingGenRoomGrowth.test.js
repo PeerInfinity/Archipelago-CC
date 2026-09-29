@@ -14,8 +14,12 @@
  *     every door approach and location reached from the start;
  *   - the COMPOSITE MAP (a loaded document) sizes its cells off the payloads that
  *     carry `width`/`height` (the mazes) — a grown room moves no cell.
- * Measured on the two census worlds G8 closed: grid growth 3×3 at 8×6 seed 1
- * (`region_2_1` grows to 10×8) and the host state at 8×6 seed 26 (`region_2_2`).
+ * Measured on two census worlds: grid growth 3×3 at 8×6 seed 6 (`region_1_1`
+ * grows to 10×8) and the host state at 8×6 seed 26 (`region_2_2`). ⛓ The grid
+ * world was seed 1 (`region_2_1`) until APWORLD SUBSTRATE CHANGE C1 (plan §42):
+ * the maze's gate-and-key placement no longer drops a key on a tile holding an
+ * item or an exit, its draw moved, and seed 1 no longer grows; seed 6 grows the
+ * same before and after.
  */
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -37,14 +41,14 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const GEN = 'flash_seedling_gen';
 
 const build = async (state) => (await runPresetHeadless(buildRunFromState(structuredClone(state)))).rulesJson;
-const GRID_8x6_S1 = {
-    mode: 'gridGrowth', params: { seed: 1, gridWidth: 3, gridHeight: 3, regionWidth: 8, regionHeight: 6 },
+const GRID_8x6_S6 = {
+    mode: 'gridGrowth', params: { seed: 6, gridWidth: 3, gridHeight: 3, regionWidth: 8, regionHeight: 6 },
     scenario: { items: { key_red: 1, key_blue: 1, victory: 1 }, obstacles: { door_red: 1, door_blue: 1 } },
     substrateQuotas: {}, substrateMix: { maze: 1, [GEN]: 1 }, substrateMode: 'mix',
 };
 const HOST_8x6_S26 = { ...SEEDLING_GENERATED_HOST_STATE,
     params: { ...SEEDLING_GENERATED_HOST_STATE.params, seed: 26, regionWidth: 8, regionHeight: 6 } };
-const WORLDS = [['grid 8x6 seed 1', GRID_8x6_S1, 'region_2_1'], ['host 8x6 seed 26', HOST_8x6_S26, 'region_2_2']];
+const WORLDS = [['grid 8x6 seed 6', GRID_8x6_S6, 'region_1_1'], ['host 8x6 seed 26', HOST_8x6_S26, 'region_2_2']];
 const GROWN = { width: 10, height: 8 };
 
 /** The rules.json with one region's sidecar taken out — everything the room's size could have reached. */

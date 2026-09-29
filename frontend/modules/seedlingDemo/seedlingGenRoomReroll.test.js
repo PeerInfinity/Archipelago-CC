@@ -399,13 +399,21 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      * sizes: attempt 9 is the first draw at 10×8), every other room at 8×6, every
      * room lawful and re-certified on its FINAL record, and the core called ONCE per
      * region (growth is inside the room's call — the engine's own loop never entered).
+     * ⛓ RE-MEASURED at APWORLD SUBSTRATE CHANGE C1 (2026-09-28, plan §42): grid seeds
+     * 1 and 8 LEFT the population — the maze's gate-and-key placement no longer
+     * drops a key on a tile holding an item or an exit (PM0's finding), which
+     * shortens the key's candidate list, so their draws moved and neither world
+     * spends a room's budget any more (seed 8's base build had also LOST a
+     * location that way: 2 of 3 — as had seeds 3, 7 and 20 of the 40). Seeds 9 and 35 took their places: the grown rooms below, measured
+     * identical at the C1 base `34f32cf324` and after (a census over grid seeds
+     * 1–40, both engines).
      */
     const HOST = (seed) => withSeed(SEEDLING_GENERATED_HOST_STATE, seed, { regionWidth: 8, regionHeight: 6 });
     it.each([
-        ['grid 8x6 seed 1', () => GRID(1, 8, 6), { region_2_1: [9, 'doors'] }],
         ['grid 8x6 seed 3', () => GRID(3, 8, 6), { region_1_1: [11, 'doors'], region_2_1: [9, 'engineDoors'] }],
         ['grid 8x6 seed 6', () => GRID(6, 8, 6), { region_1_1: [10, 'doors'] }],
-        ['grid 8x6 seed 8', () => GRID(8, 8, 6), { region_1_0: [13, 'engineDoors'] }],
+        ['grid 8x6 seed 9', () => GRID(9, 8, 6), { region_1_0: [9, 'doors'], region_0_1: [9, 'engineDoors'] }],
+        ['grid 8x6 seed 35', () => GRID(35, 8, 6), { region_1_0: [14, 'engineDoors'] }],
         ['host 8x6 seed 26', () => HOST(26), { region_2_2: [9, 'doors'] }],
         ['host 8x6 seed 27', () => HOST(27), { region_2_2: [9, 'doors'] }],
         ['host 8x6 seed 36', () => HOST(36), { region_2_2: [11, 'doors'] }],
@@ -443,10 +451,22 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      * ONCE, and with `seedling_bot_ap_p4e/game.html` substituted back to p4d
      * each still hashes to the value above (9af2ee8e / 3601cc0d / 638b4110 —
      * measured), so the wiring is the whole move.
+     * ⛓ RE-MEASURED at APWORLD SUBSTRATE CHANGE C1 (2026-09-28, plan §42) — the
+     * MAZE placer moved, no Seedling room re-rolled, and no room here grew:
+     *   · grid 8×6 seed 2 (9f77cf55 → 8c9983b5): the placer's draw is uniform
+     *     over reachable tiles (the fixpoint); ONE maze room moved one pickup —
+     *     `region_1_0`'s `key_blue` (1,4) → (0,4), so its location name (which
+     *     carries the tile) moved with it in `regions`, `canonical_placements`
+     *     and `sphere_log`; nothing else.
+     *   · grid 10×10 seed 7 (c395917a → 714ac4ef): a gate-and-key placement no
+     *     longer drops a key onto an earlier key (PM0's finding). The base build
+     *     LOST `key_red` that way — `key_blue` was dropped on its tile in
+     *     `region_1_0`, 2 locations of 3 — and now has all 3, so the draws after
+     *     that pair moved.
      */
     it.each([
-        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '9f77cf55'],
-        ['grid 10x10 seed 7', () => GRID(7, 10, 10), 'c395917a'],
+        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '8c9983b5'],
+        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '714ac4ef'],
         ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), 'a4303571'],
     ])('%s built before G8: byte-identical', async (_name, state, md5) => {
         const rulesJson = await build(state());
