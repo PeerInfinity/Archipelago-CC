@@ -50,10 +50,11 @@ Everything below this paragraph is generated from the code: each row is a questi
 | G5 | Exits can be locked behind items | ✓ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✓ | ✓ |
 | G6 | It has its own settings in the generation form | ✓ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✓ | ✗ |
 | G7 | A world of it can start with an empty inventory | ✗ (note 1) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| G8 | Any number of locations fits in one room | n/a | n/a | n/a | n/a | n/a | ✗ (note 2) | n/a | n/a | ✓ |
+| G8 | Any number of locations fits in one room | n/a | n/a | n/a | ✗ (note 2) | n/a | ✗ (note 3) | n/a | n/a | ✓ |
 
 1. Bounce Demo: a world starts with one of Left arrow / Right arrow — a bounce level cannot gate both arrows in one region, and hosts at most one arrowless-gated exit — the sphere route grants one arrow at the start for this reason
-2. Maze: a room holds `capacityAt(size)` of them — the room grows to hold more
+2. Seedling (generated room): a room holds `capacityAt(size)` of them — the room grows to hold more, up to 30 (the game's 30 persistence tags), which no size lifts
+3. Maze: a room holds `capacityAt(size)` of them — the room grows to hold more
 
 ## Edit
 

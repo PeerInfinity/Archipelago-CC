@@ -339,13 +339,13 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
-| `generationCost` | — | — | — | — | — | — | — | heavy | — |
+| `generationCost` | — | — | — | light | — | — | — | heavy | — |
 
 **Build-time — location capacity**
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
-| `locationCapacity` | — | — | — | — | — | {capacityAt, kind} | — | — | {kind} |
+| `locationCapacity` | — | — | — | {capacityAt, kind} | — | {capacityAt, kind} | — | — | {kind} |
 
 **Build-time — region library entries (capture / instantiate / validate)**
 
