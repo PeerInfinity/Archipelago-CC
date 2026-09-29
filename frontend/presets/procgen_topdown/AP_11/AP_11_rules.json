@@ -947,8 +947,8 @@
           ],
           "obstacles": [
             {
-              "x": 5,
-              "y": 5,
+              "x": 3,
+              "y": 4,
               "id": "logic_gate_0"
             }
           ],
@@ -960,8 +960,8 @@
               "locationName": "Inside Yellow Castle"
             },
             {
-              "x": 5,
-              "y": 5,
+              "x": 3,
+              "y": 4,
               "id": "Victory",
               "locationName": "Chalice Home"
             }
@@ -1076,7 +1076,7 @@
               "locationName": "RedMaze0"
             },
             {
-              "x": 1,
+              "x": 6,
               "y": 0,
               "id": "Freeincarnate",
               "locationName": "RedMaze1"

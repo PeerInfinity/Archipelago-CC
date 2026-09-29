@@ -169,7 +169,7 @@
             }
           },
           {
-            "name": "region_5_5__loc_1__1_0",
+            "name": "region_5_5__loc_1__2_4",
             "id": 1002,
             "access_rule": {
               "rule": "True_"
@@ -755,7 +755,7 @@
     "1": {
       "region_4_5__loc_0__6_2": "key_red",
       "region_5_5__loc_0__2_0": "key_blue",
-      "region_5_5__loc_1__1_0": "Ghost Spear",
+      "region_5_5__loc_1__2_4": "Ghost Spear",
       "region_6_5__loc_0__3_2": "key_green",
       "region_6_5__loc_1__5_2": "Progressive Swim",
       "Starting House - Chest": "Region Library Filler",
@@ -891,10 +891,10 @@
               "locationName": "region_5_5__loc_0__2_0"
             },
             {
-              "x": 1,
-              "y": 0,
+              "x": 2,
+              "y": 4,
               "id": "Ghost Spear",
-              "locationName": "region_5_5__loc_1__1_0"
+              "locationName": "region_5_5__loc_1__2_4"
             }
           ],
           "obstacleLib": {
@@ -6039,7 +6039,7 @@
           "new_accessible_locations": [
             "region_4_5__loc_0__6_2",
             "region_5_5__loc_0__2_0",
-            "region_5_5__loc_1__1_0"
+            "region_5_5__loc_1__2_4"
           ],
           "new_accessible_regions": [
             "dungeon1_room1__r0c4",
@@ -6128,7 +6128,7 @@
             "region_5_4"
           ],
           "sphere_locations": [
-            "region_5_5__loc_1__1_0"
+            "region_5_5__loc_1__2_4"
           ]
         }
       }

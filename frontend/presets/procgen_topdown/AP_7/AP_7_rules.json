@@ -18492,23 +18492,23 @@
               "id": "logic_gate_24"
             },
             {
-              "x": 16,
-              "y": 12,
+              "x": 6,
+              "y": 11,
               "id": "logic_gate_25"
             },
             {
-              "x": 18,
-              "y": 13,
+              "x": 16,
+              "y": 5,
               "id": "logic_gate_26"
             },
             {
-              "x": 14,
-              "y": 15,
+              "x": 1,
+              "y": 3,
               "id": "logic_gate_27"
             },
             {
-              "x": 7,
-              "y": 11,
+              "x": 16,
+              "y": 15,
               "id": "logic_gate_28"
             }
           ],
@@ -18520,32 +18520,32 @@
               "locationName": "Mushroom"
             },
             {
-              "x": 5,
-              "y": 8,
+              "x": 9,
+              "y": 1,
               "id": "Piece of Heart",
               "locationName": "Bottle Merchant"
             },
             {
-              "x": 16,
-              "y": 12,
+              "x": 6,
+              "y": 11,
               "id": "Progressive Sword",
               "locationName": "Flute Spot"
             },
             {
-              "x": 18,
-              "y": 13,
+              "x": 16,
+              "y": 5,
               "id": "Rupees (50)",
               "locationName": "Sunken Treasure"
             },
             {
-              "x": 14,
-              "y": 15,
+              "x": 1,
+              "y": 3,
               "id": "Cane of Somaria",
               "locationName": "Purple Chest"
             },
             {
-              "x": 7,
-              "y": 11,
+              "x": 16,
+              "y": 15,
               "id": "Activated Flute",
               "locationName": "Flute Activation Spot"
             }
@@ -19155,20 +19155,20 @@
               "locationName": "Blind's Hideout - Left"
             },
             {
-              "x": 0,
-              "y": 16,
+              "x": 20,
+              "y": 1,
               "id": "Quake",
               "locationName": "Blind's Hideout - Right"
             },
             {
-              "x": 6,
-              "y": 17,
+              "x": 0,
+              "y": 16,
               "id": "Piece of Heart",
               "locationName": "Blind's Hideout - Far Left"
             },
             {
-              "x": 21,
-              "y": 12,
+              "x": 9,
+              "y": 4,
               "id": "Arrows (10)",
               "locationName": "Blind's Hideout - Far Right"
             }
@@ -19257,8 +19257,8 @@
               "locationName": "Link's Uncle"
             },
             {
-              "x": 5,
-              "y": 0,
+              "x": 13,
+              "y": 4,
               "id": "Ice Rod",
               "locationName": "Secret Passage"
             }
@@ -19313,8 +19313,8 @@
           ],
           "obstacles": [
             {
-              "x": 8,
-              "y": 11,
+              "x": 12,
+              "y": 13,
               "id": "logic_gate_0"
             }
           ],
@@ -19326,8 +19326,8 @@
               "locationName": "King Zora"
             },
             {
-              "x": 8,
-              "y": 11,
+              "x": 12,
+              "y": 13,
               "id": "Boss Heart Container",
               "locationName": "Zora's Ledge"
             }
@@ -19510,8 +19510,8 @@
               "locationName": "Floodgate"
             },
             {
-              "x": 9,
-              "y": 3,
+              "x": 15,
+              "y": 0,
               "id": "Arrows (10)",
               "locationName": "Floodgate Chest"
             }
@@ -19969,20 +19969,20 @@
               "locationName": "Kakariko Well - Left"
             },
             {
-              "x": 9,
+              "x": 5,
               "y": 11,
               "id": "Rupees (5)",
               "locationName": "Kakariko Well - Middle"
             },
             {
               "x": 10,
-              "y": 19,
+              "y": 7,
               "id": "Piece of Heart",
               "locationName": "Kakariko Well - Right"
             },
             {
-              "x": 21,
-              "y": 2,
+              "x": 10,
+              "y": 14,
               "id": "Rupees (20)",
               "locationName": "Kakariko Well - Bottom"
             }
@@ -21465,33 +21465,33 @@
           ],
           "obstacles": [
             {
-              "x": 16,
-              "y": 10,
+              "x": 15,
+              "y": 16,
               "id": "logic_gate_0"
             },
             {
-              "x": 10,
-              "y": 13,
+              "x": 1,
+              "y": 3,
               "id": "logic_gate_1"
             },
             {
-              "x": 5,
-              "y": 17,
+              "x": 17,
+              "y": 7,
               "id": "logic_gate_2"
             },
             {
-              "x": 16,
-              "y": 15,
+              "x": 14,
+              "y": 6,
               "id": "logic_gate_3"
             },
             {
-              "x": 13,
-              "y": 3,
+              "x": 10,
+              "y": 0,
               "id": "logic_gate_4"
             },
             {
-              "x": 5,
-              "y": 11,
+              "x": 17,
+              "y": 10,
               "id": "logic_gate_5"
             }
           ],
@@ -21503,50 +21503,50 @@
               "locationName": "Eastern Palace - Compass Chest"
             },
             {
-              "x": 16,
-              "y": 10,
+              "x": 15,
+              "y": 16,
               "id": "Map (Eastern Palace)",
               "locationName": "Eastern Palace - Big Chest"
             },
             {
-              "x": 10,
-              "y": 19,
+              "x": 8,
+              "y": 10,
               "id": "Piece of Heart",
               "locationName": "Eastern Palace - Cannonball Chest"
             },
             {
-              "x": 10,
-              "y": 13,
+              "x": 1,
+              "y": 3,
               "id": "Small Key (Eastern Palace)",
               "locationName": "Eastern Palace - Dark Square Pot Key"
             },
             {
-              "x": 5,
-              "y": 17,
+              "x": 17,
+              "y": 7,
               "id": "Small Key (Eastern Palace)",
               "locationName": "Eastern Palace - Dark Eyegore Key Drop"
             },
             {
-              "x": 16,
-              "y": 15,
+              "x": 14,
+              "y": 6,
               "id": "Big Key (Eastern Palace)",
               "locationName": "Eastern Palace - Big Key Chest"
             },
             {
-              "x": 0,
-              "y": 15,
+              "x": 17,
+              "y": 12,
               "id": "Lamp",
               "locationName": "Eastern Palace - Map Chest"
             },
             {
-              "x": 13,
-              "y": 3,
+              "x": 10,
+              "y": 0,
               "id": "Compass (Eastern Palace)",
               "locationName": "Eastern Palace - Boss"
             },
             {
-              "x": 5,
-              "y": 11,
+              "x": 17,
+              "y": 10,
               "id": "Crystal 2",
               "locationName": "Eastern Palace - Prize"
             }
@@ -24536,7 +24536,7 @@
               "locationName": "Waterfall Fairy - Left"
             },
             {
-              "x": 10,
+              "x": 19,
               "y": 19,
               "id": "Rupees (20)",
               "locationName": "Waterfall Fairy - Right"
@@ -29994,23 +29994,23 @@
               "id": "logic_gate_1"
             },
             {
-              "x": 7,
-              "y": 5,
+              "x": 11,
+              "y": 1,
               "id": "logic_gate_2"
             },
             {
-              "x": 8,
-              "y": 15,
+              "x": 3,
+              "y": 0,
               "id": "logic_gate_3"
             },
             {
-              "x": 6,
-              "y": 16,
+              "x": 0,
+              "y": 0,
               "id": "logic_gate_4"
             },
             {
-              "x": 3,
-              "y": 18,
+              "x": 4,
+              "y": 19,
               "id": "logic_gate_5"
             }
           ],
@@ -30028,26 +30028,26 @@
               "locationName": "Hyrule Castle - Map Chest"
             },
             {
-              "x": 7,
-              "y": 5,
+              "x": 11,
+              "y": 1,
               "id": "Progressive Mail",
               "locationName": "Hyrule Castle - Zelda's Chest"
             },
             {
-              "x": 8,
-              "y": 15,
+              "x": 3,
+              "y": 0,
               "id": "Small Key (Hyrule Castle)",
               "locationName": "Hyrule Castle - Map Guard Key Drop"
             },
             {
-              "x": 6,
-              "y": 16,
+              "x": 0,
+              "y": 0,
               "id": "Progressive Shield",
               "locationName": "Hyrule Castle - Boomerang Guard Key Drop"
             },
             {
-              "x": 3,
-              "y": 18,
+              "x": 4,
+              "y": 19,
               "id": "Map (Hyrule Castle)",
               "locationName": "Hyrule Castle - Big Key Drop"
             }
@@ -30848,14 +30848,14 @@
               "locationName": "Sewers - Secret Room - Left"
             },
             {
-              "x": 5,
-              "y": 11,
+              "x": 11,
+              "y": 15,
               "id": "Piece of Heart",
               "locationName": "Sewers - Secret Room - Middle"
             },
             {
-              "x": 13,
-              "y": 13,
+              "x": 11,
+              "y": 19,
               "id": "Rupees (20)",
               "locationName": "Sewers - Secret Room - Right"
             }
@@ -32394,23 +32394,23 @@
           ],
           "obstacles": [
             {
-              "x": 13,
+              "x": 18,
               "y": 1,
               "id": "logic_gate_0"
             },
             {
-              "x": 9,
-              "y": 18,
+              "x": 20,
+              "y": 9,
               "id": "logic_gate_1"
             },
             {
-              "x": 5,
-              "y": 15,
+              "x": 11,
+              "y": 14,
               "id": "logic_gate_2"
             },
             {
-              "x": 20,
-              "y": 4,
+              "x": 2,
+              "y": 1,
               "id": "logic_gate_3"
             }
           ],
@@ -32422,26 +32422,26 @@
               "locationName": "Desert Palace - Desert Tiles 1 Pot Key"
             },
             {
-              "x": 13,
+              "x": 18,
               "y": 1,
               "id": "Small Key (Desert Palace)",
               "locationName": "Desert Palace - Beamos Hall Pot Key"
             },
             {
-              "x": 9,
-              "y": 18,
+              "x": 20,
+              "y": 9,
               "id": "Small Key (Desert Palace)",
               "locationName": "Desert Palace - Desert Tiles 2 Pot Key"
             },
             {
-              "x": 5,
-              "y": 15,
+              "x": 11,
+              "y": 14,
               "id": "Rupees (50)",
               "locationName": "Desert Palace - Boss"
             },
             {
-              "x": 20,
-              "y": 4,
+              "x": 2,
+              "y": 1,
               "id": "Red Pendant",
               "locationName": "Desert Palace - Prize"
             }
@@ -35615,8 +35615,8 @@
           ],
           "obstacles": [
             {
-              "x": 6,
-              "y": 5,
+              "x": 16,
+              "y": 0,
               "id": "logic_gate_0"
             }
           ],
@@ -35628,8 +35628,8 @@
               "locationName": "Desert Palace - Compass Chest"
             },
             {
-              "x": 6,
-              "y": 5,
+              "x": 16,
+              "y": 0,
               "id": "Compass (Desert Palace)",
               "locationName": "Desert Palace - Big Key Chest"
             }
@@ -40870,18 +40870,18 @@
           ],
           "obstacles": [
             {
-              "x": 14,
-              "y": 3,
+              "x": 11,
+              "y": 2,
               "id": "logic_gate_0"
             },
             {
-              "x": 16,
-              "y": 19,
+              "x": 18,
+              "y": 7,
               "id": "logic_gate_1"
             },
             {
-              "x": 19,
-              "y": 13,
+              "x": 21,
+              "y": 11,
               "id": "logic_gate_2"
             }
           ],
@@ -40893,20 +40893,20 @@
               "locationName": "Tower of Hera - Compass Chest"
             },
             {
-              "x": 14,
-              "y": 3,
+              "x": 11,
+              "y": 2,
               "id": "Map (Tower of Hera)",
               "locationName": "Tower of Hera - Big Chest"
             },
             {
-              "x": 16,
-              "y": 19,
+              "x": 18,
+              "y": 7,
               "id": "Small Key (Tower of Hera)",
               "locationName": "Tower of Hera - Boss"
             },
             {
-              "x": 19,
-              "y": 13,
+              "x": 21,
+              "y": 11,
               "id": "Crystal 7",
               "locationName": "Tower of Hera - Prize"
             }

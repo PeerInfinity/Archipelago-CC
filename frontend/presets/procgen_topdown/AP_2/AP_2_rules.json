@@ -867,8 +867,8 @@
               "id": "logic_gate_3"
             },
             {
-              "x": 7,
-              "y": 3,
+              "x": 3,
+              "y": 5,
               "id": "logic_gate_4"
             }
           ],
@@ -880,62 +880,62 @@
               "locationName": "Blue Labyrinth 0"
             },
             {
-              "x": 6,
-              "y": 1,
+              "x": 1,
+              "y": 4,
               "id": "Bridge",
               "locationName": "Blue Labyrinth 1"
             },
             {
-              "x": 7,
-              "y": 5,
+              "x": 3,
+              "y": 4,
               "id": "Freeincarnate",
               "locationName": "Catacombs"
             },
             {
-              "x": 0,
-              "y": 1,
+              "x": 1,
+              "y": 0,
               "id": "Sword",
               "locationName": "Adjacent to Catacombs"
             },
             {
-              "x": 0,
+              "x": 6,
               "y": 0,
               "id": "Freeincarnate",
               "locationName": "Southwest of Catacombs"
             },
             {
-              "x": 6,
-              "y": 5,
+              "x": 0,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "White Castle Gate"
             },
             {
-              "x": 7,
-              "y": 4,
+              "x": 3,
+              "y": 1,
               "id": "Freeincarnate",
               "locationName": "Black Castle Gate"
             },
             {
-              "x": 1,
-              "y": 1,
+              "x": 6,
+              "y": 4,
               "id": "White Key",
               "locationName": "Yellow Castle Gate"
             },
             {
               "x": 1,
-              "y": 4,
+              "y": 3,
               "id": "Slow Rhindle",
               "locationName": "Northeast of Catacombs"
             },
             {
-              "x": 4,
-              "y": 2,
+              "x": 5,
+              "y": 0,
               "id": "Right Difficulty Switch",
               "locationName": "Southeast of Catacombs"
             },
             {
-              "x": 7,
-              "y": 3,
+              "x": 3,
+              "y": 5,
               "id": "Black Key",
               "locationName": "Slay Grundle"
             }
@@ -1077,8 +1077,8 @@
           ],
           "obstacles": [
             {
-              "x": 4,
-              "y": 2,
+              "x": 2,
+              "y": 0,
               "id": "logic_gate_0"
             }
           ],
@@ -1090,8 +1090,8 @@
               "locationName": "Inside Yellow Castle"
             },
             {
-              "x": 4,
-              "y": 2,
+              "x": 2,
+              "y": 0,
               "id": "Victory",
               "locationName": "Chalice Home"
             }
@@ -1206,8 +1206,8 @@
               "locationName": "RedMaze0"
             },
             {
-              "x": 1,
-              "y": 1,
+              "x": 4,
+              "y": 4,
               "id": "Freeincarnate",
               "locationName": "RedMaze1"
             }
@@ -1314,8 +1314,8 @@
               "id": "logic_gate_0"
             },
             {
-              "x": 2,
-              "y": 1,
+              "x": 4,
+              "y": 3,
               "id": "logic_gate_1"
             }
           ],
@@ -1327,20 +1327,20 @@
               "locationName": "Dungeon0"
             },
             {
-              "x": 4,
-              "y": 2,
+              "x": 2,
+              "y": 3,
               "id": "Slow Yorgle",
               "locationName": "Dungeon1"
             },
             {
               "x": 7,
-              "y": 0,
+              "y": 5,
               "id": "Freeincarnate",
               "locationName": "Black Castle Foyer"
             },
             {
-              "x": 2,
-              "y": 1,
+              "x": 4,
+              "y": 3,
               "id": "Freeincarnate",
               "locationName": "Slay Rhindle"
             }
@@ -1525,8 +1525,8 @@
           ],
           "obstacles": [
             {
-              "x": 4,
-              "y": 4,
+              "x": 1,
+              "y": 3,
               "id": "logic_gate_0"
             }
           ],
@@ -1538,8 +1538,8 @@
               "locationName": "Red Maze Vault"
             },
             {
-              "x": 4,
-              "y": 4,
+              "x": 1,
+              "y": 3,
               "id": "Freeincarnate",
               "locationName": "Slay Yorgle"
             }
