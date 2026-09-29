@@ -1044,7 +1044,7 @@
             "id": "apworld-a-region-form-reads-back-the-initialise-bag",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "S2. adventure -> the first hooked target with a payload read-back that does NOT declare generationCost 'heavy' (APWORLD SUBSTRATE CHANGE H1: the registry's order is the page's parallel module-import order, so 'the first hooked target' was a coin flip and drew runner, whose generate-and-test build overruns the 30 s Initialise budget, in 3/6 loads; the row assumes a target that declares itself light builds inside that budget); its read-back knob moved on the Initialise form; Generate; Re-roll on a new region: the 'this region was built with' line names it."
+            "_comment": "S2. adventure -> the first hooked target with a payload read-back that does NOT declare generationCost 'heavy' AND whose read-back knob the hook's own control moves (apworldEditor/test-helpers.js readBackTarget). APWORLD SUBSTRATE CHANGE H1: the registry's order is the page's parallel module-import order, so 'the first hooked target' was a coin flip and drew runner, whose generate-and-test build overruns the 30 s Initialise budget, in 3/6 loads. H2: the cost filter alone promoted the next draw, a light target whose read-back names no knob (its procgenParamsFromPayload({}) answers {}), which failed the row in 0.4 s (2/8 on CI); the knob fact is now asked before the pick, over a detached render of the hook, and the premise names every hooked target skipped and why. Its read-back knob moved on the Initialise form; Generate; Re-roll on a new region: the 'this region was built with' line names it."
         },
         {
             "id": "apworld-map-menu-marker-lists-the-start-exits",

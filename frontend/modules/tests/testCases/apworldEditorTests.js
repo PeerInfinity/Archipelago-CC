@@ -12681,6 +12681,11 @@ import {
 import { initialiseArgs as s2Args, initialiseBagFor as s2BagFor } from '../../apworldEditor/initialiseFlow.js';
 // eslint-disable-next-line import/first
 import { GENERATION_COST as S2_GENERATION_COST, generationCostOf as s2GenerationCostOf } from '../../procgenCore/substratePredicates.js';
+// eslint-disable-next-line import/first
+import {
+    moveHookKnob as s2MoveHookKnobIn, moveReadBackKnob as s2MoveReadBackKnob, readBackTarget as s2ReadBackTargetOf,
+    READ_BACK_SKIP as S2_READ_BACK_SKIP,
+} from '../../apworldEditor/test-helpers.js';
 
 const initSettings = () => initSection()?.querySelector('.apworld-initialise-settings') ?? null;
 const s2Defaults = (id) => ({ ...(substrateRegistry.get(id)?.defaultProcgenParams ?? {}) });
@@ -12700,10 +12705,9 @@ const s2KnobReaches = (id) => {
 const s2KnobTarget = () => s1Targets().find((t) => t !== S2_DEFAULT
     && typeof substrateRegistry.get(t)?.renderProcgenParams === 'function' && s2KnobReaches(t)) ?? null;
 /**
- * ⛓ (iii)'s target: the first hooked realiser target whose payload read-back
- * names a knob AND that does not DECLARE its generation heavy
- * (`generationCost`, the registry fact the capability chart's G3 *"Generates
- * quickly"* and the CI preset skip read).
+ * ⛓ (iii)'s target: the first hooked realiser target that does not DECLARE its
+ * generation heavy (`generationCost` — H1) AND whose read-back knob the hook's
+ * control MOVES (H2) — `readBackTarget` in `apworldEditor/test-helpers.js`.
  *
  * ⛔ NOT "the first hooked target" (APWORLD SUBSTRATE CHANGE H1; trap 1493).
  * The registry's order is the order the page's modules finished IMPORTING —
@@ -12712,15 +12716,23 @@ const s2KnobTarget = () => s1Targets().find((t) => t !== S2_DEFAULT
  * came first in 3/6 page loads (P1b′), and its generate-and-test build
  * overruns the row's 30 s Initialise budget (`pressInitialise`: the budget is
  * for the BUILD — the target's load and generation — not the read-back, which
- * is synchronous once the op lands). The row's premise is "a hooked target
- * reads the bag back", and a target that declares itself heavy is not one this
- * row's budget was ever sized for.
+ * is synchronous once the op lands).
+ * ⛔ NOR "the first light hooked target" (H2; trap 1513): the cost filter
+ * promoted the next draw, a target whose read-back names no knob the control
+ * moves, and the row failed on its own premise. The knob fact is now asked
+ * BEFORE the pick — the same `moveReadBackKnob` the row asserts, over a
+ * DETACHED render of the target's hook on a copy of its defaults — so a target
+ * is skipped by that fact, never by name.
  */
-const s2ReadBackTarget = () => s1Targets().find((t) => {
-    const e = substrateRegistry.get(t);
-    return typeof e?.renderProcgenParams === 'function' && typeof e?.procgenParamsFromPayload === 'function'
-        && s2GenerationCostOf(e, t) !== S2_GENERATION_COST.HEAVY;
-}) ?? null;
+const s2ReadBackKnobMoves = (id, entry) => {
+    const bag = { ...(entry.defaultProcgenParams ?? {}) };
+    const node = entry.renderProcgenParams({ params: bag, onChange: () => {} });
+    return !!s2MoveReadBackKnob(entry, bag, node);
+};
+const s2ReadBackTarget = () => s2ReadBackTargetOf(s1Targets(), (t) => substrateRegistry.get(t), {
+    isHeavy: (e, t) => s2GenerationCostOf(e, t) === S2_GENERATION_COST.HEAVY,
+    knobMoves: s2ReadBackKnobMoves,
+});
 
 /** ⛓ Pick `target` in the Initialise form's substrate select; → true when the form (and its bag) holds it. */
 async function s2PickTarget(testController, panel, target) {
@@ -12739,32 +12751,13 @@ async function s2PickTarget(testController, panel, target) {
  * one knob key) is kept, any other is put back. → {key, from, to} or null.
  */
 function s2MoveHookKnob(bag, key = null) {
-    const form = initSettings();
-    const header = [...(form?.children ?? [])].find((c) => c.classList.contains('procgen-pipeline-scenario-subheader'));
-    const hookNode = header?.nextElementSibling ?? null;
-    if (!hookNode) return null;
-    for (const c of hookNode.querySelectorAll('input, select')) {
-        const snap = JSON.stringify(bag);
-        const old = c.type === 'checkbox' ? c.checked : c.value;
-        if (c.tagName === 'SELECT') {
-            const other = [...c.options].find((o) => !o.disabled && o.value !== c.value);
-            if (!other) continue;
-            c.value = other.value;
-        } else if (c.type === 'checkbox') {
-            c.checked = !c.checked;
-        } else {
-            c.value = String(Number(c.value) + Number(c.step || 1));
-        }
-        c.dispatchEvent(new Event('change', { bubbles: true }));
-        const before = JSON.parse(snap);
-        const movedKeys = Object.keys(bag).filter((k) => JSON.stringify(bag[k]) !== JSON.stringify(before[k]));
-        if (movedKeys.length === 1 && (key === null || movedKeys[0] === key)) {
-            return { key: movedKeys[0], from: before[movedKeys[0]], to: bag[movedKeys[0]] };
-        }
-        if (c.type === 'checkbox') c.checked = old; else c.value = old;
-        c.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-    return null;
+    return s2MoveHookKnobIn(s2HookNode(), bag, key);
+}
+/** ⛓ The Initialise form's hook node — the element after its substrate subheader. */
+function s2HookNode() {
+    const header = [...(initSettings()?.children ?? [])]
+        .find((c) => c.classList.contains('procgen-pipeline-scenario-subheader'));
+    return header?.nextElementSibling ?? null;
 }
 
 /**
@@ -12885,7 +12878,8 @@ export async function apworldInitialiseAHookKnobReachesTheBuildAndTheRecord(test
 /**
  * ⛓⛓⛓ **(iii) R2'S FORM READS THE INITIALISE BAG BACK** — adventure → the first
  * hooked target with a payload read-back (`procgenParamsFromPayload`) that does
- * not declare its generation heavy (H1 — see `s2ReadBackTarget`); the knob
+ * not declare its generation heavy (H1) and whose read-back knob the hook's
+ * control moves (H2 — see `s2ReadBackTarget`); the knob
  * it reads back (derived: the key the read-back names that the hook's control
  * writes) moved through the hook's control; Generate; Regions tab → the first
  * new region → Re-roll ▸ (the form on its own substrate): the *this region was
@@ -12894,11 +12888,13 @@ export async function apworldInitialiseAHookKnobReachesTheBuildAndTheRecord(test
  */
 export async function apworldARegionFormReadsBackTheInitialiseBag(testController) {
     try {
-        const target = s2ReadBackTarget();
+        const { target, skipped } = s2ReadBackTarget();
         const hooked = s1Targets().filter((t) => typeof substrateRegistry.get(t)?.procgenParamsFromPayload === 'function');
-        testController.log(`read-back target: ${target} — hooked targets in registration order: ${hooked.join(', ')}`);
-        testController.reportCondition(`⛓ premise: a hooked target with a payload read-back that does not declare `
-            + `its generation heavy (${target}; hooked in this load's order: ${hooked.join(', ')})`, !!target);
+        const skips = skipped.filter((s) => s.reason !== S2_READ_BACK_SKIP.NO_HOOKS)
+            .map((s) => `skipped: ${s.id} (${s.reason})`).join('; ') || 'no hooked target skipped';
+        testController.log(`read-back target: ${target} — hooked targets in registration order: ${hooked.join(', ')} — ${skips}`);
+        testController.reportCondition(`⛓ premise: a hooked target, not declared heavy, whose read-back knob the hook's `
+            + `control moves (${target}; ${skips}; hooked in this load's order: ${hooked.join(', ')})`, !!target);
         if (!target) return testController.getOverallResult();
         const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
         if (!panel) return testController.getOverallResult();
@@ -12907,11 +12903,7 @@ export async function apworldARegionFormReadsBackTheInitialiseBag(testController
         const entry = substrateRegistry.get(target);
         const bag = panel._initialise.state.bag;
         // ⛓ the knob the read-back names — any key of its answer the hook's control writes
-        let moved = null;
-        for (const key of Object.keys(entry.procgenParamsFromPayload({}) ?? {})) {
-            moved = s2MoveHookKnob(bag, key);
-            if (moved) break;
-        }
+        const moved = s2MoveReadBackKnob(entry, bag, s2HookNode());
         testController.reportCondition(`⛓ the hook's control moved the read-back knob (${moved?.key}: ${moved?.from} → ${moved?.to})`, !!moved);
         if (!moved) return testController.getOverallResult();
         const run = await pressInitialise(testController, panel);
