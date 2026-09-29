@@ -63,6 +63,7 @@ import { reconstructResultFromSidecars, refusedRegionsNote } from './compositeMa
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { regionRealiserKind } from '../procgenCore/substratePredicates.js';
+import { substrateCards } from '../procgenCore/substrateCapabilities.js';
 import {
     REGION_GENERATION_FIELDS, bagIntegerField, renderRegionGenerationForm,
 } from '../procgenCore/regionGenerationForm.js';
@@ -1099,6 +1100,9 @@ export class ProcgenPipelineUI {
         left.appendChild(leftHeader);
 
         const registered = substrateRegistry.getAll();
+        // ⛓ SUBSTRATE CHART S4 — every row shows the entry's label and carries
+        //   its capability card as the hover; the rows are computed ONCE here.
+        const cards = substrateCards(registered);
         if (registered.length === 0) {
             const empty = document.createElement('div');
             empty.className = 'procgen-pipeline-scenario-empty';
@@ -1106,7 +1110,7 @@ export class ProcgenPipelineUI {
             left.appendChild(empty);
         } else {
             for (const entry of registered) {
-                left.appendChild(this._renderSubstrateLibraryRow(entry));
+                left.appendChild(this._renderSubstrateLibraryRow(entry, cards.get(entry.id)));
             }
         }
 
@@ -1126,7 +1130,7 @@ export class ProcgenPipelineUI {
             right.appendChild(empty);
         } else {
             for (const id of selectedIds) {
-                right.appendChild(this._renderSubstrateSelectedRow(id, dict[id]));
+                right.appendChild(this._renderSubstrateSelectedRow(id, dict[id], cards.get(id)));
             }
             if (isQuotas) {
                 const total = selectedIds.reduce(
@@ -1722,13 +1726,32 @@ export class ProcgenPipelineUI {
         return activeSubstrateIds(quotas, startSub);
     }
 
-    _renderSubstrateLibraryRow(entry) {
+    /**
+     * ⛓ A substrate's NAME as a picker row shows it (substrate chart S4): the
+     * entry's label, the id in a muted `<small>` after it (a reader who knows
+     * ids still finds them). `card` is `substrateCards(…).get(id)` — absent for
+     * an id no entry registers, which then reads as the bare id.
+     */
+    _substrateNameEl(className, id, card) {
+        const name = document.createElement('span');
+        name.className = className;
+        name.dataset.substrateId = id;
+        name.textContent = card?.label ?? id;
+        if (card && card.label !== id) {
+            const small = document.createElement('small');
+            small.className = 'procgen-pipeline-substrate-id';
+            small.textContent = id;
+            name.append(' ', small);
+        }
+        return name;
+    }
+
+    _renderSubstrateLibraryRow(entry, card) {
         const row = document.createElement('div');
         row.className = 'procgen-pipeline-library-row procgen-pipeline-library-row-substrate';
-        const name = document.createElement('span');
-        name.className = 'procgen-pipeline-library-name';
-        name.textContent = entry.id;
-        row.appendChild(name);
+        row.dataset.substrateId = entry.id;
+        if (card) row.title = card.text;
+        row.appendChild(this._substrateNameEl('procgen-pipeline-library-name', entry.id, card));
 
         // Disabled-look when already in the active dict; clicking
         // again is a no-op rather than an increment, which would
@@ -1747,13 +1770,13 @@ export class ProcgenPipelineUI {
         return row;
     }
 
-    _renderSubstrateSelectedRow(id, value) {
+    _renderSubstrateSelectedRow(id, value, card) {
         const dict = this._activeSubstrateDict();
         const row = document.createElement('div');
         row.className = 'procgen-pipeline-selected-row';
-        const name = document.createElement('span');
-        name.className = 'procgen-pipeline-selected-name';
-        name.textContent = id;
+        row.dataset.substrateId = id;
+        const name = this._substrateNameEl('procgen-pipeline-selected-name', id, card);
+        if (card) name.title = card.text;
         row.appendChild(name);
 
         const input = document.createElement('input');
@@ -2972,15 +2995,24 @@ export class ProcgenPipelineUI {
         const subSel = document.createElement('select');
         subSel.className = 'procgen-pipeline-region-substrate';
         subSel.dataset.index = String(node.index);
-        subSel.title = 'Substrate for this region (manual override — not limited by the quota mix)';
         const subOpts = this._sphereCapableSubstrates();
         const list = subOpts.includes(node.substrate) ? subOpts : [...subOpts, node.substrate];
+        // ⛓ SUBSTRATE CHART S4 — each option shows the label (its VALUE stays the
+        //   id) and carries its card; the select's own hover is the CHOSEN
+        //   substrate's card above the override sentence (a closed select's
+        //   title is the one hover every browser shows).
+        const cards = substrateCards(substrateRegistry.getAll());
         for (const id of list) {
             const opt = document.createElement('option');
-            opt.value = id; opt.textContent = id;
+            opt.value = id;
+            opt.textContent = cards.get(id)?.label ?? id;
+            if (cards.has(id)) opt.title = cards.get(id).text;
             if (id === node.substrate) opt.selected = true;
             subSel.appendChild(opt);
         }
+        const overrideSentence = 'Substrate for this region (manual override — not limited by the quota mix)';
+        const chosen = cards.get(node.substrate);
+        subSel.title = chosen ? `${chosen.text}\n\n${overrideSentence}` : overrideSentence;
         subSel.addEventListener('change', () => this._changeRegionSubstrate(node, subSel.value));
         row.appendChild(subSel);
 

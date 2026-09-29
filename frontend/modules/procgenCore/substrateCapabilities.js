@@ -503,6 +503,37 @@ export function cardOf(entry, rows) {
 }
 
 /**
+ * ⛓⛓ **A CARD AS PLAIN TEXT** — the ONE card-to-text rule every host's hover
+ * uses (the Substrate Registry panel's column headers, the pipeline's
+ * substrate rows, the hub's substrate pickers): the label, then one line per
+ * card line, *"Group — statement: degree"* (the degree only where the cell has
+ * one). No host builds its own wording.
+ *
+ * @param {ReturnType<typeof cardOf>} card
+ * @returns {string}
+ */
+export function cardText(card) {
+    const groupLabel = new Map(CAPABILITY_GROUPS.map((g) => [g.id, g.label]));
+    return [card.label, ...card.lines.map((l) => `${groupLabel.get(l.group)} — ${l.statement}`
+        + `${l.text ? `: ${l.text}` : ''}`)].join('\n');
+}
+
+/**
+ * ⛓ **EVERY ENTRY'S LABEL AND CARD TEXT**, the rows computed ONCE — what a
+ * picker asks per render. Keyed by id, in the entries' order.
+ *
+ * @param {object[]} entries registry entries
+ * @returns {Map<string, {label: string, text: string}>}
+ */
+export function substrateCards(entries) {
+    const rows = capabilityRows(entries);
+    return new Map(entries.map((entry) => {
+        const card = cardOf(entry, rows);
+        return [entry.id, { label: card.label, text: cardText(card) }];
+    }));
+}
+
+/**
  * ⛓ The row-universe names (`registryShape.fieldNamesOf`) that NO statement
  * reads, sorted — printed under the chart as a finding, so a new capability
  * surfaces as *not yet in plain words* instead of silently missing. A parent

@@ -30,7 +30,8 @@ import { declaredStartingNeeds } from './startingInventory.js';
 import {
     CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, CELL_WORDING, FEATURE_WORDING,
     ITEM_NAME_LIMIT, LIST_PREVIEW, LIVE_ANSWERS, REQUIRES_LOOP_MODE_FIELD,
-    applyLiveAnswer, capabilityRows, cardOf, featureWords, itemTagFeatures, progressionItemsOf, uncoveredFields,
+    applyLiveAnswer, capabilityRows, cardOf, cardText, featureWords, itemTagFeatures, progressionItemsOf, substrateCards,
+    uncoveredFields,
 } from './substrateCapabilities.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -129,6 +130,38 @@ describe('the vocabulary', () => {
             }).map((r) => r.statement);
             expect(card.lines.map((l) => l.statement), e.id).toEqual(want);
         }
+    });
+
+    it('(vi′) cardText: the label, then one line per card line — "Group — statement[: degree]"', () => {
+        const groupLabel = new Map(CAPABILITY_GROUPS.map((g) => [g.id, g.label]));
+        for (const e of ENTRIES) {
+            const card = cardOf(e, ROWS);
+            const lines = cardText(card).split('\n');
+            expect(lines[0], e.id).toBe(e.label);
+            expect(lines.length, e.id).toBe(card.lines.length + 1);
+            card.lines.forEach((l, i) => {
+                const head = `${groupLabel.get(l.group)} — ${l.statement}`;
+                expect(lines[i + 1], `${e.id} ${l.statement}`).toBe(l.text ? `${head}: ${l.text}` : head);
+            });
+        }
+        /* a fixture card: the degree rides only where the cell has one; a card with no lines is its label */
+        expect(cardText({ label: 'Zed', lines: [
+            { group: 'play', statement: 'S one', text: null },
+            { group: 'edit', statement: 'S two', text: 'a degree' },
+        ] })).toBe(`Zed\n${CAPABILITY_GROUPS[0].label} — S one\n${CAPABILITY_GROUPS[3].label} — S two: a degree`);
+        expect(cardText({ label: 'Zed', lines: [] })).toBe('Zed');
+    });
+
+    it('substrateCards: one {label, text} per entry, in the entries\' order, the text cardText of cardOf', () => {
+        const cards = substrateCards(ENTRIES);
+        expect([...cards.keys()]).toEqual(ENTRIES.map((e) => e.id));
+        for (const e of ENTRIES) {
+            expect(cards.get(e.id), e.id).toEqual({ label: e.label, text: cardText(cardOf(e, ROWS)) });
+        }
+        /* a card does not depend on which OTHER entries were asked */
+        const one = substrateCards([ENTRIES[0]]);
+        expect(one.get(ENTRIES[0].id)).toEqual(cards.get(ENTRIES[0].id));
+        expect(substrateCards([{ id: 'nolabel' }]).get('nolabel').label).toBe('nolabel');
     });
 
     it('every cell carries `why`: each field it read, with the value the matrix shows', () => {

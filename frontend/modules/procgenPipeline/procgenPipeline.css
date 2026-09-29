@@ -469,3 +469,10 @@
     white-space: pre-line;
     line-height: 1.5;
 }
+
+/* SUBSTRATE CHART S4 — the id after a substrate's label, muted. */
+.procgen-pipeline-substrate-id {
+    color: #888;
+    font-family: 'Consolas', monospace;
+    font-size: 10px;
+}

@@ -17,7 +17,8 @@
 
 import { cellOf, digTwo, fieldNamesOf, shapeRows } from '../procgenDocs/registryShape.js';
 import {
-    CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, applyLiveAnswer, cardOf, uncoveredFields,
+    CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, applyLiveAnswer, cardOf, cardText,
+    uncoveredFields,
 } from '../procgenCore/substrateCapabilities.js';
 
 /** ⛓ The group a live field lands in when the snapshot has no row for it. */
@@ -366,17 +367,11 @@ export function plainOf(vm, rows, { hidden = new Set(), order = [] } = {}) {
             return applyLiveAnswer(c, s, s?.live ? vm.answers[c.id]?.[s.live] : undefined);
         }),
     }));
-    const groupLabel = new Map(CAPABILITY_GROUPS.map((g) => [g.id, g.label]));
     const ids = reorderIds(vm.columns.map((c) => c.id), order).filter((id) => !hidden.has(id));
     const columns = ids.map((id) => {
         const col = vm.columns.find((c) => c.id === id);
         const card = cardOf(col, live);
-        return {
-            id,
-            label: card.label,
-            title: [card.label, ...card.lines.map((l) => `${groupLabel.get(l.group)} — ${l.statement}`
-                + `${l.text ? `: ${l.text}` : ''}`)].join('\n'),
-        };
+        return { id, label: card.label, title: cardText(card) };
     });
     const uncovered = uncoveredFields(vm.rows.map((r) => r.name), rows);
     return {

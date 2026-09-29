@@ -14,7 +14,8 @@ import {
     UNSNAPSHOTTED_GROUP, uncoveredLine,
 } from './substrateRegistryPanelLibrary.js';
 import {
-    CAPABILITY_GROUPS, CELL_KINDS, CELL_MARKS, CELL_WORDING, capabilityRows, uncoveredFields,
+    CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, CELL_WORDING, applyLiveAnswer, capabilityRows,
+    cardOf, cardText, uncoveredFields,
 } from '../procgenCore/substrateCapabilities.js';
 import { DEFAULT_MODE, MODES } from './substrateRegistryPanelUI.js';
 
@@ -357,6 +358,21 @@ describe('the plain mode (plainOf)', () => {
         expect(lines[0]).toBe('Delta');
         expect(lines.some((l) => l.includes(rows.find((r) => r.id === 'E3').statement))).toBe(true);
         expect(p.columns.find((c) => c.id === 'gamma').label).toBe('gamma');
+    });
+
+    it('the column hover is the vocabulary\'s cardText (lifted by S4) — the S2 wording, byte for byte', () => {
+        /* ⛓ the rule S2 wrote inline, restated here as the pin: a lift that changed a byte reds this */
+        const groupLabel = new Map(CAPABILITY_GROUPS.map((g) => [g.id, g.label]));
+        const statementOf = new Map(CAPABILITY_STATEMENTS.map((st) => [st.id, st]));
+        const live = rows.map((r) => ({ ...r, cells: r.cells.map((c) => applyLiveAnswer(c, statementOf.get(r.id),
+            statementOf.get(r.id).live ? vm.answers[c.id]?.[statementOf.get(r.id).live] : undefined)) }));
+        for (const col of p.columns) {
+            const card = cardOf(entries.find((e) => e.id === col.id), live);
+            const s2 = [card.label, ...card.lines.map((l) => `${groupLabel.get(l.group)} — ${l.statement}`
+                + `${l.text ? `: ${l.text}` : ''}`)].join('\n');
+            expect(col.title, col.id).toBe(s2);
+            expect(col.title, col.id).toBe(cardText(card));
+        }
     });
 
     it('the uncovered fields are measured against the view-model\'s field universe', () => {
