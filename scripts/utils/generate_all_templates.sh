@@ -14,6 +14,7 @@
 #   WORLDGEN_CANONICAL_SEED=1      Canonical seed number (empty to disable)
 #   GENERATE_WORLDGEN2=true        Generate worldgen2 worlds from worldgen worlds
 #   GENERATE_TOPDOWN_PRESETS=true  Generate procgen_topdown presets (top-down driver, maze substrate)
+#   GENERATE_MAZE_PRESETS=true     Generate procgen_maze presets (grid-growth driver, the three tiers)
 #   CLEAN_EXISTING=false           Delete existing presets and worldgen worlds before generating
 
 # --- Command-line argument parsing ---
@@ -59,6 +60,7 @@ GENERATE_WORLDGEN="${GENERATE_WORLDGEN:-true}"
 WORLDGEN_CANONICAL_SEED="${WORLDGEN_CANONICAL_SEED:-1}"
 GENERATE_WORLDGEN2="${GENERATE_WORLDGEN2:-true}"
 GENERATE_TOPDOWN_PRESETS="${GENERATE_TOPDOWN_PRESETS:-true}"
+GENERATE_MAZE_PRESETS="${GENERATE_MAZE_PRESETS:-true}"
 CLEAN_EXISTING="${CLEAN_EXISTING:-false}"
 
 echo "Configuration:"
@@ -69,6 +71,7 @@ echo "  GENERATE_WORLDGEN=$GENERATE_WORLDGEN"
 echo "  WORLDGEN_CANONICAL_SEED=$WORLDGEN_CANONICAL_SEED"
 echo "  GENERATE_WORLDGEN2=$GENERATE_WORLDGEN2"
 echo "  GENERATE_TOPDOWN_PRESETS=$GENERATE_TOPDOWN_PRESETS"
+echo "  GENERATE_MAZE_PRESETS=$GENERATE_MAZE_PRESETS"
 echo "  CLEAN_EXISTING=$CLEAN_EXISTING"
 echo ""
 
@@ -87,6 +90,7 @@ if [ "$SCRIPT_MODE" = true ]; then
 #   WORLDGEN_CANONICAL_SEED=$WORLDGEN_CANONICAL_SEED
 #   GENERATE_WORLDGEN2=$GENERATE_WORLDGEN2
 #   GENERATE_TOPDOWN_PRESETS=$GENERATE_TOPDOWN_PRESETS
+#   GENERATE_MAZE_PRESETS=$GENERATE_MAZE_PRESETS
 #   CLEAN_EXISTING=$CLEAN_EXISTING
 HEADER
   chmod +x "$OUTPUT_SCRIPT"
@@ -347,6 +351,25 @@ generate_topdown_preset() {
     --game-name "Procgen Top-Down" \
     --seed-id "$out_seed" \
     --label "$label" \
+    --move \
+    --force
+}
+
+# Run the grid-growth writer and register the output as procgen_maze/AP_<seed>/.
+# Usage: generate_maze_preset SEED [WRITER_ARGS...]
+generate_maze_preset() {
+  local seed="$1"
+  shift
+  local staged="frontend/downloads/AP_${seed}_rules.json"
+  run_cmd node scripts/utils/generate-procgen-rules.js \
+    --seed "$seed" \
+    "$@" \
+    --stop-on-pool-empty \
+    --out "$staged"
+  run_cmd python scripts/utils/register-preset.py "$staged" \
+    --game-id procgen_maze \
+    --game-name "Procgen Maze" \
+    --seed-id "$seed" \
     --move \
     --force
 }
@@ -649,6 +672,30 @@ if [ "$GENERATE_TOPDOWN_PRESETS" = "true" ]; then
   generate_topdown_preset adventure 14089154938208861744 "adventure mixed s1" 10 "maze=1,text_adventure=1"
   generate_topdown_preset adventure 01043188731678011336 "adventure mixed s2" 11 "maze=1,text_adventure=1"
   generate_topdown_preset adventure 84719271504320872445 "adventure mixed s3" 12 "maze=1,text_adventure=1"
+fi
+
+# --- procgen_maze presets ---
+
+# The three tiers (simple / medium / complex) of the grid-growth driver. The
+# args were RECOVERED from the committed files (APWORLD SUBSTRATE CHANGE §43.0):
+# the grid is the file's procgen_metadata grid_dims, --items its itempool_counts
+# in library order (shared/procgen/library.js), --obstacles the doors its
+# payloads place (AP_1 and AP_3's door_blue keep one door spare — their producer,
+# a36e4cc7af, used the April tiers' counts), the seed the preset index, the rest
+# the writer's defaults. --stop-on-pool-empty (inside the helper) is load-
+# bearing: without it growth runs on to an empty frontier and the tiers lose
+# their shape. `node scripts/procgen/check-procgen-maze-recipe.mjs` re-runs these
+# into a scratch dir and compares them with the committed files.
+if [ "$GENERATE_MAZE_PRESETS" = "true" ]; then
+  section "Generating procgen_maze presets"
+
+  generate_maze_preset 1 --grid-width 3 --grid-height 2
+  generate_maze_preset 2 --grid-width 4 --grid-height 4 \
+    --items key_red:3,key_green:2,key_blue:2,victory:1 \
+    --obstacles door_red:2,door_green:1,door_blue:2
+  generate_maze_preset 3 --grid-width 4 --grid-height 5 \
+    --items key_red:4,key_green:3,key_blue:2,key_yellow:3,key_purple:2,key_orange:2,victory:1 \
+    --obstacles door_red:3,door_green:2,door_blue:2,door_yellow:2,door_purple:1,door_orange:2
 fi
 
 # --- Cleanup ---
