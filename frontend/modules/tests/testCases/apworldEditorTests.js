@@ -12678,6 +12678,8 @@ import {
 } from '../../apworldEditor/slotInitialise.js';
 // eslint-disable-next-line import/first
 import { initialiseArgs as s2Args, initialiseBagFor as s2BagFor } from '../../apworldEditor/initialiseFlow.js';
+// eslint-disable-next-line import/first
+import { GENERATION_COST as S2_GENERATION_COST, generationCostOf as s2GenerationCostOf } from '../../procgenCore/substratePredicates.js';
 
 const initSettings = () => initSection()?.querySelector('.apworld-initialise-settings') ?? null;
 const s2Defaults = (id) => ({ ...(substrateRegistry.get(id)?.defaultProcgenParams ?? {}) });
@@ -12696,10 +12698,27 @@ const s2KnobReaches = (id) => {
 /** ⛓ (ii)'s target: the first hooked realiser target that is not the form's default and whose first knob reaches the realiser. */
 const s2KnobTarget = () => s1Targets().find((t) => t !== S2_DEFAULT
     && typeof substrateRegistry.get(t)?.renderProcgenParams === 'function' && s2KnobReaches(t)) ?? null;
-/** ⛓ (iii)'s target: the first hooked realiser target whose payload read-back names a knob. */
+/**
+ * ⛓ (iii)'s target: the first hooked realiser target whose payload read-back
+ * names a knob AND that does not DECLARE its generation heavy
+ * (`generationCost`, the registry fact the capability chart's G3 *"Generates
+ * quickly"* and the CI preset skip read).
+ *
+ * ⛔ NOT "the first hooked target" (APWORLD SUBSTRATE CHANGE H1; trap 1493).
+ * The registry's order is the order the page's modules finished IMPORTING —
+ * `moduleLoader.js` imports every module in parallel and a library registers
+ * its entry as an import side effect — so "first" was a coin flip: `runner`
+ * came first in 3/6 page loads (P1b′), and its generate-and-test build
+ * overruns the row's 30 s Initialise budget (`pressInitialise`: the budget is
+ * for the BUILD — the target's load and generation — not the read-back, which
+ * is synchronous once the op lands). The row's premise is "a hooked target
+ * reads the bag back", and a target that declares itself heavy is not one this
+ * row's budget was ever sized for.
+ */
 const s2ReadBackTarget = () => s1Targets().find((t) => {
     const e = substrateRegistry.get(t);
-    return typeof e?.renderProcgenParams === 'function' && typeof e?.procgenParamsFromPayload === 'function';
+    return typeof e?.renderProcgenParams === 'function' && typeof e?.procgenParamsFromPayload === 'function'
+        && s2GenerationCostOf(e, t) !== S2_GENERATION_COST.HEAVY;
 }) ?? null;
 
 /** ⛓ Pick `target` in the Initialise form's substrate select; → true when the form (and its bag) holds it. */
@@ -12864,7 +12883,8 @@ export async function apworldInitialiseAHookKnobReachesTheBuildAndTheRecord(test
 
 /**
  * ⛓⛓⛓ **(iii) R2'S FORM READS THE INITIALISE BAG BACK** — adventure → the first
- * hooked target with a payload read-back (`procgenParamsFromPayload`); the knob
+ * hooked target with a payload read-back (`procgenParamsFromPayload`) that does
+ * not declare its generation heavy (H1 — see `s2ReadBackTarget`); the knob
  * it reads back (derived: the key the read-back names that the hook's control
  * writes) moved through the hook's control; Generate; Regions tab → the first
  * new region → Re-roll ▸ (the form on its own substrate): the *this region was
@@ -12874,7 +12894,10 @@ export async function apworldInitialiseAHookKnobReachesTheBuildAndTheRecord(test
 export async function apworldARegionFormReadsBackTheInitialiseBag(testController) {
     try {
         const target = s2ReadBackTarget();
-        testController.reportCondition(`⛓ premise: a hooked target with a payload read-back (${target})`, !!target);
+        const hooked = s1Targets().filter((t) => typeof substrateRegistry.get(t)?.procgenParamsFromPayload === 'function');
+        testController.log(`read-back target: ${target} — hooked targets in registration order: ${hooked.join(', ')}`);
+        testController.reportCondition(`⛓ premise: a hooked target with a payload read-back that does not declare `
+            + `its generation heavy (${target}; hooked in this load's order: ${hooked.join(', ')})`, !!target);
         if (!target) return testController.getOverallResult();
         const panel = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
         if (!panel) return testController.getOverallResult();
