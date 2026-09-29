@@ -16,7 +16,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -34,6 +34,9 @@ import {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const AS3 = join(HERE, '../../../vendor/seedling/src');
+/** ⛓ The AS3 fork (`vendor/seedling`) is a submodule a checkout may lack (a cloud bootstrap without
+ *  `--seedling`): the rows that READ it are `skipIf`-gated on its presence, as `fireVerb.test.js`'s. */
+const haveAS3 = existsSync(join(AS3, 'Player.as'));
 const levelSource = atlasLevelSource();
 
 /**
@@ -56,9 +59,13 @@ const swingUp = (run) => {
 };
 
 describe('D1 — the sword arm for RopeStart', () => {
-    it('⛓ is MODELLED under both tables, and the waiver is a fact the AS3 states', () => {
+    it('⛓ is MODELLED under both tables', () => {
         expect(PRESS_ARM_POLICY.RopeStart.policy).toBe('modelled');
         expect(FIRE_ARM_POLICY.RopeStart.policy).toBe('modelled');
+        expect(ROPE_LINE_WAIVED.type).toBe('Rope');
+    });
+
+    it.skipIf(!haveAS3)('⛓ the waiver is a fact the AS3 states (needs vendor/seedling)', () => {
         // The two lines the waiver rests on, read from the fork rather than typed.
         const rope = readFileSync(join(AS3, 'Puzzlements/RopeStart.as'), 'utf8');
         expect(rope).toMatch(/type = "Rope";/);

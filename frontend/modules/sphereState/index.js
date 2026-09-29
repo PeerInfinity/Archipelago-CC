@@ -313,11 +313,31 @@ function handleRulesLoaded(data, propagationOptions) {
   // to fetching `<seedId>_sphere_log.jsonl` when the embedded field
   // is absent (e.g., older Python-generated presets that ship the
   // sphere log as a sibling file).
-  loadEmbeddedFirstThenFile(sphereState, sourceName, sphereLogPath).then(success => {
+  loadEmbeddedFirstThenFile(sphereState, sourceName, sphereLogPath,
+    { gameDir, presetDir, fileName: `${seedId}_sphere_log.jsonl` }).then(success => {
     if (!success) {
       log('warn', `Sphere log unavailable: neither embedded nor separate file usable (${sphereLogPath})`);
     }
   });
+}
+
+let presetIndexPromise = null;
+/**
+ * ⛓ true when `presets/preset_files.json` lists `gameDir/presetDir` and its
+ * `files` do not include `fileName`; false when it lists the file, or cannot
+ * say (no index, folder not listed, a fetch error) — the caller then fetches.
+ */
+async function presetIndexLacksFile({ gameDir, presetDir, fileName }) {
+  if (typeof fetch !== 'function') return false;
+  presetIndexPromise ??= fetch('./presets/preset_files.json')
+    .then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  return indexLacksFile(await presetIndexPromise, { gameDir, presetDir, fileName });
+}
+
+/** ⛓ The pure half: does `index` (preset_files.json) list the folder WITHOUT `fileName`? EXPORTED for the rows. */
+export function indexLacksFile(index, { gameDir, presetDir, fileName }) {
+  const files = index?.[gameDir]?.folders?.[presetDir]?.files;
+  return Array.isArray(files) && !files.includes(fileName);
 }
 
 /**
@@ -329,7 +349,7 @@ function handleRulesLoaded(data, propagationOptions) {
  * Returns a Promise resolving to true on success, false when neither
  * source yields a usable sphere log.
  */
-async function loadEmbeddedFirstThenFile(sphereState, rulesPath, separateFilePath) {
+async function loadEmbeddedFirstThenFile(sphereState, rulesPath, separateFilePath, presetFile = null) {
   // Step 1: try the embedded field. The rules.json was loaded
   // moments ago by stateManager, so the fetch is almost always a
   // browser-cache hit. We re-parse rather than relying on stateManager's
@@ -353,6 +373,15 @@ async function loadEmbeddedFirstThenFile(sphereState, rulesPath, separateFilePat
     } catch (err) {
       log('warn', `Could not check embedded sphere log on ${rulesPath}: ${err.message}; falling through to separate file.`);
     }
+  }
+
+  // Step 1b (HYGIENE, 2026-09-29): the preset index says which files a
+  // preset folder ships. A folder it lists WITHOUT the sphere log has none —
+  // skip the fetch rather than log a 404 (+ an error line) on every load. A
+  // folder the index does not list is unknown: fetch as before.
+  if (presetFile && await presetIndexLacksFile(presetFile)) {
+    log('info', `No sphere log: the preset index lists ${presetFile.gameDir}/${presetFile.presetDir} without ${presetFile.fileName}.`);
+    return false;
   }
 
   // Step 2: fall back to fetching the separate `.jsonl` file. This
