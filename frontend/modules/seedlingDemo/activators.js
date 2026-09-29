@@ -460,6 +460,107 @@ export function ropePublish(rope) {
     return { group, value: true };
 }
 
+/**
+ * ⛓⛓⛓ SWIM T3 — **THE RESPONDER A BUTTON DROPS**, a fifth activation shape,
+ * and the one L29's Green Key sits behind.
+ *
+ * `FallRock` is an `Activators` with a `t` (`Scenery/FallRock.as:14,33`), so
+ * `Button.activateAll` reaches it exactly as it reaches a `Lock` — and its
+ * `set activate` override (`:111-118`) is `if (a && !_active) { fall(); … }`.
+ * So a Button standing on group `t` publishes TRUE to every rock sharing it,
+ * and the rock FALLS. Two rooms pair a local button with a rock of its own
+ * group (a census over all 116, `FALL_RESPONDER_ROOMS`), and in both the
+ * button is the tile directly beside the rock's cell:
+ *
+ *   · L29 `button@112,128` below `fallrock@112,112` — the one-column way
+ *     north to `bosskey@112,64`. Pressed from the south, the rock lands in
+ *     the corridor the walk still needs: a TRAP, not an opener.
+ *   · L74 `button@288,128` above `fallrock@288,144` — the mirror.
+ *
+ * ⚠ IT IS NOT A `RESPONDERS` ROW, and the reason is the sign. Every row there
+ * is SOLID until published and passable after; a rock is passable (parked at
+ * `y = -16`, `type = ""`) until published and SOLID after. Put in
+ * `world.activators`, a shut rock would be a wall from tick 0 and `stepActivators`
+ * would fade it open — the exact inverse. So it keeps `world.fallRocks` (R5
+ * slice 10's roster) and is named here as a responder of its GROUP, which is
+ * the question `groupResponders` answers for every lane at once.
+ *
+ * ⚠ `fallrocklarge` IS DELIBERATELY ABSENT. Its setter is the same shape, but
+ * the run's rock state is `createFallRock`'s 16x16 box and a large rock is
+ * 32x32; no local button shares a group with one (L82's button is t=1, its
+ * rock t=0; L32 has no presser), so listing it would price a geometry the run
+ * does not build.
+ */
+export const FALL_RESPONDERS = Object.freeze({
+    fallrock: {
+        as3: 'FallRock',
+        effect: 'fall',
+        // What the publication leaves behind: a Solid at the rock's own cell.
+        landsAs: 'Solid',
+        // `if (a && !_active)` — a false publication is not a write, and a
+        // rock that fell stays fallen whatever the button does next.
+        latch: 'fall() once; a false publication does nothing',
+        src: 'Scenery/FallRock.as:103-118 (fall, set activate)',
+    },
+});
+
+/** The rooms `FALL_RESPONDERS` answers in, measured over the map (T3 census). */
+export const FALL_RESPONDER_ROOMS = Object.freeze({
+    29: Object.freeze({ presser: 'button@112,128', rock: 'fallrock@112,112', group: 0, tag: 0 }),
+    74: Object.freeze({ presser: 'button@288,128', rock: 'fallrock@288,144', group: 0, tag: 2 }),
+});
+
+/**
+ * Every responder of group `t` in `world`, across the four lanes a group can
+ * reach: the fade family (`activators`), the pulsers, the arrow traps and the
+ * rocks. `[{id, lane}]`, in lane order then roster order.
+ *
+ * ⚠ A LANE IS A DIFFERENT OBSERVABLE, not a different spelling. A `lock` opens,
+ * a `pulser` starts hitting, a trap starts (or stops) firing, a rock LANDS — so
+ * a caller asking "does anything answer this press?" wants all four, and a
+ * caller asking "what does the press DO?" must branch on `lane`.
+ */
+export function groupResponders(world, t) {
+    const out = [];
+    for (const a of world.activators ?? []) if (a.t === t) out.push({ id: a.id, lane: 'activator' });
+    for (const p of world.pulsers ?? []) if (p.t === t) out.push({ id: p.id, lane: 'pulser' });
+    for (const a of world.arrowTraps ?? []) if (a.t === t) out.push({ id: a.id, lane: 'arrowtrap' });
+    for (const r of world.fallRocks ?? []) {
+        if (r.t === t && FALL_RESPONDERS[r.tag]) out.push({ id: r.id, lane: 'fallrock' });
+    }
+    return out;
+}
+
+/**
+ * The rocks a presser overlap PUBLISHES TRUE to this tick — `[rock]` from
+ * `world.fallRocks`.
+ *
+ * Two presser shapes publish locally: a `Button` (`activateAll(this, t, v)`,
+ * every tick, on any `["Player","Enemy","Solid"]` overlap) and a `room = -1`
+ * `ButtonRoom` whose `localPublish` is TRUE. A cross-room `ButtonRoom`
+ * publishes to NOTHING here (`crossRoomWrites`), and a `flip` one publishes
+ * FALSE, which a rock ignores.
+ *
+ * ⚠ LIVENESS IS THE CALLER'S. A rock that already fell is still in the roster
+ * — `_active` is true and a second publication is a no-op — so the run filters
+ * by its own rock state; this answers only "which rocks did the press reach".
+ */
+export function fallRocksArmedBy(world, playerBox, movingSolids = []) {
+    const groups = new Set();
+    for (const p of world.pressers ?? []) {
+        const hit = rectsOverlap(playerBox, p.rect)
+            || movingSolids.some((s) => rectsOverlap(s.rect, p.rect));
+        if (!hit) continue;
+        if (p.tag === 'button') groups.add(p.t);
+        else {
+            const pub = localPublish(p);
+            if (pub && pub.value) groups.add(pub.group);
+        }
+    }
+    if (groups.size === 0) return [];
+    return (world.fallRocks ?? []).filter((r) => groups.has(r.t) && FALL_RESPONDERS[r.tag]);
+}
+
 export function createActivatorState(world) {
     const byId = new Map();
     for (const a of world.activators) {

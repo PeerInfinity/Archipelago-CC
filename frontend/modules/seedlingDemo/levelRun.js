@@ -54,8 +54,8 @@ import {
     watcherTakesHit,
 } from './endingChain.js';
 import {
-    RESPONDERS, createActivatorState, opensOnTick, openActivatorIds, pressedGroups,
-    ropePublish, stepActivators,
+    RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
+    pressedGroups, ropePublish, stepActivators,
 } from './activators.js';
 import {
     createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -9428,6 +9428,81 @@ export function createLevelRun({
      * of a snap is ever inside a trigger.
      */
     let pendingSnapY = null;
+    /**
+     * ── ⛓⛓⛓ SWIM T3: THE BUTTON THAT DROPS A ROCK ───────────────────────
+     *
+     * `Button.activateAll` publishes to every `Activators` sharing its `t`,
+     * and `FallRock.set activate` answers with `fall()` (`activators.
+     * FALL_RESPONDERS`). Until this arm the run modelled the rope's and the
+     * wand's publications and NOT the button's, so a walk over L29's
+     * `button@112,128` found the corridor north still open where the game
+     * drops a Solid into it.
+     *
+     * ⛓ THE FRAMES, from the ADD ORDER. `Game.loadlevel` adds buttons at
+     * `Game.as:2318` and fallrocks at `:2330`, and `World.addUpdate` PREPENDS,
+     * so on the frame the Button sees the player the rock has ALREADY updated
+     * (untriggered) and the Player updates AFTER `fall()` raised the freeze:
+     *
+     *   frame A   `Bot.update` read the flag false -> a LIVE tape tick; the
+     *             Button calls `fall()`; the player's `mobileUpdate` is
+     *             frozen -> the player does not move on it.
+     *   A+1..     every `FallRock.update` call of `fallRockFreezeTicks` —
+     *             all DEAD to the tape, the last one the release frame on
+     *             which the player takes one unobserved step.
+     *
+     * So the dead span is the WAND's (`dropRocksTogether`, whose rocks also
+     * first update on the frame after `fall()`), preceded by one live frozen
+     * tick. `Button.update` reads the position the previous frame left, which
+     * is the post-move box of tick N — the same equivalence `stepActivators`
+     * argues — so the arm is SET at the end of tick N and RESOLVED at the top
+     * of tick N+1.
+     *
+     * ⚠ UNWITNESSED. No committed tape presses a same-group button (the T3
+     * census: the nearest any fixture comes is 63.9 px, `r5-bosskey-leg` in
+     * L29), so the frame accounting above is a reading of the source, not a
+     * measurement. What it refuses rather than models: a snap (the player in
+     * the rock's cell), a pulser in the group, a boss in the room, and a press
+     * made DURING someone else's freeze.
+     */
+    let pendingButtonFalls = null;
+    /** The rocks whose `fall()` frame A is being run — already published. */
+    let buttonFallsInFlight = new Set();
+    const armButtonFallRocks = (box) => {
+        if (pendingButtonFalls !== null) return;
+        const rocks = fallRockStateFor(level);
+        if (rocks.size === 0) return;
+        const armed = fallRocksArmedBy(world, box, movingSolidsNow())
+            .filter((r) => rocks.has(r.id) && !rocks.get(r.id).landed && !rocks.get(r.id).active
+                && !buttonFallsInFlight.has(r.id));
+        if (armed.length > 0) pendingButtonFalls = armed.map((r) => r.id);
+    };
+    const resolveButtonFalls = (ids) => {
+        const rocks = fallRockStateFor(level);
+        const groups = new Set(ids.map((id) => rocks.get(id).t));
+        const pulsing = [...pulserStateFor(level)].filter(([, p]) => groups.has(p.t));
+        if (pulsing.length > 0 || bossStateFor(level).size > 0) {
+            throw new Error(`levelRun: a button in level ${level} drops [${ids.join(', ')}] `
+                + `at tick ${ticksCompleted}, and the room also holds `
+                + `${pulsing.length > 0 ? `a pulser in the group (${pulsing[0][0]})` : 'a boss'}`
+                + ' whose phase the freeze advances. The button arm models the rock and '
+                + 'the clock only; refused rather than approximated.');
+        }
+        const dropped = dropRocksTogether(ids.map((id) => [id, rocks.get(id)]));
+        for (const d of dropped.dropped) {
+            rocks.set(d.id, d.state);
+            if (!d.write) continue;
+            const rf = outOfBandFlagFor(level, d.write.tag);
+            if (!pendingEarnedClears.has(rf.level)) pendingEarnedClears.set(rf.level, new Set());
+            pendingEarnedClears.get(rf.level).add(rf.tag);
+        }
+        if (dropped.snapY !== null) {
+            throw new Error(`levelRun: [${ids.join(', ')}] landed on the player at tick `
+                + `${ticksCompleted} in level ${level} and wrote y = ${dropped.snapY}. The `
+                + 'button that drops it is not the cell it lands in in either room that '
+                + 'pairs them (L29, L74), so a snap here is a stance nobody derived. '
+                + 'Move the stance.');
+        }
+    };
 
     /**
      * Fold this tick's touch-responder events into the window state. The
@@ -9755,6 +9830,17 @@ export function createLevelRun({
             applyLockEvents(stepActivators(activators, world,
                 playerBoxAt(state.x, state.y),
                 { inventory, keys, movingSolids: movingSolidsNow() }));
+            // ⛓ SWIM T3: a Button keeps updating through a freeze, so a press
+            // here WOULD drop a rock — inside a span already frozen, which the
+            // button arm does not nest. Refused by name.
+            if (pendingButtonFalls === null) {
+                armButtonFallRocks(playerBoxAt(state.x, state.y));
+                if (pendingButtonFalls !== null) {
+                    throw new Error(`levelRun: a button is pressed DURING ${what} at tick `
+                        + `${ticksCompleted} and drops [${pendingButtonFalls.join(', ')}]. `
+                        + 'A fall inside another freeze is not modelled; press it outside.');
+                }
+            }
         }
         // ⛓ R5 SLICE 22: AND `view()` STILL RUNS. `Game.update` gates only
         // `super.update()` — on `blackCover`, not on `freezeObjects` — so the
@@ -12715,6 +12801,20 @@ export function createLevelRun({
                 state = { ...state, y: pendingSnapY };
                 pendingSnapY = null;
             }
+            // ── ⛓⛓⛓ SWIM T3: THE BUTTON'S `fall()`, ONE TICK AFTER THE PRESS ──
+            // Frame A of `pendingButtonFalls`' docblock: live to the tape,
+            // frozen to the player. The dead span behind it is resolved after
+            // the frozen tick so the clock spends it in the game's order.
+            if (pendingButtonFalls !== null && !noclip) {
+                const ids = pendingButtonFalls;
+                pendingButtonFalls = null;
+                prevHeld = new Set(held);
+                buttonFallsInFlight = new Set(ids);
+                const tick = runFrozenTick(activators, 'a button-dropped fallrock');
+                buttonFallsInFlight = new Set();
+                resolveButtonFalls(ids);
+                return tick;
+            }
 
             // ── ⛔⛔ R5 SLICE 9: THE CHEST, THEN THE PULSER ─────────────
             //
@@ -14177,6 +14277,9 @@ export function createLevelRun({
                 applyLockEvents(stepActivators(activators, world,
                     playerBoxAt(next.x, next.y),
                     { inventory, keys, movingSolids: movingSolidsNow() }));
+                // ⛓ SWIM T3: and a Button's publication reaches a rock of its
+                // group — set here, resolved at the top of the next tick.
+                if (!next.transition) armButtonFallRocks(playerBoxAt(next.x, next.y));
             }
             const hits = { hitX: next.hitX, hitY: next.hitY };
             // ── ⛓⛓⛓ R6 SLICE 4: `updateLists()` — THE DEFERRED HALVES ──
