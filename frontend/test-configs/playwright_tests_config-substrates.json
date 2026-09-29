@@ -1215,6 +1215,12 @@
             "_comment": "SUBSTRATE REGISTRY PANEL R3. The Columns section: untick the first live id (header n-1, lacks it); ▼ on the next line (header's first two swap); All + Registry order (header == getAll() ids again). Restores the default columns at the end."
         },
         {
+            "id": "substrate-registry-panel-column-order-is-the-saved-substrate-order",
+            "enabled": true,
+            "category": "substrateRegistry",
+            "_comment": "REGISTRATION ORDER RO2 (user 2026-09-29: a tool for a custom order). The Columns ▼ SAVES the order as moduleSettings.substrateRegistryPanel.substrateOrder; the shared rule + the sidecar picker follow; an outside write is installed (settings:changed); Registry order clears it. Sets no saved order first, restores the one it found."
+        },
+        {
             "id": "substrate-registry-panel-plain-mode",
             "enabled": true,
             "category": "substrateRegistry",

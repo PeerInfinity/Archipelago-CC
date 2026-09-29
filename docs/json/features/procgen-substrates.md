@@ -6,6 +6,8 @@ How to read a cell: **✓** is always something you *can* do — no row is phras
 
 Everything below this paragraph is generated from the code: each row is a question put to every substrate's registry entry, so the chart changes when a substrate does. The field-by-field view a developer reads is the capability matrix in the [substrate registry reference](../developer/procgen/substrate-registry.md#capability-matrix).
 
+The columns here are in id order. In the app, every list of substrates — the pipeline's pickers, the APWorld Editor's Initialise select and room-editor links, the Substrate Registry panel — follows the order you choose with the **Columns** controls of the Substrate Registry panel's Matrix mode (▲ ▼; **Registry order** goes back to id order). The order is saved as a setting, `moduleSettings.substrateRegistryPanel.substrateOrder`.
+
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
 **28 statements · 9 substrates · 36 registry fields read (39 of the developer matrix's 83, counting the parents of the fields read) · 44 not yet read.**

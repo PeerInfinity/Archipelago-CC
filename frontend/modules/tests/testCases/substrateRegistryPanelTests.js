@@ -29,6 +29,33 @@ import {
 import {
     COLUMN_ACTIONS, columnsSummary, DEFAULT_MODE, MODES,
 } from '../../substrateRegistryPanel/substrateRegistryPanelUI.js';
+import { SUBSTRATE_ORDER_SETTING, inSubstrateOrder, substrateOrder } from '../../procgenCore/substrateOrder.js';
+import { playableSubstrateIds } from '../../apworldEditor/sidecarForm.js';
+import settingsManager from '../../../app/core/settingsManager.js';
+
+const sameList = (a, b) => JSON.stringify(a ?? []) === JSON.stringify(b ?? []);
+
+/**
+ * ⛓ REGISTRATION ORDER RO2 — the column order is the user's SAVED substrate
+ * order, so a row that presses ▲ ▼ or "Registry order" writes a setting. The
+ * row SETS its initial state (no saved order) and RESTORES the one it found,
+ * waiting each time until the module's `settings:changed` follower has
+ * installed it (`substrateOrder()`).
+ */
+async function withNoSavedOrder(testController, body) {
+    const saved = await settingsManager.getSetting(SUBSTRATE_ORDER_SETTING, []);
+    const install = async (order, what) => {
+        await settingsManager.updateSetting(SUBSTRATE_ORDER_SETTING, order);
+        testController.reportCondition(what, await testController.pollForCondition(
+            () => sameList(substrateOrder(), order), what, 3000, 50));
+    };
+    await install([], 'setup: no saved substrate order');
+    try {
+        return await body();
+    } finally {
+        await install(Array.isArray(saved) ? saved : [], `cleanup: the saved substrate order restored (${JSON.stringify(saved)})`);
+    }
+}
 
 /** Activate the panel and wait for its bar; null when it never appeared. */
 async function mountPanel(testController) {
@@ -166,7 +193,7 @@ async function substrateRegistryPanelColumnsCanBeHiddenAndReordered(testControll
     if (!root) return testController.getOverallResult();
     try {
         if (!pressMode(testController, root, MODES.matrix)) return testController.getOverallResult();
-        columnsCanBeHiddenAndReordered(testController, root);
+        await withNoSavedOrder(testController, () => columnsCanBeHiddenAndReordered(testController, root));
     } finally {
         restoreDefaultMode(testController, root);
     }
@@ -341,6 +368,91 @@ registerTest({
                + '(`applyLiveAnswer` over the panel\'s own view-model), and no console error; then '
                + 'restores the panel\'s default mode. The module is the oracle, the panel the subject.',
     testFunction: substrateRegistryPanelPlainMode,
+    category: 'substrateRegistry',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+/**
+ * ⛓⛓ REGISTRATION ORDER RO2 (⚖ user 2026-09-29: *"Sort by id by default, but I
+ * want to have a tool somewhere for the user to choose a custom order."*) —
+ * the Columns section's ▼ SAVES the order as the setting every substrate list
+ * follows; an outside write of the setting (the Options panel, an import)
+ * reaches the lists; "Registry order" clears it.
+ */
+async function substrateRegistryPanelColumnOrderIsTheSavedSubstrateOrder(testController) {
+    const root = await mountPanel(testController);
+    if (!root) return testController.getOverallResult();
+    try {
+        if (!pressMode(testController, root, MODES.matrix)) return testController.getOverallResult();
+        await withNoSavedOrder(testController, async () => {
+            root.querySelector('.srp-refresh').click();
+            const controls = root.querySelector('details.srp-controls');
+            testController.reportCondition('the matrix has a Columns section', controls !== null);
+            if (!controls) return;
+            controls.open = true;
+            try {
+                const live = substrateRegistry.getAll().map((e) => e.id);
+                testController.reportCondition('the live registry has at least three entries', live.length >= 3);
+                if (live.length < 3) return;
+                testController.assertEqual('no saved order: the header is the registry\'s id order',
+                    live.join(', '), headerIds(root).join(', '));
+
+                // ▼ on the first line: the header's first two swap AND the order is saved.
+                const first = controls.querySelector(`.srp-col-line[data-substrate-id="${live[0]}"]`);
+                first?.querySelector(`button[data-action="${COLUMN_ACTIONS.down}"]`)?.click();
+                const shown = headerIds(root);
+                testController.assertEqual('after ▼: the first two ids swap', [live[1], live[0]].join(', '),
+                    shown.slice(0, 2).join(', '));
+                const saved = await testController.pollForCondition(async () => sameList(
+                    await settingsManager.getSetting(SUBSTRATE_ORDER_SETTING, []), shown),
+                'the setting holds the shown order', 3000, 50);
+                testController.reportCondition('⛓⛓ the ▼ SAVED the order as the substrate-order setting', saved);
+                testController.assertEqual('⛓ every list\'s rule gives the shown order', shown.join(', '),
+                    inSubstrateOrder(live).join(', '));
+                const playable = substrateRegistry.getAll().filter((e) => typeof e?.deserializeWorld === 'function')
+                    .map((e) => e.id);
+                testController.assertEqual('⛓ the sidecar substrate picker follows it',
+                    shown.filter((id) => playable.includes(id)).join(', '), playableSubstrateIds().join(', '));
+
+                // An OUTSIDE write of the setting reaches the lists and the panel.
+                const outside = [live[2]];
+                await settingsManager.updateSetting(SUBSTRATE_ORDER_SETTING, outside);
+                const followed = await testController.pollForCondition(() => sameList(substrateOrder(), outside),
+                    'the module installs an outside write', 3000, 50);
+                testController.reportCondition('⛓⛓ an outside write of the setting is installed (settings:changed)',
+                    followed);
+                root.querySelector('.srp-refresh').click();
+                testController.assertEqual('…and the panel draws it after Refresh', live[2], headerIds(root)[0]);
+
+                // Registry order clears it.
+                controls.querySelector(`button[data-action="${COLUMN_ACTIONS.registryOrder}"]`)?.click();
+                const cleared = await testController.pollForCondition(async () => sameList(
+                    await settingsManager.getSetting(SUBSTRATE_ORDER_SETTING, []), []),
+                'the setting is cleared', 3000, 50);
+                testController.reportCondition('⛓ Registry order CLEARS the saved order', cleared);
+                testController.assertEqual('…and the header is id order again', live.join(', '),
+                    headerIds(root).join(', '));
+            } finally {
+                controls.open = false;
+            }
+        });
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('saved substrate order test error-free', false);
+    } finally {
+        restoreDefaultMode(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'substrate-registry-panel-column-order-is-the-saved-substrate-order',
+    name: 'Substrate Registry panel: the column order is the saved substrate order every list follows',
+    description: 'REGISTRATION ORDER RO2. Matrix mode, Columns: ▼ on the first line swaps the header\'s first '
+               + 'two ids AND saves the order as the substrate-order setting; the shared rule and the sidecar '
+               + 'substrate picker follow it; an outside write of the setting is installed and drawn after '
+               + 'Refresh; Registry order clears it. Sets no saved order first and restores the one it found.',
+    testFunction: substrateRegistryPanelColumnOrderIsTheSavedSubstrateOrder,
     category: 'substrateRegistry',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });

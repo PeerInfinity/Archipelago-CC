@@ -74,6 +74,7 @@ import {
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { substrateCards } from '../procgenCore/substrateCapabilities.js';
+import { inSubstrateOrder } from '../procgenCore/substrateOrder.js';
 /**
  * ⛓⛓ R-a — **THE EMPTY BLOCK'S TWO NUMBERS, EXPORTED** (⚖ k, user 2026-09-06:
  * *"the code to use exported constants, not hardcoded numbers"*). The presence
@@ -7578,7 +7579,8 @@ class ApworldEditorUI {
     //   stays the id) and carries its card; the select's own hover is the
     //   CHOSEN target's card (a closed select's title is the one every browser shows).
     const cards = substrateCards(substrateRegistry.getAll());
-    for (const id of initialiseTargets()) {
+    // ⛓ REGISTRATION ORDER RO2 — the options in the user's substrate order.
+    for (const id of inSubstrateOrder(initialiseTargets())) {
       const o = document.createElement('option');
       o.value = id;
       o.textContent = cards.get(id)?.label ?? id;

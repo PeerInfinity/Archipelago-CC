@@ -64,6 +64,7 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { regionRealiserKind } from '../procgenCore/substratePredicates.js';
 import { substrateCards } from '../procgenCore/substrateCapabilities.js';
+import { entriesInSubstrateOrder, inSubstrateOrder } from '../procgenCore/substrateOrder.js';
 import {
     REGION_GENERATION_FIELDS, bagIntegerField, renderRegionGenerationForm,
 } from '../procgenCore/regionGenerationForm.js';
@@ -1099,7 +1100,8 @@ export class ProcgenPipelineUI {
         leftHeader.textContent = 'Substrates (click to add)';
         left.appendChild(leftHeader);
 
-        const registered = substrateRegistry.getAll();
+        // ⛓ REGISTRATION ORDER RO2 — in the user's substrate order.
+        const registered = entriesInSubstrateOrder(substrateRegistry.getAll());
         // ⛓ SUBSTRATE CHART S4 — every row shows the entry's label and carries
         //   its capability card as the hover; the rows are computed ONCE here.
         const cards = substrateCards(registered);
@@ -2995,7 +2997,8 @@ export class ProcgenPipelineUI {
         const subSel = document.createElement('select');
         subSel.className = 'procgen-pipeline-region-substrate';
         subSel.dataset.index = String(node.index);
-        const subOpts = this._sphereCapableSubstrates();
+        // ⛓ REGISTRATION ORDER RO2 — the options in the user's substrate order.
+        const subOpts = inSubstrateOrder(this._sphereCapableSubstrates());
         const list = subOpts.includes(node.substrate) ? subOpts : [...subOpts, node.substrate];
         // ⛓ SUBSTRATE CHART S4 — each option shows the label (its VALUE stays the
         //   id) and carries its card; the select's own hover is the CHOSEN
