@@ -2,7 +2,7 @@
 
 A **substrate** is the small game engine that owns one region of a generated world — a maze, a platformer level, a text adventure room, an embedded game. They are not interchangeable: some can be walked by the Playback Bot, some can be grown to order by the pipeline, some only run in loop mode. This page says what you can do with each one.
 
-How to read a cell: **✓** is always something you *can* do — no row is phrased as a limitation — and a word or number next to it says how, or how much. **✗** means you cannot, with the reason when the substrate declares one. **◐** is a partial answer, with the degree beside it. **n/a** means the row does not apply because a row it depends on is ✗ (there is no "how a replay works" for a substrate you cannot record).
+How to read a cell: **✓** is always something you *can* do — no row is phrased as a limitation — and a word or number next to it says how, or how much. **✗** means you cannot, with the reason when the substrate declares one. **◐** is a partial answer, with the degree beside it. **n/a** means the row does not apply: a row it depends on is ✗ (there is no "how a replay works" for a substrate you cannot record), or the question has no answer for that substrate (there is no count of ready-made rooms for one that grows each room to order).
 
 Everything below this paragraph is generated from the code: each row is a question put to every substrate's registry entry, so the chart changes when a substrate does. The field-by-field view a developer reads is the capability matrix in the [substrate registry reference](../developer/procgen/substrate-registry.md#capability-matrix).
 
@@ -30,7 +30,7 @@ Everything below this paragraph is generated from the code: each row is a questi
 | L4 | How a replay works | ✓ replays your exact moves | n/a | ✓ applies the result instantly | ✓ applies the result instantly | ✓ re-runs the queued actions | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves |
 | L5 | Instant fast-forward | ✓ a per-block toggle | ✗ | ✓ always — a replay is already instant | ✓ always — a replay is already instant | ✓ a per-block toggle | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle |
 | L6 | A Bot block can play it for you | ✓ the substrate walks it itself | ✗ | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✗ | ✗ | ✗ | ✓ the game's own automation walks it | ✓ the game's own automation walks it |
-| L7 | The Bot honours Instant | ✗ | n/a | ✗ | ✗ | n/a | n/a | n/a | ✓ | ✓ |
+| L7 | The Bot honours Instant | ✗ | n/a | n/a | n/a | n/a | n/a | n/a | ✓ | ✓ |
 | L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ (note 1) | ✗ (note 2) |
 | L9 | It shares the loop-mode mana pool | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ | ✓ |
 | L10 | It shares consumable items with other substrates | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ its list comes from the running game — see the Substrate Registry panel | ✓ 18 item types: gold, reputation, herbs, … |
@@ -44,7 +44,7 @@ Everything below this paragraph is generated from the code: each row is a questi
 | | What you can do | Maze | Flash | Bounce Demo | Runner Demo | Text Adventure | Seedling (region atlas) | Seedling (generated room) | JtA | Idle Loops |
 |---|---|---|---|---|---|---|---|---|---|---|
 | G1 | The pipeline can build regions of it | ✓ grown to order | ✗ only as content from its own game | ✓ picked from its own levels to fit the plan | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✓ picked from its own levels to fit the plan | ✓ grown to order | ✗ only as content from its own game | ✗ only as content from its own game |
-| G2 | How many ready-made rooms / levels it brings | ✗ | ✗ | ✓ 5 | ✓ 6 | ✗ | ✓ 4 Atlas rooms | ✗ | ✓ 30 | ✓ 1 |
+| G2 | How many ready-made rooms / levels it brings | n/a | ✗ | ✓ 5 | ✓ 6 | n/a | ✓ 4 Atlas rooms | n/a | ✓ 30 | ✓ 1 |
 | G3 | Generates quickly | ✓ | n/a | ✓ | ✗ its generation cost is declared `heavy` | ✓ | ✓ | ✓ | n/a | n/a |
 | G4 | Its rooms can be captured into a library and reused | ✓ | ✗ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | G5 | Exits can be locked behind items | ✓ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ |
@@ -79,13 +79,13 @@ Each row is answered from these fields of the substrate's registry entry — the
 - **L4** — `takeLastRecording`, `loopSupport.summaryRecording`
 - **L5** — `loopSupport.instant`, `loopSupport.summaryRecording`
 - **L6** — `loopSupport.executeVia`, `sharing.mana.loopActionDelegation`
-- **L7** — `loopSupport.instant`, `loopSupport.executeVia`, `takeLastRecording`
+- **L7** — `loopSupport.instant`, `loopSupport.executeVia`, `takeLastRecording`, `loopSupport.summaryRecording`
 - **L8** — `loopSupport.requiresLoopMode`
 - **L9** — `sharing.mana`
 - **L10** — `sharing.items`
 - **L11** — `describeAction`
 - **G1** — `generateRegionCore`, `generateZoneForSpecs`, `generateZoneForSpecsGen`
-- **G2** — `zoneCount`, `zoneSourceLabel`
+- **G2** — `zoneCount`, `zoneSourceLabel`, `generateRegionCore`
 - **G3** — `generationCost`
 - **G4** — `captureLibraryEntry`, `instantiateLibraryEntry`
 - **G5** — `canHostExitGates`, `supportedFeatures`

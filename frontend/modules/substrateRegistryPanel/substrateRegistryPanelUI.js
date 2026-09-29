@@ -2,13 +2,13 @@
  * substrateRegistryPanel/substrateRegistryPanelUI — **THE DOM.** Draws the
  * view-model `describeRegistry` makes of the LIVE `substrateRegistry` and the
  * checked-in snapshot, in one of three MODES:
- * - **Plain**: the capability statements of `procgenCore/substrateCapabilities.js`
+ * - **Plain** (the default): the capability statements of `procgenCore/substrateCapabilities.js`
  *   (the same vocabulary the generated page `features/procgen-substrates.md`
  *   prints), one table per group, entries across, each cell a mark from
  *   `CELL_MARKS` and its degree (`plainOf`); a statement that declares a
  *   `live` answer shows what the running app says. Groups collapse, the filter
  *   narrows by statement, and the Columns controls apply as in the Matrix.
- * - **Matrix** (the default): one table, fields and their feature rows down,
+ * - **Matrix**: one table, fields and their feature rows down,
  *   entries across, each cell ✓ / ✗ / a number (`matrixOf`); groups collapse,
  *   a filter narrows the rows by name, and a collapsible Columns section
  *   hides and reorders the entry columns (`applyColumnControls`).
@@ -39,8 +39,8 @@ export const REFERENCE_HREF = 'modules/procgenDocs/reference.html#section-regist
 /** ⛓ The panel's view modes, in button order; the button for each carries `data-mode`. */
 export const MODES = Object.freeze({ plain: 'plain', matrix: 'matrix', detail: 'detail' });
 
-/** ⛓ The mode the panel opens in — the matrix is what was asked for. */
-export const DEFAULT_MODE = MODES.matrix;
+/** ⛓ The mode the panel opens in — the plain reading (⚖ the user, 2026-09-28, plan §6′.1 item 1); Matrix and Detail are one click away. */
+export const DEFAULT_MODE = MODES.plain;
 
 const MODE_LABELS = Object.freeze({ [MODES.plain]: 'Plain', [MODES.detail]: 'Detail', [MODES.matrix]: 'Matrix' });
 

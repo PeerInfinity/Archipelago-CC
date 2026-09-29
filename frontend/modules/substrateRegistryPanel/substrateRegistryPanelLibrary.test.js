@@ -16,6 +16,7 @@ import {
 import {
     CAPABILITY_GROUPS, CELL_KINDS, CELL_MARKS, CELL_WORDING, capabilityRows, uncoveredFields,
 } from '../procgenCore/substrateCapabilities.js';
+import { DEFAULT_MODE, MODES } from './substrateRegistryPanelUI.js';
 
 const controller = { play() {}, stop() {} };
 
@@ -367,5 +368,12 @@ describe('the plain mode (plainOf)', () => {
     it('the legend names every mark; plainCellText is mark-only without text', () => {
         for (const m of Object.values(CELL_MARKS)) expect(PLAIN_LEGEND).toContain(m);
         expect(plainCellText({ kind: CELL_KINDS.NA, text: null })).toBe(CELL_MARKS[CELL_KINDS.NA]);
+    });
+});
+
+describe('the mode the panel opens in (substrate chart S3, ⚖ plan §6′.1 item 1)', () => {
+    it('DEFAULT_MODE is Plain, and a mode the bar draws a button for', () => {
+        expect(DEFAULT_MODE).toBe(MODES.plain);
+        expect(Object.values(MODES)).toContain(DEFAULT_MODE);
     });
 });

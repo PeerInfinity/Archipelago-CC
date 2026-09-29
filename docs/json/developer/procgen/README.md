@@ -8,7 +8,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**22 documents · 4 pages · 218,175 words.**
+**22 documents · 4 pages · 218,183 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — the reading order. A document missing from that list fails the generator, so every document is indexed.
 
@@ -17,7 +17,7 @@ Descriptions: the document's own first paragraph, collapsed onto one line; past 
 | Document | Description | Words |
 |---|---|---|
 | [Procedural Generation Architecture](./architecture.md) | The orientation document for the procedural-generation ("procgen") system: how a world is generated and compiled to `rules.json`, how a single region's level is built, what the substrates are, and how a generated world is played back and round-tripped through Python. Read this first; the other procgen documents go deeper on individual pieces. | 3799 |
-| [Substrate Registry Reference](./substrate-registry.md) | `frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate. | 3678 |
+| [Substrate Registry Reference](./substrate-registry.md) | `frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate. | 3686 |
 | [Procgen demonstrations — a catalogue](./demos.md) | A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it. | 372 |
 | [Procgen Gotchas and Disambiguations](./gotchas.md) | Short entries for the things most likely to mislead someone working in the procgen code: each names the misreading, states the fact, and points at the file or doc that owns it. | 3140 |
 | [Procgen Editing Core](./editing-core.md) | The substrate-free editing machinery in `frontend/modules/procgenCore/`: the edit core and editor view that every level editor is built on, the adapter contract a substrate implements, the shared toolkit for `rules.json` and region-atlas documents, and the set editor that edits a whole collection of rooms. | 3745 |

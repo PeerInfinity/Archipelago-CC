@@ -16,7 +16,8 @@
  * substrate CAN do; a restriction is inverted (L8, G3, G7) and its detail rides
  * on the *no* cell's text, read off the declaration. A statement may declare
  * `requires: '<id>'`: where the prerequisite answers *no*, the cell reads
- * **n/a** rather than a vacuous ✓.
+ * **n/a** rather than a vacuous ✓; a statement's own answer may also be n/a
+ * where the question has no answer for that substrate (G2, L7).
  *
  * ⛓ The predicates are the app's own where the app has one
  * (`substratePredicates.js`, `startingInventory.js`, `exitSides.js`), so a chart
@@ -281,8 +282,11 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
     {
         id: 'L7', group: 'loop', requires: 'L6',
         statement: 'The Bot honours Instant',
-        fields: ['loopSupport.instant', 'loopSupport.executeVia', 'takeLastRecording'],
-        answer: (e) => yesNo(botHonorsInstant(e)),
+        fields: ['loopSupport.instant', 'loopSupport.executeVia', 'takeLastRecording', 'loopSupport.summaryRecording'],
+        /* ⛓ n/a where a replay is a summary: its Instant is *always* (L5
+         * says so), so there is no toggle for the Bot to honour. */
+        answer: (e) => (captureShapeOf(e) === CAPTURE_SHAPES.SUMMARY
+            ? cell(CELL_KINDS.NA) : yesNo(botHonorsInstant(e))),
     },
     {
         id: 'L8', group: 'loop',
@@ -326,8 +330,11 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
     {
         id: 'G2', group: 'generate',
         statement: 'How many ready-made rooms / levels it brings',
-        fields: ['zoneCount', 'zoneSourceLabel'],
+        fields: ['zoneCount', 'zoneSourceLabel', 'generateRegionCore'],
+        /* ⛓ n/a where the pipeline grows its rooms to order (G1): there is no
+         * ready-made set to count. ✗ only where nothing is declared. */
         answer: (e) => {
+            if (regionRealiserKind(e) === REALISER_KINDS.PROCEDURAL) return cell(CELL_KINDS.NA);
             const n = e.zoneCount;
             if (typeof n !== 'number' || n <= 0) return cell(CELL_KINDS.NO);
             const noun = typeof e.zoneSourceLabel === 'string' ? ` ${e.zoneSourceLabel}${n === 1 ? '' : 's'}` : '';

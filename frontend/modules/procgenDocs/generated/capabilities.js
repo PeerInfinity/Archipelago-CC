@@ -2397,6 +2397,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "fn"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2416,12 +2420,16 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 },
                 {
                     "id": "bounce",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -2435,12 +2443,16 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "yes"
                         }
                     ]
                 },
                 {
                     "id": "runner",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -2454,6 +2466,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "yes"
                         }
                     ]
                 },
@@ -2472,6 +2488,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "takeLastRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
                             "value": "—"
                         }
                     ]
@@ -2492,6 +2512,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2510,6 +2534,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "takeLastRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
                             "value": "—"
                         }
                     ]
@@ -2530,6 +2558,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "fn"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2549,6 +2581,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "fn"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 }
@@ -2556,7 +2592,8 @@ export const CAPABILITIES = frz({
             "fields": [
                 "loopSupport.instant",
                 "loopSupport.executeVia",
-                "takeLastRecording"
+                "takeLastRecording",
+                "loopSupport.summaryRecording"
             ],
             "group": "loop",
             "id": "L7",
@@ -3205,7 +3242,7 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "maze",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -3215,6 +3252,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "fn"
                         }
                     ]
                 },
@@ -3229,6 +3270,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "zoneSourceLabel",
+                            "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
                             "value": "—"
                         }
                     ]
@@ -3245,6 +3290,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
                         }
                     ]
                 },
@@ -3260,12 +3309,16 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
                         }
                     ]
                 },
                 {
                     "id": "text_adventure",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -3275,6 +3328,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "fn"
                         }
                     ]
                 },
@@ -3290,12 +3347,16 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "Atlas room"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
                         }
                     ]
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -3305,6 +3366,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "fn"
                         }
                     ]
                 },
@@ -3319,6 +3384,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "zoneSourceLabel",
+                            "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
                             "value": "—"
                         }
                     ]
@@ -3335,13 +3404,18 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
                         }
                     ]
                 }
             ],
             "fields": [
                 "zoneCount",
-                "zoneSourceLabel"
+                "zoneSourceLabel",
+                "generateRegionCore"
             ],
             "group": "generate",
             "id": "G2",

@@ -90,11 +90,11 @@ describe('the vocabulary', () => {
         }
     });
 
-    it('(iii′) a `requires` cell reads n/a exactly where its prerequisite is no or n/a', () => {
+    it('(iii′) a `requires` cell reads n/a where its prerequisite is no or n/a — else what its own answer says', () => {
         for (const s of CAPABILITY_STATEMENTS.filter((x) => x.requires)) {
             for (const e of ENTRIES) {
                 const pre = cellOf(s.requires, e.id).kind;
-                const na = pre === CELL_KINDS.NO || pre === CELL_KINDS.NA;
+                const na = pre === CELL_KINDS.NO || pre === CELL_KINDS.NA || s.answer(e).kind === CELL_KINDS.NA;
                 expect(cellOf(s.id, e.id).kind === CELL_KINDS.NA, `${s.id} × ${e.id}`).toBe(na);
             }
         }
@@ -263,6 +263,39 @@ describe('L10 on the real entries: a static `types` list is the count, a preview
         }
         /* non-vacuity: at least one real list is longer than the preview */
         expect(typed.some((e) => e.sharing.items.types.length > LIST_PREVIEW)).toBe(true);
+    });
+});
+
+describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ plan §6′.1 item 4)', () => {
+    it('G2: n/a exactly where the realiser is procedural; ✗ only where nothing is declared; else ✓ its count', () => {
+        const kinds = new Set();
+        for (const e of ENTRIES) {
+            const c = cellOf('G2', e.id);
+            kinds.add(c.kind);
+            const grown = typeof e.generateRegionCore === 'function';
+            if (grown) { expect(c.kind, e.id).toBe(CELL_KINDS.NA); continue; }
+            if (typeof e.zoneCount === 'number' && e.zoneCount > 0) {
+                expect(c.kind, e.id).toBe(CELL_KINDS.YES);
+                expect(c.text.startsWith(String(e.zoneCount)), e.id).toBe(true);
+            } else {
+                expect(c.kind, e.id).toBe(CELL_KINDS.NO);
+                expect(e.zoneCount, e.id).toBeUndefined();
+            }
+        }
+        expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.NO, CELL_KINDS.YES].sort());
+    });
+
+    it('L7: n/a where a replay is a summary (Instant is always); still n/a where L6 is ✗; ✓ somewhere', () => {
+        const summary = ENTRIES.filter((e) => e.loopSupport?.summaryRecording === true);
+        expect(summary.length).toBeGreaterThan(0);
+        for (const e of summary) {
+            expect(cellOf('L5', e.id).text, e.id).toBe(CELL_WORDING.instantAlways);
+            expect(cellOf('L7', e.id).kind, e.id).toBe(CELL_KINDS.NA);
+        }
+        for (const e of ENTRIES.filter((x) => cellOf('L6', x.id).kind === CELL_KINDS.NO)) {
+            expect(cellOf('L7', e.id).kind, e.id).toBe(CELL_KINDS.NA);
+        }
+        expect(rowOf('L7').cells.some((c) => c.kind === CELL_KINDS.YES)).toBe(true);
     });
 });
 
