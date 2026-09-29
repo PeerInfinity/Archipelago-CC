@@ -11,11 +11,13 @@ import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 import { _testOnly_getWarehouse } from '../../procgenPlayer/index.js';
 
 const APCALC_RULES = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
-// Tiny procgen+maze preset (4 regions, 3 locations) — picked specifically
-// because (a) it uses the maze substrate so the bot has a controller to
-// dispatch to and (b) it's small enough to drain to completion fast.
-const PROCGEN_MAZE_RULES =
-  './presets/procgen_maze_worldgen/AP_14089154938208861744/AP_14089154938208861744_rules.json';
+// The smallest procgen_maze tier — picked specifically because (a) it uses
+// the maze substrate so the bot has a controller to dispatch to and (b) it's
+// small enough to drain to completion fast. It carries its sphere log
+// EMBEDDED (`sphere_log`), not as a `_sphere_log.jsonl` beside it. (Until
+// APWORLD SUBSTRATE CHANGE PM1 this pointed at procgen_maze_worldgen's
+// Generate.py export of the same three payloads — deleted in ccfc5bad02.)
+const PROCGEN_MAZE_RULES = './presets/procgen_maze/AP_1/AP_1_rules.json';
 
 /**
  * Smoke test: load apcalc, activate the playback bot panel, verify the bot
@@ -109,11 +111,15 @@ async function playbackBotInstantPlaybackTest(testController) {
   testController.reportCondition('bot reachable', !!bot);
   if (!bot) return testController.getOverallResult();
 
-  testController.log('Loading procgen_maze_worldgen rules + sphere log...');
+  testController.log('Loading procgen_maze AP_1 rules + its embedded sphere log...');
   await testController.loadRulesFromFile(PROCGEN_MAZE_RULES);
   const sphereState = getSphereStateSingleton();
+  // The embedded log goes in as JSONL text, the shape the Presets module's
+  // embedded path hands loadSphereLog.
+  const rulesDoc = await (await fetch(PROCGEN_MAZE_RULES)).json();
   await sphereState.loadSphereLog(
-    PROCGEN_MAZE_RULES.replace('_rules.json', '_sphere_log.jsonl')
+    `embedded:${PROCGEN_MAZE_RULES}`,
+    (rulesDoc.sphere_log ?? []).map((e) => JSON.stringify(e)).join('\n'),
   );
   testController.reportCondition(
     'sphere data non-empty',
@@ -175,9 +181,9 @@ registerTest({
   id: 'playback-bot-instant-completion',
   name: 'Playback Bot: instant-mode completion',
   description:
-    'Drives the bot at instant speed through procgen_maze_worldgen '
-    + '(4 regions, 3 locations) and asserts it reaches the "finished" '
-    + 'status. Exercises the bot → substrate-controller dispatch chain.',
+    'Drives the bot at instant speed through procgen_maze AP_1 (the '
+    + 'smallest tier) and asserts it reaches the "finished" status. '
+    + 'Exercises the bot → substrate-controller dispatch chain.',
   testFunction: playbackBotInstantPlaybackTest,
   category: 'Playback Bot',
   enabled: false,
