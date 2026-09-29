@@ -45,6 +45,7 @@
  */
 
 import { DOCUMENT_KEY_EDITORS } from './documentKeys.js';
+import { entriesInSubstrateOrder } from '../procgenCore/substrateOrder.js';
 
 /**
  * ⛓ Where a lab-kind room editor is hosted. ⛔ BOTH lab pages mount as
@@ -98,10 +99,11 @@ export const DOCUMENT_LINKS = Object.freeze([
  * ⛓⛓⛓ **ONE ROW PER SUBSTRATE THAT DECLARES A ROOM EDITOR**, derived.
  *
  * @param {{getAll: () => Array<object>}} registry the substrate registry
- * @returns {Array<object>} rows, in registry order
+ * @returns {Array<object>} rows, in the user's substrate order (REGISTRATION
+ *   ORDER RO2; the registry's id order when none is saved)
  */
 export function substrateEditorLinks(registry) {
-    const all = typeof registry?.getAll === 'function' ? registry.getAll() : [];
+    const all = typeof registry?.getAll === 'function' ? entriesInSubstrateOrder(registry.getAll()) : [];
     return all
         .filter((entry) => entry && entry.roomEditor && typeof entry.roomEditor === 'object')
         .map((entry) => {

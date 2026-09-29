@@ -48,6 +48,7 @@
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { substrateCards } from '../procgenCore/substrateCapabilities.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { inSubstrateOrder } from '../procgenCore/substrateOrder.js';
 
 /** ⛓ The entry key the play-time host loads the room BY — its vocabulary is the registry. */
 export const SUBSTRATE_KEY = 'substrate';
@@ -116,16 +117,18 @@ export function controlForType(type, hasEnum) {
  * ⛓⛓ **THE `substrate` PICKER'S VOCABULARY** — every registered id whose entry
  * declares `deserializeWorld`, i.e. every substrate the play-time host can load
  * a room with. Sorted, so the list does not depend on the order modules
- * registered in. ⛔ Read off the registry at call time, never a list typed here.
+ * registered in, then in the user's substrate order (REGISTRATION ORDER RO2 —
+ * id order when none is saved). ⛔ Read off the registry at call time, never a
+ * list typed here.
  *
  * @param {{getAll: Function}} [registry]
  * @returns {string[]}
  */
 export function playableSubstrateIds(registry = substrateRegistry) {
-    return registry.getAll()
+    const ids = registry.getAll()
         .filter((e) => typeof e?.deserializeWorld === 'function')
-        .map((e) => e.id)
-        .sort();
+        .map((e) => e.id);
+    return inSubstrateOrder(ids.sort());
 }
 
 /**

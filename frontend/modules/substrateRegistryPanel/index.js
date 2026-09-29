@@ -13,6 +13,10 @@
  */
 
 import { SubstrateRegistryPanelUI } from './substrateRegistryPanelUI.js';
+import {
+    SUBSTRATE_ORDER_KEY, SUBSTRATE_ORDER_SCHEMA, SUBSTRATE_ORDER_SETTING, setSubstrateOrder,
+} from '../procgenCore/substrateOrder.js';
+import settingsManager from '../../app/core/settingsManager.js';
 
 export const moduleInfo = {
     name: 'substrateRegistryPanel',
@@ -34,7 +38,28 @@ export function register(registrationApi) {
         document.head.appendChild(link);
     }
     registrationApi.registerPanelComponent('substrateRegistryPanel', SubstrateRegistryPanelUI);
+    // ⛓ REGISTRATION ORDER RO2 — the user's substrate order (⚖ 2026-09-29): a
+    //   setting this module OWNS (its column controls edit it); every substrate
+    //   list reads it through `procgenCore/substrateOrder.js`.
+    registrationApi.registerSettingsSchema({
+        type: 'object',
+        properties: { [SUBSTRATE_ORDER_KEY]: { ...SUBSTRATE_ORDER_SCHEMA, items: { ...SUBSTRATE_ORDER_SCHEMA.items } } },
+    });
 }
 
-/** ⚠ Nothing to do: each panel instance reads the registry when it mounts. */
-export async function initialize() {}
+/**
+ * Each panel instance reads the registry when it mounts. What this does: load
+ * the saved substrate order into `procgenCore/substrateOrder.js` and follow
+ * every change to it (the panel's controls, the Options panel, a settings
+ * import or reset), so every substrate list draws in the user's order.
+ */
+export async function initialize(_moduleId, _priorityIndex, initializationApi) {
+    const reload = async () => {
+        setSubstrateOrder(await settingsManager.getSetting(SUBSTRATE_ORDER_SETTING, []));
+    };
+    initializationApi?.getEventBus?.()?.subscribe('settings:changed', (ev) => {
+        if (!ev || ev.key === '*' || ev.key === SUBSTRATE_ORDER_SETTING
+            || String(ev.key).startsWith('moduleSettings.substrateRegistryPanel')) reload();
+    }, 'substrateRegistryPanel');
+    await reload();
+}

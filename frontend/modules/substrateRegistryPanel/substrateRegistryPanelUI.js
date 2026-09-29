@@ -28,6 +28,8 @@
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { REGISTRY } from '../procgenDocs/generated/registry.js';
 import { capabilityRows } from '../procgenCore/substrateCapabilities.js';
+import { SUBSTRATE_ORDER_SETTING, setSubstrateOrder, substrateOrder } from '../procgenCore/substrateOrder.js';
+import settingsManager from '../../app/core/settingsManager.js';
 import {
     applyColumnControls, describeRegistry, driftIsEmpty, fullValueText, GLYPH, matrixOf, PLAIN_LEGEND, plainOf,
     reorderIds, ROW_KINDS, uncoveredLine,
@@ -112,10 +114,10 @@ export class SubstrateRegistryPanelUI {
         /** Group titles the reader collapsed — kept across Refresh. */
         this.collapsed = new Set();
         this.filterText = '';
-        /** Entry ids the reader unticked, and the reader's column order (empty
-         *  = registry order) — both kept across Refresh, not across reloads. */
+        /** Entry ids the reader unticked — kept across Refresh, not across
+         *  reloads. The column ORDER is `this.order` (below): the user's saved
+         *  substrate order, which every substrate list in the app follows. */
         this.hidden = new Set();
-        this.order = [];
         this.modeButtons = Object.values(MODES).map((m) => {
             const b = el('button', 'srp-mode', MODE_LABELS[m]);
             b.type = 'button';
@@ -175,7 +177,12 @@ export class SubstrateRegistryPanelUI {
             this._controls(vm);
             this.bodyEl.replaceChildren(...this._plain(vm, capabilityRows(entries)));
         }
-        else this.bodyEl.replaceChildren(this._drift(vm), ...vm.columns.map((c) => this._entry(vm, c)));
+        else {
+            // ⛓ RO2 — Detail's entry blocks follow the user's substrate order too.
+            const byId = new Map(vm.columns.map((c) => [c.id, c]));
+            this.bodyEl.replaceChildren(this._drift(vm),
+                ...reorderIds([...byId.keys()], this.order).map((id) => this._entry(vm, byId.get(id))));
+        }
     }
 
     /** One table: entries across, each group's field and feature rows down. */
@@ -319,6 +326,20 @@ export class SubstrateRegistryPanelUI {
             button(COLUMN_ACTIONS.registryOrder, () => { this.order = []; }),
         );
         this.controlsListEl.replaceChildren(...lines, all);
+    }
+
+    /** ⛓⛓ RO2 — the column order IS the user's saved substrate order
+     *  (`procgenCore/substrateOrder.js`): reading it reads the setting's
+     *  cache; writing it installs it at once (every list's next draw) and
+     *  SAVES the setting. Empty = id order ("Registry order" clears it). */
+    get order() {
+        return substrateOrder();
+    }
+
+    set order(next) {
+        setSubstrateOrder(next);
+        Promise.resolve(settingsManager.updateSetting(SUBSTRATE_ORDER_SETTING, substrateOrder()))
+            .catch((e) => console.warn('[substrateRegistryPanel] could not save the substrate order:', e));
     }
 
     /** Swap two places of the display order — seeded from what is shown, so

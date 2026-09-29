@@ -277,22 +277,13 @@ export function matrixOf(vm) {
 }
 
 /**
- * The ORDER rule for the matrix's columns: the ids of `order` that are still
- * in `ids`, in `order`'s order (a stale id is dropped, a repeat counts once),
- * then every id of `ids` that `order` does not name, in `ids`' own order — an
- * entry registered after the reader reordered APPENDS rather than vanishing.
- * An empty `order` is the identity.
- *
- * @param {string[]} ids    the live ids, in registry order
- * @param {string[]} order  the reader's display order (may be stale)
- * @returns {string[]}
+ * The ORDER rule for the columns — lifted to `procgenCore/substrateOrder.js`
+ * (REGISTRATION ORDER RO2: every substrate list applies the user's order by it)
+ * and re-exported here for this panel's importers.
  */
-export function reorderIds(ids, order = []) {
-    const live = new Set(ids);
-    const head = [...new Set(order)].filter((id) => live.has(id));
-    const named = new Set(head);
-    return [...head, ...ids.filter((id) => !named.has(id))];
-}
+import { reorderIds } from '../procgenCore/substrateOrder.js';
+
+export { reorderIds };
 
 /**
  * The column CONTROLS applied to a `matrixOf` result: `columns` reordered by
