@@ -280,7 +280,13 @@ export function planTopology(roomCount, { kind = 'chain' } = {}) {
  * order is unchanged, so the walk stays PREFIX-STABLE. ⛔ OPT-IN: the linker
  * passes none, and its sets (the export, the six-seed id) do not move.
  *
- * @param {object} [options.keepReachable]  `{walls?: Set<"tx,ty">, cells?: Array<{tx, ty}>}`
+ * ⛓ SWIM T1 — `approachWalls`: the doors' APPROACHES are flooded against these
+ * walls instead (a superset of `walls`), the kept cells against `walls`. A
+ * generated room whose boot swims walls no water for its goal, but an arrival
+ * lands on an approach with whatever the player holds — so an approach must be
+ * reachable from the start WITHOUT crossing water. Absent: one flood, as before.
+ *
+ * @param {object} [options.keepReachable]  `{walls?: Set<"tx,ty">, approachWalls?: Set<"tx,ty">, cells?: Array<{tx, ty}>}`
  * @returns {{doors: Array<{tx, ty, dist, from}>, flood: Map, taken: Set<string>}}
  */
 export function pickDoorCells(record, start, n, { room = '?', exclude = null, keepReachable = null } = {}) {
@@ -331,14 +337,14 @@ export function pickDoorCells(record, start, n, { room = '?', exclude = null, ke
  * with every door cell a wall, misses an approach (`from`) of a chosen door or of
  * the candidate, or a kept cell.
  */
-function sealsAnApproach(flood, start, { walls = null, cells = [] } = {}) {
+function sealsAnApproach(flood, start, { walls = null, approachWalls = null, cells = [] } = {}) {
     const startKey = cellKey(start.tx, start.ty);
     // ⛓ A kept cell the DOOR-FREE flood does not reach (the generator's goal can sit
     //   past a solid its solver clears) is not a door's to seal: only the flood's own.
     const kept = (cells ?? []).filter((c) => flood.has(cellKey(c.tx, c.ty)));
-    return (chosen, candidate) => {
-        const wall = new Set(walls ?? []);
-        for (const d of [...chosen, candidate]) wall.add(cellKey(d.tx, d.ty));
+    const reach = (base, doors) => {
+        const wall = new Set(base ?? []);
+        for (const d of doors) wall.add(cellKey(d.tx, d.ty));
         const seen = new Set([startKey]);
         const queue = [start];
         for (let head = 0; head < queue.length; head += 1) {
@@ -350,8 +356,16 @@ function sealsAnApproach(flood, start, { walls = null, cells = [] } = {}) {
                 queue.push({ tx: at.tx + dx, ty: at.ty + dy });
             }
         }
-        const must = [...[...chosen, candidate].map((d) => d.from).filter(Boolean), ...kept];
-        return must.some((c) => !seen.has(cellKey(c.tx, c.ty)));
+        return seen;
+    };
+    return (chosen, candidate) => {
+        const doors = [...chosen, candidate];
+        const seen = reach(walls, doors);
+        const approaches = doors.map((d) => d.from).filter(Boolean);
+        // ⛓ SWIM T1: the approaches against their own (wider) walls, when given.
+        const seenApproach = approachWalls ? reach(approachWalls, doors) : seen;
+        return approaches.some((c) => !seenApproach.has(cellKey(c.tx, c.ty)))
+            || kept.some((c) => !seen.has(cellKey(c.tx, c.ty)));
     };
 }
 

@@ -321,17 +321,43 @@ export function goalHoldsWithDoorsAsWalls(out, doors, items) {
  * `region_0_1` had door 1 AND its approach on water — an arrival there drowns and
  * respawns onto the same cell. So no door, approach or location stands on one,
  * and the seal flood treats them as walls.
+ *
+ * ⛓⛓ SWIM T1 — **BOOT-AWARE.** With `items` (the biome's boot inventory,
+ * `GEN_ROOM_BIOMES[biome].items`) water is NOT a hazard when `items.canSwim` and
+ * lava is not when `items.hasDarkSuit` — the planner's own arm
+ * (`botDriverV2.js`, `lethalSafe`); pits always are. Without it a `post-swim`
+ * room's `watergate` sealed its goal off on every draw (S1's residue: 83
+ * re-rolls, grown 10×10 → 28×28). No other biome grants either, so every other
+ * room reads the set it always read.
+ *
+ * ⛔ The boot-aware set is for the SEAL floods only (may the goal, a location, be
+ * reached). A door, its approach and a location never STAND on a lethal cell:
+ * those read the item-less set (`hazardCells(record)`), because an arrival lands
+ * with whatever the player holds, not with the biome's boot.
  */
-export function hazardCells(record) {
+export function hazardCells(record, items = null) {
     const world = buildLevelWorld(record);
-    return new Set([...world.lethalTerrainTiles, ...world.pitTiles]
+    const lethal = world.lethalTerrainTiles.filter((t) => !((t.t === WATER_TILE && items?.canSwim)
+        || (t.t === LAVA_TILE && items?.hasDarkSuit)));
+    return new Set([...lethal, ...world.pitTiles]
         .map((t) => cellKey({ tx: Math.floor(t.x / TILE_SIZE), ty: Math.floor(t.y / TILE_SIZE) })));
 }
 
-/** The cells reachable from the start with every door and every hazard a wall. */
+/** ⛓ SWIM T1 — the tile types `lethalTerrainTiles` carries (`levelWorld.js` WATER_STATE / LAVA_STATE). */
+const WATER_TILE = 1;
+const LAVA_TILE = 17;
+
+/** The boot inventory of a room's biome (`generation.biome`), or null. */
+const bootItems = (biome) => GEN_ROOM_BIOMES[biome]?.items ?? null;
+
+/**
+ * The cells reachable from the start with every door and every hazard (boot-aware,
+ * SWIM T1) a wall — never a lethal cell itself (a location does not stand on one).
+ */
 function safeReach(world) {
     const { flood } = pickDoorCells(world.record, world.start, 0, { room: `'${world.region_id}'` });
-    const wall = hazardCells(world.record);
+    const lethal = hazardCells(world.record);
+    const wall = hazardCells(world.record, bootItems(world.generation?.biome));
     for (const e of world.exits.values()) for (const [tx, ty] of e.exit_tiles ?? []) wall.add(cellKey({ tx, ty }));
     const seen = new Set([cellKey(world.start)]);
     const queue = [world.start];
@@ -342,12 +368,29 @@ function safeReach(world) {
             queue.push(n);
         }
     }
+    for (const key of lethal) seen.delete(key);
     return seen;
 }
 
 /** The goal cell's neighbours: no door may stand there (the approach would be the check). */
 function goalGuard(goalCell) {
     return new Set(around(goalCell).map(cellKey));
+}
+
+/**
+ * ⛓ THE CORE'S DOORS for one draw (G2), `pickDoorCells`' doors or its
+ * `LevelSetExitError`. ⛓ SWIM T1: the goal is kept reachable WITH the boot
+ * `items` (a swimmer crosses the watergate); a door stays off every lethal cell
+ * and its approach is reached from the start WITHOUT crossing one
+ * (`hazardCells`' ⛔) — so an arrival lands on the start's side of the gate.
+ */
+export function pickGenRoomDoors(record, start, goalCell, doorCount, items, room = '?') {
+    const lethal = hazardCells(record);
+    const hazards = hazardCells(record, items);
+    return pickDoorCells(record, start, doorCount, {
+        room, exclude: new Set([...goalGuard(goalCell), ...lethal]),
+        keepReachable: { walls: hazards, approachWalls: lethal, cells: [goalCell] },
+    }).doors;
 }
 
 /**
@@ -392,18 +435,14 @@ function drawRoom(regionId, drawn, k, size, knobs, doorCount) {
     const goalCell = { ...out.summary.goalCell };
     let doors;
     try {
-        const hazards = hazardCells(record);
-        ({ doors } = pickDoorCells(record, start, doorCount, {
-            room: `'${regionId}'`, exclude: new Set([...goalGuard(goalCell), ...hazards]),
-            keepReachable: { walls: hazards, cells: [goalCell] },
-        }));
+        doors = pickGenRoomDoors(record, start, goalCell, doorCount, bootItems(knobs.biome), `'${regionId}'`);
     } catch (e) {
         if (e.name !== 'LevelSetExitError') throw e;
         return { seed, out, record, start, goalCell, err: e };
     }
     // ⛓ G2 (⚖ planner): the flood check ignores a goal past a solid the solver
     //   clears, so the GOAL is re-certified with the doors as WALLS — one solve.
-    const unsealed = goalHoldsWithDoorsAsWalls(out, doors, GEN_ROOM_BIOMES[knobs.biome].items ?? null);
+    const unsealed = goalHoldsWithDoorsAsWalls(out, doors, bootItems(knobs.biome));
     if (unsealed !== true) {
         return { seed, out, record, start, goalCell, err: new Error(`levelSetExits: room '${regionId}' seats its `
             + `${doorCount} door(s), but with them as walls the generator's own solver no longer reaches the goal `
@@ -727,11 +766,15 @@ function bindAllDoors(world, entries) {
     // ⛓ G2: the doors already bound are WALLS, and their approaches, the goal and
     //   every location stay reachable from the start (`keepReachable`).
     const bound = entries.filter(([, e]) => Array.isArray(e.exit_tiles));
-    const hazards = hazardCells(world.record);
-    for (const h of hazards) exclude.add(h);
-    const walls = new Set([...hazards, ...bound.flatMap(([, e]) => e.exit_tiles.map(([tx, ty]) => cellKey({ tx, ty })))]);
+    // ⛓ SWIM T1: as `drawRoom` — boot-aware seal walls, item-less cells to stand on.
+    const lethal = hazardCells(world.record);
+    const hazards = hazardCells(world.record, bootItems(world.generation?.biome));
+    for (const h of lethal) exclude.add(h);
+    const doorWalls = bound.flatMap(([, e]) => e.exit_tiles.map(([tx, ty]) => cellKey({ tx, ty })));
+    const walls = new Set([...hazards, ...doorWalls]);
     const keepReachable = {
         walls,
+        approachWalls: new Set([...lethal, ...doorWalls]),
         cells: [world.goalCell, ...world.locations.map((l) => l.cell),
             ...bound.map(([, e]) => ({ tx: e.entrance_spawn.x / TILE_SIZE, ty: e.entrance_spawn.y / TILE_SIZE }))],
     };
@@ -751,7 +794,7 @@ function bindAllDoors(world, entries) {
     } catch (first) {
         if (first.name !== 'LevelSetExitError') throw first;
         try {
-            ({ doors } = pick(new Set([cellKey(world.goalCell), ...world.locations.map((l) => cellKey(l.cell)), ...walls])));
+            ({ doors } = pick(new Set([cellKey(world.goalCell), ...world.locations.map((l) => cellKey(l.cell)), ...walls, ...lethal])));
         } catch (e) {
             if (e.name !== 'LevelSetExitError') throw e;
             return { unseated: unbound.length, err: e };
