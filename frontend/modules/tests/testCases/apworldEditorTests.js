@@ -10679,6 +10679,12 @@ const AP10_PATH = './presets/procgen_topdown/AP_10/AP_10_rules.json';
 /** ⛓ The first registered id with a realiser that is not `not`, with or without the library hook. Derived. */
 const realiserHooked = (hooked, not = null) => substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null
     && e.id !== not && offersLibrarySource(e) === hooked)?.id ?? null;
+/** ⛓ As `realiserHooked`, and offering NO zone source either — so the form's sources are exactly
+ *  Generate (+ Library when hooked): `regionGenerationSourcesFor` adds Zone for `zoneSourceFacts(e).offers`.
+ *  (REGISTRATION ORDER RO1: under id order the first unhooked realiser is `flash_seedling`, whose
+ *  atlas-room zone source draws a Source row — the position was never the fact.) */
+const realiserSourcesOnly = (hooked, not = null) => substrateRegistry.getAll().find((e) => regionRealiserKind(e) !== null
+    && e.id !== not && offersLibrarySource(e) === hooked && !zoneSourceFacts(e).offers)?.id ?? null;
 
 /** ⛓ The served packs for `substrate`, fetched the way the page does — the rows' expectation source. */
 async function servedPacksFor(substrate) {
@@ -10728,8 +10734,8 @@ export async function apworldTheSourceRowAppearsOnlyForATargetWithTheLibraryHook
         const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, '3', region);
         if (!panel) return testController.getOverallResult();
         const own = panel.rulesDoc.preset_sidecars['3'][region].substrate;
-        const hooked = realiserHooked(true, own);
-        const bare = realiserHooked(false, own);
+        const hooked = realiserSourcesOnly(true, own);
+        const bare = realiserSourcesOnly(false, own);
         testController.reportCondition(`⛓ premise: a hooked (${hooked}) and an unhooked (${bare}) realiser exist`,
             !!hooked && !!bare);
         testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
@@ -12489,7 +12495,11 @@ registerTest({
  * ══════════════════════════════════════════════════════════════════════ */
 
 // eslint-disable-next-line import/first
-import { initialiseTargets as s1Targets } from '../../apworldEditor/slotInitialise.js';
+import { initialiseTargets as s1Targets, initialiseOpFor as s1OpFor, initialiseSlot as s1InitialiseSlot }
+    from '../../apworldEditor/slotInitialise.js';
+// eslint-disable-next-line import/first
+import { initialiseArgs as s1Args, initialiseFormDefaults as s1FormDefaults, withInitialisePatch as s1WithPatch }
+    from '../../apworldEditor/initialiseFlow.js';
 // eslint-disable-next-line import/first
 import { GRANTED_AS_STARTING, grantsClause } from '../../apworldEditor/rulesDocOps.js';
 // eslint-disable-next-line import/first
@@ -12497,8 +12507,21 @@ import { regenerationGrants, withGrantsAnswer } from '../../apworldEditor/region
 
 /** ⛓ The first realiser target that declares a starting need, and the first whose library grants nothing. */
 const s1Needer = () => s1Targets().find((t) => declaredStartingNeeds(substrateRegistry.get(t)).length) ?? null;
-const s1NonGranting = () => s1Targets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
-    .some((d) => !d?.is_victory)) ?? null;
+const s1NonGranting = async () => {
+    // ⛓ …that also BUILDS adventure — the form's own path (its defaults with the target picked →
+    //   `initialiseArgs` → `initialiseSlot` → the op lands). REGISTRATION ORDER RO1: under id order the
+    //   first non-granting target is `flash_seedling`, whose atlas has no room for adventure's regions.
+    const doc = await (await fetch(INIT_ADVENTURE_PATH)).json();
+    const builds = (t) => {
+        try {
+            const state = s1WithPatch(doc, '1', s1FormDefaults(doc, '1'), { substrate: t });
+            const args = s1Args('1', state);
+            return applyRulesDocOp(doc, s1OpFor(args, s1InitialiseSlot({ doc, ...args }))).ok === true;
+        } catch { return false; }
+    };
+    return s1Targets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
+        .some((d) => !d?.is_victory) && builds(t)) ?? null;
+};
 
 /** ⛓ Open the door on adventure, pick `target` in the form, press Generate; → {panel, p, before, run} or null. */
 async function initialiseAdventureAs(testController, target) {
@@ -12571,7 +12594,7 @@ export async function apworldInitialiseDeclaresTheGrantsAndTheButtonsWork(testCo
 /** ⛓⛓ **(ii) A TARGET WHOSE LIBRARY GRANTS NOTHING** — no grants, `items` and `starting_items` unchanged, the none clause. */
 export async function apworldInitialiseAsANonGrantingTargetMovesNoItem(testController) {
     try {
-        const got = await initialiseAdventureAs(testController, s1NonGranting());
+        const got = await initialiseAdventureAs(testController, await s1NonGranting());
         if (!got) return testController.getOverallResult();
         const { panel, before } = got;
         testController.assertEqual('⛓ the op grants nothing', '0',
@@ -12599,7 +12622,7 @@ export async function apworldInitialiseAsANonGrantingTargetMovesNoItem(testContr
 export async function apworldARegionGenerateOnAnInitialisedSlotDeclaresItsGrants(testController) {
     try {
         const needer = s1Needer();
-        const got = await initialiseAdventureAs(testController, s1NonGranting());
+        const got = await initialiseAdventureAs(testController, await s1NonGranting());
         if (!got || !needer) return testController.getOverallResult();
         const { panel, p } = got;
         const region = Object.keys(panel.rulesDoc.preset_sidecars[p])[0];
