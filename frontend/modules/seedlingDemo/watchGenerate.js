@@ -1277,7 +1277,7 @@ export function displayStaging(state) {
     return bootStaging({
         boot: state.model.boot(),
         items: state.palette.items ?? null,
-        pins: oracleFor(state).pinsFor(state.keptTemplates),
+        pins: oracleFor(state).pinsFor(state.keptTemplates, state.record),
     });
 }
 

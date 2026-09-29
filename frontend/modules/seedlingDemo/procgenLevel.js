@@ -564,6 +564,17 @@ export function terrainAt(record, tx, ty) {
 }
 
 /**
+ * ⛓ **DOES THIS RECORD HOLD A WATER CELL ANYWHERE** (seedling swim S1, D2) —
+ * the fact `stepV2`'s wet-tick refusal is about. A record that holds one owes
+ * the staging `'sound'` (`procgenSeedling.pinsForRecord`), whoever wrote it: a
+ * template, the water gate's realiser, or a hand repaint.
+ */
+export function recordHoldsWater(record) {
+    return tilesLayer(record).tiles.some((t) => columnTerrainName(
+        Math.floor(t[2] / TILE_SIZE)) === TERRAIN.water.name);
+}
+
+/**
  * ⛓ **DOES THIS RECORD HOLD A TILE AT ALL AT THAT CELL** — the three-valued
  * read's third value (arc 5, slice 1). `terrainAt` answers `null` for BOTH an
  * absent cell and a column this palette does not name, and those are different

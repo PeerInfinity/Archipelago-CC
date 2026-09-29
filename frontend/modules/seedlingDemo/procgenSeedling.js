@@ -47,7 +47,8 @@
 import { TILE_SIZE, tagOf } from './levelWorld.js';
 import {
     FILL_DENSE, FILL_SHELL, ProcgenLevelError, SINGLE_SCREEN_TILES, assertRoomSize, bootAtTile,
-    emptyLevel, fillByName, hasTile, oelAtTile, shellOf, terrainAt, withEntities, withTerrain,
+    emptyLevel, fillByName, hasTile, oelAtTile, recordHoldsWater, shellOf, terrainAt, withEntities,
+    withTerrain,
 } from './procgenLevel.js';
 import {
     DEFAULT_BUDGET, VERDICT, assertBudget, bootStaging, collectGoal, solve,
@@ -3711,6 +3712,31 @@ export function seedlingModel({
 }
 
 /**
+ * ⛓⛓⛓ **THE PINS A RECORD OWES ITS STAGING** (seedling swim S1, D2; ⚖ Q4:
+ * DERIVED, not declared). `['dead_frames']`, plus every pin a KEPT TEMPLATE
+ * obliges (the union `seedlingOracle.pinsFor` always took), plus `'sound'` iff
+ * the record's tiles layer holds a WATER cell — `stepV2` refuses a wet tick on
+ * a block that does not pin it (R5 §13).
+ *
+ * ⛔ WHY THE RECORD AND NOT THE ELEMENT: an element cannot declare a pin, and
+ * `goalHoldsWithDoorsAsWalls` solves with NO templates at all — so a water
+ * door's `'sound'` had no route to the staging but the room itself. The
+ * record is the one source every caller already holds. ⛓ Byte-inert for every
+ * committed room: the one template that writes water (`water-pool`) already
+ * obliges `'sound'`, so the union is unchanged wherever water came from it.
+ *
+ * @param {object|null} record  a level record, or `null` for the template union alone
+ * @param {object[]} [templates] the kept template instances
+ * @returns {string[]}
+ */
+export function pinsForRecord(record, templates = []) {
+    const pins = new Set(['dead_frames']);
+    for (const t of templates ?? []) for (const p of t.pins ?? []) pins.add(p);
+    if (record && recordHoldsWater(record)) pins.add('sound');
+    return [...pins];
+}
+
+/**
  * THE SEEDLING ORACLE — kickoff §3.2's second injection, over `procgenOracle`.
  *
  * ⛓⛓ THE PINS ARE COMPUTED FROM THE KEPT TEMPLATES, WHICH IS WHY THE LOOP
@@ -3731,13 +3757,10 @@ export function seedlingOracle({ model, items = null, budget = DEFAULT_BUDGET,
     const boot = model.boot();
     return {
         budget: b,
-        pinsFor: (templates) => {
-            const pins = new Set(['dead_frames']);
-            for (const t of templates ?? []) for (const p of t.pins ?? []) pins.add(p);
-            return [...pins];
-        },
+        /** ⛓ Swim S1, D2: the record, when given, is the second source. */
+        pinsFor: (templates, record = null) => pinsForRecord(record, templates),
         solve(record, { templates = [] } = {}) {
-            const pins = this.pinsFor(templates);
+            const pins = this.pinsFor(templates, record);
             const staging = bootStaging({ boot, items, pins });
             return solve(record, staging, model.goals, b,
                 { name: `procgen-l${record.level}`, dashMode });
@@ -4508,6 +4531,7 @@ export function generateSeedlingLevel({
              */
             pins: oracle.pinsFor(
                 out.summary.kept.map((k) => instantiateKept(palette, k)),
+                out.record,
             ),
         }),
     };
