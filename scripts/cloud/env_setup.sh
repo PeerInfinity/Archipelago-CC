@@ -93,7 +93,7 @@ fi
 # Version comes from the seed's own @playwright/test, so the browser matches.
 if [ -x "$SEED/node_modules/.bin/playwright" ]; then
   if (cd "$SEED" && PLAYWRIGHT_SKIP_BROWSER_GC=1 timeout 360 npx playwright install --with-deps chromium >"$DEST/playwright.log" 2>&1); then
-    step "playwright chromium: OK ($(ls ~/.cache/ms-playwright 2>/dev/null | tr '\n' ' '))"
+    step "playwright chromium: OK ($(ls "${PLAYWRIGHT_BROWSERS_PATH:-$HOME/.cache/ms-playwright}" 2>/dev/null | tr '\n' ' '))"
   else
     step "playwright chromium: FAILED (see $DEST/playwright.log)"
   fi

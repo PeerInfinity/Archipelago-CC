@@ -85,8 +85,10 @@ say "templates: $(ls Players/Templates 2>/dev/null | wc -l)"
 [ -f host.yaml ]                           && say "host.yaml: OK"          || bad "host.yaml missing"
 [ -f "$SUB/ruleEngine.js" ]                && say "shared submodule: OK"   || bad "shared submodule missing"
 [ -x node_modules/.bin/playwright ]        && say "playwright: OK"         || bad "playwright missing"
-ls ~/.cache/ms-playwright 2>/dev/null | grep -q chromium && say "chromium: OK" \
-  || bad "no Playwright chromium in ~/.cache/ms-playwright"
+# The cloud image sets PLAYWRIGHT_BROWSERS_PATH (browsers outside ~/.cache).
+PW_BROWSERS="${PLAYWRIGHT_BROWSERS_PATH:-$HOME/.cache/ms-playwright}"
+ls "$PW_BROWSERS" 2>/dev/null | grep -q chromium && say "chromium: OK ($PW_BROWSERS)" \
+  || bad "no Playwright chromium in $PW_BROWSERS"
 [ -z "$(git status --porcelain)" ] && say "tree: clean" || { say "tree NOT clean:"; git status --short | head -20; }
 [ $FAIL -eq 0 ] && say "READY" || say "NOT READY - see FAILED lines above"
 exit $FAIL
