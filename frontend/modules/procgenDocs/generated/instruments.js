@@ -10454,6 +10454,8 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "derive-only",
                 "only",
+                "out",
+                "through",
                 "timeout"
             ],
             "file": "survey-seedling-route.mjs",
@@ -10480,6 +10482,12 @@ export const INSTRUMENTS = frz({
                     "how": [
                         "argOf"
                     ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
                     "name": "step"
                 },
                 {
@@ -10487,6 +10495,13 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "table"
+                },
+                {
+                    "how": [
+                        "argOf",
+                        "startsWith"
+                    ],
+                    "name": "through"
                 },
                 {
                     "how": [

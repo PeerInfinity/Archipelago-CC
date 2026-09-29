@@ -91,9 +91,23 @@
  *   node scripts/procgen/survey-seedling-route.mjs --derive-only  # route
  *   node scripts/procgen/survey-seedling-route.mjs --only=12,13
  *   node scripts/procgen/survey-seedling-route.mjs --timeout=600
+ *   node scripts/procgen/survey-seedling-route.mjs --through=2.2 --out=<file.json> --only=21,22,…
+ *
+ * ── `--through=2.2` AND `--out=` (SEEDLING SWIM S2, D5) ────────────────
+ *
+ * `--through=2.2` appends the two legs the sphere order adds after the
+ * shield — `Level 029 - Boss Key 1` (1.4, +Green Key) and `Level 032 - Bob
+ * Boss` (2.2, +Fire) — AFTER the three above, so every earlier step keeps its
+ * id and boot and only step 21 (the shield room) gains the crossing out. The
+ * Bob Boss is an encounter: L32 has no pickup entity, so its goal is the
+ * `collect-placement` of the location's own atlas tile
+ * (`seedling-playthrough.json`) and the solver answers for it in its own words.
+ * It REQUIRES `--out=<file>`: the survey rows go there, the route and the views
+ * to `…/through-2.2/` in the gitignored survey directory, and `survey.json`
+ * is never read or written. Without the flag nothing below moves.
  */
 
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve as resolvePath } from 'node:path';
 import { execFile } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -130,7 +144,8 @@ const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
 const TAPES = join(MODULE, 'fixtures', 'tapes');
-const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey');
+const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey',
+    ...(process.argv.some((a) => a.startsWith('--through=')) ? ['through-2.2'] : []));
 
 const argOf = (k, dflt) => {
     const hit = process.argv.find((a) => a.startsWith(`--${k}=`));
@@ -138,6 +153,20 @@ const argOf = (k, dflt) => {
 };
 const STEP = argOf('step', null);
 const ONLY = argOf('only', null);
+const THROUGH = argOf('through', null);
+const OUT_FILE = argOf('out', null);
+if (THROUGH !== null && THROUGH !== '2.2') {
+    console.error(`ERROR: --through=${THROUGH} — the survey extends through sphere 2.2 only (the legs 1.4 and 2.2)`);
+    process.exit(2);
+}
+if (THROUGH !== null && STEP === null && !OUT_FILE) {
+    console.error('ERROR: --through=2.2 needs --out=<file.json> — the extended survey never writes survey.json');
+    process.exit(2);
+}
+if (OUT_FILE && THROUGH === null) {
+    console.error('ERROR: --out= is the extended survey\'s (--through=2.2); the default survey writes survey.json');
+    process.exit(2);
+}
 const DERIVE_ONLY = process.argv.includes('--derive-only');
 /**
  * ⛔ THE TIMEOUT IS A NAMED BOUND, NOT A GENEROUS ONE. Measured on this
@@ -317,6 +346,11 @@ const ROUTE_PICKUPS = [
     { match: /Level 010 - Sword/, item: 'Progressive Sword' },
     { match: /Level 019 - Boss Key 0/, item: 'Red Key' },
     { match: /Level 020 - Shield/, item: 'Progressive Shield' },
+    // ⛓ `--through=2.2` (S2 D5): the two legs the sphere order adds after 2.1.
+    ...(THROUGH ? [
+        { match: /Level 029 - Boss Key 1/, item: 'Green Key' },
+        { match: /Level 032 - Bob Boss/, item: 'Fire' },
+    ] : []),
 ].map((want) => {
     const row = spheres.order.find((o) => want.match.test(o.location));
     if (!row) throw new Error(`the sphere order has no row matching ${want.match} — the `
@@ -339,8 +373,22 @@ function placementOf(locationName) {
 }
 
 /** The pickup ENTITY in the atlas — the `collect-placement` goal's coordinates. */
-const PICKUP_ENTITY = { 10: 'sword', 19: 'bosskey', 20: 'shield' };
+const PICKUP_ENTITY = { 10: 'sword', 19: 'bosskey', 20: 'shield', ...(THROUGH ? { 29: 'bosskey' } : {}) };
+/**
+ * ⛓ S2 D5 — an ENCOUNTER location has no pickup entity (L32's Bob Boss drops
+ * Fire), so its goal is the location's own tile in the playthrough atlas.
+ */
+function encounterCoords(level) {
+    const pt = JSON.parse(readFileSync(
+        join(REPO, 'frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8'));
+    const locs = (pt.regions.find((r) => r.map_ref === level)?.locations ?? []);
+    const pickup = ROUTE_PICKUPS.find((p) => p.level === level);
+    const loc = locs.find((l) => l.name === pickup?.location);
+    if (!loc) throw new Error(`L${level}: the playthrough atlas has no location '${pickup?.location}'`);
+    return { x: loc.tile[0] * pt.tile_space.tile_size, y: loc.tile[1] * pt.tile_space.tile_size };
+}
 function pickupCoords(level) {
+    if (THROUGH && PICKUP_ENTITY[level] === undefined) return encounterCoords(level);
     const type = PICKUP_ENTITY[level];
     const hits = (levelsByNo.get(level)?.entities ?? []).filter((e) => e.type === type);
     if (hits.length !== 1) {
@@ -436,12 +484,27 @@ function buildSteps(visits, legs, id) {
             });
         }
         let edge = null;
+        // ⛓ S2 D5: under `--through`, a hop with no `to` entity (a pit fall, a
+        //   map edge) is RECORDED on the step instead of ending the derivation —
+        //   the steps after it that are derivable still get surveyed.
+        let crossingRefusal = null;
         if (next) {
-            edge = edgeFor(v.level, next.level);
-            goals.push({ kind: 'reach-exit', exit: edge.exit, why: `${edge.via} → L${next.level}` });
+            try { edge = edgeFor(v.level, next.level); } catch (e) {
+                if (!THROUGH) throw e;
+                crossingRefusal = e.message;
+            }
+            if (edge) goals.push({ kind: 'reach-exit', exit: edge.exit, why: `${edge.via} → L${next.level}` });
         }
         const prev = visits[i - 1];
-        const arrival = prev ? edgeFor(prev.level, v.level).arrival : { x: 80, y: 128 };
+        let arrival = { x: 80, y: 128 };
+        let arrivalRefusal = null;
+        if (prev) {
+            try { arrival = edgeFor(prev.level, v.level).arrival; } catch (e) {
+                if (!THROUGH) throw e;
+                arrival = null;
+                arrivalRefusal = e.message;
+            }
+        }
         return {
             step: id(i),
             level: v.level,
@@ -449,6 +512,8 @@ function buildSteps(visits, legs, id) {
             arrival,
             goals,
             crossesTo: next ? next.level : null,
+            ...(crossingRefusal ? { crossingRefusal } : {}),
+            ...(arrivalRefusal ? { arrivalRefusal } : {}),
         };
     });
 }
@@ -557,6 +622,9 @@ const KNOWN_ANSWERS = new Map([
 ]);
 
 function bootFor(step) {
+    if (step.arrival === null) {
+        return { kind: 'no-arrival', source: null, note: `no boot: ${step.arrivalRefusal}` };
+    }
     const key = bootKey(step.level, step.arrival.x, step.arrival.y);
     const tape = COMMITTED_BY_ARRIVAL.get(key);
     if (tape) {
@@ -585,6 +653,17 @@ function bootFor(step) {
 // ─────────────────────────────────────────────────────────────────────
 
 async function solveOneStep(step) {
+    // ⛓ S2 D5: a step the route reaches through a hop the atlas has no `to`
+    //   entity for has no boot to stage, and a step whose only goal was such a
+    //   hop has nothing to solve — each is its own verdict, quoted, not a solve.
+    if (step.arrival === null || (step.crossingRefusal && step.goals.length === 0)) {
+        return {
+            step: step.step, level: step.level, boot: bootFor(step), goals: step.goals, views: {},
+            clock: null, verdict: step.arrival === null ? 'NO-ARRIVAL' : 'NO-EDGE',
+            refusal: step.arrival === null ? step.arrivalRefusal : step.crossingRefusal,
+            ticks: null, ms: 0, knownAnswer: null,
+        };
+    }
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
@@ -919,6 +998,7 @@ function assertBootSourcesOnDisk() {
     };
     for (const step of allSteps) {
         const b = bootFor(step);
+        if (b.source === null) continue;
         want(b.source, `step ${step.step} (L${step.level} visit ${step.visit}) boot=${b.kind}`);
     }
     for (const [key, name] of STAGED_CROSSCHECK) want(name, `the staged cross-check at ${key}`);
@@ -990,7 +1070,7 @@ const routeDoc = {
     steps: route.steps.map((s) => ({
         ...s,
         boot: bootFor(s),
-        known: KNOWN_ANSWERS.get(bootKey(s.level, s.arrival.x, s.arrival.y)) ?? null,
+        known: KNOWN_ANSWERS.get(bootKey(s.level, s.arrival?.x, s.arrival?.y)) ?? null,
     })),
     alternative: alternative && {
         levels: alternative.levels,
@@ -1141,6 +1221,8 @@ if (process.argv.includes('--views')) {
 
 // ── the solves, one child each ───────────────────────────────────────
 const wanted = ONLY ? new Set(ONLY.split(',').map((s) => s.trim())) : null;
+/** Where the rows go: `survey.json`, or `--out=` under `--through` (S2 D5). */
+const SURVEY_FILE = OUT_FILE ? resolvePath(OUT_FILE) : join(OUT_DIR, 'survey.json');
 
 /**
  * A step's IDENTITY for the addendum: room, arrival and goals. The
@@ -1149,7 +1231,7 @@ const wanted = ONLY ? new Set(ONLY.split(',').map((s) => s.trim())) : null;
  * on the level alone would have skipped six genuinely new solves and called
  * the addendum cheap.
  */
-const identityOf = (s) => `L${s.level}@${s.arrival.x},${s.arrival.y}:`
+const identityOf = (s) => `L${s.level}@${s.arrival?.x},${s.arrival?.y}:`
     + s.goals.map((g) => `${g.kind}(${JSON.stringify(g.exit ?? g.placement)})`).join('+');
 const chosenIdentities = new Set(route.steps.map(identityOf));
 const addendum = (alternative?.steps ?? []).filter((s) => !chosenIdentities.has(identityOf(s)));
@@ -1167,7 +1249,8 @@ for (const step of [...route.steps, ...addendum]) {
     const started = Date.now();
     // eslint-disable-next-line no-await-in-loop
     const res = await new Promise((resolve) => {
-        execFile(process.execPath, [fileURLToPath(import.meta.url), `--step=${step.step}`], {
+        execFile(process.execPath, [fileURLToPath(import.meta.url), `--step=${step.step}`,
+            ...(THROUGH ? [`--through=${THROUGH}`] : [])], {
             cwd: REPO, timeout: TIMEOUT_S * 1000, maxBuffer: 64 * 1024 * 1024, killSignal: 'SIGKILL',
         }, (err, stdout, stderr) => {
             const marked = String(stdout).split('\n').find((l) => l.startsWith('##SURVEY##'));
@@ -1217,7 +1300,7 @@ for (const step of [...route.steps, ...addendum]) {
 let merged = rows;
 if (wanted) {
     let prior = [];
-    try { prior = JSON.parse(readFileSync(join(OUT_DIR, 'survey.json'), 'utf8')).rows ?? []; }
+    try { prior = JSON.parse(readFileSync(SURVEY_FILE, 'utf8')).rows ?? []; }
     catch { prior = []; }
     const byStep = new Map(prior.map((r) => [String(r.step), r]));
     for (const r of rows) byStep.set(String(r.step), r);
@@ -1227,8 +1310,9 @@ if (wanted) {
         (order.get(String(a.step)) ?? 0) - (order.get(String(b.step)) ?? 0));
 }
 const survey = { generator: routeDoc.generator, route: routeDoc, rows: merged };
-writeFileSync(join(OUT_DIR, 'survey.json'), `${JSON.stringify(survey, null, 2)}\n`);
-console.log(`\nwrote ${join(OUT_DIR, 'survey.json')}`);
+mkdirSync(dirname(SURVEY_FILE), { recursive: true });
+writeFileSync(SURVEY_FILE, `${JSON.stringify(survey, null, 2)}\n`);
+console.log(`\nwrote ${SURVEY_FILE}`);
 
 const solvedRows = merged.filter((r) => r.verdict === 'SOLVED');
 console.log(`\n## HEADLINE: ${solvedRows.length}/${merged.length} route steps SOLVE today`);
