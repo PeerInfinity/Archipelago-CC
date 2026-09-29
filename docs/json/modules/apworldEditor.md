@@ -2287,7 +2287,7 @@ of 300* from one progress message per region, with **Cancel**. The budget is
 `moduleSettings.apworldEditor.initialiseTimeoutSeconds` (Options › All Settings ›
 apworldEditor; default **300**, ⚖ #3) — a SEPARATE setting from R2's per-region
 limit, because the unit is the whole slot (`pokemon_rb`, 445 regions, ≈41 s as
-`maze`). Its sentence quotes the setting and how far the build got. The result
+`maze` when R7 measured it; 0.8 s in node since the placer's fixpoint, C1). Its sentence quotes the setting and how far the build got. The result
 lands as ONE `initialise-procgen-layout` with the result INLINE (a refold is a
 write, never a 40-second realise); its `provenance` records how it came to be,
 and since S2 that includes the settings **`bag`** (R2's precedent — the knobs are
