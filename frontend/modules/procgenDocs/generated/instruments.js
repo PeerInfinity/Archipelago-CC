@@ -215,7 +215,7 @@ export const INSTRUMENTS = frz({
         "files": 283,
         "lineStyle": 11,
         "withDocblock": 283,
-        "withFlags": 204
+        "withFlags": 205
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1966,6 +1966,8 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg",
+                "flag",
                 "flagValue"
             ],
             "browser": false,
@@ -1977,8 +1979,27 @@ export const INSTRUMENTS = frz({
                 "seeds"
             ],
             "file": "check-procgen-maze-recipe.mjs",
-            "flags": [],
-            "inheritedFlags": [],
+            "flags": [
+                {
+                    "how": [
+                        "flag"
+                    ],
+                    "name": "keep"
+                },
+                {
+                    "how": [
+                        "arg",
+                        "flag"
+                    ],
+                    "name": "seeds"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
             "oneLiner": "check-procgen-maze-recipe — **DOES THE procgen_maze RECIPE STILL PRODUCE THE COMMITTED procgen_maze PRESETS, BYTE FOR BYTE?**",
             "path": "scripts/procgen/check-procgen-maze-recipe.mjs"
         },

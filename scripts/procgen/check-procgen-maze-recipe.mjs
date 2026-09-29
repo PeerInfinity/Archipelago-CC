@@ -56,7 +56,10 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { checkLine, totalLine } from './gateTotal.js';
+
+argvHelp(import.meta.url);
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const TEMPLATES_SH = 'scripts/utils/generate_all_templates.sh';
@@ -64,24 +67,22 @@ const SECTION = 'Generating procgen_maze presets';
 const WRITER = 'scripts/utils/generate-procgen-rules.js';
 const REGISTER = 'scripts/utils/register-preset.py';
 
-function parseCli(argv) {
-    const opts = { seeds: null, keep: false };
-    for (let i = 0; i < argv.length; i++) {
-        const a = argv[i];
-        if (a === '-h' || a === '--help') {
-            const src = fs.readFileSync(fileURLToPath(import.meta.url), 'utf-8');
-            console.log(src.slice(src.indexOf('/**') + 3, src.indexOf(' */'))
-                .split('\n').map((l) => l.replace(/^ \* ?/, '')).join('\n').trim());
-            process.exit(0);
-        } else if (a === '--keep') {
-            opts.keep = true;
-        } else if (a === '--seeds') {
-            const v = argv[++i];
-            if (!v) throw new Error('--seeds requires a value, e.g. --seeds 1,2');
-            opts.seeds = new Set(v.split(',').map((s) => s.trim()).filter(Boolean));
-        } else {
-            throw new Error(`Unknown argument: ${a}`);
-        }
+const KNOWN_FLAGS = new Set(['--seeds', '--keep']);
+const argv = process.argv.slice(2);
+const flag = (name) => argv.includes(`--${name}`);
+const arg = (name) => {
+    const i = argv.indexOf(`--${name}`);
+    return i >= 0 ? argv[i + 1] : undefined;
+};
+
+function parseCli() {
+    const unknown = argv.filter((a, i) => a.startsWith('-') && !KNOWN_FLAGS.has(a) && argv[i - 1] !== '--seeds');
+    if (unknown.length) throw new Error(`Unknown argument: ${unknown[0]}`);
+    const opts = { seeds: null, keep: flag('keep') };
+    if (flag('seeds')) {
+        const v = arg('seeds');
+        if (!v) throw new Error('--seeds requires a value, e.g. --seeds 1,2');
+        opts.seeds = new Set(v.split(',').map((x) => x.trim()).filter(Boolean));
     }
     return opts;
 }
@@ -164,7 +165,7 @@ function numstat(a, b) {
 }
 
 function main() {
-    const opts = parseCli(process.argv.slice(2));
+    const opts = parseCli();
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'procgen-maze-recipe-'));
     let failures = 0;
     try {
@@ -206,10 +207,12 @@ function main() {
     process.exit(failures ? 1 : 0);
 }
 
-try {
-    main();
-} catch (err) {
-    console.log(checkLine(false, `fatal: ${err.message}`));
-    console.log(totalLine(1));
-    process.exit(1);
+if (isEntryPoint(import.meta.url)) {
+    try {
+        main();
+    } catch (err) {
+        console.log(checkLine(false, `fatal: ${err.message}`));
+        console.log(totalLine(1));
+        process.exit(1);
+    }
 }
