@@ -12363,6 +12363,122 @@ for (const [id, name, testFunction] of R7_TESTS) {
 }
 
 /* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE C2 — THE FORM SAYS HOW BIG A ROOM WILL GROW
+ * (⚖ the user, 2026-09-28: *"YES to the location CAPACITY change (C2, as a
+ * size hint)"*). A maze room above its declared location capacity is built
+ * bigger; the Initialise preview names it with that size and offers the
+ * unbounded-capacity substrate by the registry's own declaration.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+// eslint-disable-next-line import/first
+import { INITIALISE_GROWN_WORDING } from '../../apworldEditor/initialiseFlow.js';
+// eslint-disable-next-line import/first
+import { unboundedCapacityIds } from '../../procgenCore/locationCapacity.js';
+
+/**
+ * ⛓ THE LARGEST COMMITTED ROOM, BY LOCATION COUNT — derived from the page's own
+ * preset index: every `*_rules.json` it lists that is a classic document (no
+ * `preset_sidecars` entry), every player slot, every region. No game named.
+ * @returns {Promise<{path: string, player: string, region: string, locations: number}|null>}
+ */
+async function largestCommittedRoom(testController) {
+    const index = await (await fetch('./presets/preset_files.json')).json();
+    let best = null;
+    for (const [game, info] of Object.entries(index)) {
+        for (const [folder, f] of Object.entries(info?.folders ?? {})) {
+            for (const file of (f?.files ?? []).filter((n) => n.endsWith('_rules.json'))) {
+                const path = `./presets/${game}/${folder}/${file}`;
+                let doc;
+                try {
+                    doc = await (await fetch(path)).json();
+                } catch {
+                    continue;
+                }
+                if (Object.values(doc.preset_sidecars ?? {}).some((m) => m && Object.keys(m).length)) continue;
+                for (const [player, regions] of Object.entries(doc.regions ?? {})) {
+                    for (const [region, r] of Object.entries(regions ?? {})) {
+                        const n = (r?.locations ?? []).length;
+                        if (!best || n > best.locations) best = { path, player, region, locations: n };
+                    }
+                }
+            }
+        }
+    }
+    testController.log(`largest committed room: ${best ? `${best.region} (${best.locations}) in ${best.path} p${best.player}` : 'none'}`);
+    return best;
+}
+
+/**
+ * ⛓⛓⛓ **THE PREVIEW NAMES THE GROWN ROOM WITH THE SIZE THE REALISER BUILDS** —
+ * on the largest committed room (derived): the premise is that the page's own
+ * plan grows it; the preview (verbatim the page's `initialisePreview`) names it
+ * with `INITIALISE_GROWN_WORDING.room`, and — the registry holding an
+ * unbounded-capacity target other than the form's — carries the offer sentence;
+ * Generate lands, and the size READ OUT OF THE DISPLAYED SENTENCE equals the
+ * realised room's payload size. Undo restores. Mutant (C2): the sentence's size
+ * taken from the region size instead of the declaration → red on the last claim.
+ */
+export async function apworldInitialisePreviewsTheGrownRoomSize(testController) {
+    try {
+        const room = await largestCommittedRoom(testController);
+        testController.reportCondition('⛓ premise: the corpus has a room to derive', !!room);
+        if (!room) return testController.getOverallResult();
+        const panel = await openInitialiseForm(testController, room.path);
+        if (!panel) return testController.getOverallResult();
+        const p = String(panel.playerId);
+        testController.assertEqual('⛓ premise: the hub opens the derived slot', room.player, p);
+        const doc0 = panel.rulesDoc;
+        const before = JSON.stringify(doc0);
+        const state = panel._initialise.state;
+        const plan = initPlan(doc0, p, { substrate: state.substrate, bag: state.bag,
+            gridDims: { width: state.side, height: state.side } });
+        const grown = plan.ok ? plan.grown.find((g) => g.region === room.region) : null;
+        testController.reportCondition(`⛓ premise: the page's plan grows ${room.region} above ${plan.regionSize?.width}×${plan.regionSize?.height}`
+            + (grown ? ` (to ${grown.size.width}×${grown.size.height})` : ''), !!grown);
+        if (!grown) return testController.getOverallResult();
+
+        const pv = initSection().querySelector('.apworld-initialise-preview');
+        const text = pv?.textContent ?? '';
+        testController.assertEqual('⛓ the preview is the page\'s own, verbatim', initialisePreview(doc0, p, state).text, text);
+        testController.reportCondition(`the preview names the room: "${INITIALISE_GROWN_WORDING.room(grown)}"`,
+            text.includes(INITIALISE_GROWN_WORDING.room(grown)));
+        const dense = unboundedCapacityIds(s1Targets().map((t) => substrateRegistry.get(t))).filter((t) => t !== state.substrate);
+        testController.reportCondition(`⛓ premise: the registry holds an unbounded-capacity target (${dense.join(', ') || 'none'})`, dense.length > 0);
+        testController.reportCondition('…and the preview offers it', text.includes(INITIALISE_GROWN_WORDING.offer(dense)));
+
+        // The size the person READS — parsed out of the sentence on the page.
+        const esc = room.region.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const m = text.match(new RegExp(`${esc}: \\d+ locations? → (\\d+)×(\\d+)`));
+        const shown = m ? { width: Number(m[1]), height: Number(m[2]) } : null;
+        testController.reportCondition(`the sentence shows a size for ${room.region} (${m?.[0] ?? 'none'})`, !!shown);
+
+        const run = await pressInitialise(testController, panel, 60000);
+        testController.reportCondition('the build succeeded', run?.outcome?.ok === true);
+        const payload = panel.session.ops().at(-1)?.result?.entries?.[room.region]?.playable_payload;
+        const built = payload ? { width: payload.width, height: payload.height } : null;
+        testController.assertEqual('⛓⛓ the size the sentence showed is the size the realiser built',
+            JSON.stringify(shown), JSON.stringify(built));
+
+        panel.session.undo();
+        panel._render();
+        testController.assertEqual('⛓ Undo restores the document byte for byte', before, JSON.stringify(panel.rulesDoc));
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('grown room preview test error-free', false);
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-initialise-previews-the-grown-room-size',
+    name: 'APWorld hub: the Initialise preview names the largest committed room with the size its capacity grows it to, offers the unbounded-capacity substrate, and the realiser builds exactly that size',
+    description: 'APWORLD SUBSTRATE CHANGE C2. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldInitialisePreviewsTheGrownRoomSize,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
  * ⛓⛓⛓ APWORLD SUBSTRATE CHANGE S1 — THE OPS DECLARE WHAT THEIR REALISER WAS
  * HANDED FREE (plan §22, ⚖ Q1 (a) + Q1b, user 2026-09-26). The live scenario B
  * of §22.2 turned green: Adventure → Initialise as a need-declaring target →

@@ -975,6 +975,12 @@
             "_comment": "R7. adventure: the Map's door → the preview = the page's planInitialise (placed / 0 unplaced / derived return exits); Generate lands ONE initialise-procgen-layout with the result inline; answer = description + V0 count; Map cells = placed; Regions tab sidecar blocks = placed; Undo byte-for-byte + the door back."
         },
         {
+            "id": "apworld-initialise-previews-the-grown-room-size",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "C2. The largest committed room (derived from preset_files.json, classic documents): the page's plan grows it; the preview (verbatim initialisePreview) names it with INITIALISE_GROWN_WORDING.room and offers the unbounded-capacity target read off the registry; Generate lands and the size parsed out of the displayed sentence == the realised payload's; Undo byte-for-byte."
+        },
+        {
             "id": "apworld-initialise-with-return-exits-off-adds-none",
             "enabled": true,
             "category": "apworldEditor",

@@ -42,6 +42,7 @@ import {
     planInitialise,
 } from './slotInitialise.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { unboundedCapacityIds } from '../procgenCore/locationCapacity.js';
 import {
     INITIALISE_JOB, REGION_GENERATION_CANCELLED, initialiseTimeoutSentence, regionGenerationLoadTimeoutSentence,
 } from './regionGenerationRun.js';
@@ -156,11 +157,48 @@ export function initialiseLoopToggle(doc, player, pageLog = null) {
 }
 
 /**
+ * ⛓⛓ C2 — **THE ROOMS THAT WILL GROW, AND THE ROAD AROUND IT** (⚖ the user,
+ * 2026-09-28: *"YES to the location CAPACITY change (C2, as a size hint)"* — a
+ * HINT: nothing here refuses, the room builds at the size printed).
+ *
+ * One clause per grown room — *"Ingame: 340 locations → 27×27"* — from the
+ * plan's `grown` (`topDownRoomSizes`: the substrate's declared capacity on the
+ * realiser's grow ladder, the size the realiser then sizes the room to). Then,
+ * when an Initialise target OTHER than the chosen one declares an unbounded
+ * capacity (read off the registry — `unboundedCapacityIds`, no name typed), one
+ * sentence offering it.
+ *
+ * ⛓ THE ROAD IT POINTS AT is the per-region one (R2): after Initialise, the
+ * grown room's own sidecar block regenerates THAT room as the offered
+ * substrate, and every other room keeps the one chosen here. The picker above
+ * is the other road, and it re-realises EVERY region (R7: one substrate per
+ * slot), which trades a whole slot of rooms for the one that grew — so the
+ * sentence names the narrow road and leaves the picker where it is.
+ */
+export const INITIALISE_GROWN_WORDING = Object.freeze({
+    room: (g) => `${g.region}: ${g.demand.locations} location${g.demand.locations === 1 ? '' : 's'} → ${g.size.width}×${g.size.height}`,
+    head: (n, size) => `${n} room${n === 1 ? '' : 's'} above ${size.width}×${size.height}`,
+    offer: (ids) => `${ids.join(' / ')} hold${ids.length === 1 ? 's' : ''} any number of locations in one room — `
+        + 'after Initialise, regenerate a grown room as it from its sidecar block (Generate ▸)',
+});
+
+/** ⛓ The grown-room clause of the preview, `''` when no room grows. */
+export function initialiseGrownText(plan, substrate) {
+    if (!plan?.grown?.length) return '';
+    const W = INITIALISE_GROWN_WORDING;
+    const dense = unboundedCapacityIds(initialiseTargets().map((id) => substrateRegistry.get(id)))
+        .filter((id) => id !== substrate);
+    return `; ${W.head(plan.grown.length, plan.regionSize)}: ${plan.grown.map(W.room).join(', ')}`
+        + (dense.length ? `. ${W.offer(dense)}` : '');
+}
+
+/**
  * ⛓⛓ **THE PREVIEW** — the op's refusal when it would refuse (the form then
  * draws no Generate), else the layout's plan and its sentence:
  * *"81 regions placed on 13×13, 53 teleporters; 80 return exits will be added;
  * 0 unplaceable"*, the unplaceable NAMED with their why when any — and, when
- * the layout stripped a Menu (M2), *"; Menu: 13 exits → 13 roots"*.
+ * the layout stripped a Menu (M2), *"; Menu: 13 exits → 13 roots"*, and (C2)
+ * the rooms that will be built above the region size (`initialiseGrownText`).
  *
  * @returns {{refusal: string|null, plan: object|null, text: string}}
  */
@@ -192,7 +230,7 @@ export function initialisePreview(doc, player, state, pageLog = null) {
         plan,
         text: `${plan.placed} region${plan.placed === 1 ? '' : 's'} placed on ${args.gridDims.width}×${args.gridDims.height}, `
             + `${plan.teleporters} teleporter${plan.teleporters === 1 ? '' : 's'}; ${back}; `
-            + `${plan.unplaced.length} unplaceable${names}${hub}${loop}`,
+            + `${plan.unplaced.length} unplaceable${names}${hub}${loop}${initialiseGrownText(plan, args.substrate)}`,
     };
 }
 
