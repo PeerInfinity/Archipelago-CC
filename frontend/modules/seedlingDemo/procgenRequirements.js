@@ -81,7 +81,44 @@ export const ITEM_LABELS = Object.freeze({
     hasShield: 'Progressive Shield',
     /** ⛓ Swim S1 (D3) — the conch; `worlds/seedling/Items.py`'s name. */
     canSwim: 'Progressive Swim',
+    /**
+     * ⛓ Swim T2 (D2) — the feather is the SECOND `Progressive Swim`, so its
+     * row carries a COUNT. ⛔ A row is a NAME (count 1) or `{item, count}`;
+     * read it through `itemLabelOf`, never by indexing this table directly.
+     */
+    hasFeather: Object.freeze({ item: 'Progressive Swim', count: 2 }),
 });
+
+/**
+ * ⛓ ONE ROW OF `ITEM_LABELS`, NORMALISED — `{item, count}` whichever shape the
+ * table spells it in, or `null` for a flag the table does not name.
+ */
+export function itemLabelOf(flag) {
+    const row = ITEM_LABELS[flag];
+    if (row === undefined) return null;
+    if (typeof row === 'string') return Object.freeze({ item: row, count: 1 });
+    return Object.freeze({ item: row.item, count: row.count ?? 1 });
+}
+
+/** The words the REPORT speaks for a flag — the AP name, `×N` when it takes
+ *  more than one, and the flag itself when the table does not name it. */
+export function itemLabel(flag) {
+    const l = itemLabelOf(flag);
+    if (!l) return flag;
+    return l.count > 1 ? `${l.item} ×${l.count}` : l.item;
+}
+
+/**
+ * ⛓ THE REQUIREMENT A REQUIRED ROW STANDS FOR, in the rule grammar's own
+ * spelling — `Has('Progressive Sword')`, `Has('Progressive Swim', 2)`. ⛔ The
+ * count is written only when it is not 1, so every row the table held before
+ * T2 reads exactly as it did.
+ */
+export function requirementOf(flag) {
+    const l = itemLabelOf(flag);
+    const name = l ? l.item : flag;
+    return l && l.count > 1 ? `Has('${name}', ${l.count})` : `Has('${name}')`;
+}
 
 /**
  * ⚖ The PoC's §1.14 ruling, one instrument over: **a measurement harness may
@@ -160,7 +197,7 @@ export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET,
                 : 'WEAK (an ENGINE throw, not a claim about the level)');
         rows.push({
             flag,
-            item: ITEM_LABELS[flag] ?? flag,
+            item: itemLabel(flag),
             withVerdict: withOut.verdict,
             withTicks: withOut.ticks,
             withoutVerdict,
@@ -188,11 +225,11 @@ export function requirementsFor(state, withOut, { budget = DEFAULT_BUDGET,
             label: required
                 ? `SOLVER-RELATIVE, BOUNDED: this solver, at maxTicksPerTarget=`
                     + `${budget.maxTicksPerTarget}, solves this level WITH `
-                    + `${ITEM_LABELS[flag] ?? flag} and does not solve it WITHOUT. It is `
+                    + `${itemLabel(flag)} and does not solve it WITHOUT. It is `
                     + 'NOT a proof that the level is unsolvable without it — no exhaustive '
                     + 'search exists anywhere in this design, and no budget was escalated.'
                 : `SOLVER-RELATIVE, BOUNDED: the level solved BOTH with and without `
-                    + `${ITEM_LABELS[flag] ?? flag} at this budget, so no rule is `
+                    + `${itemLabel(flag)} at this budget, so no rule is `
                     + 'established. That is an answer, not an absence.',
             /**
              * ⚠ §15.8's warning, carried in the row that needs it: without the
