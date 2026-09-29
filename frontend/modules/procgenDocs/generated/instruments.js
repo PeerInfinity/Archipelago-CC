@@ -44,7 +44,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 12,
+            "count": 13,
             "id": "census"
         },
         {
@@ -209,13 +209,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 270,
+        "blockStyle": 271,
         "browser": 84,
-        "cited": 114,
-        "files": 281,
+        "cited": 115,
+        "files": 282,
         "lineStyle": 11,
-        "withDocblock": 281,
-        "withFlags": 203
+        "withDocblock": 282,
+        "withFlags": 204
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -613,6 +613,45 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-areas — **THE AREA CENSUS**: how many AREAS a Seedling skeleton offers, per kind, per knob, per seed, per biome — and what a lock on every boundary cell would cost out of the 30 persistence tags.",
             "path": "scripts/procgen/census-seedling-areas.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "readJson"
+            ],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "atlas",
+                "json"
+            ],
+            "file": "census-seedling-atlas-doors.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "atlas"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-atlas-doors — **THE ATLAS DOOR CENSUS**: every INTERNAL exit of a Seedling region atlas (the crossings between sub-regions of one level) by rule and by level, the `Progressive Swim` rows flagged BOT-UNCERTIFIED unless a committed tape witnesses that level with water armed, and whether the pipeline's …",
+            "path": "scripts/procgen/census-seedling-atlas-doors.mjs"
         },
         {
             "argvHelpers": [],
