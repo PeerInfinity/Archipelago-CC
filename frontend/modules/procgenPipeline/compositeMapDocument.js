@@ -169,10 +169,16 @@ export function mapBoundsFor(rulesJson, entries, playerId) {
  * Pure function — exported for testing.
  *
  * @param {object} rulesJson the whole document
- * @param {{playerId?: string|number|null}} [opts] which player slot's sidecars
- *   to read. Absent / unknown ⇒ the first slot in the document (v1 behaviour).
+ * @param {{playerId?: string|number|null, fallback?: boolean}} [opts] which
+ *   player slot's sidecars to read. Absent ⇒ the first slot in the document
+ *   (v1 behaviour). A NAMED slot the document lacks ⇒ the first slot too — the
+ *   fallback, REPORTED on `playerId` — unless `fallback: false`, which answers
+ *   null instead (APWORLD SUBSTRATE CHANGE H1, plan §46): the APWorld hub asks
+ *   for no fallback, because a bare slot beside a populated one must draw its
+ *   own empty state (and the Initialise door in it), not its neighbour's map.
+ *   The pipeline's callers name no slot, so the option never reaches them.
  */
-export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {}) {
+export function reconstructResultFromSidecars(rulesJson, { playerId = null, fallback = true } = {}) {
     const sidecarsByPlayer = rulesJson?.preset_sidecars;
     if (!sidecarsByPlayer || typeof sidecarsByPlayer !== 'object') return null;
     const playerKeys = Object.keys(sidecarsByPlayer);
@@ -183,6 +189,7 @@ export function reconstructResultFromSidecars(rulesJson, { playerId = null } = {
      * drew slot 1 would be a readout about a world nobody chose.
      */
     const wanted = playerId == null ? null : String(playerId);
+    if (wanted != null && !playerKeys.includes(wanted) && !fallback) return null;
     const playerKey = (wanted != null && playerKeys.includes(wanted)) ? wanted : playerKeys[0];
     const playerSidecars = sidecarsByPlayer[playerKey];
     const regionEntries = Object.entries(playerSidecars ?? {});

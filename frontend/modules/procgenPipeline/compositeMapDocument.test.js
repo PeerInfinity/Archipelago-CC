@@ -163,6 +163,35 @@ describe('reconstructResultFromSidecars — the player slot', () => {
             { playerId: '1' },
         )).toBeNull();
     });
+
+    /**
+     * ⛓⛓ APWORLD SUBSTRATE CHANGE H1 (plan §46; trap 1492) — **`fallback: false`
+     * ASKS FOR THE NAMED SLOT OR NOTHING.** The row above this one's neighbour
+     * (*falls back … and REPORTS it*) still pins the fallback for the callers that
+     * take it; this one pins the opt-out: a named slot the document lacks → null,
+     * while a slot it HAS and a call naming no slot read exactly as before.
+     */
+    it('with `fallback: false`: a named slot the document lacks → null; a present slot and no slot read as before', () => {
+        expect(reconstructResultFromSidecars(twoSlots(), { playerId: '9', fallback: false })).toBeNull();
+        expect(reconstructResultFromSidecars(twoSlots(), { playerId: 9, fallback: false })).toBeNull();
+        const present = reconstructResultFromSidecars(twoSlots(), { playerId: '3', fallback: false });
+        expect([present.playerId, present.stats.regionsBuilt]).toEqual(['3', 2]);
+        const unnamed = reconstructResultFromSidecars(twoSlots(), { fallback: false });
+        expect([unnamed.playerId, unnamed.stats.regionsBuilt]).toEqual(['1', 1]);
+    });
+
+    /**
+     * ⛓⛓ …and **THE HUB DOES NOT ASK FOR IT**: its Map tab's one reconstruction
+     * call names the selected slot with `fallback: false`, so a bare slot beside
+     * a populated one draws "No map" and the Initialise door (the in-app row
+     * `apworld-two-slots-initialise-in-turn` presses that door). Read off the
+     * panel's source, as `hubExits.test.js` pins Apply's source name.
+     */
+    it('the APWorld hub\'s Map tab asks for NO fallback', () => {
+        const hub = readFileSync(join(REPO, 'frontend/modules/apworldEditor/apworldEditorUI.js'), 'utf8');
+        const calls = [...hub.matchAll(/reconstructResultFromSidecars\(([^)]*)\)/g)].map((m) => m[1].replace(/\s+/g, ' '));
+        expect(calls).toEqual(['doc, { playerId: this.playerId, fallback: false }']);
+    });
 });
 
 /* ══════════════════════════════════════════════════════════════════════

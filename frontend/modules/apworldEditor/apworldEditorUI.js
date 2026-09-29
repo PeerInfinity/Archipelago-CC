@@ -4617,13 +4617,20 @@ class ApworldEditorUI {
    * panel and gets NO button back.
    *
    * Memoised on the record's identity + the slot — see `_mapCache`.
+   *
+   * ⛔ **NO SLOT FALLBACK** (APWORLD SUBSTRATE CHANGE H1, plan §46; trap 1492).
+   * The selected slot's map or none: a bare slot beside a populated one gets
+   * the empty state and the Initialise door in it. Until H1 the hub took the
+   * reconstruction's fallback and drew the populated slot's map with a
+   * "(slot N)" status — a readout about a world nobody chose, with the door
+   * hidden behind it.
    */
   _mapResult() {
     const doc = this.rulesDoc;
     if (!doc) return null;
     const c = this._mapCache;
     if (c && c.doc === doc && c.playerId === this.playerId) return c.result;
-    const result = reconstructResultFromSidecars(doc, { playerId: this.playerId });
+    const result = reconstructResultFromSidecars(doc, { playerId: this.playerId, fallback: false });
     this._mapCache = { doc, playerId: this.playerId, result };
     return result;
   }

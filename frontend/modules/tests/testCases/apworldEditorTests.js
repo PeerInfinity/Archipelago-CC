@@ -13603,8 +13603,9 @@ const p1bBlocksOf = (doc, p) => JSON.stringify([doc.procgen_metadata?.[p] ?? nul
 
 /**
  * ⛓⛓⛓ **(P1b′) TWO SLOTS, INITIALISED IN TURN, EACH WITH ITS OWN BLOCKS.**
- * The subject is derived (above). Slot A through the (Sidecars tab's) door with loop mode OFF,
- * then slot B with loop mode ON; after each run the slot's
+ * The subject is derived (above). Slot A through the Map tab's door with loop mode OFF,
+ * then slot B — whose Map, beside populated slot A, is its OWN empty state
+ * (H1) — with loop mode ON; after each run the slot's
  * `procgen_metadata[p]` (and, for B, `loop_costs[p]`) are the op's result
  * verbatim and NO block exists under any other slot; slot A's blocks are
  * byte-identical after B's run; the Map draws each slot's placed count; the
@@ -13640,18 +13641,28 @@ export async function apworldTwoSlotsInitialiseInTurn(testController) {
         for (const [slot, loopMode] of [[a, false], [b, true]]) {
             if (!await p1bSelect(testController, panel, slot)) return testController.getOverallResult();
             /**
-             * ⛔ THE SIDECARS TAB'S DOOR, NOT THE MAP'S. Measured in this row's first run:
-             * once slot A carries entries, the Map tab for bare slot B draws slot A's map
-             * (`reconstructResultFromSidecars` falls back to the first slot that has
-             * entries — H3's pinned, REPORTED fallback: the status reads "(slot A)"), so
-             * its "No map" state and the door in it never appear. The Sidecars tab's empty
-             * list draws the same door (`_makeInitialiseDoor`, gated per slot). ⚖ OPEN
-             * for the planner (plan §39): whether the hub should ask for no fallback.
+             * ⛓⛓ THE MAP TAB'S DOOR (APWORLD SUBSTRATE CHANGE H1, plan §46; trap 1492).
+             * Until H1 this row went through the Sidecars tab: once slot A carried
+             * entries, the Map tab for bare slot B drew slot A's map (the hub took
+             * `reconstructResultFromSidecars`' fallback — status "(slot A)"), so its
+             * "No map" state and the door in it never appeared. The hub now asks for
+             * NO fallback, so slot B's Map is its own empty state — asserted here for
+             * the second slot, where the fallback used to answer — and the Sidecars-tab
+             * workaround is retired.
              */
-            selectTab(panel, 'sidecars');
+            selectTab(panel, 'map');
             const door = await testController.pollForValue(initDoor, `slot ${slot}'s Initialise door`, 8000, 50);
-            testController.reportCondition(`slot ${slot} is bare: the Sidecars tab offers the door`, !!door);
+            testController.reportCondition(`slot ${slot} is bare: the Map tab offers the door`, !!door);
             if (!door) return testController.getOverallResult();
+            if (slot === b) {
+                const intro = document.querySelector(`${PANEL_SELECTOR} .apworld-map-intro`)?.textContent ?? '';
+                testController.reportCondition(`⛓⛓ slot ${b}'s Map is its OWN empty state, beside populated slot ${a}: `
+                    + `"${intro.slice(0, 80)}…"`, intro.startsWith('No map for this world')
+                    && intro.includes(`player slot ${b} carries no sidecars`));
+                testController.reportCondition(`…and no map of slot ${a} is drawn for it (status: "${panel.statusLabel?.textContent}")`,
+                    !document.querySelector(`${PANEL_SELECTOR} .apworld-map-slot`)
+                    && !(panel.statusLabel?.textContent ?? '').includes(`grid (slot ${a})`));
+            }
             door.click();
             if (!await testController.pollForValue(initSection, 'the Initialise form', 8000, 50)) {
                 return testController.getOverallResult();

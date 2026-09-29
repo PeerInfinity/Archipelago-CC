@@ -1796,6 +1796,17 @@ lay out, so the tab prints *"No map for this world (no grid data in the
 sidecars)"* and the reason — and draws **nothing else**. There is deliberately no
 region-graph fallback here: the graph is its own panel.
 
+⛔ **No slot fallback either** (APWORLD SUBSTRATE CHANGE H1, 2026-09-29). The tab
+asks for the SELECTED slot's map or none —
+`reconstructResultFromSidecars(record, {playerId, fallback: false})`. Without the
+option the function answers a slot the document lacks with the first slot it
+has (and reports which on `playerId`); the pipeline panel, which names no slot,
+keeps that. Until H1 the hub took it too, so on a multi-slot document with one
+slot initialised, a BARE slot's Map drew its neighbour's map (status *"… grid
+(slot 2)"*) and the Initialise door, which lives in the empty state, never
+appeared. Now that slot reads *"No map for this world (player slot 4 carries no
+sidecars)"* with the door.
+
 ⛔ **M0 (2026-09-10) REVERSED the narrower reading of that ⚖.** Until then the
 cell's SIZE also had to come out of the document — `reconstructResultFromSidecars`
 took it from `playable_payload.width`/`height` in TILES and returned null when
@@ -2763,5 +2774,5 @@ The import is free in both modes, measured:
 | `../procgenPipeline/procgenPipelineUI.test.js` | vitest — (H5) the hand-off answer's three outcomes; (M1) the carried slot named when it is not the built one, the top-down cost clause, the sphere answer unchanged, and the block's Regenerate note held to `HANDOFF_REALISED_SLOT` |
 | `presetUI.test.js` | vitest — the "Open in APWorld Editor" descriptor |
 | `measure-apworld-raw-view.mjs` | `scripts/procgen/` — the browser measurement; `--all` opens the raw tab over every committed preset, which is what RETIRED `RAW_VIEW_LIMIT_BYTES` |
-| `apworldEditorTests.js` | the in-app runner, category `apworldEditor`, enabled in `playwright_tests_config-substrates.json` (`npm test -- --mode=test-substrates --batch=fast`); S3's `apworld-initialise-loop-mode-writes-loop-costs` (adventure: the toggle ON → `loop_costs` + every payload flagged, the Document tab's row, Undo; OFF → neither); P1b′'s `apworld-two-slots-initialise-in-turn` (a DERIVED committed classic multi-slot document — every slot bare — and its two candidate slots: the layout places every reachable region and the largest room holds fewer locations than the measured cliff bound `P1B_ROOM_LOCATION_BOUND`; the first slot initialised with loop mode OFF, the second ON; each slot's own blocks, the first byte-identical after the second, the Map and the loop-mode sentence per slot, Undo ×2), and one row in category `loops` (the loop reset on `mm3`, `--mode=test-loops-only`) |
+| `apworldEditorTests.js` | the in-app runner, category `apworldEditor`, enabled in `playwright_tests_config-substrates.json` (`npm test -- --mode=test-substrates --batch=fast`); S3's `apworld-initialise-loop-mode-writes-loop-costs` (adventure: the toggle ON → `loop_costs` + every payload flagged, the Document tab's row, Undo; OFF → neither); P1b′'s `apworld-two-slots-initialise-in-turn` (a DERIVED committed classic multi-slot document — every slot bare — and its two candidate slots: the layout places every reachable region and the largest room holds fewer locations than the measured cliff bound `P1B_ROOM_LOCATION_BOUND`; the first slot initialised with loop mode OFF, the second ON — each through the Map tab's door, the second slot's Map asserted to be its OWN empty state beside the populated first (H1); each slot's own blocks, the first byte-identical after the second, the Map and the loop-mode sentence per slot, Undo ×2), and one row in category `loops` (the loop reset on `mm3`, `--mode=test-loops-only`) |
 | `check-procgen-lab-hosting.mjs` claim 12 | `scripts/procgen/` — the reverse link end to end, from a button inside an iframe to a session in this panel |

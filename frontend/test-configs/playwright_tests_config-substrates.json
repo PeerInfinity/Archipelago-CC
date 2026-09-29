@@ -1068,7 +1068,7 @@
             "id": "apworld-two-slots-initialise-in-turn",
             "enabled": true,
             "category": "apworldEditor",
-            "_comment": "P1b′. A DERIVED committed classic multi-slot document (every slot bare) and its two candidate slots (the layout places every reachable region; the largest room under the measured cliff bound): slot A initialised with loop mode OFF, slot B with loop mode ON, through the real controls; each slot's procgen_metadata[p]/loop_costs[p] = the op's result, no block under any other slot, slot A's blocks byte-identical after B's run, the Map per slot = its placed count, the Sidecars tab's loop-mode sentence names the selected slot; Undo x2 restores the document byte for byte."
+            "_comment": "P1b′. A DERIVED committed classic multi-slot document (every slot bare) and its two candidate slots (the layout places every reachable region; the largest room under the measured cliff bound): slot A initialised with loop mode OFF, slot B with loop mode ON, through the real controls (each through the MAP tab's door: since APWORLD SUBSTRATE CHANGE H1 the hub asks the reconstruction for no slot fallback, so bare slot B's Map beside populated slot A is its own 'No map' state with the door — asserted; the Sidecars-tab workaround is retired); each slot's procgen_metadata[p]/loop_costs[p] = the op's result, no block under any other slot, slot A's blocks byte-identical after B's run, the Map per slot = its placed count, the Sidecars tab's loop-mode sentence names the selected slot; Undo x2 restores the document byte for byte."
         },
         {
             "id": "apworld-substrate-pickers-show-label-and-card",
