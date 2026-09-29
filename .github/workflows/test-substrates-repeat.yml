@@ -39,7 +39,8 @@ on:
       test:
         description: >-
           One row id (or a comma-separated few) to run SOLO each time
-          (npm test --test=). Give this OR batch, not both.
+          (npm test --test=). Give this OR batch, not both; test-substrates
+          needs one of the two.
         type: string
         default: ''
       batch:
@@ -61,17 +62,19 @@ on:
 
 jobs:
   repeat:
-    name: Repeat ×${{ inputs.repeat }} — ${{ inputs.test || inputs.batch }} (${{ inputs.mode }}${{ inputs.bundled && ', bundled' || '' }})
+    name: Repeat ×${{ inputs.repeat }} — ${{ inputs.test || inputs.batch || 'whole roster' }} (${{ inputs.mode }}${{ inputs.bundled && ', bundled' || '' }})
     runs-on: ubuntu-latest
     # 20 runs × (bot-walks 375 s in-app + ~40 s launch) ≈ 140 min, plus setup.
     # A solo row is ~30–60 s a run, so the cap only binds on a batch.
     timeout-minutes: 180
 
     steps:
-      # Refuse before any setup: an empty selector would run the WHOLE roster
-      # N times (npm test with neither --test nor --batch), past any cap.
+      # Refuse before any setup. An empty selector runs the mode's WHOLE
+      # roster: fine for test-regression (~51 s on CI), but test-substrates'
+      # whole roster outruns the 600 s in-app budget — hence its batches.
       - name: Check the inputs
         env:
+          MODE: ${{ inputs.mode }}
           TEST_IDS: ${{ inputs.test }}
           BATCH: ${{ inputs.batch }}
           REPEAT: ${{ inputs.repeat }}
@@ -79,8 +82,8 @@ jobs:
           if [ -n "$TEST_IDS" ] && [ -n "$BATCH" ]; then
             echo "::error::give test OR batch, not both"; exit 2
           fi
-          if [ -z "$TEST_IDS" ] && [ -z "$BATCH" ]; then
-            echo "::error::give test (a row id) or batch — an empty selector runs the whole roster"; exit 2
+          if [ -z "$TEST_IDS" ] && [ -z "$BATCH" ] && [ "$MODE" = "test-substrates" ]; then
+            echo "::error::test-substrates needs test (a row id) or batch — its whole roster outruns the 600 s in-app budget"; exit 2
           fi
           case "$REPEAT" in
             ''|*[!0-9]*) echo "::error::repeat must be a whole number, got '$REPEAT'"; exit 2 ;;
@@ -140,7 +143,8 @@ jobs:
           BUNDLED: ${{ inputs.bundled }}
         run: |
           mkdir -p repeat test-results/in-app-tests
-          if [ -n "$TEST_IDS" ]; then SEL="--test=$TEST_IDS"; else SEL="--batch=$BATCH"; fi
+          SEL=()
+          if [ -n "$TEST_IDS" ]; then SEL=(--test="$TEST_IDS"); elif [ -n "$BATCH" ]; then SEL=(--batch="$BATCH"); fi
           for i in $(seq 1 "$REPEAT"); do
             FLAVOUR=()
             if [ "$BUNDLED" = "true" ]; then
@@ -148,10 +152,10 @@ jobs:
               if [ "$i" -eq 1 ]; then FLAVOUR=(--bundled); else FLAVOUR=(--bundled --no-build); fi
             fi
             before=$(ls test-results/in-app-tests/ 2>/dev/null | sort)
-            echo "::group::run $i/$REPEAT — npm test -- --mode=$MODE $SEL ${FLAVOUR[*]}"
+            echo "::group::run $i/$REPEAT — npm test -- --mode=$MODE ${SEL[*]} ${FLAVOUR[*]}"
             start=$(date +%s)
             set +e
-            npm test -- --mode="$MODE" "$SEL" "${FLAVOUR[@]}" > "repeat/run-$i.log" 2>&1
+            npm test -- --mode="$MODE" "${SEL[@]}" "${FLAVOUR[@]}" > "repeat/run-$i.log" 2>&1
             code=$?
             set -e
             secs=$(( $(date +%s) - start ))
@@ -166,7 +170,7 @@ jobs:
       - name: Summarise the rate
         if: ${{ always() }}
         env:
-          TITLE: "${{ inputs.mode }} · ${{ inputs.test && format('test {0}', inputs.test) || format('batch {0}', inputs.batch) }} · ×${{ inputs.repeat }}${{ inputs.bundled && ' · bundled' || '' }}"
+          TITLE: "${{ inputs.mode }} · ${{ inputs.test && format('test {0}', inputs.test) || inputs.batch && format('batch {0}', inputs.batch) || 'whole roster' }} · ×${{ inputs.repeat }}${{ inputs.bundled && ' · bundled' || '' }}"
         run: |
           mkdir -p repeat
           node scripts/test/summarize-repeat-runs.js repeat --title="$TITLE" | tee -a "$GITHUB_STEP_SUMMARY"
