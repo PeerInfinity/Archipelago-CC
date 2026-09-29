@@ -1,5 +1,6 @@
 // eventBus.js
 import { centralRegistry } from './centralRegistry.js'; // Use named import
+import { handlerErrorMessage } from './eventBusMessages.js';
 
 
 // Helper function for logging with fallback
@@ -17,6 +18,10 @@ export class EventBus {
     this.events = {}; // eventName -> Array<{moduleName, callback, enabled}>
     this.publishers = {}; // eventName -> Map<moduleName, {enabled}>
     this.publishCounts = {}; // eventName -> Map<publisherModuleName, count>
+    // Subscribers that threw in publish(). The in-app spec gates on the
+    // logged line; this count is its cross-check — a logger level or keyword
+    // filter that swallowed the line would otherwise read as zero.
+    this.handlerErrorCount = 0;
   }
 
   subscribe(event, callback, moduleName) {
@@ -149,7 +154,8 @@ export class EventBus {
       try {
         subscriber.callback(data);
       } catch (error) {
-        log('error', `Error in event handler for ${event} (module: ${subscriber.moduleName}):`, error);
+        this.handlerErrorCount += 1;
+        log('error', handlerErrorMessage(event, subscriber.moduleName), error);
       }
     });
   }

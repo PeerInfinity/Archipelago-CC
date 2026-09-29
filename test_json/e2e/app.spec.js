@@ -3,7 +3,10 @@ import { TEST_FLAVOUR, TEST_FRONTEND_URL, flavourUrlParam } from '../../scripts/
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { formatFailedTests, formatImportFailures, formatInAppSummary } from '../../scripts/test/inAppSummary.js';
+import {
+  createHandlerErrorLedger, formatFailedTests, formatHandlerErrors, formatImportFailures,
+  formatInAppSummary, handlerErrorVerdict,
+} from '../../scripts/test/inAppSummary.js';
 
 /**
  * Machine load, sampled at run start and again when a test fails.
@@ -71,6 +74,11 @@ test.describe('Application End-to-End Tests', () => {
     // only trace is a browser line in the middle of thousands.
     let consoleErrors = 0;
     const pageErrors = [];
+    // GATED, zero tolerance (plan §48): a subscriber that threw inside the
+    // event bus. The bus catches it, so the row that caused it can pass —
+    // the ledger attributes each such line to its row by the [PROGRESS
+    // markers around it (scripts/test/inAppSummary.js).
+    const handlerLedger = createHandlerErrorLedger();
     // Uncaught exceptions are not console messages — without this listener
     // they never reached the log at all.
     page.on('pageerror', (err) => {
@@ -82,6 +90,7 @@ test.describe('Application End-to-End Tests', () => {
     page.on('console', (msg) => {
       const text = msg.text();
       if (msg.type() === 'error') consoleErrors += 1;
+      handlerLedger.observe(text, msg.type());
       // The in-app runner's per-case heartbeat (testLogic.js). Relayed
       // bare, so a run in flight can be read at a glance — without it
       // the only per-case signal in the log is buried in thousands of
@@ -224,6 +233,13 @@ test.describe('Application End-to-End Tests', () => {
 
     const results = await page.evaluate(() => window.__playwrightTestResults__);
     expect(results).toBeTruthy();
+
+    // The page's own tally of subscribers that threw (eventBus.js) — the
+    // cross-check on the logged count. Null when the page never built a bus.
+    const pageHandlerErrorCount = await page.evaluate(
+      () => (typeof window.eventBus?.handlerErrorCount === 'number' ? window.eventBus.handlerErrorCount : null)
+    );
+    const handlerErrors = handlerErrorVerdict(handlerLedger.entries(), pageHandlerErrorCount);
     console.log(
       'PW DEBUG: __playwrightTestResults__ retrieved from window object.'
     );
@@ -263,6 +279,17 @@ test.describe('Application End-to-End Tests', () => {
             batch: testBatch || null,
             testIds: testIds || null,
             flavour: TEST_FLAVOUR,
+            // The page's error counts, so a results file alone answers "did a
+            // handler throw?" (scripts/test/summarize-repeat-runs.js reads it).
+            pageDiagnostics: {
+              consoleErrors,
+              pageErrors: pageErrors.length,
+              handlerErrors: {
+                logged: handlerErrors.logged,
+                pageCount: handlerErrors.pageCount,
+                rows: handlerErrors.entries,
+              },
+            },
             ...results,
           },
           null,
@@ -288,7 +315,9 @@ test.describe('Application End-to-End Tests', () => {
       console.error('PW DEBUG: Failed to save test results to file:', error);
     }
 
-    for (const line of formatInAppSummary(results, { resultsFile, saveError, consoleErrors, pageErrors })) {
+    for (const line of formatInAppSummary(results, {
+      resultsFile, saveError, consoleErrors, pageErrors, handlerErrors,
+    })) {
       console.log(line);
     }
 
@@ -301,6 +330,9 @@ test.describe('Application End-to-End Tests', () => {
       console.log(line);
     }
     for (const line of formatImportFailures(results)) {
+      console.log(line);
+    }
+    for (const line of formatHandlerErrors(handlerErrors)) {
       console.log(line);
     }
 
@@ -379,6 +411,15 @@ test.describe('Application End-to-End Tests', () => {
         'enabled tests that did not complete'
       ).toEqual([]);
     }
+
+    // Zero tolerance for a subscriber that threw (see "IN-APP HANDLER ERRORS"
+    // above). Kept after the row and roster checks, so a failing row still
+    // reports first; `consoleErrors`/`pageErrors` are counted, not gated —
+    // their CI baseline is not zero (plan §49.0).
+    expect(
+      { logged: handlerErrors.logged, unlogged: handlerErrors.unlogged },
+      'a subscriber threw inside the event bus (see "IN-APP HANDLER ERRORS" above)'
+    ).toEqual({ logged: 0, unlogged: 0 });
     
     // If tests actually ran, they should pass
     if (results.summary.totalRun > 0) {

@@ -11,7 +11,12 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { formatFailedTests, formatImportFailures, formatInAppSummary } from './inAppSummary.js';
+import {
+  createHandlerErrorLedger, formatFailedTests, formatHandlerErrors, formatImportFailures,
+  formatInAppSummary, HANDLER_ERROR_PHRASE, handlerErrorVerdict,
+} from './inAppSummary.js';
+import { handlerErrorMessage } from '../../frontend/app/core/eventBusMessages.js';
+import { EventBus } from '../../frontend/app/core/eventBus.js';
 import { extractInAppTestResults } from './analyze-test-results.js';
 
 const row = (id, status, durationMs, extra = {}) => ({
@@ -192,5 +197,92 @@ describe('analyze-test-results.js reads the results file the spec names', () => 
 
   it('returns null when the report names neither', () => {
     expect(extractInAppTestResults(report(['PW DEBUG: nothing here\n']))).toBeNull();
+  });
+});
+
+describe('the handler-error gate (plan §48: zero tolerance for a subscriber that threw)', () => {
+  // The bus's own line, built by the bus's own function — never typed here.
+  const busLine = (event, mod) => `[ERROR] [eventBus] ${handlerErrorMessage(event, mod)} Error: boom`;
+  const feed = (lines) => {
+    const ledger = createHandlerErrorLedger();
+    for (const [text, type] of lines) ledger.observe(text, type);
+    return ledger;
+  };
+
+  it('the phrase is the bus\'s: a subscriber that throws logs a line carrying it, and the bus counts it', () => {
+    const bus = new EventBus();
+    const seen = [];
+    const orig = console.error;
+    console.error = (...args) => { seen.push(String(args[0])); };
+    try {
+      bus.registerPublisher('ev', 'pub');
+      bus.subscribe('ev', () => { throw new Error('boom'); }, 'sub');
+      bus.publish('ev', {}, 'pub');
+    } finally {
+      console.error = orig;
+    }
+    expect(bus.handlerErrorCount).toBe(1);
+    expect(seen.filter((l) => l.includes(HANDLER_ERROR_PHRASE))).toHaveLength(1);
+  });
+
+  it('attributes each line to the row whose [PROGRESS marker follows it', () => {
+    const ledger = feed([
+      ['boot line', 'log'],
+      [busLine('a:x', 'm1'), 'error'],
+      ['[PROGRESS 1/3] row-one PASSED 1.0s', 'log'],
+      ['[PROGRESS 2/3] row-two PASSED 1.0s', 'log'],
+      [busLine('b:y', 'm2'), 'error'],
+      [busLine('b:y', 'm3'), 'error'],
+      ['[PROGRESS 3/3] row-three FAILED 2.0s', 'log'],
+    ]);
+    expect(ledger.entries().map((e) => [e.row, e.count])).toEqual([['row-one', 1], ['row-three', 2]]);
+    const v = handlerErrorVerdict(ledger.entries(), 3);
+    expect(v).toMatchObject({ logged: 3, unlogged: 0, failed: true });
+    const block = formatHandlerErrors(v);
+    expect(block).toContain('  ROW: row-one — 1');
+    expect(block).toContain('  ROW: row-three — 2');
+    expect(block.join('\n')).not.toContain('row-two');
+  });
+
+  it('a clean run: no block, the verdict passes, and the summary prints the 0 so it is checkable', () => {
+    const ledger = feed([['[PROGRESS 1/1] row-one PASSED 1.0s', 'log']]);
+    const v = handlerErrorVerdict(ledger.entries(), 0);
+    expect(v.failed).toBe(false);
+    expect(formatHandlerErrors(v)).toEqual([]);
+    const lines = formatInAppSummary(GREEN, { resultsFile: 'f.json', handlerErrors: v });
+    expect(lines).toContain('  handler errors (subscribers that threw inside the event bus): 0 in the log, 0 counted by the page\'s event bus');
+  });
+
+  it('a line no finished row claims is still counted — before the first row, or after the last', () => {
+    const boot = feed([[busLine('e', 'm'), 'error'], ['[PROGRESS 1/1] r PASSED 1s', 'log']]);
+    expect(boot.entries()[0].row).toBe('r');
+    const cut = feed([['[PROGRESS 1/2] r PASSED 1s', 'log'], [busLine('e', 'm'), 'error']]);
+    expect(cut.entries()).toEqual([expect.objectContaining({ row: null, count: 1, afterProgress: true })]);
+    expect(formatHandlerErrors(handlerErrorVerdict(cut.entries())).join('\n')).toContain('after the last finished row');
+    const none = feed([[busLine('e', 'm'), 'error']]);
+    expect(formatHandlerErrors(handlerErrorVerdict(none.entries())).join('\n')).toContain('before any row finished');
+  });
+
+  it('counts only error-type lines: a row that MENTIONS the phrase at log level does not trip it', () => {
+    const ledger = feed([[`condition: no ${HANDLER_ERROR_PHRASE} seen`, 'log'], ['[PROGRESS 1/1] r PASSED 1s', 'log']]);
+    expect(handlerErrorVerdict(ledger.entries(), 0).failed).toBe(false);
+  });
+
+  it('the page counted more than the log carried: a swallowed line fails the gate, never reads as zero', () => {
+    const v = handlerErrorVerdict([], 2);
+    expect(v).toMatchObject({ logged: 0, unlogged: 2, failed: true });
+    expect(formatHandlerErrors(v).join('\n')).toContain('2 line(s) never reached the log');
+    // The header counts what the BUS saw, not only what the log carried.
+    expect(formatHandlerErrors(v)[0]).toContain('IN-APP HANDLER ERRORS: 2 subscriber(s) threw inside the event bus (0 in the log)');
+    // An unknown page count (the bus was never built) is not a failure by itself.
+    expect(handlerErrorVerdict([], null).failed).toBe(false);
+  });
+
+  it('never repeats the phrase in the summary or the block — a grep -c over the log counts only the page\'s lines', () => {
+    const ledger = feed([[busLine('a', 'm'), 'error'], ['[PROGRESS 1/1] r PASSED 1s', 'log']]);
+    const v = handlerErrorVerdict(ledger.entries(), 1);
+    const printed = [...formatInAppSummary(RED, { resultsFile: 'f.json', handlerErrors: v }), ...formatHandlerErrors(v)];
+    expect(printed.filter((l) => l.includes(HANDLER_ERROR_PHRASE))).toEqual([]);
+    expect(printed.join('\n')).toContain('first: [ERROR] [eventBus] … a (module: m): Error: boom');
   });
 });

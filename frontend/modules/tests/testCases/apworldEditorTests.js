@@ -43,6 +43,7 @@ import { makeSetRecordEnvelope } from '../../procgenCore/labRoomEnvelope.js';
  * ⇒ the row registers itself the way any publisher does, once.
  */
 import appEventBus from '../../../app/core/eventBus.js';
+import { HANDLER_ERROR_PHRASE } from '../../../app/core/eventBusMessages.js';
 /**
  * ⛓⛓ H4c — **THE REVERSE LINK IS DRIVEN THROUGH ITS OWN PUBLISHER.** The
  * bounce editor's door is `openRegionInApworldEditor`, and a row that published
@@ -9898,7 +9899,7 @@ export async function apworldMapDrawsTheOtherRegionsAndNamesTheRefusedOne(testCo
             .filter(([name, sc]) => sc?.grid_cell && name !== REFUSED_MAP_REGION).length;
 
         console.error = (...args) => {
-            if (typeof args[0] === 'string' && args[0].includes('Error in event handler for')) {
+            if (typeof args[0] === 'string' && args[0].includes(HANDLER_ERROR_PHRASE)) {
                 handlerErrors.push(args[0]);
             }
             return origError.apply(console, args);
