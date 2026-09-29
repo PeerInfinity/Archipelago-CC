@@ -1271,7 +1271,9 @@ export const CATALOGUE = frz({
         "arena",
         "rockgate",
         "shortcut",
-        "shieldgate"
+        "shieldgate",
+        "watergate",
+        "watershortcut"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -1432,9 +1434,28 @@ export const CATALOGUE = frz({
             ],
             "params": [],
             "why": "The SHIELD GATE (seedling substrate S1): a `shieldlocknorm` on a main-path cut entered from the WEST, its wall grown to seal the room, opened by walking into its west face holding the shield. Certified by the existing `touch`."
+        },
+        {
+            "head": "watergate",
+            "module": "water-gate",
+            "needs": [
+                "canSwim"
+            ],
+            "params": [],
+            "why": "The WATER GATE (seedling swim S1): one water cell on a main-path cut with its wall GROWN to seal the room, crossed only holding the conch (`canSwim`, AP `Progressive Swim`). Certified by the solver WALKING it — no verb, the boot is the key."
+        },
+        {
+            "head": "watershortcut",
+            "module": "water-shortcut",
+            "needs": [
+                "canSwim"
+            ],
+            "params": [],
+            "why": "The WATER SHORTCUT (seedling swim S1): one water cell on the SHORT ARC of a cycle the room already has — without the conch the goal is reachable the long way, with it the player swims across. The differential grades the conch SHORTENS."
         }
     ],
     "itemsElementsNeed": [
+        "canSwim",
         "hasShield",
         "hasSword"
     ],

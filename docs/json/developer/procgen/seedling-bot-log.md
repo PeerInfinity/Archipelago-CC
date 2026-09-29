@@ -9965,6 +9965,101 @@ pre-existing pass-2 abort was met and not caused (`pit-patch` → *"the player f
 into a pit … no control block"*, e.g. `winding` 14×14 seed 9 at bounds 3/4/3 —
 also with `--elements=none`).
 
+### Seedling substrate S1-swim — the water gate and the water shortcut (2026-09-29)
+
+**The solver could not swim, and the driver could.** `botDriverV2.plannerObstacleAt`
+has priced a `lethal-terrain` tile by the item since R4 (skipped when
+`inventory.canSwim`), and the driver's `planNow` passes `inventory`. The solver's
+`solverPlanOpts` did not, so the live solver saw water as a wall with or without
+the conch. This slice (plan `seedling-swim-plan.md`, a cloud fan-out build) gave
+it the driver's bag, derived the `sound` pin from the room, and spent the result on
+two opt-in heads and one opt-in biome. ⛔ No biome default moved (⚖ Q5).
+
+**What the brief got wrong, measured.** Its § *Seedling substrate S1* lives in
+this log, not in `seedling-bot.md`. It predicted the water gate would place and
+certify at most as often as the rock gate. It places exactly as often (the same
+geometry and the same draw) and certifies **more**: 146/146 against the rock's
+136/146. The rock's ten drops were trap 1448 (the solve never selects `break`),
+and a swim needs no verb. It also predicted the water shortcut would behave like
+the rock shortcut. It does not always shorten (below).
+
+**W0, on the shipped solver.** The witness room is an 8×6 `empty` post-sword room
+with tiles (2, 1..4) repainted to water, a 1-wide column between the boot and the
+goal. Every arm REFUSED `no corridor … separated by water`: no conch; the conch
+with `sound` pinned; the conch without it. With `inventory` and `noHazards` added,
+the no-conch arm still REFUSES. The conch with `sound` pinned **SOLVES in 71 ticks**
+(`drown {timer: 0}`), and without `sound` it throws `PhysicsV2Error` (*"the player
+entered Water … does not pin "sound""*).
+
+- **D1 — the solver line.** `solverPlanOpts` passes `inventory: run.inventory,
+  noHazards: run.noHazards` (⚖ Q2: both). The identity block (`identity-block.sh`)
+  is identical row for row before and after, all six producers' `--check` are
+  byte-identical with exit 0, and so is `solve-seedling-r8-d2 --check`
+  (`f2cfe3f9…`). No committed boot grants `canSwim`.
+- **D2 — `sound`, derived** (⚖ Q4). `procgenSeedling.pinsForRecord(record,
+  templates)` returns `dead_frames`, plus the kept templates' pins, plus `sound`
+  when the record's tiles layer holds a water cell (`procgenLevel.recordHoldsWater`).
+  The oracle's solve uses it, and so do `goalHoldsWithDoorsAsWalls` (it solves
+  through the oracle), the summary pins that the differential reads, and
+  `watchGenerate.displayStaging`. It is byte-inert because `water-pool`, the one
+  template that writes water, already obliges `sound`.
+- **D3 — `watergate`.** This is `soloDoor.WATER_GATE`: the rock gate's geometry
+  with id `watergate_door` and law `cut`. The binding paints the door cell `water`
+  into the composite's `painted` after both laws are asked. The laws ask about the
+  door open, and a water cell is not `ground` to the flood. The entity realiser
+  skips the id (`WATER_DOOR_IDS`), so the door has no entity and no tag. It
+  `needs: ['canSwim']`. The **`post-swim`** biome boots `{hasSword, hasShield,
+  canSwim}` and uses the post-sword roster by reference. It is not in
+  `DEFAULT_CENSUS_BIOMES`. `ITEM_LABELS.canSwim` is `Progressive Swim`. At `empty`
+  10×10, seeds 1–8 all certify (73–138 ticks), and `--require=canSwim` grades
+  **STRONG** on seeds 1–4. The post-shield, post-sword and pre-sword biomes refuse
+  `the-element-needs-an-item-this-biome-does-not-grant`.
+- **D4 — `watershortcut`.** This is `soloDoor.WATER_SHORTCUT`, with law `shortcut`
+  and the rock shortcut's `longWayDemand`. `headsNeeding('canSwim')` is
+  `['watergate']` alone. The witness is `loopy` 10×10 seed 6 at bounds 3/4/3,
+  which **SHORTENS**: 75 ticks with the conch and 201 without.
+
+**Yield** (7 kinds × 10×10/14×14 × seeds 1–12, post-swim, bounds 3/4/3; `node
+scripts/procgen/sweep-yield-table.mjs --substrate=seedling --palette=post-swim
+--elements=<head> --kinds=empty,branchy,bushy,loopy,open,rooms,winding
+--sizes=10x10,14x14 --seeds=1-12`):
+
+| head | placed | certified | refused by name | beside S1's rock |
+|---|---|---|---|---|
+| `watergate` | 146/168 | **146/146** | 22 `wall-does-not-seal` | rock gate 146/168, 136/146 |
+| `watershortcut` | 87/168 | 87/87 | 47 `the-shortcut-does-not-shorten` · 34 `the-shortcut-is-a-cut` | rock shortcut 87/168, 87/87 |
+
+⚠ **The water shortcut does not always shorten.** Over its 87 certified
+placements the conch grades **73 SHORTENS, 9 NOT-ESTABLISHED and 5 INERT**, where
+the rock shortcut grades 87/87 SHORTENS. In the NOT-ESTABLISHED rows the level is
+cheaper *without* the conch (e.g. `loopy` 10×10 seed 3: 144 ticks with it, 110
+without). Water speed is 0.45 of ground, and the planner prices tiles, so a route
+through fewer tiles that swims can cost more ticks. That is a measurement about
+the solver's cost model, and it is published rather than fixed.
+
+**Mutants** (predicted, then one build each):
+
+| mutant | measured |
+|---|---|
+| (a) D1's two keys reverted | 7 rows red; the certification REFUSES `no corridor` |
+| (b) D2's water clause dropped | 6 rows red; the certification THROWS `PhysicsV2Error … does not pin "sound"` |
+| (c) `POST_SWIM_ITEMS.canSwim: false` | the seam refuses `the-element-needs-an-item-this-biome-does-not-grant` |
+| (d) `ITEM_LABELS.canSwim` dropped | the requirement row names `canSwim` rather than `Progressive Swim` |
+
+**The wasm witnesses** (`check-seedling-wasm-element.mjs`, headless logic-only):
+- `watergate` `empty` seed 4 agrees per tick over 74 observations, end Δ0/Δ0, 73 = 73 ticks.
+- `watershortcut` `loopy` seed 4 agrees per tick over 74 observations, end Δ0.
+- `watershortcut` `loopy` seed 6 agrees per tick over 76 observations, end Δ0.
+
+Each shipped tape pins `["dead_frames","sound"]`, derived from the record.
+
+⛔ **Residue: a generated AP room cannot host the water gate yet.**
+`seedlingGenRoom.hazardCells` and `safeReach` treat water as a wall whatever the
+boot grants. A `post-swim` gen room with `--elements=watergate` therefore re-rolls
+on `doors` (83 times, growing from 10×10 to 28×28), and `require=canSwim`
+refuses after its 8 re-rolls. The fix is a boot-aware hazard set. That is a seam
+this slice did not own, so it is routed rather than widened.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

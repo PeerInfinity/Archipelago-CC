@@ -195,7 +195,7 @@ The sidecar payload is `{gameId: 'seedling', generated: true, seed, size, record
 | `seed` | The seed used: drawn from the engine rng (never 0, which Seedling refuses), or the re-rolled seed. |
 | `size` | The final size; always the record's own width and height. |
 | `record` | The generator's core record for `seed`, with no door entity and no `apitem` (the assembler adds both). |
-| `generation` | The knobs (biome `pre-sword`/`post-sword`/`post-shield`, obstacle target, tries, skeleton, elements, areas, fill, optional `require`), plus `rerolls`, `rerollCause` and `grownFrom` when non-zero. |
+| `generation` | The knobs (biome `pre-sword`/`post-sword`/`post-shield`/`post-swim`, obstacle target, tries, skeleton, elements, areas, fill, optional `require`), plus `rerolls`, `rerollCause` and `grownFrom` when non-zero. |
 | `locations` | Each AP location's cell and allocated `tag` (`placementTagId`). |
 | `level` | The room's index among the world's `flash_seedling_gen` regions in sidecar order (`ordinalOfRegion`, passed to every serializer). |
 | `exits` | Each door: `exit_id` spelled `out_teleporter_<px>_<py>` (the binding's departure spelling), `exitName` (the AP exit name), `entrance_spawn` (the approach cell, in pixels). |
@@ -207,6 +207,8 @@ Doors are minted by the level linker's rule, `levelSetExits.pickDoorCells`: one 
 
 - **No door may seal an approach.** With every door cell a wall, the start must still reach every door's approach cell and the goal; the generator's own solver re-certifies the goal with the doors as walls.
 - **No door, approach or location on a hazard.** Water, lava and pits (`seedlingGenRoom.hazardCells`) are not solid but kill or respawn the player.
+
+The `post-swim` biome adds `Progressive Swim` (the conch, `canSwim`) to the boot, making water the third physical gate after the sword and the shield. Its `watergate` element does not survive a generated room yet: `hazardCells` counts water as a wall whatever the boot grants, so the goal behind the gate is never safely reachable.
 
 `entrance_spawn` is the flood cell the door was reached from, never the door tile, for the same `check()` latch reason as real rooms. The first location stands on the generator's goal cell; the rest take the cells nearest the start that are safely reachable, never on the start, a door or a door's neighbour.
 

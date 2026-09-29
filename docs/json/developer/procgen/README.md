@@ -8,7 +8,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**22 documents · 4 pages · 218,175 words.**
+**22 documents · 4 pages · 219,152 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — the reading order. A document missing from that list fails the generator, so every document is indexed.
 
@@ -16,7 +16,7 @@ Descriptions: the document's own first paragraph, collapsed onto one line; past 
 
 | Document | Description | Words |
 |---|---|---|
-| [Procedural Generation Architecture](./architecture.md) | The orientation document for the procedural-generation ("procgen") system: how a world is generated and compiled to `rules.json`, how a single region's level is built, what the substrates are, and how a generated world is played back and round-tripped through Python. Read this first; the other procgen documents go deeper on individual pieces. | 3799 |
+| [Procedural Generation Architecture](./architecture.md) | The orientation document for the procedural-generation ("procgen") system: how a world is generated and compiled to `rules.json`, how a single region's level is built, what the substrates are, and how a generated world is played back and round-tripped through Python. Read this first; the other procgen documents go deeper on individual pieces. | 3816 |
 | [Substrate Registry Reference](./substrate-registry.md) | `frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate. | 3678 |
 | [Procgen demonstrations — a catalogue](./demos.md) | A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it. | 372 |
 | [Procgen Gotchas and Disambiguations](./gotchas.md) | Short entries for the things most likely to mislead someone working in the procgen code: each names the misreading, states the fact, and points at the file or doc that owns it. | 3140 |
@@ -34,8 +34,8 @@ Descriptions: the document's own first paragraph, collapsed onto one line; past 
 | [Pipeline Presets](./pipeline-presets.md) | The Procgen Pipeline panel's **Preset** drop-down applies a shipped configuration (mode, seed, substrates, knobs and item pool) so that Generate builds a world demonstrating one feature. CI generates every preset that names no heavy substrate headless, twice, and requires the two runs to be byte-identical. | 1409 |
 | [Text Adventure Substrate](./text-adventure.md) | The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules. | 809 |
 | [The Seedling Real-Game Bot](./seedling-bot.md) | How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological build history (the R1–R9 rungs and the `watch.html` arcs) is in [seedling-bot-log.md](./seedling-bot-log.md). | 9177 |
-| [Seedling Bot and Procgen Arcs: the Build Log](./seedling-bot-log.md) | This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts. | 152861 |
-| [Flash Substrate](./flash.md) | The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room). | 5017 |
+| [Seedling Bot and Procgen Arcs: the Build Log](./seedling-bot-log.md) | This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts. | 153767 |
+| [Flash Substrate](./flash.md) | The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room). | 5071 |
 | [JtA Substrate](./jta.md) | The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool. | 2928 |
 | [Omsi Substrate (Idle Loops)](./omsi.md) | The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) runs the `PeerInfinity/omsi-loops` fork of Idle Loops, from the `frontend/modules/omsi-loops/` submodule, in a same-origin iframe as a loop-mode substrate. The host owns the game clock, and the game's per-loop mana budget is the shared mana pool. | 4321 |
 
