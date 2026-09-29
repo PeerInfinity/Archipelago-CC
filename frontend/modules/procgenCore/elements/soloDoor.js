@@ -95,6 +95,11 @@ import { DOOR_GOAL_MIN, cellKey, doorCandidates, growWall, tilesFor } from './ro
 export const ROCK_GATE_DOOR_ID = 'rockgate_door';
 export const ROCK_SHORTCUT_DOOR_ID = 'rockshortcut_door';
 export const SHIELD_GATE_DOOR_ID = 'shieldgate_door';
+/** ⛓ Seedling swim S1 (D3/D4) — the WATER doors. ⛔ On Seedling these ids
+ *  realise as TERRAIN (one water cell), not as an entity: the binding's
+ *  `WATER_DOOR_IDS` is the one table that says so. */
+export const WATER_GATE_DOOR_ID = 'watergate_door';
+export const WATER_SHORTCUT_DOOR_ID = 'watershortcut_door';
 
 /** Where the opener must stand, relative to the door: `null` (anywhere
  *  start-side) or `'west'` (the shield lock's one-pixel west probe). */
@@ -117,6 +122,10 @@ export const ROCK_SHORTCUT_REFUSALS = Object.freeze([
 export const SHIELD_GATE_REFUSALS = Object.freeze([
     'no-cut-cell', 'goal-too-close', 'the-door-has-no-west-approach', 'wall-does-not-seal',
 ]);
+/** ⛓ Swim S1 — the water doors are the rock doors' geometry, so their
+ *  refusals are the rock doors' lists. */
+export const WATER_GATE_REFUSALS = ROCK_GATE_REFUSALS;
+export const WATER_SHORTCUT_REFUSALS = ROCK_SHORTCUT_REFUSALS;
 
 /**
  * ⛓ The refusal a run of candidates deserves: the DEEPEST stage any reached,
@@ -334,4 +343,26 @@ export const SHIELD_GATE = defineElement({
     params: [],
     construct: soloConstruct(SHIELD_GATE_DOOR_ID, { law: LAW_CUT, approach: APPROACH_WEST }),
     assertPlacement: assertSoloPlacement('shieldGate', SHIELD_GATE_DOOR_ID),
+});
+
+/**
+ * ⛓⛓⛓ **THE WATER GATE** (seedling swim S1, D3) — the ROCK GATE's geometry with
+ * the obstacle swapped for ONE WATER CELL on the cut. The opener is not a verb
+ * at the door but an ITEM in the boot: with the conch (`canSwim`) the player
+ * swims the cell, without it the cell drowns (`Player.as:1456-1481`) and the
+ * planner prices it as a wall (`plannerObstacleAt`'s lethal-terrain arm, which
+ * the solver's bag reaches since D1). ⛔ `clearer` is still the start-side
+ * neighbour — the cell the swimmer enters the water from — so the contract's
+ * one-obstacle shape and the door law's cut are asked unchanged.
+ */
+export const WATER_GATE = defineElement({
+    name: 'water-gate',
+    family: 'watergate',
+    phase: 'on-connector',
+    why: 'ONE water cell on a main-path CUT, its wall grown to seal the room — on Seedling a '
+        + '`TERRAIN.water` tile the player crosses only holding the conch (`canSwim`, AP '
+        + '`Progressive Swim`). No entity and no tag: the door is terrain.',
+    params: [],
+    construct: soloConstruct(WATER_GATE_DOOR_ID, { law: LAW_CUT }),
+    assertPlacement: assertSoloPlacement('waterGate', WATER_GATE_DOOR_ID),
 });

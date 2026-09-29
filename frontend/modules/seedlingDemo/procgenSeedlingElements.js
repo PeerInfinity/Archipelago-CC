@@ -110,7 +110,8 @@ import {
     SHORTCUT_BODY_ID, SHORTCUT_DOOR_ID,
 } from '../procgenCore/elements/shortcut.js';
 import {
-    ROCK_GATE_DOOR_ID, ROCK_SHORTCUT_DOOR_ID, SHIELD_GATE_DOOR_ID,
+    ROCK_GATE_DOOR_ID, ROCK_SHORTCUT_DOOR_ID, SHIELD_GATE_DOOR_ID, WATER_GATE_DOOR_ID,
+    WATER_SHORTCUT_DOOR_ID,
 } from '../procgenCore/elements/soloDoor.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
@@ -755,6 +756,16 @@ export function compositeSeedlingElement({
 }
 
 /**
+ * ⛓⛓⛓ **THE DOORS THAT ARE TERRAIN** (seedling swim S1, D3/D4) — the one
+ * table of on-connector ids that realise as a TILE rather than an entity. A
+ * water door is ONE `water` cell at the door: no entity, no tag. ⛔ It joins
+ * `painted` AFTER both laws are asked, because the laws ask the door OPEN
+ * (`paintedFor(null)`) and a water cell is not `ground` to the flood — the
+ * door's closed half is `doorKeys`, exactly as it is for a rock.
+ */
+export const WATER_DOOR_IDS = Object.freeze([WATER_GATE_DOOR_ID, WATER_SHORTCUT_DOOR_ID]);
+
+/**
  * ⛓⛓⛓ **THE `on-connector` COMPOSITE — EVERY CHECK THE BINDING OWES A ROOM-
  * AWARE DOOR**, PROCGEN ELEMENTS arc 3, slice 4a (D1).
  *
@@ -894,6 +905,11 @@ export function compositeSeedlingOnConnector({
         }
     }
 
+    /** ⛓ Swim S1 — the water door's cell, painted only now (see `WATER_DOOR_IDS`). */
+    for (const o of placement.entities.obstacles) {
+        if (WATER_DOOR_IDS.includes(o.id)) painted.set(`${o.x},${o.y}`, 'water');
+    }
+
     return { placed: Object.freeze({
         doorCell: Object.freeze({ ...placement.doorCells[0] }),
         doorCells: Object.freeze(placement.doorCells.map((c) => Object.freeze({ ...c }))),
@@ -1031,6 +1047,9 @@ export function seedlingOnConnectorEntities({ placed, tagFor }) {
                 attrs: { tag: String(tag) } });
             continue;
         }
+        /** ⛓ Swim S1 — a water door is TERRAIN, already in `placed.painted`:
+         *  no entity and no tag (`WATER_DOOR_IDS`). */
+        if (WATER_DOOR_IDS.includes(e.id)) continue;
         fail(`procgenSeedlingElements: the on-connector element named the id `
             + `${JSON.stringify(e.id)} and this binding has no Seedling part for it. ⛔ The `
             + 'mapping is a TABLE and an id it does not carry is an element the binding '

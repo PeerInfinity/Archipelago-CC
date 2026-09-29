@@ -45,7 +45,7 @@ import { BLOCK_POCKET } from './elements/blockPocket.js';
 import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
-import { ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE } from './elements/soloDoor.js';
+import { ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE } from './elements/soloDoor.js';
 import { LAW_SHORTCUT } from './elements.js';
 import { parseRequireList } from './areaSpec.js';
 import {
@@ -301,6 +301,27 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'its west face holding the shield. Certified by the existing `touch`.',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasShield']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE WATER GATE — THE THIRD PHYSICAL GATE** (seedling swim S1, D3).
+     * The rock gate's geometry with the obstacle swapped for ONE WATER CELL on
+     * the cut: no entity, no tag — the binding paints the door as terrain
+     * (`procgenSeedlingElements.WATER_DOOR_IDS`). ⛓ It rests on two solver
+     * facts landed in the same slice: the solver's plan bag carries the boot's
+     * inventory (D1, so `canSwim` prices water as passable) and the staging's
+     * `'sound'` pin is derived from the record (D2, so the wet tick is legal).
+     *
+     * ⛓ `needs: ['canSwim']` — the seam refuses it BY NAME on every biome but
+     * `post-swim`. ⛔ IN NO BIOME DEFAULT (⚖ Q5).
+     */
+    watergate: Object.freeze({
+        element: WATER_GATE,
+        why: 'The WATER GATE (seedling swim S1): one water cell on a main-path cut with its '
+            + 'wall GROWN to seal the room, crossed only holding the conch (`canSwim`, AP '
+            + '`Progressive Swim`). Certified by the solver WALKING it — no verb, the boot is '
+            + 'the key.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['canSwim']),
     }),
 });
 

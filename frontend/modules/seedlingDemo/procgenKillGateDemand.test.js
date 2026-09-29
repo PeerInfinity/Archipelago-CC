@@ -216,8 +216,9 @@ describe('`summary.require` — omitted when untyped, and NAMED on every refusal
     });
 
     it('`no-element-needs-this-item` for an item nothing is gated on', () => {
-        // ⛓ S1: `hasShield` is gated now (the shield gate) — the swim is not.
-        const out = gen({ require: ['canSwim'] });
+        // ⛓ S1: `hasShield` is gated now (the shield gate); swim S1 gated the
+        //   swim (the water gate) — the feather is not.
+        const out = gen({ require: ['hasFeather'] });
         expect(out.summary.require.refused.reason).toBe('no-element-needs-this-item');
     });
 

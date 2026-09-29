@@ -79,6 +79,8 @@ export { REQUIRING_GRADES };
 export const ITEM_LABELS = Object.freeze({
     hasSword: 'Progressive Sword',
     hasShield: 'Progressive Shield',
+    /** ⛓ Swim S1 (D3) — the conch; `worlds/seedling/Items.py`'s name. */
+    canSwim: 'Progressive Swim',
 });
 
 /**

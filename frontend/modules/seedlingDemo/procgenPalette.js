@@ -1396,6 +1396,26 @@ export const POST_SHIELD_PALETTE = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ **THE POST-SWIM BIOME** (seedling swim S1, D3) — post-shield's boot plus
+ * the CONCH (`Player.canSwim`, AP `Progressive Swim`), so the `watergate` and
+ * `watershortcut` elements can certify. ⛔ The roster is post-sword's BY
+ * REFERENCE, as post-shield's is: the conch gates no pass-2 template (a
+ * `water-pool` becomes swimmable, which only ever OPENS a room).
+ *
+ * ⚠ DECLARED, NOT EARNED — the campaign does not hold the conch. ⛔ OPT-IN: not
+ * in `watchGenerate.DEFAULT_CENSUS_BIOMES` (trap 1447; ⚖ Q5), so no committed
+ * identity iterates it.
+ */
+export const POST_SWIM_ITEMS = Object.freeze({ hasSword: true, hasShield: true, canSwim: true });
+
+export const POST_SWIM_PALETTE = Object.freeze({
+    name: 'post-swim',
+    items: POST_SWIM_ITEMS,
+    templates: POST_SWORD_TEMPLATES,
+    excluded: POST_SWORD_EXCLUDED_TEMPLATES,
+});
+
+/**
  * ⛔⛔⛔ THE GROUP SLOT'S OWN INVARIANTS — three, and every one of them exists
  * because the shape it forbids would look FIXED AND BEHAVE BROKEN.
  *

@@ -71,7 +71,9 @@
 
 import { generateSeedlingLevel, placementTagId, seedlingOracle } from './procgenSeedling.js';
 import { VERDICT } from './procgenOracle.js';
-import { POST_SHIELD_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE } from './procgenPalette.js';
+import {
+    POST_SHIELD_PALETTE, POST_SWIM_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE,
+} from './procgenPalette.js';
 import { pickDoorCells } from './levelSetExits.js';
 import { TILE_SIZE, buildLevelWorld } from './levelWorld.js';
 import { ROOM_TILES_MAX, ROOM_TILES_MIN } from './procgenLevel.js';
@@ -100,7 +102,7 @@ const cloneRule = (rule) => structuredClone(rule);
 /** The biomes a room can be built in — the palettes `watchGenerate.GENERATE_BIOMES` offers
  *  (S1 added `post-shield`; `GEN_ROOM_BIOME_NAMES` is the same list by name). */
 export const GEN_ROOM_BIOMES = Object.freeze({ 'pre-sword': PRE_SWORD_PALETTE, 'post-sword': POST_SWORD_PALETTE,
-    'post-shield': POST_SHIELD_PALETTE });
+    'post-shield': POST_SHIELD_PALETTE, 'post-swim': POST_SWIM_PALETTE });
 if (Object.keys(GEN_ROOM_BIOMES).join() !== GEN_ROOM_BIOME_NAMES.join()) {
     throw new Error('seedlingGenRoom: GEN_ROOM_BIOMES and GEN_ROOM_BIOME_NAMES disagree — one list, two spellings');
 }
