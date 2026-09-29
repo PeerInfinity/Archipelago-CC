@@ -30,7 +30,7 @@
  */
 
 import { cellOf, digTwo } from '../procgenDocs/registryShape.js';
-import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
     CAPTURE_SHAPES, GENERATION_COST, REALISER_KINDS, SOLVER_KINDS,
     botHonorsInstant, captureShapeOf, generationCostOf, regionRealiserKind, solverKindOf,
@@ -78,9 +78,10 @@ export const LIST_PREVIEW = 3;
 export const LOGIC_GATE_FEATURE = DEFAULT_OBSTACLES.logic_gate.feature;
 
 /**
- * ⛓ The `supportedFeatures` ids in words (P4). A missing id renders as the id
+ * ⛓ The `supportedFeatures` ids in words (P5). A missing id renders as the id
  * itself — `featureWords` — and the vitest names it as a warning, so a new
- * feature id cannot red CI by existing.
+ * feature id cannot red CI by existing. An id that is an ITEM TAG
+ * (`itemTagFeatures`) never reaches P5 — P4 names its items instead.
  */
 export const FEATURE_WORDING = Object.freeze({
     [LOGIC_GATE_FEATURE]: 'item-locked gates',
@@ -128,7 +129,7 @@ export const ROOM_EDITOR_WORDING = Object.freeze({
 export const CELL_WORDING = Object.freeze({
     instantAlways: 'always — a replay is already instant',
     instantToggle: 'a per-block toggle',
-    itemsOfItsOwn: (n) => `${n} item${n === 1 ? '' : 's'} of its own`,
+    itemCount: (n) => `${n} item${n === 1 ? '' : 's'}`,
     itemTypes: (n) => `${n} item type${n === 1 ? '' : 's'}`,
     itemTypesPreview: (types) => `${CELL_WORDING.itemTypes(types.length)}${types.length
         ? `: ${types.slice(0, LIST_PREVIEW).join(', ')}${types.length > LIST_PREVIEW ? ', …' : ''}` : ''}`,
@@ -142,6 +143,9 @@ export const CELL_WORDING = Object.freeze({
     malformedSides: (m) => `its exit-side declaration is malformed: ${m}`,
 });
 
+/** ⛓ How many item names P4 lists before it gives the count alone. */
+export const ITEM_NAME_LIMIT = 8;
+
 /** ⛓ The field whose `true` keeps loop mode on (L8). */
 export const REQUIRES_LOOP_MODE_FIELD = 'loopSupport.requiresLoopMode';
 
@@ -149,6 +153,32 @@ export const REQUIRES_LOOP_MODE_FIELD = 'loopSupport.requiresLoopMode';
 export const featureWords = (id) => FEATURE_WORDING[id] ?? id;
 
 const isFn = (v) => typeof v === 'function';
+
+/**
+ * ⛓ **AN ENTRY'S PROGRESSION ITEMS** (P4) — its own `libraryItems` (the name is
+ * the value's `name`, else its key) and then every shared library item whose
+ * `feature` the entry lists in `supportedFeatures` (so a substrate that supports
+ * the coloured keys gets the shared keys). `{name, feature}` each, own first.
+ */
+export function progressionItemsOf(entry, sharedItems = DEFAULT_ITEMS) {
+    const features = Array.isArray(entry?.supportedFeatures) ? entry.supportedFeatures : [];
+    const own = Object.entries(entry?.libraryItems ?? {})
+        .map(([key, item]) => ({ name: item?.name ?? key, feature: item?.feature ?? null }));
+    const shared = Object.values(sharedItems ?? {})
+        .filter((item) => features.includes(item.feature))
+        .map((item) => ({ name: item.name ?? item.id, feature: item.feature }));
+    return [...own, ...shared];
+}
+
+/**
+ * ⛓ **THE ITEM TAGS, DERIVED** — the feature ids carried by ≥1 of the entry's
+ * progression items (`progressionItemsOf`), in first-seen order. These are the
+ * `supportedFeatures` ids P5 leaves out: the items themselves say which ids are
+ * tags, so no list of tag ids is kept here.
+ */
+export function itemTagFeatures(entry, sharedItems = DEFAULT_ITEMS) {
+    return [...new Set(progressionItemsOf(entry, sharedItems).map((i) => i.feature).filter(Boolean))];
+}
 const cell = (kind, text = null) => ({ kind, text });
 /** ⛓ An item-type list as a cell: the count and the first `LIST_PREVIEW` names, the whole list as `list`. */
 const itemTypesCell = (types) => ({ ...cell(CELL_KINDS.YES, CELL_WORDING.itemTypesPreview(types)), list: types });
@@ -180,13 +210,23 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         answer: (e) => yesNo(isFn(e.compositeMap?.drawRegion)),
     },
     {
-        id: 'P4', group: 'play', universal: true,
-        statement: 'What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)',
-        fields: ['supportedFeatures', 'libraryItems'],
+        id: 'P4', group: 'play',
+        statement: 'It brings progression items of its own',
+        fields: ['libraryItems', 'supportedFeatures'],
         answer: (e) => {
-            const words = (e.supportedFeatures ?? []).map(featureWords);
-            const n = Object.keys(e.libraryItems ?? {}).length;
-            if (n > 0) words.push(CELL_WORDING.itemsOfItsOwn(n));
+            const names = progressionItemsOf(e).map((i) => i.name);
+            if (!names.length) return cell(CELL_KINDS.NO);
+            return cell(CELL_KINDS.YES, names.length <= ITEM_NAME_LIMIT
+                ? names.join(', ') : CELL_WORDING.itemCount(names.length));
+        },
+    },
+    {
+        id: 'P5', group: 'play', universal: true,
+        statement: 'What the generator may do with it',
+        fields: ['supportedFeatures'],
+        answer: (e) => {
+            const tags = new Set(itemTagFeatures(e));
+            const words = (e.supportedFeatures ?? []).filter((id) => !tags.has(id)).map(featureWords);
             return words.length ? cell(CELL_KINDS.YES, words.join(', ')) : cell(CELL_KINDS.NO);
         },
     },

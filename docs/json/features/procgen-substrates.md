@@ -8,7 +8,7 @@ Everything below this paragraph is generated from the code: each row is a questi
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**26 statements · 9 substrates · 35 registry fields read (38 of the developer matrix's 81, counting the parents of the fields read) · 43 not yet read.**
+**27 statements · 9 substrates · 35 registry fields read (38 of the developer matrix's 81, counting the parents of the fields read) · 43 not yet read.**
 
 ## Play
 
@@ -17,7 +17,8 @@ Everything below this paragraph is generated from the code: each row is a questi
 | P1 | You can play its regions by hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | P2 | The Playback Bot can walk it (replaying a world's solution) | ✓ | ✗ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ |
 | P3 | It draws its own picture on the composite map (else a labelled box) | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
-| P4 | What its progression items are (keys & doors, item-locked gates, movement abilities, perks…) | ✓ item-locked gates, coloured keys and doors, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ locations placed anywhere, bounce_abilities, 7 items of its own | ✓ locations placed anywhere, runner_abilities, 6 items of its own | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere, 48 items of its own | ✓ its own map becomes the region graph, locations placed anywhere, 1 item of its own |
+| P4 | It brings progression items of its own | ✓ Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key | ✗ | ✓ Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory | ✓ Double Jump, Blue Platforms, Springs, Glide, Shield, Victory | ✗ | ✗ | ✗ | ✓ 48 items | ✓ Victory |
+| P5 | What the generator may do with it | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere |
 
 ## Loop mode
 
@@ -70,7 +71,8 @@ Each row is answered from these fields of the substrate's registry entry — the
 - **P1** — `panelComponentType`, `deserializeWorld`
 - **P2** — `getPlaybackController`
 - **P3** — `compositeMap.drawRegion`
-- **P4** — `supportedFeatures`, `libraryItems`
+- **P4** — `libraryItems`, `supportedFeatures`
+- **P5** — `supportedFeatures`
 - **L1** — `loopSupport.manual`
 - **L2** — `loopSupport.queueActions`
 - **L3** — `loopSupport.record`, `loopSupport.playback`
@@ -103,7 +105,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — You can play its regions by hand
 - *Play* — The Playback Bot can walk it (replaying a world's solution)
 - *Play* — It draws its own picture on the composite map (else a labelled box)
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): item-locked gates, coloured keys and doors, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit
+- *Play* — It brings progression items of its own: Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key
+- *Play* — What the generator may do with it: item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks, exploring
 - *Loop mode* — You can record a visit and replay it
@@ -126,7 +129,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 ### Flash
 
 - *Play* — You can play its regions by hand
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): locations placed anywhere
+- *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions
 - *Loop mode* — You can play it outside loop mode
@@ -137,7 +140,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 - *Play* — You can play its regions by hand
 - *Play* — The Playback Bot can walk it (replaying a world's solution)
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): locations placed anywhere, bounce_abilities, 7 items of its own
+- *Play* — It brings progression items of its own: Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory
+- *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks
 - *Loop mode* — You can record a visit and replay it
@@ -160,7 +164,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 - *Play* — You can play its regions by hand
 - *Play* — The Playback Bot can walk it (replaying a world's solution)
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): locations placed anywhere, runner_abilities, 6 items of its own
+- *Play* — It brings progression items of its own: Double Jump, Blue Platforms, Springs, Glide, Shield, Victory
+- *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks
 - *Loop mode* — You can record a visit and replay it
@@ -182,7 +187,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — You can play its regions by hand
 - *Play* — The Playback Bot can walk it (replaying a world's solution)
 - *Play* — It draws its own picture on the composite map (else a labelled box)
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit
+- *Play* — What the generator may do with it: item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks, exploring
 - *Loop mode* — You can record a visit and replay it
@@ -201,7 +206,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 ### Seedling (region atlas)
 
 - *Play* — You can play its regions by hand
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): locations placed anywhere
+- *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions
 - *Loop mode* — You can play it outside loop mode
@@ -216,7 +221,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 ### Seedling (generated room)
 
 - *Play* — You can play its regions by hand
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): locations placed anywhere
+- *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions
 - *Loop mode* — You can play it outside loop mode
@@ -233,7 +238,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 - *Play* — You can play its regions by hand
 - *Play* — The Playback Bot can walk it (replaying a world's solution)
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): its own map becomes the region graph, locations placed anywhere, 48 items of its own
+- *Play* — It brings progression items of its own: 48 items
+- *Play* — What the generator may do with it: its own map becomes the region graph, locations placed anywhere
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions
 - *Loop mode* — You can record a visit and replay it
@@ -253,7 +259,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 - *Play* — You can play its regions by hand
 - *Play* — The Playback Bot can walk it (replaying a world's solution)
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): its own map becomes the region graph, locations placed anywhere, 1 item of its own
+- *Play* — It brings progression items of its own: Victory
+- *Play* — What the generator may do with it: its own map becomes the region graph, locations placed anywhere
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions
 - *Loop mode* — You can record a visit and replay it

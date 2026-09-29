@@ -25,11 +25,12 @@ import {
 import {
     buildCapabilities, capabilitiesMarkdown,
 } from '../../../scripts/procgen/reference/capabilities.mjs';
+import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
 import { declaredStartingNeeds } from './startingInventory.js';
 import {
     CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, CELL_WORDING, FEATURE_WORDING,
-    LIST_PREVIEW, LIVE_ANSWERS, REQUIRES_LOOP_MODE_FIELD,
-    applyLiveAnswer, capabilityRows, cardOf, uncoveredFields,
+    ITEM_NAME_LIMIT, LIST_PREVIEW, LIVE_ANSWERS, REQUIRES_LOOP_MODE_FIELD,
+    applyLiveAnswer, capabilityRows, cardOf, featureWords, itemTagFeatures, progressionItemsOf, uncoveredFields,
 } from './substrateCapabilities.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -44,8 +45,8 @@ const NAMES = fieldNamesOf(ENTRIES, snapshotExpandable(REGISTRY));
 const rowOf = (id) => ROWS.find((r) => r.id === id);
 const cellOf = (rowId, entryId) => rowOf(rowId).cells.find((c) => c.id === entryId);
 
-/** ⛓ The statement ids §1 names, in group order — the vocabulary's shape. */
-const PLAN_IDS = ['P1', 'P2', 'P3', 'P4', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'L11',
+/** ⛓ The statement ids §1 names (P4 split into P4 + P5 by S3), in group order — the vocabulary's shape. */
+const PLAN_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'L11',
     'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'E1', 'E2', 'E3', 'E4'];
 
 describe('the vocabulary', () => {
@@ -174,6 +175,76 @@ describe('(vii) ⚖ the INVERTED rows hold on the real entries — the reason re
                 for (const name of n.anyOf) expect(c.text).toContain(name);
             }
         }
+    });
+});
+
+describe('P4 / P5 — the split DERIVED from the items\' own feature tags (S3, ⚖ plan §6′.2)', () => {
+    /* ⛓ W0 (a), measured at 5247ea19e1 by listing, for every supportedFeatures
+     * id, the entry's own libraryItems values and the shared DEFAULT_ITEMS that
+     * carry it as `feature` — typed here as the independent oracle, so the
+     * derivation cannot agree with itself. */
+    const W0_TAGS = {
+        maze: ['colored_doors_and_keys'],
+        bounce: ['bounce_abilities'],
+        runner: ['runner_abilities'],
+    };
+
+    it('itemTagFeatures on the real entries equals the W0 (a) tag map', () => {
+        const got = Object.fromEntries(ENTRIES.map((e) => [e.id, itemTagFeatures(e)]).filter(([, t]) => t.length));
+        expect(got).toEqual(W0_TAGS);
+    });
+
+    it('P4 for an entry supporting the coloured keys names exactly the shared keys', () => {
+        const keys = Object.values(DEFAULT_ITEMS).filter((i) => i.feature === 'colored_doors_and_keys')
+            .map((i) => i.name);
+        expect(keys.length).toBeGreaterThan(0);
+        const withKeys = ENTRIES.filter((e) => e.supportedFeatures?.includes('colored_doors_and_keys')
+            && !Object.keys(e.libraryItems ?? {}).length);
+        expect(withKeys.length).toBeGreaterThan(0);
+        for (const e of withKeys) {
+            expect(cellOf('P4', e.id), e.id).toMatchObject({ kind: CELL_KINDS.YES, text: keys.join(', ') });
+        }
+    });
+
+    it('P4 names the items up to ITEM_NAME_LIMIT, else the count; ✗ exactly where an entry has none', () => {
+        for (const e of ENTRIES) {
+            const own = Object.keys(e.libraryItems ?? {}).length;
+            const shared = Object.values(DEFAULT_ITEMS).filter((i) => e.supportedFeatures?.includes(i.feature)).length;
+            const n = own + shared;
+            const c = cellOf('P4', e.id);
+            if (!n) { expect(c.kind, e.id).toBe(CELL_KINDS.NO); continue; }
+            expect(c.kind, e.id).toBe(CELL_KINDS.YES);
+            if (n > ITEM_NAME_LIMIT) expect(c.text, e.id).toBe(CELL_WORDING.itemCount(n));
+            else expect(c.text.split(', ').length, e.id).toBe(n);
+        }
+        expect(progressionItemsOf({})).toEqual([]);
+    });
+
+    it('no item-tag id, nor its words, appears in any P5 cell', () => {
+        const tags = [...new Set(ENTRIES.flatMap((e) => itemTagFeatures(e)))];
+        expect(tags.length).toBeGreaterThan(0);
+        for (const c of rowOf('P5').cells) {
+            for (const t of tags) {
+                expect(c.text ?? '', `${c.id}: ${t}`).not.toContain(t);
+                expect(c.text ?? '', `${c.id}: ${t}`).not.toContain(featureWords(t));
+            }
+        }
+    });
+
+    it('P5 words every supportedFeatures id that is not a tag, in declared order', () => {
+        for (const e of ENTRIES) {
+            const tags = W0_TAGS[e.id] ?? [];
+            const rest = (e.supportedFeatures ?? []).filter((f) => !tags.includes(f));
+            const c = cellOf('P5', e.id);
+            if (!rest.length) { expect(c.kind, e.id).toBe(CELL_KINDS.NO); continue; }
+            expect(c, e.id).toMatchObject({ kind: CELL_KINDS.YES, text: rest.map((f) => FEATURE_WORDING[f] ?? f).join(', ') });
+        }
+    });
+
+    it('both rows are non-vacuous: P4 has a ✓ and a ✗; P5 has a ✓', () => {
+        const kinds = (id) => new Set(rowOf(id).cells.map((c) => c.kind));
+        expect([...kinds('P4')].sort()).toEqual([CELL_KINDS.NO, CELL_KINDS.YES]);
+        expect(kinds('P5').has(CELL_KINDS.YES)).toBe(true);
     });
 });
 
