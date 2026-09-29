@@ -385,13 +385,17 @@ It:
    `preset_files.json` entries back, so the dev index = canonical + preserved.
 
 The preserved set is every preset dir on `main` that the workflow does not
-produce: the dev/demo/test presets (`jta_*_test`, `omsi_*_test`, `procgen_maze`,
+produce: the dev/demo/test presets (`jta_*_test`, `omsi_*_test`,
 `robotkitty_tilemap`, `seedling_atlas*`, `seedling_playthrough`) **and** the
 hand-maintained worldgen demos (`bounce_worldgen`, `runner_worldgen`,
 `runner_sphere_worldgen`), whose `worlds/<id>` package the script restores as
 well (2026-08-30). *Workflow-produced* worldgen worlds and their preset dirs —
 the `worldgen_generation_whitelist` set — are **not** preserved: the workflow
-regenerates them; do not add those. Before each release, diff
+regenerates them; do not add those. Nor is `procgen_maze` since 2026-09-28: the script's
+`procgen_maze` section produces its three tiers (so it is in the canonical
+`preset_files.live.json` too), and `node scripts/utils/check-procgen-maze-recipe.mjs`
+says whether a regeneration would move them — run it before the dispatch, and
+expect a re-record, not a restore, when it is red. Before each release, diff
 `git ls-tree -d --name-only origin/main frontend/presets/` against the
 `generated-presets` branch and add any new hand-made dir to the list.
 
