@@ -528,6 +528,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "generate",
+                    "statement": "It has its own settings in the generation form",
+                    "text": null
+                },
+                {
+                    "group": "generate",
                     "statement": "A world of it can start with an empty inventory",
                     "text": null
                 },
@@ -836,9 +841,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 81,
+        "fields": 82,
         "fieldsRead": 35,
-        "fieldsUnread": 43,
+        "fieldsUnread": 44,
         "statements": 26,
         "substrates": 9
     },
@@ -3652,12 +3657,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "renderProcgenParams",
-                            "value": "—"
+                            "value": "fn"
                         }
                     ]
                 },
@@ -4313,6 +4318,7 @@ export const CAPABILITIES = frz({
         "loadRegionEvent",
         "loopSupport.customQueues",
         "onContentEdit",
+        "pipelineConfigFromParams",
         "pipelineConfigKeys",
         "placeFromItems",
         "placeFromRules",

@@ -57,17 +57,26 @@ import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
 import { validateRegionAtlas } from '../procgenPipeline/regionAtlasValidator.js';
 import { boundaryRule } from '../procgenPipeline/regionAtlasPool.js';
 import { makeHasRule } from '../shared/rulesJsonBuilder.js';
+import { fieldRow } from '../procgenCore/regionGenerationForm.js';
 // ⛓ The jta precedent (`jtaSubstrateWrapper/vanillaDataset.js`): a static JSON
 // module import is ONE spelling of the document's location for the browser's
 // raw ES modules, the esbuild bundle, node CLIs and vitest alike — no fetch, so
 // the synchronous `applyPipelineConfig` seam can install it.
 import SEEDLING_STARTER_ATLAS_DOC from './atlases/seedling.json' with { type: 'json' };
+// ⛓ SEEDLING SWIM S2 D1 — the playthrough atlas, the same spelling as the
+// starter's (the jta precedent carries a 169 KB dataset this way; this one is
+// 275 KB): the install knob's seams (`prepareSphereGrowth`,
+// `applyPipelineConfig`) are synchronous and the preset producer and vitest
+// have no fetch, so a served-index fetch could not reach them.
+import SEEDLING_PLAYTHROUGH_ATLAS_DOC from './atlases/seedling-playthrough.json' with { type: 'json' };
 import { atlasIndexPath, atlasPathInIndex } from './mapDocumentPath.js';
 
 export const FLASH_SEEDLING_SUBSTRATE_ID = 'flash_seedling';
 
 /** The atlas this substrate places when no `substrateConfig.flash_seedling.atlasDoc` is given. */
 export const SEEDLING_STARTER_ATLAS = SEEDLING_STARTER_ATLAS_DOC;
+/** The whole-game playthrough atlas (113 levels), installable by the `seedlingAtlasId` knob. */
+export const SEEDLING_PLAYTHROUGH_ATLAS = SEEDLING_PLAYTHROUGH_ATLAS_DOC;
 export const FLASH_SEEDLING_PANEL_COMPONENT_TYPE = 'flashPanel';
 export const FLASH_SEEDLING_LOAD_REGION_EVENT = 'flashSeedling:loadRegion';
 
@@ -353,9 +362,80 @@ const sphereRooms = new Map(); // region_id -> the placed room's apName
 export const SEEDLING_ATLAS_HOST_CHILDREN_KEY = 'seedlingAtlasHostChildren';
 export const atlasRoomHostsChildren = (regionParams) => regionParams?.seedlingAtlas?.hostChildren !== false;
 
-/** The regionParams this entry reads (`params.seedlingAtlas`), from the panel bag. */
+/**
+ * The regionParams this entry reads (`params.seedlingAtlas`), from the panel bag.
+ * S2 D1: `atlasId` only when the bag names a non-starter atlas, so a bag without
+ * the knob builds the regionParams it always built.
+ */
 export function buildSeedlingAtlasRegionParams({ params = {} } = {}) {
-    return { seedlingAtlas: { hostChildren: params[SEEDLING_ATLAS_HOST_CHILDREN_KEY] !== false } };
+    const atlasId = seedlingAtlasIdOfParams(params);
+    return {
+        seedlingAtlas: {
+            hostChildren: params[SEEDLING_ATLAS_HOST_CHILDREN_KEY] !== false,
+            ...(atlasId === SEEDLING_STARTER_ATLAS.atlas_id ? {} : { atlasId }),
+        },
+    };
+}
+
+/**
+ * ⛓⛓ SEEDLING SWIM S2 D1 — **WHICH ATLAS THE ROOMS COME FROM, AS A KNOB.** A
+ * bag key naming an atlas by its `atlas_id` (the id `atlas_files.json` serves it
+ * under); absent or empty = the starter, so no committed preset moves. The
+ * installable atlases are the bundled ones (`SEEDLING_INSTALLABLE_ATLASES`); an
+ * id outside them is refused by name, never swapped for the starter.
+ *
+ * The knob reaches the install on both drivers: sphere growth through
+ * `prepareSphereGrowth({params})` (once per generation, before any room is
+ * chosen), the shuffled spiral through `pipelineConfigFromParams` →
+ * `growthParams.substrateConfig.flash_seedling.atlasId` → `applyPipelineConfig`.
+ */
+export const SEEDLING_ATLAS_ID_KEY = 'seedlingAtlasId';
+export const SEEDLING_INSTALLABLE_ATLASES = Object.freeze([SEEDLING_STARTER_ATLAS, SEEDLING_PLAYTHROUGH_ATLAS]);
+
+/** The atlas the bag names (the starter when it names none). */
+export function seedlingAtlasIdOfParams(params) {
+    const v = params?.[SEEDLING_ATLAS_ID_KEY];
+    return typeof v === 'string' && v.trim() !== '' ? v.trim() : SEEDLING_STARTER_ATLAS.atlas_id;
+}
+
+/** The bundled atlas document with `atlasId`, refused by name when none is. */
+export function seedlingAtlasDocById(atlasId) {
+    const doc = SEEDLING_INSTALLABLE_ATLASES.find((a) => a.atlas_id === atlasId);
+    if (!doc) {
+        throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: ${SEEDLING_ATLAS_ID_KEY} "${atlasId}" names no installable `
+            + `atlas — the bundled ones are [${SEEDLING_INSTALLABLE_ATLASES.map((a) => a.atlas_id).join(', ')}] `
+            + '(a restamped atlas changes its id: pick it again)');
+    }
+    return doc;
+}
+
+/**
+ * The spiral's half of the knob: the `substrateConfig.flash_seedling` entry the
+ * bag asks for, or null for the starter (so a spiral world that does not set
+ * the knob carries no config and its bytes do not move).
+ */
+export function seedlingAtlasPipelineConfig({ params = {} } = {}) {
+    const atlasId = seedlingAtlasIdOfParams(params);
+    if (atlasId === SEEDLING_STARTER_ATLAS.atlas_id) return null;
+    seedlingAtlasDocById(atlasId);
+    return { atlasId };
+}
+
+/** The panel's picker: one option per installable atlas, bound to the bag's `seedlingAtlasId`. Call-time DOM only. */
+export function renderSeedlingAtlasProcgenParams({ params, onChange = () => {} } = {}) {
+    const select = document.createElement('select');
+    select.className = 'procgen-seedling-atlas-select';
+    for (const atlas of SEEDLING_INSTALLABLE_ATLASES) {
+        const o = document.createElement('option');
+        o.value = atlas.atlas_id;
+        o.textContent = `${atlas.name ?? atlas.atlas_id} (${atlas.regions.length} level region(s))`;
+        select.appendChild(o);
+    }
+    select.value = seedlingAtlasIdOfParams(params);
+    select.addEventListener('change', () => { params[SEEDLING_ATLAS_ID_KEY] = select.value; onChange(); });
+    const wrap = document.createElement('div');
+    wrap.appendChild(fieldRow('Atlas', 'The region atlas the real rooms are placed from', select));
+    return wrap;
 }
 
 /** The most doors any placeable room of the installed atlas has — the most gates one room can realise. */
@@ -451,11 +531,18 @@ function chooseSphereRoom(source, regionId, nSides, nItems) {
  * order, under the COMPILER's names (`global_name` — the names the check
  * binding reports). `exitRules` is EMPTY: this path compiles `exitPaths`.
  */
-function generateZoneForSpecs({ region_id: regionId, exitSpecs = [], locationSpecs = [] } = {}) {
+function generateZoneForSpecs({ region_id: regionId, exitSpecs = [], locationSpecs = [], atlasId = null } = {}) {
     if (exitSpecs.length === 0) {
         throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: region "${regionId}" asks a real Seedling room `
             + 'for no exit side at all, and a placed room is entered and left through its doors — a '
             + 'region of this substrate needs at least one exit (its door back, or a child\'s door).');
+    }
+    // ⛓ S2 D1: the regionParams' atlas (`buildZoneSpecs`) — the path a driver
+    //   with no `prepareSphereGrowth` (top-down, the hub's initialise) takes. A
+    //   switch unplaces every room, since none of them is a room of this atlas.
+    if (atlasId !== null && contentSource().atlasId !== atlasId) {
+        installedSource = sourceOf(seedlingAtlasDocById(atlasId));
+        sphereRooms.clear();
     }
     const source = contentSource();
     const zone = chooseSphereRoom(source, regionId, exitSpecs.length, locationSpecs.length);
@@ -696,33 +783,56 @@ export const substrateRegistryEntry = Object.freeze({
      * back door takes no gate slot).
      */
     generateZoneForSpecs,
+    /** S2 D1 — the regionParams' atlas onto the zone specs (the starter when it names none). */
+    buildZoneSpecs: (base, regionParams = {}) => ({
+        ...base, atlasId: regionParams?.seedlingAtlas?.atlasId ?? SEEDLING_STARTER_ATLAS.atlas_id,
+    }),
     canHostExitGates,
     exitGateVeto: (regionParams) => (atlasRoomHostsChildren(regionParams) ? canHostExitGates : () => false),
     backPortalGated: (regionParams) => atlasRoomHostsChildren(regionParams),
     buildRegionParams: buildSeedlingAtlasRegionParams,
-    /** Once per sphere generation: every room is unplaced again. Contributes nothing to the plan. */
-    prepareSphereGrowth: () => {
+    /**
+     * Once per sphere generation: install the atlas the bag names (S2 D1 —
+     * `seedlingAtlasId`, the starter when absent) and unplace every room.
+     * Sphere growth calls no `applyPipelineConfig`, so this is where its knob
+     * lands. Contributes nothing to the plan.
+     */
+    prepareSphereGrowth: ({ params } = {}) => {
+        installedSource = sourceOf(seedlingAtlasDocById(seedlingAtlasIdOfParams(params)));
         sphereRooms.clear();
         return {};
     },
+    /** S2 D1 — the spiral's half of the knob (`seedlingAtlasPipelineConfig`). */
+    pipelineConfigFromParams: seedlingAtlasPipelineConfig,
+    renderProcgenParams: renderSeedlingAtlasProcgenParams,
     /**
-     * Install `cfg.atlasDoc`, or the starter atlas when absent — a preset
-     * carries no `substrateConfig`, so the default IS the path every preset
-     * takes (jta's `applyPipelineConfig({})` precedent). Refused by name when
-     * the document does not validate.
+     * Install `cfg.atlasDoc`, else the bundled atlas `cfg.atlasId` names (S2
+     * D1), else the starter atlas — a preset that sets no knob carries no
+     * `substrateConfig`, so the default IS the path it takes (jta's
+     * `applyPipelineConfig({})` precedent). Refused by name when the document
+     * does not validate, the id names no bundled atlas, or the two disagree.
      */
     applyPipelineConfig: (cfg) => {
-        installedSource = sourceOf(cfg?.atlasDoc ?? SEEDLING_STARTER_ATLAS);
+        let doc = cfg?.atlasDoc ?? null;
+        if (cfg?.atlasId != null) {
+            const named = seedlingAtlasDocById(cfg.atlasId);
+            if (doc && doc.atlas_id !== named.atlas_id) {
+                throw new Error(`${FLASH_SEEDLING_SUBSTRATE_ID}: applyPipelineConfig was handed atlasDoc `
+                    + `"${doc.atlas_id}" and atlasId "${cfg.atlasId}" — one config installs one atlas`);
+            }
+            doc ??= named;
+        }
+        installedSource = sourceOf(doc ?? SEEDLING_STARTER_ATLAS);
         // A room placed from the atlas this replaces is not a room of the new one.
         sphereRooms.clear();
         return installedSource.atlasDoc;
     },
     /**
-     * ⛓ APWORLD SUBSTRATE CHANGE R6b — the one key `applyPipelineConfig` reads.
+     * ⛓ APWORLD SUBSTRATE CHANGE R6b — the keys `applyPipelineConfig` reads.
      * No `recordablePipelineConfig`: the atlas is the whole config, and the
      * document already names it (`region_atlas.atlas_id`).
      */
-    pipelineConfigKeys: Object.freeze(['atlasDoc']),
+    pipelineConfigKeys: Object.freeze(['atlasDoc', 'atlasId']),
     /**
      * The two top-level blocks the flash panel needs in the rules.json of a
      * world that placed a room — `region_atlas` (`mapDocumentPath.js` resolves

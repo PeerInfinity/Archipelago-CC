@@ -365,6 +365,15 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
         resolvedLibraries ?? [],
         { substrateQuotas: effectiveSubstrateQuotas(state.substrateQuotas) ?? {}, substrateConfig: {} },
     );
+    // ⛓ SEEDLING SWIM S2 D1: a quota substrate may turn a bag knob into its own
+    //   `substrateConfig[id]` entry (`pipelineConfigFromParams`), which ①'s
+    //   `applyPipelineConfig` installs. An entry answering null adds no key, so a
+    //   world that sets no such knob keeps its bytes.
+    for (const [id, count] of Object.entries(substrateQuotas)) {
+        if (!(Number(count) > 0) || substrateConfig[id] !== undefined) continue;
+        const own = substrateRegistry.get(id)?.pipelineConfigFromParams?.({ params });
+        if (own) substrateConfig[id] = own;
+    }
     if (Object.keys(substrateQuotas).length === 0) {
         throw new Error('shuffled-spiral requires at least one substrate '
             + 'with a positive quota (set Substrate allocation to Quotas) '

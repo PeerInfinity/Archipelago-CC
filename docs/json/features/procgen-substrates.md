@@ -8,7 +8,7 @@ Everything below this paragraph is generated from the code: each row is a questi
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**26 statements · 9 substrates · 35 registry fields read (38 of the developer matrix's 81, counting the parents of the fields read) · 43 not yet read.**
+**26 statements · 9 substrates · 35 registry fields read (38 of the developer matrix's 82, counting the parents of the fields read) · 44 not yet read.**
 
 ## Play
 
@@ -47,7 +47,7 @@ Everything below this paragraph is generated from the code: each row is a questi
 | G3 | Generates quickly | ✓ | n/a | ✓ | ✗ its generation cost is declared `heavy` | ✓ | ✓ | ✓ | n/a | n/a |
 | G4 | Its rooms can be captured into a library and reused | ✓ | ✗ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
 | G5 | Exits can be locked behind items | ✓ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ |
-| G6 | It has its own settings in the generation form | ✓ | ✗ | ✓ | ✓ | ✗ | ✗ | ✓ | ✗ | ✗ |
+| G6 | It has its own settings in the generation form | ✓ | ✗ | ✓ | ✓ | ✗ | ✓ | ✓ | ✗ | ✗ |
 | G7 | A world of it can start with an empty inventory | ✓ | ✓ | ✗ (note 1) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 
 1. Bounce Demo: a world starts with one of Left arrow / Right arrow — a bounce level cannot gate both arrows in one region, and hosts at most one arrowless-gated exit — the sphere route grants one arrow at the start for this reason
@@ -209,6 +209,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Generate* — How many ready-made rooms / levels it brings: 4 Atlas rooms
 - *Generate* — Generates quickly
 - *Generate* — Exits can be locked behind items
+- *Generate* — It has its own settings in the generation form
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — Its rooms can be edited: on a lab page
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one
@@ -271,8 +272,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-43 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+44 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `onContentEdit`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `renderLibraryProcgenParams`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `renderLibraryProcgenParams`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

@@ -154,6 +154,10 @@ A placed room's unbound doors warn and move nothing. The spiral links no reverse
 
 The same atlas also compiles to `seedling_atlas_maze`, playable without wasm ([Maze Substrate](./maze.md#a-real-games-map-as-maze-regions)). An atlas region may name its own `substrate`, so one preset can mix flash and maze rooms (still one sidecar per AP region).
 
+### The atlas knob and the swim census
+
+The bag key `seedlingAtlasId` (`SEEDLING_ATLAS_ID_KEY`) names the atlas the rooms come from, by the `atlas_id` `atlases/atlas_files.json` serves it under; absent means the starter, so no committed preset moves. The installable atlases are the bundled ones (`SEEDLING_INSTALLABLE_ATLASES`: the starter and the 113-level playthrough, both static JSON imports, because the install seams are synchronous and the preset producer has no fetch); any other id is refused by name. Sphere growth installs it in `prepareSphereGrowth`, before the tree's gate veto reads the atlas; the shuffled spiral carries it as `substrateConfig.flash_seedling.atlasId` (`pipelineConfigFromParams`, merged by `presetRun.buildSpiralRun`) into `applyPipelineConfig`; top-down and the APWorld hub's initialise carry it on the zone specs (`buildZoneSpecs`). The panel draws it as an *Atlas* picker (`renderProcgenParams`). `flashPanel/flashSeedlingAtlasKnob.test.js` builds both drivers' worlds from the picker's bag.
+
 ### As a sphere-growth leaf
 
 The entry has the sphere zone realiser `generateZoneForSpecs`, so sphere growth can grow a world around a real room ([Sphere Growth § Seedling as a leaf or a host](./sphere-growth.md#seedling-as-a-leaf-or-a-host-flash_seedling)).

@@ -129,6 +129,7 @@ A **content source** supplies existing region content by ordinal: its Nth planne
 | `getSpiralContent()` | The installed content document, for the stepped pipeline's content step; `null` when none is installed. |
 | `applyPipelineConfig(cfg)` | Install this source's pipeline config (called via `applySubstrateConfig`); `applyPipelineConfig({})` restores defaults. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `pipelineConfigKeys` | The keys `applyPipelineConfig` reads, as a frozen array. Tested in `procgenCore/substrateConfigRecord.test.js`. |
+| `pipelineConfigFromParams({params})` | A panel-bag knob turned into this source's `growthParams.substrateConfig[id]` entry, merged by `presetRun.buildSpiralRun` for a quota substrate with no entry yet; `null` adds no key. `flash_seedling`'s `seedlingAtlasId` ([Flash Substrate](./flash.md#the-atlas-knob-and-the-swim-census)). |
 | `recordablePipelineConfig()` | The part of the installed config a document should record (defaults included). `buildRulesJson` writes it to `procgen_metadata[<player>].substrate_configs[id]` for each declarer that realised a region. |
 | `zoneConfigFromSlot({entries, locations, blocks, fetched})` | Read back the config one player slot's zones were built with, without installing it: `{ok, cfg, assumed, zoneCount, host}`, optionally `zoneNames` and `unplaceable`. The editor verifies `assumed` by re-extracting every zone. Returns `{ok: false, needs: [path]}` when served files are needed (`resolveZoneFetches` fetches them). A `recorded` config wins over read-back. |
 | `zoneOfPayload(payload, cfg)` | The zone a region's payload plays, or `null`; the editor refuses a zone already in use. |
@@ -198,7 +199,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 81 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 82 fields · 14 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: the registry is a Map, so `getAll()` is INSERTION order; the generator imports the libraries in the order declared in `scripts/procgen/reference/registry.mjs` — the table at the end of this region prints it — and each entry lands when the library that registers it is imported.
 
@@ -298,7 +299,8 @@ Groups are this document's own § headings, matched to a field by the section th
 | `extractZoneRules` | — | — | fn | fn | — | fn | — | fn | fn |
 | `getSpiralContent` | — | — | — | — | — | — | — | fn | — |
 | `onContentEdit` | — | — | — | — | — | — | — | fn | — |
-| `pipelineConfigKeys` | — | — | — | — | — | atlasDoc | — | 6 items | 5 items |
+| `pipelineConfigFromParams` | — | — | — | — | — | fn | — | — | — |
+| `pipelineConfigKeys` | — | — | — | — | — | atlasDoc, atlasId | — | 6 items | 5 items |
 | `recordablePipelineConfig` | — | — | — | — | — | — | — | fn | fn |
 | `rulesJsonBlocks` | — | — | — | — | — | fn | fn | — | — |
 | `spiralContentConfigKey` | — | — | — | — | — | — | — | datasetDoc | — |
@@ -339,7 +341,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `buildLibraryRegionParams` | fn | — | — | — | — | — | — | — | — |
 | `buildRegionContract` | — | — | fn | fn | — | — | — | — | — |
 | `buildRegionParams` | — | — | fn | fn | — | fn | fn | — | — |
-| `buildZoneSpecs` | — | — | fn | fn | — | — | — | — | — |
+| `buildZoneSpecs` | — | — | fn | fn | — | fn | — | — | — |
 | `canHostExitGates` | — | — | fn | fn | — | fn | fn | — | — |
 | `canHostExitGatesBraid` | — | — | fn | — | — | — | — | — | — |
 | `defaultProcgenParams` | 6 keys | — | 10 keys | 8 keys | — | — | 7 keys | — | — |
@@ -354,7 +356,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `prepareSphereGrowth` | — | — | fn | — | — | fn | — | — | — |
 | `procgenParamsFromPayload` | — | — | fn | fn | — | — | fn | — | — |
 | `renderLibraryProcgenParams` | fn | — | — | — | — | — | — | — | — |
-| `renderProcgenParams` | fn | — | fn | fn | — | — | fn | — | — |
+| `renderProcgenParams` | fn | — | fn | fn | — | fn | fn | — | — |
 | `startingInventory` | — | — | {needs} | — | — | — | — | — | — |
 
 **Which library registered which entry** — entries self-register on library import, and this is the order the generator imports them in.
