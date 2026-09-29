@@ -40,6 +40,7 @@ import { TILE_SIZE } from '../seedlingDemo/levelWorld.js';
 import { sidecarFieldsOf, sidecarPayloadErrors, validateSidecarFields } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
+import { GENERATION_COST, generationCostOf } from '../procgenCore/substratePredicates.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 
@@ -468,5 +469,35 @@ describe('the per-region generation knobs', () => {
         const payload = ENTRY.serializeWorld(core.world, ENTRY.extractPathsAndObstacles(core.world, {}), null, null, {});
         expect(seedlingGenProcgenParamsFromPayload(payload)).toMatchObject({ seedlingGenObstacleTarget: 4, seedlingGenBiome: 'pre-sword' });
         expect(seedlingGenProcgenParamsFromPayload({})).toEqual({});
+    });
+
+    /**
+     * ⛓ G9 (plan §15 item 3) — the apworld S2 read-back row names its knob off
+     * `procgenParamsFromPayload({})`, an EMPTY payload, and this entry answers
+     * `{}` there: a payload without `generation` is not a generated room, so no
+     * default is faked (bounce answers `experimental` only because its absent
+     * stamp MEANS that profile). A BUILT payload reads every knob back — the one
+     * the row's control moves first (the biome select) included.
+     */
+    it('⛓ G9: a BUILT payload reads EVERY knob back — the moved biome too; an empty one names none', () => {
+        const bag = {
+            ...DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS,
+            seedlingGenBiome: 'post-sword', seedlingGenObstacleTarget: 4, seedlingGenTriesPerStep: 7, seedlingGenFill: 'shell',
+        };
+        const core = build(EXITS, { params: buildSeedlingGenRegionParams({ params: bag }) });
+        const payload = ENTRY.serializeWorld(core.world, ENTRY.extractPathsAndObstacles(core.world, {}), null, null, {});
+        expect(ENTRY.procgenParamsFromPayload(payload)).toEqual(bag);
+        expect(Object.keys(ENTRY.procgenParamsFromPayload(payload)).sort())
+            .toEqual(Object.keys(DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS).sort());
+        expect(ENTRY.procgenParamsFromPayload({})).toEqual({});
+        expect(ENTRY.procgenParamsFromPayload({ generation: null })).toEqual({});
+    });
+});
+
+describe('G9 — the declared generation cost', () => {
+    it('⛓ `generationCost` is DECLARED `light` on the entry (a statement, not the absent default)', () => {
+        expect(Object.hasOwn(ENTRY, 'generationCost')).toBe(true);
+        expect(ENTRY.generationCost).toBe(GENERATION_COST.LIGHT);
+        expect(generationCostOf(ENTRY)).toBe(GENERATION_COST.LIGHT);
     });
 });
