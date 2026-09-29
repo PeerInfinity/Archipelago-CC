@@ -258,7 +258,8 @@ describe('⛓ the links the render emits', () => {
         //   G9's substrate-registry.md capacity section → flash.md § Declarations (G9);
         //   304 → 305: engine-prep A1's README index row for seedling-constants.md; 305 → 312: concept library
         //   T0's `concepts.md` (its README index row, five sibling links, one same-doc).
-        expect(checked).toBe(312);
+        //   312 → 313: engine prep B1's README index row → tape-envelope.md.
+        expect(checked).toBe(313);
     });
 
     it('tags each link with the kind that produced it', () => {

@@ -221,20 +221,24 @@ describe('the corpus census — printed, then pinned', () => {
          *              — its README index row and five sibling links (`doc`
          *              233 → 239) and one to its own § The three effects
          *              (`same-doc` 14 → 15).
+         *   312 → 313  SEEDLING ENGINE PREP B1 (2026-09-29): tape-envelope.md
+         *              joined the corpus; its own body carries NO link, and
+         *              the one new link is README's GENERATED index row for it
+         *              (`doc` 239 → 240).
          */
         expect(by).toEqual({
             'same-doc': 15,
-            doc: 239,
+            doc: 240,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(312);
+        expect(CORPUS.length).toBe(313);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(239);
+        expect(docs).toHaveLength(240);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

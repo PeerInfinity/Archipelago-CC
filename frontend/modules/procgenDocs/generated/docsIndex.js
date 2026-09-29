@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 24,
-        "headings": 891,
+        "docs": 25,
+        "headings": 899,
         "indexHeadings": 2,
-        "lines": 20064,
+        "lines": 20191,
         "pages": 4,
-        "words": 230789
+        "words": 232866
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -360,6 +360,16 @@ export const DOCS_INDEX = frz({
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
             "words": 5654
+        },
+        {
+            "description": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate.",
+            "file": "tape-envelope.md",
+            "h1": "The Tape Envelope and the Observation Core",
+            "headings": 8,
+            "lines": 127,
+            "links": [],
+            "path": "docs/json/developer/procgen/tape-envelope.md",
+            "words": 2077
         },
         {
             "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",

@@ -71,6 +71,7 @@ export const README_ORDER = Object.freeze([
     'seedling-bot.md',
     'seedling-bot-log.md',
     'seedling-constants.md',
+    'tape-envelope.md',
     'flash.md',
     'jta.md',
     'omsi.md',
