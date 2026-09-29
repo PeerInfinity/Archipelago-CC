@@ -672,6 +672,28 @@ const STAGED_BASE = 'r8-solve-11';
 const STAGED_CROSSCHECK = new Map([[bootKey(18, 16, 32), 'r8-solve-18']]);
 
 /**
+ * ⛓ SWIM T3 D4 — **WHAT A STAGED ROOM IS GRANTED BEYOND THE LATCH**, keyed on
+ * the arrival like everything else here.
+ *
+ * `STAGED_BASE` is the campaign's post-sword latch, and it predates every
+ * pickup the extended legs collect. So L30 (step 29, `--through=2.2`) staged
+ * from it holds no Green Key and refuses at `bosslock` by name — a bound of
+ * the STAGING, not a wall in the room (S2's own reading). The row below
+ * declares the key the route has already collected by then (`bosskey@112,64`
+ * in L29, `keyType` 1 — step 27) through the tape's own v6 `save.keys` block,
+ * which `levelRun` reads at boot; it is a declaration, like the boot itself,
+ * and the row says so in its output.
+ *
+ * ⚠ `--through` ONLY, and ONE row: a derivation that granted every earlier
+ * route pickup to every later staged room would also move rows 22-30 (the
+ * shield) — a policy, not this slice's.
+ */
+const STAGED_SAVE_GRANTS = new Map(THROUGH ? [[bootKey(30, 64, 16), {
+    keys: [1],
+    why: 'the Green Key (bosskey@112,64 in L29, keyType 1) the route collects at step 27',
+}]] : []);
+
+/**
  * The KNOWN-ANSWER tape a row's tick count can be compared against — a
  * SOLVER tape for the same room from the same boot. Re-solving these is
  * agreement information, which is why they are in the survey at all.
@@ -761,6 +783,16 @@ async function solveOneStep(step) {
     const staging = solveStaging(stagingFromTape(base));
     if (boot.kind === 'staged') {
         staging.boot = { level: step.level, x: step.arrival.x, y: step.arrival.y };
+    }
+    const saveGrant = boot.kind === 'staged'
+        ? STAGED_SAVE_GRANTS.get(bootKey(step.level, step.arrival.x, step.arrival.y)) ?? null
+        : null;
+    if (saveGrant) {
+        const save = staging.save ?? { totem_parts: [], keys: [], seal_parts: [] };
+        staging.save = {
+            ...save,
+            keys: [...new Set([...(save.keys ?? []), ...saveGrant.keys])].sort((x, y) => x - y),
+        };
     }
     /**
      * ⛔⛔⛔ THE TIMED CLEARS ARE STRIPPED, AND THIS IS THE DESPAWN DROP ONE
@@ -992,6 +1024,7 @@ async function solveOneStep(step) {
             block: staging.boot,
             check: bootCheck,
             strippedTimedClears: inheritedTimed.map((r) => `{${r.level},${r.tag}}@${r.at}`),
+            ...(saveGrant ? { saveGrant: { keys: [...saveGrant.keys], why: saveGrant.why } } : {}),
         },
         withCommittedDeclarations: withCommitted,
         goals: step.goals,
