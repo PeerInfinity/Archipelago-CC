@@ -254,8 +254,9 @@ describe('⛓ the links the render emits', () => {
         //   seedling-bot.md's present-state rewrite; 300 → 301: substrate chart S2's
         //   `substrate-registry.md` → `../../features/procgen-substrates.md`; 301 → 302:
         //   seedling swim S2 D1's `pipelineConfigFromParams` row → flash.md; 302 → 303:
-        //   C2's `maze.md` room-size paragraph → substrate-registry.md.
-        expect(checked).toBe(303);
+        //   C2's `maze.md` room-size paragraph → substrate-registry.md; 303 → 304:
+        //   G9's substrate-registry.md capacity section → flash.md § Declarations (G9).
+        expect(checked).toBe(304);
     });
 
     it('tags each link with the kind that produced it', () => {

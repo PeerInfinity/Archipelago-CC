@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 22,
-        "headings": 870,
+        "headings": 871,
         "indexHeadings": 2,
-        "lines": 19542,
+        "lines": 19558,
         "pages": 4,
-        "words": 223411
+        "words": 223984
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -58,7 +58,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 22,
-            "lines": 250,
+            "lines": 259,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -67,7 +67,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 4074
+            "words": 4318
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -341,8 +341,8 @@ export const DOCS_INDEX = frz({
             "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",
             "file": "flash.md",
             "h1": "Flash Substrate",
-            "headings": 23,
-            "lines": 297,
+            "headings": 24,
+            "lines": 304,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -352,7 +352,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 5745
+            "words": 6074
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",
