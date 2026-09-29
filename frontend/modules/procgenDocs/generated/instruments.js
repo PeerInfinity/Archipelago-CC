@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 58,
-            "count": 94,
+            "count": 95,
             "id": "check"
         },
         {
@@ -209,12 +209,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 271,
+        "blockStyle": 272,
         "browser": 84,
         "cited": 115,
-        "files": 282,
+        "files": 283,
         "lineStyle": 11,
-        "withDocblock": 282,
+        "withDocblock": 283,
         "withFlags": 204
     },
     "dir": "scripts/procgen",
@@ -1963,6 +1963,24 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "check-procgen-lab-hosting — THE CONSTRUCTIVE-MODE SLICE 4 ACCEPTANCE ROW.",
             "path": "scripts/procgen/check-procgen-lab-hosting.mjs"
+        },
+        {
+            "argvHelpers": [
+                "flagValue"
+            ],
+            "browser": false,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "keep",
+                "seeds"
+            ],
+            "file": "check-procgen-maze-recipe.mjs",
+            "flags": [],
+            "inheritedFlags": [],
+            "oneLiner": "check-procgen-maze-recipe — **DOES THE procgen_maze RECIPE STILL PRODUCE THE COMMITTED procgen_maze PRESETS, BYTE FOR BYTE?**",
+            "path": "scripts/procgen/check-procgen-maze-recipe.mjs"
         },
         {
             "argvHelpers": [

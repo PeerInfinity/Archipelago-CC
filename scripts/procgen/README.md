@@ -240,3 +240,18 @@ Needs the repo Python env; runs in a throwaway world/preset and cleans up.
 ```
 node scripts/procgen/check-atlas-sphere-roundtrip.mjs
 ```
+
+## check-procgen-maze-recipe.mjs
+
+Re-runs the `procgen_maze` section of `scripts/utils/generate_all_templates.sh`
+(rendered in its `--script` mode, exactly as the Generate Presets workflow
+renders it) into a temp dir and compares each output with the committed
+`frontend/presets/procgen_maze/AP_<n>/AP_<n>_rules.json`, byte for byte. A
+difference is reported by shape (the top-level keys, the regions changed, the
+location counts). Red means the next release would re-record a preset. It was
+written in `scripts/utils/` while AP_3 was red by design and enrolled here
+once AP_3 was re-recorded from the recipe; it runs in CI's headless gates step.
+
+```
+node scripts/procgen/check-procgen-maze-recipe.mjs [--seeds 1,2] [--keep]
+```

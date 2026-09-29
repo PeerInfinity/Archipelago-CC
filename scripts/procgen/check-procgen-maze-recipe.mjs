@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Does the procgen_maze recipe still produce the committed procgen_maze presets?
+ * check-procgen-maze-recipe — **DOES THE procgen_maze RECIPE STILL PRODUCE THE
+ * COMMITTED procgen_maze PRESETS, BYTE FOR BYTE?**
  *
  * The recipe is the `procgen_maze` section of `generate_all_templates.sh`
  * (APWORLD SUBSTRATE CHANGE PM1, §44). This check renders that script in its
@@ -18,10 +19,35 @@
  *
  * Nothing in the tree is written (the temp dir is removed on exit).
  *
+ * ⛓ ENROLLED (C2, 2026-09-28). PM1 wrote this beside the writer in
+ * `scripts/utils/` on purpose: AP_3 was red BY DESIGN until its re-record on
+ * C1's fixpoint placer, and a `check-*.mjs` in `scripts/procgen/` is a gate by
+ * its filename alone (`gateRoster.isGateFile`). C2 re-recorded AP_3 from this
+ * recipe (156/101, predicted then asserted), all three presets passed, and the
+ * file moved here — so it now runs wherever the roster runs: the headless CI
+ * step (`ci-gates.mjs`, job `headless-gates`), `gates.mjs`, the standing bank
+ * and the generated instruments index. Its verdict lines are `gateTotal`'s.
+ * A red here means a release would re-record a preset: the engine or the
+ * recipe moved, so either the change is unintended or the preset is due its
+ * re-record from this recipe (the two lines of the section, as rendered).
+ *
+ * ⛓ ITS INPUT KEY IS DECLARED, because derivation sees none of it: the writer
+ * is spawned through a constant (`WRITER`), the recipe is a `.sh` rendered at
+ * run time, and the committed files are a path built from its lines. Measured
+ * at enrolment: the derived key covered 2 code files and 0 data/spawn — an
+ * engine change would have been QUOTED green (rowInputKey's "stale green").
+ * The writer imports its modules through `path.join` too, so its two in-tree
+ * ones are named as spawn seeds and their closures (the grid-growth engine,
+ * the maze placer: 155 members, and the `shared` gitlink) ride in behind
+ * them. Mutant: a byte appended to `mazeRoomEngine.js` moves the key.
+ *
+ * @key-inputs spawn: scripts/utils/generate-procgen-rules.js frontend/modules/procgenPipeline/procgenPipelineEngine.js frontend/modules/mazeRoom/mazeRoomLibrary.js
+ * @key-inputs data: scripts/utils/generate_all_templates.sh frontend/presets/procgen_maze/**
+ *
  * Usage:
- *   node scripts/utils/check-procgen-maze-recipe.mjs              # every preset in the section
- *   node scripts/utils/check-procgen-maze-recipe.mjs --seeds 1,2  # only these seed ids
- *   node scripts/utils/check-procgen-maze-recipe.mjs --keep       # keep the temp dir and print it
+ *   node scripts/procgen/check-procgen-maze-recipe.mjs              # every preset in the section
+ *   node scripts/procgen/check-procgen-maze-recipe.mjs --seeds 1,2  # only these seed ids
+ *   node scripts/procgen/check-procgen-maze-recipe.mjs --keep       # keep the temp dir and print it
  */
 
 import { execFileSync, spawnSync } from 'node:child_process';
@@ -29,6 +55,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { checkLine, totalLine } from './gateTotal.js';
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const TEMPLATES_SH = 'scripts/utils/generate_all_templates.sh';
@@ -152,25 +180,25 @@ function main() {
             const run = spawnSync(process.execPath, [WRITER, ...argv], { cwd: REPO, encoding: 'utf-8' });
             if (run.status !== 0) {
                 failures++;
-                console.log(`FAIL: ${e.committed}: the writer exited ${run.status}\n${run.stderr}`);
+                console.log(checkLine(false, `${e.committed}: the writer exited ${run.status}\n${run.stderr}`));
                 continue;
             }
             const committedPath = path.join(REPO, e.committed);
             const want = fs.readFileSync(committedPath);
             const got = fs.readFileSync(out);
             if (want.equals(got)) {
-                console.log(`PASS: ${e.committed} reproduces byte-for-byte`);
+                console.log(checkLine(true, `${e.committed} reproduces byte-for-byte`));
                 continue;
             }
             failures++;
-            console.log(`FAIL: ${e.committed} differs from the recipe's output (${numstat(committedPath, out)})`);
+            console.log(checkLine(false, `${e.committed} differs from the recipe's output (${numstat(committedPath, out)})`));
             for (const l of shapeOf(JSON.parse(want), JSON.parse(got))) console.log(`      ${l}`);
         }
     } finally {
         if (opts.keep) console.log(`kept: ${tmp}`);
         else fs.rmSync(tmp, { recursive: true, force: true });
     }
-    console.log(failures === 0 ? 'ALL CHECKS PASSED' : `${failures} CHECK(S) FAILED`);
+    console.log(totalLine(failures));
     if (failures) {
         console.log('A differing preset means the recipe (or the engine under it) no longer makes the committed file:'
             + ' either the change is unintended, or the preset is due a re-record from this recipe.');
@@ -181,7 +209,7 @@ function main() {
 try {
     main();
 } catch (err) {
-    console.log(`FAIL: fatal: ${err.message}`);
-    console.log('1 CHECK(S) FAILED');
+    console.log(checkLine(false, `fatal: ${err.message}`));
+    console.log(totalLine(1));
     process.exit(1);
 }

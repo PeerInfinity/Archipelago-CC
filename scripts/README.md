@@ -423,7 +423,7 @@ Headless CLI drivers and verification harnesses for the procedural-generation su
   | `WORLDGEN_CANONICAL_SEED` | `1` | Canonical seed number for WorldGen (empty to disable) |
   | `GENERATE_WORLDGEN2` | `false` | Generate WorldGen2 worlds from WorldGen worlds |
   | `GENERATE_TOPDOWN_PRESETS` | `true` | Generate the `procgen_topdown` presets (top-down driver over committed sources) |
-  | `GENERATE_MAZE_PRESETS` | `true` | Generate the three `procgen_maze` tiers (grid-growth driver; `utils/check-procgen-maze-recipe.mjs` checks them) |
+  | `GENERATE_MAZE_PRESETS` | `true` | Generate the three `procgen_maze` tiers (grid-growth driver; `procgen/check-procgen-maze-recipe.mjs` checks them) |
 
   Some games are excluded (commented out) because they take too long: Jak and Daxter, Pokemon Emerald, Pokemon Red and Blue, SMZ3, Yu-Gi-Oh! 2006. Their preset data may be stale.
 
@@ -442,11 +442,6 @@ Headless CLI drivers and verification harnesses for the procedural-generation su
 - **`utils/generate-procgen-rules.js`** - Generate a procgen substrate `rules.json` from CLI flags (`--help` lists them; `--stop-on-pool-empty` ends growth when the item pool empties — off by default, as in the engine)
   ```bash
   node scripts/utils/generate-procgen-rules.js
-  ```
-
-- **`utils/check-procgen-maze-recipe.mjs`** - Re-run the `procgen_maze` section of `generate_all_templates.sh` into a temp dir and compare each output with the committed preset, byte for byte (exit 1 on a difference, reported by shape)
-  ```bash
-  node scripts/utils/check-procgen-maze-recipe.mjs [--seeds 1,2]
   ```
 
 - **`utils/generate-topdown-preset.js`** - Generate a top-down procgen preset

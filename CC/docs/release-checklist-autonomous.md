@@ -393,7 +393,7 @@ well (2026-08-30). *Workflow-produced* worldgen worlds and their preset dirs —
 the `worldgen_generation_whitelist` set — are **not** preserved: the workflow
 regenerates them; do not add those. Nor is `procgen_maze` since 2026-09-28: the script's
 `procgen_maze` section produces its three tiers (so it is in the canonical
-`preset_files.live.json` too), and `node scripts/utils/check-procgen-maze-recipe.mjs`
+`preset_files.live.json` too), and `node scripts/procgen/check-procgen-maze-recipe.mjs`
 says whether a regeneration would move them — run it before the dispatch, and
 expect a re-record, not a restore, when it is red. Before each release, diff
 `git ls-tree -d --name-only origin/main frontend/presets/` against the
