@@ -362,11 +362,13 @@ describe('locations — location 0 on the goal cell, the rest on free flood cell
         expect(out.placed_obstacles).toEqual([]);
     });
 
-    // ⛓ G8: a room that cannot seat its locations GROWS (up to 60 a side), so the
-    //   refusal needs a demand no size up to 60 holds — 4000 (a 60x60 interior is 3364).
-    it('⛔ a room that cannot hold N locations REFUSES, naming its free cells and what to lower', () => {
-        expect(() => placed(4000)).toThrow(/must hold 4000 AP location\(s\), and only \d+ cell\(s\) are free for them \[\(/);
-        expect(() => placed(4000)).toThrow(/Lower maxItemsPerRegion, lower the flash_seedling_gen quota/);
+    // ⛓ G8: a room that cannot seat its locations GROWS (up to 60 a side). ⛓ G9: so
+    //   the one demand no room holds is one past the level's 30 persistence tags —
+    //   refused at once, by name (G8's row asked 4000, which now meets this first).
+    it('⛔ a room past the 30-tag budget REFUSES by name, naming the budget and what to lower', () => {
+        expect(() => placed(31)).toThrow(GEN_ROOM_REFUSALS.tagBudget('gen_probe', 31, 30));
+        expect(() => placed(4000)).toThrow(/must hold 4000 AP location\(s\), and a Seedling level holds at most 30: /);
+        expect(GEN_ROOM_REFUSALS.tagBudget('r', 31, 30)).toMatch(/Lower maxItemsPerRegion or the flash_seedling_gen quota/);
     });
 });
 

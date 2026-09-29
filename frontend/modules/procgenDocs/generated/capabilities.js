@@ -4127,12 +4127,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "kind": "na",
-                    "text": null,
+                    "kind": "no",
+                    "text": "a room holds `capacityAt(size)` of them — the room grows to hold more, up to 30 (the game's 30 persistence tags), which no size lifts",
                     "why": [
                         {
                             "field": "locationCapacity",
-                            "value": "—"
+                            "value": "{capacityAt, kind}"
                         }
                     ]
                 },

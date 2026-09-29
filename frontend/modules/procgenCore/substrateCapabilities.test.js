@@ -313,6 +313,7 @@ describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ p
      */
     it('G8: ✓ where the capacity is unbounded, ✗ naming `capacityAt` where it is tiles, n/a where none is declared', () => {
         const kinds = new Set();
+        let ceilings = 0;
         for (const e of ENTRIES) {
             const c = cellOf('G8', e.id);
             kinds.add(c.kind);
@@ -322,12 +323,22 @@ describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ p
                 expect(c.kind, e.id).toBe(CELL_KINDS.NO);
                 expect(typeof e.locationCapacity.capacityAt, e.id).toBe('function');
                 expect(c.text, e.id).toContain('capacityAt');
+                // ⛓ G9 — a declared ceiling is NAMED (its N and why), and only then
+                const ceiling = e.locationCapacity.capacityAt({ width: 8, height: 6 }, {},
+                    { locations: 0, gated: 0, exits: 0, listed: 0 })?.ceiling;
+                if (ceiling) {
+                    ceilings += 1;
+                    expect(c.text, e.id).toContain(`up to ${ceiling.locations} (${ceiling.why}), which no size lifts`);
+                } else {
+                    expect(c.text, e.id).not.toContain('no size lifts');
+                }
                 continue;
             }
             expect(c.kind, e.id).toBe(CELL_KINDS.NA);
             expect(declared, e.id).toBeUndefined();
         }
         expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.NO, CELL_KINDS.YES].sort());
+        expect(ceilings, 'a registered entry declares a ceiling (G9: flash_seedling_gen)').toBeGreaterThan(0);
     });
 
     it('G2: n/a exactly where the realiser is procedural; ✗ only where nothing is declared; else ✓ its count', () => {

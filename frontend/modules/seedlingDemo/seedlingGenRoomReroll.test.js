@@ -40,7 +40,7 @@ import { buildLevelWorld } from './levelWorld.js';
 import { assembleGeneratedSeedlingSet } from './seedlingGeneratedSet.js';
 
 const {
-    GEN_ROOM_BIOMES, GEN_ROOM_DOOR_REROLLS, GEN_ROOM_GROW_STEP, GEN_ROOM_MAX_SIDE, GEN_ROOM_REROLL_CAUSES,
+    GEN_ROOM_BIOMES, GEN_ROOM_DOOR_REROLLS, GEN_ROOM_GROW_STEP, GEN_ROOM_MAX_SIDE, GEN_ROOM_REFUSALS, GEN_ROOM_REROLL_CAUSES,
     extractGenRules, goalHoldsWithDoorsAsWalls, lastAttempt, rerollGenRoom, rerollSeed, roomCanHold, sizeOfAttempt,
     sizesTried,
 } = room;
@@ -543,12 +543,18 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
             .toThrow(/re-rolled up to 8 time\(s\) at 60x60 \(already at the room contract's maximum, 60 tiles, so it cannot grow\)/);
     });
 
-    it('4000 locations in drawn seed 1\'s 8x6 room: REFUSED after every size, in place — never short', () => {
+    // ⛓ G9: G8's 4000 now meets the level's 30-tag budget before any draw — no
+    //   size holds a 31st location, so the refusal no longer walks the sizes.
+    it('31 locations in drawn seed 1\'s 8x6 room: REFUSED by the tag budget at once, in place — no draw, never short', () => {
         const world = room.generateGenRoom({ region_id: 'u', exits: [{ exit_id: 'a' }], size: { width: 8, height: 6 }, rng: rngDrawing(1), params: {} }).world;
         const before = { seed: world.seed, size: { ...world.size }, generation: { ...world.generation } };
-        expect(() => room.placeGenItems(world, { items_to_place: Array(4000).fill('i') })).toThrow(new RegExp(
-            `must hold 4000 AP location\\(s\\).*in every draw up to re-roll ${GEN_ROOM_DOOR_REROLLS} \\(the budget\\) at each of `
-            + `${tried({ width: 8, height: 6 }).join(', ')} \\(it grows`));
+        // no draw: a re-roll at 8x6 costs 0.1-1.5 s a room (G8 measured every size to 60 for 4000)
+        const t0 = Date.now();
+        expect(() => room.placeGenItems(world, { items_to_place: Array(31).fill('i') }))
+            .toThrow(GEN_ROOM_REFUSALS.tagBudget('u', 31, 30));
+        expect(Date.now() - t0).toBeLessThan(100);
+        expect(() => room.placeGenItems(world, { items_to_place: Array(4000).fill('i') }))
+            .toThrow(GEN_ROOM_REFUSALS.tagBudget('u', 4000, 30));
         expect({ seed: world.seed, size: world.size, generation: world.generation }).toEqual(before);
         expect(world.locations).toEqual([]);
     });

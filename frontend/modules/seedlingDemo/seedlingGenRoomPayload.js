@@ -96,6 +96,18 @@ export const GEN_ROOM_REFUSALS = Object.freeze({
         + (grown == null ? '' : `, in every draw up to re-roll ${grown.budget} (the budget)${grownClause(grown)}`)
         + '. Lower maxItemsPerRegion, lower the flash_seedling_gen quota (fewer items '
         + (grown == null ? 'per room), or raise the region size.' : 'per room).'),
+    /** ⛓ G9 — past the level's persistence-tag budget: no draw at any size seats them. */
+    tagBudget: (regionId, want, max) => `generated Seedling room '${regionId}' must hold ${want} AP location(s), `
+        + `and a Seedling level holds at most ${max}: each location's pickup takes one of the game's ${max} `
+        + 'persistence tags (`Game.tagsPerLevel`), and no room size adds any. Lower maxItemsPerRegion or the '
+        + 'flash_seedling_gen quota (fewer items per room), or place this region with another substrate.',
+    /** ⛓ G9 — every draw's own elements left too few of the tags (re-rolled like too few cells). */
+    tooFewTags: (regionId, want, left, max, grown = null) => `generated Seedling room '${regionId}' must hold `
+        + `${want} AP location(s), and its own elements leave only ${left} of the level's ${max} persistence tags `
+        + 'for them (each location\'s pickup takes one)'
+        + (grown == null ? '' : `, in every draw up to re-roll ${grown.budget} (the budget)${grownClause(grown)}`)
+        + '. Lower maxItemsPerRegion or the flash_seedling_gen quota (fewer items per room), or choose elements '
+        + 'that spend fewer tags.',
     tooManyDoors: (regionId, seed, size, want, message, grown = null) => `generated Seedling room '${regionId}' `
         + `(seed ${seed}, ${size.width}x${size.height}) must hold ${want} door(s), one per exit, and its walkable `
         + `area cannot seat them apart without sealing an approach (${message.replace(/^levelSetExits: /, '')})`

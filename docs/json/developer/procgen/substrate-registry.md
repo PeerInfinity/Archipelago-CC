@@ -336,7 +336,7 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `maze` | `flash` | `bounce` | `runner` | `text_adventure` | `flash_seedling` | `flash_seedling_gen` | `jta` | `omsi` |
 |---|---|---|---|---|---|---|---|---|---|
-| `locationCapacity` | {capacityAt, kind} | — | — | — | {kind} | — | — | — | — |
+| `locationCapacity` | {capacityAt, kind} | — | — | — | {kind} | — | {capacityAt, kind} | — | — |
 
 **Build-time — region library entries (capture / instantiate / validate)**
 

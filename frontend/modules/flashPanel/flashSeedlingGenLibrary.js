@@ -51,6 +51,8 @@ import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibra
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { GENERATION_COST } from '../procgenCore/substratePredicates.js';
+import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
+import { genRoomCapacityAt } from '../seedlingDemo/seedlingGenCapacity.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import { fieldRow, numberField } from '../procgenCore/regionGenerationForm.js';
 import { SEEDLING_ITEMS_FEATURE, SEEDLING_LIBRARY_ITEMS } from '../seedlingDemo/itemLabels.js';
@@ -420,6 +422,18 @@ export const substrateRegistryEntry = Object.freeze({
      * presets already run.
      */
     generationCost: GENERATION_COST.LIGHT,
+
+    /**
+     * ⛓ G9 — Location capacity (`procgenCore/locationCapacity.js`): TILES, the
+     * smaller of the room's FLOOR (its interior less the start and the doors —
+     * growth lifts it) and the game's 30 persistence TAGS, one per location's
+     * pickup, which no size lifts and so is declared as the answer's `ceiling`:
+     * the Initialise form and the engine refuse a room past it by name before
+     * any build. `gated` = `locations` — a rule is logic only here (the host
+     * enforces doors, not pickups). The bounds and why the ceiling is the
+     * CERTAIN one, not the worst case: `seedlingDemo/seedlingGenCapacity.js`.
+     */
+    locationCapacity: Object.freeze({ kind: LOCATION_CAPACITY_KINDS.TILES, capacityAt: genRoomCapacityAt }),
 
     defaultProcgenParams: DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS,
     buildRegionParams: buildSeedlingGenRegionParams,
