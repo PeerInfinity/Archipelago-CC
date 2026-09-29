@@ -48,7 +48,7 @@ const cellOf = (rowId, entryId) => rowOf(rowId).cells.find((c) => c.id === entry
 
 /** ⛓ The statement ids §1 names (P4 split into P4 + P5 by S3), in group order — the vocabulary's shape. */
 const PLAN_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'L11',
-    'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'E1', 'E2', 'E3', 'E4'];
+    'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'E1', 'E2', 'E3', 'E4'];
 
 describe('the vocabulary', () => {
     it('the population is every registered entry', () => {
@@ -300,6 +300,31 @@ describe('L10 on the real entries: a static `types` list is the count, a preview
 });
 
 describe('the n/a cells that are the ANSWER\'s, not a prerequisite\'s (S3, ⚖ plan §6′.1 item 4)', () => {
+    /**
+     * ⛓ G8 (APWORLD SUBSTRATE CHANGE H1) — read off each entry's
+     * `locationCapacity` declaration: ✓ unbounded, ✗ tiles (the text names
+     * `capacityAt` and the growth), n/a where none is declared. All three kinds
+     * occur over the real registry.
+     */
+    it('G8: ✓ where the capacity is unbounded, ✗ naming `capacityAt` where it is tiles, n/a where none is declared', () => {
+        const kinds = new Set();
+        for (const e of ENTRIES) {
+            const c = cellOf('G8', e.id);
+            kinds.add(c.kind);
+            const declared = e.locationCapacity?.kind;
+            if (declared === 'unbounded') { expect(c.kind, e.id).toBe(CELL_KINDS.YES); continue; }
+            if (declared === 'tiles') {
+                expect(c.kind, e.id).toBe(CELL_KINDS.NO);
+                expect(typeof e.locationCapacity.capacityAt, e.id).toBe('function');
+                expect(c.text, e.id).toContain('capacityAt');
+                continue;
+            }
+            expect(c.kind, e.id).toBe(CELL_KINDS.NA);
+            expect(declared, e.id).toBeUndefined();
+        }
+        expect([...kinds].sort()).toEqual([CELL_KINDS.NA, CELL_KINDS.NO, CELL_KINDS.YES].sort());
+    });
+
     it('G2: n/a exactly where the realiser is procedural; ✗ only where nothing is declared; else ✓ its count', () => {
         const kinds = new Set();
         for (const e of ENTRIES) {

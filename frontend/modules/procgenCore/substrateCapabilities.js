@@ -17,7 +17,7 @@
  * on the *no* cell's text, read off the declaration. A statement may declare
  * `requires: '<id>'`: where the prerequisite answers *no*, the cell reads
  * **n/a** rather than a vacuous ✓; a statement's own answer may also be n/a
- * where the question has no answer for that substrate (G2, L7).
+ * where the question has no answer for that substrate (G2, L7, G8).
  *
  * ⛓ The predicates are the app's own where the app has one
  * (`substratePredicates.js`, `startingInventory.js`, `exitSides.js`), so a chart
@@ -37,6 +37,7 @@ import {
     botHonorsInstant, captureShapeOf, generationCostOf, regionRealiserKind, solverKindOf,
 } from './substratePredicates.js';
 import { declaredStartingNeeds } from './startingInventory.js';
+import { LOCATION_CAPACITY_KINDS, locationCapacityKind } from './locationCapacity.js';
 import { SIDE_SHARING, sideMayHoldAnotherExit } from './exitSides.js';
 
 /** ⛓ The four groups, in reading order. */
@@ -142,6 +143,7 @@ export const CELL_WORDING = Object.freeze({
     onePerSide: 'one exit per side',
     sideSharing: 'and a side can hold more than one',
     malformedSides: (m) => `its exit-side declaration is malformed: ${m}`,
+    capacityTiles: 'a room holds `capacityAt(size)` of them — the room grows to hold more',
 });
 
 /** ⛓ How many item names P4 lists before it gives the count alone. */
@@ -382,6 +384,22 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
             const needs = declaredStartingNeeds(e);
             if (!needs.length) return cell(CELL_KINDS.YES);
             return cell(CELL_KINDS.NO, needs.map((n) => CELL_WORDING.startingNeed(n.anyOf, n.reason)).join('; '));
+        },
+    },
+    {
+        id: 'G8', group: 'generate',
+        statement: 'Any number of locations fits in one room',
+        fields: ['locationCapacity'],
+        /* ⛓ APWORLD SUBSTRATE CHANGE H1 (⚖ the user, 2026-09-29 — the wording
+         * C2 proposed, plan §45 ⚖ #1). The declaration's kind answers
+         * (`locationCapacity.js`): unbounded ✓; tiles ✗, naming its
+         * `capacityAt` and that the room grows; n/a where the substrate declares
+         * no capacity — the question has no answer there, not a "no". */
+        answer: (e) => {
+            const kind = locationCapacityKind(e);
+            if (kind === LOCATION_CAPACITY_KINDS.UNBOUNDED) return cell(CELL_KINDS.YES);
+            if (kind === LOCATION_CAPACITY_KINDS.TILES) return cell(CELL_KINDS.NO, CELL_WORDING.capacityTiles);
+            return cell(CELL_KINDS.NA);
         },
     },
     {

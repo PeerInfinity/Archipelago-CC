@@ -476,6 +476,11 @@ export const CAPABILITIES = frz({
                     "text": null
                 },
                 {
+                    "group": "generate",
+                    "statement": "Any number of locations fits in one room",
+                    "text": null
+                },
+                {
                     "group": "edit",
                     "statement": "A region of a saved world can be opened in an editor and saved back",
                     "text": null
@@ -867,9 +872,9 @@ export const CAPABILITIES = frz({
     ],
     "counts": {
         "fields": 83,
-        "fieldsRead": 35,
-        "fieldsUnread": 45,
-        "statements": 27,
+        "fieldsRead": 36,
+        "fieldsUnread": 44,
+        "statements": 28,
         "substrates": 9
     },
     "fieldsRead": [
@@ -888,6 +893,7 @@ export const CAPABILITIES = frz({
         "getPlaybackController",
         "instantiateLibraryEntry",
         "libraryItems",
+        "locationCapacity",
         "loopSupport.executeVia",
         "loopSupport.instant",
         "loopSupport.manual",
@@ -948,7 +954,8 @@ export const CAPABILITIES = frz({
                 "G4",
                 "G5",
                 "G6",
-                "G7"
+                "G7",
+                "G8"
             ]
         },
         {
@@ -4049,6 +4056,115 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "maze",
+                    "kind": "no",
+                    "text": "a room holds `capacityAt(size)` of them — the room grows to hold more",
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "{capacityAt, kind}"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "runner",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "kind": "yes",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "{kind}"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "kind": "na",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "locationCapacity",
+                            "value": "—"
+                        }
+                    ]
+                }
+            ],
+            "fields": [
+                "locationCapacity"
+            ],
+            "group": "generate",
+            "id": "G8",
+            "statement": "Any number of locations fits in one room"
+        },
+        {
+            "cells": [
+                {
+                    "id": "maze",
                     "kind": "yes",
                     "text": "on a lab page",
                     "why": [
@@ -4545,7 +4661,6 @@ export const CAPABILITIES = frz({
         "label",
         "libraryEntryRefusal",
         "loadRegionEvent",
-        "locationCapacity",
         "loopSupport.customQueues",
         "onContentEdit",
         "pipelineConfigFromParams",
