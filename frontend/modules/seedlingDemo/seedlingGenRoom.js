@@ -75,7 +75,7 @@ import {
     POST_SHIELD_PALETTE, POST_SWIM_PALETTE, PRE_SWORD_PALETTE, POST_SWORD_PALETTE,
 } from './procgenPalette.js';
 import { pickDoorCells } from './levelSetExits.js';
-import { TILE_SIZE, buildLevelWorld } from './levelWorld.js';
+import { TILE_SIZE, buildLevelWorld, tagOf } from './levelWorld.js';
 import { ROOM_TILES_MAX, ROOM_TILES_MIN } from './procgenLevel.js';
 import { coreLevelRecord } from './levelSetValidator.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
@@ -85,6 +85,7 @@ import {
     REQUIRE_DIRECTIVE_REFUSALS, parseElementSpec, parseItemRequireList,
 } from '../procgenCore/elementSpec.js';
 import { parseAreaSpec } from '../procgenCore/areaSpec.js';
+import { GEN_ROOM_LOCATION_CEILING, genRoomFloorCells } from './seedlingGenCapacity.js';
 import {
     GEN_ROOM_BIOME_NAMES, GEN_ROOM_DEFAULTS, GEN_ROOM_REFUSALS, GEN_ROOM_TILE_SIZE, genDoorId,
 } from './seedlingGenRoomPayload.js';
@@ -254,7 +255,8 @@ export function lastAttempt(origin) {
  * instead of generating every size (measured G8 W0: a 30×30 room ≈ 15 s).
  */
 export function roomCanHold(size, demand) {
-    return demand <= (size.width - 2) * (size.height - 2) - 1;
+    // ⛓ G9 — the count is the declaration's (`seedlingGenCapacity.genRoomFloorCells`), so the two cannot drift.
+    return demand <= genRoomFloorCells(size);
 }
 
 /**
@@ -563,17 +565,43 @@ function recordWithoutGoal(world) {
     return { ...world.record, entities: (world.record.entities ?? []).filter((e) => !(e.x === gx && e.y === gy)) };
 }
 
-/** The cells `rows` would take, or null when the room has too few. */
+/**
+ * ⛓ G9 — the persistence tags a location may still take in this room: the
+ * level's `TAGS_PER_LEVEL`, less every tag the room WITHOUT its goal pickup
+ * uses (its own elements'), less the locations already seated. Location 0 takes
+ * the goal's own tag, which is why the goal is left out.
+ */
+function freeTags(world) {
+    const used = new Set(world.locations.map((l) => l.tag));
+    for (const e of recordWithoutGoal(world).entities ?? []) {
+        const t = tagOf(e.type, e.attrs);
+        if (t >= 0) used.add(t);
+    }
+    return GEN_ROOM_LOCATION_CEILING - used.size;
+}
+
+/**
+ * The cells `rows` would take — `short` when the room has too few cells, OR
+ * (G9) too few free persistence tags: a draw whose own elements spend the tags
+ * the rows need is re-rolled exactly like one without the floor for them.
+ */
 function seatsFor(world, rows) {
     const free = world.locations.length === 0 ? [world.goalCell] : [];
     free.push(...locationCells(world));
+    const tags = freeTags(world);
+    if (rows.length > tags) return { short: true, free, tags };
     return rows.length > free.length ? { short: true, free } : { free };
 }
 
-/** The sentence of a room that cannot seat `rows` beside what it holds. */
-function locationsRefusal(world, rows, free, grown = null) {
-    return GEN_ROOM_REFUSALS.tooManyLocations(world.region_id, world.locations.length + rows.length,
-        [...world.locations.map((l) => l.cell), ...free].map((c) => `(${c.tx},${c.ty})`), grown);
+/** The sentence of a room that cannot seat `rows` beside what it holds — short of TAGS (G9) or of cells. */
+function locationsRefusal(world, rows, seats, grown = null) {
+    const want = world.locations.length + rows.length;
+    if (seats.tags !== undefined) {
+        return GEN_ROOM_REFUSALS.tooFewTags(world.region_id, want, world.locations.length + seats.tags,
+            GEN_ROOM_LOCATION_CEILING, grown);
+    }
+    return GEN_ROOM_REFUSALS.tooManyLocations(world.region_id, want,
+        [...world.locations.map((l) => l.cell), ...seats.free].map((c) => `(${c.tx},${c.ty})`), grown);
 }
 
 /** A placed location as the row it was placed from: its cell and tag are the room's, re-derived on a re-roll. */
@@ -622,7 +650,7 @@ export function rerollGenRoom(world, entries, rows, cause) {
             summary: { stop: draw.out.summary.stop ?? null, keptCount: draw.out.summary.keptCount ?? null },
         };
         const seats = seatsFor(room, rows);
-        if (seats.short) { err = new Error(locationsRefusal(room, rows, seats.free)); continue; }
+        if (seats.short) { err = new Error(locationsRefusal(room, rows, seats)); continue; }
         seatRows(room, rows, seats.free);
         return { room, bound };
     }
@@ -639,13 +667,19 @@ export function rerollGenRoom(world, entries, rows, cause) {
  * never returned short, so the engine's own retry-then-grow loop is never entered.
  */
 function addLocations(world, rows) {
+    // ⛓ G9 — past the level's tag budget no draw at any size seats them: refused by
+    //   name at once, never re-rolled or grown (the entry's declared ceiling).
+    const want = world.locations.length + rows.length;
+    if (want > GEN_ROOM_LOCATION_CEILING) {
+        throw new Error(GEN_ROOM_REFUSALS.tagBudget(world.region_id ?? '?', want, GEN_ROOM_LOCATION_CEILING));
+    }
     const seats = seatsFor(world, rows);
     if (!seats.short) { seatRows(world, rows, seats.free); return; }
-    if (!Number.isInteger(world.drawnSeed)) throw new Error(locationsRefusal(world, rows, seats.free));
+    if (!Number.isInteger(world.drawnSeed)) throw new Error(locationsRefusal(world, rows, seats));
     const all = [...world.locations.map(rowOf), ...rows];
     const { room, bound, err, grown } = rerollGenRoom(world, [...world.exits.entries()], all,
         GEN_ROOM_REROLL_CAUSES.locations);
-    if (err) throw new Error(locationsRefusal(world, rows, seats.free, grown));
+    if (err) throw new Error(locationsRefusal(world, rows, seats, grown));
     // ⛓ G8: `size` too — a room that grew is the engine's world at its new size.
     for (const key of ['seed', 'size', 'record', 'start', 'goalCell', 'generation', 'summary']) world[key] = room[key];
     for (const [key, e] of bound) {

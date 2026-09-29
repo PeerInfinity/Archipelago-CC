@@ -37,7 +37,7 @@ import {
     botHonorsInstant, captureShapeOf, generationCostOf, regionRealiserKind, solverKindOf,
 } from './substratePredicates.js';
 import { declaredStartingNeeds } from './startingInventory.js';
-import { LOCATION_CAPACITY_KINDS, locationCapacityKind } from './locationCapacity.js';
+import { LOCATION_CAPACITY_KINDS, locationCapacityKind, locationCeiling } from './locationCapacity.js';
 import { SIDE_SHARING, sideMayHoldAnotherExit } from './exitSides.js';
 
 /** ⛓ The four groups, in reading order. */
@@ -144,7 +144,13 @@ export const CELL_WORDING = Object.freeze({
     sideSharing: 'and a side can hold more than one',
     malformedSides: (m) => `its exit-side declaration is malformed: ${m}`,
     capacityTiles: 'a room holds `capacityAt(size)` of them — the room grows to hold more',
+    capacityCeiling: (c) => `a room holds \`capacityAt(size)\` of them — the room grows to hold more, up to `
+        + `${c.locations}${c.why ? ` (${c.why})` : ''}, which no size lifts`,
 });
+
+/** ⛓ G9 — the room G8 asks a `tiles` declaration about its ceiling: the pipeline's default size, nothing in it. */
+const CEILING_PROBE_SIZE = Object.freeze({ width: 8, height: 6 });
+const CEILING_PROBE_DEMAND = Object.freeze({ locations: 0, gated: 0, exits: 0, listed: 0 });
 
 /** ⛓ How many item names P4 lists before it gives the count alone. */
 export const ITEM_NAME_LIMIT = 8;
@@ -398,8 +404,11 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         answer: (e) => {
             const kind = locationCapacityKind(e);
             if (kind === LOCATION_CAPACITY_KINDS.UNBOUNDED) return cell(CELL_KINDS.YES);
-            if (kind === LOCATION_CAPACITY_KINDS.TILES) return cell(CELL_KINDS.NO, CELL_WORDING.capacityTiles);
-            return cell(CELL_KINDS.NA);
+            if (kind !== LOCATION_CAPACITY_KINDS.TILES) return cell(CELL_KINDS.NA);
+            /* ⛓ G9 — a declared CEILING (a budget no size lifts) is named, asked at
+             * the probe room: the default size, no params, an empty demand. */
+            const ceiling = locationCeiling(e, CEILING_PROBE_SIZE, {}, CEILING_PROBE_DEMAND);
+            return cell(CELL_KINDS.NO, ceiling ? CELL_WORDING.capacityCeiling(ceiling) : CELL_WORDING.capacityTiles);
         },
     },
     {
