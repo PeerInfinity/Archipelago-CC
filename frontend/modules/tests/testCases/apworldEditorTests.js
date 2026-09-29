@@ -24,6 +24,7 @@
 
 import { registerTest } from '../testRegistry.js';
 import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { capabilityRows, cardOf, cardText } from '../../procgenCore/substrateCapabilities.js';
 import { deserializeRefusalSentence } from '../../procgenCore/deserializeRefusal.js';
 /** ⛓ H4b — the LAB door's host registry and the SET arm's envelope, so the row
  *  drives the real three-phase contract instead of waiting on an iframe. */
@@ -13610,6 +13611,101 @@ registerTest({
     name: 'APWorld hub: two bare slots of a classic multi-slot document initialised in turn (the second with loop mode) — each slot\'s own blocks, the first untouched, Map and loop-mode sentence per slot, Undo ×2',
     description: 'APWORLD SUBSTRATE CHANGE P1b′. See the row\'s docblock in apworldEditorTests.js.',
     testFunction: apworldTwoSlotsInitialiseInTurn,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ SUBSTRATE CHART S4 — THE HUB'S TWO SUBSTRATE PICKERS SHOW THE LABEL AND
+ * CARRY THE CARD (substrate-chart plan §6′.1 item 9, ⚖ the user 2026-09-28).
+ *
+ * The PICKER is the subject, the vocabulary module the oracle: every option's
+ * visible text is the live registry entry's `label`, its title
+ * `cardText(cardOf(entry, capabilityRows(getAll())))` computed HERE, and what
+ * it stores is unchanged — the sidecar select's value is still the enum index
+ * (its id on `data-enum-value`), the Initialise select's value the id. A
+ * closed select's title is the chosen option's card (W0 (a): Chromium shows an
+ * option's title on the OPEN list too; the select's own title covers the closed
+ * control and the browsers that ignore option titles). The row ends by closing
+ * the Initialise form it opened.
+ * ══════════════════════════════════════════════════════════════════════ */
+
+/** ⛓ The card text the vocabulary gives `id` over the LIVE registry. */
+const liveCardText = (id) => {
+    const entries = substrateRegistry.getAll();
+    const entry = substrateRegistry.get(id);
+    return entry ? cardText(cardOf(entry, capabilityRows(entries))) : null;
+};
+
+export async function apworldSubstratePickersShowLabelAndCard(testController) {
+    try {
+        /* ── (3) the sidecar block's `substrate` picker ── */
+        const slot = '3';
+        const disk = await (await fetch(FOUR_PLAYER_PATH)).json();
+        const region = Object.keys(disk.preset_sidecars?.[slot] ?? {})[0];
+        testController.reportCondition(`⛓ premise: slot ${slot} of the fixture holds a sidecar region (${region})`, !!region);
+        if (!region) return testController.getOverallResult();
+        const panel = await openHubOnDocument(testController, FOUR_PLAYER_PATH, slot, region);
+        if (!panel) return testController.getOverallResult();
+        testController.reportCondition(`slot ${slot} selected`, await onRegionsTabFor(testController, panel, slot));
+        await openSidecarJson(testController, region);
+        const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
+        testController.reportCondition('the entry\'s substrate row draws a select', picker?.tagName === 'SELECT');
+        if (!picker) return testController.getOverallResult();
+        const law = playableIdsFromRegistry();
+        const options = [...picker.options].filter((o) => !o.disabled);
+        testController.assertEqual('⛓ the options\' ids are the registry\'s playable ids, sorted (the value list unchanged)',
+            JSON.stringify(law), JSON.stringify(options.map((o) => o.dataset.enumValue)));
+        const bad = [];
+        options.forEach((o, i) => {
+            const entry = substrateRegistry.get(o.dataset.enumValue);
+            if (o.value !== String(i)) bad.push(`${o.dataset.enumValue}: value ${o.value} ≠ index ${i}`);
+            if (o.textContent !== (entry?.label ?? o.dataset.enumValue)) bad.push(`${o.dataset.enumValue}: text "${o.textContent}"`);
+            if (o.title !== liveCardText(o.dataset.enumValue)) bad.push(`${o.dataset.enumValue}: title is not its card`);
+        });
+        testController.reportCondition(`⛓⛓ every sidecar option shows its entry's label and hovers its card (${bad.join('; ') || 'all'})`,
+            bad.length === 0 && options.length > 0);
+        testController.reportCondition('⛓ non-vacuity: some label differs from its id',
+            options.some((o) => o.textContent !== o.dataset.enumValue));
+        const own = String(panel.rulesDoc.preset_sidecars[slot][region].substrate);
+        testController.reportCondition(`the select's title leads with the chosen substrate's (${own}) card, then the picker clause`,
+            picker.title.startsWith(`${liveCardText(own)}\n\n`) && picker.title.includes(SUBSTRATE_PICKER_CLAUSE));
+
+        /* ── (4) the Initialise form's target select ── */
+        const ini = await openInitialiseForm(testController, INIT_ADVENTURE_PATH);
+        if (!ini) return testController.getOverallResult();
+        const sub = () => initSection()?.querySelector('.apworld-initialise-substrate');
+        const targets = s1Targets();
+        testController.assertEqual('⛓ the Initialise options\' VALUES are initialiseTargets() (the ids, unchanged)',
+            JSON.stringify(targets), JSON.stringify([...sub().options].map((o) => o.value)));
+        const badIni = [...sub().options].filter((o) => o.textContent !== (substrateRegistry.get(o.value)?.label ?? o.value)
+            || o.title !== liveCardText(o.value)).map((o) => o.value);
+        testController.reportCondition(`⛓⛓ every Initialise option shows its entry's label and hovers its card (${badIni.join(', ') || 'all'})`,
+            badIni.length === 0 && targets.length > 0);
+        testController.assertEqual(`the select's title is the chosen target's (${sub().value}) card`,
+            String(liveCardText(sub().value)), sub().title);
+        const other = targets.find((t) => t !== sub().value);
+        testController.reportCondition(`⛓ premise: a second target to pick (${other})`, !!other);
+        if (other) {
+            sub().value = other;
+            sub().dispatchEvent(new Event('change', { bubbles: true }));
+            const moved = await testController.pollForCondition(() => ini._initialise?.state?.substrate === other
+                && sub()?.value === other, `the form holds \`${other}\``, 8000, 50);
+            testController.reportCondition(`the form stores the id \`${other}\``, moved);
+            testController.assertEqual(`…and the redrawn select's title is \`${other}\`'s card`,
+                String(liveCardText(other)), String(sub()?.title));
+        }
+    } finally {
+        initSection()?.querySelector('.apworld-initialise-close')?.click();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-substrate-pickers-show-label-and-card',
+    name: 'APWorld hub: the sidecar substrate picker and the Initialise target select show each entry\'s label and hover its capability card; the stored value is unchanged',
+    description: 'SUBSTRATE CHART S4. See the row\'s docblock in apworldEditorTests.js.',
+    testFunction: apworldSubstratePickersShowLabelAndCard,
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

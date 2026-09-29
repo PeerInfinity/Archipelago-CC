@@ -64,6 +64,7 @@ export const TEST_CASE_FILES = [
   './testCases/taswBlockModeTests.js',
   './testCases/apworldEditorTests.js',
   './testCases/substrateRegistryPanelTests.js',
+  './testCases/procgenPipelineTests.js',
   './testCases/quickLaunchTests.js',
   './testCases/storagePanelTests.js',
   //'./testCases/manualTests.js',

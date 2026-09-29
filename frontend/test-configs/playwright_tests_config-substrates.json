@@ -1065,6 +1065,12 @@
             "_comment": "P1b′. A DERIVED committed classic multi-slot document (every slot bare) and its two candidate slots (the layout places every reachable region; the largest room under the measured cliff bound): slot A initialised with loop mode OFF, slot B with loop mode ON, through the real controls; each slot's procgen_metadata[p]/loop_costs[p] = the op's result, no block under any other slot, slot A's blocks byte-identical after B's run, the Map per slot = its placed count, the Sidecars tab's loop-mode sentence names the selected slot; Undo x2 restores the document byte for byte."
         },
         {
+            "id": "apworld-substrate-pickers-show-label-and-card",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "SUBSTRATE CHART S4. The sidecar block's substrate picker (four-player fixture, slot 3) and the Initialise form's target select (adventure): every option's text is the live entry's label and its title cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the sidecar value is still the enum index (id on data-enum-value), the Initialise value the id; each select's title is the chosen option's card, and re-picking a target redraws it. Closes the Initialise form at the end."
+        },
+        {
             "id": "apworld-m3-a-non-menu-start-is-a-cell-and-the-menu",
             "enabled": true,
             "category": "apworldEditor",
@@ -1207,6 +1213,12 @@
             "enabled": true,
             "category": "substrateRegistry",
             "_comment": "SUBSTRATE CHART S2. The Plain mode: one row per capabilityRows(getAll()) statement, one cell per live entry, each cell's mark == CELL_MARKS[kind] of the vocabulary's answer, declared live answers overlaid, no console error. Restores Matrix mode at the end."
+        },
+        {
+            "id": "procgen-pipeline-substrate-rows-show-label-and-card",
+            "enabled": true,
+            "category": "procgenPipeline",
+            "_comment": "SUBSTRATE CHART S4. The pipeline's Substrates (click to add) rows, a selected row and the sphere per-region override options show the live entry's label and hover cardText(cardOf(entry, capabilityRows(getAll()))) computed in the row; the stored value stays the id. Category procgenPipeline is claimed by no batch, so it runs in the default batch (fast). Restores the Scenario Pool collapse state and the active substrate dict."
         }
     ]
 }
