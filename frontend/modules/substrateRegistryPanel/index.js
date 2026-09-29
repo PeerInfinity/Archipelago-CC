@@ -21,7 +21,7 @@ export const moduleInfo = {
     icon: '🗂️',
     column: 3,
     category: 'Procgen Infrastructure Panels',
-    description: 'Shows every registered substrate in three modes: Plain (what each one can do, in plain statements), Matrix (a feature matrix of its registry fields) and Detail (per-entry values, live answers and drift from the saved snapshot).',
+    description: 'Shows every registered substrate in three modes: Plain (the default — what each one can do, in plain statements), Matrix (a feature matrix of its registry fields) and Detail (per-entry values, live answers and drift from the saved snapshot).',
     /** ⛔ Nothing: the registry is an import, not a module dependency. */
     requires: [],
 };

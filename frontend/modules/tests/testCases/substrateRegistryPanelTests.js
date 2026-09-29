@@ -9,12 +9,12 @@
  * the test presses the panel's own Refresh before counting — the registry has
  * no change event, so a panel mounted at boot shows the boot-time registry.
  *
- * ⛓ The panel opens in its MATRIX mode; the Detail row presses `Detail` first,
- * the Matrix row presses `Matrix` first — each is green whatever mode the row
- * before it left the panel in. The Columns row ends (pass or fail) by pressing
- * `All` and `Registry order` and closing the section, so the row after it
- * inherits the default columns. The Plain row presses `Plain` and ends (pass or
- * fail) by pressing `Matrix`, the mode the panel opens in.
+ * ⛓ ⚖ EVERY ROW SETS ITS OWN MODE AND RESTORES THE DEFAULT: each presses the
+ * mode it needs first (so it is green whatever the row before it left) and
+ * ends, pass or fail, by pressing `DEFAULT_MODE` (Plain since substrate chart
+ * S3) — never by assuming which mode the panel opened in. The Columns row also
+ * ends by pressing `All` and `Registry order` and closing the section, so the
+ * row after it inherits the default columns.
  */
 
 import { registerTest } from '../testRegistry.js';
@@ -27,7 +27,7 @@ import {
     applyLiveAnswer, CAPABILITY_STATEMENTS, capabilityRows, CELL_MARKS, CELL_KINDS,
 } from '../../procgenCore/substrateCapabilities.js';
 import {
-    COLUMN_ACTIONS, columnsSummary, MODES,
+    COLUMN_ACTIONS, columnsSummary, DEFAULT_MODE, MODES,
 } from '../../substrateRegistryPanel/substrateRegistryPanelUI.js';
 
 /** Activate the panel and wait for its bar; null when it never appeared. */
@@ -43,6 +43,14 @@ async function mountPanel(testController) {
     return mounted ? document.querySelector('.substrate-registry-panel') : null;
 }
 
+/** End a row: press the DEFAULT mode's button and report that it is the pressed one. */
+function restoreDefaultMode(testController, root) {
+    root?.querySelector(`.srp-mode[data-mode="${DEFAULT_MODE}"]`)?.click();
+    const pressed = root?.querySelector('.srp-mode[aria-pressed="true"]')?.dataset.mode;
+    testController.reportCondition(`the panel is back in its default mode (${DEFAULT_MODE}; pressed: ${pressed})`,
+        pressed === DEFAULT_MODE);
+}
+
 /** Press a mode button; reports whether the panel has one for it. */
 function pressMode(testController, root, mode) {
     const b = root.querySelector(`.srp-mode[data-mode="${mode}"]`);
@@ -53,7 +61,17 @@ function pressMode(testController, root, mode) {
 
 async function substrateRegistryPanelShowsEveryEntry(testController) {
     const root = await mountPanel(testController);
-    if (!root || !pressMode(testController, root, MODES.detail)) return testController.getOverallResult();
+    if (!root) return testController.getOverallResult();
+    try {
+        if (!pressMode(testController, root, MODES.detail)) return testController.getOverallResult();
+        showsEveryEntry(testController, root);
+    } finally {
+        restoreDefaultMode(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
+function showsEveryEntry(testController, root) {
     root.querySelector('.srp-refresh').click();
 
     const live = substrateRegistry.getAll().map((e) => e.id);
@@ -73,8 +91,6 @@ async function substrateRegistryPanelShowsEveryEntry(testController) {
     const drift = root.querySelector('.srp-drift')?.textContent ?? '';
     testController.log(`drift block: ${drift}`);
     testController.reportCondition('the drift block says something', drift.length > 0);
-
-    return testController.getOverallResult();
 }
 
 registerTest({
@@ -94,14 +110,24 @@ const isCellText = (t) => t === GLYPH.yes || t === GLYPH.no || /^\d+$/.test(t);
 
 async function substrateRegistryPanelMatrixHasAColumnPerEntry(testController) {
     const root = await mountPanel(testController);
-    if (!root || !pressMode(testController, root, MODES.matrix)) return testController.getOverallResult();
+    if (!root) return testController.getOverallResult();
+    try {
+        if (!pressMode(testController, root, MODES.matrix)) return testController.getOverallResult();
+        matrixHasAColumnPerEntry(testController, root);
+    } finally {
+        restoreDefaultMode(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
+function matrixHasAColumnPerEntry(testController, root) {
     root.querySelector('.srp-refresh').click();
 
     const entries = substrateRegistry.getAll();
     const live = entries.map((e) => e.id);
     const table = root.querySelector('table.srp-matrix');
     testController.reportCondition('the matrix table is drawn', table !== null);
-    if (!table) return testController.getOverallResult();
+    if (!table) return;
 
     const header = [...table.querySelectorAll('thead th.srp-matrix-col')].map((th) => th.textContent);
     testController.assertEqual('matrix header == substrateRegistry.getAll() ids, in order',
@@ -118,8 +144,6 @@ async function substrateRegistryPanelMatrixHasAColumnPerEntry(testController) {
     testController.assertEqual('cells == rows × columns', expected.length * live.length, cells.length);
     const odd = cells.map((td) => td.textContent).filter((t) => !isCellText(t));
     testController.assertEqual('every cell is ✓, ✗ or an integer (the others)', '', [...new Set(odd)].join(' | '));
-
-    return testController.getOverallResult();
 }
 
 registerTest({
@@ -139,12 +163,22 @@ const headerIds = (root) => [...root.querySelectorAll('table.srp-matrix thead th
 
 async function substrateRegistryPanelColumnsCanBeHiddenAndReordered(testController) {
     const root = await mountPanel(testController);
-    if (!root || !pressMode(testController, root, MODES.matrix)) return testController.getOverallResult();
+    if (!root) return testController.getOverallResult();
+    try {
+        if (!pressMode(testController, root, MODES.matrix)) return testController.getOverallResult();
+        columnsCanBeHiddenAndReordered(testController, root);
+    } finally {
+        restoreDefaultMode(testController, root);
+    }
+    return testController.getOverallResult();
+}
+
+function columnsCanBeHiddenAndReordered(testController, root) {
     root.querySelector('.srp-refresh').click();
 
     const controls = root.querySelector('details.srp-controls');
     testController.reportCondition('the matrix has a Columns section', controls !== null);
-    if (!controls) return testController.getOverallResult();
+    if (!controls) return;
     const action = (name, scope = controls) => scope.querySelector(`button[data-action="${name}"]`);
     try {
         testController.reportCondition('the Columns section is closed by default', !controls.open);
@@ -153,7 +187,7 @@ async function substrateRegistryPanelColumnsCanBeHiddenAndReordered(testControll
         const live = substrateRegistry.getAll().map((e) => e.id);
         testController.log(`live registry: ${live.length} entries — ${live.join(', ')}`);
         testController.reportCondition('the live registry has at least three entries', live.length >= 3);
-        if (live.length < 3) return testController.getOverallResult();
+        if (live.length < 3) return;
         testController.assertEqual('before: header == live ids, in order', live.join(', '),
             headerIds(root).join(', '));
         testController.assertEqual('summary counts every column shown', columnsSummary(live.length, live.length),
@@ -194,7 +228,6 @@ async function substrateRegistryPanelColumnsCanBeHiddenAndReordered(testControll
     const live = substrateRegistry.getAll().map((e) => e.id);
     testController.assertEqual('after All + Registry order: header == live ids, in order', live.join(', '),
         headerIds(root).join(', '));
-    return testController.getOverallResult();
 }
 
 registerTest({
@@ -291,13 +324,11 @@ async function substrateRegistryPanelPlainMode(testController) {
         console.error = origError;
         window.removeEventListener('error', onError);
         window.removeEventListener('unhandledrejection', onRejection);
-        root.querySelector(`.srp-mode[data-mode="${MODES.matrix}"]`)?.click();
+        restoreDefaultMode(testController, root);
     }
     const seen = [...errors];
     testController.assertEqual('no console error / page error during the row', '0', String(seen.length));
     for (const e of seen.slice(0, 5)) testController.log(`error seen: ${e}`, 'error');
-    testController.reportCondition('the panel is back in Matrix mode',
-        root.querySelector('table.srp-matrix') !== null && root.querySelector('table.srp-plain') === null);
     return testController.getOverallResult();
 }
 
@@ -308,7 +339,7 @@ registerTest({
                + '`capabilityRows(substrateRegistry.getAll())` statement, one cell per live entry, each '
                + 'cell\'s mark the vocabulary\'s `CELL_MARKS[kind]`, every declared live answer overlaid '
                + '(`applyLiveAnswer` over the panel\'s own view-model), and no console error; then '
-               + 'restores the Matrix mode. The module is the oracle, the panel the subject.',
+               + 'restores the panel\'s default mode. The module is the oracle, the panel the subject.',
     testFunction: substrateRegistryPanelPlainMode,
     category: 'substrateRegistry',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)

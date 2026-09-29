@@ -16,7 +16,8 @@
  * substrate CAN do; a restriction is inverted (L8, G3, G7) and its detail rides
  * on the *no* cell's text, read off the declaration. A statement may declare
  * `requires: '<id>'`: where the prerequisite answers *no*, the cell reads
- * **n/a** rather than a vacuous ✓.
+ * **n/a** rather than a vacuous ✓; a statement's own answer may also be n/a
+ * where the question has no answer for that substrate (G2, L7).
  *
  * ⛓ The predicates are the app's own where the app has one
  * (`substratePredicates.js`, `startingInventory.js`, `exitSides.js`), so a chart
@@ -30,7 +31,7 @@
  */
 
 import { cellOf, digTwo } from '../procgenDocs/registryShape.js';
-import { DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import {
     CAPTURE_SHAPES, GENERATION_COST, REALISER_KINDS, SOLVER_KINDS,
     botHonorsInstant, captureShapeOf, generationCostOf, regionRealiserKind, solverKindOf,
@@ -61,23 +62,27 @@ export const CELL_MARKS = Object.freeze({
 /**
  * ⛓ THE LIVE ANSWERS a statement may declare (`live: LIVE_ANSWERS.x`) where its
  * headless answer is a stand-in for what only a running app can say. The values
- * ARE the keys of the Substrate Registry panel's `vm.answers[id]`
+ * ARE keys of the Substrate Registry panel's `vm.answers[id]`
  * (`substrateRegistryPanelLibrary.js` `describeRegistry`), so the panel overlays
  * a cell by `answers[entry.id][statement.live]` — by declaration, never by
  * statement id. The generated page has no running app and prints the stand-in.
+ * (P2 declared `playbackController` until substrate chart S3: every declared
+ * controller answered *mounted* in every layout measured, so the overlay said
+ * what the ✓ already said — ⚖ the user, 2026-09-28, plan §6′.1 item 7.)
  */
-export const LIVE_ANSWERS = Object.freeze({ itemTypes: 'itemTypes', playbackController: 'playbackController' });
+export const LIVE_ANSWERS = Object.freeze({ itemTypes: 'itemTypes' });
 
-/** ⛓ The `playbackController` live answers `applyLiveAnswer` refines a cell by. */
-export const PLAYBACK_LIVE = Object.freeze({ controller: 'controller', none: 'null', absent: 'absent' });
+/** ⛓ How many item-type names a cell shows before `…`; the full list rides on the cell's `list`. */
+export const LIST_PREVIEW = 3;
 
 /** ⛓ The feature id of an item-locked gate — the shared obstacle library's own. */
 export const LOGIC_GATE_FEATURE = DEFAULT_OBSTACLES.logic_gate.feature;
 
 /**
- * ⛓ The `supportedFeatures` ids in words (P4). A missing id renders as the id
+ * ⛓ The `supportedFeatures` ids in words (P5). A missing id renders as the id
  * itself — `featureWords` — and the vitest names it as a warning, so a new
- * feature id cannot red CI by existing.
+ * feature id cannot red CI by existing. An id that is an ITEM TAG
+ * (`itemTagFeatures`) never reaches P5 — P4 names its items instead.
  */
 export const FEATURE_WORDING = Object.freeze({
     [LOGIC_GATE_FEATURE]: 'item-locked gates',
@@ -87,8 +92,6 @@ export const FEATURE_WORDING = Object.freeze({
     arbitrary_ap_locations: 'locations placed anywhere',
     arbitrary_location_rules: 'any rule on a location',
     arbitrary_exit_rules: 'any rule on an exit',
-    bounce_abilities: 'movement abilities',
-    runner_abilities: 'runner abilities',
 });
 
 /** ⛓ The loops queue action types in words (L2); a missing one renders as itself. */
@@ -127,9 +130,10 @@ export const ROOM_EDITOR_WORDING = Object.freeze({
 export const CELL_WORDING = Object.freeze({
     instantAlways: 'always — a replay is already instant',
     instantToggle: 'a per-block toggle',
-    itemsOfItsOwn: (n) => `${n} item${n === 1 ? '' : 's'} of its own`,
+    itemCount: (n) => `${n} item${n === 1 ? '' : 's'}`,
     itemTypes: (n) => `${n} item type${n === 1 ? '' : 's'}`,
-    itemTypesListed: (types) => `${CELL_WORDING.itemTypes(types.length)}${types.length ? `: ${types.join(', ')}` : ''}`,
+    itemTypesPreview: (types) => `${CELL_WORDING.itemTypes(types.length)}${types.length
+        ? `: ${types.slice(0, LIST_PREVIEW).join(', ')}${types.length > LIST_PREVIEW ? ', …' : ''}` : ''}`,
     itemTypesLive: 'its list comes from the running game — see the Substrate Registry panel',
     loopModeOnly: (field) => `loop mode stays on — it declares \`${field}\``,
     realiserNone: 'only as content from its own game',
@@ -138,9 +142,10 @@ export const CELL_WORDING = Object.freeze({
     onePerSide: 'one exit per side',
     sideSharing: 'and a side can hold more than one',
     malformedSides: (m) => `its exit-side declaration is malformed: ${m}`,
-    controllerMounted: 'a controller is mounted now',
-    noPanelMounted: 'no panel mounted now',
 });
+
+/** ⛓ How many item names P4 lists before it gives the count alone. */
+export const ITEM_NAME_LIMIT = 8;
 
 /** ⛓ The field whose `true` keeps loop mode on (L8). */
 export const REQUIRES_LOOP_MODE_FIELD = 'loopSupport.requiresLoopMode';
@@ -149,7 +154,35 @@ export const REQUIRES_LOOP_MODE_FIELD = 'loopSupport.requiresLoopMode';
 export const featureWords = (id) => FEATURE_WORDING[id] ?? id;
 
 const isFn = (v) => typeof v === 'function';
+
+/**
+ * ⛓ **AN ENTRY'S PROGRESSION ITEMS** (P4) — its own `libraryItems` (the name is
+ * the value's `name`, else its key) and then every shared library item whose
+ * `feature` the entry lists in `supportedFeatures` (so a substrate that supports
+ * the coloured keys gets the shared keys). `{name, feature}` each, own first.
+ */
+export function progressionItemsOf(entry, sharedItems = DEFAULT_ITEMS) {
+    const features = Array.isArray(entry?.supportedFeatures) ? entry.supportedFeatures : [];
+    const own = Object.entries(entry?.libraryItems ?? {})
+        .map(([key, item]) => ({ name: item?.name ?? key, feature: item?.feature ?? null }));
+    const shared = Object.values(sharedItems ?? {})
+        .filter((item) => features.includes(item.feature))
+        .map((item) => ({ name: item.name ?? item.id, feature: item.feature }));
+    return [...own, ...shared];
+}
+
+/**
+ * ⛓ **THE ITEM TAGS, DERIVED** — the feature ids carried by ≥1 of the entry's
+ * progression items (`progressionItemsOf`), in first-seen order. These are the
+ * `supportedFeatures` ids P5 leaves out: the items themselves say which ids are
+ * tags, so no list of tag ids is kept here.
+ */
+export function itemTagFeatures(entry, sharedItems = DEFAULT_ITEMS) {
+    return [...new Set(progressionItemsOf(entry, sharedItems).map((i) => i.feature).filter(Boolean))];
+}
 const cell = (kind, text = null) => ({ kind, text });
+/** ⛓ An item-type list as a cell: the count and the first `LIST_PREVIEW` names, the whole list as `list`. */
+const itemTypesCell = (types) => ({ ...cell(CELL_KINDS.YES, CELL_WORDING.itemTypesPreview(types)), list: types });
 const yesNo = (b, noText = null) => (b ? cell(CELL_KINDS.YES) : cell(CELL_KINDS.NO, noText));
 
 /**
@@ -166,7 +199,7 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         answer: (e) => yesNo(typeof e.panelComponentType === 'string' && isFn(e.deserializeWorld)),
     },
     {
-        id: 'P2', group: 'play', live: LIVE_ANSWERS.playbackController,
+        id: 'P2', group: 'play',
         statement: "The Playback Bot can walk it (replaying a world's solution)",
         fields: ['getPlaybackController'],
         answer: (e) => yesNo(isFn(e.getPlaybackController)),
@@ -178,13 +211,23 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         answer: (e) => yesNo(isFn(e.compositeMap?.drawRegion)),
     },
     {
-        id: 'P4', group: 'play', universal: true,
-        statement: 'What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)',
-        fields: ['supportedFeatures', 'libraryItems'],
+        id: 'P4', group: 'play',
+        statement: 'It brings progression items of its own',
+        fields: ['libraryItems', 'supportedFeatures'],
         answer: (e) => {
-            const words = (e.supportedFeatures ?? []).map(featureWords);
-            const n = Object.keys(e.libraryItems ?? {}).length;
-            if (n > 0) words.push(CELL_WORDING.itemsOfItsOwn(n));
+            const names = progressionItemsOf(e).map((i) => i.name);
+            if (!names.length) return cell(CELL_KINDS.NO);
+            return cell(CELL_KINDS.YES, names.length <= ITEM_NAME_LIMIT
+                ? names.join(', ') : CELL_WORDING.itemCount(names.length));
+        },
+    },
+    {
+        id: 'P5', group: 'play', universal: true,
+        statement: 'What the generator may do with it',
+        fields: ['supportedFeatures'],
+        answer: (e) => {
+            const tags = new Set(itemTagFeatures(e));
+            const words = (e.supportedFeatures ?? []).filter((id) => !tags.has(id)).map(featureWords);
             return words.length ? cell(CELL_KINDS.YES, words.join(', ')) : cell(CELL_KINDS.NO);
         },
     },
@@ -239,8 +282,11 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
     {
         id: 'L7', group: 'loop', requires: 'L6',
         statement: 'The Bot honours Instant',
-        fields: ['loopSupport.instant', 'loopSupport.executeVia', 'takeLastRecording'],
-        answer: (e) => yesNo(botHonorsInstant(e)),
+        fields: ['loopSupport.instant', 'loopSupport.executeVia', 'takeLastRecording', 'loopSupport.summaryRecording'],
+        /* ⛓ n/a where a replay is a summary: its Instant is *always* (L5
+         * says so), so there is no toggle for the Bot to honour. */
+        answer: (e) => (captureShapeOf(e) === CAPTURE_SHAPES.SUMMARY
+            ? cell(CELL_KINDS.NA) : yesNo(botHonorsInstant(e))),
     },
     {
         id: 'L8', group: 'loop',
@@ -261,7 +307,7 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         answer: (e) => {
             const items = e.sharing?.items;
             if (!items || typeof items !== 'object') return cell(CELL_KINDS.NO);
-            if (Array.isArray(items.types)) return cell(CELL_KINDS.YES, CELL_WORDING.itemTypes(items.types.length));
+            if (Array.isArray(items.types)) return itemTypesCell(items.types.map(String));
             return cell(CELL_KINDS.YES, CELL_WORDING.itemTypesLive);
         },
     },
@@ -284,8 +330,11 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
     {
         id: 'G2', group: 'generate',
         statement: 'How many ready-made rooms / levels it brings',
-        fields: ['zoneCount', 'zoneSourceLabel'],
+        fields: ['zoneCount', 'zoneSourceLabel', 'generateRegionCore'],
+        /* ⛓ n/a where the pipeline grows its rooms to order (G1): there is no
+         * ready-made set to count. ✗ only where nothing is declared. */
         answer: (e) => {
+            if (regionRealiserKind(e) === REALISER_KINDS.PROCEDURAL) return cell(CELL_KINDS.NA);
             const n = e.zoneCount;
             if (typeof n !== 'number' || n <= 0) return cell(CELL_KINDS.NO);
             const noun = typeof e.zoneSourceLabel === 'string' ? ` ${e.zoneSourceLabel}${n === 1 ? '' : 's'}` : '';
@@ -347,7 +396,7 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
     },
     {
         id: 'E2', group: 'edit',
-        statement: 'A region of a saved world round-trips through that editor',
+        statement: 'A region of a saved world can be opened in an editor and saved back',
         fields: ['regionRoundTrip'],
         answer: (e) => {
             const rt = e.regionRoundTrip;
@@ -378,14 +427,13 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
 
 /**
  * ⛓ **A LIVE ANSWER OVER A CELL** — pure: a NEW cell, the input untouched. The
- * KIND is the declaration's (a substrate that declares the hook but has no
- * panel open is still ✓); the live answer refines only the TEXT, and the new
- * cell carries `live: {key, value}` so a renderer can show the raw answer.
- * - `itemTypes`: an array → *<n> item types: a, b, …* on a ✓ cell; anything
- *   else a `describeRegistry` produces (`'absent'`) → unchanged.
- * - `playbackController`: `'controller'` / `'null'` → the mounted / not-mounted
- *   wording; `'absent'` → unchanged; any other string (a `threw: …` or a
- *   `returned …`) → that string as the text.
+ * KIND is the declaration's; the live answer refines only the TEXT (and the
+ * `list`), and the new cell carries `live: {key, value}` so a renderer can show
+ * the raw answer.
+ * - `itemTypes`: an array → the same cell a static `types` list makes
+ *   (`itemTypesCell`: *<n> item types: a, b, c, …*, the whole list as `list`)
+ *   on a ✓ cell; anything else a `describeRegistry` produces (`'absent'`, a
+ *   `threw: …`) → unchanged.
  * An `n/a` cell, an undeclared statement and a missing answer are unchanged.
  *
  * @param {{kind: string, text: string|null}} cell
@@ -396,16 +444,9 @@ export function applyLiveAnswer(cell, statement, answer) {
     const key = statement?.live;
     if (!key || answer === undefined || cell.kind === CELL_KINDS.NA) return cell;
     const value = Array.isArray(answer) ? answer.join(', ') : String(answer);
-    const refined = (text) => ({ ...cell, text, live: { key, value } });
     if (key === LIVE_ANSWERS.itemTypes) {
         if (!Array.isArray(answer) || cell.kind !== CELL_KINDS.YES) return cell;
-        return refined(CELL_WORDING.itemTypesListed(answer.map(String)));
-    }
-    if (key === LIVE_ANSWERS.playbackController) {
-        if (answer === PLAYBACK_LIVE.absent || typeof answer !== 'string') return cell;
-        if (answer === PLAYBACK_LIVE.controller) return refined(CELL_WORDING.controllerMounted);
-        if (answer === PLAYBACK_LIVE.none) return refined(CELL_WORDING.noPanelMounted);
-        return refined(answer);
+        return { ...cell, ...itemTypesCell(answer.map(String)), live: { key, value } };
     }
     return cell;
 }
@@ -420,7 +461,7 @@ const whyOf = (entry, fields) => fields.map((field) => ({ field, value: cellOf(d
  *
  * @param {object[]} entries registry entries
  * @returns {{group: string, id: string, statement: string, fields: string[],
- *   cells: {id: string, kind: string, text: string|null, why: {field: string, value: string}[]}[]}[]}
+ *   cells: {id: string, kind: string, text: string|null, why: {field: string, value: string}[], list?: string[]}[]}[]}
  */
 export function capabilityRows(entries) {
     const order = CAPABILITY_GROUPS.map((g) => g.id);
@@ -436,7 +477,9 @@ export function capabilityRows(entries) {
                 return { id: entry.id, kind: CELL_KINDS.NA, text: null, why };
             }
             const a = s.answer(entry);
-            return { id: entry.id, kind: a.kind, text: a.text ?? null, why };
+            const out = { id: entry.id, kind: a.kind, text: a.text ?? null, why };
+            if (a.list) out.list = [...a.list];
+            return out;
         });
         const row = { group: s.group, id: s.id, statement: s.statement, fields: [...s.fields], cells };
         byId.set(s.id, row);

@@ -43,8 +43,13 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
-                    "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
-                    "text": "item-locked gates, coloured keys and doors, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit"
+                    "statement": "It brings progression items of its own",
+                    "text": "Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key"
+                },
+                {
+                    "group": "play",
+                    "statement": "What the generator may do with it",
+                    "text": "item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit"
                 },
                 {
                     "group": "loop",
@@ -128,7 +133,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "edit",
-                    "statement": "A region of a saved world round-trips through that editor",
+                    "statement": "A region of a saved world can be opened in an editor and saved back",
                     "text": null
                 },
                 {
@@ -149,7 +154,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
-                    "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
+                    "statement": "What the generator may do with it",
                     "text": "locations placed anywhere"
                 },
                 {
@@ -195,8 +200,13 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
-                    "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
-                    "text": "locations placed anywhere, movement abilities, 7 items of its own"
+                    "statement": "It brings progression items of its own",
+                    "text": "Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory"
+                },
+                {
+                    "group": "play",
+                    "statement": "What the generator may do with it",
+                    "text": "locations placed anywhere"
                 },
                 {
                     "group": "loop",
@@ -270,7 +280,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "edit",
-                    "statement": "A region of a saved world round-trips through that editor",
+                    "statement": "A region of a saved world can be opened in an editor and saved back",
                     "text": null
                 },
                 {
@@ -301,8 +311,13 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
-                    "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
-                    "text": "locations placed anywhere, runner abilities, 6 items of its own"
+                    "statement": "It brings progression items of its own",
+                    "text": "Double Jump, Blue Platforms, Springs, Glide, Shield, Victory"
+                },
+                {
+                    "group": "play",
+                    "statement": "What the generator may do with it",
+                    "text": "locations placed anywhere"
                 },
                 {
                     "group": "loop",
@@ -402,7 +417,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
-                    "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
+                    "statement": "What the generator may do with it",
                     "text": "item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit"
                 },
                 {
@@ -462,7 +477,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "edit",
-                    "statement": "A region of a saved world round-trips through that editor",
+                    "statement": "A region of a saved world can be opened in an editor and saved back",
                     "text": null
                 },
                 {
@@ -488,7 +503,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
-                    "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
+                    "statement": "What the generator may do with it",
                     "text": "locations placed anywhere"
                 },
                 {
@@ -559,7 +574,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
-                    "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
+                    "statement": "What the generator may do with it",
                     "text": "locations placed anywhere"
                 },
                 {
@@ -635,8 +650,13 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
-                    "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
-                    "text": "its own map becomes the region graph, locations placed anywhere, 48 items of its own"
+                    "statement": "It brings progression items of its own",
+                    "text": "48 items"
+                },
+                {
+                    "group": "play",
+                    "statement": "What the generator may do with it",
+                    "text": "its own map becomes the region graph, locations placed anywhere"
                 },
                 {
                     "group": "loop",
@@ -726,8 +746,13 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
-                    "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
-                    "text": "its own map becomes the region graph, locations placed anywhere, 1 item of its own"
+                    "statement": "It brings progression items of its own",
+                    "text": "Victory"
+                },
+                {
+                    "group": "play",
+                    "statement": "What the generator may do with it",
+                    "text": "its own map becomes the region graph, locations placed anywhere"
                 },
                 {
                     "group": "loop",
@@ -772,7 +797,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "loop",
                     "statement": "It shares consumable items with other substrates",
-                    "text": "18 item types"
+                    "text": "18 item types: gold, reputation, herbs, …"
                 },
                 {
                     "group": "loop",
@@ -844,7 +869,7 @@ export const CAPABILITIES = frz({
         "fields": 82,
         "fieldsRead": 35,
         "fieldsUnread": 44,
-        "statements": 26,
+        "statements": 27,
         "substrates": 9
     },
     "fieldsRead": [
@@ -892,7 +917,8 @@ export const CAPABILITIES = frz({
                 "P1",
                 "P2",
                 "P3",
-                "P4"
+                "P4",
+                "P5"
             ]
         },
         {
@@ -1306,15 +1332,157 @@ export const CAPABILITIES = frz({
                 {
                     "id": "maze",
                     "kind": "yes",
-                    "text": "item-locked gates, coloured keys and doors, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit",
+                    "text": "Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key",
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "—"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "7 items"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "—"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "arbitrary_ap_locations"
+                        }
+                    ]
+                },
+                {
+                    "id": "bounce",
+                    "kind": "yes",
+                    "text": "Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory",
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "7 keys"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "arbitrary_ap_locations, bounce_abilities"
+                        }
+                    ]
+                },
+                {
+                    "id": "runner",
+                    "kind": "yes",
+                    "text": "Double Jump, Blue Platforms, Springs, Glide, Shield, Victory",
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "6 keys"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "arbitrary_ap_locations, runner_abilities"
+                        }
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "—"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "6 items"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "—"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "arbitrary_ap_locations"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "—"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "arbitrary_ap_locations"
+                        }
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "kind": "yes",
+                    "text": "48 items",
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "48 keys"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "2 items"
+                        }
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "kind": "yes",
+                    "text": "Victory",
+                    "why": [
+                        {
+                            "field": "libraryItems",
+                            "value": "{Victory}"
+                        },
+                        {
+                            "field": "supportedFeatures",
+                            "value": "2 items"
+                        }
+                    ]
+                }
+            ],
+            "fields": [
+                "libraryItems",
+                "supportedFeatures"
+            ],
+            "group": "play",
+            "id": "P4",
+            "statement": "It brings progression items of its own"
+        },
+        {
+            "cells": [
+                {
+                    "id": "maze",
+                    "kind": "yes",
+                    "text": "item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit",
                     "why": [
                         {
                             "field": "supportedFeatures",
                             "value": "7 items"
-                        },
-                        {
-                            "field": "libraryItems",
-                            "value": "—"
                         }
                     ]
                 },
@@ -1326,40 +1494,28 @@ export const CAPABILITIES = frz({
                         {
                             "field": "supportedFeatures",
                             "value": "arbitrary_ap_locations"
-                        },
-                        {
-                            "field": "libraryItems",
-                            "value": "—"
                         }
                     ]
                 },
                 {
                     "id": "bounce",
                     "kind": "yes",
-                    "text": "locations placed anywhere, movement abilities, 7 items of its own",
+                    "text": "locations placed anywhere",
                     "why": [
                         {
                             "field": "supportedFeatures",
                             "value": "arbitrary_ap_locations, bounce_abilities"
-                        },
-                        {
-                            "field": "libraryItems",
-                            "value": "7 keys"
                         }
                     ]
                 },
                 {
                     "id": "runner",
                     "kind": "yes",
-                    "text": "locations placed anywhere, runner abilities, 6 items of its own",
+                    "text": "locations placed anywhere",
                     "why": [
                         {
                             "field": "supportedFeatures",
                             "value": "arbitrary_ap_locations, runner_abilities"
-                        },
-                        {
-                            "field": "libraryItems",
-                            "value": "6 keys"
                         }
                     ]
                 },
@@ -1371,10 +1527,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "supportedFeatures",
                             "value": "6 items"
-                        },
-                        {
-                            "field": "libraryItems",
-                            "value": "—"
                         }
                     ]
                 },
@@ -1386,10 +1538,6 @@ export const CAPABILITIES = frz({
                         {
                             "field": "supportedFeatures",
                             "value": "arbitrary_ap_locations"
-                        },
-                        {
-                            "field": "libraryItems",
-                            "value": "—"
                         }
                     ]
                 },
@@ -1401,51 +1549,38 @@ export const CAPABILITIES = frz({
                         {
                             "field": "supportedFeatures",
                             "value": "arbitrary_ap_locations"
-                        },
-                        {
-                            "field": "libraryItems",
-                            "value": "—"
                         }
                     ]
                 },
                 {
                     "id": "jta",
                     "kind": "yes",
-                    "text": "its own map becomes the region graph, locations placed anywhere, 48 items of its own",
+                    "text": "its own map becomes the region graph, locations placed anywhere",
                     "why": [
                         {
                             "field": "supportedFeatures",
                             "value": "2 items"
-                        },
-                        {
-                            "field": "libraryItems",
-                            "value": "48 keys"
                         }
                     ]
                 },
                 {
                     "id": "omsi",
                     "kind": "yes",
-                    "text": "its own map becomes the region graph, locations placed anywhere, 1 item of its own",
+                    "text": "its own map becomes the region graph, locations placed anywhere",
                     "why": [
                         {
                             "field": "supportedFeatures",
                             "value": "2 items"
-                        },
-                        {
-                            "field": "libraryItems",
-                            "value": "{Victory}"
                         }
                     ]
                 }
             ],
             "fields": [
-                "supportedFeatures",
-                "libraryItems"
+                "supportedFeatures"
             ],
             "group": "play",
-            "id": "P4",
-            "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)"
+            "id": "P5",
+            "statement": "What the generator may do with it"
         },
         {
             "cells": [
@@ -2267,6 +2402,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "fn"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2286,12 +2425,16 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 },
                 {
                     "id": "bounce",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -2305,12 +2448,16 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "yes"
                         }
                     ]
                 },
                 {
                     "id": "runner",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -2324,6 +2471,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "yes"
                         }
                     ]
                 },
@@ -2342,6 +2493,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "takeLastRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
                             "value": "—"
                         }
                     ]
@@ -2362,6 +2517,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2380,6 +2539,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "takeLastRecording",
+                            "value": "—"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
                             "value": "—"
                         }
                     ]
@@ -2400,6 +2563,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "fn"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 },
@@ -2419,6 +2586,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "takeLastRecording",
                             "value": "fn"
+                        },
+                        {
+                            "field": "loopSupport.summaryRecording",
+                            "value": "—"
                         }
                     ]
                 }
@@ -2426,7 +2597,8 @@ export const CAPABILITIES = frz({
             "fields": [
                 "loopSupport.instant",
                 "loopSupport.executeVia",
-                "takeLastRecording"
+                "takeLastRecording",
+                "loopSupport.summaryRecording"
             ],
             "group": "loop",
             "id": "L7",
@@ -2743,7 +2915,27 @@ export const CAPABILITIES = frz({
                 {
                     "id": "omsi",
                     "kind": "yes",
-                    "text": "18 item types",
+                    "list": [
+                        "gold",
+                        "reputation",
+                        "herbs",
+                        "hide",
+                        "potions",
+                        "teamMembers",
+                        "armor",
+                        "blood",
+                        "artifacts",
+                        "favors",
+                        "enchantments",
+                        "houses",
+                        "pylons",
+                        "zombie",
+                        "map",
+                        "completedMap",
+                        "heart",
+                        "power"
+                    ],
+                    "text": "18 item types: gold, reputation, herbs, …",
                     "why": [
                         {
                             "field": "sharing.items",
@@ -3055,7 +3247,7 @@ export const CAPABILITIES = frz({
             "cells": [
                 {
                     "id": "maze",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -3065,6 +3257,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "fn"
                         }
                     ]
                 },
@@ -3079,6 +3275,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "zoneSourceLabel",
+                            "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
                             "value": "—"
                         }
                     ]
@@ -3095,6 +3295,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
                         }
                     ]
                 },
@@ -3110,12 +3314,16 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
                         }
                     ]
                 },
                 {
                     "id": "text_adventure",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -3125,6 +3333,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "fn"
                         }
                     ]
                 },
@@ -3140,12 +3352,16 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "Atlas room"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
                         }
                     ]
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "kind": "no",
+                    "kind": "na",
                     "text": null,
                     "why": [
                         {
@@ -3155,6 +3371,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "fn"
                         }
                     ]
                 },
@@ -3169,6 +3389,10 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "zoneSourceLabel",
+                            "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
                             "value": "—"
                         }
                     ]
@@ -3185,13 +3409,18 @@ export const CAPABILITIES = frz({
                         {
                             "field": "zoneSourceLabel",
                             "value": "—"
+                        },
+                        {
+                            "field": "generateRegionCore",
+                            "value": "—"
                         }
                     ]
                 }
             ],
             "fields": [
                 "zoneCount",
-                "zoneSourceLabel"
+                "zoneSourceLabel",
+                "generateRegionCore"
             ],
             "group": "generate",
             "id": "G2",
@@ -4032,7 +4261,7 @@ export const CAPABILITIES = frz({
             ],
             "group": "edit",
             "id": "E2",
-            "statement": "A region of a saved world round-trips through that editor"
+            "statement": "A region of a saved world can be opened in an editor and saved back"
         },
         {
             "cells": [

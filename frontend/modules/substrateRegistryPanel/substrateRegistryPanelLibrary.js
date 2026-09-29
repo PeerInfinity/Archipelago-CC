@@ -331,10 +331,15 @@ export const uncoveredLine = (n) => `${n} registry field${n === 1 ? '' : 's'} no
 /** A cell's text as drawn: its mark, then its degree / reason. */
 export const plainCellText = (c) => (c.text ? `${CELL_MARKS[c.kind]} ${c.text}` : CELL_MARKS[c.kind]);
 
-/** A cell's hover: `field = value` per field it read, and the live answer when overlaid. */
+/**
+ * A cell's hover: `field = value` per field it read, then the live answer when
+ * overlaid (its value IS the whole list), else the cell's whole `list` when the
+ * text shows only a preview of it.
+ */
 function plainCellTitle(c) {
     const lines = c.why.map((w) => `${w.field} = ${w.value}`);
     if (c.live) lines.push(`live ${c.live.key} = ${c.live.value}`);
+    else if (c.list) lines.push(`all ${c.list.length}: ${c.list.join(', ')}`);
     return lines.join('\n');
 }
 
