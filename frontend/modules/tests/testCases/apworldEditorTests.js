@@ -12710,9 +12710,11 @@ const s2KnobTarget = () => s1Targets().find((t) => t !== S2_DEFAULT
  * control MOVES (H2) — `readBackTarget` in `apworldEditor/test-helpers.js`.
  *
  * ⛔ NOT "the first hooked target" (APWORLD SUBSTRATE CHANGE H1; trap 1493).
- * The registry's order is the order the page's modules finished IMPORTING —
+ * The registry's order WAS the order the page's modules finished IMPORTING —
  * `moduleLoader.js` imports every module in parallel and a library registers
- * its entry as an import side effect — so "first" was a coin flip: `runner`
+ * its entry as an import side effect — so "first" was a coin flip (since
+ * REGISTRATION ORDER RO1 `getAll()` sorts by id, so the draw is fixed; the
+ * derivation by fact stays, as a position is not a reason): `runner`
  * came first in 3/6 page loads (P1b′), and its generate-and-test build
  * overruns the row's 30 s Initialise budget (`pressInitialise`: the budget is
  * for the BUILD — the target's load and generation — not the read-back, which
@@ -12892,7 +12894,7 @@ export async function apworldARegionFormReadsBackTheInitialiseBag(testController
         const hooked = s1Targets().filter((t) => typeof substrateRegistry.get(t)?.procgenParamsFromPayload === 'function');
         const skips = skipped.filter((s) => s.reason !== S2_READ_BACK_SKIP.NO_HOOKS)
             .map((s) => `skipped: ${s.id} (${s.reason})`).join('; ') || 'no hooked target skipped';
-        testController.log(`read-back target: ${target} — hooked targets in registration order: ${hooked.join(', ')} — ${skips}`);
+        testController.log(`read-back target: ${target} — hooked targets in registry order: ${hooked.join(', ')} — ${skips}`);
         testController.reportCondition(`⛓ premise: a hooked target, not declared heavy, whose read-back knob the hook's `
             + `control moves (${target}; ${skips}; hooked in this load's order: ${hooked.join(', ')})`, !!target);
         if (!target) return testController.getOverallResult();

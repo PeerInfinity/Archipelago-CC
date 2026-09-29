@@ -619,7 +619,7 @@ for (const e of REFUSALS.enums) {
 /* ── 4. THE SUBSTRATE REGISTRY ──────────────────────────────────────── */
 
 const regSec = section('registry', 'The substrate registry — every entry, every field',
-    'One block per entry `substrateRegistry.getAll()` returns, in REGISTRATION order, with '
+    'One block per entry `substrateRegistry.getAll()` returns, in id order, with '
     + 'every field it carries grouped by the `###` heading of `substrate-registry.md` that '
     + 'documents it. ⛔ The rows are `Object.keys(entry)`, so a field a substrate grows '
     + 'appears here without anybody editing a table — and a field NO document names is a '

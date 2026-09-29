@@ -5,7 +5,7 @@
  * ⛓ The developer matrix (`registry.mjs`) is one row per FIELD; this is one row
  * per STATEMENT of `frontend/modules/procgenCore/substrateCapabilities.js`, the
  * vocabulary module the live Substrate Registry panel imports too. The columns
- * are the same entries, in the same registration order, loaded the same way
+ * are the same entries, in the same (id) order, loaded the same way
  * (`registry.mjs`'s `loadRegistry`). Nothing here decides an answer: every cell
  * is `capabilityRows(entries)`, and every word a reader sees below the page's
  * hand intro comes from that module or from an entry.

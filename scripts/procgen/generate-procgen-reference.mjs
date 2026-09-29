@@ -143,8 +143,7 @@ const files = [
         file: 'registry.js',
         exportName: 'REGISTRY',
         doc: '**THE SUBSTRATE-REGISTRY CAPABILITY MATRIX** — one column per entry '
-            + '`substrateRegistry.getAll()` returns (in REGISTRATION order, which is the '
-            + 'order the generator imports the libraries that self-register them) and one '
+            + '`substrateRegistry.getAll()` returns (in id order — the registry sorts) and one '
             + 'row per field an entry CARRIES, grouped by the `###` heading of '
             + '`substrate-registry.md` that documents it. `findings` is where an entry and '
             + 'that document disagree.',
@@ -177,7 +176,7 @@ const files = [
         doc: '**THE SUBSTRATE CAPABILITY CHART** — what a person can do with each '
             + 'substrate: one row per statement of `procgenCore/substrateCapabilities.js` '
             + '(grouped Play · Loop mode · Generate · Edit), one cell per registry entry in '
-            + 'registration order with the fields and values it read, one card per entry (its '
+            + 'id order with the fields and values it read, one card per entry (its '
             + 'yes and degree cells), and the fields of the developer matrix no statement reads.',
         value: CAPABILITIES,
     },

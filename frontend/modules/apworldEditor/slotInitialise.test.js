@@ -702,13 +702,7 @@ describe('the op initialise-procgen-layout', () => {
 
 /* ── S1: the op DECLARES what it built with ─────────────────────────────── */
 
-/** ⛓ The first realiser target whose registry entry declares a starting-inventory
- *  NEED (derived, never typed), and the first that grants nothing. */
-const NEEDER = initialiseTargets().find((t) => substrateRegistry.get(t)?.startingInventory);
-const NON_GRANTING = initialiseTargets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
-    .some((d) => !d?.is_victory));
 const GRID4 = { width: 4, height: 4 };
-
 const s1cache = new Map();
 /** ⛓ adventure initialised as `t` on 4×4, seed 1 — the hub's op, landed. */
 function hubInitialised(t, doc = DOCS.adventure) {
@@ -720,6 +714,15 @@ function hubInitialised(t, doc = DOCS.adventure) {
     }
     return s1cache.get(key);
 }
+
+/** ⛓ The first realiser target whose registry entry declares a starting-inventory
+ *  NEED (derived, never typed), and the first that grants nothing AND initialises
+ *  adventure (4×4, seed 1) — by those facts, not by a position: a target that picks
+ *  rooms from a fixed atlas may refuse adventure's regions (REGISTRATION ORDER RO1:
+ *  `getAll()` sorts by id, and `flash_seedling` now comes before `maze`). */
+const NEEDER = initialiseTargets().find((t) => substrateRegistry.get(t)?.startingInventory);
+const NON_GRANTING = initialiseTargets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
+    .some((d) => !d?.is_victory) && (() => { try { return hubInitialised(t).out.ok === true; } catch { return false; } })());
 
 /**
  * ⛓⛓ The keys the pipeline's compile writes and the hub must NOT (plan §22.1:

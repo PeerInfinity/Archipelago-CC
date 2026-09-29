@@ -28,8 +28,9 @@ export function withoutProcgenMetadata(doc, player) {
  * pinned by `readBackTarget.test.js` over a FAKE registry order.
  *
  * The row's premise is "the hook's control moves a read-back knob". H1 derived
- * the target by `generationCost` alone, and the registry's order is the page's
- * parallel module-import order, so the filter promoted the next coin-flip draw
+ * the target by `generationCost` alone, and the registry's order was then the
+ * page's parallel module-import order (id order since REGISTRATION ORDER RO1),
+ * so the filter promoted the next coin-flip draw
  * (trap 1513): a light target whose read-back names NO knob the control moves
  * (its `procgenParamsFromPayload({})` answers `{}`), which failed the row in
  * 0.4 s whenever it registered first. The skip is that FACT, never a name.

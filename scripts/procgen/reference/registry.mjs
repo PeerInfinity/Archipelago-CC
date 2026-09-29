@@ -7,7 +7,7 @@
  * human; this one has every field the code puts on an entry, because the code
  * already knows them:
  *
- *   `substrateRegistry.getAll()`  the columns, in REGISTRATION order
+ *   `substrateRegistry.getAll()`  the columns, in ID order (the registry sorts)
  *   `Object.keys(entry)`          the rows — a new field appears without an
  *                                 edit here, which is the whole point
  *
@@ -21,9 +21,11 @@
  * (`substrate-registry.md` § *Registry mechanics*: "that first bullet is
  * load-bearing"), which is how every `scripts/procgen/` CLI gets a populated
  * registry with no panel and no eventBus. This file imports the same eight
- * libraries the doc's own "Entry sources" line names, IN A DECLARED ORDER,
- * and the registry is a `Map` — so `getAll()` is insertion order and the
- * declared import order below IS the column order.
+ * libraries the doc's own "Entry sources" line names, IN A DECLARED ORDER.
+ * The import order does NOT set the column order: `getAll()` sorts by id
+ * (registration order is not observable — the page imports its modules in
+ * parallel, so it varied by page load), so the columns are the same here,
+ * in the Substrate Registry panel and in every boot.
  *
  * ⛔ A library that cannot load headless is NOT guessed at: the import is
  * caught, the failure is recorded BY NAME, and its column says so rather than
@@ -60,14 +62,14 @@ export const REGISTRY_DOC = 'docs/json/developer/procgen/substrate-registry.md';
 const DOC_DIR = 'docs/json/developer/procgen';
 
 /**
- * ⛓⛓ THE LIBRARY IMPORT ORDER — DECLARED, and it IS the column order.
+ * ⛓⛓ THE LIBRARY IMPORT ORDER — DECLARED (the library table's order; the
+ * columns are in id order whatever this order is).
  *
  * These are the eight files `substrate-registry.md` names on its own "Entry
  * sources" line. ⚠ `flash` registers as a side effect of `bounceDemoLibrary`
- * (bounce's entry factory builds on the flash one), so `flash` lands in the
- * column order at bounce's position rather than at its own library's — which
- * is a fact about the code, and the table PRINTS which library each id
- * actually arrived with.
+ * (bounce's entry factory builds on the flash one), so `flash` arrives with
+ * bounce's library rather than its own — which is a fact about the code, and
+ * the table PRINTS which library each id actually arrived with.
  */
 export const REGISTRY_LIBRARIES = Object.freeze([
     'frontend/modules/mazeRoom/mazeRoomLibrary.js',
@@ -296,10 +298,9 @@ export async function buildRegistry() {
         rows,
         libraries,
         findings,
-        columnOrder: 'the registry is a Map, so `getAll()` is INSERTION order; the generator '
-            + 'imports the libraries in the order declared in `scripts/procgen/reference/'
-            + 'registry.mjs` — the table at the end of this region prints it — and each entry '
-            + 'lands when the library that registers it is imported',
+        columnOrder: '`getAll()` returns the entries ordered by id, so the columns are the '
+            + 'same in every boot and in the Substrate Registry panel; the order the generator '
+            + 'imports the libraries in (the table at the end of this region) does not move them',
         shortValueRule: 'a cell in the markdown region is SHORT: a function is `fn`, a '
             + 'boolean is yes/no, an array of at most 3 short values is the list and any '
             + 'longer one is its count, an object is its key set or its key count. The '

@@ -363,16 +363,22 @@ describe('the panel stops the worker run and the elapsed ticker at every boundar
 
 describe('S1 — the per-region Generate declares the grants in the SAME op', () => {
     const NEEDER = initialiseTargets().find((t) => substrateRegistry.get(t)?.startingInventory);
-    const NON_GRANTING = initialiseTargets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
-        .some((d) => !d?.is_victory));
     const GRID4 = { width: 4, height: 4 };
+    const ADVENTURE = () => read('adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json');
+    /** ⛓ Adventure initialised in the hub as `t` on 4×4, seed 1 — the landed op (`ok` false if it refused). */
+    const initialised = (t) => {
+        const doc = ADVENTURE();
+        const res = initialiseSlot({ doc, player: '1', substrate: t, gridDims: GRID4, seed: 1 });
+        return applyRulesDocOp(doc, initialiseOpFor({ player: '1', substrate: t, gridDims: GRID4, seed: 1,
+            backExits: BACK_EXITS.ADD }, res));
+    };
+    /** ⛓ The first realiser target that grants nothing AND initialises adventure — by those facts, not
+     *  by a position: a target that picks rooms from a fixed atlas may refuse adventure's regions
+     *  (REGISTRATION ORDER RO1: `getAll()` sorts by id, and `flash_seedling` now comes before `maze`). */
+    const NON_GRANTING = initialiseTargets().find((t) => !Object.values(substrateRegistry.get(t)?.libraryItems ?? {})
+        .some((d) => !d?.is_victory) && (() => { try { return initialised(t).ok === true; } catch { return false; } })());
     /** ⛓ Adventure initialised in the hub as the non-granting target (task 0's (a)). */
-    const HUB = (() => {
-        const doc = read('adventure/AP_14089154938208861744/AP_14089154938208861744_rules.json');
-        const res = initialiseSlot({ doc, player: '1', substrate: NON_GRANTING, gridDims: GRID4, seed: 1 });
-        return applyRulesDocOp(doc, initialiseOpFor({ player: '1', substrate: NON_GRANTING, gridDims: GRID4, seed: 1,
-            backExits: BACK_EXITS.ADD }, res)).doc;
-    })();
+    const HUB = initialised(NON_GRANTING).doc;
     const REGION = Object.keys(HUB.preset_sidecars['1'])[0];
     /** ⛓ The landing a Generate makes: the pure regenerate, then set-region-sidecar with grants. */
     const landing = (doc, target) => {
