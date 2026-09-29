@@ -73,6 +73,7 @@ import {
 } from './rulesDocOps.js';
 import { DEFAULT_PLAYER_ID } from '../shared/playerIdUtils.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { substrateCards } from '../procgenCore/substrateCapabilities.js';
 /**
  * ⛓⛓ R-a — **THE EMPTY BLOCK'S TWO NUMBERS, EXPORTED** (⚖ k, user 2026-09-06:
  * *"the code to use exported constants, not hardcoded numbers"*). The presence
@@ -6762,7 +6763,13 @@ class ApworldEditorUI {
       row.enum.forEach((v, i) => {
         const o = document.createElement('option');
         o.value = String(i);
-        o.textContent = typeof v === 'string' ? v : JSON.stringify(v);
+        // ⛓ S4 — the option SHOWS the row's label for the value where the model
+        //   carries one (the substrate picker: the entry's label, its card as the
+        //   hover); the enum value itself rides on `data-enum-value`.
+        const plain = typeof v === 'string' ? v : JSON.stringify(v);
+        o.dataset.enumValue = plain;
+        o.textContent = row.enumLabels?.[i] ?? plain;
+        if (row.enumTitles?.[i]) o.title = row.enumTitles[i];
         if (i === at) o.selected = true;
         control.appendChild(o);
       });
@@ -6793,6 +6800,11 @@ class ApworldEditorUI {
       if (control.type === 'text' || control.type === 'number') control.style.width = '14em';
       const picker = row.level === SIDECAR_FORM_LEVELS.ENTRY && row.field === SUBSTRATE_KEY;
       control.title = picker ? `${row.description} — ${SUBSTRATE_PICKER_CLAUSE}` : row.description;
+      // ⛓ S4 — a select whose model carries option hovers leads with the CHOSEN
+      //   option's (a closed select's title is the one hover every browser shows).
+      const chosenTitle = row.control === C.SELECT && row.present
+        ? row.enumTitles?.[row.enum.findIndex((v) => v === row.value)] : null;
+      if (chosenTitle) control.title = `${chosenTitle}\n\n${control.title}`;
       if (locked) {
         control.disabled = true;
         if ('readOnly' in control) control.readOnly = true;
@@ -7555,13 +7567,19 @@ class ApworldEditorUI {
     const st = ini.state;
     const sub = document.createElement('select');
     sub.className = 'apworld-initialise-substrate';
+    // ⛓ SUBSTRATE CHART S4 — each option shows the entry's label (its VALUE
+    //   stays the id) and carries its card; the select's own hover is the
+    //   CHOSEN target's card (a closed select's title is the one every browser shows).
+    const cards = substrateCards(substrateRegistry.getAll());
     for (const id of initialiseTargets()) {
       const o = document.createElement('option');
       o.value = id;
-      o.textContent = id;
+      o.textContent = cards.get(id)?.label ?? id;
+      if (cards.has(id)) o.title = cards.get(id).text;
       sub.appendChild(o);
     }
     sub.value = st.substrate;
+    if (cards.has(st.substrate)) sub.title = cards.get(st.substrate).text;
     sub.disabled = running;
     sub.addEventListener('change', () => this._setInitialiseState({ substrate: sub.value }));
     row('Substrate (every region)').appendChild(sub);

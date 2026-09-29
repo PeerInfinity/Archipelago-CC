@@ -23,9 +23,10 @@ import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
+import { capabilityRows, cardOf, cardText } from '../procgenCore/substrateCapabilities.js';
 import {
     PAYLOAD_KEY, SIDECAR_FORM_CONTROLS, SIDECAR_FORM_LEVELS, SUBSTRATE_KEY, controlForType,
-    derivedFieldsCarried, jsonTypeOf, parseControlValue, playableSubstrateIds,
+    derivedFieldsCarried, jsonTypeOf, parseControlValue, playableSubstrateEnum, playableSubstrateIds,
     rederivesNothingSentence, sidecarEntrySchemaOf, sidecarFormModel, summarizeContainer,
     withSidecarField,
 } from './sidecarForm.js';
@@ -216,6 +217,43 @@ describe('⛓⛓ the control is chosen by TYPE', () => {
         expect(row.control).toBe(C.SELECT);
         expect(row.enum).toEqual(playableSubstrateIds());
         expect(row.required).toBe(true);
+    });
+
+    it('⛓ S4 — the `substrate` row carries each id\'s LABEL and CARD, index-aligned; the value list is unchanged', () => {
+        const row = sidecarFormModel(ENTRIES[0].entry, { rulesSchema: SCHEMA }).entryRows
+            .find((r) => r.field === SUBSTRATE_KEY);
+        const ids = playableSubstrateIds();
+        expect(row.enum).toEqual(ids);
+        /* ⛓ the law: the entry's own `label`, and the vocabulary's card over the whole registry */
+        const rows = capabilityRows(substrateRegistry.getAll());
+        expect(row.enumLabels).toEqual(ids.map((id) => substrateRegistry.get(id).label ?? id));
+        expect(row.enumTitles).toEqual(ids.map((id) => cardText(cardOf(substrateRegistry.get(id), rows))));
+        /* non-vacuity: at least one label differs from its id, so the form SHOWS something new */
+        expect(ids.some((id, i) => row.enumLabels[i] !== id)).toBe(true);
+        /* parseControlValue still reads the index into the enum — the stored value is the id */
+        expect(parseControlValue(row, '0')).toEqual({ ok: true, value: ids[0] });
+    });
+
+    it('…and no other row carries enum words (the schema declares none)', () => {
+        for (const { entry } of ENTRIES) {
+            const m = sidecarFormModel(entry, { rulesSchema: SCHEMA });
+            for (const r of [...m.entryRows, ...(m.payloadRows ?? [])]) {
+                if (r.field === SUBSTRATE_KEY && r.level === L.ENTRY) continue;
+                expect(r.enumLabels, r.field).toBeNull();
+                expect(r.enumTitles, r.field).toBeNull();
+            }
+        }
+    });
+
+    it('playableSubstrateEnum over a registry passed in: ids sorted, label (else id) and card per id', () => {
+        const fake = {
+            getAll: () => [{ id: 'b', label: 'Bee', deserializeWorld: () => 0 }, { id: 'a', deserializeWorld: () => 0 }, { id: 'c' }],
+            get(id) { return this.getAll().find((e) => e.id === id); },
+        };
+        const got = playableSubstrateEnum(fake);
+        expect(got.enum).toEqual(['a', 'b']);
+        expect(got.enumLabels).toEqual(['a', 'Bee']);
+        expect(got.enumTitles.map((t) => t.split('\n')[0])).toEqual(['a', 'Bee']);
     });
 
     it('a value whose JSON type is not the declared one is shown, not controlled', () => {

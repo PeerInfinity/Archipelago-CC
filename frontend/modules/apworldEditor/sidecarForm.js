@@ -46,6 +46,7 @@
  */
 
 import { sidecarFieldsOf } from '../procgenCore/sidecarFields.js';
+import { substrateCards } from '../procgenCore/substrateCapabilities.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 
 /** ⛓ The entry key the play-time host loads the room BY — its vocabulary is the registry. */
@@ -127,6 +128,25 @@ export function playableSubstrateIds(registry = substrateRegistry) {
         .sort();
 }
 
+/**
+ * ⛓ **THE `substrate` PICKER'S WORDS** (substrate chart S4) — for each id of
+ * `playableSubstrateIds`, in its order: the entry's label and its capability
+ * card as text (`substrateCards`). Index-aligned with the enum, as the select's
+ * own value is an index into it. ⛔ Read off the registry, never typed.
+ *
+ * @param {{get: Function, getAll: Function}} [registry]
+ * @returns {{enum: string[], enumLabels: string[], enumTitles: string[]}}
+ */
+export function playableSubstrateEnum(registry = substrateRegistry) {
+    const ids = playableSubstrateIds(registry);
+    const cards = substrateCards(ids.map((id) => registry.get(id)));
+    return {
+        enum: ids,
+        enumLabels: ids.map((id) => cards.get(id).label),
+        enumTitles: ids.map((id) => cards.get(id).text),
+    };
+}
+
 /** Resolve a local `$ref` (`#/a/b`) against the schema root; anything else → the node itself. */
 function resolveRef(root, node) {
     const ref = node?.$ref;
@@ -180,6 +200,9 @@ function rowOf(level, field, d, container) {
     const present = has(container, field);
     const value = present ? container[field] : undefined;
     const enumValues = Array.isArray(d.enum) ? d.enum : null;
+    // ⛓ Optional words for the enum, index-aligned with it (S4): what an
+    //   option SHOWS and its hover. The value is still `enum[i]`.
+    const aligned = (a) => (enumValues && Array.isArray(a) && a.length === enumValues.length ? a : null);
     let control = controlForType(d.type, !!enumValues);
     let typeMismatch = false;
     if (present && !holdsType(value, d.type)) {
@@ -195,6 +218,8 @@ function rowOf(level, field, d, container) {
         level,
         type: d.type,
         enum: enumValues,
+        enumLabels: aligned(d.enumLabels),
+        enumTitles: aligned(d.enumTitles),
         required: d.required === true,
         derived: d.derived === true,
         description: typeof d.description === 'string' ? d.description : '',
@@ -240,7 +265,7 @@ export function sidecarFormModel(entry, { rulesSchema = null, registry = substra
                 derived: false,
                 description: s.description,
                 ...(field === SUBSTRATE_KEY
-                    ? { enum: playableSubstrateIds(registry) }
+                    ? playableSubstrateEnum(registry)
                     : (Array.isArray(s.enum) ? { enum: s.enum } : {})),
             };
             entryRows.push(rowOf(L.ENTRY, field, d, entry));

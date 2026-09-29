@@ -1231,7 +1231,11 @@ regenerate in the pipeline"* (`sidecarForm.SUBSTRATE_PICKER_CLAUSE`), beside the
 block's **Regenerate in the pipeline ▸**; the pick also opens the block's
 **Region generation** form (R2, above). The block's issue list then carries V0's
 `SUBSTRATE_MISMATCH` sentence naming the substrate whose keys the payload
-actually has; one Undo takes both away.
+actually has; one Undo takes both away. Each option shows the entry's `label` and
+hovers its capability card (`substrateCapabilities.cardText`; the select's own title
+leads with the chosen one's) — the form model carries them index-aligned with the
+enum as `enumLabels` / `enumTitles` (`sidecarForm.playableSubstrateEnum`), the value
+is still the enum index and the stored `substrate` the id (substrate chart S4).
 
 **What a raw save re-derives, by name.** Under the JSON, while the block is open,
 one sentence names THIS entry's derived fields — the declaration's `derived: true`
@@ -2208,7 +2212,7 @@ one. On such a slot (`initialiseDoorShown`: no entry, some regions) the Map's
 
 | control | what it is |
 |---|---|
-| **Substrate (every region)** | the realiser targets (`initialiseTargets` — every registry entry `regionRealiserKind` accepts); default the engine's `DEFAULT_SUBSTRATE_ID`. ONE substrate for the slot (⚖ 2026-09-26 #4); a region's own picker changes it afterwards |
+| **Substrate (every region)** | the realiser targets (`initialiseTargets` — every registry entry `regionRealiserKind` accepts); default the engine's `DEFAULT_SUBSTRATE_ID`. ONE substrate for the slot (⚖ 2026-09-26 #4); a region's own picker changes it afterwards. Each option shows the entry's `label` (its value the id) and hovers its capability card; the select's title is the chosen target's card (substrate chart S4) |
 | **Grid side** + *auto* | auto = the pipeline hand-off's side (`topDownGridSide`, `⌈√(1.5 n)⌉`, shared with the pipeline panel), GROWN one at a time while the layout leaves a region for want of a cell (`autoGridSide`) — M2: a Menu root without a cell counts (`mm3` 6 → 7) — typing a side turns auto off |
 | **Seed** | the layout's and every region's (the engine's per-region sub-seed) |
 | **Add return exits** | default ON (⚖ #1) — see below |

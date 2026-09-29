@@ -7893,12 +7893,13 @@ export async function apworldTheSubstratePickerOffersThePlayableIdsAndNamesTheMi
         testController.reportCondition(`${at} the entry's substrate row draws a select`,
             !!picker && picker.tagName === 'SELECT');
         if (!picker) return testController.getOverallResult();
-        const offered = [...picker.options].filter((o) => !o.disabled).map((o) => o.textContent);
+        // ⛓ S4: an option SHOWS the entry's label; the enum value (the id) rides on data-enum-value
+        const offered = [...picker.options].filter((o) => !o.disabled).map((o) => o.dataset.enumValue);
         const law = playableIdsFromRegistry();
         testController.assertEqual(`${at} ⛓⛓⛓ it offers the registry's playable ids (${law.length}), sorted`,
             JSON.stringify(law), JSON.stringify(offered));
         testController.assertEqual(`${at} …with the entry's own substrate selected`, two.bSub,
-            String(picker.selectedOptions[0]?.textContent));
+            String(picker.selectedOptions[0]?.dataset.enumValue));
         testController.reportCondition(`${at} its title says it changes the label only`,
             picker.title.includes(SUBSTRATE_PICKER_CLAUSE));
         testController.reportCondition(`${at} …beside the Regenerate door`,
@@ -7907,7 +7908,7 @@ export async function apworldTheSubstratePickerOffersThePlayableIdsAndNamesTheMi
         const docBefore = JSON.stringify(panel.rulesDoc);
         const payloadBefore = JSON.stringify(panel.rulesDoc.preset_sidecars[slot][region].playable_payload);
         const opsBefore = panel.session.ops().length;
-        const index = [...picker.options].findIndex((o) => !o.disabled && o.textContent === now);
+        const index = [...picker.options].findIndex((o) => !o.disabled && o.dataset.enumValue === now);
         testController.reportCondition(`${at} ⛓ premise: \`${now}\` is one of the options`, index >= 0);
         picker.value = picker.options[index]?.value;
         picker.dispatchEvent(new Event('change', { bubbles: true }));
@@ -10021,7 +10022,7 @@ async function openHubOnDocument(testController, path, slot, region) {
 async function pickSubstrateAndOpenForm(testController, panel, region, target) {
     await openSidecarJson(testController, region);
     const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
-    const index = [...(picker?.options ?? [])].findIndex((o) => !o.disabled && o.textContent === target);
+    const index = [...(picker?.options ?? [])].findIndex((o) => !o.disabled && o.dataset.enumValue === target);
     testController.reportCondition(`the picker offers \`${target}\``, index >= 0);
     if (index < 0) return false;
     const opsBefore = panel.session.ops().length;
@@ -10336,7 +10337,7 @@ export async function apworldANoRealiserTargetPrintsTheOpsRefusal(testController
         testController.reportCondition('slot 3 selected', await onRegionsTabFor(testController, panel, '3'));
         await openSidecarJson(testController, region);
         const picker = sidecarFieldControl(region, SUBSTRATE_KEY, SIDECAR_FORM_LEVELS.ENTRY);
-        const none = [...(picker?.options ?? [])].filter((o) => !o.disabled).map((o) => o.textContent)
+        const none = [...(picker?.options ?? [])].filter((o) => !o.disabled).map((o) => o.dataset.enumValue)
             .filter((id) => regionRealiserKind(substrateRegistry.get(id)) === null
                 && id !== panel.rulesDoc.preset_sidecars['3'][region].substrate);
         testController.reportCondition(`⛓ premise: the picker offers ids without a realiser (${none.join(', ')})`, none.length > 0);
