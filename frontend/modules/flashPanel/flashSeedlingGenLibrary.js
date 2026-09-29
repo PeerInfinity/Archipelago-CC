@@ -50,6 +50,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
+import { GENERATION_COST } from '../procgenCore/substratePredicates.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import { fieldRow, numberField } from '../procgenCore/regionGenerationForm.js';
 import { SEEDLING_ITEMS_FEATURE, SEEDLING_LIBRARY_ITEMS } from '../seedlingDemo/itemLabels.js';
@@ -405,6 +406,20 @@ export const substrateRegistryEntry = Object.freeze({
 
     /** `flash_panel` only — the installed atlas compile's own block. NO `region_atlas`: a generated world has no map. */
     rulesJsonBlocks: () => ({ flash_panel: seedlingFlashPanelBlock() }),
+
+    /**
+     * ⛓ G9 — Headless generation cost, DECLARED rather than left to the absent
+     * default (`substratePredicates.generationCostOf`; one reader,
+     * `procgenPipeline/presetRun.js`). A room is one generator draw plus its
+     * re-rolls: 0.1–1.5 s at 10×10 (G1 §5.5; G8 measured 0.2–2.4 s on a loaded
+     * box, and a grown room's draw at 10×8 costs the same), the heaviest
+     * measured world — top-down over `seedling_atlas`, ten rooms — 5.2 s against
+     * the 30 s preset budget, and the committed generated presets build in
+     * 0.3–0.7 s (`make-seedling-spiral-room-preset.mjs --check`, G9 base). So a
+     * preset naming it stays in CI's slow battery, where the shipped generated
+     * presets already run.
+     */
+    generationCost: GENERATION_COST.LIGHT,
 
     defaultProcgenParams: DEFAULT_SEEDLING_GEN_PROCGEN_PARAMS,
     buildRegionParams: buildSeedlingGenRegionParams,

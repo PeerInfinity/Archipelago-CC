@@ -3513,7 +3513,7 @@ export const CAPABILITIES = frz({
                     "why": [
                         {
                             "field": "generationCost",
-                            "value": "—"
+                            "value": "light"
                         }
                     ]
                 },
