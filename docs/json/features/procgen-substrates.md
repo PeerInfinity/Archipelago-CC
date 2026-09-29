@@ -17,7 +17,7 @@ Everything below this paragraph is generated from the code: each row is a questi
 | P1 | You can play its regions by hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | P2 | The Playback Bot can walk it (replaying a world's solution) | ✓ | ✗ | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | ✓ |
 | P3 | It draws its own picture on the composite map (else a labelled box) | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✗ |
-| P4 | What its progression items are (keys & doors, item-locked gates, movement abilities, perks…) | ✓ item-locked gates, coloured keys and doors, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ locations placed anywhere, movement abilities, 7 items of its own | ✓ locations placed anywhere, runner abilities, 6 items of its own | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere, 48 items of its own | ✓ its own map becomes the region graph, locations placed anywhere, 1 item of its own |
+| P4 | What its progression items are (keys & doors, item-locked gates, movement abilities, perks…) | ✓ item-locked gates, coloured keys and doors, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ locations placed anywhere, bounce_abilities, 7 items of its own | ✓ locations placed anywhere, runner_abilities, 6 items of its own | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere, 48 items of its own | ✓ its own map becomes the region graph, locations placed anywhere, 1 item of its own |
 
 ## Loop mode
 
@@ -32,7 +32,7 @@ Everything below this paragraph is generated from the code: each row is a questi
 | L7 | The Bot honours Instant | ✗ | n/a | ✗ | ✗ | n/a | n/a | n/a | ✓ | ✓ |
 | L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ (note 1) | ✗ (note 2) |
 | L9 | It shares the loop-mode mana pool | ✓ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ | ✓ |
-| L10 | It shares consumable items with other substrates | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ its list comes from the running game — see the Substrate Registry panel | ✓ 18 item types |
+| L10 | It shares consumable items with other substrates | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ its list comes from the running game — see the Substrate Registry panel | ✓ 18 item types: gold, reputation, herbs, … |
 | L11 | Recorded actions are named in the game's own words | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ |
 
 1. JtA: loop mode stays on — it declares `loopSupport.requiresLoopMode`
@@ -57,7 +57,7 @@ Everything below this paragraph is generated from the code: each row is a questi
 | | What you can do | Maze | Flash | Bounce Demo | Runner Demo | Text Adventure | Seedling (region atlas) | Seedling (generated room) | JtA | Idle Loops |
 |---|---|---|---|---|---|---|---|---|---|---|
 | E1 | Its rooms can be edited | ✓ on a lab page | ✗ | ✓ in a panel | ✗ | ✗ | ✓ on a lab page | ✓ on a lab page | ✗ | ✗ |
-| E2 | A region of a saved world round-trips through that editor | ✓ | ✗ | ✓ | ✗ | ✓ | ✗ (note 1) | ✗ | ✗ | ✗ |
+| E2 | A region of a saved world can be opened in an editor and saved back | ✓ | ✗ | ✓ | ✗ | ✓ | ✗ (note 1) | ✗ | ✗ | ✗ |
 | E3 | An exit can be moved to another side (and a side can hold more than one) | ✗ | ✗ | ◐ one exit per side | ◐ one exit per side | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one | ✓ and a side can hold more than one |
 | E4 | The editor's validity report checks its location and exit names | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ | ✓ | ✓ |
 
@@ -120,7 +120,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Generate* — It has its own settings in the generation form
 - *Generate* — A world of it can start with an empty inventory
 - *Edit* — Its rooms can be edited: on a lab page
-- *Edit* — A region of a saved world round-trips through that editor
+- *Edit* — A region of a saved world can be opened in an editor and saved back
 - *Edit* — The editor's validity report checks its location and exit names
 
 ### Flash
@@ -137,7 +137,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 - *Play* — You can play its regions by hand
 - *Play* — The Playback Bot can walk it (replaying a world's solution)
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): locations placed anywhere, movement abilities, 7 items of its own
+- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): locations placed anywhere, bounce_abilities, 7 items of its own
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks
 - *Loop mode* — You can record a visit and replay it
@@ -152,7 +152,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Generate* — Exits can be locked behind items
 - *Generate* — It has its own settings in the generation form
 - *Edit* — Its rooms can be edited: in a panel
-- *Edit* — A region of a saved world round-trips through that editor
+- *Edit* — A region of a saved world can be opened in an editor and saved back
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): one exit per side
 - *Edit* — The editor's validity report checks its location and exit names
 
@@ -160,7 +160,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 - *Play* — You can play its regions by hand
 - *Play* — The Playback Bot can walk it (replaying a world's solution)
-- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): locations placed anywhere, runner abilities, 6 items of its own
+- *Play* — What its progression items are (keys & doors, item-locked gates, movement abilities, perks…): locations placed anywhere, runner_abilities, 6 items of its own
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks
 - *Loop mode* — You can record a visit and replay it
@@ -194,7 +194,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Generate* — Generates quickly
 - *Generate* — Exits can be locked behind items
 - *Generate* — A world of it can start with an empty inventory
-- *Edit* — A region of a saved world round-trips through that editor
+- *Edit* — A region of a saved world can be opened in an editor and saved back
 - *Edit* — An exit can be moved to another side (and a side can hold more than one): and a side can hold more than one
 - *Edit* — The editor's validity report checks its location and exit names
 
@@ -262,7 +262,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Loop mode* — A Bot block can play it for you: the game's own automation walks it
 - *Loop mode* — The Bot honours Instant
 - *Loop mode* — It shares the loop-mode mana pool
-- *Loop mode* — It shares consumable items with other substrates: 18 item types
+- *Loop mode* — It shares consumable items with other substrates: 18 item types: gold, reputation, herbs, …
 - *Loop mode* — Recorded actions are named in the game's own words
 - *Generate* — How many ready-made rooms / levels it brings: 1
 - *Generate* — A world of it can start with an empty inventory

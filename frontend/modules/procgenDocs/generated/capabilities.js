@@ -128,7 +128,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "edit",
-                    "statement": "A region of a saved world round-trips through that editor",
+                    "statement": "A region of a saved world can be opened in an editor and saved back",
                     "text": null
                 },
                 {
@@ -196,7 +196,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "play",
                     "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
-                    "text": "locations placed anywhere, movement abilities, 7 items of its own"
+                    "text": "locations placed anywhere, bounce_abilities, 7 items of its own"
                 },
                 {
                     "group": "loop",
@@ -270,7 +270,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "edit",
-                    "statement": "A region of a saved world round-trips through that editor",
+                    "statement": "A region of a saved world can be opened in an editor and saved back",
                     "text": null
                 },
                 {
@@ -302,7 +302,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "play",
                     "statement": "What its progression items are (keys & doors, item-locked gates, movement abilities, perks…)",
-                    "text": "locations placed anywhere, runner abilities, 6 items of its own"
+                    "text": "locations placed anywhere, runner_abilities, 6 items of its own"
                 },
                 {
                     "group": "loop",
@@ -462,7 +462,7 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "edit",
-                    "statement": "A region of a saved world round-trips through that editor",
+                    "statement": "A region of a saved world can be opened in an editor and saved back",
                     "text": null
                 },
                 {
@@ -767,7 +767,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "loop",
                     "statement": "It shares consumable items with other substrates",
-                    "text": "18 item types"
+                    "text": "18 item types: gold, reputation, herbs, …"
                 },
                 {
                     "group": "loop",
@@ -1331,7 +1331,7 @@ export const CAPABILITIES = frz({
                 {
                     "id": "bounce",
                     "kind": "yes",
-                    "text": "locations placed anywhere, movement abilities, 7 items of its own",
+                    "text": "locations placed anywhere, bounce_abilities, 7 items of its own",
                     "why": [
                         {
                             "field": "supportedFeatures",
@@ -1346,7 +1346,7 @@ export const CAPABILITIES = frz({
                 {
                     "id": "runner",
                     "kind": "yes",
-                    "text": "locations placed anywhere, runner abilities, 6 items of its own",
+                    "text": "locations placed anywhere, runner_abilities, 6 items of its own",
                     "why": [
                         {
                             "field": "supportedFeatures",
@@ -2738,7 +2738,27 @@ export const CAPABILITIES = frz({
                 {
                     "id": "omsi",
                     "kind": "yes",
-                    "text": "18 item types",
+                    "list": [
+                        "gold",
+                        "reputation",
+                        "herbs",
+                        "hide",
+                        "potions",
+                        "teamMembers",
+                        "armor",
+                        "blood",
+                        "artifacts",
+                        "favors",
+                        "enchantments",
+                        "houses",
+                        "pylons",
+                        "zombie",
+                        "map",
+                        "completedMap",
+                        "heart",
+                        "power"
+                    ],
+                    "text": "18 item types: gold, reputation, herbs, …",
                     "why": [
                         {
                             "field": "sharing.items",
@@ -4027,7 +4047,7 @@ export const CAPABILITIES = frz({
             ],
             "group": "edit",
             "id": "E2",
-            "statement": "A region of a saved world round-trips through that editor"
+            "statement": "A region of a saved world can be opened in an editor and saved back"
         },
         {
             "cells": [

@@ -28,7 +28,7 @@ import {
 import { declaredStartingNeeds } from './startingInventory.js';
 import {
     CAPABILITY_GROUPS, CAPABILITY_STATEMENTS, CELL_KINDS, CELL_MARKS, CELL_WORDING, FEATURE_WORDING,
-    LIVE_ANSWERS, PLAYBACK_LIVE, REQUIRES_LOOP_MODE_FIELD,
+    LIST_PREVIEW, LIVE_ANSWERS, REQUIRES_LOOP_MODE_FIELD,
     applyLiveAnswer, capabilityRows, cardOf, uncoveredFields,
 } from './substrateCapabilities.js';
 
@@ -108,12 +108,10 @@ describe('the vocabulary', () => {
         ['frontend/modules/procgenCore/substrateCapabilities.js'],
         ['scripts/procgen/reference/capabilities.mjs'],
     ])('(v) ⛔ %s names no registered substrate id (its SOURCE, read)', (rel) => {
-        let src = readFileSync(join(ROOT, rel), 'utf8');
-        /* ⛓ The feature-id phrases are the shared library's FEATURE vocabulary
-         * put into words (`runner_abilities` → 'runner abilities'); a feature
-         * id that carries a substrate's name is the library's naming, not this
-         * module naming a substrate. Only those values are blanked. */
-        for (const words of Object.values(FEATURE_WORDING)) src = src.split(`'${words}'`).join("''");
+        /* ⛓ The WHOLE source — no exemption (S1 blanked the FEATURE_WORDING
+         * values for 'runner abilities'; S3 dropped both ability tags from the
+         * wording, ⚖ plan §6′.2). */
+        const src = readFileSync(join(ROOT, rel), 'utf8');
         const named = ENTRIES.map((e) => e.id)
             .filter((id) => new RegExp(`(?<![A-Za-z0-9_])${id}(?![A-Za-z0-9_])`).test(src));
         expect(named).toEqual([]);
@@ -179,6 +177,24 @@ describe('(vii) ⚖ the INVERTED rows hold on the real entries — the reason re
     });
 });
 
+describe('L10 on the real entries: a static `types` list is the count, a preview and the whole list', () => {
+    it('every entry declaring `sharing.items.types` shows ≤ LIST_PREVIEW names and carries the whole list', () => {
+        const typed = ENTRIES.filter((e) => Array.isArray(e.sharing?.items?.types));
+        expect(typed.length).toBeGreaterThan(0);
+        for (const e of typed) {
+            const { types } = e.sharing.items;
+            const c = cellOf('L10', e.id);
+            expect(c.kind, e.id).toBe(CELL_KINDS.YES);
+            expect(c.list, e.id).toEqual(types.map(String));
+            expect(c.text, e.id).toBe(CELL_WORDING.itemTypesPreview(types.map(String)));
+            expect(c.text.startsWith(CELL_WORDING.itemTypes(types.length)), e.id).toBe(true);
+            for (const t of types.slice(LIST_PREVIEW)) expect(c.text.split(': ')[1].split(', '), e.id).not.toContain(t);
+        }
+        /* non-vacuity: at least one real list is longer than the preview */
+        expect(typed.some((e) => e.sharing.items.types.length > LIST_PREVIEW)).toBe(true);
+    });
+});
+
 describe('the feature wording and the uncovered fields', () => {
     it('every feature id a real entry declares has words — a missing one is a WARNING, not a failure', () => {
         const ids = [...new Set(ENTRIES.flatMap((e) => e.supportedFeatures ?? []))].sort();
@@ -238,7 +254,6 @@ describe('the live declarations and the marks (substrate chart S2)', () => {
 
 describe('applyLiveAnswer — fixtures', () => {
     const items = { live: LIVE_ANSWERS.itemTypes };
-    const play = { live: LIVE_ANSWERS.playbackController };
     const yes = { kind: CELL_KINDS.YES, text: CELL_WORDING.itemTypesLive, why: [] };
 
     it('itemTypes: a list refines a ✓ cell\'s text with the same count wording the static case uses', () => {
@@ -258,20 +273,26 @@ describe('applyLiveAnswer — fixtures', () => {
         expect(applyLiveAnswer(no, items, ['x'])).toBe(no);
     });
 
-    it('playbackController: the kind is the declaration\'s, the answer refines the text', () => {
+    it('itemTypes: a long list shows the count and the first LIST_PREVIEW names, the whole list as `list`', () => {
+        const names = ['a', 'b', 'c', 'd', 'e'];
+        const out = applyLiveAnswer(yes, items, names);
+        expect(out.text).toBe(`${CELL_WORDING.itemTypes(5)}: ${names.slice(0, LIST_PREVIEW).join(', ')}, …`);
+        expect(out.list).toEqual(names);
+        expect(applyLiveAnswer(yes, items, names.slice(0, LIST_PREVIEW)).text)
+            .toBe(`${CELL_WORDING.itemTypes(LIST_PREVIEW)}: ${names.slice(0, LIST_PREVIEW).join(', ')}`);
+    });
+
+    it('P2 declares no live answer (⚖ plan §6′.1 item 7) — a controller answer changes nothing', () => {
+        const p2 = CAPABILITY_STATEMENTS.find((s) => s.id === 'P2');
+        expect('live' in p2).toBe(false);
         const c = { kind: CELL_KINDS.YES, text: null };
-        expect(applyLiveAnswer(c, play, PLAYBACK_LIVE.controller))
-            .toMatchObject({ kind: CELL_KINDS.YES, text: CELL_WORDING.controllerMounted });
-        expect(applyLiveAnswer(c, play, PLAYBACK_LIVE.none))
-            .toMatchObject({ kind: CELL_KINDS.YES, text: CELL_WORDING.noPanelMounted, live: { value: 'null' } });
-        expect(applyLiveAnswer(c, play, `${THREW_PREFIX}boom`).text).toBe(`${THREW_PREFIX}boom`);
-        const no = { kind: CELL_KINDS.NO, text: null };
-        expect(applyLiveAnswer(no, play, PLAYBACK_LIVE.absent)).toBe(no);
+        expect(applyLiveAnswer(c, p2, 'controller')).toBe(c);
+        expect(applyLiveAnswer(c, { live: 'playbackController' }, 'controller')).toBe(c);
     });
 
     it('an n/a cell, an undeclared statement, a missing answer → the SAME cell', () => {
         const na = { kind: CELL_KINDS.NA, text: null };
-        expect(applyLiveAnswer(na, play, PLAYBACK_LIVE.controller)).toBe(na);
+        expect(applyLiveAnswer(na, items, ['x'])).toBe(na);
         expect(applyLiveAnswer(yes, {}, ['x'])).toBe(yes);
         expect(applyLiveAnswer(yes, items, undefined)).toBe(yes);
     });

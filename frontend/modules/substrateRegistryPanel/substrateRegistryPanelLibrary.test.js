@@ -333,11 +333,10 @@ describe('the plain mode (plainOf)', () => {
     });
 
     it('a live overlay: the answer refines the text, the hover carries the raw answer, the kind stays', () => {
-        expect(cellAt(p, 'P2', 'alpha')).toMatchObject({
-            kind: CELL_KINDS.YES, text: `${CELL_MARKS[CELL_KINDS.YES]} ${CELL_WORDING.controllerMounted}`,
-        });
-        expect(cellAt(p, 'P2', 'alpha').title).toContain('live playbackController = controller');
-        expect(cellAt(p, 'P2', 'beta').text).toBe(`${CELL_MARKS[CELL_KINDS.YES]} ${CELL_WORDING.noPanelMounted}`);
+        /* P2 declares no live answer since S3 — its cells are the declaration's alone */
+        expect(cellAt(p, 'P2', 'alpha')).toMatchObject({ kind: CELL_KINDS.YES, text: CELL_MARKS[CELL_KINDS.YES] });
+        expect(cellAt(p, 'P2', 'alpha').title).not.toContain('live playbackController');
+        expect(cellAt(p, 'P2', 'beta').text).toBe(CELL_MARKS[CELL_KINDS.YES]);
         expect(cellAt(p, 'P2', 'gamma')).toMatchObject({ kind: CELL_KINDS.NO, text: CELL_MARKS[CELL_KINDS.NO] });
         expect(cellAt(p, 'L10', 'alpha').text)
             .toBe(`${CELL_MARKS[CELL_KINDS.YES]} ${CELL_WORDING.itemTypes(2)}: coin, gem`);
