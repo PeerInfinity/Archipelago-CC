@@ -234,9 +234,10 @@ const NO_GRID_PRESET_PATH =
  * ⛓ H2b — **the document H2's textarea REFUSED**: `stardew_valley` at 2,620,221
  * pretty bytes, over the retired `RAW_VIEW_LIMIT_BYTES = 2_000_000`. It is a
  * committed preset rather than a padded fixture because the claim is about the
- * corpus. (It is the SECOND-largest; the largest, `procgen_topdown/AP_8` at
- * 3,147,683 B, is the instrument's `--all` arm's business — this row wants the
- * document whose refusal a person actually saw.)
+ * corpus. (It is the FOURTH-largest, under the three alttp top-down worlds; the
+ * largest, `procgen_topdown/AP_8` at 3,157,914 B, is the instrument's `--all`
+ * arm's business — this row wants the document whose refusal a person
+ * actually saw.)
  *
  * ⚠ **2,620,221, not the 2,620,225 the plan's §12.3 table says.** H2's pretty
  * column for this one preset came from `json.dumps(indent=2)`, whose default

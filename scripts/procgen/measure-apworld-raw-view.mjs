@@ -102,8 +102,8 @@ function say(line) {
  *
  * ⛔⛔ **RANKED BY PRETTY-PRINTED BYTES, NOT BY FILE SIZE — they are not the
  * same corpus.** 13 of the 205 committed presets are written COMPACT
- * (`compactJsonFile`), so the text the raw view holds is up to **1.75×** the
- * file on disk: `procgen_topdown/AP_8` is 1,800,899 B on disk and **3,147,683
+ * (`compactJsonFile`), so the text the raw view holds is up to **1.74×** the
+ * file on disk: `procgen_topdown/AP_8` is 1,811,130 B on disk and **3,157,914
  * B** in the view, which makes IT the worst case and not `stardew_valley`
  * (2,620,221 B, the file-size max the arc plan's §2 names). A threshold in
  * pretty bytes measured against a file-size ranking would never have seen its

@@ -144,7 +144,7 @@ describe('rawViewVerdict — the size question, with no limit left to guard', ()
         const sizes = [
             ['smz3 (H2: viewable)', 1_936_130],
             ['stardew_valley (H2: REFUSED)', 2_620_221],
-            ['procgen_topdown/AP_8 (the corpus maximum)', 3_147_683],
+            ['procgen_topdown/AP_8 (the corpus maximum)', 3_157_914],
         ];
         for (const [what, bytes] of sizes) {
             const v = rawViewVerdict(bytes);
