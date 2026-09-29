@@ -761,7 +761,62 @@ export function climbsArmedWaterfall(level, from, to, opts = {}) {
 }
 
 /**
- * A* over walkable tiles, 4-connected, unit cost, Manhattan heuristic.
+ * ⛓⛓⛓ **THE SWIMMER'S PRICE** (seedling swim T2, D1) — the step cost of a
+ * lattice node whose tile is ARMED WATER that the inventory makes walkable
+ * (`canSwim`). Every other node costs 1, exactly as before.
+ *
+ * ⛓ MEASURED, NOT ESTIMATED (scratch `ratio.mjs`, the real engine through
+ * `createRunForStaging`): a 40x5 corridor held RIGHT from rest, the crossing
+ * tick of every 16-px cell read off `run.state.x`, cells 8..32 (steady state,
+ * well inside a 33-cell water band in the wet arm):
+ *
+ *     ground      327 ticks / 24 cells = 13.625 t/cell
+ *     water       741 ticks / 24 cells = 30.875 t/cell  (`sound` pinned: the
+ *                 0.25 swim burst on the swim channel's first 6 of 47 frames)
+ *     ⇒ ratio     2.266 — and 16 / 0.45 = 35.56 t/cell (2.61x) with NO burst,
+ *                 since water friction 0.5 exceeds the 0.45 add and the
+ *                 velocity resets to exactly 0.45 every tick
+ *
+ * ⚠ 2.25, NOT 2.266: the measured ratio rounded to the nearest QUARTER, so a
+ * route's g-score is an exact binary sum. A* breaks ties on `f` and the route
+ * it emits is a COMMITTED FIXTURE; a cost like 2.266 would let a ULP of
+ * summation order decide between two equal routes. The rounding is 0.7 %.
+ *
+ * ⚠ AND IT IS THE HELD-KEY WALK'S RATIO, NOT THE SOLVER'S. The solver's walk
+ * presses `primary` (the sword dash) on its legs, so its speed is not one
+ * number: through `solveSegment` on the same corridor, ground cost 11.19 t/cell
+ * and an 8-cell water band 14.94 t/cell (1.34x), and ONE isolated water cell
+ * only 1.09x. Measured at T2's D1: a price of 1.25 flipped ONE of S1's nine
+ * NOT-ESTABLISHED water shortcuts, and 2.25 flipped three. What the remaining
+ * six are about (stance choice and the collect's side, not the swim) is in
+ * `seedling-bot-log.md` § *T2-swim*.
+ *
+ * ⛔ WATER ONLY (⚖ the planner ruled the scope). Ice, stairs and the waterfall
+ * keep cost 1 in this slice; the weight is one row, not a terrain table. ⛔ AND
+ * IT MOVES NO ROUTE WHERE WATER IS A WALL: without `canSwim` the lethal arm of
+ * `plannerObstacleAt` refuses the node before its cost is read, and a water
+ * tile COERCED by `noHazards` is plain floor to the physics and costs 1 here.
+ */
+export const WATER_STEP_COST = 2.25;
+
+/** The tile keys (`tx,ty`) whose lattice nodes cost `WATER_STEP_COST` under
+ *  `opts` — empty unless the inventory swims. */
+function swimTileKeys(level, opts) {
+    const { noHazards = [], inventory = null } = opts;
+    const keys = new Set();
+    if (!(inventory ?? EMPTY_INVENTORY).canSwim) return keys;
+    for (const tile of level.lethalTerrainTiles) {
+        if (tile.t !== LETHAL_WATER) continue;
+        if (coerceTerrainState(tile.t, noHazards) !== tile.t) continue;   // coerced: floor
+        keys.add(`${tile.tx},${tile.ty}`);
+    }
+    return keys;
+}
+
+/**
+ * A* over walkable tiles, 4-connected, Manhattan heuristic — unit cost except
+ * a swum water node, which costs `WATER_STEP_COST` (T2 D1; the heuristic stays
+ * admissible because no step costs less than 1).
  *
  * 4-connected rather than 8 on purpose: a diagonal tile step can cut a
  * corner the player's box does not fit around, and the smoother produces
@@ -800,6 +855,12 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
     const stride = level.width * TILE_SIZE / pitch;
     const key = (tx, ty) => ty * stride + tx;
     const h = (tx, ty) => Math.abs(tx - goal.tx) + Math.abs(ty - goal.ty);
+    // ⛓ T2 D1 — the swimmer's price, per node (see `WATER_STEP_COST`).
+    const swim = swimTileKeys(level, opts);
+    const cellsPerTile = TILE_SIZE / pitch;
+    const stepCost = (tx, ty) => (swim.size > 0
+        && swim.has(`${Math.floor(tx / cellsPerTile)},${Math.floor(ty / cellsPerTile)}`)
+        ? WATER_STEP_COST : 1);
 
     const gScore = new Map([[key(start.tx, start.ty), 0]]);
     const cameFrom = new Map();
@@ -850,7 +911,7 @@ export function planTilePath(level, from, to, allowTeleporter = null, opts = {})
             // end one tile up a waterfall, which is a stall rather than a
             // tight fit.
             if (climbsArmedWaterfall(level, cur, { tx: nx, ty: ny }, opts)) continue;
-            const g = cur.g + 1;
+            const g = cur.g + stepCost(nx, ny);
             if (gScore.has(nk) && gScore.get(nk) <= g) continue;
             gScore.set(nk, g);
             cameFrom.set(nk, { tx: cur.tx, ty: cur.ty });
