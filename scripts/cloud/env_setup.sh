@@ -12,7 +12,7 @@
 #   - a Python venv with the repo's requirements (git-sourced deps skipped)
 #   - node_modules built from package-lock.json
 #   - Playwright's Chromium + its apt dependencies
-#   - a full mirror of the frontend/modules/shared submodule's repo
+#   - a bare mirror of every submodule's repo (shared, the Seedling wasm builds, ...)
 # The session then runs scripts/cloud/session_bootstrap.sh in the repo, which
 # links these in (and repairs anything that moved since the cache was built).
 #
@@ -26,7 +26,6 @@ VENV="$DEST/venv"
 MIRRORS="$DEST/mirrors"
 STATUS="$DEST/SETUP_STATUS"
 REPO_URL="https://github.com/PeerInfinity/Archipelago-CC.git"
-SHARED_URL="https://github.com/PeerInfinity/archipelago-shared.git"
 
 mkdir -p "$DEST" "$MIRRORS"
 : > "$STATUS"
@@ -46,18 +45,24 @@ else
   step "seed clone: FAILED - nothing else can run"; exit 0
 fi
 
-# --- 2. submodule mirror ------------------------------------------------------
-# Full clone (not shallow) so the bootstrap can check out whatever commit the
-# session's HEAD pins. In-session git goes through a relay that 403s repos
-# outside the session's scope; setup-time git does not.
-if [ -d "$MIRRORS/archipelago-shared/.git" ]; then
-  timeout 120 git -C "$MIRRORS/archipelago-shared" fetch -q --all && step "shared mirror: refreshed" \
-    || step "shared mirror: refresh FAILED (stale copy kept)"
-elif timeout 180 git clone -q "$SHARED_URL" "$MIRRORS/archipelago-shared"; then
-  step "shared mirror: OK"
-else
-  step "shared mirror: FAILED"
-fi
+# --- 2. submodule mirrors -----------------------------------------------------
+# A bare mirror of EVERY submodule the seed's .gitmodules names (all public; the
+# largest, seedling-wasm, is ~36 MB packed). Full history, so the bootstrap can
+# check out whatever commit the session's HEAD pins. In-session git goes
+# through a relay that 403s repos outside the session's scope; setup-time git
+# does not.
+git -C "$SEED" config -f .gitmodules --get-regexp '^submodule\..*\.url$' | while read -r _ url; do
+  name=$(basename "$url" .git)
+  m="$MIRRORS/$name.git"
+  if [ -d "$m" ]; then
+    timeout 180 git -C "$m" fetch -q --prune origin && step "mirror $name: refreshed" \
+      || step "mirror $name: refresh FAILED (stale copy kept)"
+  elif timeout 240 git clone -q --mirror "$url" "$m"; then
+    step "mirror $name: OK ($(du -sh "$m" | cut -f1))"
+  else
+    step "mirror $name: FAILED"
+  fi
+done
 
 # --- 3. Python venv -------------------------------------------------------------
 # kivymd (root, GUI-only: a git+ line AND a >=2.0.1.dev0 pin PyPI cannot meet)
@@ -78,6 +83,12 @@ if (cd "$SEED" && timeout 480 "$VENV/bin/python" ModuleUpdate.py --yes >"$DEST/p
   step "pip: OK (ModuleUpdate reports every requirement met)"
 else
   step "pip: FAILED (see $DEST/pip.log)"
+fi
+
+# The Python half of the headless Seedling channel (pinned to node's playwright).
+if [ -f "$SEED/scripts/procgen/requirements-headless.txt" ]; then
+  timeout 120 "$VENV/bin/pip" install -q -r "$SEED/scripts/procgen/requirements-headless.txt" >>"$DEST/pip.log" 2>&1 \
+    && step "pip headless (python playwright): OK" || step "pip headless: FAILED (see $DEST/pip.log)"
 fi
 
 # --- 4. node_modules --------------------------------------------------------------

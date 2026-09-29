@@ -21,6 +21,14 @@ Two versioned scripts do all of the steps below:
   the cache was built (requirements, lockfile, the submodule pin). It also writes
   `Players/Templates` and `host.yaml` and prints `READY` or what is missing. It
   falls back to installing from scratch when no setup script ran.
+  Pass `--seedling` to also check out the Seedling wasm builds
+  (`frontend/modules/flashPanel/wasm`) and AS3 source (`vendor/seedling`), plus the
+  Python Playwright the headless Seedling drivers use. Pass `--all` for every submodule.
+  The environment script mirrors all seven submodule repos, so any of them checks out
+  offline. A Seedling tape replay then needs only a dev server on its own port and
+  `SEEDLING_PORT=<port> node scripts/procgen/check-seedling-bot-differential.mjs --tier=fast`.
+  It needs no build step. A change to `Bot.as` needs a wasm REBUILD, which can't be
+  done in the cloud.
 
 Measured locally 2026-09-28: the environment script took 108 s (excluding Chromium),
 and the bootstrap took 44 s, after which `test-all-templates.py` passed APQuest and
