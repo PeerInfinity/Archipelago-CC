@@ -52,6 +52,7 @@ import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
 import { fieldRow, numberField } from '../procgenCore/regionGenerationForm.js';
+import { SEEDLING_ITEMS_FEATURE, SEEDLING_LIBRARY_ITEMS } from '../seedlingDemo/itemLabels.js';
 import {
     FLASH_SEEDLING_LOAD_REGION_EVENT, FLASH_SEEDLING_PANEL_COMPONENT_TYPE, substrateRegistryEntry as FLASH_SEEDLING_ENTRY,
     seedlingFlashPanelBlock,
@@ -345,6 +346,10 @@ export function renderSeedlingGenProcgenParams({ params, onChange = () => {} } =
 const base = createFlashSubstrateEntry({
     id: FLASH_SEEDLING_GEN_SUBSTRATE_ID,
     label: 'Seedling (generated room)',
+    /** ⛓ `seedling_items` is the ITEM TAG of `libraryItems` below (the chart's
+     *  P4 names the items; the pipeline's item picker groups an item under the
+     *  substrates whose `supportedFeatures` carry its `feature`). */
+    supportedFeatures: ['arbitrary_ap_locations', SEEDLING_ITEMS_FEATURE],
     sidecarFields: FLASH_SEEDLING_GEN_SIDECAR_FIELDS,
     apLocationNamesOf: genRoomApLocationNames,
 });
@@ -386,6 +391,14 @@ export const substrateRegistryEntry = Object.freeze({
      * `regionParams.seedlingGen.hostChildren` (`hostsChildren`): a state that
      * says `false` keeps G1–G3's LEAF (no child; the back door takes no gate slot).
      */
+    /**
+     * ⛓ THE ITEMS A GENERATED ROOM CAN GATE ON PHYSICALLY — one per distinct
+     * AP name in `ITEM_LABELS` (sword, shield, swim), so a shipped world may
+     * name them in its scenario (`seedling_generated_swim` names `Progressive
+     * Swim`) and `presetDefs.generate.slow.test.js`'s "unknown scenario item"
+     * row can tell a declared gate item from a typo. Derived, never typed here.
+     */
+    libraryItems: SEEDLING_LIBRARY_ITEMS,
     canHostExitGates: () => true,
     exitGateVeto: (regionParams) => (hostsChildren(regionParams) ? () => true : () => false),
     backPortalGated: (regionParams) => hostsChildren(regionParams),

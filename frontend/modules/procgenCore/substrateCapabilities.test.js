@@ -220,6 +220,11 @@ describe('P4 / P5 — the split DERIVED from the items\' own feature tags (S3, �
         maze: ['colored_doors_and_keys'],
         bounce: ['bounce_abilities'],
         runner: ['runner_abilities'],
+        // ⛓ Re-pinned by name at the swim T1 merge (2026-09-29): the generated
+        // Seedling entry declares its gate items (`itemLabels.SEEDLING_LIBRARY_ITEMS`,
+        // tagged `seedling_items`) so `seedling_generated_swim` may name
+        // `Progressive Swim` — CI read the slow tier red at `17c1c999f5` without it.
+        flash_seedling_gen: ['seedling_items'],
     };
 
     it('itemTagFeatures on the real entries equals the W0 (a) tag map', () => {

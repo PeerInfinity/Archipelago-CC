@@ -579,6 +579,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
+                    "statement": "It brings progression items of its own",
+                    "text": "Progressive Sword, Progressive Shield, Progressive Swim"
+                },
+                {
+                    "group": "play",
                     "statement": "What the generator may do with it",
                     "text": "locations placed anywhere"
                 },
@@ -1428,16 +1433,16 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "Progressive Sword, Progressive Shield, Progressive Swim",
                     "why": [
                         {
                             "field": "libraryItems",
-                            "value": "—"
+                            "value": "3 keys"
                         },
                         {
                             "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations"
+                            "value": "arbitrary_ap_locations, seedling_items"
                         }
                     ]
                 },
@@ -1555,7 +1560,7 @@ export const CAPABILITIES = frz({
                     "why": [
                         {
                             "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations"
+                            "value": "arbitrary_ap_locations, seedling_items"
                         }
                     ]
                 },
@@ -3791,7 +3796,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "supportedFeatures",
-                            "value": "arbitrary_ap_locations"
+                            "value": "arbitrary_ap_locations, seedling_items"
                         }
                     ]
                 },

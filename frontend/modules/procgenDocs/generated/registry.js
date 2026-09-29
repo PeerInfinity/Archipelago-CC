@@ -60,7 +60,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 26,
+            "fields": 27,
             "id": "flash_seedling_gen",
             "label": "Seedling (generated room)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
@@ -3331,6 +3331,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "runner",
+                "flash_seedling_gen",
                 "jta",
                 "omsi"
             ],
@@ -3394,10 +3395,14 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "3 keys",
+                    "type": "object",
+                    "value": [
+                        "Progressive Shield",
+                        "Progressive Swim",
+                        "Progressive Sword"
+                    ]
                 },
                 {
                     "id": "jta",
@@ -6464,10 +6469,11 @@ export const REGISTRY = frz({
                 {
                     "id": "flash_seedling_gen",
                     "present": true,
-                    "short": "arbitrary_ap_locations",
+                    "short": "arbitrary_ap_locations, seedling_items",
                     "type": "array",
                     "value": [
-                        "arbitrary_ap_locations"
+                        "arbitrary_ap_locations",
+                        "seedling_items"
                     ]
                 },
                 {

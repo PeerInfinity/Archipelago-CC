@@ -76,49 +76,12 @@ export { REQUIRING_GRADES };
  * Progressive Sword" is a sentence about the game.
  * ⛓ Taken from `worlds/seedling/Items.py`'s own table, not invented here.
  */
-export const ITEM_LABELS = Object.freeze({
-    hasSword: 'Progressive Sword',
-    hasShield: 'Progressive Shield',
-    /** ⛓ Swim S1 (D3) — the conch; `worlds/seedling/Items.py`'s name. */
-    canSwim: 'Progressive Swim',
-    /**
-     * ⛓ Swim T2 (D2) — the feather is the SECOND `Progressive Swim`, so its
-     * row carries a COUNT. ⛔ A row is a NAME (count 1) or `{item, count}`;
-     * read it through `itemLabelOf`, never by indexing this table directly.
-     */
-    hasFeather: Object.freeze({ item: 'Progressive Swim', count: 2 }),
-});
-
-/**
- * ⛓ ONE ROW OF `ITEM_LABELS`, NORMALISED — `{item, count}` whichever shape the
- * table spells it in, or `null` for a flag the table does not name.
- */
-export function itemLabelOf(flag) {
-    const row = ITEM_LABELS[flag];
-    if (row === undefined) return null;
-    if (typeof row === 'string') return Object.freeze({ item: row, count: 1 });
-    return Object.freeze({ item: row.item, count: row.count ?? 1 });
-}
-
-/** The words the REPORT speaks for a flag — the AP name, `×N` when it takes
- *  more than one, and the flag itself when the table does not name it. */
-export function itemLabel(flag) {
-    const l = itemLabelOf(flag);
-    if (!l) return flag;
-    return l.count > 1 ? `${l.item} ×${l.count}` : l.item;
-}
-
-/**
- * ⛓ THE REQUIREMENT A REQUIRED ROW STANDS FOR, in the rule grammar's own
- * spelling — `Has('Progressive Sword')`, `Has('Progressive Swim', 2)`. ⛔ The
- * count is written only when it is not 1, so every row the table held before
- * T2 reads exactly as it did.
- */
-export function requirementOf(flag) {
-    const l = itemLabelOf(flag);
-    const name = l ? l.item : flag;
-    return l && l.count > 1 ? `Has('${name}', ${l.count})` : `Has('${name}')`;
-}
+// ⛓ The label table and its readers live in the LEAF `itemLabels.js` (no
+// imports), so the flash panel's light generated entry can declare
+// `libraryItems` from the same table without this module's closure. They are
+// re-exported here unchanged for every reader that imports them from this file.
+export { ITEM_LABELS, itemLabelOf, itemLabel, requirementOf } from './itemLabels.js';
+import { itemLabel, requirementOf } from './itemLabels.js';
 
 /**
  * ⚖ The PoC's §1.14 ruling, one instrument over: **a measurement harness may
