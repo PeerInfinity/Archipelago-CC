@@ -1468,7 +1468,12 @@ function placementBlocker(run, resolved, contacts) {
     return { kind: hit.kind, tag, id };
 }
 
-/** The solver's planning options: the FULL bag, volumes on, live keys. */
+/**
+ * The solver's planning options: the FULL bag, volumes on, live keys.
+ * ⛓ Swim S1, D1: `inventory` and `noHazards` are the DRIVER's `planNow` bag —
+ * without them `plannerObstacleAt` priced every water tile as a wall whether or
+ * not the boot granted the conch (`procgenSwimSolver.test.js`).
+ */
 function solverPlanOpts(run, contacts, extra = {}) {
     return {
         liveBag: run.liveGeometryOpts(),
@@ -1476,6 +1481,8 @@ function solverPlanOpts(run, contacts, extra = {}) {
         keys: run.keys,
         contacts,
         lattice: DEFAULT_LATTICE,
+        inventory: run.inventory,
+        noHazards: run.noHazards,
         ...extra,
     };
 }
