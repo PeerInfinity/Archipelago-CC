@@ -10179,6 +10179,124 @@ player meets either gate without the item.
 
 **The close.** The report is `CC/docs/cloud-reports/seedling-swim-t1.md`.
 
+### Seedling substrate T2-swim — the swimmer's pricing and the feather gate (2026-09-29)
+
+**The planner priced tiles, and the swim is slower.** S1-swim's grade census
+over its 87 water shortcuts read 73 SHORTENS, 9 NOT-ESTABLISHED and 5 INERT,
+where NOT-ESTABLISHED means the level was cheaper *without* the conch. The
+hypothesis was that `planTilePath` is unit-cost, so a swum tile costs what a
+ground tile costs. This slice (plan `seedling-swim-plan.md` §6, a cloud fan-out
+build) priced the swum node, gave the feather's count a place in the label
+table, and built the feather's gate. The report is
+`CC/docs/cloud-reports/seedling-swim-t2.md`. ⛔ No biome default moved, and no
+committed solve moved.
+
+**W0.** The A* cost site is `botDriverV2.planTilePath`'s `const g = cur.g + 1`.
+A lattice node knows its tile by `floor(n / (TILE_SIZE / pitch))`, and
+`level.lethalTerrainTiles` names the water, so no planner reshape was needed.
+The S1 census was rebuilt as a scratch driver (`generateSeedlingLevel`, bounds
+3/4/3/1, `requirementsFor`, `gradeOf`). All 14 non-SHORTENS rows reproduced to
+the tick.
+
+- **D1 — the price.** `WATER_STEP_COST = 2.25`: the step cost of a node whose
+  tile is ARMED water that `inventory.canSwim` makes walkable. Every other node
+  still costs 1. The ratio was measured on the real engine: a 40×5 corridor held
+  RIGHT, cells 8..32, gives ground 13.625 t/cell and water 30.875 t/cell with
+  `sound` pinned (2.266). Without the burst it is 16 / 0.45 = 35.56 t/cell
+  (2.61). The price is rounded to a quarter so that g-scores are exact binary
+  sums.
+  - ⚠ **The solver's own walk is not that walk.** The solver's tape presses
+    `primary` (the sword dash) on its legs. Through `solveSegment` on the same
+    corridor, ground costs 11.19 t/cell, an 8-cell water band 14.94 t/cell
+    (1.34×), and one isolated water cell only 1.09×. A price of 1.25 flipped
+    one of the nine rows and made `loopy 14×14 s2` worse (267 → 287); 2.25
+    flipped three.
+  - **The re-grade: 74 SHORTENS, 6 NOT-ESTABLISHED, 7 INERT.**
+    - `loopy 10×10 s1` → SHORTENS 133/160.
+    - `loopy 10×10 s3` → INERT 110/110.
+    - `loopy 14×14 s2` → INERT 232/232.
+    - `open 14×14 s1` stays SHORTENS at 268/269 (it was 244/269).
+  - **The six that stay NOT-ESTABLISHED are not about the swim price.**
+    - `branchy 14×14 s9` (= `winding 14×14 s9`, the same room), 262/162: the
+      with-arm swims a pass-2 `water-pool`, not the door. Its route to the
+      pickup's NORTH stance has the same tile count as the dry route to the
+      SOUTH one. `deriveStance`'s committed order (`ECONOMIES_ROSTER_WIDE =
+      false`) takes the first reachable ring cell in `(d, y, x)` order, so
+      north wins, and that stance is reachable only by swimming.
+    - The other four (`branchy 10×10 s2`, `branchy 14×14 s1`, `loopy 14×14
+      s10`, `winding 10×10 s10`) DO swim the door, on routes 2 cells shorter.
+      Yet the walk reaches its stance at about the same tick: 92 vs 91, 83 vs
+      81. A straight single-cell swim costs only +10..12 ticks. The balance is
+      in the controller's legs around the door and in the other side's collect
+      approach (+2..+6 t), and no tile price sees either.
+  - **Checks:**
+    - the identity block is IDENTICAL, with all six producer `--check`s
+      unmoved;
+    - the generated set is OK;
+    - `census-seedling-campaign` is byte-identical (`01ec4283…`);
+    - the witness room still SOLVES in 71 t.
+  - **Mutant (a)**, the weight at 1: 5 rows go red and the census reverts
+    byte-identical.
+- **D2 — the count.** A row of `ITEM_LABELS` is either a name or `{item,
+  count}`. It is read through `itemLabelOf`, `itemLabel` ("Progressive Swim ×2")
+  and `requirementOf` (`Has('Progressive Swim', 2)`). `hasFeather: {item:
+  'Progressive Swim', count: 2}`. The only other reader is
+  `batch-seedling-acceptance.mjs`, which reads `row.item`, and its md5 is
+  unmoved. ⚠ The brief named the gen room's exit gate as a reader: it is not,
+  because it clones the input region's `access_rule`. **Mutant (b)**, the count
+  dropped: 4 rows go red.
+- **D3 — `waterfallgate` and `post-feather`.**
+  - `TERRAIN.waterfall` uses column 32, which is level 0's own waterfall at
+    (13,7) (both of L0's waterfall tiles are column 32).
+  - `recordHoldsWater` counts it, because `inWater` covers type 25.
+  - `soloDoor.WATERFALL_GATE`: a cut whose start side is the cell BELOW
+    (`APPROACH_SOUTH`); other rooms refuse
+    `the-door-has-no-south-approach`.
+  - `DOOR_TERRAIN` paints the door `waterfall`.
+  - `ELEMENT_TABLE.waterfallgate.needs = ['hasFeather']`.
+  - `POST_FEATHER_ITEMS` is post-swim plus the feather. It is in
+    `GENERATE_BIOMES` and not in `DEFAULT_CENSUS_BIOMES`.
+  - `planTilePath`'s no-path refusal now NAMES the climb rule when it fired. The
+    clause goes first, because `solverBot` quotes that message cut to 300
+    characters.
+  - **Witness:** `winding 10×10 s8` is CERTIFIED at 139 t. `hasFeather` grades
+    STRONG, and the without-arm is *"… ⛓ The search refused 1 UPWARD step(s)
+    into or out of an armed waterfall (`climbsArmedWaterfall`) …"*. It is the
+    climb rule, not a drown. `canSwim` grades INERT, because a waterfall does
+    not drown.
+  - `post-swim`, `post-shield`, `post-sword` and `pre-sword` all refuse
+    `the-element-needs-an-item-this-biome-does-not-grant`.
+  - **Mutant (c)**, the south check dropped: 4 rows go red, and empty rooms
+    place doors entered from above that grade INERT or NOT-ESTABLISHED (not a
+    gate).
+  - ⛔ **Stopped:** `GEN_ROOM_BIOMES` lives in `seedlingGenRoom.js` (T1's file)
+    and is asserted equal to `GEN_ROOM_BIOME_NAMES` at module load. One side
+    alone throws, so `post-feather` is not a gen-room biome yet.
+- **D4 — yield** (`sweep-yield-table.mjs --substrate=seedling
+  --palette=post-feather --elements=waterfallgate`, 7 kinds × 10×10,14×14 ×
+  seeds 1–12, 3/4/3/1, 124 s):
+  - **14/168 placed, 14/14 certified.** By kind: branchy 3, bushy 3, rooms 3,
+    winding 5; empty, loopy and open 0.
+  - Refusals: 138 `the-door-has-no-south-approach` and 16 `wall-does-not-seal`.
+    A main path rarely steps UP.
+  - ⚠ **3 cells THREW `GenerationAborted`** (`branchy 10×10 s12`, `branchy /
+    winding 14×14 s9`). Each is a pass-2 `pit-patch` whose certification solve
+    died in the pit, in a room where the element had REFUSED. The aborted
+    records hold no waterfall, and the abort is unmoved with the weight at 1.
+  - **Wasm, headless:** `--elements=waterfallgate --biome=post-feather --seed=8
+    --skeleton=winding --areas=0` gives *"agrees per tick (140 observations)"*,
+    `Δx 0 Δy 0` and `0 FAILURE(S)`: the real game climbs the waterfall with the
+    feather. S1's water-shortcut witness (`--seed=6 --skeleton=loopy`) still
+    gives *"agrees per tick (76 observations)"* and `Δx 0 Δy 0`.
+
+**Handed on.**
+- The four "leg" rows want a planner that prices STOPS as well as cells; one
+  tile weight cannot.
+- The two "stance" rows are `deriveStance`'s north-first order, which is behind
+  the roster-wide economies gate.
+- The gen room needs `post-feather` in `GEN_ROOM_BIOMES`, one line in T1's file.
+- The three pit-death aborts are pass 2's to attribute.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
