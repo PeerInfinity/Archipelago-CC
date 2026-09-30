@@ -10723,6 +10723,74 @@ SOLVED 26, 26 SOLVED 89, **27 SOLVED 383**, **28 SOLVED 336** (the Green Key
 opens `{31,0}`), 29 SOLVED 210, 30 REFUSED at the macro layer. Step 24 run
 unbounded: REFUSED after 347.7 s, past the shield lock, on `puncher@416,256` at
 the Red Key's lock (R-o; no puncher arm was built).
+### Seedling substrate U3-swim — the schedule sees walls; the corridor body (2026-09-30)
+
+F2 end to end, from both sides of the user's *"fix the solver so that enemies can
+be placed on the main path"*. The report is
+`CC/docs/cloud-reports/seedling-swim-u3.md`.
+
+**D1 — the one simulation line (⚖ Q27).** `run.collideLineSolid(x0, y0, x1, y1)`
+hands out the `levelRun` closure `assertSpinnerLineOfSight` asks (the first
+Solid box on the truncated 1 px raycast, or null). It is a pure read that
+`advance` never consults. `tapeRunner.test.js` 365/365 before and after, and
+every identity row is unmoved at D1. It is a run member, not a door export
+(the door is for static imports). Its surface row (seedling / geometry-query)
+landed with its first family read: 184 → 185 rows, `--check` GREEN.
+
+**D2 — the strike schedule sees walls.** `deriveStrike` skips any (cell, tick)
+whose dispatch train would swing at a body across a Solid
+(`strikeLineBlocked`: the run's own slash-rect, `SLASH_REACH` and line gates,
+over forecast indices `i .. i + SLASH_HIT_TICKS`). The live press arm previews
+its train and asks the same line (`trainLineBlockedHere`). U1's (2,2) was
+that arm pressing from the START cell across the corner of the mouth's
+stone. A skip is not a refusal, and the no-strike refusal names the skipped
+count only when it is non-zero. Census chamber, post-sword:
+
+- **(2,2) SOLVES**, 154 t, certified, 3 landings in 137 t. Post-sword now
+  solves 9 of the 12 positions.
+- (3,6), (7,6), (2,7) and the CORRIDOR arm keep their U1 texts byte for byte.
+- Pre-sword is byte-identical to W0.
+- Mutant (a), the predicate forced false: (2,2)'s U1 line-of-sight text
+  returns byte for byte.
+
+⛔ The hammer-safe half STOPPED: `deriveStrike` already scans every walkable
+cell against the body's rect and the hammer line at each train tick's own
+phase. The "nowhere to be" text is the REFUGE's 45-tick window (trap 154).
+
+⚠ **One identity row moved.** `carved pairs c4` went `8c972028…` →
+`3bacdc9e…`, and the only differing line is `bushy post-sword seed 6`. At W0
+it THREW the run's line-of-sight Error; now it generates (TARGET_REACHED,
+114→118 t). The six `--check`s, the campaign census, `fixtures/**` and
+presets are unmoved.
+
+**D3 — `corridorbody`** (`soloDoor.CORRIDOR_BODY`, on-connector, `LAW_CUT`).
+It is the rock gate's cut search with the one obstacle realised as
+`spinner {tag:'-1'}`: no lock, no tag. The composite carries it as `bodies` +
+`killLockCell: null` (`ON_CONNECTOR_BODY_IDS`, present only when any exist).
+That puts F1's rules in reach: the TEXTLESS goal (now also swapped on the
+on-connector commit) and `the-solver-cannot-cross-the-roaming-body`. It
+`needs: ['hasSword']`, is in no biome default, and sits LAST in the table.
+
+- **Yield**, F1b's kinds, sizes, seeds and bounds, 168 cells per palette:
+  - post-sword: **137 placed, 76 certified**; 59 × the roaming refusal,
+    2 × per-target budget, 22 `wall-does-not-seal`. The body ablation reads
+    COSTS 44, INERT 19.
+  - pre-sword: 146 placed, 0 certified (the seam).
+  - roam, for comparison: 10 placed / 8 certified.
+- **The sword differential grades SHORTENS, not STRONG**, on the rooms seeds:
+  pre-sword the solver dodges the billiard. The row therefore declares
+  `meetsRequire: false`, and `headsNeeding('hasSword')` stays
+  `[killgate, arena, rockgate]`, so no `--require=hasSword` room moves.
+- **Witness**: `open` 10x10 s1 post-sword, `[kill, collect]` in 223 t. The
+  wasm witness agrees per tick (224 observations), end Δ0, 0 failures.
+- **Mutants**:
+  - (b), `needs` dropped: 2 rows red, and pre-sword the solve itself refuses
+    by the roaming name.
+  - (c), the removal never observed: the witness reds with BUDGET_EXHAUSTED.
+- ⚠ **The post-sword sweep lost 19 cells to the harness.** 9 hit the timeout
+  and 10 threw `GenerationAborted`. The throws are the swim-T2 pit class
+  (*"fell into a pit in level 900, which has NO control block"*), and W0's
+  roam sweep has the same class.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
