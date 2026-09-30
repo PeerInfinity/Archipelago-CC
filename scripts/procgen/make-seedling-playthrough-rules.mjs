@@ -204,6 +204,8 @@ const gridFor = (level) => SEM.buildSeedlingRegionGrid(
     { x: 0, y: 0, w: level.width, h: level.height }, MASKS ? expandPixelMasks(level) : level,
     { entityOverride, tileOverride: OV.overlayTileSemantics },
 );
+/** ⛓ SWIM T4 — the analyzer grid this generator builds for one level (the census's read). Additive. */
+export const playthroughGridFor = (level) => gridFor(level);
 
 // ── what the derivation needs, and what this script keeps ─────────────────
 //
