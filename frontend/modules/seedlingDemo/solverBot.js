@@ -5311,7 +5311,14 @@ function derivePressKill(run, bodies, contacts) {
                 + `${SLASH_REACH} px of a body while the player box stays clear of every `
                 + `body's 7x7 rect and of ${hammerTestAt(run)} AND is reachable in time `
                 + `along a transit-safe corridor. ${first?.considered ?? 0} `
-                + 'opportunit(ies) were considered.',
+                + 'opportunit(ies) were considered.'
+                // ⛓ U3 D2 — named only when the line of sight skipped any, so
+                // a refusal it did not touch keeps its text byte for byte.
+                + ((first?.sighted ?? 0) > 0
+                    ? ` ${first.sighted} (cell, tick) pair(s) were SKIPPED because the swing's `
+                        + 'line to a body\'s entity point crosses a Solid (`Player.slash`\'s '
+                        + 'line-of-sight gate, asked through `run.collideLineSolid`).'
+                    : ''),
         });
         if (first?.rejected?.length) rejected.push(...first.rejected.slice(0, 3));
         return no(rejected);
@@ -5587,6 +5594,40 @@ function minTicksBetween(from, to) {
     return Math.ceil(Math.max(Math.abs(to.x - from.x), Math.abs(to.y - from.y)) / WALK_SPEED);
 }
 
+/**
+ * ⛓⛓ SEEDLING SWIM U3 (D2) — **THE SWING'S LINE OF SIGHT, ASKED BEFORE IT IS
+ * PLANNED.** `Player.slash` refuses a hit whose line from the player's entity
+ * point to the body's crosses a Solid, and `levelRun` refuses to model that
+ * miss (`assertSpinnerLineOfSight`: it throws). Until the run exposed the
+ * query (`run.collideLineSolid`, U3 D1) the schedule could not ask it, so a
+ * swing through the corner of a wall was planned and the run refused it at the
+ * hit (U1's (2,2)). ⇒ the SAME predicate, asked of every body the dispatch
+ * train could test: the slash rect from `from` at `dir` overlaps it and it is
+ * within `SLASH_REACH` — the run's own two gates before the line.
+ *
+ * ⚠ THE WINDOW IS ONE WIDER THAN THE TRAIN. The five hit tests read the bodies
+ * at forecast indices `i .. i + SLASH_HIT_TICKS - 1` (the press at
+ * `ticksCompleted + i`, tests at `+1 .. +5`, `forecast[j]` = the top of tick
+ * `ticksCompleted + 1 + j`); `i + SLASH_HIT_TICKS` is included for the same
+ * pairing reason the hammer window is widened. A strike it drops for that one
+ * tick was a strike the run might have refused.
+ *
+ * @returns {?{tag, at:{x, y}}} the first blocker, or null
+ */
+function strikeLineBlocked(run, from, dir, forecast, i) {
+    const rect = slashRect(from.x, from.y, dir);
+    for (let k = 0; k <= SLASH_HIT_TICKS; k += 1) {
+        for (const r of forecast[i + k] ?? []) {
+            if (!rectsOverlapLocal(rect, r)) continue;
+            if (distanceRectPoint(from.x, from.y, r) > SLASH_REACH) continue;
+            const blocker = run.collideLineSolid(from.x, from.y,
+                r.x + SPINNER.originX, r.y + SPINNER.originY);
+            if (blocker) return blocker;
+        }
+    }
+    return null;
+}
+
 function deriveStrike(run, bodyId, contacts, notBefore = 0) {
     const index = (run.entities('spinnerBodies') ?? []).findIndex((b) => b.id === bodyId);
     if (index < 0) return null;
@@ -5597,6 +5638,9 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
     const floor = new Map(cells.map((c) => [c, minTicksBetween(run.state, c)]));
     const opportunities = [];
     let unreachable = 0;
+    /** ⛓ U3 D2 — how many (cell, tick) pairs the line of sight SKIPPED; a
+     *  skip, not a refusal, and the count rides the refusal text. */
+    let sighted = 0;
     for (let i = Math.max(1, notBefore); i < horizon - SLASH_HIT_TICKS - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
@@ -5618,6 +5662,10 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
                 if (!clearOfHammersAt(run, c.box, forecast, i + k)) safe = false;
             }
             if (!safe) continue;
+            if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i)) {
+                sighted += 1;
+                continue;
+            }
             opportunities.push({ i, cell: c });
         }
         if (opportunities.length >= STRIKE_CANDIDATES) break;
@@ -5659,12 +5707,14 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
             eta,
             rejected,
             considered: opportunities.length,
+            sighted,
         };
     }
     return {
         cell: null,
         rejected,
         considered: opportunities.length,
+        sighted,
         // ⛓ A BOUNDED SWEEP MUST NAME WHAT IT BOUNDED. The refusal now says
         // how many (cell, tick) pairs the ETA floor dropped as well as how
         // many were previewed — the two numbers a reader needs to tell "the
@@ -5713,6 +5763,40 @@ function trainIsSafeHere(run, aimKeys = null) {
         if (!clearOfHammersAt(run, playerBoxAt(st.x, st.y), forecast, k)) return false;
     }
     return true;
+}
+
+/**
+ * ⛓⛓ U3 D2 — **AND THE LIVE ARM'S TRAIN ASKS THE LINE TOO.** The early press
+ * below takes an opportunity the schedule did not plan, from where the player
+ * actually is — which is exactly how U1's (2,2) swung through a wall: the body
+ * wandered into reach of the START cell on the first ticks, across the corner
+ * of the mouth's stone. So the train is PREVIEWED as `trainIsSafeHere`'s is (the
+ * aim keys, the press, then standing) and every body the slash rect reaches
+ * within `SLASH_REACH`, at the forecast index each landing pairs with and the
+ * one before it, is asked `run.collideLineSolid` from the previewed position.
+ * A blocked line means DO NOT press here; the schedule then plans a strike the
+ * line admits.
+ */
+function trainLineBlockedHere(run, dir, aimKeys) {
+    const span = SLASH_HIT_TICKS + 3;
+    const forecast = run.spinnerForecast(span);
+    const step = run.previewStepper();
+    let st = { ...run.state };
+    const keysAt = (k) => (k === 1 ? aimKeys : (k === 2 ? new Set(['primary']) : new Set()));
+    for (let k = 1; k < span; k += 1) {
+        st = step({ ...st }, keysAt(k));
+        if (k < 2) continue;
+        const rect = slashRect(st.x, st.y, dir);
+        for (const j of [k - 1, k]) {
+            for (const r of forecast[j] ?? []) {
+                if (!rectsOverlapLocal(rect, r)) continue;
+                if (distanceRectPoint(st.x, st.y, r) > SLASH_REACH) continue;
+                if (run.collideLineSolid(st.x, st.y,
+                    r.x + SPINNER.originX, r.y + SPINNER.originY)) return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**
@@ -6608,6 +6692,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 && rectsOverlapLocal(slashRect(run.state.x, run.state.y,
                     facingToward(run.state, body.rect)), body.rect)
                 && trainIsSafeHere(run,
+                    new Set([FACING_KEYS[facingToward(run.state, body.rect)]]))
+                && !trainLineBlockedHere(run, facingToward(run.state, body.rect),
                     new Set([FACING_KEYS[facingToward(run.state, body.rect)]]))) {
                 /**
                  * ⛓ IN REACH AND READY — aim this tick, press the next. The

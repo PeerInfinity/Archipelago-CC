@@ -62,11 +62,24 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
         expect(kills[0].landings).toHaveLength(3);
     });
 
-    it('(2,2): the press arm swings through stone — REFUSED by the ladder, naming the run\'s line-of-sight refusal (not a crash)', () => {
+    /**
+     * ⛓ U3 D2 — the schedule sees walls. At U1 the live arm pressed from the
+     * start cell as the body wandered into reach across the corner of the
+     * mouth's stone, and the run refused the hit (*"tile:Stone at (32, 29.0…)
+     * on the line to its entity point"*). The press now asks
+     * `run.collideLineSolid` first, and the kill lands from a cell with a
+     * line. ⛔ With the predicate forced false (U3 mutant (a)) the U1 text
+     * returns byte for byte, and this row reds.
+     */
+    it('(2,2): was the run\'s line-of-sight refusal; now SOLVES in 154 t, the swing planned on a clear line', () => {
         const out = solveAt(2, 2, POST_SWORD_ITEMS);
-        expect(out.verdict).toBe(VERDICT.REFUSED);
-        expect(out.reasonText).toMatch(/the combat ladder is EXHAUSTED/);
-        expect(out.reasonText).toMatch(/kill: spinner@32,32 is a live Spinner and the press arm's schedule swung through a Solid/);
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.ticks).toBe(154);
+        expect(out.certification?.certified).toBe(true);
+        const kills = out.records.filter((r) => r.strategy === 'kill');
+        expect(kills).toHaveLength(1);
+        expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@32,32' });
+        expect(kills[0].landings).toHaveLength(3);
     });
 });
 
