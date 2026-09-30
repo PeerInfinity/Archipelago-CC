@@ -62,7 +62,71 @@ The table has one row per reached member or imported symbol. Its columns are:
 | `dynamic` | reads per family file while the routes ran |
 | `why` | one sentence, written from reading the member |
 
-SURFACE-TABLES-PLACEHOLDER
+### Class × form × surface
+
+Each cell shows the number of rows, then the number of static sites.
+
+| surface | class | live-state | event-ledger | forecast | stepper | geometry-query | constant | function | total |
+|---|---|---|---|---|---|---|---|---|---|
+| run | physics | 6 / 508 | 1 / 2 | 1 / 7 | 2 / 39 | 1 / 5 | 1 / 2 | 1 / 7 | 13 / 570 |
+| run | seedling | 35 / 221 | 29 / 60 | 3 / 9 | — | 2 / 2 | — | 2 / 5 | 71 / 297 |
+| world | physics | — | — | — | — | 9 / 39 | 3 / 15 | — | 12 / 54 |
+| world | seedling | — | — | — | — | 5 / 12 | 11 / 85 | — | 16 / 97 |
+| state | physics | 10 / 250 | — | — | — | — | — | — | 10 / 250 |
+| state | seedling | 4 / 0 | — | — | — | — | — | — | 4 / 0 |
+| import | physics | — | — | — | 1 / 4 | 4 / 68 | 17 / 127 | 12 / 31 | 34 / 230 |
+| import | seedling | — | — | 5 / 10 | 3 / 3 | 15 / 40 | 37 / 172 | 20 / 40 | 80 / 265 |
+
+Two thirds of the run's static sites are physics, but only 13 of its 84 members are. Most of that weight sits in `run.state`, `run.world`, `run.level` and `run.advance`. The Seedling part of the surface is wide and shallow: 71 members with 297 sites between them.
+
+### The ten heaviest members
+
+| member | static sites | class | form | files |
+|---|---|---|---|---|
+| `run.state` | 239 | physics | live-state | botDriverV2 113, solverBot 126 |
+| `run.world` | 159 | physics | live-state | botDriverV2 56, solverBot 103 |
+| `state.y` | 111 | physics | live-state | botDriverV1 2, botDriverV2 57, solverBot 52 |
+| `state.x` | 108 | physics | live-state | botDriverV1 2, botDriverV2 54, solverBot 52 |
+| `run.level` | 83 | physics | live-state | botDriverV2 30, dangerMap 9, director 1, solverBot 43 |
+| `run.advance` | 35 | physics | stepper | botDriverV2 26, solverBot 9 |
+| `run.openActivators` | 30 | seedling | live-state | botDriverV2 22, solverBot 8 |
+| `run.pushables` | 30 | seedling | live-state | botDriverV2 17, solverBot 13 |
+| `run.ticksCompleted` | 24 | physics | live-state | botDriverV2 3, dangerMap 1, solverBot 20 |
+| `world.activators` | 22 | seedling | constant | botDriverV2 10, solverBot 12 |
+
+### Static against dynamic
+
+Across the ten committed routes, the dynamic census reached 69 of the 84 run members and 24 of the 28 world members. Every one of those was already a static row. It also found eight `state` members that the static census cannot name: `terrain`, `hazard`, `drown`, `swim`, `latched`, `hitX`, `hitY` and `transition`. Seven of them are reached through the four `{ ...run.state }` copies in `solverBot.js`. The eighth, `hazard`, is read by `strikePolicy.js` through `strike.decide(state)`. The static census lists both kinds of site under what it cannot see (spread-copy and passed-unresolved). The probe also recorded some reads that are not rows, because they belong to the route scripts or to the simulation itself (`run.gameTime`, `run.saveArrays`, `world.nearestWalkableTileWithTie` and a few others).
+
+### Cold members
+
+Nineteen members are statically reached but no committed route reaches them at runtime:
+
+- **Run, 15.** Six are reached only from `director.js`: `appliedTimedClears`, `bankedClears`, `earnedClears`, `saveState`, `spinnerWrites` and `worldCtor`. The director's live envelope runs on the watch page, which none of these routes loads. One is reached only from `dangerMap.js`: `arrowCoverAt`. Eight are `botDriverV2.js` branches that none of the committed routes takes: `blastFreezes`, `crusherContacts`, `crushersParked`, `primary`, `treeBurns`, `turretDamage`, `turretKills` and `turretsSettled`.
+- **World, 4.** `bridgeTiles`, `burnableTrees`, `iceTurrets` and `solidBoxesForMover`.
+
+A cold row is still part of the contract. It just means no route guards it at runtime yet.
+
+### Narrowing candidates
+
+Each candidate below folds a group of members behind one new interface member. The table ranks them by how many static sites would move to that one new member.
+
+| rank | fold | members → 1 | sites moved | heaviest |
+|---|---|---|---|---|
+| 1 | run: Seedling entity live state → `run.entities(family)` | 22 → 1 | 171 | openActivators 30, pushables 30, armedArrowTraps 12, crushers 10, openChests 10 |
+| 2 | world: Seedling entity rosters → `world.roster(family)` | 11 → 1 | 85 | activators 22, pressers 12, arrowTraps 11, pushables 11, combat 9 |
+| 3 | run: Seedling event ledgers → `run.ledger(kind)` | 29 → 1 | 60 | collected 7, sealCollections 6, equipsFired 4, roomWrites 4, blastFreezes 3 |
+| 4 | run: the bag and progress → `run.progress()` | 13 → 1 | 50 | inventory 16, keys 10, primaryWeapon 6, slashInfo 5, inputRefused 3 |
+| 5 | imports: `presses.js` → one Seedling facade | 10 → 1 | 38 | SLASH_REACH 13, SLASH_HIT_TICKS 10, slashRect 7 |
+| 6 | imports: `spinner.js` → one facade | 5 → 1 | 35 | SPINNER 30 |
+| 7 | imports: `activators.js` → one facade | 8 → 1 | 31 | RESPONDERS 12, localPublish 5 |
+| 8 | imports: `arrowTrap.js` → one facade | 6 → 1 | 28 | ARROW 13, arrowLaneForPlacement 6 |
+| 9 | imports: `combat.js` → one facade | 9 → 1 | 28 | ENEMY_CLASSES 11, KILL_LOCK_TSET 4 |
+| 10 | imports: `combatVerbs.js` → one facade | 11 → 1 | 26 | DASH_DISPLACEMENT 6, ORDINARY_SWING_PERIOD 4 |
+| 11 | run: forecasts → `run.forecast(kind, h)` | 4 → 1 | 16 | gameTimeAt 7, spinnerForecast 7 |
+| 12 | world: Seedling terrain tables → `world.tilesOf(kind)` | 5 → 1 | 12 | pitTiles 4, avoidVolumesAt 3, bridgeTiles 2 |
+
+The event-ledger fold removes the most interface members (29 become 1). The entity fold moves the most sites. The forecast fold mixes the physics `gameTimeAt` with the three Seedling forecasts, so a slice that builds it has to split the query by class.
 
 ## Adding a member when a slice needs one
 
