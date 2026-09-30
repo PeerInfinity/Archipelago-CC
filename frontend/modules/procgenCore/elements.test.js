@@ -603,3 +603,46 @@ describe('chooseEntryPort — the entry ports are a candidate list', () => {
             .toThrow(/no `entry` port/);
     });
 });
+
+/**
+ * ⛓ concept library F1b (D1) — `through`, the element's wish that the binding
+ * carry the route THROUGH it. The contract checks the flag is a boolean, that
+ * only a `pre-carve` element may hold it, and that a through placement pairs
+ * every entry with an exit of its own on a different cell.
+ */
+describe('⛓ F1b — `through` is a declared boolean, `false` by default', () => {
+    const throughToy = (bad = {}, through = true) => defineElement({
+        name: 'toy', family: 'test', why: 'a through toy',
+        construct: (values, site) => toyPlacement(site, bad), through,
+    });
+
+    it('defaults to `false` on the element and on every instantiation', () => {
+        const el = toy();
+        expect(el.through).toBe(false);
+        expect(el.instantiate(rngFor(1)).through).toBe(false);
+        expect(throughToy().through).toBe(true);
+        expect(throughToy().instantiate(rngFor(1)).through).toBe(true);
+    });
+
+    it('refuses a non-boolean, and a `through` on-connector element', () => {
+        for (const bad of [1, 'yes', null]) {
+            expect(() => defineElement({ name: 'n', family: 'f', construct: () => ({}),
+                through: bad })).toThrow(/it is a BOOLEAN/);
+        }
+        expect(() => defineElement({ name: 'n', family: 'f', construct: () => ({}),
+            phase: 'on-connector', through: true })).toThrow(/declares no port at all/);
+    });
+
+    it('a through placement needs an exit PER entry, on a different cell', () => {
+        expect(throughToy().instantiate(rngFor(1)).construct(SITE).refused).toBeUndefined();
+        const left = { x: SITE.x, y: SITE.y };
+        expect(() => throughToy({ ports: [{ ...left, dir: 'W', role: 'entry' }] })
+            .instantiate(rngFor(1)).construct(SITE)).toThrow(/1 entry port\(s\) and 0 exit/);
+        expect(() => throughToy({ ports: [{ ...left, dir: 'W', role: 'entry' },
+            { ...left, dir: 'N', role: 'exit' }] })
+            .instantiate(rngFor(1)).construct(SITE)).toThrow(/on the SAME cell/);
+        // ⛔ The same placements are LEGAL without `through` — the check is its own.
+        expect(throughToy({ ports: [{ ...left, dir: 'W', role: 'entry' }] }, false)
+            .instantiate(rngFor(1)).construct(SITE).refused).toBeUndefined();
+    });
+});

@@ -48,6 +48,18 @@
  * REMOVED, same boot, same budget. ⛔ The item differential cannot grade it —
  * its control alone moves 218 → 123 ticks between the boots.
  *
+ * ── ⛓⛓ IT IS A THROUGH-ROOM (F1b) ─────────────────────────────────────
+ *
+ * F1 measured that a roam blob with its exit mouth SEALED is a dead-end side
+ * room the route never enters: 186 of 187 body ablations INERT. ⚖ The user
+ * ruled (2026-09-29): the roam blob is a THROUGH-ROOM. It declares
+ * `through: true` and the BINDING opens and joins BOTH mouths of the pair it
+ * chose, and refuses by name a placement the route could walk round. The
+ * seal's own reason (with both mouths open the player walks round a guard's
+ * DOOR) is a fact about doors, and a roam has none. ⛔ This file changes no
+ * geometry and no draw for it: the four mouths and their mirrors were already
+ * declared.
+ *
  * ── THE DECLARED DRAW ORDER ───────────────────────────────────────────
  *
  *   1. `w`       ⎫ the parameters, in schema order, by `defineElement`'s
@@ -192,4 +204,9 @@ export const ROAM = defineElement({
     footprint: openChamberFootprint,
     assertPlacement: assertRoamPlacement,
     law: LAW_NONE,
+    /** ⛓ F1b — the corridor passes THROUGH the blob (⚖ the user, 2026-09-29).
+     *  The pair is the chamber's own: `openChamberMouths` lists the four
+     *  entries and their four mirrors in ONE order, so the exit matched BY
+     *  INDEX is the OPPOSITE side at the same offset. */
+    through: true,
 });

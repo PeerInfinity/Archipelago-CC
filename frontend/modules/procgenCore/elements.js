@@ -460,7 +460,9 @@ const onSiteEdge = (site, x, y) => inSite(site, x, y)
  * then carves around — a defect that would surface as a broken level three
  * layers away from its cause.
  */
-function assertPlacementShape(placement, { name, site, values, assertPlacement, phase }) {
+function assertPlacementShape(placement, {
+    name, site, values, assertPlacement, phase, through = false,
+}) {
     const where = `element "${name}"${values ? ` ${JSON.stringify(values)}` : ''}`;
     const onConnector = phase === PHASE_ON_CONNECTOR;
 
@@ -663,6 +665,30 @@ function assertPlacementShape(placement, { name, site, values, assertPlacement, 
                 + 'a mouth.');
         }
     }
+    /**
+     * ⛓ F1b — **A THROUGH ELEMENT PAIRS EVERY ENTRY WITH AN EXIT OF ITS OWN.**
+     * `chooseEntryPort` lets a short exit list fall back to `exits[0]`, which is
+     * right for a single-mouth element with a lane and wrong for a through-room:
+     * the binding would open one exit for every entry, and for some entry that
+     * exit is the entry's own side. So the pairing BY INDEX is asked here in
+     * full, and a pair whose two ports are one cell is refused.
+     */
+    if (through) {
+        const entries = placement.ports.filter((p) => p.role === 'entry');
+        const exits = placement.ports.filter((p) => p.role === 'exit');
+        if (exits.length !== entries.length) {
+            fail(`elements: ${where} declares \`through\` with ${entries.length} entry port(s) and `
+                + `${exits.length} exit port(s). A through-room opens the entry AND the exit `
+                + 'matched to it BY INDEX, so every entry needs its own.');
+        }
+        entries.forEach((entry, i) => {
+            if (entry.x === exits[i].x && entry.y === exits[i].y) {
+                fail(`elements: ${where} declares \`through\` and pairs entry ${i} with an exit on `
+                    + `the SAME cell (${entry.x},${entry.y}). The corridor passes THROUGH the `
+                    + 'element, so its two ends are two cells.');
+            }
+        });
+    }
 
     // ── demand ───────────────────────────────────────────────────────
     if (!Array.isArray(placement.demand)) {
@@ -787,9 +813,18 @@ function assertConstructOutput(out, ctx) {
  * @param {'pre-carve'|'on-connector'} [o.phase]  WHEN the binding constructs it
  *   — see the file docblock. Defaults to `pre-carve`, which is every element
  *   written before arc-3 slice 4a and is unchanged byte for byte.
+ * @param {boolean} [o.through]  ⛓ concept library F1b — the element asks the
+ *   binding to carry the room's route THROUGH it: BOTH mouths of the chosen
+ *   pair (the entry and the `exit` matched to it BY INDEX) are opened and
+ *   joined, where every other element has its exit mouth SEALED. `false` (the
+ *   default) is every element written before F1b, unchanged. ⛔ A `pre-carve`
+ *   claim only — a port is what a through-room opens, and an `on-connector`
+ *   element has none. ⛔ It is a WISH, not a guarantee: the binding refuses by
+ *   name a through placement the route would not have to cross.
  */
 export function defineElement({ name, family, params = [], why, construct,
-    assertPlacement = null, footprint = null, phase = PHASE_PRE_CARVE, law = LAW_CUT }) {
+    assertPlacement = null, footprint = null, phase = PHASE_PRE_CARVE, law = LAW_CUT,
+    through = false }) {
     if (typeof name !== 'string' || !name) {
         fail('elements: an element needs a name — it is the catalogue key, the cost record\'s '
             + '`element` field and what a spec string asks for.');
@@ -827,6 +862,16 @@ export function defineElement({ name, family, params = [], why, construct,
             + `today's law (the whole rectangle written, reserved before the connector); `
             + `"${PHASE_ON_CONNECTOR}" is constructed AFTER the carve and writes sparsely.`);
     }
+    if (typeof through !== 'boolean') {
+        fail(`elements: element "${name}" declared through ${JSON.stringify(through)}; it is a `
+            + 'BOOLEAN — `true` asks the binding to open and join BOTH mouths of the chosen '
+            + 'pair, `false` (the default) seals the exit mouth as every element before F1b.');
+    }
+    if (through && phase !== PHASE_PRE_CARVE) {
+        fail(`elements: element "${name}" declares \`through\` at phase "${phase}". A `
+            + 'through-room is a rectangle whose TWO PORTS the binding opens, and an '
+            + `\`${PHASE_ON_CONNECTOR}\` element declares no port at all.`);
+    }
     // ⛔ ASKED HERE FIRST so the refusal names an ELEMENT. `defineTemplate` asks
     // the same question of the same array a line later and would answer it in
     // the word "template" — one schema language, but the reader who typed the
@@ -841,6 +886,9 @@ export function defineElement({ name, family, params = [], why, construct,
         /** ⛓ arc 5, slice 5 — see `ELEMENT_LAWS`. `'cut'` for every element
          *  written before it, so no binding branch changes for them. */
         law,
+        /** ⛓ F1b — see the `through` parameter. `false` for every element
+         *  written before it, so no binding branch changes for them. */
+        through,
         params: base.params,
         why,
         /** ⛓ `null` when the element declares none — the binding then sizes the
@@ -859,6 +907,7 @@ export function defineElement({ name, family, params = [], why, construct,
                 family: row.family,
                 phase,
                 law,
+                through,
                 params: row.params,
                 instance: row.instance,
                 why: row.why,
@@ -884,7 +933,7 @@ export function defineElement({ name, family, params = [], why, construct,
                         assertRoomProbe(site.room, `element "${name}"`);
                     }
                     return assertConstructOutput(construct(row.params, site, rng), {
-                        name, site, values: row.params, assertPlacement, phase,
+                        name, site, values: row.params, assertPlacement, phase, through,
                     });
                 },
             };

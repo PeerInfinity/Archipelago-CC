@@ -18,9 +18,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { ProcgenRng } from '../procgenRng.js';
-import { ELEMENT_LAWS, LAW_CUT, LAW_NONE, OPPOSITE_DIR as OPPOSITE } from '../elements.js';
+import {
+    ELEMENT_LAWS, LAW_CUT, LAW_NONE, OPPOSITE_DIR as OPPOSITE, chooseEntryPort,
+} from '../elements.js';
 import { ARENA, BODIES_DOMAIN, buildArena } from './arena.js';
-import { buildOpenChamber, openChamberFootprint } from './openChamber.js';
+import { OPEN_CHAMBER, buildOpenChamber, openChamberFootprint } from './openChamber.js';
 import { ROAM, ROAM_REFUSALS, buildRoam, roamBodyId } from './roam.js';
 import { TILE_FLOOR } from '../../shared/procgen/mazeAlgorithms/gridTiles.js';
 
@@ -202,5 +204,45 @@ describe('roam — the law and the refusals', () => {
         const p = ROAM.params.find((q) => q.key === 'bodies');
         expect(p.domain).toEqual([...BODIES_DOMAIN]);
         expect(p.default).toBe(1);
+    });
+});
+
+describe('⛓ F1b — roam is a THROUGH-ROOM; chamber and arena are not', () => {
+    it('declares `through: true`; `chamber` and `arena` keep the default `false`', () => {
+        expect(ROAM.through).toBe(true);
+        expect(ROAM.instantiate(rngFor(1)).through).toBe(true);
+        expect(OPEN_CHAMBER.through).toBe(false);
+        expect(ARENA.through).toBe(false);
+    });
+
+    /** ⛓ MEASURED, not assumed: the exit `chooseEntryPort` pairs BY INDEX with
+     *  each entry is that entry's OPPOSITE side, at its mirror across the site —
+     *  for every value combination and seed, and for all four candidate pairs. */
+    it('pairs every entry BY INDEX with the exit on the OPPOSITE side, its mirror', () => {
+        let pairs = 0;
+        for (const values of VALUES) {
+            for (const seed of SEEDS) {
+                const site = siteFor(values);
+                const { placement } = buildRoam(values, site, rngFor(seed));
+                const entries = placement.ports.filter((p) => p.role === 'entry');
+                const exits = placement.ports.filter((p) => p.role === 'exit');
+                entries.forEach((entry, i) => {
+                    const exit = exits[i];
+                    expect(exit.dir).toBe(OPPOSITE[entry.dir]);
+                    if (entry.dir === 'N' || entry.dir === 'S') {
+                        expect(exit.x).toBe(entry.x);
+                        expect(exit.y).toBe(entry.dir === 'N' ? site.y + site.h - 1 : site.y);
+                    } else {
+                        expect(exit.y).toBe(entry.y);
+                        expect(exit.x).toBe(entry.dir === 'W' ? site.x + site.w - 1 : site.x);
+                    }
+                    pairs += 1;
+                });
+                // The binding's own pick with no predicate is the drawn pair.
+                const chosen = chooseEntryPort(placement);
+                expect(chosen.exit).toEqual(exits[0]);
+            }
+        }
+        expect(pairs).toBe(VALUES.length * SEEDS.length * 4);
     });
 });
