@@ -2344,6 +2344,63 @@ export function previewWalk(run, wps, tolerance = 0,
     let tick = startTick;
     const samples = [];
     let truncated = null;
+    /**
+     * ⛓⛓ SEEDLING SWIM U4, D2 — **A PREVIEW THAT WALKS ONTO LETHAL FLOOR IS A
+     * TRUNCATED PREVIEW, NOT AN ENGINE THROW.**
+     *
+     * Measured on the corridor-body sweep's 10 THREW post-sword cells (U3's
+     * "pit class"; 6 pits and 4 drownings, replayed with a trace): every one
+     * came out of a PREVIEW, not the walk. `deriveRefuge` previews a straight
+     * walk to each clear cell (`open` 14x14 s5: `right+down` held at
+     * (42.5,79.1)), the walk cut a corner onto a pass-2 `pit-patch` tile in level 900,
+     * and 20 ticks later the preview's own step reached `fallDestination`,
+     * whose `PhysicsV2Error` ("that pit is lethal floor, not transport")
+     * escaped the solve and aborted the whole generation. The fall is
+     * irreversible from its first tick (`step` drops the keys), so the walk
+     * is dead where it BEGINS. The question is the model's own —
+     * `fallDestination`, the function the step would call 20 ticks later —
+     * asked when the fall starts, and a lethal answer ends the preview with
+     * `kind: 'lethal-pit'`. Every caller already reads a truncated preview as
+     * a walk it cannot take (a refuge or strike candidate is skipped, a
+     * stance is rejected), and a transport pit keeps its old path to
+     * `crossed`.
+     *
+     * ⛓ AND THE SAME SWEEP'S OTHER THROW IS THE SAME SENTENCE ON WATER. Four
+     * of the cells threw *"the player DROWNED in level 900"* from the same
+     * straight-line preview over a pass-2 `water-pool`. `checkDrowning`
+     * LATCHES `drown.drowning` after eleven cumulative ticks (`drownTimer` is
+     * never reset off-hazard) and `drown()` then runs to `die()` whatever is
+     * held, so a preview whose state latches it has died where it latched —
+     * `kind: 'drowned'`. A drown already latched when the preview STARTS is
+     * the live run's, not this candidate's, and is left to the run.
+     */
+    const drowningAtStart = run.state.drown?.drowning === true;
+    const lethalFloorOf = (state) => {
+        if (!drowningAtStart && state.drown?.drowning === true) {
+            return {
+                kind: 'drowned',
+                at: { x: state.x, y: state.y },
+                why: `the preview LATCHED DROWNING at (${state.x.toFixed(1)},${state.y.toFixed(1)}) `
+                    + `in level ${run.level} — \`checkDrowning\`'s cumulative timer ran out on `
+                    + 'unprotected water or lava, and `drown()` runs to `die()`',
+            };
+        }
+        if (!state.fall || state.fall.phase !== 'out') return null;
+        try {
+            fallDestination(run.world, state.fall.target);
+            return null;
+        } catch (e) {
+            if (!(e instanceof PhysicsV2Error)) throw e;
+            const t = state.fall.target;
+            return {
+                kind: 'lethal-pit',
+                at: { x: state.x, y: state.y },
+                why: `the preview fell into a LETHAL pit — the tile at (${t.x},${t.y}) in `
+                    + `level ${run.level}, which has no control block, so the fall is a `
+                    + 'death and not transport (`fallDestination`)',
+            };
+        }
+    };
     let wpIndex = -1;
     for (const wp of wps) {
         wpIndex += 1;
@@ -2437,6 +2494,8 @@ export function previewWalk(run, wps, tolerance = 0,
             if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
             st = step(st, held, { dashImpulse: combat.dashImpulse });
             combatAfter(tick - 1);
+            truncated = lethalFloorOf(st);
+            if (truncated) break;
             if (st.transition) {
                 // A crossing ends the preview: the next level is a different
                 // world, and this map is scoped to `run.level`.
@@ -2495,6 +2554,8 @@ export function previewWalk(run, wps, tolerance = 0,
             if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
             st = step(st, held, { dashImpulse: combat.dashImpulse });
             combatAfter(tick - 1);
+            truncated = lethalFloorOf(st);
+            if (truncated) break;
             if (st.transition) {
                 truncated = {
                     kind: 'crossed',
