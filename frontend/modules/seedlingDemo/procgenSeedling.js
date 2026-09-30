@@ -1780,6 +1780,9 @@ export function seedlingModel({
             /** ⛓ F1 (D4) — read off the element's DECLARED law: a `none` law
              *  (the roaming enemy) gets no kill lock. */
             killLock: elementPlan.concrete.law !== LAW_NONE,
+            /** ⛓ F1b — the element's DECLARED wish: both mouths opened and
+             *  joined (the roaming enemy alone). */
+            through: elementPlan.concrete.through,
         });
         if (out.refused) {
             elementInfo = Object.freeze({
@@ -1844,6 +1847,8 @@ export function seedlingModel({
                 for (let x = rr.x; x < rr.x + rr.w; x += 1) elementCells.add(`${x},${y}`);
             }
             for (const c of p.tunnel) elementCells.add(`${c.x},${c.y}`);
+            /** ⛓ F1b — a through-room's EXIT tunnel is the route too. */
+            for (const c of (p.exitTunnel ?? [])) elementCells.add(`${c.x},${c.y}`);
             elementInfo = Object.freeze({
                 spec: elementSpecNorm,
                 ran: true,
@@ -1920,7 +1925,12 @@ export function seedlingModel({
             sentence: cp
                 ? `the COMPOSITE committed \`${cp.instance}\`: the reserved rectangle was `
                     + `re-walled, a ${cp.tunnel.length}-cell TUNNEL joined the entry mouth at `
-                    + `(${cp.entryMouth.x},${cp.entryMouth.y}), the exit mouth was SEALED, `
+                    + `(${cp.entryMouth.x},${cp.entryMouth.y}), `
+                    + (cp.through
+                        ? `a ${cp.exitTunnel.length}-cell TUNNEL joined the EXIT mouth at `
+                            + `(${cp.exitMouth.x},${cp.exitMouth.y}) — the route runs THROUGH `
+                            + 'the blob, which is a CUT of the level — '
+                        : 'the exit mouth was SEALED, ')
                     + (cp.flagCell
                         ? `the FLAG sits at (${cp.flagCell.x},${cp.flagCell.y}) and its LOCK on `
                             + `the main-path cut (${cp.flagLockCell.x},${cp.flagLockCell.y}). `
@@ -1945,6 +1955,7 @@ export function seedlingModel({
             refusal: elementInfo.ran ? null : elementInfo.refused,
             data: {
                 tunnel: cp?.tunnel.length ?? null,
+                ...(cp?.through ? { exitTunnel: cp.exitTunnel.length } : {}),
                 carveOverwrote: cp?.carveOverwrote ?? null,
                 entities: elementEntities.length,
                 dropped: dropElement,
@@ -1952,6 +1963,10 @@ export function seedlingModel({
             facts: cp ? [
                 paintable({ id: 'tunnel', label: `the ${cp.tunnel.length}-cell entry TUNNEL`,
                     kind: 'cells', cells: cp.tunnel }),
+                cp.through && paintable({ id: 'exit-tunnel',
+                    label: `the ${cp.exitTunnel.length}-cell EXIT tunnel — the through-room's `
+                        + 'way on to the goal',
+                    kind: 'cells', cells: cp.exitTunnel }),
                 paintable({ id: 'reserved-rect',
                     label: `the RESERVED rectangle — ${cp.site.w + 2}x${cp.site.h + 2} at `
                         + `(${cp.site.x - 1},${cp.site.y - 1}); pass 2 may not touch any of it`,
@@ -3001,7 +3016,10 @@ export function seedlingModel({
         }
         return `(${tx},${ty}) belongs to the ELEMENT ${p.instance} — its reserved rectangle `
             + `(${p.site.w + 2}x${p.site.h + 2} at (${p.site.x - 1},${p.site.y - 1})) or the `
-            + `${p.tunnel.length}-cell tunnel that joins its entry mouth. ⛔ An element is `
+            + `${p.tunnel.length}-cell tunnel that joins its entry mouth`
+            + (p.through ? ` or the ${p.exitTunnel.length}-cell tunnel that joins its exit mouth`
+                : '')
+            + '. ⛔ An element is '
             + 'placed FIRST and the level is built AROUND it (⚖ design ruling 2), so pass 2 '
             + 'may not paint, carve or occupy any of it: the gadget\'s door is a CUT of this '
             + 'room, and a template that opened the ring or walled the push lane would break '

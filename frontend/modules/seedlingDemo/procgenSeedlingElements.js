@@ -195,6 +195,20 @@ export const SEEDLING_ELEMENT_REFUSALS = Object.freeze([
      *  re-asked of the whole composite, refused 4 of the census's cells. It is
      *  raised in this file, by `compositeSeedlingElement`'s clause (vi). */
     'the-tunnel-shortens-the-way-to-the-goal',
+    /**
+     * ⛓⛓ concept library F1b — the THROUGH-ROOM's own four (an element that
+     * declares `through`, which is `roam` alone). Named apart from their
+     * dead-end siblings so the census tells a through-room's refusal from a
+     * sealed room's: the exit mouth on the border ring, the exit mouth with no
+     * way to the goal's side, the route that walks round the blob (not a CUT),
+     * and the composite that shortens the walk (clause (vi) asked of a room
+     * whose route now crosses the blob, where the dead-end name speaks of one
+     * tunnel to one mouth).
+     */
+    'the-exit-mouth-is-the-rooms-border-ring',
+    'the-exit-port-cannot-be-joined',
+    'the-through-room-is-not-on-the-route',
+    'the-through-room-shortens-the-way',
 ]);
 
 /** The RESERVED rectangle: the site plus the one-cell ring the binding writes. */
@@ -410,10 +424,19 @@ export function vestibuleCellsAround({ width, height, walkable, goal, radius, ex
  *   the arena's `cut` law and every caller before F1; `false` is the roaming
  *   enemy's `none` law — its bodies are a danger with NOTHING waiting on their
  *   death. The caller reads it off the element's DECLARED law, never its name.
+ * @param {boolean} [o.through] ⛓ concept library F1b — the element's DECLARED
+ *   `through`. `false` (the default) is every caller before F1b: the exit
+ *   mouth is SEALED. `true` opens BOTH mouths of the chosen pair and JOINS
+ *   both — the entry to the START's side, the exit to the GOAL's — by the one
+ *   shortest-tunnel rule, and then asks that the blob be a CUT: with its cells
+ *   walled the goal is unreachable, or the placement is refused by name
+ *   (`the-through-room-is-not-on-the-route`). ⛔ The seal's reason (arm
+ *   `bothjoin`: a guard's DOOR walked round) is about doors; a through element
+ *   has none, and a guard or a chamber never passes `true`.
  * @returns {{placed}|{refused:{reason, detail}}}
  */
 export function compositeSeedlingElement({
-    width, height, groundAt, site, placement, start, goal, killLock = true,
+    width, height, groundAt, site, placement, start, goal, killLock = true, through = false,
 }) {
     const mask = new Uint8Array(width * height);
     for (let y = 0; y < height; y += 1) {
@@ -444,8 +467,23 @@ export function compositeSeedlingElement({
     const mouthOf = (p) => Object.freeze({
         x: p.x + DIR_DELTA[p.dir].dx, y: p.y + DIR_DELTA[p.dir].dy,
     });
+    /** ⛓ F1b — a THROUGH element opens the pair's exit mouth too, so the pair
+     *  is usable only when NEITHER mouth is the border ring. A sealed element
+     *  asks the entry alone, exactly as before. */
+    const mouthOk = (p) => !onBorderRing(mouthOf(p).x, mouthOf(p).y);
     const chosen = chooseEntryPort(placement,
-        (entry) => !onBorderRing(mouthOf(entry).x, mouthOf(entry).y));
+        (entry, exit) => mouthOk(entry) && (!through || mouthOk(exit)));
+    if (chosen.refusedAll && through && chosen.refusedAll.some(({ entry }) => mouthOk(entry))) {
+        return { refused: { reason: 'the-exit-mouth-is-the-rooms-border-ring',
+            detail: 'the gadget is a THROUGH-ROOM, so each pair opens its entry AND its exit '
+                + 'mouth, and on every pair whose entry mouth the room can open the EXIT mouth '
+                + 'is a cell of the room\'s BORDER RING — '
+                + `${chosen.refusedAll.map(({ entry, exit }) => `${entry.dir}:(${mouthOf(entry).x},`
+                    + `${mouthOf(entry).y})->${exit.dir}:(${mouthOf(exit).x},${mouthOf(exit).y})`)
+                    .join(', ')}. Opening it would open the room. ⛓ Refused rather than redrawn, `
+                + 'and never sealed instead: a sealed roam is the dead-end room F1 measured '
+                + 'the route never enters.' } };
+    }
     if (chosen.refusedAll) {
         const [first] = chosen.refusedAll;
         const firstMouth = mouthOf(first.entry);
@@ -481,6 +519,7 @@ export function compositeSeedlingElement({
     const entryPort = chosen.entry;
     const exitPort = chosen.exit;
     const entryMouth = mouthOf(entryPort);
+    const exitMouth = through ? mouthOf(exitPort) : null;
 
     /** ⛓ THE NON-VACUITY WITNESS: how many cells the carve had made different
      *  from what the element wants. `0` means the reservation decided nothing on
@@ -500,13 +539,18 @@ export function compositeSeedlingElement({
      * ⛔ THE RING IS WALL EXCEPT THE ENTRY MOUTH — the exit mouth is SEALED.
      * The maze measured the alternative: with both mouths open the player walks
      * round the OUTSIDE of the site and the guard door is not a cut on ~30% of
-     * runs (arc-2 §10.1 arm `bothjoin`).
+     * runs (arc-2 §10.1 arm `bothjoin`). ⛓ F1b: a THROUGH element (`roam`,
+     * which has no door) opens the pair's exit mouth too, and the walk-round
+     * `bothjoin` measured is refused by name for it (clause (vii)).
      */
+    /** ⛓ F1b — a THROUGH element's exit mouth is the ring's second opening. */
+    const isMouth = (x, y) => (x === entryMouth.x && y === entryMouth.y)
+        || (exitMouth !== null && x === exitMouth.x && y === exitMouth.y);
     for (let y = reserved.y; y < reserved.y + reserved.h; y += 1) {
         for (let x = reserved.x; x < reserved.x + reserved.w; x += 1) {
             if (x < 0 || y < 0 || x >= width || y >= height) continue;
             if (inRect(site, x, y)) continue;
-            paint(x, y, x === entryMouth.x && y === entryMouth.y);
+            paint(x, y, isMouth(x, y));
         }
     }
     /**
@@ -526,16 +570,39 @@ export function compositeSeedlingElement({
      *    and the thing that keeps it honest is that it may not enter the
      *    reserved rectangle, which is what stops it opening a second way in.
      */
-    const live = reachableFrom(width, height, at, { x: start.tx, y: start.ty });
+    /**
+     * ⛓ F1b — **THE OUTSIDE**: the room with the blob's own cells walled. A
+     * THROUGH element's two sides are asked of it (with both mouths open the
+     * blob itself would join them); a sealed element's single mouth is asked
+     * of the room as it stands, which is the flood it always was.
+     */
+    const outside = (x, y) => at(x, y) && !inRect(site, x, y);
+    const live = reachableFrom(width, height, through ? outside : at,
+        { x: start.tx, y: start.ty });
     const beforeLen = (() => {
         const p = shortestPath(width, height, groundAt,
             { x: start.tx, y: start.ty }, { x: goal.tx, y: goal.ty });
         return p ? p.length : null;
     })();
-    let tunnel = [];
-    if (!live.has(`${entryMouth.x},${entryMouth.y}`)) {
-        const parent = new Map([[`${entryMouth.x},${entryMouth.y}`, null]]);
-        const queue = [entryMouth];
+    if (through && live.has(`${goal.tx},${goal.ty}`)) {
+        return { refused: { reason: 'the-through-room-is-not-on-the-route',
+            detail: `with the ${site.w}x${site.h} blob at (${site.x},${site.y}) walled, the START `
+                + `(${start.tx},${start.ty}) already reaches the GOAL (${goal.tx},${goal.ty}) round `
+                + 'the outside of the reserved rectangle, before either tunnel is carved. ⛔ A '
+                + 'through-room the route can walk round is the dead-end room F1 measured with a '
+                + 'second door: the bodies would stand where the walk need not go. Refused, '
+                + 'never certified as a through-room.' } };
+    }
+    /**
+     * The shortest tunnel from `mouth` to any cell of `target`, breadth-first
+     * in the one neighbour order, never the border ring and never the reserved
+     * rectangle; painted as it is found. `null` when there is none.
+     */
+    const tunnelTo = (mouth, target) => {
+        const cells = [];
+        if (target.has(`${mouth.x},${mouth.y}`)) return cells;
+        const parent = new Map([[`${mouth.x},${mouth.y}`, null]]);
+        const queue = [mouth];
         let hit = null;
         while (queue.length && hit === null) {
             const p = queue.shift();
@@ -548,16 +615,11 @@ export function compositeSeedlingElement({
                 const k = `${nx},${ny}`;
                 if (parent.has(k)) continue;
                 parent.set(k, `${p.x},${p.y}`);
-                if (live.has(k)) { hit = k; break; }
+                if (target.has(k)) { hit = k; break; }
                 queue.push({ x: nx, y: ny });
             }
         }
-        if (hit === null) {
-            return { refused: { reason: 'the-entry-port-cannot-be-joined',
-                detail: `the gadget's entry mouth (${entryMouth.x},${entryMouth.y}) has no `
-                    + 'route to any ground the START reaches that stays outside the reserved '
-                    + 'rectangle and off the border ring.' } };
-        }
+        if (hit === null) return null;
         /** ⛔ THE WALK STOPS **BEFORE** THE MOUTH — the mouth is a RING cell,
          *  already written ground by the ring pass, and including it would make
          *  "the tunnel never enters the reserved rectangle" false for every
@@ -565,15 +627,41 @@ export function compositeSeedlingElement({
         for (let k = parent.get(hit); parent.get(k) !== null; k = parent.get(k)) {
             const [cx, cy] = k.split(',').map(Number);
             paint(cx, cy, true);
-            tunnel.push(Object.freeze({ x: cx, y: cy }));
+            cells.push(Object.freeze({ x: cx, y: cy }));
         }
-        tunnel = tunnel.reverse();
+        return cells.reverse();
+    };
+    const tunnel = tunnelTo(entryMouth, live);
+    if (tunnel === null) {
+        return { refused: { reason: 'the-entry-port-cannot-be-joined',
+            detail: `the gadget's entry mouth (${entryMouth.x},${entryMouth.y}) has no `
+                + 'route to any ground the START reaches that stays outside the reserved '
+                + 'rectangle and off the border ring.' } };
+    }
+    /**
+     * ⛓⛓ F1b — **THE EXIT MOUTH IS JOINED TO THE GOAL'S SIDE, BY THE SAME
+     * RULE.** The goal's side is flooded AFTER the entry tunnel is painted, on
+     * the outside (blob walled), so the corridor runs start → entry mouth →
+     * blob → exit mouth → goal. ⛔ A tunnel that crosses the START's side on
+     * its way joins the two sides round the blob; that is not repaired here —
+     * it is the cut check below, refused by name.
+     */
+    let exitTunnel = null;
+    if (through) {
+        const goalSide = reachableFrom(width, height, outside, { x: goal.tx, y: goal.ty });
+        exitTunnel = tunnelTo(exitMouth, goalSide);
+        if (exitTunnel === null) {
+            return { refused: { reason: 'the-exit-port-cannot-be-joined',
+                detail: `the through-room's exit mouth (${exitMouth.x},${exitMouth.y}) has no `
+                    + 'route to any ground the GOAL reaches that stays outside the reserved '
+                    + 'rectangle and off the border ring.' } };
+        }
     }
 
     // ── (i) `demand` — the element's own claim about what it does NOT write ──
     for (const dm of placement.demand) {
         if (dm.x < 0 || dm.y < 0 || dm.x >= width || dm.y >= height) continue;
-        if (dm.x === entryMouth.x && dm.y === entryMouth.y) continue;
+        if (isMouth(dm.x, dm.y)) continue;
         if (at(dm.x, dm.y) !== (dm.must === 'floor')) {
             return { refused: { reason: 'the-elements-demand-is-not-met',
                 detail: `the gadget demands ${dm.must} at (${dm.x},${dm.y}) and the finished `
@@ -709,9 +797,35 @@ export function compositeSeedlingElement({
         killLockCell = lock.cell;
     }
 
+    /**
+     * ⛓⛓⛓ F1b — **(vii) THE THROUGH-ROOM IS A CUT**, asked of the FINISHED
+     * room: with the blob's cells walled the goal is unreachable from the
+     * start. The early refusal above caught a room the outside already joined;
+     * this one catches the tunnels joining it (an entry tunnel that crossed
+     * the goal's side, an exit tunnel that crossed the start's). ⛔ Without it
+     * a placement the route bypasses would be certified as a through-room and
+     * its bodies graded INERT for the reason F1 found.
+     */
+    if (through && connected(width, height, outside, { x: start.tx, y: start.ty },
+        { x: goal.tx, y: goal.ty })) {
+        return { refused: { reason: 'the-through-room-is-not-on-the-route',
+            detail: `with the ${site.w}x${site.h} blob at (${site.x},${site.y}) walled, the START `
+                + `still reaches the GOAL: the ${tunnel.length}-cell entry tunnel and the `
+                + `${exitTunnel.length}-cell exit tunnel joined the two sides round the outside `
+                + 'of the reserved rectangle. ⛔ The route would not have to cross the blob, so '
+                + 'it is refused, never certified as a through-room.' } };
+    }
+
     // ── (vi) NO SHORTCUT — slice 2's carve clause (b), asked of the whole composite ──
     const afterPath = shortestPath(width, height, at,
         { x: start.tx, y: start.ty }, { x: goal.tx, y: goal.ty });
+    if (through && beforeLen !== null && afterPath && afterPath.length < beforeLen) {
+        return { refused: { reason: 'the-through-room-shortens-the-way',
+            detail: `the through-room would shorten the start->goal path from ${beforeLen - 1} `
+                + `steps to ${afterPath.length - 1}: the route now crosses the blob by its two `
+                + 'tunnels, and slice 2\'s carve rule\'s NO-SHORTCUT clause applies to the whole '
+                + 'composite — pass 1 committed to the skeleton\'s distances.' } };
+    }
     if (beforeLen !== null && afterPath && afterPath.length < beforeLen) {
         return { refused: { reason: 'the-tunnel-shortens-the-way-to-the-goal',
             detail: `the composite would shorten the start->goal path from ${beforeLen - 1} `
@@ -759,6 +873,13 @@ export function compositeSeedlingElement({
         } : {}),
         areaCells: placement.area.cells,
         tunnel: Object.freeze(tunnel),
+        /** ⛓ F1b — PRESENT ONLY ON A THROUGH-ROOM, for the reason `bodies` is
+         *  (this record rides every payload that holds an element). */
+        ...(through ? {
+            through: true,
+            exitMouth,
+            exitTunnel: Object.freeze(exitTunnel),
+        } : {}),
         carveOverwrote,
         painted: Object.freeze([...painted].map(([k, terrain]) => {
             const [tx, ty] = k.split(',').map(Number);
@@ -1653,6 +1774,9 @@ export function elementSummaryOf(model, { certification = null } = {}) {
         tags: p.tags,
         ids: p.ids,
         tunnel: p.tunnel.length,
+        /** ⛓ F1b — a through-room's second mouth and tunnel, on its own rows only. */
+        ...(p.through ? { through: true, exitMouth: p.exitMouth,
+            exitTunnel: p.exitTunnel.length } : {}),
         carveOverwrote: p.carveOverwrote,
     });
     return {
