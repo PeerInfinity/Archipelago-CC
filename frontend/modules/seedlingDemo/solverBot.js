@@ -65,7 +65,7 @@ import {
     DEFAULT_TOLERANCE, DEFAULT_MAX_TICKS_PER_TARGET, chooseHeld, hasArrived,
 } from './botDriverV1.js';
 import {
-    BotDriverV2Error, DEFAULT_LATTICE, contactsAt, drive, findExit,
+    BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit,
     nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, runChest, runCollect, runHold,
     runShove, runDwell, SHOVE_STEP,
 } from './botDriverV2.js';
@@ -100,7 +100,7 @@ import {
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
     SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
     MOBILE_DEATH_FADE,
-    PhysicsV2Error, playerBoxAt,
+    fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
     chestStanceBand,
 } from './solverView.js';
@@ -2816,7 +2816,18 @@ function withoutSources(d, except) {
     return { ...d, sources, danger: sources.length > 0 };
 }
 
-/** One goal, shape-checked. The two kinds slice 2 owns. */
+/**
+ * One goal, shape-checked. The two kinds slice 2 owns, and `reach-pit`.
+ *
+ * ⛓⛓ SEEDLING SWIM U1, D1 — **`reach-pit`, THE PIT COUNTERPART OF
+ * `reach-exit`.** A level whose `control` block names a `fallthrough` level
+ * is left by stepping onto a pit tile (`checkFallingInPit`); the survey's
+ * route hands the hop as `{kind: 'reach-pit', pit: {tx, ty, x, y}}` (T3's
+ * `pitEdgeFor`, cross-checked against the AP export). The tile is the goal's
+ * identity, as a teleporter's OEL coordinates are `reach-exit`'s; `x`/`y` are
+ * the tile's own rect origin and must agree with it (a disagreement is two
+ * spellings of one pit, refused rather than resolved).
+ */
 export function assertGoal(goal, i) {
     const at = `solverBot: goals[${i}]`;
     if (!goal || typeof goal !== 'object') fail(`${at} must be an object`);
@@ -2828,6 +2839,17 @@ export function assertGoal(goal, i) {
         }
         return goal;
     }
+    if (goal.kind === 'reach-pit') {
+        const p = goal.pit;
+        if (![p?.tx, p?.ty, p?.x, p?.y].every(Number.isInteger)
+            || p.x !== p.tx * TILE_SIZE || p.y !== p.ty * TILE_SIZE) {
+            fail(`${at}: reach-pit needs pit {tx, ty, x, y} — the pit TILE (finite `
+                + `integers) and its rect origin (x = tx·${TILE_SIZE}, y = ty·${TILE_SIZE}), `
+                + `got ${JSON.stringify(p ?? null)}. The MACRO layer names WHICH pit; the `
+                + 'solver owns HOW to reach it.');
+        }
+        return goal;
+    }
     if (goal.kind === 'collect-placement') {
         if (!Number.isFinite(goal.placement?.x) || !Number.isFinite(goal.placement?.y)) {
             fail(`${at}: collect-placement needs placement {x, y} — the pickup's or `
@@ -2836,8 +2858,8 @@ export function assertGoal(goal, i) {
         }
         return goal;
     }
-    fail(`${at}: unknown goal kind ${JSON.stringify(goal.kind)}. Slice 2 owns `
-        + '\'reach-exit\' and \'collect-placement\'; a new kind is a policy addition, '
+    fail(`${at}: unknown goal kind ${JSON.stringify(goal.kind)}. The solver owns `
+        + '\'reach-exit\', \'reach-pit\' and \'collect-placement\'; a new kind is a policy addition, '
         + 'not a free string here — the trace\'s vocabulary is open, the solver\'s '
         + 'is not.');
     return null;
@@ -8557,6 +8579,15 @@ export function solveSegment({
      * of work done for ONE goal, reset when the goal changes.
      */
     let openerChain = [];
+    /**
+     * ⛓⛓ SEEDLING SWIM U1, D1 — THE GOAL'S OWN PLAN EXEMPTION, per goal like
+     * `applied`. A `reach-pit` goal sets `{allowPit: {tx, ty}}` — the driver's
+     * own exemption (`plannerObstacleAt`, the pit-exit leg's `planNow`) — so
+     * that ONE pit tile is floor to every plan this goal makes: the corridor,
+     * the AVOID rung, the removal hypothesis and the frontier flood. Every
+     * other goal kind leaves it `{}`, so their bags are the bags they were.
+     */
+    let goalPlanExtra = {};
     const grazes = [];
     const records = [];
 
@@ -8616,7 +8647,8 @@ export function solveSegment({
      * door). Nearest-to-aim wins; the rest ride in the message.
      */
     const identifyAndSelect = (goal, aim, contacts, planError, allowTeleporter) => {
-        const opts = solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 });
+        const opts = solverPlanOpts(run, contacts,
+            { ...goalPlanExtra, nodeMargin: 0, triggerMargin: 0 });
         const pitch = DEFAULT_LATTICE;
         const w = run.world;
         const nx = w.width * TILE_SIZE / pitch;
@@ -9013,7 +9045,7 @@ export function solveSegment({
             const without = dangerVolumes(run, 0).filter((v) => v.id !== c.id);
             try {
                 planWaypoints(run.world, run.state, aim, allowTeleporter,
-                    solverPlanOpts(run, contacts, { extraVolumes: without }));
+                    solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: without }));
                 admits.push(c);
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
@@ -9084,7 +9116,7 @@ export function solveSegment({
         let avoid = null;
         try {
             avoid = planWaypoints(run.world, run.state, aim, allowTeleporter,
-                solverPlanOpts(run, contacts, { extraVolumes: vols }));
+                solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: vols }));
         } catch (e) {
             if (!(e instanceof BotDriverV2Error)) throw e;
             refused = { rung: 'avoid', why: `no admissible corridor with the danger map's `
@@ -9594,7 +9626,7 @@ export function solveSegment({
             let wps;
             try {
                 wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
-                    solverPlanOpts(run, contacts));
+                    solverPlanOpts(run, contacts, goalPlanExtra));
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
                 const identified = identifyAndSelect(goal, aim, contacts, e, allowTeleporter);
@@ -9900,6 +9932,53 @@ export function solveSegment({
         // nothing about how many obstacles the next room's goal may need.
         applied = [];
         openerChain = [];
+        goalPlanExtra = {};
+        if (goal.kind === 'reach-pit') {
+            /**
+             * ⛓⛓ SEEDLING SWIM U1, D1 — THE PIT EXECUTOR, `reach-exit`'s shape
+             * with the driver's pit-exit leg's identity. The aim is the tile's
+             * centre; the plan bag exempts THAT tile and no other (a pit met
+             * anywhere else is still `{kind: 'pit'}` and refuses by name); the
+             * crossing is accepted on the TILE the player stood on when the edge
+             * fired (`drive`'s `crossTo.pit` arm), because every pit of a level
+             * falls to the same level. The landing is the model's own:
+             * `fallDestination` reads the level's `control` block, and the
+             * run then coasts the transport (`coastThroughTransport`, the leg
+             * runner's own) so the segment ends ON THE GROUND in the next level.
+             */
+            const { tx, ty } = goal.pit;
+            const pit = (run.world.pitTiles ?? []).find((p) => p.tx === tx && p.ty === ty);
+            const whatPit = `solverBot(${name}) reach-pit (${tx},${ty})`;
+            if (!pit) {
+                refuse(`${whatPit}: level ${run.level} has no pit tile there — its pits are `
+                    + `[${(run.world.pitTiles ?? []).slice(0, 12).map((p) => `(${p.tx},${p.ty})`)
+                        .join(' ')}${(run.world.pitTiles ?? []).length > 12 ? ' …' : ''}]. A goal `
+                    + 'about an absent pit is a macro-layer error.', {
+                    goal, obstacle: { kind: 'absent-pit', id: `pit@${tx},${ty}` },
+                });
+            }
+            let fall;
+            try {
+                fall = fallDestination(run.world, {
+                    x: pit.rect.x + pit.rect.w / 2, y: pit.rect.y + pit.rect.h / 2,
+                });
+            } catch (e) {
+                if (!(e instanceof PhysicsV2Error)) throw e;
+                refuse(`${whatPit}: ${e.message}`, {
+                    goal, obstacle: { kind: 'lethal-pit', id: `pit@${pit.rect.x},${pit.rect.y}` },
+                });
+            }
+            const crossTo = { level: fall.to_level, pit, arrival: { ...fall.ctor } };
+            goalPlanExtra = { allowPit: { tx, ty } };
+            const t = walkTo(goal, {
+                x: pit.rect.x + pit.rect.w / 2, y: pit.rect.y + pit.rect.h / 2,
+            }, { crossTo, what: `${whatPit}->L${fall.to_level}` });
+            goalPlanExtra = {};
+            const coast = coastThroughTransport(run, perTick, maxTicksPerTarget,
+                `${whatPit}->L${fall.to_level}`);
+            records.push({ goal: 'reach-pit', to: fall.to_level, t: t.t, coast });
+            continue;
+        }
         if (goal.kind === 'reach-exit') {
             const { index, teleporter } = findExit(run.world, goal.exit);
             const centre = {

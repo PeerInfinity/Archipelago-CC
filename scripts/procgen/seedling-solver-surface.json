@@ -538,9 +538,9 @@
         "botDriverV2.js": 30,
         "dangerMap.js": 9,
         "director.js": 1,
-        "solverBot.js": 43
+        "solverBot.js": 44
       },
-      "sites": 83,
+      "sites": 84,
       "seen": "both",
       "via": [
         "direct"
@@ -840,9 +840,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 56,
-        "solverBot.js": 103
+        "solverBot.js": 107
       },
-      "sites": 159,
+      "sites": 163,
       "seen": "both",
       "via": [
         "direct",
@@ -1274,9 +1274,10 @@
       "class": "seedling",
       "form": "geometry-query",
       "files": {
-        "botDriverV2.js": 4
+        "botDriverV2.js": 4,
+        "solverBot.js": 3
       },
-      "sites": 4,
+      "sites": 7,
       "seen": "both",
       "via": [
         "direct",
@@ -3165,9 +3166,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 46,
-        "solverBot.js": 46
+        "solverBot.js": 50
       },
-      "sites": 92,
+      "sites": 96,
       "seen": "static",
       "via": [
         "import"
@@ -3364,15 +3365,33 @@
     },
     {
       "surface": "import",
+      "name": "fallDestination",
+      "module": "frontend/modules/seedlingDemo/playerPhysicsV2.js",
+      "line": 757,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Returns {to_level, ctor} for a pit fall: the level's control-block fallthrough level and the tile-snapped ctor position checkFallingInPit hands new Game(), throwing when the level has no control block (a lethal pit), a Seedling pit-transport rule."
+    },
+    {
+      "surface": "import",
       "name": "PhysicsV2Error",
       "module": "frontend/modules/seedlingDemo/playerPhysicsV2.js",
       "line": 113,
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 1
+        "solverBot.js": 2
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "import"

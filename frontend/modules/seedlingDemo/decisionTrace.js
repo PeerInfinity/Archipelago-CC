@@ -81,6 +81,8 @@ export const SAW_REQUIRED = Object.freeze(['level', 'x', 'y']);
  */
 export const KNOWN_GOAL_KINDS = Object.freeze([
     'reach-exit', 'reach-cell', 'collect-placement', 'clear-tag', 'kill', 'survive',
+    // ⛓ Swim U1, D1: the solver's pit counterpart of `reach-exit` (`assertGoal`).
+    'reach-pit',
 ]);
 export const KNOWN_STRATEGY_VERBS = Object.freeze([
     'walk', 'shove', 'hold', 'bait', 'touch', 'kill', 'chest', 'fire', 'spear',
