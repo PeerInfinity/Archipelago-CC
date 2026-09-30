@@ -35,6 +35,7 @@ import {
     buildRulesJson,
     computeSourceCounts,
     ruleItemWarnings,
+    recordedConceptsOf,
     serializeGrid,
     deserializeGrid,
 } from './procgenPipelineEngine.js';
@@ -139,6 +140,8 @@ function stepCompile(env, { onProgress = null } = {}) {
             // when nothing was edited, so unedited metadata is byte-identical.
             ...(env.edits?.length ? { edits: env.edits } : {}),
             ...(enriched ? { sphere_tree: sphereTree, sphere_plan: spherePlan } : {}),
+            // ⛓ T0b — the world's concept list (omitted when it names none).
+            ...recordedConceptsOf(env.opts?.regionParams),
         },
     });
     env.compile = {

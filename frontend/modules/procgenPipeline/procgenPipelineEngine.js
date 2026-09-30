@@ -4502,6 +4502,35 @@ export function sphereRebuildRefusal(rulesJson, opts = {}) {
     return null;
 }
 
+/**
+ * ⛓⛓ CONCEPT LIBRARY T0b — **THE WORLD'S CONCEPTS, RECORDED AND READ BACK.**
+ * A world that names concepts (`regionParams.concepts`, written by
+ * `sphereConfigHooks.assembleRegionParams` only when non-empty) records them in
+ * its slot's `procgen_metadata` block as `concepts`, so a rebuild from the
+ * compiled `rules.json` hands them back to the placers: an appended sphere's
+ * gates are realised as the world's concepts, not as plain logic gates.
+ * ⛔ An empty or absent list writes NOTHING and reads back nothing, so every
+ * world that names no concept records and rebuilds byte-identically.
+ */
+export const RECORDED_CONCEPTS_KEY = 'concepts';
+
+/** `{concepts: [...]}` for the metadata block when the params name any concept, else `{}`. */
+export function recordedConceptsOf(regionParams) {
+    const list = regionParams?.concepts;
+    return Array.isArray(list) && list.length ? { [RECORDED_CONCEPTS_KEY]: [...list] } : {};
+}
+
+/**
+ * The rebuild's `regionParams`: the caller's (or `{}`), with a recorded
+ * concept list laid UNDER it — a caller that passes its own `concepts` wins.
+ * Nothing recorded ⇒ exactly `opts.regionParams ?? {}`, as before T0b.
+ */
+export function rebuildRegionParams(meta, optsRegionParams) {
+    const recorded = recordedConceptsOf({ concepts: meta?.[RECORDED_CONCEPTS_KEY] });
+    if (!Object.keys(recorded).length) return optsRegionParams ?? {};
+    return { ...recorded, ...(optsRegionParams ?? {}) };
+}
+
 export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
     const playerId = opts.playerId ?? '1';
     const meta = rulesJson?.procgen_metadata?.[playerId];
@@ -4597,7 +4626,8 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         seed,
         regionSize: regionSize ?? { ...DEFAULT_REGION_SIZE },
         itemLib,
-        regionParams: opts.regionParams ?? {},
+        // ⛓ T0b — the world's recorded concepts come back (`rebuildRegionParams`).
+        regionParams: rebuildRegionParams(meta, opts.regionParams),
         hazardOpts: opts.hazardOpts ?? undefined,
         consumableTileOpts: opts.consumableTileOpts ?? undefined,
         maxItemsPerRegion,

@@ -55,6 +55,7 @@ import {
     stitchGrid,
     wallOffUnusedExits,
     rebuildEnvelopeFromRulesJson,
+    recordedConceptsOf,
     reRollSphereRegion,
     getRegionExits,
     parentExitIdTowardChild,
@@ -505,6 +506,9 @@ function stepCompile(env) {
             // Compact abstract tree (no grid) so a new sphere can be wired onto
             // this finished world straight from rules.json (Phase 4 append).
             ...(env.tree ? { sphere_tree: compactSphereTree(env.tree) } : {}),
+            // ⛓ T0b — the world's concept list, so a rebuild realises its
+            // appended gates as the concepts (omitted when it names none).
+            ...recordedConceptsOf(c.regionParams),
         },
     });
     const oracleErrors = compareSpheresToPlan(computeItemSpheres(rulesJson), env.plan);

@@ -37,7 +37,16 @@ const bundle = (concepts) => ({
 const gatesOf = (rulesJson) => Object.entries(rulesJson.preset_sidecars['1'])
     .flatMap(([rid, s]) => Object.entries(s.playable_payload?.obstacleLib ?? {})
         .map(([id, def]) => ({ rid, id, def })));
-const withoutSidecars = ({ preset_sidecars: _s, ...rest }) => rest;
+/**
+ * The document minus its sidecars AND minus the world's recorded concept list
+ * (T0b D3: `procgen_metadata[slot].concepts`, written only when the world names
+ * one) — the one metadata difference a concept makes, asserted by name below.
+ */
+const withoutSidecars = ({ preset_sidecars: _s, ...rest }) => {
+    const out = structuredClone(rest);
+    for (const block of Object.values(out.procgen_metadata ?? {})) delete block.concepts;
+    return out;
+};
 
 describe('D4 — a maze sphere world over the sword and swim, with and without the concepts', async () => {
     const control = await runPresetHeadless(buildRunFromState(bundle([])));
@@ -73,6 +82,8 @@ describe('D4 — a maze sphere world over the sword and swim, with and without t
     it('⛓ THE CONCEPT CHANGED THE PICTURE, NEVER THE LOGIC: the compiled rules.json is the control\'s, rule for rule', () => {
         expect(world.rulesJson.regions).toEqual(control.rulesJson.regions);
         expect(withoutSidecars(world.rulesJson)).toEqual(withoutSidecars(control.rulesJson));
+        expect(world.rulesJson.procgen_metadata['1'].concepts).toEqual(CONCEPT_LIST);
+        expect('concepts' in control.rulesJson.procgen_metadata['1']).toBe(false);
     });
 
     it('the world\'s items carry the two concept items; its item library carries the table\'s colour', () => {
