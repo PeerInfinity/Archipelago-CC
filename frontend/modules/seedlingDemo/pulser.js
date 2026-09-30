@@ -81,6 +81,7 @@
 import { hitPushableFromPoint } from './pushables.js';
 import { collideRectInclusive } from './fireVerb.js';
 import { PROFILE } from './seedlingProfile.js';
+import { defineRecord } from './entityRecords.js';
 
 export class PulserError extends Error {
     constructor(message) { super(message); this.name = 'PulserError'; }
@@ -95,7 +96,7 @@ const FP_MAX_ELAPSED = PROFILE.fpMaxElapsed;
  * `Pulser.as:18-37`, so none of them can be varied by placement data — the
  * only thing an `.oel` decides about a Pulser is its position and its `t`.
  */
-export const PULSER = Object.freeze({
+export const PULSER = defineRecord('pulser', {
     radiusMin: 10,
     radiusMax: 28,
     /** ⚠ NOT `radiusMax`. The hit test is a THIRD radius, and it is fixed. */
@@ -111,7 +112,7 @@ export const PULSER = Object.freeze({
     hitables: Object.freeze(['Player', 'Solid', 'Enemy']),
     anim: Object.freeze({ name: 'pulse', frames: Object.freeze([0, 1, 2, 3, 4]), frameRate: 20, loop: true }),
     src: 'Puzzlements/Pulser.as:18-37 (ctor) + :51-86 (update) + :88-115 (hit)',
-});
+}, { doc: ['src'], src: 'pulser.js' });
 
 /**
  * ⛓ THE ANIMATION'S DEAD TICKS, by simulating `Spritemap.update`'s loop.

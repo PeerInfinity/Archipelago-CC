@@ -233,7 +233,7 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**51 files, 4368 literals.** Class × position:
+**52 files, 4368 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|

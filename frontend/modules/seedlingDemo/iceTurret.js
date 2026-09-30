@@ -77,6 +77,7 @@ import { spawnVolley } from './iceTurretBlast.js';
 // `_timer += _anim._frameRate * FP.elapsed`, with `FP.elapsed` pinned at
 // `Engine.MAX_ELAPSED`. One transcription of that constant for the package.
 import { FP_ELAPSED } from './chasers.js';
+import { defineRecord } from './entityRecords.js';
 
 export class IceTurretError extends Error {
     constructor(message) { super(message); this.name = 'IceTurretError'; }
@@ -94,7 +95,7 @@ const TILE = TILE_SIZE;
  * there is no `tset`, no `tag` and no attribute of any kind on the
  * placement (`Game.as:2137` passes `o.@x, o.@y` and nothing else).
  */
-export const ICE_TURRET = Object.freeze({
+export const ICE_TURRET = defineRecord('iceTurret', {
     /**
      * ⛔ `super(_x + Tile.w, _y + Tile.h)` — a WHOLE tile, not the half every
      * other family's ctor adds. ⛔⛔ SO THE PLACEMENT'S OWN SUB-TILE OFFSET
@@ -163,7 +164,7 @@ export const ICE_TURRET = Object.freeze({
     src: 'Enemies/IceTurret.as:30-51 (ctor), :53-95 (update), :135-150 (death), '
         + ':169-201 (bump), :203-240 (input); Enemies/Enemy.as:61-113,141-181; '
         + 'Mobile.as:17,31-45,84-115',
-});
+}, { doc: ['src', 'knockback'], src: 'iceTurret.js' });
 
 /**
  * ⛓⛓⛓ THE STATE, AND WHY `tile` IS NOT DERIVED.

@@ -110,6 +110,7 @@ import { rectsOverlap, SOLIDS_BY_MOVER, TILE_SIZE } from './levelWorld.js';
  * of them was edited.
  */
 import { collideLineSolid } from './crusher.js';
+import { defineRecord } from './entityRecords.js';
 
 export class SpinnerError extends Error {
     constructor(message) { super(message); this.name = 'SpinnerError'; }
@@ -127,7 +128,7 @@ const sign = (n) => Math.sign(n);
  * Every number here is a literal from the source, not a derived one — the
  * two that look derived carry their arithmetic.
  */
-export const SPINNER = Object.freeze({
+export const SPINNER = defineRecord('spinner', {
     /** `super(_x + Tile.w/2, _y + Tile.h/2, …)` — the entity is the CELL CENTRE. */
     dx: TILE / 2,
     dy: TILE / 2,
@@ -186,7 +187,7 @@ export const SPINNER = Object.freeze({
     /** `Enemy.getState()`'s switch, by `Tile.t`. */
     terrain: Object.freeze({ 1: 'water', 6: 'pit', 17: 'lava' }),
     src: 'Enemies/Spinner.as:22-45,124-171 + Enemies/Enemy.as:62-118 + Mobile.as:26-118',
-});
+}, { doc: ['src'], src: 'spinner.js' });
 
 /**
  * ⛔⛔ THE CTOR'S RNG DRAWS — THREE OF THEM, ON TWO DIFFERENT STREAMS.
@@ -214,14 +215,14 @@ export const SPINNER = Object.freeze({
  * — the day something modelled draws from either, three draws per spinner
  * construction is a phase error nobody would look for.
  */
-export const SPINNER_CTOR_RNG = Object.freeze({
+export const SPINNER_CTOR_RNG = defineRecord('spinnerCtorRng', {
     mathRandomDraws: 2,
     fpLfsrDraws: 1,
     observable: false,
     why: '`dropCoins()` is commented out of `removed()`; `fallSpinSpeed` reaches only '
         + '`(graphic as Image).angle` on a pit fall. Both draws are pure advances.',
     src: 'Enemies/Enemy.as:30,35 + Enemies/Spinner.as:24 + net/flashpunk/FP.as:404-422',
-});
+}, { doc: ['src', 'why'], src: 'spinner.js' });
 
 /**
  * ⛔⛔ THE FLAG A SPINNER WRITES WITHOUT BEING FOUGHT.
@@ -235,7 +236,7 @@ export const SPINNER_CTOR_RNG = Object.freeze({
  * despawned the spinner for a cleared flag on entry — i.e. exactly when the
  * flag is clear already. So "unconditional" is right in every live case.
  */
-export const SPINNER_TERRAIN_WRITE = Object.freeze({
+export const SPINNER_TERRAIN_WRITE = defineRecord('spinnerTerrainWrite', {
     writes: 'Game.setPersistence(tag, false)',
     gate: 'doActions — false only after `check()` despawned it for an already-clear flag',
     causes: Object.freeze(['sword kill', 'crusher (damage 1000)', 'water', 'lava', 'pit']),
@@ -243,7 +244,7 @@ export const SPINNER_TERRAIN_WRITE = Object.freeze({
     why: 'a billiard that bounces into water banks the same flag a kill does, on a tick '
         + 'no route picked. A ledger assertion that only counted kills would pass a room '
         + 'that had quietly earned an extra clear.',
-});
+}, { doc: ['src', 'why', 'gate'], src: 'spinner.js' });
 
 /** The 7x7 body — its collider, and what `hitPlayer` touches you with. */
 export function spinnerRect(s) {
@@ -592,7 +593,7 @@ export function hammerReach(s) {
  * line and forgot the body would have opened a hole exactly the size of the
  * thing the disc used to cover.
  */
-export const HAMMER_BILLING = Object.freeze({
+export const HAMMER_BILLING = defineRecord('hammerBilling', {
     routes: 'applyPlayerHit',
     force: SPINNER.hitForce,
     /** `Player.hit`'s `d:Number=1` — the call passes three arguments. */
@@ -615,7 +616,7 @@ export const HAMMER_BILLING = Object.freeze({
      * lifetimes, four lines apart in the source.
      */
     dyingStillSwings: true,
-});
+}, { doc: ['src', 'from', 'gate'], src: 'spinner.js' });
 
 /**
  * ⛔⛔⛔ THE HAMMER, AS A CONTACT: does the line at `gameTime` reach this box?

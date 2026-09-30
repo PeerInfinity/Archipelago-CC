@@ -97,6 +97,7 @@
  */
 
 import { PROFILE } from './seedlingProfile.js';
+import { defineRecord } from './entityRecords.js';
 
 /**
  * The `Game.totalEnemies()` sum, VERBATIM and in source order
@@ -158,7 +159,7 @@ export const TOTAL_ENEMIES_OMISSIONS = Object.freeze({
  * `sideWrite`— the persistence flag its `removed()` writes, if any. A kill
  *              that writes a flag is a LEDGER entry (§3.5).
  */
-export const ENEMY_CLASSES = Object.freeze({
+export const ENEMY_CLASSES = defineRecord('enemyClasses', {
     bob: {
         ctor: { dx: 8, dy: 8, src: 'Bob.as:33 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'Bob', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
@@ -527,7 +528,7 @@ export const ENEMY_CLASSES = Object.freeze({
         boss: 'R6 — an `Entity`, not an enemy; it SPAWNS LightBoss, which is counted',
         src: 'Enemies/LightBossController.as:106',
     },
-});
+}, { doc: ['src', 'why', 'threat', 'boss', 'where'], src: 'combat.js' });
 
 /**
  * The second damage family: `Puzzlements` that reach `Player.hit`, plus the
@@ -546,7 +547,7 @@ export const ENEMY_CLASSES = Object.freeze({
  *                  The value exists so the absence of a countdown is
  *                  DECLARED rather than implied by filing it `self`.
  */
-export const PUZZLEMENT_HAZARDS = Object.freeze({
+export const PUZZLEMENT_HAZARDS = defineRecord('puzzlementHazards', {
     spinningaxe: {
         ctor: { dx: 8, dy: 8, src: 'SpinningAxe.as:36 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
         as3: 'SpinningAxe', timing: 'self', damage: 1,
@@ -652,7 +653,7 @@ export const PUZZLEMENT_HAZARDS = Object.freeze({
         why: 'adds force every tick to anything overlapping. Routed around '
             + 'since R1; unchanged at R5.',
     },
-});
+}, { doc: ['src', 'why'], src: 'combat.js' });
 
 /** `Enemy.hitsTimerMax` — the i-frame window a hit buys (`Enemy.as:24`). */
 export const ENEMY_IFRAMES = PROFILE.enemyIframes;

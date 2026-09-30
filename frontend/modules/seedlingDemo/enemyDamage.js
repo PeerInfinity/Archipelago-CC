@@ -94,6 +94,7 @@ import {
 // after the alpha reaches zero. A second copy here is the two-consumers
 // failure this arc keeps paying for.
 import { RESPONDERS, opensOnTick } from './activators.js';
+import { defineRecord } from './entityRecords.js';
 
 export class EnemyDamageError extends Error {
     constructor(message) { super(message); this.name = 'EnemyDamageError'; }
@@ -112,7 +113,7 @@ export { KILL_LOCK_TAGS, KILL_LOCK_TSET, TOTAL_ENEMIES_CLASSES, TOTAL_ENEMIES_OM
  * are two different facts and a model that hard-codes one cannot express
  * the other.
  */
-export const ENEMY_DAMAGE_DEFAULTS = Object.freeze({
+export const ENEMY_DAMAGE_DEFAULTS = defineRecord('enemyDamageDefaults', {
     damage: 1,
     hits: 0,
     hitsMax: 3,
@@ -132,7 +133,7 @@ export const ENEMY_DAMAGE_DEFAULTS = Object.freeze({
     activeOffScreen: false,
     src: 'Enemies/Enemy.as:19-51 (fields), :141-181 (hit), :223-245 (hitUpdate), '
         + ':182-186 (startDeath); Mobile.as:31-45 (mobileUpdate), :60-72 (death)',
-});
+}, { doc: ['src'], src: 'enemyDamage.js' });
 
 /**
  * ⛓⛓⛓ `Mobile.death()`'s FADE, COUNTED — the eleven ticks the ladder lost.

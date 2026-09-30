@@ -123,6 +123,7 @@ import { rect, rectsOverlap } from './levelWorld.js';
 // R5 slice 2's headline defect was a SECOND transcription that disagreed with
 // the first by eight pixels on every enemy on the map.
 import { PUZZLEMENT_HAZARDS } from './combat.js';
+import { defineRecord } from './entityRecords.js';
 
 export class ArrowTrapError extends Error {
     constructor(message) { super(message); this.name = 'ArrowTrapError'; }
@@ -139,7 +140,7 @@ const toInt = (n) => Math.trunc(n);
  * `ArrowTrap`'s constants, verbatim. Every one is a literal, a
  * `private const`, or a signature in `Puzzlements/ArrowTrap.as`.
  */
-export const ARROW_TRAP = Object.freeze({
+export const ARROW_TRAP = defineRecord('arrowTrap', {
     as3: 'ArrowTrap',
     tag: 'arrowtrap',
     /** The embedded `Spritemap(imgArrowTrap, 16, 5)`. */
@@ -189,12 +190,12 @@ export const ARROW_TRAP = Object.freeze({
      */
     freezeGated: false,
     src: 'Puzzlements/ArrowTrap.as:16-63 + Puzzlements/Activators.as:9-40',
-});
+}, { doc: ['src', 'ctorSrc'], src: 'arrowTrap.js' });
 
 /**
  * `Arrow`'s constants, verbatim from `Projectiles/Arrow.as`.
  */
-export const ARROW = Object.freeze({
+export const ARROW = defineRecord('arrow', {
     as3: 'Arrow',
     type: 'Arrow',
     /** `setHitbox(4, 4, 2, 2)` — a 4x4 box CENTRED on the entity point. */
@@ -229,7 +230,7 @@ export const ARROW = Object.freeze({
      */
     bound: 'the level rect, strict: x > w, x < 0, y < 0, y > h',
     src: 'Projectiles/Arrow.as:13-74 + Mobile.as:14-45,60-118',
-});
+}, { doc: ['src', 'bound'], src: 'arrowTrap.js' });
 
 /**
  * ⛔ `Arrow.as:52` — `(hits[i] as Enemy).hit(v.length, new Point(x, y))`.
@@ -247,7 +248,7 @@ export const ARROW = Object.freeze({
  * The first two commits of slice 6 shipped the 5 and the measurement had
  * disagreed with them all along.
  */
-export const ARROW_ENEMY_HIT = Object.freeze({
+export const ARROW_ENEMY_HIT = defineRecord('arrowEnemyHit', {
     force: 5,
     damage: 1,
     type: '',
@@ -278,7 +279,7 @@ export const ARROW_ENEMY_HIT = Object.freeze({
         'canHit', 'onlyHitBy == "" || onlyHitBy == t', 'hitByFire || t != "Fire"',
         'hits < hitsMax']),
     src: 'Projectiles/Arrow.as:51-53 + Enemies/Enemy.as:141-181,247-255',
-});
+}, { doc: ['src', 'knockbackFrom'], src: 'arrowTrap.js' });
 
 /**
  * ⛓⛓⛓ R8 SLICE 3 — WHAT EACH OF THE FIVE HITABLES DOES TO AN ARROW, AND WHAT
@@ -777,7 +778,7 @@ export function shadowOf(box, lanes, cover = []) {
  * choreography was four measured cuts and the numbers should not have to
  * be rediscovered.
  */
-export const ARROW_KILL_PLAN = Object.freeze({
+export const ARROW_KILL_PLAN = defineRecord('arrowKillPlan', {
     /**
      * ⛔ THE PRESSER IS SAFE ONLY WHERE NO TRAP IS. `Button`'s cell is a
      * cell like any other; L5's happens to sit in the one column with no
@@ -835,7 +836,7 @@ export const ARROW_KILL_PLAN = Object.freeze({
         src: 'probe-seedling-r7-l5-arrows.mjs — the `bait` arm, four cuts',
     }),
     src: 'kickoff §15.3, §15.7 + Enemies/Bob.as:49-82 + Puzzlements/Lock.as',
-});
+}, { doc: ['src', 'presserSafety', 'baitRule'], src: 'arrowTrap.js' });
 
 /**
  * ⛔ THE CENSUS, RE-ASSERTED — and it is the half that can rot QUIETLY.

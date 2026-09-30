@@ -57,6 +57,7 @@
  */
 
 import { rectsOverlap, TILE_SIZE } from './levelWorld.js';
+import { defineRecord } from './entityRecords.js';
 
 export class CrusherError extends Error {
     constructor(message) { super(message); this.name = 'CrusherError'; }
@@ -66,7 +67,7 @@ const fail = (m) => { throw new CrusherError(m); };
 const TILE = TILE_SIZE;
 
 /** `Crusher.as:18-38`, transcribed. */
-export const CRUSHER = Object.freeze({
+export const CRUSHER = defineRecord('crusher', {
     /** `super(_x + Tile.w, _y + Tile.h, …)` — the ENTITY is a tile in. */
     dx: TILE,
     dy: TILE,
@@ -88,7 +89,7 @@ export const CRUSHER = Object.freeze({
     hitables: Object.freeze(['Player', 'Solid', 'Enemy', 'ShieldBoss']),
     /** What `moveX`/`moveY` stop on. ⚠ NOT "Player" — it moves THROUGH you, killing. */
     solids: Object.freeze(['Solid']),
-});
+}, { doc: [], src: 'crusher.js' });
 
 /**
  * `directions`, IN SOURCE ORDER — and the order is the semantics.
@@ -97,12 +98,12 @@ export const CRUSHER = Object.freeze({
  * `v` and the LAST one wins. A player standing where the east and south
  * lanes overlap is charged at from the SOUTH.
  */
-export const DIRECTIONS = Object.freeze([
+export const DIRECTIONS = defineRecord('crusherDirections', [
     Object.freeze({ name: 'E', dx: 1, dy: 0 }),
     Object.freeze({ name: 'N', dx: 0, dy: -1 }),
     Object.freeze({ name: 'W', dx: -1, dy: 0 }),
     Object.freeze({ name: 'S', dx: 0, dy: 1 }),
-]);
+], { doc: [], src: 'crusher.js' });
 
 /** ⛔ `t == -1` means ALWAYS ON — the opposite of the same literal on a `Lock`. */
 export const alwaysArmed = (t) => t === -1;
@@ -431,7 +432,7 @@ export const CEREMONY_RULE = Object.freeze({
  * is declared rather than omitted because "no route goes there yet" is how
  * §24.3's statue got its offset wrong for two slices.
  */
-export const PLAYER_DAMAGE_PATHS = Object.freeze({
+export const PLAYER_DAMAGE_PATHS = defineRecord('playerDamagePaths', {
     allThrough: 'Player.hit',
     gate: 'Player.as:1380 — `hitsTimer <= 0 && hits < hitsMax && !Game.freezeObjects`',
     frozenPlayerIsInvulnerable: true,
@@ -446,7 +447,7 @@ export const PLAYER_DAMAGE_PATHS = Object.freeze({
         levels: Object.freeze([77, 78, 80, 108]),
         onR5Route: false,
     })]),
-});
+}, { doc: ['src', 'why', 'gate'], src: 'crusher.js' });
 
 /**
  * ⚖ THE VERBS THAT REPLACE HARD-AVOID.

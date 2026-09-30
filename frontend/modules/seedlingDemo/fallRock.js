@@ -82,6 +82,7 @@
  */
 
 import { rect } from './levelWorld.js';
+import { defineRecord } from './entityRecords.js';
 
 export class FallRockError extends Error {
     constructor(message) { super(message); this.name = 'FallRockError'; }
@@ -93,7 +94,7 @@ const fail = (m) => { throw new FallRockError(m); };
  * `Scenery/FallRock.as:23-31`, so an `.oel` decides only position, `t` and
  * `tag`.
  */
-export const FALL_ROCK = Object.freeze({
+export const FALL_ROCK = defineRecord('fallRock', {
     /** `super(_x + Tile.w/2, _y + Tile.h/2)` then `setHitbox(16,16,8,8)`. */
     box: Object.freeze({ dx: 8, dy: 8, w: 16, h: 16, originX: 8, originY: 8 }),
     /** `y = -16` — off the top of the map, in ENTITY coordinates. */
@@ -106,7 +107,7 @@ export const FALL_ROCK = Object.freeze({
     parkedType: '',
     landedType: 'Solid',
     src: 'Scenery/FallRock.as:33-49 (ctor) + :51-101 (update) + :103-118 (fall/activate)',
-});
+}, { doc: ['src'], src: 'fallRock.js' });
 
 /**
  * ⛓ THE CAMERA-PAN AUDIT, as data rather than as a sentence in a docblock.
@@ -358,7 +359,7 @@ export function stepFallRock(state, playerBox = null, opts = {}) {
  * `new Rectangle(2, 2, 4, 5)` and `:432` feeds it to
  * `setHitbox(width, height, x, y)` — so origin (2,2), 4x5.
  */
-export const PLAYER_SNAP = Object.freeze({ originY: 2, height: 5 });
+export const PLAYER_SNAP = defineRecord('playerSnap', { originY: 2, height: 5 }, { doc: [], src: 'fallRock.js' });
 
 function overlaps(a, b) {
     return a.x < b.right && b.x < a.right && a.y < b.bottom && b.y < a.bottom;

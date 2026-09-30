@@ -85,6 +85,7 @@
  */
 
 import { rect, rectsOverlap } from './levelWorld.js';
+import { defineRecord } from './entityRecords.js';
 
 export class IceTurretBlastError extends Error {
     constructor(message) { super(message); this.name = 'IceTurretBlastError'; }
@@ -101,7 +102,7 @@ const toInt = (n) => Math.trunc(n);
  * The class's constants, verbatim. Every one is a literal or a
  * `private const` in `Projectiles/IceTurretBlast.as`.
  */
-export const ICE_TURRET_BLAST = Object.freeze({
+export const ICE_TURRET_BLAST = defineRecord('iceTurretBlast', {
     /** `setHitbox(4, 4, 2, 2)` — a 4x4 box CENTRED on the entity point. */
     hitbox: Object.freeze({ w: 4, h: 4, originX: 2, originY: 2 }),
     type: 'IceBlast',
@@ -135,7 +136,7 @@ export const ICE_TURRET_BLAST = Object.freeze({
     sound: 'Other:2 at spawn, radius 200, volume 0.4 — no gameplay reader',
     src: 'Projectiles/IceTurretBlast.as (whole class); Mobile.as:17,31-45,84-115; '
         + 'Enemies/IceTurret.as:152-167',
-});
+}, { doc: ['src', 'sound'], src: 'iceTurretBlast.js' });
 
 /**
  * ⛓⛓⛓ THE FREEZE, AS AN ARITHMETIC RATHER THAN AS AN OUTCOME.
@@ -219,7 +220,7 @@ export const FREEZE_SPAN = Object.freeze({
  * ⚠ THREE GATES, NOT ONE, and `hits < hitsMax` is the one a summary drops:
  * a player already at `hitsMax` is mid-`die()` and takes nothing.
  */
-export const BLAST_DAMAGE = Object.freeze({
+export const BLAST_DAMAGE = defineRecord('blastDamage', {
     force: 0,
     damage: 1,
     /** `new Point(x, y)` — the BLAST's entity point, not the turret's. */
@@ -233,7 +234,7 @@ export const BLAST_DAMAGE = Object.freeze({
     /** ⛓ Under `noDamage` the blast's ENTIRE gameplay effect is the freeze. */
     underNoDamage: 'the freeze, and nothing else',
     src: 'Player.as:1372-1399, :1491-1511',
-});
+}, { doc: ['src', 'knockbackFrom', 'knockbackWhy', 'underNoDamage'], src: 'iceTurretBlast.js' });
 
 /**
  * One blast. `id` is `<turretId>#<volley>.<k>` so a ledger entry names the
@@ -416,7 +417,7 @@ export function blastIsSpent(state, reach) {
  * Written down here rather than in a leg, because every leg that kills a
  * turret is subject to all of it and none of it is negotiable.
  */
-export const BLAST_PLAN = Object.freeze({
+export const BLAST_PLAN = defineRecord('blastPlan', {
     /**
      * ⚠ THERE IS NO APPROACH OUT OF RANGE. `attackRange` is 128 and the
      * slash reach is 16, so every stance that can kill a turret is 112 px
@@ -455,4 +456,4 @@ export const BLAST_PLAN = Object.freeze({
     spawnTickAfterPlay: 3,
     animEndTickAfterPlay: 19,
     src: 'Enemies/IceTurret.as:53-95,152-167; net/flashpunk/graphics/Spritemap.as:69-99',
-});
+}, { doc: ['src', 'cover', 'pressPolicy'], src: 'iceTurretBlast.js' });

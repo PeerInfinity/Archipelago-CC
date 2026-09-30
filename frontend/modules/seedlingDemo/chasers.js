@@ -68,6 +68,7 @@ import { ENEMY_CLASSES } from './combat.js';
 import { rect, SOLIDS_BY_MOVER } from './levelWorld.js';
 import { MODELLED_ENEMY_CLASSES } from './spinner.js';
 import { PROFILE } from './seedlingProfile.js';
+import { defineRecord } from './entityRecords.js';
 
 export class ChaserError extends Error {
     constructor(message) { super(message); this.name = 'ChaserError'; }
@@ -200,7 +201,7 @@ export function createDieAnim(tag) {
  * derived tick count is one arithmetic step from the source rather than a
  * number somebody measured once.
  */
-export const CHASERS = Object.freeze({
+export const CHASERS = defineRecord('chasers', {
     bob: Object.freeze({
         as3: 'Bob',
         // ⚠ `d` is measured to `player + targetOffset`, and `targetOffset`
@@ -225,7 +226,7 @@ export const CHASERS = Object.freeze({
         solidsMover: 'chaser',
         src: 'Enemies/Jellyfish.as:44-75',
     }),
-});
+}, { doc: ['src'], src: 'chasers.js' });
 
 /**
  * ⛓⛓⛓ R8 SLICE 1 — WHICH CHASERS ARE BRIDGED INTO THE TICK LOOP, DERIVED.
@@ -301,7 +302,7 @@ export function deathTicks(tag) {
  * ASSERT the gap rather than discover it: a stepped body standing here is one
  * the game has already destroyed.
  */
-export const ENEMY_TERRAIN_DESTROYS = Object.freeze({ water: 1, lava: 17 });
+export const ENEMY_TERRAIN_DESTROYS = defineRecord('enemyTerrainDestroys', { water: 1, lava: 17 }, { doc: [], src: 'chasers.js' });
 
 /**
  * `Enemy.update`'s `case 6` — the PIT, which is a SCHEDULE and not an

@@ -98,7 +98,10 @@ export const ENTITY_RECORDS_GLOBAL = '__SEEDLING_ENTITY_RECORDS__';
  * `entityRecords.test.js` holds this list to the files that call
  * `defineRecord`.
  */
-export const ENTITY_RECORD_MODULES = Object.freeze([]);
+export const ENTITY_RECORD_MODULES = Object.freeze([
+    'arrowTrap.js', 'chasers.js', 'combat.js', 'crusher.js', 'enemyDamage.js',
+    'fallRock.js', 'iceTurret.js', 'iceTurretBlast.js', 'pulser.js', 'spinner.js',
+]);
 
 /** Every refusal this module makes. The message names the record and path. */
 export class EntityRecordError extends Error {
@@ -133,12 +136,12 @@ function readOverride(raw) {
     if (!isPlainObject(obj)) refuse(`override: must be a flat object of record paths, got ${show(obj)}`);
     const out = new Map();
     for (const [path, v] of Object.entries(obj)) {
-        const m = /^([A-Za-z][A-Za-z0-9]*)[.[]/.exec(path);
-        if (!m) refuse(`override: "${path}" is not a record path ("<name>.<key>…" or "<name>[<i>]…")`);
+        const [, name] = /^([A-Za-z][A-Za-z0-9]*)[.[]/.exec(path) ?? [];
+        if (!name) refuse(`override: "${path}" is not a record path ("<name>.<key>…" or "<name>[<i>]…")`);
         if (v !== null && typeof v === 'object') refuse(`override: "${path}" is a nested value (${show(v)}); an override is flat, one leaf per path`);
         if (typeof v === 'number' && !Number.isFinite(v)) refuse(`override: "${path}" must be a finite number, got ${show(v)}`);
         if (!['number', 'boolean', 'string'].includes(typeof v)) refuse(`override: "${path}" must be a number, a boolean or a string, got ${show(v)}`);
-        out.set(path, { name: m[1], value: v });
+        out.set(path, { name, value: v });
     }
     return out;
 }
