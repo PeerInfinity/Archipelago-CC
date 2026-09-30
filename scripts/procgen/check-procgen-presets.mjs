@@ -200,14 +200,18 @@ async function openPanel(url = PAGE_URL) {
     await page.waitForTimeout(8000);
     // Polled, not looked up once: at 1-minute load ~10 the tab was measured
     // absent 8 s after goto (C2, 2026-09-30) on an otherwise healthy boot.
-    const tab = await waitFor('the Procgen Pipeline tab', () => findPanelTab(page, PROCGEN_PIPELINE_PANEL), 30000)
-        .catch(() => null);
-    if (tab) await tab.evaluate((t) => { t.dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); t.click(); });
-    const activated = !!tab;
-    if (!activated) throw new Error('Procgen Pipeline tab not found');
-    await page.waitForTimeout(1500);
+    // The panel counts as open when its preset drop-down is VISIBLE: a click
+    // that lands while the boot is still re-rendering the layout was measured
+    // (C2, load ~10) to leave the drop-down hidden, so the tab is re-clicked.
     const panel = page.locator('.procgen-pipeline-panel');
-    if (await panel.count() === 0) throw new Error('panel not found');
+    const shown = await waitFor('the Procgen Pipeline panel, showing its preset drop-down', async () => {
+        const tab = await findPanelTab(page, PROCGEN_PIPELINE_PANEL);
+        if (!tab) return false;
+        await tab.evaluate((t) => { t.dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); t.click(); });
+        await page.waitForTimeout(1500);
+        return panel.locator('.procgen-pipeline-preset-select').first().isVisible();
+    }, 30000).catch(() => false);
+    if (!shown) throw new Error('Procgen Pipeline tab not found, or its panel never showed the preset drop-down');
     return panel;
 }
 
