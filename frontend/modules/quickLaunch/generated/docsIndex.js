@@ -378,6 +378,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "Bounce (substrate id bounce, in frontend/modules/bounceDemo/) is a Doodle-Jump-style vertical platformer. Each region is one level, a climb from the entrance to pickups and exit portals, and its…"
     },
     {
+        "path": "docs/json/developer/procgen/concepts.md",
+        "title": "Concepts",
+        "section": "developer/procgen",
+        "summary": "A concept is a thing a world can be about — a sword, a guardian, water, a coloured door — declared once, in no substrate's words, so that the planner can ask every substrate the same question: *can…"
+    },
+    {
         "path": "docs/json/developer/procgen/demos.md",
         "title": "Procgen demonstrations — a catalogue",
         "section": "developer/procgen",
@@ -468,6 +474,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "How the repo drives the real recompiled Seedling with a scripted input tape and checks a JavaScript transcription of its physics against what the game actually did, tick by tick. The chronological…"
     },
     {
+        "path": "docs/json/developer/procgen/seedling-constants.md",
+        "title": "Seedling Constants Census",
+        "section": "developer/procgen",
+        "summary": "Every numeric literal in Seedling's JS simulation — the static import closure of frontend/modules/seedlingDemo/levelRun.js — is one row of a generated census…"
+    },
+    {
         "path": "docs/json/developer/procgen/seedling-editor.md",
         "title": "The Seedling Editor",
         "section": "developer/procgen",
@@ -490,6 +502,12 @@ export const DOCS_INDEX = Object.freeze([
         "title": "Substrate Registry Reference",
         "section": "developer/procgen",
         "summary": "frontend/modules/shared/procgen/substrateRegistry.js connects the pipeline, the runtime player and the substrates: each substrate registers an entry, and consumers look entries up by id instead of…"
+    },
+    {
+        "path": "docs/json/developer/procgen/tape-envelope.md",
+        "title": "The Tape Envelope and the Observation Core",
+        "section": "developer/procgen",
+        "summary": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation…"
     },
     {
         "path": "docs/json/developer/procgen/text-adventure.md",
@@ -1313,6 +1331,7 @@ export const HELP_SECTIONS = Object.freeze([
         "docs": [
             "docs/json/developer/procgen/architecture.md",
             "docs/json/developer/procgen/bounce.md",
+            "docs/json/developer/procgen/concepts.md",
             "docs/json/developer/procgen/demos.md",
             "docs/json/developer/procgen/editing-core.md",
             "docs/json/developer/procgen/flash.md",
@@ -1328,10 +1347,12 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/runner.md",
             "docs/json/developer/procgen/seedling-bot-log.md",
             "docs/json/developer/procgen/seedling-bot.md",
+            "docs/json/developer/procgen/seedling-constants.md",
             "docs/json/developer/procgen/seedling-editor.md",
             "docs/json/developer/procgen/sphere-growth.md",
             "docs/json/developer/procgen/stepped-pipeline.md",
             "docs/json/developer/procgen/substrate-registry.md",
+            "docs/json/developer/procgen/tape-envelope.md",
             "docs/json/developer/procgen/text-adventure.md"
         ],
         "children": []
