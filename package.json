@@ -54,6 +54,7 @@
   },
   "homepage": "https://github.com/PeerInfinity/Archipelago/tree/JSONExport#readme",
   "devDependencies": {
+    "@babel/parser": "7.28.5",
     "@playwright/test": "1.56.0",
     "@vitest/coverage-v8": "^4.0.15",
     "esbuild": "^0.27.2",

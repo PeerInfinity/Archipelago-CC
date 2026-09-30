@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 23,
-        "headings": 880,
+        "docs": 24,
+        "headings": 891,
         "indexHeadings": 2,
-        "lines": 19638,
+        "lines": 20064,
         "pages": 4,
-        "words": 225135
+        "words": 230789
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -350,6 +350,16 @@ export const DOCS_INDEX = frz({
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
             "words": 156533
+        },
+        {
+            "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
+            "file": "seedling-constants.md",
+            "h1": "Seedling Constants Census",
+            "headings": 11,
+            "lines": 426,
+            "links": [],
+            "path": "docs/json/developer/procgen/seedling-constants.md",
+            "words": 5654
         },
         {
             "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",

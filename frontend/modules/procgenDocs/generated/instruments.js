@@ -44,7 +44,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 13,
+            "count": 14,
             "id": "census"
         },
         {
@@ -209,13 +209,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 274,
+        "blockStyle": 275,
         "browser": 85,
-        "cited": 116,
-        "files": 285,
+        "cited": 117,
+        "files": 286,
         "lineStyle": 11,
-        "withDocblock": 285,
-        "withFlags": 206
+        "withDocblock": 286,
+        "withFlags": 207
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -732,6 +732,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-committed-rooms — WHAT IS STANDING IN EVERY COMMITTED ROOM.",
             "path": "scripts/procgen/census-seedling-committed-rooms.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-constants.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "write"
+            ],
+            "file": "census-seedling-constants.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-constants — every numeric literal in Seedling's JS simulation, with its reviewed class (engine-prep A1).",
+            "path": "scripts/procgen/census-seedling-constants.mjs"
         },
         {
             "argvHelpers": [

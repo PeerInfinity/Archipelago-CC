@@ -1,0 +1,1578 @@
+target,class,kind,as3,note
+frontend/modules/seedlingDemo/levelWorld.js|HITBOX_ORIGIN_X|(module),physics,magnitude,Player.as:normalHitbox,player hitbox origin x (Rectangle(2;2;4;5))
+frontend/modules/seedlingDemo/levelWorld.js|HITBOX_ORIGIN_Y|(module),physics,magnitude,Player.as:normalHitbox,player hitbox origin y
+frontend/modules/seedlingDemo/levelWorld.js|BRIDGE_STATE|(module),rule,sentinel,,Tile.types index for Bridge
+frontend/modules/seedlingDemo/levelWorld.js|WATER_STATE|(module),rule,sentinel,,Tile.types index for Water
+frontend/modules/seedlingDemo/levelWorld.js|LAVA_STATE|(module),rule,sentinel,,Tile.types index for Lava
+frontend/modules/seedlingDemo/levelWorld.js|WATERFALL_STATE|(module),rule,sentinel,,Tile.types index for Waterfall
+frontend/modules/seedlingDemo/levelWorld.js|clearedHere2|clearedHere2,rule,sentinel,,tag >= 0 means tagged; -1 is none
+frontend/modules/seedlingDemo/levelWorld.js|MAGICAL_LOCK_TYPE_BY_TAG|(module),rule,sentinel,,lockType compared lockType <= shotType
+frontend/modules/seedlingDemo/levelWorld.js|MODELLED_TILE_TYPES|(module),rule,sentinel,,Tile.types ids
+frontend/modules/seedlingDemo/levelWorld.js|UNMODELLED_REASON|(module),rule,sentinel,,Tile.types id (Water) as key
+frontend/modules/seedlingDemo/levelWorld.js|combatCensusOf|combatCensusOf,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|pickup|pickup,physics,magnitude,,pickup ctor half-tile offset (dx/dy 8) of the pickup hitbox
+frontend/modules/seedlingDemo/levelWorld.js|ENTITY_CLASSES|(module),physics,magnitude,,ctor offset / setHitbox geometry (rect; pixelmask; trigger; pickup args)
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hbc628bea|8|0,rule,derivation,,watcher avoid square: ctor half-tile 8 minus NPC talkRange 24
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hbc628bea|24|0,rule,derivation,NPCs/NPC.as:talkRange,watcher avoid square: ctor half-tile 8 minus NPC talkRange 24
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hb5edf11c|8|0,rule,derivation,,watcher avoid square: ctor half-tile 8 minus NPC talkRange 24
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hb5edf11c|24|0,rule,derivation,NPCs/NPC.as:talkRange,watcher avoid square: ctor half-tile 8 minus NPC talkRange 24
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hb8801894|48|0,rule,derivation,,watcher avoid square side = 2 * NPC talkRange (24)
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h6f412f3d|48|0,rule,derivation,,watcher avoid square side = 2 * NPC talkRange (24)
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h0127b412|0|0,rule,bound,,avoid-volume origin
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h2d93fc96|0|0,rule,bound,,avoid-volume origin
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h7997cd72|0|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h7f88596f|0|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hcc53e68d|16|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h6184d97a|18|0,rule,derivation,,chest cell 16 + 2 rows for the collideLine at height+1 and the player box depth
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h81e03784|0|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hf0318bf9|0|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h0346c2f6|4|0,rule,bound,,proximity-hazard avoid volume; Button collideTypesInto at own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h5796e788|5|0,rule,bound,,proximity-hazard avoid volume; Button collideTypesInto at own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h573ac5e6|8|0,rule,bound,,proximity-hazard avoid volume; Button collideTypesInto at own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h8912a7cd|6|0,rule,bound,,proximity-hazard avoid volume; Button collideTypesInto at own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hab7d2e7d|0|0,rule,bound,,proximity-hazard avoid volume; Button collideTypesInto at own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hc68139d9|0|0,rule,bound,,proximity-hazard avoid volume; Button collideTypesInto at own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h34e341fc|4|0,rule,bound,,proximity-hazard avoid volume; ButtonRoom own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h65adff58|5|0,rule,bound,,proximity-hazard avoid volume; ButtonRoom own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h6d7ec3c6|8|0,rule,bound,,proximity-hazard avoid volume; ButtonRoom own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|he659faae|6|0,rule,bound,,proximity-hazard avoid volume; ButtonRoom own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hfc8bea57|0|0,rule,bound,,proximity-hazard avoid volume; ButtonRoom own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h1b1d76a4|0|0,rule,bound,,proximity-hazard avoid volume; ButtonRoom own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h30e47f28|0|0,rule,bound,,proximity-hazard avoid volume; Pull own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|he8d44e76|0|0,rule,bound,,proximity-hazard avoid volume; Pull own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hb3bb698a|16|0,rule,bound,,proximity-hazard avoid volume; Pull own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h99ff1fbf|16|0,rule,bound,,proximity-hazard avoid volume; Pull own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h6cb8e435|0|0,rule,bound,,proximity-hazard avoid volume; Pull own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hd41c356f|0|0,rule,bound,,proximity-hazard avoid volume; Pull own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hbfaf69b6|0|0,rule,bound,,proximity-hazard avoid volume; Whirlpool own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hf295c7df|0|0,rule,bound,,proximity-hazard avoid volume; Whirlpool own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h6dc6d479|32|0,rule,bound,,proximity-hazard avoid volume; Whirlpool own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h9fa369fe|32|0,rule,bound,,proximity-hazard avoid volume; Whirlpool own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h252e345d|0|0,rule,bound,,proximity-hazard avoid volume; Whirlpool own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hfc9d26b6|0|0,rule,bound,,proximity-hazard avoid volume; Whirlpool own hitbox
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h134b126f|8|0,rule,bound,,proximity-hazard avoid volume; transcribed
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hf8864801|8|0,rule,bound,,proximity-hazard avoid volume; transcribed
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h9f362372|33|0,rule,derivation,Enemies/LavaTrap.as:tongueLengths,REVIEW: max(tongueLengths)=32 plus 1 for the strict < disc test; source said 33 without deriving
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h514dea84|16|0,rule,bound,,proximity-hazard avoid volume; transcribed
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h07ee19cc|16|0,rule,bound,,proximity-hazard avoid volume; transcribed
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hf16b920b|129|0,rule,derivation,Enemies/IceTurret.as:attackRange,attackRange 128 plus 1: AS3 tests d <= 128 and the disc test is strict <
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h562c1023|7|0,physics,magnitude,,ShieldLock.as:35 p.y = y - originY + 7: position write
+frontend/modules/seedlingDemo/levelWorld.js|(module)|he1fbb655|-1|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h2ca86b43|0|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h103242bc|16|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h48a54fb7|16|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h488a468d|0|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hba83c4de|0|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hd5235718|7|0,physics,magnitude,,ShieldLock.as:35 p.y = y - originY + 7: position write
+frontend/modules/seedlingDemo/levelWorld.js|(module)|he7fabedb|-1|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h7b578512|0|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hf698bf49|16|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hc7c87f2d|16|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h016f6552|0|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h1ac979ec|0|0,rule,bound,,proximity-hazard avoid volume; ShieldLock.update collides at x-1
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h76aa56ff|0|0,rule,bound,,proximity-hazard avoid volume; Pod own box at own position
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h60b27c2f|0|0,rule,bound,,proximity-hazard avoid volume; Pod own box at own position
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h9b3865c2|16|0,rule,bound,,proximity-hazard avoid volume; Pod own box at own position
+frontend/modules/seedlingDemo/levelWorld.js|(module)|ha3449880|16|0,rule,bound,,proximity-hazard avoid volume; Pod own box at own position
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h72e05b2f|0|0,rule,bound,,proximity-hazard avoid volume; Pod own box at own position
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h8fc6e757|0|0,rule,bound,,proximity-hazard avoid volume; Pod own box at own position
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h83547004|2|0,rule,bound,,collideLine probe start: margin m=2 from Lock left edge
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h6274b061|11|0,rule,derivation,,last integer probe = width 16 - 2*m(2) - 1 (toX never tested)
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h1295b58e|17|0,rule,derivation,,probe row = height 16 + 1 beneath the lock
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hf5263a89|60|0,rule,magnitude,Puzzlements/BossLock.as:keyTimerMax,ticks of contact before the fade starts
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h280ee39f|0.05|0,rule,magnitude,,alpha -= 0.05 per tick until <= 0 then setPersistence: gates the write timing
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h4a651c8a|2|0,rule,bound,,collideLine probe start: margin m=2 from Lock left edge
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h1a0eafce|11|0,rule,derivation,,last integer probe = width 16 - 2*m(2) - 1 (toX never tested)
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hc437ea4b|17|0,rule,derivation,,probe row = height 16 + 1 beneath the lock
+frontend/modules/seedlingDemo/levelWorld.js|persistenceClearsFor|persistenceClearsFor,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|persistenceClearsFor|h88c5486c|-1|0,rule,sentinel,,absent tag = -1 (none)
+frontend/modules/seedlingDemo/levelWorld.js|persistenceClearsFor|hbe33c5ff|0|0,rule,sentinel,,tag >= 0 means tagged
+frontend/modules/seedlingDemo/levelWorld.js|persistenceClearsFor|h05477558|0|0,rule,sentinel,,tSet < 0 means lock-despawn group
+frontend/modules/seedlingDemo/levelWorld.js|tSetOf|tSetOf,rule,sentinel,,"int("""") default group 0"
+frontend/modules/seedlingDemo/levelWorld.js|FORCED_TSET|(module),rule,sentinel,,forced group ids
+frontend/modules/seedlingDemo/levelWorld.js|FORCED_TAG|(module),rule,sentinel,,forced persistence tags
+frontend/modules/seedlingDemo/levelWorld.js|tagOf|tagOf,rule,sentinel,,absent tag = -1 (none)
+frontend/modules/seedlingDemo/levelWorld.js|clearedAwayByTag|clearedAwayByTag,rule,sentinel,,tag >= 0 tagged; tSet < 0 lock-despawn
+frontend/modules/seedlingDemo/levelWorld.js|addedTimeKey|addedTimeKey,structural,,,0/1 booleans in a cache key
+frontend/modules/seedlingDemo/levelWorld.js|UNTOUCHABLE_CLEARS|(module),rule,sentinel,,level id 114 and Watcher tag 0 (FinalDoor.as:50)
+frontend/modules/seedlingDemo/levelWorld.js|LIGHTPOLE_PRESS_BOX|(module),physics,magnitude,,ctor offset / setHitbox geometry
+frontend/modules/seedlingDemo/levelWorld.js|WATCHER_PRESS_BOX|(module),physics,magnitude,,ctor offset / setHitbox geometry
+frontend/modules/seedlingDemo/levelWorld.js|SPINNER_PRESS_BOX|(module),physics,magnitude,,ctor offset / setHitbox geometry
+frontend/modules/seedlingDemo/levelWorld.js|FINAL_BOSS_PRESS_BOX|(module),physics,magnitude,,ctor offset / setHitbox geometry
+frontend/modules/seedlingDemo/levelWorld.js|CLIFFSIDE_CLASS|(module),physics,magnitude,,ctor offset / setHitbox geometry
+frontend/modules/seedlingDemo/levelWorld.js|cliffSideClassFor|cliffSideClassFor,structural,,,REVIEW: frame codes 0..3 + default arm index 4 select the collision mask; kept as array index/bound
+frontend/modules/seedlingDemo/levelWorld.js|maskHitsBox|maskHitsBox,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|ropeSpanRect|ropeSpanRect,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|avoidVolumesAt,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|nearestWalkableTileWithTie,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|buildLevelWorld,structural,,,
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h16329831|0|0,rule,sentinel,,tag >= 0 means tagged
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hca08c4d0|0|0,rule,sentinel,,tag >= 0 means tagged
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hd21f290c|0|0,rule,sentinel,,tag >= 0 means tagged
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hd21f290c|0|1,rule,sentinel,,"keyType default int("""")=0"
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hd21f290c|0|2,rule,sentinel,,"totemPart default int("""")=0"
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h727f4e4a|-1|0,rule,sentinel,,ButtonRoom room default -1
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hb6e5f66f|0|0,rule,sentinel,,"keyType default int("""")=0"
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h0cb35226|1|0,rule,sentinel,,rockType 1 = ghost rock
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h0cb35226|0|2,rule,sentinel,,rockType 0 = normal rock
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h8f001616|0|0,rule,sentinel,,tag >= 0 means tagged
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h8aa14517|1|0,rule,sentinel,,rockType 1 = ghost rock
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h8aa14517|0|0,rule,sentinel,,rockType 0 = normal rock
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h541eaa88|0|0,rule,sentinel,,"keyType default int("""")=0"
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hadf01302|-1|0,rule,sentinel,,Stairs forced tag -1
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hadf01302|-1|1,rule,sentinel,,Teleporter absent tag -1 (Game.as:2169)
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h3cb94e30|0|0,rule,sentinel,,tag >= 0 means tagged
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h3b06fe83|0|0,rule,sentinel,,tag >= 0 means tagged
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h3dc77506|0|0,rule,sentinel,,Teleporter.checkDeactivated tag >= 0
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hf20cbf1f|0|0,rule,magnitude,,"talkingSpeed default int("""")=0 = one char per frame; paces a freezing dialogue"
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h0811f52e|0|0,rule,magnitude,,"talkingSpeed default int("""")=0 = one char per frame; paces a freezing dialogue"
+frontend/modules/seedlingDemo/levelRun.js|*|*,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|createLevelRun|-1,rule,sentinel,,-1 = seal part not collected
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|h52f28f77|0|0,rule,sentinel,,primary item slot default
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|createLevelRun|20,rule,magnitude,,REVIEW: camera settle ticks on load; camera position feeds onScreen gates but comment says any value over ~12 is equivalent
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|shieldBossStateFor,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|owlStateFor|-1,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|finalDoorStateFor,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|watcherStateFor,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|watcherStateFor|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|drainPickupHelp,rule,derivation,,PICKUP_HELP_DEAD_FRAMES frames - 1 when the TAPE dismisses the help
+frontend/modules/seedlingDemo/levelRun.js|dropRocksTogether|hd8fd3a55|1|0,rule,count,,one free player step on the freeze-release frame
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|finishEndingReboot,rule,sentinel,,Game.cutscene[2] (tree cutscene id)
+frontend/modules/seedlingDemo/levelRun.js|finishEndingReboot|h1bf845bd|2|0,rule,sentinel,,cutscene hold arm 2 = cutscene id 2
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|finishEndingReboot|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|weaponForPress,rule,sentinel,,inventory item id
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope,physics,magnitude,,pushable block 16px box and centre origin
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|-1,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|pullRope|h71e59768|-1|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|pullRope|hd471ae06|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|2,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|4,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|5,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|1,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|applyFire|ha9f0d85f|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyFire|-1,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|applyThrust|h727dcf9b|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|applyThrust|hf2ca60d1|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|applyThrust|hd859c130|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyThrust|-1,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|stepChestsNow|hc9a4f741|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepChestsNow|8,physics,magnitude,,seal piece spawns at chest centre (half tile)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|solidOver,physics,magnitude,,chest 16px solid box
+frontend/modules/seedlingDemo/levelRun.js|step|h89e67ab9|1|0,rule,magnitude,,timer decrements one per tick
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|step|0,physics,bound,,airborne body still moving
+frontend/modules/seedlingDemo/levelRun.js|step|h98281141|0|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|step|hdf442f31|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|chaserForecastNow|h7ceee914|0|0,physics,bound,,chaser row moves only if speed nonzero
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|sweep,physics,sign,,
+frontend/modules/seedlingDemo/levelRun.js|sweep|h60d0f44f|0|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|sweep|h60d0f44f|0|1,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|sweep|h85ec21af|1|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|sweep|hca70881a|1|0,physics,magnitude,,1px sweep step
+frontend/modules/seedlingDemo/levelRun.js|sweep|h85ec21af|1|1,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|sweep|h952619c4|1|0,physics,magnitude,,1px sweep step
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow,physics,magnitude,,pushable block 16px box and centre origin
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow|1,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow|2,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow|4,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow|5,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
+frontend/modules/seedlingDemo/levelRun.js|stepBlastsNow|h968f45de|0|0,physics,magnitude,,blast knockback force 0
+frontend/modules/seedlingDemo/levelRun.js|stepBlastsNow|h968f45de|1|0,rule,magnitude,,blast damage
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|drainBossRemovals,rule,sentinel,,REVIEW: Game.resetCamera target -1/-1; camera feeds onScreen gates and shake but may be presentation only
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyExplosion|2,physics,derivation,,blast square side = radius * 2
+frontend/modules/seedlingDemo/levelRun.js|applyExplosion|h3963c3f0|2|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|applyExplosion|h3963c3f0|2|1,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|stepShieldBossesNow|h6f11a0cb|0|0,rule,sentinel,,tile type default when no walkable tile
+frontend/modules/seedlingDemo/levelRun.js|stepOwlNow|hf23fe474|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepOwlNow|8,physics,magnitude,,owl pod 16px box around entity point
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepOwlNow|5,rule,count,,five death rocks
+frontend/modules/seedlingDemo/levelRun.js|stepOwlNow|hc6d56d0e|5|0,physics,derivation,,death rock y = (i / 5) * 32; 5 = rock count
+frontend/modules/seedlingDemo/levelRun.js|stepOwlNow|hae45428f|1|0,rule,derivation,,second persistence tag b.tag + 1
+frontend/modules/seedlingDemo/levelRun.js|stepOwlNow|h0dc0f7ce|1|0,rule,magnitude,,owl body contact damage
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepOwlNow|32,physics,magnitude,,death rock y spread 32px
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|spawnGrenade,physics,magnitude,,grenade spawn at owl entity point (+8)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|spawnGrenade|1,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|spawnGrenade|h1a22893d|8|0,physics,magnitude,,grenade spawn point mirrored in event row
+frontend/modules/seedlingDemo/levelRun.js|spawnGrenade|h1a22893d|8|1,physics,magnitude,,grenade spawn point mirrored in event row
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|owlJiggleNow,rule,bound,,no shake = no jiggle RNG draws
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|owlJiggleNow|2,rule,count,,view() jiggle spends exactly two RNG draws
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepSpinnerContactsNow|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|collideLineSolid,physics,sign,,
+frontend/modules/seedlingDemo/levelRun.js|collideLineSolid|h21cbb2e8|1|0,physics,bound,,collideLine degenerate segment under 1px
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyPlayerHit|0,physics,magnitude,,default knockback force
+frontend/modules/seedlingDemo/levelRun.js|applyPlayerHit|h85b0a0cc|1|0,rule,magnitude,,default damage
+frontend/modules/seedlingDemo/levelRun.js|stepChasersNow|h7ceee914|0|0,physics,bound,,chaser row moves only if speed nonzero
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepChaserEntity|0,rule,bound,,pit fade alpha clamp; alpha 0 = removal
+frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|h65cc0531|0|0,rule,sentinel,,tile type default when no walkable tile
+frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|hee10ba2a|0|0,rule,bound,,pit fade finished -> destroy
+frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|hee10ba2a|0|1,rule,bound,,fade finished -> removal
+frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|h5b2326de|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|hae45b85b|1|0,rule,magnitude,,terrain death restarts fade at alpha 1; fade-out gates removal
+frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|h89e67ab9|1|0,rule,magnitude,,timer decrements one per tick
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepChaserEntity|10,physics,magnitude,,pit fall pulls 1/10 of the way to tile centre per tick
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|assertNoCeremonyBesideLiveChaser,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|terrainAt,rule,sentinel,,tile type default when no walkable tile
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyLockEvents,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyLockEvents|-1,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|applyLockEvents|h46837b97|0|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyLockEvents|1,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pickupUnderfoot,rule,sentinel,,Game.cutscene[2] (tree cutscene id)
+frontend/modules/seedlingDemo/levelRun.js|stepWatchersNow|h712dd745|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|stepWatchersNow|hfb4eb258|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|stepWatchersNow|hb517b9fb|0|0,rule,bound,,watcher has been hit at least once
+frontend/modules/seedlingDemo/levelRun.js|stepWatchersNow|hdb450094|1|0,rule,magnitude,,timer decrements one per tick
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|talkerStateFor,rule,sentinel,,-1 = no persistTag
+frontend/modules/seedlingDemo/levelRun.js|stepFinalDoorsNow|h37890f51|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepFinalDoorsNow|-1,rule,sentinel,,-1 = seal part not collected
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|earnedClears,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crushersParked,physics,bound,,crusher at rest
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crusherScans,physics,bound,,crusher at rest
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|previewStepper,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|advance|hd5e683f5|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|advance|hf2ca60d1|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|advance|hd4727287|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|advance|h2bf0a6f8|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
+frontend/modules/seedlingDemo/levelRun.js|advance|hf9419e89|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|advance|hee37f6e1|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|advance|h6d36784b|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|advance|hb16ea419|0|0,physics,magnitude,,cutscene walk vy clamped to 0
+frontend/modules/seedlingDemo/levelRun.js|advance|h659f58d7|1|0,rule,magnitude,,timer decrements one per tick
+frontend/modules/seedlingDemo/levelRun.js|advance|h997443db|1|0,rule,magnitude,,cutscene hold tick counter step
+frontend/modules/seedlingDemo/levelRun.js|advance|ha0be1487|1|0,rule,sentinel,,cutscene id 1 (bloody seed reboot)
+frontend/modules/seedlingDemo/levelRun.js|advance|had4c8fda|1|0,rule,magnitude,,boss totem laser damage
+frontend/modules/seedlingDemo/levelRun.js|advance|hd7b0522b|2|0,rule,sentinel,,cutscene id 2 (plain seed reboot)
+frontend/modules/flashPanel/seedlingSemantics.js|*|*,structural,,,
+frontend/modules/flashPanel/seedlingSemantics.js|SEEDLING_TILE_SIZE|(module),physics,magnitude,Scenery/Tile.as:w,tile size
+frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_TO_TYPE|(module),rule,sentinel,,tileset column -> tile type id (Game.as switch)
+frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_VARIANTS|(module),cosmetic,,,column keys of the cosmetic-only waterfall/grass variant flags
+frontend/modules/flashPanel/seedlingSemantics.js|TILE_TYPE_SEMANTICS|(module),rule,sentinel,,tile type id
+frontend/modules/flashPanel/seedlingSemantics.js|ENTITY_SEMANTICS|(module),physics,magnitude,,entity hitbox size in tiles
+frontend/modules/flashPanel/seedlingSemantics.js|ENTITY_SEMANTICS|(module)|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|ENTITY_SEMANTICS|(module)|1,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h245445a1|1|0,physics,magnitude,,entity hitbox size in tiles
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h2dee78db|1|0,physics,magnitude,,entity hitbox size in tiles
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h31ef0be2|1|0,physics,magnitude,,entity hitbox size in tiles
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h77817ece|1|0,physics,magnitude,,entity hitbox size in tiles
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h90191b8e|1|0,physics,magnitude,,entity hitbox size in tiles
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h0d6bc8f5|1|0,physics,magnitude,,entity hitbox size in tiles
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h48fab870|1|0,physics,magnitude,,entity hitbox size in tiles
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h9c7473a6|2|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|hf03417bc|2|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h6823b978|3|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|ha3e9f9a1|3|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h7299871f|5|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h8e91b935|4|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|hbdfa3165|6|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|hb340799c|7|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|hcc0e466a|8|0,rule,sentinel,,entity variant type code
+frontend/modules/flashPanel/seedlingSemantics.js|entityPixelRect|entityPixelRect,physics,magnitude,,default 1x1 tile footprint
+frontend/modules/flashPanel/seedlingSemantics.js|entityPixelRect|h90b89281|1|0,physics,bound,,footprint floor of one tile
+frontend/modules/flashPanel/seedlingSemantics.js|entityPixelRect|h42912754|1|0,physics,bound,,footprint floor of one tile
+frontend/modules/flashPanel/seedlingSemantics.js|SEEDLING_PLAYER_BOX|(module),physics,magnitude,Player.as:normalHitbox,player hitbox
+frontend/modules/flashPanel/seedlingSemantics.js|has|has,rule,count,,item count required
+frontend/modules/flashPanel/seedlingSemantics.js|buildFlagItemRules|hd2b6a69f|1|0,rule,derivation,,progressive item count = chain index + 1
+frontend/modules/flashPanel/seedlingSemantics.js|CLIFFSIDE_FRAME_FACES|(module),rule,sentinel,,cliffside frame id
+frontend/modules/flashPanel/seedlingSemantics.js|DIRECTIONS|(module),rule,sign,,grid direction unit vector
+frontend/modules/flashPanel/seedlingSemantics.js|buildSeedlingRegionGrid|buildSeedlingRegionGrid,structural,,,REVIEW: ordinal precedence of claim kinds when folding a cell; decides the cell kind
+frontend/modules/flashPanel/seedlingSemantics.js|buildSeedlingRegionGrid|buildSeedlingRegionGrid|2,structural,,,
+frontend/modules/flashPanel/seedlingSemantics.js|buildSeedlingRegionGrid|hf04350e8|2|0,structural,,,REVIEW: ordinal precedence of claim kinds when folding a cell; decides the cell kind
+frontend/modules/flashPanel/seedlingSemantics.js|buildSeedlingRegionGrid|h60d0f44f|0|0,structural,,,
+frontend/modules/flashPanel/seedlingSemantics.js|buildSeedlingRegionGrid|h32446705|1|0,structural,,,
+frontend/modules/seedlingDemo/combat.js|ENEMY_CLASSES|(module),physics,magnitude,,ctor offsets / hitboxes / speeds / glide; overrides below
+frontend/modules/seedlingDemo/combat.js|PUZZLEMENT_HAZARDS|(module),physics,magnitude,,ctor offsets; damage overridden per key
+frontend/modules/seedlingDemo/combat.js|(module)|h52ddf32a|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h1d4e59fb|80|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h31a6ba43|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h6a435990|0|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h1aa388c3|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h7cdde083|80|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|hc961c964|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h686f7ba9|16|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|hcc503c4e|16|0,physics,bound,,sword-line / punch reach
+frontend/modules/seedlingDemo/combat.js|(module)|h153f1fa3|1|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h6996fe06|80|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h5cadc6f9|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h526f3fab|0|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|hbbf5448f|17|0,rule,sentinel,,tile type 17 lava written by Bulb
+frontend/modules/seedlingDemo/combat.js|(module)|h09318176|2|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h953a7d5d|80|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h16e98058|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h228e214d|0|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h9f12d477|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h0c288315|160|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|ha6cd84d9|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h626d5f5f|0|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h08ee434b|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|he5f6fabf|80|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|hb53ccc23|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h8204ecc5|8|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|ha19e3d9a|10|0,physics,bound,,sword-line / punch reach
+frontend/modules/seedlingDemo/combat.js|(module)|h4aad4f04|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|ha51522b6|48|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h311986f4|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h9c6d5362|0|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h1ad3d5fd|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h475f25ea|80|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|hb26ec4d8|2|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h53145b6f|0|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h08cbf054|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h01c2db42|0|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h3e960ed1|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h6dd4aa3d|13|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|hc482daa7|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h251a5e2a|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h8b6ac68c|160|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h3b5e55e8|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h31e3d1f7|64|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h017408d7|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h8113fd52|64|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h10861a89|40|0,rule,magnitude,,TurretSpit fire cadence in ticks
+frontend/modules/seedlingDemo/combat.js|(module)|h46f55d68|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|hd1297054|128|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|hd842ec57|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h864b99f6|128|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h5c037708|32|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h6e3adc2e|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|he524576d|20|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h78ea415e|20|0,physics,bound,,Grenade hitRadius
+frontend/modules/seedlingDemo/combat.js|(module)|h93177fd3|8|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|hd86a3e18|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h8d8c5d75|0|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h74156b9f|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h2cd0a916|20|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|haa2c1823|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h3a7e3b1f|0|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h8ba15dd0|20|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h3a43c503|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h6030f4cf|0|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h2cc0e584|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h283c6ce6|32|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h187961d9|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h58639d43|32|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|hc83d4ba2|256|0,rule,bound,,runRange / attack or chomp range gating aggro
+frontend/modules/seedlingDemo/combat.js|(module)|h91abfb98|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h952a462d|24|0,physics,bound,,reach pad beyond the body hitbox
+frontend/modules/seedlingDemo/combat.js|(module)|h773a0045|4|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|hf253611a|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|hde2ffed2|5|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h6ce69497|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h6c2d2fe8|7|0,physics,bound,,tile column span of the pre-wake solid
+frontend/modules/seedlingDemo/combat.js|(module)|h6c2d2fe8|11|0,physics,bound,,tile column span of the pre-wake solid
+frontend/modules/seedlingDemo/combat.js|(module)|h5ed809b2|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h12d60d9b|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h8ee139f1|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
+frontend/modules/seedlingDemo/combat.js|(module)|h4a38bca7|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h86d4f602|0|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|he53a8e25|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|hf8388cec|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|hbfd7ff29|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h83155cd5|1000|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h4c4dd841|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|he118f9dd|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h955e34b8|0|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h5bd94b47|1|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|(module)|h57baabe2|0|0,rule,magnitude,,damage dealt to Player.hit
+frontend/modules/seedlingDemo/combat.js|ENEMY_IFRAMES|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/combat.js|SLASH_TIMER_MAX|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/combat.js|KILL_CADENCE_FLOOR|(module),rule,derivation,,SLASH_TIMER_MAX + 1 tick of head-room for the kill-cost estimate
+frontend/modules/seedlingDemo/combat.js|KILL_LOCK_TSET|(module),rule,sentinel,,Lock tSet == -1 kill-lock discriminator (Lock.as:109-115)
+frontend/modules/seedlingDemo/combat.js|pressesFor|pressesFor|2,rule,magnitude,Player.as:darkSwordDamage,dark sword damage
+frontend/modules/seedlingDemo/combat.js|pressesFor|pressesFor|1,rule,magnitude,Player.as:swordDamage,plain sword damage
+frontend/modules/seedlingDemo/combat.js|aggroDisc|aggroDisc,physics,bound,,margin = player half-box plus enemy half-box on a centre distance
+frontend/modules/seedlingDemo/combat.js|killLocksIn|killLocksIn|10,structural,,,
+frontend/modules/seedlingDemo/combat.js|killLocksIn|h99152229|0|0,rule,sentinel,,"missing tset attribute is group 0 (int("""") is 0)"
+frontend/modules/seedlingDemo/combat.js|killLocksIn|h99152229|0|1,rule,sentinel,,unparseable tset coerces to group 0 like AS3 int()
+frontend/modules/seedlingDemo/combat.js|killLocksIn|killLocksIn|-1,rule,sentinel,,no persistence tag
+frontend/modules/seedlingDemo/combat.js|clearabilityOf|clearabilityOf|1,rule,sentinel,,raw tile type water
+frontend/modules/seedlingDemo/combat.js|clearabilityOf|clearabilityOf|17,rule,sentinel,,raw tile type lava
+frontend/modules/seedlingDemo/combat.js|clearabilityOf|clearabilityOf|6,rule,sentinel,,raw tile type pit
+frontend/modules/seedlingDemo/combat.js|clearabilityOf|clearabilityOf|0,structural,,,
+frontend/modules/seedlingDemo/combat.js|assertNoUnclearableKillLock|assertNoUnclearableKillLock,structural,,,
+frontend/modules/seedlingDemo/combat.js|enemyHitPlayerFires|h29fa023c|0|0,structural,,,?? 0 default for a missing hitsTimer
+frontend/modules/seedlingDemo/combat.js|enemyHitPlayerFires|h29fa023c|0|1,rule,bound,,Enemy.hitPlayer gates on hitsTimer <= 0
+frontend/modules/seedlingDemo/combat.js|plannerContactFree|plannerContactFree,structural,,,?? 0 default
+frontend/modules/seedlingDemo/combat.js|contactPricing|contactPricing,physics,sentinel,,REVIEW: speed 0 as a static-body marker; decides contact-pricing kind rather than motion
+frontend/modules/seedlingDemo/finalBossFight.js|*|*,structural,,,default: loop bounds / initial accumulators / anim counters / budgets
+frontend/modules/seedlingDemo/finalBossFight.js|FP_ELAPSED_CLAMPED|(module),physics,magnitude,,FP.elapsed clamp; scales anim timers that gate callbacks
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS_ANIMS|(module)|4,cosmetic,,,REVIEW: walk anim callback only clears the anim name; nothing simulated reads it
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS_ANIMS|(module)|15,cosmetic,,,REVIEW: walk anim rate; its callback only clears the anim name
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS_ANIMS|(module)|8,rule,count,,die anim frame count; gates the death schedule and tag writes
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS_ANIMS|(module)|5,rule,magnitude,,die anim frame rate; gates the death schedule
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS_ANIMS|(module)|2,rule,count,,dead anim frame count; its callback writes the tags and drops five rocks
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS_ANIMS|(module)|0,cosmetic,,,REVIEW: deadframe terminal frameRate 0; never advanced
+frontend/modules/seedlingDemo/finalBossFight.js|(module)|h6471da84|1|0,rule,magnitude,,dead anim frame rate; gates the tag-writing callback
+frontend/modules/seedlingDemo/finalBossFight.js|(module)|h5d5f96b4|1|0,cosmetic,,,REVIEW: deadframe single terminal frame; never advanced
+frontend/modules/seedlingDemo/finalBossFight.js|ROCKFALL_BREAK_UPDATES|(module)|15,rule,magnitude,,RockFall break anim rate; its callback removes the rock
+frontend/modules/seedlingDemo/finalBossFight.js|ROCKFALL_BREAK_UPDATES|(module)|8,rule,count,,RockFall break anim frames; callback removes the rock
+frontend/modules/seedlingDemo/finalBossFight.js|POD_OPEN_UPDATES|(module)|10,rule,magnitude,,Pod open/close anim rate; closed gates the pin
+frontend/modules/seedlingDemo/finalBossFight.js|POD_OPEN_UPDATES|(module)|7,rule,count,,Pod open/close frames; closed gates the pin
+frontend/modules/seedlingDemo/finalBossFight.js|GRENADE_EXPLODE_UPDATES|(module)|12,rule,magnitude,,Grenade explode anim rate; callback fires the blast
+frontend/modules/seedlingDemo/finalBossFight.js|GRENADE_EXPLODE_UPDATES|(module)|8,rule,count,,Grenade explode frames; callback fires the blast
+frontend/modules/seedlingDemo/finalBossFight.js|GRENADE_HIT_UPDATES|(module)|12,rule,magnitude,,Grenade hit anim rate; callback removes it
+frontend/modules/seedlingDemo/finalBossFight.js|GRENADE_HIT_UPDATES|(module)|3,rule,count,,Grenade hit frames; callback removes it
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module),physics,magnitude,,ctor offset / hitbox / pod points / knock origin
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|1,physics,magnitude,Enemies/FinalBoss.as:moveSpeed,
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|240,rule,magnitude,Enemies/FinalBoss.as:rockfallTimeMax,barrage duration
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|3,rule,count,Enemies/Enemy.as:hitsMax,three lava self-hits
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|30,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|-1,physics,sentinel,Enemies/Enemy.as:maxForce,-1 = unclamped force
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|2,physics,bound,,force cap after the first lava hit
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|4,physics,bound,,velocity cap v.normalize(4)
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|0.25,physics,magnitude,Mobile.as:DEFAULT_FRICTION,
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|5,physics,magnitude,Player.as:swordForce,
+frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS|(module)|17,rule,sentinel,,lava tile type
+frontend/modules/seedlingDemo/finalBossFight.js|(module)|h1317b29c|6|0,physics,magnitude,Enemies/FinalBoss.as:lavaForce,
+frontend/modules/seedlingDemo/finalBossFight.js|createFinalBoss|createFinalBoss|-1,rule,sentinel,,tag -1 = none; rockfallTime -1 = walk arm (FinalBoss.as rockfallTime)
+frontend/modules/seedlingDemo/finalBossFight.js|createFinalBoss|h2044133f|0|2,rule,sentinel,,cpod starts at pod 0 (FinalBoss.as cpod)
+frontend/modules/seedlingDemo/finalBossFight.js|moveAxis|moveAxis|1,structural,,,
+frontend/modules/seedlingDemo/finalBossFight.js|moveAxis|h6070267a|1|0,physics,magnitude,,Mobile.moveX/moveY one-pixel step
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossHit|hd2ec07ed|0|0,physics,bound,,maxForce >= 0 clamp test (Enemy.as:143)
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossHit|hcbdb92d6|0|0,rule,bound,,hitsTimer <= 0 i-frame gate
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossHit|finalBossHit|1,rule,magnitude,,hits += d with the default damage 1
+frontend/modules/seedlingDemo/finalBossFight.js|stepFinalBoss|stepFinalBoss|0,rule,bound,,hitsTimer / rockfallTime phase tests; physics zeros overridden by key
+frontend/modules/seedlingDemo/finalBossFight.js|stepFinalBoss|he5111363|0|0,physics,bound,,friction floor Math.max(v.length - f; 0)
+frontend/modules/seedlingDemo/finalBossFight.js|stepFinalBoss|h84dc03a2|0|0,physics,magnitude,,velocity snap to 0 (Mobile.as:76)
+frontend/modules/seedlingDemo/finalBossFight.js|stepFinalBoss|hb2adf150|0|0,physics,magnitude,,velocity snap to 0 (Mobile.as:80)
+frontend/modules/seedlingDemo/finalBossFight.js|stepFinalBoss|stepFinalBoss|0.05,physics,bound,,"velocity snap threshold (Mobile.as:76,80)"
+frontend/modules/seedlingDemo/finalBossFight.js|stepFinalBoss|stepFinalBoss|1,structural,,,timer decrements and cpod+1 index arithmetic
+frontend/modules/seedlingDemo/finalBossFight.js|stepFinalBoss|h21573e46|1|0,physics,magnitude,,snap parks the boss at pod.y + 1
+frontend/modules/seedlingDemo/finalBossFight.js|stepFinalBoss|stepFinalBoss|8,physics,magnitude,,Grenade(x - 8; y - 8) spawn offset and the 16x16 pod half-box
+frontend/modules/seedlingDemo/finalBossFight.js|stepFinalBoss|stepFinalBoss|2,physics,bound,,pod snap distance <= v.length * 2
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossDeathSchedule|finalBossDeathSchedule,rule,derivation,,die anim updates minus the play-in-update fencepost (trap 104)
+frontend/modules/seedlingDemo/finalBossFight.js|ROCK_FALL|(module)|96,physics,magnitude,Scenery/RockFall.as:fallHeight,
+frontend/modules/seedlingDemo/finalBossFight.js|ROCK_FALL|(module)|0.05,physics,magnitude,Scenery/RockFall.as:g,
+frontend/modules/seedlingDemo/finalBossFight.js|ROCK_FALL|(module)|6,physics,magnitude,Scenery/RockFall.as:startingSpeed,
+frontend/modules/seedlingDemo/finalBossFight.js|ROCK_FALL|(module)|3,physics,magnitude,Scenery/RockFall.as:force,
+frontend/modules/seedlingDemo/finalBossFight.js|ROCK_FALL|(module)|1,rule,magnitude,Scenery/RockFall.as:damage,
+frontend/modules/seedlingDemo/finalBossFight.js|createRockFall|createRockFall|32,physics,magnitude,,hitbox width factor / frame height in the origin
+frontend/modules/seedlingDemo/finalBossFight.js|createRockFall|createRockFall|16,physics,magnitude,,hitbox height factor
+frontend/modules/seedlingDemo/finalBossFight.js|createRockFall|createRockFall|2,structural,,,halving for a centre
+frontend/modules/seedlingDemo/finalBossFight.js|stepRockFall|h83d54ee5|0|0,physics,magnitude,,landing zeroes v.y
+frontend/modules/seedlingDemo/finalBossFight.js|stepRockFall|hd0861c6e|0|0,physics,magnitude,,landing zeroes g
+frontend/modules/seedlingDemo/finalBossFight.js|stepRockFall|stepRockFall|1,rule,derivation,,shake = RockFall scale + 1; shake drives the jiggle RNG draws
+frontend/modules/seedlingDemo/finalBossFight.js|rockFallUpdatesToLand|hb172caee|0|0,physics,bound,,landing test y > goto (relative)
+frontend/modules/seedlingDemo/finalBossFight.js|GRENADE|(module),physics,magnitude,,force and hitbox
+frontend/modules/seedlingDemo/finalBossFight.js|GRENADE|(module)|30,rule,magnitude,,explodeTime the Owl passes (FinalBoss.as Grenade ctor arg)
+frontend/modules/seedlingDemo/finalBossFight.js|GRENADE|(module)|20,physics,bound,Enemies/Grenade.as:hitRadius,
+frontend/modules/seedlingDemo/finalBossFight.js|GRENADE|(module)|2,physics,magnitude,Enemies/Grenade.as:force,
+frontend/modules/seedlingDemo/finalBossFight.js|GRENADE|(module)|1,rule,magnitude,,grenade damage
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlGrenade|stepOwlGrenade|0,rule,bound,,explodeTime countdown tests
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlGrenade|h538aa9ec|0|0,structural,,,animAge reset
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlGrenade|stepOwlGrenade|-1,rule,sentinel,,explodeTime -1 = exploded
+frontend/modules/seedlingDemo/finalBossFight.js|advancePodGraphic|advancePodGraphic|10,cosmetic,,,REVIEW: opened/closed loop anim; callback returns nothing for those names
+frontend/modules/seedlingDemo/finalBossFight.js|advancePodGraphic|h693cc141|1|0,cosmetic,,,REVIEW: opened/closed single-frame loop anim
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossCoast|finalBossCoast|5,rule,count,,five hit tests per sword press
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossCoast|finalBossCoast|0.05,physics,bound,,"velocity snap threshold (Mobile.as:76,80)"
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossCoast|he5111363|0|0,physics,bound,,friction floor
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossCoast|h84dc03a2|0|0,physics,magnitude,,velocity snap to 0
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossCoast|hb2adf150|0|0,physics,magnitude,,velocity snap to 0
+frontend/modules/seedlingDemo/finalBossFight.js|finalBossCoast|h616edd73|0|0,physics,bound,,maxForce >= 0 clamp test
+frontend/modules/seedlingDemo/finalBossFight.js|createOwlRoom|createOwlRoom|72,physics,magnitude,,finalboss@64;96 entity point x
+frontend/modules/seedlingDemo/finalBossFight.js|createOwlRoom|createOwlRoom|104,physics,magnitude,,finalboss@64;96 entity point y
+frontend/modules/seedlingDemo/finalBossFight.js|createOwlRoom|h7022acb1|0|0,rule,sentinel,,default persistence tag
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|stepOwlRoom|40,physics,magnitude,,REVIEW: default player position when the caller passes none; a test convenience
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|stepOwlRoom|216,physics,magnitude,,REVIEW: default player position when the caller passes none; a test convenience
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|stepOwlRoom|5,rule,count,,five death rocks
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|stepOwlRoom|32,physics,magnitude,,death-rock argY spacing (i / 5) * 32
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|h65c17c2a|1|0,rule,derivation,,second tag written = boss tag + 1
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|hc132f264|0|0,rule,bound,,shake > 0 gates the jiggle draws
+frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|h4bc360d2|1|0,rule,magnitude,,shake decays 1 per frame; each frame of shake costs jiggle draws
+frontend/modules/seedlingDemo/tapeFormat.js|*|*,structural,,,default: versions / parser limits / validation floors / indices
+frontend/modules/seedlingDemo/tapeFormat.js|RNG_FP_SEED_MAX|(module),structural,,,FP.randomSeed setter clamp (FP.as:392) as a parser limit
+frontend/modules/seedlingDemo/tapeFormat.js|PIN_FRAME_RATE|(module),rule,magnitude,,engine FPS the sound-clock pin reproduces; swim boost reads it
+frontend/modules/seedlingDemo/tapeFormat.js|BUILD_SPAWN|(module)|0,rule,sentinel,,boot level id (Main.as:51)
+frontend/modules/seedlingDemo/tapeFormat.js|BUILD_SPAWN|(module)|80,physics,magnitude,,boot spawn x (Main.as:51)
+frontend/modules/seedlingDemo/tapeFormat.js|BUILD_SPAWN|(module)|128,physics,magnitude,,boot spawn y (Main.as:51)
+frontend/modules/seedlingDemo/tapeFormat.js|KEY_CODES|(module),rule,sentinel,,Player.as keys[] codes the game input reads
+frontend/modules/seedlingDemo/tapeFormat.js|FORBIDDEN_KEYS|(module),structural,,,REVIEW: key codes used only by the validator to refuse a tape; never fed to the sim
+frontend/modules/seedlingDemo/tapeFormat.js|HAZARD_STATES|(module),rule,sentinel,,tile types the noHazards coercion branches on
+frontend/modules/seedlingDemo/tapeFormat.js|COERCED_TERRAIN_STATE|(module),rule,sentinel,,Ground state 0 (Player.as:297)
+frontend/modules/seedlingDemo/tapeFormat.js|ITEM_PROPERTIES|(module)|3,rule,count,Player.as:hitsMaxDef,
+frontend/modules/seedlingDemo/tapeFormat.js|ITEM_PROPERTIES|(module)|1,rule,magnitude,,hitsMax added per health item
+frontend/modules/seedlingDemo/tapeFormat.js|LEVEL_COUNT|(module),rule,count,,Game.levels.length
+frontend/modules/seedlingDemo/tapeFormat.js|INVENTORY_ITEM_IDS|(module),rule,sentinel,,item ids Player.useItem switches on
+frontend/modules/seedlingDemo/tapeFormat.js|inventorySlotsFor|h7259ba2b|0|0,rule,sentinel,,ghostsword fusion inserts at slot 0
+frontend/modules/seedlingDemo/tapeFormat.js|inventorySlotsFor|h34f63b9c|1|0,rule,sentinel,,firewand fusion inserts at slot 1
+frontend/modules/seedlingDemo/tapeFormat.js|(module)|h8fae173a|5|0,rule,count,Player.as:totemParts,
+frontend/modules/seedlingDemo/tapeFormat.js|(module)|h71fb0fc3|5|0,rule,count,Player.as:totalKeys,
+frontend/modules/seedlingDemo/tapeFormat.js|(module)|h199ac6dc|16|0,rule,count,SealController.as:SEALS,
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h27a96276|0|0,rule,sentinel,Enemies/BossTotem.as:_state,state ids
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h5d6b5671|0|0,physics,magnitude,Enemies/BossTotem.as:shotSpeed,
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h5eb4ef0b|1|0,rule,sentinel,Enemies/BossTotem.as:_state,state ids
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h02694f65|1|0,physics,bound,,rate < 1 cap
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h85af5a48|2|0,rule,sentinel,Enemies/BossTotem.as:_state,state ids
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|ha150ec86|2|0,physics,magnitude,Enemies/BossTotem.as:shotSpeed,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|3,rule,sentinel,Enemies/BossTotem.as:_state,state ids
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h6450c1f0|4|0,rule,sentinel,Enemies/BossTotem.as:_state,state ids
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h05319546|4|0,rule,magnitude,Enemies/BossTotem.as:divisor,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|14,rule,count,Enemies/BossTotem.as:animateFrames,frame counts gate attack end and jump clamp
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|8,rule,count,Enemies/BossTotem.as:animateFrames,frame counts gate attack end and jump clamp
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|0.3,rule,magnitude,Enemies/BossTotem.as:animateRate,anim step gates shootFrame timing
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|0.1,rule,magnitude,Enemies/BossTotem.as:animateRate,anim step gates shootFrame timing
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|0.2,rule,magnitude,Enemies/BossTotem.as:animateRate,anim step gates shootFrame timing
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|0.5,rule,magnitude,Enemies/BossTotem.as:animateRate,anim step gates shootFrame timing
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|0.025,physics,magnitude,Enemies/BossTotem.as:rateRate,rate scales walk v.y and anim
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|0.25,physics,magnitude,Mobile.as:DEFAULT_FRICTION,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|352,rule,bound,Enemies/BossTotem.as:maxYPosition,jump trigger y
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|-5,physics,magnitude,,v.y = -5 * rate
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|-32,physics,bound,,startY - 32 jump ceiling
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h065ea94e|30|0,rule,magnitude,Enemies/BossTotem.as:waitAtTopTimeMax,
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|he0833744|30|0,rule,derivation,,REVIEW: laserHitTimeMax * 2; Game.shake feeds the onScreen band so not purely cosmetic
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h37a467c7|30|0,physics,magnitude,Enemies/BossTotem.as:shotPosition,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|-8,physics,magnitude,Enemies/BossTotem.as:laserPos,laser rect origin
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|-11,physics,magnitude,Enemies/BossTotem.as:laserPos,laser rect origin
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|6,physics,magnitude,Enemies/BossTotem.as:laserWidthDef,laser rect width and charge base
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|18,physics,derivation,,laserWidthDef * 3
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|15,rule,magnitude,Enemies/BossTotem.as:laserHitTimeMax,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|10,physics,magnitude,Enemies/BossTotem.as:force,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|0.01,rule,magnitude,Enemies/BossTotem.as:minIncrease,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|7,rule,sentinel,Enemies/BossTotem.as:shootFrame,frame index that fires the shots
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|75,physics,magnitude,Enemies/BossTotem.as:shotPosition,
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h3c1d48de|60|0,structural,,Enemies/BossTotem.as:attackDistance,REVIEW: declared never read in AS3; no outcome depends
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h79bf443a|60|0,rule,magnitude,,REVIEW: removed() Game.shake = 60; feeds onScreen band after the kill
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_FIGHT|(module)|240,rule,magnitude,Enemies/BossTotem.as:rumblingTimeMax,white-out render count gates removal
+frontend/modules/seedlingDemo/bossTotemFight.js|HEAD_POS_Y|(module),physics,magnitude,,head offsets feed the laser rect origin one frame late
+frontend/modules/seedlingDemo/bossTotemFight.js|DEF_HEAD_POS|(module),physics,magnitude,Enemies/BossTotem.as:defHeadPos,
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemHeadPosY|bossTotemHeadPosY|0,structural,,,
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemHeadPosY|bossTotemHeadPosY|2,physics,derivation,,headPos normalize(length / 2) blend of two frames
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemHeadPosY|bossTotemHeadPosY|1,structural,,,val = 1 identity
+frontend/modules/seedlingDemo/bossTotemFight.js|HEAD_POS_X|(module),physics,magnitude,,headPos.x always 0
+frontend/modules/seedlingDemo/bossTotemFight.js|laserChargeTicks|laserChargeTicks|0,structural,,,
+frontend/modules/seedlingDemo/bossTotemFight.js|laserChargeTicks|laserChargeTicks|100000,structural,,,
+frontend/modules/seedlingDemo/bossTotemFight.js|laserChargeTicks|laserChargeTicks|1,structural,,,
+frontend/modules/seedlingDemo/bossTotemFight.js|laserChargeTicks|laserChargeTicks|2,rule,derivation,,laserWidthDef * 2 charge threshold
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserRects|bossTotemLaserRects|160,physics,bound,,FP.width laser sweep cap
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserRects|hb7de2cee|1|0,physics,sign,,laser direction
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserRects|h6e51ab31|1|0,physics,magnitude,,1px laser sweep step
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserRects|h271ad588|1|0,physics,magnitude,,1px laser sweep step
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserRects|bossTotemLaserRects|-1,physics,sign,,laser direction
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserRects|h074d0078|0|0,physics,sign,,laser direction
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserRects|h074d0078|0|1,physics,sign,,laser direction
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserRects|h87b472c2|0|0,structural,,,
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserRects|bossTotemLaserRects|2,structural,,,centre lw / 2
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemLaserHits|bossTotemLaserHits,structural,,,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_BODY|(module)|80,physics,magnitude,Enemies/BossTotem.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_BODY|(module)|32,physics,magnitude,Enemies/BossTotem.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_BODY|(module)|40,physics,magnitude,Enemies/BossTotem.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_BODY|(module)|-12,physics,magnitude,Enemies/BossTotem.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_BODY|(module)|3,physics,magnitude,Enemies/Enemy.as:hitPlayer,p.hit force 3
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_BODY|(module)|1,rule,magnitude,,body damage
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_BODY|(module)|20,rule,magnitude,Enemies/BossTotem.as:hitsTimerMax,
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemBodyContactFires|bossTotemBodyContactFires,structural,,,
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemTakesHit|bossTotemTakesHit|0.5,rule,magnitude,,wand shot damage
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemTakesHit|bossTotemTakesHit|0,structural,,,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_KILL|(module)|5,rule,count,Enemies/BossTotem.as:hitsMax,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_KILL|(module)|0.5,rule,magnitude,,wand shot damage
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_KILL|(module)|10,rule,count,,hitsMax / shotDamage
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_KILL|(module)|20,rule,magnitude,Enemies/BossTotem.as:hitsTimerMax,kill cadence
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemCameraTarget|bossTotemCameraTarget|160,rule,magnitude,,FP.screen size; camera target feeds onScreen gates
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemCameraTarget|bossTotemCameraTarget|3,rule,derivation,,SCREEN * 3 / 4 camera box
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemCameraTarget|bossTotemCameraTarget|4,rule,derivation,,SCREEN * 3 / 4 camera box
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemCameraTarget|bossTotemCameraTarget|2,structural,,,midpoint and centre halving
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemCameraTarget|bossTotemCameraTarget|-1,rule,sentinel,,resetCamera (-1;-1)
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_SHOT|(module)|16,physics,magnitude,Projectiles/BossTotemShot.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_SHOT|(module)|8,physics,magnitude,Projectiles/BossTotemShot.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_SHOT|(module)|384,physics,bound,,room bottom gate
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_SHOT|(module)|376,physics,derivation,,roomBottom - hitbox.h + hitbox.oy
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_SHOT|(module)|0,physics,magnitude,,f = 0
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|hd14c1c63|1|0,rule,magnitude,,player damage
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h70d828a5|1|0,rule,magnitude,,explosion damage
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h22b351d1|24|0,physics,magnitude,,Explosion radius
+frontend/modules/seedlingDemo/bossTotemFight.js|(module)|h68d74c73|24|0,physics,derivation,,explosionRadius * Explosion radiusCoeff
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_SHOT|(module)|0.65,physics,derivation,,explosionRadius * Explosion radiusCoeff
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_SHOT|(module)|20,rule,bound,,onScreen margin gates removal
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_DEATH_BLAST|(module)|80,physics,magnitude,,max(width; height) blast radius
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_DEATH_BLAST|(module)|0.65,physics,magnitude,Projectiles/Explosion.as:radiusCoeff,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_DEATH_BLAST|(module)|52,physics,derivation,,visualRadius * radiusCoeff
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_DEATH_BLAST|(module)|4,physics,magnitude,,blast force
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_DEATH_BLAST|(module)|1,rule,magnitude,,blast damage
+frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemDeathBlastPrefilter|bossTotemDeathBlastPrefilter,structural,,,square side 2r
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|240,rule,magnitude,Enemies/BossTotem.as:rumblingTimeMax,
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|43,rule,sentinel,,persistence level 43 tag 5
+frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|5,rule,sentinel,,persistence level 43 tag 5
+frontend/modules/seedlingDemo/r7Acceptance.js|SEAM_SIGNATURE|(module),structural,,,seam save-array arity (format shape)
+frontend/modules/seedlingDemo/r7Acceptance.js|assertSeamChannelsTotal|assertSeamChannelsTotal,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|seamRngPosture|seamRngPosture,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|BOOT_PRESWAP_FRAMES|(module),rule,magnitude,,REVIEW: measured boot pre-swap frame offset; a clock correction for seam comparison
+frontend/modules/seedlingDemo/r7Acceptance.js|seamBootFields|seamBootFields|-1,rule,sentinel,,hasSealPart empty-slot -1
+frontend/modules/seedlingDemo/r7Acceptance.js|seamBootFields|seamBootFields|0,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|seamFindings|seamFindings,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|segmentBootFromLatch|h83e3b73a|-1|0,rule,sentinel,,hasSealPart empty-slot -1
+frontend/modules/seedlingDemo/r7Acceptance.js|segmentBootFromLatch|hb588f761|-1|0,rule,sentinel,,hasSealPart empty-slot -1
+frontend/modules/seedlingDemo/r7Acceptance.js|segmentBootFromLatch|hda30638a|-1|0,rule,sentinel,,hasSealPart empty-slot -1
+frontend/modules/seedlingDemo/r7Acceptance.js|segmentBootFromLatch|hda30638a|-1|1,rule,sentinel,,hasSealPart empty-slot -1
+frontend/modules/seedlingDemo/r7Acceptance.js|segmentBootFromLatch|heefd47c0|-1|0,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|segmentBootFromLatch|segmentBootFromLatch|0,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|seamLatchFindings|seamLatchFindings,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|INVARIANT_CHECKS|static.Game.shake,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|INVARIANT_CHECKS|arrival.blackCover,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|INVARIANT_CHECKS|arrival.velocity,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|R7_GOAL_LEDGER|(module),rule,sentinel,,goal ledger level ids / keyTypes / placement coords as row identity
+frontend/modules/seedlingDemo/r7Acceptance.js|goalHeldBy|bool,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|goalHeldBy|goalHeldBy|1,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|goalHeldBy|goalHeldBy|-1,rule,sentinel,,hasSealPart empty-slot -1
+frontend/modules/seedlingDemo/r7Acceptance.js|goalHeldBy|goalHeldBy|2,rule,sentinel,,cutscene[2] is the Seed mode flag
+frontend/modules/seedlingDemo/r7Acceptance.js|goalEarnedWitness|goalEarnedWitness,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|r7GoalCriteria|r7GoalCriteria,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|R7_BATCH|(module),structural,,,recorded prediction/outcome of a tape batch (diagnostic)
+frontend/modules/seedlingDemo/r7Acceptance.js|R7_SECOND_BATCH|(module),structural,,,recorded prediction/outcome of a tape batch (diagnostic)
+frontend/modules/seedlingDemo/r7Acceptance.js|predictedSeedIs1562BehindTheCommittedOne|predictedSeedIs1562BehindTheCommittedOne,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/r7Acceptance.js|predictedAttribution|predictedAttribution,structural,,,acceptance/diagnostic arithmetic
+frontend/modules/seedlingDemo/iceTurret.js|fpSign|fpSign,physics,sign,,FP.sign
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|32,physics,magnitude,Enemies/IceTurret.as:setHitbox,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h0d7f048b|16|0,physics,magnitude,Enemies/IceTurret.as:setHitbox,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h6606e7c5|16|0,physics,magnitude,Enemies/IceTurret.as:setHitbox,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|hef2aa703|16|0,physics,magnitude,,death() setHitbox(16; 16; 8; 8)
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h8d024a59|16|0,physics,magnitude,,death() setHitbox(16; 16; 8; 8)
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|8,physics,magnitude,,death() setHitbox(16; 16; 8; 8)
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|0.5,physics,magnitude,Enemies/IceTurret.as:moveSpeed,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|hd4940866|3|0,rule,count,Enemies/Enemy.as:hitsMax,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h1922eadf|3|0,rule,count,,three IceTurretBlast adds per volley
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|30,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|128,rule,bound,Enemies/IceTurret.as:attackRange,
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|25,rule,magnitude,Enemies/IceTurret.as:shootTimerMax,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h8f7a3a6c|6|0,physics,magnitude,Enemies/IceTurret.as:shotSpeed,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h46e66bc1|6|0,rule,sentinel,,fatal tile ids
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|12,physics,magnitude,Enemies/IceTurret.as:distBtwnShots,
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|0.1,physics,bound,Enemies/IceTurret.as:bothRange,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h54184986|10|0,rule,magnitude,Enemies/IceTurret.as:attackAnimSpeed,anim wrap spawns the volley
+frontend/modules/seedlingDemo/iceTurret.js|(module)|hfe1fd907|10|0,rule,magnitude,,shot anim callbacks spawn the volley; dead rate 0 never calls back
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h678e8216|10|0,rule,magnitude,,shot anim callbacks spawn the volley; dead rate 0 never calls back
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h572d21da|1|0,rule,count,,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h16a4d42b|1|0,rule,count,,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h4bf02e6e|1|0,cosmetic,,,hit anim never played
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h0bb154fc|1|0,rule,sentinel,,fatal tile ids
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|5,rule,count,,
+frontend/modules/seedlingDemo/iceTurret.js|(module)|hbe7fb5f1|0|0,rule,magnitude,,shot anim callbacks spawn the volley; dead rate 0 never calls back
+frontend/modules/seedlingDemo/iceTurret.js|(module)|hbec77a4a|0|0,cosmetic,,,hit anim never played
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|17,rule,sentinel,,fatal tile ids
+frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|1,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|2,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|3,rule,magnitude,Enemies/IceTurret.as:shootTimer,seeded 0 so an in-range turret fires on tick one
+frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|4,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|5,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|6,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|7,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|snapOf|snapOf,structural,,,TILE / 2 centre
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretPhase|iceTurretPhase,structural,,,phase 0/1 labels
+frontend/modules/seedlingDemo/iceTurret.js|hitIceTurret|hitIceTurret|1,rule,magnitude,,default hit damage d
+frontend/modules/seedlingDemo/iceTurret.js|hitIceTurret|hitIceTurret|0,physics,magnitude,,default hit force f
+frontend/modules/seedlingDemo/iceTurret.js|bumpIceTurret|bumpIceTurret|2,structural,,,width / 2 centre
+frontend/modules/seedlingDemo/iceTurret.js|bumpIceTurret|bumpIceTurret|0,physics,sign,,bump retarget one tile opposite the press
+frontend/modules/seedlingDemo/iceTurret.js|bumpIceTurret|bumpIceTurret|1,physics,sign,,bump retarget one tile opposite the press
+frontend/modules/seedlingDemo/iceTurret.js|bumpIceTurret|bumpIceTurret|180,structural,,,rad to deg for a diagnostic
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretInput|iceTurretInput,structural,,,v == 0 test and TILE / 2 snap centre
+frontend/modules/seedlingDemo/iceTurret.js|moveAxis|moveAxis|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|moveAxis|moveAxis|1,physics,magnitude,,one-pixel move sub-step
+frontend/modules/seedlingDemo/iceTurret.js|angleDifference|angleDifference,structural,,,2 pi wrap
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretAim|iceTurretAim|180,structural,,,degree/radian conversion
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretAim|iceTurretAim|10,physics,magnitude,Enemies/IceTurret.as:angleSpeedDivisor,aim turn divisor sets blast direction
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretAim|iceTurretAim|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretAim|iceTurretAim|1,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|iceTurretAnimStep|iceTurretAnimStep,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|h9cc43ce0|1|0,structural,,,
+frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|h88927f2f|1|0,rule,bound,,alpha clamp and <= 0 removal test
+frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|h88927f2f|1|1,rule,bound,,alpha clamp and <= 0 removal test
+frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|stepIceTurret|2,structural,,,TILE / 2 centre
+frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|stepIceTurret|10,physics,magnitude,,Enemy.as pit descent glide divisor
+frontend/modules/seedlingDemo/iceTurret.js|stepIceTurret|stepIceTurret|0,rule,bound,,alpha clamp and <= 0 removal test
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h19fcde78|5|0,rule,count,,bumps per fire press (slash window)
+frontend/modules/seedlingDemo/iceTurret.js|(module)|h52bf934f|5|0,rule,magnitude,,REVIEW: measured bump ticks T+4..T+8 recorded in a plan table
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|4,rule,magnitude,,REVIEW: measured bump ticks T+4..T+8 recorded in a plan table
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|6,rule,magnitude,,REVIEW: measured bump ticks T+4..T+8 recorded in a plan table
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|7,rule,magnitude,,REVIEW: measured bump ticks T+4..T+8 recorded in a plan table
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|8,rule,magnitude,,REVIEW: measured bump ticks T+4..T+8 recorded in a plan table
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|40,rule,magnitude,,post-press wait floor
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|38,rule,magnitude,,REVIEW: measured settle ticks per parity
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|37,rule,magnitude,,REVIEW: measured settle ticks per parity
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|1,rule,count,,
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|1614,structural,,,acceptance residue (diagnostic ticks/px of the refuted recording)
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|1616,structural,,,acceptance residue (diagnostic ticks/px of the refuted recording)
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|-0.8,structural,,,acceptance residue (diagnostic ticks/px of the refuted recording)
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|14.15,structural,,,acceptance residue (diagnostic ticks/px of the refuted recording)
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|15,rule,magnitude,Projectiles/IceTurretBlast.as:freezeTime,
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|1619,structural,,,acceptance residue (diagnostic ticks/px of the refuted recording)
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|1627,structural,,,acceptance residue (diagnostic ticks/px of the refuted recording)
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|9,structural,,,acceptance residue (diagnostic ticks/px of the refuted recording)
+frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET_PLAN|(module)|14,rule,magnitude,,refused input ticks per blast contact
+frontend/modules/seedlingDemo/arrowTrap.js|fpSign|fpSign,physics,sign,,FP.sign
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP|(module)|16,physics,magnitude,,REVIEW: sprite dims used only as spawn geometry (w/4 offsets; h/2 ctor)
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|h678c2a7e|5|0,physics,magnitude,,REVIEW: sprite dims used only as spawn geometry (w/4 offsets; h/2 ctor)
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|hd1f4146c|5|0,physics,magnitude,,arrow velocity
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP|(module)|10,rule,magnitude,Puzzlements/ArrowTrap.as:shootTimerMax,
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP|(module)|11,rule,derivation,,shootTimerMax + 1
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|hff5b08a1|0|0,rule,magnitude,Puzzlements/ArrowTrap.as:shootTimer,seed 0 fires on first update
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|ha87c70fb|0|0,physics,derivation,,sprite w / 4 spawn offsets
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|hda756409|0|0,physics,magnitude,,arrow velocity
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP|(module)|-4,physics,derivation,,sprite w / 4 spawn offsets
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP|(module)|4,physics,derivation,,sprite w / 4 spawn offsets
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP|(module)|-2,physics,magnitude,,spawn y - 2
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW|(module)|4,physics,magnitude,Projectiles/Arrow.as:setHitbox,
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW|(module)|2,physics,magnitude,Projectiles/Arrow.as:setHitbox,
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW|(module)|0,physics,magnitude,,f = 0
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW|(module)|5,physics,magnitude,,|v| at spawn
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW|(module)|0.1,cosmetic,,,REVIEW: fade of a stopped arrow (v = 0 so no hit test); only delays removal
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW|(module)|11,cosmetic,,,REVIEW: fade length of a stopped arrow; derived from fadeStep
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_ENEMY_HIT|(module)|5,physics,magnitude,,Enemy.hit f = v.length
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_ENEMY_HIT|(module)|1,rule,magnitude,,default d = 1
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_ENEMY_HIT|(module)|3,rule,count,Enemies/Enemy.as:hitsMax,
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_ENEMY_HIT|(module)|30,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_ENEMY_HIT|(module)|60,rule,derivation,,2 * iFrameTicks
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_ENEMY_HIT|(module)|50,physics,magnitude,,REVIEW: approximate documented knockback slide
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_ENEMY_HIT|(module)|19,physics,magnitude,,REVIEW: approximate documented knockback decay ticks
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_PLAYER_ARM|(module)|5,physics,magnitude,,Player.hit f = v.length
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_PLAYER_ARM|(module)|1,rule,magnitude,,default d = 1
+frontend/modules/seedlingDemo/arrowTrap.js|createArrowTrap|createArrowTrap,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrowTrap|hc3658fed|0|0,rule,magnitude,,else-arm reset so a re-armed trap fires at once
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrowTrap|h9f4d82fd|0|0,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrowTrap|stepArrowTrap|1,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|createArrow|createArrow,cosmetic,,,Image.alpha start
+frontend/modules/seedlingDemo/arrowTrap.js|moveAxis|moveAxis|0,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|moveAxis|moveAxis|1,physics,magnitude,,one-pixel move sub-step
+frontend/modules/seedlingDemo/arrowTrap.js|arrowFriction|arrowFriction|0.05,physics,bound,,Mobile.friction snap floor
+frontend/modules/seedlingDemo/arrowTrap.js|arrowFriction|arrowFriction|0,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|h7abe8437|0|0,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|h7abe8437|0|1,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|h42194208|0|0,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|ha1a3b5b4|0|0,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|h701cb61a|0|0,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|h9e2bca06|0|0,cosmetic,,,alpha clamp of a stopped arrow
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|h234144fa|0|0,cosmetic,,,alpha clamp of a stopped arrow
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|h531ac362|0|0,cosmetic,,,alpha clamp of a stopped arrow
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|h65e4808f|0|0,structural,,,level rect origin
+frontend/modules/seedlingDemo/arrowTrap.js|stepArrow|h65e4808f|0|1,structural,,,level rect origin
+frontend/modules/seedlingDemo/arrowTrap.js|arrowLaneRect|arrowLaneRect,structural,,,min height floor keeps a rect
+frontend/modules/seedlingDemo/arrowTrap.js|shadowOf|shadowOf,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_KILL_PLAN|(module)|100,rule,magnitude,,Lock alpha 0.01/update fade
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_KILL_PLAN|(module)|160,rule,derivation,,minTicksToKillDefaultEnemy + lockFadeTicks + slack
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_KILL_PLAN|(module)|72,rule,magnitude,,REVIEW: measured L5 plan stance/press points
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_KILL_PLAN|(module)|96,rule,magnitude,,REVIEW: measured L5 plan stance/press points
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_KILL_PLAN|(module)|56,rule,magnitude,,REVIEW: measured L5 plan stance/press points
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_KILL_PLAN|(module)|240,rule,magnitude,,measured L5 plan phase durations
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_KILL_PLAN|(module)|40,rule,magnitude,,measured L5 plan phase durations
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_KILL_PLAN|(module)|260,rule,magnitude,,measured L5 plan phase durations
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_KILL_PLAN|(module)|187,structural,,,REVIEW: observed diagnostic tick
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|4,rule,sentinel,,level id
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|48,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|h496c8720|16|0,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|h496c8720|16|1,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|hae2fa3b1|16|0,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|h8999277e|16|0,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|h8999277e|16|1,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|h4efa7615|16|0,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|haf0726e7|16|0,rule,sentinel,,level id
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|0,rule,sentinel,,activator group t
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|64,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|5,rule,sentinel,,level id
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|32,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|80,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|8,rule,sentinel,,level id
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|96,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|112,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|128,rule,magnitude,,OEL trap placement
+frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|67,rule,sentinel,,level id
+frontend/modules/seedlingDemo/arrowTrap.js|assertArrowTrapCensus|assertArrowTrapCensus|116,structural,,,level scan bound
+frontend/modules/seedlingDemo/arrowTrap.js|assertArrowTrapCensus|assertArrowTrapCensus|0,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|FP_ELAPSED_CLAMPED|(module),physics,magnitude,,frame-time clamp; here it times the anim callbacks
+frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossAnimUpdates|shieldBossAnimUpdates,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|h610edcfd|0|0,rule,sentinel,,sit frame id; hitPlayer tests frame 5..8
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|hd289e4d8|0|0,rule,magnitude,,frameRate 0: sit never calls back
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|h0e8e0845|0|0,rule,count,,REVIEW: frame ids whose length (2) times the moveShield callback
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|3,rule,sentinel,,stab frame ids; hitPlayer damages on frame 5..8
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|4,rule,sentinel,,stab frame ids; hitPlayer damages on frame 5..8
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|5,rule,sentinel,,stab frame ids; hitPlayer damages on frame 5..8
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|6,rule,sentinel,,stab frame ids; hitPlayer damages on frame 5..8
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|7,rule,sentinel,,stab frame ids; hitPlayer damages on frame 5..8
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|8,rule,sentinel,,stab frame ids; hitPlayer damages on frame 5..8
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|15,rule,magnitude,,anim rate gates callback timing
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|1,rule,count,,REVIEW: frame ids whose length (2) times the moveShield callback
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|hcf9e08a2|2|0,rule,sentinel,,movedShield frame id; hitPlayer tests frame 5..8
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|h2363c5b3|2|0,rule,magnitude,,movedShield rate sets the 16-update window
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|9,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|10,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|11,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|12,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|13,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|14,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|16,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|17,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|18,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS_ANIMS|(module)|19,rule,count,,REVIEW: frame ids whose length (11) times the death; values are sprite indices
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|hf1374266|24|0,physics,derivation,,Tile.w * 1.5 and Tile.h * 2 ctor offset
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|ha35ce443|24|0,physics,magnitude,Enemies/ShieldBoss.as:setHitbox,
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|h66a2a30c|24|0,physics,magnitude,Enemies/ShieldBoss.as:setHitbox,
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|32,physics,derivation,,Tile.w * 1.5 and Tile.h * 2 ctor offset
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|48,physics,magnitude,Enemies/ShieldBoss.as:setHitbox,
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|3,rule,count,Enemies/Enemy.as:hitsMax,
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|30,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|120,rule,magnitude,Enemies/ShieldBoss.as:swingTimeMax,
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|6,physics,magnitude,Enemies/ShieldBoss.as:swingForce,
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|1,rule,magnitude,,Enemy.damage
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|5,rule,bound,,damaging frame range
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|8,rule,bound,,damaging frame range
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|16,physics,magnitude,,Tile.h hitPlayer band height
+frontend/modules/seedlingDemo/shieldBossFight.js|SHIELD_BOSS|(module)|96,cosmetic,,,boss music trigger distance only
+frontend/modules/seedlingDemo/shieldBossFight.js|createShieldBoss|createShieldBoss|-1,rule,sentinel,,tag -1 none
+frontend/modules/seedlingDemo/shieldBossFight.js|createShieldBoss|createShieldBoss|0,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|playShieldBossAnim|playShieldBossAnim,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossStartStab|shieldBossStartStab,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|advanceShieldBossGraphic|advanceShieldBossGraphic,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossTakesHit|shieldBossTakesHit|1,rule,magnitude,,sword damage d
+frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossTakesHit|shieldBossTakesHit|5,physics,magnitude,,swordForce f
+frontend/modules/seedlingDemo/shieldBossFight.js|stepShieldBoss|stepShieldBoss|0,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|stepShieldBoss|hae91f788|1|0,rule,sentinel,,tile ids water 1 pit 6 lava 17
+frontend/modules/seedlingDemo/shieldBossFight.js|stepShieldBoss|h37c478bc|1|0,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|stepShieldBoss|hf3c83aab|1|0,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|stepShieldBoss|hd65a162c|1|0,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|stepShieldBoss|stepShieldBoss|6,rule,sentinel,,tile ids water 1 pit 6 lava 17
+frontend/modules/seedlingDemo/shieldBossFight.js|stepShieldBoss|stepShieldBoss|17,rule,sentinel,,tile ids water 1 pit 6 lava 17
+frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossWindowFor|shieldBossWindowFor|1,rule,derivation,,window fenceposts from SHIELD_BOSS_ANIM_UPDATES and stab indices
+frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossWindowFor|hb0d2c97e|2|0,rule,derivation,,damagingFrames.from 5 minus stab frames[0] 3 = index 2
+frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossWindowFor|hb0d2c97e|2|1,rule,derivation,,window fenceposts from SHIELD_BOSS_ANIM_UPDATES and stab indices
+frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossWindowFor|shieldBossWindowFor|6,rule,derivation,,index past damagingFrames.to 8 = stab index 6
+frontend/modules/seedlingDemo/shieldBossFight.js|stabIndexReachedAt|stabIndexReachedAt,structural,,,
+frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossDeathSchedule|shieldBossDeathSchedule,rule,derivation,,removeRequestedTick + 1 (updateLists deferral)
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|h9fbb7573|8|0,physics,derivation,,Tile.w/2 and Tile.h/2 ctor offset
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|h2772b370|8|0,physics,derivation,,Tile.w/2 and Tile.h/2 ctor offset
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|haedc53c9|8|0,physics,magnitude,Pickups/BossKey.as:setHitbox,
+frontend/modules/seedlingDemo/shieldBossFight.js|(module)|h83554b28|8|0,physics,magnitude,Pickups/BossKey.as:setHitbox,
+frontend/modules/seedlingDemo/shieldBossFight.js|BOSS_KEY|(module)|4,physics,magnitude,Pickups/BossKey.as:setHitbox,
+frontend/modules/seedlingDemo/shieldBossFight.js|BOSS_KEY|(module)|150,rule,magnitude,Pickups/Pickup.as:specialTimerMax,
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|80,physics,magnitude,Enemies/BossTotem.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|32,physics,magnitude,Enemies/BossTotem.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|40,physics,magnitude,Enemies/BossTotem.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|-12,physics,magnitude,Enemies/BossTotem.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|240,rule,magnitude,Enemies/BossTotem.as:rumblingTimeMax,rumble countdown gates the ramp
+frontend/modules/seedlingDemo/bossTotem.js|(module)|h9e9f4bb7|120|0,rule,derivation,Enemies/BossTotem.as:rumblingTimeMax,rumblingTimeMax / 2
+frontend/modules/seedlingDemo/bossTotem.js|(module)|he6044267|120|0,rule,magnitude,Enemies/BossTotem.as:activationRestTimeMax,
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|0.02,rule,magnitude,Enemies/BossTotem.as:activationRate,
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|8,rule,magnitude,Enemies/BossTotem.as:n,easing divisor n
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|30,rule,magnitude,Enemies/BossTotem.as:waitAtTopTimeMax,
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|144,rule,magnitude,Enemies/BossTotem.as:playerPosSet,respawn point rewritten on wake
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|352,rule,magnitude,Enemies/BossTotem.as:playerPosSet,respawn point rewritten on wake
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|5,rule,count,Enemies/BossTotem.as:hitsMax,
+frontend/modules/seedlingDemo/bossTotem.js|BOSS_TOTEM|(module)|20,rule,magnitude,Enemies/BossTotem.as:hitsTimerMax,
+frontend/modules/seedlingDemo/bossTotem.js|(module)|h97415cfc|8|0,physics,derivation,,Tile.w/2 and Tile.h/2 ctor offset
+frontend/modules/seedlingDemo/bossTotem.js|(module)|h5fb5ed03|8|0,physics,derivation,,Tile.w/2 and Tile.h/2 ctor offset
+frontend/modules/seedlingDemo/bossTotem.js|(module)|h7c6eb2bb|8|0,physics,magnitude,Pickups/Wand.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotem.js|WAND_PICKUP|(module)|3,physics,magnitude,Pickups/Wand.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotem.js|WAND_PICKUP|(module)|2,physics,magnitude,Pickups/Wand.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotem.js|WAND_PICKUP|(module)|4,physics,magnitude,Pickups/Wand.as:setHitbox,
+frontend/modules/seedlingDemo/bossTotem.js|WAND_PICKUP|(module)|0.01,rule,magnitude,Pickups/Wand.as:alphaRate,fade alpha gates Game.freezeObjects
+frontend/modules/seedlingDemo/bossTotem.js|WAND_PICKUP|(module)|16,rule,derivation,,Tile.h approach-gate offset
+frontend/modules/seedlingDemo/bossTotem.js|WAND_PICKUP|(module)|0,rule,sentinel,Pickups/Wand.as:tset,activator group id
+frontend/modules/seedlingDemo/bossTotem.js|WAND_PICKUP|(module)|150,rule,magnitude,Pickups/Pickup.as:specialTimerMax,
+frontend/modules/seedlingDemo/bossTotem.js|wandFadeFreezeTicks|wandFadeFreezeTicks|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|wandFadeFreezeTicks|wandFadeFreezeTicks|10000,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|wandFadeFreezeTicks|h7607a3d0|1|0,rule,bound,,alpha cap 1 ends the freeze
+frontend/modules/seedlingDemo/bossTotem.js|wandFadeFreezeTicks|h1fc6a1c0|1|0,rule,bound,,alpha < 1 freeze test
+frontend/modules/seedlingDemo/bossTotem.js|wandFadeFreezeTicks|hba551ea2|1|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|createBossTotem|createBossTotem,structural,,,zero/-1 initial state
+frontend/modules/seedlingDemo/bossTotem.js|setBossState|setBossState,structural,,,zero/-1 initial state
+frontend/modules/seedlingDemo/bossTotem.js|bossFriction|h2e57752e|0|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|bossFriction|h90f54fbb|0|0,physics,bound,,Mobile.friction max(len - f; 0) floor
+frontend/modules/seedlingDemo/bossTotem.js|bossFriction|hb2adf150|0|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|bossFriction|bossFriction|0.05,physics,bound,,Mobile.as velocity snap floor
+frontend/modules/seedlingDemo/bossTotem.js|bossMoveY|hd5e64e2f|0|0,physics,sign,,moveY sign of v.y
+frontend/modules/seedlingDemo/bossTotem.js|bossMoveY|hd5e64e2f|0|1,physics,sign,,moveY sign of v.y
+frontend/modules/seedlingDemo/bossTotem.js|bossMoveY|hd5e64e2f|0|2,physics,sign,,moveY sign of v.y
+frontend/modules/seedlingDemo/bossTotem.js|bossMoveY|h0ca2608f|0|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|bossMoveY|h60d0f44f|0|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|bossMoveY|hd5e64e2f|1|0,physics,sign,,moveY sign of v.y
+frontend/modules/seedlingDemo/bossTotem.js|bossMoveY|h40bda350|1|0,physics,magnitude,,one-pixel moveY sub-step
+frontend/modules/seedlingDemo/bossTotem.js|bossMoveY|hc763f34f|1|0,physics,magnitude,,one-pixel moveY sub-step
+frontend/modules/seedlingDemo/bossTotem.js|bossMoveY|bossMoveY|-1,physics,sign,,moveY sign of v.y
+frontend/modules/seedlingDemo/bossTotem.js|bossLaserStep|bossLaserStep|2,rule,derivation,,laserWidthDef * 2 charge threshold
+frontend/modules/seedlingDemo/bossTotem.js|bossLaserStep|bossLaserStep|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|bossLaserStep|bossLaserStep|1,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|stepBossTotem|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|hc6817ac5|1|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|he23eede0|1|0,rule,sentinel,,tile ids water 1 lava 17 pit 6
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|h37c478bc|1|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|h60ea0c08|1|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|hd9f08384|1|0,rule,bound,,activationStage < 1
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|hd6173239|1|0,rule,derivation,,easingN (n - 1)
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|h8d941055|1|0,rule,bound,,activationStage full at 1
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|h91132bfe|1|0,rule,bound,,activationStage full at 1
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|h907bcd9c|1|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|h3868634c|1|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|h258d5733|1|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|stepBossTotem|17,rule,sentinel,,tile ids water 1 lava 17 pit 6
+frontend/modules/seedlingDemo/bossTotem.js|stepBossTotem|stepBossTotem|6,rule,sentinel,,tile ids water 1 lava 17 pit 6
+frontend/modules/seedlingDemo/bossTotem.js|renderBossTotem|renderBossTotem,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|bossWakeTable|bossWakeTable|152,structural,,,REVIEW: probe boss position (L43 entity point); diagnostic fixture
+frontend/modules/seedlingDemo/bossTotem.js|bossWakeTable|bossWakeTable|168,structural,,,REVIEW: probe boss position (L43 entity point); diagnostic fixture
+frontend/modules/seedlingDemo/bossTotem.js|bossWakeTable|bossWakeTable|0,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|bossWakeTable|bossWakeTable|2000,structural,,,
+frontend/modules/seedlingDemo/bossTotem.js|bossWakeTable|bossWakeTable|100,structural,,,
+frontend/modules/seedlingDemo/activators.js|*|*,structural,,,zero tests / loop bounds / counters
+frontend/modules/seedlingDemo/activators.js|RESPONDERS|(module),rule,magnitude,,alpha fade per tick; accumulation decides open tick
+frontend/modules/seedlingDemo/activators.js|WEST_PROBE|(module),physics,sign,,collide(Player x - 1 y) probe offset
+frontend/modules/seedlingDemo/activators.js|KEY_RESPONDERS|(module),rule,magnitude,,BossLock keyTimer / fade; opens on tick 80
+frontend/modules/seedlingDemo/activators.js|clampAlpha|clampAlpha,rule,bound,,Image.alpha clamp; alpha gates open
+frontend/modules/seedlingDemo/activators.js|opensOnTick|h18b7736f|1|0,rule,magnitude,,initial alpha of the fade
+frontend/modules/seedlingDemo/activators.js|opensOnTick|opensOnTick|0.1,rule,sentinel,,fade value used as Cover class discriminator
+frontend/modules/seedlingDemo/activators.js|opensOnTick|h559c4eb2|0|0,rule,bound,,alpha <= 0 opens
+frontend/modules/seedlingDemo/activators.js|opensOnTick|h9c601703|0|0,rule,bound,,alpha > 0 guard (Lock)
+frontend/modules/seedlingDemo/activators.js|opensOnKeyTick|h18b7736f|1|0,rule,magnitude,,initial alpha of the fade
+frontend/modules/seedlingDemo/activators.js|opensOnKeyTick|h559c4eb2|0|0,rule,bound,,alpha <= 0 opens
+frontend/modules/seedlingDemo/activators.js|crossRoomWrites|crossRoomWrites,rule,sentinel,,room/persistTag >= 0 (-1 = none)
+frontend/modules/seedlingDemo/activators.js|localPublish|localPublish,rule,sentinel,,room >= 0 (-1 = local latch)
+frontend/modules/seedlingDemo/activators.js|ropePublish|ropePublish,rule,sentinel,,group >= 0
+frontend/modules/seedlingDemo/activators.js|FALL_RESPONDER_ROOMS|(module),rule,sentinel,,level ids and group/tag ids
+frontend/modules/seedlingDemo/activators.js|createActivatorState|hb5cf49a9|1|0,rule,magnitude,,initial alpha of the fade
+frontend/modules/seedlingDemo/activators.js|stepActivators|h21458b84|0|0,rule,bound,,alpha <= 0 opens BossLock
+frontend/modules/seedlingDemo/activators.js|stepActivators|hb2d7489e|0|0,rule,magnitude,,alpha pinned at 0 on open
+frontend/modules/seedlingDemo/activators.js|stepActivators|h3dcc190e|0|0,rule,sentinel,,t >= 0 (-1 = unlinked)
+frontend/modules/seedlingDemo/activators.js|stepActivators|stepActivators|0.1,rule,sentinel,,fade value used as Cover class discriminator
+frontend/modules/seedlingDemo/activators.js|stepActivators|hb00a3eca|0|0,rule,bound,,alpha > 0 guard
+frontend/modules/seedlingDemo/activators.js|stepActivators|h10cb00f9|0|0,rule,bound,,alpha <= 0 opens Cover
+frontend/modules/seedlingDemo/activators.js|stepActivators|h8b114b82|1|0,rule,magnitude,,alpha reset to 1
+frontend/modules/seedlingDemo/activators.js|stepActivators|h8b114b82|1|1,rule,magnitude,,alpha reset to 1
+frontend/modules/seedlingDemo/camera.js|*|*,structural,,,centre halves / zero defaults / loop bounds
+frontend/modules/seedlingDemo/camera.js|SCREEN_W|(module),rule,bound,,FP.screen 160 (Main.as:36); camera gates Enemy.update via onScreen
+frontend/modules/seedlingDemo/camera.js|SCREEN_H|(module),rule,bound,,FP.screen 160 (Main.as:36); camera gates Enemy.update via onScreen
+frontend/modules/seedlingDemo/camera.js|CAMERA_SPEED_DIVISOR|(module),rule,magnitude,,camera lerp; camera gates enemy updates
+frontend/modules/seedlingDemo/camera.js|INVENTORY_WIDTH|(module),rule,magnitude,,Inventory.width in camera x target
+frontend/modules/seedlingDemo/camera.js|INVENTORY_OFFSET_X|(module),rule,magnitude,,Inventory.offsetMin in camera x target
+frontend/modules/seedlingDemo/camera.js|INVENTORY_TERM|(module),rule,derivation,,INVENTORY_WIDTH / 2 + INVENTORY_OFFSET_X / 2
+frontend/modules/seedlingDemo/camera.js|stepCamera|stepCamera|-1,rule,sentinel,,cameraTarget (-1 -1) = none
+frontend/modules/seedlingDemo/camera.js|stepCamera|h0a9e6a2c|0|0,rule,bound,,camera clamp to level
+frontend/modules/seedlingDemo/camera.js|stepCamera|hd9f8f300|0|0,rule,bound,,camera clamp to level
+frontend/modules/seedlingDemo/camera.js|SHAKE_WRITERS|(module),rule,magnitude,,Game.shake amounts; shake moves onScreen verdicts
+frontend/modules/seedlingDemo/camera.js|RANDOM_RANGE|(module),rule,bound,,Math.random range [0 1)
+frontend/modules/seedlingDemo/camera.js|stepCameraBand|stepCameraBand|-1,rule,sentinel,,cameraTarget (-1 -1) = none
+frontend/modules/seedlingDemo/camera.js|stepCameraBand|axis,rule,bound,,camera clamp to level
+frontend/modules/seedlingDemo/camera.js|stepCameraBand|h7d13fe9d|1|0,rule,magnitude,,shake decays 1 per view()
+frontend/modules/seedlingDemo/camera.js|stepCameraJiggled|stepCameraJiggled|-1,rule,sentinel,,cameraTarget (-1 -1) = none
+frontend/modules/seedlingDemo/camera.js|stepCameraJiggled|h0a9e6a2c|0|0,rule,bound,,camera clamp to level
+frontend/modules/seedlingDemo/camera.js|stepCameraJiggled|hd9f8f300|0|0,rule,bound,,camera clamp to level
+frontend/modules/seedlingDemo/camera.js|stepCameraJiggled|hb722944a|1|0,rule,magnitude,,shake decays 1 per view()
+frontend/modules/seedlingDemo/camera.js|CAMERA_DEAD_ZONE_RESIDUE|(module),rule,bound,,measured dead-zone residue of the rounded lerp
+frontend/modules/seedlingDemo/camera.js|onScreenUnderShake|onScreenUnderShake,rule,bound,,onScreen margin default 0 (Enemy.as:64 zero margin)
+frontend/modules/seedlingDemo/camera.js|onScreen|onScreen,rule,bound,,onScreen margin default 0 (Enemy.as:64 zero margin)
+frontend/modules/seedlingDemo/camera.js|cameraTrack|h1e1eb711|20|0,rule,magnitude,,REVIEW: modelled load-fade dead frames; value forgiving over ~12
+frontend/modules/seedlingDemo/camera.js|stepCameraBand|ha8001fb5|2|0,rule,derivation,,shake / 2 half-amplitude of Game.view jiggle
+frontend/modules/seedlingDemo/camera.js|stepCameraJiggled|haeea8a16|2|0,rule,derivation,,shake / 2 half-amplitude of Game.view jiggle
+frontend/modules/seedlingDemo/camera.js|stepCameraJiggled|h989e47ff|2|0,rule,derivation,,shake / 2 half-amplitude of Game.view jiggle
+frontend/modules/seedlingDemo/combatVerbs.js|*|*,structural,,,zero tests / loop bounds / state init / diagnostics
+frontend/modules/seedlingDemo/combatVerbs.js|SLASH_SPRITES|(module),physics,magnitude,,slash Spritemap frame size = getSlashRect
+frontend/modules/seedlingDemo/combatVerbs.js|SLASH_SCALE_NORMAL|(module),physics,magnitude,,slash rect scale
+frontend/modules/seedlingDemo/combatVerbs.js|SLASH_SCALE_DASH|(module),physics,magnitude,,slash rect scale when dashing
+frontend/modules/seedlingDemo/combatVerbs.js|SWORD_DAMAGE|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/combatVerbs.js|SWORD_FORCE|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/combatVerbs.js|KILL_PRESS_CADENCE|(module),rule,derivation,,ENEMY_IFRAMES + 1
+frontend/modules/seedlingDemo/combatVerbs.js|SLASH_DASH_FORCE|(module),physics,magnitude,,knockback(2) Player.as:788
+frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|hd3d08480|30|0,rule,magnitude,,FP.assignedFrameRate 30
+frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|h5aaf8498|1|0,structural,,,REVIEW: Spritemap unit-frame accumulator threshold
+frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|he50a9b4e|1|0,structural,,,REVIEW: Spritemap unit-frame accumulator step
+frontend/modules/seedlingDemo/combatVerbs.js|SWORD_ANIM_RATE|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/combatVerbs.js|SWORD_ANIM_RATE_DASH|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/combatVerbs.js|SLASH_ANIM_TICKS|(module),rule,count,,slash / slashnarrow frame counts; wrap fires slashEnd
+frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hdfaa2622|0|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hdfaa2622|1|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hdfaa2622|2|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hdfaa2622|3|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/combatVerbs.js|slashRect|he0672304|2|0,physics,magnitude,,ghost sword rect height = width * 2
+frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hd299d31b|0|0,rule,sentinel,,direction code case
+frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hfe78a9a0|1|0,rule,sentinel,,direction code case
+frontend/modules/seedlingDemo/combatVerbs.js|slashRect|h1189c959|2|0,rule,sentinel,,direction code case
+frontend/modules/seedlingDemo/combatVerbs.js|swing|h03649ac3|1|0,rule,magnitude,,hit test lands one tick after the press
+frontend/modules/seedlingDemo/combatVerbs.js|killSchedule|h7a2811af|1|0,structural,,,REVIEW: planner slack presses; not a game rule
+frontend/modules/seedlingDemo/crusher.js|CRUSHER|(module)|32,physics,magnitude,,setHitbox 32x32 body = collider and kill box
+frontend/modules/seedlingDemo/crusher.js|CRUSHER|(module)|16,physics,magnitude,,setHitbox origin 16
+frontend/modules/seedlingDemo/crusher.js|CRUSHER|(module)|64,rule,bound,Puzzlements/Crusher.as:intDist,detection lane reach (trigger not collision)
+frontend/modules/seedlingDemo/crusher.js|(module)|h8d6cc6b9|1|0,physics,magnitude,Puzzlements/Crusher.as:speed,1 px/tick charge
+frontend/modules/seedlingDemo/crusher.js|(module)|h1c938f45|1|0,physics,magnitude,Puzzlements/Crusher.as:force,knockback force passed to hit()
+frontend/modules/seedlingDemo/crusher.js|CRUSHER|(module)|1000,rule,magnitude,Puzzlements/Crusher.as:damage,KILL EVERYTHING
+frontend/modules/seedlingDemo/crusher.js|CRUSHER|(module)|8,cosmetic,,Puzzlements/Crusher.as:spinRate,sprite angle only
+frontend/modules/seedlingDemo/crusher.js|DIRECTIONS|(module),physics,sign,Puzzlements/Crusher.as:directions,direction unit vectors x speed
+frontend/modules/seedlingDemo/crusher.js|alwaysArmed|alwaysArmed,rule,sentinel,,t == -1 always-on
+frontend/modules/seedlingDemo/crusher.js|detectionRects|detectionRects,structural,,,sign test / zero fallback in lane offset
+frontend/modules/seedlingDemo/crusher.js|collideLineSolid|collideLineSolid,structural,,,zero sign tests and div-by-zero guard
+frontend/modules/seedlingDemo/crusher.js|collideLineSolid|collideLineSolid|1,physics,sign,,raycast step sign
+frontend/modules/seedlingDemo/crusher.js|collideLineSolid|collideLineSolid|-1,physics,sign,,raycast step sign
+frontend/modules/seedlingDemo/crusher.js|collideLineSolid|hc976309b|1|0,physics,bound,,sub-pixel degenerate line threshold
+frontend/modules/seedlingDemo/crusher.js|scanCrusher|scanCrusher,structural,,,no-charge zero velocity
+frontend/modules/seedlingDemo/crusher.js|stepCrusher|stepCrusher,structural,,,default zero velocity / at-rest test
+frontend/modules/seedlingDemo/crusher.js|stepCrusher|stepAxis,structural,,,loop bounds
+frontend/modules/seedlingDemo/crusher.js|stepAxis|h38efa51b|1|0,physics,magnitude,,1 px movement step
+frontend/modules/seedlingDemo/crusher.js|stepAxis|hdd6e7282|0|0,physics,magnitude,,velocity zeroed on first Solid
+frontend/modules/seedlingDemo/crusher.js|CEREMONY_RULE|(module),rule,magnitude,,pickup freeze frames (CEREMONY_DEAD_FRAMES.pickup)
+frontend/modules/seedlingDemo/crusher.js|PLAYER_DAMAGE_PATHS|(module),rule,sentinel,,level ids holding LavaTrap
+frontend/modules/seedlingDemo/crusher.js|CRUSHER_PLAN|(module),structural,,,doc phase numbering
+frontend/modules/seedlingDemo/endingChain.js|*|*,structural,,,counter init / increments / loop bounds
+frontend/modules/seedlingDemo/endingChain.js|TALK_RANGE|(module),rule,bound,,origin-to-origin talk circle
+frontend/modules/seedlingDemo/endingChain.js|WATCHER|(module)|8,physics,magnitude,,NPC ctor Tile.w/2 offset and setHitbox origin
+frontend/modules/seedlingDemo/endingChain.js|WATCHER|(module)|16,physics,magnitude,,setHitbox(16 16 8 8)
+frontend/modules/seedlingDemo/endingChain.js|WATCHER|(module)|9,rule,bound,,seed held out while dialogue index in [9 19]
+frontend/modules/seedlingDemo/endingChain.js|WATCHER|(module)|19,rule,bound,,seed held out while dialogue index in [9 19]
+frontend/modules/seedlingDemo/endingChain.js|WATCHER|(module)|3,rule,count,,dieFrames length; hits > length kills
+frontend/modules/seedlingDemo/endingChain.js|WATCHER|(module)|25,rule,magnitude,NPCs/Watcher.as:hitsTimerMax,
+frontend/modules/seedlingDemo/endingChain.js|watcherSeedBox|watcherSeedBox,physics,magnitude,,Seed placement offsets (Watcher.as:68) and Seed setHitbox(10 14 5 7)
+frontend/modules/seedlingDemo/endingChain.js|WATCHER_FLAG|(module),rule,sentinel,,persistence (level 114 tag 0)
+frontend/modules/seedlingDemo/endingChain.js|FINAL_DOOR|(module)|16,physics,magnitude,,FinalDoor ctor Tile offset / hitbox origin
+frontend/modules/seedlingDemo/endingChain.js|(module)|hb6967b16|32|0,physics,magnitude,,FinalDoor hitbox
+frontend/modules/seedlingDemo/endingChain.js|(module)|h72b1d11e|32|0,physics,magnitude,,FinalDoor hitbox
+frontend/modules/seedlingDemo/endingChain.js|(module)|hfcac1c7e|32|0,rule,bound,,FP.distance <= 32 see radius
+frontend/modules/seedlingDemo/endingChain.js|FINAL_DOOR|(module)|28,rule,count,,open anim frames; animEnd removes the door
+frontend/modules/seedlingDemo/endingChain.js|FINAL_DOOR|(module)|15,rule,magnitude,,open anim rate; animEnd removes the door
+frontend/modules/seedlingDemo/endingChain.js|stepFinalDoor|hcdbbf6f1|1|0,rule,magnitude,,play frame is the first anim update (one not zero)
+frontend/modules/seedlingDemo/endingChain.js|COVER_ALPHA_RATE|(module),rule,magnitude,,cover fade accumulation = 200 frozen frames
+frontend/modules/seedlingDemo/endingChain.js|coverFadeFrames|h76e377d7|1|0,rule,bound,,coverAlpha >= 1 ends the fade
+frontend/modules/seedlingDemo/endingChain.js|TREE_GROW_FRAME_RATE|(module),rule,magnitude,,grow anim rate; endAnim triggers credits fade
+frontend/modules/seedlingDemo/endingChain.js|TREE_GROW_FRAMES|(module),rule,count,,grow anim frames; endAnim triggers credits fade
+frontend/modules/seedlingDemo/endingChain.js|(module)|hf94c6179|1|0,rule,sentinel,,reboot level id
+frontend/modules/seedlingDemo/endingChain.js|(module)|h7391f308|64|0,rule,magnitude,,reboot spawn x
+frontend/modules/seedlingDemo/endingChain.js|(module)|h7a18b111|96|0,rule,magnitude,,reboot spawn y
+frontend/modules/seedlingDemo/endingChain.js|SEED_CEREMONY_FRAMES|(module)|150,rule,magnitude,,Pickup.specialTimer
+frontend/modules/seedlingDemo/endingChain.js|SEED_CEREMONY_FRAMES|(module)|2,rule,count,,reboots in the ceremony
+frontend/modules/seedlingDemo/endingChain.js|SEED_BOX|(module),physics,magnitude,,Seed setHitbox(10 14 5 7)
+frontend/modules/seedlingDemo/endingChain.js|bloodySeedEntity|bloodySeedEntity,physics,magnitude,,new Seed(p.x - 8) then +Tile.w/2
+frontend/modules/seedlingDemo/endingChain.js|CUTSCENE_1_WALK|(module)|-1,physics,magnitude,,p.v.y = -1
+frontend/modules/seedlingDemo/endingChain.js|CUTSCENE_1_WALK|(module)|64,physics,bound,,velocity clamp y <= 64
+frontend/modules/seedlingDemo/endingChain.js|ORACLE|(module),physics,magnitude,,NPC ctor Tile.w/2 offset
+frontend/modules/seedlingDemo/endingChain.js|CREDITS|(module)|2,rule,sentinel,,menuState credits
+frontend/modules/seedlingDemo/endingChain.js|CREDITS|(module)|14,rule,sentinel,,badge index
+frontend/modules/seedlingDemo/playerPhysicsV2.js|*|*,structural,,,indices / lengths / zero inits / centre halves
+frontend/modules/seedlingDemo/playerPhysicsV2.js|INITIAL_TERRAIN_STATE|(module),rule,sentinel,,Ground state
+frontend/modules/seedlingDemo/playerPhysicsV2.js|terrainEffectClass|terrainEffectClass,rule,sentinel,,Tile.t state ids
+frontend/modules/seedlingDemo/playerPhysicsV2.js|PIT_STATE|(module),rule,sentinel,,Tile.t pit
+frontend/modules/seedlingDemo/playerPhysicsV2.js|WATER_STATE|(module),rule,sentinel,,Tile.t water
+frontend/modules/seedlingDemo/playerPhysicsV2.js|LAVA_STATE|(module),rule,sentinel,,Tile.t lava
+frontend/modules/seedlingDemo/playerPhysicsV2.js|ICE_STATE|(module),rule,sentinel,,Tile.t ice
+frontend/modules/seedlingDemo/playerPhysicsV2.js|WATERFALL_STATE|(module),rule,sentinel,,Tile.t waterfall
+frontend/modules/seedlingDemo/playerPhysicsV2.js|INITIAL_DIRECTION|(module),rule,sentinel,,direction code down
+frontend/modules/seedlingDemo/playerPhysicsV2.js|DIRECTION_RIGHT|(module),rule,sentinel,,direction code
+frontend/modules/seedlingDemo/playerPhysicsV2.js|DIRECTION_UP|(module),rule,sentinel,,direction code
+frontend/modules/seedlingDemo/playerPhysicsV2.js|DIRECTION_LEFT|(module),rule,sentinel,,direction code
+frontend/modules/seedlingDemo/playerPhysicsV2.js|DIRECTION_DOWN|(module),rule,sentinel,-,direction code; auto anchor suppressed: Player.as:direction is the facing field whose default 3 only coincides with this enum
+frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|nextDirection,rule,sign,,velocity sign picks direction
+frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|he42cf9a9|-1|0,rule,sentinel,,directionFace -1 = none
+frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|h38f2089c|0|0,rule,sentinel,,directionFace >= 0
+frontend/modules/seedlingDemo/playerPhysicsV2.js|SLIDING_FRICTION|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV2.js|SLIDING_SPEED|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV2.js|WATERFALL_ACCELERATION|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV2.js|DROWN_TIMER_MAX|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|h06381514|0|0,rule,sentinel,,drown kind none
+frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|h94f1bc9a|1|0,rule,sentinel,,drown kind water
+frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|he89fb340|2|0,rule,sentinel,,drown kind lava
+frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|h2dd3e999|0|0,rule,sentinel,,drown kind none
+frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h143b1de1|0.5|0,rule,magnitude,,spiral timer step per tick (Player.drown)
+frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h55b1a3f4|2|0,physics,derivation,,angle = timer / DROWN_TIMER_MAX * 2PI
+frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h46b9a606|2|0,physics,magnitude,,spiral y velocity doubled
+frontend/modules/seedlingDemo/playerPhysicsV2.js|FALL_ALPHA_SPEED|(module),rule,magnitude,,accumulation decides fall swap tick 20
+frontend/modules/seedlingDemo/playerPhysicsV2.js|FALL_ALPHA_START|(module),rule,magnitude,-,the player Image.alpha at the start of the pit fall (no named AS3 field); auto anchor Game.as:blackCover suppressed
+frontend/modules/seedlingDemo/playerPhysicsV2.js|FALL_LERP_DIVISOR|(module),physics,magnitude,,pit-fall position lerp
+frontend/modules/seedlingDemo/playerPhysicsV2.js|DESCENT_DROP|(module),physics,magnitude,,FP.screen.height / 2 + (height - originY) = 80 + 3
+frontend/modules/seedlingDemo/playerPhysicsV2.js|DESCENT_GRAVITY|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV2.js|DESCENT_MAX_FALL|(module),physics,bound,,
+frontend/modules/seedlingDemo/playerPhysicsV2.js|BOUNCE_VELOCITY|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV2.js|NO_BOUNCE_STATES|(module),rule,sentinel,,Tile.t pit/water/lava
+frontend/modules/seedlingDemo/playerPhysicsV2.js|getStatePos|getStatePos,rule,sentinel,,-1 = no tile
+frontend/modules/seedlingDemo/playerPhysicsV2.js|fallDestination|snap,physics,bound,,clamp position >= 0 before tile snap
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h92086e66|0|0,physics,magnitude,,landing zeroes vy
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h4c9f2076|0|0,physics,sign,,feather exempts upward motion only (v.y >= 0)
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h08da7fb0|0|0,rule,bound,,alpha <= 0 swaps level
+frontend/modules/seedlingDemo/pushables.js|*|*,structural,,,zero tests / centre halves / loop bounds / inits
+frontend/modules/seedlingDemo/pushables.js|TILE|(module),physics,magnitude,Scenery/Tile.as:w,tile size in block collision and step
+frontend/modules/seedlingDemo/pushables.js|PUSHABLE_SPEED|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/pushables.js|PUSHABLE_FRICTION|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/pushables.js|DESTROYING_TILE_TYPES|(module),rule,sentinel,,Tile.t water/lava/pit
+frontend/modules/seedlingDemo/pushables.js|ALPHA_FADE|(module),rule,magnitude,,Mobile.death alpha fade; accumulation gates removal
+frontend/modules/seedlingDemo/pushables.js|RIGHT|(module),rule,sentinel,,direction code
+frontend/modules/seedlingDemo/pushables.js|UP|(module),rule,sentinel,,direction code
+frontend/modules/seedlingDemo/pushables.js|LEFT|(module),rule,sentinel,,direction code
+frontend/modules/seedlingDemo/pushables.js|DOWN|(module),rule,sentinel,-,direction code; auto anchor suppressed: Player.as:direction default 3 is a value coincidence
+frontend/modules/seedlingDemo/pushables.js|PUSH_STEP|(module),physics,sign,,block step per facing
+frontend/modules/seedlingDemo/pushables.js|pushVector|pushVector,rule,sign,,Player.as:1103 direction code arithmetic
+frontend/modules/seedlingDemo/pushables.js|sign|sign,physics,sign,,FP.sign
+frontend/modules/seedlingDemo/pushables.js|newPushable|h164230f2|1|0,rule,magnitude,,initial alpha of the death fade
+frontend/modules/seedlingDemo/pushables.js|BOTH_RANGE|(module),physics,bound,,
+frontend/modules/seedlingDemo/pushables.js|hitPushableFromPoint|h6e7c81bd|0|0,physics,sign,,push-away sign of hit angle
+frontend/modules/seedlingDemo/pushables.js|hitPushableFromPoint|h9d8ee3d6|0|0,physics,sign,,push-away sign of hit angle
+frontend/modules/seedlingDemo/pushables.js|hitPushableFromPoint|h58425193|0|0,physics,sign,,push-away sign of hit angle
+frontend/modules/seedlingDemo/pushables.js|hitPushableFromPoint|h887df642|0|0,physics,sign,,push-away sign of hit angle
+frontend/modules/seedlingDemo/pushables.js|frictionStep|h1dee1442|0|0,physics,bound,,friction floors speed at zero
+frontend/modules/seedlingDemo/pushables.js|frictionStep|frictionStep|0.05,physics,bound,,Mobile.friction dead band
+frontend/modules/seedlingDemo/pushables.js|frictionStep|h6e9b004f|0|0,physics,magnitude,,velocity snapped to zero in dead band
+frontend/modules/seedlingDemo/pushables.js|frictionStep|hcfb3654e|0|0,physics,magnitude,,velocity snapped to zero in dead band
+frontend/modules/seedlingDemo/pushables.js|moveAxis|h10b9a735|1|0,physics,magnitude,,1 px movement step
+frontend/modules/seedlingDemo/pushables.js|stepPushable|stepPushable|0.01,physics,bound,,grid snap threshold on |v|
+frontend/modules/seedlingDemo/pushables.js|stepPushable|h559c4eb2|0|0,rule,bound,,alpha <= 0 removes
+frontend/modules/seedlingDemo/pushables.js|walkPushContact|walkPushContact|1,physics,magnitude,,1 px contact probe offset
+frontend/modules/seedlingDemo/pushables.js|walkPushContact|walkPushContact|0,physics,sign,,player velocity sign test
+frontend/modules/seedlingDemo/pushables.js|stepWalkPushable|stepWalkPushable|1,structural,,,REVIEW: +-1 tile index = push target one cell over
+frontend/modules/seedlingDemo/pushables.js|stepWalkPushable|h559c4eb2|0|0,rule,bound,,alpha <= 0 removes
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module),physics,magnitude,,Pixelmask collider width/height
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|2816,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|1280,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|4368,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|10528,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|5576,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|4848,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|904,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|5120,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|3925,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|1381,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|128,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|SEEDLING_PIXEL_MASKS|(module)|192,structural,,,opaque pixel count; a generated-mask checksum read only by tests
+frontend/modules/seedlingDemo/seedlingPixelMasks.js|(module)|h12b43664|128|0,physics,magnitude,,Pixelmask collider height
+frontend/modules/seedlingDemo/spinner.js|*|*,structural,,,loop bounds / zero floors / counter init
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|2,structural,,,TILE / 2 cell centre
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|7,physics,magnitude,,setHitbox(7 7 4 4)
+frontend/modules/seedlingDemo/spinner.js|(module)|hba7b0875|4|0,physics,magnitude,,hitbox origin
+frontend/modules/seedlingDemo/spinner.js|(module)|h0a245534|4|0,physics,magnitude,,hitbox origin
+frontend/modules/seedlingDemo/spinner.js|(module)|hdd7d45fc|1|0,physics,magnitude,Enemies/Spinner.as:moveSpeed,speed and friction floor
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|0.25,physics,magnitude,Mobile.as:DEFAULT_FRICTION,
+frontend/modules/seedlingDemo/spinner.js|(module)|h945a8886|0.05|0,physics,bound,,Mobile.friction per-axis dead band
+frontend/modules/seedlingDemo/spinner.js|(module)|h31bbaaf8|4|0,physics,derivation,,heading = -PI / 4 (Spinner.as ctor)
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|0,rule,bound,Enemies/Spinner.as:runRange,chase range zero = unreachable
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|13,physics,magnitude,,hammerLength = sprSpinner.width 18 - originX 5
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|45,rule,magnitude,,Game.timePerFrame hammer period in updates
+frontend/modules/seedlingDemo/spinner.js|(module)|hd04a5e60|4|0,physics,magnitude,Enemies/Spinner.as:hitForce,
+frontend/modules/seedlingDemo/spinner.js|(module)|heb16385c|1|0,rule,magnitude,Enemies/Enemy.as:damage,
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|3,rule,count,Enemies/Enemy.as:hitsMax,
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|30,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
+frontend/modules/seedlingDemo/spinner.js|(module)|ha43bfe71|0.05|0,rule,magnitude,,REVIEW: alpha fade but its accumulation gates pit destroy (20 ticks)
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|0.1,rule,magnitude,,REVIEW: alpha fade but its accumulation gates removal (11 ticks)
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|11,rule,magnitude,,death fade length in ticks
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|20,rule,magnitude,,pit fall length in ticks
+frontend/modules/seedlingDemo/spinner.js|(module)|hb3997753|1|0,rule,sentinel,,Tile.t water
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|6,rule,sentinel,,Tile.t pit
+frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|17,rule,sentinel,,Tile.t lava
+frontend/modules/seedlingDemo/spinner.js|SPINNER_CTOR_RNG|(module),rule,count,,RNG draws per ctor (inert but phase-relevant)
+frontend/modules/seedlingDemo/spinner.js|spinnerFriction|h6e9b004f|0|0,physics,magnitude,,velocity snapped to zero in dead band
+frontend/modules/seedlingDemo/spinner.js|spinnerFriction|hcfb3654e|0|0,physics,magnitude,,velocity snapped to zero in dead band
+frontend/modules/seedlingDemo/spinner.js|reflectAxis|h10b9a735|1|0,physics,magnitude,,1 px movement step
+frontend/modules/seedlingDemo/spinner.js|newSpinner|h8a45366c|-1|0,rule,sentinel,,persistTag -1 = none
+frontend/modules/seedlingDemo/spinner.js|newSpinner|h73ca37f1|1|0,rule,magnitude,,REVIEW: initial alpha; the fade from it gates removal
+frontend/modules/seedlingDemo/spinner.js|stepSpinner|stepSpinner|2,structural,,,TILE / 2 cell centre
+frontend/modules/seedlingDemo/spinner.js|stepSpinner|stepSpinner|10,physics,magnitude,,pit drift a tenth per tick
+frontend/modules/seedlingDemo/spinner.js|stepSpinner|h559c4eb2|0|0,rule,bound,,alpha <= 0 ends pit fall
+frontend/modules/seedlingDemo/spinner.js|stepSpinner|h559c4eb2|0|1,rule,bound,,alpha <= 0 triggers removal
+frontend/modules/seedlingDemo/spinner.js|hitSpinner|h8ec238b0|1|0,rule,magnitude,,default hit damage
+frontend/modules/seedlingDemo/spinner.js|hammerLine|hammerLine,physics,derivation,,angle = phase / hammerPeriod * 2PI
+frontend/modules/seedlingDemo/spinner.js|HAMMER_BILLING|(module)|1,rule,magnitude,,Player.hit d=1 default
+frontend/modules/seedlingDemo/spinner.js|HAMMER_BILLING|(module)|3,physics,magnitude,,Enemy.hitPlayer force 3 (Enemy.as:218)
+frontend/modules/seedlingDemo/spinner.js|spinnerTerrainWrites|spinnerTerrainWrites,rule,sentinel,,persistTag < 0 = none
+frontend/modules/seedlingDemo/wandShot.js|*|*,structural,,,counters / loop bounds / diagnostics
+frontend/modules/seedlingDemo/wandShot.js|fpSign|fpSign,physics,sign,,FP.sign used by moveX/moveY
+frontend/modules/seedlingDemo/wandShot.js|TILE_W|(module),physics,magnitude,Scenery/Tile.as:w,travel = tilesMove * Tile.w
+frontend/modules/seedlingDemo/wandShot.js|(module)|hefb0b34c|3|0,physics,magnitude,Projectiles/WandShot.as:tilesMove,travel in tiles; sets lifeMax
+frontend/modules/seedlingDemo/wandShot.js|(module)|hdcb0eb3f|3|0,physics,magnitude,Projectiles/WandShot.as:force,knockback to Enemy.hit
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT|(module)|0.6,cosmetic,,,sound volume (draw-stream only)
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT|(module)|0.3,cosmetic,,,sound volume (draw-stream only)
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT|(module)|160,rule,bound,,cull margin outside camera
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT|(module)|0,rule,sentinel,Projectiles/WandShot.as:shotType,wand shot type
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT|(module)|0.5,rule,magnitude,Projectiles/WandShot.as:damage,
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT|(module)|3,physics,magnitude,,setHitbox(3 3 2 2)
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT|(module)|2,physics,magnitude,,hitbox origin 2
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT|(module)|5,physics,magnitude,,setHitbox(5 5 2 2)
+frontend/modules/seedlingDemo/wandShot.js|(module)|hf8109efb|1|0,rule,sentinel,,fire wand shot type
+frontend/modules/seedlingDemo/wandShot.js|(module)|h963dcf74|1|0,rule,magnitude,,fire wand damage 1
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT_ANIMS|(module),cosmetic,,,flare anim: animEnd acts only on die
+frontend/modules/seedlingDemo/wandShot.js|(module)|h94b8684a|3|0,structural,,,REVIEW: die frame index list; its length gates destroy
+frontend/modules/seedlingDemo/wandShot.js|(module)|h94b8684a|4|0,structural,,,REVIEW: die frame index list; its length gates destroy
+frontend/modules/seedlingDemo/wandShot.js|(module)|h94b8684a|5|0,structural,,,REVIEW: die frame index list; its length gates destroy
+frontend/modules/seedlingDemo/wandShot.js|(module)|hc68d3638|3|0,rule,count,,die frame count; wrap sets destroy
+frontend/modules/seedlingDemo/wandShot.js|(module)|hac60b12e|20|0,rule,magnitude,,die anim rate; wrap sets destroy
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT_DEATH|(module),rule,derivation,,WAND_SHOT_ANIM_UPDATES.die - 1 (+ MOBILE_DEATH_FADE.ticks)
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT_CULL|(module)|16,physics,magnitude,,WAND_SPAWN_REACH (sprWand.width)
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT_CULL|(module)|60,rule,magnitude,,BossTotem.removed shake 60
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT_CULL|maxShakeDisplacement,rule,derivation,,maxRosterShake / 2 half-amplitude
+frontend/modules/seedlingDemo/wandShot.js|moveAxis|h2eb9e107|1|0,physics,magnitude,,1 px movement step
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT_GRAZE|(module),physics,sign,,epsilon sign per direction
+frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT_PLAN|(module),physics,magnitude,,WAND_SPAWN_REACH (sprWand.width)
+frontend/modules/seedlingDemo/wandVerb.js|*|*,structural,,,validation / index / diagnostic arithmetic
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPEED|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|16,physics,magnitude,,sprWand.width = shot spawn reach
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|10,cosmetic,,,sprite height; unread
+frontend/modules/seedlingDemo/wandVerb.js|(module)|he2096472|0|0,cosmetic,,,originX draw offset
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|8,cosmetic,,,originY draw offset
+frontend/modules/seedlingDemo/wandVerb.js|(module)|h0e2487b7|0|0,structural,,,REVIEW: frame index list; its length (frameCount) gates wandEnd
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|1,structural,,,REVIEW: frame index list; its length (frameCount) gates wandEnd
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|2,structural,,,REVIEW: frame index list; its length (frameCount) gates wandEnd
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|3,structural,,,REVIEW: frame index list; its length (frameCount) gates wandEnd
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|4,structural,,,REVIEW: frame index list; its length (frameCount) gates wandEnd
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|5,rule,count,,anim frame count; wrap fires wandEnd = the shot
+frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|20,rule,magnitude,,anim rate; decides fire tick
+frontend/modules/seedlingDemo/wandVerb.js|FIRE_WAND_SPRITE|(module)|17,cosmetic,,,fire wand width never consulted by wand()
+frontend/modules/seedlingDemo/wandVerb.js|FIRE_WAND_SPRITE|(module)|10,cosmetic,,,sprite height; unread
+frontend/modules/seedlingDemo/wandVerb.js|(module)|h14edd822|0|0,cosmetic,,,originX draw offset
+frontend/modules/seedlingDemo/wandVerb.js|FIRE_WAND_SPRITE|(module)|8,cosmetic,,,originY draw offset
+frontend/modules/seedlingDemo/wandVerb.js|(module)|hd8bb0c0c|0|0,structural,,,REVIEW: frame index list; its length gates wandEnd (fire wand)
+frontend/modules/seedlingDemo/wandVerb.js|FIRE_WAND_SPRITE|(module)|1,structural,,,REVIEW: frame index list; its length gates wandEnd (fire wand)
+frontend/modules/seedlingDemo/wandVerb.js|FIRE_WAND_SPRITE|(module)|2,structural,,,REVIEW: frame index list; its length gates wandEnd (fire wand)
+frontend/modules/seedlingDemo/wandVerb.js|FIRE_WAND_SPRITE|(module)|3,structural,,,REVIEW: frame index list; its length gates wandEnd (fire wand)
+frontend/modules/seedlingDemo/wandVerb.js|FIRE_WAND_SPRITE|(module)|4,structural,,,REVIEW: frame index list; its length gates wandEnd (fire wand)
+frontend/modules/seedlingDemo/wandVerb.js|FIRE_WAND_SPRITE|(module)|5,rule,count,,sprFireWand also calls wandEnd on wrap
+frontend/modules/seedlingDemo/wandVerb.js|FIRE_WAND_SPRITE|(module)|20,rule,magnitude,,sprFireWand also calls wandEnd on wrap
+frontend/modules/seedlingDemo/wandVerb.js|WAND_TIMELINE|(module),structural,,,simulation horizon in ticks
+frontend/modules/seedlingDemo/wandVerb.js|deriveWandWindow|h3a39ff5e|1|0,rule,derivation,,fireTick = wrapUpdate - 1 (update k runs at end of tick T+k-1)
+frontend/modules/seedlingDemo/wandVerb.js|deriveWandWindow|h3a39ff5e|1|1,rule,derivation,,endTick = wrapUpdate - 1
+frontend/modules/seedlingDemo/wandVerb.js|WAND_PRESS_CADENCE|(module),rule,derivation,,WAND_WINDOW.endTick + 1
+frontend/modules/seedlingDemo/wandVerb.js|WAND_FACING_RULE|(module),rule,magnitude,,facing read one tick stale
+frontend/modules/seedlingDemo/wandVerb.js|WAND_DIRECTIONS|(module)|0,rule,sentinel,,FlashPunk direction code
+frontend/modules/seedlingDemo/wandVerb.js|WAND_DIRECTIONS|(module)|1,rule,sentinel,,FlashPunk direction code
+frontend/modules/seedlingDemo/wandVerb.js|(module)|h0605ceef|2|0,rule,sentinel,,FlashPunk direction code
+frontend/modules/seedlingDemo/wandVerb.js|WAND_DIRECTIONS|(module)|3,rule,sentinel,,FlashPunk direction code
+frontend/modules/seedlingDemo/wandVerb.js|(module)|h80affcad|2|0,physics,derivation,,angle = direction * PI / 2 (Player.as:998)
+frontend/modules/seedlingDemo/rng.js|XOR_MASK|(module),rule,magnitude,,LFSR feedback mask; decides every draw
+frontend/modules/seedlingDemo/rng.js|BOOT_SEED|(module),rule,magnitude,,build boot seed (MOCK_DATE_TIME*1000)
+frontend/modules/seedlingDemo/rng.js|HASH_C1|(module),rule,magnitude,,avmplus hasher constant
+frontend/modules/seedlingDemo/rng.js|HASH_C2|(module),rule,magnitude,,avmplus hasher constant
+frontend/modules/seedlingDemo/rng.js|HASH_C3|(module),rule,magnitude,,avmplus hasher constant
+frontend/modules/seedlingDemo/rng.js|RANDOM_DIVISOR|(module),rule,magnitude,,2^31 Math.random divisor
+frontend/modules/seedlingDemo/rng.js|STATE_MAX|(module),rule,bound,,largest orbit state; seed ceiling
+frontend/modules/seedlingDemo/rng.js|hash|hash,structural,,,int32 coercions and 31-bit mask
+frontend/modules/seedlingDemo/rng.js|hash|hash|13,rule,magnitude,,hasher shift amount; decides outputs
+frontend/modules/seedlingDemo/rng.js|hash|hash|21,rule,magnitude,,hasher shift amount; decides outputs
+frontend/modules/seedlingDemo/rng.js|step|step,structural,,,LFSR bit test / shift-by-one / uint coercion
+frontend/modules/seedlingDemo/rng.js|rawFor|rawFor,structural,,,int32 coercion and 31-bit mask
+frontend/modules/seedlingDemo/rng.js|rawFor|rawFor|71,rule,magnitude,,avm2_generate_random_number state multiplier
+frontend/modules/seedlingDemo/rng.js|SeedlingRng|SeedlingRng.constructor,structural,,,uint32 coercions
+frontend/modules/seedlingDemo/rng.js|SeedlingRng.constructor|h56bbaf43|0|0,rule,sentinel,,seed 0 = inherit build boot seed
+frontend/modules/seedlingDemo/rng.js|SeedlingRng.constructor|hf67ffd5b|0|1,rule,sentinel,,seed 0 = inherit build boot seed
+frontend/modules/seedlingDemo/rng.js|draws|draws,structural,,,
+frontend/modules/seedlingDemo/r6AnimClock.js|animCallbackUpdate|animCallbackUpdate,structural,,,Spritemap timer loop transcription; guard and loop budget
+frontend/modules/seedlingDemo/burnableTree.js|BURN_ANIM|(module)|20,rule,count,,burn anim frame count; burnEnd callback removes the tree
+frontend/modules/seedlingDemo/burnableTree.js|BURN_ANIM|(module)|15,rule,magnitude,,burn anim frameRate gates removal tick
+frontend/modules/seedlingDemo/burnableTree.js|BURN_SPRITE|(module),physics,magnitude,,REVIEW: sprite size; pinned equal to ENTITY_CLASSES.burnabletree solid footprint
+frontend/modules/seedlingDemo/burnableTree.js|WAIT_AFTER_PRESS_TICKS|(module),rule,derivation,,HIT_TO_GONE_TICKS + 12 tick leg margin
+frontend/modules/seedlingDemo/burnableTree.js|burnTree|burnTree,structural,,,
+frontend/modules/seedlingDemo/burnableTree.js|treeBuiltIn|treeBuiltIn,rule,sentinel,,tag < 0 = per-visit (-1 family)
+frontend/modules/seedlingDemo/outOfBandLedger.js|outOfBandFlagForWriter|outOfBandFlagForWriter,rule,sentinel,,tag -1 default / in-band test
+frontend/modules/seedlingDemo/deadFrameBand.js|*|*,structural,,,differential-sweep statistics and test tolerance band
+frontend/modules/seedlingDemo/r6AnimClock.js|FP_ELAPSED_CLAMPED|(module),physics,magnitude,,FP.elapsed clamp; here drives the anim clock that fires gameplay callbacks
+frontend/modules/seedlingDemo/gameClock.js|BLACK_COVER|(module)|1,rule,magnitude,Game.as:blackCover,room-load fade start; gates super.update
+frontend/modules/seedlingDemo/gameClock.js|BLACK_COVER|(module)|-0.05,rule,magnitude,Game.as:blackCoverRate,fade step per frame; sets dead frames per load
+frontend/modules/seedlingDemo/gameClock.js|LOAD_FADE_FRAMES|(module),structural,,,accumulator / loop budget
+frontend/modules/seedlingDemo/gameClock.js|(module)|h13c1acc8|0|0,rule,bound,Game.as:blackCover,blackCover <= 0 gate
+frontend/modules/seedlingDemo/gameClock.js|PICKUP_HELP_DEAD_FRAMES|(module),rule,magnitude,,Sword Help(3) costs one dead frame
+frontend/modules/seedlingDemo/gameClock.js|TIME_RATE|(module),rule,magnitude,Game.as:timeRate,
+frontend/modules/seedlingDemo/gameClock.js|GAME_FPS|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/gameClock.js|DAY_LENGTH_FRAMES|(module),rule,derivation,Game.as:dayLength,160 seconds * GAME_FPS
+frontend/modules/seedlingDemo/gameClock.js|PAGE_BOOT_TIME|(module),rule,derivation,,DAY_LENGTH_FRAMES / 2 (Main.time fresh-save default)
+frontend/modules/seedlingDemo/gameClock.js|trueStartWindowDeadFrames|trueStartWindowDeadFrames,structural,,,harness arm-offset validity bound
+frontend/modules/seedlingDemo/gameClock.js|createGameClock|createGameClock,structural,,,
+frontend/modules/seedlingDemo/gameClock.js|createGameClock|spend,structural,,,
+frontend/modules/seedlingDemo/gameClock.js|createGameClock|adopt,structural,,,
+frontend/modules/seedlingDemo/gameClock.js|createGameClock|frozenFrames,structural,,,
+frontend/modules/seedlingDemo/gameClock.js|createGameClock|deadFrames,structural,,,
+frontend/modules/seedlingDemo/swimSoundClock.js|SWIM_LENGTH_FRAMES|(module),rule,magnitude,,REVIEW: sound length in frames; not cosmetic because the replay re-arms the swim speed boost
+frontend/modules/seedlingDemo/swimSoundClock.js|SWIM_BOOST_BELOW_SECONDS|(module),physics,bound,,Player.as:530 threshold on Sfx.position
+frontend/modules/seedlingDemo/swimSoundClock.js|SWIM_BOOST_SPEED|(module),physics,magnitude,,Player.as:530 addend
+frontend/modules/seedlingDemo/swimSoundClock.js|LOAD_DEAD_FRAMES|(module),rule,magnitude,,room-load fade dead frames (blackCover 1 at -0.05)
+frontend/modules/seedlingDemo/swimSoundClock.js|CEREMONY_FREEZE_FRAMES|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/swimSoundClock.js|createPinnedChannel|createPinnedChannel,structural,,,
+frontend/modules/seedlingDemo/swimSoundClock.js|stepChannel|stepChannel,structural,,,
+frontend/modules/seedlingDemo/swimSoundClock.js|playChannel|playChannel,structural,,,
+frontend/modules/seedlingDemo/swimSoundClock.js|swimSpeedBonus|swimSpeedBonus,structural,,,zero addend (identity)
+frontend/modules/seedlingDemo/swimSoundClock.js|boostedFramesPerPlay|boostedFramesPerPlay,structural,,,
+frontend/modules/seedlingDemo/swimSoundClock.js|swimBonusSeries|swimBonusSeries,structural,,,
+frontend/modules/seedlingDemo/bridges.js|BRIDGE_TIMER_MAX|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/bridges.js|BRIDGE_STATE|(module),rule,sentinel,,Tile.types index for bridge
+frontend/modules/seedlingDemo/bridges.js|ON_SCREEN_RADIUS|(module),rule,bound,,planner on-screen promise radius (camera lag derived)
+frontend/modules/seedlingDemo/bridges.js|bridgeHit|bridgeHit,rule,magnitude,,one decrement per spear hit
+frontend/modules/seedlingDemo/bridges.js|bridgeRender|bridgeRender|0,rule,bound,,timer > 0 arm
+frontend/modules/seedlingDemo/bridges.js|bridgeRender|bridgeRender|1,rule,magnitude,,one decrement per on-screen render
+frontend/modules/seedlingDemo/bridges.js|framesToOpen|framesToOpen,structural,,,loop start and budget
+frontend/modules/seedlingDemo/bridges.js|framesToOpen|h77f45347|1|0,rule,derivation,,BRIDGE_TIMER_MAX - 1 (timer after one hit)
+frontend/modules/seedlingDemo/bridges.js|assertOnScreenThroughout|assertOnScreenThroughout,structural,,,
+frontend/modules/seedlingDemo/bridges.js|TICKS_FROM_PRESS_TO_WALKABLE|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/bridges.js|openingWindow|openingWindow,structural,,,
+frontend/modules/seedlingDemo/breakableRocks.js|TAGS_PER_LEVEL|(module),rule,count,,
+frontend/modules/seedlingDemo/breakableRocks.js|BREAK_ANIM|(module)|4,rule,count,,break anim frames; endAnim removes the rock
+frontend/modules/seedlingDemo/breakableRocks.js|BREAK_ANIM|(module)|20,rule,magnitude,,break anim frameRate gates removal tick
+frontend/modules/seedlingDemo/breakableRocks.js|FP_MAX_ELAPSED|(module),physics,magnitude,,FP.elapsed clamp; drives anim clock gating removal
+frontend/modules/seedlingDemo/breakableRocks.js|animCallbackTick|animCallbackTick,structural,,,Spritemap timer loop transcription; guard and loop budget
+frontend/modules/seedlingDemo/breakableRocks.js|WAIT_AFTER_PRESS_TICKS|(module),rule,magnitude,,leg wait obligation after the press
+frontend/modules/seedlingDemo/breakableRocks.js|outOfBandFlagFor|outOfBandFlagFor,structural,,,input validation
+frontend/modules/seedlingDemo/breakableRocks.js|rockBreaksUnder|rockBreaksUnder,rule,sentinel,,rock type tiers vs ghost sword
+frontend/modules/seedlingDemo/breakableRocks.js|hitRock|hitRock,rule,sentinel,,tag -1 default / rockType 0 default
+frontend/modules/seedlingDemo/breakableRocks.js|hitRock|h8fb253f4|0|0,structural,,,firedTick validation
+frontend/modules/seedlingDemo/chest.js|CHEST|(module)|60,rule,magnitude,Chest.as:openTimerMax,REVIEW: fade after desolidify; removal after it may be presentation only
+frontend/modules/seedlingDemo/chest.js|CHEST|(module)|2,physics,magnitude,Chest.as:m,probe line inset
+frontend/modules/seedlingDemo/chest.js|CHEST|(module)|8,physics,magnitude,,setHitbox origin / half-tile offset
+frontend/modules/seedlingDemo/chest.js|CHEST|(module)|16,physics,magnitude,,setHitbox size
+frontend/modules/seedlingDemo/chest.js|CHEST|(module)|1,rule,count,,Math.random draws per construction
+frontend/modules/seedlingDemo/chest.js|chestProbeLine|chestProbeLine|2,physics,derivation,,right inset 2 * CHEST.m
+frontend/modules/seedlingDemo/chest.js|chestProbeLine|chestProbeLine|1,physics,derivation,,probe row CHEST.box.h + 1
+frontend/modules/seedlingDemo/chest.js|chestStanceBand|chestStanceBand,structural,,,search rows / emptiness check
+frontend/modules/seedlingDemo/chest.js|createChestState|h0bda2f5d|0|0,rule,sentinel,,frame 0 = closed
+frontend/modules/seedlingDemo/chest.js|createChestState|h0bda2f5d|0|1,structural,,,openTimer initial 0
+frontend/modules/seedlingDemo/chest.js|stepChests|stepChests,rule,sentinel,,frame 0 closed / 1 open
+frontend/modules/seedlingDemo/chest.js|stepChests|h486bce16|0|0,rule,bound,,openTimer > 0
+frontend/modules/seedlingDemo/chest.js|stepChests|h32bd46c1|1|0,rule,magnitude,,timerStep decrement
+frontend/modules/seedlingDemo/chest.js|stepChests|h96bb9372|0|0,rule,bound,,openTimer <= 0 -> gone
+frontend/modules/seedlingDemo/chest.js|SEAL_DRAW|(module)|16,rule,count,SealController.as:SEALS,
+frontend/modules/seedlingDemo/chest.js|SEAL_DRAW|(module)|1,rule,count,,draws per rejection iteration
+frontend/modules/seedlingDemo/chest.js|SEAL_DRAW|expectedDraws|0,structural,,,k validation
+frontend/modules/seedlingDemo/chest.js|SEAL_DRAW|expectedDraws|16,rule,derivation,,SealController.SEALS respelled in 16/(16-k) expectation
+frontend/modules/seedlingDemo/dialogue.js|SPECIAL_TIMER_MAX|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/dialogue.js|PICKUP_TEXT_SPEED|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/dialogue.js|PICKUP_LINE_LENGTH|(module),rule,bound,,REVIEW: text layout but the wrap changes page .length which gates page advance and ceremony ticks
+frontend/modules/seedlingDemo/dialogue.js|INITIAL_FRAMES_THIS_CHARACTER|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/dialogue.js|endlineText|endlineText,structural,,,string index arithmetic
+frontend/modules/seedlingDemo/dialogue.js|pagesOf|split,structural,,,string index arithmetic
+frontend/modules/seedlingDemo/dialogue.js|beginDialogue|beginDialogue,structural,,,initial page/char/frame counters
+frontend/modules/seedlingDemo/dialogue.js|stepDialogue|stepDialogue,structural,,,character counter reset
+frontend/modules/seedlingDemo/breakableRocks.js|outOfBandFlagFor|ha3b51314|0|0,rule,sentinel,,tag < 0 is out of band
+frontend/modules/seedlingDemo/dialogue.js|stepDialogue|h06cef2a7|1|0,rule,derivation,,page.length - 1 per NPC.talk (release does not finish the page)
+frontend/modules/seedlingDemo/dialogue.js|stepDialogue|hdcbc59fe|0|0,rule,bound,Game.as:framesThisCharacter,framesThisCharacter > 0 countdown gate
+frontend/modules/seedlingDemo/dialogue.js|PICKUP_CEREMONY_BY_KEYTYPE|(module),rule,sentinel,,bosskey keyType 0
+frontend/modules/seedlingDemo/dialogue.js|autoAdvanceArrivals|autoAdvanceArrivals,structural,,,
+frontend/modules/seedlingDemo/dialogue.js|NPC_LINE_LENGTH_DEFAULT|(module),rule,bound,NPCs/NPC.as:_lineLength,REVIEW: text layout but wrap length decides page lengths and so dialogue ticks
+frontend/modules/seedlingDemo/dialogue.js|PLACED_NPC_TALK|(module),rule,bound,,REVIEW: Statue _lineLength 34; wrap decides dialogue ticks
+frontend/modules/seedlingDemo/finalBossRng.js|ROCK_FREQUENCY|(module),rule,magnitude,,1-in-6 rock spawn roll
+frontend/modules/seedlingDemo/finalBossRng.js|GRENADE_FREQUENCY|(module),rule,magnitude,,1-in-40 grenade roll
+frontend/modules/seedlingDemo/finalBossRng.js|ROCK_STEPS_AHEAD|(module),rule,magnitude,,rock aim offset in player-velocity steps (negative = behind)
+frontend/modules/seedlingDemo/finalBossRng.js|ROCK_RADIUS|(module),rule,bound,,rock spawn scatter radius
+frontend/modules/seedlingDemo/finalBossRng.js|DEATH_ROCKS|(module),rule,count,,
+frontend/modules/seedlingDemo/finalBossRng.js|ROCK_SCALE_BASE|(module),physics,magnitude,,rock scale base; scale sets the hitbox
+frontend/modules/seedlingDemo/finalBossRng.js|ROCK_SCALE_SPAN|(module),physics,magnitude,,rock scale span; scale sets the hitbox
+frontend/modules/seedlingDemo/finalBossRng.js|ENEMY_COINS_BASE|(module),rule,magnitude,,Enemy.as:30 coin drop base
+frontend/modules/seedlingDemo/finalBossRng.js|ENEMY_COINS_SPAN|(module),rule,magnitude,,Enemy.as:30 coin drop span
+frontend/modules/seedlingDemo/finalBossRng.js|OWL_DRAW_SITES|(module),rule,count,,Math.random draws per site
+frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.constructor,structural,,,per-site counter init
+frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream._draw,structural,,,
+frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.spawnX,rule,derivation,,ROCK_RADIUS * 2 scatter width
+frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.spawnY,rule,derivation,,ROCK_RADIUS * 2 scatter width
+frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.deathRockX,rule,magnitude,,FinalBoss.as:216 death rock x = 120 + r*8 - 4
+frontend/modules/seedlingDemo/finalBossRng.js|assertOwlStreamPremises|assertOwlStreamPremises,structural,,,
+frontend/modules/seedlingDemo/seedlingDamageSites.js|*|*,structural,,,generated AS3 source line citations
+frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.constructor|h9bbf687e|0|0,rule,sentinel,,seed 0 = build boot seed
+frontend/modules/seedlingDemo/playerDamage.js|PLAYER_DAMAGE|(module)|20,rule,magnitude,Player.as:hitsTimerMax,i-frame window
+frontend/modules/seedlingDemo/playerDamage.js|PLAYER_DAMAGE|(module)|10,cosmetic,,Player.as:hitsTimerInt,flash period only
+frontend/modules/seedlingDemo/playerDamage.js|PLAYER_DAMAGE|(module)|3,rule,count,,
+frontend/modules/seedlingDemo/playerDamage.js|KNOCKBACK_COMPARATORS|(module),physics,bound,,knockback axis threshold 0.5 (Player.as:1500-1504)
+frontend/modules/seedlingDemo/playerDamage.js|createPlayerDamage|createPlayerDamage,structural,,,fresh hits/hitsTimer
+frontend/modules/seedlingDemo/playerDamage.js|createPlayerDamage|createPlayerDamage|-1,rule,sentinel,Player.as:directionFace,-1 = not set
+frontend/modules/seedlingDemo/playerDamage.js|knockbackDelta|knockbackDelta,structural,,,normalisation and zero deltas
+frontend/modules/seedlingDemo/playerDamage.js|playerHit|h6a58f89e|0|0,physics,magnitude,,default force 0 (no knockback)
+frontend/modules/seedlingDemo/playerDamage.js|playerHit|h6a58f89e|1|0,rule,magnitude,,default damage 1
+frontend/modules/seedlingDemo/playerDamage.js|playerHit|h0b03ed67|0|0,rule,bound,,hitsTimer > 0 refuses the hit
+frontend/modules/seedlingDemo/playerDamage.js|playerHit|playerHit,structural,,,zero knockback / zero shake on refusal
+frontend/modules/seedlingDemo/playerDamage.js|playerHit|nothing,structural,,,
+frontend/modules/seedlingDemo/playerDamage.js|stepPlayerDamage|stepPlayerDamage|0,rule,bound,,hitsTimer > 0 tests
+frontend/modules/seedlingDemo/playerDamage.js|stepPlayerDamage|stepPlayerDamage|1,rule,magnitude,,one decrement per tick
+frontend/modules/seedlingDemo/playerDamage.js|stepPlayerDamage|stepPlayerDamage|-1,rule,sentinel,Player.as:directionFace,-1 = not set
+frontend/modules/seedlingDemo/playerDamage.js|canSteer|canSteer,rule,bound,,hitsTimer <= 0 gates steering
+frontend/modules/seedlingDemo/playerDamage.js|iFrameSteeringSpan|iFrameSteeringSpan,structural,,,synthetic probe hit and span accumulator
+frontend/modules/seedlingDemo/chasers.js|FP_ELAPSED|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/chasers.js|FRICTION|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/chasers.js|VELOCITY_EPSILON|(module),physics,bound,,Mobile.friction dead zone (Mobile.as:76-80)
+frontend/modules/seedlingDemo/chasers.js|animTicks|animTicks,structural,,,
+frontend/modules/seedlingDemo/chasers.js|createSpriteAnim|createSpriteAnim,structural,,,
+frontend/modules/seedlingDemo/chasers.js|stepSpriteAnim|stepSpriteAnim,structural,,,Spritemap timer loop transcription
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|0,physics,magnitude,,targetOffset leash centre
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|4,rule,count,,Bob die anim frames; endAnim gates totalEnemies
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|5,rule,magnitude,,Bob die anim rate
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|8,rule,count,,Jellyfish die anim frames
+frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|7,rule,magnitude,,Jellyfish die anim rate
+frontend/modules/seedlingDemo/chasers.js|ENEMY_TERRAIN_DESTROYS|(module),rule,sentinel,,tile types water 1 / lava 17
+frontend/modules/seedlingDemo/chasers.js|ENEMY_PIT_TILE|(module),rule,sentinel,,
+frontend/modules/seedlingDemo/chasers.js|normalize|normalize,structural,,,
+frontend/modules/seedlingDemo/chasers.js|applyFriction|applyFriction,structural,,,zero floor / zeroed components
+frontend/modules/seedlingDemo/chasers.js|sign|sign,physics,sign,,FP.sign
+frontend/modules/seedlingDemo/chasers.js|killWindowTicks|killWindowTicks,rule,derivation,,1-tick hit-test lag + deathTicks(tag)
+frontend/modules/seedlingDemo/sealCeremony.js|SEAL_PIECE|(module)|4,physics,magnitude,,setHitbox(4 4 2 2) size
+frontend/modules/seedlingDemo/sealCeremony.js|SEAL_PIECE|(module)|2,physics,magnitude,,setHitbox origin
+frontend/modules/seedlingDemo/sealCeremony.js|(module)|h7850c0ee|2|0,physics,bound,Pickups/Pickup.as:minSpeedToPlayer,attraction speed cap
+frontend/modules/seedlingDemo/sealCeremony.js|SEAL_PIECE|(module)|24,physics,bound,Pickups/Pickup.as:attractDistance,
+frontend/modules/seedlingDemo/sealCeremony.js|SEAL_PIECE|(module)|20,physics,magnitude,Pickups/Pickup.as:motionDampener,
+frontend/modules/seedlingDemo/sealCeremony.js|SEAL_PIECE|(module)|0.3,physics,magnitude,Pickups/Pickup.as:minAttraction,attraction floor
+frontend/modules/seedlingDemo/sealCeremony.js|SEAL_PIECE|(module)|150,rule,magnitude,Pickups/Pickup.as:specialTimerMax,
+frontend/modules/seedlingDemo/sealCeremony.js|SEAL_PIECE|(module)|0.25,physics,magnitude,Mobile.as:DEFAULT_FRICTION,
+frontend/modules/seedlingDemo/sealCeremony.js|(module)|h131aa566|60|0,rule,magnitude,SealController.as:waitTime,overlay hold (freeze)
+frontend/modules/seedlingDemo/sealCeremony.js|(module)|hc30c74c7|60|0,rule,magnitude,SealController.as:alphaSteps,overlay fade steps; gate the freeze length
+frontend/modules/seedlingDemo/sealCeremony.js|sealControllerTicks|sealControllerTicks,structural,,,accumulator and loop budget
+frontend/modules/seedlingDemo/sealCeremony.js|sealControllerTicks|h53e7beae|0|0,rule,bound,,waitTime > 0
+frontend/modules/seedlingDemo/sealCeremony.js|sealControllerTicks|hc270d5df|1|0,rule,magnitude,,waitTime decrement
+frontend/modules/seedlingDemo/sealCeremony.js|sealControllerTicks|h33743bca|2|0,rule,derivation,,alphaSteps * 2 (third phase end)
+frontend/modules/seedlingDemo/sealCeremony.js|sealControllerTicks|he26f9845|1|0,rule,magnitude,,alphaStep increment
+frontend/modules/seedlingDemo/sealCeremony.js|CEREMONY_DEAD_FRAMES|(module),rule,magnitude,Pickups/Pickup.as:specialTimerMax,measured phase-A dead frames
+frontend/modules/seedlingDemo/sealCeremony.js|createSealPiece|createSealPiece,structural,,,zero initial velocity
+frontend/modules/seedlingDemo/sealCeremony.js|stepSealPiece|stepSealPiece,structural,,,zero-length test / squares / zero floors
+frontend/modules/seedlingDemo/sealCeremony.js|stepSealPiece|stepSealPiece|0.05,physics,bound,,Mobile.friction dead zone
+frontend/modules/seedlingDemo/sealCeremony.js|sweep|sweep,structural,,,
+frontend/modules/seedlingDemo/sealCeremony.js|sweep|h10ec1ad4|1|0,physics,magnitude,,moveX/moveY one-pixel step
+frontend/modules/seedlingDemo/sealCeremony.js|sealApproachTicks|sealApproachTicks,structural,,,search budget / loop start
+frontend/modules/seedlingDemo/fallRock.js|FALL_ROCK|(module)|8,physics,magnitude,,setHitbox origin / half-tile offset
+frontend/modules/seedlingDemo/fallRock.js|FALL_ROCK|(module)|16,physics,magnitude,,setHitbox size
+frontend/modules/seedlingDemo/fallRock.js|FALL_ROCK|(module)|-16,physics,magnitude,,parked y the fall starts from (FallRock.as:41)
+frontend/modules/seedlingDemo/fallRock.js|FALL_ROCK|(module)|0.6,physics,magnitude,Scenery/FallRock.as:fallRate,
+frontend/modules/seedlingDemo/fallRock.js|FALL_ROCK|(module)|60,rule,magnitude,Scenery/FallRock.as:waitToFallTimerMax,
+frontend/modules/seedlingDemo/fallRock.js|FALL_ROCK|(module)|90,rule,magnitude,Scenery/FallRock.as:cameraTimerMax,holds Game.freezeObjects
+frontend/modules/seedlingDemo/fallRock.js|createFallRock|createFallRock,structural,,,initial vy / timers
+frontend/modules/seedlingDemo/fallRock.js|publishActivate|publishActivate,rule,sentinel,,tag >= 0 persists
+frontend/modules/seedlingDemo/fallRock.js|stepFallRock|h0fc0d9e7|0|0,rule,sentinel,,tag < 0 = always cleared
+frontend/modules/seedlingDemo/fallRock.js|stepFallRock|hf72d3ebe|0|0,structural,,,shake accumulator
+frontend/modules/seedlingDemo/fallRock.js|stepFallRock|stepFallRock|2,cosmetic,,,camera target centring
+frontend/modules/seedlingDemo/fallRock.js|stepFallRock|he4742a00|0|0,rule,bound,,waitToFallTimer > 0
+frontend/modules/seedlingDemo/fallRock.js|stepFallRock|he607a9f3|1|0,rule,magnitude,,wait decrement
+frontend/modules/seedlingDemo/fallRock.js|stepFallRock|h0d53d36f|0|0,rule,bound,,cameraTimer > 0
+frontend/modules/seedlingDemo/fallRock.js|stepFallRock|h6224c39f|1|0,rule,magnitude,,camera hold decrement
+frontend/modules/seedlingDemo/fallRock.js|stepFallRock|h1b744a32|0|0,rule,bound,,cameraTimer === 0 -> unfreeze
+frontend/modules/seedlingDemo/fallRock.js|stepFallRock|h78a2e296|-1|0,rule,sentinel,,cameraTimer -1 = released
+frontend/modules/seedlingDemo/fallRock.js|PLAYER_SNAP|(module),physics,magnitude,,player hitbox originY/height for the snap
+frontend/modules/seedlingDemo/fallRock.js|fallRockFreezeTicks|fallRockFreezeTicks,structural,,,accumulators / guard budget
+frontend/modules/seedlingDemo/fallRock.js|fallRockFreezeTicks|h7e8282d2|0|0,rule,bound,,waitToFallTimer > 0
+frontend/modules/seedlingDemo/fallRock.js|fallRockFreezeTicks|h4bd65f0b|1|0,rule,magnitude,,wait decrement
+frontend/modules/seedlingDemo/fallRock.js|fallRockFreezeTicks|he72af3c3|1|0,rule,magnitude,,release call
+frontend/modules/seedlingDemo/fallRock.js|fallRockFreezeTicks|he72af3c3|1|1,rule,derivation,,total = wait + fall + cameraTimerMax + release 1
+frontend/modules/seedlingDemo/magicalLock.js|MAGICAL_LOCK_TYPES|(module),rule,sentinel,,lock _type codes
+frontend/modules/seedlingDemo/magicalLock.js|WAND_SHOT_TYPES|(module),rule,sentinel,,WandShot shotType codes
+frontend/modules/seedlingDemo/magicalLock.js|MAGICAL_LOCK_GEOMETRY|(module),physics,magnitude,,setHitbox(16 16 8 8) + half-tile offset
+frontend/modules/seedlingDemo/magicalLock.js|MAGICAL_LOCK_DESTROY_ANIM|(module),cosmetic,,,sprite frame indices of the destroy anim
+frontend/modules/seedlingDemo/magicalLock.js|(module)|ha8e47924|7|0,rule,count,,destroy anim frame count; animEnd removes the lock
+frontend/modules/seedlingDemo/magicalLock.js|MAGICAL_LOCK_DESTROY_ANIM|(module)|15,rule,magnitude,,destroy anim frameRate gates removal
+frontend/modules/seedlingDemo/magicalLock.js|deriveDestroyUpdates|deriveDestroyUpdates,structural,,,Spritemap timer loop transcription
+frontend/modules/seedlingDemo/magicalLock.js|MAGICAL_LOCK_CALLBACK_TICK_OFFSET|(module),rule,derivation,,MAGICAL_LOCK_DESTROY_UPDATES - 1 (update 1 is the hit tick)
+frontend/modules/seedlingDemo/magicalLock.js|magicalLockOpens|magicalLockOpens,rule,sentinel,,lock/shot type codes 0/1
+frontend/modules/seedlingDemo/magicalLock.js|MAGICAL_LOCK_MATRIX|(module),rule,sentinel,,lock/shot type codes
+frontend/modules/seedlingDemo/magicalLock.js|createMagicalLock|createMagicalLock,rule,sentinel,,tag -1 default; lockType codes
+frontend/modules/seedlingDemo/iceTurretBlast.js|fpSign|fpSign,physics,sign,,FP.sign
+frontend/modules/seedlingDemo/iceTurretBlast.js|ICE_TURRET_BLAST|(module)|4,physics,magnitude,,setHitbox(4 4 2 2) size
+frontend/modules/seedlingDemo/iceTurretBlast.js|ICE_TURRET_BLAST|(module)|2,physics,magnitude,,setHitbox origin
+frontend/modules/seedlingDemo/iceTurretBlast.js|ICE_TURRET_BLAST|(module)|15,rule,magnitude,,Player.freeze(freezeTime) ticks
+frontend/modules/seedlingDemo/iceTurretBlast.js|ICE_TURRET_BLAST|(module)|0,physics,magnitude,,f = 0 friction
+frontend/modules/seedlingDemo/iceTurretBlast.js|ICE_TURRET_BLAST|(module)|6,physics,magnitude,Enemies/IceTurret.as:shotSpeed,
+frontend/modules/seedlingDemo/iceTurretBlast.js|ICE_TURRET_BLAST|(module)|12,physics,magnitude,Enemies/IceTurret.as:distBtwnShots,perpendicular spawn offset
+frontend/modules/seedlingDemo/iceTurretBlast.js|ICE_TURRET_BLAST|(module)|3,rule,count,,blasts per volley
+frontend/modules/seedlingDemo/iceTurretBlast.js|FREEZE_SPAN|(module),rule,derivation,,ICE_TURRET_BLAST.freezeTicks - 1 refused ticks
+frontend/modules/seedlingDemo/iceTurretBlast.js|BLAST_DAMAGE|(module)|0,physics,magnitude,,zero knockback force / displacement
+frontend/modules/seedlingDemo/iceTurretBlast.js|BLAST_DAMAGE|(module)|1,rule,magnitude,,damage per blast
+frontend/modules/seedlingDemo/iceTurretBlast.js|spawnVolley|spawnVolley,structural,,,degree-radian conversion and perpendicular (PI/2)
+frontend/modules/seedlingDemo/iceTurretBlast.js|moveAxis|moveAxis,structural,,,
+frontend/modules/seedlingDemo/iceTurretBlast.js|moveAxis|h589d4831|1|0,physics,magnitude,,one-pixel move step
+frontend/modules/seedlingDemo/iceTurretBlast.js|blastFriction|blastFriction|0.05,physics,bound,,Mobile.friction dead zone
+frontend/modules/seedlingDemo/iceTurretBlast.js|blastFriction|blastFriction|0,structural,,,zeroed component
+frontend/modules/seedlingDemo/iceTurretBlast.js|stepIceTurretBlast|stepIceTurretBlast,structural,,,
+frontend/modules/seedlingDemo/iceTurretBlast.js|blastIsSpent|blastIsSpent,structural,,,velocity sign tests for off-reach pruning
+frontend/modules/seedlingDemo/iceTurretBlast.js|BLAST_PLAN|(module),rule,magnitude,,volley cadence ticks (IceTurret.as)
+frontend/modules/seedlingDemo/playerPhysicsV1.js|DEFAULT_FRICTION|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|WATER_FRICTION|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|WALK_SPEED|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|STAIR_SPEED|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|WATER_SPEED|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|SLIDING_SPEED|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|SLIDING_FRICTION|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|MOVE_SPEEDS|(module),physics,derivation,Player.as:moveSpeeds,WATER_SPEED / 2 for the waterfall row
+frontend/modules/seedlingDemo/playerPhysicsV1.js|HITBOX|(module),physics,magnitude,,normalHitbox setHitbox(4 5 2 2)
+frontend/modules/seedlingDemo/playerPhysicsV1.js|SPAWN_OFFSET|(module),physics,derivation,,TILE.w / 2 and TILE.h / 2 spawn centring (Player.as:357)
+frontend/modules/seedlingDemo/playerPhysicsV1.js|LEVEL0_WORLD|(module),physics,bound,,level 0 pixel size for the position clamp
+frontend/modules/seedlingDemo/playerPhysicsV1.js|CHECK_OFFSET_Y|(module),physics,derivation,Player.as:checkOffsetY,-HITBOX.originY + HITBOX.height - 2
+frontend/modules/seedlingDemo/playerPhysicsV1.js|pointNormalize|pointNormalize,structural,,,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|sign|sign,physics,sign,,FP.sign
+frontend/modules/seedlingDemo/playerPhysicsV1.js|applyFriction|applyFriction,structural,,,zero floor / zeroed components
+frontend/modules/seedlingDemo/playerPhysicsV1.js|applyFriction|applyFriction|0.05,physics,bound,,Mobile.friction dead zone
+frontend/modules/seedlingDemo/playerPhysicsV1.js|knockbackImpulse|knockbackImpulse,structural,,,unit normalisation / zero impulse
+frontend/modules/seedlingDemo/playerPhysicsV1.js|knockbackImpulse|knockbackImpulse|0.5,physics,bound,,knockback axis threshold
+frontend/modules/seedlingDemo/playerPhysicsV1.js|sweepAxis|sweepAxis|0,structural,,,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|sweepAxis|sweepAxis|1,physics,magnitude,,one-pixel move step
+frontend/modules/seedlingDemo/playerPhysicsV1.js|groundTerrain|groundTerrain,rule,sentinel,,terrain state 0 (ground) stub
+frontend/modules/seedlingDemo/playerPhysicsV1.js|step|step,structural,,,
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPRITE|(module)|32,physics,magnitude,,fire collide rect size
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPRITE|(module)|16,physics,magnitude,,centerOO origin
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPRITE|(module)|9,rule,count,,fire anim frames; fireEnd wrap ends the window
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPRITE|(module)|25,rule,magnitude,,fire anim frameRate
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_HIT_FRAME_START|(module),rule,bound,,
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_HIT_FRAME_END|(module),rule,bound,,
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_FORCE|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_DAMAGE|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_METER|(module)|180,cosmetic,,Player.as:fireTimerMax,meter read only by Player.render (metered: false)
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_METER|(module)|60,cosmetic,,Player.as:fireIncrement,meter read only by Player.render
+frontend/modules/seedlingDemo/fireVerb.js|animTimeline|animTimeline,structural,,,Spritemap loop transcription / tick budget
+frontend/modules/seedlingDemo/fireVerb.js|deriveWindow|deriveWindow,structural,,,
+frontend/modules/seedlingDemo/fireVerb.js|deriveWindow|h0bf195ed|1|0,rule,derivation,,wrapUpdate - 1 = fireEnd tick
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_PRESS_CADENCE|(module),rule,derivation,,FIRE_WINDOW.endTick + 1
+frontend/modules/seedlingDemo/fireVerb.js|distanceRects|distanceRects,structural,,,
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_RADIUS|(module),physics,derivation,,FIRE_SPRITE.w / 2 corner-cut threshold
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_ON_ENEMY|(module),rule,magnitude,,fire damage on enemies is 0
+frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPAN_TICKS|(module),structural,,,tape press span (edge + release)
+frontend/modules/seedlingDemo/fireVerb.js|firePress|firePress,structural,,,
+frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|1,rule,magnitude,Enemies/Enemy.as:damage,
+frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|0,structural,,,fresh hits / hitsTimer counters
+frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|3,rule,count,Enemies/Enemy.as:hitsMax,
+frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|30,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,enemy i-frames
+frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|10,cosmetic,,,colour-flash modulus
+frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|-1,physics,sentinel,Enemies/Enemy.as:maxForce,-1 = no force cap
+frontend/modules/seedlingDemo/enemyDamage.js|MOBILE_DEATH_FADE|(module),rule,magnitude,,death fade alpha step / start alpha; the fade gates removal and totalEnemies
+frontend/modules/seedlingDemo/enemyDamage.js|PIT_FADE|(module),rule,magnitude,,pit descent fade start alpha / step
+frontend/modules/seedlingDemo/enemyDamage.js|PIT_FADE|(module)|0.05,rule,magnitude,Enemies/Enemy.as:fallAlphaSpeed,pit descent fade step
+frontend/modules/seedlingDemo/enemyDamage.js|fadeTicks|fadeTicks,structural,,,loop budget and Image.alpha clamp
+frontend/modules/seedlingDemo/enemyDamage.js|fadeTicks|hdb175213|0|0,rule,bound,,alpha <= 0 removes
+frontend/modules/seedlingDemo/enemyDamage.js|removalTicksAfterHit|removalTicksAfterHit,structural,,,
+frontend/modules/seedlingDemo/enemyDamage.js|createEnemyDamage|createEnemyDamage,rule,magnitude,,alpha starts at 1 (fade removal)
+frontend/modules/seedlingDemo/enemyDamage.js|enemyHit|hd2474730|1|0,rule,magnitude,,default damage d = 1
+frontend/modules/seedlingDemo/enemyDamage.js|enemyHit|hd2474730|0|0,physics,magnitude,,default force f = 0
+frontend/modules/seedlingDemo/enemyDamage.js|enemyHit|h7ed570c5|0|0,physics,sentinel,,maxForce >= 0 means a cap is set
+frontend/modules/seedlingDemo/enemyDamage.js|enemyHit|hd7be2fa7|0|0,rule,bound,,hitsTimer <= 0 gate
+frontend/modules/seedlingDemo/enemyDamage.js|enemyHitUpdate|enemyHitUpdate|0,rule,bound,,hitsTimer > 0
+frontend/modules/seedlingDemo/enemyDamage.js|enemyHitUpdate|enemyHitUpdate|1,rule,magnitude,,hitsTimer decrement
+frontend/modules/seedlingDemo/enemyDamage.js|mobileDeath|mobileDeath,structural,,,Image.alpha clamp
+frontend/modules/seedlingDemo/enemyDamage.js|mobileDeath|h531ac362|0|0,rule,bound,,alpha <= 0 removes
+frontend/modules/seedlingDemo/enemyDamage.js|totalEnemiesOf|totalEnemiesOf,structural,,,
+frontend/modules/seedlingDemo/enemyDamage.js|killLockLedger|killLockLedger,structural,,,empty-list tests
+frontend/modules/seedlingDemo/enemyDamage.js|killLockLedger|h6b6ed088|0|0,rule,bound,,totalEnemies zero opens kill locks
+frontend/modules/seedlingDemo/enemyDamage.js|killLockLedger|h87c2cbfa|0|0,rule,bound,,totalEnemies zero opens kill locks
+frontend/modules/seedlingDemo/pulser.js|FP_MAX_ELAPSED|(module),physics,magnitude,net/flashpunk/Engine.as:MAX_ELAPSED,FP.elapsed clamp driving the pulse anim clock
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|10,physics,bound,Puzzlements/Pulser.as:radiusMin,ring start radius; sets pulse length
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|28,physics,bound,Puzzlements/Pulser.as:radiusMax,ring end radius; sets pulse length
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|22,physics,bound,Puzzlements/Pulser.as:radiusHit,fixed hit radius
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|0.8,physics,magnitude,Puzzlements/Pulser.as:radiusRate,ring growth per tick
+frontend/modules/seedlingDemo/pulser.js|(module)|h7dde6f98|20|0,rule,magnitude,,pulse anim frameRate; the wrap ends the pulse anim
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|6,physics,magnitude,Puzzlements/Pulser.as:force,
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|1,rule,magnitude,Puzzlements/Pulser.as:damage,
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|8,physics,magnitude,,setHitbox origin / half-tile offset
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|16,physics,magnitude,,setHitbox size
+frontend/modules/seedlingDemo/pulser.js|(module)|hf8b80c79|0|0,rule,count,,REVIEW: sprite frame indices but frames.length is the anim frame count that gates the wrap
+frontend/modules/seedlingDemo/pulser.js|(module)|hf8b80c79|1|0,rule,count,,REVIEW: sprite frame index; frames.length gates the wrap
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|2,rule,count,,REVIEW: sprite frame index; frames.length gates the wrap
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|3,rule,count,,REVIEW: sprite frame index; frames.length gates the wrap
+frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|4,rule,count,,REVIEW: sprite frame index; frames.length gates the wrap
+frontend/modules/seedlingDemo/pulser.js|animGateTicks|animGateTicks,structural,,,Spritemap loop transcription / budget
+frontend/modules/seedlingDemo/pulser.js|pulseTicks|pulseTicks,structural,,,
+frontend/modules/seedlingDemo/pulser.js|createPulser|h039692bb|0|0,rule,magnitude,,pulseTimer 0 = fires on first active tick
+frontend/modules/seedlingDemo/pulser.js|createPulser|h039692bb|0|1,structural,,,animTick counter
+frontend/modules/seedlingDemo/pulser.js|stepPulser|stepPulser,structural,,,animTick counter reset/increment
+frontend/modules/seedlingDemo/pulser.js|stepPulser|hff87227d|0|0,rule,bound,,pulseTimer > 0
+frontend/modules/seedlingDemo/pulser.js|stepPulser|h16938723|1|0,rule,magnitude,,pulseTimer decrement
+frontend/modules/seedlingDemo/pulser.js|stepPulser|h6127a716|0|0,rule,bound,,pulseTimer === 0 starts the pulse
+frontend/modules/seedlingDemo/pulser.js|stepPulser|stepPulser|-1,rule,sentinel,,pulseTimer -1 = pulsing / idle
+frontend/modules/seedlingDemo/pulser.js|distanceRectPoint|distanceRectPoint,structural,,,
+frontend/modules/seedlingDemo/pulser.js|(module)|h42f319fa|20|0,rule,magnitude,Puzzlements/Pulser.as:pulseTimerMax,pause between pulses
+frontend/modules/seedlingDemo/presses.js|SWORD_DAMAGE|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/presses.js|DARK_SWORD_DAMAGE|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/presses.js|SPEAR_DAMAGE|(module),rule,magnitude,,
+frontend/modules/seedlingDemo/presses.js|SLASH_REACH|(module),physics,bound,,slash distanceRectPoint reach gate (sprite width * scaleX)
+frontend/modules/seedlingDemo/presses.js|SPEAR_LENGTH|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/presses.js|SPEAR_THICK|(module),physics,magnitude,,
+frontend/modules/seedlingDemo/presses.js|ENEMY_HITS_MAX|(module),rule,count,Enemies/Enemy.as:hitsMax,
+frontend/modules/seedlingDemo/presses.js|ENEMY_HITS_TIMER|(module),rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
+frontend/modules/seedlingDemo/presses.js|SLASH_HIT_TICKS|(module),rule,count,,hit tests per slash press (T+1..T+5)
+frontend/modules/seedlingDemo/presses.js|SPEAR_HIT_TICKS_UNMODELLED|(module),rule,magnitude,,spear hit tick offsets (spearDelayMax 1); documented as unmodelled
+frontend/modules/seedlingDemo/presses.js|swordWindowStep|swordWindowStep,structural,,,repeat loop start / emptiness tests
+frontend/modules/seedlingDemo/presses.js|LIGHTPOLE_HITS_TIMER_MAX|(module),rule,magnitude,Scenery/LightPole.as:hitsTimerMax,
+frontend/modules/seedlingDemo/presses.js|RIGHT|(module),rule,sentinel,,direction code
+frontend/modules/seedlingDemo/presses.js|UP|(module),rule,sentinel,,direction code
+frontend/modules/seedlingDemo/presses.js|LEFT|(module),rule,sentinel,,direction code
+frontend/modules/seedlingDemo/presses.js|DOWN|(module),rule,sentinel,-,direction code; auto anchor suppressed: Player.as:direction is the initial-facing field (default 3) not the code table
+frontend/modules/seedlingDemo/presses.js|spearOrigin|spearOrigin,physics,sign,,direction-parity arithmetic folding spearOffset (-1 2)
+frontend/modules/seedlingDemo/presses.js|spearRect|spearRect,physics,derivation,,SPEAR_THICK / 2 (+ 1 on cases 0 and 1) rect offsets
+frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|16,physics,magnitude,,sprSlash frame width
+frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|32,physics,magnitude,,sprSlash frame height
+frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|2,physics,derivation,,h / 2 centres the slash collision rect
+frontend/modules/seedlingDemo/presses.js|distanceRectPoint|distanceRectPoint,structural,,,
+frontend/modules/seedlingDemo/presses.js|fireRespondersIn|fireRespondersIn,structural,,,absent origin defaults to 0
+frontend/modules/seedlingDemo/playerPhysicsV1.js|(module)|h52b460b3|16|0,physics,magnitude,Scenery/Tile.as:w,
+frontend/modules/seedlingDemo/playerPhysicsV1.js|(module)|hb899ef41|16|0,physics,magnitude,Scenery/Tile.as:h,
+frontend/modules/seedlingDemo/fallRock.js|(module)|h6195d364|30|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
+frontend/modules/seedlingDemo/iceTurretBlast.js|(module)|h774b1553|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
+frontend/modules/seedlingDemo/playerDamage.js|(module)|h9d8ec539|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
+frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.jiggle|h9b54b306|2|0,rule,derivation,,REVIEW: shake / 2 half-amplitude of the Owl jiggle; unified with camera.js stepCameraJiggled
+frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.jiggle|h40d304c7|2|0,rule,derivation,,REVIEW: shake / 2 half-amplitude of the Owl jiggle; unified with camera.js stepCameraJiggled
