@@ -21,7 +21,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    buildTable, census, compareToTable, CORE_FOUR, groupReads, staticDrift, surfaceA,
+    buildTable, census, compareToTable, CORE_FOUR, DOOR, groupReads, staticDrift, surfaceA,
 } from './seedlingSolverSurface.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -38,6 +38,9 @@ function printTables(c) {
     console.log(`simulation: closure of levelRun.js — ${c.simulation.length} files, `
         + `${c.simulation.reduce((a, f) => a + lineCount(f), 0)} lines`);
     console.log(`family (${c.family.length}): ${c.family.map(base).join(' ')}`);
+    const viaDoor = c.imports.filter((i) => i.door).length;
+    console.log(`import door ${base(DOOR)}: ${c.door.exports.size} exports; ${viaDoor} of ${c.imports.length} `
+        + `family import specifiers go through it; ${c.door.bypass.length} bypass, ${c.door.unused.length} unused`);
     const kinds = {};
     for (const m of c.runObject.members) kinds[m.kind] = (kinds[m.kind] ?? 0) + 1;
     console.log(`run object: ${c.runObject.members.length} properties ${JSON.stringify(kinds)} `
@@ -100,7 +103,9 @@ function main() {
         for (const d of drift) console.log(`RED drift: ${d.key} table ${JSON.stringify(d.table)} fresh ${JSON.stringify(d.fresh)}`);
         for (const r of un) console.log(`RED unclassified: ${r.surface}:${r.name}`);
         if (cmp.family) console.log(`RED family: closure ${cmp.family.closure.join(' ')} ≠ table ${cmp.family.table.join(' ')}`);
-        const red = cmp.unlisted.length + cmp.retired.length + drift.length + un.length + (cmp.family ? 1 : 0);
+        for (const d of cmp.door) console.log(`RED door: ${d.at} ${d.why}`);
+        const red = cmp.unlisted.length + cmp.retired.length + drift.length + un.length + (cmp.family ? 1 : 0)
+            + cmp.door.length;
         console.log(red ? `RED: ${red} finding(s) — run --write, then classify` : `GREEN: ${previous.rows.length} rows match a fresh census`);
         process.exit(red ? 1 : 0);
     }

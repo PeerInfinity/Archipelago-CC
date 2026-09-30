@@ -22,7 +22,13 @@
  *     `const w = run.world`, or a parameter `run.world` was passed into).
  *     `run.level` is a NUMBER (the current level id), so it has no members;
  *   - `import` surface: every named symbol a family file imports from a
- *     simulation module.
+ *     simulation module — through the import door `solverView.js`, whose
+ *     `export { … } from` table resolves each name to the module that
+ *     defines it, so a row's `module` is the simulation module, never the door.
+ *
+ * And the door's two rules: a family file imports a `seedlingDemo` module
+ * only if it is another family file or the door; the door exports only what
+ * some family file imports, and pulls in no family file.
  *
  * And what it CANNOT see, reported rather than guessed: computed access
  * (`run[k]`), destructuring of a tracked value, a tracked value stored into
@@ -35,6 +41,13 @@ import path from 'node:path';
 export const DIR = 'frontend/modules/seedlingDemo';
 export const SIM_ENTRY = `${DIR}/levelRun.js`;
 export const FAMILY_ENTRIES = [`${DIR}/solverBot.js`, `${DIR}/director.js`];
+/**
+ * The family's ONE import door (engine-prep C2): a family file imports a
+ * simulation symbol from here, never from its defining module. It is not a
+ * family file — it holds no solver code — so it is taken out of the family
+ * closure, and an import through it is resolved to the module it re-exports.
+ */
+export const DOOR = `${DIR}/solverView.js`;
 /** The four files the planner's §1 numbers were measured over. */
 export const CORE_FOUR = ['solverBot.js', 'botDriverV2.js', 'dangerMap.js', 'director.js']
     .map((f) => `${DIR}/${f}`);
@@ -477,7 +490,7 @@ export function census(read) {
     const simulation = importClosure([SIM_ENTRY], read, astCache);
     const simSet = new Set(simulation);
     const familyClosure = importClosure(FAMILY_ENTRIES, read, astCache);
-    const family = familyClosure.filter((f) => !simSet.has(f));
+    const family = familyClosure.filter((f) => !simSet.has(f) && f !== DOOR);
     const runObj = runObjectMembers(read(SIM_ENTRY));
     const runMembers = new Map(runObj.members.filter((m) => m.name).map((m) => [m.name, m]));
     const worldMembers = new Map(worldObjectMembers(read(WORLD_BUILDER.file))
@@ -683,24 +696,48 @@ export function census(read) {
         }
     }
 
-    // Imports from simulation modules (and re-exports of them).
+    // Imports from simulation modules (and re-exports of them) — through the
+    // door, resolved to the module the door re-exports.
     const imports = [];
     const exportCache = new Map();
     const exportsOf = (m) => {
         if (!exportCache.has(m)) exportCache.set(m, exportLines(m, read, astCache));
         return exportCache.get(m);
     };
+    const door = doorOf(read, astCache, simSet, family);
+    const allowed = new Set([...family, DOOR]);
+    const doorUsed = new Set();
     for (const [f, fi] of idx) {
         for (const s of fi.ast.program.body) {
-            if (!(s.type === 'ImportDeclaration' || (s.type === 'ExportNamedDeclaration' && s.source))) continue;
+            if (!(s.type === 'ImportDeclaration' || ((s.type === 'ExportNamedDeclaration'
+                || s.type === 'ExportAllDeclaration') && s.source))) continue;
             if (!s.source.value.startsWith('.')) continue;
-            const mod = resolveSpec(f, s.source.value);
-            if (!simSet.has(mod)) continue;
-            for (const sp of s.specifiers) {
-                const imported = s.type === 'ImportDeclaration'
+            let mod = resolveSpec(f, s.source.value);
+            const viaDoor = mod === DOOR;
+            if (!viaDoor && mod.startsWith(`${DIR}/`) && !allowed.has(mod)) {
+                door.bypass.push({ file: f, line: s.loc.start.line, module: mod });
+            }
+            if (!viaDoor && !simSet.has(mod)) continue;
+            for (const sp of s.specifiers ?? []) {
+                let imported = s.type === 'ImportDeclaration'
                     ? (sp.type === 'ImportSpecifier' ? (sp.imported.name ?? sp.imported.value)
                         : sp.type === 'ImportDefaultSpecifier' ? 'default' : '*')
                     : sp.local.name;
+                if (viaDoor && imported === '*') {
+                    addBlind({ file: f, line: sp.loc.start.line, kind: 'namespace-import', base: 'import',
+                        detail: `* as ${sp.local.name} from ${DOOR}` });
+                    continue;
+                }
+                if (viaDoor) {
+                    const through = door.exports.get(imported);
+                    doorUsed.add(imported);
+                    if (!through) {
+                        door.unknown.push({ file: f, line: sp.loc.start.line, name: imported });
+                        continue;
+                    }
+                    mod = through.module;
+                    imported = through.name;
+                }
                 if (imported === '*') {
                     addBlind({ file: f, line: sp.loc.start.line, kind: 'namespace-import', base: 'import',
                         detail: `* as ${sp.local.name} from ${mod}` });
@@ -710,18 +747,55 @@ export function census(read) {
                     && r.bind === fi.bindKey(fi.ast.program, local)).length : 0;
                 const def = exportsOf(mod).get(imported) ?? null;
                 imports.push({ file: f, line: sp.loc.start.line, name: imported, local, module: mod,
-                    sites, reexport: s.type !== 'ImportDeclaration',
+                    sites, reexport: s.type !== 'ImportDeclaration', door: viaDoor,
                     definedAt: def ? `${def.file}:${def.line}` : null });
             }
         }
     }
+    door.unused = [...door.exports].filter(([name]) => !doorUsed.has(name))
+        .map(([name, t]) => ({ name, module: t.module, line: t.line }));
 
     return {
         simulation, family, familyClosure,
         runObject: runObj, runMembers, worldMembers, stateMembers, stateLine: stateLit.line,
-        reads, imports, blind, passes,
+        reads, imports, blind, passes, door,
         tracked: [...trackedWhy.values()],
     };
+}
+
+/**
+ * The import door, read as text: `exports` maps each exported name to the
+ * simulation module and name it re-exports. Anything else in the door — a
+ * local declaration, a re-export of a non-simulation module, a family file in
+ * its closure — is a `leak`. `bypass` / `unknown` / `unused` are filled by the
+ * census from the family's side.
+ */
+function doorOf(read, astCache, simSet, family) {
+    const out = { exports: new Map(), leaks: [], bypass: [], unknown: [], unused: [] };
+    let ast;
+    try { ast = astOf(DOOR, read, astCache); } catch { return out; } // no door yet
+    for (const s of ast.program.body) {
+        const mod = s.source ? resolveSpec(DOOR, s.source.value) : null;
+        if (s.type === 'ExportNamedDeclaration' && mod && simSet.has(mod)) {
+            const has = exportLines(mod, read, astCache);
+            for (const sp of s.specifiers) {
+                if (!has.has(sp.local.name ?? sp.local.value)) {
+                    out.leaks.push({ line: sp.loc.start.line,
+                        what: `a re-export of ${sp.local.name ?? sp.local.value}, which ${mod} does not export` });
+                }
+                out.exports.set(sp.exported.name ?? sp.exported.value, {
+                    module: mod, name: sp.local.name ?? sp.local.value, line: sp.loc.start.line,
+                });
+            }
+        } else {
+            out.leaks.push({ line: s.loc.start.line, what: `${s.type}${mod ? ` of ${mod}` : ''}` });
+        }
+    }
+    const fam = new Set(family);
+    for (const f of importClosure([DOOR], read, astCache)) {
+        if (fam.has(f)) out.leaks.push({ line: null, what: `its closure pulls in the family file ${f}` });
+    }
+    return out;
 }
 
 function ancestorsContainDecl(ref, cand) {
@@ -849,7 +923,10 @@ export function rowKey(row) {
  *   - `unlisted`: a family file reaches a member / imports a symbol the table
  *     lacks, or reaches a listed one from a file the row does not name;
  *   - `retired`: a static row nothing reaches any more;
- *   - `family`: the family file list differs from the closure.
+ *   - `family`: the family file list differs from the closure;
+ *   - `door`: a family file importing a simulation module around the door,
+ *     a name the door does not export, or a door that is not pure re-exports
+ *     of the simulation (an UNUSED door export is `retired`).
  */
 export function compareToTable(c, table) {
     const fresh = staticRows(c);
@@ -893,7 +970,21 @@ export function compareToTable(c, table) {
     const famTable = table.family ?? [];
     const family = JSON.stringify(famNow) === JSON.stringify(famTable) ? null
         : { closure: famNow, table: famTable };
-    return { unlisted, retired, family };
+    const doorName = path.posix.basename(DOOR);
+    for (const u of c.door?.unused ?? []) {
+        retired.push({ key: `door:${doorName}#${u.name}`, at: `${DOOR}:${u.line}`,
+            why: `no family file imports it — the export must be RETIRED from ${doorName}` });
+    }
+    const door = [
+        ...(c.door?.bypass ?? []).map((b) => ({ at: `${b.file}:${b.line}`,
+            why: `imports ${path.posix.basename(b.module)} directly — a family file imports a seedlingDemo module `
+                + `only if it is a family file or the door, ${doorName}` })),
+        ...(c.door?.unknown ?? []).map((u) => ({ at: `${u.file}:${u.line}`,
+            why: `imports ${u.name} through ${doorName}, which does not export it` })),
+        ...(c.door?.leaks ?? []).map((l) => ({ at: `${DOOR}${l.line ? `:${l.line}` : ''}`,
+            why: `the door holds only \`export { … } from\` a simulation module — found ${l.what}` })),
+    ];
+    return { unlisted, retired, family, door };
 }
 
 // ── the contract table ──────────────────────────────────────────────────────

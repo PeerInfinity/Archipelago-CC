@@ -15,7 +15,7 @@
   ],
   "simulation": {
     "entry": "frontend/modules/seedlingDemo/levelRun.js",
-    "files": 47
+    "files": 48
   },
   "runObject": {
     "properties": 174,
@@ -5003,7 +5003,7 @@
       "surface": "import",
       "name": "assertTapeWithinRuntimeBudget",
       "module": "frontend/modules/seedlingDemo/tapeFormat.js",
-      "line": 2278,
+      "line": 2329,
       "class": "physics",
       "form": "function",
       "files": {
@@ -5021,7 +5021,7 @@
       "surface": "import",
       "name": "coerceTerrainState",
       "module": "frontend/modules/seedlingDemo/tapeFormat.js",
-      "line": 1565,
+      "line": 1596,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -5039,7 +5039,7 @@
       "surface": "import",
       "name": "GAME_VISIBLE_DROPS",
       "module": "frontend/modules/seedlingDemo/tapeFormat.js",
-      "line": 2009,
+      "line": 2053,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -5057,7 +5057,7 @@
       "surface": "import",
       "name": "heldKeysAt",
       "module": "frontend/modules/seedlingDemo/tapeFormat.js",
-      "line": 1932,
+      "line": 1976,
       "class": "physics",
       "form": "function",
       "files": {
@@ -5075,7 +5075,7 @@
       "surface": "import",
       "name": "KEY_CODES",
       "module": "frontend/modules/seedlingDemo/tapeFormat.js",
-      "line": 313,
+      "line": 344,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -5093,7 +5093,7 @@
       "surface": "import",
       "name": "KEY_NAMES",
       "module": "frontend/modules/seedlingDemo/tapeFormat.js",
-      "line": 342,
+      "line": 373,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -5111,7 +5111,7 @@
       "surface": "import",
       "name": "requiredTapeVersion",
       "module": "frontend/modules/seedlingDemo/tapeFormat.js",
-      "line": 2128,
+      "line": 2173,
       "class": "physics",
       "form": "function",
       "files": {
@@ -5129,7 +5129,7 @@
       "surface": "import",
       "name": "serializeTape",
       "module": "frontend/modules/seedlingDemo/tapeFormat.js",
-      "line": 2143,
+      "line": 2191,
       "class": "physics",
       "form": "function",
       "files": {

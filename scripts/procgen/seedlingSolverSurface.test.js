@@ -24,7 +24,7 @@ import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    census, compareToTable, importClosure, FAMILY_ENTRIES, SIM_ENTRY, staticDrift,
+    census, compareToTable, DOOR, importClosure, FAMILY_ENTRIES, SIM_ENTRY, staticDrift,
 } from './seedlingSolverSurface.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -40,6 +40,7 @@ const say = (cmp) => [
     ...cmp.unlisted.map((u) => `${u.at} reaches ${u.key} — ${u.why}`),
     ...cmp.retired.map((r) => `${r.key}${r.file ? ` (${r.file})` : ''} — ${r.why}`),
     ...(cmp.family ? [`family closure ${cmp.family.closure.join(' ')} ≠ table ${cmp.family.table.join(' ')}`] : []),
+    ...cmp.door.map((d) => `${d.at} ${d.why}`),
 ];
 
 let fresh;
@@ -64,7 +65,8 @@ describe('the committed contract equals a fresh census', () => {
 
     it('(iv) the family file list equals the import closure', () => {
         const sim = new Set(importClosure([SIM_ENTRY], read));
-        const fam = importClosure(FAMILY_ENTRIES, read).filter((f) => !sim.has(f)).map((f) => path.posix.basename(f));
+        const fam = importClosure(FAMILY_ENTRIES, read).filter((f) => !sim.has(f) && f !== DOOR)
+            .map((f) => path.posix.basename(f));
         expect(TABLE.family).toEqual(fam);
         expect(compareToTable(fresh, TABLE).family).toBeNull();
     });
@@ -77,8 +79,19 @@ describe('the committed contract equals a fresh census', () => {
 
     it('the import door\'s closure is the simulation\'s: solverView.js pulls in no family file', () => {
         const sim = new Set(importClosure([SIM_ENTRY], read));
-        const door = 'frontend/modules/seedlingDemo/solverView.js';
-        expect(importClosure([door], read).filter((f) => f !== door && !sim.has(f))).toEqual([]);
+        expect(importClosure([DOOR], read).filter((f) => f !== DOOR && !sim.has(f))).toEqual([]);
+    });
+
+    it('(v) the door rule: every family import of the simulation goes through solverView.js, '
+        + 'and the door exports exactly what the family imports', () => {
+        const cmp = compareToTable(fresh, TABLE);
+        expect(cmp.door.map((d) => `${d.at} ${d.why}`)).toEqual([]);
+        const direct = fresh.imports.filter((i) => !i.door);
+        expect(direct.map((i) => `${i.file}:${i.line} ${i.name}`)).toEqual([]);
+        // the door's export count IS the table's import-row count: one row per exported symbol
+        expect(fresh.door.exports.size).toBe(TABLE.rows.filter((r) => r.surface === 'import').length);
+        // and a door row keeps the SIMULATION module: no row names the door
+        expect(TABLE.rows.filter((r) => r.module === DOOR)).toEqual([]);
     });
 
     it('the census reads ONLY run members off `run` (no stray object spelled `run`)', () => {
@@ -124,13 +137,15 @@ describe('mutants, over a temporary copy of the family', () => {
         expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:bosses — the row names only botDriverV2\.js/);
     });
 
-    it('(b) an import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js ⇒ RED', () => {
+    it('(b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js '
+        + '⇒ RED twice: not in the table, and around the door', () => {
         expect(TABLE.rows.some((r) => r.surface === 'import' && r.name === 'blocksMover')).toBe(false);
         const cmp = mutate('mover.js', (s) => `import { blocksMover } from './levelWorld.js';\n${s}\n`
             + 'export const mutantB = blocksMover;\n');
         const lines = say(cmp);
-        expect(lines).toHaveLength(1);
+        expect(lines).toHaveLength(2);
         expect(lines[0]).toMatch(/mover\.js:1 reaches import:levelWorld\.js#blocksMover — not in the contract table/);
+        expect(lines[1]).toMatch(/mover\.js:1 imports levelWorld\.js directly — .* only if it is a family file or the door/);
     });
 
     it('(c) the one run.worldCtor read removed from director.js ⇒ RED "RETIRED"', () => {
