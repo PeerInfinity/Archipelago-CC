@@ -32,10 +32,11 @@ describe('the table', () => {
         expect(() => assertConceptTable(CONCEPTS)).not.toThrow();
     });
 
-    it('the shared library holds six doors and six keys (the population the pins read)', () => {
+    it('the shared library holds the coloured doors and keys the pins read, by id', () => {
         expect(SHIPPED_DOORS.map((d) => d.id)).toEqual(
             ['door_red', 'door_green', 'door_blue', 'door_yellow', 'door_purple', 'door_orange']);
-        expect(SHIPPED_KEYS).toHaveLength(6);
+        expect(SHIPPED_KEYS.map((k) => k.id)).toEqual(
+            ['key_red', 'key_green', 'key_blue', 'key_yellow', 'key_purple', 'key_orange']);
     });
 
     it('key and door have six instances each, in the shared colour order', () => {
