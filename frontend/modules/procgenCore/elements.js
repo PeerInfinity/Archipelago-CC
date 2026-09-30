@@ -156,7 +156,7 @@
  */
 
 import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
-import { assertParamSchema, defineTemplate, enumerateValues } from './templateContract.js';
+import { assertDrawable, assertParamSchema, defineTemplate, enumerateValues } from './templateContract.js';
 
 export class ElementContractError extends Error {
     constructor(message) {
@@ -877,6 +877,7 @@ export function defineElement({ name, family, params = [], why, construct,
     // the word "template" — one schema language, but the reader who typed the
     // bad domain must meet a sentence about the thing they typed it into.
     assertParamSchema(params, `element "${name}"`);
+    for (const p of params) assertDrawable(p, `element "${name}"`);
     const base = defineTemplate({ name, family, params, why, build: () => ({}) });
 
     return Object.freeze({

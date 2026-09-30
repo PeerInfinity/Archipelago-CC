@@ -47,7 +47,9 @@
 
 import { getPostProcessor } from '../shared/procgen/mazeAlgorithms/postProcessors.js';
 import { getBackend } from '../shared/procgen/mazeAlgorithms/registry.js';
-import { assertParamSchema, enumerateValues } from './templateContract.js';
+import {
+    assertDrawable, assertParamSchema, describeDomain, enumerableValues, enumerateValues, valueInDomain,
+} from './templateContract.js';
 
 /**
  * ── ⛓⛓ REGISTER-ON-IMPORT: **THE BINDING IMPORTS THE BACKENDS, NOT THIS
@@ -336,6 +338,8 @@ export const BIOMES = Object.freeze({
 for (const [kind, entry] of Object.entries(BIOMES)) {
     const schema = entry.paramSchema ?? [];
     assertParamSchema(schema, `skeleton kind ${JSON.stringify(kind)}`);
+    // ⛓ P2: a kind's parameters are typed from a URL and swept — they enumerate.
+    for (const p of schema) assertDrawable(p, `skeleton kind ${JSON.stringify(kind)}`);
     const at = schema.findIndex((p) => p.key === 'chambers');
     if (at >= 0 && at !== schema.length - 1) {
         fail(`skeletonKinds: the kind ${JSON.stringify(kind)} declares "chambers" at `
@@ -406,10 +410,10 @@ export function resolveSkeletonParams(kind, values = {}) {
                 + '⛔ A silently ignored parameter is a link that names a room it did not '
                 + 'build.');
         }
-        if (!p.domain.includes(values[key])) {
+        if (!valueInDomain(p, values[key])) {
             fail(`skeletonKinds: ${JSON.stringify(kind)} parameter "${key}" was given `
                 + `${JSON.stringify(values[key])}, which is not in its declared domain `
-                + `[${p.domain.join(', ')}]. Every value in a domain is one a sweep `
+                + `${describeDomain(p)}. Every value in a domain is one a sweep `
                 + 'measured; a value outside it is one nobody has adjudicated.');
         }
     }
@@ -550,11 +554,11 @@ export function parseSkeleton(value, { simulator = false, substrate = 'this subs
                 + '⛔ A silently ignored parameter is a link that names a room it did not '
                 + 'build.');
         }
-        const typed = p.domain.find((v) => String(v) === rawValue);
+        const typed = enumerableValues(p).find((v) => String(v) === rawValue);
         if (typed === undefined) {
             fail(`skeletonKinds: ${JSON.stringify(kind)} parameter "${key}" was given `
                 + `${JSON.stringify(rawValue)}, which is not in its declared domain `
-                + `[${p.domain.join(', ')}].`);
+                + `${describeDomain(p)}.`);
         }
         params[key] = typed;
     }

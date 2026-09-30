@@ -52,7 +52,8 @@ import {
 import { LAW_CUT } from './elements.js';
 import { parseRequireList } from './areaSpec.js';
 import {
-    assertParamSchema, enumerateValues, isParamSubset, paramSubset,
+    assertDrawable, assertParamSchema, describeDomain, enumerableValues, enumerateValues,
+    isParamSubset, paramSubset, valueInDomain,
 } from './templateContract.js';
 
 export class ElementSpecError extends Error {
@@ -536,6 +537,10 @@ export function paramSchemaFor(name) {
 
 for (const name of Object.keys(ELEMENT_TABLE)) {
     assertParamSchema(paramSchemaFor(name), `element spec head ${JSON.stringify(name)}`);
+    // ⛓ P2: this codec TYPES a string by matching it against the domain's
+    // values, so every head parameter (drawn or the binding's own) must
+    // enumerate — refused here, by name, at load.
+    for (const p of paramSchemaFor(name)) assertDrawable(p, `element spec head ${JSON.stringify(name)}`);
 }
 
 /** Every declared combination of one head — what a sweep enumerates. */
@@ -547,7 +552,7 @@ export function enumerateElementValues(name) {
  *  object path and the string path — `areaSpec`'s §9.6 defect 3, not repeated. */
 const outOfDomain = (name, p, value) => `elementSpec: parameter "${p.key}" of element `
     + `"${name}" was given ${JSON.stringify(value)}, which is not in its declared domain `
-    + `[${p.domain.join(', ')}].`;
+    + `${describeDomain(p)}.`;
 
 /** ⛓ The parameters the ELEMENT itself declares — the ones `instantiate` DRAWS.
  *  The binding's own knobs (`binds`) are resolved, never drawn, which is the
@@ -569,24 +574,24 @@ const drawsParam = (name, key) => (ELEMENT_TABLE[name]?.element.params ?? [])
  */
 function assertParamValue(name, p, value) {
     if (!isParamSubset(value)) {
-        if (!p.domain.includes(value)) fail(outOfDomain(name, p, value));
+        if (!valueInDomain(p, value)) fail(outOfDomain(name, p, value));
         return;
     }
     if (!drawsParam(name, p.key)) {
         fail(`elementSpec: parameter "${p.key}" of element "${name}" was given the SUBSET `
             + `${JSON.stringify(formatParamValue(value))}, and "${p.key}" is the BINDING's `
             + 'own knob — it is RESOLVED, never DRAWN, so there is no draw for a subset to '
-            + `narrow. Name ONE value (\`${p.key}=${p.domain[0]}\`) or leave it out.`);
+            + `narrow. Name ONE value (\`${p.key}=${enumerableValues(p)[0]}\`) or leave it out.`);
     }
     const members = value.pick;
     if (members.length === 0) {
         fail(`elementSpec: parameter "${p.key}" of element "${name}" was given an EMPTY `
             + 'subset. A subset is the set of values the draw may land on; omit the '
-            + `parameter to draw from its whole declared domain [${p.domain.join(', ')}].`);
+            + `parameter to draw from its whole declared domain ${describeDomain(p)}.`);
     }
     const seen = new Set();
     for (const m of members) {
-        if (!p.domain.includes(m)) fail(outOfDomain(name, p, m));
+        if (!valueInDomain(p, m)) fail(outOfDomain(name, p, m));
         if (seen.has(m)) {
             fail(`elementSpec: parameter "${p.key}" of element "${name}" names `
                 + `${JSON.stringify(m)} TWICE in the subset `
@@ -859,13 +864,13 @@ export function parseElementSpec(value) {
                 }
             }
             params[key] = paramSubset(members.map((m) => {
-                const t = p.domain.find((v) => String(v) === m);
+                const t = enumerableValues(p).find((v) => String(v) === m);
                 if (t === undefined) fail(outOfDomain(name, p, m));
                 return t;
             }));
             continue;
         }
-        const typed = p.domain.find((v) => String(v) === rawValue);
+        const typed = enumerableValues(p).find((v) => String(v) === rawValue);
         if (typed === undefined) fail(outOfDomain(name, p, rawValue));
         params[key] = typed;
     }

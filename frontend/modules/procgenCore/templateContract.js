@@ -125,14 +125,14 @@ function drawFromSubset(rng, owner, p, members) {
         fail(`templateContract: ${owner} parameter "${p.key}" was given an EMPTY subset. A `
             + 'subset is the set of values the draw may land on; an empty one names no run '
             + `— omit the parameter to draw from its whole declared domain `
-            + `[${p.domain.join(', ')}].`);
+            + `${describeDomain(p)}.`);
     }
     const seen = new Set();
     for (const m of members) {
-        if (!p.domain.includes(m)) {
+        if (!valueInDomain(p, m)) {
             fail(`templateContract: ${owner} parameter "${p.key}" was given the subset member `
                 + `${JSON.stringify(m)}, which is not in its declared domain `
-                + `[${p.domain.join(', ')}]. A subset NARROWS a domain; it cannot widen one.`);
+                + `${describeDomain(p)}. A subset NARROWS a domain; it cannot widen one.`);
         }
         if (seen.has(m)) {
             fail(`templateContract: ${owner} parameter "${p.key}" names ${JSON.stringify(m)} `
@@ -177,8 +177,181 @@ const instanceLabel = (name, values) => {
  * `default` outside its own domain is a form control that offers an illegal
  * value — both would otherwise surface on the day a user pressed something.
  */
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓⛓ **THREE DOMAIN FORMS, ONE VALIDATOR, ONE DRAW LAW** (behaviour
+ * parameters P2, D1; ⚖ the user 2026-09-30).
+ * ══════════════════════════════════════════════════════════════════════
+ *
+ * A parameter declares exactly ONE of:
+ *
+ *   `domain: [...]`                 a finite LIST — drawable, enumerable,
+ *                                   sweepable. Every parameter declared before
+ *                                   P2 is one, and stays one.
+ *   `range: {min, max, step?}`      numbers, `min < max`. With a `step` (> 0,
+ *                                   dividing `max − min` exactly) it enumerates
+ *                                   `min, min+step, …, max` and is therefore
+ *                                   drawable and sweepable. Without one it is
+ *                                   DECLARED only.
+ *   `open: 'string' | {id: '<registry name>'}`
+ *                                   any string (or any id a named registry
+ *                                   declares — the REGISTRY checks membership,
+ *                                   by cross-reference; this file imports
+ *                                   nothing). Never drawn, never enumerated.
+ *
+ * ⛔⛔ **THE ONE NEW LAW: A PARAMETER THE GENERATOR DRAWS IS A LIST OR A STEPPED
+ * RANGE** (`assertDrawable`). `defineTemplate` asks it of every parameter, so a
+ * template that declares an `open` or an unstepped `range` is refused BY NAME
+ * at definition time — never at the first draw. ⚖ Ruling 4 still holds for
+ * everything drawn: a stepped range is a list spelled arithmetically, and it is
+ * swept exactly as one.
+ *
+ * ⛓ THE DRAW IS ONE `rng.pick` OVER `enumerableValues(p)` — for a list that is
+ * `p.domain` ITSELF (the same array object, so every draw a list spent before P2
+ * is byte-identical), and for a stepped range it is the expanded list, so a
+ * stepped range spends exactly the one draw a list of the same values spends.
+ */
+
+/** The declared numeric-precision of a stepped range's arithmetic. */
+const STEP_EPSILON = 1e-9;
+
+const isFiniteNumber = (v) => typeof v === 'number' && Number.isFinite(v);
+
+/** How many steps a stepped range spans, or null when the step does not divide it. */
+function stepCount(range) {
+    const n = Math.round((range.max - range.min) / range.step);
+    const tol = STEP_EPSILON * Math.max(1, Math.abs(range.max - range.min));
+    return Math.abs(n * range.step - (range.max - range.min)) <= tol ? n : null;
+}
+
+/** The i-th value of a stepped range, rounded so `0.1 * 3` is `0.3`. */
+const stepValue = (range, i) => (i === 0 ? range.min : Number((range.min + i * range.step).toPrecision(12)));
+
+/**
+ * ⛓ WHICH OF THE THREE FORMS a (schema-checked) parameter declares.
+ * @returns {'list'|'range'|'open'}
+ */
+export function domainKind(p) {
+    if (Array.isArray(p?.domain)) return 'list';
+    if (p?.range !== undefined) return 'range';
+    if (p?.open !== undefined) return 'open';
+    return fail(`templateContract: parameter ${JSON.stringify(p?.key)} declares none of \`domain\`, `
+        + '`range`, `open`.');
+}
+
+/** Is this a range that enumerates (it carries a `step`)? */
+const isStepped = (p) => domainKind(p) === 'range' && p.range.step !== undefined;
+
+const steppedCache = new WeakMap();
+
+/**
+ * ⛓⛓ **EVERY VALUE A PARAMETER CAN TAKE, OR `null`** — the list itself (the
+ * SAME array, not a copy), a stepped range expanded (frozen, cached per range
+ * object), or `null` for an `open` or an unstepped `range`, which enumerate
+ * nothing.
+ */
+export function enumerableValues(p) {
+    const kind = domainKind(p);
+    if (kind === 'list') return p.domain;
+    if (!isStepped(p)) return null;
+    let values = steppedCache.get(p.range);
+    if (!values) {
+        const n = stepCount(p.range);
+        values = Object.freeze(Array.from({ length: n + 1 }, (_, i) => stepValue(p.range, i)));
+        steppedCache.set(p.range, values);
+    }
+    return values;
+}
+
+/** ⛓ Is `v` a value this parameter's domain admits? (Asked arithmetically of a range.) */
+export function valueInDomain(p, v) {
+    const kind = domainKind(p);
+    if (kind === 'list') return p.domain.includes(v);
+    if (kind === 'open') return typeof v === 'string';
+    const { min, max, step } = p.range;
+    if (!isFiniteNumber(v) || v < min || v > max) return false;
+    if (step === undefined) return true;
+    const i = Math.round((v - min) / step);
+    return Math.abs(stepValue(p.range, i) - v) <= STEP_EPSILON * Math.max(1, Math.abs(v));
+}
+
+/**
+ * ⛓ THE DOMAIN AS A REFUSAL NAMES IT. ⛔ For a LIST it is exactly the
+ * `[a, b, c]` every refusal spelled before P2, so no existing sentence moved.
+ */
+export function describeDomain(p) {
+    const kind = domainKind(p);
+    if (kind === 'list') return `[${p.domain.join(', ')}]`;
+    if (kind === 'range') {
+        const { min, max, step } = p.range;
+        return `the range ${min}..${max}${step === undefined ? ' (unstepped)' : ` step ${step}`}`;
+    }
+    return p.open === 'string' ? 'any string (open)' : `any id the "${p.open.id}" registry declares (open)`;
+}
+
+/**
+ * ⛔⛔ THE ONE DRAW LAW — a parameter the generator DRAWS must be a list or a
+ * stepped range. Refuses an `open` and an unstepped `range` by name.
+ */
+export function assertDrawable(p, owner) {
+    if (enumerableValues(p) !== null) return;
+    fail(`templateContract: ${owner} parameter "${p.key}" declares ${describeDomain(p)}, and a `
+        + 'parameter the generator DRAWS must be a LIST or a STEPPED RANGE. ⚖ Ruling 4 '
+        + 'certifies a drawn domain by SWEEPING it, and an open or unstepped domain has '
+        + 'nothing to sweep — declare it where nothing draws it (a trait, a block field), '
+        + 'or give the range a `step`.');
+}
+
+/** The ONE form check, per form — `assertParamSchema` calls it for each parameter. */
+function assertDomainForm(p, owner) {
+    const forms = ['domain', 'range', 'open'].filter((f) => p[f] !== undefined);
+    if (forms.length === 0 || (forms.length === 1 && forms[0] === 'domain'
+        && (!Array.isArray(p.domain) || p.domain.length === 0))) {
+        fail(`templateContract: ${owner} parameter "${p.key}" has no finite `
+            + 'domain. ⚖ Ruling 4 certifies a domain by SWEEPING it, and a domain '
+            + 'nobody can enumerate is a domain nobody swept. (A parameter declares '
+            + 'exactly one of `domain: [...]`, `range: {min, max, step?}`, `open`.)');
+    }
+    if (forms.length > 1) {
+        fail(`templateContract: ${owner} parameter "${p.key}" declares [${forms.join(', ')}] — `
+            + 'exactly ONE of `domain`, `range`, `open`. Two forms is two answers to "what '
+            + 'may this be", and they would agree until the day somebody tightened one.');
+    }
+    if (forms[0] === 'range') {
+        const r = p.range;
+        if (r === null || typeof r !== 'object' || !isFiniteNumber(r.min) || !isFiniteNumber(r.max)
+            || !(r.min < r.max)) {
+            fail(`templateContract: ${owner} parameter "${p.key}" declares the range `
+                + `${JSON.stringify(r)}; a range is {min, max, step?} with finite numbers and `
+                + 'min < max.');
+        }
+        if (r.step !== undefined) {
+            if (!isFiniteNumber(r.step) || !(r.step > 0)) {
+                fail(`templateContract: ${owner} parameter "${p.key}" declares step `
+                    + `${JSON.stringify(r.step)}; a step is a finite number > 0.`);
+            }
+            if (stepCount(r) === null) {
+                fail(`templateContract: ${owner} parameter "${p.key}" declares the range `
+                    + `${r.min}..${r.max} with step ${r.step}, which does not divide it — `
+                    + '(max − min) / step must be an integer, or the range would end off its '
+                    + 'own max.');
+            }
+        }
+    } else if (forms[0] === 'open') {
+        const o = p.open;
+        const ok = o === 'string'
+            || (o !== null && typeof o === 'object' && typeof o.id === 'string' && o.id.length > 0);
+        if (!ok) {
+            fail(`templateContract: ${owner} parameter "${p.key}" declares open `
+                + `${JSON.stringify(o)}; \`open\` is 'string' or {id: '<registry name>'}.`);
+        }
+    }
+}
+
 /**
  * ⛓⛓⛓ THE PARAMETER SCHEMA CHECK — **ONE SCHEMA LANGUAGE, TWO SUBJECTS.**
+ *
+ * ⛓ P2: `domain` is one of THREE forms (above); this check accepts all three
+ * and a DRAWING caller asks `assertDrawable` on top.
  *
  * A template declares `[{key, domain, default, why}]`; ⛓ CONSTRUCTIVE-MODE
  * slice 7 gave a SKELETON KIND the same shape (`procgenCore/skeletonKinds.js`
@@ -211,15 +384,11 @@ export function assertParamSchema(params, owner) {
                 + 'position in the order AND what the instance label reads.');
         }
         keys.add(p.key);
-        if (!Array.isArray(p.domain) || p.domain.length === 0) {
-            fail(`templateContract: ${owner} parameter "${p.key}" has no finite `
-                + 'domain. ⚖ Ruling 4 certifies a domain by SWEEPING it, and a domain '
-                + 'nobody can enumerate is a domain nobody swept.');
-        }
-        if (!p.domain.includes(p.default)) {
+        assertDomainForm(p, owner);
+        if (!valueInDomain(p, p.default)) {
             fail(`templateContract: ${owner} parameter "${p.key}" defaults to `
                 + `${JSON.stringify(p.default)}, which is not in its own domain `
-                + `[${p.domain.join(', ')}]. The default is what verb 2's form pre-fills, `
+                + `${describeDomain(p)}. The default is what verb 2's form pre-fills, `
                 + 'so a default outside the domain is a control offering an illegal value.');
         }
         if (typeof p.why !== 'string' || !p.why) {
@@ -275,9 +444,11 @@ export function defineTemplate({ name, family, site = 'any', params = [], why, b
             + 'make "which kind of place does this template want" a dice roll.');
     }
     const keys = assertParamSchema(params, `template "${name}"`);
-    const schema = Object.freeze(params.map((p) => Object.freeze({
-        ...p, domain: Object.freeze([...p.domain]),
-    })));
+    // ⛔ P2's ONE DRAW LAW — asked of every parameter here, at definition time.
+    for (const p of params) assertDrawable(p, `template "${name}"`);
+    const schema = Object.freeze(params.map((p) => Object.freeze(domainKind(p) === 'list'
+        ? { ...p, domain: Object.freeze([...p.domain]) }
+        : { ...p, range: Object.freeze({ ...p.range }) })));
     return Object.freeze({
         name,
         family,
@@ -313,10 +484,10 @@ export function defineTemplate({ name, family, site = 'any', params = [], why, b
                         values[p.key] = drawFromSubset(rng, `template "${name}"`, p, v.pick);
                         continue;
                     }
-                    if (!p.domain.includes(v)) {
+                    if (!valueInDomain(p, v)) {
                         fail(`templateContract: template "${name}" parameter "${p.key}" was `
                             + `overridden with ${JSON.stringify(v)}, which is not in its `
-                            + `declared domain [${p.domain.join(', ')}]. Every value in a `
+                            + `declared domain ${describeDomain(p)}. Every value in a `
                             + 'domain is one a sweep measured; a value outside it is one '
                             + 'nobody has adjudicated.');
                     }
@@ -332,7 +503,8 @@ export function defineTemplate({ name, family, site = 'any', params = [], why, b
                         + 'whose pins are static per template in v1, could not tell the '
                         + 'two apart.');
                 }
-                values[p.key] = rng.pick(p.domain);
+                // ⛓ P2: a list's own array, or a stepped range expanded — ONE pick.
+                values[p.key] = rng.pick(enumerableValues(p));
             }
             return Object.freeze({
                 why,
@@ -360,8 +532,10 @@ export function defineTemplate({ name, family, site = 'any', params = [], why, b
 export function enumerateValues(template) {
     let combos = [{}];
     for (const p of template.params ?? []) {
+        const values = enumerableValues(p);
+        if (values === null) assertDrawable(p, 'a swept schema\'s');
         const next = [];
-        for (const c of combos) for (const v of p.domain) next.push({ ...c, [p.key]: v });
+        for (const c of combos) for (const v of values) next.push({ ...c, [p.key]: v });
         combos = next;
     }
     return combos;

@@ -76,6 +76,7 @@ import {
     DEFAULT_ELEMENTS, formatElementSpec, normalizeElementSpec, parseElementSpec,
 } from './elementSpec.js';
 import { DEFAULT_BOUNDS, KEEP_POLICY } from './levelGenerator.js';
+import { describeDomain, enumerableValues, valueInDomain } from './templateContract.js';
 import {
     DEFAULT_SKELETON_KIND, formatSkeleton, normalizeSkeleton, parseSkeleton,
 } from './skeletonKinds.js';
@@ -1091,12 +1092,13 @@ export function parseDirective(text, palette) {
                     + 'A silently ignored parameter is a link that names one instance and '
                     + 'builds another.');
             }
-            const hit = p.domain.find((v) => String(v) === valueText);
+            // ⛓ P2: a template parameter is drawable (`defineTemplate` asked), so it enumerates.
+            const hit = enumerableValues(p).find((v) => String(v) === valueText);
             if (hit === undefined) {
                 fail('the-value-is-outside-the-declared-domain',
                     `urlParams: template "${name}" parameter "${key}" was given `
                     + `${JSON.stringify(valueText)}, which is not in its declared domain `
-                    + `[${p.domain.join(', ')}]. Every value in a domain is one a sweep `
+                    + `${describeDomain(p)}. Every value in a domain is one a sweep `
                     + 'measured; a value outside it is one nobody has adjudicated.');
             }
             if (Object.prototype.hasOwnProperty.call(params, key)) {
@@ -1206,11 +1208,11 @@ export function formatDirectives(directives, palette) {
                     + 'the same address, and the pin union cannot tell two instances of one '
                     + 'template apart.');
             }
-            if (!p.domain.includes(v)) {
+            if (!valueInDomain(p, v)) {
                 fail('cannot-write-a-value-outside-the-domain',
                     `urlParams: the directive for "${d.template}" gives "${p.key}" the `
                     + `value ${JSON.stringify(v)}, which is outside its declared domain `
-                    + `[${p.domain.join(', ')}].`);
+                    + `${describeDomain(p)}.`);
             }
             return `${p.key}=${v}`;
         }).join(',');

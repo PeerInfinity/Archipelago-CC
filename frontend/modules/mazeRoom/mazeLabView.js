@@ -40,6 +40,7 @@
  */
 
 import { createLifetimeHolder } from '../procgenCore/pageLifetime.js';
+import { enumerableValues } from '../procgenCore/templateContract.js';
 import { describeKeptKind, generationRows, ladderCost, tileAtPoint } from '../procgenCore/labView.js';
 import { COLORS, TILE_PX, drawWorld, plainView } from './mazeRoomRender.js';
 /**
@@ -999,10 +1000,12 @@ export function main() {
              * drawn value (`mazeLab.applyDirective`'s two salted streams).
              */
             s.appendChild(new Option('any', ''));
-            for (const v of p.domain) s.appendChild(new Option(`${p.key}=${v}`, String(v)));
+            // ⛓ P2: a template parameter is drawable, so it enumerates (a list is its own array).
+            const domain = enumerableValues(p);
+            for (const v of domain) s.appendChild(new Option(`${p.key}=${v}`, String(v)));
             form.appendChild(el('span', null, ` ${p.key} `));
             form.appendChild(s);
-            selects.set(p.key, { select: s, domain: p.domain });
+            selects.set(p.key, { select: s, domain });
         }
         const btn = el('button', null, 'ATTEMPT');
         btn.dataset.template = t.name;
@@ -1509,7 +1512,7 @@ export function main() {
             const sel = document.createElement('select');
             sel.dataset[attr] = p.key;
             if (anyOption !== null) sel.appendChild(new Option(anyOption, ''));
-            for (const v of p.domain) {
+            for (const v of enumerableValues(p)) {
                 const o = new Option(String(v), String(v));
                 const chosen = anyOption !== null
                     ? String(v) === String(values[p.key])
@@ -1528,7 +1531,7 @@ export function main() {
             const sel = $(boxId).querySelector(`select[${dataAttrOf(attr)}="${p.key}"]`);
             if (!sel) continue;
             if (anyOption !== null && sel.value === '') continue;
-            const v = p.domain.find((d) => String(d) === sel.value);
+            const v = enumerableValues(p).find((d) => String(d) === sel.value);
             if (v !== undefined) out[p.key] = v;
         }
         return out;

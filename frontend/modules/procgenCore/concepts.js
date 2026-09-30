@@ -50,7 +50,7 @@
 
 import { LAW_CUT, LAW_SHORTCUT } from './elements.js';
 import { GRADES, REQUIRING_GRADES } from './differentialGrade.js';
-import { assertParamSchema, enumerateValues } from './templateContract.js';
+import { assertDrawable, assertParamSchema, enumerateValues, valueInDomain } from './templateContract.js';
 
 export class ConceptContractError extends Error {
     constructor(message) {
@@ -145,6 +145,9 @@ export function assertConcept(id, concept) {
     let keys = new Set();
     try {
         keys = assertParamSchema(params, who);
+        // ⛓ P2: a concept's `params` make its INSTANCES (`instancesOf` enumerates
+        // them), so they must enumerate — a list or a stepped range.
+        for (const p of params) assertDrawable(p, who);
     } catch (err) {
         fail(`concepts: ${err.message}`);
     }
@@ -232,7 +235,7 @@ function relatedInstance(target, values) {
     const want = {};
     for (const p of tparams) {
         if (!Object.prototype.hasOwnProperty.call(values, p.key)) return null;
-        if (!p.domain.includes(values[p.key])) return null;
+        if (!valueInDomain(p, values[p.key])) return null;
         want[p.key] = values[p.key];
     }
     return { values: want, id: target.idFor(want) };

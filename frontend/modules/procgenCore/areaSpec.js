@@ -41,7 +41,9 @@
  * ⛔ NO DOM AND NO NODE IMPORTS: the lab page loads this in a browser.
  */
 
-import { assertParamSchema, enumerateValues } from './templateContract.js';
+import {
+    assertDrawable, assertParamSchema, describeDomain, enumerableValues, enumerateValues, valueInDomain,
+} from './templateContract.js';
 
 export class AreaSpecError extends Error {
     /** ⛓ `code` is a kebab SLUG a census can count, and it is OPTIONAL: P5
@@ -131,6 +133,9 @@ export const AREA_PARAM_SCHEMA = Object.freeze([
 ]);
 
 assertParamSchema(AREA_PARAM_SCHEMA, 'the area spec');
+// ⛓ P2: the string codec TYPES a value by matching the domain's values, and a
+// sweep enumerates them — so every area parameter must enumerate.
+for (const p of AREA_PARAM_SCHEMA) assertDrawable(p, 'the area spec');
 
 /** ⛓ The default: the module does not run. `{keys: 0}` and nothing else. */
 export const DEFAULT_AREAS = Object.freeze({ keys: 0 });
@@ -150,7 +155,7 @@ export function enumerateAreaValues() {
  */
 const outOfDomain = (p, value) => `areaSpec: parameter "${p.key}" was given `
     + `${JSON.stringify(value)}, which is not in its declared domain `
-    + `[${p.domain.join(', ')}].`
+    + `${describeDomain(p)}.`
     + (p.key === 'partition'
         ? ' ⛓ `grid` is the fallback the design NAMED and the AREA CENSUS did not trigger: '
             + '`rooms` yields 3-8 areas on the default 11x11 room at every seed, so the chamber '
@@ -181,7 +186,7 @@ export function resolveAreaSpec(spec = {}) {
                 + `[${AREA_PARAM_SCHEMA.map((q) => q.key).join(', ')}]. ⛔ A silently ignored `
                 + 'parameter is a link that names a graph it did not build.');
         }
-        if (!p.domain.includes(values[key])) fail(outOfDomain(p, values[key]));
+        if (!valueInDomain(p, values[key])) fail(outOfDomain(p, values[key]));
     }
     const out = { keys };
     for (const p of AREA_PARAM_SCHEMA) {
@@ -267,7 +272,7 @@ export function parseAreaSpec(value) {
             fail(`areaSpec: the area spec has no parameter ${JSON.stringify(key)}. It declares `
                 + `[${AREA_PARAM_SCHEMA.map((q) => q.key).join(', ')}].`);
         }
-        const typed = p.domain.find((v) => String(v) === rawValue);
+        const typed = enumerableValues(p).find((v) => String(v) === rawValue);
         if (typed === undefined) fail(outOfDomain(p, rawValue));
         params[key] = typed;
     }
