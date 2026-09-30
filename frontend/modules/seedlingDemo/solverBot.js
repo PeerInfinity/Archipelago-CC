@@ -9283,13 +9283,29 @@ export function solveSegment({
          * WHICH ORACLE finishes the job.
          */
         const live = [...(run.entities('chasers') ?? [])].map((c) => ({ ...c, stepped: true }));
+        /**
+         * ⛓⛓ SEEDLING SWIM U1, D3 (F2) — **THE LIVE SPINNERS ARE HYPOTHESISED
+         * TOO.** A spinner is in the `spinnerBodies` family, not `chasers`, so
+         * until this slice a lock-less spinner on the corridor was never a
+         * removal candidate and the kill rung said `!target`. Its death IS
+         * observed: `Spinner.removed()` drops it from the roster (`spinnerRects`
+         * skips `removed`) and writes its persistence flag
+         * (`run.ledger('spinnerWrites')`). `kind: 'spinner'` routes it to the
+         * press arm below; `stepped: true` because the run steps it.
+         */
+        const spinners = [...(run.entities('spinnerBodies') ?? [])].map((b) => ({
+            id: b.id, tag: b.id.slice(0, b.id.indexOf('@')), x: b.x, y: b.y,
+            kind: 'spinner', stepped: true,
+        }));
         const stepped = (run.chaserRoomVerdict?.(run.level)?.stepped) === true;
         const bridged = new Set(bridgedChaserTags());
+        const spinnerIds = new Set(spinners.map((b) => b.id));
         const statics = stepped ? [] : (run.world.combat?.enemies ?? [])
             .filter((e) => !bridged.has(e.tag) || !stepped)
+            .filter((e) => !spinnerIds.has(`${e.tag}@${e.x},${e.y}`))
             .map((e) => ({ id: `${e.tag}@${e.x},${e.y}`, tag: e.tag, x: e.cx ?? e.x,
                 y: e.cy ?? e.y, row: e, stepped: false }));
-        const all = [...live, ...statics];
+        const all = [...live, ...spinners, ...statics];
         all.sort((a, b) => Math.hypot(a.x - aim.x, a.y - aim.y)
             - Math.hypot(b.x - aim.x, b.y - aim.y) || (a.id < b.id ? -1 : 1));
         /**
@@ -9576,6 +9592,12 @@ export function solveSegment({
         } else if ((ENEMY_CLASSES[body.tag]?.speed ?? 0) === 0) {
             baitWhy = `${body.id} has \`speed 0\` — it never writes \`v\`, so there is no `
                 + 'straight line to bend and nothing to lure. That is a KILL question.';
+        } else if (body.kind === 'spinner') {
+            // ⛓ Swim U1, D3: a Spinner is a BILLIARD — its `v` is its own reflected
+            // diagonal, never a chase toward the player — so there is nothing to lure.
+            baitWhy = `${body.id} is a Spinner: a billiard whose \`v\` reflects off walls and `
+                + 'never turns toward the player, so there is no line to bend. That is a KILL '
+                + 'question, and the kill is the player\'s own press.';
         } else {
             const bait = deriveBaitStance(run, body, contacts);
             if (bait.stance) {
@@ -9698,12 +9720,91 @@ export function solveSegment({
                         } });
                 }
             }
+        } else if (target && target.kind === 'spinner') {
+            /**
+             * ⛓⛓⛓ SEEDLING SWIM U1, D3 (F2) — **THE KILL WITHOUT A LOCK.** The
+             * kill-lock's `tset: -1` used to supply the observation; the run
+             * supplies it itself: the body leaves `run.entities('spinnerBodies')`
+             * when `Spinner.removed()` runs, and a body with a persistence tag
+             * banks `run.ledger('spinnerWrites')` on the same removal. So the
+             * target is killed by the kill-lock's own PRESS arm (`derivePressKill`
+             * — the strike schedule, the hammer's 13 px union and the receiver's
+             * cadence — and `execKillByPress`, whose loop runs `until` the body
+             * has left the roster, bounded), with `lock: null`: no fade, no
+             * declaration, the roster is the end.
+             *
+             * ⛔ NO SWORD IS A REFUSAL BY NAME, the strong grade's shape: the
+             * weapon is a SUB-ORDER the macro layer owes.
+             */
+            const weapon = run.progress('primaryWeapon');
+            const [tagPart, xy] = target.id.split('@');
+            const [cx, cy] = xy.split(',').map(Number);
+            const press = weapon === 'sword'
+                ? derivePressKill(run, [{ tag: tagPart, x: cx, y: cy }], contacts)
+                : null;
+            if (weapon !== 'sword') {
+                killWhy = `${target.id} is a live Spinner whose removal the run OBSERVES (the `
+                    + '`spinnerBodies` roster, and `spinnerWrites` for a tagged body), but the '
+                    + `run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``}`
+                    + ' — the kill this rung derives is a SWORD press (`KILL_ARM_POLICY.Spinner`). '
+                    + 'The sword is a SUB-ORDER the macro layer owes.';
+            } else if (!press.first) {
+                killWhy = `${target.id} is a live Spinner, and the press arm refused: `
+                    + press.rejected.map((r) => `${r.option}: ${r.why}`).join(' · ');
+            } else {
+                rowFor('kill', refused, { arm: 'press', target: target.id });
+                const writesBefore = (run.ledger('spinnerWrites') ?? []).length;
+                let record = null;
+                try {
+                    record = execKillByPress(run, perTick, {
+                        plans: press.plans, first: press.first, bodies: [target.id], lock: null,
+                    }, {
+                        maxTicksPerTarget, economies, dashMode, goal, walkTo,
+                        what: `${what} -> kill (${target.id}) by press`,
+                    });
+                } catch (e) {
+                    /**
+                     * ⛔ THE MODEL'S OWN REFUSAL OF AN UNFAITHFUL HIT, SAID AS THE
+                     * RUNG'S. `levelRun` refuses a swing whose line to the body's
+                     * entity point crosses a Solid (`Player.slash`'s line-of-sight
+                     * gate) rather than model the miss; the strike schedule does not
+                     * ask that line (the query is the run's closure, not a run
+                     * member — a U1 finding). The run is dead at that tick, so this
+                     * is terminal: the ladder refuses with the press arm's reason
+                     * instead of the solve escaping as a crash.
+                     */
+                    if (!/line-of-sight gate REFUSES that hit/.test(String(e?.message))) throw e;
+                    killWhy = `${target.id} is a live Spinner and the press arm's schedule swung `
+                        + 'through a Solid — the run refused the hit by name: '
+                        + `${String(e.message).split('\n')[0]}`;
+                }
+                if (!killWhy) {
+                    /**
+                     * ⛔ THE CROSS-CHECK: the roster says removed; a TAGGED body must
+                     * also have banked its flag in the ledger on that removal. Two
+                     * readings of one death that disagree are a model defect, said
+                     * here by name.
+                     */
+                    const tag = (run.world.spinners ?? []).find((p) => p.id === target.id)?.persistTag;
+                    const wrote = (run.ledger('spinnerWrites') ?? []).slice(writesBefore)
+                        .some((w) => w.id === target.id);
+                    if (Number.isInteger(tag) && tag >= 0 && !wrote) {
+                        fail(`${what} -> kill (${target.id}): the body left \`spinnerBodies\` but `
+                            + `its tag ${tag} banked NO \`spinnerWrites\` row — the roster and the `
+                            + 'ledger disagree about one death.');
+                    }
+                    records.push({ goal: goal.kind, strategy: 'kill', arm: 'press',
+                        target: target.id, ledger: wrote ? 'spinnerWrites' : 'roster', ...record });
+                    return { escalations };
+                }
+            }
         } else if (!target) {
             killWhy = 'the danger on this corridor is not a body this run can watch die — '
-                + 'a kill needs a target whose removal the model OBSERVES, and '
-                + '⛔ a static "Enemy" body\'s own arrow death is REFUSED by name (§11.4): '
-                + 'its clear is the tape\'s DECLARED v9 `at` row, and a second writer of '
-                + 'one persistence slot is two cost models.';
+                + 'a kill needs a target whose removal the model OBSERVES (a live chaser or '
+                + 'spinner the run steps; a live body without a recorded removal is not a '
+                + 'target), and ⛔ a static "Enemy" body\'s own arrow death is REFUSED by '
+                + 'name (§11.4): its clear is the tape\'s DECLARED v9 `at` row, and a second '
+                + 'writer of one persistence slot is two cost models.';
         } else {
             const kill = deriveKillByCeiling(run, target, contacts);
             if (kill.presser) {

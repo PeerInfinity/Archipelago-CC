@@ -260,9 +260,9 @@
       "files": {
         "botDriverV2.js": 101,
         "dangerMap.js": 14,
-        "solverBot.js": 61
+        "solverBot.js": 62
       },
-      "sites": 176,
+      "sites": 177,
       "seen": "both",
       "via": [
         "direct"
@@ -341,7 +341,7 @@
         },
         "spinnerBodies": {
           "dangerMap.js": 3,
-          "solverBot.js": 6
+          "solverBot.js": 7
         },
         "strikeBodies": {
           "botDriverV2.js": 3,
@@ -421,9 +421,9 @@
       "files": {
         "botDriverV2.js": 49,
         "director.js": 4,
-        "solverBot.js": 7
+        "solverBot.js": 9
       },
-      "sites": 60,
+      "sites": 62,
       "seen": "both",
       "via": [
         "direct"
@@ -517,7 +517,8 @@
           "solverBot.js": 2
         },
         "spinnerWrites": {
-          "director.js": 1
+          "director.js": 1,
+          "solverBot.js": 2
         },
         "treeBurns": {
           "botDriverV2.js": 3
@@ -640,9 +641,9 @@
       "files": {
         "botDriverV2.js": 29,
         "director.js": 1,
-        "solverBot.js": 19
+        "solverBot.js": 20
       },
-      "sites": 49,
+      "sites": 50,
       "seen": "both",
       "via": [
         "direct"
@@ -680,7 +681,7 @@
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
-          "solverBot.js": 3
+          "solverBot.js": 4
         },
         "saveState": {
           "director.js": 1
@@ -840,9 +841,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 56,
-        "solverBot.js": 111
+        "solverBot.js": 112
       },
-      "sites": 167,
+      "sites": 168,
       "seen": "both",
       "via": [
         "direct",
@@ -1462,6 +1463,24 @@
         "sites": 3
       },
       "why": "The level's player solid list (tiles and blocking entities), generic collision geometry."
+    },
+    {
+      "surface": "world",
+      "name": "spinners",
+      "module": "frontend/modules/seedlingDemo/levelWorld.js",
+      "line": 5581,
+      "class": "seedling",
+      "form": "constant",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "direct"
+      ],
+      "dynamic": null,
+      "why": "The level's Spinner roster as built ({id, tag, as3, x, y, persistTag}, a cleared tag omitted), a Seedling entity family; the solver reads persistTag to know whether a removal must bank a spinnerWrites row."
     },
     {
       "surface": "world",
