@@ -486,6 +486,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "How Seedling rooms and level sets are edited: the room op vocabulary and its adapter, the set session that edits a whole level set with its overlay, the world session that joins several set…"
     },
     {
+        "path": "docs/json/developer/procgen/seedling-solver-surface.md",
+        "title": "The Seedling Solver's Surface",
+        "section": "developer/procgen",
+        "summary": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers. This page covers what that interface is today and how it was measured. It also covers the…"
+    },
+    {
         "path": "docs/json/developer/procgen/sphere-growth.md",
         "title": "Sphere-Driven Growth",
         "section": "developer/procgen",
@@ -1349,6 +1355,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/seedling-bot.md",
             "docs/json/developer/procgen/seedling-constants.md",
             "docs/json/developer/procgen/seedling-editor.md",
+            "docs/json/developer/procgen/seedling-solver-surface.md",
             "docs/json/developer/procgen/sphere-growth.md",
             "docs/json/developer/procgen/stepped-pipeline.md",
             "docs/json/developer/procgen/substrate-registry.md",
