@@ -3106,10 +3106,15 @@ describe('R9 slice 12c′: the PLANNER dashes toward the exit', () => {
          * relies on. `null` and `0` are NOT absent and must still fail.
          */
         for (const bad of ['nome', 'ALL', '', null, 0]) {
-            expect(() => strikePolicyFor({ inventory: { hasSword: true }, strikeBodies: [] },
+            expect(() => strikePolicyFor({
+                inventory: { hasSword: true }, strikeBodies: [],
+                // ⛓ ENGINE-PREP C4 (and C3): the family reads these through the queries
+                progress(field) { return this[field]; },
+                entities(family) { return this[family]; },
+            },
                 { dashMode: bad })).toThrow(/is not a dash mode/);
         }
-        expect(strikePolicyFor({ inventory: { hasSword: false } },
+        expect(strikePolicyFor({ inventory: { hasSword: false }, progress(field) { return this[field]; } },
             { dashMode: undefined })).toBe(null);
         // ⛓ and the message names the three states, so the fix is in the error.
         expect(() => dashPrefixesFor('nome')).toThrow(/none \| full \| all/);

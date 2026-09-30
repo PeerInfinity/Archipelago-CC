@@ -1470,10 +1470,10 @@ function solverPlanOpts(run, contacts, extra = {}) {
     return {
         liveBag: run.liveGeometryOpts(),
         avoidVolumes: true,
-        keys: run.keys,
+        keys: run.progress('keys'),
         contacts,
         lattice: DEFAULT_LATTICE,
-        inventory: run.inventory,
+        inventory: run.progress('inventory'),
         noHazards: run.noHazards,
         ...extra,
     };
@@ -1553,7 +1553,7 @@ function lanesUnpublishedByLeaving(run) {
  */
 function senseContacts(run) {
     return new Set(contactsAt(run.world, run.state.x, run.state.y,
-        { avoidVolumes: true, keys: run.keys }));
+        { avoidVolumes: true, keys: run.progress('keys') }));
 }
 
 /**
@@ -1755,7 +1755,7 @@ export const ECONOMIES_ROSTER_WIDE = false;
 export function strikePolicyFor(run, { dashPlan = null,
     dashMode = DEFAULT_DASH_MODE } = {}) {
     assertDashMode(dashMode, 'strikePolicyFor');
-    const hasSword = run.inventory?.hasSword || run.inventory?.hasGhostSword || false;
+    const hasSword = run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword || false;
     if (!hasSword) return null;
     /**
      * ⛔ A PLANNED DASH IS A MOVE, AND A MOVE DOES NOT NEED A BODY. The
@@ -1883,7 +1883,7 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
      * `pendingThrust` live at the preview's start is consumed by that tick's
      * `applyThrust` and nothing here creates another.
      */
-    const slashLive = strike ? run.slashInfo : null;
+    const slashLive = strike ? run.progress('slashInfo') : null;
     let slashState = slashLive ? slashLive.state : null;
     /**
      * ⛓⛓⛓ R9 SLICE 12c‴ — **THE PREVIEW'S OWN SWORD WINDOW**, threaded exactly
@@ -2437,7 +2437,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
      * preview a whole corridor per candidate tick would be a scan whose answer
      * is known from one field.
      */
-    if (!(run.inventory?.hasSword || run.inventory?.hasGhostSword)) {
+    if (!(run.progress('inventory')?.hasSword || run.progress('inventory')?.hasGhostSword)) {
         return refuse('this room holds no sword, so `set slashing`\'s outer gate refuses '
             + 'every press and no schedule can buy a single pixel');
     }
@@ -3422,7 +3422,7 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
         for (const rock of rocks) {
             if (state.rocks.has(rock.rockId)) continue;
             if (refusedMoves.has(`${key}|break:${rock.rockId}`)) continue;
-            const weapon = run.primaryWeapon;
+            const weapon = run.progress('primaryWeapon');
             if (weapon !== 'sword') {
                 if (atStart) {
                     rejected.push(phrase.rock(rock.rockId, weapon === null
@@ -3435,7 +3435,7 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
                 }
                 continue;
             }
-            if (!rockBreaksUnder(rock.rockType, run.inventory)) {
+            if (!rockBreaksUnder(rock.rockType, run.progress('inventory'))) {
                 if (atStart) {
                     rejected.push(phrase.rock(rock.rockId, `\`BreakableRock.hit(_t)\` is `
                         + `\`rockType <= _t\` with \`_t = hasGhostSword ? 1 : 0\`; this rock is `
@@ -6070,7 +6070,7 @@ function execKill(run, perTick, resolved, ctx) {
      * the persistence slot — so the run's own ledger has the REMOVAL tick and
      * `activators.opensOnTick` has the fade, and the sum is the declaration.
      */
-    const opens = (run.chaserKillLockOpens ?? []).filter((o) => !o.nil && o.level === run.level);
+    const opens = (run.ledger('chaserKillLockOpens') ?? []).filter((o) => !o.nil && o.level === run.level);
     const mine = opens.filter((o) => o.opens.some((x) => x.at === resolved.lock.id));
     const last = mine[mine.length - 1] ?? opens[opens.length - 1] ?? null;
     if (!last) {
@@ -6380,14 +6380,14 @@ function execKillByPress(run, perTick, resolved, ctx) {
              */
             held = safeStep(run, held, [NO_KEYS, ...Object.values(FACING_KEYS)
                 .map((k) => new Set([k]))], ctx.what, plan.id);
-            const before = (run.spinnerPressHits ?? []).length;
+            const before = (run.ledger('spinnerPressHits') ?? []).length;
             perTick.push(held);
             const { transition } = run.advance(held);
             if (transition) {
                 fail(`${ctx.what}: the run crossed to level ${transition.to_level} while `
                     + `pressing ${plan.id}. A kill does not survive the door (trap 150).`);
             }
-            for (const h of (run.spinnerPressHits ?? []).slice(before)) {
+            for (const h of (run.ledger('spinnerPressHits') ?? []).slice(before)) {
                 if (h.landed) landings.push({ t: h.t, id: h.id, hits: h.hits });
             }
         }
@@ -6470,7 +6470,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
      * ⚠ AND THE REMAINDER IS `max(0, clearTick − now)`: a walk that outlasts
      * the fade waits ZERO and the loop below simply finds the lock gone.
      */
-    const removals = (run.spinnerKillLockOpens ?? [])
+    const removals = (run.ledger('spinnerKillLockOpens') ?? [])
         .filter((o) => !o.nil && o.level === run.level);
     const removalsMine = removals.filter(
         (o) => o.opens.some((x) => x.at === resolved.lock.id));
@@ -6790,7 +6790,7 @@ function execFight(run, perTick, resolved, ctx) {
     let seenStabs = 0;
     let presses = 0;
     const windows = [];
-    const removedAt = () => (run.shieldBossKills ?? []).find(
+    const removedAt = () => (run.ledger('shieldBossKills') ?? []).find(
         (k) => k.id === id && k.what === 'removeRequested');
     for (let spent = 0; spent <= bound; spent += 1) {
         const gone = removedAt();
@@ -6809,7 +6809,7 @@ function execFight(run, perTick, resolved, ctx) {
          * the policy asks the model the same question the model asked the
          * transcription — one arithmetic, not two.
          */
-        const stabs = (run.shieldBossStabs ?? []).filter(
+        const stabs = (run.ledger('shieldBossStabs') ?? []).filter(
             (r) => r.id === id && !r.retaliation);
         if (stabs.length > seenStabs) {
             seenStabs = stabs.length;
@@ -6849,14 +6849,14 @@ function execFight(run, perTick, resolved, ctx) {
 function resolveKeylockStrategy(run, obstacle, contacts, blocked = []) {
     const row = (run.world.activators ?? []).find((a) => a.id === obstacle.id);
     if (!row || !KEY_RESPONDERS[row.tag]) return null;
-    if (!run.keys?.has(row.keyType)) {
+    if (!run.progress('keys')?.has(row.keyType)) {
         return {
             strategy: 'keylock',
             held: false,
             rejected: [{
                 option: `stand on ${obstacle.id}`,
                 why: `\`BossLock.update\` gates on \`Player.hasKey(${row.keyType})\` and `
-                    + `this run holds [${[...(run.keys ?? [])].join(', ') || 'no keys'}]. `
+                    + `this run holds [${[...(run.progress('keys') ?? [])].join(', ') || 'no keys'}]. `
                     + 'A stance on an unkeyed bosslock is a wait with no mechanism behind '
                     + 'it — the key is a SUB-ORDER, not a parameter.',
             }],
@@ -7042,7 +7042,7 @@ function resolveTouchStrategy(run, obstacle, contacts, blocked = []) {
     const row = (run.world.activators ?? []).find((a) => a.id === obstacle.id);
     if (!row || !TOUCH_RESPONDERS[row.tag]) return null;
     const need = row.shield ?? 'hasShield';
-    if (!run.inventory?.[need]) {
+    if (!run.progress('inventory')?.[need]) {
         return {
             strategy: 'touch',
             held: false,
@@ -7226,7 +7226,7 @@ function execTouch(run, perTick, resolved, ctx) {
         // it is the honest signal — the game has already taken the player's
         // input, so a key held past it is a span that buys nothing and a
         // velocity that could carry them out of the rect.
-        const refused = run.inputRefused;
+        const refused = run.progress('inputRefused');
         if (refused && snappedAt === null) snappedAt = perTick.length;
         const held = refused ? NO_KEYS : into;
         perTick.push(held);
@@ -7280,7 +7280,7 @@ function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
      * particular body can be acted on" are different claims.
      */
     if (!rock) return null;
-    const weapon = run.primaryWeapon;
+    const weapon = run.progress('primaryWeapon');
     if (weapon !== 'sword') {
         return {
             strategy: 'break',
@@ -7306,7 +7306,7 @@ function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
             }],
         };
     }
-    if (!rockBreaksUnder(rock.rockType, run.inventory)) {
+    if (!rockBreaksUnder(rock.rockType, run.progress('inventory'))) {
         return {
             strategy: 'break',
             held: false,
@@ -7316,7 +7316,7 @@ function resolveBreakStrategy(run, obstacle, contacts, blocked = []) {
                 why: `\`BreakableRock.hit(_t)\` is \`if (rockType <= _t)\` and \`Player.as:`
                     + `1071-1074\` passes \`hasGhostSword ? 1 : 0\`; this rock is rockType `
                     + `${rock.rockType ?? 0} and the run holds `
-                    + `${run.inventory?.hasGhostSword ? 'the ghost sword' : 'NO ghost sword'}`
+                    + `${run.progress('inventory')?.hasGhostSword ? 'the ghost sword' : 'NO ghost sword'}`
                     + '. ⛔ The swing would LAND and do nothing — `levelRun` records it as '
                     + '`{broke: false}` rather than as a miss. ⇒ THE NEXT WORK ORDER IS THE '
                     + 'GHOST SWORD: a `breakablerockghost` is one AS3 class away from the '
@@ -7574,7 +7574,7 @@ function execBreak(run, perTick, resolved, ctx) {
         // ⛓ R9 slice L16 — a weigh route's break waits ARMED (`execWeigh`).
         let held = pressedAt !== null && ctx.idleStrike && !run.state.fall
             ? ctx.idleStrike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, NO_KEYS,
-                { slash: run.slashInfo }).held
+                { slash: run.progress('slashInfo') }).held
             : NO_KEYS;
         if (pressedAt === null) {
             const want = facingToward(run.state, resolved.target);
@@ -7707,7 +7707,7 @@ function execPull(run, perTick, resolved, ctx) {
      * latch is `hit()`'s real no-op, and spending ticks on it proves nothing.
      */
     if (latched()) {
-        const pull = (run.ropePulls ?? []).find((p) => p.id === resolved.rope) ?? null;
+        const pull = (run.ledger('ropePulls') ?? []).find((p) => p.id === resolved.rope) ?? null;
         return { verb: 'pull', target: resolved.rope, group: resolved.group, from,
             ticks: 0, pressedAt: null, stance: resolved.stance, silenced: resolved.traps,
             pulledBy: `the approach — ${resolved.rope} was pulled at tick `
@@ -9127,7 +9127,7 @@ export function solveSegment({
             const ropeId = silencer.rope.ropeId;
             let pull = null;
             let pullWhy = null;
-            const weapon = run.primaryWeapon;
+            const weapon = run.progress('primaryWeapon');
             if (weapon !== 'sword') {
                 // ⛔ `break`'s own gate: the pull this rung derives is a SWORD swing.
                 pullWhy = `${ropeId} silences [${silencer.traps.join(', ')}] (group `

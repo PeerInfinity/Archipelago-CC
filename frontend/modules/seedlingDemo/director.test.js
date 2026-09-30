@@ -842,6 +842,9 @@ describe('⛓⛓ the live envelope is ONE function, and the page re-exports it',
             saveState: {
                 sealSlotsEarned: 0, totem_parts: [], keys: [], bootSealParts: [],
             },
+            // ⛓ ENGINE-PREP C4: the family reads these through the two queries
+            ledger(kind) { return this[kind]; },
+            progress(field) { return this[field]; },
         };
         expect(jsLiveEnvelope(run, [], ['dead_frames']).cleared)
             .toEqual([{ level: 5, tag: 0 }]);
@@ -860,6 +863,8 @@ describe('⛓⛓ the live envelope is ONE function, and the page re-exports it',
             saveState: {
                 sealSlotsEarned: 0, totem_parts: [], keys: [], bootSealParts: [],
             },
+            ledger(kind) { return this[kind]; },
+            progress(field) { return this[field]; },
         };
         const boot = [{ level: 8, tag: 1 }, { level: 5, tag: 0, at: 427 }];
         expect(jsLiveEnvelope(run, boot, []).cleared).toEqual([{ level: 8, tag: 1 }]);
@@ -871,6 +876,8 @@ describe('⛓⛓ the live envelope is ONE function, and the page re-exports it',
             saveState: {
                 sealSlotsEarned: 0, totem_parts: [], keys: [], bootSealParts: [],
             },
+            ledger(kind) { return this[kind]; },
+            progress(field) { return this[field]; },
         };
         expect(jsLiveEnvelope(run, [], []).cleared).toEqual([]);
     });

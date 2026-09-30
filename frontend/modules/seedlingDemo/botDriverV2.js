@@ -582,7 +582,7 @@ const TALK_HELD = new Set(['primary']);
  */
 function holdUntilUnfrozen(run, perTick, what) {
     let spent = 0;
-    while ((run.frozenTimer ?? 0) > 1) {
+    while ((run.progress('frozenTimer') ?? 0) > 1) {
         if (spent > FREEZE_HOLD_CEILING) {
             fail(`${what}: still frozen after ${spent} held ticks. One `
                 + '`IceTurretBlast` contact refuses input for 14, so a hold this long '
@@ -1371,7 +1371,7 @@ function runBait(run, perTick, bait, what) {
             + 'that presents the player to the lane. Omit it for a bait whose stance is '
             + 'already inside one.');
     }
-    const contactsBefore = run.crusherContacts.length;
+    const contactsBefore = run.ledger('crusherContacts').length;
     const driveSpans = (spans, phase) => {
         for (const span of spans) {
             const keys = heldFromKey(span.key, `${what}: the ${phase}`);
@@ -1407,7 +1407,7 @@ function runBait(run, perTick, bait, what) {
     }
     driveSpans(bait.spans ?? [], 'escape');
     const after = run.entities('crushers').get(id);
-    const contacts = run.crusherContacts.slice(contactsBefore);
+    const contacts = run.ledger('crusherContacts').slice(contactsBefore);
     if (contacts.length > 0) {
         fail(`${what}: the choreography was RUN OVER — ${contacts.length} tick(s) with the `
             + `player inside ${id}'s 32x32 body, first at t${contacts[0].t}. `
@@ -1689,8 +1689,8 @@ function runDwell(run, perTick, dwell, what) {
             + 'is spent, so waiting for it proves nothing. Either an earlier step did the '
             + 'work or the policy is baiting a body that is not there.');
     }
-    const hitsBefore = run.playerHits.length;
-    const deathsBefore = run.playerDeaths.length;
+    const hitsBefore = run.ledger('playerHits').length;
+    const deathsBefore = run.ledger('playerDeaths').length;
     const at = { x: run.state.x, y: run.state.y };
     let metAt = null;
     for (let i = 1; i <= ticks; i += 1) {
@@ -1708,7 +1708,7 @@ function runDwell(run, perTick, dwell, what) {
                 // SWING or DASH. Read before `advance`, which is where the
                 // preview reads its own threaded copy from — `slashTimerTick`
                 // runs at the TOP of the tick, above the press.
-                { slash: run.slashInfo }).held
+                { slash: run.progress('slashInfo') }).held
             : NO_HELD;
         perTick.push(held);
         const { transition } = run.advance(held);
@@ -1718,10 +1718,10 @@ function runDwell(run, perTick, dwell, what) {
                 + 'room: leaving RESPAWNS every enemy in it while the clear stays durable, '
                 + 'so a dwell that left would be undoing itself (trap 150).');
         }
-        if (run.playerHits.length !== hitsBefore || run.playerDeaths.length !== deathsBefore) {
+        if (run.ledger('playerHits').length !== hitsBefore || run.ledger('playerDeaths').length !== deathsBefore) {
             fail(`${what}: the dwell was HIT at tick ${i} `
-                + `(hits ${hitsBefore} -> ${run.playerHits.length}, deaths `
-                + `${deathsBefore} -> ${run.playerDeaths.length}). The stance was derived to `
+                + `(hits ${hitsBefore} -> ${run.ledger('playerHits').length}, deaths `
+                + `${deathsBefore} -> ${run.ledger('playerDeaths').length}). The stance was derived to `
                 + 'be outside every danger the map can name; the GAME says otherwise, which '
                 + 'is the map being a heuristic and the run being the oracle.');
         }
@@ -1841,7 +1841,7 @@ function runHold(run, perTick, hold, what, before = null) {
     const trapsChanging = trapGroup.filter(
         (a) => trapsArmedBefore.has(a.id) === (a.shootDefault === true),
     );
-    const writesBefore = crossRoom ? run.roomWrites.length : 0;
+    const writesBefore = crossRoom ? run.ledger('roomWrites').length : 0;
     if (shutBefore.length === 0 && quietBefore.length === 0 && trapsChanging.length === 0
         && !crossRoom) {
         // ⚠ THE DIAGNOSIS BRANCHES ON WHICH ARM IS EMPTY. A group with no
@@ -1961,7 +1961,7 @@ function runHold(run, perTick, hold, what, before = null) {
                 + '`activate XOR shootDefault`, so a hold that leaves one where it was '
                 + 'either missed the button or is holding a group nothing answers.');
         }
-        volleys = run.arrowVolleys.filter((v) => trapGroup.some((a) => a.id === v.id));
+        volleys = run.ledger('arrowVolleys').filter((v) => trapGroup.some((a) => a.id === v.id));
         const firing = trapGroup.filter((a) => armedNow.has(a.id));
         if (firing.length > 0 && volleys.length === 0) {
             fail(`${what}: ${firing.length} trap(s) in group t=${presser.t} are ARMED `
@@ -1973,14 +1973,14 @@ function runHold(run, perTick, hold, what, before = null) {
     // ⛓ THE CROSS-ROOM EFFECT: the write happened, and it names this presser.
     let wrote = null;
     if (crossRoom) {
-        wrote = run.roomWrites.slice(writesBefore)
+        wrote = run.ledger('roomWrites').slice(writesBefore)
             .filter((w) => w.id === `${presser.tag}@${presser.x},${presser.y}`);
         if (wrote.length === 0) {
             // The write is emitted ONCE PER VISIT (`roomWritten`), so a hold
             // that arrives after the approach already made it sees none — the
             // same latch shape as everything else in this verb. Fall back to
             // the whole ledger, which still fails for a presser nobody stood on.
-            wrote = run.roomWrites
+            wrote = run.ledger('roomWrites')
                 .filter((w) => w.id === `${presser.tag}@${presser.x},${presser.y}`);
         }
         if (wrote.length === 0) {
@@ -2154,9 +2154,9 @@ function runKeyLock(run, perTick, keylock, what) {
             + 'through the lock whether or not it ever opened.');
     }
     const lock = resolveKeyLock(run.world, keylock.lock, what);
-    if (!run.keys.has(lock.keyType)) {
+    if (!run.progress('keys').has(lock.keyType)) {
         fail(`${what}: ${lock.id} gates on \`Player.hasKey(${lock.keyType})\` and the run `
-            + `holds key type(s) [${[...run.keys].join(', ') || 'none'}]. `
+            + `holds key type(s) [${[...run.progress('keys')].join(', ') || 'none'}]. `
             + '`BossKey.removed()` is the only writer, so this means the key pickup is '
             + 'later in the route than the lock it opens — or in another segment, which '
             + 'is the same thing: a key is NOT inheritable through a boot grant.');
@@ -2194,7 +2194,7 @@ function runKeyLock(run, perTick, keylock, what) {
         fail(`${what}: ${lock.id} is STILL SOLID after ${window + KEY_LOCK_SLACK} ticks `
             + `of standing on its line. \`opensOnKeyTick\` says ${window}.`);
     }
-    const opened = run.keyOpens[run.keyOpens.length - 1];
+    const opened = run.ledger('keyOpens')[run.ledger('keyOpens').length - 1];
     if (!opened || opened.id !== lock.id) {
         fail(`${what}: ${lock.id} reports open but the run's keyOpens ledger names `
             + `${opened ? opened.id : 'nothing'} — the two halves disagree about which `
@@ -2278,7 +2278,7 @@ function runTouch(run, perTick, touch, maxTicks, what) {
     // simply false, the lock stays Solid, and the approach below would spend
     // its whole budget pressing into a wall — a timeout naming a waypoint,
     // for a route-ordering defect.
-    if (run.inventory[lock.shield] !== true) {
+    if (run.progress('inventory')[lock.shield] !== true) {
         fail(`${what}: ${lock.id} opens on \`Player.${lock.shield}\`, which the run does `
             + 'NOT have yet. The order is load-bearing — the shield room comes first — '
             + 'and without it the lock never activates at all.');
@@ -2296,7 +2296,7 @@ function runTouch(run, perTick, touch, maxTicks, what) {
     };
     const from = perTick.length;
     let approach = 0;
-    while (!run.inputRefused) {
+    while (!run.progress('inputRefused')) {
         if (approach >= maxTicks) {
             const s = run.state;
             fail(`${what}: pressed toward ${lock.id} for ${maxTicks} ticks without the `
@@ -2332,7 +2332,7 @@ function runTouch(run, perTick, touch, maxTicks, what) {
     // rather than counting to a number of its own.
     const at = { x: run.state.x, y: run.state.y };
     let window = 0;
-    while (run.inputRefused) {
+    while (run.progress('inputRefused')) {
         if (window >= maxTicks) {
             fail(`${what}: ${lock.id}'s input-refused window has run ${maxTicks} ticks `
                 + 'without closing. A Lock fades in 101; a window that does not end is a '
@@ -2365,7 +2365,7 @@ function runTouch(run, perTick, touch, maxTicks, what) {
             + 'flag, so a window that ends without opening the lock means the two have '
             + 'come apart.');
     }
-    const record = run.lockSnaps[run.lockSnaps.length - 1];
+    const record = run.ledger('lockSnaps')[run.ledger('lockSnaps').length - 1];
     if (!record || record.id !== lock.id) {
         fail(`${what}: the run recorded no completed touch-lock window for ${lock.id}.`);
     }
@@ -2536,7 +2536,7 @@ function faceTowards(run, perTick, facing, what) {
         }
         const o = plannerObstacleAt(run.world, run.state.x, run.state.y, null,
             liveGeometryOpts(run, {
-                noclip: false, noHazards: run.noHazards, inventory: run.inventory,
+                noclip: false, noHazards: run.noHazards, inventory: run.progress('inventory'),
             }));
         if (o) {
             fail(`${what}: the face nudge moved the player from (${before.x},${before.y})`
@@ -2759,7 +2759,7 @@ function runKill(run, perTick, kill, what) {
     // leg may ask for more; gate 4 (`hits < hitsMax`) makes the extra ones
     // true no-ops rather than a second death.
     const need = Math.ceil(ICE_TURRET.hitsMax
-        / (run.inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE));
+        / (run.progress('inventory')?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE));
     const count = presses ?? need;
     if (!Number.isInteger(count) || count < need) {
         fail(`${what}: ${count} press(es) cannot kill ${id} — it takes ${need} landed `
@@ -2774,7 +2774,7 @@ function runKill(run, perTick, kill, what) {
     // stands in a three-blast spread on purpose; this counts what that
     // bought the turret. ⛔ `levelRun` already REFUSES a press that lands
     // inside a freeze span, so a leg that gets here has spent only ticks.
-    const freezesBefore = (run.blastFreezes ?? []).length;
+    const freezesBefore = (run.ledger('blastFreezes') ?? []).length;
     for (let k = 0; k < count; k += 1) {
         // ⛓⛓⛓ R5 SLICE 22: and this is where the stance's own price is
         // paid. Every kill stance is 112 px inside `attackRange`, so a
@@ -2855,7 +2855,7 @@ function runKill(run, perTick, kill, what) {
      * — is a diff rather than a still-green pass.
      * [[feedback_bounded_sweep_must_name_what_it_bounded]]
      */
-    const record = (run.turretKills ?? []).filter((k) => k.id === id);
+    const record = (run.ledger('turretKills') ?? []).filter((k) => k.id === id);
     if (record.length !== 1) {
         fail(`${what}: the run recorded ${record.length} kills of ${id} and the leg is `
             + 'ONE. A second entry means the body was killed twice, which `IceTurret.hit`'
@@ -2880,8 +2880,8 @@ function runKill(run, perTick, kill, what) {
          * cost. Replaces `blastsUnmodelled`: the gap that string declared
          * is closed, and what a leg owes now is a NUMBER.
          */
-        blastFreezes: (run.blastFreezes ?? []).slice(freezesBefore),
-        blastFreezeTicks: ((run.blastFreezes ?? []).length - freezesBefore)
+        blastFreezes: (run.ledger('blastFreezes') ?? []).slice(freezesBefore),
+        blastFreezeTicks: ((run.ledger('blastFreezes') ?? []).length - freezesBefore)
             * ICE_TURRET_PLAN.blasts.costTicksPerContact,
         at,
         pressTick,
@@ -3011,9 +3011,9 @@ function runSpear(run, perTick, spear, what) {
                     .map((e) => e.rockId).join(' ') || 'none'}]. A rock is named by the `
                 + 'coordinates the LEVEL built it at.');
         }
-        if (!rockBreaksUnder(solid.rockType, run.inventory)) {
+        if (!rockBreaksUnder(solid.rockType, run.progress('inventory'))) {
             fail(`${what}: ${id} is rockType ${solid.rockType} and the run holds `
-                + `${run.inventory?.hasGhostSword ? 'the ghostsword' : 'no ghostsword'}. `
+                + `${run.progress('inventory')?.hasGhostSword ? 'the ghostsword' : 'no ghostsword'}. `
                 + '`hit(_t)` breaks only when `rockType <= _t` and `Player.as:1071-1074` '
                 + 'passes `hasGhostSword ? 1 : 0`, so this press would be a real no-op.');
         }
@@ -3548,7 +3548,7 @@ function runShove(run, perTick, shove, what) {
          */
         const held = shove.strike && !run.state.fall
             ? shove.strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, NO_HELD,
-                { slash: run.slashInfo }).held
+                { slash: run.progress('slashInfo') }).held
             : NO_HELD;
         perTick.push(held);
         const { transition } = run.advance(held);
@@ -3668,10 +3668,10 @@ function runFire(run, perTick, fire, what) {
      * OBLIGATION, not a remark: a fire leg needs an `equip` target ahead of
      * it, and this is where its absence gets named.
      */
-    if (run.primaryWeapon !== 'fire') {
+    if (run.progress('primaryWeapon') !== 'fire') {
         fail(`${what}: the run's selected slot holds `
-            + `${run.primaryWeapon ? `a ${run.primaryWeapon}` : 'NOTHING'} `
-            + `(Main.primary = ${run.primary}), so \`useItem\` would fire that instead. `
+            + `${run.progress('primaryWeapon') ? `a ${run.progress('primaryWeapon')}` : 'NOTHING'} `
+            + `(Main.primary = ${run.progress('primary')}), so \`useItem\` would fire that instead. `
             + 'A fire press needs an `equip` target ahead of it — `fire()` is a different '
             + 'rect, a different window and a different arm table from a slash, and the '
             + 'effect check below would report the target unmoved without ever saying '
@@ -4018,7 +4018,7 @@ function runFire(run, perTick, fire, what) {
                     + 'mistyped coordinate are different bugs and this does not guess.');
             }
             if ((run.entities('burnedTrees') ?? new Set()).has(tree.id)
-                || run.treeBurns.some((t) => t.id === tree.id)) {
+                || run.ledger('treeBurns').some((t) => t.id === tree.id)) {
                 fail(`${what}: ${tree.id} is ALREADY BURNING or BURNED before the press, so `
                     + 'setting it alight proves nothing. `hit()`\'s body is behind '
                     + '`if (t == "Fire" && !burn)`, so a second press on a burning tree '
@@ -4349,7 +4349,7 @@ function runFire(run, perTick, fire, what) {
         // the plan never predicted.
         const namedIds = new Set(expect.live.map((t) => t.id));
         const strays = [...burnedNow].filter((id) => !namedIds.has(id));
-        const strayStarts = run.treeBurns.filter((b) => !namedIds.has(b.id));
+        const strayStarts = run.ledger('treeBurns').filter((b) => !namedIds.has(b.id));
         if (strays.length > 0 || strayStarts.length > 0) {
             fail(`${what}: the press at (${at.x},${at.y}) ALSO set alight `
                 + `[${[...new Set([...strays, ...strayStarts.map((b) => b.id)])].join(', ')}], `
@@ -4484,7 +4484,7 @@ function runFire(run, perTick, fire, what) {
                 // no timestamps and the whole finding here is a gap of 41
                 // ticks between the two. `t` is the press and `goneAt` is
                 // `removed()`, which is where `Game.setPersistence` lives.
-                const rec = run.treeBurns.find((b) => b.id === t.id);
+                const rec = run.ledger('treeBurns').find((b) => b.id === t.id);
                 return {
                     id: t.id,
                     tag: t.tag,
@@ -4676,11 +4676,11 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
         // waypoint crosses it. The ledger carries the tick it really
         // happened on, which is the only honest number here.
         if (openedAt === null && run.entities('openChests').has(target.id)) {
-            openedAt = run.chestOpens.find((c) => c.id === target.id)?.t ?? i;
+            openedAt = run.ledger('chestOpens').find((c) => c.id === target.id)?.t ?? i;
         }
         if (openedAt !== null && collectedAt === null
-            && run.sealCollections.length > 0
-            && run.sealCollections[run.sealCollections.length - 1].from === target.id) {
+            && run.ledger('sealCollections').length > 0
+            && run.ledger('sealCollections')[run.ledger('sealCollections').length - 1].from === target.id) {
             collectedAt = i;
         }
         // The fade: `openTimer` runs 60 ticks after the flip and the entity
@@ -4713,7 +4713,7 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
             + 'A chest the leg did not name is a wall somewhere else that the plan '
             + 'still believes is standing.');
     }
-    const write = run.chestOpens.find((c) => c.id === target.id);
+    const write = run.ledger('chestOpens').find((c) => c.id === target.id);
     if (!write || write.persistTag !== target.persistTag) {
         fail(`${what}: ${target.id} opened but the run's chestOpens ledger names `
             + `${write ? `tag ${write.persistTag}` : 'nothing'}, against the census's `
@@ -4736,14 +4736,14 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
         openedAt,
         collectedAt: from + collectedAt,
         ticks: perTick.length - from,
-        deadFrames: run.sealCollections[run.sealCollections.length - 1].deadFrames,
+        deadFrames: run.ledger('sealCollections')[run.ledger('sealCollections').length - 1].deadFrames,
         band: [...band],
     };
 }
 
 function runCollect(run, perTick, collect, maxTicks, what) {
     const pickup = resolvePickup(run.world, collect.pickup, what);
-    const before = run.collected.length;
+    const before = run.ledger('collected').length;
     const level = run.level;
 
     // ── the approach ──────────────────────────────────────────────────
@@ -4789,7 +4789,7 @@ function runCollect(run, perTick, collect, maxTicks, what) {
     // never observed true and a loop waiting for it walks on top of the
     // pickup for its entire budget. (It did: 1,500 ticks standing inside
     // `bosskey@48,64`'s own volume.)
-    while (!run.inCeremony && run.collected.length === before) {
+    while (!run.progress('inCeremony') && run.ledger('collected').length === before) {
         if (approach >= maxTicks) {
             const s = run.state;
             fail(`${what}: walked at ${pickup.tag}@${pickup.x},${pickup.y} for `
@@ -4829,7 +4829,7 @@ function runCollect(run, perTick, collect, maxTicks, what) {
     // A textless ceremony has already recorded itself by the time the
     // approach loop exits, so this runs zero times — which is right: there
     // is no dialogue to page and no release to send.
-    while (run.collected.length === before) {
+    while (run.ledger('collected').length === before) {
         if (ticks >= maxTicks) {
             fail(`${what}: ${pickup.tag}@${pickup.x},${pickup.y}'s ceremony has not `
                 + `finished after ${maxTicks} ticks and ${cadence.releases} release(s). A `
@@ -4858,10 +4858,10 @@ function runCollect(run, perTick, collect, maxTicks, what) {
             + `land on a live frame and reach useItem(Main.primary).`);
     }
 
-    const record = run.collected[run.collected.length - 1];
-    if (!record || run.collected.length !== before + 1) {
+    const record = run.ledger('collected')[run.ledger('collected').length - 1];
+    if (!record || run.ledger('collected').length !== before + 1) {
         fail(`${what}: expected exactly one new ceremony, got `
-            + `${run.collected.length - before}.`);
+            + `${run.ledger('collected').length - before}.`);
     }
     if (record.level !== level) {
         fail(`${what}: the ceremony that ran was in level ${record.level}, not `
@@ -4946,7 +4946,7 @@ function drive(run, target, perTick, {
             held = strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, held,
                 // ⛓ R9 SLICE 12c — see `runDwell`'s own call: ONE policy, one
                 // question, and now one model of what the press will do.
-                { slash: run.slashInfo }).held;
+                { slash: run.progress('slashInfo') }).held;
         }
         perTick.push(held);
         // Where the player was when the edge could have fired. A pit's
@@ -5039,7 +5039,7 @@ function drive(run, target, perTick, {
                     + `(${s.x},${s.y}). ${effect.why} The static census cannot see this `
                     + 'volume, so this check is the only place it can be caught.');
             }
-            const v = run.world.avoidVolumesAt(box, { x: s.x, y: s.y }, { keys: run.keys })
+            const v = run.world.avoidVolumesAt(box, { x: s.x, y: s.y }, { keys: run.progress('keys') })
                 .find((h) => !contacts.has(contactKey(h)));
             if (v) {
                 fail(`${what}: the route entered a ${v.kind} — ${v.blocker.tag} at `
@@ -5314,7 +5314,7 @@ export function synthesizeLegs(legs, opts = {}) {
         // what the leg says it starts inside — see the FORCED CONTACTS
         // docblock. Both directions are named failures.
         const standing = contactsAt(run.world, run.state.x, run.state.y,
-            { avoidVolumes: Boolean(relax), keys: run.keys });
+            { avoidVolumes: Boolean(relax), keys: run.progress('keys') });
         const declared = new Set(leg.contacts ?? []);
         const undeclared = standing.filter((k) => !declared.has(k));
         if (undeclared.length > 0) {
@@ -5560,7 +5560,7 @@ export function synthesizeLegs(legs, opts = {}) {
         // a pickup that has been collected is GONE, so the tile the walk is
         // standing on the moment a ceremony ends must stop being an
         // obstacle — otherwise the next plan fails at its own START tile.
-        const contactsNow = () => new Set([...legContacts, ...run.takenPickups]);
+        const contactsNow = () => new Set([...legContacts, ...run.progress('takenPickups')]);
         // ⚠ `inventory` joins them at R4, and for the same reason: it is an
         // input that changes DURING a walk, not a decision the caller made
         // about a leg. `plannerObstacleAt`'s lethal-terrain policy gates on
@@ -5598,8 +5598,8 @@ export function synthesizeLegs(legs, opts = {}) {
             ...plan,
             contacts: contactsNow(),
             ...livePerVisitOpts(run),
-            inventory: run.inventory,
-            keys: run.keys,
+            inventory: run.progress('inventory'),
+            keys: run.progress('keys'),
             ...extra,
         });
 
@@ -5949,8 +5949,8 @@ export function synthesizeLegs(legs, opts = {}) {
     // and here it is worse than in `runTape`, because the driver PLANNED the
     // route: a grant naming a level the plan does not enter means the legs
     // and the grants disagree about what walk this is.
-    if (relax && run.unfiredGrantLevels.length > 0) {
-        fail(`the legs grant items in level(s) ${run.unfiredGrantLevels.join(', ')}, `
+    if (relax && run.progress('unfiredGrantLevels').length > 0) {
+        fail(`the legs grant items in level(s) ${run.progress('unfiredGrantLevels').join(', ')}, `
             + 'which the planned walk never enters. A grant fires on FIRST ENTRY, so '
             + 'either the legs stopped covering that room or the grant is stale.');
     }
@@ -5963,8 +5963,8 @@ export function synthesizeLegs(legs, opts = {}) {
     // A declared equip that never fires is a tape claiming a selection the
     // walk does not make, and every press after it would be a SWORD SLASH
     // with nothing saying so — the `unfiredGrantLevels` rule, one field over.
-    if (relax && run.unfiredEquipTicks.length > 0) {
-        fail(`the tape equips a slot at tick(s) ${run.unfiredEquipTicks.join(', ')}, `
+    if (relax && run.progress('unfiredEquipTicks').length > 0) {
+        fail(`the tape equips a slot at tick(s) ${run.progress('unfiredEquipTicks').join(', ')}, `
             + `which the ${perTick.length}-tick walk never reaches. An equip fires at `
             + 'its own observation, so either the walk got shorter or the tick is stale.');
     }
@@ -5991,9 +5991,9 @@ export function synthesizeLegs(legs, opts = {}) {
      * Measured on the shaft plan, which is exactly the leg the field exists
      * for. Loud here instead.
      */
-    if (relax && relax.equips === undefined && run.equipsFired.length > 0) {
-        fail(`synthesizeLegs: ${run.equipsFired.length} equip target(s) ran `
-            + `(slot(s) ${run.equipsFired.map((e) => e.slot).join(', ')}) and \`relax\` `
+    if (relax && relax.equips === undefined && run.ledger('equipsFired').length > 0) {
+        fail(`synthesizeLegs: ${run.ledger('equipsFired').length} equip target(s) ran `
+            + `(slot(s) ${run.ledger('equipsFired').map((e) => e.slot).join(', ')}) and \`relax\` `
             + 'does not declare `equips`. `equips` is version 4 and it is optional by '
             + 'PRESENCE, so the emitted tape would be version 3 and would never select '
             + 'the slot — the driver would verify one execution and the tape would '
@@ -6045,7 +6045,7 @@ export function synthesizeLegs(legs, opts = {}) {
         ...V3_FLOOR,
         ...(relax || {}),
         ...(relax && relax.persistence === undefined ? { persistence: [] } : {}),
-        ...(relax && relax.equips !== undefined ? { equips: run.equipsFired } : {}),
+        ...(relax && relax.equips !== undefined ? { equips: run.ledger('equipsFired') } : {}),
     });
     if (relax && (relax.pins ?? []).join(' ') !== (tape.pins ?? []).join(' ')) {
         fail(`synthesizeLegs: the plan declares pins [${(relax.pins ?? []).join(' ')}] and `
@@ -6116,13 +6116,13 @@ export function synthesizeLegs(legs, opts = {}) {
         chests: chestLegs.map((c) => ({ ...c })),
         /** Every pulse tick, every block a pulse moved, every seal collected. */
         pulses: {
-            hits: run.pulserHits,
-            pushes: run.pulserPushes,
-            playerHits: run.pulserPlayerHits,
+            hits: run.ledger('pulserHits'),
+            pushes: run.ledger('pulserPushes'),
+            playerHits: run.ledger('pulserPlayerHits'),
         },
-        seals: run.sealCollections,
-        chestOpens: run.chestOpens,
-        roomWrites: run.roomWrites,
+        seals: run.ledger('sealCollections'),
+        chestOpens: run.ledger('chestOpens'),
+        roomWrites: run.ledger('roomWrites'),
         // One record per SPEAR press the run verified: what it was aimed at,
         // which way the player was facing, where they stood, and the tick
         // range it cost. The tape carries a one-tick `primary` span and a
@@ -6163,12 +6163,12 @@ export function synthesizeLegs(legs, opts = {}) {
         // tape carries the same list (see `buildTape` above); this one also
         // says WHICH leg asked for it.
         equips: equips.map((e) => ({ ...e })),
-        keys: [...run.keys],
-        presses: run.presses,
+        keys: [...run.progress('keys')],
+        presses: run.ledger('presses'),
         /** Every sweep a wall stopped that the drive went on to arrive past. */
         grazes: grazes ? grazes.map((g) => ({ ...g })) : [],
-        grants: relax ? run.grantsFired : [],
-        inventory: relax ? run.inventory : null,
+        grants: relax ? run.ledger('grantsFired') : [],
+        inventory: relax ? run.progress('inventory') : null,
     };
 }
 

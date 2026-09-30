@@ -1438,7 +1438,7 @@ export function jsLiveEnvelope(run, bootPersistence, bootPins) {
      * −1 case (`levelRun.js`, the same comment), so there is nothing to fold
      * for them and inventing a fold would be a claim nothing drives.
      */
-    const outOfBand = (run.spinnerWrites ?? [])
+    const outOfBand = (run.ledger('spinnerWrites') ?? [])
         .filter((w) => w.outOfBand)
         .map((w) => ({ level: w.flag.level, tag: w.flag.tag }));
     /**
@@ -1464,7 +1464,7 @@ export function jsLiveEnvelope(run, bootPersistence, bootPins) {
      * not in the world yet — which is also why window 1's own timed rows are
      * filtered out of the boot fold below rather than trusted.
      */
-    const applied = run.appliedTimedClears ?? [];
+    const applied = run.ledger('appliedTimedClears') ?? [];
     /**
      * ⛓⛓⛓ R9 SLICE 6 — **AND THE BANKED WRITES BELONG HERE TOO**, which is the
      * same sentence one class further along and the third time this family has
@@ -1481,15 +1481,15 @@ export function jsLiveEnvelope(run, bootPersistence, bootPins) {
      * declaring `{11,0}` — the chest `r9-solve-11` opens at tick 6. No chain
      * before it had a window AFTER a chest open.
      */
-    const banked = run.bankedClears ?? [];
+    const banked = run.ledger('bankedClears') ?? [];
     const bootLatch = (bootPersistence ?? []).filter((c) => c.at === undefined);
-    for (const c of [...bootLatch, ...run.earnedClears, ...outOfBand, ...applied, ...banked]) {
+    for (const c of [...bootLatch, ...run.ledger('earnedClears'), ...outOfBand, ...applied, ...banked]) {
         const k = `${c.level}:${c.tag}`;
         if (seen.has(k)) continue;
         seen.add(k);
         cleared.push({ level: c.level, tag: c.tag });
     }
-    const save = run.saveState;
+    const save = run.progress('saveState');
     const idx = (bools) => bools.flatMap((v, i) => (v ? [i] : []));
     const blocks = { pins: [...(bootPins ?? [])] };
     const why = { ...jsBlocksWhy };
