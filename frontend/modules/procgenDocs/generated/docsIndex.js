@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 26,
         "headings": 929,
         "indexHeadings": 2,
-        "lines": 20846,
+        "lines": 20857,
         "pages": 4,
-        "words": 242630
+        "words": 242868
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -330,7 +330,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 36,
-            "lines": 542,
+            "lines": 544,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -339,7 +339,7 @@ export const DOCS_INDEX = frz({
                 "seedling-editor.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 9279
+            "words": 9337
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -371,10 +371,10 @@ export const DOCS_INDEX = frz({
             "file": "seedling-constants.md",
             "h1": "Seedling Constants Census",
             "headings": 15,
-            "lines": 523,
+            "lines": 532,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
-            "words": 7374
+            "words": 7554
         },
         {
             "description": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate.",

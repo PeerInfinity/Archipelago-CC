@@ -433,6 +433,8 @@ Build traps:
 
 Both pin observation and transition counts per tape, because a positional assertion alone is satisfiable by a bot that teleports.
 
+The two census gates stay vitest rows in the default tier: the constants census (`seedlingConstantsCensus.test.js`) and the solver-surface census (`seedlingSolverSurface.test.js`). They are not enrolled as `check-*.mjs` roster rows. The user decided this on 2026-09-30 (⚖ Q17). A roster row would be a second instrument for the same claim, and it would owe a standing row of its own.
+
 The fixture leg means something only while the expectations are oracle recordings. `fixtures/regenerate.mjs` writes `*.provisional.json` from our own engine, a bootstrap for a not-yet-recorded fixture; a verifier sharing the generator's assumptions verifies nothing. A test pins that no committed fixture rides that path.
 
 ### The bounded vacuities

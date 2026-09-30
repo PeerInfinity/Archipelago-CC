@@ -96,7 +96,7 @@ Every declaring module still exports its old name, now read from the profile (`e
 **The stamp.** `profileStamp()` is `{id, md5}`, the shape of a v13 tape's model-only `profile` field (`tapeEnvelope.validateProfile`).
 
 - `runTape`'s result carries it as `profile`. The observation stream does not: `runTapeToStream` still returns exactly `{ticks, transitions}`.
-- Emitted tapes stay unstamped by default. `buildStagedTape({ …, stampProfile: profileStamp() })` opts one in, which makes it a v13 tape that also spells `despawn: []`, the v10 list that version requires.
+- Emitted tapes stay unstamped by default. `buildStagedTape({ …, stampProfile: profileStamp() })` opts one in, which makes it a v13 tape that also spells `despawn: []`, the v10 list that version requires. The value form is the API. A `stampProfile: true` form was left open by A2 and is dropped, not owed: it would import `profileStamp` into a family file through that door, where the solver-surface table lives.
 - The v1–v5 emitters (`buildTape`, `synthesizeLegs`) do not stamp. A v13 tape must carry the fields of the versions below it, and those emitters do not write them.
 
 **How a new constant joins.**
@@ -110,7 +110,7 @@ Every declaring module still exports its old name, now read from the profile (`e
 Three gates hold the profile together:
 
 - `seedlingConstantsCensus.test.js` (v) and `--check` are red when the census's class, kind or as3 for a profile literal disagrees with `PROFILE_FIELDS`, or when the fields rows are not what `--profile-rows` generates.
-- `seedlingProfile.test.js`'s anchor row (it skips by name without `vendor/seedling`) resolves every anchor to its AS3 literal and asserts it equals the default. All 63 anchors resolve today, and an anchor that stops resolving is red.
+- `seedlingProfile.test.js`'s anchor row (it skips by name without `vendor/seedling`) resolves every anchor to its AS3 literal and asserts it equals the default, read from `PROFILE_DEFAULTS`. It reads the defaults rather than `PROFILE` because an override installed in a test process would otherwise be compared to the AS3 in their place. A row beside it asserts that `PROFILE_DEFAULTS` deep-equals `PROFILE` with no override, so the two readings agree today. All 63 anchors resolve today, and an anchor that stops resolving is red.
 
 ### Overrides
 
@@ -140,7 +140,16 @@ Three gates hold the profile together:
   - an install that comes after the profile module already evaluated is refused ("installed TOO LATE");
   - the model is imported dynamically after the install. A static `import` is hoisted above any call.
   - `scripts/procgen/run-seedling-tape.mjs <tape> [--profile=<path>] [--expect]` is the worked example. It prints the stream md5 and the live stamp.
-- **The page (open).** A `?profile=` URL would have to be fetched before the model modules import. The pages import them statically, so this needs either a top-level `await` in a bootstrap module or a dynamic-import entry. That is a design question for the arc's coordinator, and nothing in the browser sets the global today.
+- **The page: `watch.html?profile=<path>`.** The path is repo-relative, like `?tape=`. The page's inline module imports `seedlingDemo/profileBoot.js` instead of `watchViewer.js`. The bootstrap is dependency-free and does the following, in order:
+  1. reads `?profile=`;
+  2. fetches the file's text;
+  3. sets the global;
+  4. imports the profile, which validates the override;
+  5. logs the announcements to the console, each prefixed `[profile]`;
+  6. only then dynamically imports `watchViewer.js`.
+
+  A refusal, a failed fetch or a too-late install turns the page's status red, naming the `?profile=` path. With no `?profile=`, the bootstrap imports the entry and does nothing else: no fetch, and the global untouched. `profileBoot.test.js` covers these cases.
+  - **Not wired:** `mazeRoom/lab.html` also reaches the profile, through `mazeLabView.js`, and still imports it statically. So does the main app, through `flashPanel/seedlingSemantics.js`. On the bundled boot (`?bundled=true`), `frontend/dist/bundle.js` evaluates the profile when the bundle loads. Nothing there can set the global first, and `watch.html` has no bundled boot.
 
 ### The witness
 
