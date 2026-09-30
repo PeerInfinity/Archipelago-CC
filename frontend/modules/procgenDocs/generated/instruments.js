@@ -1961,7 +1961,8 @@ export const INSTRUMENTS = frz({
             "citedBy": [
                 "docs/json/developer/procgen/architecture.md",
                 "docs/json/developer/procgen/demos.md",
-                "docs/json/developer/procgen/seedling-bot-log.md"
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-constants.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [

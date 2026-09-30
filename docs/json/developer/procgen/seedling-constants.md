@@ -140,16 +140,14 @@ Three gates hold the profile together:
   - an install that comes after the profile module already evaluated is refused ("installed TOO LATE");
   - the model is imported dynamically after the install. A static `import` is hoisted above any call.
   - `scripts/procgen/run-seedling-tape.mjs <tape> [--profile=<path>] [--expect]` is the worked example. It prints the stream md5 and the live stamp.
-- **The page: `watch.html?profile=<path>`.** The path is repo-relative, like `?tape=`. The page's inline module imports `seedlingDemo/profileBoot.js` instead of `watchViewer.js`. The bootstrap is dependency-free and does the following, in order:
-  1. reads `?profile=`;
-  2. fetches the file's text;
-  3. sets the global;
-  4. imports the profile, which validates the override;
-  5. logs the announcements to the console, each prefixed `[profile]`;
-  6. only then dynamically imports `watchViewer.js`.
-
-  A refusal, a failed fetch or a too-late install turns the page's status red, naming the `?profile=` path. With no `?profile=`, the bootstrap imports the entry and does nothing else: no fetch, and the global untouched. `profileBoot.test.js` covers these cases.
-  - **Not wired:** `mazeRoom/lab.html` also reaches the profile, through `mazeLabView.js`, and still imports it statically. So does the main app, through `flashPanel/seedlingSemantics.js`. On the bundled boot (`?bundled=true`), `frontend/dist/bundle.js` evaluates the profile when the bundle loads. Nothing there can set the global first, and `watch.html` has no bundled boot.
+- **The page: `watch.html?profile=<path>`.** The path is repo-relative, like `?tape=`. `seedlingDemo/profileBoot.js` is a CLASSIC script loaded before the page's inline module, and that module is unchanged (`import { main } from './watchViewer.js'`). A classic script runs while the document parses and every module runs after, so the fetch is synchronous and the global is set before the first module evaluates.
+  - **What it does.** It fetches the file's text and sets the global. After load, it logs the announcements to the console, each prefixed `[profile]`, and refuses an install that came too late.
+  - **A refusal** fails the model's import, and `#status` turns red, naming the `?profile=` path.
+  - **A failed fetch** installs text the profile refuses. The page then never runs the defaults under a URL that asked for a profile, and `#status` shows the fetch error.
+  - **With no `?profile=`**, it reads `location.search` and returns. Measured on `?tape=collide-up-rock`, the old and new page have identical status, detail, HUD and console, and `__watch` differs only in its URL.
+  - `profileBoot.test.js` covers the logic.
+  - ⛔ **A module bootstrap was built first and measured wrong.** It dynamically imported the entry after a top-level `await`. `DOMContentLoaded` does not wait for that `await`, so `main()` ran after the page reported itself loaded, and `check-procgen-demos.mjs`'s CAMPAIGN row went red 3 times out of 3.
+  - **Not wired:** `mazeRoom/lab.html` also reaches the profile, through `mazeLabView.js`. So does the main app, through `flashPanel/seedlingSemantics.js`. On the bundled boot (`?bundled=true`), `frontend/dist/bundle.js` evaluates the profile when the bundle loads, and nothing loads this script first. `watch.html` has no bundled boot.
 
 ### The witness
 
