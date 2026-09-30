@@ -46,7 +46,7 @@ import { distanceRectPoint, SLASH_REACH } from './presses.js';
 import { SWORD_FORCE } from './combatVerbs.js';
 
 const DEATH_ANIM_TICKS = deathTicks('bob');
-import { createRunForStaging, runTapeToStream } from './tapeRunner.js';
+import { runTapeToStream } from './tapeRunner.js';
 import { isDeepStrictEqual } from 'node:util';
 
 const levelSource = atlasLevelSource();
@@ -2686,7 +2686,17 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
         it(`${name}: the query equals the getter for every family at every tick, `
             + `and the tape makes ${families.join(', ')} non-trivial`, () => {
             const tape = loadTape(name);
-            const run = createRunForStaging(tape, levelSource);
+            // ⚠ BUILT HERE, with THIS file's `createLevelRun` (the `r5-feather`
+            // row's staging, field for field) — not through `tapeRunner`, whose
+            // own import of `levelRun.js` would let a mutated copy of the
+            // module under test go unexercised (measured: C3's mutant (d)).
+            const run = createLevelRun({
+                levelSource, boot: { ...tape.boot }, noclip: tape.noclip,
+                noHazards: tape.noHazards, noDamage: tape.noDamage, grants: tape.grants,
+                persistence: tape.persistence, despawn: tape.despawn ?? [],
+                equips: tape.equips, pins: tape.pins, save: tape.save, rng: tape.rng,
+                seam: tape.seam, roles: ROLES,
+            });
             const { bad, seen } = compareEveryTick(run, tape.tick_count, (t) => heldKeysAt(tape, t));
             expect(bad).toEqual([]);
             for (const f of families) expect(seen.has(f), `${name} never made ${f} non-trivial`).toBe(true);
