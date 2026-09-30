@@ -10845,6 +10845,126 @@ cannot take.
 **D4 — the survey, 7/9.** Step 24 is REFUSED by the puncher name in 310.6 s
 under a 600 s bound raised for that row only. Steps 22, 23 and 25–30 are
 identical to U2's.
+### Seedling substrate U4b-swim — the moving refuge, the deep step-out, transit (2026-09-30)
+
+The solver's three remaining press-kill walls, each measured before it was
+touched. Two of the brief's three shapes were not what the measurement named.
+The report is `CC/docs/cloud-reports/seedling-swim-u4b.md`.
+
+**D1 — the refuge's window was not the wall; the clock was.** At (7,6)'s
+refusing tick 39 cells were clear for the whole 45-tick window, and every
+refuge preview had STALLED for 400 ticks. The player had been hit at t 64 by a
+live-arm press priced clear, and `previewStepper` freezes the hit's
+`steerBlocked` for the whole preview. The hit came from the pairing: `advance`
+steps the spinners, bills their contacts at `clock.now()` and only then ticks,
+so forecast row `i` swings at `gameTimeAt(i)`. `clearOfHammersAt` asked
+`gameTimeAt(i + 1)`, priced the press at Game.time 4885, and the run billed
+the hammer at 4884.
+- `spinnerClockPairing.test.js` drives the law over a 27-placement scan (a
+  player standing still until the first hammer hit). The same-index pairing
+  names the hit tick 27 times in 27. The old one missed it 20 times: 17 by one
+  tick, 3 entirely.
+- `clearOfHammersAt` now pairs row `i` with `gameTimeAt(i)`, and `safeStep`'s
+  one-row forecast resolves to `gameTimeAt(1)`.
+- Census chamber post-sword: **(7,6) SOLVES 213 t**. (5,5) 234 → 245 and
+  (6,6) 235 → 232; the other nine and all 13 pre-sword rows are
+  byte-identical. The six `--check`s are byte-identical.
+- Mutant (the index back to `i + 1`): (7,6)'s U3 text byte-identical, 2 rows red.
+- **No moving refuge was built.** The measurement named no refuge window to
+  widen.
+
+**D2 — the step-out: STOP.** At (2,7)'s refusal all ten key sets (the four
+diagonals and the press included) land in danger on the first tick, so no
+deeper search from that state exists. The corner is made earlier.
+`deriveStrike` prices the transit and the train, and never the WAIT between
+arrival and aim (trap 154's question, un-asked), so the player waits in the
+billiard's path.
+- Pricing that dwell **solves (2,7) in 266 t**, and every other census row
+  is byte-identical.
+- ⛔ It also re-routes the committed L18 fight: `solve-seedling-r9-campaign
+  --check` exit 1, `r9-solve-18` *"There is no step out."* at (137.99,96.15).
+  The rebound after a landing closes at ~4 px/tick.
+- A diagonal escalation of `stepToward` (depth 4, then 6) rescues L18 only
+  at 432 t, not 394, which moves the chain (5713 → 5751). Alone, the
+  escalation leaves (2,7)'s text byte-identical.
+- Nothing shipped. The dwell is the fix the measurement names, and landing it
+  needs a licence to re-record L18.
+
+**D3 — transit: the admission continues past the bounded pass.** Measured
+first:
+- (3,6): all 43 opportunities were four cells at +104…+126, every corridor
+  crossing the HAMMER, and 42 of 43 fail at the same tick under either
+  pairing.
+- CORRIDOR: all 41 were down the far leg, and every walk met the BODY at the
+  corner at +89.
+- Both rooms had a strike later in tick order, so the wall was the bound,
+  not the corridor.
+
+What shipped:
+- `deriveStrike` spells the (cell, tick) test once and caches one walk per
+  cell (its verdict does not read the tick).
+- With `continuation: true` (the admission in `derivePressKill` only) it
+  continues in tick order to the horizon, with the budget counted in distinct
+  cells (`STRIKE_CANDIDATES`). The refusal names it when it previewed any.
+- `execKillByPress` adopts a strike only the continuation found; its per-tick
+  re-derivations stay bounded.
+- Why only the admission, measured: on every derivation L18 re-plans 485 →
+  416 t (a tape move), and each refuge tick would pay a 640-tick scan.
+
+Results:
+- **(3,6) SOLVES 226 t** ((88,88) +142 after one more cell), and the
+  **CORRIDOR arm SOLVES 225 t** ((120,24) +399 after four).
+- Every other census row and all six `--check`s are byte-identical.
+- Mutant (`continuation: false`): both texts byte-identical to D1.
+- ⛔ The transit clock (`dangerMap.spinnerDanger`, `gameTimeAt(horizon)`) has
+  the same one-phase offset, and pairing it is correct by the same row. It did
+  not ship: it walks `r8-solve-18` into *"There is no step out."* at
+  (140.64,55.73) (`--check` exit 1, with or without the continuation). It is
+  the D2 wall again, so it waits on that licence.
+
+**D3b — the kill-lock press arm asks for the sword.** The lock-less arm asked
+`primaryWeapon` before calling `derivePressKill`; the kill-lock arm never did,
+and its without-sword runs refused only because *"nowhere to be"* fired first.
+With D1, seed 14's `--require=hasSword` without-arm planned 278 strikes, landed
+0 and exhausted the 2010-tick bound (STRONG → BOUND-DEPENDENT).
+- `derivePressKill` now refuses by the SUB-ORDER, asked LAST: first, it
+  drifted L5's committed trace (*"tracks NO live spinner bodies"*); before the
+  per-body checks, it hid `KILL_ARM_POLICY`.
+- Seed 14 is STRONG again; the census, the six `--check`s and the identity
+  block are unmoved by it.
+- Re-pointed by their own sweeps: `procgenCountableClock`'s hammer-safety
+  vehicle (4,1) → (1,3). Its 31-cell geometry has 12 such cells at W0 and 1
+  at head, *"There is no step out."* `procgenRoam`'s `winding` 14x14 s12
+  post-sword now certifies (650 t, `[kill, collect]`).
+
+**D4 — the census and the yield.**
+- Census chamber post-sword: **11 of 12** (U3: 9). (2,7) is the one left,
+  on the D2 wall. CORRIDOR post-sword SOLVES. Pre-sword: 6 of 12 at 218 t, the kill line the SUB-ORDER.
+- Corridor-body sweep post-sword (the same 3-way sharding before and after,
+  so the wall-clock timeouts compare):
+  - placed 135 → 144, certified **74 → 93**, named refusals 59 → 47.
+  - By text: *"nowhere to be"* **18 → 0**, *"no step out"* 6 → 10 (the D2
+    wall), ladder EXHAUSTED 25 → 25, *"the danger map forbids"* 6 → 8,
+    other 4 → 4.
+  - Harness: TIMEOUT 11 → 2, THREW 9 → 15, and every throw is the PhysicsV2
+    pit class (swim T2's).
+- ⚠ Seven identity rows moved, all post-sword measurement rows: acceptance,
+  c3, c6, c4, ENEMY census, killgate s9, level post-sword s1. Each is a
+  spinner gadget that was refused and now certifies. The default post-sword
+  s1 level now carries its kill gate (skeleton 81 → 410 t, and acceptance
+  seed 1 grades *requires Progressive Sword*, STRONG). killgate s9 goes
+  DROPPED → SOLVED. The ENEMY census CORRIDOR spinner goes REFUSED → SOLVED
+  257.
+- Pre-sword s1, killgate s2/s5, guard, AREA, maze, the six `--check`s, the
+  campaign census (`NO CHAIN ROOM MOVES`) and `fixtures/**` are unmoved.
+  `standing-values --write` was not run.
+- Roam yield: pre-sword 10/8 per-cell identical; post-sword 9/8 → 10/10.
+- Witness: `branchy` 10x10 s2 post-sword (refused at D1, certified by the
+  continuation, 364 t `[kill, collect]`). The wasm run agrees per tick over
+  365 observations, end Δ0, 0 failures.
+- Trap candidates, for the catalogue to number: the forecast row and the clock
+  row are one index; a wall that fires first can hide a missing precondition;
+  a (cell, tick) bound can spend itself on one cell.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
