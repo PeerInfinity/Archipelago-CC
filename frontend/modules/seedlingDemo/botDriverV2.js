@@ -66,45 +66,39 @@
 
 import {
     KEY_CODES, assertTapeWithinRuntimeBudget, coerceTerrainState, serializeTape,
-} from './tapeFormat.js';
-import { createLevelRun } from './levelRun.js';
-import { PRE_R5_ROLES, RELAXED_ROLES, TILE_SIZE } from './levelWorld.js';
-import { assertRect, rectsOverlap } from './levelWorld.js';
-import { LIVE_GEOMETRY_KEYS, isNormalizedLiveOpts, normalizeLiveOpts } from './levelWorld.js';
-import { playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
-import { TICKS_FROM_PRESS_TO_WALKABLE } from './bridges.js';
-import {
+    createLevelRun,
+    PRE_R5_ROLES, RELAXED_ROLES, TILE_SIZE,
+    assertRect, rectsOverlap,
+    LIVE_GEOMETRY_KEYS, isNormalizedLiveOpts, normalizeLiveOpts,
+    playerBoxAt, terrainProbeRect,
+    TICKS_FROM_PRESS_TO_WALKABLE,
     WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
-} from './breakableRocks.js';
-import { keyLineTouches, opensOnKeyTick } from './activators.js';
-import { FIRE_WINDOW, fireRect } from './fireVerb.js';
-// ⚠ ALIASED, because `breakableRocks` exports a constant of the SAME NAME
-// eight lines above and the two are different numbers for different
-// mechanics (7 ticks of shatter against 41 of animation). An unaliased
-// second import would have silently taken whichever the bundler resolved
-// last — a burn leg waiting a rock's window is exactly the shape of a green
-// tape that walks into a wall.
-import {
-    HIT_TO_GONE_TICKS as BURN_HIT_TO_GONE_TICKS,
-    WAIT_AFTER_PRESS_TICKS as BURN_WAIT_AFTER_PRESS_TICKS,
-} from './burnableTree.js';
-import { MODELLED_ENEMY_CLASSES, enemiesUnseenByBlockSweep } from './spinner.js';
-import { CHEST, chestProbeLine, chestStanceBand } from './chest.js';
-import { HITBOX } from './playerPhysicsV1.js';
-import { scanCrusher } from './crusher.js';
-import { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
-// ⛓⛓⛓ R5 SLICE 21: THE KILL VERB'S GEOMETRY AND ITS CADENCE.
-//
-// ⛔ THE SLASH RECT COMES FROM `presses.js`, NOT `combatVerbs.js`, and the
-// two are not the same function: `combatVerbs.slashRect` carries the
-// STALE-SCALE and ghost-sword arms, `presses.slashRect` is the plain-sword
-// 16x32 that `levelRun.applyThrust` audits with. A verb that checked reach
-// against one while the run audited with the other would be a leg that
-// passed its own check and hit nothing.
-import {
+    keyLineTouches, opensOnKeyTick,
+    FIRE_WINDOW, fireRect,
+    // ⚠ ALIASED, because `breakableRocks` exports a constant of the SAME NAME
+    // eight lines above and the two are different numbers for different
+    // mechanics (7 ticks of shatter against 41 of animation). An unaliased
+    // second import would have silently taken whichever the bundler resolved
+    // last — a burn leg waiting a rock's window is exactly the shape of a green
+    // tape that walks into a wall.
+    BURN_HIT_TO_GONE_TICKS,
+    BURN_WAIT_AFTER_PRESS_TICKS,
+    MODELLED_ENEMY_CLASSES, enemiesUnseenByBlockSweep,
+    CHEST, chestProbeLine, chestStanceBand,
+    HITBOX,
+    scanCrusher,
+    ICE_TURRET, ICE_TURRET_PLAN,
+    // ⛓⛓⛓ R5 SLICE 21: THE KILL VERB'S GEOMETRY AND ITS CADENCE.
+    //
+    // ⛔ THE SLASH RECT COMES FROM `presses.js`, NOT `combatVerbs.js`, and the
+    // two are not the same function: `combatVerbs.slashRect` carries the
+    // STALE-SCALE and ghost-sword arms, `presses.slashRect` is the plain-sword
+    // 16x32 that `levelRun.applyThrust` audits with. A verb that checked reach
+    // against one while the run audited with the other would be a leg that
+    // passed its own check and hit nothing.
     DARK_SWORD_DAMAGE, SLASH_REACH, SWORD_DAMAGE, distanceRectPoint, slashRect,
-} from './presses.js';
-import { KILL_PRESS_CADENCE } from './combatVerbs.js';
+    KILL_PRESS_CADENCE,
+} from './solverView.js';
 import {
     DEFAULT_MAX_TICKS_PER_TARGET,
     DEFAULT_TOLERANCE,

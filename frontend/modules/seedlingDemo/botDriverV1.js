@@ -35,14 +35,14 @@
  * half that. DEFAULT_TOLERANCE is 1.0px, comfortably above 0.85.
  */
 
-import { requiredTapeVersion, serializeTape } from './tapeFormat.js';
 import {
+    requiredTapeVersion, serializeTape,
     applyFriction,
     DEFAULT_FRICTION,
     groundTerrain,
     spawnFromBoot,
     step,
-} from './playerPhysicsV1.js';
+} from './solverView.js';
 
 /** See the precision note above: 1.70px quantum → 0.85 worst case. */
 export const DEFAULT_TOLERANCE = 1.0;

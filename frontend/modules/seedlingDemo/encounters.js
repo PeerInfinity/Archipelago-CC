@@ -64,17 +64,19 @@
  * caller passes a camera track, and skipped conservatively otherwise.
  */
 
-import { ENEMY_CLASSES, KILL_CADENCE_FLOOR, pressesFor, stepBoundFor } from './combat.js';
-import { SCREEN_H, SCREEN_W } from './camera.js';
-// ⛔ THE PLAYER BOX IS THE PHYSICS MODULE'S, NEVER A SECOND TRANSCRIPTION.
-// This module shipped one — `{w: 2, h: 2, ox: 4, oy: 5}` — by reading
-// `normalHitbox = new Rectangle(2, 2, 4, 5)` as (w, h, ox, oy) when
-// `Rectangle` is (x, y, width, height) and `setHitbox` is called
-// `(width, height, x, y)`. The real box is 4x5 with origin (2,2), i.e. two
-// pixels wider and five taller than the wrong one, sitting three pixels
-// lower. `playerPhysicsV2.playerBoxAt` has had it right since v2 and every
-// leg in four rungs rides on it.
-import { playerBoxAt } from './playerPhysicsV2.js';
+import {
+    ENEMY_CLASSES, KILL_CADENCE_FLOOR, pressesFor, stepBoundFor,
+    SCREEN_H, SCREEN_W,
+    // ⛔ THE PLAYER BOX IS THE PHYSICS MODULE'S, NEVER A SECOND TRANSCRIPTION.
+    // This module shipped one — `{w: 2, h: 2, ox: 4, oy: 5}` — by reading
+    // `normalHitbox = new Rectangle(2, 2, 4, 5)` as (w, h, ox, oy) when
+    // `Rectangle` is (x, y, width, height) and `setHitbox` is called
+    // `(width, height, x, y)`. The real box is 4x5 with origin (2,2), i.e. two
+    // pixels wider and five taller than the wrong one, sitting three pixels
+    // lower. `playerPhysicsV2.playerBoxAt` has had it right since v2 and every
+    // leg in four rungs rides on it.
+    playerBoxAt,
+} from './solverView.js';
 import { hazardVolume, volumeHitsBox } from './hazards.js';
 
 /** `Mobile.DEFAULT_FRICTION` — what damps a chaser that stops chasing. */

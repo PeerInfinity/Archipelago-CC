@@ -116,7 +116,7 @@
 
 import {
     DEFAULT_FRICTION, MOVE_SPEEDS, step as stepV1,
-} from './playerPhysicsV1.js';
+} from './solverView.js';
 
 export class MoverError extends Error {
     constructor(message) {

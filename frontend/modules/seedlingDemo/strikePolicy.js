@@ -139,22 +139,18 @@
 import {
     DASH_DISPLACEMENT, ORDINARY_SWING_PERIOD, SLASH_DASH_FORCE, SLASH_SCALE_NORMAL,
     slashPressForecast,
-} from './combatVerbs.js';
-import {
     DEFAULT_FRICTION, MOVE_SPEEDS, WALK_SPEED, applyFriction, applyInput,
     knockbackImpulse,
-} from './playerPhysicsV1.js';
-import { plannerContactFree } from './combat.js';
-import { chaseEnvelope } from './encounters.js';
-import { KILL_ARM_POLICY, MODELLED_KILL_ARMS } from './enemyDamage.js';
-import {
+    plannerContactFree,
+    KILL_ARM_POLICY, MODELLED_KILL_ARMS,
     SLASH_HIT_TICKS, distanceRectPoint, slashReachFor, slashRect,
-} from './presses.js';
-import { rectsOverlap } from './levelWorld.js';
-// ⛓ R9 slice 12e‴ (⚖ ruling 53): the talk radius, from the module that
-// transcribed it. Two spellings of 24 would be two rules
-// ([[feedback_two_cost_models_must_agree]]).
-import { TALK_RANGE } from './endingChain.js';
+    rectsOverlap,
+    // ⛓ R9 slice 12e‴ (⚖ ruling 53): the talk radius, from the module that
+    // transcribed it. Two spellings of 24 would be two rules
+    // ([[feedback_two_cost_models_must_agree]]).
+    TALK_RANGE,
+} from './solverView.js';
+import { chaseEnvelope } from './encounters.js';
 
 export class StrikePolicyError extends Error {
     constructor(message) { super(message); this.name = 'StrikePolicyError'; }

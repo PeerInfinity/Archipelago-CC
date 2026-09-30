@@ -60,7 +60,7 @@
  * of these transcribes its exact cycle then, with the encounter named.
  */
 
-import { assertRect } from './levelWorld.js';
+import { assertRect } from './solverView.js';
 
 /** `Engine.as:270` — the 30 fps clamp that makes `FP.elapsed` a constant. */
 export const MAX_ELAPSED = 0.0333;

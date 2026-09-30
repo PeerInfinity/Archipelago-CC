@@ -51,7 +51,7 @@
  *     statements.
  */
 
-import { heldKeysAt, KEY_NAMES, GAME_VISIBLE_DROPS } from './tapeFormat.js';
+import { heldKeysAt, KEY_NAMES, GAME_VISIBLE_DROPS } from './solverView.js';
 
 export class DecisionTraceError extends Error {}
 

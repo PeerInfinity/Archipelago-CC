@@ -73,53 +73,45 @@ import { resolvePresser } from './botDriverV2.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
     opensOnKeyTick, opensOnTick, touchApproachKey,
-} from './activators.js';
-import {
     SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule,
-} from './shieldBossFight.js';
-import { SPINNER, hammerHitsPlayer } from './spinner.js';
-import { KILL_ARM_POLICY } from './enemyDamage.js';
-import {
+    SPINNER, hammerHitsPlayer,
+    KILL_ARM_POLICY,
     DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH, UP,
     distanceRectPoint, slashReachFor, slashRect,
     swordWindowReplace, swordWindowSchedule, swordWindowStep,
-} from './presses.js';
-/**
- * ⛓⛓⛓ R9 SLICE 4 — THE ROCK'S OWN TRANSCRIPTION, ASKED RATHER THAN COPIED.
- * `rockBreaksUnder` is `hit(_t)`'s test (`rockType <= hasGhostSword ? 1 : 0`),
- * `WAIT_AFTER_PRESS_TICKS` is the LEG's promise and `assertWaitCovers` is the
- * check that a leg keeps it. ⛔ None of the three numbers is retyped here
- * (trap 89): the module that transcribed `BreakableRock.as` owns them, and the
- * one that owns `HIT_TO_GONE_TICKS`' ±1 is the one that must say how long a
- * wait has to be.
- */
-import {
+    /**
+     * ⛓⛓⛓ R9 SLICE 4 — THE ROCK'S OWN TRANSCRIPTION, ASKED RATHER THAN COPIED.
+     * `rockBreaksUnder` is `hit(_t)`'s test (`rockType <= hasGhostSword ? 1 : 0`),
+     * `WAIT_AFTER_PRESS_TICKS` is the LEG's promise and `assertWaitCovers` is the
+     * check that a leg keeps it. ⛔ None of the three numbers is retyped here
+     * (trap 89): the module that transcribed `BreakableRock.as` owns them, and the
+     * one that owns `HIT_TO_GONE_TICKS`' ±1 is the one that must say how long a
+     * wait has to be.
+     */
     WAIT_AFTER_PRESS_TICKS, assertWaitCovers, rockBreaksUnder,
-} from './breakableRocks.js';
+    ARROW, arrowLaneForPlacement, arrowLaneRect, arrowTrapFires,
+    bridgedChaserTags, chaserBoxAt, killWindowTicks,
+    DESTROYING_TILE_TYPES,
+    rect, TILE_SIZE,
+    ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing,
+    // ⛓ R8 slice 8: the PRESSER's own cadence floor — the dash rule plus the
+    // receiver's i-frames, in one constant `killSchedule` has refused a smaller
+    // value than since R5. The press arm never consulted it; the game found out.
+    DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
+    SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
+    MOBILE_DEATH_FADE,
+    PhysicsV2Error, playerBoxAt,
+    HITBOX, WALK_SPEED,
+    chestStanceBand,
+} from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
 } from './dangerMap.js';
 import { planDash } from './mover.js';
-import { ARROW, arrowLaneForPlacement, arrowLaneRect, arrowTrapFires } from './arrowTrap.js';
-import { bridgedChaserTags, chaserBoxAt, killWindowTicks } from './chasers.js';
 import { createTraceBuilder } from './decisionTrace.js';
-import { DESTROYING_TILE_TYPES } from './pushables.js';
-import { rect, TILE_SIZE } from './levelWorld.js';
-import { ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing } from './combat.js';
-// ⛓ R8 slice 8: the PRESSER's own cadence floor — the dash rule plus the
-// receiver's i-frames, in one constant `killSchedule` has refused a smaller
-// value than since R5. The press arm never consulted it; the game found out.
-import {
-    DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
-    SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
-} from './combatVerbs.js';
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
 } from './strikePolicy.js';
-import { MOBILE_DEATH_FADE } from './enemyDamage.js';
-import { PhysicsV2Error, playerBoxAt } from './playerPhysicsV2.js';
-import { HITBOX, WALK_SPEED } from './playerPhysicsV1.js';
-import { chestStanceBand } from './chest.js';
 
 /**
  * ⛓⛓⛓ THE TRANSIT PROBE'S OWN NON-VACUITY, AS A FUNCTION.

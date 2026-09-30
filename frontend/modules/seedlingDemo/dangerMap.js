@@ -65,14 +65,12 @@
 
 import {
     arrowLaneForPlacement, arrowLaneRect, arrowRect, ARROW, stepArrow,
-} from './arrowTrap.js';
-import {
     contactPricing, contactRect, ENEMY_CLASSES, plannerContactFree, stepBoundFor,
-} from './combat.js';
-import { chaserBoxAt, isBridgedChaser } from './chasers.js';
+    chaserBoxAt, isBridgedChaser,
+    rect, rectsOverlap,
+    SPINNER, hammerHitsPlayer, spinnerRect,
+} from './solverView.js';
 import { hazardVolume, volumeHitsBox } from './hazards.js';
-import { rect, rectsOverlap } from './levelWorld.js';
-import { SPINNER, hammerHitsPlayer, spinnerRect } from './spinner.js';
 
 export class DangerMapError extends Error {
     constructor(message) { super(message); this.name = 'DangerMapError'; }
