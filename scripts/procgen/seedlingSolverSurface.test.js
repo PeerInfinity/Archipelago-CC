@@ -161,3 +161,56 @@ describe('mutants, over a temporary copy of the family', () => {
         expect(say(cmp)).toEqual([]);
     });
 });
+
+describe('the import door (engine-prep C2), mutants over a temporary copy', () => {
+    let tmp;
+    beforeAll(() => { tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'solver-door-mutant-')); });
+    afterAll(() => { fs.rmSync(tmp, { recursive: true, force: true }); });
+    const mutate = (edits) => {
+        const copies = new Map();
+        for (const [f, ed] of Object.entries(edits)) {
+            const rel = `frontend/modules/seedlingDemo/${f}`;
+            const src = read(rel);
+            const out = ed(src);
+            expect(out, `the ${f} mutant edited nothing`).not.toBe(src);
+            copies.set(rel, path.join(tmp, f));
+            fs.writeFileSync(copies.get(rel), out);
+        }
+        return say(compareToTable(census((p) => (copies.has(p) ? fs.readFileSync(copies.get(p), 'utf8') : read(p))), TABLE));
+    };
+
+    it('(a) dangerMap.js imports SPINNER from spinner.js directly (around the door) ⇒ RED, the door rule', () => {
+        // aliased: a second unaliased `SPINNER` binding is a SyntaxError before any census reads it
+        const lines = mutate({ 'dangerMap.js': (s) => `import { SPINNER as SPINNER_DIRECT } from './spinner.js';\n${s}` });
+        expect(lines).toHaveLength(1);
+        expect(lines[0]).toMatch(/dangerMap\.js:1 imports spinner\.js directly — a family file imports a seedlingDemo module only if it is a family file or the door, solverView\.js/);
+    });
+
+    it('(b) solverView.js re-exports a levelWorld symbol no family file imports ⇒ RED "RETIRED"', () => {
+        expect(fresh.imports.some((i) => i.name === 'PLAYER_SOLID_TYPES')).toBe(false);
+        const lines = mutate({ 'solverView.js': (s) => `${s}export { PLAYER_SOLID_TYPES } from './levelWorld.js';\n` });
+        expect(lines).toEqual(['door:solverView.js#PLAYER_SOLID_TYPES — no family file imports it — '
+            + 'the export must be RETIRED from solverView.js']);
+    });
+
+    it('(b′) solverView.js re-exports a name its module does not export (WATER_STATE is levelWorld-private) ⇒ RED twice', () => {
+        const lines = mutate({ 'solverView.js': (s) => `${s}export { WATER_STATE } from './levelWorld.js';\n` });
+        expect(lines).toHaveLength(2);
+        expect(lines[0]).toMatch(/^door:solverView\.js#WATER_STATE — .* must be RETIRED/);
+        expect(lines[1]).toMatch(/solverView\.js:\d+ the door holds only .* a re-export of WATER_STATE, which .*levelWorld\.js does not export/);
+    });
+
+    it('(c) blocksMover exported by the door AND imported through it in mover.js ⇒ RED "not in the contract table"', () => {
+        const lines = mutate({
+            'solverView.js': (s) => `${s}export { blocksMover } from './levelWorld.js';\n`,
+            'mover.js': (s) => `import { blocksMover } from './solverView.js';\n${s}\nexport const mutantC = blocksMover;\n`,
+        });
+        expect(lines).toEqual([
+            'frontend/modules/seedlingDemo/mover.js:1 reaches import:levelWorld.js#blocksMover — not in the contract table']);
+    });
+
+    it('(d) a COMMENT naming a simulation module in a family file ⇒ GREEN', () => {
+        const lines = mutate({ 'dangerMap.js': (s) => `// import { SPINNER } from './spinner.js' — prose, not an import\n${s}` });
+        expect(lines).toEqual([]);
+    });
+});
