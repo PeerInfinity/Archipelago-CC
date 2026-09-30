@@ -64,6 +64,7 @@ export const README_ORDER = Object.freeze([
     'maze-lab.md',
     'sphere-growth.md',
     'paths-and-obstacles.md',
+    'concepts.md',
     'stepped-pipeline.md',
     'pipeline-presets.md',
     'text-adventure.md',

@@ -255,8 +255,9 @@ describe('⛓ the links the render emits', () => {
         //   `substrate-registry.md` → `../../features/procgen-substrates.md`; 301 → 302:
         //   seedling swim S2 D1's `pipelineConfigFromParams` row → flash.md; 302 → 303:
         //   C2's `maze.md` room-size paragraph → substrate-registry.md; 303 → 304:
-        //   G9's substrate-registry.md capacity section → flash.md § Declarations (G9).
-        expect(checked).toBe(304);
+        //   G9's substrate-registry.md capacity section → flash.md § Declarations (G9);
+        //   304 → 311: concept library T0's new `concepts.md` (six sibling links, one same-doc).
+        expect(checked).toBe(311);
     });
 
     it('tags each link with the kind that produced it', () => {
