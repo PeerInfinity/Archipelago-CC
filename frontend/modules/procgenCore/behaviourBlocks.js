@@ -179,7 +179,7 @@ DEFENCE_RESPONSES.declare('breakIfLevel', {
         why: 'the weapon level at or above which the hit breaks it (`rockType` in `BreakableRock.as`)' }],
 });
 DEFENCE_RESPONSES.declare('reflect', {
-    why: "The hit is turned back toward the one who dealt it — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "`LavaBoss.as` `hit()`: the boss is hurt only by its own `LavaBall` turned back at it (`LavaBall.as` `hit()` reverses the shot and adds `LavaBoss` to its hitables) — the hit is turned back toward the one who dealt it.",
 });
 DEFENCE_RESPONSES.declare('freeze', {
     why: '`IceTurretBlast.as`\'s freeze: the hit leaves the defender frozen in place for a while.',
@@ -190,11 +190,11 @@ DEFENCE_RESPONSES.declare('stun', {
     params: [seconds('duration', 10, 1, 'seconds the defender does nothing')],
 });
 DEFENCE_RESPONSES.declare('heal', {
-    why: "The category restores the defender instead of harming it — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "No Seedling class heals on a hit (every `hit()` override read). The nearest measured source is RWK's `MonsterEnergy` (`Player.cpp` `Energize()`: HP doubles when an enemy eats it) — the category restores the defender instead of harming it.",
     params: [{ key: 'amount', range: { min: 0, max: 10 }, default: 1, why: 'health restored per hit' }],
 });
 DEFENCE_RESPONSES.declare('split', {
-    why: "The hit replaces the defender with smaller copies — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "No class in Seedling or RWK splits on a hit (every `startDeath` / `Ouch` override read). Kept for the matrix's sake — ZQuest's `split` is the reference — and no shipped concept may use it until an engine implements it.",
     params: [{ key: 'count', range: { min: 2, max: 4, step: 1 }, default: 2, why: 'how many copies the hit makes' }],
 });
 DEFENCE_RESPONSES.declare('spawn', {
@@ -203,7 +203,7 @@ DEFENCE_RESPONSES.declare('spawn', {
         why: 'what comes out — an entity id, open because no entity registry exists yet' }],
 });
 DEFENCE_RESPONSES.declare('phaseGated', {
-    why: "The category only lands in a named phase of the defender — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "`ShieldBoss.as` `hit()`: the hit lands only while the shield is moved (`currentAnim == 'movedShield'`); `Tentacle.as` `canHit = currentAnim == 'sit'`; `FinalBoss.as` `canHit = rockfallTime < 0` — the category only lands in a named phase of the defender.",
     params: [{ key: 'phase', open: 'string', default: 'exposed', why: 'the phase in which the hit lands' }],
 });
 
@@ -249,18 +249,18 @@ BLOCKS.declare('rebound', {
         { key: 'axis', domain: ['horizontal', 'vertical', 'diagonal'], default: 'horizontal',
             why: 'which way it travels between the walls it turns at — a genuine finite choice' },
     ],
-    why: '`Flyer.as`: the entity travels straight and turns back when it meets a wall.',
+    why: "`Spinner.as` (`runRange 0`; `moveX` / `moveY` negate `v` on a solid): the entity travels straight and turns back when it meets a wall. RWK's `DripBoss` bounces diagonally the same way. (`Flyer.as` chases — it extends `Bob`.)",
 });
 BLOCKS.declare('patrol', {
     family: 'movement',
     fields: [speed('speed as a fraction of the player\'s'), tiles('length', 20, 4, 'the patrol lane\'s length in tiles')],
-    why: '`LavaRunner.as`: the entity walks a fixed lane and turns at its ends.',
+    why: 'No Seedling class patrols — every walker chases, `LavaRunner.as` included (it extends `Bob`). The source is RWK: `RedGuy::Update` (`Player.cpp:3396`: nudge 1.125 px/tick, wall and ledge probes, reverse), `BlueGuy` (vertical), `Buzzoid` (horizontal, stop / back off / wait) — the entity walks a fixed lane and turns at its ends.',
 });
 BLOCKS.declare('seek', {
     family: 'movement',
     fields: [speed('speed as a fraction of the player\'s'), { key: 'target', open: 'string', default: 'player',
         why: 'what it steers toward — the player, or a named entity' }],
-    why: "The entity steers toward a named target rather than the player alone — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "`LightBoss.as` (`goto` set by `LightBossController`'s formation; `v += (goto - pos) / divisor`, capped) and `FinalBoss.as` (walks pod to pod): the entity steers toward a named target rather than the player alone.",
 });
 BLOCKS.declare('ballistic', {
     family: 'movement',
@@ -281,12 +281,12 @@ BLOCKS.declare('wall-launch', {
 BLOCKS.declare('tile-hop', {
     family: 'movement',
     fields: [tiles('reach', 4, 1, 'tiles per hop'), seconds('interval', 5, 1, 'seconds between hops')],
-    why: "`Bob.as`'s hop: the entity moves in whole-tile jumps (bespoke).",
+    why: "`Drill.as:82-92`: the entity moves in whole-tile jumps toward the player (`tox` / `toy` by `Tile.w`), one hop per animation cycle (bespoke). `Bob.as`'s hop is only the chase's sound and animation.",
 });
 BLOCKS.declare('lane-charge', {
     family: 'movement',
     fields: [speed('charge speed as a fraction of the player\'s'), tiles('range', 20, 6, 'how far it sees down its lane')],
-    why: '`Drill.as`: the entity waits in a lane and charges when the player enters it (bespoke).',
+    why: '`Crusher.as:58-74`: the entity waits at a grid corner and charges along one of four 64 px lanes when the player is in it and in line of sight (bespoke). `Drill.as` hops; it does not charge.',
 });
 BLOCKS.declare('rise', {
     family: 'movement',
@@ -378,7 +378,7 @@ BLOCKS.declare('proximity', {
 BLOCKS.declare('lineOfSight', {
     family: 'trigger',
     fields: [tiles('range', 20, 8, 'how far it sees, in tiles')],
-    why: "The behaviour starts when the player is visible down a clear line — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "`Drill.as:86` and `Crusher.as:58` (`!FP.world.collideLine('Solid', x, y, player.x, player.y)`), `LavaTrap.as` before `launch()`: the behaviour starts when the player is visible down a clear line.",
 });
 BLOCKS.declare('channel', {
     family: 'trigger',
@@ -388,16 +388,16 @@ BLOCKS.declare('channel', {
 BLOCKS.declare('persistence', {
     family: 'trigger',
     fields: [{ key: 'scope', domain: ['room', 'world'], default: 'room', why: 'whether its state resets on leaving the room' }],
-    why: "A triggered state that outlives the room, or not — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "`tag >= 0 && !Game.checkPersistence(tag)` in `check()` and `Game.setPersistence(tag, false)` in `removed()` — `Spinner.as`, `SandTrap.as`, `BreakableRock.as`, `Lock.as`, 39 source files in all (measured): a triggered state that outlives the room, or not.",
 });
 BLOCKS.declare('onHit', {
     family: 'trigger',
     fields: [{ key: 'category', open: { id: 'weaponCategories' }, default: 'sword', why: 'the category whose hit sets it off' }],
-    why: "The behaviour starts when the entity is hit by a category — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "`ShieldBoss.as` `hit()` -> `startStab(true)` (a retaliation); `BobBoss.as` `hit()` in phase 2 (`swords++`); RWK `Boss::Ouch` (`bossOuchSpeedUp`): the behaviour starts when the entity is hit by a category.",
 });
 BLOCKS.declare('allEnemiesDead', {
     family: 'trigger', fields: [],
-    why: "The behaviour starts when the room holds no enemy — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "`RockLock.as` (`tSet == -1 && totalEnemies() == 0`, the kill lock), `Lock.as` `checkEnemies()`, `LightBossController.as` (`totalEnemies() <= 0` ends the fight): the behaviour starts when the room holds no enemy.",
 });
 BLOCKS.declare('itemHeld', {
     family: 'trigger',
@@ -416,7 +416,7 @@ BLOCKS.declare('light', {
 });
 BLOCKS.declare('facingAway', {
     family: 'trigger', fields: [],
-    why: "The behaviour runs only while the player faces away (bespoke) — the plan's §2 starter set; no Seedling class measured for it here (its source is the plan's Appendix B, which this clone does not carry).",
+    why: "No Seedling class. RWK's `Phage::Update` (`Player.cpp:8157-8171`): it chases only while the robot faces away (bespoke).",
 });
 
 /**
