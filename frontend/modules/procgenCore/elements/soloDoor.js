@@ -104,6 +104,12 @@ export const WATER_SHORTCUT_DOOR_ID = 'watershortcut_door';
  *  water doors (the binding's `WATER_DOOR_IDS` maps it to `waterfall`). */
 export const WATERFALL_GATE_DOOR_ID = 'waterfallgate_door';
 
+/** ⛓ Seedling swim U3 (D3) — the CORRIDOR BODY: the rock gate's cut with the
+ *  obstacle a lock-less SPINNER. ⛔ On Seedling this id realises as a
+ *  `spinner {tag:'-1'}` and nothing else (no lock, no tag): the binding's
+ *  `ON_CONNECTOR_BODY_IDS` is the one table that says it is a BODY. */
+export const CORRIDOR_BODY_DOOR_ID = 'corridorbody_door';
+
 /** Where the opener must stand, relative to the door: `null` (anywhere
  *  start-side) or `'west'` (the shield lock's one-pixel west probe). */
 export const APPROACH_WEST = 'west';
@@ -133,6 +139,9 @@ export const SHIELD_GATE_REFUSALS = Object.freeze([
  *  refusals are the rock doors' lists. */
 export const WATER_GATE_REFUSALS = ROCK_GATE_REFUSALS;
 export const WATER_SHORTCUT_REFUSALS = ROCK_SHORTCUT_REFUSALS;
+/** ⛓ Swim U3 — the corridor body is the rock gate's geometry, so its refusals
+ *  are the rock gate's list. */
+export const CORRIDOR_BODY_REFUSALS = ROCK_GATE_REFUSALS;
 /** ⛓ Swim T2 — the shield gate's list with the approach turned to the south. */
 export const WATERFALL_GATE_REFUSALS = Object.freeze([
     'no-cut-cell', 'goal-too-close', 'the-door-has-no-south-approach', 'wall-does-not-seal',
@@ -440,4 +449,38 @@ export const WATERFALL_GATE = defineElement({
     params: [],
     construct: soloConstruct(WATERFALL_GATE_DOOR_ID, { law: LAW_CUT, approach: APPROACH_SOUTH }),
     assertPlacement: assertSoloPlacement('waterfallGate', WATERFALL_GATE_DOOR_ID),
+});
+
+/**
+ * ⛓⛓⛓ **THE CORRIDOR BODY** (seedling swim U3, D3; the user's *"fix the solver
+ * so that enemies can be placed on the main path"*). The ROCK GATE's search
+ * verbatim — one cell of the canonical main path, a CUT once its wall is grown
+ * (`LAW_CUT`), the clearer its start-side neighbour — with the obstacle a
+ * lock-less SPINNER. F1b measured the gap this fills: the roaming blob
+ * (`roam`) is refused on 158 of 168 cells because most rooms walk ROUND a
+ * blob, and nothing put a body ON a main-path cut. Here the body starts ON the
+ * cut, so the walk cannot go round it.
+ *
+ * ⛔ A BODY, NOT A GATE THAT OPENS. Nothing opens when it dies — there is no
+ * lock — and the spinner is a billiard, so it does not stay on its cell: it
+ * roams the corridor it was dropped in. The solver crosses it with the
+ * lock-less KILL (U1 D3, its line of sight U3 D2) or by the AVOID/TIME rungs;
+ * pre-sword it cannot kill, which is why the head `needs` the sword. The
+ * binding certifies against the TEXTLESS goal (F1's rule: a live spinner and a
+ * dialogued ceremony cannot share a tick) and names a position the solver
+ * cannot cross `the-solver-cannot-cross-the-roaming-body`, exactly as for
+ * `roam`. ⛔ `assertSoloPlacement`'s empty `demand` holds: the body is not
+ * kept anywhere, and pass 2 is judged by the certification solve of the
+ * level that ships.
+ */
+export const CORRIDOR_BODY = defineElement({
+    name: 'corridor-body',
+    family: 'corridorbody',
+    phase: 'on-connector',
+    why: 'ONE lock-less SPINNER on a main-path CUT, its wall grown to seal the room — the rock '
+        + 'gate\'s search with the obstacle a body. Nothing opens: the player crosses it by '
+        + 'the solver\'s lock-less kill (post-sword) or not at all.',
+    params: [],
+    construct: soloConstruct(CORRIDOR_BODY_DOOR_ID, { law: LAW_CUT }),
+    assertPlacement: assertSoloPlacement('corridorBody', CORRIDOR_BODY_DOOR_ID),
 });

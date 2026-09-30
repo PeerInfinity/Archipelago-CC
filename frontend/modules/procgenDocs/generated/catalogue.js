@@ -1275,7 +1275,8 @@ export const CATALOGUE = frz({
         "watergate",
         "watershortcut",
         "waterfallgate",
-        "roam"
+        "roam",
+        "corridorbody"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -1504,6 +1505,15 @@ export const CATALOGUE = frz({
                 }
             ],
             "why": "The ROAMING ENEMY (concept library F1): the chamber's own blob with `bodies` spinners in it and NO lock. Two measured reasons it did not exist: a DIALOGUED goal (`torchpickup`) throws `levelRun`'s live-spinner guard at the collect — the binding certifies against a TEXTLESS goal instead — and the solver has no room-crossing answer at some body positions (*\"the combat ladder is EXHAUSTED\"*), which the binding REFUSES by name rather than redraws."
+        },
+        {
+            "head": "corridorbody",
+            "module": "corridor-body",
+            "needs": [
+                "hasSword"
+            ],
+            "params": [],
+            "why": "The CORRIDOR BODY (seedling swim U3): a lock-less `spinner` on a main-path cut, its wall grown to seal the room, so the walk must cross the body. Certified by the solver's lock-less kill (or a dodge) against the textless goal. Pre-sword the seam refuses it by name; the sword differential grades it SHORTENS where the billiard bounces clear of the cut, so it is not a head `require` can force."
         }
     ],
     "itemsElementsNeed": [

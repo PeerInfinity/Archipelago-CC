@@ -47,7 +47,8 @@ import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
 import { ROAM } from './elements/roam.js';
 import {
-    ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT, WATERFALL_GATE,
+    CORRIDOR_BODY, ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT,
+    WATERFALL_GATE,
 } from './elements/soloDoor.js';
 import { LAW_CUT } from './elements.js';
 import { parseRequireList } from './areaSpec.js';
@@ -391,6 +392,46 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'room-crossing answer at some body positions (*"the combat ladder is '
             + 'EXHAUSTED"*), which the binding REFUSES by name rather than redraws.',
         extra: Object.freeze([]),
+    }),
+    /**
+     * ⛓⛓⛓ **THE CORRIDOR BODY — A BODY ON THE MAIN PATH** (seedling swim U3,
+     * D3; the user's *"fix the solver so that enemies can be placed on the main
+     * path"*). `buildSoloDoor`'s cut search (the rock gate's, `LAW_CUT`) with the
+     * one obstacle a lock-less SPINNER: the walk cannot go round it, which is
+     * the geometry F1b's through-room lacked on 158 of 168 cells.
+     *
+     * ⛓ `needs: ['hasSword']` — the kill gate's reason, lock-less: the solver
+     * crosses a body on a cut by KILLING it (U1 D3's lock-less press, U3 D2's
+     * line of sight), and pre-sword it has no press. The seam refuses it BY NAME
+     * on `pre-sword`; `require:['hasSword']` resolves to it too (its law is
+     * `cut`), graded by the sword differential. ⛔ The certification goal is the
+     * TEXTLESS one (F1's rule) and a refused solve is
+     * `the-solver-cannot-cross-the-roaming-body` — both decided by the binding
+     * from the committed record (bodies, no kill lock), as for `roam`.
+     *
+     * ⛔ **IN NO BIOME DEFAULT**, and placed LAST so no head moves in
+     * `ELEMENT_NAMES`. OPT-IN only.
+     */
+    corridorbody: Object.freeze({
+        element: CORRIDOR_BODY,
+        why: 'The CORRIDOR BODY (seedling swim U3): a lock-less `spinner` on a main-path cut, '
+            + 'its wall grown to seal the room, so the walk must cross the body. Certified by '
+            + 'the solver\'s lock-less kill (or a dodge) against the textless goal. Pre-sword the '
+            + 'seam refuses it by name; the sword differential grades it SHORTENS where the '
+            + 'billiard bounces clear of the cut, so it is not a head `require` can force.',
+        extra: Object.freeze([]),
+        needs: Object.freeze(['hasSword']),
+        /**
+         * ⛔ **NOT A HEAD `require` CAN FORCE** — measured, not assumed (U3 D3).
+         * The sword differential grades a corridor body SHORTENS, not STRONG:
+         * pre-sword the solver walks past the billiard when it bounces clear
+         * of the cut (`--require=hasSword --elements=corridorbody` refuses
+         * `the-item-is-not-required: SHORTENS` on the certified seeds). A
+         * directive's head must grade STRONG, so `headsNeeding` leaves it out
+         * — which also keeps every `--require=hasSword` room where it was (the
+         * `+` list it would have joined spends one pick over its members).
+         */
+        meetsRequire: false,
     }),
 });
 
@@ -952,7 +993,10 @@ export const ITEMS_ELEMENTS_NEED = Object.freeze([...new Set(
 export function headsNeeding(item, table = ELEMENT_TABLE) {
     return Object.freeze(Object.keys(table)
         .filter((n) => (table[n].needs ?? []).includes(item)
-            && (table[n].element?.law ?? LAW_CUT) === LAW_CUT));
+            && (table[n].element?.law ?? LAW_CUT) === LAW_CUT
+            // ⛓ U3 D3 — a cut head whose differential is MEASURED to grade
+            // SHORTENS declares it (`corridorbody`); see its table row.
+            && table[n].meetsRequire !== false));
 }
 
 /**

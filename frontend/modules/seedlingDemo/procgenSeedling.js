@@ -2114,6 +2114,13 @@ export function seedlingModel({
         } else {
             const p = out.placed;
             base = withTerrain(base, p.painted);
+            /** ⛓ Swim U3 (D3) — F1's TEXTLESS GOAL, one phase over: an
+             *  on-connector element that committed a lock-less BODY (the
+             *  corridor body) certifies against `ROAMING_GOAL_CLASS` too. */
+            if ((p.bodies?.length ?? 0) > 0 && p.killLockCell === null) {
+                goalClass = ROAMING_GOAL_CLASS;
+                goalEntity = { ...goalEntity, type: goalClass };
+            }
             const withGoal = withEntities(base, [{
                 type: goalClass, ...goalOel, attrs: { tag: d.goalTag },
             }]);

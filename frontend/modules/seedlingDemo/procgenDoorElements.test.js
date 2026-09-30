@@ -42,10 +42,12 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
          *  ⛓ Seedling substrate S1 added `rockgate`, `shortcut`, `shieldgate` (plan §2.1 G-a..G-c);
          *  swim S1 added `watergate` and `watershortcut`; swim T2 `waterfallgate`.
          *  ⛓ Concept library F1 added `roam` (the roaming enemy), LAST, so no
-         *  existing head moved. */
+         *  existing head moved. ⛓ Swim U3 added `corridorbody` (a lock-less body on a
+         *  main-path cut), LAST for the same reason. */
         expect(ELEMENT_NAMES).toEqual([
             'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
             'shortcut', 'shieldgate', 'watergate', 'watershortcut', 'waterfallgate', 'roam',
+            'corridorbody',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });

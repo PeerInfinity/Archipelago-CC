@@ -110,8 +110,8 @@ import {
     SHORTCUT_BODY_ID, SHORTCUT_DOOR_ID,
 } from '../procgenCore/elements/shortcut.js';
 import {
-    ROCK_GATE_DOOR_ID, ROCK_SHORTCUT_DOOR_ID, SHIELD_GATE_DOOR_ID, WATER_GATE_DOOR_ID,
-    WATER_SHORTCUT_DOOR_ID, WATERFALL_GATE_DOOR_ID,
+    CORRIDOR_BODY_DOOR_ID, ROCK_GATE_DOOR_ID, ROCK_SHORTCUT_DOOR_ID, SHIELD_GATE_DOOR_ID,
+    WATER_GATE_DOOR_ID, WATER_SHORTCUT_DOOR_ID, WATERFALL_GATE_DOOR_ID,
 } from '../procgenCore/elements/soloDoor.js';
 import { connected, reachableFrom, shortestPath } from '../procgenCore/gridFlood.js';
 import { ELEMENT_TABLE, NONE as ELEMENTS_NONE } from '../procgenCore/elementSpec.js';
@@ -901,6 +901,17 @@ export const WATER_DOOR_IDS = Object.freeze([WATER_GATE_DOOR_ID, WATER_SHORTCUT_
     WATERFALL_GATE_DOOR_ID]);
 
 /**
+ * ⛓⛓ **THE DOORS THAT ARE BODIES** (seedling swim U3, D3) — the one table of
+ * on-connector ids that realise as a lock-less ENEMY rather than a door that
+ * opens. The composite carries them on the record as `bodies` with
+ * `killLockCell: null` — the roam's own two fields — so the binding's
+ * roaming-body rules (the textless certification goal, the
+ * `the-solver-cannot-cross-the-roaming-body` refusal, the body ablation, the
+ * kill-lock-counts-the-roamers clause) reach them without a second spelling.
+ */
+export const ON_CONNECTOR_BODY_IDS = Object.freeze([CORRIDOR_BODY_DOOR_ID]);
+
+/**
  * ⛓ Swim T2 (D3) — WHICH terrain each terrain door paints. The water doors
  * are one `water` cell; the waterfall gate's door is one `waterfall` cell
  * (`procgenLevel.TERRAIN.waterfall`, level 0's own column). Keyed by the
@@ -1056,6 +1067,8 @@ export function compositeSeedlingOnConnector({
     for (const o of placement.entities.obstacles) {
         if (WATER_DOOR_IDS.includes(o.id)) painted.set(`${o.x},${o.y}`, DOOR_TERRAIN[o.id]);
     }
+    /** ⛓ Swim U3 — the obstacles that are BODIES (`ON_CONNECTOR_BODY_IDS`). */
+    const bodies = placement.entities.obstacles.filter((o) => ON_CONNECTOR_BODY_IDS.includes(o.id));
 
     return { placed: Object.freeze({
         doorCell: Object.freeze({ ...placement.doorCells[0] }),
@@ -1081,6 +1094,16 @@ export function compositeSeedlingOnConnector({
             ...placement.entities.blocks.map((b) => Object.freeze({ role: 'block', ...b })),
             ...placement.entities.obstacles.map((o) => Object.freeze({ role: 'obstacle', ...o })),
         ]),
+        /**
+         * ⛓ Swim U3 — PRESENT ONLY WHERE THERE ARE ANY, the pre-carve record's
+         * own rule for the same two keys: this object rides every payload that
+         * holds an on-connector element, so a key written unconditionally would
+         * move every rock gate's md5.
+         */
+        ...(bodies.length > 0 ? {
+            bodies: Object.freeze(bodies.map((b) => Object.freeze({ x: b.x, y: b.y, id: b.id }))),
+            killLockCell: null,
+        } : {}),
         /** ⛓ THE CELLS PASS 2 MAY NOT TOUCH — the door, its clearer, the wall
          *  and the carve. ⛔ NOT a rectangle: this element has none, and
          *  reserving one would take a corridor's worth of room away from the
@@ -1197,6 +1220,16 @@ export function seedlingOnConnectorEntities({ placed, tagFor }) {
         /** ⛓ Swim S1 — a water door is TERRAIN, already in `placed.painted`:
          *  no entity and no tag (`WATER_DOOR_IDS`). */
         if (WATER_DOOR_IDS.includes(e.id)) continue;
+        /**
+         * ⛓⛓ Swim U3 (D3) — THE CORRIDOR BODY: a `spinner {tag:'-1'}`, the
+         * roam's and the kill gate's own spelling, and NOTHING else — no lock,
+         * and so NO TAG from the 30 (a spinner's `-1` is the palette literal,
+         * not an allocation).
+         */
+        if (e.id === CORRIDOR_BODY_DOOR_ID) {
+            entities.push({ type: 'spinner', tx: e.x, ty: e.y, attrs: { tag: '-1' } });
+            continue;
+        }
         fail(`procgenSeedlingElements: the on-connector element named the id `
             + `${JSON.stringify(e.id)} and this binding has no Seedling part for it. ⛔ The `
             + 'mapping is a TABLE and an id it does not carry is an element the binding '

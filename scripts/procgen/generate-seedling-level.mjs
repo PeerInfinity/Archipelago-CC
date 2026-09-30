@@ -746,6 +746,13 @@ if (has('json')) {
             if (LIFTED_CLAIM_TEXT[p.element]) {
                 say(`         ⛓ ${LIFTED_CLAIM_TEXT[p.element]}: `
                     + `${c.heldAtDoor === null ? 'the route never crossed it' : c.heldAtDoor}`);
+            } else if (p.phase === 'on-connector' && (p.bodies?.length ?? 0) > 0) {
+                /** ⛓ Swim U3 — the CORRIDOR BODY: its door IS a lock-less body,
+                 *  so nothing opens and there is no lock for a claim to name.
+                 *  What the solve did about the body is its verbs. */
+                say('         ⛓ NO LIFTED CLAIM — this door is a lock-less BODY (nothing opens '
+                    + `when it dies); the certification solve's verbs: `
+                    + `[${(c.strategies ?? []).join(', ')}]`);
             } else if (p.phase === 'on-connector') {
                 /** ⛓ S1 — a ONE-OBSTACLE door (`soloDoor.js`): it HAS a door and
                  *  NO body, so the lifted claim (whose body cleared whose lock)
