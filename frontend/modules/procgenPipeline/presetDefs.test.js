@@ -234,7 +234,7 @@ describe('SHIPPED_PRESETS', () => {
         expect(p.state).toBe(CONCEPT_TRIAL_STATE);
         expect(p.group).toBe(PRESET_GROUPS.sphereGrowth);
         expect(p.state.mode).toBe('sphereGrowth');
-        expect(p.state.params).toMatchObject({ seed: 1, startSubstrate: 'maze', sphereCount: 3, fillerCount: 0,
+        expect(p.state.params).toMatchObject({ seed: 8, startSubstrate: 'text_adventure', sphereCount: 3, fillerCount: 0,
             concepts: ['sword', 'guardian', 'swim', 'water'] });
         expect(p.state.scenario.items).toEqual({ 'Progressive Sword': 1, 'Progressive Swim': 1, victory: 1 });
         expect(p.state.substrateQuotas).toEqual({ maze: 2, text_adventure: 2 });
