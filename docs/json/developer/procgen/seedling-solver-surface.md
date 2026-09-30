@@ -6,9 +6,9 @@ The Seedling solver reaches the simulation through a single run object and a set
 
 The **simulation** is the static import closure of `frontend/modules/seedlingDemo/levelRun.js`: 48 files. The **solver family** is the closure of `solverBot.js` and `director.js` minus the simulation: 11 files (`botDriverV1 botDriverV2 campaignChain dangerMap decisionTrace director encounters hazards mover solverBot strikePolicy`). `twoPassSolve.js` and the `watch*.js` pages are **callers**. They import the family, but nothing in the family imports them, so they sit outside both closures.
 
-`createLevelRun` returns one object literal with 174 properties: 162 getters, 10 methods and 2 shorthand properties. The solver uses it in four ways:
+`createLevelRun` returns one object literal with 175 properties: 162 getters, 11 methods and 2 shorthand properties. The solver uses it in four ways:
 
-- **It reads the run.** The family reads 84 of the 174 properties (`run.state`, `run.world`, `run.level`, entity lists, event ledgers) and leaves the other 90 alone.
+- **It reads the run.** The family reads 62 of the 175 properties (`run.state`, `run.world`, `run.level`, event ledgers, the bag) and leaves the other 113 alone. Every Seedling entity family's live state comes through one of them, `run.entities(family)` (see *The entities fold*); before that fold the family read 84.
 - **It advances the run.** `run.advance(held)` steps exactly one tick. The family calls `createLevelRun` once, in `botDriverV2.js`, and then drives that one run forward.
 - **It plans with a pure stepper.** `run.previewStepper()` returns `(state, held, opts) → state`, which is bound to the run's live geometry and changes nothing.
 - **It asks for forecasts.** `spinnerForecast`, `arrowForecast`, `chaserForecast` and `gameTimeAt` return data about future ticks.
@@ -42,7 +42,7 @@ To retire one, remove the import, run `--check`, and remove the export it names.
 
 The solver family reads a Seedling entity family's live state through one query, `run.entities(family)`, and not through that family's getter. The family key is the getter's own name, so `run.entities('pushables')` returns exactly what `run.pushables` returns.
 
-**What folded: 23 getters, 172 sites.**
+**What folded: 23 getters, 180 sites.** The census sees 172 of them. The other 8 are `until.test(r)` predicates in `solverBot.js`, written `(r) => r.chasers…`. The census names these as blind spots (`passed-unresolved`), and only the dynamic probe showed that they read the run.
 
 - **Rosters.** `openActivators`, `pushables`, `armedArrowTraps`, `crushers`, `openChests`, `strikeBodies`, `spinnerBodies`, `armedPulsers`, `turrets`, `chasers`, `brokenRocks`, `openBridges`, `arrowsInFlight`, `burnedTrees`, `latchedGroups`, `pulledRopes`, `turretDamage`, `arrowFlights`, `bosses` and `talkCircles`. Each is a live `Set`, `Map` or array for one entity family. `talkCircles` is the NPC and sign talkers.
 - **Predicates.** `crushersParked`, `pushesSettled` and `turretsSettled` are one-boolean views of a family's state. They fold with their families, because the query names a view of a family, not only a roster.
@@ -74,7 +74,7 @@ The gate refuses four things by name:
 **To fold the next family:**
 
 1. Move its getter's body, unchanged, into a `<family>Now` arrow beside the others. Point the getter at the arrow, add the arrow to `ENTITY_FAMILIES`, and add its name to `ENTITY_FAMILY_NAMES`.
-2. Rewrite each family-file read, `run.<family>`, to `run.entities('<family>')`. Change only the property span.
+2. Rewrite each family-file read, `run.<family>`, to `run.entities('<family>')`. Change only the property span. Include the reads the census cannot follow, such as the run under another parameter name in an `until.test` predicate. Sweep the family files for `\w+\.<family>` and read each hit.
 3. Run `census-seedling-solver-surface.mjs --check`. The old row now reads "must be RETIRED".
 4. If a committed route reached the getter at run time, re-run `measure-seedling-solver-surface.mjs --write`. Otherwise the dynamic record keeps the old row alive as `seen: "dynamic"`.
 5. Run `--write`.
@@ -131,7 +131,7 @@ Each cell shows the number of rows, then the number of static sites.
 | surface | class | live-state | event-ledger | forecast | stepper | geometry-query | constant | function | total |
 |---|---|---|---|---|---|---|---|---|---|
 | run | physics | 6 / 508 | 1 / 2 | 1 / 7 | 2 / 39 | 1 / 5 | 1 / 2 | 1 / 7 | 13 / 570 |
-| run | seedling | 35 / 221 | 29 / 60 | 3 / 9 | — | 2 / 2 | — | 2 / 5 | 71 / 297 |
+| run | seedling | 13 / 221 | 29 / 60 | 3 / 9 | — | 2 / 2 | — | 2 / 5 | 49 / 297 |
 | world | physics | — | — | — | — | 9 / 39 | 3 / 15 | — | 12 / 54 |
 | world | seedling | — | — | — | — | 5 / 12 | 11 / 85 | — | 16 / 97 |
 | state | physics | 10 / 250 | — | — | — | — | — | — | 10 / 250 |
@@ -139,32 +139,32 @@ Each cell shows the number of rows, then the number of static sites.
 | import | physics | — | — | — | 1 / 4 | 4 / 68 | 17 / 127 | 12 / 31 | 34 / 230 |
 | import | seedling | — | — | 5 / 10 | 3 / 3 | 15 / 40 | 37 / 172 | 20 / 40 | 80 / 265 |
 
-Two thirds of the run's static sites are physics, but only 13 of its 84 members are. Most of that weight sits in `run.state`, `run.world`, `run.level` and `run.advance`. The Seedling part of the surface is wide and shallow: 71 members with 297 sites between them.
+Two thirds of the run's static sites are physics, but only 13 of its 62 members are. Most of that weight sits in `run.state`, `run.world`, `run.level` and `run.advance`. The Seedling part of the surface is 49 members with 297 sites between them; `run.entities` alone holds 172 of those sites. Before the entities fold it was 71 members, wide and shallow, and the 22 fewer members carry the same 297 sites.
 
 ### The ten heaviest members
 
 | member | static sites | class | form | files |
 |---|---|---|---|---|
 | `run.state` | 239 | physics | live-state | botDriverV2 113, solverBot 126 |
+| `run.entities` | 172 | seedling | live-state | botDriverV2 101, dangerMap 14, solverBot 57 |
 | `run.world` | 159 | physics | live-state | botDriverV2 56, solverBot 103 |
 | `state.y` | 111 | physics | live-state | botDriverV1 2, botDriverV2 57, solverBot 52 |
 | `state.x` | 108 | physics | live-state | botDriverV1 2, botDriverV2 54, solverBot 52 |
 | `run.level` | 83 | physics | live-state | botDriverV2 30, dangerMap 9, director 1, solverBot 43 |
 | `run.advance` | 35 | physics | stepper | botDriverV2 26, solverBot 9 |
-| `run.openActivators` | 30 | seedling | live-state | botDriverV2 22, solverBot 8 |
-| `run.pushables` | 30 | seedling | live-state | botDriverV2 17, solverBot 13 |
 | `run.ticksCompleted` | 24 | physics | live-state | botDriverV2 3, dangerMap 1, solverBot 20 |
 | `world.activators` | 22 | seedling | constant | botDriverV2 10, solverBot 12 |
+| `run.inventory` | 16 | seedling | live-state | botDriverV2 7, solverBot 9 |
 
 ### Static against dynamic
 
-Across the ten committed routes, the dynamic census reached 69 of the 84 run members and 24 of the 28 world members. Every one of those was already a static row. It also found eight `state` members that the static census cannot name: `terrain`, `hazard`, `drown`, `swim`, `latched`, `hitX`, `hitY` and `transition`. Seven of them are reached through the four `{ ...run.state }` copies in `solverBot.js`. The eighth, `hazard`, is read by `strikePolicy.js` through `strike.decide(state)`. The static census lists both kinds of site under what it cannot see (spread-copy and passed-unresolved). The probe also recorded some reads that are not rows, because they belong to the route scripts or to the simulation itself (`run.gameTime`, `run.saveArrays`, `world.nearestWalkableTileWithTie` and a few others).
+Across the ten committed routes, the dynamic census reached 50 of the 62 run members and 24 of the 28 world members (before the entities fold: 69 of 84). Every one of those was already a static row. It also found eight `state` members that the static census cannot name: `terrain`, `hazard`, `drown`, `swim`, `latched`, `hitX`, `hitY` and `transition`. Seven of them are reached through the four `{ ...run.state }` copies in `solverBot.js`. The eighth, `hazard`, is read by `strikePolicy.js` through `strike.decide(state)`. The static census lists both kinds of site under what it cannot see (spread-copy and passed-unresolved). The probe also recorded some reads that are not rows, because they belong to the route scripts or to the simulation itself (`run.gameTime`, `run.saveArrays`, `world.nearestWalkableTileWithTie` and a few others).
 
 ### Cold members
 
-Nineteen members are statically reached but no committed route reaches them at runtime:
+Sixteen members are statically reached but no committed route reaches them at runtime:
 
-- **Run, 15.** Six are reached only from `director.js`: `appliedTimedClears`, `bankedClears`, `earnedClears`, `saveState`, `spinnerWrites` and `worldCtor`. The director's live envelope runs on the watch page, which none of these routes loads. One is reached only from `dangerMap.js`: `arrowCoverAt`. Eight are `botDriverV2.js` branches that none of the committed routes takes: `blastFreezes`, `crusherContacts`, `crushersParked`, `primary`, `treeBurns`, `turretDamage`, `turretKills` and `turretsSettled`.
+- **Run, 12.** Six are reached only from `director.js`: `appliedTimedClears`, `bankedClears`, `earnedClears`, `saveState`, `spinnerWrites` and `worldCtor`. The director's live envelope runs on the watch page, which none of these routes loads. One is reached only from `dangerMap.js`: `arrowCoverAt`. Five are `botDriverV2.js` branches that none of the committed routes takes: `blastFreezes`, `crusherContacts`, `primary`, `treeBurns` and `turretKills`. Three more (`crushersParked`, `turretDamage` and `turretsSettled`) were cold rows until the entities fold; they are families of `run.entities` now, and their sites are still cold inside that warm row.
 - **World, 4.** `bridgeTiles`, `burnableTrees`, `iceTurrets` and `solidBoxesForMover`.
 
 A cold row is still part of the contract. It just means no route guards it at runtime yet.
@@ -175,7 +175,7 @@ Each candidate below folds a group of members behind one new interface member. T
 
 | rank | fold | members → 1 | sites moved | heaviest |
 |---|---|---|---|---|
-| 1 | run: Seedling entity live state → `run.entities(family)` | 22 → 1 | 171 | openActivators 30, pushables 30, armedArrowTraps 12, crushers 10, openChests 10 |
+| 1 | ✅ DONE (engine-prep C3): run: Seedling entity live state → `run.entities(family)` | 23 → 1 | 172 | openActivators 30, pushables 30, armedArrowTraps 12, crushers 10, openChests 10 |
 | 2 | world: Seedling entity rosters → `world.roster(family)` | 11 → 1 | 85 | activators 22, pressers 12, arrowTraps 11, pushables 11, combat 9 |
 | 3 | run: Seedling event ledgers → `run.ledger(kind)` | 29 → 1 | 60 | collected 7, sealCollections 6, equipsFired 4, roomWrites 4, blastFreezes 3 |
 | 4 | run: the bag and progress → `run.progress()` | 13 → 1 | 50 | inventory 16, keys 10, primaryWeapon 6, slashInfo 5, inputRefused 3 |
