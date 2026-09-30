@@ -380,6 +380,10 @@ describe('⛔⛔ THE RE-PROBE — every excluded family, driven in the door geom
         expect(unkeyed.threw).toBe('SolverBotError');
         expect(unkeyed.reasonText).toMatch(/needs a key this run does not hold/);
         expect(unkeyed.reasonText).toMatch(/[Tt]he key is a SUB-ORDER/);
+        // ⛓ SEEDLING SWIM U2, D2 — the refusal NAMES the lock (U1's survey
+        // printed `keylock: undefined needs a key …`).
+        expect(unkeyed.reasonText).toMatch(/keylock: bosslock@64,80 needs a key this run does not hold/);
+        expect(unkeyed.reasonText).not.toMatch(/undefined needs a key/);
 
         const keyed = attempt('keylock-keyed', spec, POST_SWORD_ITEMS, { keys: [0] });
         expect(keyed.verdict).not.toBe('SOLVED');

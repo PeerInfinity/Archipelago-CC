@@ -7161,6 +7161,10 @@ function resolveKeylockStrategy(run, obstacle, contacts, blocked = []) {
         return {
             strategy: 'keylock',
             held: false,
+            // ⛓ SEEDLING SWIM U2, D2 — the refusal names the lock (`execKeylock`
+            // prints `resolved.lock`; U1's survey read `keylock: undefined`).
+            lock: obstacle.id,
+            keyType: row.keyType,
             rejected: [{
                 option: `stand on ${obstacle.id}`,
                 why: `\`BossLock.update\` gates on \`Player.hasKey(${row.keyType})\` and `
