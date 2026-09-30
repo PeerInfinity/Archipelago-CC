@@ -51,6 +51,14 @@ export const CENSUS_CSV = 'scripts/procgen/seedling-constants-census.csv';
 export const DOC_MD = 'docs/json/developer/procgen/seedling-constants.md';
 /** The AS3 source, when the submodule is initialised. */
 export const AS3_SRC = 'vendor/seedling/src';
+/**
+ * The physics profile registry (engine prep A2). Its `PROFILE` table holds
+ * every physics/rule scalar the simulation used to declare in place; each of
+ * its literals is classed by an EXACT-KEY fields row generated from
+ * `PROFILE_FIELDS` (`--profile-rows`), and the gate asserts the two agree.
+ */
+export const PROFILE_FILE = 'frontend/modules/seedlingDemo/seedlingProfile.js';
+export const PROFILE_TABLE = 'PROFILE';
 
 export const CLASSES = ['physics', 'rule', 'cosmetic', 'structural', 'unclassified'];
 /** The second axis, owed by every `physics` and `rule` row and by no other. */
@@ -296,10 +304,20 @@ function sameLineComment(src, comments, line, from) {
     return c ? c.value.trim() : '';
 }
 
-/** The top-level facts the doc renders: named scalars, duplicates, derived. */
+/** `PROFILE.<key>` — a declaration that reads the profile rather than deriving. */
+const isProfileRead = (n) => n.type === 'MemberExpression' && !n.computed
+    && n.object.type === 'Identifier' && n.object.name === PROFILE_TABLE && n.property.type === 'Identifier';
+
+/**
+ * The top-level facts the doc renders: named scalars, duplicates, derived
+ * constants, and the ALIASES — `NAME = PROFILE.key`, a name the profile now
+ * owns (kept apart from `derived`, which is arithmetic).
+ */
 export function topLevelFacts(files) {
     const scalars = [];
     const derived = [];
+    const aliases = [];
+    const reads = [];
     const tables = [];
     for (const { file, src } of files) {
         const ast = parseSource(src);
@@ -310,6 +328,11 @@ export function topLevelFacts(files) {
             const lead = (stmt.leadingComments ?? []).map((c) => c.value).join(' ');
             const refs = [...new Set(lead.match(/\b[A-Z][\w/]*\.as(?::\d+(?:-\d+)?)?/g) ?? [])];
             for (const x of d.declarations) {
+                if (x.id.type === 'Identifier' && x.init) {
+                    walk(x.init, (n) => {
+                        if (isProfileRead(n)) reads.push({ key: n.property.name, file, name: x.id.name });
+                    });
+                }
                 if (x.id.type === 'Identifier' && x.init && !isNumInit(x.init)
                     && !/^(ArrowFunctionExpression|FunctionExpression)$/.test(x.init.type)) {
                     tables.push({ name: x.id.name, file, line: x.loc.start.line, exported, as3Refs: refs });
@@ -318,6 +341,8 @@ export function topLevelFacts(files) {
                 const text = src.slice(x.init.start, x.init.end).replace(/\s+/g, ' ');
                 if (isNumInit(x.init)) {
                     scalars.push({ name: x.id.name, file, line: x.loc.start.line, exported, literal: text });
+                } else if (isProfileRead(x.init)) {
+                    aliases.push({ name: x.id.name, file, line: x.loc.start.line, exported, key: x.init.property.name });
                 } else if (/^(BinaryExpression|MemberExpression|Identifier|UnaryExpression)$/.test(x.init.type)) {
                     derived.push({ name: x.id.name, file, line: x.loc.start.line, exported, init: text });
                 }
@@ -328,7 +353,66 @@ export function topLevelFacts(files) {
     for (const s of scalars) byName.set(s.name, [...(byName.get(s.name) ?? []), s]);
     const duplicates = [...byName].filter(([, v]) => v.length > 1)
         .map(([name, v]) => ({ name, sites: v, agree: new Set(v.map((s) => Number(s.literal))).size === 1 }));
-    return { scalars, derived, duplicates, tables, distinct: byName.size };
+    return { scalars, derived, aliases, reads, duplicates, tables, distinct: byName.size };
+}
+
+// ── the profile ──────────────────────────────────────────────────────
+
+/**
+ * The census rows of the profile's `PROFILE` table, each with the profile
+ * key it holds (the table's property name, read off the row's property path).
+ */
+export function profileRows(rows) {
+    return rows.filter((r) => r.file === PROFILE_FILE && r.position === 'table' && r.enclosing === PROFILE_TABLE)
+        .map((r) => ({ ...r, profileKey: /^PROFILE\.(\w+):/.exec(r.context)?.[1] ?? null }));
+}
+
+/**
+ * One EXACT-KEY fields row per `PROFILE` literal, from `PROFILE_FIELDS`:
+ * class, kind and as3 are the metadata's, the note is the metadata's note.
+ * The census rows supply the keys (they carry the statement hash), the
+ * metadata supplies the classification — so neither is typed twice.
+ * Throws when a literal has no field or a field has no literal.
+ */
+export function profileFieldsRows(census, fields) {
+    const byKey = new Map(fields.map((f) => [f.key, f]));
+    const rows = profileRows(census.rows);
+    const seen = new Set();
+    const out = rows.map((r) => {
+        const f = byKey.get(r.profileKey);
+        if (!f) throw new Error(`${PROFILE_FILE}: PROFILE.${r.profileKey} has no PROFILE_FIELDS record`);
+        seen.add(f.key);
+        return { target: r.key, class: f.class, kind: f.kind, as3: f.as3, note: f.note };
+    });
+    const missing = fields.filter((f) => !seen.has(f.key)).map((f) => f.key);
+    if (missing.length) throw new Error(`${PROFILE_FILE}: PROFILE_FIELDS names keys with no PROFILE literal: ${missing.join(', ')}`);
+    return out;
+}
+
+/**
+ * The fields table's text with its profile rows REPLACED by `profileRowsFresh`
+ * (every existing target in `PROFILE_FILE` dropped, the fresh ones appended).
+ */
+export function spliceProfileFields(fieldsText, profileRowsFresh) {
+    const kept = parseCsv(fieldsText).filter((f) => !f.target.startsWith(`${PROFILE_FILE}|`));
+    return toCsv([...kept, ...profileRowsFresh], FIELDS_COLUMNS);
+}
+
+/**
+ * Where the reviewed table and `PROFILE_FIELDS` disagree, as human lines: a
+ * profile literal whose census class, kind or as3 is not its field's.
+ */
+export function profileDisagreements(census, fields) {
+    const byKey = new Map(fields.map((f) => [f.key, f]));
+    const out = [];
+    for (const r of profileRows(census.rows)) {
+        const f = byKey.get(r.profileKey);
+        if (!f) { out.push(`PROFILE.${r.profileKey}: no PROFILE_FIELDS record`); continue; }
+        for (const col of ['class', 'kind', 'as3']) {
+            if (String(r[col] ?? '') !== String(f[col] ?? '')) out.push(`PROFILE.${r.profileKey}: ${col} is ${JSON.stringify(r[col])} in the census, ${JSON.stringify(f[col])} in PROFILE_FIELDS`);
+        }
+    }
+    return out;
 }
 
 // ── the AS3 anchors ──────────────────────────────────────────────────
@@ -619,15 +703,27 @@ export function renderDocRegion(census) {
 
     const { scalarRows, tables, facts } = profileCandidates(census);
     out.push('', `### The ${facts.duplicates.length} names declared in more than one file`, '');
-    out.push(mdTable(['name', 'values agree', 'files'], facts.duplicates.map((d) => [
-        `\`${d.name}\``, d.agree ? 'yes' : '**NO**', d.sites.map((s) => `${short(s.file)} = ${s.literal}`).join('; ')])));
+    if (facts.duplicates.length) {
+        out.push(mdTable(['name', 'values agree', 'files'], facts.duplicates.map((d) => [
+            `\`${d.name}\``, d.agree ? 'yes' : '**NO**', d.sites.map((s) => `${short(s.file)} = ${s.literal}`).join('; ')])));
+    } else out.push('None: a name declared in several files now reads one profile key (the table below).');
+
+    const prof = profileRows(rows);
+    const readsOf = (k) => facts.reads.filter((r) => r.key === k)
+        .map((r) => `${short(r.file).replace(/^seedlingDemo\//, '')} \`${r.name}\``);
+    out.push('', `### The profile: ${prof.length} keys in \`${short(PROFILE_FILE)}\``, '',
+        `${['physics', 'rule'].map((c) => `**${prof.filter((r) => r.class === c).length} ${c}**`).join(', ')}; `
+        + `${prof.filter((r) => r.as3).length} with an AS3 anchor. ${facts.aliases.length} top-level names alias a key, `
+        + `and ${facts.reads.length} top-level declarations read one. "Read by" is every such declaration.`, '');
+    out.push(mdTable(['key', 'value', 'class', 'kind', 'AS3', 'read by'], prof.map((r) => [
+        `\`${r.profileKey}\``, r.literal, r.class, r.kind, r.as3, readsOf(r.profileKey).join('; ')])));
     out.push('', `### The ${facts.derived.length} derived or aliased top-level constants`, '');
     out.push(mdTable(['name', 'file', 'initialiser'], facts.derived.map((d) => [
         `\`${d.name}\``, short(d.file), `\`${d.init.length > 80 ? `${d.init.slice(0, 77)}...` : d.init}\``])));
 
     const anchoredS = scalarRows.filter((r) => r.as3).length;
     const anchoredT = tables.filter((t) => t.as3).length;
-    out.push('', '### The profile candidates', '',
+    out.push('', '### The profile candidates outside the profile', '',
         `**${scalarRows.length} named scalars** are \`physics\` or \`rule\` (${anchoredS} with an AS3 anchor), and `
         + `**${tables.length} small tables** (at most ${SMALL_TABLE_MAX} literals) hold at least one (${anchoredT} with an AS3 reference).`, '');
     out.push(mdTable(['name', 'file', 'value', 'class', 'kind', 'AS3'], scalarRows.map((r) => [

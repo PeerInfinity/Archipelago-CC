@@ -1,10 +1,4 @@
 target,class,kind,as3,note
-frontend/modules/seedlingDemo/levelWorld.js|HITBOX_ORIGIN_X|(module),physics,magnitude,Player.as:normalHitbox,player hitbox origin x (Rectangle(2;2;4;5))
-frontend/modules/seedlingDemo/levelWorld.js|HITBOX_ORIGIN_Y|(module),physics,magnitude,Player.as:normalHitbox,player hitbox origin y
-frontend/modules/seedlingDemo/levelWorld.js|BRIDGE_STATE|(module),rule,sentinel,,Tile.types index for Bridge
-frontend/modules/seedlingDemo/levelWorld.js|WATER_STATE|(module),rule,sentinel,,Tile.types index for Water
-frontend/modules/seedlingDemo/levelWorld.js|LAVA_STATE|(module),rule,sentinel,,Tile.types index for Lava
-frontend/modules/seedlingDemo/levelWorld.js|WATERFALL_STATE|(module),rule,sentinel,,Tile.types index for Waterfall
 frontend/modules/seedlingDemo/levelWorld.js|clearedHere2|clearedHere2,rule,sentinel,,tag >= 0 means tagged; -1 is none
 frontend/modules/seedlingDemo/levelWorld.js|MAGICAL_LOCK_TYPE_BY_TAG|(module),rule,sentinel,,lockType compared lockType <= shotType
 frontend/modules/seedlingDemo/levelWorld.js|MODELLED_TILE_TYPES|(module),rule,sentinel,,Tile.types ids
@@ -243,7 +237,6 @@ frontend/modules/seedlingDemo/levelRun.js|advance|ha0be1487|1|0,rule,sentinel,,c
 frontend/modules/seedlingDemo/levelRun.js|advance|had4c8fda|1|0,rule,magnitude,,boss totem laser damage
 frontend/modules/seedlingDemo/levelRun.js|advance|hd7b0522b|2|0,rule,sentinel,,cutscene id 2 (plain seed reboot)
 frontend/modules/flashPanel/seedlingSemantics.js|*|*,structural,,,
-frontend/modules/flashPanel/seedlingSemantics.js|SEEDLING_TILE_SIZE|(module),physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_TO_TYPE|(module),rule,sentinel,,tileset column -> tile type id (Game.as switch)
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_VARIANTS|(module),cosmetic,,,column keys of the cosmetic-only waterfall/grass variant flags
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_TYPE_SEMANTICS|(module),rule,sentinel,,tile type id
@@ -373,10 +366,7 @@ frontend/modules/seedlingDemo/combat.js|(module)|he118f9dd|1|0,rule,magnitude,,d
 frontend/modules/seedlingDemo/combat.js|(module)|h955e34b8|0|0,rule,magnitude,,damage dealt to Player.hit
 frontend/modules/seedlingDemo/combat.js|(module)|h5bd94b47|1|0,rule,magnitude,,damage dealt to Player.hit
 frontend/modules/seedlingDemo/combat.js|(module)|h57baabe2|0|0,rule,magnitude,,damage dealt to Player.hit
-frontend/modules/seedlingDemo/combat.js|ENEMY_IFRAMES|(module),rule,magnitude,,
-frontend/modules/seedlingDemo/combat.js|SLASH_TIMER_MAX|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/combat.js|KILL_CADENCE_FLOOR|(module),rule,derivation,,SLASH_TIMER_MAX + 1 tick of head-room for the kill-cost estimate
-frontend/modules/seedlingDemo/combat.js|KILL_LOCK_TSET|(module),rule,sentinel,,Lock tSet == -1 kill-lock discriminator (Lock.as:109-115)
 frontend/modules/seedlingDemo/combat.js|pressesFor|pressesFor|2,rule,magnitude,Player.as:darkSwordDamage,dark sword damage
 frontend/modules/seedlingDemo/combat.js|pressesFor|pressesFor|1,rule,magnitude,Player.as:swordDamage,plain sword damage
 frontend/modules/seedlingDemo/combat.js|aggroDisc|aggroDisc,physics,bound,,margin = player half-box plus enemy half-box on a centre distance
@@ -394,7 +384,6 @@ frontend/modules/seedlingDemo/combat.js|enemyHitPlayerFires|h29fa023c|0|1,rule,b
 frontend/modules/seedlingDemo/combat.js|plannerContactFree|plannerContactFree,structural,,,?? 0 default
 frontend/modules/seedlingDemo/combat.js|contactPricing|contactPricing,physics,sentinel,,REVIEW: speed 0 as a static-body marker; decides contact-pricing kind rather than motion
 frontend/modules/seedlingDemo/finalBossFight.js|*|*,structural,,,default: loop bounds / initial accumulators / anim counters / budgets
-frontend/modules/seedlingDemo/finalBossFight.js|FP_ELAPSED_CLAMPED|(module),physics,magnitude,,FP.elapsed clamp; scales anim timers that gate callbacks
 frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS_ANIMS|(module)|4,cosmetic,,,REVIEW: walk anim callback only clears the anim name; nothing simulated reads it
 frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS_ANIMS|(module)|15,cosmetic,,,REVIEW: walk anim rate; its callback only clears the anim name
 frontend/modules/seedlingDemo/finalBossFight.js|FINAL_BOSS_ANIMS|(module)|8,rule,count,,die anim frame count; gates the death schedule and tag writes
@@ -480,17 +469,14 @@ frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|hc132f264|0|0,rule,b
 frontend/modules/seedlingDemo/finalBossFight.js|stepOwlRoom|h4bc360d2|1|0,rule,magnitude,,shake decays 1 per frame; each frame of shake costs jiggle draws
 frontend/modules/seedlingDemo/tapeFormat.js|*|*,structural,,,default: versions / parser limits / validation floors / indices
 frontend/modules/seedlingDemo/tapeFormat.js|RNG_FP_SEED_MAX|(module),structural,,,FP.randomSeed setter clamp (FP.as:392) as a parser limit
-frontend/modules/seedlingDemo/tapeFormat.js|PIN_FRAME_RATE|(module),rule,magnitude,,engine FPS the sound-clock pin reproduces; swim boost reads it
 frontend/modules/seedlingDemo/tapeFormat.js|BUILD_SPAWN|(module)|0,rule,sentinel,,boot level id (Main.as:51)
 frontend/modules/seedlingDemo/tapeFormat.js|BUILD_SPAWN|(module)|80,physics,magnitude,,boot spawn x (Main.as:51)
 frontend/modules/seedlingDemo/tapeFormat.js|BUILD_SPAWN|(module)|128,physics,magnitude,,boot spawn y (Main.as:51)
 frontend/modules/seedlingDemo/tapeFormat.js|KEY_CODES|(module),rule,sentinel,,Player.as keys[] codes the game input reads
 frontend/modules/seedlingDemo/tapeFormat.js|FORBIDDEN_KEYS|(module),structural,,,REVIEW: key codes used only by the validator to refuse a tape; never fed to the sim
 frontend/modules/seedlingDemo/tapeFormat.js|HAZARD_STATES|(module),rule,sentinel,,tile types the noHazards coercion branches on
-frontend/modules/seedlingDemo/tapeFormat.js|COERCED_TERRAIN_STATE|(module),rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/tapeFormat.js|ITEM_PROPERTIES|(module)|3,rule,count,Player.as:hitsMaxDef,
 frontend/modules/seedlingDemo/tapeFormat.js|ITEM_PROPERTIES|(module)|1,rule,magnitude,,hitsMax added per health item
-frontend/modules/seedlingDemo/tapeFormat.js|LEVEL_COUNT|(module),rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/tapeFormat.js|INVENTORY_ITEM_IDS|(module),rule,sentinel,,item ids Player.useItem switches on
 frontend/modules/seedlingDemo/tapeFormat.js|inventorySlotsFor|h7259ba2b|0|0,rule,sentinel,,ghostsword fusion inserts at slot 0
 frontend/modules/seedlingDemo/tapeFormat.js|inventorySlotsFor|h34f63b9c|1|0,rule,sentinel,,firewand fusion inserts at slot 1
@@ -537,7 +523,6 @@ frontend/modules/seedlingDemo/bossTotemFight.js|DEF_HEAD_POS|(module),physics,ma
 frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemHeadPosY|bossTotemHeadPosY|0,structural,,,
 frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemHeadPosY|bossTotemHeadPosY|2,physics,derivation,,headPos normalize(length / 2) blend of two frames
 frontend/modules/seedlingDemo/bossTotemFight.js|bossTotemHeadPosY|bossTotemHeadPosY|1,structural,,,val = 1 identity
-frontend/modules/seedlingDemo/bossTotemFight.js|HEAD_POS_X|(module),physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/bossTotemFight.js|laserChargeTicks|laserChargeTicks|0,structural,,,
 frontend/modules/seedlingDemo/bossTotemFight.js|laserChargeTicks|laserChargeTicks|100000,structural,,,
 frontend/modules/seedlingDemo/bossTotemFight.js|laserChargeTicks|laserChargeTicks|1,structural,,,
@@ -594,7 +579,6 @@ frontend/modules/seedlingDemo/bossTotemFight.js|BOSS_TOTEM_WHITE_OUT|(module)|5,
 frontend/modules/seedlingDemo/r7Acceptance.js|SEAM_SIGNATURE|(module),structural,,,seam save-array arity (format shape)
 frontend/modules/seedlingDemo/r7Acceptance.js|assertSeamChannelsTotal|assertSeamChannelsTotal,structural,,,acceptance/diagnostic arithmetic
 frontend/modules/seedlingDemo/r7Acceptance.js|seamRngPosture|seamRngPosture,structural,,,acceptance/diagnostic arithmetic
-frontend/modules/seedlingDemo/r7Acceptance.js|BOOT_PRESWAP_FRAMES|(module),rule,magnitude,,REVIEW: measured boot pre-swap frame offset; a clock correction for seam comparison
 frontend/modules/seedlingDemo/r7Acceptance.js|seamBootFields|seamBootFields|-1,rule,sentinel,,hasSealPart empty-slot -1
 frontend/modules/seedlingDemo/r7Acceptance.js|seamBootFields|seamBootFields|0,structural,,,acceptance/diagnostic arithmetic
 frontend/modules/seedlingDemo/r7Acceptance.js|seamFindings|seamFindings,structural,,,acceptance/diagnostic arithmetic
@@ -775,7 +759,6 @@ frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|128,rule,m
 frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|67,rule,sentinel,,level id
 frontend/modules/seedlingDemo/arrowTrap.js|assertArrowTrapCensus|assertArrowTrapCensus|116,structural,,,level scan bound
 frontend/modules/seedlingDemo/arrowTrap.js|assertArrowTrapCensus|assertArrowTrapCensus|0,structural,,,
-frontend/modules/seedlingDemo/shieldBossFight.js|FP_ELAPSED_CLAMPED|(module),physics,magnitude,,frame-time clamp; here it times the anim callbacks
 frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossAnimUpdates|shieldBossAnimUpdates,structural,,,
 frontend/modules/seedlingDemo/shieldBossFight.js|(module)|h610edcfd|0|0,rule,sentinel,,sit frame id; hitPlayer tests frame 5..8
 frontend/modules/seedlingDemo/shieldBossFight.js|(module)|hd289e4d8|0|0,rule,magnitude,,frameRate 0: sit never calls back
@@ -932,11 +915,6 @@ frontend/modules/seedlingDemo/activators.js|stepActivators|h10cb00f9|0|0,rule,bo
 frontend/modules/seedlingDemo/activators.js|stepActivators|h8b114b82|1|0,rule,magnitude,,alpha reset to 1
 frontend/modules/seedlingDemo/activators.js|stepActivators|h8b114b82|1|1,rule,magnitude,,alpha reset to 1
 frontend/modules/seedlingDemo/camera.js|*|*,structural,,,centre halves / zero defaults / loop bounds
-frontend/modules/seedlingDemo/camera.js|SCREEN_W|(module),rule,bound,,FP.screen 160 (Main.as:36); camera gates Enemy.update via onScreen
-frontend/modules/seedlingDemo/camera.js|SCREEN_H|(module),rule,bound,,FP.screen 160 (Main.as:36); camera gates Enemy.update via onScreen
-frontend/modules/seedlingDemo/camera.js|CAMERA_SPEED_DIVISOR|(module),rule,magnitude,,camera lerp; camera gates enemy updates
-frontend/modules/seedlingDemo/camera.js|INVENTORY_WIDTH|(module),rule,magnitude,,Inventory.width in camera x target
-frontend/modules/seedlingDemo/camera.js|INVENTORY_OFFSET_X|(module),rule,magnitude,,Inventory.offsetMin in camera x target
 frontend/modules/seedlingDemo/camera.js|INVENTORY_TERM|(module),rule,derivation,,INVENTORY_WIDTH / 2 + INVENTORY_OFFSET_X / 2
 frontend/modules/seedlingDemo/camera.js|stepCamera|stepCamera|-1,rule,sentinel,,cameraTarget (-1 -1) = none
 frontend/modules/seedlingDemo/camera.js|stepCamera|h0a9e6a2c|0|0,rule,bound,,camera clamp to level
@@ -962,14 +940,10 @@ frontend/modules/seedlingDemo/combatVerbs.js|SLASH_SPRITES|(module),physics,magn
 frontend/modules/seedlingDemo/combatVerbs.js|SLASH_SCALE_NORMAL|(module),physics,magnitude,,slash rect scale
 frontend/modules/seedlingDemo/combatVerbs.js|SLASH_SCALE_DASH|(module),physics,magnitude,,slash rect scale when dashing
 frontend/modules/seedlingDemo/combatVerbs.js|SWORD_DAMAGE|(module),rule,magnitude,,
-frontend/modules/seedlingDemo/combatVerbs.js|SWORD_FORCE|(module),physics,magnitude,,
 frontend/modules/seedlingDemo/combatVerbs.js|KILL_PRESS_CADENCE|(module),rule,derivation,,ENEMY_IFRAMES + 1
-frontend/modules/seedlingDemo/combatVerbs.js|SLASH_DASH_FORCE|(module),physics,magnitude,,knockback(2) Player.as:788
 frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|hd3d08480|30|0,rule,magnitude,,FP.assignedFrameRate 30
 frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|h5aaf8498|1|0,structural,,,REVIEW: Spritemap unit-frame accumulator threshold
 frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|he50a9b4e|1|0,structural,,,REVIEW: Spritemap unit-frame accumulator step
-frontend/modules/seedlingDemo/combatVerbs.js|SWORD_ANIM_RATE|(module),rule,magnitude,,
-frontend/modules/seedlingDemo/combatVerbs.js|SWORD_ANIM_RATE_DASH|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/combatVerbs.js|SLASH_ANIM_TICKS|(module),rule,count,,slash / slashnarrow frame counts; wrap fires slashEnd
 frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hdfaa2622|0|0,rule,sentinel,,direction code
 frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hdfaa2622|1|0,rule,sentinel,,direction code
@@ -1004,7 +978,6 @@ frontend/modules/seedlingDemo/crusher.js|CEREMONY_RULE|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/crusher.js|PLAYER_DAMAGE_PATHS|(module),rule,sentinel,,level ids holding LavaTrap
 frontend/modules/seedlingDemo/crusher.js|CRUSHER_PLAN|(module),structural,,,doc phase numbering
 frontend/modules/seedlingDemo/endingChain.js|*|*,structural,,,counter init / increments / loop bounds
-frontend/modules/seedlingDemo/endingChain.js|TALK_RANGE|(module),rule,bound,,origin-to-origin talk circle
 frontend/modules/seedlingDemo/endingChain.js|WATCHER|(module)|8,physics,magnitude,,NPC ctor Tile.w/2 offset and setHitbox origin
 frontend/modules/seedlingDemo/endingChain.js|WATCHER|(module)|16,physics,magnitude,,setHitbox(16 16 8 8)
 frontend/modules/seedlingDemo/endingChain.js|WATCHER|(module)|9,rule,bound,,seed held out while dialogue index in [9 19]
@@ -1020,10 +993,7 @@ frontend/modules/seedlingDemo/endingChain.js|(module)|hfcac1c7e|32|0,rule,bound,
 frontend/modules/seedlingDemo/endingChain.js|FINAL_DOOR|(module)|28,rule,count,,open anim frames; animEnd removes the door
 frontend/modules/seedlingDemo/endingChain.js|FINAL_DOOR|(module)|15,rule,magnitude,,open anim rate; animEnd removes the door
 frontend/modules/seedlingDemo/endingChain.js|stepFinalDoor|hcdbbf6f1|1|0,rule,magnitude,,play frame is the first anim update (one not zero)
-frontend/modules/seedlingDemo/endingChain.js|COVER_ALPHA_RATE|(module),rule,magnitude,,cover fade accumulation = 200 frozen frames
 frontend/modules/seedlingDemo/endingChain.js|coverFadeFrames|h76e377d7|1|0,rule,bound,,coverAlpha >= 1 ends the fade
-frontend/modules/seedlingDemo/endingChain.js|TREE_GROW_FRAME_RATE|(module),rule,magnitude,,grow anim rate; endAnim triggers credits fade
-frontend/modules/seedlingDemo/endingChain.js|TREE_GROW_FRAMES|(module),rule,count,,grow anim frames; endAnim triggers credits fade
 frontend/modules/seedlingDemo/endingChain.js|(module)|hf94c6179|1|0,rule,sentinel,,reboot level id
 frontend/modules/seedlingDemo/endingChain.js|(module)|h7391f308|64|0,rule,magnitude,,reboot spawn x
 frontend/modules/seedlingDemo/endingChain.js|(module)|h7a18b111|96|0,rule,magnitude,,reboot spawn y
@@ -1037,25 +1007,10 @@ frontend/modules/seedlingDemo/endingChain.js|ORACLE|(module),physics,magnitude,,
 frontend/modules/seedlingDemo/endingChain.js|CREDITS|(module)|2,rule,sentinel,,menuState credits
 frontend/modules/seedlingDemo/endingChain.js|CREDITS|(module)|14,rule,sentinel,,badge index
 frontend/modules/seedlingDemo/playerPhysicsV2.js|*|*,structural,,,indices / lengths / zero inits / centre halves
-frontend/modules/seedlingDemo/playerPhysicsV2.js|INITIAL_TERRAIN_STATE|(module),rule,sentinel,,Ground state
 frontend/modules/seedlingDemo/playerPhysicsV2.js|terrainEffectClass|terrainEffectClass,rule,sentinel,,Tile.t state ids
-frontend/modules/seedlingDemo/playerPhysicsV2.js|PIT_STATE|(module),rule,sentinel,,Tile.t pit
-frontend/modules/seedlingDemo/playerPhysicsV2.js|WATER_STATE|(module),rule,sentinel,,Tile.t water
-frontend/modules/seedlingDemo/playerPhysicsV2.js|LAVA_STATE|(module),rule,sentinel,,Tile.t lava
-frontend/modules/seedlingDemo/playerPhysicsV2.js|ICE_STATE|(module),rule,sentinel,,Tile.t ice
-frontend/modules/seedlingDemo/playerPhysicsV2.js|WATERFALL_STATE|(module),rule,sentinel,,Tile.t waterfall
-frontend/modules/seedlingDemo/playerPhysicsV2.js|INITIAL_DIRECTION|(module),rule,sentinel,,direction code down
-frontend/modules/seedlingDemo/playerPhysicsV2.js|DIRECTION_RIGHT|(module),rule,sentinel,,direction code
-frontend/modules/seedlingDemo/playerPhysicsV2.js|DIRECTION_UP|(module),rule,sentinel,,direction code
-frontend/modules/seedlingDemo/playerPhysicsV2.js|DIRECTION_LEFT|(module),rule,sentinel,,direction code
-frontend/modules/seedlingDemo/playerPhysicsV2.js|DIRECTION_DOWN|(module),rule,sentinel,-,direction code; auto anchor suppressed: Player.as:direction is the facing field whose default 3 only coincides with this enum
 frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|nextDirection,rule,sign,,velocity sign picks direction
 frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|he42cf9a9|-1|0,rule,sentinel,,directionFace -1 = none
 frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|h38f2089c|0|0,rule,sentinel,,directionFace >= 0
-frontend/modules/seedlingDemo/playerPhysicsV2.js|SLIDING_FRICTION|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV2.js|SLIDING_SPEED|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV2.js|WATERFALL_ACCELERATION|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV2.js|DROWN_TIMER_MAX|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|h06381514|0|0,rule,sentinel,,drown kind none
 frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|h94f1bc9a|1|0,rule,sentinel,,drown kind water
 frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|he89fb340|2|0,rule,sentinel,,drown kind lava
@@ -1063,34 +1018,17 @@ frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|h2dd3e999|0|0,rul
 frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h143b1de1|0.5|0,rule,magnitude,,spiral timer step per tick (Player.drown)
 frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h55b1a3f4|2|0,physics,derivation,,angle = timer / DROWN_TIMER_MAX * 2PI
 frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h46b9a606|2|0,physics,magnitude,,spiral y velocity doubled
-frontend/modules/seedlingDemo/playerPhysicsV2.js|FALL_ALPHA_SPEED|(module),rule,magnitude,,accumulation decides fall swap tick 20
-frontend/modules/seedlingDemo/playerPhysicsV2.js|FALL_ALPHA_START|(module),rule,magnitude,-,the player Image.alpha at the start of the pit fall (no named AS3 field); auto anchor Game.as:blackCover suppressed
-frontend/modules/seedlingDemo/playerPhysicsV2.js|FALL_LERP_DIVISOR|(module),physics,magnitude,,pit-fall position lerp
-frontend/modules/seedlingDemo/playerPhysicsV2.js|DESCENT_DROP|(module),physics,magnitude,,FP.screen.height / 2 + (height - originY) = 80 + 3
-frontend/modules/seedlingDemo/playerPhysicsV2.js|DESCENT_GRAVITY|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV2.js|DESCENT_MAX_FALL|(module),physics,bound,,
-frontend/modules/seedlingDemo/playerPhysicsV2.js|BOUNCE_VELOCITY|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV2.js|NO_BOUNCE_STATES|(module),rule,sentinel,,Tile.t pit/water/lava
 frontend/modules/seedlingDemo/playerPhysicsV2.js|getStatePos|getStatePos,rule,sentinel,,-1 = no tile
 frontend/modules/seedlingDemo/playerPhysicsV2.js|fallDestination|snap,physics,bound,,clamp position >= 0 before tile snap
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h92086e66|0|0,physics,magnitude,,landing zeroes vy
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h4c9f2076|0|0,physics,sign,,feather exempts upward motion only (v.y >= 0)
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h08da7fb0|0|0,rule,bound,,alpha <= 0 swaps level
 frontend/modules/seedlingDemo/pushables.js|*|*,structural,,,zero tests / centre halves / loop bounds / inits
-frontend/modules/seedlingDemo/pushables.js|TILE|(module),physics,magnitude,Scenery/Tile.as:w,tile size in block collision and step
-frontend/modules/seedlingDemo/pushables.js|PUSHABLE_SPEED|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/pushables.js|PUSHABLE_FRICTION|(module),physics,magnitude,,
 frontend/modules/seedlingDemo/pushables.js|DESTROYING_TILE_TYPES|(module),rule,sentinel,,Tile.t water/lava/pit
-frontend/modules/seedlingDemo/pushables.js|ALPHA_FADE|(module),rule,magnitude,,Mobile.death alpha fade; accumulation gates removal
-frontend/modules/seedlingDemo/pushables.js|RIGHT|(module),rule,sentinel,,direction code
-frontend/modules/seedlingDemo/pushables.js|UP|(module),rule,sentinel,,direction code
-frontend/modules/seedlingDemo/pushables.js|LEFT|(module),rule,sentinel,,direction code
-frontend/modules/seedlingDemo/pushables.js|DOWN|(module),rule,sentinel,-,direction code; auto anchor suppressed: Player.as:direction default 3 is a value coincidence
 frontend/modules/seedlingDemo/pushables.js|PUSH_STEP|(module),physics,sign,,block step per facing
 frontend/modules/seedlingDemo/pushables.js|pushVector|pushVector,rule,sign,,Player.as:1103 direction code arithmetic
 frontend/modules/seedlingDemo/pushables.js|sign|sign,physics,sign,,FP.sign
 frontend/modules/seedlingDemo/pushables.js|newPushable|h164230f2|1|0,rule,magnitude,,initial alpha of the death fade
-frontend/modules/seedlingDemo/pushables.js|BOTH_RANGE|(module),physics,bound,,
 frontend/modules/seedlingDemo/pushables.js|hitPushableFromPoint|h6e7c81bd|0|0,physics,sign,,push-away sign of hit angle
 frontend/modules/seedlingDemo/pushables.js|hitPushableFromPoint|h9d8ee3d6|0|0,physics,sign,,push-away sign of hit angle
 frontend/modules/seedlingDemo/pushables.js|hitPushableFromPoint|h58425193|0|0,physics,sign,,push-away sign of hit angle
@@ -1160,7 +1098,6 @@ frontend/modules/seedlingDemo/spinner.js|HAMMER_BILLING|(module)|3,physics,magni
 frontend/modules/seedlingDemo/spinner.js|spinnerTerrainWrites|spinnerTerrainWrites,rule,sentinel,,persistTag < 0 = none
 frontend/modules/seedlingDemo/wandShot.js|*|*,structural,,,counters / loop bounds / diagnostics
 frontend/modules/seedlingDemo/wandShot.js|fpSign|fpSign,physics,sign,,FP.sign used by moveX/moveY
-frontend/modules/seedlingDemo/wandShot.js|TILE_W|(module),physics,magnitude,Scenery/Tile.as:w,travel = tilesMove * Tile.w
 frontend/modules/seedlingDemo/wandShot.js|(module)|hefb0b34c|3|0,physics,magnitude,Projectiles/WandShot.as:tilesMove,travel in tiles; sets lifeMax
 frontend/modules/seedlingDemo/wandShot.js|(module)|hdcb0eb3f|3|0,physics,magnitude,Projectiles/WandShot.as:force,knockback to Enemy.hit
 frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT|(module)|0.6,cosmetic,,,sound volume (draw-stream only)
@@ -1187,7 +1124,6 @@ frontend/modules/seedlingDemo/wandShot.js|moveAxis|h2eb9e107|1|0,physics,magnitu
 frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT_GRAZE|(module),physics,sign,,epsilon sign per direction
 frontend/modules/seedlingDemo/wandShot.js|WAND_SHOT_PLAN|(module),physics,magnitude,,WAND_SPAWN_REACH (sprWand.width)
 frontend/modules/seedlingDemo/wandVerb.js|*|*,structural,,,validation / index / diagnostic arithmetic
-frontend/modules/seedlingDemo/wandVerb.js|WAND_SPEED|(module),physics,magnitude,,
 frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|16,physics,magnitude,,sprWand.width = shot spawn reach
 frontend/modules/seedlingDemo/wandVerb.js|WAND_SPRITE|(module)|10,cosmetic,,,sprite height; unread
 frontend/modules/seedlingDemo/wandVerb.js|(module)|he2096472|0|0,cosmetic,,,originX draw offset
@@ -1220,13 +1156,6 @@ frontend/modules/seedlingDemo/wandVerb.js|WAND_DIRECTIONS|(module)|1,rule,sentin
 frontend/modules/seedlingDemo/wandVerb.js|(module)|h0605ceef|2|0,rule,sentinel,,FlashPunk direction code
 frontend/modules/seedlingDemo/wandVerb.js|WAND_DIRECTIONS|(module)|3,rule,sentinel,,FlashPunk direction code
 frontend/modules/seedlingDemo/wandVerb.js|(module)|h80affcad|2|0,physics,derivation,,angle = direction * PI / 2 (Player.as:998)
-frontend/modules/seedlingDemo/rng.js|XOR_MASK|(module),rule,magnitude,,LFSR feedback mask; decides every draw
-frontend/modules/seedlingDemo/rng.js|BOOT_SEED|(module),rule,magnitude,,build boot seed (MOCK_DATE_TIME*1000)
-frontend/modules/seedlingDemo/rng.js|HASH_C1|(module),rule,magnitude,,avmplus hasher constant
-frontend/modules/seedlingDemo/rng.js|HASH_C2|(module),rule,magnitude,,avmplus hasher constant
-frontend/modules/seedlingDemo/rng.js|HASH_C3|(module),rule,magnitude,,avmplus hasher constant
-frontend/modules/seedlingDemo/rng.js|RANDOM_DIVISOR|(module),rule,magnitude,,2^31 Math.random divisor
-frontend/modules/seedlingDemo/rng.js|STATE_MAX|(module),rule,bound,,largest orbit state; seed ceiling
 frontend/modules/seedlingDemo/rng.js|hash|hash,structural,,,int32 coercions and 31-bit mask
 frontend/modules/seedlingDemo/rng.js|hash|hash|13,rule,magnitude,,hasher shift amount; decides outputs
 frontend/modules/seedlingDemo/rng.js|hash|hash|21,rule,magnitude,,hasher shift amount; decides outputs
@@ -1246,14 +1175,12 @@ frontend/modules/seedlingDemo/burnableTree.js|burnTree|burnTree,structural,,,
 frontend/modules/seedlingDemo/burnableTree.js|treeBuiltIn|treeBuiltIn,rule,sentinel,,tag < 0 = per-visit (-1 family)
 frontend/modules/seedlingDemo/outOfBandLedger.js|outOfBandFlagForWriter|outOfBandFlagForWriter,rule,sentinel,,tag -1 default / in-band test
 frontend/modules/seedlingDemo/deadFrameBand.js|*|*,structural,,,differential-sweep statistics and test tolerance band
-frontend/modules/seedlingDemo/r6AnimClock.js|FP_ELAPSED_CLAMPED|(module),physics,magnitude,,FP.elapsed clamp; here drives the anim clock that fires gameplay callbacks
 frontend/modules/seedlingDemo/gameClock.js|BLACK_COVER|(module)|1,rule,magnitude,Game.as:blackCover,room-load fade start; gates super.update
 frontend/modules/seedlingDemo/gameClock.js|BLACK_COVER|(module)|-0.05,rule,magnitude,Game.as:blackCoverRate,fade step per frame; sets dead frames per load
 frontend/modules/seedlingDemo/gameClock.js|LOAD_FADE_FRAMES|(module),structural,,,accumulator / loop budget
 frontend/modules/seedlingDemo/gameClock.js|(module)|h13c1acc8|0|0,rule,bound,Game.as:blackCover,blackCover <= 0 gate
 frontend/modules/seedlingDemo/gameClock.js|PICKUP_HELP_DEAD_FRAMES|(module),rule,magnitude,,Sword Help(3) costs one dead frame
 frontend/modules/seedlingDemo/gameClock.js|TIME_RATE|(module),rule,magnitude,Game.as:timeRate,
-frontend/modules/seedlingDemo/gameClock.js|GAME_FPS|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/gameClock.js|DAY_LENGTH_FRAMES|(module),rule,derivation,Game.as:dayLength,160 seconds * GAME_FPS
 frontend/modules/seedlingDemo/gameClock.js|PAGE_BOOT_TIME|(module),rule,derivation,,DAY_LENGTH_FRAMES / 2 (Main.time fresh-save default)
 frontend/modules/seedlingDemo/gameClock.js|trueStartWindowDeadFrames|trueStartWindowDeadFrames,structural,,,harness arm-offset validity bound
@@ -1262,34 +1189,22 @@ frontend/modules/seedlingDemo/gameClock.js|createGameClock|spend,structural,,,
 frontend/modules/seedlingDemo/gameClock.js|createGameClock|adopt,structural,,,
 frontend/modules/seedlingDemo/gameClock.js|createGameClock|frozenFrames,structural,,,
 frontend/modules/seedlingDemo/gameClock.js|createGameClock|deadFrames,structural,,,
-frontend/modules/seedlingDemo/swimSoundClock.js|SWIM_LENGTH_FRAMES|(module),rule,magnitude,,REVIEW: sound length in frames; not cosmetic because the replay re-arms the swim speed boost
-frontend/modules/seedlingDemo/swimSoundClock.js|SWIM_BOOST_BELOW_SECONDS|(module),physics,bound,,Player.as:530 threshold on Sfx.position
-frontend/modules/seedlingDemo/swimSoundClock.js|SWIM_BOOST_SPEED|(module),physics,magnitude,,Player.as:530 addend
-frontend/modules/seedlingDemo/swimSoundClock.js|LOAD_DEAD_FRAMES|(module),rule,magnitude,,room-load fade dead frames (blackCover 1 at -0.05)
-frontend/modules/seedlingDemo/swimSoundClock.js|CEREMONY_FREEZE_FRAMES|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/swimSoundClock.js|createPinnedChannel|createPinnedChannel,structural,,,
 frontend/modules/seedlingDemo/swimSoundClock.js|stepChannel|stepChannel,structural,,,
 frontend/modules/seedlingDemo/swimSoundClock.js|playChannel|playChannel,structural,,,
 frontend/modules/seedlingDemo/swimSoundClock.js|swimSpeedBonus|swimSpeedBonus,structural,,,zero addend (identity)
 frontend/modules/seedlingDemo/swimSoundClock.js|boostedFramesPerPlay|boostedFramesPerPlay,structural,,,
 frontend/modules/seedlingDemo/swimSoundClock.js|swimBonusSeries|swimBonusSeries,structural,,,
-frontend/modules/seedlingDemo/bridges.js|BRIDGE_TIMER_MAX|(module),rule,magnitude,,
-frontend/modules/seedlingDemo/bridges.js|BRIDGE_STATE|(module),rule,sentinel,,Tile.types index for bridge
-frontend/modules/seedlingDemo/bridges.js|ON_SCREEN_RADIUS|(module),rule,bound,,planner on-screen promise radius (camera lag derived)
 frontend/modules/seedlingDemo/bridges.js|bridgeHit|bridgeHit,rule,magnitude,,one decrement per spear hit
 frontend/modules/seedlingDemo/bridges.js|bridgeRender|bridgeRender|0,rule,bound,,timer > 0 arm
 frontend/modules/seedlingDemo/bridges.js|bridgeRender|bridgeRender|1,rule,magnitude,,one decrement per on-screen render
 frontend/modules/seedlingDemo/bridges.js|framesToOpen|framesToOpen,structural,,,loop start and budget
 frontend/modules/seedlingDemo/bridges.js|framesToOpen|h77f45347|1|0,rule,derivation,,BRIDGE_TIMER_MAX - 1 (timer after one hit)
 frontend/modules/seedlingDemo/bridges.js|assertOnScreenThroughout|assertOnScreenThroughout,structural,,,
-frontend/modules/seedlingDemo/bridges.js|TICKS_FROM_PRESS_TO_WALKABLE|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/bridges.js|openingWindow|openingWindow,structural,,,
-frontend/modules/seedlingDemo/breakableRocks.js|TAGS_PER_LEVEL|(module),rule,count,,
 frontend/modules/seedlingDemo/breakableRocks.js|BREAK_ANIM|(module)|4,rule,count,,break anim frames; endAnim removes the rock
 frontend/modules/seedlingDemo/breakableRocks.js|BREAK_ANIM|(module)|20,rule,magnitude,,break anim frameRate gates removal tick
-frontend/modules/seedlingDemo/breakableRocks.js|FP_MAX_ELAPSED|(module),physics,magnitude,,FP.elapsed clamp; drives anim clock gating removal
 frontend/modules/seedlingDemo/breakableRocks.js|animCallbackTick|animCallbackTick,structural,,,Spritemap timer loop transcription; guard and loop budget
-frontend/modules/seedlingDemo/breakableRocks.js|WAIT_AFTER_PRESS_TICKS|(module),rule,magnitude,,leg wait obligation after the press
 frontend/modules/seedlingDemo/breakableRocks.js|outOfBandFlagFor|outOfBandFlagFor,structural,,,input validation
 frontend/modules/seedlingDemo/breakableRocks.js|rockBreaksUnder|rockBreaksUnder,rule,sentinel,,rock type tiers vs ghost sword
 frontend/modules/seedlingDemo/breakableRocks.js|hitRock|hitRock,rule,sentinel,,tag -1 default / rockType 0 default
@@ -1312,10 +1227,6 @@ frontend/modules/seedlingDemo/chest.js|SEAL_DRAW|(module)|16,rule,count,SealCont
 frontend/modules/seedlingDemo/chest.js|SEAL_DRAW|(module)|1,rule,count,,draws per rejection iteration
 frontend/modules/seedlingDemo/chest.js|SEAL_DRAW|expectedDraws|0,structural,,,k validation
 frontend/modules/seedlingDemo/chest.js|SEAL_DRAW|expectedDraws|16,rule,derivation,,SealController.SEALS respelled in 16/(16-k) expectation
-frontend/modules/seedlingDemo/dialogue.js|SPECIAL_TIMER_MAX|(module),rule,magnitude,,
-frontend/modules/seedlingDemo/dialogue.js|PICKUP_TEXT_SPEED|(module),rule,magnitude,,
-frontend/modules/seedlingDemo/dialogue.js|PICKUP_LINE_LENGTH|(module),rule,bound,,REVIEW: text layout but the wrap changes page .length which gates page advance and ceremony ticks
-frontend/modules/seedlingDemo/dialogue.js|INITIAL_FRAMES_THIS_CHARACTER|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/dialogue.js|endlineText|endlineText,structural,,,string index arithmetic
 frontend/modules/seedlingDemo/dialogue.js|pagesOf|split,structural,,,string index arithmetic
 frontend/modules/seedlingDemo/dialogue.js|beginDialogue|beginDialogue,structural,,,initial page/char/frame counters
@@ -1325,17 +1236,7 @@ frontend/modules/seedlingDemo/dialogue.js|stepDialogue|h06cef2a7|1|0,rule,deriva
 frontend/modules/seedlingDemo/dialogue.js|stepDialogue|hdcbc59fe|0|0,rule,bound,Game.as:framesThisCharacter,framesThisCharacter > 0 countdown gate
 frontend/modules/seedlingDemo/dialogue.js|PICKUP_CEREMONY_BY_KEYTYPE|(module),rule,sentinel,,bosskey keyType 0
 frontend/modules/seedlingDemo/dialogue.js|autoAdvanceArrivals|autoAdvanceArrivals,structural,,,
-frontend/modules/seedlingDemo/dialogue.js|NPC_LINE_LENGTH_DEFAULT|(module),rule,bound,NPCs/NPC.as:_lineLength,REVIEW: text layout but wrap length decides page lengths and so dialogue ticks
 frontend/modules/seedlingDemo/dialogue.js|PLACED_NPC_TALK|(module),rule,bound,,REVIEW: Statue _lineLength 34; wrap decides dialogue ticks
-frontend/modules/seedlingDemo/finalBossRng.js|ROCK_FREQUENCY|(module),rule,magnitude,,1-in-6 rock spawn roll
-frontend/modules/seedlingDemo/finalBossRng.js|GRENADE_FREQUENCY|(module),rule,magnitude,,1-in-40 grenade roll
-frontend/modules/seedlingDemo/finalBossRng.js|ROCK_STEPS_AHEAD|(module),rule,magnitude,,rock aim offset in player-velocity steps (negative = behind)
-frontend/modules/seedlingDemo/finalBossRng.js|ROCK_RADIUS|(module),rule,bound,,rock spawn scatter radius
-frontend/modules/seedlingDemo/finalBossRng.js|DEATH_ROCKS|(module),rule,count,,
-frontend/modules/seedlingDemo/finalBossRng.js|ROCK_SCALE_BASE|(module),physics,magnitude,,rock scale base; scale sets the hitbox
-frontend/modules/seedlingDemo/finalBossRng.js|ROCK_SCALE_SPAN|(module),physics,magnitude,,rock scale span; scale sets the hitbox
-frontend/modules/seedlingDemo/finalBossRng.js|ENEMY_COINS_BASE|(module),rule,magnitude,,Enemy.as:30 coin drop base
-frontend/modules/seedlingDemo/finalBossRng.js|ENEMY_COINS_SPAN|(module),rule,magnitude,,Enemy.as:30 coin drop span
 frontend/modules/seedlingDemo/finalBossRng.js|OWL_DRAW_SITES|(module),rule,count,,Math.random draws per site
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.constructor,structural,,,per-site counter init
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream._draw,structural,,,
@@ -1362,9 +1263,6 @@ frontend/modules/seedlingDemo/playerDamage.js|stepPlayerDamage|stepPlayerDamage|
 frontend/modules/seedlingDemo/playerDamage.js|stepPlayerDamage|stepPlayerDamage|-1,rule,sentinel,Player.as:directionFace,-1 = not set
 frontend/modules/seedlingDemo/playerDamage.js|canSteer|canSteer,rule,bound,,hitsTimer <= 0 gates steering
 frontend/modules/seedlingDemo/playerDamage.js|iFrameSteeringSpan|iFrameSteeringSpan,structural,,,synthetic probe hit and span accumulator
-frontend/modules/seedlingDemo/chasers.js|FP_ELAPSED|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/chasers.js|FRICTION|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/chasers.js|VELOCITY_EPSILON|(module),physics,bound,,Mobile.friction dead zone (Mobile.as:76-80)
 frontend/modules/seedlingDemo/chasers.js|animTicks|animTicks,structural,,,
 frontend/modules/seedlingDemo/chasers.js|createSpriteAnim|createSpriteAnim,structural,,,
 frontend/modules/seedlingDemo/chasers.js|stepSpriteAnim|stepSpriteAnim,structural,,,Spritemap timer loop transcription
@@ -1374,7 +1272,6 @@ frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|5,rule,magnitude,,Bob 
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|8,rule,count,,Jellyfish die anim frames
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|7,rule,magnitude,,Jellyfish die anim rate
 frontend/modules/seedlingDemo/chasers.js|ENEMY_TERRAIN_DESTROYS|(module),rule,sentinel,,tile types water 1 / lava 17
-frontend/modules/seedlingDemo/chasers.js|ENEMY_PIT_TILE|(module),rule,sentinel,,
 frontend/modules/seedlingDemo/chasers.js|normalize|normalize,structural,,,
 frontend/modules/seedlingDemo/chasers.js|applyFriction|applyFriction,structural,,,zero floor / zeroed components
 frontend/modules/seedlingDemo/chasers.js|sign|sign,physics,sign,,FP.sign
@@ -1454,18 +1351,6 @@ frontend/modules/seedlingDemo/iceTurretBlast.js|blastFriction|blastFriction|0,st
 frontend/modules/seedlingDemo/iceTurretBlast.js|stepIceTurretBlast|stepIceTurretBlast,structural,,,
 frontend/modules/seedlingDemo/iceTurretBlast.js|blastIsSpent|blastIsSpent,structural,,,velocity sign tests for off-reach pruning
 frontend/modules/seedlingDemo/iceTurretBlast.js|BLAST_PLAN|(module),rule,magnitude,,volley cadence ticks (IceTurret.as)
-frontend/modules/seedlingDemo/playerPhysicsV1.js|DEFAULT_FRICTION|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV1.js|WATER_FRICTION|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV1.js|WALK_SPEED|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV1.js|STAIR_SPEED|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV1.js|WATER_SPEED|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV1.js|SLIDING_SPEED|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV1.js|SLIDING_FRICTION|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/playerPhysicsV1.js|MOVE_SPEEDS|(module),physics,derivation,Player.as:moveSpeeds,WATER_SPEED / 2 for the waterfall row
-frontend/modules/seedlingDemo/playerPhysicsV1.js|HITBOX|(module),physics,magnitude,,normalHitbox setHitbox(4 5 2 2)
-frontend/modules/seedlingDemo/playerPhysicsV1.js|SPAWN_OFFSET|(module),physics,derivation,,TILE.w / 2 and TILE.h / 2 spawn centring (Player.as:357)
-frontend/modules/seedlingDemo/playerPhysicsV1.js|LEVEL0_WORLD|(module),physics,bound,,level 0 pixel size for the position clamp
-frontend/modules/seedlingDemo/playerPhysicsV1.js|CHECK_OFFSET_Y|(module),physics,derivation,Player.as:checkOffsetY,-HITBOX.originY + HITBOX.height - 2
 frontend/modules/seedlingDemo/playerPhysicsV1.js|pointNormalize|pointNormalize,structural,,,
 frontend/modules/seedlingDemo/playerPhysicsV1.js|sign|sign,physics,sign,,FP.sign
 frontend/modules/seedlingDemo/playerPhysicsV1.js|applyFriction|applyFriction,structural,,,zero floor / zeroed components
@@ -1480,10 +1365,6 @@ frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPRITE|(module)|32,physics,magnit
 frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPRITE|(module)|16,physics,magnitude,,centerOO origin
 frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPRITE|(module)|9,rule,count,,fire anim frames; fireEnd wrap ends the window
 frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPRITE|(module)|25,rule,magnitude,,fire anim frameRate
-frontend/modules/seedlingDemo/fireVerb.js|FIRE_HIT_FRAME_START|(module),rule,bound,,
-frontend/modules/seedlingDemo/fireVerb.js|FIRE_HIT_FRAME_END|(module),rule,bound,,
-frontend/modules/seedlingDemo/fireVerb.js|FIRE_FORCE|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/fireVerb.js|FIRE_DAMAGE|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/fireVerb.js|FIRE_METER|(module)|180,cosmetic,,Player.as:fireTimerMax,meter read only by Player.render (metered: false)
 frontend/modules/seedlingDemo/fireVerb.js|FIRE_METER|(module)|60,cosmetic,,Player.as:fireIncrement,meter read only by Player.render
 frontend/modules/seedlingDemo/fireVerb.js|animTimeline|animTimeline,structural,,,Spritemap loop transcription / tick budget
@@ -1520,7 +1401,6 @@ frontend/modules/seedlingDemo/enemyDamage.js|totalEnemiesOf|totalEnemiesOf,struc
 frontend/modules/seedlingDemo/enemyDamage.js|killLockLedger|killLockLedger,structural,,,empty-list tests
 frontend/modules/seedlingDemo/enemyDamage.js|killLockLedger|h6b6ed088|0|0,rule,bound,,totalEnemies zero opens kill locks
 frontend/modules/seedlingDemo/enemyDamage.js|killLockLedger|h87c2cbfa|0|0,rule,bound,,totalEnemies zero opens kill locks
-frontend/modules/seedlingDemo/pulser.js|FP_MAX_ELAPSED|(module),physics,magnitude,net/flashpunk/Engine.as:MAX_ELAPSED,FP.elapsed clamp driving the pulse anim clock
 frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|10,physics,bound,Puzzlements/Pulser.as:radiusMin,ring start radius; sets pulse length
 frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|28,physics,bound,Puzzlements/Pulser.as:radiusMax,ring end radius; sets pulse length
 frontend/modules/seedlingDemo/pulser.js|PULSER|(module)|22,physics,bound,Puzzlements/Pulser.as:radiusHit,fixed hit radius
@@ -1546,22 +1426,8 @@ frontend/modules/seedlingDemo/pulser.js|stepPulser|h6127a716|0|0,rule,bound,,pul
 frontend/modules/seedlingDemo/pulser.js|stepPulser|stepPulser|-1,rule,sentinel,,pulseTimer -1 = pulsing / idle
 frontend/modules/seedlingDemo/pulser.js|distanceRectPoint|distanceRectPoint,structural,,,
 frontend/modules/seedlingDemo/pulser.js|(module)|h42f319fa|20|0,rule,magnitude,Puzzlements/Pulser.as:pulseTimerMax,pause between pulses
-frontend/modules/seedlingDemo/presses.js|SWORD_DAMAGE|(module),rule,magnitude,,
-frontend/modules/seedlingDemo/presses.js|DARK_SWORD_DAMAGE|(module),rule,magnitude,,
-frontend/modules/seedlingDemo/presses.js|SPEAR_DAMAGE|(module),rule,magnitude,,
-frontend/modules/seedlingDemo/presses.js|SLASH_REACH|(module),physics,bound,,slash distanceRectPoint reach gate (sprite width * scaleX)
-frontend/modules/seedlingDemo/presses.js|SPEAR_LENGTH|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/presses.js|SPEAR_THICK|(module),physics,magnitude,,
-frontend/modules/seedlingDemo/presses.js|ENEMY_HITS_MAX|(module),rule,count,Enemies/Enemy.as:hitsMax,
-frontend/modules/seedlingDemo/presses.js|ENEMY_HITS_TIMER|(module),rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
-frontend/modules/seedlingDemo/presses.js|SLASH_HIT_TICKS|(module),rule,count,,hit tests per slash press (T+1..T+5)
 frontend/modules/seedlingDemo/presses.js|SPEAR_HIT_TICKS_UNMODELLED|(module),rule,magnitude,,spear hit tick offsets (spearDelayMax 1); documented as unmodelled
 frontend/modules/seedlingDemo/presses.js|swordWindowStep|swordWindowStep,structural,,,repeat loop start / emptiness tests
-frontend/modules/seedlingDemo/presses.js|LIGHTPOLE_HITS_TIMER_MAX|(module),rule,magnitude,Scenery/LightPole.as:hitsTimerMax,
-frontend/modules/seedlingDemo/presses.js|RIGHT|(module),rule,sentinel,,direction code
-frontend/modules/seedlingDemo/presses.js|UP|(module),rule,sentinel,,direction code
-frontend/modules/seedlingDemo/presses.js|LEFT|(module),rule,sentinel,,direction code
-frontend/modules/seedlingDemo/presses.js|DOWN|(module),rule,sentinel,-,direction code; auto anchor suppressed: Player.as:direction is the initial-facing field (default 3) not the code table
 frontend/modules/seedlingDemo/presses.js|spearOrigin|spearOrigin,physics,sign,,direction-parity arithmetic folding spearOffset (-1 2)
 frontend/modules/seedlingDemo/presses.js|spearRect|spearRect,physics,derivation,,SPEAR_THICK / 2 (+ 1 on cases 0 and 1) rect offsets
 frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|16,physics,magnitude,,sprSlash frame width
@@ -1569,8 +1435,6 @@ frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|32,physics,magnitud
 frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|2,physics,derivation,,h / 2 centres the slash collision rect
 frontend/modules/seedlingDemo/presses.js|distanceRectPoint|distanceRectPoint,structural,,,
 frontend/modules/seedlingDemo/presses.js|fireRespondersIn|fireRespondersIn,structural,,,absent origin defaults to 0
-frontend/modules/seedlingDemo/playerPhysicsV1.js|(module)|h52b460b3|16|0,physics,magnitude,Scenery/Tile.as:w,
-frontend/modules/seedlingDemo/playerPhysicsV1.js|(module)|hb899ef41|16|0,physics,magnitude,Scenery/Tile.as:h,
 frontend/modules/seedlingDemo/fallRock.js|(module)|h6195d364|30|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
 frontend/modules/seedlingDemo/iceTurretBlast.js|(module)|h774b1553|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
 frontend/modules/seedlingDemo/playerDamage.js|(module)|h9d8ec539|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
@@ -1579,3 +1443,131 @@ frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.jiggle|h40d304c7|2|0
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|*,structural,,,default: the envelope reader's validation floors and indices (engine prep B1 joined the closure through tapeFormat.js)
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|inclusiveToHalfOpen|1,rule,magnitude,,the inclusive-to-half-open bridge: an engine span [a b] is the envelope span {from a; to b+1} (tape-envelope.md § 4)
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|halfOpenToInclusive|1,rule,magnitude,,the reverse bridge: to - 1 (tape-envelope.md § 4)
+frontend/modules/seedlingDemo/md5.js|*|*,structural,,,"the profile md5 digest: RFC 1321 round constants, shifts, byte arithmetic"
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hcdca2d02|0.0333|0,physics,magnitude,net/flashpunk/Engine.as:MAX_ELAPSED,FP.elapsed clamp; drives anim clock gating removal
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h906db0ec|20|0,rule,magnitude,,leg wait obligation after the press
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|ha92d7399|60|0,rule,magnitude,Scenery/Tile.as:bridgeOpeningTimerMax,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h1e70805e|29|0,rule,sentinel,,Tile.types index for bridge
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bbcdf78|64|0,rule,bound,,planner on-screen promise radius (camera lag derived)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hfd8bd977|60|0,rule,magnitude,,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h59746bb0|160|0,rule,bound,,FP.screen 160 (Main.as:36); camera gates Enemy.update via onScreen
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd15858ec|160|0,rule,bound,,FP.screen 160 (Main.as:36); camera gates Enemy.update via onScreen
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hcefd4dfe|10|0,rule,magnitude,Game.as:cameraSpeedDivisorDef,camera lerp; camera gates enemy updates
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2aab9e12|66|0,rule,magnitude,,Inventory.width in camera x target
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb5839b06|-70|0,rule,magnitude,,Inventory.offsetMin in camera x target
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h8922d4b2|0.0333|0,physics,magnitude,net/flashpunk/Engine.as:MAX_ELAPSED,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h32c78f05|0.25|0,physics,magnitude,Mobile.as:DEFAULT_FRICTION,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hbad42265|0.05|0,physics,bound,,Mobile.friction dead zone (Mobile.as:76-80)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h65a07688|6|0,rule,sentinel,,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h7bd960bb|30|0,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf4de85d9|20|0,rule,magnitude,Player.as:slashTimerMax,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hc0fccb1c|-1|0,rule,sentinel,,Lock tSet == -1 kill-lock discriminator (Lock.as:109-115)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|habc2b3f1|5|0,physics,magnitude,Player.as:swordForce,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h08bb5fb7|2|0,physics,magnitude,,knockback(2) Player.as:788
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|heaf60327|30|0,rule,magnitude,Player.as:swordSpeed,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h94e43808|20|0,rule,magnitude,Player.as:swordSpeedDash,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hc25ea55d|150|0,rule,magnitude,Pickups/Pickup.as:specialTimerMax,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf819694a|6|0,rule,magnitude,Pickups/Pickup.as:DEF_TEXT_SPEED,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h45a08861|32|0,rule,bound,,REVIEW: text layout but the wrap changes page .length which gates page advance and ceremony ticks
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hfff173d4|0|0,rule,magnitude,Game.as:framesThisCharacter,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h73de3ca0|28|0,rule,bound,NPCs/NPC.as:_lineLength,REVIEW: text layout but wrap length decides page lengths and so dialogue ticks
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hdfec7059|24|0,rule,bound,NPCs/NPC.as:talkRange,origin-to-origin talk circle
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|heb154991|0.005|0,rule,magnitude,Pickups/Seed.as:coverAlphaRate,cover fade accumulation = 200 frozen frames
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2d766bda|3.5|0,rule,magnitude,,grow anim rate; endAnim triggers credits fade
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h97cddd00|16|0,rule,count,,grow anim frames; endAnim triggers credits fade
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hbd2bac54|0.0333|0,physics,magnitude,net/flashpunk/Engine.as:MAX_ELAPSED,FP.elapsed clamp; scales anim timers that gate callbacks
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h15980948|6|0,rule,magnitude,Enemies/FinalBoss.as:rockFrequency,1-in-6 rock spawn roll
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h24c90c78|40|0,rule,magnitude,Enemies/FinalBoss.as:grenadeFrequency,1-in-40 grenade roll
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h7d22a8e2|-15|0,rule,magnitude,Enemies/FinalBoss.as:stepsAhead,rock aim offset in player-velocity steps (negative = behind)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h57bda62a|20|0,rule,bound,Enemies/FinalBoss.as:radius,rock spawn scatter radius
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hc4ac0f44|5|0,rule,count,,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9c3340ef|0.25|0,physics,magnitude,,rock scale base; scale sets the hitbox
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h7f881074|0.5|0,physics,magnitude,,rock scale span; scale sets the hitbox
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hec39d7f6|4|0,rule,magnitude,,Enemy.as:30 coin drop base
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h687af065|4|0,rule,magnitude,,Enemy.as:30 coin drop span
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h7e3e048f|3|0,rule,bound,Player.as:fireHitFrameStart,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb933ddd0|6|0,rule,bound,Player.as:fireHitFrameEnd,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h22595166|0.325|0,physics,magnitude,Player.as:fireForce,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h1f086fa5|0|0,rule,magnitude,Player.as:fireDamage,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|haf724414|60|0,rule,magnitude,Main.as:FPS,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hc57e6b97|2|0,physics,magnitude,Player.as:normalHitbox,player hitbox origin x (Rectangle(2;2;4;5))
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h42073506|2|0,physics,magnitude,Player.as:normalHitbox,player hitbox origin y
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h8abc164a|1|0,rule,sentinel,,Tile.types index for Water
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hcf8a998b|17|0,rule,sentinel,,Tile.types index for Lava
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|he065d762|25|0,rule,sentinel,,Tile.types index for Waterfall
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|he78196b9|0.25|0,physics,magnitude,Mobile.as:DEFAULT_FRICTION,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h5a788903|0.5|0,physics,magnitude,Mobile.as:WATER_FRICTION,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hec1b61a9|0.8|0,physics,magnitude,Player.as:dMS,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0150ffa8|0.4|0,physics,magnitude,Player.as:dMSstair,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h1d3bc44b|0.45|0,physics,magnitude,Player.as:dMSwater,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|ha02282d2|1|0,physics,magnitude,Player.as:slidingSpeed,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h02663ab6|0.025|0,physics,magnitude,Player.as:slidingFriction,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4b0e6159|2|0,physics,derivation,Player.as:moveSpeeds,WATER_SPEED / 2 for the waterfall row
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h29d411e4|4|0,physics,magnitude,Player.as:normalHitbox,normalHitbox setHitbox(4 5 2 2)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h526bd912|5|0,physics,magnitude,Player.as:normalHitbox,normalHitbox setHitbox(4 5 2 2)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|heee18b68|16|0,physics,magnitude,Scenery/Tile.as:w,the tile width (wandShot: travel = tilesMove * Tile.w)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9b719fcf|16|0,physics,magnitude,Scenery/Tile.as:h,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hc4ce20c5|2|0,physics,derivation,,TILE.w / 2 and TILE.h / 2 spawn centring (Player.as:357)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h33986c42|2|0,physics,derivation,,TILE.w / 2 and TILE.h / 2 spawn centring (Player.as:357)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h8ca084fe|320|0,physics,bound,,level 0 pixel size for the position clamp
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h23d16d70|320|0,physics,bound,,level 0 pixel size for the position clamp
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf5b8f9b7|2|0,physics,derivation,Player.as:checkOffsetY,-HITBOX.originY + HITBOX.height - 2
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h1ef8ab35|0|0,rule,sentinel,Player.as:_state,Ground state
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hdaec7f8f|6|0,rule,sentinel,,Tile.t pit
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb0608d4d|22|0,rule,sentinel,,Tile.t ice
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h5b91b6b2|3|0,rule,sentinel,Player.as:direction,direction code down
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h1374ca5b|0|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h7cdc815e|1|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h50d16bcf|2|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h8f5d9204|3|0,rule,sentinel,,direction code; auto anchor suppressed: Player.as:direction is the facing field whose default 3 only coincides with this enum
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|he423a7c8|0.8|0,physics,magnitude,Player.as:waterfallAcceleration,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0804a9c0|10|0,rule,magnitude,Player.as:drownTimerMax,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hc516ef25|0.05|0,rule,magnitude,Player.as:fallAlphaSpeed,accumulation decides fall swap tick 20
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0d4a6792|1|0,rule,magnitude,,the player Image.alpha at the start of the pit fall (no named AS3 field); auto anchor Game.as:blackCover suppressed
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h7f51712a|10|0,physics,magnitude,,pit-fall position lerp
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|ha395715a|83|0,physics,magnitude,,FP.screen.height / 2 + (height - originY) = 80 + 3
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0b7cf243|0.1|0,physics,magnitude,,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9341af43|5|0,physics,bound,,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf4dd4436|-2|0,physics,magnitude,,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd7b0d8d3|6|0,rule,sentinel,,Tile.t pit/water/lava
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hcf712235|1|0,rule,sentinel,,Tile.t pit/water/lava
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hdc4fc09e|17|0,rule,sentinel,,Tile.t pit/water/lava
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0c71790c|1|0,rule,magnitude,Player.as:swordDamage,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h64c32ce2|2|0,rule,magnitude,Player.as:darkSwordDamage,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h76a8b7b1|2|0,rule,magnitude,Player.as:spearDamage,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|ha7f8db7f|16|0,physics,bound,,slash distanceRectPoint reach gate (sprite width * scaleX)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h91de18ae|32|0,physics,magnitude,Player.as:length,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h46296a61|5|0,physics,magnitude,Player.as:thick,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0592e549|3|0,rule,count,Enemies/Enemy.as:hitsMax,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h09a19aff|30|0,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hfe7aca7c|5|0,rule,count,,hit tests per slash press (T+1..T+5)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h69102a0f|25|0,rule,magnitude,Scenery/LightPole.as:hitsTimerMax,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h97062344|0|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h6b95a7bc|1|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h09c75233|2|0,rule,sentinel,,direction code
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h04b9d543|3|0,rule,sentinel,,direction code; auto anchor suppressed: Player.as:direction is the initial-facing field (default 3) not the code table
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd2d4fde7|16|0,physics,magnitude,Scenery/Tile.as:w,tile size in block collision and step
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|ha76736e8|0.5|0,physics,magnitude,Puzzlements/PushableBlockFire.as:moveSpeed,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|he1abacbd|0.25|0,physics,magnitude,Mobile.as:DEFAULT_FRICTION,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf52f9d5c|0.1|0,rule,magnitude,,Mobile.death alpha fade; accumulation gates removal
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd4c405b5|0.1|0,physics,bound,Puzzlements/PushableBlockFire.as:bothRange,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd930be8c|1|0,rule,magnitude,,REVIEW: measured boot pre-swap frame offset; a clock correction for seam comparison
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h790f9f93|0x48000000|0,rule,magnitude,,LFSR feedback mask; decides every draw
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hba73f6f8|1486967168|0,rule,magnitude,,build boot seed (MOCK_DATE_TIME*1000)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0913bab4|1376312589|0,rule,magnitude,,avmplus hasher constant
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h898f4332|789221|0,rule,magnitude,,avmplus hasher constant
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h8300c6fb|15731|0,rule,magnitude,,avmplus hasher constant
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h13d81a36|2147483648|0,rule,magnitude,,2^31 Math.random divisor
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h5e238134|2147483647|0,rule,bound,,largest orbit state; seed ceiling
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h83a9eb32|47|0,rule,magnitude,,REVIEW: sound length in frames; not cosmetic because the replay re-arms the swim speed boost
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2c3140db|0.1|0,physics,bound,,Player.as:530 threshold on Sfx.position
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|ha2247bd0|0.25|0,physics,magnitude,,Player.as:530 addend
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h78fd484d|20|0,rule,magnitude,,room-load fade dead frames (blackCover 1 at -0.05)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h021697ae|150|0,rule,magnitude,Pickups/Pickup.as:specialTimerMax,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,magnitude,Main.as:FPS,engine FPS the sound-clock pin reproduces; swim boost reads it
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,

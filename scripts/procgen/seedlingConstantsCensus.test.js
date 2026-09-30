@@ -29,9 +29,11 @@ import { afterAll, describe, expect, it } from 'vitest';
 
 import { checkCensus } from './census-seedling-constants.mjs';
 import {
-    AS3_SRC, CENSUS_CSV, DOC_MD, FIELDS_CSV, GUARDED, KINDS, REGION_BEGIN, as3Declarations, buildClosure,
-    md5h8, parseCsv, rowsOfFile,
+    AS3_SRC, CENSUS_CSV, DOC_MD, FIELDS_CSV, GUARDED, KINDS, PROFILE_FILE, REGION_BEGIN, as3Declarations,
+    buildCensus, buildClosure, md5h8, parseCsv, profileDisagreements, profileFieldsRows, profileRows, rowsOfFile,
+    spliceProfileFields,
 } from './seedlingConstantsCensus.js';
+import { PROFILE, PROFILE_FIELDS } from '../../frontend/modules/seedlingDemo/seedlingProfile.js';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const HAS_AS3 = existsSync(join(REPO, AS3_SRC));
@@ -180,7 +182,9 @@ describe('(iv) positions, the unary minus and the unit, on synthetic sources', (
 describe('the mutants — each in a temp copy of the closure', () => {
     it('(a) PREDICTED RED: a new `const SPEED_X = 0.37` in a physics file names its key', () => {
         const dir = tempCopy();
-        edit(dir, PHYS1, 'export const WATER_FRICTION = 0.5;\n', 'export const WATER_FRICTION = 0.5;\nexport const SPEED_X = 0.37;\n');
+        // (engine prep A2: WATER_FRICTION now reads the profile; the new scalar is still a new physics literal)
+        edit(dir, PHYS1, 'export const WATER_FRICTION = PROFILE.waterFriction;\n',
+            'export const WATER_FRICTION = PROFILE.waterFriction;\nexport const SPEED_X = 0.37;\n');
         const { diff } = checkCensus(dir);
         const key = `${PHYS1}|(module)|h${md5h8('SPEED_X=0.37')}|0.37|0`;
         expect(diff.red.map((x) => [x.why, x.key])).toEqual([['NEW', key]]);
@@ -201,10 +205,12 @@ describe('the mutants — each in a temp copy of the closure', () => {
     });
 
     it('(c) PREDICTED RED: a committed physics row\'s statement deleted must be RETIRED', () => {
+        // engine prep A2: the literal WATER_FRICTION used to hold lives in the
+        // profile now, so the statement to delete is the profile's property
         const dir = tempCopy();
-        const gone = tree.committed.find((r) => r.file === PHYS1 && r.enclosing === 'WATER_FRICTION');
+        const gone = tree.committed.find((r) => r.file === PROFILE_FILE && r.context === 'PROFILE.waterFriction: waterFriction:0.5');
         expect(gone?.class).toBe('physics');
-        edit(dir, PHYS1, 'export const WATER_FRICTION = 0.5;\n', '');
+        edit(dir, PROFILE_FILE, '    waterFriction: 0.5,\n', '');
         const { diff } = checkCensus(dir);
         expect(diff.red.map((x) => [x.why, x.key])).toEqual([['RETIRED', gone.key]]);
     });
@@ -216,6 +222,34 @@ describe('the mutants — each in a temp copy of the closure', () => {
         expect(at).toBeGreaterThan(-1);
         writeFileSync(join(dir, DOC_MD), `${doc.slice(0, at + REGION_BEGIN.length)}\nhand edit${doc.slice(at + REGION_BEGIN.length)}`);
         expect(checkCensus(dir).docStale).toBe(true);
+    });
+});
+
+describe('(v) the profile — the census and PROFILE_FIELDS agree (engine prep A2)', () => {
+    const fieldsText = readFileSync(join(REPO, FIELDS_CSV), 'utf8');
+
+    it('every PROFILE key is exactly one census row, in the profile file, classed physics or rule', () => {
+        const rows = profileRows(tree.census.rows);
+        expect(rows.map((r) => r.profileKey)).toEqual(Object.keys(PROFILE));
+        for (const r of rows) expect(GUARDED.has(r.class), r.profileKey).toBe(true);
+    });
+
+    it('the fields table\'s profile rows are exactly what --profile-rows generates from PROFILE_FIELDS', () => {
+        const fresh = profileFieldsRows(tree.census, PROFILE_FIELDS);
+        expect(fresh).toHaveLength(PROFILE_FIELDS.length);
+        expect(spliceProfileFields(fieldsText, fresh), 'run --profile-rows, then --write').toBe(fieldsText);
+    });
+
+    it('the census\'s class, kind and as3 for every profile literal are PROFILE_FIELDS\'s', () => {
+        expect(profileDisagreements(tree.census, PROFILE_FIELDS)).toEqual([]);
+    });
+
+    it('MUTANT, PREDICTED RED: a fields row whose class contradicts PROFILE_FIELDS names the key', () => {
+        const target = profileFieldsRows(tree.census, PROFILE_FIELDS).find((r) => r.target.includes('h' + md5h8('PROFILE.walkSpeed: walkSpeed:0.8'))).target;
+        const mutated = fieldsText.split('\n').map((l) => (l.startsWith(`${target},physics,`) ? l.replace(',physics,', ',rule,') : l)).join('\n');
+        expect(mutated).not.toBe(fieldsText);
+        const census = buildCensus(REPO, { fieldsText: mutated });
+        expect(profileDisagreements(census, PROFILE_FIELDS)).toEqual(['PROFILE.walkSpeed: class is "rule" in the census, "physics" in PROFILE_FIELDS']);
     });
 });
 

@@ -26,15 +26,21 @@
  *   node scripts/procgen/census-seedling-constants.mjs            # the summary table
  *   node scripts/procgen/census-seedling-constants.mjs --write    # regenerate the census CSV and the doc region
  *   node scripts/procgen/census-seedling-constants.mjs --check    # exit 1 on drift
+ *   node scripts/procgen/census-seedling-constants.mjs --profile-rows  # regenerate the fields table's profile rows
+ *
+ * `--profile-rows` (engine prep A2) rewrites ONLY the fields table's rows for
+ * `seedlingProfile.js`: one exact-key row per `PROFILE` literal, its class,
+ * kind, as3 and note taken from `PROFILE_FIELDS`. Run it after adding or
+ * changing a profile key, then `--write`.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import {
-    CENSUS_CSV, CLASSES, DOC_MD, FIELDS_CSV, KINDS, buildCensus, censusCsv, diffCensus, parseCsv, redLine,
-    renderDocRegion, spliceDocRegion,
+    CENSUS_CSV, CLASSES, DOC_MD, FIELDS_CSV, KINDS, PROFILE_FILE, buildCensus, censusCsv, diffCensus, parseCsv,
+    profileDisagreements, profileFieldsRows, redLine, renderDocRegion, spliceDocRegion, spliceProfileFields,
 } from './seedlingConstantsCensus.js';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -82,8 +88,22 @@ function summary(census) {
     return lines.join('\n');
 }
 
+/** `PROFILE_FIELDS` of the registry at `root`. */
+export async function loadProfileFields(root = REPO) {
+    const { PROFILE_FIELDS } = await import(pathToFileURL(join(root, PROFILE_FILE)).href);
+    return PROFILE_FIELDS;
+}
+
 async function main() {
     const argv = process.argv.slice(2);
+    if (argv.includes('--profile-rows')) {
+        const fields = await loadProfileFields(REPO);
+        const fresh = profileFieldsRows(buildCensus(REPO), fields);
+        const path = join(REPO, FIELDS_CSV);
+        writeFileSync(path, spliceProfileFields(readFileSync(path, 'utf8'), fresh));
+        console.log(`wrote ${fresh.length} profile row(s) into ${FIELDS_CSV} — now run --write`);
+        return;
+    }
     if (argv.includes('--write')) {
         const census = buildCensus(REPO);
         writeFileSync(join(REPO, CENSUS_CSV), censusCsv(census.rows));
@@ -102,6 +122,9 @@ async function main() {
         if (docStale) lines.push(`RED  ${DOC_MD}: the CENSUS region is stale — --write`);
         for (const a of census.ambiguous) lines.push(`RED  ${a.key}: equally specific targets ${a.targets.join(' / ')}`);
         for (const t of census.unusedTargets) lines.push(`RED  ${FIELDS_CSV}: target ${t} reaches no row — delete it`);
+        for (const d of profileDisagreements(census, await loadProfileFields(REPO))) {
+            lines.push(`RED  ${d} — --profile-rows, then --write`);
+        }
         const byWhy = (w) => diff.green.filter((g) => g.why === w).length;
         console.log(`census-seedling-constants --check — ${census.rows.length} literals; `
             + `green drift: ${byWhy('new')} new + ${byWhy('vanished')} vanished cosmetic/structural, ${byWhy('moved')} moved`

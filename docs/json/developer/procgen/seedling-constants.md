@@ -81,42 +81,163 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**48 files, 4185 literals.** Class × position:
+**50 files, 4358 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 43 | 1194 | 268 | 1505 |
-| rule | 85 | 729 | 377 | 1191 |
+| physics | 0 | 1229 | 268 | 1497 |
+| rule | 0 | 806 | 377 | 1183 |
 | cosmetic | 0 | 43 | 8 | 51 |
-| structural | 9 | 182 | 1247 | 1438 |
+| structural | 9 | 310 | 1308 | 1627 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 137 | 2148 | 1900 | 4185 |
+| total | 9 | 2388 | 1961 | 4358 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1267 | 0 | 87 | 108 | 4 | 39 | 1505 |
-| rule | 321 | 109 | 184 | 22 | 482 | 73 | 1191 |
+| physics | 1259 | 0 | 87 | 108 | 4 | 39 | 1497 |
+| rule | 321 | 109 | 184 | 22 | 474 | 73 | 1183 |
 
 Rows whose note starts `REVIEW:`: **105**.
 
-### The 12 names declared in more than one file
+### The 0 names declared in more than one file
 
-| name | values agree | files |
-|---|---|---|
-| `BRIDGE_STATE` | yes | seedlingDemo/levelWorld.js = 29; seedlingDemo/bridges.js = 29 |
-| `WATER_STATE` | yes | seedlingDemo/levelWorld.js = 1; seedlingDemo/playerPhysicsV2.js = 1 |
-| `LAVA_STATE` | yes | seedlingDemo/levelWorld.js = 17; seedlingDemo/playerPhysicsV2.js = 17 |
-| `WATERFALL_STATE` | yes | seedlingDemo/levelWorld.js = 25; seedlingDemo/playerPhysicsV2.js = 25 |
-| `RIGHT` | yes | seedlingDemo/pushables.js = 0; seedlingDemo/presses.js = 0 |
-| `UP` | yes | seedlingDemo/pushables.js = 1; seedlingDemo/presses.js = 1 |
-| `LEFT` | yes | seedlingDemo/pushables.js = 2; seedlingDemo/presses.js = 2 |
-| `DOWN` | yes | seedlingDemo/pushables.js = 3; seedlingDemo/presses.js = 3 |
-| `FP_MAX_ELAPSED` | yes | seedlingDemo/breakableRocks.js = 0.0333; seedlingDemo/pulser.js = 0.0333 |
-| `FP_ELAPSED_CLAMPED` | yes | seedlingDemo/shieldBossFight.js = 0.0333; seedlingDemo/finalBossFight.js = 0.0333; seedlingDemo/r6AnimClock.js = 0.0333 |
-| `SLIDING_SPEED` | yes | seedlingDemo/playerPhysicsV1.js = 1; seedlingDemo/playerPhysicsV2.js = 1 |
-| `SLIDING_FRICTION` | yes | seedlingDemo/playerPhysicsV1.js = 0.025; seedlingDemo/playerPhysicsV2.js = 0.025 |
+None: a name declared in several files now reads one profile key (the table below).
+
+### The profile: 127 keys in `seedlingDemo/seedlingProfile.js`
+
+**47 physics**, **80 rule**; 63 with an AS3 anchor. 128 top-level names alias a key, and 143 top-level declarations read one. "Read by" is every such declaration.
+
+| key | value | class | kind | AS3 | read by |
+|---|---|---|---|---|---|
+| `seedlingTileSize` | 16 | physics | magnitude | Scenery/Tile.as:w | flashPanel/seedlingSemantics.js `SEEDLING_TILE_SIZE` |
+| `headPosX` | 0 | physics | magnitude |  | bossTotemFight.js `HEAD_POS_X` |
+| `tagsPerLevel` | 30 | rule | count | Game.as:tagsPerLevel | breakableRocks.js `TAGS_PER_LEVEL` |
+| `fpMaxElapsed` | 0.0333 | physics | magnitude | net/flashpunk/Engine.as:MAX_ELAPSED | breakableRocks.js `FP_MAX_ELAPSED`; pulser.js `FP_MAX_ELAPSED` |
+| `waitAfterPressTicks` | 20 | rule | magnitude |  | breakableRocks.js `WAIT_AFTER_PRESS_TICKS` |
+| `bridgeTimerMax` | 60 | rule | magnitude | Scenery/Tile.as:bridgeOpeningTimerMax | bridges.js `BRIDGE_TIMER_MAX` |
+| `bridgeState` | 29 | rule | sentinel |  | levelWorld.js `BRIDGE_STATE`; bridges.js `BRIDGE_STATE` |
+| `onScreenRadius` | 64 | rule | bound |  | bridges.js `ON_SCREEN_RADIUS` |
+| `ticksFromPressToWalkable` | 60 | rule | magnitude |  | bridges.js `TICKS_FROM_PRESS_TO_WALKABLE` |
+| `screenW` | 160 | rule | bound |  | camera.js `SCREEN_W` |
+| `screenH` | 160 | rule | bound |  | camera.js `SCREEN_H` |
+| `cameraSpeedDivisor` | 10 | rule | magnitude | Game.as:cameraSpeedDivisorDef | camera.js `CAMERA_SPEED_DIVISOR` |
+| `inventoryWidth` | 66 | rule | magnitude |  | camera.js `INVENTORY_WIDTH` |
+| `inventoryOffsetX` | -70 | rule | magnitude |  | camera.js `INVENTORY_OFFSET_X` |
+| `fpElapsed` | 0.0333 | physics | magnitude | net/flashpunk/Engine.as:MAX_ELAPSED | chasers.js `FP_ELAPSED` |
+| `friction` | 0.25 | physics | magnitude | Mobile.as:DEFAULT_FRICTION | chasers.js `FRICTION` |
+| `velocityEpsilon` | 0.05 | physics | bound |  | chasers.js `VELOCITY_EPSILON` |
+| `enemyPitTile` | 6 | rule | sentinel |  | chasers.js `ENEMY_PIT_TILE` |
+| `enemyIframes` | 30 | rule | magnitude | Enemies/Enemy.as:hitsTimerMax | combat.js `ENEMY_IFRAMES` |
+| `slashTimerMax` | 20 | rule | magnitude | Player.as:slashTimerMax | combat.js `SLASH_TIMER_MAX` |
+| `killLockTset` | -1 | rule | sentinel |  | combat.js `KILL_LOCK_TSET` |
+| `swordForce` | 5 | physics | magnitude | Player.as:swordForce | combatVerbs.js `SWORD_FORCE` |
+| `slashDashForce` | 2 | physics | magnitude |  | combatVerbs.js `SLASH_DASH_FORCE` |
+| `swordAnimRate` | 30 | rule | magnitude | Player.as:swordSpeed | combatVerbs.js `SWORD_ANIM_RATE` |
+| `swordAnimRateDash` | 20 | rule | magnitude | Player.as:swordSpeedDash | combatVerbs.js `SWORD_ANIM_RATE_DASH` |
+| `specialTimerMax` | 150 | rule | magnitude | Pickups/Pickup.as:specialTimerMax | dialogue.js `SPECIAL_TIMER_MAX` |
+| `pickupTextSpeed` | 6 | rule | magnitude | Pickups/Pickup.as:DEF_TEXT_SPEED | dialogue.js `PICKUP_TEXT_SPEED` |
+| `pickupLineLength` | 32 | rule | bound |  | dialogue.js `PICKUP_LINE_LENGTH` |
+| `initialFramesThisCharacter` | 0 | rule | magnitude | Game.as:framesThisCharacter | dialogue.js `INITIAL_FRAMES_THIS_CHARACTER` |
+| `npcLineLengthDefault` | 28 | rule | bound | NPCs/NPC.as:_lineLength | dialogue.js `NPC_LINE_LENGTH_DEFAULT` |
+| `talkRange` | 24 | rule | bound | NPCs/NPC.as:talkRange | endingChain.js `TALK_RANGE` |
+| `coverAlphaRate` | 0.005 | rule | magnitude | Pickups/Seed.as:coverAlphaRate | endingChain.js `COVER_ALPHA_RATE` |
+| `treeGrowFrameRate` | 3.5 | rule | magnitude |  | endingChain.js `TREE_GROW_FRAME_RATE` |
+| `treeGrowFrames` | 16 | rule | count |  | endingChain.js `TREE_GROW_FRAMES` |
+| `fpElapsedClamped` | 0.0333 | physics | magnitude | net/flashpunk/Engine.as:MAX_ELAPSED | shieldBossFight.js `FP_ELAPSED_CLAMPED`; finalBossFight.js `FP_ELAPSED_CLAMPED`; r6AnimClock.js `FP_ELAPSED_CLAMPED` |
+| `rockFrequency` | 6 | rule | magnitude | Enemies/FinalBoss.as:rockFrequency | finalBossRng.js `ROCK_FREQUENCY` |
+| `grenadeFrequency` | 40 | rule | magnitude | Enemies/FinalBoss.as:grenadeFrequency | finalBossRng.js `GRENADE_FREQUENCY` |
+| `rockStepsAhead` | -15 | rule | magnitude | Enemies/FinalBoss.as:stepsAhead | finalBossRng.js `ROCK_STEPS_AHEAD` |
+| `rockRadius` | 20 | rule | bound | Enemies/FinalBoss.as:radius | finalBossRng.js `ROCK_RADIUS` |
+| `deathRocks` | 5 | rule | count |  | finalBossRng.js `DEATH_ROCKS` |
+| `rockScaleBase` | 0.25 | physics | magnitude |  | finalBossRng.js `ROCK_SCALE_BASE` |
+| `rockScaleSpan` | 0.5 | physics | magnitude |  | finalBossRng.js `ROCK_SCALE_SPAN` |
+| `enemyCoinsBase` | 4 | rule | magnitude |  | finalBossRng.js `ENEMY_COINS_BASE` |
+| `enemyCoinsSpan` | 4 | rule | magnitude |  | finalBossRng.js `ENEMY_COINS_SPAN` |
+| `fireHitFrameStart` | 3 | rule | bound | Player.as:fireHitFrameStart | fireVerb.js `FIRE_HIT_FRAME_START` |
+| `fireHitFrameEnd` | 6 | rule | bound | Player.as:fireHitFrameEnd | fireVerb.js `FIRE_HIT_FRAME_END` |
+| `fireForce` | 0.325 | physics | magnitude | Player.as:fireForce | fireVerb.js `FIRE_FORCE` |
+| `fireDamage` | 0 | rule | magnitude | Player.as:fireDamage | fireVerb.js `FIRE_DAMAGE` |
+| `gameFps` | 60 | rule | magnitude | Main.as:FPS | gameClock.js `GAME_FPS` |
+| `hitboxOriginX` | 2 | physics | magnitude | Player.as:normalHitbox | levelWorld.js `HITBOX_ORIGIN_X`; playerPhysicsV1.js `HITBOX` |
+| `hitboxOriginY` | 2 | physics | magnitude | Player.as:normalHitbox | levelWorld.js `HITBOX_ORIGIN_Y`; playerPhysicsV1.js `HITBOX` |
+| `waterState` | 1 | rule | sentinel |  | levelWorld.js `WATER_STATE`; playerPhysicsV2.js `WATER_STATE` |
+| `lavaState` | 17 | rule | sentinel |  | levelWorld.js `LAVA_STATE`; playerPhysicsV2.js `LAVA_STATE` |
+| `waterfallState` | 25 | rule | sentinel |  | levelWorld.js `WATERFALL_STATE`; playerPhysicsV2.js `WATERFALL_STATE` |
+| `defaultFriction` | 0.25 | physics | magnitude | Mobile.as:DEFAULT_FRICTION | playerPhysicsV1.js `DEFAULT_FRICTION` |
+| `waterFriction` | 0.5 | physics | magnitude | Mobile.as:WATER_FRICTION | playerPhysicsV1.js `WATER_FRICTION` |
+| `walkSpeed` | 0.8 | physics | magnitude | Player.as:dMS | playerPhysicsV1.js `WALK_SPEED` |
+| `stairSpeed` | 0.4 | physics | magnitude | Player.as:dMSstair | playerPhysicsV1.js `STAIR_SPEED` |
+| `waterSpeed` | 0.45 | physics | magnitude | Player.as:dMSwater | playerPhysicsV1.js `WATER_SPEED` |
+| `slidingSpeed` | 1 | physics | magnitude | Player.as:slidingSpeed | playerPhysicsV1.js `SLIDING_SPEED`; playerPhysicsV2.js `SLIDING_SPEED` |
+| `slidingFriction` | 0.025 | physics | magnitude | Player.as:slidingFriction | playerPhysicsV1.js `SLIDING_FRICTION`; playerPhysicsV2.js `SLIDING_FRICTION` |
+| `moveSpeeds25Divisor` | 2 | physics | derivation | Player.as:moveSpeeds | playerPhysicsV1.js `MOVE_SPEEDS` |
+| `hitboxWidth` | 4 | physics | magnitude | Player.as:normalHitbox | playerPhysicsV1.js `HITBOX` |
+| `hitboxHeight` | 5 | physics | magnitude | Player.as:normalHitbox | playerPhysicsV1.js `HITBOX` |
+| `tileW` | 16 | physics | magnitude | Scenery/Tile.as:w | wandShot.js `TILE_W`; playerPhysicsV1.js `TILE` |
+| `tileH` | 16 | physics | magnitude | Scenery/Tile.as:h | playerPhysicsV1.js `TILE` |
+| `spawnOffsetXDivisor` | 2 | physics | derivation |  | playerPhysicsV1.js `SPAWN_OFFSET` |
+| `spawnOffsetYDivisor` | 2 | physics | derivation |  | playerPhysicsV1.js `SPAWN_OFFSET` |
+| `level0WorldWidth` | 320 | physics | bound |  | playerPhysicsV1.js `LEVEL0_WORLD` |
+| `level0WorldHeight` | 320 | physics | bound |  | playerPhysicsV1.js `LEVEL0_WORLD` |
+| `checkOffsetYInset` | 2 | physics | derivation | Player.as:checkOffsetY | playerPhysicsV1.js `CHECK_OFFSET_Y` |
+| `initialTerrainState` | 0 | rule | sentinel | Player.as:_state | playerPhysicsV2.js `INITIAL_TERRAIN_STATE` |
+| `pitState` | 6 | rule | sentinel |  | playerPhysicsV2.js `PIT_STATE` |
+| `iceState` | 22 | rule | sentinel |  | playerPhysicsV2.js `ICE_STATE` |
+| `initialDirection` | 3 | rule | sentinel | Player.as:direction | playerPhysicsV2.js `INITIAL_DIRECTION` |
+| `directionRight` | 0 | rule | sentinel |  | playerPhysicsV2.js `DIRECTION_RIGHT` |
+| `directionUp` | 1 | rule | sentinel |  | playerPhysicsV2.js `DIRECTION_UP` |
+| `directionLeft` | 2 | rule | sentinel |  | playerPhysicsV2.js `DIRECTION_LEFT` |
+| `directionDown` | 3 | rule | sentinel |  | playerPhysicsV2.js `DIRECTION_DOWN` |
+| `waterfallAcceleration` | 0.8 | physics | magnitude | Player.as:waterfallAcceleration | playerPhysicsV2.js `WATERFALL_ACCELERATION` |
+| `drownTimerMax` | 10 | rule | magnitude | Player.as:drownTimerMax | playerPhysicsV2.js `DROWN_TIMER_MAX` |
+| `fallAlphaSpeed` | 0.05 | rule | magnitude | Player.as:fallAlphaSpeed | playerPhysicsV2.js `FALL_ALPHA_SPEED` |
+| `fallAlphaStart` | 1 | rule | magnitude |  | playerPhysicsV2.js `FALL_ALPHA_START` |
+| `fallLerpDivisor` | 10 | physics | magnitude |  | playerPhysicsV2.js `FALL_LERP_DIVISOR` |
+| `descentDrop` | 83 | physics | magnitude |  | playerPhysicsV2.js `DESCENT_DROP` |
+| `descentGravity` | 0.1 | physics | magnitude |  | playerPhysicsV2.js `DESCENT_GRAVITY` |
+| `descentMaxFall` | 5 | physics | bound |  | playerPhysicsV2.js `DESCENT_MAX_FALL` |
+| `bounceVelocity` | -2 | physics | magnitude |  | playerPhysicsV2.js `BOUNCE_VELOCITY` |
+| `noBounceStates0` | 6 | rule | sentinel |  | playerPhysicsV2.js `NO_BOUNCE_STATES` |
+| `noBounceStates1` | 1 | rule | sentinel |  | playerPhysicsV2.js `NO_BOUNCE_STATES` |
+| `noBounceStates2` | 17 | rule | sentinel |  | playerPhysicsV2.js `NO_BOUNCE_STATES` |
+| `swordDamage` | 1 | rule | magnitude | Player.as:swordDamage | presses.js `SWORD_DAMAGE` |
+| `darkSwordDamage` | 2 | rule | magnitude | Player.as:darkSwordDamage | presses.js `DARK_SWORD_DAMAGE` |
+| `spearDamage` | 2 | rule | magnitude | Player.as:spearDamage | presses.js `SPEAR_DAMAGE` |
+| `slashReach` | 16 | physics | bound |  | presses.js `SLASH_REACH` |
+| `spearLength` | 32 | physics | magnitude | Player.as:length | presses.js `SPEAR_LENGTH` |
+| `spearThick` | 5 | physics | magnitude | Player.as:thick | presses.js `SPEAR_THICK` |
+| `enemyHitsMax` | 3 | rule | count | Enemies/Enemy.as:hitsMax | presses.js `ENEMY_HITS_MAX` |
+| `enemyHitsTimer` | 30 | rule | magnitude | Enemies/Enemy.as:hitsTimerMax | presses.js `ENEMY_HITS_TIMER` |
+| `slashHitTicks` | 5 | rule | count |  | presses.js `SLASH_HIT_TICKS` |
+| `lightpoleHitsTimerMax` | 25 | rule | magnitude | Scenery/LightPole.as:hitsTimerMax | presses.js `LIGHTPOLE_HITS_TIMER_MAX` |
+| `right` | 0 | rule | sentinel |  | pushables.js `RIGHT`; presses.js `RIGHT` |
+| `up` | 1 | rule | sentinel |  | pushables.js `UP`; presses.js `UP` |
+| `left` | 2 | rule | sentinel |  | pushables.js `LEFT`; presses.js `LEFT` |
+| `down` | 3 | rule | sentinel |  | pushables.js `DOWN`; presses.js `DOWN` |
+| `tile` | 16 | physics | magnitude | Scenery/Tile.as:w | pushables.js `TILE` |
+| `pushableSpeed` | 0.5 | physics | magnitude | Puzzlements/PushableBlockFire.as:moveSpeed | pushables.js `PUSHABLE_SPEED` |
+| `pushableFriction` | 0.25 | physics | magnitude | Mobile.as:DEFAULT_FRICTION | pushables.js `PUSHABLE_FRICTION` |
+| `alphaFade` | 0.1 | rule | magnitude |  | pushables.js `ALPHA_FADE` |
+| `bothRange` | 0.1 | physics | bound | Puzzlements/PushableBlockFire.as:bothRange | pushables.js `BOTH_RANGE` |
+| `bootPreswapFrames` | 1 | rule | magnitude |  | r7Acceptance.js `BOOT_PRESWAP_FRAMES` |
+| `xorMask` | 0x48000000 | rule | magnitude |  | rng.js `XOR_MASK` |
+| `bootSeed` | 1486967168 | rule | magnitude |  | rng.js `BOOT_SEED` |
+| `hashC1` | 1376312589 | rule | magnitude |  | rng.js `HASH_C1` |
+| `hashC2` | 789221 | rule | magnitude |  | rng.js `HASH_C2` |
+| `hashC3` | 15731 | rule | magnitude |  | rng.js `HASH_C3` |
+| `randomDivisor` | 2147483648 | rule | magnitude |  | rng.js `RANDOM_DIVISOR` |
+| `stateMax` | 2147483647 | rule | bound |  | rng.js `STATE_MAX` |
+| `swimLengthFrames` | 47 | rule | magnitude |  | swimSoundClock.js `SWIM_LENGTH_FRAMES` |
+| `swimBoostBelowSeconds` | 0.1 | physics | bound |  | swimSoundClock.js `SWIM_BOOST_BELOW_SECONDS` |
+| `swimBoostSpeed` | 0.25 | physics | magnitude |  | swimSoundClock.js `SWIM_BOOST_SPEED` |
+| `loadDeadFrames` | 20 | rule | magnitude |  | swimSoundClock.js `LOAD_DEAD_FRAMES` |
+| `ceremonyFreezeFrames` | 150 | rule | magnitude | Pickups/Pickup.as:specialTimerMax | swimSoundClock.js `CEREMONY_FREEZE_FRAMES` |
+| `pinFrameRate` | 60 | rule | magnitude | Main.as:FPS | tapeFormat.js `PIN_FRAME_RATE` |
+| `coercedTerrainState` | 0 | rule | sentinel |  | tapeFormat.js `COERCED_TERRAIN_STATE` |
+| `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
+| `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
 ### The 28 derived or aliased top-level constants
 
@@ -147,144 +268,16 @@ Rows whose note starts `REVIEW:`: **105**.
 | `KILL_PRESS_CADENCE` | seedlingDemo/combatVerbs.js | `ENEMY_IFRAMES + 1` |
 | `DASH_CHAIN_MAX` | seedlingDemo/combatVerbs.js | `DASH_CHAIN.max` |
 | `ORDINARY_SWING_PERIOD` | seedlingDemo/combatVerbs.js | `SLASH_TIMER_MAX` |
-| `CHECK_OFFSET_Y` | seedlingDemo/playerPhysicsV1.js | `-HITBOX.originY + HITBOX.height - 2` |
+| `CHECK_OFFSET_Y` | seedlingDemo/playerPhysicsV1.js | `-HITBOX.originY + HITBOX.height - PROFILE.checkOffsetYInset` |
 | `DAY_LENGTH_FRAMES` | seedlingDemo/gameClock.js | `160 * GAME_FPS` |
 | `PAGE_BOOT_TIME` | seedlingDemo/gameClock.js | `DAY_LENGTH_FRAMES / 2` |
 
-### The profile candidates
+### The profile candidates outside the profile
 
-**128 named scalars** are `physics` or `rule` (62 with an AS3 anchor), and **133 small tables** (at most 16 literals) hold at least one (84 with an AS3 reference).
+**0 named scalars** are `physics` or `rule` (0 with an AS3 anchor), and **126 small tables** (at most 16 literals) hold at least one (77 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
-| `SEEDLING_TILE_SIZE` | flashPanel/seedlingSemantics.js | 16 | physics | magnitude | Scenery/Tile.as:w |
-| `HEAD_POS_X` | seedlingDemo/bossTotemFight.js | 0 | physics | magnitude |  |
-| `TAGS_PER_LEVEL` | seedlingDemo/breakableRocks.js | 30 | rule | count | Game.as:tagsPerLevel |
-| `FP_MAX_ELAPSED` | seedlingDemo/breakableRocks.js | 0.0333 | physics | magnitude | net/flashpunk/Engine.as:MAX_ELAPSED |
-| `WAIT_AFTER_PRESS_TICKS` | seedlingDemo/breakableRocks.js | 20 | rule | magnitude |  |
-| `BRIDGE_TIMER_MAX` | seedlingDemo/bridges.js | 60 | rule | magnitude | Scenery/Tile.as:bridgeOpeningTimerMax |
-| `BRIDGE_STATE` | seedlingDemo/bridges.js | 29 | rule | sentinel |  |
-| `ON_SCREEN_RADIUS` | seedlingDemo/bridges.js | 64 | rule | bound |  |
-| `TICKS_FROM_PRESS_TO_WALKABLE` | seedlingDemo/bridges.js | 60 | rule | magnitude |  |
-| `SCREEN_W` | seedlingDemo/camera.js | 160 | rule | bound |  |
-| `SCREEN_H` | seedlingDemo/camera.js | 160 | rule | bound |  |
-| `CAMERA_SPEED_DIVISOR` | seedlingDemo/camera.js | 10 | rule | magnitude | Game.as:cameraSpeedDivisorDef |
-| `INVENTORY_WIDTH` | seedlingDemo/camera.js | 66 | rule | magnitude |  |
-| `INVENTORY_OFFSET_X` | seedlingDemo/camera.js | -70 | rule | magnitude |  |
-| `FP_ELAPSED` | seedlingDemo/chasers.js | 0.0333 | physics | magnitude | net/flashpunk/Engine.as:MAX_ELAPSED |
-| `FRICTION` | seedlingDemo/chasers.js | 0.25 | physics | magnitude | Mobile.as:DEFAULT_FRICTION |
-| `VELOCITY_EPSILON` | seedlingDemo/chasers.js | 0.05 | physics | bound |  |
-| `ENEMY_PIT_TILE` | seedlingDemo/chasers.js | 6 | rule | sentinel |  |
-| `ENEMY_IFRAMES` | seedlingDemo/combat.js | 30 | rule | magnitude | Enemies/Enemy.as:hitsTimerMax |
-| `SLASH_TIMER_MAX` | seedlingDemo/combat.js | 20 | rule | magnitude | Player.as:slashTimerMax |
-| `KILL_LOCK_TSET` | seedlingDemo/combat.js | -1 | rule | sentinel |  |
-| `SWORD_FORCE` | seedlingDemo/combatVerbs.js | 5 | physics | magnitude | Player.as:swordForce |
-| `SLASH_DASH_FORCE` | seedlingDemo/combatVerbs.js | 2 | physics | magnitude |  |
-| `SWORD_ANIM_RATE` | seedlingDemo/combatVerbs.js | 30 | rule | magnitude | Player.as:swordSpeed |
-| `SWORD_ANIM_RATE_DASH` | seedlingDemo/combatVerbs.js | 20 | rule | magnitude | Player.as:swordSpeedDash |
-| `SPECIAL_TIMER_MAX` | seedlingDemo/dialogue.js | 150 | rule | magnitude | Pickups/Pickup.as:specialTimerMax |
-| `PICKUP_TEXT_SPEED` | seedlingDemo/dialogue.js | 6 | rule | magnitude | Pickups/Pickup.as:DEF_TEXT_SPEED |
-| `PICKUP_LINE_LENGTH` | seedlingDemo/dialogue.js | 32 | rule | bound |  |
-| `INITIAL_FRAMES_THIS_CHARACTER` | seedlingDemo/dialogue.js | 0 | rule | magnitude | Game.as:framesThisCharacter |
-| `NPC_LINE_LENGTH_DEFAULT` | seedlingDemo/dialogue.js | 28 | rule | bound | NPCs/NPC.as:_lineLength |
-| `TALK_RANGE` | seedlingDemo/endingChain.js | 24 | rule | bound | NPCs/NPC.as:talkRange |
-| `COVER_ALPHA_RATE` | seedlingDemo/endingChain.js | 0.005 | rule | magnitude | Pickups/Seed.as:coverAlphaRate |
-| `TREE_GROW_FRAME_RATE` | seedlingDemo/endingChain.js | 3.5 | rule | magnitude |  |
-| `TREE_GROW_FRAMES` | seedlingDemo/endingChain.js | 16 | rule | count |  |
-| `FP_ELAPSED_CLAMPED` | seedlingDemo/finalBossFight.js | 0.0333 | physics | magnitude |  |
-| `ROCK_FREQUENCY` | seedlingDemo/finalBossRng.js | 6 | rule | magnitude | Enemies/FinalBoss.as:rockFrequency |
-| `GRENADE_FREQUENCY` | seedlingDemo/finalBossRng.js | 40 | rule | magnitude | Enemies/FinalBoss.as:grenadeFrequency |
-| `ROCK_STEPS_AHEAD` | seedlingDemo/finalBossRng.js | -15 | rule | magnitude | Enemies/FinalBoss.as:stepsAhead |
-| `ROCK_RADIUS` | seedlingDemo/finalBossRng.js | 20 | rule | bound | Enemies/FinalBoss.as:radius |
-| `DEATH_ROCKS` | seedlingDemo/finalBossRng.js | 5 | rule | count |  |
-| `ROCK_SCALE_BASE` | seedlingDemo/finalBossRng.js | 0.25 | physics | magnitude |  |
-| `ROCK_SCALE_SPAN` | seedlingDemo/finalBossRng.js | 0.5 | physics | magnitude |  |
-| `ENEMY_COINS_BASE` | seedlingDemo/finalBossRng.js | 4 | rule | magnitude |  |
-| `ENEMY_COINS_SPAN` | seedlingDemo/finalBossRng.js | 4 | rule | magnitude |  |
-| `FIRE_HIT_FRAME_START` | seedlingDemo/fireVerb.js | 3 | rule | bound | Player.as:fireHitFrameStart |
-| `FIRE_HIT_FRAME_END` | seedlingDemo/fireVerb.js | 6 | rule | bound | Player.as:fireHitFrameEnd |
-| `FIRE_FORCE` | seedlingDemo/fireVerb.js | 0.325 | physics | magnitude | Player.as:fireForce |
-| `FIRE_DAMAGE` | seedlingDemo/fireVerb.js | 0 | rule | magnitude | Player.as:fireDamage |
-| `GAME_FPS` | seedlingDemo/gameClock.js | 60 | rule | magnitude | Main.as:FPS |
-| `HITBOX_ORIGIN_X` | seedlingDemo/levelWorld.js | 2 | physics | magnitude | Player.as:normalHitbox |
-| `HITBOX_ORIGIN_Y` | seedlingDemo/levelWorld.js | 2 | physics | magnitude | Player.as:normalHitbox |
-| `BRIDGE_STATE` | seedlingDemo/levelWorld.js | 29 | rule | sentinel |  |
-| `WATER_STATE` | seedlingDemo/levelWorld.js | 1 | rule | sentinel |  |
-| `LAVA_STATE` | seedlingDemo/levelWorld.js | 17 | rule | sentinel |  |
-| `WATERFALL_STATE` | seedlingDemo/levelWorld.js | 25 | rule | sentinel |  |
-| `DEFAULT_FRICTION` | seedlingDemo/playerPhysicsV1.js | 0.25 | physics | magnitude | Mobile.as:DEFAULT_FRICTION |
-| `WATER_FRICTION` | seedlingDemo/playerPhysicsV1.js | 0.5 | physics | magnitude | Mobile.as:WATER_FRICTION |
-| `WALK_SPEED` | seedlingDemo/playerPhysicsV1.js | 0.8 | physics | magnitude | Player.as:dMS |
-| `STAIR_SPEED` | seedlingDemo/playerPhysicsV1.js | 0.4 | physics | magnitude | Player.as:dMSstair |
-| `WATER_SPEED` | seedlingDemo/playerPhysicsV1.js | 0.45 | physics | magnitude | Player.as:dMSwater |
-| `SLIDING_SPEED` | seedlingDemo/playerPhysicsV1.js | 1 | physics | magnitude | Player.as:slidingSpeed |
-| `SLIDING_FRICTION` | seedlingDemo/playerPhysicsV1.js | 0.025 | physics | magnitude | Player.as:slidingFriction |
-| `INITIAL_TERRAIN_STATE` | seedlingDemo/playerPhysicsV2.js | 0 | rule | sentinel | Player.as:_state |
-| `PIT_STATE` | seedlingDemo/playerPhysicsV2.js | 6 | rule | sentinel |  |
-| `WATER_STATE` | seedlingDemo/playerPhysicsV2.js | 1 | rule | sentinel |  |
-| `LAVA_STATE` | seedlingDemo/playerPhysicsV2.js | 17 | rule | sentinel |  |
-| `ICE_STATE` | seedlingDemo/playerPhysicsV2.js | 22 | rule | sentinel |  |
-| `WATERFALL_STATE` | seedlingDemo/playerPhysicsV2.js | 25 | rule | sentinel |  |
-| `INITIAL_DIRECTION` | seedlingDemo/playerPhysicsV2.js | 3 | rule | sentinel | Player.as:direction |
-| `DIRECTION_RIGHT` | seedlingDemo/playerPhysicsV2.js | 0 | rule | sentinel |  |
-| `DIRECTION_UP` | seedlingDemo/playerPhysicsV2.js | 1 | rule | sentinel |  |
-| `DIRECTION_LEFT` | seedlingDemo/playerPhysicsV2.js | 2 | rule | sentinel |  |
-| `DIRECTION_DOWN` | seedlingDemo/playerPhysicsV2.js | 3 | rule | sentinel |  |
-| `SLIDING_FRICTION` | seedlingDemo/playerPhysicsV2.js | 0.025 | physics | magnitude | Player.as:slidingFriction |
-| `SLIDING_SPEED` | seedlingDemo/playerPhysicsV2.js | 1 | physics | magnitude | Player.as:slidingSpeed |
-| `WATERFALL_ACCELERATION` | seedlingDemo/playerPhysicsV2.js | 0.8 | physics | magnitude | Player.as:waterfallAcceleration |
-| `DROWN_TIMER_MAX` | seedlingDemo/playerPhysicsV2.js | 10 | rule | magnitude | Player.as:drownTimerMax |
-| `FALL_ALPHA_SPEED` | seedlingDemo/playerPhysicsV2.js | 0.05 | rule | magnitude | Player.as:fallAlphaSpeed |
-| `FALL_ALPHA_START` | seedlingDemo/playerPhysicsV2.js | 1 | rule | magnitude |  |
-| `FALL_LERP_DIVISOR` | seedlingDemo/playerPhysicsV2.js | 10 | physics | magnitude |  |
-| `DESCENT_DROP` | seedlingDemo/playerPhysicsV2.js | 83 | physics | magnitude |  |
-| `DESCENT_GRAVITY` | seedlingDemo/playerPhysicsV2.js | 0.1 | physics | magnitude |  |
-| `DESCENT_MAX_FALL` | seedlingDemo/playerPhysicsV2.js | 5 | physics | bound |  |
-| `BOUNCE_VELOCITY` | seedlingDemo/playerPhysicsV2.js | -2 | physics | magnitude |  |
-| `SWORD_DAMAGE` | seedlingDemo/presses.js | 1 | rule | magnitude | Player.as:swordDamage |
-| `DARK_SWORD_DAMAGE` | seedlingDemo/presses.js | 2 | rule | magnitude | Player.as:darkSwordDamage |
-| `SPEAR_DAMAGE` | seedlingDemo/presses.js | 2 | rule | magnitude | Player.as:spearDamage |
-| `SLASH_REACH` | seedlingDemo/presses.js | 16 | physics | bound |  |
-| `SPEAR_LENGTH` | seedlingDemo/presses.js | 32 | physics | magnitude | Player.as:length |
-| `SPEAR_THICK` | seedlingDemo/presses.js | 5 | physics | magnitude | Player.as:thick |
-| `ENEMY_HITS_MAX` | seedlingDemo/presses.js | 3 | rule | count | Enemies/Enemy.as:hitsMax |
-| `ENEMY_HITS_TIMER` | seedlingDemo/presses.js | 30 | rule | magnitude | Enemies/Enemy.as:hitsTimerMax |
-| `SLASH_HIT_TICKS` | seedlingDemo/presses.js | 5 | rule | count |  |
-| `LIGHTPOLE_HITS_TIMER_MAX` | seedlingDemo/presses.js | 25 | rule | magnitude | Scenery/LightPole.as:hitsTimerMax |
-| `RIGHT` | seedlingDemo/presses.js | 0 | rule | sentinel |  |
-| `UP` | seedlingDemo/presses.js | 1 | rule | sentinel |  |
-| `LEFT` | seedlingDemo/presses.js | 2 | rule | sentinel |  |
-| `DOWN` | seedlingDemo/presses.js | 3 | rule | sentinel |  |
-| `FP_MAX_ELAPSED` | seedlingDemo/pulser.js | 0.0333 | physics | magnitude | net/flashpunk/Engine.as:MAX_ELAPSED |
-| `TILE` | seedlingDemo/pushables.js | 16 | physics | magnitude | Scenery/Tile.as:w |
-| `PUSHABLE_SPEED` | seedlingDemo/pushables.js | 0.5 | physics | magnitude | Puzzlements/PushableBlockFire.as:moveSpeed |
-| `PUSHABLE_FRICTION` | seedlingDemo/pushables.js | 0.25 | physics | magnitude | Mobile.as:DEFAULT_FRICTION |
-| `ALPHA_FADE` | seedlingDemo/pushables.js | 0.1 | rule | magnitude |  |
-| `RIGHT` | seedlingDemo/pushables.js | 0 | rule | sentinel |  |
-| `UP` | seedlingDemo/pushables.js | 1 | rule | sentinel |  |
-| `LEFT` | seedlingDemo/pushables.js | 2 | rule | sentinel |  |
-| `DOWN` | seedlingDemo/pushables.js | 3 | rule | sentinel |  |
-| `BOTH_RANGE` | seedlingDemo/pushables.js | 0.1 | physics | bound | Puzzlements/PushableBlockFire.as:bothRange |
-| `FP_ELAPSED_CLAMPED` | seedlingDemo/r6AnimClock.js | 0.0333 | physics | magnitude | net/flashpunk/Engine.as:MAX_ELAPSED |
-| `BOOT_PRESWAP_FRAMES` | seedlingDemo/r7Acceptance.js | 1 | rule | magnitude |  |
-| `XOR_MASK` | seedlingDemo/rng.js | 0x48000000 | rule | magnitude |  |
-| `BOOT_SEED` | seedlingDemo/rng.js | 1486967168 | rule | magnitude |  |
-| `HASH_C1` | seedlingDemo/rng.js | 1376312589 | rule | magnitude |  |
-| `HASH_C2` | seedlingDemo/rng.js | 789221 | rule | magnitude |  |
-| `HASH_C3` | seedlingDemo/rng.js | 15731 | rule | magnitude |  |
-| `RANDOM_DIVISOR` | seedlingDemo/rng.js | 2147483648 | rule | magnitude |  |
-| `STATE_MAX` | seedlingDemo/rng.js | 2147483647 | rule | bound |  |
-| `FP_ELAPSED_CLAMPED` | seedlingDemo/shieldBossFight.js | 0.0333 | physics | magnitude | net/flashpunk/Engine.as:MAX_ELAPSED |
-| `SWIM_LENGTH_FRAMES` | seedlingDemo/swimSoundClock.js | 47 | rule | magnitude |  |
-| `SWIM_BOOST_BELOW_SECONDS` | seedlingDemo/swimSoundClock.js | 0.1 | physics | bound |  |
-| `SWIM_BOOST_SPEED` | seedlingDemo/swimSoundClock.js | 0.25 | physics | magnitude |  |
-| `LOAD_DEAD_FRAMES` | seedlingDemo/swimSoundClock.js | 20 | rule | magnitude |  |
-| `CEREMONY_FREEZE_FRAMES` | seedlingDemo/swimSoundClock.js | 150 | rule | magnitude | Pickups/Pickup.as:specialTimerMax |
-| `PIN_FRAME_RATE` | seedlingDemo/tapeFormat.js | 60 | rule | magnitude | Main.as:FPS |
-| `COERCED_TERRAIN_STATE` | seedlingDemo/tapeFormat.js | 0 | rule | sentinel |  |
-| `LEVEL_COUNT` | seedlingDemo/tapeFormat.js | 116 | rule | count |  |
-| `TILE_W` | seedlingDemo/wandShot.js | 16 | physics | magnitude | Scenery/Tile.as:w |
-| `WAND_SPEED` | seedlingDemo/wandVerb.js | 3 | physics | magnitude | Player.as:wandSpeed |
 
 | table | file | literals | physics/rule | classes | kinds | AS3 |
 |---|---|---|---|---|---|---|
@@ -404,19 +397,12 @@ Rows whose note starts `REVIEW:`: **105**.
 | `ITEM_PROPERTIES` | seedlingDemo/tapeFormat.js | 2 | 2 | rule | count/magnitude | Player.as:hitsMaxDef |
 | `INVENTORY_ITEM_IDS` | seedlingDemo/tapeFormat.js | 6 | 6 | rule | sentinel | Inventory.as:277-318 |
 | `SAVE_SLOTS` | seedlingDemo/tapeFormat.js | 3 | 3 | rule | count | Player.as:totemParts Player.as:totalKeys SealController.as:SEALS |
-| `MOVE_SPEEDS` | seedlingDemo/playerPhysicsV1.js | 1 | 1 | physics | derivation | Player.as:moveSpeeds |
-| `HITBOX` | seedlingDemo/playerPhysicsV1.js | 4 | 4 | physics | magnitude | Player.as:560-561 Player.as:295 |
-| `TILE` | seedlingDemo/playerPhysicsV1.js | 2 | 2 | physics | magnitude | Scenery/Tile.as:w Scenery/Tile.as:h |
-| `SPAWN_OFFSET` | seedlingDemo/playerPhysicsV1.js | 2 | 2 | physics | derivation | Player.as:357 Game.as:2034-2037 |
-| `LEVEL0_WORLD` | seedlingDemo/playerPhysicsV1.js | 2 | 2 | physics | bound | Main.as:36 Game.as:1854-1855 |
-| `CHECK_OFFSET_Y` | seedlingDemo/playerPhysicsV1.js | 1 | 1 | physics | derivation | Player.as:checkOffsetY |
 | `BLACK_COVER` | seedlingDemo/gameClock.js | 2 | 2 | rule | magnitude | Game.as:blackCover Game.as:blackCoverRate |
 | `LOAD_FADE_FRAMES` | seedlingDemo/gameClock.js | 7 | 1 | rule | bound | Game.as:blackCover |
 | `PICKUP_HELP_DEAD_FRAMES` | seedlingDemo/gameClock.js | 1 | 1 | rule | magnitude | Pickups/Sword.as:42-49 Inventory.as:174 Game.as:961 |
 | `TIME_RATE` | seedlingDemo/gameClock.js | 1 | 1 | rule | magnitude | Game.as:timeRate |
 | `DAY_LENGTH_FRAMES` | seedlingDemo/gameClock.js | 1 | 1 | rule | derivation | Game.as:dayLength |
 | `PAGE_BOOT_TIME` | seedlingDemo/gameClock.js | 1 | 1 | rule | derivation | Main.as:158 Main.as:51 |
-| `NO_BOUNCE_STATES` | seedlingDemo/playerPhysicsV2.js | 3 | 3 | rule | sentinel | Player.as:490 |
 | `TILE_TYPE_SEMANTICS` | flashPanel/seedlingSemantics.js | 8 | 8 | rule | sentinel |  |
 | `SEEDLING_PLAYER_BOX` | flashPanel/seedlingSemantics.js | 2 | 2 | physics | magnitude | Player.as:normalHitbox |
 | `CLIFFSIDE_FRAME_FACES` | flashPanel/seedlingSemantics.js | 4 | 4 | rule | sentinel | Game.as:2084-2089 Scenery/CliffSide.as:15-34 |
