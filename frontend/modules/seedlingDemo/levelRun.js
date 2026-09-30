@@ -249,6 +249,39 @@ function applyItem(inventory, name) {
 }
 
 /**
+ * ⛓ ENGINE-PREP C3: the entity families `run.entities(family)` answers — each
+ * name is also a getter on the run, and both faces call one closure function.
+ * The solver-surface census reads this list (it is the table's `folded`
+ * list) and refuses a solver-family file that reads one of these getters
+ * directly. Must equal the keys of `createLevelRun`'s `ENTITY_FAMILIES`.
+ */
+export const ENTITY_FAMILY_NAMES = Object.freeze([
+    'openActivators',
+    'pushables',
+    'armedArrowTraps',
+    'crushers',
+    'openChests',
+    'strikeBodies',
+    'spinnerBodies',
+    'armedPulsers',
+    'turrets',
+    'chasers',
+    'brokenRocks',
+    'crushersParked',
+    'pushesSettled',
+    'openBridges',
+    'arrowsInFlight',
+    'burnedTrees',
+    'latchedGroups',
+    'pulledRopes',
+    'turretDamage',
+    'turretsSettled',
+    'arrowFlights',
+    'bosses',
+    'talkCircles',
+]);
+
+/**
  * Start a run at `boot`, in the level the boot names.
  *
  * @param {object}   opts
@@ -10455,10 +10488,236 @@ export function createLevelRun({
         return { frozen };
     };
 
+    /**
+     * ⛓ ENGINE-PREP C3 — THE ENTITIES FOLD: ONE FUNCTION, TWO FACES.
+     *
+     * Each arrow below is the body its getter on the returned object had,
+     * moved here verbatim. The getter now returns it (`get pushables() {
+     * return pushablesNow(); }`) and so does `run.entities('pushables')`,
+     * through `ENTITY_FAMILIES`. One function behind both faces, so the
+     * getter and the query cannot drift. The solver family reads these
+     * through `entities(family)` only (the solver-surface census refuses a
+     * direct read); every other caller keeps the getter. Each getter's
+     * docblock stays on the getter, so "the docblock above" inside a body
+     * here means that one.
+     *
+     * ⛔ To fold another family: move its getter's body here as
+     * `<name>Now`, point the getter at it, add it to `ENTITY_FAMILIES` and
+     * its name to `ENTITY_FAMILY_NAMES`. Never change what it computes.
+     */
+    const spinnerBodiesNow = () => {
+        const st = spinnerStateFor(level);
+        return spinnerRects(st).map(({ id, rect, spinner }) => ({
+            id,
+            rect: { ...rect },
+            x: spinner.x,
+            y: spinner.y,
+            hits: spinner.hits,
+            hitsTimer: spinner.hitsTimer,
+            destroy: spinner.destroy,
+            alpha: spinner.alpha,
+            persistTag: spinner.persistTag,
+        }));
+    };
+    const openActivatorsNow = () => noclip ? null : openActivatorIds(activatorStateFor(level));
+    const openBridgesNow = () => noclip ? null : (openBridgeIdsNow() ?? new Set());
+    const pushablesNow = () => noclip ? null : pushableRects(pushableStateFor(level));
+    const brokenRocksNow = () => noclip ? null : (brokenRockIdsNow() ?? new Set());
+    const burnedTreesNow = () => noclip ? null : (burnedTreeIdsNow() ?? new Set());
+    const pulledRopesNow = () => noclip ? null : (pulledRopeIdsNow() ?? new Set());
+    const crushersNow = () => {
+        if (noclip) return null;
+        return crusherRectsNow() ?? new Map();
+    };
+    const crushersParkedNow = () => {
+        if (noclip) return true;
+        for (const c of crusherStateFor(level).values()) {
+            if (c.vx !== 0 || c.vy !== 0) return false;
+        }
+        return true;
+    };
+    const talkCirclesNow = () => {
+        if (noclip) return [];
+        const out = [];
+        for (const w of talkerStateFor(level).values()) {
+            if (w.cleared || !w.text) continue;
+            out.push({ id: w.id, tag: w.tag, ex: w.ex, ey: w.ey, level: w.level });
+        }
+        return out;
+    };
+    const strikeBodiesNow = () => {
+        if (noclip || noDamage) return [];
+        const out = [];
+        for (const c of chaserStateFor(level).values()) {
+            if (c.removed || c.destroy) continue;
+            out.push({
+                id: c.id,
+                tag: c.tag,
+                as3: 'Enemy',
+                // ⛔ THE CLASS, WHICH IS WHAT THE POLICY ROW IS KEYED ON.
+                // `as3` is the `genericHit` ARM and is `"Enemy"` for every
+                // chaser; `KILL_ARM_POLICY.Enemy` is refused for the whole
+                // family on purpose. `enemyClass` is `combat.js`'s own
+                // per-tag name — the field `enemyClassModelled` reads.
+                enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
+                // ⛓ R9 SLICE 12c — THE CENTRE, WHICH THE FORECAST'S OWN
+                // PROJECTION HAS CARRIED SINCE 12b (`:5964`) AND THIS
+                // SHAPE DID NOT. The docblock above says the two are
+                // "written to the same four fields, cannot drift" — and
+                // they had already drifted by two. `chaseEnvelope` prices
+                // a body from its CENTRE and its tag, so the dash
+                // certification cannot be asked from a rect alone.
+                x: c.x,
+                y: c.y,
+                rect: chaserBoxAt(c.tag, c.x, c.y),
+                hits: c.hits,
+                hitsTimer: c.hitsTimer,
+            });
+        }
+        return out;
+    };
+    const chasersNow = () => {
+        if (noclip || noDamage) return [];
+        const out = [];
+        for (const c of chaserStateFor(level).values()) {
+            if (c.removed) continue;
+            out.push({
+                id: c.id, tag: c.tag, x: c.x, y: c.y, vx: c.v.x, vy: c.v.y,
+                hits: c.hits, hitsTimer: c.hitsTimer, dying: c.dying,
+                // ⛓ R8 SLICE 3 — the three fenceposts, reported apart:
+                // `dying` (the "die" anim is playing, `totalEnemies()`
+                // still counts it), `destroy` (`endAnim` fired, the fade
+                // is running, `totalEnemies()` STILL counts it), and the
+                // absence from this list at all (`FP.world.remove`, which
+                // is the one that moves the count). A live solver reading
+                // "is that body a threat" wants the first; one reading
+                // "will the lock open" wants the third.
+                destroy: c.destroy,
+                alpha: c.alpha,
+            });
+        }
+        return out;
+    };
+    const turretsNow = () => {
+        if (noclip) return null;
+        return turretRectsNow() ?? new Map();
+    };
+    const bossesNow = () => {
+        if (noclip) return null;
+        return bossRectsNow() ?? new Map();
+    };
+    const turretsSettledNow = () => {
+        if (noclip) return true;
+        for (const t of turretStateFor(level).values()) {
+            if (t.removed) continue;
+            if (!iceTurretSettled(t)) return false;
+        }
+        return true;
+    };
+    const turretDamageNow = () => {
+        if (noclip) return [];
+        return [...turretStateFor(level).values()].map((t) => ({
+            id: t.id, hits: t.hits, hitsMax: t.hitsMax, hitsTimer: t.hitsTimer,
+            dying: t.dying, dead: t.dead, removed: t.removed,
+            // ⛓ The LATCH, so a leg can say whether the corpse has become
+            // a wall yet — it flips on the first tick the player's box is
+            // off the 16x16 body and never goes back.
+            solid: t.solid,
+            // ⛓⛓ R5 SLICE 22: THE SHOOTER'S OWN CLOCK. `anim` and
+            // `shootTimer` between them say exactly where in the 45-tick
+            // volley cycle the body is, and `angle` is what the next
+            // `endAnim` will fire along — which is the only way a leg can
+            // reason about a volley BEFORE it exists.
+            anim: t.anim, shootTimer: t.shootTimer, angle: t.angle,
+            volleys: t.volleys,
+        }));
+    };
+    const openChestsNow = () => noclip ? null : (openChestIdsNow() ?? new Set());
+    const armedPulsersNow = () => {
+        if (noclip) return null;
+        const armed = new Set();
+        const st = pulserStateFor(level);
+        if (st.size === 0) return armed;
+        const activators = activatorStateFor(level);
+        const pressed = pressedGroups(world, playerBoxAt(state.x, state.y),
+            movingSolidsNow());
+        for (const [id, p] of st) {
+            if (pressed.has(p.t) || activators.latched.get(p.t) === true) armed.add(id);
+        }
+        return armed;
+    };
+    const armedArrowTrapsNow = () => {
+        if (noclip) return null;
+        const armed = new Set();
+        const st = arrowTrapStateFor(level);
+        if (st.size === 0) return armed;
+        const activators = activatorStateFor(level);
+        const pressed = pressedGroups(world, playerBoxAt(state.x, state.y),
+            movingSolidsNow());
+        for (const [id, trap] of st) {
+            const group = pressed.has(trap.t) || activators.latched.get(trap.t) === true;
+            if (arrowTrapFires(trap, group)) armed.add(id);
+        }
+        return armed;
+    };
+    const latchedGroupsNow = () => {
+        if (noclip) return null;
+        const out = new Set();
+        for (const [g, v] of activatorStateFor(level).latched) if (v === true) out.add(g);
+        return out;
+    };
+    const arrowsInFlightNow = () => arrowsFor(level).map((a) => ({ id: a.id, x: a.x, y: a.y }));
+    const arrowFlightsNow = () => arrowsFor(level).map((a) => ({
+        id: a.id, x: a.x, y: a.y, v: { x: a.v.x, y: a.v.y },
+        die: a.die, alpha: a.alpha, removed: a.removed,
+    }));
+    const pushesSettledNow = () => noclip ? true : pushablesSettled(pushableStateFor(level));
+    const ENTITY_FAMILIES = Object.freeze({
+        openActivators: openActivatorsNow,
+        pushables: pushablesNow,
+        armedArrowTraps: armedArrowTrapsNow,
+        crushers: crushersNow,
+        openChests: openChestsNow,
+        strikeBodies: strikeBodiesNow,
+        spinnerBodies: spinnerBodiesNow,
+        armedPulsers: armedPulsersNow,
+        turrets: turretsNow,
+        chasers: chasersNow,
+        brokenRocks: brokenRocksNow,
+        crushersParked: crushersParkedNow,
+        pushesSettled: pushesSettledNow,
+        openBridges: openBridgesNow,
+        arrowsInFlight: arrowsInFlightNow,
+        burnedTrees: burnedTreesNow,
+        latchedGroups: latchedGroupsNow,
+        pulledRopes: pulledRopesNow,
+        turretDamage: turretDamageNow,
+        turretsSettled: turretsSettledNow,
+        arrowFlights: arrowFlightsNow,
+        bosses: bossesNow,
+        talkCircles: talkCirclesNow,
+    });
+
     return {
         get level() { return level; },
         get world() { return world; },
         get state() { return state; },
+        /**
+         * ⛓ ENGINE-PREP C3 — THE SOLVER'S ONE QUERY FOR LIVE ENTITY STATE.
+         *
+         * `run.entities('pushables')` returns exactly what `run.pushables`
+         * returns: the family key IS the getter's name, and both call the
+         * same closure function (`ENTITY_FAMILIES`). An unknown family throws
+         * by name rather than reading as an empty room.
+         */
+        entities(family) {
+            const f = Object.hasOwn(ENTITY_FAMILIES, family) ? ENTITY_FAMILIES[family] : undefined;
+            if (!f) {
+                throw new Error(`levelRun.entities: unknown entity family ${JSON.stringify(family)} — `
+                    + `the known families are ${Object.keys(ENTITY_FAMILIES).join(', ')}`);
+            }
+            return f();
+        },
         /**
          * ⛓⛓⛓ R9 SLICE 2 — THE ARGS THIS WORLD WAS **CONSTRUCTED** WITH, and
          * they are not `state`.
@@ -10580,20 +10839,7 @@ export function createLevelRun({
          * on. Reporting only the undying ones would make a press at a corpse
          * read as a press at nothing.
          */
-        get spinnerBodies() {
-            const st = spinnerStateFor(level);
-            return spinnerRects(st).map(({ id, rect, spinner }) => ({
-                id,
-                rect: { ...rect },
-                x: spinner.x,
-                y: spinner.y,
-                hits: spinner.hits,
-                hitsTimer: spinner.hitsTimer,
-                destroy: spinner.destroy,
-                alpha: spinner.alpha,
-                persistTag: spinner.persistTag,
-            }));
-        },
+        get spinnerBodies() { return spinnerBodiesNow(); },
         /**
          * ⛓⛓ R5 SLICE 13: WHERE THE SPINNERS WILL BE, for the next `n` ticks.
          *
@@ -11469,9 +11715,7 @@ export function createLevelRun({
          * the walkTo-divergence lesson, one mechanic later. Reading it off
          * the run means the two cannot disagree.
          */
-        get openActivators() {
-            return noclip ? null : openActivatorIds(activatorStateFor(level));
-        },
+        get openActivators() { return openActivatorsNow(); },
         /**
          * R4: the same thing for the two press families — the planner's only
          * legitimate view of an opened bridge and a moved block.
@@ -11483,10 +11727,8 @@ export function createLevelRun({
          * the push opened and then walk the executor into the block it did
          * not move — the `openActivators` lesson, one mechanic later.
          */
-        get openBridges() {
-            return noclip ? null : (openBridgeIdsNow() ?? new Set());
-        },
-        get pushables() { return noclip ? null : pushableRects(pushableStateFor(level)); },
+        get openBridges() { return openBridgesNow(); },
+        get pushables() { return pushablesNow(); },
         /**
          * R5 slice 5: which of this level's BreakableRocks are GONE right
          * now — the planner's only legitimate view of a broken one.
@@ -11497,7 +11739,7 @@ export function createLevelRun({
          * wall it watched shatter. The `openBridges` lesson, one mechanic
          * later — which is now the fifth time this file has had to make it.
          */
-        get brokenRocks() { return noclip ? null : (brokenRockIdsNow() ?? new Set()); },
+        get brokenRocks() { return brokenRocksNow(); },
         /**
          * ⛓⛓ R5 SLICE 14: which of this level's `BurnableTree`s are GONE
          * right now — the EIGHTH family's answer to the same question, and
@@ -11517,9 +11759,9 @@ export function createLevelRun({
          * `tag = -1` tree is rebuilt by the next `new Game` however this
          * reads, and a `tag >= 0` one is not rebuilt at all (`check()`).
          */
-        get burnedTrees() { return noclip ? null : (burnedTreeIdsNow() ?? new Set()); },
+        get burnedTrees() { return burnedTreesNow(); },
         /** ⛓ R5 slice 7: the ropes pulled in the CURRENT level, this visit. */
-        get pulledRopes() { return noclip ? null : (pulledRopeIdsNow() ?? new Set()); },
+        get pulledRopes() { return pulledRopesNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 15: WHERE EVERY CRUSHER IN THIS ROOM IS RIGHT NOW —
          * the NINTH family's answer to the question the other eight answer
@@ -11534,22 +11776,13 @@ export function createLevelRun({
          * makes the two-phase doctrine a rule and not a style —
          * `crusherIsParked` is the predicate a phase-2 plan has to check.
          */
-        get crushers() {
-            if (noclip) return null;
-            return crusherRectsNow() ?? new Map();
-        },
+        get crushers() { return crushersNow(); },
         /**
          * ⛓ Is every crusher in this room at rest? The precondition a
          * phase-2 (static-world) plan has to hold, asked of the run rather
          * than assumed by it.
          */
-        get crushersParked() {
-            if (noclip) return true;
-            for (const c of crusherStateFor(level).values()) {
-                if (c.vx !== 0 || c.vy !== 0) return false;
-            }
-            return true;
-        },
+        get crushersParked() { return crushersParkedNow(); },
         /**
          * ⛔⛔ Every tick a crusher's body overlapped the player. `Bot.noDamage`
          * is why the run continues; this list is why "the route stayed out of
@@ -11607,68 +11840,9 @@ export function createLevelRun({
          * and a constraint over it would be a refusal with no alternative.
          * Its four committed tapes open it BY DESIGN.
          */
-        get talkCircles() {
-            if (noclip) return [];
-            const out = [];
-            for (const w of talkerStateFor(level).values()) {
-                if (w.cleared || !w.text) continue;
-                out.push({ id: w.id, tag: w.tag, ex: w.ex, ey: w.ey, level: w.level });
-            }
-            return out;
-        },
-        get strikeBodies() {
-            if (noclip || noDamage) return [];
-            const out = [];
-            for (const c of chaserStateFor(level).values()) {
-                if (c.removed || c.destroy) continue;
-                out.push({
-                    id: c.id,
-                    tag: c.tag,
-                    as3: 'Enemy',
-                    // ⛔ THE CLASS, WHICH IS WHAT THE POLICY ROW IS KEYED ON.
-                    // `as3` is the `genericHit` ARM and is `"Enemy"` for every
-                    // chaser; `KILL_ARM_POLICY.Enemy` is refused for the whole
-                    // family on purpose. `enemyClass` is `combat.js`'s own
-                    // per-tag name — the field `enemyClassModelled` reads.
-                    enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
-                    // ⛓ R9 SLICE 12c — THE CENTRE, WHICH THE FORECAST'S OWN
-                    // PROJECTION HAS CARRIED SINCE 12b (`:5964`) AND THIS
-                    // SHAPE DID NOT. The docblock above says the two are
-                    // "written to the same four fields, cannot drift" — and
-                    // they had already drifted by two. `chaseEnvelope` prices
-                    // a body from its CENTRE and its tag, so the dash
-                    // certification cannot be asked from a rect alone.
-                    x: c.x,
-                    y: c.y,
-                    rect: chaserBoxAt(c.tag, c.x, c.y),
-                    hits: c.hits,
-                    hitsTimer: c.hitsTimer,
-                });
-            }
-            return out;
-        },
-        get chasers() {
-            if (noclip || noDamage) return [];
-            const out = [];
-            for (const c of chaserStateFor(level).values()) {
-                if (c.removed) continue;
-                out.push({
-                    id: c.id, tag: c.tag, x: c.x, y: c.y, vx: c.v.x, vy: c.v.y,
-                    hits: c.hits, hitsTimer: c.hitsTimer, dying: c.dying,
-                    // ⛓ R8 SLICE 3 — the three fenceposts, reported apart:
-                    // `dying` (the "die" anim is playing, `totalEnemies()`
-                    // still counts it), `destroy` (`endAnim` fired, the fade
-                    // is running, `totalEnemies()` STILL counts it), and the
-                    // absence from this list at all (`FP.world.remove`, which
-                    // is the one that moves the count). A live solver reading
-                    // "is that body a threat" wants the first; one reading
-                    // "will the lock open" wants the third.
-                    destroy: c.destroy,
-                    alpha: c.alpha,
-                });
-            }
-            return out;
-        },
+        get talkCircles() { return talkCirclesNow(); },
+        get strikeBodies() { return strikeBodiesNow(); },
+        get chasers() { return chasersNow(); },
         /**
          * ⛓⛓⛓ R8 SLICE 3 — every arrow that died on a body, and on WHICH.
          * The positive witness for a kill (trap 113: a count is not a
@@ -11720,10 +11894,7 @@ export function createLevelRun({
          * after the press that shoved it, so a route flooded against it is
          * only sound once `turretsSettled` is true.
          */
-        get turrets() {
-            if (noclip) return null;
-            return turretRectsNow() ?? new Map();
-        },
+        get turrets() { return turretsNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 23 — the boss totems, as `collidesSolid` sees them.
          *
@@ -11733,10 +11904,7 @@ export function createLevelRun({
          * questions", and `liveRectOf` then falls through to `s.rect`, which
          * for an unwoken boss is the right answer anyway.
          */
-        get bosses() {
-            if (noclip) return null;
-            return bossRectsNow() ?? new Map();
-        },
+        get bosses() { return bossesNow(); },
         /** ⛓ Has the wand's publication woken the room's boss? */
         get bossesWoken() {
             if (noclip) return [];
@@ -11789,14 +11957,7 @@ export function createLevelRun({
          * `iceTurretSettled`, which uses the FLOOR tile because the
          * two-cycle straddles `Math.round`'s boundary.
          */
-        get turretsSettled() {
-            if (noclip) return true;
-            for (const t of turretStateFor(level).values()) {
-                if (t.removed) continue;
-                if (!iceTurretSettled(t)) return false;
-            }
-            return true;
-        },
+        get turretsSettled() { return turretsSettledNow(); },
         /**
          * ⛓ The kill ledger's other half: `IceTurret` writes NO persistence,
          * so the only witness that it died is this.
@@ -11847,24 +12008,7 @@ export function createLevelRun({
          * that presses too fast can be told WHICH press was refused rather
          * than being told the enemy did not die.
          */
-        get turretDamage() {
-            if (noclip) return [];
-            return [...turretStateFor(level).values()].map((t) => ({
-                id: t.id, hits: t.hits, hitsMax: t.hitsMax, hitsTimer: t.hitsTimer,
-                dying: t.dying, dead: t.dead, removed: t.removed,
-                // ⛓ The LATCH, so a leg can say whether the corpse has become
-                // a wall yet — it flips on the first tick the player's box is
-                // off the 16x16 body and never goes back.
-                solid: t.solid,
-                // ⛓⛓ R5 SLICE 22: THE SHOOTER'S OWN CLOCK. `anim` and
-                // `shootTimer` between them say exactly where in the 45-tick
-                // volley cycle the body is, and `angle` is what the next
-                // `endAnim` will fire along — which is the only way a leg can
-                // reason about a volley BEFORE it exists.
-                anim: t.anim, shootTimer: t.shootTimer, angle: t.angle,
-                volleys: t.volleys,
-            }));
-        },
+        get turretDamage() { return turretDamageNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 16 — WHAT EVERY CRUSHER IN THIS ROOM CAN SEE RIGHT
          * NOW, ASKED OF THE RUN.
@@ -11908,7 +12052,7 @@ export function createLevelRun({
             return out;
         },
         // ── ⛔⛔ R5 slice 9: the chest, the pulse and the seal ──────────
-        get openChests() { return noclip ? null : (openChestIdsNow() ?? new Set()); },
+        get openChests() { return openChestsNow(); },
         /** One record per chest OPENED, with the flag `open()` cleared. */
         get chestOpens() { return chestOpens.map((c) => ({ ...c })); },
 
@@ -11966,19 +12110,7 @@ export function createLevelRun({
          * "the hold opened something" has to be asked of this instead, and
          * `runHold` does.
          */
-        get armedPulsers() {
-            if (noclip) return null;
-            const armed = new Set();
-            const st = pulserStateFor(level);
-            if (st.size === 0) return armed;
-            const activators = activatorStateFor(level);
-            const pressed = pressedGroups(world, playerBoxAt(state.x, state.y),
-                movingSolidsNow());
-            for (const [id, p] of st) {
-                if (pressed.has(p.t) || activators.latched.get(p.t) === true) armed.add(id);
-            }
-            return armed;
-        },
+        get armedPulsers() { return armedPulsersNow(); },
         /**
          * ⛓⛓⛓ THE ARROW TRAPS WHOSE GROUP IS PUBLISHED RIGHT NOW.
          *
@@ -11993,20 +12125,7 @@ export function createLevelRun({
          * the flag — a set built from the flag alone would report L16 and
          * L67 backwards, and would report them backwards SILENTLY.
          */
-        get armedArrowTraps() {
-            if (noclip) return null;
-            const armed = new Set();
-            const st = arrowTrapStateFor(level);
-            if (st.size === 0) return armed;
-            const activators = activatorStateFor(level);
-            const pressed = pressedGroups(world, playerBoxAt(state.x, state.y),
-                movingSolidsNow());
-            for (const [id, trap] of st) {
-                const group = pressed.has(trap.t) || activators.latched.get(trap.t) === true;
-                if (arrowTrapFires(trap, group)) armed.add(id);
-            }
-            return armed;
-        },
+        get armedArrowTraps() { return armedArrowTrapsNow(); },
         /**
          * ⛓⛓⛓ R9 SLICE L16 — THE GROUPS A PUBLICATION HAS LATCHED, THIS VISIT.
          *
@@ -12016,12 +12135,7 @@ export function createLevelRun({
          * — the live run's own map, never a flag the verb set itself. `null`
          * under `noclip`, like its neighbours.
          */
-        get latchedGroups() {
-            if (noclip) return null;
-            const out = new Set();
-            for (const [g, v] of activatorStateFor(level).latched) if (v === true) out.add(g);
-            return out;
-        },
+        get latchedGroups() { return latchedGroupsNow(); },
         /** One per volley an arrow trap fired — `{t, level, id, arrows}`. */
         get arrowVolleys() { return arrowVolleysFired.map((v) => ({ ...v })); },
         /**
@@ -12030,9 +12144,7 @@ export function createLevelRun({
          * ⚠ POSITION AND LIFETIME ONLY. Nothing here says what an arrow hit
          * — see `stepArrowTrapsNow`'s two named absences.
          */
-        get arrowsInFlight() {
-            return arrowsFor(level).map((a) => ({ id: a.id, x: a.x, y: a.y }));
-        },
+        get arrowsInFlight() { return arrowsInFlightNow(); },
         /**
          * ⛓⛓⛓ R8 SLICE 5 — THE SAME ARROWS, WITH THE FIELDS A PREDICTION
          * NEEDS. `arrowsInFlight` is POSITION AND LIFETIME ONLY and stays
@@ -12143,12 +12255,7 @@ export function createLevelRun({
         chaserForecast() {
             return chaserForecastNow();
         },
-        get arrowFlights() {
-            return arrowsFor(level).map((a) => ({
-                id: a.id, x: a.x, y: a.y, v: { x: a.v.x, y: a.v.y },
-                die: a.die, alpha: a.alpha, removed: a.removed,
-            }));
-        },
+        get arrowFlights() { return arrowFlightsNow(); },
         /**
          * ⛓ THE ARROW'S OWN COVER QUERY, as `stepArrowTrapsNow` builds it.
          *
@@ -12180,7 +12287,7 @@ export function createLevelRun({
         /** Which blocks are no longer where the level built them, this visit. */
         get pushedBlocks() { return noclip ? [] : movedPushables(pushableStateFor(level)); },
         /** Is every block at rest? The `spear` leg's "the push has landed" test. */
-        get pushesSettled() { return noclip ? true : pushablesSettled(pushableStateFor(level)); },
+        get pushesSettled() { return pushesSettledNow(); },
         /**
          * One record per press that FIRED its rect: `{t, fired, level,
          * weapon, direction, rect, hits}`.

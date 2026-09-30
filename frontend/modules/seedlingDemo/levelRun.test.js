@@ -25,7 +25,7 @@ import { SLASH_HIT_TICKS } from './presses.js';
 const DASH_CHAIN_OFFSETS = [0, ...DASH_CHAIN.at];
 
 import { loadTape } from './fixtures/index.js';
-import { createLevelRun } from './levelRun.js';
+import { createLevelRun, ENTITY_FAMILY_NAMES } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import { RELAXED_ROLES, ROLES, buildLevelWorld, rectsOverlap } from './levelWorld.js';
 import {
@@ -46,7 +46,8 @@ import { distanceRectPoint, SLASH_REACH } from './presses.js';
 import { SWORD_FORCE } from './combatVerbs.js';
 
 const DEATH_ANIM_TICKS = deathTicks('bob');
-import { runTapeToStream } from './tapeRunner.js';
+import { createRunForStaging, runTapeToStream } from './tapeRunner.js';
+import { isDeepStrictEqual } from 'node:util';
 
 const levelSource = atlasLevelSource();
 const boot = { level: 0, x: 80, y: 128 };
@@ -2605,5 +2606,124 @@ describe('R9 slice 12c‴: the shared sword window is exercised by the roster', 
         expect(Math.max(...offsets)).toBeLessThanOrEqual(SLASH_HIT_TICKS);
         expect([...new Set(repeatHits.map((p) => p.fired - p.t))].sort((a, b) => a - b))
             .toEqual([2, 3, 4, 5]);
+    });
+});
+
+/**
+ * ⛓ ENGINE-PREP C3 — `run.entities(family)` IS THE GETTER, BY ANOTHER NAME.
+ *
+ * The solver family reads a Seedling entity family's live state through one
+ * query, and every other caller keeps the getter. The fold is a SEAM, not a
+ * model change: both faces call one closure function (`ENTITY_FAMILIES` in
+ * `createLevelRun`), so these rows hold the query to the getter at EVERY tick
+ * of committed tapes, deep-strictly (every getter returns a fresh Set, Map,
+ * array or boolean, so identity is not the claim — equality is).
+ *
+ * ⚠ A ROW OVER AN EMPTY ROOM PROVES NOTHING. Each tape below was chosen by a
+ * survey of the whole roster for the families it makes NON-TRIVIAL (a
+ * non-empty Set/Map/array, or a predicate that goes false), and the last row
+ * asserts every family was witnessed non-trivially somewhere. No committed
+ * tape opens a bridge, so `openBridges` is witnessed by the R4 block's own
+ * `probe-seedling-bridge` staging.
+ */
+describe('engine-prep C3: run.entities(family) is the getter, by another name', () => {
+    const WITNESSES = [
+        { tape: 'r5-l42-part4', families: ['crushers', 'crushersParked', 'pushables', 'spinnerBodies',
+            'turrets', 'turretDamage', 'turretsSettled'] },
+        { tape: 'r5-totem-entrance', families: ['armedPulsers', 'latchedGroups', 'openActivators',
+            'openChests', 'pushesSettled'] },
+        { tape: 'r9-solve-16', families: ['armedArrowTraps', 'arrowFlights', 'arrowsInFlight', 'brokenRocks',
+            'chasers', 'pulledRopes', 'strikeBodies'] },
+        { tape: 'r5-l43-wand', families: ['bosses'] },
+        { tape: 'r5-l37-burn', families: ['burnedTrees', 'talkCircles'] },
+    ];
+    const nontrivial = (v) => v === false
+        || ((v instanceof Set || v instanceof Map) ? v.size > 0 : Array.isArray(v) ? v.length > 0 : false);
+    const witnessed = new Set();
+
+    /** Every family, query against getter, after every tick; returns the mismatches. */
+    function compareEveryTick(run, ticks, heldAt) {
+        const bad = [];
+        const seen = new Set();
+        const check = (t) => {
+            for (const f of ENTITY_FAMILY_NAMES) {
+                const viaGetter = run[f];
+                const viaQuery = run.entities(f);
+                if (!isDeepStrictEqual(viaQuery, viaGetter)) bad.push(`t=${t} ${f}`);
+                if (nontrivial(viaGetter)) seen.add(f);
+            }
+        };
+        check(0);
+        for (let t = 0; t < ticks; t++) {
+            run.advance(heldAt(t));
+            check(t + 1);
+        }
+        return { bad, seen };
+    }
+
+    it('the name list is the dispatch table: 23 families, each one a getter on the run', () => {
+        const run = createLevelRun({ levelSource, boot });
+        expect(ENTITY_FAMILY_NAMES).toHaveLength(23);
+        expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
+        for (const f of ENTITY_FAMILY_NAMES) {
+            expect(typeof Object.getOwnPropertyDescriptor(run, f)?.get, f).toBe('function');
+        }
+        // the table's keys, as the refusal names them, ARE the exported list
+        let message = '';
+        try { run.entities('noSuchFamily'); } catch (e) { message = e.message; }
+        expect(message.split('the known families are ')[1]).toBe(ENTITY_FAMILY_NAMES.join(', '));
+    });
+
+    it('an unknown family throws BY NAME — a typo, and a prototype key, are not empty rooms', () => {
+        const run = createLevelRun({ levelSource, boot });
+        expect(() => run.entities('pushable'))
+            .toThrow(/levelRun\.entities: unknown entity family "pushable" — the known families are openActivators, pushables, /);
+        expect(() => run.entities('constructor')).toThrow(/unknown entity family "constructor"/);
+        expect(() => run.entities(undefined)).toThrow(/unknown entity family undefined/);
+    });
+
+    for (const { tape: name, families } of WITNESSES) {
+        it(`${name}: the query equals the getter for every family at every tick, `
+            + `and the tape makes ${families.join(', ')} non-trivial`, () => {
+            const tape = loadTape(name);
+            const run = createRunForStaging(tape, levelSource);
+            const { bad, seen } = compareEveryTick(run, tape.tick_count, (t) => heldKeysAt(tape, t));
+            expect(bad).toEqual([]);
+            for (const f of families) expect(seen.has(f), `${name} never made ${f} non-trivial`).toBe(true);
+            for (const f of seen) witnessed.add(f);
+        });
+    }
+
+    it('L63\'s bridge (the R4 probe staging): openBridges, through the query, opens with the getter', () => {
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 63, x: 32, y: 128 },
+            noHazards: ['water', 'lava', 'ice', 'waterfall'],
+            grants: [{ level: 63, items: ['sword', 'spear'] }],
+            equips: [{ t: 0, slot: 1 }],
+        });
+        const spans = [
+            { key: 'down', from: 5, to: 20 },
+            { key: 'primary', from: 25, to: 26 },
+            { key: 'down', from: 30, to: 198 },
+        ];
+        const { bad, seen } = compareEveryTick(run, 200, (t) => new Set(
+            spans.filter((s) => t >= s.from && t < s.to).map((s) => s.key)));
+        expect(bad).toEqual([]);
+        expect([...run.entities('openBridges')]).toEqual(['2,9']);
+        expect(seen.has('openBridges')).toBe(true);
+        for (const f of seen) witnessed.add(f);
+    });
+
+    it('under noclip the query takes the getter\'s noclip arm too', () => {
+        const run = createLevelRun({ levelSource, boot: { level: 71, x: 112, y: 176 }, noclip: true });
+        const { bad } = compareEveryTick(run, 30, () => new Set(['down']));
+        expect(bad).toEqual([]);
+        expect(run.entities('pushables')).toBe(null);
+        expect(run.entities('pushesSettled')).toBe(true);
+    });
+
+    it('every family was witnessed NON-TRIVIALLY by the rows above', () => {
+        expect(ENTITY_FAMILY_NAMES.filter((f) => !witnessed.has(f))).toEqual([]);
     });
 });
