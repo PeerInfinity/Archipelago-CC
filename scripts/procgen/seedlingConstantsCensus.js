@@ -197,7 +197,9 @@ function unitText(src, unit, comments, lo, hi) {
     out += src.slice(at, unit.end);
     // collapse whitespace, then drop it wherever it touches punctuation: only a
     // space BETWEEN two word characters (`return 4`) can carry meaning
-    return out.replace(/\s+/g, ' ').trim(); // PENDING-NORMALISE
+    // collapse whitespace, then drop it wherever it touches punctuation: only a
+    // space BETWEEN two word characters (`return 4`) can carry meaning
+    return out.replace(/\s+/g, ' ').replace(/ ?([^\w$ ]) ?/g, '$1').trim();
 }
 
 export const md5h8 = (s) => createHash('md5').update(s).digest('hex').slice(0, 8);
@@ -364,7 +366,9 @@ const camel = (NAME) => NAME.toLowerCase().replace(/_([a-z0-9])/g, (_, c) => c.t
  * or ''. Only scalars are anchored automatically: a table or inline literal
  * shares its line with prose that names AS3 fields in passing (measured: a
  * `0` beside a comment mentioning `hitsTimer` anchored to `Enemy.as:hitsTimer`),
- * so those anchors come from the reviewed table's `as3` column instead.
+ * so those anchors come from the reviewed table's `as3` column instead. A
+ * reviewed `as3` of `-` SUPPRESSES an automatic anchor that is a coincidence
+ * of name and value (`DOWN = 3` is not `Player.as:direction`'s default 3).
  * The AS3 declaration's value must EQUAL the literal: a name match with a
  * different value is not an anchor. When several files declare the name, the
  * one the comment names (`Player.as`, `Mobile.DEFAULT_FRICTION`) wins; still
@@ -498,7 +502,7 @@ export function buildCensus(root, { fieldsText } = {}) {
             rows.push({
                 key: r.key, file: r.file, line: r.line, function: r.function, position: r.position,
                 enclosing: r.enclosing, literal: r.literal, class: cls, kind: hit?.kind ?? '',
-                as3: hit?.as3 || auto, note: hit?.note ?? '', context: r.context, value: r.value,
+                as3: hit?.as3 === '-' ? '' : (hit?.as3 || auto), note: hit?.note ?? '', context: r.context, value: r.value,
             });
         }
     }
@@ -592,7 +596,11 @@ export function profileCandidates(census) {
     return { scalarRows, tables, facts };
 }
 
-/** The markdown between the CENSUS markers. */
+/**
+ * The markdown between the CENSUS markers. ⛔ No LINE numbers: a moved line is
+ * green drift, and a line in the doc would turn every such edit into a stale
+ * page. The file and the name locate a row; the census CSV has the line.
+ */
 export function renderDocRegion(census) {
     const { rows } = census;
     const pos = ['scalar', 'table', 'inline'];
@@ -611,22 +619,22 @@ export function renderDocRegion(census) {
 
     const { scalarRows, tables, facts } = profileCandidates(census);
     out.push('', `### The ${facts.duplicates.length} names declared in more than one file`, '');
-    out.push(mdTable(['name', 'values agree', 'sites'], facts.duplicates.map((d) => [
-        `\`${d.name}\``, d.agree ? 'yes' : '**NO**', d.sites.map((s) => `${short(s.file)}:${s.line} = ${s.literal}`).join('; ')])));
+    out.push(mdTable(['name', 'values agree', 'files'], facts.duplicates.map((d) => [
+        `\`${d.name}\``, d.agree ? 'yes' : '**NO**', d.sites.map((s) => `${short(s.file)} = ${s.literal}`).join('; ')])));
     out.push('', `### The ${facts.derived.length} derived or aliased top-level constants`, '');
-    out.push(mdTable(['name', 'site', 'initialiser'], facts.derived.map((d) => [
-        `\`${d.name}\``, `${short(d.file)}:${d.line}`, `\`${d.init.length > 80 ? `${d.init.slice(0, 77)}...` : d.init}\``])));
+    out.push(mdTable(['name', 'file', 'initialiser'], facts.derived.map((d) => [
+        `\`${d.name}\``, short(d.file), `\`${d.init.length > 80 ? `${d.init.slice(0, 77)}...` : d.init}\``])));
 
     const anchoredS = scalarRows.filter((r) => r.as3).length;
     const anchoredT = tables.filter((t) => t.as3).length;
     out.push('', '### The profile candidates', '',
         `**${scalarRows.length} named scalars** are \`physics\` or \`rule\` (${anchoredS} with an AS3 anchor), and `
         + `**${tables.length} small tables** (at most ${SMALL_TABLE_MAX} literals) hold at least one (${anchoredT} with an AS3 reference).`, '');
-    out.push(mdTable(['name', 'site', 'value', 'class', 'kind', 'AS3'], scalarRows.map((r) => [
-        `\`${r.enclosing}\``, `${short(r.file)}:${r.line}`, r.literal, r.class, r.kind, r.as3])));
+    out.push(mdTable(['name', 'file', 'value', 'class', 'kind', 'AS3'], scalarRows.map((r) => [
+        `\`${r.enclosing}\``, short(r.file), r.literal, r.class, r.kind, r.as3])));
     out.push('');
-    out.push(mdTable(['table', 'site', 'literals', 'physics/rule', 'classes', 'kinds', 'AS3'], tables.map((t) => [
-        `\`${t.name}\``, `${short(t.file)}:${t.line}`, t.literals, t.guarded, t.classes, t.kinds, t.as3])));
+    out.push(mdTable(['table', 'file', 'literals', 'physics/rule', 'classes', 'kinds', 'AS3'], tables.map((t) => [
+        `\`${t.name}\``, short(t.file), t.literals, t.guarded, t.classes, t.kinds, t.as3])));
     out.push('', REGION_END);
     return out.join('\n');
 }

@@ -19,7 +19,7 @@
  * same function): RED on a NEW physics/rule/unclassified literal, on a
  * committed physics/rule row whose statement is gone ("must be RETIRED"), on a
  * committed row whose reviewed columns disagree with the table, and on a stale
- * doc region. A new or vanished cosmetic/structural literal is GREEN, and is
+ * doc region, on a reviewed target that reaches no row or ties another. A new or vanished cosmetic/structural literal is GREEN, and is
  * reported.
  *
  * Run:
@@ -33,7 +33,7 @@ import { fileURLToPath } from 'node:url';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import {
-    CENSUS_CSV, CLASSES, DOC_MD, KINDS, buildCensus, censusCsv, diffCensus, parseCsv, redLine,
+    CENSUS_CSV, CLASSES, DOC_MD, FIELDS_CSV, KINDS, buildCensus, censusCsv, diffCensus, parseCsv, redLine,
     renderDocRegion, spliceDocRegion,
 } from './seedlingConstantsCensus.js';
 
@@ -101,6 +101,7 @@ async function main() {
         const lines = diff.red.map(redLine);
         if (docStale) lines.push(`RED  ${DOC_MD}: the CENSUS region is stale — --write`);
         for (const a of census.ambiguous) lines.push(`RED  ${a.key}: equally specific targets ${a.targets.join(' / ')}`);
+        for (const t of census.unusedTargets) lines.push(`RED  ${FIELDS_CSV}: target ${t} reaches no row — delete it`);
         const byWhy = (w) => diff.green.filter((g) => g.why === w).length;
         console.log(`census-seedling-constants --check — ${census.rows.length} literals; `
             + `green drift: ${byWhy('new')} new + ${byWhy('vanished')} vanished cosmetic/structural, ${byWhy('moved')} moved`
