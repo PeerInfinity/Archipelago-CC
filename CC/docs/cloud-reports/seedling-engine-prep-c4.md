@@ -317,7 +317,7 @@ Each mutant was predicted first. The predictions were written to the session scr
 - **Two of the 41 members have no committed-tape witness.** `crusherContacts` and `pulserPlayerHits` are never non-trivial on any of the 144 non-noclip tapes. The `r5-shaft` pulse staging had to be found by a branch search.
 - **"(d) a dispatch entry removed ⇒ the D1 rows RED" is 13 of 16.** The ledger fold's two name rows and the disjoint row are rightly GREEN when a *progress* entry is removed.
 - **The constants census moved five keys, not a hand-written target alone.** `slashInfo`'s two structural literals moved owner too. Only `earnedClears` had a field target to follow.
-- **The bank's vitest counts.** levelRun has 100 tests at W0 (C3's report says 90 → 100 after its D1; 100 is right), and the seedlingDemo + procgenDocs + two census battery is 6408 at the head (C3 reported 6362 at its head; this slice adds 28: levelRun +16, surface +12).
+- **`tapeRunner.test.js` (365) held.** The brief's number was right this time. For the record, the seedlingDemo + procgenDocs + two-census battery is 6408 at the head (C3 reported 6362 at its head); this slice added 28 (levelRun +16, surface gate +12).
 - **The page's own "48 files" for the simulation is stale.** The table says 50 (`simulation.files`). It is pre-existing and was left alone.
 
 ## Residue: the queue for after the arc
