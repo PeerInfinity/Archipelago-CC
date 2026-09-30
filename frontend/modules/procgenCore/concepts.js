@@ -519,3 +519,42 @@ export const CONCEPTS = Object.freeze({
 });
 
 assertConceptTable(CONCEPTS);
+
+/* ─────────────────────── the chart's input (D4) ─────────────────────── */
+
+/**
+ * ⛓ **WHAT AN ENTRY REALISES**, in its declared order —
+ * `[{concept, kind, tier, placements: [{key, effect}]}]` (an item's
+ * `placements` is empty). The input a future chart row reads; ⛔ this file adds
+ * no statement to `CAPABILITY_STATEMENTS`.
+ */
+export function conceptsRealisedBy(entry, concepts) {
+    return Object.entries(entry?.conceptRealisations ?? {})
+        .filter(([cid]) => concepts[cid])
+        .map(([cid, r]) => ({
+            concept: cid,
+            kind: concepts[cid].kind,
+            tier: r.tier,
+            placements: Object.entries(r.placements ?? {}).map(([key, p]) => ({ key, effect: p.effect })),
+        }));
+}
+
+/**
+ * ⛓ **THE ITEM TAGS AN ENTRY'S REALISATIONS IMPLY** — the `feature` of every
+ * item concept it realises or needs, first-seen order, no duplicates (the same
+ * tag law `substrateCapabilities.itemTagFeatures` reads off its items).
+ */
+export function itemTagsImpliedBy(entry, concepts) {
+    const tags = [];
+    const add = (cid) => {
+        const f = concepts[cid]?.kind === 'item' ? concepts[cid].feature : undefined;
+        if (f && !tags.includes(f)) tags.push(f);
+    };
+    for (const [cid, r] of Object.entries(entry?.conceptRealisations ?? {})) {
+        add(cid);
+        for (const p of Object.values(r.placements ?? {})) {
+            for (const n of p.needs ?? []) add(normaliseNeed(n)?.concept);
+        }
+    }
+    return tags;
+}

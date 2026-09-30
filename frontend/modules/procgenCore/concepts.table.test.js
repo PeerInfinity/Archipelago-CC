@@ -12,8 +12,10 @@ import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { ITEM_LABELS, itemLabelOf } from '../seedlingDemo/itemLabels.js';
+import { CAPABILITY_STATEMENTS, itemTagFeatures } from './substrateCapabilities.js';
 import {
-    CONCEPTS, assertConceptTable, instancesOf, itemRowsOf, obstacleRowsOf,
+    CONCEPTS, assertConceptTable, assertRealisations, conceptsRealisedBy, instancesOf, itemRowsOf,
+    itemTagsImpliedBy, obstacleRowsOf,
 } from './concepts.js';
 
 const FEATURE = 'colored_doors_and_keys';
@@ -80,5 +82,64 @@ describe('⛓ sword and swim carry the names ITEM_LABELS carries', () => {
         expect(CONCEPTS.guardian.relations).toEqual({ weakness: ['sword'] });
         expect(CONCEPTS.water.relations).toEqual({ crossedWith: ['swim'] });
         expect(CONCEPTS.door.relations).toEqual({ openedBy: ['key'] });
+    });
+});
+
+/* ─────────────────────── D4 — the chart's input ─────────────────────── */
+
+/** The brief's substrate half, plus a coloured key/door pair, as a TEST DOUBLE. */
+const DOUBLE = Object.freeze({
+    id: 'double',
+    conceptRealisations: {
+        guardian: {
+            tier: 'mechanic', art: null, placements: {
+                gate: { effect: 'requires', needs: ['sword'], mechanic: { element: 'killgate' } },
+                roaming: { effect: 'none', mechanic: { element: 'roam' } },
+            },
+        },
+        water: {
+            tier: 'skin', art: 'water tiles', placements: {
+                gate: { effect: 'requires', needs: ['swim'] },
+                shortcut: { effect: 'helps', needs: ['swim'] },
+            },
+        },
+        sword: { tier: 'mechanic', flag: 'hasSword' },
+        key: { tier: 'mechanic' },
+        door: { tier: 'mechanic', placements: { gate: { effect: 'requires', needs: ['sword'] } } },
+    },
+});
+
+describe('D4 — conceptsRealisedBy / itemTagsImpliedBy (the chart\'s INPUT, not a chart row)', () => {
+    it('the double is well-formed', () => {
+        expect(() => assertRealisations(DOUBLE, CONCEPTS)).not.toThrow();
+    });
+
+    it('conceptsRealisedBy: one row per realised concept, declared order, placements as {key, effect}', () => {
+        expect(conceptsRealisedBy(DOUBLE, CONCEPTS)).toEqual([
+            { concept: 'guardian', kind: 'enemy', tier: 'mechanic',
+                placements: [{ key: 'gate', effect: 'requires' }, { key: 'roaming', effect: 'none' }] },
+            { concept: 'water', kind: 'obstacle', tier: 'skin',
+                placements: [{ key: 'gate', effect: 'requires' }, { key: 'shortcut', effect: 'helps' }] },
+            { concept: 'sword', kind: 'item', tier: 'mechanic', placements: [] },
+            { concept: 'key', kind: 'item', tier: 'mechanic', placements: [] },
+            { concept: 'door', kind: 'obstacle', tier: 'mechanic', placements: [{ key: 'gate', effect: 'requires' }] },
+        ]);
+    });
+
+    it('an entry that declares none realises nothing', () => {
+        expect(conceptsRealisedBy({ id: 'bare' }, CONCEPTS)).toEqual([]);
+        expect(itemTagsImpliedBy({ id: 'bare' }, CONCEPTS)).toEqual([]);
+    });
+
+    it('itemTagsImpliedBy: the feature of every realised or needed item concept — the SAME law itemTagFeatures reads', () => {
+        expect(itemTagsImpliedBy(DOUBLE, CONCEPTS)).toEqual([FEATURE]);
+        /* ⛓ the chart's own law, asked of an entry whose library items ARE the realised item concepts' rows */
+        const libraryItems = Object.fromEntries(['sword', 'key']
+            .flatMap((c) => itemRowsOf(CONCEPTS[c])).map((r) => [r.id, r]));
+        expect(itemTagFeatures({ libraryItems, supportedFeatures: [] }, {})).toEqual(itemTagsImpliedBy(DOUBLE, CONCEPTS));
+    });
+
+    it('⛔ no chart statement reads `conceptRealisations` (the row is proposed at the replan)', () => {
+        expect(CAPABILITY_STATEMENTS.flatMap((s) => s.fields).filter((f) => f.startsWith('conceptRealisations'))).toEqual([]);
     });
 });
