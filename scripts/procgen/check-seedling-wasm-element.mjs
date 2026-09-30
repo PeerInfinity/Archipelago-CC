@@ -73,14 +73,15 @@
  *       --skeleton=loopy --biome=post-sword --areas=0
  *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=shieldgate --seed=8 \
  *       --skeleton=empty --biome=post-shield --areas=0
- *   # ⛓ concept library F1's ROAMING ENEMY (three certified subjects, two
- *   #   kinds, both boots; branchy s7 is the level whose bodies COST the walk)
- *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=8 \
- *       --skeleton=empty --biome=pre-sword --areas=0
- *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=7 \
- *       --skeleton=branchy --biome=post-sword --areas=0
- *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=6 \
- *       --skeleton=loopy --biome=pre-sword --areas=0
+ *   # ⛓ concept library F1b's THROUGH-ROOM roam (three certified subjects, two
+ *   #   kinds, both boots; the two post-sword ones are levels whose bodies COST
+ *   #   the walk). F1's three were dead-end rooms and no longer place a roam.
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=10 \
+ *       --skeleton=rooms --biome=post-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=1 \
+ *       --skeleton=bushy --width=14 --height=14 --biome=post-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=10 \
+ *       --skeleton=rooms --width=14 --height=14 --biome=pre-sword --areas=0
  *
  * ⚠ QUOTE THE SPEC: `;` is a shell statement separator.
  */
@@ -288,6 +289,17 @@ if ((placed?.bodies?.length ?? 0) > 0 && (placed.killLockCell ?? null) === null)
         `${placed.bodies.length} roaming body/bodies at `
         + `${placed.bodies.map((b) => `(${b.x},${b.y})`).join(' ')}, killLockCell `
         + `${JSON.stringify(placed.killLockCell ?? null)}, certified ${gen.certified}`);
+    /**
+     * ⛓ CONCEPT LIBRARY F1b (D4) — **AND IT IS A THROUGH-ROOM**: the record
+     * carries `through` and its second mouth, so a witness of a roam room is a
+     * witness of a room whose route CROSSES the bodies (the binding refused it
+     * otherwise, `the-through-room-is-not-on-the-route`).
+     */
+    check(placed.through === true && Boolean(placed.exitMouth),
+        '⛓ …and the blob is a THROUGH-ROOM — both mouths opened and joined',
+        `through ${JSON.stringify(placed.through ?? null)}, entry mouth `
+        + `(${placed.entryMouth?.x},${placed.entryMouth?.y}), exit mouth `
+        + `(${placed.exitMouth?.x},${placed.exitMouth?.y}), exit tunnel ${placed.exitTunnel ?? '—'}`);
 } else if ((placed?.bodies?.length ?? 0) > 0) {
     check(Boolean(placed.killLockCell),
         '⛓⛓ …and the room really carries THIS element\'s payload — its bodies and the '
