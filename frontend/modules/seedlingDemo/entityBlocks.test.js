@@ -14,7 +14,7 @@ import { ENTITY_FAMILY_NAMES } from './levelRun.js';
 import { OBSTACLE_STRATEGIES } from './solverBot.js';
 import {
     AGGRO_KIND_BLOCKS, ENTITY_BLOCKS, FAMILY_BLOCKS, EntityBlocksError, assertEntityBlocks,
-    blocksNoFamilyModels, blocksOnlyAvoided, blocksTheSolverModels,
+    blocksNoFamilyModels, blocksOnlyAvoided, blocksTheSolverModels, certifiableBlocks,
     entityBlocksOf, modellingFamilies,
 } from './entityBlocks.js';
 import {
@@ -227,5 +227,33 @@ describe('D2 — FAMILY_BLOCKS: the run\'s families and the hazard volumes', () 
         for (const [id, fams] of modellingFamilies()) {
             for (const fam of fams) expect(FAMILY_BLOCKS.find((f) => f.family === fam).kind, `${id} via ${fam}`).toBe('entities');
         }
+    });
+});
+
+describe('D3 — certifiability as a lookup', () => {
+    it('a realisation whose blocks are all modelled', () => {
+        expect(certifiableBlocks({ chase: { speed: 0.5 }, contact: { damage: 1 } }))
+            .toEqual({ modelled: ['chase', 'contact'], unmodelled: [], avoidedOnly: [] });
+    });
+
+    it('an unmodelled block — tether is priced only as an avoid volume', () => {
+        expect(certifiableBlocks({ tether: { length: 3 } }))
+            .toEqual({ modelled: [], unmodelled: ['tether'], avoidedOnly: ['tether'] });
+    });
+
+    it('rebound is modelled, through spinnerBodies', () => {
+        expect(certifiableBlocks({ rebound: {} }).modelled).toEqual(['rebound']);
+        expect(modellingFamilies().get('rebound')).toEqual(['spinnerBodies']);
+    });
+
+    it('a mixed realisation keeps its key order and splits', () => {
+        expect(certifiableBlocks({ stomp: {}, hp: {}, beam: {} }))
+            .toEqual({ modelled: ['hp'], unmodelled: ['stomp', 'beam'], avoidedOnly: ['beam'] });
+    });
+
+    it('refuses an undeclared id and a non-object', () => {
+        expect(() => certifiableBlocks({ orbit: {} })).toThrow(/"orbit" is not a block behaviourBlocks.BLOCKS declares/);
+        expect(() => certifiableBlocks(['chase'])).toThrow(EntityBlocksError);
+        expect(() => certifiableBlocks(null)).toThrow(EntityBlocksError);
     });
 });

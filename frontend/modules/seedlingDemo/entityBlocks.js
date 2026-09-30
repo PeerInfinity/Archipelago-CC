@@ -23,7 +23,8 @@
  *
  * `blocksTheSolverModels()` is the answer to *which blocks can the solver
  * reason about today* (live state only — a `hazardVolume` arm is an avoid
- * volume, reported apart by `blocksOnlyAvoided()`).
+ * volume, reported apart by `blocksOnlyAvoided()`); `certifiableBlocks(
+ * realisation.blocks)` asks it of one realisation.
  *
  * ⛔ READ-ONLY FOR THE MODEL AND THE SOLVER. Nothing in the simulation
  * (`levelRun.js`'s import closure) or the solver family (`solverBot.js` +
@@ -442,4 +443,32 @@ export function blocksOnlyAvoided() {
     const modelled = new Set(modellingFamilies().keys());
     return inDeclarationOrder(new Set([...modellingFamilies({ depth: 'avoid' }).keys()]
         .filter((id) => !modelled.has(id))));
+}
+
+/**
+ * ⛓ CERTIFIABILITY AS A LOOKUP: split a realisation's `blocks` (P2's shape,
+ * `{chase: {…}, contact: {…}}`) into the ids the solver models and those it
+ * does not. `avoidedOnly` is the part of `unmodelled` an avoid volume prices
+ * (the solver can keep a route out of it, not reason inside it). An id
+ * `BLOCKS` does not declare is refused by name.
+ *
+ * @param {Record<string, object>} realisationBlocks
+ * @returns {{modelled: string[], unmodelled: string[], avoidedOnly: string[]}} in key order
+ */
+export function certifiableBlocks(realisationBlocks) {
+    if (realisationBlocks === null || typeof realisationBlocks !== 'object' || Array.isArray(realisationBlocks)) {
+        fail('certifiableBlocks: a realisation\'s `blocks` is an object keyed by block id.');
+    }
+    const modelled = new Set(blocksTheSolverModels());
+    const avoided = new Set(blocksOnlyAvoided());
+    const out = { modelled: [], unmodelled: [], avoidedOnly: [] };
+    for (const id of Object.keys(realisationBlocks)) {
+        if (!BLOCKS.has(id)) fail(`certifiableBlocks: "${id}" is not a block behaviourBlocks.BLOCKS declares.`);
+        if (modelled.has(id)) out.modelled.push(id);
+        else {
+            out.unmodelled.push(id);
+            if (avoided.has(id)) out.avoidedOnly.push(id);
+        }
+    }
+    return out;
 }
