@@ -75,7 +75,7 @@ import { CONCEPTS, isConceptRow, realisationsOf } from '../procgenCore/concepts.
 // a config in place are one-line callers over `this`, and the headless preset
 // row calls the same functions.
 import {
-    panelDefaultParams, topDownGridSide,
+    panelDefaultParams, sourceSizedParams,
     effectiveSubstrateMix, effectiveSubstrateQuotas, effectiveHazardOpts,
     activeSubstrateDict, mergedItemLib, resolveVictoryItemId,
     substrateSphereCapable, librarySphereCapable, sphereRegionLibraries,
@@ -5029,16 +5029,14 @@ export class ProcgenPipelineUI {
     // Auto-size the grid to fit the source rules.json's region count.
     // Top-down places one grid cell per non-Menu region (plus extra
     // for teleporter targets that can't fit adjacent), so a square
-    // grid sized to ceil(sqrt(N * 1.5)) (`topDownGridSide`) gives BFS room to lay out
+    // grid sized by `gridDimsForSource` (`topDownGridSide`) gives BFS room to lay out
     // without immediately falling back to teleporters. Floor at the
     // panel's defaults so a small source doesn't shrink the grid.
+    // ⛓ C2: the ONE rule (`sourceSizedParams`), shared with the preset apply
+    // and the headless `buildRunFromState`. Assigned in place: the rendered
+    // grid inputs hold this.params.
     _applyGridDimsFromSource(rulesJson) {
-        const regions = rulesJson?.regions?.['1'] ?? {};
-        const count = Object.keys(regions).length;
-        if (count === 0) return;
-        const dim = topDownGridSide(count);
-        this.params.gridWidth = dim;
-        this.params.gridHeight = dim;
+        Object.assign(this.params, sourceSizedParams(this.params, rulesJson));
     }
 
     // --- helpers ---

@@ -25,6 +25,7 @@ import {
     buildRunFromState, runPresetHeadless, panelDefaultParams, DEFAULT_PARAMS,
     effectiveHazardOpts, activeSubstrateDict,
     GENERATION_COST, substrateGenerationCost, presetSubstrateIds, heavySubstrateIds,
+    gridDimsForSource, pinnedGridKeys, sourceSizedParams, topDownGridSide, TOPDOWN_GRID_KEYS,
 } from './presetRun.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -200,6 +201,64 @@ describe('buildRunFromState — top-down', () => {
     it('refuses a top-down run with no source, in words', () => {
         expect(() => buildRunFromState(bundle))
             .toThrow('top-down needs a source rules.json to realise, and none was given');
+    });
+});
+
+describe('the top-down grid follows the source unless the bundle pins it', () => {
+    /** A source naming `n` regions for slot 1. */
+    const sourceOf = (n) => ({ regions: { 1: Object.fromEntries(Array.from({ length: n }, (_, i) => [`r${i}`, {}])) } });
+    // ⛓ C2: the committed APCalc world, 81 regions — larger than the 3×3 default
+    // grid holds, which is what made a shipped top-down preset stop partial_layout.
+    const APCALC = JSON.parse(readFileSync(join(ROOT,
+        'frontend/presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json'), 'utf8'));
+    const bundle = (params) => ({
+        mode: 'topDown',
+        params,
+        scenario: { items: {}, obstacles: {} },
+        substrateQuotas: {},
+        substrateMix: { maze: 2, text_adventure: 1 },
+        substrateMode: 'mix',
+    });
+
+    it('gridDimsForSource: region count → square side, floored at the default grid (table)', () => {
+        const table = [0, 1, 10, 81, 251].map((n) => [n, gridDimsForSource(sourceOf(n))]);
+        expect(table).toEqual([
+            [0, null],
+            [1, { width: DEFAULT_PARAMS.gridWidth, height: DEFAULT_PARAMS.gridWidth }],
+            [10, { width: 4, height: 4 }],
+            [81, { width: 12, height: 12 }],
+            [251, { width: 20, height: 20 }],
+        ]);
+        expect(gridDimsForSource(sourceOf(81)).width).toBe(topDownGridSide(81));
+    });
+
+    it('pinnedGridKeys names only the grid keys the sparse params carry', () => {
+        expect(pinnedGridKeys(undefined)).toEqual([]);
+        expect(pinnedGridKeys({ seed: 3 })).toEqual([]);
+        expect(pinnedGridKeys({ gridHeight: 5 })).toEqual([TOPDOWN_GRID_KEYS.height]);
+        expect(pinnedGridKeys({ gridWidth: 3, gridHeight: 3 }))
+            .toEqual([TOPDOWN_GRID_KEYS.width, TOPDOWN_GRID_KEYS.height]);
+    });
+
+    it('sourceSizedParams sizes only the unpinned axes, and leaves params alone for a source with no regions', () => {
+        const params = { seed: 1, gridWidth: 3, gridHeight: 3 };
+        expect(sourceSizedParams(params, sourceOf(81), { pinned: ['gridHeight'] }))
+            .toEqual({ seed: 1, gridWidth: 12, gridHeight: 3 });
+        expect(sourceSizedParams(params, sourceOf(0))).toBe(params);
+    });
+
+    it('an unpinned bundle over APCalc lays out on the derived grid and places every region', async () => {
+        const built = buildRunFromState(bundle({ seed: 3 }), { topDownSource: APCALC });
+        expect(built.run.gridDims).toEqual(gridDimsForSource(APCALC));
+        const { stats } = await runPresetHeadless(built);
+        expect(stats.stopReason, `placed ${stats.regionsBuilt} of ${stats.regionsTotal}`).toBe('all_placed');
+    });
+
+    it('a bundle that pins 3×3 keeps it over APCalc — the pin wins, and the layout stops partial', async () => {
+        const built = buildRunFromState(bundle({ seed: 3, gridWidth: 3, gridHeight: 3 }), { topDownSource: APCALC });
+        expect(built.run.gridDims).toEqual({ width: 3, height: 3 });
+        const { stats } = await runPresetHeadless(built);
+        expect(stats.stopReason).toBe('partial_layout');
     });
 });
 

@@ -119,6 +119,61 @@ export function topDownGridSide(regionCount) {
 }
 
 /**
+ * ⛓ The params keys that hold top-down's grid, per axis — the keys a top-down
+ * state may PIN (see `pinnedGridKeys`) and `sourceSizedParams` otherwise fills.
+ */
+export const TOPDOWN_GRID_KEYS = Object.freeze({ width: 'gridWidth', height: 'gridHeight' });
+
+/**
+ * ⛓ The grid a top-down run gives `rulesJson` — `topDownGridSide` over the
+ * regions it names for `playerId` (the slot the panel's routes realise,
+ * `HANDOFF_REALISED_SLOT`), as `{ width, height }`; null when it names none
+ * (there is nothing to size for, and the caller keeps what it has).
+ */
+export function gridDimsForSource(rulesJson, { playerId = '1' } = {}) {
+    const count = Object.keys(rulesJson?.regions?.[playerId] ?? {}).length;
+    if (count === 0) return null;
+    const side = topDownGridSide(count);
+    return { width: side, height: side };
+}
+
+/**
+ * ⛓ The grid keys a preset/persisted bundle PINS: those its (sparse) `params`
+ * carries. A shipped top-down preset pins none (`{ seed: 3 }`), so its grid
+ * follows the source; a bundle that carries `gridWidth` keeps that width
+ * whatever the source — the author's explicit pin wins, by design.
+ * ⚠ A USER preset captures the panel's whole `params` (`capturePresetState`),
+ * so it pins both keys at whatever the grid read when it was saved.
+ */
+export function pinnedGridKeys(bundleParams) {
+    return Object.values(TOPDOWN_GRID_KEYS)
+        .filter((key) => bundleParams?.[key] !== undefined);
+}
+
+/**
+ * ⛓⛓ **THE ONE TOP-DOWN SIZING RULE, APPLIED.** `params` with every grid key
+ * NOT in `pinned` set from `gridDimsForSource(rulesJson)`; `params` itself
+ * (unchanged, same object) when the source names no regions. Called where a
+ * state meets a source: `buildRunFromState` (headless — the every-preset row,
+ * the box gate's oracle), the panel's `_applyPreset` and its source adoption
+ * (`_applyGridDimsFromSource`). `buildTopDownRun` does NOT call it: it reads
+ * the grid verbatim, because the panel hands it the grid inputs' values.
+ *
+ * Measured (C2 W0, 2026-09-30): before this rule reached the preset apply, a
+ * shipped top-down preset laid APCalc's 81 regions on the 3×3 default and
+ * stopped `partial_layout` with 9 built; at the derived 12×12 all 81 place.
+ */
+export function sourceSizedParams(params, rulesJson, { pinned = [] } = {}) {
+    const dims = gridDimsForSource(rulesJson);
+    if (!dims) return params;
+    const out = { ...params };
+    for (const [axis, key] of Object.entries(TOPDOWN_GRID_KEYS)) {
+        if (!pinned.includes(key)) out[key] = dims[axis];
+    }
+    return out;
+}
+
+/**
  * The base default params merged with every registered substrate's declared
  * `defaultProcgenParams` — the `defaults` a sparse preset is merged over.
  */
@@ -435,6 +490,9 @@ export function buildSpiralRun(state, { resolvedLibraries = [] } = {}) {
  * The `buildTopDownEnvelope` input: the source rules.json plus the mix,
  * regionParams (the in-mix substrates' `buildRegionParams` hooks), hazardOpts
  * and sphere log. `sphereLog` null = the source's own embedded log, if any.
+ * The grid is `state.params.gridWidth/gridHeight` VERBATIM (the panel passes
+ * its grid inputs); sizing the grid to the source is `sourceSizedParams`'s job,
+ * done before this is called (`buildRunFromState`, the panel's apply/adoption).
  */
 export function buildTopDownRun(state, { topDownSource = null, sphereLog = null } = {}) {
     if (!topDownSource) {
@@ -568,7 +626,9 @@ export function heavySubstrateIds(bundle) {
  *
  *   sphereGrowth   → buildSphereRun   ({ cfg, prep, itemPool, config })
  *   shuffledSpiral → buildSpiralRun   ({ config, compileIn })
- *   topDown        → buildTopDownRun  (buildTopDownEnvelope's input)
+ *   topDown        → buildTopDownRun  (buildTopDownEnvelope's input), its grid
+ *                    sized to `topDownSource` on every axis the bundle's
+ *                    params do not pin (`sourceSizedParams`, `pinnedGridKeys`)
  *   gridGrowth     → buildGridRun     ({ grow, compile })
  *
  * `ctx.defaults` defaults to panelDefaultParams() (the registry must be
@@ -597,7 +657,13 @@ export function buildRunFromState(bundle, {
     const { mode } = state;
     if (mode === 'sphereGrowth') return { mode, run: buildSphereRun(state, { resolvedLibraries }) };
     if (mode === 'shuffledSpiral') return { mode, run: buildSpiralRun(state, { resolvedLibraries }) };
-    if (mode === 'topDown') return { mode, run: buildTopDownRun(state, { topDownSource, sphereLog }) };
+    if (mode === 'topDown') {
+        // The grid follows the source unless the bundle pins it — what the
+        // panel's _applyPreset does with the same bundle over the same source.
+        const params = sourceSizedParams(state.params, topDownSource,
+            { pinned: pinnedGridKeys(bundle.params) });
+        return { mode, run: buildTopDownRun({ ...state, params }, { topDownSource, sphereLog }) };
+    }
     return { mode, run: buildGridRun(state) };
 }
 
