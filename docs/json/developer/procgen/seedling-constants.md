@@ -157,7 +157,7 @@ Three gates hold the profile together:
 
 **The method.**
 
-- The replay is the JS model over the FAST tier: every tape of at most 600 ticks, which is 102 tapes today.
+- The replay is the JS model over the FAST tier: every tape of at most 600 ticks, which is 102 tapes today. The full tier is below.
 - Each run is a child process that installs its override before importing the model. It runs every tape through `runTapeToStream` with the real level geometry.
 - A CONTROL runs first, twice, with no override. It must be stable, throw nothing, and differ from the committed expectations only where `tapeRunner.test.js` declares it (`r5-l60-kill`).
 - Per key, two magnitudes are tried:
@@ -194,6 +194,40 @@ The mechanisms below are INFERRED from each key's module and the fast tier's tap
 - **The path is never taken.** The frame-time clamps (the model's step is below them), the friction dead zone, level 0's edge clamp, the maximum fall speed, the drown timer, the water and lava no-bounce states, and the RNG constants (no fast tape consumes a draw that the stream shows).
 
 **What a blind key means for a tape-based gate.** A wrong value in a blind key passes every fast-tier replay. Of the 69 blind keys, 34 carry an AS3 anchor. For those keys, the anchor row in `seedlingProfile.test.js` is the only thing that holds the value.
+
+**The full tier.** `--tier=full` measures every committed tape and records into a sibling file, `scripts/procgen/seedling-profile-witnesses-full.json`, so the fast record and its rows above are unchanged. The control's declared divergers are `tapeRunner.test.js`'s whole `EXPECTED_TO_DIVERGE`: `r5-l60-kill` plus the three `r5-bobboss-*` tapes. The guard requires the full file to name every key as well, and `--check` checks both files.
+
+The measurement was taken at `e83441d` with a clean tree, 154 tapes, 4 jobs and 1651 s. **70 keys move and 57 are corpus-blind.**
+
+| class | moves | corpus-blind |
+|---|---|---|
+| physics | 32 | 15 |
+| rule | 38 | 42 |
+
+No key that moves on the fast tier is blind on the full one. The campaign tapes woke 12 fast-blind keys:
+
+| keys | what they move | tapes |
+|---|---|---|
+| `stairSpeed` | streams at +1 ULP (10 tapes); at ×1.1, 3 move and 7 throw | the r2–r4 spear, dark-shield, health and full walks, and `r5-feather` |
+| `slidingSpeed` | a stream at +1 ULP; a throw at ×1.1 | `r5-d5-conch` |
+| `slidingFriction`, `iceState` | throws only | `r5-d5-conch` |
+| `bridgeState` | throws only: the changed sentinel leaves a Bridge tile unmodelled | 8 tapes: the r2–r4 spear, approach, health and full walks |
+| `screenH`, `cameraSpeedDivisor` | streams at ×1.1 | `r5-l40-part5` and its control |
+| `fpElapsed` | throws at ×1.1 | `r5-l40-part5` and its control |
+| `xorMask`, `hashC3` | streams at ×1.1 | `r6-owl-kill` and `r6-owl-control` |
+| `hashC2`, `rockFrequency` | throws at ×1.1, both the same one (the player inside a pod's cell at tick 696) | `r6-owl-kill` and `r6-owl-control` |
+
+For the camera, clamp and RNG keys, "no fast tape takes the path" was right. For the ice and stairs keys, "no fixture carries the body" was right. `rockFrequency` wakes in the owl fight, not the final boss. It throws exactly where `hashC2` does, so the inference is that it changes the RNG draws there. That is inferred, not measured. The other eight final-boss keys stay blind, and so do all of these:
+
+- the spear and dark-sword keys;
+- the bridge timers;
+- the fire pushable;
+- the wand and fire keys;
+- enemy hit points and invulnerability;
+- dialogue;
+- the rest of the camera and the RNG.
+
+57 keys are blind on every committed tape.
 
 ## The census
 
