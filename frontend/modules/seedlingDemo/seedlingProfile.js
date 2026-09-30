@@ -1,12 +1,25 @@
 /**
  * seedlingDemo/seedlingProfile — **THE ONE REGISTRY OF SEEDLING'S PHYSICS AND
- * RULE CONSTANTS** (engine-prep arc, slice A2; plan
+ * RULE CONSTANTS** (engine-prep arc, slices A2 and A3; plan
  * `seedling-engine-prep-plan.md` §7). The convention is RWK's physics
- * profile, without overrides: every value below is the literal its declaring
- * module used to spell, and every declaring module still exports its old name,
- * now read from here (`export const WALK_SPEED = PROFILE.walkSpeed; // dMS`).
- * Moving a declaration moved no arithmetic, so every committed tape,
- * expectation and solve is byte-identical across the move.
+ * profile: every DEFAULT below is the literal its declaring module used to
+ * spell, and every declaring module still exports its old name, now read
+ * from here (`export const WALK_SPEED = PROFILE.walkSpeed; // dMS`). Moving a
+ * declaration moved no arithmetic, so every committed tape, expectation and
+ * solve is byte-identical across the move.
+ *
+ * ── OVERRIDES (A3) ─────────────────────────────────────────────────────
+ *
+ * `PROFILE` is the defaults with `globalThis.__SEEDLING_PROFILE__` applied,
+ * read ONCE, here, at evaluation (`profileOverrides.js` has the rules and
+ * the refusals). With the global undefined, `PROFILE` IS
+ * `PROFILE_DEFAULTS` — the same frozen object — and nothing below moves.
+ * An override is process-wide: it must be installed before the first import
+ * of any module that reads the profile, because they copy their constants
+ * out at their own evaluation. `PROFILE_SOURCE` names where the live profile
+ * came from, `PROFILE_OVERRIDES` what was set, `PROFILE_DEFAULTED` how many
+ * keys were left at default; `profileDump()`, `profileMd5()` and
+ * `profileStamp()` describe the LIVE profile.
  *
  * ── WHAT IS IN IT ──────────────────────────────────────────────────────
  *
@@ -56,19 +69,41 @@
  *   `profileStamp()`  `{id, md5}`, the shape of a v13 tape's model-only
  *                     `profile` field (`tapeEnvelope.validateProfile`).
  *
- * Dependency-free apart from `md5.js`, and browser-safe (no `fs`, no
- * `process`): the dependency-free modules (`tapeFormat.js`, `levelWorld.js`,
+ * Dependency-free apart from `md5.js` and `profileOverrides.js`, and
+ * browser-safe (no `fs`, no `process`): the dependency-free modules (`tapeFormat.js`, `levelWorld.js`,
  * `flashPanel/seedlingSemantics.js`) import it without taking on anything
  * else, and since it imports nothing of the simulation no cycle can form.
  */
 
 import { md5 } from './md5.js';
+import { PROFILE_GLOBAL, applyOverrides } from './profileOverrides.js';
 
-/** The profile's NAME. The md5 is its identity. */
-export const PROFILE_ID = 'seedling-js-2026';
+/** The compiled-in profile's NAME. The md5 is its identity. */
+export const PROFILE_DEFAULT_ID = 'seedling-js-2026';
 
-/** Every physics and rule constant, by key. See the docblock. */
-export const PROFILE = Object.freeze({
+/**
+ * The formula flags (RWK: flag 0 is the original path). NONE EXISTS YET: the
+ * section is reserved, and the loader refuses every flag key it is handed.
+ */
+export const PROFILE_FLAGS = Object.freeze([]);
+
+/** The loader's result — set once, by the `PROFILE` declaration below. */
+let LOADED = null;
+
+/** Apply the override the global holds (if any) to the compiled-in defaults. */
+function load(defaults) {
+    LOADED = applyOverrides(defaults, globalThis[PROFILE_GLOBAL], {
+        defaultId: PROFILE_DEFAULT_ID,
+        knownFlags: PROFILE_FLAGS.map((f) => f.flag),
+    });
+    return LOADED.profile;
+}
+
+/**
+ * Every physics and rule constant, by key — the LIVE profile. The literals
+ * are the compiled-in defaults (`PROFILE_DEFAULTS`); see the docblock.
+ */
+export const PROFILE = load(Object.freeze({
     // ── seedlingSemantics.js
     seedlingTileSize: 16,
     // ── bossTotemFight.js
@@ -220,7 +255,26 @@ export const PROFILE = Object.freeze({
     levelCount: 116,
     // ── wandVerb.js
     wandSpeed: 3,
-});
+}));
+
+/**
+ * What the loader decided. `PROFILE_DEFAULTS` is the frozen compiled-in
+ * table (`=== PROFILE` when nothing was overridden); `PROFILE_ID` the live
+ * name (the override's `id`, else the default's); `PROFILE_SOURCE`
+ * `'compiled-in default'` or `'override:<id>'` / `'override:inline'`;
+ * `PROFILE_OVERRIDES` every key the override SET, `{key: value}` (a set equal
+ * to its default still counts); `PROFILE_FLAGS_SET` the flags it set.
+ */
+export const {
+    defaults: PROFILE_DEFAULTS,
+    id: PROFILE_ID,
+    source: PROFILE_SOURCE,
+    overrides: PROFILE_OVERRIDES,
+    flags: PROFILE_FLAGS_SET,
+} = LOADED;
+
+/** How many keys were left at their compiled-in default. */
+export const { length: PROFILE_DEFAULTED } = LOADED.defaulted;
 
 /** One metadata record per `PROFILE` key, in the same order. */
 export const PROFILE_FIELDS = Object.freeze([
@@ -395,4 +449,22 @@ export function profileMd5(profile = PROFILE) {
 /** `{id, md5}` — what a v13 tape's `profile` field carries. */
 export function profileStamp() {
     return { id: PROFILE_ID, md5: profileMd5() };
+}
+
+/** The keys left at their compiled-in default, in `PROFILE` order. */
+export function profileDefaultedKeys() {
+    return [...LOADED.defaulted];
+}
+
+/**
+ * RWK's announcements, as lines: the provenance, one `set <key>=<value>` per
+ * key the override set, and the defaulted count. The module never prints;
+ * a runner that installed an override prints these.
+ */
+export function profileAnnouncements() {
+    return [
+        `profile: ${PROFILE_SOURCE} (id ${PROFILE_ID}, md5 ${profileMd5()})`,
+        ...Object.entries(PROFILE_OVERRIDES).map(([k, v]) => `set ${k}=${JSON.stringify(v)}`),
+        `defaulted: ${PROFILE_DEFAULTED} of ${Object.keys(PROFILE).length} keys`,
+    ];
 }

@@ -1444,6 +1444,7 @@ frontend/modules/seedlingDemo/tapeEnvelope.js|*|*,structural,,,default: the enve
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|inclusiveToHalfOpen|1,rule,magnitude,,the inclusive-to-half-open bridge: an engine span [a b] is the envelope span {from a; to b+1} (tape-envelope.md § 4)
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|halfOpenToInclusive|1,rule,magnitude,,the reverse bridge: to - 1 (tape-envelope.md § 4)
 frontend/modules/seedlingDemo/md5.js|*|*,structural,,,"the profile md5 digest: RFC 1321 round constants, shifts, byte arithmetic"
+frontend/modules/seedlingDemo/profileOverrides.js|*|*,structural,,,the profile override loader: JSON text scanning indices and offsets
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

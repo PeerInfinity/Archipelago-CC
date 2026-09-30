@@ -6,11 +6,15 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
-    PROFILE, PROFILE_FIELDS, PROFILE_ID, profileDump, profileMd5, profileStamp,
+    PROFILE, PROFILE_DEFAULTED, PROFILE_DEFAULTS, PROFILE_DEFAULT_ID, PROFILE_FIELDS, PROFILE_FLAGS,
+    PROFILE_ID, PROFILE_OVERRIDES, PROFILE_SOURCE, profileDump, profileMd5, profileStamp,
 } from './seedlingProfile.js';
+import {
+    DEFAULT_SOURCE, PROFILE_GLOBAL, ProfileOverrideError, applyOverrides, duplicateKeys,
+} from './profileOverrides.js';
 import { validateProfile } from './tapeEnvelope.js';
 
 const CLASSES = new Set(['physics', 'rule']);
@@ -167,5 +171,162 @@ describe('seedlingProfile — every AS3 anchor resolves to a literal EQUAL to th
         // must say how (`as3Match`), not be skipped silently
         expect(unresolved).toEqual([]);
         expect({ anchored: anchored.length, checked }).toEqual({ anchored: 63, checked: 63 });
+    });
+});
+
+// ── A3: overrides ────────────────────────────────────────────────────
+
+const DEFAULT_MD5 = 'be8b983bc252c0ac33effa9ede59bc6e';
+/** The next double above `x` (x > 0): +1 ULP. */
+const nextUp = (x) => {
+    const b = new DataView(new ArrayBuffer(8));
+    b.setFloat64(0, x);
+    b.setBigUint64(0, b.getBigUint64(0) + 1n);
+    return b.getFloat64(0);
+};
+const OPTS = { defaultId: PROFILE_DEFAULT_ID, knownFlags: [] };
+const refusal = (override) => {
+    try { applyOverrides(PROFILE_DEFAULTS, override, OPTS); } catch (e) {
+        expect(e).toBeInstanceOf(ProfileOverrideError);
+        return e.message;
+    }
+    throw new Error('not refused');
+};
+
+/**
+ * A FRESH module registry with `override` installed in the global — the
+ * load-time semantics under test: the profile and every module that copies
+ * a constant out of it evaluate after the global is set.
+ */
+async function withOverride(override, ...modules) {
+    vi.resetModules();
+    globalThis[PROFILE_GLOBAL] = override;
+    try {
+        return await Promise.all(['./seedlingProfile.js', ...modules].map((m) => import(m)));
+    } finally {
+        delete globalThis[PROFILE_GLOBAL];
+    }
+}
+
+describe('seedlingProfile — overrides (A3): no override is byte-identical', () => {
+    afterEach(() => { delete globalThis[PROFILE_GLOBAL]; });
+
+    it('⚖ WITH NO OVERRIDE, PROFILE IS THE DEFAULTS OBJECT ITSELF — every value Object.is, the md5 pinned', () => {
+        expect(PROFILE).toBe(PROFILE_DEFAULTS);
+        expect(Object.isFrozen(PROFILE_DEFAULTS)).toBe(true);
+        for (const k of Object.keys(PROFILE_DEFAULTS)) expect(Object.is(PROFILE[k], PROFILE_DEFAULTS[k]), k).toBe(true);
+        expect(profileMd5()).toBe(DEFAULT_MD5);
+        expect(PROFILE_ID).toBe('seedling-js-2026');
+        expect(PROFILE_ID).toBe(PROFILE_DEFAULT_ID);
+        expect(PROFILE_SOURCE).toBe('compiled-in default');
+        expect(PROFILE_SOURCE).toBe(DEFAULT_SOURCE);
+        expect(PROFILE_OVERRIDES).toEqual({});
+        expect(PROFILE_DEFAULTED).toBe(127);
+        expect(PROFILE_FLAGS).toEqual([]); // the reserved flags section: empty
+    });
+
+    it('a fresh load with the global undefined is the same profile again', async () => {
+        const [m] = await withOverride(undefined);
+        expect(m.PROFILE).toBe(m.PROFILE_DEFAULTS);
+        expect(m.profileMd5()).toBe(DEFAULT_MD5);
+        expect(m.profileStamp()).toEqual({ id: 'seedling-js-2026', md5: DEFAULT_MD5 });
+    });
+});
+
+describe('seedlingProfile — overrides (A3): the load-time semantics', () => {
+    afterEach(() => { delete globalThis[PROFILE_GLOBAL]; });
+
+    it('an override moves PROFILE.walkSpeed AND playerPhysicsV1.WALK_SPEED (the module copied it at ITS load)', async () => {
+        const v = nextUp(0.8);
+        expect(v).not.toBe(0.8);
+        const [m, phys] = await withOverride({ walkSpeed: v }, './playerPhysicsV1.js');
+        expect(m.PROFILE.walkSpeed).toBe(v);
+        expect(phys.WALK_SPEED).toBe(v);
+        expect(m.PROFILE_DEFAULTS.walkSpeed).toBe(0.8); // the defaults are never edited
+        expect(Object.isFrozen(m.PROFILE)).toBe(true);
+        expect(Object.keys(m.PROFILE)).toEqual(Object.keys(PROFILE));
+        expect(m.profileMd5()).not.toBe(DEFAULT_MD5);
+        expect(m.profileMd5()).toBe(profileMd5({ ...PROFILE, walkSpeed: v }));
+        expect(validateProfile(m.profileStamp())).toEqual({ id: 'seedling-js-2026', md5: m.profileMd5() });
+        expect(m.PROFILE_SOURCE).toBe('override:inline');
+        expect(m.PROFILE_OVERRIDES).toEqual({ walkSpeed: v });
+        expect(m.PROFILE_DEFAULTED).toBe(126);
+        expect(m.profileDefaultedKeys()).not.toContain('walkSpeed');
+        expect(m.profileAnnouncements()).toContain(`set walkSpeed=${JSON.stringify(v)}`);
+        // ...and a module imported in THIS (unreset) registry kept the default
+        expect(PROFILE.walkSpeed).toBe(0.8);
+    });
+
+    it('JSON text is accepted; an `id` names the profile and the provenance', async () => {
+        const [m] = await withOverride('{"id": "walk-plus", "walkSpeed": 0.9, "flags": {}}');
+        expect(m.PROFILE.walkSpeed).toBe(0.9);
+        expect(m.PROFILE_ID).toBe('walk-plus');
+        expect(m.PROFILE_SOURCE).toBe('override:walk-plus');
+        expect(m.profileStamp()).toEqual({ id: 'walk-plus', md5: m.profileMd5() });
+        expect(m.profileAnnouncements()[0]).toBe(`profile: override:walk-plus (id walk-plus, md5 ${m.profileMd5()})`);
+    });
+
+    it('⚖ A NO-OP OVERRIDE IS STILL A SET (RWK announces every set): md5 unchanged, 1 set, 126 defaulted', async () => {
+        const [m] = await withOverride({ walkSpeed: 0.8 });
+        expect(m.profileMd5()).toBe(DEFAULT_MD5); // the md5 says the profile did not move
+        expect(m.PROFILE_OVERRIDES).toEqual({ walkSpeed: 0.8 });
+        expect(m.PROFILE_DEFAULTED).toBe(126);
+        expect(m.PROFILE_SOURCE).toBe('override:inline');
+        expect(m.PROFILE).not.toBe(m.PROFILE_DEFAULTS);
+        expect(m.PROFILE).toEqual(m.PROFILE_DEFAULTS);
+        expect(m.profileAnnouncements()).toEqual([
+            `profile: override:inline (id seedling-js-2026, md5 ${DEFAULT_MD5})`,
+            'set walkSpeed=0.8',
+            'defaulted: 126 of 127 keys',
+        ]);
+    });
+
+    it('a refused override fails the IMPORT, by name', async () => {
+        vi.resetModules();
+        globalThis[PROFILE_GLOBAL] = { walkSped: 0.8 };
+        await expect(import('./seedlingProfile.js')).rejects.toThrow(/unknown key "walkSped"/);
+    });
+});
+
+describe('seedlingProfile — overrides (A3): every refusal names what it refused', () => {
+    it('an unknown key — named, with the known keys listed (mutant (a))', () => {
+        const msg = refusal({ walkSped: 0.8 });
+        expect(msg).toMatch(/^profile override: unknown key "walkSped"; the known keys are: /);
+        for (const k of Object.keys(PROFILE)) expect(msg).toContain(k);
+    });
+
+    it('a duplicate key in JSON text (JSON.parse would silently keep the last)', () => {
+        expect(refusal('{"walkSpeed": 0.8, "stairSpeed": 1, "walkSpeed": 0.9}'))
+            .toBe('profile override: duplicate key "walkSpeed"');
+        expect(duplicateKeys('{"a": 1, "flags": {"x": 0, "x": 1}, "s": "a,\\"b\\"", "b": [{"a": 1}]}'))
+            .toEqual(['flags.x']);
+        expect(duplicateKeys('{"a": 1, "b": {"a": 2}}')).toEqual([]);
+    });
+
+    it('a nested value, a string, a boolean, null, NaN and Infinity', () => {
+        expect(refusal({ walkSpeed: { v: 1 } })).toMatch(/"walkSpeed" is a nested value/);
+        expect(refusal({ walkSpeed: [1] })).toMatch(/"walkSpeed" is a nested value/);
+        expect(refusal({ walkSpeed: '0.8' })).toMatch(/"walkSpeed" must be a number, got "0.8"/);
+        expect(refusal({ walkSpeed: true })).toMatch(/"walkSpeed" must be a number, got true/);
+        expect(refusal({ walkSpeed: null })).toMatch(/"walkSpeed" must be a number, got null/);
+        expect(refusal({ walkSpeed: NaN })).toMatch(/"walkSpeed" must be a finite number, got NaN/);
+        expect(refusal({ walkSpeed: -Infinity })).toMatch(/"walkSpeed" must be a finite number, got -Infinity/);
+    });
+
+    it('any flag — none exists yet; `flags: {}` is accepted', () => {
+        expect(refusal({ flags: { v2Friction: 1 } }))
+            .toBe('profile override: unknown flag "v2Friction"; the known flags are: (none — no flag exists yet)');
+        expect(refusal({ flags: 1 })).toMatch(/"flags" must be an object/);
+        expect(applyOverrides(PROFILE_DEFAULTS, { flags: {} }, OPTS).flags).toEqual({});
+    });
+
+    it('a bad id, a non-object and text that is not JSON', () => {
+        expect(refusal({ id: '' })).toMatch(/"id" must be a non-empty string/);
+        expect(refusal({ id: 7 })).toMatch(/"id" must be a non-empty string/);
+        expect(refusal([])).toMatch(/must be a flat JSON object/);
+        expect(refusal(null)).toMatch(/must be a flat JSON object/);
+        expect(refusal(0.8)).toMatch(/must be a flat JSON object/);
+        expect(refusal('{"walkSpeed": 0.8,}')).toMatch(/^profile override: not JSON: /);
+        expect(refusal('[1]')).toMatch(/must be a flat JSON object/);
     });
 });
