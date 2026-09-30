@@ -33,9 +33,12 @@
  *                     `TILE.w`); `alsoIn` names the other declarations.
  *                     Values keep their source spelling (`0x48000000`).
  *   `PROFILE_FIELDS`  one record per key, in `PROFILE`'s order: the census
- *                     class and kind, the AS3 anchor (`File.as:name`, with
- *                     `as3Match: 'arg:<n>'` when the anchor is a constructor
- *                     call's n-th argument rather than a literal), the
+ *                     class and kind, the AS3 anchor (`File.as:name`), how
+ *                     the anchor's literal is found when it is not a
+ *                     numeric `const`/`var` declaration (`as3Match`:
+ *                     `'arg:<n>'` a constructor call's n-th argument,
+ *                     `'param'` a parameter default, `'after:<text>'` the
+ *                     number right after the one occurrence of `<text>`), the
  *                     declaration it came from, and the census note
  *                     (`review` is true exactly when that note starts
  *                     `REVIEW:`). Strings and booleans only — no numbers, so
@@ -259,7 +262,7 @@ export const PROFILE_FIELDS = Object.freeze([
     { key: 'pickupTextSpeed', class: 'rule', kind: 'magnitude', as3: 'Pickups/Pickup.as:DEF_TEXT_SPEED', source: 'dialogue.js:PICKUP_TEXT_SPEED', review: false, note: '' },
     { key: 'pickupLineLength', class: 'rule', kind: 'bound', as3: '', source: 'dialogue.js:PICKUP_LINE_LENGTH', review: true, note: 'REVIEW: text layout but the wrap changes page .length which gates page advance and ceremony ticks' },
     { key: 'initialFramesThisCharacter', class: 'rule', kind: 'magnitude', as3: 'Game.as:framesThisCharacter', source: 'dialogue.js:INITIAL_FRAMES_THIS_CHARACTER', review: false, note: '' },
-    { key: 'npcLineLengthDefault', class: 'rule', kind: 'bound', as3: 'NPCs/NPC.as:_lineLength', source: 'dialogue.js:NPC_LINE_LENGTH_DEFAULT', review: true, note: 'REVIEW: text layout but wrap length decides page lengths and so dialogue ticks' },
+    { key: 'npcLineLengthDefault', class: 'rule', kind: 'bound', as3: 'NPCs/NPC.as:_lineLength', as3Match: 'param', source: 'dialogue.js:NPC_LINE_LENGTH_DEFAULT', review: true, note: 'REVIEW: text layout but wrap length decides page lengths and so dialogue ticks' },
     // ── endingChain.js
     { key: 'talkRange', class: 'rule', kind: 'bound', as3: 'NPCs/NPC.as:talkRange', source: 'endingChain.js:TALK_RANGE', review: false, note: 'origin-to-origin talk circle' },
     { key: 'coverAlphaRate', class: 'rule', kind: 'magnitude', as3: 'Pickups/Seed.as:coverAlphaRate', source: 'endingChain.js:COVER_ALPHA_RATE', review: false, note: 'cover fade accumulation = 200 frozen frames' },
@@ -298,7 +301,7 @@ export const PROFILE_FIELDS = Object.freeze([
     { key: 'waterSpeed', class: 'physics', kind: 'magnitude', as3: 'Player.as:dMSwater', source: 'playerPhysicsV1.js:WATER_SPEED', review: false, note: '' },
     { key: 'slidingSpeed', class: 'physics', kind: 'magnitude', as3: 'Player.as:slidingSpeed', source: 'playerPhysicsV1.js:SLIDING_SPEED', alsoIn: ['playerPhysicsV2.js:SLIDING_SPEED'], review: false, note: '' },
     { key: 'slidingFriction', class: 'physics', kind: 'magnitude', as3: 'Player.as:slidingFriction', source: 'playerPhysicsV1.js:SLIDING_FRICTION', alsoIn: ['playerPhysicsV2.js:SLIDING_FRICTION'], review: false, note: '' },
-    { key: 'moveSpeeds25Divisor', class: 'physics', kind: 'derivation', as3: 'Player.as:moveSpeeds', source: 'playerPhysicsV1.js:MOVE_SPEEDS[25]', review: false, note: 'WATER_SPEED / 2 for the waterfall row' },
+    { key: 'moveSpeeds25Divisor', class: 'physics', kind: 'derivation', as3: 'Player.as:moveSpeeds', as3Match: 'after:dMSwater/', source: 'playerPhysicsV1.js:MOVE_SPEEDS[25]', review: false, note: 'WATER_SPEED / 2 for the waterfall row' },
     { key: 'hitboxWidth', class: 'physics', kind: 'magnitude', as3: 'Player.as:normalHitbox', as3Match: 'arg:2', source: 'playerPhysicsV1.js:HITBOX.width', review: false, note: 'normalHitbox setHitbox(4 5 2 2)' },
     { key: 'hitboxHeight', class: 'physics', kind: 'magnitude', as3: 'Player.as:normalHitbox', as3Match: 'arg:3', source: 'playerPhysicsV1.js:HITBOX.height', review: false, note: 'normalHitbox setHitbox(4 5 2 2)' },
     { key: 'tileW', class: 'physics', kind: 'magnitude', as3: 'Scenery/Tile.as:w', source: 'playerPhysicsV1.js:TILE.w', alsoIn: ['wandShot.js:TILE_W'], review: false, note: 'the tile width (wandShot: travel = tilesMove * Tile.w)' },
@@ -307,7 +310,7 @@ export const PROFILE_FIELDS = Object.freeze([
     { key: 'spawnOffsetYDivisor', class: 'physics', kind: 'derivation', as3: '', source: 'playerPhysicsV1.js:SPAWN_OFFSET.y', review: false, note: 'TILE.w / 2 and TILE.h / 2 spawn centring (Player.as:357)' },
     { key: 'level0WorldWidth', class: 'physics', kind: 'bound', as3: '', source: 'playerPhysicsV1.js:LEVEL0_WORLD.width', review: false, note: 'level 0 pixel size for the position clamp' },
     { key: 'level0WorldHeight', class: 'physics', kind: 'bound', as3: '', source: 'playerPhysicsV1.js:LEVEL0_WORLD.height', review: false, note: 'level 0 pixel size for the position clamp' },
-    { key: 'checkOffsetYInset', class: 'physics', kind: 'derivation', as3: 'Player.as:checkOffsetY', source: 'playerPhysicsV1.js:CHECK_OFFSET_Y', review: false, note: '-HITBOX.originY + HITBOX.height - 2' },
+    { key: 'checkOffsetYInset', class: 'physics', kind: 'derivation', as3: 'Player.as:checkOffsetY', as3Match: 'after:checkOffsetY = -originY + height - ', source: 'playerPhysicsV1.js:CHECK_OFFSET_Y', review: false, note: '-HITBOX.originY + HITBOX.height - 2' },
     // ── playerPhysicsV2.js
     { key: 'initialTerrainState', class: 'rule', kind: 'sentinel', as3: 'Player.as:_state', source: 'playerPhysicsV2.js:INITIAL_TERRAIN_STATE', review: false, note: 'Ground state' },
     { key: 'pitState', class: 'rule', kind: 'sentinel', as3: '', source: 'playerPhysicsV2.js:PIT_STATE', review: false, note: 'Tile.t pit' },
