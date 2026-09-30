@@ -1477,19 +1477,11 @@
     </details>
   </div>
 </main>
+<!-- ?profile=<path> installs a physics profile override before any module loads (profileBoot.js); without it, it does nothing -->
+<script src="./profileBoot.js"></script>
 <script type="module">
-  // ?profile=<path> installs a physics profile override before the model loads (profileBoot.js)
-  import { bootWithProfile } from './profileBoot.js';
-  let entry;
-  try {
-    entry = await bootWithProfile(new URL('./watchViewer.js', import.meta.url).href);
-  } catch (e) {
-    const status = document.getElementById('status');
-    status.className = 'bad';
-    status.textContent = e.message;
-    throw e;
-  }
-  entry.main();
+  import { main } from './watchViewer.js';
+  main();
 </script>
 </body>
 </html>
