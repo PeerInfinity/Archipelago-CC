@@ -95,12 +95,13 @@ describe('SWIM T1 D1 — hazardCells(record, items): one arm per item', () => {
         expect(h.has('2,3')).toBe(true);
         expect(h.has('7,7')).toBe(true);
     });
-    it('byte-inertia: no biome but post-swim grants canSwim or hasDarkSuit, so every other room reads the item-less set', () => {
+    // ⛓ SWIM T4 — `post-feather` (post-swim + the feather) joined the gen room and grants canSwim too.
+    it('byte-inertia: no biome but post-swim and post-feather grants canSwim or hasDarkSuit, so every other room reads the item-less set', () => {
         const granting = Object.entries(GEN_ROOM_BIOMES)
             .filter(([, p]) => p.items?.canSwim || p.items?.hasDarkSuit).map(([name]) => name);
-        expect(granting).toEqual(['post-swim']);
+        expect(granting).toEqual(['post-swim', 'post-feather']);
         for (const [name, p] of Object.entries(GEN_ROOM_BIOMES)) {
-            if (name !== 'post-swim') expect(hazardCells(record, p.items ?? null), name).toEqual(hazardCells(record));
+            if (!granting.includes(name)) expect(hazardCells(record, p.items ?? null), name).toEqual(hazardCells(record));
         }
     });
 });
