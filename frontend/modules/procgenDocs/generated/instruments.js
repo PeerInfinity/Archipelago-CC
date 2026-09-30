@@ -119,7 +119,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 4,
+            "count": 5,
             "id": "no prefix"
         },
         {
@@ -164,7 +164,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "run"
         },
         {
@@ -209,13 +209,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 277,
+        "blockStyle": 279,
         "browser": 85,
         "cited": 119,
-        "files": 288,
+        "files": 290,
         "lineStyle": 11,
-        "withDocblock": 288,
-        "withFlags": 209
+        "withDocblock": 290,
+        "withFlags": 211
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10125,6 +10125,44 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/run-seedling-director.mjs"
         },
         {
+            "argvHelpers": [
+                "load"
+            ],
+            "browser": false,
+            "category": "run",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "expect",
+                "profile"
+            ],
+            "file": "run-seedling-tape.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "expect"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "seedlingProfileLoader.mjs",
+                    "name": "list-defaulted"
+                },
+                {
+                    "from": "seedlingProfileLoader.mjs",
+                    "name": "profile"
+                }
+            ],
+            "oneLiner": "run-seedling-tape — replay one Seedling tape through the JS model and print its observation stream's md5 and the live profile stamp (engine-prep A3).",
+            "path": "scripts/procgen/run-seedling-tape.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "seedling",
@@ -10179,6 +10217,40 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "seedling-wasm-readme — **WRITE (AND GATE) THE seedling-wasm README'S BUILD TABLE FROM `builds.json`** (SEEDLING ORIGINAL WASM slice W2, ⚖ user 2026-09-07: the build table *\"GENERATED from `builds.json` with a check gate\"*, and *\"I want to fix the false and stale things in the readme\"*).",
             "path": "scripts/procgen/seedling-wasm-readme.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "no prefix",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "list-defaulted",
+                "profile"
+            ],
+            "file": "seedlingProfileLoader.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "list-defaulted"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "profile"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "seedlingProfileLoader — install a Seedling physics profile override from a file, for a node process (engine-prep A3).",
+            "path": "scripts/procgen/seedlingProfileLoader.mjs"
         },
         {
             "argvHelpers": [],
