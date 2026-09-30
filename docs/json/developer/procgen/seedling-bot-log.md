@@ -10593,6 +10593,89 @@ the goal round the outside of any blob, so a through-room there is not a cut.
 `empty` places none of its 24 cells. `generateGenRoom` over drawn seeds 1-300
 now holds a roaming body in 0 rooms (F1: 209 pre-sword and 201 post-sword). The report is `CC/docs/cloud-reports/concept-library-f1b.md`.
 
+### Seedling substrate U1-swim — the solver batch after the engine preparation (2026-09-30)
+
+The first slice to edit the solver family since the engine-prep freeze. Every
+new simulation symbol went through the door (`solverView.js`: `fallDestination`,
+`groupResponders`, `fallRocksArmedBy`, `sweepAxis`) and every new member is a
+surface row (`world.spinners`); the table went 179 → 184 rows, `--check` GREEN.
+No simulation file, tape, `campaign-frontier.json`, AS3, wasm or gitlink moved.
+The report is `CC/docs/cloud-reports/seedling-swim-u1.md`.
+
+**W0 — the stale editor-refusal gate** (`check-seedling-editor-refusal.mjs`).
+Row 1 drove L16 → exit 352,80, which SOLVES since the L16 rope slice; the script
+then threw on `dangerSources.length` and rows 2–4 never ran. Now a missing field
+is a FAIL line (measured: row 1 pointed back at L16 → 5 FAIL, 15 PASS, exit 1),
+and row 1 is re-aimed by measurement at L71 (boot `l71-shieldlock-open`, the
+committed tape whose own boot is L71@256,256) → teleporter@304,96: the ladder is
+EXHAUSTED past `spinningaxe@256,144`, 5 queries, 0 dangerous. The candidates
+refused: L8 from the re-pointed boot starts on stone and from its own boot
+solves; L16's three exits all solve; `chaserRoomVerdict` refuses only L8
+atlas-wide. Predicted 20/0, measured ALL CHECKS PASSED 20/0.
+
+**D1 — `reach-pit`.** `assertGoal` accepts `{kind: 'reach-pit', pit: {tx, ty,
+x, y}}`; the executor exempts that one tile in every plan the goal makes (a
+per-goal `goalPlanExtra = {allowPit}`), accepts the edge on the tile (`drive`'s
+`crossTo.pit`), lands by `fallDestination` and coasts the transport. Unit row:
+L30 pit (3,14) from `r3-collect-torch` + sword SOLVES in 178 t (break the rock
+ON the tile, edge at t=98, 80-tick transport) and ends in L31 at (56,552), the
+ctor plus the half tile. Mutant (a), `allowPit` dropped: the row reds, the
+planner's sentence names *"pit Pit (t=6) at tile (3,14)"*. ⚠ The brief's unit
+row (L12 from (16,80)) is a ROOM question, not a goal-kind one: the corridor
+crosses `shieldlocknorm@288,704` (no shield staged) and, with the route's Red
+Key and Shield (and even the conch) granted, the keylock stance at
+`bosslock@416,240` is EXHAUSTED on `puncher@416,256`. Survey step 24 now
+refuses on the shield, by name.
+
+**D2 — `skirt` (R-h).** `refineStrategy` turns `hold` into `skirt` for a
+`button` whose group has no opener and ≥ 1 fall-responder rock
+(`fallTrapPresser`; atlas-wide exactly L29 `button@112,128` and L74
+`button@288,128`); `STRATEGY_REFINEMENTS` and `R8_STRATEGY_EXECUTORS` carry the
+row. The lane is the press rect's edge plus the hitbox offsets: in L29's 112..128
+shaft it is x = 114 or 126 EXACTLY (zero slack), and only the east lane has a
+wall to lean on from the stance row ((6,9) is open). ⛔ **The model keeps
+sub-pixel remainders on a blocked sweep**, so leaning cannot make x integral: a
+lean from the stance stalled at x = 125.97137961649308, vx 1.15, the box 0.03 px
+inside the press rect. The executor therefore ALIGNS x by a bounded search on
+the transcription's own x-axis step (`applyInput`/`applyFriction`/`sweepAxis`,
+run and compared exactly), passes with the vertical key alone, and verifies
+every tick (`fallRocksArmedBy`) and after (the rock stands, the open/latched sets
+unchanged). From a boot ON the lane the solve skirts in 28 t, collects the Green
+Key, `rockFalls` [], 0 hits, crosses to L31 at t=150. **STOP for step 27:** the
+route's walk arrives at x = 125.97137961649308 and on one axis every velocity is
+a multiple of 0.05, so no x-input reaches 126.000 — refused by name. Mutant (b)
+(predicate false) → step 27's text byte-identical to W0; mutant (c) (lane
+centred, checks dropped) → both skirt rows red (the press freezes the walk).
+
+**D3 — the kill without a lock (F2).** `chooseBodyToRemove` hypothesises the live
+spinners (`run.entities('spinnerBodies')`); BAIT names a spinner a billiard; KILL
+uses the kill-lock's own press arm (`derivePressKill` + `execKillByPress`) with
+`lock: null`, `until` the body leaves the roster, cross-checked against
+`run.ledger('spinnerWrites')` for a tagged body; no sword names the weapon as a
+sub-order. A swing the run refuses by `Player.slash`'s line-of-sight gate
+becomes the ladder's refusal rather than a crash (the schedule cannot ask that
+line — `collideLineSolid` is not a run member). Probe room, the six refused
+positions post-sword (predicted 4/6 at 250–400 t): **(5,5) SOLVED 234 t, (6,6)
+SOLVED 235 t**; (2,2) refused on line of sight, (7,6) and (2,7) by the press
+executor's hammer safety, (3,6) with no transit-safe strike. Pre-sword all six
+stay REFUSED, the kill line naming the sword. The through-room yield is
+unchanged, 10/168 placed and 8 certified on both palettes (its 2 refusals are
+geometry the chooser change cannot reach). Mutant (d), the removal never
+observed → BUDGET_EXHAUSTED by `STRIKE_BOUND_EXHAUSTED`'s name, no
+`PendingDeclaration`. Committed tapes meeting a lock-less spinner (L40, L92):
+nine replay tapes, none solver-produced.
+
+**D4 — the survey against the new route.** `STAGED_SAVE_GRANTS` re-keyed to
+L30@176,48 (re-derived; T3's `(64,16)` matched no step). `--through=2.2
+--only=24..30`, predicted 3/7, measured **3/7**: 24 REFUSED (the shield), 25
+SOLVED 26 t, 26 SOLVED 89 t, 27 REFUSED (D2's stop), 28 L31 (first survey)
+REFUSED on its key-locked exit, **29 SOLVED 210 t** with the Green Key, 30
+REFUSED at the macro layer.
+
+**Byte-inertia** after every D: the identity block, the campaign census, the six
+r8/r9 `--check`s and the default-mode survey md5s (`27ff43db…` / `1e08f9ad…`)
+all equal W0; `fixtures/**` 0 files differ.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

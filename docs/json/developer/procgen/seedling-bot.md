@@ -352,6 +352,8 @@ The rule this keeps re-teaching: **do not let the JS clean up the game.** The fi
 
 For a synthesized fixture, "the driver still emits this tape" turns any geometry error into a red, because the plan depends on the geometry.
 
+**The solver above the driver** (`solverBot.js`; the as-built record is the log's per-slice sections, U1-swim the latest). Its goal kinds are `reach-exit` (a teleporter by OEL coordinates), `reach-pit` (one pit tile of a level whose `control` block names a fallthrough level: the plan exempts that tile only, the crossing is accepted on the tile, and the run coasts the transport to the ground) and `collect-placement`. `OBSTACLE_STRATEGIES` maps a frontier obstacle to a verb and `refineStrategy` asks the level to refine it: a `button` whose group answers only fall-responder rocks is `skirt` (walk past it in a sub-tile lane, verified unpressed every tick), not `hold`. The combat ladder (AVOID → PULL → TIME → BAIT → KILL) hypothesises the live chasers, the live spinners and the static census bodies; a live spinner is killed by the player's own press, `until` it leaves the run's `spinnerBodies` roster, with no kill lock needed.
+
 ## Running it
 
 ```bash
