@@ -304,11 +304,7 @@ frontend/modules/mazeGame-iframe/
 worlds/apworld_manager/
 worlds_disabled/
 custom_worlds_disabled/
-iframe_games/journey-to-ascension-backup/
-iframe_games/journey-to-ascension-modified/
 iframe_games/omsi-loops/
-iframe_games/journey-to-ascension/build/
-iframe_games/journey-to-ascension/node_modules/
 fuzz_output/
 test_dumps/
 grid-growth-dump.json
