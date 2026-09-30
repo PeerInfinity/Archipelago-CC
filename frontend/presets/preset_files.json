@@ -7200,5 +7200,24 @@
         "has_procgen_data": true
       }
     }
+  },
+  "concept_trial": {
+    "name": "Procgen Maze",
+    "folders": {
+      "AP_1": {
+        "seed": 1,
+        "games": [
+          {
+            "player": 1,
+            "name": "Player1",
+            "game": "Procgen Maze"
+          }
+        ],
+        "files": [
+          "AP_1_rules.json"
+        ],
+        "has_procgen_data": true
+      }
+    }
   }
 }

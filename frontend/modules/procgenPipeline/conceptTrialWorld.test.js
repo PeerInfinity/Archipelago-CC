@@ -17,6 +17,10 @@
  * 1 and 7–12 realise one of each and seeds 8 and 9 pass; seed 8 is taken. The
  * compiled logic equals the control's at every seed.
  */
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, it, expect } from 'vitest';
 
 import '../mazeRoom/mazeRoomLibrary.js';
@@ -95,5 +99,28 @@ describe('T4 D1 — the concept trial world', async () => {
         }
         expect(lib['Progressive Sword'].color).toBe('#c0a040');
         expect(lib['Progressive Swim'].color).toBe('#40b0c0');
+    });
+});
+
+describe('T4 D2 — the committed concept_trial preset IS this world', async () => {
+    const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
+    const text = readFileSync(join(ROOT, 'frontend/presets/concept_trial/AP_1/AP_1_rules.json'), 'utf8');
+    const committed = JSON.parse(text);
+    const fresh = await runPresetHeadless(buildRunFromState(structuredClone(CONCEPT_TRIAL_STATE)));
+
+    it('byte for byte a fresh build of CONCEPT_TRIAL_STATE (the producer\'s --check, in the suite)', () => {
+        expect(text).toBe(JSON.stringify(fresh.rulesJson, null, 2));
+    });
+
+    it('names the concept items, records the concept list, and carries the painted gate and the prose', () => {
+        expect(Object.keys(committed.items['1'])).toEqual(expect.arrayContaining(['Progressive Sword', 'Progressive Swim']));
+        expect(committed.procgen_metadata['1'].concepts).toEqual(['sword', 'guardian', 'swim', 'water']);
+        const sc = committed.preset_sidecars['1'];
+        const maze = Object.values(sc).filter((s) => s.substrate === 'maze');
+        const gates = maze.flatMap((s) => Object.values(s.playable_payload.obstacleLib ?? {})).filter((d) => d.concept);
+        expect(gates.map((d) => [d.id, d.concept, d.color])).toEqual([['water_gate_0', 'water', '#2f6fd0']]);
+        expect(maze.every((s) => s.playable_payload.itemLib['Progressive Swim']?.color === '#40b0c0')).toBe(true);
+        const ta = Object.values(sc).filter((s) => s.substrate === 'text_adventure');
+        expect(ta.map((s) => Object.keys(s.playable_payload.prose?.exits ?? {}))).toEqual([['exit']]);
     });
 });

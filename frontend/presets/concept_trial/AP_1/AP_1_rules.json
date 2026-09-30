@@ -1,0 +1,789 @@
+{
+  "schema_version": 3,
+  "game_name": "Procgen Maze",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 8,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_2_2",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_2_2": {
+        "name": "region_2_2",
+        "exits": [
+          {
+            "name": "exit",
+            "connected_region": "region_2_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_2__loc_0",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Sword",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_1_3": {
+        "name": "region_1_3",
+        "exits": [
+          {
+            "name": "region_2_3",
+            "connected_region": "region_2_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_3__loc_0__6_0",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      },
+      "region_2_3": {
+        "name": "region_2_3",
+        "exits": [
+          {
+            "name": "exit",
+            "connected_region": "region_1_3",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "region_2_2",
+            "connected_region": "region_2_2",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_2_3__loc_0__4_1",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Progressive Swim",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Progressive Sword": {
+        "name": "Progressive Sword",
+        "id": 1,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "victory": {
+        "name": "victory",
+        "id": 2,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Progressive Swim": {
+        "name": "Progressive Swim",
+        "id": 3,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Progressive Sword": 1,
+      "victory": 1,
+      "Progressive Swim": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Procgen Maze",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {},
+  "canonical_placements": {
+    "1": {
+      "region_2_2__loc_0": "Progressive Sword",
+      "region_1_3__loc_0__6_0": "victory",
+      "region_2_3__loc_0__4_1": "Progressive Swim"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "assume_bidirectional_exits": true,
+  "preset_sidecars": {
+    "1": {
+      "region_2_2": {
+        "substrate": "text_adventure",
+        "render_hint": "text_adventure",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 2
+        },
+        "playable_payload": {
+          "exits": [
+            {
+              "exit_id": "exit",
+              "side": "S",
+              "exitName": "exit",
+              "targetRegion": "region_2_3",
+              "targetExitId": "region_2_2",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "exitGates": {
+            "exit": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Sword"
+              }
+            }
+          },
+          "locations": [
+            {
+              "name": "region_2_2__loc_0",
+              "item": "Progressive Sword"
+            }
+          ],
+          "prose": {
+            "exits": {
+              "exit": {
+                "moveMessage": "You draw your sword and the guardian lunges, but its armour is split at the joints and the blade finds the gap. Its weakness was the sword all along: it crumples, and the way to {destinationRegion} lies open.",
+                "inaccessibleMessage": "A hulking guardian bars the way to {destinationRegion}, its armoured bulk filling the passage. You carry nothing that could hurt it, and it knows it. Without a sword, you will not get past."
+              }
+            },
+            "locations": {
+              "region_2_2__loc_0": {
+                "checkMessage": "Half-buried in the rubble lies {item}, its edge still keen after who knows how long. You take up the sword and test its weight. Whatever guards these halls will have to reckon with it now."
+              }
+            }
+          },
+          "fogEnabled": true
+        }
+      },
+      "region_2_3": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 2,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "entrance": {
+            "x": 4,
+            "y": 0
+          },
+          "exits": [
+            {
+              "exit_id": "exit",
+              "x": 0,
+              "y": 1,
+              "side": "W",
+              "exitName": "exit",
+              "targetRegion": "region_1_3",
+              "targetExitId": "region_2_3",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "region_2_2",
+              "x": 4,
+              "y": 0,
+              "side": "N",
+              "exitName": "region_2_2",
+              "targetRegion": "region_2_2",
+              "targetExitId": "exit",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [
+            {
+              "x": 0,
+              "y": 1,
+              "id": "water_gate_0"
+            }
+          ],
+          "items": [
+            {
+              "x": 4,
+              "y": 1,
+              "id": "Progressive Swim",
+              "locationName": "region_2_3__loc_0__4_1"
+            }
+          ],
+          "obstacleLib": {
+            "water_gate_0": {
+              "name": "Water",
+              "id": "water_gate_0",
+              "clear_set_type": "rule",
+              "clear_rule": {
+                "rule": "Has",
+                "args": {
+                  "item_name": "Progressive Swim"
+                }
+              },
+              "color": "#2f6fd0",
+              "display": {
+                "mode": "tree"
+              },
+              "feature": "logic_gate",
+              "concept": "water",
+              "placement": "gate",
+              "symbol": "~"
+            }
+          },
+          "itemLib": {
+            "Progressive Sword": {
+              "name": "Progressive Sword",
+              "id": "Progressive Sword",
+              "classification": "progression",
+              "color": "#c0a040",
+              "symbol": "star",
+              "feature": "concept_items",
+              "concept": "sword"
+            },
+            "Progressive Swim": {
+              "name": "Progressive Swim",
+              "id": "Progressive Swim",
+              "classification": "progression",
+              "color": "#40b0c0",
+              "symbol": "star",
+              "feature": "concept_items",
+              "concept": "swim"
+            }
+          },
+          "longestShortestPath": 7,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      },
+      "region_1_3": {
+        "substrate": "maze",
+        "render_hint": "maze",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 3
+        },
+        "playable_payload": {
+          "width": 8,
+          "height": 6,
+          "tiles": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "entrance": {
+            "x": 7,
+            "y": 1
+          },
+          "exits": [
+            {
+              "exit_id": "region_2_3",
+              "x": 7,
+              "y": 1,
+              "side": "E",
+              "exitName": "region_2_3",
+              "targetRegion": "region_2_3",
+              "targetExitId": "exit",
+              "isBackExit": true,
+              "isTeleporter": false
+            }
+          ],
+          "obstacles": [],
+          "items": [
+            {
+              "x": 6,
+              "y": 0,
+              "id": "victory",
+              "locationName": "region_1_3__loc_0__6_0"
+            }
+          ],
+          "obstacleLib": {},
+          "itemLib": {
+            "Progressive Sword": {
+              "name": "Progressive Sword",
+              "id": "Progressive Sword",
+              "classification": "progression",
+              "color": "#c0a040",
+              "symbol": "star",
+              "feature": "concept_items",
+              "concept": "sword"
+            },
+            "Progressive Swim": {
+              "name": "Progressive Swim",
+              "id": "Progressive Swim",
+              "classification": "progression",
+              "color": "#40b0c0",
+              "symbol": "star",
+              "feature": "concept_items",
+              "concept": "swim"
+            }
+          },
+          "longestShortestPath": 1,
+          "fogEnabled": true
+        },
+        "biome": {
+          "id": "classic"
+        },
+        "grow_telemetry": {
+          "requested_size": {
+            "width": 8,
+            "height": 6
+          },
+          "final_size": {
+            "width": 8,
+            "height": 6
+          },
+          "grow_attempts": 0
+        }
+      }
+    }
+  },
+  "procgen_metadata": {
+    "1": {
+      "driver": "sphere-growth",
+      "stop_reason": "plan_complete",
+      "sphere_plan": {
+        "seed": 8,
+        "spheres": [
+          {
+            "sphere": 1,
+            "items": [
+              "Progressive Sword"
+            ]
+          },
+          {
+            "sphere": 2,
+            "items": [
+              "Progressive Swim"
+            ]
+          },
+          {
+            "sphere": 3,
+            "items": [
+              "victory"
+            ]
+          }
+        ]
+      },
+      "sphere_tree": {
+        "nodes": [
+          {
+            "index": 0,
+            "wave": 0,
+            "parent": null,
+            "side": null,
+            "cell": {
+              "gx": 2,
+              "gy": 2
+            },
+            "isTeleporter": false,
+            "substrate": "text_adventure",
+            "gate": [],
+            "gateCounts": {},
+            "usedSides": [
+              "E"
+            ],
+            "childGates": [
+              [
+                {
+                  "item": "Progressive Sword",
+                  "count": 1
+                }
+              ]
+            ],
+            "isFiller": false
+          },
+          {
+            "index": 1,
+            "wave": 1,
+            "parent": 0,
+            "side": "S",
+            "cell": {
+              "gx": 2,
+              "gy": 3
+            },
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [
+              "Progressive Sword"
+            ],
+            "gateCounts": {
+              "Progressive Sword": 1
+            },
+            "usedSides": [
+              "W",
+              "S"
+            ],
+            "childGates": [
+              [
+                {
+                  "item": "Progressive Sword",
+                  "count": 1
+                }
+              ],
+              [
+                {
+                  "item": "Progressive Swim",
+                  "count": 1
+                }
+              ]
+            ],
+            "isFiller": false
+          },
+          {
+            "index": 2,
+            "wave": 2,
+            "parent": 1,
+            "side": "W",
+            "cell": {
+              "gx": 1,
+              "gy": 3
+            },
+            "isTeleporter": false,
+            "substrate": "maze",
+            "gate": [
+              "Progressive Swim"
+            ],
+            "gateCounts": {
+              "Progressive Swim": 1
+            },
+            "usedSides": [
+              "N"
+            ],
+            "childGates": [
+              [
+                {
+                  "item": "Progressive Swim",
+                  "count": 1
+                }
+              ]
+            ],
+            "isFiller": false
+          }
+        ],
+        "substrateCounts": {
+          "text_adventure": 1,
+          "maze": 2
+        },
+        "quotaFallbacks": 0
+      },
+      "concepts": [
+        "sword",
+        "guardian",
+        "swim",
+        "water"
+      ],
+      "region_count": 3,
+      "grid_dims": {
+        "width": 3,
+        "height": 4
+      }
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 8,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "region_2_2__loc_0"
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_2_2"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Progressive Sword": 1
+            },
+            "resolved_items": {
+              "Progressive Sword": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_2_3__loc_0__4_1"
+          ],
+          "new_accessible_regions": [
+            "region_2_3"
+          ],
+          "sphere_locations": [
+            "region_2_2__loc_0"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Progressive Swim": 1
+            },
+            "resolved_items": {
+              "Progressive Swim": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_3__loc_0__6_0"
+          ],
+          "new_accessible_regions": [
+            "region_1_3"
+          ],
+          "sphere_locations": [
+            "region_2_3__loc_0__4_1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "victory": 1
+            },
+            "resolved_items": {
+              "victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_3__loc_0__6_0"
+          ]
+        }
+      }
+    }
+  ]
+}
