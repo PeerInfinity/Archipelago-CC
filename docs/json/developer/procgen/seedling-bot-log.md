@@ -10792,6 +10792,60 @@ on-connector commit) and `the-solver-cannot-cross-the-roaming-body`. It
   (*"fell into a pit in level 900, which has NO control block"*), and W0's
   roam sweep has the same class.
 
+### Seedling substrate U4-swim — L12's puncher measured; the pit class is a verdict (2026-09-30)
+
+R-o measured and stopped with a design; the corridor body's harness throws
+turned into levels. The report is `CC/docs/cloud-reports/seedling-swim-u4.md`.
+
+**D1 — R-o, L12's puncher (measurement, STOP).**
+- The pit (36,43) is reachable only through the two keyType-0 locks,
+  `bosslock@416,240` and `bosslock@432,240`: a flood from the arrival reaches
+  833 tiles with them shut and 1028 with them open.
+- The danger map prices `puncher@416,256` as a static body at its placement:
+  the bare 12×12 body (418,260)–(430,272), with no pad.
+- `chaserRoomVerdict(12)` is **stepped: true**, vacuously (L12 has no bridged
+  chaser), so the static half of `chooseBodyToRemove` is empty and BAIT and
+  KILL have no body to hypothesise.
+- The stance the solver aimed at, (424,264), is the puncher's own tile. The
+  other lock's stance (x 433..445 under `bosslock@432,240`) is clear of the
+  priced body in the model. But the game's Puncher chases (`aggro: chase`,
+  range 80, speed 1): that stance is 17.1 px from it through an 80-tick key
+  wait, so it CAN reach the stance. The verdict is STOP. The design (a
+  `CHASERS.puncher` transcription, the punch box, the 3-hit death, then
+  `KILL_ARM_POLICY.Puncher` → `modelled`, wasm parity on L12 and L40 first)
+  is in the report, not built.
+- The 345 s refusal is 94% `planSwordDash` previewing the walk, not the ladder
+  (`climbLadder` 4.6 s).
+
+**D2 — a preview that walks onto lethal floor is truncated.** All 10 of the
+corridor-body sweep's post-sword THREW cells came out of `deriveRefuge`'s
+straight-line `previewWalk` of a refuge cell, never the certification walk.
+It cut a corner onto a pass-2 `pit-patch` (6 cells) or `water-pool`
+(4 cells: *"the player DROWNED"*, so U3's "one pit class" was two).
+`previewWalk` now ends a preview whose fall the model's own `fallDestination`
+calls lethal (`kind: 'lethal-pit'`), or whose `drown.drowning` latches
+(`'drowned'`). Every caller already treats a truncated preview as a walk it
+cannot take.
+- Yield, post-sword, 168 cells: 156 are byte-identical to W0. The 10 THREW
+  cells generate, all with the body placed and certified. THREW 10 → 0, placed
+  136 → 137, certified 75 → 76, the named refusals unchanged (59 roaming +
+  2 per-target), ablation COSTS 43 → 54. TIMEOUT moved 10 → 9 with load;
+  `branchy 14x14 s9` now outruns the 120 s bound and certifies at 1200 s.
+- Roam: 10/8/2 unchanged on both palettes; its 3 post-sword THREW cells
+  generate.
+- Mutant (a), the predicate forced null: all 10 THREW rows return byte for
+  byte.
+- The identity block, the six `--check`s, the campaign census and the survey
+  derives are unmoved.
+
+**D3 — the AVOID text.** A danger volume on a planner endpoint reads
+`danger:puncher@416,256 (a static "Enemy" body) at (418,260)`, not
+`danger undefined at (undefined,undefined)`.
+
+**D4 — the survey, 7/9.** Step 24 is REFUSED by the puncher name in 310.6 s
+under a 600 s bound raised for that row only. Steps 22, 23 and 25–30 are
+identical to U2's.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
