@@ -117,9 +117,9 @@
       "form": "stepper",
       "files": {
         "botDriverV2.js": 26,
-        "solverBot.js": 9
+        "solverBot.js": 10
       },
-      "sites": 35,
+      "sites": 36,
       "seen": "both",
       "via": [
         "direct"
@@ -260,9 +260,9 @@
       "files": {
         "botDriverV2.js": 101,
         "dangerMap.js": 14,
-        "solverBot.js": 57
+        "solverBot.js": 61
       },
-      "sites": 172,
+      "sites": 176,
       "seen": "both",
       "via": [
         "direct"
@@ -316,11 +316,11 @@
           "botDriverV2.js": 5
         },
         "latchedGroups": {
-          "solverBot.js": 3
+          "solverBot.js": 5
         },
         "openActivators": {
           "botDriverV2.js": 22,
-          "solverBot.js": 8
+          "solverBot.js": 10
         },
         "openBridges": {
           "botDriverV2.js": 4
@@ -564,9 +564,9 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "solverBot.js": 5
+        "solverBot.js": 6
       },
-      "sites": 5,
+      "sites": 6,
       "seen": "both",
       "via": [
         "direct"
@@ -760,9 +760,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 113,
-        "solverBot.js": 126
+        "solverBot.js": 145
       },
-      "sites": 239,
+      "sites": 258,
       "seen": "both",
       "via": [
         "direct"
@@ -787,9 +787,9 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 1,
-        "solverBot.js": 20
+        "solverBot.js": 23
       },
-      "sites": 24,
+      "sites": 27,
       "seen": "both",
       "via": [
         "direct"
@@ -840,9 +840,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 56,
-        "solverBot.js": 107
+        "solverBot.js": 111
       },
-      "sites": 163,
+      "sites": 167,
       "seen": "both",
       "via": [
         "direct",
@@ -1326,9 +1326,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 10
+        "solverBot.js": 11
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1814,9 +1814,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 6,
-        "solverBot.js": 2
+        "solverBot.js": 6
       },
-      "sites": 10,
+      "sites": 14,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1876,9 +1876,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 54,
-        "solverBot.js": 52
+        "solverBot.js": 58
       },
-      "sites": 108,
+      "sites": 114,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1907,9 +1907,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 57,
-        "solverBot.js": 52
+        "solverBot.js": 61
       },
-      "sites": 111,
+      "sites": 120,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1927,6 +1927,42 @@
         "sites": 66
       },
       "why": "The player's y position in the physics state, initialised from the spawn."
+    },
+    {
+      "surface": "import",
+      "name": "fallRocksArmedBy",
+      "module": "frontend/modules/seedlingDemo/activators.js",
+      "line": 548,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Returns the FallRocks a player box pressing a Button (or a room=-1 ButtonRoom publishing true) arms, by group, from world.pressers and world.fallRocks: the run's own button press test for the fall-responder lane."
+    },
+    {
+      "surface": "import",
+      "name": "groupResponders",
+      "module": "frontend/modules/seedlingDemo/activators.js",
+      "line": 523,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Lists every responder of an Activators group t across the four lanes (activator, pulser, arrowtrap, fallrock), each {id, lane}: what a Seedling button press would reach."
     },
     {
       "surface": "import",
@@ -3166,9 +3202,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 46,
-        "solverBot.js": 50
+        "solverBot.js": 56
       },
-      "sites": 96,
+      "sites": 102,
       "seen": "static",
       "via": [
         "import"
@@ -3185,9 +3221,10 @@
       "form": "function",
       "files": {
         "botDriverV1.js": 1,
+        "solverBot.js": 1,
         "strikePolicy.js": 1
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "import"
@@ -3203,9 +3240,10 @@
       "class": "physics",
       "form": "function",
       "files": {
+        "solverBot.js": 1,
         "strikePolicy.js": 1
       },
-      "sites": 1,
+      "sites": 2,
       "seen": "static",
       "via": [
         "import"
@@ -3223,9 +3261,10 @@
       "files": {
         "botDriverV1.js": 1,
         "mover.js": 1,
+        "solverBot.js": 1,
         "strikePolicy.js": 1
       },
-      "sites": 3,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"
@@ -3260,9 +3299,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 1,
-        "solverBot.js": 7
+        "solverBot.js": 13
       },
-      "sites": 8,
+      "sites": 14,
       "seen": "static",
       "via": [
         "import"
@@ -3346,16 +3385,34 @@
     },
     {
       "surface": "import",
+      "name": "sweepAxis",
+      "module": "frontend/modules/seedlingDemo/playerPhysicsV1.js",
+      "line": 386,
+      "class": "physics",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Moves a position by rel in unit steps (the last one fractional), stopping before the first step the collide test rejects and keeping the sub-pixel remainder: the per-axis collision sweep of the move."
+    },
+    {
+      "surface": "import",
       "name": "WALK_SPEED",
       "module": "frontend/modules/seedlingDemo/playerPhysicsV1.js",
       "line": 51,
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 1,
+        "solverBot.js": 3,
         "strikePolicy.js": 2
       },
-      "sites": 3,
+      "sites": 5,
       "seen": "static",
       "via": [
         "import"
@@ -3409,9 +3466,9 @@
       "files": {
         "botDriverV2.js": 12,
         "encounters.js": 1,
-        "solverBot.js": 20
+        "solverBot.js": 21
       },
-      "sites": 33,
+      "sites": 34,
       "seen": "static",
       "via": [
         "import"

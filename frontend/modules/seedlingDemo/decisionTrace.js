@@ -94,6 +94,8 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // driven for three rungs is neither. The reporting path keeps its own
     // test coverage against a synthetic unknown.
     'collect',
+    // ⛓ Swim U1, D2: walk PAST a stand-on presser whose press only drops a rock.
+    'skirt',
     /**
      * ⛓ R9 slice 4: the `break` verb — a sword swing that removes a
      * `BreakableRock` from the world. Listed for `collect`'s own reason (it is

@@ -38,10 +38,10 @@
  * `BURN_` names `botDriverV2.js` already gave them.
  */
 
-// activators.js — botDriverV2, solverBot · seedling 8
+// activators.js — botDriverV2, solverBot · seedling 10
 export {
-    KEY_RESPONDERS, keyLineTouches, localPublish, opensOnKeyTick, opensOnTick, RESPONDERS, TOUCH_RESPONDERS,
-    touchApproachKey,
+    fallRocksArmedBy, groupResponders, KEY_RESPONDERS, keyLineTouches, localPublish, opensOnKeyTick,
+    opensOnTick, RESPONDERS, TOUCH_RESPONDERS, touchApproachKey,
 } from './activators.js';
 // arrowTrap.js — dangerMap, solverBot · seedling 6
 export { ARROW, arrowLaneForPlacement, arrowLaneRect, arrowRect, arrowTrapFires, stepArrow } from './arrowTrap.js';
@@ -86,10 +86,10 @@ export {
     assertRect, isNormalizedLiveOpts, LIVE_GEOMETRY_KEYS, normalizeLiveOpts, PRE_R5_ROLES, rect, rectsOverlap,
     RELAXED_ROLES, TILE_SIZE,
 } from './levelWorld.js';
-// playerPhysicsV1.js — botDriverV1, botDriverV2, mover, solverBot, strikePolicy · physics 10
+// playerPhysicsV1.js — botDriverV1, botDriverV2, mover, solverBot, strikePolicy · physics 11
 export {
     applyFriction, applyInput, DEFAULT_FRICTION, groundTerrain, HITBOX, knockbackImpulse, MOVE_SPEEDS,
-    spawnFromBoot, step, WALK_SPEED,
+    spawnFromBoot, step, sweepAxis, WALK_SPEED,
 } from './playerPhysicsV1.js';
 // playerPhysicsV2.js — botDriverV2, encounters, solverBot · seedling 1, physics 3
 export { fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';

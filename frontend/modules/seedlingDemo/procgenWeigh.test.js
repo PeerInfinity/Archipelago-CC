@@ -54,7 +54,11 @@ import {
 } from './procgenOracle.js';
 import { PRE_SWORD_ITEMS } from './procgenPalette.js';
 import { SEEDLING_DEFAULTS } from './procgenSeedling.js';
-import { STRATEGY_EXECUTORS, STRATEGY_REFINEMENTS } from './solverBot.js';
+import { STRATEGY_EXECUTORS, STRATEGY_REFINEMENTS, solveSegment } from './solverBot.js';
+import { readFileSync } from 'node:fs';
+import { parseTape } from './tapeFormat.js';
+import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner.js';
+import { atlasLevelSource } from './levelSource.js';
 
 const START = SEEDLING_DEFAULTS.start;
 
@@ -275,6 +279,22 @@ describe('⛓ EVERY REFINEMENT ROW IS DRIVEN — the table cannot drift silently
             ],
         }),
         'hold -> weigh': () => solveRoom('refinement-hold-to-weigh', CANONICAL),
+        /**
+         * ⛓ Swim U1, D2 — the ATLAS room the refinement was written for: no
+         * generator element seats a fallrock, so L29 itself is the driven case
+         * (the survey's staged `r8-solve-11` boot, re-pointed onto the east
+         * lane — `solverSkirt.test.js` says why the route's own arrival cannot).
+         */
+        'hold -> skirt': () => {
+            const staging = solveStaging(stagingFromTape(parseTape(JSON.parse(readFileSync(
+                new URL('./fixtures/tapes/r8-solve-11.json', import.meta.url), 'utf8')))));
+            staging.boot = { level: 29, x: 118, y: 144 };
+            staging.persistence = (staging.persistence ?? []).filter((r) => r.at === undefined);
+            const run = createRunForStaging(staging, atlasLevelSource());
+            const out = solveSegment({ run, name: 'refinement-hold-to-skirt', boot: staging.boot,
+                goals: [{ kind: 'collect-placement', placement: { x: 112, y: 64 } }] });
+            return { ...out, verdict: VERDICT.SOLVED };
+        },
     };
     const EXPECTED = {
         'hold -> kill': (out) => {
@@ -285,10 +305,14 @@ describe('⛓ EVERY REFINEMENT ROW IS DRIVEN — the table cannot drift silently
             expect(out.verdict).toBe(VERDICT.SOLVED);
             expect(verbsOf(out)).toContain('weigh');
         },
+        'hold -> skirt': (out) => {
+            expect(verbsOf(out)).toContain('skirt');
+            expect(verbsOf(out).has('hold')).toBe(false);
+        },
     };
 
-    it('the table has at least the two refinements this arc knows about', () => {
-        expect(STRATEGY_REFINEMENTS.length).toBeGreaterThanOrEqual(2);
+    it('the table has at least the three refinements this arc knows about', () => {
+        expect(STRATEGY_REFINEMENTS.length).toBeGreaterThanOrEqual(3);
     });
 
     for (const r of STRATEGY_REFINEMENTS) {

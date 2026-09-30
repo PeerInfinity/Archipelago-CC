@@ -72,6 +72,7 @@ import {
 import { resolvePresser } from './botDriverV2.js';
 import {
     KEY_RESPONDERS, RESPONDERS, TOUCH_RESPONDERS, keyLineTouches, localPublish,
+    fallRocksArmedBy, groupResponders,
     opensOnKeyTick, opensOnTick, touchApproachKey,
     SHIELD_BOSS, shieldBossBandRect, shieldBossBodyRect, shieldBossDeathSchedule,
     SPINNER, hammerHitsPlayer,
@@ -102,6 +103,7 @@ import {
     MOBILE_DEATH_FADE,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
+    applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
     chestStanceBand,
 } from './solverView.js';
 import {
@@ -440,6 +442,13 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
     }),
     Object.freeze({
         from: 'hold',
+        to: 'skirt',
+        when: 'the presser is a `button` whose group has NO opener — every responder '
+            + '`groupResponders` names is a `FALL_RESPONDERS` rock and there is at least one — '
+            + 'so a press only drops a Solid into the corridor (L29, L74): avoid, do not press',
+    }),
+    Object.freeze({
+        from: 'hold',
         to: 'weigh',
         when: 'every presser in the lock\'s group REPUBLISHES (`localPublish` is null for '
             + 'all of them), so the hold cannot outlive the walker — and the game\'s own '
@@ -504,6 +513,11 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * out an animation whose length the transcription already owns.
      */
     break: execBreak,
+    /**
+     * ⛓⛓ SEEDLING SWIM U1, D2 — the first executor whose whole job is to NOT
+     * trigger the obstacle it was selected for. See `resolveSkirtStrategy`.
+     */
+    skirt: execSkirt,
 });
 
 /**
@@ -559,6 +573,14 @@ export const NESTED_OPENER_DEPTH = 2;
  */
 function refineStrategy(run, strategy, obstacle) {
     if (strategy !== 'hold') return strategy;
+    /**
+     * ⛓⛓ SEEDLING SWIM U1, D2 — THE TRAP PRESSER. Asked FIRST and only of a
+     * `button` on the frontier: a group with no opener and a rock in it is a
+     * press that can only drop a Solid (`fallTrapPresser`). Every other button
+     * — L4's and L5's open arrow traps and doors — keeps `hold`.
+     */
+    if (obstacle?.kind === 'proximity-hazard' && obstacle.tag === 'button'
+        && fallTrapPresser(run, obstacle)) return 'skirt';
     /**
      * ⚠ ASKED OF THE BUILT WORLD'S OWN ACTIVATOR ROSTER, which carries the
      * group verbatim (`lock@48,112 t=-1` in L5), rather than of the raw level
@@ -632,8 +654,252 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'touch') return resolveTouchStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'break') return resolveBreakStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'weigh') return resolveWeighStrategy(run, obstacle, contacts, blocked);
+    if (strategy === 'skirt') return resolveSkirtStrategy(run, obstacle, contacts);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
+}
+
+/**
+ * ⛓⛓ SEEDLING SWIM U1, D2 — **A BUTTON WHOSE PRESS IS A TRAP.**
+ *
+ * `{presser, rocks}` when `obstacle` is a `button` in `world.pressers` whose
+ * group's responders (`groupResponders`, all four lanes) are ALL fall-responder
+ * rocks and there is at least one; `null` otherwise. Pressing such a button
+ * opens nothing and arms nothing — it drops `FallRock`s (Solid after) into the
+ * room (T3's D1 arm). In L29 the rock lands in the one-tile shaft between the
+ * button and the Boss Key, so a `hold` there would not just fail, it would
+ * seal the errand. The census that makes this the narrowest predicate:
+ * `FALL_RESPONDER_ROOMS` is L29 and L74, and no other button's group is
+ * rocks-only.
+ */
+export function fallTrapPresser(run, obstacle) {
+    const presser = (run.world.pressers ?? []).find((p) => p.tag === 'button'
+        && `${p.tag}@${p.x},${p.y}` === obstacle.id);
+    if (!presser) return null;
+    const responders = groupResponders(run.world, presser.t);
+    if (responders.length === 0 || responders.some((r) => r.lane !== 'fallrock')) return null;
+    return { presser, rocks: responders.map((r) => r.id) };
+}
+
+/**
+ * ⛓⛓ SEEDLING SWIM U1, D2 — RESOLVE a `skirt`: walk PAST a stand-on presser
+ * without pressing it, in a sub-tile LANE the planner's whole tiles cannot see.
+ *
+ * The planner works in whole tiles and the button tile's centre box overlaps
+ * the 8x6 press rect, so the tile is blocked; but the press is a BOX test
+ * (`fallRocksArmedBy`, the run's own), and a box whose x-extent stops at the
+ * rect's edge never presses whatever its y. So:
+ *
+ *   - the LANE x is the rect's edge plus the hitbox's own offsets — west
+ *     `rect.x - (w - originX)`, east `rect.right + originX` (L29: 114 / 126 in
+ *     a 112..128 shaft, zero slack either side);
+ *   - a lane is taken only where the WALL beside it is continuous from the
+ *     stance row through the button row — `plannerObstacleAt` one pixel
+ *     outward answers a Solid at every y of the pass — because the executor
+ *     holds the lane by LEANING into that wall (a bang-bang walk cannot keep a
+ *     0-px tolerance any other way);
+ *   - only a VERTICAL shaft is resolved (stone left and right of the button
+ *     tile); anything else resolves to `null` and is reported as considered.
+ *
+ * The stance is the lane x in the tile BEYOND the button on the player's side
+ * (the planner reaches it without the button tile), and the pass ends in the
+ * tile beyond on the far side, where the planner takes over again. No
+ * exemption is added: the button tile stays blocked to every later plan.
+ */
+function resolveSkirtStrategy(run, obstacle, contacts) {
+    const trap = fallTrapPresser(run, obstacle);
+    if (!trap) return null;
+    const r = trap.presser.rect;
+    const w = run.world;
+    const opts = solverPlanOpts(run, contacts);
+    const geometryAt = (x, y) => {
+        const hit = plannerObstacleAt(w, x, y, null, opts);
+        return hit && hit.kind !== 'proximity-hazard' ? hit : null;
+    };
+    const tx = Math.floor(trap.presser.x / TILE_SIZE);
+    const ty = Math.floor(trap.presser.y / TILE_SIZE);
+    const centreOf = (cx, cy) => ({ x: cx * TILE_SIZE + TILE_SIZE / 2, y: cy * TILE_SIZE + TILE_SIZE / 2 });
+    const shaft = geometryAt(centreOf(tx - 1, ty).x, centreOf(tx - 1, ty).y)
+        && geometryAt(centreOf(tx + 1, ty).x, centreOf(tx + 1, ty).y);
+    if (!shaft) return null;
+    const below = run.state.y > r.bottom;
+    const stanceY = centreOf(tx, below ? ty + 1 : ty - 1).y;
+    const exitY = centreOf(tx, below ? ty - 1 : ty + 1).y;
+    // The box clears the press rect's ROWS here — the lean may stop.
+    const clearY = below ? r.y - (HITBOX.height - HITBOX.originY) : r.bottom + HITBOX.originY;
+    const lanes = [
+        { side: 'east', x: r.right + HITBOX.originX, lean: 'right', out: 1 },
+        { side: 'west', x: r.x - (HITBOX.width - HITBOX.originX), lean: 'left', out: -1 },
+    ];
+    const rejected = [];
+    for (const lane of lanes) {
+        const ys = [];
+        for (let y = Math.min(stanceY, clearY); y <= Math.max(stanceY, clearY); y += 1) ys.push(y);
+        const blockedAt = ys.find((y) => geometryAt(lane.x, y));
+        const openWallAt = ys.find((y) => !geometryAt(lane.x + lane.out, y));
+        if (blockedAt === undefined && openWallAt === undefined) {
+            return {
+                strategy: 'skirt',
+                target: { x: trap.presser.x, y: trap.presser.y },
+                presser: trap.presser,
+                rocks: trap.rocks,
+                lane: { side: lane.side, x: lane.x, lean: lane.lean, stanceY, clearY, exitY },
+                stance: { x: lane.x, y: stanceY },
+                rejected: [{
+                    option: 'hold',
+                    why: `${obstacle.id}'s group t=${trap.presser.t} answers only `
+                        + `[${trap.rocks.join(', ')}] — a press opens nothing and DROPS a Solid `
+                        + 'into the room (`FALL_RESPONDERS`), so pressing is a trap: avoid, do '
+                        + 'not press',
+                }, ...rejected],
+            };
+        }
+        rejected.push({
+            option: `skirt ${lane.side} lane x=${lane.x}`,
+            why: blockedAt !== undefined
+                ? `the lane box is blocked at y=${blockedAt}`
+                : `no wall to lean on at y=${openWallAt}, so a bang-bang walk cannot hold a `
+                    + '0-px lane there',
+        });
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓ SEEDLING SWIM U1, D2 — THE `skirt` EXECUTOR. From the stance (the lane x,
+ * one tile short of the button): ALIGN the x EXACTLY on the lane, then walk
+ * through the button's rows holding only the vertical key, then on into the
+ * far tile's centre row.
+ *
+ * ⛔ WHY ALIGN AND NOT LEAN. The lane admits ONE x (L29: 126.000 — box
+ * 124..128 against a 116..124 press rect and a wall at 128), and the model's
+ * blocked sweep keeps the fractional remainder (`sweepAxis` stops at `p`, not
+ * at the wall): measured, a walk that arrived at x≈125.4 and leaned right
+ * settled at 125.97137961649308 with vx 1.15 for 70 ticks, its box 0.03 px
+ * into the press rect. So the x is steered onto the lane by a bounded search
+ * over `{none, left, right}` on the x axis alone, using the transcription's own
+ * three steps (`applyInput`, `applyFriction`, `sweepAxis` with the wall at the
+ * lane's lean side), and every searched tick is then RUN and compared exactly.
+ * With vx = 0 the vertical walk leaves x untouched (friction shortens the
+ * velocity VECTOR, whose x is 0).
+ *
+ * ⛔ VERIFIED PER TICK, `runHold`'s positive-control shape turned round: after
+ * every tick the run's own press test (`fallRocksArmedBy` on the live box) must
+ * name no rock, and after the pass the rocks must still stand
+ * (`liveGeometryOpts().fallenRocks`) and the open/latched sets must be what
+ * they were. A pass that pressed fails BY NAME — it is a defect in this verb,
+ * never a measurement.
+ */
+function execSkirt(run, perTick, resolved, ctx) {
+    const { lane, presser, rocks } = resolved;
+    const id = `${presser.tag}@${presser.x},${presser.y}`;
+    const what = `${ctx.what} (${id}, ${lane.side} lane x=${lane.x})`;
+    const openBefore = [...(run.entities('openActivators') ?? [])].sort().join(',');
+    const latchedBefore = [...(run.entities('latchedGroups') ?? [])].sort().join(',');
+    const from = run.ticksCompleted;
+    const up = lane.exitY < lane.stanceY;
+    const tick = (held, phase) => {
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) {
+            fail(`${what}: the pass crossed to level ${transition.to_level} during its ${phase} `
+                + 'phase — a skirt never leaves the room.');
+        }
+        const pressed = fallRocksArmedBy(run.world, playerBoxAt(run.state.x, run.state.y));
+        if (pressed.length > 0) {
+            fail(`${what}: the pass PRESSED ${id} at tick ${run.ticksCompleted} (${phase} phase, `
+                + `box at (${run.state.x},${run.state.y})) and armed `
+                + `[${pressed.map((x) => x.id).join(', ')}] — the lane was not held.`);
+        }
+    };
+    const bound = (px) => Math.ceil(Math.abs(px) / WALK_SPEED) * 2 + HOLD_SLACK;
+    // 1. ALIGN: steer x onto the lane EXACTLY (see the docblock).
+    const plan = skirtAlignment(run.state.x, run.state.vx, lane);
+    if (!plan) {
+        fail(`${what}: no x-input sequence of at most ${SKIRT_ALIGN_DEPTH} ticks takes the `
+            + `stance state (x=${run.state.x}, vx=${run.state.vx}) EXACTLY onto x=${lane.x} `
+            + 'at rest — the lane admits that one x and the model keeps sub-pixel remainders.');
+    }
+    for (const key of plan) {
+        tick(new Set(key ? [key] : []), 'align');
+    }
+    if (run.state.x !== lane.x || run.state.vx !== 0) {
+        fail(`${what}: the align sequence [${plan.map((k) => k ?? '-').join(' ')}] was searched `
+            + `to end on x=${lane.x} at rest and the RUN ended at x=${run.state.x}, `
+            + `vx=${run.state.vx} — the x-axis model and the run disagree.`);
+    }
+    // 2. PASS: the vertical key alone; vx is 0, so x stays on the lane.
+    const vKey = up ? 'up' : 'down';
+    const past = () => (up ? run.state.y <= lane.clearY : run.state.y >= lane.clearY);
+    for (let n = 0; !past(); n += 1) {
+        if (n >= bound(lane.stanceY - lane.clearY)) {
+            fail(`${what}: the lane walk did not clear the button's rows within `
+                + `${bound(lane.stanceY - lane.clearY)} ticks (at y=${run.state.y}).`);
+        }
+        tick(new Set([vKey]), 'pass');
+    }
+    // 3. ON: into the far tile's centre row, where whole-tile planning resumes.
+    const beyond = () => (up ? run.state.y <= lane.exitY : run.state.y >= lane.exitY);
+    for (let n = 0; !beyond(); n += 1) {
+        if (n >= bound(lane.clearY - lane.exitY)) {
+            fail(`${what}: the walk on did not reach y=${lane.exitY} within `
+                + `${bound(lane.clearY - lane.exitY)} ticks (at y=${run.state.y}).`);
+        }
+        tick(new Set([vKey]), 'on');
+    }
+    const fallen = run.liveGeometryOpts().fallenRocks;
+    const dropped = rocks.filter((rid) => fallen?.has?.(rid));
+    const openAfter = [...(run.entities('openActivators') ?? [])].sort().join(',');
+    const latchedAfter = [...(run.entities('latchedGroups') ?? [])].sort().join(',');
+    if (dropped.length > 0 || openAfter !== openBefore || latchedAfter !== latchedBefore) {
+        fail(`${what}: after the pass [${dropped.join(', ')}] fell and the open/latched sets `
+            + `moved (${openBefore}|${latchedBefore} -> ${openAfter}|${latchedAfter}) — the `
+            + 'skirt published its group.');
+    }
+    return { verb: 'skirt', target: id, lane: lane.side, x: lane.x, from,
+        ticks: run.ticksCompleted - from, rocksStanding: [...rocks] };
+}
+
+/**
+ * ⛓⛓ SEEDLING SWIM U1, D2 — the align search's depth, a POLICY bound (how long
+ * the solver will look), not a physics value. Measured on L29's east lane:
+ * from x=125.5 at rest the answer is 8 ticks, from 124.3 it is 10, and some
+ * starts have none within 14; 16 bounds a tile's worth of cheap search.
+ */
+const SKIRT_ALIGN_DEPTH = 16;
+
+/**
+ * The shortest `{null, 'left', 'right'}` sequence (breadth-first, `null` first)
+ * that takes `(x, vx)` to exactly `lane.x` with the friction-zeroed vx 0, on
+ * the x axis alone, with the wall on the lane's lean side. `null` if none
+ * within `SKIRT_ALIGN_DEPTH`.
+ */
+function skirtAlignment(x0, vx0, lane) {
+    const wallAt = lane.lean === 'right' ? (p) => p > lane.x : (p) => p < lane.x;
+    const stepX = (x, vx, key) => {
+        const v = applyFriction(applyInput({ x: vx, y: 0 }, new Set(key ? [key] : []), WALK_SPEED),
+            DEFAULT_FRICTION);
+        return { x: sweepAxis(x, v.x, (p) => (wallAt(p) ? 'wall' : null)).pos, vx: v.x };
+    };
+    if (x0 === lane.x && vx0 === 0) return [];
+    let frontier = [{ x: x0, vx: vx0, seq: [] }];
+    const seen = new Set([`${x0}|${vx0}`]);
+    for (let d = 0; d < SKIRT_ALIGN_DEPTH; d += 1) {
+        const next = [];
+        for (const s of frontier) {
+            for (const key of [null, 'left', 'right']) {
+                const n = stepX(s.x, s.vx, key);
+                const seq = [...s.seq, key];
+                if (n.x === lane.x && n.vx === 0) return seq;
+                const k = `${n.x}|${n.vx}`;
+                if (seen.has(k)) continue;
+                seen.add(k);
+                next.push({ ...n, seq });
+            }
+        }
+        frontier = next;
+    }
+    return null;
 }
 
 /**
