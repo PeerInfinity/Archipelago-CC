@@ -42,6 +42,31 @@ function chamberWithSpinner(tx, ty) {
     ]);
 }
 
+/** `census-seedling-enemies.corridorRoom('spinner')`: a 1-wide L from (1,1)
+ *  along row 1 and down column 8 to the goal, the body standing IN it at (4,1). */
+function corridorWithSpinner() {
+    let rec = emptyLevel({ level: SEEDLING_DEFAULTS.level });
+    const floor = new Set();
+    for (let x = 1; x <= 8; x += 1) floor.add(`${x},1`);
+    for (let y = 1; y <= 8; y += 1) floor.add(`8,${y}`);
+    const wall = [];
+    for (let y = 1; y <= 8; y += 1) {
+        for (let x = 1; x <= 8; x += 1) if (!floor.has(`${x},${y}`)) wall.push({ tx: x, ty: y, terrain: 'wall' });
+    }
+    rec = withTerrain(rec, wall);
+    return withEntities(rec, [
+        { type: 'totempart', ...oelAtTile(GOAL.tx, GOAL.ty), attrs: { tag: SEEDLING_DEFAULTS.goalTag } },
+        { type: 'spinner', ...oelAtTile(4, 1), attrs: { tag: '-1' } },
+    ]);
+}
+
+function solveRoom(rec, items, name) {
+    const staging = bootStaging({ boot: bootAtTile(rec, START.tx, START.ty), items,
+        pins: ['dead_frames'], time: GENERATED_BOOT_TIME });
+    return solve(rec, staging, [collectGoal(GOAL.tx * 16, GOAL.ty * 16)], DEFAULT_BUDGET,
+        { name, scratchPersistence: true });
+}
+
 function solveAt(tx, ty, items) {
     const rec = chamberWithSpinner(tx, ty);
     const staging = bootStaging({ boot: bootAtTile(rec, START.tx, START.ty), items,
@@ -107,6 +132,49 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
         expect(kills).toHaveLength(1);
         expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@112,96' });
         expect(kills[0].landings).toHaveLength(3);
+    });
+
+    /**
+     * ⛓ U4b D3 — the bounded pass spent its forty-three opportunities on four
+     * cells whose corridors all cross the hammer, and refused *"no (cell, tick)
+     * … 43 opportunit(ies)"*. The admission's continuation keeps scanning in
+     * tick order with one walk per cell and finds (88,88) at +142 after one more
+     * cell. ⛔ With `continuation: false` the D1 text returns byte for byte.
+     */
+    it('(3,6): was "no (cell, tick)"; now SOLVES in 226 t on a strike past the bounded pass', () => {
+        const out = solveAt(3, 6, POST_SWORD_ITEMS);
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.ticks).toBe(226);
+        expect(out.certification?.certified).toBe(true);
+        const kills = out.records.filter((r) => r.strategy === 'kill');
+        expect(kills).toHaveLength(1);
+        expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@48,96' });
+        expect(kills[0].landings).toHaveLength(3);
+    });
+});
+
+describe('U4b D3 — the census CORRIDOR arm: a spinner in a 1-wide L', () => {
+    /**
+     * Every one of the bounded pass's forty-one opportunities was down the far
+     * leg, and every walk to one met the billiard at the corner at +89. The
+     * continuation finds (120,24) at +399 after four more cells, and the live
+     * arm presses as the body comes back into reach.
+     */
+    it('post-sword: was "no (cell, tick)"; now SOLVES in 225 t by a press kill', () => {
+        const out = solveRoom(corridorWithSpinner(), POST_SWORD_ITEMS, 'enemy-census-spinner@corridor');
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.ticks).toBe(225);
+        expect(out.certification?.certified).toBe(true);
+        const kills = out.records.filter((r) => r.strategy === 'kill');
+        expect(kills).toHaveLength(1);
+        expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@64,16' });
+        expect(kills[0].landings).toHaveLength(3);
+    });
+
+    it('pre-sword: stays REFUSED, and the kill line is the SUB-ORDER', () => {
+        const out = solveRoom(corridorWithSpinner(), PRE_SWORD_ITEMS, 'enemy-census-spinner@corridor');
+        expect(out.verdict).toBe(VERDICT.REFUSED);
+        expect(out.reasonText).toMatch(/kill: spinner@64,16 is a live Spinner whose removal the run OBSERVES .* The sword is a SUB-ORDER the macro layer owes/);
     });
 });
 

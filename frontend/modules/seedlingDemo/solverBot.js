@@ -5362,8 +5362,14 @@ function derivePressKill(run, bodies, contacts) {
      * here — before a tick is spent — is what turns "the room is unsolvable"
      * into a named refusal with the census behind it.
      */
+    /**
+     * ⛓ U4b D3 — the ADMISSION question ("is there a strike in this horizon at
+     * all?") is asked once, so it may continue past the bounded pass; the
+     * executor's per-tick re-derivations stay bounded, and adopt this strike
+     * only when the continuation is what found it (`execKillByPress`).
+     */
     const first = deriveStrike(run, `${bodies[0].tag}@${bodies[0].x},${bodies[0].y}`,
-        contacts, 0);
+        contacts, 0, { continuation: true });
     if (!first || !first.cell) {
         rejected.push({
             option: 'a strike schedule',
@@ -5379,6 +5385,13 @@ function derivePressKill(run, bodies, contacts) {
                     ? ` ${first.sighted} (cell, tick) pair(s) were SKIPPED because the swing's `
                         + 'line to a body\'s entity point crosses a Solid (`Player.slash`\'s '
                         + 'line-of-sight gate, asked through `run.collideLineSolid`).'
+                    : '')
+                // ⛓ U4b D3 — named only when the continuation previewed a cell.
+                + ((first?.continued ?? 0) > 0
+                    ? ` The scan then CONTINUED past them in tick order to +${strikeHorizon(run)} `
+                        + `and previewed ${first.continued} more cell(s) (bound `
+                        + `${STRIKE_CANDIDATES}); none is reachable in time along a `
+                        + 'transit-safe corridor.'
                     : ''),
         });
         if (first?.rejected?.length) rejected.push(...first.rejected.slice(0, 3));
@@ -5699,7 +5712,7 @@ function strikeLineBlocked(run, from, dir, forecast, i) {
     return null;
 }
 
-function deriveStrike(run, bodyId, contacts, notBefore = 0) {
+function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = false } = {}) {
     const index = (run.entities('spinnerBodies') ?? []).findIndex((b) => b.id === bodyId);
     if (index < 0) return null;
     const horizon = strikeHorizon(run);
@@ -5712,6 +5725,34 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
     /** ⛓ U3 D2 — how many (cell, tick) pairs the line of sight SKIPPED; a
      *  skip, not a refusal, and the count rides the refusal text. */
     let sighted = 0;
+    /** ⛓ U4b D3 — the tick the bounded pass stopped at, where a continuation
+     *  (below) picks up. */
+    let stoppedAt = horizon;
+    /**
+     * ⛓ U4b D3 — the (cell, tick) test, one spelling for both passes: in
+     * reach at the landing, the whole train clear, a clear line. `false` when
+     * the pair is not an opportunity; `sighted` counts the bounded pass's
+     * line skips only, so the refusal's count keeps its meaning.
+     */
+    const opportunityAt = (i, c, mine, { countSighted = true } = {}) => {
+        if (distanceRectPoint(c.x, c.y, mine) > SLASH_REACH) return false;
+        if (!rectsOverlapLocal(slashRectToward(c, mine), mine)) return false;
+        /**
+         * ⚠ THE TRAIN IS CHECKED ONE WIDER AT EACH END, and the reason is
+         * the pairing rather than caution: the assert reads the PRE-MOVE
+         * box against the POST-STEP bodies, so the tick the player arrives
+         * on and the tick after the last dispatch are both compared
+         * against a body this window would otherwise not have asked about.
+         */
+        for (let k = -2; k <= SLASH_HIT_TICKS + 1; k += 1) {
+            if (!clearOfHammersAt(run, c.box, forecast, i + k)) return false;
+        }
+        if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i)) {
+            if (countSighted) sighted += 1;
+            return false;
+        }
+        return true;
+    };
     for (let i = Math.max(1, notBefore); i < horizon - SLASH_HIT_TICKS - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
@@ -5719,32 +5760,38 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
             // ⛔ BEFORE the truncation, never after: a candidate the movement
             // model provably cannot reach must not consume one of the forty.
             if (i - 1 < floor.get(c)) { unreachable += 1; continue; }
-            if (distanceRectPoint(c.x, c.y, mine) > SLASH_REACH) continue;
-            if (!rectsOverlapLocal(slashRectToward(c, mine), mine)) continue;
-            /**
-             * ⚠ THE TRAIN IS CHECKED ONE WIDER AT EACH END, and the reason is
-             * the pairing rather than caution: the assert reads the PRE-MOVE
-             * box against the POST-STEP bodies, so the tick the player arrives
-             * on and the tick after the last dispatch are both compared
-             * against a body this window would otherwise not have asked about.
-             */
-            let safe = true;
-            for (let k = -2; k <= SLASH_HIT_TICKS + 1 && safe; k += 1) {
-                if (!clearOfHammersAt(run, c.box, forecast, i + k)) safe = false;
-            }
-            if (!safe) continue;
-            if (strikeLineBlocked(run, c, facingToward(c, mine), forecast, i)) {
-                sighted += 1;
-                continue;
-            }
-            opportunities.push({ i, cell: c });
+            if (opportunityAt(i, c, mine)) opportunities.push({ i, cell: c });
         }
-        if (opportunities.length >= STRIKE_CANDIDATES) break;
+        if (opportunities.length >= STRIKE_CANDIDATES) { stoppedAt = i; break; }
     }
     const rejected = [];
+    /**
+     * ⛓ U4b D3 — WHAT A CELL'S WALK SAYS DOES NOT DEPEND ON THE TICK. The walk
+     * is `previewWalk` from where the player is NOW to the cell, and its
+     * transit verdict is asked at each sample's own ETA — neither reads `i`.
+     * So one walk per cell answers every opportunity at that cell, and the
+     * continuation below spends its budget on CELLS rather than on the same
+     * cell at forty consecutive ticks.
+     */
+    const walks = new Map();
+    const walkTo = (cell) => {
+        if (walks.has(cell)) return walks.get(cell);
+        const walk = previewWalk(run, [{ x: cell.x, y: cell.y }], DEFAULT_TOLERANCE);
+        let unsafe = null;
+        if (!walk.truncated) {
+            for (const sm of walk.samples) {
+                const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
+                    sm.arrows, sm.chasers);
+                if (d.danger) { unsafe = { sm, d }; break; }
+            }
+        }
+        const out = { walk, eta: walk.samples.length, unsafe };
+        walks.set(cell, out);
+        return out;
+    };
     for (const o of opportunities) {
         // `previewWalk` returns the samples `drive` would spend getting there.
-        const walk = previewWalk(run, [{ x: o.cell.x, y: o.cell.y }], DEFAULT_TOLERANCE);
+        const { walk, unsafe } = walkTo(o.cell);
         if (walk.truncated) {
             rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
                 why: 'the preview TRUNCATED — the corridor the controller would take is '
@@ -5757,12 +5804,6 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
                 why: `the controller needs ${eta} tick(s) to arrive and the aim tick is `
                     + `+${o.i - 1} — a strike the walk cannot reach is a window, not a plan` });
             continue;
-        }
-        let unsafe = null;
-        for (const sm of walk.samples) {
-            const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
-                sm.arrows, sm.chasers);
-            if (d.danger) { unsafe = { sm, d }; break; }
         }
         if (unsafe) {
             rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
@@ -5781,11 +5822,63 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0) {
             sighted,
         };
     }
+    /**
+     * ⛓⛓ U4b D3 — **THE CONTINUATION, ONLY WHERE THE BOUNDED PASS REFUSED,
+     * AND ONLY FOR THE ADMISSION** (`derivePressKill`, `continuation: true`).
+     * The census chamber's (3,6) spent its forty-three on four cells at
+     * +104 … +126, every one's corridor crossing the hammer; the CORRIDOR arm
+     * spent its forty-one on four cells down the far leg, every walk meeting the
+     * billiard at the corner at +89. Both rooms had a strike later in tick
+     * order — (3,6) at (88,88) +142 after ONE more cell, the corridor at
+     * (120,24) +399 after four. The pass above is unchanged, so every strike it
+     * finds is found byte for byte; past it the scan continues in tick order to
+     * the horizon, asking the same four conditions, with the walk cached per
+     * cell and the budget counted in DISTINCT cells previewed
+     * (`STRIKE_CANDIDATES` again, named in the refusal).
+     *
+     * ⛔ WHY NOT EVERY DERIVATION. The executor re-derives on every tick it has
+     * no strike (a refuge wait), and a continuation there is a 640-tick scan
+     * per tick. It also re-plans committed fights: with it on every
+     * derivation L18's `r8-solve-18` solves in 416 t, not 485, which is a tape
+     * move and not this slice's. So the admission asks it once and
+     * `execKillByPress` adopts the strike it found.
+     */
+    let continued = 0;
+    for (let i = Math.max(stoppedAt + 1, notBefore, 1);
+        continuation && i < horizon - SLASH_HIT_TICKS - 1 && continued < STRIKE_CANDIDATES;
+        i += 1) {
+        const mine = forecast[i + 1]?.[index];
+        if (!mine) continue;
+        for (const c of cells) {
+            if (i - 1 < floor.get(c)) continue;
+            const known = walks.get(c);
+            if (known && (known.walk.truncated || known.unsafe || known.eta > i - 1)) continue;
+            if (!opportunityAt(i, c, mine, { countSighted: false })) continue;
+            if (!known) {
+                if (continued >= STRIKE_CANDIDATES) break;
+                continued += 1;
+            }
+            const { walk, eta, unsafe } = walkTo(c);
+            if (walk.truncated || unsafe || eta > i - 1) continue;
+            return {
+                cell: { x: c.x, y: c.y },
+                pressAt: run.ticksCompleted + i,
+                aimAt: run.ticksCompleted + i - 1,
+                eta,
+                rejected,
+                considered: opportunities.length,
+                sighted,
+                continued,
+                fromContinuation: true,
+            };
+        }
+    }
     return {
         cell: null,
         rejected,
         considered: opportunities.length,
         sighted,
+        continued,
         // ⛓ A BOUNDED SWEEP MUST NAME WHAT IT BOUNDED. The refusal now says
         // how many (cell, tick) pairs the ETA floor dropped as well as how
         // many were previewed — the two numbers a reader needs to tell "the
@@ -6749,6 +6842,25 @@ function execKillByPress(run, perTick, resolved, ctx) {
          * to allow.
          */
         let lastPressAt = -KILL_PRESS_CADENCE;
+        /**
+         * ⛓ U4b D3 — A STRIKE ONLY THE ADMISSION'S CONTINUATION FOUND IS
+         * ADOPTED, not re-derived: the executor's own derivation is the bounded
+         * pass and would refuse it on this same tick. A strike the bounded pass
+         * found is re-derived here exactly as before, so that path is unchanged.
+         */
+        const seeded = resolved.first;
+        if (seeded?.fromContinuation && seeded.cell && plan === resolved.plans[0]
+            && run.ticksCompleted < seeded.aimAt) {
+            strike = seeded;
+            cycles.push({
+                body: plan.id,
+                cell: seeded.cell,
+                pressAt: seeded.pressAt,
+                eta: seeded.eta,
+                considered: seeded.considered,
+                rejected: seeded.rejected.slice(0, 3),
+            });
+        }
         for (; spent <= bound; spent += 1) {
             const body = (run.entities('spinnerBodies') ?? []).find((b) => b.id === plan.id);
             if (!body) break;

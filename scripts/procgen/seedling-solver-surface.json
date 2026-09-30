@@ -806,9 +806,9 @@
       "files": {
         "botDriverV2.js": 3,
         "dangerMap.js": 1,
-        "solverBot.js": 23
+        "solverBot.js": 26
       },
-      "sites": 27,
+      "sites": 30,
       "seen": "both",
       "via": [
         "direct"
@@ -3653,10 +3653,10 @@
       "class": "seedling",
       "form": "constant",
       "files": {
-        "solverBot.js": 10,
+        "solverBot.js": 11,
         "strikePolicy.js": 2
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "static",
       "via": [
         "import"
