@@ -198,6 +198,25 @@ describe('A*', () => {
             .toThrow(/start tile \(9,9\)/);
     });
 
+    it('names a DANGER volume on an endpoint by its source id and rect, never undefined', () => {
+        // Seedling swim U4, D3: the AVOID rung hands `dangerVolumes` rows
+        // (`{id, rect, why}`, no tag/x/y) through `extraVolumes`; step 24's
+        // planner sentence read "danger undefined at (undefined,undefined)".
+        const goal = tileCentre(8, 12);
+        expect(isWalkableTile(level0, 8, 12)).toBe(true);
+        const volume = {
+            level: level0.level, kind: 'danger', id: 'puncher@128,192',
+            rect: { x: 130, y: 196, w: 12, h: 12, right: 142, bottom: 208 },
+            why: 'a static "Enemy" body',
+        };
+        let message = null;
+        try {
+            planTilePath(level0, SPAWN, goal, null, { extraVolumes: [volume] });
+        } catch (e) { message = e.message; }
+        expect(message).toMatch(/goal tile \(8,12\).*not walkable: danger:puncher@128,192 \(a static "Enemy" body\) at \(130,196\)/s);
+        expect(message).not.toMatch(/undefined/);
+    });
+
     it('refuses rather than approximates when the target is walled off', () => {
         // Tile (18,8) is in level 0's east corridor: walkable, and cut off
         // from the spawn by the lake and the cliff. "No path" is a named

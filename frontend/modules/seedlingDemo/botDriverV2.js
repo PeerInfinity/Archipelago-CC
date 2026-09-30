@@ -675,6 +675,15 @@ const describe = (o) => {
         return `${o.kind} ${o.blocker.tag} at (${o.blocker.rect.x},${o.blocker.rect.y}): `
             + `${o.blocker.why}`;
     }
+    // ⛓ SEEDLING SWIM U4, D3 — a DANGER volume (the AVOID rung's
+    // `extraVolumes`, `dangerMap.dangerVolumes`' rows) is `{id, rect, why}`
+    // with no `tag`/`x`/`y`, so the entity formatter below read
+    // "danger undefined at (undefined,undefined)" (U2's step-24 residue).
+    // It names its source by id and its rect, the same sentence shape.
+    if (o.blocker.id !== undefined && o.blocker.rect && o.blocker.tag === undefined) {
+        return `${o.kind}:${o.blocker.id} (${o.blocker.why}) `
+            + `at (${o.blocker.rect.x},${o.blocker.rect.y})`;
+    }
     return `${o.kind} ${o.blocker.tag ?? o.blocker.cls?.as3} `
         + `at (${o.blocker.x},${o.blocker.y})`;
 };
