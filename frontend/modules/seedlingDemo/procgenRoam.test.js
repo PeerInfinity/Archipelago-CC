@@ -266,8 +266,9 @@ describe('roam — the textless goal is the COMMITTED record\'s', () => {
 
 describe('roam — the solver\'s refusal is the element\'s, BY NAME', () => {
     /** ⛓ F1b — a 2x4 blob whose two bodies stand in the corridor's own column:
-     *  the route MUST cross them, which is W0's refusing half. */
-    for (const [boot, items] of [['pre-sword', PRE_SWORD_ITEMS], ['post-sword', POST_SWORD_ITEMS]]) {
+     *  the route MUST cross them, which is W0's refusing half. ⛓ U4b: only the
+     *  PRE-sword half still refuses; post-sword the kill lands (the row below). */
+    for (const [boot, items] of [['pre-sword', PRE_SWORD_ITEMS]]) {
         it(`winding 14x14 seed 12, ${boot}: the-solver-cannot-cross-the-roaming-body, with the `
             + 'solver\'s own words, and the element is DROPPED', () => {
             const seam = seedlingSeam({ seed: 12, items, skeleton: seedlingSkeletonSpec('winding'),
@@ -282,6 +283,25 @@ describe('roam — the solver\'s refusal is the element\'s, BY NAME', () => {
             expect(goalOf(seam.model.skeleton()).type).toBe('torchpickup');
         });
     }
+
+    /**
+     * ⛓ SEEDLING SWIM U4b — the post-sword half of the same room now CERTIFIES
+     * by a kill: the press arm's hammer test pairs each forecast row with the
+     * clock its own tick bills, and the kill admission continues past the
+     * bounded strike pass. Both bodies are placed and both are killed.
+     */
+    it('winding 14x14 seed 12, post-sword: was the-solver-cannot-cross-the-roaming-body; now CERTIFIES by a kill', () => {
+        const seam = seedlingSeam({ seed: 12, items: POST_SWORD_ITEMS,
+            skeleton: seedlingSkeletonSpec('winding'), defaults: { width: 14, height: 14 },
+            elements: { name: 'roam' } });
+        const c = seam.certification;
+        expect(c.certified).toBe(true);
+        expect(c.verdict).toBe('SOLVED');
+        expect(c.ticks).toBe(650);
+        expect(c.strategies).toEqual(['kill', 'collect']);
+        expect(seam.model.elements.ran).toBe(true);
+        expect(seam.model.roamingBodies.map((b) => b.id)).toEqual(['roam_body_0', 'roam_body_1']);
+    });
 });
 
 describe('roam — a kill lock in a room that holds a roaming body is refused BY NAME', () => {

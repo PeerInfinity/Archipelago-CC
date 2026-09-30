@@ -659,9 +659,9 @@
       "files": {
         "botDriverV2.js": 29,
         "director.js": 1,
-        "solverBot.js": 20
+        "solverBot.js": 21
       },
-      "sites": 50,
+      "sites": 51,
       "seen": "both",
       "via": [
         "direct"
@@ -699,7 +699,7 @@
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
-          "solverBot.js": 4
+          "solverBot.js": 5
         },
         "saveState": {
           "director.js": 1

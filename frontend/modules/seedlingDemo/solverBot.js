@@ -5363,6 +5363,29 @@ function derivePressKill(run, bodies, contacts) {
      * into a named refusal with the census behind it.
      */
     /**
+     * ⛓⛓ SEEDLING SWIM U4b — **A PRESS WITHOUT A SWORD IS NOT A KILL.** The
+     * lock-less arm asked `primaryWeapon` before it called this; the KILL-LOCK
+     * arm (`execKill`) never did. Its without-sword runs refused only because
+     * the refuge wall fired first (*"nowhere to be"*). With the hammer priced
+     * at its own tick that wall is gone, and `generateSeedlingLevel` seed 14's
+     * `--require=hasSword` without-arm planned 278 strikes, landed 0, and
+     * exhausted the 2010-tick bound (STRONG → BOUND-DEPENDENT). So the question
+     * is asked here, for both callers, in the lock-less arm's own words —
+     * LAST, after every per-body refusal, so each sentence this arm already
+     * said keeps its place (L5's committed trace records *"tracks NO live
+     * spinner bodies"*; an un-modelled body names `KILL_ARM_POLICY`), and the
+     * weapon is asked only where a modelled live spinner is there to press.
+     */
+    const weapon = run.progress('primaryWeapon');
+    if (weapon !== 'sword') {
+        return no([{
+            option: 'press a body',
+            why: `the run's \`primary\` slot ${weapon === null ? 'holds NOTHING' : `fires \`${weapon}\``}`
+                + ' — the kill this arm derives is a SWORD press (`KILL_ARM_POLICY.Spinner`). '
+                + 'The sword is a SUB-ORDER the macro layer owes.',
+        }]);
+    }
+    /**
      * ⛓ U4b D3 — the ADMISSION question ("is there a strike in this horizon at
      * all?") is asked once, so it may continue past the bounded pass; the
      * executor's per-tick re-derivations stay bounded, and adopt this strike

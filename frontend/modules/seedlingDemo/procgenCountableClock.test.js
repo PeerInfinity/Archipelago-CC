@@ -292,11 +292,19 @@ describe('procgen — the hammer-safety refusal is classifiable (slice 4e)', () 
      * cells refuse as a plain `SolverRefusal` instead ((2,2), (5,4)); those are
      * NOT this row's subject and picking one would have made the row green
      * while testing a different class.
+     *
+     * ⛓⛓ SEEDLING SWIM U4b RE-POINTED IT AGAIN, (4,1) -> (1,3), BY THE SAME
+     * SWEEP. With the press arm's hammer test paired at the clock its own tick
+     * bills (`spinnerClockPairing.test.js`) and the kill admission continuing
+     * past the bounded strike pass, the class shrank from TWELVE cells to ONE:
+     * (1,3), whose refusal is *"There is no step out."* (the step-out wall U4b
+     * measured and did not ship). Ten of the twelve had read *"nowhere to be"*.
+     * (6,3) and (5,4) refuse as a plain `SolverRefusal`, not this class.
      */
     it('a hammer-safety `SolverBotError` becomes REFUSED, text carried VERBATIM', () => {
         const out = solveRoom(room([
             { type: 'lock', ...oelAtTile(5, 5), attrs: { tset: '-1', tag: '1' } },
-            { type: 'spinner', ...oelAtTile(4, 1), attrs: { tag: '-1' } },
+            { type: 'spinner', ...oelAtTile(1, 3), attrs: { tag: '-1' } },
         ]));
         expect(out.verdict).toBe(VERDICT.REFUSED);
         expect(out.errorName).toBe('SolverBotError');
