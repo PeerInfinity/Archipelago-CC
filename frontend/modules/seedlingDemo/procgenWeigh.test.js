@@ -311,8 +311,11 @@ describe('⛓ EVERY REFINEMENT ROW IS DRIVEN — the table cannot drift silently
         },
     };
 
-    it('the table has at least the three refinements this arc knows about', () => {
-        expect(STRATEGY_REFINEMENTS.length).toBeGreaterThanOrEqual(3);
+    it('the table carries the refinements this arc knows about, pinned by NAME', () => {
+        // ⛓ A roster is pinned by its names, never its length (the gate-label
+        // lint's own rule): a row that counted would pass with the wrong three.
+        const keys = STRATEGY_REFINEMENTS.map((r) => `${r.from} -> ${r.to}`);
+        expect(keys).toEqual(expect.arrayContaining(['hold -> kill', 'hold -> weigh', 'hold -> skirt']));
     });
 
     for (const r of STRATEGY_REFINEMENTS) {
