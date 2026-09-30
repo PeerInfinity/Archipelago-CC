@@ -24,7 +24,6 @@ Beyond standard tracking, the frontend supports alternate game modes activated v
 | **Standard** | *(default)* | Connect to an Archipelago server and track your game |
 | **[MetaMath](../worlds/metamath/docs/README.md)** | `?mode=metamath` | Play through mathematical proofs as Archipelago worlds |
 | **[DepGraph](../docs/json/features/depgraph.md)** | `?mode=depgraph` | Navigate dependency graphs (tech trees, skill trees) |
-| **[Journey to Ascension](../worlds/jta/docs/en_Journey%20to%20Ascension.md)** | `?mode=jta` | Incremental/idle game with randomized perks |
 | **[Loops](../docs/json/features/loops.md)** | `?mode=loops` | Incremental/idle mode — queue actions, spend mana, earn XP |
 | **[Maze Metagame](../docs/json/features/maze-metagame.md)** | `?metagame=mazegame` | Solve mazes before checking locations or moving regions |
 | **Text Adventure** | *(via module config)* | Play the randomizer as a text-based adventure |

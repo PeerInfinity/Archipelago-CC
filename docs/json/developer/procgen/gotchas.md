@@ -67,7 +67,7 @@ The libraries are `mazeRoomLibrary.js`, `bounceDemoLibrary.js`, `runnerDemoLibra
 
 ### Which substrates are live depends on the launch mode
 
-`frontend/modes.json` maps each launch mode to a module config in `frontend/module-configs/` (`modules.json`, `modules-nograph.json`, `modules-jta.json`, …), and each enables a different module set; the spoiler-test configs omit the substrate runtimes entirely. When a substrate "is not registered", check which mode the app was launched with before debugging the registry.
+`frontend/modes.json` maps each launch mode to a module config in `frontend/module-configs/` (`modules.json`, `modules-nograph.json`, `modules-flash.json`, …), and each enables a different module set; the spoiler-test configs omit the substrate runtimes entirely. When a substrate "is not registered", check which mode the app was launched with before debugging the registry.
 
 ### A substrate's replay can depend on a module the config disables
 

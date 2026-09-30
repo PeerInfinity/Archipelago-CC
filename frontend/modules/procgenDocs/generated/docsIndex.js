@@ -27,7 +27,7 @@ export const DOCS_INDEX = frz({
         "indexHeadings": 2,
         "lines": 20889,
         "pages": 4,
-        "words": 243372
+        "words": 243365
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -417,7 +417,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/jta.md",
-            "words": 2928
+            "words": 2921
         },
         {
             "description": "The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) runs the `PeerInfinity/omsi-loops` fork of Idle Loops, from the `frontend/modules/omsi-loops/` submodule, in a same-origin iframe as a loop-mode substrate. The host owns the game clock, and the game's per-loop mana budget is the shared mana pool.",

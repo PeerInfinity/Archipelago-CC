@@ -80,7 +80,7 @@ jta supports every loops block mode. The contract is in [Loop Recording and Bloc
 - **Bot** hands the queued `regionMove` to `controller.walkTo` ([above](#playback--bot-execution)). The fork's energy drain is mirrored into the pool, and loops adds no completion charge.
 - **Bot Instant** uses `setInstantMode`, set both ways before each walk because the mode is sticky in the fork. A Bot plays the live game with no recording to stay faithful to, and the native economy still charges for every rep.
 - **Strict action gate.** Declaring `record` and `playback` puts jta under the strict action gate: substrate actions only count while the queue is parked on a matching Manual, Record or Bot block. The bridge's `_dispatchRegionMove` carries no `fromLoop`, so a walk-driven crossing passes on the `queueExecution` exemption while the Bot park holds it open.
-- **`requiresLoopMode: true`.** The fork's native reset to zone 0 is the loop-mode teleport once zones are host regions, so energy sync and reset propagation are always on. Standalone play uses the separate `?mode=jta` mode. See [`requiresLoopMode`](./loop-recording.md#requiresloopmode--loop-game-substrates).
+- **`requiresLoopMode: true`.** The fork's native reset to zone 0 is the loop-mode teleport once zones are host regions, so energy sync and reset propagation are always on. See [`requiresLoopMode`](./loop-recording.md#requiresloopmode--loop-game-substrates).
 
 In-app coverage: `jta-bot-walkto-exit` (the full Bot path), `jta-record-playback-crosses-zone-boundary` (Record then Playback) and `jta-synthetic-exit-task-id-stability` (exit ids across re-entry, and that a re-entry after a reset loads the zone un-completed), all in `frontend/modules/tests/testCases/jtaSubstrateWrapperTests.js`.
 

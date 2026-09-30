@@ -290,16 +290,15 @@ These parameters control automatic connection to an Archipelago server.
 
 **Usage:** `?iframe=<shortname>` or `?iframe=<url>`
 
-**Valid Values:** A shortname from the known pages list (`textadventure`, `iframebase`, `mazegame`, `jta`) or a full URL.
+**Valid Values:** A shortname from the known pages list (`textadventure`, `iframebase`, `mazegame`) or a full URL.
 
 **Examples:**
-- `?iframe=jta` - Load Journey to Ascension in an iframe
 - `?iframe=mazegame` - Load A-Mazing-Idle in an iframe
-- `?iframe=jta&useWindow=1` - Load JtA in a separate browser window instead
+- `?iframe=mazegame&useWindow=1` - Load A-Mazing-Idle in a separate browser window instead
 
 **Details:**
 - Resolved via `knownIframePages.js` shortname lookup, or passed through as a URL
-- Falls back to the `iframeAutoLoad` setting from mode settings (e.g., `settings-jta.json` has `"iframeAutoLoad": "jta"`)
+- Falls back to the `iframeAutoLoad` setting from mode settings (e.g. `"iframeAutoLoad": "mazegame"` in a mode's settings file)
 - Publishes `iframe:loadUrl` (or `window:loadUrl` when `useWindow=1`)
 - Loading happens after the panel manager initializes, with a 500ms delay
 - **Dev-host only:** `?iframe=` is a local-testing affordance. It is honored
@@ -316,8 +315,7 @@ These parameters control automatic connection to an Archipelago server.
 **Usage:** `?useWindow=1`
 
 **Examples:**
-- `?iframe=jta&useWindow=1` - Load JtA in a separate window
-- `?mode=jta&useWindow=1` - JtA mode with game in a separate window (via `iframeAutoLoad`)
+- `?iframe=mazegame&useWindow=1` - Load A-Mazing-Idle in a separate window
 - `?metagame=mazegame&useWindow=1` - Maze metagame with mazes opening in separate windows
 
 **Details:**

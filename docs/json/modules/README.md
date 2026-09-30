@@ -132,5 +132,5 @@ These live under `frontend/modules/` but are not frontend modules in the registr
 
 - **`shared/`** — git submodule of cross-module utilities and the procgen primitives ([Shared](./shared.md)); `git log`/`blame`/commits happen inside the submodule.
 - **`textAdventureEngine/`** — git submodule holding the Archipelago-naive text-adventure engine. See [Text Adventure Substrate](../developer/procgen/text-adventure.md).
-- **`journey-to-ascension/`**, **`jta-randomizer/`**, **`jta-remote/`**, **`a-mazing-idle-remote/`** — bundled game builds/forks consumed by their wrapper modules, not modules themselves.
+- **`journey-to-ascension/`**, **`jta-randomizer/`**, **`a-mazing-idle-remote/`** — bundled game builds/forks consumed by their wrapper modules, not modules themselves.
 - **`testModule/`** — a minimal dynamically-loaded panel used as a test fixture.

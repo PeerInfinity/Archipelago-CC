@@ -1,7 +1,5 @@
 # Journey to Ascension
 
-**[Live demo](https://peerinfinity.github.io/Archipelago-CC/?mode=jta)**
-
 Archipelago integration for [Journey to Ascension](https://imgreghenry.github.io/JourneyToAscension/), an incremental/idle game. Progress through 27 zones by completing tasks, leveling skills, and collecting perks — but your perks are shuffled into the multiworld item pool.
 
 ## How to Play

@@ -113,8 +113,7 @@
       "textAdventureStandalone": "WARN",
       "jtaActionQueue": "WARN",
       "jtaQueueEngine": "WARN",
-      "jtaQueueExecutor": "WARN",
-      "jtaGameClient": "WARN"
+      "jtaQueueExecutor": "WARN"
     },
     "filters": {
       "includeKeywords": [],

@@ -32,12 +32,6 @@ export const knownWindowPages = [
         url: "./modules/a-mazing-idle-remote/index-iframe.html",
         description: "Incremental maze game in separate window",
         shortName: "mazegame"
-    },
-    {
-        name: "Journey to Ascension",
-        url: "./modules/jta-remote/index-iframe.html",
-        description: "Incremental RPG adventure in separate window",
-        shortName: "jta"
     }
 ];
 
