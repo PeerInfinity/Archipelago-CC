@@ -50,7 +50,6 @@ import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { createRoomPlay } from './seedlingRoomPlay.js';
@@ -108,7 +107,13 @@ async function main() {
         .filter((cid) => CONCEPTS[cid]?.item).map((cid) => [CONCEPTS[cid].item.id, MAZE?.itemLib?.[CONCEPTS[cid].item.id]?.color]));
 
     const URL = `${HOST}/frontend/?game=${GAME}&seed=1`;
-    const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
+    // ⛓ No wasm on this page (a maze and a text adventure), so no wasm channel:
+    // the default launch, as the other non-wasm gates use. The wasm gates' arg
+    // sets belong to gates that drive the recompiled game, and importing one
+    // here made H2's roster (`headlessChromium.test.js`) count this gate as one
+    // — a zero-pageerror claim on the logic-only channel is a claim that
+    // channel's device-lost signature refutes for a WASM page, not for this one.
+    const browser = await chromium.launch();
     const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
     const logs = [];
     page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
