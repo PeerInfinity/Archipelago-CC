@@ -177,6 +177,8 @@ guardian: { tier: 'mechanic', placements: { /* … */ },
 
 `blocksImplementedBy(entry, concepts)` lists `[{concept, block, family}]` in the entry's declared order, as `conceptsRealisedBy` does for concepts. No chart statement reads it yet. The maze's and the text adventure's realisations implement no block: a skin shows a concept and does not behave as it.
 
+Seedling's entities carry these blocks as labels in `seedlingDemo/entityBlocks.js`, which also says which blocks the Seedling solver models (see [The Seedling Solver's Surface § Which blocks the solver models](./seedling-solver-surface.md#which-blocks-the-solver-models)). `certifiableBlocks(realisation.blocks)` splits a realisation's blocks into the ones the solver models and the ones it does not, so whether a realisation can be certified is a lookup.
+
 ## Related documentation
 
 - [Paths and Obstacles](./paths-and-obstacles.md) — the shared item/obstacle vocabulary and the rule → requirement extractor

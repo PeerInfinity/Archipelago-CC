@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 26,
-        "headings": 935,
+        "headings": 936,
         "indexHeadings": 2,
-        "lines": 21088,
+        "lines": 21143,
         "pages": 4,
-        "words": 246361
+        "words": 247007
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -269,15 +269,16 @@ export const DOCS_INDEX = frz({
             "file": "concepts.md",
             "h1": "Concepts",
             "headings": 18,
-            "lines": 185,
+            "lines": 187,
             "links": [
                 "gotchas.md",
                 "paths-and-obstacles.md",
+                "seedling-solver-surface.md",
                 "substrate-registry.md",
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/concepts.md",
-            "words": 2866
+            "words": 2922
         },
         {
             "description": "Sphere growth, top-down, and shuffled-spiral can run as one monolithic call or as a sequence of discrete steps that you can inspect, edit, and re-run. The stepped form is what the Procgen Pipeline panel's step buttons and the per-step CLIs drive, and it reproduces the monolithic output byte for byte.",
@@ -345,11 +346,13 @@ export const DOCS_INDEX = frz({
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
             "file": "seedling-solver-surface.md",
             "h1": "The Seedling Solver's Surface",
-            "headings": 14,
-            "lines": 242,
-            "links": [],
+            "headings": 15,
+            "lines": 295,
+            "links": [
+                "concepts.md"
+            ],
             "path": "docs/json/developer/procgen/seedling-solver-surface.md",
-            "words": 3872
+            "words": 4462
         },
         {
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",

@@ -257,3 +257,35 @@ describe('D3 — certifiability as a lookup', () => {
         expect(() => certifiableBlocks(null)).toThrow(EntityBlocksError);
     });
 });
+
+describe('D4 — the doc section is pinned to the tables', () => {
+    const doc = read('docs/json/developer/procgen/seedling-solver-surface.md');
+    const start = doc.indexOf('## Which blocks the solver models');
+    const section = doc.slice(start, doc.indexOf('\n## ', start + 1));
+    const ticks = (text) => [...text.matchAll(/`([^`]+)`/g)].map((m) => m[1]);
+    const para = (label) => section.slice(section.indexOf(`**${label}.**`)).split('\n')[0];
+    const withFamilies = (text) => new Map([...text.matchAll(/`([a-z-]+)` \(([^)]*)\)/gi)]
+        .map((m) => [m[1], ticks(m[2])]));
+
+    it('the section exists', () => {
+        expect(start).toBeGreaterThan(0);
+    });
+
+    it('its family table is FAMILY_BLOCKS, row for row', () => {
+        const rows = section.split('\n').filter((l) => /^\| `/.test(l)).map((l) => l.split('|').slice(1, -1).map((c) => c.trim()));
+        expect(rows.map((r) => ticks(r[0])[0])).toEqual(FAMILY_BLOCKS.map((f) => f.family));
+        for (const [i, f] of FAMILY_BLOCKS.entries()) {
+            expect(ticks(rows[i][1]), f.family).toEqual(f.blocks);
+            expect(ticks(rows[i][2]), f.family).toEqual(f.solverReads);
+        }
+    });
+
+    it('its three lists are the derived lists, with the families behind each', () => {
+        expect(withFamilies(para('Modelled'))).toEqual(new Map(blocksTheSolverModels().map((id) => [id, modellingFamilies().get(id)])));
+        const avoid = modellingFamilies({ depth: 'avoid' });
+        expect(withFamilies(para('Only avoided'))).toEqual(new Map(blocksOnlyAvoided().map((id) => [id, avoid.get(id)])));
+        const notModelled = para('Not modelled');
+        expect(ticks(notModelled.slice(notModelled.lastIndexOf(':'))))
+            .toEqual(blocksNoFamilyModels().filter((id) => !blocksOnlyAvoided().includes(id)));
+    });
+});

@@ -219,6 +219,59 @@ Each candidate below folds a group of members behind one new interface member. T
 
 The event-ledger fold removed the most interface members (29 became 1). The entity fold moved the most sites. Rank 4's first count, 13 → 1 and 50 sites, included `talkCircles` (1 site), which C3 folded into `run.entities`. The forecast fold mixes the physics `gameTimeAt` with the three Seedling forecasts, so a slice that builds it has to split the query by class.
 
+## Which blocks the solver models
+
+`frontend/modules/seedlingDemo/entityBlocks.js` (behaviour parameters P3) labels Seedling's entities with the behaviour blocks of `procgenCore/behaviourBlocks.js` (see [Concepts § Behaviour](./concepts.md#behaviour)). It is read-only for the model and the solver: nothing in either import closure imports it, and `entityBlocks.test.js` asserts that. It has three tables:
+
+- `ENTITY_BLOCKS` gives, for every `ENEMY_CLASSES` and `PUZZLEMENT_HAZARDS` tag, the blocks the class realises. A class that needs a block the vocabulary does not declare lists it under `bespoke`, and a boss is `unique`, with no blocks.
+- `AGGRO_KIND_BLOCKS` maps each `aggro.kind` word to the movement block it denotes.
+- `FAMILY_BLOCKS` maps each `run.entities` family and each `hazards.hazardVolume` arm to the blocks its state realises, the family files that read it, and the `OBSTACLE_STRATEGIES` verbs of the tags it holds.
+
+The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `volume:` row is an avoid volume: a static union over every phase, which keeps a route out of it but says nothing about what happens inside.
+
+| Family | Blocks | Read by |
+|---|---|---|
+| `openActivators` | `channel` | `botDriverV2`, `solverBot` |
+| `pushables` | `pushable` | `botDriverV2`, `solverBot` |
+| `armedArrowTraps` | `stationary`, `emitter`, `channel` | `botDriverV2`, `dangerMap`, `solverBot` |
+| `crushers` | `lane-charge`, `contact` | `botDriverV2`, `dangerMap` |
+| `openChests` | — | `botDriverV2`, `solverBot` |
+| `strikeBodies` | `hp` | `botDriverV2`, `solverBot` |
+| `spinnerBodies` | `rebound`, `contact`, `sweep`, `hp` | `dangerMap`, `solverBot` |
+| `armedPulsers` | `stationary`, `pulse`, `channel` | `botDriverV2`, `solverBot` |
+| `turrets` | `stationary`, `pushable` | `botDriverV2` |
+| `chasers` | `chase`, `contact` | `dangerMap`, `solverBot` |
+| `brokenRocks` | — | `botDriverV2`, `solverBot` |
+| `crushersParked` | `lane-charge` | `botDriverV2` |
+| `pushesSettled` | `pushable` | `botDriverV2` |
+| `openBridges` | — | `botDriverV2` |
+| `arrowsInFlight` | `emitter` | `dangerMap`, `solverBot` |
+| `burnedTrees` | — | `botDriverV2` |
+| `latchedGroups` | `channel` | `solverBot` |
+| `pulledRopes` | — | `botDriverV2` |
+| `turretDamage` | `hp`, `emitter` | `botDriverV2` |
+| `turretsSettled` | `pushable` | `botDriverV2` |
+| `arrowFlights` | `emitter` | `dangerMap` |
+| `bosses` | — | `botDriverV2` |
+| `talkCircles` | — | `solverBot` |
+| `volume:crusher` | `lane-charge`, `contact` | `encounters` |
+| `volume:spinningaxe` | `stationary`, `sweep` | `dangerMap`, `encounters` |
+| `volume:pulser` | `stationary`, `pulse` | `dangerMap`, `encounters` |
+| `volume:arrowtrap` | `emitter` | `encounters` |
+| `volume:beamtower` | `stationary`, `beam` | `dangerMap`, `encounters` |
+| `volume:lavachain` | `stationary`, `tether` | `dangerMap`, `encounters` |
+| `volume:whirlpool` | `stationary` | `dangerMap`, `encounters` |
+| `volume:pull` | `stationary` | `dangerMap`, `encounters` |
+| `volume:pod` | `stationary`, `contact` | `dangerMap`, `encounters` |
+
+**Modelled.** A block counts as modelled when some `run.entities` family that a solver-family file reads realises it. These blocks are modelled, with the families behind each: `stationary` (`armedArrowTraps`, `armedPulsers`, `turrets`), `chase` (`chasers`), `rebound` (`spinnerBodies`), `pushable` (`pushables`, `turrets`, `pushesSettled`, `turretsSettled`), `lane-charge` (`crushers`, `crushersParked`), `contact` (`crushers`, `spinnerBodies`, `chasers`), `emitter` (`armedArrowTraps`, `arrowsInFlight`, `turretDamage`, `arrowFlights`), `sweep` (`spinnerBodies`), `pulse` (`armedPulsers`), `hp` (`strikeBodies`, `spinnerBodies`, `turretDamage`), `channel` (`openActivators`, `armedArrowTraps`, `armedPulsers`, `latchedGroups`).
+
+**Only avoided.** These blocks reach the solver only as an avoid volume: `beam` (`volume:beamtower`), `tether` (`volume:lavachain`).
+
+**Not modelled.** No family the solver reads realises these blocks. A concept whose realisation uses one of them needs that block modelled before a solve can certify it: `patrol`, `seek`, `ballistic`, `wall-launch`, `tile-hop`, `rise`, `melee`, `stomp`, `explode`, `matrix`, `terrain`, `onDeath`, `proximity`, `lineOfSight`, `persistence`, `onHit`, `allEnemiesDead`, `itemHeld`, `schedule`, `light`, `facingAway`.
+
+`certifiableBlocks(realisation.blocks)` returns `{modelled, unmodelled, avoidedOnly}` for one realisation, so certifiability is a lookup. `blocksTheSolverModels()` returns the first list, `blocksOnlyAvoided()` the second, and `blocksNoFamilyModels()` the second and third together.
+
 ## Adding a member when a slice needs one
 
 The gate, `scripts/procgen/seedlingSolverSurface.test.js`, fails in five cases:

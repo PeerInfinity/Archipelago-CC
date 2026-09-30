@@ -264,8 +264,9 @@ describe('⛓ the links the render emits', () => {
         //   315 → 318: T2's text-adventure.md ⇄ concepts.md pair and text-adventure.md's same-doc § Prose link;
         //   318 → 319: T1's maze.md § Concept gates → concepts.md;
         //   319 → 320: T0b's concepts.md § Selection → § The two halves (same-doc);
-        //   320 → 322: T4's two pipeline-presets.md → concepts.md § The trial world links.
-        expect(checked).toBe(322);
+        //   320 → 322: T4's two pipeline-presets.md → concepts.md § The trial world links;
+        //   322 → 324: P3's seedling-solver-surface.md § Which blocks the solver models ⇄ concepts.md § Behaviour pair.
+        expect(checked).toBe(324);
     });
 
     it('tags each link with the kind that produced it', () => {

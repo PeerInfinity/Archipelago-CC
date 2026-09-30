@@ -240,20 +240,23 @@ describe('the corpus census — printed, then pinned', () => {
          *   320 → 322  CONCEPT LIBRARY T4 D5 (2026-09-30): pipeline-presets.md's
          *              `concept-trial-demo` row and its § The committed concept
          *              preset, each → concepts.md § The trial world (`doc` 245 → 247).
+         *   322 → 324  BEHAVIOUR PARAMETERS P3 D4 (2026-09-30): the pair
+         *              seedling-solver-surface.md § Which blocks the solver models ⇄
+         *              concepts.md § Behaviour (`doc` 247 → 249).
          */
         expect(by).toEqual({
             'same-doc': 17,
-            doc: 247,
+            doc: 249,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(322);
+        expect(CORPUS.length).toBe(324);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(247);
+        expect(docs).toHaveLength(249);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
