@@ -11,8 +11,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 603,
-      "msProbed": 4463,
+      "msPlain": 524,
+      "msProbed": 3642,
       "runs": 9
     },
     {
@@ -25,8 +25,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 451,
-      "msProbed": 1566,
+      "msPlain": 481,
+      "msProbed": 1457,
       "runs": 1
     },
     {
@@ -39,8 +39,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 2321,
-      "msProbed": 14267,
+      "msPlain": 2722,
+      "msProbed": 11990,
       "runs": 6
     },
     {
@@ -53,8 +53,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 1252,
-      "msProbed": 7753,
+      "msPlain": 1468,
+      "msProbed": 6580,
       "runs": 5
     },
     {
@@ -67,8 +67,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 448,
-      "msProbed": 1376,
+      "msPlain": 458,
+      "msProbed": 1023,
       "runs": 4
     },
     {
@@ -81,8 +81,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 369,
-      "msProbed": 1160,
+      "msPlain": 351,
+      "msProbed": 964,
       "runs": 2
     },
     {
@@ -95,8 +95,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 9746,
-      "msProbed": 47740,
+      "msPlain": 8572,
+      "msProbed": 37072,
       "runs": 32
     },
     {
@@ -109,8 +109,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": false,
-      "msPlain": 84543,
-      "msProbed": 275927,
+      "msPlain": 61297,
+      "msProbed": 219818,
       "runs": 7
     },
     {
@@ -123,8 +123,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": false,
-      "msPlain": 151002,
-      "msProbed": 465855,
+      "msPlain": 122105,
+      "msProbed": 365443,
       "runs": 7
     },
     {
@@ -137,8 +137,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": false,
-      "msPlain": 75000,
-      "msProbed": 292099,
+      "msPlain": 59307,
+      "msProbed": 235433,
       "runs": 7
     }
   ],
@@ -157,29 +157,29 @@
         "scripts/procgen/solve-seedling-r9-l3.mjs": 152
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1196",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1720",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1902",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2190",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2317",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2348",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2523",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2527",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3084",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3115",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3464",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3560",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4674",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4808",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4848",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4962",
-        "frontend/modules/seedlingDemo/solverBot.js:6393",
-        "frontend/modules/seedlingDemo/solverBot.js:6571",
-        "frontend/modules/seedlingDemo/solverBot.js:6833",
-        "frontend/modules/seedlingDemo/solverBot.js:7011",
-        "frontend/modules/seedlingDemo/solverBot.js:7241",
-        "frontend/modules/seedlingDemo/solverBot.js:7616",
-        "frontend/modules/seedlingDemo/solverBot.js:8411",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1190",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1714",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1896",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2184",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2311",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2342",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2517",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2521",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3078",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3109",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3458",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3554",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4668",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4802",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4842",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4956",
+        "frontend/modules/seedlingDemo/solverBot.js:6385",
+        "frontend/modules/seedlingDemo/solverBot.js:6563",
+        "frontend/modules/seedlingDemo/solverBot.js:6825",
+        "frontend/modules/seedlingDemo/solverBot.js:7003",
+        "frontend/modules/seedlingDemo/solverBot.js:7233",
+        "frontend/modules/seedlingDemo/solverBot.js:7608",
+        "frontend/modules/seedlingDemo/solverBot.js:8403",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:535",
         "scripts/procgen/solve-seedling-r8-l18.mjs:288",
         "scripts/procgen/solve-seedling-r8-tail.mjs:446",
@@ -202,117 +202,13 @@
     },
     {
       "surface": "run",
-      "name": "armedArrowTraps",
-      "reads": 75017,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 134,
-        "frontend/modules/seedlingDemo/dangerMap.js": 74837,
-        "frontend/modules/seedlingDemo/solverBot.js": 46
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1961",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5653",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5654",
-        "frontend/modules/seedlingDemo/dangerMap.js:140",
-        "frontend/modules/seedlingDemo/dangerMap.js:253",
-        "frontend/modules/seedlingDemo/dangerMap.js:678",
-        "frontend/modules/seedlingDemo/dangerMap.js:778",
-        "frontend/modules/seedlingDemo/solverBot.js:5933",
-        "frontend/modules/seedlingDemo/solverBot.js:9341",
-        "frontend/modules/seedlingDemo/solverBot.js:9689"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "armedPulsers",
-      "reads": 186,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 140,
-        "frontend/modules/seedlingDemo/solverBot.js": 46
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2000",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5644",
-        "frontend/modules/seedlingDemo/solverBot.js:5932",
-        "frontend/modules/seedlingDemo/solverBot.js:9340",
-        "frontend/modules/seedlingDemo/solverBot.js:9688"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "arrowFlights",
-      "reads": 66808,
-      "files": {
-        "frontend/modules/seedlingDemo/dangerMap.js": 66808
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:198"
-      ],
-      "routes": [
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "arrowForecast",
       "reads": 4667,
       "files": {
         "frontend/modules/seedlingDemo/solverBot.js": 4667
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:1821"
-      ],
-      "routes": [
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "arrowsInFlight",
-      "reads": 735,
-      "files": {
-        "frontend/modules/seedlingDemo/dangerMap.js": 674,
-        "frontend/modules/seedlingDemo/solverBot.js": 61
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:131",
-        "frontend/modules/seedlingDemo/dangerMap.js:690",
-        "frontend/modules/seedlingDemo/solverBot.js:5800",
-        "frontend/modules/seedlingDemo/solverBot.js:5856"
+        "frontend/modules/seedlingDemo/solverBot.js:1813"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -332,7 +228,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 14
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1970"
+        "frontend/modules/seedlingDemo/botDriverV2.js:1964"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -342,62 +238,16 @@
     },
     {
       "surface": "run",
-      "name": "bosses",
-      "reads": 360,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 360
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4563"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "brokenRocks",
-      "reads": 624,
+      "reads": 152,
       "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 360,
-        "frontend/modules/seedlingDemo/solverBot.js": 112,
         "scripts/procgen/solve-seedling-r9-l3.mjs": 152
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4552",
-        "frontend/modules/seedlingDemo/solverBot.js:4603",
-        "frontend/modules/seedlingDemo/solverBot.js:7565",
         "scripts/procgen/solve-seedling-r9-l3.mjs:186"
       ],
       "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs",
         "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "burnedTrees",
-      "reads": 360,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 360
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4554"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs"
       ]
     },
     {
@@ -408,7 +258,7 @@
         "frontend/modules/seedlingDemo/solverBot.js": 4667
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:1837"
+        "frontend/modules/seedlingDemo/solverBot.js:1829"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -428,7 +278,7 @@
         "frontend/modules/seedlingDemo/solverBot.js": 4
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6081"
+        "frontend/modules/seedlingDemo/solverBot.js:6073"
       ],
       "routes": [
         "solve-seedling-r8-tail.mjs",
@@ -444,39 +294,10 @@
         "frontend/modules/seedlingDemo/solverBot.js": 1604
       },
       "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:471",
-        "frontend/modules/seedlingDemo/dangerMap.js:715",
-        "frontend/modules/seedlingDemo/solverBot.js:4757",
-        "frontend/modules/seedlingDemo/solverBot.js:8996"
-      ],
-      "routes": [
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "chasers",
-      "reads": 68262,
-      "files": {
-        "frontend/modules/seedlingDemo/dangerMap.js": 66156,
-        "frontend/modules/seedlingDemo/solverBot.js": 2106
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:378",
-        "frontend/modules/seedlingDemo/dangerMap.js:716",
-        "frontend/modules/seedlingDemo/solverBot.js:4057",
-        "frontend/modules/seedlingDemo/solverBot.js:4065",
-        "frontend/modules/seedlingDemo/solverBot.js:4758",
-        "frontend/modules/seedlingDemo/solverBot.js:5998",
-        "frontend/modules/seedlingDemo/solverBot.js:6042",
-        "frontend/modules/seedlingDemo/solverBot.js:8995",
-        "frontend/modules/seedlingDemo/solverBot.js:9302"
+        "frontend/modules/seedlingDemo/dangerMap.js:469",
+        "frontend/modules/seedlingDemo/dangerMap.js:713",
+        "frontend/modules/seedlingDemo/solverBot.js:4749",
+        "frontend/modules/seedlingDemo/solverBot.js:8988"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -497,9 +318,9 @@
         "scripts/procgen/solve-seedling-r9-campaign.mjs": 18
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4685",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4722",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6130",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4679",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4716",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6124",
         "scripts/procgen/solve-seedling-r9-campaign.mjs:646",
         "scripts/procgen/solve-seedling-r9-campaign.mjs:838"
       ],
@@ -519,11 +340,11 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 1268
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4752",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4798",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4838",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4867",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4868"
+        "frontend/modules/seedlingDemo/botDriverV2.js:4746",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4792",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4832",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4861",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4862"
       ],
       "routes": [
         "regenerate-r3-tapes.mjs",
@@ -532,32 +353,6 @@
         "solve-seedling-r8-d2-chain.mjs",
         "solve-seedling-r8-d2.mjs",
         "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "crushers",
-      "reads": 75195,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 360,
-        "frontend/modules/seedlingDemo/dangerMap.js": 74835
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4556",
-        "frontend/modules/seedlingDemo/dangerMap.js:646",
-        "frontend/modules/seedlingDemo/dangerMap.js:746"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
       ]
     },
     {
@@ -583,7 +378,7 @@
         "frontend/modules/seedlingDemo/solverBot.js": 5
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:7603"
+        "frontend/modules/seedlingDemo/solverBot.js:7595"
       ],
       "routes": [
         "solve-seedling-r9-campaign.mjs",
@@ -613,13 +408,148 @@
     },
     {
       "surface": "run",
+      "name": "entities",
+      "reads": 457474,
+      "files": {
+        "frontend/modules/seedlingDemo/botDriverV2.js": 9473,
+        "frontend/modules/seedlingDemo/dangerMap.js": 432952,
+        "frontend/modules/seedlingDemo/solverBot.js": 15049
+      },
+      "sites": [
+        "frontend/modules/seedlingDemo/botDriverV2.js:1705",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1747",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1931",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1955",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1994",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2151",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2164",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2191",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2193",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2261",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2271",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2362",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2927",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3028",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3120",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3121",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3144",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3165",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3362",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3375",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3456",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3466",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3550",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3560",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3577",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3579",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3584",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4542",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4543",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4544",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4545",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4546",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4547",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4548",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4550",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4553",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4557",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4619",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4678",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4710",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4946",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5637",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5638",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5647",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5648",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5654",
+        "frontend/modules/seedlingDemo/dangerMap.js:129",
+        "frontend/modules/seedlingDemo/dangerMap.js:138",
+        "frontend/modules/seedlingDemo/dangerMap.js:196",
+        "frontend/modules/seedlingDemo/dangerMap.js:251",
+        "frontend/modules/seedlingDemo/dangerMap.js:376",
+        "frontend/modules/seedlingDemo/dangerMap.js:478",
+        "frontend/modules/seedlingDemo/dangerMap.js:567",
+        "frontend/modules/seedlingDemo/dangerMap.js:644",
+        "frontend/modules/seedlingDemo/dangerMap.js:676",
+        "frontend/modules/seedlingDemo/dangerMap.js:688",
+        "frontend/modules/seedlingDemo/dangerMap.js:714",
+        "frontend/modules/seedlingDemo/dangerMap.js:732",
+        "frontend/modules/seedlingDemo/dangerMap.js:744",
+        "frontend/modules/seedlingDemo/dangerMap.js:776",
+        "frontend/modules/seedlingDemo/solverBot.js:1007",
+        "frontend/modules/seedlingDemo/solverBot.js:1246",
+        "frontend/modules/seedlingDemo/solverBot.js:1769",
+        "frontend/modules/seedlingDemo/solverBot.js:1787",
+        "frontend/modules/seedlingDemo/solverBot.js:1853",
+        "frontend/modules/seedlingDemo/solverBot.js:2456",
+        "frontend/modules/seedlingDemo/solverBot.js:3127",
+        "frontend/modules/seedlingDemo/solverBot.js:3521",
+        "frontend/modules/seedlingDemo/solverBot.js:3552",
+        "frontend/modules/seedlingDemo/solverBot.js:4013",
+        "frontend/modules/seedlingDemo/solverBot.js:4044",
+        "frontend/modules/seedlingDemo/solverBot.js:4049",
+        "frontend/modules/seedlingDemo/solverBot.js:4057",
+        "frontend/modules/seedlingDemo/solverBot.js:4348",
+        "frontend/modules/seedlingDemo/solverBot.js:4579",
+        "frontend/modules/seedlingDemo/solverBot.js:4595",
+        "frontend/modules/seedlingDemo/solverBot.js:4750",
+        "frontend/modules/seedlingDemo/solverBot.js:4954",
+        "frontend/modules/seedlingDemo/solverBot.js:5283",
+        "frontend/modules/seedlingDemo/solverBot.js:5422",
+        "frontend/modules/seedlingDemo/solverBot.js:5491",
+        "frontend/modules/seedlingDemo/solverBot.js:5792",
+        "frontend/modules/seedlingDemo/solverBot.js:5848",
+        "frontend/modules/seedlingDemo/solverBot.js:5923",
+        "frontend/modules/seedlingDemo/solverBot.js:5924",
+        "frontend/modules/seedlingDemo/solverBot.js:5925",
+        "frontend/modules/seedlingDemo/solverBot.js:5990",
+        "frontend/modules/seedlingDemo/solverBot.js:6034",
+        "frontend/modules/seedlingDemo/solverBot.js:6289",
+        "frontend/modules/seedlingDemo/solverBot.js:6394",
+        "frontend/modules/seedlingDemo/solverBot.js:6887",
+        "frontend/modules/seedlingDemo/solverBot.js:7221",
+        "frontend/modules/seedlingDemo/solverBot.js:7557",
+        "frontend/modules/seedlingDemo/solverBot.js:7576",
+        "frontend/modules/seedlingDemo/solverBot.js:7653",
+        "frontend/modules/seedlingDemo/solverBot.js:7700",
+        "frontend/modules/seedlingDemo/solverBot.js:812",
+        "frontend/modules/seedlingDemo/solverBot.js:839",
+        "frontend/modules/seedlingDemo/solverBot.js:844",
+        "frontend/modules/seedlingDemo/solverBot.js:864",
+        "frontend/modules/seedlingDemo/solverBot.js:865",
+        "frontend/modules/seedlingDemo/solverBot.js:8987",
+        "frontend/modules/seedlingDemo/solverBot.js:9294",
+        "frontend/modules/seedlingDemo/solverBot.js:9331",
+        "frontend/modules/seedlingDemo/solverBot.js:9332",
+        "frontend/modules/seedlingDemo/solverBot.js:9333",
+        "frontend/modules/seedlingDemo/solverBot.js:9679",
+        "frontend/modules/seedlingDemo/solverBot.js:9680",
+        "frontend/modules/seedlingDemo/solverBot.js:9681",
+        "frontend/modules/seedlingDemo/solverBot.js:9695",
+        "frontend/modules/seedlingDemo/solverBot.js:9993"
+      ],
+      "routes": [
+        "regenerate-r2-tapes.mjs",
+        "regenerate-r3-tapes.mjs",
+        "regenerate-r4-tapes.mjs",
+        "solve-seedling-r8-battery.mjs",
+        "solve-seedling-r8-d2-chain.mjs",
+        "solve-seedling-r8-d2.mjs",
+        "solve-seedling-r8-l18.mjs",
+        "solve-seedling-r8-tail.mjs",
+        "solve-seedling-r9-campaign.mjs",
+        "solve-seedling-r9-l3.mjs"
+      ]
+    },
+    {
+      "surface": "run",
       "name": "equipNow",
       "reads": 2,
       "files": {
         "frontend/modules/seedlingDemo/botDriverV2.js": 2
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:5754"
+        "frontend/modules/seedlingDemo/botDriverV2.js:5748"
       ],
       "routes": [
         "regenerate-r4-tapes.mjs"
@@ -633,8 +563,8 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 21
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6000",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6054"
+        "frontend/modules/seedlingDemo/botDriverV2.js:5994",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6048"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -650,7 +580,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 10
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:591"
+        "frontend/modules/seedlingDemo/botDriverV2.js:585"
       ],
       "routes": [
         "regenerate-r4-tapes.mjs"
@@ -680,9 +610,9 @@
         "frontend/modules/seedlingDemo/solverBot.js": 591591
       },
       "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:574",
-        "frontend/modules/seedlingDemo/solverBot.js:5111",
-        "frontend/modules/seedlingDemo/solverBot.js:5520"
+        "frontend/modules/seedlingDemo/dangerMap.js:572",
+        "frontend/modules/seedlingDemo/solverBot.js:5103",
+        "frontend/modules/seedlingDemo/solverBot.js:5512"
       ],
       "routes": [
         "solve-seedling-r8-d2-chain.mjs",
@@ -713,7 +643,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 21
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6176"
+        "frontend/modules/seedlingDemo/botDriverV2.js:6170"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -729,7 +659,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 271
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4798"
+        "frontend/modules/seedlingDemo/botDriverV2.js:4792"
       ],
       "routes": [
         "regenerate-r3-tapes.mjs",
@@ -749,9 +679,9 @@
         "frontend/modules/seedlingDemo/solverBot.js": 210
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2305",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2341",
-        "frontend/modules/seedlingDemo/solverBot.js:7237"
+        "frontend/modules/seedlingDemo/botDriverV2.js:2299",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2335",
+        "frontend/modules/seedlingDemo/solverBot.js:7229"
       ],
       "routes": [
         "regenerate-r3-tapes.mjs",
@@ -770,16 +700,16 @@
         "scripts/procgen/solve-seedling-r9-campaign.mjs": 19
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2287",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2545",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5607",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6177",
-        "frontend/modules/seedlingDemo/solverBot.js:1484",
-        "frontend/modules/seedlingDemo/solverBot.js:1766",
-        "frontend/modules/seedlingDemo/solverBot.js:2448",
-        "frontend/modules/seedlingDemo/solverBot.js:3446",
-        "frontend/modules/seedlingDemo/solverBot.js:7053",
-        "frontend/modules/seedlingDemo/solverBot.js:7317",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2281",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2539",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5601",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6171",
+        "frontend/modules/seedlingDemo/solverBot.js:1476",
+        "frontend/modules/seedlingDemo/solverBot.js:1758",
+        "frontend/modules/seedlingDemo/solverBot.js:2440",
+        "frontend/modules/seedlingDemo/solverBot.js:3438",
+        "frontend/modules/seedlingDemo/solverBot.js:7045",
+        "frontend/modules/seedlingDemo/solverBot.js:7309",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:657",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:705",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:706",
@@ -813,7 +743,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 4
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2203"
+        "frontend/modules/seedlingDemo/botDriverV2.js:2197"
       ],
       "routes": [
         "regenerate-r4-tapes.mjs"
@@ -829,14 +759,14 @@
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs": 4
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2163",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5048",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5323",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5608",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6172",
-        "frontend/modules/seedlingDemo/solverBot.js:1481",
-        "frontend/modules/seedlingDemo/solverBot.js:1564",
-        "frontend/modules/seedlingDemo/solverBot.js:6860",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2157",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5042",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5317",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5602",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6166",
+        "frontend/modules/seedlingDemo/solverBot.js:1473",
+        "frontend/modules/seedlingDemo/solverBot.js:1556",
+        "frontend/modules/seedlingDemo/solverBot.js:6852",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:658",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:702",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:703"
@@ -856,21 +786,6 @@
     },
     {
       "surface": "run",
-      "name": "latchedGroups",
-      "reads": 2,
-      "files": {
-        "frontend/modules/seedlingDemo/solverBot.js": 2
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:7661",
-        "frontend/modules/seedlingDemo/solverBot.js:7708"
-      ],
-      "routes": [
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "level",
       "reads": 377530,
       "files": {
@@ -881,38 +796,38 @@
         "scripts/procgen/solve-seedling-r9-campaign.mjs": 2
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4753",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5013",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5014",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5052",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5314",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5685",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6090",
-        "frontend/modules/seedlingDemo/dangerMap.js:144",
-        "frontend/modules/seedlingDemo/dangerMap.js:255",
-        "frontend/modules/seedlingDemo/dangerMap.js:322",
-        "frontend/modules/seedlingDemo/dangerMap.js:470",
-        "frontend/modules/seedlingDemo/dangerMap.js:471",
-        "frontend/modules/seedlingDemo/dangerMap.js:676",
-        "frontend/modules/seedlingDemo/dangerMap.js:776",
-        "frontend/modules/seedlingDemo/dangerMap.js:970",
-        "frontend/modules/seedlingDemo/solverBot.js:3059",
-        "frontend/modules/seedlingDemo/solverBot.js:4062",
-        "frontend/modules/seedlingDemo/solverBot.js:4757",
-        "frontend/modules/seedlingDemo/solverBot.js:4839",
-        "frontend/modules/seedlingDemo/solverBot.js:4966",
-        "frontend/modules/seedlingDemo/solverBot.js:5855",
-        "frontend/modules/seedlingDemo/solverBot.js:5960",
-        "frontend/modules/seedlingDemo/solverBot.js:6081",
-        "frontend/modules/seedlingDemo/solverBot.js:6115",
-        "frontend/modules/seedlingDemo/solverBot.js:6482",
-        "frontend/modules/seedlingDemo/solverBot.js:6601",
-        "frontend/modules/seedlingDemo/solverBot.js:8503",
-        "frontend/modules/seedlingDemo/solverBot.js:8520",
-        "frontend/modules/seedlingDemo/solverBot.js:8996",
-        "frontend/modules/seedlingDemo/solverBot.js:9190",
-        "frontend/modules/seedlingDemo/solverBot.js:9358",
-        "frontend/modules/seedlingDemo/solverBot.js:9403",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4747",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5007",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5008",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5046",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5308",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5679",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6084",
+        "frontend/modules/seedlingDemo/dangerMap.js:142",
+        "frontend/modules/seedlingDemo/dangerMap.js:253",
+        "frontend/modules/seedlingDemo/dangerMap.js:320",
+        "frontend/modules/seedlingDemo/dangerMap.js:468",
+        "frontend/modules/seedlingDemo/dangerMap.js:469",
+        "frontend/modules/seedlingDemo/dangerMap.js:674",
+        "frontend/modules/seedlingDemo/dangerMap.js:774",
+        "frontend/modules/seedlingDemo/dangerMap.js:968",
+        "frontend/modules/seedlingDemo/solverBot.js:3051",
+        "frontend/modules/seedlingDemo/solverBot.js:4054",
+        "frontend/modules/seedlingDemo/solverBot.js:4749",
+        "frontend/modules/seedlingDemo/solverBot.js:4831",
+        "frontend/modules/seedlingDemo/solverBot.js:4958",
+        "frontend/modules/seedlingDemo/solverBot.js:5847",
+        "frontend/modules/seedlingDemo/solverBot.js:5952",
+        "frontend/modules/seedlingDemo/solverBot.js:6073",
+        "frontend/modules/seedlingDemo/solverBot.js:6107",
+        "frontend/modules/seedlingDemo/solverBot.js:6474",
+        "frontend/modules/seedlingDemo/solverBot.js:6593",
+        "frontend/modules/seedlingDemo/solverBot.js:8495",
+        "frontend/modules/seedlingDemo/solverBot.js:8512",
+        "frontend/modules/seedlingDemo/solverBot.js:8988",
+        "frontend/modules/seedlingDemo/solverBot.js:9182",
+        "frontend/modules/seedlingDemo/solverBot.js:9350",
+        "frontend/modules/seedlingDemo/solverBot.js:9395",
         "scripts/procgen/provisionalLatch.js:234",
         "scripts/procgen/solve-seedling-r9-campaign.mjs:477",
         "scripts/procgen/solve-seedling-r9-campaign.mjs:479"
@@ -938,10 +853,10 @@
         "frontend/modules/seedlingDemo/solverBot.js": 3652
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:1231",
-        "frontend/modules/seedlingDemo/solverBot.js:1479",
-        "frontend/modules/seedlingDemo/solverBot.js:3137",
-        "frontend/modules/seedlingDemo/solverBot.js:4496"
+        "frontend/modules/seedlingDemo/solverBot.js:1223",
+        "frontend/modules/seedlingDemo/solverBot.js:1471",
+        "frontend/modules/seedlingDemo/solverBot.js:3129",
+        "frontend/modules/seedlingDemo/solverBot.js:4488"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -961,7 +876,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 4
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2374"
+        "frontend/modules/seedlingDemo/botDriverV2.js:2368"
       ],
       "routes": [
         "regenerate-r3-tapes.mjs"
@@ -990,8 +905,8 @@
         "frontend/modules/seedlingDemo/solverBot.js": 3637
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2545",
-        "frontend/modules/seedlingDemo/solverBot.js:1485"
+        "frontend/modules/seedlingDemo/botDriverV2.js:2539",
+        "frontend/modules/seedlingDemo/solverBot.js:1477"
       ],
       "routes": [
         "regenerate-r4-tapes.mjs",
@@ -1007,93 +922,15 @@
     {
       "surface": "run",
       "name": "openActivators",
-      "reads": 1567,
+      "reads": 1,
       "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 690,
-        "frontend/modules/seedlingDemo/solverBot.js": 876,
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs": 1
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1753",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1937",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2157",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2170",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2197",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2199",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2267",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2277",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2368",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2933",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4548",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5643",
-        "frontend/modules/seedlingDemo/solverBot.js:4021",
-        "frontend/modules/seedlingDemo/solverBot.js:4052",
-        "frontend/modules/seedlingDemo/solverBot.js:4356",
-        "frontend/modules/seedlingDemo/solverBot.js:5931",
-        "frontend/modules/seedlingDemo/solverBot.js:6895",
-        "frontend/modules/seedlingDemo/solverBot.js:7229",
-        "frontend/modules/seedlingDemo/solverBot.js:852",
-        "frontend/modules/seedlingDemo/solverBot.js:9339",
-        "frontend/modules/seedlingDemo/solverBot.js:9687",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:730"
       ],
       "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "openBridges",
-      "reads": 360,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 360
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4551"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "openChests",
-      "reads": 523,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 486,
-        "frontend/modules/seedlingDemo/solverBot.js": 37
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4549",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4625",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4684",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4716",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5660",
-        "frontend/modules/seedlingDemo/solverBot.js:10001",
-        "frontend/modules/seedlingDemo/solverBot.js:9703"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
+        "solve-seedling-r8-d2-chain.mjs"
       ]
     },
     {
@@ -1112,8 +949,8 @@
         "scripts/procgen/solve-seedling-r9-l3.mjs": 1
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1699",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1727",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1693",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1721",
         "scripts/procgen/provisionalLatch.js:233",
         "scripts/procgen/solve-seedling-r8-battery.mjs:573",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:505",
@@ -1149,8 +986,8 @@
         "scripts/procgen/solve-seedling-r9-l3.mjs": 1
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1698",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1727",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1692",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1721",
         "scripts/procgen/provisionalLatch.js:232",
         "scripts/procgen/solve-seedling-r8-battery.mjs:572",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:504",
@@ -1178,7 +1015,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 21
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6173"
+        "frontend/modules/seedlingDemo/botDriverV2.js:6167"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -1194,10 +1031,10 @@
         "frontend/modules/seedlingDemo/solverBot.js": 9575
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:1809",
-        "frontend/modules/seedlingDemo/solverBot.js:5408",
-        "frontend/modules/seedlingDemo/solverBot.js:5433",
-        "frontend/modules/seedlingDemo/solverBot.js:5513"
+        "frontend/modules/seedlingDemo/solverBot.js:1801",
+        "frontend/modules/seedlingDemo/solverBot.js:5400",
+        "frontend/modules/seedlingDemo/solverBot.js:5425",
+        "frontend/modules/seedlingDemo/solverBot.js:5505"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -1217,31 +1054,13 @@
         "frontend/modules/seedlingDemo/solverBot.js": 1154
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:3433",
-        "frontend/modules/seedlingDemo/solverBot.js:7291",
-        "frontend/modules/seedlingDemo/solverBot.js:9138"
+        "frontend/modules/seedlingDemo/solverBot.js:3425",
+        "frontend/modules/seedlingDemo/solverBot.js:7283",
+        "frontend/modules/seedlingDemo/solverBot.js:9130"
       ],
       "routes": [
         "solve-seedling-r9-campaign.mjs",
         "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "pulledRopes",
-      "reads": 360,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 360
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4553"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs"
       ]
     },
     {
@@ -1252,7 +1071,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 21
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6125"
+        "frontend/modules/seedlingDemo/botDriverV2.js:6119"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -1268,7 +1087,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 21
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6127"
+        "frontend/modules/seedlingDemo/botDriverV2.js:6121"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -1284,69 +1103,12 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 21
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6126"
+        "frontend/modules/seedlingDemo/botDriverV2.js:6120"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
         "regenerate-r3-tapes.mjs",
         "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "pushables",
-      "reads": 1519,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 1447,
-        "frontend/modules/seedlingDemo/solverBot.js": 72
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:3034",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3127",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3150",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3368",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3381",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3462",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3472",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3566",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3590",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4550",
-        "frontend/modules/seedlingDemo/solverBot.js:1015",
-        "frontend/modules/seedlingDemo/solverBot.js:1254",
-        "frontend/modules/seedlingDemo/solverBot.js:3135",
-        "frontend/modules/seedlingDemo/solverBot.js:3529",
-        "frontend/modules/seedlingDemo/solverBot.js:3560",
-        "frontend/modules/seedlingDemo/solverBot.js:4587",
-        "frontend/modules/seedlingDemo/solverBot.js:820",
-        "frontend/modules/seedlingDemo/solverBot.js:847",
-        "frontend/modules/seedlingDemo/solverBot.js:872",
-        "frontend/modules/seedlingDemo/solverBot.js:873"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "pushesSettled",
-      "reads": 801,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 801
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:3126",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3171",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3583",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3585"
-      ],
-      "routes": [
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs"
       ]
     },
     {
@@ -1357,7 +1119,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 21
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6131"
+        "frontend/modules/seedlingDemo/botDriverV2.js:6125"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -1373,7 +1135,7 @@
         "frontend/modules/seedlingDemo/solverBot.js": 1
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:7718"
+        "frontend/modules/seedlingDemo/solverBot.js:7710"
       ],
       "routes": [
         "solve-seedling-r9-campaign.mjs"
@@ -1401,10 +1163,10 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 35
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4688",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4689",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4745",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6129"
+        "frontend/modules/seedlingDemo/botDriverV2.js:4682",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4683",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4739",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6123"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -1422,7 +1184,7 @@
         "frontend/modules/seedlingDemo/solverBot.js": 51
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2463"
+        "frontend/modules/seedlingDemo/solverBot.js:2455"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -1456,7 +1218,7 @@
         "frontend/modules/seedlingDemo/solverBot.js": 1200
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6801"
+        "frontend/modules/seedlingDemo/solverBot.js:6793"
       ],
       "routes": [
         "solve-seedling-r8-d2-chain.mjs",
@@ -1471,7 +1233,7 @@
         "frontend/modules/seedlingDemo/solverBot.js": 1197
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6820"
+        "frontend/modules/seedlingDemo/solverBot.js:6812"
       ],
       "routes": [
         "solve-seedling-r8-d2-chain.mjs",
@@ -1487,46 +1249,17 @@
         "frontend/modules/seedlingDemo/solverBot.js": 1965
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1717",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3557",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4955",
-        "frontend/modules/seedlingDemo/solverBot.js:1894",
-        "frontend/modules/seedlingDemo/solverBot.js:7585"
+        "frontend/modules/seedlingDemo/botDriverV2.js:1711",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3551",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4949",
+        "frontend/modules/seedlingDemo/solverBot.js:1886",
+        "frontend/modules/seedlingDemo/solverBot.js:7577"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
         "solve-seedling-r8-d2-chain.mjs",
         "solve-seedling-r8-d2.mjs",
         "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "spinnerBodies",
-      "reads": 157211,
-      "files": {
-        "frontend/modules/seedlingDemo/dangerMap.js": 149642,
-        "frontend/modules/seedlingDemo/solverBot.js": 7569
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:480",
-        "frontend/modules/seedlingDemo/dangerMap.js:569",
-        "frontend/modules/seedlingDemo/dangerMap.js:734",
-        "frontend/modules/seedlingDemo/solverBot.js:4962",
-        "frontend/modules/seedlingDemo/solverBot.js:5291",
-        "frontend/modules/seedlingDemo/solverBot.js:5430",
-        "frontend/modules/seedlingDemo/solverBot.js:5499",
-        "frontend/modules/seedlingDemo/solverBot.js:6297",
-        "frontend/modules/seedlingDemo/solverBot.js:6402"
-      ],
-      "routes": [
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r8-tail.mjs",
         "solve-seedling-r9-campaign.mjs",
         "solve-seedling-r9-l3.mjs"
       ]
@@ -1556,12 +1289,12 @@
         "frontend/modules/seedlingDemo/solverBot.js": 5160
       },
       "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:573",
-        "frontend/modules/seedlingDemo/solverBot.js:5176",
-        "frontend/modules/seedlingDemo/solverBot.js:5294",
-        "frontend/modules/seedlingDemo/solverBot.js:5391",
-        "frontend/modules/seedlingDemo/solverBot.js:5431",
-        "frontend/modules/seedlingDemo/solverBot.js:5511"
+        "frontend/modules/seedlingDemo/dangerMap.js:571",
+        "frontend/modules/seedlingDemo/solverBot.js:5168",
+        "frontend/modules/seedlingDemo/solverBot.js:5286",
+        "frontend/modules/seedlingDemo/solverBot.js:5383",
+        "frontend/modules/seedlingDemo/solverBot.js:5423",
+        "frontend/modules/seedlingDemo/solverBot.js:5503"
       ],
       "routes": [
         "solve-seedling-r8-d2-chain.mjs",
@@ -1578,7 +1311,7 @@
         "scripts/procgen/solve-seedling-r8-l18.mjs": 2
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6481",
+        "frontend/modules/seedlingDemo/solverBot.js:6473",
         "scripts/procgen/solve-seedling-r8-l18.mjs:317",
         "scripts/procgen/solve-seedling-r8-l18.mjs:319"
       ],
@@ -1597,8 +1330,8 @@
         "scripts/procgen/solve-seedling-r8-l18.mjs": 1
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6391",
-        "frontend/modules/seedlingDemo/solverBot.js:6398",
+        "frontend/modules/seedlingDemo/solverBot.js:6383",
+        "frontend/modules/seedlingDemo/solverBot.js:6390",
         "scripts/procgen/solve-seedling-r8-l18.mjs:310"
       ],
       "routes": [
@@ -1636,92 +1369,92 @@
         "scripts/procgen/solve-seedling-r9-l3.mjs": 4
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1188",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1700",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1710",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1711",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1865",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1908",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2176",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2213",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2315",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2339",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2357",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1182",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1694",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1704",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1705",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1859",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1902",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2170",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2207",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2309",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2333",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2351",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2513",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2514",
         "frontend/modules/seedlingDemo/botDriverV2.js:2519",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2520",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2525",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2533",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2543",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3076",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3450",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3555",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3556",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4653",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4658",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4740",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4806",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4910",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4931",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4951",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4952",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4961",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4984",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4985",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5009",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5038",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5322",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5662",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5683",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5684",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5870",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5924",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6090",
-        "frontend/modules/seedlingDemo/solverBot.js:10017",
-        "frontend/modules/seedlingDemo/solverBot.js:1545",
-        "frontend/modules/seedlingDemo/solverBot.js:1563",
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:3141",
-        "frontend/modules/seedlingDemo/solverBot.js:3920",
-        "frontend/modules/seedlingDemo/solverBot.js:4471",
-        "frontend/modules/seedlingDemo/solverBot.js:4495",
-        "frontend/modules/seedlingDemo/solverBot.js:5193",
-        "frontend/modules/seedlingDemo/solverBot.js:5297",
-        "frontend/modules/seedlingDemo/solverBot.js:5392",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515",
-        "frontend/modules/seedlingDemo/solverBot.js:5693",
-        "frontend/modules/seedlingDemo/solverBot.js:5737",
-        "frontend/modules/seedlingDemo/solverBot.js:5742",
-        "frontend/modules/seedlingDemo/solverBot.js:5808",
-        "frontend/modules/seedlingDemo/solverBot.js:5825",
-        "frontend/modules/seedlingDemo/solverBot.js:5830",
-        "frontend/modules/seedlingDemo/solverBot.js:6307",
-        "frontend/modules/seedlingDemo/solverBot.js:6308",
-        "frontend/modules/seedlingDemo/solverBot.js:6309",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2527",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2537",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3070",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3444",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3549",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3550",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4647",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4652",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4734",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4800",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4904",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4925",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4945",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4946",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4955",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4978",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4979",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5003",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5032",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5316",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5656",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5677",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5678",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5864",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5918",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6084",
+        "frontend/modules/seedlingDemo/solverBot.js:10009",
+        "frontend/modules/seedlingDemo/solverBot.js:1537",
+        "frontend/modules/seedlingDemo/solverBot.js:1555",
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:3133",
+        "frontend/modules/seedlingDemo/solverBot.js:3912",
+        "frontend/modules/seedlingDemo/solverBot.js:4463",
+        "frontend/modules/seedlingDemo/solverBot.js:4487",
+        "frontend/modules/seedlingDemo/solverBot.js:5185",
+        "frontend/modules/seedlingDemo/solverBot.js:5289",
+        "frontend/modules/seedlingDemo/solverBot.js:5384",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507",
+        "frontend/modules/seedlingDemo/solverBot.js:5685",
+        "frontend/modules/seedlingDemo/solverBot.js:5729",
+        "frontend/modules/seedlingDemo/solverBot.js:5734",
+        "frontend/modules/seedlingDemo/solverBot.js:5800",
+        "frontend/modules/seedlingDemo/solverBot.js:5817",
+        "frontend/modules/seedlingDemo/solverBot.js:5822",
+        "frontend/modules/seedlingDemo/solverBot.js:6299",
+        "frontend/modules/seedlingDemo/solverBot.js:6300",
+        "frontend/modules/seedlingDemo/solverBot.js:6301",
+        "frontend/modules/seedlingDemo/solverBot.js:6303",
         "frontend/modules/seedlingDemo/solverBot.js:6311",
-        "frontend/modules/seedlingDemo/solverBot.js:6319",
-        "frontend/modules/seedlingDemo/solverBot.js:6357",
-        "frontend/modules/seedlingDemo/solverBot.js:6358",
-        "frontend/modules/seedlingDemo/solverBot.js:6998",
-        "frontend/modules/seedlingDemo/solverBot.js:7016",
-        "frontend/modules/seedlingDemo/solverBot.js:7491",
+        "frontend/modules/seedlingDemo/solverBot.js:6349",
+        "frontend/modules/seedlingDemo/solverBot.js:6350",
+        "frontend/modules/seedlingDemo/solverBot.js:6990",
+        "frontend/modules/seedlingDemo/solverBot.js:7008",
+        "frontend/modules/seedlingDemo/solverBot.js:7483",
+        "frontend/modules/seedlingDemo/solverBot.js:7575",
+        "frontend/modules/seedlingDemo/solverBot.js:7576",
+        "frontend/modules/seedlingDemo/solverBot.js:7580",
+        "frontend/modules/seedlingDemo/solverBot.js:7581",
         "frontend/modules/seedlingDemo/solverBot.js:7583",
-        "frontend/modules/seedlingDemo/solverBot.js:7584",
-        "frontend/modules/seedlingDemo/solverBot.js:7588",
-        "frontend/modules/seedlingDemo/solverBot.js:7589",
-        "frontend/modules/seedlingDemo/solverBot.js:7591",
-        "frontend/modules/seedlingDemo/solverBot.js:7852",
-        "frontend/modules/seedlingDemo/solverBot.js:7867",
-        "frontend/modules/seedlingDemo/solverBot.js:7873",
-        "frontend/modules/seedlingDemo/solverBot.js:8516",
-        "frontend/modules/seedlingDemo/solverBot.js:8632",
-        "frontend/modules/seedlingDemo/solverBot.js:9023",
-        "frontend/modules/seedlingDemo/solverBot.js:9094",
-        "frontend/modules/seedlingDemo/solverBot.js:9192",
-        "frontend/modules/seedlingDemo/solverBot.js:9203",
-        "frontend/modules/seedlingDemo/solverBot.js:9601",
-        "frontend/modules/seedlingDemo/solverBot.js:9604",
+        "frontend/modules/seedlingDemo/solverBot.js:7844",
+        "frontend/modules/seedlingDemo/solverBot.js:7859",
+        "frontend/modules/seedlingDemo/solverBot.js:7865",
+        "frontend/modules/seedlingDemo/solverBot.js:8508",
+        "frontend/modules/seedlingDemo/solverBot.js:8624",
+        "frontend/modules/seedlingDemo/solverBot.js:9015",
+        "frontend/modules/seedlingDemo/solverBot.js:9086",
+        "frontend/modules/seedlingDemo/solverBot.js:9184",
+        "frontend/modules/seedlingDemo/solverBot.js:9195",
+        "frontend/modules/seedlingDemo/solverBot.js:9593",
+        "frontend/modules/seedlingDemo/solverBot.js:9596",
         "scripts/procgen/provisionalLatch.js:237",
         "scripts/procgen/provisionalLatch.js:238",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:512",
@@ -1746,63 +1479,18 @@
     },
     {
       "surface": "run",
-      "name": "strikeBodies",
-      "reads": 5384,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 3255,
-        "frontend/modules/seedlingDemo/solverBot.js": 2129
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1711",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3556",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4952",
-        "frontend/modules/seedlingDemo/solverBot.js:1777",
-        "frontend/modules/seedlingDemo/solverBot.js:1861",
-        "frontend/modules/seedlingDemo/solverBot.js:2464",
-        "frontend/modules/seedlingDemo/solverBot.js:7584"
-      ],
-      "routes": [
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "takenPickups",
       "reads": 1394,
       "files": {
         "frontend/modules/seedlingDemo/botDriverV2.js": 1394
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:5569"
+        "frontend/modules/seedlingDemo/botDriverV2.js:5563"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
         "regenerate-r3-tapes.mjs",
         "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "talkCircles",
-      "reads": 1993,
-      "files": {
-        "frontend/modules/seedlingDemo/solverBot.js": 1993
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:1795"
-      ],
-      "routes": [
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
       ]
     },
     {
@@ -1816,28 +1504,28 @@
         "scripts/procgen/provisionalLatch.js": 27
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1711",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3556",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4952",
-        "frontend/modules/seedlingDemo/dangerMap.js:982",
-        "frontend/modules/seedlingDemo/solverBot.js:1808",
-        "frontend/modules/seedlingDemo/solverBot.js:2434",
-        "frontend/modules/seedlingDemo/solverBot.js:2795",
-        "frontend/modules/seedlingDemo/solverBot.js:5357",
-        "frontend/modules/seedlingDemo/solverBot.js:5358",
-        "frontend/modules/seedlingDemo/solverBot.js:5968",
-        "frontend/modules/seedlingDemo/solverBot.js:5969",
-        "frontend/modules/seedlingDemo/solverBot.js:6103",
-        "frontend/modules/seedlingDemo/solverBot.js:6302",
-        "frontend/modules/seedlingDemo/solverBot.js:6305",
-        "frontend/modules/seedlingDemo/solverBot.js:6322",
-        "frontend/modules/seedlingDemo/solverBot.js:7578",
-        "frontend/modules/seedlingDemo/solverBot.js:7584",
-        "frontend/modules/seedlingDemo/solverBot.js:7605",
-        "frontend/modules/seedlingDemo/solverBot.js:7864",
-        "frontend/modules/seedlingDemo/solverBot.js:8451",
-        "frontend/modules/seedlingDemo/solverBot.js:8502",
-        "frontend/modules/seedlingDemo/solverBot.js:9191",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1705",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3550",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4946",
+        "frontend/modules/seedlingDemo/dangerMap.js:980",
+        "frontend/modules/seedlingDemo/solverBot.js:1800",
+        "frontend/modules/seedlingDemo/solverBot.js:2426",
+        "frontend/modules/seedlingDemo/solverBot.js:2787",
+        "frontend/modules/seedlingDemo/solverBot.js:5349",
+        "frontend/modules/seedlingDemo/solverBot.js:5350",
+        "frontend/modules/seedlingDemo/solverBot.js:5960",
+        "frontend/modules/seedlingDemo/solverBot.js:5961",
+        "frontend/modules/seedlingDemo/solverBot.js:6095",
+        "frontend/modules/seedlingDemo/solverBot.js:6294",
+        "frontend/modules/seedlingDemo/solverBot.js:6297",
+        "frontend/modules/seedlingDemo/solverBot.js:6314",
+        "frontend/modules/seedlingDemo/solverBot.js:7570",
+        "frontend/modules/seedlingDemo/solverBot.js:7576",
+        "frontend/modules/seedlingDemo/solverBot.js:7597",
+        "frontend/modules/seedlingDemo/solverBot.js:7856",
+        "frontend/modules/seedlingDemo/solverBot.js:8443",
+        "frontend/modules/seedlingDemo/solverBot.js:8494",
+        "frontend/modules/seedlingDemo/solverBot.js:9183",
         "scripts/procgen/provisionalLatch.js:241"
       ],
       "routes": [
@@ -1865,8 +1553,8 @@
         "scripts/procgen/solve-seedling-r9-l3.mjs": 3
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6091",
-        "frontend/modules/seedlingDemo/solverBot.js:10111",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6085",
+        "frontend/modules/seedlingDemo/solverBot.js:10103",
         "scripts/procgen/provisionalLatch.js:230",
         "scripts/procgen/provisionalLatch.js:239",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:508",
@@ -1898,31 +1586,13 @@
     },
     {
       "surface": "run",
-      "name": "turrets",
-      "reads": 360,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 360
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4559"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "unfiredEquipTicks",
       "reads": 21,
       "files": {
         "frontend/modules/seedlingDemo/botDriverV2.js": 21
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:5972"
+        "frontend/modules/seedlingDemo/botDriverV2.js:5966"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -1938,7 +1608,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 21
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:5958"
+        "frontend/modules/seedlingDemo/botDriverV2.js:5952"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -1955,113 +1625,113 @@
         "frontend/modules/seedlingDemo/solverBot.js": 489445
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1760",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1762",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1777",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1796",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2162",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2274",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2543",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3376",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4630",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4644",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4729",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4751",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5048",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5322",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5367",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5384",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5484",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5518",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5662",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1754",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1756",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1771",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1790",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2156",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2268",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2537",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3370",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4624",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4638",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4723",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4745",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5042",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5316",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5361",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5378",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5478",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5512",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5656",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5843",
         "frontend/modules/seedlingDemo/botDriverV2.js:5849",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5855",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5870",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5909",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5924",
-        "frontend/modules/seedlingDemo/solverBot.js:1060",
-        "frontend/modules/seedlingDemo/solverBot.js:1062",
-        "frontend/modules/seedlingDemo/solverBot.js:1154",
-        "frontend/modules/seedlingDemo/solverBot.js:1167",
-        "frontend/modules/seedlingDemo/solverBot.js:1238",
-        "frontend/modules/seedlingDemo/solverBot.js:1444",
-        "frontend/modules/seedlingDemo/solverBot.js:1546",
-        "frontend/modules/seedlingDemo/solverBot.js:1549",
-        "frontend/modules/seedlingDemo/solverBot.js:1563",
-        "frontend/modules/seedlingDemo/solverBot.js:2863",
-        "frontend/modules/seedlingDemo/solverBot.js:2948",
-        "frontend/modules/seedlingDemo/solverBot.js:3060",
-        "frontend/modules/seedlingDemo/solverBot.js:3119",
-        "frontend/modules/seedlingDemo/solverBot.js:3126",
-        "frontend/modules/seedlingDemo/solverBot.js:3144",
-        "frontend/modules/seedlingDemo/solverBot.js:3162",
-        "frontend/modules/seedlingDemo/solverBot.js:3163",
-        "frontend/modules/seedlingDemo/solverBot.js:3196",
-        "frontend/modules/seedlingDemo/solverBot.js:3212",
-        "frontend/modules/seedlingDemo/solverBot.js:3249",
-        "frontend/modules/seedlingDemo/solverBot.js:3258",
-        "frontend/modules/seedlingDemo/solverBot.js:3391",
-        "frontend/modules/seedlingDemo/solverBot.js:3395",
-        "frontend/modules/seedlingDemo/solverBot.js:3557",
-        "frontend/modules/seedlingDemo/solverBot.js:3715",
-        "frontend/modules/seedlingDemo/solverBot.js:3716",
-        "frontend/modules/seedlingDemo/solverBot.js:3726",
-        "frontend/modules/seedlingDemo/solverBot.js:3774",
-        "frontend/modules/seedlingDemo/solverBot.js:4018",
-        "frontend/modules/seedlingDemo/solverBot.js:4019",
-        "frontend/modules/seedlingDemo/solverBot.js:4355",
-        "frontend/modules/seedlingDemo/solverBot.js:4434",
-        "frontend/modules/seedlingDemo/solverBot.js:4471",
-        "frontend/modules/seedlingDemo/solverBot.js:4495",
-        "frontend/modules/seedlingDemo/solverBot.js:4622",
-        "frontend/modules/seedlingDemo/solverBot.js:4741",
-        "frontend/modules/seedlingDemo/solverBot.js:4800",
-        "frontend/modules/seedlingDemo/solverBot.js:5037",
-        "frontend/modules/seedlingDemo/solverBot.js:5046",
-        "frontend/modules/seedlingDemo/solverBot.js:5047",
-        "frontend/modules/seedlingDemo/solverBot.js:5049",
-        "frontend/modules/seedlingDemo/solverBot.js:5618",
-        "frontend/modules/seedlingDemo/solverBot.js:5706",
-        "frontend/modules/seedlingDemo/solverBot.js:5742",
-        "frontend/modules/seedlingDemo/solverBot.js:577",
-        "frontend/modules/seedlingDemo/solverBot.js:5809",
-        "frontend/modules/seedlingDemo/solverBot.js:5830",
-        "frontend/modules/seedlingDemo/solverBot.js:5844",
-        "frontend/modules/seedlingDemo/solverBot.js:5864",
-        "frontend/modules/seedlingDemo/solverBot.js:5898",
-        "frontend/modules/seedlingDemo/solverBot.js:6098",
-        "frontend/modules/seedlingDemo/solverBot.js:618",
-        "frontend/modules/seedlingDemo/solverBot.js:6560",
-        "frontend/modules/seedlingDemo/solverBot.js:657",
-        "frontend/modules/seedlingDemo/solverBot.js:6663",
-        "frontend/modules/seedlingDemo/solverBot.js:6697",
-        "frontend/modules/seedlingDemo/solverBot.js:6858",
-        "frontend/modules/seedlingDemo/solverBot.js:6936",
-        "frontend/modules/seedlingDemo/solverBot.js:7017",
-        "frontend/modules/seedlingDemo/solverBot.js:7050",
-        "frontend/modules/seedlingDemo/solverBot.js:7132",
-        "frontend/modules/seedlingDemo/solverBot.js:7282",
-        "frontend/modules/seedlingDemo/solverBot.js:7410",
-        "frontend/modules/seedlingDemo/solverBot.js:7448",
-        "frontend/modules/seedlingDemo/solverBot.js:7659",
-        "frontend/modules/seedlingDemo/solverBot.js:7660",
-        "frontend/modules/seedlingDemo/solverBot.js:768",
-        "frontend/modules/seedlingDemo/solverBot.js:7682",
-        "frontend/modules/seedlingDemo/solverBot.js:778",
-        "frontend/modules/seedlingDemo/solverBot.js:7873",
-        "frontend/modules/seedlingDemo/solverBot.js:821",
-        "frontend/modules/seedlingDemo/solverBot.js:8351",
-        "frontend/modules/seedlingDemo/solverBot.js:8442",
-        "frontend/modules/seedlingDemo/solverBot.js:848",
-        "frontend/modules/seedlingDemo/solverBot.js:851",
-        "frontend/modules/seedlingDemo/solverBot.js:8629",
-        "frontend/modules/seedlingDemo/solverBot.js:883",
-        "frontend/modules/seedlingDemo/solverBot.js:8998",
-        "frontend/modules/seedlingDemo/solverBot.js:9023",
-        "frontend/modules/seedlingDemo/solverBot.js:9094",
-        "frontend/modules/seedlingDemo/solverBot.js:9350",
-        "frontend/modules/seedlingDemo/solverBot.js:9604",
-        "frontend/modules/seedlingDemo/solverBot.js:9912"
+        "frontend/modules/seedlingDemo/botDriverV2.js:5864",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5903",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5918",
+        "frontend/modules/seedlingDemo/solverBot.js:1052",
+        "frontend/modules/seedlingDemo/solverBot.js:1054",
+        "frontend/modules/seedlingDemo/solverBot.js:1146",
+        "frontend/modules/seedlingDemo/solverBot.js:1159",
+        "frontend/modules/seedlingDemo/solverBot.js:1230",
+        "frontend/modules/seedlingDemo/solverBot.js:1436",
+        "frontend/modules/seedlingDemo/solverBot.js:1538",
+        "frontend/modules/seedlingDemo/solverBot.js:1541",
+        "frontend/modules/seedlingDemo/solverBot.js:1555",
+        "frontend/modules/seedlingDemo/solverBot.js:2855",
+        "frontend/modules/seedlingDemo/solverBot.js:2940",
+        "frontend/modules/seedlingDemo/solverBot.js:3052",
+        "frontend/modules/seedlingDemo/solverBot.js:3111",
+        "frontend/modules/seedlingDemo/solverBot.js:3118",
+        "frontend/modules/seedlingDemo/solverBot.js:3136",
+        "frontend/modules/seedlingDemo/solverBot.js:3154",
+        "frontend/modules/seedlingDemo/solverBot.js:3155",
+        "frontend/modules/seedlingDemo/solverBot.js:3188",
+        "frontend/modules/seedlingDemo/solverBot.js:3204",
+        "frontend/modules/seedlingDemo/solverBot.js:3241",
+        "frontend/modules/seedlingDemo/solverBot.js:3250",
+        "frontend/modules/seedlingDemo/solverBot.js:3383",
+        "frontend/modules/seedlingDemo/solverBot.js:3387",
+        "frontend/modules/seedlingDemo/solverBot.js:3549",
+        "frontend/modules/seedlingDemo/solverBot.js:3707",
+        "frontend/modules/seedlingDemo/solverBot.js:3708",
+        "frontend/modules/seedlingDemo/solverBot.js:3718",
+        "frontend/modules/seedlingDemo/solverBot.js:3766",
+        "frontend/modules/seedlingDemo/solverBot.js:4010",
+        "frontend/modules/seedlingDemo/solverBot.js:4011",
+        "frontend/modules/seedlingDemo/solverBot.js:4347",
+        "frontend/modules/seedlingDemo/solverBot.js:4426",
+        "frontend/modules/seedlingDemo/solverBot.js:4463",
+        "frontend/modules/seedlingDemo/solverBot.js:4487",
+        "frontend/modules/seedlingDemo/solverBot.js:4614",
+        "frontend/modules/seedlingDemo/solverBot.js:4733",
+        "frontend/modules/seedlingDemo/solverBot.js:4792",
+        "frontend/modules/seedlingDemo/solverBot.js:5029",
+        "frontend/modules/seedlingDemo/solverBot.js:5038",
+        "frontend/modules/seedlingDemo/solverBot.js:5039",
+        "frontend/modules/seedlingDemo/solverBot.js:5041",
+        "frontend/modules/seedlingDemo/solverBot.js:5610",
+        "frontend/modules/seedlingDemo/solverBot.js:569",
+        "frontend/modules/seedlingDemo/solverBot.js:5698",
+        "frontend/modules/seedlingDemo/solverBot.js:5734",
+        "frontend/modules/seedlingDemo/solverBot.js:5801",
+        "frontend/modules/seedlingDemo/solverBot.js:5822",
+        "frontend/modules/seedlingDemo/solverBot.js:5836",
+        "frontend/modules/seedlingDemo/solverBot.js:5856",
+        "frontend/modules/seedlingDemo/solverBot.js:5890",
+        "frontend/modules/seedlingDemo/solverBot.js:6090",
+        "frontend/modules/seedlingDemo/solverBot.js:610",
+        "frontend/modules/seedlingDemo/solverBot.js:649",
+        "frontend/modules/seedlingDemo/solverBot.js:6552",
+        "frontend/modules/seedlingDemo/solverBot.js:6655",
+        "frontend/modules/seedlingDemo/solverBot.js:6689",
+        "frontend/modules/seedlingDemo/solverBot.js:6850",
+        "frontend/modules/seedlingDemo/solverBot.js:6928",
+        "frontend/modules/seedlingDemo/solverBot.js:7009",
+        "frontend/modules/seedlingDemo/solverBot.js:7042",
+        "frontend/modules/seedlingDemo/solverBot.js:7124",
+        "frontend/modules/seedlingDemo/solverBot.js:7274",
+        "frontend/modules/seedlingDemo/solverBot.js:7402",
+        "frontend/modules/seedlingDemo/solverBot.js:7440",
+        "frontend/modules/seedlingDemo/solverBot.js:760",
+        "frontend/modules/seedlingDemo/solverBot.js:7651",
+        "frontend/modules/seedlingDemo/solverBot.js:7652",
+        "frontend/modules/seedlingDemo/solverBot.js:7674",
+        "frontend/modules/seedlingDemo/solverBot.js:770",
+        "frontend/modules/seedlingDemo/solverBot.js:7865",
+        "frontend/modules/seedlingDemo/solverBot.js:813",
+        "frontend/modules/seedlingDemo/solverBot.js:8343",
+        "frontend/modules/seedlingDemo/solverBot.js:840",
+        "frontend/modules/seedlingDemo/solverBot.js:843",
+        "frontend/modules/seedlingDemo/solverBot.js:8434",
+        "frontend/modules/seedlingDemo/solverBot.js:8621",
+        "frontend/modules/seedlingDemo/solverBot.js:875",
+        "frontend/modules/seedlingDemo/solverBot.js:8990",
+        "frontend/modules/seedlingDemo/solverBot.js:9015",
+        "frontend/modules/seedlingDemo/solverBot.js:9086",
+        "frontend/modules/seedlingDemo/solverBot.js:9342",
+        "frontend/modules/seedlingDemo/solverBot.js:9596",
+        "frontend/modules/seedlingDemo/solverBot.js:9904"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -2102,12 +1772,12 @@
         "frontend/modules/seedlingDemo/dangerMap.js": 224451
       },
       "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:144",
-        "frontend/modules/seedlingDemo/dangerMap.js:255",
-        "frontend/modules/seedlingDemo/dangerMap.js:322",
-        "frontend/modules/seedlingDemo/dangerMap.js:470",
-        "frontend/modules/seedlingDemo/dangerMap.js:677",
-        "frontend/modules/seedlingDemo/dangerMap.js:777"
+        "frontend/modules/seedlingDemo/dangerMap.js:142",
+        "frontend/modules/seedlingDemo/dangerMap.js:253",
+        "frontend/modules/seedlingDemo/dangerMap.js:320",
+        "frontend/modules/seedlingDemo/dangerMap.js:468",
+        "frontend/modules/seedlingDemo/dangerMap.js:675",
+        "frontend/modules/seedlingDemo/dangerMap.js:775"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2129,16 +1799,16 @@
         "frontend/modules/seedlingDemo/strikePolicy.js": 4011
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2519",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2533",
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515",
-        "frontend/modules/seedlingDemo/strikePolicy.js:881",
-        "frontend/modules/seedlingDemo/strikePolicy.js:910",
-        "frontend/modules/seedlingDemo/strikePolicy.js:922",
-        "frontend/modules/seedlingDemo/strikePolicy.js:986"
+        "frontend/modules/seedlingDemo/botDriverV2.js:2513",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2527",
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507",
+        "frontend/modules/seedlingDemo/strikePolicy.js:877",
+        "frontend/modules/seedlingDemo/strikePolicy.js:906",
+        "frontend/modules/seedlingDemo/strikePolicy.js:918",
+        "frontend/modules/seedlingDemo/strikePolicy.js:982"
       ],
       "routes": [
         "regenerate-r4-tapes.mjs",
@@ -2159,10 +1829,10 @@
         "frontend/modules/seedlingDemo/solverBot.js": 21500
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515"
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2184,17 +1854,17 @@
         "frontend/modules/seedlingDemo/strikePolicy.js": 463
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1188",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1710",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3555",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4931",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4951",
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515",
-        "frontend/modules/seedlingDemo/solverBot.js:7583",
-        "frontend/modules/seedlingDemo/strikePolicy.js:864"
+        "frontend/modules/seedlingDemo/botDriverV2.js:1182",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1704",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3549",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4925",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4945",
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507",
+        "frontend/modules/seedlingDemo/solverBot.js:7575",
+        "frontend/modules/seedlingDemo/strikePolicy.js:860"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -2218,11 +1888,11 @@
         "frontend/modules/seedlingDemo/strikePolicy.js": 309
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515",
-        "frontend/modules/seedlingDemo/strikePolicy.js:473"
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507",
+        "frontend/modules/seedlingDemo/strikePolicy.js:469"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2242,10 +1912,10 @@
         "frontend/modules/seedlingDemo/solverBot.js": 21500
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515"
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2265,10 +1935,10 @@
         "frontend/modules/seedlingDemo/solverBot.js": 21500
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515"
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2288,10 +1958,10 @@
         "frontend/modules/seedlingDemo/solverBot.js": 21500
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515"
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2311,10 +1981,10 @@
         "frontend/modules/seedlingDemo/solverBot.js": 20504
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515"
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2335,11 +2005,11 @@
         "frontend/modules/seedlingDemo/strikePolicy.js": 309
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515",
-        "frontend/modules/seedlingDemo/strikePolicy.js:476"
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507",
+        "frontend/modules/seedlingDemo/strikePolicy.js:472"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2359,10 +2029,10 @@
         "frontend/modules/seedlingDemo/solverBot.js": 20504
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515"
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2393,16 +2063,16 @@
       "sites": [
         "frontend/modules/seedlingDemo/botDriverV1.js:120",
         "frontend/modules/seedlingDemo/botDriverV1.js:87",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2525",
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515",
-        "frontend/modules/seedlingDemo/solverBot.js:8520",
-        "frontend/modules/seedlingDemo/strikePolicy.js:452",
-        "frontend/modules/seedlingDemo/strikePolicy.js:678",
-        "frontend/modules/seedlingDemo/strikePolicy.js:882",
-        "frontend/modules/seedlingDemo/strikePolicy.js:987",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2519",
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507",
+        "frontend/modules/seedlingDemo/solverBot.js:8512",
+        "frontend/modules/seedlingDemo/strikePolicy.js:448",
+        "frontend/modules/seedlingDemo/strikePolicy.js:674",
+        "frontend/modules/seedlingDemo/strikePolicy.js:878",
+        "frontend/modules/seedlingDemo/strikePolicy.js:983",
         "scripts/procgen/provisionalLatch.js:237",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:512",
         "scripts/procgen/solve-seedling-r8-d2.mjs:285",
@@ -2443,16 +2113,16 @@
       "sites": [
         "frontend/modules/seedlingDemo/botDriverV1.js:121",
         "frontend/modules/seedlingDemo/botDriverV1.js:87",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2525",
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515",
-        "frontend/modules/seedlingDemo/solverBot.js:8520",
-        "frontend/modules/seedlingDemo/strikePolicy.js:452",
-        "frontend/modules/seedlingDemo/strikePolicy.js:678",
-        "frontend/modules/seedlingDemo/strikePolicy.js:882",
-        "frontend/modules/seedlingDemo/strikePolicy.js:987",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2519",
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507",
+        "frontend/modules/seedlingDemo/solverBot.js:8512",
+        "frontend/modules/seedlingDemo/strikePolicy.js:448",
+        "frontend/modules/seedlingDemo/strikePolicy.js:674",
+        "frontend/modules/seedlingDemo/strikePolicy.js:878",
+        "frontend/modules/seedlingDemo/strikePolicy.js:983",
         "scripts/procgen/provisionalLatch.js:237",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:512",
         "scripts/procgen/solve-seedling-r8-d2.mjs:285",
@@ -2488,69 +2158,69 @@
       "sites": [
         "frontend/modules/seedlingDemo/botDriverV1.js:115",
         "frontend/modules/seedlingDemo/botDriverV1.js:89",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1118",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1120",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1700",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1865",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1112",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1114",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1694",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1859",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1903",
         "frontend/modules/seedlingDemo/botDriverV2.js:1909",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1915",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2176",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2213",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2339",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2358",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2520",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2543",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3076",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3450",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4658",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4740",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4961",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4984",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5012",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5039",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5048",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5053",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5322",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5683",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6090",
-        "frontend/modules/seedlingDemo/botDriverV2.js:834",
-        "frontend/modules/seedlingDemo/solverBot.js:10017",
-        "frontend/modules/seedlingDemo/solverBot.js:1545",
-        "frontend/modules/seedlingDemo/solverBot.js:1563",
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:3141",
-        "frontend/modules/seedlingDemo/solverBot.js:5193",
-        "frontend/modules/seedlingDemo/solverBot.js:5287",
-        "frontend/modules/seedlingDemo/solverBot.js:5392",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2170",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2207",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2333",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2352",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2514",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2537",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3070",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3444",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4652",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4734",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4955",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4978",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5006",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5033",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5042",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5047",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5316",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5677",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6084",
+        "frontend/modules/seedlingDemo/botDriverV2.js:828",
+        "frontend/modules/seedlingDemo/solverBot.js:10009",
+        "frontend/modules/seedlingDemo/solverBot.js:1537",
+        "frontend/modules/seedlingDemo/solverBot.js:1555",
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:3133",
+        "frontend/modules/seedlingDemo/solverBot.js:5185",
+        "frontend/modules/seedlingDemo/solverBot.js:5279",
+        "frontend/modules/seedlingDemo/solverBot.js:5384",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507",
+        "frontend/modules/seedlingDemo/solverBot.js:5590",
         "frontend/modules/seedlingDemo/solverBot.js:5598",
-        "frontend/modules/seedlingDemo/solverBot.js:5606",
-        "frontend/modules/seedlingDemo/solverBot.js:5693",
-        "frontend/modules/seedlingDemo/solverBot.js:5737",
-        "frontend/modules/seedlingDemo/solverBot.js:5808",
-        "frontend/modules/seedlingDemo/solverBot.js:5825",
-        "frontend/modules/seedlingDemo/solverBot.js:6307",
-        "frontend/modules/seedlingDemo/solverBot.js:6308",
-        "frontend/modules/seedlingDemo/solverBot.js:7016",
-        "frontend/modules/seedlingDemo/solverBot.js:7028",
-        "frontend/modules/seedlingDemo/solverBot.js:7389",
-        "frontend/modules/seedlingDemo/solverBot.js:7589",
-        "frontend/modules/seedlingDemo/solverBot.js:7591",
-        "frontend/modules/seedlingDemo/solverBot.js:7852",
-        "frontend/modules/seedlingDemo/solverBot.js:7867",
-        "frontend/modules/seedlingDemo/solverBot.js:8517",
-        "frontend/modules/seedlingDemo/solverBot.js:8518",
-        "frontend/modules/seedlingDemo/solverBot.js:8520",
-        "frontend/modules/seedlingDemo/solverBot.js:8632",
-        "frontend/modules/seedlingDemo/solverBot.js:9192",
-        "frontend/modules/seedlingDemo/solverBot.js:9203",
-        "frontend/modules/seedlingDemo/solverBot.js:9601",
-        "frontend/modules/seedlingDemo/strikePolicy.js:257",
-        "frontend/modules/seedlingDemo/strikePolicy.js:268",
-        "frontend/modules/seedlingDemo/strikePolicy.js:530",
-        "frontend/modules/seedlingDemo/strikePolicy.js:681",
+        "frontend/modules/seedlingDemo/solverBot.js:5685",
+        "frontend/modules/seedlingDemo/solverBot.js:5729",
+        "frontend/modules/seedlingDemo/solverBot.js:5800",
+        "frontend/modules/seedlingDemo/solverBot.js:5817",
+        "frontend/modules/seedlingDemo/solverBot.js:6299",
+        "frontend/modules/seedlingDemo/solverBot.js:6300",
+        "frontend/modules/seedlingDemo/solverBot.js:7008",
+        "frontend/modules/seedlingDemo/solverBot.js:7020",
+        "frontend/modules/seedlingDemo/solverBot.js:7381",
+        "frontend/modules/seedlingDemo/solverBot.js:7581",
+        "frontend/modules/seedlingDemo/solverBot.js:7583",
+        "frontend/modules/seedlingDemo/solverBot.js:7844",
+        "frontend/modules/seedlingDemo/solverBot.js:7859",
+        "frontend/modules/seedlingDemo/solverBot.js:8509",
+        "frontend/modules/seedlingDemo/solverBot.js:8510",
+        "frontend/modules/seedlingDemo/solverBot.js:8512",
+        "frontend/modules/seedlingDemo/solverBot.js:8624",
+        "frontend/modules/seedlingDemo/solverBot.js:9184",
+        "frontend/modules/seedlingDemo/solverBot.js:9195",
+        "frontend/modules/seedlingDemo/solverBot.js:9593",
+        "frontend/modules/seedlingDemo/strikePolicy.js:253",
+        "frontend/modules/seedlingDemo/strikePolicy.js:264",
+        "frontend/modules/seedlingDemo/strikePolicy.js:526",
+        "frontend/modules/seedlingDemo/strikePolicy.js:677",
         "scripts/procgen/provisionalLatch.js:238"
       ],
       "routes": [
@@ -2580,70 +2250,70 @@
       "sites": [
         "frontend/modules/seedlingDemo/botDriverV1.js:116",
         "frontend/modules/seedlingDemo/botDriverV1.js:98",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1118",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1120",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1700",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1865",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1112",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1114",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1694",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1859",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1903",
         "frontend/modules/seedlingDemo/botDriverV2.js:1909",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1915",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2176",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2213",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2339",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2358",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2520",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2543",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3076",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3450",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4653",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4658",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4740",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4961",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4985",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5012",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5039",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5048",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5053",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5322",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5684",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6090",
-        "frontend/modules/seedlingDemo/botDriverV2.js:834",
-        "frontend/modules/seedlingDemo/solverBot.js:10017",
-        "frontend/modules/seedlingDemo/solverBot.js:1545",
-        "frontend/modules/seedlingDemo/solverBot.js:1563",
-        "frontend/modules/seedlingDemo/solverBot.js:2068",
-        "frontend/modules/seedlingDemo/solverBot.js:3141",
-        "frontend/modules/seedlingDemo/solverBot.js:5193",
-        "frontend/modules/seedlingDemo/solverBot.js:5287",
-        "frontend/modules/seedlingDemo/solverBot.js:5392",
-        "frontend/modules/seedlingDemo/solverBot.js:5409",
-        "frontend/modules/seedlingDemo/solverBot.js:5463",
-        "frontend/modules/seedlingDemo/solverBot.js:5515",
-        "frontend/modules/seedlingDemo/solverBot.js:5599",
-        "frontend/modules/seedlingDemo/solverBot.js:5606",
-        "frontend/modules/seedlingDemo/solverBot.js:5693",
-        "frontend/modules/seedlingDemo/solverBot.js:5737",
-        "frontend/modules/seedlingDemo/solverBot.js:5808",
-        "frontend/modules/seedlingDemo/solverBot.js:5825",
-        "frontend/modules/seedlingDemo/solverBot.js:6307",
-        "frontend/modules/seedlingDemo/solverBot.js:6308",
-        "frontend/modules/seedlingDemo/solverBot.js:7016",
-        "frontend/modules/seedlingDemo/solverBot.js:7029",
-        "frontend/modules/seedlingDemo/solverBot.js:7389",
-        "frontend/modules/seedlingDemo/solverBot.js:7589",
-        "frontend/modules/seedlingDemo/solverBot.js:7591",
-        "frontend/modules/seedlingDemo/solverBot.js:7852",
-        "frontend/modules/seedlingDemo/solverBot.js:7867",
-        "frontend/modules/seedlingDemo/solverBot.js:8517",
-        "frontend/modules/seedlingDemo/solverBot.js:8518",
-        "frontend/modules/seedlingDemo/solverBot.js:8520",
-        "frontend/modules/seedlingDemo/solverBot.js:8632",
-        "frontend/modules/seedlingDemo/solverBot.js:9192",
-        "frontend/modules/seedlingDemo/solverBot.js:9203",
-        "frontend/modules/seedlingDemo/solverBot.js:9601",
-        "frontend/modules/seedlingDemo/strikePolicy.js:257",
-        "frontend/modules/seedlingDemo/strikePolicy.js:268",
-        "frontend/modules/seedlingDemo/strikePolicy.js:531",
-        "frontend/modules/seedlingDemo/strikePolicy.js:681",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2170",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2207",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2333",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2352",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2514",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2537",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3070",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3444",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4647",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4652",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4734",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4955",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4979",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5006",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5033",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5042",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5047",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5316",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5678",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6084",
+        "frontend/modules/seedlingDemo/botDriverV2.js:828",
+        "frontend/modules/seedlingDemo/solverBot.js:10009",
+        "frontend/modules/seedlingDemo/solverBot.js:1537",
+        "frontend/modules/seedlingDemo/solverBot.js:1555",
+        "frontend/modules/seedlingDemo/solverBot.js:2060",
+        "frontend/modules/seedlingDemo/solverBot.js:3133",
+        "frontend/modules/seedlingDemo/solverBot.js:5185",
+        "frontend/modules/seedlingDemo/solverBot.js:5279",
+        "frontend/modules/seedlingDemo/solverBot.js:5384",
+        "frontend/modules/seedlingDemo/solverBot.js:5401",
+        "frontend/modules/seedlingDemo/solverBot.js:5455",
+        "frontend/modules/seedlingDemo/solverBot.js:5507",
+        "frontend/modules/seedlingDemo/solverBot.js:5591",
+        "frontend/modules/seedlingDemo/solverBot.js:5598",
+        "frontend/modules/seedlingDemo/solverBot.js:5685",
+        "frontend/modules/seedlingDemo/solverBot.js:5729",
+        "frontend/modules/seedlingDemo/solverBot.js:5800",
+        "frontend/modules/seedlingDemo/solverBot.js:5817",
+        "frontend/modules/seedlingDemo/solverBot.js:6299",
+        "frontend/modules/seedlingDemo/solverBot.js:6300",
+        "frontend/modules/seedlingDemo/solverBot.js:7008",
+        "frontend/modules/seedlingDemo/solverBot.js:7021",
+        "frontend/modules/seedlingDemo/solverBot.js:7381",
+        "frontend/modules/seedlingDemo/solverBot.js:7581",
+        "frontend/modules/seedlingDemo/solverBot.js:7583",
+        "frontend/modules/seedlingDemo/solverBot.js:7844",
+        "frontend/modules/seedlingDemo/solverBot.js:7859",
+        "frontend/modules/seedlingDemo/solverBot.js:8509",
+        "frontend/modules/seedlingDemo/solverBot.js:8510",
+        "frontend/modules/seedlingDemo/solverBot.js:8512",
+        "frontend/modules/seedlingDemo/solverBot.js:8624",
+        "frontend/modules/seedlingDemo/solverBot.js:9184",
+        "frontend/modules/seedlingDemo/solverBot.js:9195",
+        "frontend/modules/seedlingDemo/solverBot.js:9593",
+        "frontend/modules/seedlingDemo/strikePolicy.js:253",
+        "frontend/modules/seedlingDemo/strikePolicy.js:264",
+        "frontend/modules/seedlingDemo/strikePolicy.js:527",
+        "frontend/modules/seedlingDemo/strikePolicy.js:677",
         "scripts/procgen/provisionalLatch.js:238"
       ],
       "routes": [
@@ -2668,21 +2338,21 @@
         "frontend/modules/seedlingDemo/solverBot.js": 1172
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1762",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2083",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2115",
-        "frontend/modules/seedlingDemo/solverBot.js:3126",
-        "frontend/modules/seedlingDemo/solverBot.js:4018",
-        "frontend/modules/seedlingDemo/solverBot.js:4355",
-        "frontend/modules/seedlingDemo/solverBot.js:4801",
-        "frontend/modules/seedlingDemo/solverBot.js:577",
-        "frontend/modules/seedlingDemo/solverBot.js:6098",
-        "frontend/modules/seedlingDemo/solverBot.js:6560",
-        "frontend/modules/seedlingDemo/solverBot.js:6858",
-        "frontend/modules/seedlingDemo/solverBot.js:7017",
-        "frontend/modules/seedlingDemo/solverBot.js:7050",
-        "frontend/modules/seedlingDemo/solverBot.js:778",
-        "frontend/modules/seedlingDemo/solverBot.js:851"
+        "frontend/modules/seedlingDemo/botDriverV2.js:1756",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2077",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2109",
+        "frontend/modules/seedlingDemo/solverBot.js:3118",
+        "frontend/modules/seedlingDemo/solverBot.js:4010",
+        "frontend/modules/seedlingDemo/solverBot.js:4347",
+        "frontend/modules/seedlingDemo/solverBot.js:4793",
+        "frontend/modules/seedlingDemo/solverBot.js:569",
+        "frontend/modules/seedlingDemo/solverBot.js:6090",
+        "frontend/modules/seedlingDemo/solverBot.js:6552",
+        "frontend/modules/seedlingDemo/solverBot.js:6850",
+        "frontend/modules/seedlingDemo/solverBot.js:7009",
+        "frontend/modules/seedlingDemo/solverBot.js:7042",
+        "frontend/modules/seedlingDemo/solverBot.js:770",
+        "frontend/modules/seedlingDemo/solverBot.js:843"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -2705,19 +2375,19 @@
         "frontend/modules/seedlingDemo/solverBot.js": 58
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1796",
-        "frontend/modules/seedlingDemo/dangerMap.js:145",
-        "frontend/modules/seedlingDemo/dangerMap.js:256",
-        "frontend/modules/seedlingDemo/dangerMap.js:680",
-        "frontend/modules/seedlingDemo/dangerMap.js:780",
-        "frontend/modules/seedlingDemo/solverBot.js:1549",
-        "frontend/modules/seedlingDemo/solverBot.js:3162",
-        "frontend/modules/seedlingDemo/solverBot.js:4019",
-        "frontend/modules/seedlingDemo/solverBot.js:4839",
-        "frontend/modules/seedlingDemo/solverBot.js:5619",
-        "frontend/modules/seedlingDemo/solverBot.js:5898",
-        "frontend/modules/seedlingDemo/solverBot.js:7659",
-        "frontend/modules/seedlingDemo/solverBot.js:7682"
+        "frontend/modules/seedlingDemo/botDriverV2.js:1790",
+        "frontend/modules/seedlingDemo/dangerMap.js:143",
+        "frontend/modules/seedlingDemo/dangerMap.js:254",
+        "frontend/modules/seedlingDemo/dangerMap.js:678",
+        "frontend/modules/seedlingDemo/dangerMap.js:778",
+        "frontend/modules/seedlingDemo/solverBot.js:1541",
+        "frontend/modules/seedlingDemo/solverBot.js:3154",
+        "frontend/modules/seedlingDemo/solverBot.js:4011",
+        "frontend/modules/seedlingDemo/solverBot.js:4831",
+        "frontend/modules/seedlingDemo/solverBot.js:5611",
+        "frontend/modules/seedlingDemo/solverBot.js:5890",
+        "frontend/modules/seedlingDemo/solverBot.js:7651",
+        "frontend/modules/seedlingDemo/solverBot.js:7674"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -2739,9 +2409,9 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 3300461
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:206",
-        "frontend/modules/seedlingDemo/botDriverV2.js:504",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5048"
+        "frontend/modules/seedlingDemo/botDriverV2.js:200",
+        "frontend/modules/seedlingDemo/botDriverV2.js:498",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5042"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -2765,8 +2435,8 @@
         "frontend/modules/seedlingDemo/solverBot.js": 11
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4584",
-        "frontend/modules/seedlingDemo/solverBot.js:2864"
+        "frontend/modules/seedlingDemo/botDriverV2.js:4578",
+        "frontend/modules/seedlingDemo/solverBot.js:2856"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2783,7 +2453,7 @@
         "frontend/modules/seedlingDemo/solverBot.js": 3627
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2948"
+        "frontend/modules/seedlingDemo/solverBot.js:2940"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2799,15 +2469,15 @@
         "frontend/modules/seedlingDemo/solverBot.js": 2566
       },
       "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:323",
-        "frontend/modules/seedlingDemo/dangerMap.js:481",
-        "frontend/modules/seedlingDemo/dangerMap.js:699",
-        "frontend/modules/seedlingDemo/dangerMap.js:735",
-        "frontend/modules/seedlingDemo/solverBot.js:4741",
-        "frontend/modules/seedlingDemo/solverBot.js:5864",
-        "frontend/modules/seedlingDemo/solverBot.js:8442",
-        "frontend/modules/seedlingDemo/solverBot.js:8998",
-        "frontend/modules/seedlingDemo/solverBot.js:9350"
+        "frontend/modules/seedlingDemo/dangerMap.js:321",
+        "frontend/modules/seedlingDemo/dangerMap.js:479",
+        "frontend/modules/seedlingDemo/dangerMap.js:697",
+        "frontend/modules/seedlingDemo/dangerMap.js:733",
+        "frontend/modules/seedlingDemo/solverBot.js:4733",
+        "frontend/modules/seedlingDemo/solverBot.js:5856",
+        "frontend/modules/seedlingDemo/solverBot.js:8434",
+        "frontend/modules/seedlingDemo/solverBot.js:8990",
+        "frontend/modules/seedlingDemo/solverBot.js:9342"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2827,7 +2497,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 12
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:5855"
+        "frontend/modules/seedlingDemo/botDriverV2.js:5849"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -2843,16 +2513,16 @@
         "frontend/modules/seedlingDemo/solverBot.js": 177238
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:703",
-        "frontend/modules/seedlingDemo/solverBot.js:3060",
-        "frontend/modules/seedlingDemo/solverBot.js:3212",
-        "frontend/modules/seedlingDemo/solverBot.js:3391",
-        "frontend/modules/seedlingDemo/solverBot.js:3716",
-        "frontend/modules/seedlingDemo/solverBot.js:5037",
-        "frontend/modules/seedlingDemo/solverBot.js:5046",
-        "frontend/modules/seedlingDemo/solverBot.js:5708",
-        "frontend/modules/seedlingDemo/solverBot.js:5811",
-        "frontend/modules/seedlingDemo/solverBot.js:8631"
+        "frontend/modules/seedlingDemo/botDriverV2.js:697",
+        "frontend/modules/seedlingDemo/solverBot.js:3052",
+        "frontend/modules/seedlingDemo/solverBot.js:3204",
+        "frontend/modules/seedlingDemo/solverBot.js:3383",
+        "frontend/modules/seedlingDemo/solverBot.js:3708",
+        "frontend/modules/seedlingDemo/solverBot.js:5029",
+        "frontend/modules/seedlingDemo/solverBot.js:5038",
+        "frontend/modules/seedlingDemo/solverBot.js:5700",
+        "frontend/modules/seedlingDemo/solverBot.js:5803",
+        "frontend/modules/seedlingDemo/solverBot.js:8623"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -2876,8 +2546,8 @@
         "frontend/modules/seedlingDemo/dangerMap.js": 2
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:489",
-        "frontend/modules/seedlingDemo/dangerMap.js:790"
+        "frontend/modules/seedlingDemo/botDriverV2.js:483",
+        "frontend/modules/seedlingDemo/dangerMap.js:788"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -2900,9 +2570,9 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 145413
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:458",
-        "frontend/modules/seedlingDemo/botDriverV2.js:847",
-        "frontend/modules/seedlingDemo/botDriverV2.js:928"
+        "frontend/modules/seedlingDemo/botDriverV2.js:452",
+        "frontend/modules/seedlingDemo/botDriverV2.js:841",
+        "frontend/modules/seedlingDemo/botDriverV2.js:922"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -2924,7 +2594,7 @@
         "frontend/modules/seedlingDemo/solverBot.js": 4090
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:2934"
+        "frontend/modules/seedlingDemo/solverBot.js:2926"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2939,7 +2609,7 @@
         "frontend/modules/seedlingDemo/levelWorld.js": 4090
       },
       "sites": [
-        "frontend/modules/seedlingDemo/levelWorld.js:5914"
+        "frontend/modules/seedlingDemo/levelWorld.js:5915"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -2955,8 +2625,8 @@
         "frontend/modules/seedlingDemo/solverBot.js": 9
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2494",
-        "frontend/modules/seedlingDemo/solverBot.js:2877"
+        "frontend/modules/seedlingDemo/botDriverV2.js:2488",
+        "frontend/modules/seedlingDemo/solverBot.js:2869"
       ],
       "routes": [
         "regenerate-r3-tapes.mjs",
@@ -2976,10 +2646,10 @@
         "frontend/modules/seedlingDemo/dangerMap.js": 2
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1160",
-        "frontend/modules/seedlingDemo/botDriverV2.js:467",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5849",
-        "frontend/modules/seedlingDemo/dangerMap.js:796"
+        "frontend/modules/seedlingDemo/botDriverV2.js:1154",
+        "frontend/modules/seedlingDemo/botDriverV2.js:461",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5843",
+        "frontend/modules/seedlingDemo/dangerMap.js:794"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -3002,7 +2672,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 3321031
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:420"
+        "frontend/modules/seedlingDemo/botDriverV2.js:414"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -3026,14 +2696,14 @@
         "frontend/modules/seedlingDemo/solverBot.js": 769
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1260",
-        "frontend/modules/seedlingDemo/solverBot.js:1546",
-        "frontend/modules/seedlingDemo/solverBot.js:3119",
-        "frontend/modules/seedlingDemo/solverBot.js:3163",
-        "frontend/modules/seedlingDemo/solverBot.js:5624",
-        "frontend/modules/seedlingDemo/solverBot.js:618",
-        "frontend/modules/seedlingDemo/solverBot.js:768",
-        "frontend/modules/seedlingDemo/solverBot.js:848"
+        "frontend/modules/seedlingDemo/botDriverV2.js:1254",
+        "frontend/modules/seedlingDemo/solverBot.js:1538",
+        "frontend/modules/seedlingDemo/solverBot.js:3111",
+        "frontend/modules/seedlingDemo/solverBot.js:3155",
+        "frontend/modules/seedlingDemo/solverBot.js:5616",
+        "frontend/modules/seedlingDemo/solverBot.js:610",
+        "frontend/modules/seedlingDemo/solverBot.js:760",
+        "frontend/modules/seedlingDemo/solverBot.js:840"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -3055,7 +2725,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 24
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1777"
+        "frontend/modules/seedlingDemo/botDriverV2.js:1771"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -3075,13 +2745,13 @@
         "frontend/modules/seedlingDemo/solverBot.js": 33
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:3353",
-        "frontend/modules/seedlingDemo/solverBot.js:1062",
-        "frontend/modules/seedlingDemo/solverBot.js:1154",
-        "frontend/modules/seedlingDemo/solverBot.js:1238",
-        "frontend/modules/seedlingDemo/solverBot.js:3557",
-        "frontend/modules/seedlingDemo/solverBot.js:4622",
-        "frontend/modules/seedlingDemo/solverBot.js:821"
+        "frontend/modules/seedlingDemo/botDriverV2.js:3347",
+        "frontend/modules/seedlingDemo/solverBot.js:1054",
+        "frontend/modules/seedlingDemo/solverBot.js:1146",
+        "frontend/modules/seedlingDemo/solverBot.js:1230",
+        "frontend/modules/seedlingDemo/solverBot.js:3549",
+        "frontend/modules/seedlingDemo/solverBot.js:4614",
+        "frontend/modules/seedlingDemo/solverBot.js:813"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -3096,8 +2766,8 @@
         "frontend/modules/seedlingDemo/solverBot.js": 26
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:4434",
-        "frontend/modules/seedlingDemo/solverBot.js:6697"
+        "frontend/modules/seedlingDemo/solverBot.js:4426",
+        "frontend/modules/seedlingDemo/solverBot.js:6689"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -3114,9 +2784,9 @@
         "frontend/modules/seedlingDemo/solverBot.js": 13
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:3144",
-        "frontend/modules/seedlingDemo/solverBot.js:7282",
-        "frontend/modules/seedlingDemo/solverBot.js:7660"
+        "frontend/modules/seedlingDemo/solverBot.js:3136",
+        "frontend/modules/seedlingDemo/solverBot.js:7274",
+        "frontend/modules/seedlingDemo/solverBot.js:7652"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
@@ -3132,7 +2802,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 478
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:200"
+        "frontend/modules/seedlingDemo/botDriverV2.js:194"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -3155,10 +2825,10 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 60270380
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1144",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1151",
-        "frontend/modules/seedlingDemo/botDriverV2.js:508",
-        "frontend/modules/seedlingDemo/botDriverV2.js:509"
+        "frontend/modules/seedlingDemo/botDriverV2.js:1138",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1145",
+        "frontend/modules/seedlingDemo/botDriverV2.js:502",
+        "frontend/modules/seedlingDemo/botDriverV2.js:503"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -3181,7 +2851,7 @@
         "frontend/modules/seedlingDemo/botDriverV2.js": 2350
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:749"
+        "frontend/modules/seedlingDemo/botDriverV2.js:743"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -3204,17 +2874,17 @@
         "frontend/modules/seedlingDemo/solverBot.js": 203560
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:702",
-        "frontend/modules/seedlingDemo/botDriverV2.js:855",
-        "frontend/modules/seedlingDemo/solverBot.js:3060",
-        "frontend/modules/seedlingDemo/solverBot.js:3212",
-        "frontend/modules/seedlingDemo/solverBot.js:3391",
-        "frontend/modules/seedlingDemo/solverBot.js:3715",
-        "frontend/modules/seedlingDemo/solverBot.js:5037",
-        "frontend/modules/seedlingDemo/solverBot.js:5047",
-        "frontend/modules/seedlingDemo/solverBot.js:5707",
-        "frontend/modules/seedlingDemo/solverBot.js:5810",
-        "frontend/modules/seedlingDemo/solverBot.js:8630"
+        "frontend/modules/seedlingDemo/botDriverV2.js:696",
+        "frontend/modules/seedlingDemo/botDriverV2.js:849",
+        "frontend/modules/seedlingDemo/solverBot.js:3052",
+        "frontend/modules/seedlingDemo/solverBot.js:3204",
+        "frontend/modules/seedlingDemo/solverBot.js:3383",
+        "frontend/modules/seedlingDemo/solverBot.js:3707",
+        "frontend/modules/seedlingDemo/solverBot.js:5029",
+        "frontend/modules/seedlingDemo/solverBot.js:5039",
+        "frontend/modules/seedlingDemo/solverBot.js:5699",
+        "frontend/modules/seedlingDemo/solverBot.js:5802",
+        "frontend/modules/seedlingDemo/solverBot.js:8622"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -3238,11 +2908,11 @@
         "frontend/modules/seedlingDemo/solverBot.js": 69
       },
       "sites": [
-        "frontend/modules/seedlingDemo/dangerMap.js:148",
-        "frontend/modules/seedlingDemo/dangerMap.js:259",
-        "frontend/modules/seedlingDemo/dangerMap.js:685",
-        "frontend/modules/seedlingDemo/solverBot.js:5844",
-        "frontend/modules/seedlingDemo/solverBot.js:8352"
+        "frontend/modules/seedlingDemo/dangerMap.js:146",
+        "frontend/modules/seedlingDemo/dangerMap.js:257",
+        "frontend/modules/seedlingDemo/dangerMap.js:683",
+        "frontend/modules/seedlingDemo/solverBot.js:5836",
+        "frontend/modules/seedlingDemo/solverBot.js:8344"
       ],
       "routes": [
         "solve-seedling-r8-battery.mjs",
