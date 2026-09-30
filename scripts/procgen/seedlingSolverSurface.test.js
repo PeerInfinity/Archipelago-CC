@@ -75,6 +75,12 @@ describe('the committed contract equals a fresh census', () => {
         expect(bad).toEqual([]);
     });
 
+    it('the import door\'s closure is the simulation\'s: solverView.js pulls in no family file', () => {
+        const sim = new Set(importClosure([SIM_ENTRY], read));
+        const door = 'frontend/modules/seedlingDemo/solverView.js';
+        expect(importClosure([door], read).filter((f) => f !== door && !sim.has(f))).toEqual([]);
+    });
+
     it('the census reads ONLY run members off `run` (no stray object spelled `run`)', () => {
         const stray = fresh.reads.filter((r) => r.base === 'run' && !fresh.runMembers.has(r.name))
             .map((r) => `${r.file}:${r.line} run.${r.name}`);
