@@ -2038,6 +2038,21 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`",
+            "constant": "SEEDLING_AREA_REFUSALS",
+            "file": "frontend/modules/seedlingDemo/procgenSeedling.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": null,
+            "name": "the-solver-cannot-cross-the-roaming-body",
+            "named": true,
+            "scanFound": true,
+            "source": "seedling-area-binding",
+            "sourceTitle": "The SEEDLING area binding",
+            "where": "procgenSeedling.js (the whole module)"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "`buildAreaGraph(...).refused.reason` → `summary.areaGraph.refused` on both pages",
             "constant": "REASONS",
             "file": "frontend/modules/procgenCore/areaGraph.js",
@@ -2321,14 +2336,14 @@ export const REFUSALS = frz({
         {
             "channel": "`summary.areas.refused` / `summary.elementInfo.refused` on `watch.html`",
             "constant": "SEEDLING_AREA_REFUSALS",
-            "declaredCount": 19,
+            "declaredCount": 20,
             "file": "frontend/modules/seedlingDemo/procgenSeedling.js",
             "id": "seedling-area-binding",
             "kind": "constant",
             "patterns": [
                 "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
             ],
-            "scannedCount": 19,
+            "scannedCount": 20,
             "spansModules": false,
             "title": "The SEEDLING area binding",
             "where": "procgenSeedling.js (the whole module)"

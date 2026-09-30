@@ -113,7 +113,7 @@ import {
     vestibuleCellsAround,
 } from './procgenSeedlingElements.js';
 import {
-    PHASE_ON_CONNECTOR, PHASE_PRE_CARVE, guardIdsFor,
+    LAW_NONE, PHASE_ON_CONNECTOR, PHASE_PRE_CARVE, guardIdsFor,
 } from '../procgenCore/elements.js';
 /**
  * ⛓⛓ PROCGEN ELEMENTS arc 3, slice 5b (D3) — **THE OFFERED CANDIDATE SET, FROM
@@ -203,6 +203,9 @@ export const SEEDLING_AREA_REFUSALS = Object.freeze([
     'the-level-flood-disagrees-with-the-partition',
     'the-partition-yields-one-area-or-fewer',
     'the-skeleton-does-not-solve-with-the-element',
+    /** ⛓ concept library F1 (D4) — the ROAMING ENEMY's certification refusal:
+     *  the solver REFUSED the room with the body in it, in its own words. */
+    'the-solver-cannot-cross-the-roaming-body',
     'the-tag-budget-is-exceeded',
 ]);
 
@@ -655,6 +658,30 @@ export const SEEDLING_DEFAULTS = Object.freeze({
 });
 
 /**
+ * ⛓⛓⛓ **THE CERTIFICATION GOAL WHEN THE RECORD HOLDS A ROAMING BODY** —
+ * concept library F1, D4. ⛔ `torchpickup` shows TEXT, and `levelRun` throws on
+ * any tick where a live spinner and a DIALOGUED ceremony coexist (*"level 900
+ * holds live spinners AND a DIALOGUED ceremony (torch) is running"*) — measured
+ * at F1 W0 on the census's own room: the torch THREW at ticks 222 (pre-sword)
+ * and 225/126 (post-sword) where the SAME rooms with `totempart` SOLVED
+ * certified. An arena never met it because its bodies are DEAD before the
+ * player reaches the goal (the kill lock is on the way); a roaming body is not.
+ *
+ * `totempart` is `PICKUP_CEREMONY`'s own textless row (`dialogue.js`): PHASE A
+ * only, 150 frames, no NPC. ⛓ Its side effect is `BossTotemPart.removed()`
+ * writing `Player.hasTotemPartSet` instead of an item flag — nothing the
+ * palette, the boot items or a pin reads (`bosskey` is the other textless row
+ * and is textless only for `keyType != 0`, a condition this binding would have
+ * to spell; the totem part is textless unconditionally, so it is the one).
+ *
+ * ⛔ ONLY A LEVEL WHOSE COMMITTED RECORD HOLDS A ROAMING BODY swaps; every other
+ * level keeps `SEEDLING_DEFAULTS.goalClass` byte for byte. In a pipeline room
+ * the goal pickup is replaced by AP location 0 anyway (`seedlingGenRoom.js`),
+ * which matches by POSITION, not by class.
+ */
+export const ROAMING_GOAL_CLASS = 'totempart';
+
+/**
  * ⛓⛓⛓ THE PLACEMENT'S OWN ACTIVATOR GROUP, DERIVED FROM ITS ANCHOR.
  *
  * ⚖ USER-REPORTED DEFECT, 2026-08-13 (`procgenPalette.PLACEMENT_GROUP` carries
@@ -926,7 +953,10 @@ export function seedlingModel({
     ]);
     /** ⛓ THE GOAL ENTITY, built once — the row below records it as the level's
      *  first entity and `skeleton()` writes the identical object. */
-    const goalEntity = { type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag } };
+    let goalEntity = { type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag } };
+    /** ⛓ F1 (D4) — the goal's CLASS, `d.goalClass` unless the committed record
+     *  holds a roaming body (`ROAMING_GOAL_CLASS`). Every write below reads it. */
+    let goalClass = d.goalClass;
     ledger.phase('goal', {
         sentence: `the GOAL is (${goalCell.tx},${goalCell.ty}), ONE \`pick\` over the `
             + `${goalCandidates.length} interior cell(s) at Manhattan >= `
@@ -1747,6 +1777,9 @@ export function seedlingModel({
             groundAt: (x, y) => terrainAt(base, x, y) === 'ground',
             site: elementPlan.site, placement: elementPlan.placement,
             start: d.start, goal: goalCell,
+            /** ⛓ F1 (D4) — read off the element's DECLARED law: a `none` law
+             *  (the roaming enemy) gets no kill lock. */
+            killLock: elementPlan.concrete.law !== LAW_NONE,
         });
         if (out.refused) {
             elementInfo = Object.freeze({
@@ -1773,8 +1806,17 @@ export function seedlingModel({
         } else {
             const p = out.placed;
             base = withTerrain(base, p.painted);
+            /**
+             * ⛓⛓ F1 (D4) — **THE TEXTLESS GOAL, DECIDED BY WHAT WAS COMMITTED**:
+             * bodies and no kill lock. ⛔ Decided HERE, on the committed
+             * placement, so a dropped or refused roam level keeps the torch.
+             */
+            if ((p.bodies?.length ?? 0) > 0 && p.killLockCell === null) {
+                goalClass = ROAMING_GOAL_CLASS;
+                goalEntity = { ...goalEntity, type: goalClass };
+            }
             const withGoal = withEntities(base, [{
-                type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
+                type: goalClass, ...goalOel, attrs: { tag: d.goalTag },
             }]);
             const taken = [Number.parseInt(d.goalTag, 10)];
             const realised = seedlingElementEntities({
@@ -1885,9 +1927,14 @@ export function seedlingModel({
                         : `and it declared its ${cp.areaCells.length} floor cell(s) an AREA — `
                             + ((cp.bodies?.length ?? 0) === 0
                                 ? 'no door, no flag and no lock: it is SPACE. '
-                                : `${cp.bodies.length} body/bodies stand in it and their `
-                                    + 'death opens the KILL LOCK on the main-path cut '
-                                    + `(${cp.killLockCell.x},${cp.killLockCell.y}). `))
+                                /** ⛓ F1 (D4) — a roaming body has no lock to name. */
+                                : cp.killLockCell === null
+                                    ? `${cp.bodies.length} body/bodies ROAM in it and NOTHING `
+                                        + 'waits on their death — no lock, no tag; the goal '
+                                        + `is the textless \`${goalClass}\`. `
+                                    : `${cp.bodies.length} body/bodies stand in it and their `
+                                        + 'death opens the KILL LOCK on the main-path cut '
+                                        + `(${cp.killLockCell.x},${cp.killLockCell.y}). `))
                     + `The carve `
                     + `had written ${cp.carveOverwrote} of these cells differently. ⛔ NO draw.`
                 : `the COMPOSITE REFUSED: ${elementInfo.refused?.reason} — `
@@ -1929,7 +1976,14 @@ export function seedlingModel({
                 /** ⛓ arc 5, slice 4 — the ARENA's payload: where the bodies
                  *  stand and which cut their death opens. ⛔ Absent for a
                  *  chamber, whose `bodies` is empty. */
-                (cp.bodies?.length ?? 0) > 0 && paintable({ id: 'arena-bodies',
+                (cp.bodies?.length ?? 0) > 0 && cp.killLockCell === null && paintable({
+                    id: 'roaming-bodies',
+                    label: `the ${cp.bodies.length} ROAMING BODY/BODIES — no lock waits on `
+                        + 'their death; they are a danger on the route, not a gate across it',
+                    kind: 'outline',
+                    cells: cp.bodies.map((b) => ({ x: b.x, y: b.y })) }),
+                (cp.bodies?.length ?? 0) > 0 && cp.killLockCell !== null && paintable({
+                    id: 'arena-bodies',
                     label: `the ${cp.bodies.length} BODY/BODIES and the KILL LOCK their death `
                         + `opens — the lock is on a main-path CUT, with the arena's mouth on `
                         + 'the START\'s side of it',
@@ -2046,7 +2100,7 @@ export function seedlingModel({
             const p = out.placed;
             base = withTerrain(base, p.painted);
             const withGoal = withEntities(base, [{
-                type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
+                type: goalClass, ...goalOel, attrs: { tag: d.goalTag },
             }]);
             const taken = [Number.parseInt(d.goalTag, 10)];
             const realised = seedlingOnConnectorEntities({
@@ -2445,7 +2499,7 @@ export function seedlingModel({
                  * answer, the reserved list is the declared one).
                  */
                 const recordSoFar = withEntities(base, [{
-                    type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
+                    type: goalClass, ...goalOel, attrs: { tag: d.goalTag },
                 }, ...elementEntities]);
                 const taken = [Number.parseInt(d.goalTag, 10)];
                 const takeTag = () => {
@@ -2830,8 +2884,19 @@ export function seedlingModel({
         }
     }
 
+    /**
+     * ⛓ F1 (D4) — THE ROAMING BODIES THE COMMITTED RECORD HOLDS: bodies with no
+     * kill lock. `[]` for every other level, including a roam level whose
+     * element was dropped or refused (then the record holds no body at all).
+     */
+    const roamingBodies = Object.freeze(elementInfo.ran
+        && (elementInfo.placed[0]?.bodies?.length ?? 0) > 0
+        && elementInfo.placed[0].killLockCell === null
+        ? elementInfo.placed[0].bodies.map((b) => Object.freeze({ x: b.x, y: b.y, id: b.id }))
+        : []);
+
     const skeleton = () => withEntities(base, [{
-        type: d.goalClass, ...goalOel, attrs: { tag: d.goalTag },
+        type: goalClass, ...goalOel, attrs: { tag: d.goalTag },
     }, ...elementEntities, ...areaEntities]);
 
     /**
@@ -3311,7 +3376,42 @@ export function seedlingModel({
      * law's own docblock for what it claims; this closure only says WHERE the
      * cells came from.
      */
+    /**
+     * ⛓⛓⛓ **A KILL LOCK IN A ROOM THAT HOLDS A ROAMING BODY IS REFUSED BY NAME**
+     * — concept library F1, D4, and it is a MEASUREMENT rather than a worry.
+     *
+     * A `tset:-1` lock opens on the game's `totalEnemies() == 0`, which counts
+     * EVERY live enemy in the room — the roaming bodies too. Measured at F1 on
+     * the census's own arena room (lock at (4,1), one body in the blob) with a
+     * SECOND spinner in a pocket on the lock's GOAL side: **BUDGET_EXHAUSTED**
+     * (the lock never opens — the body that must die stands behind it), where
+     * the same room without the second spinner SOLVED in 358 ticks. ⇒ a kill
+     * lock and a roaming body cannot share a room this generator certifies.
+     *
+     * ⛔ WHO COULD PUT ONE THERE: through the element spec, nobody (one head per
+     * level, so `roam` never meets `killgate`/`arena`); through pass 2, nobody
+     * TODAY — `wall-gap-spinner-killlock` was RETIRED (2026-08-16) and neither
+     * biome's roster carries a `tset:-1` lock. This clause is for the day one
+     * returns: it answers BY NAME at the anchor rather than letting the loop
+     * discover it as a budget exhaustion. It reads nothing and costs nothing
+     * on a level without a roaming body.
+     */
+    const killLockCountsRoamers = (template, tx, ty) => {
+        if (roamingBodies.length === 0) return null;
+        const lock = (template.entities ?? [])
+            .find((e) => e.type === 'lock' && String(e.attrs?.tset) === '-1');
+        if (!lock) return null;
+        return `"${template.instance ?? template.name}" at (${tx},${ty}) `
+            + 'a-kill-lock-would-count-the-roaming-bodies: its `tset:-1` lock at '
+            + `(${tx + lock.dx},${ty + lock.dy}) opens on \`totalEnemies() == 0\`, which counts `
+            + `the ${roamingBodies.length} roaming body/bodies at `
+            + `${roamingBodies.map((b) => `(${b.x},${b.y})`).join(' ')} too — nothing waits on `
+            + 'their death, so the lock would wait on it instead.';
+    };
+
     const doorRefusal = (record, template, tx, ty) => {
+        const counted = killLockCountsRoamers(template, tx, ty);
+        if (counted) return counted;
         if (!template.door) return null;
         const painted = paintedOf(template, tx, ty);
         return doorLawRefusal({
@@ -3494,6 +3594,12 @@ export function seedlingModel({
          */
         roomDraws: roomRng.draws,
         goalCell: Object.freeze({ ...goalCell }),
+        /** ⛓ F1 (D4) — the goal's EFFECTIVE class: `defaults.goalClass`, or
+         *  `ROAMING_GOAL_CLASS` when the committed record holds a roaming body. */
+        goalClass,
+        /** ⛓ F1 (D4/D5) — the committed roaming bodies (`[]` for every other
+         *  level): what the body ablation removes and the kill-lock clause reads. */
+        roamingBodies,
         goalOel: Object.freeze({ ...goalOel }),
         goals: Object.freeze([Object.freeze(collectGoal(goalOel.x, goalOel.y))]),
         boot: () => bootAtTile(blank, d.start.tx, d.start.ty),
@@ -4062,7 +4168,17 @@ export function seedlingSeam({
             geometry: model.elements.placed,
             /** ⛓ THE OBSTACLE THE SOLVE NAMED — structured, beside the prose. */
             obstacle: cert.obstacle ?? null,
-            gap: certificationGap(cert),
+            /**
+             * ⛓⛓ F1 (D4) — **A ROAMING BODY THE SOLVER REFUSED IS THE ELEMENT'S
+             * REFUSAL, BY NAME**, and `reasonText` above carries the solver's
+             * own words (at F1 W0: *"the combat ladder is EXHAUSTED"*). ⛔ Only a
+             * REFUSED verdict is renamed: a budget exhaustion keeps its own
+             * gap, and no budget is widened. ⚖ *Refuse rather than redraw*: the
+             * level ships with the element DROPPED (below) and the next try is
+             * the caller's, exactly as for every other element.
+             */
+            gap: model.roamingBodies.length > 0 && cert.verdict === VERDICT.REFUSED
+                ? 'the-solver-cannot-cross-the-roaming-body' : certificationGap(cert),
         });
         if (!certification.certified) {
             model = seedlingModel({ seed, defaults, skeleton, elements, areas, dropElement: true });
@@ -4517,7 +4633,7 @@ export function generateSeedlingLevel({
             ...(requireReport ? { require: requireReport } : {}),
             goalCell: model.goalCell,
             goalOel: model.goalOel,
-            goalClass: model.defaults.goalClass,
+            goalClass: model.goalClass ?? model.defaults.goalClass,
             startCell: model.defaults.start,
             items: palette.items ?? null,
             /**

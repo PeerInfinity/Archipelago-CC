@@ -405,10 +405,15 @@ export function vestibuleCellsAround({ width, height, walkable, goal, radius, ex
  * writer (`withTerrain`/`withEntities`) and this file never learns the record
  * format. ⛔ AND IT SPENDS NO DRAW — every decision here reads tiles.
  *
+ * @param {boolean} [o.killLock] ⛓ concept library F1 (D4) — whether a placement
+ *   that declares BODIES gets the binding's KILL LOCK. `true` (the default) is
+ *   the arena's `cut` law and every caller before F1; `false` is the roaming
+ *   enemy's `none` law — its bodies are a danger with NOTHING waiting on their
+ *   death. The caller reads it off the element's DECLARED law, never its name.
  * @returns {{placed}|{refused:{reason, detail}}}
  */
 export function compositeSeedlingElement({
-    width, height, groundAt, site, placement, start, goal,
+    width, height, groundAt, site, placement, start, goal, killLock = true,
 }) {
     const mask = new Uint8Array(width * height);
     for (let y = 0; y < height; y += 1) {
@@ -688,7 +693,15 @@ export function compositeSeedlingElement({
     const bodies = placement.symbols.holds.length === 0
         ? placement.entities.obstacles : [];
     let killLockCell = null;
-    if (bodies.length > 0) {
+    /**
+     * ⛓⛓ F1 (D4) — **A ROAMING BODY GETS NO LOCK**, and so no cut is asked for
+     * one: `killLock` is `false` for the `none` law, `killLockCell` stays
+     * `null`, and the record below still carries `bodies` (the ENTITIES are
+     * the same spinners). ⛔ Nothing else here changes for it: the ring, the
+     * mouth, the demand, the connectivity and clause (vi)'s NO-SHORTCUT are
+     * all the BINDING's claims about the room and all still run.
+     */
+    if (bodies.length > 0 && killLock) {
         const lock = flagLockCellFor({ width, height, walkable: at,
             start: { x: start.tx, y: start.ty }, goal: { x: goal.tx, y: goal.ty },
             reserved, entryMouth, reason: 'no-cut-for-the-kill-lock' });
@@ -1154,6 +1167,25 @@ export function seedlingElementEntities({ placed, groupIdFor, tagFor, ids }) {
          * ONE of `TAGS_PER_LEVEL`'s 30 at `bodies=1` and ONE at `bodies=n` —
          * the count buys enemies, never persistence.
          */
+        /**
+         * ⛓⛓⛓ **THE ROAMING ENEMY'S REALISATION — SPINNERS AND NOTHING ELSE**
+         * (concept library F1, D4). A placement with bodies and NO kill lock
+         * (`killLockCell === null`, the `none` law) is each declared body ->
+         * `spinner {tag:'-1'}`, the arena's own spelling, and nothing more.
+         * ⛔ **NO TAG AT ALL**: the lock was the only thing an arena had with
+         * durable state, and a spinner's `tag:'-1'` is the palette's literal,
+         * not an allocation — so a roaming enemy spends NONE of the 30.
+         */
+        if ((placed.bodies?.length ?? 0) > 0 && placed.killLockCell === null) {
+            return {
+                groups: Object.freeze({}),
+                tags: Object.freeze({}),
+                ids,
+                entities: Object.freeze(placed.bodies.map((b) => Object.freeze({
+                    type: 'spinner', tx: b.x, ty: b.y, attrs: Object.freeze({ tag: '-1' }),
+                }))),
+            };
+        }
         if ((placed.bodies?.length ?? 0) > 0) {
             const tag = tagFor();
             return {

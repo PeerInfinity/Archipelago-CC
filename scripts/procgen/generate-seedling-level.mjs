@@ -699,6 +699,11 @@ if (has('json')) {
          */
         const payload = () => (((p.bodies?.length ?? 0) === 0)
             ? 'put NO entity in the room'
+            /** ⛓ concept library F1 (D4) — the ROAMING ENEMY: bodies, no lock. */
+            : (p.killLockCell ?? null) === null
+                ? `put ${p.bodies.length} ROAMING spinner(s) in it `
+                    + `(${p.bodies.map((b) => `(${b.x},${b.y})`).join(' ')}) and NO lock — `
+                    + 'nothing waits on their death'
             : `put ${p.bodies.length} spinner(s) in it `
                 + `(${p.bodies.map((b) => `(${b.x},${b.y})`).join(' ')}), whose death opens the `
                 + `KILL LOCK on the main-path cut (${p.killLockCell.x},${p.killLockCell.y}) `
