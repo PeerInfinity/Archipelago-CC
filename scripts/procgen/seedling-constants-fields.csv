@@ -1576,3 +1576,6 @@ frontend/modules/seedlingDemo/iceTurretBlast.js|(module)|h774b1553|5|0,rule,magn
 frontend/modules/seedlingDemo/playerDamage.js|(module)|h9d8ec539|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.jiggle|h9b54b306|2|0,rule,derivation,,REVIEW: shake / 2 half-amplitude of the Owl jiggle; unified with camera.js stepCameraJiggled
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.jiggle|h40d304c7|2|0,rule,derivation,,REVIEW: shake / 2 half-amplitude of the Owl jiggle; unified with camera.js stepCameraJiggled
+frontend/modules/seedlingDemo/tapeEnvelope.js|*|*,structural,,,default: the envelope reader's validation floors and indices (engine prep B1 joined the closure through tapeFormat.js)
+frontend/modules/seedlingDemo/tapeEnvelope.js|*|inclusiveToHalfOpen|1,rule,magnitude,,the inclusive-to-half-open bridge: an engine span [a b] is the envelope span {from a; to b+1} (tape-envelope.md § 4)
+frontend/modules/seedlingDemo/tapeEnvelope.js|*|halfOpenToInclusive|1,rule,magnitude,,the reverse bridge: to - 1 (tape-envelope.md § 4)
