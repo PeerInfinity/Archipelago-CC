@@ -10368,6 +10368,87 @@ owners:
 
 L32 stays refused (R-f is a design).
 
+### Concept library F1 — the roaming enemy: a body without a kill lock (2026-09-30)
+
+The user asked for it on 2026-09-29: *"if Seedling is currently unable to place
+enemies without an enemy lock, then that's something we'll want to fix."* This
+slice builds the generator half. The solver half (F2) is not started here.
+
+**Why there was no lock-less body.** Two reasons, both measured at W0 on the
+enemy census's own room (start (1,1), a 6x6 chamber, goal (8,8), one spinner,
+no lock). The numbers match the brief exactly.
+
+- **The goal was dialogued.** The generator's goal is `torchpickup`, which shows
+  text. `levelRun` throws on any tick where a live spinner and a dialogued
+  ceremony coexist. With the spinner at (4,4) or (7,2) the torch threw on both
+  boots (ticks 222 pre-sword; 225 and 126 post-sword). With a textless
+  `totempart` goal the same rooms solved certified: 218/221 and 218/123 ticks.
+  The empty control is 218/123.
+- **The solver has no answer for some positions.** Twelve positions with the
+  textless goal: six solved on both boots and six refused on both, with *"the
+  combat ladder is EXHAUSTED"*. The kill rung needs a death the model can
+  observe, and only a lock's `tset:-1` gives one. That is F2's.
+
+**What landed.**
+
+- **D1 — the census gained the arms.** `census-seedling-enemies.mjs` takes
+  `--goal=`, `--boot=`, `--at=` and `--classes=`. With no flag its stdout md5 is
+  unchanged (`4ce6c5b3…`). The new arms reproduce both tables above.
+- **D2 — the element.** `procgenCore/elements/roam.js` is the chamber's blob
+  plus the arena's body draw (`drawBlobBodies`, exported from `arena.js` without
+  moving an arena draw). It has no lock, no door cell and no clearer. Its law is
+  the new `LAW_NONE`: it is neither a cut nor a shortcut. `headsNeeding` now
+  reads only the cut law as able to meet a directive.
+- **D3 — the head.** `roam` is the last row of `ELEMENT_TABLE`. It has no
+  `needs`, so a pre-sword biome places it too. It is in no biome default.
+- **D4 — the binding.** Each body becomes a `spinner {tag:'-1'}` with no lock
+  and no tag spent. A level whose committed record holds a roaming body
+  certifies against `ROAMING_GOAL_CLASS = 'totempart'`. Every other level keeps
+  the torch byte for byte. A refused certification is named
+  `the-solver-cannot-cross-the-roaming-body` and carries the solver's words. The
+  level then ships with the element dropped; nothing redraws and no budget moves.
+- **D5 — the grade.** `bodyAblation` solves the finished level with and without
+  its bodies at the same boot and budget. The verdicts are `INERT`, `COSTS` and
+  `NOT-ESTABLISHED`. `differentialGrade.GRADES` is unchanged.
+- **D6 — wasm.** Three subjects agree per tick with Δx 0 Δy 0: `empty` s8
+  pre-sword (43 observations), `branchy` s7 post-sword (150) and `loopy` s6
+  pre-sword (52).
+- **D7 — the pipeline room.** `generateGenRoom` with `elements: 'roam'` builds at
+  re-roll 0 and seats AP location 0 on the goal cell.
+
+**The kill lock, measured.** A `tset:-1` lock opens on `totalEnemies() == 0`,
+and that counts roaming bodies too. The census's arena room with a second
+spinner on the lock's goal side is BUDGET_EXHAUSTED; without it, it solves in
+358 ticks. Nothing can build that room today. One head per level keeps `roam`
+away from `killgate` and `arena`, and pass 2's kill-lock row was retired on
+2026-08-16. The refusal `a-kill-lock-would-count-the-roaming-bodies` now sits
+beside the door law for the day a kill-lock template returns.
+
+**The yield** (7 kinds x 10x10/14x14 x seeds 1-12, `--count=3 --tries=4 --k=3`):
+
+| palette | cells | placed | certified | named refusals | INERT | COSTS | NOT-ESTABLISHED | aborted |
+|---|---|---|---|---|---|---|---|---|
+| pre-sword | 168 | 96 | 94 | 2 | 94 | 0 | 0 | 0 |
+| post-sword | 168 | 96 | 94 | 2 | 92 | 1 | 0 | 1 |
+
+Placement is 36 of 84 cells at 10x10 and 60 of 84 at 14x14, the same on both
+boots. The element stream never reads the boot. The 72 geometry refusals are the
+composite's own: 42 `the-entry-port-cannot-be-joined`, 17
+`the-tunnel-shortens-the-way-to-the-goal` and 13
+`the-reserved-rectangle-seals-the-room`. The one aborted cell is the known
+pass-2 swing line-of-sight throw (§9.5c).
+
+**The finding.** A roaming body in a one-mouth side room almost never touches
+the route: 186 of 187 ablations are INERT. The binding seals the blob's exit
+mouth, so the blob is a dead end the walk never enters. The one COSTS level
+(`branchy` s7 post-sword, 149 vs 86 ticks) is also the wasm witness where the
+bodies matter. Two ways to make the danger real are a geometry that carries the
+corridor through the blob (both mouths open, which a design ruling would have to
+allow) and F2's solver rung. F2 alone moves at most the 2 named refusals per
+palette.
+
+The report is `CC/docs/cloud-reports/concept-library-f1.md`.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
