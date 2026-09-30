@@ -1046,6 +1046,10 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "at",
+                "boot",
+                "classes",
+                "goal",
                 "json"
             ],
             "file": "census-seedling-enemies.mjs",
@@ -1055,6 +1059,30 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "arena"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "at"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "boot"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "classes"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "goal"
                 },
                 {
                     "how": [

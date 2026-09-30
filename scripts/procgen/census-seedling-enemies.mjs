@@ -53,9 +53,28 @@
  * and `solve` does not hand back the run. It is labelled `(derived)` for that
  * reason rather than presented as a reading.
  *
+ * ── ⛓⛓ THE TWO ARMS THE ROAMING ENEMY NEEDED (concept library F1, D1) ──
+ *
+ * A body with NO lock is only measurable if the goal is not DIALOGUED (the
+ * torch's ceremony throws `levelRun`'s live-spinner guard) and if the BOOT is
+ * a variable (the empty control is 218 ticks pre-sword and 123 post-sword, so
+ * a table at one boot cannot grade a body at the other). So three flags, and
+ * ⛔ WITH NONE OF THEM THIS FILE'S STDOUT IS BYTE-IDENTICAL:
+ *
+ *   `--goal=<class>`            the goal pickup's class (default the generator's
+ *                               own `SEEDLING_DEFAULTS.goalClass`, `torchpickup`)
+ *   `--boot=pre-sword|post-sword`  the boot's items (default `post-sword`)
+ *   `--at=<tx,ty>[;<tx,ty>…]`   where the CHAMBER arm's body stands (default the
+ *                               centre (4,4)); several positions multiply the
+ *                               chamber rows, each labelled `class@tx,ty`
+ *   `--classes=<a,b,…>`         only these classes (default every one) — so a
+ *                               spinner-only position sweep is one command
+ *
  * Run:
  *   node scripts/procgen/census-seedling-enemies.mjs
  *   node scripts/procgen/census-seedling-enemies.mjs --json=/tmp/enemies.json
+ *   node scripts/procgen/census-seedling-enemies.mjs --goal=totempart --boot=pre-sword \
+ *       --classes=spinner --at='4,4;7,2;2,2;5,5'
  */
 
 import { dirname, join, resolve } from 'node:path';
@@ -73,7 +92,7 @@ const M = (p) => import(join(REPO, 'frontend/modules/seedlingDemo', p));
 const { bootAtTile, emptyLevel, oelAtTile, withEntities, withTerrain } = await M('procgenLevel.js');
 const { DEFAULT_BUDGET, GENERATED_BOOT_TIME, bootStaging, collectGoal, solve } =
     await M('procgenOracle.js');
-const { POST_SWORD_ITEMS } = await M('procgenPalette.js');
+const { POST_SWORD_ITEMS, PRE_SWORD_ITEMS } = await M('procgenPalette.js');
 const { SEEDLING_DEFAULTS } = await M('procgenSeedling.js');
 const { ENTITY_CLASSES } = await M('levelWorld.js');
 const { MODELLED_ENEMY_CLASSES } = await M('spinner.js');
@@ -88,6 +107,29 @@ const START = { tx: 1, ty: 1 };
 const GOAL = { tx: 8, ty: 8 };
 const CHAMBER = { x0: 2, y0: 2, x1: 7, y1: 7 };
 const CENTRE = { tx: 4, ty: 4 };
+
+/**
+ * ⛓ F1 D1 — THE ARMS. ⛔ Each default is the value this file hard-coded before
+ * the flag existed, so an omitted flag is the old table byte for byte.
+ */
+const GOAL_CLASS = arg('goal', SEEDLING_DEFAULTS.goalClass);
+const BOOTS = Object.freeze({ 'pre-sword': PRE_SWORD_ITEMS, 'post-sword': POST_SWORD_ITEMS });
+const BOOT = arg('boot', 'post-sword');
+if (!BOOTS[BOOT]) {
+    process.stderr.write(`census-seedling-enemies: --boot=${BOOT} is not one of `
+        + `[${Object.keys(BOOTS).join(', ')}]\n`);
+    process.exit(2);
+}
+const AT_ARG = arg('at', '');
+const AT = AT_ARG === '' ? [CENTRE] : AT_ARG.split(';').map((s) => {
+    const [tx, ty] = s.split(',').map(Number);
+    if (!Number.isInteger(tx) || !Number.isInteger(ty)) {
+        process.stderr.write(`census-seedling-enemies: --at=${AT_ARG}: "${s}" is not tx,ty\n`);
+        process.exit(2);
+    }
+    return { tx, ty };
+});
+const CLASSES_ARG = arg('classes', '');
 
 /** The hand-drawn room. ⛓ Built by WALLING an open room, so the only floor is
  *  what the diagram in the docblock shows. */
@@ -105,7 +147,7 @@ function room() {
     }
     rec = withTerrain(rec, wall);
     return withEntities(rec, [{
-        type: SEEDLING_DEFAULTS.goalClass, ...oelAtTile(GOAL.tx, GOAL.ty),
+        type: GOAL_CLASS, ...oelAtTile(GOAL.tx, GOAL.ty),
         attrs: { tag: SEEDLING_DEFAULTS.goalTag },
     }]);
 }
@@ -138,7 +180,7 @@ function corridorRoom(cls) {
         }
     }
     rec = withTerrain(rec, wall);
-    const ents = [{ type: SEEDLING_DEFAULTS.goalClass, ...oelAtTile(8, 8),
+    const ents = [{ type: GOAL_CLASS, ...oelAtTile(8, 8),
         attrs: { tag: SEEDLING_DEFAULTS.goalTag } }];
     if (cls) {
         ents.push({ type: cls, ...oelAtTile(4, 1), ...(ATTRS[cls] ? { attrs: ATTRS[cls] } : {}) });
@@ -163,7 +205,7 @@ function nubRoom() {
     }
     rec = withTerrain(rec, wall);
     return withEntities(rec, [
-        { type: SEEDLING_DEFAULTS.goalClass, ...oelAtTile(8, 3),
+        { type: GOAL_CLASS, ...oelAtTile(8, 3),
             attrs: { tag: SEEDLING_DEFAULTS.goalTag } },
         { type: 'lock', ...oelAtTile(5, 1), attrs: { tset: '-1', tag: '1' } },
         { type: 'spinner', ...oelAtTile(3, 2), attrs: { tag: '-1' } },
@@ -177,9 +219,17 @@ function nubRoom() {
  * the crusher, the spinning axe and the arrow trap.
  */
 const NAMED_EXTRAS = Object.freeze(['crusher', 'spinningaxe', 'arrowtrap', 'lavachain']);
-const CLASSES = Object.keys(ENTITY_CLASSES)
+const ALL_CLASSES = Object.keys(ENTITY_CLASSES)
     .filter((k) => ENTITY_CLASSES[k].type === 'Enemy' || NAMED_EXTRAS.includes(k))
     .sort();
+const CLASSES = CLASSES_ARG === '' ? ALL_CLASSES : CLASSES_ARG.split(',').map((c) => {
+    if (!ALL_CLASSES.includes(c)) {
+        process.stderr.write(`census-seedling-enemies: --classes: "${c}" is not one of `
+            + `[${ALL_CLASSES.join(', ')}]\n`);
+        process.exit(2);
+    }
+    return c;
+});
 
 /**
  * ⛓ WHICH `dangerMap` PRODUCER WOULD PRICE THIS BODY, derived from the roster
@@ -202,7 +252,7 @@ const ATTRS = Object.freeze({
 function attempt(record, name, goalAt = null) {
     const staging = bootStaging({
         boot: bootAtTile(record, START.tx, START.ty),
-        items: POST_SWORD_ITEMS,
+        items: BOOTS[BOOT],
         pins: ['dead_frames'],
         time: GENERATED_BOOT_TIME,
     });
@@ -228,19 +278,25 @@ const rows = [];
 rows.push({ cls: '(control — empty chamber)', ...attempt(room(), 'control') });
 rows.push({ cls: '(control — empty corridor)', ...attempt(corridorRoom(null), 'control-corridor') });
 for (const cls of CLASSES) {
-    const rec = withEntities(room(), [{ type: cls, ...oelAtTile(CENTRE.tx, CENTRE.ty),
-        ...(ATTRS[cls] ? { attrs: ATTRS[cls] } : {}) }]);
     const corr = attempt(corridorRoom(cls), `${cls}@corridor`);
-    rows.push({
-        cls,
-        as3: ENTITY_CLASSES[cls].as3,
-        modelled: Object.keys(MODELLED_ENEMY_CLASSES)
-            .some((k) => k.toLowerCase() === cls) ? 'yes' : 'no',
-        spellable: ENTITY_ROSTER_TYPES.includes(cls) ? 'yes' : 'no',
-        danger: dangerOf(cls),
-        ...attempt(rec, cls),
-        corridor: corr,
-    });
+    /** ⛓ F1 D1 — one chamber row PER `--at` POSITION; the corridor arm does
+     *  not depend on it, so it is solved once and carried on each. ⛔ The label
+     *  gains `@tx,ty` only when `--at` was typed, so the default rows keep the
+     *  bare class name. */
+    for (const at of AT) {
+        const rec = withEntities(room(), [{ type: cls, ...oelAtTile(at.tx, at.ty),
+            ...(ATTRS[cls] ? { attrs: ATTRS[cls] } : {}) }]);
+        rows.push({
+            cls: AT_ARG === '' ? cls : `${cls}@${at.tx},${at.ty}`,
+            as3: ENTITY_CLASSES[cls].as3,
+            modelled: Object.keys(MODELLED_ENEMY_CLASSES)
+                .some((k) => k.toLowerCase() === cls) ? 'yes' : 'no',
+            spellable: ENTITY_ROSTER_TYPES.includes(cls) ? 'yes' : 'no',
+            danger: dangerOf(cls),
+            ...attempt(rec, AT_ARG === '' ? cls : `${cls}@${at.tx},${at.ty}`),
+            corridor: corr,
+        });
+    }
 }
 rows.push({ cls: 'spinner@nub', as3: 'Spinner', modelled: 'yes',
     spellable: 'yes', danger: dangerOf('spinner'), ...attempt(nubRoom(), 'spinner@nub') });
@@ -248,10 +304,13 @@ rows.push({ cls: 'spinner@nub', as3: 'Spinner', modelled: 'yes',
 say('# census-seedling-enemies — ⚖ design ruling 19, and it asserts NOTHING');
 say('');
 say(`room: 10x10, ONE route start (1,1) -> a 6x6 chamber (2,2)..(7,7) -> goal (8,8); `
-    + `the body stands at (${CENTRE.tx},${CENTRE.ty}). Boot post-sword, budget `
+    + `the body stands at ${AT.map((c) => `(${c.tx},${c.ty})`).join(' ')}. Boot ${BOOT}, budget `
     + `maxTicksPerTarget=${DEFAULT_BUDGET.maxTicksPerTarget}.`);
+/** ⛓ F1 D1 — said only when it differs, so the default header is unmoved. */
+if (GOAL_CLASS !== SEEDLING_DEFAULTS.goalClass) say(`goal class: \`${GOAL_CLASS}\`.`);
 say(`classes: every \`levelWorld.ENTITY_CLASSES\` row whose AS3 type is "Enemy", plus `
-    + `[${NAMED_EXTRAS.join(', ')}] — **${CLASSES.length}** of them, read from the table.`);
+    + `[${NAMED_EXTRAS.join(', ')}] — **${ALL_CLASSES.length}** of them, read from the table.`);
+if (CLASSES_ARG !== '') say(`⛓ --classes: only [${CLASSES.join(', ')}] are measured below.`);
 say('');
 say('| class | AS3 | stepper? | palette can SPELL | danger kind (derived) | CHAMBER '
     + '| ticks | CORRIDOR | ticks | strategies (corridor) | the corridor solve\'s own words |');
@@ -278,7 +337,7 @@ say(`CORRIDOR arm: ${JSON.stringify(byCorridor)}`);
 const chamberControl = rows[0].ticks;
 const inert = rows.filter((r) => r.corridor && r.ticks === chamberControl).length;
 say('');
-say(`⛓⛓ **${inert} of ${CLASSES.length} CHAMBER rows solve at the CONTROL'S OWN TICK COUNT `
+say(`⛓⛓ **${inert} of ${rows.filter((r) => r.corridor).length} CHAMBER rows solve at the CONTROL'S OWN TICK COUNT `
     + `(${chamberControl})** — the body was never on the route. A 6x6 chamber does not make `
     + 'a body an obstacle; the corridor arm is where the question is actually asked.');
 say('');
@@ -343,7 +402,7 @@ if (ARENA) {
             }
         }
         rec = withTerrain(rec, wall);
-        const ents = [{ type: SEEDLING_DEFAULTS.goalClass, ...oelAtTile(8, 1),
+        const ents = [{ type: GOAL_CLASS, ...oelAtTile(8, 1),
             attrs: { tag: SEEDLING_DEFAULTS.goalTag } }];
         if (lock) ents.push({ type: 'lock', ...oelAtTile(4, 1), attrs: { tset: '-1', tag: '1' } });
         /** ⛓ FROM THE FAR CORNER INWARDS — a fixed order, so `n` is the only
