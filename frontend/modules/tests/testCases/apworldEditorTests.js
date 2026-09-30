@@ -12041,6 +12041,15 @@ registerTest({
  * — measured in node at C1 (load ≈4): 8×6 0.8 s, 32×32 3.3 s, 40×40 4.4 s,
  * 48×48 6.0 s, 56×56 7.7 s, 64×64 10.1 s (the side 64 is ≈5× the timeout row's
  * 2 s budget; the cancel row reads *built 5 / 444* about 2 s in).
+ * ⚠ THAT MARGIN DID NOT HOLD IN THE PAGE (registration-order plan §6.3/§9): on
+ * a CI runner the timeout row once saw the 64×64 build LAND (443 / 444 built,
+ * the outcome 3.8 s after the press) before its 2 s timer answered — the
+ * in-page build is far faster than node's, or the timer was starved. The side
+ * is now 96: node at `ec5b4314ef` (load ≈1) 64×64 10.8–11.7 s, 96×96
+ * 29.1–29.9 s, 128×128 53.9–54.7 s — ≈2.7× the 64 build, so the page's
+ * fastest observed 64 build (≤ 3.8 s) becomes ≈ 10 s, ≈5× the budget. Both
+ * rows STOP the build (Cancel ≈2 s in; the 2 s timeout), so the side costs
+ * them no wall time.
  * ══════════════════════════════════════════════════════════════════════ */
 
 // eslint-disable-next-line import/first
@@ -12058,7 +12067,7 @@ const INIT_ADVENTURE_PATH = './presets/adventure/AP_14089154938208861744/AP_1408
 const INIT_APCALC_PATH = './presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 const INIT_SLOW_PATH = './presets/pokemon_rb/AP_14089154938208861744/AP_14089154938208861744_rules.json';
 /** ⛓ The region side the slow rows set in the form's bag (see the section note). */
-const INIT_SLOW_REGION_SIDE = 64;
+const INIT_SLOW_REGION_SIDE = 96;
 
 /** ⛓ Raise the open form's region size to `INIT_SLOW_REGION_SIDE` (the slow rows' premise). */
 function slowInitialiseSize(testController, panel) {
