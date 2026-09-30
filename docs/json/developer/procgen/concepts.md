@@ -68,6 +68,10 @@ Logic is always `needs` plus `effect`, never a free rule expression; a placement
 
 A refusal is a value. When `selectRealisation` returns null — the entry declares nothing, the concept is not offered, or no placement's needs equal the rule — the caller does what it does today (for a procedural substrate, the generic `logic_gate` carrying the rule as its `clear_rule`).
 
+## The text adventure
+
+A text-adventure gate has no geometry: the bridge refuses the move while the exit's rule fails, so the realisation is the prose the player reads. `sword`, `swim`, `guardian.gate` and `water.gate` are all `tier: 'mechanic'`. When the planner's rule selects a gate, `placeFromRules` writes that gate's `blocked` and `passedWith` messages into the room's payload `prose`. See [Text Adventure Substrate](./text-adventure.md#concept-realisations).
+
 ## What the chart reads
 
 `conceptsRealisedBy(entry, concepts)` lists an entry's realised concepts with their kind, tier and placements' effects, and `itemTagsImpliedBy(entry, concepts)` lists the item tags those concepts carry — the same tag law `substrateCapabilities.itemTagFeatures` applies to an entry's items. They are inputs for a future row of the substrate capability chart; no chart statement reads `conceptRealisations` yet.

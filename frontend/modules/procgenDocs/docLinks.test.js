@@ -230,20 +230,23 @@ describe('the corpus census — printed, then pinned', () => {
          *              (`doc` 240 → 241). The new document itself links nothing.
          *   314 → 315  CONCEPT LIBRARY T2 D3 (2026-09-30): substrate-registry.md's
          *              `conceptRealisations` row → concepts.md (`doc` 241 → 242).
+         *   315 → 318  CONCEPT LIBRARY T2 D5 (2026-09-30): text-adventure.md's
+         *              § Concept realisations ⇄ concepts.md (`doc` 242 → 244) and
+         *              text-adventure.md's same-doc § Prose link (`same-doc` 15 → 16).
          */
         expect(by).toEqual({
-            'same-doc': 15,
-            doc: 242,
+            'same-doc': 16,
+            doc: 244,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(315);
+        expect(CORPUS.length).toBe(318);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(242);
+        expect(docs).toHaveLength(244);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

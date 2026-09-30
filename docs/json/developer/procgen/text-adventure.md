@@ -49,14 +49,35 @@ The serialized payload has these fields:
 - `locations` — `{name, item?, access_rule?}`, with the AP location name filled in at serialize time.
 - `fogEnabled` — engine flag, always present.
 - `manaEnabled` — engine flag, present in loop mode.
+- `prose` — optional; the region's own prose (see [below](#prose-and-its-resolution-order)). Written only when the room says something, so a room built without a concept has no `prose` key.
 
-`deserializeWorld` returns `{exits: Map, locations}`. It copies `manaEnabled: true` onto the world, because play reads the flag from the world: `procgenPlayer.getRegionInfo` passes it to `mana.js`. `fogEnabled` is not copied; nothing reads it from a world.
+`deserializeWorld` returns `{exits: Map, locations}`. It copies `manaEnabled: true` onto the world, because play reads the flag from the world: `procgenPlayer.getRegionInfo` passes it to `mana.js`. It copies `prose` for the same reason: the bridge reads it off the world that `textAdventure:loadRegion` carries. `fogEnabled` is not copied; nothing reads it from a world.
 
 A payload that is not a room (a tile-grid shape with `tiles`/`items` and no `exitGates`/`locations`) is refused with a message naming those keys (`textAdventureRoomRefusal`), rather than read as a room with no locations.
 
+## Prose and its resolution order
+
+The engine shows six kinds of message: a region's `enterMessage`, an exit's `moveMessage` and `inaccessibleMessage`, and a location's `checkMessage`, `alreadyCheckedMessage` and `inaccessibleMessage`. Each is a `{var}` template (`templating.js`): `{destinationRegion}` on an exit, `{item}` on a location.
+
+They come from two documents:
+
+- **The per-game file**, `shared/customData/<game>_textadventure.json`, fetched by game name (`customData.js`) and keyed by region, exit and location name across the whole game.
+- **The region's payload `prose`**, a slice of the same shape for one region: `{enterMessage?, exits: {<exit_id>: {moveMessage?, inaccessibleMessage?}}, locations: {<AP name>: {checkMessage?, alreadyCheckedMessage?, inaccessibleMessage?}}}`.
+
+Each message resolves in this order: **the region's payload prose → the per-game file → the bridge's generic line** ("You can't go that way: …"). The fall-through is per message, so a region may override one exit's `inaccessibleMessage` and keep the file's `moveMessage`. `composeProse` in `templating.js` does this: it lays the region's prose over the file and hands the six lookup helpers the result. The bridge caches each region's prose on `textAdventure:loadRegion` and maps its `exit_id` keys to the engine's exit names.
+
+## Concept realisations
+
+A text-adventure gate has no geometry. `placeFromRules` records the rule on the exit, and the bridge refuses the move while the rule fails. So what a [concept](./concepts.md) adds here is what the player reads, and every realisation is `tier: 'mechanic'`. The entry declares `conceptRealisations` (`textAdventureConceptRealisations.js`):
+
+- `sword` and `swim` each carry a location `checkMessage`.
+- `guardian` and `water` each have a `gate` placement that requires the sword or swim. Its `mechanic.prose` has a `blocked` message and a `passedWith` message (which names the weakness).
+
+`placeFromRules` offers each exit rule to `selectRealisation` with the world's `params.concepts`. On a match it writes `prose.exits[exit_id] = {inaccessibleMessage: blocked, moveMessage: passedWith}`. A location holding an offered item concept gets that item's `checkMessage`. The rule itself is recorded unchanged. A world that offers no concepts gets no `prose`, and its payloads are byte-identical to what they were before.
+
 ## Registry entry
 
-The entry (in `textAdventureSubstrateWrapperLibrary.js`) declares `textAdventure:loadRegion`, `regionGeometry: SIDES`, the hooks and serializer above, `sidecarFields`, `apLocationNamesOf` (every `locations[].name`), `exitSides` with no side-keyed payload fields, and the composite-map painter. Full contract: [Substrate Registry Reference](./substrate-registry.md).
+The entry (in `textAdventureSubstrateWrapperLibrary.js`) declares `textAdventure:loadRegion`, `regionGeometry: SIDES`, the hooks and serializer above, `sidecarFields`, `apLocationNamesOf` (every `locations[].name`), `exitSides` with no side-keyed payload fields, the composite-map painter, and `conceptRealisations` (above). Full contract: [Substrate Registry Reference](./substrate-registry.md).
 
 `regionRoundTrip` lets the APWorld hub's **Re-derive rules** reach every text-adventure region: `open` deserializes the room; `save` serializes it, re-adds `fogEnabled`/`manaEnabled`, and compiles the rules. It declares `rules: 'authored'`, so `scripts/procgen/check-sidecar-fields.mjs` fails a document rule the payload does not carry. **Edit** stays disabled because the entry has no `roomEditor`.
 
@@ -67,7 +88,7 @@ Loop support: `regionMove`/`locationCheck`/`explore` queue actions, manual play,
 - **The bridge** re-applies each exit's side (sent with `textAdventure:loadRegion`) to the rooms it builds from `staticData`, which carry no sides. That is what makes the engine draw its 3×3 compass grid in a procgen world.
 - **The composite-map painter** draws exits on their sides, the location count and names, and a gate as closed when its rule fails on an empty inventory.
 
-In-app tests (`frontend/modules/tests/testCases/textAdventureWrapperTests.js`): `tasw-compass-grid-renders-procgen-sides` and `tasw-gate-holds-in-play`.
+In-app tests (`frontend/modules/tests/testCases/textAdventureWrapperTests.js`): `tasw-compass-grid-renders-procgen-sides`, `tasw-gate-holds-in-play`, and `tasw-concept-prose-in-play` (a guardian-gated exit shows its `blocked` prose, and after the sword is granted its `passedWith` prose).
 
 ## Related documentation
 
