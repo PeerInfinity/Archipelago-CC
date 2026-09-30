@@ -120,5 +120,5 @@ This approach ensures your fork maintains a clean relationship with the upstream
 - Fuzzer based on [Archipelago-fuzzer](https://github.com/Eijebong/Archipelago-fuzzer) by Eijebong
 - APWorld Manager from [silasary/Archipelago](https://github.com/silasary/Archipelago)
 - APWorld Index from [silasary/apworlds](https://github.com/silasary/apworlds)
-- APWorld and Iframe integration of [Journey to Ascension](https://github.com/meneth/journey-to-ascension/) by Meneth
+- APWorld and Iframe integration of [Journey to Ascension](https://github.com/meneth/journey-to-ascension/) by Meneth (used with permission, non-commercial; see [NOTICE.md](NOTICE.md))
 - Iframe integration of [A-Mazing-Idle](https://imgreghenry.github.io/A-Mazing-Idle/) by ImGregHenry
