@@ -2661,9 +2661,18 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
         return { bad, seen };
     }
 
-    it('the name list is the dispatch table: 23 families, each one a getter on the run', () => {
+    it('the name list is the dispatch table: every folded family, by name, each one a getter on the run', () => {
         const run = createLevelRun({ levelSource, boot });
-        expect(ENTITY_FAMILY_NAMES).toHaveLength(23);
+        // The population by NAME, not by count (lintGateLabels: a roster's length is a
+        // count the condition types; the names are the claim). Fold the next family by
+        // extending this list in the same commit as the dispatch entry.
+        expect([...ENTITY_FAMILY_NAMES]).toEqual([
+            'openActivators', 'pushables', 'armedArrowTraps', 'crushers', 'openChests',
+            'strikeBodies', 'spinnerBodies', 'armedPulsers', 'turrets', 'chasers',
+            'brokenRocks', 'crushersParked', 'pushesSettled', 'openBridges', 'arrowsInFlight',
+            'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
+            'arrowFlights', 'bosses', 'talkCircles',
+        ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
             expect(typeof Object.getOwnPropertyDescriptor(run, f)?.get, f).toBe('function');
