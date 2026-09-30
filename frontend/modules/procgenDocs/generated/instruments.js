@@ -206,16 +206,21 @@ export const INSTRUMENTS = frz({
             "browser": 0,
             "count": 6,
             "id": "sweep"
+        },
+        {
+            "browser": 0,
+            "count": 1,
+            "id": "witness"
         }
     ],
     "counts": {
-        "blockStyle": 279,
+        "blockStyle": 280,
         "browser": 85,
         "cited": 119,
-        "files": 290,
+        "files": 291,
         "lineStyle": 11,
-        "withDocblock": 290,
-        "withFlags": 211
+        "withDocblock": 291,
+        "withFlags": 212
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -11216,6 +11221,88 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "sweep-yield-table — **THE YIELD TABLE**: what pass 2 actually yields over a carved room, per skeleton kind, per room size, per seed, on BOTH substrates.",
             "path": "scripts/procgen/sweep-yield-table.mjs"
+        },
+        {
+            "argvHelpers": [
+                "cell",
+                "opt"
+            ],
+            "browser": false,
+            "category": "witness",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "jobs",
+                "only",
+                "tier",
+                "write"
+            ],
+            "file": "witness-seedling-profile.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "child"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "jobs"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "cell"
+                    ],
+                    "name": "pct10"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "tapes"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "tier"
+                },
+                {
+                    "how": [
+                        "cell"
+                    ],
+                    "name": "ulp"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "witness-seedling-profile — per physics-profile key, does perturbing it move any committed replay? (engine-prep A3; RWK's check_profile_live.py, restated).",
+            "path": "scripts/procgen/witness-seedling-profile.mjs"
         }
     ],
     "terms": [
