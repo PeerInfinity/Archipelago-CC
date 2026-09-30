@@ -303,7 +303,7 @@ Format of the block:
 Both build a *topology* — regions, locations, exits, adjacency and each region's
 substrate — and hand it to the same model, so **they produce the same block for
 the same world**. `scripts/procgen/check-loop-costs-one-model.mjs` asserts that
-over five documents.
+over four documents.
 
 The model simulates a playthrough, one action queue per planned step. Start at
 the start region with max mana; for each location in sphere order, path to it,

@@ -17,7 +17,7 @@ the state manager (turned into a topology), the player id via `sphereState`, and
 each region's substrate via `procgenPlayer.getRegionInfo`. Its `getCostData()`
 applies the same write-by-class rule the pipeline does, so **what Generate Costs
 stamps into the store is the block the pipeline would have embedded**;
-`scripts/procgen/check-loop-costs-one-model.mjs` asserts that over five
+`scripts/procgen/check-loop-costs-one-model.mjs` asserts that over four
 documents. Before that it was a second, disagreeing model.
 
 ## Key Files
@@ -46,7 +46,7 @@ Everything below is a way of pointing it at a world; none of them is a model.
 
 `scripts/procgen/check-loop-costs-one-model.mjs` is the standing proof that the
 last two produce byte-identical blocks (modulo `generatedAt` / `generatedFrom`)
-over five documents. A second model can only come back by RED-ing there.
+over four documents. A second model can only come back by RED-ing there.
 
 ## Data flow
 

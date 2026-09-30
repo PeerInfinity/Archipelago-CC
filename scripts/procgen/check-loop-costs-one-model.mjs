@@ -22,13 +22,17 @@
  *
  * ── WHAT IT COVERS ────────────────────────────────────────────────────
  *
- * Five documents, one per class the write-by-class rule distinguishes:
+ * Four documents, one per class the write-by-class rule distinguishes:
  *   procgen_maze        plain procgen world (coarse regions)
- *   maze_loop_worldgen  a maze fixture that ships a REAL block (untracked;
- *                       skipped when absent, and it says so)
  *   jta_schedule_test   a NATIVE substrate (its own mana economy ⇒ no entries)
  *   omsi_substrate_test a second NATIVE substrate
  *   shapez              56 regions / 140 locations — the size case
+ *
+ * ⛓ A fifth, `maze_loop_worldgen` (a maze fixture that ships a REAL block),
+ * was an UNTRACKED preset, deleted 2026-09-16; the gate then read "4 … 1
+ * skipped" for two weeks. ⚖ The user (2026-09-30) kept the gate and dropped
+ * the entry: the class a shipped block represents is not covered here now.
+ * An optional (`required: false`) entry is still supported — it SKIPs by name.
  *
  * Pure-node (no dev server, no browser). Measured on this box: 1.05 / 0.76 /
  * 0.84 s over three runs.
@@ -87,14 +91,9 @@ let CostPlanner;
 let documentStateManager; let documentPlayerId; let documentSphereLog;
 
 
-/** The five documents, by preset directory. */
+/** The four documents, by preset directory. */
 const DOCUMENTS = [
     { preset: 'procgen_maze', required: true },
-    {
-        preset: 'maze_loop_worldgen',
-        required: false,
-        note: 'regenerate with the command in check-maze-loop-mana.mjs\'s header',
-    },
     { preset: 'jta_schedule_test', required: true },
     { preset: 'omsi_substrate_test', required: true },
     { preset: 'shapez', required: true },
