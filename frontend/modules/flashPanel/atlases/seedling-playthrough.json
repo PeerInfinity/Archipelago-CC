@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-ae833c1e",
+  "atlas_id": "seedling-0faa7fee",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "ae833c1e" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "0faa7fee" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -907,7 +907,7 @@
           {
             "from": "r0c19",
             "to": "r0c37",
-            "bidirectional": true,
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": {
               "rule": "Or",
@@ -919,26 +919,33 @@
           },
           {
             "from": "r0c19",
-            "to": "r13c6",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Yellow Key" } }
-          },
-          {
-            "from": "r0c19",
-            "to": "r40c4",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Green Key" } }
-          },
-          {
-            "from": "r0c19",
             "to": "r44c19",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Shield" } }
           },
-          { "from": "r0c37", "to": "r44c19", "bidirectional": true, "source": "manual" }
+          {
+            "from": "r0c37",
+            "to": "r0c19",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          { "from": "r0c37", "to": "r44c19", "bidirectional": true, "source": "manual" },
+          {
+            "from": "r13c6",
+            "to": "r0c19",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Yellow Key" } }
+          },
+          {
+            "from": "r40c4",
+            "to": "r0c19",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Green Key" } }
+          }
         ]
       }
     },
@@ -1339,13 +1346,6 @@
         "sub_regions": ["r1c1","r1c5","r3c3","r5c5"],
         "internal_exits": [
           {
-            "from": "r1c1",
-            "to": "r3c3",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Red Key" } }
-          },
-          {
             "from": "r1c5",
             "to": "r3c3",
             "bidirectional": true,
@@ -1358,6 +1358,13 @@
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Sword" } }
+          },
+          {
+            "from": "r3c3",
+            "to": "r1c1",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Red Key" } }
           },
           {
             "from": "r3c3",
@@ -2029,13 +2036,6 @@
         "sub_regions": ["r0c4","r2c10","r8c13","r16c17","r17c11"],
         "internal_exits": [
           {
-            "from": "r0c4",
-            "to": "r2c10",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Green Key" } }
-          },
-          {
             "from": "r16c17",
             "to": "r17c11",
             "bidirectional": true,
@@ -2058,8 +2058,15 @@
           },
           {
             "from": "r2c10",
+            "to": "r0c4",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Green Key" } }
+          },
+          {
+            "from": "r2c10",
             "to": "r8c13",
-            "bidirectional": true,
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Green Key" } }
           }
@@ -2115,9 +2122,9 @@
         "sub_regions": ["r5c24","r24c10"],
         "internal_exits": [
           {
-            "from": "r24c10",
-            "to": "r5c24",
-            "bidirectional": true,
+            "from": "r5c24",
+            "to": "r24c10",
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Green Key" } }
           }
@@ -2634,9 +2641,9 @@
         "sub_regions": ["r0c53","r23c29","r32c36","r36c35","r36c37"],
         "internal_exits": [
           {
-            "from": "r0c53",
-            "to": "r23c29",
-            "bidirectional": true,
+            "from": "r23c29",
+            "to": "r0c53",
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Purple Key" } }
           },
@@ -3625,7 +3632,7 @@
           {
             "from": "r2c10",
             "to": "r4c3",
-            "bidirectional": true,
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Blue Key" } }
           },
@@ -5138,9 +5145,9 @@
         "sub_regions": ["r1c1","r3c1"],
         "internal_exits": [
           {
-            "from": "r1c1",
-            "to": "r3c1",
-            "bidirectional": true,
+            "from": "r3c1",
+            "to": "r1c1",
+            "bidirectional": false,
             "source": "analyzer",
             "access_rule": {
               "rule": "And",

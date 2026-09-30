@@ -200,12 +200,25 @@ const entityOverride = (entity, base, level) => {
 // `--masks` keeps the code alive and runnable for whoever wants to make it
 // sub-tile (where it would be a genuine improvement rather than a coarsening).
 const MASKS = process.argv.includes('--masks');
-const gridFor = (level) => SEM.buildSeedlingRegionGrid(
+// ⛓ SWIM T4 (plan R-j) — THE ONE-SIDED LOCKS. `bosslock`'s `probe: 'S'`
+// (BossLock.as:62 tests the key only against a player on the row BELOW the
+// lock) is read as `enter` gates, so each lock crosses one way, south -> north.
+// REFUTATION_LOG entry 3 is the row this retires.
+// ON BY DEFAULT, because it was measured before it was turned on
+// (CC/docs/cloud-reports/seedling-swim-t4.md § D4):
+// - the seed-1 sphere order is byte-identical;
+// - the survey's 21-step route (`--derive-only`) is byte-identical;
+// - 9 reverse entrances go, and one Or narrows;
+// - `--through=2.2`'s leg 2.2 now arrives at L30 from L31 (the south).
+// `--no-directional-locks` rebuilds the two-way v1 rows, for comparison only
+// (its output is not what `--check` compares against).
+const DIRECTIONAL_LOCKS = !process.argv.includes('--no-directional-locks');
+const gridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS } = {}) => SEM.buildSeedlingRegionGrid(
     { x: 0, y: 0, w: level.width, h: level.height }, MASKS ? expandPixelMasks(level) : level,
-    { entityOverride, tileOverride: OV.overlayTileSemantics },
+    { entityOverride, tileOverride: OV.overlayTileSemantics, ...(directionalLocks ? { directionalLocks } : {}) },
 );
 /** ⛓ SWIM T4 — the analyzer grid this generator builds for one level (the census's read). Additive. */
-export const playthroughGridFor = (level) => gridFor(level);
+export const playthroughGridFor = (level, options) => gridFor(level, options);
 
 // ── what the derivation needs, and what this script keeps ─────────────────
 //

@@ -589,26 +589,6 @@
             }
           },
           {
-            "name": "level_12__r0c19 -> level_12__r13c6",
-            "connected_region": "level_12__r13c6",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Yellow Key"
-              }
-            }
-          },
-          {
-            "name": "level_12__r0c19 -> level_12__r40c4",
-            "connected_region": "level_12__r40c4",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Green Key"
-              }
-            }
-          },
-          {
             "name": "level_12__r0c19 -> level_12__r44c19",
             "connected_region": "level_12__r44c19",
             "access_rule": {
@@ -695,12 +675,9 @@
             "name": "level_12__r0c37 -> level_12__r0c19",
             "connected_region": "level_12__r0c19",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Has",
               "args": {
-                "item_names": [
-                  "Progressive Swim",
-                  "Red Key"
-                ]
+                "item_name": "Progressive Swim"
               }
             }
           },
@@ -1123,16 +1100,6 @@
         "name": "level_19__r1c1",
         "exits": [
           {
-            "name": "level_19__r1c1 -> level_19__r3c3",
-            "connected_region": "level_19__r3c3",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Red Key"
-              }
-            }
-          },
-          {
             "name": "level_19__r1c1 -> level_20__r1c4",
             "connected_region": "level_20__r1c4",
             "access_rule": {
@@ -1172,22 +1139,22 @@
         "name": "level_19__r3c3",
         "exits": [
           {
-            "name": "level_19__r3c3 -> level_19__r1c1",
-            "connected_region": "level_19__r1c1",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Red Key"
-              }
-            }
-          },
-          {
             "name": "level_19__r3c3 -> level_19__r1c5",
             "connected_region": "level_19__r1c5",
             "access_rule": {
               "rule": "Has",
               "args": {
                 "item_name": "Progressive Sword"
+              }
+            }
+          },
+          {
+            "name": "level_19__r3c3 -> level_19__r1c1",
+            "connected_region": "level_19__r1c1",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Red Key"
               }
             }
           },
@@ -1726,16 +1693,6 @@
         "name": "level_30__r0c4",
         "exits": [
           {
-            "name": "level_30__r0c4 -> level_30__r2c10",
-            "connected_region": "level_30__r2c10",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Green Key"
-              }
-            }
-          },
-          {
             "name": "level_30__r0c4 -> level_22",
             "connected_region": "level_22",
             "access_rule": {
@@ -1748,16 +1705,6 @@
       "level_30__r2c10": {
         "name": "level_30__r2c10",
         "exits": [
-          {
-            "name": "level_30__r2c10 -> level_30__r0c4",
-            "connected_region": "level_30__r0c4",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Green Key"
-              }
-            }
-          },
           {
             "name": "level_30__r2c10 -> level_30__r16c17",
             "connected_region": "level_30__r16c17",
@@ -1775,6 +1722,16 @@
               "rule": "Has",
               "args": {
                 "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_30__r2c10 -> level_30__r0c4",
+            "connected_region": "level_30__r0c4",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Green Key"
               }
             }
           },
@@ -1830,16 +1787,6 @@
       "level_30__r8c13": {
         "name": "level_30__r8c13",
         "exits": [
-          {
-            "name": "level_30__r8c13 -> level_30__r2c10",
-            "connected_region": "level_30__r2c10",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Green Key"
-              }
-            }
-          },
           {
             "name": "level_30__r8c13 -> level_32",
             "connected_region": "level_32",
@@ -1928,16 +1875,6 @@
       "level_31__r24c10": {
         "name": "level_31__r24c10",
         "exits": [
-          {
-            "name": "level_31__r24c10 -> level_31__r5c24",
-            "connected_region": "level_31__r5c24",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Green Key"
-              }
-            }
-          },
           {
             "name": "level_31__r24c10 -> level_30__r2c10",
             "connected_region": "level_30__r2c10",
@@ -2255,16 +2192,6 @@
       "level_40__r0c53": {
         "name": "level_40__r0c53",
         "exits": [
-          {
-            "name": "level_40__r0c53 -> level_40__r23c29",
-            "connected_region": "level_40__r23c29",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Purple Key"
-              }
-            }
-          },
           {
             "name": "level_40__r0c53 -> level_42",
             "connected_region": "level_42",
@@ -4214,16 +4141,6 @@
       "level_48__r4c3": {
         "name": "level_48__r4c3",
         "exits": [
-          {
-            "name": "level_48__r4c3 -> level_48__r2c10",
-            "connected_region": "level_48__r2c10",
-            "access_rule": {
-              "rule": "Has",
-              "args": {
-                "item_name": "Blue Key"
-              }
-            }
-          },
           {
             "name": "level_48__r4c3 -> level_48__r7c0",
             "connected_region": "level_48__r7c0",
@@ -6437,44 +6354,7 @@
       },
       "level_68__r1c1": {
         "name": "level_68__r1c1",
-        "exits": [
-          {
-            "name": "level_68__r1c1 -> level_68__r3c1",
-            "connected_region": "level_68__r3c1",
-            "access_rule": {
-              "rule": "And",
-              "children": [
-                {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "item_names": [
-                          "Fire",
-                          "Fire Wand Fusion",
-                          "Wand"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Yellow Key"
-                  }
-                }
-              ]
-            }
-          }
-        ],
+        "exits": [],
         "locations": [
           {
             "name": "Level 068 - Health",

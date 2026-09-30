@@ -214,6 +214,14 @@ describe('the refutation log — the mechanism, built before it is needed', () =
         expect(entry.observed).toMatch(/arrives from the NORTH/);
         expect(entry.cite).toMatch(/Puzzlements\/BossLock\.as:58-90/);
         expect(entry.cite).toMatch(/seedling-swim-t3\.md/);
+        // ⛔ THE REFUTED ROW MUST NOT STILL BE SHIPPING: in the committed atlas the lock is
+        // crossed south -> north only, and the north pocket has no row back.
+        const atlas = JSON.parse(readFileSync(fileURLToPath(
+            new URL('./atlases/seedling-playthrough.json', import.meta.url)), 'utf8'));
+        const l30 = atlas.regions.find((r) => r.region_id === 'level_30').subgraph.internal_exits;
+        const across = l30.filter((x) => [x.from, x.to].includes('r0c4'));
+        expect(across).toEqual([{ from: 'r2c10', to: 'r0c4', bidirectional: false, source: 'analyzer',
+            access_rule: { rule: 'Has', args: { item_name: 'Green Key' } } }]);
     });
 
     // ⛓ R7 slice 5 gave it its first entry: §13.5's level_76 Dark Suit row put

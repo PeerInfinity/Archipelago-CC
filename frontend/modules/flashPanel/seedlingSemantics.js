@@ -307,7 +307,11 @@ export const ENTITY_SEMANTICS = Object.freeze({
     // BossLock (Puzzlements/BossLock.as:17,34,63): `normType = "Solid"` until
     // `Player.hasKey(keyType)`. The key index is a per-placement attribute
     // (Game.as:2147 `o.@keyType`), so the condition is resolved per entity.
-    bosslock: { kind: 'gated', class: 'BossLock', conditionFromAttr: 'keyType', condition: null },
+    // ⛓ SWIM T4 — `probe: 'S'`: the key is tested only against a player on the
+    // one-pixel row BELOW the lock (BossLock.as:62), so it opens from the south
+    // only. Read ONLY under `buildSeedlingRegionGrid`'s `directionalLocks`
+    // option (default off), which turns it into `enter` gates.
+    bosslock: { kind: 'gated', class: 'BossLock', conditionFromAttr: 'keyType', condition: null, probe: 'S' },
 
     // PushableBlockFire / PushableBlockSpear (Puzzlements/*.as:30 type "Solid";
     // pushed by Player.genericHit's Fire and Spear branches, Player.as:1092-1098).
@@ -909,6 +913,11 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     // Fold the claims. The cell takes the STRONGEST kind; every claim still
     // contributes its conditions, faces and manual reasons.
     const RANK = { open: 0, gated: 1, directional: 1, sink: 2, manual: 3, wall: 4 };
+    // ⛓ SWIM T4 — a one-sided lock (`probe`) is entered only by stepping in FROM
+    // its probe side; every other entry is walled. Leaving is free, because once
+    // it is open it stays open (the persistence tag).
+    const { directionalLocks = false } = options;
+    const STEP_FROM = { S: 'N', N: 'S', E: 'W', W: 'E' };
     const cells = new Array(width * height);
     const sinks = [];
     for (let i = 0; i < cells.length; i += 1) {
@@ -924,8 +933,14 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             }
             // A blocked face/direction always wins; two gated ones AND together,
             // which the analyzer does by seeing the list.
-            for (const key of ['faces', 'dirs']) {
-                for (const [dir, cond] of Object.entries(semantics[key] ?? {})) {
+            const enterOf = directionalLocks && semantics.probe
+                ? Object.fromEntries(['N', 'E', 'S', 'W'].filter((d) => d !== STEP_FROM[semantics.probe]).map((d) => [d, null]))
+                : null;
+            for (const key of ['faces', 'dirs', 'enter']) {
+                const gates = key === 'enter' ? enterOf : semantics[key];
+                if (!gates) continue;
+                if (key === 'enter') cell.enter ??= {};
+                for (const [dir, cond] of Object.entries(gates)) {
                     if (cell[key][dir] === null) continue;
                     if (cond === null) cell[key][dir] = null;
                     else cell[key][dir] = [...(cell[key][dir] ?? []), cond];

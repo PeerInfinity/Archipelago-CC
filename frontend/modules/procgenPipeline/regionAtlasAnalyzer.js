@@ -29,6 +29,9 @@
 //   cell.faces[dir]  gate on a geometric face, paid crossing it either way;
 //                    null blocks
 //   cell.dirs[dir]   gate on MOVING that way while on the cell; null blocks
+//   cell.enter[dir]  gate on ENTERING the cell moving that way (read from the
+//                    entered cell only, so leaving is free); null blocks —
+//                    a lock that opens only from one side (swim T4)
 //   cell.manual[]    why a blocker has no derivable rule
 //
 // plus two helpers the caller supplies, because condition VALUES are the game's:
@@ -153,6 +156,7 @@ function stepCost(grid, ui, vi, dir) {
     const gates = [
         u.faces?.[dir], v.faces?.[OPPOSITE[dir]],
         u.dirs?.[dir], v.dirs?.[dir],
+        v.enter?.[dir],
     ];
     for (const gate of gates) {
         if (gate === null) return null;

@@ -1,8 +1,10 @@
 /**
  * ⛓ SEEDLING SWIM T4, D2 — the one-sided lock census, pinned against the
- * COMMITTED playthrough atlas. A restamped atlas moves this row by name; a
- * directional derivation (T4's D4) that makes the rows one-way moves
- * DISAGREES into AGREES here.
+ * COMMITTED playthrough atlas. A restamped atlas moves this row by name.
+ *
+ * ⛓ D4 moved it on purpose. The census read the v1 atlas (`seedling-ae833c1e`) as
+ * 10 DISAGREES:LIVE, 1 DISAGREES:INERT (L68), 2 NOT, 1 NOT-SEALED. D4's
+ * `enter` gates made every separating lock one-way, so all 11 read AGREES now.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -25,14 +27,21 @@ describe('SWIM T4 D2 — every bosslock against the committed atlas', () => {
         expect(LOCK_PROBE_SIDES.bosslock).toBe('S');
         expect(rows.every((r) => r.probe === 'S' && r.persistTag >= 0)).toBe(true);
     });
-    it('the counts: 11 two-way rows the game does not honour (10 LIVE, 1 INERT), 2 non-separators, 1 off-grid', () => {
-        expect(censusCounts(rows)).toEqual({ 'DISAGREES:LIVE': 10, 'DISAGREES:INERT': 1, NOT: 2, 'NOT-SEALED': 1 });
+    it('the counts: all 11 separating locks one-way from the probe side, 2 non-separators, 1 off-grid', () => {
+        expect(censusCounts(rows)).toEqual({ AGREES: 11, NOT: 2, 'NOT-SEALED': 1 });
     });
-    it('T3\'s L30 row: bosslock@64,32 splits the north pocket r0c4 (L22\'s teleporter lands there) from r2c10, ruled Green Key both ways', () => {
+    it('T3\'s L30 row: bosslock@64,32 splits the north pocket r0c4 (L22\'s teleporter lands there) from r2c10, crossed south -> north only', () => {
         const r = rows.find((x) => x.level === 30 && x.at === '64,32');
-        expect(r).toMatchObject({ keyType: 1, probeSide: 'r2c10', farSide: 'r0c4', ruleDirections: 'both' });
+        expect(r).toMatchObject({ keyType: 1, probeSide: 'r2c10', farSide: 'r0c4', ruleDirections: 'r2c10->r0c4' });
         expect(r.rule.access_rule).toEqual({ rule: 'Has', args: { item_name: 'Green Key' } });
         expect(r.farEntrances).toEqual(['in_L22_96_192']);
-        expect(r.verdict).toMatch(/^DISAGREES — TWO-WAY, AND THE FAR SIDE HAS ITS OWN WAY IN/);
+        expect(r.verdict).toMatch(/^AGREES/);
+    });
+    it('L12\'s red locks keep a reverse row, but it pays the WATER, not the key (so it is another way, not the lock)', () => {
+        const r = rows.find((x) => x.level === 12 && x.at === '416,240');
+        expect(r.verdict).toMatch(/^AGREES/);
+        const back = ATLAS.regions.find((g) => g.map_ref === 12).subgraph.internal_exits
+            .find((x) => x.from === 'r0c37' && x.to === 'r0c19');
+        expect(back.access_rule).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim' } });
     });
 });

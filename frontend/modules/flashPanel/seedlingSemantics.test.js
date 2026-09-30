@@ -270,6 +270,21 @@ describe('flag -> AP item rules', () => {
 });
 
 describe('grid construction over real levels', () => {
+    // ⛓ SWIM T4 — `bosslock`'s `probe: 'S'` becomes `enter` gates ONLY under `directionalLocks`.
+    it('a bosslock is one-sided under `directionalLocks` (entered only moving north), and untouched without it', () => {
+        const level = levelById(30);
+        const bounds = { x: 0, y: 0, w: level.width, h: level.height };
+        const lockCell = (g) => g.cells[2 * g.width + 4]; // bosslock@64,32 = tile (4,2)
+        const off = buildSeedlingRegionGrid(bounds, level);
+        expect(ENTITY_SEMANTICS.bosslock.probe).toBe('S');
+        expect(lockCell(off).kind).toBe('gated');
+        expect(lockCell(off).enter).toBeUndefined();
+        expect(off.cells.some((c) => c.enter)).toBe(false);
+        const on = buildSeedlingRegionGrid(bounds, level, { directionalLocks: true });
+        expect(lockCell(on).enter).toEqual({ E: null, S: null, W: null });
+        expect(on.cells.filter((c) => c.enter)).toHaveLength(2); // L30's two locks
+    });
+
     it('builds a fully classified grid for the starting house', () => {
         const level = levelById(86);
         const grid = buildSeedlingRegionGrid({ x: 0, y: 0, w: level.width, h: level.height }, level);

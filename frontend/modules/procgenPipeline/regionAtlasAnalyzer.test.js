@@ -51,6 +51,7 @@ const OPTIONS = {
  *   '.' open   '#' wall   '~' gated on `a`   '=' gated on `b`
  *   'v' one-way south (free down, blocked up)   'o' pit sink
  *   '?' manual blocker   'c' cave: north FACE walled, sides free
+ *   'k' one-sided lock: gated on `a`, ENTERED only moving north (from below)
  */
 function gridOf(rows, origin = { x: 0, y: 0 }) {
     const width = rows[0].length;
@@ -66,6 +67,7 @@ function gridOf(rows, origin = { x: 0, y: 0 }) {
             else if (ch === 'o') { cell.kind = 'sink'; cell.labels = ['pit']; }
             else if (ch === '?') { cell.kind = 'manual'; cell.manual = ['a puzzle']; }
             else if (ch === 'c') { cell.kind = 'directional'; cell.faces = { N: null }; }
+            else if (ch === 'k') { cell.kind = 'gated'; cell.conditions = ['a']; cell.enter = { S: null, E: null, W: null }; }
             cells.push(cell);
         }
     }
@@ -106,6 +108,24 @@ describe('components', () => {
 });
 
 describe('crossings', () => {
+    // ⛓ SWIM T4 — `enter`: a gate on ENTERING a cell moving a given way, read from the
+    // entered cell only. A lock that opens from one side is one-way, and the rule says so.
+    it('`enter` makes a gated cell one-way: crossed from below on its condition, a wall from above', () => {
+        const analysis = analyzeRegion({ region_id: 'r', exits: [], locations: [] }, gridOf(['.', 'k', '.']), OPTIONS);
+        expect(idsOf(analysis)).toEqual(['r0c0', 'r2c0']);
+        expect(rowsOf(analysis)).toEqual([{
+            from: 'r2c0',
+            to: 'r0c0',
+            bidirectional: false,
+            source: 'analyzer',
+            access_rule: { rule: 'Has', args: { item_name: 'a' } },
+        }]);
+        // …and a side entry is walled too: from the east, only the probe side leads in.
+        const side = analyzeRegion({ region_id: 'r', exits: [], locations: [] }, gridOf(['#.#', '#k.', '#.#']), OPTIONS);
+        expect(rowsOf(side).map((x) => `${x.from}${x.bidirectional ? '<->' : '->'}${x.to}`).sort())
+            .toEqual(['r2c1->r0c1', 'r2c1->r1c2']);
+    });
+
     it('labels a gated strip with its condition, both ways', () => {
         const analysis = analyzeRegion({ region_id: 'r', exits: [], locations: [] }, gridOf(['.~.']), OPTIONS);
         expect(idsOf(analysis)).toEqual(['r0c0', 'r0c2']);

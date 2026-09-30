@@ -37,6 +37,13 @@
 
 const SIDES = Object.freeze({ N: [0, -1], S: [0, 1], E: [1, 0], W: [-1, 0] });
 
+/** Every `item_name` a Rule Builder tree mentions. */
+const itemNames = (rule) => (!rule ? [] : [
+    ...(rule.args?.item_name ? [rule.args.item_name] : []),
+    ...(rule.args?.item_names ?? []),
+    ...(rule.children ?? []).flatMap(itemNames),
+]);
+
 /** The class-level probe side of each one-sided lock class, read off the AS3. */
 export const LOCK_PROBE_SIDES = Object.freeze({
     // BossLock.as:61 — `y - originY + height + 1`: the row BELOW the lock.
@@ -94,9 +101,13 @@ export function censusLocks({ levels, atlas, gridFor, findComponents, tags = ['b
             const farComp = farComps[0] ?? sides[{ S: 'N', N: 'S', W: 'E', E: 'W' }[probe]];
             const between = internal.filter((x) => (x.from === probeComp && farComps.includes(x.to))
                 || (farComps.includes(x.from) && x.to === probeComp));
-            const edge = between[0] ?? null;
-            const twoWay = !!edge && (edge.bidirectional === true
-                || between.some((x) => farComps.includes(x.from) && x.to === probeComp));
+            const forward = between.find((x) => x.from === probeComp || x.bidirectional) ?? null;
+            const edge = forward ?? between[0] ?? null;
+            // Two-way means the far -> probe direction pays the LOCK: its rule names the key the
+            // forward rule names. A reverse that pays something else (L12's water) is another way.
+            const keys = itemNames(edge?.access_rule).filter((n) => / Key$/.test(n));
+            const reverse = between.filter((x) => x.bidirectional || (farComps.includes(x.from) && x.to === probeComp));
+            const twoWay = !!edge && reverse.some((x) => keys.some((k) => itemNames(x.access_rule).includes(k)));
             // Does the far side have a way in that is not this crossing? (A boundary `in_*` exit
             // bound to it, or another internal exit into it — one hop, not a reachability proof.)
             const farEntrances = (region?.exits ?? []).filter((x) => farComps.includes(x.sub_region) && /^in_/.test(x.exit_id))
@@ -129,7 +140,7 @@ export function censusLocks({ levels, atlas, gridFor, findComponents, tags = ['b
                 farSide: farComp,
                 farDirs,
                 rule: edge ? { from: edge.from, to: edge.to, bidirectional: !!edge.bidirectional, access_rule: edge.access_rule ?? null } : null,
-                ruleDirections: edge ? (twoWay ? 'both' : `${edge.from}->${edge.to}`) : null,
+                ruleDirections: edge ? (twoWay ? 'both' : `${probeComp}->${farComps.join('|')}`) : null,
                 farEntrances,
                 farOther,
                 verdict,

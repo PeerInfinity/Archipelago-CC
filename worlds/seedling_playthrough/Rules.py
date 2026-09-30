@@ -106,23 +106,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_12__r0c19 -> level_12__r13c6", player),
-        Has('Yellow Key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_12__r0c19 -> level_12__r40c4", player),
-        Has('Green Key', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("level_12__r0c19 -> level_12__r44c19", player),
         Has('Progressive Shield', 1)
     )
 
     world.set_rule(
         multiworld.get_entrance("level_12__r0c37 -> level_12__r0c19", player),
-        HasAny('Progressive Swim', 'Red Key')
+        Has('Progressive Swim', 1)
     )
 
     world.set_rule(
@@ -166,11 +156,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_19__r1c1 -> level_19__r3c3", player),
-        Has('Red Key', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("level_19__r1c5 -> level_19__r3c3", player),
         Has('Progressive Sword', 1)
     )
@@ -181,13 +166,13 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_19__r3c3 -> level_19__r1c1", player),
-        Has('Red Key', 1)
+        multiworld.get_entrance("level_19__r3c3 -> level_19__r1c5", player),
+        Has('Progressive Sword', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_19__r3c3 -> level_19__r1c5", player),
-        Has('Progressive Sword', 1)
+        multiworld.get_entrance("level_19__r3c3 -> level_19__r1c1", player),
+        Has('Red Key', 1)
     )
 
     world.set_rule(
@@ -266,16 +251,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_30__r0c4 -> level_30__r2c10", player),
-        Has('Green Key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_30__r2c10 -> level_30__r0c4", player),
-        Has('Green Key', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("level_30__r2c10 -> level_30__r16c17", player),
         Has('Progressive Swim', 1)
     )
@@ -286,12 +261,12 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_30__r2c10 -> level_30__r8c13", player),
+        multiworld.get_entrance("level_30__r2c10 -> level_30__r0c4", player),
         Has('Green Key', 1)
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_30__r8c13 -> level_30__r2c10", player),
+        multiworld.get_entrance("level_30__r2c10 -> level_30__r8c13", player),
         Has('Green Key', 1)
     )
 
@@ -317,11 +292,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_31__r5c24 -> level_31__r24c10", player),
-        Has('Green Key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_31__r24c10 -> level_31__r5c24", player),
         Has('Green Key', 1)
     )
 
@@ -353,11 +323,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_38__r12c5 -> level_38__r0c9", player),
         Has('Fire', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_40__r0c53 -> level_40__r23c29", player),
-        Has('Purple Key', 1)
     )
 
     world.set_rule(
@@ -957,11 +922,6 @@ def set_rules(world: "World") -> None:
 
     world.set_rule(
         multiworld.get_entrance("level_48__r2c10 -> level_48__r4c3", player),
-        Has('Blue Key', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_48__r4c3 -> level_48__r2c10", player),
         Has('Blue Key', 1)
     )
 
@@ -1643,11 +1603,6 @@ def set_rules(world: "World") -> None:
     world.set_rule(
         multiworld.get_entrance("level_67__r6c11 -> level_67__r3c2", player),
         Has('Ghost Spear', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_68__r1c1 -> level_68__r3c1", player),
-        And(Or(HasAll('Fire Wand Fusion', 'Wand', 'Fire'), Has('Wand')), Has('Yellow Key'))
     )
 
     world.set_rule(

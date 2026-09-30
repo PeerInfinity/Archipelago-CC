@@ -28,12 +28,14 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         expect(SWIM_TAGS.sort()).toEqual(['conch', 'feather']);
     });
 
-    it('52 regions carry a subgraph: 189 sub-regions, 285 internal exits, 216 of them need Progressive Swim', () => {
-        expect(c.atlasId).toBe('seedling-ae833c1e');
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 52, 189, 285, 216]);
+    // ⛓ SWIM T4 D4 — the one-sided locks restamped the atlas (ae833c1e -> 0faa7fee): L12's two-way
+    // `Or(Swim, Red Key)` row split into two one-way rows, so +1 internal exit and +1 swim row.
+    it('52 regions carry a subgraph: 189 sub-regions, 286 internal exits, 217 of them need Progressive Swim', () => {
+        expect(c.atlasId).toBe('seedling-0faa7fee');
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 52, 189, 286, 217]);
         expect(c.swimLevels).toHaveLength(23);
         expect(c.byRule.slice(0, 2)).toEqual([
-            { rule: 'Has(Progressive Swim)', count: 179 },
+            { rule: 'Has(Progressive Swim)', count: 180 },
             { rule: 'Has(Progressive Swim, 2)', count: 33 },
         ]);
     });

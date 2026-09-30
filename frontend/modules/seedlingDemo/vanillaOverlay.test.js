@@ -315,8 +315,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         const { createHash } = await import('node:crypto');
         const playthroughPath = fileURLToPath(
             new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url));
+        // ⛓ SWIM T4 D4 re-pinned this (1c4836d1… -> e5f12454…): the one-sided locks moved internal
+        //   exits and the content hash only; locations, boundary exits and sub-regions are unchanged.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('1c4836d11cd9390cbb61f99c94f26d1e');
+            .toBe('e5f12454036a6dc7963ddfb1186b0719');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

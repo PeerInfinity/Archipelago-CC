@@ -743,7 +743,10 @@ export const REFUTATION_LOG = Object.freeze([
             + 'only r2c10 -> r0c4, and once the lock is open its persistence tag keeps it open, so '
             + 'the other direction is never needed. It is one row of a class: '
             + 'census-seedling-bosslocks reads 11 of the 14 bosslocks as two-way rules the game '
-            + 'does not honour (10 with a far side AP can reach another way).',
+            + 'does not honour (10 with a far side AP can reach another way). RETIRED by swim T4 '
+            + 'D4: `bosslock`\'s `probe: \'S\'` is read as `enter` gates, so all 11 are one-way '
+            + '(r2c10 -> r0c4 here). The seed-1 sphere order and the 21-step route are '
+            + 'byte-identical, and the through-2.2 route now reaches L30 from L31.',
         cite: 'Puzzlements/BossLock.as:58-90 (the probe at :62, the persistence at :43,81) '
             + '+ Dungeon3/9.oel:454 (the lock) + Dungeon3/1.oel:216 (L22\'s teleporter into the '
             + 'pocket) + CC/docs/cloud-reports/seedling-swim-t3.md § D4 '
