@@ -318,6 +318,15 @@ describe('⛔ every listener in the page goes through a lifetime', () => {
         // lines of `export {}` and the only `addEventListener` in it is in a
         // sentence about this very rule.
         .filter((f) => f !== 'watchLifetime.js')
+        // ⚠ `profileBoot.js` is excluded BY NAME and with its reason: it is a
+        // CLASSIC script (`<script src>` before the page's module boot), so it
+        // cannot import the lifetime module, and it runs once per DOCUMENT —
+        // before any generation exists for a lifetime to own. Its two
+        // listeners are one-shot: `error` is removed on `load`, and `load`
+        // fires once. ⛔ The exclusion is not a waiver: the row after the
+        // scan pins exactly those two listeners and the removal, and that
+        // the page still loads the file as a classic script.
+        .filter((f) => f !== 'profileBoot.js')
         .sort();
 
     it('NO module of this page calls addEventListener directly', () => {
@@ -343,6 +352,25 @@ describe('⛔ every listener in the page goes through a lifetime', () => {
         // would pass this row for the worst possible reason.
         expect(files).toContain('watchViewer.js');
         expect(files).toContain('watchWasm.js');
+    });
+
+    it('profileBoot.js, the one exclusion, keeps ONLY its two one-shot load listeners', () => {
+        // The exclusion above holds only while (a) the file is a classic
+        // script, and (b) its listeners cannot outlive the load. A third
+        // listener, a dropped removal, or a move to `type="module"` reds here.
+        const src = source('profileBoot.js');
+        const adds = src.split('\n')
+            .map((line) => line.trim())
+            .filter((line) => /addEventListener\s*\(/.test(line));
+        expect(adds).toEqual([
+            "g.addEventListener('error', onLoadError);",
+            "g.addEventListener('load', () => {",
+        ]);
+        // the `error` listener is removed as the FIRST act of the `load` handler
+        expect(src).toMatch(/g\.addEventListener\('load', \(\) => \{\s*g\.removeEventListener\('error', onLoadError\);/);
+        const html = source('watch.html');
+        expect(html).toMatch(/<script src="\.\/profileBoot\.js"><\/script>/);
+        expect(html).not.toMatch(/<script type="module"[^>]*src="\.\/profileBoot\.js"/);
     });
 
     it('the lifetime module is the ONE place that calls it', () => {
