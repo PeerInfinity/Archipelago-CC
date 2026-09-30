@@ -1647,6 +1647,26 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
                 + 'rather than `HIT_TO_GONE_TICKS` — the animation\'s ±1 update-order '
                 + 'gap is exactly what the larger number covers, and '
                 + '`assertWaitCovers` is asked at the resolution']),
+        /**
+         * ⛓⛓ SEEDLING SWIM U1, D2 — the `skirt` verb: walk PAST a stand-on
+         * presser whose group answers only fall-responder rocks (L29, L74).
+         * Its whole effect is an obstacle NOT triggered, so every parameter is
+         * a geometry fact about the press rect and the shaft beside it.
+         */
+        skirt: Object.freeze([
+            'the gate: `fallTrapPresser` — the group\'s `groupResponders` are ALL '
+                + '`FALL_RESPONDERS` rocks and there is at least one; any opener keeps `hold`',
+            'the lane: the press rect\'s edge plus `HITBOX`\'s own offsets (east '
+                + '`rect.right + originX`, west `rect.x - (width - originX)`), taken only where '
+                + '`plannerObstacleAt` one pixel outward answers a Solid at every y of the pass',
+            'the stance: the lane x in the tile beyond the button on the player\'s side; '
+                + 'the exit: the far tile\'s centre row, where whole-tile planning resumes',
+            'the alignment: a bounded search over `{none, left, right}` on the '
+                + 'transcription\'s own `applyInput`/`applyFriction`/`sweepAxis`, RUN and '
+                + 'compared exactly — the lane admits one x and the model keeps sub-pixel '
+                + 'remainders',
+            'the check: `fallRocksArmedBy` on the live box every tick, and the rocks '
+                + 'standing and the open/latched sets unchanged after the pass']),
     }),
 
     /**
