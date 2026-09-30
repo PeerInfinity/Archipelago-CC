@@ -77,7 +77,7 @@ The `as3` column is read from `vendor/seedling/src` when the submodule is initia
 
 ## The profile
 
-`frontend/modules/seedlingDemo/seedlingProfile.js` is the ONE registry of the simulation's physics and rule constants: RWK's profile convention, without overrides. It holds every named top-level scalar the census classed `physics` or `rule`, and the literals of the player's own small tables in `playerPhysicsV1.js` and `playerPhysicsV2.js` (`HITBOX`, `TILE`, `SPAWN_OFFSET`, `LEVEL0_WORLD`, the waterfall divisor in `MOVE_SPEEDS`, the inset in `CHECK_OFFSET_Y`, `NO_BOUNCE_STATES`). The entity tables stay in their modules. A derived constant (`CLAMP`, `CHECK_OFFSET_Y`, `TICKS_PER_TILE`, `KILL_CADENCE_FLOOR` …) stays derived in its module, now from profile fields: a derived value is computed in code and never stored.
+`frontend/modules/seedlingDemo/seedlingProfile.js` is the ONE registry of the simulation's physics and rule constants: RWK's profile convention, with overrides (§ *Overrides* below). It holds every named top-level scalar the census classed `physics` or `rule`, and the literals of the player's own small tables in `playerPhysicsV1.js` and `playerPhysicsV2.js` (`HITBOX`, `TILE`, `SPAWN_OFFSET`, `LEVEL0_WORLD`, the waterfall divisor in `MOVE_SPEEDS`, the inset in `CHECK_OFFSET_Y`, `NO_BOUNCE_STATES`). The entity tables stay in their modules. A derived constant (`CLAMP`, `CHECK_OFFSET_Y`, `TICKS_PER_TILE`, `KILL_CADENCE_FLOOR` …) stays derived in its module, now from profile fields: a derived value is computed in code and never stored.
 
 Every declaring module still exports its old name, now read from the profile (`export const WALK_SPEED = PROFILE.walkSpeed; // dMS`). Every default is the literal the module used to spell, and no arithmetic moved, so every committed tape, expectation and solve is byte-identical across the move.
 
@@ -111,6 +111,80 @@ Three gates hold the profile together:
 
 - `seedlingConstantsCensus.test.js` (v) and `--check` are red when the census's class, kind or as3 for a profile literal disagrees with `PROFILE_FIELDS`, or when the fields rows are not what `--profile-rows` generates.
 - `seedlingProfile.test.js`'s anchor row (it skips by name without `vendor/seedling`) resolves every anchor to its AS3 literal and asserts it equals the default. All 63 anchors resolve today, and an anchor that stops resolving is red.
+
+### Overrides
+
+`PROFILE` is the compiled-in defaults with an override applied, which is RWK's semantics. The literals in `seedlingProfile.js` are the defaults, exported as `PROFILE_DEFAULTS`. An override is data, never an edit to them.
+
+- **Where it comes from.** `globalThis.__SEEDLING_PROFILE__`, read ONCE, when `seedlingProfile.js` evaluates. `undefined` means no override, and then `PROFILE` IS `PROFILE_DEFAULTS` (the same frozen object) and the md5 stays `be8b983b…`. An object is the override. A string is its JSON text. The module stays dependency-free and browser-safe: it reads no file and no environment.
+- **Process-wide at load (⚖ Q2).** The 28 modules that read the profile copy their constants out at their own evaluation (`WALK_SPEED = PROFILE.walkSpeed`). An override therefore has to be installed before the first import of any of them. Setting it later changes nothing.
+- **The shape.** A flat object: profile keys to finite numbers. Two keys are not numbers:
+  - `id` is a non-empty string, the profile's name. It is what `profileStamp()` and a v13 tape's `profile.id` carry. Without one, the default name stays; the md5 is the identity, and it moves anyway.
+  - `flags` is reserved for formula switches, where flag 0 is the original path. `PROFILE_FLAGS` is empty because no flag exists yet, so every flag key is refused.
+- **Refused by name** (`profileOverrides.js`, `ProfileOverrideError`):
+  - an unknown key (the message lists the known keys);
+  - a duplicate key, found in the JSON text, because `JSON.parse` would silently keep the last one;
+  - a nested value;
+  - a non-number or non-finite value;
+  - an unknown flag;
+  - a bad `id`.
+  A refusal fails the import itself.
+- **Provenance and reporting.**
+  - `PROFILE_SOURCE` is `compiled-in default`, `override:<id>` or `override:inline`.
+  - `PROFILE_OVERRIDES` holds every key the override SET. A set equal to its default still counts, because RWK announces every set; the md5 says whether the profile actually moved.
+  - `PROFILE_DEFAULTED` is the count of keys left at default, and `profileDefaultedKeys()` lists them.
+  - `profileAnnouncements()` gives the lines a runner prints: the provenance, one `set <key>=<value>` per set, and the defaulted count.
+  - `profileDump()`, `profileMd5()` and `profileStamp()` describe the LIVE profile.
+- **Node.** `scripts/procgen/seedlingProfileLoader.mjs`:
+  - `installProfileFromEnv()` reads `--profile=<path>` or `SEEDLING_PROFILE`, sets the global to the file's text, and imports the profile itself, so a refusal names the file;
+  - an install that comes after the profile module already evaluated is refused ("installed TOO LATE");
+  - the model is imported dynamically after the install. A static `import` is hoisted above any call.
+  - `scripts/procgen/run-seedling-tape.mjs <tape> [--profile=<path>] [--expect]` is the worked example. It prints the stream md5 and the live stamp.
+- **The page (open).** A `?profile=` URL would have to be fetched before the model modules import. The pages import them statically, so this needs either a top-level `await` in a bootstrap module or a dynamic-import entry. That is a design question for the arc's coordinator, and nothing in the browser sets the global today.
+
+### The witness
+
+`scripts/procgen/witness-seedling-profile.mjs` answers, per key, whether perturbing that key moves any committed replay. It restates RWK's `check_profile_live.py`. It is a one-off measurement recorded as data (⚖ Q3), in `scripts/procgen/seedling-profile-witnesses.json`, and not a per-push gate.
+
+**The method.**
+
+- The replay is the JS model over the FAST tier: every tape of at most 600 ticks, which is 102 tapes today.
+- Each run is a child process that installs its override before importing the model. It runs every tape through `runTapeToStream` with the real level geometry.
+- A CONTROL runs first, twice, with no override. It must be stable, throw nothing, and differ from the committed expectations only where `tapeRunner.test.js` declares it (`r5-l60-kill`).
+- Per key, two magnitudes are tried:
+  - `ulp`: the next double above the default;
+  - `pct10`: the default × 1.1, or +1 for an integer default.
+- A tape MOVES when its stream md5 differs from the control's, or when the run throws.
+- A key is `corpus-blind` only when neither magnitude moves any tape.
+
+`seedlingProfileWitness.test.js` checks that the record still names exactly `PROFILE`'s keys. A new key without a row is red with "run the witness". The test never re-measures.
+
+**The measurement** (at `bbdbe7d`, 4 jobs, 328 s): 58 keys move and 69 are corpus-blind.
+
+| class | moves | corpus-blind |
+|---|---|---|
+| physics | 28 | 19 |
+| rule | 30 | 50 |
+
+Of the 58 that move:
+
+- 42 move an observation stream, 22 of them at +1 ULP.
+- 16 move ONLY by making the model throw. For these, a guard refuses the perturbed value (a non-integer direction, frame count or tag), or a sentinel change sends the run into a state its tape does not declare. The keys are `tagsPerLevel`, `coverAlphaRate`, `treeGrowFrameRate`, `treeGrowFrames`, `lavaState`, `initialDirection`, `directionRight`/`Up`/`Left`/`Down`, `right`/`up`/`left`/`down`, `loadDeadFrames` and `coercedTerrainState`.
+
+Such a key is witnessed as READ, not as a value a replay checks.
+
+**The corpus-blind keys:**
+
+- physics: `headPosX`, `fpMaxElapsed`, `fpElapsed`, `velocityEpsilon`, `rockScaleBase`, `rockScaleSpan`, `fireForce`, `stairSpeed`, `slidingSpeed`, `slidingFriction`, `level0WorldWidth`, `level0WorldHeight`, `descentMaxFall`, `slashReach`, `spearLength`, `spearThick`, `pushableFriction`, `bothRange`, `wandSpeed`.
+- rule: `waitAfterPressTicks`, `bridgeTimerMax`, `bridgeState`, `onScreenRadius`, `ticksFromPressToWalkable`, `screenW`, `screenH`, `cameraSpeedDivisor`, `inventoryWidth`, `inventoryOffsetX`, `enemyPitTile`, `enemyIframes`, `killLockTset`, `swordAnimRate`, `swordAnimRateDash`, `specialTimerMax`, `pickupLineLength`, `initialFramesThisCharacter`, `npcLineLengthDefault`, `talkRange`, `rockFrequency`, `grenadeFrequency`, `rockStepsAhead`, `rockRadius`, `deathRocks`, `enemyCoinsBase`, `enemyCoinsSpan`, `fireHitFrameEnd`, `fireDamage`, `gameFps`, `iceState`, `drownTimerMax`, `noBounceStates1`, `noBounceStates2`, `darkSwordDamage`, `spearDamage`, `enemyHitsMax`, `enemyHitsTimer`, `slashHitTicks`, `lightpoleHitsTimerMax`, `alphaFade`, `xorMask`, `bootSeed`, `hashC1`, `hashC2`, `hashC3`, `randomDivisor`, `stateMax`, `ceremonyFreezeFrames`, `levelCount`.
+
+The mechanisms below are INFERRED from each key's module and the fast tier's tape names. They are not measured per key, and they follow RWK's three:
+
+- **No fixture carries the body.** The final boss (`rock*`, `grenadeFrequency`, `deathRocks`, `enemyCoins*`), the totem head, the spear and dark sword, the fire pushable, lightpoles, bridges, ice and stairs.
+- **The stream cannot see it.** The stream carries the player's `x`, `y` and level only. That rules out the camera and screen bounds, dialogue layout and timing, enemy hit points and invulnerability, and sword animation rates, except where they change the player's path.
+- **The path is never taken.** The frame-time clamps (the model's step is below them), the friction dead zone, level 0's edge clamp, the maximum fall speed, the drown timer, the water and lava no-bounce states, and the RNG constants (no fast tape consumes a draw that the stream shows).
+
+**What a blind key means for a tape-based gate.** A wrong value in a blind key passes every fast-tier replay. Of the 69 blind keys, 34 carry an AS3 anchor. For those keys, the anchor row in `seedlingProfile.test.js` is the only thing that holds the value.
 
 ## The census
 
