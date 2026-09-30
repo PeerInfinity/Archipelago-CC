@@ -38,7 +38,7 @@ The six sections the brief asked for:
 5. The observation core. Seedling spells `room` as `level` and no file moves. Robot Wants Kitty has one room per stream. Game columns sit under a per-game namespace.
 6. Exact comparison versus tolerance, and why exact stays the gate.
 
-Pointers to other docs are plain prose; the body contains **zero links**. The doc says outright that the Robot Wants Kitty half describes work for a later kittyengine session and changes nothing in that repo.
+Pointers to other docs are plain prose; the body contains **zero links**. The doc says outright that the Robot Wants Kitty half describes work for a later session in that engine's own repository and changes nothing in that repo.
 
 **Files outside my list that this forced (a new procgen doc is not free):**
 - `scripts/procgen/reference/docsIndex.mjs`: `README_ORDER` gained `tape-envelope.md`, placed after `seedling-bot-log.md`. The generator hard-errors on any doc missing from that list.

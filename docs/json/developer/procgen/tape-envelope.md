@@ -4,7 +4,7 @@ The contract two bots share: what every input tape says whatever game it drives 
 
 ## Why an envelope
 
-The Seedling bot (the seedling-bot document in this directory) and the Robot Wants Kitty engine (`kittyengine-CC`, a separate private repository) both replay tick-indexed input against a game and compare what the game did with what a model predicted. They grew their tape formats separately. The envelope is the part the two already agree on, written down once so that a reader, a converter or a later shared tool has one definition to point at. It is small on purpose: a field goes in the envelope only when both games carry it with the same meaning.
+The Seedling bot (the seedling-bot document in this directory) and the Robot Wants Kitty engine (a separate repository) both replay tick-indexed input against a game and compare what the game did with what a model predicted. They grew their tape formats separately. The envelope is the part the two already agree on, written down once so that a reader, a converter or a later shared tool has one definition to point at. It is small on purpose: a field goes in the envelope only when both games carry it with the same meaning.
 
 Nothing on disk changes because of this page. No tape is rewritten, no expectation is renamed, and each game's own parser keeps its own rules. `parseTape` still refuses any `game` other than `"seedling"`; `readEnvelope` is the one reader that accepts any game id, and it validates only the envelope.
 

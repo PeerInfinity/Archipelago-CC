@@ -27,7 +27,7 @@ export const DOCS_INDEX = frz({
         "indexHeadings": 2,
         "lines": 20192,
         "pages": 4,
-        "words": 232892
+        "words": 232890
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -369,7 +369,7 @@ export const DOCS_INDEX = frz({
             "lines": 127,
             "links": [],
             "path": "docs/json/developer/procgen/tape-envelope.md",
-            "words": 2077
+            "words": 2075
         },
         {
             "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",
