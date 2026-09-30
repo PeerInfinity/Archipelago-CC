@@ -1,0 +1,3327 @@
+{
+  "measuredAt": "2026-09-30T04:01:06.358Z",
+  "head": "e83441dd3882ffe119c85bc8d62b2064ca3c2d22",
+  "treeClean": true,
+  "tier": "full",
+  "method": "per key x magnitude, a child process with the override installed runs every tier tape through runTapeToStream; a tape moves when its stream md5 differs from the control run or it throws. ulp = +1 ULP; pct10 = x1.1, or +1 for an integer default. corpus-blind = neither magnitude moved any tape.",
+  "jobs": 4,
+  "wallSeconds": 1651,
+  "tapes": [
+    "collide-up-rock",
+    "cross-level-leg",
+    "diagonal-run",
+    "direction-flip",
+    "friction-stop",
+    "grant-sword-room",
+    "hazard-boot-pit",
+    "hazard-walk-water",
+    "l71-button-lock",
+    "l71-hold-101-shut",
+    "l71-hold-102-open",
+    "l71-lock-shut",
+    "l71-shieldlock-open",
+    "l71-shieldlock-shut",
+    "pit-fall-83",
+    "pit-fall-chain-85",
+    "r2-walk-1-sword-shield",
+    "r2-walk-2-feather",
+    "r2-walk-3-darksword-torch",
+    "r2-walk-4-spear",
+    "r2-walk-5-darkshield",
+    "r2-walk-6-darksuit",
+    "r2-walk-full",
+    "r3-collect-darkshield",
+    "r3-collect-darksuit",
+    "r3-collect-feather",
+    "r3-collect-shield",
+    "r3-collect-spear",
+    "r3-collect-sword",
+    "r3-collect-torch",
+    "r3-walk-1-sword",
+    "r3-walk-2-feather",
+    "r3-walk-3-torch",
+    "r3-walk-4-spear",
+    "r3-walk-5-darkshield",
+    "r3-walk-6-darksuit",
+    "r3-walk-full",
+    "r4-walk-1-sword",
+    "r4-walk-2-feather",
+    "r4-walk-3-torch",
+    "r4-walk-4-approach",
+    "r4-walk-5-spear",
+    "r4-walk-6-health",
+    "r4-walk-full",
+    "r5-bobboss-arm",
+    "r5-bobboss-fire",
+    "r5-bobboss-fire-control",
+    "r5-bosskey-leg",
+    "r5-bosskey-lock-shut",
+    "r5-contact-control-off",
+    "r5-contact-control-on",
+    "r5-d5-conch",
+    "r5-feather",
+    "r5-karlore-fire",
+    "r5-karlore-plug",
+    "r5-l37-burn",
+    "r5-l37-burn-control",
+    "r5-l38-fade-boot",
+    "r5-l38-fade-door",
+    "r5-l40-join",
+    "r5-l40-join-control",
+    "r5-l40-part0",
+    "r5-l40-part0-control",
+    "r5-l40-part1",
+    "r5-l40-part5",
+    "r5-l40-part5-control",
+    "r5-l41-part3",
+    "r5-l41-part3-control",
+    "r5-l42-part4",
+    "r5-l42-part4-control",
+    "r5-l43-wand",
+    "r5-l43-wand-control",
+    "r5-l60-kill",
+    "r5-l60-kill-control",
+    "r5-press-delay",
+    "r5-press-delay-control",
+    "r5-press-glide",
+    "r5-press-repeat",
+    "r5-shaft",
+    "r5-shaft-control",
+    "r5-swim-cross",
+    "r5-swim-drown",
+    "r5-swim-latch",
+    "r5-totem-entrance",
+    "r5-totem-entrance-control",
+    "r5-waterfall-climb",
+    "r5-waterfall-shut",
+    "r6-contact-pair-control",
+    "r6-contact-pair-heart",
+    "r6-contact-pair-live",
+    "r6-contact-pair-standing",
+    "r6-final-door",
+    "r6-final-door-control",
+    "r6-owl-control",
+    "r6-owl-kill",
+    "r6-seed-control",
+    "r6-seed-credits",
+    "r6-shield-control",
+    "r6-shield-kill",
+    "r6-totem-control",
+    "r6-totem-kill",
+    "r6-watcher-blood",
+    "r6-watcher-blood-control",
+    "r6-watcher-control",
+    "r6-watcher-talk",
+    "r7-act2-5",
+    "r7-act2-6",
+    "r7-act2-full",
+    "r7-ends-meet-1",
+    "r7-ends-meet-2",
+    "r7-ends-meet-full",
+    "r8-d2",
+    "r8-d2-19",
+    "r8-d2-20",
+    "r8-hammer-arm",
+    "r8-hammer-control",
+    "r8-l18-spinner-press",
+    "r8-l6-bob-contact",
+    "r8-solve-1",
+    "r8-solve-10",
+    "r8-solve-11",
+    "r8-solve-18",
+    "r8-solve-2",
+    "r8-solve-20",
+    "r8-solve-3",
+    "r8-solve-4",
+    "r8-solve-5",
+    "r8-solve-6",
+    "r8-solve-7",
+    "r8-solve-8",
+    "r8-solve-9",
+    "r9-l0-sword-dash",
+    "r9-l0-sword-dash-rest",
+    "r9-l6-bob-press",
+    "r9-l6-harmless-control",
+    "r9-l6-harmless-press",
+    "r9-l6-sword-dash-hit",
+    "r9-solve-0",
+    "r9-solve-11",
+    "r9-solve-13",
+    "r9-solve-14",
+    "r9-solve-15",
+    "r9-solve-16",
+    "r9-solve-18",
+    "r9-solve-19",
+    "r9-solve-2",
+    "r9-solve-20",
+    "r9-solve-3",
+    "shuffle-stop",
+    "statue-press",
+    "straight-run",
+    "thread-the-gap",
+    "transition-west-return",
+    "wall-slide"
+  ],
+  "control": {
+    "moved": 0,
+    "runs": 2,
+    "divergesFromExpectation": [
+      "r5-bobboss-arm",
+      "r5-bobboss-fire",
+      "r5-bobboss-fire-control",
+      "r5-l60-kill"
+    ]
+  },
+  "keys": {
+    "seedlingTileSize": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 47,
+        "threw": 56,
+        "same": 51,
+        "movedTapes": [
+          "collide-up-rock",
+          "cross-level-leg",
+          "l71-button-lock",
+          "l71-hold-101-shut",
+          "l71-hold-102-open",
+          "l71-lock-shut",
+          "l71-shieldlock-open",
+          "l71-shieldlock-shut",
+          "pit-fall-83",
+          "pit-fall-chain-85"
+        ],
+        "firstThrow": "r2-walk-1-sword-shield: runTape: the tape grants items in level(s) 10, 20, which the run never entered. A grant fires on FIRST ENTRY, so this ta"
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 68,
+        "threw": 48,
+        "same": 38,
+        "movedTapes": [
+          "collide-up-rock",
+          "cross-level-leg",
+          "grant-sword-room",
+          "l71-button-lock",
+          "l71-hold-101-shut",
+          "l71-hold-102-open",
+          "l71-lock-shut",
+          "l71-shieldlock-open",
+          "l71-shieldlock-shut",
+          "pit-fall-83"
+        ],
+        "firstThrow": "r2-walk-1-sword-shield: runTape: the tape grants items in level(s) 10, 20, which the run never entered. A grant fires on FIRST ENTRY, so this ta"
+      },
+      "verdict": "moves"
+    },
+    "headPosX": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "tagsPerLevel": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 12,
+        "same": 142,
+        "movedTapes": [
+          "r5-feather",
+          "r5-l37-burn",
+          "r5-l40-join",
+          "r5-l40-part0",
+          "r6-owl-kill",
+          "r6-shield-kill",
+          "r6-totem-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r9-solve-15"
+        ],
+        "firstThrow": "r5-feather: ledgerKey: expects {level, tag} integers, got {\"level\":91,\"tag\":29.00000000000013,\"outOfBand\":true,\"as3\":\"BreakableRock\""
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "moves"
+    },
+    "fpMaxElapsed": {
+      "ulp": {
+        "value": 0.03330000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.03663000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "waitAfterPressTicks": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bridgeTimerMax": {
+      "ulp": {
+        "value": 60.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 61,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bridgeState": {
+      "ulp": {
+        "value": 29.000000000000004,
+        "moved": 0,
+        "threw": 8,
+        "same": 146,
+        "movedTapes": [
+          "r2-walk-4-spear",
+          "r2-walk-full",
+          "r3-walk-4-spear",
+          "r3-walk-full",
+          "r4-walk-4-approach",
+          "r4-walk-5-spear",
+          "r4-walk-6-health",
+          "r4-walk-full"
+        ],
+        "firstThrow": "r2-walk-4-spear: level 61 tile (11,13) is type 29 (Bridge), whose Tile.types entry is \"Unused\": not modelled"
+      },
+      "pct10": {
+        "value": 30,
+        "moved": 0,
+        "threw": 8,
+        "same": 146,
+        "movedTapes": [
+          "r2-walk-4-spear",
+          "r2-walk-full",
+          "r3-walk-4-spear",
+          "r3-walk-full",
+          "r4-walk-4-approach",
+          "r4-walk-5-spear",
+          "r4-walk-6-health",
+          "r4-walk-full"
+        ],
+        "firstThrow": "r2-walk-4-spear: level 61 tile (11,13) is type 29 (Bridge), whose Tile.types entry is \"Unused\": not modelled"
+      },
+      "verdict": "moves"
+    },
+    "onScreenRadius": {
+      "ulp": {
+        "value": 64.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 65,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "ticksFromPressToWalkable": {
+      "ulp": {
+        "value": 60.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 61,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "screenW": {
+      "ulp": {
+        "value": 160.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 161,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "screenH": {
+      "ulp": {
+        "value": 160.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 161,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r5-l40-part5",
+          "r5-l40-part5-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "cameraSpeedDivisor": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r5-l40-part5",
+          "r5-l40-part5-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "inventoryWidth": {
+      "ulp": {
+        "value": 66.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 67,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "inventoryOffsetX": {
+      "ulp": {
+        "value": -69.99999999999999,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": -69,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fpElapsed": {
+      "ulp": {
+        "value": 0.03330000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.03663000000000001,
+        "moved": 0,
+        "threw": 2,
+        "same": 152,
+        "movedTapes": [
+          "r5-l40-part5",
+          "r5-l40-part5-control"
+        ],
+        "firstThrow": "r5-l40-part5: levelRun: a `primary` press at tick 1756 lands on a FROZEN tick (frozenTimer 12 after this tick's `freezeStep`). `Player"
+      },
+      "verdict": "moves"
+    },
+    "friction": {
+      "ulp": {
+        "value": 0.25000000000000006,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.275,
+        "moved": 3,
+        "threw": 0,
+        "same": 151,
+        "movedTapes": [
+          "r8-l6-bob-contact",
+          "r9-l6-harmless-control",
+          "r9-l6-harmless-press"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "velocityEpsilon": {
+      "ulp": {
+        "value": 0.05000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.05500000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyPitTile": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyIframes": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "slashTimerMax": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 13,
+        "threw": 2,
+        "same": 139,
+        "movedTapes": [
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-l0-sword-dash",
+          "r9-solve-0",
+          "r9-solve-13",
+          "r9-solve-14",
+          "r9-solve-15"
+        ],
+        "firstThrow": "r9-solve-0: the player DROWNED in level 0 at (133.65154851459488, 214.33073866298415) — terrain state 1. An armed hazard is PLANNER-"
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 13,
+        "threw": 2,
+        "same": 139,
+        "movedTapes": [
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-l0-sword-dash",
+          "r9-solve-0",
+          "r9-solve-13",
+          "r9-solve-14",
+          "r9-solve-15"
+        ],
+        "firstThrow": "r9-solve-0: the player DROWNED in level 0 at (133.65154851459488, 214.33073866298415) — terrain state 1. An armed hazard is PLANNER-"
+      },
+      "verdict": "moves"
+    },
+    "killLockTset": {
+      "ulp": {
+        "value": -0.9999999999999999,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "swordForce": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 5,
+        "threw": 2,
+        "same": 147,
+        "movedTapes": [
+          "r6-owl-control",
+          "r6-owl-kill",
+          "r8-d2",
+          "r8-solve-18",
+          "r9-l6-harmless-press",
+          "r9-solve-16",
+          "r9-solve-18"
+        ],
+        "firstThrow": "r6-owl-control: levelRun: the player is inside pod@40,120's 16x16 cell at tick 696 in level 112 with its animation \"closed\". `Pod.update"
+      },
+      "verdict": "moves"
+    },
+    "slashDashForce": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 16,
+        "threw": 0,
+        "same": 138,
+        "movedTapes": [
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-l0-sword-dash-rest",
+          "r9-solve-0",
+          "r9-solve-11",
+          "r9-solve-14",
+          "r9-solve-15"
+        ]
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 14,
+        "threw": 7,
+        "same": 133,
+        "movedTapes": [
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-10",
+          "r8-solve-11",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-l0-sword-dash",
+          "r9-l0-sword-dash-rest",
+          "r9-l6-sword-dash-hit"
+        ],
+        "firstThrow": "r8-d2-20: the player DROWNED in level 20 at (194.35751347978407, 120.9713413410282) — terrain state 1. An armed hazard is PLANNER-"
+      },
+      "verdict": "moves"
+    },
+    "swordAnimRate": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "swordAnimRateDash": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "specialTimerMax": {
+      "ulp": {
+        "value": 150.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 151,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pickupTextSpeed": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r6-totem-control",
+          "r6-totem-kill"
+        ]
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r6-totem-control",
+          "r6-totem-kill"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "pickupLineLength": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "initialFramesThisCharacter": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "npcLineLengthDefault": {
+      "ulp": {
+        "value": 28.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 29,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "talkRange": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "coverAlphaRate": {
+      "ulp": {
+        "value": 0.005000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.0055000000000000005,
+        "moved": 0,
+        "threw": 1,
+        "same": 153,
+        "movedTapes": [
+          "r6-seed-credits"
+        ],
+        "firstThrow": "r6-seed-credits: levelRun: the tape asks for tick 502, after the CREDITS reboot at tick 502. `Game.menuAndRestart()` sets `Game.freezeObj"
+      },
+      "verdict": "moves"
+    },
+    "treeGrowFrameRate": {
+      "ulp": {
+        "value": 3.5000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3.8500000000000005,
+        "moved": 0,
+        "threw": 1,
+        "same": 153,
+        "movedTapes": [
+          "r6-seed-credits"
+        ],
+        "firstThrow": "r6-seed-credits: levelRun: the tape asks for tick 507, after the CREDITS reboot at tick 507. `Game.menuAndRestart()` sets `Game.freezeObj"
+      },
+      "verdict": "moves"
+    },
+    "treeGrowFrames": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 1,
+        "same": 153,
+        "movedTapes": [
+          "r6-seed-credits"
+        ],
+        "firstThrow": "r6-seed-credits: animCallbackUpdate: 16.000000000000004 frames at 3.5/s did not wrap"
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "moves"
+    },
+    "fpElapsedClamped": {
+      "ulp": {
+        "value": 0.03330000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.03663000000000001,
+        "moved": 3,
+        "threw": 4,
+        "same": 147,
+        "movedTapes": [
+          "r6-final-door",
+          "r6-seed-credits",
+          "r6-shield-control",
+          "r6-shield-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r9-solve-19"
+        ],
+        "firstThrow": "r6-seed-credits: levelRun: the tape asks for tick 507, after the CREDITS reboot at tick 507. `Game.menuAndRestart()` sets `Game.freezeObj"
+      },
+      "verdict": "moves"
+    },
+    "rockFrequency": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 2,
+        "same": 152,
+        "movedTapes": [
+          "r6-owl-control",
+          "r6-owl-kill"
+        ],
+        "firstThrow": "r6-owl-control: levelRun: the player is inside pod@40,120's 16x16 cell at tick 696 in level 112 with its animation \"closed\". `Pod.update"
+      },
+      "verdict": "moves"
+    },
+    "grenadeFrequency": {
+      "ulp": {
+        "value": 40.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 41,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "rockStepsAhead": {
+      "ulp": {
+        "value": -14.999999999999998,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": -14,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "rockRadius": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "deathRocks": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "rockScaleBase": {
+      "ulp": {
+        "value": 0.25000000000000006,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.275,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "rockScaleSpan": {
+      "ulp": {
+        "value": 0.5000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.55,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyCoinsBase": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyCoinsSpan": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fireHitFrameStart": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r5-press-glide",
+          "r5-press-repeat"
+        ]
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r5-press-glide",
+          "r5-press-repeat"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "fireHitFrameEnd": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fireForce": {
+      "ulp": {
+        "value": 0.32500000000000007,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.35750000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fireDamage": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "gameFps": {
+      "ulp": {
+        "value": 60.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 61,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "hitboxOriginX": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 67,
+        "threw": 8,
+        "same": 79,
+        "movedTapes": [
+          "cross-level-leg",
+          "grant-sword-room",
+          "l71-shieldlock-open",
+          "l71-shieldlock-shut",
+          "r2-walk-1-sword-shield",
+          "r2-walk-3-darksword-torch",
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full"
+        ],
+        "firstThrow": "r2-walk-3-darksword-torch: runTape: the tape grants items in level(s) 30, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "verdict": "moves"
+    },
+    "hitboxOriginY": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 89,
+        "threw": 8,
+        "same": 57,
+        "movedTapes": [
+          "collide-up-rock",
+          "grant-sword-room",
+          "l71-hold-101-shut",
+          "l71-hold-102-open",
+          "l71-lock-shut",
+          "r2-walk-1-sword-shield",
+          "r2-walk-2-feather",
+          "r2-walk-3-darksword-torch",
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield"
+        ],
+        "firstThrow": "r2-walk-4-spear: the player fell into a pit in level 62, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "verdict": "moves"
+    },
+    "waterState": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "lavaState": {
+      "ulp": {
+        "value": 17.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 18,
+        "moved": 0,
+        "threw": 25,
+        "same": 129,
+        "movedTapes": [
+          "r5-l38-fade-boot",
+          "r5-l38-fade-door",
+          "r5-l40-join",
+          "r5-l40-join-control",
+          "r5-l40-part0",
+          "r5-l40-part0-control",
+          "r5-l40-part1",
+          "r5-l40-part5",
+          "r5-l40-part5-control",
+          "r5-l41-part3"
+        ],
+        "firstThrow": "r5-l38-fade-boot: the player entered Lava in level 38 at (152, 296) on a tape that does not pin \"sound\". `Player.as:530` adds `0.25 * int("
+      },
+      "verdict": "moves"
+    },
+    "waterfallState": {
+      "ulp": {
+        "value": 25.000000000000004,
+        "moved": 4,
+        "threw": 0,
+        "same": 150,
+        "movedTapes": [
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "pct10": {
+        "value": 26,
+        "moved": 4,
+        "threw": 7,
+        "same": 143,
+        "movedTapes": [
+          "r2-walk-4-spear",
+          "r2-walk-full",
+          "r3-walk-4-spear",
+          "r3-walk-full",
+          "r4-walk-4-approach",
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control"
+        ],
+        "firstThrow": "r2-walk-4-spear: the player entered Water in level 95 at (287.5214505399861, 83.15838809009114) on a tape that does not pin \"sound\". `Pla"
+      },
+      "verdict": "moves"
+    },
+    "defaultFriction": {
+      "ulp": {
+        "value": 0.25000000000000006,
+        "moved": 79,
+        "threw": 4,
+        "same": 71,
+        "movedTapes": [
+          "cross-level-leg",
+          "grant-sword-room",
+          "r2-walk-1-sword-shield",
+          "r2-walk-2-feather",
+          "r2-walk-3-darksword-torch",
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-1-sword"
+        ],
+        "firstThrow": "r2-walk-4-spear: the player fell into a pit in level 62, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "pct10": {
+        "value": 0.275,
+        "moved": 136,
+        "threw": 16,
+        "same": 2,
+        "movedTapes": [
+          "collide-up-rock",
+          "cross-level-leg",
+          "diagonal-run",
+          "direction-flip",
+          "friction-stop",
+          "grant-sword-room",
+          "hazard-boot-pit",
+          "hazard-walk-water",
+          "l71-button-lock",
+          "l71-hold-101-shut"
+        ],
+        "firstThrow": "r2-walk-1-sword-shield: runTape: the tape grants items in level(s) 20, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "verdict": "moves"
+    },
+    "waterFriction": {
+      "ulp": {
+        "value": 0.5000000000000001,
+        "moved": 4,
+        "threw": 0,
+        "same": 150,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch"
+        ]
+      },
+      "pct10": {
+        "value": 0.55,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "walkSpeed": {
+      "ulp": {
+        "value": 0.8000000000000002,
+        "moved": 113,
+        "threw": 0,
+        "same": 41,
+        "movedTapes": [
+          "collide-up-rock",
+          "cross-level-leg",
+          "diagonal-run",
+          "direction-flip",
+          "grant-sword-room",
+          "hazard-walk-water",
+          "l71-button-lock",
+          "l71-shieldlock-open",
+          "pit-fall-83",
+          "pit-fall-chain-85"
+        ]
+      },
+      "pct10": {
+        "value": 0.8800000000000001,
+        "moved": 132,
+        "threw": 21,
+        "same": 1,
+        "movedTapes": [
+          "collide-up-rock",
+          "cross-level-leg",
+          "diagonal-run",
+          "direction-flip",
+          "friction-stop",
+          "grant-sword-room",
+          "hazard-boot-pit",
+          "hazard-walk-water",
+          "l71-button-lock",
+          "l71-hold-101-shut"
+        ],
+        "firstThrow": "grant-sword-room: runTape: the tape grants items in level(s) 10, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "verdict": "moves"
+    },
+    "stairSpeed": {
+      "ulp": {
+        "value": 0.4000000000000001,
+        "moved": 10,
+        "threw": 0,
+        "same": 144,
+        "movedTapes": [
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield",
+          "r2-walk-full",
+          "r3-walk-4-spear",
+          "r3-walk-5-darkshield",
+          "r3-walk-full",
+          "r4-walk-5-spear",
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-feather"
+        ]
+      },
+      "pct10": {
+        "value": 0.44000000000000006,
+        "moved": 3,
+        "threw": 7,
+        "same": 144,
+        "movedTapes": [
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield",
+          "r2-walk-full",
+          "r3-walk-4-spear",
+          "r3-walk-5-darkshield",
+          "r3-walk-full",
+          "r4-walk-5-spear",
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-feather"
+        ],
+        "firstThrow": "r2-walk-4-spear: the player fell into a pit in level 62, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "verdict": "moves"
+    },
+    "waterSpeed": {
+      "ulp": {
+        "value": 0.45000000000000007,
+        "moved": 4,
+        "threw": 0,
+        "same": 150,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-latch",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "pct10": {
+        "value": 0.49500000000000005,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "slidingSpeed": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 1,
+        "threw": 0,
+        "same": 153,
+        "movedTapes": [
+          "r5-d5-conch"
+        ]
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 1,
+        "same": 153,
+        "movedTapes": [
+          "r5-d5-conch"
+        ],
+        "firstThrow": "r5-d5-conch: levelRun: a fire press at tick 1625 lands inside the window the press at tick 1616 opened (`firing` is up through tick 1"
+      },
+      "verdict": "moves"
+    },
+    "slidingFriction": {
+      "ulp": {
+        "value": 0.025000000000000005,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.027500000000000004,
+        "moved": 0,
+        "threw": 1,
+        "same": 153,
+        "movedTapes": [
+          "r5-d5-conch"
+        ],
+        "firstThrow": "r5-d5-conch: levelRun: a fire press at tick 1625 lands inside the window the press at tick 1616 opened (`firing` is up through tick 1"
+      },
+      "verdict": "moves"
+    },
+    "moveSpeeds25Divisor": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 4,
+        "threw": 0,
+        "same": 150,
+        "movedTapes": [
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "hitboxWidth": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r7-act2-full",
+          "r8-solve-4"
+        ]
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 55,
+        "threw": 6,
+        "same": 93,
+        "movedTapes": [
+          "cross-level-leg",
+          "grant-sword-room",
+          "l71-shieldlock-open",
+          "l71-shieldlock-shut",
+          "r2-walk-2-feather",
+          "r2-walk-3-darksword-torch",
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full"
+        ],
+        "firstThrow": "r2-walk-4-spear: 2 teleporters fired on the same tick in level 95 ((32,0)->59, (48,0)->59). Which world swap wins depends on FlashPunk's "
+      },
+      "verdict": "moves"
+    },
+    "hitboxHeight": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 50,
+        "threw": 11,
+        "same": 93,
+        "movedTapes": [
+          "grant-sword-room",
+          "r2-walk-1-sword-shield",
+          "r2-walk-2-feather",
+          "r2-walk-3-darksword-torch",
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-1-sword",
+          "r3-walk-2-feather"
+        ],
+        "firstThrow": "r2-walk-1-sword-shield: runTape: the tape grants items in level(s) 20, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "verdict": "moves"
+    },
+    "tileW": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 147,
+        "threw": 7,
+        "same": 0,
+        "movedTapes": [
+          "collide-up-rock",
+          "cross-level-leg",
+          "diagonal-run",
+          "direction-flip",
+          "friction-stop",
+          "grant-sword-room",
+          "hazard-boot-pit",
+          "hazard-walk-water",
+          "l71-button-lock",
+          "l71-hold-101-shut"
+        ],
+        "firstThrow": "r2-walk-4-spear: the player fell into a pit in level 95, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "verdict": "moves"
+    },
+    "tileH": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 151,
+        "threw": 3,
+        "same": 0,
+        "movedTapes": [
+          "collide-up-rock",
+          "cross-level-leg",
+          "diagonal-run",
+          "direction-flip",
+          "friction-stop",
+          "grant-sword-room",
+          "hazard-boot-pit",
+          "hazard-walk-water",
+          "l71-button-lock",
+          "l71-hold-101-shut"
+        ],
+        "firstThrow": "r4-walk-5-spear: levelRun: the tape equips slot 1 at tick 783, but the run holds 1 item(s) (slots [0]). `Inventory.getItem` on an out-of-"
+      },
+      "verdict": "moves"
+    },
+    "spawnOffsetXDivisor": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 145,
+        "threw": 9,
+        "same": 0,
+        "movedTapes": [
+          "collide-up-rock",
+          "cross-level-leg",
+          "diagonal-run",
+          "direction-flip",
+          "friction-stop",
+          "grant-sword-room",
+          "hazard-boot-pit",
+          "hazard-walk-water",
+          "l71-button-lock",
+          "l71-hold-101-shut"
+        ],
+        "firstThrow": "grant-sword-room: runTape: the tape grants items in level(s) 10, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "verdict": "moves"
+    },
+    "spawnOffsetYDivisor": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 148,
+        "threw": 6,
+        "same": 0,
+        "movedTapes": [
+          "collide-up-rock",
+          "cross-level-leg",
+          "diagonal-run",
+          "direction-flip",
+          "friction-stop",
+          "grant-sword-room",
+          "hazard-boot-pit",
+          "hazard-walk-water",
+          "l71-button-lock",
+          "l71-hold-101-shut"
+        ],
+        "firstThrow": "r2-walk-6-darksuit: runTape: the tape grants items in level(s) 79, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "verdict": "moves"
+    },
+    "level0WorldWidth": {
+      "ulp": {
+        "value": 320.00000000000006,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 321,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "level0WorldHeight": {
+      "ulp": {
+        "value": 320.00000000000006,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 321,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "checkOffsetYInset": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 11,
+        "threw": 7,
+        "same": 136,
+        "movedTapes": [
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield",
+          "r2-walk-full",
+          "r3-walk-4-spear",
+          "r3-walk-5-darkshield",
+          "r3-walk-full",
+          "r4-walk-5-spear",
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-d5-conch"
+        ],
+        "firstThrow": "r2-walk-4-spear: the player fell into a pit in level 62, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "verdict": "moves"
+    },
+    "initialTerrainState": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "pitState": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 6,
+        "threw": 3,
+        "same": 145,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-6-darksuit",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ],
+        "firstThrow": "r2-walk-5-darkshield: runTape: the tape grants items in level(s) 74, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 7,
+        "threw": 21,
+        "same": 126,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-1-sword-shield",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-collect-shield",
+          "r3-walk-5-darkshield",
+          "r3-walk-6-darksuit",
+          "r3-walk-full"
+        ],
+        "firstThrow": "r2-walk-1-sword-shield: the player fell into a pit in level 13, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "verdict": "moves"
+    },
+    "iceState": {
+      "ulp": {
+        "value": 22.000000000000004,
+        "moved": 0,
+        "threw": 1,
+        "same": 153,
+        "movedTapes": [
+          "r5-d5-conch"
+        ],
+        "firstThrow": "r5-d5-conch: levelRun: a fire press at tick 1625 lands inside the window the press at tick 1616 opened (`firing` is up through tick 1"
+      },
+      "pct10": {
+        "value": 23,
+        "moved": 0,
+        "threw": 1,
+        "same": 153,
+        "movedTapes": [
+          "r5-d5-conch"
+        ],
+        "firstThrow": "r5-d5-conch: levelRun: a fire press at tick 1625 lands inside the window the press at tick 1616 opened (`firing` is up through tick 1"
+      },
+      "verdict": "moves"
+    },
+    "initialDirection": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 12,
+        "same": 142,
+        "movedTapes": [
+          "r5-l60-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-20",
+          "r9-l0-sword-dash-rest",
+          "r9-solve-0",
+          "r9-solve-13",
+          "r9-solve-14",
+          "r9-solve-19"
+        ],
+        "firstThrow": "r5-l60-kill: slashRect: direction 3.0000000000000004 is not 0..3"
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 12,
+        "same": 142,
+        "movedTapes": [
+          "r5-l60-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-20",
+          "r9-l0-sword-dash-rest",
+          "r9-solve-0",
+          "r9-solve-13",
+          "r9-solve-14",
+          "r9-solve-19"
+        ],
+        "firstThrow": "r5-l60-kill: slashRect: direction 4 is not 0..3"
+      },
+      "verdict": "moves"
+    },
+    "directionRight": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 23,
+        "same": 131,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r6-owl-control",
+          "r6-owl-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-l18-spinner-press",
+          "r8-solve-10",
+          "r8-solve-18"
+        ],
+        "firstThrow": "r4-walk-6-health: spearRect: direction 5e-324 is not 0..3"
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 4,
+        "threw": 4,
+        "same": 146,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r6-owl-control",
+          "r6-owl-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r9-solve-16",
+          "r9-solve-19"
+        ],
+        "firstThrow": "r4-walk-6-health: the player fell into a pit in level 63, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "verdict": "moves"
+    },
+    "directionUp": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 26,
+        "same": 128,
+        "movedTapes": [
+          "r3-collect-sword",
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-bobboss-fire",
+          "r5-l40-part5",
+          "r5-l40-part5-control",
+          "r6-shield-control",
+          "r6-shield-kill",
+          "r6-totem-control",
+          "r6-totem-kill"
+        ],
+        "firstThrow": "r3-collect-sword: slashRect: direction 1.0000000000000002 is not 0..3"
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 3,
+        "threw": 0,
+        "same": 151,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r6-totem-kill"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "directionLeft": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 19,
+        "same": 135,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-feather",
+          "r5-l40-part0",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-10",
+          "r8-solve-18",
+          "r8-solve-20"
+        ],
+        "firstThrow": "r4-walk-6-health: spearRect: direction 2.0000000000000004 is not 0..3"
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 3,
+        "same": 151,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r9-solve-14"
+        ],
+        "firstThrow": "r4-walk-6-health: the player fell into a pit in level 67, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "verdict": "moves"
+    },
+    "directionDown": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 15,
+        "same": 139,
+        "movedTapes": [
+          "r5-l43-wand-control",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-11",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-solve-0",
+          "r9-solve-11",
+          "r9-solve-15"
+        ],
+        "firstThrow": "r5-l43-wand-control: slashRect: direction 3.0000000000000004 is not 0..3"
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 15,
+        "same": 139,
+        "movedTapes": [
+          "r5-l43-wand-control",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-11",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-solve-0",
+          "r9-solve-11",
+          "r9-solve-15"
+        ],
+        "firstThrow": "r5-l43-wand-control: slashRect: direction 4 is not 0..3"
+      },
+      "verdict": "moves"
+    },
+    "waterfallAcceleration": {
+      "ulp": {
+        "value": 0.8000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.8800000000000001,
+        "moved": 1,
+        "threw": 0,
+        "same": 153,
+        "movedTapes": [
+          "r5-waterfall-shut"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "drownTimerMax": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fallAlphaSpeed": {
+      "ulp": {
+        "value": 0.05000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.05500000000000001,
+        "moved": 9,
+        "threw": 0,
+        "same": 145,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-6-darksuit",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "fallAlphaStart": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 6,
+        "threw": 3,
+        "same": 145,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-6-darksuit",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ],
+        "firstThrow": "r2-walk-5-darkshield: runTape: the tape grants items in level(s) 74, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "verdict": "moves"
+    },
+    "fallLerpDivisor": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 9,
+        "threw": 0,
+        "same": 145,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-6-darksuit",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ]
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 9,
+        "threw": 0,
+        "same": 145,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-6-darksuit",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "descentDrop": {
+      "ulp": {
+        "value": 83.00000000000001,
+        "moved": 7,
+        "threw": 0,
+        "same": 147,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ]
+      },
+      "pct10": {
+        "value": 84,
+        "moved": 9,
+        "threw": 0,
+        "same": 145,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-6-darksuit",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "descentGravity": {
+      "ulp": {
+        "value": 0.10000000000000002,
+        "moved": 7,
+        "threw": 0,
+        "same": 147,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ]
+      },
+      "pct10": {
+        "value": 0.11000000000000001,
+        "moved": 7,
+        "threw": 2,
+        "same": 145,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-6-darksuit",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ],
+        "firstThrow": "r2-walk-5-darkshield: runTape: the tape grants items in level(s) 74, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "verdict": "moves"
+    },
+    "descentMaxFall": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bounceVelocity": {
+      "ulp": {
+        "value": -1.9999999999999998,
+        "moved": 5,
+        "threw": 0,
+        "same": 149,
+        "movedTapes": [
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-full"
+        ]
+      },
+      "pct10": {
+        "value": -1,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-6-darksuit",
+          "r3-walk-full",
+          "r5-d5-conch"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "noBounceStates0": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 4,
+        "threw": 2,
+        "same": 148,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-full"
+        ],
+        "firstThrow": "r2-walk-5-darkshield: runTape: the tape grants items in level(s) 74, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 4,
+        "threw": 2,
+        "same": 148,
+        "movedTapes": [
+          "pit-fall-83",
+          "pit-fall-chain-85",
+          "r2-walk-5-darkshield",
+          "r2-walk-full",
+          "r3-walk-5-darkshield",
+          "r3-walk-full"
+        ],
+        "firstThrow": "r2-walk-5-darkshield: runTape: the tape grants items in level(s) 74, which the run never entered. A grant fires on FIRST ENTRY, so this tape n"
+      },
+      "verdict": "moves"
+    },
+    "noBounceStates1": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "noBounceStates2": {
+      "ulp": {
+        "value": 17.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 18,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "swordDamage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 5,
+        "threw": 1,
+        "same": 148,
+        "movedTapes": [
+          "r6-shield-control",
+          "r6-shield-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-l18-spinner-press",
+          "r9-solve-19"
+        ],
+        "firstThrow": "r8-l18-spinner-press: levelRun: spinner@112,48's removal at tick 3139 OPENS 1 kill lock(s) in level 18 [{18,0}] (1 kill lock(s) OPEN: totalEne"
+      },
+      "verdict": "moves"
+    },
+    "darkSwordDamage": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spearDamage": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "slashReach": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spearLength": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spearThick": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyHitsMax": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyHitsTimer": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "slashHitTicks": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "lightpoleHitsTimerMax": {
+      "ulp": {
+        "value": 25.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 26,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "right": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 23,
+        "same": 131,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r6-owl-control",
+          "r6-owl-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-l18-spinner-press",
+          "r8-solve-10",
+          "r8-solve-18"
+        ],
+        "firstThrow": "r4-walk-6-health: spearRect: direction 0 is not 0..3"
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 23,
+        "same": 131,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r6-owl-control",
+          "r6-owl-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-l18-spinner-press",
+          "r8-solve-10",
+          "r8-solve-18"
+        ],
+        "firstThrow": "r4-walk-6-health: spearRect: direction 0 is not 0..3"
+      },
+      "verdict": "moves"
+    },
+    "up": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 24,
+        "same": 130,
+        "movedTapes": [
+          "r3-collect-sword",
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-bobboss-fire",
+          "r5-l40-part5",
+          "r5-l40-part5-control",
+          "r6-shield-control",
+          "r6-shield-kill",
+          "r6-watcher-blood",
+          "r6-watcher-blood-control"
+        ],
+        "firstThrow": "r3-collect-sword: slashRect: direction 1 is not 0..3"
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 1,
+        "threw": 25,
+        "same": 128,
+        "movedTapes": [
+          "r3-collect-sword",
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-bobboss-fire",
+          "r5-l40-part0",
+          "r5-l40-part5",
+          "r5-l40-part5-control",
+          "r6-shield-control",
+          "r6-shield-kill",
+          "r6-watcher-blood"
+        ],
+        "firstThrow": "r3-collect-sword: slashRect: direction 1 is not 0..3"
+      },
+      "verdict": "moves"
+    },
+    "left": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 19,
+        "same": 135,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-feather",
+          "r5-l40-part0",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-10",
+          "r8-solve-18",
+          "r8-solve-20"
+        ],
+        "firstThrow": "r4-walk-6-health: spearRect: direction 2 is not 0..3"
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 19,
+        "same": 135,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-feather",
+          "r5-l40-part0",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-10",
+          "r8-solve-18",
+          "r8-solve-20"
+        ],
+        "firstThrow": "r4-walk-6-health: spearRect: direction 2 is not 0..3"
+      },
+      "verdict": "moves"
+    },
+    "down": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 20,
+        "same": 134,
+        "movedTapes": [
+          "r5-l43-wand-control",
+          "r5-l60-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-11",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-l0-sword-dash-rest",
+          "r9-solve-0"
+        ],
+        "firstThrow": "r5-l43-wand-control: slashRect: direction 3 is not 0..3"
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 20,
+        "same": 134,
+        "movedTapes": [
+          "r5-l43-wand-control",
+          "r5-l60-kill",
+          "r8-d2",
+          "r8-d2-19",
+          "r8-d2-20",
+          "r8-solve-11",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-l0-sword-dash-rest",
+          "r9-solve-0"
+        ],
+        "firstThrow": "r5-l43-wand-control: slashRect: direction 3 is not 0..3"
+      },
+      "verdict": "moves"
+    },
+    "tile": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 11,
+        "threw": 5,
+        "same": 138,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-l41-part3",
+          "r5-press-delay",
+          "r5-press-delay-control",
+          "r5-press-glide",
+          "r5-press-repeat",
+          "r5-shaft",
+          "r5-shaft-control",
+          "r5-totem-entrance"
+        ],
+        "firstThrow": "r4-walk-6-health: the player fell into a pit in level 67, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 12,
+        "threw": 4,
+        "same": 138,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-l41-part3",
+          "r5-press-delay",
+          "r5-press-delay-control",
+          "r5-press-glide",
+          "r5-press-repeat",
+          "r5-shaft",
+          "r5-shaft-control",
+          "r5-totem-entrance"
+        ],
+        "firstThrow": "r4-walk-6-health: the player fell into a pit in level 67, which has NO control block — `Game.fallthroughLevel` is still -1 and `checkFalli"
+      },
+      "verdict": "moves"
+    },
+    "pushableSpeed": {
+      "ulp": {
+        "value": 0.5000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.55,
+        "moved": 10,
+        "threw": 2,
+        "same": 142,
+        "movedTapes": [
+          "r4-walk-6-health",
+          "r4-walk-full",
+          "r5-l41-part3",
+          "r5-press-delay",
+          "r5-press-glide",
+          "r5-press-repeat",
+          "r5-shaft",
+          "r7-act2-full",
+          "r8-solve-4",
+          "r8-solve-8"
+        ],
+        "firstThrow": "r7-act2-full: the player DROWNED in level 8 at (89.16183500156646, 114.58588393760705) — terrain state 1. An armed hazard is PLANNER-F"
+      },
+      "verdict": "moves"
+    },
+    "pushableFriction": {
+      "ulp": {
+        "value": 0.25000000000000006,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.275,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "alphaFade": {
+      "ulp": {
+        "value": 0.10000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.11000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bothRange": {
+      "ulp": {
+        "value": 0.10000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.11000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "bootPreswapFrames": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 1,
+        "threw": 0,
+        "same": 153,
+        "movedTapes": [
+          "r8-hammer-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "xorMask": {
+      "ulp": {
+        "value": 1207959552.0000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1207959553,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r6-owl-control",
+          "r6-owl-kill"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "bootSeed": {
+      "ulp": {
+        "value": 1486967168.0000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1486967169,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "hashC1": {
+      "ulp": {
+        "value": 1376312589.0000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1376312590,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "hashC2": {
+      "ulp": {
+        "value": 789221.0000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 789222,
+        "moved": 0,
+        "threw": 2,
+        "same": 152,
+        "movedTapes": [
+          "r6-owl-control",
+          "r6-owl-kill"
+        ],
+        "firstThrow": "r6-owl-control: levelRun: the player is inside pod@40,120's 16x16 cell at tick 696 in level 112 with its animation \"closed\". `Pod.update"
+      },
+      "verdict": "moves"
+    },
+    "hashC3": {
+      "ulp": {
+        "value": 15731.000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 15732,
+        "moved": 2,
+        "threw": 0,
+        "same": 152,
+        "movedTapes": [
+          "r6-owl-control",
+          "r6-owl-kill"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "randomDivisor": {
+      "ulp": {
+        "value": 2147483648.0000005,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2147483649,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "stateMax": {
+      "ulp": {
+        "value": 2147483647.0000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2147483648,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "swimLengthFrames": {
+      "ulp": {
+        "value": 47.00000000000001,
+        "moved": 0,
+        "threw": 8,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ],
+        "firstThrow": "r5-feather: createPinnedChannel: lengthFrames must be a positive integer, got 47.00000000000001. A pinned channel with no length com"
+      },
+      "pct10": {
+        "value": 48,
+        "moved": 6,
+        "threw": 0,
+        "same": 148,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "swimBoostBelowSeconds": {
+      "ulp": {
+        "value": 0.10000000000000002,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "pct10": {
+        "value": 0.11000000000000001,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "swimBoostSpeed": {
+      "ulp": {
+        "value": 0.25000000000000006,
+        "moved": 4,
+        "threw": 0,
+        "same": 150,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-latch",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "pct10": {
+        "value": 0.275,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "loadDeadFrames": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 2,
+        "same": 152,
+        "movedTapes": [
+          "r5-feather",
+          "r6-seed-credits"
+        ],
+        "firstThrow": "r5-feather: stepChannel: frames must be a non-negative integer, got 20.000000000000004"
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 1,
+        "threw": 0,
+        "same": 153,
+        "movedTapes": [
+          "r5-feather"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "ceremonyFreezeFrames": {
+      "ulp": {
+        "value": 150.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 151,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pinFrameRate": {
+      "ulp": {
+        "value": 60.00000000000001,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "pct10": {
+        "value": 61,
+        "moved": 8,
+        "threw": 0,
+        "same": 146,
+        "movedTapes": [
+          "r5-feather",
+          "r5-swim-cross",
+          "r5-swim-drown",
+          "r5-swim-latch",
+          "r5-waterfall-climb",
+          "r5-waterfall-shut",
+          "r6-seed-control",
+          "r6-seed-credits"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "coercedTerrainState": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 33,
+        "same": 121,
+        "movedTapes": [
+          "grant-sword-room",
+          "hazard-boot-pit",
+          "hazard-walk-water",
+          "r2-walk-1-sword-shield",
+          "r2-walk-2-feather",
+          "r2-walk-3-darksword-torch",
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full"
+        ],
+        "firstThrow": "grant-sword-room: tile type 5e-324 (undefined) is not modelled at the v2 rung: no reason recorded"
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 1,
+        "threw": 32,
+        "same": 121,
+        "movedTapes": [
+          "grant-sword-room",
+          "hazard-boot-pit",
+          "hazard-walk-water",
+          "r2-walk-1-sword-shield",
+          "r2-walk-2-feather",
+          "r2-walk-3-darksword-torch",
+          "r2-walk-4-spear",
+          "r2-walk-5-darkshield",
+          "r2-walk-6-darksuit",
+          "r2-walk-full"
+        ],
+        "firstThrow": "grant-sword-room: the player entered Water in level 0 at (112.47689398770626, 160.47689398770626) on a tape that does not pin \"sound\". `Pl"
+      },
+      "verdict": "moves"
+    },
+    "levelCount": {
+      "ulp": {
+        "value": 116.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 117,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "wandSpeed": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 154,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    }
+  },
+  "summary": {
+    "verdicts": {
+      "moves": 70,
+      "corpus-blind": 57
+    },
+    "byClass": {
+      "physics": {
+        "moves": 32,
+        "corpus-blind": 15
+      },
+      "rule": {
+        "moves": 38,
+        "corpus-blind": 42
+      }
+    },
+    "threw": [
+      "seedlingTileSize",
+      "tagsPerLevel",
+      "bridgeState",
+      "fpElapsed",
+      "slashTimerMax",
+      "swordForce",
+      "slashDashForce",
+      "coverAlphaRate",
+      "treeGrowFrameRate",
+      "treeGrowFrames",
+      "fpElapsedClamped",
+      "rockFrequency",
+      "hitboxOriginX",
+      "hitboxOriginY",
+      "lavaState",
+      "waterfallState",
+      "defaultFriction",
+      "walkSpeed",
+      "stairSpeed",
+      "slidingSpeed",
+      "slidingFriction",
+      "hitboxWidth",
+      "hitboxHeight",
+      "tileW",
+      "tileH",
+      "spawnOffsetXDivisor",
+      "spawnOffsetYDivisor",
+      "checkOffsetYInset",
+      "pitState",
+      "iceState",
+      "initialDirection",
+      "directionRight",
+      "directionUp",
+      "directionLeft",
+      "directionDown",
+      "fallAlphaStart",
+      "descentGravity",
+      "noBounceStates0",
+      "swordDamage",
+      "right",
+      "up",
+      "left",
+      "down",
+      "tile",
+      "pushableSpeed",
+      "hashC2",
+      "swimLengthFrames",
+      "loadDeadFrames",
+      "coercedTerrainState"
+    ]
+  }
+}

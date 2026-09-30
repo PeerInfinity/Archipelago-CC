@@ -13,12 +13,16 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import { PROFILE, PROFILE_FIELDS } from '../../frontend/modules/seedlingDemo/seedlingProfile.js';
-import { MAGNITUDES, VERDICTS, WITNESS_JSON, checkWitness, verdictOf } from './witness-seedling-profile.mjs';
+import {
+    MAGNITUDES, VERDICTS, WITNESS_FULL_JSON, WITNESS_JSON, checkWitness, verdictOf,
+} from './witness-seedling-profile.mjs';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const JSON_TEXT = readFileSync(join(REPO, WITNESS_JSON), 'utf8');
 const W = JSON.parse(JSON_TEXT);
 const KEYS = Object.keys(PROFILE);
+/** The full-tier record (engine-prep R1): a sibling file, so every row above reads the fast one unchanged. */
+const WF = JSON.parse(readFileSync(join(REPO, WITNESS_FULL_JSON), 'utf8'));
 
 describe('seedling-profile-witnesses.json — the witness record names today\'s profile', () => {
     it('names EXACTLY PROFILE\'s keys — a new key without a witness row is RED: run the witness', () => {
@@ -58,5 +62,33 @@ describe('seedling-profile-witnesses.json — the witness record names today\'s 
         const flipped = { ...W.keys, walkSpeed: { ...walkSpeed, verdict: 'corpus-blind' } };
         expect(checkWitness({ ...W, keys: flipped }, KEYS, PROFILE_FIELDS))
             .toContain('walkSpeed: verdict "corpus-blind" does not follow from its counts');
+    });
+});
+
+describe('seedling-profile-witnesses-full.json — the full-tier record names today\'s profile too', () => {
+    it('names EXACTLY PROFILE\'s keys, and is sound by the same check — a new key is RED here as well', () => {
+        const problems = checkWitness(WF, KEYS, PROFILE_FIELDS);
+        expect(problems, 'node scripts/procgen/witness-seedling-profile.mjs --write --tier=full').toEqual([]);
+        expect(Object.keys(WF.keys).sort()).toEqual([...KEYS].sort());
+        const { walkSpeed, ...rest } = WF.keys;
+        expect(walkSpeed).toBeDefined();
+        expect(checkWitness({ ...WF, keys: rest }, KEYS, PROFILE_FIELDS))
+            .toContain('PROFILE.walkSpeed has no witness row — run the witness (node scripts/procgen/witness-seedling-profile.mjs --write)');
+    });
+
+    it('is the full tier: every fast tape and more, the control unmoved over two runs', () => {
+        expect(WF.tier).toBe('full');
+        expect(W.tier).toBe('fast');
+        expect(WF.tapes.length).toBeGreaterThan(W.tapes.length);
+        for (const t of W.tapes) expect(WF.tapes, t).toContain(t);
+        expect(WF.control.moved).toBe(0);
+        expect(WF.control.runs).toBe(2);
+    });
+
+    it('`--check` names both files', () => {
+        const r = spawnSync(process.execPath, [join(REPO, 'scripts/procgen/witness-seedling-profile.mjs'), '--check'],
+            { cwd: REPO, encoding: 'utf8' });
+        expect(r.status, r.stdout + r.stderr).toBe(0);
+        expect(r.stdout).toContain(`PASS — ${WITNESS_FULL_JSON} names all ${KEYS.length} keys`);
     });
 });
