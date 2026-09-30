@@ -31,7 +31,48 @@
  *
  * All lookup helpers return null when the corresponding entry is
  * missing — the caller falls back to a generic message.
+ *
+ * ⛓ CONCEPT LIBRARY T2 — **THE RESOLUTION ORDER.** A procgen region may carry
+ * its OWN prose in its sidecar payload (`prose`, `textAdventureRoom.js`), the
+ * same message kinds for that one region. `composeProse` lays it OVER the
+ * per-game file, message by message, so each helper below resolves
+ *
+ *     the region's payload prose → the per-game file → null (the generic line)
+ *
+ * with no change to the six helpers: the bridge hands them the composed
+ * document instead of the file.
  */
+
+/**
+ * ⛓⛓ **THE ONE RESOLVER** — the per-game `customData` with one region's
+ * payload `prose` laid over it, per message: a message the region says wins, a
+ * message it does not say falls through to the file's. `prose` exits are keyed
+ * by `exit_id`; `exitNameOf` maps one to the name the engine's exit carries
+ * (the identity for every serialized room, whose `exitName` is its `exit_id`).
+ * No prose ⇒ `customData` itself, unchanged. Neither input is mutated.
+ *
+ * @param {object|null} customData the per-game file (or null)
+ * @param {string} regionName
+ * @param {object|null|undefined} prose the region's payload `prose`
+ * @param {(exitId: string) => string} [exitNameOf]
+ * @returns {object|null}
+ */
+export function composeProse(customData, regionName, prose, exitNameOf = (id) => id) {
+    if (!prose || typeof prose !== 'object') return customData;
+    const base = customData ?? {};
+    const over = (table, entries) => {
+        const out = { ...(base[table] ?? {}) };
+        for (const [key, rec] of entries) out[key] = { ...(out[key] ?? {}), ...rec };
+        return out;
+    };
+    return {
+        ...base,
+        regions: over('regions', typeof prose.enterMessage === 'string'
+            ? [[regionName, { enterMessage: prose.enterMessage }]] : []),
+        exits: over('exits', Object.entries(prose.exits ?? {}).map(([id, rec]) => [exitNameOf(id), rec])),
+        locations: over('locations', Object.entries(prose.locations ?? {})),
+    };
+}
 
 function escapeHtml(s) {
     return String(s ?? '').replace(/[&<>"']/g, (c) => ({

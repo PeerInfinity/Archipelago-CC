@@ -30,6 +30,7 @@ import {
     customLocationAlreadyCheckedMessage,
     customExitMoveMessage,
     customExitInaccessibleMessage,
+    composeProse,
 } from './templating.js';
 
 const statusEl = document.getElementById('status');
@@ -91,6 +92,28 @@ const _exitSideOverrides = new Map();
 // a value (typically after stateManager:rawJsonDataLoaded fires).
 let _customData = null;
 export function getCustomData() { return _customData; }
+// ⛓ Concept library T2 — each procgen region's OWN prose (its sidecar
+// payload's `prose`, carried onto the deserialized world that
+// textAdventure:loadRegion delivers), keyed by regionName, its exits keyed
+// by exit_id with the exit_id → engine exit-name map beside it. Every message resolves
+// through proseDocFor: this region's prose → the per-game file → generic.
+const _regionProse = new Map();
+
+function captureRegionProse(regionName, world) {
+    if (!regionName) return;
+    const prose = world?.prose;
+    if (!prose) { _regionProse.delete(regionName); return; }
+    const names = new Map();
+    const exits = world?.exits instanceof Map ? [...world.exits.values()] : (world?.exits ?? []);
+    for (const e of exits) if (e?.exit_id) names.set(e.exit_id, e.exitName ?? e.exit_id);
+    _regionProse.set(regionName, { prose, exitNameOf: (id) => names.get(id) ?? id });
+}
+
+/** The prose document for one room: its payload prose laid over the per-game file. */
+function proseDocFor(regionName) {
+    const own = _regionProse.get(regionName);
+    return own ? composeProse(_customData, regionName, own.prose, own.exitNameOf) : _customData;
+}
 
 /**
  * Pull per-exit side info out of a procgen sidecar payload. The
@@ -314,7 +337,7 @@ async function main() {
         log('debug', 'engine command:move', { fromRoomId, exitId, targetRoomId });
         // Push the exit's move prose (custom or generic) before
         // dispatching, so the message lands before the region change.
-        const templated = customExitMoveMessage(_customData, exitId, {
+        const templated = customExitMoveMessage(proseDocFor(fromRoomId), exitId, {
             destinationRegion: targetRoomId,
         });
         if (templated) {
@@ -342,7 +365,7 @@ async function main() {
         const item = world?.rooms[roomId]?.items.find(i => i.id === itemId);
         const locationName = item?.label ?? itemId;
         const itemNameRaw = item?.itemName ?? null;
-        const templated = customLocationCheckMessage(_customData, itemId, {
+        const templated = customLocationCheckMessage(proseDocFor(roomId), itemId, {
             item: itemNameRaw ?? 'something',
             wasUnchecked: true,
         });
@@ -372,14 +395,14 @@ async function main() {
         const item = world?.rooms[roomId]?.items.find(i => i.id === itemId);
         const itemLabel = item?.label ?? itemId;
         if (reason === 'collected') {
-            const t = customLocationAlreadyCheckedMessage(_customData, itemId, { item: itemLabel });
+            const t = customLocationAlreadyCheckedMessage(proseDocFor(roomId), itemId, { item: itemLabel });
             engine.displayMessage(
                 t ?? `${itemLabel}: already examined.`,
                 'system',
                 t ? { html: true } : {},
             );
         } else {
-            const t = customLocationInaccessibleMessage(_customData, itemId, { item: itemLabel });
+            const t = customLocationInaccessibleMessage(proseDocFor(roomId), itemId, { item: itemLabel });
             engine.displayMessage(
                 t ?? `You can't interact with that: ${itemLabel}.`,
                 'error',
@@ -391,7 +414,7 @@ async function main() {
     engine.on('command:moveBlocked', ({ fromRoomId, exitId, targetRoomId }) => {
         const exit = world?.rooms[fromRoomId]?.exits.find(e => e.id === exitId);
         const exitLabel = exit?.label ?? exitId;
-        const t = customExitInaccessibleMessage(_customData, exitId, {
+        const t = customExitInaccessibleMessage(proseDocFor(fromRoomId), exitId, {
             destinationRegion: targetRoomId,
         });
         engine.displayMessage(
@@ -555,6 +578,8 @@ async function main() {
         // the rebuild with both the new procgen state and fresh
         // staticData in place.
         _procgenMode = !!data.procgenMode;
+        // A standalone document has no sidecars, so no region prose.
+        if (!_procgenMode) _regionProse.clear();
         _procgenSidecarRegions = Array.isArray(data.procgenSidecarRegions)
             ? new Set(data.procgenSidecarRegions)
             : null;
@@ -647,7 +672,7 @@ async function main() {
             // setCurrentRoom — the engine's managed mode skips its
             // own room description, so this is the only enter prose
             // the player sees.
-            const templated = customRegionEnterMessage(_customData, newRegion);
+            const templated = customRegionEnterMessage(proseDocFor(newRegion), newRegion);
             engine.displayMessage(
                 templated ?? `You are in ${newRegion}.`,
                 'normal',
@@ -673,6 +698,7 @@ async function main() {
     client.subscribeEventBus('textAdventure:loadRegion', (data) => {
         const regionName = data?.region_id;
         captureExitSidesFromSidecar(regionName, data?.world);
+        captureRegionProse(regionName, data?.world);
         applyExitSideOverridesToWorld(regionName);
         applyRegionChange(regionName, 'textAdventure:loadRegion');
     });

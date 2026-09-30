@@ -24,6 +24,7 @@ import {
     customLocationAlreadyCheckedMessage,
     customExitMoveMessage,
     customExitInaccessibleMessage,
+    composeProse,
 } from './templating.js';
 
 describe('processMessageTemplate', () => {
@@ -182,5 +183,59 @@ describe('custom*Message lookup helpers', () => {
             expect(customLocationCheckMessage(d, 'X', {})).toBeNull();
             expect(customExitMoveMessage(d, 'X', {})).toBeNull();
         }
+    });
+});
+
+/**
+ * ⛓ CONCEPT LIBRARY T2, D2 — **THE RESOLUTION ORDER**: the region's payload
+ * `prose` → the per-game file → null (the bridge's generic line), per message,
+ * for an exit's `inaccessibleMessage` and a location's `checkMessage`.
+ */
+describe('composeProse — payload prose, then the per-game file, then the generic line', () => {
+    const FILE = Object.freeze({
+        regions: { Hall: { enterMessage: 'FILE enter {regionName}' } },
+        exits: { North: { inaccessibleMessage: 'FILE blocked {destinationRegion}', moveMessage: 'FILE move' } },
+        locations: { 'Hall Chest': { checkMessage: 'FILE check {item}' } },
+    });
+    const PROSE = Object.freeze({
+        exits: { North: { inaccessibleMessage: 'PAYLOAD blocked {destinationRegion}' } },
+        locations: { 'Hall Chest': { checkMessage: 'PAYLOAD check {item}' } },
+    });
+
+    it('payload prose WINS over the file prose', () => {
+        const doc = composeProse(FILE, 'Hall', PROSE);
+        expect(customExitInaccessibleMessage(doc, 'North', { destinationRegion: 'Tower' }))
+            .toBe('PAYLOAD blocked Tower');
+        expect(customLocationCheckMessage(doc, 'Hall Chest', { item: 'Sword' })).toBe('PAYLOAD check Sword');
+    });
+
+    it('a message the payload does not say FALLS THROUGH to the file (per message, not per record)', () => {
+        const doc = composeProse(FILE, 'Hall', { exits: { North: { moveMessage: 'PAYLOAD move' } }, locations: {} });
+        expect(customExitInaccessibleMessage(doc, 'North', { destinationRegion: 'Tower' })).toBe('FILE blocked Tower');
+        expect(customExitMoveMessage(doc, 'North')).toBe('PAYLOAD move');
+        expect(customLocationCheckMessage(doc, 'Hall Chest', { item: 'Sword' })).toBe('FILE check Sword');
+        expect(customRegionEnterMessage(doc, 'Hall')).toBe('FILE enter Hall');
+        expect(composeProse(FILE, 'Hall', undefined)).toBe(FILE);
+    });
+
+    it('absent BOTH, every helper returns null — the bridge prints its generic line', () => {
+        for (const doc of [composeProse(null, 'Hall', null), composeProse({}, 'Hall', { exits: {}, locations: {} })]) {
+            expect(customExitInaccessibleMessage(doc, 'North', { destinationRegion: 'Tower' })).toBeNull();
+            expect(customLocationCheckMessage(doc, 'Hall Chest', { item: 'Sword' })).toBeNull();
+        }
+        // payload prose with no file at all still resolves
+        expect(customExitInaccessibleMessage(composeProse(null, 'Hall', PROSE), 'North', { destinationRegion: 'T' }))
+            .toBe('PAYLOAD blocked T');
+    });
+
+    it("keys the payload's exits by the engine's exit name, carries `enterMessage`, and mutates neither input", () => {
+        const file = structuredClone(FILE);
+        const prose = { enterMessage: 'PAYLOAD enter {regionName}', exits: { exit_0: { moveMessage: 'P move' } } };
+        const doc = composeProse(file, 'Hall', prose, (id) => (id === 'exit_0' ? 'North' : id));
+        expect(customExitMoveMessage(doc, 'North')).toBe('P move');
+        expect(customExitInaccessibleMessage(doc, 'North', { destinationRegion: 'X' })).toBe('FILE blocked X');
+        expect(customRegionEnterMessage(doc, 'Hall')).toBe('PAYLOAD enter Hall');
+        expect(file).toEqual(FILE);
+        expect(prose.exits).toEqual({ exit_0: { moveMessage: 'P move' } });
     });
 });
