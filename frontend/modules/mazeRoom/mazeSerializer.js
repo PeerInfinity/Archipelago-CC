@@ -30,6 +30,7 @@ import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTile
 import { computeLongestShortestPath } from './mazeGeometry.js';
 import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
+import { isConceptRow } from '../procgenCore/concepts.js';
 
 const xy = Object.freeze({ x: Object.freeze({ type: 'integer' }), y: Object.freeze({ type: 'integer' }) });
 const atXY = (extra = {}, required = []) => Object.freeze({
@@ -108,7 +109,9 @@ export const TILE_GRID_SIDECAR_FIELDS = Object.freeze({
     itemLib: Object.freeze({
         type: 'object', required: false, derived: true,
         description: 'Item definitions NOT already in the base library — the diff `serializeMazeWorld` '
-            + `computes against \`DEFAULT_ITEMS\`. Omitted by ${ATLAS_PROJECTION}.`,
+            + 'computes against `DEFAULT_ITEMS` — plus every row the world\'s concept list added '
+            + '(marked `concept`, `concepts.isConceptRow`) even when the base holds its id, so play draws '
+            + `the concept's colour. Omitted by ${ATLAS_PROJECTION}.`,
     }),
     longestShortestPath: Object.freeze({
         type: 'integer', required: false, derived: true,
@@ -264,9 +267,15 @@ export function serializeMazeWorld(world, extractedRules, baseObstacleLib = DEFA
             obstacleLibExtras[id] = def;
         }
     }
+    // ⛓ CONCEPT LIBRARY T0b — a row the WORLD'S concept list added
+    // (`presetRun.mergedItemLib` marks it `concept`) travels even when the
+    // base holds its id: the pipeline's base IS the merged library, so the
+    // diff alone would drop it and play would draw the pickup in the foreign
+    // hash colour. No library declares a marked row ⇒ a world that names no
+    // concept carries exactly what it did.
     const itemLibExtras = {};
     for (const [id, def] of Object.entries(world.itemLib || {})) {
-        if (!(id in baseItemLib)) {
+        if (!(id in baseItemLib) || isConceptRow(def)) {
             itemLibExtras[id] = def;
         }
     }

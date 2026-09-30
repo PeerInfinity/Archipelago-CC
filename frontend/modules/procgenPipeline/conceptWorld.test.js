@@ -19,7 +19,9 @@ import { describe, it, expect } from 'vitest';
 
 import '../mazeRoom/mazeRoomLibrary.js';
 import { buildRunFromState, runPresetHeadless, mergedItemLib } from './presetRun.js';
-import { CONCEPTS } from '../procgenCore/concepts.js';
+import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
+import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
+import { getItemRenderHints } from '../shared/procgen/library.js';
 import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
 
 const CONCEPT_LIST = ['sword', 'guardian', 'swim', 'water'];
@@ -83,11 +85,48 @@ describe('D4 — a maze sphere world over the sword and swim, with and without t
         const lib = mergedItemLib(bundle(CONCEPT_LIST));
         expect(lib['Progressive Sword'].color).toBe(CONCEPTS.sword.item.color);
         expect(lib['Progressive Swim'].color).toBe(CONCEPTS.swim.item.color);
-        // ⚠ FINDING, pinned: the colour does not travel into the region payload
-        // (the sidecar serializer's base IS the merged library, so its itemLib
-        // extras are empty) — play draws these pickups with the foreign hash.
-        for (const s of Object.values(world.rulesJson.preset_sidecars['1'])) {
-            expect(s.playable_payload.itemLib).toEqual({});
+    });
+});
+
+/**
+ * ⛓⛓ CONCEPT LIBRARY T0b, D2 — **THE COLOUR AT PLAY.** T1 pinned that the
+ * concept's colour never reached the payload (the serializer's base IS the
+ * merged library, so its `itemLib` diff was `{}`), and play drew the pickup in
+ * the foreign hash colour. `mergedItemLib` now MARKS the rows it adds and the
+ * serializer carries a marked row even when the base holds it.
+ */
+describe('T0b D2 — the concept\'s colour reaches play', async () => {
+    const control = await runPresetHeadless(buildRunFromState(bundle([])));
+    const world = await runPresetHeadless(buildRunFromState(bundle(CONCEPT_LIST)));
+    const payloads = (rj) => Object.values(rj.preset_sidecars['1']).map((s) => s.playable_payload);
+    const MARKED = {
+        'Progressive Sword': markConceptRow(itemRowsOf(CONCEPTS.sword)[0], 'sword'),
+        'Progressive Swim': markConceptRow(itemRowsOf(CONCEPTS.swim)[0], 'swim'),
+    };
+
+    it('⛔ a concept-less world\'s payload itemLib extras stay {} (byte identity)', () => {
+        for (const p of payloads(control.rulesJson)) expect(p.itemLib).toEqual({});
+    });
+
+    it('a concept world\'s payloads carry the marked table rows, the table\'s colour included', () => {
+        for (const p of payloads(world.rulesJson)) {
+            expect(p.itemLib).toEqual(MARKED);
+            expect(p.itemLib['Progressive Sword'].color).toBe(CONCEPTS.sword.item.color);
         }
+    });
+
+    it('getItemRenderHints on the DESERIALIZED world returns the table\'s colour (the control\'s draws the hash)', () => {
+        const [p] = payloads(world.rulesJson);
+        const played = deserializeMazeWorld(p);
+        expect(getItemRenderHints('Progressive Sword', played.itemLib)).toMatchObject({
+            color: CONCEPTS.sword.item.color, label: CONCEPTS.sword.item.symbol, name: 'Progressive Sword',
+        });
+        expect(getItemRenderHints('Progressive Swim', played.itemLib).color).toBe(CONCEPTS.swim.item.color);
+        const plain = deserializeMazeWorld(payloads(control.rulesJson)[0]);
+        expect(getItemRenderHints('Progressive Sword', plain.itemLib).color).toMatch(/^hsl\(/);
+    });
+
+    it('the compiled rules.json outside the sidecars is still the control\'s', () => {
+        expect(withoutSidecars(world.rulesJson)).toEqual(withoutSidecars(control.rulesJson));
     });
 });

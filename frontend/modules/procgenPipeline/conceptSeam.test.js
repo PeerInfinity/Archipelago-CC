@@ -19,7 +19,7 @@ import { spatialCore, ruleGatePlacer, tileGridPathExtractor, tileGridSerializer 
 import { DEFAULT_PARAMS, panelDefaultParams, mergedItemLib } from './presetRun.js';
 import { assembleRegionParams } from './sphereConfigHooks.js';
 import { generateRegion } from './procgenPipelineEngine.js';
-import { CONCEPTS, itemRowsOf } from '../procgenCore/concepts.js';
+import { CONCEPTS, isConceptRow, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
 import { generateTextAdventureRoom, placeTextAdventureRules }
     from '../textAdventureSubstrateWrapper/textAdventureRoom.js';
 import { substrateRegistryEntry as GEN_ENTRY } from '../flashPanel/flashSeedlingGenLibrary.js';
@@ -67,10 +67,13 @@ describe('mergedItemLib — an ITEM concept the world names joins its item libra
         const none = mergedItemLib(state([]));
         const got = mergedItemLib(state(['sword', 'guardian', 'swim', 'water']));
         const added = Object.fromEntries(Object.entries(got).filter(([k]) => !(k in none)));
+        // ⛓ T0b: each added row is MARKED with its concept (`markConceptRow`).
         expect(added).toEqual({
-            'Progressive Sword': itemRowsOf(CONCEPTS.sword)[0],
-            'Progressive Swim': itemRowsOf(CONCEPTS.swim)[0],
+            'Progressive Sword': markConceptRow(itemRowsOf(CONCEPTS.sword)[0], 'sword'),
+            'Progressive Swim': markConceptRow(itemRowsOf(CONCEPTS.swim)[0], 'swim'),
         });
+        expect(Object.values(added).every(isConceptRow)).toBe(true);
+        expect(Object.values(none).some(isConceptRow)).toBe(false);
         expect(added['Progressive Sword'].color).toBe(CONCEPTS.sword.item.color);
     });
     it('never over a row a library already declares (the shared red key stays the shared one)', () => {

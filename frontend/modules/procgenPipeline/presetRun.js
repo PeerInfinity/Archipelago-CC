@@ -29,7 +29,7 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
-import { CONCEPTS, itemRowsOf } from '../procgenCore/concepts.js';
+import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
 import { GENERATION_COST, generationCostOf } from '../procgenCore/substratePredicates.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
@@ -190,9 +190,12 @@ export function mergedItemLib(state) {
     // ⛓ CONCEPT LIBRARY T1 — an ITEM concept the world names joins its item
     // library as the table's rows (`itemRowsOf`: name, id, colour, symbol),
     // never over a row a library already declares. An empty list adds nothing.
+    // ⛓ T0b — each added row is MARKED (`markConceptRow`: `concept: '<id>'`),
+    // so the tile-grid serializer carries it into the payload and the item
+    // picker groups it under the substrates that realise it.
     for (const cid of state.params?.concepts ?? []) {
         for (const row of itemRowsOf(CONCEPTS[cid])) {
-            if (!(row.id in merged)) merged[row.id] = row;
+            if (!(row.id in merged)) merged[row.id] = markConceptRow(row, cid);
         }
     }
     return merged;
