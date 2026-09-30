@@ -10,7 +10,9 @@
  * ── THE METHOD ─────────────────────────────────────────────────────────
  *
  * The replay is the JS model over a tier of committed tapes (default `fast`:
- * every tape of at most 600 ticks, the differential's own threshold). Each
+ * every tape of at most 600 ticks, the differential's own threshold; `full`:
+ * every committed tape, recorded in its own file so the fast record and its
+ * guard stay exactly as they were). Each
  * run is a CHILD PROCESS, because an override is process-wide at load: the
  * child installs its profile (`seedlingProfileLoader.mjs`) before it imports
  * the model, runs every tape through `runTapeToStream` with the real level
@@ -38,8 +40,9 @@
  * Run:
  *   node scripts/procgen/witness-seedling-profile.mjs --write            # measure every key, write the JSON
  *   node scripts/procgen/witness-seedling-profile.mjs --only=walkSpeed,swimLengthFrames   # measure some keys, print only
- *   node scripts/procgen/witness-seedling-profile.mjs --check            # the committed JSON is well formed and names every key
+ *   node scripts/procgen/witness-seedling-profile.mjs --check            # both committed JSONs are well formed and name every key
  *   node scripts/procgen/witness-seedling-profile.mjs --write --jobs=4 --tier=fast
+ *   node scripts/procgen/witness-seedling-profile.mjs --write --jobs=4 --tier=full   # every tape → the -full JSON
  */
 import { execFileSync, spawn } from 'node:child_process';
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -54,8 +57,12 @@ const REPO = resolve(HERE, '..', '..');
 const DEMO = join(REPO, 'frontend/modules/seedlingDemo');
 const SELF = fileURLToPath(import.meta.url);
 
-/** The committed measurement. */
+/** The committed measurement (the fast tier). */
 export const WITNESS_JSON = 'scripts/procgen/seedling-profile-witnesses.json';
+/** The committed full-tier measurement — a sibling file, so the fast record's shape and guard never moved. */
+export const WITNESS_FULL_JSON = 'scripts/procgen/seedling-profile-witnesses-full.json';
+/** The tiers, and the file each one is recorded in. */
+export const TIER_FILES = Object.freeze({ fast: WITNESS_JSON, full: WITNESS_FULL_JSON });
 /** FAST = every tape at or below this many ticks — `check-seedling-bot-differential.mjs`'s FAST_TIER_MAX_TICKS. */
 export const FAST_TIER_MAX_TICKS = 600;
 /** The two perturbations, in the order they are measured. */
@@ -67,9 +74,10 @@ export const MOVED_TAPES_KEPT = 10;
 /**
  * The tapes whose control stream is DECLARED to differ from the committed
  * expectation — `tapeRunner.test.js`'s EXPECTED_TO_DIVERGE, which is
- * `'r5-l60-kill'` plus `r5Chain.js`'s MODEL_EXEMPT_NAMES.
+ * `'r5-l60-kill'` plus `r5Chain.js`'s MODEL_EXEMPT_NAMES (the three
+ * `r5-bobboss-*` tapes, all longer than the fast tier).
  */
-const DECLARED_DIVERGERS = ['r5-l60-kill'];
+const declaredDivergers = async () => ['r5-l60-kill', ...(await load('r5Chain.js')).MODEL_EXEMPT_NAMES];
 /** A child that runs longer than this is killed (by its own pid) and every tape counts as `threw:timeout`. */
 const CHILD_TIMEOUT_MS = 300_000;
 
@@ -242,13 +250,15 @@ async function pool(tasks, jobs, onDone) {
 }
 
 function tierTapes(tier, fixtures) {
-    if (tier !== 'fast') throw new Error(`--tier=${tier}: only "fast" is measured (every tape of at most ${FAST_TIER_MAX_TICKS} ticks)`);
+    if (tier === 'full') return fixtures.fixtureNames();
+    if (tier !== 'fast') throw new Error(`--tier=${tier}: only "fast" (every tape of at most ${FAST_TIER_MAX_TICKS} ticks) and "full" (every tape) are measured`);
     return fixtures.fixtureNames().filter((n) => fixtures.loadTape(n).tick_count <= FAST_TIER_MAX_TICKS);
 }
 
 async function measure({ only, jobs, tier }) {
     const [{ PROFILE_DEFAULTS, PROFILE_FIELDS }, fixtures] = await Promise.all([load('seedlingProfile.js'), load('fixtures/index.js')]);
     const tapes = tierTapes(tier, fixtures);
+    const DECLARED_DIVERGERS = await declaredDivergers();
     const keys = only ?? Object.keys(PROFILE_DEFAULTS);
     for (const k of keys) if (!(k in PROFILE_DEFAULTS)) throw new Error(`--only: "${k}" is not a PROFILE key`);
     const tmp = mkdtempSync(join(tmpdir(), 'seedling-witness-'));
@@ -260,8 +270,9 @@ async function measure({ only, jobs, tier }) {
         const threwCtl = tapes.filter((n) => c1.get(n).startsWith('threw:'));
         const diverges = tapes.filter((n) => c1.get(n).endsWith('\tdiverges'));
         const undeclared = diverges.filter((n) => !DECLARED_DIVERGERS.includes(n));
+        const declared = DECLARED_DIVERGERS.filter((n) => tapes.includes(n));
         console.log(`CONTROL: ${tapes.length} tapes (tier ${tier}); stable across two runs: ${unstable.length ? `NO (${unstable.join(', ')})` : 'yes'}; `
-            + `threw ${threwCtl.length}; diverge from expectation ${diverges.length} (${diverges.join(', ') || 'none'}; declared: ${DECLARED_DIVERGERS.join(', ')})`);
+            + `threw ${threwCtl.length}; diverge from expectation ${diverges.length} (${diverges.join(', ') || 'none'}; declared in this tier: ${declared.join(', ')})`);
         if (unstable.length || threwCtl.length || undeclared.length) {
             throw new Error(`the CONTROL is not sound — refusing to perturb (unstable ${unstable.length}, threw ${threwCtl.length}, undeclared divergers ${undeclared.join(', ') || 0})`);
         }
@@ -322,12 +333,18 @@ async function main() {
     const opt = (name, dflt) => argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? dflt;
     const { PROFILE, PROFILE_FIELDS } = await load('seedlingProfile.js');
     if (argv.includes('--check')) {
-        const path = join(REPO, WITNESS_JSON);
-        if (!existsSync(path)) { console.error(`RED: ${WITNESS_JSON} does not exist — run the witness`); process.exit(1); }
-        const problems = checkWitness(JSON.parse(readFileSync(path, 'utf8')), Object.keys(PROFILE), PROFILE_FIELDS);
-        for (const p of problems) console.log(`RED  ${p}`);
-        console.log(problems.length ? `FAIL — ${problems.length} problem(s)` : `PASS — ${WITNESS_JSON} names all ${Object.keys(PROFILE).length} keys`);
-        process.exit(problems.length ? 1 : 0);
+        let bad = 0;
+        for (const [tier, file] of Object.entries(TIER_FILES)) {
+            const path = join(REPO, file);
+            if (!existsSync(path)) { console.log(`RED  ${file} does not exist — run the witness (--write --tier=${tier})`); bad += 1; continue; }
+            const json = JSON.parse(readFileSync(path, 'utf8'));
+            const problems = checkWitness(json, Object.keys(PROFILE), PROFILE_FIELDS);
+            if (json.tier !== tier) problems.push(`${file} records tier "${json.tier}", not "${tier}"`);
+            for (const p of problems) console.log(`RED  ${file}: ${p}`);
+            console.log(problems.length ? `FAIL — ${file}: ${problems.length} problem(s)` : `PASS — ${file} names all ${Object.keys(PROFILE).length} keys`);
+            bad += problems.length;
+        }
+        process.exit(bad ? 1 : 0);
     }
     const only = opt('only', null)?.split(',').map((s) => s.trim()).filter(Boolean) ?? null;
     const write = argv.includes('--write');
@@ -335,6 +352,7 @@ async function main() {
     if (!only && !write) { console.error('nothing to do: --write (every key), --only=<key,…> (print), or --check'); process.exit(2); }
     const jobs = Math.max(1, Number(opt('jobs', '4')) || 1);
     const tier = opt('tier', 'fast');
+    if (!(tier in TIER_FILES)) { console.error(`--tier=${tier}: only ${Object.keys(TIER_FILES).map((t) => `"${t}"`).join(' and ')} are measured`); process.exit(2); }
     const m = await measure({ only, jobs, tier });
     printRows(m.rows);
     const summary = summarise(m.rows, PROFILE_FIELDS);
@@ -358,8 +376,8 @@ async function main() {
     };
     const problems = checkWitness(json, Object.keys(PROFILE), PROFILE_FIELDS);
     if (problems.length) { for (const p of problems) console.error(`RED  ${p}`); process.exit(1); }
-    writeFileSync(join(REPO, WITNESS_JSON), `${JSON.stringify(json, null, 2)}\n`);
-    console.log(`wrote ${WITNESS_JSON}`);
+    writeFileSync(join(REPO, TIER_FILES[tier]), `${JSON.stringify(json, null, 2)}\n`);
+    console.log(`wrote ${TIER_FILES[tier]}`);
 }
 
 argvHelp(import.meta.url);
