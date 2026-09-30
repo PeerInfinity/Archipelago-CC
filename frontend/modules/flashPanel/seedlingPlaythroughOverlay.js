@@ -725,6 +725,30 @@ export const REFUTATION_LOG = Object.freeze([
         cite: 'Dungeon2/7.oel + Puzzlements/ShieldLock.as:33 + Puzzlements/ButtonRoom.as '
             + '+ R6 kickoff §13.8 + R7 kickoff §15 — see GROUPED_LOCK_EXCEPTIONS',
     }),
+    // ⛓ ENTRY 3 (SWIM T4, plan R-j) — entry 2's sign again: a rule too PERMISSIVE.
+    // This time the analyzer SAW the wall. It then paid it in both directions,
+    // because `bosslock`'s semantics row is `kind: 'gated'` and a gated cell has
+    // no direction. The first driven segment to reach one of these rows from
+    // the far side is what refuted it.
+    Object.freeze({
+        row: 'bosslock@64,32 in L30, ruled two-way Has(Green Key) by the gated arm '
+            + '(level_30__r0c4 <-> level_30__r2c10)',
+        refutedBy: 'survey-seedling-route --through=2.2 --only=29 with the Green Key staged '
+            + '(swim T3, D4): REFUSED, four keylock stances at bosslock@64,32 and no corridor',
+        observed: 'the lock opens only from the SOUTH. BossLock.update probes the ONE-PIXEL ROW '
+            + 'BELOW it (`y - originY + height + 1`; the model\'s keyLine is {x0 66, x1 75, y 49}), '
+            + 'but the route arrives from the NORTH. L22\'s teleporter@96,192 lands at L30@64,16, '
+            + 'the one-tile pocket r0c4 north of the lock, whose only other exit is the teleporter '
+            + 'back. The rule crosses r0c4 -> r2c10 AND r2c10 -> r0c4 on the key. The game honours '
+            + 'only r2c10 -> r0c4, and once the lock is open its persistence tag keeps it open, so '
+            + 'the other direction is never needed. It is one row of a class: '
+            + 'census-seedling-bosslocks reads 11 of the 14 bosslocks as two-way rules the game '
+            + 'does not honour (10 with a far side AP can reach another way).',
+        cite: 'Puzzlements/BossLock.as:58-90 (the probe at :62, the persistence at :43,81) '
+            + '+ Dungeon3/9.oel:454 (the lock) + Dungeon3/1.oel:216 (L22\'s teleporter into the '
+            + 'pocket) + CC/docs/cloud-reports/seedling-swim-t3.md § D4 '
+            + '+ CC/docs/cloud-reports/seedling-swim-t4.md § D2',
+    }),
 ]);
 
 /** The shape every refutation entry must have. Exported for the test and the generator. */

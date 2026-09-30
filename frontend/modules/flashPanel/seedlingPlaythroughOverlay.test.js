@@ -204,6 +204,18 @@ describe('the trap rooms, and the L40 ruling', () => {
 });
 
 describe('the refutation log — the mechanism, built before it is needed', () => {
+    // ⛓ SWIM T4's entry: the analyzer SAW this wall and paid it in both directions.
+    it('carries the L30 one-sided bosslock refutation, well-formed and cited to the probe line', () => {
+        const entry = REFUTATION_LOG.find((r) => /bosslock@64,32 in L30/.test(r.row));
+        expect(entry, 'the L30 entry').toBeDefined();
+        expect(isRefutation(entry)).toBe(true);
+        expect(entry.row).toMatch(/two-way Has\(Green Key\)/);
+        expect(entry.observed).toMatch(/ONE-PIXEL ROW BELOW/);
+        expect(entry.observed).toMatch(/arrives from the NORTH/);
+        expect(entry.cite).toMatch(/Puzzlements\/BossLock\.as:58-90/);
+        expect(entry.cite).toMatch(/seedling-swim-t3\.md/);
+    });
+
     // ⛓ R7 slice 5 gave it its first entry: §13.5's level_76 Dark Suit row put
     // the Dark Suit behind ITSELF, and AP's fill is what said so.
     it('carries the level_76 igneous refutation, well-formed', () => {

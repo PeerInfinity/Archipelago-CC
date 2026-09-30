@@ -10663,6 +10663,12 @@
         "refutedBy": "the map, read against R6 kickoff §13.8 (R7 slice 6)",
         "observed": "the lock's group has exactly ONE presser, `buttonroom@192,16`, and it stands behind `shieldlocknorm@176,16` — so the press is not free, it costs the SHIELD. And the lock is the only exit from the four cells L13's `stairsdown@96,32` drops the player into ((0,3),(1,3),(2,3),(2,4)), so with the row ruled OPEN the analyzer folded that alcove into the room and AP took **Level 020 - Shield at sphere 0.4**, before the Red Key it needs, THROUGH A WALL. Gated on hasShield the alcove becomes its own region, the Shield moves to sphere 2.1 behind `Level 019 - Boss Key 0` at 1.2, and the walkthrough cross-check over the intended vocabulary is unchanged.",
         "cite": "Dungeon2/7.oel + Puzzlements/ShieldLock.as:33 + Puzzlements/ButtonRoom.as + R6 kickoff §13.8 + R7 kickoff §15 — see GROUPED_LOCK_EXCEPTIONS"
+      },
+      {
+        "row": "bosslock@64,32 in L30, ruled two-way Has(Green Key) by the gated arm (level_30__r0c4 <-> level_30__r2c10)",
+        "refutedBy": "survey-seedling-route --through=2.2 --only=29 with the Green Key staged (swim T3, D4): REFUSED, four keylock stances at bosslock@64,32 and no corridor",
+        "observed": "the lock opens only from the SOUTH. BossLock.update probes the ONE-PIXEL ROW BELOW it (`y - originY + height + 1`; the model's keyLine is {x0 66, x1 75, y 49}), but the route arrives from the NORTH. L22's teleporter@96,192 lands at L30@64,16, the one-tile pocket r0c4 north of the lock, whose only other exit is the teleporter back. The rule crosses r0c4 -> r2c10 AND r2c10 -> r0c4 on the key. The game honours only r2c10 -> r0c4, and once the lock is open its persistence tag keeps it open, so the other direction is never needed. It is one row of a class: census-seedling-bosslocks reads 11 of the 14 bosslocks as two-way rules the game does not honour (10 with a far side AP can reach another way).",
+        "cite": "Puzzlements/BossLock.as:58-90 (the probe at :62, the persistence at :43,81) + Dungeon3/9.oel:454 (the lock) + Dungeon3/1.oel:216 (L22's teleporter into the pocket) + CC/docs/cloud-reports/seedling-swim-t3.md § D4 + CC/docs/cloud-reports/seedling-swim-t4.md § D2"
       }
     ],
     "atlas_id": "seedling-ae833c1e"
