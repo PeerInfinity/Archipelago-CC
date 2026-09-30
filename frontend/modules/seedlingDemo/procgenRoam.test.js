@@ -20,6 +20,10 @@
  *   5. (D5) THE BODY ABLATION — the level solved with and without its bodies at
  *      the SAME boot: `empty` s2 pre-sword is INERT (the body stays in its side
  *      room), `branchy` s7 post-sword COSTS (149 vs 86 ticks, measured at F1).
+ *   6. (D7) THE PIPELINE ROOM — `generateGenRoom` with `elements: 'roam'`
+ *      builds at re-roll 0 with the bodies in it and AP location 0 on the goal
+ *      cell (the assembler matches the goal by POSITION, so the textless class
+ *      rides through untouched).
  */
 
 import { describe, expect, it } from 'vitest';
@@ -30,6 +34,7 @@ import {
     generateSeedlingLevel, seedlingModel, seedlingSeam, seedlingSkeletonSpec,
 } from './procgenSeedling.js';
 import { GRADES } from '../procgenCore/differentialGrade.js';
+import { generateGenRoom, placeGenItems } from './seedlingGenRoom.js';
 import { compositeSeedlingElement, seedlingElementEntities } from './procgenSeedlingElements.js';
 import {
     POST_SWORD_ITEMS, POST_SWORD_PALETTE, PRE_SWORD_ITEMS, PRE_SWORD_PALETTE,
@@ -199,4 +204,28 @@ describe('roam — the BODY ABLATION (D5)', () => {
         expect(a.withBodies.ticks).toBeGreaterThan(a.withoutBodies.ticks);
         expect(a.deltaTicks).toBe(a.withBodies.ticks - a.withoutBodies.ticks);
     });
+});
+
+describe('roam — the pipeline room (D7)', () => {
+    /** An rng whose first draw yields `seed` as the room's drawn seed (the gen-room tests' own). */
+    const rngDrawing = (seed) => ({ next: () => (seed + 0.5) / 0x7fffffff });
+    for (const biome of ['pre-sword', 'post-sword']) {
+        it(`${biome}: drawn seed 16807 builds at re-roll 0, holds its roaming bodies, and seats `
+            + 'location 0 on the goal cell', () => {
+            const { world } = generateGenRoom({ region_id: 'roam', exits: [{}],
+                size: { width: 10, height: 10 }, rng: rngDrawing(16807),
+                params: { seedlingGen: { biome, elements: 'roam' } } });
+            expect(world.generation.rerolls).toBe(0);
+            expect(world.generation.elements).toBe('roam');
+            expect(world.record.entities.filter((e) => e.type === 'spinner').length)
+                .toBeGreaterThan(0);
+            expect(world.record.entities.filter((e) => e.type === 'lock')).toEqual([]);
+            const goal = world.record.entities.find((e) => e.x === world.goalCell.tx * 16
+                && e.y === world.goalCell.ty * 16);
+            expect(goal.type).toBe(ROAMING_GOAL_CLASS);
+            placeGenItems(world, { items_to_place: ['Sword'] });
+            expect(world.locations[0].cell).toEqual(world.goalCell);
+            expect(world.locations[0].tag).toBe(0);
+        });
+    }
 });
