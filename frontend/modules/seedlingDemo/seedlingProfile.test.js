@@ -154,7 +154,15 @@ function as3Literal(field, files) {
 }
 
 describe('seedlingProfile — every AS3 anchor resolves to a literal EQUAL to the profile default (D4)', () => {
-    it.skipIf(!HAS_AS3)('each anchored field\'s AS3 literal === PROFILE[key] (SKIPPED BY NAME without vendor/seedling)', () => {
+    // The anchor reads PROFILE_DEFAULTS, not PROFILE: the claim is about the
+    // compiled-in table, and an override installed in a test process (A3)
+    // would otherwise be compared to the AS3 in its place (engine-prep R1).
+    it('with no override the two readings agree: PROFILE_DEFAULTS deep-equals PROFILE', () => {
+        expect(PROFILE_DEFAULTS).toEqual(PROFILE);
+        expect(Object.keys(PROFILE_DEFAULTS)).toEqual(Object.keys(PROFILE));
+    });
+
+    it.skipIf(!HAS_AS3)('each anchored field\'s AS3 literal === PROFILE_DEFAULTS[key] (SKIPPED BY NAME without vendor/seedling)', () => {
         const files = as3Files();
         const anchored = PROFILE_FIELDS.filter((f) => f.as3);
         const unresolved = [];
@@ -164,7 +172,7 @@ describe('seedlingProfile — every AS3 anchor resolves to a literal EQUAL to th
             const r = as3Literal(f, files);
             if (r.unresolved) { unresolved.push(`${f.key} ${f.as3}: ${r.unresolved}`); continue; }
             checked++;
-            if (Number(r.literal) !== PROFILE[f.key]) wrong.push(`${f.key}: ${r.file} says ${r.literal}, the profile ${PROFILE[f.key]}`);
+            if (Number(r.literal) !== PROFILE_DEFAULTS[f.key]) wrong.push(`${f.key}: ${r.file} says ${r.literal}, the profile default ${PROFILE_DEFAULTS[f.key]}`);
         }
         expect(wrong).toEqual([]);
         // every anchor resolves to a number today; a new anchor that does not
