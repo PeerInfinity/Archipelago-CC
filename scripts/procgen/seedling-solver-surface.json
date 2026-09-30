@@ -15,7 +15,7 @@
   ],
   "simulation": {
     "entry": "frontend/modules/seedlingDemo/levelRun.js",
-    "files": 51
+    "files": 52
   },
   "runObject": {
     "properties": 178,
@@ -778,10 +778,10 @@
       "class": "physics",
       "form": "live-state",
       "files": {
-        "botDriverV2.js": 113,
+        "botDriverV2.js": 114,
         "solverBot.js": 148
       },
-      "sites": 261,
+      "sites": 262,
       "seen": "both",
       "via": [
         "direct"
@@ -1850,10 +1850,10 @@
       "form": "live-state",
       "files": {
         "botDriverV1.js": 2,
-        "botDriverV2.js": 6,
+        "botDriverV2.js": 9,
         "solverBot.js": 6
       },
-      "sites": 14,
+      "sites": 17,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1881,10 +1881,10 @@
       "form": "live-state",
       "files": {
         "botDriverV1.js": 2,
-        "botDriverV2.js": 6,
+        "botDriverV2.js": 9,
         "solverBot.js": 2
       },
-      "sites": 10,
+      "sites": 13,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1912,10 +1912,10 @@
       "form": "live-state",
       "files": {
         "botDriverV1.js": 2,
-        "botDriverV2.js": 54,
+        "botDriverV2.js": 55,
         "solverBot.js": 58
       },
-      "sites": 114,
+      "sites": 115,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1943,10 +1943,10 @@
       "form": "live-state",
       "files": {
         "botDriverV1.js": 2,
-        "botDriverV2.js": 57,
+        "botDriverV2.js": 58,
         "solverBot.js": 61
       },
-      "sites": 120,
+      "sites": 121,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2151,7 +2151,7 @@
       "surface": "import",
       "name": "ARROW",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 197,
+      "line": 198,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2170,7 +2170,7 @@
       "surface": "import",
       "name": "arrowLaneForPlacement",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 693,
+      "line": 694,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2189,7 +2189,7 @@
       "surface": "import",
       "name": "arrowLaneRect",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 724,
+      "line": 725,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2208,7 +2208,7 @@
       "surface": "import",
       "name": "arrowRect",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 516,
+      "line": 517,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2226,7 +2226,7 @@
       "surface": "import",
       "name": "arrowTrapFires",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 431,
+      "line": 432,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2244,7 +2244,7 @@
       "surface": "import",
       "name": "stepArrow",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 588,
+      "line": 589,
       "class": "seedling",
       "form": "stepper",
       "files": {
@@ -2409,7 +2409,7 @@
       "surface": "import",
       "name": "bridgedChaserTags",
       "module": "frontend/modules/seedlingDemo/chasers.js",
-      "line": 250,
+      "line": 252,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2427,7 +2427,7 @@
       "surface": "import",
       "name": "chaserBoxAt",
       "module": "frontend/modules/seedlingDemo/chasers.js",
-      "line": 316,
+      "line": 318,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2446,7 +2446,7 @@
       "surface": "import",
       "name": "isBridgedChaser",
       "module": "frontend/modules/seedlingDemo/chasers.js",
-      "line": 258,
+      "line": 260,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2464,7 +2464,7 @@
       "surface": "import",
       "name": "killWindowTicks",
       "module": "frontend/modules/seedlingDemo/chasers.js",
-      "line": 436,
+      "line": 438,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -2537,7 +2537,7 @@
       "surface": "import",
       "name": "contactPricing",
       "module": "frontend/modules/seedlingDemo/combat.js",
-      "line": 1444,
+      "line": 1446,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2556,7 +2556,7 @@
       "surface": "import",
       "name": "contactRect",
       "module": "frontend/modules/seedlingDemo/combat.js",
-      "line": 1475,
+      "line": 1477,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2574,7 +2574,7 @@
       "surface": "import",
       "name": "ENEMY_CLASSES",
       "module": "frontend/modules/seedlingDemo/combat.js",
-      "line": 161,
+      "line": 163,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2594,7 +2594,7 @@
       "surface": "import",
       "name": "KILL_CADENCE_FLOOR",
       "module": "frontend/modules/seedlingDemo/combat.js",
-      "line": 696,
+      "line": 698,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2612,7 +2612,7 @@
       "surface": "import",
       "name": "KILL_LOCK_TAGS",
       "module": "frontend/modules/seedlingDemo/combat.js",
-      "line": 850,
+      "line": 852,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2630,7 +2630,7 @@
       "surface": "import",
       "name": "KILL_LOCK_TSET",
       "module": "frontend/modules/seedlingDemo/combat.js",
-      "line": 840,
+      "line": 842,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2648,7 +2648,7 @@
       "surface": "import",
       "name": "plannerContactFree",
       "module": "frontend/modules/seedlingDemo/combat.js",
-      "line": 1209,
+      "line": 1211,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2667,7 +2667,7 @@
       "surface": "import",
       "name": "pressesFor",
       "module": "frontend/modules/seedlingDemo/combat.js",
-      "line": 706,
+      "line": 708,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2685,7 +2685,7 @@
       "surface": "import",
       "name": "stepBoundFor",
       "module": "frontend/modules/seedlingDemo/combat.js",
-      "line": 1077,
+      "line": 1079,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2905,7 +2905,7 @@
       "surface": "import",
       "name": "scanCrusher",
       "module": "frontend/modules/seedlingDemo/crusher.js",
-      "line": 243,
+      "line": 244,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2941,7 +2941,7 @@
       "surface": "import",
       "name": "KILL_ARM_POLICY",
       "module": "frontend/modules/seedlingDemo/enemyDamage.js",
-      "line": 219,
+      "line": 227,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2960,7 +2960,7 @@
       "surface": "import",
       "name": "MOBILE_DEATH_FADE",
       "module": "frontend/modules/seedlingDemo/enemyDamage.js",
-      "line": 162,
+      "line": 170,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2978,7 +2978,7 @@
       "surface": "import",
       "name": "MODELLED_KILL_ARMS",
       "module": "frontend/modules/seedlingDemo/enemyDamage.js",
-      "line": 490,
+      "line": 498,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3032,7 +3032,7 @@
       "surface": "import",
       "name": "ICE_TURRET",
       "module": "frontend/modules/seedlingDemo/iceTurret.js",
-      "line": 97,
+      "line": 99,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3050,7 +3050,7 @@
       "surface": "import",
       "name": "ICE_TURRET_PLAN",
       "module": "frontend/modules/seedlingDemo/iceTurret.js",
-      "line": 785,
+      "line": 787,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3902,7 +3902,7 @@
       "surface": "import",
       "name": "enemiesUnseenByBlockSweep",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 827,
+      "line": 829,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -3920,7 +3920,7 @@
       "surface": "import",
       "name": "hammerHitsPlayer",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 642,
+      "line": 644,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -3939,7 +3939,7 @@
       "surface": "import",
       "name": "MODELLED_ENEMY_CLASSES",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 743,
+      "line": 745,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3957,7 +3957,7 @@
       "surface": "import",
       "name": "SPINNER",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 130,
+      "line": 132,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3976,7 +3976,7 @@
       "surface": "import",
       "name": "spinnerRect",
       "module": "frontend/modules/seedlingDemo/spinner.js",
-      "line": 249,
+      "line": 251,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
