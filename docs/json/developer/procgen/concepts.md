@@ -125,6 +125,58 @@ The maze's cell reads *4 concepts: sword (mechanic), swim (mechanic), guardian (
 
 `itemTagsImpliedBy(entry, concepts)` lists the item tags an entry's concepts carry, by the same tag law `substrateCapabilities.itemTagFeatures` applies to an entry's items.
 
+## Behaviour
+
+A concept can also say how it **behaves**: what an item hits with, how an enemy answers a hit, what makes an obstacle give way, and what a substrate's realisation of it does. Every behaviour field is optional, and a concept without one is exactly the concept it was before.
+
+### Three domain forms, one draw law
+
+A parameter, wherever it is declared (a template, an element, a skeleton kind, a concept's `params` or `traits`, a behaviour block's fields), declares exactly one of three forms, checked by `templateContract.assertParamSchema`:
+
+| Form | Example | Drawn and swept? |
+|---|---|---|
+| `domain: [...]` | `{ key: 'len', domain: [2, 3, 4], default: 2, why }` | yes |
+| `range: {min, max, step?}` | `{ key: 'speed', range: { min: 0, max: 1 }, default: 0, why }` | only with a `step` that divides `max − min` |
+| `open: 'string'` or `open: {id}` | `{ key: 'category', open: { id: 'weaponCategories' }, default: 'sword', why }` | never |
+
+`default` must be in the list, within the range (and on a step when stepped), or a string for `open`. `why` is required.
+
+**A parameter the generator draws must be a list or a stepped range.** `defineTemplate` asks this of every parameter (`assertDrawable`), so a template that declares an `open` or unstepped parameter is refused by name when it is defined. A stepped range spends the same one draw a list of the same values spends. `domainKind(p)`, `enumerableValues(p)` (the list itself, the stepped range expanded, or `null`) and `valueInDomain(p, v)` are what every reader of a domain goes through.
+
+### The four registries
+
+`procgenCore/behaviourBlocks.js` holds four open vocabularies. Each is a registry made by `createRegistry(name)`, and an id is **declared where it is introduced** (`declare(id, {why, ...})`) and **checked by cross-reference** wherever it is used:
+
+- `BLOCKS`: what a thing does. Each block has a `family` (`movement`, `attack`, `defence` or `trigger`, the closed `BLOCK_FAMILIES`) and `fields` in the schema language above; `chase` has a `speed` range and a `range` range, `emitter` an `aim` list, an `interval` range and an open `projectile`.
+- `WEAPON_CATEGORIES`: what an item hits with (`sword`, `fire`, …), after Seedling's hit categories.
+- `DEFENCE_RESPONSES`: what a defender does when hit (`damage` with a `factor`, `breakIfLevel` with a `level`, `ignore`, …), after Seedling's `Enemy.hit` flags.
+- `TILE_TRIGGERS`: what makes a tile-like obstacle give way (`itemCategory`, `level`, `counter`, `channel`).
+
+The module declares a starter set in each. A later slice declares its own ids beside them; nothing branches on a starter id. `declare` refuses a duplicate id, a missing `why` and a non-string id.
+
+### The concept fields
+
+```js
+sword:    { kind: 'item', /* … */ weaponCategories: ['sword'] },
+guardian: { kind: 'enemy', /* … */
+    defence: { sword: 'damage' },   // or { sword: { response: 'damage', factor: 2 } }
+    traits: [{ key: 'speed', range: { min: 0, max: 1 }, default: 0, why: '…' }] },
+```
+
+- `traits` (any concept): parameters in any of the three forms.
+- `weaponCategories` (an item): declared weapon category ids.
+- `defence` (an enemy, hazard or obstacle): a weapon category → a response id, or `{response, ...params}`. The category must be declared **and** produced by some item concept in the table; the response must be declared and its params valid.
+- `triggers` (an obstacle or hazard): `[{kind, ...params}]`, the kind a declared tile trigger.
+
+A realisation may carry `blocks`: each key a declared block, each field one the block declares, and each value either a literal valid for the field's form or `{trait: '<key>'}`, naming a trait the concept declares in a form the field can take.
+
+```js
+guardian: { tier: 'mechanic', placements: { /* … */ },
+    blocks: { chase: { speed: { trait: 'speed' }, range: 6 }, contact: { damage: 1 } } },
+```
+
+`blocksImplementedBy(entry, concepts)` lists `[{concept, block, family}]` in the entry's declared order, as `conceptsRealisedBy` does for concepts. No chart statement reads it yet. The maze's and the text adventure's realisations implement no block: a skin shows a concept and does not behave as it.
+
 ## Related documentation
 
 - [Paths and Obstacles](./paths-and-obstacles.md) — the shared item/obstacle vocabulary and the rule → requirement extractor
