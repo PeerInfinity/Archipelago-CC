@@ -10676,6 +10676,54 @@ REFUSED at the macro layer.
 r8/r9 `--check`s and the default-mode survey md5s (`27ff43db…` / `1e08f9ad…`)
 all equal W0; `fixtures/**` 0 files differ.
 
+### Seedling substrate U2-swim — the lane entry and the derived grants (2026-09-30)
+
+U1 stopped on one thing: the route could not ENTER L29's zero-slack lane. This
+slice finishes that, names the unkeyed lock, derives the survey's staged grants
+and re-runs the through-2.2 survey. No simulation file, tape,
+`campaign-frontier.json`, AS3, wasm or gitlink moved; the surface table is still
+184 rows (site counts only), `--check` GREEN. The report is
+`CC/docs/cloud-reports/seedling-swim-u2.md`.
+
+**D1 — R-h′, the lane entry.** Measured first, on survey step 27 (L29 from
+(16,224), the walk replayed with x printed per tick): x is on the 0.05 grid
+through t=13 and leaves it at **t=14, the second tick of a `right+up` hold**
+(40.25 → 41.67322330470335). `applyFriction` is `pointNormalize(v, |v| − f)`:
+exact on one axis, irrational on a diagonal. So the stance walk is now
+AXIS-ALIGNED, asked only by `skirt`'s resolution (`approach: 'axis-aligned'`):
+`planWaypoints({manhattan})` returns the 4-connected A\* path's corners (no
+string-pull), and `holdOneAxis` (never hold a second axis while the first still
+moves; from rest the farther axis wins) filters the held set in `drive` AND
+`previewWalk` at the same point (⚖ ruling 30(c)). The walk takes no sword dash
+and no opportunistic strike, because either would add the second axis back.
+⛔ It surfaced a latent U1 defect: `skirtAlignment` composed `applyFriction(applyInput(v))`,
+but the step is friction FIRST (`playerPhysicsV1.js`), and the run's compare
+caught it the first time a sequence was found (searched vx 0, run vx
+0.1000000000000001). Fixed. **Step 27 SOLVES from the route's arrival: 383 t.**
+The stance is reached at t=215 on x = 126.00000000000001 (grid plus float
+drift), a 10-tick alignment lands exactly 126, the pass takes 28 t, then
+`bosskey@112,64` and `stairsdown@112,32` → L31 at t=383, `rockFalls` [],
+0 hits. The walk is longer than U1's diagonal one (215 vs 95 t to the stance).
+Mutant (a), approach off → U1's refusal byte-identical (`x=125.97137961649308`).
+
+**D2 — `keylock: undefined`.** The key-not-held branch of
+`resolveKeylockStrategy` now carries `lock`/`keyType`; the refusal reads
+`keylock: bosslock@… needs a key`.
+
+**D3 — the staged grant, derived (⚖ Q26).** `surveyGrants.deriveStagedGrant`
+replaces the hand row under `--through` only: the union of every earlier
+`collect-placement`, AP name → `ap_items` → (`progressive_items` by copy count)
+→ `save.keys[N]` for `key<N>` or `seam.items.<property>` for an item. An item
+the latch holds is `latched` and not written, and the Sword must be one of
+them (asserted). Default mode md5s unchanged.
+
+**D4 — the survey** (`--only=22..30 --timeout=180`): **7/9**. 22 SOLVED 48,
+23 SOLVED 229 (both unmoved by the grant: key 0 + shield), **24 TIMEOUT**, 25
+SOLVED 26, 26 SOLVED 89, **27 SOLVED 383**, **28 SOLVED 336** (the Green Key
+opens `{31,0}`), 29 SOLVED 210, 30 REFUSED at the macro layer. Step 24 run
+unbounded: REFUSED after 347.7 s, past the shield lock, on `puncher@416,256` at
+the Red Key's lock (R-o; no puncher arm was built).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
