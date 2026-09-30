@@ -236,6 +236,36 @@ export const SEEDLING_GENERATED_SWIM_STATE = Object.freeze({
 });
 
 /**
+ * ⛓⛓ CONCEPT LIBRARY T4 — **THE FIRST WORLD THAT NAMES CONCEPTS, SPELLED ONCE.**
+ * Seed 1, 3 spheres, no filler, starting in a MAZE, quotas maze 2 + text
+ * adventure 2, over the sword, the swim and victory, with the world's concept
+ * list `[sword, guardian, swim, water]`. Measured over seeds 1–6: seed 1 is the
+ * first to realise ONE gate in EACH substrate — the maze START `region_2_2`
+ * holds `Progressive Swim` and its exit is the painted `water_gate_0`; the
+ * text-adventure room `region_2_3` holds `Progressive Sword` and its exit on to
+ * the text-adventure room `region_3_3` (victory) carries the guardian's
+ * blocked / passed-with prose. The compiled logic is the control's (`concepts:
+ * []`) apart from `procgen_metadata[slot].concepts`. Its readers:
+ * `procgenPipeline/conceptTrialWorld.test.js`, the committed preset
+ * `concept_trial`, its box gate `check-concept-trial-play.mjs` and the in-app
+ * row `concept-trial-plays`.
+ */
+export const CONCEPT_TRIAL_STATE = Object.freeze({
+    mode: 'sphereGrowth',
+    params: Object.freeze({
+        seed: 1, startSubstrate: 'maze', sphereCount: 3, fillerCount: 0,
+        concepts: Object.freeze(['sword', 'guardian', 'swim', 'water']),
+    }),
+    scenario: Object.freeze({
+        items: Object.freeze({ 'Progressive Sword': 1, 'Progressive Swim': 1, victory: 1 }),
+        obstacles: Object.freeze({}),
+    }),
+    substrateQuotas: Object.freeze({ maze: 2, text_adventure: 2 }),
+    substrateMix: Object.freeze({}),
+    substrateMode: 'quotas',
+});
+
+/**
  * ⛓⛓ SEEDLING GENERATED LEVELS G6 — **A REAL SEEDLING ROOM THAT HOSTS A CHILD
  * BEHIND AN AP GATE, SPELLED ONCE: T3's SPHERE-ROOM WORLD WITHOUT ITS KNOB.**
  * The same seed, spheres, filler and quotas as `SEEDLING_SPHERE_ROOM_STATE`; with
@@ -424,6 +454,20 @@ export const SHIPPED_PRESETS = Object.freeze([
             substrateMix: {},
             substrateMode: 'quotas',
         },
+    },
+    {
+        id: 'shipped:concept-trial-demo',
+        label: 'Concept trial (maze + text adventure)',
+        group: PRESET_GROUPS.sphereGrowth,
+        description: 'The first world that names CONCEPTS (sword, guardian, swim, water): a maze START '
+            + 'holding Progressive Swim, a text-adventure room holding Progressive Sword, and victory in a '
+            + 'second text-adventure room, over 3 spheres. Each substrate shows its gate in its own way — '
+            + 'look at the composite map, where the maze\'s swim gate is painted as WATER (blue, ~) where a '
+            + 'plain logic gate would stand, and play the text adventure, where the sword-gated exit is a '
+            + 'GUARDIAN: its prose bars the way without the sword and says how the sword beat it once you '
+            + 'have it. The compiled logic is the same as the same world without concepts. The same world '
+            + 'is committed as the concept_trial preset.',
+        state: CONCEPT_TRIAL_STATE,
     },
     {
         id: 'shipped:maze-bounce-sphere-mix',

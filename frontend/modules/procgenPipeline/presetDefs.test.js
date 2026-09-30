@@ -6,6 +6,7 @@ import {
     SEEDLING_SPIRAL_ROOM_STATE, SEEDLING_SPHERE_ROOM_STATE,
     SEEDLING_GENERATED_ROOM_STATE, SEEDLING_GENERATED_LEAF_STATE, SEEDLING_GENERATED_HOST_STATE,
     SEEDLING_GENERATED_SWIM_STATE,
+    CONCEPT_TRIAL_STATE,
     SEEDLING_ATLAS_HOST_STATE,
     SEEDLING_ATLAS_LOCATION_STATE,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
@@ -224,6 +225,19 @@ describe('SHIPPED_PRESETS', () => {
             seedlingGenElements: 'watergate', seedlingGenRequire: 'canSwim' });
         expect(p.state.scenario.items).toEqual({ 'Progressive Swim': 1, victory: 1 });
         expect(p.state.substrateQuotas).toEqual({ maze: 1, flash_seedling_gen: 1 });
+    });
+
+    it('concept trial demo IS the committed preset\'s state — the first world that names concepts (T4)', () => {
+        const p = getPresetById('shipped:concept-trial-demo');
+        // ONE spelling: the drop-down, the committed concept_trial preset, its box
+        // gate and its in-app row all read this object.
+        expect(p.state).toBe(CONCEPT_TRIAL_STATE);
+        expect(p.group).toBe(PRESET_GROUPS.sphereGrowth);
+        expect(p.state.mode).toBe('sphereGrowth');
+        expect(p.state.params).toMatchObject({ seed: 1, startSubstrate: 'maze', sphereCount: 3, fillerCount: 0,
+            concepts: ['sword', 'guardian', 'swim', 'water'] });
+        expect(p.state.scenario.items).toEqual({ 'Progressive Sword': 1, 'Progressive Swim': 1, victory: 1 });
+        expect(p.state.substrateQuotas).toEqual({ maze: 2, text_adventure: 2 });
     });
 
     it('seedling atlas location demo IS the committed preset\'s state — a REAL room\'s chest as a check (G7)', () => {
