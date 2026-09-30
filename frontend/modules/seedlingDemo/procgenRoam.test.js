@@ -17,16 +17,23 @@
  *   4. THE KILL-LOCK CLAUSE — a `tset:-1` lock offered to a room that holds a
  *      roaming body is refused BY NAME at the anchor; the same template in a
  *      room without one is not.
+ *   5. (D5) THE BODY ABLATION — the level solved with and without its bodies at
+ *      the SAME boot: `empty` s2 pre-sword is INERT (the body stays in its side
+ *      room), `branchy` s7 post-sword COSTS (149 vs 86 ticks, measured at F1).
  */
 
 import { describe, expect, it } from 'vitest';
 
 import { ROAM } from '../procgenCore/elements/roam.js';
 import {
-    ROAMING_GOAL_CLASS, SEEDLING_DEFAULTS, seedlingModel, seedlingSeam, seedlingSkeletonSpec,
+    BODY_ABLATION_VERDICTS, ROAMING_GOAL_CLASS, SEEDLING_DEFAULTS, bodyAblation,
+    generateSeedlingLevel, seedlingModel, seedlingSeam, seedlingSkeletonSpec,
 } from './procgenSeedling.js';
+import { GRADES } from '../procgenCore/differentialGrade.js';
 import { compositeSeedlingElement, seedlingElementEntities } from './procgenSeedlingElements.js';
-import { POST_SWORD_ITEMS, PRE_SWORD_ITEMS } from './procgenPalette.js';
+import {
+    POST_SWORD_ITEMS, POST_SWORD_PALETTE, PRE_SWORD_ITEMS, PRE_SWORD_PALETTE,
+} from './procgenPalette.js';
 import { rngFor } from './procgenRng.js';
 
 const goalOf = (record) => record.entities.find((e) => e.attrs?.tag === SEEDLING_DEFAULTS.goalTag
@@ -140,5 +147,56 @@ describe('roam — a kill lock in a room that holds a roaming body is refused BY
         const c = firstFree(m);
         expect(m.refusalAt(m.skeleton(), killLock, c.tx, c.ty) ?? '')
             .not.toMatch(/a-kill-lock-would-count-the-roaming-bodies/);
+    });
+});
+
+describe('roam — the BODY ABLATION (D5)', () => {
+    const level = (kind, seed, palette) => generateSeedlingLevel({ seed, palette,
+        skeleton: seedlingSkeletonSpec(kind), elements: { name: 'roam' } });
+
+    /** ⛓ Two of the three BORROW the differential's words with the differential's
+     *  meaning (INERT = equal cost, NOT-ESTABLISHED = no claim); `COSTS` is the
+     *  ablation's own and is NOT added to `GRADES`, whose six words are pinned
+     *  across both substrates. */
+    it('declares three verdicts and adds NO word to differentialGrade.GRADES', () => {
+        expect(BODY_ABLATION_VERDICTS).toEqual(['INERT', 'COSTS', 'NOT-ESTABLISHED']);
+        expect(Object.values(GRADES)).toEqual(['STRONG', 'BOUND-DEPENDENT', 'WEAK', 'INERT',
+            'SHORTENS', 'NOT-ESTABLISHED']);
+        expect(Object.values(GRADES)).not.toContain('COSTS');
+        expect(GRADES.INERT).toBe('INERT');
+        expect(GRADES.NOT_ESTABLISHED).toBe('NOT-ESTABLISHED');
+    });
+
+    it('is absent from the summary of a level with no roaming body', () => {
+        const lv = generateSeedlingLevel({ seed: 2, palette: PRE_SWORD_PALETTE,
+            elements: { name: 'chamber' } });
+        expect(lv.summary.bodyAblation).toBeUndefined();
+        expect(bodyAblation({ model: lv.model, out: lv, palette: PRE_SWORD_PALETTE })).toBeNull();
+    });
+
+    /**
+     * ⛓⛓ **THE SAME-BOOT PIN.** A body in a sealed side room that never leaves
+     * it is INERT — and INERT is only reachable if the two arms ran at ONE boot:
+     * the pre-sword and post-sword solves of any room differ (the census's empty
+     * control is 218 vs 123), so an ablation whose without-arm ran at the other
+     * boot reads COSTS or NOT-ESTABLISHED here (F1 mutant (b)).
+     */
+    it('empty s2 pre-sword: INERT — both arms SOLVED in the same tick count, the body removed',
+        () => {
+            const lv = level('empty', 2, PRE_SWORD_PALETTE);
+            const a = lv.summary.bodyAblation;
+            expect(lv.summary.goalClass).toBe(ROAMING_GOAL_CLASS);
+            expect(a.removed).toBe(a.bodies);
+            expect(a.withBodies.verdict).toBe('SOLVED');
+            expect(a.withoutBodies.verdict).toBe('SOLVED');
+            expect(a.withoutBodies.ticks).toBe(a.withBodies.ticks);
+            expect(a.verdict).toBe('INERT');
+        });
+
+    it('branchy s7 post-sword: COSTS — the bodies are on the route (149 vs 86 ticks)', () => {
+        const a = level('branchy', 7, POST_SWORD_PALETTE).summary.bodyAblation;
+        expect(a.verdict).toBe('COSTS');
+        expect(a.withBodies.ticks).toBeGreaterThan(a.withoutBodies.ticks);
+        expect(a.deltaTicks).toBe(a.withBodies.ticks - a.withoutBodies.ticks);
     });
 });

@@ -660,6 +660,16 @@ if (CELL !== '') {
             params: p ? p.params : null,
             ...shape,
         };
+        /**
+         * ⛓⛓ concept library F1 (D5) — **THE BODY ABLATION, FROM THE ONE
+         * IMPLEMENTATION** (`procgenSeedling.bodyAblation`, the same function
+         * `generateSeedlingLevel` calls). ⛔ Only on a finished level that holds
+         * a roaming body, so every other sweep's rows carry no new key.
+         */
+        if (out && (model.roamingBodies?.length ?? 0) > 0) {
+            const { bodyAblation } = await M('seedlingDemo/procgenSeedling.js');
+            elementRow.ablation = bodyAblation({ model, out, palette: seedlingPalette });
+        }
     }
     if (SUBSTRATE === 'maze' && ELEMENTS_EFFECTIVE.name !== ELEMENTS_NONE) {
         const { mazeCostRecords } = await M('mazeRoom/procgenMaze.js');
@@ -1350,6 +1360,55 @@ if (SUBSTRATE === 'seedling'
         for (const [k, n] of rows3) say(`| ${n} | ${k} |`);
     }
     say('');
+    /**
+     * ⛓⛓⛓ concept library F1 (D5) — **THE ROAMING ENEMY'S YIELD AND ITS BODY
+     * ABLATION**, per kind and size. ⛔ PRINTED ONLY WHEN SOME ROW CARRIES AN
+     * ABLATION, so a sweep of any other element prints what it always printed.
+     * `gap` is the certification's named refusal; `ablation` counts the
+     * verdicts of `procgenSeedling.bodyAblation` on the levels that SHIPPED
+     * with their bodies (a THREW row is a pass-2 abort, counted apart).
+     */
+    if (results.some((r) => r.elements?.ablation)) {
+        say('### ⛓ the ROAMING ENEMY — yield, named refusals and the BODY ABLATION');
+        say('');
+        say('| kind | size | N | PLACED | CERTIFIED | gap (by name) | INERT | COSTS '
+            + '| NOT-ESTABLISHED | aborted | COSTS Δticks |');
+        say('|---|---|---|---|---|---|---|---|---|---|---|');
+        const byCell = new Map();
+        for (const r of results) {
+            const k = `${r.kind}|${r.size}`;
+            if (!byCell.has(k)) {
+                byCell.set(k, { kind: r.kind, size: r.size, n: 0, placed: 0, certified: 0,
+                    gap: {}, INERT: 0, COSTS: 0, 'NOT-ESTABLISHED': 0, aborted: 0, deltas: [] });
+            }
+            const c = byCell.get(k);
+            c.n += 1;
+            const e = r.elements;
+            if (!e?.placed) continue;
+            c.placed += 1;
+            if (e.certified) c.certified += 1;
+            else if (e.gap) c.gap[e.gap] = (c.gap[e.gap] ?? 0) + 1;
+            if (e.ablation) {
+                c[e.ablation.verdict] += 1;
+                if (e.ablation.verdict === 'COSTS') c.deltas.push(e.ablation.deltaTicks);
+            } else if (e.certified && (r.error || r.aborted)) c.aborted += 1;
+        }
+        const tot = { n: 0, placed: 0, certified: 0, INERT: 0, COSTS: 0, 'NOT-ESTABLISHED': 0,
+            aborted: 0, gap: {} };
+        for (const c of byCell.values()) {
+            const gaps = Object.entries(c.gap).map(([g, n]) => `${n}× \`${g}\``).join(', ') || '—';
+            say(`| ${c.kind} | ${c.size} | ${c.n} | **${c.placed}** | **${c.certified}** | ${gaps} `
+                + `| ${c.INERT} | **${c.COSTS}** | ${c['NOT-ESTABLISHED']} | ${c.aborted} `
+                + `| ${c.deltas.join(', ') || '—'} |`);
+            for (const f of ['n', 'placed', 'certified', 'INERT', 'COSTS', 'NOT-ESTABLISHED',
+                'aborted']) tot[f] += c[f];
+            for (const [g, n] of Object.entries(c.gap)) tot.gap[g] = (tot.gap[g] ?? 0) + n;
+        }
+        say(`| **all** | | ${tot.n} | **${tot.placed}** | **${tot.certified}** | `
+            + `${Object.entries(tot.gap).map(([g, n]) => `${n}× \`${g}\``).join(', ') || '—'} `
+            + `| ${tot.INERT} | **${tot.COSTS}** | ${tot['NOT-ESTABLISHED']} | ${tot.aborted} | |`);
+        say('');
+    }
 }
 
 say('## Per cell');

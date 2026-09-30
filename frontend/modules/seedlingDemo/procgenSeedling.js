@@ -4513,6 +4513,87 @@ export function requireVerdict({ dir, model, certification, out, palette, seed, 
 }
 
 /**
+ * ⛓⛓⛓ **THE BODY ABLATION — THE ROAMING ENEMY'S GRADE** (concept library F1,
+ * D5). The level solved WITH its roaming bodies and with them REMOVED, at the
+ * SAME boot and the SAME budget, so the only thing that differs between the
+ * two arms is the bodies.
+ *
+ * ⛔ **WHY NOT THE REQUIREMENTS DIFFERENTIAL.** That instrument flips a BOOT
+ * FLAG and compares — and a roaming body is gated on no item: the empty
+ * census room alone solves in 218 ticks pre-sword and 123 post-sword (F1 W0),
+ * so a differential across boots measures the boot, not the body. The body's
+ * cost is the difference the BODY makes, at one boot.
+ *
+ *   `INERT`            both arms SOLVED in the same tick count — the body was
+ *                      never on the route (a sealed side room's spinner that
+ *                      stayed home is the common case).
+ *   `COSTS`            both SOLVED and the with-arm took MORE ticks — the body
+ *                      was a danger the walk had to spend time on.
+ *   `NOT-ESTABLISHED`  either arm did not SOLVE, or the with-arm was FASTER
+ *                      (a body cannot shorten a walk; a faster with-arm is a
+ *                      fact about the solver, published rather than graded).
+ *
+ * ⛓ THE WITH-ARM SPENDS NO SOLVE, `requireVerdict`'s own reasoning: the
+ * loop's last solve (`summary.finalTicks`) IS a solve of the final record.
+ * The WITHOUT arm is one solve, on the final record minus the spinner entities
+ * standing on the committed body cells, staged with the SAME pins.
+ *
+ * ⛔ **IT ADDS NO WORD TO `differentialGrade.GRADES`** — that list is pinned
+ * across both substrates. `INERT` and `NOT-ESTABLISHED` BORROW two of its
+ * words with the same meaning (equal cost; no claim); `COSTS` is the
+ * ablation's own and lives only in `BODY_ABLATION_VERDICTS`.
+ * ⛔ **THE BOOT IS `palette.items`, THE SEAM'S OWN, AND IS NOT A PARAMETER** —
+ * an arm at another boot would be the 218-vs-123 comparison this exists to
+ * avoid (F1 mutant (b) is exactly that edit, and it reds a row).
+ *
+ * @returns {null|{bodies, withBodies, withoutBodies, verdict, deltaTicks}}
+ *   `null` when the level holds no roaming body.
+ */
+export const BODY_ABLATION_VERDICTS = Object.freeze(['INERT', 'COSTS', 'NOT-ESTABLISHED']);
+
+export function bodyAblation({ model, out, palette, budget = DEFAULT_BUDGET, dashMode } = {}) {
+    const bodies = model.roamingBodies ?? [];
+    if (bodies.length === 0 || !out) return null;
+    const at = new Set(bodies.map((b) => {
+        const o = oelAtTile(b.x, b.y);
+        return `${o.x},${o.y}`;
+    }));
+    const record = out.record;
+    const without = {
+        ...record,
+        entities: (record.entities ?? []).filter((e) => !(e.type === 'spinner'
+            && at.has(`${e.x},${e.y}`))),
+    };
+    const removed = (record.entities ?? []).length - without.entities.length;
+    const templates = (out.summary.kept ?? []).map((k) => instantiateKept(palette, k));
+    const oracle = seedlingOracle({ model, items: palette.items ?? null, budget, dashMode });
+    let w = null;
+    try {
+        const r = oracle.solve(without, { templates });
+        w = { verdict: r.verdict, ticks: r.ticks ?? r.ticksSpent ?? null,
+            reasonText: r.verdict === VERDICT.SOLVED ? null : (r.reasonText ?? null) };
+    } catch (e) {
+        w = { verdict: `THREW:${e.name}`, ticks: null,
+            reasonText: String(e.message).split('\n')[0].slice(0, 300) };
+    }
+    const withArm = { verdict: VERDICT.SOLVED, ticks: out.summary.finalTicks ?? null };
+    const both = w.verdict === VERDICT.SOLVED && withArm.ticks !== null && w.ticks !== null;
+    const verdict = !both ? 'NOT-ESTABLISHED'
+        : withArm.ticks === w.ticks ? 'INERT'
+            : withArm.ticks > w.ticks ? 'COSTS' : 'NOT-ESTABLISHED';
+    return Object.freeze({
+        bodies: bodies.length,
+        /** ⛔ a count, beside the bodies, so a record whose spinner entities did
+         *  not sit on the committed cells cannot grade INERT by removing nothing. */
+        removed,
+        withBodies: Object.freeze(withArm),
+        withoutBodies: Object.freeze(w),
+        verdict,
+        deltaTicks: both ? withArm.ticks - w.ticks : null,
+    });
+}
+
+/**
  * GENERATE ONE SEEDLING LEVEL — the whole seam, wired.
  *
  * ⛔ TWO STREAMS, TWO SEEDS FROM ONE. The model's room stream and the loop's
@@ -4582,6 +4663,9 @@ export function generateSeedlingLevel({
      */
     const requireReport = dir.asked.length === 0
         ? null : requireVerdict({ dir, model, certification, out, palette, seed, budget });
+    /** ⛓ F1 (D5) — `null` (and so absent from the summary) unless the level
+     *  holds a roaming body. */
+    const ablation = bodyAblation({ model, out, palette, budget, dashMode });
     return {
         ...out,
         /**
@@ -4631,6 +4715,13 @@ export function generateSeedlingLevel({
              * byte-identical (arc-1 §10.2's own rule).
              */
             ...(requireReport ? { require: requireReport } : {}),
+            /**
+             * ⛓⛓ F1 (D5) — **THE ROAMING ENEMY'S BODY ABLATION**, beside the
+             * requirements differential and in its own words (`INERT` /
+             * `COSTS` / `NOT-ESTABLISHED`). ⛔ OMITTED ENTIRELY on a level with
+             * no roaming body, which keeps every committed payload unmoved.
+             */
+            ...(ablation ? { bodyAblation: ablation } : {}),
             goalCell: model.goalCell,
             goalOel: model.goalOel,
             goalClass: model.goalClass ?? model.defaults.goalClass,
