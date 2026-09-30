@@ -10368,6 +10368,89 @@ owners:
 
 L32 stays refused (R-f is a design).
 
+### Seedling substrate T4-swim — the feather biome and the one-sided lock (2026-09-30)
+
+Two non-solver rungs (plan R-g and R-j). No solver-family or simulation file was
+touched, and no tape or `campaign-frontier.json` moved.
+
+**W0** (`855532f672`). The rows that match T3's:
+- the campaign census, md5 `88fa2333…`, *NO CHAIN ROOM MOVES*;
+- the six r8/r9 `--check`s;
+- survey `--derive-only`, `27ff43db…` / `1e08f9ad…`.
+
+The rest of W0:
+- the 8 preset `--check`s all OK;
+- the 14 shipped md5s banked;
+- both playthrough producers `--check` OK;
+- bounded vitest: 9 files, 193 tests.
+
+**D1 — `post-feather` in the gen room.** It is T2's one line plus the payload
+name. The two lists stay asserted equal, and mutant (a) (the palette line
+dropped) throws by name.
+
+Measured, `generateGenRoom` 10×10 with seeds 1–12:
+- **The default skeleton.** All 12 build at re-roll 0 with NO waterfall seated.
+  All 12 `require: hasFeather` runs refuse after 8 re-rolls on
+  `the-door-has-no-south-approach`.
+- **`skeleton: 'winding'` with `require: hasFeather`.**
+  - 8 of 12 are met; 2 abort in `pit-patch` and 2 refuse.
+  - ⚠ **In 4 of the 8, the door is seated PAST the fall** (seeds 5, 6, 8 and 9):
+    the arrival reaches the goal without the feather.
+  - The cause: a waterfall is not lethal, and T1's `approachWalls` is a set of
+    cells, which cannot say "not UP this tile".
+  - The fix, a directed approach flood, is proposed and not built.
+    `seedlingGenRoomFeather.test.js` pins seed 9 by name.
+
+**D2 — the census.** `census-seedling-bosslocks.mjs` is report-only.
+`BossLock.update` probes the row BELOW the lock (`BossLock.as:62`), and every
+lock's persistence tag keeps it open once opened, so the true crossing is one-way,
+south to north. Over the 14 bosslocks on the v1 atlas (`seedling-ae833c1e`):
+- **11 two-way rules the game does not honour.** 10 are LIVE: the far side has
+  another way in.
+- **2 are not separators:** L12@32,864, `CHARGED_DOORS`' stacked lock, and
+  L56@96,16.
+- **1 is off-grid** (L66@72,64) and claims no whole tile.
+
+**D3 — `REFUTATION_LOG` entry 3.** The row is L30's bosslock@64,32, ruled
+two-way `Has(Green Key)`. It is refuted by T3's step 29 and the probe line. It is
+entry 2's sign (too permissive), but this time the analyzer saw the wall.
+
+**D4 — the derivation, committed.**
+- The bosslock semantics row carries `probe: 'S'`.
+- `buildSeedlingRegionGrid`'s `directionalLocks` option turns it into `enter`
+  gates. `enter` is new analyzer vocabulary: a gate on ENTERING a cell moving a
+  given way, read from the entered cell only.
+- The playthrough generator turns it on by default; `--no-directional-locks`
+  rebuilds v1.
+
+The STOP rule was measured before committing:
+- the seed-1 sphere order and the sphere log are **byte-identical**;
+- `--derive-only` stdout and `route.json` are unmoved.
+
+What moves:
+- 9 reverse entrances go, and L12's `HasAny(Swim, Red Key)` narrows to
+  `Has(Swim)` north to south;
+- 812 → 803 AP exits, and the atlas becomes `seedling-0faa7fee`;
+- `--through=2.2`'s leg 2.2 now reaches L30 from L31, the south, not through
+  L22's pocket.
+
+Every gate holds:
+- the census reads AGREES 11;
+- the campaign census and the six r8/r9 `--check`s are identical;
+- the world regenerates byte-identically;
+- the spoiler test on `seedling_playthrough` passes.
+
+Mutant (d), the `enter` read dropped: the analyzer row reds and `--check`
+reports both files differ.
+
+**Handed on.**
+- The directed approach flood for `post-feather` rooms (T1's rule, gen room).
+- ShieldLock's WEST probe (`ShieldLock.as:32`), which `--shield` lists, belongs
+  to T3/S1.
+- `census-seedling-campaign --check-frontier`'s `sources` row was already stale
+  at W0: it pins `602b318b…` against `dbf79293…`.
+- The report is `CC/docs/cloud-reports/seedling-swim-t4.md`.
+
 ### Concept library F1 — the roaming enemy: a body without a kill lock (2026-09-30)
 
 The user asked for it on 2026-09-29: *"if Seedling is currently unable to place

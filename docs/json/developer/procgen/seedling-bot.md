@@ -450,11 +450,13 @@ Some model properties turn no fixture red when mutated away, because the roster 
 
 The synthetic hand-built grids in `playerPhysicsV2.test.js` are the stratum that sees stickiness today, and they share the generator's assumptions. Saying so is the point.
 
-## Two transcription lessons worth generalising
+## Three transcription lessons worth generalising
 
 **A tag missing from a table while its twin is present.** `ENTITY_CLASSES` once carried `stairsdown` but not `stairsup`, the same class and trigger (`Stairs`' third argument only picks a sprite, a sound and a render flag). The guard is a census wider than the fixture levels: every `teleporter`/`stairs*` tag in all 116 levels must be a classified trigger, because a missing one is an exit that silently does not exist.
 
 **An offset applied at one level of a constructor chain but not the next.** `Statue` adds its own offset (+16, −8) before `NPC`'s constructor adds (+8, +8). Applying only the first put level 0's statue collider 8 px off, unnoticed until a better driver routed next to it. "Unobservable" decays as soon as the driver improves; `statue-press` (a planned approach plus a hand-authored press into the edge) now pins it.
+
+**A blocker whose trigger reads only one side.** `BossLock.update` tests the key only against a player on the one-pixel row below the lock (`BossLock.as:62`), so a `kind: 'gated'` row, which the analyzer pays both ways, let the rules v1 playthrough cross 11 of the 14 bosslocks from the side the game refuses (`census-seedling-bosslocks.mjs`; `REFUTATION_LOG` entry 3). The semantics row now carries `probe: 'S'`, and the playthrough generator reads it as the analyzer's `enter` gates (swim T4).
 
 ## Dead ends
 

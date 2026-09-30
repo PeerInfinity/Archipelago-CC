@@ -54,6 +54,9 @@ export const LOCK_PROBE_SIDES = Object.freeze({
     shieldlocknorm: 'W',
 });
 
+/** The AP item a lock class's crossing pays — how the reverse direction is told apart from another way. */
+const LOCK_ITEM = Object.freeze({ bosslock: / Key$/, shieldlock: /Shield/, shieldlocknorm: /Shield/ });
+
 /**
  * One row per placed lock of `tags` in `levels`.
  *
@@ -105,7 +108,7 @@ export function censusLocks({ levels, atlas, gridFor, findComponents, tags = ['b
             const edge = forward ?? between[0] ?? null;
             // Two-way means the far -> probe direction pays the LOCK: its rule names the key the
             // forward rule names. A reverse that pays something else (L12's water) is another way.
-            const keys = itemNames(edge?.access_rule).filter((n) => / Key$/.test(n));
+            const keys = itemNames(edge?.access_rule).filter((n) => LOCK_ITEM[e.type].test(n));
             const reverse = between.filter((x) => x.bidirectional || (farComps.includes(x.from) && x.to === probeComp));
             const twoWay = !!edge && reverse.some((x) => keys.some((k) => itemNames(x.access_rule).includes(k)));
             // Does the far side have a way in that is not this crossing? (A boundary `in_*` exit
