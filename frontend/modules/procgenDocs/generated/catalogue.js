@@ -1274,7 +1274,8 @@ export const CATALOGUE = frz({
         "shieldgate",
         "watergate",
         "watershortcut",
-        "waterfallgate"
+        "waterfallgate",
+        "roam"
     ],
     "elementSubsetSeparator": "|",
     "elements": [
@@ -1462,6 +1463,47 @@ export const CATALOGUE = frz({
             ],
             "params": [],
             "why": "The WATERFALL GATE (seedling swim T2): one waterfall cell on a main-path cut entered from BELOW, its wall GROWN to seal the room, climbed only holding the feather (`hasFeather`, the second AP `Progressive Swim`). Certified by the solver WALKING it — no verb, the boot is the key."
+        },
+        {
+            "head": "roam",
+            "module": "roam",
+            "needs": [],
+            "params": [
+                {
+                    "default": 4,
+                    "domain": [
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "key": "w",
+                    "why": "the blob's width — `openChamber`'s own domain and for its own two reasons."
+                },
+                {
+                    "default": 4,
+                    "domain": [
+                        2,
+                        3,
+                        4,
+                        5,
+                        6
+                    ],
+                    "key": "h",
+                    "why": "the blob's height, on the same domain; separate because a non-square blob has two orientations and the site pick offers both."
+                },
+                {
+                    "default": 1,
+                    "domain": [
+                        1,
+                        2
+                    ],
+                    "key": "bodies",
+                    "why": "how many enemies roam the blob — the ARENA's domain, which its D0 arm priced per body (wall clock and solve ticks); a roaming body costs the solver the same danger map whether or not a lock waits on its death."
+                }
+            ],
+            "why": "The ROAMING ENEMY (concept library F1): the chamber's own blob with `bodies` spinners in it and NO lock. Two measured reasons it did not exist: a DIALOGUED goal (`torchpickup`) throws `levelRun`'s live-spinner guard at the collect — the binding certifies against a TEXTLESS goal instead — and the solver has no room-crossing answer at some body positions (*\"the combat ladder is EXHAUSTED\"*), which the binding REFUSES by name rather than redraws."
         }
     ],
     "itemsElementsNeed": [

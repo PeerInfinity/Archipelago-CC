@@ -73,6 +73,24 @@ describe('the item vocabulary, read from the table', () => {
         expect(d.refused.reason).toBe('no-element-needs-this-item');
     });
 
+    /**
+     * ⛓⛓ F1, D3 — THE ROAMING ENEMY IS NEVER A HEAD `require` CAN FORCE, TWICE
+     * OVER: it declares no `needs`, and its law is `none`. ⛔ The second half is
+     * asked on a table where it is GIVEN a `needs`, so the row shows the filter
+     * is the LAW (only `cut` meets a directive) and not the absent `needs`.
+     */
+    it('⛔ a `none`-law head (the roaming enemy) is never a head `require` can force', () => {
+        expect(ELEMENT_TABLE.roam.needs).toBeUndefined();
+        expect(ELEMENT_TABLE.roam.element.law).toBe('none');
+        for (const item of ITEMS_ELEMENTS_NEED) expect(headsNeeding(item)).not.toContain('roam');
+        const GIVEN = Object.freeze({
+            roam: Object.freeze({ ...ELEMENT_TABLE.roam, needs: Object.freeze(['hasSword']) }),
+        });
+        expect(headsNeeding('hasSword', GIVEN)).toEqual([]);
+        expect(resolveRequireDirective({ require: ['hasSword'], items: SWORD, table: GIVEN })
+            .refused.reason).toBe('no-element-needs-this-item');
+    });
+
     it('⛓⛓ A TABLE WITH TWO NEEDING HEADS OFFERS BOTH — the derivation is not a constant',
         () => {
             expect(headsNeeding('hasSword', TWO)).toEqual(['alpha', 'beta', 'both']);

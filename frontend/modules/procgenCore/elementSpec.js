@@ -45,10 +45,11 @@ import { BLOCK_POCKET } from './elements/blockPocket.js';
 import { KILL_GATE } from './elements/killGate.js';
 import { OPEN_CHAMBER } from './elements/openChamber.js';
 import { REVERSE_PULL_BLOCK } from './elements/reversePullBlock.js';
+import { ROAM } from './elements/roam.js';
 import {
     ROCK_GATE, ROCK_SHORTCUT, SHIELD_GATE, WATER_GATE, WATER_SHORTCUT, WATERFALL_GATE,
 } from './elements/soloDoor.js';
-import { LAW_SHORTCUT } from './elements.js';
+import { LAW_CUT } from './elements.js';
 import { parseRequireList } from './areaSpec.js';
 import {
     assertParamSchema, enumerateValues, isParamSubset, paramSubset,
@@ -360,6 +361,35 @@ export const ELEMENT_TABLE = Object.freeze({
             + 'solver WALKING it — no verb, the boot is the key.',
         extra: Object.freeze([]),
         needs: Object.freeze(['hasFeather']),
+    }),
+    /**
+     * ⛓⛓⛓ **THE ROAMING ENEMY — A BODY WITHOUT A KILL LOCK** (concept library
+     * F1, D3). ⚖ The user ruled a THIRD head (2026-09-29) rather than `arena`
+     * with the lock off: `chamber` is free supply, `arena` is the gate, and a
+     * roaming body costs a room something different again — a DANGER on the
+     * route and no gate across it. So a caller choosing among the three is
+     * choosing among those three costs, not among values of a number.
+     *
+     * ⛔ **NO `needs`**, and that is the point of it: its body is never killed
+     * FOR anything, so a pre-sword boot that cannot swing places it exactly as
+     * a post-sword one does. (The arena needs the sword because only a kill
+     * opens its lock; this has no lock.) ⛔ And NO `binds`, the chamber's
+     * reason: there is no door for the area graph to bind to.
+     *
+     * ⛔ **IN NO BIOME DEFAULT** (`defaultElementsFor` unchanged): a default
+     * change is a bundled re-record this slice does not own. OPT-IN only.
+     *
+     * ⛓ It is placed LAST so no existing head moves in `ELEMENT_NAMES`.
+     */
+    roam: Object.freeze({
+        element: ROAM,
+        why: 'The ROAMING ENEMY (concept library F1): the chamber\'s own blob with `bodies` '
+            + 'spinners in it and NO lock. Two measured reasons it did not exist: a DIALOGUED '
+            + 'goal (`torchpickup`) throws `levelRun`\'s live-spinner guard at the collect — '
+            + 'the binding certifies against a TEXTLESS goal instead — and the solver has no '
+            + 'room-crossing answer at some body positions (*"the combat ladder is '
+            + 'EXHAUSTED"*), which the binding REFUSES by name rather than redraws.',
+        extra: Object.freeze([]),
     }),
 });
 
@@ -906,11 +936,18 @@ export const ITEMS_ELEMENTS_NEED = Object.freeze([...new Set(
  * `law`, not its head name (the `ELEMENT_LAWS` rule: one table of which
  * elements are shortcuts). A table row with no `element` (a test double) is
  * read as the cut law.
+ *
+ * ⛓ F1 (D2/D3) — **AND ONLY THE CUT LAW CAN.** `ELEMENT_LAWS` grew a third
+ * member, `none` (the roaming enemy: no door cell at all), so the test is now
+ * spelled POSITIVELY — the element's law IS `cut` — rather than "is not a
+ * shortcut", which would have let any future law through by omission. ⛔ It
+ * answers the shipped table exactly as before: every row that was a head is a
+ * `cut`, and `roam` declares no `needs`, so it could not be a head either way.
  */
 export function headsNeeding(item, table = ELEMENT_TABLE) {
     return Object.freeze(Object.keys(table)
         .filter((n) => (table[n].needs ?? []).includes(item)
-            && table[n].element?.law !== LAW_SHORTCUT));
+            && (table[n].element?.law ?? LAW_CUT) === LAW_CUT));
 }
 
 /**

@@ -40,10 +40,12 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
          *  the roster is asserted LITERALLY (never `toContain`) so a head
          *  arriving without a decision reds a row rather than sliding in.
          *  ⛓ Seedling substrate S1 added `rockgate`, `shortcut`, `shieldgate` (plan §2.1 G-a..G-c);
-         *  swim S1 added `watergate` and `watershortcut`; swim T2 `waterfallgate`. */
+         *  swim S1 added `watergate` and `watershortcut`; swim T2 `waterfallgate`.
+         *  ⛓ Concept library F1 added `roam` (the roaming enemy), LAST, so no
+         *  existing head moved. */
         expect(ELEMENT_NAMES).toEqual([
             'none', 'guard', 'killgate', 'blockpocket', 'chamber', 'arena', 'rockgate',
-            'shortcut', 'shieldgate', 'watergate', 'watershortcut', 'waterfallgate',
+            'shortcut', 'shieldgate', 'watergate', 'watershortcut', 'waterfallgate', 'roam',
         ]);
         expect(parseElementSpec('killgate')).toEqual({ name: 'killgate' });
         expect(parseElementSpec('blockpocket')).toEqual({ name: 'blockpocket' });
