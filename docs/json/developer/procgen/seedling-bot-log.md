@@ -10449,6 +10449,67 @@ palette.
 
 The report is `CC/docs/cloud-reports/concept-library-f1.md`.
 
+### Concept library F1b — the through-room (2026-09-30)
+
+F1's finding was that a roam blob with its exit mouth sealed is a dead end the
+walk never enters. The user ruled on 2026-09-29 that the roam blob becomes a
+THROUGH-ROOM: the corridor passes through it with both mouths open. This slice
+builds that ruling and does not redesign it.
+
+**What landed.**
+
+- **D1 — the element asks for it.** `defineElement` takes a boolean `through`
+  (default `false`, `pre-carve` only). A through placement must pair every entry
+  BY INDEX with its own exit on a different cell. `roam` declares `true`.
+  `chamber` and `arena` keep `false`. Measured: the exit paired by index is the
+  entry's OPPOSITE side at its mirror, for every value combination and seed.
+- **D2 — the binding opens it and joins it.** For a through element
+  `compositeSeedlingElement` takes a pair only when NEITHER mouth is the border
+  ring. The ring is wall except both mouths. The entry mouth joins the START's
+  side and the exit mouth the GOAL's side, by the one shortest-tunnel rule,
+  flooded over the room with the blob walled. Then the blob must be a **cut**:
+  with its cells walled the goal is unreachable. The composite asks this before
+  the tunnels and again after them. Four new named refusals:
+  `the-exit-mouth-is-the-rooms-border-ring`, `the-exit-port-cannot-be-joined`,
+  `the-through-room-is-not-on-the-route` (the cut) and
+  `the-through-room-shortens-the-way`. The last is clause (vi), named apart
+  from the dead-end tunnel's so the census can tell them apart. Pass 2 may not
+  touch the exit tunnel. The record gains `through`/`exitMouth`/`exitTunnel`,
+  on through-rooms only.
+- **D4 — wasm.** Three certified through-rooms agree per tick with Δx 0 Δy 0:
+  `rooms` 10x10 s10 post-sword (128 observations, COSTS), `bushy` 14x14 s1
+  post-sword (230, COSTS) and `rooms` 14x14 s10 pre-sword (489). The witness
+  now also asserts `through` on the record.
+
+**The yield** (the same sweep as F1):
+
+| palette | placed | certified | named refusals | INERT | COSTS | NOT-EST. | aborted |
+|---|---|---|---|---|---|---|---|
+| F1, pre-sword | 96 | 94 | 2 | 94 | 0 | 0 | 0 |
+| F1, post-sword | 96 | 94 | 2 | 92 | 1 | 0 | 1 |
+| **F1b, pre-sword** | **10** | **8** | 2 | **8** | **0** | 0 | 0 |
+| **F1b, post-sword** | **10** | **8** | 2 | **1** | **7** | 0 | 0 |
+
+- **The geometry refusals** (158 per palette, the same on both boots) are 123
+  `the-through-room-is-not-on-the-route`, 14
+  `the-exit-mouth-is-the-rooms-border-ring`, 14
+  `the-entry-port-cannot-be-joined`, 4 `the-through-room-shortens-the-way` and 3
+  `the-exit-port-cannot-be-joined`.
+- **Placement** is 5 of 84 cells at 10x10 and 5 of 84 at 14x14.
+- **The COSTS Δticks** (post-sword) are 58, 58, 58, 58, 73, 84 and 44.
+- **The two certification refusals** are `branchy` and `winding` 14x14 s12, on
+  both boots. The same 2x4 blob has its bodies in the column the route crosses.
+- **The cut holds in the final record.** A probe re-flooded every shipped level
+  with its blob walled, after pass 2: 10 of 10 per palette are still cuts.
+
+**The finding.** The through-room makes the bodies matter post-sword: 7 of 8
+certified levels COST the walk, where F1 had 1 of 94. Pre-sword they are still
+INERT, 8 of 8: the walk crosses the blob on the mouths' line and the bodies
+stand off it. The price is yield: 96 → 10 placed. Most rooms join the start and
+the goal round the outside of any blob, so a through-room there is not a cut.
+`empty` places none of its 24 cells. `generateGenRoom` over drawn seeds 1-300
+now holds a roaming body in 0 rooms (F1: 209 pre-sword and 201 post-sword). The report is `CC/docs/cloud-reports/concept-library-f1b.md`.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
