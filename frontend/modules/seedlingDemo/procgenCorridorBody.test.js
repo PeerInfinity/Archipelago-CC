@@ -105,10 +105,13 @@ describe('the corridor body in a generated level', () => {
     /**
      * ⛓ U4b D3 — the row's position moved: `rooms` s2 CERTIFIES now (the kill
      * admission's continuation finds a strike past the bounded pass), which is
-     * the lever working on the generator. `rooms` s6 still refuses by the name.
+     * the lever working on the generator. `rooms` s6 still refuses by the name,
+     * but at the U4+U4b merge it takes ~27 s alone and TIMED OUT (60 s) under
+     * the suite's load; s10 refuses by the same name in ~1 s (measured over
+     * rooms s1–s12 at the merge head: s6, s10, s12 refuse), so the row pins s10.
      */
     it('a position the solver cannot cross is REFUSED BY NAME and the level ships WITHOUT it', () => {
-        const out = gen(POST_SWORD_PALETTE, { seed: 6, kind: 'rooms' });
+        const out = gen(POST_SWORD_PALETTE, { seed: 10, kind: 'rooms' });
         const cert = out.summary.elements.certification;
         expect(cert.certified).toBe(false);
         expect(cert.gap).toBe('the-solver-cannot-cross-the-roaming-body');
