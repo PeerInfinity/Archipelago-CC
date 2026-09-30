@@ -36,7 +36,11 @@
  *   - a top-down preset realises the committed Adventure world with its
  *     committed sphere log — what a plain page load has loaded, and what the
  *     panel's "Use currently-loaded rules.json / sphere log" (both on by
- *     default) hand it (measured P2 W0: the log changes the world's bytes);
+ *     default) hand it (measured P2 W0: the log changes the world's bytes),
+ *     on the grid the ONE sizing rule derives for it (`sourceSizedParams`) on
+ *     every axis the preset does not pin — what the panel's apply gives it
+ *     since C2 (before C2 the apply reset it to the 3×3 default, and so did
+ *     this row);
  *   - every substrate the definition names realises at least one region —
  *     measured (P2, mutant B): a top-down preset whose substrate sits in
  *     quotas rather than the mix realises an all-maze world, green;
@@ -66,6 +70,7 @@ import {
 } from './presetDefs.js';
 import {
     buildRunFromState, runPresetHeadless, presetSubstrateIds, heavySubstrateIds, mergedItemLib,
+    sourceSizedParams, pinnedGridKeys,
 } from './presetRun.js';
 import { resolveLibrarySelection } from './regionLibraryLoader.js';
 
@@ -169,6 +174,14 @@ describe('every shipped preset generates headless', () => {
                 `preset ${preset.id} names substrate(s) that realise no region in its world `
                 + `(realised: ${[...realised].join(', ')})`).toEqual([]);
             expect(JSON.stringify(b.rulesJson)).toBe(JSON.stringify(a.rulesJson));
+            if (preset.state.mode === 'topDown') {
+                const { topDownSource } = buildCtxOf(preset, resolvedLibraries);
+                const sized = sourceSizedParams({ ...preset.state.params }, topDownSource,
+                    { pinned: pinnedGridKeys(preset.state.params) });
+                expect(a.rulesJson.procgen_metadata['1'].grid_dims, `top-down preset ${preset.id} laid out on a `
+                    + 'grid other than the one its source derives (or it pins)')
+                    .toEqual({ width: sized.gridWidth, height: sized.gridHeight });
+            }
             for (const r of runs) {
                 expect(r.ms, `${preset.id} took ${r.ms} ms, over PRESET_HEADLESS_BUDGET_MS`)
                     .toBeLessThanOrEqual(PRESET_HEADLESS_BUDGET_MS);
