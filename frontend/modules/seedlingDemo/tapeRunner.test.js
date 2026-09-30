@@ -40,11 +40,17 @@ import { fixtureNames, loadExpectation, loadTape } from './fixtures/index.js';
 import { MODEL_EXEMPT_NAMES } from './r5Chain.js';
 import { atlasLevelSource } from './levelSource.js';
 import { MOVE_SPEEDS, spawnFromBoot } from './playerPhysicsV1.js';
-import { deriveTransitions, diffObservationStreams } from './tapeFormat.js';
+import {
+    PROFILE_TAPE_VERSION, deriveTransitions, diffObservationStreams, gameVisibleTape, heldKeysAt, parseTape,
+    serializeTape,
+} from './tapeFormat.js';
 import {
     createTapeStepper, runTape, runTapeToStream, stagingFromTape,
 } from './tapeRunner.js';
 import { PLAYTHROUGH_CHAINS, chainSpans } from './playthroughWalk.js';
+import { buildStagedTape } from './botDriverV1.js';
+import { profileStamp } from './seedlingProfile.js';
+import { validateProfile } from './tapeEnvelope.js';
 
 /** Entity spawn for the fixtures' shared boot block (Player.as:357: +8,+8). */
 const SPAWN = spawnFromBoot({ x: 80, y: 128 });
@@ -879,6 +885,58 @@ describe('createTapeStepper — the resume run', () => {
             // code, can add a timed row to a running run.
             expect(Object.keys(stagingFromTape(loadTape('r8-solve-5'))))
                 .not.toContain('addTimedClears');
+        });
+    });
+});
+
+/**
+ * Engine prep A2, D5: the runner RECORDS which physics ran — on its result,
+ * never on the stream or on an emitted tape unless asked.
+ */
+describe('the physics profile on the run (engine prep A2)', () => {
+    it('runTape\'s result carries profileStamp(), a valid v13 profile block', () => {
+        const out = runTape(loadTape('r8-solve-2'), { levelSource });
+        expect(out.profile).toEqual(profileStamp());
+        expect(validateProfile(out.profile)).toEqual(out.profile);
+    });
+
+    it('the stepper\'s done value is where it lives, so stepping to completion still equals runTape', () => {
+        const t = loadTape('straight-run');
+        const stepper = createTapeStepper(t, { levelSource });
+        let r = stepper.next();
+        while (!r.done) r = stepper.next();
+        expect(r.value.profile).toEqual(profileStamp());
+        expect(JSON.stringify(r.value)).toBe(JSON.stringify(runTape(t, { levelSource })));
+    });
+
+    it('⛔ the observation STREAM keeps its shape: {ticks, transitions} and nothing else', () => {
+        expect(Object.keys(runTapeToStream(loadTape('straight-run'), { levelSource }))).toEqual(['ticks', 'transitions']);
+    });
+
+    describe('buildStagedTape\'s stampProfile opt-in', () => {
+        const t = loadTape('r8-solve-2');
+        const staging = stagingFromTape(t);
+        const perTick = Array.from({ length: t.tick_count }, (_, i) => heldKeysAt(t, i));
+
+        it('default: no profile, no despawn, the v8 floor — the bytes every solve emits today', () => {
+            const plain = buildStagedTape({ staging, perTick, name: t.name });
+            expect(plain).not.toHaveProperty('profile');
+            expect(plain).not.toHaveProperty('despawn');
+            expect(plain.tape_version).toBe(8);
+            expect(serializeTape(buildStagedTape({ staging, perTick, name: t.name, stampProfile: null })))
+                .toBe(serializeTape(plain));
+        });
+
+        it('opted in: a v13 tape whose profile validates and which the game never sees', () => {
+            const stamped = buildStagedTape({ staging, perTick, name: t.name, stampProfile: profileStamp() });
+            expect(stamped.tape_version).toBe(PROFILE_TAPE_VERSION);
+            const parsed = parseTape(serializeTape(stamped));
+            expect(parsed.profile).toEqual(profileStamp());
+            expect(validateProfile(parsed.profile)).toEqual(profileStamp());
+            expect(gameVisibleTape(parsed)).not.toHaveProperty('profile');
+            // the stamp moves no input: same spans, same world
+            const plain = buildStagedTape({ staging, perTick, name: t.name });
+            expect(parsed.inputs).toEqual(parseTape(serializeTape(plain)).inputs);
         });
     });
 });

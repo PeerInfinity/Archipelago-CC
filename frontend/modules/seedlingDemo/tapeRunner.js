@@ -46,6 +46,7 @@ import { isBridgedChaser } from './chasers.js';
 import { createLevelRun } from './levelRun.js';
 import { RELAXED_ROLES, ROLES } from './levelWorld.js';
 import { groundTerrain, spawnFromBoot, step as stepV1 } from './playerPhysicsV1.js';
+import { profileStamp } from './seedlingProfile.js';
 
 /**
  * Run `tape` through the physics.
@@ -58,7 +59,7 @@ import { groundTerrain, spawnFromBoot, step as stepV1 } from './playerPhysicsV1.
  * @param {Function} [opts.onTick]    called as (t, state, held, run) after each
  *                                    observation is recorded — for tests and
  *                                    the bot driver, never for control flow
- * @returns {{ticks: Array, transitions: Array, final: object}}
+ * @returns {{ticks: Array, transitions: Array, final: object, profile: {id: string, md5: string}}}
  *   `ticks` is the observation stream; `final` is the full physics state in
  *   whichever level the run ended in (including velocity, the sticky
  *   terrain state and the teleporter latch, none of which the game exposes
@@ -1032,6 +1033,13 @@ export function createTapeStepper(tape, opts = {}) {
             primary: run ? run.primary : 0,
             inventorySlots: run ? run.inventorySlots : [],
             equips: run ? run.equipsFired : [],
+            /**
+             * Engine prep A2: WHICH physics ran — `{id, md5}` of the profile
+             * registry (`seedlingProfile.profileStamp()`). On the result only:
+             * the observation stream (`runTapeToStream`) and every emitted
+             * tape keep their shape, so no committed fixture moves.
+             */
+            profile: profileStamp(),
         };
     }
 

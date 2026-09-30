@@ -416,7 +416,7 @@ export function buildTape(perTick, boot = { level: 0, x: 80, y: 128 }, name,
  * Widening the persistence bound is a tape-format change guarding the real
  * game's level space, and it is nobody's to make in passing.
  */
-export function buildStagedTape({ staging, perTick, name }) {
+export function buildStagedTape({ staging, perTick, name, stampProfile = null }) {
     if ((staging.despawn ?? []).length > 0) {
         throw new Error('buildStagedTape: this staging block declares '
             + `${staging.despawn.length} despawn(s) `
@@ -460,6 +460,14 @@ export function buildStagedTape({ staging, perTick, name }) {
         tick_count: perTick.length,
         inputs: folded.inputs,
     };
+    // ⛓ Engine prep A2: `stampProfile` is OPT-IN and takes the stamp itself
+    // (`seedlingProfile.profileStamp()`, `{id, md5}`), never `true` — the
+    // caller names which physics it solved against. A stamped tape is v13
+    // (`requiredTapeVersion` asks the field), and v13 is v10 plus the rest,
+    // so it also spells `despawn: []` — the only despawn list this assembly
+    // admits (refused above otherwise). Unstamped, nothing below moves: every
+    // committed solve's bytes are what they were.
+    if (stampProfile) Object.assign(tape, { despawn: [], profile: stampProfile });
     // ⛔ ASKED, never re-derived — `requiredTapeVersion` owns the rule and
     // this is the whole of slice 5's half of it. The floor is 8: the
     // vocabulary this assembly writes, so a v8 boot's bytes do not move.
