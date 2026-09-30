@@ -4,7 +4,7 @@ The Seedling solver reaches the simulation through a single run object and a set
 
 ## What the interface is
 
-The **simulation** is the static import closure of `frontend/modules/seedlingDemo/levelRun.js`: 47 files. The **solver family** is the closure of `solverBot.js` and `director.js` minus the simulation: 11 files (`botDriverV1 botDriverV2 campaignChain dangerMap decisionTrace director encounters hazards mover solverBot strikePolicy`). `twoPassSolve.js` and the `watch*.js` pages are **callers**. They import the family, but nothing in the family imports them, so they sit outside both closures.
+The **simulation** is the static import closure of `frontend/modules/seedlingDemo/levelRun.js`: 48 files. The **solver family** is the closure of `solverBot.js` and `director.js` minus the simulation: 11 files (`botDriverV1 botDriverV2 campaignChain dangerMap decisionTrace director encounters hazards mover solverBot strikePolicy`). `twoPassSolve.js` and the `watch*.js` pages are **callers**. They import the family, but nothing in the family imports them, so they sit outside both closures.
 
 `createLevelRun` returns one object literal with 174 properties: 162 getters, 10 methods and 2 shorthand properties. The solver uses it in four ways:
 
@@ -15,7 +15,28 @@ The **simulation** is the static import closure of `frontend/modules/seedlingDem
 
 ⛔ **The run has no clone, snapshot or restore, and the solver has never needed one.** Planning works through the stepper and the forecasts. Everything else is a read followed by `advance`.
 
-The family also imports 114 named symbols from 24 simulation modules. Most are Seedling rules and tables (`presses.js`, `combatVerbs.js`, `combat.js`, `activators.js` and so on). The rest are physics helpers (`playerPhysicsV1/V2.js`, `levelWorld.js` geometry).
+The family also imports 114 named symbols from 24 simulation modules. Most are Seedling rules and tables (`presses.js`, `combatVerbs.js`, `combat.js`, `activators.js` and so on). The rest are physics helpers (`playerPhysicsV1/V2.js`, `levelWorld.js` geometry). Every one of those imports goes through one module, the import door `solverView.js` (see *The import door* below).
+
+## The import door
+
+`frontend/modules/seedlingDemo/solverView.js` re-exports exactly the 114 simulation symbols the family imports, one `export { … } from './<module>.js'` block per defining module. A family file takes all of its simulation symbols from one `import { … } from './solverView.js'` statement. Its imports of other family files are unchanged. So the solver reaches the simulation through two doors: the run object for live state, and `solverView.js` for rules, tables and helpers.
+
+The door is **not a wrapper**. Each line is a re-export, so a name imported through it is the defining module's own live binding, and every committed route solves byte for byte as it did before the door existed. It is **not the contract** either: the contract table is. The comment over each block summarises that module's rows (which family files use it, and how many rows are physics and how many Seedling). One name is renamed: `burnableTree.js` and `breakableRocks.js` both export a `WAIT_AFTER_PRESS_TICKS`, so the door exports the tree's pair under the `BURN_` names that `botDriverV2.js` already used.
+
+The door is not a family file. The census takes it out of the family closure, and it resolves an import through the door to the module the door re-exports. An import row's `module` is therefore always the simulation module, never `solverView.js`.
+
+The gate holds two rules on the door:
+
+- **A family file imports a `seedlingDemo` module only if it is another family file or the door.** A direct import of a simulation module is RED, naming the file and line. The allowed set comes from the closure, not from a hand-written list.
+- **The door exports only what the family imports, and only from the simulation.** An export no family file imports is RED "must be RETIRED from solverView.js". So is a re-export of a name its module does not export, any statement other than `export { … } from` a simulation module, and a family file in the door's closure.
+
+To add a symbol, the table row comes first:
+
+1. Add the name to its module's block in `solverView.js`, and to the family file's `import { … } from './solverView.js'`.
+2. Run `node scripts/procgen/census-seedling-solver-surface.mjs --write`. The new row comes out `UNCLASSIFIED`.
+3. Read the symbol's definition and fill in `class`, `form` and `why`, as for any other row (see *Adding a member when a slice needs one*).
+
+To retire one, remove the import, run `--check`, and remove the export it names.
 
 ## How it is measured
 
@@ -130,12 +151,13 @@ The event-ledger fold removes the most interface members (29 become 1). The enti
 
 ## Adding a member when a slice needs one
 
-The gate, `scripts/procgen/seedlingSolverSurface.test.js`, fails in four cases:
+The gate, `scripts/procgen/seedlingSolverSurface.test.js`, fails in five cases:
 
 - a family file reaches a member, or imports a symbol, that the table does not list;
 - a family file reaches a listed member that its row does not name in `files`;
-- a row that nothing reaches any more;
-- a family file list that no longer equals the closure.
+- a row that nothing reaches any more, or a door export that nothing imports;
+- a family file list that no longer equals the closure;
+- a break of the door's rules (see *The import door*).
 
 To add a member:
 

@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 26,
-        "headings": 915,
+        "headings": 916,
         "indexHeadings": 2,
-        "lines": 20459,
+        "lines": 20481,
         "pages": 4,
-        "words": 236623
+        "words": 237065
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -344,11 +344,11 @@ export const DOCS_INDEX = frz({
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
             "file": "seedling-solver-surface.md",
             "h1": "The Seedling Solver's Surface",
-            "headings": 10,
-            "lines": 150,
+            "headings": 11,
+            "lines": 172,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-solver-surface.md",
-            "words": 2080
+            "words": 2522
         },
         {
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
