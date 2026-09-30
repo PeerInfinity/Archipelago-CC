@@ -238,6 +238,7 @@ frontend/modules/seedlingDemo/levelRun.js|advance|had4c8fda|1|0,rule,magnitude,,
 frontend/modules/seedlingDemo/levelRun.js|advance|hd7b0522b|2|0,rule,sentinel,,cutscene id 2 (plain seed reboot)
 frontend/modules/flashPanel/seedlingSemantics.js|*|*,structural,,,
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_TO_TYPE|(module),rule,sentinel,,tileset column -> tile type id (Game.as switch)
+frontend/modules/flashPanel/seedlingSemantics.js|TILE_TYPE_IDS|(module),rule,sentinel,,tile type id by name (Tile.as:32-69); P1 names the ids the records held
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_VARIANTS|(module),cosmetic,,,column keys of the cosmetic-only waterfall/grass variant flags
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_TYPE_SEMANTICS|(module),rule,sentinel,,tile type id
 frontend/modules/flashPanel/seedlingSemantics.js|ENTITY_SEMANTICS|(module),physics,magnitude,,entity hitbox size in tiles
@@ -287,7 +288,6 @@ frontend/modules/seedlingDemo/combat.js|(module)|h153f1fa3|1|0,rule,count,,sword
 frontend/modules/seedlingDemo/combat.js|(module)|h6996fe06|80|0,rule,bound,,runRange / attack or chomp range gating aggro
 frontend/modules/seedlingDemo/combat.js|(module)|h5cadc6f9|1|0,rule,magnitude,,damage dealt to Player.hit
 frontend/modules/seedlingDemo/combat.js|(module)|h526f3fab|0|0,physics,bound,,reach pad beyond the body hitbox
-frontend/modules/seedlingDemo/combat.js|(module)|hbbf5448f|17|0,rule,sentinel,,tile type 17 lava written by Bulb
 frontend/modules/seedlingDemo/combat.js|(module)|h09318176|2|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
 frontend/modules/seedlingDemo/combat.js|(module)|h953a7d5d|80|0,rule,bound,,runRange / attack or chomp range gating aggro
 frontend/modules/seedlingDemo/combat.js|(module)|h16e98058|1|0,rule,magnitude,,damage dealt to Player.hit
@@ -617,7 +617,6 @@ frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|30,rule,magnitude
 frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|128,rule,bound,Enemies/IceTurret.as:attackRange,
 frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|25,rule,magnitude,Enemies/IceTurret.as:shootTimerMax,
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h8f7a3a6c|6|0,physics,magnitude,Enemies/IceTurret.as:shotSpeed,
-frontend/modules/seedlingDemo/iceTurret.js|(module)|h46e66bc1|6|0,rule,sentinel,,fatal tile ids
 frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|12,physics,magnitude,Enemies/IceTurret.as:distBtwnShots,
 frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|0.1,physics,bound,Enemies/IceTurret.as:bothRange,
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h54184986|10|0,rule,magnitude,Enemies/IceTurret.as:attackAnimSpeed,anim wrap spawns the volley
@@ -626,11 +625,9 @@ frontend/modules/seedlingDemo/iceTurret.js|(module)|h678e8216|10|0,rule,magnitud
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h572d21da|1|0,rule,count,,
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h16a4d42b|1|0,rule,count,,
 frontend/modules/seedlingDemo/iceTurret.js|(module)|h4bf02e6e|1|0,cosmetic,,,hit anim never played
-frontend/modules/seedlingDemo/iceTurret.js|(module)|h0bb154fc|1|0,rule,sentinel,,fatal tile ids
 frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|5,rule,count,,
 frontend/modules/seedlingDemo/iceTurret.js|(module)|hbe7fb5f1|0|0,rule,magnitude,,shot anim callbacks spawn the volley; dead rate 0 never calls back
 frontend/modules/seedlingDemo/iceTurret.js|(module)|hbec77a4a|0|0,cosmetic,,,hit anim never played
-frontend/modules/seedlingDemo/iceTurret.js|ICE_TURRET|(module)|17,rule,sentinel,,fatal tile ids
 frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|0,structural,,,
 frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|1,structural,,,
 frontend/modules/seedlingDemo/iceTurret.js|createIceTurret|hd036d842|0|2,structural,,,
@@ -1078,9 +1075,6 @@ frontend/modules/seedlingDemo/spinner.js|(module)|ha43bfe71|0.05|0,rule,magnitud
 frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|0.1,rule,magnitude,,REVIEW: alpha fade but its accumulation gates removal (11 ticks)
 frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|11,rule,magnitude,,death fade length in ticks
 frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|20,rule,magnitude,,pit fall length in ticks
-frontend/modules/seedlingDemo/spinner.js|(module)|hb3997753|1|0,rule,sentinel,,Tile.t water
-frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|6,rule,sentinel,,Tile.t pit
-frontend/modules/seedlingDemo/spinner.js|SPINNER|(module)|17,rule,sentinel,,Tile.t lava
 frontend/modules/seedlingDemo/spinner.js|SPINNER_CTOR_RNG|(module),rule,count,,RNG draws per ctor (inert but phase-relevant)
 frontend/modules/seedlingDemo/spinner.js|spinnerFriction|h6e9b004f|0|0,physics,magnitude,,velocity snapped to zero in dead band
 frontend/modules/seedlingDemo/spinner.js|spinnerFriction|hcfb3654e|0|0,physics,magnitude,,velocity snapped to zero in dead band
@@ -1271,7 +1265,6 @@ frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|4,rule,count,,Bob die 
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|5,rule,magnitude,,Bob die anim rate
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|8,rule,count,,Jellyfish die anim frames
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|7,rule,magnitude,,Jellyfish die anim rate
-frontend/modules/seedlingDemo/chasers.js|ENEMY_TERRAIN_DESTROYS|(module),rule,sentinel,,tile types water 1 / lava 17
 frontend/modules/seedlingDemo/chasers.js|normalize|normalize,structural,,,
 frontend/modules/seedlingDemo/chasers.js|applyFriction|applyFriction,structural,,,zero floor / zeroed components
 frontend/modules/seedlingDemo/chasers.js|sign|sign,physics,sign,,FP.sign
@@ -1377,11 +1370,11 @@ frontend/modules/seedlingDemo/fireVerb.js|FIRE_ON_ENEMY|(module),rule,magnitude,
 frontend/modules/seedlingDemo/fireVerb.js|FIRE_SPAN_TICKS|(module),structural,,,tape press span (edge + release)
 frontend/modules/seedlingDemo/fireVerb.js|firePress|firePress,structural,,,
 frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|1,rule,magnitude,Enemies/Enemy.as:damage,
+frontend/modules/seedlingDemo/enemyDamage.js|NO_FORCE_CAP|(module),physics,sentinel,Enemies/Enemy.as:maxForce,-1 = no force cap (was ENEMY_DAMAGE_DEFAULTS.maxForce)
 frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|0,structural,,,fresh hits / hitsTimer counters
 frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|3,rule,count,Enemies/Enemy.as:hitsMax,
 frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|30,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,enemy i-frames
 frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|10,cosmetic,,,colour-flash modulus
-frontend/modules/seedlingDemo/enemyDamage.js|ENEMY_DAMAGE_DEFAULTS|(module)|-1,physics,sentinel,Enemies/Enemy.as:maxForce,-1 = no force cap
 frontend/modules/seedlingDemo/enemyDamage.js|MOBILE_DEATH_FADE|(module),rule,magnitude,,death fade alpha step / start alpha; the fade gates removal and totalEnemies
 frontend/modules/seedlingDemo/enemyDamage.js|PIT_FADE|(module),rule,magnitude,,pit descent fade start alpha / step
 frontend/modules/seedlingDemo/enemyDamage.js|PIT_FADE|(module)|0.05,rule,magnitude,Enemies/Enemy.as:fallAlphaSpeed,pit descent fade step

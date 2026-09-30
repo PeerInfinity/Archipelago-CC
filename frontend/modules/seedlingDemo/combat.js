@@ -98,6 +98,7 @@
 
 import { PROFILE } from './seedlingProfile.js';
 import { defineRecord } from './entityRecords.js';
+import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
 
 /**
  * The `Game.totalEnemies()` sum, VERBATIM and in source order
@@ -197,7 +198,7 @@ export const ENEMY_CLASSES = defineRecord('enemyClasses', {
         // `collidePoint("Tile", x, y).t = 17` — the tile under its CENTRE
         // becomes LAVA for the rest of the visit — before playing "die",
         // whose own `endAnim` arm removes it.
-        navMeshEdit: { becomes: 17, where: 'the tile under its centre', src: 'Enemies/Bulb.as:71-79' },
+        navMeshEdit: { becomes: TILE_TYPE_IDS.lava, where: 'the tile under its centre', src: 'Enemies/Bulb.as:71-79' },
     },
     lavarunner: {
         ctor: { dx: 8, dy: 8, src: 'LavaRunner.as `super(_x, _y)` → Bob adds Tile/2' },

@@ -420,3 +420,62 @@ describe('grid construction over real levels', () => {
         expect(grid.unclassified).toEqual([{ tile: [0, 0], what: 'entity "martian"' }]);
     });
 });
+
+// ── Behaviour-parameters P1 (⚖ Q11): the tile types BY NAME ─────────────────
+//
+// `TILE_TYPE_IDS` is the one name ↔ int table. These rows hold it to the
+// source's own numbering, hold the profile's `*State` keys to their names (one
+// value, two places — the profile keys stay, the witness names them), and hold
+// every tile-keyed table in the model to a named id.
+const { TILE_TYPE_IDS } = await import('./seedlingSemantics.js');
+const { PROFILE } = await import('../seedlingDemo/seedlingProfile.js');
+const { MODELLED_TILE_TYPES } = await import('../seedlingDemo/levelWorld.js');
+const { HAZARD_STATES } = await import('../seedlingDemo/tapeFormat.js');
+const { DESTROYING_TILE_TYPES } = await import('../seedlingDemo/pushables.js');
+const { ENEMY_TERRAIN_DESTROYS } = await import('../seedlingDemo/chasers.js');
+const { ICE_TURRET } = await import('../seedlingDemo/iceTurret.js');
+const { SPINNER } = await import('../seedlingDemo/spinner.js');
+const { FINAL_BOSS } = await import('../seedlingDemo/finalBossFight.js');
+const { ENEMY_CLASSES } = await import('../seedlingDemo/combat.js');
+const NAME_OF = new Map(Object.entries(TILE_TYPE_IDS).map(([n, id]) => [id, n]));
+const camel = (s) => s.replace(/[()]/g, '').split(/[\s-]+/).map((w, i) => (i ? w[0].toUpperCase() + w.slice(1) : w.toLowerCase())).join('');
+
+describe('TILE_TYPE_IDS — the tile types by name', () => {
+
+    it('ids unique, names unique, and each id is its name\'s index in TILE_TYPE_NAMES (Tile.as:32-69)', () => {
+        const ids = Object.values(TILE_TYPE_IDS);
+        expect(new Set(ids).size).toBe(ids.length);
+        expect(Object.isFrozen(TILE_TYPE_IDS)).toBe(true);
+        expect(ids).toEqual(TILE_TYPE_NAMES.map((_, i) => i));
+        expect(Object.keys(TILE_TYPE_IDS)).toEqual(TILE_TYPE_NAMES.map(camel));
+    });
+
+    it('every id TILE_COLUMN_TO_TYPE builds and every id MODELLED_TILE_TYPES lists has a name', () => {
+        for (const t of new Set([...TILE_COLUMN_TO_TYPE, ...MODELLED_TILE_TYPES])) expect(NAME_OF.has(t), String(t)).toBe(true);
+    });
+
+    it('the profile\'s *State keys ARE the named ids (one value, two places)', () => {
+        expect(PROFILE.lavaState).toBe(TILE_TYPE_IDS.lava);
+        expect(PROFILE.waterState).toBe(TILE_TYPE_IDS.water);
+        expect(PROFILE.bridgeState).toBe(TILE_TYPE_IDS.bridge);
+        expect(PROFILE.waterfallState).toBe(TILE_TYPE_IDS.waterfall);
+        expect(PROFILE.iceState).toBe(TILE_TYPE_IDS.ice);
+        expect(PROFILE.pitState).toBe(TILE_TYPE_IDS.pit);
+        expect(PROFILE.enemyPitTile).toBe(TILE_TYPE_IDS.pit);
+        expect(PROFILE.initialTerrainState).toBe(TILE_TYPE_IDS.ground);
+        expect(PROFILE.coercedTerrainState).toBe(TILE_TYPE_IDS.ground);
+        expect([PROFILE.noBounceStates0, PROFILE.noBounceStates1, PROFILE.noBounceStates2])
+            .toEqual([TILE_TYPE_IDS.pit, TILE_TYPE_IDS.water, TILE_TYPE_IDS.lava]);
+    });
+
+    it('every tile-keyed table in the model names its ids by the table\'s own name', () => {
+        for (const t of Object.keys(TILE_TYPE_SEMANTICS).map(Number)) expect(NAME_OF.has(t), String(t)).toBe(true);
+        for (const [name, t] of Object.entries(HAZARD_STATES)) expect(TILE_TYPE_IDS[name], `HAZARD_STATES.${name}`).toBe(t);
+        for (const [t, name] of Object.entries(DESTROYING_TILE_TYPES)) expect(TILE_TYPE_IDS[name], `DESTROYING_TILE_TYPES[${t}]`).toBe(Number(t));
+        for (const [name, t] of Object.entries(ENEMY_TERRAIN_DESTROYS)) expect(TILE_TYPE_IDS[name], `ENEMY_TERRAIN_DESTROYS.${name}`).toBe(t);
+        for (const [name, t] of Object.entries(ICE_TURRET.fatalTiles)) expect(TILE_TYPE_IDS[name], `ICE_TURRET.fatalTiles.${name}`).toBe(t);
+        for (const [t, name] of Object.entries(SPINNER.terrain)) expect(TILE_TYPE_IDS[name], `SPINNER.terrain[${t}]`).toBe(Number(t));
+        expect(FINAL_BOSS.lavaT).toBe(TILE_TYPE_IDS.lava);
+        expect(ENEMY_CLASSES.bulb.navMeshEdit.becomes).toBe(TILE_TYPE_IDS.lava);
+    });
+});

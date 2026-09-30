@@ -78,6 +78,7 @@ import { spawnVolley } from './iceTurretBlast.js';
 // `Engine.MAX_ELAPSED`. One transcription of that constant for the package.
 import { FP_ELAPSED } from './chasers.js';
 import { defineRecord } from './entityRecords.js';
+import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
 
 export class IceTurretError extends Error {
     constructor(message) { super(message); this.name = 'IceTurretError'; }
@@ -160,7 +161,7 @@ export const ICE_TURRET = defineRecord('iceTurret', {
      */
     activeOffScreen: false,
     /** Tile `t` values `input()` and `Enemy.update` both treat as fatal. */
-    fatalTiles: Object.freeze({ water: 1, pit: 6, lava: 17 }),
+    fatalTiles: Object.freeze({ water: TILE_TYPE_IDS.water, pit: TILE_TYPE_IDS.pit, lava: TILE_TYPE_IDS.lava }),
     src: 'Enemies/IceTurret.as:30-51 (ctor), :53-95 (update), :135-150 (death), '
         + ':169-201 (bump), :203-240 (input); Enemies/Enemy.as:61-113,141-181; '
         + 'Mobile.as:17,31-45,84-115',

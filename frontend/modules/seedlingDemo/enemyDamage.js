@@ -105,6 +105,13 @@ const fail = (m) => { throw new EnemyDamageError(m); };
 export { KILL_LOCK_TAGS, KILL_LOCK_TSET, TOTAL_ENEMIES_CLASSES, TOTAL_ENEMIES_OMISSIONS };
 
 /**
+ * `Enemy.maxForce`'s "no cap" sentinel (`Enemies/Enemy.as:maxForce`): `enemyHit`
+ * clamps the knockback only when `maxForce >= 0`. Behaviour-parameters P1
+ * named it so `ENEMY_DAMAGE_DEFAULTS` reads a name, not a bare -1.
+ */
+export const NO_FORCE_CAP = -1;
+
+/**
  * `Enemies/Enemy.as:19-51` — every damage-relevant field default, verbatim.
  *
  * Exported as data because a subclass changes these by ASSIGNMENT in its
@@ -126,7 +133,7 @@ export const ENEMY_DAMAGE_DEFAULTS = defineRecord('enemyDamageDefaults', {
     canHit: true,
     justKnock: false,
     onlyHitBy: '',
-    maxForce: -1,
+    maxForce: NO_FORCE_CAP,
     dieInWater: true,
     dieInLava: true,
     canFallInPit: true,

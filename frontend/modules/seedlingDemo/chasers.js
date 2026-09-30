@@ -69,6 +69,7 @@ import { rect, SOLIDS_BY_MOVER } from './levelWorld.js';
 import { MODELLED_ENEMY_CLASSES } from './spinner.js';
 import { PROFILE } from './seedlingProfile.js';
 import { defineRecord } from './entityRecords.js';
+import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
 
 export class ChaserError extends Error {
     constructor(message) { super(message); this.name = 'ChaserError'; }
@@ -302,7 +303,7 @@ export function deathTicks(tag) {
  * ASSERT the gap rather than discover it: a stepped body standing here is one
  * the game has already destroyed.
  */
-export const ENEMY_TERRAIN_DESTROYS = defineRecord('enemyTerrainDestroys', { water: 1, lava: 17 }, { doc: [], src: 'chasers.js' });
+export const ENEMY_TERRAIN_DESTROYS = defineRecord('enemyTerrainDestroys', { water: TILE_TYPE_IDS.water, lava: TILE_TYPE_IDS.lava }, { doc: [], src: 'chasers.js' });
 
 /**
  * `Enemy.update`'s `case 6` — the PIT, which is a SCHEDULE and not an

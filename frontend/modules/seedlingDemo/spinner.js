@@ -111,6 +111,7 @@ import { rectsOverlap, SOLIDS_BY_MOVER, TILE_SIZE } from './levelWorld.js';
  */
 import { collideLineSolid } from './crusher.js';
 import { defineRecord } from './entityRecords.js';
+import { TILE_TYPE_IDS } from '../flashPanel/seedlingSemantics.js';
 
 export class SpinnerError extends Error {
     constructor(message) { super(message); this.name = 'SpinnerError'; }
@@ -185,7 +186,7 @@ export const SPINNER = defineRecord('spinner', {
     /** ⛓ `Mobile.solids`, VERBATIM — no `push` anywhere in the chain. */
     solids: SOLIDS_BY_MOVER.enemy,
     /** `Enemy.getState()`'s switch, by `Tile.t`. */
-    terrain: Object.freeze({ 1: 'water', 6: 'pit', 17: 'lava' }),
+    terrain: Object.freeze({ [TILE_TYPE_IDS.water]: 'water', [TILE_TYPE_IDS.pit]: 'pit', [TILE_TYPE_IDS.lava]: 'lava' }),
     src: 'Enemies/Spinner.as:22-45,124-171 + Enemies/Enemy.as:62-118 + Mobile.as:26-118',
 }, { doc: ['src'], src: 'spinner.js' });
 

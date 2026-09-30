@@ -72,6 +72,27 @@ export const TILE_TYPE_NAMES = Object.freeze([
 ]);
 
 /**
+ * ⛓ Behaviour-parameters P1 (⚖ Q11): Seedling's tile types BY NAME — ONE
+ * name ↔ int table, so a record that means "lava" can say `TILE_TYPE_IDS.lava`
+ * instead of a bare 17. The int is the `t` a Tile is constructed with; each
+ * name is `TILE_TYPE_NAMES`' entry at that index (the comment block at
+ * `Scenery/Tile.as:32-69`, `* 0 = Ground` … `* 37= Rock Wall (floor)`) in
+ * camelCase (vendor/seedling), and `TILE_COLUMN_TO_TYPE` (`Game.as:2097`'s
+ * `switch(Math.floor(o.@tx / Tile.w))`) builds
+ * only these ids. `seedlingSemantics.test.js` holds the two tables together,
+ * holds the profile's `*State` keys to their names (one value, two places),
+ * and holds every tile-keyed table in the model to a named id.
+ */
+export const TILE_TYPE_IDS = Object.freeze({
+    ground: 0, water: 1, stone: 2, brick: 3, dirt: 4, dungeonTile: 5, pit: 6, shieldTile: 7,
+    forest: 8, cliff: 9, cliffStairs: 10, wood: 11, walkableWood: 12, cave: 13, woodNatural: 14,
+    darkStone: 15, igneousStone: 16, lava: 17, blueTile: 18, blueWall: 19, blueWallDark: 20,
+    snow: 21, ice: 22, iceWall: 23, iceWallGlowing: 24, waterfall: 25, bodyFloor: 26, bodyWall: 27,
+    ghostTile: 28, bridge: 29, ghostTileStep: 30, igneousToLava: 31, oddTile: 32, fuchsiaTile: 33,
+    oddTileWall: 34, rockWallDark: 35, rockWall: 36, rockWallFloor: 37,
+});
+
+/**
  * `Tile.types` verbatim (Tile.as:23-26): the FlashPunk entity `type` each tile
  * number takes in `update()`. Only "Solid" blocks — see SOLID_ENTITY_TYPES.
  * Index 29 (Bridge) is "Unused" in the table because Bridge overwrites `type`
