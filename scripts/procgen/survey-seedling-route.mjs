@@ -113,6 +113,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync } from 
 import { fileURLToPath } from 'node:url';
 
 import { familyOf } from './surveyFamily.js';
+import { deriveStagedGrant } from './surveyGrants.js';
 
 import { parseDashMode, dashModeNote } from './dashMode.js';
 
@@ -188,6 +189,9 @@ const atlas = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
 const spheres = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/flashPanel/atlases/seedling-sphere-order.json'), 'utf8'));
+/** ⛓ SWIM U2 D3: the AP item → flash name → property tables the staged grant maps through. */
+const GAME = JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
 
 /** The AP rules export for the playthrough world — found, never hardcoded. */
 function apRulesPath() {
@@ -672,33 +676,40 @@ const STAGED_BASE = 'r8-solve-11';
 const STAGED_CROSSCHECK = new Map([[bootKey(18, 16, 32), 'r8-solve-18']]);
 
 /**
- * ⛓ SWIM T3 D4 — **WHAT A STAGED ROOM IS GRANTED BEYOND THE LATCH**, keyed on
- * the arrival like everything else here.
+ * ⛓ SWIM T3 D4 — **WHAT A STAGED ROOM IS GRANTED BEYOND THE LATCH**.
  *
  * `STAGED_BASE` is the campaign's post-sword latch, and it predates every
- * pickup the extended legs collect. So L30 (step 29, `--through=2.2`) staged
- * from it holds no Green Key and refuses at `bosslock` by name — a bound of
- * the STAGING, not a wall in the room (S2's own reading). The row below
- * declares the key the route has already collected by then (`bosskey@112,64`
- * in L29, `keyType` 1 — step 27) through the tape's own v6 `save.keys` block,
- * which `levelRun` reads at boot; it is a declaration, like the boot itself,
- * and the row says so in its output.
+ * pickup the extended legs collect, so a staged room after the Red Key, the
+ * Shield or the Green Key refused on a lock the route had already earned (S2's
+ * reading: a bound of the STAGING, not a wall in the room). T3 declared ONE
+ * row by hand (the Green Key at L30) and U1 re-keyed it.
  *
- * ⚠ `--through` ONLY, and ONE row: a derivation that granted every earlier
- * route pickup to every later staged room would also move rows 22-30 (the
- * shield) — a policy, not this slice's.
- *
- * ⛓ SWIM U1 D4 — RE-KEYED to the arrival the route takes NOW. T4's directional
- * lock derivation moved leg 2.2 to `L29 → L31 → L30 (r2c10) → L32`, so step 29
- * arrives at L30 (176,48) from L31 (`--through=2.2 --derive-only`), not at the
- * (64,16) pocket north of the lock that T3 keyed; that key matched no step and
- * step 29 booted without the Green Key. Still ONE row: step 28 (L31) also
- * meets a key-locked exit and is left to say so.
+ * ⛓⛓ SWIM U2 D3 (⚖ Q26: "derive it") — the hand row is gone. Under
+ * `--through` ONLY, a staged step is granted the union of every
+ * `collect-placement` the route completed at an EARLIER step
+ * (`surveyGrants.deriveStagedGrant`): Boss Keys through the v6 `save.keys`
+ * block, items through the v8 `seam.items` block — the two doors the staging
+ * already has (`buildStagedTape` carries both verbatim). An item the latch
+ * already holds is reported `latched` and not written, and the latch is
+ * post-sword, so the Sword must be one of those (asserted). The default survey
+ * is untouched: no grant, so its rows and md5s cannot move.
  */
-const STAGED_SAVE_GRANTS = new Map(THROUGH ? [[bootKey(30, 176, 48), {
-    keys: [1],
-    why: 'the Green Key (bosskey@112,64 in L29, keyType 1) the route collects at step 27',
-}]] : []);
+function stagedGrantFor(step, latchItems) {
+    if (!THROUGH || typeof step.step !== 'number') return null;
+    const grant = deriveStagedGrant({
+        earlier: route.steps.filter((s) => typeof s.step === 'number' && s.step < step.step),
+        pickups: ROUTE_PICKUPS,
+        game: GAME,
+        latchItems,
+    });
+    const sword = grant?.from.find((f) => f.item === 'Progressive Sword');
+    if (sword && sword.grants !== 'latched hasSword') {
+        throw new Error(`staged grant for step ${step.step}: the route's Sword (step ${sword.step}) `
+            + `derives '${sword.grants}', but ${STAGED_BASE} is the POST-SWORD latch — the latch `
+            + 'must already hold it, and a second grant would hide a latch that does not.');
+    }
+    return grant;
+}
 
 /**
  * The KNOWN-ANSWER tape a row's tick count can be compared against — a
@@ -792,13 +803,20 @@ async function solveOneStep(step) {
         staging.boot = { level: step.level, x: step.arrival.x, y: step.arrival.y };
     }
     const saveGrant = boot.kind === 'staged'
-        ? STAGED_SAVE_GRANTS.get(bootKey(step.level, step.arrival.x, step.arrival.y)) ?? null
+        ? stagedGrantFor(step, staging.seam?.items ?? null)
         : null;
-    if (saveGrant) {
+    if (saveGrant?.keys.length) {
         const save = staging.save ?? { totem_parts: [], keys: [], seal_parts: [] };
         staging.save = {
             ...save,
             keys: [...new Set([...(save.keys ?? []), ...saveGrant.keys])].sort((x, y) => x - y),
+        };
+    }
+    if (saveGrant?.items.length) {
+        staging.seam = {
+            ...staging.seam,
+            items: { ...staging.seam.items,
+                ...Object.fromEntries(saveGrant.items.map((prop) => [prop, true])) },
         };
     }
     /**
@@ -1031,7 +1049,7 @@ async function solveOneStep(step) {
             block: staging.boot,
             check: bootCheck,
             strippedTimedClears: inheritedTimed.map((r) => `{${r.level},${r.tag}}@${r.at}`),
-            ...(saveGrant ? { saveGrant: { keys: [...saveGrant.keys], why: saveGrant.why } } : {}),
+            ...(saveGrant ? { saveGrant } : {}),
         },
         withCommittedDeclarations: withCommitted,
         goals: step.goals,
