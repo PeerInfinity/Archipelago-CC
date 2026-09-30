@@ -67,7 +67,7 @@ Pointers to other docs are plain prose; the body contains **zero links**. The do
 - `requiredTapeVersion` returns 13 first, outranking `hold`.
 - `GAME_VISIBLE_DROPS` gains `'profile'`, and `gameVisibleTape` destructures it away. The projection rule is unchanged: `hold ? 12 : min(version, 8)`.
 - `serializeTape` writes the field only when a v13 tape declares it.
-- **Decision: `TAPE_VERSION` stays 12.** Six builders stamp that constant onto the tapes they build: `playthroughAcceptance.test.js`, `r7Acceptance.test.js`, and four probe/plan scripts under `scripts/procgen/`. Bumping it would re-version those tapes to 13 for a feature they don't use. The reasoning is in the docblock. The precedent (v9–v11 bumped it) points the other way, so the coordinator may overrule this. It would be a one-line change plus two pins.
+- **Decision: `TAPE_VERSION` stays 12.** Six builders stamp that constant onto the tapes they build: `playthroughAcceptance.test.js`, `r7Acceptance.test.js`, and four probe/plan scripts under `scripts/procgen/`. Bumping it would re-version those tapes to 13 for a feature they don't use. The reasoning is in the docblock. The precedent (v9–v11 bumped it) pointed the other way. **⚖ Ruled by the user, 2026-09-30: *"I agree with your recommendations."* `TAPE_VERSION` stays 12.**
 - **Gate: the identity file regenerated after D3 is BYTE-IDENTICAL**: `24db54a7312c354fbd0dc5ede73a8fdd` (`cmp` clean). That covers all three tape columns for all 154 tapes, plus the 154 expectations.
 - Tests: the two `SUPPORTED_TAPE_VERSIONS` pins and the `GAME_VISIBLE_DROPS` pin moved (these are the "pins the version list" allowance, and all are in `tapeFormat.test.js`). A new `version 13` block adds 6 rows. `tapeFormat.test.js` now has 149 tests.
 - **The existing projection pin (`tapeFormat.test.js` ~1318) cannot see `profile`**, because it projects a tape that declares none. So the classification pin for v13 is the new row `⛓ is MODEL-ONLY`, as the brief's "(or your new row)" allowed.
@@ -136,6 +136,6 @@ Non-test files outside the list that D1 needed: `scripts/procgen/reference/docsI
 
 ## Residue
 
-- `docs/json/developer/procgen/seedling-bot.md` § *Versions* still says "accepts versions 1 to 12", and its table has no v13 row. The file is outside B1's list; the follow-up is one sentence and one table row.
+- ~~`seedling-bot.md` § *Versions* still says 1 to 12~~ **Done after the ruling:** it now says 1 to 13, has a v13 row (model only) and lists `profile` among the drops. No link was added, so the census stays at 305; the README index word count was regenerated and `--check` is clean.
 - `observationTolerance.test.js` adds about 26 s to the default vitest tier, because it re-runs the 154 model streams. If that matters, it could move to `*.slow`.
-- `TAPE_VERSION` staying at 12 needs the coordinator's ruling (see D3).
+- `TAPE_VERSION` staying at 12: ruled by the user on 2026-09-30 (see D3).

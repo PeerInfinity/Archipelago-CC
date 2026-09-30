@@ -82,7 +82,7 @@ Validation is loud everywhere. `noclip` has no default, unknown keys throw, and 
 
 ### Versions
 
-`tapeFormat.SUPPORTED_TAPE_VERSIONS` accepts versions 1 to 12. A field is legal only at or above the version that introduced it; a lower-version tape that declares it is a named error. **Note:** check the version by value, never by presence: `parseTape` is idempotent and fills every later field with its empty value, and the harness sends the parsed object, so a presence check rejects every tape.
+`tapeFormat.SUPPORTED_TAPE_VERSIONS` accepts versions 1 to 13. A field is legal only at or above the version that introduced it; a lower-version tape that declares it is a named error. **Note:** check the version by value, never by presence: `parseTape` is idempotent and fills every later field with its empty value, and the harness sends the parsed object, so a presence check rejects every tape.
 
 | Version | Adds | Reaches the game? |
 |---|---|---|
@@ -98,10 +98,11 @@ Validation is loud everywhere. `noclip` has no default, unknown keys throw, and 
 | 10 | `despawn`: `[{level, id, at, note}]`, a body the game removes on its own at tick `at` | no (model only) |
 | 11 | `tick0: {rng, seam}`: the measured state at tick 0 of a fresh boot | no (model only) |
 | 12 | `hold: true`: freeze the room at the seam latch until the next `botStart` | yes, on builds declaring `hold` |
+| 13 | `profile: {id, md5}`: the physics profile the tape was recorded against (the tape-envelope document in this directory) | no (model only) |
 
 Live in `fixtures/tapes/` today: versions 3 to 11 (no committed tape is at 1, 2 or 12). To tally them, read `tape_version` across `fixtures/tapes/*.json`, skipping `index.json`.
 
-**Model-only fields never cross to the game.** `gameVisibleTape()`, the tape handed to `botLoadTape`, drops `GAME_VISIBLE_DROPS` (clears with `at`, `despawn`, `tick0`) and reports the newest version whose features survive; `Bot.as` accepts 1–8 and 12. A v9 `at` or v10 `despawn` states what the game does by itself, and a game that consumed it would no longer be checked. `tapeFormat.test.js` pins the projection, so a new field fails until it is classified.
+**Model-only fields never cross to the game.** `gameVisibleTape()`, the tape handed to `botLoadTape`, drops `GAME_VISIBLE_DROPS` (clears with `at`, `despawn`, `tick0`, `profile`) and reports the newest version whose features survive; `Bot.as` accepts 1–8 and 12. A v9 `at` or v10 `despawn` states what the game does by itself, and a game that consumed it would no longer be checked. `tapeFormat.test.js` pins the projection, so a new field fails until it is classified.
 
 ### The relaxations (v2)
 
