@@ -4879,8 +4879,9 @@ export function buildLevelWorld(levelRecord, {
                 y,
                 // The ENTITY point — `super(_x + Tile.w/2, _y + spr.height/2)`
                 // through `Activators(_x:int, _y:int, …)`, whose int params
-                // TRUNCATE the 2.5 to 2. `arrowTrap.ARROW_TRAP.ctor` is the
-                // one transcription; this is its consumer.
+                // TRUNCATE the 2.5 to 2. `combat.PUZZLEMENT_HAZARDS.arrowtrap.ctor`
+                // is the census row read here; `arrowTrap.ARROW_TRAP.ctor` is
+                // its value-identical twin (entityRecords.agreement.test.js).
                 ex: x + PUZZLEMENT_HAZARDS.arrowtrap.ctor.dx,
                 ey: y + PUZZLEMENT_HAZARDS.arrowtrap.ctor.dy,
                 t: tSetOf(e.type, e.attrs),

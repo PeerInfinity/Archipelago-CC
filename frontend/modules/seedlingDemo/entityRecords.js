@@ -122,6 +122,30 @@ const leafType = (v) => (v === null ? 'null' : typeof v);
 /** name → {name, record, doc, src}. The registry. */
 const RECORDS = new Map();
 
+/**
+ * Every object/array node a registered record holds → the path it was
+ * registered at. ⛔ A node two records share is overridden ASYMMETRICALLY
+ * (the P1 residue, ⚖ Q13): an override through the first record's path
+ * writes the shared node in place and moves the second record too, while
+ * the second record's own path only reaches a copy. So a node already
+ * held by another record is REFUSED; the second record carries its own
+ * value-identical literal.
+ */
+const NODE_OWNER = new WeakMap();
+
+/** Every object/array node under `record`, with its dotted path. */
+function nodesOf(name, record) {
+    const out = [];
+    const visit = (v, path) => {
+        if (v === null || typeof v !== 'object') return;
+        out.push([v, path]);
+        if (Array.isArray(v)) v.forEach((x, i) => visit(x, `${path}[${i}]`));
+        else for (const k of Object.keys(v)) visit(v[k], `${path}.${k}`);
+    };
+    visit(record, name);
+    return out;
+}
+
 // ── the override, read once ──────────────────────────────────────────
 
 /** Parse and validate the global's override into Map(path → value). */
@@ -256,6 +280,12 @@ function setAt(node, segs, value) {
 export function defineRecord(name, record, { doc = [], src = '' } = {}) {
     assertEntityRecord(name, record, { doc });
     if (RECORDS.has(name)) refuse(`record "${name}" is registered twice (first by ${RECORDS.get(name).src || '?'}, again by ${src || '?'})`);
+    for (const [node, path] of nodesOf(name, record)) {
+        const owner = NODE_OWNER.get(node);
+        if (owner && owner.name !== name) {
+            refuse(`record "${name}": ${path} is the same object as ${owner.path}, registered by "${owner.name}" (${owner.src || '?'}) — give "${name}" its own value-identical literal; a node two records share is overridden asymmetrically`);
+        }
+    }
     const docKeys = new Set(doc);
     let live = record;
     if (OVERRIDE) {
@@ -273,6 +303,11 @@ export function defineRecord(name, record, { doc = [], src = '' } = {}) {
         }
     }
     deepFreeze(live);
+    for (const r of new Set([record, live])) {
+        for (const [node, path] of nodesOf(name, r)) {
+            if (!NODE_OWNER.has(node)) NODE_OWNER.set(node, { name, path, src });
+        }
+    }
     RECORDS.set(name, Object.freeze({ name, record: live, doc: Object.freeze([...doc]), src }));
     return live;
 }

@@ -756,6 +756,8 @@ frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|128,rule,m
 frontend/modules/seedlingDemo/arrowTrap.js|ARROW_TRAP_CENSUS|(module)|67,rule,sentinel,,level id
 frontend/modules/seedlingDemo/arrowTrap.js|assertArrowTrapCensus|assertArrowTrapCensus|116,structural,,,level scan bound
 frontend/modules/seedlingDemo/arrowTrap.js|assertArrowTrapCensus|assertArrowTrapCensus|0,structural,,,
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|hef4fa827|8|0,physics,magnitude,,ctor offset dx; value-identical twin of PUZZLEMENT_HAZARDS.arrowtrap.ctor (F-b; agreement test)
+frontend/modules/seedlingDemo/arrowTrap.js|(module)|h9c6ecc0b|2|0,physics,magnitude,,ctor offset dy (2.5 truncated); value-identical twin of PUZZLEMENT_HAZARDS.arrowtrap.ctor (F-b; agreement test)
 frontend/modules/seedlingDemo/shieldBossFight.js|shieldBossAnimUpdates|shieldBossAnimUpdates,structural,,,
 frontend/modules/seedlingDemo/shieldBossFight.js|(module)|h610edcfd|0|0,rule,sentinel,,sit frame id; hitPlayer tests frame 5..8
 frontend/modules/seedlingDemo/shieldBossFight.js|(module)|hd289e4d8|0|0,rule,magnitude,,frameRate 0: sit never calls back

@@ -44,15 +44,17 @@ describe('`ArrowTrap`, against `Puzzlements/ArrowTrap.as`', () => {
         expect(arrowTrapEntityPoint(32, 48)).toEqual({ x: 40, y: 50 });
     });
 
-    it('⛔⛔ THERE IS ONE TRANSCRIPTION — `combat.js`\'s — and this is it', () => {
-        // Not a cross-check: an IDENTITY. R5 slice 2's headline defect was a
-        // second transcription of the constructor offsets that disagreed with
-        // the first by eight pixels on every enemy on the map, and the
-        // standing answer since `chasers.js` is to IMPORT the census rather
-        // than re-read the class. A mutation of `combat.js`'s row moves this
-        // module and every consumer of it in one step, which is the point.
-        expect(ARROW_TRAP.ctor).toBe(PUZZLEMENT_HAZARDS.arrowtrap.ctor);
-        // ...and the value, so a mutation of the census still reddens HERE.
+    it('⛔⛔ the two ctor transcriptions AGREE — and are two objects (⚖ Q13, F-b)', () => {
+        // R5 slice 2's headline defect was a second transcription of the
+        // constructor offsets that disagreed with the first by eight pixels.
+        // Until 2026-09-30 the answer here was an IDENTITY (the same object);
+        // that made an override through `puzzlementHazards.arrowtrap.ctor`
+        // move this record too, while `arrowTrap.ctor` reached only a copy.
+        // ⚖ Q13: `defineRecord` refuses a shared node, so the record has its
+        // own literal and the VALUES are held together here and in
+        // `entityRecords.agreement.test.js`.
+        expect(ARROW_TRAP.ctor).not.toBe(PUZZLEMENT_HAZARDS.arrowtrap.ctor);
+        expect(ARROW_TRAP.ctor).toEqual(PUZZLEMENT_HAZARDS.arrowtrap.ctor);
         expect(PUZZLEMENT_HAZARDS.arrowtrap.ctor.dy).toBe(2);
     });
 

@@ -27,7 +27,7 @@ export const DOCS_INDEX = frz({
         "indexHeadings": 2,
         "lines": 21259,
         "pages": 4,
-        "words": 248240
+        "words": 248296
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -377,7 +377,7 @@ export const DOCS_INDEX = frz({
             "lines": 626,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
-            "words": 9366
+            "words": 9422
         },
         {
             "description": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate.",

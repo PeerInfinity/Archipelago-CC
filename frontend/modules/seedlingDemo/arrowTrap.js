@@ -117,12 +117,13 @@
  */
 
 import { rect, rectsOverlap } from './levelWorld.js';
-// ⛓ THE CTOR OFFSET IS IMPORTED, NEVER RE-TRANSCRIBED. `combat.js` is the
-// census that owns every constructor offset in the game and is deliberately
-// dependency-free; `chasers.js` set this precedent for `ENEMY_CLASSES` after
-// R5 slice 2's headline defect was a SECOND transcription that disagreed with
-// the first by eight pixels on every enemy on the map.
-import { PUZZLEMENT_HAZARDS } from './combat.js';
+// ⛓ THE CTOR OFFSET. `combat.js`'s `PUZZLEMENT_HAZARDS.arrowtrap.ctor` is the
+// census row; R5 slice 2's headline defect was a SECOND transcription that
+// disagreed with the first by eight pixels. This record was the SAME OBJECT
+// until 2026-09-30; ⚖ Q13 (behaviour-parameters F-b) made `defineRecord`
+// refuse a node two records share, so `ARROW_TRAP.ctor` is its own
+// value-identical literal and `entityRecords.agreement.test.js` +
+// `arrowTrap.test.js` hold the two values together.
 import { defineRecord } from './entityRecords.js';
 
 export class ArrowTrapError extends Error {
@@ -152,8 +153,14 @@ export const ARROW_TRAP = defineRecord('arrowTrap', {
      * reads as `(+8, +2.5)`, and `Activators(_x:int, _y:int, …)` truncates
      * the second one. So the entity point is `(oel.x + 8, oel.y + 2)` and
      * NOT the half pixel `combat.js` carried until this slice.
+     *
+     * ⛓ Its OWN literal, value-identical to `PUZZLEMENT_HAZARDS.arrowtrap.ctor`
+     * (see the note above the imports).
      */
-    ctor: PUZZLEMENT_HAZARDS.arrowtrap.ctor,
+    ctor: {
+        dx: 8, dy: 2,
+        src: 'ArrowTrap.as:24 `super(_x + Tile.w/2, _y + sprArrowTrap.height/2, …)` through `Activators(_x:int, _y:int, …)` — the int params truncate the 2.5 to 2',
+    },
     ctorSrc: 'ArrowTrap.as:24 `super(_x + Tile.w/2, _y + sprArrowTrap.height/2, …)` '
         + 'through `Activators(_x:int, _y:int, …)` — the int params TRUNCATE 2.5 to 2',
     /** `private const shootTimerMax:int = 10`. */

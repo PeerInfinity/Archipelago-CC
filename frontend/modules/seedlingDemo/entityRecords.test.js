@@ -105,10 +105,28 @@ describe('entityRecords — assertEntityRecord refuses by name and dotted path',
         expect(refusal(() => m.assertEntityRecord('t', 3))).toContain('a record is a plain object or an array');
     });
 
-    it('a shared (non-cyclic) node is allowed', async () => {
+    it('a shared (non-cyclic) node WITHIN one record is allowed', async () => {
         const [m] = await fresh();
         const s = { w: 1 };
         expect(() => m.defineRecord('t', { a: s, b: s })).not.toThrow();
+    });
+
+    it('mutant (d): a node ANOTHER record holds ⇒ refused naming both paths (⚖ Q13, F-b)', async () => {
+        const [m] = await fresh();
+        const shared = { dx: 8, dy: 2 };
+        m.defineRecord('first', { row: { ctor: shared } }, { src: 'one.js' });
+        const msg = refusal(() => m.defineRecord('second', { ctor: shared }, { src: 'two.js' }));
+        expect(msg).toContain('record "second": second.ctor is the same object as first.row.ctor, registered by "first" (one.js)');
+        // A value-identical literal of its own is what the refusal asks for.
+        expect(() => m.defineRecord('third', { ctor: { dx: 8, dy: 2 } })).not.toThrow();
+    });
+
+    it('an override cannot reach a second record through the first one\'s path', async () => {
+        const [m] = await fresh(JSON.stringify({ 'first.ctor.dy': 3 }));
+        const first = m.defineRecord('first', { ctor: { dx: 8, dy: 2 } });
+        const second = m.defineRecord('second', { ctor: { dx: 8, dy: 2 } });
+        expect(first.ctor.dy).toBe(3);
+        expect(second.ctor.dy).toBe(2);
     });
 });
 

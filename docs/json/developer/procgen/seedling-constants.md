@@ -277,7 +277,7 @@ The profile holds the simulation's flat scalars. The per-entity tables (`ENEMY_C
 - 3 leaves move a stream at +1 ULP: `fallRock.cameraTimerMax`, `fallRock.waitToFallTimerMax`, `spinner.hitsMax`. `spinner.moveSpeed` is not one of them: 1 ULP is absorbed, and ×1.1 moves five tapes (`r5-press-glide`, `r5-press-repeat`, `r8-hammer-control`, `r8-solve-18`, `r9-solve-18`).
 - 17 move ONLY by making the model throw — 14 of them `ctor` offsets (inferred: a non-integer or shifted spawn offset lands a body where a guard refuses it). These leaves are witnessed as READ, not as values a replay checks: `arrowTrap.shootTimerMax`, `chasers.bob.dieAnim.frames`, `enemyClasses.bombpusher.ctor.dx`, `enemyClasses.bombpusher.ctor.dy`, `enemyClasses.bosstotem.ctor.dx`, `enemyClasses.bosstotem.ctor.dy`, `enemyClasses.iceturret.ctor.dx`, `enemyClasses.iceturret.ctor.dy`, `enemyClasses.sandtrap.speed`, `enemyClasses.shieldboss.ctor.dx`, `enemyClasses.shieldboss.ctor.dy`, `puzzlementHazards.lavachain.ctor.dx`, `puzzlementHazards.lavachain.ctor.dy`, `puzzlementHazards.pulser.ctor.dx`, `puzzlementHazards.pulser.ctor.dy`, `puzzlementHazards.spinningaxe.ctor.dx`, `puzzlementHazards.spinningaxe.ctor.dy`.
 - Every `iceTurret`, `iceTurretBlast`, `pulser`, `crusher`, `blast*` and `playerDamagePaths` number is blind: no fast-tier tape meets those bodies. Most of `enemyClasses` is blind for the same reason and — inferred, not measured per leaf — because its pricing and envelope fields (`threatPad`, `aggro.range` of a class no fast tape wakes) are read by the solver, not the replay.
-- ⚠ **A node two records share is overridden asymmetrically.** `ARROW_TRAP.ctor` IS `PUZZLEMENT_HAZARDS.arrowtrap.ctor`. `combat.js` registers first and writes the shared node in place, so `puzzlementHazards.arrowtrap.ctor.dy` moves a tape through `ARROW_TRAP`, while `arrowTrap.ctor.dy`, registered after the node froze, is copied and moves nothing. The witness measures each path as it is; a caller that means "the arrow trap's offset" must know which record the stepping module reads.
+- ⛔ **Two records never share a node** (⚖ Q13, 2026-09-30). `defineRecord` refuses an object or array another record already holds, naming both paths, because a shared node was overridden asymmetrically: `ARROW_TRAP.ctor` used to BE `PUZZLEMENT_HAZARDS.arrowtrap.ctor`, so an override through the first-registered path wrote both records while the other path reached only a copy. `ARROW_TRAP.ctor` is now its own value-identical literal, held equal to the combat row by `entityRecords.agreement.test.js`. The witness did not move: `puzzlementHazards.arrowtrap.ctor.dy` still moves one tape (`r8-solve-5`) because `levelWorld.js` reads the combat row directly for the entity point, and both `arrowTrap.ctor` leaves stay corpus-blind (re-measured on the four leaves, 2026-09-30). A caller that means "the arrow trap's offset" must still know which record the code it cares about reads.
 
 **The tile types by name (⚖ Q11).** `flashPanel/seedlingSemantics.js`'s `TILE_TYPE_IDS` is the one name ↔ int table for Seedling's tile types (`ground: 0`, `water: 1`, … `pit: 6`, `cave: 13`, `lava: 17`, … `rockWallFloor: 37`). The int is the `t` a Tile is constructed with; the name is `TILE_TYPE_NAMES`' entry at that index, from the comment block at `Scenery/Tile.as:32-69`, in camelCase. `seedlingSemantics.test.js` holds the two tables together; holds the profile's `*State` keys to their names (`lavaState === TILE_TYPE_IDS.lava` …; the profile keys stay, because the witness names them); and holds every tile-keyed table (`TILE_TYPE_SEMANTICS`, `MODELLED_TILE_TYPES`, `HAZARD_STATES`, `DESTROYING_TILE_TYPES`, `ENEMY_TERRAIN_DESTROYS`, `ICE_TURRET.fatalTiles`, `SPINNER.terrain`, `FINAL_BOSS.lavaT`) to a named id. The records that held a bare tile id read the name (`ENEMY_TERRAIN_DESTROYS`, `ICE_TURRET.fatalTiles`, `SPINNER.terrain`'s keys, `ENEMY_CLASSES.bulb.navMeshEdit.becomes`), and `ENEMY_DAMAGE_DEFAULTS.maxForce` reads `NO_FORCE_CAP`. The inline sentinels inside the simulation's functions are the simulation and stay literals.
 
@@ -295,22 +295,22 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**52 files, 4397 literals.** Class × position:
+**52 files, 4399 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 1 | 1228 | 268 | 1497 |
+| physics | 1 | 1230 | 268 | 1499 |
 | rule | 0 | 835 | 377 | 1212 |
 | cosmetic | 0 | 43 | 8 | 51 |
 | structural | 9 | 310 | 1318 | 1637 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 10 | 2416 | 1971 | 4397 |
+| total | 10 | 2418 | 1971 | 4399 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1259 | 0 | 87 | 108 | 4 | 39 | 1497 |
+| physics | 1261 | 0 | 87 | 108 | 4 | 39 | 1499 |
 | rule | 321 | 109 | 184 | 22 | 503 | 73 | 1212 |
 
 Rows whose note starts `REVIEW:`: **105**.
@@ -600,7 +600,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `SEAL_PIECE` | seedlingDemo/sealCeremony.js | 10 | 10 | physics/rule | bound/magnitude | Pickups/Pickup.as:attractDistance Pickups/Pickup.as:motionDampener Pickups/Pickup.as:minAttraction Pickups/Pickup.as:minSpeedToPlayer Pickups/Pickup.as:specialTimerMax Mobile.as:DEFAULT_FRICTION |
 | `SEAL_CONTROLLER` | seedlingDemo/sealCeremony.js | 2 | 2 | rule | magnitude | SealController.as:waitTime SealController.as:alphaSteps |
 | `CEREMONY_DEAD_FRAMES` | seedlingDemo/sealCeremony.js | 1 | 1 | rule | magnitude | Pickups/Pickup.as:specialTimerMax |
-| `ARROW_TRAP` | seedlingDemo/arrowTrap.js | 11 | 11 | physics/rule | derivation/magnitude | Puzzlements/ArrowTrap.as:shootTimerMax Puzzlements/ArrowTrap.as:shootTimer |
+| `ARROW_TRAP` | seedlingDemo/arrowTrap.js | 13 | 13 | physics/rule | derivation/magnitude | Puzzlements/ArrowTrap.as:shootTimerMax Puzzlements/ArrowTrap.as:shootTimer |
 | `ARROW` | seedlingDemo/arrowTrap.js | 8 | 6 | physics | magnitude | Projectiles/Arrow.as:setHitbox |
 | `ARROW_ENEMY_HIT` | seedlingDemo/arrowTrap.js | 7 | 7 | physics/rule | count/derivation/magnitude | Enemies/Enemy.as:hitsMax Enemies/Enemy.as:hitsTimerMax |
 | `ARROW_PLAYER_ARM` | seedlingDemo/arrowTrap.js | 2 | 2 | physics/rule | magnitude | Arrow.as:51 |
