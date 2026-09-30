@@ -441,3 +441,81 @@ export function obstacleRowsOf(concept, concepts) {
         return row;
     });
 }
+
+/* ────────────────────────────── the table ────────────────────────────── */
+
+/** ⛓ The six colours the shared coloured-door vocabulary uses, in its order. */
+const COLOURS = Object.freeze(['red', 'green', 'blue', 'yellow', 'purple', 'orange']);
+const COLOUR_WHY = 'the six colours of the shared coloured keys and doors — each colour is one '
+    + 'independent lock group; the colour is cosmetic, the pairing key↔door is the logic';
+const COLOUR_PARAM = Object.freeze({ key: 'colour', domain: COLOURS, default: 'red', why: COLOUR_WHY });
+const COLOURED_DOORS_AND_KEYS = 'colored_doors_and_keys';
+
+const perColour = (idOf, rows) => Object.freeze(Object.fromEntries(COLOURS.map((c) => [
+    idOf({ colour: c }), Object.freeze(rows[c]),
+])));
+
+const keyIdFor = ({ colour }) => `key_${colour}`;
+const doorIdFor = ({ colour }) => `door_${colour}`;
+
+/**
+ * ⛓⛓⛓ **THE CONCEPTS.** The item names are the AP names the rules carry
+ * (`sword` / `swim` are the progressive items a generated room gates on; the
+ * keys and doors are the shared coloured vocabulary, instance for instance).
+ */
+export const CONCEPTS = Object.freeze({
+    sword: Object.freeze({
+        kind: 'item',
+        item: Object.freeze({
+            id: 'Progressive Sword', name: 'Progressive Sword', classification: 'progression',
+            color: '#c0a040', symbol: 'star',
+        }),
+    }),
+    swim: Object.freeze({
+        kind: 'item',
+        item: Object.freeze({
+            id: 'Progressive Swim', name: 'Progressive Swim', classification: 'progression',
+            color: '#40b0c0', symbol: 'star',
+        }),
+    }),
+    guardian: Object.freeze({
+        kind: 'enemy',
+        relations: Object.freeze({ weakness: Object.freeze(['sword']) }),
+    }),
+    water: Object.freeze({
+        kind: 'obstacle',
+        relations: Object.freeze({ crossedWith: Object.freeze(['swim']) }),
+    }),
+    key: Object.freeze({
+        kind: 'item',
+        params: Object.freeze([COLOUR_PARAM]),
+        idFor: keyIdFor,
+        item: Object.freeze({ classification: 'progression', symbol: 'key' }),
+        feature: COLOURED_DOORS_AND_KEYS,
+        presentation: perColour(keyIdFor, {
+            red: { name: 'Red Key', color: '#d04040' },
+            green: { name: 'Green Key', color: '#40c060' },
+            blue: { name: 'Blue Key', color: '#4080d0' },
+            yellow: { name: 'Yellow Key', color: '#d8b820' },
+            purple: { name: 'Purple Key', color: '#a040c0' },
+            orange: { name: 'Orange Key', color: '#d87830' },
+        }),
+    }),
+    door: Object.freeze({
+        kind: 'obstacle',
+        params: Object.freeze([COLOUR_PARAM]),
+        idFor: doorIdFor,
+        relations: Object.freeze({ openedBy: Object.freeze(['key']) }),
+        feature: COLOURED_DOORS_AND_KEYS,
+        presentation: perColour(doorIdFor, {
+            red: { name: 'Red Door', color: '#b84040' },
+            green: { name: 'Green Door', color: '#408040' },
+            blue: { name: 'Blue Door', color: '#404080' },
+            yellow: { name: 'Yellow Door', color: '#a08018' },
+            purple: { name: 'Purple Door', color: '#803090' },
+            orange: { name: 'Orange Door', color: '#b06018' },
+        }),
+    }),
+});
+
+assertConceptTable(CONCEPTS);

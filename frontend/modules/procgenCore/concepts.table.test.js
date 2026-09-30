@@ -1,0 +1,84 @@
+/**
+ * procgenCore/concepts — **THE SHIPPED TABLE, PINNED TO WHAT ALREADY SHIPS**
+ * (concept library T0, D2).
+ *
+ * ⛓ The pins that prove the later migration is possible WITHOUT touching the
+ * shared library: the six `door` instances render to exactly the shared
+ * library's six doors, and the six `key` instances to its six keys — deep-equal
+ * AND key order. The expectations are read off the shared library and off
+ * `seedlingDemo/itemLabels.js`, never off this module's own output.
+ */
+import { describe, expect, it } from 'vitest';
+
+import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
+import { ITEM_LABELS, itemLabelOf } from '../seedlingDemo/itemLabels.js';
+import {
+    CONCEPTS, assertConceptTable, instancesOf, itemRowsOf, obstacleRowsOf,
+} from './concepts.js';
+
+const FEATURE = 'colored_doors_and_keys';
+const SHIPPED_DOORS = Object.values(DEFAULT_OBSTACLES).filter((o) => o.feature === FEATURE);
+const SHIPPED_KEYS = Object.values(DEFAULT_ITEMS).filter((i) => i.feature === FEATURE);
+const DOOR_ROWS = obstacleRowsOf(CONCEPTS.door, CONCEPTS);
+const KEY_ROWS = itemRowsOf(CONCEPTS.key);
+
+describe('the table', () => {
+    it('holds the six trial concepts, frozen, and checks clean', () => {
+        expect(Object.keys(CONCEPTS)).toEqual(['sword', 'swim', 'guardian', 'water', 'key', 'door']);
+        expect(Object.isFrozen(CONCEPTS)).toBe(true);
+        for (const c of Object.values(CONCEPTS)) expect(Object.isFrozen(c)).toBe(true);
+        expect(() => assertConceptTable(CONCEPTS)).not.toThrow();
+    });
+
+    it('the shared library holds six doors and six keys (the population the pins read)', () => {
+        expect(SHIPPED_DOORS.map((d) => d.id)).toEqual(
+            ['door_red', 'door_green', 'door_blue', 'door_yellow', 'door_purple', 'door_orange']);
+        expect(SHIPPED_KEYS).toHaveLength(6);
+    });
+
+    it('key and door have six instances each, in the shared colour order', () => {
+        expect(instancesOf(CONCEPTS.door).map((i) => i.id)).toEqual(SHIPPED_DOORS.map((d) => d.id));
+        expect(instancesOf(CONCEPTS.key).map((i) => i.id)).toEqual(SHIPPED_KEYS.map((k) => k.id));
+    });
+});
+
+describe('⛓ door ⇔ DEFAULT_OBSTACLES, key ⇔ DEFAULT_ITEMS (deep-equal, key order included)', () => {
+    it.each(SHIPPED_DOORS.map((d) => [d.id]))('%s', (id) => {
+        const want = DEFAULT_OBSTACLES[id];
+        const got = DOOR_ROWS.find((r) => r.id === id);
+        expect(got, `${id} rendered`).toEqual(want);
+        expect(JSON.stringify(got), `${id} key order`).toBe(JSON.stringify(want));
+    });
+
+    it.each(SHIPPED_KEYS.map((k) => [k.id]))('%s', (id) => {
+        const want = DEFAULT_ITEMS[id];
+        const got = KEY_ROWS.find((r) => r.id === id);
+        expect(got, `${id} rendered`).toEqual(want);
+        expect(JSON.stringify(got), `${id} key order`).toBe(JSON.stringify(want));
+    });
+
+    it('the whole lists, in order', () => {
+        expect(JSON.stringify(DOOR_ROWS)).toBe(JSON.stringify(SHIPPED_DOORS));
+        expect(JSON.stringify(KEY_ROWS)).toBe(JSON.stringify(SHIPPED_KEYS));
+    });
+});
+
+describe('⛓ sword and swim carry the names ITEM_LABELS carries', () => {
+    it('hasSword → sword, canSwim → swim, hasFeather → swim ×2', () => {
+        expect(itemLabelOf('hasSword')).toEqual({ item: CONCEPTS.sword.item.id, count: 1 });
+        expect(itemLabelOf('canSwim')).toEqual({ item: CONCEPTS.swim.item.id, count: 1 });
+        expect(itemLabelOf('hasFeather')).toEqual({ item: CONCEPTS.swim.item.id, count: 2 });
+        expect(CONCEPTS.sword.item.name).toBe(ITEM_LABELS.hasSword);
+        expect(CONCEPTS.swim.item.name).toBe(ITEM_LABELS.canSwim);
+    });
+
+    it('their id is their name (the AP name a rule\'s Has carries)', () => {
+        for (const c of [CONCEPTS.sword, CONCEPTS.swim]) expect(c.item.id).toBe(c.item.name);
+    });
+
+    it('the relations say what the trial says: guardian ⇐ sword, water ⇐ swim, door ⇐ key', () => {
+        expect(CONCEPTS.guardian.relations).toEqual({ weakness: ['sword'] });
+        expect(CONCEPTS.water.relations).toEqual({ crossedWith: ['swim'] });
+        expect(CONCEPTS.door.relations).toEqual({ openedBy: ['key'] });
+    });
+});
