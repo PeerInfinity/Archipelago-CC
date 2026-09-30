@@ -98,3 +98,43 @@ export function conceptGateFor(rule, { offered, rng, n, logicGateBase }) {
         },
     };
 }
+
+/**
+ * ⛓⛓ **THE SKIN, PAINTED** (D3) — a `rule` gate that carries a `concept` is
+ * drawn as the concept: its colour as an inset square with its symbol, and,
+ * once cleared, the dimmed dashed outline the coloured door uses (the combo-list
+ * door's own idiom in `mazeRoomRender.drawWorld`). A plain `logic_gate` is never
+ * passed here, so it draws exactly as before. Takes `ctx`; touches no DOM.
+ *
+ * @param {CanvasRenderingContext2D} ctx
+ * @param {{x0: number, y0: number, px: number, def: object, cleared: boolean}} o
+ *   the tile's canvas origin and size, the gate's obstacle definition
+ */
+export function paintConceptGate(ctx, { x0, y0, px, def, cleared }) {
+    const color = def.color ?? '#b06eb8';
+    ctx.save();
+    if (cleared) {
+        ctx.globalAlpha = 0.4;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([3, 3]);
+        ctx.strokeRect(x0 + 3, y0 + 3, px - 6, px - 6);
+    } else {
+        ctx.fillStyle = color;
+        ctx.fillRect(x0 + 2, y0 + 2, px - 4, px - 4);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x0 + 2, y0 + 2, px - 4, px - 4);
+    }
+    if (def.symbol) {
+        ctx.fillStyle = '#000';
+        ctx.font = `bold ${Math.floor(px * 0.5)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(def.symbol, x0 + px / 2, y0 + px / 2);
+    }
+    ctx.restore();
+}
+
+/** ⛓ Is this obstacle definition a concept's skin (a `rule` gate that names its concept)? */
+export const isConceptGate = (def) => def?.clear_set_type === 'rule' && typeof def.concept === 'string';

@@ -29,6 +29,7 @@ import {
     isObstacleCleared, getItemRenderHints,
 } from '../shared/procgen/library.js';
 import { TILE_PX, COLORS } from '../procgenCore/compositeMapRenderer.js';
+import { isConceptGate, paintConceptGate } from './mazeConcepts.js';
 
 /**
  * Paint one maze region into its composite-map cell.
@@ -92,6 +93,13 @@ export function drawMazeCompositeRegion(ctx, region, {
                 const color = obstacle.color ?? '#b84040';
                 ctx.fillStyle = color;
                 ctx.fillRect(offX + x * tilePx + 2, offY + y * tilePx + 2, tilePx - 4, tilePx - 4);
+            }
+            // ⛓ CONCEPT LIBRARY T1 — a concept's skin, as the panel paints it
+            // (always closed here: the composite view has no inventory).
+            if (isConceptGate(obstacle)) {
+                paintConceptGate(ctx, {
+                    x0: offX + x * tilePx, y0: offY + y * tilePx, px: tilePx, def: obstacle, cleared: !gateClosed,
+                });
             }
             if (itemId) {
                 const hints = getItemRenderHints(itemId, itemLib);

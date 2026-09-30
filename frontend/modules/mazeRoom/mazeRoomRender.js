@@ -83,6 +83,7 @@ import {
 } from '../shared/procgen/library.js';
 import { drawHazards } from '../shared/procgen/contentModules/hazardRender.js';
 import { TILE_WALL, getTile } from './mazeRoomEngine.js';
+import { isConceptGate, paintConceptGate } from './mazeConcepts.js';
 
 export class MazeRenderError extends Error {
     constructor(message) {
@@ -375,6 +376,14 @@ export function drawWorld(ctx, world, view) {
                     ctx.lineWidth = 2;
                     ctx.strokeRect(x * px + 2, y * px + 2, px - 4, px - 4);
                 }
+            }
+
+            // ⛓ CONCEPT LIBRARY T1 — a rule gate that carries a `concept` is
+            // the concept's SKIN: painted in its colour and symbol, dimmed
+            // once cleared (`mazeConcepts.paintConceptGate`). A plain
+            // logic_gate has no `concept` and is drawn exactly as above.
+            if (isConceptGate(obstacle)) {
+                paintConceptGate(ctx, { x0: x * px, y0: y * px, px, def: obstacle, cleared: !gateClosed });
             }
 
             // Items: a circle in the library's color. Skipped
