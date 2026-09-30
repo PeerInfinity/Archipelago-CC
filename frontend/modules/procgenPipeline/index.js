@@ -3,7 +3,7 @@
  * (docs/json/developer/procgen/architecture.md).
  *
  * This module hosts the layout drivers (sphere growth, top-down,
- * shuffled spiral, and the deprecated grid growth), the grid data
+ * shuffled spiral, and grid growth), the grid data
  * model, the stepped-pipeline runners, and the panel UI for running
  * a pipeline end-to-end. It consumes substrates through the substrate
  * registry and produces a compiled rules.json ready for

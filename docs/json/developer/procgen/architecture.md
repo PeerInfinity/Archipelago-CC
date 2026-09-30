@@ -109,7 +109,7 @@ The Procgen Pipeline panel's Mode control (`frontend/modules/procgenPipeline/pro
 | **Sphere growth** | `growSpheres` | The primary driver. Plans the sphere structure first (which items unlock which sphere, `spherePlanner.js`), then grows the world wave by wave to match. After compilation the actual item spheres are checked against the plan. See [Sphere-Driven Growth](./sphere-growth.md). |
 | **Top-down** | `topDownFromRulesJson` | Realises an existing `rules.json` (for example one exported from a real game) as a playable procgen world: each source region gets a grid cell and a substrate, keeping the source's region graph and access rules. |
 | **Shuffled spiral** | `arrangeShuffledSpiral` | Lays zones out in a spiral from the centre. This is the driver for content sources, whose regions are a fixed set of pre-authored zones rather than grown geometry. |
-| **Grid growth** | `growMaze` | Deprecated. Grows a grid of rooms from a scenario pool. Still selectable; sphere growth replaces it. |
+| **Grid growth** | `growMaze` | Grows a grid of rooms from a scenario pool. Kept alongside sphere growth (not deprecated). |
 
 Substrates take part in two ways:
 
