@@ -4,7 +4,7 @@
  * parameters P3; plan `behaviour-parameters-plan.md` §3 P3, §7, ⚖ the user
  * GO 2026-09-30).
  *
- * Two tables (the family map and the lookups follow in D2 and D3):
+ * Three tables and the lookups over them:
  *
  *   `ENTITY_BLOCKS`      one row per `combat.ENEMY_CLASSES` tag and per
  *                        `combat.PUZZLEMENT_HAZARDS` tag: the P2 block ids the
@@ -14,12 +14,24 @@
  *                        shares — `unique` and no blocks at all.
  *   `AGGRO_KIND_BLOCKS`  `ENEMY_CLASSES[tag].aggro.kind` → the movement block
  *                        that word denotes (`null` for a unique script).
+ *   `FAMILY_BLOCKS`      one row per `run.entities(family)` family
+ *                        (`levelRun.ENTITY_FAMILY_NAMES`, spelled here as
+ *                        strings) and per `hazards.hazardVolume` arm: the
+ *                        blocks the family's state realises, which solver-family
+ *                        files read it, and the `solverBot.OBSTACLE_STRATEGIES`
+ *                        verbs its tags carry.
+ *
+ * `blocksTheSolverModels()` is the answer to *which blocks can the solver
+ * reason about today* (live state only — a `hazardVolume` arm is an avoid
+ * volume, reported apart by `blocksOnlyAvoided()`).
  *
  * ⛔ READ-ONLY FOR THE MODEL AND THE SOLVER. Nothing in the simulation
  * (`levelRun.js`'s import closure) or the solver family (`solverBot.js` +
  * `director.js`'s) imports this file, and it imports neither `levelRun.js` nor
- * any solver-family file. Its only imports are the vocabulary and the two
- * census tables it labels. Asserted by the test, which walks both closures.
+ * any solver-family file — so the families are spelled here as strings and
+ * `entityBlocks.test.js` holds them equal to the live lists. Its only imports
+ * are the vocabulary and the two census tables it labels. Asserted by the test,
+ * which walks both closures.
  *
  * ⛔ A LABEL IS NOT A GUESS. A class whose honest answer is "no declared block
  * says this" files the need under `bespoke`; a boss files `unique`. No row
@@ -41,6 +53,8 @@ const deepFreeze = (rows) => Object.freeze(rows.map((r) => Object.freeze({
     ...r,
     blocks: Object.freeze([...r.blocks]),
     ...(r.bespoke ? { bespoke: Object.freeze([...r.bespoke]) } : {}),
+    ...(r.solverReads ? { solverReads: Object.freeze([...r.solverReads]) } : {}),
+    ...(r.strategies ? { strategies: Object.freeze([...r.strategies]) } : {}),
 })));
 
 /* ─────────────────────── the aggro words → movement ─────────────────────── */
@@ -184,6 +198,124 @@ export const ENTITY_BLOCKS = deepFreeze([
         src: 'combat.js:650 · levelWorld ENTITY_CLASSES pull' },
 ]);
 
+/* ─────────────────────── the families the solver reads ─────────────────────── */
+
+/**
+ * ⛓ ONE ROW PER `run.entities(family)` FAMILY (the 23 of
+ * `levelRun.ENTITY_FAMILY_NAMES`, `levelRun.js:258-282`) AND PER
+ * `hazards.hazardVolume` ARM (`hazards.js:156-362`, keyed `volume:<tag>`).
+ *
+ * `solverReads` — the solver-family files that read it, without `.js`. For an
+ * entity family, the `families` column of `scripts/procgen/
+ * seedling-solver-surface.json`'s `entities` row (the census's authority); for
+ * a volume, the family files that call `hazardVolume(`, minus `dangerMap` for a
+ * tag `dangerMap.HAZARDS_PRICED_LIVE` excludes. Both asserted by the test.
+ * `strategies` — the `solverBot.OBSTACLE_STRATEGIES` verbs keyed by a tag the
+ * family holds (asserted against the solver's table by the test).
+ */
+const RUN_ENTITIES = 'entities';
+const VOLUME = 'volume';
+export const FAMILY_BLOCKS = deepFreeze([
+    { family: 'openActivators', kind: RUN_ENTITIES, blocks: ['channel'],
+        solverReads: ['botDriverV2', 'solverBot'], strategies: ['hold', 'keylock', 'touch', 'wand'],
+        why: 'the lock/cover ids an Activators group has opened (`levelRun.js:10577`): a channel a button publishes.' },
+    { family: 'pushables', kind: RUN_ENTITIES, blocks: ['pushable'],
+        solverReads: ['botDriverV2', 'solverBot'], strategies: ['shove'],
+        why: 'the pushed blocks\' live rects (`levelRun.js:10579`).' },
+    { family: 'armedArrowTraps', kind: RUN_ENTITIES, blocks: ['stationary', 'emitter', 'channel'],
+        solverReads: ['botDriverV2', 'dangerMap', 'solverBot'], strategies: [],
+        why: 'the traps whose group is pressed or latched (`levelRun.js:10704`); `dangerMap.arrowDanger` prices their lanes.' },
+    { family: 'crushers', kind: RUN_ENTITIES, blocks: ['lane-charge', 'contact'],
+        solverReads: ['botDriverV2', 'dangerMap'], strategies: [],
+        why: 'the crushers\' LIVE bodies (`levelRun.js:10583`); `dangerMap.crusherDanger` re-derives the lanes at the live centre.' },
+    { family: 'openChests', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['botDriverV2', 'solverBot'], strategies: ['chest'],
+        why: 'opened chest ids (`levelRun.js:10690`) — an obstacle\'s state, not a behaviour block.' },
+    { family: 'strikeBodies', kind: RUN_ENTITIES, blocks: ['hp'],
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
+        why: 'the bridged chasers as kill targets, with `hits` and `hitsTimer` (`levelRun.js:10603`).' },
+    { family: 'spinnerBodies', kind: RUN_ENTITIES, blocks: ['rebound', 'contact', 'sweep', 'hp'],
+        solverReads: ['dangerMap', 'solverBot'], strategies: [],
+        why: 'the stepped spinners (`levelRun.js:10563`, `MODELLED_ENEMY_CLASSES.Spinner`): the bounced body, `dangerMap.spinnerDanger`\'s hammer, `hitsTimer`.' },
+    { family: 'armedPulsers', kind: RUN_ENTITIES, blocks: ['stationary', 'pulse', 'channel'],
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
+        why: 'the pulsers whose group is pressed or latched (`levelRun.js:10691`).' },
+    { family: 'turrets', kind: RUN_ENTITIES, blocks: ['stationary', 'pushable'],
+        solverReads: ['botDriverV2'], strategies: [],
+        why: 'the ice turrets\' rects and `solid` flag (`levelRun.js:10656`) — the live body and the pushed corpse.' },
+    { family: 'chasers', kind: RUN_ENTITIES, blocks: ['chase', 'contact'],
+        solverReads: ['dangerMap', 'solverBot'], strategies: [],
+        why: 'the bridged chasers\' live positions (`levelRun.js:10634`; `chasers.bridgedChaserTags()`, Bob today); `dangerMap.chaserDanger` grows each by its step bound.' },
+    { family: 'brokenRocks', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['botDriverV2', 'solverBot'], strategies: ['break'],
+        why: 'broken rock ids (`levelRun.js:10580`) — a `TILE_TRIGGERS` level, not a block.' },
+    { family: 'crushersParked', kind: RUN_ENTITIES, blocks: ['lane-charge'],
+        solverReads: ['botDriverV2'], strategies: [],
+        why: 'whether every crusher has stopped charging (`levelRun.js:10587`).' },
+    { family: 'pushesSettled', kind: RUN_ENTITIES, blocks: ['pushable'],
+        solverReads: ['botDriverV2'], strategies: [],
+        why: 'whether every pushed block has come to rest (`levelRun.js:10729`).' },
+    { family: 'openBridges', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['botDriverV2'], strategies: [],
+        why: 'opened bridge ids (`levelRun.js:10578`) — terrain state, not a block.' },
+    { family: 'arrowsInFlight', kind: RUN_ENTITIES, blocks: ['emitter'],
+        solverReads: ['dangerMap', 'solverBot'], strategies: [],
+        why: 'live arrow positions (`levelRun.js:10724`) — the emitter\'s shots.' },
+    { family: 'burnedTrees', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['botDriverV2'], strategies: [],
+        why: 'burned tree ids (`levelRun.js:10581`) — a `TILE_TRIGGERS` itemCategory, not a block.' },
+    { family: 'latchedGroups', kind: RUN_ENTITIES, blocks: ['channel'],
+        solverReads: ['solverBot'], strategies: [],
+        why: 'the Activators groups a `room = -1` press latched open (`levelRun.js:10718`).' },
+    { family: 'pulledRopes', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['botDriverV2'], strategies: [],
+        why: 'pulled rope ids (`levelRun.js:10582`) — an obstacle\'s state, not a block.' },
+    { family: 'turretDamage', kind: RUN_ENTITIES, blocks: ['hp', 'emitter'],
+        solverReads: ['botDriverV2'], strategies: [],
+        why: 'each ice turret\'s `hits`/`hitsMax`/`hitsTimer` and its volley clock (`shootTimer`, `angle`, `volleys`) (`levelRun.js:10672`).' },
+    { family: 'turretsSettled', kind: RUN_ENTITIES, blocks: ['pushable'],
+        solverReads: ['botDriverV2'], strategies: [],
+        why: 'whether every ice turret corpse has finished its glide (`levelRun.js:10664`).' },
+    { family: 'arrowFlights', kind: RUN_ENTITIES, blocks: ['emitter'],
+        solverReads: ['dangerMap'], strategies: [],
+        why: 'live arrows with velocity and lifetime (`levelRun.js:10725`), for `dangerMap.predictArrows`.' },
+    { family: 'bosses', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['botDriverV2'], strategies: [],
+        why: 'the boss totems\' rects (`levelRun.js:10660`) — a unique fight (`ENTITY_BLOCKS` bosstotem), so no block.' },
+    { family: 'talkCircles', kind: RUN_ENTITIES, blocks: [],
+        solverReads: ['solverBot'], strategies: [],
+        why: 'uncleared talker circles (`levelRun.js:10594`) — dialogue, not a behaviour.' },
+
+    /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
+    { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],
+        solverReads: ['encounters'], strategies: [],
+        why: 'the body and four trigger lanes at the `.oel` placement (`hazards.js:157`); `dangerMap` prices it LIVE through `crushers` instead (`HAZARDS_PRICED_LIVE`).' },
+    { family: 'volume:spinningaxe', kind: VOLUME, blocks: ['stationary', 'sweep'],
+        solverReads: ['dangerMap', 'encounters'], strategies: [],
+        why: 'the hub rect and the 32 px disc the arm sweeps (`hazards.js:181`).' },
+    { family: 'volume:pulser', kind: VOLUME, blocks: ['stationary', 'pulse'],
+        solverReads: ['dangerMap', 'encounters'], strategies: [],
+        why: 'the 22 px ring disc (`hazards.js:196`), armed or not.' },
+    { family: 'volume:arrowtrap', kind: VOLUME, blocks: ['emitter'],
+        solverReads: ['encounters'], strategies: [],
+        why: 'the arrow column to the floor (`hazards.js:210`); `dangerMap` prices it by ARMED state through `armedArrowTraps` instead (`HAZARDS_PRICED_LIVE`).' },
+    { family: 'volume:beamtower', kind: VOLUME, blocks: ['stationary', 'beam'],
+        solverReads: ['dangerMap', 'encounters'], strategies: [],
+        why: 'the Solid body and the beam band swept over its bob (`hazards.js:229`) — the firing cycle is not in the volume.' },
+    { family: 'volume:lavachain', kind: VOLUME, blocks: ['stationary', 'tether'],
+        solverReads: ['dangerMap', 'encounters'], strategies: [],
+        why: 'the body and the extended arm (`hazards.js:271`), a phase-band union.' },
+    { family: 'volume:whirlpool', kind: VOLUME, blocks: ['stationary'],
+        solverReads: ['dangerMap', 'encounters'], strategies: [],
+        why: 'the 16 px knife-edge disc (`hazards.js:302`); its pull-and-drown is bespoke (`vortex`).' },
+    { family: 'volume:pull', kind: VOLUME, blocks: ['stationary'],
+        solverReads: ['dangerMap', 'encounters'], strategies: [],
+        why: 'no rect or disc — `deferredTo` levelWorld\'s proximity hazard (`hazards.js:318`).' },
+    { family: 'volume:pod', kind: VOLUME, blocks: ['stationary', 'contact'],
+        solverReads: ['dangerMap', 'encounters'], strategies: [],
+        why: 'the 16x16 cell (`hazards.js:331`); its pin and the boss\'s schedule are bespoke.' },
+]);
+
 /* ─────────────────────────────── the checks ─────────────────────────────── */
 
 const nonEmptyString = (v) => typeof v === 'string' && v.length > 0;
@@ -253,6 +385,11 @@ export function assertEntityBlocks(rows = ENTITY_BLOCKS, {
             fail(`entityBlocks: row "${tag}" does not name "${want}", the block its aggro word "${word}" denotes.`);
         }
     }
+    for (const f of FAMILY_BLOCKS) {
+        for (const id of f.blocks) {
+            if (!BLOCKS.has(id)) fail(`entityBlocks: family "${f.family}" names the block "${id}", which BLOCKS does not declare.`);
+        }
+    }
 }
 
 assertEntityBlocks();
@@ -262,4 +399,47 @@ assertEntityBlocks();
 /** The row for a census tag, or undefined. */
 export function entityBlocksOf(tag) {
     return ENTITY_BLOCKS.find((r) => r.tag === tag);
+}
+
+/**
+ * ⛓ block id → the families that realise it and are read by some solver-family
+ * file. A family with an empty `solverReads` contributes nothing.
+ *
+ * ⚠ `depth: 'live'` (the default) counts the `run.entities` families only —
+ * per-tick state the solver steps or reads. `depth: 'avoid'` counts the
+ * `hazardVolume` arms only: a static volume unioned over every phase, which
+ * lets a route STAY OUT but says nothing about the behaviour inside.
+ */
+export function modellingFamilies({ depth = 'live' } = {}) {
+    const kind = depth === 'live' ? RUN_ENTITIES : depth === 'avoid' ? VOLUME
+        : fail(`modellingFamilies: depth is "live" or "avoid", not ${JSON.stringify(depth)}.`);
+    const out = new Map();
+    for (const f of FAMILY_BLOCKS) {
+        if (f.kind !== kind || !f.solverReads.length) continue;
+        for (const id of f.blocks) {
+            if (!out.has(id)) out.set(id, []);
+            out.get(id).push(f.family);
+        }
+    }
+    return out;
+}
+
+const inDeclarationOrder = (ids) => BLOCKS.ids().filter((id) => ids.has(id));
+
+/** ⛓ The block ids the solver reasons about today — realised by a `run.entities` family it reads — in `BLOCKS` order. */
+export function blocksTheSolverModels() {
+    return inDeclarationOrder(new Set(modellingFamilies().keys()));
+}
+
+/** ⛓ The declared block ids no solver-read family realises — what a new concept would need modelled first. */
+export function blocksNoFamilyModels() {
+    const modelled = new Set(modellingFamilies().keys());
+    return BLOCKS.ids().filter((id) => !modelled.has(id));
+}
+
+/** ⛓ The unmodelled blocks a `hazardVolume` arm still prices as an avoid volume. */
+export function blocksOnlyAvoided() {
+    const modelled = new Set(modellingFamilies().keys());
+    return inDeclarationOrder(new Set([...modellingFamilies({ depth: 'avoid' }).keys()]
+        .filter((id) => !modelled.has(id))));
 }

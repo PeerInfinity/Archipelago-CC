@@ -9,8 +9,13 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { BLOCKS } from '../procgenCore/behaviourBlocks.js';
 import { ENEMY_CLASSES, PUZZLEMENT_HAZARDS } from './combat.js';
+import { ACTIVATOR_RESPONDERS, PUSHABLE_FAMILIES } from './levelWorld.js';
+import { ENTITY_FAMILY_NAMES } from './levelRun.js';
+import { OBSTACLE_STRATEGIES } from './solverBot.js';
 import {
-    AGGRO_KIND_BLOCKS, ENTITY_BLOCKS, EntityBlocksError, assertEntityBlocks, entityBlocksOf,
+    AGGRO_KIND_BLOCKS, ENTITY_BLOCKS, FAMILY_BLOCKS, EntityBlocksError, assertEntityBlocks,
+    blocksNoFamilyModels, blocksOnlyAvoided, blocksTheSolverModels,
+    entityBlocksOf, modellingFamilies,
 } from './entityBlocks.js';
 import {
     FAMILY_ENTRIES, SIM_ENTRY, importClosure, parseSource, staticImports,
@@ -20,6 +25,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../.
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const SELF = 'frontend/modules/seedlingDemo/entityBlocks.js';
 const DEMO = 'frontend/modules/seedlingDemo/';
+const SURFACE = JSON.parse(read('scripts/procgen/seedling-solver-surface.json'));
 const sorted = (xs) => [...xs].sort();
 
 describe('D1 — ENTITY_BLOCKS: one row per census tag, every id declared', () => {
@@ -125,5 +131,101 @@ describe('D1 — the module stays out of the model and the solver', () => {
             { cwd: ROOT, encoding: 'utf8' });
         expect(r.stderr).toBe('');
         expect(r.stdout.trim()).toBe(String(ENTITY_BLOCKS.length));
+    });
+});
+
+describe('D2 — FAMILY_BLOCKS: the run\'s families and the hazard volumes', () => {
+    const entityRows = FAMILY_BLOCKS.filter((f) => f.kind === 'entities');
+    const volumeRows = FAMILY_BLOCKS.filter((f) => f.kind === 'volume');
+    const familyFiles = SURFACE.family;
+
+    it('one row per ENTITY_FAMILY_NAMES entry, in its order, and nothing else', () => {
+        expect(entityRows.map((f) => f.family)).toEqual([...ENTITY_FAMILY_NAMES]);
+        expect(SURFACE.folded.entities).toEqual([...ENTITY_FAMILY_NAMES]);
+    });
+
+    it('one row per hazardVolume arm, and the arms are PUZZLEMENT_HAZARDS', () => {
+        const src = read(`${DEMO}hazards.js`);
+        const body = src.slice(src.indexOf('export function hazardVolume('), src.indexOf('export function volumeHitsBox('));
+        const arms = [...body.matchAll(/case '([a-z]+)':/g)].map((m) => m[1]);
+        expect(volumeRows.map((f) => f.family)).toEqual(arms.map((t) => `volume:${t}`));
+        expect(sorted(arms)).toEqual(sorted(Object.keys(PUZZLEMENT_HAZARDS)));
+    });
+
+    it('an entity family\'s solverReads is the surface table\'s `families` column', () => {
+        const col = SURFACE.rows.find((r) => r.surface === 'run' && r.name === 'entities').families;
+        for (const f of entityRows) {
+            expect(f.solverReads, f.family).toEqual(sorted(Object.keys(col[f.family] ?? {}).map((x) => x.replace(/\.js$/, ''))));
+        }
+    });
+
+    it('…and a grep of `entities(\'<family>\')` over the family files finds the same files', () => {
+        for (const f of entityRows) {
+            const re = new RegExp(`entities\\(\\s*'${f.family}'\\s*\\)`);
+            const hits = familyFiles.filter((file) => re.test(read(`${DEMO}${file}`))).map((x) => x.replace(/\.js$/, ''));
+            expect(sorted(hits), f.family).toEqual(f.solverReads);
+        }
+    });
+
+    it('a volume\'s solverReads is the family files that call hazardVolume, minus dangerMap where it prices the tag live', () => {
+        const callers = familyFiles.filter((file) => file !== 'hazards.js' && read(`${DEMO}${file}`).includes('hazardVolume('))
+            .map((x) => x.replace(/\.js$/, ''));
+        expect(callers).toEqual(['dangerMap', 'encounters']);
+        const dm = read(`${DEMO}dangerMap.js`);
+        const liveBlock = dm.slice(dm.indexOf('export const HAZARDS_PRICED_LIVE'), dm.indexOf('export function hazardDanger('));
+        const live = [...liveBlock.matchAll(/^ {4}([a-z]+): Object\.freeze\(/gm)].map((m) => m[1]);
+        expect(sorted(live)).toEqual(['arrowtrap', 'crusher']);
+        for (const f of volumeRows) {
+            const tag = f.family.slice('volume:'.length);
+            expect(f.solverReads, f.family).toEqual(callers.filter((c) => !(c === 'dangerMap' && live.includes(tag))));
+        }
+    });
+
+    it('strategies are the OBSTACLE_STRATEGIES verbs of the tags each family holds', () => {
+        const tagsOf = {
+            openActivators: [...ACTIVATOR_RESPONDERS],
+            pushables: Object.keys(PUSHABLE_FAMILIES),
+            openChests: ['chest'],
+            brokenRocks: ['breakablerock', 'breakablerockghost'],
+        };
+        for (const f of FAMILY_BLOCKS) {
+            const tags = tagsOf[f.family] ?? [];
+            const verbs = new Set(tags.flatMap((t) => [OBSTACLE_STRATEGIES[`solid:${t}`], OBSTACLE_STRATEGIES[`proximity-hazard:${t}`]])
+                .filter(Boolean));
+            expect(f.strategies, f.family).toEqual(sorted(verbs));
+        }
+    });
+
+    it('every family block id is declared, and every row says why', () => {
+        for (const f of FAMILY_BLOCKS) {
+            for (const id of f.blocks) expect(BLOCKS.has(id), `${f.family} → ${id}`).toBe(true);
+            expect(f.why.length, f.family).toBeGreaterThan(0);
+        }
+    });
+
+    it('a family realises only blocks some census class it holds realises', () => {
+        const holds = {
+            armedArrowTraps: ['arrowtrap'], crushers: ['crusher'], crushersParked: ['crusher'],
+            strikeBodies: ['bob'], chasers: ['bob'], spinnerBodies: ['spinner'], armedPulsers: ['pulser'],
+            turrets: ['iceturret'], turretDamage: ['iceturret'], turretsSettled: ['iceturret'],
+            arrowsInFlight: ['arrowtrap'], arrowFlights: ['arrowtrap'], bosses: ['bosstotem'],
+        };
+        for (const f of FAMILY_BLOCKS) {
+            const tags = f.kind === 'volume' ? [f.family.slice('volume:'.length)] : holds[f.family];
+            if (!tags) continue;
+            const union = new Set(tags.flatMap((t) => entityBlocksOf(t).blocks));
+            for (const id of f.blocks) expect(union.has(id), `${f.family} → ${id} (holds ${tags})`).toBe(true);
+        }
+    });
+
+    it('the derived lists partition BLOCKS; avoided-only is a subset of unmodelled', () => {
+        const modelled = blocksTheSolverModels();
+        const none = blocksNoFamilyModels();
+        expect(sorted([...modelled, ...none])).toEqual(sorted(BLOCKS.ids()));
+        expect(modelled.filter((id) => none.includes(id))).toEqual([]);
+        for (const id of blocksOnlyAvoided()) expect(none).toContain(id);
+        for (const [id, fams] of modellingFamilies()) {
+            for (const fam of fams) expect(FAMILY_BLOCKS.find((f) => f.family === fam).kind, `${id} via ${fam}`).toBe('entities');
+        }
     });
 });
