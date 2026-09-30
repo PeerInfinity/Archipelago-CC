@@ -93,6 +93,7 @@
  */
 
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
+import { validateProfile } from './tapeEnvelope.js';
 
 /**
  * ── Version 2: the subtractive ladder's relaxations ───────────────────
@@ -127,12 +128,42 @@ import { TAGS_PER_LEVEL } from './breakableRocks.js';
  * The emitted version is decided by WHICH FIELDS THE CALLER DECLARES, so
  * bumping this constant cannot silently re-version the committed fixtures.
  * It is documentation plus one test's anchor.
+ *
+ * ⛔ AND IT STAYS 12 PAST VERSION 13, deliberately (engine prep B1 D3). v13's
+ * one feature, `profile`, is opt-in and model-only, and six probes, planners
+ * and tests stamp THIS constant onto the tapes they build — bumping it would
+ * re-version every one of those tapes to 13 for a feature none of them uses,
+ * which is the rewrite-for-no-meaning `requiredTapeVersion` exists to prevent.
+ * A tape reaches 13 by DECLARING a profile, never by being built.
  */
 export const TAPE_VERSION = 12;
 
 /** Every version this parser accepts. v1 tapes are frozen, not deprecated. */
 export const SUPPORTED_TAPE_VERSIONS = Object.freeze(
-    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+
+/**
+ * ── Version 13: the PHYSICS PROFILE (engine prep B1 D3) ─────────────────
+ *
+ * `profile: {id, md5}` names the physics profile a tape was recorded
+ * against: `id` a non-empty name, `md5` 32 lowercase hex over the profile's
+ * own dump. It is the envelope's `profile`
+ * (`docs/json/developer/procgen/tape-envelope.md`), and its SHAPE is
+ * validated by `tapeEnvelope.validateProfile`, so the two readers cannot
+ * disagree about what a profile is.
+ *
+ * ⛓ MODEL-ONLY. Seedling has one build physics, so there is nothing for the
+ * game to do with the field: `GAME_VISIBLE_DROPS` carries it and
+ * `gameVisibleTape` projects it away, and the projection's version rule is
+ * unchanged (`hold ? 12 : min(version, 8)`).
+ *
+ * ⛔ PRESENCE-SCOPED, ON `name`'s PRECEDENT, NOT NORMALISED: a parsed tape
+ * carries the key ONLY when the tape declared it. A normalised `profile:
+ * null` would add a key to every parsed tape — and to every projection a
+ * caller builds by spreading one — for no change in meaning. Below 13 the
+ * only legal value is absent/null, like every field before it.
+ */
+export const PROFILE_TAPE_VERSION = 13;
 
 /**
  * ── Version 12: HOLD-AFTER-LATCH (R9 slice P4E, ⚖ 72 (a′)) ──────────────
@@ -1787,6 +1818,17 @@ export function parseTape(input) {
             + `to ${HOLD_TAPE_VERSION} to declare it.`);
     }
     const hold = version >= HOLD_TAPE_VERSION && raw.hold === true;
+    // ⛓ v13 `profile` — refused below 13, shape-checked by the envelope's
+    // own validator at 13, and carried only when declared.
+    const declaresProfile = raw.profile !== undefined && raw.profile !== null;
+    if (declaresProfile && version < PROFILE_TAPE_VERSION) {
+        fail(`tape_version ${version} declares profile: ${JSON.stringify(raw.profile)}, `
+            + `but versions below ${PROFILE_TAPE_VERSION} have no profile BY DEFINITION — `
+            + 'a reader of that version would replay the tape against whatever physics '
+            + `it has while the tape names another. Bump tape_version to ${PROFILE_TAPE_VERSION} `
+            + 'to declare one.');
+    }
+    const profile = declaresProfile ? validateProfile(raw.profile, fail) : null;
 
     const boot = raw.boot;
     if (boot === null || typeof boot !== 'object' || Array.isArray(boot)) {
@@ -1918,6 +1960,8 @@ export function parseTape(input) {
         }),
         // ⛓ v12: `false` unless declared (normalised, like `despawn`).
         hold,
+        // ⛓ v13: present ONLY when declared (see PROFILE_TAPE_VERSION).
+        ...(profile ? { profile } : {}),
         tick_count: tickCount,
         inputs: Object.freeze(inputs.map((s) => Object.freeze(s))),
         ...(raw.name ? { name: String(raw.name) } : {}),
@@ -2007,7 +2051,7 @@ export function keyEdgesAt(tape, t) {
  * asked whether it had.
  */
 export const GAME_VISIBLE_DROPS = Object.freeze(
-    ['persistence[] with at', 'despawn', 'tick0']);
+    ['persistence[] with at', 'despawn', 'tick0', 'profile']);
 
 /**
  * ⛓ R9 slice P4E — the fields a version above 8 added that DO cross to the
@@ -2058,7 +2102,8 @@ export function gameVisibleTape(tape) {
     // whole claim. The fork has no tick-0 concept — the page APPLIES the block
     // through `botStart`'s existing `rng`/`seam.time` writes and the game only
     // ever sees the ordinary declaration it has always seen.
-    const { despawn, tick0, hold, ...rest } = t;
+    // ⛓ engine prep B1 D3: `profile` (v13) leaves too — model-only.
+    const { despawn, tick0, hold, profile, ...rest } = t;
     return {
         ...rest,
         /**
@@ -2133,6 +2178,9 @@ export function requiredTapeVersion(tape, floor = 8) {
     // ⛔ HIGHEST FIRST, and the tick-0 latch is the highest: a segment that
     // carries a measured tick-0 state AND a despawn is a v11 tape, not a v10
     // one that quietly drops the field the continuation page reads.
+    // ⛓ v13 `profile` outranks `hold` in the MODEL's version; the game's
+    // projection is untouched by it (`gameVisibleTape`).
+    if (tape.profile !== null && tape.profile !== undefined) return PROFILE_TAPE_VERSION;
     if (tape.hold === true) return HOLD_TAPE_VERSION;
     if (tape.tick0 !== null && tape.tick0 !== undefined) return 11;
     if ((tape.despawn ?? []).length > 0) return 10;
@@ -2225,6 +2273,9 @@ export function serializeTape(tape) {
         } : {}),
         // Written ONLY for a v12 tape that declares it (the round-trip rule).
         ...(t.tape_version >= HOLD_TAPE_VERSION && t.hold ? { hold: true } : {}),
+        // Written ONLY for a v13 tape that declares it (the round-trip rule).
+        ...(t.tape_version >= PROFILE_TAPE_VERSION && t.profile
+            ? { profile: { id: t.profile.id, md5: t.profile.md5 } } : {}),
         tick_count: t.tick_count,
         inputs: t.inputs.map((s) => ({ key: s.key, from: s.from, to: s.to })),
     };

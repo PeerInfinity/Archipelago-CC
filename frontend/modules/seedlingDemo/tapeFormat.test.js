@@ -712,7 +712,7 @@ describe('the game\'s stream, out of botDrain', () => {
 describe('version 2: what a v1 tape may and may not say', () => {
     it('still parses every v1 tape', () => {
         expect(parseTape(base).tape_version).toBe(1);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
     });
 
     it('normalises v1 to version 1 SEMANTICS so no engine branches on version', () => {
@@ -1249,7 +1249,7 @@ describe('version 7: the RNG state', () => {
 
     it('TAPE_VERSION and SUPPORTED_TAPE_VERSIONS carry the bump', () => {
         expect(TAPE_VERSION).toBe(12);
-        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+        expect(SUPPORTED_TAPE_VERSIONS).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
     });
 });
 
@@ -1367,7 +1367,7 @@ describe('version 9: the witnessed mid-run clear', () => {
         // handed to the game.
         expect(gameVisibleTape(v8).tape_version).toBe(8);
         expect(GAME_VISIBLE_DROPS).toEqual(
-            ['persistence[] with at', 'despawn', 'tick0']);
+            ['persistence[] with at', 'despawn', 'tick0', 'profile']);
     });
 
     /**
@@ -1754,5 +1754,92 @@ describe('version 12: HOLD-AFTER-LATCH (R9 slice P4E, ⚖ 72 (a′))', () => {
         expect(JSON.parse(serializeTape(h)).hold).toBe(true);
         expect(serializeTape(parseTape(JSON.parse(serializeTape(h))))).toBe(serializeTape(h));
         expect(JSON.parse(serializeTape(parseTape(v8())))).not.toHaveProperty('hold');
+    });
+});
+
+/**
+ * ── VERSION 13: the physics PROFILE (engine prep B1 D3) ─────────────────
+ *
+ * Model-only, presence-scoped, and byte-neutral: no committed tape declares
+ * it, so the 154 fixtures, their serialised bytes and their projected bytes
+ * do not move (the arc's W0 identity file, re-generated, is the gate).
+ */
+describe('version 13: the physics profile', () => {
+    const MD5 = '0123456789abcdef0123456789abcdef';
+    const v13 = (over = {}) => ({
+        tape_version: 13, game: 'seedling', boot: { level: 6, x: 32, y: 16 },
+        noclip: false, noDamage: false, noHazards: [], grants: [], persistence: [],
+        despawn: [], equips: [], pins: [],
+        save: { totem_parts: [], keys: [], seal_parts: [] },
+        rng: { seed: 514746467, split: false, cosmetic: 0, fp: 341033166 },
+        seam: { time: 6187 }, tick_count: 3, inputs: [],
+        profile: { id: 'seedling-p4e', md5: MD5 }, ...over,
+    });
+
+    it('parses a declared profile and refuses it below 13, by name', () => {
+        expect(parseTape(v13()).profile).toEqual({ id: 'seedling-p4e', md5: MD5 });
+        for (const v of [8, 11, 12]) {
+            expect(() => parseTape(v13({ tape_version: v })))
+                .toThrow(/versions below 13 have no profile BY DEFINITION/);
+        }
+        // absent / null is legal at every version, and a v12 re-parse is untouched
+        expect(() => parseTape(v13({ tape_version: 12, profile: null }))).not.toThrow();
+    });
+
+    it('validates the SHAPE with the envelope\'s own validator', () => {
+        expect(() => parseTape(v13({ profile: { id: 'x', md5: 'ABCDEF' } })))
+            .toThrow(/32 lowercase hex/);
+        expect(() => parseTape(v13({ profile: { id: '', md5: MD5 } })))
+            .toThrow(/profile.id must be a non-empty string/);
+        expect(() => parseTape(v13({ profile: { id: 'x', md5: MD5, build: 'p4e' } })))
+            .toThrow(/profile.build is not a profile field/);
+        expect(() => parseTape(v13({ profile: 'seedling' }))).toThrow(/profile must be an object/);
+    });
+
+    it('is PRESENCE-scoped: a tape that does not declare it carries no key', () => {
+        expect(parseTape(v13({ profile: undefined }))).not.toHaveProperty('profile');
+        expect(parseTape(v13({ tape_version: 8, despawn: undefined, profile: undefined })))
+            .not.toHaveProperty('profile');
+    });
+
+    it('`requiredTapeVersion` says 13, outranking `hold`', () => {
+        expect(requiredTapeVersion(parseTape(v13()))).toBe(13);
+        const both = holdingWindowTape(v13());
+        expect(both.tape_version).toBe(13);
+        expect(both.hold).toBe(true);
+        expect(requiredTapeVersion(both)).toBe(13);
+        expect(requiredTapeVersion(parseTape(v13({ profile: undefined })))).toBe(8);
+    });
+
+    /**
+     * ⛔ THE CLASSIFICATION PIN FOR v13. Mutant (a) — `'profile'` left out of
+     * the projection's drops — reds THIS row: the existing v9 pin projects a
+     * tape that declares no profile, so it cannot see the field at all.
+     */
+    it('⛓ is MODEL-ONLY: the projection drops it and its version rule is unchanged', () => {
+        const t = parseTape(v13());
+        const g = gameVisibleTape(t);
+        expect(g).not.toHaveProperty('profile');
+        expect(g.tape_version).toBe(8);
+        const differing = Object.keys(t).filter(
+            (k) => JSON.stringify(t[k]) !== JSON.stringify(g[k]));
+        expect(differing.sort()).toEqual(
+            ['despawn', 'hold', 'profile', 'tape_version', 'tick0']);
+        expect(() => parseTape(g)).not.toThrow();
+        // …and a HOLDING v13 tape projects to the game's 12, profile still dropped.
+        const gh = gameVisibleTape(holdingWindowTape(v13()));
+        expect(gh.tape_version).toBe(12);
+        expect(gh.hold).toBe(true);
+        expect(gh).not.toHaveProperty('profile');
+        expect(GAME_VISIBLE_DROPS).toContain('profile');
+        expect(GAME_VISIBLE_KEEPS).toEqual(['hold']);
+    });
+
+    it('round-trips, and writes NO profile unless declared', () => {
+        const text = serializeTape(v13());
+        expect(JSON.parse(text).profile).toEqual({ id: 'seedling-p4e', md5: MD5 });
+        expect(serializeTape(parseTape(text))).toBe(text);
+        expect(parseTape(parseTape(v13()))).toEqual(parseTape(v13()));
+        expect(JSON.parse(serializeTape(v13({ profile: undefined })))).not.toHaveProperty('profile');
     });
 });
