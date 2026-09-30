@@ -43,6 +43,11 @@
  * assertParamSchema`) and enumerated by its `enumerateValues` — a concept's
  * colour is a parameter exactly as a template's length is.
  *
+ * ⛓ BEHAVIOUR (P2, ⚖ the user 2026-09-30) — four OPTIONAL fields on a concept
+ * (`traits`, `weaponCategories`, `defence`, `triggers`) and one on a realisation
+ * (`blocks`), every id in them DECLARED in `behaviourBlocks.js`'s registries and
+ * checked here by cross-reference. An absent field is exactly today's concept.
+ *
  * ⛔ BROWSER-SAFE AND NAMELESS: no `node:` import, no registry import, and no
  * registered substrate id anywhere in this file (asserted by
  * `concepts.test.js`, which reads this file's source).
@@ -50,7 +55,12 @@
 
 import { LAW_CUT, LAW_SHORTCUT } from './elements.js';
 import { GRADES, REQUIRING_GRADES } from './differentialGrade.js';
-import { assertDrawable, assertParamSchema, enumerateValues, valueInDomain } from './templateContract.js';
+import {
+    assertDrawable, assertParamSchema, describeDomain, domainKind, enumerableValues, enumerateValues, valueInDomain,
+} from './templateContract.js';
+import {
+    BLOCKS, DEFENCE_RESPONSES, TILE_TRIGGERS, WEAPON_CATEGORIES, fieldValueRefusal,
+} from './behaviourBlocks.js';
 
 export class ConceptContractError extends Error {
     constructor(message) {
@@ -124,6 +134,106 @@ export function instancesOf(concept) {
     return enumerateValues({ params }).map((values) => Object.freeze({
         values: Object.freeze(values), id: concept.idFor(values),
     }));
+}
+
+/** ⛓ The concept kinds that may declare a `defence` (they are HIT), and a `triggers` list (they GIVE WAY). */
+const DEFENDING_KINDS = Object.freeze(['enemy', 'hazard', 'obstacle']);
+const TRIGGERED_KINDS = Object.freeze(['obstacle', 'hazard']);
+
+/**
+ * ⛓ `{key: value}` against a declared schema (a response's or a tile trigger's
+ * params): every key declared, every value valid for its form (and, for an
+ * `open: {id}`, declared in that registry). An absent key is its default.
+ */
+function assertParamValues(where, schema, values) {
+    const declared = schema ?? [];
+    for (const [k, v] of Object.entries(values)) {
+        const p = declared.find((q) => q.key === k);
+        if (!p) {
+            fail(`concepts: ${where} gives "${k}", which it does not declare — it declares `
+                + `[${declared.map((q) => q.key).join(', ')}].`);
+        }
+        const why = fieldValueRefusal(p, v);
+        if (why) fail(`concepts: ${where} gives "${k}" the value ${JSON.stringify(v)}, which ${why} (${describeDomain(p)}).`);
+    }
+}
+
+/** ⛓ One `defence` entry, normalised: `'damage'` → `{response: 'damage', params: {}}`. */
+export function normaliseDefence(entry) {
+    if (nonEmptyString(entry)) return { response: entry, params: {} };
+    if (isPlainObject(entry) && nonEmptyString(entry.response)) {
+        const { response, ...params } = entry;
+        return { response, params };
+    }
+    return null;
+}
+
+/** ⛓ The behaviour fields of one concept alone (the cross-references are the table's). */
+function assertBehaviour(who, concept) {
+    if (concept.traits !== undefined) {
+        try {
+            assertParamSchema(concept.traits, `${who}'s traits:`);
+        } catch (err) {
+            fail(`concepts: ${err.message}`);
+        }
+    }
+    if (concept.weaponCategories !== undefined) {
+        if (concept.kind !== 'item') {
+            fail(`concepts: ${who} is ${concept.kind === 'enemy' ? 'an' : 'a'} ${concept.kind} and declares `
+                + '`weaponCategories` — only an item concept is something a player HITS WITH.');
+        }
+        const cats = concept.weaponCategories;
+        if (!Array.isArray(cats) || !cats.length) fail(`concepts: ${who}'s \`weaponCategories\` must be a non-empty list.`);
+        for (const c of cats) {
+            if (!WEAPON_CATEGORIES.has(c)) {
+                fail(`concepts: ${who} declares the weapon category ${JSON.stringify(c)}, which the `
+                    + `"${WEAPON_CATEGORIES.name}" registry does not declare. Declare it where it is introduced.`);
+            }
+        }
+        if (new Set(cats).size !== cats.length) fail(`concepts: ${who} names a weapon category twice.`);
+    }
+    if (concept.defence !== undefined) {
+        if (!DEFENDING_KINDS.includes(concept.kind)) {
+            fail(`concepts: ${who} is ${concept.kind === 'item' ? 'an' : 'a'} ${concept.kind} and declares a `
+                + `\`defence\` — only [${DEFENDING_KINDS.join(', ')}] are hit.`);
+        }
+        if (!isPlainObject(concept.defence) || !Object.keys(concept.defence).length) {
+            fail(`concepts: ${who}'s \`defence\` must be a non-empty object keyed by weapon category.`);
+        }
+        for (const [cat, raw] of Object.entries(concept.defence)) {
+            if (!WEAPON_CATEGORIES.has(cat)) {
+                fail(`concepts: ${who}'s defence names the category "${cat}", which the `
+                    + `"${WEAPON_CATEGORIES.name}" registry does not declare.`);
+            }
+            const d = normaliseDefence(raw);
+            if (!d) fail(`concepts: ${who}'s defence against "${cat}" is ${JSON.stringify(raw)}; it is a response id or {response, ...params}.`);
+            const response = DEFENCE_RESPONSES.get(d.response);
+            if (!response) {
+                fail(`concepts: ${who}'s defence against "${cat}" is the response "${d.response}", which the `
+                    + `"${DEFENCE_RESPONSES.name}" registry does not declare.`);
+            }
+            assertParamValues(`${who}'s defence against "${cat}" (response "${d.response}")`, response.params, d.params);
+        }
+    }
+    if (concept.triggers !== undefined) {
+        if (!TRIGGERED_KINDS.includes(concept.kind)) {
+            fail(`concepts: ${who} is ${concept.kind === 'item' || concept.kind === 'enemy' ? 'an' : 'a'} `
+                + `${concept.kind} and declares \`triggers\` — only [${TRIGGERED_KINDS.join(', ')}] give way.`);
+        }
+        if (!Array.isArray(concept.triggers) || !concept.triggers.length) {
+            fail(`concepts: ${who}'s \`triggers\` must be a non-empty list of {kind, ...params}.`);
+        }
+        concept.triggers.forEach((t, i) => {
+            if (!isPlainObject(t) || !nonEmptyString(t.kind)) fail(`concepts: ${who}'s trigger ${i} has no \`kind\`.`);
+            const { kind, ...params } = t;
+            const trig = TILE_TRIGGERS.get(kind);
+            if (!trig) {
+                fail(`concepts: ${who}'s trigger ${i} is the kind "${kind}", which the "${TILE_TRIGGERS.name}" `
+                    + 'registry does not declare.');
+            }
+            assertParamValues(`${who}'s trigger ${i} ("${kind}")`, trig.params, params);
+        });
+    }
 }
 
 /**
@@ -219,6 +329,7 @@ export function assertConcept(id, concept) {
             }
         }
     }
+    assertBehaviour(who, concept);
 }
 
 /** ⛓ An item concept's instances as `{id, name}` — the names a rule can carry. */
@@ -264,6 +375,17 @@ export function assertConceptTable(concepts) {
                             + `which has no instance for its values ${JSON.stringify(inst.values)}.`);
                     }
                 }
+            }
+        }
+    }
+    /* ⛓ P2: a defended category is one some ITEM in this table hits with. */
+    const produced = new Set(Object.values(concepts)
+        .flatMap((c) => (c.kind === 'item' ? c.weaponCategories ?? [] : [])));
+    for (const [id, c] of Object.entries(concepts)) {
+        for (const cat of Object.keys(c.defence ?? {})) {
+            if (!produced.has(cat)) {
+                fail(`concepts: concept "${id}"'s defence names the category "${cat}", and no item concept `
+                    + 'produces it — a response to a hit nothing in the table can deal is a rule nobody can meet.');
             }
         }
     }
@@ -386,6 +508,7 @@ export function assertRealisation(conceptId, realisation, concepts) {
         && !nonEmptyString(realisation.art) && !isPlainObject(realisation.art)) {
         fail(`concepts: ${who}'s \`art\` must be null, a string or an object.`);
     }
+    if (realisation.blocks !== undefined) assertBlocks(who, concept, realisation.blocks);
     if (concept.kind === 'item') {
         if (realisation.placements !== undefined) {
             fail(`concepts: ${who} carries \`placements\` — an item is HELD, never placed as a gate.`);
@@ -433,6 +556,66 @@ export function assertRealisation(conceptId, realisation, concepts) {
         }
         if (p.mechanic !== undefined && !isPlainObject(p.mechanic)) {
             fail(`concepts: ${where}'s \`mechanic\` is not an object.`);
+        }
+    }
+}
+
+/** ⛓ Can a trait of this form feed a field of that form? The reason it cannot, or null. */
+function traitFieldMismatch(trait, field) {
+    const tk = domainKind(trait);
+    const fk = domainKind(field);
+    const an = (w) => (w === 'open' ? 'an' : 'a');
+    if (tk !== fk) return `${an(tk)} ${tk} trait cannot feed ${an(fk)} ${fk} field`;
+    if (tk === 'open') {
+        return JSON.stringify(trait.open) === JSON.stringify(field.open) ? null
+            : `the trait is open over ${describeDomain(trait)} and the field over ${describeDomain(field)}`;
+    }
+    if (tk === 'range' && (trait.range.min < field.range.min || trait.range.max > field.range.max)) {
+        return `the trait's ${describeDomain(trait)} is not inside the field's ${describeDomain(field)}`;
+    }
+    const values = enumerableValues(trait);
+    if (values === null) {
+        return field.range.step === undefined ? null
+            : `an unstepped trait cannot feed the stepped field ${describeDomain(field)}`;
+    }
+    const off = values.filter((v) => !valueInDomain(field, v));
+    return off.length ? `the trait's values [${off.join(', ')}] are not in the field's ${describeDomain(field)}` : null;
+}
+
+/**
+ * ⛓⛓ **A REALISATION'S `blocks`, CHECKED** (P2) — `{ '<block id>': { '<field>':
+ * <value> | {trait: '<trait key>'} } }`: the block declared in `BLOCKS`, each
+ * field one it declares, a literal valid for the field's form, a `{trait}`
+ * naming a trait the concept declares, of a form the field can take.
+ */
+function assertBlocks(who, concept, blocks) {
+    if (!isPlainObject(blocks)) fail(`concepts: ${who}'s \`blocks\` is not an object keyed by block id.`);
+    for (const [bid, fields] of Object.entries(blocks)) {
+        const block = BLOCKS.get(bid);
+        if (!block) fail(`concepts: ${who} implements the block "${bid}", which the "${BLOCKS.name}" registry does not declare.`);
+        if (!isPlainObject(fields)) fail(`concepts: ${who}'s block "${bid}" is not an object keyed by field.`);
+        for (const [key, value] of Object.entries(fields)) {
+            const where = `${who}, block "${bid}" field "${key}"`;
+            const field = block.fields.find((f) => f.key === key);
+            if (!field) {
+                fail(`concepts: ${where} — the block declares no such field; it declares `
+                    + `[${block.fields.map((f) => f.key).join(', ')}].`);
+            }
+            if (isPlainObject(value) && Object.prototype.hasOwnProperty.call(value, 'trait')) {
+                const trait = (concept.traits ?? []).find((t) => t.key === value.trait);
+                if (!trait) {
+                    fail(`concepts: ${where} reads the trait ${JSON.stringify(value.trait)}, which the concept `
+                        + `does not declare — it declares [${(concept.traits ?? []).map((t) => t.key).join(', ')}].`);
+                }
+                const why = traitFieldMismatch(trait, field);
+                if (why) fail(`concepts: ${where} reads the trait "${trait.key}", and ${why}.`);
+                continue;
+            }
+            const why = fieldValueRefusal(field, value);
+            if (why) {
+                fail(`concepts: ${where} was given ${JSON.stringify(value)}, which ${why} — the field is `
+                    + `${domainKind(field)} (${describeDomain(field)}).`);
+            }
         }
     }
 }
@@ -603,6 +786,19 @@ export function conceptsRealisedBy(entry, concepts) {
             tier: r.tier,
             placements: Object.entries(r.placements ?? {}).map(([key, p]) => ({ key, effect: p.effect })),
         }));
+}
+
+/**
+ * ⛓ **THE BEHAVIOUR BLOCKS AN ENTRY IMPLEMENTS** (P2), in its declared order —
+ * realisation order, then each realisation's block order —
+ * `[{concept, block, family}]`. The input a future chart row reads, like
+ * `conceptsRealisedBy`; ⛔ this file adds no statement to `CAPABILITY_STATEMENTS`.
+ */
+export function blocksImplementedBy(entry, concepts) {
+    return Object.entries(realisationsOf(entry))
+        .filter(([cid]) => concepts[cid])
+        .flatMap(([cid, r]) => Object.keys(r.blocks ?? {})
+            .map((bid) => ({ concept: cid, block: bid, family: BLOCKS.get(bid)?.family ?? null })));
 }
 
 /**

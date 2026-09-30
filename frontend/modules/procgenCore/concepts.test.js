@@ -21,6 +21,7 @@ import {
     itemIdOfNeed, normaliseNeed,
     CONCEPTS, CONCEPT_ITEMS_FEATURE, conceptOfItem, conceptsRealisedBy, isConceptRow, itemRowsOf,
     itemTagsImpliedBy, markConceptRow, realisationsOf,
+    blocksImplementedBy, normaliseDefence,
 } from './concepts.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -303,5 +304,126 @@ describe('T0b — the concept-row marker', () => {
         expect(isConceptRow(row)).toBe(false);
         expect(isConceptRow(null)).toBe(false);
         expect(isConceptRow({ concept: '' })).toBe(false);
+    });
+});
+
+/* ─────────────── behaviour parameters P2, D3 — the concept's behaviour fields ─────────────── */
+
+/** The fixture table with every P2 field declared — a fresh copy each call. */
+function behaviourTable() {
+    const t = table();
+    t.sword.weaponCategories = ['sword'];
+    t.guardian.defence = { sword: 'damage' };
+    t.guardian.traits = [
+        { key: 'toughness', range: { min: 1, max: 5 }, default: 2, why: 'how much it takes' },
+        { key: 'speed', range: { min: 0, max: 1 }, default: 0.5, why: 'a fraction of the player speed' },
+    ];
+    t.water.triggers = [{ kind: 'counter', count: 2 }];
+    return t;
+}
+
+/** A TEST DOUBLE whose guardian realisation implements blocks. */
+function blockDouble() {
+    const e = double();
+    e.conceptRealisations.guardian.blocks = {
+        chase: { speed: { trait: 'speed' }, range: 6 },
+        contact: { damage: 1 },
+        hp: {},
+    };
+    return e;
+}
+
+describe('P2 D3 — traits, weaponCategories, defence, triggers (every one OPTIONAL)', () => {
+    it('the behaviour fixture passes; the plain fixture (no P2 field) still passes', () => {
+        expect(() => assertConceptTable(behaviourTable())).not.toThrow();
+        expect(() => assertConceptTable(table())).not.toThrow();
+    });
+
+    it('a defence entry may carry its response\'s params, and normaliseDefence reads both spellings', () => {
+        const t = behaviourTable();
+        t.guardian.defence = { sword: { response: 'damage', factor: 2 } };
+        expect(() => assertConceptTable(t)).not.toThrow();
+        expect(normaliseDefence('damage')).toEqual({ response: 'damage', params: {} });
+        expect(normaliseDefence({ response: 'breakIfLevel', level: 2 })).toEqual({ response: 'breakIfLevel', params: { level: 2 } });
+        expect(normaliseDefence(3)).toBeNull();
+    });
+
+    const bad = [
+        ['traits that are not the schema array', (t) => { t.guardian.traits = { speed: 1 }; }, /concept "guardian"'s traits:.*SCHEMA ARRAY/s],
+        ['a trait with no why', (t) => { t.guardian.traits[0].why = ''; }, /traits: parameter "toughness" carries no/],
+        ['weaponCategories on a non-item', (t) => { t.guardian.weaponCategories = ['sword']; }, /concept "guardian" is an enemy and declares `weaponCategories`/],
+        ['an undeclared weapon category', (t) => { t.sword.weaponCategories = ['laser']; }, /weapon category "laser", which the "weaponCategories" registry does not declare/],
+        ['an empty weaponCategories', (t) => { t.sword.weaponCategories = []; }, /non-empty list/],
+        ['a category named twice', (t) => { t.sword.weaponCategories = ['sword', 'sword']; }, /twice/],
+        ['defence on an item', (t) => { t.swim.defence = { sword: 'damage' }; }, /concept "swim" is an item and declares a `defence`/],
+        ['a defence keyed by an undeclared category', (t) => { t.guardian.defence = { laser: 'damage' }; }, /category "laser", which the "weaponCategories" registry/],
+        ['an undeclared response', (t) => { t.guardian.defence = { sword: 'explodeHarder' }; }, /response "explodeHarder", which the "defenceResponses" registry/],
+        ['a response param it does not declare', (t) => { t.guardian.defence = { sword: { response: 'damage', level: 2 } }; }, /gives "level", which it does not declare — it declares \[factor\]/],
+        ['a response param out of its range', (t) => { t.guardian.defence = { sword: { response: 'damage', factor: 9 } }; }, /gives "factor" the value 9, which is not in its domain \(the range 0..4/],
+        ['a malformed defence entry', (t) => { t.guardian.defence = { sword: 7 }; }, /defence against "sword" is 7/],
+        ['triggers on an item', (t) => { t.sword.triggers = [{ kind: 'counter' }]; }, /declares `triggers`/],
+        ['triggers on an enemy', (t) => { t.guardian.triggers = [{ kind: 'counter' }]; }, /is an enemy and declares `triggers`/],
+        ['an undeclared tile trigger', (t) => { t.water.triggers = [{ kind: 'moonphase' }]; }, /trigger 0 is the kind "moonphase"/],
+        ['a trigger with no kind', (t) => { t.water.triggers = [{ count: 2 }]; }, /trigger 0 has no `kind`/],
+        ['an itemCategory trigger naming an undeclared category', (t) => { t.water.triggers = [{ kind: 'itemCategory', category: 'laser' }]; }, /not an id the "weaponCategories" registry declares/],
+        // ⛓ MUTANT (e): a defended category nothing in the table produces.
+        ['(e) guardian defends against fire, and no item produces fire', (t) => { t.guardian.defence = { fire: 'damage' }; },
+            /concept "guardian"'s defence names the category "fire", and no item concept produces it/],
+    ];
+    it.each(bad)('refuses %s', (_label, mutate, re) => {
+        const t = behaviourTable();
+        mutate(t);
+        throwsNaming(() => assertConceptTable(t), re);
+    });
+});
+
+describe('P2 D3 — a realisation\'s `blocks` (a TEST DOUBLE; no shipped realisation implements one)', () => {
+    it('the block double passes, and blocksImplementedBy lists it in declared order', () => {
+        const t = behaviourTable();
+        expect(() => assertRealisations(blockDouble(), t)).not.toThrow();
+        expect(blocksImplementedBy(blockDouble(), t)).toEqual([
+            { concept: 'guardian', block: 'chase', family: 'movement' },
+            { concept: 'guardian', block: 'contact', family: 'attack' },
+            { concept: 'guardian', block: 'hp', family: 'defence' },
+        ]);
+        expect(blocksImplementedBy(blockDouble().conceptRealisations, t)).toEqual(blocksImplementedBy(blockDouble(), t));
+        expect(blocksImplementedBy(double(), t)).toEqual([]);
+        expect(blocksImplementedBy({ id: 'bare' }, t)).toEqual([]);
+    });
+
+    const bad = [
+        ['blocks that are not an object', (e) => { e.conceptRealisations.guardian.blocks = ['chase']; }, /`blocks` is not an object keyed by block id/],
+        ['an undeclared block', (e) => { e.conceptRealisations.guardian.blocks = { teleport: {} }; }, /implements the block "teleport", which the "blocks" registry does not declare/],
+        ['a field the block does not declare', (e) => { e.conceptRealisations.guardian.blocks = { chase: { colour: 'red' } }; }, /block "chase" field "colour" — the block declares no such field; it declares \[speed, range\]/],
+        // ⛓ MUTANT (f): a trait the concept does not declare.
+        ['(f) a {trait} naming no declared trait', (e) => { e.conceptRealisations.guardian.blocks = { chase: { speed: { trait: 'nope' } } }; },
+            /block "chase" field "speed" reads the trait "nope", which the concept does not declare — it declares \[toughness, speed\]/],
+        // ⛓ MUTANT (g): a string into a range field.
+        ['(g) a string into a range field', (e) => { e.conceptRealisations.guardian.blocks = { chase: { range: 'fast' } }; },
+            /block "chase" field "range" was given "fast", which is not in its domain — the field is range \(the range 0..20 \(unstepped\)\)/],
+        ['an open trait onto a range field', (e, t) => {
+            t.guardian.traits.push({ key: 'kind', open: 'string', default: 'x', why: 'x' });
+            e.conceptRealisations.guardian.blocks = { chase: { speed: { trait: 'kind' } } };
+        }, /an open trait cannot feed a range field/],
+        ['a range trait wider than its field', (e) => { e.conceptRealisations.guardian.blocks = { melee: { reach: { trait: 'toughness' } } }; },
+            /the trait's the range 1..5 \(unstepped\) is not inside the field's the range 0..3/],
+        ['an unstepped trait onto a stepped field', (e) => { e.conceptRealisations.guardian.blocks = { hp: { health: { trait: 'toughness' } } }; },
+            /an unstepped trait cannot feed the stepped field the range 1..50 step 1/],
+        ['an open-id field given an undeclared id', (e) => { e.conceptRealisations.guardian.blocks = { onHit: { category: 'laser' } }; },
+            /field "category" was given "laser", which is not an id the "weaponCategories" registry declares/],
+    ];
+    it.each(bad)('refuses %s', (_label, mutate, re) => {
+        const e = blockDouble();
+        const t = behaviourTable();
+        mutate(e, t);
+        throwsNaming(() => assertRealisations(e, t), re);
+    });
+
+    it('a stepped trait onto a stepped field whose values it stays within passes', () => {
+        const e = blockDouble();
+        const t = behaviourTable();
+        t.guardian.traits.push({ key: 'hits', range: { min: 1, max: 5, step: 1 }, default: 2, why: 'x' });
+        e.conceptRealisations.guardian.blocks = { hp: { health: { trait: 'hits' } } };
+        expect(() => assertRealisations(e, t)).not.toThrow();
     });
 });
