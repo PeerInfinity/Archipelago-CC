@@ -611,12 +611,16 @@ describe('R1 — the Parameters section binds the same bag keys it bound before 
  * spliced out (R1 adds that one element per active substrate and nothing
  * else), hashed. CAPTURED at the start HEAD `9ab1459239` by the same fake
  * document; the wrapper's own rows are `regionGenerationForm.test.js`'s.
+ * ⛓ `topDown` RE-RECORDED by PROCGEN PIPELINE PRESETS C2 (2026-09-30): its grid
+ * inputs' `max` moved 10 → `TOPDOWN_GRID_INPUT_MAX` by design. With that
+ * constant set back to 10 the R1 capture `666aeec3…` held — the attribute is
+ * the whole delta.
  */
 const PARAMETERS_SECTION_SHA256_BEFORE_R1 = Object.freeze({
     gridGrowth: 'f49e89f68ba8a5cb858d3abd74e9b4d1825b42a0f0e98b5d238fb83067e1c298',
     sphereGrowth: 'd19a7149611d9cd1289e8f9fac457b81da16df18742771c6ff57b049834ea71a',
     shuffledSpiral: 'cbd1d83f8490db92a82331113efd87544be267f2471c54f6dbe7e9b0f3eecf9b',
-    topDown: '666aeec3b7aa23a8c5ec85e65d1baaeee26de7c3c97cd060f9eae163d12b312d',
+    topDown: '55923d59e185ecb8aeb3ca78347ef9e514d5017888fc651f261b04f2ac9c1585',
 });
 function unwrapForms(el) {
     el.children = el.children.flatMap((c) => (c.className === 'procgen-region-generation-form'
