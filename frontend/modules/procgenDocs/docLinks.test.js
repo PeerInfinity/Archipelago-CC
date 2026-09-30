@@ -235,15 +235,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              text-adventure.md's same-doc § Prose link (`same-doc` 15 → 16).
          *   318 → 319  CONCEPT LIBRARY T1 D5 (2026-09-30): maze.md § Concept gates →
          *              concepts.md (`doc` 244 → 245).
+         *   319 → 320  CONCEPT LIBRARY T0b D5 (2026-09-30): concepts.md § Selection's
+         *              same-doc link to § The two halves (`same-doc` 16 → 17).
          */
         expect(by).toEqual({
-            'same-doc': 16,
+            'same-doc': 17,
             doc: 245,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(319);
+        expect(CORPUS.length).toBe(320);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {

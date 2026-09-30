@@ -33,11 +33,17 @@ conceptRealisations: {
 
 An item realisation carries no placements (an item is held, not placed as a gate); any other field on it, such as a boot flag, is the substrate's own.
 
+Every reader of a substrate's half takes **either** the registry entry **or** its realisations object (`realisationsOf` normalises both). A substrate's placer lives in a module its own entry imports, so it cannot hand over the entry; it hands over the data module the entry declares, as the maze and the text adventure do.
+
 `assertConceptTable` checks the neutral half and `assertRealisations(entry, concepts)` checks a substrate's half. A malformed declaration throws a `ConceptContractError` naming what is wrong. A substrate that declares no realisations, or does not realise a given concept, is not an error.
 
 ### Parameterised concepts
 
 A concept can take parameters in the same schema language templates and skeleton kinds use (`templateContract.assertParamSchema`: `[{key, domain, default, why}]`). Each value combination is an **instance** (`instancesOf`), with its own id from `idFor(values)` and its own row in `presentation`. The `key` and `door` concepts take a `colour`; `itemRowsOf(CONCEPTS.key)` and `obstacleRowsOf(CONCEPTS.door, CONCEPTS)` render their instances in the shared library's row shape, and a test holds those rows equal to the shared library's coloured keys and doors (see [Paths and Obstacles](./paths-and-obstacles.md#the-vocabulary-frontendmodulessharedprocgenlibraryjs)). A door's clear set comes from its `openedBy` relation: the key instance with the door's own colour.
+
+### Item concepts
+
+The unparameterised item concepts (`sword`, `swim`) carry the `feature` `concept_items` (`CONCEPT_ITEMS_FEATURE`), so `itemTagsImpliedBy` names it. `itemIdOfNeed(conceptId)` gives the AP item name a need carries, and `conceptOfItem(apName)` is its reverse: `conceptOfItem('Progressive Sword')` is `sword`. Both answer only for an unparameterised item concept; `key_red` is an instance of `key`, never "the key".
 
 ## The three effects
 
@@ -58,6 +64,7 @@ Logic is always `needs` plus `effect`, never a free rule expression; a placement
 `conceptSelection.js` takes the planner's rule and an entry:
 
 - `ruleFor(placement, concepts)` writes a placement's needs as Rule Builder JSON: one need is a `Has` (with `count` only when it is not 1), several are an `And`. `extractItemRequirementFromRule` reads every such rule back exactly.
+- `entry` below is a registry entry or its realisations object (see [The two halves](#the-two-halves)).
 - `candidatesFor(rule, entry, {concepts, offered})` returns the entry's `requires` placements whose needs equal the rule's **exact** requirement — the same item names and the same counts. A rule the extractor reports as inexact (an `Or`, a many-item `HasAny`) has no candidates: no single placement is equivalent to a disjunction. Only concepts in `offered`, the world's list of concept ids, are considered.
 - `selectRealisation(rule, entry, {concepts, offered, rng})` returns null, the single candidate, or one `rng.choice` among several.
 - `decorationsFor(entry, {offered})` returns the `helps` and `none` placements. No rule ever selects them, because they change no reachability the planner fixed.
@@ -72,13 +79,31 @@ A refusal is a value. When `selectRealisation` returns null — the entry declar
 
 The maze (`mazeRoom/mazeConcepts.js`) realises `sword` and `swim` as pickups (tier `mechanic`) and `guardian` and `water` as gates that need the sword and swim (tier `skin`). Its placer asks `selectRealisation` about every gate rule with the world's `params.concepts` as `offered`; a selected rule is placed as `guardian_gate_<n>` or `water_gate_<n>` over the same rule gate, with the same `clear_rule`, and painted in the colour and symbol from the realisation's `art` (the table gives `guardian` and `water` no presentation). The maze declares no `libraryItems`: top-down grants every in-mix substrate's library items as free starting items, so a static declaration would change every top-down world. Instead, an item concept the world names joins that world's item library as the table's rows (`presetRun.mergedItemLib`).
 
+Those rows are **marked** with the concept they came from (`markConceptRow` adds `concept: '<id>'`; `isConceptRow` reads it), and a marked row does two things:
+
+- **It reaches play.** The maze's serializer writes a region's `itemLib` as the difference from its base library, and in the pipeline the base *is* the merged library, so a concept row used to be dropped and play drew the pickup in the hashed foreign colour. The serializer now carries a marked row even when the base holds its id, so the played world draws the table's colour. No library declares a marked row, so a world that names no concept writes exactly the payload it did.
+- **The pipeline's item picker groups it** under the selected substrates that realise its concept. No substrate has to list `concept_items` in `supportedFeatures` for that.
+
 ## The text adventure
 
 A text-adventure gate has no geometry: the bridge refuses the move while the exit's rule fails, so the realisation is the prose the player reads. `sword`, `swim`, `guardian.gate` and `water.gate` are all `tier: 'mechanic'`. When the planner's rule selects a gate, `placeFromRules` writes that gate's `blocked` and `passedWith` messages into the room's payload `prose`. See [Text Adventure Substrate](./text-adventure.md#concept-realisations).
 
+## A rebuilt world keeps its concepts
+
+A sphere-growth or top-down compile records the world's concept list in its slot's `procgen_metadata` block as `concepts`, and only when the list is non-empty. `rebuildEnvelopeFromRulesJson` reads it back into `regionParams.concepts`; a caller that passes its own `regionParams.concepts` wins.
+
+A plain rebuild never needed this, because it deserializes every placed region from its payload and so keeps the skinned gates and the prose. What needed it is every region an **append** realises: the appended sphere, and the kept region that now carries its gate. Those regions were placed with no concept, so they got plain `logic_gate`s and no prose. A world that names no concept records nothing and rebuilds as before.
+
 ## What the chart reads
 
-`conceptsRealisedBy(entry, concepts)` lists an entry's realised concepts with their kind, tier and placements' effects, and `itemTagsImpliedBy(entry, concepts)` lists the item tags those concepts carry — the same tag law `substrateCapabilities.itemTagFeatures` applies to an entry's items. They are inputs for a future row of the substrate capability chart; no chart statement reads `conceptRealisations` yet.
+Statement **P6** of the substrate capability chart, *"It can show the library's concepts in its own way"* (⚖ the user, 2026-09-29), reads `conceptRealisations` through `conceptsRealisedBy(entry, concepts)`:
+
+- ✗ where the entry realises no concept;
+- otherwise ✓, with each concept as `name (tier)` in the entry's declared order: the count, the first three names, and the whole list in the cell's `list`.
+
+The maze's cell reads *4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …*.
+
+`itemTagsImpliedBy(entry, concepts)` lists the item tags an entry's concepts carry, by the same tag law `substrateCapabilities.itemTagFeatures` applies to an entry's items.
 
 ## Related documentation
 
