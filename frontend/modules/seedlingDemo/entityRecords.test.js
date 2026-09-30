@@ -14,6 +14,9 @@ import {
     entitiesDump, entitiesMd5, entitiesStamp, entitiesUnused, entityLeaves, entityRecordNames,
 } from './entityRecords.js';
 import { md5 } from './md5.js';
+import { createTapeStepper, runTape, runTapeToStream } from './tapeRunner.js';
+import { atlasLevelSource } from './levelSource.js';
+import { loadTape } from './fixtures/index.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -240,3 +243,20 @@ describe('entityRecords — overrides (the load-time semantics)', () => {
         expect(new EntityRecordError('x').message).toBe('entity records: x');
     });
 });
+
+describe('entityRecords — the stamp on the run (D4): the RESULT only', () => {
+    it('runTape\'s result carries entitiesStamp() beside profile; the stream and the stepper keep their shape', () => {
+        const levelSource = atlasLevelSource();
+        const t = loadTape('straight-run');
+        const out = runTape(t, { levelSource });
+        expect(out.entities).toEqual(entitiesStamp());
+        expect(out.entities).toEqual({ md5: entitiesMd5(), records: entityRecordNames().length });
+        expect(Object.keys(runTapeToStream(t, { levelSource }))).toEqual(['ticks', 'transitions']);
+        const stepper = createTapeStepper(t, { levelSource });
+        let r = stepper.next();
+        while (!r.done) r = stepper.next();
+        expect(r.value.entities).toEqual(entitiesStamp());
+        expect(JSON.stringify(r.value)).toBe(JSON.stringify(out));
+    });
+});
+

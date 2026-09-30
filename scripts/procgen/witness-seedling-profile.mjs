@@ -77,7 +77,7 @@ export const MOVED_TAPES_KEPT = 10;
  * `'r5-l60-kill'` plus `r5Chain.js`'s MODEL_EXEMPT_NAMES (the three
  * `r5-bobboss-*` tapes, all longer than the fast tier).
  */
-const declaredDivergers = async () => ['r5-l60-kill', ...(await load('r5Chain.js')).MODEL_EXEMPT_NAMES];
+export const declaredDivergers = async () => ['r5-l60-kill', ...(await load('r5Chain.js')).MODEL_EXEMPT_NAMES];
 /** A child that runs longer than this is killed (by its own pid) and every tape counts as `threw:timeout`. */
 const CHILD_TIMEOUT_MS = 300_000;
 
@@ -111,7 +111,9 @@ export const verdictOf = (row) => (MAGNITUDES.some((m) => row[m].moved + row[m].
  * is one of the two and follows from its counts, the control moved nothing,
  * and the summary is the recount of the rows.
  */
-export function checkWitness(json, profileKeys, profileFields = []) {
+export function checkWitness(json, profileKeys, profileFields = [], {
+    noun = 'PROFILE.', names = 'PROFILE key', command = 'node scripts/procgen/witness-seedling-profile.mjs --write',
+} = {}) {
     const out = [];
     if (!json || typeof json !== 'object') return ['not a JSON object'];
     for (const f of ['measuredAt', 'head', 'tier', 'tapes', 'control', 'keys', 'summary']) {
@@ -124,8 +126,8 @@ export function checkWitness(json, profileKeys, profileFields = []) {
     const have = Object.keys(json.keys);
     const missing = profileKeys.filter((k) => !have.includes(k));
     const extra = have.filter((k) => !profileKeys.includes(k));
-    for (const k of missing) out.push(`PROFILE.${k} has no witness row — run the witness (node scripts/procgen/witness-seedling-profile.mjs --write)`);
-    for (const k of extra) out.push(`witness row "${k}" names no PROFILE key — run the witness`);
+    for (const k of missing) out.push(`${noun}${k} has no witness row — run the witness (${command})`);
+    for (const k of extra) out.push(`witness row "${k}" names no ${names} — run the witness`);
     for (const [k, row] of Object.entries(json.keys)) {
         if (!VERDICTS.includes(row.verdict)) { out.push(`${k}: verdict "${row.verdict}" is not one of ${VERDICTS.join(', ')}`); continue; }
         for (const m of MAGNITUDES) {
@@ -163,13 +165,17 @@ export function summarise(keys, profileFields) {
 
 // ── the child ────────────────────────────────────────────────────────
 
-/** Run the tier under whatever profile is installed; one line per tape on stdout. */
+/**
+ * Run the tier under whatever profile (and entity-records override,
+ * `witness-seedling-entities.mjs`) is installed; one line per tape on stdout.
+ */
 async function child() {
-    const { installProfileFromEnv } = await import('./seedlingProfileLoader.mjs');
+    const { installEntityRecordsFromEnv, installProfileFromEnv } = await import('./seedlingProfileLoader.mjs');
     const tapes = JSON.parse(readFileSync(process.argv.find((a) => a.startsWith('--tapes=')).slice('--tapes='.length), 'utf8'));
     let run;
     try {
         await installProfileFromEnv();
+        await installEntityRecordsFromEnv();
         const [{ runTapeToStream }, { atlasLevelSource }, fixtures, { diffObservationStreams }] = await Promise.all([
             load('tapeRunner.js'), load('levelSource.js'), load('fixtures/index.js'), load('tapeFormat.js'),
         ]);
@@ -197,17 +203,21 @@ let md5hex;
 
 // ── the parent ───────────────────────────────────────────────────────
 
-/** Spawn one child over `tapes` with `profile` (an object, or null for none); resolve to Map(name → line). */
-function runChild(tapes, profile, tmp, label) {
+/**
+ * Spawn one child over `tapes` with `profile` (an object, or null for none)
+ * handed over as `<flag><file>` (`--profile=`, or `--entities=` for an
+ * entity-records override); resolve to Map(name → line).
+ */
+export function runChild(tapes, profile, tmp, label, flag = '--profile=') {
     const tapesFile = join(tmp, 'tapes.json');
     if (!existsSync(tapesFile)) writeFileSync(tapesFile, JSON.stringify(tapes));
     const args = [SELF, '--child', `--tapes=${tapesFile}`];
     if (profile) {
         const p = join(tmp, `${label}.json`);
         writeFileSync(p, `${JSON.stringify(profile)}\n`);
-        args.push(`--profile=${p}`);
+        args.push(`${flag}${p}`);
     }
-    const { SEEDLING_PROFILE, ...env } = process.env;
+    const { SEEDLING_PROFILE, SEEDLING_ENTITY_RECORDS, ...env } = process.env;
     return new Promise((res) => {
         const c = spawn(process.execPath, args, { cwd: REPO, env, stdio: ['ignore', 'pipe', 'pipe'] });
         let out = '';
@@ -234,7 +244,7 @@ function runChild(tapes, profile, tmp, label) {
 }
 
 /** A pool of `jobs` concurrent tasks. */
-async function pool(tasks, jobs, onDone) {
+export async function pool(tasks, jobs, onDone) {
     const results = new Array(tasks.length);
     let next = 0;
     let done = 0;
@@ -249,7 +259,7 @@ async function pool(tasks, jobs, onDone) {
     return results;
 }
 
-function tierTapes(tier, fixtures) {
+export function tierTapes(tier, fixtures) {
     if (tier === 'full') return fixtures.fixtureNames();
     if (tier !== 'fast') throw new Error(`--tier=${tier}: only "fast" (every tape of at most ${FAST_TIER_MAX_TICKS} ticks) and "full" (every tape) are measured`);
     return fixtures.fixtureNames().filter((n) => fixtures.loadTape(n).tick_count <= FAST_TIER_MAX_TICKS);

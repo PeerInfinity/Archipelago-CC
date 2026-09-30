@@ -47,6 +47,7 @@ import { createLevelRun } from './levelRun.js';
 import { RELAXED_ROLES, ROLES } from './levelWorld.js';
 import { groundTerrain, spawnFromBoot, step as stepV1 } from './playerPhysicsV1.js';
 import { profileStamp } from './seedlingProfile.js';
+import { entitiesStamp } from './entityRecords.js';
 
 /**
  * Run `tape` through the physics.
@@ -1040,6 +1041,13 @@ export function createTapeStepper(tape, opts = {}) {
              * tape keep their shape, so no committed fixture moves.
              */
             profile: profileStamp(),
+            /**
+             * Behaviour-parameters P1: WHICH entity records ran — `{md5,
+             * records}` (`entityRecords.entitiesStamp()`), beside `profile`
+             * and for the same reason on the result only: the stream, every
+             * emitted tape and the envelope keep their shape.
+             */
+            entities: entitiesStamp(),
         };
     }
 
