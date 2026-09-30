@@ -31,12 +31,15 @@ describe('cellOf — one row per branch', () => {
         ['string > 44 chars', 'z'.repeat(45),
             { present: true, type: 'string', value: 'z'.repeat(45), short: '45 chars' }],
         ['number', 30, { present: true, type: 'number', value: 30, short: '30' }],
-        /** ⚠ Pinned AS MEASURED, quirks included: a short array of objects
-         *  joins to `[object Object]` (its `value` is the JSON), and an empty
-         *  array's short is the empty string. */
+        /** An array's short is joined from its stringified elements: objects
+         *  read as JSON (once `[object Object]`), an empty array reads `[]`
+         *  (once the empty string). Fixed 2026-09-30 — the registry panel's
+         *  owner finding. */
         ['short array of objects', [{ k: 1 }],
-            { present: true, type: 'array', value: ['{"k":1}'], short: '[object Object]' }],
-        ['empty array', [], { present: true, type: 'array', value: [], short: '' }],
+            { present: true, type: 'array', value: ['{"k":1}'], short: '{"k":1}' }],
+        ['empty array', [], { present: true, type: 'array', value: [], short: '[]' }],
+        ['short array of strings', ['a', 'b'],
+            { present: true, type: 'array', value: ['a', 'b'], short: 'a, b' }],
         ['empty object', {}, { present: true, type: 'object', value: [], short: '{}' }],
     ];
     it.each(cases)('%s', (_label, value, expected) => {

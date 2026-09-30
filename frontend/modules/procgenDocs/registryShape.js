@@ -28,12 +28,17 @@ export function cellOf(value) {
         return { present: true, type: 'function', value: null, short: 'fn' };
     }
     if (Array.isArray(value)) {
+        /** The short is joined from the same stringified elements as `value`,
+         *  so an array of objects reads as its JSON rather than
+         *  `[object Object]`, and an empty array reads `[]`, not blank. */
+        const items = value.map((v) => (typeof v === 'object' ? JSON.stringify(v) : String(v)));
+        const joined = items.join(', ');
         return {
             present: true,
             type: 'array',
-            value: value.map((v) => (typeof v === 'object' ? JSON.stringify(v) : String(v))),
-            short: value.length <= 3 && value.join(', ').length <= 44
-                ? value.join(', ') : `${value.length} items`,
+            value: items,
+            short: items.length === 0 ? '[]'
+                : items.length <= 3 && joined.length <= 44 ? joined : `${items.length} items`,
         };
     }
     if (value && typeof value === 'object') {
