@@ -228,20 +228,22 @@ describe('the corpus census — printed, then pinned', () => {
          *   313 → 314  SEEDLING ENGINE PREP C1 (2026-09-30): the GENERATED README
          *              index gains its row for the new seedling-solver-surface.md
          *              (`doc` 240 → 241). The new document itself links nothing.
+         *   314 → 315  CONCEPT LIBRARY T2 D3 (2026-09-30): substrate-registry.md's
+         *              `conceptRealisations` row → concepts.md (`doc` 241 → 242).
          */
         expect(by).toEqual({
             'same-doc': 15,
-            doc: 241,
+            doc: 242,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(314);
+        expect(CORPUS.length).toBe(315);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(241);
+        expect(docs).toHaveLength(242);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

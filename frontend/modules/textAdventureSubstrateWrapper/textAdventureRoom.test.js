@@ -39,6 +39,7 @@ import {
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { SIDES } from '../shared/procgen/spatialPrimitives.js';
 import { sidecarFieldsOf, sidecarPayloadErrors } from '../procgenCore/sidecarFields.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS as TA_REAL } from './textAdventureConceptRealisations.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const TRUE = { rule: 'True_' };
@@ -320,6 +321,74 @@ describe('the `prose` field (concept library T2, D1)', () => {
         expect(errs({ exits: {}, locations: {}, enterMessage: '' }).map((e) => e.field)).toEqual(['prose']);
         expect(errs({ exits: {}, locations: {}, lore: 'x' }).map((e) => e.field)).toEqual(['prose']);
         expect(errs({ enterMessage: 'You arrive.', exits: {}, locations: {} })).toEqual([]);
+    });
+});
+
+/**
+ * ⛓ CONCEPT LIBRARY T2, D3 — **THE RULE SELECTS A REALISATION, AND THE ROOM
+ * SPEAKS IT.** A guardian-gated exit (`Has(Progressive Sword)`) and a
+ * water-gated one (`Has(Progressive Swim)`) carry their concept's two
+ * messages; a plain-rule exit carries none; the recorded rule is the same
+ * with or without; and no offered concept ⇒ no `prose` at all.
+ */
+describe('concept realisations in `placeFromRules` (concept library T2, D3)', () => {
+    const SWORD = { rule: 'Has', args: { item_name: 'Progressive Sword' } };
+    const SWIM = { rule: 'Has', args: { item_name: 'Progressive Swim' } };
+    const G = TA_REAL.guardian.placements.gate.mechanic.prose;
+    const W = TA_REAL.water.placements.gate.mechanic.prose;
+    const OFFERED = ['sword', 'swim', 'guardian', 'water'];
+
+    function conceptRoom(concepts) {
+        const core = generateTextAdventureRoom({
+            region_id: 'Keep',
+            exits: [
+                { exit_id: 'Gate', side: 'N', targetRegion: 'Throne' },
+                { exit_id: 'Moat', side: 'E', targetRegion: 'Garden' },
+                { exit_id: 'Door', side: 'W', targetRegion: 'Vault' },
+                { exit_id: 'Out', side: 'S', targetRegion: 'Yard' },
+            ],
+        });
+        placeTextAdventureRules(core.world, {
+            exit_rules: { Gate: SWORD, Moat: SWIM, Door: GATE_A, Out: TRUE },
+            location_rules: { 'Rack': TRUE },
+            item_placements: [
+                { item_id: 'Progressive Sword', location_id: 'Rack' },
+                { item_id: 'Yellow Key', location_id: 'Shelf' },
+            ],
+            rng: noDrawRng(),
+            ...(concepts === undefined ? {} : { params: { concepts } }),
+        });
+        return core.world;
+    }
+    const payloadOf = (world) => serializeTextAdventureRoom(world, extractTextAdventureRules(world, { regionId: 'Keep' }));
+
+    it("a guardian-gated exit's payload carries BOTH messages, a water-gated one its own, a plain rule none", () => {
+        const payload = payloadOf(conceptRoom(OFFERED));
+        expect(payload.prose.exits).toEqual({
+            Gate: { inaccessibleMessage: G.blocked, moveMessage: G.passedWith },
+            Moat: { inaccessibleMessage: W.blocked, moveMessage: W.passedWith },
+        });
+        // the sword's location speaks the sword's prose (keyed by its AP name); the key's says nothing
+        expect(payload.prose.locations).toEqual({ Keep__Rack: { checkMessage: TA_REAL.sword.prose.checkMessage } });
+        expect(sidecarPayloadErrors(sidecarFieldsOf(substrateRegistryEntry), { ...payload, fogEnabled: true })).toEqual([]);
+    });
+
+    it('the recorded RULE is unchanged either way — exits, gates and locations are byte-identical', () => {
+        const withC = payloadOf(conceptRoom(OFFERED));
+        const without = payloadOf(conceptRoom(undefined));
+        const { prose, ...rest } = withC;
+        expect(prose).toBeDefined();
+        expect(JSON.stringify(rest)).toBe(JSON.stringify(without));
+        expect(without.exitGates).toEqual({ Gate: SWORD, Moat: SWIM, Door: GATE_A });
+    });
+
+    it('⛔ no offered concept (absent or empty) ⇒ no `prose` key — a world that lists none is what it was', () => {
+        expect(Object.keys(payloadOf(conceptRoom(undefined)))).toEqual(['exits', 'exitGates', 'locations']);
+        expect(Object.keys(payloadOf(conceptRoom([])))).toEqual(['exits', 'exitGates', 'locations']);
+        // only what is offered: guardian without water speaks at the Gate only, and no item prose
+        const partial = payloadOf(conceptRoom(['guardian']));
+        expect(Object.keys(partial.prose.exits)).toEqual(['Gate']);
+        expect(partial.prose.locations).toEqual({});
     });
 });
 

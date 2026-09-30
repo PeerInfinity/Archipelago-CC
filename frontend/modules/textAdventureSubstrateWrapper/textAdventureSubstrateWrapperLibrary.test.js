@@ -23,6 +23,8 @@ import {
     deserializeTextAdventureRoom,
 } from './textAdventureRoom.js';
 import { REGION_GEOMETRY, geometryOf } from '../procgenCore/regionGeometry.js';
+import { CONCEPTS, assertRealisations, conceptsRealisedBy } from '../procgenCore/concepts.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from './textAdventureConceptRealisations.js';
 
 describe('textAdventureSubstrateWrapperLibrary substrateRegistryEntry', () => {
     it('claims the text-adventure identity and load event, with the WRAPPER panel', () => {
@@ -101,5 +103,25 @@ describe('textAdventureSubstrateWrapperLibrary substrateRegistryEntry', () => {
         // in playbackProxy.test.js.
         expect(typeof substrateRegistryEntry.getPlaybackController).toBe('function');
         expect(substrateRegistryEntry.getPlaybackController()).toBeNull();
+    });
+
+    // ⛓ CONCEPT LIBRARY T2, D3 — the entry's half of the contract holds it.
+    it('declares its concept realisations — sword, swim, guardian.gate, water.gate — and they hold the contract', () => {
+        expect(substrateRegistryEntry.conceptRealisations).toBe(TEXT_ADVENTURE_CONCEPT_REALISATIONS);
+        expect(() => assertRealisations(substrateRegistryEntry, CONCEPTS)).not.toThrow();
+        expect(conceptsRealisedBy(substrateRegistryEntry, CONCEPTS)).toEqual([
+            { concept: 'sword', kind: 'item', tier: 'mechanic', placements: [] },
+            { concept: 'swim', kind: 'item', tier: 'mechanic', placements: [] },
+            { concept: 'guardian', kind: 'enemy', tier: 'mechanic', placements: [{ key: 'gate', effect: 'requires' }] },
+            { concept: 'water', kind: 'obstacle', tier: 'mechanic', placements: [{ key: 'gate', effect: 'requires' }] },
+        ]);
+        for (const cid of ['guardian', 'water']) {
+            const { blocked, passedWith } = TEXT_ADVENTURE_CONCEPT_REALISATIONS[cid].placements.gate.mechanic.prose;
+            expect(blocked, cid).toMatch(/\{destinationRegion\}/);
+            expect(passedWith, cid).toMatch(/\{destinationRegion\}/);
+        }
+        // passedWith names the weakness / the crossing
+        expect(TEXT_ADVENTURE_CONCEPT_REALISATIONS.guardian.placements.gate.mechanic.prose.passedWith).toMatch(/sword/);
+        expect(TEXT_ADVENTURE_CONCEPT_REALISATIONS.water.placements.gate.mechanic.prose.passedWith).toMatch(/[Ss]wim/);
     });
 });

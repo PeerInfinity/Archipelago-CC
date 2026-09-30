@@ -260,7 +260,8 @@ describe('⛓ the links the render emits', () => {
         //   T0's `concepts.md` (its README index row, five sibling links, one same-doc).
         //   312 → 313: engine prep B1's README index row → tape-envelope.md.
         //   313 → 314: C1's README index row for seedling-solver-surface.md.
-        expect(checked).toBe(314);
+        //   314 → 315: concept library T2's `conceptRealisations` row in substrate-registry.md → concepts.md.
+        expect(checked).toBe(315);
     });
 
     it('tags each link with the kind that produced it', () => {

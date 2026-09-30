@@ -33,6 +33,7 @@ import { drawTextAdventureCompositeRegion } from './textAdventureCompositeMap.js
 import { textAdventureRegionRoundTrip } from './textAdventureRegionRoundTrip.js';
 import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from './textAdventureConceptRealisations.js';
 
 export const substrateRegistryEntry = Object.freeze({
     // Identity / runtime
@@ -143,6 +144,13 @@ export const substrateRegistryEntry = Object.freeze({
     // Initialise form offers it by this declaration for a room above a tile
     // substrate's capacity (`procgenCore/locationCapacity.js`).
     locationCapacity: Object.freeze({ kind: LOCATION_CAPACITY_KINDS.UNBOUNDED }),
+    // ⛓ CONCEPT LIBRARY T2 — the concepts this substrate realises, as PROSE
+    // (a gate here has no geometry: the bridge refuses the move by its rule,
+    // so what a concept adds is what the player reads). `placeFromRules`
+    // selects a gate's realisation by its rule over the world's offered
+    // concepts and writes the room's `prose`; see
+    // `textAdventureConceptRealisations.js` and `procgenCore/concepts.js`.
+    conceptRealisations: TEXT_ADVENTURE_CONCEPT_REALISATIONS,
 });
 
 // Side-effect on import: register the substrate, matching mazeRoomLibrary.js,

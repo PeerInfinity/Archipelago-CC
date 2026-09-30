@@ -44,6 +44,9 @@ import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import {
     REQUIRED_ENVELOPE_FIELD, SIDECAR_FIELD_ERRORS, sidecarFieldsOf, sidecarPayloadErrors,
 } from '../procgenCore/sidecarFields.js';
+import { CONCEPTS } from '../procgenCore/concepts.js';
+import { selectRealisation } from '../procgenPipeline/conceptSelection.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from './textAdventureConceptRealisations.js';
 
 /** The rule every ungated exit / location compiles to. */
 const TRUE_RULE = Object.freeze({ rule: 'True_' });
@@ -125,20 +128,62 @@ export function placeTextAdventureItems(world, input = {}) {
     return { placed_items, placed_obstacles: [] };
 }
 
+/** What `selectRealisation` reads off an entry — the realisations alone (the entry imports this module). */
+const REALISING_ENTRY = Object.freeze({
+    id: 'text_adventure', conceptRealisations: TEXT_ADVENTURE_CONCEPT_REALISATIONS,
+});
+
+/** The room's `prose` table for `kind` (`exits` / `locations`), made on first write. */
+function proseTableOf(world, kind) {
+    world.prose ??= { exits: {}, locations: {} };
+    world.prose[kind] ??= {};
+    return world.prose[kind];
+}
+
+/**
+ * The realised item concept a placed item IS — its concept id, when the world
+ * offers it and this substrate realises it with prose — else null.
+ */
+function realisedItemConcept(itemId, offered) {
+    if (!offered.length) return null;
+    for (const [cid, r] of Object.entries(TEXT_ADVENTURE_CONCEPT_REALISATIONS)) {
+        if (CONCEPTS[cid]?.kind === 'item' && CONCEPTS[cid].item?.id === itemId
+            && offered.includes(cid) && r.prose) return cid;
+    }
+    return null;
+}
+
 /**
  * `placeFromRules` — the top-down placer: every exit rule is recorded on its
  * exit and every location (ruled first, then item-only — the maze's order) is
  * added with its item and rule. A `True_` rule is recorded as absent. No
  * location stands on a tile, so `placed_locations` carry no `position` — the
  * engine matches them by id.
+ *
+ * ⛓ CONCEPT LIBRARY T2 — the rule SELECTS a realisation
+ * (`selectRealisation`, over the world's offered concepts
+ * `input.params?.concepts`): a selected gate writes its prose on the exit
+ * (`prose.exits[exit_id] = {inaccessibleMessage: blocked, moveMessage:
+ * passedWith}`), and a location holding an offered item concept writes that
+ * item's `checkMessage`. The RULE is recorded exactly as without it. ⛔ No
+ * offered concept (the default) ⇒ no candidate, no draw, no `prose` — the
+ * room is what it was before the library existed.
  */
 export function placeTextAdventureRules(world, input = {}) {
     const { exit_rules = {}, location_rules = {}, item_placements = [] } = input;
+    const offered = Array.isArray(input.params?.concepts) ? input.params.concepts : [];
     for (const [exit_id, rule] of Object.entries(exit_rules)) {
         const exit = world.exits.get(exit_id);
         if (!exit) throw new Error(TEXT_ADVENTURE_ROOM_REFUSALS.unknownExit(world.region_id ?? '?', exit_id));
-        if (isTrueRule(rule)) delete exit.access_rule;
-        else exit.access_rule = cloneRule(rule);
+        if (isTrueRule(rule)) {
+            delete exit.access_rule;
+            continue;
+        }
+        exit.access_rule = cloneRule(rule);
+        const chosen = selectRealisation(rule, REALISING_ENTRY, { concepts: CONCEPTS, offered, rng: input.rng });
+        const prose = chosen?.mechanic?.prose;
+        if (!prose) continue;
+        proseTableOf(world, 'exits')[exit_id] = { inaccessibleMessage: prose.blocked, moveMessage: prose.passedWith };
     }
     const itemByLocation = Object.fromEntries(item_placements.map((p) => [p.location_id, p.item_id]));
     const order = [...Object.keys(location_rules),
@@ -155,6 +200,12 @@ export function placeTextAdventureRules(world, input = {}) {
         });
         if (item_id != null) placed_items.push({ item_id, location_id });
         placed_locations.push({ location_id });
+        const cid = item_id != null ? realisedItemConcept(item_id, offered) : null;
+        if (cid) {
+            proseTableOf(world, 'locations')[location_id] = {
+                checkMessage: TEXT_ADVENTURE_CONCEPT_REALISATIONS[cid].prose.checkMessage,
+            };
+        }
     }
     return { placed_logic_gates: [], placed_items, placed_locations };
 }

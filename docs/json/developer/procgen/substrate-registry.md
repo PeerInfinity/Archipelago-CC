@@ -117,6 +117,7 @@ Implemented by `maze` (tile-grid helpers in `adapterPrimitives.js`), `text_adven
 | `placeFromRules` | Place gates, items and locations to satisfy the region's access rules. |
 | `extractPathsAndObstacles` | Extract the access rules the generated geometry enforces, to check them against the authored ones. |
 | `applyContentModules` | Optional post-build pass for content modules (the maze's hazards). |
+| `conceptRealisations` | Optional. The substrate's half of the concept library: `{<concept id>: {tier, art?, placements?}}`, which concepts it can realise and how, checked by `assertRealisations`. `placeFromRules` selects a gate's realisation by its rule over the world's offered concepts (`selectRealisation`). See [Concepts](./concepts.md). |
 
 ### Build-time — content sources (zone-based substrates)
 
@@ -218,7 +219,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 83 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 84 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -304,6 +305,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
 | `applyContentModules` | — | — | — | — | — | fn | — | — | — |
+| `conceptRealisations` | — | — | — | — | — | — | — | — | {guardian, swim, sword, water} |
 | `extractPathsAndObstacles` | — | — | — | fn | — | fn | — | — | fn |
 | `generateRegionCore` | — | — | — | fn | — | fn | — | — | fn |
 | `placeFromItems` | — | — | — | fn | — | fn | — | — | fn |

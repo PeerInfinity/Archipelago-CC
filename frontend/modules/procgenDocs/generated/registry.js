@@ -72,7 +72,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
         },
         {
-            "fields": 22,
+            "fields": 23,
             "id": "text_adventure",
             "label": "Text Adventure",
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
@@ -156,6 +156,7 @@ export const REGISTRY = frz({
         {
             "rows": [
                 "applyContentModules",
+                "conceptRealisations",
                 "extractPathsAndObstacles",
                 "generateRegionCore",
                 "placeFromItems",
@@ -1370,6 +1371,84 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Composite map",
             "name": "compositeMap.drawRegion"
+        },
+        {
+            "carriedBy": [
+                "text_adventure"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": true,
+                    "short": "{guardian, swim, sword, water}",
+                    "type": "object",
+                    "value": [
+                        "guardian",
+                        "swim",
+                        "sword",
+                        "water"
+                    ]
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — procedural substrates",
+            "name": "conceptRealisations"
         },
         {
             "carriedBy": [
