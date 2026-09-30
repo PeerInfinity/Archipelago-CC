@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 26,
-        "headings": 926,
+        "headings": 927,
         "indexHeadings": 2,
-        "lines": 20730,
+        "lines": 20815,
         "pages": 4,
-        "words": 241042
+        "words": 241817
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -330,7 +330,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 36,
-            "lines": 540,
+            "lines": 542,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -339,7 +339,7 @@ export const DOCS_INDEX = frz({
                 "seedling-editor.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 9203
+            "words": 9279
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -355,8 +355,8 @@ export const DOCS_INDEX = frz({
             "description": "This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts.",
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
-            "headings": 494,
-            "lines": 15547,
+            "headings": 495,
+            "lines": 15630,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -364,7 +364,7 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 157932
+            "words": 158514
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
@@ -401,7 +401,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 6074
+            "words": 6191
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",

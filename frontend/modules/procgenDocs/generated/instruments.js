@@ -44,7 +44,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 15,
+            "count": 16,
             "id": "census"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 281,
+        "blockStyle": 282,
         "browser": 86,
-        "cited": 123,
-        "files": 292,
+        "cited": 124,
+        "files": 293,
         "lineStyle": 11,
-        "withDocblock": 292,
-        "withFlags": 213
+        "withDocblock": 293,
+        "withFlags": 214
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -658,6 +658,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-atlas-doors — **THE ATLAS DOOR CENSUS**: every INTERNAL exit of a Seedling region atlas (the crossings between sub-regions of one level) by rule and by level, the `Progressive Swim` rows flagged BOT-UNCERTIFIED unless a committed tape witnesses that level with water armed, and whether the pipeline's …",
             "path": "scripts/procgen/census-seedling-atlas-doors.mjs"
+        },
+        {
+            "argvHelpers": [
+                "readJson"
+            ],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json",
+                "shield"
+            ],
+            "file": "census-seedling-bosslocks.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "shield"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-bosslocks — **THE ONE-SIDED LOCK CENSUS.** For every placed `bosslock` in `seedling-map.json`, it reports whether the playthrough atlas's rule agrees with the game's south-only probe.",
+            "path": "scripts/procgen/census-seedling-bosslocks.mjs"
         },
         {
             "argvHelpers": [],
@@ -6036,6 +6076,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "masks"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-directional-locks"
                 },
                 {
                     "how": [
