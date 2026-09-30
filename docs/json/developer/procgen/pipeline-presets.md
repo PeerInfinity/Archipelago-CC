@@ -28,6 +28,7 @@ Each preset's full description, with where to look in the panel, is its `descrip
 | `maze-sphere-demo` | maze | The plan-then-grow driver: sphere plan, waves, filler regions and revisits. |
 | `text-adventure-sphere-demo` | text_adventure | A sides-only substrate: compass exits instead of wall openings. |
 | `maze-ta-sphere-mix` | maze + text_adventure | Two procedural substrates in one world, with key gates crossing between them. |
+| `concept-trial-demo` | text_adventure + maze | The first world that names concepts: the text adventure's sword gate narrated as a guardian, the maze's swim gate painted as water. See [Concepts](./concepts.md#the-trial-world). |
 | `maze-bounce-sphere-mix` | maze + bounce | Maze keys gate bounce exits and bounce abilities gate maze regions. |
 | `maze-hazards-loop-demo` | maze, loop mode | Maze hazards and the `loop_costs` sidecar. |
 | `bounce-sphere-demo` | bounce | Bounce alone: the free-arrow start and gated exits. |
@@ -72,6 +73,10 @@ A top-down preset realises the world the app has loaded; it cannot name a source
 ### Committed Seedling presets
 
 Each Seedling preset's state is a named constant in `presetDefs.js` (for example `SEEDLING_SPHERE_ROOM_STATE`). The same state is also committed as a preset under `frontend/presets/` and played in the Seedling wasm by a matching `scripts/procgen/check-seedling-*-play.mjs` gate. Seedling room hosting itself is documented in [Flash substrate](./flash.md).
+
+### The committed concept preset
+
+`CONCEPT_TRIAL_STATE` is committed the same way, as `frontend/presets/concept_trial/`, through the same producer (`make-seedling-spiral-room-preset.mjs --state=concept-trial`: the recipe writes no Seedling block of its own, so any state goes through it). It is played by `scripts/procgen/check-concept-trial-play.mjs` and the in-app row `concept-trial-plays`. See [Concepts](./concepts.md#the-trial-world).
 
 **Note on timings:** to time a preset, run it through `buildRunFromState` then `runPresetHeadless`, the headless test's own path. Most presets generate in well under a second; the two runner sphere presets take several seconds and vary with machine load.
 

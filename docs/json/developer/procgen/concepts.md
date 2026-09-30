@@ -94,6 +94,26 @@ A sphere-growth or top-down compile records the world's concept list in its slot
 
 A plain rebuild never needed this, because it deserializes every placed region from its payload and so keeps the skinned gates and the prose. What needed it is every region an **append** realises: the appended sphere, and the kept region that now carries its gate. Those regions were placed with no concept, so they got plain `logic_gate`s and no prose. A world that names no concept records nothing and rebuilds as before.
 
+## The trial world
+
+`concept_trial` (`frontend/presets/concept_trial/`, the state `CONCEPT_TRIAL_STATE`, the drop-down's *Concept trial (maze + text adventure)*) is the first committed world that names concepts. It is a sphere-growth world at seed 8 over the sword, the swim and victory, with the concept list `[sword, guardian, swim, water]`. It has three regions: a text-adventure START holding the sword, a maze holding the swim, and a second maze holding victory.
+
+| concept | substrate | placement | effect | what the player sees |
+|---|---|---|---|---|
+| `guardian` | text adventure | `gate` on the START's exit into the maze (`Has(Progressive Sword)`) | `requires` sword | the guardian's *blocked* prose on a refused move, its *passed-with* prose on the move once the sword is held |
+| `sword` | text adventure | the START's location | item | the sword's check prose when the location is searched |
+| `water` | maze | `gate` on the maze's exit into the victory maze (`Has(Progressive Swim)`) | `requires` swim | `water_gate_0`, painted in the realisation's blue with `~`; dimmed once cleared |
+| `swim` | maze | a pickup in the maze | item | the pickup in the table's colour (`#40b0c0`; the sword's is `#c0a040`) |
+
+**The compiled logic equals the control's**: the same state with `concepts: []` compiles to the same `rules.json` apart from the sidecars and `procgen_metadata[slot].concepts` (pinned in `procgenPipeline/conceptTrialWorld.test.js`, *the compiled logic is the control's*).
+
+Two measurements shaped the world:
+
+- **The start is a text-adventure room.** A text-adventure room's payload records only its forward exits' gates (`exitGates`), while sphere growth gates the back-exit of every region behind a gate with the same rule. So any text-adventure room behind a gate fails the rule-agreement layer of `check-sidecar-fields.mjs`. This holds for the concept-less control and for the shipped text-adventure sphere presets too; none of them was ever committed. With a maze start, none of the 99 worlds measured (seeds 1–12 over 30 configurations) that realise one gate per substrate passed. With a text-adventure start, seeds 8 and 9 were the first to pass.
+- **The start room's prose needs the iframe's replay.** A text-adventure START's `loadRegion` is published before the wrapper's iframe bridge subscribes. The `text_adventure` entry now declares `iframeId`, so `procgenPlayer` re-publishes it when the iframe is ready. Without it, the player read the generic *You can't go that way* at the guardian.
+
+`check-concept-trial-play.mjs` plays the world from a fresh page load: the guardian's prose, the sword, the maze's gate read closed by the renderer's clearance and by `whyBlocked`, the swim, the gate read cleared, victory, and world completion. The in-app row `concept-trial-plays` asserts the maze world's gate definition and colours, and the guardian's two messages.
+
 ## What the chart reads
 
 Statement **P6** of the substrate capability chart, *"It can show the library's concepts in its own way"* (⚖ the user, 2026-09-29), reads `conceptRealisations` through `conceptsRealisedBy(entry, concepts)`:

@@ -216,7 +216,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 281,
         "browser": 86,
-        "cited": 122,
+        "cited": 123,
         "files": 292,
         "lineStyle": 11,
         "withDocblock": 292,
@@ -1423,7 +1423,10 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "check",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/concepts.md",
+                "docs/json/developer/procgen/pipeline-presets.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "game",
@@ -4221,6 +4224,7 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "check",
             "citedBy": [
+                "docs/json/developer/procgen/concepts.md",
                 "docs/json/developer/procgen/substrate-registry.md",
                 "docs/json/developer/procgen/text-adventure.md"
             ],
@@ -6081,7 +6085,8 @@ export const INSTRUMENTS = frz({
             "browser": false,
             "category": "make",
             "citedBy": [
-                "docs/json/developer/procgen/flash.md"
+                "docs/json/developer/procgen/flash.md",
+                "docs/json/developer/procgen/pipeline-presets.md"
             ],
             "docblockStyle": "block",
             "documentedFlags": [
