@@ -69,6 +69,7 @@ export const README_ORDER = Object.freeze([
     'pipeline-presets.md',
     'text-adventure.md',
     'seedling-bot.md',
+    'seedling-solver-surface.md',
     'seedling-bot-log.md',
     'seedling-constants.md',
     'tape-envelope.md',

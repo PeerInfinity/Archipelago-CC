@@ -259,7 +259,8 @@ describe('⛓ the links the render emits', () => {
         //   304 → 305: engine-prep A1's README index row for seedling-constants.md; 305 → 312: concept library
         //   T0's `concepts.md` (its README index row, five sibling links, one same-doc).
         //   312 → 313: engine prep B1's README index row → tape-envelope.md.
-        expect(checked).toBe(313);
+        //   313 → 314: C1's README index row for seedling-solver-surface.md.
+        expect(checked).toBe(314);
     });
 
     it('tags each link with the kind that produced it', () => {

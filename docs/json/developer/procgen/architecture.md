@@ -88,9 +88,9 @@ Headless equivalents live in `scripts/procgen/`: `generate-seedling-level.mjs` a
 
 <!-- GENERATED:procgen-instruments BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**286 instruments** live in `scripts/procgen/`, by prefix: `check-` 97 (59 browser) · `probe-` 61 (22 browser) · `plan-` 36 (1 browser) · `census-` 14 · `make-` 7 · `solve-` 7 · `sweep-` 6 · `dump-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · no prefix 4 · `ci-` 3 · `extract-` 3 · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `measure-` 2 (1 browser) · `record-` 2 · `seedling-` 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `migrate-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `rerecord-` 1 · `run-` 1 · `shot-` 1 (1 browser) · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
+**288 instruments** live in `scripts/procgen/`, by prefix: `check-` 97 (59 browser) · `probe-` 61 (22 browser) · `plan-` 36 (1 browser) · `census-` 15 · `make-` 7 · `solve-` 7 · `sweep-` 6 · `dump-` 5 · `recon-` 5 · `region-` 5 · `generate-` 4 · no prefix 4 · `ci-` 3 · `extract-` 3 · `measure-` 3 (1 browser) · `attribute-` 2 · `audit-` 2 · `export-` 2 (1 browser) · `record-` 2 · `seedling-` 2 · `batch-` 1 · `build-` 1 · `derive-` 1 · `find-` 1 · `harvest-` 1 · `lint-` 1 · `migrate-` 1 · `mine-` 1 · `prove-` 1 · `reach-` 1 · `rerecord-` 1 · `run-` 1 · `shot-` 1 (1 browser) · `show-` 1 · `stamp-` 1 · `standing-` 1 · `survey-` 1.
 
-85 of them drive a real browser; 207 accept at least one `--flag` OF THEIR OWN; 117 are cited by one of these documents; and 0 open with no comment at all.
+85 of them drive a real browser; 209 accept at least one `--flag` OF THEIR OWN; 119 are cited by one of these documents; and 0 open with no comment at all.
 
 Each also accepts what a module it IMPORTS parses: `--help` (284, in `argvHelp.js`) · `--wait-for-box` (106, in `boxLock.js`) · `--only` (1, in `rehearsalTree.js`) · `--record` (1, in `rehearsalTree.js`) · `--walk-report` (1, in `rehearsalTree.js`). Those are listed per row with the parse site named, so the table says what a file ACCEPTS without losing where the parse lives.
 

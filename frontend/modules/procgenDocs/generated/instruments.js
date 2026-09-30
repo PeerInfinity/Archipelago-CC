@@ -44,7 +44,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 14,
+            "count": 15,
             "id": "census"
         },
         {
@@ -104,7 +104,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 2,
+            "count": 3,
             "id": "measure"
         },
         {
@@ -209,13 +209,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 275,
+        "blockStyle": 277,
         "browser": 85,
-        "cited": 117,
-        "files": 286,
+        "cited": 119,
+        "files": 288,
         "lineStyle": 11,
-        "withDocblock": 286,
-        "withFlags": 207
+        "withDocblock": 288,
+        "withFlags": 209
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1169,6 +1169,44 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-sites — **THE SITE CENSUS**: how many of each SITE class a Seedling skeleton offers, per kind, per knob, per seed.",
             "path": "scripts/procgen/census-seedling-sites.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-solver-surface.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "json",
+                "write"
+            ],
+            "file": "census-seedling-solver-surface.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [],
+            "oneLiner": "census-seedling-solver-surface — engine-prep C1's static census of the Seedling solver's surface: everything the solver family reaches in the simulation.",
+            "path": "scripts/procgen/census-seedling-solver-surface.mjs"
         },
         {
             "argvHelpers": [
@@ -6146,6 +6184,37 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: it measures the BLAST RADIUS of the kill lock's literal `tag:'1'` — a literal that was converted to the per-placement slot in GENERA…",
             "path": "scripts/procgen/measure-seedling-killlock-tag.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "measure",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-solver-surface.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only",
+                "write"
+            ],
+            "file": "measure-seedling-solver-surface.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [],
+            "oneLiner": "measure-seedling-solver-surface — the DYNAMIC half of engine-prep C1: what the solver family actually reaches in the simulation while its committed routes are re-solved.",
+            "path": "scripts/procgen/measure-seedling-solver-surface.mjs"
         },
         {
             "argvHelpers": [],
