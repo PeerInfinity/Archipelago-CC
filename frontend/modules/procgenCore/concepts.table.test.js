@@ -13,9 +13,13 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { ITEM_LABELS, itemLabelOf } from '../seedlingDemo/itemLabels.js';
 import { CAPABILITY_STATEMENTS, itemTagFeatures } from './substrateCapabilities.js';
+import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
+import { DEFENCE_RESPONSES, WEAPON_CATEGORIES } from './behaviourBlocks.js';
+import { domainKind } from './templateContract.js';
 import {
-    CONCEPTS, CONCEPT_ITEMS_FEATURE, assertConceptTable, assertRealisations, conceptsRealisedBy, instancesOf,
-    itemRowsOf, itemTagsImpliedBy, obstacleRowsOf,
+    CONCEPTS, CONCEPT_ITEMS_FEATURE, assertConceptTable, assertRealisations, blocksImplementedBy, conceptsRealisedBy,
+    instancesOf, itemRowsOf, itemTagsImpliedBy, normaliseDefence, obstacleRowsOf,
 } from './concepts.js';
 
 const FEATURE = 'colored_doors_and_keys';
@@ -144,5 +148,67 @@ describe('D4 — conceptsRealisedBy / itemTagsImpliedBy (the chart\'s INPUT, not
     it('⛓ exactly one chart statement reads `conceptRealisations`: P6 (T0b, ⚖ the user 2026-09-29)', () => {
         expect(CAPABILITY_STATEMENTS.filter((s) => s.fields.some((f) => f.startsWith('conceptRealisations')))
             .map((s) => s.id)).toEqual(['P6']);
+    });
+});
+
+/* ─────────────── behaviour parameters P2, D4 — the table's behaviour ─────────────── */
+
+describe('P2 D4 — the behaviour the shipped table declares (on the EXISTING concepts, and nothing else)', () => {
+    it('sword hits with the `sword` category; guardian answers it with `damage` (the default factor)', () => {
+        expect(CONCEPTS.sword.weaponCategories).toEqual(['sword']);
+        expect(WEAPON_CATEGORIES.has('sword')).toBe(true);
+        expect(CONCEPTS.guardian.defence).toEqual({ sword: 'damage' });
+        expect(normaliseDefence(CONCEPTS.guardian.defence.sword)).toEqual({ response: 'damage', params: {} });
+        expect(DEFENCE_RESPONSES.get('damage').params[0]).toMatchObject({ key: 'factor', default: 1 });
+    });
+
+    it('guardian declares two range traits — toughness 1..5, speed 0..1 (a fraction of player speed) — each with a why', () => {
+        expect(CONCEPTS.guardian.traits.map((t) => [t.key, domainKind(t), t.range])).toEqual([
+            ['toughness', 'range', { min: 1, max: 5 }],
+            ['speed', 'range', { min: 0, max: 1 }],
+        ]);
+        for (const t of CONCEPTS.guardian.traits) expect(t.why.length).toBeGreaterThan(20);
+    });
+
+    it('no other concept declares a P2 field; no concept declares `triggers` (water does not fit itemCategory — swim is not a weapon)', () => {
+        const fields = ['traits', 'weaponCategories', 'defence', 'triggers'];
+        const declared = Object.entries(CONCEPTS).flatMap(([id, c]) => fields.filter((f) => c[f] !== undefined).map((f) => `${id}.${f}`));
+        expect(declared).toEqual(['sword.weaponCategories', 'guardian.traits', 'guardian.defence']);
+        expect(WEAPON_CATEGORIES.has('swim')).toBe(false);
+    });
+
+    it('⛔ the two real realisations implement NO block — a skin implements no behaviour, and that absence is a correct value', () => {
+        expect(blocksImplementedBy(MAZE_CONCEPT_REALISATIONS, CONCEPTS)).toEqual([]);
+        expect(blocksImplementedBy(TEXT_ADVENTURE_CONCEPT_REALISATIONS, CONCEPTS)).toEqual([]);
+        expect(() => assertRealisations({ conceptRealisations: MAZE_CONCEPT_REALISATIONS }, CONCEPTS)).not.toThrow();
+        expect(() => assertRealisations({ conceptRealisations: TEXT_ADVENTURE_CONCEPT_REALISATIONS }, CONCEPTS)).not.toThrow();
+    });
+
+    /**
+     * ⛓ MEASURED, NOT DERIVED: could `relations.weakness` be derived from
+     * `defence`? A defended category whose response HARMS (not `ignore`, not
+     * `knockOnly`) names the item concepts that produce it. On the shipped
+     * table that derivation equals every declared weakness — ONE concept, so
+     * it is a measurement, not a proof; P2 derives nothing.
+     */
+    it('weakness ⇐ defence, measured on the shipped table', () => {
+        const harmless = new Set(['ignore', 'knockOnly']);
+        const derived = (c) => {
+            const cats = Object.entries(c.defence ?? {})
+                .filter(([, raw]) => !harmless.has(normaliseDefence(raw).response)).map(([cat]) => cat);
+            return Object.entries(CONCEPTS)
+                .filter(([, i]) => i.kind === 'item' && (i.weaponCategories ?? []).some((x) => cats.includes(x)))
+                .map(([id]) => id);
+        };
+        const withDefence = Object.entries(CONCEPTS).filter(([, c]) => c.defence);
+        expect(withDefence.map(([id]) => id)).toEqual(['guardian']);
+        for (const [id, c] of withDefence) expect(derived(c), id).toEqual([...(c.relations?.weakness ?? [])]);
+    });
+
+    it('the table still checks clean and stays frozen, the new fields included', () => {
+        expect(() => assertConceptTable(CONCEPTS)).not.toThrow();
+        expect(Object.isFrozen(CONCEPTS.guardian.traits)).toBe(true);
+        expect(Object.isFrozen(CONCEPTS.guardian.defence)).toBe(true);
+        expect(Object.isFrozen(CONCEPTS.sword.weaponCategories)).toBe(true);
     });
 });

@@ -717,6 +717,8 @@ export const CONCEPTS = Object.freeze({
             color: '#c0a040', symbol: 'star',
         }),
         feature: CONCEPT_ITEMS_FEATURE,
+        /* ⛓ P2: what the sword hits with — Seedling's `Sword` hit category. */
+        weaponCategories: Object.freeze(['sword']),
     }),
     swim: Object.freeze({
         kind: 'item',
@@ -729,6 +731,20 @@ export const CONCEPTS = Object.freeze({
     guardian: Object.freeze({
         kind: 'enemy',
         relations: Object.freeze({ weakness: Object.freeze(['sword']) }),
+        /* ⛓ P2: the sword's hit lands as ordinary damage (the response's default factor). */
+        defence: Object.freeze({ sword: 'damage' }),
+        traits: Object.freeze([
+            Object.freeze({
+                key: 'toughness', range: Object.freeze({ min: 1, max: 5 }), default: 1,
+                why: 'how many ordinary sword hits the guardian takes before it gives way — 1 is the trial '
+                    + 'world\'s gate, one hit; a realisation that counts health reads it',
+            }),
+            Object.freeze({
+                key: 'speed', range: Object.freeze({ min: 0, max: 1 }), default: 0,
+                why: 'how fast a roaming guardian moves, as a fraction of the substrate\'s player speed — 0 '
+                    + 'is the gate guardian, which stands where it is placed',
+            }),
+        ]),
     }),
     water: Object.freeze({
         kind: 'obstacle',
