@@ -687,8 +687,15 @@ const STAGED_CROSSCHECK = new Map([[bootKey(18, 16, 32), 'r8-solve-18']]);
  * ⚠ `--through` ONLY, and ONE row: a derivation that granted every earlier
  * route pickup to every later staged room would also move rows 22-30 (the
  * shield) — a policy, not this slice's.
+ *
+ * ⛓ SWIM U1 D4 — RE-KEYED to the arrival the route takes NOW. T4's directional
+ * lock derivation moved leg 2.2 to `L29 → L31 → L30 (r2c10) → L32`, so step 29
+ * arrives at L30 (176,48) from L31 (`--through=2.2 --derive-only`), not at the
+ * (64,16) pocket north of the lock that T3 keyed; that key matched no step and
+ * step 29 booted without the Green Key. Still ONE row: step 28 (L31) also
+ * meets a key-locked exit and is left to say so.
  */
-const STAGED_SAVE_GRANTS = new Map(THROUGH ? [[bootKey(30, 64, 16), {
+const STAGED_SAVE_GRANTS = new Map(THROUGH ? [[bootKey(30, 176, 48), {
     keys: [1],
     why: 'the Green Key (bosskey@112,64 in L29, keyType 1) the route collects at step 27',
 }]] : []);
