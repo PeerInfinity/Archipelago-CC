@@ -45,7 +45,9 @@ The hooks in `textAdventureRoom.js`:
 The serialized payload has these fields:
 
 - `exits` — the envelope's sided exit list.
-- `exitGates` — `{exit_id: rule}` for gated exits only. It is a sibling of `exits` because a substrate may not add fields to the envelope's exit record.
+- `exitGates` — `{exit_id: rule}` for gated exits only, forward and back. It is a sibling of `exits` because a substrate may not add fields to the envelope's exit record.
+  - A **back-exit's** gate is its forward exit's compiled rule. The engine inserts a back-exit after placement with no rule. `buildRulesJson`'s bidirectional post-pass copies the forward rule onto the document's back-exit. For a substrate whose `regionRoundTrip.rules` is `authored` (the text adventure), it also writes the rule on the back-exit's own record, so the serializer writes it here.
+  - Why it matters: the text adventure's round trip re-emits its rules from this payload. Before this (concept library T2c), a room behind a gate had no back-exit entry. `check-sidecar-fields.mjs` then failed its rule agreement on that room, and the round trip answered `True_` for the back-exit.
 - `locations` — `{name, item?, access_rule?}`, with the AP location name filled in at serialize time.
 - `fogEnabled` — engine flag, always present.
 - `manaEnabled` — engine flag, present in loop mode.
