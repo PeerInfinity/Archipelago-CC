@@ -923,7 +923,7 @@
       "surface": "world",
       "name": "activators",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5439,
+      "line": 5440,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -951,7 +951,7 @@
       "surface": "world",
       "name": "arrowTraps",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5557,
+      "line": 5558,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -979,7 +979,7 @@
       "surface": "world",
       "name": "avoidVolumesAt",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5628,
+      "line": 5629,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -1004,7 +1004,7 @@
       "surface": "world",
       "name": "bridgeTiles",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5614,
+      "line": 5615,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -1022,7 +1022,7 @@
       "surface": "world",
       "name": "burnableTrees",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5472,
+      "line": 5473,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1040,7 +1040,7 @@
       "surface": "world",
       "name": "chests",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5461,
+      "line": 5462,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1068,7 +1068,7 @@
       "surface": "world",
       "name": "collidesSolid",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5684,
+      "line": 5685,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -1092,7 +1092,7 @@
       "surface": "world",
       "name": "combat",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5604,
+      "line": 5605,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1119,7 +1119,7 @@
       "surface": "world",
       "name": "fallthrough",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5357,
+      "line": 5358,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -1143,7 +1143,7 @@
       "surface": "world",
       "name": "height",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5326,
+      "line": 5327,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -1171,7 +1171,7 @@
       "surface": "world",
       "name": "iceTurrets",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5502,
+      "line": 5503,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1189,7 +1189,7 @@
       "surface": "world",
       "name": "lethalTerrainTiles",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5379,
+      "line": 5380,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -1214,7 +1214,7 @@
       "surface": "world",
       "name": "level",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5324,
+      "line": 5325,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -1238,7 +1238,7 @@
       "surface": "world",
       "name": "nearestWalkableTile",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5914,
+      "line": 5915,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -1262,7 +1262,7 @@
       "surface": "world",
       "name": "pickups",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5411,
+      "line": 5412,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1289,7 +1289,7 @@
       "surface": "world",
       "name": "pitTiles",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5359,
+      "line": 5360,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -1316,7 +1316,7 @@
       "surface": "world",
       "name": "plannerBlockerAt",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 6040,
+      "line": 6041,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -1340,7 +1340,7 @@
       "surface": "world",
       "name": "pressers",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5440,
+      "line": 5441,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1368,7 +1368,7 @@
       "surface": "world",
       "name": "pulsers",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5541,
+      "line": 5542,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1392,7 +1392,7 @@
       "surface": "world",
       "name": "pushables",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5452,
+      "line": 5453,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1419,7 +1419,7 @@
       "surface": "world",
       "name": "shieldBosses",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5523,
+      "line": 5524,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1443,7 +1443,7 @@
       "surface": "world",
       "name": "solidBoxesForMover",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5761,
+      "line": 5762,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -1461,7 +1461,7 @@
       "surface": "world",
       "name": "solids",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5407,
+      "line": 5408,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -1486,7 +1486,7 @@
       "surface": "world",
       "name": "spinners",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5581,
+      "line": 5582,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -1504,7 +1504,7 @@
       "surface": "world",
       "name": "teleporterHit",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 6103,
+      "line": 6104,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -1528,7 +1528,7 @@
       "surface": "world",
       "name": "teleporters",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5410,
+      "line": 5411,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -1552,7 +1552,7 @@
       "surface": "world",
       "name": "waterfallTiles",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5404,
+      "line": 5405,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -1576,7 +1576,7 @@
       "surface": "world",
       "name": "width",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5325,
+      "line": 5326,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -1604,7 +1604,7 @@
       "surface": "world",
       "name": "world",
       "module": "frontend/modules/seedlingDemo/levelWorld.js",
-      "line": 5330,
+      "line": 5331,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -2155,7 +2155,7 @@
       "surface": "import",
       "name": "ARROW",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 198,
+      "line": 205,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2174,7 +2174,7 @@
       "surface": "import",
       "name": "arrowLaneForPlacement",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 694,
+      "line": 701,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2193,7 +2193,7 @@
       "surface": "import",
       "name": "arrowLaneRect",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 725,
+      "line": 732,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2212,7 +2212,7 @@
       "surface": "import",
       "name": "arrowRect",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 517,
+      "line": 524,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -2230,7 +2230,7 @@
       "surface": "import",
       "name": "arrowTrapFires",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 432,
+      "line": 439,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2248,7 +2248,7 @@
       "surface": "import",
       "name": "stepArrow",
       "module": "frontend/modules/seedlingDemo/arrowTrap.js",
-      "line": 589,
+      "line": 596,
       "class": "seedling",
       "form": "stepper",
       "files": {
