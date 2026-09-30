@@ -41,6 +41,11 @@
             "category": "textAdventureSubstrateWrapper"
         },
         {
+            "id": "tasw-concept-prose-in-play",
+            "enabled": true,
+            "category": "textAdventureSubstrateWrapper"
+        },
+        {
             "id": "tasw-playback-no-double-append",
             "enabled": true,
             "category": "TA block modes"

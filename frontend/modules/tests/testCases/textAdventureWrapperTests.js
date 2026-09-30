@@ -29,6 +29,8 @@ import {
     DEFAULT_ITEMS,
     DEFAULT_OBSTACLES,
 } from '../../shared/procgen/library.js';
+import { substrateRegistry } from '../../shared/procgen/substrateRegistry.js';
+import { processMessageTemplate } from '../../textAdventureSubstrateWrapper/templating.js';
 
 const PROCGEN_RULES_PATH = './presets/procgen_maze/AP_1/AP_1_rules.json';
 
@@ -1153,6 +1155,208 @@ registerTest({
                + 'first gated exit names and asserts it opens and moves, then asserts a gated location '
                + 'refuses until its items are held. Every name is read off the document (G2b-1).',
     testFunction: gateHoldsInPlay,
+    category: 'textAdventureSubstrateWrapper',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+/**
+ * ⛓⛓ CONCEPT LIBRARY T2, D4 — **A CONCEPT'S PROSE IS WHAT THE PLAYER READS.**
+ *
+ * The world is the committed gated fixture `procgen_topdown/AP_11`, loaded
+ * as `tasw-gate-holds-in-play` loads it, with ONE exit re-gated IN THE TEST:
+ * the first `Has`-gated exit of the first text-adventure room behind an open
+ * exit becomes `Has(Progressive Sword)` in the document, `Progressive Sword`
+ * joins the item table, and the room's payload is REWRITTEN THROUGH THE
+ * ENTRY'S OWN HOOKS (`deserializeWorld` → `placeFromRules` with
+ * `params.concepts: ['guardian', 'sword']` → `extractPathsAndObstacles` →
+ * `serializeWorld`), so the `prose` it carries is the one `placeFromRules`
+ * selected. ⚠ Not built through the pipeline: the seam that hands
+ * `params.concepts` to `placeFromRules` is T1's. Asserts:
+ *   1. without the sword the exit is inaccessible, a click does not move, and
+ *      the line the engine displayed is the guardian's `blocked` prose (not
+ *      the generic "You can't go that way");
+ *   2. with the sword the exit opens, a click moves the player, and the line
+ *      displayed is the guardian's `passedWith` prose.
+ * The fetched document is mutated in memory only; the sword is removed after.
+ */
+const CONCEPT_SWORD = 'Progressive Sword';
+
+async function conceptProseInPlay(testController) {
+    const doc = await (await fetch(GATED_TA_PRESET_PATH)).json();
+    const slot = '1';
+    const regions = doc.regions[slot];
+    const sidecars = doc.preset_sidecars?.[slot] ?? {};
+    const isRoom = (name) => sidecars[name]?.substrate === 'text_adventure';
+    const gated = (r) => !!r && r.rule !== 'True_';
+    const entryTA = substrateRegistry.get('text_adventure');
+    testController.reportCondition('⛓ premise: the text_adventure entry declares conceptRealisations',
+        !!entryTA?.conceptRealisations?.guardian);
+    if (!entryTA?.conceptRealisations?.guardian) return testController.getOverallResult();
+    const G = entryTA.conceptRealisations.guardian.placements.gate.mechanic.prose;
+
+    // ⛓ The room and its exit: as tasw-gate-holds-in-play finds them, read off the document.
+    const starts = doc.start_regions?.[slot]?.default ?? [];
+    let start = null;
+    let entry = null;
+    for (const s of [...(Array.isArray(starts) ? starts : []), ...Object.keys(regions)]) {
+        const e = (regions[s]?.exits ?? []).find((x) => !gated(x.access_rule) && isRoom(x.connected_region)
+            && (regions[x.connected_region].exits ?? []).some((y) => itemsOfRule(y.access_rule)?.length === 1));
+        if (e) { start = s; entry = e; break; }
+    }
+    testController.reportCondition('⛓ premise: the document has a Has-gated text-adventure exit behind an open exit',
+        !!entry);
+    if (!entry) return testController.getOverallResult();
+    const room = entry.connected_region;
+    const guarded = regions[room].exits.find((x) => itemsOfRule(x.access_rule)?.length === 1);
+    const target = guarded.connected_region;
+    const SWORD_RULE = { rule: 'Has', args: { item_name: CONCEPT_SWORD } };
+
+    // ⛓ Re-gate it with the sword: the document's rule, the item table, and the payload through the entry.
+    guarded.access_rule = structuredClone(SWORD_RULE);
+    doc.items[slot][CONCEPT_SWORD] = {
+        name: CONCEPT_SWORD, id: 9001, classification: 'progression', groups: ['Everything'],
+    };
+    const payload = sidecars[room].playable_payload;
+    testController.reportCondition(`⛓ premise: ${room}'s payload lists exit ${guarded.name} by its exit_id`,
+        payload.exits.some((e) => e.exit_id === guarded.name));
+    const world = entryTA.deserializeWorld(payload);
+    entryTA.placeFromRules(world, {
+        exit_rules: { [guarded.name]: SWORD_RULE }, params: { concepts: ['guardian', 'sword'] },
+    });
+    const rewritten = entryTA.serializeWorld(world, entryTA.extractPathsAndObstacles(world, { regionId: room }));
+    sidecars[room].playable_payload = {
+        ...rewritten,
+        ...('fogEnabled' in payload ? { fogEnabled: payload.fogEnabled } : {}),
+        ...('manaEnabled' in payload ? { manaEnabled: payload.manaEnabled } : {}),
+    };
+    const written = rewritten.prose?.exits?.[guarded.name];
+    testController.assertEqual(`placeFromRules wrote the guardian's two messages on ${guarded.name}`,
+        JSON.stringify([G.blocked, G.passedWith]),
+        JSON.stringify([written?.inaccessibleMessage, written?.moveMessage]));
+    testController.assertEqual(`the payload's gate on ${guarded.name} is the sword rule`,
+        JSON.stringify(SWORD_RULE), JSON.stringify(rewritten.exitGates?.[guarded.name]));
+    if (!written) return testController.getOverallResult();
+    const wantBlocked = processMessageTemplate(G.blocked, { exitName: guarded.name, destinationRegion: target });
+    const wantPassed = processMessageTemplate(G.passedWith, { exitName: guarded.name, destinationRegion: target });
+
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const gs = getGameStateSingleton();
+    if (gs?.isLoopModeActive) gs.setLoopModeActive(false);
+    let swordGranted = false;
+    try {
+        const rulesLoaded = testController.waitForEvent('stateManager:rulesLoaded', 10000);
+        testController.eventBus.publish('files:jsonLoaded', {
+            jsonData: doc, selectedPlayerId: slot, sourceName: 'tasw-concept-prose-in-play',
+        });
+        await rulesLoaded;
+        await testController.stateManager.pingWorker('after-rules-load', 3000);
+        // ⛔ IDENTITY, not existence (trap 1302): the rewritten rule is what the worker holds.
+        const loaded = await testController.pollForCondition(() => {
+            const sd = testController.stateManager.getStaticData?.();
+            const ex = sd?.regions?.get?.(room)?.exits?.find((x) => x.name === guarded.name);
+            return testController.stateManager.getGameName?.() === doc.game_name
+                && JSON.stringify(ex?.access_rule) === JSON.stringify(SWORD_RULE);
+        }, `the loaded document is AP_11 with ${guarded.name} gated on ${CONCEPT_SWORD}`, 10000, 100);
+        testController.reportCondition(`the loaded document is AP_11 with ${guarded.name} gated on ${CONCEPT_SWORD}`,
+            !!loaded);
+        if (!loaded) return testController.getOverallResult();
+        testController.log(`start ${start} --${entry.name}--> ${room}; guarded ${guarded.name} → ${target}`);
+
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'textAdventureSubstrateWrapperPanel' });
+        const iframeDoc = () => document.querySelector('iframe.tasw-iframe')?.contentDocument ?? null;
+        const click = (el) => el.dispatchEvent(new el.ownerDocument.defaultView.MouseEvent('click',
+            { bubbles: true, cancelable: true }));
+        const linkFor = (id) => [...(iframeDoc()?.querySelectorAll('[data-exit-id]') ?? [])]
+            .find((l) => l.getAttribute('data-exit-id') === id) ?? null;
+        const messages = () => [...(iframeDoc()?.querySelectorAll('.tae-msg') ?? [])].map((m) => m.textContent);
+        const exploreUntil = async (done) => {
+            for (let i = 0; i < 20 && !done(); i++) {
+                const explore = iframeDoc()?.querySelector('[data-action="explore"]');
+                if (!explore) break;
+                click(explore);
+                // eslint-disable-next-line no-await-in-loop
+                await new Promise((r) => setTimeout(r, 200));
+            }
+            return done();
+        };
+
+        const mounted = await testController.pollForCondition(
+            () => [start, room].includes(gs.getCurrentRegion()) && iframeDoc()?.querySelector('.tae-actions') !== null,
+            `the wrapper rendered ${start} or ${room}`, 15000, 300);
+        testController.reportCondition(`the wrapper rendered ${start} or ${room}`, !!mounted);
+        if (!mounted) return testController.getOverallResult();
+        if (gs.getCurrentRegion() === start) {
+            const atStart = await exploreUntil(() => !!linkFor(entry.name));
+            testController.reportCondition(`the wrapper rendered ${start}'s exit ${entry.name}`, !!atStart);
+            if (!atStart) return testController.getOverallResult();
+            click(linkFor(entry.name));
+        }
+        const inRoom = await testController.pollForCondition(() => gs.getCurrentRegion() === room,
+            `the player is in ${room}`, 8000, 100);
+        testController.reportCondition(`the player is in ${room}`, !!inRoom);
+        if (!inRoom) return testController.getOverallResult();
+        testController.reportCondition(`${guarded.name} rendered as a link`, await exploreUntil(() => !!linkFor(guarded.name)));
+
+        // (1) without the sword: refused, and the blocked prose is what the engine displayed.
+        testController.reportCondition(`⛓ premise: ${CONCEPT_SWORD} is not held`,
+            !((testController.stateManager.getSnapshot()?.inventory ?? {})[CONCEPT_SWORD] > 0));
+        const link = linkFor(guarded.name);
+        testController.reportCondition(`${guarded.name} is tae-link-inaccessible without the sword`,
+            !!link && link.classList.contains('tae-link-inaccessible'));
+        const before = messages().length;
+        if (link) click(link);
+        const saidBlocked = await testController.pollForCondition(
+            () => messages().slice(before).includes(wantBlocked),
+            `the engine displayed the guardian's blocked prose for ${guarded.name}`, 5000, 100);
+        testController.reportCondition(`the engine displayed the guardian's blocked prose for ${guarded.name}`,
+            !!saidBlocked);
+        testController.reportCondition('…and not the generic line',
+            !messages().slice(before).some((m) => m.startsWith("You can't go that way")));
+        const until = Date.now() + GATE_SETTLE_MS;
+        let stayed = true;
+        while (Date.now() < until) {
+            if (gs.getCurrentRegion() !== room) { stayed = false; break; }
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, 100));
+        }
+        testController.reportCondition(`the click on guarded ${guarded.name} leaves the player in ${room} `
+            + `for ${GATE_SETTLE_MS} ms`, stayed);
+
+        // (2) with the sword: the move succeeds, and the passedWith prose is what the engine displayed.
+        await testController.stateManager.addItemToInventory(CONCEPT_SWORD, 1);
+        swordGranted = true;
+        await testController.stateManager.pingWorker('after-sword', 3000);
+        const opened = await testController.pollForCondition(
+            () => linkFor(guarded.name)?.classList.contains('tae-link-accessible'),
+            `${guarded.name} becomes accessible once ${CONCEPT_SWORD} is held`, 8000, 100);
+        testController.reportCondition(`${guarded.name} becomes tae-link-accessible once ${CONCEPT_SWORD} is held`,
+            !!opened);
+        if (!opened) return testController.getOverallResult();
+        const beforeMove = messages().length;
+        let saidPassed = false;
+        click(linkFor(guarded.name));
+        const moved = await testController.pollForCondition(() => {
+            saidPassed ||= messages().slice(beforeMove).includes(wantPassed);
+            return gs.getCurrentRegion() === target;
+        }, `the click on ${guarded.name} moved the player to ${target}`, 8000, 50);
+        saidPassed ||= messages().slice(beforeMove).includes(wantPassed);
+        testController.reportCondition(`the click on ${guarded.name} moved the player to ${target}`, !!moved);
+        testController.reportCondition(`the engine displayed the guardian's passedWith prose for ${guarded.name}`,
+            saidPassed);
+        return testController.getOverallResult();
+    } finally {
+        if (swordGranted) await testController.stateManager.removeItemFromInventory(CONCEPT_SWORD, 1);
+    }
+}
+
+registerTest({
+    id: 'tasw-concept-prose-in-play',
+    name: 'Wrapper: a guardian-gated exit speaks the concept\'s prose — blocked without the sword, passed with it',
+    description: 'Loads procgen_topdown/AP_11 with one text-adventure exit re-gated on Progressive Sword and its '
+               + 'room payload rewritten through the entry\'s own hooks with params.concepts [guardian, sword]; '
+               + 'asserts the move is refused and the guardian\'s blocked prose is displayed, then grants the '
+               + 'sword and asserts the move succeeds with the passedWith prose displayed (concept library T2).',
+    testFunction: conceptProseInPlay,
     category: 'textAdventureSubstrateWrapper',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
