@@ -638,6 +638,10 @@ export function census(read) {
                 } else if (parent.type === 'ObjectProperty' && key === 'value') {
                     addBlind({ file: f, line: r.line, kind: 'stored-in-object', base: exprBase,
                         detail: `${exprBase} as .${parent.key.name ?? parent.key.value}` });
+                } else if (parent.type === 'SpreadElement' && r.ancestors[depth - 1]?.type === 'ObjectExpression') {
+                    // `{ ...run.state }` reads EVERY own key — the census cannot name them.
+                    addBlind({ file: f, line: r.line, kind: 'spread-copy', base: exprBase,
+                        detail: `{ ...${exprBase} } copies every member` });
                 } else if (parent.type === 'ArrayExpression' || parent.type === 'SpreadElement') {
                     addBlind({ file: f, line: r.line, kind: 'stored-in-array', base: exprBase, detail: exprBase });
                 } else if (parent.type === 'ReturnStatement' || (parent.type === 'ArrowFunctionExpression' && key === 'body')) {

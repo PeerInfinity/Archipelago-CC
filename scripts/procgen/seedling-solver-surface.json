@@ -23,7 +23,18 @@
     "method": 10,
     "shorthand": 2
   },
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    "node scripts/procgen/solve-seedling-r8-battery.mjs --check",
+    "node scripts/procgen/solve-seedling-r8-d2.mjs --check",
+    "node scripts/procgen/solve-seedling-r8-d2-chain.mjs --check",
+    "node scripts/procgen/solve-seedling-r8-l18.mjs --check",
+    "node scripts/procgen/solve-seedling-r8-tail.mjs --check",
+    "node scripts/procgen/solve-seedling-r9-l3.mjs --check",
+    "node scripts/procgen/solve-seedling-r9-campaign.mjs --check",
+    "node frontend/modules/seedlingDemo/fixtures/regenerate-r2-tapes.mjs --check",
+    "node frontend/modules/seedlingDemo/fixtures/regenerate-r3-tapes.mjs --check",
+    "node frontend/modules/seedlingDemo/fixtures/regenerate-r4-tapes.mjs --check"
+  ],
   "rows": [
     {
       "surface": "run",
@@ -37,11 +48,18 @@
         "solverBot.js": 9
       },
       "sites": 35,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 80927,
+        "files": {
+          "botDriverV2.js": 75639,
+          "solverBot.js": 5288
+        },
+        "sites": 23
+      },
       "why": "Runs one tick with held input and applies the end-of-tick teleporter swap, returning {transition, hitX, hitY}, the engine's tick advance."
     },
     {
@@ -75,11 +93,19 @@
         "solverBot.js": 4
       },
       "sites": 12,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 75017,
+        "files": {
+          "botDriverV2.js": 134,
+          "dangerMap.js": 74837,
+          "solverBot.js": 46
+        },
+        "sites": 10
+      },
       "why": "Returns the Set of ArrowTrap ids firing now (group pressed/latched XOR shootDefault), a Seedling trap family."
     },
     {
@@ -94,11 +120,18 @@
         "solverBot.js": 4
       },
       "sites": 8,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 186,
+        "files": {
+          "botDriverV2.js": 140,
+          "solverBot.js": 46
+        },
+        "sites": 5
+      },
       "why": "Returns the Set of Pulser ids whose activator group is pressed or latched right now, Seedling pulser/activator state."
     },
     {
@@ -130,11 +163,17 @@
         "dangerMap.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 66808,
+        "files": {
+          "dangerMap.js": 66808
+        },
+        "sites": 1
+      },
       "why": "Returns each in-flight arrow with velocity, die, alpha and removed flags, Seedling arrow-trap projectile state."
     },
     {
@@ -148,11 +187,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 4667,
+        "files": {
+          "solverBot.js": 4667
+        },
+        "sites": 1
+      },
       "why": "Returns arrowForecastNow(), a prediction of the Seedling arrow-trap subsystem's future arrows."
     },
     {
@@ -167,11 +212,18 @@
         "solverBot.js": 1
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 735,
+        "files": {
+          "dangerMap.js": 674,
+          "solverBot.js": 61
+        },
+        "sites": 4
+      },
       "why": "Returns {id,x,y} for each arrow in flight in this level (arrowsFor), Seedling arrow-trap projectiles."
     },
     {
@@ -185,11 +237,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 14,
+        "files": {
+          "botDriverV2.js": 14
+        },
+        "sites": 1
+      },
       "why": "Returns copies of arrowVolleysFired, one per volley a Seedling arrow trap fired."
     },
     {
@@ -239,11 +297,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 360,
+        "files": {
+          "botDriverV2.js": 360
+        },
+        "sites": 1
+      },
       "why": "Returns a Map of BossTotem live rects (bossRectsNow) saying which boss totems stopped being walls, Seedling boss state."
     },
     {
@@ -258,11 +322,18 @@
         "solverBot.js": 2
       },
       "sites": 5,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 472,
+        "files": {
+          "botDriverV2.js": 360,
+          "solverBot.js": 112
+        },
+        "sites": 3
+      },
       "why": "Returns the Set of BreakableRock ids gone this visit (brokenRockIdsNow), a Seedling entity family's per-visit state."
     },
     {
@@ -276,11 +347,17 @@
         "botDriverV2.js": 3
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 360,
+        "files": {
+          "botDriverV2.js": 360
+        },
+        "sites": 1
+      },
       "why": "Returns the Set of BurnableTree ids burned this visit (burnedTreeIdsNow), Seedling's fire-item entity family."
     },
     {
@@ -294,11 +371,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 4667,
+        "files": {
+          "solverBot.js": 4667
+        },
+        "sites": 1
+      },
       "why": "Returns chaserForecastNow(), a prediction of Seedling chaser bodies' future positions."
     },
     {
@@ -312,11 +395,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 4,
+        "files": {
+          "solverBot.js": 4
+        },
+        "sites": 1
+      },
       "why": "Returns copies of chaserKillLockOpens, the Seedling kill-lock consequence recorded for every chaser removal."
     },
     {
@@ -331,11 +420,18 @@
         "solverBot.js": 2
       },
       "sites": 4,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 76439,
+        "files": {
+          "dangerMap.js": 74835,
+          "solverBot.js": 1604
+        },
+        "sites": 4
+      },
       "why": "Returns a copy of the per-room verdict on whether the chaser roster is stepped and why, specific to Seedling's chaser bridge."
     },
     {
@@ -350,11 +446,18 @@
         "solverBot.js": 5
       },
       "sites": 7,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 68262,
+        "files": {
+          "dangerMap.js": 66156,
+          "solverBot.js": 2106
+        },
+        "sites": 9
+      },
       "why": "Returns live chaser enemy bodies from chaserStateFor(level) with position, velocity, hits and dying/destroy flags, a Seedling enemy family."
     },
     {
@@ -368,11 +471,17 @@
         "botDriverV2.js": 3
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 25,
+        "files": {
+          "botDriverV2.js": 25
+        },
+        "sites": 3
+      },
       "why": "Returns copies of chestOpens, one record per Seedling chest opened with the persistence flag it cleared."
     },
     {
@@ -386,11 +495,17 @@
         "botDriverV2.js": 7
       },
       "sites": 7,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1268,
+        "files": {
+          "botDriverV2.js": 1268
+        },
+        "sites": 5
+      },
       "why": "Returns copies of `collected`, one `{t, level, item, frames}` per completed Seedling pickup ceremony."
     },
     {
@@ -423,11 +538,18 @@
         "dangerMap.js": 2
       },
       "sites": 10,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 75195,
+        "files": {
+          "botDriverV2.js": 360,
+          "dangerMap.js": 74835
+        },
+        "sites": 3
+      },
       "why": "Returns a Map of each Crusher's live rect (crusherRectsNow), a Seedling self-propelled hazard family."
     },
     {
@@ -459,11 +581,17 @@
         "solverBot.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 5,
+        "files": {
+          "solverBot.js": 5
+        },
+        "sites": 1
+      },
       "why": "Returns `state.direction`, the player's facing as of the end of the last tick — generic top-down player state."
     },
     {
@@ -495,11 +623,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 2,
+        "files": {
+          "botDriverV2.js": 2
+        },
+        "sites": 1
+      },
       "why": "Closure `equipNow(slot)` writes `equipsByTick` and applies the equip, i.e. selects Seedling's `Main.primary` slot at the current tick."
     },
     {
@@ -513,11 +647,17 @@
         "botDriverV2.js": 4
       },
       "sites": 4,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 21,
+        "files": {
+          "botDriverV2.js": 21
+        },
+        "sites": 2
+      },
       "why": "Returns copies of `firedEquips` `{t, slot}` records, a ledger of Seedling `Main.primary` equip selections."
     },
     {
@@ -531,11 +671,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 10,
+        "files": {
+          "botDriverV2.js": 10
+        },
+        "sites": 1
+      },
       "why": "Returns the closure frozenTimer mirroring Player.frozenTimer, the ice-blast freeze countdown specific to Seedling's IceTurret."
     },
     {
@@ -550,11 +696,18 @@
         "solverBot.js": 5
       },
       "sites": 7,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 644493,
+        "files": {
+          "dangerMap.js": 52902,
+          "solverBot.js": 591591
+        },
+        "sites": 3
+      },
       "why": "Returns `clock.now() + horizon`, the game clock value h ticks ahead (null if the clock is unknown) — a generic engine clock forecast."
     },
     {
@@ -568,11 +721,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 21,
+        "files": {
+          "botDriverV2.js": 21
+        },
+        "sites": 1
+      },
       "why": "Returns copies of `firedGrants`, `{t, level, items}` per tape grant of Seedling items that fired."
     },
     {
@@ -586,11 +745,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 271,
+        "files": {
+          "botDriverV2.js": 271
+        },
+        "sites": 1
+      },
       "why": "Returns `ceremony !== null`, whether a Seedling pickup ceremony (freezeObjects + dialogue) is running."
     },
     {
@@ -605,11 +770,18 @@
         "solverBot.js": 1
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 416,
+        "files": {
+          "botDriverV2.js": 206,
+          "solverBot.js": 210
+        },
+        "sites": 3
+      },
       "why": "Returns `lockSnap !== null`, i.e. whether a Seedling touch-lock window is active; OVERTURNED: despite the generic name it reports one specific Seedling entity mechanic (the Lock's `receiveInput=false` snap), not a general engine input gate — ceremonies are reported separately by `inCeremony`."
     },
     {
@@ -624,11 +796,18 @@
         "solverBot.js": 9
       },
       "sites": 16,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 7643,
+        "files": {
+          "botDriverV2.js": 379,
+          "solverBot.js": 7264
+        },
+        "sites": 10
+      },
       "why": "Returns a copy of the `inventory` object from `initialInventory()`, Seedling's item bag (sword, shield, spear, etc.)."
     },
     {
@@ -642,11 +821,17 @@
         "botDriverV2.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 4,
+        "files": {
+          "botDriverV2.js": 4
+        },
+        "sites": 1
+      },
       "why": "Returns copies of `keyOpens`, one record per Seedling BossLock that finished its fade."
     },
     {
@@ -661,11 +846,18 @@
         "solverBot.js": 4
       },
       "sites": 10,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 72599,
+        "files": {
+          "botDriverV2.js": 68794,
+          "solverBot.js": 3805
+        },
+        "sites": 8
+      },
       "why": "Returns a copy of the `keys` set, Seedling's `SAVE_FILE.data.hasKey` key types that open BossLocks."
     },
     {
@@ -679,11 +871,17 @@
         "solverBot.js": 3
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 2,
+        "files": {
+          "solverBot.js": 2
+        },
+        "sites": 2
+      },
       "why": "Returns the Set of activator groups latched this visit (ButtonRoom publishes, pulled ropes), Seedling activator state."
     },
     {
@@ -700,11 +898,19 @@
         "solverBot.js": 43
       },
       "sites": 83,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 377501,
+        "files": {
+          "botDriverV2.js": 1239,
+          "dangerMap.js": 374065,
+          "solverBot.js": 2197
+        },
+        "sites": 32
+      },
       "why": "Returns the closure `level`, the id of the room the run currently occupies, rewritten on every level transition — a generic engine's current-level pointer."
     },
     {
@@ -718,11 +924,17 @@
         "solverBot.js": 5
       },
       "sites": 5,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 3652,
+        "files": {
+          "solverBot.js": 3652
+        },
+        "sites": 4
+      },
       "why": "Returns `normalizeLiveOpts(liveSolidOpts())`, the branded live-solid options bag every collision query consults; the engine-level collision-options channel, although the fourteen families filling it are Seedling entities."
     },
     {
@@ -736,11 +948,17 @@
         "botDriverV2.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 4,
+        "files": {
+          "botDriverV2.js": 4
+        },
+        "sites": 1
+      },
       "why": "Returns copies of `lockSnaps`, one record per completed Seedling touch-lock window."
     },
     {
@@ -755,11 +973,18 @@
         "solverBot.js": 1
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 3641,
+        "files": {
+          "botDriverV2.js": 4,
+          "solverBot.js": 3637
+        },
+        "sites": 2
+      },
       "why": "Returns a copy of the `noHazards` construction option, the hazard-name set the terrain physics is coerced under, so re-asked geometry queries use the same coercion."
     },
     {
@@ -774,11 +999,18 @@
         "solverBot.js": 8
       },
       "sites": 30,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1566,
+        "files": {
+          "botDriverV2.js": 690,
+          "solverBot.js": 876
+        },
+        "sites": 21
+      },
       "why": "Returns `openActivatorIds(activatorStateFor(level))`, the Seedling activator/lock ids currently non-solid (null under noclip)."
     },
     {
@@ -792,11 +1024,17 @@
         "botDriverV2.js": 4
       },
       "sites": 4,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 360,
+        "files": {
+          "botDriverV2.js": 360
+        },
+        "sites": 1
+      },
       "why": "Returns `openBridgeIdsNow()`, the Seedling bridge ids currently walkable (null under noclip)."
     },
     {
@@ -811,11 +1049,18 @@
         "solverBot.js": 3
       },
       "sites": 10,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 523,
+        "files": {
+          "botDriverV2.js": 486,
+          "solverBot.js": 37
+        },
+        "sites": 7
+      },
       "why": "Returns the Set of Chest ids opened this visit (openChestIdsNow), a Seedling chest family."
     },
     {
@@ -829,11 +1074,17 @@
         "botDriverV2.js": 3
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 589,
+        "files": {
+          "botDriverV2.js": 589
+        },
+        "sites": 2
+      },
       "why": "Returns copies of `playerDeaths`, one row per Seedling death/world reboot with its computed respawn."
     },
     {
@@ -847,11 +1098,17 @@
         "botDriverV2.js": 3
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 589,
+        "files": {
+          "botDriverV2.js": 589
+        },
+        "sites": 2
+      },
       "why": "Returns copies of `playerHits`, one row per landed Seedling `Player.hit` with source, hits, knockback and shake."
     },
     {
@@ -865,11 +1122,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 21,
+        "files": {
+          "botDriverV2.js": 21
+        },
+        "sites": 1
+      },
       "why": "Returns copies of the presses ledger, one per Seedling weapon press that fired its rect with weapon, direction and hits."
     },
     {
@@ -883,11 +1146,17 @@
         "solverBot.js": 4
       },
       "sites": 4,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 9575,
+        "files": {
+          "solverBot.js": 9575
+        },
+        "sites": 4
+      },
       "why": "Returns a pure closure over stepV2 bound to the run's current live geometry options, the generic player-physics stepper for previewing corridors."
     },
     {
@@ -920,11 +1189,17 @@
         "solverBot.js": 3
       },
       "sites": 6,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1154,
+        "files": {
+          "solverBot.js": 1154
+        },
+        "sites": 3
+      },
       "why": "Returns `weaponForPress()`, which of Seedling's four weapon mechanics the selected slot would fire."
     },
     {
@@ -938,11 +1213,17 @@
         "botDriverV2.js": 3
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 360,
+        "files": {
+          "botDriverV2.js": 360
+        },
+        "sites": 1
+      },
       "why": "Returns the Set of Rope ids pulled in the current level this visit (pulledRopeIdsNow), a Seedling activator entity."
     },
     {
@@ -956,11 +1237,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 21,
+        "files": {
+          "botDriverV2.js": 21
+        },
+        "sites": 1
+      },
       "why": "Returns copies of pulserHits, one per tick a Seedling Pulser's hit() ran."
     },
     {
@@ -974,11 +1261,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 21,
+        "files": {
+          "botDriverV2.js": 21
+        },
+        "sites": 1
+      },
       "why": "Returns copies of pulserPlayerHits, one per tick a Seedling pulse reached the player."
     },
     {
@@ -992,11 +1285,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 21,
+        "files": {
+          "botDriverV2.js": 21
+        },
+        "sites": 1
+      },
       "why": "Returns copies of pulsePushes_, one per block a Seedling Pulser moved."
     },
     {
@@ -1011,11 +1310,18 @@
         "solverBot.js": 13
       },
       "sites": 30,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1519,
+        "files": {
+          "botDriverV2.js": 1447,
+          "solverBot.js": 72
+        },
+        "sites": 20
+      },
       "why": "Returns `pushableRects(pushableStateFor(level))`, the current rects of Seedling pushable blocks (null under noclip)."
     },
     {
@@ -1029,11 +1335,17 @@
         "botDriverV2.js": 5
       },
       "sites": 5,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 801,
+        "files": {
+          "botDriverV2.js": 801
+        },
+        "sites": 4
+      },
       "why": "Returns pushablesSettled(pushableStateFor(level)), whether every Seedling pushable block is at rest."
     },
     {
@@ -1047,11 +1359,17 @@
         "botDriverV2.js": 4
       },
       "sites": 4,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 21,
+        "files": {
+          "botDriverV2.js": 21
+        },
+        "sites": 1
+      },
       "why": "Returns copies of `roomWrites`, every Seedling `ButtonRoom` cross-room persistence write."
     },
     {
@@ -1065,11 +1383,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1,
+        "files": {
+          "solverBot.js": 1
+        },
+        "sites": 1
+      },
       "why": "Returns copies of `ropePulls`, a ledger of Seedling rope entities pulled and their persistence flags."
     },
     {
@@ -1101,11 +1425,17 @@
         "botDriverV2.js": 6
       },
       "sites": 6,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 35,
+        "files": {
+          "botDriverV2.js": 35
+        },
+        "sites": 4
+      },
       "why": "Returns copies of sealCollections, one per completed Seedling seal ceremony with its dead frames."
     },
     {
@@ -1119,11 +1449,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 51,
+        "files": {
+          "solverBot.js": 51
+        },
+        "sites": 1
+      },
       "why": "Returns which Seedling boss shake writers (totemLaser, totemDeath, rockFallLanding) exist in this room from boss/owl state."
     },
     {
@@ -1137,11 +1473,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1200,
+        "files": {
+          "solverBot.js": 1200
+        },
+        "sites": 1
+      },
       "why": "Returns copies of shieldBossKills, the ShieldBoss death's tag/destroy/removed instants."
     },
     {
@@ -1155,11 +1497,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1197,
+        "files": {
+          "solverBot.js": 1197
+        },
+        "sites": 1
+      },
       "why": "Returns copies of shieldBossStabs, one per ShieldBoss startStab with its derived sword window."
     },
     {
@@ -1174,11 +1522,18 @@
         "solverBot.js": 2
       },
       "sites": 5,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 5220,
+        "files": {
+          "botDriverV2.js": 3255,
+          "solverBot.js": 1965
+        },
+        "sites": 5
+      },
       "why": "Returns the sword slash state, wand/fire window end ticks and hasSword/hasGhostSword gates, Seedling weapon/inventory state."
     },
     {
@@ -1193,11 +1548,18 @@
         "solverBot.js": 6
       },
       "sites": 9,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 157211,
+        "files": {
+          "dangerMap.js": 149642,
+          "solverBot.js": 7569
+        },
+        "sites": 9
+      },
       "why": "Returns the current Seedling Spinner enemy bodies (id, rect, x, y, hits, hitsTimer, destroy, alpha, persistTag) from `spinnerStateFor(level)`."
     },
     {
@@ -1213,11 +1575,18 @@
         "solverBot.js": 5
       },
       "sites": 7,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 31593,
+        "files": {
+          "dangerMap.js": 26433,
+          "solverBot.js": 5160
+        },
+        "sites": 6
+      },
       "why": "Memoised forward simulation of Seedling Spinner rects for the next n ticks via `stepSpinners`, specific to that enemy family."
     },
     {
@@ -1231,11 +1600,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 9,
+        "files": {
+          "solverBot.js": 9
+        },
+        "sites": 1
+      },
       "why": "Returns copies of `spinnerKillLockOpens`, the removal-time scan of kill-locks opened by Seedling spinner deaths (`Game.totalEnemies()`)."
     },
     {
@@ -1249,11 +1624,17 @@
         "solverBot.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 4950,
+        "files": {
+          "solverBot.js": 4950
+        },
+        "sites": 2
+      },
       "why": "Returns copies of `spinnerPressHits`, one row per press hit test on a Seedling Spinner (landed or refused with reason)."
     },
     {
@@ -1286,11 +1667,18 @@
         "solverBot.js": 126
       },
       "sites": 239,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 454608,
+        "files": {
+          "botDriverV2.js": 405532,
+          "solverBot.js": 49076
+        },
+        "sites": 86
+      },
       "why": "Returns the player body state object (x, y, vx, vy, terrain, hazard flags, drown timer, direction, latch) that the tick stepper mutates — core player physics state."
     },
     {
@@ -1305,11 +1693,18 @@
         "solverBot.js": 7
       },
       "sites": 10,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 5384,
+        "files": {
+          "botDriverV2.js": 3255,
+          "solverBot.js": 2129
+        },
+        "sites": 7
+      },
       "why": "Returns the live chaser (Enemy) bodies with class, centre, rect and hit counters for the Seedling strike policy."
     },
     {
@@ -1323,11 +1718,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1394,
+        "files": {
+          "botDriverV2.js": 1394
+        },
+        "sites": 1
+      },
       "why": "Returns a set of `pickup:tag@x,y` keys for Seedling pickups already collected in the current level, derived from `collectedPickups`."
     },
     {
@@ -1341,11 +1742,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1993,
+        "files": {
+          "solverBot.js": 1993
+        },
+        "sites": 1
+      },
       "why": "Returns the uncleared NPC/sign talker rows (talkerStateFor) whose dialogue the sword key must not trigger, Seedling NPC state."
     },
     {
@@ -1361,11 +1768,19 @@
         "solverBot.js": 20
       },
       "sites": 24,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 89373,
+        "files": {
+          "botDriverV2.js": 3255,
+          "dangerMap.js": 74807,
+          "solverBot.js": 11311
+        },
+        "sites": 22
+      },
       "why": "Returns the closure `ticksCompleted`, the count of ticks `advance` has stepped — the engine's tick counter."
     },
     {
@@ -1380,11 +1795,18 @@
         "solverBot.js": 1
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 54,
+        "files": {
+          "botDriverV2.js": 21,
+          "solverBot.js": 33
+        },
+        "sites": 2
+      },
       "why": "Returns the `transitions` array of `{t, from_level, to_level}` records pushed on each level change — a generic level-transition ledger."
     },
     {
@@ -1452,11 +1874,17 @@
         "botDriverV2.js": 8
       },
       "sites": 8,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 360,
+        "files": {
+          "botDriverV2.js": 360
+        },
+        "sites": 1
+      },
       "why": "Returns a Map of IceTurret live rects (turretRectsNow), a Seedling enemy family."
     },
     {
@@ -1488,11 +1916,17 @@
         "botDriverV2.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 21,
+        "files": {
+          "botDriverV2.js": 21
+        },
+        "sites": 1
+      },
       "why": "Returns the keys of `equipsByTick`, tape-declared Seedling equip ticks the run has not yet reached."
     },
     {
@@ -1506,11 +1940,17 @@
         "botDriverV2.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 21,
+        "files": {
+          "botDriverV2.js": 21
+        },
+        "sites": 1
+      },
       "why": "Returns the keys of `grantsByLevel`, levels whose Seedling item grants have not fired yet."
     },
     {
@@ -1525,12 +1965,19 @@
         "solverBot.js": 103
       },
       "sites": 159,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 558706,
+        "files": {
+          "botDriverV2.js": 69261,
+          "solverBot.js": 489445
+        },
+        "sites": 107
+      },
       "why": "Returns the closure `world` built by `worldFor(level)` (the room's solids/tiles/entity placements), i.e. the current world geometry any engine exposes."
     },
     {
@@ -1562,11 +2009,17 @@
         "dangerMap.js": 7
       },
       "sites": 7,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 224451,
+        "files": {
+          "dangerMap.js": 224451
+        },
+        "sites": 6
+      },
       "why": "Builds and memoises another level's world via buildLevelWorld, the generic level-loading lookup used for planning ahead."
     },
     {
@@ -1581,13 +2034,20 @@
         "solverBot.js": 12
       },
       "sites": 22,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 1204,
+        "files": {
+          "botDriverV2.js": 32,
+          "solverBot.js": 1172
+        },
+        "sites": 15
+      },
       "why": "The level's activator roster (buttons/groups publishing open state), a Seedling entity family."
     },
     {
@@ -1602,12 +2062,20 @@
         "solverBot.js": 9
       },
       "sites": 11,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 74919,
+        "files": {
+          "botDriverV2.js": 24,
+          "dangerMap.js": 74837,
+          "solverBot.js": 58
+        },
+        "sites": 13
+      },
       "why": "The level's ArrowTrap roster {id, tag, x, y, ex, ey, t, shootDefault}, a Seedling trap family."
     },
     {
@@ -1621,12 +2089,18 @@
         "botDriverV2.js": 3
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 3300461,
+        "files": {
+          "botDriverV2.js": 3300461
+        },
+        "sites": 3
+      },
       "why": "Returns the Seedling pickups and key-gated proximity hazards (disc/line/rect) a box overlaps, whose contents and keys gate are Seedling-specific."
     },
     {
@@ -1677,13 +2151,20 @@
         "solverBot.js": 2
       },
       "sites": 4,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 13,
+        "files": {
+          "botDriverV2.js": 2,
+          "solverBot.js": 11
+        },
+        "sites": 2
+      },
       "why": "The level's Chest roster {id, tag, x, y, persistTag}, a Seedling entity family."
     },
     {
@@ -1697,11 +2178,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 3627,
+        "files": {
+          "solverBot.js": 3627
+        },
+        "sites": 1
+      },
       "why": "Returns the first solid/pixelmask blocker a box overlaps under the live geometry options, the generic sweep collision test."
     },
     {
@@ -1716,12 +2203,19 @@
         "solverBot.js": 5
       },
       "sites": 9,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 152236,
+        "files": {
+          "dangerMap.js": 149670,
+          "solverBot.js": 2566
+        },
+        "sites": 9
+      },
       "why": "The Seedling combat census per instance (enemies, kill locks) or null when the combat role was not built."
     },
     {
@@ -1735,11 +2229,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 12,
+        "files": {
+          "botDriverV2.js": 12
+        },
+        "sites": 1
+      },
       "why": "Where a pit in this level drops the player {level, offsetX, offsetY, sign} or null, the level's pit transition destination."
     },
     {
@@ -1754,13 +2254,20 @@
         "solverBot.js": 10
       },
       "sites": 11,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 280394,
+        "files": {
+          "botDriverV2.js": 103156,
+          "solverBot.js": 177238
+        },
+        "sites": 10
+      },
       "why": "The level's height in tiles from levelRecord.height."
     },
     {
@@ -1792,11 +2299,18 @@
         "botDriverV2.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 3239334,
+        "files": {
+          "botDriverV2.js": 3239332,
+          "dangerMap.js": 2
+        },
+        "sites": 2
+      },
       "why": "Returns walkable tiles of WATER_STATE or LAVA_STATE, Seedling's lethal-water/lava terrain table gated by conch/dark suit."
     },
     {
@@ -1810,11 +2324,17 @@
         "botDriverV2.js": 12
       },
       "sites": 12,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 145413,
+        "files": {
+          "botDriverV2.js": 145413
+        },
+        "sites": 3
+      },
       "why": "The level number this world was built for."
     },
     {
@@ -1828,11 +2348,17 @@
         "solverBot.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 4090,
+        "files": {
+          "solverBot.js": 4090
+        },
+        "sites": 1
+      },
       "why": "Returns the nearest walkable tile to a point in the game's list order, a generic terrain lookup."
     },
     {
@@ -1847,12 +2373,19 @@
         "solverBot.js": 1
       },
       "sites": 3,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 66,
+        "files": {
+          "botDriverV2.js": 57,
+          "solverBot.js": 9
+        },
+        "sites": 2
+      },
       "why": "The level's pickup items with rects, Seedling items feeding the inventory."
     },
     {
@@ -1866,12 +2399,19 @@
         "botDriverV2.js": 4
       },
       "sites": 4,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 3248958,
+        "files": {
+          "botDriverV2.js": 3248956,
+          "dangerMap.js": 2
+        },
+        "sites": 4
+      },
       "why": "Returns walkable tiles of PIT_STATE, Seedling's pit terrain table used as forbidden floor."
     },
     {
@@ -1885,11 +2425,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 3321031,
+        "files": {
+          "botDriverV2.js": 3321031
+        },
+        "sites": 1
+      },
       "why": "Returns the first solid or unmodelled-terrain blocker a box/probe overlaps under the live geometry options, the generic planner collision query."
     },
     {
@@ -1904,13 +2450,20 @@
         "solverBot.js": 10
       },
       "sites": 12,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 813,
+        "files": {
+          "botDriverV2.js": 44,
+          "solverBot.js": 769
+        },
+        "sites": 8
+      },
       "why": "The level's presser roster (pressure-plate style entities), a Seedling entity family."
     },
     {
@@ -1924,11 +2477,17 @@
         "botDriverV2.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 24,
+        "files": {
+          "botDriverV2.js": 24
+        },
+        "sites": 1
+      },
       "why": "The level's Pulser roster {id, tag, x, y, t}, a Seedling entity family."
     },
     {
@@ -1943,12 +2502,19 @@
         "solverBot.js": 9
       },
       "sites": 11,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 44,
+        "files": {
+          "botDriverV2.js": 11,
+          "solverBot.js": 33
+        },
+        "sites": 7
+      },
       "why": "The level's pushable block roster {id, tag, as3, family, x, y}, a Seedling entity family."
     },
     {
@@ -1962,11 +2528,17 @@
         "solverBot.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 26,
+        "files": {
+          "solverBot.js": 26
+        },
+        "sites": 2
+      },
       "why": "The level's ShieldBoss roster {id, tag, x, y, ex, ey, persistTag, aliveRect}, a Seedling boss family."
     },
     {
@@ -1999,11 +2571,17 @@
         "solverBot.js": 3
       },
       "sites": 5,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 13,
+        "files": {
+          "solverBot.js": 13
+        },
+        "sites": 3
+      },
       "why": "The level's player solid list (tiles and blocking entities), generic collision geometry."
     },
     {
@@ -2017,11 +2595,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 478,
+        "files": {
+          "botDriverV2.js": 478
+        },
+        "sites": 1
+      },
       "why": "Returns every non-deactivated teleporter whose trigger rect the box overlaps, a generic level-transition query."
     },
     {
@@ -2035,11 +2619,17 @@
         "botDriverV2.js": 5
       },
       "sites": 5,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 60270380,
+        "files": {
+          "botDriverV2.js": 60270380
+        },
+        "sites": 4
+      },
       "why": "The level's teleporter trigger volumes with destinations, generic level-transition geometry."
     },
     {
@@ -2053,11 +2643,17 @@
         "botDriverV2.js": 1
       },
       "sites": 1,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 2350,
+        "files": {
+          "botDriverV2.js": 2350
+        },
+        "sites": 1
+      },
       "why": "Returns walkable tiles of WATERFALL_STATE, Seedling's one-way-down waterfall terrain gated by the feather."
     },
     {
@@ -2072,13 +2668,20 @@
         "solverBot.js": 10
       },
       "sites": 12,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 307483,
+        "files": {
+          "botDriverV2.js": 103923,
+          "solverBot.js": 203560
+        },
+        "sites": 11
+      },
       "why": "The level's width in tiles from levelRecord.width."
     },
     {
@@ -2092,12 +2695,19 @@
         "solverBot.js": 2
       },
       "sites": 2,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 6461,
+        "files": {
+          "dangerMap.js": 6392,
+          "solverBot.js": 69
+        },
+        "sites": 5
+      },
       "why": "Frozen {width, height} in pixels for the physics clamp, the level's pixel dimensions."
     },
     {
@@ -2111,12 +2721,40 @@
         "botDriverV2.js": 4
       },
       "sites": 4,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 25525,
+        "files": {
+          "botDriverV2.js": 14,
+          "solverBot.js": 21500,
+          "strikePolicy.js": 4011
+        },
+        "sites": 10
+      },
       "why": "The player's facing, derived each tick by nextDirection from post-move velocity."
+    },
+    {
+      "surface": "state",
+      "name": "drown",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 3290,
+      "class": "seedling",
+      "form": "live-state",
+      "files": {},
+      "sites": 0,
+      "seen": "dynamic",
+      "via": [],
+      "dynamic": {
+        "reads": 21500,
+        "files": {
+          "solverBot.js": 21500
+        },
+        "sites": 4
+      },
+      "why": "Seedling's drown timer and drowning latch ({timer, drowning}) from Player's initialisers; reached only by the { ...run.state } copy."
     },
     {
       "surface": "state",
@@ -2130,12 +2768,162 @@
         "solverBot.js": 1
       },
       "sites": 7,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "direct"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 93489,
+        "files": {
+          "botDriverV2.js": 72503,
+          "solverBot.js": 20523,
+          "strikePolicy.js": 463
+        },
+        "sites": 11
+      },
       "why": "The in-progress pit fall-through record (phase, alpha, destination) the stepper carries until it emits a kind 'fall' level transition."
+    },
+    {
+      "surface": "state",
+      "name": "hazard",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 3289,
+      "class": "seedling",
+      "form": "live-state",
+      "files": {},
+      "sites": 0,
+      "seen": "dynamic",
+      "via": [],
+      "dynamic": {
+        "reads": 21809,
+        "files": {
+          "solverBot.js": 21500,
+          "strikePolicy.js": 309
+        },
+        "sites": 5
+      },
+      "why": "Seedling's four sticky Player hazard flags (inWater, inLava, onIce, onWaterfall); strikePolicy.js reads it to refuse a strike while wet."
+    },
+    {
+      "surface": "state",
+      "name": "hitX",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 3299,
+      "class": "physics",
+      "form": "live-state",
+      "files": {},
+      "sites": 0,
+      "seen": "dynamic",
+      "via": [],
+      "dynamic": {
+        "reads": 21500,
+        "files": {
+          "solverBot.js": 21500
+        },
+        "sites": 4
+      },
+      "why": "The x of the last solid collision the stepper resolved (null when none) — generic collision output; reached only by the { ...run.state } copy."
+    },
+    {
+      "surface": "state",
+      "name": "hitY",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 3300,
+      "class": "physics",
+      "form": "live-state",
+      "files": {},
+      "sites": 0,
+      "seen": "dynamic",
+      "via": [],
+      "dynamic": {
+        "reads": 21500,
+        "files": {
+          "solverBot.js": 21500
+        },
+        "sites": 4
+      },
+      "why": "The y of the last solid collision the stepper resolved (null when none) — generic collision output; reached only by the { ...run.state } copy."
+    },
+    {
+      "surface": "state",
+      "name": "latched",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 3298,
+      "class": "physics",
+      "form": "live-state",
+      "files": {},
+      "sites": 0,
+      "seen": "dynamic",
+      "via": [],
+      "dynamic": {
+        "reads": 21500,
+        "files": {
+          "solverBot.js": 21500
+        },
+        "sites": 4
+      },
+      "why": "The teleporter re-entry latch that stops a spawn standing on a teleporter from falling straight back through it — any engine with transition volumes carries one; reached only by the { ...run.state } copy."
+    },
+    {
+      "surface": "state",
+      "name": "swim",
+      "module": "frontend/modules/seedlingDemo/playerPhysicsV2.js",
+      "line": 1432,
+      "class": "seedling",
+      "form": "live-state",
+      "files": {},
+      "sites": 0,
+      "seen": "dynamic",
+      "via": [],
+      "dynamic": {
+        "reads": 20504,
+        "files": {
+          "solverBot.js": 20504
+        },
+        "sites": 4
+      },
+      "why": "Seedling's swim-channel state (conch-gated water movement and its sound-pinned term), set by the stepper; reached only by the { ...run.state } copy."
+    },
+    {
+      "surface": "state",
+      "name": "terrain",
+      "module": "frontend/modules/seedlingDemo/levelRun.js",
+      "line": 3286,
+      "class": "seedling",
+      "form": "live-state",
+      "files": {},
+      "sites": 0,
+      "seen": "dynamic",
+      "via": [],
+      "dynamic": {
+        "reads": 21809,
+        "files": {
+          "solverBot.js": 21500,
+          "strikePolicy.js": 309
+        },
+        "sites": 5
+      },
+      "why": "The Seedling Tile.types index under the player (water, lava, ice, stairs, waterfall...), which selects Seedling's MOVE_SPEEDS row; read by strikePolicy.js and copied whole by solverBot.js's { ...run.state } previews."
+    },
+    {
+      "surface": "state",
+      "name": "transition",
+      "module": "frontend/modules/seedlingDemo/playerPhysicsV2.js",
+      "line": 1434,
+      "class": "physics",
+      "form": "live-state",
+      "files": {},
+      "sites": 0,
+      "seen": "dynamic",
+      "via": [],
+      "dynamic": {
+        "reads": 20504,
+        "files": {
+          "solverBot.js": 20504
+        },
+        "sites": 4
+      },
+      "why": "The level change the stepper emitted this tick (teleporter or fall), which advance turns into a world swap — generic level-transition output; reached only by the { ...run.state } copy."
     },
     {
       "surface": "state",
@@ -2150,13 +2938,22 @@
         "solverBot.js": 2
       },
       "sites": 10,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 102519,
+        "files": {
+          "botDriverV1.js": 76578,
+          "botDriverV2.js": 20,
+          "solverBot.js": 21685,
+          "strikePolicy.js": 4236
+        },
+        "sites": 12
+      },
       "why": "The player's x velocity in the physics state."
     },
     {
@@ -2172,13 +2969,22 @@
         "solverBot.js": 2
       },
       "sites": 10,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 99937,
+        "files": {
+          "botDriverV1.js": 74004,
+          "botDriverV2.js": 12,
+          "solverBot.js": 21685,
+          "strikePolicy.js": 4236
+        },
+        "sites": 12
+      },
       "why": "The player's y velocity in the physics state."
     },
     {
@@ -2194,13 +3000,22 @@
         "solverBot.js": 52
       },
       "sites": 108,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 382783,
+        "files": {
+          "botDriverV1.js": 123784,
+          "botDriverV2.js": 213535,
+          "solverBot.js": 39446,
+          "strikePolicy.js": 6018
+        },
+        "sites": 65
+      },
       "why": "The player's x position in the physics state, initialised from the spawn."
     },
     {
@@ -2216,13 +3031,22 @@
         "solverBot.js": 52
       },
       "sites": 111,
-      "seen": "static",
+      "seen": "both",
       "via": [
         "const-alias",
         "direct",
         "param"
       ],
-      "dynamic": null,
+      "dynamic": {
+        "reads": 356160,
+        "files": {
+          "botDriverV1.js": 97449,
+          "botDriverV2.js": 213247,
+          "solverBot.js": 39446,
+          "strikePolicy.js": 6018
+        },
+        "sites": 66
+      },
       "why": "The player's y position in the physics state, initialised from the spawn."
     },
     {
