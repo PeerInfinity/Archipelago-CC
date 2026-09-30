@@ -30,6 +30,14 @@
  * only if it is another family file or the door; the door exports only what
  * some family file imports, and pulls in no family file.
  *
+ * And the ENTITIES FOLD (engine-prep C3): `run.entities('<family>')` is a
+ * read of `run:entities` AND of the family its string literal names. The
+ * families are read, as text, from `levelRun.js` — the exported
+ * `ENTITY_FAMILY_NAMES` list and the keys of `createLevelRun`'s
+ * `ENTITY_FAMILIES` dispatch table, which must agree. A family file reading a
+ * folded getter directly (`run.pushables`) is refused by name, and so is an
+ * unknown family or a non-literal argument (a blind spot the census names).
+ *
  * And what it CANNOT see, reported rather than guessed: computed access
  * (`run[k]`), destructuring of a tracked value, a tracked value stored into
  * an object/array, returned, reassigned, held in a `let`, or handed to a
@@ -51,6 +59,10 @@ export const DOOR = `${DIR}/solverView.js`;
 /** The four files the planner's §1 numbers were measured over. */
 export const CORE_FOUR = ['solverBot.js', 'botDriverV2.js', 'dangerMap.js', 'director.js']
     .map((f) => `${DIR}/${f}`);
+/** The run's one query for live entity state, and the names it reads out of `levelRun.js`. */
+export const ENTITY_QUERY = 'entities';
+export const ENTITY_NAMES_EXPORT = 'ENTITY_FAMILY_NAMES';
+export const ENTITY_DISPATCH = 'ENTITY_FAMILIES';
 /** Where the world object's members are defined. */
 export const WORLD_BUILDER = { file: `${DIR}/levelWorld.js`, fn: 'buildLevelWorld' };
 /** Where a `state` member the boot literal lacks is defined: the stepper's returned object. */
@@ -216,6 +228,33 @@ export function stateLiteralMembers(levelRunSrc) {
         return undefined;
     });
     return found;
+}
+
+/**
+ * The entity families, read as TEXT out of `levelRun.js`: `names` is the
+ * exported `ENTITY_FAMILY_NAMES` array literal, `dispatch` the keys of the
+ * `ENTITY_FAMILIES` object literal inside `createLevelRun` (each wrapped in
+ * `Object.freeze(…)`). Either is `null` when absent (no fold yet).
+ */
+export function entityFamiliesOf(levelRunSrc) {
+    const ast = parseSource(levelRunSrc);
+    const unfreeze = (n) => (n && isCall(n) && n.arguments.length === 1 ? n.arguments[0] : n);
+    let names = null;
+    let dispatch = null;
+    walk(ast.program, (n) => {
+        if (n.type !== 'VariableDeclarator' || n.id.type !== 'Identifier') return undefined;
+        const init = unfreeze(n.init);
+        if (n.id.name === ENTITY_NAMES_EXPORT && init?.type === 'ArrayExpression') {
+            names = { line: n.loc.start.line,
+                list: init.elements.map((e) => (e?.type === 'StringLiteral' ? e.value : null)) };
+        } else if (n.id.name === ENTITY_DISPATCH && init?.type === 'ObjectExpression') {
+            dispatch = { line: n.loc.start.line,
+                list: init.properties.map((p) => (p.type === 'ObjectProperty' && !p.computed
+                    ? (p.key.name ?? p.key.value) : null)) };
+        }
+        return undefined;
+    });
+    return { names, dispatch };
 }
 
 /** `name → line` of every export of a module, following `export … from`. */
@@ -679,7 +718,22 @@ export function census(read) {
             const nm = memberName(r.parent);
             if (!nm) continue;
             const via = base === 'run' && r.name === 'run' ? 'direct' : `${trackedWhy.get(keyOf(f, r.bind))?.how ?? 'direct'}:${r.name}`;
-            reads.push({ file: f, line: r.line, base, name: nm, via, spelled: `${r.name}.${nm}` });
+            const read = { file: f, line: r.line, base, name: nm, via, spelled: `${r.name}.${nm}` };
+            if (base === 'run' && nm === ENTITY_QUERY) {
+                // `run.entities('<family>')`: the family is the string literal.
+                const call = r.ancestors[r.ancestors.length - 2];
+                const arg = isCall(call) && call.callee === r.parent ? call.arguments[0] : undefined;
+                if (arg?.type === 'StringLiteral') {
+                    read.family = arg.value;
+                } else {
+                    const detail = arg === undefined
+                        ? (isCall(call) && call.callee === r.parent ? `${r.name}.${nm}() with no family`
+                            : `${r.name}.${nm} read without being called`)
+                        : `${r.name}.${nm}(${arg.type === 'Identifier' ? arg.name : arg.type}) — not a string literal`;
+                    addBlind({ file: f, line: r.line, kind: 'entities-nonliteral', base: 'run', detail });
+                }
+            }
+            reads.push(read);
             if (base === 'run' && BASE_MEMBER[nm]) {
                 const up = r.ancestors[r.ancestors.length - 2];
                 if (isMember(up) && keyInParent(up, r.parent) === 'object') {
@@ -758,6 +812,7 @@ export function census(read) {
     return {
         simulation, family, familyClosure,
         runObject: runObj, runMembers, worldMembers, stateMembers, stateLine: stateLit.line,
+        entityFamilies: entityFamiliesOf(read(SIM_ENTRY)),
         reads, imports, blind, passes, door,
         tracked: [...trackedWhy.values()],
     };
@@ -894,6 +949,8 @@ export function staticRows(c) {
             via: [...g.vias].sort(),
         });
     }
+    const ent = rows.get(`run:${ENTITY_QUERY}`);
+    if (ent) ent.families = entityFamilySites(c);
     const byImport = new Map();
     for (const im of c.imports) {
         const k = `import:${path.posix.basename(im.module)}#${im.name}`;
@@ -909,6 +966,64 @@ export function staticRows(c) {
         rows.set(k, v);
     }
     return rows;
+}
+
+/**
+ * `family → { file: sites }` over every `run.entities('<literal>')` read, both
+ * levels sorted — the `families` column of the `run:entities` row.
+ */
+export function entityFamilySites(c) {
+    const out = {};
+    for (const r of c.reads) {
+        if (r.base !== 'run' || r.name !== ENTITY_QUERY || r.family === undefined) continue;
+        const b = path.posix.basename(r.file);
+        out[r.family] ??= {};
+        out[r.family][b] = (out[r.family][b] ?? 0) + 1;
+    }
+    return Object.fromEntries(Object.keys(out).sort().map((k) => [k, Object.fromEntries(
+        Object.entries(out[k]).sort(([a], [b]) => a.localeCompare(b)))]));
+}
+
+/**
+ * The fold's own findings (engine-prep C3), each a sentence with a site:
+ *   - a family file reads a FOLDED getter directly (`run.pushables`);
+ *   - `run.entities(…)` names a family the dispatch table does not hold;
+ *   - `run.entities(…)` with a non-literal argument (a blind spot);
+ *   - the exported name list and the dispatch table disagree;
+ *   - the table's `folded` list is not the exported name list.
+ */
+export function entityFindings(c, table = null) {
+    const { names, dispatch } = c.entityFamilies ?? {};
+    const out = [];
+    const folded = new Set((names?.list ?? []).filter(Boolean));
+    const known = new Set((dispatch?.list ?? []).filter(Boolean));
+    for (const r of c.reads) {
+        if (r.base !== 'run') continue;
+        if (folded.has(r.name)) {
+            out.push({ at: `${r.file}:${r.line}`, why: `reads run.${r.name} directly — it is folded behind `
+                + `run.${ENTITY_QUERY}('${r.name}'); a family file reads it through the query` });
+        } else if (r.name === ENTITY_QUERY && r.family !== undefined && !known.has(r.family)) {
+            out.push({ at: `${r.file}:${r.line}`, why: `run.${ENTITY_QUERY}('${r.family}') — unknown entity family; `
+                + `${path.posix.basename(SIM_ENTRY)}'s ${ENTITY_DISPATCH} holds ${[...known].join(', ') || 'none'}` });
+        }
+    }
+    for (const b of c.blind) {
+        if (b.kind === 'entities-nonliteral') {
+            out.push({ at: `${b.file}:${b.line}`, why: `${b.detail} — a BLIND SPOT: the census cannot name the `
+                + 'family, so a family file passes a string literal' });
+        }
+    }
+    const nameList = JSON.stringify(names?.list ?? null);
+    const dispatchList = JSON.stringify(dispatch?.list ?? null);
+    if ((names || dispatch) && nameList !== dispatchList) {
+        out.push({ at: `${SIM_ENTRY}:${dispatch?.line ?? names?.line}`, why: `${ENTITY_NAMES_EXPORT} ${nameList} ≠ `
+            + `the keys of ${ENTITY_DISPATCH} ${dispatchList} — the list and the dispatch table must agree` });
+    }
+    if (table && JSON.stringify(table.folded ?? []) !== JSON.stringify(names?.list ?? [])) {
+        out.push({ at: 'seedling-solver-surface.json#folded', why: `the table's folded list `
+            + `${JSON.stringify(table.folded ?? [])} ≠ ${ENTITY_NAMES_EXPORT} — run --write` });
+    }
+    return out;
 }
 
 /** The key a table row is compared under. */
@@ -944,8 +1059,10 @@ export function compareToTable(c, table) {
         const r = c.reads.find((x) => x.base === surface && x.name === rest && path.posix.basename(x.file) === file);
         return r ? `${r.file}:${r.line}` : file;
     };
+    const folded = new Set((c.entityFamilies?.names?.list ?? []).map((n) => `run:${n}`));
     for (const [k, row] of fresh) {
         const have = committed.get(k);
+        if (!have && folded.has(k)) continue; // a folded getter read directly: entityFindings names it
         if (!have) {
             for (const f of Object.keys(row.files)) {
                 unlisted.push({ key: k, file: f, at: siteOf(k, f), why: 'not in the contract table' });
@@ -984,7 +1101,7 @@ export function compareToTable(c, table) {
         ...(c.door?.leaks ?? []).map((l) => ({ at: `${DOOR}${l.line ? `:${l.line}` : ''}`,
             why: `the door holds only \`export { … } from\` a simulation module — found ${l.what}` })),
     ];
-    return { unlisted, retired, family, door };
+    return { unlisted, retired, family, door, entities: entityFindings(c, table) };
 }
 
 // ── the contract table ──────────────────────────────────────────────────────
@@ -1035,6 +1152,7 @@ export function buildTable(c, { previous = null, dynamic = null } = {}) {
             via: st?.via ?? [],
             dynamic: surface === 'import' ? null : dy,
             why: p?.why ?? null,
+            ...(st?.families ? { families: st.families } : {}),
         });
     }
     rows.sort((a, b) => (SURFACE_ORDER[a.surface] - SURFACE_ORDER[b.surface])
@@ -1051,6 +1169,7 @@ export function buildTable(c, { previous = null, dynamic = null } = {}) {
         simulation: { entry: SIM_ENTRY, files: c.simulation.length },
         runObject: { properties: c.runObject.members.length, ...kinds },
         dynamicRoutes: (dynamic?.routes ?? []).map((r) => r.command),
+        folded: c.entityFamilies?.names?.list ?? [],
         rows,
     };
 }
@@ -1063,8 +1182,11 @@ export function staticDrift(c, table) {
         if (r.seen === 'dynamic') continue;
         const f = fresh.get(rowKey(r));
         if (!f) continue; // retired — reported by compareToTable
-        if (f.sites !== r.sites || JSON.stringify(f.files) !== JSON.stringify(r.files)) {
-            out.push({ key: rowKey(r), table: { sites: r.sites, files: r.files }, fresh: { sites: f.sites, files: f.files } });
+        if (f.sites !== r.sites || JSON.stringify(f.files) !== JSON.stringify(r.files)
+            || JSON.stringify(f.families ?? null) !== JSON.stringify(r.families ?? null)) {
+            out.push({ key: rowKey(r),
+                table: { sites: r.sites, files: r.files, ...(r.families ? { families: r.families } : {}) },
+                fresh: { sites: f.sites, files: f.files, ...(f.families ? { families: f.families } : {}) } });
         }
     }
     return out;

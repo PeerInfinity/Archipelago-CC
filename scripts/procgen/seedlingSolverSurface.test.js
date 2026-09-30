@@ -14,6 +14,13 @@
  * member and fill in the new row's class, form and why (docs/json/developer/
  * procgen/seedling-solver-surface.md says how).
  *
+ * ⛓ ENGINE-PREP C3 — the entities fold: the 23 Seedling entity getters the
+ * family read are folded behind `run.entities(family)`. The table lists them
+ * as `folded` (read out of `levelRun.js`'s `ENTITY_FAMILY_NAMES`, never
+ * typed), keeps ONE `run:entities` row whose `families` column says which
+ * file asks for which family, and a family file reading a folded getter
+ * directly is RED by name.
+ *
  * The mutants run the census over a temporary COPY of the family files —
  * never the tree.
  */
@@ -24,8 +31,9 @@ import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    census, compareToTable, DOOR, importClosure, FAMILY_ENTRIES, SIM_ENTRY, staticDrift,
+    census, compareToTable, DOOR, entityFamilySites, importClosure, FAMILY_ENTRIES, SIM_ENTRY, staticDrift,
 } from './seedlingSolverSurface.js';
+import { ENTITY_FAMILY_NAMES } from '../../frontend/modules/seedlingDemo/levelRun.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '../..');
@@ -41,6 +49,7 @@ const say = (cmp) => [
     ...cmp.retired.map((r) => `${r.key}${r.file ? ` (${r.file})` : ''} — ${r.why}`),
     ...(cmp.family ? [`family closure ${cmp.family.closure.join(' ')} ≠ table ${cmp.family.table.join(' ')}`] : []),
     ...cmp.door.map((d) => `${d.at} ${d.why}`),
+    ...cmp.entities.map((e) => `${e.at} ${e.why}`),
 ];
 
 let fresh;
@@ -94,6 +103,23 @@ describe('the committed contract equals a fresh census', () => {
         expect(TABLE.rows.filter((r) => r.module === DOOR)).toEqual([]);
     });
 
+    it('(vi) the entities fold: no family file reads a folded getter, every run.entities(…) names a known '
+        + 'family with a literal, and the table\'s folded list IS levelRun.js\'s ENTITY_FAMILY_NAMES', () => {
+        const cmp = compareToTable(fresh, TABLE);
+        expect(cmp.entities.map((e) => `${e.at} ${e.why}`)).toEqual([]);
+        // generated, not typed: the census's text read, the module's own export and the table agree
+        expect(fresh.entityFamilies.names.list).toEqual([...ENTITY_FAMILY_NAMES]);
+        expect(fresh.entityFamilies.dispatch.list).toEqual([...ENTITY_FAMILY_NAMES]);
+        expect(TABLE.folded).toEqual([...ENTITY_FAMILY_NAMES]);
+        // a folded getter has no row: the family reaches it only through the query
+        expect(TABLE.rows.filter((r) => r.surface === 'run' && TABLE.folded.includes(r.name))
+            .map((r) => r.name)).toEqual([]);
+        const row = TABLE.rows.find((r) => r.surface === 'run' && r.name === 'entities');
+        expect(row.families).toEqual(entityFamilySites(fresh));
+        expect(Object.keys(row.families).filter((f) => !TABLE.folded.includes(f))).toEqual([]);
+        expect(Object.values(row.families).flatMap(Object.values).reduce((a, b) => a + b, 0)).toBe(row.sites);
+    });
+
     it('the census reads ONLY run members off `run` (no stray object spelled `run`)', () => {
         const stray = fresh.reads.filter((r) => r.base === 'run' && !fresh.runMembers.has(r.name))
             .map((r) => `${r.file}:${r.line} run.${r.name}`);
@@ -128,13 +154,14 @@ describe('mutants, over a temporary copy of the family', () => {
         expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:adoptWindowClock — not in the contract table/);
     });
 
-    it('(a′) run.bosses (reached by botDriverV2.js only), read in dangerMap.js ⇒ RED through `files`', () => {
-        const row = TABLE.rows.find((r) => r.surface === 'run' && r.name === 'bosses');
+    // ⛓ C3: this mutant read run.bosses until the entities fold folded it (see the C3 block's (a)).
+    it('(a′) run.equipNow (reached by botDriverV2.js only), read in dangerMap.js ⇒ RED through `files`', () => {
+        const row = TABLE.rows.find((r) => r.surface === 'run' && r.name === 'equipNow');
         expect(Object.keys(row.files)).toEqual(['botDriverV2.js']);
-        const cmp = mutate('dangerMap.js', (s) => `${s}\nexport const mutantA2 = (run) => run.bosses;\n`);
+        const cmp = mutate('dangerMap.js', (s) => `${s}\nexport const mutantA2 = (run) => run.equipNow;\n`);
         const lines = say(cmp);
         expect(lines).toHaveLength(1);
-        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:bosses — the row names only botDriverV2\.js/);
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:equipNow — the row names only botDriverV2\.js/);
     });
 
     it('(b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js '
@@ -212,5 +239,57 @@ describe('the import door (engine-prep C2), mutants over a temporary copy', () =
     it('(d) a COMMENT naming a simulation module in a family file ⇒ GREEN', () => {
         const lines = mutate({ 'dangerMap.js': (s) => `// import { SPINNER } from './spinner.js' — prose, not an import\n${s}` });
         expect(lines).toEqual([]);
+    });
+});
+
+describe('the entities fold (engine-prep C3), mutants over a temporary copy', () => {
+    let tmp;
+    beforeAll(() => { tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'solver-entities-mutant-')); });
+    afterAll(() => { fs.rmSync(tmp, { recursive: true, force: true }); });
+    /** Census with the named files replaced by edited copies; the findings as sentences. */
+    const mutate = (edits) => {
+        const copies = new Map();
+        for (const [rel, ed] of Object.entries(edits)) {
+            const src = read(rel);
+            const out = ed(src);
+            expect(out, `the ${rel} mutant edited nothing`).not.toBe(src);
+            copies.set(rel, path.join(tmp, path.posix.basename(rel)));
+            fs.writeFileSync(copies.get(rel), out);
+        }
+        return say(compareToTable(census((p) => (copies.has(p) ? fs.readFileSync(copies.get(p), 'utf8') : read(p))), TABLE));
+    };
+    const DANGER = 'frontend/modules/seedlingDemo/dangerMap.js';
+
+    it('(a) a DIRECT run.pushables read in dangerMap.js ⇒ RED "folded behind run.entities", once', () => {
+        const lines = mutate({ [DANGER]: (s) => `${s}\nexport const mutantA = (run) => run.pushables;\n` });
+        expect(lines).toHaveLength(1);
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reads run\.pushables directly — it is folded behind run\.entities\('pushables'\)/);
+    });
+
+    it('(b) run.entities(\'pushable\') — a typo ⇒ RED "unknown entity family"', () => {
+        const lines = mutate({ [DANGER]: (s) => `${s}\nexport const mutantB = (run) => run.entities('pushable');\n` });
+        expect(lines).toHaveLength(1);
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ run\.entities\('pushable'\) — unknown entity family; levelRun\.js's ENTITY_FAMILIES holds openActivators, pushables, /);
+    });
+
+    it('(c) run.entities(name) with a variable ⇒ RED, a named blind spot', () => {
+        const lines = mutate({ [DANGER]: (s) => `${s}\nexport const mutantC = (run, name) => run.entities(name);\n` });
+        expect(lines).toHaveLength(1);
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ run\.entities\(name\) — not a string literal — a BLIND SPOT/);
+    });
+
+    it('(d) the pushables entry removed from ENTITY_FAMILIES in levelRun.js ⇒ RED at every site that asks for it, '
+        + 'and the name list no longer matches the table', () => {
+        const pushSites = Object.values(TABLE.rows.find((r) => r.name === 'entities').families.pushables)
+            .reduce((a, b) => a + b, 0);
+        const lines = mutate({ [SIM_ENTRY]: (s) => s.replace(/\n {8}pushables: pushablesNow,/, '') });
+        const unknown = lines.filter((l) => /run\.entities\('pushables'\) — unknown entity family/.test(l));
+        expect(unknown).toHaveLength(pushSites);
+        expect(lines.filter((l) => /ENTITY_FAMILY_NAMES .* ≠ the keys of ENTITY_FAMILIES/.test(l))).toHaveLength(1);
+        expect(lines).toHaveLength(pushSites + 1);
+    });
+
+    it('(e) a COMMENT naming run.pushables in a family file ⇒ GREEN', () => {
+        expect(mutate({ [DANGER]: (s) => `${s}\n// run.pushables — prose, not a read\n` })).toEqual([]);
     });
 });

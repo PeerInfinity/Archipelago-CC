@@ -38,6 +38,47 @@ To add a symbol, the table row comes first:
 
 To retire one, remove the import, run `--check`, and remove the export it names.
 
+## The entities fold
+
+The solver family reads a Seedling entity family's live state through one query, `run.entities(family)`, and not through that family's getter. The family key is the getter's own name, so `run.entities('pushables')` returns exactly what `run.pushables` returns.
+
+**What folded: 23 getters, 172 sites.**
+
+- **Rosters.** `openActivators`, `pushables`, `armedArrowTraps`, `crushers`, `openChests`, `strikeBodies`, `spinnerBodies`, `armedPulsers`, `turrets`, `chasers`, `brokenRocks`, `openBridges`, `arrowsInFlight`, `burnedTrees`, `latchedGroups`, `pulledRopes`, `turretDamage`, `arrowFlights`, `bosses` and `talkCircles`. Each is a live `Set`, `Map` or array for one entity family. `talkCircles` is the NPC and sign talkers.
+- **Predicates.** `crushersParked`, `pushesSettled` and `turretsSettled` are one-boolean views of a family's state. They fold with their families, because the query names a view of a family, not only a roster.
+
+**What did not fold, and why:**
+
+- **The player's bag and progress** (`inventory`, `keys`, `primaryWeapon`, `slashInfo`, `inputRefused`, `unfiredEquipTicks`, `unfiredGrantLevels`, `frozenTimer`, `inCeremony`, `primary`, `saveState`, `takenPickups`). This is not entity state. It is the next fold, `run.progress()`.
+- **The event ledgers** (form `event-ledger`). These are the fold after that, `run.ledger(kind)`.
+- **`arrowCoverAt`.** It is a geometry-query closure, not live state.
+
+**One function, two faces.** Each folded getter's body lives in one closure arrow, `<family>Now`, inside `createLevelRun`. The getter returns that arrow (`get pushables() { return pushablesNow(); }`), and the frozen dispatch table `ENTITY_FAMILIES` maps `pushables: pushablesNow`. `entities(family)` calls the table's entry and throws by name on an unknown family, listing the known ones.
+
+The getter and the query share one function, so they cannot drift. `levelRun.test.js` still holds them equal, deep-strictly, at every tick of five committed tapes and two stagings, and asserts that each family was non-empty (or false, for a predicate) somewhere along the way.
+
+**The getters stay.** `tapeRunner.js`, the `watch*.js` pages, the acceptance modules and the tests read them. Only the three family files that read these getters (`botDriverV2.js`, `solverBot.js` and `dangerMap.js`) go through the query.
+
+**How the census sees it.** The census reads the families as text out of `levelRun.js`: the exported `ENTITY_FAMILY_NAMES` list, and the keys of `ENTITY_FAMILIES`. The two must agree. `run.entities('<literal>')` is a read of `run:entities` and of the family its literal names. The table holds:
+
+- **One `run:entities` row.** Its `families` column maps `family → { file: sites }`. There are no per-family rows.
+- **A top-level `folded` list.** It is generated from `ENTITY_FAMILY_NAMES`, never typed.
+
+The gate refuses four things by name:
+
+- a family file that reads a folded getter directly ("folded behind run.entities('…')");
+- a family the dispatch table does not hold ("unknown entity family");
+- a non-literal argument, which is a blind spot the census cannot name;
+- a name list that disagrees with the dispatch table or with the table's `folded`.
+
+**To fold the next family:**
+
+1. Move its getter's body, unchanged, into a `<family>Now` arrow beside the others. Point the getter at the arrow, add the arrow to `ENTITY_FAMILIES`, and add its name to `ENTITY_FAMILY_NAMES`.
+2. Rewrite each family-file read, `run.<family>`, to `run.entities('<family>')`. Change only the property span.
+3. Run `census-seedling-solver-surface.mjs --check`. The old row now reads "must be RETIRED".
+4. If a committed route reached the getter at run time, re-run `measure-seedling-solver-surface.mjs --write`. Otherwise the dynamic record keeps the old row alive as `seen: "dynamic"`.
+5. Run `--write`.
+
 ## How it is measured
 
 **Statically**, `scripts/procgen/seedlingSolverSurface.js` parses each family file with `@babel/parser` and counts four kinds of access:

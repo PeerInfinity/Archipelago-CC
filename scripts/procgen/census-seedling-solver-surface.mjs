@@ -21,7 +21,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    buildTable, census, compareToTable, CORE_FOUR, DOOR, groupReads, staticDrift, surfaceA,
+    buildTable, census, compareToTable, CORE_FOUR, DOOR, ENTITY_QUERY, entityFamilySites, groupReads,
+    staticDrift, surfaceA,
 } from './seedlingSolverSurface.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -41,6 +42,10 @@ function printTables(c) {
     const viaDoor = c.imports.filter((i) => i.door).length;
     console.log(`import door ${base(DOOR)}: ${c.door.exports.size} exports; ${viaDoor} of ${c.imports.length} `
         + `family import specifiers go through it; ${c.door.bypass.length} bypass, ${c.door.unused.length} unused`);
+    const fams = entityFamilySites(c);
+    const calls = c.reads.filter((r) => r.base === 'run' && r.name === ENTITY_QUERY).length;
+    console.log(`entities fold: ${c.entityFamilies.names?.list.length ?? 0} families folded behind run.${ENTITY_QUERY}(…); `
+        + `${calls} call(s) reach ${Object.keys(fams).length} of them`);
     const kinds = {};
     for (const m of c.runObject.members) kinds[m.kind] = (kinds[m.kind] ?? 0) + 1;
     console.log(`run object: ${c.runObject.members.length} properties ${JSON.stringify(kinds)} `
@@ -104,8 +109,9 @@ function main() {
         for (const r of un) console.log(`RED unclassified: ${r.surface}:${r.name}`);
         if (cmp.family) console.log(`RED family: closure ${cmp.family.closure.join(' ')} ≠ table ${cmp.family.table.join(' ')}`);
         for (const d of cmp.door) console.log(`RED door: ${d.at} ${d.why}`);
+        for (const e of cmp.entities) console.log(`RED entities: ${e.at} ${e.why}`);
         const red = cmp.unlisted.length + cmp.retired.length + drift.length + un.length + (cmp.family ? 1 : 0)
-            + cmp.door.length;
+            + cmp.door.length + cmp.entities.length;
         console.log(red ? `RED: ${red} finding(s) — run --write, then classify` : `GREEN: ${previous.rows.length} rows match a fresh census`);
         process.exit(red ? 1 : 0);
     }
