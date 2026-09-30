@@ -126,7 +126,7 @@ const grow = (r, n) => rect(r.x - n, r.y - n, r.w + n * 2, r.h + n * 2);
  */
 export function arrowDanger(run, box, horizon) {
     const out = [];
-    for (const a of run.arrowsInFlight ?? []) {
+    for (const a of run.entities('arrowsInFlight') ?? []) {
         const body = rect(a.x - ARROW.hitbox.originX, a.y - ARROW.hitbox.originY,
             ARROW.hitbox.w, ARROW.hitbox.h);
         const swept = rect(body.x, body.y, body.w, body.h + ARROW.speed * horizon);
@@ -135,7 +135,7 @@ export function arrowDanger(run, box, horizon) {
                 + `x ${horizon} tick(s)` });
         }
     }
-    const armed = run.armedArrowTraps;
+    const armed = run.entities('armedArrowTraps');
     // ⚠ `null` under `noclip` and an empty SET otherwise — the two mean
     // different things and only one of them is "no trap is armed".
     if (armed) {
@@ -193,7 +193,7 @@ export function predictArrows(run, horizon) {
             + `${horizon}. A fractional horizon is a caller that has a distance and wants `
             + 'a time.');
     }
-    const flights = (run.arrowFlights ?? []).map((a) => ({
+    const flights = (run.entities('arrowFlights') ?? []).map((a) => ({
         ...a, v: { x: a.v.x, y: a.v.y },
     }));
     if (flights.length === 0) return [];
@@ -248,7 +248,7 @@ export function arrowDangerDuringTransit(run, box, horizon, arrows = null) {
                 + 'arithmetic with cover' });
         }
     }
-    const armed = run.armedArrowTraps;
+    const armed = run.entities('armedArrowTraps');
     if (armed) {
         const world = run.worldFor(run.level);
         for (const trap of (world.arrowTraps ?? [])) {
@@ -373,7 +373,7 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
      * `threatPad` applies either way: a class whose THREAT exceeds its body is
      * not measured by its body.
      */
-    for (const c of bodies ?? run.chasers ?? []) {
+    for (const c of bodies ?? run.entities('chasers') ?? []) {
         /**
          * ⛓⛓⛓ R9 SLICE 12c″, ⚖ RULING 44 — **A BODY THE GAME'S OWN GATE SAYS
          * CANNOT FIRE IS NOT A CONTACT.**
@@ -475,7 +475,7 @@ export function staticEnemyDanger(run, box) {
      * trap 157 wearing the danger map's clothes, which §12.4 named for the
      * live half and this is the other half of.
      */
-    const live = new Set((run.spinnerBodies ?? []).map((b) => b.id));
+    const live = new Set((run.entities('spinnerBodies') ?? []).map((b) => b.id));
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
@@ -564,7 +564,7 @@ export function staticEnemyDanger(run, box) {
  * 13 px pad and NOT invisible to a raycast from the point.
  */
 export function spinnerDanger(run, box, horizon) {
-    const bodies = run.spinnerBodies ?? [];
+    const bodies = run.entities('spinnerBodies') ?? [];
     if (bodies.length === 0) return [];
     // `forecast[i]` is the state at the top of tick `ticksCompleted + 1 + i`,
     // and it is a list of RECTS in the same order `spinnerBodies` reports.
@@ -641,7 +641,7 @@ export function spinnerDanger(run, box, horizon) {
  */
 export function crusherDanger(run, box) {
     const out = [];
-    const live = run.crushers;
+    const live = run.entities('crushers');
     if (!live) return out;
     for (const [id, c] of live) {
         for (const v of crusherVolumesAt(c.x, c.y)) {
@@ -673,7 +673,7 @@ export function dangerVolumes(run, horizon = 0) {
     const out = [];
     const level = run.level;
     const world = run.worldFor(level);
-    const armed = run.armedArrowTraps;
+    const armed = run.entities('armedArrowTraps');
     if (armed) {
         for (const trap of (world.arrowTraps ?? [])) {
             if (!armed.has(trap.id)) continue;
@@ -685,7 +685,7 @@ export function dangerVolumes(run, horizon = 0) {
             });
         }
     }
-    for (const a of (run.arrowsInFlight ?? [])) {
+    for (const a of (run.entities('arrowsInFlight') ?? [])) {
         const body = rect(a.x - ARROW.hitbox.originX, a.y - ARROW.hitbox.originY,
             ARROW.hitbox.w, ARROW.hitbox.h);
         out.push({
@@ -711,7 +711,7 @@ export function dangerVolumes(run, horizon = 0) {
          */
     }
     const stepped = run.chaserRoomVerdict(level).stepped;
-    for (const c of (run.chasers ?? [])) {
+    for (const c of (run.entities('chasers') ?? [])) {
         const row = ENEMY_CLASSES[c.tag];
         const bound = stepBoundFor(c.tag) ?? 0;
         const body = chaserBoxAt(c.tag, c.x, c.y);
@@ -729,7 +729,7 @@ export function dangerVolumes(run, horizon = 0) {
      * trap 157 wearing the danger map's clothes, which §12.4 named for the
      * live half and this is the other half of.
      */
-    const live = new Set((run.spinnerBodies ?? []).map((b) => b.id));
+    const live = new Set((run.entities('spinnerBodies') ?? []).map((b) => b.id));
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
@@ -741,7 +741,7 @@ export function dangerVolumes(run, horizon = 0) {
             why: 'a static "Enemy" body',
         });
     }
-    for (const [id, c] of (run.crushers ?? [])) {
+    for (const [id, c] of (run.entities('crushers') ?? [])) {
         for (const v of crusherVolumesAt(c.x, c.y)) {
             out.push({ level, kind: 'danger', id, rect: v.r, why: v.why });
         }
@@ -773,7 +773,7 @@ export function bodyKillRegions(run) {
     const out = [];
     const level = run.level;
     const world = run.worldFor(level);
-    const armed = run.armedArrowTraps;
+    const armed = run.entities('armedArrowTraps');
     if (armed) {
         for (const trap of (world.arrowTraps ?? [])) {
             if (!armed.has(trap.id)) continue;

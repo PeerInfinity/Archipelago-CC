@@ -703,6 +703,8 @@ describe('A3 — a kill refusal names the PRESS arm, on a room with no arrow tra
         spinnerBodies: [],
         chasers: [],
         chaserRoomVerdict: () => ({ stepped: false }),
+        // ⛓ ENGINE-PREP C3: the family reads these through the one query
+        entities(family) { return this[family]; },
     });
 
     it('⛔ reports BOTH arms, the PRESS arm FIRST', () => {

@@ -46,6 +46,18 @@ const runIn = (level, boot, keys, ticks) => {
     return run;
 };
 
+
+/**
+ * ⛓ ENGINE-PREP C3: the danger map reads live entity state through
+ * `run.entities(family)`, so a run with a family OVERRIDDEN has to answer the
+ * query with the override. `base` null is a bare stub that holds only
+ * `families`.
+ */
+const withFamilies = (base, families) => ({
+    ...base,
+    ...families,
+    entities: (f) => (Object.hasOwn(families, f) ? families[f] : base.entities(f)),
+});
 describe('dangerAt — the four ingredients, each measured in a real room', () => {
     /**
      * ⛓ INGREDIENT (c): L6 is the room the bridge really steps — two bobs,
@@ -87,19 +99,19 @@ describe('dangerAt — the four ingredients, each measured in a real room', () =
          * own arithmetic, and this asserts the model kept it.
          */
         it('does NOT grow a body outside its leash', () => {
-            const far = { ...run, chasers: [{ id: 'x', tag: 'bob', x: 1000, y: 1000 }] };
+            const far = withFamilies(run, { chasers: [{ id: 'x', tag: 'bob', x: 1000, y: 1000 }] });
             // Far away: no source at all, at any horizon.
             expect(chaserDanger(far, box(), 100)).toEqual([]);
             // Right on top of it, out of leash by construction? Impossible —
             // so the leash test is made directly: a body 200 px away with a
             // 400-tick horizon would be grown 200 px if the leash were
             // ignored, and is not.
-            const outOfLeash = { ...run, chasers: [{ id: 'y', tag: 'bob', x: run.state.x + 200, y: run.state.y }] };
+            const outOfLeash = withFamilies(run, { chasers: [{ id: 'y', tag: 'bob', x: run.state.x + 200, y: run.state.y }] });
             expect(chaserDanger(outOfLeash, box(), 400)).toEqual([]);
         });
 
         it('⛔ refuses a class with no step bound rather than calling the arena clear', () => {
-            const boss = { ...run, chasers: [{ id: 'b', tag: 'bosstotem', x: run.state.x, y: run.state.y }] };
+            const boss = withFamilies(run, { chasers: [{ id: 'b', tag: 'bosstotem', x: run.state.x, y: run.state.y }] });
             expect(() => chaserDanger(boss, box(), 1)).toThrow(DangerMapError);
             expect(() => chaserDanger(boss, box(), 1)).toThrow(/ENCOUNTER SCRIPT/);
         });
@@ -270,15 +282,15 @@ describe('dangerAt — the four ingredients, each measured in a real room', () =
          * docblock and the map is reading the `.oel` after all.
          */
         it('moving the crusher moves the danger', () => {
-            const run = { crushers: new Map([['c', { id: 'c', x: 100, y: 100 }]]) };
+            const run = withFamilies(null, { crushers: new Map([['c', { id: 'c', x: 100, y: 100 }]]) });
             const box = playerBoxAt(160, 100);
             expect(crusherDanger(run, box).length).toBeGreaterThan(0);
-            const moved = { crushers: new Map([['c', { id: 'c', x: 400, y: 400 }]]) };
+            const moved = withFamilies(null, { crushers: new Map([['c', { id: 'c', x: 400, y: 400 }]]) });
             expect(crusherDanger(moved, box)).toEqual([]);
         });
 
         it('a null roster (noclip) is not an empty one — it asks nothing', () => {
-            expect(crusherDanger({ crushers: null }, playerBoxAt(0, 0))).toEqual([]);
+            expect(crusherDanger(withFamilies(null, { crushers: null }), playerBoxAt(0, 0))).toEqual([]);
         });
     });
 });

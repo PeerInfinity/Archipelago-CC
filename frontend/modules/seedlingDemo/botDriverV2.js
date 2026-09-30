@@ -1329,18 +1329,18 @@ export function resolvePresser(world, named, what) {
  * written against slice 15's shape verifies exactly as it did.
  */
 function runBait(run, perTick, bait, what) {
-    if (run.crushers === null) {
+    if (run.entities('crushers') === null) {
         fail(`${what}: a bait is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` steps no crusher under noclip, so the choreography would emit '
             + 'its ticks, verify nothing and report success.');
     }
     const id = `crusher@${bait.crusher?.x},${bait.crusher?.y}`;
-    const before = run.crushers.get(id);
+    const before = run.entities('crushers').get(id);
     if (!before) {
         fail(`${what}: level ${run.level} has no ${id}; it holds `
-            + `[${[...run.crushers.keys()].join(' ') || 'none'}].`);
+            + `[${[...run.entities('crushers').keys()].join(' ') || 'none'}].`);
     }
-    if (!run.crushersParked) {
+    if (!run.entities('crushersParked')) {
         fail(`${what}: a crusher in this room is already CHARGING. A bait's spans are `
             + 'verified against a scan taken at rest, so starting one mid-charge is '
             + 'planning against a world that has already moved.');
@@ -1351,7 +1351,7 @@ function runBait(run, perTick, bait, what) {
      * approach — the slice-15 shape, where standing still is the trigger —
      * and the FAILURE DIAGNOSIS in every case.
      */
-    const scanNow = () => scanCrusher({ x: run.crushers.get(id).x, y: run.crushers.get(id).y },
+    const scanNow = () => scanCrusher({ x: run.entities('crushers').get(id).x, y: run.entities('crushers').get(id).y },
         playerBoxAt(run.state.x, run.state.y), { x: run.state.x, y: run.state.y },
         run.world.solidBoxesForMover(livePerVisitOpts(run), id));
     const whyItIsAsleep = (scan) => (scan.shieldedBy
@@ -1401,12 +1401,12 @@ function runBait(run, perTick, bait, what) {
      * only ever leaves rest by scanning, so "it is no longer parked" is
      * exactly "the choreography woke it" — observed, not predicted.
      */
-    if (run.crushersParked) {
+    if (run.entities('crushersParked')) {
         fail(`${what}: the approach ended with every crusher in the room STILL AT REST, `
             + `so nothing has been baited. ${whyItIsAsleep(scanNow())}`);
     }
     driveSpans(bait.spans ?? [], 'escape');
-    const after = run.crushers.get(id);
+    const after = run.entities('crushers').get(id);
     const contacts = run.crusherContacts.slice(contactsBefore);
     if (contacts.length > 0) {
         fail(`${what}: the choreography was RUN OVER — ${contacts.length} tick(s) with the `
@@ -1415,7 +1415,7 @@ function runBait(run, perTick, bait, what) {
             + '`hitsMax`; the run survived it only because `Bot.noDamage` is on, which is '
             + 'exactly why the count is asserted and not merely the end position.');
     }
-    if (!run.crushersParked) {
+    if (!run.entities('crushersParked')) {
         fail(`${what}: ${id} is STILL CHARGING at the end of the choreography `
             + `(${after.x},${after.y}). Phase 2 plans against a static world; a leg that `
             + 'handed it a moving one would certify a corridor that closes behind it.');
@@ -1513,7 +1513,7 @@ function runWaitShut(run, perTick, { ticks, staysShut, why }, what) {
         fail(`${what}: level ${run.level} has no activator ${staysShut}; it has `
             + `[${run.world.activators.map((a) => a.id).join(' ') || 'none'}].`);
     }
-    if (run.openActivators.has(staysShut)) {
+    if (run.entities('openActivators').has(staysShut)) {
         fail(`${what}: ${staysShut} is ALREADY OPEN before the wait, so a control that `
             + 'watches it stay shut is watching the wrong world.');
     }
@@ -1524,7 +1524,7 @@ function runWaitShut(run, perTick, { ticks, staysShut, why }, what) {
             fail(`${what}: wait tick ${i} of ${ticks} crossed from level `
                 + `${transition.from_level} to ${transition.to_level}.`);
         }
-        if (run.openActivators.has(staysShut)) {
+        if (run.entities('openActivators').has(staysShut)) {
             fail(`${what}: ${staysShut} OPENED on tick ${i} of ${ticks}. This arm is the `
                 + 'control and its premise is that nothing here holds that button — so '
                 + 'either the arms are not one field apart or the field is not the one '
@@ -1535,7 +1535,7 @@ function runWaitShut(run, perTick, { ticks, staysShut, why }, what) {
 }
 
 function runWait(run, perTick, wait, what) {
-    if (run.openActivators === null) {
+    if (run.entities('openActivators') === null) {
         fail(`${what}: a wait is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null activator set, so the wait would emit '
             + 'its ticks, verify nothing and report success.');
@@ -1589,7 +1589,7 @@ function runWait(run, perTick, wait, what) {
         fail(`${what}: level ${run.level} has no activator ${opens}; it has `
             + `[${run.world.activators.map((a) => a.id).join(' ') || 'none'}].`);
     }
-    if (run.openActivators.has(opens)) {
+    if (run.entities('openActivators').has(opens)) {
         fail(`${what}: ${opens} is ALREADY OPEN before the wait, so waiting for it proves `
             + 'nothing. Either an earlier target opened it or its group was never shut.');
     }
@@ -1601,9 +1601,9 @@ function runWait(run, perTick, wait, what) {
             fail(`${what}: wait tick ${i} of ${ticks} crossed from level `
                 + `${transition.from_level} to ${transition.to_level}.`);
         }
-        if (openedAt === null && run.openActivators.has(opens)) openedAt = i;
+        if (openedAt === null && run.entities('openActivators').has(opens)) openedAt = i;
     }
-    if (!run.openActivators.has(opens)) {
+    if (!run.entities('openActivators').has(opens)) {
         fail(`${what}: ${opens} is STILL SHUT after ${ticks} idle tick(s). A \`Lock\` `
             + 'needs 101 CONTINUOUS ticks of its group being published and a `Cover` 11, '
             + 'and the count restarts the moment the button is released — so this is '
@@ -1702,7 +1702,7 @@ function runDwell(run, perTick, dwell, what) {
          * policy (⚖ ruling 30(c)).
          */
         const held = strike && !run.state.fall
-            ? strike.decide(run.state, run.strikeBodies, run.ticksCompleted, NO_HELD,
+            ? strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, NO_HELD,
                 // ⛓ R9 SLICE 12c — and the run's own SLASH STATE, which is
                 // what tells the policy whether the press its aim earns will
                 // SWING or DASH. Read before `advance`, which is where the
@@ -1744,7 +1744,7 @@ function runDwell(run, perTick, dwell, what) {
 }
 
 function runHold(run, perTick, hold, what, before = null) {
-    if (run.openActivators === null) {
+    if (run.entities('openActivators') === null) {
         fail(`${what}: a hold is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null activator set, so the hold would emit '
             + 'its ticks, verify nothing and report success. A tape that holds a '
@@ -1827,17 +1827,17 @@ function runHold(run, perTick, hold, what, before = null) {
     // ⛓ THE APPROACH IS PART OF THE MECHANIC for a latching presser — see
     // the `before` snapshot at the call site. Falling back to the current
     // state keeps every direct caller (and every test) on the old reading.
-    const openBefore = before?.open ?? run.openActivators;
+    const openBefore = before?.open ?? run.entities('openActivators');
     const shutBefore = group.filter((a) => !openBefore.has(a.id));
     // The same control for the pulser arm: quiet before, loud after.
-    const armedBefore = before?.armed ?? run.armedPulsers ?? new Set();
+    const armedBefore = before?.armed ?? run.entities('armedPulsers') ?? new Set();
     const quietBefore = pulserGroup.filter((p) => !armedBefore.has(p.id));
     // The same control again for the traps: silent before, shooting after.
     // ⚠ READ THROUGH `armedArrowTraps`, NOT off the group flag, because
     // four of the game's eleven traps are `shootDefault` and fire UNTIL
     // their group is pressed — for those a hold makes the room QUIETER, and
     // a control built on the flag would call that "already armed".
-    const trapsArmedBefore = before?.trapsArmed ?? run.armedArrowTraps ?? new Set();
+    const trapsArmedBefore = before?.trapsArmed ?? run.entities('armedArrowTraps') ?? new Set();
     const trapsChanging = trapGroup.filter(
         (a) => trapsArmedBefore.has(a.id) === (a.shootDefault === true),
     );
@@ -1928,7 +1928,7 @@ function runHold(run, perTick, hold, what, before = null) {
     // its flag every tick and `Lock.activationStep` fades by 0.01 with
     // `Image.alpha` clamping at 0 and the test BEFORE the decrement, so a
     // lock opens on tick 101 and 100 leaves it solid.
-    const open = run.openActivators;
+    const open = run.entities('openActivators');
     const shut = group.filter((a) => !open.has(a.id));
     if (shut.length > 0) {
         fail(`${what}: held ${presser.tag}@${presser.x},${presser.y} for ${ticks} `
@@ -1952,7 +1952,7 @@ function runHold(run, perTick, hold, what, before = null) {
      */
     let volleys = null;
     if (trapGroup.length > 0) {
-        const armedNow = run.armedArrowTraps ?? new Set();
+        const armedNow = run.entities('armedArrowTraps') ?? new Set();
         const wrong = trapGroup.filter((a) => armedNow.has(a.id) === (a.shootDefault === true));
         if (wrong.length > 0) {
             fail(`${what}: held ${presser.tag}@${presser.x},${presser.y} for ${ticks} `
@@ -1991,7 +1991,7 @@ function runHold(run, perTick, hold, what, before = null) {
                 + 'no write means the stance never overlapped the button.');
         }
     }
-    const armedAfter = run.armedPulsers ?? new Set();
+    const armedAfter = run.entities('armedPulsers') ?? new Set();
     const quiet = pulserGroup.filter((p) => !armedAfter.has(p.id));
     if (quiet.length > 0) {
         fail(`${what}: held ${presser.tag}@${presser.x},${presser.y} for ${ticks} `
@@ -2148,7 +2148,7 @@ export function resolveKeyLock(world, named, what) {
  *      the flag.
  */
 function runKeyLock(run, perTick, keylock, what) {
-    if (run.openActivators === null) {
+    if (run.entities('openActivators') === null) {
         fail(`${what}: a keylock is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null activator set, so the walk would pass '
             + 'through the lock whether or not it ever opened.');
@@ -2161,7 +2161,7 @@ function runKeyLock(run, perTick, keylock, what) {
             + 'later in the route than the lock it opens — or in another segment, which '
             + 'is the same thing: a key is NOT inheritable through a boot grant.');
     }
-    if (run.openActivators.has(lock.id)) {
+    if (run.entities('openActivators').has(lock.id)) {
         fail(`${what}: ${lock.id} is ALREADY OPEN before the stance, so opening it proves `
             + 'nothing. A BossLock that opened on an earlier visit is DESPAWNED by '
             + '`check()` rather than open, so this means an earlier leg of this visit '
@@ -2188,9 +2188,9 @@ function runKeyLock(run, perTick, keylock, what) {
                 + 'rebuilds the Game, so the fade restarts from `keyTimer` 60 and the '
                 + 'flag is never written.');
         }
-        if (run.openActivators.has(lock.id)) break;
+        if (run.entities('openActivators').has(lock.id)) break;
     }
-    if (!run.openActivators.has(lock.id)) {
+    if (!run.entities('openActivators').has(lock.id)) {
         fail(`${what}: ${lock.id} is STILL SOLID after ${window + KEY_LOCK_SLACK} ticks `
             + `of standing on its line. \`opensOnKeyTick\` says ${window}.`);
     }
@@ -2258,7 +2258,7 @@ const THREAD_MAX_WAIT = 400;
 const PUSH_SINK_TICKS = 60;
 
 function runTouch(run, perTick, touch, maxTicks, what) {
-    if (run.openActivators === null) {
+    if (run.entities('openActivators') === null) {
         fail(`${what}: a touch is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null activator set, so the walk would pass '
             + 'through the lock whether or not it ever opened, and every check below '
@@ -2268,7 +2268,7 @@ function runTouch(run, perTick, touch, maxTicks, what) {
     const lock = resolveTouchLock(run.world, touch.lock, what);
 
     // ⚠ THE POSITIVE CONTROL, BEFORE THE NEGATIVE.
-    if (run.openActivators.has(lock.id)) {
+    if (run.entities('openActivators').has(lock.id)) {
         fail(`${what}: ${lock.id} is ALREADY OPEN before the touch begins, so walking `
             + 'into it proves nothing about it. A touch that changes nothing is a check '
             + 'that cannot fail.');
@@ -2359,7 +2359,7 @@ function runTouch(run, perTick, touch, maxTicks, what) {
 
     // ⚠ THE EFFECT, not the ceremony. Everything above says the lock took
     // the player over; only this says it opened.
-    if (!run.openActivators.has(lock.id)) {
+    if (!run.entities('openActivators').has(lock.id)) {
         fail(`${what}: ${lock.id}'s window ended after ${window} tick(s) and it is STILL `
             + 'SOLID. The fade and the input window are driven by the same `activate` '
             + 'flag, so a window that ends without opening the lock means the two have '
@@ -2594,7 +2594,7 @@ function faceTowards(run, perTick, facing, what) {
  * carry it; this verb refuses to pretend the approach is free.
  */
 function runKill(run, perTick, kill, what) {
-    if (run.openActivators === null) {
+    if (run.entities('openActivators') === null) {
         fail(`${what}: a kill is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null world state, so the presses would emit '
             + 'their spans, kill nothing and report success. A tape that kills must '
@@ -2688,7 +2688,7 @@ function runKill(run, perTick, kill, what) {
         fail(`${what}: level ${run.level} holds no ${id}. Known: `
             + `[${(run.world.iceTurrets ?? []).map((t) => t.id).join(', ') || 'none'}].`);
     }
-    const before = (run.turretDamage ?? []).find((t) => t.id === id);
+    const before = (run.entities('turretDamage') ?? []).find((t) => t.id === id);
     if (!before) {
         fail(`${what}: the run has no damage state for ${id}, which means \`levelRun\` `
             + 'did not build a turret roster for this level — a kill against no state '
@@ -2828,7 +2828,7 @@ function runKill(run, perTick, kill, what) {
     }
 
     // ── the effect ────────────────────────────────────────────────────
-    const after = (run.turretDamage ?? []).find((t) => t.id === id);
+    const after = (run.entities('turretDamage') ?? []).find((t) => t.id === id);
     if (!after?.dead) {
         fail(`${what}: ${count} press(es) at ${cadence}-tick cadence from `
             + `(${at.x},${at.y}) facing ${facing} left ${id} on `
@@ -2924,7 +2924,7 @@ function runKill(run, perTick, kill, what) {
  * job is the four checks above, which are about INTENT.
  */
 function runSpear(run, perTick, spear, what) {
-    if (run.openActivators === null) {
+    if (run.entities('openActivators') === null) {
         fail(`${what}: a spear press is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null world state, so the press would emit its '
             + 'span, change nothing and report success. A tape that presses must '
@@ -2995,7 +2995,7 @@ function runSpear(run, perTick, spear, what) {
                 + `${bridge.ty}); it has [${run.world.bridgeTiles
                     .map((t) => `(${t.tx},${t.ty})`).join(' ') || 'none'}].`);
         }
-        if (run.openBridges.has(id)) {
+        if (run.entities('openBridges').has(id)) {
             fail(`${what}: bridge ${id} is ALREADY OPEN before the press, so opening it `
                 + 'proves nothing. A bridge rebuilds CLOSED on every entry — an open '
                 + 'one means an earlier leg in this visit already spent the press.');
@@ -3017,7 +3017,7 @@ function runSpear(run, perTick, spear, what) {
                 + '`hit(_t)` breaks only when `rockType <= _t` and `Player.as:1071-1074` '
                 + 'passes `hasGhostSword ? 1 : 0`, so this press would be a real no-op.');
         }
-        if (run.brokenRocks.has(id)) {
+        if (run.entities('brokenRocks').has(id)) {
             fail(`${what}: ${id} is ALREADY GONE before the press, so breaking it proves `
                 + 'nothing. A rock with tag -1 rebuilds on every entry, so a broken one '
                 + 'means an earlier leg of THIS visit already spent the swing.');
@@ -3025,10 +3025,10 @@ function runSpear(run, perTick, spear, what) {
         expect = { kind: 'rock', id, at: { x: rock.x, y: rock.y } };
     } else {
         const id = `${'pushableblockspear'}@${block.x},${block.y}`;
-        const live = run.pushables.get(id);
+        const live = run.entities('pushables').get(id);
         if (!live) {
             fail(`${what}: level ${run.level} has no pushable at (${block.x},${block.y}); `
-                + `it has [${[...run.pushables.keys()].join(' ') || 'none'}]. A block is `
+                + `it has [${[...run.entities('pushables').keys()].join(' ') || 'none'}]. A block is `
                 + 'named by the coordinates the LEVEL built it at, which do not change '
                 + 'when it moves.');
         }
@@ -3111,14 +3111,14 @@ function runSpear(run, perTick, spear, what) {
             fail(`${what}: wait tick ${i} of ${ticks} crossed from level `
                 + `${transition.from_level} to ${transition.to_level}.`);
         }
-        if (expect.kind === 'bridge' && run.openBridges.has(expect.id)) break;
+        if (expect.kind === 'bridge' && run.entities('openBridges').has(expect.id)) break;
         // ⚠ AND A DESTROYING PUSH IS NOT DONE WHEN THE GLIDE STOPS. The
         // sink is an eleven-frame fade AFTER the block reaches the tile, and
         // `FP.world.remove` lands at the end of it — so a wait that stopped
         // at `pushesSettled` would check `removed` before the game had
         // written it.
-        if (expect.kind === 'block' && run.pushesSettled && i > 1
-            && (!expect.destroys || run.pushables.get(expect.id).removed)) break;
+        if (expect.kind === 'block' && run.entities('pushesSettled') && i > 1
+            && (!expect.destroys || run.entities('pushables').get(expect.id).removed)) break;
     }
 
     // ── the effect ────────────────────────────────────────────────────
@@ -3126,7 +3126,7 @@ function runSpear(run, perTick, spear, what) {
         // ⚠ NO EARLY EXIT FROM THE WAIT ABOVE, deliberately: a bridge's
         // loop breaks the moment the tile opens, and doing that here would
         // shorten the tape to exactly the number the ±1 lives in.
-        if (!run.brokenRocks.has(expect.id)) {
+        if (!run.entities('brokenRocks').has(expect.id)) {
             fail(`${what}: pressed at (${at.x},${at.y}) facing ${facing} and `
                 + `${expect.id} is STILL SOLID after ${ticks} tick(s). The rect has to `
                 + 'CONTAIN the rock (32x5 from the player, so a diagonal stance misses '
@@ -3134,14 +3134,14 @@ function runSpear(run, perTick, spear, what) {
                 + '`Main.primary` is a silent no-op in the game and here.');
         }
     } else if (expect.kind === 'bridge') {
-        if (!run.openBridges.has(expect.id)) {
+        if (!run.entities('openBridges').has(expect.id)) {
             fail(`${what}: pressed at (${at.x},${at.y}) facing ${facing} and bridge `
                 + `${expect.id} is STILL SOLID after ${ticks} tick(s). The Tile arm of `
                 + '`genericHit` fires only under t == "Spear" — check the equip — and '
                 + 'the rect has to contain the tile.');
         }
     } else {
-        const live = run.pushables.get(expect.id);
+        const live = run.entities('pushables').get(expect.id);
         const now = { tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE) };
         if (expect.destroys) {
             if (!live.removed) {
@@ -3162,7 +3162,7 @@ function runSpear(run, perTick, spear, what) {
                 + 'water, lava or a pit is an opener the route did not plan for and a '
                 + 'block a later push in the chain will aim at and miss.');
         }
-        if (!run.pushesSettled) {
+        if (!run.entities('pushesSettled')) {
             fail(`${what}: the block reached (${now.tx},${now.ty}) but is still MOVING `
                 + `after ${ticks} tick(s). A block is 16 px of solid at a straddling `
                 + 'rect until it stops — walking now would meet it mid-glide.');
@@ -3359,7 +3359,7 @@ export function resolveWalkPushable(world, named, what) {
 }
 
 function runShove(run, perTick, shove, what) {
-    if (run.pushables === null) {
+    if (run.entities('pushables') === null) {
         fail(`${what}: a shove is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null pushable state, so the lean would emit '
             + 'its ticks, move nothing and report success. A tape that shoves a block '
@@ -3372,7 +3372,7 @@ function runShove(run, perTick, shove, what) {
     const HELD = heldFromKey(key, what);
 
     // ── the positive control, before the lean ─────────────────────────
-    const live0 = run.pushables.get(row.id);
+    const live0 = run.entities('pushables').get(row.id);
     if (!live0) {
         fail(`${what}: the run carries no live state for ${row.id}, which the world `
             + 'lists. The two halves disagree about what this level holds.');
@@ -3453,7 +3453,7 @@ function runShove(run, perTick, shove, what) {
         // computes it at the top of the tick from the position the previous
         // one left, so this is the value the contact about to happen will
         // use — reading it after `advance` would be the NEXT tick's.
-        const pre = { ...run.pushables.get(row.id).rect };
+        const pre = { ...run.entities('pushables').get(row.id).rect };
         perTick.push(HELD);
         const { transition } = run.advance(HELD);
         leanTicks = i;
@@ -3463,7 +3463,7 @@ function runShove(run, perTick, shove, what) {
                 + 'walks the player through a trigger is a routing defect — the stance '
                 + 'is on the wrong side of a door.');
         }
-        const live = run.pushables.get(row.id);
+        const live = run.entities('pushables').get(row.id);
         if (contactTick < 0 && (live.rect.x !== live0.rect.x || live.rect.y !== live0.rect.y)) {
             contactTick = i;
         }
@@ -3480,7 +3480,7 @@ function runShove(run, perTick, shove, what) {
         if (contactTick > 0 && committed(pre)) { done = true; break; }
     }
     if (!done) {
-        const live = run.pushables.get(row.id);
+        const live = run.entities('pushables').get(row.id);
         const now = tileOf(live);
         fail(`${what}: leaned ${key} for ${leanTicks} tick(s) and ${row.id} is on `
             + `(${now.tx},${now.ty}) at (${live.rect.x},${live.rect.y}), never committed `
@@ -3547,7 +3547,7 @@ function runShove(run, perTick, shove, what) {
          * below still refuses a strike aim that re-contacts the block.
          */
         const held = shove.strike && !run.state.fall
-            ? shove.strike.decide(run.state, run.strikeBodies, run.ticksCompleted, NO_HELD,
+            ? shove.strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, NO_HELD,
                 { slash: run.slashInfo }).held
             : NO_HELD;
         perTick.push(held);
@@ -3557,7 +3557,7 @@ function runShove(run, perTick, shove, what) {
                 + `to ${transition.to_level}. The player coasts after a release and a `
                 + 'coast that crosses a trigger is a cut the route did not plan.');
         }
-        const live = run.pushables.get(row.id);
+        const live = run.entities('pushables').get(row.id);
         const now = tileOf(live);
         if (!live.removed && (now.tx !== to.tx || now.ty !== to.ty)
             && (now.tx - to.tx) * step.dx + (now.ty - to.ty) * step.dy > 0) {
@@ -3574,14 +3574,14 @@ function runShove(run, perTick, shove, what) {
                 + 'block a later leg walks around will not be there.');
         }
         const jitter = !destroys && !live.removed && jitteringAtRest(live);
-        if ((run.pushesSettled || jitter) && (!destroys || live.removed)) { rested = true; break; }
+        if ((run.entities('pushesSettled') || jitter) && (!destroys || live.removed)) { rested = true; break; }
     }
-    if (!run.pushesSettled && !rested) {
+    if (!run.entities('pushesSettled') && !rested) {
         fail(`${what}: ${row.id} is STILL MOVING ${settleWindow} tick(s) after the `
             + 'release. A block is 16 px of solid at a straddling rect until it stops — '
             + 'walking now would meet it mid-glide.');
     }
-    const live = run.pushables.get(row.id);
+    const live = run.entities('pushables').get(row.id);
     const landed = tileOf(live);
     if (!live.removed && (landed.tx !== to.tx || landed.ty !== to.ty)) {
         fail(`${what}: the lean committed and ${row.id} came to rest on (${landed.tx},`
@@ -3636,7 +3636,7 @@ function runShove(run, perTick, shove, what) {
  * run's own answer and this waits for that rather than counting.
  */
 function runFire(run, perTick, fire, what) {
-    if (run.openActivators === null) {
+    if (run.entities('openActivators') === null) {
         fail(`${what}: a fire press is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null world state, so the press would emit its '
             + 'span, change nothing and report success. A tape that fires must declare '
@@ -3786,15 +3786,15 @@ function runFire(run, perTick, fire, what) {
          * unshielded with the player in a lane, or already moving — and a
          * plan that gets the order wrong is told which crusher and why.
          */
-        const liveCrushers = run.crushers;
+        const liveCrushers = run.entities('crushers');
         if (liveCrushers && liveCrushers.size > 0 && !fire.enemyRoom) {
             const box = playerBoxAt(run.state.x, run.state.y);
             const point = { x: run.state.x, y: run.state.y };
             for (const [id, c] of liveCrushers) {
                 const solids = run.world.solidBoxesForMover(livePerVisitOpts(run), id);
                 const s = scanCrusher({ x: c.x, y: c.y }, box, point, solids);
-                if (s.dir === null && run.crushersParked) continue;
-                const why = run.crushersParked
+                if (s.dir === null && run.entities('crushersParked')) continue;
+                const why = run.entities('crushersParked')
                     ? `it can see the player and its ${s.dir} lane matches`
                     : 'it is already CHARGING';
                 fail(`${what}: ${id} is AWAKE at this press stance — ${why}. `
@@ -3821,7 +3821,7 @@ function runFire(run, perTick, fire, what) {
     let expect;
     if (rope) {
         const id = `rope@${rope.x},${rope.y}`;
-        if (run.pulledRopes.has(id)) {
+        if (run.entities('pulledRopes').has(id)) {
             fail(`${what}: ${id} is ALREADY PULLED before the press, so pulling it proves `
                 + 'nothing. `RopeStart.hit()` is entirely inside `if (!activate)`, so a '
                 + 'second press is a real no-op — which means an earlier leg of this '
@@ -3871,7 +3871,7 @@ function runFire(run, perTick, fire, what) {
                 fail(`${what}: level ${run.level} holds no ${b.id}. Known: `
                     + `[${(run.world.iceTurrets ?? []).map((t) => t.id).join(', ') || 'none'}].`);
             }
-            const now = (run.turrets ?? new Map()).get(b.id);
+            const now = (run.entities('turrets') ?? new Map()).get(b.id);
             if (!now) {
                 fail(`${what}: the run has no state for ${b.id}, which means `
                     + '`levelRun` did not build a roster for this level — a bump against '
@@ -3938,7 +3938,7 @@ function runFire(run, perTick, fire, what) {
          * driven, and the KILL is an enemy damage model nobody has written.
          */
         for (const m of live) {
-            const now = run.turrets.get(m.id);
+            const now = run.entities('turrets').get(m.id);
             if (!now.dead) {
                 fail(`${what}: ${m.id} is ALIVE. \`IceTurret.bump\` is gated on the "dead" `
                     + 'anim and `knockback` is an empty override, so a live turret is '
@@ -3961,7 +3961,7 @@ function runFire(run, perTick, fire, what) {
             // ⛓ The whole roster's positions BEFORE the press — the strays
             // check's other half, and a snapshot rather than a reference
             // because `run.turrets` is rebuilt every query.
-            beforeTurrets: new Map([...(run.turrets ?? new Map())]
+            beforeTurrets: new Map([...(run.entities('turrets') ?? new Map())]
                 .map(([id, t]) => [id, { x: t.x, y: t.y }])),
         };
     } else if (burns) {
@@ -4017,7 +4017,7 @@ function runFire(run, perTick, fire, what) {
                     + '`new Game` builds the room without it. An absent tree and a '
                     + 'mistyped coordinate are different bugs and this does not guess.');
             }
-            if ((run.burnedTrees ?? new Set()).has(tree.id)
+            if ((run.entities('burnedTrees') ?? new Set()).has(tree.id)
                 || run.treeBurns.some((t) => t.id === tree.id)) {
                 fail(`${what}: ${tree.id} is ALREADY BURNING or BURNED before the press, so `
                     + 'setting it alight proves nothing. `hit()`\'s body is behind '
@@ -4052,7 +4052,7 @@ function runFire(run, perTick, fire, what) {
          * that does not depend on what is modelled.
          */
         const rect = fireRect(run.state.x, run.state.y);
-        const inRect = [...(run.pushables ?? new Map()).entries()]
+        const inRect = [...(run.entities('pushables') ?? new Map()).entries()]
             .filter(([, b]) => !b.removed && rectsOverlap(rect, b.rect))
             .map(([id]) => id);
         if (inRect.length > 0) {
@@ -4080,13 +4080,13 @@ function runFire(run, perTick, fire, what) {
             // is its spawn cell and never changes; a choreography's steps
             // are about the cell it is standing on NOW, and eighteen presses
             // in a row is exactly where the two diverge.
-            const found = [...run.pushables.entries()].find(([, b]) => !b.removed
+            const found = [...run.entities('pushables').entries()].find(([, b]) => !b.removed
                 && Math.floor(b.rect.x / TILE_SIZE) === m.from.tx
                 && Math.floor(b.rect.y / TILE_SIZE) === m.from.ty);
             if (!found) {
                 fail(`${what}: no live pushable is standing on (${m.from.tx},`
                     + `${m.from.ty}); the level's blocks are at `
-                    + `[${[...run.pushables.entries()].filter(([, b]) => !b.removed)
+                    + `[${[...run.entities('pushables').entries()].filter(([, b]) => !b.removed)
                         .map(([id, b]) => `${id} on (${Math.floor(b.rect.x / TILE_SIZE)},`
                             + `${Math.floor(b.rect.y / TILE_SIZE)})`).join(' ') || 'none'}]`);
             }
@@ -4098,7 +4098,7 @@ function runFire(run, perTick, fire, what) {
         }
         // ⛔ EVERY block's position BEFORE the press, not just the named
         // ones — the other half of the exact-set check below.
-        const before = new Map([...run.pushables.entries()]
+        const before = new Map([...run.entities('pushables').entries()]
             .filter(([, b]) => !b.removed)
             .map(([id, b]) => [id, {
                 tx: Math.floor(b.rect.x / TILE_SIZE),
@@ -4289,7 +4289,7 @@ function runFire(run, perTick, fire, what) {
          */
         if (expect.kind === 'bumps' && i === FIRE_WINDOW.endTick) {
             for (const m of expect.live) {
-                const now = run.turrets.get(m.id);
+                const now = run.entities('turrets').get(m.id);
                 const at = { tx: Math.floor(now.x / TILE_SIZE), ty: Math.floor(now.y / TILE_SIZE) };
                 if (at.tx === m.to.tx && at.ty === m.to.ty) {
                     fail(`${what}: ${m.id} was already on (${m.to.tx},${m.to.ty}) `
@@ -4298,7 +4298,7 @@ function runFire(run, perTick, fire, what) {
                         + 'so arriving inside the press window is a model that moved it '
                         + 'instantly rather than one that pushed it.');
                 }
-                if (run.turretsSettled) {
+                if (run.entities('turretsSettled')) {
                     fail(`${what}: ${m.id} reports SETTLED ${i} tick(s) after the press, `
                         + 'i.e. it never started moving. The five bumps ran and the body '
                         + 'is where it was — check the stance is inside the 32x32 fire '
@@ -4311,12 +4311,12 @@ function runFire(run, perTick, fire, what) {
         // for the first four ticks too — the hits have not landed yet — so
         // an early break would report a press that never dispatched as a
         // push that settled instantly.
-        if (expect.kind === 'blocks' && i > FIRE_WINDOW.lastHitTick && run.pushesSettled) break;
+        if (expect.kind === 'blocks' && i > FIRE_WINDOW.lastHitTick && run.entities('pushesSettled')) break;
     }
 
     // ── the effect ────────────────────────────────────────────────────
     if (expect.kind === 'rope') {
-        if (!run.pulledRopes.has(expect.id)) {
+        if (!run.entities('pulledRopes').has(expect.id)) {
             fail(`${what}: fired at (${at.x},${at.y}) and ${expect.id} is STILL its full `
                 + `span after ${ticks} tick(s). The 32x32 rect has to CONTAIN the rope `
                 + 'and the 16 px radius cut has to admit it — and a rope is a wide, '
@@ -4325,7 +4325,7 @@ function runFire(run, perTick, fire, what) {
         }
     } else if (expect.kind === 'burns') {
         // ── ⛓⛓ THE SECOND HALF: GONE, AND ONLY THE NAMED ONES ────────
-        const burnedNow = run.burnedTrees ?? new Set();
+        const burnedNow = run.entities('burnedTrees') ?? new Set();
         for (const t of expect.live) {
             if (!burnedNow.has(t.id)) {
                 fail(`${what}: fired at (${at.x},${at.y}) and ${t.id} is STILL STANDING `
@@ -4366,13 +4366,13 @@ function runFire(run, perTick, fire, what) {
         }
     } else if (expect.kind === 'bumps') {
         // ── ⛓⛓ THE EFFECT: THE NAMED TILE, AND NOTHING ELSE MOVED ────
-        if (!run.turretsSettled) {
+        if (!run.entities('turretsSettled')) {
             fail(`${what}: a corpse is STILL GLIDING after ${ticks} tick(s). A route `
                 + 'flooded against a moving body is a route planned against a wall that '
                 + 'is not there yet — wait for `run.turretsSettled`.');
         }
         const at = (id) => {
-            const now = run.turrets.get(id);
+            const now = run.entities('turrets').get(id);
             return { tx: Math.floor(now.x / TILE_SIZE), ty: Math.floor(now.y / TILE_SIZE) };
         };
         for (const m of expect.live) {
@@ -4391,7 +4391,7 @@ function runFire(run, perTick, fire, what) {
              * ever writes it back — so this is a claim about the WALK as
              * much as about the push.
              */
-            if (!run.turrets.get(m.id).solid) {
+            if (!run.entities('turrets').get(m.id).solid) {
                 fail(`${what}: ${m.id} is on (${got.tx},${got.ty}) and is NOT a Solid. `
                     + '`IceTurret.update`\'s `else if (!collide("Player", x, y)) type = '
                     + '"Solid"` needs one tick with the player off the body, and a corpse '
@@ -4406,7 +4406,7 @@ function runFire(run, perTick, fire, what) {
         const strays = [];
         for (const [id, before] of expect.beforeTurrets) {
             if (namedIds.has(id)) continue;
-            const now = run.turrets.get(id);
+            const now = run.entities('turrets').get(id);
             if (!now || now.x !== before.x || now.y !== before.y) strays.push(id);
         }
         if (strays.length > 0) {
@@ -4420,7 +4420,7 @@ function runFire(run, perTick, fire, what) {
         }
     } else {
         const got = [];
-        for (const [id, b] of run.pushables) {
+        for (const [id, b] of run.entities('pushables')) {
             if (b.removed) continue;
             got.push({
                 id,
@@ -4539,22 +4539,22 @@ export function livePerVisitOpts(run) {
      * pushables}` both rely on.
      */
     return normalizeLiveOpts({
-        openActivators: run.openActivators,
-        openChests: run.openChests,
-        pushables: run.pushables,
-        openBridges: run.openBridges,
-        brokenRocks: run.brokenRocks,
-        pulledRopes: run.pulledRopes,
-        burnedTrees: run.burnedTrees,
+        openActivators: run.entities('openActivators'),
+        openChests: run.entities('openChests'),
+        pushables: run.entities('pushables'),
+        openBridges: run.entities('openBridges'),
+        brokenRocks: run.entities('brokenRocks'),
+        pulledRopes: run.entities('pulledRopes'),
+        burnedTrees: run.entities('burnedTrees'),
         // ⛓⛓⛓ R5 slice 15: the NINTH, and the only SNAPSHOT in the list.
-        crushers: run.crushers,
+        crushers: run.entities('crushers'),
         // ⛓⛓⛓ R5 slice 20: the TENTH, and the only one whose absence means
         // "not a solid" rather than "still where the level built it".
-        turrets: run.turrets,
+        turrets: run.entities('turrets'),
         // ⛓⛓⛓ R5 slice 23: the TWELFTH, and the only one whose absence
         // means "still a solid" — an unwoken BossTotem is a Solid, so the
         // key expresses the WAKE rather than the wall.
-        bosses: run.bosses,
+        bosses: run.entities('bosses'),
     });
 }
 function liveGeometryOpts(run, extra = {}) {
@@ -4616,7 +4616,7 @@ export function resolveChest(world, named, what) {
  * expected open still solid, is a named failure.
  */
 function runChest(run, perTick, chest, maxTicks, what, before = null) {
-    if (run.openChests === null) {
+    if (run.entities('openChests') === null) {
         fail(`${what}: a chest is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` skips the chest step entirely, so the leg would emit its '
             + 'ticks, verify nothing and report success on a wall it never opened.');
@@ -4628,7 +4628,7 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
     // snapshot at the call site — the same correction a latching
     // `ButtonRoom` forced on `runHold`, one verb later and for a different
     // mechanism.
-    const chestsBefore = before?.chests ?? run.openChests;
+    const chestsBefore = before?.chests ?? run.entities('openChests');
     if (chestsBefore.has(target.id)) {
         fail(`${what}: ${target.id} is ALREADY OPEN before the target, so opening it `
             + 'proves nothing. A chest whose flag was cleared on an earlier visit is '
@@ -4675,7 +4675,7 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
         // have opened it already: the trigger is a line and the last
         // waypoint crosses it. The ledger carries the tick it really
         // happened on, which is the only honest number here.
-        if (openedAt === null && run.openChests.has(target.id)) {
+        if (openedAt === null && run.entities('openChests').has(target.id)) {
             openedAt = run.chestOpens.find((c) => c.id === target.id)?.t ?? i;
         }
         if (openedAt !== null && collectedAt === null
@@ -4707,7 +4707,7 @@ function runChest(run, perTick, chest, maxTicks, what, before = null) {
             + 'impossible.');
     }
     // ── ⛓ THE EFFECT, AS AN EXACT SET ────────────────────────────────
-    const opened = [...run.openChests];
+    const opened = [...run.entities('openChests')];
     if (opened.length !== 1 || opened[0] !== target.id) {
         fail(`${what}: the leg opened [${opened.join(' ')}] and named only ${target.id}. `
             + 'A chest the leg did not name is a wall somewhere else that the plan '
@@ -4943,7 +4943,7 @@ function drive(run, target, perTick, {
          * spends the same two, which is why the ETAs still hold.
          */
         if (strike && !run.state.fall) {
-            held = strike.decide(run.state, run.strikeBodies, run.ticksCompleted, held,
+            held = strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, held,
                 // ⛓ R9 SLICE 12c — see `runDwell`'s own call: ONE policy, one
                 // question, and now one model of what the press will do.
                 { slash: run.slashInfo }).held;
@@ -5634,8 +5634,8 @@ export function synthesizeLegs(legs, opts = {}) {
              * few ticks of it did.
              */
             const before = {
-                open: run.openActivators === null ? null : new Set(run.openActivators),
-                armed: run.armedPulsers === null ? null : new Set(run.armedPulsers),
+                open: run.entities('openActivators') === null ? null : new Set(run.entities('openActivators')),
+                armed: run.entities('armedPulsers') === null ? null : new Set(run.entities('armedPulsers')),
                 // ⛓⛓⛓ R7 SLICE 6b: AND THE ARROW TRAPS, for the third time
                 // and the sharpest instance of the reason. A trap fires on
                 // its VERY FIRST update once its group is published
@@ -5644,14 +5644,14 @@ export function synthesizeLegs(legs, opts = {}) {
                 // armed every trap in the group before `runHold` looks. A
                 // control asked then reports "already armed" on a leg that
                 // did exactly what it was written to do.
-                trapsArmed: run.armedArrowTraps === null
-                    ? null : new Set(run.armedArrowTraps),
+                trapsArmed: run.entities('armedArrowTraps') === null
+                    ? null : new Set(run.entities('armedArrowTraps')),
                 // ⛔⛔ AND THE CHEST, for the same reason twice over: its
                 // trigger is a LINE the approach crosses, so by the time the
                 // verb runs the chest has already opened and a control asked
                 // then would report "already open" on a leg that did exactly
                 // what it was written to do.
-                chests: run.openChests === null ? null : new Set(run.openChests),
+                chests: run.entities('openChests') === null ? null : new Set(run.entities('openChests')),
             };
             const wps = planWaypoints(run.world, run.state, target, null, planNow());
             legWaypoints.push(...wps);

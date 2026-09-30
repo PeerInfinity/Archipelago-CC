@@ -706,7 +706,7 @@ function resolveChestStrategy(run, obstacle, contacts) {
      * disagree, and refusing to bind is what surfaces that rather than
      * spending a leg on it.
      */
-    if (run.openChests?.has?.(chest.id)) return null;
+    if (run.entities('openChests')?.has?.(chest.id)) return null;
     return {
         strategy: 'chest',
         target: chest,
@@ -809,7 +809,7 @@ function openerPresserFor(run, obstacle) {
  * would sink a block as a side effect.
  */
 function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blocked = []) {
-    if (run.pushables === null) return null;
+    if (run.entities('pushables') === null) return null;
     const row = (run.world.pushables ?? []).find((p) => p.id === obstacle.id);
     if (!row) return null;
     if (row.family !== 'walk') {
@@ -836,12 +836,12 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
      * activator of its group is still shut — a latched group is `hold`'s
      * and an open one is not an obstacle.
      */
-    const liveBlock = run.pushables.get(row.id);
+    const liveBlock = run.entities('pushables').get(row.id);
     const pressed = liveBlock && !liveBlock.removed ? (run.world.pressers ?? []).find(
         (p) => localPublish(p) === null && rectsOverlapLocal(liveBlock.rect, p.rect)) : null;
     if (pressed) {
         const shut = (run.world.activators ?? []).find(
-            (a) => a.t === pressed.t && !run.openActivators.has(a.id));
+            (a) => a.t === pressed.t && !run.entities('openActivators').has(a.id));
         if (shut) {
             const dwell = resolveWeighStrategy(run, { kind: 'solid', tag: shut.tag, id: shut.id },
                 contacts, blocked);
@@ -861,8 +861,8 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
     const stance = derived.route
         ? derived.route[0].stance
         : nodeCentre(
-            Math.floor(run.pushables.get(row.id).rect.x / TILE_SIZE) - step.dx,
-            Math.floor(run.pushables.get(row.id).rect.y / TILE_SIZE) - step.dy,
+            Math.floor(run.entities('pushables').get(row.id).rect.x / TILE_SIZE) - step.dx,
+            Math.floor(run.entities('pushables').get(row.id).rect.y / TILE_SIZE) - step.dy,
             DEFAULT_LATTICE);
     /**
      * ⛓ THE TRACE RECORDS `k`, AND THE TWO NEIGHBOURS IT REJECTED — ⚖ §11.8a
@@ -965,7 +965,7 @@ function resolveShoveStrategy(run, obstacle, contacts, aim, allowTeleporter, blo
  */
 function shoveRefusalDetail(run, obstacle, contacts, aim, allowTeleporter, blocked) {
     const row = (run.world.pushables ?? []).find((p) => p.id === obstacle.id);
-    if (!row || row.family !== 'walk' || run.pushables === null) return null;
+    if (!row || row.family !== 'walk' || run.entities('pushables') === null) return null;
     const derived = deriveShove(run, row, aim, allowTeleporter, contacts, blocked);
     if (!derived || derived.plan) return null;
     const rows = derived.rejected ?? [];
@@ -1004,7 +1004,7 @@ const describeRoute = (route) => route.map((st, i) => (st.verb === 'shove'
  * looked.
  */
 function resolveWeighStrategy(run, obstacle, contacts, blocked = []) {
-    if (run.pushables === null) return null;
+    if (run.entities('pushables') === null) return null;
     const opener = openerPresserFor(run, obstacle);
     if (!opener) return null;
     const presser = opener.presser;
@@ -1243,7 +1243,7 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
             });
             continue;
         }
-        const live = run.pushables?.get(row.id);
+        const live = run.entities('pushables')?.get(row.id);
         if (!live || live.removed) continue;
         const from = {
             tx: Math.floor(live.rect.x / TILE_SIZE), ty: Math.floor(live.rect.y / TILE_SIZE),
@@ -1766,7 +1766,7 @@ export function strikePolicyFor(run, { dashPlan = null,
      * make `planSwordDash`'s plan silently unwalkable (⚖ ruling 30(c): the
      * preview would carry it and the drive would not).
      */
-    if (!dashPlan && (run.strikeBodies ?? []).length === 0) return null;
+    if (!dashPlan && (run.entities('strikeBodies') ?? []).length === 0) return null;
     return createStrikePolicy({
         facingToward, facingKeys: FACING_KEYS, hasSword, dashPlan,
         /**
@@ -1784,7 +1784,7 @@ export function strikePolicyFor(run, { dashPlan = null,
          * the SWORD key — and that is a freeze, not a cost: the policy
          * refuses rather than prices it.
          */
-        talkCircles: run.talkCircles ?? [],
+        talkCircles: run.entities('talkCircles') ?? [],
     });
 }
 
@@ -1850,7 +1850,7 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
      * the post-step bodies with the pre-move player, which is the game's own
      * pairing and a different question.
      */
-    let bodiesForPolicy = strike ? (run.strikeBodies ?? []) : null;
+    let bodiesForPolicy = strike ? (run.entities('strikeBodies') ?? []) : null;
     /**
      * ⛓ R9 slice 12c‴ — every body a PLANNED press's window struck, in the
      * order it struck them. See the push site for why it is the application and
@@ -2453,7 +2453,7 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
      * is the one shape both sides of ⚖ ruling 30(c) already share.
      */
     const shakeWriters = run.shakeWritersHere ?? [];
-    const tagOfBody = new Map((run.strikeBodies ?? []).map((b) => [b.id, b.tag]));
+    const tagOfBody = new Map((run.entities('strikeBodies') ?? []).map((b) => [b.id, b.tag]));
     const legsOf = (walk) => {
         const legs = [];
         for (const sample of walk.samples) legs[sample.wp] = (legs[sample.wp] ?? 0) + 1;
@@ -3124,7 +3124,7 @@ function groupsHeldOpenBySolids(run, bag) {
 
 export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
     { discharged = [], phrase = SHOVE_PHRASE } = {}) {
-    const live = run.pushables?.get(row.id);
+    const live = run.entities('pushables')?.get(row.id);
     if (!live || live.removed) return { steps: null, rejected: [], found: [], expansions: 0, refused: null };
     const base = run.liveGeometryOpts();
     const liveRocks = base.brokenRocks ?? new Set();
@@ -3518,7 +3518,7 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
  * validation that binds; this is what makes the hypothesis worth taking.
  */
 function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
-    const live = run.pushables?.get(row.id);
+    const live = run.entities('pushables')?.get(row.id);
     if (!live || live.removed) return null;
     /**
      * ⛓⛓⛓ ⚖ RULED IN REPLY (orchestrator, mid-slice 3b) — READING (b), WITH
@@ -3549,7 +3549,7 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
     for (const other of (run.world.pushables ?? [])) {
         if (other.id === row.id) continue;
         if (blocked.includes(other.id)) continue;
-        const otherLive = run.pushables?.get(other.id);
+        const otherLive = run.entities('pushables')?.get(other.id);
         if (!otherLive || otherLive.removed) continue;
         if (!OBSTACLE_STRATEGIES[`solid:${other.tag}`]) continue;
         discharged.push(other.id);
@@ -4010,7 +4010,7 @@ function deriveHold(run, presser, opener = null) {
     const group = run.world.activators.filter((a) => a.t === presser.t);
     const traps = (run.world.arrowTraps ?? []).filter((a) => a.t === presser.t);
     if (group.length > 0) {
-        const shut = group.filter((a) => !run.openActivators.has(a.id));
+        const shut = group.filter((a) => !run.entities('openActivators').has(a.id));
         const cost = Math.max(...shut.map(
             (a) => opensOnTick(RESPONDERS[a.tag]?.fade ?? RESPONDERS.lock.fade),
         ));
@@ -4046,7 +4046,7 @@ function deriveHold(run, presser, opener = null) {
         };
     }
     if (traps.length > 0) {
-        const bodies = run.chasers.length;
+        const bodies = run.entities('chasers').length;
         if (bodies > 0) {
             return {
                 ticks: bodies * ARROW_KILL_FLOOR + HOLD_SLACK,
@@ -4240,7 +4240,7 @@ function stancePrerequisite(run, candidates, exempt, hypothesis, contacts, block
     }
     for (const row of (run.world.pushables ?? [])) {
         if (row.family !== 'walk' || blocked.includes(row.id)) continue;
-        const live = run.pushables?.get(row.id);
+        const live = run.entities('pushables')?.get(row.id);
         if (!live || live.removed) continue;
         for (const c of candidates) {
             const derived = deriveShove(run, row, { x: c.x, y: c.y }, null, exempt, blocked);
@@ -4290,7 +4290,7 @@ function prerequisiteRefusalClause(run, hypothesis, walls, blocked) {
     }
     const blocks = (run.world.pushables ?? []).filter((row) => {
         if (row.family !== 'walk' || blocked.includes(row.id)) return false;
-        const live = run.pushables?.get(row.id);
+        const live = run.entities('pushables')?.get(row.id);
         return Boolean(live) && !live.removed;
     });
     for (const row of blocks) parts.push(`${row.id} (no shove of it plans the corridor)`);
@@ -4345,7 +4345,7 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
     const wall = new Set(blocked);
     const out = [];
     for (const a of (run.world.activators ?? [])) {
-        if (wall.has(a.id) || run.openActivators.has(a.id)) continue;
+        if (wall.has(a.id) || run.entities('openActivators').has(a.id)) continue;
         const strategy = refineStrategy(run,
             OBSTACLE_STRATEGIES[`solid:${a.tag}`] ?? null, { id: a.id, tag: a.tag });
         if (!strategy || !STRATEGY_EXECUTORS[strategy]) continue;
@@ -4576,7 +4576,7 @@ function execRoute(run, perTick, resolved, ctx, what) {
                 ...(step.destroys ? { destroys: true } : {}),
                 ...(ctx.idleStrike ? { strike: ctx.idleStrike } : {}),
             }, label);
-            const live = run.pushables.get(blockRow());
+            const live = run.entities('pushables').get(blockRow());
             if (step.destroys ? !live?.removed
                 : (!live || live.removed || tileOf(live).tx !== step.to.tx
                     || tileOf(live).ty !== step.to.ty)) {
@@ -4592,7 +4592,7 @@ function execRoute(run, perTick, resolved, ctx, what) {
                 held: true, rock: step.rock, target: step.target, stance: step.stance,
                 wait: step.wait, rejected: [],
             }, { ...ctx, what: label });
-            if (!(run.brokenRocks ?? new Set()).has(step.rock)) {
+            if (!(run.entities('brokenRocks') ?? new Set()).has(step.rock)) {
                 refuse(`${label}: ${step.rock} is not in the run's \`brokenRocks\` after `
                     + `route step ${i + 1}'s swing returned. The verb's own wait covers the `
                     + 'animation, so a rock still standing is a disagreement, not a budget.');
@@ -4747,7 +4747,7 @@ function countedBodiesLeft(run) {
      * opposite consequences (§12.4).
      */
     const stepped = (run.chaserRoomVerdict?.(run.level)?.stepped) === true;
-    const live = new Set((run.chasers ?? []).map((c) => c.id));
+    const live = new Set((run.entities('chasers') ?? []).map((c) => c.id));
     const bridged = new Set(bridgedChaserTags());
     return census.filter((e) => {
         const id = `${e.tag}@${e.x},${e.y}`;
@@ -4951,7 +4951,7 @@ function derivePressKill(run, bodies, contacts) {
      *   null on every refusal; `rejected` is never empty on one.
      */
     const no = (rejected) => ({ first: null, plans: [], rejected });
-    const live = run.spinnerBodies ?? [];
+    const live = run.entities('spinnerBodies') ?? [];
     if (live.length === 0) {
         return no([{
             option: 'press a body',
@@ -5280,7 +5280,7 @@ function minTicksBetween(from, to) {
 }
 
 function deriveStrike(run, bodyId, contacts, notBefore = 0) {
-    const index = (run.spinnerBodies ?? []).findIndex((b) => b.id === bodyId);
+    const index = (run.entities('spinnerBodies') ?? []).findIndex((b) => b.id === bodyId);
     if (index < 0) return null;
     const horizon = strikeHorizon(run);
     const forecast = run.spinnerForecast(horizon);
@@ -5419,7 +5419,7 @@ function trainIsSafeHere(run, aimKeys = null) {
  * something else would be the walk deciding to hide a corner it walked into.
  */
 function stepToward(run, aim, intended) {
-    if (!aim || (run.spinnerBodies ?? []).length === 0) return intended;
+    if (!aim || (run.entities('spinnerBodies') ?? []).length === 0) return intended;
     const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
     if (!forecast.length) return intended;
     const step = run.previewStepper();
@@ -5488,7 +5488,7 @@ const STEP_LOOKAHEAD = 4;
  * planned; refusing it silently would hide that.
  */
 function safeStep(run, held, alternatives, what, bodyId) {
-    if ((run.spinnerBodies ?? []).length === 0) return held;
+    if ((run.entities('spinnerBodies') ?? []).length === 0) return held;
     /**
      * ⛔⛔⛔ INDEX **1**, NOT 0, AND THE OFF-BY-ONE IS THE WHOLE CHECK.
      * `advance` steps the spinners and THEN asserts, against the position the
@@ -5789,7 +5789,7 @@ export const PENDING_AT = Number.MAX_SAFE_INTEGER;
  * "nobody looked" print the same thing otherwise.
  */
 function drainCeiling(run, perTick, weapon, ctx) {
-    const inFlight = () => (run.arrowsInFlight ?? []).length;
+    const inFlight = () => (run.entities('arrowsInFlight') ?? []).length;
     if (inFlight() === 0) {
         return { phase: 'drain', ticks: 0,
             why: 'the column was already empty when the hold ended — no volley was still '
@@ -5920,9 +5920,9 @@ function execKill(run, perTick, resolved, ctx) {
      * go quiet in between. Two snapshots, one law.
      */
     const snapshot = () => ({
-        open: run.openActivators,
-        armed: run.armedPulsers ?? new Set(),
-        trapsArmed: run.armedArrowTraps ?? new Set(),
+        open: run.entities('openActivators'),
+        armed: run.entities('armedPulsers') ?? new Set(),
+        trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
     });
     /**
      * ⛓⛓⛓ AND THE HOLD OUTLASTS THE KILL BY THE RESPONDER'S OWN FADE — the
@@ -5987,7 +5987,7 @@ function execKill(run, perTick, resolved, ctx) {
     for (let turn = 0; turn < started; turn += 1) {
         const left = countedBodiesLeft(run);
         if (left.length === 0) break;
-        const live = (run.chasers ?? []).filter(
+        const live = (run.entities('chasers') ?? []).filter(
             (c) => left.some((b) => `${b.tag}@${b.x},${b.y}` === c.id));
         const body = live[0] ?? null;
         if (!body) {
@@ -6286,7 +6286,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
          */
         let lastPressAt = -KILL_PRESS_CADENCE;
         for (; spent <= bound; spent += 1) {
-            const body = (run.spinnerBodies ?? []).find((b) => b.id === plan.id);
+            const body = (run.entities('spinnerBodies') ?? []).find((b) => b.id === plan.id);
             if (!body) break;
             let held = NO_KEYS;
             if (aimed) {
@@ -6391,7 +6391,7 @@ function execKillByPress(run, perTick, resolved, ctx) {
                 if (h.landed) landings.push({ t: h.t, id: h.id, hits: h.hits });
             }
         }
-        if ((run.spinnerBodies ?? []).some((b) => b.id === plan.id)) {
+        if ((run.entities('spinnerBodies') ?? []).some((b) => b.id === plan.id)) {
             /**
              * ⛓⛓⛓ ARC 3 SLICE 2d — STAMPED, AND THE STAMP IS WHAT MAKES THIS
              * A REVERT INSTEAD OF A DEAD RUN.
@@ -7218,7 +7218,7 @@ function execTouch(run, perTick, resolved, ctx) {
     const bound = resolved.window + HOLD_SLACK;
     let snappedAt = null;
     for (let spent = 0; spent <= bound; spent += 1) {
-        if (run.openActivators.has(resolved.lock)) {
+        if (run.entities('openActivators').has(resolved.lock)) {
             return { verb: 'touch', target: resolved.lock, from,
                 ticks: perTick.length - from, snappedAt };
         }
@@ -7554,7 +7554,7 @@ function execBreak(run, perTick, resolved, ctx) {
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
     const from = perTick.length;
-    const gone = () => (run.brokenRocks ?? NO_KEYS).has(resolved.rock);
+    const gone = () => (run.entities('brokenRocks') ?? NO_KEYS).has(resolved.rock);
     /**
      * ⛔ THE BOUND IS THE MECHANISM'S OWN, PLUS THE ONE RE-AIM THIS VERB MAY
      * SPEND: an aim tick, a press tick, the leg's wait, and one repeat in case
@@ -7573,7 +7573,7 @@ function execBreak(run, perTick, resolved, ctx) {
         }
         // ⛓ R9 slice L16 — a weigh route's break waits ARMED (`execWeigh`).
         let held = pressedAt !== null && ctx.idleStrike && !run.state.fall
-            ? ctx.idleStrike.decide(run.state, run.strikeBodies, run.ticksCompleted, NO_KEYS,
+            ? ctx.idleStrike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, NO_KEYS,
                 { slash: run.slashInfo }).held
             : NO_KEYS;
         if (pressedAt === null) {
@@ -7650,7 +7650,7 @@ function deriveLaneSilencer(run, hit, what, pulling = new Set()) {
     if (laneIds.size === 0) return null;
     const traps = (run.world.arrowTraps ?? []).filter((t) => laneIds.has(t.id));
     const ropes = (run.world.solids ?? []).filter((x) => x.ropeId);
-    const latched = run.latchedGroups ?? new Set();
+    const latched = run.entities('latchedGroups') ?? new Set();
     for (const t of traps) {
         if (arrowTrapFires(t, true)) continue;
         const rope = ropes.find((r) => r.ropeT === t.t);
@@ -7697,7 +7697,7 @@ function execPull(run, perTick, resolved, ctx) {
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
     const from = perTick.length;
-    const latched = () => (run.latchedGroups ?? NO_KEYS).has(resolved.group);
+    const latched = () => (run.entities('latchedGroups') ?? NO_KEYS).has(resolved.group);
     /**
      * ⛓ THE APPROACH MAY HAVE PULLED IT ALREADY. The walk to the stance carries
      * the strike policy and the dash windows, and a swing up the handle's column
@@ -7756,7 +7756,7 @@ function execPull(run, perTick, resolved, ctx) {
     return refuse(`${ctx.what}: pressed ${resolved.rope} at tick `
         + `${pressedAt === null ? 'NEVER — the aim never resolved' : pressedAt} and group `
         + `t=${resolved.group} is NOT latched in the live run ${bound} ticks later `
-        + `(latched: [${[...(run.latchedGroups ?? [])].join(', ')}]). The rope's `
+        + `(latched: [${[...(run.entities('latchedGroups') ?? [])].join(', ')}]). The rope's `
         + '`set activate` publishes its group on the swing that lands; a pull that '
         + `latches nothing leaves [${resolved.traps.join(', ')}] firing, so the corridor `
         + 'this rung promised does not exist.');
@@ -7960,11 +7960,11 @@ export function deriveKillByChaser(run, body, contacts,
      */
     { aim = null, allowTeleporter = null, tolerance = 0,
         dashMode = DEFAULT_DASH_MODE } = {}) {
-    if (!(run.strikeBodies ?? []).some((b) => b.id === body.id)) {
+    if (!(run.entities('strikeBodies') ?? []).some((b) => b.id === body.id)) {
         return { stance: null, why: `${body.id} is not a body this run steps — the chaser `
             + 'arm needs a live position, and a static census body has none' };
     }
-    const target = run.strikeBodies.find((b) => b.id === body.id);
+    const target = run.entities('strikeBodies').find((b) => b.id === body.id);
     if (!armIsModelled(target)) {
         return { stance: null, why: `KILL_ARM_POLICY.${target.enemyClass} is not `
             + '`modelled`, so a press against it is not something this model may claim' };
@@ -8287,7 +8287,7 @@ function planWaypointsOrNull(world, from, aim, allowTeleporter, opts) {
  */
 function clearsOf(walk, run) {
     const gone = [];
-    let live = new Set((run.strikeBodies ?? []).map((b) => b.id));
+    let live = new Set((run.entities('strikeBodies') ?? []).map((b) => b.id));
     for (const sm of walk.samples) {
         if (!sm.chasers) continue;
         const now = new Set(sm.chasers.map((b) => b.id));
@@ -8984,7 +8984,7 @@ export function solveSegment({
          * body the danger map is pricing, live or static, and what differs is
          * WHICH ORACLE finishes the job.
          */
-        const live = [...(run.chasers ?? [])].map((c) => ({ ...c, stepped: true }));
+        const live = [...(run.entities('chasers') ?? [])].map((c) => ({ ...c, stepped: true }));
         const stepped = (run.chaserRoomVerdict?.(run.level)?.stepped) === true;
         const bridged = new Set(bridgedChaserTags());
         const statics = stepped ? [] : (run.world.combat?.enemies ?? [])
@@ -9271,7 +9271,7 @@ export function solveSegment({
             baitWhy = 'NO LIVE BODY\'s removal admits a corridor — the danger on this '
                 + `corridor is [${hit.sources.map((sx) => `${sx.kind}:${sx.id}`)
                     .join(', ')}] and this room's live roster is `
-                + `[${(run.chasers ?? []).map((c) => c.id).join(', ') || 'empty'}]. A bait `
+                + `[${(run.entities('chasers') ?? []).map((c) => c.id).join(', ') || 'empty'}]. A bait `
                 + 'moves a body along its own straight line; a static census body, a '
                 + 'hazard volume and an arrow lane do not have one, and a body whose '
                 + 'removal changes no corridor is not what is in the way.';
@@ -9328,9 +9328,9 @@ export function solveSegment({
                  * nothing to change and fails BY NAME.
                  */
                 const before = {
-                    open: run.openActivators,
-                    armed: run.armedPulsers ?? new Set(),
-                    trapsArmed: run.armedArrowTraps ?? new Set(),
+                    open: run.entities('openActivators'),
+                    armed: run.entities('armedPulsers') ?? new Set(),
+                    trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
                 };
                 walkTo(goal, weapon.stance, {
                     what: `${what} -> kill (${target.id}) stance`,
@@ -9427,9 +9427,9 @@ export function solveSegment({
                     maxTicksPerTarget,
                     what: `${what} -> kill (${target.id})`,
                     before: {
-                        open: run.openActivators,
-                        armed: run.armedPulsers ?? new Set(),
-                        trapsArmed: run.armedArrowTraps ?? new Set(),
+                        open: run.entities('openActivators'),
+                        armed: run.entities('armedPulsers') ?? new Set(),
+                        trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
                     },
                 });
                 for (const c of kill.exempt) exemptions.add(c);
@@ -9676,9 +9676,9 @@ export function solveSegment({
                  * correct walk is never in at the stance.
                  */
                 const beforeStrategy = {
-                    open: run.openActivators,
-                    armed: run.armedPulsers ?? new Set(),
-                    trapsArmed: run.armedArrowTraps ?? new Set(),
+                    open: run.entities('openActivators'),
+                    armed: run.entities('armedPulsers') ?? new Set(),
+                    trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
                     /**
                      * ⛓ ⚖ SLICE 10 — AND THE CHEST'S OWN SET, for the same
                      * reason the other three are here. `runChest`'s positive
@@ -9692,7 +9692,7 @@ export function solveSegment({
                      * same field. ⚠ Inert for every other verb: nothing but
                      * `runChest` reads `before.chests`.
                      */
-                    chests: run.openChests,
+                    chests: run.entities('openChests'),
                 };
                 // The stance first — planned with whatever exemptions the
                 // strategy's own resolution earned (trap 147: a hold is what
@@ -9990,7 +9990,7 @@ export function solveSegment({
          * cross, so "shut when the verb began" is a state a correct walk is
          * never in at the stance.
          */
-        const before = resolved.strategy === 'chest' ? { chests: run.openChests } : null;
+        const before = resolved.strategy === 'chest' ? { chests: run.entities('openChests') } : null;
         /**
          * ⛓ PROCGEN PoC SLICE 3 — THE SAME WALK, EITHER WAY. `deriveStance`
          * now hands back a stance it could not plan a corridor to (flagged

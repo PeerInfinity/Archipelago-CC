@@ -168,7 +168,9 @@ describe('R8_NORMALIZE_LIVE_BATCH — the prediction, stated first', () => {
         // separates "supplied" from "filled in by the brand" is that the
         // builder reads it OFF THE RUN — so the run is given a sentinel and
         // the families that carry it out are the ones really supplied.
-        const run = Object.fromEntries(LIVE_GEOMETRY_KEYS.map((k) => [k, `RUN:${k}`]));
+        const fields = Object.fromEntries(LIVE_GEOMETRY_KEYS.map((k) => [k, `RUN:${k}`]));
+        // ⛓ ENGINE-PREP C3: the builder reads entity families through the one query
+        const run = { ...fields, entities: (family) => fields[family] };
         const built = livePerVisitOpts(run);
         const supplied = LIVE_GEOMETRY_KEYS.filter((k) => built[k] === `RUN:${k}`);
         const suppliedAndDropped = supplied.filter((k) => p.dropped.includes(k)).sort();
