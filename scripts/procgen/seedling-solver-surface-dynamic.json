@@ -11,8 +11,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 524,
-      "msProbed": 3642,
+      "msPlain": 616,
+      "msProbed": 3829,
       "runs": 9
     },
     {
@@ -25,8 +25,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 481,
-      "msProbed": 1457,
+      "msPlain": 387,
+      "msProbed": 1317,
       "runs": 1
     },
     {
@@ -39,8 +39,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 2722,
-      "msProbed": 11990,
+      "msPlain": 2044,
+      "msProbed": 11562,
       "runs": 6
     },
     {
@@ -53,8 +53,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 1468,
-      "msProbed": 6580,
+      "msPlain": 1244,
+      "msProbed": 6606,
       "runs": 5
     },
     {
@@ -67,8 +67,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 458,
-      "msProbed": 1023,
+      "msPlain": 406,
+      "msProbed": 1095,
       "runs": 4
     },
     {
@@ -81,8 +81,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 351,
-      "msProbed": 964,
+      "msPlain": 292,
+      "msProbed": 1018,
       "runs": 2
     },
     {
@@ -95,8 +95,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": true,
-      "msPlain": 8572,
-      "msProbed": 37072,
+      "msPlain": 8157,
+      "msProbed": 39895,
       "runs": 32
     },
     {
@@ -109,8 +109,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": false,
-      "msPlain": 61297,
-      "msProbed": 219818,
+      "msPlain": 63462,
+      "msProbed": 236248,
       "runs": 7
     },
     {
@@ -123,8 +123,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": false,
-      "msPlain": 122105,
-      "msProbed": 365443,
+      "msPlain": 138233,
+      "msProbed": 389377,
       "runs": 7
     },
     {
@@ -137,8 +137,8 @@
       "probedStderrMd5": "d41d8cd98f00b204e9800998ecf8427e",
       "identical": true,
       "byteIdentical": false,
-      "msPlain": 59307,
-      "msProbed": 235433,
+      "msPlain": 59510,
+      "msProbed": 247456,
       "runs": 7
     }
   ],
@@ -222,22 +222,6 @@
     },
     {
       "surface": "run",
-      "name": "arrowVolleys",
-      "reads": 14,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 14
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1964"
-      ],
-      "routes": [
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "brokenRocks",
       "reads": 152,
       "files": {
@@ -272,21 +256,6 @@
     },
     {
       "surface": "run",
-      "name": "chaserKillLockOpens",
-      "reads": 4,
-      "files": {
-        "frontend/modules/seedlingDemo/solverBot.js": 4
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6073"
-      ],
-      "routes": [
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "chaserRoomVerdict",
       "reads": 76439,
       "files": {
@@ -312,46 +281,15 @@
     {
       "surface": "run",
       "name": "chestOpens",
-      "reads": 43,
+      "reads": 18,
       "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 25,
         "scripts/procgen/solve-seedling-r9-campaign.mjs": 18
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4679",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4716",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6124",
         "scripts/procgen/solve-seedling-r9-campaign.mjs:646",
         "scripts/procgen/solve-seedling-r9-campaign.mjs:838"
       ],
       "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "collected",
-      "reads": 1268,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 1268
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4746",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4792",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4832",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4861",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4862"
-      ],
-      "routes": [
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
         "solve-seedling-r9-campaign.mjs"
       ]
     },
@@ -557,37 +495,6 @@
     },
     {
       "surface": "run",
-      "name": "equipsFired",
-      "reads": 21,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 21
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:5994",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6048"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "frozenTimer",
-      "reads": 10,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 10
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:585"
-      ],
-      "routes": [
-        "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "gameTime",
       "reads": 2,
       "files": {
@@ -637,79 +544,14 @@
     },
     {
       "surface": "run",
-      "name": "grantsFired",
-      "reads": 21,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 21
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6170"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "inCeremony",
-      "reads": 271,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 271
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4792"
-      ],
-      "routes": [
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "inputRefused",
-      "reads": 416,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 206,
-        "frontend/modules/seedlingDemo/solverBot.js": 210
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2299",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2335",
-        "frontend/modules/seedlingDemo/solverBot.js:7229"
-      ],
-      "routes": [
-        "regenerate-r3-tapes.mjs",
-        "solve-seedling-r8-d2-chain.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "inventory",
-      "reads": 7671,
+      "reads": 28,
       "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 379,
-        "frontend/modules/seedlingDemo/solverBot.js": 7264,
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs": 4,
         "scripts/procgen/solve-seedling-r8-d2.mjs": 5,
         "scripts/procgen/solve-seedling-r9-campaign.mjs": 19
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2281",
-        "frontend/modules/seedlingDemo/botDriverV2.js:2539",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5601",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6171",
-        "frontend/modules/seedlingDemo/solverBot.js:1476",
-        "frontend/modules/seedlingDemo/solverBot.js:1758",
-        "frontend/modules/seedlingDemo/solverBot.js:2440",
-        "frontend/modules/seedlingDemo/solverBot.js:3438",
-        "frontend/modules/seedlingDemo/solverBot.js:7045",
-        "frontend/modules/seedlingDemo/solverBot.js:7309",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:657",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:705",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:706",
@@ -723,53 +565,69 @@
         "scripts/procgen/solve-seedling-r9-campaign.mjs:833"
       ],
       "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
         "solve-seedling-r8-d2-chain.mjs",
         "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "keyOpens",
-      "reads": 4,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 4
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2197"
-      ],
-      "routes": [
-        "regenerate-r4-tapes.mjs"
+        "solve-seedling-r9-campaign.mjs"
       ]
     },
     {
       "surface": "run",
       "name": "keys",
-      "reads": 72603,
+      "reads": 4,
       "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 68794,
-        "frontend/modules/seedlingDemo/solverBot.js": 3805,
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs": 4
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2157",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5042",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5317",
-        "frontend/modules/seedlingDemo/botDriverV2.js:5602",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6166",
-        "frontend/modules/seedlingDemo/solverBot.js:1473",
-        "frontend/modules/seedlingDemo/solverBot.js:1556",
-        "frontend/modules/seedlingDemo/solverBot.js:6852",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:658",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:702",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:703"
+      ],
+      "routes": [
+        "solve-seedling-r8-d2-chain.mjs"
+      ]
+    },
+    {
+      "surface": "run",
+      "name": "ledger",
+      "reads": 10036,
+      "files": {
+        "frontend/modules/seedlingDemo/botDriverV2.js": 2675,
+        "frontend/modules/seedlingDemo/solverBot.js": 7361
+      },
+      "sites": [
+        "frontend/modules/seedlingDemo/botDriverV2.js:1692",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1693",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1721",
+        "frontend/modules/seedlingDemo/botDriverV2.js:1964",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2197",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2368",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4679",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4682",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4683",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4716",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4739",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4746",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4792",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4832",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4861",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4862",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5994",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6048",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6119",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6120",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6121",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6123",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6124",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6125",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6167",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6170",
+        "frontend/modules/seedlingDemo/solverBot.js:6073",
+        "frontend/modules/seedlingDemo/solverBot.js:6383",
+        "frontend/modules/seedlingDemo/solverBot.js:6390",
+        "frontend/modules/seedlingDemo/solverBot.js:6473",
+        "frontend/modules/seedlingDemo/solverBot.js:6793",
+        "frontend/modules/seedlingDemo/solverBot.js:6812",
+        "frontend/modules/seedlingDemo/solverBot.js:7710"
       ],
       "routes": [
         "regenerate-r2-tapes.mjs",
@@ -780,8 +638,7 @@
         "solve-seedling-r8-d2.mjs",
         "solve-seedling-r8-l18.mjs",
         "solve-seedling-r8-tail.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
+        "solve-seedling-r9-campaign.mjs"
       ]
     },
     {
@@ -870,20 +727,6 @@
     },
     {
       "surface": "run",
-      "name": "lockSnaps",
-      "reads": 4,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 4
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:2368"
-      ],
-      "routes": [
-        "regenerate-r3-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "noDamage",
       "reads": 1,
       "files": {
@@ -936,9 +779,8 @@
     {
       "surface": "run",
       "name": "playerDeaths",
-      "reads": 649,
+      "reads": 60,
       "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 589,
         "scripts/procgen/provisionalLatch.js": 27,
         "scripts/procgen/solve-seedling-r8-battery.mjs": 9,
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs": 3,
@@ -949,8 +791,6 @@
         "scripts/procgen/solve-seedling-r9-l3.mjs": 1
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1693",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1721",
         "scripts/procgen/provisionalLatch.js:233",
         "scripts/procgen/solve-seedling-r8-battery.mjs:573",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:505",
@@ -973,9 +813,8 @@
     {
       "surface": "run",
       "name": "playerHits",
-      "reads": 649,
+      "reads": 60,
       "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 589,
         "scripts/procgen/provisionalLatch.js": 27,
         "scripts/procgen/solve-seedling-r8-battery.mjs": 9,
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs": 3,
@@ -986,8 +825,6 @@
         "scripts/procgen/solve-seedling-r9-l3.mjs": 1
       },
       "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1692",
-        "frontend/modules/seedlingDemo/botDriverV2.js:1721",
         "scripts/procgen/provisionalLatch.js:232",
         "scripts/procgen/solve-seedling-r8-battery.mjs:572",
         "scripts/procgen/solve-seedling-r8-d2-chain.mjs:504",
@@ -1005,22 +842,6 @@
         "solve-seedling-r8-tail.mjs",
         "solve-seedling-r9-campaign.mjs",
         "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "presses",
-      "reads": 21,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 21
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6167"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
       ]
     },
     {
@@ -1048,97 +869,59 @@
     },
     {
       "surface": "run",
-      "name": "primaryWeapon",
-      "reads": 1154,
+      "name": "progress",
+      "reads": 88749,
       "files": {
-        "frontend/modules/seedlingDemo/solverBot.js": 1154
+        "frontend/modules/seedlingDemo/botDriverV2.js": 74351,
+        "frontend/modules/seedlingDemo/solverBot.js": 14398
       },
       "sites": [
+        "frontend/modules/seedlingDemo/botDriverV2.js:1711",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2157",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2281",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2299",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2335",
+        "frontend/modules/seedlingDemo/botDriverV2.js:2539",
+        "frontend/modules/seedlingDemo/botDriverV2.js:3551",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4792",
+        "frontend/modules/seedlingDemo/botDriverV2.js:4949",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5042",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5317",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5563",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5601",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5602",
+        "frontend/modules/seedlingDemo/botDriverV2.js:585",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5952",
+        "frontend/modules/seedlingDemo/botDriverV2.js:5966",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6166",
+        "frontend/modules/seedlingDemo/botDriverV2.js:6171",
+        "frontend/modules/seedlingDemo/solverBot.js:1473",
+        "frontend/modules/seedlingDemo/solverBot.js:1476",
+        "frontend/modules/seedlingDemo/solverBot.js:1556",
+        "frontend/modules/seedlingDemo/solverBot.js:1758",
+        "frontend/modules/seedlingDemo/solverBot.js:1886",
+        "frontend/modules/seedlingDemo/solverBot.js:2440",
         "frontend/modules/seedlingDemo/solverBot.js:3425",
+        "frontend/modules/seedlingDemo/solverBot.js:3438",
+        "frontend/modules/seedlingDemo/solverBot.js:6852",
+        "frontend/modules/seedlingDemo/solverBot.js:7045",
+        "frontend/modules/seedlingDemo/solverBot.js:7229",
         "frontend/modules/seedlingDemo/solverBot.js:7283",
+        "frontend/modules/seedlingDemo/solverBot.js:7309",
+        "frontend/modules/seedlingDemo/solverBot.js:7577",
         "frontend/modules/seedlingDemo/solverBot.js:9130"
       ],
       "routes": [
+        "regenerate-r2-tapes.mjs",
+        "regenerate-r3-tapes.mjs",
+        "regenerate-r4-tapes.mjs",
+        "solve-seedling-r8-battery.mjs",
+        "solve-seedling-r8-d2-chain.mjs",
+        "solve-seedling-r8-d2.mjs",
+        "solve-seedling-r8-l18.mjs",
+        "solve-seedling-r8-tail.mjs",
         "solve-seedling-r9-campaign.mjs",
         "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "pulserHits",
-      "reads": 21,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 21
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6119"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "pulserPlayerHits",
-      "reads": 21,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 21
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6121"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "pulserPushes",
-      "reads": 21,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 21
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6120"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "roomWrites",
-      "reads": 21,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 21
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:6125"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "ropePulls",
-      "reads": 1,
-      "files": {
-        "frontend/modules/seedlingDemo/solverBot.js": 1
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:7710"
-      ],
-      "routes": [
-        "solve-seedling-r9-campaign.mjs"
       ]
     },
     {
@@ -1153,27 +936,6 @@
       ],
       "routes": [
         "solve-seedling-r8-d2.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "sealCollections",
-      "reads": 35,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 35
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:4682",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4683",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4739",
-        "frontend/modules/seedlingDemo/botDriverV2.js:6123"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs",
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r9-campaign.mjs"
       ]
     },
     {
@@ -1208,60 +970,6 @@
       ],
       "routes": [
         "solve-seedling-r8-d2-chain.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "shieldBossKills",
-      "reads": 1200,
-      "files": {
-        "frontend/modules/seedlingDemo/solverBot.js": 1200
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6793"
-      ],
-      "routes": [
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "shieldBossStabs",
-      "reads": 1197,
-      "files": {
-        "frontend/modules/seedlingDemo/solverBot.js": 1197
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6812"
-      ],
-      "routes": [
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r9-campaign.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "slashInfo",
-      "reads": 5220,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 3255,
-        "frontend/modules/seedlingDemo/solverBot.js": 1965
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:1711",
-        "frontend/modules/seedlingDemo/botDriverV2.js:3551",
-        "frontend/modules/seedlingDemo/botDriverV2.js:4949",
-        "frontend/modules/seedlingDemo/solverBot.js:1886",
-        "frontend/modules/seedlingDemo/solverBot.js:7577"
-      ],
-      "routes": [
-        "solve-seedling-r8-battery.mjs",
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-d2.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r9-campaign.mjs",
-        "solve-seedling-r9-l3.mjs"
       ]
     },
     {
@@ -1305,39 +1013,30 @@
     {
       "surface": "run",
       "name": "spinnerKillLockOpens",
-      "reads": 11,
+      "reads": 2,
       "files": {
-        "frontend/modules/seedlingDemo/solverBot.js": 9,
         "scripts/procgen/solve-seedling-r8-l18.mjs": 2
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6473",
         "scripts/procgen/solve-seedling-r8-l18.mjs:317",
         "scripts/procgen/solve-seedling-r8-l18.mjs:319"
       ],
       "routes": [
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r9-campaign.mjs"
+        "solve-seedling-r8-l18.mjs"
       ]
     },
     {
       "surface": "run",
       "name": "spinnerPressHits",
-      "reads": 4951,
+      "reads": 1,
       "files": {
-        "frontend/modules/seedlingDemo/solverBot.js": 4950,
         "scripts/procgen/solve-seedling-r8-l18.mjs": 1
       },
       "sites": [
-        "frontend/modules/seedlingDemo/solverBot.js:6383",
-        "frontend/modules/seedlingDemo/solverBot.js:6390",
         "scripts/procgen/solve-seedling-r8-l18.mjs:310"
       ],
       "routes": [
-        "solve-seedling-r8-d2-chain.mjs",
-        "solve-seedling-r8-l18.mjs",
-        "solve-seedling-r9-campaign.mjs"
+        "solve-seedling-r8-l18.mjs"
       ]
     },
     {
@@ -1479,22 +1178,6 @@
     },
     {
       "surface": "run",
-      "name": "takenPickups",
-      "reads": 1394,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 1394
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:5563"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
       "name": "ticksCompleted",
       "reads": 89400,
       "files": {
@@ -1582,38 +1265,6 @@
         "solve-seedling-r8-tail.mjs",
         "solve-seedling-r9-campaign.mjs",
         "solve-seedling-r9-l3.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "unfiredEquipTicks",
-      "reads": 21,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 21
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:5966"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
-      ]
-    },
-    {
-      "surface": "run",
-      "name": "unfiredGrantLevels",
-      "reads": 21,
-      "files": {
-        "frontend/modules/seedlingDemo/botDriverV2.js": 21
-      },
-      "sites": [
-        "frontend/modules/seedlingDemo/botDriverV2.js:5952"
-      ],
-      "routes": [
-        "regenerate-r2-tapes.mjs",
-        "regenerate-r3-tapes.mjs",
-        "regenerate-r4-tapes.mjs"
       ]
     },
     {

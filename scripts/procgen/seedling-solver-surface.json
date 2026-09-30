@@ -15,12 +15,12 @@
   ],
   "simulation": {
     "entry": "frontend/modules/seedlingDemo/levelRun.js",
-    "files": 50
+    "files": 51
   },
   "runObject": {
-    "properties": 175,
+    "properties": 177,
     "getter": 162,
-    "method": 11,
+    "method": 13,
     "shorthand": 2
   },
   "dynamicRoutes": [
@@ -35,37 +35,84 @@
     "node frontend/modules/seedlingDemo/fixtures/regenerate-r3-tapes.mjs --check",
     "node frontend/modules/seedlingDemo/fixtures/regenerate-r4-tapes.mjs --check"
   ],
-  "folded": [
-    "openActivators",
-    "pushables",
-    "armedArrowTraps",
-    "crushers",
-    "openChests",
-    "strikeBodies",
-    "spinnerBodies",
-    "armedPulsers",
-    "turrets",
-    "chasers",
-    "brokenRocks",
-    "crushersParked",
-    "pushesSettled",
-    "openBridges",
-    "arrowsInFlight",
-    "burnedTrees",
-    "latchedGroups",
-    "pulledRopes",
-    "turretDamage",
-    "turretsSettled",
-    "arrowFlights",
-    "bosses",
-    "talkCircles"
-  ],
+  "folded": {
+    "entities": [
+      "openActivators",
+      "pushables",
+      "armedArrowTraps",
+      "crushers",
+      "openChests",
+      "strikeBodies",
+      "spinnerBodies",
+      "armedPulsers",
+      "turrets",
+      "chasers",
+      "brokenRocks",
+      "crushersParked",
+      "pushesSettled",
+      "openBridges",
+      "arrowsInFlight",
+      "burnedTrees",
+      "latchedGroups",
+      "pulledRopes",
+      "turretDamage",
+      "turretsSettled",
+      "arrowFlights",
+      "bosses",
+      "talkCircles"
+    ],
+    "progress": [
+      "inventory",
+      "keys",
+      "primaryWeapon",
+      "slashInfo",
+      "inputRefused",
+      "unfiredEquipTicks",
+      "unfiredGrantLevels",
+      "frozenTimer",
+      "inCeremony",
+      "primary",
+      "saveState",
+      "takenPickups"
+    ],
+    "ledger": [
+      "collected",
+      "sealCollections",
+      "equipsFired",
+      "roomWrites",
+      "blastFreezes",
+      "chestOpens",
+      "playerDeaths",
+      "playerHits",
+      "treeBurns",
+      "crusherContacts",
+      "keyOpens",
+      "lockSnaps",
+      "spinnerPressHits",
+      "appliedTimedClears",
+      "arrowVolleys",
+      "bankedClears",
+      "chaserKillLockOpens",
+      "earnedClears",
+      "grantsFired",
+      "presses",
+      "pulserHits",
+      "pulserPlayerHits",
+      "pulserPushes",
+      "ropePulls",
+      "shieldBossKills",
+      "shieldBossStabs",
+      "spinnerKillLockOpens",
+      "spinnerWrites",
+      "turretKills"
+    ]
+  },
   "rows": [
     {
       "surface": "run",
       "name": "advance",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12693,
+      "line": 12886,
       "class": "physics",
       "form": "stepper",
       "files": {
@@ -89,27 +136,9 @@
     },
     {
       "surface": "run",
-      "name": "appliedTimedClears",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11368,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "director.js": 1
-      },
-      "sites": 1,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Returns the applied rows of `timedClears` as `{level, tag, at}`, Seedling persistence-flag clears declared on the tape."
-    },
-    {
-      "surface": "run",
       "name": "arrowCoverAt",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12269,
+      "line": 12490,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -127,7 +156,7 @@
       "surface": "run",
       "name": "arrowForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12244,
+      "line": 12465,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -149,69 +178,9 @@
     },
     {
       "surface": "run",
-      "name": "arrowVolleys",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12140,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 14,
-        "files": {
-          "botDriverV2.js": 14
-        },
-        "sites": 1
-      },
-      "why": "Returns copies of arrowVolleysFired, one per volley a Seedling arrow trap fired."
-    },
-    {
-      "surface": "run",
-      "name": "bankedClears",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12088,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "director.js": 1
-      },
-      "sites": 1,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Returns {level, tag} rows flattened from pendingEarnedClears, the Seedling persistence-flag clears banked for the next build."
-    },
-    {
-      "surface": "run",
-      "name": "blastFreezes",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11994,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 3
-      },
-      "sites": 3,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Returns copies of blastFreezes, one row per tick an ice-turret blast froze the player."
-    },
-    {
-      "surface": "run",
       "name": "chaserForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12255,
+      "line": 12476,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -233,33 +202,9 @@
     },
     {
       "surface": "run",
-      "name": "chaserKillLockOpens",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11865,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "solverBot.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 4,
-        "files": {
-          "solverBot.js": 4
-        },
-        "sites": 1
-      },
-      "why": "Returns copies of chaserKillLockOpens, the Seedling kill-lock consequence recorded for every chaser removal."
-    },
-    {
-      "surface": "run",
       "name": "chaserRoomVerdict",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11885,
+      "line": 12112,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -283,75 +228,9 @@
     },
     {
       "surface": "run",
-      "name": "chestOpens",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12057,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 3
-      },
-      "sites": 3,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 25,
-        "files": {
-          "botDriverV2.js": 25
-        },
-        "sites": 3
-      },
-      "why": "Returns copies of chestOpens, one record per Seedling chest opened with the persistence flag it cleared."
-    },
-    {
-      "surface": "run",
-      "name": "collected",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11225,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 7
-      },
-      "sites": 7,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 1268,
-        "files": {
-          "botDriverV2.js": 1268
-        },
-        "sites": 5
-      },
-      "why": "Returns copies of `collected`, one `{t, level, item, frames}` per completed Seedling pickup ceremony."
-    },
-    {
-      "surface": "run",
-      "name": "crusherContacts",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11791,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 2
-      },
-      "sites": 2,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Returns copies of the crusherContacts list, one row per tick a Crusher body overlapped the player."
-    },
-    {
-      "surface": "run",
       "name": "direction",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10783,
+      "line": 11173,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -373,27 +252,9 @@
     },
     {
       "surface": "run",
-      "name": "earnedClears",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11373,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "director.js": 1
-      },
-      "sites": 1,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Derives `{level, tag, by, t}` Seedling persistence clears from lock snaps, key opens, lightpoles, buttons, rocks, bosses, watchers, final doors and pickups."
-    },
-    {
-      "surface": "run",
       "name": "entities",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10713,
+      "line": 11074,
       "class": "seedling",
       "form": "live-state",
       "files": {
@@ -504,7 +365,7 @@
       "surface": "run",
       "name": "equipNow",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11160,
+      "line": 11550,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -526,57 +387,9 @@
     },
     {
       "surface": "run",
-      "name": "equipsFired",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10785,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 4
-      },
-      "sites": 4,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 21,
-        "files": {
-          "botDriverV2.js": 21
-        },
-        "sites": 2
-      },
-      "why": "Returns copies of `firedEquips` `{t, slot}` records, a ledger of Seedling `Main.primary` equip selections."
-    },
-    {
-      "surface": "run",
-      "name": "frozenTimer",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11998,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 10,
-        "files": {
-          "botDriverV2.js": 10
-        },
-        "sites": 1
-      },
-      "why": "Returns the closure frozenTimer mirroring Player.frozenTimer, the ice-blast freeze countdown specific to Seedling's IceTurret."
-    },
-    {
-      "surface": "run",
       "name": "gameTimeAt",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11103,
+      "line": 11493,
       "class": "physics",
       "form": "forecast",
       "files": {
@@ -600,159 +413,125 @@
     },
     {
       "surface": "run",
-      "name": "grantsFired",
+      "name": "ledger",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11600,
+      "line": 11103,
       "class": "seedling",
       "form": "event-ledger",
       "files": {
-        "botDriverV2.js": 1
+        "botDriverV2.js": 49,
+        "director.js": 4,
+        "solverBot.js": 7
       },
-      "sites": 1,
+      "sites": 60,
       "seen": "both",
       "via": [
         "direct"
       ],
       "dynamic": {
-        "reads": 21,
+        "reads": 10036,
         "files": {
-          "botDriverV2.js": 21
+          "botDriverV2.js": 2675,
+          "solverBot.js": 7361
         },
-        "sites": 1
+        "sites": 33
       },
-      "why": "Returns copies of `firedGrants`, `{t, level, items}` per tape grant of Seedling items that fired."
-    },
-    {
-      "surface": "run",
-      "name": "inCeremony",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11533,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 271,
-        "files": {
-          "botDriverV2.js": 271
+      "why": "Returns LEDGER_KINDS[kind](), the closure function the kind’s own getter also returns: a fresh copy of one Seedling event ledger (collections, chest opens, lock snaps, pulser and spinner hits, clears, presses; engine-prep C4 folded 29 getters behind it); throws by name on an unknown kind. The physics room log, transitions, is not a kind.",
+      "kinds": {
+        "appliedTimedClears": {
+          "director.js": 1
         },
-        "sites": 1
-      },
-      "why": "Returns `ceremony !== null`, whether a Seedling pickup ceremony (freezeObjects + dialogue) is running."
-    },
-    {
-      "surface": "run",
-      "name": "inputRefused",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11517,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 2,
-        "solverBot.js": 1
-      },
-      "sites": 3,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 416,
-        "files": {
-          "botDriverV2.js": 206,
-          "solverBot.js": 210
+        "arrowVolleys": {
+          "botDriverV2.js": 1
         },
-        "sites": 3
-      },
-      "why": "Returns `lockSnap !== null`, i.e. whether a Seedling touch-lock window is active; OVERTURNED: despite the generic name it reports one specific Seedling entity mechanic (the Lock's `receiveInput=false` snap), not a general engine input gate — ceremonies are reported separately by `inCeremony`."
-    },
-    {
-      "surface": "run",
-      "name": "inventory",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10746,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 7,
-        "solverBot.js": 9
-      },
-      "sites": 16,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 7643,
-        "files": {
-          "botDriverV2.js": 379,
-          "solverBot.js": 7264
+        "bankedClears": {
+          "director.js": 1
         },
-        "sites": 10
-      },
-      "why": "Returns a copy of the `inventory` object from `initialInventory()`, Seedling's item bag (sword, shield, spear, etc.)."
-    },
-    {
-      "surface": "run",
-      "name": "keyOpens",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11205,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 2
-      },
-      "sites": 2,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 4,
-        "files": {
+        "blastFreezes": {
+          "botDriverV2.js": 3
+        },
+        "chaserKillLockOpens": {
+          "solverBot.js": 1
+        },
+        "chestOpens": {
+          "botDriverV2.js": 3
+        },
+        "collected": {
+          "botDriverV2.js": 7
+        },
+        "crusherContacts": {
+          "botDriverV2.js": 2
+        },
+        "earnedClears": {
+          "director.js": 1
+        },
+        "equipsFired": {
           "botDriverV2.js": 4
         },
-        "sites": 1
-      },
-      "why": "Returns copies of `keyOpens`, one record per Seedling BossLock that finished its fade."
-    },
-    {
-      "surface": "run",
-      "name": "keys",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11165,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 6,
-        "solverBot.js": 4
-      },
-      "sites": 10,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 72599,
-        "files": {
-          "botDriverV2.js": 68794,
-          "solverBot.js": 3805
+        "grantsFired": {
+          "botDriverV2.js": 1
         },
-        "sites": 8
-      },
-      "why": "Returns a copy of the `keys` set, Seedling's `SAVE_FILE.data.hasKey` key types that open BossLocks."
+        "keyOpens": {
+          "botDriverV2.js": 2
+        },
+        "lockSnaps": {
+          "botDriverV2.js": 2
+        },
+        "playerDeaths": {
+          "botDriverV2.js": 3
+        },
+        "playerHits": {
+          "botDriverV2.js": 3
+        },
+        "presses": {
+          "botDriverV2.js": 1
+        },
+        "pulserHits": {
+          "botDriverV2.js": 1
+        },
+        "pulserPlayerHits": {
+          "botDriverV2.js": 1
+        },
+        "pulserPushes": {
+          "botDriverV2.js": 1
+        },
+        "roomWrites": {
+          "botDriverV2.js": 4
+        },
+        "ropePulls": {
+          "solverBot.js": 1
+        },
+        "sealCollections": {
+          "botDriverV2.js": 6
+        },
+        "shieldBossKills": {
+          "solverBot.js": 1
+        },
+        "shieldBossStabs": {
+          "solverBot.js": 1
+        },
+        "spinnerKillLockOpens": {
+          "solverBot.js": 1
+        },
+        "spinnerPressHits": {
+          "solverBot.js": 2
+        },
+        "spinnerWrites": {
+          "director.js": 1
+        },
+        "treeBurns": {
+          "botDriverV2.js": 3
+        },
+        "turretKills": {
+          "botDriverV2.js": 1
+        }
+      }
     },
     {
       "surface": "run",
       "name": "level",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10702,
+      "line": 11063,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -781,7 +560,7 @@
       "surface": "run",
       "name": "liveGeometryOpts",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11695,
+      "line": 11922,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -803,33 +582,9 @@
     },
     {
       "surface": "run",
-      "name": "lockSnaps",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11236,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 2
-      },
-      "sites": 2,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 4,
-        "files": {
-          "botDriverV2.js": 4
-        },
-        "sites": 1
-      },
-      "why": "Returns copies of `lockSnaps`, one record per completed Seedling touch-lock window."
-    },
-    {
-      "surface": "run",
       "name": "noHazards",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11669,
+      "line": 11896,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -853,81 +608,9 @@
     },
     {
       "surface": "run",
-      "name": "playerDeaths",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11626,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 3
-      },
-      "sites": 3,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 589,
-        "files": {
-          "botDriverV2.js": 589
-        },
-        "sites": 2
-      },
-      "why": "Returns copies of `playerDeaths`, one row per Seedling death/world reboot with its computed respawn."
-    },
-    {
-      "surface": "run",
-      "name": "playerHits",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11625,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 3
-      },
-      "sites": 3,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 589,
-        "files": {
-          "botDriverV2.js": 589
-        },
-        "sites": 2
-      },
-      "why": "Returns copies of `playerHits`, one row per landed Seedling `Player.hit` with source, hits, knockback and shake."
-    },
-    {
-      "surface": "run",
-      "name": "presses",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12300,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 21,
-        "files": {
-          "botDriverV2.js": 21
-        },
-        "sites": 1
-      },
-      "why": "Returns copies of the presses ledger, one per Seedling weapon press that fired its rect with weapon, direction and hits."
-    },
-    {
-      "surface": "run",
       "name": "previewStepper",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12184,
+      "line": 12405,
       "class": "physics",
       "form": "stepper",
       "files": {
@@ -949,214 +632,79 @@
     },
     {
       "surface": "run",
-      "name": "primary",
+      "name": "progress",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10758,
+      "line": 11089,
       "class": "seedling",
       "form": "live-state",
       "files": {
-        "botDriverV2.js": 1
+        "botDriverV2.js": 29,
+        "director.js": 1,
+        "solverBot.js": 19
       },
-      "sites": 1,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Returns `primary`, the mirror of Seedling's `Main.primary` selected inventory slot."
-    },
-    {
-      "surface": "run",
-      "name": "primaryWeapon",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10767,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 3,
-        "solverBot.js": 3
-      },
-      "sites": 6,
+      "sites": 49,
       "seen": "both",
       "via": [
         "direct"
       ],
       "dynamic": {
-        "reads": 1154,
+        "reads": 88749,
         "files": {
-          "solverBot.js": 1154
+          "botDriverV2.js": 74351,
+          "solverBot.js": 14398
         },
-        "sites": 3
+        "sites": 34
       },
-      "why": "Returns `weaponForPress()`, which of Seedling's four weapon mechanics the selected slot would fire."
-    },
-    {
-      "surface": "run",
-      "name": "pulserHits",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12104,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 21,
-        "files": {
-          "botDriverV2.js": 21
+      "why": "Returns PROGRESS_FIELDS[field](), the closure function the field’s own getter also returns: a copy or primitive of the player’s Seedling bag and progress (inventory, key types, selected slot and its weapon, slash windows, touch-lock and ceremony flags, freeze timer, save arrays, taken pickups; engine-prep C4 folded 12 getters behind it); throws by name on an unknown field.",
+      "fields": {
+        "frozenTimer": {
+          "botDriverV2.js": 1
         },
-        "sites": 1
-      },
-      "why": "Returns copies of pulserHits, one per tick a Seedling Pulser's hit() ran."
-    },
-    {
-      "surface": "run",
-      "name": "pulserPlayerHits",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12278,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 21,
-        "files": {
-          "botDriverV2.js": 21
+        "inCeremony": {
+          "botDriverV2.js": 1
         },
-        "sites": 1
-      },
-      "why": "Returns copies of pulserPlayerHits, one per tick a Seedling pulse reached the player."
-    },
-    {
-      "surface": "run",
-      "name": "pulserPushes",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12276,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 21,
-        "files": {
-          "botDriverV2.js": 21
-        },
-        "sites": 1
-      },
-      "why": "Returns copies of pulsePushes_, one per block a Seedling Pulser moved."
-    },
-    {
-      "surface": "run",
-      "name": "roomWrites",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11216,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 4
-      },
-      "sites": 4,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 21,
-        "files": {
-          "botDriverV2.js": 21
-        },
-        "sites": 1
-      },
-      "why": "Returns copies of `roomWrites`, every Seedling `ButtonRoom` cross-room persistence write."
-    },
-    {
-      "surface": "run",
-      "name": "ropePulls",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10789,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "solverBot.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 1,
-        "files": {
+        "inputRefused": {
+          "botDriverV2.js": 2,
           "solverBot.js": 1
         },
-        "sites": 1
-      },
-      "why": "Returns copies of `ropePulls`, a ledger of Seedling rope entities pulled and their persistence flags."
-    },
-    {
-      "surface": "run",
-      "name": "saveState",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11186,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "director.js": 1
-      },
-      "sites": 1,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Returns Seedling's save arrays (totem_parts, keys, boot seal_parts prefix, seal slots earned from chest opens)."
-    },
-    {
-      "surface": "run",
-      "name": "sealCollections",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12100,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 6
-      },
-      "sites": 6,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 35,
-        "files": {
-          "botDriverV2.js": 35
+        "inventory": {
+          "botDriverV2.js": 7,
+          "solverBot.js": 9
         },
-        "sites": 4
-      },
-      "why": "Returns copies of sealCollections, one per completed Seedling seal ceremony with its dead frames."
+        "keys": {
+          "botDriverV2.js": 6,
+          "solverBot.js": 4
+        },
+        "primary": {
+          "botDriverV2.js": 1
+        },
+        "primaryWeapon": {
+          "botDriverV2.js": 3,
+          "solverBot.js": 3
+        },
+        "saveState": {
+          "director.js": 1
+        },
+        "slashInfo": {
+          "botDriverV2.js": 3,
+          "solverBot.js": 2
+        },
+        "takenPickups": {
+          "botDriverV2.js": 1
+        },
+        "unfiredEquipTicks": {
+          "botDriverV2.js": 2
+        },
+        "unfiredGrantLevels": {
+          "botDriverV2.js": 2
+        }
+      }
     },
     {
       "surface": "run",
       "name": "shakeWritersHere",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11656,
+      "line": 11883,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -1178,83 +726,9 @@
     },
     {
       "surface": "run",
-      "name": "shieldBossKills",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12451,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "solverBot.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 1200,
-        "files": {
-          "solverBot.js": 1200
-        },
-        "sites": 1
-      },
-      "why": "Returns copies of shieldBossKills, the ShieldBoss death's tag/destroy/removed instants."
-    },
-    {
-      "surface": "run",
-      "name": "shieldBossStabs",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12442,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "solverBot.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 1197,
-        "files": {
-          "solverBot.js": 1197
-        },
-        "sites": 1
-      },
-      "why": "Returns copies of shieldBossStabs, one per ShieldBoss startStab with its derived sword window."
-    },
-    {
-      "surface": "run",
-      "name": "slashInfo",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12359,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 3,
-        "solverBot.js": 2
-      },
-      "sites": 5,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 5220,
-        "files": {
-          "botDriverV2.js": 3255,
-          "solverBot.js": 1965
-        },
-        "sites": 5
-      },
-      "why": "Returns the sword slash state, wand/fire window end ticks and hasSword/hasGhostSword gates, Seedling weapon/inventory state."
-    },
-    {
-      "surface": "run",
       "name": "spinnerForecast",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10929,
+      "line": 11319,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -1279,75 +753,9 @@
     },
     {
       "surface": "run",
-      "name": "spinnerKillLockOpens",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11036,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "solverBot.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 9,
-        "files": {
-          "solverBot.js": 9
-        },
-        "sites": 1
-      },
-      "why": "Returns copies of `spinnerKillLockOpens`, the removal-time scan of kill-locks opened by Seedling spinner deaths (`Game.totalEnemies()`)."
-    },
-    {
-      "surface": "run",
-      "name": "spinnerPressHits",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11010,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "solverBot.js": 2
-      },
-      "sites": 2,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 4950,
-        "files": {
-          "solverBot.js": 4950
-        },
-        "sites": 2
-      },
-      "why": "Returns copies of `spinnerPressHits`, one row per press hit test on a Seedling Spinner (landed or refused with reason)."
-    },
-    {
-      "surface": "run",
-      "name": "spinnerWrites",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11000,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "director.js": 1
-      },
-      "sites": 1,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Returns copies of `spinnerWrites`, `{t, level, id, flag, cause}` per Seedling `Spinner.removed()` persistence write."
-    },
-    {
-      "surface": "run",
       "name": "state",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10704,
+      "line": 11065,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -1371,33 +779,9 @@
     },
     {
       "surface": "run",
-      "name": "takenPickups",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11250,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 1
-      },
-      "sites": 1,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 1394,
-        "files": {
-          "botDriverV2.js": 1394
-        },
-        "sites": 1
-      },
-      "why": "Returns a set of `pickup:tag@x,y` keys for Seedling pickups already collected in the current level, derived from `collectedPickups`."
-    },
-    {
-      "surface": "run",
       "name": "ticksCompleted",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10745,
+      "line": 11135,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -1425,7 +809,7 @@
       "surface": "run",
       "name": "transitions",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10742,
+      "line": 11132,
       "class": "physics",
       "form": "event-ledger",
       "files": {
@@ -1449,93 +833,9 @@
     },
     {
       "surface": "run",
-      "name": "treeBurns",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10800,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 3
-      },
-      "sites": 3,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Returns copies of `treeBurns`, records of Seedling FallRocks dropped by an activator publication (`{id, level, t, flag, deadFrames}`)."
-    },
-    {
-      "surface": "run",
-      "name": "turretKills",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11981,
-      "class": "seedling",
-      "form": "event-ledger",
-      "files": {
-        "botDriverV2.js": 1
-      },
-      "sites": 1,
-      "seen": "static",
-      "via": [
-        "direct"
-      ],
-      "dynamic": null,
-      "why": "Returns copies of turretKills, the IceTurret kill ledger with the locks each death opened."
-    },
-    {
-      "surface": "run",
-      "name": "unfiredEquipTicks",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11158,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 2
-      },
-      "sites": 2,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 21,
-        "files": {
-          "botDriverV2.js": 21
-        },
-        "sites": 1
-      },
-      "why": "Returns the keys of `equipsByTick`, tape-declared Seedling equip ticks the run has not yet reached."
-    },
-    {
-      "surface": "run",
-      "name": "unfiredGrantLevels",
-      "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 11607,
-      "class": "seedling",
-      "form": "live-state",
-      "files": {
-        "botDriverV2.js": 2
-      },
-      "sites": 2,
-      "seen": "both",
-      "via": [
-        "direct"
-      ],
-      "dynamic": {
-        "reads": 21,
-        "files": {
-          "botDriverV2.js": 21
-        },
-        "sites": 1
-      },
-      "why": "Returns the keys of `grantsByLevel`, levels whose Seedling item grants have not fired yet."
-    },
-    {
-      "surface": "run",
       "name": "world",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10703,
+      "line": 11064,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -1562,7 +862,7 @@
       "surface": "run",
       "name": "worldCtor",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 10741,
+      "line": 11131,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -1580,7 +880,7 @@
       "surface": "run",
       "name": "worldFor",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 12674,
+      "line": 12867,
       "class": "physics",
       "form": "function",
       "files": {
@@ -2292,7 +1592,7 @@
       "surface": "state",
       "name": "direction",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3326,
+      "line": 3381,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -2318,7 +1618,7 @@
       "surface": "state",
       "name": "drown",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3323,
+      "line": 3378,
       "class": "seedling",
       "form": "live-state",
       "files": {},
@@ -2365,7 +1665,7 @@
       "surface": "state",
       "name": "hazard",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3322,
+      "line": 3377,
       "class": "seedling",
       "form": "live-state",
       "files": {},
@@ -2386,7 +1686,7 @@
       "surface": "state",
       "name": "hitX",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3332,
+      "line": 3387,
       "class": "physics",
       "form": "live-state",
       "files": {},
@@ -2406,7 +1706,7 @@
       "surface": "state",
       "name": "hitY",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3333,
+      "line": 3388,
       "class": "physics",
       "form": "live-state",
       "files": {},
@@ -2426,7 +1726,7 @@
       "surface": "state",
       "name": "latched",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3331,
+      "line": 3386,
       "class": "physics",
       "form": "live-state",
       "files": {},
@@ -2466,7 +1766,7 @@
       "surface": "state",
       "name": "terrain",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3319,
+      "line": 3374,
       "class": "seedling",
       "form": "live-state",
       "files": {},
@@ -2507,7 +1807,7 @@
       "surface": "state",
       "name": "vx",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3317,
+      "line": 3372,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -2538,7 +1838,7 @@
       "surface": "state",
       "name": "vy",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3318,
+      "line": 3373,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -2569,7 +1869,7 @@
       "surface": "state",
       "name": "x",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3315,
+      "line": 3370,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -2600,7 +1900,7 @@
       "surface": "state",
       "name": "y",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 3316,
+      "line": 3371,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -3694,7 +2994,7 @@
       "surface": "import",
       "name": "createLevelRun",
       "module": "frontend/modules/seedlingDemo/levelRun.js",
-      "line": 324,
+      "line": 379,
       "class": "physics",
       "form": "function",
       "files": {

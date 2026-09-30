@@ -21,6 +21,12 @@
  * file asks for which family, and a family file reading a folded getter
  * directly is RED by name.
  *
+ * ⛓ ENGINE-PREP C4 — the progress and ledger folds: the player's bag and
+ * progress (12 getters) behind `run.progress(field)`, the Seedling event
+ * ledgers (29) behind `run.ledger(kind)`. The census's fold machinery is a
+ * LIST (`FOLDS`); the table's `folded` is keyed by query, and each query's
+ * row carries its own per-key column (`families`, `fields`, `kinds`).
+ *
  * The mutants run the census over a temporary COPY of the family files —
  * never the tree.
  */
@@ -31,9 +37,12 @@ import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import {
-    census, compareToTable, DOOR, entityFamilySites, importClosure, FAMILY_ENTRIES, SIM_ENTRY, staticDrift,
+    census, compareToTable, DOOR, entityFamilySites, FOLDS, foldKeySites, importClosure, FAMILY_ENTRIES, SIM_ENTRY,
+    staticDrift,
 } from './seedlingSolverSurface.js';
-import { ENTITY_FAMILY_NAMES } from '../../frontend/modules/seedlingDemo/levelRun.js';
+import * as LEVEL_RUN from '../../frontend/modules/seedlingDemo/levelRun.js';
+
+const { ENTITY_FAMILY_NAMES } = LEVEL_RUN;
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '../..');
@@ -49,7 +58,7 @@ const say = (cmp) => [
     ...cmp.retired.map((r) => `${r.key}${r.file ? ` (${r.file})` : ''} — ${r.why}`),
     ...(cmp.family ? [`family closure ${cmp.family.closure.join(' ')} ≠ table ${cmp.family.table.join(' ')}`] : []),
     ...cmp.door.map((d) => `${d.at} ${d.why}`),
-    ...cmp.entities.map((e) => `${e.at} ${e.why}`),
+    ...cmp.folds.map((e) => `${e.at} ${e.why}`),
 ];
 
 let fresh;
@@ -106,18 +115,46 @@ describe('the committed contract equals a fresh census', () => {
     it('(vi) the entities fold: no family file reads a folded getter, every run.entities(…) names a known '
         + 'family with a literal, and the table\'s folded list IS levelRun.js\'s ENTITY_FAMILY_NAMES', () => {
         const cmp = compareToTable(fresh, TABLE);
-        expect(cmp.entities.map((e) => `${e.at} ${e.why}`)).toEqual([]);
+        expect(cmp.folds.map((e) => `${e.at} ${e.why}`)).toEqual([]);
         // generated, not typed: the census's text read, the module's own export and the table agree
         expect(fresh.entityFamilies.names.list).toEqual([...ENTITY_FAMILY_NAMES]);
         expect(fresh.entityFamilies.dispatch.list).toEqual([...ENTITY_FAMILY_NAMES]);
-        expect(TABLE.folded).toEqual([...ENTITY_FAMILY_NAMES]);
+        expect(TABLE.folded.entities).toEqual([...ENTITY_FAMILY_NAMES]);
         // a folded getter has no row: the family reaches it only through the query
-        expect(TABLE.rows.filter((r) => r.surface === 'run' && TABLE.folded.includes(r.name))
+        expect(TABLE.rows.filter((r) => r.surface === 'run' && TABLE.folded.entities.includes(r.name))
             .map((r) => r.name)).toEqual([]);
         const row = TABLE.rows.find((r) => r.surface === 'run' && r.name === 'entities');
         expect(row.families).toEqual(entityFamilySites(fresh));
-        expect(Object.keys(row.families).filter((f) => !TABLE.folded.includes(f))).toEqual([]);
+        expect(Object.keys(row.families).filter((f) => !TABLE.folded.entities.includes(f))).toEqual([]);
         expect(Object.values(row.families).flatMap(Object.values).reduce((a, b) => a + b, 0)).toBe(row.sites);
+    });
+
+    for (const fold of FOLDS) {
+        it(`(vii) the ${fold.query} fold: names = dispatch = levelRun.js's runtime ${fold.namesExport} = the table's `
+            + `folded.${fold.query}; no folded row; the ${fold.column} column is a fresh census and sums to the row`, () => {
+            const runtime = LEVEL_RUN[fold.namesExport];
+            expect(Array.isArray(runtime) && runtime.length > 0, `levelRun.js exports ${fold.namesExport}`).toBe(true);
+            expect(fresh.folds[fold.query].names.list).toEqual([...runtime]);
+            expect(fresh.folds[fold.query].dispatch.list).toEqual([...runtime]);
+            expect(TABLE.folded[fold.query]).toEqual([...runtime]);
+            expect(TABLE.rows.filter((r) => r.surface === 'run' && runtime.includes(r.name)).map((r) => r.name))
+                .toEqual([]);
+            const row = TABLE.rows.find((r) => r.surface === 'run' && r.name === fold.query);
+            expect(row, `the run:${fold.query} row`).toBeTruthy();
+            expect(row[fold.column]).toEqual(foldKeySites(fresh, fold.query));
+            expect(Object.keys(row[fold.column]).filter((k) => !runtime.includes(k))).toEqual([]);
+            expect(Object.values(row[fold.column]).flatMap(Object.values).reduce((a, b) => a + b, 0)).toBe(row.sites);
+            // the query's row carries ITS column only
+            expect(FOLDS.filter((f) => f !== fold && row[f.column] !== undefined).map((f) => f.column)).toEqual([]);
+        });
+    }
+
+    it('(vii′) the folds are disjoint, and `transitions` (physics, live) is none of them', () => {
+        const all = FOLDS.flatMap((f) => TABLE.folded[f.query]);
+        expect(new Set(all).size).toBe(all.length);
+        expect(all).not.toContain('transitions');
+        const t = TABLE.rows.find((r) => r.surface === 'run' && r.name === 'transitions');
+        expect([t.class, t.form]).toEqual(['physics', 'event-ledger']);
     });
 
     it('the census reads ONLY run members off `run` (no stray object spelled `run`)', () => {
@@ -293,3 +330,4 @@ describe('the entities fold (engine-prep C3), mutants over a temporary copy', ()
         expect(mutate({ [DANGER]: (s) => `${s}\n// run.pushables — prose, not a read\n` })).toEqual([]);
     });
 });
+
