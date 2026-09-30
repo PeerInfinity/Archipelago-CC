@@ -10,6 +10,13 @@
  * (defaultProcgenParams), so a preset pins only what it means to pin
  * and picks up new substrate default keys automatically.
  *
+ * ⛓ C2 — a TOP-DOWN state's grid is not the defaults' 3×3: where it meets a
+ * source (presetRun.buildRunFromState; the panel's apply and its source
+ * adoption) the grid is sized to that source (`presetRun.sourceSizedParams`)
+ * on every axis `params` does not carry. Carrying `gridWidth`/`gridHeight`
+ * PINS that axis (`presetRun.pinnedGridKeys`); the shipped top-down presets
+ * pin neither. applyPresetState itself stays source-free.
+ *
  * The presets, what each demonstrates and what they cost, are documented in
  * docs/json/developer/procgen/pipeline-presets.md.
  *
@@ -1003,7 +1010,8 @@ export function capturePresetState({
  * Mirrors (and now backs) the panel's _loadFromLocalStorage rules:
  *
  * - `params` present → merged over `defaults` (sparse presets pick up
- *   panel + substrate default keys); absent → `current.params`.
+ *   panel + substrate default keys); absent → `current.params`. A top-down
+ *   grid is then sized to the source by the CALLER (see the file header).
  * - `scenario` present → deep-copied with items/obstacles defaulting
  *   to {}; absent → `current.scenario`.
  * - `substrateMix`/`substrateQuotas` are ALWAYS rebuilt, dropping

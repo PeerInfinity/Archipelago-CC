@@ -65,6 +65,10 @@ The two leaf presets set `seedlingAtlasHostChildren: false` / `seedlingGenHostCh
 
 A top-down preset realises the world the app has loaded; it cannot name a source. Load a game's preset first (a plain page load has Adventure loaded). The panel's *Use currently-loaded rules.json* and *Use currently-loaded sphere log* options (both on by default) pass that world to the pipeline, so region count and substrate split depend on what is loaded.
 
+The grid follows the loaded source. Adopting a source, and applying a top-down preset while one is loaded, both size the grid with one rule: a square side of ⌈√(1.5 × N)⌉ for a source of N regions, never smaller than the default 3 (`gridDimsForSource` in `presetRun.js`). Adventure's 10 regions get 4×4 and APCalc's 81 get 12×12. The headless test and the browser gate use the same rule, so the panel and the headless run build the same world. A preset whose `params` carries `gridWidth` or `gridHeight` pins that axis, and the pin wins over the source, including when a reload adopts the source again. The two shipped top-down presets pin neither. A user preset saves the whole `params`, so it pins the grid it had when it was saved. In top-down mode the grid inputs accept up to 52 (`TOPDOWN_GRID_INPUT_MAX`); grid growth keeps its cap of 10.
+
+A large source costs what it costs; the 30 s preset budget applies to the shipped fixture, Adventure. Measured 2026-09-30, headless, maze and text adventure 2 : 1: APCalc (81 regions, 12×12) places every region in about 0.2 s; `seedling_playthrough` (251 regions, 20×20) takes about 0.5 s and stops at `partial_layout` with 240 of 250 regions placed; `pokemon_rb` (445 regions, 26×26), the largest committed source, places every region in about 1 s. The ten unplaced playthrough regions stay unplaced at every grid up to 40×40, so a larger grid does not help there. In the browser, APCalc took 1.6–11 s depending on machine load.
+
 | id | substrates | demonstrates |
 |---|---|---|
 | `topdown-maze-ta-demo` | maze + text_adventure | An existing game's region graph realised as procgen regions, keeping its access rules. |
@@ -102,7 +106,8 @@ The headless test requires each preset to:
 - pass sphere growth's plan-versus-world oracle;
 - name only registered substrates, and only items that the shared item library or one of its substrates declares;
 - name only obstacles in `DEFAULT_OBSTACLES`;
-- carry each served library's current `library_id` from `region_library_files.json`.
+- carry each served library's current `library_id` from `region_library_files.json`;
+- for a top-down preset, lay the fixture out on the grid its source derives, or on the axes it pins.
 
 **Warning:** several mistakes still produce a green-looking world, which is why the test checks them. An unknown obstacle is dropped silently. A stale `library_id` only warns, and the world is built from the current file. A top-down preset with an empty mix, or with quotas instead of a mix, realises an all-maze world without an error.
 
@@ -111,6 +116,7 @@ A preset naming a substrate whose registry entry declares `generationCost: 'heav
 ## Limits
 
 - **No named top-down source.** A top-down preset uses whatever world is loaded.
+- **`topdown-zones-demo` works only on a source that needs no teleporter.** A top-down layout links a region it cannot place beside its neighbour through a teleporter exit, which has no side, and a bounce zone refuses an exit without one (`unknown exit side 'undefined'`). Adventure needs no teleporter. APCalc, `seedling_playthrough` and `pokemon_rb` fail this way at every grid size measured; ALttP fails earlier, with `braid: at least one exit spec required`.
 - **No region-atlas pool.** Sphere growth can draw on a region-atlas content pool (`procgenPipeline/regionAtlasPool.js`), but the panel has no atlas picker, so a preset cannot select one. Individual Seedling rooms do reach presets through `flash_seedling` and `flash_seedling_gen`.
 - **No JtA or omsi `substrateConfig`** (a JtA dataset, emitted zone locations, an omsi region split). The engine accepts one, but the panel builds none, so a preset has nowhere to carry it. This is why the omsi preset's single region is the whole town.
 - **No generic `flash`.** The generic Flash substrate declares no build-time hook, so no mode can generate it. `flash_seedling` places rooms of the real map rather than generating them; `flash_seedling_gen` generates Seedling rooms.
