@@ -27,7 +27,7 @@ import {
     calcSkillXpPerTick as sharedCalcXp,
     calcSkillXpNeeded as sharedCalcXpNeeded,
     isSingleTick as sharedIsSingleTick,
-} from '../shared/jtaGameCalc.js';
+} from './jtaGameCalc.js';
 
 // ============================================================================
 // Simulation Helpers (mirror jtaCostGenerator's internal functions)
