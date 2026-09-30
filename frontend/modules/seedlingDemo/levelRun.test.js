@@ -25,7 +25,9 @@ import { SLASH_HIT_TICKS } from './presses.js';
 const DASH_CHAIN_OFFSETS = [0, ...DASH_CHAIN.at];
 
 import { loadTape } from './fixtures/index.js';
-import { createLevelRun, ENTITY_FAMILY_NAMES } from './levelRun.js';
+import {
+    createLevelRun, ENTITY_FAMILY_NAMES, LEDGER_KIND_NAMES, PROGRESS_FIELD_NAMES,
+} from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import { RELAXED_ROLES, ROLES, buildLevelWorld, rectsOverlap } from './levelWorld.js';
 import {
@@ -2744,5 +2746,147 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
 
     it('every family was witnessed NON-TRIVIALLY by the rows above', () => {
         expect(ENTITY_FAMILY_NAMES.filter((f) => !witnessed.has(f))).toEqual([]);
+    });
+});
+
+/**
+ * ⛓ ENGINE-PREP C4 — `run.progress(field)` AND `run.ledger(kind)` ARE THE
+ * GETTERS, BY OTHER NAMES.
+ *
+ * The same seam as C3's, twice: the player's bag and progress (12 fields) and
+ * the Seedling event ledgers (29 kinds) each sit behind one keyed query, and
+ * both faces call one closure function (`PROGRESS_FIELDS` / `LEDGER_KINDS`
+ * in `createLevelRun`). Every folded getter returns a fresh value or a
+ * primitive, so the rows hold query to getter deep-strictly at every tick.
+ *
+ * ⚠ A ROW OVER AN EMPTY LEDGER PROVES NOTHING. The tapes below were chosen by
+ * a survey of every non-noclip tape in the roster for the members each makes
+ * NON-TRIVIAL (a non-empty collection, or a value that moved off its tick-0
+ * value). No committed tape makes `crusherContacts` or `pulserPlayerHits`
+ * non-trivial, so two stagings do: R5 slice 15's L41 crusher standing still
+ * in its lane, and `r5-shaft` walked `up` into its latched pulser's ring
+ * after tick 2000.
+ */
+describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the getters, by other names', () => {
+    const FOLDS = [
+        { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 12, noun: 'progress field', plural: 'fields' },
+        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 29, noun: 'ledger kind', plural: 'kinds' },
+    ];
+    const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
+    const queryOf = new Map(FOLDS.flatMap((f) => f.names.map((n) => [n, f.query])));
+    const WITNESSES = [
+        { tape: 'r8-d2', members: ['appliedTimedClears', 'bankedClears', 'collected', 'earnedClears', 'inCeremony',
+            'inputRefused', 'inventory', 'keyOpens', 'keys', 'lockSnaps', 'presses', 'roomWrites', 'saveState',
+            'shieldBossKills', 'shieldBossStabs', 'slashInfo', 'spinnerKillLockOpens', 'spinnerPressHits',
+            'spinnerWrites', 'takenPickups'] },
+        { tape: 'r4-walk-5-spear', members: ['equipsFired', 'grantsFired', 'primary', 'primaryWeapon',
+            'unfiredEquipTicks'] },
+        { tape: 'r5-totem-entrance-control', members: ['chestOpens', 'pulserHits', 'pulserPushes', 'sealCollections'] },
+        { tape: 'r9-solve-16', members: ['arrowVolleys', 'chaserKillLockOpens', 'ropePulls'] },
+        { tape: 'r6-contact-pair-heart', members: ['playerDeaths', 'playerHits'] },
+        { tape: 'r2-walk-2-feather', members: ['unfiredGrantLevels'] },
+        { tape: 'r5-l37-burn', members: ['treeBurns'] },
+        { tape: 'r5-l40-part5-control', members: ['blastFreezes', 'frozenTimer', 'turretKills'] },
+    ];
+    const text = (v) => JSON.stringify(v, (k, x) => (x instanceof Set || x instanceof Map ? [...x] : x));
+    const sizeOf = (v) => (v instanceof Set || v instanceof Map ? v.size : Array.isArray(v) ? v.length : null);
+    const witnessed = new Set();
+    /** A run built with THIS file's `createLevelRun` (C3's D4 lesson), staged field for field from a tape. */
+    const runFor = (tape) => createLevelRun({
+        levelSource, boot: { ...tape.boot }, noclip: tape.noclip,
+        noHazards: tape.noHazards, noDamage: tape.noDamage, grants: tape.grants,
+        persistence: tape.persistence, despawn: tape.despawn ?? [],
+        equips: tape.equips, pins: tape.pins, save: tape.save, rng: tape.rng,
+        seam: tape.seam, roles: ROLES,
+    });
+
+    /** Every folded member, query against getter, after every tick; returns the mismatches and the non-trivial. */
+    function compareEveryTick(run, ticks, heldAt) {
+        const bad = [];
+        const seen = new Set();
+        const first = Object.fromEntries(ALL.map((m) => [m, text(run[m])]));
+        const check = (t) => {
+            for (const m of ALL) {
+                const viaGetter = run[m];
+                const viaQuery = run[queryOf.get(m)](m);
+                if (!isDeepStrictEqual(viaQuery, viaGetter)) bad.push(`t=${t} ${m}`);
+                const n = sizeOf(viaGetter);
+                if (n !== null ? n > 0 : text(viaGetter) !== first[m]) seen.add(m);
+            }
+        };
+        check(0);
+        for (let t = 0; t < ticks; t++) {
+            run.advance(heldAt(t));
+            check(t + 1);
+        }
+        return { bad, seen };
+    }
+
+    for (const { query, names, count, noun, plural } of FOLDS) {
+        it(`the ${query} name list is its dispatch table: ${count} ${plural}, each one a getter on the run`, () => {
+            const run = createLevelRun({ levelSource, boot });
+            expect(names).toHaveLength(count);
+            expect(Object.isFrozen(names)).toBe(true);
+            for (const m of names) {
+                expect(typeof Object.getOwnPropertyDescriptor(run, m)?.get, m).toBe('function');
+            }
+            let message = '';
+            try { run[query]('noSuchKey'); } catch (e) { message = e.message; }
+            expect(message.split(`the known ${plural} are `)[1]).toBe(names.join(', '));
+        });
+
+        it(`an unknown ${noun} throws BY NAME — a typo, and a prototype key, are not empty`, () => {
+            const run = createLevelRun({ levelSource, boot });
+            const typo = names[0].slice(0, -1);
+            expect(() => run[query](typo)).toThrow(new RegExp(
+                `levelRun\\.${query}: unknown ${noun} "${typo}" — the known ${plural} are ${names[0]}, ${names[1]}, `));
+            expect(() => run[query]('constructor')).toThrow(new RegExp(`unknown ${noun} "constructor"`));
+            expect(() => run[query](undefined)).toThrow(new RegExp(`unknown ${noun} undefined`));
+        });
+    }
+
+    it('the three folds are disjoint: no getter answers two queries', () => {
+        const all = [...ENTITY_FAMILY_NAMES, ...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
+        expect(new Set(all).size).toBe(all.length);
+        // ⚖ transitions is the physics room log, handed out live: it stays a direct member
+        expect(all).not.toContain('transitions');
+    });
+
+    for (const { tape: name, members } of WITNESSES) {
+        it(`${name}: the query equals the getter for every folded member at every tick, `
+            + `and the tape makes ${members.join(', ')} non-trivial`, () => {
+            const tape = loadTape(name);
+            const { bad, seen } = compareEveryTick(runFor(tape), tape.tick_count, (t) => heldKeysAt(tape, t));
+            expect(bad).toEqual([]);
+            for (const m of members) expect(seen.has(m), `${name} never made ${m} non-trivial`).toBe(true);
+            for (const m of seen) witnessed.add(m);
+        });
+    }
+
+    it('L41\'s crusher (R5 slice 15\'s staging): standing in the lane is a crusherContacts entry, through the query', () => {
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 41, x: 208, y: 80 },
+            persistence: [{ level: 41, tag: 1 }, { level: 41, tag: 2 }],
+            noDamage: true,
+        });
+        const { bad, seen } = compareEveryTick(run, 60, () => new Set());
+        expect(bad).toEqual([]);
+        expect(run.ledger('crusherContacts')[0]).toMatchObject({ level: 41, id: 'crusher@240,64' });
+        expect(seen.has('crusherContacts')).toBe(true);
+        for (const m of seen) witnessed.add(m);
+    });
+
+    it('r5-shaft, walked up into its latched pulser after tick 2000: a pulserPlayerHits entry, through the query', () => {
+        const tape = loadTape('r5-shaft');
+        const { bad, seen } = compareEveryTick(runFor(tape), 2040,
+            (t) => (t < 2000 ? heldKeysAt(tape, t) : new Set(['up'])));
+        expect(bad).toEqual([]);
+        expect(seen.has('pulserPlayerHits')).toBe(true);
+        for (const m of seen) witnessed.add(m);
+    });
+
+    it('every folded member was witnessed NON-TRIVIALLY by the rows above', () => {
+        expect(ALL.filter((m) => !witnessed.has(m))).toEqual([]);
     });
 });

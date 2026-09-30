@@ -282,6 +282,61 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
 ]);
 
 /**
+ * ⛓ ENGINE-PREP C4: the player's bag and progress fields `run.progress(field)`
+ * answers, and the event-ledger kinds `run.ledger(kind)` answers — each name
+ * is also a getter on the run, and both faces call one closure function. The
+ * solver-surface census reads these lists (the table's `folded.progress` and
+ * `folded.ledger`) and refuses a solver-family file that reads one of these
+ * getters directly. Each must equal the keys of `createLevelRun`'s
+ * `PROGRESS_FIELDS` / `LEDGER_KINDS`.
+ */
+export const PROGRESS_FIELD_NAMES = Object.freeze([
+    'inventory',
+    'keys',
+    'primaryWeapon',
+    'slashInfo',
+    'inputRefused',
+    'unfiredEquipTicks',
+    'unfiredGrantLevels',
+    'frozenTimer',
+    'inCeremony',
+    'primary',
+    'saveState',
+    'takenPickups',
+]);
+export const LEDGER_KIND_NAMES = Object.freeze([
+    'collected',
+    'sealCollections',
+    'equipsFired',
+    'roomWrites',
+    'blastFreezes',
+    'chestOpens',
+    'playerDeaths',
+    'playerHits',
+    'treeBurns',
+    'crusherContacts',
+    'keyOpens',
+    'lockSnaps',
+    'spinnerPressHits',
+    'appliedTimedClears',
+    'arrowVolleys',
+    'bankedClears',
+    'chaserKillLockOpens',
+    'earnedClears',
+    'grantsFired',
+    'presses',
+    'pulserHits',
+    'pulserPlayerHits',
+    'pulserPushes',
+    'ropePulls',
+    'shieldBossKills',
+    'shieldBossStabs',
+    'spinnerKillLockOpens',
+    'spinnerWrites',
+    'turretKills',
+]);
+
+/**
  * Start a run at `boot`, in the level the boot names.
  *
  * @param {object}   opts
@@ -10698,6 +10753,312 @@ export function createLevelRun({
         talkCircles: talkCirclesNow,
     });
 
+    /**
+     * ⛓ ENGINE-PREP C4 — THE PROGRESS AND LEDGER FOLDS, ON THE ENTITIES
+     * FOLD'S PATTERN: ONE FUNCTION, TWO FACES.
+     *
+     * Each arrow below is the body its getter on the returned object had,
+     * moved here verbatim. The getter now returns it (`get inventory() {
+     * return inventoryNow(); }`) and so does `run.progress('inventory')`,
+     * through `PROGRESS_FIELDS` — or, for an event ledger,
+     * `run.ledger('collected')` through `LEDGER_KINDS`. The solver family
+     * reads these through the two queries only (the solver-surface census
+     * refuses a direct read); every other caller keeps the getter.
+     *
+     * - PROGRESS: the player's bag and progress — what the player holds,
+     *   which weapon the selected slot fires, whether input is refused.
+     * - LEDGER: the Seedling event ledgers — one append-only record per kind
+     *   of event the run has seen, copied out on every read.
+     *
+     * ⚖ `transitions` is NOT a ledger kind, though it is a ledger: it is the
+     * PHYSICS room-transition log, part of the run's minimum contract (this
+     * function's `@returns`), handed out live rather than copied; it stays a
+     * direct member.
+     *
+     * ⛔ To fold another member: move its getter's body here as
+     * `<name>Now`, point the getter at it, add it to the table and its name
+     * to the exported list. Never change what it computes.
+     */
+    const inventoryNow = () => ({ ...inventory });
+    const keysNow = () => new Set(keys);
+    const primaryWeaponNow = () => weaponForPress();
+    const slashInfoNow = () => {
+        /**
+         * ⛓ THE END TICKS RIDE ALONG WITH THE BOOLEANS, and that is what
+         * lets a PREVIEW use this shape at all. A preview steps ticks the
+         * run has not run, so it must AGE the two windows rather than
+         * freeze this tick's answer — and a preview that froze `firing`
+         * true would refuse to model a press for the rest of the corridor.
+         * ⛔ A preview cannot OPEN either window: both are opened by a
+         * `secondary` press, the walk holds no `secondary`, and the strike
+         * policy presses `primary` alone. Asserted as a row rather than
+         * claimed here (trap 566). `-1` is "no window", which no
+         * `ticksCompleted` can be inside.
+         */
+        const wandUntil = wandWindows.reduce((m, w) => Math.max(m, w.endTick), -1);
+        const fireUntil = fireWindows.reduce((m, w) => Math.max(m, w.endTick), -1);
+        return {
+            state: { ...slashState },
+            endsAt: slashEndsAt,
+            openUntil: { wanding: wandUntil, firing: fireUntil },
+            gate: {
+                hasSword: inventory?.hasSword ?? false,
+                hasGhostSword: inventory?.hasGhostSword ?? false,
+                wanding: ticksCompleted <= wandUntil,
+                firing: ticksCompleted <= fireUntil,
+                deathRaying: false,
+                spearing: swordWindow.pending?.weapon === 'spear',
+            },
+        };
+    };
+    const inputRefusedNow = () => lockSnap !== null;
+    const unfiredEquipTicksNow = () => [...equipsByTick.keys()];
+    const unfiredGrantLevelsNow = () => [...grantsByLevel.keys()];
+    const frozenTimerNow = () => frozenTimer;
+    const inCeremonyNow = () => ceremony !== null;
+    const primaryNow = () => primary;
+    const saveStateNow = () => ({
+                totem_parts: Array.from(
+                    { length: SAVE_SLOTS.totem_parts }, (_, i) => totemParts.has(i)),
+                keys: Array.from({ length: SAVE_SLOTS.keys }, (_, i) => keys.has(i)),
+                /** The boot-declared prefix, unchanged by the run. */
+                bootSealParts: [...(bootSave.seal_parts ?? [])],
+                /** One per chest OPENED — the slots the run itself filled. */
+                sealSlotsEarned: chestOpens.length,
+            });
+    const takenPickupsNow = () => {
+        const keys = new Set();
+        for (const p of world.pickups ?? []) {
+            if (collectedPickups.has(pickupKey(level, p))) {
+                keys.add(`pickup:${p.tag}@${p.x},${p.y}`);
+            }
+        }
+        return keys;
+    };
+    const collectedNow = () => collected.map((c) => ({ ...c }));
+    const sealCollectionsNow = () => sealCollections.map((c) => ({ ...c }));
+    const equipsFiredNow = () => firedEquips.map((e) => ({ ...e }));
+    const roomWritesNow = () => roomWrites.map((r) => ({ ...r }));
+    const blastFreezesNow = () => blastFreezes.map((b) => ({ ...b }));
+    const chestOpensNow = () => chestOpens.map((c) => ({ ...c }));
+    const playerDeathsNow = () => playerDeaths.map((d) => ({ ...d }));
+    const playerHitsNow = () => playerHits.map((h) => ({ ...h }));
+    const treeBurnsNow = () => treeBurns.map((b) => ({ ...b, flag: { ...b.flag } }));
+    const crusherContactsNow = () => crusherContacts.map((c) => ({ ...c }));
+    const keyOpensNow = () => keyOpens.map((r) => ({ ...r }));
+    const lockSnapsNow = () => lockSnaps.map((r) => ({ ...r }));
+    const spinnerPressHitsNow = () => spinnerPressHits.map((h) => ({ ...h }));
+    const appliedTimedClearsNow = () => timedClears.filter((c) => c.applied)
+                .map((c) => ({ level: c.level, tag: c.tag, at: c.at }));
+    const arrowVolleysNow = () => arrowVolleysFired.map((v) => ({ ...v }));
+    const bankedClearsNow = () => {
+        const out = [];
+        for (const [lvl, tags] of pendingEarnedClears) {
+            for (const tag of tags) out.push({ level: lvl, tag });
+        }
+        return out;
+    };
+    const chaserKillLockOpensNow = () => chaserKillLockOpens.map((o) => ({ ...o }));
+    const earnedClearsNow = () => {
+        const out = [];
+        for (const r of lockSnaps) {
+            if (r.persistTag < 0) continue;
+            // `to` is the window's END — `Lock.turnOff()`'s third line is
+            // where `Game.setPersistence(tag, false)` runs, so the snap's
+            // closing tick IS the write's tick. No new field was needed.
+            out.push({ level: r.level, tag: r.persistTag, by: r.id, t: r.to });
+        }
+        // R4: a BossLock whose fade completed. Same shape as a snap's,
+        // and deliberately a SEPARATE loop: the two are different
+        // mechanics that happen to write the same namespace, and folding
+        // them would make "which openers did this walk use" unanswerable
+        // from the ledger.
+        for (const r of keyOpens) {
+            if (r.persistTag < 0) continue;
+            out.push({ level: r.level, tag: r.persistTag, by: r.id, t: r.t });
+        }
+        // R4: a lit lightpole cleared a flag. ⚠ DERIVED FROM THE FINAL
+        // STATE, never from a count of hits — `LightPole.hit()` is a
+        // TOGGLE, so an even number of presses leaves the flag exactly
+        // as it started and a ledger that counted them would report a
+        // clear the game does not have.
+        for (const [key, flag] of poleFlags) {
+            if (flag.held) continue;
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            // ⚠ `flag.t` is the tick of the write that LEFT it off — the
+            // LAST toggle, not the first. For a toggle that is the only
+            // honest answer, and it is `null` for the boot reading.
+            out.push({ level: n, tag, by: 'lightpole', t: flag.t });
+        }
+        // ⛓ R5 slice 5 step 2: a `ButtonRoom`'s cross-room press.
+        // ⚠ FILTERED ON THE VALUE, not on the existence of the write.
+        // `flip` decides the sign and a `flip = 0` button writes TRUE —
+        // a real `setPersistence` call that puts nothing in the game's
+        // `persistence_cleared` readout, so an exact-set assertion that
+        // banked it would go red against a correct walk.
+        for (const r of roomWrites) {
+            if (r.value !== false || r.tag < 0) continue;
+            if (out.some((o) => o.level === r.level && o.tag === r.tag)) continue;
+            out.push({
+                level: r.level, tag: r.tag,
+                by: r.which === 'room' ? `${r.id} (L${r.from} -> L${r.level})` : r.id,
+                t: r.t,
+            });
+        }
+        // R5: a broken rock. ⚠ NOT a toggle — `endAnim` writes `false`
+        // once and the entity is gone — so unlike the lightpole this is
+        // read off the writes rather than off a final state. And two
+        // rocks that resolve to one flag are ONE entry, which is what
+        // keying the map by the flag buys.
+        for (const [key, r] of rockFlags) {
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            // ⚠ THE WRITER IS NAMED, because two families share this
+            // map now: a `BreakableRock`'s `endAnim` and (R5 slice 12) a
+            // `BurnableTree`'s `removed`. A label hard-coded to one of
+            // them would report a burn as a break — the ledger's whole
+            // job is attribution.
+            const by = r.by ?? 'breakablerock';
+            out.push({
+                level: n, tag,
+                by: r.level === n ? by : `${by} (L${r.level}, tag -1)`,
+                t: r.t,
+            });
+        }
+        // ⛓⛓⛓ R6 SLICE 4: THE FIRST BOSS KILL ON THE LADDER.
+        // `BossTotem.removed()` runs `Game.setPersistence(tag, false)`,
+        // so a kill is a CLEAR like a broken rock's and not a set — the
+        // same polarity the MagicalLock has (§10.8) and the opposite of
+        // what "a kill sets a flag" suggests. It belongs in this ledger
+        // for that reason and not in a ledger of its own.
+        for (const [key, r] of bossFlags) {
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            if (out.some((o) => o.level === n && o.tag === tag)) continue;
+            out.push({ level: n, tag, by: r.id, t: r.t });
+        }
+        // ⛓⛓⛓ R6 SLICE 5: THE SHIELDSPIRE — the same polarity and a
+        // DIFFERENT SITE. `BossTotem` writes from `removed()`, 241 ticks
+        // after the kill; `ShieldBoss.startDeath` writes from inside the
+        // killing HIT, 34 ticks BEFORE the body leaves the world. So a
+        // tape that ends between the two owes this clear and would owe
+        // the totem's nothing — which is why the two are separate loops
+        // rather than one "boss died" arm.
+        for (const [key, r] of shieldBossFlags) {
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            if (out.some((o) => o.level === n && o.tag === tag)) continue;
+            out.push({ level: n, tag, by: r.id, t: r.t });
+        }
+        // ⛓⛓⛓ R6 SLICE 6c: THE WATCHER — the same polarity again, and a
+        // site that is not a death at all. `Watcher.doneTalking()` writes
+        // `setPersistence(tag, false)` when the dialogue is exhausted OR
+        // when the player leaves the 24 px circle, so this is the first
+        // entry in the ledger that a route can earn by walking AWAY.
+        // Its own loop for that reason: "which openers did this walk use"
+        // has to distinguish a dialogue from a kill.
+        for (const [key, r] of watcherFlags) {
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            if (out.some((o) => o.level === n && o.tag === tag)) continue;
+            out.push({ level: n, tag, by: r.id, t: r.t });
+        }
+        // ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR — `removed()` is
+        // `Game.setPersistence(tag, false)` with no test of the cause,
+        // and `animEnd` is the only caller. Its own loop because the
+        // WRITE SITE is what a window has to name: the flag lands 56
+        // ticks after the animation starts and on the same tick the wall
+        // stops colliding, which is the opposite fencepost from the
+        // ShieldBoss's (tag first, wall 34 ticks later).
+        for (const [key, r] of finalDoorFlags) {
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            if (out.some((o) => o.level === n && o.tag === tag)) continue;
+            out.push({ level: n, tag, by: r.id, t: r.t });
+        }
+        // ⛓⛓ R7 SLICE 6 — R6 DEBT 2, PAID. A collected pickup's own
+        // `removed()` runs `Game.setPersistence(tag, false)` for fourteen
+        // of the seventeen placed classes, so the shield's `{20,2}` and
+        // the sword's `{10,0}` belong in this ledger and were missing
+        // from it since R3.
+        //
+        // ⚠ ITS OWN LOOP, like every family above, because "which
+        // openers did this walk use" has to distinguish a PICKUP from a
+        // kill, a break and a dialogue — and because the write site is
+        // different in kind: the other families open a WALL, this one
+        // stops an item respawning.
+        //
+        // ⚠ AND IT IS ADDITIVE IN THE SAFE DIRECTION. The differential's
+        // persistence claim is a SUBSET check — "everything the model
+        // says was opened really is off in the game" — and its own
+        // comment says the exact-set claim was waiting on exactly these
+        // tags. A row added here can only make that check stricter.
+        for (const [key, r] of pickupFlags) {
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            if (out.some((o) => o.level === n && o.tag === tag)) continue;
+            out.push({ level: n, tag, by: r.id, t: r.t });
+        }
+        return out;
+    };
+    const grantsFiredNow = () => firedGrants.map((g) => ({ ...g, items: [...g.items] }));
+    const pressesNow = () => presses.map((p) => ({ ...p, hits: p.hits.map((h) => ({ ...h })) }));
+    const pulserHitsNow = () => pulserHits.map((h) => ({ ...h }));
+    const pulserPlayerHitsNow = () => pulserPlayerHits.map((h) => ({ ...h }));
+    const pulserPushesNow = () => pulsePushes_.map((h) => ({ ...h }));
+    const ropePullsNow = () => ropePulls.map((r) => ({ ...r, flag: { ...r.flag } }));
+    const shieldBossKillsNow = () => shieldBossKills.map((r) => ({ ...r }));
+    const shieldBossStabsNow = () => shieldBossStabs.map((r) => ({ ...r }));
+    const spinnerKillLockOpensNow = () => spinnerKillLockOpens.map((k) => ({ ...k }));
+    const spinnerWritesNow = () => spinnerWrites.map((w) => ({ ...w, flag: { ...w.flag } }));
+    const turretKillsNow = () => turretKills.map((k) => ({ ...k }));
+    const PROGRESS_FIELDS = Object.freeze({
+        inventory: inventoryNow,
+        keys: keysNow,
+        primaryWeapon: primaryWeaponNow,
+        slashInfo: slashInfoNow,
+        inputRefused: inputRefusedNow,
+        unfiredEquipTicks: unfiredEquipTicksNow,
+        unfiredGrantLevels: unfiredGrantLevelsNow,
+        frozenTimer: frozenTimerNow,
+        inCeremony: inCeremonyNow,
+        primary: primaryNow,
+        saveState: saveStateNow,
+        takenPickups: takenPickupsNow,
+    });
+    const LEDGER_KINDS = Object.freeze({
+        collected: collectedNow,
+        sealCollections: sealCollectionsNow,
+        equipsFired: equipsFiredNow,
+        roomWrites: roomWritesNow,
+        blastFreezes: blastFreezesNow,
+        chestOpens: chestOpensNow,
+        playerDeaths: playerDeathsNow,
+        playerHits: playerHitsNow,
+        treeBurns: treeBurnsNow,
+        crusherContacts: crusherContactsNow,
+        keyOpens: keyOpensNow,
+        lockSnaps: lockSnapsNow,
+        spinnerPressHits: spinnerPressHitsNow,
+        appliedTimedClears: appliedTimedClearsNow,
+        arrowVolleys: arrowVolleysNow,
+        bankedClears: bankedClearsNow,
+        chaserKillLockOpens: chaserKillLockOpensNow,
+        earnedClears: earnedClearsNow,
+        grantsFired: grantsFiredNow,
+        presses: pressesNow,
+        pulserHits: pulserHitsNow,
+        pulserPlayerHits: pulserPlayerHitsNow,
+        pulserPushes: pulserPushesNow,
+        ropePulls: ropePullsNow,
+        shieldBossKills: shieldBossKillsNow,
+        shieldBossStabs: shieldBossStabsNow,
+        spinnerKillLockOpens: spinnerKillLockOpensNow,
+        spinnerWrites: spinnerWritesNow,
+        turretKills: turretKillsNow,
+    });
+
     return {
         get level() { return level; },
         get world() { return world; },
@@ -10715,6 +11076,35 @@ export function createLevelRun({
             if (!f) {
                 throw new Error(`levelRun.entities: unknown entity family ${JSON.stringify(family)} — `
                     + `the known families are ${Object.keys(ENTITY_FAMILIES).join(', ')}`);
+            }
+            return f();
+        },
+        /**
+         * ⛓ ENGINE-PREP C4 — THE SOLVER'S ONE QUERY FOR THE PLAYER'S BAG AND
+         * PROGRESS. `run.progress('inventory')` returns exactly what
+         * `run.inventory` returns: the field key IS the getter's name, and
+         * both call the same closure function (`PROGRESS_FIELDS`). An unknown
+         * field throws by name.
+         */
+        progress(field) {
+            const f = Object.hasOwn(PROGRESS_FIELDS, field) ? PROGRESS_FIELDS[field] : undefined;
+            if (!f) {
+                throw new Error(`levelRun.progress: unknown progress field ${JSON.stringify(field)} — `
+                    + `the known fields are ${Object.keys(PROGRESS_FIELDS).join(', ')}`);
+            }
+            return f();
+        },
+        /**
+         * ⛓ ENGINE-PREP C4 — THE SOLVER'S ONE QUERY FOR THE EVENT LEDGERS.
+         * `run.ledger('collected')` returns exactly what `run.collected`
+         * returns: the kind key IS the getter's name, and both call the same
+         * closure function (`LEDGER_KINDS`). An unknown kind throws by name.
+         */
+        ledger(kind) {
+            const f = Object.hasOwn(LEDGER_KINDS, kind) ? LEDGER_KINDS[kind] : undefined;
+            if (!f) {
+                throw new Error(`levelRun.ledger: unknown ledger kind ${JSON.stringify(kind)} — `
+                    + `the known kinds are ${Object.keys(LEDGER_KINDS).join(', ')}`);
             }
             return f();
         },
@@ -10743,7 +11133,7 @@ export function createLevelRun({
         /** The `transitions` entries a PIT FALL produced, not a teleporter. */
         get transports() { return transports.map((r) => ({ ...r })); },
         get ticksCompleted() { return ticksCompleted; },
-        get inventory() { return { ...inventory }; },
+        get inventory() { return inventoryNow(); },
         /**
          * The equip mirror (R4): the slot `Main.primary` should hold, and
          * the slot array `Inventory` should have built.
@@ -10755,7 +11145,7 @@ export function createLevelRun({
          * rather than a mysterious slash-instead-of-thrust later. Reading
          * this for both sides would be the mirror agreeing with itself.
          */
-        get primary() { return primary; },
+        get primary() { return primaryNow(); },
         /**
          * ⛓ R5 slice 9: WHICH WEAPON the selected slot would fire.
          *
@@ -10764,7 +11154,7 @@ export function createLevelRun({
          * press the run would route through the wrong one BY NAME, rather
          * than letting the effect check report the target unmoved.
          */
-        get primaryWeapon() { return weaponForPress(); },
+        get primaryWeapon() { return primaryWeaponNow(); },
         get inventorySlots() { return inventorySlotsFor(inventory); },
         /**
          * R4: the facing (`Player.direction`) as of the END of the last
@@ -10782,11 +11172,11 @@ export function createLevelRun({
          */
         get direction() { return state.direction; },
         /** One record per equip that fired: `{t, slot}`. */
-        get equipsFired() { return firedEquips.map((e) => ({ ...e })); },
+        get equipsFired() { return equipsFiredNow(); },
         /** ⛓ R5 slice 7: every plain-`Lock` persistence write, in order. */
         get lockWrites() { return lockWrites.map((w) => ({ ...w, flag: { ...w.flag } })); },
         /** ⛓ R5 slice 7: every rope this run pulled, in order. */
-        get ropePulls() { return ropePulls.map((r) => ({ ...r, flag: { ...r.flag } })); },
+        get ropePulls() { return ropePullsNow(); },
         /**
          * ⛔⛔ R5 slice 10: one record per `FallRock` an activator publication
          * DROPPED — `{id, level, t, flag, deadFrames}`.
@@ -10797,7 +11187,7 @@ export function createLevelRun({
          * `earnedClears`, for §22.8's reason — a banked clear is cashed on
          * the next BUILD, so a run that never leaves the level reports none.
          */
-        get treeBurns() { return treeBurns.map((b) => ({ ...b, flag: { ...b.flag } })); },
+        get treeBurns() { return treeBurnsNow(); },
         get rockFalls() { return rockFalls.map((r) => ({ ...r, flag: r.flag && { ...r.flag } })); },
         /**
          * ⛔⛔ R5 slice 13: every spinner that has LEFT THE WORLD this visit,
@@ -10997,7 +11387,7 @@ export function createLevelRun({
          * `ropePulls` use — a persistence write with a tick on it, so a plan
          * can assert WHEN as well as whether.
          */
-        get spinnerWrites() { return spinnerWrites.map((w) => ({ ...w, flag: { ...w.flag } })); },
+        get spinnerWrites() { return spinnerWritesNow(); },
         /**
          * ⛓⛓⛓ R8 SLICE 6: every HIT TEST a press spent on a spinner — landed
          * or refused, with the reason and the reach.
@@ -11007,7 +11397,7 @@ export function createLevelRun({
          * whole answer to trap 85 — and a witness that reported the count
          * alone would be trap 113 exactly.
          */
-        get spinnerPressHits() { return spinnerPressHits.map((h) => ({ ...h })); },
+        get spinnerPressHits() { return spinnerPressHitsNow(); },
         /**
          * ⛓⛓⛓ R8 SLICE 8: every spinner contact this run BILLED, by arm, with
          * the `Game.time` and the hammer ANGLE that produced it.
@@ -11033,7 +11423,7 @@ export function createLevelRun({
          * eleven fade ticks apart, and a single one would have to pick which
          * question it was answering.
          */
-        get spinnerKillLockOpens() { return spinnerKillLockOpens.map((k) => ({ ...k })); },
+        get spinnerKillLockOpens() { return spinnerKillLockOpensNow(); },
         /**
          * ⛓ PROCGEN PoC SLICE 4b — whether this run may self-declare a
          * kill-lock clear. Exposed so the boundary is ASSERTABLE from outside
@@ -11155,14 +11545,14 @@ export function createLevelRun({
          * make, and every press after it would be a SWORD SLASH with nothing
          * saying so.
          */
-        get unfiredEquipTicks() { return [...equipsByTick.keys()]; },
+        get unfiredEquipTicks() { return unfiredEquipTicksNow(); },
         /** Select `Main.primary` at the tick the run has reached (R4). */
         equipNow,
         /**
          * The key types this run has collected — `Main.SAVE_FILE.data.hasKey`
          * as a set. A `BossLock` opens on exactly this.
          */
-        get keys() { return new Set(keys); },
+        get keys() { return keysNow(); },
         /**
          * ⛓⛓⛓ R7 SLICE 1 (R6 debt 6): THE MODEL'S SAVE ARRAYS, in the
          * GAME's own shape — `botStatus.save`'s counterpart.
@@ -11183,17 +11573,7 @@ export function createLevelRun({
          * prefix is untouched. The consumer asserts exactly that and names
          * the bound rather than asserting an identity it cannot know.
          */
-        get saveState() {
-            return {
-                totem_parts: Array.from(
-                    { length: SAVE_SLOTS.totem_parts }, (_, i) => totemParts.has(i)),
-                keys: Array.from({ length: SAVE_SLOTS.keys }, (_, i) => keys.has(i)),
-                /** The boot-declared prefix, unchanged by the run. */
-                bootSealParts: [...(bootSave.seal_parts ?? [])],
-                /** One per chest OPENED — the slots the run itself filled. */
-                sealSlotsEarned: chestOpens.length,
-            };
-        },
+        get saveState() { return saveStateNow(); },
         /**
          * One record per BossLock that finished its fade:
          * `{id, level, persistTag, t}`.
@@ -11202,7 +11582,7 @@ export function createLevelRun({
          * opened; this is what a key opened; `earnedClears` is both, keyed by
          * flag.
          */
-        get keyOpens() { return keyOpens.map((r) => ({ ...r })); },
+        get keyOpens() { return keyOpensNow(); },
         /**
          * ⛓ R5 slice 5 step 2: every `ButtonRoom` cross-room write this run
          * made — `{id, from, level, tag, value, which, t}`.
@@ -11213,7 +11593,7 @@ export function createLevelRun({
          * write the run actually made, which no reachability count can say:
          * two different buttons in one room resolve to two different rooms.
          */
-        get roomWrites() { return roomWrites.map((r) => ({ ...r })); },
+        get roomWrites() { return roomWritesNow(); },
         /**
          * One record per completed ceremony: `{t, level, item, frames}`.
          *
@@ -11222,7 +11602,7 @@ export function createLevelRun({
          * claim "collected for real, not granted" is exactly the statement
          * that the first list is empty and this one is not.
          */
-        get collected() { return collected.map((c) => ({ ...c })); },
+        get collected() { return collectedNow(); },
         /**
          * One record per COMPLETED touch-lock window:
          * `{id, level, persistTag, from, to, ticks, y}`.
@@ -11233,7 +11613,7 @@ export function createLevelRun({
          * tape field would need validating on the AS3 side too, to state
          * something both sides can already work out.
          */
-        get lockSnaps() { return lockSnaps.map((r) => ({ ...r })); },
+        get lockSnaps() { return lockSnapsNow(); },
         /**
          * The pickups already TAKEN in the level the run is in, as planner
          * contact keys.
@@ -11247,15 +11627,7 @@ export function createLevelRun({
          * of which pickups are gone would certify a route the executor then
          * refuses; reading it off the run means the two cannot disagree.
          */
-        get takenPickups() {
-            const keys = new Set();
-            for (const p of world.pickups ?? []) {
-                if (collectedPickups.has(pickupKey(level, p))) {
-                    keys.add(`pickup:${p.tag}@${p.x},${p.y}`);
-                }
-            }
-            return keys;
-        },
+        get takenPickups() { return takenPickupsNow(); },
         /**
          * The `(level, tag)` clears this run EARNED — turned off by opening
          * something rather than by the tape declaring it.
@@ -11365,156 +11737,11 @@ export function createLevelRun({
          * ⚠ APPLIED, not declared: a row whose tick the walk never reached is
          * NOT here, because the world does not hold it.
          */
-        get appliedTimedClears() {
-            return timedClears.filter((c) => c.applied)
-                .map((c) => ({ level: c.level, tag: c.tag, at: c.at }));
-        },
+        get appliedTimedClears() { return appliedTimedClearsNow(); },
 
-        get earnedClears() {
-            const out = [];
-            for (const r of lockSnaps) {
-                if (r.persistTag < 0) continue;
-                // `to` is the window's END — `Lock.turnOff()`'s third line is
-                // where `Game.setPersistence(tag, false)` runs, so the snap's
-                // closing tick IS the write's tick. No new field was needed.
-                out.push({ level: r.level, tag: r.persistTag, by: r.id, t: r.to });
-            }
-            // R4: a BossLock whose fade completed. Same shape as a snap's,
-            // and deliberately a SEPARATE loop: the two are different
-            // mechanics that happen to write the same namespace, and folding
-            // them would make "which openers did this walk use" unanswerable
-            // from the ledger.
-            for (const r of keyOpens) {
-                if (r.persistTag < 0) continue;
-                out.push({ level: r.level, tag: r.persistTag, by: r.id, t: r.t });
-            }
-            // R4: a lit lightpole cleared a flag. ⚠ DERIVED FROM THE FINAL
-            // STATE, never from a count of hits — `LightPole.hit()` is a
-            // TOGGLE, so an even number of presses leaves the flag exactly
-            // as it started and a ledger that counted them would report a
-            // clear the game does not have.
-            for (const [key, flag] of poleFlags) {
-                if (flag.held) continue;
-                const [n, tag] = key.split(':').map(Number);
-                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
-                // ⚠ `flag.t` is the tick of the write that LEFT it off — the
-                // LAST toggle, not the first. For a toggle that is the only
-                // honest answer, and it is `null` for the boot reading.
-                out.push({ level: n, tag, by: 'lightpole', t: flag.t });
-            }
-            // ⛓ R5 slice 5 step 2: a `ButtonRoom`'s cross-room press.
-            // ⚠ FILTERED ON THE VALUE, not on the existence of the write.
-            // `flip` decides the sign and a `flip = 0` button writes TRUE —
-            // a real `setPersistence` call that puts nothing in the game's
-            // `persistence_cleared` readout, so an exact-set assertion that
-            // banked it would go red against a correct walk.
-            for (const r of roomWrites) {
-                if (r.value !== false || r.tag < 0) continue;
-                if (out.some((o) => o.level === r.level && o.tag === r.tag)) continue;
-                out.push({
-                    level: r.level, tag: r.tag,
-                    by: r.which === 'room' ? `${r.id} (L${r.from} -> L${r.level})` : r.id,
-                    t: r.t,
-                });
-            }
-            // R5: a broken rock. ⚠ NOT a toggle — `endAnim` writes `false`
-            // once and the entity is gone — so unlike the lightpole this is
-            // read off the writes rather than off a final state. And two
-            // rocks that resolve to one flag are ONE entry, which is what
-            // keying the map by the flag buys.
-            for (const [key, r] of rockFlags) {
-                const [n, tag] = key.split(':').map(Number);
-                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
-                // ⚠ THE WRITER IS NAMED, because two families share this
-                // map now: a `BreakableRock`'s `endAnim` and (R5 slice 12) a
-                // `BurnableTree`'s `removed`. A label hard-coded to one of
-                // them would report a burn as a break — the ledger's whole
-                // job is attribution.
-                const by = r.by ?? 'breakablerock';
-                out.push({
-                    level: n, tag,
-                    by: r.level === n ? by : `${by} (L${r.level}, tag -1)`,
-                    t: r.t,
-                });
-            }
-            // ⛓⛓⛓ R6 SLICE 4: THE FIRST BOSS KILL ON THE LADDER.
-            // `BossTotem.removed()` runs `Game.setPersistence(tag, false)`,
-            // so a kill is a CLEAR like a broken rock's and not a set — the
-            // same polarity the MagicalLock has (§10.8) and the opposite of
-            // what "a kill sets a flag" suggests. It belongs in this ledger
-            // for that reason and not in a ledger of its own.
-            for (const [key, r] of bossFlags) {
-                const [n, tag] = key.split(':').map(Number);
-                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
-                if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id, t: r.t });
-            }
-            // ⛓⛓⛓ R6 SLICE 5: THE SHIELDSPIRE — the same polarity and a
-            // DIFFERENT SITE. `BossTotem` writes from `removed()`, 241 ticks
-            // after the kill; `ShieldBoss.startDeath` writes from inside the
-            // killing HIT, 34 ticks BEFORE the body leaves the world. So a
-            // tape that ends between the two owes this clear and would owe
-            // the totem's nothing — which is why the two are separate loops
-            // rather than one "boss died" arm.
-            for (const [key, r] of shieldBossFlags) {
-                const [n, tag] = key.split(':').map(Number);
-                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
-                if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id, t: r.t });
-            }
-            // ⛓⛓⛓ R6 SLICE 6c: THE WATCHER — the same polarity again, and a
-            // site that is not a death at all. `Watcher.doneTalking()` writes
-            // `setPersistence(tag, false)` when the dialogue is exhausted OR
-            // when the player leaves the 24 px circle, so this is the first
-            // entry in the ledger that a route can earn by walking AWAY.
-            // Its own loop for that reason: "which openers did this walk use"
-            // has to distinguish a dialogue from a kill.
-            for (const [key, r] of watcherFlags) {
-                const [n, tag] = key.split(':').map(Number);
-                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
-                if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id, t: r.t });
-            }
-            // ⛓⛓⛓ R6 SLICE 6c: THE FINAL DOOR — `removed()` is
-            // `Game.setPersistence(tag, false)` with no test of the cause,
-            // and `animEnd` is the only caller. Its own loop because the
-            // WRITE SITE is what a window has to name: the flag lands 56
-            // ticks after the animation starts and on the same tick the wall
-            // stops colliding, which is the opposite fencepost from the
-            // ShieldBoss's (tag first, wall 34 ticks later).
-            for (const [key, r] of finalDoorFlags) {
-                const [n, tag] = key.split(':').map(Number);
-                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
-                if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id, t: r.t });
-            }
-            // ⛓⛓ R7 SLICE 6 — R6 DEBT 2, PAID. A collected pickup's own
-            // `removed()` runs `Game.setPersistence(tag, false)` for fourteen
-            // of the seventeen placed classes, so the shield's `{20,2}` and
-            // the sword's `{10,0}` belong in this ledger and were missing
-            // from it since R3.
-            //
-            // ⚠ ITS OWN LOOP, like every family above, because "which
-            // openers did this walk use" has to distinguish a PICKUP from a
-            // kill, a break and a dialogue — and because the write site is
-            // different in kind: the other families open a WALL, this one
-            // stops an item respawning.
-            //
-            // ⚠ AND IT IS ADDITIVE IN THE SAFE DIRECTION. The differential's
-            // persistence claim is a SUBSET check — "everything the model
-            // says was opened really is off in the game" — and its own
-            // comment says the exact-set claim was waiting on exactly these
-            // tags. A row added here can only make that check stricter.
-            for (const [key, r] of pickupFlags) {
-                const [n, tag] = key.split(':').map(Number);
-                if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
-                if (out.some((o) => o.level === n && o.tag === tag)) continue;
-                out.push({ level: n, tag, by: r.id, t: r.t });
-            }
-            return out;
-        },
+        get earnedClears() { return earnedClearsNow(); },
         /** Is a touch-lock refusing input RIGHT NOW? The driver's gate. */
-        get inputRefused() { return lockSnap !== null; },
+        get inputRefused() { return inputRefusedNow(); },
         /**
          * Is a pickup ceremony up RIGHT NOW?
          *
@@ -11530,7 +11757,7 @@ export function createLevelRun({
          * needs is a function of its text, and reading it off the run is the
          * alternative to counting pages by hand seven times.
          */
-        get inCeremony() { return ceremony !== null; },
+        get inCeremony() { return inCeremonyNow(); },
         /**
          * ⛓⛓⛓ GROUP B — THE CEREMONY'S OWN STATE, AND WHY `inCeremony` WAS
          * NOT ENOUGH.
@@ -11597,14 +11824,14 @@ export function createLevelRun({
             };
         },
         /** `{t, level, items}` per grant that fired, in firing order. */
-        get grantsFired() { return firedGrants.map((g) => ({ ...g, items: [...g.items] })); },
+        get grantsFired() { return grantsFiredNow(); },
         /**
          * Levels named by `grants` the run never entered. A grant that never
          * fires is a ROUTE CLAIM that silently stopped being true, which is
          * exactly how a routing regression hides behind a green tape — so
          * the caller turns a non-empty list into a named failure.
          */
-        get unfiredGrantLevels() { return [...grantsByLevel.keys()]; },
+        get unfiredGrantLevels() { return unfiredGrantLevelsNow(); },
         get noDamage() { return noDamage; },
         /**
          * ⛓⛓⛓ R6 SLICE 3: THE DAMAGE LEDGERS.
@@ -11622,8 +11849,8 @@ export function createLevelRun({
          * swallowed produce identical positions when the model is wrong in
          * either direction; the only difference is here.
          */
-        get playerHits() { return playerHits.map((h) => ({ ...h })); },
-        get playerDeaths() { return playerDeaths.map((d) => ({ ...d })); },
+        get playerHits() { return playerHitsNow(); },
+        get playerDeaths() { return playerDeathsNow(); },
         get contactsSuppressed() { return contactsSuppressed.map((c) => ({ ...c })); },
         /** `{hits, hitsTimer, directionFace}` right now. */
         get damage() { return { ...damage }; },
@@ -11788,7 +12015,7 @@ export function createLevelRun({
          * is why the run continues; this list is why "the route stayed out of
          * the body" is a CLAIM and not a silence.
          */
-        get crusherContacts() { return crusherContacts.map((c) => ({ ...c })); },
+        get crusherContacts() { return crusherContactsNow(); },
         /**
          * ⛓⛓⛓ R8 SLICE 1 — THE LIVE CHASER BODIES IN THIS ROOM, RIGHT NOW.
          *
@@ -11862,7 +12089,7 @@ export function createLevelRun({
          * thing); an `opens` row carries the tags and the tick the tape
          * declares each at, which is what makes the declaration a CHECK.
          */
-        get chaserKillLockOpens() { return chaserKillLockOpens.map((o) => ({ ...o })); },
+        get chaserKillLockOpens() { return chaserKillLockOpensNow(); },
         /**
          * One row per tick a bridged chaser MOVED. ⚠ The emptiness is a
          * claim: a room whose chasers never wake writes nothing here, which
@@ -11978,7 +12205,7 @@ export function createLevelRun({
          * number it opened. A leg asserts the second; a flood reads the
          * first.
          */
-        get turretKills() { return turretKills.map((k) => ({ ...k })); },
+        get turretKills() { return turretKillsNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 22 — THE FREEZE LEDGER, AND IT IS THE PRICE OF THE
          * KILL RATHER THAN AN ACCIDENT.
@@ -11991,11 +12218,11 @@ export function createLevelRun({
          * blast freeze is unavoidable (`BLAST_PLAN.avoidable` is false) —
          * so this is priced, not refused.
          */
-        get blastFreezes() { return blastFreezes.map((b) => ({ ...b })); },
+        get blastFreezes() { return blastFreezesNow(); },
         /** One per volley an `endAnim` spawned — the shooter's own history. */
         get volleys() { return volleys.map((v) => ({ ...v })); },
         /** `Player.frozenTimer` right now, against the game's `frozen_timer`. */
-        get frozenTimer() { return frozenTimer; },
+        get frozenTimer() { return frozenTimerNow(); },
         /** The blasts in flight in the CURRENT level, for a probe. */
         get blastsInFlight() {
             return blastsFor(level).map((b) => ({
@@ -12054,7 +12281,7 @@ export function createLevelRun({
         // ── ⛔⛔ R5 slice 9: the chest, the pulse and the seal ──────────
         get openChests() { return openChestsNow(); },
         /** One record per chest OPENED, with the flag `open()` cleared. */
-        get chestOpens() { return chestOpens.map((c) => ({ ...c })); },
+        get chestOpens() { return chestOpensNow(); },
 
         /**
          * ⛓⛓⛓ R9 SLICE 6 — **THE BANKED WRITES, AS A LEDGER** (trap 493, third
@@ -12085,23 +12312,17 @@ export function createLevelRun({
          * ⛔ A VIEW, NOT THE MAP. Handing the caller the live `Map` would let a
          * reader empty the bank that `applyEarnedClears` consumes.
          */
-        get bankedClears() {
-            const out = [];
-            for (const [lvl, tags] of pendingEarnedClears) {
-                for (const tag of tags) out.push({ level: lvl, tag });
-            }
-            return out;
-        },
+        get bankedClears() { return bankedClearsNow(); },
         /**
          * One per completed seal ceremony. ⚠ `deadFrames` is the claim and
          * `t` is not: the ceremony costs the TAPE nothing, so the tick is
          * where it started and the evidence is the game's own counter.
          */
-        get sealCollections() { return sealCollections.map((c) => ({ ...c })); },
+        get sealCollections() { return sealCollectionsNow(); },
         /** The live piece's position, or null — for a driver mid-approach. */
         get sealPiece() { return sealPiece === null ? null : { ...sealPiece }; },
         /** One per tick a pulse's `hit()` ran. */
-        get pulserHits() { return pulserHits.map((h) => ({ ...h })); },
+        get pulserHits() { return pulserHitsNow(); },
         /**
          * The pulsers whose group is published RIGHT NOW.
          *
@@ -12137,7 +12358,7 @@ export function createLevelRun({
          */
         get latchedGroups() { return latchedGroupsNow(); },
         /** One per volley an arrow trap fired — `{t, level, id, arrows}`. */
-        get arrowVolleys() { return arrowVolleysFired.map((v) => ({ ...v })); },
+        get arrowVolleys() { return arrowVolleysNow(); },
         /**
          * Every arrow in flight in THIS level right now, `{id, x, y}`.
          *
@@ -12273,9 +12494,9 @@ export function createLevelRun({
             return (box) => w.collidesArrowCover(box, solidOpts);
         },
         /** One per block a pulse MOVED — link 3 of L38's chain. */
-        get pulserPushes() { return pulsePushes_.map((h) => ({ ...h })); },
+        get pulserPushes() { return pulserPushesNow(); },
         /** One per tick a pulse reached the player; inert under `noDamage`. */
-        get pulserPlayerHits() { return pulserPlayerHits.map((h) => ({ ...h })); },
+        get pulserPlayerHits() { return pulserPlayerHitsNow(); },
         /** `{id, hitTick, goneAt, tag, x, y}` per rock this run has broken. */
         get rocksBroken() {
             const out = [];
@@ -12297,7 +12518,7 @@ export function createLevelRun({
          * they differ by one BY TRANSCRIPTION, and having both is what lets
          * a leg say which of the two it meant.
          */
-        get presses() { return presses.map((p) => ({ ...p, hits: p.hits.map((h) => ({ ...h })) })); },
+        get presses() { return pressesNow(); },
         /**
          * ⛓ R9 SLICE 12b — one record per SWORD DASH: `{t, level, direction,
          * v, impulse}`.
@@ -12356,35 +12577,7 @@ export function createLevelRun({
          * `strikePolicyFor` returns `null` and nothing ever asks. A third
          * gate here would be a fourth spelling of the same refusal.
          */
-        get slashInfo() {
-            /**
-             * ⛓ THE END TICKS RIDE ALONG WITH THE BOOLEANS, and that is what
-             * lets a PREVIEW use this shape at all. A preview steps ticks the
-             * run has not run, so it must AGE the two windows rather than
-             * freeze this tick's answer — and a preview that froze `firing`
-             * true would refuse to model a press for the rest of the corridor.
-             * ⛔ A preview cannot OPEN either window: both are opened by a
-             * `secondary` press, the walk holds no `secondary`, and the strike
-             * policy presses `primary` alone. Asserted as a row rather than
-             * claimed here (trap 566). `-1` is "no window", which no
-             * `ticksCompleted` can be inside.
-             */
-            const wandUntil = wandWindows.reduce((m, w) => Math.max(m, w.endTick), -1);
-            const fireUntil = fireWindows.reduce((m, w) => Math.max(m, w.endTick), -1);
-            return {
-                state: { ...slashState },
-                endsAt: slashEndsAt,
-                openUntil: { wanding: wandUntil, firing: fireUntil },
-                gate: {
-                    hasSword: inventory?.hasSword ?? false,
-                    hasGhostSword: inventory?.hasGhostSword ?? false,
-                    wanding: ticksCompleted <= wandUntil,
-                    firing: ticksCompleted <= fireUntil,
-                    deathRaying: false,
-                    spearing: swordWindow.pending?.weapon === 'spear',
-                },
-            };
-        },
+        get slashInfo() { return slashInfoNow(); },
         /**
          * ⛓ R6 slice 2: one record per shot the run has FIRED —
          * `{t, level, id, direction, x, y, pressTick}`. `t` is the fire tick
@@ -12439,7 +12632,7 @@ export function createLevelRun({
         /** Every tick, `{t, level, id, inBand, swingTime, anim, hitsTimer}`. */
         get shieldBossBand() { return shieldBossBand.map((r) => ({ ...r })); },
         /** One per `startStab`, with the DERIVED window the sword must land in. */
-        get shieldBossStabs() { return shieldBossStabs.map((r) => ({ ...r })); },
+        get shieldBossStabs() { return shieldBossStabsNow(); },
         /** One per swing that reached him — swallowed, refused, aborted or landed. */
         get shieldBossHits() { return shieldBossHits.map((r) => ({ ...r })); },
         /**
@@ -12448,7 +12641,7 @@ export function createLevelRun({
          * did the wall open" must read `removed`; `tag` is the kill witness
          * and nothing else.
          */
-        get shieldBossKills() { return shieldBossKills.map((r) => ({ ...r })); },
+        get shieldBossKills() { return shieldBossKillsNow(); },
         /** The `{19,0}` write, keyed like `bossFlags`. */
         get shieldBossFlags() { return [...shieldBossFlags.values()].map((f) => ({ ...f })); },
         /** The live bodies, for a stance that has to plan around the wall. */
