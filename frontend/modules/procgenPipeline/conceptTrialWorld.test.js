@@ -2,20 +2,21 @@
  * ⛓⛓⛓ CONCEPT LIBRARY T4, D1 — **THE TRIAL WORLD: ONE CONCEPT GATE PER SUBSTRATE,
  * AND THE CONTROL'S LOGIC.**
  *
- * `CONCEPT_TRIAL_STATE` (maze START, maze 2 + text adventure 2, sword + swim +
- * victory, `concepts: [sword, guardian, swim, water]`), built headless through
- * the panel's own assembly (`buildRunFromState` → `runPresetHeadless`) beside
- * its control — the same state with `concepts: []`.
+ * `CONCEPT_TRIAL_STATE` (text-adventure START, seed 8, maze 2 + text adventure
+ * 2, sword + swim + victory, `concepts: [sword, guardian, swim, water]`), built
+ * headless through the panel's own assembly (`buildRunFromState` →
+ * `runPresetHeadless`) beside its control — the same state with `concepts: []`.
  *
  * ⛓ Measured before this row was written (quotas maze 2 + text adventure 2,
  * 3 spheres, no filler). With a MAZE start (the brief's), seeds 1, 2 and 5
  * realise one gate in each substrate — but every such world puts a
- * text-adventure room behind a gate, whose gated BACK-exit its payload does not
- * record, and `check-sidecar-fields` FAILs its rule agreement (the concept-less
- * control and the shipped text-adventure sphere presets fail the same way); 0 of
- * 99 such worlds over 30 configurations pass. With a TEXT-ADVENTURE start, seeds
- * 1 and 7–12 realise one of each and seeds 8 and 9 pass; seed 8 is taken. The
- * compiled logic equals the control's at every seed.
+ * text-adventure room behind a gate, whose gated BACK-exit its payload did not
+ * record at T4, and `check-sidecar-fields` FAILed its rule agreement; 0 of 99
+ * such worlds over 30 configurations passed. With a TEXT-ADVENTURE start, seeds
+ * 1 and 7–12 realise one of each and seeds 8 and 9 passed; seed 8 is taken. The
+ * compiled logic equals the control's at every seed. ⛓ Concept library T2c
+ * closed the gap (the maze-start seed-1 world now passes —
+ * `textAdventureBackExitGates.test.js`); this world is unchanged by it.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';

@@ -246,16 +246,18 @@ export const SEEDLING_GENERATED_SWIM_STATE = Object.freeze({
  * `region_1_3` (victory) is the painted `water_gate_0`. The compiled logic is
  * the control's (`concepts: []`) apart from `procgen_metadata[slot].concepts`.
  *
- * ⛔ WHY A TEXT-ADVENTURE START AND SEED 8 (measured, T4 D2): a text-adventure
- * room's payload records only its FORWARD exits' gates (`exitGates`), while
- * sphere growth gates the BACK-exit of every region behind a gate with the same
- * rule — so any text-adventure room behind a gate fails `check-sidecar-fields`'
- * rule agreement (the concept-less control and the shipped text-adventure sphere
- * presets alike; none was ever committed). With a maze START, 0 of 99 worlds that
+ * ⛔ WHY A TEXT-ADVENTURE START AND SEED 8 (measured, T4 D2): at T4 a
+ * text-adventure room's payload recorded only its FORWARD exits' gates
+ * (`exitGates`), while sphere growth gates the BACK-exit of every region behind
+ * a gate with the same rule — so any text-adventure room behind a gate failed
+ * `check-sidecar-fields`' rule agreement. With a maze START, 0 of 99 worlds that
  * realise one gate per substrate (seeds 1–12 over 30 quota / sphere / filler
- * configurations) pass; with this state's text-adventure START, seeds 8 and 9
- * are the first that do (seeds 1, 7, 10–12 realise one of each but put a
- * text-adventure room behind a gate). Its readers:
+ * configurations) passed; with this state's text-adventure START, seeds 8 and 9
+ * were the first that did. ⛓ CONCEPT LIBRARY T2c closed that gap (the compile's
+ * bidirectional post-pass writes the back-exit's gate on an AUTHORED payload's
+ * record): the maze-start world at seed 1 now passes too
+ * (`textAdventureBackExitGates.test.js`). This state is UNCHANGED — the
+ * committed `concept_trial` is its world. Its readers:
  * `procgenPipeline/conceptTrialWorld.test.js`, the committed preset
  * `concept_trial`, its box gate `check-concept-trial-play.mjs` and the in-app
  * row `concept-trial-plays`.
