@@ -73,6 +73,14 @@
  *       --skeleton=loopy --biome=post-sword --areas=0
  *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=shieldgate --seed=8 \
  *       --skeleton=empty --biome=post-shield --areas=0
+ *   # ⛓ concept library F1's ROAMING ENEMY (three certified subjects, two
+ *   #   kinds, both boots; branchy s7 is the level whose bodies COST the walk)
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=8 \
+ *       --skeleton=empty --biome=pre-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=7 \
+ *       --skeleton=branchy --biome=post-sword --areas=0
+ *   node scripts/procgen/check-seedling-wasm-element.mjs --elements=roam --seed=6 \
+ *       --skeleton=loopy --biome=pre-sword --areas=0
  *
  * ⚠ QUOTE THE SPEC: `;` is a shell statement separator.
  */
@@ -264,7 +272,23 @@ check(gen.elements?.ran === true,
  * ordinary room and read `agrees per tick` off it.
  */
 const placed = gen.elements?.placed?.[0] ?? null;
-if ((placed?.bodies?.length ?? 0) > 0) {
+if ((placed?.bodies?.length ?? 0) > 0 && (placed.killLockCell ?? null) === null) {
+    /**
+     * ⛓⛓ CONCEPT LIBRARY F1 (D6) — THE ROAMING ENEMY: bodies and NO lock. What
+     * the shipped room must carry is the bodies themselves, live all the way to
+     * the goal (nothing kills them for a reason), and a CERTIFIED solve — which
+     * on this element is only possible against the TEXTLESS goal the binding
+     * swaps in (the torch's ceremony throws `levelRun`'s live-spinner guard).
+     * ⛔ Asserting a kill lock here would demand the one thing the element
+     * exists not to have.
+     */
+    check(gen.certified === true && placed.element === 'roam',
+        '⛓⛓ …and the room really carries THIS element\'s payload — ROAMING bodies, NO kill '
+        + 'lock, certified against the textless goal',
+        `${placed.bodies.length} roaming body/bodies at `
+        + `${placed.bodies.map((b) => `(${b.x},${b.y})`).join(' ')}, killLockCell `
+        + `${JSON.stringify(placed.killLockCell ?? null)}, certified ${gen.certified}`);
+} else if ((placed?.bodies?.length ?? 0) > 0) {
     check(Boolean(placed.killLockCell),
         '⛓⛓ …and the room really carries THIS element\'s payload — its bodies and the '
         + 'KILL LOCK their death opens',
