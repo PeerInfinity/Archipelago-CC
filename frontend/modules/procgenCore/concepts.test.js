@@ -115,6 +115,7 @@ describe('⛔ browser-safe and nameless (the SOURCE, read)', () => {
     const ids = substrateRegistry.getAll().map((e) => e.id);
     it.each([
         ['frontend/modules/procgenCore/concepts.js'],
+        ['frontend/modules/procgenCore/behaviourBlocks.js'],
         ['frontend/modules/procgenPipeline/conceptSelection.js'],
     ])('%s: no node: import, no registry import, no registered substrate id', (rel) => {
         const src = readFileSync(join(ROOT, rel), 'utf8');
