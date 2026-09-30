@@ -24,7 +24,8 @@
  *
  *   `<file>|<function>|h<8 hex of md5(unit)>|<literal>|<ordinal>`
  *
- * `unit` is the whitespace-normalised, comment-stripped text of the smallest
+ * `unit` is the whitespace-normalised (runs collapsed; dropped beside
+ * punctuation), comment-stripped text of the smallest
  * syntactic unit that holds the literal: its statement (with any nested block
  * or statement that does NOT hold the literal replaced by `{…}`, so an edit in
  * an `if`'s body moves no key in its test), or — in a table — its innermost
@@ -66,6 +67,23 @@ export const FIELDS_COLUMNS = ['target', 'class', 'kind', 'as3', 'note'];
 const toPosix = (p) => p.split(sep).join('/');
 const PARSE_OPTS = { sourceType: 'module', errorRecovery: false };
 
+/**
+ * One parse per distinct source text. The gate builds the census several
+ * times over copies that differ in one file (the mutants), so a memo keyed on
+ * the text keeps each rebuild to the file that moved. Nothing downstream
+ * mutates an AST.
+ */
+const AST_MEMO = new Map();
+export function parseSource(src) {
+    let ast = AST_MEMO.get(src);
+    if (!ast) {
+        ast = parse(src, PARSE_OPTS);
+        if (AST_MEMO.size > 256) AST_MEMO.clear();
+        AST_MEMO.set(src, ast);
+    }
+    return ast;
+}
+
 // ── the closure ──────────────────────────────────────────────────────
 
 /**
@@ -80,7 +98,7 @@ export function buildClosure(root, entry = ENTRY) {
         if (seen.has(abs)) continue;
         const src = readFileSync(abs, 'utf8');
         seen.set(abs, src);
-        const ast = parse(src, PARSE_OPTS);
+        const ast = parseSource(src);
         for (const n of ast.program.body) {
             if (!n.source || typeof n.source.value !== 'string') continue;
             if (!/^(ImportDeclaration|ExportNamedDeclaration|ExportAllDeclaration)$/.test(n.type)) continue;
@@ -177,7 +195,9 @@ function unitText(src, unit, comments, lo, hi) {
         at = h.end;
     }
     out += src.slice(at, unit.end);
-    return out.replace(/\s+/g, ' ').trim();
+    // collapse whitespace, then drop it wherever it touches punctuation: only a
+    // space BETWEEN two word characters (`return 4`) can carry meaning
+    return out.replace(/\s+/g, ' ').trim(); // PENDING-NORMALISE
 }
 
 export const md5h8 = (s) => createHash('md5').update(s).digest('hex').slice(0, 8);
@@ -189,7 +209,7 @@ export const md5h8 = (s) => createHash('md5').update(s).digest('hex').slice(0, 8
  * @returns {object[]} rows without class/kind/as3/note, in source order
  */
 export function rowsOfFile(file, src) {
-    const ast = parse(src, PARSE_OPTS);
+    const ast = parseSource(src);
     const comments = ast.comments ?? [];
     const rows = [];
     for (const stmt of ast.program.body) {
@@ -280,7 +300,7 @@ export function topLevelFacts(files) {
     const derived = [];
     const tables = [];
     for (const { file, src } of files) {
-        const ast = parse(src, PARSE_OPTS);
+        const ast = parseSource(src);
         for (const stmt of ast.program.body) {
             const exported = stmt.type === 'ExportNamedDeclaration';
             const d = exported ? stmt.declaration : stmt;
@@ -370,7 +390,7 @@ export function anchorFor(row, leading, as3) {
 
 /** The leading comment text of each top-level statement, inherited down an unbroken run of consts. */
 function leadingByLine(src) {
-    const ast = parse(src, PARSE_OPTS);
+    const ast = parseSource(src);
     const out = new Map();
     let prev = null;
     for (const stmt of ast.program.body) {

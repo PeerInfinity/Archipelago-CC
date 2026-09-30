@@ -50,7 +50,13 @@ export function checkCensus(root = REPO) {
     const diff = diffCensus(committed, census.rows, { compareAs3: census.as3 !== null });
     const docPath = join(root, DOC_MD);
     const doc = existsSync(docPath) ? readFileSync(docPath, 'utf8') : '';
-    const region = renderDocRegion(census);
+    // ⛓ The region renders the COMMITTED census, not the fresh one. A new
+    // cosmetic/structural literal is green drift by design; rendering the
+    // fresh rows would turn every such literal red through the doc's counts.
+    // So the doc is stale exactly when the committed record moved without a
+    // re-render (or a top-level fact it lists — a duplicated name, a derived
+    // constant — moved in the source).
+    const region = renderDocRegion({ files: census.files, rows: committed });
     const docStale = spliceDocRegion(doc, region) !== doc;
     return { census, committed, diff, docStale, region };
 }
@@ -98,7 +104,7 @@ async function main() {
         const byWhy = (w) => diff.green.filter((g) => g.why === w).length;
         console.log(`census-seedling-constants --check — ${census.rows.length} literals; `
             + `green drift: ${byWhy('new')} new + ${byWhy('vanished')} vanished cosmetic/structural, ${byWhy('moved')} moved`
-            + `${census.as3 === null ? '; AS3 source absent, the as3 column is not compared' : ''}`);
+            + `${census.as3 === null ? '; AS3 source absent: the as3 column is NOT compared' : ''}`);
         for (const l of lines) console.log(l);
         if (lines.length) {
             console.log(`\nFAIL — ${lines.length} red item(s)`);
