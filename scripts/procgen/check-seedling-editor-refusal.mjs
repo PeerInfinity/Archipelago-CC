@@ -24,7 +24,7 @@
  * slice 8, trap 196). There are THREE answers here and a row that collapsed
  * them would report a calm walk for a refusal nobody recorded:
  *
- *   `dangerQueries: n`    the bot WAS told things (L16's exhausted climb),
+ *   `dangerQueries: n`    the bot WAS told things (L71's exhausted climb),
  *   `dangerousQueries: 0` and every one of them said CLEAR;
  *   `dangerQueries: 0`    the recorder RAN and the bot asked nothing (an
  *                         absent placement, refused at the door);
@@ -32,15 +32,29 @@
  *                         `SolverRefusal` and no recorder ever existed (an
  *                         exit the room does not have).
  *
- * So the row asserts a POSITIVE population on L16 BEFORE it asserts the zero
+ * So the row asserts a POSITIVE population on L71 BEFORE it asserts the zero
  * — a row that merely tolerated the emptiness would be the finding wearing a
  * check's clothes (§17.5 consequence 1).
  *
- * ⚠ AND THE BOOTS ARE THE SURVEY'S OWN staged construction, not invented
- * here: `r7-act2-11`'s committed block re-pointed by `?level=`, which is
- * exactly what `survey-seedling-route.mjs` does for a room with no committed
- * tape. `r7-act2-11` boots at (32,64) — which IS L16's arrival from L15, so
- * the page reaches the survey's step 18 with one parameter.
+ * ⚠ THE BOOTS ARE COMMITTED BLOCKS, not invented here. Rows 2–3 and the
+ * L11 row use `r8-solve-11` re-pointed by `?level=` (the survey's own staged
+ * construction). Row 1 boots `l71-shieldlock-open` — a committed tape whose
+ * own boot IS L71 at (256,256) — and asks for `teleporter@304,96` (→ L72).
+ *
+ * ⛓⛓ SEEDLING SWIM U1, W0 — WHY ROW 1 NO LONGER NAMES L16. Row 1 drove the
+ * climb L16 → exit 352,80 until the R9 L16 slice (2026-09-27):
+ * the rope silences the lanes and L16 SOLVES, so the row read `status=ok`
+ * and then DIED on `dangerSources.length` (a solved readout carries no such
+ * field), hiding every row after it. Re-aimed by measurement (the U1 report
+ * carries the whole candidate table): L8 from the re-pointed boot starts on
+ * stone and from its own boot SOLVES; L16's three exits all solve; the danger
+ * census (`chaserRoomVerdict`) refuses only L8 atlas-wide. L71's climb past
+ * `spinningaxe@256,144` is EXHAUSTED with 5 recorded queries, 0 dangerous —
+ * a HAZARD, not a body, so no removal rung applies and the refusal is the
+ * ladder's own.
+ *
+ * ⛔ AND NO ROW MAY DIE. A readout without a field is a FAIL line naming the
+ * field; a script that throws on row 1 reports nothing about rows 2–4.
  *
  * Prereqs: a dev server at the REPO ROOT. SKIPs (exit 0) without one, like
  * its siblings — `export-seedling-view.mjs` is the arc's non-skipping browser
@@ -125,10 +139,10 @@ async function solveInPage(level, goals, extra = '', boot = BOOT) {
 }
 
 // ── 1. ⚖ §12d ITEM 10 — THE DANGER RECORD ON THE REFUSAL PATH ───────────
-console.log('## L16 (the survey\'s step 18) — the ladder is EXHAUSTED, and the refusal '
-    + 'carries what the bot was told');
+console.log('## L71 (`l71-shieldlock-open`\'s boot → teleporter@304,96) — the ladder is '
+    + 'EXHAUSTED, and the refusal carries what the bot was told');
 {
-    const r = await solveInPage(16, 'exit:352,80');
+    const r = await solveInPage(71, 'exit:304,96', '', `${TAPES}/l71-shieldlock-open.json`);
     check(r.solve.status === 'refused',
         '⛓ the page reports the solver\'s own REFUSAL, not a page error',
         `status=${r.solve.status}`);
@@ -140,14 +154,17 @@ console.log('## L16 (the survey\'s step 18) — the ladder is EXHAUSTED, and the
     check(typeof r.solve.dangerQueries === 'number' && r.solve.dangerQueries > 0,
         '⛓⛓⛓ the REFUSAL carries the danger record — the channel slice 9 could not reach',
         `${r.solve.dangerQueries} recorded query(s)`);
-    check(r.solve.dangerousQueries === 0 && r.solve.dangerSources.length === 0,
+    check(r.solve.dangerousQueries === 0 && Array.isArray(r.solve.dangerSources)
+        && r.solve.dangerSources.length === 0,
         '⛓⛓⛓ …and EVERY gate this climb reached answered CLEAR — §17.5 sharpened',
-        `${r.solve.dangerousQueries} dangerous, ${r.solve.dangerSources.length} reason(s)`);
+        `${r.solve.dangerousQueries} dangerous, `
+            + `${Array.isArray(r.solve.dangerSources) ? r.solve.dangerSources.length
+                : 'NO dangerSources field (not a refusal readout)'} reason(s)`);
     check(/the danger the bot was told: \d+ query\(s\), 0 DANGEROUS/.test(r.detail)
         && /every gate this walk reached answered CLEAR/.test(r.detail),
         '⛔ …and the page SAYS SO on screen, not only in a readout nobody reads',
         (r.detail.match(/the danger the bot was told[^\n]*/) ?? ['(absent)'])[0].slice(0, 90));
-    if (SHOT) await r.page.locator('main').screenshot({ path: `${SHOT}/slice10-L16-refusal.png` });
+    if (SHOT) await r.page.locator('main').screenshot({ path: `${SHOT}/slice10-L71-refusal.png` });
     check(unexpectedErrors(r.errors).length === 0, 'no page errors',
         unexpectedErrors(r.errors).join(' | ') || 'clean');
     await r.page.close();
