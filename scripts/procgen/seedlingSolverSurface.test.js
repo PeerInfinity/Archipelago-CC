@@ -331,3 +331,78 @@ describe('the entities fold (engine-prep C3), mutants over a temporary copy', ()
     });
 });
 
+describe('the progress and ledger folds (engine-prep C4), mutants over a temporary copy', () => {
+    let tmp;
+    beforeAll(() => { tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'solver-folds-mutant-')); });
+    afterAll(() => { fs.rmSync(tmp, { recursive: true, force: true }); });
+    /** Census with the named files replaced by edited copies; the findings as sentences. */
+    const mutate = (edits) => {
+        const copies = new Map();
+        for (const [rel, ed] of Object.entries(edits)) {
+            const src = read(rel);
+            const out = ed(src);
+            expect(out, `the ${rel} mutant edited nothing`).not.toBe(src);
+            copies.set(rel, path.join(tmp, path.posix.basename(rel)));
+            fs.writeFileSync(copies.get(rel), out);
+        }
+        return say(compareToTable(census((p) => (copies.has(p) ? fs.readFileSync(copies.get(p), 'utf8') : read(p))), TABLE));
+    };
+    const DANGER = 'frontend/modules/seedlingDemo/dangerMap.js';
+
+    it('(a) a DIRECT run.inventory read in dangerMap.js ⇒ RED "folded behind run.progress", once', () => {
+        const lines = mutate({ [DANGER]: (s) => `${s}\nexport const mutantA = (run) => run.inventory;\n` });
+        expect(lines).toHaveLength(1);
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reads run\.inventory directly — it is folded behind run\.progress\('inventory'\)/);
+    });
+
+    it('(a′) a DIRECT run.collected read ⇒ RED "folded behind run.ledger", once', () => {
+        const lines = mutate({ [DANGER]: (s) => `${s}\nexport const mutantA2 = (run) => run.collected;\n` });
+        expect(lines).toEqual([expect.stringMatching(
+            /dangerMap\.js:\d+ reads run\.collected directly — it is folded behind run\.ledger\('collected'\)/)]);
+    });
+
+    // ⚠ PREDICTED ONE LINE, MEASURED TWO (C4 D4): dangerMap.js reads no ledger and no progress, so a
+    // `run.ledger(…)` / `run.progress(…)` there is ALSO a new file on that row — the `files` rule fires
+    // beside the fold's own sentence. C3's dangerMap mutants never saw it: dangerMap already asks `entities`.
+    it('(b) run.ledger(\'chestOpen\') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS '
+        + '(and a file the run:ledger row does not name)', () => {
+        const lines = mutate({ [DANGER]: (s) => `${s}\nexport const mutantB = (run) => run.ledger('chestOpen');\n` });
+        expect(lines).toHaveLength(2);
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:ledger — the row names only botDriverV2\.js, director\.js, solverBot\.js/);
+        expect(lines[1]).toMatch(/dangerMap\.js:\d+ run\.ledger\('chestOpen'\) — unknown ledger kind; levelRun\.js's LEDGER_KINDS holds collected, sealCollections, /);
+    });
+
+    it('(c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name)', () => {
+        const lines = mutate({ [DANGER]: (s) => `${s}\nexport const mutantC = (run, f) => run.progress(f);\n` });
+        expect(lines).toHaveLength(2);
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:progress — the row names only botDriverV2\.js, director\.js, solverBot\.js/);
+        expect(lines[1]).toMatch(/dangerMap\.js:\d+ run\.progress\(f\) — not a string literal — a BLIND SPOT: the census cannot name the field/);
+    });
+
+    it('(d) the inventory entry removed from PROGRESS_FIELDS in levelRun.js ⇒ RED at every site that asks for it, '
+        + 'and the name list no longer matches the dispatch table', () => {
+        const sites = Object.values(TABLE.rows.find((r) => r.name === 'progress').fields.inventory)
+            .reduce((a, b) => a + b, 0);
+        const lines = mutate({ [SIM_ENTRY]: (s) => s.replace(/\n {8}inventory: inventoryNow,/, '') });
+        const unknown = lines.filter((l) => /run\.progress\('inventory'\) — unknown progress field/.test(l));
+        expect(unknown).toHaveLength(sites);
+        expect(lines.filter((l) => /PROGRESS_FIELD_NAMES .* ≠ the keys of PROGRESS_FIELDS/.test(l))).toHaveLength(1);
+        expect(lines).toHaveLength(sites + 1);
+    });
+
+    it('(d′) the collected entry pointed at another arrow (collected: sealCollectionsNow) ⇒ GREEN here — the census '
+        + 'sees keys, not values; levelRun.test.js\'s query-equals-getter rows are what hold the values', () => {
+        expect(mutate({ [SIM_ENTRY]: (s) => s.replace(/\n {8}collected: collectedNow,/,
+            '\n        collected: sealCollectionsNow,') })).toEqual([]);
+    });
+
+    it('(e) COMMENTS naming run.inventory and run.collected in a family file ⇒ GREEN', () => {
+        expect(mutate({ [DANGER]: (s) => `${s}\n// run.inventory, run.collected — prose, not a read\n` })).toEqual([]);
+    });
+
+    it('(f) a getter listed in two folds (keys added to LEDGER_KIND_NAMES) ⇒ RED "folded behind both"', () => {
+        const lines = mutate({ [SIM_ENTRY]: (s) => s.replace(
+            /(export const LEDGER_KIND_NAMES = Object\.freeze\(\[\n)/, "$1    'keys',\n") });
+        expect(lines.some((l) => /keys is folded behind both run\.progress and run\.ledger/.test(l))).toBe(true);
+    });
+});
