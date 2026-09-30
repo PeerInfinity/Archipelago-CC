@@ -18,6 +18,7 @@ import {
 } from './procgenPipelineUI.js';
 import { sphereRebuildRefusal } from './procgenPipelineEngine.js';
 import { panelDefaultParams, buildRunFromState } from './presetRun.js';
+import { CONCEPTS } from '../procgenCore/concepts.js';
 import { DOCUMENT_KEY_EDITORS } from '../apworldEditor/documentKeys.js';
 
 /**
@@ -550,6 +551,17 @@ describe('R1 — the substrate hooks draw with the shared helpers exactly as the
     });
 });
 
+/**
+ * ⛓ CONCEPT LIBRARY T1 — the concept-list row (`_renderConceptsField`) is NEW
+ * after the R1 capture, so the two R1 pins below splice it out (the same move
+ * as `unwrapForms`) and hold the rest of the section to its fixture; its own
+ * rows are the `concept list` suite after them.
+ */
+function withoutConceptsRow(el) {
+    el.children = el.children.filter((c) => c.className !== 'procgen-pipeline-field procgen-pipeline-concepts');
+    return el;
+}
+
 describe('R1 — the Parameters section binds the same bag keys it bound before the split', () => {
     it.each(Object.keys(PARAMETER_KEYS_BEFORE_R1))('⛓ %s: every control\'s key, against the captured fixture', (mode) => {
         const written = new Set();
@@ -560,7 +572,7 @@ describe('R1 — the Parameters section binds the same bag keys it bound before 
         ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
         ctx._saveToLocalStorage = () => {};
         withFakeDocument(() => {
-            for (const c of controls(ctx._renderParams())) { perturb(c); c.fire('change'); }
+            for (const c of controls(withoutConceptsRow(ctx._renderParams()))) { perturb(c); c.fire('change'); }
         });
         expect([...written].sort()).toEqual(PARAMETER_KEYS_BEFORE_R1[mode]);
     });
@@ -592,8 +604,35 @@ describe('R1 — the Parameters section draws the DOM it drew before the split',
         ctx.params = { ...panelDefaultParams(), enableHazards: true };
         ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
         ctx._saveToLocalStorage = () => {};
-        const html = withFakeDocument(() => serialize(unwrapForms(ctx._renderParams())));
+        const html = withFakeDocument(() => serialize(unwrapForms(withoutConceptsRow(ctx._renderParams()))));
         expect(createHash('sha256').update(html).digest('hex')).toBe(PARAMETERS_SECTION_SHA256_BEFORE_R1[mode]);
+    });
+});
+
+describe('CONCEPT LIBRARY T1 — the concept list (`params.concepts`) on the Parameters section', () => {
+    const conceptsRow = (section) => section.children
+        .filter((c) => c.className === 'procgen-pipeline-field procgen-pipeline-concepts');
+    it.each(Object.keys(PARAMETERS_SECTION_SHA256_BEFORE_R1))('⛓ %s: ONE row, a box per CONCEPTS id, none ticked by default; ticking writes the ids in table order', (mode) => {
+        const ctx = Object.create(ProcgenPipelineUI.prototype);
+        ctx.mode = mode;
+        ctx.params = { ...panelDefaultParams() };
+        ctx._activeSubstrateDict = () => ({ maze: 1 });
+        let saves = 0;
+        ctx._saveToLocalStorage = () => { saves += 1; };
+        withFakeDocument(() => {
+            const rows = conceptsRow(ctx._renderParams());
+            expect(rows).toHaveLength(1);
+            const boxes = controls(rows[0]);
+            expect(boxes.map((b) => b.value)).toEqual(Object.keys(CONCEPTS));
+            expect(boxes.every((b) => b.checked === false)).toBe(true);
+            expect(ctx.params.concepts).toEqual([]);
+            const byId = Object.fromEntries(boxes.map((b) => [b.value, b]));
+            for (const id of ['water', 'sword']) { byId[id].checked = true; byId[id].fire('change'); }
+            expect(ctx.params.concepts).toEqual(['sword', 'water']);
+            byId.water.checked = false; byId.water.fire('change');
+            expect(ctx.params.concepts).toEqual(['sword']);
+            expect(saves).toBe(3);
+        });
     });
 });
 

@@ -93,6 +93,10 @@ export function assembleRegionParams({ activeIds, mode = 'sphere', params, extra
         if (typeof fn === 'function') Object.assign(out, fn({ params, mode }));
     }
     Object.assign(out, extra);
+    // ⛓ CONCEPT LIBRARY T1 — the world's concept list rides into every region's
+    // params (the engine hands `spec.params` to `placeFromRules`). Written ONLY
+    // when non-empty, so a world that names no concept takes no new key.
+    if (Array.isArray(params?.concepts) && params.concepts.length > 0) out.concepts = [...params.concepts];
     return out;
 }
 

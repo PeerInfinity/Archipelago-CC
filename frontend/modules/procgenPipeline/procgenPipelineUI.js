@@ -69,6 +69,7 @@ import {
     REGION_GENERATION_FIELDS, bagIntegerField, renderRegionGenerationForm,
 } from '../procgenCore/regionGenerationForm.js';
 import { activeSubstrateIds } from './sphereConfigHooks.js';
+import { CONCEPTS } from '../procgenCore/concepts.js';
 // ⛓ PROCGEN PIPELINE PRESETS P0 — every mode's run is ASSEMBLED in presetRun.js
 // (pure functions of a panel-shaped state); the methods below that used to build
 // a config in place are one-line callers over `this`, and the headless preset
@@ -1965,6 +1966,43 @@ export class ProcgenPipelineUI {
 
     // --- Parameters ---
 
+    /**
+     * ⛓ CONCEPT LIBRARY T1 — the world's concept list (`params.concepts`), one
+     * checkbox per concept in `CONCEPTS`, table order. A substrate that declares
+     * a realisation of a ticked concept may show a planned gate as it
+     * (`conceptSelection.selectRealisation`); none ticked (the default) builds
+     * exactly the world it always did.
+     */
+    _renderConceptsField() {
+        const row = document.createElement('div');
+        row.className = 'procgen-pipeline-field procgen-pipeline-concepts';
+        const label = document.createElement('label');
+        label.textContent = 'Concepts';
+        label.title = 'The concepts this world may show a planned gate as (a guardian that needs the '
+            + 'sword, water that needs swim). A concept changes the picture, never the logic. None '
+            + 'ticked = the world as before.';
+        row.appendChild(label);
+        const chosen = new Set(Array.isArray(this.params.concepts) ? this.params.concepts : []);
+        for (const id of Object.keys(CONCEPTS)) {
+            const opt = document.createElement('label');
+            const box = document.createElement('input');
+            box.type = 'checkbox';
+            box.value = id;
+            box.checked = chosen.has(id);
+            box.addEventListener('change', () => {
+                const now = new Set(Array.isArray(this.params.concepts) ? this.params.concepts : []);
+                if (box.checked) now.add(id); else now.delete(id);
+                // table order, whatever order the boxes were ticked in
+                this.params.concepts = Object.keys(CONCEPTS).filter((c) => now.has(c));
+                this._saveToLocalStorage();
+            });
+            opt.appendChild(box);
+            opt.appendChild(document.createTextNode(` ${id}`));
+            row.appendChild(opt);
+        }
+        return row;
+    }
+
     _renderParams() {
         const section = document.createElement('div');
         section.className = 'procgen-pipeline-params';
@@ -2035,6 +2073,8 @@ export class ProcgenPipelineUI {
         xpEffectRow.appendChild(xpEffectLabel);
         xpEffectRow.appendChild(xpEffectSelect);
         section.appendChild(xpEffectRow);
+
+        section.appendChild(this._renderConceptsField());
 
         // Stop-on-pool-empty toggle. When on, growMaze ends the
         // moment the item pool is exhausted; when off (default),

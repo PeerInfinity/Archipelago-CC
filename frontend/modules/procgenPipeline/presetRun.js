@@ -87,6 +87,14 @@ export const DEFAULT_PARAMS = {
     // integer < sphereCount grows the middle phases sphere-major in batches
     // (Phase 2). Phase 1 only carries the knob; no visible control yet.
     spheresPerBatch: null,
+    // ⛓ CONCEPT LIBRARY T1 — the world's concept list: the concept ids
+    // (`procgenCore/concepts.js` `CONCEPTS`) a substrate may realise a planned
+    // gate as (`procgenPipeline/conceptSelection.js`). EMPTY by default, and an
+    // empty list spends no draw and places no concept, so every world that
+    // names none is byte-identical to one built before the knob existed.
+    // Reaches each region's `placeFromRules` as `params.concepts`
+    // (`sphereConfigHooks.assembleRegionParams`).
+    concepts: [],
     // Substrate-specific params (e.g. bounce's fall behavior / physics
     // profile / braid layout, the maze's hazards and its library's connection
     // strictness) are

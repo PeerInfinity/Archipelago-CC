@@ -3147,8 +3147,10 @@ function generateRegionProcedural(spec) {
             }
             if (exitId != null) exit_rules[exitId] = e.access_rule;
         }
+        // ⛓ CONCEPT LIBRARY T1 — `params` carries the world's concept list
+        // (`params.concepts`) to the placer that realises a gate as one.
         placement = adapter.placeFromRules(core.world, {
-            exit_rules, location_rules, item_placements, rng: spec.rng,
+            exit_rules, location_rules, item_placements, rng: spec.rng, params: spec.params,
         });
         const placedIds = new Set(
             (placement.placed_locations ?? []).map((p) => p.location_id));
