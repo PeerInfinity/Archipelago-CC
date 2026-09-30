@@ -12493,6 +12493,18 @@ export function createLevelRun({
             const w = world;
             return (box) => w.collidesArrowCover(box, solidOpts);
         },
+        /**
+         * ⛓ THE SWING'S OWN LINE-OF-SIGHT QUERY (seedling swim U3, ⚖ Q27) — the
+         * `collideLineSolid` closure `assertSpinnerLineOfSight` asks, handed out
+         * as a member so a strike schedule can ask it BEFORE it plans a swing
+         * rather than learn it from the refusal at the hit. The same function,
+         * the same live geometry, the same truncating signature: the planner and
+         * the executor agree by construction. A pure read — `advance` never
+         * consults it. Returns the first blocker `{tag, at: {x, y}}`, or null.
+         */
+        collideLineSolid(fromX, fromY, toX, toY) {
+            return collideLineSolid(fromX, fromY, toX, toY);
+        },
         /** One per block a pulse MOVED — link 3 of L38's chain. */
         get pulserPushes() { return pulserPushesNow(); },
         /** One per tick a pulse reached the player; inert under `noDamage`. */
