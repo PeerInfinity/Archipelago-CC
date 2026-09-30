@@ -1,15 +1,15 @@
 # Seedling Constants Census
 
-Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`. It is the first step of giving the simulation a single physics profile: the census says which numbers a profile would have to own, and a vitest gate keeps the classification from rotting as the simulation changes.
+Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`. It was the first step of giving the simulation a single physics profile: the census said which numbers a profile would have to own, the profile now owns them (§ *The profile* below), and a vitest gate keeps the classification from rotting as the simulation changes.
 
 ## What it is, and what it is not
 
-The census is READ-ONLY over the simulation. It moves no constant, edits no simulation or solver file, and touches no tape or expectation. The profile itself — gathering the `physics` and `rule` constants into one object — is a later slice that reads this classification; the candidate list at the end of this page is its starting inventory.
+The census is READ-ONLY over the simulation. It moves no constant, edits no simulation or solver file, and touches no tape or expectation. The profile — the `physics` and `rule` constants gathered into one object — is `frontend/modules/seedlingDemo/seedlingProfile.js`, built from this classification; the census now classifies the profile's literals, and the candidate list at the end of this page names what is still outside it.
 
 Three files and one test:
 
 - `scripts/procgen/seedlingConstantsCensus.js` — the pure logic: the closure, the rows, the keys, the join, the drift verdict, and the tables rendered at the end of this page.
-- `scripts/procgen/census-seedling-constants.mjs` — the command. With no flag it prints the class × position table; `--write` regenerates the census CSV and this page's CENSUS region; `--check` exits 1 on drift.
+- `scripts/procgen/census-seedling-constants.mjs` — the command. With no flag it prints the class × position table; `--write` regenerates the census CSV and this page's CENSUS region; `--check` exits 1 on drift; `--profile-rows` regenerates the fields table's rows for the profile.
 - `scripts/procgen/seedling-constants-fields.csv` — the reviewed classification, hand-edited.
 - `scripts/procgen/seedlingConstantsCensus.test.js` — the gate, in the default vitest tier.
 
@@ -74,6 +74,43 @@ To classify a new literal after the gate names it:
 A new or vanished `cosmetic` or `structural` literal is GREEN and is reported as drift, as is a moved line; the next `--write` records it. The region renders the committed rows rather than fresh ones for exactly that reason: rendered fresh, every new cosmetic literal would move the counts and turn the page red. The test also proves the key line-independent, self-tests the positions on synthetic sources, and runs three mutants on temp copies of the closure (a new physics scalar is red by key, a new literal in a cosmetic table is green, a deleted physics statement must be retired).
 
 The `as3` column is read from `vendor/seedling/src` when the submodule is initialised: a named scalar is anchored automatically when its trailing comment or its name names an AS3 `const`/`var` of EQUAL value (`WALK_SPEED = 0.8; // dMS` → `Player.as:dMS`), and the fields file can give any row an anchor by hand. Without the submodule the as3 column is not compared and the anchor row of the test skips by name; the region needs no AS3 source, since the committed rows carry their anchors.
+
+## The profile
+
+`frontend/modules/seedlingDemo/seedlingProfile.js` is the ONE registry of the simulation's physics and rule constants: RWK's profile convention, without overrides. It holds every named top-level scalar the census classed `physics` or `rule`, and the literals of the player's own small tables in `playerPhysicsV1.js` and `playerPhysicsV2.js` (`HITBOX`, `TILE`, `SPAWN_OFFSET`, `LEVEL0_WORLD`, the waterfall divisor in `MOVE_SPEEDS`, the inset in `CHECK_OFFSET_Y`, `NO_BOUNCE_STATES`). The entity tables stay in their modules. A derived constant (`CLAMP`, `CHECK_OFFSET_Y`, `TICKS_PER_TILE`, `KILL_CADENCE_FLOOR` …) stays derived in its module, now from profile fields: a derived value is computed in code and never stored.
+
+Every declaring module still exports its old name, now read from the profile (`export const WALK_SPEED = PROFILE.walkSpeed; // dMS`). Every default is the literal the module used to spell, and no arithmetic moved, so every committed tape, expectation and solve is byte-identical across the move.
+
+**The key.** A key is the declaring name in camelCase: `WALK_SPEED` → `walkSpeed`. A table field `HITBOX.originY` becomes `hitboxOriginY`, and an array element `NO_BOUNCE_STATES[1]` becomes `noBounceStates1`. A literal inside a derivation is named for its role (`moveSpeeds25Divisor`, `checkOffsetYInset`). A name declared in several files is ONE key (`SLIDING_SPEED`, `WATER_STATE`, `RIGHT` …). So is a pair whose keys would collide and whose value and AS3 source agree: `HITBOX_ORIGIN_X` in `levelWorld.js` and `HITBOX.originX`, and `TILE_W` in `wandShot.js` and `TILE.w`. `PROFILE` is flat and holds numbers only, at their source spelling (`0x48000000`).
+
+**The metadata.** `PROFILE_FIELDS` has one record per key, in `PROFILE`'s order:
+
+- `class` and `kind`, as in the census;
+- `as3`, the anchor `File.as:name`;
+- `as3Match`, when the anchor's literal is not a numeric `const`/`var` declaration: `arg:<n>` (a constructor call's n-th argument), `param` (a parameter default) or `after:<text>` (the number after the one occurrence of the text);
+- `source`, the declaration the value came from, and `alsoIn`, the others that now read it;
+- `review` and `note`. `review` is true exactly when the note starts `REVIEW:`.
+
+**The dump and the md5.** `profileDump()` is RWK's text shape: braces, then one `"<key>": <value>` line per field in `PROFILE_FIELDS` order. Each value is printed as its shortest round-trip double, which is exact, so the dump is JSON and parses back to `PROFILE`. `profileMd5()` is the md5 of the dump, and it is the profile's identity. `PROFILE_ID` (`seedling-js-2026`) is only a name. `seedlingProfile.test.js` pins the md5 as a literal: a change there is a physics change, not a re-record. The md5 comes from `seedlingDemo/md5.js`, a dependency-free RFC 1321 digest, so it runs in a page as well as under node.
+
+**The stamp.** `profileStamp()` is `{id, md5}`, the shape of a v13 tape's model-only `profile` field (`tapeEnvelope.validateProfile`).
+
+- `runTape`'s result carries it as `profile`. The observation stream does not: `runTapeToStream` still returns exactly `{ticks, transitions}`.
+- Emitted tapes stay unstamped by default. `buildStagedTape({ …, stampProfile: profileStamp() })` opts one in, which makes it a v13 tape that also spells `despawn: []`, the v10 list that version requires.
+- The v1–v5 emitters (`buildTape`, `synthesizeLegs`) do not stamp. A v13 tape must carry the fields of the versions below it, and those emitters do not write them.
+
+**How a new constant joins.**
+
+1. Add the key to `PROFILE` at its source spelling.
+2. Add its record to `PROFILE_FIELDS`: class, kind, the AS3 anchor when there is one, and `as3Match` when the literal is not a plain declaration.
+3. Make the declaring module read it (`NAME = PROFILE.key`).
+4. Run `node scripts/procgen/census-seedling-constants.mjs --profile-rows`, then `--write`, and commit the profile, the fields table, the census and this page together.
+5. Update the md5 pin in `seedlingProfile.test.js` in the same commit. Say in that commit that it is a physics change.
+
+Three gates hold the profile together:
+
+- `seedlingConstantsCensus.test.js` (v) and `--check` are red when the census's class, kind or as3 for a profile literal disagrees with `PROFILE_FIELDS`, or when the fields rows are not what `--profile-rows` generates.
+- `seedlingProfile.test.js`'s anchor row (it skips by name without `vendor/seedling`) resolves every anchor to its AS3 literal and asserts it equals the default. All 63 anchors resolve today, and an anchor that stops resolving is red.
 
 ## The census
 

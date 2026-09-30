@@ -743,6 +743,7 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "check",
+                "profile-rows",
                 "write"
             ],
             "file": "census-seedling-constants.mjs",
@@ -752,6 +753,12 @@ export const INSTRUMENTS = frz({
                         "includes"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "profile-rows"
                 },
                 {
                     "how": [
