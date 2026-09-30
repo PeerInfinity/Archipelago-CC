@@ -241,7 +241,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `apExitNamesOf` | fn | fn | — | fn | fn | fn | fn | fn | fn |
 | `apLocationNamesOf` | fn | fn | — | fn | fn | fn | fn | fn | fn |
 | `deserializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |
-| `iframeId` | bounceDemo | flashSubstrate | — | — | jtaSubstrateWrapper | — | omsiSubstrateWrapper | runnerDemo | — |
+| `iframeId` | bounceDemo | flashSubstrate | — | — | jtaSubstrateWrapper | — | omsiSubstrateWrapper | runnerDemo | textAdventureSubstrateWrapper |
 | `loadRegionEvent` | bounce:loadRegion | flash:loadRegion | flashSeedling:loadRegion | flashSeedling:loadRegion | jta:loadRegion | maze:loadRegion | omsi:loadRegion | runner:loadRegion | textAdventure:loadRegion |
 | `panelComponentType` | bounceDemoPanel | flashSubstratePanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | omsiSubstrateWrapperPanel | runnerDemoPanel | textAdventureSubstrateWrapperPanel |
 | `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |

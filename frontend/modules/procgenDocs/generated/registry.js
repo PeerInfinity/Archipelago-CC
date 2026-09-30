@@ -72,7 +72,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/runnerDemo/runnerDemoLibrary.js"
         },
         {
-            "fields": 23,
+            "fields": 24,
             "id": "text_adventure",
             "label": "Text Adventure",
             "registeredBy": "frontend/modules/textAdventureSubstrateWrapper/textAdventureSubstrateWrapperLibrary.js"
@@ -2964,7 +2964,8 @@ export const REGISTRY = frz({
                 "flash",
                 "jta",
                 "omsi",
-                "runner"
+                "runner",
+                "text_adventure"
             ],
             "cells": [
                 {
@@ -3025,10 +3026,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "text_adventure",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "textAdventureSubstrateWrapper",
+                    "type": "string",
+                    "value": "textAdventureSubstrateWrapper"
                 }
             ],
             "documentedHow": "table",

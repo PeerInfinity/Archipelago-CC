@@ -430,7 +430,8 @@ describe('who takes the box', () => {
          * gate `check-seedling-generated-host-play.mjs`; G6 its real-room
          * sibling `check-seedling-atlas-host-play.mjs`; G7 the real room's own
          * location, `check-seedling-atlas-location-play.mjs`; swim T1 the
-         * water-gated generated room, `check-seedling-generated-swim-play.mjs`.)
+         * water-gated generated room, `check-seedling-generated-swim-play.mjs`;
+         * concept library T4 the joined concept world, `check-concept-trial-play.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -439,7 +440,8 @@ describe('who takes the box', () => {
             'check-seedling-spiral-room-play.mjs', 'check-seedling-sphere-room-play.mjs',
             'check-seedling-generated-room-play.mjs', 'check-seedling-generated-leaf-play.mjs',
             'check-seedling-generated-host-play.mjs', 'check-seedling-atlas-host-play.mjs',
-            'check-seedling-atlas-location-play.mjs', 'check-seedling-generated-swim-play.mjs'];
+            'check-seedling-atlas-location-play.mjs', 'check-seedling-generated-swim-play.mjs',
+            'check-concept-trial-play.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

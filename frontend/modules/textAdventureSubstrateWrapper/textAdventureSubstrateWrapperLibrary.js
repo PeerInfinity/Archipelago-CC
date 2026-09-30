@@ -41,6 +41,13 @@ export const substrateRegistryEntry = Object.freeze({
     label: 'Text Adventure',
     panelComponentType: 'textAdventureSubstrateWrapperPanel',
     loadRegionEvent: 'textAdventure:loadRegion',
+    // ⛓ CONCEPT LIBRARY T4 — the panel's iframe (`textAdventureSubstrateWrapperPanel`'s
+    // IFRAME_ID). procgenPlayer re-publishes the active region's loadRegion when this
+    // iframe announces appReady. MEASURED (T4 D3, the `concept_trial` preset): a
+    // text-adventure START's loadRegion lands before the bridge subscribes, so without
+    // this the start room's payload `prose` (and its exit sides) never reached the
+    // bridge — the player read the generic "You can't go that way" at a guardian.
+    iframeId: 'textAdventureSubstrateWrapper',
 
     // Mirrors the existing substrate. The wrapper's engine renders
     // location names + clickable exits — no spatial representation

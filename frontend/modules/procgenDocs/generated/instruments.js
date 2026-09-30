@@ -48,8 +48,8 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 59,
-            "count": 97,
+            "browser": 60,
+            "count": 98,
             "id": "check"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 280,
-        "browser": 85,
+        "blockStyle": 281,
+        "browser": 86,
         "cited": 122,
-        "files": 291,
+        "files": 292,
         "lineStyle": 11,
-        "withDocblock": 291,
-        "withFlags": 212
+        "withDocblock": 292,
+        "withFlags": 213
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1416,6 +1416,46 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Phase-2 check: the headless CLIs build their sphere-growth config through the SAME substrate-hook assembly the panel uses (sphereConfigHooks), so the CLI's emitted regionParams / starting items / exclusive spheres match what the panel produces — no more inline arrow block + minimal {fallBehavior, physicsProfile} reg…",
             "path": "scripts/procgen/check-cli-sphere-config.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "check",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "game",
+                "host"
+            ],
+            "file": "check-concept-trial-play.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "game"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Concept library T4: THE JOINED WORLD, PLAYED — the first committed world that names concepts, played end to end in a headless page.",
+            "path": "scripts/procgen/check-concept-trial-play.mjs"
         },
         {
             "argvHelpers": [],
