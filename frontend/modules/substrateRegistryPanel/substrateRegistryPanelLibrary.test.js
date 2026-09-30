@@ -322,6 +322,20 @@ describe('the plain mode (plainOf)', () => {
         }
     });
 
+    it('⛓ T0b — P6 draws generically: ✓ and the concept list for an entry that realises concepts, ✗ elsewhere', () => {
+        const epsilon = {
+            id: 'epsilon', label: 'Epsilon',
+            conceptRealisations: { sword: { tier: 'mechanic' }, water: {
+                tier: 'skin', placements: { gate: { effect: 'requires', needs: ['swim'] } } } },
+        };
+        const withConcepts = [...entries, epsilon];
+        const q = plainOf(describeRegistry(withConcepts, snap), capabilityRows(withConcepts));
+        expect(cellAt(q, 'P6', 'epsilon')).toMatchObject({
+            kind: CELL_KINDS.YES, text: `${CELL_MARKS[CELL_KINDS.YES]} 2 concepts: sword (mechanic), water (skin)`,
+        });
+        expect(cellAt(q, 'P6', 'alpha')).toMatchObject({ kind: CELL_KINDS.NO, text: CELL_MARKS[CELL_KINDS.NO] });
+    });
+
     it('a partial cell: ◐ and its degree', () => {
         expect(cellAt(p, 'E3', 'delta')).toMatchObject({
             kind: CELL_KINDS.PARTIAL, text: `${CELL_MARKS[CELL_KINDS.PARTIAL]} ${CELL_WORDING.onePerSide}`,

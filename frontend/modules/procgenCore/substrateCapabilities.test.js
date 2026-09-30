@@ -46,8 +46,8 @@ const NAMES = fieldNamesOf(ENTRIES, snapshotExpandable(REGISTRY));
 const rowOf = (id) => ROWS.find((r) => r.id === id);
 const cellOf = (rowId, entryId) => rowOf(rowId).cells.find((c) => c.id === entryId);
 
-/** ⛓ The statement ids §1 names (P4 split into P4 + P5 by S3), in group order — the vocabulary's shape. */
-const PLAN_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'L11',
+/** ⛓ The statement ids §1 names (P4 split into P4 + P5 by S3; P6 added by concept library T0b), in group order — the vocabulary's shape. */
+const PLAN_IDS = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8', 'L9', 'L10', 'L11',
     'G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'E1', 'E2', 'E3', 'E4'];
 
 describe('the vocabulary', () => {
@@ -283,6 +283,49 @@ describe('P4 / P5 — the split DERIVED from the items\' own feature tags (S3, �
         const kinds = (id) => new Set(rowOf(id).cells.map((c) => c.kind));
         expect([...kinds('P4')].sort()).toEqual([CELL_KINDS.NO, CELL_KINDS.YES]);
         expect(kinds('P5').has(CELL_KINDS.YES)).toBe(true);
+    });
+});
+
+describe('P6 — "It can show the library\'s concepts in its own way" (concept library T0b, ⚖ the user 2026-09-29)', () => {
+    /* ⛓ The oracle is TYPED from the two entries' declarations (T1's
+     * `MAZE_CONCEPT_REALISATIONS`, T2's `TEXT_ADVENTURE_CONCEPT_REALISATIONS`),
+     * in their declared order — never derived from `conceptsRealisedBy`. */
+    const WANT = {
+        maze: ['sword (mechanic)', 'swim (mechanic)', 'guardian (skin)', 'water (skin)'],
+        text_adventure: ['sword (mechanic)', 'swim (mechanic)', 'guardian (mechanic)', 'water (mechanic)'],
+    };
+
+    it('the statement is the user\'s sentence, in the play group, reading conceptRealisations', () => {
+        const s = CAPABILITY_STATEMENTS.find((x) => x.id === 'P6');
+        expect(s).toMatchObject({
+            group: 'play', statement: "It can show the library's concepts in its own way", fields: ['conceptRealisations'],
+        });
+        expect(s.universal).toBeUndefined();
+    });
+
+    it('the maze and the text adventure answer ✓ with the count, the first LIST_PREVIEW `name (tier)`, and the whole list', () => {
+        for (const [id, names] of Object.entries(WANT)) {
+            const c = cellOf('P6', id);
+            expect(c, id).toMatchObject({ kind: CELL_KINDS.YES, list: names });
+            expect(c.text, id).toBe(`${names.length} concepts: ${names.slice(0, LIST_PREVIEW).join(', ')}, …`);
+        }
+        expect(cellOf('P6', 'maze').text).toBe('4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …');
+    });
+
+    it('every other entry answers ✗ (it declares no conceptRealisations)', () => {
+        const others = ENTRIES.filter((e) => !(e.id in WANT));
+        expect(others.length).toBeGreaterThan(0);
+        for (const e of others) {
+            expect(e.conceptRealisations, e.id).toBeUndefined();
+            expect(cellOf('P6', e.id).kind, e.id).toBe(CELL_KINDS.NO);
+        }
+    });
+
+    it('a short list shows every name and no ellipsis', () => {
+        const s = CAPABILITY_STATEMENTS.find((x) => x.id === 'P6');
+        expect(s.answer({ conceptRealisations: { water: { tier: 'skin', placements: {
+            gate: { effect: 'requires', needs: ['swim'] } } } } }))
+            .toEqual({ kind: CELL_KINDS.YES, text: '1 concept: water (skin)', list: ['water (skin)'] });
     });
 });
 

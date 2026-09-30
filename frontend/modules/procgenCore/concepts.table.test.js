@@ -141,7 +141,8 @@ describe('D4 — conceptsRealisedBy / itemTagsImpliedBy (the chart\'s INPUT, not
         expect(itemTagFeatures({ libraryItems, supportedFeatures: [] }, {})).toEqual(itemTagsImpliedBy(DOUBLE, CONCEPTS));
     });
 
-    it('⛔ no chart statement reads `conceptRealisations` (the row is proposed at the replan)', () => {
-        expect(CAPABILITY_STATEMENTS.flatMap((s) => s.fields).filter((f) => f.startsWith('conceptRealisations'))).toEqual([]);
+    it('⛓ exactly one chart statement reads `conceptRealisations`: P6 (T0b, ⚖ the user 2026-09-29)', () => {
+        expect(CAPABILITY_STATEMENTS.filter((s) => s.fields.some((f) => f.startsWith('conceptRealisations')))
+            .map((s) => s.id)).toEqual(['P6']);
     });
 });

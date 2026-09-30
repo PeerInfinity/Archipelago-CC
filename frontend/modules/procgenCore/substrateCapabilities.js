@@ -39,6 +39,7 @@ import {
 import { declaredStartingNeeds } from './startingInventory.js';
 import { LOCATION_CAPACITY_KINDS, locationCapacityKind, locationCeiling } from './locationCapacity.js';
 import { SIDE_SHARING, sideMayHoldAnotherExit } from './exitSides.js';
+import { CONCEPTS, conceptsRealisedBy } from './concepts.js';
 
 /** ⛓ The four groups, in reading order. */
 export const CAPABILITY_GROUPS = Object.freeze([
@@ -136,6 +137,10 @@ export const CELL_WORDING = Object.freeze({
     itemTypesPreview: (types) => `${CELL_WORDING.itemTypes(types.length)}${types.length
         ? `: ${types.slice(0, LIST_PREVIEW).join(', ')}${types.length > LIST_PREVIEW ? ', …' : ''}` : ''}`,
     itemTypesLive: 'its list comes from the running game — see the Substrate Registry panel',
+    concepts: (n) => `${n} concept${n === 1 ? '' : 's'}`,
+    conceptTier: (concept, tier) => `${concept} (${tier})`,
+    conceptsPreview: (names) => `${CELL_WORDING.concepts(names.length)}: ${names.slice(0, LIST_PREVIEW).join(', ')}${
+        names.length > LIST_PREVIEW ? ', …' : ''}`,
     loopModeOnly: (field) => `loop mode stays on — it declares \`${field}\``,
     realiserNone: 'only as content from its own game',
     generationCost: (cost) => `its generation cost is declared \`${cost}\``,
@@ -192,6 +197,16 @@ const cell = (kind, text = null) => ({ kind, text });
 /** ⛓ An item-type list as a cell: the count and the first `LIST_PREVIEW` names, the whole list as `list`. */
 const itemTypesCell = (types) => ({ ...cell(CELL_KINDS.YES, CELL_WORDING.itemTypesPreview(types)), list: types });
 const yesNo = (b, noText = null) => (b ? cell(CELL_KINDS.YES) : cell(CELL_KINDS.NO, noText));
+/**
+ * ⛓ P6 — the concepts an entry realises (`concepts.conceptsRealisedBy`, in its
+ * declared order) as `name (tier)`: the count and the first `LIST_PREVIEW`, the
+ * whole list as `list` (the `itemTypesCell` idiom). ✗ where it realises none.
+ */
+const conceptsCell = (e) => {
+    const names = conceptsRealisedBy(e, CONCEPTS).map((r) => CELL_WORDING.conceptTier(r.concept, r.tier));
+    if (!names.length) return cell(CELL_KINDS.NO);
+    return { ...cell(CELL_KINDS.YES, CELL_WORDING.conceptsPreview(names)), list: names };
+};
 
 /**
  * ⛓⛓ **THE STATEMENTS** — one per row of plan §1, in group then row order.
@@ -238,6 +253,15 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
             const words = (e.supportedFeatures ?? []).filter((id) => !tags.has(id)).map(featureWords);
             return words.length ? cell(CELL_KINDS.YES, words.join(', ')) : cell(CELL_KINDS.NO);
         },
+    },
+    {
+        /* ⛓ CONCEPT LIBRARY T0b (⚖ the user, 2026-09-29): the sentence is the
+         * user's. A ✓ is the FEATURE — the library's concepts, each at the tier
+         * the entry realises it (`mechanic` enforces it, `skin` shows it). */
+        id: 'P6', group: 'play',
+        statement: "It can show the library's concepts in its own way",
+        fields: ['conceptRealisations'],
+        answer: conceptsCell,
     },
     {
         id: 'L1', group: 'loop', universal: true,

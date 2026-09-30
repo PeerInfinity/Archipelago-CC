@@ -10,7 +10,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**28 statements · 9 substrates · 36 registry fields read (39 of the developer matrix's 84, counting the parents of the fields read) · 45 not yet read.**
+**29 statements · 9 substrates · 37 registry fields read (40 of the developer matrix's 84, counting the parents of the fields read) · 44 not yet read.**
 
 ## Play
 
@@ -21,6 +21,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 | P3 | It draws its own picture on the composite map (else a labelled box) | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ |
 | P4 | It brings progression items of its own | ✓ Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory | ✗ | ✗ | ✓ Progressive Sword, Progressive Shield, Progressive Swim | ✓ 48 items | ✓ Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key | ✓ Victory | ✓ Double Jump, Blue Platforms, Springs, Glide, Shield, Victory | ✗ |
 | P5 | What the generator may do with it | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ its own map becomes the region graph, locations placed anywhere | ✓ locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit |
+| P6 | It can show the library's concepts in its own way | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (skin), … | ✗ | ✗ | ✓ 4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), … |
 
 ## Loop mode
 
@@ -78,6 +79,7 @@ Each row is answered from these fields of the substrate's registry entry — the
 - **P3** — `compositeMap.drawRegion`
 - **P4** — `libraryItems`, `supportedFeatures`
 - **P5** — `supportedFeatures`
+- **P6** — `conceptRealisations`
 - **L1** — `loopSupport.manual`
 - **L2** — `loopSupport.queueActions`
 - **L3** — `loopSupport.record`, `loopSupport.playback`
@@ -201,6 +203,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — It draws its own picture on the composite map (else a labelled box)
 - *Play* — It brings progression items of its own: Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key
 - *Play* — What the generator may do with it: item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit
+- *Play* — It can show the library's concepts in its own way: 4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks, exploring
 - *Loop mode* — You can record a visit and replay it
@@ -269,6 +272,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — The Playback Bot can walk it (replaying a world's solution)
 - *Play* — It draws its own picture on the composite map (else a labelled box)
 - *Play* — What the generator may do with it: item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit
+- *Play* — It can show the library's concepts in its own way: 4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), …
 - *Loop mode* — You can play it in loop mode
 - *Loop mode* — What you can queue for it: moves between regions, location checks, exploring
 - *Loop mode* — You can record a visit and replay it
@@ -287,8 +291,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-45 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+44 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `conceptRealisations`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `renderLibraryProcgenParams`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `renderLibraryProcgenParams`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

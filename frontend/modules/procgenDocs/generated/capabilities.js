@@ -447,6 +447,11 @@ export const CAPABILITIES = frz({
                     "text": "item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit"
                 },
                 {
+                    "group": "play",
+                    "statement": "It can show the library's concepts in its own way",
+                    "text": "4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …"
+                },
+                {
                     "group": "loop",
                     "statement": "You can play it in loop mode",
                     "text": null
@@ -760,6 +765,11 @@ export const CAPABILITIES = frz({
                     "text": "item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit"
                 },
                 {
+                    "group": "play",
+                    "statement": "It can show the library's concepts in its own way",
+                    "text": "4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), …"
+                },
+                {
                     "group": "loop",
                     "statement": "You can play it in loop mode",
                     "text": null
@@ -877,9 +887,9 @@ export const CAPABILITIES = frz({
     ],
     "counts": {
         "fields": 84,
-        "fieldsRead": 36,
-        "fieldsUnread": 45,
-        "statements": 28,
+        "fieldsRead": 37,
+        "fieldsUnread": 44,
+        "statements": 29,
         "substrates": 9
     },
     "fieldsRead": [
@@ -888,6 +898,7 @@ export const CAPABILITIES = frz({
         "canHostExitGates",
         "captureLibraryEntry",
         "compositeMap.drawRegion",
+        "conceptRealisations",
         "describeAction",
         "deserializeWorld",
         "exitSides",
@@ -929,7 +940,8 @@ export const CAPABILITIES = frz({
                 "P2",
                 "P3",
                 "P4",
-                "P5"
+                "P5",
+                "P6"
             ]
         },
         {
@@ -1593,6 +1605,127 @@ export const CAPABILITIES = frz({
             "group": "play",
             "id": "P5",
             "statement": "What the generator may do with it"
+        },
+        {
+            "cells": [
+                {
+                    "id": "bounce",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "maze",
+                    "kind": "yes",
+                    "list": [
+                        "sword (mechanic)",
+                        "swim (mechanic)",
+                        "guardian (skin)",
+                        "water (skin)"
+                    ],
+                    "text": "4 concepts: sword (mechanic), swim (mechanic), guardian (skin), …",
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "{guardian, swim, sword, water}"
+                        }
+                    ]
+                },
+                {
+                    "id": "omsi",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "runner",
+                    "kind": "no",
+                    "text": null,
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "—"
+                        }
+                    ]
+                },
+                {
+                    "id": "text_adventure",
+                    "kind": "yes",
+                    "list": [
+                        "sword (mechanic)",
+                        "swim (mechanic)",
+                        "guardian (mechanic)",
+                        "water (mechanic)"
+                    ],
+                    "text": "4 concepts: sword (mechanic), swim (mechanic), guardian (mechanic), …",
+                    "why": [
+                        {
+                            "field": "conceptRealisations",
+                            "value": "{guardian, swim, sword, water}"
+                        }
+                    ]
+                }
+            ],
+            "fields": [
+                "conceptRealisations"
+            ],
+            "group": "play",
+            "id": "P6",
+            "statement": "It can show the library's concepts in its own way"
         },
         {
             "cells": [
@@ -4649,7 +4782,6 @@ export const CAPABILITIES = frz({
         "buildRegionParams",
         "buildZoneSpecs",
         "canHostExitGatesBraid",
-        "conceptRealisations",
         "defaultProcgenParams",
         "driftItems",
         "emitsSpiralContent",
