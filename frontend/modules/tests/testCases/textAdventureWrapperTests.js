@@ -1360,3 +1360,192 @@ registerTest({
     category: 'textAdventureSubstrateWrapper',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
+
+/**
+ * ⛓⛓ CONCEPT LIBRARY T4, D4 — **THE JOINED WORLD SPEAKS ITS CONCEPTS IN PLAY.**
+ *
+ * The world is the committed `concept_trial` preset (`CONCEPT_TRIAL_STATE`),
+ * loaded as a document is loaded and never changed: a text-adventure START
+ * whose sword-gated exit carries the GUARDIAN's prose, and a maze whose
+ * swim-gated exit is the painted `water_gate_0`. Every name is read off the
+ * document. Asserts:
+ *   1. the maze region's deserialized world (procgenPlayer's warehouse, what the
+ *      maze panel is handed) holds the concept gate's definition — `concept:
+ *      'water'`, its colour — and the concept items in the table's colours;
+ *   2. without the sword the START's exit is inaccessible, a click does not
+ *      move, and the engine displays the guardian's `blocked` prose;
+ *   3. with the sword (granted through the state manager, as T2's row grants
+ *      it) the exit opens, a click moves the player into the maze, and the
+ *      engine displayed the guardian's `passedWith` prose.
+ * The sword is removed after. Every line the engine displays is recorded as it
+ * is added (a MutationObserver in the iframe): the log is re-rendered on each
+ * state change and emptied on a room change (measured, `check-concept-trial-play.mjs`).
+ */
+const CONCEPT_TRIAL_PRESET_PATH = './presets/concept_trial/AP_1/AP_1_rules.json';
+
+async function conceptTrialPlays(testController) {
+    const doc = await (await fetch(CONCEPT_TRIAL_PRESET_PATH)).json();
+    const slot = '1';
+    const regions = doc.regions[slot];
+    const sidecars = doc.preset_sidecars?.[slot] ?? {};
+    const start = regions.Menu.exits[0].connected_region;
+    const room = sidecars[start]?.playable_payload;
+    const guarded = Object.keys(room?.prose?.exits ?? {})[0] ?? null;
+    const guardedExit = room?.exits?.find((e) => e.exit_id === guarded) ?? null;
+    const target = guardedExit?.targetRegion ?? null;
+    const rule = regions[start]?.exits?.find((x) => x.connected_region === target)?.access_rule ?? null;
+    const sword = itemsOfRule(rule)?.[0] ?? null;
+    const maze = sidecars[target]?.playable_payload ?? null;
+    const [gateId, gate] = Object.entries(maze?.obstacleLib ?? {}).find(([, d]) => typeof d.concept === 'string') ?? [];
+    testController.reportCondition(`⛓ premise: ${CONCEPT_TRIAL_PRESET_PATH}'s START ${start} is a text-adventure room whose `
+        + `exit ${guarded} → ${target} is gated on ${sword} and carries prose; ${target} is a maze with a concept gate`,
+    sidecars[start]?.substrate === 'text_adventure' && !!guarded && !!sword
+        && sidecars[target]?.substrate === 'maze' && !!gateId);
+    if (!guarded || !sword || !gateId) return testController.getOverallResult();
+    const wantBlocked = processMessageTemplate(room.prose.exits[guarded].inaccessibleMessage,
+        { exitName: guarded, destinationRegion: target });
+    const wantPassed = processMessageTemplate(room.prose.exits[guarded].moveMessage,
+        { exitName: guarded, destinationRegion: target });
+
+    const { getGameStateSingleton } = await import('../../gameState/singleton.js');
+    const gs = getGameStateSingleton();
+    if (gs?.isLoopModeActive) gs.setLoopModeActive(false);
+    let swordGranted = false;
+    let observer = null;
+    try {
+        const rulesLoaded = testController.waitForEvent('stateManager:rulesLoaded', 10000);
+        testController.eventBus.publish('files:jsonLoaded', {
+            jsonData: doc, selectedPlayerId: slot, sourceName: 'concept-trial-plays',
+        });
+        await rulesLoaded;
+        await testController.stateManager.pingWorker('after-rules-load', 3000);
+        // ⛔ IDENTITY, not existence (trap 1302): the app may be loading its own default.
+        const docRegions = JSON.stringify(Object.keys(regions).sort());
+        const loaded = await testController.pollForCondition(() => {
+            const sd = testController.stateManager.getStaticData?.();
+            return testController.stateManager.getGameName?.() === doc.game_name
+                && !!sd?.regions && JSON.stringify([...sd.regions.keys()].sort()) === docRegions;
+        }, `the loaded document is ${CONCEPT_TRIAL_PRESET_PATH} (game + region set)`, 10000, 100);
+        testController.reportCondition(`the loaded document is ${CONCEPT_TRIAL_PRESET_PATH}`, !!loaded);
+        if (!loaded) return testController.getOverallResult();
+
+        // (1) the maze region's world, as the maze panel is handed it.
+        // ⛔ IDENTITY, not existence (trap 1302): the previous document's warehouse can
+        //   hold a `region_2_3` too. ⚠ `pollForCondition` answers a boolean, not the
+        //   value polled for (measured on this row's first run), so the world is read after.
+        const docSidecars = JSON.stringify(Object.keys(sidecars).sort());
+        const getWarehouse = () => window.centralRegistry?.getPublicFunction('procgenPlayer', 'getWarehouse')?.();
+        const ours = await testController.pollForCondition(() => {
+            const w = getWarehouse();
+            return !!w?.regions && JSON.stringify([...w.regions.keys()].sort()) === docSidecars
+                && !!w.regions.get(target)?.world?.obstacleLib?.[gateId];
+        }, `procgenPlayer's warehouse is this document's (its regions) and ${target} holds ${gateId}`, 10000, 100);
+        testController.reportCondition(`procgenPlayer's warehouse is this document's and ${target}'s world holds ${gateId}`,
+            !!ours);
+        const mazeWorld = ours ? getWarehouse()?.regions?.get(target)?.world ?? null : null;
+        const def = mazeWorld?.obstacleLib?.[gateId];
+        testController.assertEqual(`${target}'s world holds ${gateId} as a concept gate (concept, colour, symbol)`,
+            JSON.stringify({ concept: gate.concept, color: gate.color, symbol: gate.symbol, clear_rule: gate.clear_rule }),
+            JSON.stringify({ concept: def?.concept, color: def?.color, symbol: def?.symbol, clear_rule: def?.clear_rule }));
+        testController.reportCondition(`${gateId} stands in ${target}'s world`,
+            [...(mazeWorld?.obstacles?.values?.() ?? [])].includes(gateId));
+        const colours = Object.fromEntries(Object.entries(mazeWorld?.itemLib ?? {})
+            .filter(([, r]) => r?.concept).map(([k, r]) => [k, r.color]));
+        testController.assertEqual(`${target}'s world carries the concept items in the table's colours`,
+            JSON.stringify({ 'Progressive Sword': '#c0a040', 'Progressive Swim': '#40b0c0' }), JSON.stringify(colours));
+
+        // (2) the START, without the sword.
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'textAdventureSubstrateWrapperPanel' });
+        const iframeDoc = () => document.querySelector('iframe.tasw-iframe')?.contentDocument ?? null;
+        const click = (el) => el.dispatchEvent(new el.ownerDocument.defaultView.MouseEvent('click',
+            { bubbles: true, cancelable: true }));
+        const linkFor = (id) => [...(iframeDoc()?.querySelectorAll('[data-exit-id]') ?? [])]
+            .find((l) => l.getAttribute('data-exit-id') === id) ?? null;
+        const exploreUntil = async (done) => {
+            for (let i = 0; i < 20 && !done(); i++) {
+                const explore = iframeDoc()?.querySelector('[data-action="explore"]');
+                if (!explore) break;
+                click(explore);
+                // eslint-disable-next-line no-await-in-loop
+                await new Promise((r) => setTimeout(r, 200));
+            }
+            return done();
+        };
+        // ⛓ MEASURED (this row inside the fast batch): after the earlier wrapper rows
+        //   the room renders with no exit link until it is explored — as T2's rows do.
+        const inStart = await testController.pollForCondition(
+            () => gs.getCurrentRegion() === start && iframeDoc()?.querySelector('.tae-actions') !== null,
+            `the wrapper rendered ${start}`, 15000, 200);
+        const mounted = inStart && await exploreUntil(() => !!linkFor(guarded));
+        testController.reportCondition(`the player is in ${start} and the wrapper rendered its exit ${guarded}`, !!mounted);
+        if (!mounted) {
+            testController.log(`current region ${JSON.stringify(gs.getCurrentRegion())}; iframe `
+                + `${document.querySelector('iframe.tasw-iframe') ? 'present' : 'absent'}; exit links `
+                + `${JSON.stringify([...(iframeDoc()?.querySelectorAll('[data-exit-id]') ?? [])].map((l) => l.getAttribute('data-exit-id')))}`,
+            'error');
+            return testController.getOverallResult();
+        }
+        const seen = [];
+        const take = (n) => {
+            if (n.nodeType !== 1) return;
+            if (n.matches?.('.tae-msg')) seen.push(n.textContent);
+            for (const m of n.querySelectorAll?.('.tae-msg') ?? []) seen.push(m.textContent);
+        };
+        observer = new (iframeDoc().defaultView.MutationObserver)((recs) => recs.forEach((r) => r.addedNodes.forEach(take)));
+        observer.observe(iframeDoc().body, { childList: true, subtree: true });
+
+        testController.reportCondition(`⛓ premise: ${sword} is not held`,
+            !((testController.stateManager.getSnapshot()?.inventory ?? {})[sword] > 0));
+        const link = linkFor(guarded);
+        testController.reportCondition(`${guarded} is tae-link-inaccessible without ${sword}`,
+            !!link && link.classList.contains('tae-link-inaccessible'));
+        const before = seen.length;
+        if (link) click(link);
+        const saidBlocked = await testController.pollForCondition(() => seen.slice(before).includes(wantBlocked),
+            `the engine displayed the guardian's blocked prose for ${guarded}`, 5000, 100);
+        testController.reportCondition(`the engine displayed the guardian's blocked prose for ${guarded}`, !!saidBlocked);
+        testController.reportCondition('…and not the generic line',
+            !seen.slice(before).some((m) => m.startsWith("You can't go that way")));
+        const until = Date.now() + GATE_SETTLE_MS;
+        let stayed = true;
+        while (Date.now() < until) {
+            if (gs.getCurrentRegion() !== start) { stayed = false; break; }
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, 100));
+        }
+        testController.reportCondition(`the click on ${guarded} leaves the player in ${start} for ${GATE_SETTLE_MS} ms`, stayed);
+
+        // (3) with the sword.
+        await testController.stateManager.addItemToInventory(sword, 1);
+        swordGranted = true;
+        await testController.stateManager.pingWorker('after-sword', 3000);
+        const opened = await testController.pollForCondition(
+            () => linkFor(guarded)?.classList.contains('tae-link-accessible'),
+            `${guarded} becomes accessible once ${sword} is held`, 8000, 100);
+        testController.reportCondition(`${guarded} becomes tae-link-accessible once ${sword} is held`, !!opened);
+        if (!opened) return testController.getOverallResult();
+        const beforeMove = seen.length;
+        click(linkFor(guarded));
+        const moved = await testController.pollForCondition(() => gs.getCurrentRegion() === target,
+            `the click on ${guarded} moved the player to ${target}`, 8000, 50);
+        testController.reportCondition(`the click on ${guarded} moved the player into the maze ${target}`, !!moved);
+        testController.reportCondition(`the engine displayed the guardian's passedWith prose for ${guarded}`,
+            seen.slice(beforeMove).includes(wantPassed));
+        return testController.getOverallResult();
+    } finally {
+        observer?.disconnect();
+        if (swordGranted) await testController.stateManager.removeItemFromInventory(sword, 1);
+    }
+}
+
+registerTest({
+    id: 'concept-trial-plays',
+    name: 'Concept trial: the joined world\'s maze holds the painted water gate and its text adventure speaks the guardian',
+    description: 'Loads the committed concept_trial preset (concept library T4); asserts the maze region\'s world holds '
+               + 'water_gate_0 with its concept and colour and the concept items in the table\'s colours, that the '
+               + 'text-adventure START\'s sword-gated exit is refused with the guardian\'s blocked prose, and that with '
+               + 'the sword granted it opens and moves the player with the passedWith prose. The sword is removed after.',
+    testFunction: conceptTrialPlays,
+    category: 'textAdventureSubstrateWrapper',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
