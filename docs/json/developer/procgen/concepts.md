@@ -68,6 +68,10 @@ Logic is always `needs` plus `effect`, never a free rule expression; a placement
 
 A refusal is a value. When `selectRealisation` returns null — the entry declares nothing, the concept is not offered, or no placement's needs equal the rule — the caller does what it does today (for a procedural substrate, the generic `logic_gate` carrying the rule as its `clear_rule`).
 
+## The maze's realisations
+
+The maze (`mazeRoom/mazeConcepts.js`) realises `sword` and `swim` as pickups (tier `mechanic`) and `guardian` and `water` as gates that need the sword and swim (tier `skin`). Its placer asks `selectRealisation` about every gate rule with the world's `params.concepts` as `offered`; a selected rule is placed as `guardian_gate_<n>` or `water_gate_<n>` over the same rule gate, with the same `clear_rule`, and painted in the colour and symbol from the realisation's `art` (the table gives `guardian` and `water` no presentation). The maze declares no `libraryItems`: top-down grants every in-mix substrate's library items as free starting items, so a static declaration would change every top-down world. Instead, an item concept the world names joins that world's item library as the table's rows (`presetRun.mergedItemLib`).
+
 ## The text adventure
 
 A text-adventure gate has no geometry: the bridge refuses the move while the exit's rule fails, so the realisation is the prose the player reads. `sword`, `swim`, `guardian.gate` and `water.gate` are all `tier: 'mechanic'`. When the planner's rule selects a gate, `placeFromRules` writes that gate's `blocked` and `passedWith` messages into the room's payload `prose`. See [Text Adventure Substrate](./text-adventure.md#concept-realisations).

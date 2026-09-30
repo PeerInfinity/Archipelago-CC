@@ -22,6 +22,12 @@ Region generation (`generateRegionCore`) resolves the biome, runs its wall backe
 
 `whyBlocked(world, state, input, inventoryOverride, clearanceOpts)` returns `null` for a legal move or a wait, and otherwise one sentence: `wall at (x,y)`, `off the grid`, `door_red is shut — needs key_red`, `door_A0 is shut — nothing on button_A0`, or `block at (x,y) cannot move: …`. It sits beside `step` and checks in the same order, because only the engine's effective inventory can tell a missing item from an unpressed button. `mazeQueueExecutor.refusalReason` delegates to it. Its test is a property: over every reachable `(state, input)` of three fixture worlds, `whyBlocked(...) === null` exactly when `step(...) !== null`.
 
+### Concept gates — a skin over the logic gate
+
+`placeFromRules` realises each planned rule as a `logic_gate_<n>` clone on the target tile (the exit tile, or the item tile of a location), carrying the rule as its `clear_rule`. When the world names concepts (the pipeline's `params.concepts`, empty by default) and a rule is exactly what one of the maze's realisations needs, the clone is registered as that concept instead: `Has(Progressive Sword)` becomes `guardian_gate_<n>`, `Has(Progressive Swim)` becomes `water_gate_<n>`. The clone keeps the same `clear_set_type: 'rule'` and the same `clear_rule`, so extraction and compilation give the same rule as a plain gate; it adds `concept`, `placement` and the maze's own `name`, `color` and `symbol`, and travels in the payload's `obstacleLib` extras like any per-instance gate. `drawWorld` and the composite-map cell paint a gate that carries a `concept` in its colour and symbol, dimmed once cleared (the coloured door's idiom); a plain logic gate is still shown only through the exit fill and the location border. A rule no realisation matches exactly, or a world that names no concept, gets today's `logic_gate_<n>` and spends no extra draw.
+
+The realisations are `mazeConcepts.js`'s `MAZE_CONCEPT_REALISATIONS`, declared on the entry as `conceptRealisations`: `sword` and `swim` at tier `mechanic` (a pickup is the maze's mechanic for an item), `guardian` and `water` at tier `skin`, because the gate enforces the rule, not the concept. See [Concepts](./concepts.md).
+
 ## Biomes and wall backends
 
 A **biome** is a named bundle of (backend, params, post-processors); a **backend** is one wall-generation strategy, registered by id in `shared/procgen/mazeAlgorithms/registry.js`. A region picks its biome in `preset_sidecars[player][region].biome`; an unspecified region uses `classic`.

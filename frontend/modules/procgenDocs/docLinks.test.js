@@ -233,20 +233,22 @@ describe('the corpus census — printed, then pinned', () => {
          *   315 → 318  CONCEPT LIBRARY T2 D5 (2026-09-30): text-adventure.md's
          *              § Concept realisations ⇄ concepts.md (`doc` 242 → 244) and
          *              text-adventure.md's same-doc § Prose link (`same-doc` 15 → 16).
+         *   318 → 319  CONCEPT LIBRARY T1 D5 (2026-09-30): maze.md § Concept gates →
+         *              concepts.md (`doc` 244 → 245).
          */
         expect(by).toEqual({
             'same-doc': 16,
-            doc: 244,
+            doc: 245,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(318);
+        expect(CORPUS.length).toBe(319);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(244);
+        expect(docs).toHaveLength(245);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
