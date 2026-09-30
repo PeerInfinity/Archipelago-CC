@@ -4,7 +4,8 @@
  * (or a marker) changed without `node scripts/quicklaunch/generate-docs-index.mjs`
  * being run.
  */
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -19,6 +20,17 @@ describe('quickLaunch generated/docsIndex.js', () => {
     it('equals what the generator writes today (byte for byte)', () => {
         expect(readFileSync(join(REPO, OUTPUT), 'utf8'))
             .toBe(renderDocsIndexModule(buildDocsIndex(), buildCategoryOrder(), buildHelpSections()));
+    });
+
+    it('`--help` prints usage and exits 0 WITHOUT writing the index (it used to write it)', () => {
+        const out = join(REPO, OUTPUT);
+        const before = statSync(out).mtimeMs;
+        const r = spawnSync(process.execPath, [join(REPO, 'scripts/quicklaunch/generate-docs-index.mjs'), '--help'],
+            { cwd: REPO, encoding: 'utf8' });
+        expect(r.status, r.stdout + r.stderr).toBe(0);
+        expect(r.stdout).toMatch(/^generate-docs-index\.mjs — /);
+        expect(r.stdout).not.toContain('wrote ');
+        expect(statSync(out).mtimeMs).toBe(before);
     });
 
     it('the imported table deep-equals a fresh walk', () => {

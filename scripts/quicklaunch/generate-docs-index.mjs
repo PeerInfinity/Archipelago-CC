@@ -51,8 +51,10 @@
  * beside the output regenerates in memory and fails when the committed file
  * differs, so an edit that skips this step is caught by the unit tests.
  *
+ * Run:
  *     node scripts/quicklaunch/generate-docs-index.mjs          # write
  *     node scripts/quicklaunch/generate-docs-index.mjs --check  # exit 1 on drift
+ *     node scripts/quicklaunch/generate-docs-index.mjs --help   # print usage, write nothing
  *
  * It also writes `CATEGORY_ORDER`: the `## ` headings of docs/json/modules/README.md
  * that list modules, in README order — the vocabulary of `moduleInfo.category`
@@ -67,6 +69,8 @@
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+import { argvHelp } from '../procgen/argvHelp.js';
 
 export const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const DOCS_ROOT = 'docs/json';
@@ -369,4 +373,6 @@ function main(argv) {
     console.log(`wrote ${OUTPUT} (${counts}).`);
 }
 
+// `--help` printed nothing and WROTE the index until engine-prep R1 (byte-identical, but a write).
+argvHelp(import.meta.url);
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) main(process.argv.slice(2));
