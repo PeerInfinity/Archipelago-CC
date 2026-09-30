@@ -51,10 +51,16 @@ function solveAt(tx, ty, items) {
 }
 
 describe('F2 — a lock-less spinner on the walk, post-sword', () => {
-    it('(5,5): was EXHAUSTED; now SOLVES in 234 t by a press kill whose end is OBSERVED', () => {
+    /**
+     * ⛓ U4b D1 — 234 → 245 t. The strike schedule now prices each forecast row
+     * at the clock its own tick swings under (`gameTimeAt(i)`), so the first
+     * strike it plans is a different (cell, tick): the one the old pairing took
+     * was clear only against the NEXT tick's hammer.
+     */
+    it('(5,5): was EXHAUSTED; now SOLVES in 245 t by a press kill whose end is OBSERVED', () => {
         const out = solveAt(5, 5, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(234);
+        expect(out.ticks).toBe(245);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
@@ -79,6 +85,27 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
         expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@32,32' });
+        expect(kills[0].landings).toHaveLength(3);
+    });
+
+    /**
+     * ⛓ U4b D1 — the refusal read *"no reachable cell … for the next 45
+     * tick(s) … The room has nowhere to be."*, and the window was not the wall:
+     * 39 cells were clear for all 45 ticks. The live arm had pressed at t 63 on
+     * a train priced against the NEXT tick's hammer, the run billed the hammer
+     * at t 64, and every refuge preview then stalled under the hit's steering
+     * loss. Priced at the clock each forecast row swings under
+     * (`spinnerClockPairing.test.js`), the kill lands. ⛔ With `clearOfHammersAt`
+     * back at `gameTimeAt(i + 1)` the U3 text returns byte for byte.
+     */
+    it('(7,6): was "nowhere to be"; now SOLVES in 213 t, the train priced at its own tick\'s phase', () => {
+        const out = solveAt(7, 6, POST_SWORD_ITEMS);
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.ticks).toBe(213);
+        expect(out.certification?.certified).toBe(true);
+        const kills = out.records.filter((r) => r.strategy === 'kill');
+        expect(kills).toHaveLength(1);
+        expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@112,96' });
         expect(kills[0].landings).toHaveLength(3);
     });
 });

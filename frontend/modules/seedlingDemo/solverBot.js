@@ -5437,11 +5437,21 @@ function walkableCells(run, contacts) {
  * the slice-7 machinery was built under, which is still what is TRUE when the
  * phase is unknowable.
  *
- * ⛔ THE INDEX CONVENTION IS THE FORECAST'S: `forecast[i]` is the state at the
- * top of tick `ticksCompleted + 1 + i`, so the clock there is
- * `gameTimeAt(i + 1)` and NOT `gameTimeAt(i)`. Off by one here would price
- * every stance against the previous tick's hammer, which is a wrong answer
- * that looks right 44 times in 45.
+ * ⛔ THE INDEX CONVENTION IS THE RUN'S OWN CONTACT: `forecast[i]` is the bodies
+ * as `stepSpinners` leaves them in the advance from `ticksCompleted + i`, and
+ * that same advance bills them (`stepSpinnerContactsNow`) at `clock.now()`
+ * BEFORE its `clock.tick()` — so the clock there is `gameTimeAt(i)`.
+ *
+ * ⛓⛓ SEEDLING SWIM U4b — THIS SENTENCE USED TO SAY `gameTimeAt(i + 1)`, and
+ * the census chamber's (7,6) is what it cost. The press was priced clear at
+ * `Game.time` 4885 and the run billed the hammer at 4884: a hit the plan never
+ * saw, then a steer-blocked preview that stalled every refuge walk — which
+ * printed as *"the room has nowhere to be"* with 39 cells clear for the whole
+ * window. `spinnerClockPairing.test.js` drives the law: over 27 placements
+ * whose first contact is the hammer, the same-index pairing names the hit tick
+ * 27 times in 27 and the old one missed it 20 times. It was a wrong answer
+ * that looked right 44 times in 45, which is the sentence this paragraph used
+ * to warn about in the other direction.
  */
 /**
  * ⛓⛓⛓ ARC 3 SLICE 2c — WHICH HAMMER TEST ACTUALLY DECIDED, in the refusal's
@@ -5476,7 +5486,7 @@ function hammerTestAt(run) {
 function clearOfHammersAt(run, box, forecast, i) {
     const step = forecast[i];
     if (!step) return false;
-    const at = typeof run?.gameTimeAt === 'function' ? run.gameTimeAt(i + 1) : null;
+    const at = typeof run?.gameTimeAt === 'function' ? run.gameTimeAt(i) : null;
     for (const r of step) {
         const cx = r.x + SPINNER.originX;
         const cy = r.y + SPINNER.originY;
@@ -5959,8 +5969,9 @@ function safeStep(run, held, alternatives, what, bodyId) {
     const lands = (keys) => {
         const next = step({ ...run.state }, keys);
         // ⚠ `[ahead]` is a ONE-ELEMENT forecast whose index 0 is the run's
-        // own index 1, so the clock is asked for `gameTimeAt(2)` by hand
-        // rather than by the shared convention — see the comment above.
+        // own index 1, so the clock is asked for `gameTimeAt(1)` by hand
+        // rather than by the shared convention — see the comment above
+        // (⛓ U4b: forecast row i swings at `gameTimeAt(i)`, `clearOfHammersAt`).
         return clearOfHammersAt(
             { gameTimeAt: (i) => run.gameTimeAt(i + 1) },
             playerBoxAt(next.x, next.y), [ahead], 0);
