@@ -14,8 +14,8 @@ import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { ITEM_LABELS, itemLabelOf } from '../seedlingDemo/itemLabels.js';
 import { CAPABILITY_STATEMENTS, itemTagFeatures } from './substrateCapabilities.js';
 import {
-    CONCEPTS, assertConceptTable, assertRealisations, conceptsRealisedBy, instancesOf, itemRowsOf,
-    itemTagsImpliedBy, obstacleRowsOf,
+    CONCEPTS, CONCEPT_ITEMS_FEATURE, assertConceptTable, assertRealisations, conceptsRealisedBy, instancesOf,
+    itemRowsOf, itemTagsImpliedBy, obstacleRowsOf,
 } from './concepts.js';
 
 const FEATURE = 'colored_doors_and_keys';
@@ -133,7 +133,8 @@ describe('D4 — conceptsRealisedBy / itemTagsImpliedBy (the chart\'s INPUT, not
     });
 
     it('itemTagsImpliedBy: the feature of every realised or needed item concept — the SAME law itemTagFeatures reads', () => {
-        expect(itemTagsImpliedBy(DOUBLE, CONCEPTS)).toEqual([FEATURE]);
+        // ⛓ T0b: sword/swim carry CONCEPT_ITEMS_FEATURE (guardian's need names it first).
+        expect(itemTagsImpliedBy(DOUBLE, CONCEPTS)).toEqual([CONCEPT_ITEMS_FEATURE, FEATURE]);
         /* ⛓ the chart's own law, asked of an entry whose library items ARE the realised item concepts' rows */
         const libraryItems = Object.fromEntries(['sword', 'key']
             .flatMap((c) => itemRowsOf(CONCEPTS[c])).map((r) => [r.id, r]));

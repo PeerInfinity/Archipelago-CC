@@ -18,7 +18,10 @@ import {
 } from './procgenPipelineUI.js';
 import { sphereRebuildRefusal } from './procgenPipelineEngine.js';
 import { panelDefaultParams, buildRunFromState } from './presetRun.js';
-import { CONCEPTS } from '../procgenCore/concepts.js';
+import { CONCEPTS, itemRowsOf, markConceptRow } from '../procgenCore/concepts.js';
+import { MAZE_CONCEPT_REALISATIONS } from '../mazeRoom/mazeConcepts.js';
+import { TEXT_ADVENTURE_CONCEPT_REALISATIONS }
+    from '../textAdventureSubstrateWrapper/textAdventureConceptRealisations.js';
 import { DOCUMENT_KEY_EDITORS } from '../apworldEditor/documentKeys.js';
 
 /**
@@ -46,6 +49,30 @@ const TEXT_ADVENTURE = {
     id: 'text_adventure',
     supportedFeatures: ['logic_gate'],
 };
+
+describe('T0b — groupLibraryByFeature groups a CONCEPT row under the entries that realise it', () => {
+    const REALISING_MAZE = { ...MAZE, conceptRealisations: MAZE_CONCEPT_REALISATIONS };
+    const REALISING_TA = { ...TEXT_ADVENTURE, conceptRealisations: TEXT_ADVENTURE_CONCEPT_REALISATIONS };
+    const BARE = { id: 'bounce', supportedFeatures: ['logic_gate'] };
+    const plain = itemRowsOf(CONCEPTS.sword)[0];
+    const row = (def) => [{ id: def.id, def, kind: 'item' }];
+    it('BEFORE the marker: the table row (feature concept_items, which no entry lists) is unsupported', () => {
+        const groups = groupLibraryByFeature(row(plain), [REALISING_MAZE, REALISING_TA]);
+        expect(groups.unsupported.map((e) => e.id)).toEqual(['Progressive Sword']);
+    });
+    it('marked: common when every selected entry realises it; "<realisers> only" when some do', () => {
+        const marked = markConceptRow(plain, 'sword');
+        expect(groupLibraryByFeature(row(marked), [REALISING_MAZE, REALISING_TA]).common.map((e) => e.id))
+            .toEqual(['Progressive Sword']);
+        const some = groupLibraryByFeature(row(marked), [REALISING_MAZE, BARE]);
+        expect(some.substrateSpecific).toEqual([{ label: 'maze only', entries: row(marked) }]);
+        expect(groupLibraryByFeature(row(marked), [BARE]).unsupported.map((e) => e.id)).toEqual(['Progressive Sword']);
+    });
+    it('an UNMARKED row of the same name (a library\'s own) is grouped by its feature alone', () => {
+        const seedlingsOwn = { ...plain, feature: 'seedling_items' };
+        expect(groupLibraryByFeature(row(seedlingsOwn), [REALISING_MAZE]).unsupported).toHaveLength(1);
+    });
+});
 
 describe('groupLibraryByFeature', () => {
     it('with zero substrates selected, every entry falls into unsupported', () => {

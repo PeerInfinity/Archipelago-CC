@@ -44,7 +44,7 @@ import { makeLocationName } from '../procgenCore/apLocationNaming.js';
 import {
     REQUIRED_ENVELOPE_FIELD, SIDECAR_FIELD_ERRORS, sidecarFieldsOf, sidecarPayloadErrors,
 } from '../procgenCore/sidecarFields.js';
-import { CONCEPTS } from '../procgenCore/concepts.js';
+import { CONCEPTS, conceptOfItem } from '../procgenCore/concepts.js';
 import { selectRealisation } from '../procgenPipeline/conceptSelection.js';
 import { TEXT_ADVENTURE_CONCEPT_REALISATIONS } from './textAdventureConceptRealisations.js';
 
@@ -128,11 +128,6 @@ export function placeTextAdventureItems(world, input = {}) {
     return { placed_items, placed_obstacles: [] };
 }
 
-/** What `selectRealisation` reads off an entry — the realisations alone (the entry imports this module). */
-const REALISING_ENTRY = Object.freeze({
-    id: 'text_adventure', conceptRealisations: TEXT_ADVENTURE_CONCEPT_REALISATIONS,
-});
-
 /** The room's `prose` table for `kind` (`exits` / `locations`), made on first write. */
 function proseTableOf(world, kind) {
     world.prose ??= { exits: {}, locations: {} };
@@ -146,11 +141,8 @@ function proseTableOf(world, kind) {
  */
 function realisedItemConcept(itemId, offered) {
     if (!offered.length) return null;
-    for (const [cid, r] of Object.entries(TEXT_ADVENTURE_CONCEPT_REALISATIONS)) {
-        if (CONCEPTS[cid]?.kind === 'item' && CONCEPTS[cid].item?.id === itemId
-            && offered.includes(cid) && r.prose) return cid;
-    }
-    return null;
+    const cid = conceptOfItem(itemId, CONCEPTS);
+    return cid && offered.includes(cid) && TEXT_ADVENTURE_CONCEPT_REALISATIONS[cid]?.prose ? cid : null;
 }
 
 /**
@@ -180,7 +172,7 @@ export function placeTextAdventureRules(world, input = {}) {
             continue;
         }
         exit.access_rule = cloneRule(rule);
-        const chosen = selectRealisation(rule, REALISING_ENTRY, { concepts: CONCEPTS, offered, rng: input.rng });
+        const chosen = selectRealisation(rule, TEXT_ADVENTURE_CONCEPT_REALISATIONS, { concepts: CONCEPTS, offered, rng: input.rng });
         const prose = chosen?.mechanic?.prose;
         if (!prose) continue;
         proseTableOf(world, 'exits')[exit_id] = { inaccessibleMessage: prose.blocked, moveMessage: prose.passedWith };

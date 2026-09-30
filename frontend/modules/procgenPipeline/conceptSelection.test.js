@@ -175,3 +175,26 @@ describe('decorationsFor — the helps and none placements, which no rule select
         expect(decorationsFor(double(), {})).toEqual([]);
     });
 });
+
+describe('T0b — an entry OR its realisations object: one normaliser, pinned both ways', () => {
+    const entry = double();
+    const reals = entry.conceptRealisations;
+    it('candidatesFor answers the same for both', () => {
+        for (const rule of [has(SWORD), has(SWIM), has(SWIM, 2), { rule: 'And', children: [has(SWORD), has(SWIM)] }]) {
+            expect(candidatesFor(rule, reals, O)).toEqual(candidatesFor(rule, entry, O));
+        }
+        expect(candidatesFor(has(SWORD), reals, O).map((c) => c.concept)).toEqual(['guardian']);
+    });
+    it('selectRealisation answers the same for both', () => {
+        expect(selectRealisation(has(SWIM), reals, O)).toEqual(selectRealisation(has(SWIM), entry, O));
+        expect(selectRealisation(has(SWIM), reals, O)).toMatchObject({ concept: 'water', placement: 'gate' });
+    });
+    it('decorationsFor answers the same for both', () => {
+        expect(decorationsFor(reals, O)).toEqual(decorationsFor(entry, O));
+        expect(decorationsFor(reals, O).map((d) => `${d.concept}.${d.placement}`))
+            .toEqual(['guardian.roaming', 'water.shortcut']);
+    });
+    it('an entry that realises nothing still selects nothing', () => {
+        expect(selectRealisation(has(SWORD), { id: 'bare', supportedFeatures: ['logic_gate'] }, O)).toBeNull();
+    });
+});

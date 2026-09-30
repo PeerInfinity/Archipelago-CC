@@ -20,7 +20,7 @@ import { serializeMazeWorld } from './mazeSerializer.js';
 import { substrateRegistryEntry as ENTRY } from './mazeRoomLibrary.js';
 import { MAZE_CONCEPT_REALISATIONS, conceptGateFor } from './mazeConcepts.js';
 import {
-    CONCEPTS, assertRealisations, conceptsRealisedBy, itemTagsImpliedBy,
+    CONCEPTS, CONCEPT_ITEMS_FEATURE, assertRealisations, conceptsRealisedBy, itemTagsImpliedBy,
 } from '../procgenCore/concepts.js';
 
 const SWORD = { rule: 'Has', args: { item_name: 'Progressive Sword' } };
@@ -72,8 +72,8 @@ describe('the entry declares the realisations, and they are well-formed', () => 
             { concept: 'water', kind: 'obstacle', tier: 'skin', placements: [{ key: 'gate', effect: 'requires' }] },
         ]);
     });
-    it('⚠ FINDING pinned: the table gives sword/swim no `feature`, so itemTagsImpliedBy names no tag', () => {
-        expect(itemTagsImpliedBy(ENTRY, CONCEPTS)).toEqual([]);
+    it('⛓ T0b: sword/swim carry the concept-items `feature`, so itemTagsImpliedBy names it (T1\'s finding, closed)', () => {
+        expect(itemTagsImpliedBy(ENTRY, CONCEPTS)).toEqual([CONCEPT_ITEMS_FEATURE]);
     });
     it('⛔ the entry declares NO libraryItems (top-down grants them as free starting items)', () => {
         expect('libraryItems' in ENTRY).toBe(false);

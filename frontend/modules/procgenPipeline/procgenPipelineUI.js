@@ -69,7 +69,7 @@ import {
     REGION_GENERATION_FIELDS, bagIntegerField, renderRegionGenerationForm,
 } from '../procgenCore/regionGenerationForm.js';
 import { activeSubstrateIds } from './sphereConfigHooks.js';
-import { CONCEPTS } from '../procgenCore/concepts.js';
+import { CONCEPTS, isConceptRow, realisationsOf } from '../procgenCore/concepts.js';
 // ⛓ PROCGEN PIPELINE PRESETS P0 — every mode's run is ASSEMBLED in presetRun.js
 // (pure functions of a panel-shaped state); the methods below that used to build
 // a config in place are one-line callers over `this`, and the headless preset
@@ -170,6 +170,9 @@ export const HANDOFF_TOPDOWN_COST = 'which REGENERATES every sidecar payload fro
  *                                          // when nothing is selected)
  *   }
  *
+ * A concept row (`concepts.isConceptRow`, added by the world's concept list)
+ * is supported by an entry that lists its `feature` OR realises its concept.
+ *
  * When `selectedEntries` is empty, every entry falls into `unsupported`
  * (there's no selection to compare against). The UI hides the
  * unsupported group behind a toggle, so the empty-selection default is
@@ -191,9 +194,14 @@ export function groupLibraryByFeature(allEntries, selectedEntries) {
     const specificMap = new Map();
     for (const entry of allEntries) {
         const feature = entry.def.feature;
+        // ⛓ T0b — a row the WORLD'S concept list added (`isConceptRow`) is
+        // also supported by every entry that REALISES that concept, so no
+        // entry has to list `CONCEPT_ITEMS_FEATURE` for its concepts' items.
+        const concept = isConceptRow(entry.def) ? entry.def.concept : null;
         const supporters = selectedEntries
-            .filter((s) => Array.isArray(s.supportedFeatures)
+            .filter((s) => (Array.isArray(s.supportedFeatures)
                 && s.supportedFeatures.includes(feature))
+                || (concept !== null && Object.hasOwn(realisationsOf(s), concept)))
             .map((s) => s.id)
             .sort();
         if (supporters.length === selectedEntries.length) {

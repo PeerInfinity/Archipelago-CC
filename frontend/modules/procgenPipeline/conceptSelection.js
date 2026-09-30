@@ -16,6 +16,11 @@
  *   `decorationsFor(entry, o)`         the `helps` / `none` placements, which
  *                                      no rule ever selects
  *
+ * ⛓ `entry` is EITHER a registry entry OR its realisations object
+ * (`concepts.realisationsOf`, T0b): a substrate's placer cannot import its own
+ * entry (the entry imports the placer), so it hands over the data module the
+ * entry declares.
+ *
  * ⛔ **NO CANDIDATE IS A VALUE, NOT AN ERROR** (rule 4): null ⇒ the caller does
  * what it does today. An inexact rule (`Or`, a many-item `HasAny`, anything
  * `extractItemRequirementFromRule` reports `exact: false`) has no candidate by
@@ -30,7 +35,9 @@
  * ⛔ Browser-safe and nameless, like `concepts.js` (asserted by its test).
  */
 
-import { EFFECTS, itemIdOfNeed, normaliseNeed } from '../procgenCore/concepts.js';
+import {
+    EFFECTS, itemIdOfNeed, normaliseNeed, realisationsOf,
+} from '../procgenCore/concepts.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 
 /** ⛓ A placement's needs as `[{name, count}]` — the AP names a rule carries. */
@@ -76,7 +83,7 @@ const offeredSet = (offered) => (Array.isArray(offered) && offered.length ? new 
  * Only a concept in `offered` is considered.
  *
  * @param {object} rule Rule Builder JSON
- * @param {object} entry a registry entry (or a test double)
+ * @param {object} entry a registry entry, or its `conceptRealisations` object
  * @param {{concepts: object, offered?: string[]}} o
  */
 export function candidatesFor(rule, entry, { concepts, offered } = {}) {
@@ -85,7 +92,7 @@ export function candidatesFor(rule, entry, { concepts, offered } = {}) {
     const want = exactRequirement(rule);
     if (!want || want.size === 0) return [];
     const out = [];
-    for (const [concept, r] of Object.entries(entry?.conceptRealisations ?? {})) {
+    for (const [concept, r] of Object.entries(realisationsOf(entry))) {
         if (!world.has(concept)) continue;
         for (const [key, p] of Object.entries(r.placements ?? {})) {
             if (p.effect !== EFFECTS.REQUIRES) continue;
@@ -104,7 +111,7 @@ export function candidatesFor(rule, entry, { concepts, offered } = {}) {
  * candidate (no draw), or ONE `rng.choice` over 2+.
  *
  * @param {object} rule
- * @param {object} entry
+ * @param {object} entry a registry entry, or its `conceptRealisations` object
  * @param {{concepts: object, offered?: string[], rng?: {choice: Function}}} o
  */
 export function selectRealisation(rule, entry, { concepts, offered, rng } = {}) {
@@ -128,7 +135,7 @@ export function decorationsFor(entry, { offered } = {}) {
     const world = offeredSet(offered);
     if (!world) return [];
     const out = [];
-    for (const [concept, r] of Object.entries(entry?.conceptRealisations ?? {})) {
+    for (const [concept, r] of Object.entries(realisationsOf(entry))) {
         if (!world.has(concept)) continue;
         for (const [key, p] of Object.entries(r.placements ?? {})) {
             if (p.effect === EFFECTS.REQUIRES) continue;

@@ -307,6 +307,57 @@ export function itemIdOfNeed(conceptId, concepts) {
 }
 
 /**
+ * ⛓ **THE REVERSE OF `itemIdOfNeed`** (T0b) — the concept whose item an AP
+ * item name IS, or null. Like `itemIdOfNeed`, only an UNPARAMETERISED item
+ * concept answers: `key_red` is an instance of `key`, never "the key".
+ *
+ * @param {string} apName the AP item name a placement or rule carries
+ * @param {Record<string, object>} concepts the table
+ * @returns {string|null} the concept id
+ */
+export function conceptOfItem(apName, concepts) {
+    if (!nonEmptyString(apName)) return null;
+    for (const [cid, c] of Object.entries(concepts ?? {})) {
+        if (c?.kind === 'item' && !(c.params ?? []).length && c.item?.id === apName) return cid;
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓ **ONE SHAPE FOR "WHAT A SUBSTRATE REALISES"** (T0b) — the realisations
+ * object, from EITHER a registry entry (or any `{conceptRealisations}` view of
+ * one) OR the realisations object itself. A substrate's placer lives in a
+ * module its entry imports, so it cannot hand over the entry; it hands over
+ * the data module its entry declares, and every reader here takes both.
+ *
+ *   an object carrying `conceptRealisations` → that field (`{}` when null)
+ *   a non-empty object every value of which is `{tier, …}` → itself
+ *   anything else (an entry that realises nothing, null) → `{}`
+ */
+export function realisationsOf(entryOrRealisations) {
+    const x = entryOrRealisations;
+    if (!isPlainObject(x)) return {};
+    if (Object.prototype.hasOwnProperty.call(x, 'conceptRealisations')) {
+        return isPlainObject(x.conceptRealisations) ? x.conceptRealisations : {};
+    }
+    const values = Object.values(x);
+    if (values.length && values.every((r) => isPlainObject(r) && nonEmptyString(r.tier))) return x;
+    return {};
+}
+
+/**
+ * ⛓ **THE CONCEPT-ROW MARKER** (T0b) — an item library row that a WORLD'S
+ * concept list added (`presetRun.mergedItemLib`) carries `concept: '<id>'`, so
+ * a reader can tell it from a row a library declares: a tile-grid serializer
+ * carries a marked row into the payload even when its base library holds the
+ * id, and the item picker groups it under the substrates that realise it.
+ * ⛔ No library declares a marked row, so a world that names no concept holds
+ * none.
+ */
+export const markConceptRow = (row, conceptId) => ({ ...row, concept: conceptId });
+export const isConceptRow = (row) => isPlainObject(row) && nonEmptyString(row.concept);
+
+/**
  * ⛓⛓ **ONE REALISATION, CHECKED** — a substrate's half for one concept.
  *
  *   `tier`       one of `TIERS`
@@ -444,6 +495,15 @@ export function obstacleRowsOf(concept, concepts) {
 
 /* ────────────────────────────── the table ────────────────────────────── */
 
+/**
+ * ⛓ The `feature` every unparameterised item concept carries (T0b), so
+ * `itemTagsImpliedBy` names it and its library row says it is a concept's. The
+ * item picker does NOT need an entry to list it in `supportedFeatures`: a row
+ * the world's concept list added is grouped under the entries that REALISE
+ * that concept (`procgenPipelineUI.groupLibraryByFeature`).
+ */
+export const CONCEPT_ITEMS_FEATURE = 'concept_items';
+
 /** ⛓ The six colours the shared coloured-door vocabulary uses, in its order. */
 const COLOURS = Object.freeze(['red', 'green', 'blue', 'yellow', 'purple', 'orange']);
 const COLOUR_WHY = 'the six colours of the shared coloured keys and doors — each colour is one '
@@ -470,6 +530,7 @@ export const CONCEPTS = Object.freeze({
             id: 'Progressive Sword', name: 'Progressive Sword', classification: 'progression',
             color: '#c0a040', symbol: 'star',
         }),
+        feature: CONCEPT_ITEMS_FEATURE,
     }),
     swim: Object.freeze({
         kind: 'item',
@@ -477,6 +538,7 @@ export const CONCEPTS = Object.freeze({
             id: 'Progressive Swim', name: 'Progressive Swim', classification: 'progression',
             color: '#40b0c0', symbol: 'star',
         }),
+        feature: CONCEPT_ITEMS_FEATURE,
     }),
     guardian: Object.freeze({
         kind: 'enemy',
@@ -523,13 +585,14 @@ assertConceptTable(CONCEPTS);
 /* ─────────────────────── the chart's input (D4) ─────────────────────── */
 
 /**
- * ⛓ **WHAT AN ENTRY REALISES**, in its declared order —
+ * ⛓ **WHAT AN ENTRY REALISES**, in its declared order (an entry or its
+ * realisations object — `realisationsOf`) —
  * `[{concept, kind, tier, placements: [{key, effect}]}]` (an item's
  * `placements` is empty). The input a future chart row reads; ⛔ this file adds
  * no statement to `CAPABILITY_STATEMENTS`.
  */
 export function conceptsRealisedBy(entry, concepts) {
-    return Object.entries(entry?.conceptRealisations ?? {})
+    return Object.entries(realisationsOf(entry))
         .filter(([cid]) => concepts[cid])
         .map(([cid, r]) => ({
             concept: cid,
@@ -550,7 +613,7 @@ export function itemTagsImpliedBy(entry, concepts) {
         const f = concepts[cid]?.kind === 'item' ? concepts[cid].feature : undefined;
         if (f && !tags.includes(f)) tags.push(f);
     };
-    for (const [cid, r] of Object.entries(entry?.conceptRealisations ?? {})) {
+    for (const [cid, r] of Object.entries(realisationsOf(entry))) {
         add(cid);
         for (const p of Object.values(r.placements ?? {})) {
             for (const n of p.needs ?? []) add(normaliseNeed(n)?.concept);

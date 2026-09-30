@@ -19,6 +19,8 @@ import {
     CONCEPT_KINDS, ConceptContractError, EFFECTS, EFFECT_GRADES, EFFECT_LAW, EFFECT_WORDS, RELATIONS, TIERS,
     assertConcept, assertConceptTable, assertRealisation, assertRealisations, gradeCertifies, instancesOf,
     itemIdOfNeed, normaliseNeed,
+    CONCEPTS, CONCEPT_ITEMS_FEATURE, conceptOfItem, conceptsRealisedBy, isConceptRow, itemRowsOf,
+    itemTagsImpliedBy, markConceptRow, realisationsOf,
 } from './concepts.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -227,5 +229,78 @@ describe('assertRealisation(s) — a substrate\'s half', () => {
         expect(() => assertRealisation('water', {
             tier: 'skin', art: 'deep water', placements: { deep: { effect: 'requires', needs: [{ concept: 'swim', count: 2 }] } },
         }, t)).not.toThrow();
+    });
+});
+
+/* ─────────────────── T0b — the contract's follow-ups ─────────────────── */
+
+describe('T0b — sword and swim carry the concept-items feature', () => {
+    it('both unparameterised item concepts carry CONCEPT_ITEMS_FEATURE, and their library rows carry it', () => {
+        expect(CONCEPT_ITEMS_FEATURE).toBe('concept_items');
+        for (const c of ['sword', 'swim']) {
+            expect(CONCEPTS[c].feature, c).toBe(CONCEPT_ITEMS_FEATURE);
+            expect(itemRowsOf(CONCEPTS[c])[0].feature, c).toBe(CONCEPT_ITEMS_FEATURE);
+        }
+    });
+    it('the coloured key keeps its own shared feature', () => {
+        expect(CONCEPTS.key.feature).toBe('colored_doors_and_keys');
+    });
+});
+
+describe('T0b — conceptOfItem, the reverse of itemIdOfNeed', () => {
+    it('round-trips every unparameterised item concept', () => {
+        for (const [cid, c] of Object.entries(CONCEPTS)) {
+            const id = itemIdOfNeed(cid, CONCEPTS);
+            if (id === null) continue;
+            expect(conceptOfItem(id, CONCEPTS), cid).toBe(cid);
+        }
+        expect(conceptOfItem('Progressive Sword', CONCEPTS)).toBe('sword');
+        expect(conceptOfItem('Progressive Swim', CONCEPTS)).toBe('swim');
+    });
+    it('a parameterised instance, a non-item, an unknown name and a non-string answer null', () => {
+        expect(conceptOfItem('key_red', CONCEPTS)).toBeNull();
+        expect(conceptOfItem('door_red', CONCEPTS)).toBeNull();
+        expect(conceptOfItem('Sword', CONCEPTS)).toBeNull();
+        expect(conceptOfItem('', CONCEPTS)).toBeNull();
+        expect(conceptOfItem(undefined, CONCEPTS)).toBeNull();
+        expect(conceptOfItem('Progressive Sword', undefined)).toBeNull();
+    });
+});
+
+describe('T0b — realisationsOf takes an entry OR the realisations object', () => {
+    const reals = double().conceptRealisations;
+    it('an entry → its field; a {conceptRealisations} view → the field; the object itself → itself', () => {
+        const entry = double();
+        expect(realisationsOf(entry)).toBe(entry.conceptRealisations);
+        expect(realisationsOf({ id: 'x', conceptRealisations: reals })).toBe(reals);
+        expect(realisationsOf({ conceptRealisations: reals })).toBe(reals);
+        expect(realisationsOf(reals)).toBe(reals);
+    });
+    it('an entry that realises nothing, a null field, null and a non-object are {}', () => {
+        expect(realisationsOf({ id: 'bare', supportedFeatures: ['logic_gate'] })).toEqual({});
+        expect(realisationsOf({ id: 'x', conceptRealisations: null })).toEqual({});
+        expect(realisationsOf({})).toEqual({});
+        expect(realisationsOf(null)).toEqual({});
+        expect(realisationsOf(undefined)).toEqual({});
+        expect(realisationsOf('maze')).toEqual({});
+    });
+    it('conceptsRealisedBy and itemTagsImpliedBy answer the same for the entry and for its realisations', () => {
+        expect(conceptsRealisedBy(reals, CONCEPTS)).toEqual(conceptsRealisedBy(double(), CONCEPTS));
+        expect(itemTagsImpliedBy(reals, CONCEPTS)).toEqual(itemTagsImpliedBy(double(), CONCEPTS));
+        expect(conceptsRealisedBy(reals, CONCEPTS).map((r) => r.concept)).toEqual(['guardian', 'water', 'sword']);
+    });
+});
+
+describe('T0b — the concept-row marker', () => {
+    it('markConceptRow adds `concept` last and changes nothing else; isConceptRow reads it', () => {
+        const row = itemRowsOf(CONCEPTS.sword)[0];
+        const marked = markConceptRow(row, 'sword');
+        expect(marked).toEqual({ ...row, concept: 'sword' });
+        expect(Object.keys(marked).at(-1)).toBe('concept');
+        expect('concept' in row).toBe(false);
+        expect(isConceptRow(marked)).toBe(true);
+        expect(isConceptRow(row)).toBe(false);
+        expect(isConceptRow(null)).toBe(false);
+        expect(isConceptRow({ concept: '' })).toBe(false);
     });
 });

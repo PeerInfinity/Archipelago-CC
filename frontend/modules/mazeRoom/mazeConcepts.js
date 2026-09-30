@@ -59,9 +59,6 @@ export const MAZE_CONCEPT_REALISATIONS = Object.freeze({
     }),
 });
 
-/** The shape `selectRealisation` reads — the maze's realisations, and nothing else of the entry. */
-const REALISER = Object.freeze({ conceptRealisations: MAZE_CONCEPT_REALISATIONS });
-
 /** ⛓ `rng.choice` when the stream has it (the shared `rng.js`), else the same draw over `next()`. */
 const chooser = (rng) => (typeof rng?.choice === 'function'
     ? rng
@@ -79,7 +76,7 @@ const chooser = (rng) => (typeof rng?.choice === 'function'
  * @param {{offered?: string[], rng: object, n: number, logicGateBase: object}} o
  */
 export function conceptGateFor(rule, { offered, rng, n, logicGateBase }) {
-    const cand = selectRealisation(rule, REALISER, { concepts: CONCEPTS, offered, rng: chooser(rng) });
+    const cand = selectRealisation(rule, MAZE_CONCEPT_REALISATIONS, { concepts: CONCEPTS, offered, rng: chooser(rng) });
     if (!cand) return null;
     const art = MAZE_CONCEPT_REALISATIONS[cand.concept]?.art ?? {};
     const id = `${cand.mechanic?.obstacle ?? `${cand.concept}_gate`}_${n}`;
