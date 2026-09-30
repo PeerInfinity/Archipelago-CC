@@ -22,6 +22,7 @@ import {
     tileIndex, getTile, setTile,
 } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
 import { resolveBiome } from './mazeRoomBiomeLibrary.js';
+import { conceptGateFor } from './mazeConcepts.js';
 // Side-effect: ensure all maze backends are registered before
 // generateMaze runs.
 import './mazeAlgorithms/index.js';
@@ -1949,7 +1950,7 @@ export function placeFromRules(world, input = {}) {
         location_rules = {},
         item_placements = [],
         rng,
-        params: _params = {},
+        params = {},
     } = input;
 
     if (!world) throw new Error('placeFromRules: world required');
@@ -1968,7 +1969,19 @@ export function placeFromRules(world, input = {}) {
 
     let gateCounter = 0;
     const newGateId = () => `logic_gate_${gateCounter++}`;
+    // ⛓ CONCEPT LIBRARY T1 — a rule EXACTLY one of the world's concepts needs
+    // (`params.concepts`, `mazeConcepts.conceptGateFor`) is registered as that
+    // concept's gate (`guardian_gate_<n>`), a skin over the SAME rule gate. An
+    // empty or absent list returns null with no draw: today's `logic_gate_<n>`.
     const registerGate = (rule) => {
+        const skin = conceptGateFor(rule, {
+            offered: params?.concepts, rng, n: gateCounter, logicGateBase,
+        });
+        if (skin) {
+            gateCounter++;
+            world.obstacleLib[skin.id] = skin.def;
+            return skin.id;
+        }
         const gate_id = newGateId();
         world.obstacleLib[gate_id] = {
             ...logicGateBase,

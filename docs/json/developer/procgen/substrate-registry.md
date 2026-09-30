@@ -305,7 +305,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
 | `applyContentModules` | — | — | — | — | — | fn | — | — | — |
-| `conceptRealisations` | — | — | — | — | — | — | — | — | {guardian, swim, sword, water} |
+| `conceptRealisations` | — | — | — | — | — | {guardian, swim, sword, water} | — | — | {guardian, swim, sword, water} |
 | `extractPathsAndObstacles` | — | — | — | fn | — | fn | — | — | fn |
 | `generateRegionCore` | — | — | — | fn | — | fn | — | — | fn |
 | `placeFromItems` | — | — | — | fn | — | fn | — | — | fn |

@@ -29,6 +29,7 @@
 
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { DEFAULT_ITEMS } from '../shared/procgen/library.js';
+import { CONCEPTS, itemRowsOf } from '../procgenCore/concepts.js';
 import { GENERATION_COST, generationCostOf } from '../procgenCore/substratePredicates.js';
 import {
     defaultProcgenParams, activeSubstrateIds,
@@ -185,6 +186,14 @@ export function mergedItemLib(state) {
         if (!(Number(count) > 0)) continue;
         const extra = substrateRegistry.get(id)?.libraryItems;
         if (extra) Object.assign(merged, extra);
+    }
+    // ⛓ CONCEPT LIBRARY T1 — an ITEM concept the world names joins its item
+    // library as the table's rows (`itemRowsOf`: name, id, colour, symbol),
+    // never over a row a library already declares. An empty list adds nothing.
+    for (const cid of state.params?.concepts ?? []) {
+        for (const row of itemRowsOf(CONCEPTS[cid])) {
+            if (!(row.id in merged)) merged[row.id] = row;
+        }
     }
     return merged;
 }

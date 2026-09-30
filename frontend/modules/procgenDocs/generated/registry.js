@@ -54,7 +54,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js"
         },
         {
-            "fields": 34,
+            "fields": 35,
             "id": "maze",
             "label": "Maze",
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
@@ -1374,6 +1374,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "maze",
                 "text_adventure"
             ],
             "cells": [
@@ -1414,10 +1415,15 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "maze",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "{guardian, swim, sword, water}",
+                    "type": "object",
+                    "value": [
+                        "guardian",
+                        "swim",
+                        "sword",
+                        "water"
+                    ]
                 },
                 {
                     "id": "omsi",

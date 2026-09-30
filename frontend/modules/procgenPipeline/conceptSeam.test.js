@@ -16,10 +16,10 @@ import { createRng } from '../shared/rng.js';
 import { DEFAULT_ITEMS, DEFAULT_OBSTACLES } from '../shared/procgen/library.js';
 import { spatialCore, ruleGatePlacer, tileGridPathExtractor, tileGridSerializer }
     from '../shared/procgen/adapterPrimitives.js';
-import { DEFAULT_PARAMS, panelDefaultParams } from './presetRun.js';
+import { DEFAULT_PARAMS, panelDefaultParams, mergedItemLib } from './presetRun.js';
 import { assembleRegionParams } from './sphereConfigHooks.js';
 import { generateRegion } from './procgenPipelineEngine.js';
-import { CONCEPTS } from '../procgenCore/concepts.js';
+import { CONCEPTS, itemRowsOf } from '../procgenCore/concepts.js';
 import { generateTextAdventureRoom, placeTextAdventureRules }
     from '../textAdventureSubstrateWrapper/textAdventureRoom.js';
 import { substrateRegistryEntry as GEN_ENTRY } from '../flashPanel/flashSeedlingGenLibrary.js';
@@ -50,6 +50,32 @@ describe('assembleRegionParams — the list rides into the region params only wh
             expect(out.concepts).toEqual(['guardian', 'sword']);
             expect(out.concepts).not.toBe(params.concepts);
         }
+    });
+});
+
+describe('mergedItemLib — an ITEM concept the world names joins its item library', () => {
+    const state = (concepts) => ({
+        mode: 'sphereGrowth', substrateMode: 'quota', substrateQuotas: { maze: 4 }, substrateMix: {},
+        params: { ...panelDefaultParams(), concepts },
+    });
+    it('an empty list adds nothing (the library is the concept-less one)', () => {
+        const none = mergedItemLib({ ...state([]), params: { ...panelDefaultParams() } });
+        expect(mergedItemLib(state([]))).toEqual(none);
+        expect('Progressive Sword' in none).toBe(false);
+    });
+    it('sword + swim (+ the gates, which add no item) add exactly the table\'s rows, colour and symbol included', () => {
+        const none = mergedItemLib(state([]));
+        const got = mergedItemLib(state(['sword', 'guardian', 'swim', 'water']));
+        const added = Object.fromEntries(Object.entries(got).filter(([k]) => !(k in none)));
+        expect(added).toEqual({
+            'Progressive Sword': itemRowsOf(CONCEPTS.sword)[0],
+            'Progressive Swim': itemRowsOf(CONCEPTS.swim)[0],
+        });
+        expect(added['Progressive Sword'].color).toBe(CONCEPTS.sword.item.color);
+    });
+    it('never over a row a library already declares (the shared red key stays the shared one)', () => {
+        const none = mergedItemLib(state([]));
+        expect(mergedItemLib(state(['key'])).key_red).toBe(none.key_red);
     });
 });
 

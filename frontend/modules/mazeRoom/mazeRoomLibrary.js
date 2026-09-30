@@ -46,6 +46,7 @@ import { drawMazeCompositeRegion } from './mazeCompositeMap.js';
 import { mazeRegionRoundTrip } from './mazeRegionRoundTrip.js';
 import { TILE_GRID_SIDECAR_FIELDS, tileGridApLocationNames } from './mazeSerializer.js';
 import { mazeCapacityAt } from './mazeLocationCapacity.js';
+import { MAZE_CONCEPT_REALISATIONS } from './mazeConcepts.js';
 import { LOCATION_CAPACITY_KINDS } from '../procgenCore/locationCapacity.js';
 import { envelopeExitNames } from '../procgenCore/sidecarFields.js';
 import {
@@ -147,6 +148,23 @@ export const substrateRegistryEntry = Object.freeze({
         'arbitrary_exit_rules',
     ]),
     deserializeWorld: tileGridDeserializer,
+
+    /**
+     * ⛓⛓ CONCEPT LIBRARY T1 — **WHAT THE MAZE REALISES** (`mazeConcepts.js`;
+     * the contract is `procgenCore/concepts.js`). `sword`/`swim` are pickups
+     * (`mechanic`); `guardian`/`water` are `skin` gates — a planned rule that
+     * is exactly `Has(sword)` / `Has(swim)`, in a world that names the concept
+     * (`params.concepts`), is placed as a `guardian_gate_<n>` / `water_gate_<n>`
+     * over the same rule gate, and painted as the concept.
+     */
+    //
+    // ⛔ NO `libraryItems` for the concept items (T1, measured): top-down GRANTS
+    // every in-mix substrate's `libraryItems` as free starting items
+    // (`topDownSteps.grantedLibraryItems`), so declaring them here moved the two
+    // shipped top-down presets' bytes with no concept named. A world that NAMES
+    // an item concept gets its rows in its item library instead
+    // (`presetRun.mergedItemLib`), which is inert for a concept-less world.
+    conceptRealisations: MAZE_CONCEPT_REALISATIONS,
 
     /**
      * ⛓⛓⛓ EDITOR INTEGRATION W3 — **THE ROOM-EDITOR DECLARATION**
