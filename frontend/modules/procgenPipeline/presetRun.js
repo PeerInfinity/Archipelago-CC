@@ -125,6 +125,22 @@ export function topDownGridSide(regionCount) {
 export const TOPDOWN_GRID_KEYS = Object.freeze({ width: 'gridWidth', height: 'gridHeight' });
 
 /**
+ * ⛓ The panel's grid inputs' `max` in TOP-DOWN mode. The engine refuses only a
+ * side below 1 (`Grid: invalid dimensions`), so this is a cost bound, and it
+ * is MEASURED (C2 W0, 2026-09-30, headless, load ~2): twice the derived side
+ * of the largest committed source — `pokemon_rb`, 445 regions → 26 — laid out
+ * all_placed in 1.4 s at 52×52 (maze : text adventure 2 : 1; 1.2 s at 26×26).
+ */
+export const TOPDOWN_GRID_INPUT_MAX = 52;
+
+/**
+ * ⛓ The panel's grid inputs' `max` in GRID GROWTH mode — the pre-C2 cap for
+ * both modes, kept for grid growth only: its grower fills cells until the
+ * frontier is empty, and its cost at a larger grid has not been measured.
+ */
+export const GRID_GROWTH_INPUT_MAX = 10;
+
+/**
  * ⛓ The grid a top-down run gives `rulesJson` — `topDownGridSide` over the
  * regions it names for `playerId` (the slot the panel's routes realise,
  * `HANDOFF_REALISED_SLOT`), as `{ width, height }`; null when it names none

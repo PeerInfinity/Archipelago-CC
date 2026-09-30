@@ -75,7 +75,8 @@ import { CONCEPTS, isConceptRow, realisationsOf } from '../procgenCore/concepts.
 // a config in place are one-line callers over `this`, and the headless preset
 // row calls the same functions.
 import {
-    panelDefaultParams, sourceSizedParams,
+    panelDefaultParams, sourceSizedParams, pinnedGridKeys,
+    TOPDOWN_GRID_INPUT_MAX, GRID_GROWTH_INPUT_MAX,
     effectiveSubstrateMix, effectiveSubstrateQuotas, effectiveHazardOpts,
     activeSubstrateDict, mergedItemLib, resolveVictoryItemId,
     substrateSphereCapable, librarySphereCapable, sphereRegionLibraries,
@@ -700,7 +701,14 @@ export class ProcgenPipelineUI {
             hasSubstrate: (sid) => substrateRegistry.has(sid),
             current: this,
         });
-        this.params = next.params;
+        // ⛓ C2: a top-down preset's grid follows the present source on every
+        // axis the preset does not pin — the rule buildRunFromState applies to
+        // the same bundle headless. (applyPresetState rebuilds params from the
+        // defaults, 3×3, which alone discarded the grid adoption had derived.)
+        this.params = next.mode === 'topDown' && this.topDownSource
+            ? sourceSizedParams(next.params, this.topDownSource,
+                { pinned: pinnedGridKeys(preset.state?.params) })
+            : next.params;
         this.scenario = next.scenario;
         this.substrateMix = next.substrateMix;
         this.substrateQuotas = next.substrateQuotas;
@@ -2025,11 +2033,14 @@ export class ProcgenPipelineUI {
         // think they take effect.
         const showGridDims = this.mode !== 'shuffledSpiral'
             && this.mode !== 'sphereGrowth';
+        // ⛓ C2: top-down's grid follows its source (up to 26 for the largest
+        // committed one), so its cap is not grid growth's.
+        const gridInputMax = this.mode === 'topDown' ? TOPDOWN_GRID_INPUT_MAX : GRID_GROWTH_INPUT_MAX;
         const fields = [
             { key: 'seed',              label: 'Seed',             min: 0 },
             ...(showGridDims ? [
-                { key: 'gridWidth',     label: 'Grid width',       min: 1, max: 10 },
-                { key: 'gridHeight',    label: 'Grid height',      min: 1, max: 10 },
+                { key: 'gridWidth',     label: 'Grid width',       min: 1, max: gridInputMax },
+                { key: 'gridHeight',    label: 'Grid height',      min: 1, max: gridInputMax },
             ] : []),
             // The per-REGION rows (region size, max items) are the shared
             // generation form's (procgenCore/regionGenerationForm.js); drawn
@@ -5033,10 +5044,14 @@ export class ProcgenPipelineUI {
     // without immediately falling back to teleporters. Floor at the
     // panel's defaults so a small source doesn't shrink the grid.
     // ⛓ C2: the ONE rule (`sourceSizedParams`), shared with the preset apply
-    // and the headless `buildRunFromState`. Assigned in place: the rendered
-    // grid inputs hold this.params.
+    // and the headless `buildRunFromState`; an axis the ACTIVE preset pins
+    // keeps its value (so a reload, which restores the persisted grid and then
+    // re-adopts the source, keeps a pinned preset's grid). Assigned in place:
+    // the rendered grid inputs hold this.params.
     _applyGridDimsFromSource(rulesJson) {
-        Object.assign(this.params, sourceSizedParams(this.params, rulesJson));
+        const active = getPresetById(this.activePresetId, this.userPresets);
+        Object.assign(this.params, sourceSizedParams(this.params, rulesJson,
+            { pinned: pinnedGridKeys(active?.state?.params) }));
     }
 
     // --- helpers ---

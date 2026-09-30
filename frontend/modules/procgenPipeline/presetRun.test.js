@@ -13,7 +13,7 @@
  * registry would drop quota entries the panel keeps.
  */
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -26,6 +26,7 @@ import {
     effectiveHazardOpts, activeSubstrateDict,
     GENERATION_COST, substrateGenerationCost, presetSubstrateIds, heavySubstrateIds,
     gridDimsForSource, pinnedGridKeys, sourceSizedParams, topDownGridSide, TOPDOWN_GRID_KEYS,
+    TOPDOWN_GRID_INPUT_MAX,
 } from './presetRun.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -252,6 +253,24 @@ describe('the top-down grid follows the source unless the bundle pins it', () =>
         expect(built.run.gridDims).toEqual(gridDimsForSource(APCALC));
         const { stats } = await runPresetHeadless(built);
         expect(stats.stopReason, `placed ${stats.regionsBuilt} of ${stats.regionsTotal}`).toBe('all_placed');
+    });
+
+    it('every committed source\'s derived grid fits the top-down grid inputs\' cap', () => {
+        // ⛓ TOPDOWN_GRID_INPUT_MAX is a MEASURED cost bound (its docblock);
+        // a committed source that derives past it must re-measure the cap.
+        const presets = join(ROOT, 'frontend', 'presets');
+        const over = [];
+        for (const game of readdirSync(presets)) {
+            const dir = join(presets, game);
+            if (!statSync(dir).isDirectory()) continue;
+            for (const seedDir of readdirSync(dir)) {
+                const file = join(dir, seedDir, `${seedDir}_rules.json`);
+                if (!existsSync(file)) continue;
+                const dims = gridDimsForSource(JSON.parse(readFileSync(file, 'utf8')));
+                if (dims && dims.width > TOPDOWN_GRID_INPUT_MAX) over.push(`${game}/${seedDir}: ${dims.width}`);
+            }
+        }
+        expect(over).toEqual([]);
     });
 
     it('a bundle that pins 3×3 keeps it over APCalc — the pin wins, and the layout stops partial', async () => {
