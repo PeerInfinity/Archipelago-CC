@@ -248,10 +248,19 @@ export const PHASE_ON_CONNECTOR = 'on-connector';
  *               §9's door law, and every element written before arc 5.
  *   `shortcut`  with them walled the goal is STILL reachable and the walk is
  *               STRICTLY LONGER — `gridFlood.shortcutLawRefusal`, the inverse.
+ *   `none`      NEITHER — concept library F1 (the roaming enemy). The element
+ *               has no door cell at all: the goal stays reachable with it
+ *               placed AND the walk does not get shorter. ⛓ Its check is not a
+ *               flood over door cells but the BODY ABLATION (the level solved
+ *               with and without the element's bodies, same boot, same
+ *               budget), because what it costs a room is a DANGER on the route,
+ *               not a gate across it. ⛔ `headsNeeding` reads only the CUT law
+ *               as able to meet a directive, so a `none` element never can.
  */
-export const ELEMENT_LAWS = Object.freeze(['cut', 'shortcut']);
+export const ELEMENT_LAWS = Object.freeze(['cut', 'shortcut', 'none']);
 export const LAW_CUT = 'cut';
 export const LAW_SHORTCUT = 'shortcut';
+export const LAW_NONE = 'none';
 
 /**
  * ⛓⛓ **THE ROOM PROBE — WHAT AN `on-connector` ELEMENT IS ALLOWED TO KNOW**,
@@ -803,7 +812,8 @@ export function defineElement({ name, family, params = [], why, construct,
         fail(`elements: element "${name}" declared law ${JSON.stringify(law)}; the laws are `
             + `[${ELEMENT_LAWS.join(', ')}]. "${LAW_CUT}" is the default and is arc-3 §9's `
             + `door law; "${LAW_SHORTCUT}" is its INVERSE (still reachable, strictly `
-            + 'longer) and is what a gated SHORTCUT is adjudicated by.');
+            + `longer) and is what a gated SHORTCUT is adjudicated by; "${LAW_NONE}" is `
+            + 'NEITHER (no door cell — the roaming enemy, graded by its body ablation).');
     }
     if (law === LAW_SHORTCUT && phase !== PHASE_ON_CONNECTOR) {
         fail(`elements: element "${name}" declares law "${LAW_SHORTCUT}" at phase `

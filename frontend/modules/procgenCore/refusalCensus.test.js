@@ -49,6 +49,7 @@ import { KILL_GATE_REFUSALS } from './elements/killGate.js';
 import { BLOCK_POCKET_REFUSALS } from './elements/blockPocket.js';
 import { OPEN_CHAMBER_REFUSALS } from './elements/openChamber.js';
 import { ARENA_REFUSALS } from './elements/arena.js';
+import { ROAM_REFUSALS } from './elements/roam.js';
 import { SHORTCUT_REFUSALS } from './elements/shortcut.js';
 import { ROOM_DOOR_REFUSALS } from './elements/roomDoor.js';
 import { SOLO_DOOR_REFUSALS } from './elements/soloDoor.js';
@@ -95,6 +96,7 @@ const SOURCES = {
     blockPocket: 'frontend/modules/procgenCore/elements/blockPocket.js',
     openChamber: 'frontend/modules/procgenCore/elements/openChamber.js',
     arena: 'frontend/modules/procgenCore/elements/arena.js',
+    roam: 'frontend/modules/procgenCore/elements/roam.js',
     shortcut: 'frontend/modules/procgenCore/elements/shortcut.js',
     roomDoor: 'frontend/modules/procgenCore/elements/roomDoor.js',
     soloDoor: 'frontend/modules/procgenCore/elements/soloDoor.js',
@@ -130,6 +132,11 @@ const KEYS = [
         constant: 'ARENA_REFUSALS',
         declared: ARENA_REFUSALS,
         text: () => read(SOURCES.arena),
+    },
+    {
+        constant: 'ROAM_REFUSALS',
+        declared: ROAM_REFUSALS,
+        text: () => read(SOURCES.roam),
     },
     {
         constant: 'SHORTCUT_REFUSALS',

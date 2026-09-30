@@ -1109,6 +1109,21 @@ export const REFUSALS = frz({
         },
         {
             "alsoFiresIn": [],
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "ROAM_REFUSALS",
+            "file": "frontend/modules/procgenCore/elements/roam.js",
+            "inTheConstant": true,
+            "kind": "constant",
+            "meaning": "… bod(y|ies) and a …x… blob has … cell(s). ⛔ They are drawn WITHOUT replacement (the arena's `drawBlobBodies`), so a blob with fewer cells than bodies is refused rather than stacked.",
+            "name": "roam-has-no-room-for-its-bodies",
+            "named": true,
+            "scanFound": true,
+            "source": "roam",
+            "sourceTitle": "The ROAMING ENEMY element",
+            "where": "frontend/modules/procgenCore/elements/roam.js — `ROAM_REFUSALS`"
+        },
+        {
+            "alsoFiresIn": [],
             "channel": "a `UrlParamsError` thrown at READ time — the page's fatal line, and the CLI's stderr. `error.code` IS the name in this column.",
             "constant": "URL_PARAM_REFUSALS",
             "file": "frontend/modules/procgenCore/urlParams.js",
@@ -2272,6 +2287,21 @@ export const REFUSALS = frz({
             "spansModules": false,
             "title": "The `?require=` directive (the ITEM vocabulary)",
             "where": "elementSpec.resolveRequireDirective"
+        },
+        {
+            "channel": "the element's `{refused:{reason, detail}}` → `summary.elementInfo.refused` on both pages, and the ELEMENTS CENSUS counts them",
+            "constant": "ROAM_REFUSALS",
+            "declaredCount": 1,
+            "file": "frontend/modules/procgenCore/elements/roam.js",
+            "id": "roam",
+            "kind": "constant",
+            "patterns": [
+                "/(?:seen\\.add|refused:\\s*|reason:\\s*|refuse\\(|refuseArea\\(|\\?\\?\\s*|\\?\\s*|\\s:\\s*)\\(?'([a-z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)'/g"
+            ],
+            "scannedCount": 1,
+            "spansModules": false,
+            "title": "The ROAMING ENEMY element",
+            "where": "frontend/modules/procgenCore/elements/roam.js — `ROAM_REFUSALS`"
         },
         {
             "channel": "returned to the ELEMENT that asked, which files it under its own census key",

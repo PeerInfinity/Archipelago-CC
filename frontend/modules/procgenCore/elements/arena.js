@@ -102,6 +102,34 @@ export const arenaBodyId = (i) => `arena_body_${i}`;
 export const BODIES_DOMAIN = Object.freeze([1, 2]);
 
 /**
+ * ⛓⛓⛓ **THE BODY DRAW — THE HALF THE ROAMING ENEMY SHARES** (concept library
+ * F1, D2). Exported so `roam.js` draws its bodies the way this file does rather
+ * than by a copy; ⛔ moved here VERBATIM from `buildArena`, which now calls it
+ * at the same point in its stream, so no arena draw moved (the arena's own
+ * rows and the identity block are the proof).
+ *
+ * ⛓ ONE `pick` PER BODY, over the cells still free, in the blob's row-major
+ * order. ⛔ The candidate list SHRINKS, which is what "without replacement"
+ * means for a draw: the second body's `pick` is over a strictly smaller list,
+ * so two bodies can never be one. The caller has already refused a blob with
+ * fewer cells than bodies.
+ *
+ * @param {Array<{x,y}>} cells  the blob, row-major
+ * @param {number} n            how many bodies
+ * @param {Function} idFor      `(i) => id` — each element names its own bodies
+ */
+export function drawBlobBodies(cells, n, rng, idFor) {
+    const free = [...cells];
+    const bodies = [];
+    for (let i = 0; i < n; i += 1) {
+        const cell = rng.pick(free);
+        free.splice(free.indexOf(cell), 1);
+        bodies.push({ x: cell.x, y: cell.y, id: idFor(i) });
+    }
+    return bodies;
+}
+
+/**
  * The element's internals, exported so the geometry is testable without the
  * contract wrapper.
  *
@@ -119,19 +147,7 @@ export function buildArena(values, site, rng) {
                 + 'cells than bodies is refused rather than stacked.' } };
     }
     const ports = openChamberMouths(site, rng);
-    /**
-     * ⛓ ONE `pick` PER BODY, over the cells still free, in the blob's row-major
-     * order. ⛔ The candidate list SHRINKS, which is what "without replacement"
-     * means for a draw: the second body's `pick` is over a strictly smaller
-     * list, so two bodies can never be one.
-     */
-    const free = [...cells];
-    const bodies = [];
-    for (let i = 0; i < values.bodies; i += 1) {
-        const cell = rng.pick(free);
-        free.splice(free.indexOf(cell), 1);
-        bodies.push({ x: cell.x, y: cell.y, id: arenaBodyId(i) });
-    }
+    const bodies = drawBlobBodies(cells, values.bodies, rng, arenaBodyId);
     return { placement: {
         tiles,
         /**

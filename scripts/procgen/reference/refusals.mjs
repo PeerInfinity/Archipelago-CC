@@ -124,6 +124,19 @@ const REFUSAL_SOURCES = [
             + 'on both pages, and the ELEMENTS CENSUS counts them',
     },
     {
+        /** ⛓ concept library F1 — the ROAMING ENEMY: the chamber's blob plus the
+         *  arena's body draw, and no lock. Its own one name; the blob's
+         *  `site-is-not-a-declared-footprint` is `open-chamber`'s above. */
+        id: 'roam',
+        title: 'The ROAMING ENEMY element',
+        kind: 'constant',
+        constant: 'ROAM_REFUSALS',
+        names: M.roam.ROAM_REFUSALS,
+        file: SOURCES.roam,
+        channel: 'the element\'s `{refused:{reason, detail}}` → `summary.elementInfo.refused` '
+            + 'on both pages, and the ELEMENTS CENSUS counts them',
+    },
+    {
         id: 'seedling-element-binding',
         title: 'The SEEDLING element binding',
         kind: 'constant',
