@@ -1,0 +1,8232 @@
+{
+  "measuredAt": "2026-09-30T20:40:18.735Z",
+  "head": "163a45ebf8dd073f2f1163256c3aed574bd7db71",
+  "treeClean": true,
+  "tier": "fast",
+  "entitiesMd5": "b378bf423846d0232a518bfd94e1d0f9",
+  "method": "per record number leaf x magnitude, a child process with the entity-records override installed runs every fast-tier tape through runTapeToStream; a tape moves when its stream md5 differs from the control run or it throws. ulp = +1 ULP; pct10 = x1.1, or +1 for an integer default. corpus-blind = neither magnitude moved any tape.",
+  "jobs": 4,
+  "wallSeconds": 1304,
+  "tapes": [
+    "collide-up-rock",
+    "cross-level-leg",
+    "diagonal-run",
+    "direction-flip",
+    "friction-stop",
+    "grant-sword-room",
+    "hazard-boot-pit",
+    "hazard-walk-water",
+    "l71-button-lock",
+    "l71-hold-101-shut",
+    "l71-hold-102-open",
+    "l71-lock-shut",
+    "l71-shieldlock-open",
+    "l71-shieldlock-shut",
+    "pit-fall-83",
+    "pit-fall-chain-85",
+    "r2-walk-2-feather",
+    "r3-collect-darkshield",
+    "r3-collect-darksuit",
+    "r3-collect-feather",
+    "r3-collect-shield",
+    "r3-collect-spear",
+    "r3-collect-sword",
+    "r3-collect-torch",
+    "r5-bosskey-lock-shut",
+    "r5-contact-control-off",
+    "r5-contact-control-on",
+    "r5-karlore-fire",
+    "r5-karlore-plug",
+    "r5-l37-burn",
+    "r5-l37-burn-control",
+    "r5-l38-fade-boot",
+    "r5-l38-fade-door",
+    "r5-l40-part1",
+    "r5-l43-wand",
+    "r5-l43-wand-control",
+    "r5-l60-kill",
+    "r5-l60-kill-control",
+    "r5-press-delay",
+    "r5-press-delay-control",
+    "r5-press-glide",
+    "r5-press-repeat",
+    "r5-swim-cross",
+    "r5-swim-drown",
+    "r5-swim-latch",
+    "r5-waterfall-climb",
+    "r5-waterfall-shut",
+    "r6-contact-pair-control",
+    "r6-contact-pair-heart",
+    "r6-contact-pair-live",
+    "r6-contact-pair-standing",
+    "r6-final-door",
+    "r6-final-door-control",
+    "r6-seed-control",
+    "r6-seed-credits",
+    "r6-shield-control",
+    "r6-totem-control",
+    "r6-watcher-blood",
+    "r6-watcher-blood-control",
+    "r6-watcher-control",
+    "r6-watcher-talk",
+    "r7-act2-6",
+    "r7-ends-meet-1",
+    "r7-ends-meet-2",
+    "r7-ends-meet-full",
+    "r8-d2-20",
+    "r8-hammer-arm",
+    "r8-hammer-control",
+    "r8-l6-bob-contact",
+    "r8-solve-1",
+    "r8-solve-10",
+    "r8-solve-11",
+    "r8-solve-18",
+    "r8-solve-2",
+    "r8-solve-20",
+    "r8-solve-3",
+    "r8-solve-4",
+    "r8-solve-5",
+    "r8-solve-6",
+    "r8-solve-7",
+    "r8-solve-9",
+    "r9-l0-sword-dash",
+    "r9-l0-sword-dash-rest",
+    "r9-l6-bob-press",
+    "r9-l6-harmless-control",
+    "r9-l6-harmless-press",
+    "r9-l6-sword-dash-hit",
+    "r9-solve-0",
+    "r9-solve-11",
+    "r9-solve-13",
+    "r9-solve-14",
+    "r9-solve-15",
+    "r9-solve-18",
+    "r9-solve-2",
+    "r9-solve-20",
+    "r9-solve-3",
+    "shuffle-stop",
+    "statue-press",
+    "straight-run",
+    "thread-the-gap",
+    "transition-west-return",
+    "wall-slide"
+  ],
+  "control": {
+    "moved": 0,
+    "runs": 2,
+    "divergesFromExpectation": [
+      "r5-l60-kill"
+    ]
+  },
+  "keys": {
+    "arrow.hitbox.w": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrow.hitbox.h": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r8-solve-5"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "arrow.hitbox.originX": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrow.hitbox.originY": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrow.friction": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrow.speed": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrow.fadeStep": {
+      "ulp": {
+        "value": 0.10000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.11000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrow.fadeTicks": {
+      "ulp": {
+        "value": 11.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 12,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowEnemyHit.force": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowEnemyHit.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowEnemyHit.arrowsToKillDefaultEnemy": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowEnemyHit.iFrameTicks": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowEnemyHit.minTicksToKillDefaultEnemy": {
+      "ulp": {
+        "value": 60.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 61,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowEnemyHit.knockbackDisplacesUpTo": {
+      "ulp": {
+        "value": 50.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 51,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowEnemyHit.knockbackDecayTicks": {
+      "ulp": {
+        "value": 19.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 20,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.lockFadeTicks": {
+      "ulp": {
+        "value": 100.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 101,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.minHoldAfterBaitTicks": {
+      "ulp": {
+        "value": 160.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 161,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.measuredL5.stance.x": {
+      "ulp": {
+        "value": 72.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 73,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.measuredL5.stance.y": {
+      "ulp": {
+        "value": 96.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 97,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.measuredL5.press.x": {
+      "ulp": {
+        "value": 56.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 57,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.measuredL5.press.y": {
+      "ulp": {
+        "value": 56.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 57,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.measuredL5.clear": {
+      "ulp": {
+        "value": 240.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 241,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.measuredL5.dwell": {
+      "ulp": {
+        "value": 40.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 41,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.measuredL5.hold": {
+      "ulp": {
+        "value": 260.00000000000006,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 261,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowKillPlan.measuredL5.leftPairDeadByTick": {
+      "ulp": {
+        "value": 187.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 188,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.sprite.w": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.sprite.h": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.ctor.dy": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.shootTimerMax": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r8-solve-5"
+        ],
+        "firstThrow": "r8-solve-5: the player DROWNED in level 5 at (38.25324793668, 59.06593532569194) — terrain state 1. An armed hazard is PLANNER-FORBI"
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r8-solve-5"
+        ],
+        "firstThrow": "r8-solve-5: the player DROWNED in level 5 at (38.25324793668, 59.06593532569194) — terrain state 1. An armed hazard is PLANNER-FORBI"
+      },
+      "verdict": "moves"
+    },
+    "arrowTrap.volleyPeriodTicks": {
+      "ulp": {
+        "value": 11.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 12,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.initialShootTimer": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.spawnOffsetsX[0]": {
+      "ulp": {
+        "value": -3.9999999999999996,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": -3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.spawnOffsetsX[1]": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.spawnOffsetsX[2]": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "arrowTrap.spawnDY": {
+      "ulp": {
+        "value": -1.9999999999999998,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": -1,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r8-solve-5"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "arrowTrap.velocity.x": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 2,
+        "threw": 0,
+        "same": 100,
+        "movedTapes": [
+          "r8-solve-4",
+          "r8-solve-5"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "arrowTrap.velocity.y": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "blastDamage.force": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "blastDamage.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "blastDamage.knockbackDisplaces": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "blastDamage.shake": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "blastPlan.costTicks": {
+      "ulp": {
+        "value": 14.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 15,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "blastPlan.volleyPeriodTicks": {
+      "ulp": {
+        "value": 45.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 46,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "blastPlan.spawnTickAfterPlay": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "blastPlan.animEndTickAfterPlay": {
+      "ulp": {
+        "value": 19.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 20,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.bob.targetOffset.x": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r9-l6-harmless-press"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "chasers.bob.targetOffset.y": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.bob.dieAnim.frames": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 3,
+        "same": 99,
+        "movedTapes": [
+          "r8-solve-4",
+          "r8-solve-5",
+          "r9-l6-bob-press"
+        ],
+        "firstThrow": "r8-solve-4: createSpriteAnim: frames must be a positive integer, got 4.000000000000001"
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "moves"
+    },
+    "chasers.bob.dieAnim.rate": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.jellyfish.targetOffset.x": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.jellyfish.targetOffset.y": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.jellyfish.dieAnim.frames": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "chasers.jellyfish.dieAnim.rate": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.dx": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.dy": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.w": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.h": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.originX": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.originY": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.intDist": {
+      "ulp": {
+        "value": 64.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 65,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.speed": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.damage": {
+      "ulp": {
+        "value": 1000.0000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.force": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusher.spinRate": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusherDirections[0].dx": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusherDirections[0].dy": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusherDirections[1].dx": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusherDirections[1].dy": {
+      "ulp": {
+        "value": -0.9999999999999999,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusherDirections[2].dx": {
+      "ulp": {
+        "value": -0.9999999999999999,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusherDirections[2].dy": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusherDirections[3].dx": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "crusherDirections[3].dy": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bob.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 3,
+        "threw": 0,
+        "same": 99,
+        "movedTapes": [
+          "r8-l6-bob-contact",
+          "r9-l6-harmless-control",
+          "r9-l6-harmless-press"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bob.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 2,
+        "threw": 0,
+        "same": 100,
+        "movedTapes": [
+          "r8-l6-bob-contact",
+          "r9-l6-harmless-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bob.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bob.aggro.range": {
+      "ulp": {
+        "value": 80.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 81,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bob.hitbox.w": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r9-l6-harmless-press"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bob.hitbox.h": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r7-act2-6"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bob.hitbox.ox": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r9-l6-harmless-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bob.hitbox.oy": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bob.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r9-l6-harmless-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bob.speed": {
+      "ulp": {
+        "value": 0.5000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.55,
+        "moved": 4,
+        "threw": 0,
+        "same": 98,
+        "movedTapes": [
+          "r7-act2-6",
+          "r8-l6-bob-contact",
+          "r8-solve-6",
+          "r9-l6-harmless-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bob.threatPad": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.aggro.range": {
+      "ulp": {
+        "value": 80.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 81,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.hitbox.w": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.hitbox.h": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.hitbox.ox": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.hitbox.oy": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.speed": {
+      "ulp": {
+        "value": 0.8000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.8800000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.threatPad": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bobsoldier.reach.px": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.kill.hits": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.aggro.range": {
+      "ulp": {
+        "value": 80.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 81,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.hitbox.w": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.hitbox.h": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.hitbox.ox": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.hitbox.oy": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.speed": {
+      "ulp": {
+        "value": 0.6500000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.7150000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.threatPad": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bulb.navMeshEdit.becomes": {
+      "ulp": {
+        "value": 17.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 18,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.kill.hits": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.aggro.range": {
+      "ulp": {
+        "value": 80.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 81,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.hitbox.w": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.hitbox.h": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.hitbox.ox": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.hitbox.oy": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.speed": {
+      "ulp": {
+        "value": 1.5000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1.6500000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavarunner.threatPad": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.aggro.range": {
+      "ulp": {
+        "value": 160.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 161,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.hitbox.w": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.hitbox.h": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.hitbox.ox": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.hitbox.oy": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.speed": {
+      "ulp": {
+        "value": 0.8000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.8800000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.jellyfish.threatPad": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.aggro.range": {
+      "ulp": {
+        "value": 80.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 81,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.hitbox.w": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.hitbox.h": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.hitbox.ox": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.hitbox.oy": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.speed": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.threatPad": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.puncher.reach.px": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.aggro.range": {
+      "ulp": {
+        "value": 48.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 49,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.hitbox.w": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.hitbox.h": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.hitbox.ox": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.hitbox.oy": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.speed": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.drill.threatPad": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.aggro.range": {
+      "ulp": {
+        "value": 80.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 81,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.hitbox.w": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.hitbox.h": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.hitbox.ox": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.hitbox.oy": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.damage": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.speed": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.flyer.threatPad": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.aggro.range": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.hitbox.w": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.hitbox.h": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.hitbox.ox": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.hitbox.oy": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.speed": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.spinner.threatPad": {
+      "ulp": {
+        "value": 13.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 14,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.hitbox.w": {
+      "ulp": {
+        "value": 14.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 15,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.hitbox.h": {
+      "ulp": {
+        "value": 14.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 15,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.hitbox.ox": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.hitbox.oy": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.speed": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.wallflyer.threatPad": {
+      "ulp": {
+        "value": 160.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 161,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.aggro.range": {
+      "ulp": {
+        "value": 64.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 65,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.hitbox.w": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.hitbox.h": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.hitbox.ox": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.hitbox.oy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.speed": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.threatPad": {
+      "ulp": {
+        "value": 64.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 65,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.projectile.speed": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.turret.projectile.everyTicks": {
+      "ulp": {
+        "value": 40.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 41,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.ctor.dx": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r5-l40-part1"
+        ],
+        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement — the combat row says (16.000000000000004,16) from IceTurret.as `super("
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r5-l40-part1"
+        ],
+        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement — the combat row says (17,16) from IceTurret.as `super(_x + Tile.w, _y "
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.iceturret.ctor.dy": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r5-l40-part1"
+        ],
+        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement — the combat row says (16,16.000000000000004) from IceTurret.as `super("
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r5-l40-part1"
+        ],
+        "firstThrow": "r5-l40-part1: combatCensus: \"iceturret\" placement disagreement — the combat row says (16,17) from IceTurret.as `super(_x + Tile.w, _y "
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.iceturret.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.aggro.range": {
+      "ulp": {
+        "value": 128.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 129,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.hitbox.w": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.hitbox.h": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.hitbox.ox": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.hitbox.oy": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.speed": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.threatPad": {
+      "ulp": {
+        "value": 128.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 129,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.iceturret.corpse.glideSpeed": {
+      "ulp": {
+        "value": 0.5000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.55,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.aggro.range": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.hitbox.w": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.hitbox.h": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.hitbox.ox": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.hitbox.oy": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.speed": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.threatPad": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.blast.radius": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.grenade.blast.force": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.aggro.range": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.hitbox.w": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.hitbox.h": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.hitbox.ox": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.hitbox.oy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.speed": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.icetrap.threatPad": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.sandtrap.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 4,
+        "threw": 0,
+        "same": 98,
+        "movedTapes": [
+          "r5-contact-control-on",
+          "r6-contact-pair-heart",
+          "r6-contact-pair-live",
+          "r6-contact-pair-standing"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.sandtrap.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 4,
+        "threw": 0,
+        "same": 98,
+        "movedTapes": [
+          "r5-contact-control-on",
+          "r6-contact-pair-heart",
+          "r6-contact-pair-live",
+          "r6-contact-pair-standing"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.sandtrap.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.sandtrap.aggro.range": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.sandtrap.hitbox.w": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.sandtrap.hitbox.h": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.sandtrap.hitbox.ox": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 4,
+        "threw": 0,
+        "same": 98,
+        "movedTapes": [
+          "r5-contact-control-on",
+          "r6-contact-pair-heart",
+          "r6-contact-pair-live",
+          "r6-contact-pair-standing"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.sandtrap.hitbox.oy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.sandtrap.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 3,
+        "threw": 0,
+        "same": 99,
+        "movedTapes": [
+          "r6-contact-pair-heart",
+          "r6-contact-pair-live",
+          "r6-contact-pair-standing"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.sandtrap.speed": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 4,
+        "same": 98,
+        "movedTapes": [
+          "r5-contact-control-on",
+          "r6-contact-pair-heart",
+          "r6-contact-pair-live",
+          "r6-contact-pair-standing"
+        ],
+        "firstThrow": "r5-contact-control-on: levelRun: the player is standing inside sandtrap@96,128 in level 8 at tick 50 on a tape that does NOT declare `noDamage`"
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 4,
+        "same": 98,
+        "movedTapes": [
+          "r5-contact-control-on",
+          "r6-contact-pair-heart",
+          "r6-contact-pair-live",
+          "r6-contact-pair-standing"
+        ],
+        "firstThrow": "r5-contact-control-on: levelRun: the player is standing inside sandtrap@96,128 in level 8 at tick 50 on a tape that does NOT declare `noDamage`"
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.sandtrap.threatPad": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.aggro.range": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.hitbox.w": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.hitbox.h": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.hitbox.ox": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.hitbox.oy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.speed": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.darktrap.threatPad": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.aggro.range": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.hitbox.w": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.hitbox.h": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.hitbox.ox": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.hitbox.oy": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.speed": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavatrap.threatPad": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bombpusher.ctor.dx": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r5-l40-part1"
+        ],
+        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement — the combat row says (24.000000000000004,24) from BombPusher.as `supe"
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r5-l40-part1"
+        ],
+        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement — the combat row says (25,24) from BombPusher.as `super(_x + Tile.w*3/"
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bombpusher.ctor.dy": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r5-l40-part1"
+        ],
+        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement — the combat row says (24,24.000000000000004) from BombPusher.as `supe"
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 1,
+        "same": 101,
+        "movedTapes": [
+          "r5-l40-part1"
+        ],
+        "firstThrow": "r5-l40-part1: combatCensus: \"bombpusher\" placement disagreement — the combat row says (24,25) from BombPusher.as `super(_x + Tile.w*3/"
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bombpusher.aggro.range": {
+      "ulp": {
+        "value": 256.00000000000006,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 257,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bombpusher.hitbox.w": {
+      "ulp": {
+        "value": 48.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 49,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bombpusher.hitbox.h": {
+      "ulp": {
+        "value": 48.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 49,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bombpusher.hitbox.ox": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bombpusher.hitbox.oy": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bombpusher.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bombpusher.speed": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bombpusher.threatPad": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.shieldboss.ctor.dx": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 4,
+        "same": 98,
+        "movedTapes": [
+          "r6-shield-control",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-solve-18"
+        ],
+        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement — the combat row says (24.000000000000004,32) from ShieldBoss.as `supe"
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 4,
+        "same": 98,
+        "movedTapes": [
+          "r6-shield-control",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-solve-18"
+        ],
+        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement — the combat row says (25,32) from ShieldBoss.as `super(_x + Tile.w*1."
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.shieldboss.ctor.dy": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 4,
+        "same": 98,
+        "movedTapes": [
+          "r6-shield-control",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-solve-18"
+        ],
+        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement — the combat row says (24,32.00000000000001) from ShieldBoss.as `super"
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 4,
+        "same": 98,
+        "movedTapes": [
+          "r6-shield-control",
+          "r8-solve-18",
+          "r8-solve-20",
+          "r9-solve-18"
+        ],
+        "firstThrow": "r6-shield-control: combatCensus: \"shieldboss\" placement disagreement — the combat row says (24,33) from ShieldBoss.as `super(_x + Tile.w*1."
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.shieldboss.kill.hits": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.shieldboss.hitbox.w": {
+      "ulp": {
+        "value": 48.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 49,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.shieldboss.hitbox.h": {
+      "ulp": {
+        "value": 48.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 49,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.shieldboss.hitbox.ox": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.shieldboss.hitbox.oy": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.shieldboss.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.ctor.dx": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 3,
+        "same": 99,
+        "movedTapes": [
+          "r5-l43-wand",
+          "r5-l43-wand-control",
+          "r6-totem-control"
+        ],
+        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement — the combat row says (5e-324,0) from BossTotem.as `super(_x, _y)` — no"
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 3,
+        "same": 99,
+        "movedTapes": [
+          "r5-l43-wand",
+          "r5-l43-wand-control",
+          "r6-totem-control"
+        ],
+        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement — the combat row says (1,0) from BossTotem.as `super(_x, _y)` — no offs"
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bosstotem.ctor.dy": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 3,
+        "same": 99,
+        "movedTapes": [
+          "r5-l43-wand",
+          "r5-l43-wand-control",
+          "r6-totem-control"
+        ],
+        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement — the combat row says (0,5e-324) from BossTotem.as `super(_x, _y)` — no"
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 3,
+        "same": 99,
+        "movedTapes": [
+          "r5-l43-wand",
+          "r5-l43-wand-control",
+          "r6-totem-control"
+        ],
+        "firstThrow": "r5-l43-wand: combatCensus: \"bosstotem\" placement disagreement — the combat row says (0,1) from BossTotem.as `super(_x, _y)` — no offs"
+      },
+      "verdict": "moves"
+    },
+    "enemyClasses.bosstotem.kill.hits": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.hitbox.w": {
+      "ulp": {
+        "value": 80.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 81,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.hitbox.h": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.hitbox.ox": {
+      "ulp": {
+        "value": 40.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 41,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.hitbox.oy": {
+      "ulp": {
+        "value": -11.999999999999998,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": -11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.preWakeSolid.w": {
+      "ulp": {
+        "value": 80.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 81,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.preWakeSolid.h": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.preWakeSolid.ox": {
+      "ulp": {
+        "value": 40.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 41,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.preWakeSolid.oy": {
+      "ulp": {
+        "value": -11.999999999999998,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": -11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.preWakeSolid.cols[0]": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.bosstotem.preWakeSolid.cols[1]": {
+      "ulp": {
+        "value": 11.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 12,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavaboss.ctor.dx": {
+      "ulp": {
+        "value": 48.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 49,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavaboss.ctor.dy": {
+      "ulp": {
+        "value": 40.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 41,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lavaboss.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.tentaclebeast.ctor.dx": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.tentaclebeast.ctor.dy": {
+      "ulp": {
+        "value": 24.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 25,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.tentaclebeast.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.finalboss.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.finalboss.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.finalboss.kill.hits": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.finalboss.hitbox.w": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.finalboss.hitbox.h": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.finalboss.hitbox.ox": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.finalboss.hitbox.oy": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.finalboss.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lightbosscontroller.ctor.dx": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lightbosscontroller.ctor.dy": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyClasses.lightbosscontroller.damage": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyDamageDefaults.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyDamageDefaults.hits": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r6-shield-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyDamageDefaults.hitsMax": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyDamageDefaults.hitsTimer": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyDamageDefaults.hitsTimerMax": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyDamageDefaults.hitsTimerInt": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyDamageDefaults.maxForce": {
+      "ulp": {
+        "value": -0.9999999999999999,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r9-l6-bob-press"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "enemyTerrainDestroys.water": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "enemyTerrainDestroys.lava": {
+      "ulp": {
+        "value": 17.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 18,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fallRock.box.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fallRock.box.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fallRock.box.w": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fallRock.box.h": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fallRock.box.originX": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fallRock.box.originY": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fallRock.parkedY": {
+      "ulp": {
+        "value": -15.999999999999998,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": -15,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "fallRock.fallRate": {
+      "ulp": {
+        "value": 0.6000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.66,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r5-l43-wand"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "fallRock.waitToFallTimerMax": {
+      "ulp": {
+        "value": 60.00000000000001,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r5-l43-wand"
+        ]
+      },
+      "pct10": {
+        "value": 61,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r5-l43-wand"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "fallRock.cameraTimerMax": {
+      "ulp": {
+        "value": 90.00000000000001,
+        "moved": 1,
+        "threw": 1,
+        "same": 100,
+        "movedTapes": [
+          "r5-l43-wand",
+          "r6-totem-control"
+        ],
+        "firstThrow": "r6-totem-control: level 43: the tape clears tag 2, which is a \"fallrock\" at (96,336) — response \"arm\", and clearing it does not remove it "
+      },
+      "pct10": {
+        "value": 91,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r5-l43-wand"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "fallRock.shake": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "hammerBilling.force": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r8-hammer-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "hammerBilling.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "hammerBilling.body.force": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "hammerBilling.body.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.ctor.dx": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.ctor.dy": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.alive.w": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.alive.h": {
+      "ulp": {
+        "value": 32.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 33,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.alive.originX": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.alive.originY": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.corpse.w": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.corpse.h": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.corpse.originX": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.corpse.originY": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.moveSpeed": {
+      "ulp": {
+        "value": 0.5000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.55,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.hitsMax": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.hitsTimerMax": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.attackRange": {
+      "ulp": {
+        "value": 128.00000000000003,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 129,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.shootTimerMax": {
+      "ulp": {
+        "value": 25.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 26,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.blastsPerVolley": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.shotSpeed": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.distBtwnShots": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.bothRange": {
+      "ulp": {
+        "value": 0.10000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.11000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.attackAnimSpeed": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.anims.startshot.frames": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.anims.startshot.rate": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.anims.finishshot.frames": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.anims.finishshot.rate": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.anims.dead.frames": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.anims.dead.rate": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.anims.hit.frames": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.anims.hit.rate": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.fatalTiles.water": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.fatalTiles.pit": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurret.fatalTiles.lava": {
+      "ulp": {
+        "value": 17.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 18,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurretBlast.hitbox.w": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurretBlast.hitbox.h": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurretBlast.hitbox.originX": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurretBlast.hitbox.originY": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurretBlast.freezeTicks": {
+      "ulp": {
+        "value": 15.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 16,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurretBlast.friction": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurretBlast.speed": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurretBlast.distBtwnShots": {
+      "ulp": {
+        "value": 12.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 13,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "iceTurretBlast.perVolley": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "playerDamagePaths.exceptions[0].levels[0]": {
+      "ulp": {
+        "value": 77.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 78,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "playerDamagePaths.exceptions[0].levels[1]": {
+      "ulp": {
+        "value": 78.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 79,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "playerDamagePaths.exceptions[0].levels[2]": {
+      "ulp": {
+        "value": 80.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 81,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "playerDamagePaths.exceptions[0].levels[3]": {
+      "ulp": {
+        "value": 108.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 109,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "playerSnap.originY": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "playerSnap.height": {
+      "ulp": {
+        "value": 5.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 6,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.radiusMin": {
+      "ulp": {
+        "value": 10.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 11,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.radiusMax": {
+      "ulp": {
+        "value": 28.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 29,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.radiusHit": {
+      "ulp": {
+        "value": 22.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 23,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.radiusRate": {
+      "ulp": {
+        "value": 0.8000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.8800000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.pulseTimerMax": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.force": {
+      "ulp": {
+        "value": 6.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 7,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.box.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.box.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.box.w": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.box.h": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.box.originX": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.box.originY": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.anim.frames[0]": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.anim.frames[1]": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.anim.frames[2]": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.anim.frames[3]": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.anim.frames[4]": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "pulser.anim.frameRate": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.spinningaxe.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 11,
+        "same": 91,
+        "movedTapes": [
+          "l71-button-lock",
+          "l71-hold-101-shut",
+          "l71-hold-102-open",
+          "l71-lock-shut",
+          "l71-shieldlock-open",
+          "l71-shieldlock-shut",
+          "r5-karlore-fire",
+          "r5-karlore-plug",
+          "r5-swim-cross",
+          "r5-swim-drown"
+        ],
+        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement — the combat row says (8.000000000000002,8) from SpinningAxe.as:36 `s"
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 11,
+        "same": 91,
+        "movedTapes": [
+          "l71-button-lock",
+          "l71-hold-101-shut",
+          "l71-hold-102-open",
+          "l71-lock-shut",
+          "l71-shieldlock-open",
+          "l71-shieldlock-shut",
+          "r5-karlore-fire",
+          "r5-karlore-plug",
+          "r5-swim-cross",
+          "r5-swim-drown"
+        ],
+        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement — the combat row says (9,8) from SpinningAxe.as:36 `super(_x + Tile.w"
+      },
+      "verdict": "moves"
+    },
+    "puzzlementHazards.spinningaxe.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 11,
+        "same": 91,
+        "movedTapes": [
+          "l71-button-lock",
+          "l71-hold-101-shut",
+          "l71-hold-102-open",
+          "l71-lock-shut",
+          "l71-shieldlock-open",
+          "l71-shieldlock-shut",
+          "r5-karlore-fire",
+          "r5-karlore-plug",
+          "r5-swim-cross",
+          "r5-swim-drown"
+        ],
+        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement — the combat row says (8,8.000000000000002) from SpinningAxe.as:36 `s"
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 11,
+        "same": 91,
+        "movedTapes": [
+          "l71-button-lock",
+          "l71-hold-101-shut",
+          "l71-hold-102-open",
+          "l71-lock-shut",
+          "l71-shieldlock-open",
+          "l71-shieldlock-shut",
+          "r5-karlore-fire",
+          "r5-karlore-plug",
+          "r5-swim-cross",
+          "r5-swim-drown"
+        ],
+        "firstThrow": "l71-button-lock: combatCensus: \"spinningaxe\" placement disagreement — the combat row says (8,9) from SpinningAxe.as:36 `super(_x + Tile.w"
+      },
+      "verdict": "moves"
+    },
+    "puzzlementHazards.spinningaxe.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.beamtower.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.beamtower.ctor.dy": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.beamtower.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.lavachain.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 2,
+        "same": 100,
+        "movedTapes": [
+          "l71-shieldlock-open",
+          "r3-collect-darksuit"
+        ],
+        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement — the combat row says (8.000000000000002,8) from LavaChain.as:30 `super"
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 2,
+        "same": 100,
+        "movedTapes": [
+          "l71-shieldlock-open",
+          "r3-collect-darksuit"
+        ],
+        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement — the combat row says (9,8) from LavaChain.as:30 `super(_x + Tile.w/2, "
+      },
+      "verdict": "moves"
+    },
+    "puzzlementHazards.lavachain.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 2,
+        "same": 100,
+        "movedTapes": [
+          "l71-shieldlock-open",
+          "r3-collect-darksuit"
+        ],
+        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement — the combat row says (8,8.000000000000002) from LavaChain.as:30 `super"
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 2,
+        "same": 100,
+        "movedTapes": [
+          "l71-shieldlock-open",
+          "r3-collect-darksuit"
+        ],
+        "firstThrow": "l71-shieldlock-open: combatCensus: \"lavachain\" placement disagreement — the combat row says (8,9) from LavaChain.as:30 `super(_x + Tile.w/2, "
+      },
+      "verdict": "moves"
+    },
+    "puzzlementHazards.lavachain.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.crusher.ctor.dx": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.crusher.ctor.dy": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.crusher.damage": {
+      "ulp": {
+        "value": 1000.0000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.pulser.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 7,
+        "same": 95,
+        "movedTapes": [
+          "r5-l38-fade-boot",
+          "r5-l38-fade-door",
+          "r5-l40-part1",
+          "r5-press-delay",
+          "r5-press-delay-control",
+          "r5-press-glide",
+          "r5-press-repeat"
+        ],
+        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement — the combat row says (8.000000000000002,8) from Pulser.as:42 `super(_x + "
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 7,
+        "same": 95,
+        "movedTapes": [
+          "r5-l38-fade-boot",
+          "r5-l38-fade-door",
+          "r5-l40-part1",
+          "r5-press-delay",
+          "r5-press-delay-control",
+          "r5-press-glide",
+          "r5-press-repeat"
+        ],
+        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement — the combat row says (9,8) from Pulser.as:42 `super(_x + Tile.w/2, _y + T"
+      },
+      "verdict": "moves"
+    },
+    "puzzlementHazards.pulser.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 7,
+        "same": 95,
+        "movedTapes": [
+          "r5-l38-fade-boot",
+          "r5-l38-fade-door",
+          "r5-l40-part1",
+          "r5-press-delay",
+          "r5-press-delay-control",
+          "r5-press-glide",
+          "r5-press-repeat"
+        ],
+        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement — the combat row says (8,8.000000000000002) from Pulser.as:42 `super(_x + "
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 7,
+        "same": 95,
+        "movedTapes": [
+          "r5-l38-fade-boot",
+          "r5-l38-fade-door",
+          "r5-l40-part1",
+          "r5-press-delay",
+          "r5-press-delay-control",
+          "r5-press-glide",
+          "r5-press-repeat"
+        ],
+        "firstThrow": "r5-l38-fade-boot: combatCensus: \"pulser\" placement disagreement — the combat row says (8,9) from Pulser.as:42 `super(_x + Tile.w/2, _y + T"
+      },
+      "verdict": "moves"
+    },
+    "puzzlementHazards.pulser.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.arrowtrap.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.arrowtrap.ctor.dy": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r8-solve-5"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "puzzlementHazards.arrowtrap.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.whirlpool.ctor.dx": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.whirlpool.ctor.dy": {
+      "ulp": {
+        "value": 16.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 17,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.whirlpool.damage": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.pod.ctor.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.pod.ctor.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.pod.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.pull.ctor.dx": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.pull.ctor.dy": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "puzzlementHazards.pull.damage": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinner.dx": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 2,
+        "threw": 0,
+        "same": 100,
+        "movedTapes": [
+          "r8-hammer-control",
+          "r8-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.dy": {
+      "ulp": {
+        "value": 8.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 9,
+        "moved": 5,
+        "threw": 0,
+        "same": 97,
+        "movedTapes": [
+          "r5-press-glide",
+          "r5-press-repeat",
+          "r8-hammer-control",
+          "r8-solve-18",
+          "r9-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.w": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 3,
+        "threw": 0,
+        "same": 99,
+        "movedTapes": [
+          "r8-hammer-control",
+          "r8-solve-18",
+          "r9-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.h": {
+      "ulp": {
+        "value": 7.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 8,
+        "moved": 2,
+        "threw": 0,
+        "same": 100,
+        "movedTapes": [
+          "r8-solve-18",
+          "r9-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.originX": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 2,
+        "threw": 0,
+        "same": 100,
+        "movedTapes": [
+          "r8-hammer-control",
+          "r8-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.originY": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 3,
+        "threw": 0,
+        "same": 99,
+        "movedTapes": [
+          "r8-hammer-control",
+          "r8-solve-18",
+          "r9-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.moveSpeed": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 5,
+        "threw": 0,
+        "same": 97,
+        "movedTapes": [
+          "r5-press-glide",
+          "r5-press-repeat",
+          "r8-hammer-control",
+          "r8-solve-18",
+          "r9-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.f": {
+      "ulp": {
+        "value": 0.25000000000000006,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.275,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r8-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.zeroBand": {
+      "ulp": {
+        "value": 0.05000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.05500000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinner.heading": {
+      "ulp": {
+        "value": -0.7853981633974482,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": -0.8639379797371932,
+        "moved": 4,
+        "threw": 0,
+        "same": 98,
+        "movedTapes": [
+          "r5-press-glide",
+          "r5-press-repeat",
+          "r8-hammer-control",
+          "r9-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.runRange": {
+      "ulp": {
+        "value": 5e-324,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 1,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinner.hammerLength": {
+      "ulp": {
+        "value": 13.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 14,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinner.hammerPeriod": {
+      "ulp": {
+        "value": 45.00000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 46,
+        "moved": 2,
+        "threw": 0,
+        "same": 100,
+        "movedTapes": [
+          "r8-hammer-control",
+          "r8-solve-18"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.hitForce": {
+      "ulp": {
+        "value": 4.000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 5,
+        "moved": 1,
+        "threw": 0,
+        "same": 101,
+        "movedTapes": [
+          "r8-hammer-control"
+        ]
+      },
+      "verdict": "moves"
+    },
+    "spinner.damage": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinner.hitsMax": {
+      "ulp": {
+        "value": 3.0000000000000004,
+        "moved": 1,
+        "threw": 1,
+        "same": 100,
+        "movedTapes": [
+          "r8-solve-18",
+          "r9-solve-18"
+        ],
+        "firstThrow": "r8-solve-18: levelRun: the swing at (155.81707217971982, 92.92077576435672) reaches spinner@48,96's rect but `collideLine(\"Solid\", …)"
+      },
+      "pct10": {
+        "value": 4,
+        "moved": 1,
+        "threw": 1,
+        "same": 100,
+        "movedTapes": [
+          "r8-solve-18",
+          "r9-solve-18"
+        ],
+        "firstThrow": "r8-solve-18: levelRun: the swing at (155.81707217971982, 92.92077576435672) reaches spinner@48,96's rect but `collideLine(\"Solid\", …)"
+      },
+      "verdict": "moves"
+    },
+    "spinner.hitsTimerMax": {
+      "ulp": {
+        "value": 30.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 31,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinner.fallAlphaSpeed": {
+      "ulp": {
+        "value": 0.05000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.05500000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinner.alphaFade": {
+      "ulp": {
+        "value": 0.10000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.11000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinner.deathTicks": {
+      "ulp": {
+        "value": 11.000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 12,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinner.pitFallTicks": {
+      "ulp": {
+        "value": 20.000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 21,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinnerCtorRng.mathRandomDraws": {
+      "ulp": {
+        "value": 2.0000000000000004,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 3,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "spinnerCtorRng.fpLfsrDraws": {
+      "ulp": {
+        "value": 1.0000000000000002,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 2,
+        "moved": 0,
+        "threw": 0,
+        "same": 102,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    }
+  },
+  "summary": {
+    "verdicts": {
+      "moves": 51,
+      "corpus-blind": 401
+    },
+    "byClass": {
+      "arrow": {
+        "moves": 1,
+        "corpus-blind": 7
+      },
+      "arrowEnemyHit": {
+        "moves": 0,
+        "corpus-blind": 7
+      },
+      "arrowKillPlan": {
+        "moves": 0,
+        "corpus-blind": 10
+      },
+      "arrowTrap": {
+        "moves": 3,
+        "corpus-blind": 10
+      },
+      "blastDamage": {
+        "moves": 0,
+        "corpus-blind": 4
+      },
+      "blastPlan": {
+        "moves": 0,
+        "corpus-blind": 4
+      },
+      "chasers": {
+        "moves": 2,
+        "corpus-blind": 6
+      },
+      "crusher": {
+        "moves": 0,
+        "corpus-blind": 11
+      },
+      "crusherDirections": {
+        "moves": 0,
+        "corpus-blind": 8
+      },
+      "enemyClasses": {
+        "moves": 20,
+        "corpus-blind": 220
+      },
+      "enemyDamageDefaults": {
+        "moves": 2,
+        "corpus-blind": 5
+      },
+      "enemyTerrainDestroys": {
+        "moves": 0,
+        "corpus-blind": 2
+      },
+      "fallRock": {
+        "moves": 3,
+        "corpus-blind": 8
+      },
+      "hammerBilling": {
+        "moves": 1,
+        "corpus-blind": 3
+      },
+      "iceTurret": {
+        "moves": 0,
+        "corpus-blind": 31
+      },
+      "iceTurretBlast": {
+        "moves": 0,
+        "corpus-blind": 9
+      },
+      "playerDamagePaths": {
+        "moves": 0,
+        "corpus-blind": 4
+      },
+      "playerSnap": {
+        "moves": 0,
+        "corpus-blind": 2
+      },
+      "pulser": {
+        "moves": 0,
+        "corpus-blind": 19
+      },
+      "puzzlementHazards": {
+        "moves": 7,
+        "corpus-blind": 20
+      },
+      "spinner": {
+        "moves": 12,
+        "corpus-blind": 9
+      },
+      "spinnerCtorRng": {
+        "moves": 0,
+        "corpus-blind": 2
+      }
+    },
+    "threw": [
+      "arrowTrap.shootTimerMax",
+      "chasers.bob.dieAnim.frames",
+      "enemyClasses.iceturret.ctor.dx",
+      "enemyClasses.iceturret.ctor.dy",
+      "enemyClasses.sandtrap.speed",
+      "enemyClasses.bombpusher.ctor.dx",
+      "enemyClasses.bombpusher.ctor.dy",
+      "enemyClasses.shieldboss.ctor.dx",
+      "enemyClasses.shieldboss.ctor.dy",
+      "enemyClasses.bosstotem.ctor.dx",
+      "enemyClasses.bosstotem.ctor.dy",
+      "fallRock.cameraTimerMax",
+      "puzzlementHazards.spinningaxe.ctor.dx",
+      "puzzlementHazards.spinningaxe.ctor.dy",
+      "puzzlementHazards.lavachain.ctor.dx",
+      "puzzlementHazards.lavachain.ctor.dy",
+      "puzzlementHazards.pulser.ctor.dx",
+      "puzzlementHazards.pulser.ctor.dy",
+      "spinner.hitsMax"
+    ]
+  }
+}
