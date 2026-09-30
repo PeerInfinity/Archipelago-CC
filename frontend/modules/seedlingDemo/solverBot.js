@@ -4041,7 +4041,7 @@ function deriveHold(run, presser, opener = null) {
                     + `[${shut.map((a) => a.id).join(', ')}] is open`
                     + (latch ? ' — and the group is LATCHED by `localPublish`, so the '
                         + 'fade completes whoever is standing where' : ''),
-                test: (r) => shut.every((a) => r.openActivators.has(a.id)),
+                test: (r) => shut.every((a) => r.entities('openActivators').has(a.id)),
             },
         };
     }
@@ -4054,7 +4054,7 @@ function deriveHold(run, presser, opener = null) {
                     why: `every bridged chaser in level ${run.level} has been removed by `
                         + 'the room\'s own ceiling — the observable the Arrow x Enemy '
                         + 'family added (R8 slice 3)',
-                    test: (r) => r.chasers.length === 0,
+                    test: (r) => r.entities('chasers').length === 0,
                 },
             };
         }
@@ -5845,7 +5845,7 @@ function drainCeiling(run, perTick, weapon, ctx) {
             + `walked — ${inFlight()} arrow(s) are still falling`,
         until: {
             why: `level ${run.level} has no arrow in flight`,
-            test: (r) => (r.arrowsInFlight ?? []).length === 0,
+            test: (r) => (r.entities('arrowsInFlight') ?? []).length === 0,
         },
     }, `${ctx.what} -> drain`);
     return { phase: 'drain', ticks: rec.ticks, bound, at: spot };
@@ -6031,7 +6031,7 @@ function execKill(run, perTick, resolved, ctx) {
             until: {
                 why: `${body.id} stands inside ${bait.crossed.id}'s lane — the cell the `
                     + 'ceiling will be firing into once the button is held again',
-                test: (r) => (r.chasers ?? []).some((c) => c.id === body.id
+                test: (r) => (r.entities('chasers') ?? []).some((c) => c.id === body.id
                     && rectsOverlapLocal(bait.crossed.rect, bodyRectOf(c))),
             },
         }, `${ctx.what} -> dwell (${body.id})`);
@@ -6884,7 +6884,7 @@ function resolveKeylockStrategy(run, obstacle, contacts, blocked = []) {
             until: {
                 why: `${obstacle.id} is no longer solid — \`BossLock\`'s `
                     + `${responder.keyTimer}-tick \`keyTimer\` and then its own fade`,
-                test: (r) => r.openActivators.has(obstacle.id),
+                test: (r) => r.entities('openActivators').has(obstacle.id),
             },
         },
         rejected: [{
@@ -9291,7 +9291,7 @@ export function solveSegment({
                     until: {
                         why: `${body.id} has left the world — the room's own kill region `
                             + 'removed it',
-                        test: (r) => !(r.chasers ?? []).some((c) => c.id === body.id),
+                        test: (r) => !(r.entities('chasers') ?? []).some((c) => c.id === body.id),
                     },
                 }, `${what} -> bait (${body.id})`);
                 records.push({ goal: goal.kind, strategy: 'bait', target: body.id, ...record });
@@ -9420,7 +9420,7 @@ export function solveSegment({
                         ticks: KILL_BY_CEILING_BOUND,
                         until: {
                             why: `${target.id} has left the world — ${kill.why}`,
-                            test: (r) => !(r.chasers ?? []).some((c) => c.id === target.id),
+                            test: (r) => !(r.entities('chasers') ?? []).some((c) => c.id === target.id),
                         },
                     },
                 }, {
@@ -9513,7 +9513,7 @@ export function solveSegment({
                         why: hunt.why,
                         until: {
                             why: `${hunted.id} has left the world — ${hunt.why}`,
-                            test: (r) => !(r.strikeBodies ?? [])
+                            test: (r) => !(r.entities('strikeBodies') ?? [])
                                 .some((c) => c.id === hunted.id),
                         },
                     }, `${what} -> kill (${hunted.id}) by press`);
