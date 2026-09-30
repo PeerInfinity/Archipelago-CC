@@ -400,9 +400,11 @@ export const TEXT_ADVENTURE_SIDECAR_FIELDS = Object.freeze({
     exitGates: Object.freeze({
         type: 'object', required: true,
         description: 'The room\'s AUTHORED exit gates, `{exit_id: rule}` — the document\'s own rule tree for '
-            + 'every gated exit (an ungated exit is absent; a back exit takes its forward exit\'s rule at '
-            + 'compile). A sibling of the envelope\'s `exits`, because a substrate may not add a field to '
-            + 'that record. Written by `serializeTextAdventureRoom`; a rebuild re-emits the exit rules from it.',
+            + 'every gated exit, FORWARD AND BACK (an ungated exit is absent). A back exit\'s gate is its '
+            + 'forward exit\'s compiled rule: the compile\'s bidirectional post-pass writes it on the back '
+            + 'exit\'s record for an AUTHORED substrate (concept library T2c), so the payload says what the '
+            + 'document says. A sibling of the envelope\'s `exits`, because a substrate may not add a field '
+            + 'to that record. Written by `serializeTextAdventureRoom`; a rebuild re-emits the exit rules from it.',
         schema: Object.freeze({ additionalProperties: RULE_TREE }),
     }),
     locations: Object.freeze({

@@ -37,6 +37,7 @@ import { deserializeOrRefuse } from '../procgenCore/deserializeRefusal.js';
 import { exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 import { itemNamesInDocument, undefinedRuleItems } from '../procgenCore/ruleItemNames.js';
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
+import { ROUND_TRIP_RULES, roundTripRulesOf } from '../procgenCore/roundTripRules.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
 import {
     exceedsCeiling, locationCeilingRefusal, locationDemandOf, sizeForLocations,
@@ -6976,6 +6977,19 @@ export function buildRulesJson(grid, opts = {}) {
     // Without this the back-exit's rule is True_ (its path through
     // the entrance has no obstacles), which would let the player
     // re-enter A from B without re-satisfying the gate.
+    //
+    // ⛓⛓ CONCEPT LIBRARY T2c — **AN AUTHORED PAYLOAD CARRIES THE COPIED RULE
+    // TOO.** A substrate whose `regionRoundTrip.rules` is AUTHORED
+    // (`procgenCore/roundTripRules.js`; the text adventure's `exitGates`)
+    // re-emits its rules FROM its payload, and its serializer reads each gate
+    // off the region's exit record. `insertBackExit` gives a back-exit's record
+    // no rule, so until T2c the payload said nothing where the document said
+    // the forward gate: the census's rule agreement FAILed on every such room,
+    // and the round trip answered `True_` for the back-exit. So the copied rule
+    // is ALSO written on that record (a clone; a `True_` is recorded ABSENT,
+    // the room's own convention), and `buildPresetSidecars` below picks it up
+    // unchanged. ⛔ A DERIVED substrate's record is never touched: its round
+    // trip re-derives from geometry, and this pass re-applies on its rebuild.
     if (assumeBidirectional) {
         const regionsByName = {};
         for (const region of grid.allRegions()) {
@@ -6997,7 +7011,15 @@ export function buildRulesJson(grid, opts = {}) {
                 const fwdExit = compiledTarget.exits.find(
                     (e) => e.name === worldExit.targetExitId,
                 );
-                if (fwdExit) exit.access_rule = fwdExit.access_rule;
+                if (!fwdExit) continue;
+                exit.access_rule = fwdExit.access_rule;
+                if (roundTripRulesOf(substrateRegistry.get(region.substrate ?? DEFAULT_SUBSTRATE_ID))
+                    !== ROUND_TRIP_RULES.AUTHORED) continue;
+                if (fwdExit.access_rule && fwdExit.access_rule.rule !== 'True_') {
+                    worldExit.access_rule = structuredClone(fwdExit.access_rule);
+                } else {
+                    delete worldExit.access_rule;
+                }
             }
         }
     }
