@@ -6229,13 +6229,14 @@ export const REGISTRY = frz({
                 {
                     "id": "text_adventure",
                     "present": true,
-                    "short": "{exitGates, exits, fogEnabled, locations}",
+                    "short": "5 keys",
                     "type": "object",
                     "value": [
                         "exitGates",
                         "exits",
                         "fogEnabled",
-                        "locations"
+                        "locations",
+                        "prose"
                     ]
                 }
             ],

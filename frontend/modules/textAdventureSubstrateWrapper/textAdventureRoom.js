@@ -18,6 +18,8 @@
  *                              isBackExit, isTeleporter, access_rule?}>,
  *     locations: [{id, item?, access_rule?, name?}],
  *     manaEnabled?: true,   // deserialized worlds only, iff the payload's is `true`
+ *     prose?: {enterMessage?, exits: {<exit_id>: {…}}, locations: {<id>: {…}}},
+ *                           // concept library T2 — the region's own prose
  *   }
  *
  * — no tiles, no entrance, no obstacles, and ⛔ **NO RNG DRAW anywhere**: a room
@@ -221,7 +223,48 @@ export function serializeTextAdventureRoom(world, extractedRules) {
             ...(l.access_rule && !isTrueRule(l.access_rule) ? { access_rule: cloneRule(l.access_rule) } : {}),
         };
     });
-    return { exits, exitGates, locations };
+    const nameOf = new Map((world.locations ?? []).map((l, i) => [l.id, locations[i].name]));
+    const prose = serializeProse(world.prose, nameOf);
+    return { exits, exitGates, locations, ...(prose ? { prose } : {}) };
+}
+
+/** The message keys a region's `prose` may carry — the per-game file's own, per kind. */
+export const PROSE_KEYS = Object.freeze({
+    region: Object.freeze(['enterMessage']),
+    exit: Object.freeze(['moveMessage', 'inaccessibleMessage']),
+    location: Object.freeze(['checkMessage', 'alreadyCheckedMessage', 'inaccessibleMessage']),
+});
+
+/** The non-empty string messages of `rec` under `keys`, or null when there are none. */
+function proseMessages(rec, keys) {
+    const out = {};
+    for (const k of keys) if (typeof rec?.[k] === 'string' && rec[k] !== '') out[k] = rec[k];
+    return Object.keys(out).length ? out : null;
+}
+
+/**
+ * ⛓ CONCEPT LIBRARY T2 — a room's `prose` → the payload's, or `null` when it
+ * says nothing (⇒ the key is not written, and every payload built without a
+ * concept stays byte-identical). Location prose is keyed by the location's AP
+ * NAME in the payload (the key the per-game file and the bridge use), by its
+ * id on a freshly built room — `nameOf` maps one to the other. Exits stay
+ * keyed by `exit_id`. A clone: the world's strings are copied into new objects.
+ */
+function serializeProse(prose, nameOf) {
+    if (!prose) return null;
+    const out = { exits: {}, locations: {} };
+    const enter = proseMessages(prose, PROSE_KEYS.region);
+    if (enter) Object.assign(out, enter);
+    for (const [exitId, rec] of Object.entries(prose.exits ?? {})) {
+        const m = proseMessages(rec, PROSE_KEYS.exit);
+        if (m) out.exits[exitId] = m;
+    }
+    for (const [locId, rec] of Object.entries(prose.locations ?? {})) {
+        const m = proseMessages(rec, PROSE_KEYS.location);
+        if (m) out.locations[nameOf.get(locId) ?? locId] = m;
+    }
+    const empty = !enter && !Object.keys(out.exits).length && !Object.keys(out.locations).length;
+    return empty ? null : { ...(enter ?? {}), exits: out.exits, locations: out.locations };
 }
 
 /**
@@ -248,6 +291,10 @@ export function serializeTextAdventureRoom(world, extractedRules) {
  * `fogEnabled` is NOT carried: no text-adventure reader takes it off a world
  * (the maze panel's is a maze world's). The serializer writes neither — the
  * engine stamps both on the envelope after `serializeWorld`.
+ *
+ * ⛓ Concept library T2 — the region's `prose` rides onto the world (a clone)
+ * for the same reason: the bridge reads it off the world
+ * `textAdventure:loadRegion` carries, never off the payload.
  */
 export function deserializeTextAdventureRoom(payload) {
     const refusal = textAdventureRoomRefusal(payload);
@@ -267,6 +314,7 @@ export function deserializeTextAdventureRoom(payload) {
     }));
     const world = { exits, locations };
     if (payload.manaEnabled === true) world.manaEnabled = true;
+    if (payload.prose) world.prose = structuredClone(payload.prose);
     return world;
 }
 
@@ -275,6 +323,18 @@ const RULE_TREE = Object.freeze({
     type: 'object',
     required: Object.freeze(['rule']),
     properties: Object.freeze({ rule: Object.freeze({ type: 'string', minLength: 1 }) }),
+});
+
+/** One prose message: a non-empty `{var}` template. */
+const PROSE_MESSAGE = Object.freeze({ type: 'string', minLength: 1 });
+/** `{<key>: {<message kind>: template}}` — one prose table (exits or locations) of a region. */
+const proseTable = (kinds) => Object.freeze({
+    type: 'object',
+    additionalProperties: Object.freeze({
+        type: 'object',
+        additionalProperties: false,
+        properties: Object.freeze(Object.fromEntries(kinds.map((k) => [k, PROSE_MESSAGE]))),
+    }),
 });
 
 /**
@@ -317,6 +377,23 @@ export const TEXT_ADVENTURE_SIDECAR_FIELDS = Object.freeze({
                     item: Object.freeze({ type: 'string' }),
                     access_rule: RULE_TREE,
                 }),
+            }),
+        }),
+    }),
+    prose: Object.freeze({
+        type: 'object',
+        description: 'The region\'s OWN prose (concept library T2): a per-region slice of the per-game custom-data '
+            + 'file\'s shape — `{enterMessage?, exits: {<exit_id>: {moveMessage?, inaccessibleMessage?}}, '
+            + 'locations: {<AP name>: {checkMessage?, alreadyCheckedMessage?, inaccessibleMessage?}}}`, same '
+            + '`{var}` templating. Written by `serializeTextAdventureRoom` only when the room says something (a '
+            + 'concept realisation `placeTextAdventureRules` selected); the bridge resolves each message payload '
+            + 'prose → per-game file → generic line.',
+        schema: Object.freeze({
+            additionalProperties: false,
+            properties: Object.freeze({
+                enterMessage: PROSE_MESSAGE,
+                exits: proseTable(PROSE_KEYS.exit),
+                locations: proseTable(PROSE_KEYS.location),
             }),
         }),
     }),

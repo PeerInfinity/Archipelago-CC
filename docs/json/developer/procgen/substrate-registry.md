@@ -245,7 +245,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `panelComponentType` | bounceDemoPanel | flashSubstratePanel | flashPanel | flashPanel | jtaSubstrateWrapperPanel | mazeRoomPanel | omsiSubstrateWrapperPanel | runnerDemoPanel | textAdventureSubstrateWrapperPanel |
 | `serializeWorld` | fn | fn | fn | fn | fn | fn | fn | fn | fn |
 | `sharing` | — | — | — | — | {items, mana} | {mana} | {items, mana} | — | {mana} |
-| `sidecarFields` | 7 keys | 6 keys | 7 keys | 14 keys | 5 keys | 18 keys | 9 keys | 7 keys | {exitGates, exits, fogEnabled, locations} |
+| `sidecarFields` | 7 keys | 6 keys | 7 keys | 14 keys | 5 keys | 18 keys | 9 keys | 7 keys | 5 keys |
 | `supportedFeatures` | arbitrary_ap_locations, bounce_abilities | arbitrary_ap_locations | arbitrary_ap_locations | arbitrary_ap_locations, seedling_items | 2 items | 7 items | 2 items | arbitrary_ap_locations, runner_abilities | 6 items |
 
 **Playback**

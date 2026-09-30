@@ -266,6 +266,63 @@ describe('the payload (`serializeWorld` ⇄ `deserializeWorld`)', () => {
     });
 });
 
+/**
+ * ⛓ CONCEPT LIBRARY T2, D1 — **THE `prose` FIELD.** A per-region slice of the
+ * per-game file's shape, written only when the room says something (⇒ every
+ * payload built without it keeps its three keys), keyed by `exit_id` and by the
+ * location's AP NAME, declared in `sidecarFields`, and carried onto the world.
+ */
+describe('the `prose` field (concept library T2, D1)', () => {
+    const MOVE = 'You pass on to {destinationRegion}.';
+    const BLOCKED = 'Something bars the way to {destinationRegion}.';
+    const CHECK = 'You find {item} here.';
+    const fields = sidecarFieldsOf(substrateRegistryEntry);
+
+    it('a room with no prose (or only empty prose) serializes WITHOUT the key', () => {
+        const { core } = gatedRoom();
+        const ex = () => extractTextAdventureRules(core.world, { regionId: 'Hall' });
+        expect(Object.keys(serializeTextAdventureRoom(core.world, ex()))).toEqual(['exits', 'exitGates', 'locations']);
+        core.world.prose = { exits: { North: {} }, locations: {} };
+        expect(Object.keys(serializeTextAdventureRoom(core.world, ex()))).toEqual(['exits', 'exitGates', 'locations']);
+    });
+
+    it('writes exits by `exit_id` and locations by AP NAME, round-trips, and holds its declaration', () => {
+        const { core } = gatedRoom();
+        core.world.prose = {
+            exits: { North: { inaccessibleMessage: BLOCKED, moveMessage: MOVE } },
+            locations: { 'Pick Up Sword': { checkMessage: CHECK } },
+        };
+        const payload = serializeTextAdventureRoom(core.world, extractTextAdventureRules(core.world, { regionId: 'Hall' }));
+        expect(Object.keys(payload)).toEqual(['exits', 'exitGates', 'locations', 'prose']);
+        expect(payload.prose).toEqual({
+            exits: { North: { moveMessage: MOVE, inaccessibleMessage: BLOCKED } },
+            locations: { 'Hall__Pick Up Sword': { checkMessage: CHECK } },
+        });
+        expect(payload.locations.map((l) => l.name)).toContain('Hall__Pick Up Sword');
+        expect(sidecarPayloadErrors(fields, { ...payload, fogEnabled: true })).toEqual([]);
+        expect(textAdventureRoomRefusal(payload)).toBeNull();
+
+        const world = deserializeTextAdventureRoom(payload);
+        expect(world.prose).toEqual(payload.prose);
+        world.prose.exits.North.moveMessage = 'MUTATED';
+        expect(payload.prose.exits.North.moveMessage).toBe(MOVE); // a clone
+        const again = deserializeTextAdventureRoom(payload);
+        const reserialized = serializeTextAdventureRoom(again, extractTextAdventureRules(again, { regionId: 'Hall' }));
+        expect(JSON.stringify(reserialized)).toBe(JSON.stringify(payload));
+    });
+
+    it('the declaration refuses a message kind the per-game file does not have, and an empty message', () => {
+        const { core } = gatedRoom();
+        const payload = serializeTextAdventureRoom(core.world, extractTextAdventureRules(core.world, { regionId: 'Hall' }));
+        const errs = (prose) => sidecarPayloadErrors(fields, { ...payload, fogEnabled: true, prose });
+        expect(errs({ exits: { North: { checkMessage: CHECK } }, locations: {} }).map((e) => e.field)).toEqual(['prose']);
+        expect(errs({ exits: {}, locations: { X: { moveMessage: MOVE } } }).map((e) => e.field)).toEqual(['prose']);
+        expect(errs({ exits: {}, locations: {}, enterMessage: '' }).map((e) => e.field)).toEqual(['prose']);
+        expect(errs({ exits: {}, locations: {}, lore: 'x' }).map((e) => e.field)).toEqual(['prose']);
+        expect(errs({ enterMessage: 'You arrive.', exits: {}, locations: {} })).toEqual([]);
+    });
+});
+
 /** The Adventure source AP_11 is built from, and its sphere log (the driver's own inputs). */
 function adventureSource(seedId) {
     const dir = join(ROOT, 'frontend/presets/adventure', seedId);
