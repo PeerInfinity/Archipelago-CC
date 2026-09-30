@@ -209,18 +209,18 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 1,
+            "count": 2,
             "id": "witness"
         }
     ],
     "counts": {
-        "blockStyle": 282,
+        "blockStyle": 283,
         "browser": 86,
-        "cited": 125,
-        "files": 293,
+        "cited": 126,
+        "files": 294,
         "lineStyle": 11,
-        "withDocblock": 293,
-        "withFlags": 214
+        "withDocblock": 294,
+        "withFlags": 215
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10248,6 +10248,10 @@ export const INSTRUMENTS = frz({
             ],
             "inheritedFlags": [
                 {
+                    "from": "seedlingProfileLoader.mjs",
+                    "name": "entities"
+                },
+                {
                     "from": "argvHelp.js",
                     "name": "help"
                 },
@@ -10328,11 +10332,18 @@ export const INSTRUMENTS = frz({
             ],
             "docblockStyle": "block",
             "documentedFlags": [
+                "entities",
                 "list-defaulted",
                 "profile"
             ],
             "file": "seedlingProfileLoader.mjs",
             "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "entities"
+                },
                 {
                     "how": [
                         "includes"
@@ -11319,6 +11330,85 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "sweep-yield-table — **THE YIELD TABLE**: what pass 2 actually yields over a carved room, per skeleton kind, per room size, per seed, on BOTH substrates.",
             "path": "scripts/procgen/sweep-yield-table.mjs"
+        },
+        {
+            "argvHelpers": [
+                "opt"
+            ],
+            "browser": false,
+            "category": "witness",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-constants.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "jobs",
+                "only",
+                "records",
+                "write"
+            ],
+            "file": "witness-seedling-entities.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "jobs"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "records"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "write"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "witness-seedling-profile.mjs",
+                    "name": "child"
+                },
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "witness-seedling-profile.mjs",
+                    "name": "pct10"
+                },
+                {
+                    "from": "witness-seedling-profile.mjs",
+                    "name": "tapes"
+                },
+                {
+                    "from": "witness-seedling-profile.mjs",
+                    "name": "tier"
+                },
+                {
+                    "from": "witness-seedling-profile.mjs",
+                    "name": "ulp"
+                }
+            ],
+            "oneLiner": "witness-seedling-entities — per entity-record NUMBER leaf, does perturbing it move any committed replay? (behaviour-parameters P1; the profile witness's sibling).",
+            "path": "scripts/procgen/witness-seedling-entities.mjs"
         },
         {
             "argvHelpers": [

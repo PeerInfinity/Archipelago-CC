@@ -227,29 +227,91 @@ For the camera, clamp and RNG keys, "no fast tape takes the path" was right. For
 
 57 keys are blind on every committed tape.
 
+## The entity records
+
+The profile holds the simulation's flat scalars. The per-entity tables (`ENEMY_CLASSES`, `PUZZLEMENT_HAZARDS`, `CHASERS`, `SPINNER`, `CRUSHER`, `ARROW_TRAP`, `FALL_ROCK`, `PULSER`, `ICE_TURRET`, `ENEMY_DAMAGE_DEFAULTS` and their companions) stay in their declaring modules and get the profile's machinery through `frontend/modules/seedlingDemo/entityRecords.js` (behaviour-parameters P1).
+
+**What a record is.** A declaring module wraps its table where it declares it: `export const CHASERS = defineRecord('chasers', {…}, { doc: ['src'], src: 'chasers.js' })`. `defineRecord` returns THE SAME OBJECT it was given, deep-frozen, so every reader keeps its object; the wrapper is a declaration, and no value or arithmetic moves. A record is not flat: a leaf may be a finite number, a boolean, a string or `null`, inside arrays and plain objects. A function, `undefined`, `NaN`, `±Infinity`, any other object, a cycle, a key holding `.`, `[` or `]`, a record name registered twice and a stale `doc` name are all refused by name with the dotted path (`EntityRecordError`). `ENTITY_RECORD_MODULES` lists the declaring modules, and `entityRecords.test.js` holds that list to the files that call `defineRecord`.
+
+**Doc and content.** A key named in `doc` (at any depth: `src` covers `ctor.src`) holds PROSE — an AS3 anchor, a why, a threat description — and must hold a string. Prose is left out of the dump, the md5 and the witness, so rewording it moves nothing. Every other string is CONTENT: a game id (`type: 'Solid'`, `as3`), a rule the model keys on (`hitables`, `aggro.kind`, `timing`), and it is part of the identity.
+
+**The dump and the md5.** A path is the record's name, then `.key` per object step and `[i]` per array step: `enemyClasses.bob.aggro.range`, `spinner.solids[0]`, `crusherDirections[2].dx`. `entitiesDump()` prints one `"<path>": <JSON leaf>` line per non-doc leaf (an empty array or object is one leaf), for every registered record IN NAME ORDER — never registration order, which is import order — inside braces with a final newline, so it is JSON. `entitiesMd5()` is its md5 and the records' identity; `entityRecords.test.js` pins it as a literal, and a change there is an entity-record change. `entitiesStamp()` is `{md5, records}`, and `runTape`'s RESULT carries it as `entities`, beside `profile`. The stream, every emitted tape and the envelope keep their shape: a tape's `profile` is exactly `{id, md5}` (`tapeEnvelope.validateProfile`), so a second identity is not a tape field.
+
+**Overrides.** `globalThis.__SEEDLING_ENTITY_RECORDS__`, read ONCE when `entityRecords.js` evaluates: a FLAT object keyed by path (`{"spinner.moveSpeed": 1.1}`), or its JSON text. A value is a finite number, a boolean or a string.
+
+- **Refused at load, by name:** a duplicate key in the text, a nested value, a non-finite number, any other type, a key that is not a path.
+- **Refused when the record registers, by name:** an unknown path, a doc key, a type change (a string into a number leaf …).
+- **Applied at registration, before the freeze.** The object returned is the same object, written in place, except along a path through a node that was already frozen, which is copied rather than written.
+- **Unused, not refused (⚖).** A path whose record never registers is reported by `entitiesAnnouncements()` as `unused`. Registration is import order, and a page or a test need not import every declaring module; a refusal there would make an override's validity depend on what else the process loaded. `entitiesUnused()` lets a runner insist.
+- **Node.** `scripts/procgen/seedlingProfileLoader.mjs`'s `installEntityRecordsFromEnv()` reads `--entities=<path>` or `SEEDLING_ENTITY_RECORDS`, installs the text, imports every `ENTITY_RECORD_MODULES` module so a wrong path is refused with the FILE named, and refuses an unused path. As with the profile, it must run before the first import of the model. Run as a command, the loader prints both sets of announcements.
+
+**The witness.** `scripts/procgen/witness-seedling-entities.mjs` is the profile witness's sibling and reuses its harness (`runChild`, `pool`, `tierTapes`, `checkWitness`): the same FAST tier, the same control, the same `ulp` and `pct10`, over every NON-doc NUMBER leaf of every registered record, into `scripts/procgen/seedling-entity-witnesses.json`. Its summary counts per record. Strings, booleans and nulls are content too, but have no ULP, so they are outside it by construction. `seedlingEntityWitness.test.js` checks that the record names exactly today's number leaves and today's `entitiesMd5()`; it never re-measures.
+
+**The measurement** (at `163a45e`, clean tree, the fast tier's 102 tapes, 4 jobs, 1304 s): **51 leaves move and 401 are corpus-blind.**
+
+| record | moves | corpus-blind |
+|---|---|---|
+| `arrow` | 1 | 7 |
+| `arrowEnemyHit` | 0 | 7 |
+| `arrowKillPlan` | 0 | 10 |
+| `arrowTrap` | 3 | 10 |
+| `blastDamage` | 0 | 4 |
+| `blastPlan` | 0 | 4 |
+| `chasers` | 2 | 6 |
+| `crusher` | 0 | 11 |
+| `crusherDirections` | 0 | 8 |
+| `enemyClasses` | 20 | 220 |
+| `enemyDamageDefaults` | 2 | 5 |
+| `enemyTerrainDestroys` | 0 | 2 |
+| `fallRock` | 3 | 8 |
+| `hammerBilling` | 1 | 3 |
+| `iceTurret` | 0 | 31 |
+| `iceTurretBlast` | 0 | 9 |
+| `playerDamagePaths` | 0 | 4 |
+| `playerSnap` | 0 | 2 |
+| `pulser` | 0 | 19 |
+| `puzzlementHazards` | 7 | 20 |
+| `spinner` | 12 | 9 |
+| `spinnerCtorRng` | 0 | 2 |
+
+- 3 leaves move a stream at +1 ULP: `fallRock.cameraTimerMax`, `fallRock.waitToFallTimerMax`, `spinner.hitsMax`. `spinner.moveSpeed` is not one of them: 1 ULP is absorbed, and ×1.1 moves five tapes (`r5-press-glide`, `r5-press-repeat`, `r8-hammer-control`, `r8-solve-18`, `r9-solve-18`).
+- 17 move ONLY by making the model throw — 14 of them `ctor` offsets (inferred: a non-integer or shifted spawn offset lands a body where a guard refuses it). These leaves are witnessed as READ, not as values a replay checks: `arrowTrap.shootTimerMax`, `chasers.bob.dieAnim.frames`, `enemyClasses.bombpusher.ctor.dx`, `enemyClasses.bombpusher.ctor.dy`, `enemyClasses.bosstotem.ctor.dx`, `enemyClasses.bosstotem.ctor.dy`, `enemyClasses.iceturret.ctor.dx`, `enemyClasses.iceturret.ctor.dy`, `enemyClasses.sandtrap.speed`, `enemyClasses.shieldboss.ctor.dx`, `enemyClasses.shieldboss.ctor.dy`, `puzzlementHazards.lavachain.ctor.dx`, `puzzlementHazards.lavachain.ctor.dy`, `puzzlementHazards.pulser.ctor.dx`, `puzzlementHazards.pulser.ctor.dy`, `puzzlementHazards.spinningaxe.ctor.dx`, `puzzlementHazards.spinningaxe.ctor.dy`.
+- Every `iceTurret`, `iceTurretBlast`, `pulser`, `crusher`, `blast*` and `playerDamagePaths` number is blind: no fast-tier tape meets those bodies. Most of `enemyClasses` is blind for the same reason and — inferred, not measured per leaf — because its pricing and envelope fields (`threatPad`, `aggro.range` of a class no fast tape wakes) are read by the solver, not the replay.
+- ⚠ **A node two records share is overridden asymmetrically.** `ARROW_TRAP.ctor` IS `PUZZLEMENT_HAZARDS.arrowtrap.ctor`. `combat.js` registers first and writes the shared node in place, so `puzzlementHazards.arrowtrap.ctor.dy` moves a tape through `ARROW_TRAP`, while `arrowTrap.ctor.dy`, registered after the node froze, is copied and moves nothing. The witness measures each path as it is; a caller that means "the arrow trap's offset" must know which record the stepping module reads.
+
+**The tile types by name (⚖ Q11).** `flashPanel/seedlingSemantics.js`'s `TILE_TYPE_IDS` is the one name ↔ int table for Seedling's tile types (`ground: 0`, `water: 1`, … `pit: 6`, `cave: 13`, `lava: 17`, … `rockWallFloor: 37`). The int is the `t` a Tile is constructed with; the name is `TILE_TYPE_NAMES`' entry at that index, from the comment block at `Scenery/Tile.as:32-69`, in camelCase. `seedlingSemantics.test.js` holds the two tables together; holds the profile's `*State` keys to their names (`lavaState === TILE_TYPE_IDS.lava` …; the profile keys stay, because the witness names them); and holds every tile-keyed table (`TILE_TYPE_SEMANTICS`, `MODELLED_TILE_TYPES`, `HAZARD_STATES`, `DESTROYING_TILE_TYPES`, `ENEMY_TERRAIN_DESTROYS`, `ICE_TURRET.fatalTiles`, `SPINNER.terrain`, `FINAL_BOSS.lavaT`) to a named id. The records that held a bare tile id read the name (`ENEMY_TERRAIN_DESTROYS`, `ICE_TURRET.fatalTiles`, `SPINNER.terrain`'s keys, `ENEMY_CLASSES.bulb.navMeshEdit.becomes`), and `ENEMY_DAMAGE_DEFAULTS.maxForce` reads `NO_FORCE_CAP`. The inline sentinels inside the simulation's functions are the simulation and stay literals.
+
+**How a new table joins.**
+
+1. Wrap its declaration in `defineRecord('<name>', {…}, { doc: [<prose keys>], src: '<file>' })` — same literal, same export name — and import `defineRecord` from `./entityRecords.js`. Name its prose keys in `doc`; every other string is content.
+2. Add its module to `ENTITY_RECORD_MODULES` if it is new there.
+3. Update the md5 pin in `entityRecords.test.js`, and say in the commit that it is an entity-record change.
+4. Run the witness (`node scripts/procgen/witness-seedling-entities.mjs --write --jobs=4`) and commit its JSON.
+5. Run `node scripts/procgen/census-seedling-constants.mjs --write` (the import line moves the census's line column) and `--check`.
+
 ## The census
 
 The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**52 files, 4368 literals.** Class × position:
+**52 files, 4397 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 0 | 1229 | 268 | 1497 |
-| rule | 0 | 806 | 377 | 1183 |
+| physics | 1 | 1228 | 268 | 1497 |
+| rule | 0 | 835 | 377 | 1212 |
 | cosmetic | 0 | 43 | 8 | 51 |
 | structural | 9 | 310 | 1318 | 1637 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 9 | 2388 | 1971 | 4368 |
+| total | 10 | 2416 | 1971 | 4397 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1259 | 0 | 87 | 108 | 4 | 39 | 1497 |
-| rule | 321 | 109 | 184 | 22 | 474 | 73 | 1183 |
+| rule | 321 | 109 | 184 | 22 | 503 | 73 | 1212 |
 
 Rows whose note starts `REVIEW:`: **105**.
 
@@ -426,10 +488,11 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**0 named scalars** are `physics` or `rule` (0 with an AS3 anchor), and **126 small tables** (at most 16 literals) hold at least one (77 with an AS3 reference).
+**1 named scalars** are `physics` or `rule` (1 with an AS3 anchor), and **125 small tables** (at most 16 literals) hold at least one (76 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
+| `NO_FORCE_CAP` | seedlingDemo/enemyDamage.js | -1 | physics | sentinel | Enemies/Enemy.as:maxForce |
 
 | table | file | literals | physics/rule | classes | kinds | AS3 |
 |---|---|---|---|---|---|---|
@@ -474,7 +537,6 @@ None: a name declared in several files now reads one profile key (the table belo
 | `SPINNER_CTOR_RNG` | seedlingDemo/spinner.js | 2 | 2 | rule | count | Enemy.as:30 Enemy.as:35 Spinner.as:24 FP.as:404-422 |
 | `HAMMER_BILLING` | seedlingDemo/spinner.js | 2 | 2 | physics/rule | magnitude | Spinner.as:72-76 Player.as |
 | `CHASERS` | seedlingDemo/chasers.js | 8 | 8 | physics/rule | count/magnitude |  |
-| `ENEMY_TERRAIN_DESTROYS` | seedlingDemo/chasers.js | 2 | 2 | rule | sentinel | Enemies/Enemy.as:68-103 |
 | `CRUSHER` | seedlingDemo/crusher.js | 9 | 8 | physics/rule | bound/magnitude | Puzzlements/Crusher.as:intDist Puzzlements/Crusher.as:speed Puzzlements/Crusher.as:damage Puzzlements/Crusher.as:force Puzzlements/Crusher.as:spinRate |
 | `DIRECTIONS` | seedlingDemo/crusher.js | 8 | 8 | physics | sign | Puzzlements/Crusher.as:directions |
 | `CEREMONY_RULE` | seedlingDemo/crusher.js | 1 | 1 | rule | magnitude |  |
@@ -524,7 +586,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `PLAYER_DAMAGE` | seedlingDemo/playerDamage.js | 5 | 4 | rule | count/magnitude | Player.as:hitsTimerMax Player.as:hitsTimerInt |
 | `KNOCKBACK_COMPARATORS` | seedlingDemo/playerDamage.js | 1 | 1 | physics | bound | Player.as:1500 |
 | `KILL_CADENCE_FLOOR` | seedlingDemo/combat.js | 1 | 1 | rule | derivation |  |
-| `ENEMY_DAMAGE_DEFAULTS` | seedlingDemo/enemyDamage.js | 7 | 4 | physics/rule | count/magnitude/sentinel | Enemies/Enemy.as:damage Enemies/Enemy.as:hitsMax Enemies/Enemy.as:hitsTimerMax Enemies/Enemy.as:maxForce |
+| `ENEMY_DAMAGE_DEFAULTS` | seedlingDemo/enemyDamage.js | 6 | 3 | rule | count/magnitude | Enemies/Enemy.as:damage Enemies/Enemy.as:hitsMax Enemies/Enemy.as:hitsTimerMax |
 | `MOBILE_DEATH_FADE` | seedlingDemo/enemyDamage.js | 3 | 3 | rule | magnitude | Image.as:157 |
 | `PIT_FADE` | seedlingDemo/enemyDamage.js | 3 | 3 | rule | magnitude | Enemies/Enemy.as:fallAlphaSpeed |
 | `SLASH_SPRITES` | seedlingDemo/combatVerbs.js | 6 | 6 | physics | magnitude | Player.as:41-45 |
