@@ -1116,6 +1116,25 @@ export function planWaypoints(level, from, to, allowTeleporter = null, opts = {}
         ...path.slice(1).map((t) => nodeCentre(t.tx, t.ty, pitch)),
         { x: to.x, y: to.y },
     ];
+    /**
+     * ⛓⛓ SEEDLING SWIM U2, D1 — **`opts.manhattan`: THE CORNERS OF THE A\* PATH,
+     * NOT ITS STRING-PULL.** The path is 4-connected, so consecutive node centres
+     * differ on ONE axis; keeping only the points where the direction turns gives
+     * a walk whose every segment is axis-aligned — which, driven under
+     * `holdOneAxis`, never holds two axes at once. Asked by exactly one caller:
+     * `skirt`'s approach to its stance (`solverBot.resolveSkirtStrategy`), whose
+     * lane admits ONE x and whose x must therefore stay on the 0.05 grid (see
+     * `holdOneAxis`). Every other plan string-pulls as before.
+     */
+    if (opts.manhattan) {
+        const pts = points.slice(1);
+        return pts.filter((p, i) => {
+            if (i === pts.length - 1) return true;
+            const a = i === 0 ? points[0] : pts[i - 1];
+            const b = pts[i + 1];
+            return !((a.x === p.x && p.x === b.x) || (a.y === p.y && p.y === b.y));
+        });
+    }
 
     const kept = [];
     let anchor = 0;
@@ -4879,6 +4898,36 @@ function runCollect(run, perTick, collect, maxTicks, what) {
 }
 
 /**
+ * ⛓⛓ SEEDLING SWIM U2, D1 — **ONE AXIS AT A TIME**, the held-set filter of an
+ * axis-aligned walk (`drive`'s and `previewWalk`'s `axisAligned`).
+ *
+ * `applyFriction` is `pointNormalize(v, |v| − f)`: EXACT on a velocity with one
+ * zero component (that axis loses `f`, the 0.05 grid of `accel` survives) and
+ * IRRATIONAL on a diagonal one (both components scale by `(|v| − f)/|v|`).
+ * Measured on survey step 27 (L29 from (16,224)): the route's x left the grid
+ * at t=14, the second tick of a `right+up` hold, and arrived at the skirt
+ * stance on 125.97137961649308, which no x-only sequence can take onto 126.
+ * So: a second axis is never held while the first still has velocity (drop
+ * the keys on the axis that is at rest), and from rest a two-axis choice keeps
+ * the axis with the farther remaining distance. `held`'s other keys pass
+ * through untouched. The result never makes a diagonal velocity from an
+ * axis-aligned one.
+ */
+export function holdOneAxis(held, state, target) {
+    const X = ['left', 'right'];
+    const Y = ['up', 'down'];
+    const hasX = X.some((k) => held.has(k));
+    const hasY = Y.some((k) => held.has(k));
+    let drop = null;
+    if (hasY && state.vx !== 0 && state.vy === 0) drop = Y;
+    else if (hasX && state.vy !== 0 && state.vx === 0) drop = X;
+    else if (hasX && hasY && state.vx === 0 && state.vy === 0) {
+        drop = Math.abs(target.x - state.x) >= Math.abs(target.y - state.y) ? Y : X;
+    }
+    return drop ? new Set([...held].filter((k) => !drop.includes(k))) : held;
+}
+
+/**
  * Drive the run to `target`, one bang-bang tick at a time.
  *
  * `until` is `'arrival'` (v1's criterion: within tolerance AND stopped) or
@@ -4897,6 +4946,7 @@ function runCollect(run, perTick, collect, maxTicks, what) {
 function drive(run, target, perTick, {
     until, tolerance, maxTicks, what, avoidVolumes, contacts = EMPTY_CONTACTS,
     extraVolumes = EMPTY_VOLUMES, crossTo = null, grazes = null, strike = null,
+    axisAligned = false,
 }) {
     let ticks = 0;
     const touched = [];
@@ -4948,6 +4998,9 @@ function drive(run, target, perTick, {
                 // question, and now one model of what the press will do.
                 { slash: run.progress('slashInfo') }).held;
         }
+        // ⛓ SEEDLING SWIM U2, D1 — see `holdOneAxis`; `previewWalk` applies the
+        // same filter at the same point, so the preview and the drive still agree.
+        if (axisAligned) held = holdOneAxis(held, run.state, target);
         perTick.push(held);
         // Where the player was when the edge could have fired. A pit's
         // identity is the tile UNDER them, and after `advance` they are in

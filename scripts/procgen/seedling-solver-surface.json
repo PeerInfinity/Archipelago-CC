@@ -760,10 +760,10 @@
       "class": "physics",
       "form": "live-state",
       "files": {
-        "botDriverV2.js": 113,
+        "botDriverV2.js": 114,
         "solverBot.js": 145
       },
-      "sites": 258,
+      "sites": 259,
       "seen": "both",
       "via": [
         "direct"
@@ -1832,10 +1832,10 @@
       "form": "live-state",
       "files": {
         "botDriverV1.js": 2,
-        "botDriverV2.js": 6,
+        "botDriverV2.js": 9,
         "solverBot.js": 6
       },
-      "sites": 14,
+      "sites": 17,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1863,10 +1863,10 @@
       "form": "live-state",
       "files": {
         "botDriverV1.js": 2,
-        "botDriverV2.js": 6,
+        "botDriverV2.js": 9,
         "solverBot.js": 2
       },
-      "sites": 10,
+      "sites": 13,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1894,10 +1894,10 @@
       "form": "live-state",
       "files": {
         "botDriverV1.js": 2,
-        "botDriverV2.js": 54,
+        "botDriverV2.js": 55,
         "solverBot.js": 58
       },
-      "sites": 114,
+      "sites": 115,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1925,10 +1925,10 @@
       "form": "live-state",
       "files": {
         "botDriverV1.js": 2,
-        "botDriverV2.js": 57,
+        "botDriverV2.js": 58,
         "solverBot.js": 61
       },
-      "sites": 120,
+      "sites": 121,
       "seen": "both",
       "via": [
         "const-alias",

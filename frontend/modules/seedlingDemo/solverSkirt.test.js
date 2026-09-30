@@ -9,9 +9,13 @@
  *   2. the PASS works where the lane can be entered: from a boot ON the east
  *      lane the solve skirts, collects the Green Key and leaves the rock
  *      standing, with no press and no hit;
- *   3. the route's own arrival CANNOT enter it: the lane admits x = 126.000
- *      only, the walk to the stance arrives at x = 125.97137961649308, and no
- *      x-input sequence lands on 126 from there — refused BY NAME (the U1 STOP).
+ *   3. the route's own arrival ENTERS it (⛓ SEEDLING SWIM U2, D1). The lane
+ *      admits x = 126.000 only; U1's string-pulled walk held `right+up` from
+ *      t=13, diagonal friction took x off the 0.05 grid at t=14, and the stance
+ *      was reached at x = 125.97137961649308, which no x-input sequence can
+ *      move onto 126 (the U1 STOP). The stance walk is now AXIS-ALIGNED
+ *      (`planWaypoints`' `manhattan` + `holdOneAxis`), so x reaches the stance
+ *      on the grid and the x-only alignment lands the lane.
  */
 
 import { readFileSync } from 'node:fs';
@@ -22,6 +26,7 @@ import { createRunForStaging, solveStaging, stagingFromTape } from './tapeRunner
 import { atlasLevelSource } from './levelSource.js';
 import { buildLevelWorld, ROLES } from './levelWorld.js';
 import { fallTrapPresser, solveSegment } from './solverBot.js';
+import { holdOneAxis } from './botDriverV2.js';
 
 const TAPE = new URL('./fixtures/tapes/r8-solve-11.json', import.meta.url);
 const GOALS = Object.freeze([
@@ -81,10 +86,50 @@ describe('skirt — L29, the pass', () => {
             strategy: { verb: 'skirt' } });
     });
 
-    it('from the ROUTE\'s arrival (16,224): the stance is reached at a sub-pixel x the lane cannot take — refused BY NAME', () => {
+    it('from the ROUTE\'s arrival (16,224): an axis-aligned approach keeps x on the 0.05 grid, and the solve SKIRTS, collects the key and crosses at 383', () => {
         const { run, boot } = l29Run(16, 224);
-        expect(() => solveSegment({ run, goals: GOALS.map((g) => ({ ...g })), name: 'u1-skirt-route', boot }))
-            .toThrow(/skirt \(button@112,128, east lane x=126\): no x-input sequence of at most 16 ticks takes the stance state \(x=125\.97137961649308, vx=0\) EXACTLY onto x=126 at rest/);
+        const trail = [];
+        const advance = run.advance.bind(run);
+        run.advance = (held) => {
+            const r = advance(held);
+            trail.push({ held: [...held], x: run.state.x, vx: run.state.vx, vy: run.state.vy });
+            return r;
+        };
+        const out = solveSegment({ run, goals: GOALS.map((g) => ({ ...g })), name: 'u2-skirt-route', boot });
+        expect(out.perTick.length).toBe(383);
+        expect(run.transitions).toEqual([{ t: 383, from_level: 29, to_level: 31 }]);
+        expect(out.records[0]).toMatchObject({
+            strategy: 'skirt', target: 'button@112,128', lane: 'east', x: 126, from: 215, ticks: 38,
+            rocksStanding: ['fallrock@112,112'],
+        });
+        expect(out.records[1]).toMatchObject({ strategy: 'collect', pickup: { tag: 'bosskey', x: 112, y: 64 } });
+        expect(out.records[2]).toMatchObject({ goal: 'reach-exit', to: 31, t: 383 });
+        expect([...run.progress('keys')]).toEqual([1]);
         expect(run.rockFalls).toEqual([]);
+        expect(run.playerHits).toEqual([]);
+        // ⛔ THE DISCIPLINE, tick by tick over the approach and the skirt: never two
+        // axes held, never two axes moving, and x on the 0.05 grid at the stance.
+        const approach = trail.slice(0, 215 + 38);
+        const X = ['left', 'right'];
+        const Y = ['up', 'down'];
+        expect(approach.filter((r) => r.held.some((k) => X.includes(k))
+            && r.held.some((k) => Y.includes(k)))).toEqual([]);
+        expect(approach.filter((r) => r.vx !== 0 && r.vy !== 0)).toEqual([]);
+        const stanceX = trail[214].x;
+        expect(Math.abs(stanceX * 20 - Math.round(stanceX * 20))).toBeLessThan(1e-9);
+        expect(trail[215 + 10 - 1].x).toBe(126);
+    });
+
+    it('`holdOneAxis`: a moving axis keeps the keys, a resting one loses them; from rest the farther axis wins', () => {
+        const at = (vx, vy) => ({ x: 0, y: 0, vx, vy });
+        const both = new Set(['right', 'up', 'primary']);
+        expect([...holdOneAxis(both, at(0.8, 0), { x: 1, y: -50 })]).toEqual(['right', 'primary']);
+        expect([...holdOneAxis(both, at(0, -0.8), { x: 50, y: -1 })]).toEqual(['up', 'primary']);
+        expect([...holdOneAxis(both, at(0, 0), { x: 50, y: -1 })]).toEqual(['right', 'primary']);
+        expect([...holdOneAxis(both, at(0, 0), { x: 1, y: -50 })]).toEqual(['up', 'primary']);
+        // a y key while x still coasts waits for x to stop
+        expect([...holdOneAxis(new Set(['up']), at(0.3, 0), { x: 0, y: -50 })]).toEqual([]);
+        const one = new Set(['left']);
+        expect(holdOneAxis(one, at(0, 0), { x: -9, y: 9 })).toBe(one);
     });
 });

@@ -66,7 +66,8 @@ import {
 } from './botDriverV1.js';
 import {
     BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit,
-    nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, runChest, runCollect, runHold,
+    holdOneAxis, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, runChest, runCollect,
+    runHold,
     runShove, runDwell, SHOVE_STEP,
 } from './botDriverV2.js';
 import { resolvePresser } from './botDriverV2.js';
@@ -745,6 +746,16 @@ function resolveSkirtStrategy(run, obstacle, contacts) {
                 rocks: trap.rocks,
                 lane: { side: lane.side, x: lane.x, lean: lane.lean, stanceY, clearY, exitY },
                 stance: { x: lane.x, y: stanceY },
+                /**
+                 * ⛓⛓ SEEDLING SWIM U2, D1 — THE APPROACH KEEPS x ON THE 0.05
+                 * GRID. The lane admits one x, `execSkirt`'s alignment is
+                 * x-only, and an x-only sequence cannot change x's fraction
+                 * modulo 0.05; only a diagonal velocity's friction can, and a
+                 * walk that never makes one keeps an arrival's integral x on
+                 * the grid (`holdOneAxis`). So the stance walk is asked to be
+                 * axis-aligned (`walkTo`'s `axisAligned`).
+                 */
+                approach: 'axis-aligned',
                 rejected: [{
                     option: 'hold',
                     why: `${obstacle.id}'s group t=${trap.presser.t} answers only `
@@ -876,9 +887,14 @@ const SKIRT_ALIGN_DEPTH = 16;
  */
 function skirtAlignment(x0, vx0, lane) {
     const wallAt = lane.lean === 'right' ? (p) => p > lane.x : (p) => p < lane.x;
+    // ⛓ SEEDLING SWIM U2, D1 — FRICTION FIRST, THEN INPUT: the step's own order
+    // (`playerPhysicsV1.js` `v = applyFriction(v, f)` above `applyInput`). U1
+    // composed them the other way round and the run's compare caught it the
+    // first time a sequence was found (measured on step 27: the searched
+    // sequence ended at vx 0 and the run at vx 0.1000000000000001).
     const stepX = (x, vx, key) => {
-        const v = applyFriction(applyInput({ x: vx, y: 0 }, new Set(key ? [key] : []), WALK_SPEED),
-            DEFAULT_FRICTION);
+        const v = applyInput(applyFriction({ x: vx, y: 0 }, DEFAULT_FRICTION),
+            new Set(key ? [key] : []), WALK_SPEED);
         return { x: sweepAxis(x, v.x, (p) => (wallAt(p) ? 'wall' : null)).pos, vx: v.x };
     };
     if (x0 === lane.x && vx0 === 0) return [];
@@ -2062,7 +2078,8 @@ export function strikePolicyFor(run, { dashPlan = null,
  * `solverBot.test.js` calls both, from one starting state, and compares the
  * held-set sequences.
  */
-export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor = 0 } = {}) {
+export function previewWalk(run, wps, tolerance = 0,
+    { strike = null, standFor = 0, axisAligned = false } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     /**
@@ -2403,6 +2420,9 @@ export function previewWalk(run, wps, tolerance = 0, { strike = null, standFor =
             // ticks, so the two must agree or one walk gets two answers.
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
             held = combat.held;
+            // ⛓ SEEDLING SWIM U2, D1 — `drive`'s own filter, at `drive`'s own
+            // point (after the strike), so ⚖ ruling 30(c)'s equality holds.
+            if (axisAligned) held = holdOneAxis(held, st, wp);
             // ⛓ R9 slice 12b: the sample carries the KEYS this tick spends, so
             // the preview/drive equality row has both sides of its claim.
             sample.held = held;
@@ -9220,7 +9240,7 @@ export function solveSegment({
         return null;
     };
 
-    const probeCorridor = (wps, except = null) => {
+    const probeCorridor = (wps, except = null, { axisAligned = false } = {}) => {
         // ⛔ THE SAME TOLERANCE `drive` WILL USE. A preview that arrived on a
         // different criterion would spend different ticks, and the ETAs are
         // the whole product.
@@ -9236,8 +9256,9 @@ export function solveSegment({
          * the same held-set sequence — which `solverBot.test.js` asserts
          * directly rather than leaving to inspection.
          */
-        const walk = previewWalk(run, wps, tolerance,
-            { strike: strikePolicyFor(run, { dashMode }) });
+        const walk = previewWalk(run, wps, tolerance, axisAligned
+            ? { strike: null, axisAligned }
+            : { strike: strikePolicyFor(run, { dashMode }) });
         const hit = probeSamples(walk.samples, except);
         if (hit) return { ...hit, eta: hit.tick - walk.startTick };
         /**
@@ -9974,6 +9995,15 @@ export function solveSegment({
     const walkTo = (goal, aim, {
         allowTeleporter = null, crossTo = null, what, contactsOverride = null,
         dangerExcept = null,
+        /**
+         * ⛓⛓ SEEDLING SWIM U2, D1 — AN AXIS-ALIGNED WALK: the plan is the A\*
+         * path's corners (`planWaypoints`' `manhattan`), and the preview and
+         * the drive hold one axis at a time (`holdOneAxis`) with no sword dash
+         * and no opportunistic strike, whose presses and aim keys would add
+         * the second axis back. Asked only by a resolution that says
+         * `approach: 'axis-aligned'` — `skirt`'s, whose lane admits one x.
+         */
+        axisAligned = false,
     }) => {
         for (let attempt = 0; ; attempt += 1) {
             const contacts = contactsOverride
@@ -9993,7 +10023,9 @@ export function solveSegment({
             let wps;
             try {
                 wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
-                    solverPlanOpts(run, contacts, goalPlanExtra));
+                    axisAligned
+                        ? { ...solverPlanOpts(run, contacts, goalPlanExtra), manhattan: true }
+                        : solverPlanOpts(run, contacts, goalPlanExtra));
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
                 const identified = identifyAndSelect(goal, aim, contacts, e, allowTeleporter);
@@ -10102,6 +10134,7 @@ export function solveSegment({
                         what: `${what} -> ${plan.strategy} stance `
                             + `(${plan.obstacle.id})`,
                         contactsOverride: plan.resolved.exempt,
+                        axisAligned: plan.resolved.approach === 'axis-aligned',
                     });
                 }
                 const record = STRATEGY_EXECUTORS[plan.strategy](run, perTick, plan.resolved, {
@@ -10152,7 +10185,7 @@ export function solveSegment({
              * `forbiddenByDanger`; the probe itself is the seam it plugs
              * into.
              */
-            const hit = probeCorridor(wps, except);
+            const hit = probeCorridor(wps, except, { axisAligned });
             if (hit) {
                 /**
                  * ⛓⛓⛓ ⚖ §11.8a RULING 2 — THE LADDER REPLACES SLICE 2's
@@ -10192,7 +10225,7 @@ export function solveSegment({
              * walk row's `verb` and `path`. Measured: the first cut did
              * exactly that and every campaign trace lost its waypoint list.
              */
-            const dash = dashMode === 'none'
+            const dash = (dashMode === 'none' || axisAligned)
                 ? null
                 : planSwordDash(run, wps, { tolerance, dashMode,
                     certify: (samples) => probeSamples(samples, except) });
@@ -10254,7 +10287,9 @@ export function solveSegment({
              * without one and the corridor is walked exactly as it was before
              * this existed.
              */
-            const strike = strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode });
+            const strike = axisAligned
+                ? null
+                : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode });
             try {
                 for (let wi = 0; wi < wps.length; wi += 1) {
                     const last = wi === wps.length - 1;
@@ -10268,6 +10303,7 @@ export function solveSegment({
                         crossTo,
                         grazes,
                         strike,
+                        axisAligned,
                         what: `${what} waypoint ${wi} (${wps[wi].x},${wps[wi].y})`,
                     });
                     if (t && crossTo) return t;
