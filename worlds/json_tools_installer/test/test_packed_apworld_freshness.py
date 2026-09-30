@@ -29,7 +29,7 @@ SCRIPTS_BUILD = REPO_ROOT / "scripts" / "build"
 
 # Worlds packed by scripts/build/pack_apworld.py into tracked artifacts
 # (release-checklist-autonomous.md §7.1)
-PACKED_WORLDS = ["metamath", "depgraph", "jta", "bakingadventure", "codingadventure"]
+PACKED_WORLDS = ["metamath", "depgraph", "bakingadventure", "codingadventure"]
 
 
 def _load_script(name: str):

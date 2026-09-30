@@ -934,7 +934,7 @@ else, then commit.
 ```bash
 source .venv/bin/activate
 python scripts/build/pack_json_tools_installer.py          # -> apworlds/json_tools_installer.apworld
-for g in metamath depgraph jta bakingadventure codingadventure; do
+for g in metamath depgraph bakingadventure codingadventure; do
   python scripts/build/pack_apworld.py "$g"                # -> apworlds/<g>.apworld
 done
 ```

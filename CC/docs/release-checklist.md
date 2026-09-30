@@ -309,7 +309,6 @@ If new docs were generated but aren't reachable from any entry point, add links 
 python scripts/build/pack_json_tools_installer.py    # → apworlds/json_tools_installer.apworld
 python scripts/build/pack_apworld.py metamath          # → apworlds/metamath.apworld
 python scripts/build/pack_apworld.py depgraph          # → apworlds/depgraph.apworld
-python scripts/build/pack_apworld.py jta               # → apworlds/jta.apworld
 python scripts/build/pack_apworld.py bakingadventure   # → apworlds/bakingadventure.apworld
 python scripts/build/pack_apworld.py codingadventure   # → apworlds/codingadventure.apworld
 ```
