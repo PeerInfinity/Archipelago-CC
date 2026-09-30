@@ -273,7 +273,25 @@ check(gen.elements?.ran === true,
  * ordinary room and read `agrees per tick` off it.
  */
 const placed = gen.elements?.placed?.[0] ?? null;
-if ((placed?.bodies?.length ?? 0) > 0 && (placed.killLockCell ?? null) === null) {
+if (placed?.element === 'corridor-body') {
+    /**
+     * ⛓⛓ SEEDLING SWIM U3 (D3) — THE CORRIDOR BODY: a lock-less spinner ON the
+     * door cell of a main-path cut. What the shipped room must carry is that
+     * body where the element put it — its `corridorbody_door` obstacle on its
+     * door cell, realised as a spinner (no lock) — and a CERTIFIED solve, which
+     * (as for `roam`) is only possible against the TEXTLESS goal. ⛔ Not the
+     * roam branch below: a corridor body is no blob and no through-room.
+     */
+    const door = (placed.entities ?? []).find((e) => e.role === 'obstacle'
+        && e.id === 'corridorbody_door'
+        && e.x === placed.doorCell?.x && e.y === placed.doorCell?.y);
+    check(gen.certified === true && Boolean(door) && (placed.killLockCell ?? null) === null,
+        '⛓⛓ …and the room really carries THIS element\'s payload — ONE lock-less body on its '
+        + 'door cell, certified against the textless goal',
+        door ? `${door.id} at (${door.x},${door.y}), killLockCell `
+            + `${JSON.stringify(placed.killLockCell ?? null)}, certified ${gen.certified}`
+            : `no corridorbody_door on the door cell ${JSON.stringify(placed.doorCell)}`);
+} else if ((placed?.bodies?.length ?? 0) > 0 && (placed.killLockCell ?? null) === null) {
     /**
      * ⛓⛓ CONCEPT LIBRARY F1 (D6) — THE ROAMING ENEMY: bodies and NO lock. What
      * the shipped room must carry is the bodies themselves, live all the way to
