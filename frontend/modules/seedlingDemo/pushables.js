@@ -80,6 +80,8 @@
  * the model's silence as a claim.
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
 export class PushableError extends Error {
     constructor(message) {
         super(message);
@@ -96,13 +98,13 @@ export class PushableError extends Error {
  * (measured at `8a1eb6b1a`) to share one integer. The three files that kept the
  * literal are the three where it is not free; the other eleven import it.
  */
-export const TILE = 16;
+export const TILE = PROFILE.tile;
 
 /** `PushableBlockFire.moveSpeed` — px per tick, per axis. */
-export const PUSHABLE_SPEED = 0.5;
+export const PUSHABLE_SPEED = PROFILE.pushableSpeed;
 
 /** `Mobile.DEFAULT_FRICTION`, which `input()` overwrites — see `friction`. */
-export const PUSHABLE_FRICTION = 0.25;
+export const PUSHABLE_FRICTION = PROFILE.pushableFriction;
 
 /**
  * Ticks a block takes to cross one tile: 16 px at 0.5 px/tick.
@@ -122,13 +124,13 @@ export const TICKS_PER_TILE = TILE / PUSHABLE_SPEED;
 export const DESTROYING_TILE_TYPES = Object.freeze({ 1: 'water', 17: 'lava', 6: 'pit' });
 
 /** `Mobile.death()` — `(graphic as Image).alpha -= 0.1` per frame. */
-export const ALPHA_FADE = 0.1;
+export const ALPHA_FADE = PROFILE.alphaFade;
 
 /** Facing directions, as `Player.direction` numbers them. */
-const RIGHT = 0;
-const UP = 1;
-const LEFT = 2;
-const DOWN = 3;
+const RIGHT = PROFILE.right;
+const UP = PROFILE.up;
+const LEFT = PROFILE.left;
+const DOWN = PROFILE.down;
 
 /**
  * `spearDirection` -> the tile step the block takes.
@@ -294,7 +296,7 @@ export const MOVE_TYPES_BY_CLASS = Object.freeze({
 });
 
 /** `PushableBlockFire.hit`'s `const bothRange` — the diagonal band's width. */
-export const BOTH_RANGE = 0.1;
+export const BOTH_RANGE = PROFILE.bothRange;
 
 /**
  * ⛓ `genericHit`'s ABSOLUTE arm — the one a FIRE attack takes, and the one

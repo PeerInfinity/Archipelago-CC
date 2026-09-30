@@ -75,6 +75,7 @@
  */
 
 import { BOOT_PRESWAP_FRAMES } from './r7Acceptance.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class GameClockError extends Error {
     constructor(message) { super(message); this.name = 'GameClockError'; }
@@ -179,7 +180,7 @@ export const TIME_RATE = Object.freeze({
 });
 
 /** `Main.as:27` — `FPS = 60`, which `Engine` writes to `stage.frameRate`. */
-export const GAME_FPS = 60;
+export const GAME_FPS = PROFILE.gameFps;
 /** `Game.as:460` — `dayLength:uint = 160 * Main.FPS`. */
 export const DAY_LENGTH_FRAMES = 160 * GAME_FPS;
 /**

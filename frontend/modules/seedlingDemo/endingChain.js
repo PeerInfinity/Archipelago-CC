@@ -59,6 +59,7 @@ import {
 // ⛓ From the browser-safe half: `r6Acceptance` reaches `node:fs` and the
 // live run needs this module in a browser (editor arc slice 1).
 import { animCallbackUpdate } from './r6AnimClock.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class EndingError extends Error {
     constructor(message) { super(message); this.name = 'EndingError'; }
@@ -68,7 +69,7 @@ const fail = (m) => { throw new EndingError(m); };
 // ── the placed NPC ────────────────────────────────────────────────────
 
 /** `NPCs/NPC.as:27` — the talk radius, an origin-to-origin CIRCLE. */
-export const TALK_RANGE = 24;
+export const TALK_RANGE = PROFILE.talkRange;
 
 /**
  * `NPCs/NPC.as:46` — a placed NPC's default `_lineLength`.
@@ -333,7 +334,7 @@ export const freshFinalDoor = () => ({
 // ── the seed ──────────────────────────────────────────────────────────
 
 /** `Pickups/Seed.as:21-22` — the cover fade's rate, and its accumulation. */
-export const COVER_ALPHA_RATE = 0.005;
+export const COVER_ALPHA_RATE = PROFILE.coverAlphaRate;
 
 /**
  * ⛓ HOW MANY FRAMES THE COVER FADE TAKES, by ACCUMULATION.
@@ -359,8 +360,8 @@ export function coverFadeFrames() {
  * ⚠ 138 at the clamped `FP.elapsed`, and 274 at 60 fps. The brief said
  * "≈274"; that is the 60 fps reading of a 30 fps game.
  */
-export const TREE_GROW_FRAME_RATE = 3.5;
-export const TREE_GROW_FRAMES = 16;
+export const TREE_GROW_FRAME_RATE = PROFILE.treeGrowFrameRate;
+export const TREE_GROW_FRAMES = PROFILE.treeGrowFrames;
 export function treeGrowUpdates() {
     return animCallbackUpdate(TREE_GROW_FRAME_RATE, TREE_GROW_FRAMES);
 }

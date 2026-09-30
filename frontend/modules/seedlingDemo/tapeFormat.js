@@ -94,6 +94,11 @@
 
 import { TAGS_PER_LEVEL } from './breakableRocks.js';
 import { validateProfile } from './tapeEnvelope.js';
+// The physics profile registry (engine prep A2) owns this module's rule scalars
+// (`PIN_FRAME_RATE`, `COERCED_TERRAIN_STATE`, `LEVEL_COUNT`). Importing it keeps
+// the charter: the profile is itself dependency-free and browser-safe (it
+// imports only `md5.js`), so this module takes on no physics.
+import { PROFILE } from './seedlingProfile.js';
 
 /**
  * ── Version 2: the subtractive ladder's relaxations ───────────────────
@@ -309,7 +314,7 @@ export const PIN_NAMES = Object.freeze(['sound', 'dead_frames']);
  * the compile flag's number instead would halve every pinned position and
  * turn six boosted swim ticks into three.
  */
-export const PIN_FRAME_RATE = 60;
+export const PIN_FRAME_RATE = PROFILE.pinFrameRate;
 
 /**
  * ⚠ THE SPAWN IS BAKED INTO THE BUILD, so a tape's `boot` block is a CLAIM
@@ -397,7 +402,7 @@ export const HAZARD_STATES = Object.freeze({
 });
 
 /** The state a coerced hazard becomes: Ground, `Player.as:297`'s own initial. */
-export const COERCED_TERRAIN_STATE = 0;
+export const COERCED_TERRAIN_STATE = PROFILE.coercedTerrainState;
 
 export const HAZARD_NAMES = Object.freeze(Object.keys(HAZARD_STATES));
 
@@ -695,7 +700,7 @@ export { TAGS_PER_LEVEL };
 // change guarding that space — "not one to make in passing". A set-aware bound
 // is the natural fix and the mounted set is now able to supply it, but it is
 // its own decision, not a side effect of Phase 2.
-export const LEVEL_COUNT = 116;     // Game.levels.length
+export const LEVEL_COUNT = PROFILE.levelCount;     // Game.levels.length
 
 function parsePersistence(raw, version, tickCount) {
     if (!Array.isArray(raw.persistence)) {

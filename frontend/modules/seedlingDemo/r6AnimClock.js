@@ -18,6 +18,8 @@
  * untouched. One definition each, no copies.
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
 export class R6AcceptanceError extends Error {
     constructor(message) {
         super(message);
@@ -39,7 +41,7 @@ export class R6AcceptanceError extends Error {
  * why `ShieldBoss`'s die animation still runs while its `update()` skips
  * `super.update()`.
  */
-export const FP_ELAPSED_CLAMPED = 0.0333;
+export const FP_ELAPSED_CLAMPED = PROFILE.fpElapsedClamped;
 
 /**
  * `Spritemap.update`, transcribed. Returns the update index on which the

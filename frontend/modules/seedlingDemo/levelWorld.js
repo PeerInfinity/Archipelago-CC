@@ -75,20 +75,21 @@ import { treeBuiltIn } from './burnableTree.js';
 // ⛓ R9 slice 12e‴: the PLACED-NPC talk table. `dialogue.js` imports nothing at
 // all, so this is the leaf-most edge in the file — same care as the two above.
 import { PLACED_NPC_TALK, TALK_OWNED_ELSEWHERE } from './dialogue.js';
+import { PROFILE } from './seedlingProfile.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
  * Transcribed rather than imported: this module stays dependency-free of the
  * physics (`Player.as:295` normalHitbox = (2, 2, 4, 5)).
  */
-const HITBOX_ORIGIN_X = 2;
-const HITBOX_ORIGIN_Y = 2;
+const HITBOX_ORIGIN_X = PROFILE.hitboxOriginX;
+const HITBOX_ORIGIN_Y = PROFILE.hitboxOriginY;
 
 /** `Tile.types` index for a Pit — the transport primitive, R1. */
 const PIT_STATE = HAZARD_STATES.pit;
 
 /** `Tile.types` index for a Bridge — Solid until something spears it. */
-const BRIDGE_STATE = 29;
+const BRIDGE_STATE = PROFILE.bridgeState;
 
 /**
  * The two terrain types that KILL rather than merely slowing (R4).
@@ -97,10 +98,10 @@ const BRIDGE_STATE = 29;
  * the item that survives them lands: `canSwim` (the conch, R5) for water
  * and `hasDarkSuit` for lava. See `lethalTerrainTiles`.
  */
-const WATER_STATE = 1;
-const LAVA_STATE = 17;
+const WATER_STATE = PROFILE.waterState;
+const LAVA_STATE = PROFILE.lavaState;
 /** R4: `Player.input()`'s waterfall push — see `waterfallTiles`. */
-const WATERFALL_STATE = 25;
+const WATERFALL_STATE = PROFILE.waterfallState;
 
 export class LevelWorldError extends Error {
     constructor(message) {

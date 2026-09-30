@@ -60,15 +60,16 @@
  */
 
 import { PIN_FRAME_RATE } from './tapeFormat.js';
+import { PROFILE } from './seedlingProfile.js';
 
 /** `swim.mp3` at `Main.FPS`. A PREDICTION — see the header. */
-export const SWIM_LENGTH_FRAMES = 47;
+export const SWIM_LENGTH_FRAMES = PROFILE.swimLengthFrames;
 
 /** `Player.as:530`'s threshold, in SECONDS (`Sfx.position` divides by 1000). */
-export const SWIM_BOOST_BELOW_SECONDS = 0.1;
+export const SWIM_BOOST_BELOW_SECONDS = PROFILE.swimBoostBelowSeconds;
 
 /** `Player.as:530`'s addend. */
-export const SWIM_BOOST_SPEED = 0.25;
+export const SWIM_BOOST_SPEED = PROFILE.swimBoostSpeed;
 
 /**
  * ⛔⛔ THE FRAMES THE MIXER STEPS ON AND THE TAPE DOES NOT — R5 slice 5.
@@ -105,10 +106,10 @@ export const SWIM_BOOST_SPEED = 0.25;
  * game renders is a frame the mixer stepped; the model's job is to name the
  * ones its own loop skips.
  */
-export const LOAD_DEAD_FRAMES = 20;
+export const LOAD_DEAD_FRAMES = PROFILE.loadDeadFrames;
 
 /** `Pickup.as:22` — `specialTimerMax`, phase A's whole length. */
-export const CEREMONY_FREEZE_FRAMES = 150;
+export const CEREMONY_FREEZE_FRAMES = PROFILE.ceremonyFreezeFrames;
 
 /**
  * A pinned `Sfx` channel.

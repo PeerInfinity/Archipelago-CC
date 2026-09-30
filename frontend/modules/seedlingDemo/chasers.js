@@ -67,6 +67,7 @@
 import { ENEMY_CLASSES } from './combat.js';
 import { rect, SOLIDS_BY_MOVER } from './levelWorld.js';
 import { MODELLED_ENEMY_CLASSES } from './spinner.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class ChaserError extends Error {
     constructor(message) { super(message); this.name = 'ChaserError'; }
@@ -86,13 +87,13 @@ const fail = (m) => { throw new ChaserError(m); };
  * the page ABOVE 30 fps would step animations faster and every count below
  * would be wrong.
  */
-export const FP_ELAPSED = 0.0333;
+export const FP_ELAPSED = PROFILE.fpElapsed;
 
 /** `Mobile.DEFAULT_FRICTION`. An `Enemy` never changes `f`. */
-export const FRICTION = 0.25;
+export const FRICTION = PROFILE.friction;
 
 /** `Mobile.friction`'s dead zone — a component under this is ZEROED. */
-export const VELOCITY_EPSILON = 0.05;
+export const VELOCITY_EPSILON = PROFILE.velocityEpsilon;
 
 /**
  * How many ticks a FlashPunk animation takes to reach its callback.
@@ -309,7 +310,7 @@ export const ENEMY_TERRAIN_DESTROYS = Object.freeze({ water: 1, lava: 17 });
  * by `fallSpinSpeed` and fades it by `fallAlphaSpeed` 0.05, and only sets
  * `destroy` when the alpha runs out.
  */
-export const ENEMY_PIT_TILE = 6;
+export const ENEMY_PIT_TILE = PROFILE.enemyPitTile;
 
 /** The class's box at a centre, from the CENSUS's hitbox. */
 export function chaserBoxAt(tag, cx, cy) {

@@ -112,6 +112,7 @@
  */
 
 import { SeedlingRng } from './rng.js';
+import { PROFILE } from './seedlingProfile.js';
 
 /** Thrown by everything in this module. */
 export class OwlRngError extends Error {
@@ -136,21 +137,21 @@ export function as3Int(v) {
 // ── THE CONSTANTS THE SCHEDULE IS A FUNCTION OF ───────────────────────
 
 /** `FinalBoss.as:139` — `const rockFrequency:int = 6`. */
-export const ROCK_FREQUENCY = 6;
+export const ROCK_FREQUENCY = PROFILE.rockFrequency;
 /** `FinalBoss.as:157` — `const grenadeFrequency:int = 40`. */
-export const GRENADE_FREQUENCY = 40;
+export const GRENADE_FREQUENCY = PROFILE.grenadeFrequency;
 /** `FinalBoss.as:140` — `const stepsAhead:int = -15`. ⛓ NEGATIVE: it aims BEHIND. */
-export const ROCK_STEPS_AHEAD = -15;
+export const ROCK_STEPS_AHEAD = PROFILE.rockStepsAhead;
 /** `FinalBoss.as:141` — `const radius:int = 20`, so the offset is [-20, 20). */
-export const ROCK_RADIUS = 20;
+export const ROCK_RADIUS = PROFILE.rockRadius;
 /** `FinalBoss.as:214` — `const n:int = 5`, the death arm's rocks. */
-export const DEATH_ROCKS = 5;
+export const DEATH_ROCKS = PROFILE.deathRocks;
 /** `RockFall.as:33` — `Math.random() / 2 + 0.25`, so scale is [0.25, 0.75). */
-export const ROCK_SCALE_BASE = 0.25;
-export const ROCK_SCALE_SPAN = 0.5;
+export const ROCK_SCALE_BASE = PROFILE.rockScaleBase;
+export const ROCK_SCALE_SPAN = PROFILE.rockScaleSpan;
 /** `Enemy.as:30` — `4 + Math.random() * 4`, truncated by the `int` slot. */
-export const ENEMY_COINS_BASE = 4;
-export const ENEMY_COINS_SPAN = 4;
+export const ENEMY_COINS_BASE = PROFILE.enemyCoinsBase;
+export const ENEMY_COINS_SPAN = PROFILE.enemyCoinsSpan;
 
 /**
  * The census of every site that can move THIS stream inside L112, with what

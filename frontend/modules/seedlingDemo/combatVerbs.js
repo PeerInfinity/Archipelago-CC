@@ -59,6 +59,7 @@ import { assertRect, rect, rectsOverlap } from './levelWorld.js';
 import { ENEMY_CLASSES, ENEMY_IFRAMES, KILL_CADENCE_FLOOR, SLASH_TIMER_MAX } from './combat.js';
 import { DEFAULT_FRICTION } from './playerPhysicsV1.js';
 import { CHASERS, killWindowTicks } from './chasers.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class CombatVerbError extends Error {
     constructor(message) { super(message); this.name = 'CombatVerbError'; }
@@ -90,7 +91,7 @@ export { SLASH_TIMER_MAX };
 export const SWORD_DAMAGE = Object.freeze({ sword: 1, darksword: 2, ghostsword: 2 });
 
 /** `Player.swordForce` — the knockback impulse a landed hit applies. */
-export const SWORD_FORCE = 5;
+export const SWORD_FORCE = PROFILE.swordForce;
 
 /**
  * ⛓⛓⛓ R9 SLICE 12b, ⚖ ruling 31(b) — **THE GAP BETWEEN TWO PRESSES THAT BOTH
@@ -128,7 +129,7 @@ export const KILL_PRESS_CADENCE = ENEMY_IFRAMES + 1;
  * `Player.slashTimerMax`'s companion force — `set slashing`'s dash branch
  * calls `knockback(2, …)` (`Player.as:788`).
  */
-export const SLASH_DASH_FORCE = 2;
+export const SLASH_DASH_FORCE = PROFILE.slashDashForce;
 
 /** The two animations `set slashing` can play (`Player.as:786`, `:794`). */
 export const SLASH_ANIM_NORMAL = 'slash';
@@ -180,8 +181,8 @@ export function animCompleteTicks(frameCount, frameRate, assignedFrameRate = 30)
 }
 
 /** `Player.as:131-132` — `swordSpeed` and `swordSpeedDash`. */
-export const SWORD_ANIM_RATE = 30;
-export const SWORD_ANIM_RATE_DASH = 20;
+export const SWORD_ANIM_RATE = PROFILE.swordAnimRate;
+export const SWORD_ANIM_RATE_DASH = PROFILE.swordAnimRateDash;
 
 /**
  * How many ticks after `play(anim, true)` the `slashEnd` callback fires, per

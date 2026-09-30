@@ -80,6 +80,8 @@
  * of a divergence in a recording.
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
 export class BridgeError extends Error {
     constructor(message) {
         super(message);
@@ -88,10 +90,10 @@ export class BridgeError extends Error {
 }
 
 /** `Tile.as:78-79` — `bridgeOpeningTimerMax`, and the value one starts at. */
-export const BRIDGE_TIMER_MAX = 60;
+export const BRIDGE_TIMER_MAX = PROFILE.bridgeTimerMax;
 
 /** `Tile.types` index a bridge occupies, and the terrain state when open. */
-export const BRIDGE_STATE = 29;
+export const BRIDGE_STATE = PROFILE.bridgeState;
 
 /**
  * The camera radius the opening policy asserts against, in pixels.
@@ -115,7 +117,7 @@ export const BRIDGE_STATE = 29;
  * 50 in a cutscene branch, which would quintuple the lag to ~72 px and
  * break the bound. R4 enters no cutscene; a rung that does must re-derive.
  */
-export const ON_SCREEN_RADIUS = 64;
+export const ON_SCREEN_RADIUS = PROFILE.onScreenRadius;
 
 /** A fresh bridge, as `loadlevel` builds it. */
 export function newBridge() {
@@ -247,7 +249,7 @@ export function assertOnScreenThroughout(positions, tileCentre, opts = {}) {
  * is the LEG's obligation, and a rung that changes the spear animation
  * moves the second without touching the first.
  */
-export const TICKS_FROM_PRESS_TO_WALKABLE = 60;
+export const TICKS_FROM_PRESS_TO_WALKABLE = PROFILE.ticksFromPressToWalkable;
 
 /**
  * The on-screen window a leg must keep its promise over: the press tick

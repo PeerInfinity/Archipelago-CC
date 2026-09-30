@@ -93,6 +93,7 @@ import {
  * left to drift.
  */
 import { pointLength } from './playerPhysicsV1.js';
+import { PROFILE } from './seedlingProfile.js';
 
 /** Thrown by everything in this module. */
 export class FinalBossError extends Error {
@@ -103,7 +104,7 @@ export class FinalBossError extends Error {
 }
 
 /** `Main.as:36` — `super(160, 160, FPS)`, and `FP.elapsed` clamped (§8.2). */
-export const FP_ELAPSED_CLAMPED = 0.0333;
+export const FP_ELAPSED_CLAMPED = PROFILE.fpElapsedClamped;
 
 /**
  * The update on which a Spritemap's callback fires, counting the `play()`

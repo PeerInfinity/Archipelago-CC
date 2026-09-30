@@ -45,6 +45,7 @@ import { fireHits } from './fireVerb.js';
  * nobody tests is the one that drifts (⚖ ruling 17).
  */
 import { SLASH_SCALE_DASH, SLASH_SCALE_NORMAL, SLASH_TIMER_MAX } from './combatVerbs.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class PressError extends Error {
     constructor(message) {
@@ -69,11 +70,11 @@ export const HITABLE_TYPES = Object.freeze([
 ]);
 
 /** `Player.as:114-146` — damage and reach. */
-export const SWORD_DAMAGE = 1;
-export const DARK_SWORD_DAMAGE = 2;
-export const SPEAR_DAMAGE = 2;
+export const SWORD_DAMAGE = PROFILE.swordDamage;
+export const DARK_SWORD_DAMAGE = PROFILE.darkSwordDamage;
+export const SPEAR_DAMAGE = PROFILE.spearDamage;
 /** `slashingSprite.width * scaleX` — the slash's post-rect distance gate. */
-export const SLASH_REACH = 16;
+export const SLASH_REACH = PROFILE.slashReach;
 /**
  * ⛓ R9 SLICE 12b — AND IT SCALES WITH THE SWING. The gate is
  * `slashingSprite.width * scaleX`, so a DASH press reaches 24 px, not 16.
@@ -85,12 +86,12 @@ export const slashReachFor = (scale = SLASH_SCALE_NORMAL) => SLASH_REACH * scale
 /** `slashReachFor(SLASH_SCALE_DASH)` — 24 px, named for the doc rows. */
 export const SLASH_REACH_DASH = SLASH_REACH * SLASH_SCALE_DASH.x;
 /** `Player.as:947-948` — `const length:int = 32; const thick:int = 5;` */
-export const SPEAR_LENGTH = 32;
-export const SPEAR_THICK = 5;
+export const SPEAR_LENGTH = PROFILE.spearLength;
+export const SPEAR_THICK = PROFILE.spearThick;
 /** `Enemy.as:22-24` — the default an unmodified enemy carries. */
-export const ENEMY_HITS_MAX = 3;
+export const ENEMY_HITS_MAX = PROFILE.enemyHitsMax;
 /** `Enemy.as:24` — ticks before the same enemy can be hit again. */
-export const ENEMY_HITS_TIMER = 30;
+export const ENEMY_HITS_TIMER = PROFILE.enemyHitsTimer;
 /**
  * `Player.as:119` — the double-tap window that turns two presses into a DASH.
  * ⛓ RE-EXPORTED rather than re-typed: `combat.js` is its one home (⚖ ruling 17).
@@ -138,7 +139,7 @@ export { SLASH_TIMER_MAX };
  * fixtures to no measured end. It is named here rather than modelled, and a
  * slice that reaches a non-idempotent spear arm owes the same fix.
  */
-export const SLASH_HIT_TICKS = 5;
+export const SLASH_HIT_TICKS = PROFILE.slashHitTicks;
 export const SPEAR_HIT_TICKS_UNMODELLED = Object.freeze({
     ticks: Object.freeze([1, 3, 5]),
     why: '`spearDelayMax` is 1, so the test runs on alternate ticks of the same '
@@ -263,13 +264,13 @@ export function swordWindowSchedule(win, thrust) {
     return { pending: thrust, repeats: win.repeats };
 }
 
-export const LIGHTPOLE_HITS_TIMER_MAX = 25;
+export const LIGHTPOLE_HITS_TIMER_MAX = PROFILE.lightpoleHitsTimerMax;
 
 /** Facing directions, as `Player.direction` numbers them. */
-export const RIGHT = 0;
-export const UP = 1;
-export const LEFT = 2;
-export const DOWN = 3;
+export const RIGHT = PROFILE.right;
+export const UP = PROFILE.up;
+export const LEFT = PROFILE.left;
+export const DOWN = PROFILE.down;
 
 const rect = (x, y, w, h) => ({ x, y, w, h, right: x + w, bottom: y + h });
 

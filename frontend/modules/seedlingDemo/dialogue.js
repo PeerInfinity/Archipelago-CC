@@ -66,17 +66,19 @@
  * compares against. Transcribe it; do not "fix" it.
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
 /** `Pickup.specialTimer` starts here and counts to zero. `Pickup.as:22`. */
-export const SPECIAL_TIMER_MAX = 150;
+export const SPECIAL_TIMER_MAX = PROFILE.specialTimerMax;
 
 /** `Pickup.DEF_TEXT_SPEED` — frames per character for a pickup's NPC. */
-export const PICKUP_TEXT_SPEED = 6;
+export const PICKUP_TEXT_SPEED = PROFILE.pickupTextSpeed;
 
 /** `Pickup.as:101` passes 32 as the NPC's `_lineLength`. */
-export const PICKUP_LINE_LENGTH = 32;
+export const PICKUP_LINE_LENGTH = PROFILE.pickupLineLength;
 
 /** `Game.framesThisCharacter` starts at 0 on a fresh `Game`. `Game.as:603`. */
-export const INITIAL_FRAMES_THIS_CHARACTER = 0;
+export const INITIAL_FRAMES_THIS_CHARACTER = PROFILE.initialFramesThisCharacter;
 
 /**
  * `NPC.validChar` — the characters a line break may NOT land on.
@@ -447,7 +449,7 @@ export const TALK_KEY = 'primary';
  * `NPCs/NPC.as:46` — a placed NPC's default `_lineLength`, the column count
  * `lineWrap()` folds its pages to. Only `Statue` passes anything else.
  */
-export const NPC_LINE_LENGTH_DEFAULT = 28;
+export const NPC_LINE_LENGTH_DEFAULT = PROFILE.npcLineLengthDefault;
 
 /**
  * ⛓⛓⛓ R9 SLICE 12e‴ — **THE PLACED NPCs THAT TALK, AND THE KEY THAT OPENS

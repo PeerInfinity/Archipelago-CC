@@ -96,6 +96,7 @@ import { rect } from './levelWorld.js';
 import {
     MOBILE_DEATH_FADE, createEnemyDamage, enemyHit, mobileDeath,
 } from './enemyDamage.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class ShieldBossError extends Error {
     constructor(message) { super(message); this.name = 'ShieldBossError'; }
@@ -103,7 +104,7 @@ export class ShieldBossError extends Error {
 const fail = (m) => { throw new ShieldBossError(m); };
 
 /** `Engine.as:270` — `MAX_ELAPSED`, the decimal literal, not `1/30`. */
-export const FP_ELAPSED_CLAMPED = 0.0333;
+export const FP_ELAPSED_CLAMPED = PROFILE.fpElapsedClamped;
 
 /**
  * `Spritemap.update`, simulated at double precision.

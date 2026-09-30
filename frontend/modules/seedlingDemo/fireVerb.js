@@ -131,6 +131,7 @@ import { assertRect, rect } from './levelWorld.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { HITABLE_TYPES } from './combatVerbs.js';
 import { FP_MAX_ELAPSED } from './breakableRocks.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class FireVerbError extends Error {
     constructor(message) { super(message); this.name = 'FireVerbError'; }
@@ -157,18 +158,18 @@ export const FIRE_SPRITE = Object.freeze({
 });
 
 /** `Player.fire()`'s two locals (`Player.as:1016-1017`). */
-export const FIRE_HIT_FRAME_START = 3;
-export const FIRE_HIT_FRAME_END = 6;
+export const FIRE_HIT_FRAME_START = PROFILE.fireHitFrameStart;
+export const FIRE_HIT_FRAME_END = PROFILE.fireHitFrameEnd;
 
 /** `Player.fireForce` (`:179`) — the knockback impulse, per dispatch. */
-export const FIRE_FORCE = 0.325;
+export const FIRE_FORCE = PROFILE.fireForce;
 
 /**
  * `Player.fireDamage` (`:178`) — and it is **0**, with `// .5` commented
  * beside it. Fire never kills. Kept as a named constant so an arithmetic
  * that divides by it fails loudly instead of returning Infinity.
  */
-export const FIRE_DAMAGE = 0;
+export const FIRE_DAMAGE = PROFILE.fireDamage;
 
 /** The `t` string `fire()` dispatches with (`Player.as:1030`). */
 export const FIRE_HIT_TYPE = 'Fire';

@@ -80,6 +80,7 @@
 
 import { hitPushableFromPoint } from './pushables.js';
 import { collideRectInclusive } from './fireVerb.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class PulserError extends Error {
     constructor(message) { super(message); this.name = 'PulserError'; }
@@ -87,7 +88,7 @@ export class PulserError extends Error {
 const fail = (m) => { throw new PulserError(m); };
 
 /** `Engine.as:162` clamps at 30 fps, so this is a constant for every tape. */
-const FP_MAX_ELAPSED = 0.0333;
+const FP_MAX_ELAPSED = PROFILE.fpMaxElapsed;
 
 /**
  * The constructor's numbers, verbatim. Every one is `private const` in

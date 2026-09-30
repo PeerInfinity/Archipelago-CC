@@ -51,13 +51,15 @@
  * lifetime is where it lives.
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
 export class BreakableRockError extends Error {
     constructor(message) { super(message); this.name = 'BreakableRockError'; }
 }
 const fail = (m) => { throw new BreakableRockError(m); };
 
 /** `Game.as:525`. Restated so the out-of-band arithmetic can be read here. */
-export const TAGS_PER_LEVEL = 30;
+export const TAGS_PER_LEVEL = PROFILE.tagsPerLevel;
 
 /** `add("break", [0, 1, 2, 3], 20)` — `BreakableRock.as:40`. */
 export const BREAK_ANIM = Object.freeze({ frames: 4, frameRate: 20 });
@@ -74,7 +76,7 @@ export const BREAK_ANIM = Object.freeze({ frames: 4, frameRate: 20 });
  * be a coincidence this arc has been bitten by before, so the test drives
  * both.
  */
-export const FP_MAX_ELAPSED = 0.0333;
+export const FP_MAX_ELAPSED = PROFILE.fpMaxElapsed;
 
 /**
  * Ticks from the `play("break")` to the `endAnim` callback, by SIMULATING
@@ -146,7 +148,7 @@ export const HIT_TO_GONE_TICKS = animCallbackTick();
  * order leaves open. 20 is ~3x the animation and costs a fifth of a
  * second of tape.
  */
-export const WAIT_AFTER_PRESS_TICKS = 20;
+export const WAIT_AFTER_PRESS_TICKS = PROFILE.waitAfterPressTicks;
 
 /**
  * ⛔ `Game.setPersistence(tag, o)` RESOLVED, including for `tag < 0`.

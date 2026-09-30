@@ -113,12 +113,14 @@
  * survive the SHORTEST fade, a named refusal when it can.
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
 /** `Main.as:36` — `super(160, 160, FPS)`. `FP.screen` never changes size. */
-export const SCREEN_W = 160;
-export const SCREEN_H = 160;
+export const SCREEN_W = PROFILE.screenW;
+export const SCREEN_H = PROFILE.screenH;
 
 /** `Game.as:569-570` — `cameraSpeedDivisorDef`. */
-export const CAMERA_SPEED_DIVISOR = 10;
+export const CAMERA_SPEED_DIVISOR = PROFILE.cameraSpeedDivisor;
 
 /**
  * `Inventory.width / 2 + Inventory.offset.x / 2`, SUBTRACTED from the x
@@ -128,8 +130,8 @@ export const CAMERA_SPEED_DIVISOR = 10;
  * the -2 so the arithmetic is checkable against the two source lines
  * (`Inventory.as:31` and `:38`) instead of against a number.
  */
-export const INVENTORY_WIDTH = 66;
-export const INVENTORY_OFFSET_X = -70;
+export const INVENTORY_WIDTH = PROFILE.inventoryWidth;
+export const INVENTORY_OFFSET_X = PROFILE.inventoryOffsetX;
 export const INVENTORY_TERM = INVENTORY_WIDTH / 2 + INVENTORY_OFFSET_X / 2;
 
 export class CameraError extends Error {

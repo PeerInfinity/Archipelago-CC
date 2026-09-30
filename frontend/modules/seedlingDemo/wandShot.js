@@ -134,6 +134,7 @@ import { SCREEN_H, SCREEN_W } from './camera.js';
 import { MOBILE_DEATH_FADE } from './enemyDamage.js';
 import { rect } from './levelWorld.js';
 import { magicalLockOpens } from './magicalLock.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class WandShotError extends Error {
     constructor(message) { super(message); this.name = 'WandShotError'; }
@@ -150,7 +151,7 @@ const toInt = (n) => {
 };
 
 /** `Scenery/Tile.w`. */
-const TILE_W = 16;
+const TILE_W = PROFILE.tileW;
 
 /**
  * The class's constants, verbatim. Every one is a literal, a

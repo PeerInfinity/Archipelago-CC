@@ -62,6 +62,8 @@
  * checking the transcription against itself.
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
 /**
  * `avm2_random_xor_masks[31 - 2]` — the n = 31 tap.
  *
@@ -82,7 +84,7 @@
  * NEGATIVE int32 going into the hasher. That is why `rng.seed` is bounded
  * at 2^31 - 1 in `tapeFormat` rather than at 2^32 - 1.
  */
-export const XOR_MASK = 0x48000000;
+export const XOR_MASK = PROFILE.xorMask;
 
 /**
  * `(uint32)((int64_t) MOCK_DATE_TIME * 1000)` at the default 981152406000.
@@ -93,15 +95,15 @@ export const XOR_MASK = 0x48000000;
  * matters only where a tape declares seed 0 (or a probe asks for it), which
  * means "inherit the build's own boot state".
  */
-export const BOOT_SEED = 1486967168;
+export const BOOT_SEED = PROFILE.bootSeed;
 
 /** The hasher's three avmplus constants. */
-export const HASH_C1 = 1376312589;
-export const HASH_C2 = 789221;
-export const HASH_C3 = 15731;
+export const HASH_C1 = PROFILE.hashC1;
+export const HASH_C2 = PROFILE.hashC2;
+export const HASH_C3 = PROFILE.hashC3;
 
 /** `Math.random()`'s divisor — 2^31, not 2^32: the output is masked to 31 bits. */
-export const RANDOM_DIVISOR = 2147483648;
+export const RANDOM_DIVISOR = PROFILE.randomDivisor;
 
 /**
  * `avm2_random_pure_hasher`, transcribed.
@@ -139,7 +141,7 @@ export function step(u) {
  * The largest state the orbit contains — `uSequenceLength` in the C, and
  * the ceiling `rng.seed` is validated against.
  */
-export const STATE_MAX = 2147483647;
+export const STATE_MAX = PROFILE.stateMax;
 
 /**
  * The raw 31-bit output for a state — `avm2_generate_random_number`'s tail.

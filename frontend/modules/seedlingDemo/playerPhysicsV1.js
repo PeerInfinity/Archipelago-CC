@@ -39,18 +39,20 @@
  * tape deterministic at all.)
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
 // ── Constants, straight from the source ───────────────────────────────
 
 /** `Mobile.as:14-15`. */
-export const DEFAULT_FRICTION = 0.25;
-export const WATER_FRICTION = 0.5;
+export const DEFAULT_FRICTION = PROFILE.defaultFriction;
+export const WATER_FRICTION = PROFILE.waterFriction;
 
 /** `Player.as:65, 73-80`. */
-export const WALK_SPEED = 0.8;          // dMS
-export const STAIR_SPEED = 0.4;         // dMSstair
-export const WATER_SPEED = 0.45;        // dMSwater
-export const SLIDING_SPEED = 1;         // slidingSpeed (ice)
-export const SLIDING_FRICTION = 0.025;  // slidingFriction (ice)
+export const WALK_SPEED = PROFILE.walkSpeed;          // dMS
+export const STAIR_SPEED = PROFILE.stairSpeed;         // dMSstair
+export const WATER_SPEED = PROFILE.waterSpeed;        // dMSwater
+export const SLIDING_SPEED = PROFILE.slidingSpeed;         // slidingSpeed (ice)
+export const SLIDING_FRICTION = PROFILE.slidingFriction;  // slidingFriction (ice)
 
 /**
  * `Player.as:86-89` — `moveSpeeds`, indexed by the terrain `state` that
@@ -77,7 +79,7 @@ export const MOVE_SPEEDS = Object.freeze([
     /* 17 */ WATER_SPEED,       // Lava
     /* 18..24 */ WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED,
     WALK_SPEED, WALK_SPEED,
-    /* 25 */ WATER_SPEED / 2,   // Waterfall
+    /* 25 */ WATER_SPEED / PROFILE.moveSpeeds25Divisor,   // Waterfall
     /* 26..29 */ WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED,
     /* 30 */ STAIR_SPEED,       // Ghost Tile Step
     /* 31..37 */ WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED, WALK_SPEED,
@@ -92,10 +94,13 @@ export const MOVE_SPEEDS = Object.freeze([
  * `normalHitbox = Rectangle(2, 2, 4, 5)` → `setHitbox(4, 5, 2, 2)`
  * (`Player.as:295, 414`).
  */
-export const HITBOX = Object.freeze({ width: 4, height: 5, originX: 2, originY: 2 });
+export const HITBOX = Object.freeze({
+    width: PROFILE.hitboxWidth, height: PROFILE.hitboxHeight,
+    originX: PROFILE.hitboxOriginX, originY: PROFILE.hitboxOriginY,
+});
 
 /** `Scenery/Tile.as:22-23`. */
-export const TILE = Object.freeze({ w: 16, h: 16 });
+export const TILE = Object.freeze({ w: PROFILE.tileW, h: PROFILE.tileH });
 
 /**
  * ⚠ The player entity does NOT spawn at the coordinates `new Game(level,
@@ -115,7 +120,9 @@ export const TILE = Object.freeze({ w: 16, h: 16 });
  * constructor args stand; a v2 level that has one will need the level's
  * own value.)
  */
-export const SPAWN_OFFSET = Object.freeze({ x: TILE.w / 2, y: TILE.h / 2 });
+export const SPAWN_OFFSET = Object.freeze({
+    x: TILE.w / PROFILE.spawnOffsetXDivisor, y: TILE.h / PROFILE.spawnOffsetYDivisor,
+});
 
 /** Entity spawn position for a `new Game(level, x, y)` boot block. */
 export function spawnFromBoot(boot) {
@@ -135,7 +142,7 @@ export function spawnFromBoot(boot) {
  * This is exactly the kind of thing a "transcribe the constant" shortcut
  * gets wrong: the 160 is real, it is just not what the clamp reads.
  */
-export const LEVEL0_WORLD = Object.freeze({ width: 320, height: 320 });
+export const LEVEL0_WORLD = Object.freeze({ width: PROFILE.level0WorldWidth, height: PROFILE.level0WorldHeight });
 
 /** Clamp bounds for a world of the given pixel dimensions. */
 export function clampFor(world) {
@@ -155,7 +162,7 @@ export const CLAMP = Object.freeze(clampFor(LEVEL0_WORLD));
  * offset at which the terrain state is sampled. With the normal hitbox
  * that is `-2 + 5 - 2 = 1`.
  */
-export const CHECK_OFFSET_Y = -HITBOX.originY + HITBOX.height - 2;
+export const CHECK_OFFSET_Y = -HITBOX.originY + HITBOX.height - PROFILE.checkOffsetYInset;
 
 // ── flash.geom.Point semantics ────────────────────────────────────────
 

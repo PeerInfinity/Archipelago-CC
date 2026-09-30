@@ -117,6 +117,7 @@
 
 import { FP_MAX_ELAPSED } from './breakableRocks.js';
 import { animTimeline } from './fireVerb.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class WandVerbError extends Error {
     constructor(message) { super(message); this.name = 'WandVerbError'; }
@@ -140,7 +141,7 @@ const toInt = (n) => {
 };
 
 /** `Player.wandSpeed` (`Player.as:167`). */
-export const WAND_SPEED = 3;
+export const WAND_SPEED = PROFILE.wandSpeed;
 
 /**
  * `sprWand` / `sprFireWand`, from the two `Spritemap` constructions and the

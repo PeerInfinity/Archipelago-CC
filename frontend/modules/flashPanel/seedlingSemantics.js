@@ -31,6 +31,8 @@
 // every entity tag the COMMITTED extract contains must be classified here, and
 // the table sizes are pinned. A silent gap is a red test, not a skipped tile.
 
+import { PROFILE } from '../seedlingDemo/seedlingProfile.js';
+
 // --- condition algebra -------------------------------------------------------
 //
 // Conditions are expressed over the game's ENGINE FLAGS (`hasSword`, `canSwim`,
@@ -54,7 +56,7 @@ export const allOf = (...parts) => (parts.length === 1 ? parts[0] : { all: parts
 
 // --- tile types (Tile.as) ----------------------------------------------------
 
-export const SEEDLING_TILE_SIZE = 16;
+export const SEEDLING_TILE_SIZE = PROFILE.seedlingTileSize;
 
 /**
  * Tile type numbers -> names, from the comment block at Tile.as:39-77. The

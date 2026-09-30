@@ -108,6 +108,7 @@ import {
     SWIM_LENGTH_FRAMES, createPinnedChannel, stepChannel, playChannel,
     channelPlaying, swimSpeedBonus,
 } from './swimSoundClock.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class PhysicsV2Error extends Error {
     constructor(message) {
@@ -121,7 +122,7 @@ export class PhysicsV2Error extends Error {
  * starts at Ground, and a fresh `Player` (a boot, or an arrival through a
  * teleporter) resets it, because the whole entity is new.
  */
-export const INITIAL_TERRAIN_STATE = 0;
+export const INITIAL_TERRAIN_STATE = PROFILE.initialTerrainState;
 
 /**
  * The player's collision box at (x, y), as `Entity.collide` places it
@@ -281,7 +282,7 @@ function terrainEffectClass(effective) {
 const NO_KEYS = new Set();
 
 /** `Tile.types` index for a Pit. */
-const PIT_STATE = 6;
+const PIT_STATE = PROFILE.pitState;
 
 // ── R4: THE HAZARDS COME BACK ─────────────────────────────────────────
 //
@@ -292,10 +293,10 @@ const PIT_STATE = 6;
 // the player is running are two different questions.
 
 /** `Tile.types` indices, the ones with hazard physics behind them. */
-const WATER_STATE = 1;
-const LAVA_STATE = 17;
-const ICE_STATE = 22;
-const WATERFALL_STATE = 25;
+const WATER_STATE = PROFILE.waterState;
+const LAVA_STATE = PROFILE.lavaState;
+const ICE_STATE = PROFILE.iceState;
+const WATERFALL_STATE = PROFILE.waterfallState;
 
 /**
  * The four flags a fresh `Player` starts with — all false (`Player.as:67-70`),
@@ -342,11 +343,11 @@ export const INITIAL_HAZARD_FLAGS = Object.freeze({
  * confirms that one-tick lag end to end (press 25, pin breaks 85, and
  * `framesToOpen()` is 60).
  */
-export const INITIAL_DIRECTION = 3;
-export const DIRECTION_RIGHT = 0;
-export const DIRECTION_UP = 1;
-export const DIRECTION_LEFT = 2;
-export const DIRECTION_DOWN = 3;
+export const INITIAL_DIRECTION = PROFILE.initialDirection;
+export const DIRECTION_RIGHT = PROFILE.directionRight;
+export const DIRECTION_UP = PROFILE.directionUp;
+export const DIRECTION_LEFT = PROFILE.directionLeft;
+export const DIRECTION_DOWN = PROFILE.directionDown;
 
 /**
  * `sprites()`'s derivation, given this tick's post-move velocity.
@@ -394,12 +395,12 @@ export function directionAfterFall() {
 }
 
 /** `Player.as:65-80` and `Mobile.as:14-15`. */
-export const SLIDING_FRICTION = 0.025;
-export const SLIDING_SPEED = 1;
-export const WATERFALL_ACCELERATION = 0.8;
+export const SLIDING_FRICTION = PROFILE.slidingFriction;
+export const SLIDING_SPEED = PROFILE.slidingSpeed;
+export const WATERFALL_ACCELERATION = PROFILE.waterfallAcceleration;
 
 /** `Player.as:312` — `drownTimerMax`. */
-export const DROWN_TIMER_MAX = 10;
+export const DROWN_TIMER_MAX = PROFILE.drownTimerMax;
 
 /**
  * The state setter's flag assignment (`Player.as:701-724`), transcribed.
@@ -707,11 +708,11 @@ function arriveAt(level, x, y) {
  */
 
 /** `fallAlphaSpeed` (`Player.as:345`) and the alpha it counts down from. */
-export const FALL_ALPHA_SPEED = 0.05;
-export const FALL_ALPHA_START = 1;
+export const FALL_ALPHA_SPEED = PROFILE.fallAlphaSpeed;
+export const FALL_ALPHA_START = PROFILE.fallAlphaStart;
 
 /** `const divisor:int = 10` in `checkFallingInPit`. */
-export const FALL_LERP_DIVISOR = 10;
+export const FALL_LERP_DIVISOR = PROFILE.fallLerpDivisor;
 
 /**
  * `FP.screen.height / 2 + (height - originY)` = 80 + 3.
@@ -720,15 +721,17 @@ export const FALL_LERP_DIVISOR = 10;
  * and `Game.as:1854`'s per-level `FP.width/height` overwrite does NOT touch
  * it — so this is a constant of the BUILD, not of the level.
  */
-export const DESCENT_DROP = 83;
+export const DESCENT_DROP = PROFILE.descentDrop;
 
 /** `v.y += 0.1`, `v.y = Math.min(v.y, 5)`, and the bounce's `v.y = -2`. */
-export const DESCENT_GRAVITY = 0.1;
-export const DESCENT_MAX_FALL = 5;
-export const BOUNCE_VELOCITY = -2;
+export const DESCENT_GRAVITY = PROFILE.descentGravity;
+export const DESCENT_MAX_FALL = PROFILE.descentMaxFall;
+export const BOUNCE_VELOCITY = PROFILE.bounceVelocity;
 
 /** The three raw states a descent does NOT bounce off (`Player.as:490`). */
-export const NO_BOUNCE_STATES = Object.freeze([6, 1, 17]);
+export const NO_BOUNCE_STATES = Object.freeze([
+    PROFILE.noBounceStates0, PROFILE.noBounceStates1, PROFILE.noBounceStates2,
+]);
 
 /**
  * `Player.getStatePos(_x:int, _y:int)` (`Player.as:670-678`) — a DIFFERENT

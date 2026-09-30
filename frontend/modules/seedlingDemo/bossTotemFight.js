@@ -78,6 +78,7 @@
  */
 
 import { rect } from './levelWorld.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class BossTotemFightError extends Error {
     constructor(message) {
@@ -189,7 +190,7 @@ export function bossTotemHeadPosY(anim, currentFrame) {
 }
 
 /** `headPos.x` — 0 on every frame of every animation, for the same reason. */
-export const HEAD_POS_X = 0;
+export const HEAD_POS_X = PROFILE.headPosX;
 
 /**
  * `laserStep()`'s charge arm, stepped.

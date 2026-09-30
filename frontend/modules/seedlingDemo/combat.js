@@ -96,6 +96,8 @@
  * for it and the i-frame timer does not run down out there either.
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
 /**
  * The `Game.totalEnemies()` sum, VERBATIM and in source order
  * (`Game.as:1738-1763`).
@@ -653,7 +655,7 @@ export const PUZZLEMENT_HAZARDS = Object.freeze({
 });
 
 /** `Enemy.hitsTimerMax` — the i-frame window a hit buys (`Enemy.as:24`). */
-export const ENEMY_IFRAMES = 30;
+export const ENEMY_IFRAMES = PROFILE.enemyIframes;
 
 /**
  * ⛓ `Player.slashTimerMax` (`Player.as:119`) — the window inside which a
@@ -665,7 +667,7 @@ export const ENEMY_IFRAMES = 30;
  * other cross-cutting press constant (`ENEMY_IFRAMES`), so it is the one place
  * the number can be edited once.
  */
-export const SLASH_TIMER_MAX = 20;
+export const SLASH_TIMER_MAX = PROFILE.slashTimerMax;
 
 /**
  * ⛔⛔ R9 SLICE 12b, ⚖ ruling 36 — **THIS IS NO LONGER A FLOOR, AND IT NEVER
@@ -835,7 +837,7 @@ export const LOOKS_LIKE_COMBAT = new Set([
 ]);
 
 /** `Lock`'s kill-lock discriminator: `tSet == -1` (`Lock.as:109-115`). */
-export const KILL_LOCK_TSET = -1;
+export const KILL_LOCK_TSET = PROFILE.killLockTset;
 
 /**
  * The classes that inherit `Lock.update`'s kill arm.

@@ -58,6 +58,7 @@ import {
 // subtracted from. `rng.js` is the transcription the whole arc already trusts
 // (asserted against the live game in `rng.test.js`).
 import { step } from './rng.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class R7AcceptanceError extends Error {
     constructor(message) {
@@ -649,7 +650,7 @@ export const SEAM_PREBUILD_FIELDS = Object.freeze(
  * is an EQUALITY that would redden the moment it stopped being zero. So the
  * clock is corrected and the stream is asserted.
  */
-export const BOOT_PRESWAP_FRAMES = 1;
+export const BOOT_PRESWAP_FRAMES = PROFILE.bootPreswapFrames;
 
 /**
  * ⛔⛔⛔ THE EXIT SIDE, AND WHICH INSTANT EACH ROW IS READ AT. R7 slice 2b.
