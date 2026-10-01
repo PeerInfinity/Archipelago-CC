@@ -289,6 +289,9 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'bobBoss', kind: RUN_ENTITIES, blocks: ['chase', 'contact', 'hp'],
         solverReads: ['solverBot'], strategies: [],
         why: 'L32\'s encounter by role — the rock, the boss (three forms: chase, swords, `hits`), the dialogue, the pending Fire (`levelRun.js`, swim U5\'s `bobBossFight.js`); the encounter executor reads the boss\'s own `hits`.' },
+    { family: 'pulls', kind: RUN_ENTITIES, blocks: ['stationary'],
+        solverReads: ['solverBot'], strategies: [],
+        why: 'the room\'s `Pull` currents in update order (`levelRun.pullsNow`, U12-swim `pull.js`); a pit leg rides the ones that drain into its pit (`solverBot.pitRides`).' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],
@@ -314,7 +317,7 @@ export const FAMILY_BLOCKS = deepFreeze([
         why: 'the 16 px knife-edge disc (`hazards.js:302`); its pull-and-drown is bespoke (`vortex`).' },
     { family: 'volume:pull', kind: VOLUME, blocks: ['stationary'],
         solverReads: ['dangerMap', 'encounters'], strategies: [],
-        why: 'no rect or disc — `deferredTo` levelWorld\'s proximity hazard (`hazards.js:318`).' },
+        why: 'no rect or disc — `deferredTo` levelWorld\'s proximity hazard (`hazards.js:318`); stepped by `levelRun.stepPullsNow` and ridden by a pit leg (U12-swim).' },
     { family: 'volume:pod', kind: VOLUME, blocks: ['stationary', 'contact'],
         solverReads: ['dangerMap', 'encounters'], strategies: [],
         why: 'the 16x16 cell (`hazards.js:331`); its pin and the boss\'s schedule are bespoke.' },

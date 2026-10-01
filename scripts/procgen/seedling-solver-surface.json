@@ -300,9 +300,9 @@
       "files": {
         "botDriverV2.js": 101,
         "dangerMap.js": 13,
-        "solverBot.js": 64
+        "solverBot.js": 66
       },
-      "sites": 178,
+      "sites": 180,
       "seen": "both",
       "via": [
         "direct"
@@ -375,6 +375,9 @@
         },
         "pulledRopes": {
           "botDriverV2.js": 3
+        },
+        "pulls": {
+          "solverBot.js": 2
         },
         "pushables": {
           "botDriverV2.js": 17,
@@ -591,9 +594,9 @@
         "botDriverV2.js": 30,
         "dangerMap.js": 9,
         "director.js": 1,
-        "solverBot.js": 51
+        "solverBot.js": 52
       },
-      "sites": 91,
+      "sites": 92,
       "seen": "both",
       "via": [
         "direct"
@@ -895,9 +898,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 56,
-        "solverBot.js": 117
+        "solverBot.js": 119
       },
-      "sites": 173,
+      "sites": 175,
       "seen": "both",
       "via": [
         "direct",
@@ -3849,6 +3852,42 @@
       ],
       "dynamic": null,
       "why": "Facing direction UP = 1 as Player.direction numbers it."
+    },
+    {
+      "surface": "import",
+      "name": "pullModelled",
+      "module": "frontend/modules/seedlingDemo/pull.js",
+      "line": 164,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 2
+      },
+      "sites": 2,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "Whether the model steps a Pull for a walking player: {modelled, why}, false when the pull's 16x16 box overlaps a solid of the built world (Pull.update would move it, an arm levelRun does not step), a Seedling Pull rule (U12-swim D2)."
+    },
+    {
+      "surface": "import",
+      "name": "pullsDrainingInto",
+      "module": "frontend/modules/seedlingDemo/pull.js",
+      "line": 135,
+      "class": "seedling",
+      "form": "function",
+      "files": {
+        "solverBot.js": 1
+      },
+      "sites": 1,
+      "seen": "static",
+      "via": [
+        "import"
+      ],
+      "dynamic": null,
+      "why": "The Pulls whose current, followed cell to cell through other pulls by each one's own push, ends in a given pit tile (Pull.as direction/force read through createPulls), a Seedling Pull-funnel rule (U12-swim D2)."
     },
     {
       "surface": "import",

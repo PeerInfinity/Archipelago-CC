@@ -320,12 +320,14 @@ export function hazardVolume(instance, world) {
                 tag,
                 verdict: 'avoid',
                 exactness: 'exact',
-                why: 'adds force every tick to anything overlapping; routed around since '
-                    + 'R1 and priced as a proximity hazard by levelWorld, which is where '
-                    + 'its rect lives.',
+                why: 'adds force every tick to anything overlapping. STEPPED since U12-swim '
+                    + '(`levelRun.stepPullsNow`, witnessed by `u12-pull-carry`/`u12-pull-cross`); '
+                    + 'still a levelWorld proximity hazard, where its rect lives, for every leg '
+                    + 'but one: a `reach-pit` leg RIDES the modelled currents that drain into '
+                    + 'its pit (`solverBot.pitRides`).',
                 rects: [],
                 discs: [],
-                deferredTo: 'levelWorld proximity-hazard',
+                deferredTo: 'levelWorld proximity-hazard (a pit leg rides it: solverBot.pitRides)',
             };
         }
         case 'pod': {

@@ -98,6 +98,8 @@ export {
     DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,
     slashReachFor, slashRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule, swordWindowStep, UP,
 } from './presses.js';
+// pull.js — solverBot · seedling 2
+export { pullModelled, pullsDrainingInto } from './pull.js';
 // pushables.js — solverBot · seedling 1
 export { DESTROYING_TILE_TYPES } from './pushables.js';
 // shieldBossFight.js — solverBot · seedling 4

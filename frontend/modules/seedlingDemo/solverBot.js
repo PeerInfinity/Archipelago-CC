@@ -108,6 +108,7 @@ import {
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
     chestStanceBand,
     fireRect, inventorySlotsFor,
+    pullModelled, pullsDrainingInto,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -9638,6 +9639,16 @@ export function solveSegment({
      * other goal kind leaves it `{}`, so their bags are the bags they were.
      */
     let goalPlanExtra = {};
+    /**
+     * ⛓⛓⛓ U12-swim D2 — THE GOAL'S RIDES, per goal like `goalPlanExtra`. A
+     * `reach-pit` goal whose pit is fed by `Pull` currents the model STEPS
+     * (`levelRun.stepPullsNow`) admits exactly those currents: their contact
+     * keys join every attempt's `contacts`, so the plan, the frontier flood and
+     * the drive's live volume watch all read the funnel as floor that carries
+     * the player in. Any other pull stays an avoid volume. Empty for every
+     * other goal, so their bags are the bags they were.
+     */
+    let goalRides = new Set();
     const grazes = [];
     const records = [];
     /**
@@ -9751,6 +9762,30 @@ export function solveSegment({
                         tag,
                         id,
                         d: Math.hypot(c.x - aim.x, c.y - aim.y),
+                    });
+                }
+            }
+        }
+        /**
+         * ⛓⛓ U12-swim D2 — AN UNMODELLED PULL NEAREST THE AIM IS NAMED, not
+         * passed over for the nearest resolvable sub-order. U11's wall 5 was
+         * that misattribution: the funnel's pulls were the cut, and the
+         * frontier named a keyType-1 lock elsewhere in the room. A pull the
+         * model steps for the player is not this case (a pit leg rides it,
+         * `pitRides`); one whose box would move a solid is (`pullModelled`).
+         */
+        {
+            const nearest = [...frontier.values()].sort((a, b) => a.d - b.d)[0];
+            if (nearest && nearest.kind === 'proximity-hazard' && nearest.tag === 'pull') {
+                const p = run.entities('pulls').find((q) => q.id === nearest.id);
+                const m = p ? pullModelled(p, run.world) : { modelled: false, why: 'not in this room\'s pull list' };
+                if (!m.modelled) {
+                    refuse(`solverBot(${name}): no corridor for goal ${goal.kind} toward `
+                        + `(${aim.x},${aim.y}) in level ${run.level}. Obstacle: an unmodelled pull `
+                        + `${nearest.id} — ${m.why}. \`Pull.update\` writes the position of `
+                        + 'whatever overlaps it, and a current the model does not step is priced as '
+                        + 'an avoid volume; no strategy crosses one (U12-swim D2).', {
+                        goal, obstacle: { kind: 'unmodelled-pull', id: nearest.id },
                     });
                 }
             }
@@ -10782,8 +10817,8 @@ export function solveSegment({
     }) => {
         for (let attempt = 0; ; attempt += 1) {
             const contacts = contactsOverride
-                ? new Set([...senseContacts(run), ...contactsOverride])
-                : new Set([...senseContacts(run), ...exemptions]);
+                ? new Set([...senseContacts(run), ...contactsOverride, ...goalRides])
+                : new Set([...senseContacts(run), ...exemptions, ...goalRides]);
             /**
              * ⛓ The derived exclusion is recomputed PER ATTEMPT, from the
              * live position — a re-plan after a verb has moved the player off
@@ -11104,6 +11139,19 @@ export function solveSegment({
         }
     };
 
+    /**
+     * ⛓⛓⛓ U12-swim D2 — THE PULLS THAT ARE A RIDE INTO PIT (tx, ty): every
+     * current that drains into it (`pull.pullsDrainingInto`) AND that the model
+     * steps for a walking player (`pull.pullModelled`), as contact keys. L12's
+     * fourteen all qualify for (36,43): every push points the way the walk is
+     * going. A pull that is not modelled stays a volume — and the frontier
+     * names it (`identifyAndSelect`).
+     */
+    const pitRides = (tx, ty) => new Set(
+        pullsDrainingInto(run.entities('pulls'), { tx, ty })
+            .filter((p) => pullModelled(p, run.world).modelled)
+            .map((p) => `proximity-hazard:${p.id}`));
+
     // ── the goals, in order ───────────────────────────────────────────
     for (const goal of goals) {
         // The bound is PER GOAL: clearing L4's button for the crossing says
@@ -11111,6 +11159,7 @@ export function solveSegment({
         applied = [];
         openerChain = [];
         goalPlanExtra = {};
+        goalRides = new Set();
         /** The pit executor, shared by `reach-pit` and an encounter's `then` (swim U5). */
         const execReachPit = (goal, pitGoal) => {
             /**
@@ -11149,10 +11198,12 @@ export function solveSegment({
             }
             const crossTo = { level: fall.to_level, pit, arrival: { ...fall.ctor } };
             goalPlanExtra = { allowPit: { tx, ty } };
+            goalRides = pitRides(tx, ty);
             const t = walkTo(goal, {
                 x: pit.rect.x + pit.rect.w / 2, y: pit.rect.y + pit.rect.h / 2,
             }, { crossTo, what: `${whatPit}->L${fall.to_level}` });
             goalPlanExtra = {};
+            goalRides = new Set();
             const coast = coastThroughTransport(run, perTick, maxTicksPerTarget,
                 `${whatPit}->L${fall.to_level}`);
             records.push({ goal: 'reach-pit', to: fall.to_level, t: t.t, coast });

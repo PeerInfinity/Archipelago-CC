@@ -5,6 +5,7 @@
  */
 import { describe, expect, it } from 'vitest';
 
+import { DEFAULT_LATTICE, nodeAt, nodeCentre, plannerObstacleAt, planWaypoints } from './botDriverV2.js';
 import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import { ROLES } from './levelWorld.js';
@@ -13,7 +14,7 @@ import { createPulls, pullModelled, pullsDrainingInto, pushBody } from './pull.j
 import { PIN_NAMES } from './tapeFormat.js';
 
 const levelSource = atlasLevelSource();
-const PIT = Object.freeze({ tx: 36, ty: 43 });
+const PIT = Object.freeze({ tx: 36, ty: 43, x: 584, y: 696 });
 const FROM = Object.freeze({ x: 424, y: 224 });
 
 const l12Pulls = () => createPulls(levelSource(12).entities);
@@ -83,5 +84,47 @@ describe('pull — the funnel (D2)', () => {
         const m = pullModelled(l12Pulls()[0], fake);
         expect(m.modelled).toBe(false);
         expect(m.why).toMatch(/rock@1,2/);
+    });
+
+    it('opens L12\'s pit to the solver\'s plan bag once the rides are admitted', () => {
+        const run = stepTwentyFourRun();
+        const rides = new Set(pullsDrainingInto(run.entities('pulls'), PIT)
+            .map((p) => `proximity-hazard:${p.id}`));
+        const bag = (contacts) => ({
+            liveBag: run.liveGeometryOpts(),
+            avoidVolumes: true,
+            keys: run.progress('keys'),
+            contacts,
+            lattice: DEFAULT_LATTICE,
+            inventory: run.progress('inventory'),
+            noHazards: run.noHazards,
+            allowPit: { tx: PIT.tx, ty: PIT.ty },
+        });
+        const reaches = (contacts) => {
+            const opts = bag(contacts);
+            const s = nodeAt(FROM.x, FROM.y, DEFAULT_LATTICE);
+            const seen = new Set([`${s.tx},${s.ty}`]);
+            const q = [s];
+            while (q.length > 0) {
+                const c = q.shift();
+                for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+                    const tx = c.tx + dx;
+                    const ty = c.ty + dy;
+                    const k = `${tx},${ty}`;
+                    if (tx < 0 || ty < 0 || tx >= run.world.width || ty >= run.world.height || seen.has(k)) continue;
+                    const n = nodeCentre(tx, ty, DEFAULT_LATTICE);
+                    if (plannerObstacleAt(run.world, n.x, n.y, null, opts)) continue;
+                    seen.add(k);
+                    q.push({ tx, ty });
+                }
+            }
+            return seen.has(`${PIT.tx},${PIT.ty}`);
+        };
+        // U11's wall: no rides, no pit.
+        expect(reaches(new Set())).toBe(false);
+        expect(() => planWaypoints(run.world, FROM, PIT, null, bag(new Set()))).toThrow(/no walkable tile path/);
+        // U12: the funnel admitted, the pit reached and planned.
+        expect(reaches(rides)).toBe(true);
+        expect(planWaypoints(run.world, FROM, PIT, null, bag(rides)).length).toBeGreaterThan(0);
     });
 });
