@@ -3571,14 +3571,21 @@ describe('R9 slice 12d′: ⚖ 47 — the fade is spent walking, and the wait is
      * segment boots, which is what puts the last strike near the lock and makes
      * the walk shorter than the fade. The wait is then the remainder and
      * nothing else: `clearTick − arrivedAt`, exactly.
+     *
+     * ⛓ SEEDLING SWIM U6 (D3) — the boot moved (128,112) → (120,112), one tile
+     * west. With `stepToward` scoring the diagonals, (128,112) walks into the
+     * step-out wall (*"There is no step out."* at (88.22,34.57): a dash press
+     * lands, the body rebounds off the wall at +5.12 px/tick, and every key set
+     * meets it). (120,112) keeps the property this row is about: it arrives at
+     * 331, clears at 406 and waits 75 (measured; 410 t, zero hits).
      */
     it('⛓ a walk that beats the fade waits the ARITHMETIC remainder, not a margin', () => {
-        const { run } = runFromCommitted('r8-solve-18', { boot: { level: 18, x: 128, y: 112 } });
+        const { run } = runFromCommitted('r8-solve-18', { boot: { level: 18, x: 120, y: 112 } });
         const L18 = levelSource(18);
         const exit = (L18.entities ?? []).find((e) => Number(e.attrs?.to) === 19);
         const out = solveSegment({
             run, goals: [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }],
-            name: 'L18 from the lock\'s own chamber', boot: { level: 18, x: 128, y: 112 },
+            name: 'L18 from the lock\'s own chamber', boot: { level: 18, x: 120, y: 112 },
             economies: true,
         });
         const kill = out.records.find((r) => r.verb === 'kill');

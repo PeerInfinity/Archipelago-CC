@@ -6410,9 +6410,24 @@ function trainLineBlockedHere(run, dir, aimKeys) {
  * ⛓ ONE STEP TOWARD `aim` THAT DOES NOT LAND IN A DISC — the per-tick half of
  * the strike schedule, and the cheapest possible dodge.
  *
- * The five key sets the controller can produce are scored by (SAFE, then
+ * The key sets the controller can produce are scored by (SAFE, then
  * distance to the aim after the step), with the intended one preferred on a
- * tie so a clear walk is byte-identical to a plain `chooseHeld`. ⚠ When
+ * tie so a clear walk is byte-identical to a plain `chooseHeld`.
+ *
+ * ⛓⛓ SEEDLING SWIM U6 (D3) — **NINE MOVEMENT SETS, NOT FIVE.** This paragraph
+ * used to say "the five key sets the controller can produce", and the
+ * controller produces nine: `applyInput` reads each axis on its own, so a
+ * diagonal (`DIAGONAL_KEYS`) is as real a step as a facing. With the dwell
+ * (D1) and the transit clock (D2) priced, L18's `r8-solve-18` walked into
+ * *"There is no step out."* at (140.64,55.73): a press landed at t 239 and
+ * the knocked-back body came off the wall at x≈157 at −4.07 px/tick along
+ * the player's own row; at t 241 all ten key sets landed in its rect. The
+ * knockback is player-coupled, so no forecast taken before the landing
+ * shows it, and no step after it escapes — escalating to the diagonals only
+ * once the facings fail (depth 4, 5 or 6) still refuses there. Scored as
+ * ordinary options, the diagonals walk a different approach and the corner
+ * never forms: `r8-solve-18` 485 → 522 t, `r9-solve-18` 394 → 455 t.
+ * ⚠ When
  * nothing is safe the intended set is returned unchanged and `safeStep` — the
  * guard one layer down — is what refuses by name: a mover that silently did
  * something else would be the walk deciding to hide a corner it walked into.
@@ -6422,8 +6437,10 @@ function stepToward(run, aim, intended) {
     const forecast = run.spinnerForecast(STEP_LOOKAHEAD + 2);
     if (!forecast.length) return intended;
     const step = run.previewStepper();
+    // ⚠ THE ORDER IS THE TIE-BREAK: the facings and the stand keep the places
+    // they had, and the diagonals follow them.
     const options = [intended, ...Object.values(FACING_KEYS).map((k) => new Set([k])),
-        new Set()];
+        new Set(), ...DIAGONAL_KEYS.map((k) => new Set(k))];
     /**
      * ⛓⛓⛓ HOW DEEP THE STEP LOOKS, AND WHY ONE TICK IS NOT ENOUGH.
      *
@@ -6571,6 +6588,13 @@ function safeStep(run, held, alternatives, what, bodyId) {
 export const FACING_KEYS = Object.freeze({
     [RIGHT]: 'right', [UP]: 'up', [LEFT]: 'left', [DOWN]: 'down',
 });
+
+/**
+ * ⛓ U6 D3 — the four two-key steps `stepToward` scores beside the facings,
+ * spelled from `FACING_KEYS` (one numbering, no second literal).
+ */
+const DIAGONAL_KEYS = Object.freeze([[RIGHT, UP], [LEFT, UP], [LEFT, DOWN], [RIGHT, DOWN]]
+    .map(([h, v]) => Object.freeze([FACING_KEYS[h], FACING_KEYS[v]])));
 
 /**
  * Which of the four `Player.direction` values points from `cell` at `target`.

@@ -75,6 +75,14 @@ function solveAt(tx, ty, items) {
         { name: `enemy-census-spinner@${tx},${ty}`, scratchPersistence: true });
 }
 
+/**
+ * ⛓ SEEDLING SWIM U6 (D3) — every PRESS row below re-timed once more when
+ * `stepToward` began scoring the four diagonals beside the facings (the
+ * controller's own nine movement sets): (5,5) 245 → 241, (2,2) 252 → 260, (7,6)
+ * 213 → 212, (3,6) 166 → 173, (2,7) 266 → 258. Each still kills with three
+ * landings and certifies; the CORRIDOR arm (225) and every walk row are
+ * byte-identical.
+ */
 describe('F2 — a lock-less spinner on the walk, post-sword', () => {
     /**
      * ⛓ U4b D1 — 234 → 245 t. The strike schedule now prices each forecast row
@@ -82,10 +90,10 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * strike it plans is a different (cell, tick): the one the old pairing took
      * was clear only against the NEXT tick's hammer.
      */
-    it('(5,5): was EXHAUSTED; now SOLVES in 245 t by a press kill whose end is OBSERVED', () => {
+    it('(5,5): was EXHAUSTED; now SOLVES in 241 t by a press kill whose end is OBSERVED', () => {
         const out = solveAt(5, 5, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(245);
+        expect(out.ticks).toBe(241);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
@@ -109,10 +117,10 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * was its only exclusion) and the next gate refused; a spinner the run
      * killed is excluded now too (`dangerMap.spinnersTheRunSteps`).
      */
-    it('(2,2): was the run\'s line-of-sight refusal; now SOLVES in 252 t, the swing planned on a clear line', () => {
+    it('(2,2): was the run\'s line-of-sight refusal; now SOLVES in 260 t, the swing planned on a clear line', () => {
         const out = solveAt(2, 2, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(252);
+        expect(out.ticks).toBe(260);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
@@ -130,10 +138,10 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * (`spinnerClockPairing.test.js`), the kill lands. ⛔ With `clearOfHammersAt`
      * back at `gameTimeAt(i + 1)` the U3 text returns byte for byte.
      */
-    it('(7,6): was "nowhere to be"; now SOLVES in 213 t, the train priced at its own tick\'s phase', () => {
+    it('(7,6): was "nowhere to be"; now SOLVES in 212 t, the train priced at its own tick\'s phase', () => {
         const out = solveAt(7, 6, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(213);
+        expect(out.ticks).toBe(212);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
@@ -153,10 +161,10 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * (88,56) +67, whose wait was unpriced, and takes (88,72) +70. The second
      * landing comes at 72 instead of 98, and the third at 108 instead of 179.
      */
-    it('(3,6): was "no (cell, tick)"; now SOLVES in 166 t on a strike past the bounded pass', () => {
+    it('(3,6): was "no (cell, tick)"; now SOLVES in 173 t on a strike past the bounded pass', () => {
         const out = solveAt(3, 6, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(166);
+        expect(out.ticks).toBe(173);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
@@ -173,10 +181,10 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * that dwell (`[eta, i − 2)` at the cell's box). ⛔ With the dwell window
      * empty (U6 mutant (a)) the U4b text returns byte for byte.
      */
-    it('(2,7): was "no step out"; now SOLVES in 266 t, the wait before the train priced', () => {
+    it('(2,7): was "no step out"; now SOLVES in 258 t, the wait before the train priced', () => {
         const out = solveAt(2, 7, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(266);
+        expect(out.ticks).toBe(258);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
