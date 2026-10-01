@@ -178,6 +178,7 @@ import './modules/tests/testCases/omsiRegionSplitTests.js';
 import './modules/tests/testCases/mazeConsumableTileTests.js';
 import './modules/tests/testCases/mazeBlockModeTests.js';
 import './modules/tests/testCases/seedlingAtlasMazeTests.js';
+import './modules/tests/testCases/seedlingJsRuntimeTests.js';
 import './modules/tests/testCases/taswBlockModeTests.js';
 import './modules/tests/testCases/apworldEditorTests.js';
 import './modules/tests/testCases/substrateRegistryPanelTests.js';
