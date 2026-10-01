@@ -11227,6 +11227,99 @@ per-head **default-in** column (`catalogue.elements[].defaultIn`, read off
 `defaultElementsFor`). `flash.md` § *The element defaults by biome* has the
 table, `seedling-bot.md` the paragraph, and `architecture.md` and the
 glossary the lists.
+### Seedling substrate U6-swim — the dwell, the transit clock, L18 re-recorded (2026-10-01)
+
+The two fixes U4b measured and held back for one ruling (⚖ Q33, 2026-10-01: a
+licence to re-record L18). Both shipped, along with the step-out shape that
+L18 then needed. The re-record itself did **not** land: it cascades past the
+licence. The report is `CC/docs/cloud-reports/seedling-swim-u6.md`.
+
+**D1 — the dwell is priced.** `deriveStrike` asks `clearOfHammersAt` at the
+cell's box over every row in `[eta, i − 2)`: the wait between the walk's
+arrival and the train. A candidate whose wait is unsafe is skipped and counted,
+and the refusal names the count (*"N reachable strike(s) were SKIPPED because
+the DWELL …"*).
+- (2,7) **SOLVES 266 t**, so the census chamber is 12/12 post-sword.
+  (3,6) 226 → 166 t: the re-derivation after the first landing skips an
+  unpriced wait.
+- `r9-campaign --check` exit 1, by U4b's text (`r9-solve-18` *"There is no
+  step out."* at (137.99,96.15)). The other five `--check`s are byte-identical.
+- Mutant (the dwell window empty): (2,7) and every post-sword row are back at
+  W0.
+
+**D2 — the transit clock is paired.** `dangerMap.spinnerDanger` prices row
+`h − 1` at `gameTimeAt(max(0, h − 1))`. `spinnerClockPairing.test.js` gains the
+danger map's half: three rows, which go red 3/3 with the index back at `h`.
+- The paired clock re-routes (2,2)'s kill so that it ends ON the dead body's
+  placement tile. `staticEnemyDanger` (and the AVOID volumes) priced that
+  tile, because their spinner exclusion asked the LIVE roster only (trap 157,
+  the dead half). They now also skip a spinner with a landed press hit
+  (`spinnersTheRunSteps`, read through `run.ledger('spinnerPressHits')`).
+- (2,2) 154 → 252 t and (4,4) 221 → 219 t.
+- `r8-l18` and `r8-d2-chain --check` exit 1 by U4b's text (*"There is no step
+  out."* at (140.64,55.73)).
+- Mutant (b) splits: the dead-spinner exclusion moves L18 on its own
+  (`r8-solve-18` 485 → 461 t, the exit walk no longer avoids a dead
+  placement).
+
+**D3 — the step-out: nine movement sets.** Measured at `r8-solve-18`'s corner:
+- A press at t 237, nine ticks after one at 228, is a DASH (vx +2.55). It
+  lands at 239.
+- The knocked-back body comes off the wall at x≈157 at **−4.07 px/tick**
+  along the player's row. At 241 all ten key sets land in its rect.
+- The knockback is player-coupled, so no forecast before the landing shows it
+  and no step after it escapes. Escalating to the diagonals only once the
+  facings fail refuses there at depth 4, 5 and 6.
+
+`stepToward`'s docblock said *"the five key sets the controller can produce"*,
+but `applyInput` reads each axis on its own, so the controller produces nine.
+Scored as ordinary options (after the facings and the stand), the diagonals walk
+a different approach and the corner never forms.
+- `r8-solve-18` **485 → 522 t**; `r9-solve-18` **394 → 455 t** (the chain
+  5713 → 5774).
+- `STEP_LOOKAHEAD` stays 4: depths 5 and 6 measured identical.
+- Every press row of the census re-times ((5,5) 241, (2,2) 260, (7,6) 212,
+  (3,6) 173, (2,7) 258); 12/12 holds. CORRIDOR, the walk rows and pre-sword
+  are byte-identical.
+- The ⚖ 47 arrive-early row's boot (128,112) meets the same rebound corner at
+  (88.22,34.57) (a dash press, the body back at +5.12 px/tick), so it moves to
+  (120,112).
+
+**D4 — the re-record: STOP (measured, reverted).**
+- `solve-seedling-r8-l18` writes `r8-solve-18` at 522 t (0 hits, 0 contacts,
+  {18,0} at 422).
+- `check-seedling-bot-differential --record --only=r8-solve-18` agrees: 523
+  observations, *"THE MODEL REPRODUCES THE RECORDING IT JUST MADE"*, game
+  `save.time` 9149 = model.
+- With only that tape moved, `tapeRunner` reads 364/365: the r8-d2 chain's
+  *"[r8-solve-18, r8-d2-19, r8-d2-20] on ONE run IS the headline r8-d2"*.
+- The chains carry L18's length forward. `r8-d2` (headline, 1791 → 1828 t),
+  `r8-d2-19` and `r8-d2-20` boot from L18's game latch. `r9-solve-19`'s
+  declared `seam.time` is the free-oracle sum over segment 18 (10466 → 10527),
+  and `r9-solve-20` follows. Their walks are unchanged (746 / 560 / 161 t).
+- The licence names two tapes, so nothing was committed.
+
+**D5 — the census and the yield.**
+- Corridor-body sweep post-sword (sharded the same before and after):
+  certified **94 → 122**, named refusals 47 → 14. *"No step out"* 10 → 2,
+  EXHAUSTED 25 → 4, *"the danger map forbids"* 8 → 3.
+- 35 cells newly certify and 7 are lost. Four of the lost were the goal
+  COLLECTED DURING THE FIGHT: the dodge walked over it, and `runCollect`
+  waits 400 ticks for the ledger to grow from its count at the start (a
+  goal-loop defect). Two are TIMEOUTs, and one is a stone on the approach.
+- Roam: pre-sword 10/8 identical. Post-sword 10/10 → **10/8**: `winding` and
+  `branchy` 14x14 s12 refuse by the dwell (*"269 reachable strike(s) were
+  SKIPPED …"*). The executor walks to an adopted strike at once and stands
+  there; a late departure is the lever.
+- Identity: acceptance, c3, c6, c4, ENEMY, killgate s2/s5/s9 and level
+  post-sword s1 moved, all post-sword spinner gadgets (killgate s5 DROPPED →
+  SOLVED; post-sword s1 410→444 to 402→427 t). Maze, guard, AREA, pre-sword
+  s1 and the campaign census are byte-identical.
+- Trap candidates, for the catalogue to number:
+  - a player-coupled knockback is in no autonomous forecast;
+  - a goal satisfied in passing is a goal the loop must recognise;
+  - a priced wait makes "walk now, stand there" a policy and not a free
+    default.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
