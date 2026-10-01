@@ -1280,11 +1280,15 @@ const CHAIN_DECLARATIONS = Object.freeze([
              * segment declares (`r9-solve-18`, authored through the two-pass
              * loop). The model computes it — `r8-solve-18`'s own law, one chain
              * over — and the recording agreed per tick (395 observations).
+             * ⛓ swim U6b re-recorded the segment headless (455 t): the second
+             * spinner now dies at 317, so the clear is at 418 — the tape's own
+             * `persistence` note, which this row must equal (half 1 and half 2
+             * of `stagedClearFindings` both red on 342 at the first full tier).
              */
             Object.freeze({
                 level: 18, tag: 0, source: 'model',
                 evidence: Object.freeze({
-                    removedAt: 241,
+                    removedAt: 317,
                     fade: 101,
                     why: '`spinnerKillLockOpens`\'s removal (the second spinner dies to '
                         + 'the player\'s presses and `Game.totalEnemies()` reaches zero) '

@@ -211,7 +211,15 @@ describe('⛔⛔ THE SLICE-11 REPRODUCTION — the four rows a depth-1 grep miss
         const report = await reachReport(changed, { repo: REPO });
         const { PLAYTHROUGH_CHAINS } = await import(
             '../../frontend/modules/seedlingDemo/playthroughWalk.js');
-        const names = new Set(report.tapes.map((t) => t.tape));
+        // ⛓ swim U10: the graph's producer set admits `plan-`/`rerecord-`
+        //   scripts too, and a planner that imports `solverBot.js`
+        //   (`plan-seedling-u10-puncher-dwell.mjs`) is reached by this change
+        //   while its siblings (u7, u9) are not. §16.11's rule counts the
+        //   `solve-` family — the corpus side below admits only that — so the
+        //   graph side is narrowed to the same family before the equality.
+        const names = new Set(report.tapes
+            .filter((t) => /solve-seedling-[a-z0-9-]*\.mjs$/.test(t.producer))
+            .map((t) => t.tape));
         for (const c of PLAYTHROUGH_CHAINS) {
             if (!report.chains.includes(c.id)) continue;
             for (const n of c.segments) names.add(n);
