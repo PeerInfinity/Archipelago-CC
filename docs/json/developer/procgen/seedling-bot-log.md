@@ -10966,6 +10966,70 @@ With D1, seed 14's `--require=hasSword` without-arm planned 278 strikes, landed
   row are one index; a wall that fires first can hide a missing precondition;
   a (cell, tick) bound can spend itself on one cell.
 
+### Seedling substrate U5-swim — the encounter goal (2026-10-01)
+
+The survey's step 30 (L32, `Level 032 - Bob Boss`) is a boss DROP, not a
+placement, and the solver had no goal kind for it. The report is
+`CC/docs/cloud-reports/seedling-swim-u5.md`.
+
+**W0 — the premise did not hold.** The brief said the model already plays the
+encounter tick-exactly. It does not. Replaying `r5-bobboss-fire` through the
+model:
+- The stream diverges from the game's recording at **t=15**, the arm frame
+  (game y 116.85, model 115.35). The model ends at (80, 34.05); the game ends at
+  (80, 80.7). The tape is in `r5Chain.MODEL_EXEMPT`, and `tapeRunner.test.js`
+  asserts that it diverges.
+- `rockFalls` stays `[]` for all 2,500 ticks. `fallrocklarge` is deliberately
+  not a `FALL_RESPONDERS` row (a 32x32 rock the run does not build).
+- The only dead span is the 20-frame level load. No entity family holds a
+  BobBoss (`bosses` is L43's totem), and `hasFire` never turns true.
+- The game's own dead-frame record for the tape is 345 = 21 boot + 174 rock +
+  150 Fire phase A. So the three dialogues consume tape ticks.
+
+**D1 — the goal kind.**
+- `assertGoal` accepts `{kind: 'encounter', at, drop: {item}, then:
+  'reach-pit' | null}`, and the unknown-kind refusal lists four kinds.
+  `decisionTrace` knows the kind.
+- The executor is looked up by the drop in `ENCOUNTER_EXECUTORS`. The table is
+  empty, so the goal refuses before a tick, by name: obstacle
+  `unmodelled-encounter`, survey family `ENCOUNTER-UNMODELLED`.
+- The survey hands step 30 `at` (64,128), the atlas tile, and `drop` Fire. Its
+  `then` is `'reach-pit'`, from the level's CONTROL BLOCK (`fallthrough 30`,
+  pits (4,0) (5,0) under `burnabletree@64,0`), not from `pitEdgeFor`, which is
+  keyed on a route hop, and the route ends in L32.
+- Default survey mode is byte-identical (`27ff43db…` / `1e08f9ad…`). The
+  through-2.2 pair moves by exactly step 30's goal (`d200a51f…` /
+  `845a1cd3…`).
+- Mutant (the `encounter` arm of `assertGoal` disabled): 3 rows red as
+  predicted; restored md5-identical.
+
+**D2 — the executor: STOP.** It could not be derived from the model, because
+the model has none of the fight. There is no freeze to wait, no roster to
+verify a landing against, no dialogue page to tell from a swing, and no drop
+to observe. A getter cannot expose state the run never builds. Building that
+state means simulating the fight in `levelRun.js`, which is not a solver
+slice's region. `KILL_ARM_POLICY.BobBoss` stays `refused`.
+
+**D3 — the witness: STOP.** With no executor there is no tape. A model
+differential of the fight would diverge at the arm frame by construction.
+`fixtures/**` is untouched.
+
+**D4.** Step 30 is REFUSED as `ENCOUNTER-UNMODELLED` (3 ms). Steps 22, 23 and
+25–29 are byte-identical to U4's rows apart from wall-clock. HEADLINE **7/9**,
+unmoved; step 24 is the puncher's.
+
+**Residue: what a simulation slice needs, read off the game's recording.**
+- The stream first reads y < 120 (the arm line) at t=12, y = 119. It holds
+  still from t=14.
+- The first transition's teleport to (80,120) is visible between t=293 and
+  t=294. The second lands on the same spot, so it is invisible in a position
+  stream.
+- The Fire is touched at t=1830 (y 84.75).
+- Dead frames: 174 (rock) + 150 (Fire phase A).
+- Form deaths, landings and pages are not observable in a position stream.
+  They need the game's own per-tick readout (the differential's item and
+  `receiveInput` channels).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
