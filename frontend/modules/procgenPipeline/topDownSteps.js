@@ -131,6 +131,8 @@ function stepCompile(env, { onProgress = null } = {}) {
             ...c.sourceItemDefs,
             ...grantedItemDefs(c.grantedItems ?? []),
         },
+        // The source's item group list, verbatim (its items carry theirs).
+        sourceItemGroups: env.source?.item_groups?.['1'] ?? null,
         procgenMetadata: {
             driver: enriched ? 'top-down-sphere' : 'top-down',
             source_game: c.sourceGameName ?? null,

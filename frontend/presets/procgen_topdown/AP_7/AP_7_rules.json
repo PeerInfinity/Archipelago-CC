@@ -16227,7 +16227,8 @@
         "id": 1,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Bottle (Red Potion)": {
@@ -16235,7 +16236,10 @@
         "id": 2,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Bottles",
+          "Everything",
+          "Potions",
+          "Progression Items"
         ]
       },
       "Magic Mirror": {
@@ -16243,7 +16247,8 @@
         "id": 3,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Boss Heart Container": {
@@ -16251,7 +16256,8 @@
         "id": 4,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Rupees (5)": {
@@ -16259,7 +16265,9 @@
         "id": 5,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items",
+          "Rupees"
         ]
       },
       "Book of Mudora": {
@@ -16267,7 +16275,8 @@
         "id": 6,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Rupees (20)": {
@@ -16275,7 +16284,9 @@
         "id": 7,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items",
+          "Rupees"
         ]
       },
       "Open Floodgate": {
@@ -16283,7 +16294,7 @@
         "id": 8,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Event"
         ]
       },
       "Arrows (10)": {
@@ -16291,7 +16302,8 @@
         "id": 9,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Piece of Heart": {
@@ -16299,7 +16311,8 @@
         "id": 10,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Progressive Glove": {
@@ -16307,7 +16320,9 @@
         "id": 11,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Gloves",
+          "Progression Items"
         ]
       },
       "Return Smith": {
@@ -16315,7 +16330,7 @@
         "id": 12,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Event"
         ]
       },
       "Compass (Misery Mire)": {
@@ -16323,7 +16338,9 @@
         "id": 13,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Crystal 6": {
@@ -16331,7 +16348,7 @@
         "id": 14,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Crystals"
         ]
       },
       "Rupee (1)": {
@@ -16339,7 +16356,9 @@
         "id": 15,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items",
+          "Rupees"
         ]
       },
       "Small Key (Turtle Rock)": {
@@ -16347,7 +16366,9 @@
         "id": 16,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Magic Upgrade (1/2)": {
@@ -16355,7 +16376,9 @@
         "id": 17,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Upgrades"
         ]
       },
       "Big Key (Turtle Rock)": {
@@ -16363,7 +16386,9 @@
         "id": 18,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Ether": {
@@ -16371,7 +16396,9 @@
         "id": 19,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Medallions",
+          "Progression Items"
         ]
       },
       "Rupees (300)": {
@@ -16379,7 +16406,9 @@
         "id": 20,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items",
+          "Rupees"
         ]
       },
       "Small Key (Swamp Palace)": {
@@ -16387,7 +16416,9 @@
         "id": 21,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Red Boomerang": {
@@ -16395,7 +16426,9 @@
         "id": 22,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Boomerangs",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Map (Turtle Rock)": {
@@ -16403,7 +16436,9 @@
         "id": 23,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Compass (Turtle Rock)": {
@@ -16411,7 +16446,9 @@
         "id": 24,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Crystal 3": {
@@ -16419,7 +16456,7 @@
         "id": 25,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Crystals"
         ]
       },
       "Big Key (Swamp Palace)": {
@@ -16427,7 +16464,9 @@
         "id": 26,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Small Key (Ganons Tower)": {
@@ -16435,7 +16474,9 @@
         "id": 27,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Progressive Shield": {
@@ -16443,7 +16484,9 @@
         "id": 28,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Shields"
         ]
       },
       "Hookshot": {
@@ -16451,7 +16494,8 @@
         "id": 29,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Rupees (50)": {
@@ -16459,7 +16503,9 @@
         "id": 30,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items",
+          "Rupees"
         ]
       },
       "Pegasus Boots": {
@@ -16467,7 +16513,8 @@
         "id": 31,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Cane of Byrna": {
@@ -16475,7 +16522,9 @@
         "id": 32,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Canes",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Crystal 5": {
@@ -16483,7 +16532,7 @@
         "id": 33,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Crystals"
         ]
       },
       "Progressive Bow": {
@@ -16491,7 +16540,9 @@
         "id": 34,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Bows",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Big Key (Ganons Tower)": {
@@ -16499,7 +16550,9 @@
         "id": 35,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Mushroom": {
@@ -16507,7 +16560,8 @@
         "id": 36,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Map (Eastern Palace)": {
@@ -16515,7 +16569,9 @@
         "id": 37,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Small Key (Eastern Palace)": {
@@ -16523,7 +16579,9 @@
         "id": 38,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Big Key (Eastern Palace)": {
@@ -16531,7 +16589,9 @@
         "id": 39,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Lamp": {
@@ -16539,7 +16599,8 @@
         "id": 40,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Compass (Eastern Palace)": {
@@ -16547,7 +16608,9 @@
         "id": 41,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Crystal 2": {
@@ -16555,7 +16618,7 @@
         "id": 42,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Crystals"
         ]
       },
       "Map (Swamp Palace)": {
@@ -16563,7 +16626,9 @@
         "id": 43,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Compass (Swamp Palace)": {
@@ -16571,7 +16636,9 @@
         "id": 44,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Small Key (Hyrule Castle)": {
@@ -16579,7 +16646,9 @@
         "id": 45,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Map (Desert Palace)": {
@@ -16587,7 +16656,9 @@
         "id": 46,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Compass (Desert Palace)": {
@@ -16595,7 +16666,9 @@
         "id": 47,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Small Key (Desert Palace)": {
@@ -16603,7 +16676,9 @@
         "id": 48,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Bug Catching Net": {
@@ -16611,7 +16686,8 @@
         "id": 49,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Big Key (Desert Palace)": {
@@ -16619,7 +16695,9 @@
         "id": 50,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Flute": {
@@ -16627,7 +16705,8 @@
         "id": 51,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Quake": {
@@ -16635,7 +16714,9 @@
         "id": 52,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Medallions",
+          "Progression Items"
         ]
       },
       "Big Key (Palace of Darkness)": {
@@ -16643,7 +16724,9 @@
         "id": 53,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Small Key (Misery Mire)": {
@@ -16651,7 +16734,9 @@
         "id": 54,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Map (Misery Mire)": {
@@ -16659,7 +16744,9 @@
         "id": 55,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Progressive Sword": {
@@ -16667,7 +16754,9 @@
         "id": 56,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Swords"
         ]
       },
       "Blue Boomerang": {
@@ -16675,7 +16764,9 @@
         "id": 57,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Boomerangs",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Blue Pendant": {
@@ -16683,7 +16774,7 @@
         "id": 58,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Pendants"
         ]
       },
       "Ice Rod": {
@@ -16691,7 +16782,9 @@
         "id": 59,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Rods"
         ]
       },
       "Cane of Somaria": {
@@ -16699,7 +16792,9 @@
         "id": 60,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Canes",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Activated Flute": {
@@ -16707,7 +16802,8 @@
         "id": 61,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Single Arrow": {
@@ -16715,7 +16811,8 @@
         "id": 62,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Small Key (Palace of Darkness)": {
@@ -16723,7 +16820,9 @@
         "id": 63,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Small Key (Skull Woods)": {
@@ -16731,7 +16830,9 @@
         "id": 64,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Cape": {
@@ -16739,7 +16840,8 @@
         "id": 65,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Moon Pearl": {
@@ -16747,7 +16849,8 @@
         "id": 66,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Big Key (Hyrule Castle)": {
@@ -16755,7 +16858,9 @@
         "id": 67,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Progressive Mail": {
@@ -16763,7 +16868,9 @@
         "id": 68,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Mails",
+          "Non Progression Items"
         ]
       },
       "Map (Hyrule Castle)": {
@@ -16771,7 +16878,9 @@
         "id": 69,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Bombos": {
@@ -16779,7 +16888,9 @@
         "id": 70,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Medallions",
+          "Progression Items"
         ]
       },
       "Sanctuary Heart Container": {
@@ -16787,7 +16898,8 @@
         "id": 71,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Shovel": {
@@ -16795,7 +16907,8 @@
         "id": 72,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Map (Ganons Tower)": {
@@ -16803,7 +16916,9 @@
         "id": 73,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Bottle (Bee)": {
@@ -16811,7 +16926,9 @@
         "id": 74,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Bottles",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Compass (Ganons Tower)": {
@@ -16819,7 +16936,9 @@
         "id": 75,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Bottle (Blue Potion)": {
@@ -16827,7 +16946,10 @@
         "id": 76,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Bottles",
+          "Everything",
+          "Potions",
+          "Progression Items"
         ]
       },
       "Bombs (10)": {
@@ -16835,7 +16957,8 @@
         "id": 77,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Small Key (Ice Palace)": {
@@ -16843,7 +16966,9 @@
         "id": 78,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Big Key (Misery Mire)": {
@@ -16851,7 +16976,9 @@
         "id": 79,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Red Pendant": {
@@ -16859,7 +16986,7 @@
         "id": 80,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Pendants"
         ]
       },
       "Capacity Upgrade Shop": {
@@ -16867,7 +16994,7 @@
         "id": 81,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Event"
         ]
       },
       "Compass (Skull Woods)": {
@@ -16875,7 +17002,9 @@
         "id": 82,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Green Pendant": {
@@ -16883,7 +17012,7 @@
         "id": 83,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Pendants"
         ]
       },
       "Magic Powder": {
@@ -16891,7 +17020,8 @@
         "id": 84,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Triforce": {
@@ -16899,7 +17029,8 @@
         "id": 85,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Big Key (Ice Palace)": {
@@ -16907,7 +17038,9 @@
         "id": 86,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Fire Rod": {
@@ -16915,7 +17048,9 @@
         "id": 87,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Rods"
         ]
       },
       "Map (Ice Palace)": {
@@ -16923,7 +17058,9 @@
         "id": 88,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Small Key (Agahnims Tower)": {
@@ -16931,7 +17068,9 @@
         "id": 89,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Map (Skull Woods)": {
@@ -16939,7 +17078,9 @@
         "id": 90,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Big Key (Skull Woods)": {
@@ -16947,7 +17088,9 @@
         "id": 91,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Beat Agahnim 2": {
@@ -16955,7 +17098,7 @@
         "id": 92,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Event"
         ]
       },
       "Compass (Ice Palace)": {
@@ -16963,7 +17106,9 @@
         "id": 93,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Beat Agahnim 1": {
@@ -16971,7 +17116,7 @@
         "id": 94,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Event"
         ]
       },
       "Crystal 1": {
@@ -16979,7 +17124,7 @@
         "id": 95,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Crystals"
         ]
       },
       "Compass (Thieves Town)": {
@@ -16987,7 +17132,9 @@
         "id": 96,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Small Key (Thieves Town)": {
@@ -16995,7 +17142,9 @@
         "id": 97,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Crystal 4": {
@@ -17003,7 +17152,7 @@
         "id": 98,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Crystals"
         ]
       },
       "Compass (Palace of Darkness)": {
@@ -17011,7 +17160,9 @@
         "id": 99,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Map (Palace of Darkness)": {
@@ -17019,7 +17170,9 @@
         "id": 100,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Map (Thieves Town)": {
@@ -17027,7 +17180,9 @@
         "id": 101,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Flippers": {
@@ -17035,7 +17190,8 @@
         "id": 102,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Big Key (Thieves Town)": {
@@ -17043,7 +17199,9 @@
         "id": 103,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Pick Up Purple Chest": {
@@ -17051,7 +17209,7 @@
         "id": 104,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Event"
         ]
       },
       "Get Frog": {
@@ -17059,7 +17217,7 @@
         "id": 105,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Event"
         ]
       },
       "Hammer": {
@@ -17067,7 +17225,8 @@
         "id": 106,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items"
         ]
       },
       "Map (Tower of Hera)": {
@@ -17075,7 +17234,9 @@
         "id": 107,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Maps",
+          "Non Progression Items"
         ]
       },
       "Small Key (Tower of Hera)": {
@@ -17083,7 +17244,9 @@
         "id": 108,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Progression Items",
+          "Small Keys"
         ]
       },
       "Crystal 7": {
@@ -17091,7 +17254,7 @@
         "id": 109,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Crystals"
         ]
       },
       "Compass (Tower of Hera)": {
@@ -17099,7 +17262,9 @@
         "id": 110,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Compasses",
+          "Everything",
+          "Non Progression Items"
         ]
       },
       "Big Key (Tower of Hera)": {
@@ -17107,7 +17272,9 @@
         "id": 111,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Big Keys",
+          "Everything",
+          "Progression Items"
         ]
       },
       "Rupees (100)": {
@@ -17115,7 +17282,9 @@
         "id": 112,
         "classification": "progression",
         "groups": [
-          "Everything"
+          "Everything",
+          "Non Progression Items",
+          "Rupees"
         ]
       },
       "Mirror Shield": {
@@ -17148,7 +17317,29 @@
   },
   "item_groups": {
     "1": [
-      "Everything"
+      "Big Keys",
+      "Boomerangs",
+      "Bottles",
+      "Bows",
+      "Canes",
+      "Clocks",
+      "Compasses",
+      "Crystals",
+      "Everything",
+      "Gloves",
+      "Mails",
+      "Maps",
+      "Medallions",
+      "Non Progression Items",
+      "Pendants",
+      "Potions",
+      "Progression Items",
+      "Rods",
+      "Rupees",
+      "Shields",
+      "Small Keys",
+      "Swords",
+      "Upgrades"
     ]
   },
   "itempool_counts": {

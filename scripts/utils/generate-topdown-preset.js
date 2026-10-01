@@ -312,6 +312,7 @@ async function main() {
         assumeBidirectional: source.assume_bidirectional_exits !== false,
         startingItems: source.starting_items?.['1'] ?? [],
         sourceItems: source.items?.['1'] ?? null,
+        sourceItemGroups: source.item_groups?.['1'] ?? null,
         menuRegion,
         ...(enriched ? { sphereLog } : {}),
         procgenMetadata: {

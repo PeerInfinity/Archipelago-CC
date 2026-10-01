@@ -2643,6 +2643,10 @@ export function compileRegionGraph(grid, opts = {}) {
         // every grid location and item keeps the id it had. null = none (every
         // other driver; `buildRulesJson` then writes its synthetic Menu).
         menuRegion = null,
+        // The SOURCE world's item defs (name → def; top-down's `source.items[p]`).
+        // An item the source defines carries the source's `groups` VERBATIM; an
+        // item it does not (every synthetic library item) gets `['Everything']`.
+        sourceItems = null,
     } = opts;
     const itemLib = { [LIBRARY_SLOT_FILLER_ITEM]: { classification: 'filler' }, ...rawItemLib };
     const lockedItemSet = new Set(lockedItems);
@@ -2732,17 +2736,19 @@ export function compileRegionGraph(grid, opts = {}) {
         let itemPlacement = null;
         if (item) {
             // Register the item and tally the canonical placement.
-            // Every non-event item belongs to the "Everything" group by
-            // convention (matches item_groups["1"] = ["Everything"]).
+            // Its groups are the source def's, verbatim, when the source
+            // defines it; otherwise "Everything" by convention (matches the
+            // synthetic item_groups["1"] = ["Everything"]).
             // First occurrence mints a numeric id that persists for
             // the item's lifetime in this compile.
             const classification = itemLib[item]?.classification ?? 'progression';
             if (!items[item]) {
+                const sourceGroups = sourceItems?.[item]?.groups;
                 items[item] = {
                     name: item,
                     id: nextItemId++,
                     classification,
-                    groups: ['Everything'],
+                    groups: Array.isArray(sourceGroups) ? [...sourceGroups] : ['Everything'],
                 };
             }
             itempool_counts[item] = (itempool_counts[item] || 0) + 1;
@@ -6930,6 +6936,10 @@ export function buildRulesJson(grid, opts = {}) {
         // that no placed location holds (below, after the back-exits inherit).
         startingItems = [],
         sourceItems = null,
+        // The SOURCE world's `item_groups[playerId]` list, written VERBATIM as
+        // this document's; null (every driver with no source world) keeps the
+        // synthetic `['Everything']`.
+        sourceItemGroups = null,
         // Item names whose canonical placement is ALWAYS locked
         // (compiled location gets locked:true → world_generator uses
         // place_locked_item). The sphere-growth bounce start passes
@@ -6958,6 +6968,7 @@ export function buildRulesJson(grid, opts = {}) {
         startCell, itemLib, obstacleLib, playerId,
         lockedItems: lockedCanonicalItems,
         menuRegion,
+        sourceItems,
     });
 
     const scaffold = makeRulesJsonScaffold({
@@ -7005,10 +7016,12 @@ export function buildRulesJson(grid, opts = {}) {
     scaffold.canonical_placements[playerId] = compiled.canonical_placements;
 
     // AP convention: `item_groups["1"]` is a list of group *names*.
-    // "Everything" is the standard group covering all non-event items.
-    // The inventoryUI warns when the list is empty; a single-entry
-    // list suffices.
-    scaffold.item_groups[playerId] = ['Everything'];
+    // A source world's list is carried verbatim (its items carry their
+    // groups verbatim, above). Without one, "Everything" — the standard
+    // group covering all non-event items; the inventoryUI warns when the
+    // list is empty, and a single-entry list suffices.
+    scaffold.item_groups[playerId] = Array.isArray(sourceItemGroups)
+        ? [...sourceItemGroups] : ['Everything'];
 
     // Starting items: keep names that exist in the compiled items
     // pool. For names that don't, backfill the definition from

@@ -2082,6 +2082,31 @@ describe('buildRulesJson', () => {
         }
     });
 
+    it('carries a SOURCE item def\'s groups verbatim, and the source item_groups list verbatim', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const placed = Object.keys(plain.items['1']);
+        expect(placed.length).toBeGreaterThan(0);
+        // the first placed item is "from the source"; any other stays synthetic
+        const [fromSource, ...synthetic] = placed;
+        const sourceGroups = ['Keys', 'Everything', 'Progression Items'];
+        const out = buildRulesJson(grid, {
+            startCell,
+            sourceItems: { [fromSource]: { name: fromSource, id: 7, groups: sourceGroups } },
+            sourceItemGroups: ['Keys', 'Everything', 'Progression Items', 'Unused'],
+        });
+        expect(out.items['1'][fromSource].groups).toEqual(sourceGroups);
+        expect(out.items['1'][fromSource].groups).not.toBe(sourceGroups);
+        for (const name of synthetic) expect(out.items['1'][name].groups).toEqual(['Everything']);
+        expect(out.item_groups['1']).toEqual(['Keys', 'Everything', 'Progression Items', 'Unused']);
+        // an event's ['Event'] is a source list like any other — verbatim
+        const ev = buildRulesJson(grid, {
+            startCell, sourceItems: { [fromSource]: { name: fromSource, id: null, groups: ['Event'] } },
+        });
+        expect(ev.items['1'][fromSource].groups).toEqual(['Event']);
+        expect(ev.item_groups['1']).toEqual(['Everything']);
+    });
+
     it('assigns numeric ids to every item (unique within the game)', () => {
         const { grid, startCell } = smallGrid();
         const out = buildRulesJson(grid, { startCell });
