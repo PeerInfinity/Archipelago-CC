@@ -4809,6 +4809,13 @@ export function buildLevelWorld(levelRecord, {
                 y,
                 t: tSetOf(e.type, e.attrs),
                 persistTag: tagOf(e.type, e.attrs),
+                // ⛓ Swim U5: `Game.as:2331` passes `bossrock`/`thirdboss` to
+                // the ctor. Only a `thirdboss` rock spawns the BobBoss
+                // encounter (`bobBossFight.js`), and only L32 places one.
+                ...(cls.as3 === 'FallRockLarge' ? {
+                    bossRock: Boolean(Number(e.attrs?.bossrock ?? 0)),
+                    thirdBoss: Boolean(Number(e.attrs?.thirdboss ?? 0)),
+                } : {}),
             });
         }
         /**

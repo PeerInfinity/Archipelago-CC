@@ -111,6 +111,13 @@ import {
     shieldBossBodyRect, shieldBossDeathSchedule, shieldBossTakesHit, shieldBossWindowFor,
     stepShieldBoss,
 } from './shieldBossFight.js';
+// ⛓⛓ Swim U5: L32's BobBoss encounter — the rock, three forms, three
+// dialogues, the transitions and the runtime Fire (`bobBossFight.js`).
+import { FIRE as BOB_BOSS_FIRE } from './bobBoss.js';
+import {
+    BOB_BOSS_ROCK_DEAD_FRAMES, beginBobBossDialogue, bobBossBox, bobBossHit, bobBossRockArms,
+    bobBossRockRect, createBobBossBody, stepBobBossBody,
+} from './bobBossFight.js';
 // ⛓⛓⛓ R6 SLICE 6f: the FIFTEENTH family — the Owl, and the first fight on
 // the ladder whose GAMEPLAY reads random numbers. `finalBossRng` is the
 // per-tick DRAW SCHEDULE the fight consumes; `finalBossFight` is the fight.
@@ -279,6 +286,7 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'arrowFlights',
     'bosses',
     'talkCircles',
+    'bobBoss',
 ]);
 
 /**
@@ -334,6 +342,7 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'spinnerKillLockOpens',
     'spinnerWrites',
     'turretKills',
+    'bobBossEvents',
 ]);
 
 /**
@@ -1805,6 +1814,13 @@ export function createLevelRun({
         for (const [id, r] of st) {
             if (!r.landed) continue;
             out.set(id, { id, tag: 'fallrock', rect: fallRockRect(r), x: r.x, y: r.y });
+        }
+        // ⛓ Swim U5: the arena's `FallRockLarge`, a 32x32 Solid once it lands.
+        // `fallRockStateFor` holds it as a 16x16 `createFallRock` that nothing
+        // ever drops; the arena owns its landing (`stepBobBossArenaNow`).
+        if (bobArena && !bobArena.none && bobArena.level === level && bobArena.landed) {
+            out.set(bobArena.rockId, { id: bobArena.rockId, tag: 'fallrocklarge',
+                rect: bobBossRockRect(), x: bobBossRockRect().x, y: bobBossRockRect().y });
         }
         return out.size === 0 ? null : out;
     };
@@ -3679,6 +3695,11 @@ export function createLevelRun({
         // "carried" is not a state the game has.
         runtimeSeeds = [];
         pendingSeedAdds = [];
+        // ⛓ Swim U5: the arena is runtime entities plus a per-visit rock, so
+        // a new `Game` ends it. A world rebuilt AFTER the rock fell is a
+        // state this model does not build (see `bobArenaNow`).
+        bobArena = null;
+        bobNoInput = false;
         state = arrivalFor(world);
         // ⛔⛔ THE SWIM CHANNEL IS A MIXER, NOT A `Player` FIELD, AND IT
         // SURVIVES THE DOOR — plus the twenty frames the door costs.
@@ -5643,6 +5664,8 @@ export function createLevelRun({
                 }
             }
         }
+        // ⛓⛓ Swim U5: the BobBoss, a runtime `Enemy` no census holds.
+        bobBossSlashNow({ rect, reachLimit, weapon, pressTick, hits });
         presses.push({
             t: pressTick, fired: ticksCompleted, level, weapon, direction, rect, hits,
         });
@@ -9328,6 +9351,20 @@ export function createLevelRun({
      */
     let pendingSeedReboot = null;
     /**
+     * ⛓⛓ SEEDLING SWIM U5 — THE BOBBOSS ARENA, PER VISIT.
+     *
+     * `null` until the current world is asked; `{level, none: true}` for a
+     * world with no `thirdboss` rock. Every member is a runtime entity (the
+     * boss, its `BobBossNPC`, the Fire) or a per-visit state of a placed one
+     * (the rock), so a new `Game` destroys all of it, as it does
+     * `runtimeSeeds`. See `stepBobBossArenaNow`.
+     */
+    let bobArena = null;
+    /** `player.receiveInput = false`, written by `BobBoss.death` each transition frame. */
+    let bobNoInput = false;
+    /** The encounter's event ledger, `run.ledger('bobBoss')`: one row per event, `what` names it. */
+    const bobBossLedger = [];
+    /**
      * ⛓⛓ `Game.as:955-960`'s scripted walk, while it is running.
      *
      * `null`, or `{arm: 1, level, from}`. It is NOT a freeze: `cutscene[1]`
@@ -10591,6 +10628,274 @@ export function createLevelRun({
         }
         return true;
     };
+    /**
+     * ⛓⛓ SEEDLING SWIM U5 — THE BOBBOSS ARENA FOR THE CURRENT WORLD.
+     *
+     * Built on first ask for each visit. Only a `thirdboss` `FallRockLarge`
+     * opens one (L32's; L82's `bossrock` rock spawns no boss and stays
+     * unmodelled, as before). A world built with the rock's flag already
+     * cleared never gets here: `buildLevelWorld` refuses that clear
+     * (`REFUSED_CLEAR_RESPONSES.arm`), and a death mid-fight is refused by
+     * `stepBobBossArenaNow` before it can reboot.
+     */
+    const bobArenaNow = () => {
+        if (bobArena && bobArena.level === level) return bobArena;
+        const rock = (world.fallRocks ?? []).find((r) => r.thirdBoss === true);
+        if (!rock) {
+            bobArena = { level, none: true };
+            return bobArena;
+        }
+        bobArena = {
+            level,
+            rockId: rock.id,
+            persistTag: rock.persistTag,
+            armed: false,
+            landed: false,
+            boss: null,
+            npc: null,
+            pending: null,
+            fire: null,
+            fireCollected: false,
+            faceUp: false,
+        };
+        return bobArena;
+    };
+    const bobLedger = (row) => bobBossLedger.push({ t: ticksCompleted, level, ...row });
+    /** `new BobBossNPC(72, 72, ...)` -> `NPC`'s `+ Tile/2`: the point the NPC occupies. */
+    const ARENA_NPC_POINT = Object.freeze({ x: 80, y: 80 });
+
+    /**
+     * ONE frame of the arena, in `World.update`'s order: the runtime adds
+     * first (the `BobBoss`, then its `BobBossNPC`; see the boss block), then
+     * the placed rock, all before the Player.
+     *
+     * @returns {{frozen: boolean, why?: string, after?: function}}
+     *   `frozen` is a live tape tick on which the player does not move: a
+     *   `BobBossNPC` page frame, or the rock's arm frame. `after` spends the
+     *   dead span the arm frame starts, once the frozen tick has run.
+     */
+    const stepBobBossArenaNow = (held) => {
+        const a = bobArenaNow();
+        if (a.none) return { frozen: false };
+        // `updateLists()`'s ADD half: what the previous frame added updates now.
+        let npcFrozen = false;
+        if (a.pending) {
+            if (a.pending.fire) {
+                a.fire = { x: a.pending.at.x, y: a.pending.at.y };
+                bobLedger({ what: 'fire-added', x: a.fire.x, y: a.fire.y });
+            } else {
+                a.boss = createBobBossBody(a.pending.form);
+                a.npc = { form: a.pending.form, d: null };
+                bobLedger({ what: 'boss-added', form: a.pending.form });
+            }
+            a.pending = null;
+        }
+        // ── the BobBoss (`Enemies/BobBoss.as`) — BEFORE its own NPC ────
+        //
+        // ⛔ The ctor runs `FP.world.add(new BobBossNPC(...))` INSIDE itself,
+        // so the NPC is queued before the caller queues the boss, and
+        // `addUpdate` PREPENDS: the boss is first in the update list. On a
+        // page frame it therefore reads the freeze the previous frame's
+        // `Game.update` tail LOWERED, and runs whole (forming, chase,
+        // swords) while the NPC then freezes the player. The oracle measured
+        // it: with the NPC first, the first kill landed 62 ticks late.
+        a.faceUp = false;
+        if (a.boss) {
+            const b = a.boss;
+            const solidOpts = normalizeLiveOpts(liveSolidOpts());
+            const r = stepBobBossBody(b, {
+                player: { x: state.x, y: state.y },
+                playerBox: playerBoxAt(state.x, state.y),
+                frozen: false,
+                // ⛔ AND ITS OWN NPC IS A WALL. `BobBossNPC` has no graphic, so
+                // it is a ZERO-SIZE `type = "Solid"` at (80,80), and
+                // `Entity.collide`'s strict test still catches any box that
+                // STRADDLES that point. The boss spawns centred on it, so every
+                // 1 px step of its sweep is refused until the NPC removes
+                // itself at the dialogue's last page: it forms and swings
+                // through the dialogue and cannot move. (Measured: without
+                // this the first kill landed one press early.)
+                blocked: (box) => (a.npc !== null && box.x < ARENA_NPC_POINT.x
+                        && box.right > ARENA_NPC_POINT.x && box.y < ARENA_NPC_POINT.y
+                        && box.bottom > ARENA_NPC_POINT.y)
+                    || !!world.collidesSolid(box, solidOpts),
+            });
+            for (const h of r.playerHits) {
+                const hit = applyPlayerHit({ source: 'bobBoss', id: `${b.id}:${h.arm}`,
+                    force: h.force, damage: h.damage, from: h.from });
+                bobLedger({ what: 'player-hit', form: b.form, arm: h.arm, applied: hit.applied });
+                if (pendingDeath) {
+                    throw new Error(`levelRun: the player died to ${b.id} (${h.arm}) at tick `
+                        + `${ticksCompleted}. A death reboots into L32 with the rock fallen and `
+                        + 'the boss respawned on the first frame, which is not modelled.');
+                }
+            }
+            if (r.transition && !r.transition.done) {
+                bobNoInput = true;
+                a.faceUp = true;
+                damage = { ...damage, directionFace: 1 };
+                if (r.transition.pin) state = { ...state, x: r.transition.pin.x, y: r.transition.pin.y };
+            } else if (r.transition && r.transition.done) {
+                bobNoInput = false;
+                damage = { ...damage, hits: 0, directionFace: -1 };
+                a.pending = r.spawn;
+                bobLedger({ what: 'boss-removed', form: b.form,
+                    next: r.spawn.fire ? 'fire' : `form ${r.spawn.form}` });
+                a.boss = null;
+            }
+        }
+        // ── the BobBossNPC (`NPCs/BobBossNPC.as`) ──────────────────────
+        if (a.npc) {
+            if (ceremony !== null) {
+                throw new Error('levelRun: a BobBossNPC dialogue and a pickup ceremony are '
+                    + `both up at tick ${ticksCompleted}. Refused rather than approximated.`);
+            }
+            if (a.npc.d === null) {
+                // `!Game.talking && !talked` -> `talking = true`. The freeze
+                // line runs ABOVE it (`if (talking) freeze = true`), so this
+                // frame is not frozen; the render types the first character.
+                a.npc.d = beginBobBossDialogue(a.npc.form, framesThisCharacter);
+                stepDialogue(a.npc.d, false);
+                bobLedger({ what: 'dialogue-open', form: a.npc.form, pages: a.npc.d.pages.length });
+            } else {
+                const released = releasedThisTick(held, TALK_KEY);
+                const page = a.npc.d.page;
+                stepDialogue(a.npc.d, released);
+                if (released) {
+                    bobLedger({ what: 'dialogue-release', form: a.npc.form, page,
+                        paged: a.npc.d.page !== page });
+                }
+                if (a.npc.d.done) {
+                    framesThisCharacter = a.npc.d.framesThisCharacter;
+                    bobLedger({ what: 'dialogue-close', form: a.npc.form, frames: a.npc.d.frames });
+                    a.npc = null;
+                } else {
+                    npcFrozen = true;
+                }
+            }
+        }
+        // ── the rock (`Scenery/FallRockLarge.as`) ──────────────────────
+        if (!a.armed && bobBossRockArms(state.y, { fallFromCeiling: !!state.fall })) {
+            a.armed = true;
+            // `fall()` writes `setPersistence(tag, false)` on the arm frame.
+            bobLedger({ what: 'rock-armed', y: state.y,
+                flag: { level, tag: a.persistTag, value: false } });
+            return {
+                frozen: true,
+                why: 'the BobBoss rock\'s arm frame',
+                after: () => {
+                    spendFrozen(BOB_BOSS_ROCK_DEAD_FRAMES, 'bobboss-rock');
+                    // ⛔ THE RELEASE FRAME IS THE LAST DEAD FRAME AND IT MOVES
+                    // THE PLAYER. The rock clears the freeze before the Player
+                    // updates, so the player takes one step BEFORE the next
+                    // observation: it is applied here, inside the arm tick,
+                    // not deferred (`pendingFreeSteps` lands a tick late, which
+                    // the oracle measured as obs 13 one 1.2 px step short).
+                    // The keys are the held set: a dead frame dispatches no
+                    // edge, so no press can fire on it.
+                    const keys = (lockSnap || frozenTimer > 0 || cutsceneWalk) ? NO_KEYS : held;
+                    const freed = stepV2(state, keys, stepOptsFor({
+                        beforeTypeFlip: false,
+                        openActivators: openActivatorIds(activatorStateFor(level)),
+                        inputBlocked: frozenTimer > 0,
+                        steerBlocked: !canSteer(damage),
+                        dashImpulse: null,
+                    }));
+                    if (freed.transition) {
+                        throw new Error('levelRun: the BobBoss rock\'s release frame produced a '
+                            + 'TRANSITION, which a dead frame cannot show. Refused.');
+                    }
+                    state = freed;
+                    a.landed = true;
+                    a.pending = { form: 0 };
+                    bobLedger({ what: 'rock-landed', deadFrames: BOB_BOSS_ROCK_DEAD_FRAMES });
+                },
+            };
+        }
+        return npcFrozen ? { frozen: true, why: 'a BobBossNPC dialogue' } : { frozen: false };
+    };
+
+    /**
+     * `Player.slash`'s hit test against the BobBoss, for one fired thrust.
+     * `collideRectInto` (Entity.collideRect, INCLUSIVE edges), then the
+     * `distanceRectPoint` reach gate, then `collideLine("Solid")`, then
+     * `genericHit` -> `BobBoss.hit`.
+     */
+    function bobBossSlashNow({ rect: r, reachLimit, weapon, pressTick, hits }) {
+        const a = bobArena;
+        if (!a || a.none || a.level !== level || !a.boss) return;
+        const b = a.boss;
+        const box = bobBossBox(b);
+        const touches = box.right >= r.x && box.bottom >= r.y
+            && box.x <= r.x + r.w && box.y <= r.y + r.h;
+        if (!touches) return;
+        const reach = distanceRectPoint(state.x, state.y, box);
+        const blocker = reach <= reachLimit ? collideLineSolid(state.x, state.y, b.x, b.y) : null;
+        let verdict = { landed: false, killed: false, refusedAt: null };
+        if (reach > reachLimit) {
+            verdict.refusedAt = `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`;
+        } else if (blocker) {
+            verdict.refusedAt = 'collideLine Solid';
+        } else {
+            verdict = bobBossHit(b, {
+                d: weapon === 'spear' ? SPEAR_DAMAGE
+                    : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                t: weapon === 'spear' ? 'Spear' : 'Sword',
+                frozen: ceremony !== null,
+            });
+        }
+        bobLedger({ what: 'boss-hit', form: b.form, pressTick, landed: verdict.landed,
+            killed: verdict.killed, hits: b.hits, hitsMax: b.hitsMax, hitsTimer: b.hitsTimer,
+            why: verdict.refusedAt ?? null });
+        hits.push({ as3: 'BobBoss', id: b.id, landed: verdict.landed, killed: verdict.killed });
+    }
+
+    /** The runtime Fire under the player, `Pickup.update`'s `collide("Player")`. */
+    const bobFireUnderfoot = () => {
+        const a = bobArena;
+        if (!a || a.none || a.level !== level || !a.fire || a.fireCollected) return null;
+        const box = playerBoxAt(state.x, state.y);
+        const fx = a.fire.x - 4;
+        const fy = a.fire.y - 4;
+        if (box.right > fx && box.x < fx + 8 && box.bottom > fy && box.y < fy + 8) return a.fire;
+        return null;
+    };
+
+    /** `run.ledger('bobBossEvents')` — a copy of the encounter's event rows. */
+    const bobBossEventsNow = () => bobBossLedger.map((r) => ({ ...r }));
+    /**
+     * `run.entities('bobBoss')` — the arena's live members, keyed by role
+     * (`rock`, `boss`, `dialogue`, `fire`, `transition`), each present only
+     * while it exists. EMPTY in every room without a `thirdboss` rock.
+     */
+    const bobBossNow = () => {
+        const out = new Map();
+        const a = bobArenaNow();
+        if (a.none) return out;
+        const b = a.boss;
+        out.set('rock', { id: a.rockId, armed: a.armed, landed: a.landed });
+        if (b) {
+            out.set('boss', {
+                id: b.id, form: b.form, x: b.x, y: b.y, vx: b.v.x, vy: b.v.y,
+                hits: b.hits, hitsMax: b.hitsMax, hitsTimer: b.hitsTimer,
+                formingTimer: b.formingTimer, destroy: b.destroy,
+                nextBossTimer: b.nextBossTimer, swords: b.swords,
+                swordSpin: b.swordSpin.slice(0, Math.max(b.swords, 0)),
+            });
+        }
+        if (a.npc) {
+            out.set('dialogue', {
+                form: a.npc.form, open: a.npc.d !== null,
+                page: a.npc.d?.page ?? 0, pages: a.npc.d?.pages.length ?? null,
+                currentCharacter: a.npc.d?.currentCharacter ?? 0,
+                pageLength: a.npc.d ? a.npc.d.pages[a.npc.d.page]?.length ?? null : null,
+            });
+        }
+        if (a.pending) out.set('pending', a.pending.fire ? { fire: true } : { form: a.pending.form });
+        if (a.fire && !a.fireCollected) out.set('fire', { ...a.fire });
+        if (a.fireCollected) out.set('fireCollected', true);
+        return out;
+    };
     const talkCirclesNow = () => {
         if (noclip) return [];
         const out = [];
@@ -10751,6 +11056,7 @@ export function createLevelRun({
         arrowFlights: arrowFlightsNow,
         bosses: bossesNow,
         talkCircles: talkCirclesNow,
+        bobBoss: bobBossNow,
     });
 
     /**
@@ -10811,7 +11117,7 @@ export function createLevelRun({
             },
         };
     };
-    const inputRefusedNow = () => lockSnap !== null;
+    const inputRefusedNow = () => lockSnap !== null || bobNoInput;
     const unfiredEquipTicksNow = () => [...equipsByTick.keys()];
     const unfiredGrantLevelsNow = () => [...grantsByLevel.keys()];
     const frozenTimerNow = () => frozenTimer;
@@ -11057,6 +11363,7 @@ export function createLevelRun({
         spinnerKillLockOpens: spinnerKillLockOpensNow,
         spinnerWrites: spinnerWritesNow,
         turretKills: turretKillsNow,
+        bobBossEvents: bobBossEventsNow,
     });
 
     return {
@@ -12068,6 +12375,8 @@ export function createLevelRun({
          * Its four committed tapes open it BY DESIGN.
          */
         get talkCircles() { return talkCirclesNow(); },
+        /** ⛓ Swim U5: L32's encounter, by role — see `bobBossNow`. */
+        get bobBoss() { return bobBossNow(); },
         get strikeBodies() { return strikeBodiesNow(); },
         get chasers() { return chasersNow(); },
         /**
@@ -12206,6 +12515,8 @@ export function createLevelRun({
          * first.
          */
         get turretKills() { return turretKillsNow(); },
+        /** ⛓ Swim U5: the encounter's event rows — see `bobBossEventsNow`. */
+        get bobBossEvents() { return bobBossEventsNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 22 — THE FREEZE LEDGER, AND IT IS THE PRICE OF THE
          * KILL RATHER THAN AN ACCIDENT.
@@ -13538,6 +13849,25 @@ export function createLevelRun({
                 }
             }
 
+            // ── ⛓⛓ SWIM U5: THE BOBBOSS ARENA, ABOVE THE CEREMONY ────────
+            //
+            // The `BobBossNPC` and the `BobBoss` are runtime adds (prepended,
+            // so they update before every placed entity), and the rock is
+            // placed after the Player in `Game.as`'s add order, so all three
+            // update before the player's own tick. A page frame is a TAPE
+            // TICK with a frozen player (`Game.update`'s `inventory.open =
+            // false` lowers the flag while `Game.talking`), like the Watcher's.
+            // The rock's arm frame is the same kind of tick, followed by the
+            // 174 dead frames of the wait, the fall and the camera hold.
+            if (!noclip) {
+                const bb = stepBobBossArenaNow(held);
+                if (bb.frozen) {
+                    prevHeld = new Set(held);
+                    const tick = runFrozenTick(activators, bb.why);
+                    if (bb.after) bb.after();
+                    return tick;
+                }
+            }
             // ── the ceremony, before anything else ─────────────────────
             // A pickup updates BEFORE the player, so a contact found here
             // is a contact the game found on this frame too. Starting one
@@ -13604,6 +13934,25 @@ export function createLevelRun({
                         keyType: null,
                         seed: { id: seed.id, arm: seed.arm },
                         dialogue: beginDialogue(seed.text, { framesThisCharacter }),
+                    };
+                }
+            }
+            // ⛓⛓ Swim U5: the runtime Fire `BobBoss.death` adds — `new Fire(72,
+            // 72, -1)`, special, text `FIRE.text`. Runtime-added, so it updates
+            // before the placed pickups, exactly like the Watcher's Seed.
+            if (ceremony === null && !noclip) {
+                const fire = bobFireUnderfoot();
+                if (fire) {
+                    ceremonyStarts.push({ t: ticksCompleted, level, tag: 'fire', runtime: true });
+                    spendCeremonyPhaseA('fire');
+                    bobLedger({ what: 'fire-contact', x: state.x, y: state.y });
+                    ceremony = {
+                        pickup: { tag: 'fire', x: fire.x, y: fire.y, runtime: true, bobFire: true },
+                        level,
+                        item: 'fire',
+                        keyType: null,
+                        totemPart: null,
+                        dialogue: beginDialogue(BOB_BOSS_FIRE.text, { framesThisCharacter }),
                     };
                 }
             }
@@ -13785,6 +14134,17 @@ export function createLevelRun({
                     // contact, which is the whole difference between a real
                     // collection and R0's grant.
                     collectedPickups.add(pickupKey(ceremony.level, ceremony.pickup));
+                    // ⛓ Swim U5: `Fire.removed()` — `Player.hasFire = true` (the
+                    // item, below) and `setPersistence(-1, false)`, which lands in
+                    // the PREVIOUS level's last slot. Reported, not applied: an
+                    // out-of-band write is a ledger entry (`spinnerWrites`' rule).
+                    if (ceremony.pickup.bobFire) {
+                        bobArena.fireCollected = true;
+                        const flag = outOfBandFlagForWriter({ as3: 'Fire', level, tag: -1 });
+                        bobLedger({ what: 'fire-removed', t: ticksCompleted + 1,
+                            flag: { level: flag.level, tag: flag.tag, value: false },
+                            outOfBand: flag.outOfBand });
+                    }
                     // ⛓⛓ R8 slice 8: and the ONE pickup whose `removed()` costs a
                     // dead frame of its own — `Sword.removed()` adds `Help(3)`,
                     // which raises the freeze for exactly as long as it takes
@@ -14107,7 +14467,10 @@ export function createLevelRun({
             // `Player.input()`'s `if (!receiveInput || frozenTimer > 0 ||
             // fallFromCeiling) return` — the same line a touch-lock writes.
             // One statement, three writers, one treatment.
-            const acting = (lockSnap || frozenTimer > 0 || cutsceneWalk) ? NO_KEYS : held;
+            // ⛓ Swim U5: and `BobBoss.death`'s `player.receiveInput = false`, the
+            // fourth writer of the same first term (`bobNoInput`).
+            const acting = (lockSnap || frozenTimer > 0 || cutsceneWalk || bobNoInput)
+                ? NO_KEYS : held;
             // ── R4: the thrust the last tick's press scheduled ────────
             // After the blocks' own update (the block's `hit` refuses while
             // `v.length > 0`, and `v` is what its own `input()` just set)
@@ -14364,6 +14727,10 @@ export function createLevelRun({
             // (never observed) step. Two deferred `FP.world =` writes, two
             // different final ticks, and the difference is one `if`.
             let next = pendingDeath ? state : stepV2(state, acting, stepOpts);
+            // ⛓ Swim U5: `BobBoss.death` writes `player.directionFace = 1` on
+            // every transition frame, and `sprites()` (after the move) then
+            // sets `direction = directionFace`. `stepV2` derives it from `v`.
+            if (bobArena?.faceUp && !pendingDeath) next = { ...next, direction: 1 };
             // ── ⛓⛓⛓ R6 SLICE 6d: `Game.as:957-959`, BELOW THE WORLD ───
             //
             // ```as3

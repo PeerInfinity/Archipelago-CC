@@ -301,15 +301,15 @@ describe('MODEL_EXEMPT: a declaration, never a predicate', () => {
         }
     });
 
-    it('⚠ it is a LIST OF NAMES, and the names are the ones this slice added', () => {
-        // `feedback_coincidental_predicate_rots`: a predicate over "has
-        // presses" or "has enemies" would sweep in every kill fixture after
-        // this one, all of which are supposed to match the model exactly.
-        expect([...MODEL_EXEMPT_NAMES].sort()).toEqual([
-            'r5-bobboss-arm', 'r5-bobboss-fire', 'r5-bobboss-fire-control',
-        ]);
-        // The L60 kill pair is NOT here — its control matches the model and
-        // its kill arm is exempt for a different, older reason.
+    it('⛓ it is EMPTY: the three BobBoss entries retired when the model caught up (swim U5)', () => {
+        // `bobBossFight.js` steps the encounter, and all three tapes match
+        // their oracle recordings exactly (`tapeRunner.test.js`). Pinned by
+        // name, as `r5-karlore-fire`'s retirement is below: a re-added entry
+        // would re-weaken the differential's mirror checks.
+        expect(MODEL_EXEMPT_NAMES).toEqual([]);
+        for (const n of ['r5-bobboss-arm', 'r5-bobboss-fire', 'r5-bobboss-fire-control']) {
+            expect(MODEL_EXEMPT_NAMES).not.toContain(n);
+        }
         expect(MODEL_EXEMPT_NAMES).not.toContain('r5-l60-kill');
     });
 
@@ -324,14 +324,5 @@ describe('MODEL_EXEMPT: a declaration, never a predicate', () => {
         expect(MODEL_EXEMPT_NAMES).not.toContain('r5-karlore-fire');
         expect(MODEL_EXEMPT_NAMES).not.toContain('r5-karlore-plug');
     });
-
-    it('only ONE of them earns anything, and it is the boss fight', () => {
-        const earning = MODEL_EXEMPT_NAMES.filter((n) => MODEL_EXEMPT[n].earned.length > 0);
-        expect(earning).toEqual(['r5-bobboss-fire']);
-        expect([...MODEL_EXEMPT['r5-bobboss-fire'].earned]).toEqual(['fire']);
-        // ...and only that one is taken over, because `BobBoss.death` is the
-        // only thing in any of these rooms that sets `receiveInput = false`.
-        expect(MODEL_EXEMPT_NAMES.filter((n) => MODEL_EXEMPT[n].refusesInput))
-            .toEqual(['r5-bobboss-fire']);
-    });
 });
+

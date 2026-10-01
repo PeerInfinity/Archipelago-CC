@@ -38,9 +38,6 @@
  * rock drops.
  */
 
-import { rockSchedule } from './bobBoss.js';
-
-
 export class R5ChainError extends Error {
     constructor(message) { super(message); this.name = 'R5ChainError'; }
 }
@@ -381,53 +378,25 @@ export const CONCH = Object.freeze({
  * than keeping its own).
  */
 /**
- * ⛓⛓ THE FREEZE AN EXEMPT TAPE CARRIES, AS A NUMBER — R5 slice 11.
+ * ⛓⛓ SWIM U5 — ALL THREE BOBBOSS ENTRIES ARE RETIRED; THE MODEL CAUGHT UP.
  *
- * `FallRockLarge`'s 174 frames were prose in three `why` strings and a
- * number nowhere, so the dead-frame budget could not spend them: its first
- * run against the roster reported all three bobboss tapes OUT OF BAND by
- * exactly this amount. The budget was right and the record was unreadable.
+ * `bobBossFight.js` steps L32's script, and `levelRun` runs it: the rock's arm
+ * frame and its 174 dead frames, the three forms with their chase, swords
+ * and i-frames, the three `BobBossNPC` dialogues, the transitions with their
+ * teleport and `receiveInput = false`, and the runtime Fire and its
+ * ceremony. All three tapes now match their committed ORACLE recordings
+ * exactly (`r5-bobboss-arm` 901, `-fire` 2,501, `-fire-control` 2,501
+ * observations), with no re-record, which is `r5-karlore-fire`'s retirement
+ * one encounter over. The table stays, EMPTY, because it is still the place
+ * a future encounter would be declared, and `tapeRunner.test.js` still
+ * asserts that every name in it diverges.
  *
- * ⛓ DERIVED, NOT TRANSCRIBED. `rockSchedule()` runs the fall as a LOOP —
- * `vy += 0.6; y += vy` from -32 — because the closed form solves to 23.7
- * and rounds the wrong way on the frame the test fires. 60 wait + 24 fall
- * + 90 camera = 174, and the literal never appears.
+ * ⚠ What the three entries carried now comes from the model: `earned:
+ * ['fire']` is the Fire ceremony's `applyItem`; `freezeFrames` (174) is the
+ * arm frame's `spendFrozen`; `refusesInput` is `inputRefused` during a
+ * transition, which the run's `bobBoss` ledger names to the differential.
  */
-const ROCK_FREEZE_FRAMES = rockSchedule().bossSpawnsAt;
-
-export const MODEL_EXEMPT = Object.freeze({
-    'r5-bobboss-arm': Object.freeze({
-        /** `FallRockLarge`'s freeze, which every arm of this pair pays. */
-        freezeFrames: ROCK_FREEZE_FRAMES,
-        earned: Object.freeze([]),
-        refusesInput: false,
-        why: 'the arm probe. `FallRockLarge` freezes the game for 174 frames and the '
-            + 'engine models neither the rock nor the three `BobBossNPC` dialogues that '
-            + 'follow, so the model walks where the game stands still. It earns nothing '
-            + '— it holds no sword — so only the STREAM diverges.',
-    }),
-    'r5-bobboss-fire': Object.freeze({
-        /** `FallRockLarge`'s freeze, which every arm of this pair pays. */
-        freezeFrames: ROCK_FREEZE_FRAMES,
-        earned: Object.freeze(['fire']),
-        refusesInput: true,
-        why: '⛓ THE FIRST BOSS KILL ON THE ARC. `fire` is spawned by `BobBoss.death` at '
-            + 'runtime — it is in no level\'s pickup list, so no engine reading the '
-            + 'extract could ever see it — and `receiveInput` goes false for the two '
-            + '120-frame form transitions. The mirror is amended with `fire` rather '
-            + 'than excused, so a run that fought and did not win goes RED here.',
-    }),
-    'r5-bobboss-fire-control': Object.freeze({
-        /** `FallRockLarge`'s freeze, which every arm of this pair pays. */
-        freezeFrames: ROCK_FREEZE_FRAMES,
-        earned: Object.freeze([]),
-        refusesInput: false,
-        why: 'the same tape with `grants` empty. It earns nothing and is never taken '
-            + 'over — form 0 never dies, so there is no transition — but the rock still '
-            + 'freezes the game for 174 frames, so its STREAM diverges for the same '
-            + 'reason the probe\'s does.',
-    }),
-});
+export const MODEL_EXEMPT = Object.freeze({});
 
 /** The names, for a harness that wants the set rather than the table. */
 export const MODEL_EXEMPT_NAMES = Object.freeze(Object.keys(MODEL_EXEMPT));

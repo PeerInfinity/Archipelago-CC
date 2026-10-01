@@ -634,6 +634,13 @@ export function createTapeStepper(tape, opts = {}) {
             // that refuses input by design.
             lockSnaps: run ? run.lockSnaps : [],
             /**
+             * ⛓ Swim U5: L32's encounter ledger (`levelRun`'s `bobBoss` kind).
+             * The third thing that refuses input by design (`BobBoss.death`'s
+             * transitions), and the record of the rock's and the Fire's
+             * persistence writes.
+             */
+            bobBoss: run ? run.bobBossEvents : [],
+            /**
              * ⛓ R9 slice 12b: one record per SWORD DASH. Model-side
              * bookkeeping like `transports`, and for a sharper version of the
              * same reason: at rest a dash's impulse is EXACTLY (0,0), so the

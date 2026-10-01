@@ -1797,6 +1797,24 @@ function checkReadout(name, tape, status, stream, seam) {
                 + 'the flag, so the clear crutch has not actually been retired for it');
     }
 
+    // ── ⛓ SWIM U5: THE BOBBOSS ENCOUNTER'S WRITES, FROM THE GAME'S OWN ARRAY ──
+    //
+    // `FallRockLarge.fall()` clears the rock's tag on the ARM frame, and
+    // `Fire.removed()` runs `setPersistence(-1, false)`, which lands in L31's
+    // last slot. Both are in the model's `bobBoss` ledger; both must be off
+    // in the game. (The exact-set claim stays `r5Acceptance`'s.)
+    const bobWrites = (expected.bobBoss ?? []).filter((r) => r.flag);
+    if (bobWrites.length > 0) {
+        const missing = bobWrites
+            .filter((r) => !clearedInGame.has(`${r.flag.level}:${r.flag.tag}`))
+            .map((r) => `${r.what} (${r.flag.level}:${r.flag.tag})`);
+        check(`${name}: every BobBoss-encounter write the model made is off in the game`,
+            missing.length === 0,
+            missing.length === 0
+                ? bobWrites.map((r) => `${r.what} -> ${r.flag.level}:${r.flag.tag}`).join(', ')
+                : `${missing.join(', ')} still SET in the game`);
+    }
+
     // ── ⛓⛓⛓ R6 SLICE 4: THE BOSS-KILL LEDGER, FROM THE GAME'S OWN ARRAY ──
     //
     // The rung's HEADLINE (§3.1) is "kills by persistence tag, asserted
@@ -2471,7 +2489,13 @@ try {
         // the end of the tape. A pit transport is ~83 px of falling and a
         // ShieldLock is ~101 ticks; this one never ends.
         const endingReboots = expectedRun?.endingReboots ?? [];
+        // ⛓ SWIM U5 ADDS A FOURTH, which used to be `MODEL_EXEMPT`'s declared
+        // take-over: `BobBoss.death` writes `receiveInput = false` on every
+        // frame of each 120-frame form transition, and the model now runs it.
+        const bobKills = (expectedRun?.bobBoss ?? [])
+            .filter((r) => r.what === 'boss-hit' && r.killed);
         const causes = [
+            ...(bobKills.length ? [`${bobKills.length} BobBoss form transition(s)`] : []),
             ...(transports.length ? [`${transports.length} pit transport(s)`] : []),
             ...lockSnaps.map((s) => `${s.id} for ${s.ticks} tick(s)`),
             // ⛓ TWO SHAPES, ONE LINE. `cutscene[1]` walks the player north

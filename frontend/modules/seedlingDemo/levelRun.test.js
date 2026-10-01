@@ -2638,6 +2638,8 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'chasers', 'pulledRopes', 'strikeBodies'] },
         { tape: 'r5-l43-wand', families: ['bosses'] },
         { tape: 'r5-l37-burn', families: ['burnedTrees', 'talkCircles'] },
+        // ⛓ Swim U5: the BobBoss arena, played from the arm to the Fire.
+        { tape: 'r5-bobboss-fire', families: ['bobBoss'] },
     ];
     const nontrivial = (v) => v === false
         || ((v instanceof Set || v instanceof Map) ? v.size > 0 : Array.isArray(v) ? v.length > 0 : false);
@@ -2673,7 +2675,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'strikeBodies', 'spinnerBodies', 'armedPulsers', 'turrets', 'chasers',
             'brokenRocks', 'crushersParked', 'pushesSettled', 'openBridges', 'arrowsInFlight',
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
-            'arrowFlights', 'bosses', 'talkCircles',
+            'arrowFlights', 'bosses', 'talkCircles', 'bobBoss',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
@@ -2754,7 +2756,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
  * GETTERS, BY OTHER NAMES.
  *
  * The same seam as C3's, twice: the player's bag and progress (12 fields) and
- * the Seedling event ledgers (29 kinds) each sit behind one keyed query, and
+ * the Seedling event ledgers (30 kinds) each sit behind one keyed query, and
  * both faces call one closure function (`PROGRESS_FIELDS` / `LEDGER_KINDS`
  * in `createLevelRun`). Every folded getter returns a fresh value or a
  * primitive, so the rows hold query to getter deep-strictly at every tick.
@@ -2770,7 +2772,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
 describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the getters, by other names', () => {
     const FOLDS = [
         { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 12, noun: 'progress field', plural: 'fields' },
-        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 29, noun: 'ledger kind', plural: 'kinds' },
+        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 30, noun: 'ledger kind', plural: 'kinds' },
     ];
     const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
     const queryOf = new Map(FOLDS.flatMap((f) => f.names.map((n) => [n, f.query])));
@@ -2787,6 +2789,7 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
         { tape: 'r2-walk-2-feather', members: ['unfiredGrantLevels'] },
         { tape: 'r5-l37-burn', members: ['treeBurns'] },
         { tape: 'r5-l40-part5-control', members: ['blastFreezes', 'frozenTimer', 'turretKills'] },
+        { tape: 'r5-bobboss-fire', members: ['bobBossEvents'] },
     ];
     const text = (v) => JSON.stringify(v, (k, x) => (x instanceof Set || x instanceof Map ? [...x] : x));
     const sizeOf = (v) => (v instanceof Set || v instanceof Map ? v.size : Array.isArray(v) ? v.length : null);

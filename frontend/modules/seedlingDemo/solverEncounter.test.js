@@ -79,25 +79,34 @@ describe('solveSegment — encounter L32 from the survey boot (72,120), sword gr
     });
 });
 
-describe('⛔ why the registry is empty: the model does not play r5-bobboss-fire', () => {
+describe('⛓ the model plays r5-bobboss-fire (the BobBoss simulation family, swim U5)', () => {
     const replay = () => {
-        let hasFire = false;
+        let hasFireAt = null;
         let last = null;
         runTape(TAPE, {
             levelSource: atlasLevelSource(),
             onTick: (t, now, held, run) => {
                 last = run;
-                if (run.progress('inventory')?.hasFire) hasFire = true;
+                if (hasFireAt === null && run.progress('inventory')?.hasFire) hasFireAt = t;
             },
         });
-        return { run: last, hasFire };
+        return { run: last, hasFireAt };
     };
 
-    it('the arena rock never falls, nothing freezes the run past the load, and Fire is never earned', () => {
-        const { run, hasFire } = replay();
-        expect(run.world.fallRocks.map((r) => r.id)).toEqual(['fallrocklarge@64,128']);
-        expect(run.rockFalls).toEqual([]);
-        expect(run.deadFrameSpans.map((s) => s.kind)).toEqual(['load']);
-        expect(hasFire).toBe(false);
+    it('the rock arms at t=12, three forms die, and the Fire is earned with both writes', () => {
+        const { run, hasFireAt } = replay();
+        const ev = run.ledger('bobBossEvents');
+        expect(ev.find((r) => r.what === 'rock-armed')).toMatchObject(
+            { t: 12, flag: { level: 32, tag: 1, value: false } });
+        expect(ev.filter((r) => r.what === 'boss-hit' && r.killed).map((r) => r.form))
+            .toEqual([0, 1, 2]);
+        expect(ev.filter((r) => r.what === 'dialogue-open').map((r) => r.pages)).toEqual([3, 7, 4]);
+        expect(ev.find((r) => r.what === 'fire-removed')).toMatchObject(
+            { flag: { level: 31, tag: 29, value: false }, outOfBand: true });
+        expect(hasFireAt).not.toBeNull();
+        // The game's own dead-frame record for this tape is 345 = 21 boot
+        // + 174 rock + 150 Fire phase A (`dead-frame-observations.json`).
+        expect(run.deadFrameSpans.map((s) => [s.kind, s.frames]))
+            .toEqual([['load', 20], ['freeze', 174], ['ceremony', 150]]);
     });
 });
