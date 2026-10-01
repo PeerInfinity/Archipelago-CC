@@ -27,12 +27,11 @@ const ALL_SIDES = ['N', 'E', 'S', 'W'];
 // ⛓ F2: a side-less exit spec (a top-down teleporter exit no driver gave a
 // side) is refused BY NAME — it used to read `unknown exit side 'undefined'`.
 describe('a side-less exit spec', () => {
-    it('is refused by name: a bounce zone holds one exit per side', () => {
+    it('is refused by name: a bounce room has one exit per side', () => {
         const specs = { region_id: 'Region 3', exitSpecs: [{ side: 'N', requirement: [] }, { requirement: [] }] };
-        expect(() => generateZoneForSpecs(specs))
-            .toThrow("bounce zone 'Region 3': an exit has no side — a bounce zone holds one exit per side");
-        expect(() => assembleBounceRegionFromLevel(bounceStack, specs))
-            .toThrow("bounce zone 'Region 3': an exit has no side — a bounce zone holds one exit per side");
+        const why = "bounce zone 'Region 3': an exit has no side — a bounce room has one exit per side today";
+        expect(() => generateZoneForSpecs(specs)).toThrow(why);
+        expect(() => assembleBounceRegionFromLevel(bounceStack, specs)).toThrow(why);
     });
 });
 

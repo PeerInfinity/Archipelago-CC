@@ -535,11 +535,10 @@ export function buildBounceRegionContract({ specs, node, regionParams = {} }) {
  */
 export function exitSideRefusal(regionId, side) {
     return side === undefined || side === null
-        ? `bounce zone '${regionId}': an exit has no side — a bounce zone holds one exit `
-            + 'per side (N/E/S/W), so the driver must give every exit one (a top-down teleporter '
-            + 'exit gets a free side; a region with more than four exits has none to get)'
-        : `bounce zone '${regionId}': unknown exit side '${side}' — a bounce zone holds one exit `
-            + 'per side (N/E/S/W)';
+        ? `bounce zone '${regionId}': an exit has no side — a bounce room has one exit per side `
+            + 'today (N, E, S or W), so every exit needs one'
+        : `bounce zone '${regionId}': unknown exit side '${side}' — a bounce room has one exit `
+            + 'per side today (N, E, S or W)';
 }
 
 /**
