@@ -227,7 +227,7 @@ frontend/modules/seedlingDemo/levelRun.js|advance|hd5e683f5|0|0,rule,sentinel,,p
 frontend/modules/seedlingDemo/levelRun.js|advance|hf2ca60d1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hd4727287|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|h2bf0a6f8|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
-frontend/modules/seedlingDemo/levelRun.js|advance|hf9419e89|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|advance|ha5ff1365|0|0,rule,bound,,i-frame timer gate (the acting gate; swim U5 added bobNoInput)
 frontend/modules/seedlingDemo/levelRun.js|advance|hee37f6e1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|h6d36784b|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hb16ea419|0|0,physics,magnitude,,cutscene walk vy clamped to 0
@@ -1440,6 +1440,45 @@ frontend/modules/seedlingDemo/tapeEnvelope.js|*|inclusiveToHalfOpen|1,rule,magni
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|halfOpenToInclusive|1,rule,magnitude,,the reverse bridge: to - 1 (tape-envelope.md § 4)
 frontend/modules/seedlingDemo/md5.js|*|*,structural,,,"the profile md5 digest: RFC 1321 round constants, shifts, byte arithmetic"
 frontend/modules/seedlingDemo/profileOverrides.js|*|*,structural,,,the profile override loader: JSON text scanning indices and offsets
+frontend/modules/seedlingDemo/bobBoss.js|ARENA|(module),rule,magnitude,Enemies/BobBoss.as:BobBoss,arena points: level 32; boot (72;120); arrival/boss/pin +Tile/2; respawn (72;104)
+frontend/modules/seedlingDemo/bobBoss.js|ROCK|(module),rule,magnitude,Scenery/FallRockLarge.as:fallTo,rock: tag 1; arm line 120; fallTo 144; park -32; wait 60; camera 90; seal rect
+frontend/modules/seedlingDemo/bobBoss.js|ROCK|(module)|0.6,physics,magnitude,Scenery/FallRockLarge.as:fallRate,fallRate: vy += 0.6 per frame
+frontend/modules/seedlingDemo/bobBoss.js|BOSS_IFRAMES|(module),rule,bound,Enemies/Enemy.as:hitsTimerMax,Enemy.hitsTimerMax: the boss's i-frames
+frontend/modules/seedlingDemo/bobBoss.js|FORM_TRANSITION_FRAMES|(module),rule,bound,Enemies/BobBoss.as:nextBossTimerMax,nextBossTimerMax: the between-forms window
+frontend/modules/seedlingDemo/bobBoss.js|FORM_TELEPORT_AT|(module),rule,derivation,Enemies/BobBoss.as:nextBossTimerMax,nextBossTimer <= nextBossTimerMax / 3 pins the player
+frontend/modules/seedlingDemo/bobBoss.js|FORMING_FRAMES|(module),rule,bound,Enemies/BobBoss.as:formingTimerMax,formingTimerMax: a new form's fade-in before it acts
+frontend/modules/seedlingDemo/bobBoss.js|BOB_BOSS_FORMS|(module),rule,count,Enemies/BobBoss.as:hitsMax,per form: index; hitsMax 2/3/2; swords 1/2/2
+frontend/modules/seedlingDemo/bobBoss.js|BOSS_TEXT_SPEED|(module),rule,magnitude,NPCs/BobBossNPC.as:_talkingSpeed,talkingSpeed 6 frames per character
+frontend/modules/seedlingDemo/bobBoss.js|BOSS_LINE_LENGTH|(module),rule,magnitude,NPCs/NPC.as:lineLength,NPC default lineLength 28
+frontend/modules/seedlingDemo/bobBoss.js|PLAIN_SWORD_DAMAGE|(module),rule,magnitude,Player.as:swordDamage,swordDamage 1
+frontend/modules/seedlingDemo/bobBoss.js|FIRE|(module),rule,magnitude,Pickups/Fire.as:Fire,Fire: spawn point; specialTimer 150; out-of-band flag {31;29}
+frontend/modules/seedlingDemo/bobBoss.js|FIRE|(module)|-1,rule,sentinel,Pickups/Fire.as:tag,tag -1: setPersistence(-1) lands out of band
+frontend/modules/seedlingDemo/bobBoss.js|BURNABLE_TREE|(module),rule,magnitude,Scenery/BurnableTree.as:burn,the arena tree: tag; rect; burn anim 20 frames at rate 15
+frontend/modules/seedlingDemo/bobBoss.js|BURNABLE_TREE|burnTicks,rule,derivation,Scenery/BurnableTree.as:burn,ceil(20 / (15 * FP_MAX_ELAPSED))
+frontend/modules/seedlingDemo/bobBoss.js|BOB_BOSS_LEDGER|(module),rule,sentinel,,level ids of the encounter's persistence writes
+frontend/modules/seedlingDemo/bobBoss.js|rockSchedule|rockSchedule,structural,,,fall loop counters and its runaway guard
+frontend/modules/seedlingDemo/bobBoss.js|formPresses|formPresses,structural,,,slack default and the positive-damage test
+frontend/modules/seedlingDemo/bobBoss.js|bobBossPressBill|bobBossPressBill,structural,,,slack default and the bill's accumulators
+frontend/modules/seedlingDemo/bobBossFight.js|BASE_SPIN_RATE|(module),physics,magnitude,Enemies/BobSoldier.as:swordSpinRate,swordSpinRate = PI / 10
+frontend/modules/seedlingDemo/bobBossFight.js|BOB_BOSS_BOX|(module),physics,magnitude,Enemies/BobBoss.as:setHitbox,setHitbox(14; 14; 7; 7)
+frontend/modules/seedlingDemo/bobBossFight.js|BOB_BOSS_FORM_STATS|(module),rule,magnitude,Enemies/BobBoss.as:bossType,the ctor's form switch: rate divisor; damage; hitsMax; swords; swordSpinResetTimerMax
+frontend/modules/seedlingDemo/bobBossFight.js|BOB_BOSS_FORM_STATS|(module)|0.5,physics,magnitude,Enemies/BobBoss.as:moveSpeed,moveSpeed (forms 0 and 2)
+frontend/modules/seedlingDemo/bobBossFight.js|BOB_BOSS_FORM_STATS|(module)|0.65,physics,magnitude,Enemies/BobBoss.as:moveSpeed,moveSpeed (form 1)
+frontend/modules/seedlingDemo/bobBossFight.js|DEATH_LIFT|(module),physics,magnitude,Enemies/BobBoss.as:death,death(): v.y -= 1.2 per transition frame
+frontend/modules/seedlingDemo/bobBossFight.js|RUN_RANGE|(module),physics,bound,Enemies/BobSoldier.as:runRange,runRange: the chase leash
+frontend/modules/seedlingDemo/bobBossFight.js|WEAPON_LENGTH|(module),physics,magnitude,Enemies/BobBoss.as:weaponLength,BobBossWeapons sprite width (weaponLength)
+frontend/modules/seedlingDemo/bobBossFight.js|bobBossHit|bobBossHit,rule,bound,Enemies/BobBoss.as:hitsTimer,hitsTimer <= 0 gate; form 2's sword re-seed at 3PI/2 + 2PI/n
+frontend/modules/seedlingDemo/bobBossFight.js|bobBossSwordLine|bobBossSwordLine,physics,derivation,Enemies/BobSoldier.as:weaponLength,swordHitting: the line from weaponLength / 2 to weaponLength
+frontend/modules/seedlingDemo/bobBossFight.js|chase|chase,physics,derivation,Enemies/BobSoldier.as:playerActions,playerActions and swordSpinningBegin: reset timer gate; angle mod 2PI
+frontend/modules/seedlingDemo/bobBossFight.js|createBobBossBody|createBobBossBody,physics,magnitude,Enemies/BobSoldier.as:swordSpin,fresh body: zero state; swordSpin seeds 3PI/2 PI/2 PI 0
+frontend/modules/seedlingDemo/bobBossFight.js|moveAxis|moveAxis,structural,,Mobile.as:moveX,moveX/moveY 1 px step loop
+frontend/modules/seedlingDemo/bobBossFight.js|normalize|normalize,structural,,,
+frontend/modules/seedlingDemo/bobBossFight.js|sign|sign,physics,sign,,FP.sign
+frontend/modules/seedlingDemo/bobBossFight.js|spin|spin,physics,derivation,Enemies/BobBoss.as:swordSpinningStep,swordSpinningStep: form ids; blade 2 at rate / 4; full turn 2PI
+frontend/modules/seedlingDemo/bobBossFight.js|stepBobBossBody|stepBobBossBody,rule,magnitude,Enemies/BobBoss.as:update,the update: timers; form < 2; directionFace -1/1; contact force 3 and 3 * damage
+frontend/modules/seedlingDemo/bobBossFight.js|playerShieldRect|playerShieldRect,physics,magnitude,Player.as:shieldOffset,the shield box Player.render places: offsets (2;3) and (4;0); 7x7 origin (3;3) or 3x7 origin (2;3); direction ids; slashing lifts it 1 px
+frontend/modules/seedlingDemo/bobBossFight.js|bobBossShieldBump|bobBossShieldBump,physics,bound,Player.as:shieldBump,v.length > 0: only a moving player bumps
+frontend/modules/seedlingDemo/bobBossFight.js|SHIELD_FORCE|(module),physics,magnitude,Player.as:shieldForce,shieldForce: Enemy.knockback(5; player point)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

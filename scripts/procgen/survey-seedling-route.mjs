@@ -1047,7 +1047,13 @@ async function solveOneStep(step) {
     let replay = null;
     if (solved) {
         const run = makeRun(solved.persistence);
-        for (const held of solved.out.perTick) run.advance(held);
+        // ⛓ Swim U5: a segment's own slot selections are applied at their
+        // ticks, as `Bot.as` applies a tape's `equips` beside the grants.
+        const equipsAt = new Map((solved.out.equips ?? []).map((e) => [e.t, e.slot]));
+        solved.out.perTick.forEach((held, t) => {
+            if (equipsAt.has(t)) run.equipNow(equipsAt.get(t));
+            run.advance(held);
+        });
         replay = {
             hits: run.playerHits.length,
             deaths: run.playerDeaths.length,
@@ -1059,7 +1065,8 @@ async function solveOneStep(step) {
 
     if (solved) {
         const walk = buildStagedTape({
-            staging: { ...staging, persistence: solved.persistence },
+            staging: { ...staging, persistence: solved.persistence,
+                equips: [...(staging.equips ?? []), ...(solved.out.equips ?? [])] },
             perTick: solved.out.perTick,
             name: `survey-step-${step.step}`,
         });

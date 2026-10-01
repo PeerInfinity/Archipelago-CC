@@ -5,13 +5,10 @@
  * spawns the Fire at runtime, so the U2–U4 survey's `collect-placement
  * (64,128)` resolved to nothing. The goal kind says what the location is.
  *
- * ⛔ AND IT REFUSES, BY NAME, BEFORE A TICK — because the model does not
- * simulate the fight. That is measured, not assumed. The last describe block
- * replays `r5-bobboss-fire` through the model and pins what the model does NOT
- * do: the arena's `fallrocklarge` never falls, no dead span beyond the level
- * load, and no `hasFire`. Those rows are the guard on `ENCOUNTER_EXECUTORS`
- * being empty. The day the model simulates the fight they go red, and the
- * executor is owed.
+ * D1 shipped the kind with an empty executor table, because the model then
+ * simulated none of the fight. The BobBoss simulation family
+ * (`bobBossFight.js`) landed after it, and the Fire's executor is registered
+ * and SOLVES here from `r5-bobboss-fire`'s boot, in an honest run.
  */
 
 import { readFileSync } from 'node:fs';
@@ -54,28 +51,49 @@ describe('assertGoal — encounter', () => {
     });
 });
 
-describe('solveSegment — encounter L32 from the survey boot (72,120), sword granted', () => {
+describe('solveSegment — encounter L32 from r5-bobboss-fire\'s boot, honest, sword granted', () => {
     const l32Run = () => {
         const staging = solveStaging(stagingFromTape(parseTape(TAPE)));
         expect(staging.boot).toEqual({ level: ARENA.level, ...ARENA.boot });
         return { run: createRunForStaging(staging, atlasLevelSource()), boot: staging.boot };
     };
 
-    it('⛔ refuses BY NAME, before a tick: no executor for a Fire drop, because the model has no fight', () => {
+    it('⛓ SOLVES: arm, seven verified landings, fourteen pages, the Fire, the burn and the pit to L30, untouched', () => {
+        const { run, boot } = l32Run();
+        const out = solveSegment({ run, goals: [{ ...L32_GOAL }], name: 'u5-encounter', boot });
+        // Measured (no shield here; the survey's shielded boot is 1056 and is the
+        // committed witness `swim-u5-bobboss-encounter`).
+        expect(out.perTick.length).toBe(1042);
+        expect(run.level).toBe(30);
+        expect(run.transitions).toEqual([{ t: 962, from_level: 32, to_level: 30 }]);
+        expect(run.ledger('playerHits')).toEqual([]);
+        expect(out.equips).toEqual([{ t: 826, slot: 1 }]);
+        const strikes = out.records.filter((r) => r.leg === 'strike');
+        expect(strikes.map((r) => r.form)).toEqual([0, 0, 1, 1, 1, 2, 2]);
+        expect(strikes.filter((r) => r.killed).map((r) => r.form)).toEqual([0, 1, 2]);
+        expect(out.records.find((r) => r.leg === 'drop')).toMatchObject({ landings: 7, pages: 14, t: 825 });
+        expect(out.records.find((r) => r.leg === 'burn')).toMatchObject({ id: 'burnabletree@64,0' });
+        expect(out.records.at(-1)).toEqual({ goal: 'reach-pit', to: 30, t: 962, coast: 80 });
+        // The landings are the RUN's, read off the boss: one `boss-hit` row
+        // with `landed` per strike, never a page.
+        const landed = run.ledger('bobBossEvents').filter((r) => r.what === 'boss-hit' && r.landed);
+        expect(landed.map((r) => r.form)).toEqual([0, 0, 1, 1, 1, 2, 2]);
+        expect(run.ledger('bobBossEvents').filter((r) => r.flag).map((r) => r.what))
+            .toEqual(['rock-armed', 'fire-removed']);
+    }, 120_000);
+
+    it('the registry holds Fire, and an unregistered drop refuses BY NAME before a tick', () => {
+        expect(Object.keys(ENCOUNTER_EXECUTORS)).toEqual(['Fire']);
         const { run, boot } = l32Run();
         let err = null;
         try {
-            solveSegment({ run, goals: [{ ...L32_GOAL }], name: 'u5-encounter', boot });
+            solveSegment({ run, goals: [{ ...L32_GOAL, drop: { item: 'Moonrock' } }],
+                name: 'u5-unregistered', boot });
         } catch (e) { err = e; }
         expect(err?.name).toBe('SolverRefusal');
-        expect(err.message).toMatch(/^solverBot\(u5-encounter\) encounter \(64,128\)->Fire: no encounter executor is registered for a 'Fire' drop in level 32\./);
-        expect(err.message).toMatch(/DIVERGES from the game at t=15, the arm frame/);
+        expect(err.message).toMatch(/no encounter executor is registered for a 'Moonrock' drop in level 32\./);
         expect(err.obstacle).toEqual({ kind: 'unmodelled-encounter', id: 'encounter@64,128' });
         expect(run.ticksCompleted).toBe(0);
-    });
-
-    it('the registry is the gate: no Fire row', () => {
-        expect(Object.keys(ENCOUNTER_EXECUTORS)).not.toContain('Fire');
     });
 });
 

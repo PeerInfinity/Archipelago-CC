@@ -69,6 +69,7 @@ import {
     holdOneAxis, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, runChest, runCollect,
     runHold,
     runShove, runDwell, SHOVE_STEP,
+    CEREMONY_CADENCE_START, ceremonyCadenceStep, runFire,
 } from './botDriverV2.js';
 import { resolvePresser } from './botDriverV2.js';
 import {
@@ -106,6 +107,7 @@ import {
     HITBOX, WALK_SPEED,
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
     chestStanceBand,
+    fireRect, inventorySlotsFor,
 } from './solverView.js';
 import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
@@ -522,23 +524,360 @@ export const STRATEGY_EXECUTORS = Object.freeze({
 });
 
 /**
- * ⛓⛓ SEEDLING SWIM U5, D1 — THE `encounter` EXECUTORS, keyed by the item the
+ * ⛓⛓ SEEDLING SWIM U5 — THE BOBBOSS ENCOUNTER EXECUTOR.
+ *
+ * Derived from the model, not hand-authored: `levelRun` simulates the fight
+ * (`bobBossFight.js`), and every decision here reads the run or a forecast the
+ * run hands out (`run.bobBossForecast()`, the same stepper and the same slash
+ * test the run uses). The legs:
+ *
+ *   (a) ARM — hold `up` until the run's rock reads `armed` (the line is
+ *       y < 120). The arm tick and its 174 dead frames happen inside
+ *       `advance`; nothing here counts them.
+ *   (b) PER FORM —
+ *       · a DIALOGUE is paged with `ceremonyCadenceStep`. A press while the
+ *         dialogue holds the run is a PAGE, never a swing, and a page is never
+ *         counted as a landing.
+ *       · a STRIKE is searched against the forecast: hold one of nine key sets
+ *         for n ticks, press, then hold one of nine for the safety tail. A plan
+ *         is admitted only if the player is touched by NO sword line and NO
+ *         body contact through the tail, and the forecast lands a hit. The
+ *         press must be an ordinary `slash` (never a dash), which is the run's
+ *         own `slashSet` answer. After the press the landing is VERIFIED on the
+ *         boss's own `hits` (`run.entities('bobBoss')`): read, never counted.
+ *       · with no admissible strike, a short REPOSITION is chosen the same way
+ *         (the key set whose forecast stays untouched longest).
+ *       · a TRANSITION (`inputRefused`) is waited out, holding nothing.
+ *   (c) DROP — walk onto the Fire and page its ceremony. Done when the
+ *       inventory holds `hasFire` AND the run's `bobBossEvents` ledger holds
+ *       both writes: the rock's `rock-armed` {32,1} and `fire-removed`.
+ *   (d) BURN — equip the Fire's slot, stand where `fireRect` reaches the
+ *       burnable tree, and run `botDriverV2.runFire`'s `burns` arm (its own
+ *       53-tick wait and its solid-then-gone check). `then: 'reach-pit'` is the
+ *       goal loop's, after this returns.
+ */
+const ENCOUNTER_KEYSETS = Object.freeze([
+    [], ['up'], ['down'], ['left'], ['right'],
+    ['up', 'left'], ['up', 'right'], ['down', 'left'], ['down', 'right'],
+].map((k) => Object.freeze(k)));
+/** The longest approach a strike plan may hold before its press. */
+const ENCOUNTER_APPROACH_MAX = 72;
+/** How long after its press a strike plan must leave the player untouched. */
+const ENCOUNTER_SAFE_TAIL = 48;
+/** A reposition's committed length, and the horizon its safety is priced over. */
+const ENCOUNTER_REPOSITION_TICKS = 6;
+const ENCOUNTER_REPOSITION_HORIZON = 48;
+/** The whole encounter's tick bound, arm to burn. */
+const ENCOUNTER_MAX_TICKS = 8000;
+
+/** The live boss's landed-hit count across forms: the `bobBossEvents` ledger's landings. */
+const bobLandings = (run) => run.ledger('bobBossEvents')
+    .filter((r) => r.what === 'boss-hit' && r.landed).length;
+const bobArena = (run) => run.entities('bobBoss');
+
+/**
+ * Forecast one plan from the run's current state, tick by tick, in
+ * `advance`'s own order: the boss steps against the player's point, the
+ * sword window's due tests fire against the boss, the press (if this is its
+ * tick) is resolved by `slashSet`, then the player steps.
+ *
+ * @returns {{touchedAt: ?number, landedAt: ?number, killed: boolean,
+ *   pressOutcome: ?string, end: object}}
+ */
+function forecastEncounterPlan(run, fc, stepper, { approach, n, retreat, tail, press }) {
+    const b = fc.clone(fc.body);
+    let p = { ...run.state };
+    const info = run.progress('slashInfo');
+    let slash = { ...info.state };
+    // `slashEndsAt`, relative to this tick: `slashing` drops at the END of the
+    // tick whose count reaches it (`sprites()` -> `slashEnd`).
+    let endsAt = info.endsAt === null ? null : info.endsAt - run.ticksCompleted;
+    const tests = new Map();
+    let landedAt = null;
+    let killed = false;
+    let pressOutcome = null;
+    const total = press ? n + 1 + tail : n + tail;
+    for (let k = 0; k < total; k += 1) {
+        const r = fc.step(b, p);
+        if (r.playerHits.length > 0) return { touchedAt: k, landedAt, killed, pressOutcome, end: p };
+        if (b.removed) return { touchedAt: null, landedAt, killed, pressOutcome, end: p };
+        // `Player.update`: `shieldBump()`, then `slash()`'s timer and test.
+        fc.shieldBump(b, p, slash.slashing);
+        slash = slashTimerTick(slash);
+        const due = tests.get(k);
+        if (due !== undefined && landedAt === null) {
+            const v = fc.slash(b, p, due);
+            if (v.landed) { landedAt = k; killed = v.killed; }
+        }
+        const keys = k < n ? approach : (press && k === n ? [...approach, 'primary'] : retreat);
+        if (press && k === n) {
+            const out = slashSet(slash, { pressed: true, hasSword: true, direction: p.direction });
+            pressOutcome = out.outcome;
+            if (out.outcome !== 'slash') return { touchedAt: null, landedAt: null, killed, pressOutcome, end: p };
+            slash = out.state;
+            endsAt = k + SLASH_ANIM_TICKS[slash.anim];
+            for (let i = 1; i <= SLASH_HIT_TICKS; i += 1) tests.set(k + i, out.slashDirection);
+        }
+        p = stepper(p, new Set(keys));
+        if (endsAt !== null && k + 1 >= endsAt) {
+            endsAt = null;
+            slash = slashSet(slash, { pressed: false, hasSword: true }).state;
+        }
+    }
+    return { touchedAt: null, landedAt, killed, pressOutcome, end: p };
+}
+
+/** The earliest-landing admissible strike plan, or null. */
+function searchEncounterStrike(run) {
+    const fc = run.bobBossForecast();
+    if (!fc) return null;
+    const stepper = run.previewStepper();
+    let best = null;
+    let tried = 0;
+    for (const approach of ENCOUNTER_KEYSETS) {
+        for (let n = 0; n <= ENCOUNTER_APPROACH_MAX; n += 1) {
+            // A prefix that is touched before its press tick touches every
+            // plan built on it: stop extending this approach.
+            const pre = forecastEncounterPlan(run, fc, stepper,
+                { approach, n, retreat: [], tail: 0, press: false });
+            if (pre.touchedAt !== null) break;
+            if (best && n >= best.landedAt) break;
+            for (const retreat of ENCOUNTER_KEYSETS) {
+                tried += 1;
+                const f = forecastEncounterPlan(run, fc, stepper,
+                    { approach, n, retreat, tail: ENCOUNTER_SAFE_TAIL, press: true });
+                if (f.touchedAt !== null || f.landedAt === null) continue;
+                if (!best || f.landedAt < best.landedAt) {
+                    best = { approach, n, retreat, landedAt: f.landedAt, killed: f.killed };
+                }
+            }
+        }
+    }
+    return best ? { ...best, tried } : { tried, none: true };
+}
+
+/** The key set whose forecast stays untouched longest, held for a short reposition. */
+function searchEncounterReposition(run) {
+    const fc = run.bobBossForecast();
+    const stepper = run.previewStepper();
+    const scored = ENCOUNTER_KEYSETS.map((keys) => {
+        if (!fc) return { keys, safeFor: Infinity };
+        const f = forecastEncounterPlan(run, fc, stepper, {
+            approach: keys, n: ENCOUNTER_REPOSITION_TICKS, retreat: [],
+            tail: ENCOUNTER_REPOSITION_HORIZON - ENCOUNTER_REPOSITION_TICKS, press: false,
+        });
+        return { keys, safeFor: f.touchedAt ?? Infinity };
+    });
+    scored.sort((x, y) => y.safeFor - x.safeFor);
+    return scored[0];
+}
+
+function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, refuse, equip }) {
+    const records = [];
+    const start = perTick.length;
+    const tick = (keys) => {
+        if (perTick.length - start > ENCOUNTER_MAX_TICKS) {
+            refuse(`${what}: the encounter has run ${ENCOUNTER_MAX_TICKS} ticks without the `
+                + 'drop.', { goal, obstacle: { kind: 'encounter', id: `encounter@${goal.at.x},${goal.at.y}` } });
+        }
+        const held = new Set(keys);
+        perTick.push(held);
+        const r = run.advance(held);
+        if (r.transition) {
+            refuse(`${what}: the run left level ${r.transition.from_level} mid-encounter.`, { goal });
+        }
+        return r;
+    };
+    const row = (verb, extra = {}) => seeRow({
+        tick: perTick.length, saw: saw(), goal: { kind: 'encounter', at: { ...goal.at } },
+        strategy: { verb }, rejected: [], keys: [], ...extra,
+    });
+    const hitsTaken = () => run.ledger('playerHits').length;
+    const hits0 = hitsTaken();
+
+    // ── (a) the arm ───────────────────────────────────────────────────
+    const arena0 = bobArena(run);
+    if (!arena0.has('rock')) {
+        refuse(`${what}: level ${run.level} holds no BobBoss arena (no \`thirdboss\` rock).`, { goal });
+    }
+    if (!arena0.get('rock').armed) {
+        row('touch');
+        const armFrom = perTick.length;
+        while (!bobArena(run).get('rock').armed) {
+            if (perTick.length - armFrom > 240) {
+                refuse(`${what}: held \`up\` for 240 ticks and the rock never armed (y=${run.state.y}).`, { goal });
+            }
+            tick(['up']);
+        }
+        records.push({ goal: 'encounter', leg: 'arm', t: perTick.length });
+    }
+
+    // ── (b) the forms ─────────────────────────────────────────────────
+    let pages = 0;
+    let landings = 0;
+    let cadence = CEREMONY_CADENCE_START;
+    let inDialogue = false;
+    while (!bobArena(run).has('fire') && !bobArena(run).has('fireCollected')) {
+        const arena = bobArena(run);
+        const dlg = arena.get('dialogue');
+        if (dlg?.open) {
+            if (!inDialogue) { row('wait'); inDialogue = true; cadence = CEREMONY_CADENCE_START; }
+            const step = ceremonyCadenceStep(cadence);
+            cadence = step.next;
+            const before = run.ledger('bobBossEvents').length;
+            tick([...step.held]);
+            pages += run.ledger('bobBossEvents').slice(before)
+                .filter((r) => r.what === 'dialogue-release' && r.paged).length;
+            continue;
+        }
+        if (inDialogue && cadence.pressing) {
+            // The release that closed the page went out; never carry a press down
+            // into a live frame (it would swing).
+            refuse(`${what}: a dialogue closed with a press still down.`, { goal });
+        }
+        inDialogue = false;
+        const boss = arena.get('boss');
+        if (run.progress('inputRefused') || !boss || boss.destroy || dlg) {
+            tick([]);
+            continue;
+        }
+        const plan = searchEncounterStrike(run);
+        if (plan.none) {
+            const rp = searchEncounterReposition(run);
+            if (rp.safeFor <= ENCOUNTER_REPOSITION_TICKS) {
+                refuse(`${what}: form ${boss.form} at (${boss.x.toFixed(2)},${boss.y.toFixed(2)}) — no `
+                    + `strike lands untouched (${plan.tried} plans forecast) and every key set is `
+                    + `touched within ${rp.safeFor} tick(s).`, {
+                    goal, obstacle: { kind: 'encounter', id: boss.id } });
+            }
+            row('wait', { rejected: [{ option: 'kill', why: `no admissible strike among ${plan.tried}` }] });
+            for (let i = 0; i < ENCOUNTER_REPOSITION_TICKS; i += 1) tick(rp.keys);
+            continue;
+        }
+        row('kill', { obstacle: { kind: 'bobboss', id: boss.id } });
+        const before = bobLandings(run);
+        const formBefore = boss.form;
+        for (let k = 0; k <= plan.landedAt; k += 1) {
+            const keys = k < plan.n ? plan.approach
+                : (k === plan.n ? [...plan.approach, 'primary'] : plan.retreat);
+            tick(keys);
+        }
+        const after = bobLandings(run);
+        if (after !== before + 1) {
+            refuse(`${what}: the forecast landed form ${formBefore}'s hit at +${plan.landedAt} and `
+                + `the run's boss reports ${after - before} landing(s) — the forecast and the run `
+                + 'disagree.', { goal });
+        }
+        landings += 1;
+        records.push({ goal: 'encounter', leg: 'strike', form: formBefore, landings, pages,
+            killed: plan.killed, t: perTick.length });
+        if (hitsTaken() !== hits0) {
+            refuse(`${what}: the player was hit during an admitted strike plan — the forecast `
+                + 'and the run disagree.', { goal });
+        }
+    }
+
+    // ── (c) the drop ──────────────────────────────────────────────────
+    const fire = bobArena(run).get('fire');
+    if (fire) {
+        row('collect');
+        const aim = { x: fire.x, y: fire.y };
+        const from = perTick.length;
+        while (!run.progress('inCeremony') && !run.progress('inventory')?.hasFire) {
+            if (perTick.length - from > 400) refuse(`${what}: never touched the Fire at (${aim.x},${aim.y}).`, { goal });
+            tick([...chooseHeld(run.state, aim, 0)]);
+        }
+        let c = CEREMONY_CADENCE_START;
+        while (!run.progress('inventory')?.hasFire) {
+            if (perTick.length - from > 1200) refuse(`${what}: the Fire's ceremony never ended.`, { goal });
+            const step = ceremonyCadenceStep(c);
+            c = step.next;
+            tick([...step.held]);
+        }
+        if (c.pressing) refuse(`${what}: the Fire's ceremony ended with a press still down.`, { goal });
+    }
+    const writes = run.ledger('bobBossEvents').filter((r) => r.flag).map((r) => r.what);
+    if (!run.progress('inventory')?.hasFire || !writes.includes('rock-armed')
+        || !writes.includes('fire-removed')) {
+        refuse(`${what}: the drop is not complete — hasFire ${run.progress('inventory')?.hasFire}, `
+            + `writes [${writes.join(', ')}].`, { goal });
+    }
+    records.push({ goal: 'encounter', leg: 'drop', landings, pages, t: perTick.length });
+
+    // ── (d) the burn ──────────────────────────────────────────────────
+    if (goal.then === 'reach-pit') {
+        const trees = run.world.burnableTrees ?? [];
+        const burned = run.entities('burnedTrees');
+        const standing = trees.filter((t) => !burned.has(t.id)
+            && (run.world.pitTiles ?? []).some((pt) => rectsOverlapInclusive(t.rect, pt.rect)));
+        if (standing.length > 0) {
+            const slots = inventorySlotsFor(run.progress('inventory'));
+            const slot = slots.indexOf(1);
+            if (slot < 0) refuse(`${what}: the inventory has no Fire slot (slots [${slots}]).`, { goal });
+            if (run.progress('primaryWeapon') !== 'fire') {
+                // ⛔ ONE TICK AFTER THE FLAG. `Fire.removed()` sets `hasFire` at
+                // the end of the collect frame, but the slot array is rebuilt
+                // by `inventory.update()` (`addItemsFromSave`) in the NEXT
+                // frame's `Game.update` tail, after `Bot.update` has applied
+                // that frame's equips. Measured: an equip on the flag's own
+                // tick finds one slot in the game and the tape disarms there.
+                tick([]);
+                equip(slot);
+            }
+            for (const tree of standing) {
+                const stance = burnStanceFor(run, tree);
+                if (!stance) refuse(`${what}: no walkable stance puts ${tree.id} inside \`fireRect\`.`, { goal });
+                walkTo(goal, stance, { what: `${what} -> burn stance (${tree.id})` });
+                for (let i = 0; (run.state.vx !== 0 || run.state.vy !== 0); i += 1) {
+                    if (i > 60) refuse(`${what}: the burn stance never came to rest.`, { goal });
+                    tick([]);
+                }
+                row('fire', { obstacle: { kind: 'burnabletree', id: tree.id } });
+                // Every tree in `standing` covers a pit tile (the filter above),
+                // so its burn opens a pit, declared to `runFire` as `overPit`.
+                const rec = runFire(run, perTick, { burns: [{ x: tree.x, y: tree.y }], overPit: true },
+                    `${what} -> fire (${tree.id})`);
+                records.push({ goal: 'encounter', leg: 'burn', id: tree.id, t: perTick.length,
+                    pressTick: rec.pressTick ?? null });
+            }
+        }
+    }
+    return { records, landings, pages };
+}
+
+/** `Entity.collideRect`'s inclusive overlap, for a burn's fire rect and a tree. */
+function rectsOverlapInclusive(a, b) {
+    return a.x <= b.x + b.w && b.x <= a.x + a.w && a.y <= b.y + b.h && b.y <= a.y + a.h;
+}
+
+/** The nearest walkable tile centre whose `fireRect` reaches `tree`. */
+function burnStanceFor(run, tree) {
+    let best = null;
+    for (let ty = 0; ty < 12; ty += 1) {
+        for (let tx = 0; tx < 12; tx += 1) {
+            const cx = tx * TILE_SIZE + TILE_SIZE / 2;
+            const cy = ty * TILE_SIZE + TILE_SIZE / 2;
+            const fr = fireRect(cx, cy);
+            if (!rectsOverlapInclusive({ x: fr.x, y: fr.y, w: fr.w, h: fr.h }, tree.rect)) continue;
+            if (plannerObstacleAt(run.world, cx, cy, null, solverPlanOpts(run, new Set(), {})) !== null) continue;
+            const d = Math.hypot(cx - run.state.x, cy - run.state.y);
+            if (!best || d < best.d) best = { x: cx, y: cy, d };
+        }
+    }
+    return best ? { x: best.x, y: best.y } : null;
+}
+
+/**
+ * ⛓⛓ SEEDLING SWIM U5 — THE `encounter` EXECUTORS, keyed by the item the
  * encounter DROPS (the location is the drop, not a placement).
  *
- * ⛔ EMPTY, AND THE EMPTINESS IS THE MEASUREMENT. An executor here has to be
- * derived from the model and has to read the fight off the run (the freeze,
- * the dialogue pages, the boss's hits, the drop). U5's W0 replayed
- * `r5-bobboss-fire` through the model, and the model simulates NONE of L32's
- * script. It diverges from the game's recording at t=15, which is the arm
- * frame. `rockFalls` stays `[]` for 2,500 ticks (`fallrocklarge` is not a
- * `FALL_RESPONDERS` row), the only dead span is the 20-frame level load, no
- * entity family holds a BobBoss, and `hasFire` never turns true. The tape is in
- * `r5Chain.MODEL_EXEMPT`, and `tapeRunner.test.js` asserts that it DIVERGES. A
- * row here therefore needs a simulation family first (`levelRun.js`), which no
- * solver slice may write. Until then the goal refuses by name, the same way
- * `STRATEGY_EXECUTORS`' "SELECTED but not registered" does.
+ * D1 shipped this table empty, because the model then simulated none of
+ * L32's script. The user licensed the simulation, `bobBossFight.js` now steps
+ * it, and `r5-bobboss-*` match their oracle recordings exactly, so the Fire's
+ * row is registered: `execBobBossEncounter`. A drop with no row still
+ * refuses by name, before a tick.
  */
-export const ENCOUNTER_EXECUTORS = Object.freeze({});
+export const ENCOUNTER_EXECUTORS = Object.freeze({ Fire: execBobBossEncounter });
 
 /**
  * ⛔ THE BOUND ON STRATEGY APPLICATIONS PER GOAL, and it is named rather than
@@ -9213,6 +9552,17 @@ export function solveSegment({
     let goalPlanExtra = {};
     const grazes = [];
     const records = [];
+    /**
+     * ⛓ Swim U5 — the slot selections THIS segment made (`run.equipNow`), as
+     * `{t, slot}`. A tape carries an equip as a field, not as keys, so a
+     * caller that folds `perTick` into a tape (or replays it) must apply
+     * these too. The staging's own equips are not here.
+     */
+    const solverEquips = [];
+    const equip = (slot) => {
+        run.equipNow(slot);
+        solverEquips.push({ t: run.ticksCompleted, slot });
+    };
 
     /**
      * Refuse, with everything a reader needs. The rows recorded so far ride
@@ -10673,7 +11023,8 @@ export function solveSegment({
         applied = [];
         openerChain = [];
         goalPlanExtra = {};
-        if (goal.kind === 'reach-pit') {
+        /** The pit executor, shared by `reach-pit` and an encounter's `then` (swim U5). */
+        const execReachPit = (goal, pitGoal) => {
             /**
              * ⛓⛓ SEEDLING SWIM U1, D1 — THE PIT EXECUTOR, `reach-exit`'s shape
              * with the driver's pit-exit leg's identity. The aim is the tile's
@@ -10686,7 +11037,7 @@ export function solveSegment({
              * run then coasts the transport (`coastThroughTransport`, the leg
              * runner's own) so the segment ends ON THE GROUND in the next level.
              */
-            const { tx, ty } = goal.pit;
+            const { tx, ty } = pitGoal.pit;
             const pit = (run.world.pitTiles ?? []).find((p) => p.tx === tx && p.ty === ty);
             const whatPit = `solverBot(${name}) reach-pit (${tx},${ty})`;
             if (!pit) {
@@ -10717,37 +11068,48 @@ export function solveSegment({
             const coast = coastThroughTransport(run, perTick, maxTicksPerTarget,
                 `${whatPit}->L${fall.to_level}`);
             records.push({ goal: 'reach-pit', to: fall.to_level, t: t.t, coast });
+        };
+        if (goal.kind === 'reach-pit') {
+            execReachPit(goal, goal);
             continue;
         }
         if (goal.kind === 'encounter') {
             /**
-             * ⛓⛓ SEEDLING SWIM U5, D1: the executor is looked up by the DROP,
-             * and an unregistered drop refuses before a tick is spent. See
-             * `ENCOUNTER_EXECUTORS` for why the table is empty: the model
-             * does not simulate the fight, so there is nothing to derive a
-             * schedule from and nothing to verify a landing against.
+             * ⛓⛓ SEEDLING SWIM U5: the executor is looked up by the DROP, and
+             * an unregistered drop refuses before a tick is spent. After the
+             * drop, `then: 'reach-pit'` falls through the level's nearest pit
+             * tile (its control block names where every pit lands).
              */
             const whatEnc = `solverBot(${name}) encounter (${goal.at.x},${goal.at.y})`
                 + `->${goal.drop.item}`;
             const exec = ENCOUNTER_EXECUTORS[goal.drop.item];
             if (!exec) {
                 refuse(`${whatEnc}: no encounter executor is registered for a `
-                    + `'${goal.drop.item}' drop in level ${run.level}. The model does not `
-                    + 'simulate this encounter: no entity family holds the boss, the '
-                    + 'arena\'s `fallrocklarge` never falls (`rockFalls` stays empty), '
-                    + 'no dialogue or form transition freezes the run, and nothing spawns '
-                    + 'the drop. `r5-bobboss-fire` DIVERGES from the game at t=15, the '
-                    + 'arm frame (`r5Chain.MODEL_EXEMPT`). An executor derived from the '
-                    + 'model needs the encounter MODELLED first, which is a simulation '
-                    + 'family, not a solver policy.', {
+                    + `'${goal.drop.item}' drop in level ${run.level}. An executor is derived from `
+                    + 'an encounter the model SIMULATES (L32\'s, `bobBossFight.js`, registered '
+                    + 'as `Fire`); a drop with no simulated encounter behind it has nothing to '
+                    + 'derive a schedule from or verify a landing against.', {
                     goal,
                     obstacle: { kind: 'unmodelled-encounter',
                         id: `encounter@${goal.at.x},${goal.at.y}` },
                 });
             }
-            records.push({ goal: 'encounter', ...exec(run, perTick, goal, {
+            const enc = exec(run, perTick, goal, {
                 maxTicksPerTarget, economies, dashMode, what: whatEnc, walkTo, goal,
-            }) });
+                seeRow, saw, refuse, equip,
+            });
+            records.push(...enc.records);
+            if (goal.then === 'reach-pit') {
+                // The level's control block names where its pits fall; the
+                // nearest pit tile is the one the walk takes.
+                const pits = (run.world.pitTiles ?? []).slice().sort((p, q) =>
+                    Math.hypot(p.rect.x + 8 - run.state.x, p.rect.y + 8 - run.state.y)
+                    - Math.hypot(q.rect.x + 8 - run.state.x, q.rect.y + 8 - run.state.y));
+                if (pits.length === 0) {
+                    refuse(`${whatEnc}: then 'reach-pit', and level ${run.level} has no pit tile.`, { goal });
+                }
+                execReachPit(goal, { pit: { tx: pits[0].tx, ty: pits[0].ty } });
+            }
             continue;
         }
         if (goal.kind === 'reach-exit') {
@@ -10955,6 +11317,8 @@ export function solveSegment({
         replans,
         grazes,
         records,
+        /** ⛓ Swim U5: the slot selections this segment made — see `solverEquips`. */
+        equips: solverEquips,
         /**
          * ⛓ EDITOR ARC SLICE 9 — beside `trace`, deliberately, and not inside
          * it. A trace row is a DECISION and its `saw.danger` is a summary

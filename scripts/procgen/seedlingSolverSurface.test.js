@@ -192,13 +192,14 @@ describe('mutants, over a temporary copy of the family', () => {
     });
 
     // ⛓ C3: this mutant read run.bosses until the entities fold folded it (see the C3 block's (a)).
-    it('(a′) run.equipNow (reached by botDriverV2.js only), read in dangerMap.js ⇒ RED through `files`', () => {
+    // ⛓ Swim U5: the BobBoss executor's slot selection added solverBot.js to the row.
+    it('(a′) run.equipNow (reached by botDriverV2.js and solverBot.js), read in dangerMap.js ⇒ RED through `files`', () => {
         const row = TABLE.rows.find((r) => r.surface === 'run' && r.name === 'equipNow');
-        expect(Object.keys(row.files)).toEqual(['botDriverV2.js']);
+        expect(Object.keys(row.files)).toEqual(['botDriverV2.js', 'solverBot.js']);
         const cmp = mutate('dangerMap.js', (s) => `${s}\nexport const mutantA2 = (run) => run.equipNow;\n`);
         const lines = say(cmp);
         expect(lines).toHaveLength(1);
-        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:equipNow — the row names only botDriverV2\.js/);
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:equipNow — the row names only botDriverV2\.js, solverBot\.js/);
     });
 
     it('(b) a DIRECT import of a simulation symbol no family file imports (levelWorld.js#blocksMover) in mover.js '

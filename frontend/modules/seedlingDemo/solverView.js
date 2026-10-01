@@ -108,6 +108,6 @@ export {
 } from './spinner.js';
 // tapeFormat.js — botDriverV1, botDriverV2, decisionTrace · seedling 1, physics 7
 export {
-    assertTapeWithinRuntimeBudget, coerceTerrainState, GAME_VISIBLE_DROPS, heldKeysAt, KEY_CODES, KEY_NAMES,
-    requiredTapeVersion, serializeTape,
+    assertTapeWithinRuntimeBudget, coerceTerrainState, GAME_VISIBLE_DROPS, heldKeysAt, inventorySlotsFor,
+    KEY_CODES, KEY_NAMES, requiredTapeVersion, serializeTape,
 } from './tapeFormat.js';

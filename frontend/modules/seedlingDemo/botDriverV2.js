@@ -3663,7 +3663,7 @@ function runShove(run, perTick, shove, what) {
  * is the padded number `runSpear` already uses; `run.pushesSettled` is the
  * run's own answer and this waits for that rather than counting.
  */
-function runFire(run, perTick, fire, what) {
+export function runFire(run, perTick, fire, what) {
     if (run.entities('openActivators') === null) {
         fail(`${what}: a fire press is a MECHANIC, and the noclip arm does not run it — `
             + '`advance` hands `stepV2` a null world state, so the press would emit its '
@@ -4363,7 +4363,11 @@ function runFire(run, perTick, fire, what) {
                     + 'other weapon selected reaches it and does nothing.');
             }
             const after = plannerObstacleAt(run.world, t.cx, t.cy, null, burnProbeOpts(run));
-            if (after !== null) {
+            // ⛓ Swim U5: L32's arena tree stands ON its level's two pit tiles
+            // (`control@64,0`, `fallthrough 30`), so its cell is a PIT once it
+            // burns. That is the room's exit, not a stray solid, and a leg
+            // DECLARES it (`fire.overPit`); an undeclared pit is still a red.
+            if (after !== null && !(after.kind === 'pit' && fire.overPit === true)) {
                 fail(`${what}: ${t.id} reports burned and its cell (${t.cx},${t.cy}) is `
                     + `STILL BLOCKED by ${after.kind}. \`die()\` writes \`type = ""\` AND `
                     + '`FP.world.remove(this)`, so the 2x2 leaves the solids list '

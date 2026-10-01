@@ -85,10 +85,11 @@ export const FAMILY_RULES = [
     [/No strategy row exists for this obstacle/,
         'VERB-MISSING — the selected obstacle has NO strategy row at all'],
     /**
-     * ⛓ SWIM U5, D1 — an `encounter` whose drop has no registered executor. The
-     * reason is upstream of the solver: the MODEL does not simulate the fight
-     * (`solverBot.ENCOUNTER_EXECUTORS`). Its witness is survey step 30 (L32),
-     * the only encounter on the route.
+     * ⛓ SWIM U5 — an `encounter` whose drop has no registered executor
+     * (`solverBot.ENCOUNTER_EXECUTORS`). An executor needs the fight SIMULATED
+     * first, so the missing piece is a simulation family. Its witness was
+     * survey step 30 (L32) until the BobBoss family landed and `Fire` was
+     * registered; it now reaches no route step.
      */
     [/no encounter executor is registered for a '([^']+)' drop/,
         (m) => `ENCOUNTER-UNMODELLED — the '${m[1]}' drop's fight is not simulated by the `

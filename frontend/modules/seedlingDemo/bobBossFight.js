@@ -312,6 +312,55 @@ export function bobBossHit(b, { d, t = 'Sword', frozen = false }) {
 }
 
 /**
+ * ⛓⛓ THE SHIELD SHOVES THE BOSS — `Player.shieldBump`, and the model had no
+ * `shieldBump` at all (swim U5's witness found it: the survey's boot holds the
+ * shield, the R5 tapes never did, and the live game's boss ended up across the
+ * room from the model's).
+ *
+ * `Player.update` calls `shieldBump()` near its top, every frame, with NO
+ * freeze gate: `if (shieldObj && v.length > 0)`, every `Enemy` whose box
+ * touches the shield's box gets `knockback(shieldForce = 5, new Point(x, y))`.
+ * `BobBoss` overrides `hit` (force 0, point null) but NOT `knockback`, so the
+ * shield moves it. `Enemy.knockback` skips a body with `destroy` set.
+ *
+ * The shield's BOX is placed in `Player.render` (`shieldObj.setHitbox` +
+ * `x`/`y`), so the bump reads where the PREVIOUS frame's render left it:
+ * the player's end-of-frame position, velocity, direction and `slashing`.
+ *   · `direction == 1 && v.x == 0`: 7x7 (origin 3,3) at (x - 2, y - 3 + slashing)
+ *   · `direction == 3 && v.x == 0`: 7x7 at (x + 2, y + 3 - slashing)
+ *   · `v.x < 0 || (v.x == 0 && direction == 2)`: 3x7 (origin 2,3) at (x - 4, y)
+ *   · `v.x > 0 || (v.x == 0 && direction == 0)`: 3x7 at (x + 4, y)
+ * (`setHitbox` takes ints, so `sprShield.width / 2` = 3.5 is 3.)
+ *
+ * ⚠ BOSS ONLY. Every other `Enemy` the model steps is shoved by the same
+ * line in the game and not here — a model-wide gap this family names and
+ * does not close (the chaser family is another slice's).
+ */
+export function playerShieldRect(p, slashing) {
+    const s = slashing ? 1 : 0;
+    const box = (cx, cy, w, h, ox, oy) => ({ x: cx - ox, y: cy - oy, w, h,
+        right: cx - ox + w, bottom: cy - oy + h });
+    if (p.direction === 1 && p.vx === 0) return box(p.x - 2, p.y - 3 + s, 7, 7, 3, 3);
+    if (p.direction === 3 && p.vx === 0) return box(p.x + 2, p.y + 3 - s, 7, 7, 3, 3);
+    if (p.vx < 0 || (p.vx === 0 && p.direction === 2)) return box(p.x - 4, p.y, 3, 7, 2, 3);
+    if (p.vx > 0 || (p.vx === 0 && p.direction === 0)) return box(p.x + 4, p.y, 3, 7, 2, 3);
+    return null;
+}
+
+/** `shieldBump` against the boss; returns true when it shoved. MUTATES `b.v`. */
+export function bobBossShieldBump(b, p, { slashing }) {
+    if (b.removed || b.destroy) return false;
+    if (!(Math.hypot(p.vx, p.vy) > 0)) return false;
+    const r = playerShieldRect(p, slashing);
+    if (!r || !overlapsStrict(bobBossBox(b), r)) return false;
+    const a = Math.atan2(b.y - p.y, b.x - p.x);
+    b.v = { x: b.v.x + SHIELD_FORCE * Math.cos(a), y: b.v.y + SHIELD_FORCE * Math.sin(a) };
+    return true;
+}
+/** `Player.shieldForce`. */
+const SHIELD_FORCE = 5;
+
+/**
  * The arena rock's arm test, `FallRockLarge.update`'s `bossRock` branch:
  * `!p.fallFromCeiling && p.y < fallTo - sprRock.height / 2 - 8`.
  */

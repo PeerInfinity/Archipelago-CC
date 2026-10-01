@@ -116,7 +116,7 @@ import {
 import { FIRE as BOB_BOSS_FIRE } from './bobBoss.js';
 import {
     BOB_BOSS_ROCK_DEAD_FRAMES, beginBobBossDialogue, bobBossBox, bobBossHit, bobBossRockArms,
-    bobBossRockRect, createBobBossBody, stepBobBossBody,
+    bobBossRockRect, bobBossShieldBump, createBobBossBody, stepBobBossBody,
 } from './bobBossFight.js';
 // ⛓⛓⛓ R6 SLICE 6f: the FIFTEENTH family — the Owl, and the first fight on
 // the ladder whose GAMEPLAY reads random numbers. `finalBossRng` is the
@@ -10001,6 +10001,9 @@ export function createLevelRun({
          * live path, because `set slashing` is reached only through
          * `useItem`, which the freeze really does gate.
          */
+        // ⛓ Swim U5: `shieldBump()` sits above `slash()` in `Player.update` and
+        // has no freeze gate either.
+        if (!noclip) bobShieldBumpNow();
         slashState = slashTimerTick(slashState);
         // ⛓⛓⛓ R6 SLICE 3: AND SO DOES `hitUpdate()`, for the SAME reason one
         // line lower — it sits outside `super.update()` in `Player.update`,
@@ -10821,21 +10824,55 @@ export function createLevelRun({
      * `distanceRectPoint` reach gate, then `collideLine("Solid")`, then
      * `genericHit` -> `BobBoss.hit`.
      */
+    /**
+     * The geometry half of `slash()` against the boss — one function, used by
+     * the live arm below and by `bobBossForecast`, so the forecast and the
+     * run cannot disagree about whether a swing reaches.
+     *
+     * @returns {?{reach: number, gate: ?string}} null when the rect does not
+     *   collect the body; `gate` names the first refusing test, or null.
+     */
+    function bobBossSlashGeometry(b, px, py, r, reachLimit) {
+        const box = bobBossBox(b);
+        const touches = box.right >= r.x && box.bottom >= r.y
+            && box.x <= r.x + r.w && box.y <= r.y + r.h;
+        if (!touches) return null;
+        const reach = distanceRectPoint(px, py, box);
+        if (reach > reachLimit) {
+            return { reach, gate: `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}` };
+        }
+        if (collideLineSolid(px, py, b.x, b.y)) return { reach, gate: 'collideLine Solid' };
+        return { reach, gate: null };
+    }
+
+    /**
+     * `Player.shieldBump` against the arena's boss, at the top of the
+     * player's update — live tick or frozen (it has no freeze gate). The
+     * shield's box is the one the previous frame's render placed, i.e. the
+     * player's state at the start of this tick. See `bobBossShieldBump`.
+     */
+    function bobShieldBumpNow() {
+        const a = bobArena;
+        if (!a || a.none || a.level !== level || !a.boss || !inventory?.hasShield) return;
+        if (inventory?.hasDarkShield) {
+            throw new Error('levelRun: the BobBoss fight with the DARK shield is not modelled — '
+                + '`shieldBump` then HITS (`darkShieldDamage`, "Shield") rather than shoving.');
+        }
+        if (bobBossShieldBump(a.boss, state, { slashing: slashState.slashing })) {
+            bobLedger({ what: 'shield-bump', form: a.boss.form,
+                v: { x: a.boss.v.x, y: a.boss.v.y } });
+        }
+    }
+
     function bobBossSlashNow({ rect: r, reachLimit, weapon, pressTick, hits }) {
         const a = bobArena;
         if (!a || a.none || a.level !== level || !a.boss) return;
         const b = a.boss;
-        const box = bobBossBox(b);
-        const touches = box.right >= r.x && box.bottom >= r.y
-            && box.x <= r.x + r.w && box.y <= r.y + r.h;
-        if (!touches) return;
-        const reach = distanceRectPoint(state.x, state.y, box);
-        const blocker = reach <= reachLimit ? collideLineSolid(state.x, state.y, b.x, b.y) : null;
+        const geo = bobBossSlashGeometry(b, state.x, state.y, r, reachLimit);
+        if (!geo) return;
         let verdict = { landed: false, killed: false, refusedAt: null };
-        if (reach > reachLimit) {
-            verdict.refusedAt = `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`;
-        } else if (blocker) {
-            verdict.refusedAt = 'collideLine Solid';
+        if (geo.gate) {
+            verdict.refusedAt = geo.gate;
         } else {
             verdict = bobBossHit(b, {
                 d: weapon === 'spear' ? SPEAR_DAMAGE
@@ -12777,6 +12814,53 @@ export function createLevelRun({
             return noclip ? null : arrowForecastNow();
         },
         /**
+         * ⛓⛓ SWIM U5 — THE BOBBOSS, FORECAST.
+         *
+         * A deep copy of the live body and three pure functions over copies
+         * of it: `step` is `stepBobBossBody` with this tick's solid bag (and
+         * the NPC point while the NPC stands); `slash` is the run's own
+         * `bobBossSlashGeometry` + `bobBossHit` for one sword test; `box` is
+         * the body's 14x14. `null` when no boss is live (or under noclip).
+         *
+         * ⚠ A SNAPSHOT, like `previewStepper`: the solid bag is this tick's.
+         * The arena's only solid that changes during a fight is the NPC,
+         * which this freezes too; a forecast across the dialogue's end is a
+         * forecast of a boss that stays pinned.
+         */
+        bobBossForecast() {
+            if (noclip) return null;
+            const a = bobArenaNow();
+            if (a.none || !a.boss) return null;
+            const solidOpts = normalizeLiveOpts(liveSolidOpts());
+            const npcStands = a.npc !== null;
+            const blocked = (box) => (npcStands && box.x < ARENA_NPC_POINT.x
+                    && box.right > ARENA_NPC_POINT.x && box.y < ARENA_NPC_POINT.y
+                    && box.bottom > ARENA_NPC_POINT.y)
+                || !!world.collidesSolid(box, solidOpts);
+            const clone = (b) => ({ ...b, v: { ...b.v }, swordSpin: [...b.swordSpin],
+                swordSpinBegin: [...b.swordSpinBegin] });
+            return {
+                body: clone(a.boss),
+                clone,
+                box: (b) => bobBossBox(b),
+                shieldBump: (b, p, slashing) => (inventory?.hasShield
+                    ? bobBossShieldBump(b, p, { slashing }) : false),
+                step: (b, p) => stepBobBossBody(b, {
+                    player: { x: p.x, y: p.y }, playerBox: playerBoxAt(p.x, p.y),
+                    frozen: false, blocked,
+                }),
+                slash: (b, p, direction) => {
+                    const geo = bobBossSlashGeometry(b, p.x, p.y,
+                        slashRect(p.x, p.y, direction, SLASH_SCALE_NORMAL),
+                        slashReachFor(SLASH_SCALE_NORMAL));
+                    if (!geo || geo.gate) return { landed: false, killed: false, reached: !!geo };
+                    return { ...bobBossHit(b, { d: inventory?.hasDarkSword
+                        ? DARK_SWORD_DAMAGE : SWORD_DAMAGE, t: 'Sword', frozen: false }),
+                    reached: true };
+                },
+            };
+        },
+        /**
          * ⛓ THE CHASER SUBSYSTEM, FORECAST — see `chaserForecastNow`. `null`
          * when the room steps no bridged chaser, and `null` under
          * `noclip`/`noDamage`, where nothing is stepped at all. The gate is
@@ -14480,6 +14564,8 @@ export function createLevelRun({
             // the whole reason the dash window is `gap <= 19`. `if (slashTimer
             // > 0) slashTimer--` runs at the top of `Player.update`, ABOVE
             // `super.update()` and therefore above the press that reads it.
+            // ⛓ Swim U5: `shieldBump()` runs just above `slash()`.
+            if (!noclip && !pendingDeath) bobShieldBumpNow();
             slashState = slashTimerTick(slashState);
             /**
              * ⛓⛓⛓ R9 SLICE 12c‴ — **ONE SWORD-WINDOW STEPPER, AND THE PREVIEW
