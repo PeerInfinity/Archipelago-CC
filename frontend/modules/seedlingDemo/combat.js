@@ -52,11 +52,14 @@
  * - **An enemy in its i-frames cannot contact-damage.** `Enemy.hitPlayer`
  *   gates on `hitsTimer <= 0`, so a hit buys 30 ticks of contact safety
  *   from THAT enemy as well as blocking the next hit.
- * - **`hitByDarkStuff` retires an enemy's i-frames permanently.**
- *   `Enemy.hit`'s gate is `(hitsTimer <= 0 || hitByDarkStuff)`, and
- *   `hitByDarkStuff` is set by a `"Shield"` or `"Suit"` hit — the darksuit
- *   retaliation inside `Player.hit`. An enemy that has touched a
- *   suit-wearing player takes every subsequent press.
+ * - **`hitByDarkStuff` lets the NEXT damaging hit through a live i-frame.**
+ *   `Enemy.hit`'s gate is `(hitsTimer <= 0 || hitByDarkStuff)`, and every
+ *   damaging hit REASSIGNS the latch — `hitByDarkStuff = (t == "Shield" ||
+ *   t == "Suit")` (`enemyDamage.js`) — so a `"Shield"`/`"Suit"` hit (the
+ *   dark shield's bump, the dark suit's retaliation inside `Player.hit`)
+ *   sets it and the next sword or spear hit clears it. ⛔ NOT permanent:
+ *   this header once said so; swim R1 measured the game reading it false
+ *   after a sword hit (`r1-dark-shield-spinner` t6, U11's bob at t20).
  *
  * ── THE SECOND DAMAGE FAMILY ──────────────────────────────────────────
  *
