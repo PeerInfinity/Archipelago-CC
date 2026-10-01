@@ -865,6 +865,23 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             addedBy: 'U9-swim D2(c) (the standing-gate witness)',
             why: 'a shielded player STANDS while `bob@64,64` sits on the shield\'s box: '
                 + '`v.length > 0` is false, so nothing is shoved until the contact lands.',
+         * ⛓⛓⛓ U10-swim D2 — THE GAME WITNESS FOR PRICING THE PUNCH BY THE
+         * FORECAST rather than the static pad: an admitted stance and its
+         * positive control, both in L12's one-puncher room.
+         */
+        Object.freeze({
+            name: 'u10-puncher-dwell', levels: Object.freeze([12]), bobs: 1, ticks: 200,
+            addedBy: 'U10-swim D2 (the admitted dwell)',
+            why: 'a stance the forecast ADMITS and the static pad refuses: (392,280) inside '
+                + '`puncher@416,256`\'s leash, held for 200 ticks on the kill arm\'s own '
+                + 'preview keys — three presses land (t 14, 47, 80), the puncher is removed, '
+                + 'and the player takes ZERO hits, punch or contact.',
+        }),
+        Object.freeze({
+            name: 'u10-puncher-dwell-refused', levels: Object.freeze([12]), bobs: 1, ticks: 34,
+            addedBy: 'U10-swim D2 (the positive control)',
+            why: 'a stance the forecast REFUSES by the punch: (400,248), where the forecast '
+                + 'names the punch at t 34 and the game lands it there (`hits` 1).',
         }),
     ]),
 

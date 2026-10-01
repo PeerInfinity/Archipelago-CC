@@ -1365,6 +1365,20 @@
       "noHazards": []
     },
     {
+      "file": "u10-puncher-dwell-refused.json",
+      "tickCount": 34,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "u10-puncher-dwell.json",
+      "tickCount": 200,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "u7-puncher-kill.json",
       "tickCount": 128,
       "bootLevel": 12,

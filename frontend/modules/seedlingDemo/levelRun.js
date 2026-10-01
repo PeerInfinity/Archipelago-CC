@@ -6274,9 +6274,35 @@ export function createLevelRun({
                     // ⛓ U7-swim D2: the wind-up, decided and stepped as the live
                     // run does, so the chase gate (`getSprite() != "attack"`)
                     // agrees. ⛔ No punch is thrown: a hit does not happen in a
-                    // preview — the danger map prices the reach as `threatPad`.
+                    // preview.
                     c.attack = chaserAttackDecision(c.tag, c, playerPos) ?? c.attack;
-                    if (c.attack && stepSpriteAnim(c.attack)) c.attack = null;
+                    // Only a class that HAS a punch reports one (`punch` stays
+                    // absent otherwise, so `dangerMap` keeps the pad for every
+                    // other body).
+                    if (CHASERS[c.tag]?.attack) c.punch = null;
+                    if (c.attack && stepSpriteAnim(c.attack)) {
+                        c.attack = null;
+                        /**
+                         * ⛓⛓ SEEDLING SWIM U10, D2 — **THE PUNCH IS REPORTED, NOT
+                         * THROWN** (the one field this forecast gains). It is the
+                         * box `punchNow` would test on the tick the wind-up ends,
+                         * whether `attackPlayer`'s own gate lets it throw at all
+                         * (`hitsTimer`, read AFTER this tick's `hitUpdate`, which
+                         * the loop below applies — live, the entity half runs it
+                         * before the graphic half), and whether it meets the
+                         * previewed player where this tick STARTED, which is the
+                         * `state` `punchNow` reads. `dangerMap.chaserDanger`
+                         * prices it per tick in place of the static `threatPad`.
+                         */
+                        const { rect } = puncherPunchRect(c.tag, c, playerPos);
+                        const live = (c.hitsTimer > 0 ? c.hitsTimer - 1 : 0) <= 0;
+                        c.punch = {
+                            rect,
+                            live,
+                            hitsPlayer: live
+                                && rectsOverlap(rect, playerBoxAt(playerPos.x, playerPos.y)),
+                        };
+                    }
                 }
                 if (shieldInForecast && Number.isFinite(playerPos.vx)
                         && Number.isFinite(playerPos.vy)) {
@@ -6329,6 +6355,8 @@ export function createLevelRun({
                         enemyClass: ENEMY_CLASSES[c.tag]?.as3 ?? null,
                         hits: c.hits,
                         hitsTimer: c.hitsTimer,
+                        // ⛓ U10-swim D2: this tick's punch, for a class that has one.
+                        ...(c.punch !== undefined ? { punch: c.punch } : {}),
                     }));
             },
             /**

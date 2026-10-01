@@ -412,7 +412,33 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
         }
         const body = chaserBoxAt(c.tag, c.x, c.y);
         const leash = typeof row.aggro?.range === 'number' ? row.aggro.range : 0;
-        const pad = row.threatPad ?? 0;
+        /**
+         * ⛓⛓⛓ SEEDLING SWIM U10, D2 — **A FORECAST BODY THAT CARRIES ITS OWN
+         * PUNCH IS PRICED BY IT, NOT BY THE PAD** (U7 § D4's wall 2).
+         *
+         * `threatPad` stands for a reach this map cannot TIME. The chaser
+         * forecast does time the puncher's: `chaserForecastNow` reports the
+         * box `punchNow` tests on the one tick the wind-up ends, and whether
+         * `attackPlayer`'s own `hitsTimer` gate lets it throw. So per tick,
+         * with forecast bodies, the body is priced bare (its contact —
+         * `Puncher.solids` carries `"Player"`, so the contact needs the player
+         * to walk INTO it) and the punch exactly. The relaxation's game
+         * witness is `u10-puncher-dwell` (both arms).
+         *
+         * ⛔ THE WAIT ARM AND THE LIVE BODIES KEEP THE PAD: neither carries a
+         * forecast, and a pad is what a reach without a clock costs (trap
+         * candidate: a pad priced where a forecast exists — and its converse,
+         * a forecast assumed where none was taken).
+         */
+        const timed = perTick && bodies !== null && c.punch !== undefined;
+        if (timed && c.punch && c.punch.live
+            && (c.punch.hitsPlayer || rectsOverlap(box, c.punch.rect))) {
+            out.push({ kind: 'chaser', id: c.id,
+                why: 'the punch: the `attackPlayer` box off the body\'s edge ends its '
+                    + 'wind-up THIS tick, and the body\'s own hitsTimer does not refuse it' });
+            continue;
+        }
+        const pad = timed ? 0 : (row.threatPad ?? 0);
         // The player's centre against the body's, which is what `Bob.update`'s
         // own `FP.distance(x, y, player.x, player.y)` measures.
         const px = (box.x + box.right) / 2;

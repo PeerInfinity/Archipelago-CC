@@ -1,0 +1,84 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 12,
+        "x": 392,
+        "y": 280
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasSword": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 200,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "primary",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "right",
+            "from": 45,
+            "to": 46
+        },
+        {
+            "key": "primary",
+            "from": 46,
+            "to": 47
+        },
+        {
+            "key": "right",
+            "from": 78,
+            "to": 79
+        },
+        {
+            "key": "primary",
+            "from": 79,
+            "to": 80
+        },
+        {
+            "key": "right",
+            "from": 111,
+            "to": 112
+        },
+        {
+            "key": "primary",
+            "from": 112,
+            "to": 113
+        }
+    ],
+    "name": "u10-puncher-dwell",
+    "description": "⛓⛓⛓ U10-swim D2 — THE DWELL THE FORECAST ADMITS, DRIVEN. L12 at (392,280), inside `puncher@416,256`'s 80 px leash, with a sword and `noDamage` FALSE, holding the keys the chaser kill arm's own preview holds (`previewWalk` with the strike policy and a 200-tick standing tail). The forecast prices the puncher's punch per tick (`chaserForecastNow`'s `punch` row) and finds no tick whose punch box, or body, meets the player; the STATIC pad (`threatPad` 8 at every tick) refuses the same stance at t 45. The model predicts: presses land at t 14, 47, 80, the puncher is removed by t 124, and the player takes ZERO hits over a dwell longer than both the kill and the key wait (140). Authored by scripts/procgen/plan-seedling-u10-puncher-dwell.mjs.",
+    "note": ""
+}
