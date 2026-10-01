@@ -247,7 +247,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -739,7 +740,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1105,7 +1107,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Palace - Boss",
@@ -1160,7 +1163,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Palace - Prize",
@@ -1331,7 +1335,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Palace - Compass Chest",
@@ -1382,7 +1387,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1900,7 +1906,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Palace - Pot Row Pot Key",
@@ -1916,7 +1923,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Swamp Palace - Trench 1 Pot Key",
@@ -1944,7 +1952,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -1992,7 +2001,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2225,7 +2235,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -2787,7 +2798,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Dark Basement - Right",
@@ -2806,7 +2818,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3329,7 +3342,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Stalfos Basement",
@@ -3345,7 +3359,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -3681,7 +3696,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Hyrule Castle - Zelda's Chest",
@@ -3741,7 +3757,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Hyrule Castle - Map Guard Key Drop",
@@ -3765,7 +3782,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Hyrule Castle - Boomerang Guard Key Drop",
@@ -3799,7 +3817,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Hyrule Castle - Big Key Drop",
@@ -3895,7 +3914,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4223,7 +4243,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Castle Tower - Dark Maze",
@@ -4261,7 +4282,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Castle Tower - Dark Archer Key Drop",
@@ -4303,7 +4325,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Castle Tower - Circle of Pots Key Drop",
@@ -4345,7 +4368,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4559,7 +4583,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Map Chest",
@@ -4575,7 +4600,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -4877,7 +4903,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Desert Palace - Beamos Hall Pot Key",
@@ -4913,7 +4940,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Desert Palace - Desert Tiles 2 Pot Key",
@@ -5026,7 +5054,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Desert Palace - Prize",
@@ -5463,7 +5492,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Prize",
@@ -5580,7 +5610,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -5709,7 +5740,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of Hera - Map Chest",
@@ -5976,7 +6008,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Desert Palace - Map Chest",
@@ -5989,7 +6022,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6020,7 +6054,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Desert Palace - Big Key Chest",
@@ -6044,7 +6079,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6320,7 +6356,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Main Lobby",
@@ -6370,7 +6407,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Bridge Chest",
@@ -6435,7 +6473,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Spikes Pot Key",
@@ -6451,7 +6490,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Fishbone Pot Key",
@@ -6490,7 +6530,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Conveyor Crystal Key Drop",
@@ -6597,7 +6638,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -6757,7 +6799,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of Hera - Boss",
@@ -6794,7 +6837,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Tower of Hera - Prize",
@@ -6934,7 +6978,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -7042,7 +7087,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Prize",
@@ -7151,7 +7197,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Hammer Block Key Drop",
@@ -7167,7 +7214,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -8154,7 +8202,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Misery Mire - Big Key Chest",
@@ -8180,7 +8229,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -8595,7 +8645,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Compass Chest",
@@ -8683,7 +8734,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -8833,7 +8885,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Many Pots Pot Key",
@@ -8849,7 +8902,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Big Chest",
@@ -8868,7 +8922,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ice Palace - Iced T Room",
@@ -8990,7 +9045,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9071,7 +9127,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Prize",
@@ -9295,7 +9352,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Big Chest",
@@ -9363,7 +9421,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Hallway Pot Key",
@@ -9379,7 +9438,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Spike Switch Pot Key",
@@ -9398,7 +9458,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Blind's Cell",
@@ -9457,7 +9518,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Map Chest",
@@ -9473,7 +9535,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Thieves' Town - Compass Chest",
@@ -9651,7 +9714,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganons Tower - Hope Room - Left",
@@ -9683,7 +9747,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganons Tower - Conveyor Cross Pot Key",
@@ -9699,7 +9764,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -9837,7 +9903,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Eye Bridge - Top Left",
@@ -10595,7 +10662,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -10696,7 +10764,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -10743,7 +10812,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Roller Room - Left",
@@ -10763,7 +10833,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Turtle Rock - Roller Room - Right",
@@ -11074,7 +11145,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11229,7 +11301,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -11270,7 +11343,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -12496,7 +12570,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Sewers - Key Rat Key Drop",
@@ -12614,7 +12689,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganons Tower - Big Chest",
@@ -12710,7 +12786,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganons Tower - Big Key Room - Right",
@@ -12864,7 +12941,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -12950,7 +13028,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Palace of Darkness - Prize",
@@ -13841,7 +13920,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganons Tower - DMs Room - Bottom Right",
@@ -13860,7 +13940,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Ganons Tower - Double Switch Pot Key",
@@ -14093,7 +14174,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14318,7 +14400,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Skull Woods - West Lobby Pot Key",
@@ -14334,7 +14417,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14408,7 +14492,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -14957,7 +15042,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -15030,7 +15116,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Eastern Palace - Cannonball Chest",
@@ -15059,7 +15146,8 @@
               "player": 1,
               "advancement": false,
               "type": "Map"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Eastern Palace - Dark Eyegore Key Drop",
@@ -15097,7 +15185,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Eastern Palace - Big Key Chest",
@@ -15188,7 +15277,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Eastern Palace - Boss",
@@ -15251,7 +15341,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Eastern Palace - Prize",
@@ -15425,7 +15516,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -15802,7 +15894,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
@@ -15907,7 +16000,8 @@
               "player": 1,
               "advancement": false,
               "type": "Compass"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Skull Woods - Prize",
@@ -16186,7 +16280,8 @@
               "player": 1,
               "advancement": true,
               "type": "BigKey"
-            }
+            },
+            "locked": true
           },
           {
             "name": "Skull Woods - Pot Prison",
@@ -16202,7 +16297,8 @@
               "player": 1,
               "advancement": true,
               "type": "SmallKey"
-            }
+            },
+            "locked": true
           }
         ]
       },
