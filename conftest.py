@@ -14,6 +14,11 @@ To keep CI signal focused on this fork's own code, this conftest:
    start of the pytest session so the iteration-over-all-worlds tests in
    ``test/general/`` (e.g. ``test_create_duplicate_locations``,
    ``test_locations_in_datapackage``) do not try to instantiate them.
+3. Drops the same worlds from ``worlds.failed_world_loads``, so an excluded
+   world whose import failed for an environmental reason (e.g. zillion's
+   ``git+`` requirement when pip's clone of GitHub times out on a runner)
+   does not red ``test_no_failed_world_loads``. A fork world that fails to
+   load still reds it.
 
 To re-include an upstream world (e.g. while investigating a real
 regression), remove it from ``UPSTREAM_WORLDS`` below.
@@ -125,8 +130,14 @@ def _is_excluded_world_module(module: str) -> bool:
 def pytest_configure(config) -> None:  # noqa: ARG001 — pytest hook signature
     del config
 
+    from worlds import failed_world_loads
     from worlds.AutoWorld import AutoWorldRegister
     from worlds.Files import AutoPatchExtensionRegister, AutoPatchRegister
+
+    # A folder world's failed load is keyed by its directory name, the same
+    # names EXCLUDED_WORLDS holds.
+    for name in EXCLUDED_WORLDS:
+        failed_world_loads.pop(name, None)
 
     for game, world_type in list(AutoWorldRegister.world_types.items()):
         if _is_excluded_world_module(world_type.__module__):
