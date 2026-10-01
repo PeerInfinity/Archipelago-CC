@@ -8,7 +8,7 @@
  * `spinnerForecast(n)[i]` swings its hammer at `gameTimeAt(i)`, not
  * `gameTimeAt(i + 1)`. Until U4b every solver-side hammer query paired them one
  * phase apart (`clearOfHammersAt`, `safeStep`'s hand-built clock,
- * `dangerMap.spinnerDanger`; the solver's two are D1, the danger map's is D3): the census chamber's (7,6) press was priced
+ * `dangerMap.spinnerDanger`; the solver's two are U4b D1, the danger map's is U6 D2, below): the census chamber's (7,6) press was priced
  * clear at `Game.time` 4885 and the run billed the hammer at 4884.
  *
  * ⛔ The row drives a player who stands still until the first hammer hit, and
@@ -25,6 +25,7 @@ import { POST_SWORD_ITEMS } from './procgenPalette.js';
 import { SPINNER, hammerHitsPlayer } from './spinner.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
+import { spinnerDanger } from './dangerMap.js';
 
 /** The census chamber (the 6x6 chamber (2,2)..(7,7), the goal at (8,8)) with
  *  one untagged body; the player is booted INSIDE it and never moves. */
@@ -92,6 +93,34 @@ describe('U4b — the spinner forecast and the clock pair on one index', () => {
             expect(firstSame).toBe(hitAt);
             // the old pairing was one phase ahead: it did not call this tick.
             expect(firstNext).not.toBe(hitAt);
+        });
+    }
+});
+
+/**
+ * ⛓⛓ SEEDLING SWIM U6 (D2) — **AND THE DANGER MAP'S TRANSIT ARM ASKS THE SAME
+ * PAIR.** `spinnerDanger(run, box, h)` reads forecast row `h − 1`; at horizon 1
+ * that is row 0, the bodies the next advance bills, and the clock it bills them
+ * at is `gameTimeAt(0)`. Until U6 the arm asked `gameTimeAt(h)`, one phase
+ * ahead, and these three rows red on it (3 of 3).
+ */
+describe('U6 — dangerMap.spinnerDanger prices row h − 1 at gameTimeAt(h − 1)', () => {
+    for (const { body, stand } of PLACEMENTS) {
+        it(`body (${body}) stand (${stand}): the transit arm at horizon 1 names the first hammer hit on its own tick`, () => {
+            const run = runAt(chamber(...body), ...stand);
+            const hits = () => run.ledger('playerHits') ?? [];
+            let firstDanger = null;
+            let hitAt = null;
+            for (let n = 0; n < 400 && hitAt === null; n += 1) {
+                const box = playerBoxAt(run.state.x, run.state.y);
+                if (firstDanger === null && spinnerDanger(run, box, 1).length > 0) {
+                    firstDanger = run.ticksCompleted;
+                }
+                run.advance(new Set());
+                if (hits().length > 0) hitAt = run.ticksCompleted - 1;
+            }
+            expect(hits()[0]?.source).toBe('spinner-hammer');
+            expect(firstDanger).toBe(hitAt);
         });
     }
 });

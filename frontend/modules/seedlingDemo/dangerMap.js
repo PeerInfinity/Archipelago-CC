@@ -463,6 +463,32 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
  * — and is skipped here for the reason `stepBoundFor` refuses one in (c): a
  * bound of zero would read as "static" and prove the arena clear.
  */
+/**
+ * ⛓⛓ SEEDLING SWIM U6 — **THE SPINNERS THIS RUN STEPS, LIVE OR KILLED**: the
+ * ids the static ingredient must NOT price at their placements.
+ *
+ * ⛔ THE LIVE ROSTER ALONE WAS HALF THE ANSWER. A spinner the press arm killed
+ * leaves `run.spinnerBodies`, and the exclusion above then let its census row
+ * fall through to "a static Enemy body at its placement" — trap 157 for the
+ * DEAD half, which this file's own chaser paragraph names (*"forbid a DEAD
+ * one's placement for ever"*). The census chamber's (2,2) is what it cost once
+ * the transit clock was paired (U6 D2): the kill ends with the player on the
+ * body's placement tile and the next danger gate refused *"the danger map
+ * forbids (40.02,39.95) — enemy:spinner@32,32 (a static "Enemy" body …)"* with
+ * no body in the room.
+ *
+ * ⇒ the run's own verdict, through the one ledger the solver family reads: a
+ * body with a LANDED press hit (`spinnerPressHits`) is one this run stepped, so
+ * if it is not in the live roster now, the run removed it. A spinner the run
+ * never steps (a room whose roster is not tracked) has no such row and is still
+ * priced at its placement, which is the honest reading there.
+ */
+function spinnersTheRunSteps(run) {
+    const ids = new Set((run.entities('spinnerBodies') ?? []).map((b) => b.id));
+    for (const h of (run.ledger('spinnerPressHits') ?? [])) if (h.landed) ids.add(h.id);
+    return ids;
+}
+
 export function staticEnemyDanger(run, box) {
     const out = [];
     const world = run.worldFor(run.level);
@@ -474,8 +500,11 @@ export function staticEnemyDanger(run, box) {
      * well would forbid a cell every spinner in the game leaves on tick one —
      * trap 157 wearing the danger map's clothes, which §12.4 named for the
      * live half and this is the other half of.
+     *
+     * ⛓ U6 — AND A SPINNER THE RUN KILLED IS NOT AT ITS PLACEMENT EITHER
+     * (`spinnersTheRunSteps`).
      */
-    const live = new Set((run.entities('spinnerBodies') ?? []).map((b) => b.id));
+    const live = spinnersTheRunSteps(run);
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
@@ -541,7 +570,8 @@ export function staticEnemyDanger(run, box) {
  *   (2) the hammer — `collideLine("Player", x, y, x + 13·cos a, y + 13·sin a)`
  *       at `hammerAngle = (Game.time % 45) / 45 · 2π`, force 4
  *
- * and the ANGLE comes from `run.gameTimeAt(horizon)`, which is the clock's own
+ * and the ANGLE comes from `run.gameTimeAt(horizon − 1)` — the clock forecast
+ * row `horizon − 1` swings under (U6 D2) — which is the clock's own
  * arithmetic and not a second one.
  *
  * ⛔ THE DISC SURVIVES AS THE FALLBACK, AND ITS CONDITION IS NAMED. Where the
@@ -569,7 +599,18 @@ export function spinnerDanger(run, box, horizon) {
     // `forecast[i]` is the state at the top of tick `ticksCompleted + 1 + i`,
     // and it is a list of RECTS in the same order `spinnerBodies` reports.
     const ahead = horizon > 0 ? (run.spinnerForecast(horizon)[horizon - 1] ?? null) : null;
-    const at = typeof run.gameTimeAt === 'function' ? run.gameTimeAt(horizon) : null;
+    /**
+     * ⛓⛓ SEEDLING SWIM U6 (D2) — **ROW `h − 1` SWINGS AT `gameTimeAt(h − 1)`.**
+     * `advance` steps the spinners, bills their contacts at `clock.now()`, and
+     * only then ticks, so a forecast row and its clock share one index
+     * (`spinnerClockPairing.test.js`, the same law U4b D1 applied to
+     * `solverBot.clearOfHammersAt`). This line used to read `gameTimeAt(h)`:
+     * the transit arm priced every body one hammer phase ahead of the contact
+     * the run bills. Horizon 0 reads the bodies as they stand, at
+     * `gameTimeAt(0)`, as it always did.
+     */
+    const at = typeof run.gameTimeAt === 'function'
+        ? run.gameTimeAt(Math.max(0, horizon - 1)) : null;
     const out = [];
     bodies.forEach((b, i) => {
         const r = ahead?.[i] ?? null;
@@ -727,9 +768,10 @@ export function dangerVolumes(run, horizon = 0) {
      * belong to ingredient (f) at their LIVE positions. Pricing them here as
      * well would forbid a cell every spinner in the game leaves on tick one —
      * trap 157 wearing the danger map's clothes, which §12.4 named for the
-     * live half and this is the other half of.
+     * live half and this is the other half of. ⛓ U6: the killed ones too
+     * (`spinnersTheRunSteps`).
      */
-    const live = new Set((run.entities('spinnerBodies') ?? []).map((b) => b.id));
+    const live = spinnersTheRunSteps(run);
     for (const inst of (world.combat?.enemies ?? [])) {
         if (stepped && isBridgedChaser(inst.tag)) continue;
         if (live.has(`${inst.tag}@${inst.x},${inst.y}`)) continue;
@@ -919,7 +961,8 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
      * criterion is autonomy given the walk, and a quantity that is a function
      * of the tick index alone meets it as squarely as the arrow subsystem
      * does: `gameClock` counts the dead frames the caveat named, so the phase
-     * at horizon `h` is `run.gameTimeAt(h)` and the ingredient prices the
+     * at horizon `h` is `run.gameTimeAt(h − 1)` (row `h − 1`'s own clock, U6 D2)
+     * and the ingredient prices the
      * EXACT LINE at that phase.
      *
      * ⚠ The coupling is unchanged — `runRange` is 0, so `Spinner.update`'s

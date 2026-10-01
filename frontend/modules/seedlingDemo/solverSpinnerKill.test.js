@@ -101,11 +101,18 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * `run.collideLineSolid` first, and the kill lands from a cell with a
      * line. ⛔ With the predicate forced false (U3 mutant (a)) the U1 text
      * returns byte for byte, and this row reds.
+     *
+     * ⛓ U6 D2 — 154 → 252 t. With the transit arm priced at its own tick's
+     * phase the strike walks a different corridor, and the kill ends with the
+     * player ON the dead body's placement tile. The static ingredient priced
+     * that tile as *"a static "Enemy" body at its placement"* (the live roster
+     * was its only exclusion) and the next gate refused; a spinner the run
+     * killed is excluded now too (`dangerMap.spinnersTheRunSteps`).
      */
-    it('(2,2): was the run\'s line-of-sight refusal; now SOLVES in 154 t, the swing planned on a clear line', () => {
+    it('(2,2): was the run\'s line-of-sight refusal; now SOLVES in 252 t, the swing planned on a clear line', () => {
         const out = solveAt(2, 2, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(154);
+        expect(out.ticks).toBe(252);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
