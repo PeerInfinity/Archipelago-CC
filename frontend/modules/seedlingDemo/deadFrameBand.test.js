@@ -27,7 +27,7 @@ import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
 import {
-    FADE_STATS, LEGACY_FADE_PER_LOAD, MAX_HALF_WIDTH, SPREAD_PER_SQRT_LOAD,
+    FADE_STATS, LEGACY_FADE_PER_LOAD, MAX_HALF_WIDTH, MIN_FLOOR_HALF_WIDTH, SPREAD_PER_SQRT_LOAD,
     describeFadeBand, fadeBand, legacyFadeBand,
 } from './deadFrameBand.js';
 import { CEREMONY_DEAD_FRAMES } from './sealCeremony.js';
@@ -169,6 +169,35 @@ describe('the shape, and the cap that keeps detection unconditional', () => {
         expect(needed).toBeCloseTo(4.26, 2);
         expect(SPREAD_PER_SQRT_LOAD).toBeGreaterThan(needed);
         expect(SPREAD_PER_SQRT_LOAD).toBeLessThan(needed * 1.5);
+    });
+
+    it('⛓⛓ trap 1484: a STARVED single-load tape (14 dead, twice on CI) is admitted by the floor', () => {
+        const b = fadeBand(1);
+        expect(14).toBeGreaterThanOrEqual(b.lo);
+        expect(b.halfLow).toBe(MIN_FLOOR_HALF_WIDTH);
+        // the minimum is the measured worst plus margin, not a guess
+        expect(MIN_FLOOR_HALF_WIDTH).toBeGreaterThan(FADE_STATS.mean - 14);
+    });
+
+    it('⛔ the wider floor still CATCHES a load the model invented, below four loads', () => {
+        // An invented load (a death or reboot the game did not take) puts the
+        // game's residue one fade below the model's centre.
+        for (const n of [2, 3]) {
+            const invented = FADE_STATS.mean * (n - 1);
+            expect(invented).toBeLessThan(fadeBand(n).lo - 5);
+        }
+    });
+
+    it('⛓ the floor minimum is ONE-SIDED and bites only below four loads', () => {
+        for (const n of [1, 2, 3]) {
+            const b = fadeBand(n);
+            expect(b.hi - b.centre).toBeCloseTo(SPREAD_PER_SQRT_LOAD * Math.sqrt(n), 6);
+            expect(b.centre - b.lo).toBe(MIN_FLOOR_HALF_WIDTH);
+        }
+        for (const n of [4, 9, 53, 79]) {
+            const b = fadeBand(n);
+            expect(b.centre - b.lo).toBeCloseTo(b.hi - b.centre, 6);
+        }
     });
 
     it('rejects a load count that is not a positive integer', () => {

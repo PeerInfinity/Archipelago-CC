@@ -97,12 +97,13 @@ export const FADE_STATS = Object.freeze({
  * be far too tight for the per-RUN noise, and the two are different
  * quantities that happen to be measured in the same frames.
  *
- * ⚠ SYMMETRIC, though the noise is not. A starved run can only LOSE fade
- * frames, so the flake pushes residue DOWN and never up. The ceiling is
- * widened by the same amount anyway because it costs nothing: see
- * `MAX_HALF_WIDTH` — detection keeps a 1.9x margin at the roster's
- * largest tape either way, and a one-sided band invites the next reader
- * to ask which side is which.
+ * ⚠ SYMMETRIC ABOVE THREE LOADS, though the noise is not. A starved run
+ * can only LOSE fade frames, so the flake pushes residue DOWN and never up.
+ * The ceiling is widened by the same amount anyway because it costs
+ * nothing: see `MAX_HALF_WIDTH` — detection keeps a 1.9x margin at the
+ * roster's largest tape either way. ⛓ BELOW FOUR LOADS THE FLOOR IS WIDER:
+ * `MIN_FLOOR_HALF_WIDTH` (trap 1484 fired twice at one load), and the
+ * returned `halfLow` names the floor's side so nobody has to ask.
  */
 export const SPREAD_PER_SQRT_LOAD = 4.5;
 
@@ -124,10 +125,35 @@ export const SPREAD_PER_SQRT_LOAD = 4.5;
 export const MAX_HALF_WIDTH = CEREMONY_DEAD_FRAMES.pickup / 2;
 
 /**
+ * ⛓⛓ THE FLOOR'S ABSOLUTE MINIMUM HALF-WIDTH, IN FRAMES — a ONE-SIDED term
+ * (swim planning-3, ⚖ the user 2026-10-01: "do 1 next").
+ *
+ * `4.5·√N` is 4.5 frames at one load, and the floor at one load was
+ * therefore 14.6. Trap 1484 measured that twice on CI, to the digit: a
+ * single-load tape reading 14 dead frames, and 17 on the re-run of the same
+ * SHA (R9 L18b: `direction-flip` and `wall-slide`; the U11 merge:
+ * `straight-run`). A starved render loop costs a SHORT tape the same few
+ * frames it costs a long one, and √N gives a short tape no room for them.
+ *
+ *     the worst single-load starvation seen   19.1275 − 14 = 5.13
+ *
+ * so the floor's half-width is never less than 9 (that plus margin). ONLY the
+ * floor: starvation LOSES frames, so the residue only ever reads LOW, and the
+ * ceiling (a freeze the model MISSED) keeps `half` exactly.
+ *
+ * ⚠ What it may not cost: the smallest LOW-side defect is a load the model
+ * INVENTED (a death or reboot the game did not take), one fade ≈ 19 frames
+ * below the centre — still ~10 frames under this floor. A missed ceremony
+ * (150) is caught at every N as before. It bites only below N = 4 (`4.5·√4
+ * = 9`); at every longer tape the band is byte-for-byte what it was.
+ */
+export const MIN_FLOOR_HALF_WIDTH = 9;
+
+/**
  * The band a run's fade residue must land in.
  *
  * @param {number} loads — world builds, i.e. `transitions.length + 1`.
- * @returns {{lo:number, hi:number, centre:number, half:number, capped:boolean}}
+ * @returns {{lo:number, hi:number, centre:number, half:number, halfLow:number, capped:boolean}}
  */
 export function fadeBand(loads) {
     if (!Number.isInteger(loads) || loads < 1) {
@@ -136,7 +162,10 @@ export function fadeBand(loads) {
     const centre = FADE_STATS.mean * loads;
     const raw = SPREAD_PER_SQRT_LOAD * Math.sqrt(loads);
     const half = Math.min(raw, MAX_HALF_WIDTH);
-    return { lo: centre - half, hi: centre + half, centre, half, capped: raw > MAX_HALF_WIDTH };
+    const halfLow = Math.max(half, MIN_FLOOR_HALF_WIDTH);
+    return {
+        lo: centre - halfLow, hi: centre + half, centre, half, halfLow, capped: raw > MAX_HALF_WIDTH,
+    };
 }
 
 /** Slice 10's linear band, kept so the comparison in the probe is real. */
@@ -150,7 +179,9 @@ export function legacyFadeBand(loads) {
 /** One line for a check's detail string. */
 export function describeFadeBand(loads) {
     const b = fadeBand(loads);
-    return `${loads} load(s) at ${FADE_STATS.mean}/load ± ${b.half.toFixed(1)}`
+    return `${loads} load(s) at ${FADE_STATS.mean}/load ${b.halfLow > b.half
+        ? `−${b.halfLow.toFixed(1)} (floor min ${MIN_FLOOR_HALF_WIDTH}) +${b.half.toFixed(1)}`
+        : `± ${b.half.toFixed(1)}`}`
         + `${b.capped ? ' (CAPPED)' : ` (${SPREAD_PER_SQRT_LOAD}·√${loads})`} `
         + `= [${b.lo.toFixed(1)},${b.hi.toFixed(1)}]`;
 }
