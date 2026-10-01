@@ -49,6 +49,7 @@ import {
 import { applyFriction } from './chasers.js';
 import { collideLineSolid } from './crusher.js';
 import { beginDialogue } from './dialogue.js';
+import { PROFILE } from './seedlingProfile.js';
 
 export class BobBossFightError extends Error {
     constructor(message) { super(message); this.name = 'BobBossFightError'; }
@@ -396,6 +397,12 @@ export function bobBossShieldBump(b, p, { slashing, rendered = p }) {
 }
 /** `Player.shieldForce`. */
 export const SHIELD_FORCE = 5;
+/**
+ * `Player.darkShieldDamage` — what the DARK shield's `shieldBump` deals instead
+ * of shoving: `o.hit(shieldForce, new Point(x, y), darkShieldDamage, "Shield")`
+ * on a body whose own `hitsTimer <= 0` (U11-swim D3).
+ */
+export const DARK_SHIELD_DAMAGE = PROFILE.darkShieldDamage;
 
 /**
  * The arena rock's arm test, `FallRockLarge.update`'s `bossRock` branch:

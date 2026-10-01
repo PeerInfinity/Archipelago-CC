@@ -124,9 +124,10 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ R9 slice L18b: 151 → 154 with `r9-solve-18`/`-19`/`-20` — inert too.
         // ⛓ swim U5/U7: 154 → 157 with `swim-u5-bobboss-encounter`, `u7-puncher-punch`, `u7-puncher-kill` — inert too.
         // ⛓ swim U9 + U10: 157 → 162 with the three `u9-shield-*` witnesses and the two `u10-puncher-dwell*` — inert too.
-        // ⛓ swim U11: 164 with the two `u11-facing-*` witnesses — inert too.
-        expect(rows).toHaveLength(164);
-        expect(rows.length - parted.length).toBe(163);
+        // ⛓ swim U11: 166 with the two `u11-facing-*` and the two `u11-dark-shield-*`
+        // witnesses — inert too.
+        expect(rows).toHaveLength(166);
+        expect(rows.length - parted.length).toBe(165);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

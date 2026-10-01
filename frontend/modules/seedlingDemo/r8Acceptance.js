@@ -904,6 +904,25 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + '`puncher@416,256` (`hits` 2 from t 36); the player stream is the same '
                 + 'under either facing, the puncher\'s `hits` is the observable.',
         }),
+        /**
+         * ⛓⛓⛓ U11-swim D3 — THE DARK SHIELD'S `shieldBump` HIT: `Enemy.hit(5, p,
+         * darkShieldDamage, "Shield")` on a body outside its own i-frame, and the
+         * `hitByDarkStuff` latch it sets.
+         */
+        Object.freeze({
+            name: 'u11-dark-shield-bob', levels: Object.freeze([4]), bobs: 1, ticks: 58,
+            addedBy: 'U11-swim D3 (the hit and its latch)',
+            why: 'the dark shield HITS `bob@64,64` on t 16 (0.5, a 30-tick i-frame, a shove) '
+                + 'and the press on t 19 lands THROUGH that i-frame on the latch; the bob comes '
+                + 'back and contacts the player on t 57.',
+        }),
+        Object.freeze({
+            name: 'u11-dark-shield-puncher', levels: Object.freeze([12]), bobs: 1, ticks: 60,
+            addedBy: 'U11-swim D3 (a hit with no shove)',
+            why: 'the dark shield HITS `puncher@416,256` on t 13 (0.5, a 30-tick i-frame) and '
+                + 'its empty `knockback` moves nothing; inside the i-frame the player walks '
+                + 'through it untouched.',
+        }),
     ]),
 
     /**

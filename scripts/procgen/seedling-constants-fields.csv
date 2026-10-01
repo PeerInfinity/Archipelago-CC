@@ -1485,6 +1485,7 @@ frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|hffedc0b7|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
 frontend/modules/seedlingDemo/levelRun.js|stepOptsFor|h14b15328|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: stepOptsFor's default; the drive passes damage.directionFace)
+frontend/modules/seedlingDemo/levelRun.js|bobShieldBumpNow|h35d3c9c5|0|0,rule,bound,Player.as:shieldBump,the dark arm fires only when o.hitsTimer <= 0 (U11-swim D3: the BobBoss refusal is that gate's; inside the i-frame it is the plain shove)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,
@@ -1584,6 +1585,7 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf4dd4436|-2|0,physics
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd7b0d8d3|6|0,rule,sentinel,,Tile.t pit/water/lava
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hcf712235|1|0,rule,sentinel,,Tile.t pit/water/lava
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hdc4fc09e|17|0,rule,sentinel,,Tile.t pit/water/lava
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|ha659b9bb|0.5|0,rule,magnitude,Player.as:darkShieldDamage,"shieldBump with the dark shield: o.hit(shieldForce, p, darkShieldDamage, ""Shield"") on a body whose hitsTimer <= 0"
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0c71790c|1|0,rule,magnitude,Player.as:swordDamage,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h64c32ce2|2|0,rule,magnitude,Player.as:darkSwordDamage,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h76a8b7b1|2|0,rule,magnitude,Player.as:spearDamage,

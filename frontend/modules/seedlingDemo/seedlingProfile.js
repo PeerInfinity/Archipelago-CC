@@ -220,6 +220,8 @@ export const PROFILE = load(Object.freeze({
     noBounceStates0: 6,
     noBounceStates1: 1,
     noBounceStates2: 17,
+    // ── bobBossFight.js
+    darkShieldDamage: 0.5,
     // ── presses.js
     swordDamage: 1,
     darkSwordDamage: 2,
@@ -402,6 +404,8 @@ export const PROFILE_FIELDS = Object.freeze([
     { key: 'noBounceStates0', class: 'rule', kind: 'sentinel', as3: '', source: 'playerPhysicsV2.js:NO_BOUNCE_STATES[0]', review: false, note: 'Tile.t pit/water/lava' },
     { key: 'noBounceStates1', class: 'rule', kind: 'sentinel', as3: '', source: 'playerPhysicsV2.js:NO_BOUNCE_STATES[1]', review: false, note: 'Tile.t pit/water/lava' },
     { key: 'noBounceStates2', class: 'rule', kind: 'sentinel', as3: '', source: 'playerPhysicsV2.js:NO_BOUNCE_STATES[2]', review: false, note: 'Tile.t pit/water/lava' },
+    // ── bobBossFight.js
+    { key: 'darkShieldDamage', class: 'rule', kind: 'magnitude', as3: 'Player.as:darkShieldDamage', source: 'bobBossFight.js:DARK_SHIELD_DAMAGE', review: false, note: 'shieldBump with the dark shield: o.hit(shieldForce, p, darkShieldDamage, "Shield") on a body whose hitsTimer <= 0' },
     // ── presses.js
     { key: 'swordDamage', class: 'rule', kind: 'magnitude', as3: 'Player.as:swordDamage', source: 'presses.js:SWORD_DAMAGE', review: false, note: '' },
     { key: 'darkSwordDamage', class: 'rule', kind: 'magnitude', as3: 'Player.as:darkSwordDamage', source: 'presses.js:DARK_SWORD_DAMAGE', review: false, note: '' },

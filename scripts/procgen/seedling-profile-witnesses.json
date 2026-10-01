@@ -1,11 +1,11 @@
 {
-  "measuredAt": "2026-10-01T04:37:10.951Z",
-  "head": "f36294d6a3d4c0d1a7c4708e4c58ff920b82a0b3",
-  "treeClean": true,
+  "measuredAt": "2026-10-01T17:10:52.502Z",
+  "head": "e915dab9df54e6b1f0786f88ed5af7990527d246",
+  "treeClean": false,
   "tier": "fast",
   "method": "per key x magnitude, a child process with the override installed runs every tier tape through runTapeToStream; a tape moves when its stream md5 differs from the control run or it throws. ulp = +1 ULP; pct10 = x1.1, or +1 for an integer default. corpus-blind = neither magnitude moved any tape.",
   "jobs": 4,
-  "wallSeconds": 334,
+  "wallSeconds": 431,
   "tapes": [
     "collide-up-rock",
     "cross-level-leg",
@@ -108,8 +108,17 @@
     "straight-run",
     "thread-the-gap",
     "transition-west-return",
+    "u10-puncher-dwell",
+    "u10-puncher-dwell-refused",
+    "u11-dark-shield-bob",
+    "u11-dark-shield-puncher",
+    "u11-facing-knockback",
+    "u11-facing-puncher",
     "u7-puncher-kill",
     "u7-puncher-punch",
+    "u9-shield-bob-shove",
+    "u9-shield-bob-standing",
+    "u9-shield-puncher",
     "wall-slide"
   ],
   "control": {
@@ -123,9 +132,9 @@
     "seedlingTileSize": {
       "ulp": {
         "value": 16.000000000000004,
-        "moved": 37,
-        "threw": 22,
-        "same": 45,
+        "moved": 39,
+        "threw": 23,
+        "same": 51,
         "movedTapes": [
           "collide-up-rock",
           "cross-level-leg",
@@ -142,9 +151,9 @@
       },
       "pct10": {
         "value": 17,
-        "moved": 52,
-        "threw": 16,
-        "same": 36,
+        "moved": 54,
+        "threw": 17,
+        "same": 42,
         "movedTapes": [
           "collide-up-rock",
           "cross-level-leg",
@@ -166,14 +175,14 @@
         "value": 5e-324,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 1,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -183,7 +192,7 @@
         "value": 30.000000000000004,
         "moved": 0,
         "threw": 3,
-        "same": 101,
+        "same": 110,
         "movedTapes": [
           "r5-l37-burn",
           "r9-solve-15",
@@ -195,7 +204,7 @@
         "value": 31,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "moves"
@@ -205,14 +214,14 @@
         "value": 0.03330000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.03663000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -222,14 +231,14 @@
         "value": 20.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 21,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -239,14 +248,14 @@
         "value": 60.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 61,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -256,14 +265,14 @@
         "value": 29.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 30,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -273,14 +282,14 @@
         "value": 64.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 65,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -290,14 +299,14 @@
         "value": 60.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 61,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -307,14 +316,14 @@
         "value": 160.00000000000003,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 161,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -324,14 +333,14 @@
         "value": 160.00000000000003,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 161,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -341,14 +350,14 @@
         "value": 10.000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 11,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -358,14 +367,14 @@
         "value": 66.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 67,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -375,14 +384,14 @@
         "value": -69.99999999999999,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": -69,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -392,16 +401,17 @@
         "value": 0.03330000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.03663000000000001,
-        "moved": 1,
+        "moved": 2,
         "threw": 0,
-        "same": 103,
+        "same": 111,
         "movedTapes": [
-          "u7-puncher-punch"
+          "u7-puncher-punch",
+          "u9-shield-puncher"
         ]
       },
       "verdict": "moves"
@@ -411,19 +421,24 @@
         "value": 0.25000000000000006,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.275,
-        "moved": 4,
+        "moved": 9,
         "threw": 0,
-        "same": 100,
+        "same": 104,
         "movedTapes": [
           "r8-l6-bob-contact",
           "r9-l6-harmless-control",
           "r9-l6-harmless-press",
-          "u7-puncher-punch"
+          "u11-dark-shield-bob",
+          "u11-facing-knockback",
+          "u7-puncher-punch",
+          "u9-shield-bob-shove",
+          "u9-shield-bob-standing",
+          "u9-shield-puncher"
         ]
       },
       "verdict": "moves"
@@ -433,14 +448,14 @@
         "value": 0.05000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.05500000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -450,14 +465,14 @@
         "value": 6.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 7,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -466,18 +481,19 @@
       "ulp": {
         "value": 10.000000000000002,
         "moved": 0,
-        "threw": 1,
-        "same": 103,
+        "threw": 2,
+        "same": 111,
         "movedTapes": [
+          "u10-puncher-dwell",
           "u7-puncher-kill"
         ],
-        "firstThrow": "u7-puncher-kill: createSpriteAnim: frames must be a positive integer, got 10.000000000000002"
+        "firstThrow": "u10-puncher-dwell: createSpriteAnim: frames must be a positive integer, got 10.000000000000002"
       },
       "pct10": {
         "value": 11,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "moves"
@@ -487,14 +503,14 @@
         "value": 10.000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 11,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -503,21 +519,26 @@
       "ulp": {
         "value": 4.000000000000001,
         "moved": 0,
-        "threw": 2,
-        "same": 102,
+        "threw": 6,
+        "same": 107,
         "movedTapes": [
+          "u10-puncher-dwell-refused",
+          "u11-dark-shield-puncher",
+          "u11-facing-puncher",
           "u7-puncher-kill",
-          "u7-puncher-punch"
+          "u7-puncher-punch",
+          "u9-shield-puncher"
         ],
-        "firstThrow": "u7-puncher-kill: createSpriteAnim: frames must be a positive integer, got 4.000000000000001"
+        "firstThrow": "u10-puncher-dwell-refused: createSpriteAnim: frames must be a positive integer, got 4.000000000000001"
       },
       "pct10": {
         "value": 5,
-        "moved": 1,
+        "moved": 2,
         "threw": 0,
-        "same": 103,
+        "same": 111,
         "movedTapes": [
-          "u7-puncher-punch"
+          "u7-puncher-punch",
+          "u9-shield-puncher"
         ]
       },
       "verdict": "moves"
@@ -527,16 +548,17 @@
         "value": 12.000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 13,
-        "moved": 1,
+        "moved": 2,
         "threw": 0,
-        "same": 103,
+        "same": 111,
         "movedTapes": [
-          "u7-puncher-punch"
+          "u7-puncher-punch",
+          "u9-shield-puncher"
         ]
       },
       "verdict": "moves"
@@ -546,16 +568,17 @@
         "value": 5.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 6,
-        "moved": 1,
+        "moved": 2,
         "threw": 0,
-        "same": 103,
+        "same": 111,
         "movedTapes": [
-          "u7-puncher-punch"
+          "u7-puncher-punch",
+          "u9-shield-puncher"
         ]
       },
       "verdict": "moves"
@@ -565,14 +588,14 @@
         "value": 8.000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 9,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -582,14 +605,14 @@
         "value": 30.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 31,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -599,7 +622,7 @@
         "value": 20.000000000000004,
         "moved": 9,
         "threw": 2,
-        "same": 93,
+        "same": 102,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-18",
@@ -618,7 +641,7 @@
         "value": 21,
         "moved": 9,
         "threw": 2,
-        "same": 93,
+        "same": 102,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-18",
@@ -640,14 +663,14 @@
         "value": -0.9999999999999999,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -657,14 +680,14 @@
         "value": 80.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 81,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -674,16 +697,17 @@
         "value": 10.000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 11,
-        "moved": 1,
+        "moved": 2,
         "threw": 0,
-        "same": 103,
+        "same": 111,
         "movedTapes": [
-          "u7-puncher-punch"
+          "u7-puncher-punch",
+          "u9-shield-puncher"
         ]
       },
       "verdict": "moves"
@@ -693,18 +717,19 @@
         "value": 5.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 6,
-        "moved": 3,
+        "moved": 4,
         "threw": 0,
-        "same": 101,
+        "same": 109,
         "movedTapes": [
           "r8-solve-18",
           "r9-l6-harmless-press",
-          "r9-solve-18"
+          "r9-solve-18",
+          "u11-dark-shield-bob"
         ]
       },
       "verdict": "moves"
@@ -714,7 +739,7 @@
         "value": 2.0000000000000004,
         "moved": 12,
         "threw": 0,
-        "same": 92,
+        "same": 101,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-18",
@@ -732,7 +757,7 @@
         "value": 3,
         "moved": 10,
         "threw": 7,
-        "same": 87,
+        "same": 96,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-10",
@@ -754,14 +779,14 @@
         "value": 30.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 31,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -771,14 +796,14 @@
         "value": 20.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 21,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -788,14 +813,14 @@
         "value": 150.00000000000003,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 151,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -805,7 +830,7 @@
         "value": 6.000000000000001,
         "moved": 1,
         "threw": 0,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r6-totem-control"
         ]
@@ -814,7 +839,7 @@
         "value": 7,
         "moved": 1,
         "threw": 0,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r6-totem-control"
         ]
@@ -826,14 +851,14 @@
         "value": 32.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 33,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -843,14 +868,14 @@
         "value": 5e-324,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 1,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -860,14 +885,14 @@
         "value": 28.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 29,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -877,14 +902,14 @@
         "value": 24.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 25,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -894,14 +919,14 @@
         "value": 0.005000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.0055000000000000005,
         "moved": 0,
         "threw": 1,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r6-seed-credits"
         ],
@@ -914,14 +939,14 @@
         "value": 3.5000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 3.8500000000000005,
         "moved": 0,
         "threw": 1,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r6-seed-credits"
         ],
@@ -934,7 +959,7 @@
         "value": 16.000000000000004,
         "moved": 0,
         "threw": 1,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r6-seed-credits"
         ],
@@ -944,7 +969,7 @@
         "value": 17,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "moves"
@@ -954,14 +979,14 @@
         "value": 0.03330000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.03663000000000001,
         "moved": 2,
         "threw": 1,
-        "same": 101,
+        "same": 110,
         "movedTapes": [
           "r6-final-door",
           "r6-seed-credits",
@@ -976,14 +1001,14 @@
         "value": 6.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 7,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -993,14 +1018,14 @@
         "value": 40.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 41,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1010,14 +1035,14 @@
         "value": -14.999999999999998,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": -14,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1027,14 +1052,14 @@
         "value": 20.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 21,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1044,14 +1069,14 @@
         "value": 5.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 6,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1061,14 +1086,14 @@
         "value": 0.25000000000000006,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.275,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1078,14 +1103,14 @@
         "value": 0.5000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.55,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1095,14 +1120,14 @@
         "value": 4.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 5,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1112,14 +1137,14 @@
         "value": 4.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 5,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1129,7 +1154,7 @@
         "value": 3.0000000000000004,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "r5-press-glide",
           "r5-press-repeat"
@@ -1139,7 +1164,7 @@
         "value": 4,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "r5-press-glide",
           "r5-press-repeat"
@@ -1152,14 +1177,14 @@
         "value": 6.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 7,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1169,14 +1194,14 @@
         "value": 0.32500000000000007,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.35750000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1186,14 +1211,14 @@
         "value": 5e-324,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 1,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1203,14 +1228,14 @@
         "value": 60.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 61,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1220,14 +1245,14 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 3,
-        "moved": 34,
+        "moved": 37,
         "threw": 0,
-        "same": 70,
+        "same": 76,
         "movedTapes": [
           "cross-level-leg",
           "grant-sword-room",
@@ -1248,14 +1273,14 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 3,
-        "moved": 47,
+        "moved": 49,
         "threw": 1,
-        "same": 56,
+        "same": 63,
         "movedTapes": [
           "collide-up-rock",
           "grant-sword-room",
@@ -1277,7 +1302,7 @@
         "value": 1.0000000000000002,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -1292,7 +1317,7 @@
         "value": 2,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -1310,14 +1335,14 @@
         "value": 17.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 18,
         "moved": 0,
         "threw": 10,
-        "same": 94,
+        "same": 103,
         "movedTapes": [
           "r5-l38-fade-boot",
           "r5-l38-fade-door",
@@ -1339,7 +1364,7 @@
         "value": 25.000000000000004,
         "moved": 4,
         "threw": 0,
-        "same": 100,
+        "same": 109,
         "movedTapes": [
           "r5-waterfall-climb",
           "r5-waterfall-shut",
@@ -1351,7 +1376,7 @@
         "value": 26,
         "moved": 4,
         "threw": 0,
-        "same": 100,
+        "same": 109,
         "movedTapes": [
           "r5-waterfall-climb",
           "r5-waterfall-shut",
@@ -1366,7 +1391,7 @@
         "value": 0.25000000000000006,
         "moved": 38,
         "threw": 0,
-        "same": 66,
+        "same": 75,
         "movedTapes": [
           "cross-level-leg",
           "grant-sword-room",
@@ -1382,9 +1407,9 @@
       },
       "pct10": {
         "value": 0.275,
-        "moved": 98,
+        "moved": 104,
         "threw": 4,
-        "same": 2,
+        "same": 5,
         "movedTapes": [
           "collide-up-rock",
           "cross-level-leg",
@@ -1406,7 +1431,7 @@
         "value": 0.5000000000000001,
         "moved": 3,
         "threw": 0,
-        "same": 101,
+        "same": 110,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -1417,7 +1442,7 @@
         "value": 0.55,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -1433,9 +1458,9 @@
     "walkSpeed": {
       "ulp": {
         "value": 0.8000000000000002,
-        "moved": 63,
+        "moved": 66,
         "threw": 0,
-        "same": 41,
+        "same": 47,
         "movedTapes": [
           "collide-up-rock",
           "cross-level-leg",
@@ -1451,9 +1476,9 @@
       },
       "pct10": {
         "value": 0.8800000000000001,
-        "moved": 96,
+        "moved": 101,
         "threw": 6,
-        "same": 2,
+        "same": 6,
         "movedTapes": [
           "collide-up-rock",
           "cross-level-leg",
@@ -1475,14 +1500,14 @@
         "value": 0.4000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.44000000000000006,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1492,7 +1517,7 @@
         "value": 0.45000000000000007,
         "moved": 3,
         "threw": 0,
-        "same": 101,
+        "same": 110,
         "movedTapes": [
           "r5-swim-latch",
           "r6-seed-control",
@@ -1503,7 +1528,7 @@
         "value": 0.49500000000000005,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -1521,14 +1546,14 @@
         "value": 1.0000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 2,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1538,14 +1563,14 @@
         "value": 0.025000000000000005,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.027500000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1555,14 +1580,14 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 3,
         "moved": 4,
         "threw": 0,
-        "same": 100,
+        "same": 109,
         "movedTapes": [
           "r5-waterfall-climb",
           "r5-waterfall-shut",
@@ -1577,16 +1602,16 @@
         "value": 4.000000000000001,
         "moved": 1,
         "threw": 0,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r8-solve-4"
         ]
       },
       "pct10": {
         "value": 5,
-        "moved": 27,
+        "moved": 29,
         "threw": 0,
-        "same": 77,
+        "same": 84,
         "movedTapes": [
           "cross-level-leg",
           "grant-sword-room",
@@ -1607,14 +1632,14 @@
         "value": 5.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 6,
-        "moved": 23,
+        "moved": 26,
         "threw": 0,
-        "same": 81,
+        "same": 87,
         "movedTapes": [
           "grant-sword-room",
           "r2-walk-2-feather",
@@ -1635,12 +1660,12 @@
         "value": 16.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 17,
-        "moved": 103,
+        "moved": 112,
         "threw": 1,
         "same": 0,
         "movedTapes": [
@@ -1664,12 +1689,12 @@
         "value": 16.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 17,
-        "moved": 104,
+        "moved": 113,
         "threw": 0,
         "same": 0,
         "movedTapes": [
@@ -1692,12 +1717,12 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 3,
-        "moved": 103,
+        "moved": 112,
         "threw": 1,
         "same": 0,
         "movedTapes": [
@@ -1721,12 +1746,12 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 3,
-        "moved": 100,
+        "moved": 109,
         "threw": 4,
         "same": 0,
         "movedTapes": [
@@ -1750,14 +1775,14 @@
         "value": 320.00000000000006,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 321,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1767,14 +1792,14 @@
         "value": 320.00000000000006,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 321,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1784,14 +1809,14 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 3,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -1809,14 +1834,14 @@
         "value": 5e-324,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 1,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "r6-seed-control",
           "r6-seed-credits"
@@ -1829,7 +1854,7 @@
         "value": 6.000000000000001,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -1839,7 +1864,7 @@
         "value": 7,
         "moved": 2,
         "threw": 12,
-        "same": 90,
+        "same": 99,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85",
@@ -1861,14 +1886,14 @@
         "value": 22.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 23,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -1878,7 +1903,7 @@
         "value": 3.0000000000000004,
         "moved": 0,
         "threw": 9,
-        "same": 95,
+        "same": 104,
         "movedTapes": [
           "r5-l60-kill",
           "r8-d2-20",
@@ -1896,7 +1921,7 @@
         "value": 4,
         "moved": 0,
         "threw": 9,
-        "same": 95,
+        "same": 104,
         "movedTapes": [
           "r5-l60-kill",
           "r8-d2-20",
@@ -1916,8 +1941,8 @@
       "ulp": {
         "value": 5e-324,
         "moved": 0,
-        "threw": 15,
-        "same": 89,
+        "threw": 18,
+        "same": 95,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-10",
@@ -1936,7 +1961,7 @@
         "value": 1,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "moves"
@@ -1946,7 +1971,7 @@
         "value": 1.0000000000000002,
         "moved": 0,
         "threw": 15,
-        "same": 89,
+        "same": 98,
         "movedTapes": [
           "r3-collect-sword",
           "r6-shield-control",
@@ -1965,7 +1990,7 @@
         "value": 2,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "moves"
@@ -1975,7 +2000,7 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 11,
-        "same": 93,
+        "same": 102,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-10",
@@ -1994,7 +2019,7 @@
         "value": 3,
         "moved": 1,
         "threw": 1,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "r8-solve-18",
           "r9-solve-14"
@@ -2006,9 +2031,9 @@
     "directionDown": {
       "ulp": {
         "value": 3.0000000000000004,
-        "moved": 0,
-        "threw": 11,
-        "same": 93,
+        "moved": 1,
+        "threw": 13,
+        "same": 99,
         "movedTapes": [
           "r5-l43-wand-control",
           "r8-d2-20",
@@ -2025,9 +2050,9 @@
       },
       "pct10": {
         "value": 4,
-        "moved": 0,
-        "threw": 11,
-        "same": 93,
+        "moved": 1,
+        "threw": 13,
+        "same": 99,
         "movedTapes": [
           "r5-l43-wand-control",
           "r8-d2-20",
@@ -2049,14 +2074,14 @@
         "value": 0.8000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.8800000000000001,
         "moved": 1,
         "threw": 0,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r5-waterfall-shut"
         ]
@@ -2068,14 +2093,14 @@
         "value": 10.000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 11,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2085,14 +2110,14 @@
         "value": 0.05000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.05500000000000001,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2105,14 +2130,14 @@
         "value": 1.0000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 2,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2125,7 +2150,7 @@
         "value": 10.000000000000002,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2135,7 +2160,7 @@
         "value": 11,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2148,7 +2173,7 @@
         "value": 83.00000000000001,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2158,7 +2183,7 @@
         "value": 84,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2171,7 +2196,7 @@
         "value": 0.10000000000000002,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2181,7 +2206,7 @@
         "value": 0.11000000000000001,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2194,14 +2219,14 @@
         "value": 5.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 6,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2211,7 +2236,7 @@
         "value": -1.9999999999999998,
         "moved": 1,
         "threw": 0,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "pit-fall-chain-85"
         ]
@@ -2220,7 +2245,7 @@
         "value": -1,
         "moved": 1,
         "threw": 0,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "pit-fall-chain-85"
         ]
@@ -2232,7 +2257,7 @@
         "value": 6.000000000000001,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2242,7 +2267,7 @@
         "value": 7,
         "moved": 2,
         "threw": 0,
-        "same": 102,
+        "same": 111,
         "movedTapes": [
           "pit-fall-83",
           "pit-fall-chain-85"
@@ -2255,14 +2280,14 @@
         "value": 1.0000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 2,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2272,14 +2297,31 @@
         "value": 17.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 18,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
+        "movedTapes": []
+      },
+      "verdict": "corpus-blind"
+    },
+    "darkShieldDamage": {
+      "ulp": {
+        "value": 0.5000000000000001,
+        "moved": 0,
+        "threw": 0,
+        "same": 113,
+        "movedTapes": []
+      },
+      "pct10": {
+        "value": 0.55,
+        "moved": 0,
+        "threw": 0,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2289,14 +2331,14 @@
         "value": 1.0000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 2,
         "moved": 1,
         "threw": 0,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r6-shield-control"
         ]
@@ -2308,14 +2350,14 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 3,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2325,14 +2367,14 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 3,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2342,14 +2384,14 @@
         "value": 16.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 17,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2359,14 +2401,14 @@
         "value": 32.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 33,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2376,14 +2418,14 @@
         "value": 5.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 6,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2393,14 +2435,14 @@
         "value": 3.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 4,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2410,14 +2452,14 @@
         "value": 30.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 31,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2427,14 +2469,14 @@
         "value": 5.000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 6,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2444,14 +2486,14 @@
         "value": 25.000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 26,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2460,8 +2502,8 @@
       "ulp": {
         "value": 5e-324,
         "moved": 0,
-        "threw": 15,
-        "same": 89,
+        "threw": 18,
+        "same": 95,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-10",
@@ -2479,8 +2521,8 @@
       "pct10": {
         "value": 1,
         "moved": 0,
-        "threw": 15,
-        "same": 89,
+        "threw": 18,
+        "same": 95,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-10",
@@ -2502,7 +2544,7 @@
         "value": 1.0000000000000002,
         "moved": 0,
         "threw": 14,
-        "same": 90,
+        "same": 99,
         "movedTapes": [
           "r3-collect-sword",
           "r6-shield-control",
@@ -2521,7 +2563,7 @@
         "value": 2,
         "moved": 1,
         "threw": 14,
-        "same": 89,
+        "same": 98,
         "movedTapes": [
           "r3-collect-sword",
           "r6-shield-control",
@@ -2543,7 +2585,7 @@
         "value": 2.0000000000000004,
         "moved": 0,
         "threw": 11,
-        "same": 93,
+        "same": 102,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-10",
@@ -2562,7 +2604,7 @@
         "value": 3,
         "moved": 0,
         "threw": 11,
-        "same": 93,
+        "same": 102,
         "movedTapes": [
           "r8-d2-20",
           "r8-solve-10",
@@ -2583,8 +2625,8 @@
       "ulp": {
         "value": 3.0000000000000004,
         "moved": 0,
-        "threw": 16,
-        "same": 88,
+        "threw": 18,
+        "same": 95,
         "movedTapes": [
           "r5-l43-wand-control",
           "r5-l60-kill",
@@ -2602,8 +2644,8 @@
       "pct10": {
         "value": 4,
         "moved": 0,
-        "threw": 16,
-        "same": 88,
+        "threw": 18,
+        "same": 95,
         "movedTapes": [
           "r5-l43-wand-control",
           "r5-l60-kill",
@@ -2625,7 +2667,7 @@
         "value": 16.000000000000004,
         "moved": 4,
         "threw": 2,
-        "same": 98,
+        "same": 107,
         "movedTapes": [
           "r5-press-delay",
           "r5-press-delay-control",
@@ -2640,7 +2682,7 @@
         "value": 17,
         "moved": 5,
         "threw": 1,
-        "same": 98,
+        "same": 107,
         "movedTapes": [
           "r5-press-delay",
           "r5-press-delay-control",
@@ -2658,14 +2700,14 @@
         "value": 0.5000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.55,
         "moved": 5,
         "threw": 0,
-        "same": 99,
+        "same": 108,
         "movedTapes": [
           "r5-press-delay",
           "r5-press-glide",
@@ -2681,14 +2723,14 @@
         "value": 0.25000000000000006,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.275,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2698,14 +2740,14 @@
         "value": 0.10000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.11000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2715,14 +2757,14 @@
         "value": 0.10000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 0.11000000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2732,14 +2774,14 @@
         "value": 1.0000000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 2,
         "moved": 1,
         "threw": 0,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r8-hammer-control"
         ]
@@ -2751,14 +2793,14 @@
         "value": 1207959552.0000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 1207959553,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2768,14 +2810,14 @@
         "value": 1486967168.0000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 1486967169,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2785,14 +2827,14 @@
         "value": 1376312589.0000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 1376312590,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2802,14 +2844,14 @@
         "value": 789221.0000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 789222,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2819,14 +2861,14 @@
         "value": 15731.000000000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 15732,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2836,14 +2878,14 @@
         "value": 2147483648.0000005,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 2147483649,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2853,14 +2895,14 @@
         "value": 2147483647.0000002,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 2147483648,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -2870,7 +2912,7 @@
         "value": 47.00000000000001,
         "moved": 0,
         "threw": 7,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -2886,7 +2928,7 @@
         "value": 48,
         "moved": 5,
         "threw": 0,
-        "same": 99,
+        "same": 108,
         "movedTapes": [
           "r5-swim-latch",
           "r5-waterfall-climb",
@@ -2902,7 +2944,7 @@
         "value": 0.10000000000000002,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -2917,7 +2959,7 @@
         "value": 0.11000000000000001,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -2935,7 +2977,7 @@
         "value": 0.25000000000000006,
         "moved": 3,
         "threw": 0,
-        "same": 101,
+        "same": 110,
         "movedTapes": [
           "r5-swim-latch",
           "r6-seed-control",
@@ -2946,7 +2988,7 @@
         "value": 0.275,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -2964,7 +3006,7 @@
         "value": 20.000000000000004,
         "moved": 0,
         "threw": 1,
-        "same": 103,
+        "same": 112,
         "movedTapes": [
           "r6-seed-credits"
         ],
@@ -2974,7 +3016,7 @@
         "value": 21,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "moves"
@@ -2984,14 +3026,14 @@
         "value": 150.00000000000003,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 151,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -3001,7 +3043,7 @@
         "value": 60.00000000000001,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -3016,7 +3058,7 @@
         "value": 61,
         "moved": 7,
         "threw": 0,
-        "same": 97,
+        "same": 106,
         "movedTapes": [
           "r5-swim-cross",
           "r5-swim-drown",
@@ -3034,7 +3076,7 @@
         "value": 5e-324,
         "moved": 0,
         "threw": 13,
-        "same": 91,
+        "same": 100,
         "movedTapes": [
           "grant-sword-room",
           "hazard-boot-pit",
@@ -3053,7 +3095,7 @@
         "value": 1,
         "moved": 0,
         "threw": 13,
-        "same": 91,
+        "same": 100,
         "movedTapes": [
           "grant-sword-room",
           "hazard-boot-pit",
@@ -3075,14 +3117,14 @@
         "value": 116.00000000000001,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 117,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -3092,14 +3134,14 @@
         "value": 3.0000000000000004,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "pct10": {
         "value": 4,
         "moved": 0,
         "threw": 0,
-        "same": 104,
+        "same": 113,
         "movedTapes": []
       },
       "verdict": "corpus-blind"
@@ -3108,7 +3150,7 @@
   "summary": {
     "verdicts": {
       "moves": 64,
-      "corpus-blind": 71
+      "corpus-blind": 72
     },
     "byClass": {
       "physics": {
@@ -3117,7 +3159,7 @@
       },
       "rule": {
         "moves": 34,
-        "corpus-blind": 51
+        "corpus-blind": 52
       }
     },
     "threw": [

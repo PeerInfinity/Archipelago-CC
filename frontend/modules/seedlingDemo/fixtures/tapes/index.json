@@ -1379,6 +1379,20 @@
       "noHazards": []
     },
     {
+      "file": "u11-dark-shield-bob.json",
+      "tickCount": 58,
+      "bootLevel": 4,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "u11-dark-shield-puncher.json",
+      "tickCount": 60,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "u11-facing-knockback.json",
       "tickCount": 80,
       "bootLevel": 4,

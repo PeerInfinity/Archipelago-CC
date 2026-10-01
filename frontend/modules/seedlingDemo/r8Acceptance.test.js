@@ -332,8 +332,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'u9-shield-bob-shove', 'u9-shield-puncher', 'u9-shield-bob-standing',
             // ⛓⛓⛓ U10-swim: the forecast-priced punch's witness and its control.
             'u10-puncher-dwell', 'u10-puncher-dwell-refused',
-            // ⛓⛓⛓ U11-swim: the facing-in-the-i-frame witnesses.
+            // ⛓⛓⛓ U11-swim: the facing-in-the-i-frame witnesses and the dark shield's.
             'u11-facing-knockback', 'u11-facing-puncher',
+            'u11-dark-shield-bob', 'u11-dark-shield-puncher',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -349,14 +350,16 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // arrival. ⛓ R9 slice L16 takes it to 17 — the L16 crossing itself.
         // ⛓ U7-swim takes it to 19 — the puncher's punch and kill witnesses in L12.
         // ⛓ U9-swim + U10-swim take it to 24 — the three shield-bump witnesses and the dwell witness + its control.
-        // ⛓ U11-swim takes it to 26 — the two facing witnesses (L4, L12).
-        expect(out.exposed).toBe(26);
+        // ⛓ U11-swim takes it to 28 — the two facing witnesses and the two dark-shield
+        // witnesses (L4, L12 each).
+        expect(out.exposed).toBe(28);
         expect(out.tapes).toEqual([
             'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-13',
             'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'u10-puncher-dwell',
-            'u10-puncher-dwell-refused', 'u11-facing-knockback', 'u11-facing-puncher',
+            'u10-puncher-dwell-refused', 'u11-dark-shield-bob', 'u11-dark-shield-puncher',
+            'u11-facing-knockback', 'u11-facing-puncher',
             'u7-puncher-kill', 'u7-puncher-punch',
             'u9-shield-bob-shove', 'u9-shield-bob-standing', 'u9-shield-puncher',
         ]);
@@ -459,6 +462,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'u10-puncher-dwell-refused': { tape: {}, levels: [12] },
             'u11-facing-knockback': { tape: {}, levels: [4] },
             'u11-facing-puncher': { tape: {}, levels: [12] },
+            'u11-dark-shield-bob': { tape: {}, levels: [4] },
+            'u11-dark-shield-puncher': { tape: {}, levels: [12] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

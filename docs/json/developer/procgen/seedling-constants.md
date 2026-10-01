@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**54 files, 4630 literals.** Class × position:
+**54 files, 4632 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1243 | 333 | 1581 |
-| rule | 6 | 903 | 406 | 1315 |
+| rule | 6 | 904 | 407 | 1317 |
 | cosmetic | 0 | 43 | 8 | 51 |
 | structural | 9 | 310 | 1364 | 1683 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 20 | 2499 | 2111 | 4630 |
+| total | 20 | 2500 | 2112 | 4632 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1324 | 0 | 89 | 113 | 4 | 51 | 1581 |
-| rule | 389 | 120 | 199 | 22 | 508 | 77 | 1315 |
+| rule | 390 | 120 | 200 | 22 | 508 | 77 | 1317 |
 
 Rows whose note starts `REVIEW:`: **105**.
 
@@ -319,9 +319,9 @@ Rows whose note starts `REVIEW:`: **105**.
 
 None: a name declared in several files now reads one profile key (the table below).
 
-### The profile: 135 keys in `seedlingDemo/seedlingProfile.js`
+### The profile: 136 keys in `seedlingDemo/seedlingProfile.js`
 
-**50 physics**, **85 rule**; 69 with an AS3 anchor. 132 top-level names alias a key, and 151 top-level declarations read one. "Read by" is every such declaration.
+**50 physics**, **86 rule**; 70 with an AS3 anchor. 133 top-level names alias a key, and 152 top-level declarations read one. "Read by" is every such declaration.
 
 | key | value | class | kind | AS3 | read by |
 |---|---|---|---|---|---|
@@ -424,6 +424,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `noBounceStates0` | 6 | rule | sentinel |  | playerPhysicsV2.js `NO_BOUNCE_STATES` |
 | `noBounceStates1` | 1 | rule | sentinel |  | playerPhysicsV2.js `NO_BOUNCE_STATES` |
 | `noBounceStates2` | 17 | rule | sentinel |  | playerPhysicsV2.js `NO_BOUNCE_STATES` |
+| `darkShieldDamage` | 0.5 | rule | magnitude | Player.as:darkShieldDamage | bobBossFight.js `DARK_SHIELD_DAMAGE` |
 | `swordDamage` | 1 | rule | magnitude | Player.as:swordDamage | presses.js `SWORD_DAMAGE` |
 | `darkSwordDamage` | 2 | rule | magnitude | Player.as:darkSwordDamage | presses.js `DARK_SWORD_DAMAGE` |
 | `spearDamage` | 2 | rule | magnitude | Player.as:spearDamage | presses.js `SPEAR_DAMAGE` |

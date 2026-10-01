@@ -117,7 +117,8 @@ import {
 import { FIRE as BOB_BOSS_FIRE } from './bobBoss.js';
 import {
     BOB_BOSS_ROCK_DEAD_FRAMES, beginBobBossDialogue, bobBossBox, bobBossHit, bobBossRockArms,
-    bobBossRockRect, bobBossShieldBump, createBobBossBody, enemyKnockbackV, SHIELD_FORCE,
+    bobBossRockRect, bobBossShieldBump, createBobBossBody, DARK_SHIELD_DAMAGE, enemyKnockbackV,
+    SHIELD_FORCE,
     shieldBumpTouches, stepBobBossBody,
 } from './bobBossFight.js';
 // ⛓⛓⛓ R6 SLICE 6f: the FIFTEENTH family — the Owl, and the first fight on
@@ -255,6 +256,35 @@ function applyItem(inventory, name) {
     const spec = ITEM_PROPERTIES[name];
     if (spec.kind === 'add') inventory[spec.property] += spec.value;
     else inventory[spec.property] = true;
+}
+
+/**
+ * ⛓⛓⛓ U11-swim D3 — THE DARK SHIELD'S ARM OF `Player.shieldBump` on one stepped
+ * chaser, for the live bump and the forecast alike:
+ *
+ * ```
+ *   if (hasDarkShield && o.hitsTimer <= 0) o.hit(shieldForce, new Point(x, y), darkShieldDamage, "Shield");
+ *   else o.knockback(shieldForce, new Point(x, y));
+ * ```
+ *
+ * The caller has already taken the `o.hitsTimer <= 0` gate (a body inside its
+ * own i-frame gets the plain knockback, which both callers model). The hit is
+ * `Enemy.hit` — `enemyHit`, the one transcription every chaser hit goes
+ * through — so its gates (`hitByDarkStuff`, the freeze, `canHit`, `onlyHitBy`,
+ * `hits < hitsMax`) are the press's, and it LATCHES `hitByDarkStuff`: the next
+ * damaging hit lands through the i-frame this one opens. A landed non-killing
+ * hit then calls `knockback(f, p)` (`f` capped by `maxForce`), which a class
+ * with an EMPTY override (the puncher, `Puncher.as:167-170`) does not move.
+ * `Bob`, `Puncher` and the rest of the chaser roster override no `hit`.
+ *
+ * @returns {{verdict: object, shoved: boolean}} — `verdict.killed` is the
+ *   caller's to refuse: a shield kill's death staging is not transcribed.
+ */
+function darkShieldHitChaser(c, p, frozen) {
+    const verdict = enemyHit(c, { d: DARK_SHIELD_DAMAGE, f: SHIELD_FORCE, t: 'Shield', frozen });
+    const shoved = verdict.knockedBack && chaserKnocksBack(c.tag);
+    if (shoved) c.v = enemyKnockbackV(c, c.v, verdict.force, p);
+    return { verdict, shoved };
 }
 
 /**
@@ -6319,11 +6349,17 @@ export function createLevelRun({
                         const c = bodies.get(id);
                         if (!c || c.removed) continue;
                         if (!shieldBumpTouches(playerPos, slashing, chaserBoxAt(c.tag, c.x, c.y))) continue;
+                        // ⛓ U11-swim D3: the DARK shield HITS a body outside its own
+                        // i-frame (`darkShieldHitChaser`), the live run's arm exactly.
                         if (darkShieldInForecast && c.hitsTimer <= 0) {
-                            throw new Error(`chaserForecast: the DARK shield touches ${c.id} in a `
-                                + 'preview — `shieldBump` then HITS it, which the live run refuses '
-                                + 'by name (`shieldBumpNow`); a forecast must not price what the '
-                                + 'run cannot walk.');
+                            const { verdict } = darkShieldHitChaser(c, p, false);
+                            if (verdict.killed) {
+                                throw new Error(`chaserForecast: the DARK shield KILLS ${c.id} in a `
+                                    + 'preview — a shield kill\'s death staging is not transcribed, '
+                                    + 'and the live run refuses it by name (`shieldBumpNow`); a '
+                                    + 'forecast must not price what the run cannot walk.');
+                            }
+                            continue;
                         }
                         // "die" is playing: live it is `c.dying`, in a preview the
                         // kill's own `dyingAt` (`hit` below).
@@ -11042,9 +11078,17 @@ export function createLevelRun({
     function bobShieldBumpNow() {
         const a = bobArena;
         if (!a || a.none || a.level !== level || !a.boss || !inventory?.hasShield) return;
-        if (inventory?.hasDarkShield) {
-            throw new Error('levelRun: the BobBoss fight with the DARK shield is not modelled — '
-                + '`shieldBump` then HITS (`darkShieldDamage`, "Shield") rather than shoving.');
+        // ⛓ U11-swim D3: refused only where the dark arm FIRES (`hitsTimer <= 0`);
+        // inside the boss's i-frame the dark shield shoves like the plain one.
+        if (inventory?.hasDarkShield && a.boss.hitsTimer <= 0 && !a.boss.removed && !a.boss.destroy
+            && shieldBumpTouches(state, slashState.slashing, bobBossBox(a.boss),
+                shieldRenderState ?? state)) {
+            throw new Error('levelRun: the DARK shield touched the BobBoss — `shieldBump` then '
+                + 'calls `BobBoss.hit(5, p, darkShieldDamage, "Shield")`, which on the third form '
+                + 'adds a sword (`swords++`, the spin re-seeded) when `hitsTimer <= 0`, then '
+                + '`super.hit(0, null, …)`: damage with NO shove, an i-frame, and the '
+                + '`hitByDarkStuff` latch that lets the next sword hit through it. `bobBossHit` '
+                + 'carries no latch, so this is refused by name (U11-swim D3).');
         }
         if (bobBossShieldBump(a.boss, state, {
             slashing: slashState.slashing, rendered: shieldRenderState ?? state,
@@ -11108,11 +11152,11 @@ export function createLevelRun({
         const rendered = shieldRenderState ?? state;
         const p = { x: state.x, y: state.y };
         const dark = inventory?.hasDarkShield === true;
-        const refuseDark = (id) => {
+        // ⛓ U11-swim D3: a chaser is HIT (`darkShieldHitChaser`); what stays
+        // refused is a shield KILL and the spinner.
+        const refuseDark = (id, why) => {
             throw new Error(`levelRun: the DARK shield touched ${id} at tick ${ticksCompleted + 1} `
-                + `in level ${level} — \`shieldBump\` then HITS it (\`Enemy.hit(5, p, 0.5, "Shield")\`, `
-                + 'and `hitByDarkStuff` lets the next hit through a live i-frame), which no '
-                + 'stepped family models. Refused rather than shoved.');
+                + `in level ${level} — ${why} Refused by name (U11-swim D3).`);
         };
         const row = (r) => shieldBumpLedger.push({ t: ticksCompleted + 1, level, ...r });
         if (!noDamage) {
@@ -11120,7 +11164,19 @@ export function createLevelRun({
             for (const c of st.values()) {
                 if (c.removed) continue;
                 if (!shieldBumpTouches(state, slashing, chaserBoxAt(c.tag, c.x, c.y), rendered)) continue;
-                if (dark && c.hitsTimer <= 0) refuseDark(c.id);
+                if (dark && c.hitsTimer <= 0) {
+                    const { verdict, shoved } = darkShieldHitChaser(c, p, ceremony !== null);
+                    if (verdict.killed) {
+                        refuseDark(c.id, '`Enemy.hit(5, p, darkShieldDamage, "Shield")` KILLS it, and '
+                            + 'a shield kill\'s death staging (`startDeath("Shield")`, the kill '
+                            + 'ledger) is not transcribed.');
+                    }
+                    row({ family: 'chaser', id: c.id, hit: true, landed: verdict.landed,
+                        hits: c.hits, hitsTimer: c.hitsTimer, shoved,
+                        ...(shoved ? { v: { x: c.v.x, y: c.v.y } } : {}),
+                        ...(verdict.landed ? {} : { why: verdict.refusedAt }) });
+                    continue;
+                }
                 // `Enemy.knockback`'s own gate: `!destroy` and not playing "die".
                 if (c.destroy || c.dying) {
                     row({ family: 'chaser', id: c.id, shoved: false, why: 'destroy/die' });
@@ -11138,7 +11194,11 @@ export function createLevelRun({
         for (const [id, s] of sp.byId) {
             if (s.removed) continue;
             if (!shieldBumpTouches(state, slashing, spinnerRect(s), rendered)) continue;
-            if (dark && s.hitsTimer <= 0) refuseDark(id);
+            if (dark && s.hitsTimer <= 0) {
+                refuseDark(id, '`Spinner` overrides no `hit`, so `Enemy.hit(5, p, darkShieldDamage, '
+                    + '"Shield")` damages it and latches `hitByDarkStuff` — and `hitSpinner` carries '
+                    + 'no such latch (`spinner.js`, outside U11\'s licence).');
+            }
             if (s.destroy) {
                 row({ family: 'spinner', id, shoved: false, why: 'destroy' });
                 continue;
