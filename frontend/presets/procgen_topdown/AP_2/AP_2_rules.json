@@ -44,8 +44,8 @@
             "item": {
               "name": "Slow Grundle",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -63,8 +63,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
         ]
@@ -114,7 +114,7 @@
               "name": "Chalice",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
@@ -126,8 +126,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
         ]
@@ -153,8 +153,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
         ]
@@ -190,8 +190,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
         ]
@@ -254,7 +254,7 @@
               "name": "Magnet",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
@@ -267,7 +267,7 @@
               "name": "Bridge",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
@@ -279,8 +279,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -293,7 +293,7 @@
               "name": "Sword",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
@@ -305,8 +305,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -318,8 +318,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -331,8 +331,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -345,7 +345,7 @@
               "name": "White Key",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
@@ -357,8 +357,8 @@
             "item": {
               "name": "Slow Rhindle",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -371,7 +371,7 @@
               "name": "Right Difficulty Switch",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           },
           {
@@ -390,7 +390,7 @@
               "name": "Black Key",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           }
         ]
@@ -416,8 +416,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -465,7 +465,7 @@
               "name": "Yellow Key",
               "player": 1,
               "advancement": true,
-              "type": "progression"
+              "type": "None"
             }
           }
         ]
@@ -504,8 +504,8 @@
             "item": {
               "name": "Left Difficulty Switch",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -517,8 +517,8 @@
             "item": {
               "name": "Slow Yorgle",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -530,8 +530,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           },
           {
@@ -549,8 +549,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
         ]
@@ -576,8 +576,8 @@
             "item": {
               "name": "Freeincarnate",
               "player": 1,
-              "advancement": true,
-              "type": "progression"
+              "advancement": false,
+              "type": "None"
             }
           }
         ]
@@ -597,7 +597,7 @@
       "Slow Grundle": {
         "name": "Slow Grundle",
         "id": 1,
-        "classification": "progression",
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
@@ -605,7 +605,7 @@
       "Freeincarnate": {
         "name": "Freeincarnate",
         "id": 2,
-        "classification": "progression",
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
@@ -613,7 +613,7 @@
       "Chalice": {
         "name": "Chalice",
         "id": 3,
-        "classification": "progression",
+        "classification": "progression_skip_balancing",
         "groups": [
           "Everything"
         ]
@@ -653,7 +653,7 @@
       "Slow Rhindle": {
         "name": "Slow Rhindle",
         "id": 8,
-        "classification": "progression",
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
@@ -688,7 +688,7 @@
       "Yellow Key": {
         "name": "Yellow Key",
         "id": 11,
-        "classification": "progression",
+        "classification": "progression_skip_balancing",
         "groups": [
           "Everything"
         ]
@@ -696,7 +696,7 @@
       "Left Difficulty Switch": {
         "name": "Left Difficulty Switch",
         "id": 12,
-        "classification": "progression",
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
@@ -704,7 +704,7 @@
       "Slow Yorgle": {
         "name": "Slow Yorgle",
         "id": 13,
-        "classification": "progression",
+        "classification": "filler",
         "groups": [
           "Everything"
         ]
@@ -2073,27 +2073,6 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Black Castle Gate"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "0.3",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
               "Magnet": 1
             },
             "resolved_items": {
@@ -2110,7 +2089,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.4",
+      "sphere_index": "0.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -2131,49 +2110,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.5",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Catacombs"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "0.6",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Slow Rhindle": 1
-            },
-            "resolved_items": {
-              "Slow Rhindle": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Northeast of Catacombs"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "0.7",
+      "sphere_index": "0.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -2196,49 +2133,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.8",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Southwest of Catacombs"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "0.9",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "White Castle Gate"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "0.10",
+      "sphere_index": "0.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -2274,48 +2169,6 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
-              "Slow Grundle": 1
-            },
-            "resolved_items": {
-              "Slow Grundle": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Red Maze Vault"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "1.2",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Red Maze Vault Entrance"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "1.3",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
               "Chalice": 1
             },
             "resolved_items": {
@@ -2332,28 +2185,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "1.4",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "RedMaze1"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "1.5",
+      "sphere_index": "1.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -2387,70 +2219,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "1.6",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Slay Yorgle"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
       "sphere_index": "2.1",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Black Castle Foyer"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "2.2",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Credits Left Side"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "2.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -2476,90 +2245,6 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "2.4",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Dungeon Vault"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "2.5",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Left Difficulty Switch": 1
-            },
-            "resolved_items": {
-              "Left Difficulty Switch": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Dungeon0"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "2.6",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Slow Yorgle": 1
-            },
-            "resolved_items": {
-              "Slow Yorgle": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Dungeon1"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "2.7",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Slay Rhindle"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
       "sphere_index": "3.1",
       "player_data": {
         "1": {
@@ -2575,27 +2260,6 @@
           "new_accessible_regions": [],
           "sphere_locations": [
             "Chalice Home"
-          ]
-        }
-      }
-    },
-    {
-      "type": "state_update",
-      "sphere_index": "3.2",
-      "player_data": {
-        "1": {
-          "new_inventory_details": {
-            "base_items": {
-              "Freeincarnate": 1
-            },
-            "resolved_items": {
-              "Freeincarnate": 1
-            }
-          },
-          "new_accessible_locations": [],
-          "new_accessible_regions": [],
-          "sphere_locations": [
-            "Inside Yellow Castle"
           ]
         }
       }
