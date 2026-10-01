@@ -36,7 +36,7 @@ import {
     collectSphereGrowthPrep, assembleRegionParams, assembleLibraryRegionParams,
 } from './sphereConfigHooks.js';
 import { buildLibrarySpiralConfig } from './regionLibraryLoader.js';
-import { applyPresetState, VALID_MODES } from './presetDefs.js';
+import { applyPresetState, VALID_MODES, TOPDOWN_GRID_KEYS } from './presetDefs.js';
 import { growMazeAsync, buildRulesJson } from './procgenPipelineEngine.js';
 import { newEnvelope as newSphereEnvelope, runToStep as runSphereToStep } from './sphereSteps.js';
 import { newSpiralEnvelope, runSpiralToStep } from './spiralSteps.js';
@@ -118,11 +118,9 @@ export function topDownGridSide(regionCount) {
     return Math.max(DEFAULT_PARAMS.gridWidth, Math.ceil(Math.sqrt(regionCount * TOPDOWN_GRID_AREA_FACTOR)));
 }
 
-/**
- * ⛓ The params keys that hold top-down's grid, per axis — the keys a top-down
- * state may PIN (see `pinnedGridKeys`) and `sourceSizedParams` otherwise fills.
- */
-export const TOPDOWN_GRID_KEYS = Object.freeze({ width: 'gridWidth', height: 'gridHeight' });
+// ⛓ TOPDOWN_GRID_KEYS lives in presetDefs.js (its capture omits them; F1) and
+// is re-exported here, beside the rules that read it.
+export { TOPDOWN_GRID_KEYS };
 
 /**
  * ⛓ The panel's grid inputs' `max` in TOP-DOWN mode. The engine refuses only a
@@ -158,8 +156,8 @@ export function gridDimsForSource(rulesJson, { playerId = '1' } = {}) {
  * carries. A shipped top-down preset pins none (`{ seed: 3 }`), so its grid
  * follows the source; a bundle that carries `gridWidth` keeps that width
  * whatever the source — the author's explicit pin wins, by design.
- * ⚠ A USER preset captures the panel's whole `params` (`capturePresetState`),
- * so it pins both keys at whatever the grid read when it was saved.
+ * A USER preset saved in top-down mode carries (so pins) only the axes the
+ * user hand-edited (`capturePresetState`'s `handEditedGridKeys`, F1).
  */
 export function pinnedGridKeys(bundleParams) {
     return Object.values(TOPDOWN_GRID_KEYS)

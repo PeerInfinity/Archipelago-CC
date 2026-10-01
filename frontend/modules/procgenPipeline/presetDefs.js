@@ -15,7 +15,9 @@
  * adoption) the grid is sized to that source (`presetRun.sourceSizedParams`)
  * on every axis `params` does not carry. Carrying `gridWidth`/`gridHeight`
  * PINS that axis (`presetRun.pinnedGridKeys`); the shipped top-down presets
- * pin neither. applyPresetState itself stays source-free.
+ * pin neither, and a user preset saved in top-down mode pins only the axes the
+ * user typed into (F1, `capturePresetState`). applyPresetState itself stays
+ * source-free.
  *
  * The presets, what each demonstrates and what they cost, are documented in
  * docs/json/developer/procgen/pipeline-presets.md.
@@ -987,15 +989,33 @@ export const SHIPPED_PRESETS = Object.freeze([
 ]);
 
 /**
+ * ⛓ The params keys that hold top-down's grid, per axis — the keys a top-down
+ * state may PIN (`presetRun.pinnedGridKeys`) and `presetRun.sourceSizedParams`
+ * otherwise fills. Re-exported by presetRun.js.
+ */
+export const TOPDOWN_GRID_KEYS = Object.freeze({ width: 'gridWidth', height: 'gridHeight' });
+
+/**
  * Snapshot a panel-shaped object's preset-relevant state as a
  * JSON-safe deep copy (the bundle round-trips through localStorage, so
  * everything in it is JSON-serialisable by construction).
+ *
+ * ⛓ F1 (⚖ user 2026-09-30): in TOP-DOWN mode the capture leaves out each grid
+ * key not in `handEditedGridKeys`, so the saved preset's grid follows whatever
+ * source it is applied over (an absent key is unpinned). The panel tracks which
+ * axes the user typed into since the grid was last sized automatically
+ * (adoption, apply, reload). A kept key stays pinned. Other modes keep the
+ * whole `params`: there the grid is a real setting, never derived.
  */
 export function capturePresetState({
     mode, params, scenario, substrateMix, substrateQuotas, substrateMode, libraries,
-}) {
+}, { handEditedGridKeys = [] } = {}) {
+    const capturedParams = mode === 'topDown' && params
+        ? Object.fromEntries(Object.entries(params).filter(([key]) =>
+            !Object.values(TOPDOWN_GRID_KEYS).includes(key) || handEditedGridKeys.includes(key)))
+        : params;
     return JSON.parse(JSON.stringify({
-        mode, params, scenario, substrateMix, substrateQuotas, substrateMode,
+        mode, params: capturedParams, scenario, substrateMix, substrateQuotas, substrateMode,
         // Selected region libraries in the hybrid-persistence shape (served
         // references + inline ad-hoc/edited docs — regionLibraryLoader
         // serializeLibrarySelection). Carried verbatim; the panel resolves

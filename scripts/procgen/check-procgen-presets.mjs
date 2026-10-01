@@ -32,6 +32,10 @@
  *      active one, keeps 6×6 when a reload re-adopts APCalc. Step 3's
  *      top-down presets also assert their grid
  *      inputs read Adventure's derived grid after the apply.
+ *   7. (F1) A top-down user preset saved over APCalc with the grid untouched
+ *      carries no grid key, so applied over Adventure it reads Adventure's
+ *      derived grid; one saved after typing a width carries the width only,
+ *      so applied over APCalc it keeps that width and derives the height.
  *
  * The page is opened as `?game=adventure&seed=1`: the top-down presets realise
  * the LOADED world (⚖ user 2026-09-16, Q4), and this is the loaded world the
@@ -430,6 +434,73 @@ check('deleted preset no longer listed',
     const pinGot = await readGridInputs(pinPanel);
     check(`the source's adoption on that reload leaves the pinned grid at ${PINNED_GRID_SIDE}×${PINNED_GRID_SIDE}`,
         sameJson(pinGot, { width: PINNED_GRID_SIDE, height: PINNED_GRID_SIDE }), JSON.stringify(pinGot));
+}
+
+// ── 7. (F1) A top-down user preset pins only the grid axes the user typed ──
+// ⚖ user 2026-09-30: a saved top-down preset leaves the grid OUT unless the
+// user changed it by hand. Measured (F1) with the capture keeping both keys:
+// the Adventure apply below reads APCalc's 12×12.
+{
+    const SMALL_SOURCE_GAME = 'adventure';
+    const small = gridDimsForSource(JSON.parse(readFileSync(join(ROOT, TOPDOWN_SOURCE_FILE), 'utf8')));
+    const large = gridDimsForSource(JSON.parse(readFileSync(join(ROOT, LARGE_SOURCE_FILE), 'utf8')));
+    check(`${SMALL_SOURCE_GAME}'s derived grid ${small.width}×${small.height} is not ${LARGE_SOURCE_GAME}'s ${large.width}×${large.height}`,
+        small.width !== large.width && small.height !== large.height);
+    check(`the typed width ${PINNED_GRID_SIDE} is neither source's derived width`,
+        PINNED_GRID_SIDE !== small.width && PINNED_GRID_SIDE !== large.width);
+    await page.evaluate(() => localStorage.setItem('procgenPipeline_presets', JSON.stringify({ presets: [] })));
+    const savePreset = async (p, label) => {
+        page.once('dialog', (d) => d.accept(label));
+        await p.locator('button:has-text("Save as…")').click();
+        await page.waitForTimeout(300);
+        return (await readPresetStore())?.presets?.find((x) => x.label === label) ?? null;
+    };
+    /** Custom, then the preset: re-selecting the selected option fires no change. */
+    const applyById = async (p, id) => {
+        const sel = p.locator('.procgen-pipeline-preset-select');
+        await sel.selectOption('');
+        await page.waitForTimeout(300);
+        await p.locator('.procgen-pipeline-preset-select').selectOption(id);
+        await page.waitForTimeout(300);
+    };
+
+    // (a) Over APCalc, the grid untouched → the saved preset carries no grid key.
+    let p7 = await openPanel(`${HOST}/frontend/?game=${LARGE_SOURCE_GAME}&seed=1`);
+    await applyById(p7, LARGE_SOURCE_PRESET_ID);
+    check(`F1: ${LARGE_SOURCE_PRESET_ID} over ${LARGE_SOURCE_GAME} reads the derived ${large.width}×${large.height} before the save`,
+        sameJson(await readGridInputs(p7), large), JSON.stringify(await readGridInputs(p7)));
+    const untouched = await savePreset(p7, 'Grid untouched');
+    check('F1: a top-down preset saved with the grid untouched carries no grid key',
+        untouched && !('gridWidth' in untouched.state.params) && !('gridHeight' in untouched.state.params),
+        JSON.stringify(untouched?.state?.params));
+
+    // ... and applied over Adventure, its grid is Adventure's derived one.
+    p7 = await openPanel(`${HOST}/frontend/?game=${SMALL_SOURCE_GAME}&seed=1`);
+    const smallStatus = await p7.locator('.procgen-pipeline-source-status').first().textContent();
+    check(`F1: the source picker has the loaded ${SMALL_SOURCE_GAME} world`,
+        smallStatus.includes(`./presets/${SMALL_SOURCE_GAME}/`), smallStatus);
+    await applyById(p7, untouched.id);
+    const overSmall = await readGridInputs(p7);
+    check(`F1: that preset applied over ${SMALL_SOURCE_GAME} lays out on ${SMALL_SOURCE_GAME}'s derived ${small.width}×${small.height}, not ${large.width}×${large.height}`,
+        sameJson(overSmall, small), JSON.stringify(overSmall));
+
+    // (b) Type a width → the saved preset carries (pins) the width only.
+    const widthInput = p7.locator('.procgen-pipeline-field:has(label:text-is("Grid width")) input');
+    await widthInput.fill(String(PINNED_GRID_SIDE));
+    await widthInput.dispatchEvent('change');
+    await page.waitForTimeout(300);
+    const typed = await savePreset(p7, 'Width typed');
+    check(`F1: a top-down preset saved after typing width ${PINNED_GRID_SIDE} carries gridWidth ${PINNED_GRID_SIDE} and no gridHeight`,
+        typed?.state?.params?.gridWidth === PINNED_GRID_SIDE && !('gridHeight' in typed.state.params),
+        JSON.stringify(typed?.state?.params));
+
+    // ... and applied over APCalc, the width is kept and the height derived.
+    p7 = await openPanel(`${HOST}/frontend/?game=${LARGE_SOURCE_GAME}&seed=1`);
+    await applyById(p7, typed.id);
+    const overLarge = await readGridInputs(p7);
+    check(`F1: that preset applied over ${LARGE_SOURCE_GAME} keeps width ${PINNED_GRID_SIDE} and derives height ${large.height}`,
+        sameJson(overLarge, { width: PINNED_GRID_SIDE, height: large.height }), JSON.stringify(overLarge));
+    await page.evaluate(() => localStorage.setItem('procgenPipeline_presets', JSON.stringify({ presets: [] })));
 }
 
 console.log(`\nPer preset (${HOST}, ceiling ${ceilingMs} ms each):\n  ${timings.join('\n  ')}`);

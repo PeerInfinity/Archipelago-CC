@@ -75,7 +75,7 @@ import { CONCEPTS, isConceptRow, realisationsOf } from '../procgenCore/concepts.
 // a config in place are one-line callers over `this`, and the headless preset
 // row calls the same functions.
 import {
-    panelDefaultParams, sourceSizedParams, pinnedGridKeys,
+    panelDefaultParams, sourceSizedParams, pinnedGridKeys, TOPDOWN_GRID_KEYS,
     TOPDOWN_GRID_INPUT_MAX, GRID_GROWTH_INPUT_MAX,
     effectiveSubstrateMix, effectiveSubstrateQuotas, effectiveHazardOpts,
     activeSubstrateDict, mergedItemLib, resolveVictoryItemId,
@@ -385,6 +385,15 @@ export class ProcgenPipelineUI {
         // a preset apply).
         this.userPresets = loadUserPresets(localStorage);
         this.activePresetId = null;
+        // ⛓ F1: the grid keys (`gridWidth`/`gridHeight`) the user typed into
+        // since the grid was last sized automatically — a top-down "Save as…"
+        // keeps (pins) only these (`capturePresetState`). Reset by every
+        // automatic sizing to the active preset's pinned keys (the axes it
+        // left alone), so re-saving a pinned preset keeps its pin. NOT
+        // persisted: every reload re-derives it from the restored active
+        // preset, and the reload's source adoption resizes every other axis
+        // (so a Custom hand-edit is gone from the inputs too).
+        this._handEditedGridKeys = new Set();
 
         this.rootElement = document.createElement('div');
         this.rootElement.className = 'procgen-pipeline-panel';
@@ -638,7 +647,8 @@ export class ProcgenPipelineUI {
             try {
                 saved = saveUserPreset(
                     localStorage, label,
-                    capturePresetState({ ...this, libraries: this._serializedLibraries() }),
+                    capturePresetState({ ...this, libraries: this._serializedLibraries() },
+                        { handEditedGridKeys: [...this._handEditedGridKeys] }),
                 );
             } catch (e) {
                 // A full origin used to throw out of this click handler (plan §37.7.5).
@@ -709,6 +719,7 @@ export class ProcgenPipelineUI {
             ? sourceSizedParams(next.params, this.topDownSource,
                 { pinned: pinnedGridKeys(preset.state?.params) })
             : next.params;
+        this._handEditedGridKeys = new Set(pinnedGridKeys(preset.state?.params));
         this.scenario = next.scenario;
         this.substrateMix = next.substrateMix;
         this.substrateQuotas = next.substrateQuotas;
@@ -2061,8 +2072,13 @@ export class ProcgenPipelineUI {
             ] : []),
         ];
 
+        const gridKeys = Object.values(TOPDOWN_GRID_KEYS);
         for (const f of fields) {
-            grid.appendChild(bagIntegerField(this.params, f, () => this._saveToLocalStorage()));
+            grid.appendChild(bagIntegerField(this.params, f, () => {
+                // ⛓ F1: a typed grid axis is the user's, so a top-down save keeps it.
+                if (gridKeys.includes(f.key)) this._handEditedGridKeys.add(f.key);
+                this._saveToLocalStorage();
+            }));
         }
         section.appendChild(grid);
 
@@ -5050,8 +5066,11 @@ export class ProcgenPipelineUI {
     // the rendered grid inputs hold this.params.
     _applyGridDimsFromSource(rulesJson) {
         const active = getPresetById(this.activePresetId, this.userPresets);
-        Object.assign(this.params, sourceSizedParams(this.params, rulesJson,
-            { pinned: pinnedGridKeys(active?.state?.params) }));
+        const pinned = pinnedGridKeys(active?.state?.params);
+        Object.assign(this.params, sourceSizedParams(this.params, rulesJson, { pinned }));
+        // ⛓ F1: the grid was just sized automatically; only the pinned axes
+        // (left alone) still count as the user's.
+        this._handEditedGridKeys = new Set(pinned);
     }
 
     // --- helpers ---
@@ -5203,6 +5222,9 @@ export class ProcgenPipelineUI {
             this.activePresetId = restoredActivePresetId(
                 parsed.activePresetId, this.userPresets,
             );
+            // ⛓ F1: a restore is an automatic sizing too (see the constructor).
+            this._handEditedGridKeys = new Set(pinnedGridKeys(
+                getPresetById(this.activePresetId, this.userPresets)?.state?.params));
         } catch (e) {
             // ignore
         }
