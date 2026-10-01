@@ -246,7 +246,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `pushesSettled` | `pushable` | `botDriverV2` |
 | `openBridges` | — | `botDriverV2` |
 | `arrowsInFlight` | `emitter` | `dangerMap`, `solverBot` |
-| `burnedTrees` | — | `botDriverV2` |
+| `burnedTrees` | — | `botDriverV2`, `solverBot` |
 | `latchedGroups` | `channel` | `solverBot` |
 | `pulledRopes` | — | `botDriverV2` |
 | `turretDamage` | `hp`, `emitter` | `botDriverV2` |
@@ -254,6 +254,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `arrowFlights` | `emitter` | `dangerMap` |
 | `bosses` | — | `botDriverV2` |
 | `talkCircles` | — | `solverBot` |
+| `bobBoss` | `chase`, `contact`, `hp` | `solverBot` |
 | `volume:crusher` | `lane-charge`, `contact` | `encounters` |
 | `volume:spinningaxe` | `stationary`, `sweep` | `dangerMap`, `encounters` |
 | `volume:pulser` | `stationary`, `pulse` | `dangerMap`, `encounters` |
@@ -264,7 +265,7 @@ The family map below is pinned to `FAMILY_BLOCKS` by `entityBlocks.test.js`. A `
 | `volume:pull` | `stationary` | `dangerMap`, `encounters` |
 | `volume:pod` | `stationary`, `contact` | `dangerMap`, `encounters` |
 
-**Modelled.** A block counts as modelled when some `run.entities` family that a solver-family file reads realises it. These blocks are modelled, with the families behind each: `stationary` (`armedArrowTraps`, `armedPulsers`, `turrets`), `chase` (`chasers`), `rebound` (`spinnerBodies`), `pushable` (`pushables`, `turrets`, `pushesSettled`, `turretsSettled`), `lane-charge` (`crushers`, `crushersParked`), `contact` (`crushers`, `spinnerBodies`, `chasers`), `emitter` (`armedArrowTraps`, `arrowsInFlight`, `turretDamage`, `arrowFlights`), `sweep` (`spinnerBodies`), `pulse` (`armedPulsers`), `hp` (`strikeBodies`, `spinnerBodies`, `turretDamage`), `channel` (`openActivators`, `armedArrowTraps`, `armedPulsers`, `latchedGroups`).
+**Modelled.** A block counts as modelled when some `run.entities` family that a solver-family file reads realises it. These blocks are modelled, with the families behind each: `stationary` (`armedArrowTraps`, `armedPulsers`, `turrets`), `chase` (`chasers`, `bobBoss`), `rebound` (`spinnerBodies`), `pushable` (`pushables`, `turrets`, `pushesSettled`, `turretsSettled`), `lane-charge` (`crushers`, `crushersParked`), `contact` (`crushers`, `spinnerBodies`, `chasers`, `bobBoss`), `emitter` (`armedArrowTraps`, `arrowsInFlight`, `turretDamage`, `arrowFlights`), `sweep` (`spinnerBodies`), `pulse` (`armedPulsers`), `hp` (`strikeBodies`, `spinnerBodies`, `turretDamage`, `bobBoss`), `channel` (`openActivators`, `armedArrowTraps`, `armedPulsers`, `latchedGroups`).
 
 **Only avoided.** These blocks reach the solver only as an avoid volume: `beam` (`volume:beamtower`), `tether` (`volume:lavachain`).
 

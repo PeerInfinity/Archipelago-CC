@@ -263,7 +263,7 @@ export const FAMILY_BLOCKS = deepFreeze([
         solverReads: ['dangerMap', 'solverBot'], strategies: [],
         why: 'live arrow positions (`levelRun.js:10724`) — the emitter\'s shots.' },
     { family: 'burnedTrees', kind: RUN_ENTITIES, blocks: [],
-        solverReads: ['botDriverV2'], strategies: [],
+        solverReads: ['botDriverV2', 'solverBot'], strategies: [],
         why: 'burned tree ids (`levelRun.js:10581`) — a `TILE_TRIGGERS` itemCategory, not a block.' },
     { family: 'latchedGroups', kind: RUN_ENTITIES, blocks: ['channel'],
         solverReads: ['solverBot'], strategies: [],
@@ -286,6 +286,9 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'talkCircles', kind: RUN_ENTITIES, blocks: [],
         solverReads: ['solverBot'], strategies: [],
         why: 'uncleared talker circles (`levelRun.js:10594`) — dialogue, not a behaviour.' },
+    { family: 'bobBoss', kind: RUN_ENTITIES, blocks: ['chase', 'contact', 'hp'],
+        solverReads: ['solverBot'], strategies: [],
+        why: 'L32\'s encounter by role — the rock, the boss (three forms: chase, swords, `hits`), the dialogue, the pending Fire (`levelRun.js`, swim U5\'s `bobBossFight.js`); the encounter executor reads the boss\'s own `hits`.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],
