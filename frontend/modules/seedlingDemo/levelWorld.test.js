@@ -1205,7 +1205,14 @@ describe('roles: the census is per-role, and wider than the fixture levels', () 
         for (const level of atlas.levels) {
             for (const e of level.entities ?? []) used.add(e.type);
         }
-        expect([...used].sort()).toEqual(Object.keys(ENTITY_CLASSES).sort());
+        // ⛓ Seedling JS J1 (⚖ user, 2026-10-01): ONE entry no vanilla level
+        // carries, by ruling — `apitem`, which the HOST writes into a
+        // delivered level set (`apPlacementRewriter`, `seedlingGeneratedSet`)
+        // and the fork's `Pickups/APItem.as` builds. Named here so a second
+        // host-only row is a decision, not a drift.
+        const HOST_WRITTEN = ['apitem'];
+        for (const tag of HOST_WRITTEN) expect(used.has(tag), `${tag} is host-written`).toBe(false);
+        expect([...used, ...HOST_WRITTEN].sort()).toEqual(Object.keys(ENTITY_CLASSES).sort());
         expect(used.size).toBe(137);
     });
 

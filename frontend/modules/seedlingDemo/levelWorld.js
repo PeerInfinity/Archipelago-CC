@@ -1114,6 +1114,22 @@ export const ENTITY_CLASSES = Object.freeze({
     // frame) and `BossTotemPart` writes save state.
     totempart: pickup('BossTotemPart', 'Game.as:2131 + Pickups/BossTotemPart.as',
         16, 16, 8, 8),
+    // ⛓ SEEDLING JS J1 (⚖ user, 2026-10-01): the Archipelago placement pickup
+    // a delivered level set writes into every randomized location. Its ctor
+    // never sets `special`, so `Pickup.update` → `pick_up()` takes the
+    // `removeSelf()` arm on CONTACT — no freeze, no text, no item — and
+    // `removed()` writes `setPersistence(tag, false)`, which the host reads as
+    // `pendingCheck`. ⛔ So it carries NO `pickup` role entry: a run would
+    // charge it a ceremony the game never spends. Its contact box is
+    // `apItem`, read by the JS runtime page (`jsRuntimeCore.js`), which owns
+    // the report; on every vanilla level this row is unreachable.
+    apitem: {
+        as3: 'APItem', roles: ROLES, collider: 'none', type: '',
+        src: 'Pickups/APItem.as:98-104 (super(_x + Tile.w/2, _y + Tile.h/2, …, false); '
+            + 'setHitbox(8, 8, 4, 4)) + Pickups/Pickup.as:50-122',
+        why: 'a Pickup: Mobile assigns no type, so it is in no solids list',
+        apItem: { special: false, dx: 8, dy: 8, w: 8, h: 8, originX: 4, originY: 4 },
+    },
 
     // --- PROXIMITY HAZARDS -------------------------------------------
     // The test applied to every tag: with `noDamage` and `noHazards` on and
