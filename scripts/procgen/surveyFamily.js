@@ -84,6 +84,16 @@ export const FAMILY_RULES = [
             + 'order, not a missing mechanism — the room says which verb it wants'],
     [/No strategy row exists for this obstacle/,
         'VERB-MISSING — the selected obstacle has NO strategy row at all'],
+    /**
+     * ⛓ SWIM U5, D1 — an `encounter` whose drop has no registered executor. The
+     * reason is upstream of the solver: the MODEL does not simulate the fight
+     * (`solverBot.ENCOUNTER_EXECUTORS`). Its witness is survey step 30 (L32),
+     * the only encounter on the route.
+     */
+    [/no encounter executor is registered for a '([^']+)' drop/,
+        (m) => `ENCOUNTER-UNMODELLED — the '${m[1]}' drop's fight is not simulated by the `
+            + 'model, so no executor can be derived from it; the missing piece is a '
+            + 'simulation family, not a solver policy'],
     [/needs a GAME-sourced tick/,
         'ORACLE — a declaration the model refuses to compute; only the `--win` game '
         + 'channel can answer it, which is a RECORDING channel (R9\'s)'],

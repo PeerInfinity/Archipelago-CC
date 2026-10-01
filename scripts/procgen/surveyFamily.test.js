@@ -27,6 +27,10 @@ describe('familyOf — the text arm, unchanged by the extraction', () => {
             .toMatch(/^ORACLE/);
         expect(familyOf('ladder: the combat ladder is EXHAUSTED after four rungs'))
             .toMatch(/^LADDER/);
+        // ⛓ Swim U5, D1: step 30's refusal (`solverBot`'s encounter arm).
+        expect(familyOf('solverBot(survey-step-30) encounter (64,128)->Fire: no encounter '
+            + "executor is registered for a 'Fire' drop in level 32."))
+            .toMatch(/^ENCOUNTER-UNMODELLED — the 'Fire' drop's fight/);
     });
 
     it('⛓ a refusal matching nothing is NAMED as unclassified, never swallowed', () => {

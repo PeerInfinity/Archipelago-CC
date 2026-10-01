@@ -99,9 +99,9 @@
  * shield — `Level 029 - Boss Key 1` (1.4, +Green Key) and `Level 032 - Bob
  * Boss` (2.2, +Fire) — AFTER the three above, so every earlier step keeps its
  * id and boot and only step 21 (the shield room) gains the crossing out. The
- * Bob Boss is an encounter: L32 has no pickup entity, so its goal is the
- * `collect-placement` of the location's own atlas tile
- * (`seedling-playthrough.json`) and the solver answers for it in its own words.
+ * Bob Boss is an encounter: L32 has no pickup entity, so its goal is an
+ * `encounter` (swim U5) anchored at the location's own atlas tile
+ * (`seedling-playthrough.json`), and the solver answers for it in its own words.
  * It REQUIRES `--out=<file>`: the survey rows go there, the route and the views
  * to `…/through-2.2/` in the gitignored survey directory, and `survey.json`
  * is never read or written. Without the flag nothing below moves.
@@ -449,7 +449,8 @@ function placementOf(locationName) {
 const PICKUP_ENTITY = { 10: 'sword', 19: 'bosskey', 20: 'shield', ...(THROUGH ? { 29: 'bosskey' } : {}) };
 /**
  * ⛓ S2 D5 — an ENCOUNTER location has no pickup entity (L32's Bob Boss drops
- * Fire), so its goal is the location's own tile in the playthrough atlas.
+ * Fire), so it is anchored at the location's own tile in the playthrough atlas
+ * (the `encounter` goal's `at` since U5).
  */
 function encounterCoords(level) {
     const pt = JSON.parse(readFileSync(
@@ -460,8 +461,29 @@ function encounterCoords(level) {
     if (!loc) throw new Error(`L${level}: the playthrough atlas has no location '${pickup?.location}'`);
     return { x: loc.tile[0] * pt.tile_space.tile_size, y: loc.tile[1] * pt.tile_space.tile_size };
 }
+/**
+ * ⛓ SWIM U5 D1 — the encounter location's GOAL, not a `collect-placement` of
+ * its tile. U2–U4 handed L32 `collect-placement (64,128)`, and the solver
+ * refused it as an absent thing. The location is a DROP, so the goal says so:
+ * `at` is the atlas tile (`encounterCoords`), `drop.item` is the AP item the
+ * sphere row grants, and `then` comes from the level's own CONTROL BLOCK. If
+ * `fallthrough` names a level, the room is left by a pit, so `'reach-pit'`;
+ * otherwise `null`. For L32 that is `fallthrough 30`, pits (4,0) (5,0) under
+ * `burnabletree@64,0`. The solver resolves which pit tile; the survey does not
+ * pick one, because `pitEdgeFor` is keyed on a route hop and this route ends in
+ * L32.
+ */
+function encounterGoal(level, pickup) {
+    const world = MODEL.buildLevelWorld(MODEL.atlasLevelSource()(level));
+    return {
+        kind: 'encounter',
+        at: encounterCoords(level),
+        drop: { item: pickup.item },
+        then: world.fallthrough ? 'reach-pit' : null,
+        why: `${pickup.location} (sphere ${pickup.sphere}) → ${pickup.item}`,
+    };
+}
 function pickupCoords(level) {
-    if (THROUGH && PICKUP_ENTITY[level] === undefined) return encounterCoords(level);
     const type = PICKUP_ENTITY[level];
     const hits = (levelsByNo.get(level)?.entities ?? []).filter((e) => e.type === type);
     if (hits.length !== 1) {
@@ -549,7 +571,9 @@ function buildSteps(visits, legs, id) {
         const goals = [];
         const pickupHere = ROUTE_PICKUPS.find((p) => p.level === v.level
             && legs[v.leg].goal === p.location && (!next || next.leg !== v.leg));
-        if (pickupHere) {
+        if (pickupHere && THROUGH && PICKUP_ENTITY[v.level] === undefined) {
+            goals.push(encounterGoal(v.level, pickupHere));
+        } else if (pickupHere) {
             goals.push({
                 kind: 'collect-placement',
                 placement: pickupCoords(v.level),
@@ -896,6 +920,8 @@ async function solveOneStep(step) {
     // not a kind the solver owns, and its refusal saying so is the measurement.
     const goals = step.goals.map((g) => (g.kind === 'reach-pit'
         ? { kind: 'reach-pit', pit: { ...g.pit } }
+        : g.kind === 'encounter'
+        ? { kind: 'encounter', at: { ...g.at }, drop: { ...g.drop }, then: g.then }
         : g.kind === 'reach-exit'
         ? { kind: 'reach-exit', exit: { ...g.exit } }
         : { kind: 'collect-placement', placement: { ...g.placement } }));

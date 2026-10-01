@@ -51,9 +51,10 @@ describe('assertGoal — reach-pit', () => {
         expect(() => assertGoal({ kind: 'reach-pit' }, 0)).toThrow(/reach-pit needs pit/);
     });
 
-    it('the unknown-kind refusal lists the three kinds the solver owns', () => {
+    it('the unknown-kind refusal lists the kinds the solver owns', () => {
+        // ⛓ Swim U5 added `encounter` (`solverEncounter.test.js`).
         expect(() => assertGoal({ kind: 'reach-cell' }, 0))
-            .toThrow(/'reach-exit', 'reach-pit' and 'collect-placement'/);
+            .toThrow(/'reach-exit', 'reach-pit', 'collect-placement' and 'encounter'/);
     });
 });
 

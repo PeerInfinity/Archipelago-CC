@@ -522,6 +522,25 @@ export const STRATEGY_EXECUTORS = Object.freeze({
 });
 
 /**
+ * ⛓⛓ SEEDLING SWIM U5, D1 — THE `encounter` EXECUTORS, keyed by the item the
+ * encounter DROPS (the location is the drop, not a placement).
+ *
+ * ⛔ EMPTY, AND THE EMPTINESS IS THE MEASUREMENT. An executor here has to be
+ * derived from the model and has to read the fight off the run (the freeze,
+ * the dialogue pages, the boss's hits, the drop). U5's W0 replayed
+ * `r5-bobboss-fire` through the model, and the model simulates NONE of L32's
+ * script. It diverges from the game's recording at t=15, which is the arm
+ * frame. `rockFalls` stays `[]` for 2,500 ticks (`fallrocklarge` is not a
+ * `FALL_RESPONDERS` row), the only dead span is the 20-frame level load, no
+ * entity family holds a BobBoss, and `hasFire` never turns true. The tape is in
+ * `r5Chain.MODEL_EXEMPT`, and `tapeRunner.test.js` asserts that it DIVERGES. A
+ * row here therefore needs a simulation family first (`levelRun.js`), which no
+ * solver slice may write. Until then the goal refuses by name, the same way
+ * `STRATEGY_EXECUTORS`' "SELECTED but not registered" does.
+ */
+export const ENCOUNTER_EXECUTORS = Object.freeze({});
+
+/**
  * ⛔ THE BOUND ON STRATEGY APPLICATIONS PER GOAL, and it is named rather than
  * generous. Every application must EDIT the world (that is what a verb is),
  * so a goal that has cleared four distinct obstacles and still has no
@@ -3164,7 +3183,7 @@ function withoutSources(d, except) {
 }
 
 /**
- * One goal, shape-checked. The two kinds slice 2 owns, and `reach-pit`.
+ * One goal, shape-checked. The two kinds slice 2 owns, `reach-pit`, and `encounter`.
  *
  * ⛓⛓ SEEDLING SWIM U1, D1 — **`reach-pit`, THE PIT COUNTERPART OF
  * `reach-exit`.** A level whose `control` block names a `fallthrough` level
@@ -3205,8 +3224,29 @@ export function assertGoal(goal, i) {
         }
         return goal;
     }
+    /**
+     * ⛓⛓ SEEDLING SWIM U5, D1 — **`encounter`, A LOCATION THAT IS A DROP.**
+     * L32's `Level 032 - Bob Boss` has no pickup entity. `BobBoss.death`
+     * spawns the Fire at runtime, so a `collect-placement` there resolves to
+     * nothing. The goal names WHERE the fight is anchored (`at`, the location's
+     * atlas tile), WHAT it drops (`drop.item`), and what the room asks after the
+     * drop (`then`). That is `'reach-pit'` for L32, whose only exit is the pit
+     * under the tree the Fire burns, and `null` when the route ends in the room.
+     * The executor is `ENCOUNTER_EXECUTORS[drop.item]`.
+     */
+    if (goal.kind === 'encounter') {
+        if (!Number.isFinite(goal.at?.x) || !Number.isFinite(goal.at?.y)
+            || typeof goal.drop?.item !== 'string' || !goal.drop.item
+            || !(goal.then === 'reach-pit' || goal.then === null)) {
+            fail(`${at}: encounter needs at {x, y} (the location's atlas tile), drop `
+                + '{item} (what the fight spawns) and then \'reach-pit\' | null (the '
+                + `room's exit after the drop), got ${JSON.stringify(goal)}. The MACRO `
+                + 'layer names WHICH encounter; the solver owns HOW to fight it.');
+        }
+        return goal;
+    }
     fail(`${at}: unknown goal kind ${JSON.stringify(goal.kind)}. The solver owns `
-        + '\'reach-exit\', \'reach-pit\' and \'collect-placement\'; a new kind is a policy addition, '
+        + '\'reach-exit\', \'reach-pit\', \'collect-placement\' and \'encounter\'; a new kind is a policy addition, '
         + 'not a free string here — the trace\'s vocabulary is open, the solver\'s '
         + 'is not.');
     return null;
@@ -10677,6 +10717,37 @@ export function solveSegment({
             const coast = coastThroughTransport(run, perTick, maxTicksPerTarget,
                 `${whatPit}->L${fall.to_level}`);
             records.push({ goal: 'reach-pit', to: fall.to_level, t: t.t, coast });
+            continue;
+        }
+        if (goal.kind === 'encounter') {
+            /**
+             * ⛓⛓ SEEDLING SWIM U5, D1: the executor is looked up by the DROP,
+             * and an unregistered drop refuses before a tick is spent. See
+             * `ENCOUNTER_EXECUTORS` for why the table is empty: the model
+             * does not simulate the fight, so there is nothing to derive a
+             * schedule from and nothing to verify a landing against.
+             */
+            const whatEnc = `solverBot(${name}) encounter (${goal.at.x},${goal.at.y})`
+                + `->${goal.drop.item}`;
+            const exec = ENCOUNTER_EXECUTORS[goal.drop.item];
+            if (!exec) {
+                refuse(`${whatEnc}: no encounter executor is registered for a `
+                    + `'${goal.drop.item}' drop in level ${run.level}. The model does not `
+                    + 'simulate this encounter: no entity family holds the boss, the '
+                    + 'arena\'s `fallrocklarge` never falls (`rockFalls` stays empty), '
+                    + 'no dialogue or form transition freezes the run, and nothing spawns '
+                    + 'the drop. `r5-bobboss-fire` DIVERGES from the game at t=15, the '
+                    + 'arm frame (`r5Chain.MODEL_EXEMPT`). An executor derived from the '
+                    + 'model needs the encounter MODELLED first, which is a simulation '
+                    + 'family, not a solver policy.', {
+                    goal,
+                    obstacle: { kind: 'unmodelled-encounter',
+                        id: `encounter@${goal.at.x},${goal.at.y}` },
+                });
+            }
+            records.push({ goal: 'encounter', ...exec(run, perTick, goal, {
+                maxTicksPerTarget, economies, dashMode, what: whatEnc, walkTo, goal,
+            }) });
             continue;
         }
         if (goal.kind === 'reach-exit') {

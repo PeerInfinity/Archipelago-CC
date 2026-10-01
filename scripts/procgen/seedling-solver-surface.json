@@ -557,9 +557,9 @@
         "botDriverV2.js": 30,
         "dangerMap.js": 9,
         "director.js": 1,
-        "solverBot.js": 46
+        "solverBot.js": 47
       },
-      "sites": 86,
+      "sites": 87,
       "seen": "both",
       "via": [
         "direct"
