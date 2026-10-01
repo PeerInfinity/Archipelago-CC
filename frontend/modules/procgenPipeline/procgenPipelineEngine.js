@@ -3250,8 +3250,8 @@ export function realisesThroughZonePath(substrateId) {
  * gives every exit a distinct side (a side-less exit, e.g. a top-down
  * teleporter, gets a free one, clockwise) and the zone keys its portals by side
  * (bounce's `side_exit_<side>` / `sidePortals`). The 'sides' GEOMETRY alone does
- * not cap exits: text_adventure is 'sides' and realises a 5-exit region
- * through its procedural core.
+ * not cap exits: text_adventure is 'sides' but realises through its own
+ * procedural core, which this ceiling does not cover.
  */
 export const ZONE_PATH_EXIT_CEILING = SIDES.length;
 
