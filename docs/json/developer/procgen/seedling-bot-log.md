@@ -11419,6 +11419,99 @@ a stepped body, and its 89-tick walk never touches it.
 `winding post-swim s6`. No pre-sword or post-sword row moved. Every other row
 and the six `--check`s are identical.
 
+### Seedling substrate U10-swim — step 24: the three walls; the goal collected in passing (2026-10-01)
+
+⚖ Q38 (user, 2026-10-01). The report is `CC/docs/cloud-reports/seedling-swim-u10.md`.
+Step 24 (L12 → the pit at (36,43), landing L21) passed all three of U7's walls
+and stopped at a fifth, named below. The goal loop now recognises a pickup
+taken before its goal was asked.
+
+**D1 — the kill arm's scan centre.** `deriveKillByChaser` scanned a
+`STANCE_SCAN_CELLS` box around the PLAYER's node. L12's ladder asks from about
+470 px away, so it read "0 cell(s) inside its 80 px leash". When that box holds
+no leash cell, the arm now scans a box around the TARGET, and the refusal says
+so. Every committed stance is still chosen the same way. Step 24 measured the
+prediction exactly: 76 leash cells, 17 reachable with a corridor onward, 17
+refused by the forecast (`(360,280): the WAIT is dangerous at tick 954`), in
+278 s.
+
+**D2 — the pad at the dwell, with its game witness.** `chaserForecastNow`'s
+body rows carry a `punch` field for a class that has one. It holds the box
+`punchNow` would test on the tick a wind-up ends, whether the body's
+`hitsTimer` lets it throw (read after that tick's `hitUpdate`), and whether it
+meets the previewed player where the tick started. In transit with forecast
+bodies, `chaserDanger` prices that punch and the bare body instead of
+`threatPad`. The WAIT arm and the live bodies keep the pad. The witness was
+recorded headless on the game, and the model reproduces both arms:
+
+- `u10-puncher-dwell` stands at (392,280), a stance the forecast admits and
+  the pad refuses at t45. It runs 200 ticks on the kill arm's own preview
+  keys. Presses land at t14, 47 and 80, the puncher is removed, and the
+  player's `hits` is 0 in the game and in the model. The per-tick puncher
+  probe agrees on 123 comparisons (worst |Δ| 2.8e-17).
+- `u10-puncher-dwell-refused` stands at (400,248), the positive control. The
+  forecast names the punch at t34, and the game lands it there (`hits` 1).
+
+The control was first recorded at 50 ticks. The model swung the press on the
+punch's own tick west, while the game swung it east and landed a hit. That is
+the player's facing after a knockback, which is not this slice's region (see
+the residue), so the arm now ends on the punch's tick.
+
+With D2, step 24's ladder passes, and the walk refuses at U7's wall 3, byte for
+byte (470 s).
+
+**D3 — wall 3 was a corpse.** The brief guessed the gate's pad on a live body.
+The probe measured something else: at the refusal (t1812), `puncher@416,256`
+was already dead. It was killed by press at t1781, with `dying` and `destroy`
+set and its fade running. The kill dwell ends when the body leaves
+`strikeBodies`, which drops `destroy`, but `run.chasers` keeps it through the
+fade. `chaserDanger` now skips a `destroy`ed body: `Enemy.update` runs
+`hitPlayer` only `if (!destroy)`, and `play("die")` replaced any wind-up. Its
+witness is `u7-puncher-kill`, whose corpse stands beside the player through
+the fade at `hits` 0. Step 24 then opens both keyType-0 locks, and the
+puncher is gone.
+
+The walk then refuses at a **fifth wall** (474 s): *"keylock:
+bosslock@80,656 needs a key this run does not hold"*. That lock is keyType 1,
+the Green Key that the route collects at step 27. At t2048, both
+`bosslock@416,240` and `@432,240` are in `openActivators`. The player stands
+at (423.7,258.1), tile (26,16), and the planner still reports tile (26,16) and
+the pit in different components. So the frontier's next entity is the
+keyType-1 lock. From (424,224), just north of the locks, the pit's neighbour
+tiles plan in 6–9 waypoints with no Green Key. Wall 5 is therefore the walk's
+view of the opened lock row, not the level. It was measured and not chased.
+Steps 22, 23 and 25–30 are byte-identical to U5's rows.
+
+**D4 — a goal satisfied before it was asked.** The goal loop's
+`collect-placement` branch asks the run's own `takenPickups` before deriving
+the stance and again after the walk to it. When the pickup is already taken,
+it records `{strategy: 'collect', arm: 'collected-in-passing', pickup, …}`
+instead of letting `runCollect` wait 400 ticks for the ledger to grow.
+
+Re-measured on main (U6's four cells were measured on U6's tree), the
+corridor-body sweep found three such cells: `empty` 10x10 s9, `empty` 14x14
+s5 and `open` 14x14 s3. With D4, all three certify. `empty` 14x14 s5 needs
+172 s on its own, over the sweep's 120 s harness bound, so the sweep reads it
+as TIMEOUT. The sweep went from 145 placed / 94 certified to 144 / 96.
+
+**Mutants** (each predicted first; copies restored):
+
+| mutant | result |
+|---|---|
+| (a) target scan off | U7's text, byte-identical except the corridor danger's reason, which D2 now names as the punch |
+| (b) punch pricing off | D1's refusal, byte-identical |
+| (c) corpse skip off | wall 3's text, byte-identical |
+| (d) in-passing check off | the three cells return to "without touching", and the unit row goes red by name |
+
+**Trap candidates**, for the catalogue to number:
+
+- a scan centred on the asker, which reads a body as unreachable when it is
+  only far away;
+- a pad priced where a forecast exists;
+- a corpse priced as a body, because two rosters disagree about when a death
+  ends;
+- a goal satisfied before it was asked.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
