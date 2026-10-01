@@ -28,6 +28,10 @@ import {
     gridDimsForSource, pinnedGridKeys, sourceSizedParams, topDownGridSide, TOPDOWN_GRID_KEYS,
     TOPDOWN_GRID_INPUT_MAX,
 } from './presetRun.js';
+import { getPresetById } from './presetDefs.js';
+import {
+    ZONE_PATH_EXIT_CEILING, realisesThroughZonePath, zoneExitCeilingRefusal,
+} from './procgenPipelineEngine.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 for (const rel of REGISTRY_LIBRARIES) {
@@ -278,6 +282,35 @@ describe('the top-down grid follows the source unless the bundle pins it', () =>
         expect(built.run.gridDims).toEqual({ width: 3, height: 3 });
         const { stats } = await runPresetHeadless(built);
         expect(stats.stopReason).toBe('partial_layout');
+    });
+});
+
+// ⛓ F2: a zone substrate (bounce) holds one exit per side. Before F2 the
+// top-down zones demo over APCalc (5-exit regions) died inside bounce with
+// `unknown exit side 'undefined'`; it now refuses BY NAME before any region builds.
+describe('a zone substrate given more exits than sides is refused by name', () => {
+    const APCALC = JSON.parse(readFileSync(join(ROOT,
+        'frontend/presets/apcalc/AP_14089154938208861744/AP_14089154938208861744_rules.json'), 'utf8'));
+
+    it('zoneExitCeilingRefusal: only a zone-path substrate past one exit per side', () => {
+        expect(ZONE_PATH_EXIT_CEILING).toBe(4);
+        expect(realisesThroughZonePath('bounce')).toBe(true);
+        expect(realisesThroughZonePath('maze')).toBe(false);
+        expect(realisesThroughZonePath('text_adventure')).toBe(false);
+        expect(zoneExitCeilingRefusal([
+            { name: 'a', substrate: 'bounce', exits: 4 },
+            { name: 'b', substrate: 'maze', exits: 9 },
+            { name: 'c', substrate: 'text_adventure', exits: 5 },
+        ])).toBeNull();
+        expect(zoneExitCeilingRefusal([{ name: 'Region 3', substrate: 'bounce', exits: 5 }]))
+            .toBe("cannot realise 1 region on a zone substrate: 'Region 3' (bounce, 5 exits) — a zone holds "
+                + 'one exit per side (4); give that region another substrate');
+    });
+
+    it('topdown-zones-demo over APCalc refuses by name, before any region builds', async () => {
+        const built = buildRunFromState(getPresetById('shipped:topdown-zones-demo').state, { topDownSource: APCALC });
+        await expect((async () => runPresetHeadless(built))()).rejects
+            .toThrow(/^cannot realise \d+ regions? on a zone substrate: '[^']+' \(bounce, 5 exits\).* — a zone holds one exit per side \(4\)/);
     });
 });
 

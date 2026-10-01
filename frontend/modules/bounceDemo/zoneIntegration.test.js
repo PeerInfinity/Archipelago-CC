@@ -8,6 +8,7 @@ import { describe, it, expect } from 'vitest';
 import './bounceDemoLibrary.js'; // registers the 'bounce' substrate
 import {
     extractZoneRules, ZONES, substrateRegistryEntry, assembleBounceRegionFromLevel,
+    generateZoneForSpecs,
 } from './bounceDemoLibrary.js';
 import { attachSideExits, portalSide } from './sideExits.js';
 import { springGap } from './fixtures/springGap.js';
@@ -22,6 +23,18 @@ import {
 } from '../procgenPipeline/procgenPipelineEngine.js';
 
 const ALL_SIDES = ['N', 'E', 'S', 'W'];
+
+// ⛓ F2: a side-less exit spec (a top-down teleporter exit no driver gave a
+// side) is refused BY NAME — it used to read `unknown exit side 'undefined'`.
+describe('a side-less exit spec', () => {
+    it('is refused by name: a bounce zone holds one exit per side', () => {
+        const specs = { region_id: 'Region 3', exitSpecs: [{ side: 'N', requirement: [] }, { requirement: [] }] };
+        expect(() => generateZoneForSpecs(specs))
+            .toThrow("bounce zone 'Region 3': an exit has no side — a bounce zone holds one exit per side");
+        expect(() => assembleBounceRegionFromLevel(bounceStack, specs))
+            .toThrow("bounce zone 'Region 3': an exit has no side — a bounce zone holds one exit per side");
+    });
+});
 
 describe('attachSideExits', () => {
     it('produces a valid level for every fixture with all four sides', () => {

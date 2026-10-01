@@ -2070,6 +2070,15 @@ export function* realiseTopDownGen(layout, opts) {
     // rather than accumulate across runs. No-op (0→0) on the first run.
     stats.regionsBuilt = 0;
 
+    // ⛓ F2: refuse UP FRONT, by name, a region a zone substrate cannot hold —
+    // before any region builds (see zoneExitCeilingRefusal).
+    const refusal = zoneExitCeilingRefusal(placementOrder.map(({ name }) => ({
+        name,
+        substrate: substrateByRegion[name] ?? DEFAULT_SUBSTRATE_ID,
+        exits: (sourceRegions[name]?.exits ?? []).length,
+    })).filter(({ name }) => sourceRegions[name]));
+    if (refusal) throw new Error(refusal);
+
     // exitSidesByExit lets a child resolve its entrance tile from its
     // parent's exit position — populated as we go through phase 2 in
     // BFS-placement order, so parents always realise before children.
@@ -3224,10 +3233,57 @@ function generateRegionProcedural(spec) {
     };
 }
 
+/**
+ * ⛓ F2 — whether a substrate realises its regions through the ZONE path
+ * (`generateRegionZoneGen`): it declares a zone generator and no procedural
+ * core — the dispatch `generateRegionGen` makes. bounce and runner do.
+ */
+export function realisesThroughZonePath(substrateId) {
+    const adapter = substrateRegistry.get(substrateId);
+    return !!adapter && typeof adapter.generateRegionCore !== 'function'
+        && (typeof adapter.generateZoneForSpecs === 'function'
+            || typeof adapter.generateZoneForSpecsGen === 'function');
+}
+
+/**
+ * ⛓ F2 — the most exits a ZONE-path region holds: ONE PER SIDE. The zone path
+ * gives every exit a distinct side (a side-less exit, e.g. a top-down
+ * teleporter, gets a free one, clockwise) and the zone keys its portals by side
+ * (bounce's `side_exit_<side>` / `sidePortals`). The 'sides' GEOMETRY alone does
+ * not cap exits: text_adventure is 'sides' and realises a 5-exit region
+ * through its procedural core.
+ */
+export const ZONE_PATH_EXIT_CEILING = SIDES.length;
+
+/**
+ * ⛓ F2 — the sentence refusing the regions a zone-path substrate was given more
+ * exits than it holds, or null. `regions`: `[{ name, substrate, exits }]`, exits
+ * a count. Measured (F2 W0, 2026-09-30): before this refusal the top-down zones
+ * demo over APCalc (5-exit regions) died inside bounce with `unknown exit side
+ * 'undefined'` — the engine had run out of free sides to hand the fifth exit.
+ */
+export function zoneExitCeilingRefusal(regions) {
+    const over = regions.filter((r) => r.exits > ZONE_PATH_EXIT_CEILING
+        && realisesThroughZonePath(r.substrate));
+    if (over.length === 0) return null;
+    const named = over.slice(0, 5).map((r) => `'${r.name}' (${r.substrate}, ${r.exits} exits)`).join(', ');
+    return `cannot realise ${over.length} region${over.length === 1 ? '' : 's'} on a zone substrate: `
+        + `${named}${over.length > 5 ? `, and ${over.length - 5} more` : ''} — a zone holds one exit `
+        + `per side (${ZONE_PATH_EXIT_CEILING}); give ${over.length === 1 ? 'that region' : 'those regions'} `
+        + 'another substrate';
+}
+
 function* generateRegionZoneGen(spec) {
     const adapter = getAdapter(spec.substrate);
     const regionSize = spec.size;
     const specById = new Map((spec.locations ?? []).map((l) => [l.id, l]));
+
+    // ⛓ F2: one exit per side (ZONE_PATH_EXIT_CEILING) — refused by name here
+    // too, for a driver that did not check up front.
+    const ceilingRefusal = zoneExitCeilingRefusal([{
+        name: spec.region_id, substrate: spec.substrate, exits: (spec.exits ?? []).length,
+    }]);
+    if (ceilingRefusal) throw new Error(ceilingRefusal);
 
     // Bounce-style zone substrates gate on a side; assign one to any exit
     // the layout driver couldn't resolve geographically (clockwise over
