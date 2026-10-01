@@ -2640,6 +2640,8 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
         { tape: 'r5-l37-burn', families: ['burnedTrees', 'talkCircles'] },
         // ⛓ Swim U5: the BobBoss arena, played from the arm to the Fire.
         { tape: 'r5-bobboss-fire', families: ['bobBoss'] },
+        // ⛓ U12-swim: L12's funnel, ridden into the pit.
+        { tape: 'u12-pull-carry', families: ['pulls'] },
     ];
     const nontrivial = (v) => v === false
         || ((v instanceof Set || v instanceof Map) ? v.size > 0 : Array.isArray(v) ? v.length > 0 : false);
@@ -2675,7 +2677,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'strikeBodies', 'spinnerBodies', 'armedPulsers', 'turrets', 'chasers',
             'brokenRocks', 'crushersParked', 'pushesSettled', 'openBridges', 'arrowsInFlight',
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
-            'arrowFlights', 'bosses', 'talkCircles', 'bobBoss',
+            'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {

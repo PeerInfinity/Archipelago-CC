@@ -129,6 +129,17 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
          * written. Two slices running, two additions caught — a re-derived
          * tally is worth more than a list somebody remembers to edit.
          */
+        /**
+         * ⛓ ADDED BY U12-swim D1: `stepPullsNow`'s embed refusal asks whether a
+         * push left the player's box in a solid — ONE read, only on a tick a pull
+         * moved the player, and nothing in it moves the geometry.
+         */
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepPullsNow embed refusal',
+            addedBy: 'U12-swim D1', action: 'brand',
+            why: 'a read and not a step: `collidesSolid` on the pushed box, once per pushed '
+                + 'tick, so the bag is built where it is used and normalised there.',
+        }),
         Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepArrowTrapsNow',
             addedBy: 'R8 slice 3', action: 'brand+hoist',
@@ -922,6 +933,25 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'the dark shield HITS `puncher@416,256` on t 13 (0.5, a 30-tick i-frame) and '
                 + 'its empty `knockback` moves nothing; inside the i-frame the player walks '
                 + 'through it untouched.',
+        }),
+        /**
+         * ⛓⛓⛓ U12-swim D1 — `Pull.update`'s witnesses. Exposed because L12 holds
+         * the bridged `puncher@416,256`; the funnel is a sealed room away from it,
+         * so the bridge moves nothing here — the walks are the current's.
+         */
+        Object.freeze({
+            name: 'u12-pull-carry', levels: Object.freeze([12]), bobs: 1, ticks: 100,
+            addedBy: 'U12-swim D1 (the current carries a standing player into the pit)',
+            why: 'booted on `pull@576,640` and standing: 1 px/tick south, 2 px on t 7-8 and '
+                + 't 21-22, the pit edge on t 35, the swap to L21 on t 55; the puncher never '
+                + 'leaves its cell.',
+        }),
+        Object.freeze({
+            name: 'u12-pull-cross', levels: Object.freeze([12]), bobs: 1, ticks: 100,
+            addedBy: 'U12-swim D1 (a walk across a current)',
+            why: 'walking north on `pull@560,720`\'s column, the box drifts east 1 px/tick (2 '
+                + 'where it straddles two cells) into column 36 and the pit, the swap on t 34; '
+                + 'the puncher never leaves its cell.',
         }),
     ]),
 

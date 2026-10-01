@@ -1407,6 +1407,20 @@
       "noHazards": []
     },
     {
+      "file": "u12-pull-carry.json",
+      "tickCount": 100,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "u12-pull-cross.json",
+      "tickCount": 100,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "u7-puncher-kill.json",
       "tickCount": 128,
       "bootLevel": 12,

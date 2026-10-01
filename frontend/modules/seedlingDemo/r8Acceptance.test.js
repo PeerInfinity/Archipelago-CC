@@ -335,6 +335,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓⛓⛓ U11-swim: the facing-in-the-i-frame witnesses and the dark shield's.
             'u11-facing-knockback', 'u11-facing-puncher',
             'u11-dark-shield-bob', 'u11-dark-shield-puncher',
+            // ⛓⛓⛓ U12-swim: `Pull.update`'s witnesses, in the puncher's room.
+            'u12-pull-carry', 'u12-pull-cross',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -352,7 +354,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ U9-swim + U10-swim take it to 24 — the three shield-bump witnesses and the dwell witness + its control.
         // ⛓ U11-swim takes it to 28 — the two facing witnesses and the two dark-shield
         // witnesses (L4, L12 each).
-        expect(out.exposed).toBe(28);
+        // ⛓ U12-swim takes it to 30 — `u12-pull-carry` and `u12-pull-cross`, in L12.
+        expect(out.exposed).toBe(30);
         expect(out.tapes).toEqual([
             'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
@@ -360,6 +363,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'u10-puncher-dwell',
             'u10-puncher-dwell-refused', 'u11-dark-shield-bob', 'u11-dark-shield-puncher',
             'u11-facing-knockback', 'u11-facing-puncher',
+            'u12-pull-carry', 'u12-pull-cross',
             'u7-puncher-kill', 'u7-puncher-punch',
             'u9-shield-bob-shove', 'u9-shield-bob-standing', 'u9-shield-puncher',
         ]);
@@ -464,6 +468,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'u11-facing-puncher': { tape: {}, levels: [12] },
             'u11-dark-shield-bob': { tape: {}, levels: [4] },
             'u11-dark-shield-puncher': { tape: {}, levels: [12] },
+            'u12-pull-carry': { tape: {}, levels: [12] },
+            'u12-pull-cross': { tape: {}, levels: [12] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

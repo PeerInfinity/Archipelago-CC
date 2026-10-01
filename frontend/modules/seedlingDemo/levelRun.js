@@ -197,6 +197,7 @@ import {
     CEREMONY_DEAD_FRAMES, createSealPiece, sealControllerTicks, sealPieceBox, stepSealPiece,
 } from './sealCeremony.js';
 import { PULSER, createPulser, pulseReaches, pulsePushes, stepPulser } from './pulser.js';
+import { createPulls, pushBody } from './pull.js';
 // ⛓⛓⛓ R7 SLICE 6b: the SIXTEENTH family. An `ArrowTrap` is the pulsers'
 // shape with the sign flipped — an `Activators` with a `t` that is Solid
 // NEITHER way — so its live state lives here beside theirs and never in
@@ -319,6 +320,7 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'bosses',
     'talkCircles',
     'bobBoss',
+    'pulls',
 ]);
 
 /**
@@ -6666,6 +6668,75 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ U12-swim D1 — `Pull.update`, EVERY PULL OF THE ROOM, ONE TICK.
+     *
+     * `e.x += force * Math.cos(direction); e.y -= force * Math.sin(direction)`
+     * on every overlapping Player/Enemy/Solid (`pull.js` for the AS3 and the
+     * order). A DIRECT WRITE, ahead of the chasers and the player (`loadlevel`
+     * adds `pull` at `:2329`, after both, and `World.addUpdate` prepends), so
+     * the box it tests is the previous tick's observation and the player's own
+     * update starts from the pushed position. No `Game.freezeObjects` test, so
+     * it runs above the ceremony's early return; no solid test and no
+     * `noclip` test, so it runs under `noclip` too.
+     *
+     * Witnessed on the game BEFORE this function existed (`u12-pull-carry`,
+     * `u12-pull-cross`, `plan-seedling-u12-pull.mjs`).
+     *
+     * ⛔ REFUSED BY NAME, three arms the witnesses do not reach:
+     *   · a stepped BODY on a pull (`Enemy` is pullable; no L12 chaser can
+     *     reach the funnel, and a push here would not move it);
+     *   · a room holding pulls AND pushables or spinners (`Solid`/`Enemy`
+     *     bodies whose pulled arm is not transcribed);
+     *   · a push that leaves the player's box IN a solid (`Pull` does not
+     *     test one; the next `moveBy` would start embedded, which no witness
+     *     has measured). Every L12 push points into a pull cell or the pit.
+     */
+    const pullsByLevel = new Map();
+    function pullsFor(n) {
+        if (!pullsByLevel.has(n)) pullsByLevel.set(n, createPulls(recordFor(n).entities));
+        return pullsByLevel.get(n);
+    }
+    function stepPullsNow() {
+        const pulls = pullsFor(level);
+        if (pulls.length === 0) return;
+        if (!noclip) {
+            if (pushableStateFor(level).byId.size > 0 || spinnerStateFor(level).byId.size > 0) {
+                throw new Error(`levelRun: level ${level} holds ${pulls.length} Pull(s) AND pushable `
+                    + 'blocks or spinners — `Pull.update` moves every overlapping "Solid" and '
+                    + '"Enemy" too, and only the PLAYER arm is transcribed (U12-swim D1). '
+                    + 'Refused by name rather than stepped without the bodies.');
+            }
+            if (!noDamage) {
+                for (const c of chaserStateFor(level).values()) {
+                    if (c.removed) continue;
+                    const box = chaserBoxAt(c.tag, c.x, c.y);
+                    const on = pulls.find((p) => rectsOverlap(box, p.rect));
+                    if (on) {
+                        throw new Error(`levelRun: ${c.id} overlaps ${on.id} at tick `
+                            + `${ticksCompleted + 1} in level ${level} — \`Pull.update\` writes an `
+                            + 'Enemy\'s x/y too, and the body arm is not transcribed (U12-swim D1: '
+                            + 'no L12 chaser can reach the funnel). Refused by name.');
+                    }
+                }
+            }
+        }
+        const r = pushBody(pulls, state, playerBoxAt);
+        if (r.by.length === 0) return;
+        state = { ...state, x: r.x, y: r.y };
+        if (!noclip) {
+            const solid = world.collidesSolid(playerBoxAt(state.x, state.y),
+                normalizeLiveOpts(liveSolidOpts()));
+            if (solid) {
+                throw new Error(`levelRun: ${r.by.join(' + ')} pushed the player INTO a solid at `
+                    + `tick ${ticksCompleted + 1} in level ${level} ((${r.x},${r.y}), `
+                    + `${solid.tag ?? solid.cls?.as3 ?? '?'}@${solid.x ?? '?'},${solid.y ?? '?'}). `
+                    + '`Pull.update` tests no solid, so the next `moveBy` starts embedded — an arm '
+                    + 'no witness has measured (U12-swim D1). Refused by name.');
+            }
+        }
+    }
+
+    /**
      * One tick of every `Pulser`, and the block it moves.
      *
      * ⚠ THE ACTIVATION IS THE GROUP'S, and a `Pulser` is not in
@@ -11248,6 +11319,11 @@ export function createLevelRun({
     /** ⛓ U9-swim: one row per body a moving shield touched — `shieldBumpNow`. */
     const shieldBumpsNow = () => shieldBumpLedger.map((r) => ({ ...r, ...(r.v ? { v: { ...r.v } } : {}) }));
     /**
+     * ⛓ U12-swim D1: this room's pulls in UPDATE order (`pull.createPulls`),
+     * each `{id, x, y, force, direction, cosTerm, sinTerm, rect}` — a copy.
+     */
+    const pullsNow = () => pullsFor(level).map((p) => ({ ...p, rect: { ...p.rect } }));
+    /**
      * `run.entities('bobBoss')` — the arena's live members, keyed by role
      * (`rock`, `boss`, `dialogue`, `fire`, `transition`), each present only
      * while it exists. EMPTY in every room without a `thirdboss` rock.
@@ -11441,6 +11517,7 @@ export function createLevelRun({
         bosses: bossesNow,
         talkCircles: talkCirclesNow,
         bobBoss: bobBossNow,
+        pulls: pullsNow,
     });
 
     /**
@@ -12908,6 +12985,8 @@ export function createLevelRun({
          * boss's own rows stay in `bobBossEvents` (`what: 'shield-bump'`).
          */
         get shieldBumps() { return shieldBumpsNow(); },
+        /** ⛓ U12-swim D1: the room's pulls, in update order — see `pullsNow`. */
+        get pulls() { return pullsNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 22 — THE FREEZE LEDGER, AND IT IS THE PRICE OF THE
          * KILL RATHER THAN AN ACCIDENT.
@@ -13153,11 +13232,22 @@ export function createLevelRun({
              * names a value instead of the name that holds it is a landmine
              * under the next flip (kickoff §40.6).
              */
-            return (st, held, { dashImpulse = null } = {}) => (
+            const step = (st, held, { dashImpulse = null } = {}) => (
                 dashImpulse
                     ? stepV2(st, held, { ...opts, dashImpulse })
                     : stepV2(st, held, opts)
             );
+            /**
+             * ⛓⛓ U12-swim D1: AND THE PULLS, AHEAD OF THE STEP, as `advance`
+             * runs them — a preview across a current rides it. A room with no
+             * pull gets the same closure it always did.
+             */
+            const pulls = pullsFor(level);
+            if (pulls.length === 0) return step;
+            return (st, held, o = {}) => {
+                const r = pushBody(pulls, st, playerBoxAt);
+                return step(r.by.length > 0 ? { ...st, x: r.x, y: r.y } : st, held, o);
+            };
         },
         /**
          * ⛓ THE ARROW SUBSYSTEM, FORECAST — see `arrowForecastNow`. `null`
@@ -13883,6 +13973,13 @@ export function createLevelRun({
             // frozen to the player. The dead span behind it is resolved after
             // the frozen tick so the clock spends it in the game's order.
             if (pendingButtonFalls !== null && !noclip) {
+                // ⛔ U12-swim D1: this frozen tick returns above the pulls' slot,
+                // and `Pull` has no freeze gate — refused rather than skipped.
+                if (pullsFor(level).length > 0) {
+                    throw new Error(`levelRun: a button-dropped fallrock's frozen tick in level ${level}, `
+                        + 'which holds Pull(s): `Pull.update` has no `Game.freezeObjects` test and '
+                        + 'this path returns above `stepPullsNow`. Refused by name (U12-swim D1).');
+                }
                 const ids = pendingButtonFalls;
                 pendingButtonFalls = null;
                 prevHeld = new Set(held);
@@ -13919,6 +14016,12 @@ export function createLevelRun({
             if (!noclip) stepSealPieceNow();
             if (!noclip) stepChestsNow(activators);
             if (!noclip) stepPulsersNow(activators, pushState);
+            // ⛓⛓⛓ U12-swim D1: THE PULLS, in their own slot. `loadlevel` adds
+            // `pull` at `:2329` — BELOW `pulser` (`:2334`) and `lock` (`:2333`),
+            // ABOVE `arrowtrap` (`:2323`), the crusher, the ice turret, every
+            // chaser and the Player — so a prepending update list runs them
+            // here. See `stepPullsNow`.
+            stepPullsNow();
             // ⛓⛓⛓ R7 SLICE 6b: THE ARROW TRAPS, in the pulsers' own slot.
             // `Game.loadlevel` adds `arrowtrap` at :2204 — BELOW `pulser`
             // (:2191) and `button` (:2202) — so a prepending update list

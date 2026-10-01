@@ -295,16 +295,16 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**54 files, 4632 literals.** Class × position:
+**55 files, 4646 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1243 | 333 | 1581 |
 | rule | 6 | 904 | 407 | 1317 |
 | cosmetic | 0 | 43 | 8 | 51 |
-| structural | 9 | 310 | 1364 | 1683 |
+| structural | 9 | 310 | 1378 | 1697 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 20 | 2500 | 2112 | 4632 |
+| total | 20 | 2500 | 2126 | 4646 |
 
 Class × kind (physics and rule rows only):
 
@@ -462,7 +462,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 32 derived or aliased top-level constants
+### The 34 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -495,6 +495,8 @@ None: a name declared in several files now reads one profile key (the table belo
 | `KILL_PRESS_CADENCE` | seedlingDemo/combatVerbs.js | `ENEMY_IFRAMES + 1` |
 | `DASH_CHAIN_MAX` | seedlingDemo/combatVerbs.js | `DASH_CHAIN.max` |
 | `ORDINARY_SWING_PERIOD` | seedlingDemo/combatVerbs.js | `SLASH_TIMER_MAX` |
+| `PULL_W` | seedlingDemo/pull.js | `TILE_SIZE` |
+| `PULL_H` | seedlingDemo/pull.js | `TILE_SIZE` |
 | `CHECK_OFFSET_Y` | seedlingDemo/playerPhysicsV1.js | `-HITBOX.originY + HITBOX.height - PROFILE.checkOffsetYInset` |
 | `DAY_LENGTH_FRAMES` | seedlingDemo/gameClock.js | `160 * GAME_FPS` |
 | `PAGE_BOOT_TIME` | seedlingDemo/gameClock.js | `DAY_LENGTH_FRAMES / 2` |
