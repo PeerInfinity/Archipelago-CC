@@ -114,7 +114,7 @@ import {
 } from './shieldBossFight.js';
 // ⛓⛓ Swim U5: L32's BobBoss encounter — the rock, three forms, three
 // dialogues, the transitions and the runtime Fire (`bobBossFight.js`).
-import { FIRE as BOB_BOSS_FIRE } from './bobBoss.js';
+import { ARENA as BOB_BOSS_ARENA, FIRE as BOB_BOSS_FIRE } from './bobBoss.js';
 import {
     BOB_BOSS_ROCK_DEAD_FRAMES, beginBobBossDialogue, bobBossBox, bobBossHit, bobBossRockArms,
     bobBossRockRect, bobBossShieldBump, createBobBossBody, DARK_SHIELD_DAMAGE, enemyKnockbackV,
@@ -9825,6 +9825,15 @@ export function createLevelRun({
      * `runtimeSeeds`. See `stepBobBossArenaNow`.
      */
     let bobArena = null;
+    /**
+     * ⛓⛓⛓ R3-swim D3: the levels whose `thirdboss` rock has FALLEN this run —
+     * `fall()`'s `Game.setPersistence(tag, false)` on the arm frame. The flag
+     * is a `Game` static and outlives the world, so a NEW `Game` in that level
+     * (a death's `restartLevel()`, or a later entry) builds the rock fallen:
+     * `FallRockLarge`'s ctor reads `!checkPersistence(tag)` -> `y = fallTo`,
+     * `type = "Solid"`, `cameraTimer = 0`. See `bobArenaNow`.
+     */
+    const bobRocksFallen = new Set();
     /** `player.receiveInput = false`, written by `BobBoss.death` each transition frame. */
     let bobNoInput = false;
     /** The encounter's event ledger, `run.ledger('bobBoss')`: one row per event, `what` names it. */
@@ -11113,12 +11122,18 @@ export function createLevelRun({
             bobArena = { level, none: true };
             return bobArena;
         }
+        // ⛓⛓⛓ R3-swim D3: the rock's flag is already false, so the ctor
+        // builds it FALLEN (Solid) with `cameraTimer = 0`, and its first live
+        // `update()` takes the `cameraTimer == 0` arm at once — see the rock
+        // block of `stepBobBossArenaNow`.
+        const fallen = bobRocksFallen.has(level);
         bobArena = {
             level,
             rockId: rock.id,
             persistTag: rock.persistTag,
-            armed: false,
-            landed: false,
+            armed: fallen,
+            landed: fallen,
+            ...(fallen ? { spawnOnFirstFrame: true } : {}),
             boss: null,
             npc: null,
             pending: null,
@@ -11192,11 +11207,11 @@ export function createLevelRun({
                 const hit = applyPlayerHit({ source: 'bobBoss', id: `${b.id}:${h.arm}`,
                     force: h.force, damage: h.damage, from: h.from });
                 bobLedger({ what: 'player-hit', form: b.form, arm: h.arm, applied: hit.applied });
-                if (pendingDeath) {
-                    throw new Error(`levelRun: the player died to ${b.id} (${h.arm}) at tick `
-                        + `${ticksCompleted}. A death reboots into L32 with the rock fallen and `
-                        + 'the boss respawned on the first frame, which is not modelled.');
-                }
+                // ⛓⛓⛓ R3-swim D3: a death here is the ordinary hit death
+                // (`pendingDeath`, rebooted at end of tick). The new `Game`
+                // builds the rock fallen and re-adds the boss on its first
+                // live frame (`bobArenaNow`); the respawn is the rock's own
+                // `playerPosition` write, `ARENA.respawn`.
             }
             if (r.transition && !r.transition.done) {
                 bobNoInput = true;
@@ -11243,8 +11258,26 @@ export function createLevelRun({
             }
         }
         // ── the rock (`Scenery/FallRockLarge.as`) ──────────────────────
+        // ⛓⛓⛓ R3-swim D3: a rock built FALLEN (`cameraTimer = 0` in the ctor)
+        // takes `update()`'s `cameraTimer == 0` arm on its first live frame:
+        // `FP.world.add(new BobBoss(72, 72))` — added at this frame's
+        // `updateLists`, so it steps from the next one, as on the release
+        // frame — then `playerPosition = new Point(72, 104)`,
+        // `freezeObjects = false`, `resetCamera()`. No freeze, no dead frame:
+        // the player moves on this tick. `BobBoss`'s ctor removes itself when
+        // `Player.hasFire`, so then nothing is added. Witness:
+        // `r3-bobboss-death` (respawn (80,112) on observation 148).
+        if (a.spawnOnFirstFrame) {
+            a.spawnOnFirstFrame = false;
+            worldCtor = { x: BOB_BOSS_ARENA.respawn.x, y: BOB_BOSS_ARENA.respawn.y };
+            const hasFire = inventory?.hasFire === true;
+            if (!hasFire) a.pending = { form: 0 };
+            bobLedger({ what: 'rock-fallen-at-build', boss: !hasFire,
+                playerPosition: { ...worldCtor } });
+        }
         if (!a.armed && bobBossRockArms(state.y, { fallFromCeiling: !!state.fall })) {
             a.armed = true;
+            bobRocksFallen.add(level);
             // `fall()` writes `setPersistence(tag, false)` on the arm frame.
             bobLedger({ what: 'rock-armed', y: state.y,
                 flag: { level, tag: a.persistTag, value: false } });
@@ -11277,6 +11310,10 @@ export function createLevelRun({
                     state = freed;
                     a.landed = true;
                     a.pending = { form: 0 };
+                    // ⛓⛓⛓ R3-swim D3: the same `cameraTimer == 0` arm writes
+                    // `(FP.world as Game).playerPosition = new Point(72, 104)`
+                    // — the args a later `restartLevel()` reboots into.
+                    worldCtor = { x: BOB_BOSS_ARENA.respawn.x, y: BOB_BOSS_ARENA.respawn.y };
                     bobLedger({ what: 'rock-landed', deadFrames: BOB_BOSS_ROCK_DEAD_FRAMES });
                 },
             };

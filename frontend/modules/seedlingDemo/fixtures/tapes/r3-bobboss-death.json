@@ -1,0 +1,140 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 32,
+        "x": 72,
+        "y": 120
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 1,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 210,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 10
+        },
+        {
+            "key": "primary",
+            "from": 19,
+            "to": 20
+        },
+        {
+            "key": "primary",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "primary",
+            "from": 37,
+            "to": 38
+        },
+        {
+            "key": "primary",
+            "from": 46,
+            "to": 47
+        },
+        {
+            "key": "primary",
+            "from": 55,
+            "to": 56
+        },
+        {
+            "key": "primary",
+            "from": 64,
+            "to": 65
+        },
+        {
+            "key": "left",
+            "from": 160,
+            "to": 200
+        }
+    ],
+    "name": "r3-bobboss-death",
+    "description": "⛓⛓⛓ R3-swim D3 — A DEATH INSIDE THE BOBBOSS FIGHT REBOOTS THE FIGHT. `swim-u5-bobboss-encounter`'s boot, seam (`hits_max` 1), save, rng and clears; `up` ×10 arms the rock, six presses page form 0's dialogue, then still: the boss's blade kills the player. `FallRockLarge`'s release frame wrote `playerPosition = (72,104)`, so `restartLevel()` respawns at (80,112) inside the arena; the rebuilt rock is FALLEN (`checkPersistence(tag)` false: Solid, `cameraTimer` 0), so its first live frame re-adds `new BobBoss(72,72)` and the dialogue opens again. `left` from t 160 to 200: the dialogue holds the player. Fixed keys, emitted while the model refused the death by name. Authored by scripts/procgen/plan-seedling-r3-death.mjs.",
+    "note": ""
+}

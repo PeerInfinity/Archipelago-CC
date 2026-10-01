@@ -54,7 +54,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ swim R1 + U13 (merged): 175.
         // ⛓ swim R3: 176 (+ `r3-pit-death`, inert).
         // ⛓ swim R3: 178 (+ `r3-drown` and `r3-lava`, inert).
-        expect(names.length).toBe(178);
+        // ⛓ swim R3: 179 (+ `r3-bobboss-death`, inert).
+        expect(names.length).toBe(179);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);

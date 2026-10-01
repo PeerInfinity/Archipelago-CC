@@ -299,6 +299,13 @@
       ]
     },
     {
+      "file": "r3-bobboss-death.json",
+      "tickCount": 210,
+      "bootLevel": 32,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r3-collect-darkshield.json",
       "tickCount": 54,
       "bootLevel": 74,
