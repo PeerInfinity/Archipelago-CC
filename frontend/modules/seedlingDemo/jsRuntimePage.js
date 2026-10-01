@@ -32,6 +32,7 @@
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { heldFromCodes, KEYBOARD_BINDINGS } from './watchManual.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
+import { createLifetime } from './watchLifetime.js';
 import {
     FLOOR_COLOUR, SOLID_COLOUR, TILE_COLOURS, objectSolidColour,
 } from './rectPalette.js';
@@ -51,6 +52,9 @@ export function mountJsRuntimePage(win = window) {
     const canvas = doc.getElementById('game');
     const status = doc.getElementById('status');
     const ctx = canvas.getContext('2d');
+    // ⛓ Every listener goes through a lifetime (`watchLifetime.test.js`'s rule
+    // for every page module here); this page has one, for the document.
+    const life = createLifetime('seedling-js-runtime-page');
 
     const bridge = {
         game: {},
@@ -80,9 +84,9 @@ export function mountJsRuntimePage(win = window) {
         if (pressed) down.add(e.code);
         else down.delete(e.code);
     };
-    doc.addEventListener('keydown', (e) => onKey(e, true));
-    doc.addEventListener('keyup', (e) => onKey(e, false));
-    win.addEventListener('blur', () => down.clear());
+    life.on(doc, 'keydown', (e) => onKey(e, true));
+    life.on(doc, 'keyup', (e) => onKey(e, false));
+    life.on(win, 'blur', () => down.clear());
 
     // ── clock ─────────────────────────────────────────────────────────────
     let last = null;
@@ -146,6 +150,6 @@ export function mountJsRuntimePage(win = window) {
             + `${deaths ? ` · deaths ${deaths}` : ''}${runtime.run?.inCeremony ? ' · (text — auto-advancing)' : ''}`;
     }
 
-    canvas.addEventListener('mousedown', () => canvas.focus());
+    life.on(canvas, 'mousedown', () => canvas.focus());
     return runtime;
 }
