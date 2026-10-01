@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 36,
+            "count": 37,
             "id": "plan"
         },
         {
-            "browser": 22,
-            "count": 61,
+            "browser": 23,
+            "count": 62,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 283,
-        "browser": 86,
-        "cited": 126,
-        "files": 294,
+        "blockStyle": 285,
+        "browser": 87,
+        "cited": 127,
+        "files": 296,
         "lineStyle": 11,
-        "withDocblock": 294,
-        "withFlags": 215
+        "withDocblock": 296,
+        "withFlags": 217
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7494,6 +7494,33 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-u7-puncher.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-u7-puncher — ⛓⛓⛓ U7-swim: THE PUNCHER'S DRIVEN WITNESSES.",
+            "path": "scripts/procgen/plan-seedling-u7-puncher.mjs"
+        },
+        {
+            "argvHelpers": [],
             "browser": true,
             "category": "probe",
             "citedBy": [],
@@ -9066,6 +9093,52 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-swim-sound — is the swim speed a function of WALL CLOCK?",
             "path": "scripts/procgen/probe-seedling-swim-sound.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-u7-puncher-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-u7-puncher-mobiles — ⛓⛓⛓ U7-swim: THE PUNCHER'S OWN POSITION, ASKED OF THE GAME, TICK BY SAMPLED TICK.",
+            "path": "scripts/procgen/probe-seedling-u7-puncher-mobiles.mjs"
         },
         {
             "argvHelpers": [],

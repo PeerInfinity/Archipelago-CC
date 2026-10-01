@@ -239,6 +239,8 @@ const DANGER_BY_CLASS = Object.freeze({
     spinner: 'spinner (dangerMap.spinnerDanger)',
     bob: 'chaser (dangerMap.chaserDanger)',
     jellyfish: 'chaser (dangerMap.chaserDanger)',
+    // ⛓ U7-swim: bridged since D1, so ingredient (c) prices it at its live position.
+    puncher: 'chaser (dangerMap.chaserDanger)',
     crusher: 'crusher (dangerMap.crusherDanger)',
     arrowtrap: 'arrow/arrowLane (dangerMap.arrowDanger)',
 });

@@ -11086,6 +11086,66 @@ licensed a BobBoss simulation family, and the rest of the slice built on it.
   `tag 0`, and the burn writes {32,0}.
 - `Enemy`'s ctor draws RNG (`coins`, `FP.choose`) at each of the three
   constructions. The model does not count those draws.
+### Seedling substrate U7-swim — the puncher, stepped (2026-10-01)
+
+The first stepped enemy class since Bob, built because step 24 (L12 → the pit)
+needed it (⚖ Q34; U4-swim § D1's design). The report is
+`CC/docs/cloud-reports/seedling-swim-u7.md`.
+
+**D1 — the chase.** `CHASERS.puncher` (`Puncher.as:53-119`) beside `bob`,
+bridged by `MODELLED_ENEMY_CLASSES.Puncher`, so `bridgedChaserTags()` is
+`[bob, puncher]`. The run steps it where it steps Bob, the danger map prices it
+as ingredient (c), and `contactPricing('puncher')` is stepped and billed by
+`stepChasersNow`. Three facts are its own rather than Bob's: no freeze gate;
+a sweep that stops against the player (`SOLIDS_BY_MOVER.puncher` adds
+`"Player"`); and a 31-tick die animation. `runRange` 80 is a profile key that
+`ENEMY_CLASSES.puncher` reads.
+- ⛔ The parity gate the brief named is **vacuous by construction**. All
+  fourteen tapes that enter a puncher room (L12's seven r2–r4 walks, L40's
+  seven r5-l40 tapes) declare `noDamage`, and the run steps no chaser under it.
+  tapeRunner stayed 365/365, the R8 exposure guard re-derived zero newly
+  exposed tapes, and both mutants (`runRange` halved, speed doubled) left all
+  365 rows identical. The fourteen differential rows replay the game alone, so
+  no model edit can move them (14/14 PASS at W0).
+
+**D2 — the punch.** Within `attackRange` 10 the body starts an 11-update
+wind-up and the chase yields to it. The wind-up's `endAnim` throws
+`attackPlayer`: re-aimed at the player, an `r = 8` box off that body edge,
+`punchForce` 5, damage 1, refused while the puncher's own `hitsTimer` runs.
+`play("die")` replaces a wind-up.
+- Witness `u7-puncher-punch` (L12, two tiles west, standing still,
+  `noDamage` false), recorded on the game: the model reproduces all 121
+  observations (punches at t44 and t108, terminal `hits` 2 / `hits_timer` 7).
+- `probe-seedling-u7-puncher-mobiles.mjs` reads the puncher itself through
+  `botMobiles`: 121 sampled ticks, clock shift [0], positions bit-exact (the
+  game's anim reads `attack-side` from t34, the decision tick).
+- Danger at the lock stances (centre y 258). Before: the bare body
+  (418,260)–(430,272). After: the live body + pad 8, (410,252)–(438,280). The
+  second lock is clear only for x ≥ 440, and over an 80-tick wait every stance
+  is priced.
+
+**D3 — the death.** `KILL_ARM_POLICY.Puncher` → `modelled`.
+`CORPSE_COUNTING.Puncher` is anim+fade (42 ticks from the blow to the
+removal); `KILL_SIDE_WRITES.Puncher` writes nothing. `Puncher.knockback` is an
+empty override, so `CHASERS[*].knocksBack` gates all three knockback sites.
+- Witness `u7-puncher-kill`, recorded on the game: three landed hits (t15,
+  t46, t77), no knockback, the kill at t78, the removal 42 ticks later, and
+  zero punches (every wind-up ends inside the puncher's own i-frame). All 129
+  observations are reproduced. The probe's 120 comparisons (position,
+  velocity, `hits`, `hits_timer`, presence) agree.
+
+**D4 — step 24.** REFUSED in 139.0 s (U4: 310.6 s) by a NEW name. The keylock stance is now `bosslock@432,240`, and the ladder is exhausted against the LIVE puncher. AVOID finds no corridor, because the padded live volume plugs the row-16 corridor and covers the goal tile. The chaser KILL arm reports *"0 cell(s) inside its 80 px leash"*: its stance scan (`STANCE_SCAN_CELLS`) is a box around the PLAYER, asked from the arrival 470 px away.
+- Measured on a scratch tree (not shipped), each change exposing the next wall:
+  1. A target-centred fallback scan finds 76 cells in leash, 17 reachable, all 17 refused: *"the WAIT is dangerous"*, because `threatPad` 8 prices the punch at every dwell tick.
+  2. Pricing the forecast's own punch per tick instead gets the solve through the ladder. It then stops at the decision gate (`refuseDanger`, the goal loop), which reads the live bodies with the pad: *"the danger map forbids (377.3,252.0) — chaser:puncher@416,256 (d=7.9)"*.
+  3. Both changes together leave the six `--check`s on their banked digests.
+- Steps 22, 23 and 25–29 are byte-identical to U4's rows.
+
+**Census.** The ENEMY census moved on the puncher row only. It is now
+"stepper: yes" and priced as a chaser. The corridor arm went REFUSED →
+SOLVED 141 (certified, Bob's own number). The chamber arm went SOLVED 155 →
+REFUSED: "the combat ladder is EXHAUSTED" at `danger puncher@64,64`, because
+the live body now walks onto the chamber route.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
