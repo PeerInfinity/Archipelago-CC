@@ -3267,9 +3267,11 @@ export function zoneExitCeilingRefusal(regions) {
         && realisesThroughZonePath(r.substrate));
     if (over.length === 0) return null;
     const named = over.slice(0, 5).map((r) => `'${r.name}' (${r.substrate}, ${r.exits} exits)`).join(', ');
-    return `cannot realise ${over.length} region${over.length === 1 ? '' : 's'} on a zone substrate: `
-        + `${named}${over.length > 5 ? `, and ${over.length - 5} more` : ''} — a zone holds one exit `
-        + `per side (${ZONE_PATH_EXIT_CEILING}); give ${over.length === 1 ? 'that region' : 'those regions'} `
+    const ids = [...new Set(over.map((r) => r.substrate))];
+    const rooms = ids.length === 1 ? `a ${ids[0]} room has` : `${ids.join(' and ')} rooms have`;
+    return `cannot realise ${over.length} region${over.length === 1 ? '' : 's'}: `
+        + `${named}${over.length > 5 ? `, and ${over.length - 5} more` : ''} — ${rooms} one exit `
+        + `per side today, so ${ZONE_PATH_EXIT_CEILING} at most; give ${over.length === 1 ? 'that region' : 'those regions'} `
         + 'another substrate';
 }
 

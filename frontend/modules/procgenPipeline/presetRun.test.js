@@ -303,14 +303,18 @@ describe('a zone substrate given more exits than sides is refused by name', () =
             { name: 'c', substrate: 'text_adventure', exits: 5 },
         ])).toBeNull();
         expect(zoneExitCeilingRefusal([{ name: 'Region 3', substrate: 'bounce', exits: 5 }]))
-            .toBe("cannot realise 1 region on a zone substrate: 'Region 3' (bounce, 5 exits) — a zone holds "
-                + 'one exit per side (4); give that region another substrate');
+            .toBe("cannot realise 1 region: 'Region 3' (bounce, 5 exits) — a bounce room has one exit "
+                + 'per side today, so 4 at most; give that region another substrate');
+        expect(zoneExitCeilingRefusal([
+            { name: 'a', substrate: 'bounce', exits: 5 },
+            { name: 'b', substrate: 'runner', exits: 6 },
+        ])).toContain('bounce and runner rooms have one exit per side today');
     });
 
     it('topdown-zones-demo over APCalc refuses by name, before any region builds', async () => {
         const built = buildRunFromState(getPresetById('shipped:topdown-zones-demo').state, { topDownSource: APCALC });
         await expect((async () => runPresetHeadless(built))()).rejects
-            .toThrow(/^cannot realise \d+ regions? on a zone substrate: '[^']+' \(bounce, 5 exits\).* — a zone holds one exit per side \(4\)/);
+            .toThrow(/^cannot realise \d+ regions?: '[^']+' \(bounce, 5 exits\).* — a bounce room has one exit per side today, so 4 at most/);
     });
 });
 
