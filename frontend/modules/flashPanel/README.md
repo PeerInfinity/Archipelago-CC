@@ -43,7 +43,10 @@ Either transport key may be omitted. `componentState` overrides
 (`configPath`/`swfPath`/`wasmPath`) win over rules.json.
 
 Transport choice: `moduleSettings.flashPanel.runtime` — `auto` (default:
-wasm when a `wasm` page is wired, real Flash otherwise), `flash`, `wasm`.
+wasm when a `wasm` page is wired, real Flash otherwise), `flash`, `wasm`, or
+`js` (Seedling only: the JavaScript model's page, `seedlingDemo/jsRuntime.html`,
+generated rooms only — see `docs/json/developer/procgen/flash.md` § The JS
+runtime). Changing it re-initializes the panel.
 
 Note: preset rules.json files are generated artifacts — the `flash_panel`
 section is a hand-added block (on the seed-1 seedling preset and

@@ -33,8 +33,18 @@ const WASM_DIR = './modules/flashPanel/wasm/';
 const RUFFLE_CDN = 'https://unpkg.com/@ruffle-rs/ruffle';
 // Transport selection, mirroring moduleSettings.bounceDemo.renderer:
 // 'auto' (default) uses the wasm page when the game wiring provides
-// one, real Flash otherwise; 'flash'/'wasm' force a transport.
+// one, real Flash otherwise; 'flash'/'wasm' force a transport; 'js'
+// (Seedling only) mounts the JavaScript model's page instead of the
+// wasm build — the same iframe contract, so the same init flow.
 const RUNTIME_SETTING_KEY = 'moduleSettings.flashPanel.runtime';
+/**
+ * ⛓ Seedling JS J1 — the JS runtime's page, document-relative like WASM_DIR.
+ * ⛔ A PATH, never an import: the page's closure is the whole JS model, and a
+ * static import here would put it in the shipped panel bundle.
+ */
+const JS_RUNTIME_PAGE = './modules/seedlingDemo/jsRuntime.html';
+/** The one game the JS runtime plays. */
+const JS_RUNTIME_CONFIG = 'seedling.json';
 
 let instanceCounter = 0;
 let rufflePromise = null;
@@ -95,6 +105,8 @@ export class FlashPanelUI {
     this.configPath = this.componentState.configPath || null;
     this.swfPath = this.componentState.swfPath || null;
     this.wasmPath = this.componentState.wasmPath || null;
+    /** 'wasm' | 'js' — which page the iframe transport mounted (Seedling JS J1). */
+    this.transport = 'wasm';
 
     this.rootElement = null;
     this.swfContainer = null;
@@ -142,6 +154,31 @@ export class FlashPanelUI {
     // preset through the UI.
     this._rulesLoadedHandler = () => { this._onRulesLoaded(); };
     this.eventBus.subscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
+
+    /**
+     * ⛓ Seedling JS J1 — a RUNTIME change re-initializes the embed (the
+     * `bounceDemo.renderer` precedent: one panel, the page swapped). Without
+     * it the choice waited for the next preset with DIFFERENT wiring, so
+     * switching wasm ↔ js on the loaded preset did nothing at all.
+     */
+    this._settingsChangedHandler = async (data) => {
+      if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
+      if (!this.isInitialized) return;
+      if (this.componentState.configPath || this.componentState.swfPath
+        || this.componentState.wasmPath) return;
+      // ⛔ Only a real CHANGE of the value tears the game down — a '*'
+      // broadcast (any settings load) must not restart a running game.
+      let next = data.value;
+      if (data.key === '*') {
+        try { next = await settingsManager.getSetting(RUNTIME_SETTING_KEY, 'auto'); } catch { return; }
+      }
+      // `undefined`: an init is still reading the setting — it will see this value.
+      if (this._initRuntime === undefined || next === this._initRuntime) return;
+      this._panelLog(`runtime setting changed (${this._initRuntime} → ${next}) — reinitializing`);
+      this._teardownForReinit();
+      this._initializeAdapter();
+    };
+    this.eventBus.subscribe('settings:changed', this._settingsChangedHandler);
 
     /**
      * ⛓ **"found X for Player Y"** (EDITOR INTEGRATION M1). When a room holds
@@ -211,6 +248,7 @@ export class FlashPanelUI {
   }
 
   _teardownForReinit() {
+    this._initRuntime = undefined;
     this._heldKeys?.uninstall();
     if (this.adapter) {
       this._detachRegionGlue();
@@ -445,7 +483,7 @@ export class FlashPanelUI {
   async _initializeWasm() {
     this._setStatus('loading config…');
     this.gameConfig = await this._loadConfig(this.configPath);
-    this._panelLog(`config loaded: ${this.gameConfig.game} (wasm transport)`);
+    this._panelLog(`config loaded: ${this.gameConfig.game} (${this.transport} transport)`);
     this._setupTeleportUI();
 
     const [w, h] = this.gameConfig.stage_size || [480, 480];
@@ -470,8 +508,14 @@ export class FlashPanelUI {
       await adapter.waitForRuntime(30000);
       if (this.adapter !== adapter) return;
       this._heldKeys.install();
-      this._setStatus('click ▶ Start in the game');
-      this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');
+      if (this.transport === 'js') {
+        // ⛓ The JS page has no ▶ Start: no GPU or audio context to unlock.
+        this._setStatus('JS runtime loaded');
+        this._panelLog('JS runtime page loaded (seedlingDemo model, rectangles)');
+      } else {
+        this._setStatus('click ▶ Start in the game');
+        this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');
+      }
       // Callbacks appear only after the user starts the game; wait
       // generously rather than timing out under them.
       await adapter.waitForBridge(10 * 60 * 1000);
@@ -525,11 +569,16 @@ export class FlashPanelUI {
   async _startSeedlingRandomizer(adapter) {
     const staticData = stateManager.getStaticData?.() ?? null;
     const flashPanel = staticData?.flash_panel ?? null;
+    const transport = this.transport === 'js' ? 'js' : 'wasm';
     let manifest = null;
-    try {
-      manifest = await this._loadConfig(`${WASM_DIR}builds.json`);
-    } catch (err) {
-      this._panelLog(`ap placement: the wasm manifest could not be read — ${err.message}`, 'error');
+    // ⛓ Seedling JS J1: the JS runtime answers its capabilities itself
+    // (`JS_RUNTIME_CAPABILITIES`), so the wasm manifest is not its question.
+    if (transport === 'wasm') {
+      try {
+        manifest = await this._loadConfig(`${WASM_DIR}builds.json`);
+      } catch (err) {
+        this._panelLog(`ap placement: the wasm manifest could not be read — ${err.message}`, 'error');
+      }
     }
     if (this.adapter !== adapter) return;
 
@@ -542,7 +591,7 @@ export class FlashPanelUI {
      */
     const rawRules = rulesOfRawPayload(getLastRawJsonData?.());
     const generated = generatedRoomCensus(rawRules);
-    const cheap = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest, generated });
+    const cheap = seedlingRandomizerEligibility({ flashPanel, transport, manifest, generated });
     if (cheap.verdict === 'ineligible') {
       // ⛓ ONE LINE, AND IT NAMES THE CHECK. "Nothing happened" with no reason
       // is the shape a data-driven feature fails in.
@@ -581,6 +630,7 @@ export class FlashPanelUI {
       const loaded = await (generatedArm ? wiring.loadSeedlingGenerated : wiring.loadSeedlingRandomizer)({
         flashPanel,
         manifest,
+        transport,
         rawRules,
         locations: staticData?.locations,
         playerId: staticData?.playerId,
@@ -757,6 +807,20 @@ export class FlashPanelUI {
       try {
         runtime = await settingsManager.getSetting(RUNTIME_SETTING_KEY, 'auto');
       } catch { /* keep 'auto' */ }
+      this._initRuntime = runtime;
+      this.transport = 'wasm';
+      if (runtime === 'js') {
+        // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME
+        // iframe flow. Any other game keeps 'auto'.
+        if (this.configPath && this.configPath.endsWith(`/${JS_RUNTIME_CONFIG}`)) {
+          this.transport = 'js';
+          this.wasmPath = JS_RUNTIME_PAGE;
+          this._panelLog(`runtime 'js': the Seedling JS runtime page (${JS_RUNTIME_PAGE})`);
+          await this._initializeWasm();
+          return;
+        }
+        this._panelLog(`runtime 'js' plays ${JS_RUNTIME_CONFIG} only — this game uses 'auto'`);
+      }
       if (this.configPath && this.wasmPath && runtime !== 'flash') {
         await this._initializeWasm();
         return;
@@ -1003,6 +1067,10 @@ export class FlashPanelUI {
     if (this._rulesLoadedHandler) {
       this.eventBus.unsubscribe('stateManager:rulesLoaded', this._rulesLoadedHandler);
       this._rulesLoadedHandler = null;
+    }
+    if (this._settingsChangedHandler) {
+      this.eventBus.unsubscribe('settings:changed', this._settingsChangedHandler);
+      this._settingsChangedHandler = null;
     }
     if (this._apItemFoundHandler) {
       this.eventBus.unsubscribe(AP_ITEM_FOUND_EVENT, this._apItemFoundHandler);

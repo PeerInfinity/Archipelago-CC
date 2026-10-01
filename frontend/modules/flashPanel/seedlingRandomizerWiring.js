@@ -865,6 +865,8 @@ export async function loadSeedlingRandomizer({
 export async function loadSeedlingGenerated({
     flashPanel,
     manifest,
+    /** ⛓ Seedling JS J1: `'js'` when the panel mounted the JS runtime page. */
+    transport = 'wasm',
     rawRules = null,
     locations,
     playerId,
@@ -892,7 +894,7 @@ export async function loadSeedlingGenerated({
     });
 
     const generated = generatedRoomCensus(rawRules);
-    const eligibility = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest, generated });
+    const eligibility = seedlingRandomizerEligibility({ flashPanel, transport, manifest, generated });
     if (eligibility.verdict === 'ineligible') return refuse(eligibility);
     if (eligibility.arm !== RANDOMIZER_ARMS.GENERATED) {
         // ⛔ NOT `undecided`: whatever the vanilla facts would say, THIS arm has

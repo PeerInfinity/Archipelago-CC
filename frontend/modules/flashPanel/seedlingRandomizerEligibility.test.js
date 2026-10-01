@@ -16,6 +16,8 @@ import { describe, expect, it } from 'vitest';
 import {
     AP_ITEM_CAPABILITY,
     ELIGIBILITY_CHECK_IDS,
+    JS_RUNTIME_CAPABILITIES,
+    JS_TRANSPORT,
     WASM_BUILD_CAPABILITIES,
     buildNameFromWasmPath,
     capabilitiesOf,
@@ -275,5 +277,53 @@ describe('the THREE SHIPPED PRESETS against the SHIPPED manifest', () => {
             && b.role !== 'candidate' && b.role !== 'control');
         expect(capable.map((b) => b.name)).toHaveLength(1);
         expect(capable[0].role).toBe('default');
+    });
+});
+
+/**
+ * ⛓ SEEDLING JS J1 — `flashPanel.runtime: 'js'`. The JS page is not a manifest
+ * build, so it answers its own capability row; it plays the GENERATED arm only;
+ * and the wasm path's answers are the same verdicts they were.
+ */
+describe('the JS runtime transport (Seedling JS J1)', () => {
+    const generatedRules = readJson('../../presets/seedling_generated_room/AP_1/AP_1_rules.json');
+    const GENERATED = { rooms: ['region_0_0', 'region_0_1'], mixed: [] };
+    const flashPanel = generatedRules.flash_panel;
+
+    it('is eligible on the GENERATED arm with NO manifest at all', () => {
+        const v = seedlingRandomizerEligibility({ flashPanel, transport: JS_TRANSPORT, manifest: null,
+            generated: GENERATED });
+        expect(v).toMatchObject({ eligible: true, verdict: 'eligible', arm: 'generated' });
+        expect(v.checks.find((c) => c.id === 'capability').why).toMatch(/JS runtime declares apitem/);
+        expect(JS_RUNTIME_CAPABILITIES).toEqual([AP_ITEM_CAPABILITY]);
+    });
+
+    it('refuses a world with no generated rooms BY NAME, before the vanilla facts are asked', () => {
+        const v = seedlingRandomizerEligibility({ flashPanel, transport: JS_TRANSPORT, manifest: null,
+            generated: { rooms: [], mixed: [] } });
+        expect(v).toMatchObject({ eligible: false, verdict: 'ineligible', failed: 'generated' });
+        expect(v.why).toMatch(/GENERATED rooms only/);
+    });
+
+    it('a MIXED world is still refused by the generated check\'s own reason', () => {
+        const v = seedlingRandomizerEligibility({ flashPanel, transport: JS_TRANSPORT, manifest: null,
+            generated: { rooms: ['a'], mixed: ['b'] } });
+        expect(v).toMatchObject({ verdict: 'ineligible', failed: 'generated' });
+        expect(v.why).toMatch(/mixed world/);
+    });
+
+    it('⛔ the wasm transport\'s answers do not move: no manifest is still a capability FAIL', () => {
+        const v = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest: null,
+            generated: GENERATED });
+        expect(v).toMatchObject({ verdict: 'ineligible', failed: 'capability' });
+        const flash = seedlingRandomizerEligibility({ flashPanel, transport: 'flash', manifest: null });
+        expect(flash).toMatchObject({ verdict: 'ineligible', failed: 'transport' });
+    });
+
+    withSubmodule('⛔ and with the real manifest the wasm generated verdict is unchanged', () => {
+        const manifest = readJson(MANIFEST_PATH);
+        const v = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest, generated: GENERATED });
+        expect(v).toMatchObject({ eligible: true, arm: 'generated' });
+        expect(v.checks.find((c) => c.id === 'transport').why).toMatch(/^wasm transport/);
     });
 });

@@ -131,17 +131,21 @@ export function register(registrationApi) {
       runtime: {
         type: 'string',
         default: 'auto',
-        enum: ['auto', 'flash', 'wasm'],
+        enum: ['auto', 'flash', 'wasm', 'js'],
         label: 'Runtime',
         description: "'auto' uses the SWFRecomp wasm page when the game's "
           + "flash_panel wiring provides one (runs in any browser), real "
           + "Flash otherwise | 'flash' forces the real-Flash <object> embed "
-          + "(needs NPAPI Flash or Ruffle) | 'wasm' forces the wasm iframe.",
+          + "(needs NPAPI Flash or Ruffle) | 'wasm' forces the wasm iframe | "
+          + "'js' (Seedling only) plays the JavaScript model of the game "
+          + "(seedlingDemo) in rectangles, no sound — GENERATED rooms only for now.",
       },
     },
   });
 
   registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
+  // ⛓ Seedling JS J1: the panel re-initializes when `runtime` changes.
+  registrationApi.registerEventBusSubscriberIntent('settings:changed');
   registrationApi.registerEventBusSubscriberIntent('stateManager:inventoryChanged');
   registrationApi.registerEventBusSubscriberIntent('stateManager:ready');
   registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');

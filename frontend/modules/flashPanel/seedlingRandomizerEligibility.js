@@ -140,6 +140,17 @@ export const TAG_CAPABILITY = 'tag';
 export const WASM_BUILD_CAPABILITIES = Object.freeze(
     [AP_ITEM_CAPABILITY, ARM_CAPABILITY, HOLD_CAPABILITY, TAG_CAPABILITY]);
 
+/**
+ * ⛓ SEEDLING JS J1 — THE JS RUNTIME'S OWN ANSWER (`flashPanel.runtime: 'js'`).
+ * The JS page (`seedlingDemo/jsRuntime.html`) is not a build in `builds.json`,
+ * so the capability check cannot read it from the manifest; the runtime
+ * declares its own list HERE, in the same vocabulary, and the wasm path's
+ * answers do not move. ⛔ It plays the GENERATED arm only in J1 — the vanilla
+ * and atlas arms deliver or bind the 116 real rooms, which are slice J3's.
+ */
+export const JS_TRANSPORT = 'js';
+export const JS_RUNTIME_CAPABILITIES = Object.freeze([AP_ITEM_CAPABILITY]);
+
 /** The ids the five checks report themselves by, in the ruled order. */
 export const ELIGIBILITY_CHECK_IDS = Object.freeze(
     ['transport', 'capability', 'generated', 'atlas', 'placement', 'assets']);
@@ -215,6 +226,9 @@ const skipped = (why) => ({ status: 'skipped', why });
  */
 function checkTransport({ flashPanel, transport }) {
     if (transport === undefined) return unknown('the panel has not chosen a transport yet');
+    if (transport === JS_TRANSPORT) {
+        return pass('the Seedling JS runtime (seedlingDemo/jsRuntime.html) — no wasm build is consulted');
+    }
     if (transport !== 'wasm') {
         return fail(`the panel is on the ${JSON.stringify(transport)} transport — the AP `
             + 'placement is wasm-only until Ruffle\'s AVM2 is measured against a 116-room '
@@ -228,7 +242,12 @@ function checkTransport({ flashPanel, transport }) {
 }
 
 /** ── (ii) THE BUILD'S OWN DECLARATION ──────────────────────────────────── */
-function checkCapability({ flashPanel, manifest }) {
+function checkCapability({ flashPanel, manifest, transport }) {
+    if (transport === JS_TRANSPORT) {
+        return JS_RUNTIME_CAPABILITIES.includes(AP_ITEM_CAPABILITY)
+            ? pass(`the JS runtime declares ${AP_ITEM_CAPABILITY}`)
+            : fail(`the JS runtime does not declare ${JSON.stringify(AP_ITEM_CAPABILITY)}`);
+    }
     const buildName = buildNameFromWasmPath(flashPanel?.wasm);
     if (manifest === undefined) return unknown('the wasm manifest has not been fetched yet');
     if (!manifest) {
@@ -393,6 +412,20 @@ export function seedlingRandomizerEligibility(inputs = {}) {
         const c = { id, ...run(inputs) };
         checks.push(c);
         if (c.status === 'divert') diverted = c;
+    }
+    /**
+     * ⛓ SEEDLING JS J1: the JS runtime is decided BEFORE the vanilla facts are
+     * asked for — a world it cannot play is refused here by name, not left
+     * `undecided` behind a placement and two documents it would never use.
+     */
+    if (inputs.transport === JS_TRANSPORT && diverted?.id !== 'generated'
+        && !checks.some((c) => c.status === 'fail')) {
+        const why = 'the Seedling JS runtime plays GENERATED rooms only (slice J1) — these rules '
+            + 'carry none, and the vanilla and atlas arms deliver or bind the real 116 rooms, which '
+            + 'the JS runtime does not mount yet (slice J3)';
+        Object.assign(checks.find((c) => c.id === 'generated'), fail(why));
+        return { eligible: false, verdict: 'ineligible', arm: null, failed: 'generated',
+            why: `generated: ${why}`, checks };
     }
     const firstFail = checks.find((c) => c.status === 'fail');
     if (firstFail) {
