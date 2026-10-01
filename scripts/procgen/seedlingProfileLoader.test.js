@@ -17,7 +17,7 @@ const RUN = join(REPO, 'scripts/procgen/run-seedling-tape.mjs');
 const TMP = mkdtempSync(join(tmpdir(), 'seedling-profile-'));
 afterAll(() => rmSync(TMP, { recursive: true, force: true }));
 
-const DEFAULT_MD5 = 'd67dc8518f2cceb263cd94f1cbc27534';
+const DEFAULT_MD5 = 'f32d4d47bad3d72516f656d785623241';
 const temp = (name, text) => { const p = join(TMP, name); writeFileSync(p, text); return p; };
 /** The run's stdout; the environment never carries a stray SEEDLING_PROFILE in. */
 function run(args, env = {}) {
@@ -39,7 +39,7 @@ describe('run-seedling-tape — a node entry that takes a profile override (D2)'
         const moved = run(['collide-up-rock', `--profile=${ulp}`, '--expect']);
         expect(moved.status, moved.stderr).toBe(0);
         expect(moved.stdout).toContain('set walkSpeed=0.8000000000000002');
-        expect(moved.stdout).toContain('defaulted: 129 of 130 keys');
+        expect(moved.stdout).toContain('defaulted: 134 of 135 keys');
         expect(moved.stdout).toMatch(/^expectation: moved \(tick \d+ differs/m);
         expect(field(moved.stdout, 'stream md5')).not.toBe(field(base.stdout, 'stream md5'));
         expect(moved.stdout).not.toContain(DEFAULT_MD5);

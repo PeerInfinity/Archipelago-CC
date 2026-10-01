@@ -130,11 +130,16 @@ export const PROFILE = load(Object.freeze({
     enemyPitTile: 6,
     puncherDieAnimFrames: 10,
     puncherDieAnimRate: 10,
+    puncherAttackAnimFrames: 4,
+    puncherAttackAnimRate: 12,
+    puncherPunchForce: 5,
+    puncherPunchReach: 8,
     // ── combat.js
     enemyIframes: 30,
     slashTimerMax: 20,
     killLockTset: -1,
     puncherRunRange: 80,
+    puncherAttackRange: 10,
     // ── combatVerbs.js
     swordForce: 5,
     slashDashForce: 2,
@@ -307,11 +312,16 @@ export const PROFILE_FIELDS = Object.freeze([
     { key: 'enemyPitTile', class: 'rule', kind: 'sentinel', as3: '', source: 'chasers.js:ENEMY_PIT_TILE', review: false, note: '' },
     { key: 'puncherDieAnimFrames', class: 'rule', kind: 'count', as3: '', source: 'chasers.js:PUNCHER_DIE_ANIM.frames', review: false, note: 'Puncher die anim frames [30..39] (Puncher.as:44); endAnim gates totalEnemies' },
     { key: 'puncherDieAnimRate', class: 'rule', kind: 'magnitude', as3: 'Enemies/Puncher.as:add', as3Match: 'after:39], ', source: 'chasers.js:PUNCHER_DIE_ANIM.rate', review: false, note: 'Puncher die anim rate (Puncher.as:44)' },
+    { key: 'puncherAttackAnimFrames', class: 'rule', kind: 'count', as3: '', source: 'chasers.js:PUNCHER_ATTACK_ANIM.frames', review: false, note: 'Puncher attack anims are four frames (Puncher.as:36-38); endAnim fires the punch' },
+    { key: 'puncherAttackAnimRate', class: 'rule', kind: 'magnitude', as3: 'Enemies/Puncher.as:attackAnimSpeed', source: 'chasers.js:PUNCHER_ATTACK_ANIM.rate', review: false, note: 'the wind-up: 11 updates from the decision to the punch' },
+    { key: 'puncherPunchForce', class: 'physics', kind: 'magnitude', as3: 'Enemies/Puncher.as:punchForce', source: 'chasers.js:PUNCHER_PUNCH_FORCE', review: false, note: 'p.hit(this, punchForce, Point(x, y), damage) (Puncher.as:216)' },
+    { key: 'puncherPunchReach', class: 'physics', kind: 'magnitude', as3: 'Enemies/Puncher.as:r', source: 'chasers.js:PUNCHER_PUNCH_REACH', review: false, note: 'the punch box is r deep off the body edge in the facing (Puncher.as:201-211)' },
     // ── combat.js
     { key: 'enemyIframes', class: 'rule', kind: 'magnitude', as3: 'Enemies/Enemy.as:hitsTimerMax', source: 'combat.js:ENEMY_IFRAMES', review: false, note: '' },
     { key: 'slashTimerMax', class: 'rule', kind: 'magnitude', as3: 'Player.as:slashTimerMax', source: 'combat.js:SLASH_TIMER_MAX', review: false, note: '' },
     { key: 'killLockTset', class: 'rule', kind: 'sentinel', as3: '', source: 'combat.js:KILL_LOCK_TSET', review: false, note: 'Lock tSet == -1 kill-lock discriminator (Lock.as:109-115)' },
     { key: 'puncherRunRange', class: 'physics', kind: 'bound', as3: 'Enemies/Puncher.as:runRange', source: 'combat.js:PUNCHER_RUN_RANGE', review: false, note: 'Puncher.update chases while FP.distance to the player <= runRange' },
+    { key: 'puncherAttackRange', class: 'rule', kind: 'bound', as3: 'Enemies/Puncher.as:attackRange', source: 'combat.js:PUNCHER_ATTACK_RANGE', review: false, note: 'Puncher.update starts the attack anim when FP.distance <= attackRange (Puncher.as:111)' },
     // ── combatVerbs.js
     { key: 'swordForce', class: 'physics', kind: 'magnitude', as3: 'Player.as:swordForce', source: 'combatVerbs.js:SWORD_FORCE', review: false, note: '' },
     { key: 'slashDashForce', class: 'physics', kind: 'magnitude', as3: '', source: 'combatVerbs.js:SLASH_DASH_FORCE', review: false, note: 'knockback(2) Player.as:788' },

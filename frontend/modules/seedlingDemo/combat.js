@@ -167,6 +167,13 @@ export const TOTAL_ENEMIES_OMISSIONS = Object.freeze({
  */
 export const PUNCHER_RUN_RANGE = PROFILE.puncherRunRange;
 
+/**
+ * ⛓ U7-swim: `Puncher.as:23` — `attackRange`, the distance at which it
+ * DECIDES to punch (`:111`). Not the punch's reach: that is the `r = 8` box
+ * off the body edge (`chasers.PUNCHER_PUNCH_REACH`).
+ */
+export const PUNCHER_ATTACK_RANGE = PROFILE.puncherAttackRange;
+
 export const ENEMY_CLASSES = defineRecord('enemyClasses', {
     bob: {
         ctor: { dx: 8, dy: 8, src: 'Bob.as:33 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
@@ -242,7 +249,7 @@ export const ENEMY_CLASSES = defineRecord('enemyClasses', {
         threat: 'the punch box is `r = 8` deep off the body edge (Puncher.as:201); the 10 is its attackRange, the distance at which it decides to punch',
         terrain: { water: 'dies', lava: 'dies', pit: 'falls' },
         offScreen: false, sideWrite: null,
-        reach: { kind: 'punch', px: 10 },
+        reach: { kind: 'punch', px: PUNCHER_ATTACK_RANGE },
         src: 'Enemies/Puncher.as:22-24,46,50',
     },
     drill: {

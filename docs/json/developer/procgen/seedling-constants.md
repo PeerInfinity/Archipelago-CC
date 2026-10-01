@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**52 files, 4403 literals.** Class × position:
+**52 files, 4415 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 1 | 1233 | 268 | 1502 |
-| rule | 0 | 836 | 377 | 1213 |
+| physics | 1 | 1234 | 268 | 1503 |
+| rule | 0 | 839 | 377 | 1216 |
 | cosmetic | 0 | 43 | 8 | 51 |
-| structural | 9 | 310 | 1318 | 1637 |
+| structural | 9 | 310 | 1326 | 1645 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 10 | 2422 | 1971 | 4403 |
+| total | 10 | 2426 | 1979 | 4415 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1263 | 0 | 88 | 108 | 4 | 39 | 1502 |
-| rule | 322 | 110 | 183 | 22 | 503 | 73 | 1213 |
+| physics | 1265 | 0 | 87 | 108 | 4 | 39 | 1503 |
+| rule | 323 | 111 | 184 | 22 | 503 | 73 | 1216 |
 
 Rows whose note starts `REVIEW:`: **105**.
 
@@ -319,9 +319,9 @@ Rows whose note starts `REVIEW:`: **105**.
 
 None: a name declared in several files now reads one profile key (the table below).
 
-### The profile: 130 keys in `seedlingDemo/seedlingProfile.js`
+### The profile: 135 keys in `seedlingDemo/seedlingProfile.js`
 
-**48 physics**, **82 rule**; 65 with an AS3 anchor. 129 top-level names alias a key, and 146 top-level declarations read one. "Read by" is every such declaration.
+**50 physics**, **85 rule**; 69 with an AS3 anchor. 132 top-level names alias a key, and 151 top-level declarations read one. "Read by" is every such declaration.
 
 | key | value | class | kind | AS3 | read by |
 |---|---|---|---|---|---|
@@ -345,10 +345,15 @@ None: a name declared in several files now reads one profile key (the table belo
 | `enemyPitTile` | 6 | rule | sentinel |  | chasers.js `ENEMY_PIT_TILE` |
 | `puncherDieAnimFrames` | 10 | rule | count |  | chasers.js `PUNCHER_DIE_ANIM` |
 | `puncherDieAnimRate` | 10 | rule | magnitude | Enemies/Puncher.as:add | chasers.js `PUNCHER_DIE_ANIM` |
+| `puncherAttackAnimFrames` | 4 | rule | count |  | chasers.js `PUNCHER_ATTACK_ANIM` |
+| `puncherAttackAnimRate` | 12 | rule | magnitude | Enemies/Puncher.as:attackAnimSpeed | chasers.js `PUNCHER_ATTACK_ANIM` |
+| `puncherPunchForce` | 5 | physics | magnitude | Enemies/Puncher.as:punchForce | chasers.js `PUNCHER_PUNCH_FORCE` |
+| `puncherPunchReach` | 8 | physics | magnitude | Enemies/Puncher.as:r | chasers.js `PUNCHER_PUNCH_REACH` |
 | `enemyIframes` | 30 | rule | magnitude | Enemies/Enemy.as:hitsTimerMax | combat.js `ENEMY_IFRAMES` |
 | `slashTimerMax` | 20 | rule | magnitude | Player.as:slashTimerMax | combat.js `SLASH_TIMER_MAX` |
 | `killLockTset` | -1 | rule | sentinel |  | combat.js `KILL_LOCK_TSET` |
 | `puncherRunRange` | 80 | physics | bound | Enemies/Puncher.as:runRange | combat.js `PUNCHER_RUN_RANGE` |
+| `puncherAttackRange` | 10 | rule | bound | Enemies/Puncher.as:attackRange | combat.js `PUNCHER_ATTACK_RANGE` |
 | `swordForce` | 5 | physics | magnitude | Player.as:swordForce | combatVerbs.js `SWORD_FORCE` |
 | `slashDashForce` | 2 | physics | magnitude |  | combatVerbs.js `SLASH_DASH_FORCE` |
 | `swordAnimRate` | 30 | rule | magnitude | Player.as:swordSpeed | combatVerbs.js `SWORD_ANIM_RATE` |

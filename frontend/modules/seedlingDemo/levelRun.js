@@ -91,8 +91,9 @@ import {
 // the slice. The roster it is gated on (`bridgedChaserTags`) is DERIVED from
 // `CHASERS` x `MODELLED_ENEMY_CLASSES`, never typed here.
 import {
-    ENEMY_PIT_TILE, ENEMY_TERRAIN_DESTROYS, chaserBoxAt, chaserSolids, chaserStep,
-    createDieAnim, deathTicks, isBridgedChaser, stepSpriteAnim,
+    ENEMY_PIT_TILE, ENEMY_TERRAIN_DESTROYS, chaserAttackDecision, chaserBoxAt, chaserSolids,
+    chaserStep, createDieAnim, deathTicks, isBridgedChaser, puncherPunchRect, stepSpriteAnim,
+    CHASERS,
 } from './chasers.js';
 import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
@@ -3003,6 +3004,12 @@ export function createLevelRun({
                      */
                     anim: null,
                     /**
+                     * ⛓ U7-swim D2: the puncher's "attack-*" Spritemap while it
+                     * plays — `getSprite() == "attack"` is `attack !== null`.
+                     * Null for every class without `CHASERS[tag].attack`.
+                     */
+                    attack: null,
+                    /**
                      * `Enemy.fallInPit` — a LATCH, armed by the terrain
                      * switch's `case 6`, and `fell` is what `removed()`
                      * would read (`Bob.removed()` is an empty override, so
@@ -5597,6 +5604,10 @@ export function createLevelRun({
                          * same staging rather than opening a second one.
                          */
                         c.anim = createDieAnim(c.tag);
+                        // ⛓ U7-swim: `play("die")` REPLACES a running
+                        // "attack-*" anim, so a wind-up killed mid-swing
+                        // never throws its punch.
+                        c.attack = null;
                         chaserKills.push({
                             t: ticksCompleted + 1,
                             level,
@@ -6116,7 +6127,9 @@ export function createLevelRun({
         // with six).
         const ids = [...st.keys()].reverse();
         const bodies = new Map();
-        for (const [id, c] of st) bodies.set(id, { ...c, v: { ...c.v } });
+        for (const [id, c] of st) {
+            bodies.set(id, { ...c, v: { ...c.v }, attack: c.attack ? { ...c.attack } : null });
+        }
         // ⚠ ONCE, not per tick: the previewed world is FROZEN at this tick's
         // geometry (`previewWalk`'s own law — blocks do not glide, locks do not
         // open), so re-normalising per tick would be a cost with no reading
@@ -6240,6 +6253,12 @@ export function createLevelRun({
                     c.x = r.x;
                     c.y = r.y;
                     c.v = r.v;
+                    // ⛓ U7-swim D2: the wind-up, decided and stepped as the live
+                    // run does, so the chase gate (`getSprite() != "attack"`)
+                    // agrees. ⛔ No punch is thrown: a hit does not happen in a
+                    // preview — the danger map prices the reach as `threatPad`.
+                    c.attack = chaserAttackDecision(c.tag, c, playerPos) ?? c.attack;
+                    if (c.attack && stepSpriteAnim(c.attack)) c.attack = null;
                 }
                 // ⛓⛓ R9 SLICE 12b — THE I-FRAME RUNS DOWN IN THE FORECAST TOO.
                 // `enemyHitUpdate` decrements once per enemy update, and a
@@ -6509,6 +6528,7 @@ export function createLevelRun({
             // `endAnim` does, `MOBILE_DEATH_FADE` ticks after that, and
             // `FP.world.remove` after that. Three fenceposts, not one.
             c.anim = createDieAnim(c.tag);
+            c.attack = null; // ⛓ U7-swim: `play("die")` replaces a wind-up.
             chaserKills.push({
                 t: ticksCompleted + 1,
                 level,
@@ -8820,7 +8840,52 @@ export function createLevelRun({
             // (`dying` -> `destroy` -> `removed`).
             if (c.anim && stepSpriteAnim(c.anim)) c.destroy = true;
             if (stop === 'player-died') return;
+            /**
+             * ⛓⛓⛓ U7-swim D2 — THE PUNCH, in the GRAPHIC half: the "attack-*"
+             * anim's callback is `endAnim`, whose attack arm is
+             * `attackPlayer(); setSprite("stand")` (`Puncher.as:137-141`). It
+             * fires on the wind-up's last update, before the player's own tick.
+             */
+            if (c.attack && stepSpriteAnim(c.attack)) {
+                c.attack = null;
+                if (punchNow(c) === 'player-died') return;
+            }
         }
+    }
+
+    /**
+     * ⛓⛓⛓ U7-swim D2 — `Puncher.attackPlayer()` (`Puncher.as:172-218`).
+     *
+     * ⛔ ITS OWN GATE IS THE PUNCHER'S i-FRAME: `if (hitsTimer > 0) return;`
+     * — a body struck during its wind-up throws nothing. Then the facing is
+     * re-aimed at the player and the `r = 8` box off that edge is collided
+     * with the player's hitbox; a hit is `p.hit(this, punchForce, new
+     * Point(x, y), damage)` through the run's one `applyPlayerHit` funnel, so
+     * `Player.hit`'s own gates (`noDamage`, the freeze, its i-frames) decide.
+     *
+     * @returns {?string} `'player-died'` when the punch killed the player.
+     */
+    function punchNow(c) {
+        const a = CHASERS[c.tag]?.attack;
+        if (!a) return null;
+        const t = ticksCompleted + 1;
+        if (c.hitsTimer > 0) {
+            contactsSuppressed.push({ t, level, source: 'punch', id: c.id, why: 'enemy hitsTimer' });
+            return null;
+        }
+        const { rect: box } = puncherPunchRect(c.tag, c, { x: state.x, y: state.y });
+        if (!rectsOverlap(box, playerBoxAt(state.x, state.y))) {
+            contactsSuppressed.push({ t, level, source: 'punch', id: c.id, why: 'punch box missed' });
+            return null;
+        }
+        applyPlayerHit({
+            source: 'punch',
+            id: c.id,
+            force: a.force,
+            damage: c.damage,
+            from: { x: c.x, y: c.y },
+        });
+        return pendingDeath ? 'player-died' : null;
     }
 
     /**
@@ -8972,9 +9037,12 @@ export function createLevelRun({
              * `laterRemovalBy` already said in words.
              */
             if (!c.destroy && c.fallInPit) {
-                const r = chaserStep(c.tag, { x: c.x, y: c.y, v: c.v, dying: c.dying },
+                const r = chaserStep(c.tag, { x: c.x, y: c.y, v: c.v, dying: c.dying, attack: c.attack },
                     playerPoint, { onScreen: false, frozen: ceremony !== null, move });
                 c.v = r.v;
+                // ⛓ U7-swim D2: `Puncher.update`'s block runs below the fall
+                // branch too (it tests only `destroy` and "die").
+                c.attack = chaserAttackDecision(c.tag, c, playerPoint) ?? c.attack;
                 c.x += (Math.floor(c.x / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2 - c.x) / 10;
                 c.y += (Math.floor(c.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2 - c.y) / 10;
                 const next = c.alpha - PIT_FADE.alphaStep;
@@ -9030,7 +9098,9 @@ export function createLevelRun({
                 }
                 return null;
             }
-            const r = chaserStep(c.tag, { x: c.x, y: c.y, v: c.v, dying: c.dying }, playerPoint, {
+            const r = chaserStep(c.tag, {
+                x: c.x, y: c.y, v: c.v, dying: c.dying, attack: c.attack,
+            }, playerPoint, {
                 onScreen,
                 frozen: ceremony !== null,
                 move,
@@ -9038,6 +9108,13 @@ export function createLevelRun({
             c.x = r.x;
             c.y = r.y;
             c.v = r.v;
+            /**
+             * ⛓⛓ U7-swim D2 — `Puncher.update`'s tail: within `attackRange` of
+             * the player, `setSprite("attack")`. Decided at the position this
+             * tick's move left, in the same block as the chase (so it is not
+             * gated by the contact below, which belongs to `Enemy.update`).
+             */
+            c.attack = chaserAttackDecision(c.tag, c, playerPoint) ?? c.attack;
             assertSteppedChaserLifetime(c);
             // `Enemy.update`'s tail, in its own order: `hitUpdate()` then
             // `hitPlayer()`, and BOTH are inside `if (!destroy)`.

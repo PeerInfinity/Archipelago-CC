@@ -1,0 +1,39 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 12,
+        "x": 384,
+        "y": 256
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {},
+    "tick0": null,
+    "hold": false,
+    "tick_count": 120,
+    "inputs": [],
+    "name": "u7-puncher-punch",
+    "description": "⛓⛓⛓ U7-swim D2 — THE PUNCH, DRIVEN. L12, two tiles west of `puncher@416,256` (d = 32, inside `runRange` 80), standing still with NO item and `noDamage` FALSE (under the flag the run steps no chaser, and every committed tape that enters a puncher room carries it — the reason this tape exists). The model predicts: the chase closes at ~0.69 px/tick and stops against the player's box (`solids.push(\"Enemy\", \"Player\")`); the attack is decided at `attackRange` 10 and the chase yields to it; the 11-update wind-up ends in `attackPlayer`, whose `r = 8` box off the west edge throws the player by `punchForce` 5 — punch 1 at t 44, punch 2 at t 108 against the corridor's west wall (`hits` 2). The third would kill (`hitsMax` 3), so the tape stops short of it. Authored by scripts/procgen/plan-seedling-u7-puncher.mjs.",
+    "note": ""
+}

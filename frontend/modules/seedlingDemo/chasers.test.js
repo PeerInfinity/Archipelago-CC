@@ -306,3 +306,54 @@ describe('R8 slice 3: `Spritemap.update` as the loop it is', () => {
         expect(() => createDieAnim('sandtrap')).toThrow(/not a transcribed chaser/);
     });
 });
+
+/**
+ * ⛓⛓⛓ U7-swim — THE PUNCHER, hand-derived from `Enemies/Puncher.as`.
+ */
+describe('chasers — the puncher (U7-swim D1/D2)', () => {
+    it('dies over 31 updates (ten frames at rate 10) and winds up over 11 (four at 12)', async () => {
+        const { animTicks, deathTicks, CHASERS } = await import('./chasers.js');
+        expect(deathTicks('puncher')).toBe(31);
+        const a = CHASERS.puncher.attack;
+        expect(animTicks(a.anim.frames, a.anim.rate)).toBe(11);
+        expect({ range: a.range, reach: a.reach, force: a.force }).toEqual({ range: 10, reach: 8, force: 5 });
+    });
+
+    it('has no freeze gate and stops against the player (`solids` carries "Player")', async () => {
+        const { CHASERS, chaserSolids } = await import('./chasers.js');
+        expect(CHASERS.puncher.freezesOnGameFreeze).toBe(false);
+        expect(chaserSolids('puncher')).toContain('Player');
+        expect(chaserSolids('bob')).not.toContain('Player');
+    });
+
+    it('decides to attack at d <= attackRange from the post-move position, and not while attacking or dying', async () => {
+        const { chaserAttackDecision } = await import('./chasers.js');
+        const p = { x: 100, y: 100 };
+        expect(chaserAttackDecision('puncher', { x: 110, y: 100, attack: null }, p)).not.toBeNull();
+        expect(chaserAttackDecision('puncher', { x: 110.001, y: 100, attack: null }, p)).toBeNull();
+        expect(chaserAttackDecision('puncher', { x: 105, y: 100, attack: { timer: 0 } }, p)).toBeNull();
+        expect(chaserAttackDecision('puncher', { x: 105, y: 100, attack: null, dying: true }, p)).toBeNull();
+        // Bob has no attack at all.
+        expect(chaserAttackDecision('bob', { x: 101, y: 100, attack: null }, p)).toBeNull();
+    });
+
+    it('the chase yields to the attack: no impulse while the wind-up runs', async () => {
+        const { chaserStep } = await import('./chasers.js');
+        const free = chaserStep('puncher', { x: 120, y: 100, v: { x: 0, y: 0 }, attack: null }, { x: 100, y: 100 });
+        const held = chaserStep('puncher', { x: 120, y: 100, v: { x: 0, y: 0 }, attack: { timer: 0 } }, { x: 100, y: 100 });
+        expect(free.v.x).toBeLessThan(0);
+        expect(held.v).toEqual({ x: 0, y: 0 });
+    });
+
+    it('re-aims the punch box at the player: r = 8 off the body edge on the facing side', async () => {
+        const { puncherPunchRect } = await import('./chasers.js');
+        const e = { x: 100, y: 100 }; // body x 94..106, y 96..108 (hitbox 12x12 origin 6,4)
+        const at = (px, py) => puncherPunchRect('puncher', e, { x: px, y: py });
+        expect(at(120, 101)).toMatchObject({ direction: 0, rect: { x: 106, y: 96, w: 8, h: 12 } });
+        expect(at(100, 80)).toMatchObject({ direction: 1, rect: { x: 94, y: 88, w: 12, h: 8 } });
+        expect(at(80, 99)).toMatchObject({ direction: 2, rect: { x: 86, y: 96, w: 8, h: 12 } });
+        expect(at(100, 120)).toMatchObject({ direction: 3, rect: { x: 94, y: 108, w: 12, h: 8 } });
+        // |dx| == |dy| is NOT a side: the vertical arm takes it (`Math.abs(dx) > Math.abs(dy)`).
+        expect(at(110, 110).direction).toBe(3);
+    });
+});

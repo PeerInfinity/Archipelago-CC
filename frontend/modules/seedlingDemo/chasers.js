@@ -66,7 +66,7 @@
  *    the lock shut and the walk standing at it.
  */
 
-import { ENEMY_CLASSES } from './combat.js';
+import { ENEMY_CLASSES, PUNCHER_ATTACK_RANGE } from './combat.js';
 import { rect, SOLIDS_BY_MOVER } from './levelWorld.js';
 import { MODELLED_ENEMY_CLASSES } from './spinner.js';
 import { PROFILE } from './seedlingProfile.js';
@@ -199,6 +199,22 @@ export const PUNCHER_DIE_ANIM = Object.freeze({
     rate: PROFILE.puncherDieAnimRate,
 });
 
+/**
+ * ⛓ U7-swim: `Puncher.as:36-38` — `add("attack-side"|"attack-up"|"attack-down",
+ * [four frames], attackAnimSpeed 12)`. Every direction is four frames at 12, so
+ * the wind-up does not depend on which one plays: 11 updates (`animTicks`).
+ */
+export const PUNCHER_ATTACK_ANIM = Object.freeze({
+    frames: PROFILE.puncherAttackAnimFrames,
+    rate: PROFILE.puncherAttackAnimRate,
+});
+
+/** `Puncher.as:24` — `punchForce`, the knockback `attackPlayer` hands `p.hit`. */
+export const PUNCHER_PUNCH_FORCE = PROFILE.puncherPunchForce;
+
+/** `Puncher.as:201` — `const r:int = 8`, the punch box's depth off the body edge. */
+export const PUNCHER_PUNCH_REACH = PROFILE.puncherPunchReach;
+
 /** The "die" animation of a transcribed chaser, ready to step. */
 export function createDieAnim(tag) {
     const c = CHASERS[tag];
@@ -263,6 +279,18 @@ export const CHASERS = defineRecord('chasers', {
         }),
         // ⛔ `Puncher.as:48` — `solids.push("Enemy", "Player")`.
         solidsMover: 'puncher',
+        /**
+         * ⛓ D2 — the ATTACK, which no other row has (`Puncher.as:111-117`,
+         * `endAnim` `:127-143`, `attackPlayer` `:172-218`). `range` decides,
+         * the anim is the wind-up, and `reach`/`force` are the punch.
+         */
+        attack: Object.freeze({
+            range: PUNCHER_ATTACK_RANGE,
+            anim: Object.freeze({ frames: PUNCHER_ATTACK_ANIM.frames, rate: PUNCHER_ATTACK_ANIM.rate }),
+            reach: PUNCHER_PUNCH_REACH,
+            force: PUNCHER_PUNCH_FORCE,
+            src: 'Enemies/Puncher.as:111-117,127-143,172-218',
+        }),
         src: 'Enemies/Puncher.as:53-119',
     }),
 }, { doc: ['src'], src: 'chasers.js' });
@@ -460,10 +488,69 @@ export function chaserStep(tag, enemy, player, {
     // ── the subclass block ────────────────────────────────────────────
     // ⚠ Runs whether or not the super returned early (note 2), and its
     // freeze gate is PER CLASS (note 1).
-    const blocked = enemy.dying === true || (c.freezesOnGameFreeze && frozen);
+    // ⛓ U7-swim: and a puncher mid-attack does not chase — `Puncher.update`'s
+    // block is `if (player && getSprite() != "attack")` (`:60`).
+    const blocked = enemy.dying === true || (c.freezesOnGameFreeze && frozen)
+        || (enemy.attack !== null && enemy.attack !== undefined);
     if (!blocked) v = chaseImpulse(tag, { x, y, v }, player);
 
     return { x, y, v, iframesTicked };
+}
+
+/**
+ * ⛓⛓⛓ U7-swim D2 — `Puncher.update`'s TAIL: does the body DECIDE to punch
+ * this tick? (`:111-117`.)
+ *
+ * It sits inside the same `if (player && getSprite() != "attack")` as the
+ * chase, below the `destroy || "die"` return, and measures `d` from the
+ * position this tick's move LEFT (`chaserStep`'s `x, y`) to the player's
+ * entity point — the player updates last, so that is where the previous
+ * tick left them. A body already attacking does not decide again: the
+ * running wind-up is not restarted (`Spritemap.play` returns early on the
+ * same name, and the block is skipped anyway).
+ *
+ * @returns {?object} a fresh attack animation to install, or null
+ */
+export function chaserAttackDecision(tag, enemy, player) {
+    const a = CHASERS[tag]?.attack;
+    if (!a) return null;
+    if (enemy.dying === true || enemy.destroy === true) return null;
+    if (enemy.attack !== null && enemy.attack !== undefined) return null;
+    const d = Math.hypot(player.x - enemy.x, player.y - enemy.y);
+    return d <= a.range ? createSpriteAnim(a.anim.frames, a.anim.rate) : null;
+}
+
+/**
+ * ⛓⛓⛓ U7-swim D2 — `attackPlayer()`'s box (`Puncher.as:179-211`), from the
+ * body's entity point and the player's.
+ *
+ * The facing is RE-AIMED at the punch, from where the player is now, and not
+ * the facing the chase left: `|dx| > |dy|` picks the side (0 east, 2 west),
+ * else `dy > 0` is 3 (south) and anything else 1 (north). The box is `r` deep
+ * off the body's edge on that side, as wide as the body.
+ *
+ * @returns {{direction: number, rect: object}}
+ */
+export function puncherPunchRect(tag, enemy, player) {
+    const a = CHASERS[tag]?.attack;
+    const row = ENEMY_CLASSES[tag];
+    if (!a || !row?.hitbox) fail(`puncherPunchRect: "${tag}" has no attack`);
+    const { w, h, ox, oy } = row.hitbox;
+    const dx = player.x - enemy.x;
+    const dy = player.y - enemy.y;
+    let direction;
+    if (Math.abs(dx) > Math.abs(dy)) direction = dx > 0 ? 0 : 2;
+    else direction = dy > 0 ? 3 : 1;
+    const left = enemy.x - ox;
+    const top = enemy.y - oy;
+    const r = a.reach;
+    const rects = [
+        rect(left + w, top, r, h),
+        rect(left, top - r, w, r),
+        rect(left - r, top, r, h),
+        rect(left, top + h, w, r),
+    ];
+    return { direction, rect: rects[direction] };
 }
 
 /**

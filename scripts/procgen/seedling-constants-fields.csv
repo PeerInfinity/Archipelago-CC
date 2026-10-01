@@ -299,7 +299,6 @@ frontend/modules/seedlingDemo/combat.js|(module)|h626d5f5f|0|0,physics,bound,,re
 frontend/modules/seedlingDemo/combat.js|(module)|h08ee434b|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
 frontend/modules/seedlingDemo/combat.js|(module)|hb53ccc23|1|0,rule,magnitude,,damage dealt to Player.hit
 frontend/modules/seedlingDemo/combat.js|(module)|h8204ecc5|8|0,physics,bound,,reach pad beyond the body hitbox
-frontend/modules/seedlingDemo/combat.js|(module)|ha19e3d9a|10|0,physics,bound,,sword-line / punch reach
 frontend/modules/seedlingDemo/combat.js|(module)|h4aad4f04|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
 frontend/modules/seedlingDemo/combat.js|(module)|ha51522b6|48|0,rule,bound,,runRange / attack or chomp range gating aggro
 frontend/modules/seedlingDemo/combat.js|(module)|h311986f4|1|0,rule,magnitude,,damage dealt to Player.hit
@@ -1267,6 +1266,7 @@ frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|5,rule,magnitude,,Bob 
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|8,rule,count,,Jellyfish die anim frames
 frontend/modules/seedlingDemo/chasers.js|CHASERS|(module)|7,rule,magnitude,,Jellyfish die anim rate
 frontend/modules/seedlingDemo/chasers.js|normalize|normalize,structural,,,
+frontend/modules/seedlingDemo/chasers.js|puncherPunchRect|puncherPunchRect,structural,,,Puncher.as direction codes (0 east 1 north 2 west 3 south) indexing the four punch boxes
 frontend/modules/seedlingDemo/chasers.js|applyFriction|applyFriction,structural,,,zero floor / zeroed components
 frontend/modules/seedlingDemo/chasers.js|sign|sign,physics,sign,,FP.sign
 frontend/modules/seedlingDemo/chasers.js|killWindowTicks|killWindowTicks,rule,derivation,,1-tick hit-test lag + deathTicks(tag)
@@ -1498,10 +1498,15 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hbad42265|0.05|0,physi
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h65a07688|6|0,rule,sentinel,,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf188b5c2|10|0,rule,count,,Puncher die anim frames [30..39] (Puncher.as:44); endAnim gates totalEnemies
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h5cf591e0|10|0,rule,magnitude,Enemies/Puncher.as:add,Puncher die anim rate (Puncher.as:44)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0ddb4280|4|0,rule,count,,Puncher attack anims are four frames (Puncher.as:36-38); endAnim fires the punch
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h54c95a8a|12|0,rule,magnitude,Enemies/Puncher.as:attackAnimSpeed,the wind-up: 11 updates from the decision to the punch
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h82f7eeb6|5|0,physics,magnitude,Enemies/Puncher.as:punchForce,"p.hit(this, punchForce, Point(x, y), damage) (Puncher.as:216)"
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hae91df29|8|0,physics,magnitude,Enemies/Puncher.as:r,the punch box is r deep off the body edge in the facing (Puncher.as:201-211)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h7bd960bb|30|0,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf4de85d9|20|0,rule,magnitude,Player.as:slashTimerMax,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hc0fccb1c|-1|0,rule,sentinel,,Lock tSet == -1 kill-lock discriminator (Lock.as:109-115)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd7d3b91f|80|0,physics,bound,Enemies/Puncher.as:runRange,Puncher.update chases while FP.distance to the player <= runRange
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd3c565c4|10|0,rule,bound,Enemies/Puncher.as:attackRange,Puncher.update starts the attack anim when FP.distance <= attackRange (Puncher.as:111)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|habc2b3f1|5|0,physics,magnitude,Player.as:swordForce,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h08bb5fb7|2|0,physics,magnitude,,knockback(2) Player.as:788
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|heaf60327|30|0,rule,magnitude,Player.as:swordSpeed,

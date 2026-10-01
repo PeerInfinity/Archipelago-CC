@@ -805,6 +805,20 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'bobs in the SAME room — the pair is a pair precisely because the '
                 + 'exposure claim does not move and the OUTCOME does.',
         }),
+        /**
+         * ⛓⛓⛓ U7-swim — THE PUNCHER'S WITNESSES, written before the roster
+         * measured them. `bobs` counts the bridged bodies in the room (L12 holds
+         * one puncher and nothing else that walks).
+         */
+        Object.freeze({
+            name: 'u7-puncher-punch', levels: Object.freeze([12]), bobs: 1, ticks: 120,
+            addedBy: 'U7-swim D2 (the punch witness)',
+            why: 'the puncher\'s chase and punch, driven: the player stands still two tiles '
+                + 'west of `puncher@416,256` with `noDamage` FALSE, and is punched twice '
+                + '(t 44, t 108) by the `r = 8` box at `punchForce` 5. None of the fourteen '
+                + 'tapes that enter a puncher room retires `noDamage`, so this is the first '
+                + 'tape on the roster the puncher can move at all.',
+        }),
     ]),
 
     /**
