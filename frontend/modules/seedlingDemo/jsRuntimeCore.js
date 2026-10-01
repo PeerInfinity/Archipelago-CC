@@ -76,6 +76,7 @@ import { assembleLevelSetChunks } from './levelSetValidator.js';
 import { ENTITY_CLASSES, entityRect } from './levelWorld.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { ITEM_PROPERTIES } from './tapeFormat.js';
+import { createRuntimeWalker, WALK_STATES } from './jsRuntimeWalker.js';
 
 /**
  * The pins every JS-runtime run carries. ⛔ `sound` is not optional: without
@@ -186,6 +187,21 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
 
     const note = (e) => { events.push({ t: ticks, ...e }); log(e.message ?? JSON.stringify(e)); };
 
+    /**
+     * ⛓ J2 — the Playback Bot's walker. It is asked for this tick's keys
+     * INSIDE `tick`, so the walk runs on the page's one clock; while it holds
+     * no goal (or is paused) the keyboard drives, exactly as in J1.
+     */
+    const walkListeners = new Set();
+    const walker = createRuntimeWalker({
+        apItemOf: (level, tag) => (mounted?.apItems.get(level) ?? []).find((a) => a.tag === tag) ?? null,
+        isCollected: (level, tag) => collected.has(`${level}:${tag}`),
+        onEvent: (e) => {
+            note({ type: 'walk', state: e.state, message: `[js runtime] ${walker.describe()}` });
+            for (const fn of walkListeners) { try { fn(e); } catch (err) { log(`[js runtime] a walk listener threw: ${err.message}`); } }
+        },
+    });
+
     // ── the run ────────────────────────────────────────────────────────────
 
     function bankClears() {
@@ -263,7 +279,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         const box0 = playerBoxAt(run.state.x, run.state.y);
         const n0 = run.transitions.length;
         const inCeremony0 = Boolean(run.inCeremony);
-        const { held: drive } = session.heldFor(held);
+        const walkHeld = walker.heldFor(run);
+        const { held: drive } = session.heldFor(walkHeld ?? held);
         try {
             session.step(drive);
         } catch (err) {
@@ -279,6 +296,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
                 + `respawn at the arrival (${arrival.x}, ${arrival.y})` });
             boot(arrival, `respawn after a ${kind} death`);
             ticks += 1;
+            walker.observe({ death: kind });
             flush();
             return { stepped: true, death: kind };
         }
@@ -299,6 +317,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
             // left (`World.addUpdate` prepends; the Player is added first).
             apItemContact(level0, box0);
         }
+        walker.observe({ crossing });
         flush();
         return { stepped: true, crossing };
     }
@@ -451,9 +470,63 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         arrival = null;
         halted = null;
         levelSetError = null;
+        walker.setGoal(null);
         note({ type: 'mount', message: `[js runtime] level set ${set.set_id} mounted — ${set.rooms.length} room(s)` });
         flush();
     }
+
+    /**
+     * ⛓ J2 — a goal the host controller resolved, checked against the MOUNTED
+     * set before it is accepted: `{ok:true}` or `{ok:false, reason}`. The
+     * level must be a mounted room; a location must be one of its apitems; an
+     * exit must be one of its teleporters (by `.oel` cell).
+     */
+    function validateGoal(goal) {
+        if (!mounted) return { ok: false, reason: 'no level set is mounted' };
+        if (!goal || !['location', 'exit', 'tile'].includes(goal.kind)) {
+            return { ok: false, reason: `not a walk goal: ${JSON.stringify(goal)}` };
+        }
+        const record = mounted.records.get(goal.level);
+        if (!record) return { ok: false, reason: `the mounted set has no level ${goal.level}` };
+        if (goal.kind === 'location') {
+            if (!(mounted.apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag)) {
+                return { ok: false, reason: `level ${goal.level} has no apitem with tag ${goal.tag}` };
+            }
+            return { ok: true };
+        }
+        const [tx, ty] = Array.isArray(goal.tile) ? goal.tile : [];
+        if (!Number.isInteger(tx) || !Number.isInteger(ty)) return { ok: false, reason: `no tile in ${JSON.stringify(goal)}` };
+        if (goal.kind === 'exit' && !(record.entities ?? []).some((e) => e.type === 'teleporter'
+            && Math.floor(e.x / 16) === tx && Math.floor(e.y / 16) === ty)) {
+            return { ok: false, reason: `level ${goal.level} has no teleporter on tile (${tx}, ${ty})` };
+        }
+        return { ok: true };
+    }
+
+    const playback = {
+        walkTo(goal) {
+            const v = validateGoal(goal);
+            if (!v.ok) {
+                note({ type: 'walk-refused', message: `[js runtime] walkTo refused — ${v.reason}` });
+                return v;
+            }
+            walker.setGoal(goal);
+            return v;
+        },
+        play() { walker.play(); },
+        stop() { walker.stop(); },
+        step() { walker.step(); },
+        reset() { walker.reset(); },
+        get state() { return walker.state; },
+        get reason() { return walker.reason; },
+        get goal() { return walker.goal; },
+        get playing() { return walker.playing; },
+        get stats() { return walker.stats; },
+        describe: () => walker.describe(),
+        /** `fn(event)` on every walk state change; returns the unsubscribe. */
+        onWalk(fn) { walkListeners.add(fn); return () => walkListeners.delete(fn); },
+        STATES: WALK_STATES,
+    };
 
     const game = {
         wireCheck: () => 'ok:seedling-js',
@@ -485,6 +558,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
 
     return {
         game,
+        /** ⛓ J2 — the Playback Bot's verbs (the host controller calls these). */
+        playback,
         /** `__swfBridge.queueItems` — drained on the next tick, like `getItemQueue`. */
         queueItems(items) {
             if (items == null) return;

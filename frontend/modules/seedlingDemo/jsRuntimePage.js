@@ -24,9 +24,12 @@
  *     (`rectPalette.js`): tiles, object solids, teleporters, the AP items and
  *     the player's hitbox.
  *
- * `window.__seedlingJsRuntime` is the core itself — a TEST handle (the in-app
- * row reads the mounted rooms off it to plan its key presses), not part of the
- * contract the host speaks.
+ * `window.__seedlingJsRuntime` is the core itself. J1 used it as a TEST handle
+ * (the in-app row reads the mounted rooms off it); ⛓ since J2 its `playback`
+ * member is also the HOST's: `flashPanel/seedlingPlaybackController.js` (the
+ * `flash_seedling_gen` PlaybackController) hands the Playback Bot's goals to it
+ * synchronously, and the walk then runs inside this page's own tick — while a
+ * goal is being walked the keyboard is not read.
  */
 
 import { createJsRuntime } from './jsRuntimeCore.js';
@@ -147,7 +150,8 @@ export function mountJsRuntimePage(win = window) {
         r(playerBoxAt(state.x, state.y), PLAYER_COLOUR, 0.95);
         const deaths = runtime.deaths.length;
         status.textContent = `level ${level} · tick ${runtime.ticks}`
-            + `${deaths ? ` · deaths ${deaths}` : ''}${runtime.run?.inCeremony ? ' · (text — auto-advancing)' : ''}`;
+            + `${deaths ? ` · deaths ${deaths}` : ''}${runtime.run?.inCeremony ? ' · (text — auto-advancing)' : ''}`
+            + `${runtime.playback.goal ? ` · ${runtime.playback.describe()}` : ''}`;
     }
 
     life.on(canvas, 'mousedown', () => canvas.focus());
