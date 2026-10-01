@@ -28,27 +28,29 @@ const room = (seed, seedlingGen, size = { width: 10, height: 10 }) => generateGe
     region_id: 'req', exits: [{ exit_id: 'a' }], size, rng: createRng(seed), params: { seedlingGen } }).world;
 
 describe('⛓⛓ the `require` knob — absent is byte-identical, given is honoured', () => {
-    // ⚠ The two seed-4 rows build a post-sword room TWICE each. Since the biome
-    // defaults fold (swim U8) the post-sword default draw at seed 4 is `arena`,
-    // and the certification measures 51 s ALONE at the U5+U7+U8 merge head —
-    // the old 60 s bound timed out under the suite's load. 180 s is the
-    // measured cost ×3; the seed stays, because the next row shares it.
+    // ⚠ These two rows build a post-sword room TWICE each. They pinned seed 4
+    // until the biome defaults fold (swim U8) made its default draw `arena`:
+    // 51 s at the U5+U7+U8 merge, 170 s after U9/U10 (the forecast now carries
+    // the shield bump and the punch), and timeouts under the suite's load.
+    // Seed 6 (measured 2026-10-01 over seeds 1/6/11: plain 0.3 s, `require`
+    // 1.1 s, rerolls 0, the records differ) keeps every property the rows
+    // assert at a cost the 60 s bound covers fifty times over.
     it('the default is the empty string, and an absent knob adds NO `require` to `generation`', () => {
         expect(GEN_ROOM_DEFAULTS.require).toBe('');
-        const w = room(4, { biome: 'post-sword' });
+        const w = room(6, { biome: 'post-sword' });
         expect('require' in w.generation).toBe(false);
-        const empty = room(4, { biome: 'post-sword', require: '' });
+        const empty = room(6, { biome: 'post-sword', require: '' });
         expect(JSON.stringify(empty)).toBe(JSON.stringify(w));
-    }, 180000);
+    }, 60000);
 
     it('⛔ `require=hasSword` REACHES the generator — a different room, recorded, met first draw', () => {
-        const plain = room(4, { biome: 'post-sword' });
-        const req = room(4, { biome: 'post-sword', require: 'hasSword' });
+        const plain = room(6, { biome: 'post-sword' });
+        const req = room(6, { biome: 'post-sword', require: 'hasSword' });
         expect(req.generation.require).toBe('hasSword');
         expect(req.generation.rerolls).toBe(0);
         // ⛔ MUTANT (d): a knob recorded and never passed would leave these EQUAL.
         expect(JSON.stringify(req.record)).not.toBe(JSON.stringify(plain.record));
-    }, 180000);
+    }, 60000);
 
     /** ⛓ SEEDLING SWIM U6 — the seed moved 3 → 8: with the strike's dwell priced
      *  and `stepToward` scoring the diagonals, seed 3's FIRST draw meets
