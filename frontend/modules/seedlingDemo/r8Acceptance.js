@@ -965,6 +965,23 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'i-frame, a shove of 1); `Enemy.hitPlayer` is gated on the bob\'s own '
                 + '`hitsTimer`, so its second contact lands on t 50, not t 44.',
         }),
+        /**
+         * ⛓⛓⛓ R1-swim D2 — THE DARK STUFF'S KILL: `startDeath("Suit")` and
+         * `startDeath("Shield")` on a bob, through the one kill staging.
+         */
+        Object.freeze({
+            name: 'r1-dark-suit-kill', levels: Object.freeze([4]), bobs: 1, ticks: 135,
+            addedBy: 'R1-swim D2 (the suit\'s kill)',
+            why: 'three retaliated contacts (t 20 / 50 / 87, `hits_max` 4); the third KILLS '
+                + '`bob@64,64` (`startDeath("Suit")`), which leaves the world on t 123.',
+        }),
+        Object.freeze({
+            name: 'r1-dark-shield-kill', levels: Object.freeze([22]), bobs: 1, ticks: 520,
+            addedBy: 'R1-swim D2 (the dark shield\'s kill)',
+            why: 'six dark-shield hits on `bob@96,144`, 0.5 each; the sixth (t 476) KILLS it '
+                + '(`startDeath("Shield")`), and it leaves the world on t 512. The player is '
+                + 'never hit.',
+        }),
     ]),
 
     /**

@@ -77,8 +77,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ swim U9 + U10: 162 (+ the three shield-bump witnesses and the two dwell witnesses).
         // ⛓ swim U11: 166 (+ the two `u11-facing-*` and the two `u11-dark-shield-*` witnesses).
         // ⛓ swim U12: 168 (+ `u12-pull-carry` and `u12-pull-cross`).
-        // ⛓ swim R1: 169 (+ `r1-dark-suit-bob`).
-        expect(names.length).toBe(169);
+        // ⛓ swim R1: 169 (+ `r1-dark-suit-bob`), 171 (+ the two `r1-dark-*-kill`).
+        expect(names.length).toBe(171);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -122,7 +122,7 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(169);
+        expect(tally.swapped).toBe(171);
     }, 600_000);
 });
 

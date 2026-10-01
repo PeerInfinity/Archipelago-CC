@@ -280,7 +280,7 @@ function applyItem(inventory, name) {
  * `Bob`, `Puncher` and the rest of the chaser roster override no `hit`.
  *
  * @returns {{verdict: object, shoved: boolean}} — `verdict.killed` is the
- *   caller's to refuse: a shield kill's death staging is not transcribed.
+ *   caller's to stage (`stageChaserKill`, R1-swim D2).
  */
 function darkShieldHitChaser(c, p, frozen) {
     return darkHitChaser(c, p, { d: DARK_SHIELD_DAMAGE, f: SHIELD_FORCE, t: 'Shield', frozen });
@@ -296,22 +296,18 @@ function darkShieldHitChaser(c, p, frozen) {
  * holds off the body's NEXT contact, `Enemy.hitPlayer` being gated on it — and
  * latches `hitByDarkStuff`.
  *
- * ⛔ A KILL IS REFUSED BY NAME: `startDeath("Suit")`'s staging is D2's.
+ * A KILL (`hits >= hitsMax`, `startDeath("Suit")`) is the caller's to stage
+ * (`stageChaserKill`, R1-swim D2): `killed` says so.
  *
  * @returns the `playerHits` row's `retaliation` field
  */
 function darkSuitHitChaser(c, p, frozen) {
     const { verdict, shoved } = darkHitChaser(c, p,
         { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen });
-    if (verdict.killed) {
-        throw new Error(`levelRun: the dark suit's retaliation KILLS ${c.id} — `
-            + '`Enemy.hit(darkSuitForce, p, darkSuitDamage, "Suit")` reaches `hits >= hitsMax` '
-            + 'and calls `startDeath("Suit")`, whose death staging and kill ledger are not '
-            + 'transcribed for this arm.');
-    }
     return {
         id: c.id, landed: verdict.landed, refusedAt: verdict.refusedAt,
         hits: c.hits, hitsTimer: c.hitsTimer, shoved,
+        ...(verdict.killed ? { killed: true } : {}),
     };
 }
 
@@ -5680,20 +5676,7 @@ export function createLevelRun({
                          * walks them for the arrow path; a press kill joins the
                          * same staging rather than opening a second one.
                          */
-                        c.anim = createDieAnim(c.tag);
-                        // ⛓ U7-swim: `play("die")` REPLACES a running
-                        // "attack-*" anim, so a wind-up killed mid-swing
-                        // never throws its punch.
-                        c.attack = null;
-                        chaserKills.push({
-                            t: ticksCompleted + 1,
-                            level,
-                            id: c.id,
-                            by: 'press',
-                            weapon,
-                            hits: c.hits,
-                        });
-                        assertChaserRemovalIsDeclared(c, 'a press kill');
+                        stageChaserKill(c, 'press', 'a press kill', { weapon });
                         /**
                          * ⛔⛔⛔ THE LEDGER CONSEQUENCE, COMPUTED — AND FOR THIS
                          * CLASS IT IS NOT NIL BY CONSTRUCTION.
@@ -6396,10 +6379,17 @@ export function createLevelRun({
                         if (darkShieldInForecast && c.hitsTimer <= 0) {
                             const { verdict } = darkShieldHitChaser(c, p, false);
                             if (verdict.killed) {
-                                throw new Error(`chaserForecast: the DARK shield KILLS ${c.id} in a `
-                                    + 'preview — a shield kill\'s death staging is not transcribed, '
-                                    + 'and the live run refuses it by name (`shieldBumpNow`); a '
-                                    + 'forecast must not price what the run cannot walk.');
+                                /**
+                                 * ⛓ R1-swim D2: the preview kill's own shape (`hit`
+                                 * below). `enemyHit` set `dying`, so the body stops
+                                 * chasing; it leaves the danger set `removalTicks`
+                                 * after the kill. ⚠ `+ 1`: this bump runs INSIDE
+                                 * `step`, before `tickOffset += 1`, and a press of
+                                 * the same game tick is applied after `step`
+                                 * returns — both are `Player.update`'s.
+                                 */
+                                c.dyingAt = tickOffset + 1;
+                                c.removalTicks = removalTicksAfterHit(c.as3, deathTicks(c.tag));
                             }
                             continue;
                         }
@@ -6679,22 +6669,7 @@ export function createLevelRun({
             c.v.x += verdict.force * Math.cos(a);
             c.v.y += verdict.force * Math.sin(a);
         }
-        if (verdict.killed) {
-            // `Bob.startDeath` is `play("die")` and does NOT set `destroy` —
-            // `endAnim` does, `MOBILE_DEATH_FADE` ticks after that, and
-            // `FP.world.remove` after that. Three fenceposts, not one.
-            c.anim = createDieAnim(c.tag);
-            c.attack = null; // ⛓ U7-swim: `play("die")` replaces a wind-up.
-            chaserKills.push({
-                t: ticksCompleted + 1,
-                level,
-                id: c.id,
-                by: 'arrow',
-                arrow: arrow.id,
-                hits: c.hits,
-            });
-            assertChaserRemovalIsDeclared(c, 'an arrow kill');
-        }
+        if (verdict.killed) stageChaserKill(c, 'arrow', 'an arrow kill', { arrow: arrow.id });
         arrowBodyHits.push({
             t: ticksCompleted + 1,
             level,
@@ -8848,6 +8823,58 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ R1-swim D2 — ONE KILL STAGING FOR EVERY CHASER KILL: the arrow's,
+     * the press's, the dark shield's (`startDeath("Shield")`) and the dark
+     * suit's (`startDeath("Suit")`).
+     *
+     * `Bob.startDeath` / `Puncher.startDeath` is `play("die"); dieEffects(t)`
+     * and does NOT set `destroy` — `endAnim` does, at the anim's end
+     * (`stepChasersNow`'s graphic half), `MOBILE_DEATH_FADE` ticks after that
+     * `FP.world.remove`. Three fenceposts, not one. `play("die")` REPLACES a
+     * running "attack-*" anim, so a wind-up killed mid-swing never throws its
+     * punch (U7-swim). `dieEffects(t)` adds a `SlashHit` for "Sword"/"Spear"
+     * and an `Explosion` for "Wand" only — "Shield" and "Suit" add nothing.
+     * `enemyHit` has already set `dying` (and, for a `fade` class, `destroy`).
+     *
+     * @param {string} by    the ledger's `by` — 'arrow' | 'press' | 'shield' | 'suit'
+     * @param {string} cause the declared-removal assert's wording
+     * @param {object} extra the row's own fields, between `by` and `hits`
+     */
+    function stageChaserKill(c, by, cause, extra = {}) {
+        c.anim = createDieAnim(c.tag);
+        c.attack = null;
+        chaserKills.push({ t: ticksCompleted + 1, level, id: c.id, by, ...extra, hits: c.hits });
+        assertChaserRemovalIsDeclared(c, cause);
+    }
+
+    /**
+     * ⛓⛓⛓ R1-swim D1/D2 — the dark suit's retaliation into a stepped chaser,
+     * with its kill staged. `via` is the attacker's own call: a body contact
+     * (`Enemy.hitPlayer`) or a punch (`Puncher.attackPlayer`).
+     *
+     * ⛔ A PUNCH THAT THE SUIT KILLS IS REFUSED BY NAME. `attackPlayer` runs
+     * inside `Puncher.endAnim`'s attack arm, `attackPlayer(); setSprite("stand")`
+     * (`Puncher.as:137-141`): the retaliation's `startDeath` plays "die" and the
+     * very next statement replaces it with "stand-*", so the body sits at
+     * `hits >= hitsMax` with no die anim — never destroyed, still chasing and
+     * still in contact (its gates read "die", not `hits`). Not transcribed.
+     */
+    function retaliateIntoChaser(c, p, via) {
+        const row = darkSuitHitChaser(c, p, ceremony !== null);
+        if (row.killed) {
+            if (via === 'punch') {
+                throw new Error(`levelRun: the dark suit's retaliation KILLS ${c.id} through its `
+                    + `PUNCH at tick ${ticksCompleted + 1} in level ${level} — \`attackPlayer\` runs `
+                    + 'inside `Puncher.endAnim`, whose next statement `setSprite("stand")` replaces '
+                    + 'the "die" anim `startDeath` just played, leaving a body at `hitsMax` that is '
+                    + 'never destroyed. Not transcribed; refused by name (R1-swim D2).');
+            }
+            stageChaserKill(c, 'suit', 'a dark-suit kill');
+        }
+        return row;
+    }
+
+    /**
      * ⛔ THE LEDGER CONSEQUENCE OF A CHASER'S REMOVAL, COMPUTED — NOT SKIPPED.
      *
      * `Bob` IS in `totalEnemies()`, and its removal really does drop
@@ -9139,7 +9166,7 @@ export function createLevelRun({
             from: { x: c.x, y: c.y },
             // `p.hit(this, punchForce, …)` — the puncher is `e`, and its
             // `knockback` is the empty override, so the suit shoves nothing.
-            retaliate: (p) => darkSuitHitChaser(c, p, ceremony !== null),
+            retaliate: (p) => retaliateIntoChaser(c, p, 'punch'),
         });
         return pendingDeath ? 'player-died' : null;
     }
@@ -9455,7 +9482,7 @@ export function createLevelRun({
             force: PLAYER_DAMAGE.contactForce,
             damage: c.damage,
             from: { x: c.x, y: c.y },
-            retaliate: (p) => darkSuitHitChaser(c, p, ceremony !== null),
+            retaliate: (p) => retaliateIntoChaser(c, p, 'contact'),
         });
         return pendingDeath ? 'player-died' : null;
     }
@@ -11328,8 +11355,9 @@ export function createLevelRun({
         const rendered = shieldRenderState ?? state;
         const p = { x: state.x, y: state.y };
         const dark = inventory?.hasDarkShield === true;
-        // ⛓ U11-swim D3: a chaser is HIT (`darkShieldHitChaser`); what stays
-        // refused is a shield KILL and the spinner.
+        // ⛓ U11-swim D3: a chaser is HIT (`darkShieldHitChaser`); ⛓ R1-swim D2:
+        // a shield KILL is staged (`stageChaserKill`). What stays refused is the
+        // spinner.
         const refuseDark = (id, why) => {
             throw new Error(`levelRun: the DARK shield touched ${id} at tick ${ticksCompleted + 1} `
                 + `in level ${level} — ${why} Refused by name (U11-swim D3).`);
@@ -11342,15 +11370,13 @@ export function createLevelRun({
                 if (!shieldBumpTouches(state, slashing, chaserBoxAt(c.tag, c.x, c.y), rendered)) continue;
                 if (dark && c.hitsTimer <= 0) {
                     const { verdict, shoved } = darkShieldHitChaser(c, p, ceremony !== null);
-                    if (verdict.killed) {
-                        refuseDark(c.id, '`Enemy.hit(5, p, darkShieldDamage, "Shield")` KILLS it, and '
-                            + 'a shield kill\'s death staging (`startDeath("Shield")`, the kill '
-                            + 'ledger) is not transcribed.');
-                    }
                     row({ family: 'chaser', id: c.id, hit: true, landed: verdict.landed,
                         hits: c.hits, hitsTimer: c.hitsTimer, shoved,
                         ...(shoved ? { v: { x: c.v.x, y: c.v.y } } : {}),
+                        ...(verdict.killed ? { killed: true } : {}),
                         ...(verdict.landed ? {} : { why: verdict.refusedAt }) });
+                    // `startDeath("Shield")` — the staging every chaser kill shares.
+                    if (verdict.killed) stageChaserKill(c, 'shield', 'a dark-shield kill');
                     continue;
                 }
                 // `Enemy.knockback`'s own gate: `!destroy` and not playing "die".

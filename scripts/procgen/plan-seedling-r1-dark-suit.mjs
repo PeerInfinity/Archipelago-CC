@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * plan-seedling-r1-dark-suit — ⛓⛓⛓ R1-swim D1: THE DARK SUIT'S RETALIATION,
- * WITNESSED ON THE GAME.
+ * plan-seedling-r1-dark-suit — ⛓⛓⛓ R1-swim D1/D2: THE DARK SUIT'S RETALIATION
+ * AND THE DARK STUFF'S KILL, WITNESSED ON THE GAME.
  *
  * `Player.hit(e, f, p, d)` (`Player.as:1374-1400`), inside the three-term gate
  * and ABOVE `hits += d`:
@@ -18,6 +18,14 @@
  * ⛔ THE KEYS ARE A FIXED SCHEDULE and the tape is emitted BEFORE the model is
  * driven, so this script authored the witness while the model still refused
  * the dark suit by name (witness-first), and `--check` re-derives it after.
+ *
+ *   `r1-dark-suit-kill` (D2) — the same boot, `down` held for 135 ticks, the
+ *     seam's `hits_max` 4: the third retaliation (t 87) KILLS the bob,
+ *     `startDeath("Suit")`, and the corpse leaves the world 36 ticks later.
+ *
+ *   `r1-dark-shield-kill` (D2) — L22 (64,144), the shield and the dark shield,
+ *     `down` held: six dark-shield hits on `bob@96,144`, 0.5 each, the sixth
+ *     (t 476) KILLS it, `startDeath("Shield")`.
  *
  *   `r1-dark-suit-bob` — L4 (64,32), U9's shove boot three tiles north of
  *     `bob@64,64`, the DARK SUIT only through the seam and `noDamage` FALSE:
@@ -173,6 +181,81 @@ const fmt = (rows) => JSON.stringify(rows.map((h) => `${h.source}@${h.t}`
     check('⛓ without the suit the second contact is t 44 (the player\'s i-frame, not the bob\'s)',
         plain.refused === null && plain.run.playerHits.map((h) => h.t).join() === '20,44',
         fmt(hitsOf(plain.run, plain.refused)));
+    console.log(`## ${NAME}: ${perTick.length} ticks${refused ? ` — REFUSED: ${refused.slice(0, 200)}` : ''}`);
+}
+
+// ── r1-dark-suit-kill (D2) ───────────────────────────────────────────
+{
+    const NAME = 'r1-dark-suit-kill';
+    const BOOT = Object.freeze({ level: 4, x: 64, y: 32 });
+    /** `hits_max` 4 — the third contact would otherwise kill the PLAYER too. */
+    const SEAM = Object.freeze({ items: { hasDarkSuit: true }, hits_max: 4 });
+    const DOWN = new Set(['down']);
+    /**
+     * `down` for the WHOLE tape. With `r1-dark-suit-bob`'s keys (still from t 21)
+     * the third contact, on t 122, throws the player north into L4's
+     * `stairsdown` at (64,16) — the game swapped to L5 on t 125, so the kill's
+     * death staging happened in a world the stream had left. Held `down`, the
+     * player keeps walking back into the bob and stays in the room.
+     */
+    const perTick = Array.from({ length: 135 }, () => DOWN);
+    const description = '⛓⛓⛓ R1-swim D2 — THE DARK SUIT KILLS A BOB. L4 (64,32), three tiles north '
+        + 'of `bob@64,64`, the DARK SUIT through the seam with `hits_max` 4 (so the player outlives '
+        + 'three contacts) and `noDamage` FALSE; `down` held for 135 ticks. Each contact is '
+        + 'retaliated with `Enemy.hit(1, playerPoint, 1, "Suit")`: t 20 (`hits` 1), t 50 (2) and '
+        + 't 87 (3 = `hitsMax`), where `startDeath("Suit")` — `Bob.startDeath`, `play("die")` — '
+        + 'starts the death staging: the "die" anim\'s `endAnim` sets `destroy`, `Mobile.death` '
+        + 'fades it, and it leaves the world 36 ticks after the kill. The player still takes the '
+        + 'third hit (3 of 4) and no fourth contact comes. Fixed keys. Authored by '
+        + 'scripts/procgen/plan-seedling-r1-dark-suit.mjs.';
+    emit(NAME, tapeJson(NAME, BOOT, SEAM, perTick, description));
+    const { run, refused } = driveModel(BOOT, SEAM, perTick);
+    check('the model WALKS the suit kill (no refusal)', refused === null, refused ?? '');
+    const hits = hitsOf(run, refused);
+    check('⛓⛓⛓ three retaliated contacts, t 20 / 50 / 87, the bob\'s hits 1 / 2 / 3; the player 3 of 4',
+        hits.map((h) => `${h.t}:${h.retaliation?.hits}:${h.hits}`).join() === '20:1:1,50:2:2,87:3:3',
+        fmt(hits));
+    check('⛓⛓⛓ the third KILLS: `startDeath("Suit")` and the kill ledger, `by: \'suit\'` on t 87',
+        !refused && hits[2]?.retaliation?.killed === true
+        && JSON.stringify(run.chaserKills) === JSON.stringify([{ t: 87, level: 4, id: 'bob@64,64', by: 'suit', hits: 3 }]),
+        JSON.stringify(refused ? null : run.chaserKills));
+    check('⛓ the corpse leaves the world by the tape\'s end (36 ticks after the kill)',
+        !refused && run.chasers.length === 0, JSON.stringify(refused ? null : run.chasers));
+    console.log(`## ${NAME}: ${perTick.length} ticks${refused ? ` — REFUSED: ${refused.slice(0, 200)}` : ''}`);
+}
+
+// ── r1-dark-shield-kill (D2) ─────────────────────────────────────────
+{
+    const NAME = 'r1-dark-shield-kill';
+    /** L22, west of `bob@96,144`; L4's bob falls into its pit before a sixth bump. */
+    const BOOT = Object.freeze({ level: 22, x: 64, y: 144 });
+    const SEAM = Object.freeze({ items: { hasShield: true, hasDarkShield: true } });
+    const DOWN = new Set(['down']);
+    const perTick = Array.from({ length: 520 }, () => DOWN);
+    const description = '⛓⛓⛓ R1-swim D2 — THE DARK SHIELD KILLS A BOB. L22 (64,144), west of '
+        + '`bob@96,144`, the shield and the DARK shield through the seam and `noDamage` FALSE; '
+        + '`down` held for 520 ticks against the south trees. `shieldBump` with `hasDarkShield` '
+        + 'calls `Enemy.hit(5, playerPoint, darkShieldDamage 0.5, "Shield")` on a body whose own '
+        + '`hitsTimer <= 0`: the bob takes 0.5 on t 120, 191, 260, 332 and 404, and the sixth '
+        + '(t 476) reaches `hitsMax` 3 and calls `startDeath("Shield")` — `Bob.startDeath`, '
+        + '`play("die")` — whose "die" anim\'s `endAnim` sets `destroy`; `Mobile.death` fades it '
+        + 'and it leaves the world 36 ticks after the kill. The player is never hit. Fixed keys. '
+        + 'Authored by scripts/procgen/plan-seedling-r1-dark-suit.mjs.';
+    emit(NAME, tapeJson(NAME, BOOT, SEAM, perTick, description));
+    const { run, refused } = driveModel(BOOT, SEAM, perTick);
+    check('the model WALKS the shield kill (no refusal)', refused === null, refused ?? '');
+    const rows = refused ? [] : run.ledger('shieldBumps').filter((r) => r.hit);
+    check('⛓⛓⛓ six dark-shield hits, t 120 / 191 / 260 / 332 / 404 / 476, 0.5 each; the sixth KILLS',
+        rows.map((r) => `${r.t}:${r.hits}`).join() === '120:0.5,191:1,260:1.5,332:2,404:2.5,476:3'
+        && rows[5]?.killed === true,
+        JSON.stringify(rows.map((r) => `${r.t}:${r.hits}${r.killed ? 'K' : ''}`)));
+    check('⛓⛓⛓ the kill ledger: `startDeath("Shield")`, `by: \'shield\'` on t 476',
+        !refused && JSON.stringify(run.chaserKills)
+            === JSON.stringify([{ t: 476, level: 22, id: 'bob@96,144', by: 'shield', hits: 3 }]),
+        JSON.stringify(refused ? null : run.chaserKills));
+    check('⛓ the player is never hit, and the corpse is gone by the tape\'s end',
+        !refused && run.playerHits.length === 0 && run.chasers.length === 0,
+        JSON.stringify(refused ? null : [run.playerHits.length, run.chasers]));
     console.log(`## ${NAME}: ${perTick.length} ticks${refused ? ` — REFUSED: ${refused.slice(0, 200)}` : ''}`);
 }
 
