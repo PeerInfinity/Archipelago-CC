@@ -403,6 +403,30 @@ export function chaserDanger(run, box, horizon, bodies = null, { perTick = false
          * refusing.
          */
         if (perTick && plannerContactFree(c, 'on').contactFree) continue;
+        /**
+         * ⛓⛓⛓ SEEDLING SWIM U10, D3 — **A DESTROYED BODY IS A CORPSE, NOT A
+         * THREAT** (U7 § D4's wall 3, measured here rather than as the brief
+         * guessed it).
+         *
+         * Step 24's decision gate refused at (377.34,251.98) against
+         * `puncher@416,256` "inside leash 80 (d=7.9) … pad 8" — and the body
+         * it priced was DEAD: killed by press at t 1781, `dying` and `destroy`
+         * both set, its fade running (`alpha` 1). The kill arm's dwell ends
+         * when the body leaves `strikeBodies` (which drops `destroy`), but
+         * `run.chasers` keeps it through the fade, and this arm priced it
+         * with the pad at the walk's very next gate.
+         *
+         * ⛔ THE GAME'S GATE, CALLED BY NAME: `Enemy.update` runs
+         * `hitUpdate(); hitPlayer();` only `if (!destroy)`, and `play("die")`
+         * replaced any wind-up, so a destroyed body neither touches nor
+         * punches — `levelRun`'s stepper bills nothing for one ("A DESTROYED
+         * BODY STOPS DEAD"). Its witness is `u7-puncher-kill`: the corpse
+         * stands at the player's side through the whole fade and the player's
+         * `hits` stays 0 in the game. ⚠ `dying` alone is NOT skipped — a body
+         * whose die animation is still playing has not reached that gate.
+         * (Forecast bodies never carry one: the forecast drops `destroy`.)
+         */
+        if (c.destroy) continue;
         const row = ENEMY_CLASSES[c.tag];
         const bound = stepBoundFor(c.tag);
         if (bound === null) {

@@ -1616,3 +1616,6 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,ma
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,
+frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|0,rule,bound,,U10 forecast punch: hitsTimer > 0 i-frame gate (attackPlayer)
+frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10 forecast punch: the hitUpdate decrement this tick applies before the graphic half
+frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
