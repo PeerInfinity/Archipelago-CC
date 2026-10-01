@@ -113,6 +113,25 @@ export function deriveSphereLogPath(rulesetPath) {
 }
 
 /**
+ * ⛓ **THE `.jsonl` STAYS AUTHORITATIVE; AN EMBEDDED `sphere_log` IS THE
+ * FALLBACK.** `attemptAutoLoad` fetches the derived `_sphere_log.jsonl` first,
+ * exactly as before, and reads the loaded ruleset's embedded `sphere_log` only
+ * when that fetch fails. Measured 2026-10-01 over the committed presets: 178
+ * ship only a `.jsonl`, 35 only embed (every `procgen_topdown`, `procgen_maze`,
+ * the `seedling_*` and omsi/jta test presets), and NONE do both — so the order
+ * decides nothing today, and a `.jsonl` preset loads byte-for-byte as before.
+ * (The app's sphereState loads embedded-first; the two agree while no preset
+ * carries both.) Before this, an embedding preset's "Load Suggested Log" ended
+ * at the `.jsonl` 404.
+ *
+ * @param {string} rulesetPath
+ * @returns {string} the label an embedded log is loaded under (its "path")
+ */
+export function embeddedSphereLogLabel(rulesetPath) {
+  return `${rulesetPath}#sphere_log`;
+}
+
+/**
  * Handles loading and parsing of spoiler log files from various sources.
  *
  * Supports both auto-loading from derived URLs and manual file selection.
@@ -157,9 +176,11 @@ export class FileLoader {
    * @param {string} currentLogPath - Currently loaded log path (to prevent duplicates)
    * @param {Array|null} currentLogData - Currently loaded log data (to verify data exists)
    * @param {string|null} isLoadingLogPath - Path currently being loaded (to prevent concurrent loads)
+   * @param {Array|null} [embeddedLog] - the loaded rules.json's top-level `sphere_log`, if it has one
+   *   (see {@link embeddedSphereLogLabel} for when it is read)
    * @returns {Promise<Object>} Result object with success, logData, logPath, and optional error properties
    */
-  async attemptAutoLoad(rulesetPath, currentLogPath, currentLogData, isLoadingLogPath) {
+  async attemptAutoLoad(rulesetPath, currentLogPath, currentLogData, isLoadingLogPath, embeddedLog = null) {
     logger.debug('attemptAutoLoad called', { rulesetPath, currentLogPath, hasData: !!(currentLogData && currentLogData.length), isLoadingLogPath });
 
     // Derive log path from ruleset path
@@ -193,7 +214,9 @@ export class FileLoader {
 
     // Check 2: Is this exact log path already loaded and processed successfully?
     // Must verify BOTH path match AND that data exists and has content
-    if (currentLogPath === logPath && currentLogData && currentLogData.length > 0) {
+    const embeddedLabel = embeddedSphereLogLabel(rulesetPath);
+    if ((currentLogPath === logPath || currentLogPath === embeddedLabel)
+        && currentLogData && currentLogData.length > 0) {
       logger.info(
         `Spoiler log for ${logPath} is already loaded and processed. No need to reload.`
       );
@@ -211,6 +234,9 @@ export class FileLoader {
 
       const response = await fetch(logPath);
       if (!response.ok) {
+        const embedded = this._embeddedResult(embeddedLog, rulesetPath,
+          `${logPath}: ${response.status} ${response.statusText}`);
+        if (embedded) return embedded;
         logger.warn(
           `Failed to fetch spoiler log from ${logPath}: ${response.status} ${response.statusText}`
         );
@@ -245,6 +271,8 @@ export class FileLoader {
         logPath
       };
     } catch (error) {
+      const embedded = this._embeddedResult(embeddedLog, rulesetPath, `${logPath}: ${error.message}`);
+      if (embedded) return embedded;
       logger.warn(
         `Failed to auto-load or process spoiler log from ${logPath}. Error: ${error.message}`
       );
@@ -255,6 +283,36 @@ export class FileLoader {
         error: `Auto-load failed: ${error.message}`
       };
     }
+  }
+
+  /**
+   * The EMBEDDED fallback: a rules.json may carry its sphere log as a
+   * top-level `sphere_log` array (procgen output — `buildRulesJson` embeds
+   * it, and no `_sphere_log.jsonl` is written beside it). Its entries are
+   * the `.jsonl`'s line records, one per element.
+   *
+   * @param {Array|null} embeddedLog the rules.json's `sphere_log`
+   * @param {string} rulesetPath for the label
+   * @param {string} fileMiss why the `.jsonl` was not used (logged)
+   * @returns {Object|null} an attemptAutoLoad result, or null when there is
+   *   no non-empty embedded log (the caller then reports the file miss)
+   * @private
+   */
+  _embeddedResult(embeddedLog, rulesetPath, fileMiss) {
+    if (!Array.isArray(embeddedLog) || embeddedLog.length === 0) return null;
+    const rawContent = embeddedLog.map((e) => JSON.stringify(e)).join('\n');
+    const parsedResult = this._parseLogText(rawContent, embeddedSphereLogLabel(rulesetPath));
+    if (!parsedResult.success) return null;
+    logger.info(
+      `No sphere-log file (${fileMiss}); using the ruleset's embedded sphere_log (${parsedResult.logData.length} events).`
+    );
+    return {
+      success: true,
+      logData: parsedResult.logData,
+      rawContent,
+      logPath: embeddedSphereLogLabel(rulesetPath),
+      embedded: true
+    };
   }
 
   /**
