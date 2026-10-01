@@ -11282,6 +11282,7 @@ export const INSTRUMENTS = frz({
             "category": "sweep",
             "citedBy": [
                 "docs/json/developer/procgen/architecture.md",
+                "docs/json/developer/procgen/flash.md",
                 "docs/json/developer/procgen/maze.md",
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],

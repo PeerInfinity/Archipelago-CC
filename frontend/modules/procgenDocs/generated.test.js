@@ -316,6 +316,24 @@ describe('catalogue names every template, element head and skeleton kind', () =>
         expect(CATALOGUE.biomes.find((b) => b.id === 'maze-v1').defaultElements).toBe('none');
     });
 
+    /** ⛓ seedling swim U8 (⚖ Q13) — every Seedling biome is a catalogue row, and each
+     *  head's DEFAULT-IN column is read off `defaultElementsFor`, pinned BY NAME. */
+    it('⛓ the DEFAULT-IN column: which biome defaults draw each head (the ⚖ Q13 fold)', () => {
+        expect(CATALOGUE.biomes.map((b) => b.id))
+            .toEqual(['pre-sword', 'post-sword', 'post-shield', 'post-swim', 'post-feather', 'maze-v1']);
+        const defaultIn = (head) => CATALOGUE.elements.find((e) => e.head === head).defaultIn;
+        const ALL = ['pre-sword', 'post-sword', 'post-shield', 'post-swim', 'post-feather'];
+        const SWORD = ALL.slice(1);
+        for (const head of ['guard', 'blockpocket', 'chamber']) expect(defaultIn(head), head).toEqual(ALL);
+        for (const head of ['killgate', 'arena', 'rockgate', 'shortcut', 'roam', 'corridorbody']) {
+            expect(defaultIn(head), head).toEqual(SWORD);
+        }
+        expect(defaultIn('shieldgate')).toEqual(['post-shield', 'post-swim', 'post-feather']);
+        expect(defaultIn('watergate')).toEqual(['post-swim', 'post-feather']);
+        expect(defaultIn('watershortcut')).toEqual(['post-swim', 'post-feather']);
+        expect(defaultIn('waterfallgate')).toEqual(['post-feather']);
+    });
+
     it('⛔ KILL_LOCK_TEMPLATES is EMPTY, and the table SAYS SO rather than '
         + 'omitting the row', () => {
         expect(CATALOGUE.killLockTemplates.count).toBe(0);

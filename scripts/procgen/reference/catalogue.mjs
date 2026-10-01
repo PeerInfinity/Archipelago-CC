@@ -89,6 +89,25 @@ export function buildCatalogue() {
             ),
             skeletonKinds: skeletonRows('seedling'),
         },
+        /**
+         * ⛓ SEEDLING SWIM U8 (⚖ Q13) — the three later boots, in the census
+         * default since the fold. The roster and the exclusions are post-sword's
+         * BY REFERENCE (`procgenPalette`); what differs is the boot, and so the
+         * default element list.
+         */
+        ...['post-shield', 'post-swim', 'post-feather'].map((id) => {
+            const palette = M.watchGenerate.GENERATE_BIOMES[id];
+            return {
+                id,
+                substrate: 'seedling',
+                page: '/frontend/modules/seedlingDemo/watch.html',
+                items: { ...palette.items },
+                templates: palette.templates.map(templateRow),
+                excluded: [...EXCLUDED_TEMPLATES, ...POST_SWORD_EXCLUDED_TEMPLATES].map(excludedRow),
+                defaultElements: M.elementSpec.formatElementSpec(M.seedling.defaultElementsFor(palette.items)),
+                skeletonKinds: skeletonRows('seedling'),
+            };
+        }),
         {
             id: 'maze-v1',
             substrate: 'maze',
@@ -101,12 +120,20 @@ export function buildCatalogue() {
         },
     ];
 
+    /**
+     * ⛓ U8 — the DEFAULT-IN column: the Seedling biomes whose default list
+     * (`defaultElementsFor`) draws this head, read off the code per biome rather
+     * than typed, so a fold that moves a head moves this column with it.
+     */
+    const defaultHeads = Object.fromEntries(Object.entries(M.watchGenerate.GENERATE_BIOMES)
+        .map(([id, palette]) => [id, M.seedling.defaultElementsFor(palette.items).any.map((m) => m.name)]));
     const elements = Object.entries(M.elementSpec.ELEMENT_TABLE).map(([head, entry]) => ({
         head,
         why: entry.why,
         needs: [...(entry.needs ?? [])],
         module: entry.element?.name ?? null,
         params: M.elementSpec.paramSchemaFor(head).map(paramRow),
+        defaultIn: Object.keys(defaultHeads).filter((id) => defaultHeads[id].includes(head)),
     }));
 
     return {

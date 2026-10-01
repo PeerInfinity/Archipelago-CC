@@ -11146,6 +11146,87 @@ empty override, so `CHASERS[*].knocksBack` gates all three knockback sites.
 SOLVED 141 (certified, Bob's own number). The chamber arm went SOLVED 155 →
 REFUSED: "the combat ladder is EXHAUSTED" at `danger puncher@64,64`, because
 the live body now walks onto the chamber route.
+### Seedling substrate U8-swim — the biome defaults fold (2026-10-01)
+
+⚖ Q13 (user, 2026-10-01): the element heads shipped opt-in since arc 5 join
+the biome defaults, in one bundled re-record. The report is
+`CC/docs/cloud-reports/seedling-swim-u8.md`.
+
+**D1 — the fold.** `defaultElementsFor(items)` appends, by the item that
+admits them (`procgenSeedling.BIOME_DEFAULT_FOLD`, asserted at load against
+each head's `needs`): sword `arena;w=2;h=3`, `rockgate`, `shortcut`, `roam`,
+`corridorbody`; shield `shieldgate`; conch `watergate`, `watershortcut`;
+feather `waterfallgate`. They go after the four heads every list starts with,
+so pre-sword is unchanged.
+- **arena is named, roam stays bare.** Each was measured post-sword over F1b's
+  168 cells. `arena` bare placed 25 and certified 12; `arena;w=2;h=3` placed 47
+  and certified 25. `roam;w=2;h=3` placed 11 but certified only 2, against
+  bare `roam`'s 10 and 10 (U4b).
+- **roam joins with the sword**, although it declares no `needs`. Pre-sword
+  the solver can only dodge it, and the pre-sword list is the one the shipped
+  generated rooms draw from.
+- **The draw is uniform** (a draw is not a yield). `corridorbody`, `shortcut`
+  and `watershortcut` are drawn but never `require` heads (⚖ Q29).
+- `watchGenerate.DEFAULT_CENSUS_BIOMES` names all five biomes.
+- **Mutant (a):** with the fold disabled, exactly the two pin rows go red, by
+  name.
+
+**The yield** (`sweep-yield-table.mjs --substrate=seedling`, no `--elements=`,
+7 kinds × 10x10/14x14 × seeds 1–12, placed/certified of 168):
+
+| biome | before | after |
+|---|---|---|
+| pre-sword | 80 / 70 | 80 / 70 (byte-identical, timings stripped) |
+| post-sword | 95 / 64 | 106 / 85 (1 harness-failed) |
+| post-shield | 95 / 64 | 104 / 82 (1 TIMEOUT) |
+| post-swim | 95 / 64 | 54 / 50 (1 TIMEOUT) |
+| post-feather | 95 / 64 | 66 / 58 |
+
+- **The draw is a function of the seed alone.** All 14 kind×size cells of one
+  seed draw the same head, so each biome's column is 12 draws. Post-swim landed
+  three seeds on `arena`, one on `roam` and none on `watergate`.
+- `roam` placed 0 of 14 in every sword biome. `waterfallgate` placed 0 of 14
+  in post-feather (R-m).
+- **The harness-failed cell** is `winding` 10x10 s7 (`corridorbody`). It is
+  `levelRun`'s line-of-sight throw (*"the swing … reaches spinner@…'s rect but
+  `collideLine` finds tile:Stone"*), a raw `Error` out of the solver's kill
+  path, so the sweep cannot parse a row. The same throw hits
+  `arena;w=2;h=3` at `branchy` 10x10 s10 and `winding` 14x14 s6. The fold
+  makes it reachable from a DEFAULT draw. It is the solver's (U5–U7's
+  region), not this slice's.
+
+**D2 — the re-record, measured.**
+- **No shipped preset moved.** `seedling_generated_room`, `_leaf` and `_host`
+  carry `biome: pre-sword` with `elements: ''`, and `_swim` names `watergate`.
+  So the fold re-records no shipped world. The nine preset `--check`s and the
+  14 shipped md5s are byte-identical, the sidecar census reads ALL PASS 1422,
+  and nothing enrolled.
+- **Mutant (b):** `roam` folded into pre-sword too. It reds
+  `generated --check` by name. Leaf and host stay OK, because their pick lands
+  on the same head from 4 members as from 3.
+- **Identity rows moved:** acceptance, pairs c3/c6/c4, AREA, killgate
+  s2/s5/s9 and level post-sword s1.
+- **Unmoved:** maze, ENEMY, guard, level pre-sword s1, the generated set, the
+  six `--check`s and the reference.
+- The acceptance batch had scan orders (`PHASES`) for two biomes, so five
+  threw. The three later boots now walk the naturals.
+- **The census wall clock** on this box: about 115 s before and 640 s after
+  for the movers. The batch went 17.7 → 83.3 s, c3 14.3 → 183.8 s, c6 23.3 →
+  219.2 s and c4 52.4 → 147.3 s.
+- **Re-picked subjects** (the post-sword pick moved them), each by its own
+  rule:
+  - `procgenPostSword` seed 38 → 13, and `seedlingGenCapacity` seed 29 → 31
+    with `killgate` named;
+  - `check-seedling-editor-generate` CARRIER 29 → 13, 5R 3 → 9, and 10b gets
+    its own subject, seed 5;
+  - `check-seedling-wasm-ship` 38 → 25 (agrees per tick, 382 observations);
+  - the density-block demo 2 → 6.
+
+**D3 — records.** The generated reference gains the three later biomes and a
+per-head **default-in** column (`catalogue.elements[].defaultIn`, read off
+`defaultElementsFor`). `flash.md` § *The element defaults by biome* has the
+table, `seedling-bot.md` the paragraph, and `architecture.md` and the
+glossary the lists.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 

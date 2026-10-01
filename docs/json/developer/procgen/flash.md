@@ -197,8 +197,36 @@ The entry's `zoneConfigFromSlot` and `zoneOfPayload` let the APWorld hub's `repl
 
 - **`generationCost: 'light'`**, declared explicitly. A room costs 0.1–1.5 s at 10×10, and the committed generated presets build in 0.3–0.7 s, so its presets stay in CI's slow battery.
 - **`locationCapacity`: tiles, with a ceiling** (`seedlingDemo/seedlingGenCapacity.js`). The floor bound is the room's interior less the start and the doors, which growth lifts. The ceiling is **30 locations**, the game's 30 persistence tags, one per location's pickup. No size adds tags. Location 0 takes the goal's own tag, so the ceiling is 30, not 29. The Initialise preview refuses a slot past it by name before building, for example *"flash_seedling_gen: at most 30 locations per room (the game's 30 persistence tags) — 'Act 2' lists 52"*, and the engine refuses such a room before its core runs.
-- **The ceiling is the certain bound, not the worst case.** A room's own elements spend tags too: a guard 3, a kill, rock or shield gate 1. The biome-default element list places a guard in about 1 pre-sword draw in 60. A draw that leaves too few tags is re-rolled like one short of cells, so every draw seed seats 30 at the defaults. The slow census, drawn seeds 1–60 in pre-sword and post-sword, seats 30 at every seed and refuses 31 at every seed.
+- **The ceiling is the certain bound, not the worst case.** A room's own elements spend tags too: a guard 3, a kill, rock or shield gate 1. The biome-default element list places a guard in about 1 pre-sword draw in 60. A draw that leaves too few tags is re-rolled like one short of cells, so every draw seed seats 30 at the defaults. The slow census, drawn seeds 1–60 in pre-sword and post-sword, seats 30 at every seed and refuses 31 at every seed (re-run green after swim U8's fold, which put the tag-spending `arena`, `rockgate` and `corridorbody` in the post-sword list).
 - **`procgenParamsFromPayload({})` answers `{}`**: a payload without `generation` is not a generated room, so no default is invented. A built payload reads every knob back. The APWorld S2 read-back row names its knob from the empty-payload answer, so it skips this entry. Making the entry eligible was measured and not done: with the biome moved to `post-sword` by the row's control, an Initialise of the row's Adventure document is refused by the generator (`Overworld` at 8×6).
+
+### The element defaults by biome (swim U8, ⚖ Q13)
+
+A room whose `elements` knob is empty (`''`, the default) draws its element from its biome's default list, `procgenSeedling.defaultElementsFor(items)`. Since swim U8 that list holds every head the biome's boot lets certify. The heads shipped opt-in after arc 5 joined it by the item that admits them (`BIOME_DEFAULT_FOLD`):
+
+| Biome | Default element list |
+|---|---|
+| `pre-sword` (the knob's default) | `guard;len=2\|3\|4+blockpocket+chamber;w=2;h=3` (unchanged) |
+| `post-sword` | the above with `killgate` second, then `+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody` |
+| `post-shield` | post-sword's `+shieldgate` |
+| `post-swim` | post-shield's `+watergate+watershortcut` |
+| `post-feather` | post-swim's `+waterfallgate` (all 13 heads) |
+
+- **One draw, uniform, decided by the seed.** The list is a choice, not a conjunction: one `rng.pick`, equal over its members. The pick is made before the room is built, so every kind and size at one seed draws the same head. A head that cannot place in the room is a graded drop, and the level ships element-less.
+- **Named parameters.** `arena` carries the chamber's `w=2;h=3` (post-sword: 47 placed, 25 certified, against 25 and 12 bare). `roam` stays bare (its `w=2;h=3` measured 11 placed, 2 certified).
+- **Draw, not `require`.** `corridorbody`, `shortcut` and `watershortcut` can be drawn but never satisfy a `require` directive (⚖ Q29; their grade is SHORTENS).
+- **No committed generated room moved.** `seedling_generated_room`, `_leaf` and `_host` build on the default biome, `pre-sword`, whose list did not change, and `seedling_generated_swim` names `watergate`. All four are byte-identical.
+- **The yield, measured** (`sweep-yield-table.mjs --substrate=seedling` with no `--elements=`, F1b's 7 kinds × 10x10/14x14 × seeds 1–12, placed/certified of 168):
+
+  | Biome | Before the fold | After |
+  |---|---|---|
+  | `pre-sword` | 80 / 70 | 80 / 70 (byte-identical) |
+  | `post-sword` | 95 / 64 | 106 / 85 |
+  | `post-shield` | 95 / 64 | 104 / 82 |
+  | `post-swim` | 95 / 64 | 54 / 50 |
+  | `post-feather` | 95 / 64 | 66 / 58 |
+
+  The 12 seeds are 12 draws per biome, so these numbers depend on which heads the seeds landed on. In `post-swim`, three seeds drew `arena`, one drew `roam` and none drew `watergate`. Read them as one 12-draw sample, not as a rate. The per-head yields are in the swim reports. `roam` placed 0 of 14 cells in every sword biome here (10 of 168 on its own sweep). `waterfallgate` placed 0 of 14 in `post-feather`: the default skeleton seats no fall (open, R-m).
 
 ### The payload
 

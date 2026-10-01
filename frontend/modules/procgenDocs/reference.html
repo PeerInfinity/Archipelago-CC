@@ -433,8 +433,10 @@ for (const e of CATALOGUE.elements) {
     row(elSec.box, {
         anchor: `element-${slug(e.head)}`,
         title: `<code>${esc(e.head)}</code>`,
-        sub: e.needs.length ? `needs ${e.needs.map((n) => `<code>${esc(n)}</code>`).join(', ')}`
-            : 'needs nothing',
+        sub: (e.needs.length ? `needs ${e.needs.map((n) => `<code>${esc(n)}</code>`).join(', ')}`
+            : 'needs nothing')
+            + ` · default in ${e.defaultIn.length
+                ? e.defaultIn.map((b) => `<code>${esc(b)}</code>`).join(', ') : 'no biome'}`,
         body: `${label('what it is')}${prose(e.why)}`
             + (e.module ? `${label('module')}<p><code>${esc(e.module)}</code></p>` : '')
             + label('parameters')
@@ -447,7 +449,7 @@ for (const e of CATALOGUE.elements) {
                 : '<p class="note">⛔ NONE, and that is the finding rather than an omission: '
                     + 'an on-connector element GROWS to the room it stands in, so the '
                     + 'parameters its pass-2 predecessors carried have nothing left to say.</p>'),
-        hay: `${e.head} ${e.needs.join(' ')} ${e.params.map((p) => p.key).join(' ')}`,
+        hay: `${e.head} ${e.needs.join(' ')} ${e.defaultIn.join(' ')} ${e.params.map((p) => p.key).join(' ')}`,
     });
 }
 
