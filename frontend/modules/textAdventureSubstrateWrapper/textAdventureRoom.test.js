@@ -419,7 +419,7 @@ describe('through the engine — top-down, the rebuild path, the spiral', () => 
         substrateMix: { maze: 1, text_adventure: 1 }, sphereLog,
     });
     const doc = buildRulesJson(built.grid, {
-        startCell: built.startCell, seed: SEED, sphereLog,
+        startCell: built.startCell, seed: SEED,
         assumeBidirectional: source.assume_bidirectional_exits !== false,
         procgenMetadata: { driver: 'top-down-sphere', sphere_tree: built.sphereTree, sphere_plan: built.spherePlan },
     });
@@ -463,7 +463,7 @@ describe('through the engine — top-down, the rebuild path, the spiral', () => 
         expect(root.substrate).toBe('text_adventure');
         const env = rebuildEnvelopeFromRulesJson(doc);
         const rebuilt = buildRulesJson(env.grow.grid, {
-            startCell: env.startCell, seed: SEED, sphereLog,
+            startCell: env.startCell, seed: SEED,
             assumeBidirectional: source.assume_bidirectional_exits !== false,
         });
         for (const r of taRegions) {
