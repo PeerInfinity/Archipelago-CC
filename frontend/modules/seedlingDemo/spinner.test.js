@@ -285,6 +285,23 @@ describe('`Enemy.hit` — the bill a modelled POSITION creates', () => {
         expect(twice).toEqual(once);
     });
 
+    it('⛓ R1-swim D3: a "Shield"/"Suit" hit LATCHES `hitByDarkStuff`, and the next damaging hit passes its i-frame', () => {
+        const from = { x: 0, y: 0 };
+        const dark = hitSpinner(free({ x: 40, y: 0 }), { force: 5, from, damage: 0.5, t: 'Shield' });
+        expect(dark.hits).toBe(0.5);
+        expect(dark.hitsTimer).toBe(SPINNER.hitsTimerMax);
+        expect(dark.hitByDarkStuff).toBe(true);
+        // a sword inside that i-frame lands, re-arms it and clears the latch
+        const sword = hitSpinner({ ...dark, hitsTimer: 29 }, { force: 4, from, damage: 1, t: 'Sword' });
+        expect(sword.hits).toBe(1.5);
+        expect(sword.hitsTimer).toBe(SPINNER.hitsTimerMax);
+        expect(sword.hitByDarkStuff).toBe(false);
+        // …and the one after that is refused by the plain i-frame again
+        expect(hitSpinner({ ...sword, hitsTimer: 29 }, { force: 4, from, damage: 1, t: 'Sword' })).toEqual({ ...sword, hitsTimer: 29 });
+        // A spinner the dark stuff never touched keeps its exact shape.
+        expect('hitByDarkStuff' in hitSpinner(free(), { force: 6, from, t: 'Pulse' })).toBe(false);
+    });
+
     it('three hits DESTROY it — and `death()` then fades it out', () => {
         let s = free();
         for (let i = 0; i < SPINNER.hitsMax; i += 1) {

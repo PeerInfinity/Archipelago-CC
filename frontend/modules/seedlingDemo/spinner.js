@@ -475,24 +475,35 @@ export function stepSpinner(s, ctx = {}) {
  * ⛓ THE GATES, IN SOURCE ORDER: `hitsTimer <= 0 || hitByDarkStuff`, then
  * `!Game.freezeObjects`, then `canHit`, then `onlyHitBy`, then the fire
  * exemption. A `Spinner` overrides none of them — `maxForce` is -1,
- * `onlyHitBy` is "", `hitByFire` is false — so the only live ones are the
- * timer and the freeze.
+ * `onlyHitBy` is "", `hitByFire` is false — so the live ones are the timer
+ * (with its latch) and the freeze.
+ *
+ * ⛓⛓⛓ R1-swim D3 — THE LATCH. `hitByDarkStuff = (t == "Shield" || t ==
+ * "Suit")` on every DAMAGING hit, and it sits in the gate as an OR against
+ * the i-frame: after a dark-shield or dark-suit hit the NEXT damaging hit
+ * lands through the i-frame that one opened, and clears the latch unless it
+ * is dark too. A fire knockback (no damage) leaves it alone. The field is
+ * written only once it has been true, so a spinner the dark stuff never
+ * touched keeps its exact shape.
  *
  * @param {object} s
  * @param {object} opts  `{force, from: {x, y}, damage, t, frozen}`
  */
 export function hitSpinner(s, { force = 0, from = null, damage = 1, t = '', frozen = false } = {}) {
     if (s.removed || s.destroy) return s;
-    // `hitsTimer <= 0 || hitByDarkStuff` — a Spinner is never hit by dark
-    // stuff on this arc (no Shield, no Suit), so the timer is the gate.
-    if (s.hitsTimer > 0) return s;
+    // `hitsTimer <= 0 || hitByDarkStuff`.
+    if (s.hitsTimer > 0 && s.hitByDarkStuff !== true) return s;
     if (frozen) return s;
     // `hitByFire` is false on `Enemy` and the Spinner does not override it,
     // so a FIRE press knocks it back and does NOT damage it.
     if (t === 'Fire') return knockbackSpinner(s, force, from);
     if (s.hits >= SPINNER.hitsMax) return s;
     const hits = s.hits + damage;
-    const next = { ...s, hits, hitsTimer: SPINNER.hitsTimerMax };
+    const dark = t === 'Shield' || t === 'Suit';
+    const next = {
+        ...s, hits, hitsTimer: SPINNER.hitsTimerMax,
+        ...(dark || s.hitByDarkStuff !== undefined ? { hitByDarkStuff: dark } : {}),
+    };
     if (hits >= SPINNER.hitsMax) {
         // `startDeath` -> `destroy = true`. `death()` then fades it out over
         // `SPINNER.deathTicks` and `removed()` writes the tag.

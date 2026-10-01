@@ -5,8 +5,11 @@
  * witnesses (`plan-seedling-u9-shield-bump.mjs`).
  *
  * U7's `probe-seedling-u7-puncher-mobiles.mjs`, generalised by one argument:
- * `--class=Bob|Puncher` picks the `botMobiles()` rows (`cls` ends in it) and
- * the model's chaser ids (`<tag>@`). Everything else is U7's: an expectation
+ * `--class=Bob|Puncher|Spinner` picks the `botMobiles()` rows (`cls` ends in
+ * it) and the model's body ids (`<tag>@`). ⛓ R1-swim D3: a `Spinner` is read
+ * from `run.entities('spinnerBodies')`, which carries no velocity — so for a
+ * spinner the comparison is position, `hits` and `hits_timer` (a position
+ * equal to the bit on every tick pins the velocity that moved it). Everything else is U7's: an expectation
  * carries the PLAYER only, so a shove that has not yet reached the player is
  * invisible to the differential; this compares the body itself. The sample's
  * tick is CALIBRATED on the player's x (exactly one shift, zero, must fit),
@@ -37,8 +40,8 @@ if (!TAPE) {
     process.exit(2);
 }
 const CLASS = arg('class') ?? 'Bob';
-if (!/^(Bob|Puncher)$/.test(CLASS)) {
-    console.error(`probe-seedling-u9-shield-mobiles: --class=${CLASS} — Bob or Puncher`);
+if (!/^(Bob|Puncher|Spinner)$/.test(CLASS)) {
+    console.error(`probe-seedling-u9-shield-mobiles: --class=${CLASS} — Bob, Puncher or Spinner`);
     process.exit(2);
 }
 const TAG = CLASS.toLowerCase();
@@ -72,7 +75,7 @@ const col = [];
     let r = st.next();
     while (!r.done) {
         const o = r.value.observation;
-        const ch = run ? run.entities('chasers') : [];
+        const ch = !run ? [] : (CLASS === 'Spinner' ? run.entities('spinnerBodies') : run.entities('chasers'));
         col[o.t] = {
             px: o.x, py: o.y,
             bodies: ch.map((c) => ({ id: c.id, x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer })),
@@ -170,7 +173,9 @@ for (const f of samples) {
         const b = model.reduce((best, x) => (!best || Math.hypot(x.x - g.x, x.y - g.y)
             < Math.hypot(best.x - g.x, best.y - g.y) ? x : best), null);
         // position AND velocity, to the bit; and the body's own damage state
-        const d = [g.x - b.x, g.y - b.y, g.vx - b.vx, g.vy - b.vy].map(Math.abs);
+        // (a spinner's model row has no velocity — see the header)
+        const d = (b.vx === undefined ? [g.x - b.x, g.y - b.y]
+            : [g.x - b.x, g.y - b.y, g.vx - b.vx, g.vy - b.vy]).map(Math.abs);
         worst = Math.max(worst, ...d);
         compared += 1;
         rows.push({ t, game: { x: g.x, y: g.y, vx: g.vx, vy: g.vy, anim: g.anim, enemy: g.enemy },

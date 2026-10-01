@@ -173,9 +173,23 @@
       ]
     },
     {
+      "file": "r1-dark-shield-bobboss.json",
+      "tickCount": 703,
+      "bootLevel": 32,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r1-dark-shield-kill.json",
       "tickCount": 520,
       "bootLevel": 22,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "r1-dark-shield-spinner.json",
+      "tickCount": 60,
+      "bootLevel": 18,
       "tapeVersion": 8,
       "noHazards": []
     },
@@ -190,6 +204,13 @@
       "file": "r1-dark-suit-kill.json",
       "tickCount": 135,
       "bootLevel": 4,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "r1-dark-suit-spinner.json",
+      "tickCount": 220,
+      "bootLevel": 18,
       "tapeVersion": 8,
       "noHazards": []
     },

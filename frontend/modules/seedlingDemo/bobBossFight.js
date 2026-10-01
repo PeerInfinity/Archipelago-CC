@@ -281,11 +281,19 @@ function overlapsStrict(a, c) {
 }
 
 /**
- * `BobBoss.hit(f, p, d, t)` from a player's `genericHit` — the sword arm.
+ * `BobBoss.hit(f, p, d, t)` — a player's `genericHit` (the sword arm) and the
+ * DARK shield's `shieldBump` (R1-swim D3).
  *
  * ⛔ The super call passes force 0 and point null, so nothing is knocked
- * back. Form 2's override adds a sword and re-seeds EVERY blade first, but
- * only when the base gate would let the hit through.
+ * back. Form 2's override adds a sword and re-seeds EVERY blade first — on
+ * its OWN gate, `hitsTimer <= 0 && bossType == 2 && !Game.freezeObjects`,
+ * which does not read the latch: a hit the latch lets through a live i-frame
+ * damages the boss and adds no sword. The re-seed is arithmetic, no RNG.
+ *
+ * ⛓⛓⛓ R1-swim D3 — `Enemy.hit`'s gate is `hitsTimer <= 0 || hitByDarkStuff`:
+ * a damaging `"Shield"`/`"Suit"` hit latches it and the next damaging hit
+ * passes the i-frame it opened. The field is written only once it has been
+ * true, so a body the dark stuff never touched keeps its shape.
  *
  * @returns {{landed: boolean, killed: boolean, refusedAt: ?string}}
  */
@@ -298,13 +306,15 @@ export function bobBossHit(b, { d, t = 'Sword', frozen = false }) {
             b.swordSpin[i] = b.swordSpinBegin[i];
         }
     }
-    if (!(b.hitsTimer <= 0) || frozen) {
+    if (!(b.hitsTimer <= 0 || b.hitByDarkStuff === true) || frozen) {
         return { landed: false, killed: false, refusedAt: frozen ? 'frozen' : 'hitsTimer' };
     }
     if (t === 'Fire') return { landed: false, killed: false, refusedAt: 'Fire' };
     if (!(b.hits < b.hitsMax)) return { landed: false, killed: false, refusedAt: 'hits >= hitsMax' };
     b.hits += d;
     b.hitsTimer = BOSS_IFRAMES;
+    const dark = t === 'Shield' || t === 'Suit';
+    if (dark || b.hitByDarkStuff !== undefined) b.hitByDarkStuff = dark;
     if (b.hits >= b.hitsMax) {
         b.destroy = true;
         return { landed: true, killed: true, refusedAt: null };
@@ -386,12 +396,28 @@ export function enemyKnockbackV(body, v, f, p) {
 }
 
 /**
- * `shieldBump` against the boss; returns true when it shoved. MUTATES `b.v`.
- * `rendered` is the box's player (`shieldBumpTouches`); absent, the live one.
+ * `shieldBump` against the boss. MUTATES `b`. `rendered` is the box's player
+ * (`shieldBumpTouches`); absent, the live one.
+ *
+ * ```
+ *   if (hasDarkShield && o.hitsTimer <= 0) o.hit(shieldForce, new Point(x, y), darkShieldDamage, "Shield");
+ *   else o.knockback(shieldForce, new Point(x, y));
+ * ```
+ *
+ * ⛓⛓⛓ R1-swim D3 — the DARK arm is `BobBoss.hit` (`bobBossHit`): on form 2 a
+ * sword and the re-seed, then `super.hit(0, null, …)` — damage, the i-frame and
+ * the latch, and NO shove. One function for the live bump and the executor's
+ * forecast (`bobBossForecast().shieldBump`), so the two cannot disagree.
+ *
+ * @returns {false | true | {hit: object}} false when nothing touched; true for
+ *   the plain shove; `{hit}` (`bobBossHit`'s verdict) for the dark arm
  */
-export function bobBossShieldBump(b, p, { slashing, rendered = p }) {
+export function bobBossShieldBump(b, p, { slashing, rendered = p, dark = false, frozen = false }) {
     if (b.removed || b.destroy) return false;
     if (!shieldBumpTouches(p, slashing, bobBossBox(b), rendered)) return false;
+    if (dark && b.hitsTimer <= 0) {
+        return { hit: bobBossHit(b, { d: DARK_SHIELD_DAMAGE, t: 'Shield', frozen }) };
+    }
     b.v = enemyKnockbackV(b, b.v, SHIELD_FORCE, p);
     return true;
 }

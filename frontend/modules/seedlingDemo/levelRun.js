@@ -8136,6 +8136,9 @@ export function createLevelRun({
                     force: PLAYER_DAMAGE.contactForce,
                     damage: SPINNER.damage,
                     from: { x: sp.x, y: sp.y },
+                    // `p.hit(this, …)` — the spinner is `e` (R1-swim D3).
+                    retaliate: (p) => darkHitSpinner(sp.id, p, { force: DARK_SUIT_FORCE,
+                        damage: DARK_SUIT_DAMAGE, t: 'Suit', by: 'suit' }),
                 });
                 spinnerContacts.push({
                     t: ticksCompleted + 1, level, id: sp.id, arm: 'body',
@@ -8155,6 +8158,9 @@ export function createLevelRun({
                 force: HAMMER_BILLING.force,
                 damage: HAMMER_BILLING.damage,
                 from: { x: sp.x, y: sp.y },
+                // `player.hit(this, hitForce, …)` — the spinner is `e` (R1-swim D3).
+                retaliate: (p) => darkHitSpinner(sp.id, p, { force: DARK_SUIT_FORCE,
+                    damage: DARK_SUIT_DAMAGE, t: 'Suit', by: 'suit' }),
             });
             spinnerContacts.push({
                 t: ticksCompleted + 1, level, id: sp.id, arm: 'hammer',
@@ -8162,6 +8168,38 @@ export function createLevelRun({
             });
             if (pendingDeath) return;
         }
+    }
+
+    /**
+     * ⛓⛓⛓ R1-swim D3 — A DARK HIT ON A SPINNER (`Enemy.hit(f, p, d, "Shield" |
+     * "Suit")`), through `hitSpinner` — the one transcription every spinner
+     * hit goes through, which now carries the `hitByDarkStuff` latch — with a
+     * kill accounted exactly as a press kill is (`assertSpinnerKillIsAccounted`,
+     * a `spinnerKills` row): `Enemy.startDeath` sets `destroy` and the fade
+     * removes it.
+     *
+     * @returns the ledger fields — `{landed, hits, hitsTimer, shoved, killed?, why?}`
+     */
+    function darkHitSpinner(id, p, { force, damage, t, by }) {
+        const spSt = spinnerStateFor(level);
+        const sp = spSt.byId.get(id);
+        const after = hitSpinner(sp, { force, from: p, damage, t, frozen: ceremony !== null });
+        spSt.byId.set(id, after);
+        const landed = after.hits !== sp.hits;
+        const killed = after.destroy && !sp.destroy;
+        if (killed) {
+            assertSpinnerKillIsAccounted(after);
+            spinnerKills.push({
+                t: ticksCompleted + 1, level, id, tag: sp.persistTag, weapon: by,
+                removedTick: ticksCompleted + 1 + removalTicksAfterHit('Spinner'),
+            });
+        }
+        return {
+            id, landed, hits: after.hits, hitsTimer: after.hitsTimer,
+            shoved: landed && !killed,
+            ...(killed ? { killed: true } : {}),
+            ...(landed ? {} : { why: sp.hitsTimer > 0 ? 'i-frames' : 'the freeze' }),
+        };
     }
 
     function assertSpinnerLineOfSight(sp) {
@@ -11281,21 +11319,18 @@ export function createLevelRun({
     function bobShieldBumpNow() {
         const a = bobArena;
         if (!a || a.none || a.level !== level || !a.boss || !inventory?.hasShield) return;
-        // ⛓ U11-swim D3: refused only where the dark arm FIRES (`hitsTimer <= 0`);
+        // ⛓ R1-swim D3: the DARK arm (`hitsTimer <= 0`) is `BobBoss.hit` — form 2's
+        // sword and re-seed, then damage with no shove, the i-frame and the latch;
         // inside the boss's i-frame the dark shield shoves like the plain one.
-        if (inventory?.hasDarkShield && a.boss.hitsTimer <= 0 && !a.boss.removed && !a.boss.destroy
-            && shieldBumpTouches(state, slashState.slashing, bobBossBox(a.boss),
-                shieldRenderState ?? state)) {
-            throw new Error('levelRun: the DARK shield touched the BobBoss — `shieldBump` then '
-                + 'calls `BobBoss.hit(5, p, darkShieldDamage, "Shield")`, which on the third form '
-                + 'adds a sword (`swords++`, the spin re-seeded) when `hitsTimer <= 0`, then '
-                + '`super.hit(0, null, …)`: damage with NO shove, an i-frame, and the '
-                + '`hitByDarkStuff` latch that lets the next sword hit through it. `bobBossHit` '
-                + 'carries no latch, so this is refused by name (U11-swim D3).');
-        }
-        if (bobBossShieldBump(a.boss, state, {
+        const r = bobBossShieldBump(a.boss, state, {
             slashing: slashState.slashing, rendered: shieldRenderState ?? state,
-        })) {
+            dark: inventory?.hasDarkShield === true, frozen: ceremony !== null,
+        });
+        if (r && r.hit) {
+            bobLedger({ what: 'shield-hit', form: a.boss.form, landed: r.hit.landed,
+                killed: r.hit.killed, hits: a.boss.hits, hitsMax: a.boss.hitsMax,
+                hitsTimer: a.boss.hitsTimer, swords: a.boss.swords, why: r.hit.refusedAt ?? null });
+        } else if (r) {
             bobLedger({ what: 'shield-bump', form: a.boss.form,
                 v: { x: a.boss.v.x, y: a.boss.v.y } });
         }
@@ -11356,12 +11391,8 @@ export function createLevelRun({
         const p = { x: state.x, y: state.y };
         const dark = inventory?.hasDarkShield === true;
         // ⛓ U11-swim D3: a chaser is HIT (`darkShieldHitChaser`); ⛓ R1-swim D2:
-        // a shield KILL is staged (`stageChaserKill`). What stays refused is the
-        // spinner.
-        const refuseDark = (id, why) => {
-            throw new Error(`levelRun: the DARK shield touched ${id} at tick ${ticksCompleted + 1} `
-                + `in level ${level} — ${why} Refused by name (U11-swim D3).`);
-        };
+        // a shield KILL is staged (`stageChaserKill`); ⛓ R1-swim D3: a spinner
+        // is hit too (`darkHitSpinner`).
         const row = (r) => shieldBumpLedger.push({ t: ticksCompleted + 1, level, ...r });
         if (!noDamage) {
             const st = chaserStateFor(level);
@@ -11397,9 +11428,12 @@ export function createLevelRun({
             if (s.removed) continue;
             if (!shieldBumpTouches(state, slashing, spinnerRect(s), rendered)) continue;
             if (dark && s.hitsTimer <= 0) {
-                refuseDark(id, '`Spinner` overrides no `hit`, so `Enemy.hit(5, p, darkShieldDamage, '
-                    + '"Shield")` damages it and latches `hitByDarkStuff` — and `hitSpinner` carries '
-                    + 'no such latch (`spinner.js`, outside U11\'s licence).');
+                // `Spinner` overrides no `hit`: `Enemy.hit(5, p, darkShieldDamage,
+                // "Shield")` — damage, the i-frame, the knockback and the latch.
+                const r = darkHitSpinner(id, p, { force: SHIELD_FORCE, damage: DARK_SHIELD_DAMAGE,
+                    t: 'Shield', by: 'shield' });
+                row({ family: 'spinner', id, hit: true, ...r });
+                continue;
             }
             if (s.destroy) {
                 row({ family: 'spinner', id, shoved: false, why: 'destroy' });
@@ -13418,8 +13452,10 @@ export function createLevelRun({
                 body: clone(a.boss),
                 clone,
                 box: (b) => bobBossBox(b),
+                // ⛓ R1-swim D3: the dark arm too — the live bump's own function.
                 shieldBump: (b, p, slashing) => (inventory?.hasShield
-                    ? bobBossShieldBump(b, p, { slashing }) : false),
+                    ? bobBossShieldBump(b, p, { slashing, dark: inventory?.hasDarkShield === true })
+                    : false),
                 step: (b, p) => stepBobBossBody(b, {
                     player: { x: p.x, y: p.y }, playerBox: playerBoxAt(p.x, p.y),
                     frozen: false, blocked,

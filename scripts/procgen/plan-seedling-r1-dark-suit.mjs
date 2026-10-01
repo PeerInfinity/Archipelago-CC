@@ -27,6 +27,13 @@
  *     `down` held: six dark-shield hits on `bob@96,144`, 0.5 each, the sixth
  *     (t 476) KILLS it, `startDeath("Shield")`.
  *
+ *   `r1-dark-shield-spinner` (D3) — L18 (48,80): the dark shield hits
+ *     `spinner@48,96` on t 4 and a press lands through the i-frame on the latch.
+ *   `r1-dark-suit-spinner` (D3) — L18 (16,112), `right`: the hammer's hit on
+ *     t 180 is retaliated into the spinner.
+ *   `r1-dark-shield-bobboss` (D3) — U5's encounter through form 2's dialogue,
+ *     then a walk into form 2: two dark hits, each a new sword and a re-seed.
+ *
  *   `r1-dark-suit-bob` — L4 (64,32), U9's shove boot three tiles north of
  *     `bob@64,64`, the DARK SUIT only through the seam and `noDamage` FALSE:
  *     `down` for 20 ticks, then still to t 75. The bob's contact on t 20 is
@@ -55,7 +62,8 @@ const TAPES = join(MODULE, 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
 
-const { parseTape, PIN_NAMES } = await import(join(MODULE, 'tapeFormat.js'));
+const { parseTape, PIN_NAMES, heldKeysAt } = await import(join(MODULE, 'tapeFormat.js'));
+const { loadTape } = await import(join(MODULE, 'fixtures', 'index.js'));
 const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
@@ -256,6 +264,133 @@ const fmt = (rows) => JSON.stringify(rows.map((h) => `${h.source}@${h.t}`
     check('⛓ the player is never hit, and the corpse is gone by the tape\'s end',
         !refused && run.playerHits.length === 0 && run.chasers.length === 0,
         JSON.stringify(refused ? null : [run.playerHits.length, run.chasers]));
+    console.log(`## ${NAME}: ${perTick.length} ticks${refused ? ` — REFUSED: ${refused.slice(0, 200)}` : ''}`);
+}
+
+/**
+ * L18's boot block — `r8-hammer-arm`'s: the spinner's hammer is a function of
+ * `Game.time`, so the seam declares it (and the cutscene/menu the clock reads).
+ */
+const L18_SEAM = Object.freeze({ hits_max: 3, time: 4800, cutscene: [false, false, false, false], menu_state: 0 });
+
+// ── r1-dark-shield-spinner (D3) ──────────────────────────────────────
+{
+    const NAME = 'r1-dark-shield-spinner';
+    const BOOT = Object.freeze({ level: 18, x: 48, y: 80 });
+    const SEAM = Object.freeze({ items: { hasShield: true, hasDarkShield: true, hasSword: true }, ...L18_SEAM });
+    const DOWN = new Set(['down']);
+    const DOWN_PRESS = new Set(['down', 'primary']);
+    /** Held index 4: inside the 30-tick i-frame the t 4 hit opened. */
+    const PRESS_AT = 4;
+    const perTick = Array.from({ length: 60 }, (_, i) => (i === PRESS_AT ? DOWN_PRESS : DOWN));
+    const description = '⛓⛓⛓ R1-swim D3 — THE DARK SHIELD HITS A SPINNER, AND ITS LATCH LETS A SWORD '
+        + 'THROUGH THE I-FRAME. L18 (48,80), north of `spinner@48,96`, the shield, the DARK shield '
+        + 'and a sword through the seam (`r8-hammer-arm`\'s clock block) and `noDamage` FALSE; '
+        + '`down` for 60 ticks with one press at held index 4. `Spinner` overrides no `hit`, so '
+        + '`shieldBump` calls `Enemy.hit(5, playerPoint, 0.5, "Shield")` on t 4: `hits` 0.5, a '
+        + '30-tick i-frame, a shove of 5, and `hitByDarkStuff` latched. The press lands THROUGH '
+        + 'that i-frame on the latch (`hits` 1.5, a fresh i-frame) and the sword\'s knockback '
+        + 'throws it again. The player is never hit. Fixed keys. Authored by '
+        + 'scripts/procgen/plan-seedling-r1-dark-suit.mjs.';
+    emit(NAME, tapeJson(NAME, BOOT, SEAM, perTick, description));
+    const { run, refused } = driveModel(BOOT, SEAM, perTick);
+    check('the model WALKS the dark shield into a spinner (no refusal)', refused === null, refused ?? '');
+    const rows = refused ? [] : run.ledger('shieldBumps').filter((r) => r.family === 'spinner' && r.hit);
+    check('⛓⛓⛓ the bump HITS `spinner@48,96` on t 4: 0.5 dealt, a 30-tick i-frame, a shove',
+        rows.length === 1 && rows[0].t === 4 && rows[0].landed === true && rows[0].hits === 0.5
+        && rows[0].hitsTimer === 30 && rows[0].shoved === true, JSON.stringify(rows));
+    const presses = refused ? [] : run.spinnerPressHits.filter((h) => h.landed);
+    check('⛓⛓⛓ the press LANDS through the i-frame (the latch): hits 1.5',
+        presses.length === 1 && presses[0].hits === 1.5,
+        JSON.stringify((refused ? [] : run.spinnerPressHits).map((h) => `${h.t}:${h.landed ? 'L' : 'm'}${h.hits}`)));
+    check('⛓ and the player is never hit', !refused && run.playerHits.length === 0,
+        JSON.stringify((refused ? [] : run.playerHits).map((h) => `${h.source}@${h.t}`)));
+    console.log(`## ${NAME}: ${perTick.length} ticks${refused ? ` — REFUSED: ${refused.slice(0, 200)}` : ''}`);
+}
+
+// ── r1-dark-suit-spinner (D3) ────────────────────────────────────────
+{
+    const NAME = 'r1-dark-suit-spinner';
+    /** `r8-hammer-arm`'s boot and walk, with the dark suit. */
+    const BOOT = Object.freeze({ level: 18, x: 16, y: 112 });
+    const SEAM = Object.freeze({ items: { hasDarkSuit: true }, ...L18_SEAM });
+    const RIGHT = new Set(['right']);
+    const perTick = Array.from({ length: 220 }, () => RIGHT);
+    const description = '⛓⛓⛓ R1-swim D3 — THE DARK SUIT RETALIATES INTO A SPINNER\'S HAMMER. L18 '
+        + '(16,112), `r8-hammer-arm`\'s boot and clock block, the DARK SUIT through the seam and '
+        + '`noDamage` FALSE; `right` held for 220 ticks. The hammer\'s line meets the player on '
+        + 't 180 and `Spinner.update` calls `player.hit(this, hitForce, …)`: the suit\'s '
+        + '`e.hit(1, playerPoint, 1, "Suit")` lands on the spinner (`hits` 1, a 30-tick i-frame, '
+        + 'a shove of 1, `hitByDarkStuff` latched) above the player\'s own hit. Fixed keys. '
+        + 'Authored by scripts/procgen/plan-seedling-r1-dark-suit.mjs.';
+    emit(NAME, tapeJson(NAME, BOOT, SEAM, perTick, description));
+    const { run, refused } = driveModel(BOOT, SEAM, perTick);
+    check('the model WALKS the suit into a spinner\'s hammer (no refusal)', refused === null, refused ?? '');
+    const hits = hitsOf(run, refused);
+    check('⛓⛓⛓ the hammer\'s hit on t 180 is RETALIATED: the spinner\'s hits 1, a 30-tick i-frame',
+        hits.length >= 1 && hits[0].t === 180 && hits[0].source === 'spinner-hammer'
+        && hits[0].retaliation?.landed === true && hits[0].retaliation.hits === 1
+        && hits[0].retaliation.hitsTimer === 30, fmt(hits));
+    console.log(`## ${NAME}: ${perTick.length} ticks${refused ? ` — REFUSED: ${refused.slice(0, 200)}` : ''}`);
+}
+
+// ── r1-dark-shield-bobboss (D3) ──────────────────────────────────────
+{
+    const NAME = 'r1-dark-shield-bobboss';
+    /**
+     * U5's encounter (`swim-u5-bobboss-encounter`) with the DARK shield granted
+     * is VACUOUS: its walk bumps the boss twice (t 378-379), both inside form 1's
+     * i-frame, so the dark arm never fires. So: U5's keys through form 2's
+     * dialogue (held index 612), then a walk UP into form 2 and back down.
+     */
+    const U5 = loadTape('swim-u5-bobboss-encounter');
+    const PREFIX = 613;
+    const UP = new Set(['up']);
+    const DOWN = new Set(['down']);
+    const perTick = [
+        ...Array.from({ length: PREFIX }, (_, i) => new Set(heldKeysAt(U5, i))),
+        ...Array.from({ length: 60 }, () => UP),
+        ...Array.from({ length: 30 }, () => DOWN),
+    ];
+    const seam = structuredClone(U5.seam);
+    seam.items.hasDarkShield = true;
+    const description = '⛓⛓⛓ R1-swim D3 — THE DARK SHIELD HITS THE BOBBOSS: FORM 2 GROWS A SWORD. '
+        + '`swim-u5-bobboss-encounter`\'s boot, seam (plus `hasDarkShield`) and keys through form 2\'s '
+        + 'dialogue (held index 612), then `up` for 60 ticks into form 2 and `down` for 30. '
+        + '`shieldBump` with the dark shield calls `BobBoss.hit(5, p, 0.5, "Shield")` on a boss whose '
+        + '`hitsTimer <= 0`: on form 2 that is `swords++` with every blade re-seeded at '
+        + '3π/2 + 2π·i/swords, then `super.hit(0, null, …)` — 0.5 dealt, a 30-tick i-frame, no '
+        + 'shove, the latch. Hits on t 633 (swords 3) and t 665 (swords 4); the re-seeded blade 0 '
+        + 'hits the player on t 635 and t 667. Inside the i-frame the dark shield shoves like the '
+        + 'plain one. Fixed keys. Authored by scripts/procgen/plan-seedling-r1-dark-suit.mjs.';
+    const folded = buildTape(perTick, U5.boot, NAME,
+        { noclip: false, noDamage: false, noHazards: [], grants: [] });
+    const tape = {
+        game: 'seedling', name: NAME, boot: U5.boot, noclip: false, noDamage: false, noHazards: [],
+        grants: [], persistence: [], equips: [], pins: [...U5.pins], save: structuredClone(U5.save),
+        rng: structuredClone(U5.rng), seam, tick_count: perTick.length, inputs: folded.inputs,
+        tape_version: 8,
+    };
+    const parsed = parseTape({ ...tape, description });
+    emit(NAME, `${JSON.stringify({ ...parsed, description, note: '' }, null, 4)}\n`);
+    let run = null;
+    let refused = null;
+    try {
+        run = createLevelRun({ levelSource, boot: U5.boot, noclip: false, noHazards: [], noDamage: false,
+            grants: [], persistence: [], despawn: [], equips: [], pins: [...U5.pins],
+            save: structuredClone(U5.save), rng: structuredClone(U5.rng), seam: structuredClone(seam), roles: ROLES });
+        perTick.forEach((held, i) => {
+            try { run.advance(held); } catch (e) { throw new Error(`t ${i + 1}: ${e.message.split('\n')[0]}`); }
+        });
+    } catch (e) { refused = e.message; }
+    check('the model WALKS the dark shield into the BobBoss (no refusal)', refused === null, refused ?? '');
+    const ev = refused ? [] : run.ledger('bobBossEvents').filter((e) => e.what === 'shield-hit');
+    check('⛓⛓⛓ two dark hits on form 2: t 633 (0.5, swords 3) and t 665 (1, swords 4), no shove',
+        ev.map((e) => `${e.t}:${e.form}:${e.hits}:${e.swords}`).join() === '633:2:0.5:3,665:2:1:4',
+        JSON.stringify(ev.map((e) => `${e.t}:${e.form}:${e.hits}:${e.swords}`)));
+    check('⛓ the re-seeded blade hits the player on t 635 and t 667 (2 of 3)',
+        !refused && run.playerHits.map((h) => `${h.source}@${h.t}:${h.hits}`).join() === 'bobBoss@635:1,bobBoss@667:2',
+        JSON.stringify((refused ? [] : run.playerHits).map((h) => `${h.source}@${h.t}:${h.hits}`)));
     console.log(`## ${NAME}: ${perTick.length} ticks${refused ? ` — REFUSED: ${refused.slice(0, 200)}` : ''}`);
 }
 

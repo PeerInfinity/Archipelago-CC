@@ -1485,7 +1485,7 @@ frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|hffedc0b7|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
 frontend/modules/seedlingDemo/levelRun.js|stepOptsFor|h14b15328|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: stepOptsFor's default; the drive passes damage.directionFace)
-frontend/modules/seedlingDemo/levelRun.js|bobShieldBumpNow|h35d3c9c5|0|0,rule,bound,Player.as:shieldBump,the dark arm fires only when o.hitsTimer <= 0 (U11-swim D3: the BobBoss refusal is that gate's; inside the i-frame it is the plain shove)
+frontend/modules/seedlingDemo/bobBossFight.js|bobBossShieldBump|h7d55bf85|0|0,rule,bound,Player.as:shieldBump,the dark arm fires only when o.hitsTimer <= 0 (R1-swim D3: BobBoss.hit there; inside the i-frame it is the plain shove)
 frontend/modules/seedlingDemo/levelRun.js|previewStepper|h2e35f0c8|0|0,structural,,,U12-swim D1: a room with no pull gets the same closure (empty test)
 frontend/modules/seedlingDemo/levelRun.js|previewStepper|h00e3c357|0|0,structural,,,U12-swim D1: no pull pushed this preview tick (empty test)
 frontend/modules/seedlingDemo/pull.js|createPulls|hea6d6684|2|0,structural,,Puzzlements/Pull.as:direction,turn-to-radian conversion (_d * Math.PI * 2)

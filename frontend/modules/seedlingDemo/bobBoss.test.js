@@ -196,3 +196,50 @@ describe('the reward, and the flag it writes in another level', () => {
         expect(Math.ceil(20 / 0.5)).toBe(40);
     });
 });
+
+// ⛓⛓⛓ R1-swim D3 — `BobBoss.hit` under the dark shield (`bobBossFight.js`).
+import {
+    bobBossHit, bobBossShieldBump, createBobBossBody, DARK_SHIELD_DAMAGE,
+} from './bobBossFight.js';
+
+describe('R1-swim D3 — the dark shield\'s `BobBoss.hit`, and the latch', () => {
+    // The player directly south of the boss, walking up into it: the 7x7 up box.
+    const touching = (b) => ({ x: b.x, y: b.y + 12, vx: 0, vy: -1, direction: 1 });
+
+    it('form 2: a sword and the re-seed, then 0.5 dealt, the i-frame, the latch and NO shove', () => {
+        const b = createBobBossBody(2);
+        b.formingTimer = 0;
+        const before = { swords: b.swords, v: { ...b.v } };
+        const r = bobBossShieldBump(b, touching(b), { slashing: false, dark: true });
+        expect(r.hit).toEqual({ landed: true, killed: false, refusedAt: null });
+        expect(b.swords).toBe(before.swords + 1);
+        for (let i = 0; i < b.swords; i++) {
+            expect(b.swordSpin[i]).toBe(Math.PI * 3 / 2 + 2 * Math.PI / b.swords * i);
+        }
+        expect(b.hits).toBe(DARK_SHIELD_DAMAGE);
+        expect(b.hitsTimer).toBe(30);
+        expect(b.hitByDarkStuff).toBe(true);
+        expect(b.v).toEqual(before.v);
+        // Inside its i-frame the dark shield shoves like the plain one.
+        expect(bobBossShieldBump(b, touching(b), { slashing: false, dark: true })).toBe(true);
+        expect(b.swords).toBe(before.swords + 1);
+    });
+
+    it('the latch lets the next damaging hit through the i-frame — and adds NO sword (its own gate is `hitsTimer <= 0`)', () => {
+        const b = createBobBossBody(2);
+        bobBossShieldBump(b, touching(b), { slashing: false, dark: true });
+        const swords = b.swords;
+        b.hitsTimer = 20;
+        expect(bobBossHit(b, { d: 1, t: 'Sword' })).toEqual({ landed: true, killed: false, refusedAt: null });
+        expect(b.hits).toBe(1.5);
+        expect(b.hitsTimer).toBe(30);
+        expect(b.swords).toBe(swords);
+        expect(b.hitByDarkStuff).toBe(false);
+    });
+
+    it('a body the dark stuff never touched keeps its exact shape', () => {
+        const b = createBobBossBody(0);
+        bobBossHit(b, { d: 1, t: 'Sword' });
+        expect('hitByDarkStuff' in b).toBe(false);
+    });
+});

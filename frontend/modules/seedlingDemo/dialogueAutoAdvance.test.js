@@ -128,9 +128,10 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // witnesses — inert too.
         // ⛓ swim U12: 168 with `u12-pull-carry` and `u12-pull-cross` — inert too.
         // ⛓ swim R1: 169 with `r1-dark-suit-bob`, 171 with `r1-dark-suit-kill` and
-        // `r1-dark-shield-kill` — inert too.
-        expect(rows).toHaveLength(171);
-        expect(rows.length - parted.length).toBe(170);
+        // `r1-dark-shield-kill`, 174 with `r1-dark-shield-spinner`,
+        // `r1-dark-suit-spinner` and `r1-dark-shield-bobboss` — inert too.
+        expect(rows).toHaveLength(174);
+        expect(rows.length - parted.length).toBe(173);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

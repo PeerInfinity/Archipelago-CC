@@ -2772,6 +2772,14 @@ export const R8_D2_SHIELD = Object.freeze({
                     + '`{18,0}@342` model-sourced). Named by this assertion driving the '
                     + 'roster, the same way `r8-d2` was.',
             }),
+            Object.freeze({
+                name: 'r1-dark-shield-spinner',
+                level: 18,
+                addedBy: 'R1-swim D3 (the spinner\'s latch)',
+                why: 'the dark shield hits `spinner@48,96` on t 4 and the one press lands '
+                    + 'THROUGH that i-frame on `hitByDarkStuff` (`hits` 1.5) — no kill. Named by '
+                    + 'this assertion driving the roster.',
+            }),
         ]),
     }),
 
