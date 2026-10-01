@@ -11231,8 +11231,10 @@ glossary the lists.
 
 The two fixes U4b measured and held back for one ruling (⚖ Q33, 2026-10-01: a
 licence to re-record L18). Both shipped, along with the step-out shape that
-L18 then needed. The re-record itself did **not** land: it cascades past the
-licence. The report is `CC/docs/cloud-reports/seedling-swim-u6.md`.
+L18 then needed. The re-record did not land in U6: it cascades past the
+licence (seven tapes, not two). It **landed in U6b** under the wider licence
+(⚖ Q36, 2026-10-01), on U6's code rebased over main; see *U6b* below. The
+reports are `CC/docs/cloud-reports/seedling-swim-u6.md` and `-u6b.md`.
 
 **D1 — the dwell is priced.** `deriveStrike` asks `clearOfHammersAt` at the
 cell's box over every row in `[eta, i − 2)`: the wait between the walk's
@@ -11298,6 +11300,37 @@ a different approach and the corner never forms.
   declared `seam.time` is the free-oracle sum over segment 18 (10466 → 10527),
   and `r9-solve-20` follows. Their walks are unchanged (746 / 560 / 161 t).
 - The licence names two tapes, so nothing was committed.
+
+**U6b — the seven tapes, re-recorded (⚖ Q36).** U6's five commits rebased over
+main (U5, U7, U8 and the coordinator's pins); then the three producers and the
+headless differential:
+- `r8-solve-18` 485 → **522 t**; the `r8-d2` headline 1791 → **1828 t**
+  (522 + 746 + 560); `r9-solve-18` 394 → **455 t**; the chain 5713 →
+  **5774 t**. `r8-d2-19`, `r8-d2-20`, `r9-solve-19` and `r9-solve-20` keep
+  their walks (traces byte-identical) and move only in the boot block
+  (`seam.time`, the game-measured RNG), as U6 predicted. No other tape moved.
+- Each of the seven recorded headless agrees per tick: observations = ticks
+  + 1 and *"THE MODEL REPRODUCES THE RECORDING IT JUST MADE"*, 0 FAIL. The
+  four unchanged walks re-record their expectations byte-identically.
+- `tapeRunner` 371/371 (the d2 chain row is green again); the six `--check`s
+  exit 0, with `r8-d2-chain` `7cba9530…`, `r8-l18` `cef8048e…` and
+  `r9-campaign` `46990775…` the three new digests; the campaign census NO
+  CHAIN ROOM MOVES at 5774 t.
+- `solve-seedling-r8-d2-chain.mjs` still spelled the Windows launcher inline
+  and could not drive a latch on a box without Windows Chrome. Its `latchOf`
+  now goes through `driverChannel` (headless by default, `--win` kept), on
+  `solve-seedling-r9-campaign`'s L16 precedent; its `--check` stdout is
+  unchanged. It also caches each latch on that producer's key scheme, so
+  `check-seedling-producer-boundaries` VERIFIES both r8-d2 boundaries
+  (17 → 19 verified) instead of refusing them.
+- Two rows pinned the old walk itself: the r8-d2 chain's `clears` evidence
+  (`removedAt` 292 → 321, + the 101-step fade = 422) and `watchOverlays`'
+  landing presses (now 44, 113, 146, 168, 231, 307 — six presses for six
+  hits, so the old walk's one swing on both bodies is gone — with the one
+  miss before the last kill, t 161, pinned by tick).
+- Both profile witnesses are re-measured at 135 keys over the new corpus (U7's
+  eight `puncher*` keys had no row in either): full tier 157 tapes, 75 move /
+  60 corpus-blind, 1787 s at 4 jobs; fast tier 104 tapes, 64 / 71, 334 s.
 
 **D5 — the census and the yield.**
 - Corridor-body sweep post-sword (sharded the same before and after):
@@ -12112,7 +12145,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **21 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L20** end of the route, **5713 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **21 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L20** end of the route, **5774 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12134,7 +12167,7 @@ its byte-frozen free oracle is compared against.
 | 16 | `r9-solve-14` | L14 → L15 | 118 | — |
 | 17 | `r9-solve-15` | L15 → L16 | 456 | — |
 | 18 | `r9-solve-16` | L16 → L18 | 625 | — |
-| 19 | `r9-solve-18` | L18 → L19 | 394 | — |
+| 19 | `r9-solve-18` | L18 → L19 | 455 | — |
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
 | 21 | `r9-solve-20` | L20 → END | 161 | `shield@L20` |
 

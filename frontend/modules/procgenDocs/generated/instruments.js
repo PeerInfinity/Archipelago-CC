@@ -216,7 +216,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 285,
         "browser": 87,
-        "cited": 127,
+        "cited": 128,
         "files": 296,
         "lineStyle": 11,
         "withDocblock": 296,
@@ -10555,7 +10555,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "solve",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "solve-seedling-r8-d2-chain.mjs",
