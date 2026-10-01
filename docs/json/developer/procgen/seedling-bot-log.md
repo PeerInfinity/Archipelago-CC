@@ -11354,6 +11354,71 @@ headless differential:
   - a priced wait makes "walk now, stand there" a policy and not a free
     default.
 
+### Seedling substrate U9-swim — the shield bump, every stepped enemy (2026-10-01)
+
+U5-swim found `Player.shieldBump` on L32's boss and transcribed it for the
+boss only. ⚖ Q37 made the rest its own slice. The report is
+`CC/docs/cloud-reports/seedling-swim-u9.md`.
+
+**D1 — one transcription.** `Player.shieldBump` (`Player.as:1697-1712`):
+while `v.length > 0`, every `Enemy` touching the shield's box gets
+`knockback(shieldForce 5, playerPoint)`, or a HIT under the dark shield. It
+sits above `super.update()` in `Player.update`, after every enemy's update,
+with no freeze gate.
+- `bobBossFight.js` holds the one transcription: `shieldBumpTouches` (the
+  gate and the strict collide against `playerShieldRect`) and
+  `enemyKnockbackV` (`Enemy.knockback`, both components added whole; the ±0.5
+  gate is `Player.knockback`'s). `bobBossShieldBump` calls both.
+- `levelRun.shieldBumpNow`, at U5's two sites (live and frozen tick): the
+  boss; every live chaser where `stepChasersNow` steps them (gated on
+  `!destroy`, not "die", and `CHASERS[*].knocksBack`, so a puncher is touched
+  and does not move); and every spinner (`Spinner` inherits `Enemy.knockback`;
+  its friction floor decays the shove back to speed 1 on the new heading).
+  The dark shield is refused by name at the touch: `hitByDarkStuff` is a field
+  no family carries.
+- The chaser forecast's `step(playerPos, {slashing})` carries the same shove;
+  `previewWalk` passes its slash state. The spinner forecast is player-free
+  and does not.
+- New ledger kind `shieldBumps`.
+- ⛔ The parity gate is **vacuous**, like U7's. W0's probe replayed every
+  committed tape: thirteen ever hold the shield, and none of them stands in a
+  room with a stepped body while it does. tapeRunner 371/371.
+
+**D2 — the witnesses, and what they found.** `u9-shield-bob-shove` (L4,
+walking down into `bob@64,64`), `u9-shield-puncher` (L12, walking east into
+`puncher@416,256`) and `u9-shield-bob-standing` (L4, standing while the bob
+sits on the box), from `plan-seedling-u9-shield-bump.mjs`, recorded on the
+game. The model reproduced every observation (61 / 61 / 101) on the first
+recording. The body readout (`probe-seedling-u9-shield-mobiles.mjs`, U7's
+probe with `--class`) did not, and found two errors:
+1. **Two players in one line.** The gate reads the LIVE `v`, and an enemy's
+   `hitPlayer` writes its knockback into `v` before `Player.update` runs, so
+   the contact tick bumps. The BOX is where the previous frame's render left
+   it, facing the game's `direction`, which `sprites()` pins to the hit-parked
+   `directionFace` (`Player.hit` arms `hitsTimer` before `knockback`, so it
+   always parks). `stepV2` derives `direction` from `v`. `advance` now
+   snapshots the rendered player first, and the box reads it. Measured: t 58
+   standing (Δv 4.5), t 27 shove (Δv 5.0).
+2. **The pit-fall branch's order.** The chase ran above the lerp and on the
+   destroy tick. `Bob.update` runs `super.update()` (the descent) first and
+   returns on `destroy`. Measured: t 50, after the shove carried the bob into
+   L4's pit; a falling body's `v` moves nothing.
+- After both, the probe agrees at every sampled tick: 51 / 61 / 101, worst
+  8.9e-16. tapeRunner 377/377.
+- Mutant (a), the chaser bump off: `u9-shield-bob-shove` red at t 20 only.
+  Mutant (b), the `v.length > 0` gate dropped: `u9-shield-bob-standing` red at
+  t 58, and `swim-u5-bobboss-encounter` red at t 397.
+
+**D3 — the survey.** Steps 22, 23 and 25–30 are byte-identical to U5's rows
+(`ms`/`views` stripped). Step 30 stays SOLVED 1,056. Only L22 (step 26) holds
+a stepped body, and its 89-tick walk never touches it.
+
+**Census.** One identity row moved: `carved pairs c4` `fcc6d836…` →
+`04d2c468…`. Four of its rows moved, and every one boots the shield:
+`bushy post-shield s2`, `loopy post-shield s6`, `loopy post-swim s6`,
+`winding post-swim s6`. No pre-sword or post-sword row moved. Every other row
+and the six `--check`s are identical.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
