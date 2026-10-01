@@ -598,10 +598,15 @@ describe('R1 — the Parameters section binds the same bag keys it bound before 
         ctx.params = new Proxy(bag, { set(t, k, v) { written.add(k); t[k] = v; return true; } });
         ctx._activeSubstrateDict = () => ({ maze: 1, bounce: 1, runner: 1 });
         ctx._saveToLocalStorage = () => {};
+        ctx._handEditedGridKeys = new Set();
         withFakeDocument(() => {
             for (const c of controls(withoutConceptsRow(ctx._renderParams()))) { perturb(c); c.fire('change'); }
         });
         expect([...written].sort()).toEqual(PARAMETER_KEYS_BEFORE_R1[mode]);
+        // ⛓ F1: a changed grid control records its key as hand-edited (a
+        // top-down save keeps only those); no other control does.
+        expect([...ctx._handEditedGridKeys].sort())
+            .toEqual(PARAMETER_KEYS_BEFORE_R1[mode].filter((k) => k === 'gridWidth' || k === 'gridHeight'));
     });
 });
 
