@@ -1,11 +1,11 @@
 {
-  "measuredAt": "2026-10-01T04:42:56.273Z",
-  "head": "0a8771ad8d1b542687b97a871e0cd913ad3a25b3",
-  "treeClean": false,
+  "measuredAt": "2026-10-01T04:37:10.951Z",
+  "head": "f36294d6a3d4c0d1a7c4708e4c58ff920b82a0b3",
+  "treeClean": true,
   "tier": "fast",
   "method": "per key x magnitude, a child process with the override installed runs every tier tape through runTapeToStream; a tape moves when its stream md5 differs from the control run or it throws. ulp = +1 ULP; pct10 = x1.1, or +1 for an integer default. corpus-blind = neither magnitude moved any tape.",
   "jobs": 4,
-  "wallSeconds": 783,
+  "wallSeconds": 334,
   "tapes": [
     "collide-up-rock",
     "cross-level-leg",
@@ -1612,9 +1612,9 @@
       },
       "pct10": {
         "value": 6,
-        "moved": 22,
+        "moved": 23,
         "threw": 0,
-        "same": 82,
+        "same": 81,
         "movedTapes": [
           "grant-sword-room",
           "r2-walk-2-feather",
@@ -1992,10 +1992,11 @@
       },
       "pct10": {
         "value": 3,
-        "moved": 0,
+        "moved": 1,
         "threw": 1,
-        "same": 103,
+        "same": 102,
         "movedTapes": [
+          "r8-solve-18",
           "r9-solve-14"
         ],
         "firstThrow": "r9-solve-14: levelRun: whether bob bob@32,32 is on screen at tick 43 depends on where inside `Game.shake`'s jiggle the camera landed,"
@@ -2518,8 +2519,8 @@
       },
       "pct10": {
         "value": 2,
-        "moved": 0,
-        "threw": 15,
+        "moved": 1,
+        "threw": 14,
         "same": 89,
         "movedTapes": [
           "r3-collect-sword",
