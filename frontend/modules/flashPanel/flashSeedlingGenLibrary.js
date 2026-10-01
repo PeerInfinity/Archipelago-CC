@@ -344,6 +344,22 @@ export function renderSeedlingGenProcgenParams({ params, onChange = () => {} } =
     return wrap;
 }
 
+// ── the playback controller (Seedling JS J2) ──────────────────────────────
+
+/**
+ * ⛓ J2 — the Playback Bot's controller, INJECTED by `flashPanel/index.js` at
+ * `initialize` (bounce's `setPlaybackProxy` precedent: the library stays
+ * import-light, and headless — or before the module initializes — the entry
+ * answers null, which the bot reads as "panel still mounting"). The controller
+ * itself (`seedlingPlaybackController.js`) refuses BY NAME under any runtime
+ * but the JS one, so declaring the field does not re-open P0's silent wait.
+ */
+let _playbackController = null;
+export function setSeedlingPlaybackController(controller) { _playbackController = controller ?? null; }
+
+/** ⛓ The chart's P2 degree (`substrateCapabilities.js`): the bot walks these rooms only on the JS runtime. */
+export const SEEDLING_PLAYBACK_SCOPE = "with the Flash Panel's JS runtime";
+
 // ── the entry ──────────────────────────────────────────────────────────────
 
 const base = createFlashSubstrateEntry({
@@ -380,6 +396,8 @@ export const substrateRegistryEntry = Object.freeze({
 
     // ── play time: light ──
     deserializeWorld: deserializeGenRoom,
+    getPlaybackController: () => _playbackController,
+    playbackScope: SEEDLING_PLAYBACK_SCOPE,
 
     /** A generated room's exits are SIDES — labels; the door stands where the flood put it. */
     regionGeometry: REGION_GEOMETRY.SIDES,

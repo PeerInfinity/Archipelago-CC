@@ -14,7 +14,10 @@ import {
   installSeedlingGenRoom,
   seedlingGenRoomInstalled,
   SEEDLING_GEN_ROOM_MODULE_PATH,
+  setSeedlingPlaybackController,
 } from './flashSeedlingGenLibrary.js';
+import { SeedlingPlaybackController } from './seedlingPlaybackController.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
@@ -184,6 +187,9 @@ export function register(registrationApi) {
 
   // Self-activation on a region load (see `activateOnLoadRegion`).
   registrationApi.registerEventBusPublisher('ui:activatePanel');
+  // ⛓ Seedling JS J2 — the playback controller's LATE refusal (same trap a
+  // third time: unregistered, the publish is skipped with a warn).
+  registrationApi.registerEventBusPublisher(PLAYBACK_WALK_FAILED_EVENT);
 
   log('info', '[FlashPanel Module] Registration complete.');
 }
@@ -275,6 +281,22 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   });
   seedlingRegionGlue.start();
 
+  // ⛓ Seedling JS J2 — the Playback Bot's controller for generated rooms. It
+  // reads the live panel on every call (a preset switch replaces the iframe),
+  // and refuses by name under any runtime but 'js'.
+  setSeedlingPlaybackController(new SeedlingPlaybackController({
+    getSurface: () => {
+      const surface = activePanelInstance?.seedlingPlaybackSurface?.() ?? null;
+      return surface ? { ...surface, region: seedlingRegionGlue?.binding?.region ?? null } : null;
+    },
+    log: (msg, level) => {
+      activePanelInstance?._panelLog?.(msg, level);
+      log(level === 'warn' ? 'warn' : 'info', msg);
+    },
+    // A LATE refusal reaches the bot as a named status, never a silent wait.
+    onWalkFailed: (e) => getModuleEventBus()?.publish?.(PLAYBACK_WALK_FAILED_EVENT, e),
+  }));
+
   // ⛓ AFTER the glue's own subscription, so the arrival is queued before the
   // tab switch that resumes the game's page.
   const activationBus = getModuleEventBus();
@@ -289,6 +311,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     if (typeof offActivate === 'function') offActivate();
     else activationBus.unsubscribe?.(FLASH_SEEDLING_LOAD_REGION_EVENT, onLoadRegionActivate);
     if (seedlingRegionGlue) { seedlingRegionGlue.stop(); seedlingRegionGlue = null; }
+    setSeedlingPlaybackController(null);
   };
 }
 

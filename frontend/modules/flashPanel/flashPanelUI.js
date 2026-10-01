@@ -247,8 +247,32 @@ export class FlashPanelUI {
     this._initializeAdapter();
   }
 
+  /**
+   * ⛓ Seedling JS J2 — what `seedlingPlaybackController` asks of the panel,
+   * re-read on every call: the transport this panel RUNS (not the setting
+   * alone — a non-Seedling game keeps 'auto'), the setting it was built under,
+   * the generated arm's assembly report (the name → cell map; null until the
+   * AP placement load finishes) and, on the JS runtime, the page's core
+   * (`window.__seedlingJsRuntime` — same-origin, as `WasmBridgeAdapter` reads
+   * `__swfBridge`).
+   */
+  seedlingPlaybackSurface() {
+    if (!this.adapter) return null;
+    let jsRuntime = null;
+    if (this.transport === 'js') {
+      try { jsRuntime = this.adapter._getWin?.()?.__seedlingJsRuntime ?? null; } catch { jsRuntime = null; }
+    }
+    return {
+      transport: this._initRuntime === undefined ? null : this.transport,
+      setting: this._initRuntime ?? null,
+      report: this._seedlingGenReport ?? null,
+      jsRuntime,
+    };
+  }
+
   _teardownForReinit() {
     this._initRuntime = undefined;
+    this._seedlingGenReport = null;
     this._heldKeys?.uninstall();
     if (this.adapter) {
       this._detachRegionGlue();
@@ -644,6 +668,8 @@ export class FlashPanelUI {
         overlay.remove();
         return;
       }
+      // ⛓ Seedling JS J2 — the assembly report is the Playback Bot's name → cell map.
+      this._seedlingGenReport = generatedArm ? (loaded.report ?? null) : null;
 
       const glue = getSeedlingRegionGlue();
       if (!glue) {

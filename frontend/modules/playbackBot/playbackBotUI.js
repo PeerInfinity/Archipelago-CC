@@ -677,6 +677,21 @@ export class PlaybackBotUI {
      * a collect detour the bot would otherwise reach the tile and stall
      * with nothing to wake it. No-op when idle or when detours are off.
      */
+    onWalkFailed(data) {
+        // ⛓ Seedling JS J2 — `playback:walkFailed`: a controller that accepted a
+        // walkTo and only LATER found it cannot be walked (its runtime came up
+        // as one without feet; the live walk gave up) says so here, so the bot
+        // shows a terminal, named status instead of waiting for a check or a
+        // crossing that will not come. Same wording as a synchronous refusal.
+        const reason = data?.reason;
+        if (typeof reason !== 'string' || !reason) return;
+        const t = data.target ?? {};
+        const tail = t.kind === 'tile' ? `${t.x},${t.y}` : `${t.name}`;
+        this._lastPublishedTarget = null;
+        this._setStatus(`error: ${this._currentRegion ?? '?'}: the bot cannot walk to ${t.kind ?? 'target'} "${tail}" — ${reason}`);
+        this._render();
+    }
+
     onConsumableCollected() {
         if (!this._isActive) return;
         if (this._mazeCollect !== COLLECT_ALWAYS) return;
@@ -841,8 +856,13 @@ export class PlaybackBotUI {
         // bot waited for a transition that could never come: a SILENT STALL,
         // indistinguishable from slow progress. Make it terminal and named.
         if (this._dispatch('walkTo', [target]) === false) {
-            this._setStatus(
-                `error: ${this._currentRegion ?? '?'} has no tile for `
+            // ⛓ Seedling JS J2 — a controller that knows WHY it refused says
+            // so (`lastRefusal`): e.g. a generated Seedling room under the wasm
+            // runtime, which has no feet. Without one, the router's case.
+            const why = this._resolveController()?.lastRefusal;
+            this._setStatus(typeof why === 'string' && why
+                ? `error: ${this._currentRegion ?? '?'}: the bot cannot walk to ${target.kind} "${tail}" — ${why}`
+                : `error: ${this._currentRegion ?? '?'} has no tile for `
                 + `${target.kind} "${tail}" — the router picked a target the `
                 + 'substrate cannot reach',
             );

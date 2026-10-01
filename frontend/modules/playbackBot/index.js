@@ -21,6 +21,7 @@
 
 import { PlaybackBotPanel } from './playbackBotPanel.js';
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
+import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 
 export const moduleInfo = {
     name: 'playbackBot',
@@ -67,6 +68,8 @@ export function register(registrationApi) {
     // panel's visualizer subscribes to (single-trigger remote-control
     // wiring from Phase 5 of the debugging-tools plan).
     registrationApi.registerEventBusPublisher('playback:command');
+    // Seedling JS J2: a controller's late refusal (see onWalkFailed).
+    registrationApi.registerEventBusSubscriberIntent?.(PLAYBACK_WALK_FAILED_EVENT);
 
     // Dispatcher receivers — formerly in presets/index.js. Each one
     // propagates first (so stateManager + downstream handlers see the
@@ -201,8 +204,20 @@ export async function initialize(moduleId, priorityIndex, initializationApi) {
     };
     _moduleEventBus?.subscribe?.('maze:consumableCollected', onConsumable, 'playbackBot');
 
+    // Seedling JS J2: a controller's LATE refusal (accepted, then found
+    // unwalkable) — see PlaybackBotUI.onWalkFailed.
+    const onWalkFailed = (data) => {
+        try {
+            getActivePanel()?.getBot()?.onWalkFailed?.(data);
+        } catch (e) {
+            log('warn', 'playbackBot: bot.onWalkFailed threw', e);
+        }
+    };
+    _moduleEventBus?.subscribe?.(PLAYBACK_WALK_FAILED_EVENT, onWalkFailed, 'playbackBot');
+
     return () => {
         _moduleEventBus?.unsubscribe?.('maze:consumableCollected', onConsumable, 'playbackBot');
+        _moduleEventBus?.unsubscribe?.(PLAYBACK_WALK_FAILED_EVENT, onWalkFailed, 'playbackBot');
         _moduleEventBus = null;
         _moduleDispatcher = null;
     };

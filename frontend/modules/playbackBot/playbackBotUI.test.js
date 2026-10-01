@@ -1195,6 +1195,39 @@ describe('PlaybackBotUI — an unresolvable walkTo is a NAMED failure, not a sta
         expect(controller.calls.filter((c) => c.method === 'play')).toHaveLength(0);
     });
 
+    it('a refusal that carries its REASON (`lastRefusal`) is shown in the status (Seedling JS J2)', () => {
+        const controller = makeRefusingController();
+        controller.lastRefusal = 'flash_seedling_gen regions are walked only on the Seedling JS runtime';
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getStatus()).toBe('error: region_a: the bot cannot walk to location "Loc A" — '
+            + 'flash_seedling_gen regions are walked only on the Seedling JS runtime');
+        expect(controller.calls.filter((c) => c.method === 'play')).toHaveLength(0);
+    });
+
+    it('a LATE refusal (playback:walkFailed → onWalkFailed) is the same named error status', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        expect(bot.getStatus()).not.toContain('error:');
+        bot.onWalkFailed({ substrate: 'flash_seedling_gen', target: { kind: 'location', name: 'Loc A' },
+            reason: 'the JS runtime\'s walk failed: not reached within 1800 ticks' });
+        expect(bot.getStatus()).toBe('error: region_a: the bot cannot walk to location "Loc A" — '
+            + 'the JS runtime\'s walk failed: not reached within 1800 ticks');
+        bot.onWalkFailed({});
+        expect(bot.getStatus()).toContain('not reached within 1800 ticks');
+    });
+
     it('a controller that accepts the target is unaffected', () => {
         const controller = makeFakeController();
         const bot = new PlaybackBotUI({
