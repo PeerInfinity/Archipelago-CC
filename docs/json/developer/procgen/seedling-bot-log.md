@@ -11707,6 +11707,81 @@ Steps 22, 23 and 25–30 are row-identical to the bank.
   fold, `entityBlocks`, the surface doc's family table): D1 added the family
   and D2 found the other two still owed.
 
+### Seedling substrate R1-swim — the dark stuff (2026-10-01)
+
+⚖ The user's ruling (2026-10-01: *"U13 ∥ R1 now"*). The report is
+`CC/docs/cloud-reports/seedling-swim-r1.md`. The first of the un-parked model
+residues: every `"Shield"`/`"Suit"` hit path and the `hitByDarkStuff` latch.
+Every arm has a game witness recorded before the arm was committed
+(`plan-seedling-r1-dark-suit.mjs`, with `--check`).
+
+**D1 — the dark suit's retaliation.** `Player.hit(e, f, p, d)` reads, inside
+`hitsTimer <= 0 && hits < hitsMax && !Game.freezeObjects` and above
+`hits += d`: `if (e && hasDarkSuit) e.hit(darkSuitForce 1, new Point(x, y),
+darkSuitDamage 1, "Suit")`. Two facts decide it:
+
+- Who passes `e`. Every projectile, trap and hazard calls `hit(null, …)`
+  (`Arrow`, `Pulser`, `Crusher`, `IceTurretBlast`, `BossTotemShot`,
+  `Explosion`, `RockFall`, `Grenade`, `BossTotem`'s laser); a body contact
+  (`Enemy.hitPlayer`), a punch, a spinner's hammer, a BobSoldier blade and the
+  ShieldBoss pass `this`. `applyPlayerHit` now takes the AS3 call's `e` as
+  `retaliate` (null, a transcribed `Enemy.hit`, or absent), and an absent one
+  under the suit refuses by name, naming the source.
+- Where it lands. `Enemy.update` is `super.update()` (move, `hitUpdate()`,
+  `hitPlayer()`) and THEN `Bob.update`'s chase, so the suit's shove is in `v`
+  before the chase's `pushed` test reads it. The model ran the contact after
+  the chase, which was byte-identical while nothing in a contact wrote the
+  body; `chaserStep` now takes a `hitPlayer` hook at its own place.
+
+The observable is the bob's i-frame. `Enemy.hitPlayer` is gated on the BOB's
+`hitsTimer`, so after a retaliation its next contact waits 30 ticks, not the
+player's 20. `r1-dark-suit-bob` (L4): contacts on t20 and t50 in the game,
+where the suitless model has t20 and t44. The bob probe agrees 76/76, `hits`
+included; mutant: 1 red at t44. Of the 169 tapes only the witness holds the
+suit at a hit. Profile keys `darkSuitForce`, `darkSuitDamage`.
+
+**D2 — the kill.** `startDeath("Shield")` / `("Suit")` go through one helper
+the arrow and press kills now share (`stageChaserKill`). Witnesses: the suit
+(`r1-dark-suit-kill`, `hits_max` 4, the third contact kills on t87) and the
+dark shield (`r1-dark-shield-kill`, L22: six hits of 0.5 on a bob, the kill on
+t476, removal on t512). The probes agree on every sample, removal tick
+included. A suit kill through a PUNCH stays refused: `attackPlayer` runs inside
+`Puncher.endAnim`, whose next statement `setSprite("stand")` overwrites the
+"die" that `startDeath` just played.
+
+**D3 — the spinner and the BobBoss.**
+
+- `hitSpinner` carries the latch. The dark shield hits a spinner
+  (`r1-dark-shield-spinner`: 0.5 on t4, a press through the i-frame to 1.5),
+  and the suit retaliates into its contact and its hammer
+  (`r1-dark-suit-spinner`, t180). These are stream-invisible, so the judge is
+  the probe, extended with `--class=Spinner`. Mutant (the latch dropped):
+  tapeRunner green, the game rows replayed offline disagree from t6.
+- `bobBossHit` carries the latch too. Form 2's `swords++` keeps its own
+  `hitsTimer <= 0` gate, and the re-seed is arithmetic, not RNG.
+  `bobBossShieldBump`'s dark arm is one function for the live bump and the
+  executor's forecast. U5's encounter with the dark shield is vacuous (both of
+  its bumps fall inside form 1's i-frame), so `r1-dark-shield-bobboss` walks
+  into form 2: dark hits on t633/t665, swords 3 and 4, and the re-seeded blade
+  hits the player on t635/t667. Mutant: 1 red at t635.
+
+**The census.** J0(a)'s twelve suit levels, re-driven on the model
+(`probe-seedling-r1-suit-census.mjs`): six refused on the suit at the base and
+two at the head. L17 refuses on the camera shake's on-screen band; L36 refuses
+on the static `sandtrap`'s contact, whose `Enemy.hit` is not transcribed.
+
+**Trap candidates**, for the catalogue to number:
+
+- an order that was free until a write made it observable: the contact ran
+  after the chase for as long as no contact wrote the body;
+- a callback that overwrites the state its own call just set: `endAnim`'s
+  `attackPlayer(); setSprite("stand")` turns a kill-by-retaliation into a body
+  that never dies;
+- a witness borrowed from another slice that never exercises the arm:
+  U5's encounter with the dark shield granted fires no dark hit;
+- a stream-invisible arm whose mutant tapeRunner cannot see: the spinner's
+  latch reds only in the body probe.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

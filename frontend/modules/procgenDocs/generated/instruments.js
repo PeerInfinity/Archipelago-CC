@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 42,
+            "count": 43,
             "id": "plan"
         },
         {
             "browser": 24,
-            "count": 64,
+            "count": 65,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 292,
+        "blockStyle": 294,
         "browser": 88,
-        "cited": 132,
-        "files": 303,
+        "cited": 134,
+        "files": 305,
         "lineStyle": 11,
-        "withDocblock": 303,
-        "withFlags": 223
+        "withDocblock": 305,
+        "withFlags": 225
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6413,6 +6413,35 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/mine-seedling-roster-history.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-r1-dark-suit.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-r1-dark-suit — ⛓⛓⛓ R1-swim D1/D2: THE DARK SUIT'S RETALIATION AND THE DARK STUFF'S KILL, WITNESSED ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-r1-dark-suit.mjs"
+        },
+        {
             "argvHelpers": [
                 "addEdge"
             ],
@@ -8228,6 +8257,43 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-music-pair — the Music no-repeat pair, WITNESSED at last.",
             "path": "scripts/procgen/probe-seedling-music-pair.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "levels"
+            ],
+            "file": "probe-seedling-r1-suit-census.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "levels"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-r1-suit-census — ⛓⛓ R1-swim D1: J0(a)'s twelve dark-suit levels, re-driven on the MODEL.",
+            "path": "scripts/procgen/probe-seedling-r1-suit-census.mjs"
         },
         {
             "argvHelpers": [],
