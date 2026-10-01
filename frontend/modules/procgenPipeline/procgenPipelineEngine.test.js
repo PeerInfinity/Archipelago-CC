@@ -2137,6 +2137,33 @@ describe('buildRulesJson', () => {
         expect(ids).toEqual(ids.map((_, i) => ids[0] + i));
     });
 
+    it('carries a SOURCE item\'s classification, and its placed item\'s advancement + type, verbatim', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const placedLocs = Object.values(plain.regions['1']).flatMap((r) => r.locations).filter((l) => l.item);
+        const [fromSource, ...synthetic] = [...new Set(placedLocs.map((l) => l.item.name))];
+        const atLoc = placedLocs.find((l) => l.item.name === fromSource);
+        // the derived branch below needs a second location holding the same item
+        expect(placedLocs.filter((l) => l.item.name === fromSource).length).toBeGreaterThan(1);
+        expect(plain.items['1'][fromSource].classification).toBe('progression');
+        const out = buildRulesJson(grid, {
+            startCell,
+            sourceItems: { [fromSource]: { name: fromSource, id: 7, groups: ['Everything'], classification: 'filler' } },
+            sourceLocations: { [atLoc.name]: { name: atLoc.name, id: 5,
+                item: { name: fromSource, player: 1, advancement: false, type: 'None' } } },
+        });
+        expect(out.items['1'][fromSource].classification).toBe('filler');
+        for (const name of synthetic) expect(out.items['1'][name].classification).toBe(plain.items['1'][name].classification);
+        const locs = Object.values(out.regions['1']).flatMap((r) => r.locations);
+        expect(locs.find((l) => l.name === atLoc.name).item)
+            .toEqual({ name: fromSource, player: 1, advancement: false, type: 'None' });
+        // another location holding the same item, which the source does not place
+        // there: derived from the (source) classification
+        for (const l of locs.filter((x) => x.item?.name === fromSource && x.name !== atLoc.name)) {
+            expect(l.item).toEqual({ name: fromSource, player: 1, advancement: false, type: 'filler' });
+        }
+    });
+
     it('sourceLocationsOf maps every source location name to its location, first one winning', () => {
         const src = { regions: { 1: {
             A: { name: 'A', locations: [{ name: 'x', id: 1 }, { name: 'y', id: null }] },

@@ -2644,8 +2644,9 @@ export function compileRegionGraph(grid, opts = {}) {
         // other driver; `buildRulesJson` then writes its synthetic Menu).
         menuRegion = null,
         // The SOURCE world's item defs (name → def; top-down's `source.items[p]`).
-        // An item the source defines carries the source's `groups` VERBATIM; an
-        // item it does not (every synthetic library item) gets `['Everything']`.
+        // An item the source defines carries the source's `groups` and
+        // `classification` VERBATIM; an item it does not (every synthetic library
+        // item) gets `['Everything']` and the item library's classification.
         sourceItems = null,
         // The SOURCE world's locations (name → location; `sourceLocationsOf`).
         // A source EVENT location (`id: null`, or `event: true`) compiles as one: no
@@ -2750,7 +2751,7 @@ export function compileRegionGraph(grid, opts = {}) {
             // synthetic item_groups["1"] = ["Everything"]).
             // First occurrence mints a numeric id that persists for
             // the item's lifetime in this compile.
-            const classification = itemLib[item]?.classification ?? 'progression';
+            const classification = itemClassification(item);
             if (!items[item] && isIdlessSourceItem(item)) {
                 registerSourceItemDef(item);
             } else if (!items[item]) {
@@ -2769,11 +2770,17 @@ export function compileRegionGraph(grid, opts = {}) {
             // stateManager's checkLocation reads to add the item to
             // inventory at runtime. canonical_placements alone isn't
             // enough; stateManager looks at location.item directly.
+            // ⛓ The source's placed item, when the source places this item at
+            // this location: its `advancement` and `type` VERBATIM (the exporter's
+            // `Item.advancement` — true for every progression flavour — and the
+            // game's own item type).
+            const sourcePlaced = sourceLocations?.[globalName]?.item;
             itemPlacement = {
                 name: item,
                 player: numericPlayerId,
-                advancement: classification === 'progression',
-                type: classification,
+                ...(sourcePlaced?.name === item
+                    ? { advancement: sourcePlaced.advancement, type: sourcePlaced.type }
+                    : { advancement: classification === 'progression', type: classification }),
             };
         }
         return {
@@ -2784,6 +2791,15 @@ export function compileRegionGraph(grid, opts = {}) {
             ...(itemPlacement && lockedItemSet.has(item)
                 ? { locked: true } : {}),
         };
+    }
+
+    // An item's classification: the source def's VERBATIM when the source
+    // defines one (ALTTP's `filler` Bombs stay filler); otherwise the item
+    // library's, else `'progression'` (every synthetic library item).
+    function itemClassification(item) {
+        const sourceClassification = sourceItems?.[item]?.classification;
+        if (typeof sourceClassification === 'string') return sourceClassification;
+        return itemLib[item]?.classification ?? 'progression';
     }
 
     // A source item the source gave NO numeric id — an event (`id: null`) or an
@@ -2815,7 +2831,7 @@ export function compileRegionGraph(grid, opts = {}) {
                 items[item] = {
                     name: item,
                     id: nextItemId++,
-                    classification: itemLib[item]?.classification ?? 'progression',
+                    classification: itemClassification(item),
                     groups: Array.isArray(sourceGroups) ? [...sourceGroups] : ['Everything'],
                 };
             }
