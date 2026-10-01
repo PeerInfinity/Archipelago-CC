@@ -1,0 +1,49 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 4,
+        "x": 64,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasShield": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 60,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 40
+        }
+    ],
+    "name": "u9-shield-bob-shove",
+    "description": "⛓⛓⛓ U9-swim D2(a) — THE SHIELD SHOVES A BOB. L4, spawn (72,40), three tiles north of `bob@64,64` (ctor (72,72)), the SHIELD granted through the seam and `noDamage` FALSE (no committed tape holds the shield in a room with a stepped body). The player walks DOWN for 40 ticks with the 7x7 shield box below it, then stands for 20. The model predicts `Player.shieldBump` — `knockback(shieldForce 5, playerPoint)` on the bob each tick the box touches it while the player moves — at t 16, 23, 24, 25, 26, 27, 28, 29, the bob's velocity piling up against the south wall (`Mobile.moveY` stops the sweep and keeps `v`), and the contact at t 26 knocking the player north. Authored by scripts/procgen/plan-seedling-u9-shield-bump.mjs.",
+    "note": ""
+}

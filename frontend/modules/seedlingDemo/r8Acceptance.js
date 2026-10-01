@@ -840,6 +840,32 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'kill at t 78 and the removal 42 ticks later — and zero punches, because '
                 + 'every wind-up ends inside the puncher\'s own i-frame.',
         }),
+        /**
+         * ⛓⛓⛓ U9-swim — `Player.shieldBump`'s WITNESSES, written before the
+         * roster measured them. No committed tape holds the shield in a room
+         * with a stepped body, so these grant it through the seam and retire
+         * `noDamage`. L4 holds one bob; L12 one puncher.
+         */
+        Object.freeze({
+            name: 'u9-shield-bob-shove', levels: Object.freeze([4]), bobs: 1, ticks: 60,
+            addedBy: 'U9-swim D2(a) (the shove witness)',
+            why: 'a shielded player walks DOWN into `bob@64,64`: `Player.shieldBump` throws the '
+                + 'bob back by `shieldForce` 5 each tick the moving shield\'s box touches it, '
+                + 'and the contact that follows knocks the player north.',
+        }),
+        Object.freeze({
+            name: 'u9-shield-puncher', levels: Object.freeze([12]), bobs: 1, ticks: 60,
+            addedBy: 'U9-swim D2(b) (the empty-override witness)',
+            why: 'a shielded player walks EAST into `puncher@416,256`: the shield touches it '
+                + 'and it does not move (`Puncher.knockback` is an empty override); the '
+                + 'contact and the punch follow.',
+        }),
+        Object.freeze({
+            name: 'u9-shield-bob-standing', levels: Object.freeze([4]), bobs: 1, ticks: 100,
+            addedBy: 'U9-swim D2(c) (the standing-gate witness)',
+            why: 'a shielded player STANDS while `bob@64,64` sits on the shield\'s box: '
+                + '`v.length > 0` is false, so nothing is shoved until the contact lands.',
+        }),
     ]),
 
     /**

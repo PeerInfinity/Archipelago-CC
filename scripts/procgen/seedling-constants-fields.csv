@@ -1480,6 +1480,7 @@ frontend/modules/seedlingDemo/bobBossFight.js|shieldBumpTouches|shieldBumpTouche
 frontend/modules/seedlingDemo/bobBossFight.js|SHIELD_FORCE|(module),physics,magnitude,Player.as:shieldForce,shieldForce: Enemy.knockback(5; player point)
 frontend/modules/seedlingDemo/levelRun.js|step|hbaf0da28|0|0,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name in the forecast)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|shieldBumpNow,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name)
+frontend/modules/seedlingDemo/levelRun.js|advance|h3bdba7db|0|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked; >= 0 is the hit-parked facing sprites() pins (the shield box's direction)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

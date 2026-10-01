@@ -1,0 +1,43 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 4,
+        "x": 48,
+        "y": 48
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "hasShield": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 100,
+    "inputs": [],
+    "name": "u9-shield-bob-standing",
+    "description": "⛓⛓⛓ U9-swim D2(c) — A STANDING SHIELD BUMPS NOTHING. L4, spawn (56,56), diagonal to `bob@64,64` (ctor (72,72)), the SHIELD granted through the seam and `noDamage` FALSE, no keys for 100 ticks. `Player.shieldBump` is gated on `v.length > 0`: the bob chases onto the down-facing 7x7 shield box and sits on it for 23 tick(s) from t 36 without a shove, until its body reaches the player's and the contact lands (t 58). On that tick the bob IS shoved: `hitPlayer` wrote the knockback into the player's `v` earlier in the frame, so `v.length > 0` holds, and the box is still where the previous frame's render left it, facing down (t 58). A model without the gate would shove the bob off the box from the first touch and the contact would not land where it does. Authored by scripts/procgen/plan-seedling-u9-shield-bump.mjs.",
+    "note": ""
+}

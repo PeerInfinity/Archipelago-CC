@@ -45,7 +45,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
 
     it(`reads all ${names.length} committed tapes`, () => {
         // ⛓ swim U5/U7: 157 tapes (+ `swim-u5-bobboss-encounter`, `u7-puncher-punch`, `u7-puncher-kill`).
-        expect(names.length).toBe(157);
+        // ⛓ swim U9: 160 (+ `u9-shield-bob-shove`, `u9-shield-puncher`, `u9-shield-bob-standing`).
+        expect(names.length).toBe(160);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);

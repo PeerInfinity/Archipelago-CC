@@ -327,6 +327,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓⛓⛓ U7-swim: the puncher's witnesses, declared in the commit that
             // wrote them — the first exposed tapes whose bridged body is not a bob.
             'u7-puncher-punch', 'u7-puncher-kill',
+            // ⛓⛓⛓ U9-swim: the shield-bump witnesses, declared in the commit that
+            // wrote them.
+            'u9-shield-bob-shove', 'u9-shield-puncher', 'u9-shield-bob-standing',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -341,7 +344,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ R9 slice L15 takes it to 16 — the L15 crossing, exposed at its L16
         // arrival. ⛓ R9 slice L16 takes it to 17 — the L16 crossing itself.
         // ⛓ U7-swim takes it to 19 — the puncher's punch and kill witnesses in L12.
-        expect(out.exposed).toBe(19);
+        // ⛓ U9-swim takes it to 22 — the three shield-bump witnesses (L4, L12, L4).
+        expect(out.exposed).toBe(22);
         expect(out.tapes).toEqual([
             'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
             'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
@@ -349,6 +353,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r9-l6-harmless-control', 'r9-l6-harmless-press',
             'r9-l6-sword-dash-hit', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15',
             'r9-solve-16', 'u7-puncher-kill', 'u7-puncher-punch',
+            'u9-shield-bob-shove', 'u9-shield-bob-standing', 'u9-shield-puncher',
         ]);
     });
 
@@ -441,6 +446,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ U7-swim's punch witness, at its declared room — the mirror rule.
             'u7-puncher-punch': { tape: {}, levels: [12] },
             'u7-puncher-kill': { tape: {}, levels: [12] },
+            // ⛓ U9-swim's shield-bump witnesses, at their declared rooms — the mirror rule.
+            'u9-shield-bob-shove': { tape: {}, levels: [4] },
+            'u9-shield-puncher': { tape: {}, levels: [12] },
+            'u9-shield-bob-standing': { tape: {}, levels: [4] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

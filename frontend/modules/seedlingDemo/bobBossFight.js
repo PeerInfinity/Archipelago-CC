@@ -353,10 +353,21 @@ export function playerShieldRect(p, slashing) {
  * `if (shieldObj && v.length > 0)` (a STANDING player bumps nothing), then
  * `shieldObj.collideTypesInto(enemies, …)` — `Entity.collide`'s strict test
  * against the box `playerShieldRect` places. `bodyBox` is `{x, y, w, h}`.
+ *
+ * ⛔⛔ TWO PLAYERS, AND THE GAME READS BOTH IN THE SAME LINE. `v.length` is
+ * the LIVE `v` — and an enemy that updated earlier THIS frame may already
+ * have written a knockback into it (`hitPlayer` -> `Player.hit` ->
+ * `knockback`), so a player standing until this frame's contact bumps on the
+ * contact's own tick. The BOX is where the PREVIOUS frame's `render` left it,
+ * read off `rendered` — the player as that frame ended (`x`, `y`, `vx`,
+ * `direction`; `slashing` is the caller's, from the same frame). MEASURED by
+ * U9's witnesses: with the box read off the live player, a contact that
+ * knocked the player north-west flipped it to the WEST side box and the
+ * game's down box shoved the bob the model left standing (t 58, Δv 4.5).
  */
-export function shieldBumpTouches(p, slashing, bodyBox) {
+export function shieldBumpTouches(p, slashing, bodyBox, rendered = p) {
     if (!(Math.hypot(p.vx, p.vy) > 0)) return false;
-    const r = playerShieldRect(p, slashing);
+    const r = playerShieldRect(rendered, slashing);
     if (!r) return false;
     return overlapsStrict({ ...bodyBox, right: bodyBox.x + bodyBox.w,
         bottom: bodyBox.y + bodyBox.h }, r);
@@ -373,10 +384,13 @@ export function enemyKnockbackV(body, v, f, p) {
     return { x: v.x + f * Math.cos(a), y: v.y + f * Math.sin(a) };
 }
 
-/** `shieldBump` against the boss; returns true when it shoved. MUTATES `b.v`. */
-export function bobBossShieldBump(b, p, { slashing }) {
+/**
+ * `shieldBump` against the boss; returns true when it shoved. MUTATES `b.v`.
+ * `rendered` is the box's player (`shieldBumpTouches`); absent, the live one.
+ */
+export function bobBossShieldBump(b, p, { slashing, rendered = p }) {
     if (b.removed || b.destroy) return false;
-    if (!shieldBumpTouches(p, slashing, bobBossBox(b))) return false;
+    if (!shieldBumpTouches(p, slashing, bobBossBox(b), rendered)) return false;
     b.v = enemyKnockbackV(b, b.v, SHIELD_FORCE, p);
     return true;
 }

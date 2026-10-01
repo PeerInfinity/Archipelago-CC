@@ -1379,6 +1379,27 @@
       "noHazards": []
     },
     {
+      "file": "u9-shield-bob-shove.json",
+      "tickCount": 60,
+      "bootLevel": 4,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "u9-shield-bob-standing.json",
+      "tickCount": 100,
+      "bootLevel": 4,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "u9-shield-puncher.json",
+      "tickCount": 60,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "wall-slide.json",
       "tickCount": 70,
       "bootLevel": 0,

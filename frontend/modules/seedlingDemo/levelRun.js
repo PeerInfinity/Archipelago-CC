@@ -9078,12 +9078,6 @@ export function createLevelRun({
              * `laterRemovalBy` already said in words.
              */
             if (!c.destroy && c.fallInPit) {
-                const r = chaserStep(c.tag, { x: c.x, y: c.y, v: c.v, dying: c.dying, attack: c.attack },
-                    playerPoint, { onScreen: false, frozen: ceremony !== null, move });
-                c.v = r.v;
-                // ⛓ U7-swim D2: `Puncher.update`'s block runs below the fall
-                // branch too (it tests only `destroy` and "die").
-                c.attack = chaserAttackDecision(c.tag, c, playerPoint) ?? c.attack;
                 c.x += (Math.floor(c.x / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2 - c.x) / 10;
                 c.y += (Math.floor(c.y / TILE_SIZE) * TILE_SIZE + TILE_SIZE / 2 - c.y) / 10;
                 const next = c.alpha - PIT_FADE.alphaStep;
@@ -9095,6 +9089,28 @@ export function createLevelRun({
                         t: ticksCompleted + 1, level, id: c.id, cause: 'pit', x: c.x, y: c.y,
                     });
                     assertChaserRemovalIsDeclared(c, 'a pit fall');
+                }
+                /**
+                 * ⛓⛓ U9-swim — AND THE CHASE IS BELOW IT, FROM WHERE THE LERP
+                 * LEFT THE BODY, AND NOT ON THE TICK THE FADE ENDS. The descent
+                 * IS `Enemy.update` (it replaces `super.update()` there), and
+                 * `Bob.update` calls `super.update()` FIRST and then returns on
+                 * `destroy` before its chase block. This branch used to run the
+                 * chase above the lerp: the impulse was measured from the
+                 * pre-lerp position, and on the last tick it still landed.
+                 * MEASURED by `u9-shield-bob-shove` (the shove carries the bob
+                 * into L4's pit): at t 50, the destroy tick, the game's `v` is
+                 * the t 49 one and the model's had moved one chase step (0.5 per
+                 * axis). A falling body's `v` moves nothing (no move runs), so
+                 * only its readout could see this.
+                 */
+                if (!c.destroy) {
+                    const r = chaserStep(c.tag, { x: c.x, y: c.y, v: c.v, dying: c.dying, attack: c.attack },
+                        playerPoint, { onScreen: false, frozen: ceremony !== null, move });
+                    c.v = r.v;
+                    // ⛓ U7-swim D2: `Puncher.update`'s block runs below the fall
+                    // branch too (it tests only `destroy` and "die").
+                    c.attack = chaserAttackDecision(c.tag, c, playerPoint) ?? c.attack;
                 }
                 return null;
             }
@@ -10994,7 +11010,9 @@ export function createLevelRun({
             throw new Error('levelRun: the BobBoss fight with the DARK shield is not modelled — '
                 + '`shieldBump` then HITS (`darkShieldDamage`, "Shield") rather than shoving.');
         }
-        if (bobBossShieldBump(a.boss, state, { slashing: slashState.slashing })) {
+        if (bobBossShieldBump(a.boss, state, {
+            slashing: slashState.slashing, rendered: shieldRenderState ?? state,
+        })) {
             bobLedger({ what: 'shield-bump', form: a.boss.form,
                 v: { x: a.boss.v.x, y: a.boss.v.y } });
         }
@@ -11039,10 +11057,19 @@ export function createLevelRun({
      * modelled.
      */
     const shieldBumpLedger = [];
+    /**
+     * ⛓⛓ The player as the PREVIOUS frame's `render` left it — the shield
+     * BOX's placement (`shieldBumpTouches`' `rendered`). Snapshotted as the
+     * first statement of `advance`, before any enemy this tick can write a
+     * knockback into `state`. The gate and the shove's point read the live
+     * `state`.
+     */
+    let shieldRenderState = null;
     function shieldBumpNow() {
         bobShieldBumpNow();
         if (!inventory?.hasShield) return;
         const slashing = slashState.slashing;
+        const rendered = shieldRenderState ?? state;
         const p = { x: state.x, y: state.y };
         const dark = inventory?.hasDarkShield === true;
         const refuseDark = (id) => {
@@ -11056,7 +11083,7 @@ export function createLevelRun({
             const st = chaserStateFor(level);
             for (const c of st.values()) {
                 if (c.removed) continue;
-                if (!shieldBumpTouches(state, slashing, chaserBoxAt(c.tag, c.x, c.y))) continue;
+                if (!shieldBumpTouches(state, slashing, chaserBoxAt(c.tag, c.x, c.y), rendered)) continue;
                 if (dark && c.hitsTimer <= 0) refuseDark(c.id);
                 // `Enemy.knockback`'s own gate: `!destroy` and not playing "die".
                 if (c.destroy || c.dying) {
@@ -11074,7 +11101,7 @@ export function createLevelRun({
         const sp = spinnerStateFor(level);
         for (const [id, s] of sp.byId) {
             if (s.removed) continue;
-            if (!shieldBumpTouches(state, slashing, spinnerRect(s))) continue;
+            if (!shieldBumpTouches(state, slashing, spinnerRect(s), rendered)) continue;
             if (dark && s.hitsTimer <= 0) refuseDark(id);
             if (s.destroy) {
                 row({ family: 'spinner', id, shoved: false, why: 'destroy' });
@@ -13529,6 +13556,19 @@ export function createLevelRun({
             // is three lines down — cannot leave a survivor behind for a
             // caller that catches. See `spinnerForecast`.
             spinnerForecastMemo = null;
+            // ⛓ U9-swim: the shield box's player, as the last frame rendered it.
+            // ⛔ Its `direction` is the GAME's, which `sprites()` pins to
+            // `directionFace` while a hit has parked it (`Player.hit` arms
+            // `hitsTimer` BEFORE `knockback`, whose `if (hitsTimer > 0)
+            // directionFace = direction` then always parks). `stepV2` derives
+            // `state.direction` from `v` alone, so a player knocked north reads
+            // 1 here while the game's box is still the pre-hit one. MEASURED by
+            // `u9-shield-bob-shove`: with `state.direction` the model missed the
+            // t 27 shove (Δv 5.0) the game's down box dealt.
+            shieldRenderState = {
+                x: state.x, y: state.y, vx: state.vx, vy: state.vy,
+                direction: damage.directionFace >= 0 ? damage.directionFace : state.direction,
+            };
             // ⛓ R7 slice 6d: the witnessed mid-run clears, BEFORE anything
             // reads geometry this tick — the flag is already false when the
             // tick numbered `at` begins, which is what "the game cleared it
