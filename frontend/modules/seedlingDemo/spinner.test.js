@@ -441,7 +441,7 @@ describe('the refusal predicate `runFire` narrows to', () => {
             // for ever with nobody noticing. Required, not defaulted.
             expect(typeof row.wedgeVisible, `${as3} must answer wedgeVisible`).toBe('boolean');
         }
-        expect(Object.keys(MODELLED_ENEMY_CLASSES).sort()).toEqual(['Bob', 'Spinner']);
+        expect(Object.keys(MODELLED_ENEMY_CLASSES).sort()).toEqual(['Bob', 'Puncher', 'Spinner']);
     });
 });
 

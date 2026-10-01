@@ -818,7 +818,18 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
      * what lets the PREDICTION be committed one commit before the roster it
      * predicts about exists.
      */
-    bridgedClasses: Object.freeze(['bob']),
+    /**
+     * ⛓⛓⛓ U7-swim — `puncher` JOINS THE SCOPE, and its exposure was predicted
+     * before it was measured: ZERO new exposed tapes. Every committed tape that
+     * enters a puncher room (L12's seven r2–r4 walks, L40's seven r5-l40 tapes)
+     * declares `noDamage`, so the stepper's gate skips it. Measured:
+     * `assertBridgeExposureIsMeasured` re-derived the set over the bridged
+     * levels WITH the puncher rooms and it is unchanged — so the 14 tapes are
+     * byte-inert BY GATE and are no witness for the chase. The witnesses are
+     * the synthetic `u7-puncher-*` tapes, which retire `noDamage` on purpose
+     * and are declared in `exposedAdded`.
+     */
+    bridgedClasses: Object.freeze(['bob', 'puncher']),
 
     /** The roster tally the exposure was derived from, at `153f5100b`. */
     rosterAtPrediction: Object.freeze({

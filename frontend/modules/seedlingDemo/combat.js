@@ -160,6 +160,13 @@ export const TOTAL_ENEMIES_OMISSIONS = Object.freeze({
  * `sideWrite`— the persistence flag its `removed()` writes, if any. A kill
  *              that writes a flag is a LEDGER entry (§3.5).
  */
+/**
+ * ⛓ U7-swim: `Puncher.as:22` — `runRange`, the distance under which the
+ * puncher chases. `ENEMY_CLASSES.puncher.aggro.range` reads it, and so does
+ * `chasers.chaseImpulse` through that row — one spelling.
+ */
+export const PUNCHER_RUN_RANGE = PROFILE.puncherRunRange;
+
 export const ENEMY_CLASSES = defineRecord('enemyClasses', {
     bob: {
         ctor: { dx: 8, dy: 8, src: 'Bob.as:33 `super(_x + Tile.w/2, _y + Tile.h/2)`' },
@@ -229,7 +236,7 @@ export const ENEMY_CLASSES = defineRecord('enemyClasses', {
     },
     puncher: {
         ctor: { dx: 8, dy: 8, src: 'Puncher.as `super(_x + Tile.w/2, _y + Tile.h/2)`' },
-        as3: 'Puncher', kill: { hits: 3 }, aggro: { kind: 'chase', range: 80 },
+        as3: 'Puncher', kill: { hits: 3 }, aggro: { kind: 'chase', range: PUNCHER_RUN_RANGE },
         hitbox: { w: 12, h: 12, ox: 6, oy: 4 }, damage: 1, speed: 1,
         threatPad: 8, envelopeProof: true,
         threat: 'the punch box is `r = 8` deep off the body edge (Puncher.as:201); the 10 is its attackRange, the distance at which it decides to punch',
@@ -1277,7 +1284,7 @@ export function plannerContactFree(body, onScreenVerdict) {
  * null for them), which is what keeps the totem out of this arm until
  * slice 4 wires its own.
  */
-export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', 'bob']);
+export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', 'bob', 'puncher']);
 
 /**
  * ⛓⛓⛓ R8 SLICE 1 — WHICH `stepped` FAMILIES PRICE THEIR OWN CONTACT, AND
@@ -1328,6 +1335,8 @@ export const CONTACT_STEPPED_PRICED_BY = Object.freeze({
     spinner: 'stepSpinnerContactsNow',
     iceturret: null,
     bob: 'stepChasersNow',
+    // ⛓ U7-swim: the second bridged chaser, billed by the same stepper.
+    puncher: 'stepChasersNow',
 });
 
 /**
@@ -1351,6 +1360,10 @@ export const CONTACT_STEPPED_WHY = Object.freeze({
         + 'leaves it on the first tick the player is inside `runRange` 80 — so the census '
         + 'scan must skip the body, exactly as it skips a boss, or the same contact is '
         + 'billed twice from two different places.',
+    puncher: '⛓ U7-swim: bridged beside `bob` and billed by the same `stepChasersNow` at '
+        + 'the position this tick left. ⚠ Its own sweep carries `"Player"` '
+        + '(`Puncher.as:48`), so it stops against the player rather than walking into '
+        + 'them: the contact arm is reached when the PLAYER walks into the body.',
 });
 
 /**

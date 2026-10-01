@@ -297,7 +297,6 @@ frontend/modules/seedlingDemo/combat.js|(module)|h0c288315|160|0,rule,bound,,run
 frontend/modules/seedlingDemo/combat.js|(module)|ha6cd84d9|1|0,rule,magnitude,,damage dealt to Player.hit
 frontend/modules/seedlingDemo/combat.js|(module)|h626d5f5f|0|0,physics,bound,,reach pad beyond the body hitbox
 frontend/modules/seedlingDemo/combat.js|(module)|h08ee434b|3|0,rule,count,,sword presses at damage 1 (Enemy.hitsMax)
-frontend/modules/seedlingDemo/combat.js|(module)|he5f6fabf|80|0,rule,bound,,runRange / attack or chomp range gating aggro
 frontend/modules/seedlingDemo/combat.js|(module)|hb53ccc23|1|0,rule,magnitude,,damage dealt to Player.hit
 frontend/modules/seedlingDemo/combat.js|(module)|h8204ecc5|8|0,physics,bound,,reach pad beyond the body hitbox
 frontend/modules/seedlingDemo/combat.js|(module)|ha19e3d9a|10|0,physics,bound,,sword-line / punch reach
@@ -1497,9 +1496,12 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h8922d4b2|0.0333|0,phy
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h32c78f05|0.25|0,physics,magnitude,Mobile.as:DEFAULT_FRICTION,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hbad42265|0.05|0,physics,bound,,Mobile.friction dead zone (Mobile.as:76-80)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h65a07688|6|0,rule,sentinel,,
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf188b5c2|10|0,rule,count,,Puncher die anim frames [30..39] (Puncher.as:44); endAnim gates totalEnemies
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h5cf591e0|10|0,rule,magnitude,Enemies/Puncher.as:add,Puncher die anim rate (Puncher.as:44)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h7bd960bb|30|0,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hf4de85d9|20|0,rule,magnitude,Player.as:slashTimerMax,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hc0fccb1c|-1|0,rule,sentinel,,Lock tSet == -1 kill-lock discriminator (Lock.as:109-115)
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd7d3b91f|80|0,physics,bound,Enemies/Puncher.as:runRange,Puncher.update chases while FP.distance to the player <= runRange
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|habc2b3f1|5|0,physics,magnitude,Player.as:swordForce,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h08bb5fb7|2|0,physics,magnitude,,knockback(2) Player.as:788
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|heaf60327|30|0,rule,magnitude,Player.as:swordSpeed,

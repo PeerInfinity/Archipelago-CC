@@ -12,6 +12,8 @@
  * actually meet — and nothing else. A third class gets transcribed when a
  * rung fights it, not speculatively.
  *
+ * ⛓ U7-swim: the third is `puncher`, which L12's pit forced (U4-swim § D1).
+ *
  * ── THE PLACEMENTS COME FROM `combat.js`, NEVER FROM HERE ─────────────
  * Slice 2's headline defect was a second transcription of the constructor
  * offsets that disagreed with the first by eight pixels on every enemy on
@@ -188,6 +190,15 @@ export function stepSpriteAnim(anim) {
     return fired;
 }
 
+/**
+ * ⛓ U7-swim: `Puncher.as:44` — `add("die", [30, …, 39], 10)`: ten frames at
+ * rate 10, so 31 updates from `startDeath` to `endAnim` (`animTicks`).
+ */
+export const PUNCHER_DIE_ANIM = Object.freeze({
+    frames: PROFILE.puncherDieAnimFrames,
+    rate: PROFILE.puncherDieAnimRate,
+});
+
 /** The "die" animation of a transcribed chaser, ready to step. */
 export function createDieAnim(tag) {
     const c = CHASERS[tag];
@@ -226,6 +237,33 @@ export const CHASERS = defineRecord('chasers', {
         // sweep swept every `Enemies/*.as` and this class really has one.
         solidsMover: 'chaser',
         src: 'Enemies/Jellyfish.as:44-75',
+    }),
+    /**
+     * ⛓⛓⛓ U7-swim — THE THIRD ROW, AND THE SECOND BRIDGED ONE.
+     *
+     * `Puncher.update`'s chase block (`:62-73`) is Bob's eleven lines with no
+     * `targetOffset` (`d` is measured to `player.x, player.y` directly), so
+     * `chaseImpulse` is reused rather than re-derived. What is NOT Bob's:
+     *
+     *   · the gate is `destroy || currentAnim == "die"` (`:56`) — NO freeze
+     *     test, so a frozen puncher keeps accumulating `v` like a jellyfish;
+     *   · its `solids` carries `"Player"` as well as `"Enemy"` (`:48`), so it
+     *     stops AGAINST the player — `SOLIDS_BY_MOVER.puncher`;
+     *   · the die animation is ten frames at rate 10 (`:44`): 31 ticks.
+     */
+    puncher: Object.freeze({
+        as3: 'Puncher',
+        targetOffset: Object.freeze({ x: 0, y: 0 }),
+        // ⛔ `Puncher.as:56` tests `destroy` and "die" only — header note 1.
+        freezesOnGameFreeze: false,
+        dieAnim: Object.freeze({
+            frames: PUNCHER_DIE_ANIM.frames,
+            rate: PUNCHER_DIE_ANIM.rate,
+            src: 'Puncher.as:44 add("die", [30..39], 10)',
+        }),
+        // ⛔ `Puncher.as:48` — `solids.push("Enemy", "Player")`.
+        solidsMover: 'puncher',
+        src: 'Enemies/Puncher.as:53-119',
     }),
 }, { doc: ['src'], src: 'chasers.js' });
 

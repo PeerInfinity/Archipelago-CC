@@ -3056,10 +3056,15 @@ export function createLevelRun({
          * quoted beside its derivation (trap 97) — and would go stale the
          * moment either list moved.
          */
-        const chaserTypes = new Set(chaserSolids(
-            census.find((e) => isBridgedChaser(e.tag)).tag,
-        ));
-        const overReach = PLAYER_SOLID_TYPES.filter((t) => !chaserTypes.has(t));
+        // ⛓ U7-swim: PER BRIDGED TAG, not the first one found — a room can hold a
+        // bob and a puncher, and their lists differ (the puncher's carries
+        // "Player"). The over-reach is the union of what any of them lacks.
+        const overReach = [...new Set([...new Set(census.filter((e) => isBridgedChaser(e.tag))
+            .map((e) => e.tag))]
+            .flatMap((tag) => {
+                const chaserTypes = new Set(chaserSolids(tag));
+                return PLAYER_SOLID_TYPES.filter((t) => !chaserTypes.has(t));
+            }))];
         const wrong = (w.solids ?? []).filter((s) => overReach.includes(s.cls?.type));
         if (wrong.length > 0) {
             throw new Error(`levelRun: level ${n} holds a bridged chaser AND `
@@ -6188,12 +6193,17 @@ export function createLevelRun({
                     const c = bodies.get(id);
                     if (!c || c.removed || c.destroy) continue;
                     const box = chaserBoxAt(c.tag, c.x, c.y);
+                    // ⛓ U7-swim: `stepChaserEntity`'s `"Player"` wall, at the
+                    // previewed player's start-of-tick box.
+                    const playerWall = chaserSolids(c.tag).includes('Player')
+                        ? playerBoxAt(playerPos.x, playerPos.y) : null;
                     const move = (mx, my, dx, dy) => {
                         let x = mx;
                         let y = my;
                         const blocked = (px, py) => {
                             const r = chaserBoxAt(c.tag, px, py);
                             if (world.collidesSolid(r, solidOpts)) return true;
+                            if (playerWall && rectsOverlap(r, playerWall)) return true;
                             for (const b of staticEnemyBoxes) {
                                 if (rectsOverlap(r, b.rect)) return true;
                             }
@@ -8826,6 +8836,13 @@ export function createLevelRun({
             const box = chaserBoxAt(c.tag, c.x, c.y);
             const before = { x: c.x, y: c.y };
             /**
+             * ⛓ U7-swim: the `"Player"` half of a puncher's own `solids`
+             * (`Puncher.as:48`). The player updates LAST, so the box this sweep
+             * meets is where the previous tick left it — `state`, unmoved yet.
+             */
+            const playerWall = chaserSolids(c.tag).includes('Player')
+                ? playerBoxAt(state.x, state.y) : null;
+            /**
              * `Mobile.moveX`/`moveY`, transcribed as the sweep this world
              * really is — 1 px at a time, the last step `min(1, |rel| - i)`,
              * stopping at the first collider and NOT continuing past it.
@@ -8836,6 +8853,7 @@ export function createLevelRun({
                 const blocked = (px, py) => {
                     const r = chaserBoxAt(c.tag, px, py);
                     if (world.collidesSolid(r, solidOpts)) return true;
+                    if (playerWall && rectsOverlap(r, playerWall)) return true;
                     for (const b of staticEnemyBoxes) {
                         if (rectsOverlap(r, b.rect)) return true;
                     }

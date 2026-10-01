@@ -177,7 +177,7 @@ describe('entityRecords — the dump and its md5', () => {
 
     it('the model\'s records: the md5 is pinned', () => {
         // a change here is an entity-record change
-        expect(entitiesMd5()).toBe('b378bf423846d0232a518bfd94e1d0f9');
+        expect(entitiesMd5()).toBe('dfd22f071a2ec6eedf81a30e90459323');
         expect(entitiesStamp()).toEqual({ md5: entitiesMd5(), records: entityRecordNames().length });
     });
 });

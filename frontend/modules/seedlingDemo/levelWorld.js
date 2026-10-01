@@ -209,6 +209,13 @@ export const SOLIDS_BY_MOVER = Object.freeze({
      */
     chaser: Object.freeze([...SOLID_ENTITY_TYPES, 'Enemy']),
     /**
+     * ⛓⛓⛓ U7-swim — `Puncher.as:48`, `solids.push("Enemy", "Player")`: the
+     * pushable's list, on a chaser. A puncher's own sweep stops against the
+     * PLAYER, so it closes to touching and never overlaps by its own move;
+     * `levelRun`'s chaser sweep models the `"Player"` half itself.
+     */
+    puncher: Object.freeze([...SOLID_ENTITY_TYPES, 'Enemy', 'Player']),
+    /**
      * ⛔⛔ R6 SLICE 2: `WandShot.as:69` — `solids.push("Enemy")`, and the
      * FOURTH mover. `Mobile.solids` plus `"Enemy"`, WITHOUT the player's
      * `"LavaBoss"`: a wand shot is stopped by a spinner and flies through a

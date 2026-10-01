@@ -808,6 +808,20 @@ export const MODELLED_ENEMY_CLASSES = Object.freeze({
          */
         wedgeVisible: false,
     }),
+    /**
+     * ⛓⛓⛓ U7-swim — THE THIRD ROW: the puncher, bridged through `chasers.js`
+     * beside the Bob, because L12's pit is reachable only through two locks the
+     * puncher's leash covers (U4-swim § D1) and a body the model holds still
+     * there is a route the game refutes.
+     */
+    Puncher: Object.freeze({
+        module: 'chasers.js',
+        why: '`Puncher.update`\'s chase block is Bob\'s eleven lines with no target offset '
+            + '— `chaseImpulse` is reused — plus an attack state the chase yields to',
+        stepped: 'levelRun.advance, in the chaser slot beside the Bobs',
+        // ⛔ FALSE for Bob's reason: `pushableCtx().collides` sees spinners only.
+        wedgeVisible: false,
+    }),
 });
 
 /**

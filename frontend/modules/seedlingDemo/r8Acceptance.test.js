@@ -466,7 +466,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
  */
 describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () => {
     it('the DECLARED scope and the DERIVED roster are the same claim', () => {
-        expect(assertBridgeRosterMatchesScope(bridgedChaserTags)).toEqual({ classes: ['bob'] });
+        expect(assertBridgeRosterMatchesScope(bridgedChaserTags)).toEqual({ classes: ['bob', 'puncher'] });
     });
 
     it('⛔ MUTATION: a roster that drifts from the declaration reds by name', () => {
@@ -484,9 +484,9 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
      * as the pair's control.
      */
     it('a transcribed class with no roster row is NOT bridged — the control exists', () => {
-        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'jellyfish']);
+        expect(Object.keys(CHASERS).sort()).toEqual(['bob', 'jellyfish', 'puncher']);
         expect(MODELLED_ENEMY_CLASSES.Jellyfish).toBeUndefined();
-        expect(bridgedChaserTags()).toEqual(['bob']);
+        expect(bridgedChaserTags()).toEqual(['bob', 'puncher']);
         expect(contactPricing('jellyfish').kind).toBe('mover');
     });
 
@@ -505,7 +505,7 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
              * is unchanged, because `iceturret` is still in neither.
              */
             bridged: [...bridgedChaserTags(), 'spinner'],
-        })).toEqual({ families: 3, bridged: ['bob', 'spinner'], refused: ['iceturret'] });
+        })).toEqual({ families: 4, bridged: ['bob', 'puncher', 'spinner'], refused: ['iceturret'] });
     });
 
     it('⛔ MUTATION: a family in one table and not another reds by name (trap 94)', () => {
