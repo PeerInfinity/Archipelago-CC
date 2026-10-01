@@ -284,6 +284,31 @@ The parking room is level N, after the generated rooms: a walled 3×3 room with 
 
 **Note:** on the first entry the reset re-lands the player on the approach and hides a wrong arrival; only a second entry tests the binding's arrival alone.
 
+### The JS runtime (`runtime: 'js'`)
+
+`moduleSettings.flashPanel.runtime` picks the page the flash panel mounts: `auto` (the default: the wasm page when the preset wires one, real Flash otherwise), `flash`, `wasm`, or `js`. With `js` and a Seedling preset (`flash_panel.config` is `seedling.json`), the panel mounts `seedlingDemo/jsRuntime.html` instead of the wasm build. The page plays the JavaScript model (`createManualSession` over `levelRun`) and draws it in rectangles with the watch page's palette (`seedlingDemo/rectPalette.js`), with no sound. Changing the setting re-initializes the panel. Any other game ignores `js` and uses `auto`.
+
+The page speaks the wasm page's contract, so the host glue is unchanged: `window.__swfBridge` with `game.configure`, `readState`, `wireCheck`, `botStatus`, `botMobiles`, `botLoadLevels` and `botLevelSet`, plus `queueItems` and `onStateChanged`, and `__runtimeReady`. There is no ▶ Start; both readiness questions (`wasmGamePage.js`) answer at once. The contract lives in `seedlingDemo/jsRuntimeCore.js`, which has no DOM and runs in node; `jsRuntimePage.js` adds the canvas, the keyboard (`watchManual.KEYBOARD_BINDINGS`) and a 30-tick requestAnimationFrame accumulator, with a timer pump while the frame gets no animation frames.
+
+How each wasm-side fact maps onto the model:
+
+| Wasm page | JS runtime |
+|---|---|
+| BridgeGeneric reports a declared property when it changes, in declaration order | `flush()` after every tick compares each configured `state_properties` entry with its last report |
+| `Main.playerPositionX/Y` are the `new Game` constructor args | `run.worldCtor` |
+| `APItem` collected → `pendingCheck` `<seq>\|<level>\|<tag>\|0` | The page tests the player's box against the `apitem` row's `apItem` box (`levelWorld.ENTITY_CLASSES`) on the position the previous tick left, and writes the same string |
+| `Teleporter.update()` → `pendingExit` `<seq>\|<from>\|teleporter\|<x>\|<y>\|<to>` | A new `run.transitions` entry, joined to the teleporter the player stood in; a pit fall through a `control` block writes nothing, as in the game |
+| `queueItems`: flag writes, `menu`, `new_instance Game(level, x, y)` | Drained once per tick; a changed flag re-boots the run where the player stands (the run's inventory is fixed at boot), and the teleport boots a fresh run at the args |
+| `botLoadLevels` chunks, `botLevelSet` readback | `pending` per chunk and `ok` on the last; the readback carries `active`, `table_levels`, `start_level` |
+
+**Death.** The model refuses a terrain death by name: a pit in a room with no `control` block, or drowning (water without the conch, lava without the dark suit) throws a `PhysicsV2Error`. The page catches exactly those (`isDeathRefusal`) and boots a fresh run at the arrival the room was entered with, carrying its earned clears. A pit with a `control` block is a transition, not a throw, so it never reaches the catch. Any other refusal halts the page by name.
+
+**Eligibility.** The JS page is not a build in `builds.json`, so `seedlingRandomizerEligibility` takes `transport: 'js'` and answers the capability check from `JS_RUNTIME_CAPABILITIES` (`apitem`). The JS runtime plays the generated arm only: a world with no generated rooms is refused by the `generated` check before any vanilla fact is asked. The wasm transport's answers are unchanged.
+
+**Not yet.** Real atlas rooms (`flash_seedling`) and the vanilla 116 are not mounted by the JS runtime, and the playback bot has no controller for it. Before a set is delivered the page reports level −1.
+
+The in-app row `seedling-js-runtime-generated-room` (`test-substrates`, category `Seedling JS runtime`, default `fast` batch) plays `seedling_generated_room` this way: synthetic keys on the canvas walk to the `apitem` (one `user:locationCheck`) and through the door to the other generated room (one `user:regionMove`). It needs no wasm artifact.
+
 ### Host-enforced door gates
 
 A generated or real room can host children behind any AP item. The game cannot enforce such a gate: pipeline items (`key_blue`, `victory`) are not Seedling items, and a door is a plain teleporter. The host enforces it instead.
