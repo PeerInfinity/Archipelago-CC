@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**52 files, 4415 literals.** Class × position:
+**54 files, 4619 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 1 | 1234 | 268 | 1503 |
-| rule | 0 | 839 | 377 | 1216 |
+| physics | 5 | 1243 | 333 | 1581 |
+| rule | 6 | 903 | 398 | 1307 |
 | cosmetic | 0 | 43 | 8 | 51 |
-| structural | 9 | 310 | 1326 | 1645 |
+| structural | 9 | 310 | 1361 | 1680 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 10 | 2426 | 1979 | 4415 |
+| total | 20 | 2499 | 2100 | 4619 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1265 | 0 | 87 | 108 | 4 | 39 | 1503 |
-| rule | 323 | 111 | 184 | 22 | 503 | 73 | 1216 |
+| physics | 1324 | 0 | 89 | 113 | 4 | 51 | 1581 |
+| rule | 388 | 120 | 194 | 22 | 506 | 77 | 1307 |
 
 Rows whose note starts `REVIEW:`: **105**.
 
@@ -461,7 +461,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 28 derived or aliased top-level constants
+### The 32 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -478,6 +478,10 @@ None: a name declared in several files now reads one profile key (the table belo
 | `TILE` | seedlingDemo/crusher.js | `TILE_SIZE` |
 | `SHIELD_BOSS_DIE_UPDATES` | seedlingDemo/shieldBossFight.js | `SHIELD_BOSS_ANIM_UPDATES.die` |
 | `SHIELD_BOSS_WINDOW_UPDATES` | seedlingDemo/shieldBossFight.js | `SHIELD_BOSS_ANIM_UPDATES.movedShield` |
+| `FORM_TELEPORT_AT` | seedlingDemo/bobBoss.js | `FORM_TRANSITION_FRAMES / 3` |
+| `BASE_SPIN_RATE` | seedlingDemo/bobBossFight.js | `Math.PI / 10` |
+| `TRANSITION_PIN` | seedlingDemo/bobBossFight.js | `ARENA.transitionTo` |
+| `BOB_BOSS_ROCK_DEAD_FRAMES` | seedlingDemo/bobBossFight.js | `rockSchedule().bossSpawnsAt` |
 | `OWL_LEVEL_BUILD_DRAWS` | seedlingDemo/finalBossRng.js | `OWL_LEVEL_BUILD_SITES.length` |
 | `TILE` | seedlingDemo/iceTurret.js | `TILE_SIZE` |
 | `WAND_SPAWN_REACH` | seedlingDemo/wandVerb.js | `WAND_SPRITE.w` |
@@ -496,10 +500,20 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**1 named scalars** are `physics` or `rule` (1 with an AS3 anchor), and **125 small tables** (at most 16 literals) hold at least one (76 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **134 small tables** (at most 16 literals) hold at least one (84 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
+| `BOSS_IFRAMES` | seedlingDemo/bobBoss.js | 30 | rule | bound | Enemies/Enemy.as:hitsTimerMax |
+| `FORM_TRANSITION_FRAMES` | seedlingDemo/bobBoss.js | 120 | rule | bound | Enemies/BobBoss.as:nextBossTimerMax |
+| `FORMING_FRAMES` | seedlingDemo/bobBoss.js | 60 | rule | bound | Enemies/BobBoss.as:formingTimerMax |
+| `BOSS_TEXT_SPEED` | seedlingDemo/bobBoss.js | 6 | rule | magnitude | NPCs/BobBossNPC.as:_talkingSpeed |
+| `BOSS_LINE_LENGTH` | seedlingDemo/bobBoss.js | 28 | rule | magnitude | NPCs/NPC.as:lineLength |
+| `PLAIN_SWORD_DAMAGE` | seedlingDemo/bobBoss.js | 1 | rule | magnitude | Player.as:swordDamage |
+| `RUN_RANGE` | seedlingDemo/bobBossFight.js | 80 | physics | bound | Enemies/BobSoldier.as:runRange |
+| `WEAPON_LENGTH` | seedlingDemo/bobBossFight.js | 24 | physics | magnitude | Enemies/BobBoss.as:weaponLength |
+| `DEATH_LIFT` | seedlingDemo/bobBossFight.js | 1.2 | physics | magnitude | Enemies/BobBoss.as:death |
+| `SHIELD_FORCE` | seedlingDemo/bobBossFight.js | 5 | physics | magnitude | Player.as:shieldForce |
 | `NO_FORCE_CAP` | seedlingDemo/enemyDamage.js | -1 | physics | sentinel | Enemies/Enemy.as:maxForce |
 
 | table | file | literals | physics/rule | classes | kinds | AS3 |
@@ -559,6 +573,15 @@ None: a name declared in several files now reads one profile key (the table belo
 | `BOSS_TOTEM_WHITE_OUT` | seedlingDemo/bossTotemFight.js | 3 | 3 | rule | magnitude/sentinel | Enemies/BossTotem.as:rumblingTimeMax |
 | `SHIELD_BOSS` | seedlingDemo/shieldBossFight.js | 15 | 14 | physics/rule | bound/count/derivation/magnitude | Enemies/ShieldBoss.as:setHitbox Enemies/Enemy.as:hitsMax Enemies/Enemy.as:hitsTimerMax Enemies/ShieldBoss.as:swingTimeMax Enemies/ShieldBoss.as:swingForce |
 | `BOSS_KEY` | seedlingDemo/shieldBossFight.js | 7 | 7 | physics/rule | derivation/magnitude | Pickups/BossKey.as:setHitbox Pickups/Pickup.as:specialTimerMax |
+| `ARENA` | seedlingDemo/bobBoss.js | 11 | 11 | rule | magnitude | Enemies/BobBoss.as:BobBoss |
+| `ROCK` | seedlingDemo/bobBoss.js | 11 | 11 | physics/rule | magnitude | Scenery/FallRockLarge.as:fallTo Scenery/FallRockLarge.as:fallRate |
+| `FORM_TELEPORT_AT` | seedlingDemo/bobBoss.js | 1 | 1 | rule | derivation | Enemies/BobBoss.as:nextBossTimerMax |
+| `BOB_BOSS_FORMS` | seedlingDemo/bobBoss.js | 9 | 9 | rule | count | Enemies/BobBoss.as:hitsMax |
+| `FIRE` | seedlingDemo/bobBoss.js | 6 | 6 | rule | magnitude/sentinel | Pickups/Fire.as:tag Pickups/Fire.as:Fire |
+| `BURNABLE_TREE` | seedlingDemo/bobBoss.js | 10 | 10 | rule | derivation/magnitude | Scenery/BurnableTree.as:burn |
+| `BOB_BOSS_LEDGER` | seedlingDemo/bobBoss.js | 2 | 2 | rule | sentinel |  |
+| `BASE_SPIN_RATE` | seedlingDemo/bobBossFight.js | 1 | 1 | physics | magnitude | Enemies/BobSoldier.as:swordSpinRate |
+| `BOB_BOSS_BOX` | seedlingDemo/bobBossFight.js | 4 | 4 | physics | magnitude | Enemies/BobBoss.as:setHitbox |
 | `FINAL_BOSS_ANIMS` | seedlingDemo/finalBossFight.js | 8 | 4 | rule | count/magnitude | FinalBoss.as:47-50 |
 | `ROCKFALL_BREAK_UPDATES` | seedlingDemo/finalBossFight.js | 2 | 2 | rule | count/magnitude | Scenery/RockFall.as Scenery/Pod.as Enemies/Grenade.as |
 | `POD_OPEN_UPDATES` | seedlingDemo/finalBossFight.js | 2 | 2 | rule | count/magnitude |  |

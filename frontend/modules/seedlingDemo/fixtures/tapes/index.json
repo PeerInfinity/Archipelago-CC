@@ -1365,6 +1365,20 @@
       "noHazards": []
     },
     {
+      "file": "u7-puncher-kill.json",
+      "tickCount": 128,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "u7-puncher-punch.json",
+      "tickCount": 120,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "wall-slide.json",
       "tickCount": 70,
       "bootLevel": 0,
