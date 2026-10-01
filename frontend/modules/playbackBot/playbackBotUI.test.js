@@ -1208,3 +1208,42 @@ describe('PlaybackBotUI — an unresolvable walkTo is a NAMED failure, not a sta
         expect(controller.calls.some((c) => c.method === 'play')).toBe(true);
     });
 });
+
+describe('PlaybackBotUI — a substrate that declares no controller', () => {
+    // The flash entries (and both Seedling entries built on them) omit
+    // `getPlaybackController` on purpose. A walkTo into such a region used
+    // to wait forever with no status; it is now a NAMED error. A declared
+    // controller that returns null (a panel still mounting) stays silent.
+    beforeEach(() => {
+        substrateRegistry.clear();
+        substrateRegistry.register({ id: 'flash_seedling_gen' });
+        substrateRegistry.register({ id: 'maze', getPlaybackController: () => null });
+    });
+    afterEach(() => { substrateRegistry.clear(); });
+
+    function makeBot(regionSubstrate) {
+        const rulesJson = { preset_sidecars: { '1': { region_x: { substrate: regionSubstrate } } } };
+        return new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc X'] }],
+            getStaticData: () => ({ regions: new Map([['region_x', { locations: [{ name: 'Loc X' }] }]]) }),
+            getRulesJson: () => rulesJson,
+        });
+    }
+    const statusText = (bot) => bot.getElement()
+        .queryAll((el) => el.className === 'playback-bot-status')[0]?.textContent;
+
+    it('names the substrate when its entry has no getPlaybackController', () => {
+        const bot = makeBot('flash_seedling_gen');
+        bot.onRegionMove({ targetRegion: 'region_x' });
+        bot.play();
+        expect(statusText(bot)).toBe('error: region_x is a flash_seedling_gen region, and '
+            + 'flash_seedling_gen has no playback controller — the bot cannot walk it');
+    });
+
+    it('stays silent when the controller is declared but not yet available', () => {
+        const bot = makeBot('maze');
+        bot.onRegionMove({ targetRegion: 'region_x' });
+        bot.play();
+        expect(statusText(bot)).toBe('Sphere 0.1 → walking to "Loc X" (1/1)');
+    });
+});

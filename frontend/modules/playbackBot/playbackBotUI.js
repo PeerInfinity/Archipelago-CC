@@ -818,6 +818,21 @@ export class PlaybackBotUI {
         const sig = `${this._currentRegion}:${target.kind}:${tail}`;
         if (sig === this._lastPublishedTarget) return;
         this._lastPublishedTarget = sig;
+        // A substrate whose registry entry declares NO controller (flash and
+        // both Seedling entries today) can never take this target. `_dispatch`
+        // reads that as "no panel mounted yet" and returns undefined, so the
+        // bot used to wait forever for a check that could never come — the
+        // same silent stall as the unresolved-target case below. A controller
+        // that is declared but returns null (a panel still mounting) is
+        // transient and keeps the silent path.
+        const undeclared = this._undeclaredControllerSubstrate();
+        if (undeclared) {
+            this._setStatus(
+                `error: ${this._currentRegion ?? '?'} is a ${undeclared} region, and `
+                + `${undeclared} has no playback controller — the bot cannot walk it`,
+            );
+            return;
+        }
         // A controller that cannot RESOLVE the target reports false. That
         // happens when the router picks an exit the substrate has no tile for
         // — e.g. a region-atlas crossing the maze projection deliberately
@@ -886,6 +901,20 @@ export class PlaybackBotUI {
         if (this._getActiveController) return this._getActiveController() ?? null;
         const substrateId = this._resolveSubstrateId(this._currentRegion);
         return substrateRegistry.get(substrateId)?.getPlaybackController?.() ?? null;
+    }
+
+    /**
+     * The current region's substrate id when its registry entry is present
+     * and declares no `getPlaybackController` at all; null otherwise
+     * (including whenever a `getActiveController` resolver was injected,
+     * and for an unregistered id, which says nothing either way).
+     */
+    _undeclaredControllerSubstrate() {
+        if (this._getActiveController) return null;
+        const substrateId = this._resolveSubstrateId(this._currentRegion);
+        const entry = substrateRegistry.get(substrateId);
+        if (!entry || typeof entry.getPlaybackController === 'function') return null;
+        return substrateId;
     }
 
     /**
