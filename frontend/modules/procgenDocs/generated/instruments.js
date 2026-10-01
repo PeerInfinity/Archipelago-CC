@@ -124,7 +124,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 41,
+            "count": 42,
             "id": "plan"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 291,
+        "blockStyle": 292,
         "browser": 88,
-        "cited": 131,
-        "files": 302,
+        "cited": 132,
+        "files": 303,
         "lineStyle": 11,
-        "withDocblock": 302,
-        "withFlags": 222
+        "withDocblock": 303,
+        "withFlags": 223
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7572,6 +7572,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-u11-facing — ⛓⛓⛓ U11-swim D2: THE PLAYER'S FACING DURING A KNOCKBACK'S I-FRAME, WITNESSED ON THE GAME.",
             "path": "scripts/procgen/plan-seedling-u11-facing.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-u12-pull.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-u12-pull — ⛓⛓⛓ U12-swim D1: `Pull.update`, WITNESSED ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-u12-pull.mjs"
         },
         {
             "argvHelpers": [],

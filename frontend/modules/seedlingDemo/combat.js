@@ -664,9 +664,11 @@ export const PUZZLEMENT_HAZARDS = defineRecord('puzzlementHazards', {
     pull: {
         ctor: { dx: 0, dy: 0, src: 'Pull `super(_x, _y)`' },
         as3: 'Pull', timing: 'self', damage: 0, displaces: true,
-        src: 'levelWorld ENTITY_CLASSES (priced as a proximity hazard since R1)',
-        why: 'adds force every tick to anything overlapping. Routed around '
-            + 'since R1; unchanged at R5.',
+        src: 'levelWorld ENTITY_CLASSES (a proximity hazard) + pull.js / levelRun.stepPullsNow (U12-swim)',
+        why: 'adds force every tick to anything overlapping — a direct x/y write ahead '
+            + 'of the player. STEPPED since U12-swim (witnessed by `u12-pull-carry` and '
+            + '`u12-pull-cross`): a reach-pit leg rides the currents that drain into its '
+            + 'pit, and every other leg still routes around them as avoid volumes.',
     },
 }, { doc: ['src', 'why'], src: 'combat.js' });
 

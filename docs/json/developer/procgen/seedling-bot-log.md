@@ -11634,6 +11634,79 @@ stepped body, so they are vacuous for this change.
 - a witness whose arm ends inside a death the model refuses: `receiveInput`
   falls at the start of the pit lerp, twenty frames before the `die()`.
 
+### Seedling substrate U12-swim — Pull, the funnel ridden; step 24 (2026-10-01)
+
+⚖ Q42 (user, 2026-10-01: one slice). The report is
+`CC/docs/cloud-reports/seedling-swim-u12.md`. U11 found step 24's wall in L12's
+`Pull` funnel. U12 transcribes `Pull.update` with game witnesses recorded
+first, lets the planner ride a modelled funnel into its pit, and step 24
+solves. The survey through 2.2 reads 9/9.
+
+**D1 — `Pull.update`, transcribed (simulation licence).** `Puzzlements/Pull.as`
+writes `e.x += force·cos(dir); e.y -= force·sin(dir)` on every overlapping
+Player, Enemy and Solid, every frame: a direct write, with no `moveBy`, solid
+test, `hit()` or freeze gate. The tick order, read from the AS3:
+
+- (a) `loadlevel` adds `pull` (`Game.as:2329`) after the Player (`:2227`) and
+  every chaser, and `World.addUpdate` prepends. So the pulls update before the
+  chasers and the player, in reverse `.oel` order. Each tests the box where
+  the previous tick left it (an observation) or where the pull before it moved
+  it. A box straddling two cells of one current is pushed twice.
+- (b) A push into a solid is not undone by `Pull`. No L12 push can make one,
+  because every push points into another pull cell or the pit, so the model
+  refuses it by name.
+- (c) Mid pit-fall the push still lands; `checkFallingInPit`'s lerp starts from
+  the pushed position.
+- (d) No `Solid` of L12 overlaps a pull box. L12's one Enemy
+  (`puncher@416,256`) is a sealed room away, so the body arm is refused by
+  name rather than witnessed.
+
+`levelRun.stepPullsNow` runs in the slot the add order gives, between the
+pulsers and the arrow traps. It sits above the ceremony's early return and runs
+under `noclip` too. `previewStepper` applies the same push ahead of `stepV2`.
+The witnesses (`plan-seedling-u12-pull.mjs`, with `--check`) were recorded
+before the step existed:
+
+- `u12-pull-carry`: booted on `pull@576,640` and standing. The game rode 1
+  px/tick, with 2 px on t7–8 and t21–22, exactly as the AS3 reading predicted.
+  The edge fires on t35, the push still lands on t36–37 inside the fall-out
+  (688 → 688.8, 689.8 → 690.42), and the swap to L21 comes on t55.
+- `u12-pull-cross`: walking north on column 35, whose currents push east, the
+  drift is +1 px/tick (2 where the box straddles two cells), and the swap
+  comes on t34.
+
+The model reproduces every observation of both. Mutant (g), the step disabled:
+2 reds / 393, both witnesses at t1. Parity: of the 166 committed tapes, 20
+enter L12 and no observed tick of any of them overlaps a pull, so tapeRunner
+is unchanged on every older row.
+
+**D2 — the planner rides a modelled funnel.** A `reach-pit` goal admits the
+currents that drain into its own pit (`pull.pullsDrainingInto`: follow each
+push cell to cell until it reaches the pit) and that the model steps for a
+walking player (`pull.pullModelled`). Their contact keys join every attempt's
+contacts (`goalRides`), so the plan, the frontier flood and the drive's live
+volume watch read the funnel as floor that carries the player in. Every other
+pull stays an avoid volume. An UNMODELLED pull nearest the aim is named by
+the frontier (*"an unmodelled pull …"*) instead of being passed over for a
+resolvable sub-order; that arm is vacuous on L12. Mutant (h), the admission
+disabled: step 24 refuses with U11's wall-5 text, row-identical (`a5d18e6b`).
+
+**D3 — step 24 SOLVED, 2,419 ticks.** The run kills the puncher at t1781,
+`bosslock@432,240` opens at t1947, and the walk enters the funnel at
+`pull@576,640` on t2303. It walks with the current (18 pushed ticks), and the
+fall lands in L21 on t2339, with 0 hits. The survey through 2.2 reads 9/9.
+Steps 22, 23 and 25–30 are row-identical to the bank.
+
+**Trap candidates**, for the catalogue to number:
+
+- a missing mechanic misattributed to the nearest resolvable sub-order: the
+  frontier named a keyType-1 lock for a wall that was an untranscribed current;
+- a direct position write tested per entity: one frame can push a body twice
+  when its box straddles two cells, and a "1 px/tick" reading misses it;
+- a new entity family whose census rows are spread over three tables (the run
+  fold, `entityBlocks`, the surface doc's family table): D1 added the family
+  and D2 found the other two still owed.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
