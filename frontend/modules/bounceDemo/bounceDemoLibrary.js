@@ -526,6 +526,23 @@ export function buildBounceRegionContract({ specs, node, regionParams = {} }) {
 }
 
 /**
+ * ⛓ F2 — why a bounce zone refuses an exit spec, by name. A zone keys its
+ * portals by SIDE (`side_exit_<side>`, `sidePortals`), so every exit must carry
+ * one of the four. A side-less exit is the DRIVER's to place: the pipeline's
+ * zone path gives a top-down teleporter exit a free side, and refuses up front
+ * a region with more exits than sides (`zoneExitCeilingRefusal`). Measured (F2
+ * W0, 2026-09-30): this used to read `unknown exit side 'undefined'`.
+ */
+export function exitSideRefusal(regionId, side) {
+    return side === undefined || side === null
+        ? `bounce zone '${regionId}': an exit has no side — a bounce zone holds one exit `
+            + 'per side (N/E/S/W), so the driver must give every exit one (a top-down teleporter '
+            + 'exit gets a free side; a region with more than four exits has none to get)'
+        : `bounce zone '${regionId}': unknown exit side '${side}' — a bounce zone holds one exit `
+            + 'per side (N/E/S/W)';
+}
+
+/**
  * @param {object} specs
  * @param {string} specs.region_id
  * @param {Array<{side: string, requirement: string[],
@@ -579,9 +596,7 @@ export function* generateZoneForSpecsGen({
     platformRows = 0,
 } = {}) {
     const exits = exitSpecs.map((s) => {
-        if (!SIDE_DIRECTIONS[s.side]) {
-            throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
-        }
+        if (!SIDE_DIRECTIONS[s.side]) throw new Error(exitSideRefusal(region_id, s.side));
         const { physics, authored } = splitRequirement(s.requirement, s.counts);
         return {
             id: `side_exit_${s.side}`,
@@ -671,9 +686,7 @@ export function assembleBounceRegionFromLevel(level, {
      */
     const levelPortalIds = portalIdsBySide(level);
     const exits = exitSpecs.map((s) => {
-        if (!SIDE_DIRECTIONS[s.side]) {
-            throw new Error(`bounce zone '${region_id}': unknown exit side '${s.side}'`);
-        }
+        if (!SIDE_DIRECTIONS[s.side]) throw new Error(exitSideRefusal(region_id, s.side));
         const { physics, authored } = splitRequirement(s.requirement, s.counts);
         return {
             id: levelPortalIds.get(s.side) ?? `side_exit_${s.side}`,
