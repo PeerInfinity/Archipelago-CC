@@ -26,6 +26,8 @@ import { registerTest } from '../testRegistry.js';
 import settingsManager from '../../../app/core/settingsManager.js';
 import { getActivePanelInstance } from '../../flashPanel/index.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
+import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
+import { getSphereStateSingleton } from '../../sphereState/singleton.js';
 
 /**
  * ⛔ The walk helper imports `levelWorld.js`; a static import here would put
@@ -197,6 +199,174 @@ registerTest({
         + 'AP item (a real user:locationCheck) and through the door to the other generated room (a real '
         + 'user:regionMove). No wasm artifact needed.',
     testFunction: seedlingJsRuntimePlaysGeneratedRoom,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── Seedling JS J2: the Playback Bot ────────────────────────────────────────
+
+/**
+ * Mount the bot panel, set the runtime, load the preset by the PRODUCTION path
+ * (J1's trap: `loadRulesFromFile` leaves the catch-up on the previous preset),
+ * and wait for the flash panel on `transport`. Returns `{bot, panel}` or null.
+ */
+async function botOnSeedlingPreset(tc, runtime) {
+    // The bot panel must be mounted BEFORE the rules load: procgenPlayer's
+    // synthetic initial user:regionMove is how it learns its start region.
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
+    const botPanel = await tc.pollForValue(() => getBotPanel(), 'playback bot panel instance', 5000, 100);
+    const bot = botPanel?.getBot?.() ?? null;
+    tc.reportCondition('the playback bot is mounted', !!bot);
+    if (!bot) return null;
+    bot.reset?.();
+
+    await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
+    tc.log(`runtime = ${runtime} (session override); loading seedling_generated_room…`);
+    const rulesJson = await (await fetch(PRESET_PATH)).json();
+    const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+    tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: PRESET_PATH });
+    await loaded;
+    await tc.stateManager.pingWorker('after-rules-load', 5000);
+    tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+
+    const transport = runtime === 'js' ? 'js' : 'wasm';
+    const panel = await tc.pollForValue(() => {
+        const p = getActivePanelInstance();
+        return p?.transport === transport && p.adapter && p._initRuntime === runtime ? p : null;
+    }, `the flash panel mounted the ${transport} transport`, 30000, 250);
+    tc.assertEqual(`the panel is on the ${transport} transport`, transport, panel?.transport ?? null);
+    if (!panel) return null;
+
+    const sphereState = getSphereStateSingleton();
+    const sphereLoaded = await tc.pollForCondition(() => (sphereState.getSphereData()?.length ?? 0) > 0,
+        'the preset\'s EMBEDDED sphere log was loaded', 10000, 200);
+    tc.reportCondition('embedded sphere log loaded', !!sphereLoaded);
+    if (!sphereLoaded) return null;
+    bot.refresh();
+    return { bot, panel };
+}
+
+/** `error:` statuses, read off the bot's LOG (every distinct status, so a transient one is not missed). */
+const errorStatuses = (bot) => (bot.getLog?.() ?? []).filter((l) => typeof l === 'string' && l.startsWith('error:'));
+
+/** Every region gameState's PATH records a landed regionMove into — the cross-region witness. */
+function walkedRegions() {
+    const gs = getGameStateSingleton();
+    return (gs?.getPath?.() ?? []).filter((e) => e.type === 'regionMove').map((e) => e.destinationRegion).filter(Boolean);
+}
+
+export async function seedlingJsRuntimeBotCompletesGeneratedRoom(tc) {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        const ready = await botOnSeedlingPreset(tc, 'js');
+        if (!ready) return tc.getOverallResult();
+        const { bot, panel } = ready;
+        const ap = await tc.pollForValue(() => (panel._apLoadResult && panel.seedlingPlaybackSurface()?.report ? panel : null),
+            'the panel finished its AP load (the generated arm) and holds the assembly report', 30000, 250);
+        tc.reportCondition('the generated arm loaded (the bot\'s name → cell map)', !!ap);
+        if (!ap) return tc.getOverallResult();
+        const rt = frameOf(panel)?.__seedlingJsRuntime ?? null;
+        tc.reportCondition('the JS runtime page is up', !!rt?.run);
+        if (!rt?.run) return tc.getOverallResult();
+
+        // ── the sphere log, end to end ────────────────────────────────────
+        const expected = (getSphereStateSingleton().getSphereData() ?? [])
+            .flatMap((s) => s.locations ?? []);
+        tc.log(`sphere log locations: ${JSON.stringify(expected)}; bot start region '${bot.getCurrentRegion?.() ?? '?'}'`);
+        await bot.play();
+        const finished = await tc.pollForCondition(() => (bot.getStatus() || '').startsWith('finished'),
+            'the bot drained its whole sphere queue on the JS runtime', 60000, 250);
+        if (!finished) {
+            tc.log(`bot status "${bot.getStatus()}"; walk: ${rt.playback.describe()}; log tail `
+                + JSON.stringify(bot.getLog?.().slice(-8) ?? []), 'error');
+        }
+        tc.assertEqual('the Playback Bot completed seedling_generated_room from its sphere log', true, !!finished);
+        await tc.stateManager.pingWorker('after-bot-run', 5000);
+        const snap = tc.stateManager.getSnapshot?.();
+        const checked = new Set(Array.isArray(snap?.checkedLocations) ? snap.checkedLocations : [...(snap?.checkedLocations ?? [])]);
+        tc.assertEqual('every sphere-log location is checked in the state manager',
+            '[]', JSON.stringify(expected.filter((n) => !checked.has(n))));
+
+        // ── crossings ─────────────────────────────────────────────────────
+        // The queue's one location sits in the start room, so the queue alone
+        // crosses nothing. The bot is sent on — one exit per region, re-entering
+        // on every arrival — and the witness is gameState's own path. Measured
+        // route (PathFinder's): region_0_0 →(a generated door)→ region_0_1
+        // →(a door into the parking room)→ the maze region_1_1.
+        const before = walkedRegions().length;
+        const MAZE_TARGET = { region: 'region_1_1', x: 5, y: 5 };
+        const r = bot.walkToTile(MAZE_TARGET.region, MAZE_TARGET.x, MAZE_TARGET.y);
+        tc.assertEqual('the bot took a cross-region tile target', true, !!r?.ok);
+        const arrived = await tc.pollForCondition(() => walkedRegions().slice(before).includes(MAZE_TARGET.region),
+            `gameState's path records the bot's arrival in ${MAZE_TARGET.region} (a maze region)`, 60000, 250);
+        const legs = walkedRegions().slice(before);
+        tc.log(`regions walked after the queue: ${JSON.stringify(legs)}; bot "${bot.getStatus()}"`);
+        tc.assertEqual('the bot crossed out of the generated room into a maze region (gameState path)', true, !!arrived);
+        tc.assertEqual('the route crossed Seedling doors the page walked (a generated door AND a parking door)',
+            '1+1', `${rt.events.filter((e) => e.type === 'transition' && e.teleporter && e.from === 0 && e.to === 1).length > 0 ? 1 : 0}`
+            + `+${rt.events.filter((e) => e.type === 'transition' && e.teleporter && e.to === rt.mounted.set.rooms.find((room) => room.name === 'parking')?.id).length > 0 ? 1 : 0}`);
+
+        // And back: from the maze into the start room (the host's arrival
+        // teleport lands the JS run in its generated room again).
+        const back = walkedRegions().length;
+        bot.walkToLocation(expected[0]);
+        const home = await tc.pollForCondition(() => walkedRegions().slice(back).includes('region_0_0'),
+            'the bot routed back into the start room', 60000, 250);
+        tc.log(`regions walked on the way back: ${JSON.stringify(walkedRegions().slice(back))}`);
+        tc.assertEqual('the bot routed from the maze back into the generated start room (gameState path)', true, !!home);
+
+        // The silent-stall guard, with its positive control first.
+        const log = bot.getLog?.() ?? [];
+        tc.assertEqual('the bot wrote a status log to read errors out of', true,
+            log.length > 1 && log.some((l) => String(l).startsWith('finished')));
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+        tc.assertEqual('no death and no halt on the JS runtime', '0/null',
+            `${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+export async function seedlingWasmRuntimeBotNamesItsRefusal(tc) {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        const ready = await botOnSeedlingPreset(tc, 'wasm');
+        if (!ready) return tc.getOverallResult();
+        const { bot } = ready;
+        await bot.play();
+        const named = await tc.pollForValue(() => errorStatuses(bot).find((l) => l.includes('only on the Seedling JS runtime')) ?? null,
+            'the bot\'s status NAMES the cannot-walk error under the wasm runtime', 15000, 200);
+        tc.log(`bot status: "${bot.getStatus()}"`);
+        tc.assertEqual('under wasm the bot says, by name, that it cannot walk the generated room', true, !!named);
+        tc.assertEqual('the named error names the runtime it is on', true, /running the wasm runtime/.test(named ?? ''));
+    } finally {
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-bot-completes-generated-room',
+    name: 'Seedling JS runtime: the Playback Bot completes seedling_generated_room',
+    description: 'With flashPanel.runtime = js, the Playback Bot drains the preset\'s sphere log (the apitem '
+        + 'check through the real dispatcher), then routes through a generated door and a parking door into a '
+        + 'maze region and back into the start room — every crossing witnessed by gameState\'s path, '
+        + 'no error: status ever.',
+    testFunction: seedlingJsRuntimeBotCompletesGeneratedRoom,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+registerTest({
+    id: 'seedling-wasm-runtime-bot-names-refusal',
+    name: 'Seedling (wasm runtime): the Playback Bot names why it cannot walk a generated room',
+    description: 'With flashPanel.runtime = wasm, the bot\'s walkTo into a flash_seedling_gen region is refused '
+        + 'by the controller and the bot\'s status names the cannot-walk error (only the JS runtime has feet) '
+        + '— never a silent wait. The wasm page is never started.',
+    testFunction: seedlingWasmRuntimeBotNamesItsRefusal,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

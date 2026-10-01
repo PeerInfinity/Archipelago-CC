@@ -305,9 +305,25 @@ How each wasm-side fact maps onto the model:
 
 **Eligibility.** The JS page is not a build in `builds.json`, so `seedlingRandomizerEligibility` takes `transport: 'js'` and answers the capability check from `JS_RUNTIME_CAPABILITIES` (`apitem`). The JS runtime plays the generated arm only: a world with no generated rooms is refused by the `generated` check before any vanilla fact is asked. The wasm transport's answers are unchanged.
 
-**Not yet.** Real atlas rooms (`flash_seedling`) and the vanilla 116 are not mounted by the JS runtime, and the playback bot has no controller for it. Before a set is delivered the page reports level −1.
+**Not yet.** Real atlas rooms (`flash_seedling`) and the vanilla 116 are not mounted by the JS runtime, so the playback bot cannot walk them either. Before a set is delivered the page reports level −1.
 
 The in-app row `seedling-js-runtime-generated-room` (`test-substrates`, category `Seedling JS runtime`, default `fast` batch) plays `seedling_generated_room` this way: synthetic keys on the canvas walk to the `apitem` (one `user:locationCheck`) and through the door to the other generated room (one `user:regionMove`). It needs no wasm artifact.
+
+#### The playback bot on the JS runtime
+
+`flash_seedling_gen` declares `getPlaybackController`, which returns `flashPanel/seedlingPlaybackController.js` (injected by `flashPanel/index.js`; `null` before the module initializes). The controller is a host-side object that walks nothing itself:
+
+- **Names to cells.** It maps the bot's AP names to cells with the generated arm's assembly report (`assembleGeneratedSeedlingSet(...).report`, which the panel keeps from its AP placement load): a location to its room and `apitem` tag, an exit to its room and door tile. An exit name may be bare (`exit_0`) or region-prefixed (`region_0_0__exit_0`); a bare name is read against the room the player is in.
+- **The walk runs in the page.** It hands the goal synchronously to the page's `window.__seedlingJsRuntime.playback` (the iframe is same-origin, as it is for `__swfBridge`). `seedlingDemo/jsRuntimeWalker.js` then chooses the keys once per tick inside the page's own clock: every 8 ticks it re-plans with `planWaypoints` over the live run (`livePerVisitOpts` plus `snapStart`, so a player standing against a wall or a pit edge still has a start cell), and every tick it holds `driveStepHeld`'s keys toward the first waypoint not yet reached. `driveStepHeld` is `botDriverV2.drive`'s per-tick choice, lifted out of its loop, so the walk holds the keys the solver's walk would. During a ceremony the session's auto-advance cadence replaces the keys, as it does for a player. While a goal is walked, the keyboard is not read.
+- **Done.** A location goal is done when the page reports its `pendingCheck`; an exit goal when the door's crossing fires. The host glue turns those into `user:locationCheck` and `user:regionMove` exactly as for keyboard play.
+- **Refusals.** Under any other runtime (`wasm`, `flash`, `auto` on a wasm build), `walkTo` returns `false` and `lastRefusal` names the runtime and the setting to change, so the bot stops on a named `error:` status. A name the generated rooms do not hold is refused the same way. A goal that arrives before the page or the AP load is up is held and retried every 250 ms. If the held goal later turns out to be unwalkable (the panel came up on another runtime, nothing was handed over within 60 s), or the page gives up on a live walk (`WALK_GIVE_UP_TICKS`, 1800 ticks), the controller publishes `playback:walkFailed` and the bot shows the reason.
+- **The other verbs.** `play`, `stop`, `step` (drive one page tick) and `reset` go to the page's walker. `instant` is `play`: the game has one 30-tick clock. `setRate` does nothing.
+
+The walk does not see enemies or arrows. Generated rooms hold only elements the solver certifies, and the model is not extended to see more. Atlas rooms (`flash_seedling`) declare no controller; they wait for the JS runtime to mount them (slice J3).
+
+The capability chart's "The Playback Bot can walk it" cell for `flash_seedling_gen` is ◐ *with the Flash Panel's JS runtime*, from the entry's `playbackScope`.
+
+Two in-app rows cover it (same category and batch): `seedling-js-runtime-bot-completes-generated-room` drains `seedling_generated_room`'s sphere log with `runtime: 'js'`, then routes the bot through a generated door and a parking door into a maze region and back, with every crossing read from gameState's path and no `error:` status at any point. `seedling-wasm-runtime-bot-names-refusal` checks that with `runtime: 'wasm'` the bot's status names the refusal.
 
 ### Host-enforced door gates
 

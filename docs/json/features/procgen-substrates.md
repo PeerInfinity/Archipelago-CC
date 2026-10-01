@@ -10,14 +10,14 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**29 statements · 9 substrates · 37 registry fields read (40 of the developer matrix's 84, counting the parents of the fields read) · 44 not yet read.**
+**29 statements · 9 substrates · 38 registry fields read (41 of the developer matrix's 85, counting the parents of the fields read) · 44 not yet read.**
 
 ## Play
 
 | | What you can do | Bounce Demo | Flash | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Idle Loops | Runner Demo | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|
 | P1 | You can play its regions by hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| P2 | The Playback Bot can walk it (replaying a world's solution) | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| P2 | The Playback Bot can walk it (replaying a world's solution) | ✓ | ✗ | ✗ | ◐ with the Flash Panel's JS runtime | ✓ | ✓ | ✓ | ✓ | ✓ |
 | P3 | It draws its own picture on the composite map (else a labelled box) | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✓ |
 | P4 | It brings progression items of its own | ✓ Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory | ✗ | ✗ | ✓ Progressive Sword, Progressive Shield, Progressive Swim | ✓ 48 items | ✓ Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key | ✓ Victory | ✓ Double Jump, Blue Platforms, Springs, Glide, Shield, Victory | ✗ |
 | P5 | What the generator may do with it | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ its own map becomes the region graph, locations placed anywhere | ✓ locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit |
@@ -75,7 +75,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 Each row is answered from these fields of the substrate's registry entry — the names in the developer matrix.
 
 - **P1** — `panelComponentType`, `deserializeWorld`
-- **P2** — `getPlaybackController`
+- **P2** — `getPlaybackController`, `playbackScope`
 - **P3** — `compositeMap.drawRegion`
 - **P4** — `libraryItems`, `supportedFeatures`
 - **P5** — `supportedFeatures`
@@ -161,6 +161,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 ### Seedling (generated room)
 
 - *Play* — You can play its regions by hand
+- *Play* — The Playback Bot can walk it (replaying a world's solution): with the Flash Panel's JS runtime
 - *Play* — It brings progression items of its own: Progressive Sword, Progressive Shield, Progressive Swim
 - *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode

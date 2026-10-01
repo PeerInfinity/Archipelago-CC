@@ -379,6 +379,18 @@
             "_comment": "Seedling JS J1. flashPanel.runtime = js: the JS model's page plays seedling_generated_room by synthetic keys — the apitem check and the door crossing through the unchanged host glue. Needs no wasm artifact, so unlike the wasm flavour (check-seedling-generated-room-play.mjs, a box gate) it can be an in-app row. No batch claims the category, so it rides the default `fast` batch deliberately: a ~20 s walk at 30 ticks/s, not a real-time bot walk."
         },
         {
+            "id": "seedling-js-runtime-bot-completes-generated-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J2. flashPanel.runtime = js: the Playback Bot drains seedling_generated_room's sphere log through the flash_seedling_gen PlaybackController (closed-loop walk inside the JS page's tick), then routes through a generated door and a parking door into a maze region and back into the start room — crossings witnessed by gameState's path, no error: status. Fast batch, like the J1 row."
+        },
+        {
+            "id": "seedling-wasm-runtime-bot-names-refusal",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J2. flashPanel.runtime = wasm: the bot's walkTo into a generated room is refused and its status NAMES the cannot-walk error (P0's rule: never a silent wait). The wasm page is loaded but never started."
+        },
+        {
             "id": "apworld-document-tab-lists-every-schema-key",
             "enabled": true,
             "category": "apworldEditor",

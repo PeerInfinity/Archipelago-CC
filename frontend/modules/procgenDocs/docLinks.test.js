@@ -246,20 +246,23 @@ describe('the corpus census — printed, then pinned', () => {
          *   324 → 325  SEEDLING SWIM U8 D3 (2026-10-01): seedling-bot.md's biome
          *              defaults paragraph → flash.md § The element defaults by biome
          *              (`doc` 249 → 250).
+         *   325 → 327  SEEDLING JS J2 (2026-10-01): substrate-registry.md's
+         *              `flash_seedling_gen` annotation and playback-and-debugging.md
+         *              → flash.md § The playback bot on the JS runtime (`doc` 250 → 252).
          */
         expect(by).toEqual({
             'same-doc': 17,
-            doc: 250,
+            doc: 252,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(325);
+        expect(CORPUS.length).toBe(327);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(250);
+        expect(docs).toHaveLength(252);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

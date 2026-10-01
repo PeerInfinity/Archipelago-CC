@@ -9,8 +9,8 @@
  * cell's centre, read off the live position every tick (closed loop, so a
  * wall's push-back or a knock cannot desynchronise it).
  *
- * ⛔ NOT THE PLAYBACK CONTROLLER. That is slice J2 (planned against the live
- * run with `planWaypoints`, held for the swim arc's U12). This knows nothing
+ * ⛔ NOT THE PLAYBACK CONTROLLER. That is `jsRuntimeWalker.js` (slice J2:
+ * planned against the live run with `planWaypoints`). This knows nothing
  * of hazards beyond "do not route over them", nothing of enemies, and nothing
  * of ceremonies — the runtime's own auto-advance presses through those.
  *

@@ -23,6 +23,8 @@ For in-process substrates (maze), the controller is the live panel's own object.
 
 The proxy is reusable: it takes a `controlEvent` parameter, so other iframe substrates use the same class on their own channel — bounce constructs one on `bounce:playbackControl`, received by the shared flash bridge's playback receiver and translated into bot-driver targets ([Bounce Substrate](./bounce.md)).
 
+A proxy cannot refuse a target, because its methods return nothing. Generated Seedling rooms (`flash_seedling_gen`) need to refuse: they can only be walked on the Flash Panel's JS runtime, and the bot must say so rather than wait. Their controller (`flashPanel/seedlingPlaybackController.js`) is therefore a host-side object that calls into the same-origin JS runtime page directly. `walkTo` returns `false` with a `lastRefusal` reason on any other runtime, and the walk itself runs inside the page's own tick ([Flash Substrate](./flash.md#the-playback-bot-on-the-js-runtime)). A refusal that comes after the target was accepted is published as `playback:walkFailed`; the bot turns both kinds into a named `error:` status.
+
 ## Shared timing and UI primitives (`frontend/modules/shared/`)
 
 - **`playbackClock.js`** — the substrate-neutral timing primitive: drives `onTick` at a configurable Hz with start/stop/single-step/rate controls. `_tick(nowMs)` is a pure decision function; production wraps it in a requestAnimationFrame scheduler, tests call it directly with controlled timestamps.

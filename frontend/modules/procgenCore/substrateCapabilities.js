@@ -227,7 +227,7 @@ export const CAPABILITY_STATEMENTS = Object.freeze([
         fields: ['getPlaybackController', 'playbackScope'],
         /* ⛓ SEEDLING JS J2: a controller that walks only under a condition
          * declares the condition (`playbackScope`), and the cell is ◐ with it
-         * as the degree — flash_seedling_gen walks only on the JS runtime. */
+         * as the degree — the generated Seedling rooms walk only on the JS runtime. */
         answer: (e) => {
             if (!isFn(e.getPlaybackController)) return cell(CELL_KINDS.NO);
             return typeof e.playbackScope === 'string' && e.playbackScope

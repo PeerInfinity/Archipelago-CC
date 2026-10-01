@@ -256,6 +256,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
+                    "statement": "The Playback Bot can walk it (replaying a world's solution)",
+                    "text": "with the Flash Panel's JS runtime"
+                },
+                {
+                    "group": "play",
                     "statement": "It brings progression items of its own",
                     "text": "Progressive Sword, Progressive Shield, Progressive Swim"
                 },
@@ -886,8 +891,8 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 84,
-        "fieldsRead": 37,
+        "fields": 85,
+        "fieldsRead": 38,
         "fieldsUnread": 44,
         "statements": 29,
         "substrates": 9
@@ -919,6 +924,7 @@ export const CAPABILITIES = frz({
         "loopSupport.requiresLoopMode",
         "loopSupport.summaryRecording",
         "panelComponentType",
+        "playbackScope",
         "regionRoundTrip",
         "renderProcgenParams",
         "roomEditor",
@@ -1143,6 +1149,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "getPlaybackController",
                             "value": "fn"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "—"
                         }
                     ]
                 },
@@ -1153,6 +1163,10 @@ export const CAPABILITIES = frz({
                     "why": [
                         {
                             "field": "getPlaybackController",
+                            "value": "—"
+                        },
+                        {
+                            "field": "playbackScope",
                             "value": "—"
                         }
                     ]
@@ -1165,17 +1179,25 @@ export const CAPABILITIES = frz({
                         {
                             "field": "getPlaybackController",
                             "value": "—"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "—"
                         }
                     ]
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "partial",
+                    "text": "with the Flash Panel's JS runtime",
                     "why": [
                         {
                             "field": "getPlaybackController",
-                            "value": "—"
+                            "value": "fn"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "with the Flash Panel's JS runtime"
                         }
                     ]
                 },
@@ -1187,6 +1209,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "getPlaybackController",
                             "value": "fn"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "—"
                         }
                     ]
                 },
@@ -1198,6 +1224,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "getPlaybackController",
                             "value": "fn"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "—"
                         }
                     ]
                 },
@@ -1209,6 +1239,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "getPlaybackController",
                             "value": "fn"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "—"
                         }
                     ]
                 },
@@ -1220,6 +1254,10 @@ export const CAPABILITIES = frz({
                         {
                             "field": "getPlaybackController",
                             "value": "fn"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "—"
                         }
                     ]
                 },
@@ -1231,12 +1269,17 @@ export const CAPABILITIES = frz({
                         {
                             "field": "getPlaybackController",
                             "value": "fn"
+                        },
+                        {
+                            "field": "playbackScope",
+                            "value": "—"
                         }
                     ]
                 }
             ],
             "fields": [
-                "getPlaybackController"
+                "getPlaybackController",
+                "playbackScope"
             ],
             "group": "play",
             "id": "P2",

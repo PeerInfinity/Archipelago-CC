@@ -267,7 +267,8 @@ describe('⛓ the links the render emits', () => {
         //   320 → 322: T4's two pipeline-presets.md → concepts.md § The trial world links;
         //   322 → 324: P3's seedling-solver-surface.md § Which blocks the solver models ⇄ concepts.md § Behaviour pair.
         //   324 → 325: swim U8's seedling-bot.md → flash.md § The element defaults by biome.
-        expect(checked).toBe(325);
+        //   325 → 327: Seedling JS J2's substrate-registry.md + playback-and-debugging.md → flash.md § The playback bot.
+        expect(checked).toBe(327);
     });
 
     it('tags each link with the kind that produced it', () => {

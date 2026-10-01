@@ -42,7 +42,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 29,
+            "fields": 31,
             "id": "flash_seedling_gen",
             "label": "Seedling (generated room)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
@@ -104,7 +104,8 @@ export const REGISTRY = frz({
         },
         {
             "rows": [
-                "getPlaybackController"
+                "getPlaybackController",
+                "playbackScope"
             ],
             "title": "Playback"
         },
@@ -2655,6 +2656,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "flash_seedling_gen",
                 "jta",
                 "maze",
                 "omsi",
@@ -2685,9 +2687,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling_gen",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -5060,6 +5062,79 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Build-time — procedural substrates",
             "name": "placeFromRules"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "with the Flash Panel's JS runtime",
+                    "type": "string",
+                    "value": "with the Flash Panel's JS runtime"
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Playback",
+            "name": "playbackScope"
         },
         {
             "carriedBy": [

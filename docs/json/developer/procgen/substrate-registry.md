@@ -46,8 +46,11 @@ Every group after Identity is optional; consumers check for the fields they need
 | Field | Type | Meaning |
 |-------|------|---------|
 | `getPlaybackController` | `() → PlaybackController \| null` | Used by the playback bot and the loops `customQueue` action. `null` means no panel is mounted and the caller does nothing; an entry without the field has no bot. |
+| `playbackScope` | string (optional) | The condition the controller walks under, for an entry whose controller works only in some configurations. The capability chart's "The Playback Bot can walk it" cell is then ◐ with this text instead of ✓. `flash_seedling_gen`: `with the Flash Panel's JS runtime`. |
 
 A **PlaybackController** has `play(rateHz?)`, `stop()`, `step()`, `instant()`, `reset()`, `setRate(rateHz)`, `walkTo(target)` with target `{ kind: 'location'|'exit'|'tile', name?, region?, x?, y? }`, and optional `replayActions(actions, { onComplete, departureExitId, instant })`, which replays a visit's interior and then crosses `departureExitId` itself. Methods return `void` or `Promise<void>`; progress comes back as `user:locationCheck` / `user:regionMove` events. Iframe substrates implement it as a host-side proxy to a bridge in the iframe.
+
+`walkTo` may return `false` when the controller cannot take the target; the bot then stops on a named `error:` status instead of waiting. A controller can say why in a `lastRefusal` string, which the bot puts in the status. A controller that accepted a target and only later finds it cannot walk it publishes `playback:walkFailed` (`{ substrate, target, reason }`, `procgenCore/playbackEvents.js`) on the event bus, and the bot shows the same status.
 
 ### Action labelling
 
@@ -219,7 +222,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**9 registered entries · 84 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**9 registered entries · 85 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -253,7 +256,8 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
-| `getPlaybackController` | fn | — | — | — | fn | fn | fn | fn | fn |
+| `getPlaybackController` | fn | — | — | fn | fn | fn | fn | fn | fn |
+| `playbackScope` | — | — | — | with the Flash Panel's JS runtime | — | — | — | — | — |
 
 **Action labelling**
 
@@ -412,9 +416,9 @@ What the declarations mean, which the generated table cannot show.
 | `bounce` | The playback controller is a host-side proxy (`bounce:playbackControl`) to an in-game bot that plays real physics. Summary capture. |
 | `runner` | Like bounce; its `zoneCount` comes from a lazily built zone table. |
 | `text_adventure` | The playback controller is a host proxy to an iframe bridge (`textAdventureSubstrateWrapper:control`). Coarse capture. |
-| `flash` | No `getPlaybackController`, so the Playback Bot cannot walk a Flash region; a per-game entry that gains a bot declares its own. |
+| `flash` | No `getPlaybackController`, so the Playback Bot cannot walk a Flash region; a per-game entry that gains a bot declares its own (`flash_seedling_gen` does). |
 | `flash_seedling` | No bot. Host-side glue turns the game's level changes into region moves ([Flash Substrate](./flash.md#flash_seedling--a-real-games-map-as-procgen-regions)). `zoneCount` counts placeable rooms (with at least one wired door), not all atlas regions. |
-| `flash_seedling_gen` | Like `flash_seedling`, but its rooms are built by the Seedling generator; `flashSeedlingGenBuild.js` installs the generator hooks ([Flash Substrate](./flash.md#generated-rooms-flash_seedling_gen)). |
+| `flash_seedling_gen` | Like `flash_seedling`, but its rooms are built by the Seedling generator; `flashSeedlingGenBuild.js` installs the generator hooks ([Flash Substrate](./flash.md#generated-rooms-flash_seedling_gen)). Its playback controller walks only on the Flash Panel's JS runtime (`playbackScope`) and refuses by name on any other ([Flash Substrate](./flash.md#the-playback-bot-on-the-js-runtime)). |
 | `jta` | Fine-grained; the Bot honours Instant. Zones are indices into one game build, so it cannot go into a region library. |
 | `omsi` | Fine-grained; the recording is the region's authored plan. Bot mode uses the omsi fork's planner; Instant runs the same ticks without waiting. `zoneCount` is the region-split or town count. |
 
