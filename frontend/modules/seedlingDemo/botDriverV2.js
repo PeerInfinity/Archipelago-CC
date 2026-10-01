@@ -817,6 +817,44 @@ function swimTileKeys(level, opts) {
 }
 
 /**
+ * ⛓⛓ SEEDLING JS J2 — **THE START SNAP** (`opts.snapStart`, asked by the JS
+ * runtime's closed-loop walker and by nobody else, so every existing route is
+ * byte-identical). A tape-driven leg starts where a leg ended — a tile centre
+ * or an arrival — but a LIVE run is wherever the player happens to stand, and
+ * the player's box can stand with its centre over a cell whose centre it does
+ * not fit at: against a wall, beside a pit's edge. `planTilePath` refused such
+ * a start by name ("A* start tile … not walkable") although the player is
+ * plainly standing there. With the flag, an unwalkable start cell is replaced
+ * by the NEAREST walkable cell within two rings (the goal's own radius —
+ * `nearestGoalNode`), ties broken by ty then tx; `planWaypoints` keeps the
+ * real position as the route's first point, and the smoother checks that
+ * first segment like any other. No walkable cell within two rings → the
+ * original cell, so the refusal still names it.
+ */
+function snappedStartNode(level, from, allowTeleporter, ends, pitch) {
+    const cell = nodeAt(from.x, from.y, pitch);
+    if (isWalkableTile(level, cell.tx, cell.ty, allowTeleporter, ends)) return cell;
+    let best = null;
+    for (let r = 1; r <= 2 && best === null; r++) {
+        for (let dy = -r; dy <= r; dy++) {
+            for (let dx = -r; dx <= r; dx++) {
+                if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+                const tx = cell.tx + dx;
+                const ty = cell.ty + dy;
+                if (!isWalkableTile(level, tx, ty, allowTeleporter, ends)) continue;
+                const c = nodeCentre(tx, ty, pitch);
+                const d = Math.hypot(c.x - from.x, c.y - from.y);
+                if (best === null || d < best.d
+                    || (d === best.d && (ty < best.ty || (ty === best.ty && tx < best.tx)))) {
+                    best = { d, tx, ty };
+                }
+            }
+        }
+    }
+    return best ? { tx: best.tx, ty: best.ty } : cell;
+}
+
+/**
  * A* over walkable tiles, 4-connected, Manhattan heuristic — unit cost except
  * a swum water node, which costs `WATER_STEP_COST` (T2 D1; the heuristic stays
  * admissible because no step costs less than 1).
@@ -834,15 +872,17 @@ function swimTileKeys(level, opts) {
  */
 export function planTilePath(level, from, to, allowTeleporter = null, opts = {}) {
     const pitch = opts.lattice ?? DEFAULT_LATTICE;
-    const start = nodeAt(from.x, from.y, pitch);
-    const goal = nodeAt(to.x, to.y, pitch);
-
     // Both ENDPOINTS are checked without ANY clearance, for the same reason
     // the goal is exempt during expansion: they are positions the caller
     // named or the game chose, not cells the planner picked. The trigger
     // margin especially — a leg starts where the previous leg's exit landed,
     // which is INSIDE a trigger by construction.
     const ends = { ...opts, nodeMargin: 0, triggerMargin: 0 };
+    const start = opts.snapStart
+        ? snappedStartNode(level, from, allowTeleporter, ends, pitch)
+        : nodeAt(from.x, from.y, pitch);
+    const goal = nodeAt(to.x, to.y, pitch);
+
     for (const [what, t, pos] of [['start', start, from], ['goal', goal, to]]) {
         if (!isWalkableTile(level, t.tx, t.ty, allowTeleporter, ends)) {
             const c = nodeCentre(t.tx, t.ty, pitch);
@@ -4941,6 +4981,65 @@ export function holdOneAxis(held, state, target) {
 }
 
 /**
+ * ⛓⛓ SEEDLING JS J2 — **ONE TICK OF `drive`'S CHOICE, LIFTED OUT OF ITS
+ * LOOP** (the precedent is `ceremonyCadenceStep`, hoisted out of
+ * `runCollect` for the same reason): the keys `drive` holds this tick toward
+ * `target`, given the run as it stands. `drive` calls it and nothing else
+ * decides its keys, so a caller with its OWN clock — the Seedling JS runtime's
+ * page, one tick per animation-frame slot — walks with exactly the choice the
+ * solver's walk makes, without a second copy of the bang-bang rule, the
+ * transport freeze, the strike or the one-axis filter.
+ *
+ * ⛔ IT DECIDES, IT DOES NOT STEP — no `run.advance`, no `perTick`, no
+ * arrival test; those stay the loop's.
+ *
+ * @param {object} run
+ * @param {{x:number, y:number}} target
+ * @param {number} tolerance
+ * @param {object} [opts] `strike`, `axisAligned` — `drive`'s own options
+ * @returns {Set<string>} the held set
+ */
+export function driveStepHeld(run, target, tolerance, { strike = null, axisAligned = false } = {}) {
+    // ⚠ ONCE A TRANSPORT IS IN FLIGHT, THE DRIVER PRESSES NOTHING.
+    // The twenty fall-out ticks are ordinary live ticks — `receiveInput
+    // = false` stops input, not the tick counter — so the controller
+    // would happily keep choosing keys for them, and the game would
+    // ignore every one. A span one consumer honours and the other drops
+    // is the asymmetry this format exists to prevent, so the driver
+    // emits the same nothing the game acts on.
+    let held = run.state.fall ? NO_HELD : chooseHeld(run.state, target, tolerance);
+    /**
+     * ⛓⛓⛓ R9 SLICE 12b — **THE OPPORTUNISTIC STRIKE, ON THE WALK SIDE OF
+     * THE ONE POLICY** (⚖ ruling 30(b), the user's own ask: *"add
+     * opportunistic sword attacks to all of the paths, AVOID, TIME, and
+     * BAIT, not just KILL"*).
+     *
+     * ⛓ THIS IS THE WHOLE CROSS-CUT. `drive` is the single `chooseHeld`
+     * walk loop the ladder has — every rung's approach, every re-plan,
+     * every `walkTo` — so one line here is "on every walk" rather than a
+     * change repeated five times and forgotten in a sixth.
+     *
+     * ⛔ IT NEVER REFUSES. `decide` hands back the walk's own keys when
+     * nothing is in reach, so a room with no bodies, no sword or no
+     * modelled arm walks exactly as it did before this slice — which is
+     * what makes the roster's silence on it meaningful rather than lucky.
+     *
+     * ⚠ THE AIM AND THE PRESS COST THE WALK TWO TICKS, and the preview
+     * spends the same two, which is why the ETAs still hold.
+     */
+    if (strike && !run.state.fall) {
+        held = strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, held,
+            // ⛓ R9 SLICE 12c — see `runDwell`'s own call: ONE policy, one
+            // question, and now one model of what the press will do.
+            { slash: run.progress('slashInfo') }).held;
+    }
+    // ⛓ SEEDLING SWIM U2, D1 — see `holdOneAxis`; `previewWalk` applies the
+    // same filter at the same point, so the preview and the drive still agree.
+    if (axisAligned) held = holdOneAxis(held, run.state, target);
+    return held;
+}
+
+/**
  * Drive the run to `target`, one bang-bang tick at a time.
  *
  * `until` is `'arrival'` (v1's criterion: within tolerance AND stopped) or
@@ -4978,42 +5077,7 @@ function drive(run, target, perTick, {
                 + `${touched.length ? `, after grazing ${touched.length} solid(s): `
                     + `${touched.slice(0, 3).map((g) => g.what).join('; ')}` : ''}.`);
         }
-        // ⚠ ONCE A TRANSPORT IS IN FLIGHT, THE DRIVER PRESSES NOTHING.
-        // The twenty fall-out ticks are ordinary live ticks — `receiveInput
-        // = false` stops input, not the tick counter — so the controller
-        // would happily keep choosing keys for them, and the game would
-        // ignore every one. A span one consumer honours and the other drops
-        // is the asymmetry this format exists to prevent, so the driver
-        // emits the same nothing the game acts on.
-        let held = run.state.fall ? NO_HELD : chooseHeld(run.state, target, tolerance);
-        /**
-         * ⛓⛓⛓ R9 SLICE 12b — **THE OPPORTUNISTIC STRIKE, ON THE WALK SIDE OF
-         * THE ONE POLICY** (⚖ ruling 30(b), the user's own ask: *"add
-         * opportunistic sword attacks to all of the paths, AVOID, TIME, and
-         * BAIT, not just KILL"*).
-         *
-         * ⛓ THIS IS THE WHOLE CROSS-CUT. `drive` is the single `chooseHeld`
-         * walk loop the ladder has — every rung's approach, every re-plan,
-         * every `walkTo` — so one line here is "on every walk" rather than a
-         * change repeated five times and forgotten in a sixth.
-         *
-         * ⛔ IT NEVER REFUSES. `decide` hands back the walk's own keys when
-         * nothing is in reach, so a room with no bodies, no sword or no
-         * modelled arm walks exactly as it did before this slice — which is
-         * what makes the roster's silence on it meaningful rather than lucky.
-         *
-         * ⚠ THE AIM AND THE PRESS COST THE WALK TWO TICKS, and the preview
-         * spends the same two, which is why the ETAs still hold.
-         */
-        if (strike && !run.state.fall) {
-            held = strike.decide(run.state, run.entities('strikeBodies'), run.ticksCompleted, held,
-                // ⛓ R9 SLICE 12c — see `runDwell`'s own call: ONE policy, one
-                // question, and now one model of what the press will do.
-                { slash: run.progress('slashInfo') }).held;
-        }
-        // ⛓ SEEDLING SWIM U2, D1 — see `holdOneAxis`; `previewWalk` applies the
-        // same filter at the same point, so the preview and the drive still agree.
-        if (axisAligned) held = holdOneAxis(held, run.state, target);
+        const held = driveStepHeld(run, target, tolerance, { strike, axisAligned });
         perTick.push(held);
         // Where the player was when the edge could have fired. A pit's
         // identity is the tile UNDER them, and after `advance` they are in
