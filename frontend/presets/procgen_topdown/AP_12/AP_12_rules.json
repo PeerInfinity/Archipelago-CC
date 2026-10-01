@@ -1637,18 +1637,10 @@
   "sphere_log": [
     {
       "type": "metadata",
-      "seed": 3,
-      "seed_name": "84719271504320872445",
-      "event_locations": {
-        "1": [
-          "Chalice Home"
-        ]
-      },
-      "event_items": {
-        "1": [
-          "Victory"
-        ]
-      }
+      "seed": 12,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
     },
     {
       "type": "state_update",
@@ -1686,6 +1678,69 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Adjacent to Catacombs"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Black Castle Gate"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Blue Labyrinth 0"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "Bridge": 1
             },
             "resolved_items": {
@@ -1702,7 +1757,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.2",
+      "sphere_index": "0.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1727,7 +1782,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.3",
+      "sphere_index": "0.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1757,7 +1812,49 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.4",
+      "sphere_index": "0.7",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Southeast of Catacombs"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.8",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Southwest of Catacombs"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.9",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1782,6 +1879,27 @@
           ],
           "sphere_locations": [
             "White Castle Gate"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.10",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Yellow Castle Gate"
           ]
         }
       }
@@ -1839,6 +1957,48 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Dungeon Vault"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Dungeon0"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "Right Difficulty Switch": 1
             },
             "resolved_items": {
@@ -1859,7 +2019,133 @@
     },
     {
       "type": "state_update",
+      "sphere_index": "1.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Slow Yorgle": 1
+            },
+            "resolved_items": {
+              "Slow Yorgle": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Inside Yellow Castle"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.7",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Red Maze Vault"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.8",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Red Maze Vault Entrance"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.9",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "RedMaze0"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.10",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Freeincarnate": 1
+            },
+            "resolved_items": {
+              "Freeincarnate": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "RedMaze1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
       "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Slow Grundle": 1
+            },
+            "resolved_items": {
+              "Slow Grundle": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Credits Right Side"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -1876,6 +2162,48 @@
           "new_accessible_regions": [],
           "sphere_locations": [
             "Slay Grundle"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Slow Rhindle": 1
+            },
+            "resolved_items": {
+              "Slow Rhindle": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Slay Rhindle"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Left Difficulty Switch": 1
+            },
+            "resolved_items": {
+              "Left Difficulty Switch": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Slay Yorgle"
           ]
         }
       }

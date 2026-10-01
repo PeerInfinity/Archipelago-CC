@@ -35,6 +35,7 @@ import {
     buildRulesJson,
     computeSourceCounts,
     ruleItemWarnings,
+    sphereLogRefusal,
     recordedConceptsOf,
     sourceLocationsOf,
     serializeGrid,
@@ -124,8 +125,6 @@ function stepCompile(env, { onProgress = null } = {}) {
         startingItems: c.startingItems,
         // ⛓ M1 — the source Menu ③ kept (null → the synthetic one).
         menuRegion: menuRegion ?? null,
-        // Embed the AUTHORITATIVE log verbatim so loop_costs reflect real AP logic.
-        ...(enriched ? { sphereLog: c.sphereLog } : {}),
         // Granted ability items are placed at no location, so synthesise defs
         // (`grantedItemDef`: ids 999↓ stay clear of the compiled pool's upward numbering).
         sourceItems: {
@@ -154,6 +153,8 @@ function stepCompile(env, { onProgress = null } = {}) {
         menuWarnings: menuWarnings ?? [],
         // ⛓ B1 — a rule naming an item neither the pool nor the source defines.
         ruleItemWarnings: ruleItemWarnings(rulesJson, '1'),
+        // Why no sphere_log was embedded (rules an inventory cannot decide), or null.
+        sphereLogRefusal: sphereLogRefusal(rulesJson, '1'),
     };
     env.completed = 3;
     return env;
@@ -290,6 +291,9 @@ export function buildTopDownEnvelope({
             grantedItems,
             sourceItemDefs,
             sourceGameName: source?.game_name ?? null,
+            // The SOURCE log's only compile-time role: it names the driver
+            // 'top-down-sphere' and gates sphere_tree/sphere_plan. The embedded
+            // sphere_log is generated over the compiled world (buildRulesJson).
             sphereLog: resolvedLog,
         },
     });

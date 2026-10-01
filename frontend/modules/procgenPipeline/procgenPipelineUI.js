@@ -4706,7 +4706,9 @@ export class ProcgenPipelineUI {
         const st = this._tdState;
         await runTopDownStep('compile', st,
             { onProgress: (ev) => this._onGenerationProgress(ev) });
-        const { rulesJson, enriched, attributionWarnings, menuWarnings, ruleItemWarnings } = st.compile;
+        const {
+            rulesJson, enriched, attributionWarnings, menuWarnings, ruleItemWarnings, sphereLogRefusal,
+        } = st.compile;
         if (enriched && attributionWarnings?.length) {
             this.message = `${this.message ? `${this.message} · ` : ''}`
                 + `sphere-log attribution: ${attributionWarnings.length} warning(s) — `
@@ -4726,6 +4728,10 @@ export class ProcgenPipelineUI {
                 + `rule items: ${ruleItemWarnings.length} undefined — `
                 + `${ruleItemWarnings.slice(0, 3).join('; ')}`
                 + `${ruleItemWarnings.length > 3 ? ' …' : ''}`;
+        }
+        // No embedded sphere log: rules an inventory cannot decide.
+        if (sphereLogRefusal) {
+            this.message = `${this.message ? `${this.message} · ` : ''}no sphere log — ${sphereLogRefusal}`;
         }
         this.result = {
             grid: st.finalize.grid,

@@ -19,7 +19,7 @@ import {
     makeRulesJsonScaffold, makeHasRule, makeAndRule, makeExit, makeTrueRule,
 } from '../shared/rulesJsonBuilder.js';
 import { validateSpherePlan } from './spherePlanner.js';
-import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
+import { generateSphereLog, SphereLogNotEvaluableError } from '../shared/procgen/forwardSimulator.js';
 import {
     generateLoopCosts,
     DEFAULT_REGION_COST,
@@ -6951,6 +6951,22 @@ export function serializeRegionEntry(region, {
 // to keep existing import paths working.
 export { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 
+/**
+ * Why `rulesJson` carries no embedded sphere log, when that is because
+ * generateSphereLog REFUSED it (rules an inventory cannot decide): the
+ * refusal's message (naming the rule kinds), else null. Re-runs the walk,
+ * so call it only on a document without a `sphere_log`.
+ */
+export function sphereLogRefusal(rulesJson, playerId = '1') {
+    if (Array.isArray(rulesJson?.sphere_log)) return null;
+    try {
+        generateSphereLog(rulesJson, { playerId });
+        return null;
+    } catch (e) {
+        return e instanceof SphereLogNotEvaluableError ? e.message : null;
+    }
+}
+
 export function buildRulesJson(grid, opts = {}) {
     const {
         startCell,
@@ -6983,14 +6999,6 @@ export function buildRulesJson(grid, opts = {}) {
         // entries. Default true; callers (tests, debug harnesses) can
         // disable.
         embedSphereLog = true,
-        // An authoritative sphere log (array of JSONL entries) to embed
-        // VERBATIM as `sphere_log` instead of the JS forward simulator's
-        // re-derivation. Top-down-sphere passes the real
-        // `_sphere_log.jsonl` here so the embedded log (and loop_costs
-        // derived from it) reflect the source world's true AP logic rather
-        // than the unverified JS sweep. null → embed generateSphereLog's
-        // output as before. Only used when embedSphereLog is true.
-        sphereLog = null,
         // Embed loop-mode cost data (per-region moveCost, per-location
         // cost) at the top level of the output rules.json. Requires
         // embedSphereLog. The runtime loops module auto-loads this when
@@ -7043,6 +7051,16 @@ export function buildRulesJson(grid, opts = {}) {
     } = opts;
 
     if (!startCell) throw new Error('buildRulesJson: startCell required');
+    // ⛔ No caller-supplied log. The embedded `sphere_log` is ALWAYS
+    // generateSphereLog over THIS compiled world. A `sphereLog` opt once
+    // embedded a source world's log verbatim on the claim that "top-down
+    // keeps source region names" — false (a compiled world adds `Menu` and
+    // renames regions), so the spoiler test failed at sphere 0 on those
+    // presets. Refused by name so a stale caller cannot reintroduce it.
+    if (opts.sphereLog !== undefined) {
+        throw new Error('buildRulesJson: the `sphereLog` option is gone — the embedded sphere_log is '
+            + 'always generated over the compiled world (pass the source log to the top-down LAYOUT instead)');
+    }
 
     const compiled = compileRegionGraph(grid, {
         startCell, itemLib, obstacleLib, playerId,
@@ -7279,28 +7297,7 @@ export function buildRulesJson(grid, opts = {}) {
     // and embeds the result as a top-level array. The loader
     // (sphereState/index.js) falls back to this field when no
     // separate _sphere_log.jsonl is present.
-    if (embedSphereLog && Array.isArray(sphereLog) && sphereLog.length > 0) {
-        // Authoritative log supplied (top-down-sphere): embed it verbatim.
-        // Top-down keeps source region names as region_id, so the log's
-        // region references resolve directly against the emitted regions.
-        // Ensure the metadata header that every _sphere_log.jsonl (and
-        // generateSphereLog) leads with is present — some sources (e.g. a
-        // log pulled from sphereState, which strips metadata on parse) hand
-        // a bare state_update array. Synthesize one when absent so the
-        // embedded log matches the canonical format.
-        scaffold.sphere_log = sphereLog[0]?.type === 'metadata'
-            ? sphereLog
-            : [
-                {
-                    type: 'metadata',
-                    seed,
-                    seed_name: seedName,
-                    event_locations: {},
-                    event_items: {},
-                },
-                ...sphereLog,
-            ];
-    } else if (embedSphereLog) {
+    if (embedSphereLog) {
         try {
             scaffold.sphere_log = generateSphereLog(scaffold, {
                 playerId,
@@ -7310,13 +7307,22 @@ export function buildRulesJson(grid, opts = {}) {
                 },
             });
         } catch (e) {
-            // Don't fail the entire build if sphere log generation
-            // throws — emit a marker entry the loader will see and
-            // log a warning, but keep the rules.json otherwise valid.
-            scaffold.sphere_log = [{
-                type: 'metadata',
-                error: `forwardSimulator failed: ${e?.message ?? String(e)}`,
-            }];
+            // ⚖ (the user, 2026-10-01) A world whose rules an inventory
+            // cannot decide (a game helper, CanReachRegion, …) carries NO
+            // log rather than a guessed one: its absence reads as "no sphere
+            // log" to the app and fails the spoiler test by name. The reason
+            // is `sphereLogRefusal(rulesJson)`, which callers report.
+            if (e instanceof SphereLogNotEvaluableError) {
+                delete scaffold.sphere_log;
+            } else {
+                // Don't fail the entire build if sphere log generation
+                // throws — emit a marker entry the loader will see and
+                // log a warning, but keep the rules.json otherwise valid.
+                scaffold.sphere_log = [{
+                    type: 'metadata',
+                    error: `forwardSimulator failed: ${e?.message ?? String(e)}`,
+                }];
+            }
         }
     }
 

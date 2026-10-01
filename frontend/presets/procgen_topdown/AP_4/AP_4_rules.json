@@ -20284,178 +20284,10 @@
   "sphere_log": [
     {
       "type": "metadata",
-      "seed": 1,
-      "seed_name": "14089154938208861744",
-      "event_locations": {
-        "1": [
-          "Checked 1",
-          "Checked 10",
-          "Checked 11",
-          "Checked 12",
-          "Checked 13",
-          "Checked 14",
-          "Checked 15",
-          "Checked 16",
-          "Checked 17",
-          "Checked 18",
-          "Checked 19",
-          "Checked 2",
-          "Checked 20",
-          "Checked 21",
-          "Checked 22",
-          "Checked 23",
-          "Checked 24",
-          "Checked 25",
-          "Checked 26",
-          "Checked 27",
-          "Checked 28",
-          "Checked 29",
-          "Checked 3",
-          "Checked 30",
-          "Checked 31",
-          "Checked 32",
-          "Checked 33",
-          "Checked 34",
-          "Checked 35",
-          "Checked 36",
-          "Checked 37",
-          "Checked 38",
-          "Checked 39",
-          "Checked 4",
-          "Checked 40",
-          "Checked 41",
-          "Checked 42",
-          "Checked 43",
-          "Checked 44",
-          "Checked 45",
-          "Checked 46",
-          "Checked 47",
-          "Checked 48",
-          "Checked 49",
-          "Checked 5",
-          "Checked 50",
-          "Checked 51",
-          "Checked 52",
-          "Checked 53",
-          "Checked 54",
-          "Checked 55",
-          "Checked 56",
-          "Checked 57",
-          "Checked 58",
-          "Checked 59",
-          "Checked 6",
-          "Checked 60",
-          "Checked 61",
-          "Checked 62",
-          "Checked 63",
-          "Checked 64",
-          "Checked 65",
-          "Checked 66",
-          "Checked 67",
-          "Checked 68",
-          "Checked 69",
-          "Checked 7",
-          "Checked 70",
-          "Checked 71",
-          "Checked 72",
-          "Checked 73",
-          "Checked 74",
-          "Checked 75",
-          "Checked 76",
-          "Checked 77",
-          "Checked 78",
-          "Checked 79",
-          "Checked 8",
-          "Checked 80",
-          "Checked 9",
-          "Victory"
-        ]
-      },
-      "event_items": {
-        "1": [
-          "Checked 1",
-          "Checked 10",
-          "Checked 11",
-          "Checked 12",
-          "Checked 13",
-          "Checked 14",
-          "Checked 15",
-          "Checked 16",
-          "Checked 17",
-          "Checked 18",
-          "Checked 19",
-          "Checked 2",
-          "Checked 20",
-          "Checked 21",
-          "Checked 22",
-          "Checked 23",
-          "Checked 24",
-          "Checked 25",
-          "Checked 26",
-          "Checked 27",
-          "Checked 28",
-          "Checked 29",
-          "Checked 3",
-          "Checked 30",
-          "Checked 31",
-          "Checked 32",
-          "Checked 33",
-          "Checked 34",
-          "Checked 35",
-          "Checked 36",
-          "Checked 37",
-          "Checked 38",
-          "Checked 39",
-          "Checked 4",
-          "Checked 40",
-          "Checked 41",
-          "Checked 42",
-          "Checked 43",
-          "Checked 44",
-          "Checked 45",
-          "Checked 46",
-          "Checked 47",
-          "Checked 48",
-          "Checked 49",
-          "Checked 5",
-          "Checked 50",
-          "Checked 51",
-          "Checked 52",
-          "Checked 53",
-          "Checked 54",
-          "Checked 55",
-          "Checked 56",
-          "Checked 57",
-          "Checked 58",
-          "Checked 59",
-          "Checked 6",
-          "Checked 60",
-          "Checked 61",
-          "Checked 62",
-          "Checked 63",
-          "Checked 64",
-          "Checked 65",
-          "Checked 66",
-          "Checked 67",
-          "Checked 68",
-          "Checked 69",
-          "Checked 7",
-          "Checked 70",
-          "Checked 71",
-          "Checked 72",
-          "Checked 73",
-          "Checked 74",
-          "Checked 75",
-          "Checked 76",
-          "Checked 77",
-          "Checked 78",
-          "Checked 79",
-          "Checked 8",
-          "Checked 80",
-          "Checked 9",
-          "Victory"
-        ]
-      }
+      "seed": 4,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
     },
     {
       "type": "state_update",
@@ -20471,9 +20303,9 @@
             },
             "resolved_items": {
               "Button: 6": 1,
-              "Button: 7": 1,
               "Button: 8": 1,
-              "Button: 9": 1
+              "Button: 9": 1,
+              "Button: 7": 1
             }
           },
           "new_accessible_locations": [
@@ -20488,6 +20320,7 @@
           ],
           "new_accessible_regions": [
             "C",
+            "Menu",
             "Region 1",
             "Region 2",
             "Region 3",
@@ -20500,6 +20333,27 @@
     {
       "type": "state_update",
       "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.2",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20520,7 +20374,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.2",
+      "sphere_index": "0.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20549,7 +20403,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.3",
+      "sphere_index": "0.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20578,7 +20432,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.4",
+      "sphere_index": "0.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20599,7 +20453,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.5",
+      "sphere_index": "0.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20620,7 +20474,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.6",
+      "sphere_index": "0.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20641,7 +20495,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "0.7",
+      "sphere_index": "0.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20663,6 +20517,69 @@
     {
       "type": "state_update",
       "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 10"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 12"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 6"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20691,7 +20608,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "1.2",
+      "sphere_index": "1.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20712,7 +20629,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "1.3",
+      "sphere_index": "1.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20733,7 +20650,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "1.4",
+      "sphere_index": "1.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -20754,7 +20671,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "1.5",
+      "sphere_index": "1.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21014,6 +20931,48 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 17"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 23"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "Button: *": 1
             },
             "resolved_items": {
@@ -21035,7 +20994,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "4.2",
+      "sphere_index": "4.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21056,7 +21015,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "4.3",
+      "sphere_index": "4.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21077,7 +21036,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "4.4",
+      "sphere_index": "4.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21185,6 +21144,27 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 33"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "6.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "Button: 0": 1
             },
             "resolved_items": {
@@ -21215,7 +21195,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.3",
+      "sphere_index": "6.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21236,7 +21216,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.4",
+      "sphere_index": "6.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21257,7 +21237,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "6.5",
+      "sphere_index": "6.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21279,6 +21259,48 @@
     {
       "type": "state_update",
       "sphere_index": "7.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 15"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "7.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 20"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "7.3",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21325,7 +21347,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.2",
+      "sphere_index": "7.4",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21351,7 +21373,28 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.3",
+      "sphere_index": "7.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 31"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "7.6",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21380,7 +21423,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.4",
+      "sphere_index": "7.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21401,7 +21444,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.5",
+      "sphere_index": "7.8",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21422,7 +21465,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.6",
+      "sphere_index": "7.9",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21443,7 +21486,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.7",
+      "sphere_index": "7.10",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21464,7 +21507,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.8",
+      "sphere_index": "7.11",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21485,7 +21528,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "7.9",
+      "sphere_index": "7.12",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21507,6 +21550,90 @@
     {
       "type": "state_update",
       "sphere_index": "8.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 18"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 19"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 21"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 22"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21538,7 +21665,91 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.2",
+      "sphere_index": "8.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 28"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.7",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 29"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.8",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 30"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.9",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 53"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.10",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21576,7 +21787,28 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.3",
+      "sphere_index": "8.11",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 75"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.12",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21597,7 +21829,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.4",
+      "sphere_index": "8.13",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21618,7 +21850,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.5",
+      "sphere_index": "8.14",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21639,7 +21871,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.6",
+      "sphere_index": "8.15",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21660,7 +21892,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.7",
+      "sphere_index": "8.16",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21681,7 +21913,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.8",
+      "sphere_index": "8.17",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21702,7 +21934,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.9",
+      "sphere_index": "8.18",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21723,7 +21955,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.10",
+      "sphere_index": "8.19",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21744,7 +21976,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.11",
+      "sphere_index": "8.20",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21765,7 +21997,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.12",
+      "sphere_index": "8.21",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21786,7 +22018,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "8.13",
+      "sphere_index": "8.22",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21862,6 +22094,153 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 46"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 54"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 70"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 71"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 72"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.7",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 76"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.8",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 77"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.9",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "Checked 37": 1
             },
             "resolved_items": {
@@ -21878,7 +22257,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.3",
+      "sphere_index": "9.10",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21899,7 +22278,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.4",
+      "sphere_index": "9.11",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21920,7 +22299,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.5",
+      "sphere_index": "9.12",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21941,7 +22320,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.6",
+      "sphere_index": "9.13",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21962,7 +22341,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.7",
+      "sphere_index": "9.14",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -21983,7 +22362,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.8",
+      "sphere_index": "9.15",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22004,7 +22383,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "9.9",
+      "sphere_index": "9.16",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22026,6 +22405,90 @@
     {
       "type": "state_update",
       "sphere_index": "10.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 34"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 35"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 36"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 47"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.5",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22057,7 +22520,28 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.2",
+      "sphere_index": "10.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 49"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.7",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22149,7 +22633,49 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.3",
+      "sphere_index": "10.8",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 51"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.9",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 61"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.10",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22170,7 +22696,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.4",
+      "sphere_index": "10.11",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22191,7 +22717,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.5",
+      "sphere_index": "10.12",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22212,7 +22738,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.6",
+      "sphere_index": "10.13",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22233,7 +22759,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.7",
+      "sphere_index": "10.14",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22254,7 +22780,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.8",
+      "sphere_index": "10.15",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22275,7 +22801,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.9",
+      "sphere_index": "10.16",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22296,7 +22822,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.10",
+      "sphere_index": "10.17",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22317,7 +22843,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "10.11",
+      "sphere_index": "10.18",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22343,6 +22869,552 @@
         "1": {
           "new_inventory_details": {
             "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 32"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 38"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.3",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 39"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.4",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 40"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.5",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 41"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.6",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 42"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.7",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 43"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.8",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 44"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.9",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 52"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.10",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 55"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.11",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 57"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.12",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 59"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.13",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 60"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.14",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 62"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.15",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 63"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.16",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 64"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.17",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 65"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.18",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 66"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.19",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 67"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.20",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 68"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.21",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 69"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.22",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 73"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.23",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 74"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.24",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 78"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.25",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 79"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.26",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Junk": 1
+            },
+            "resolved_items": {
+              "Junk": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Check 80"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.27",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
               "Checked 32": 1
             },
             "resolved_items": {
@@ -22359,7 +23431,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.2",
+      "sphere_index": "11.28",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22380,7 +23452,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.3",
+      "sphere_index": "11.29",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22401,7 +23473,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.4",
+      "sphere_index": "11.30",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22422,7 +23494,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.5",
+      "sphere_index": "11.31",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22443,7 +23515,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.6",
+      "sphere_index": "11.32",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22464,7 +23536,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.7",
+      "sphere_index": "11.33",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22485,7 +23557,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.8",
+      "sphere_index": "11.34",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22506,7 +23578,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.9",
+      "sphere_index": "11.35",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22527,7 +23599,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.10",
+      "sphere_index": "11.36",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22548,7 +23620,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.11",
+      "sphere_index": "11.37",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22569,7 +23641,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.12",
+      "sphere_index": "11.38",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22590,7 +23662,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.13",
+      "sphere_index": "11.39",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22611,7 +23683,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.14",
+      "sphere_index": "11.40",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22632,7 +23704,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.15",
+      "sphere_index": "11.41",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22653,7 +23725,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.16",
+      "sphere_index": "11.42",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22674,7 +23746,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.17",
+      "sphere_index": "11.43",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22695,7 +23767,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.18",
+      "sphere_index": "11.44",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22716,7 +23788,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.19",
+      "sphere_index": "11.45",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22737,7 +23809,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.20",
+      "sphere_index": "11.46",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22758,7 +23830,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.21",
+      "sphere_index": "11.47",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22779,7 +23851,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.22",
+      "sphere_index": "11.48",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22800,7 +23872,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.23",
+      "sphere_index": "11.49",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22821,7 +23893,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.24",
+      "sphere_index": "11.50",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22842,7 +23914,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.25",
+      "sphere_index": "11.51",
       "player_data": {
         "1": {
           "new_inventory_details": {
@@ -22863,7 +23935,7 @@
     },
     {
       "type": "state_update",
-      "sphere_index": "11.26",
+      "sphere_index": "11.52",
       "player_data": {
         "1": {
           "new_inventory_details": {

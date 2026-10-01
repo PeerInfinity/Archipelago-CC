@@ -634,7 +634,7 @@ describe('appendSphere (envelope path)', () => {
             gridDims: { width: 6, height: 6 }, seed: 1, sphereLog,
         });
         const rulesJson = buildRulesJson(grid, {
-            startCell, sphereLog,
+            startCell,
             procgenMetadata: {
                 driver: 'top-down-sphere',
                 sphere_tree: sphereTree,

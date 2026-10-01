@@ -25,6 +25,7 @@ import {
     moveSphereRegion, swapSphereRegions, relayoutSphereGrid,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
+import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 
 const TEST_ITEM_LIB = {
     key_red: { id: 'key_red' },
@@ -2351,14 +2352,14 @@ describe('topDownFromRulesJson — sphere-log attribution', () => {
         expect(res.spherePlan).toBeTruthy();
     });
 
-    it('embeds the supplied log verbatim and tags top-down-sphere', () => {
+    it('tags top-down-sphere but embeds a log OF THE COMPILED WORLD, not the source log', () => {
         const rulesJson = makeGridGrowthRulesJson();
         const sphereLog = rulesJson.sphere_log;
         const { grid, startCell, sphereTree, spherePlan } = topDownFromRulesJson(rulesJson, {
             gridDims: { width: 5, height: 5 }, seed: 1, sphereLog,
         });
         const out = buildRulesJson(grid, {
-            startCell, sphereLog,
+            startCell,
             procgenMetadata: {
                 driver: 'top-down-sphere',
                 sphere_tree: sphereTree,
@@ -2366,28 +2367,26 @@ describe('topDownFromRulesJson — sphere-log attribution', () => {
             },
         });
         expect(out.procgen_metadata['1'].driver).toBe('top-down-sphere');
-        // The embedded log is the authoritative one, NOT a JS re-derivation.
-        // (The grid-growth log already leads with a metadata header.)
-        expect(sphereLog[0].type).toBe('metadata');
-        expect(out.sphere_log).toEqual(sphereLog);
         expect(out.procgen_metadata['1'].sphere_tree.nodes[0].region_id).toBeDefined();
+        // The embedded log is generateSphereLog over `out`, and every region it
+        // names is a COMPILED region. (This grid-growth source happens to share
+        // its region names with the compile; a real source does not — apcalc's
+        // log starts at its own start region, the compile at `Menu`.)
+        expect(out.sphere_log).toEqual(generateSphereLog(out, { metadata: { seed: 1, seed_name: '' } }));
+        const compiled = new Set(Object.keys(out.regions['1']));
+        const named = out.sphere_log.filter((e) => e.type === 'state_update')
+            .flatMap((e) => e.player_data['1'].new_accessible_regions);
+        expect(named.length).toBeGreaterThan(0);
+        for (const r of named) expect(compiled.has(r)).toBe(true);
     });
 
-    it('synthesizes the metadata header when the supplied log lacks one', () => {
+    it('refuses a caller-supplied sphereLog BY NAME (the verbatim embed is gone)', () => {
         const rulesJson = makeGridGrowthRulesJson();
-        // A log pulled from sphereState has its metadata entry stripped.
-        const bareLog = rulesJson.sphere_log.filter((e) => e.type === 'state_update');
-        expect(bareLog[0].type).toBe('state_update');
-        const { grid, startCell } = topDownFromRulesJson(rulesJson, {
-            gridDims: { width: 5, height: 5 }, seed: 1, sphereLog: bareLog,
-        });
-        const out = buildRulesJson(grid, { startCell, seed: 1, seedName: 'sn', sphereLog: bareLog });
-        // Embedded log leads with a metadata header (canonical format), then
-        // the supplied state_update entries verbatim.
-        expect(out.sphere_log[0]).toEqual({
-            type: 'metadata', seed: 1, seed_name: 'sn', event_locations: {}, event_items: {},
-        });
-        expect(out.sphere_log.slice(1)).toEqual(bareLog);
+        const { grid, startCell } = topDownFromRulesJson(rulesJson, { gridDims: { width: 5, height: 5 }, seed: 1 });
+        expect(() => buildRulesJson(grid, { startCell, sphereLog: rulesJson.sphere_log }))
+            .toThrow(/the `sphereLog` option is gone/);
+        expect(() => buildRulesJson(grid, { startCell, sphereLog: null }))
+            .toThrow(/the `sphereLog` option is gone/);
     });
 });
 

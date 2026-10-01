@@ -107,7 +107,7 @@ const REGEN_WORLDS = [10, 11, 12].map((seed) => {
     }
     const doc = buildRulesJson(built.grid, {
         startCell: built.startCell, seed, assumeBidirectional: source.assume_bidirectional_exits !== false,
-        startingItems: source.starting_items?.['1'] ?? [], sourceItems: source.items?.['1'] ?? null, sphereLog,
+        startingItems: source.starting_items?.['1'] ?? [], sourceItems: source.items?.['1'] ?? null,
         sourceItemGroups: source.item_groups?.['1'] ?? null, sourceLocations: sourceLocationsOf(source, '1'),
         procgenMetadata: {
             driver: 'top-down-sphere', source_game: source.game_name ?? null,

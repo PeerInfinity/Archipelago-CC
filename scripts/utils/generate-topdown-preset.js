@@ -229,6 +229,7 @@ async function main() {
         stringifyRulesJson,
         computeSourceCounts,
         ruleItemWarnings,
+        sphereLogRefusal,
         sourceLocationsOf,
     } = await import(enginePath);
 
@@ -304,8 +305,10 @@ async function main() {
     }
 
     // When a sphere log produced an attribution, tag the enriched driver
-    // and carry the sphere_tree + sphere_plan; embed the AUTHORITATIVE log
-    // (not the JS re-derivation). Otherwise emit plain 'top-down', unchanged.
+    // and carry the sphere_tree + sphere_plan. Otherwise emit plain
+    // 'top-down'. Either way the embedded sphere_log is buildRulesJson's,
+    // generated over the COMPILED world — the source log names source
+    // regions, not the compiled ones (a compiled world adds `Menu`).
     const enriched = !!(sphereLog && sphereTree && spherePlan);
     const rulesJson = buildRulesJson(grid, {
         startCell,
@@ -316,7 +319,6 @@ async function main() {
         sourceItemGroups: source.item_groups?.['1'] ?? null,
         sourceLocations: sourceLocationsOf(source, '1'),
         menuRegion,
-        ...(enriched ? { sphereLog } : {}),
         procgenMetadata: {
             driver: enriched ? 'top-down-sphere' : 'top-down',
             source_game: source.game_name ?? null,
@@ -343,6 +345,8 @@ async function main() {
     }
     for (const w of menuWarnings) console.log(`  warn: ${w}`);
     for (const w of ruleItemWarnings(rulesJson, '1')) console.log(`  warn: ${w}`);
+    const refusal = sphereLogRefusal(rulesJson, '1');
+    if (refusal) console.log(`  warn: no sphere_log embedded — ${refusal}`);
     console.log(`Wrote ${args.out}`);
 }
 
