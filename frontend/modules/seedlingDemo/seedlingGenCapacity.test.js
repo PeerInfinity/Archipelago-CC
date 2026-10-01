@@ -41,9 +41,10 @@ const P = '1';
 
 /** An rng whose first draw yields exactly `seed` under the room's `(next()*0x7fffffff | 0) || 1`. */
 const seededRng = (seed) => ({ next: () => (seed + 0.5) / 0x7fffffff });
-const genRoom = (seed, { exits = 2, biome = 'pre-sword' } = {}) => room.generateGenRoom({
+const genRoom = (seed, { exits = 2, biome = 'pre-sword', elements } = {}) => room.generateGenRoom({
     region_id: 'cap', exits: Array.from({ length: exits }, (_, i) => ({ exit_id: `e${i}` })),
-    size: { width: 10, height: 10 }, rng: seededRng(seed), params: { seedlingGen: { biome } },
+    size: { width: 10, height: 10 }, rng: seededRng(seed),
+    params: { seedlingGen: { biome, ...(elements !== undefined ? { elements } : {}) } },
 }).world;
 const items = (n) => ({ items_to_place: Array.from({ length: n }, (_, i) => `i${i}`) });
 /** The tags the room's own record spends, the goal pickup left out (location 0 takes the goal's). */
@@ -109,12 +110,25 @@ describe('⛓⛓ the ceiling is what the room accepts: N seats, N+1 is refused b
         expect(w2.locations).toEqual([]);
     });
 
-    it('⛓⛓ a draw whose own element spends a tag is RE-ROLLED like one short of cells (post-sword drawn seed 29: a kill gate)', () => {
-        const w = genRoom(29, { exits: 1, biome: 'post-sword' });
+    /**
+     * ⛓ RE-AIMED AT SEEDLING SWIM U8 (⚖ Q13). The row was written on the
+     * post-sword DEFAULT's draw at seed 29, which landed a kill gate. With the
+     * opt-in heads folded in, that list's one `pick` is over nine heads, and no
+     * post-sword seed in 1..60 meets the row's whole rule through the default.
+     * The tag-spending draws re-roll at 29 already. The subject is the re-roll
+     * MECHANISM, not the default, so the row now names its head: `killgate`
+     * explicitly. Over seeds 1..40, ONLY seed 31 meets the whole rule (one tag
+     * spent, 29 seated at re-roll 0, 30 re-rolled by the locations cause, the
+     * deserialized room refused in the tag sentence). A named head also keeps
+     * the row still at the next default move.
+     */
+    const KILLGATE_ROOM = { exits: 1, biome: 'post-sword', elements: 'killgate' };
+    it('⛓⛓ a draw whose own element spends a tag is RE-ROLLED like one short of cells (post-sword drawn seed 31, `killgate` named)', () => {
+        const w = genRoom(31, KILLGATE_ROOM);
         expect(w.generation.rerolls).toBe(0);
         expect(ownTags(w)).toBe(1);
         // 29 = 30 less the lock's own tag: seated in the first draw
-        const a = genRoom(29, { exits: 1, biome: 'post-sword' });
+        const a = genRoom(31, KILLGATE_ROOM);
         room.placeGenItems(a, items(29));
         expect(a.generation.rerolls).toBe(0);
         // 30: that draw has 29 tags left, so the room re-rolls — and the next draw seats all 30
@@ -128,7 +142,7 @@ describe('⛓⛓ the ceiling is what the room accepts: N seats, N+1 is refused b
     });
 
     it('a deserialized room cannot re-roll: short of tags it refuses in the tag sentence, not the cell one', () => {
-        const w = genRoom(29, { exits: 1, biome: 'post-sword' });
+        const w = genRoom(31, KILLGATE_ROOM);
         delete w.drawnSeed;
         expect(() => room.placeGenItems(w, items(30)))
             .toThrow(room.GEN_ROOM_REFUSALS.tooFewTags('cap', 30, 29, 30));

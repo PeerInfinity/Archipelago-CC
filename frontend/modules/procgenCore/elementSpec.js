@@ -217,9 +217,11 @@ export const ELEMENT_TABLE = Object.freeze({
      * refuses BY NAME and for free rather than spending a solver budget to
      * learn what the boot flags already say.
      *
-     * ⛔ AND IT IS IN NO BIOME DEFAULT. ⚖ Ruling 8 put `chamber` in the close
+     * ⛔ IT SHIPPED IN NO BIOME DEFAULT. ⚖ Ruling 8 put `chamber` in the close
      * slice's bundled re-record and explicitly did NOT rule on `arena`; this
-     * arc ships it OPT-IN, with the numbers a default decision would need.
+     * arc shipped it OPT-IN, with the numbers a default decision would need.
+     * ⛓ Seedling swim U8 (⚖ Q13) folded it into every sword biome's default
+     * as `arena;w=2;h=3` (`procgenSeedling.BIOME_DEFAULT_FOLD`).
      */
     arena: Object.freeze({
         element: ARENA,
@@ -242,8 +244,9 @@ export const ELEMENT_TABLE = Object.freeze({
      * ⛓ `needs: ['hasSword']` for the kill gate's reason, one class over: a
      * rockType-0 rock breaks under a sword swing, and with no sword slot
      * `weaponForPress` is null and the press is a silent no-op — the seam
-     * refuses BY NAME and for free. ⛔ IN NO BIOME DEFAULT (plan ⚖ Q5: new heads
-     * ship opt-in; a default change is ⚖ elements ruling 8's bundled re-record).
+     * refuses BY NAME and for free. It shipped OPT-IN (plan ⚖ Q5: new heads
+     * ship opt-in; a default change is ⚖ elements ruling 8's bundled re-record),
+     * and ⚖ Q13's re-record (swim U8) folded it into every sword biome's default.
      */
     rockgate: Object.freeze({
         element: ROCK_GATE,
@@ -317,7 +320,8 @@ export const ELEMENT_TABLE = Object.freeze({
      * `'sound'` pin is derived from the record (D2, so the wet tick is legal).
      *
      * ⛓ `needs: ['canSwim']` — the seam refuses it BY NAME on every biome but
-     * `post-swim`. ⛔ IN NO BIOME DEFAULT (⚖ Q5).
+     * `post-swim`. Shipped opt-in (⚖ Q5); in the post-swim and post-feather
+     * defaults since ⚖ Q13 (swim U8).
      */
     watergate: Object.freeze({
         element: WATER_GATE,
@@ -353,7 +357,7 @@ export const ELEMENT_TABLE = Object.freeze({
      *
      * ⛓ `needs: ['hasFeather']` — the seam refuses it BY NAME on every biome but
      * `post-feather`, and `headsNeeding('hasFeather')` is exactly this head.
-     * ⛔ IN NO BIOME DEFAULT.
+     * Shipped opt-in; in the post-feather default since ⚖ Q13 (swim U8).
      */
     waterfallgate: Object.freeze({
         element: WATERFALL_GATE,
@@ -378,8 +382,11 @@ export const ELEMENT_TABLE = Object.freeze({
      * opens its lock; this has no lock.) ⛔ And NO `binds`, the chamber's
      * reason: there is no door for the area graph to bind to.
      *
-     * ⛔ **IN NO BIOME DEFAULT** (`defaultElementsFor` unchanged): a default
-     * change is a bundled re-record this slice does not own. OPT-IN only.
+     * It shipped OPT-IN (a default change is a bundled re-record F1 did not
+     * own). ⚖ Q13 (swim U8) folded it into the sword biomes' defaults, bare.
+     * It joins WITH THE SWORD, not pre-sword, although it declares no `needs`:
+     * pre-sword the solver can only dodge it, and the pre-sword list is the one
+     * the shipped generated rooms draw from.
      *
      * ⛓ It is placed LAST so no existing head moves in `ELEMENT_NAMES`.
      */
@@ -409,8 +416,9 @@ export const ELEMENT_TABLE = Object.freeze({
      * `the-solver-cannot-cross-the-roaming-body` — both decided by the binding
      * from the committed record (bodies, no kill lock), as for `roam`.
      *
-     * ⛔ **IN NO BIOME DEFAULT**, and placed LAST so no head moves in
-     * `ELEMENT_NAMES`. OPT-IN only.
+     * Placed LAST so no head moves in `ELEMENT_NAMES`. It shipped OPT-IN;
+     * ⚖ Q13 (swim U8) folded it into the sword biomes' default DRAW. ⛔ The
+     * draw only: ⚖ Q29 keeps it out of `require` (`meetsRequire`, below).
      */
     corridorbody: Object.freeze({
         element: CORRIDOR_BODY,

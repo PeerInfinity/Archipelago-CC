@@ -1381,10 +1381,10 @@ export const POST_SWORD_PALETTE = Object.freeze({
  * ⚠ DECLARED, NOT EARNED. The bot campaign does not hold the shield yet (L20
  * is three rooms past its frontier; plan §0 #5), so this biome's boot is a
  * claim about a player the chain has not produced — the same standing the
- * post-sword boot had before the campaign reached L10. ⛔ OPT-IN: no default
- * reads it (the censuses and the acceptance batch iterate
- * `watchGenerate.DEFAULT_CENSUS_BIOMES`, which does not name it), so every
- * committed identity is untouched by its existing.
+ * post-sword boot had before the campaign reached L10. It shipped OPT-IN (no
+ * census read it). ⛓ Since swim U8 (⚖ Q13) `watchGenerate.DEFAULT_CENSUS_BIOMES`
+ * names it, so the censuses and the acceptance batch iterate it, at its own
+ * biome default (`procgenSeedling.BIOME_DEFAULT_FOLD`).
  */
 export const POST_SHIELD_ITEMS = Object.freeze({ hasSword: true, hasShield: true });
 
@@ -1402,9 +1402,9 @@ export const POST_SHIELD_PALETTE = Object.freeze({
  * REFERENCE, as post-shield's is: the conch gates no pass-2 template (a
  * `water-pool` becomes swimmable, which only ever OPENS a room).
  *
- * ⚠ DECLARED, NOT EARNED — the campaign does not hold the conch. ⛔ OPT-IN: not
- * in `watchGenerate.DEFAULT_CENSUS_BIOMES` (trap 1447; ⚖ Q5), so no committed
- * identity iterates it.
+ * ⚠ DECLARED, NOT EARNED — the campaign does not hold the conch. It shipped
+ * OPT-IN (trap 1447; ⚖ Q5); since swim U8 (⚖ Q13) it is in
+ * `watchGenerate.DEFAULT_CENSUS_BIOMES`, so the census identities iterate it.
  */
 export const POST_SWIM_ITEMS = Object.freeze({ hasSword: true, hasShield: true, canSwim: true });
 
@@ -1422,8 +1422,9 @@ export const POST_SWIM_PALETTE = Object.freeze({
  * conch, so this boot holds BOTH; a feather without the conch is not a boot the
  * game can produce. The roster is post-sword's BY REFERENCE, as post-swim's is.
  *
- * ⚠ DECLARED, NOT EARNED — the campaign holds neither. ⛔ OPT-IN: not in
- * `watchGenerate.DEFAULT_CENSUS_BIOMES`, so no committed identity iterates it.
+ * ⚠ DECLARED, NOT EARNED — the campaign holds neither. It shipped OPT-IN; since
+ * swim U8 (⚖ Q13) it is in `watchGenerate.DEFAULT_CENSUS_BIOMES`, so the census
+ * identities iterate it.
  */
 export const POST_FEATHER_ITEMS = Object.freeze({ ...POST_SWIM_ITEMS, hasFeather: true });
 

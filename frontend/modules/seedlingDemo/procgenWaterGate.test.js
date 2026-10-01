@@ -75,7 +75,7 @@ describe('⛓⛓⛓ the WATER GATE element and its table row (swim S1, D3)', () 
         expect(tags).toBe(0);
     });
 
-    it('`post-swim` is a biome on every list that offers one, and in NO census default', () => {
+    it('`post-swim` is a biome on every list that offers one, the census default included (⚖ Q13)', () => {
         expect(POST_SWIM_ITEMS).toEqual({ hasSword: true, hasShield: true, canSwim: true });
         expect(POST_SWIM_PALETTE.templates).toBe(POST_SWORD_PALETTE.templates);
         expect(POST_SWIM_PALETTE.excluded).toBe(POST_SWORD_PALETTE.excluded);
@@ -83,7 +83,7 @@ describe('⛓⛓⛓ the WATER GATE element and its table row (swim S1, D3)', () 
         expect(BIOME_NAMES).toContain('post-swim');
         expect(GEN_ROOM_BIOME_NAMES).toContain('post-swim');
         expect(GEN_ROOM_BIOMES['post-swim']).toBe(POST_SWIM_PALETTE);
-        expect(DEFAULT_CENSUS_BIOMES).not.toContain('post-swim');
+        expect(DEFAULT_CENSUS_BIOMES).toContain('post-swim');
     });
 });
 

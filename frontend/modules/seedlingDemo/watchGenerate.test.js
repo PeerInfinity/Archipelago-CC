@@ -72,9 +72,12 @@ describe('the biome map — ONE map, two readers', () => {
     });
 
     /** ⛔ S1 — a census/batch that runs "every biome" by default would move its
-     *  committed identity the day a biome is added; they read this instead. */
-    it('the CENSUS default is the two pre-S1 biomes, not every biome', () => {
-        expect(DEFAULT_CENSUS_BIOMES).toEqual(['pre-sword', 'post-sword']);
+     *  committed identity the day a biome is added; they read this instead.
+     *  ⛓ U8 (⚖ Q13) named all five, BY NAME: it is still a list, not `BIOME_NAMES`. */
+    it('the CENSUS default is the five biomes named by ⚖ Q13, a list and not every biome', () => {
+        expect(DEFAULT_CENSUS_BIOMES).toEqual(['pre-sword', 'post-sword', 'post-shield', 'post-swim',
+            'post-feather']);
+        expect(DEFAULT_CENSUS_BIOMES).not.toBe(BIOME_NAMES);
     });
 
     /**

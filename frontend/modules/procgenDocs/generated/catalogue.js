@@ -458,7 +458,7 @@ export const CATALOGUE = frz({
             ]
         },
         {
-            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3",
+            "defaultElements": "guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody",
             "excluded": [
                 {
                     "cause": "⚖ RULED OUT (user, 2026-08-15) — a pre-sword-puzzle element only; the generator does not use arrow lanes",

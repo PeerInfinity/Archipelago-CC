@@ -4032,6 +4032,49 @@ function certificationGap(cert) {
  * builds a bare room, and every caller that reaches a BIOME (the CLI, the sweep,
  * the batch, the pairs dump, the page's ladder) gets the default from here.
  *
+ * ── ⛓⛓⛓ AND IT MOVED A SECOND TIME: THE OPT-IN HEADS FOLD IN (⚖ Q13) ──
+ *
+ * Seedling swim U8 (⚖ user, 2026-10-01, Q13: *the opt-in heads join the biome
+ * defaults; the shipped generated presets are re-recorded ONCE*). Every head
+ * shipped since arc 5 went in OPT-IN under ruling 8. They now join the list
+ * by the item that lets them certify, appended AFTER the four above so the
+ * list a pre-sword boot draws from is unchanged:
+ *
+ *   pre-sword    `guard;len=2|3|4+blockpocket+chamber;w=2;h=3`  (unchanged)
+ *   post-sword   … `+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody`
+ *   post-shield  … `+shieldgate`
+ *   post-swim    … `+watergate+watershortcut`
+ *   post-feather … `+waterfallgate`
+ *
+ * (`BIOME_DEFAULT_FOLD` is the table; each later boot holds every earlier
+ * item, so a biome's list is every row its boot grants.)
+ *
+ * ⛓ **`arena` IS NAMED `w=2;h=3`, AS `chamber` IS**, and for the chamber's
+ * reason, measured on the arena itself (U8 W0, post-sword, F1b's 168 cells):
+ * bare it places 25 and certifies 12, while `w=2;h=3` places 47 and
+ * certifies 25. `bodies` stays drawn.
+ *
+ * ⛓ **`roam` STAYS BARE**: `roam;w=2;h=3` places 11 but certifies only 2
+ * (the combat ladder is exhausted in the smaller blob), against the bare
+ * head's 10 and 10 (U4b).
+ *
+ * ⛓ **`roam` JOINS WITH THE SWORD, NOT EARLIER, though it declares no
+ * `needs`.** A pre-sword boot can only dodge it, and putting it there would
+ * move the pre-sword list. That list is the one every shipped generated room
+ * on the gen-room default biome draws from.
+ *
+ * ⛔ **`corridorbody` JOINS THE DRAW, NEVER `require`** (⚖ Q29): its
+ * `meetsRequire: false` is untouched, and `headsNeeding` still leaves it out.
+ * `shortcut` and `watershortcut` are the same: a draw may land on them, and a
+ * directive can never be met by one.
+ *
+ * ⛓ **THE DRAW IS EQUAL, NOT WEIGHTED BY YIELD.** The list's one `rng.pick`
+ * is uniform over its members. A draw is a choice of WHAT to try, and a yield
+ * is what a try lands. Weighting by the yield would mostly stop drawing the
+ * heads that place least, and those are the ones whose yield still has to
+ * be measured. A head that cannot place in this room is a graded drop: the
+ * level ships element-less, the ordinary refusal path.
+ *
  * @param {object|null} items the biome's boot flags (`palette.items`)
  */
 export function defaultElementsFor(items) {
@@ -4055,7 +4098,48 @@ export function defaultElementsFor(items) {
     if (items?.hasSword === true) heads.push({ name: 'killgate' });
     heads.push({ name: 'blockpocket' });
     heads.push({ name: 'chamber', params: { w: 2, h: 3 } });
+    for (const row of BIOME_DEFAULT_FOLD) {
+        if (items?.[row.item] === true) heads.push(...row.heads);
+    }
     return normalizeElementSpec({ any: heads });
+}
+
+/**
+ * ⛓⛓⛓ **THE ⚖ Q13 FOLD — WHICH HEADS JOIN THE DEFAULT, BY THE ITEM THAT
+ * ADMITS THEM** (seedling swim U8). Read in order and appended after the four
+ * heads every list starts with, so ORDER IS PART OF THE RUN (the `+` list's
+ * `pick` indexes the members as written). The why is
+ * `defaultElementsFor`'s docblock.
+ *
+ * ⛔ A row may only name heads whose `needs` its item covers. Otherwise the
+ * default would spend draws on a head the seam refuses for free, and a yield
+ * table would be measuring the boot (the reason `killgate` is absent
+ * pre-sword). That is asserted at load, below, so a row that breaks it never
+ * reaches a draw.
+ */
+export const BIOME_DEFAULT_FOLD = Object.freeze([
+    Object.freeze({
+        item: 'hasSword',
+        heads: Object.freeze([
+            { name: 'arena', params: { w: 2, h: 3 } },
+            { name: 'rockgate' },
+            { name: 'shortcut' },
+            { name: 'roam' },
+            { name: 'corridorbody' },
+        ]),
+    }),
+    Object.freeze({ item: 'hasShield', heads: Object.freeze([{ name: 'shieldgate' }]) }),
+    Object.freeze({ item: 'canSwim', heads: Object.freeze([{ name: 'watergate' }, { name: 'watershortcut' }]) }),
+    Object.freeze({ item: 'hasFeather', heads: Object.freeze([{ name: 'waterfallgate' }]) }),
+]);
+for (const row of BIOME_DEFAULT_FOLD) {
+    for (const { name } of row.heads) {
+        const needs = ELEMENT_TABLE[name]?.needs ?? [];
+        if (!ELEMENT_TABLE[name] || needs.some((k) => k !== row.item)) {
+            throw new Error(`procgenSeedling: BIOME_DEFAULT_FOLD's '${row.item}' row names '${name}', `
+                + `which needs [${needs.join(', ')}] — a default head must be one its row's item lets certify`);
+        }
+    }
 }
 
 export function seedlingSeam({

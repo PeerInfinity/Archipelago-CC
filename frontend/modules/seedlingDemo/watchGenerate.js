@@ -160,9 +160,18 @@ export const BIOME_NAMES = Object.freeze(Object.keys(GENERATE_BIOMES));
  * `attribute-seedling-pairs-cost`) publish committed identities over "every
  * biome", and a new biome joining that iteration would move every one of them
  * for a boot nobody asked them to measure. A new biome is opt-in there
- * (`--biomes=`), exactly as a new element head is opt-in to a biome default.
+ * (`--biomes=`).
+ *
+ * ⛓⛓ **SEEDLING SWIM U8 (⚖ Q13) PUT ALL FIVE IN IT**, with the biome
+ * defaults' fold in the same bundled re-record (`procgenSeedling.
+ * BIOME_DEFAULT_FOLD`). The three later biomes are where the folded heads
+ * certify: a census over only pre- and post-sword would measure four of the
+ * thirteen heads' boots and none of the shield's, the conch's or the
+ * feather's. It is still a NAMED list and not `BIOME_NAMES`, so a sixth biome
+ * stays opt-in here until its own re-record.
  */
-export const DEFAULT_CENSUS_BIOMES = Object.freeze(['pre-sword', 'post-sword']);
+export const DEFAULT_CENSUS_BIOMES = Object.freeze(['pre-sword', 'post-sword', 'post-shield', 'post-swim',
+    'post-feather']);
 
 export function paletteFor(biome) {
     const palette = GENERATE_BIOMES[biome];

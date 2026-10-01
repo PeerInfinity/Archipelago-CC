@@ -659,10 +659,19 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
      * `cause: 'sword'`). **ZERO of the forty abort**, where one did before.
      * ⚠ The one-member-class warning from the third re-pin STANDS: this is a
      * class of one, and the residue below is unchanged.
+     *
+     * ⛓⛓⛓ **RE-PINNED A SIXTH TIME AT SEEDLING SWIM U8 (⚖ Q13): the opt-in heads
+     * folded into the post-sword default**, so the list's one `pick` is over
+     * NINE heads and seed 38 now draws another. RE-SCANNED, same rule, same
+     * bounds, post-sword seeds 1..40 through the SHIPPED DEFAULT: **6 of 40
+     * draw `killgate`, THREE certify (13, 25, 33), and all three keep 6 over 3
+     * families** (SOLVED, one `kill` record, one scratch clear, `cause:
+     * 'sword'`). The class is three members now, not one; seed 13 is the
+     * lowest.
      */
-    it('seed 38: >= 5 kept obstacles over >= 3 families, and the KILL GATE is DISCHARGED', () => {
+    it('seed 13: >= 5 kept obstacles over >= 3 families, and the KILL GATE is DISCHARGED', () => {
         const gen = generateSeedlingLevel({
-            seed: 38, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
+            seed: 13, palette: POST_SWORD_PALETTE, bounds: { obstacleTarget: 6 },
         });
         expect(gen.summary.stop).toBe('TARGET_REACHED');
         expect(gen.summary.keptCount).toBeGreaterThanOrEqual(5);
@@ -680,7 +689,7 @@ describe('⛓ THE DEMONSTRATION — a certified post-sword level with a DISCHARG
         expect(gen.summary.kept.filter((k) => k.family === 'kill')).toEqual([]);
 
         // ⛔ THE SEAM's model, not a bare one: the element is in the skeleton.
-        const { model } = seedlingSeam({ seed: 38, items: POST_SWORD_PALETTE.items });
+        const { model } = seedlingSeam({ seed: 13, items: POST_SWORD_PALETTE.items });
         const out = seedlingOracle({ model, items: POST_SWORD_PALETTE.items }).solve(gen.record, {
             templates: gen.summary.kept.map((k) => instantiateKept(POST_SWORD_PALETTE, k)),
         });

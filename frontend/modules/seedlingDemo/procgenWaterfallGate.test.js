@@ -66,11 +66,11 @@ describe('⛓⛓⛓ the waterfall terrain, the table row and the biome (swim T2,
         expect(headsNeeding('hasFeather')).toEqual(['waterfallgate']);
     });
 
-    it('post-feather is post-swim plus the feather, opt-in, in no census default', () => {
+    it('post-feather is post-swim plus the feather, and in the census default (⚖ Q13)', () => {
         expect(POST_FEATHER_ITEMS).toEqual({ ...POST_SWIM_ITEMS, hasFeather: true });
         expect(POST_FEATHER_PALETTE.templates).toBe(POST_SWIM_PALETTE.templates);
         expect(GENERATE_BIOMES['post-feather']).toBe(POST_FEATHER_PALETTE);
-        expect(DEFAULT_CENSUS_BIOMES).not.toContain('post-feather');
+        expect(DEFAULT_CENSUS_BIOMES).toContain('post-feather');
     });
 
     it('the door is TERRAIN: painted `waterfall`, no entity, no tag', () => {

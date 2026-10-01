@@ -75,11 +75,14 @@ describe('⛓⛓⛓ the CORRIDOR BODY element and its table row (swim U3, D3)', 
         expect(tags).toBe(0);
     });
 
-    it('is in NO census default (opt-in only)', () => {
-        expect(DEFAULT_CENSUS_BIOMES).toEqual(['pre-sword', 'post-sword']);
-        for (const items of [PRE_SWORD_ITEMS, POST_SWORD_ITEMS]) {
-            expect(JSON.stringify(defaultElementsFor(items))).not.toMatch(/corridorbody/);
-        }
+    /** ⛓ U8 (⚖ Q13 + ⚖ Q29): the fold put it in the post-sword DRAW. It is
+     *  still never a `require` head, and pre-sword (no press) never draws it. */
+    it('joins the post-sword default DRAW (⚖ Q13), never pre-sword, and never `require` (⚖ Q29)', () => {
+        expect(DEFAULT_CENSUS_BIOMES).toContain('post-sword');
+        const names = (items) => defaultElementsFor(items).any.map((m) => m.name);
+        expect(names(POST_SWORD_ITEMS)).toContain('corridorbody');
+        expect(names(PRE_SWORD_ITEMS)).not.toContain('corridorbody');
+        expect(headsNeeding('hasSword')).not.toContain('corridorbody');
     });
 });
 

@@ -15,18 +15,19 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    SEEDLING_DEFAULTS, carveLawRefusal, defaultElementsFor, doorLawRefusal, generateSeedlingLevel,
-    seedlingModel, seedlingSeam,
+    BIOME_DEFAULT_FOLD, SEEDLING_DEFAULTS, carveLawRefusal, defaultElementsFor, doorLawRefusal,
+    generateSeedlingLevel, seedlingModel, seedlingSeam,
 } from './procgenSeedling.js';
 import {
     compositeSeedlingOnConnector, liftedClaimFor, seedlingOnConnectorEntities,
 } from './procgenSeedlingElements.js';
 import {
-    POST_SHIELD_ITEMS, POST_SHIELD_PALETTE, POST_SWORD_ITEMS, PRE_SWORD_ITEMS,
+    POST_FEATHER_ITEMS, POST_SHIELD_ITEMS, POST_SHIELD_PALETTE, POST_SWIM_ITEMS, POST_SWORD_ITEMS,
+    PRE_SWORD_ITEMS,
 } from './procgenPalette.js';
 import { parseSkeleton } from '../procgenCore/skeletonKinds.js';
 import {
-    ELEMENT_NAMES, formatElementSpec, isElementList, parseElementSpec,
+    ELEMENT_NAMES, ELEMENT_TABLE, formatElementSpec, headsNeeding, isElementList, parseElementSpec,
 } from '../procgenCore/elementSpec.js';
 import { TILE_FLOOR, TILE_WALL } from '../shared/procgen/mazeAlgorithms/gridTiles.js';
 
@@ -85,18 +86,44 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
      * is DRAWN, so `guard` and `guard;len=2` are different defaults even when
      * `len` resolves to 2.
      */
-    it('⛔ the BIOME DEFAULT spec, both biomes, pinned LITERALLY — spelling, '
+    /**
+     * ⛓⛓⛓ SEEDLING SWIM U8 (⚖ Q13) — THE OPT-IN HEADS FOLDED IN. The row now
+     * pins all FIVE biomes, each by its literal spelling, and the heads each
+     * biome ADDS over the one before it BY NAME (never a count). A fold reverted
+     * reds the per-biome lines by name; a head moved between rows reds the
+     * delta lines.
+     */
+    it('⛔ the BIOME DEFAULT spec, all five biomes, pinned LITERALLY — spelling, '
         + 'order, and which parameters are NAMED', () => {
         expect(formatElementSpec(defaultElementsFor(PRE_SWORD_ITEMS)))
             .toBe('guard;len=2|3|4+blockpocket+chamber;w=2;h=3');
         expect(formatElementSpec(defaultElementsFor(POST_SWORD_ITEMS)))
-            .toBe('guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3');
-        /** ⛓ the two biomes differ by EXACTLY the sword-gated head. */
-        const pre = defaultElementsFor(PRE_SWORD_ITEMS).any.map((m) => m.name);
-        const post = defaultElementsFor(POST_SWORD_ITEMS).any.map((m) => m.name);
+            .toBe('guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3'
+                + '+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody');
+        expect(formatElementSpec(defaultElementsFor(POST_SHIELD_ITEMS)))
+            .toBe('guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3'
+                + '+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate');
+        expect(formatElementSpec(defaultElementsFor(POST_SWIM_ITEMS)))
+            .toBe('guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3'
+                + '+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut');
+        expect(formatElementSpec(defaultElementsFor(POST_FEATHER_ITEMS)))
+            .toBe('guard;len=2|3|4+killgate+blockpocket+chamber;w=2;h=3'
+                + '+arena;w=2;h=3+rockgate+shortcut+roam+corridorbody+shieldgate+watergate+watershortcut'
+                + '+waterfallgate');
+        /** ⛓ each biome differs from the one before by EXACTLY the heads its new item admits. */
+        const names = (items) => defaultElementsFor(items).any.map((m) => m.name);
+        const pre = names(PRE_SWORD_ITEMS);
+        const post = names(POST_SWORD_ITEMS);
+        const added = (from, to) => names(to).filter((n) => !names(from).includes(n));
         expect(pre).toEqual(['guard', 'blockpocket', 'chamber']);
-        expect(post).toEqual(['guard', 'killgate', 'blockpocket', 'chamber']);
-        expect(post.filter((n) => !pre.includes(n))).toEqual(['killgate']);
+        expect(post.slice(0, 4)).toEqual(['guard', 'killgate', 'blockpocket', 'chamber']);
+        expect(post.filter((n) => !pre.includes(n)))
+            .toEqual(['killgate', 'arena', 'rockgate', 'shortcut', 'roam', 'corridorbody']);
+        expect(added(POST_SWORD_ITEMS, POST_SHIELD_ITEMS)).toEqual(['shieldgate']);
+        expect(added(POST_SHIELD_ITEMS, POST_SWIM_ITEMS)).toEqual(['watergate', 'watershortcut']);
+        expect(added(POST_SWIM_ITEMS, POST_FEATHER_ITEMS)).toEqual(['waterfallgate']);
+        /** ⛓ by post-feather every head in the table is drawn by default. */
+        expect([...names(POST_FEATHER_ITEMS)].sort()).toEqual(Object.keys(ELEMENT_TABLE).sort());
         /**
          * ⛔ THE TWO-STREAMS HALF, READ OFF THE NORMALIZED SPEC — and since
          * SEEDLING BOT R9 slice 1 (D1) the guard's `len` is the THIRD kind:
@@ -120,6 +147,30 @@ describe('⛓ THE CODEC — two new heads, and the `+` list', () => {
             .toEqual({ w: 2, h: 3 });
         expect(memberOf(defaultElementsFor(POST_SWORD_ITEMS), 'killgate').params)
             .toBeUndefined();
+        /** ⛓ U8 — `arena` NAMES the chamber's `w=2;h=3` (measured: 47/25 placed/certified
+         *  against bare 25/12) and leaves `bodies` drawn; `roam` stays BARE (its `w=2;h=3`
+         *  measured 11/2 against bare 10/10). */
+        expect(memberOf(defaultElementsFor(POST_SWORD_ITEMS), 'arena').params).toEqual({ w: 2, h: 3 });
+        expect(memberOf(defaultElementsFor(POST_SWORD_ITEMS), 'roam').params).toBeUndefined();
+    });
+
+    /**
+     * ⛔ THE FOLD NEVER DRAWS A HEAD ITS BIOME REFUSES FOR FREE, and never widens
+     * `require`: every folded head's `needs` is its row's item (so the seam's
+     * item gate passes on every biome that draws it), and `headsNeeding` is the
+     * same list it was before the fold.
+     */
+    it('⛔ every folded head certifies on its row\'s boot; `require` is unmoved by the fold', () => {
+        for (const row of BIOME_DEFAULT_FOLD) {
+            for (const { name } of row.heads) {
+                expect((ELEMENT_TABLE[name].needs ?? []).every((k) => k === row.item)).toBe(true);
+            }
+        }
+        expect(BIOME_DEFAULT_FOLD.map((r) => r.item)).toEqual(['hasSword', 'hasShield', 'canSwim', 'hasFeather']);
+        expect(headsNeeding('hasSword')).toEqual(['killgate', 'arena', 'rockgate']);
+        expect(headsNeeding('hasShield')).toEqual(['shieldgate']);
+        expect(headsNeeding('canSwim')).toEqual(['watergate']);
+        expect(headsNeeding('hasFeather')).toEqual(['waterfallgate']);
     });
 
     /** ⛔ `none` IS A LEGAL MEMBER — *"and sometimes nothing"* is sayable, which
