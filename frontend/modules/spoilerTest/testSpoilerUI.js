@@ -437,6 +437,9 @@ export class TestSpoilerUI {
       // Handle failure case
       if (!result.success) {
         logger.warn(result.error);
+        // Into the panel's own log too: it is what a reader (and the test
+        // harness's failure message) sees.
+        this.log('error', `Could not load the suggested log: ${result.error}`);
         if (this.initialAutoLoadAttempted) {
           this.renderManualFileSelectionView(
             `Auto-load failed: ${result.error}. Please select a file manually.`
