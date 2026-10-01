@@ -529,16 +529,25 @@ describe('⛔ kickoff §4 slice 2 acceptance — the overlays on committed tapes
          * both its ticks and its arithmetic, and it is what slice 11 measured.
          * A row that compared the raw press list was pinning the tail of a walk
          * alongside the finding it meant to keep.
+         *
+         * ⛓⛓ SEEDLING SWIM U6b — RE-PINNED AT THE SEVEN-TAPE RE-RECORD (⚖ Q36):
+         * `r8-solve-18` 485 -> 522 under U6's levers (the dwell priced, the
+         * transit clock paired, `stepToward` scoring the diagonals). The walk
+         * now lands SIX presses for its six hits — 44, 113, 146, 168, 231, 307 —
+         * so on this tape no swing lands on both bodies; the double landing
+         * slice 11 measured belonged to that walk, not to the room.
          */
         const landing = collected.run.presses.filter((p) => p.hits.some((h) => h.landed));
         expect([...new Set(landing.map((p) => p.t))].sort((a, b) => a - b))
-            .toEqual([44, 112, 145, 245, 278]);
+            .toEqual([44, 113, 146, 168, 231, 307]);
         expect(landing.reduce((n, p) => n + p.hits.filter((h) => h.landed).length, 0)).toBe(6);
-        // …and every press that does NOT land comes after the last kill.
+        // …and every press that does NOT land comes after the last kill but
+        // ONE. ⛓ U6b: the 522-t walk makes one press between the kills that
+        // lands nothing (t 161, measured); the row pins it by tick rather than
+        // claiming there are none.
         const lastKill = Math.max(...collected.run.spinnerPressKills.map((k) => k.t));
-        for (const t of pressTicks) {
-            if (![44, 112, 145, 245, 278].includes(t)) expect(t).toBeGreaterThan(lastKill);
-        }
+        expect(pressTicks.filter((t) => ![44, 113, 146, 168, 231, 307].includes(t) && t <= lastKill))
+            .toEqual([161]);
 
         // (c) ZERO damage markers — the honest L18 took nothing.
         expect(markers.filter((m) => m.layer === 'damage')).toEqual([]);

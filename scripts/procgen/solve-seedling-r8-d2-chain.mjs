@@ -65,6 +65,7 @@
  *       --only=r8-d2,r8-d2-19,r8-d2-20
  */
 
+import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -217,10 +218,29 @@ const WIN_PY = '/mnt/c/Windows/py.exe';
 const WIN_DRIVER = join(HERE, 'seedling-bot-replay-win.py');
 const WIN = process.argv.includes('--win');
 
+/**
+ * ⛓ SEEDLING SWIM U6b — THE LATCH IS CACHED, on `solve-seedling-r9-campaign
+ * .mjs`'s scheme: keyed on the md5 of the exact bytes handed to the driver,
+ * under `WIN_SCRATCH_WSL`. A latch is a pure function of those bytes, so a
+ * re-run over an unchanged segment reuses it — and
+ * `check-seedling-producer-boundaries.mjs` reads this cache to VERIFY the
+ * chain's `boot(N+1) == latch(N)`; with no entry it could only refuse.
+ */
+const WIN_SCRATCH_WSL = '/mnt/c/playwright';
+
 function latchOf(label, tapeObj) {
+    mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
+    const payload = JSON.stringify(gameVisibleTape(parseTape(tapeObj)));
+    const key = createHash('md5').update(payload).digest('hex').slice(0, 12);
+    const cached = join(WIN_SCRATCH_WSL, `latch-${label}-${key}.json`);
+    if (existsSync(cached)) {
+        console.log(`    ${label}: latch REUSED from ${key} (the tape's bytes are `
+            + 'unchanged, and a latch is a pure function of them)');
+        return JSON.parse(readFileSync(cached, 'utf8'));
+    }
     const channel = driverChannel({ win: WIN, winPy: WIN_PY, driver: WIN_DRIVER,
         chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
-    channel.write(`tape-${label}.json`, JSON.stringify(gameVisibleTape(parseTape(tapeObj))));
+    channel.write(`tape-${label}.json`, payload);
     channel.clear(`stream-${label}.json`);
     const t0 = Date.now();
     let out;
@@ -255,6 +275,7 @@ function latchOf(label, tapeObj) {
     console.log(`    drove ${label}: ${got.stream.ticks.length} observations, `
         + `${got.status.dead_frames} dead${CHECK ? '' : `, ${((Date.now() - t0) / 1000).toFixed(0)}s`}`);
     if (!got.seam) throw new Error(`${label}: the driver returned no seam block`);
+    writeFileSync(cached, JSON.stringify(got.seam));
     return got.seam;
 }
 

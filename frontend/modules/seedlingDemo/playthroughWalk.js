@@ -1153,7 +1153,7 @@ const CHAIN_DECLARATIONS = Object.freeze([
         clears: Object.freeze([Object.freeze({
             level: 18, tag: 0, source: 'model',
             evidence: Object.freeze({
-                removedAt: 292,
+                removedAt: 321,
                 fade: 101,
                 why: '`spinnerKillLockOpens`\'s removal (the second Spinner body leaves '
                     + 'and `Game.totalEnemies()` reaches zero) plus '
