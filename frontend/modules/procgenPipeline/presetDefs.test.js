@@ -10,6 +10,7 @@ import {
     SEEDLING_ATLAS_HOST_STATE,
     SEEDLING_ATLAS_LOCATION_STATE,
     capturePresetState, applyPresetState, getPresetById, restoredActivePresetId, groupShippedPresets,
+    TOPDOWN_GRID_KEYS,
     userPresetId, loadUserPresets, saveUserPreset, deleteUserPreset,
 } from './presetDefs.js';
 
@@ -381,6 +382,29 @@ describe('capturePresetState', () => {
         expect(libraries[0].count).toBe(3);
         expect(capturePresetState({ ...CURRENT, libraries: [] })).not.toHaveProperty('libraries');
         expect(capturePresetState(CURRENT)).not.toHaveProperty('libraries');
+    });
+
+    // ⛓ F1 (⚖ user 2026-09-30): a top-down save pins only the grid axes the
+    // user typed into; the rest follow the source the preset is applied over.
+    const TOPDOWN = { ...CURRENT, mode: 'topDown', params: { seed: 3, gridWidth: 12, gridHeight: 12, regionWidth: 8 } };
+
+    it('top-down, no grid axis hand-edited: the capture carries no grid key', () => {
+        const snap = capturePresetState(TOPDOWN);
+        expect(snap.params).toEqual({ seed: 3, regionWidth: 8 });
+        expect(capturePresetState(TOPDOWN, { handEditedGridKeys: [] }).params)
+            .toEqual({ seed: 3, regionWidth: 8 });
+    });
+
+    it('top-down, one axis hand-edited: the capture carries that key only', () => {
+        expect(capturePresetState(TOPDOWN, { handEditedGridKeys: [TOPDOWN_GRID_KEYS.width] }).params)
+            .toEqual({ seed: 3, gridWidth: 12, regionWidth: 8 });
+        expect(capturePresetState(TOPDOWN, { handEditedGridKeys: [TOPDOWN_GRID_KEYS.height] }).params)
+            .toEqual({ seed: 3, gridHeight: 12, regionWidth: 8 });
+    });
+
+    it('grid-growth mode: the grid is a real setting, so the capture keeps both keys', () => {
+        const gridGrowth = { ...TOPDOWN, mode: 'gridGrowth' };
+        expect(capturePresetState(gridGrowth).params).toEqual(TOPDOWN.params);
     });
 });
 
