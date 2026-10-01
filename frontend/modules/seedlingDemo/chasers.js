@@ -241,6 +241,8 @@ export const CHASERS = defineRecord('chasers', {
         dieAnim: Object.freeze({ frames: 4, rate: 5, src: 'Bob.as:36 add("die", [3,4,5,6], 5)' }),
         // ⛔ `Bob.as:39` — `solids.push("Enemy")`. See `SOLIDS_BY_MOVER.chaser`.
         solidsMover: 'chaser',
+        // `Enemy.knockback`, inherited (`Enemy.as:247-255`).
+        knocksBack: true,
         src: 'Enemies/Bob.as:44-83',
     }),
     jellyfish: Object.freeze({
@@ -252,6 +254,7 @@ export const CHASERS = defineRecord('chasers', {
         // ⛔ `Jellyfish.as:35` — the same push, and NOT a copy-paste: the
         // sweep swept every `Enemies/*.as` and this class really has one.
         solidsMover: 'chaser',
+        knocksBack: true,
         src: 'Enemies/Jellyfish.as:44-75',
     }),
     /**
@@ -279,6 +282,9 @@ export const CHASERS = defineRecord('chasers', {
         }),
         // ⛔ `Puncher.as:48` — `solids.push("Enemy", "Player")`.
         solidsMover: 'puncher',
+        // ⛔ D3: `override public function knockback(...) { }` (`Puncher.as:167-170`)
+        // — a landed hit arms the i-frame and moves the count, and shoves nothing.
+        knocksBack: false,
         /**
          * ⛓ D2 — the ATTACK, which no other row has (`Puncher.as:111-117`,
          * `endAnim` `:127-143`, `attackPlayer` `:172-218`). `range` decides,
@@ -320,6 +326,16 @@ export function bridgedChaserTags() {
         .filter(([, c]) => MODELLED_ENEMY_CLASSES[c.as3]?.module === 'chasers.js')
         .map(([tag]) => tag)
         .sort();
+}
+
+/**
+ * ⛓ U7-swim D3: does `Enemy.hit`'s `knockback(f, p)` move this class? False for
+ * the puncher, whose override is empty. Throws for an untranscribed tag.
+ */
+export function chaserKnocksBack(tag) {
+    const c = CHASERS[tag];
+    if (!c) fail(`chaserKnocksBack: "${tag}" is not a transcribed chaser`);
+    return c.knocksBack === true;
 }
 
 /** Is this census tag one the tick loop steps? */

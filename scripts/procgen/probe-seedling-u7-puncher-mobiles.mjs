@@ -169,17 +169,24 @@ for (const f of samples) {
         const g = game[i];
         const b = model.reduce((best, x) => (!best || Math.hypot(x.x - g.x, x.y - g.y)
             < Math.hypot(best.x - g.x, best.y - g.y) ? x : best), null);
-        const dx = Math.abs(g.x - b.x);
-        const dy = Math.abs(g.y - b.y);
-        worst = Math.max(worst, dx, dy);
+        // position AND velocity, to the bit; and the body's own damage state
+        const d = [g.x - b.x, g.y - b.y, g.vx - b.vx, g.vy - b.vy].map(Math.abs);
+        worst = Math.max(worst, ...d);
         compared += 1;
         rows.push({ t, game: { x: g.x, y: g.y, vx: g.vx, vy: g.vy, anim: g.anim, enemy: g.enemy },
             model: b });
-        if (dx > 1e-9 || dy > 1e-9) disagreements.push(`t ${t}: game (${g.x}, ${g.y}) model (${b.x}, ${b.y})`);
+        if (d.some((x) => x > 1e-9)) {
+            disagreements.push(`t ${t}: game (${g.x}, ${g.y}) v (${g.vx}, ${g.vy}) model `
+                + `(${b.x}, ${b.y}) v (${b.vx}, ${b.vy})`);
+        }
+        if (g.enemy && (g.enemy.hits !== b.hits || g.enemy.hits_timer !== b.hitsTimer)) {
+            disagreements.push(`t ${t}: game hits ${g.enemy.hits}/${g.enemy.hits_timer} model `
+                + `${b.hits}/${b.hitsTimer}`);
+        }
     }
 }
 const agree = compared > 0 && disagreements.length === 0;
-console.log(`${agree ? 'PASS' : 'FAIL'}: the puncher stands where the model stands at every sampled tick`
+console.log(`${agree ? 'PASS' : 'FAIL'}: the puncher's position, velocity, hits and hits_timer are the model's at every sampled tick, and it exists exactly when the model's does`
     + `${Number.isFinite(UPTO) ? ` <= ${UPTO}` : ''} — ${compared} comparison(s), worst |Δ| ${worst}`);
 for (const d of disagreements.slice(0, 12)) console.log(`      ${d}`);
 if (disagreements.length > 12) console.log(`      … ${disagreements.length - 12} more`);

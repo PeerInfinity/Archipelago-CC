@@ -819,6 +819,14 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'tapes that enter a puncher room retires `noDamage`, so this is the first '
                 + 'tape on the roster the puncher can move at all.',
         }),
+        Object.freeze({
+            name: 'u7-puncher-kill', levels: Object.freeze([12]), bobs: 1, ticks: 128,
+            addedBy: 'U7-swim D3 (the kill witness)',
+            why: 'the puncher\'s death, driven: the same boot with a sword, three landed '
+                + 'presses (t 15, 46, 77) with no knockback on any (an empty override), the '
+                + 'kill at t 78 and the removal 42 ticks later — and zero punches, because '
+                + 'every wind-up ends inside the puncher\'s own i-frame.',
+        }),
     ]),
 
     /**

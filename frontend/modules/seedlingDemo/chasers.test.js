@@ -357,3 +357,17 @@ describe('chasers — the puncher (U7-swim D1/D2)', () => {
         expect(at(110, 110).direction).toBe(3);
     });
 });
+
+describe('chasers — the puncher\'s death (U7-swim D3)', () => {
+    it('is a modelled kill arm: anim+fade, 42 ticks from the blow to the removal, no side write, no knockback', async () => {
+        const { KILL_ARM_POLICY, CORPSE_COUNTING, KILL_SIDE_WRITES, removalTicksAfterHit } = await import('./enemyDamage.js');
+        const { chaserKnocksBack, deathTicks } = await import('./chasers.js');
+        expect(KILL_ARM_POLICY.Puncher.policy).toBe('modelled');
+        expect(CORPSE_COUNTING.Puncher).toMatchObject({ shape: 'anim+fade', removesBody: true, chaserTag: 'puncher' });
+        expect(removalTicksAfterHit('Puncher', deathTicks('puncher'))).toBe(42);
+        expect(KILL_SIDE_WRITES.Puncher.writes).toBe('none');
+        expect(chaserKnocksBack('puncher')).toBe(false);
+        expect(chaserKnocksBack('bob')).toBe(true);
+        expect(() => chaserKnocksBack('sandtrap')).toThrow(/not a transcribed chaser/);
+    });
+});

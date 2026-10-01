@@ -386,7 +386,29 @@ export const KILL_ARM_POLICY = Object.freeze({
             + '`removed()` write, which for a `tag = -1` body lands OUT OF BAND.',
     }),
     WallFlyer: Object.freeze({ policy: 'refused', why: 'the Bob cost; off every R5 route' }),
-    Puncher: Object.freeze({ policy: 'refused', why: 'the Bob cost; L40 has two and no leg presses either' }),
+    /**
+     * ⛓⛓⛓ U7-swim D3 — THE SIXTH `modelled` ROW, AND THE SECOND CHASER.
+     *
+     * The refusal read *"the Bob cost"*, and the Bob cost was paid at R9 slice
+     * 12 for the class it named: the five gates, the death as an animation,
+     * the computed `classCount` move. What a puncher owed ON TOP of it was its
+     * position (U7-swim D1, the chase) and its threat (D2, the punch) — a kill
+     * arm against a body the model holds still is a stance the game refutes.
+     * ⛔ Two facts are the puncher's own and are carried, not inherited:
+     * `knockback` is an EMPTY override (`Puncher.as:167-170`), so a landed
+     * sword hit does not shove it, and `attackPlayer` returns while its
+     * `hitsTimer` runs, so a struck puncher's wind-up throws nothing.
+     */
+    Puncher: Object.freeze({
+        policy: 'modelled',
+        why: '⛓ U7-swim: L12\'s pit is reachable only past `puncher@416,256`. The damage half '
+            + 'is `enemyHit` with the sword\'s own `{d, f, t}` against the LIVE chaser state '
+            + '(D1 steps it); the death half is `stepChasersNow`\'s staging — a 31-tick "die" '
+            + 'animation (ten frames at rate 10), then the fade, then the removal, during all '
+            + 'of which `totalEnemies()` counts the body. ⛔ `knockback` is an empty override, '
+            + 'so no hit shoves it; and a struck puncher\'s pending punch is refused by its '
+            + 'own `hitsTimer` (`attackPlayer`\'s first line).',
+    }),
     Drill: Object.freeze({ policy: 'refused', why: 'the Bob cost; off every R5 route' }),
     Turret: Object.freeze({
         policy: 'refused',
@@ -549,6 +571,13 @@ export const CORPSE_COUNTING = Object.freeze({
         why: 'the same two-stage shape as Bob, with an eight-frame animation.',
         src: 'Enemies/Jellyfish.as:77-91',
     }),
+    // ⛓ U7-swim D3: Bob's shape, with a ten-frame animation at rate 10.
+    Puncher: Object.freeze({
+        shape: 'anim+fade', removesBody: true, chaserTag: 'puncher',
+        why: '`startDeath` plays "die" and does NOT set `destroy`; `endAnim`\'s die arm '
+            + 'does, 31 updates later. Then the fade.',
+        src: 'Enemies/Puncher.as:121-134',
+    }),
     /**
      * ⛓⛓⛓ R6 SLICE 5. The same two-stage shape as Bob's — and the anim
      * length does NOT come from `chasers.deathTicks`, because a ShieldBoss
@@ -675,6 +704,12 @@ export const KILL_SIDE_WRITES = Object.freeze({
     Jellyfish: Object.freeze({
         writes: 'none',
         why: 'the same empty override as Bob, same commented line.',
+    }),
+    Puncher: Object.freeze({
+        writes: 'none',
+        why: '⛓ U7-swim: NO `removed()` anywhere in its chain — `Puncher`, `Enemy` and '
+            + '`Mobile` declare none, and `Entity.removed()` is empty — and no '
+            + '`setPersistence` in the class. A puncher kill writes nothing.',
     }),
     ShieldBoss: Object.freeze({
         writes: 'ownTag',

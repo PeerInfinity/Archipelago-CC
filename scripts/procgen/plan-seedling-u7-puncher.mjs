@@ -17,6 +17,13 @@
  *                      `r = 8` box throws the player west by `punchForce` 5.
  *                      The tape ends after the SECOND punch and before the
  *                      third (which would kill: `hitsMax` 3).
+ *   u7-puncher-kill    the same boot with a sword: the player faces east and
+ *                      presses whenever the body is in `slash()`'s reach and
+ *                      the 31-tick cadence allows — three landed hits, NO
+ *                      knockback on any of them (`Puncher.knockback` is an
+ *                      empty override), the 31-tick "die" animation, the fade
+ *                      and the removal. A struck puncher's pending punch is
+ *                      refused by its own `hitsTimer`.
  *
  * The stances are CHOSEN, not derived — a witness is not a solve.
  *
@@ -44,7 +51,12 @@ const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
 const { ROLES } = await import(join(MODULE, 'levelWorld.js'));
-const { animTicks, CHASERS, PUNCHER_PUNCH_FORCE } = await import(join(MODULE, 'chasers.js'));
+const {
+    animTicks, CHASERS, PUNCHER_PUNCH_FORCE, chaserBoxAt, deathTicks,
+} = await import(join(MODULE, 'chasers.js'));
+const { distanceRectPoint, SLASH_REACH } = await import(join(MODULE, 'presses.js'));
+const { removalTicksAfterHit } = await import(join(MODULE, 'enemyDamage.js'));
+const { ENEMY_CLASSES } = await import(join(MODULE, 'combat.js'));
 
 let failures = 0;
 const check = (name, ok, detail) => {
@@ -152,6 +164,77 @@ function emit(name, json) {
         + 'Authored by scripts/procgen/plan-seedling-u7-puncher.mjs.';
     emit(NAME, tapeJson(NAME, perTick, {}, description));
     console.log(`## ${NAME}: ${perTick.length} ticks, punches at t ${punches.map((h) => h.t).join(', ')}`);
+}
+
+// ── u7-puncher-kill ──────────────────────────────────────────────────
+{
+    const NAME = 'u7-puncher-kill';
+    const ITEMS = { hasSword: true };
+    const CADENCE = 31;
+    const HITS_TO_KILL = ENEMY_CLASSES.puncher.kill.hits;
+    const run = stage(ITEMS);
+    const NO_KEYS = new Set();
+    const EAST = new Set(['right']);
+    const PRESS = new Set(['primary']);
+    const perTick = [];
+    const bodyOf = () => {
+        const c = run.chasers.find((x) => x.id === TARGET);
+        return c ? chaserBoxAt(c.tag, c.x, c.y) : null;
+    };
+    const landedRows = () => run.chaserPressHits.filter((h) => h.landed);
+    let presses = 0;
+    let last = -99;
+    for (let i = 0; i < 400; i += 1) {
+        if (landedRows().length >= HITS_TO_KILL) break;
+        const b = bodyOf();
+        const reach = b ? distanceRectPoint(run.state.x, run.state.y, b) : Infinity;
+        // ⚠ ONE tick of `right` first: `slash()` swings the way the player FACES,
+        // and the boot faces down.
+        const held = i === 0 ? EAST
+            : (reach <= SLASH_REACH && i - last >= CADENCE && presses < HITS_TO_KILL ? PRESS : NO_KEYS);
+        if (held === PRESS) { presses += 1; last = i; }
+        perTick.push(held);
+        run.advance(held);
+        if (run.playerDeaths.length > 0) break;
+    }
+    const OWED = removalTicksAfterHit('Puncher', deathTicks('puncher'));
+    for (let i = 0; i < OWED + 8; i += 1) {
+        perTick.push(NO_KEYS);
+        run.advance(NO_KEYS);
+    }
+    const landed = landedRows();
+    const kills = run.chaserKills;
+    check('⛓⛓⛓ THREE presses LAND on the live puncher, 1 -> 2 -> 3 of `hitsMax` 3',
+        landed.length === HITS_TO_KILL && JSON.stringify(landed.map((h) => h.hits)) === '[1,2,3]',
+        JSON.stringify(landed.map((h) => ({ t: h.t, hits: h.hits, killed: h.killed }))));
+    check('⛔ NO hit shoves it — `Puncher.knockback` is an empty override',
+        landed.every((h) => h.knockback === null),
+        JSON.stringify(landed.map((h) => h.knockback)));
+    check('⛓ ONE death, billed to the PRESS, one tick after the blow',
+        kills.length === 1 && kills[0].by === 'press' && kills[0].t === landed[2]?.t + 1,
+        JSON.stringify(kills));
+    check('⛓⛓ the corpse is GONE by the end — the 31-tick animation, the fade, the removal',
+        !run.chasers.some((c) => c.id === TARGET), `removalTicksAfterHit = ${OWED}`);
+    const punches = run.playerHits.filter((h) => h.source === 'punch');
+    check('the player is alive at the end', run.playerDeaths.length === 0,
+        `${punches.length} punch(es) landed: ${JSON.stringify(punches.map((h) => h.t))}`);
+    const description = '⛓⛓⛓ U7-swim D3 — THE DEATH, DRIVEN. `KILL_ARM_POLICY.Puncher` flipped '
+        + '`refused` -> `modelled` this slice; this is the witness. The `u7-puncher-punch` '
+        + 'boot (L12, two tiles west of `puncher@416,256`) with a sword: one tick of `right` '
+        + 'to face east, then a press whenever the body is in `slash()`\'s reach and the '
+        + `31-tick cadence allows. Three LANDED hits (t ${landed.map((h) => h.t).join(', ')}) `
+        + 'and NO knockback on any of them — `Puncher.knockback` is an empty override, so '
+        + 'the body stays at the player\'s side through the whole exchange. The killing blow '
+        + `starts the ${deathTicks('puncher')}-update "die" animation (ten frames at rate 10), `
+        + `then the fade: ${OWED} ticks from the blow to the removal. `
+        + `${punches.length} punch(es) land on the player`
+        + `${punches.length ? ` (t ${punches.map((h) => h.t).join(', ')})` : ''}; a wind-up `
+        + 'that ends while the puncher\'s own `hitsTimer` runs throws nothing. L12 holds no '
+        + '`tset -1` lock, and that nil is scanned. Authored by '
+        + 'scripts/procgen/plan-seedling-u7-puncher.mjs.';
+    emit(NAME, tapeJson(NAME, perTick, ITEMS, description));
+    console.log(`## ${NAME}: ${perTick.length} ticks, ${landed.length} landed, kill at t `
+        + `${kills[0]?.t}, punches ${JSON.stringify(punches.map((h) => h.t))}`);
 }
 
 if (failures > 0) {

@@ -92,8 +92,8 @@ import {
 // `CHASERS` x `MODELLED_ENEMY_CLASSES`, never typed here.
 import {
     ENEMY_PIT_TILE, ENEMY_TERRAIN_DESTROYS, chaserAttackDecision, chaserBoxAt, chaserSolids,
-    chaserStep, createDieAnim, deathTicks, isBridgedChaser, puncherPunchRect, stepSpriteAnim,
-    CHASERS,
+    chaserKnocksBack, chaserStep, createDieAnim, deathTicks, isBridgedChaser, puncherPunchRect,
+    stepSpriteAnim, CHASERS,
 } from './chasers.js';
 import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
@@ -5571,7 +5571,10 @@ export function createLevelRun({
                         // ways (`enemyHitUpdate`'s asymmetry note).
                         frozen: ceremony !== null,
                     });
-                    if (verdict.knockedBack) {
+                    // ⛓ U7-swim D3: and only for a class whose `knockback` is
+                    // not an empty override (the puncher's is).
+                    const shoved = verdict.knockedBack && chaserKnocksBack(c.tag);
+                    if (shoved) {
                         /**
                          * `Enemy.knockback(f, p)` — `a = atan2(y - p.y,
                          * x - p.x)` from the PLAYER's own entity point, which
@@ -5589,7 +5592,7 @@ export function createLevelRun({
                         t: ticksCompleted, level, id: c.id, tag: c.tag, weapon,
                         landed: verdict.landed, killed: verdict.killed, reach,
                         hits: c.hits, hitsTimer: c.hitsTimer,
-                        knockback: verdict.knockedBack
+                        knockback: shoved
                             ? { dx: c.v.x - before.vx, dy: c.v.y - before.vy }
                             : null,
                         why: verdict.landed ? null : verdict.refusedAt,
@@ -6357,14 +6360,15 @@ export function createLevelRun({
                     // A preview never starts a ceremony, so nothing freezes.
                     frozen: false,
                 });
-                if (verdict.knockedBack) {
+                if (verdict.knockedBack && chaserKnocksBack(c.tag)) {
                     const a = Math.atan2(c.y - playerPos.y, c.x - playerPos.x);
                     c.v.x += verdict.force * Math.cos(a);
                     c.v.y += verdict.force * Math.sin(a);
                 }
                 if (verdict.killed) {
                     c.dyingAt = tickOffset;
-                    c.removalTicks = removalTicksAfterHit('Bob', deathTicks(c.tag));
+                    // ⛓ U7-swim D3: the CLASS's corpse row, not Bob's.
+                    c.removalTicks = removalTicksAfterHit(c.as3, deathTicks(c.tag));
                 }
                 return verdict;
             },
@@ -6510,7 +6514,8 @@ export function createLevelRun({
             // i-frames (`enemyHitUpdate`'s own asymmetry note).
             frozen,
         });
-        if (verdict.knockedBack) {
+        // ⛓ U7-swim D3: a class whose `knockback` is empty is not shoved.
+        if (verdict.knockedBack && chaserKnocksBack(c.tag)) {
             /**
              * `Enemy.knockback(f, p)` — `a = atan2(y - p.y, x - p.x)`, from
              * the ARROW's own entity point (`new Point(x, y)` in
