@@ -2164,6 +2164,21 @@ describe('buildRulesJson', () => {
         }
     });
 
+    it('a derived placement is advancement for EVERY progression flavour (AP: progression in classification)', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const name = Object.values(plain.regions['1']).flatMap((r) => r.locations).find((l) => l.item).item.name;
+        const placedWith = (classification) => {
+            const out = buildRulesJson(grid, { startCell, itemLib: { [name]: { classification } } });
+            return Object.values(out.regions['1']).flatMap((r) => r.locations).find((l) => l.item?.name === name).item;
+        };
+        for (const c of ['progression', 'progression_skip_balancing', 'progression_deprioritized',
+            'progression_deprioritized_skip_balancing', 'progression|useful']) {
+            expect(placedWith(c)).toEqual({ name, player: 1, advancement: true, type: c });
+        }
+        for (const c of ['filler', 'useful', 'trap']) expect(placedWith(c).advancement).toBe(false);
+    });
+
     it('sourceLocationsOf maps every source location name to its location, first one winning', () => {
         const src = { regions: { 1: {
             A: { name: 'A', locations: [{ name: 'x', id: 1 }, { name: 'y', id: null }] },

@@ -2780,7 +2780,7 @@ export function compileRegionGraph(grid, opts = {}) {
                 player: numericPlayerId,
                 ...(sourcePlaced?.name === item
                     ? { advancement: sourcePlaced.advancement, type: sourcePlaced.type }
-                    : { advancement: classification === 'progression', type: classification }),
+                    : { advancement: isProgressionClassification(classification), type: classification }),
             };
         }
         return {
@@ -2800,6 +2800,14 @@ export function compileRegionGraph(grid, opts = {}) {
         const sourceClassification = sourceItems?.[item]?.classification;
         if (typeof sourceClassification === 'string') return sourceClassification;
         return itemLib[item]?.classification ?? 'progression';
+    }
+
+    // AP's `Item.advancement` is `ItemClassification.progression in
+    // classification`: TRUE for every progression flavour
+    // (`progression_skip_balancing` — omsi's Supply Steps —, `…_deprioritized`,
+    // a combined `progression|useful`), not only the bare `'progression'`.
+    function isProgressionClassification(c) {
+        return typeof c === 'string' && c.split('|').some((flag) => flag.trim().startsWith('progression'));
     }
 
     // A source item the source gave NO numeric id — an event (`id: null`) or an
