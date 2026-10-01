@@ -9114,7 +9114,6 @@ export function deriveKillByChaser(run, body, contacts,
         y: (target.rect.y + target.rect.bottom) / 2,
     };
     const pitch = DEFAULT_LATTICE;
-    const here = nodeAt(run.state.x, run.state.y, pitch);
     const planOpts = solverPlanOpts(run, contacts);
     const strikeFor = () => strikePolicyFor(run, { dashMode });
 
@@ -9135,19 +9134,39 @@ export function deriveKillByChaser(run, body, contacts,
     // ── condition 1, and the cheap half of 3 and 4 ────────────────────
     const inLeash = [];
     const candidates = [];
-    for (let dy = -STANCE_SCAN_CELLS; dy <= STANCE_SCAN_CELLS; dy += 1) {
-        for (let dx = -STANCE_SCAN_CELLS; dx <= STANCE_SCAN_CELLS; dx += 1) {
-            const c = nodeCentre(here.tx + dx, here.ty + dy, pitch);
-            const d = Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y);
-            if (d > leash) continue;
-            inLeash.push(c);
-            if (!corridorPlans(run.world, run.state, c, allowTeleporter, planOpts)) continue;
-            if (aimIsPlannable
-                && !corridorPlans(run.world, c, aim, allowTeleporter, planOpts)) continue;
-            candidates.push({ ...c, d,
-                approach: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+    const scanAround = (here) => {
+        for (let dy = -STANCE_SCAN_CELLS; dy <= STANCE_SCAN_CELLS; dy += 1) {
+            for (let dx = -STANCE_SCAN_CELLS; dx <= STANCE_SCAN_CELLS; dx += 1) {
+                const c = nodeCentre(here.tx + dx, here.ty + dy, pitch);
+                const d = Math.hypot(c.x - targetCentre.x, c.y - targetCentre.y);
+                if (d > leash) continue;
+                inLeash.push(c);
+                if (!corridorPlans(run.world, run.state, c, allowTeleporter, planOpts)) continue;
+                if (aimIsPlannable
+                    && !corridorPlans(run.world, c, aim, allowTeleporter, planOpts)) continue;
+                candidates.push({ ...c, d,
+                    approach: Math.hypot(c.x - run.state.x, c.y - run.state.y) });
+            }
         }
-    }
+    };
+    scanAround(nodeAt(run.state.x, run.state.y, pitch));
+    /**
+     * ⛓⛓ SEEDLING SWIM U10, D1 — **THE FALLBACK SCAN, CENTRED ON THE TARGET**
+     * (U7 § D4's wall 1, its scratch change 1, re-measured on main).
+     *
+     * The box above is centred on the PLAYER, which is where every committed
+     * chaser fight asks from: the walk meets the body, so the body is near.
+     * L12's ladder asks from the ARRIVAL, ~470 px from `puncher@416,256`, and
+     * that box held "0 cell(s) inside its 80 px leash" — the body was never a
+     * hypothesis, and the refusal read as geometry when it was the scan's
+     * centre (trap candidate: a scan centred on the asker).
+     *
+     * ⛔ ONLY when the player's box holds no leash cell, so every stance a
+     * committed solve chose is still chosen the same way (the six `--check`s
+     * are the receipt). The refusal names which centre the cells came from.
+     */
+    const aroundTarget = inLeash.length === 0;
+    if (aroundTarget) scanAround(nodeAt(targetCentre.x, targetCentre.y, pitch));
     // Nearest-first only as a SCAN order — the pick below is by score, and
     // ties are broken by y then x so an emitted tape is not an artifact of
     // iteration order.
@@ -9238,6 +9257,8 @@ export function deriveKillByChaser(run, body, contacts,
         return {
             stance: null,
             why: `no stance derives for ${body.id} on level ${run.level}: `
+                + `${aroundTarget ? `the ${STANCE_SCAN_CELLS}-cell box around the player's `
+                    + 'node held 0 leash cells, so the box around the TARGET was scanned: ' : ''}`
                 + `${inLeash.length} cell(s) inside its ${leash} px leash, `
                 + `${candidates.length} of those reachable`
                 + `${aimIsPlannable ? ' and with a corridor onward' : ''}, `
