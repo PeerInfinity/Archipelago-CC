@@ -227,6 +227,7 @@ import {
     arriveAtRespawn,
     arriveFromFall,
     arriveIn,
+    deathRefusal,
     initialLatch,
     playerBoxAt,
     step as stepV2,
@@ -13397,11 +13398,17 @@ export function createLevelRun({
              * names a value instead of the name that holds it is a landmine
              * under the next flip (kickoff §40.6).
              */
-            const step = (st, held, { dashImpulse = null } = {}) => (
-                dashImpulse
+            const step = (st, held, { dashImpulse = null } = {}) => {
+                const r = dashImpulse
                     ? stepV2(st, held, { ...opts, dashImpulse })
-                    : stepV2(st, held, opts)
-            );
+                    : stepV2(st, held, opts);
+                // ⛓ R3-swim: the RUN reboots a death; a PREVIEW has no world
+                // to reboot into, so it refuses with the words `step` used to
+                // throw — every planner caller already reads that refusal as a
+                // walk it cannot take.
+                if (r.death) throw deathRefusal(opts.level, st, r.death);
+                return r;
+            };
             /**
              * ⛓⛓ U12-swim D1: AND THE PULLS, AHEAD OF THE STEP, as `advance`
              * runs them — a preview across a current rides it. A room with no
@@ -15434,12 +15441,13 @@ export function createLevelRun({
             // would disagree with the tape.
             for (let extra = 0; extra < pendingFreeSteps; extra += 1) {
                 const unobserved = stepV2(state, acting, stepOpts);
-                if (unobserved.transition) {
+                if (unobserved.transition || unobserved.death) {
                     throw new Error('levelRun: the freeze-clearing frame at tick '
                         + `${ticksCompleted} produced a TRANSITION. That frame is dead `
                         + 'to the tape by construction, so the crossing would be '
                         + 'invisible in the stream and the transition list would '
-                        + 'disagree with it. Move the span away from the door.');
+                        + 'disagree with it. Move the span away from the door.'
+                        + (unobserved.death ? ` (It was a DEATH, \`${unobserved.death.source}\`.)` : ''));
                 }
                 state = unobserved;
             }
@@ -15457,6 +15465,20 @@ export function createLevelRun({
             // (never observed) step. Two deferred `FP.world =` writes, two
             // different final ticks, and the difference is one `if`.
             let next = pendingDeath ? state : stepV2(state, acting, stepOpts);
+            // ── ⛓⛓⛓ R3-swim: A DEATH FROM INSIDE `Player.update` ────────
+            //
+            // The pit (`checkFallingInPit`'s `else die()`) and the drown
+            // spiral's last tick (`drown()`'s `die()`) call `die()` from the
+            // PLAYER's own update — after (the pit) or instead of (the
+            // spiral) `super.update()` — so unlike a hit death this tick's
+            // step stands, and the reboot below is the same one a hit takes:
+            // `restartLevel()` at end of tick, into this world's ctor args.
+            if (!pendingDeath && next.death) {
+                pendingDeath = {
+                    t: ticksCompleted + 1, level, source: next.death.source,
+                    id: next.death.id, hits: damage.hits,
+                };
+            }
             // ⛓ Swim U5: `BobBoss.death` writes `player.directionFace = 1` on
             // every transition frame, and `sprites()` (after the move) then
             // sets `direction = directionFace`. `stepV2` derives it from `v`.

@@ -2494,9 +2494,14 @@ try {
         // frame of each 120-frame form transition, and the model now runs it.
         const bobKills = (expectedRun?.bobBoss ?? [])
             .filter((r) => r.what === 'boss-hit' && r.killed);
+        // ⛓ R3-swim ADDS A FIFTH: a fall into a pit with no control block is
+        // the same `checkFallingInPit` (`receiveInput = false`) ending in
+        // `die()` instead of a transport.
+        const pitDeaths = (expectedRun?.playerDeaths ?? []).filter((d) => d.source === 'pit');
         const causes = [
             ...(bobKills.length ? [`${bobKills.length} BobBoss form transition(s)`] : []),
             ...(transports.length ? [`${transports.length} pit transport(s)`] : []),
+            ...(pitDeaths.length ? [`${pitDeaths.length} pit death(s)`] : []),
             ...lockSnaps.map((s) => `${s.id} for ${s.ticks} tick(s)`),
             // ⛓ TWO SHAPES, ONE LINE. `cutscene[1]` walks the player north
             // with `receiveInput = false`; `cutscene[2]` adds

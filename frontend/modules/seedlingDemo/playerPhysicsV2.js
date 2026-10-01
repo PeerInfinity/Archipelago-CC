@@ -750,21 +750,47 @@ export function getStatePos(level, x, y) {
 }
 
 /**
+ * The refusal a PLANNER question about a lethal pit gets. ⛓ R3-swim D1: the
+ * RUN no longer throws it — `step` returns the death and `levelRun` reboots —
+ * but `fallDestination` is the planner's "is this pit transport?" query and a
+ * preview that walks to a death still refuses with these words.
+ */
+export function pitDeathRefusal(level) {
+    return new PhysicsV2Error(
+        `the player fell into a pit in level ${level.level}, which has NO control `
+        + 'block — `Game.fallthroughLevel` is still -1 and `checkFallingInPit` '
+        + 'calls die(). That pit is lethal floor, not transport (27 of the 116 '
+        + 'levels are like this, Dungeon 6 and most of Dungeon 8 among them), so '
+        + 'the route must not step on it.',
+    );
+}
+
+/**
+ * The refusal for a `step` result that carries a `death` — for a caller with
+ * no world to reboot into (a PREVIEW). Each source keeps the words `step`
+ * threw before the run modelled it.
+ */
+export function deathRefusal(level, state, death) {
+    if (death.source === 'pit') return pitDeathRefusal(level);
+    return new PhysicsV2Error(
+        `the player DROWNED in level ${level.level} at (${state.x}, ${state.y}) — `
+        + `terrain state ${death.source === 'lava' ? LAVA_STATE : WATER_STATE}. `
+        + 'An armed hazard is PLANNER-FORBIDDEN FLOOR (the pit precedent): '
+        + '`drownTimer` is never reset off-hazard, so eleven cumulative ticks '
+        + 'on water without canSwim (the conch, R5) or lava without the dark '
+        + 'suit ends the run. Re-route, or coerce the hazard in `noHazards`.',
+    );
+}
+
+/**
  * The ctor args `checkFallingInPit` hands `new Game(...)`, and the level it
  * hands them to. Throws when the level has no `control` block, because the
- * game's own `else` there is `die()`.
+ * game's own `else` there is `die()` — the PLANNER's question. `step` asks
+ * `level.fallthrough` itself and returns the death (R3-swim D1).
  */
 export function fallDestination(level, target) {
     const ft = level.fallthrough;
-    if (!ft) {
-        throw new PhysicsV2Error(
-            `the player fell into a pit in level ${level.level}, which has NO control `
-            + 'block — `Game.fallthroughLevel` is still -1 and `checkFallingInPit` '
-            + 'calls die(). That pit is lethal floor, not transport (27 of the 116 '
-            + 'levels are like this, Dungeon 6 and most of Dungeon 8 among them), so '
-            + 'the route must not step on it.',
-        );
-    }
+    if (!ft) throw pitDeathRefusal(level);
     const snap = (v, off) => Math.floor(Math.max(v - off, 0) / TILE_SIZE) * TILE_SIZE;
     return {
         to_level: ft.level,
@@ -1051,6 +1077,8 @@ export function step(state, held, opts = {}) {
     );
     const fall = state.fall ?? null;
     let transition = null;
+    /** ⛓ R3-swim: `{source, id}` when this tick's `Player.update` calls `die()`. */
+    let death = null;
     // ⚠ A teleporter firing while a transport is IN FLIGHT is refused, not
     // resolved. It is the same doctrine as the two-teleporter throw and it
     // is LIVE, not defensive: level 100's exit to 101 stands ON a pit tile,
@@ -1422,7 +1450,18 @@ export function step(state, held, opts = {}) {
         // accumulating the other way, can land a hair ABOVE zero and give
         // 21, and the recording says 20.
         const alpha = nextFall.alpha - FALL_ALPHA_SPEED;
-        if (alpha <= 0) {
+        if (alpha <= 0 && !level.fallthrough) {
+            // ⛓⛓⛓ R3-swim D1: `else { die(); }` — `Game.fallthroughLevel` is
+            // still -1, so the fall ends in `restartLevel()`. This tick's
+            // `super.update()` HAS run (`checkFallingInPit` is below it), so
+            // the moved state stands; the run reboots at end of tick.
+            // Witness: `r3-pit-death` (L4, the respawn is observation 57).
+            death = {
+                source: 'pit',
+                id: `pit@${nextFall.target.x - TILE_SIZE / 2},${nextFall.target.y - TILE_SIZE / 2}`,
+            };
+            nextFall = null;
+        } else if (alpha <= 0) {
             const dest = fallDestination(level, nextFall.target);
             transition = {
                 kind: 'fall',
@@ -1445,6 +1484,9 @@ export function step(state, held, opts = {}) {
         latched,
         transition,
         fall: nextFall,
+        // ⛓ R3-swim: `die()` from inside `Player.update` — present ONLY on a
+        // death tick, so every other state keeps its exact shape.
+        ...(death ? { death } : {}),
         // `sprites()` runs AFTER `super.update()`, so it reads THIS tick's
         // post-move velocity — and the value it leaves is what the NEXT
         // tick's press will capture as `spearDirection`. ⛓ U11-swim D2: a

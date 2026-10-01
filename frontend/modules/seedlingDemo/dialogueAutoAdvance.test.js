@@ -132,8 +132,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // `r1-dark-suit-spinner` and `r1-dark-shield-bobboss` — inert too.
         // ⛓ swim U13: 169 with `r9-solve-13-v2` — inert too.
         // ⛓ swim R1 + U13 (merged): 175 — the six R1 witnesses and `r9-solve-13-v2`, all inert.
-        expect(rows).toHaveLength(175);
-        expect(rows.length - parted.length).toBe(174);
+        // ⛓ swim R3: 176 (+ `r3-pit-death`, inert).
+        expect(rows).toHaveLength(176);
+        expect(rows.length - parted.length).toBe(175);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

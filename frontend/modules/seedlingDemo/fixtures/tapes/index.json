@@ -383,6 +383,13 @@
       ]
     },
     {
+      "file": "r3-pit-death.json",
+      "tickCount": 100,
+      "bootLevel": 4,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r3-walk-1-sword.json",
       "tickCount": 641,
       "bootLevel": 0,
