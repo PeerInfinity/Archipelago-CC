@@ -70,6 +70,9 @@ Examples:
 
   # Overwrite existing files
   python -m world_generator input.json --force
+
+  # Build a loadable .apworld instead of writing into worlds/
+  python -m world_generator input.json --apworld apworlds/
 '''
     )
 
@@ -125,6 +128,15 @@ Examples:
         '--apply-name-substitutions',
         action='store_true',
         help='Apply name_substitutions from the rules file (e.g. Metamath generic to meaningful names)'
+    )
+
+    parser.add_argument(
+        '--apworld',
+        type=str,
+        default=None,
+        metavar='DIR',
+        help='Write <game_directory>.apworld into DIR instead of a world directory '
+             '(AP only loads an apworld under that file name)'
     )
 
     parser.add_argument(
@@ -186,6 +198,21 @@ Examples:
                 if args.validate:
                     has_errors = any(issue.startswith('ERROR') for issue in issues)
                     return 1 if has_errors else 0
+
+        if args.apworld and not args.validate:
+            from .apworld import build_apworld
+            built = build_apworld(
+                input_path,
+                game_name=args.game_name,
+                canonical_seed=canonical_seed,
+                player_id=args.player_id,
+            )
+            out_dir = Path(args.apworld)
+            out_dir.mkdir(parents=True, exist_ok=True)
+            out_file = out_dir / built['file_name']
+            out_file.write_bytes(built['data'])
+            print(f"Wrote {out_file} ({len(built['data'])} bytes)")
+            return 0
 
         if not args.validate:
             # Generate the world
