@@ -7130,10 +7130,17 @@ export function buildRulesJson(grid, opts = {}) {
     // rulesDoc validation as "starting item is not a defined item".
     // ⛓ B1 — through the ONE backfill (`backfillItemDefs`, below), so a starting
     // def whose verbatim id the pool already holds moves as a rule item's does.
+    // ⛓ Each kept starting item is ALSO pooled: the exporter's `itempool_counts`
+    // is precollected + placed (`get_itempool_counts`), and world_generator
+    // inverts exactly that — its pool is `itempool_counts − starting_items −
+    // locked events`. Pooling only the placed copies (as this did) left an apcalc
+    // top-down world one item short per starting button: `No more spots to place`.
     if (Array.isArray(startingItems) && startingItems.length > 0) {
         backfillItemDefs(scaffold.items[playerId], startingItems, sourceItems);
         scaffold.starting_items[playerId] = startingItems
             .filter((name) => Object.hasOwn(scaffold.items[playerId], name));
+        const pool = scaffold.itempool_counts[playerId];
+        for (const name of scaffold.starting_items[playerId]) pool[name] = (pool[name] || 0) + 1;
     }
 
     // Top-level flag: every back-exit inherits the forward exit's
