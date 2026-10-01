@@ -220,6 +220,13 @@ async function botOnSeedlingPreset(tc, runtime) {
     if (!bot) return null;
     bot.reset?.();
 
+    // ⛔ THE PANEL MAY ALREADY BE ON THIS PRESET AND RUNTIME (the J1 row runs
+    // just before this one in the fast batch): its adapter, AP load and page
+    // are then the PREVIOUS row's, and every poll below would answer at once
+    // off a panel that is about to re-initialize for the new rules load.
+    // Measured: "the JS runtime page is up" failed 1.3 s in. So wait for an
+    // adapter that is not the one in place before the load.
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
     await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
     tc.log(`runtime = ${runtime} (session override); loading seedling_generated_room…`);
     const rulesJson = await (await fetch(PRESET_PATH)).json();
@@ -232,8 +239,8 @@ async function botOnSeedlingPreset(tc, runtime) {
     const transport = runtime === 'js' ? 'js' : 'wasm';
     const panel = await tc.pollForValue(() => {
         const p = getActivePanelInstance();
-        return p?.transport === transport && p.adapter && p._initRuntime === runtime ? p : null;
-    }, `the flash panel mounted the ${transport} transport`, 30000, 250);
+        return p?.transport === transport && p.adapter && p.adapter !== staleAdapter && p._initRuntime === runtime ? p : null;
+    }, `the flash panel mounted the ${transport} transport (a fresh adapter)`, 30000, 250);
     tc.assertEqual(`the panel is on the ${transport} transport`, transport, panel?.transport ?? null);
     if (!panel) return null;
 
@@ -266,7 +273,10 @@ export async function seedlingJsRuntimeBotCompletesGeneratedRoom(tc) {
             'the panel finished its AP load (the generated arm) and holds the assembly report', 30000, 250);
         tc.reportCondition('the generated arm loaded (the bot\'s name → cell map)', !!ap);
         if (!ap) return tc.getOverallResult();
-        const rt = frameOf(panel)?.__seedlingJsRuntime ?? null;
+        const rt = await tc.pollForValue(() => {
+            const r = frameOf(panel)?.__seedlingJsRuntime ?? null;
+            return r?.run ? r : null;
+        }, 'the JS runtime page is up and running the set', 15000, 200);
         tc.reportCondition('the JS runtime page is up', !!rt?.run);
         if (!rt?.run) return tc.getOverallResult();
 
