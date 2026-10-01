@@ -1481,6 +1481,9 @@ frontend/modules/seedlingDemo/bobBossFight.js|SHIELD_FORCE|(module),physics,magn
 frontend/modules/seedlingDemo/levelRun.js|step|hbaf0da28|0|0,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name in the forecast)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|shieldBumpNow,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name)
 frontend/modules/seedlingDemo/levelRun.js|advance|h3bdba7db|0|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked; >= 0 is the hit-parked facing sprites() pins (the shield box's direction)
+frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|0,rule,bound,,U10 forecast punch: hitsTimer > 0 i-frame gate (attackPlayer)
+frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10 forecast punch: the hitUpdate decrement this tick applies before the graphic half
+frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,
@@ -1616,6 +1619,3 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2478e7e0|60|0,rule,ma
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9065cb5b|0|0,rule,sentinel,,Ground state 0 (Player.as:297)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb348a44c|116|0,rule,count,,Game.levels.length
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h4254a394|3|0,physics,magnitude,Player.as:wandSpeed,
-frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|0,rule,bound,,U10 forecast punch: hitsTimer > 0 i-frame gate (attackPlayer)
-frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10 forecast punch: the hitUpdate decrement this tick applies before the graphic half
-frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0

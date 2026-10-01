@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 37,
+            "count": 39,
             "id": "plan"
         },
         {
-            "browser": 23,
-            "count": 62,
+            "browser": 24,
+            "count": 63,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 285,
-        "browser": 87,
-        "cited": 128,
-        "files": 296,
+        "blockStyle": 288,
+        "browser": 88,
+        "cited": 130,
+        "files": 299,
         "lineStyle": 11,
-        "withDocblock": 296,
-        "withFlags": 217
+        "withDocblock": 299,
+        "withFlags": 220
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7501,6 +7501,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-u10-puncher-dwell.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-u10-puncher-dwell — ⛓⛓⛓ U10-swim D2: THE GAME WITNESS FOR PRICING THE PUNCHER'S PUNCH BY THE FORECAST INSTEAD OF THE PAD.",
+            "path": "scripts/procgen/plan-seedling-u10-puncher-dwell.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-u7-puncher.mjs",
             "flags": [
                 {
@@ -7518,6 +7545,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-u7-puncher — ⛓⛓⛓ U7-swim: THE PUNCHER'S DRIVEN WITNESSES.",
             "path": "scripts/procgen/plan-seedling-u7-puncher.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-u9-shield-bump.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-u9-shield-bump — ⛓⛓⛓ U9-swim: `Player.shieldBump`'s DRIVEN WITNESSES.",
+            "path": "scripts/procgen/plan-seedling-u9-shield-bump.mjs"
         },
         {
             "argvHelpers": [],
@@ -9139,6 +9195,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-u7-puncher-mobiles — ⛓⛓⛓ U7-swim: THE PUNCHER'S OWN POSITION, ASKED OF THE GAME, TICK BY SAMPLED TICK.",
             "path": "scripts/procgen/probe-seedling-u7-puncher-mobiles.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-u9-shield-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "class"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-u9-shield-mobiles — ⛓⛓⛓ U9-swim: A STEPPED BODY'S OWN POSITION, ASKED OF THE GAME, TICK BY SAMPLED TICK — for the shield-bump witnesses (`plan-seedling-u9-shield-bump.mjs`).",
+            "path": "scripts/procgen/probe-seedling-u9-shield-mobiles.mjs"
         },
         {
             "argvHelpers": [],
