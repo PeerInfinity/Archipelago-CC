@@ -11782,6 +11782,72 @@ on the static `sandtrap`'s contact, whose `Enemy.hit` is not transcribed.
 - a stream-invisible arm whose mutant tapeRunner cannot see: the spinner's
   latch reds only in the body probe.
 
+### Seedling substrate U13-swim — the campaign chain to sphere 2.2 (2026-10-01)
+
+⚖ Q40 (user, 2026-10-01: *"Yes, one slice"*): grow the campaign chain from
+route 2.1's tail (L20, the shield) through route step 30 (L32, the Bob Boss),
+recorded on the game. The report is `CC/docs/cloud-reports/seedling-swim-u13.md`.
+**The chain grew by one room and stopped at a wall the game named.**
+
+**D1 — the producer learns the 2.2 route's two goal shapes.** A declaration
+row may carry `exit: 'pit'` (the room is left by its one pit tile, which the
+producer derives from the model: the level's `control` block names `to`, and a
+room with more than one pit tile refuses as ambiguous) or `encounter: '<drop>'`
+(`at` from the playthrough atlas's location tile, `then` from the control
+block). A terminal segment may cross exactly its encounter's pit, and the
+census aligns a terminal route step on the room that pit falls to. The
+frontier's source is now the through-2.2 route
+(`NewDocs/plans/seedling-editor-survey/through-2.2/{route,survey}.json`).
+
+**D2 — solved, latched and recorded headless, in chain order.**
+
+| segment | route step | rooms | survey | producer | game |
+|---|---|---|---|---|---|
+| `r9-solve-20` (licensed re-record) | 21 | L20 → L13 (the shield, then `stairsup@16,48`) | 560 | **560** (was 161) | the model reproduces 561 observations; a calm latch at t560 |
+| `r9-solve-13-v2` (new) | 22 | L13 → L0 (`stairsup@64,144`) | 48 | **48** | the model reproduces 49 observations; a calm latch at t48 |
+| `r9-solve-0-v3` | 23 | L0 → L12 (`teleporter@304,176`) | 229 | 229 | **REFUTED at t3** |
+
+**The wall: the Moonrock beam.** Route step 23 is the first L0 visit after the
+shield, and `Shield.removed()` arms `Moonrock.beam`. In the game,
+`Moonrock.update` sets `Game.freezeObjects` while `beam && canBeam` (the player
+more than ¾ of the rock's width from its fall point), turns the player toward
+it, runs `beamTimeMax` frames of beam and then drops the rock
+(`Moonrock.as:66-118`). The model has no Moonrock beam. The recording:
+
+- t0–t2 agree (56 → 56.8 → 58.15). At t3 the tape presses `primary`+`right`:
+  the model dashes (v 1.35 → 3.1, x 61.25) and the game's player does not
+  (x 59.25, then 59.3 at t4).
+- The game owes 511 dead frames to the model's 40, and its latched
+  `save.time` is 12,982 against the model's 12,511 (Δ 471).
+- The game's latch is not calm, v = (1.5, 0), so no successor could boot from
+  it. `drownTimer` reads 9.
+
+The survey's 9/9 could not see it: it boots step 23 from `r8-solve-11`'s
+pre-shield block, whose `beam` is false. The refuted tape is not committed,
+and steps 23–30 stay out of the declaration. The chain is **22 windows, 6,221
+ticks** (was 21 / 5,774).
+
+**D3.** No new `earns` or `clears` row is owed: neither new tape declares a
+timed clear (`stagedClearFindings` 12 rows, 0 red), and `r9-solve-13-v2`
+collects nothing. The campaign tier derives its tapes from the declaration
+(30 → 31). `derive-seedling-tick0.mjs` now drives headless through
+`driverChannel` (it spelled `py.exe` inline), and measured `r9-solve-13-v2`'s
+tick-0 block: clock delta 21, the predicted boot cost. The differential over
+the whole chain reads ALL CHECKS PASSED, the new seam `r9-solve-20 →
+r9-solve-13-v2` GREEN over the 46-row signature.
+
+**Trap candidates**, for the catalogue to number:
+
+- a survey that stages every room from one pre-event block cannot see an event
+  the route itself arms: the shield's beam is the route's own consequence, and
+  only the chained latch carries it;
+- a frontier that reads "every remaining step SOLVES" because its only source
+  is the staged survey, while the producer refuses the next step. The frontier
+  says gap list; the chain is at a wall;
+- a measuring instrument with one hard-coded channel (`derive-seedling-tick0`
+  spelled `py.exe`) blocks a growth in the cloud after every solver and
+  recording step has passed.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -12573,7 +12639,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **21 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L20** end of the route, **5774 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **22 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L0** arrival, **6221 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12597,9 +12663,10 @@ its byte-frozen free oracle is compared against.
 | 18 | `r9-solve-16` | L16 → L18 | 625 | — |
 | 19 | `r9-solve-18` | L18 → L19 | 455 | — |
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
-| 21 | `r9-solve-20` | L20 → END | 161 | `shield@L20` |
+| 21 | `r9-solve-20` | L20 → L13 | 560 | `shield@L20` |
+| 22 | `r9-solve-13-v2` | L13 → L0 | 48 | — |
 
-**ROUTE COMPLETE** — the chain walks all 21 route steps, from the true start to route step 21 in L20 (Level 020 - Shield (sphere 2.1) → Progressive Shield); there is no next room on this route.
+**NO REFUSED STEP** — no route step after the chain is refused by the survey — every remaining step SOLVES today, so the frontier is a GAP LIST rather than a refusal and this is a finding, not a stop.
 
 <!-- GENERATED:campaign-chain END -->
 

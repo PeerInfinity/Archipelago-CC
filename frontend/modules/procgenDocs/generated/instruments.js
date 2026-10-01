@@ -4887,6 +4887,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "only"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
                 }
             ],
             "inheritedFlags": [
