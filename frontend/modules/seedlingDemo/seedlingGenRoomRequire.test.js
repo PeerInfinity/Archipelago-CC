@@ -28,13 +28,18 @@ const room = (seed, seedlingGen, size = { width: 10, height: 10 }) => generateGe
     region_id: 'req', exits: [{ exit_id: 'a' }], size, rng: createRng(seed), params: { seedlingGen } }).world;
 
 describe('⛓⛓ the `require` knob — absent is byte-identical, given is honoured', () => {
+    // ⚠ The two seed-4 rows build a post-sword room TWICE each. Since the biome
+    // defaults fold (swim U8) the post-sword default draw at seed 4 is `arena`,
+    // and the certification measures 51 s ALONE at the U5+U7+U8 merge head —
+    // the old 60 s bound timed out under the suite's load. 180 s is the
+    // measured cost ×3; the seed stays, because the next row shares it.
     it('the default is the empty string, and an absent knob adds NO `require` to `generation`', () => {
         expect(GEN_ROOM_DEFAULTS.require).toBe('');
         const w = room(4, { biome: 'post-sword' });
         expect('require' in w.generation).toBe(false);
         const empty = room(4, { biome: 'post-sword', require: '' });
         expect(JSON.stringify(empty)).toBe(JSON.stringify(w));
-    }, 60000);
+    }, 180000);
 
     it('⛔ `require=hasSword` REACHES the generator — a different room, recorded, met first draw', () => {
         const plain = room(4, { biome: 'post-sword' });
@@ -43,7 +48,7 @@ describe('⛓⛓ the `require` knob — absent is byte-identical, given is honou
         expect(req.generation.rerolls).toBe(0);
         // ⛔ MUTANT (d): a knob recorded and never passed would leave these EQUAL.
         expect(JSON.stringify(req.record)).not.toBe(JSON.stringify(plain.record));
-    }, 60000);
+    }, 180000);
 
     it('a draw that misses the directive is RE-ROLLED, and says why', () => {
         const req = room(3, { biome: 'post-sword', require: 'hasSword' });
