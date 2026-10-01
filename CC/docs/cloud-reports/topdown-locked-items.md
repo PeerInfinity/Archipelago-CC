@@ -183,7 +183,16 @@ source would randomise.
 **R1 (2026-10-01, this chat), answering §4 Q1 by reframing it:**
 > If procgen is using "locked" to mean something different from what Archipelago uses it for, then I want to change procgen to use a different name for what it does.
 
-So `locked` keeps Archipelago's meaning everywhere, and procgen's "always here" moves to a new field. That replaces §3's
+**R2 (2026-10-01, this chat), answering §6.4 Q-A – Q-D:**
+> I agree with your recommendations. Please continue.
+
+That settles all four questions as recommended. **Q-A:** the name is `pinned`. **Q-B:** no compatibility shim.
+**Q-C:** no dungeon-group reshuffle for now. **Q-D:** AP_7–9 are re-recorded. "Please continue" was taken as the
+go-ahead to build, which the brief allowed once `topdown-apcalc-fill` had landed. It had: `git ls-tree origin/main`
+lists `CC/docs/cloud-reports/topdown-apcalc-fill.md`, and it was merged into this branch at `2c5dc0a`. The build is
+recorded in §7.
+
+Under R1, `locked` keeps Archipelago's meaning everywhere, and procgen's "always here" moves to a new field. That replaces §3's
 `source_locked` marker. The revised design is in §6. §4 Q2–Q5 are superseded or restated in §6.4.
 
 ## §6 Revised design under R1
@@ -277,3 +286,70 @@ So `locked` keeps Archipelago's meaning everywhere, and procgen's "always here" 
   already sits on the source. Only AP_7–9 would use it, and they do not generate.
 - **Q-D (was Q4), AP_7–9.** **Recommend re-record with the recorded commands** (they gain the carried `locked`).
 - Q2 and Q5 are settled by R1: an observed `locked` randomises like any canonical placement, and the A3 trap is gone.
+
+## §7 Build (R2)
+
+**Commits** on `claude/topdown-locked-items-5alp75`, after merging `origin/main` @ `9a0b031` (`2c5dc0a`):
+- `2784b95` **feat(procgen): `pinned` is procgen's always-place.** `locked` keeps Archipelago's meaning, and a
+  top-down compile carries it.
+- `a5964de` **chore(presets): re-record procgen_topdown AP_1–12.**
+
+**What changed:**
+- **`procgenPipelineEngine.js`:**
+  - `pinnedItems` / `pinnedCanonicalItems` replace `lockedItems` / `lockedCanonicalItems`, and the pinned location
+    gets `pinned: true`.
+  - `compileLocation` carries a source non-event location's `locked: true`. `locked: false` is the default and is not
+    carried, which keeps the presets in use byte-identical.
+- **The renamed option is threaded through** `sphereConfigHooks.js`, `sphereSteps.js`, `presetRun.js`,
+  `procgenPipelineUI.js`, `rebuildEnvelopeFromRulesJson`, and `scripts/procgen/{sphere-step.js,
+  dump-sphere-growth.js, dump-sphere-byteidentity.mjs, check-region-step-editing.mjs,
+  check-jta-locations-roundtrip.mjs}`.
+- **world_generator:**
+  - `extractors.py`: `pinned_placements` replaces `honor_locked_placements`. `pinned` stays an extra attribute, so it
+    is set on the generated Location and written back by the exporter.
+  - `_template_init.py`: one helper, `_always_placed`, now feeds both `LOCKED_PLACEMENTS` and the item-pool
+    subtraction: event locks + `pinned` (in canonical mode), or all locks + `pinned` (otherwise, as before).
+- **Schema:** `rules.schema.json` documents `locked` (Archipelago's meaning) and `pinned`, and drops the procgen
+  caveat.
+- **Comments:**
+  - `generator.py` and `handler.py`: `procgen_metadata` no longer changes placement.
+  - `make-seedling-playthrough-rules.mjs` header: the ⛔ reason is retired. Its output is unchanged (`--check` OK).
+    Whether to emit `procgen_metadata` there is left open.
+- **`CC/docs/plans/jta-zone-randomization-plan.md:593`** is left as written: it quotes the old mechanism as history.
+
+**Gates (all run here):**
+- **Bounded vitest** (⚖ ruling 52; the unfiltered suite was not run):
+  - 48 files, **1530/1530**: every non-slow test file mentioning `buildRulesJson(`, `pinnedCanonicalItems` or
+    `procgen_topdown`, plus all of `frontend/modules/apworldEditor/`.
+  - Slow tier: `sphereGrowth.slow` + `braidSphereBot.slow`, **38/38**.
+  - New test `procgenPipelineEngine.test.js` "carries a SOURCE non-event location's locked:true verbatim, and pins
+    only via pinnedCanonicalItems". `sphereGrowth.slow` now asserts `pinned` on the arrow and no non-event `locked`.
+- **pytest:** `test/test_world_generator_apworld.py` + `test/test_loop_costs_export_roundtrip.py`, **9/9**. pytest was
+  missing from the cloud venv and was pip-installed into it. Tree clean after.
+- **Other checks:**
+  - `check-jta-locations-roundtrip.mjs`: **ALL CHECKS PASSED**. Victory is still pinned (now via `pinned`), and still
+    out of logic at sphere 0.
+  - `check-topdown-steps.mjs`: **ALL PASS**.
+- **Scratch Generate.py round trips on AP_1, seeds 1–3** (§1.4 recipe; the tree was clean after each):
+  - **`locked`** on 3 locations: `LOCKED_PLACEMENTS` = Victory only. The placements are **identical to A0**, so
+    carrying `locked` changes no behaviour.
+  - **`pinned`** on 3 locations: they are in `LOCKED_PLACEMENTS` and frozen on all 3 seeds. The export carries
+    `locked: true` + `pinned: true`.
+  - **Re-derive the pinned seed-3 export**, seeds 1–2: still pinned. The pin survives the export round trip, and the
+    A3 trap is gone (a bare exported `locked` no longer pins).
+- **Re-record:** the `generated_commands.sh` procgen_topdown block (24 commands), exit 0.
+  - **AP_1–6 and AP_10–12:** byte-identical.
+  - **`preset_files.json`:** byte-identical.
+  - **AP_7–9:** strip `locked` from the 96 source-locked non-event locations and the documents equal HEAD's. The
+    96-location set equals the source's.
+- **Spoiler tests** (`npm test -- --port=8140 --mode=test-spoilers --game=procgen_topdown --seed=N`):
+  - AP_1 **passed**.
+  - AP_7, AP_8 and AP_9 **failed**: `Could not fetch presets/procgen_topdown/AP_N/AP_N_sphere_log.jsonl: 404`. The
+    committed pre-change AP_7, swapped in temporarily, fails **identically**. That is baseline: AP_7–9 have no sphere
+    log, consistent with the user dropping them.
+  - AP_2–6 and AP_10–12 are byte-identical, so they were not re-run.
+
+**Not done / left open:**
+- The CI suite number at the pushed SHA (`ci-vitest-summary.mjs`) applies once this branch reaches `main`. This
+  branch is not `main`, and merging is the coordinator's call.
+- The cloud venv lacks `zilliandomizer`. That is harmless import noise in every Generate.py log.
