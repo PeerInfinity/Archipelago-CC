@@ -5788,6 +5788,12 @@ function derivePressKill(run, bodies, contacts) {
                         + 'line to a body\'s entity point crosses a Solid (`Player.slash`\'s '
                         + 'line-of-sight gate, asked through `run.collideLineSolid`).'
                     : '')
+                // ⛓ U6 D1 — named only when the dwell skipped any.
+                + ((first?.dwelt ?? 0) > 0
+                    ? ` ${first.dwelt} reachable strike(s) were SKIPPED because the DWELL — `
+                        + 'standing on the cell from the walk\'s arrival to the train — '
+                        + 'meets a body or its hammer.'
+                    : '')
                 // ⛓ U4b D3 — named only when the continuation previewed a cell.
                 + ((first?.continued ?? 0) > 0
                     ? ` The scan then CONTINUED past them in tick order to +${strikeHorizon(run)} `
@@ -6155,6 +6161,28 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         }
         return true;
     };
+    /**
+     * ⛓⛓ SEEDLING SWIM U6 (D1) — **THE DWELL IS PRICED** (trap 154's
+     * question, asked of the one wait this schedule plans and never priced).
+     * The walk arrives at `eta` and the train is priced from `i − 2`; between
+     * them the player STANDS on the cell, and nothing asked whether the cell
+     * was clear there. The census chamber's (2,7) is what that cost: the
+     * strike (88,88) pressed at +12, the walk arrived at about +5 and waited in
+     * the billiard's path, and the corner it made was *"There is no step out."*
+     * with all ten key sets failing on the first tick. ⇒ every forecast row in
+     * `[eta, i − 2)` is asked at the cell's own box (`clearOfHammersAt`, the
+     * one predicate); the first unsafe one names the skip, and the skips are
+     * COUNTED so the refusal can say how many it dropped.
+     *
+     * @returns {number|null} the first unsafe forecast index, or null
+     */
+    let dwelt = 0;
+    const dwellUnsafeAt = (c, eta, i) => {
+        for (let k = eta; k < i - 2; k += 1) {
+            if (!clearOfHammersAt(run, c.box, forecast, k)) return k;
+        }
+        return null;
+    };
     for (let i = Math.max(1, notBefore); i < horizon - SLASH_HIT_TICKS - 1; i += 1) {
         const mine = forecast[i + 1]?.[index];
         if (!mine) continue;
@@ -6214,6 +6242,15 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
                     + `names ${unsafe.d.sources.map((x) => `${x.kind}:${x.id}`).join(', ')}` });
             continue;
         }
+        const waitHit = dwellUnsafeAt(o.cell, eta, o.i);
+        if (waitHit !== null) {
+            dwelt += 1;
+            rejected.push({ option: `strike (${o.cell.x},${o.cell.y}) at +${o.i}`,
+                why: `the DWELL is not safe: the walk arrives at +${eta} and stands there `
+                    + `until the train at +${o.i - 2}, and at +${waitHit} the box meets a `
+                    + `body's 7x7 rect or ${hammerTestAt(run)}` });
+            continue;
+        }
         return {
             cell: { x: o.cell.x, y: o.cell.y },
             pressAt: run.ticksCompleted + o.i,
@@ -6222,6 +6259,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
             rejected,
             considered: opportunities.length,
             sighted,
+            dwelt,
         };
     }
     /**
@@ -6262,6 +6300,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
             }
             const { walk, eta, unsafe } = walkTo(c);
             if (walk.truncated || unsafe || eta > i - 1) continue;
+            if (dwellUnsafeAt(c, eta, i) !== null) { dwelt += 1; continue; }
             return {
                 cell: { x: c.x, y: c.y },
                 pressAt: run.ticksCompleted + i,
@@ -6270,6 +6309,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
                 rejected,
                 considered: opportunities.length,
                 sighted,
+                dwelt,
                 continued,
                 fromContinuation: true,
             };
@@ -6280,6 +6320,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         rejected,
         considered: opportunities.length,
         sighted,
+        dwelt,
         continued,
         // ⛓ A BOUNDED SWEEP MUST NAME WHAT IT BOUNDED. The refusal now says
         // how many (cell, tick) pairs the ETA floor dropped as well as how

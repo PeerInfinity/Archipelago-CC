@@ -140,15 +140,40 @@ describe('F2 — a lock-less spinner on the walk, post-sword', () => {
      * … 43 opportunit(ies)"*. The admission's continuation keeps scanning in
      * tick order with one walk per cell and finds (88,88) at +142 after one more
      * cell. ⛔ With `continuation: false` the D1 text returns byte for byte.
+     *
+     * ⛓ U6 D1 — 226 → 166 t. The first strike is the same ((88,88) +142,
+     * the first landing at t 39); the re-derivation after it now skips
+     * (88,56) +67, whose wait was unpriced, and takes (88,72) +70. The second
+     * landing comes at 72 instead of 98, and the third at 108 instead of 179.
      */
-    it('(3,6): was "no (cell, tick)"; now SOLVES in 226 t on a strike past the bounded pass', () => {
+    it('(3,6): was "no (cell, tick)"; now SOLVES in 166 t on a strike past the bounded pass', () => {
         const out = solveAt(3, 6, POST_SWORD_ITEMS);
         expect(out.verdict).toBe(VERDICT.SOLVED);
-        expect(out.ticks).toBe(226);
+        expect(out.ticks).toBe(166);
         expect(out.certification?.certified).toBe(true);
         const kills = out.records.filter((r) => r.strategy === 'kill');
         expect(kills).toHaveLength(1);
         expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@48,96' });
+        expect(kills[0].landings).toHaveLength(3);
+    });
+
+    /**
+     * ⛓ U6 D1 — the refusal read *"every key set … lands the player box … at
+     * (86.53,83.57) … There is no step out."*, and no step-out exists from
+     * there: all ten key sets fail on the first tick. The corner was made
+     * earlier, by the walk arriving at its strike cell about seven ticks before
+     * the train and standing in the billiard's path. `deriveStrike` now prices
+     * that dwell (`[eta, i − 2)` at the cell's box). ⛔ With the dwell window
+     * empty (U6 mutant (a)) the U4b text returns byte for byte.
+     */
+    it('(2,7): was "no step out"; now SOLVES in 266 t, the wait before the train priced', () => {
+        const out = solveAt(2, 7, POST_SWORD_ITEMS);
+        expect(out.verdict).toBe(VERDICT.SOLVED);
+        expect(out.ticks).toBe(266);
+        expect(out.certification?.certified).toBe(true);
+        const kills = out.records.filter((r) => r.strategy === 'kill');
+        expect(kills).toHaveLength(1);
+        expect(kills[0]).toMatchObject({ arm: 'press', target: 'spinner@32,112' });
         expect(kills[0].landings).toHaveLength(3);
     });
 });
