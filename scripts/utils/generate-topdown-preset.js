@@ -229,6 +229,7 @@ async function main() {
         stringifyRulesJson,
         computeSourceCounts,
         ruleItemWarnings,
+        sourceLocationsOf,
     } = await import(enginePath);
 
     let gridDims = autoSizeGrid(source, args.minGridDim);
@@ -313,6 +314,7 @@ async function main() {
         startingItems: source.starting_items?.['1'] ?? [],
         sourceItems: source.items?.['1'] ?? null,
         sourceItemGroups: source.item_groups?.['1'] ?? null,
+        sourceLocations: sourceLocationsOf(source, '1'),
         menuRegion,
         ...(enriched ? { sphereLog } : {}),
         procgenMetadata: {

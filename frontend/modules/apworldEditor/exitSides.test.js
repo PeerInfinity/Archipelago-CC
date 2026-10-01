@@ -23,7 +23,7 @@ import { describe, expect, it } from 'vitest';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
-    DEFAULT_REGION_SIZE, buildRulesJson, linkIsAdjacentOnSide, topDownFromRulesJson,
+    DEFAULT_REGION_SIZE, buildRulesJson, linkIsAdjacentOnSide, topDownFromRulesJson, sourceLocationsOf,
 } from '../procgenPipeline/procgenPipelineEngine.js';
 import { SIDE_SHARING, exitSidesOf, sideMayHoldAnotherExit } from '../procgenCore/exitSides.js';
 import { resolveExitTilePositions } from '../procgenCore/compositeMapRenderer.js';
@@ -108,6 +108,7 @@ const REGEN_WORLDS = [10, 11, 12].map((seed) => {
     const doc = buildRulesJson(built.grid, {
         startCell: built.startCell, seed, assumeBidirectional: source.assume_bidirectional_exits !== false,
         startingItems: source.starting_items?.['1'] ?? [], sourceItems: source.items?.['1'] ?? null, sphereLog,
+        sourceItemGroups: source.item_groups?.['1'] ?? null, sourceLocations: sourceLocationsOf(source, '1'),
         procgenMetadata: {
             driver: 'top-down-sphere', source_game: source.game_name ?? null,
             source_counts: committed.procgen_metadata['1'].source_counts, stop_reason: built.stats.stopReason,

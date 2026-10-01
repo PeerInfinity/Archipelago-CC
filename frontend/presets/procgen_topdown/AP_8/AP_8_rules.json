@@ -173,7 +173,7 @@
         "locations": [
           {
             "name": "Floodgate",
-            "id": 1002,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -181,12 +181,14 @@
               "name": "Open Floodgate",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true
           },
           {
             "name": "Floodgate Chest",
-            "id": 1003,
+            "id": 1002,
             "access_rule": {
               "rule": "True_"
             },
@@ -217,7 +219,7 @@
         "locations": [
           {
             "name": "Swamp Palace - Big Key Chest",
-            "id": 1004,
+            "id": 1003,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -233,7 +235,7 @@
           },
           {
             "name": "Swamp Palace - West Chest",
-            "id": 1005,
+            "id": 1004,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -289,7 +291,7 @@
         "locations": [
           {
             "name": "Kakariko Tavern",
-            "id": 1006,
+            "id": 1005,
             "access_rule": {
               "rule": "True_"
             },
@@ -375,7 +377,7 @@
         "locations": [
           {
             "name": "Ganons Tower - Validation Chest",
-            "id": 1007,
+            "id": 1006,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -391,7 +393,7 @@
           },
           {
             "name": "Agahnim 2",
-            "id": 1008,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -434,8 +436,10 @@
               "name": "Beat Agahnim 2",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -639,7 +643,7 @@
         "locations": [
           {
             "name": "Ganons Tower - Mini Helmasaur Room - Left",
-            "id": 1009,
+            "id": 1007,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -655,7 +659,7 @@
           },
           {
             "name": "Ganons Tower - Mini Helmasaur Room - Right",
-            "id": 1010,
+            "id": 1008,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -671,7 +675,7 @@
           },
           {
             "name": "Ganons Tower - Pre-Moldorm Chest",
-            "id": 1011,
+            "id": 1009,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -704,7 +708,7 @@
           },
           {
             "name": "Ganons Tower - Mini Helmasaur Key Drop",
-            "id": 1012,
+            "id": 1010,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -945,7 +949,7 @@
         "locations": [
           {
             "name": "Kakariko Well - Top",
-            "id": 1013,
+            "id": 1011,
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
@@ -960,7 +964,7 @@
           },
           {
             "name": "Kakariko Well - Left",
-            "id": 1014,
+            "id": 1012,
             "access_rule": {
               "rule": "True_"
             },
@@ -973,7 +977,7 @@
           },
           {
             "name": "Kakariko Well - Middle",
-            "id": 1015,
+            "id": 1013,
             "access_rule": {
               "rule": "True_"
             },
@@ -986,7 +990,7 @@
           },
           {
             "name": "Kakariko Well - Right",
-            "id": 1016,
+            "id": 1014,
             "access_rule": {
               "rule": "True_"
             },
@@ -999,7 +1003,7 @@
           },
           {
             "name": "Kakariko Well - Bottom",
-            "id": 1017,
+            "id": 1015,
             "access_rule": {
               "rule": "True_"
             },
@@ -1041,7 +1045,7 @@
         "locations": [
           {
             "name": "Swamp Palace - Flooded Room - Left",
-            "id": 1018,
+            "id": 1016,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1057,7 +1061,7 @@
           },
           {
             "name": "Swamp Palace - Flooded Room - Right",
-            "id": 1019,
+            "id": 1017,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1073,7 +1077,7 @@
           },
           {
             "name": "Swamp Palace - Waterway Pot Key",
-            "id": 1020,
+            "id": 1018,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1089,7 +1093,7 @@
           },
           {
             "name": "Swamp Palace - Waterfall Room",
-            "id": 1021,
+            "id": 1019,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1105,7 +1109,7 @@
           },
           {
             "name": "Swamp Palace - Boss",
-            "id": 1022,
+            "id": 1020,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -1160,7 +1164,7 @@
           },
           {
             "name": "Swamp Palace - Prize",
-            "id": 1023,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -1210,8 +1214,10 @@
               "name": "Red Pendant",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1277,7 +1283,7 @@
         "locations": [
           {
             "name": "Swamp Palace - Big Chest",
-            "id": 1024,
+            "id": 1021,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -1329,7 +1335,7 @@
           },
           {
             "name": "Swamp Palace - Compass Chest",
-            "id": 1025,
+            "id": 1022,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1345,7 +1351,7 @@
           },
           {
             "name": "Swamp Palace - Hookshot Pot Key",
-            "id": 1026,
+            "id": 1023,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -1364,7 +1370,7 @@
           },
           {
             "name": "Swamp Palace - Trench 2 Pot Key",
-            "id": 1027,
+            "id": 1024,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1574,7 +1580,7 @@
         "locations": [
           {
             "name": "Stumpy",
-            "id": 1028,
+            "id": 1025,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1590,7 +1596,7 @@
           },
           {
             "name": "Digging Game",
-            "id": 1029,
+            "id": 1026,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1633,7 +1639,7 @@
         "locations": [
           {
             "name": "Hype Cave - Top",
-            "id": 1030,
+            "id": 1027,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -1659,7 +1665,7 @@
           },
           {
             "name": "Hype Cave - Middle Right",
-            "id": 1031,
+            "id": 1028,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -1685,7 +1691,7 @@
           },
           {
             "name": "Hype Cave - Middle Left",
-            "id": 1032,
+            "id": 1029,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -1711,7 +1717,7 @@
           },
           {
             "name": "Hype Cave - Bottom",
-            "id": 1033,
+            "id": 1030,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -1737,7 +1743,7 @@
           },
           {
             "name": "Hype Cave - Generous Guy",
-            "id": 1034,
+            "id": 1031,
             "access_rule": {
               "rule": "True_"
             },
@@ -1764,7 +1770,7 @@
         "locations": [
           {
             "name": "Sick Kid",
-            "id": 1035,
+            "id": 1032,
             "access_rule": {
               "rule": "HasGroup",
               "args": {
@@ -1872,7 +1878,7 @@
         "locations": [
           {
             "name": "Swamp Palace - Map Chest",
-            "id": 1036,
+            "id": 1033,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -1898,7 +1904,7 @@
           },
           {
             "name": "Swamp Palace - Pot Row Pot Key",
-            "id": 1037,
+            "id": 1034,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1914,7 +1920,7 @@
           },
           {
             "name": "Swamp Palace - Trench 1 Pot Key",
-            "id": 1038,
+            "id": 1035,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -1974,7 +1980,7 @@
         "locations": [
           {
             "name": "Swamp Palace - Entrance",
-            "id": 1039,
+            "id": 1036,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -2083,7 +2089,7 @@
         "locations": [
           {
             "name": "Lost Woods Hideout",
-            "id": 1040,
+            "id": 1037,
             "access_rule": {
               "rule": "True_"
             },
@@ -2162,7 +2168,7 @@
         "locations": [
           {
             "name": "Palace of Darkness - Dark Maze - Top",
-            "id": 1041,
+            "id": 1038,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -2178,7 +2184,7 @@
           },
           {
             "name": "Palace of Darkness - Dark Maze - Bottom",
-            "id": 1042,
+            "id": 1039,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -2194,7 +2200,7 @@
           },
           {
             "name": "Palace of Darkness - Big Chest",
-            "id": 1043,
+            "id": 1040,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -2237,7 +2243,7 @@
         "locations": [
           {
             "name": "Cave 45",
-            "id": 1044,
+            "id": 1041,
             "access_rule": {
               "rule": "True_"
             },
@@ -2408,7 +2414,7 @@
         "locations": [
           {
             "name": "Potion Shop",
-            "id": 1045,
+            "id": 1042,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -2440,7 +2446,7 @@
         "locations": [
           {
             "name": "Mini Moldorm Cave - Far Left",
-            "id": 1046,
+            "id": 1043,
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
@@ -2464,7 +2470,7 @@
           },
           {
             "name": "Mini Moldorm Cave - Left",
-            "id": 1047,
+            "id": 1044,
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
@@ -2488,7 +2494,7 @@
           },
           {
             "name": "Mini Moldorm Cave - Right",
-            "id": 1048,
+            "id": 1045,
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
@@ -2512,7 +2518,7 @@
           },
           {
             "name": "Mini Moldorm Cave - Far Right",
-            "id": 1049,
+            "id": 1046,
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
@@ -2536,7 +2542,7 @@
           },
           {
             "name": "Mini Moldorm Cave - Generous Guy",
-            "id": 1050,
+            "id": 1047,
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
@@ -2574,7 +2580,7 @@
         "locations": [
           {
             "name": "Maze Race",
-            "id": 1051,
+            "id": 1048,
             "access_rule": {
               "rule": "True_"
             },
@@ -2644,7 +2650,7 @@
         "locations": [
           {
             "name": "Palace of Darkness - Harmless Hellway",
-            "id": 1052,
+            "id": 1049,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -2750,7 +2756,7 @@
         "locations": [
           {
             "name": "Palace of Darkness - Compass Chest",
-            "id": 1053,
+            "id": 1050,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -2766,7 +2772,7 @@
           },
           {
             "name": "Palace of Darkness - Dark Basement - Left",
-            "id": 1054,
+            "id": 1051,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -2785,7 +2791,7 @@
           },
           {
             "name": "Palace of Darkness - Dark Basement - Right",
-            "id": 1055,
+            "id": 1052,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -2825,7 +2831,7 @@
         "locations": [
           {
             "name": "Lake Hylia Island",
-            "id": 1056,
+            "id": 1053,
             "access_rule": {
               "rule": "True_"
             },
@@ -2905,7 +2911,7 @@
         "locations": [
           {
             "name": "Spectacle Rock Cave",
-            "id": 1057,
+            "id": 1054,
             "access_rule": {
               "rule": "True_"
             },
@@ -2932,7 +2938,7 @@
         "locations": [
           {
             "name": "Master Sword Pedestal",
-            "id": 1058,
+            "id": 1055,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -2966,7 +2972,7 @@
         "locations": [
           {
             "name": "Chicken House",
-            "id": 1059,
+            "id": 1056,
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
@@ -3031,7 +3037,7 @@
         "locations": [
           {
             "name": "Ganon",
-            "id": 1060,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -3068,8 +3074,10 @@
               "name": "Triforce",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3173,7 +3181,7 @@
         "locations": [
           {
             "name": "Palace of Darkness - Big Key Chest",
-            "id": 1061,
+            "id": 1057,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -3309,7 +3317,7 @@
         "locations": [
           {
             "name": "Palace of Darkness - The Arena - Bridge",
-            "id": 1062,
+            "id": 1058,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -3325,7 +3333,7 @@
           },
           {
             "name": "Palace of Darkness - Stalfos Basement",
-            "id": 1063,
+            "id": 1059,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -3481,7 +3489,7 @@
         "locations": [
           {
             "name": "Sahasrahla's Hut - Left",
-            "id": 1064,
+            "id": 1060,
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "_original_ast_type": "helper",
@@ -3496,7 +3504,7 @@
           },
           {
             "name": "Sahasrahla's Hut - Middle",
-            "id": 1065,
+            "id": 1061,
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "_original_ast_type": "helper",
@@ -3511,7 +3519,7 @@
           },
           {
             "name": "Sahasrahla's Hut - Right",
-            "id": 1066,
+            "id": 1062,
             "access_rule": {
               "rule": "can_bomb_or_bonk",
               "_original_ast_type": "helper",
@@ -3526,7 +3534,7 @@
           },
           {
             "name": "Sahasrahla",
-            "id": 1067,
+            "id": 1063,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -3630,7 +3638,7 @@
         "locations": [
           {
             "name": "Hyrule Castle - Boomerang Chest",
-            "id": 1068,
+            "id": 1064,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -3664,7 +3672,7 @@
           },
           {
             "name": "Hyrule Castle - Map Chest",
-            "id": 1069,
+            "id": 1065,
             "access_rule": {
               "rule": "True_"
             },
@@ -3677,7 +3685,7 @@
           },
           {
             "name": "Hyrule Castle - Zelda's Chest",
-            "id": 1070,
+            "id": 1066,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -3737,7 +3745,7 @@
           },
           {
             "name": "Hyrule Castle - Map Guard Key Drop",
-            "id": 1071,
+            "id": 1067,
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
@@ -3761,7 +3769,7 @@
           },
           {
             "name": "Hyrule Castle - Boomerang Guard Key Drop",
-            "id": 1072,
+            "id": 1068,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -3795,7 +3803,7 @@
           },
           {
             "name": "Hyrule Castle - Big Key Drop",
-            "id": 1073,
+            "id": 1069,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -3875,7 +3883,7 @@
         "locations": [
           {
             "name": "Palace of Darkness - Shooter Room",
-            "id": 1074,
+            "id": 1070,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -4081,7 +4089,7 @@
         "locations": [
           {
             "name": "Pyramid",
-            "id": 1075,
+            "id": 1071,
             "access_rule": {
               "rule": "True_"
             },
@@ -4195,7 +4203,7 @@
         "locations": [
           {
             "name": "Castle Tower - Room 03",
-            "id": 1076,
+            "id": 1072,
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
@@ -4219,7 +4227,7 @@
           },
           {
             "name": "Castle Tower - Dark Maze",
-            "id": 1077,
+            "id": 1073,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4257,7 +4265,7 @@
           },
           {
             "name": "Castle Tower - Dark Archer Key Drop",
-            "id": 1078,
+            "id": 1074,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4299,7 +4307,7 @@
           },
           {
             "name": "Castle Tower - Circle of Pots Key Drop",
-            "id": 1079,
+            "id": 1075,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4375,7 +4383,7 @@
         "locations": [
           {
             "name": "Agahnim 1",
-            "id": 1080,
+            "id": null,
             "access_rule": {
               "rule": "AST_function_call",
               "args": {
@@ -4407,8 +4415,10 @@
               "name": "Beat Agahnim 1",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4478,7 +4488,7 @@
         "locations": [
           {
             "name": "Desert Ledge",
-            "id": 1081,
+            "id": 1076,
             "access_rule": {
               "rule": "True_"
             },
@@ -4527,7 +4537,7 @@
         "locations": [
           {
             "name": "Palace of Darkness - The Arena - Ledge",
-            "id": 1082,
+            "id": 1077,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4553,7 +4563,7 @@
           },
           {
             "name": "Palace of Darkness - Map Chest",
-            "id": 1083,
+            "id": 1078,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -4625,7 +4635,7 @@
         "locations": [
           {
             "name": "Pyramid Fairy - Left",
-            "id": 1084,
+            "id": 1079,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -4641,7 +4651,7 @@
           },
           {
             "name": "Pyramid Fairy - Right",
-            "id": 1085,
+            "id": 1080,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -4684,7 +4694,7 @@
         "locations": [
           {
             "name": "Spike Cave",
-            "id": 1086,
+            "id": 1081,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4858,7 +4868,7 @@
         "locations": [
           {
             "name": "Desert Palace - Desert Tiles 1 Pot Key",
-            "id": 1087,
+            "id": 1082,
             "access_rule": {
               "rule": "True_"
             },
@@ -4871,7 +4881,7 @@
           },
           {
             "name": "Desert Palace - Beamos Hall Pot Key",
-            "id": 1088,
+            "id": 1083,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4907,7 +4917,7 @@
           },
           {
             "name": "Desert Palace - Desert Tiles 2 Pot Key",
-            "id": 1089,
+            "id": 1084,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -4943,7 +4953,7 @@
           },
           {
             "name": "Desert Palace - Boss",
-            "id": 1090,
+            "id": 1085,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -5020,7 +5030,7 @@
           },
           {
             "name": "Desert Palace - Prize",
-            "id": 1091,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -5107,8 +5117,10 @@
               "name": "Crystal 2",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5146,7 +5158,7 @@
         "locations": [
           {
             "name": "Library",
-            "id": 1092,
+            "id": 1086,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -5176,7 +5188,7 @@
         "locations": [
           {
             "name": "Mire Shed - Left",
-            "id": 1093,
+            "id": 1087,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -5192,7 +5204,7 @@
           },
           {
             "name": "Mire Shed - Right",
-            "id": 1094,
+            "id": 1088,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -5407,7 +5419,7 @@
         "locations": [
           {
             "name": "Misery Mire - Boss",
-            "id": 1095,
+            "id": 1089,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -5455,7 +5467,7 @@
           },
           {
             "name": "Misery Mire - Prize",
-            "id": 1096,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -5498,8 +5510,10 @@
               "name": "Green Pendant",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5555,7 +5569,7 @@
         "locations": [
           {
             "name": "Tower of Hera - Big Key Chest",
-            "id": 1097,
+            "id": 1090,
             "access_rule": {
               "rule": "has_fire_source",
               "_original_ast_type": "helper",
@@ -5684,7 +5698,7 @@
         "locations": [
           {
             "name": "Tower of Hera - Basement Cage",
-            "id": 1098,
+            "id": 1091,
             "access_rule": {
               "rule": "can_activate_crystal_switch",
               "_original_ast_type": "helper",
@@ -5699,7 +5713,7 @@
           },
           {
             "name": "Tower of Hera - Map Chest",
-            "id": 1099,
+            "id": 1092,
             "access_rule": {
               "rule": "can_activate_crystal_switch",
               "_original_ast_type": "helper",
@@ -5752,7 +5766,7 @@
         "locations": [
           {
             "name": "Ether Tablet",
-            "id": 1100,
+            "id": 1093,
             "access_rule": {
               "rule": "can_retrieve_tablet",
               "_original_ast_type": "helper",
@@ -5791,7 +5805,7 @@
         "locations": [
           {
             "name": "Spectacle Rock",
-            "id": 1101,
+            "id": 1094,
             "access_rule": {
               "rule": "True_"
             },
@@ -5934,7 +5948,7 @@
         "locations": [
           {
             "name": "Desert Palace - Big Chest",
-            "id": 1102,
+            "id": 1095,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -5950,7 +5964,7 @@
           },
           {
             "name": "Desert Palace - Torch",
-            "id": 1103,
+            "id": 1096,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -5966,7 +5980,7 @@
           },
           {
             "name": "Desert Palace - Map Chest",
-            "id": 1104,
+            "id": 1097,
             "access_rule": {
               "rule": "True_"
             },
@@ -5997,7 +6011,7 @@
         "locations": [
           {
             "name": "Desert Palace - Compass Chest",
-            "id": 1105,
+            "id": 1098,
             "access_rule": {
               "rule": "True_"
             },
@@ -6010,7 +6024,7 @@
           },
           {
             "name": "Desert Palace - Big Key Chest",
-            "id": 1106,
+            "id": 1099,
             "access_rule": {
               "rule": "can_kill_most_things",
               "_original_ast_type": "helper",
@@ -6055,7 +6069,7 @@
         "locations": [
           {
             "name": "Link's Uncle",
-            "id": 1107,
+            "id": 1100,
             "access_rule": {
               "rule": "True_"
             },
@@ -6068,7 +6082,7 @@
           },
           {
             "name": "Secret Passage",
-            "id": 1108,
+            "id": 1101,
             "access_rule": {
               "rule": "True_"
             },
@@ -6241,7 +6255,7 @@
         "locations": [
           {
             "name": "Misery Mire - Big Chest",
-            "id": 1109,
+            "id": 1102,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -6260,7 +6274,7 @@
           },
           {
             "name": "Misery Mire - Map Chest",
-            "id": 1110,
+            "id": 1103,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -6310,7 +6324,7 @@
           },
           {
             "name": "Misery Mire - Main Lobby",
-            "id": 1111,
+            "id": 1104,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -6360,7 +6374,7 @@
           },
           {
             "name": "Misery Mire - Bridge Chest",
-            "id": 1112,
+            "id": 1105,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -6376,7 +6390,7 @@
           },
           {
             "name": "Misery Mire - Spike Chest",
-            "id": 1113,
+            "id": 1106,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -6425,7 +6439,7 @@
           },
           {
             "name": "Misery Mire - Spikes Pot Key",
-            "id": 1114,
+            "id": 1107,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -6441,7 +6455,7 @@
           },
           {
             "name": "Misery Mire - Fishbone Pot Key",
-            "id": 1115,
+            "id": 1108,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -6480,7 +6494,7 @@
           },
           {
             "name": "Misery Mire - Conveyor Crystal Key Drop",
-            "id": 1116,
+            "id": 1109,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -6640,7 +6654,7 @@
         "locations": [
           {
             "name": "C-Shaped House",
-            "id": 1117,
+            "id": 1110,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -6718,7 +6732,7 @@
         "locations": [
           {
             "name": "Tower of Hera - Compass Chest",
-            "id": 1118,
+            "id": 1111,
             "access_rule": {
               "rule": "True_"
             },
@@ -6731,7 +6745,7 @@
           },
           {
             "name": "Tower of Hera - Big Chest",
-            "id": 1119,
+            "id": 1112,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -6747,7 +6761,7 @@
           },
           {
             "name": "Tower of Hera - Boss",
-            "id": 1120,
+            "id": 1113,
             "access_rule": {
               "rule": "AST_function_call",
               "args": {
@@ -6784,7 +6798,7 @@
           },
           {
             "name": "Tower of Hera - Prize",
-            "id": 1121,
+            "id": null,
             "access_rule": {
               "rule": "AST_function_call",
               "args": {
@@ -6816,8 +6830,10 @@
               "name": "Crystal 6",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6835,7 +6851,7 @@
         "locations": [
           {
             "name": "Capacity Upgrade Shop",
-            "id": 1122,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6843,8 +6859,10 @@
               "name": "Capacity Upgrade Shop",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6907,7 +6925,7 @@
         "locations": [
           {
             "name": "Sanctuary",
-            "id": 1123,
+            "id": 1114,
             "access_rule": {
               "rule": "True_"
             },
@@ -6980,7 +6998,7 @@
         "locations": [
           {
             "name": "Ice Palace - Boss",
-            "id": 1124,
+            "id": 1115,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -7028,7 +7046,7 @@
           },
           {
             "name": "Ice Palace - Prize",
-            "id": 1125,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -7071,8 +7089,10 @@
               "name": "Crystal 5",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -7103,7 +7123,7 @@
         "locations": [
           {
             "name": "Ice Palace - Big Key Chest",
-            "id": 1126,
+            "id": 1116,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -7119,7 +7139,7 @@
           },
           {
             "name": "Ice Palace - Map Chest",
-            "id": 1127,
+            "id": 1117,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -7135,7 +7155,7 @@
           },
           {
             "name": "Ice Palace - Hammer Block Key Drop",
-            "id": 1128,
+            "id": 1118,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -7214,7 +7234,7 @@
         "locations": [
           {
             "name": "King Zora",
-            "id": 1129,
+            "id": 1119,
             "access_rule": {
               "rule": "True_"
             },
@@ -7227,7 +7247,7 @@
           },
           {
             "name": "Zora's Ledge",
-            "id": 1130,
+            "id": 1120,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -7858,7 +7878,7 @@
         "locations": [
           {
             "name": "Mushroom",
-            "id": 1131,
+            "id": 1121,
             "access_rule": {
               "rule": "True_"
             },
@@ -7871,7 +7891,7 @@
           },
           {
             "name": "Bottle Merchant",
-            "id": 1132,
+            "id": 1122,
             "access_rule": {
               "rule": "True_"
             },
@@ -7884,7 +7904,7 @@
           },
           {
             "name": "Flute Spot",
-            "id": 1133,
+            "id": 1123,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -7900,7 +7920,7 @@
           },
           {
             "name": "Sunken Treasure",
-            "id": 1134,
+            "id": 1124,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -7916,7 +7936,7 @@
           },
           {
             "name": "Purple Chest",
-            "id": 1135,
+            "id": 1125,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -7932,7 +7952,7 @@
           },
           {
             "name": "Flute Activation Spot",
-            "id": 1136,
+            "id": null,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -7943,8 +7963,10 @@
               "name": "Activated Flute",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -7962,7 +7984,7 @@
         "locations": [
           {
             "name": "Blind's Hideout - Top",
-            "id": 1137,
+            "id": 1126,
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
@@ -7977,7 +7999,7 @@
           },
           {
             "name": "Blind's Hideout - Left",
-            "id": 1138,
+            "id": 1127,
             "access_rule": {
               "rule": "True_"
             },
@@ -7990,7 +8012,7 @@
           },
           {
             "name": "Blind's Hideout - Right",
-            "id": 1139,
+            "id": 1128,
             "access_rule": {
               "rule": "True_"
             },
@@ -8003,7 +8025,7 @@
           },
           {
             "name": "Blind's Hideout - Far Left",
-            "id": 1140,
+            "id": 1129,
             "access_rule": {
               "rule": "True_"
             },
@@ -8016,7 +8038,7 @@
           },
           {
             "name": "Blind's Hideout - Far Right",
-            "id": 1141,
+            "id": 1130,
             "access_rule": {
               "rule": "True_"
             },
@@ -8110,7 +8132,7 @@
         "locations": [
           {
             "name": "Misery Mire - Compass Chest",
-            "id": 1142,
+            "id": 1131,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -8136,7 +8158,7 @@
           },
           {
             "name": "Misery Mire - Big Key Chest",
-            "id": 1143,
+            "id": 1132,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -8176,7 +8198,7 @@
         "locations": [
           {
             "name": "Chest Game",
-            "id": 1144,
+            "id": 1133,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -8418,7 +8440,7 @@
         "locations": [
           {
             "name": "Frog",
-            "id": 1145,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -8439,8 +8461,10 @@
               "name": "Get Frog",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -8471,7 +8495,7 @@
         "locations": [
           {
             "name": "Brewery",
-            "id": 1146,
+            "id": 1134,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -8549,7 +8573,7 @@
         "locations": [
           {
             "name": "Ice Palace - Jelly Key Drop",
-            "id": 1147,
+            "id": 1135,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -8575,7 +8599,7 @@
           },
           {
             "name": "Ice Palace - Compass Chest",
-            "id": 1148,
+            "id": 1136,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -8647,7 +8671,7 @@
         "locations": [
           {
             "name": "Ice Palace - Conveyor Key Drop",
-            "id": 1149,
+            "id": 1137,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -8797,7 +8821,7 @@
         "locations": [
           {
             "name": "Ice Palace - Freezor Chest",
-            "id": 1150,
+            "id": 1138,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -8813,7 +8837,7 @@
           },
           {
             "name": "Ice Palace - Many Pots Pot Key",
-            "id": 1151,
+            "id": 1139,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -8829,7 +8853,7 @@
           },
           {
             "name": "Ice Palace - Big Chest",
-            "id": 1152,
+            "id": 1140,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -8848,7 +8872,7 @@
           },
           {
             "name": "Ice Palace - Iced T Room",
-            "id": 1153,
+            "id": 1141,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -8954,7 +8978,7 @@
         "locations": [
           {
             "name": "Ice Palace - Spike Room",
-            "id": 1154,
+            "id": 1142,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9003,7 +9027,7 @@
         "locations": [
           {
             "name": "Turtle Rock - Boss",
-            "id": 1155,
+            "id": 1143,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -9051,7 +9075,7 @@
           },
           {
             "name": "Turtle Rock - Prize",
-            "id": 1156,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -9094,8 +9118,10 @@
               "name": "Crystal 4",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9149,7 +9175,7 @@
         "locations": [
           {
             "name": "Dark Blacksmith Ruins",
-            "id": 1157,
+            "id": null,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9160,8 +9186,10 @@
               "name": "Pick Up Purple Chest",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -9179,7 +9207,7 @@
         "locations": [
           {
             "name": "Link's House",
-            "id": 1158,
+            "id": 1144,
             "access_rule": {
               "rule": "True_"
             },
@@ -9243,7 +9271,7 @@
         "locations": [
           {
             "name": "Thieves' Town - Attic",
-            "id": 1159,
+            "id": 1145,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -9271,7 +9299,7 @@
           },
           {
             "name": "Thieves' Town - Big Chest",
-            "id": 1160,
+            "id": 1146,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -9339,7 +9367,7 @@
           },
           {
             "name": "Thieves' Town - Hallway Pot Key",
-            "id": 1161,
+            "id": 1147,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9355,7 +9383,7 @@
           },
           {
             "name": "Thieves' Town - Spike Switch Pot Key",
-            "id": 1162,
+            "id": 1148,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -9374,7 +9402,7 @@
           },
           {
             "name": "Thieves' Town - Blind's Cell",
-            "id": 1163,
+            "id": 1149,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -9417,7 +9445,7 @@
         "locations": [
           {
             "name": "Thieves' Town - Big Key Chest",
-            "id": 1164,
+            "id": 1150,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9433,7 +9461,7 @@
           },
           {
             "name": "Thieves' Town - Map Chest",
-            "id": 1165,
+            "id": 1151,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9449,7 +9477,7 @@
           },
           {
             "name": "Thieves' Town - Compass Chest",
-            "id": 1166,
+            "id": 1152,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9465,7 +9493,7 @@
           },
           {
             "name": "Thieves' Town - Ambush Chest",
-            "id": 1167,
+            "id": 1153,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9498,7 +9526,7 @@
         "locations": [
           {
             "name": "Hobo",
-            "id": 1168,
+            "id": 1154,
             "access_rule": {
               "rule": "True_"
             },
@@ -9527,7 +9555,7 @@
         "locations": [
           {
             "name": "Checkerboard Cave",
-            "id": 1169,
+            "id": 1155,
             "access_rule": {
               "rule": "True_"
             },
@@ -9608,7 +9636,7 @@
         "locations": [
           {
             "name": "Ganons Tower - Bob's Torch",
-            "id": 1170,
+            "id": 1156,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -9627,7 +9655,7 @@
           },
           {
             "name": "Ganons Tower - Hope Room - Left",
-            "id": 1171,
+            "id": 1157,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9643,7 +9671,7 @@
           },
           {
             "name": "Ganons Tower - Hope Room - Right",
-            "id": 1172,
+            "id": 1158,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9659,7 +9687,7 @@
           },
           {
             "name": "Ganons Tower - Conveyor Cross Pot Key",
-            "id": 1173,
+            "id": 1159,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -9751,7 +9779,7 @@
         "locations": [
           {
             "name": "Turtle Rock - Eye Bridge - Bottom Left",
-            "id": 1174,
+            "id": 1160,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -9782,7 +9810,7 @@
           },
           {
             "name": "Turtle Rock - Eye Bridge - Bottom Right",
-            "id": 1175,
+            "id": 1161,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -9813,7 +9841,7 @@
           },
           {
             "name": "Turtle Rock - Eye Bridge - Top Left",
-            "id": 1176,
+            "id": 1162,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -9844,7 +9872,7 @@
           },
           {
             "name": "Turtle Rock - Eye Bridge - Top Right",
-            "id": 1177,
+            "id": 1163,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -9930,7 +9958,7 @@
         "locations": [
           {
             "name": "Peg Cave",
-            "id": 1178,
+            "id": 1164,
             "access_rule": {
               "rule": "True_"
             },
@@ -9984,7 +10012,7 @@
         "locations": [
           {
             "name": "Thieves' Town - Boss",
-            "id": 1179,
+            "id": 1165,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -10032,7 +10060,7 @@
           },
           {
             "name": "Thieves' Town - Prize",
-            "id": 1180,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -10075,8 +10103,10 @@
               "name": "Crystal 1",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -10101,7 +10131,7 @@
         "locations": [
           {
             "name": "Spiral Cave",
-            "id": 1181,
+            "id": 1166,
             "access_rule": {
               "rule": "True_"
             },
@@ -10296,7 +10326,7 @@
         "locations": [
           {
             "name": "Hookshot Cave - Top Right",
-            "id": 1182,
+            "id": 1167,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -10315,7 +10345,7 @@
           },
           {
             "name": "Hookshot Cave - Top Left",
-            "id": 1183,
+            "id": 1168,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -10334,7 +10364,7 @@
           },
           {
             "name": "Hookshot Cave - Bottom Right",
-            "id": 1184,
+            "id": 1169,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -10364,7 +10394,7 @@
           },
           {
             "name": "Hookshot Cave - Bottom Left",
-            "id": 1185,
+            "id": 1170,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -10515,7 +10545,7 @@
         "locations": [
           {
             "name": "Turtle Rock - Chain Chomps",
-            "id": 1186,
+            "id": 1171,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -10635,7 +10665,7 @@
         "locations": [
           {
             "name": "Turtle Rock - Pokey 1 Key Drop",
-            "id": 1187,
+            "id": 1172,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -10698,7 +10728,7 @@
         "locations": [
           {
             "name": "Turtle Rock - Compass Chest",
-            "id": 1188,
+            "id": 1173,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -10717,7 +10747,7 @@
           },
           {
             "name": "Turtle Rock - Roller Room - Left",
-            "id": 1189,
+            "id": 1174,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -10737,7 +10767,7 @@
           },
           {
             "name": "Turtle Rock - Roller Room - Right",
-            "id": 1190,
+            "id": 1175,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -11032,7 +11062,7 @@
         "locations": [
           {
             "name": "Ganons Tower - Tile Room",
-            "id": 1191,
+            "id": 1176,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -11136,7 +11166,7 @@
         "locations": [
           {
             "name": "Turtle Rock - Big Key Chest",
-            "id": 1192,
+            "id": 1177,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -11168,7 +11198,7 @@
           },
           {
             "name": "Turtle Rock - Pokey 2 Key Drop",
-            "id": 1193,
+            "id": 1178,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -11228,7 +11258,7 @@
         "locations": [
           {
             "name": "Turtle Rock - Crystaroller Room",
-            "id": 1194,
+            "id": 1179,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -11374,7 +11404,7 @@
         "locations": [
           {
             "name": "Superbunny Cave - Top",
-            "id": 1195,
+            "id": 1180,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -11390,7 +11420,7 @@
           },
           {
             "name": "Superbunny Cave - Bottom",
-            "id": 1196,
+            "id": 1181,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -11473,7 +11503,7 @@
         "locations": [
           {
             "name": "Sewers - Secret Room - Left",
-            "id": 1197,
+            "id": 1182,
             "access_rule": {
               "rule": "True_"
             },
@@ -11486,7 +11516,7 @@
           },
           {
             "name": "Sewers - Secret Room - Middle",
-            "id": 1198,
+            "id": 1183,
             "access_rule": {
               "rule": "True_"
             },
@@ -11499,7 +11529,7 @@
           },
           {
             "name": "Sewers - Secret Room - Right",
-            "id": 1199,
+            "id": 1184,
             "access_rule": {
               "rule": "True_"
             },
@@ -11648,7 +11678,7 @@
         "locations": [
           {
             "name": "Ganons Tower - Compass Room - Top Left",
-            "id": 1200,
+            "id": 1185,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -11743,7 +11773,7 @@
           },
           {
             "name": "Ganons Tower - Compass Room - Top Right",
-            "id": 1201,
+            "id": 1186,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -11838,7 +11868,7 @@
           },
           {
             "name": "Ganons Tower - Compass Room - Bottom Left",
-            "id": 1202,
+            "id": 1187,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -11933,7 +11963,7 @@
           },
           {
             "name": "Ganons Tower - Compass Room - Bottom Right",
-            "id": 1203,
+            "id": 1188,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -12028,7 +12058,7 @@
           },
           {
             "name": "Ganons Tower - Conveyor Star Pits Pot Key",
-            "id": 1204,
+            "id": 1189,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -12140,7 +12170,7 @@
         "locations": [
           {
             "name": "King's Tomb",
-            "id": 1205,
+            "id": 1190,
             "access_rule": {
               "rule": "True_"
             },
@@ -12209,7 +12239,7 @@
         "locations": [
           {
             "name": "Old Man",
-            "id": 1206,
+            "id": 1191,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -12454,7 +12484,7 @@
         "locations": [
           {
             "name": "Sewers - Dark Cross",
-            "id": 1207,
+            "id": 1192,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -12470,7 +12500,7 @@
           },
           {
             "name": "Sewers - Key Rat Key Drop",
-            "id": 1208,
+            "id": 1193,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -12572,7 +12602,7 @@
         "locations": [
           {
             "name": "Ganons Tower - Bob's Chest",
-            "id": 1209,
+            "id": 1194,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -12588,7 +12618,7 @@
           },
           {
             "name": "Ganons Tower - Big Chest",
-            "id": 1210,
+            "id": 1195,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -12607,7 +12637,7 @@
           },
           {
             "name": "Ganons Tower - Big Key Room - Left",
-            "id": 1211,
+            "id": 1196,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -12684,7 +12714,7 @@
           },
           {
             "name": "Ganons Tower - Big Key Room - Right",
-            "id": 1212,
+            "id": 1197,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -12761,7 +12791,7 @@
           },
           {
             "name": "Ganons Tower - Big Key Chest",
-            "id": 1213,
+            "id": 1198,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -12876,7 +12906,7 @@
         "locations": [
           {
             "name": "Palace of Darkness - Boss",
-            "id": 1214,
+            "id": 1199,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -12924,7 +12954,7 @@
           },
           {
             "name": "Palace of Darkness - Prize",
-            "id": 1215,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -12967,8 +12997,10 @@
               "name": "Crystal 7",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -12988,7 +13020,7 @@
         "locations": [
           {
             "name": "Catfish",
-            "id": 1216,
+            "id": 1200,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -13116,7 +13148,7 @@
         "locations": [
           {
             "name": "Aginah's Cave",
-            "id": 1217,
+            "id": 1201,
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
@@ -13244,7 +13276,7 @@
         "locations": [
           {
             "name": "Paradox Cave Lower - Far Left",
-            "id": 1218,
+            "id": 1202,
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -13283,7 +13315,7 @@
           },
           {
             "name": "Paradox Cave Lower - Left",
-            "id": 1219,
+            "id": 1203,
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -13322,7 +13354,7 @@
           },
           {
             "name": "Paradox Cave Lower - Right",
-            "id": 1220,
+            "id": 1204,
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -13361,7 +13393,7 @@
           },
           {
             "name": "Paradox Cave Lower - Far Right",
-            "id": 1221,
+            "id": 1205,
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -13400,7 +13432,7 @@
           },
           {
             "name": "Paradox Cave Lower - Middle",
-            "id": 1222,
+            "id": 1206,
             "access_rule": {
               "rule": "Or",
               "children": [
@@ -13439,7 +13471,7 @@
           },
           {
             "name": "Paradox Cave Upper - Left",
-            "id": 1223,
+            "id": 1207,
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
@@ -13454,7 +13486,7 @@
           },
           {
             "name": "Paradox Cave Upper - Right",
-            "id": 1224,
+            "id": 1208,
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
@@ -13499,7 +13531,7 @@
         "locations": [
           {
             "name": "Waterfall Fairy - Left",
-            "id": 1225,
+            "id": 1209,
             "access_rule": {
               "rule": "True_"
             },
@@ -13512,7 +13544,7 @@
           },
           {
             "name": "Waterfall Fairy - Right",
-            "id": 1226,
+            "id": 1210,
             "access_rule": {
               "rule": "True_"
             },
@@ -13637,7 +13669,7 @@
         "locations": [
           {
             "name": "Ganons Tower - Map Chest",
-            "id": 1227,
+            "id": 1211,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -13756,7 +13788,7 @@
         "locations": [
           {
             "name": "Ganons Tower - DMs Room - Top Left",
-            "id": 1228,
+            "id": 1212,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -13775,7 +13807,7 @@
           },
           {
             "name": "Ganons Tower - DMs Room - Top Right",
-            "id": 1229,
+            "id": 1213,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -13794,7 +13826,7 @@
           },
           {
             "name": "Ganons Tower - DMs Room - Bottom Left",
-            "id": 1230,
+            "id": 1214,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -13813,7 +13845,7 @@
           },
           {
             "name": "Ganons Tower - DMs Room - Bottom Right",
-            "id": 1231,
+            "id": 1215,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -13832,7 +13864,7 @@
           },
           {
             "name": "Ganons Tower - Double Switch Pot Key",
-            "id": 1232,
+            "id": 1216,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -13973,7 +14005,7 @@
         "locations": [
           {
             "name": "Ganons Tower - Firesnake Room",
-            "id": 1233,
+            "id": 1217,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -14092,7 +14124,7 @@
         "locations": [
           {
             "name": "Lumberjack Tree",
-            "id": 1234,
+            "id": 1218,
             "access_rule": {
               "rule": "True_"
             },
@@ -14208,7 +14240,7 @@
         "locations": [
           {
             "name": "Blacksmith",
-            "id": 1235,
+            "id": 1219,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -14224,7 +14256,7 @@
           },
           {
             "name": "Missing Smith",
-            "id": 1236,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -14246,8 +14278,10 @@
               "name": "Return Smith",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Event"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -14272,7 +14306,7 @@
         "locations": [
           {
             "name": "Skull Woods - Big Key Chest",
-            "id": 1237,
+            "id": 1220,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -14288,7 +14322,7 @@
           },
           {
             "name": "Skull Woods - West Lobby Pot Key",
-            "id": 1238,
+            "id": 1221,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -14345,7 +14379,7 @@
         "locations": [
           {
             "name": "Turtle Rock - Big Chest",
-            "id": 1239,
+            "id": 1222,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -14392,7 +14426,7 @@
         "locations": [
           {
             "name": "Mimic Cave",
-            "id": 1240,
+            "id": 1223,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -14560,7 +14594,7 @@
         "locations": [
           {
             "name": "Ganons Tower - Randomizer Room - Top Left",
-            "id": 1241,
+            "id": 1224,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -14637,7 +14671,7 @@
           },
           {
             "name": "Ganons Tower - Randomizer Room - Top Right",
-            "id": 1242,
+            "id": 1225,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -14714,7 +14748,7 @@
           },
           {
             "name": "Ganons Tower - Randomizer Room - Bottom Left",
-            "id": 1243,
+            "id": 1226,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -14791,7 +14825,7 @@
           },
           {
             "name": "Ganons Tower - Randomizer Room - Bottom Right",
-            "id": 1244,
+            "id": 1227,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -14911,7 +14945,7 @@
         "locations": [
           {
             "name": "Skull Woods - Map Chest",
-            "id": 1245,
+            "id": 1228,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -14944,7 +14978,7 @@
         "locations": [
           {
             "name": "Floating Island",
-            "id": 1246,
+            "id": 1229,
             "access_rule": {
               "rule": "True_"
             },
@@ -14971,7 +15005,7 @@
         "locations": [
           {
             "name": "Eastern Palace - Compass Chest",
-            "id": 1247,
+            "id": 1230,
             "access_rule": {
               "rule": "True_"
             },
@@ -14984,7 +15018,7 @@
           },
           {
             "name": "Eastern Palace - Big Chest",
-            "id": 1248,
+            "id": 1231,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -15000,7 +15034,7 @@
           },
           {
             "name": "Eastern Palace - Cannonball Chest",
-            "id": 1249,
+            "id": 1232,
             "access_rule": {
               "rule": "True_"
             },
@@ -15013,7 +15047,7 @@
           },
           {
             "name": "Eastern Palace - Dark Square Pot Key",
-            "id": 1250,
+            "id": 1233,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -15029,7 +15063,7 @@
           },
           {
             "name": "Eastern Palace - Dark Eyegore Key Drop",
-            "id": 1251,
+            "id": 1234,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -15067,7 +15101,7 @@
           },
           {
             "name": "Eastern Palace - Big Key Chest",
-            "id": 1252,
+            "id": 1235,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -15145,7 +15179,7 @@
           },
           {
             "name": "Eastern Palace - Map Chest",
-            "id": 1253,
+            "id": 1236,
             "access_rule": {
               "rule": "True_"
             },
@@ -15158,7 +15192,7 @@
           },
           {
             "name": "Eastern Palace - Boss",
-            "id": 1254,
+            "id": 1237,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -15221,7 +15255,7 @@
           },
           {
             "name": "Eastern Palace - Prize",
-            "id": 1255,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -15279,8 +15313,10 @@
               "name": "Crystal 3",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -15320,7 +15356,7 @@
         "locations": [
           {
             "name": "Skull Woods - Pinball Room",
-            "id": 1256,
+            "id": 1238,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -15377,7 +15413,7 @@
         "locations": [
           {
             "name": "Skull Woods - Bridge Room",
-            "id": 1257,
+            "id": 1239,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -15529,7 +15565,7 @@
         "locations": [
           {
             "name": "Bonk Rock Cave",
-            "id": 1258,
+            "id": 1240,
             "access_rule": {
               "rule": "True_"
             },
@@ -15615,7 +15651,7 @@
         "locations": [
           {
             "name": "Graveyard Cave",
-            "id": 1259,
+            "id": 1241,
             "access_rule": {
               "rule": "can_use_bombs",
               "_original_ast_type": "helper",
@@ -15708,7 +15744,7 @@
         "locations": [
           {
             "name": "Skull Woods - Big Chest",
-            "id": 1260,
+            "id": 1242,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -15804,7 +15840,7 @@
         "locations": [
           {
             "name": "Skull Woods - Spike Corner Key Drop",
-            "id": 1261,
+            "id": 1243,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -15820,7 +15856,7 @@
           },
           {
             "name": "Skull Woods - Boss",
-            "id": 1262,
+            "id": 1244,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -15875,7 +15911,7 @@
           },
           {
             "name": "Skull Woods - Prize",
-            "id": 1263,
+            "id": null,
             "access_rule": {
               "rule": "And",
               "children": [
@@ -15925,8 +15961,10 @@
               "name": "Blue Pendant",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "Crystal"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -15995,7 +16033,7 @@
         "locations": [
           {
             "name": "Bombos Tablet",
-            "id": 1264,
+            "id": 1245,
             "access_rule": {
               "rule": "can_retrieve_tablet",
               "_original_ast_type": "helper",
@@ -16136,7 +16174,7 @@
         "locations": [
           {
             "name": "Skull Woods - Compass Chest",
-            "id": 1265,
+            "id": 1246,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -16152,7 +16190,7 @@
           },
           {
             "name": "Skull Woods - Pot Prison",
-            "id": 1266,
+            "id": 1247,
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -16184,7 +16222,7 @@
         "locations": [
           {
             "name": "Ice Rod Cave",
-            "id": 1267,
+            "id": 1248,
             "access_rule": {
               "rule": "True_"
             },
@@ -16243,15 +16281,18 @@
       },
       "Open Floodgate": {
         "name": "Open Floodgate",
-        "id": 3,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Rupees (20)": {
         "name": "Rupees (20)",
-        "id": 4,
+        "id": 3,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16261,7 +16302,7 @@
       },
       "Rupees (50)": {
         "name": "Rupees (50)",
-        "id": 5,
+        "id": 4,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16271,7 +16312,7 @@
       },
       "Compass (Swamp Palace)": {
         "name": "Compass (Swamp Palace)",
-        "id": 6,
+        "id": 5,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -16281,7 +16322,7 @@
       },
       "Piece of Heart": {
         "name": "Piece of Heart",
-        "id": 7,
+        "id": 6,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16290,7 +16331,7 @@
       },
       "Arrows (10)": {
         "name": "Arrows (10)",
-        "id": 8,
+        "id": 7,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16299,15 +16340,18 @@
       },
       "Beat Agahnim 2": {
         "name": "Beat Agahnim 2",
-        "id": 9,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Flute": {
         "name": "Flute",
-        "id": 10,
+        "id": 8,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16316,7 +16360,7 @@
       },
       "Small Key (Ganons Tower)": {
         "name": "Small Key (Ganons Tower)",
-        "id": 11,
+        "id": 9,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16326,7 +16370,7 @@
       },
       "Lamp": {
         "name": "Lamp",
-        "id": 12,
+        "id": 10,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16335,7 +16379,7 @@
       },
       "Bombs (3)": {
         "name": "Bombs (3)",
-        "id": 13,
+        "id": 11,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16344,7 +16388,7 @@
       },
       "Hammer": {
         "name": "Hammer",
-        "id": 14,
+        "id": 12,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16353,7 +16397,7 @@
       },
       "Small Key (Swamp Palace)": {
         "name": "Small Key (Swamp Palace)",
-        "id": 15,
+        "id": 13,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16363,7 +16407,7 @@
       },
       "Big Key (Swamp Palace)": {
         "name": "Big Key (Swamp Palace)",
-        "id": 16,
+        "id": 14,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -16373,15 +16417,25 @@
       },
       "Red Pendant": {
         "name": "Red Pendant",
-        "id": 17,
-        "classification": "progression",
+        "hint_text": "the red pendant",
+        "id": [
+          1,
+          50,
+          96,
+          0,
+          105,
+          3
+        ],
         "groups": [
           "Pendants"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Map (Swamp Palace)": {
         "name": "Map (Swamp Palace)",
-        "id": 18,
+        "id": 15,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16391,7 +16445,7 @@
       },
       "Cane of Byrna": {
         "name": "Cane of Byrna",
-        "id": 19,
+        "id": 16,
         "classification": "progression",
         "groups": [
           "Canes",
@@ -16401,7 +16455,7 @@
       },
       "Progressive Sword": {
         "name": "Progressive Sword",
-        "id": 20,
+        "id": 17,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16411,7 +16465,7 @@
       },
       "Sanctuary Heart Container": {
         "name": "Sanctuary Heart Container",
-        "id": 21,
+        "id": 18,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16420,7 +16474,7 @@
       },
       "Bottle (Blue Potion)": {
         "name": "Bottle (Blue Potion)",
-        "id": 22,
+        "id": 19,
         "classification": "progression",
         "groups": [
           "Bottles",
@@ -16431,7 +16485,7 @@
       },
       "Progressive Bow": {
         "name": "Progressive Bow",
-        "id": 23,
+        "id": 20,
         "classification": "progression",
         "groups": [
           "Bows",
@@ -16441,7 +16495,7 @@
       },
       "Map (Palace of Darkness)": {
         "name": "Map (Palace of Darkness)",
-        "id": 24,
+        "id": 21,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16451,7 +16505,7 @@
       },
       "Shovel": {
         "name": "Shovel",
-        "id": 25,
+        "id": 22,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16460,7 +16514,7 @@
       },
       "Ice Rod": {
         "name": "Ice Rod",
-        "id": 26,
+        "id": 23,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16470,7 +16524,7 @@
       },
       "Small Key (Palace of Darkness)": {
         "name": "Small Key (Palace of Darkness)",
-        "id": 27,
+        "id": 24,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16480,7 +16534,7 @@
       },
       "Fire Rod": {
         "name": "Fire Rod",
-        "id": 28,
+        "id": 25,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16490,7 +16544,7 @@
       },
       "Triforce": {
         "name": "Triforce",
-        "id": 29,
+        "id": 26,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16499,7 +16553,7 @@
       },
       "Small Key (Hyrule Castle)": {
         "name": "Small Key (Hyrule Castle)",
-        "id": 30,
+        "id": 27,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16509,7 +16563,7 @@
       },
       "Map (Hyrule Castle)": {
         "name": "Map (Hyrule Castle)",
-        "id": 31,
+        "id": 28,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16519,7 +16573,7 @@
       },
       "Big Key (Hyrule Castle)": {
         "name": "Big Key (Hyrule Castle)",
-        "id": 32,
+        "id": 29,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -16529,7 +16583,7 @@
       },
       "Big Key (Palace of Darkness)": {
         "name": "Big Key (Palace of Darkness)",
-        "id": 33,
+        "id": 30,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -16539,7 +16593,7 @@
       },
       "Small Key (Agahnims Tower)": {
         "name": "Small Key (Agahnims Tower)",
-        "id": 34,
+        "id": 31,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16549,15 +16603,18 @@
       },
       "Beat Agahnim 1": {
         "name": "Beat Agahnim 1",
-        "id": 35,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Rupees (100)": {
         "name": "Rupees (100)",
-        "id": 36,
+        "id": 32,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16567,7 +16624,7 @@
       },
       "Bottle (Fairy)": {
         "name": "Bottle (Fairy)",
-        "id": 37,
+        "id": 33,
         "classification": "progression",
         "groups": [
           "Bottles",
@@ -16577,7 +16634,7 @@
       },
       "Small Key (Desert Palace)": {
         "name": "Small Key (Desert Palace)",
-        "id": 38,
+        "id": 34,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16587,7 +16644,7 @@
       },
       "Pegasus Boots": {
         "name": "Pegasus Boots",
-        "id": 39,
+        "id": 35,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16596,7 +16653,7 @@
       },
       "Map (Desert Palace)": {
         "name": "Map (Desert Palace)",
-        "id": 40,
+        "id": 36,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16606,15 +16663,25 @@
       },
       "Crystal 2": {
         "name": "Crystal 2",
-        "id": 41,
-        "classification": "progression",
+        "hint_text": "a blue crystal",
+        "id": [
+          16,
+          52,
+          100,
+          64,
+          121,
+          6
+        ],
         "groups": [
           "Crystals"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Bottle (Green Potion)": {
         "name": "Bottle (Green Potion)",
-        "id": 42,
+        "id": 37,
         "classification": "progression",
         "groups": [
           "Bottles",
@@ -16625,7 +16692,7 @@
       },
       "Small Key (Misery Mire)": {
         "name": "Small Key (Misery Mire)",
-        "id": 43,
+        "id": 38,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16635,15 +16702,25 @@
       },
       "Green Pendant": {
         "name": "Green Pendant",
-        "id": 44,
-        "classification": "progression",
+        "hint_text": "the green pendant",
+        "id": [
+          4,
+          56,
+          98,
+          0,
+          105,
+          1
+        ],
         "groups": [
           "Pendants"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Compass (Tower of Hera)": {
         "name": "Compass (Tower of Hera)",
-        "id": 45,
+        "id": 39,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -16653,7 +16730,7 @@
       },
       "Big Key (Tower of Hera)": {
         "name": "Big Key (Tower of Hera)",
-        "id": 46,
+        "id": 40,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -16663,7 +16740,7 @@
       },
       "Rupees (5)": {
         "name": "Rupees (5)",
-        "id": 47,
+        "id": 41,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16673,7 +16750,7 @@
       },
       "Bombs (10)": {
         "name": "Bombs (10)",
-        "id": 48,
+        "id": 42,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16682,7 +16759,7 @@
       },
       "Compass (Desert Palace)": {
         "name": "Compass (Desert Palace)",
-        "id": 49,
+        "id": 43,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -16692,7 +16769,7 @@
       },
       "Big Key (Desert Palace)": {
         "name": "Big Key (Desert Palace)",
-        "id": 50,
+        "id": 44,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -16702,7 +16779,7 @@
       },
       "Flippers": {
         "name": "Flippers",
-        "id": 51,
+        "id": 45,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16711,7 +16788,7 @@
       },
       "Big Key (Misery Mire)": {
         "name": "Big Key (Misery Mire)",
-        "id": 52,
+        "id": 46,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -16721,7 +16798,7 @@
       },
       "Magic Powder": {
         "name": "Magic Powder",
-        "id": 53,
+        "id": 47,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16730,7 +16807,7 @@
       },
       "Map (Tower of Hera)": {
         "name": "Map (Tower of Hera)",
-        "id": 54,
+        "id": 48,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16740,7 +16817,7 @@
       },
       "Small Key (Tower of Hera)": {
         "name": "Small Key (Tower of Hera)",
-        "id": 55,
+        "id": 49,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16750,23 +16827,36 @@
       },
       "Crystal 6": {
         "name": "Crystal 6",
-        "id": 56,
-        "classification": "progression",
+        "hint_text": "a red crystal",
+        "id": [
+          1,
+          50,
+          100,
+          64,
+          111,
+          6
+        ],
         "groups": [
           "Crystals"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Capacity Upgrade Shop": {
         "name": "Capacity Upgrade Shop",
-        "id": 57,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Small Key (Ice Palace)": {
         "name": "Small Key (Ice Palace)",
-        "id": 58,
+        "id": 50,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16776,15 +16866,25 @@
       },
       "Crystal 5": {
         "name": "Crystal 5",
-        "id": 59,
-        "classification": "progression",
+        "hint_text": "a red crystal",
+        "id": [
+          4,
+          50,
+          100,
+          64,
+          110,
+          6
+        ],
         "groups": [
           "Crystals"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Map (Ice Palace)": {
         "name": "Map (Ice Palace)",
-        "id": 60,
+        "id": 51,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16794,7 +16894,7 @@
       },
       "Big Key (Ice Palace)": {
         "name": "Big Key (Ice Palace)",
-        "id": 61,
+        "id": 52,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -16804,7 +16904,7 @@
       },
       "Magic Mirror": {
         "name": "Magic Mirror",
-        "id": 62,
+        "id": 53,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16813,7 +16913,7 @@
       },
       "Ether": {
         "name": "Ether",
-        "id": 63,
+        "id": 54,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16823,7 +16923,7 @@
       },
       "Rupee (1)": {
         "name": "Rupee (1)",
-        "id": 64,
+        "id": 55,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16833,7 +16933,7 @@
       },
       "Progressive Mail": {
         "name": "Progressive Mail",
-        "id": 65,
+        "id": 56,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16843,7 +16943,7 @@
       },
       "Activated Flute": {
         "name": "Activated Flute",
-        "id": 66,
+        "id": 57,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16852,7 +16952,7 @@
       },
       "Progressive Shield": {
         "name": "Progressive Shield",
-        "id": 67,
+        "id": 58,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16862,7 +16962,7 @@
       },
       "Compass (Misery Mire)": {
         "name": "Compass (Misery Mire)",
-        "id": 68,
+        "id": 59,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -16872,7 +16972,7 @@
       },
       "Map (Misery Mire)": {
         "name": "Map (Misery Mire)",
-        "id": 69,
+        "id": 60,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16882,15 +16982,18 @@
       },
       "Get Frog": {
         "name": "Get Frog",
-        "id": 70,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Mushroom": {
         "name": "Mushroom",
-        "id": 71,
+        "id": 61,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16899,7 +17002,7 @@
       },
       "Compass (Ice Palace)": {
         "name": "Compass (Ice Palace)",
-        "id": 72,
+        "id": 62,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -16909,7 +17012,7 @@
       },
       "Compass (Turtle Rock)": {
         "name": "Compass (Turtle Rock)",
-        "id": 73,
+        "id": 63,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -16919,23 +17022,36 @@
       },
       "Crystal 4": {
         "name": "Crystal 4",
-        "id": 74,
-        "classification": "progression",
+        "hint_text": "a blue crystal",
+        "id": [
+          32,
+          52,
+          100,
+          64,
+          109,
+          6
+        ],
         "groups": [
           "Crystals"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Pick Up Purple Chest": {
         "name": "Pick Up Purple Chest",
-        "id": 75,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Map (Thieves Town)": {
         "name": "Map (Thieves Town)",
-        "id": 76,
+        "id": 64,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16945,7 +17061,7 @@
       },
       "Compass (Thieves Town)": {
         "name": "Compass (Thieves Town)",
-        "id": 77,
+        "id": 65,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -16955,7 +17071,7 @@
       },
       "Small Key (Thieves Town)": {
         "name": "Small Key (Thieves Town)",
-        "id": 78,
+        "id": 66,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16965,7 +17081,7 @@
       },
       "Big Key (Thieves Town)": {
         "name": "Big Key (Thieves Town)",
-        "id": 79,
+        "id": 67,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -16975,7 +17091,7 @@
       },
       "Red Boomerang": {
         "name": "Red Boomerang",
-        "id": 80,
+        "id": 68,
         "classification": "progression",
         "groups": [
           "Boomerangs",
@@ -16985,7 +17101,7 @@
       },
       "Small Key (Turtle Rock)": {
         "name": "Small Key (Turtle Rock)",
-        "id": 81,
+        "id": 69,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -16995,15 +17111,25 @@
       },
       "Crystal 1": {
         "name": "Crystal 1",
-        "id": 82,
-        "classification": "progression",
+        "hint_text": "a blue crystal",
+        "id": [
+          2,
+          52,
+          100,
+          64,
+          127,
+          6
+        ],
         "groups": [
           "Crystals"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Bombos": {
         "name": "Bombos",
-        "id": 83,
+        "id": 70,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17013,7 +17139,7 @@
       },
       "Blue Boomerang": {
         "name": "Blue Boomerang",
-        "id": 84,
+        "id": 71,
         "classification": "progression",
         "groups": [
           "Boomerangs",
@@ -17023,7 +17149,7 @@
       },
       "Big Key (Turtle Rock)": {
         "name": "Big Key (Turtle Rock)",
-        "id": 85,
+        "id": 72,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -17033,7 +17159,7 @@
       },
       "Cape": {
         "name": "Cape",
-        "id": 86,
+        "id": 73,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17042,7 +17168,7 @@
       },
       "Single Arrow": {
         "name": "Single Arrow",
-        "id": 87,
+        "id": 74,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17051,7 +17177,7 @@
       },
       "Quake": {
         "name": "Quake",
-        "id": 88,
+        "id": 75,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17061,7 +17187,7 @@
       },
       "Magic Upgrade (1/2)": {
         "name": "Magic Upgrade (1/2)",
-        "id": 89,
+        "id": 76,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17071,7 +17197,7 @@
       },
       "Moon Pearl": {
         "name": "Moon Pearl",
-        "id": 90,
+        "id": 77,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17080,7 +17206,7 @@
       },
       "Map (Ganons Tower)": {
         "name": "Map (Ganons Tower)",
-        "id": 91,
+        "id": 78,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17090,7 +17216,7 @@
       },
       "Compass (Ganons Tower)": {
         "name": "Compass (Ganons Tower)",
-        "id": 92,
+        "id": 79,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -17100,7 +17226,7 @@
       },
       "Big Key (Ganons Tower)": {
         "name": "Big Key (Ganons Tower)",
-        "id": 93,
+        "id": 80,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -17110,7 +17236,7 @@
       },
       "Compass (Palace of Darkness)": {
         "name": "Compass (Palace of Darkness)",
-        "id": 94,
+        "id": 81,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -17120,15 +17246,25 @@
       },
       "Crystal 7": {
         "name": "Crystal 7",
-        "id": 95,
-        "classification": "progression",
+        "hint_text": "a blue crystal",
+        "id": [
+          8,
+          52,
+          100,
+          64,
+          124,
+          6
+        ],
         "groups": [
           "Crystals"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Hookshot": {
         "name": "Hookshot",
-        "id": 96,
+        "id": 82,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17137,7 +17273,7 @@
       },
       "Progressive Glove": {
         "name": "Progressive Glove",
-        "id": 97,
+        "id": 83,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17147,7 +17283,7 @@
       },
       "Bug Catching Net": {
         "name": "Bug Catching Net",
-        "id": 98,
+        "id": 84,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17156,7 +17292,7 @@
       },
       "Cane of Somaria": {
         "name": "Cane of Somaria",
-        "id": 99,
+        "id": 85,
         "classification": "progression",
         "groups": [
           "Canes",
@@ -17166,15 +17302,18 @@
       },
       "Return Smith": {
         "name": "Return Smith",
-        "id": 100,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Small Key (Skull Woods)": {
         "name": "Small Key (Skull Woods)",
-        "id": 101,
+        "id": 86,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17184,7 +17323,7 @@
       },
       "Map (Skull Woods)": {
         "name": "Map (Skull Woods)",
-        "id": 102,
+        "id": 87,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17194,7 +17333,7 @@
       },
       "Map (Turtle Rock)": {
         "name": "Map (Turtle Rock)",
-        "id": 103,
+        "id": 88,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17204,7 +17343,7 @@
       },
       "Book of Mudora": {
         "name": "Book of Mudora",
-        "id": 104,
+        "id": 89,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17213,7 +17352,7 @@
       },
       "Small Key (Eastern Palace)": {
         "name": "Small Key (Eastern Palace)",
-        "id": 105,
+        "id": 90,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17223,7 +17362,7 @@
       },
       "Map (Eastern Palace)": {
         "name": "Map (Eastern Palace)",
-        "id": 106,
+        "id": 91,
         "classification": "progression",
         "groups": [
           "Everything",
@@ -17233,7 +17372,7 @@
       },
       "Big Key (Eastern Palace)": {
         "name": "Big Key (Eastern Palace)",
-        "id": 107,
+        "id": 92,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -17243,7 +17382,7 @@
       },
       "Compass (Eastern Palace)": {
         "name": "Compass (Eastern Palace)",
-        "id": 108,
+        "id": 93,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -17253,15 +17392,25 @@
       },
       "Crystal 3": {
         "name": "Crystal 3",
-        "id": 109,
-        "classification": "progression",
+        "hint_text": "a blue crystal",
+        "id": [
+          64,
+          52,
+          100,
+          64,
+          108,
+          6
+        ],
         "groups": [
           "Crystals"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Compass (Skull Woods)": {
         "name": "Compass (Skull Woods)",
-        "id": 110,
+        "id": 94,
         "classification": "progression",
         "groups": [
           "Compasses",
@@ -17271,15 +17420,25 @@
       },
       "Blue Pendant": {
         "name": "Blue Pendant",
-        "id": 111,
-        "classification": "progression",
+        "hint_text": "the blue pendant",
+        "id": [
+          2,
+          52,
+          96,
+          0,
+          105,
+          2
+        ],
         "groups": [
           "Pendants"
-        ]
+        ],
+        "classification": "progression",
+        "type": "Crystal",
+        "max_count": 1
       },
       "Big Key (Skull Woods)": {
         "name": "Big Key (Skull Woods)",
-        "id": 112,
+        "id": 95,
         "classification": "progression",
         "groups": [
           "Big Keys",
@@ -17289,7 +17448,7 @@
       },
       "Silver Bow": {
         "name": "Silver Bow",
-        "id": 113,
+        "id": 96,
         "groups": [
           "Bows",
           "Everything",
@@ -17302,7 +17461,7 @@
       },
       "Mirror Shield": {
         "name": "Mirror Shield",
-        "id": 114,
+        "id": 97,
         "groups": [
           "Everything",
           "Progression Items",
@@ -17479,13 +17638,11 @@
     "1": {
       "Magic Bat": "Boss Heart Container",
       "Bumper Cave Ledge": "Rupees (300)",
-      "Floodgate": "Open Floodgate",
       "Floodgate Chest": "Rupees (20)",
       "Swamp Palace - Big Key Chest": "Rupees (50)",
       "Swamp Palace - West Chest": "Compass (Swamp Palace)",
       "Kakariko Tavern": "Piece of Heart",
       "Ganons Tower - Validation Chest": "Arrows (10)",
-      "Agahnim 2": "Beat Agahnim 2",
       "Ganons Tower - Mini Helmasaur Room - Left": "Piece of Heart",
       "Ganons Tower - Mini Helmasaur Room - Right": "Flute",
       "Ganons Tower - Pre-Moldorm Chest": "Rupees (20)",
@@ -17500,7 +17657,6 @@
       "Swamp Palace - Waterway Pot Key": "Piece of Heart",
       "Swamp Palace - Waterfall Room": "Small Key (Swamp Palace)",
       "Swamp Palace - Boss": "Big Key (Swamp Palace)",
-      "Swamp Palace - Prize": "Red Pendant",
       "Swamp Palace - Big Chest": "Map (Swamp Palace)",
       "Swamp Palace - Compass Chest": "Rupees (300)",
       "Swamp Palace - Hookshot Pot Key": "Cane of Byrna",
@@ -17537,7 +17693,6 @@
       "Spectacle Rock Cave": "Bombs (3)",
       "Master Sword Pedestal": "Bombs (3)",
       "Chicken House": "Rupees (20)",
-      "Ganon": "Triforce",
       "Palace of Darkness - Big Key Chest": "Bombs (3)",
       "Palace of Darkness - The Arena - Bridge": "Small Key (Palace of Darkness)",
       "Palace of Darkness - Stalfos Basement": "Small Key (Palace of Darkness)",
@@ -17557,7 +17712,6 @@
       "Castle Tower - Dark Maze": "Small Key (Agahnims Tower)",
       "Castle Tower - Dark Archer Key Drop": "Small Key (Agahnims Tower)",
       "Castle Tower - Circle of Pots Key Drop": "Small Key (Agahnims Tower)",
-      "Agahnim 1": "Beat Agahnim 1",
       "Desert Ledge": "Rupees (20)",
       "Palace of Darkness - The Arena - Ledge": "Small Key (Palace of Darkness)",
       "Palace of Darkness - Map Chest": "Small Key (Palace of Darkness)",
@@ -17568,12 +17722,10 @@
       "Desert Palace - Beamos Hall Pot Key": "Small Key (Desert Palace)",
       "Desert Palace - Desert Tiles 2 Pot Key": "Pegasus Boots",
       "Desert Palace - Boss": "Map (Desert Palace)",
-      "Desert Palace - Prize": "Crystal 2",
       "Library": "Rupees (20)",
       "Mire Shed - Left": "Bottle (Green Potion)",
       "Mire Shed - Right": "Arrows (10)",
       "Misery Mire - Boss": "Small Key (Misery Mire)",
-      "Misery Mire - Prize": "Green Pendant",
       "Tower of Hera - Big Key Chest": "Compass (Tower of Hera)",
       "Tower of Hera - Basement Cage": "Big Key (Tower of Hera)",
       "Tower of Hera - Map Chest": "Piece of Heart",
@@ -17598,11 +17750,8 @@
       "Tower of Hera - Compass Chest": "Rupees (5)",
       "Tower of Hera - Big Chest": "Map (Tower of Hera)",
       "Tower of Hera - Boss": "Small Key (Tower of Hera)",
-      "Tower of Hera - Prize": "Crystal 6",
-      "Capacity Upgrade Shop": "Capacity Upgrade Shop",
       "Sanctuary": "Small Key (Hyrule Castle)",
       "Ice Palace - Boss": "Small Key (Ice Palace)",
-      "Ice Palace - Prize": "Crystal 5",
       "Ice Palace - Big Key Chest": "Piece of Heart",
       "Ice Palace - Map Chest": "Map (Ice Palace)",
       "Ice Palace - Hammer Block Key Drop": "Big Key (Ice Palace)",
@@ -17613,7 +17762,6 @@
       "Flute Spot": "Bombs (3)",
       "Sunken Treasure": "Rupees (20)",
       "Purple Chest": "Progressive Mail",
-      "Flute Activation Spot": "Activated Flute",
       "Blind's Hideout - Top": "Bombs (3)",
       "Blind's Hideout - Left": "Progressive Sword",
       "Blind's Hideout - Right": "Progressive Shield",
@@ -17622,7 +17770,6 @@
       "Misery Mire - Compass Chest": "Compass (Misery Mire)",
       "Misery Mire - Big Key Chest": "Map (Misery Mire)",
       "Chest Game": "Arrows (10)",
-      "Frog": "Get Frog",
       "Brewery": "Piece of Heart",
       "Ice Palace - Jelly Key Drop": "Small Key (Ice Palace)",
       "Ice Palace - Compass Chest": "Mushroom",
@@ -17633,8 +17780,6 @@
       "Ice Palace - Iced T Room": "Rupees (20)",
       "Ice Palace - Spike Room": "Small Key (Ice Palace)",
       "Turtle Rock - Boss": "Compass (Turtle Rock)",
-      "Turtle Rock - Prize": "Crystal 4",
-      "Dark Blacksmith Ruins": "Pick Up Purple Chest",
       "Link's House": "Progressive Shield",
       "Thieves' Town - Attic": "Map (Thieves Town)",
       "Thieves' Town - Big Chest": "Compass (Thieves Town)",
@@ -17657,7 +17802,6 @@
       "Turtle Rock - Eye Bridge - Top Right": "Piece of Heart",
       "Peg Cave": "Rupees (5)",
       "Thieves' Town - Boss": "Bombs (3)",
-      "Thieves' Town - Prize": "Crystal 1",
       "Spiral Cave": "Bombs (3)",
       "Hookshot Cave - Top Right": "Rupees (300)",
       "Hookshot Cave - Top Left": "Piece of Heart",
@@ -17692,7 +17836,6 @@
       "Ganons Tower - Big Key Room - Right": "Rupees (50)",
       "Ganons Tower - Big Key Chest": "Big Key (Ganons Tower)",
       "Palace of Darkness - Boss": "Compass (Palace of Darkness)",
-      "Palace of Darkness - Prize": "Crystal 7",
       "Catfish": "Arrows (10)",
       "Aginah's Cave": "Arrows (10)",
       "Paradox Cave Lower - Far Left": "Bombs (3)",
@@ -17713,7 +17856,6 @@
       "Ganons Tower - Firesnake Room": "Small Key (Ganons Tower)",
       "Lumberjack Tree": "Cane of Somaria",
       "Blacksmith": "Arrows (10)",
-      "Missing Smith": "Return Smith",
       "Skull Woods - Big Key Chest": "Small Key (Skull Woods)",
       "Skull Woods - West Lobby Pot Key": "Map (Skull Woods)",
       "Turtle Rock - Big Chest": "Map (Turtle Rock)",
@@ -17732,7 +17874,6 @@
       "Eastern Palace - Big Key Chest": "Rupees (20)",
       "Eastern Palace - Map Chest": "Big Key (Eastern Palace)",
       "Eastern Palace - Boss": "Compass (Eastern Palace)",
-      "Eastern Palace - Prize": "Crystal 3",
       "Skull Woods - Pinball Room": "Progressive Glove",
       "Skull Woods - Bridge Room": "Small Key (Skull Woods)",
       "Bonk Rock Cave": "Rupees (5)",
@@ -17740,7 +17881,6 @@
       "Skull Woods - Big Chest": "Small Key (Skull Woods)",
       "Skull Woods - Spike Corner Key Drop": "Piece of Heart",
       "Skull Woods - Boss": "Compass (Skull Woods)",
-      "Skull Woods - Prize": "Blue Pendant",
       "Bombos Tablet": "Rupees (20)",
       "Skull Woods - Compass Chest": "Big Key (Skull Woods)",
       "Skull Woods - Pot Prison": "Small Key (Skull Woods)",

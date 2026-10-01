@@ -13,7 +13,7 @@ import {
     Grid, cellKey,
     stitchGrid, accumulatedInventory,
     wallOffUnusedExits, growMaze, growMazeGen, growMazeAsync, compileRegionGraph,
-    buildPresetSidecars, buildRulesJson, stringifyRulesJson,
+    buildPresetSidecars, buildRulesJson, stringifyRulesJson, sourceLocationsOf,
     findDisconnectedCell,
     topDownFromRulesJson, layoutTopDown, realiseTopDownGen,
     sphereLogToWavesAndPlan,
@@ -2105,6 +2105,46 @@ describe('buildRulesJson', () => {
         });
         expect(ev.items['1'][fromSource].groups).toEqual(['Event']);
         expect(ev.item_groups['1']).toEqual(['Everything']);
+    });
+
+    it('compiles a SOURCE event location as one: id null, its flags + placed item verbatim, an id-less def verbatim, no canonical placement', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const placedLocs = Object.values(plain.regions['1']).flatMap((r) => r.locations).filter((l) => l.item);
+        expect(placedLocs.length).toBeGreaterThan(1);
+        const [evLoc] = placedLocs;
+        const evItem = evLoc.item.name;
+        const sourceDef = { name: evItem, id: null, groups: ['Event'], classification: 'progression',
+            event: true, type: 'Event', max_count: 1 };
+        const out = buildRulesJson(grid, {
+            startCell,
+            sourceItems: { [evItem]: sourceDef },
+            sourceLocations: { [evLoc.name]: { name: evLoc.name, id: null,
+                item: { name: evItem, player: 1, advancement: true, type: 'Event' },
+                locked: true, event: true, crystal: false } },
+        });
+        const locs = Object.values(out.regions['1']).flatMap((r) => r.locations);
+        const got = locs.find((l) => l.name === evLoc.name);
+        expect(got).toEqual({ name: evLoc.name, id: null, access_rule: evLoc.access_rule,
+            item: { name: evItem, player: 1, advancement: true, type: 'Event' }, locked: true, event: true });
+        expect(out.items['1'][evItem]).toEqual(sourceDef);
+        expect(out.canonical_placements['1'][evLoc.name]).toBeUndefined();
+        expect(out.itempool_counts['1'][evItem]).toBe(plain.itempool_counts['1'][evItem]);
+        // the event took no number: the numbered locations stay a contiguous run
+        const ids = locs.map((l) => l.id).filter((id) => id != null);
+        expect(ids.length).toBe(locs.length - 1);
+        expect(ids).toEqual(ids.map((_, i) => ids[0] + i));
+    });
+
+    it('sourceLocationsOf maps every source location name to its location, first one winning', () => {
+        const src = { regions: { 1: {
+            A: { name: 'A', locations: [{ name: 'x', id: 1 }, { name: 'y', id: null }] },
+            B: { name: 'B', locations: [{ name: 'x', id: 9 }] },
+        } } };
+        const out = sourceLocationsOf(src, '1');
+        expect(Object.keys(out)).toEqual(['x', 'y']);
+        expect(out.x.id).toBe(1);
+        expect(out.y.id).toBeNull();
     });
 
     it('assigns numeric ids to every item (unique within the game)', () => {

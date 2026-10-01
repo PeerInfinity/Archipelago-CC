@@ -403,7 +403,7 @@
           },
           {
             "name": "Chalice Home",
-            "id": 1017,
+            "id": null,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -417,8 +417,10 @@
               "name": "Victory",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -436,7 +438,7 @@
         "locations": [
           {
             "name": "Red Maze Vault",
-            "id": 1018,
+            "id": 1017,
             "access_rule": {
               "rule": "True_"
             },
@@ -449,7 +451,7 @@
           },
           {
             "name": "Slay Grundle",
-            "id": 1019,
+            "id": 1018,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -495,7 +497,7 @@
         "locations": [
           {
             "name": "Dungeon0",
-            "id": 1020,
+            "id": 1019,
             "access_rule": {
               "rule": "True_"
             },
@@ -508,7 +510,7 @@
           },
           {
             "name": "Dungeon1",
-            "id": 1021,
+            "id": 1020,
             "access_rule": {
               "rule": "True_"
             },
@@ -521,7 +523,7 @@
           },
           {
             "name": "Black Castle Foyer",
-            "id": 1022,
+            "id": 1021,
             "access_rule": {
               "rule": "True_"
             },
@@ -534,7 +536,7 @@
           },
           {
             "name": "Slay Rhindle",
-            "id": 1023,
+            "id": 1022,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -567,7 +569,7 @@
         "locations": [
           {
             "name": "Dungeon Vault",
-            "id": 1024,
+            "id": 1023,
             "access_rule": {
               "rule": "True_"
             },
@@ -658,15 +660,18 @@
       },
       "Victory": {
         "name": "Victory",
-        "id": 9,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Yellow Key": {
         "name": "Yellow Key",
-        "id": 10,
+        "id": 9,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -674,7 +679,7 @@
       },
       "Right Difficulty Switch": {
         "name": "Right Difficulty Switch",
-        "id": 11,
+        "id": 10,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -682,7 +687,7 @@
       },
       "Bridge": {
         "name": "Bridge",
-        "id": 12,
+        "id": 11,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -690,7 +695,7 @@
       },
       "Slow Rhindle": {
         "name": "Slow Rhindle",
-        "id": 13,
+        "id": 12,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -698,7 +703,7 @@
       },
       "White Key": {
         "name": "White Key",
-        "id": 14,
+        "id": 13,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -765,7 +770,6 @@
       "Southeast of Catacombs": "Freeincarnate",
       "Slay Yorgle": "Freeincarnate",
       "Inside Yellow Castle": "Magnet",
-      "Chalice Home": "Victory",
       "Red Maze Vault": "Freeincarnate",
       "Slay Grundle": "Yellow Key",
       "Dungeon0": "Freeincarnate",

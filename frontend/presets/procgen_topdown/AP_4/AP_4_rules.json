@@ -86,7 +86,7 @@
           },
           {
             "name": "Checked 70",
-            "id": 1001,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -94,8 +94,10 @@
               "name": "Checked 70",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -150,7 +152,7 @@
         "locations": [
           {
             "name": "Check 71",
-            "id": 1002,
+            "id": 1001,
             "access_rule": {
               "rule": "True_"
             },
@@ -163,7 +165,7 @@
           },
           {
             "name": "Checked 71",
-            "id": 1003,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -171,8 +173,10 @@
               "name": "Checked 71",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -202,7 +206,7 @@
         "locations": [
           {
             "name": "Check 58",
-            "id": 1004,
+            "id": 1002,
             "access_rule": {
               "rule": "True_"
             },
@@ -215,7 +219,7 @@
           },
           {
             "name": "Checked 58",
-            "id": 1005,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -223,8 +227,10 @@
               "name": "Checked 58",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -291,7 +297,7 @@
         "locations": [
           {
             "name": "Check 14",
-            "id": 1006,
+            "id": 1003,
             "access_rule": {
               "rule": "True_"
             },
@@ -304,7 +310,7 @@
           },
           {
             "name": "Checked 14",
-            "id": 1007,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -312,8 +318,10 @@
               "name": "Checked 14",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -347,7 +355,7 @@
         "locations": [
           {
             "name": "Check 44",
-            "id": 1008,
+            "id": 1004,
             "access_rule": {
               "rule": "True_"
             },
@@ -360,7 +368,7 @@
           },
           {
             "name": "Checked 44",
-            "id": 1009,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -368,8 +376,10 @@
               "name": "Checked 44",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -424,7 +434,7 @@
         "locations": [
           {
             "name": "Check 72",
-            "id": 1010,
+            "id": 1005,
             "access_rule": {
               "rule": "True_"
             },
@@ -437,7 +447,7 @@
           },
           {
             "name": "Checked 72",
-            "id": 1011,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -445,8 +455,10 @@
               "name": "Checked 72",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -479,7 +491,7 @@
         "locations": [
           {
             "name": "Check 73",
-            "id": 1012,
+            "id": 1006,
             "access_rule": {
               "rule": "True_"
             },
@@ -492,7 +504,7 @@
           },
           {
             "name": "Checked 73",
-            "id": 1013,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -500,8 +512,10 @@
               "name": "Checked 73",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -557,7 +571,7 @@
         "locations": [
           {
             "name": "Check 43",
-            "id": 1014,
+            "id": 1007,
             "access_rule": {
               "rule": "True_"
             },
@@ -570,7 +584,7 @@
           },
           {
             "name": "Checked 43",
-            "id": 1015,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -578,8 +592,10 @@
               "name": "Checked 43",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -612,7 +628,7 @@
         "locations": [
           {
             "name": "Check 38",
-            "id": 1016,
+            "id": 1008,
             "access_rule": {
               "rule": "True_"
             },
@@ -625,7 +641,7 @@
           },
           {
             "name": "Checked 38",
-            "id": 1017,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -633,8 +649,10 @@
               "name": "Checked 38",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -681,7 +699,7 @@
         "locations": [
           {
             "name": "Check 47",
-            "id": 1018,
+            "id": 1009,
             "access_rule": {
               "rule": "True_"
             },
@@ -694,7 +712,7 @@
           },
           {
             "name": "Checked 47",
-            "id": 1019,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -702,8 +720,10 @@
               "name": "Checked 47",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -737,7 +757,7 @@
         "locations": [
           {
             "name": "Check 80",
-            "id": 1020,
+            "id": 1010,
             "access_rule": {
               "rule": "True_"
             },
@@ -750,7 +770,7 @@
           },
           {
             "name": "Checked 80",
-            "id": 1021,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -758,8 +778,10 @@
               "name": "Checked 80",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -808,7 +830,7 @@
         "locations": [
           {
             "name": "Check 45",
-            "id": 1022,
+            "id": 1011,
             "access_rule": {
               "rule": "True_"
             },
@@ -821,7 +843,7 @@
           },
           {
             "name": "Checked 45",
-            "id": 1023,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -829,8 +851,10 @@
               "name": "Checked 45",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -863,7 +887,7 @@
         "locations": [
           {
             "name": "Check 39",
-            "id": 1024,
+            "id": 1012,
             "access_rule": {
               "rule": "True_"
             },
@@ -876,7 +900,7 @@
           },
           {
             "name": "Checked 39",
-            "id": 1025,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -884,8 +908,10 @@
               "name": "Checked 39",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -939,7 +965,7 @@
         "locations": [
           {
             "name": "Check 32",
-            "id": 1026,
+            "id": 1013,
             "access_rule": {
               "rule": "True_"
             },
@@ -952,7 +978,7 @@
           },
           {
             "name": "Checked 32",
-            "id": 1027,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -960,8 +986,10 @@
               "name": "Checked 32",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1037,7 +1065,7 @@
         "locations": [
           {
             "name": "Check 37",
-            "id": 1028,
+            "id": 1014,
             "access_rule": {
               "rule": "True_"
             },
@@ -1050,7 +1078,7 @@
           },
           {
             "name": "Checked 37",
-            "id": 1029,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1058,8 +1086,10 @@
               "name": "Checked 37",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1113,7 +1143,7 @@
         "locations": [
           {
             "name": "Check 24",
-            "id": 1030,
+            "id": 1015,
             "access_rule": {
               "rule": "True_"
             },
@@ -1126,7 +1156,7 @@
           },
           {
             "name": "Checked 24",
-            "id": 1031,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1134,8 +1164,10 @@
               "name": "Checked 24",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1168,7 +1200,7 @@
         "locations": [
           {
             "name": "Check 25",
-            "id": 1032,
+            "id": 1016,
             "access_rule": {
               "rule": "True_"
             },
@@ -1181,7 +1213,7 @@
           },
           {
             "name": "Checked 25",
-            "id": 1033,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1189,8 +1221,10 @@
               "name": "Checked 25",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1240,7 +1274,7 @@
         "locations": [
           {
             "name": "Check 48",
-            "id": 1034,
+            "id": 1017,
             "access_rule": {
               "rule": "True_"
             },
@@ -1253,7 +1287,7 @@
           },
           {
             "name": "Checked 48",
-            "id": 1035,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1261,8 +1295,10 @@
               "name": "Checked 48",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1290,7 +1326,7 @@
         "locations": [
           {
             "name": "Check 75",
-            "id": 1036,
+            "id": 1018,
             "access_rule": {
               "rule": "True_"
             },
@@ -1303,7 +1339,7 @@
           },
           {
             "name": "Checked 75",
-            "id": 1037,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1311,8 +1347,10 @@
               "name": "Checked 75",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1368,7 +1406,7 @@
         "locations": [
           {
             "name": "Check 79",
-            "id": 1038,
+            "id": 1019,
             "access_rule": {
               "rule": "True_"
             },
@@ -1381,7 +1419,7 @@
           },
           {
             "name": "Checked 79",
-            "id": 1039,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1389,8 +1427,10 @@
               "name": "Checked 79",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1443,7 +1483,7 @@
         "locations": [
           {
             "name": "Check 76",
-            "id": 1040,
+            "id": 1020,
             "access_rule": {
               "rule": "True_"
             },
@@ -1456,7 +1496,7 @@
           },
           {
             "name": "Checked 76",
-            "id": 1041,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1464,8 +1504,10 @@
               "name": "Checked 76",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1517,7 +1559,7 @@
         "locations": [
           {
             "name": "Check 31",
-            "id": 1042,
+            "id": 1021,
             "access_rule": {
               "rule": "True_"
             },
@@ -1530,7 +1572,7 @@
           },
           {
             "name": "Checked 31",
-            "id": 1043,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1538,8 +1580,10 @@
               "name": "Checked 31",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1612,7 +1656,7 @@
         "locations": [
           {
             "name": "Check 22",
-            "id": 1044,
+            "id": 1022,
             "access_rule": {
               "rule": "True_"
             },
@@ -1625,7 +1669,7 @@
           },
           {
             "name": "Checked 22",
-            "id": 1045,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1633,8 +1677,10 @@
               "name": "Checked 22",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1726,7 +1772,7 @@
         "locations": [
           {
             "name": "Check 23",
-            "id": 1046,
+            "id": 1023,
             "access_rule": {
               "rule": "True_"
             },
@@ -1739,7 +1785,7 @@
           },
           {
             "name": "Checked 23",
-            "id": 1047,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1747,8 +1793,10 @@
               "name": "Checked 23",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1852,7 +1900,7 @@
         "locations": [
           {
             "name": "Check 5",
-            "id": 1048,
+            "id": 1024,
             "access_rule": {
               "rule": "True_"
             },
@@ -1865,7 +1913,7 @@
           },
           {
             "name": "Checked 5",
-            "id": 1049,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1873,8 +1921,10 @@
               "name": "Checked 5",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -1950,7 +2000,7 @@
         "locations": [
           {
             "name": "Check 49",
-            "id": 1050,
+            "id": 1025,
             "access_rule": {
               "rule": "True_"
             },
@@ -1963,7 +2013,7 @@
           },
           {
             "name": "Checked 49",
-            "id": 1051,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -1971,8 +2021,10 @@
               "name": "Checked 49",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2052,7 +2104,7 @@
         "locations": [
           {
             "name": "Check 50",
-            "id": 1052,
+            "id": 1026,
             "access_rule": {
               "rule": "True_"
             },
@@ -2065,7 +2117,7 @@
           },
           {
             "name": "Checked 50",
-            "id": 1053,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2073,8 +2125,10 @@
               "name": "Checked 50",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2129,7 +2183,7 @@
         "locations": [
           {
             "name": "Check 78",
-            "id": 1054,
+            "id": 1027,
             "access_rule": {
               "rule": "True_"
             },
@@ -2142,7 +2196,7 @@
           },
           {
             "name": "Checked 78",
-            "id": 1055,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2150,8 +2204,10 @@
               "name": "Checked 78",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2205,7 +2261,7 @@
         "locations": [
           {
             "name": "Check 77",
-            "id": 1056,
+            "id": 1028,
             "access_rule": {
               "rule": "True_"
             },
@@ -2218,7 +2274,7 @@
           },
           {
             "name": "Checked 77",
-            "id": 1057,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2226,8 +2282,10 @@
               "name": "Checked 77",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2260,7 +2318,7 @@
         "locations": [
           {
             "name": "Check 63",
-            "id": 1058,
+            "id": 1029,
             "access_rule": {
               "rule": "True_"
             },
@@ -2273,7 +2331,7 @@
           },
           {
             "name": "Checked 63",
-            "id": 1059,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2281,8 +2339,10 @@
               "name": "Checked 63",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2313,7 +2373,7 @@
         "locations": [
           {
             "name": "Check 27",
-            "id": 1060,
+            "id": 1030,
             "access_rule": {
               "rule": "True_"
             },
@@ -2326,7 +2386,7 @@
           },
           {
             "name": "Checked 27",
-            "id": 1061,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2334,8 +2394,10 @@
               "name": "Checked 27",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2442,7 +2504,7 @@
         "locations": [
           {
             "name": "Check 26",
-            "id": 1062,
+            "id": 1031,
             "access_rule": {
               "rule": "True_"
             },
@@ -2455,7 +2517,7 @@
           },
           {
             "name": "Checked 26",
-            "id": 1063,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2463,8 +2525,10 @@
               "name": "Checked 26",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2530,7 +2594,7 @@
         "locations": [
           {
             "name": "Check 17",
-            "id": 1064,
+            "id": 1032,
             "access_rule": {
               "rule": "True_"
             },
@@ -2543,7 +2607,7 @@
           },
           {
             "name": "Checked 17",
-            "id": 1065,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2551,8 +2615,10 @@
               "name": "Checked 17",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2632,7 +2698,7 @@
         "locations": [
           {
             "name": "Check 10",
-            "id": 1066,
+            "id": 1033,
             "access_rule": {
               "rule": "True_"
             },
@@ -2645,7 +2711,7 @@
           },
           {
             "name": "Checked 10",
-            "id": 1067,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2653,8 +2719,10 @@
               "name": "Checked 10",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2753,7 +2821,7 @@
         "locations": [
           {
             "name": "Check 2",
-            "id": 1068,
+            "id": 1034,
             "access_rule": {
               "rule": "True_"
             },
@@ -2766,7 +2834,7 @@
           },
           {
             "name": "Checked 2",
-            "id": 1069,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2774,8 +2842,10 @@
               "name": "Checked 2",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2877,7 +2947,7 @@
         "locations": [
           {
             "name": "Check 8",
-            "id": 1070,
+            "id": 1035,
             "access_rule": {
               "rule": "True_"
             },
@@ -2890,7 +2960,7 @@
           },
           {
             "name": "Checked 8",
-            "id": 1071,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2898,8 +2968,10 @@
               "name": "Checked 8",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -2955,7 +3027,7 @@
         "locations": [
           {
             "name": "Check 68",
-            "id": 1072,
+            "id": 1036,
             "access_rule": {
               "rule": "True_"
             },
@@ -2968,7 +3040,7 @@
           },
           {
             "name": "Checked 68",
-            "id": 1073,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -2976,8 +3048,10 @@
               "name": "Checked 68",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3034,7 +3108,7 @@
         "locations": [
           {
             "name": "Check 51",
-            "id": 1074,
+            "id": 1037,
             "access_rule": {
               "rule": "True_"
             },
@@ -3047,7 +3121,7 @@
           },
           {
             "name": "Checked 51",
-            "id": 1075,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3055,8 +3129,10 @@
               "name": "Checked 51",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3090,7 +3166,7 @@
         "locations": [
           {
             "name": "Check 52",
-            "id": 1076,
+            "id": 1038,
             "access_rule": {
               "rule": "True_"
             },
@@ -3103,7 +3179,7 @@
           },
           {
             "name": "Checked 52",
-            "id": 1077,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3111,8 +3187,10 @@
               "name": "Checked 52",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3145,7 +3223,7 @@
         "locations": [
           {
             "name": "Check 67",
-            "id": 1078,
+            "id": 1039,
             "access_rule": {
               "rule": "True_"
             },
@@ -3158,7 +3236,7 @@
           },
           {
             "name": "Checked 67",
-            "id": 1079,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3166,8 +3244,10 @@
               "name": "Checked 67",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3221,7 +3301,7 @@
         "locations": [
           {
             "name": "Check 62",
-            "id": 1080,
+            "id": 1040,
             "access_rule": {
               "rule": "True_"
             },
@@ -3234,7 +3314,7 @@
           },
           {
             "name": "Checked 62",
-            "id": 1081,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3242,8 +3322,10 @@
               "name": "Checked 62",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3296,7 +3378,7 @@
         "locations": [
           {
             "name": "Check 61",
-            "id": 1082,
+            "id": 1041,
             "access_rule": {
               "rule": "True_"
             },
@@ -3309,7 +3391,7 @@
           },
           {
             "name": "Checked 61",
-            "id": 1083,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3317,8 +3399,10 @@
               "name": "Checked 61",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3403,7 +3487,7 @@
         "locations": [
           {
             "name": "Check 33",
-            "id": 1084,
+            "id": 1042,
             "access_rule": {
               "rule": "True_"
             },
@@ -3416,7 +3500,7 @@
           },
           {
             "name": "Checked 33",
-            "id": 1085,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3424,8 +3508,10 @@
               "name": "Checked 33",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3539,7 +3625,7 @@
         "locations": [
           {
             "name": "Check 11",
-            "id": 1086,
+            "id": 1043,
             "access_rule": {
               "rule": "True_"
             },
@@ -3552,7 +3638,7 @@
           },
           {
             "name": "Checked 11",
-            "id": 1087,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3560,8 +3646,10 @@
               "name": "Checked 11",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3655,7 +3743,7 @@
         "locations": [
           {
             "name": "Check 1",
-            "id": 1088,
+            "id": 1044,
             "access_rule": {
               "rule": "True_"
             },
@@ -3668,7 +3756,7 @@
           },
           {
             "name": "Checked 1",
-            "id": 1089,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3676,8 +3764,10 @@
               "name": "Checked 1",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3728,7 +3818,7 @@
         "locations": [
           {
             "name": "Victory",
-            "id": 1090,
+            "id": null,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -3820,8 +3910,10 @@
               "name": "Victory",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3918,7 +4010,7 @@
         "locations": [
           {
             "name": "Check 4",
-            "id": 1091,
+            "id": 1045,
             "access_rule": {
               "rule": "True_"
             },
@@ -3931,7 +4023,7 @@
           },
           {
             "name": "Checked 4",
-            "id": 1092,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3939,8 +4031,10 @@
               "name": "Checked 4",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -3974,7 +4068,7 @@
         "locations": [
           {
             "name": "Check 69",
-            "id": 1093,
+            "id": 1046,
             "access_rule": {
               "rule": "True_"
             },
@@ -3987,7 +4081,7 @@
           },
           {
             "name": "Checked 69",
-            "id": 1094,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -3995,8 +4089,10 @@
               "name": "Checked 69",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4050,7 +4146,7 @@
         "locations": [
           {
             "name": "Check 66",
-            "id": 1095,
+            "id": 1047,
             "access_rule": {
               "rule": "True_"
             },
@@ -4063,7 +4159,7 @@
           },
           {
             "name": "Checked 66",
-            "id": 1096,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4071,8 +4167,10 @@
               "name": "Checked 66",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4105,7 +4203,7 @@
         "locations": [
           {
             "name": "Check 36",
-            "id": 1097,
+            "id": 1048,
             "access_rule": {
               "rule": "True_"
             },
@@ -4118,7 +4216,7 @@
           },
           {
             "name": "Checked 36",
-            "id": 1098,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4126,8 +4224,10 @@
               "name": "Checked 36",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4222,7 +4322,7 @@
         "locations": [
           {
             "name": "Check 35",
-            "id": 1099,
+            "id": 1049,
             "access_rule": {
               "rule": "True_"
             },
@@ -4235,7 +4335,7 @@
           },
           {
             "name": "Checked 35",
-            "id": 1100,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4243,8 +4343,10 @@
               "name": "Checked 35",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4338,7 +4440,7 @@
         "locations": [
           {
             "name": "Check 34",
-            "id": 1101,
+            "id": 1050,
             "access_rule": {
               "rule": "True_"
             },
@@ -4351,7 +4453,7 @@
           },
           {
             "name": "Checked 34",
-            "id": 1102,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4359,8 +4461,10 @@
               "name": "Checked 34",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4389,7 +4493,7 @@
         "locations": [
           {
             "name": "Check 15",
-            "id": 1103,
+            "id": 1051,
             "access_rule": {
               "rule": "True_"
             },
@@ -4402,7 +4506,7 @@
           },
           {
             "name": "Checked 15",
-            "id": 1104,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4410,8 +4514,10 @@
               "name": "Checked 15",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4506,7 +4612,7 @@
         "locations": [
           {
             "name": "Check 13",
-            "id": 1105,
+            "id": 1052,
             "access_rule": {
               "rule": "True_"
             },
@@ -4519,7 +4625,7 @@
           },
           {
             "name": "Checked 13",
-            "id": 1106,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4527,8 +4633,10 @@
               "name": "Checked 13",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4623,7 +4731,7 @@
         "locations": [
           {
             "name": "Check 3",
-            "id": 1107,
+            "id": 1053,
             "access_rule": {
               "rule": "True_"
             },
@@ -4636,7 +4744,7 @@
           },
           {
             "name": "Checked 3",
-            "id": 1108,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4644,8 +4752,10 @@
               "name": "Checked 3",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4762,7 +4872,7 @@
         "locations": [
           {
             "name": "Check 6",
-            "id": 1109,
+            "id": 1054,
             "access_rule": {
               "rule": "True_"
             },
@@ -4775,7 +4885,7 @@
           },
           {
             "name": "Checked 6",
-            "id": 1110,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4783,8 +4893,10 @@
               "name": "Checked 6",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4815,7 +4927,7 @@
         "locations": [
           {
             "name": "Check 60",
-            "id": 1111,
+            "id": 1055,
             "access_rule": {
               "rule": "True_"
             },
@@ -4828,7 +4940,7 @@
           },
           {
             "name": "Checked 60",
-            "id": 1112,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4836,8 +4948,10 @@
               "name": "Checked 60",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4890,7 +5004,7 @@
         "locations": [
           {
             "name": "Check 65",
-            "id": 1113,
+            "id": 1056,
             "access_rule": {
               "rule": "True_"
             },
@@ -4903,7 +5017,7 @@
           },
           {
             "name": "Checked 65",
-            "id": 1114,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4911,8 +5025,10 @@
               "name": "Checked 65",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -4964,7 +5080,7 @@
         "locations": [
           {
             "name": "Check 64",
-            "id": 1115,
+            "id": 1057,
             "access_rule": {
               "rule": "True_"
             },
@@ -4977,7 +5093,7 @@
           },
           {
             "name": "Checked 64",
-            "id": 1116,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -4985,8 +5101,10 @@
               "name": "Checked 64",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5041,7 +5159,7 @@
         "locations": [
           {
             "name": "Check 40",
-            "id": 1117,
+            "id": 1058,
             "access_rule": {
               "rule": "True_"
             },
@@ -5054,7 +5172,7 @@
           },
           {
             "name": "Checked 40",
-            "id": 1118,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5062,8 +5180,10 @@
               "name": "Checked 40",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5120,7 +5240,7 @@
         "locations": [
           {
             "name": "Check 41",
-            "id": 1119,
+            "id": 1059,
             "access_rule": {
               "rule": "True_"
             },
@@ -5133,7 +5253,7 @@
           },
           {
             "name": "Checked 41",
-            "id": 1120,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5141,8 +5261,10 @@
               "name": "Checked 41",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5174,7 +5296,7 @@
         "locations": [
           {
             "name": "Check 19",
-            "id": 1121,
+            "id": 1060,
             "access_rule": {
               "rule": "True_"
             },
@@ -5187,7 +5309,7 @@
           },
           {
             "name": "Checked 19",
-            "id": 1122,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5195,8 +5317,10 @@
               "name": "Checked 19",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5244,7 +5368,7 @@
         "locations": [
           {
             "name": "Check 18",
-            "id": 1123,
+            "id": 1061,
             "access_rule": {
               "rule": "True_"
             },
@@ -5257,7 +5381,7 @@
           },
           {
             "name": "Checked 18",
-            "id": 1124,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5265,8 +5389,10 @@
               "name": "Checked 18",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5384,7 +5510,7 @@
         "locations": [
           {
             "name": "Check 7",
-            "id": 1125,
+            "id": 1062,
             "access_rule": {
               "rule": "True_"
             },
@@ -5397,7 +5523,7 @@
           },
           {
             "name": "Checked 7",
-            "id": 1126,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5405,8 +5531,10 @@
               "name": "Checked 7",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5497,7 +5625,7 @@
         "locations": [
           {
             "name": "Check 12",
-            "id": 1127,
+            "id": 1063,
             "access_rule": {
               "rule": "True_"
             },
@@ -5510,7 +5638,7 @@
           },
           {
             "name": "Checked 12",
-            "id": 1128,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5518,8 +5646,10 @@
               "name": "Checked 12",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5567,7 +5697,7 @@
         "locations": [
           {
             "name": "Check 59",
-            "id": 1129,
+            "id": 1064,
             "access_rule": {
               "rule": "True_"
             },
@@ -5580,7 +5710,7 @@
           },
           {
             "name": "Checked 59",
-            "id": 1130,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5588,8 +5718,10 @@
               "name": "Checked 59",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5622,7 +5754,7 @@
         "locations": [
           {
             "name": "Check 55",
-            "id": 1131,
+            "id": 1065,
             "access_rule": {
               "rule": "True_"
             },
@@ -5635,7 +5767,7 @@
           },
           {
             "name": "Checked 55",
-            "id": 1132,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5643,8 +5775,10 @@
               "name": "Checked 55",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5754,7 +5888,7 @@
         "locations": [
           {
             "name": "Check 16",
-            "id": 1133,
+            "id": 1066,
             "access_rule": {
               "rule": "True_"
             },
@@ -5767,7 +5901,7 @@
           },
           {
             "name": "Checked 16",
-            "id": 1134,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5775,8 +5909,10 @@
               "name": "Checked 16",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5810,7 +5946,7 @@
         "locations": [
           {
             "name": "Check 42",
-            "id": 1135,
+            "id": 1067,
             "access_rule": {
               "rule": "True_"
             },
@@ -5823,7 +5959,7 @@
           },
           {
             "name": "Checked 42",
-            "id": 1136,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5831,8 +5967,10 @@
               "name": "Checked 42",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5863,7 +6001,7 @@
         "locations": [
           {
             "name": "Check 9",
-            "id": 1137,
+            "id": 1068,
             "access_rule": {
               "rule": "True_"
             },
@@ -5876,7 +6014,7 @@
           },
           {
             "name": "Checked 9",
-            "id": 1138,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5884,8 +6022,10 @@
               "name": "Checked 9",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -5932,7 +6072,7 @@
         "locations": [
           {
             "name": "Check 20",
-            "id": 1139,
+            "id": 1069,
             "access_rule": {
               "rule": "True_"
             },
@@ -5945,7 +6085,7 @@
           },
           {
             "name": "Checked 20",
-            "id": 1140,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -5953,8 +6093,10 @@
               "name": "Checked 20",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6003,7 +6145,7 @@
         "locations": [
           {
             "name": "Check 21",
-            "id": 1141,
+            "id": 1070,
             "access_rule": {
               "rule": "True_"
             },
@@ -6016,7 +6158,7 @@
           },
           {
             "name": "Checked 21",
-            "id": 1142,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6024,8 +6166,10 @@
               "name": "Checked 21",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6076,7 +6220,7 @@
         "locations": [
           {
             "name": "Check 53",
-            "id": 1143,
+            "id": 1071,
             "access_rule": {
               "rule": "True_"
             },
@@ -6089,7 +6233,7 @@
           },
           {
             "name": "Checked 53",
-            "id": 1144,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6097,8 +6241,10 @@
               "name": "Checked 53",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6152,7 +6298,7 @@
         "locations": [
           {
             "name": "Check 54",
-            "id": 1145,
+            "id": 1072,
             "access_rule": {
               "rule": "True_"
             },
@@ -6165,7 +6311,7 @@
           },
           {
             "name": "Checked 54",
-            "id": 1146,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6173,8 +6319,10 @@
               "name": "Checked 54",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6222,7 +6370,7 @@
         "locations": [
           {
             "name": "Check 28",
-            "id": 1147,
+            "id": 1073,
             "access_rule": {
               "rule": "True_"
             },
@@ -6235,7 +6383,7 @@
           },
           {
             "name": "Checked 28",
-            "id": 1148,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6243,8 +6391,10 @@
               "name": "Checked 28",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6276,7 +6426,7 @@
         "locations": [
           {
             "name": "Check 46",
-            "id": 1149,
+            "id": 1074,
             "access_rule": {
               "rule": "True_"
             },
@@ -6289,7 +6439,7 @@
           },
           {
             "name": "Checked 46",
-            "id": 1150,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6297,8 +6447,10 @@
               "name": "Checked 46",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6331,7 +6483,7 @@
         "locations": [
           {
             "name": "Check 57",
-            "id": 1151,
+            "id": 1075,
             "access_rule": {
               "rule": "True_"
             },
@@ -6344,7 +6496,7 @@
           },
           {
             "name": "Checked 57",
-            "id": 1152,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6352,8 +6504,10 @@
               "name": "Checked 57",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6407,7 +6561,7 @@
         "locations": [
           {
             "name": "Check 29",
-            "id": 1153,
+            "id": 1076,
             "access_rule": {
               "rule": "True_"
             },
@@ -6420,7 +6574,7 @@
           },
           {
             "name": "Checked 29",
-            "id": 1154,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6428,8 +6582,10 @@
               "name": "Checked 29",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6463,7 +6619,7 @@
         "locations": [
           {
             "name": "Check 74",
-            "id": 1155,
+            "id": 1077,
             "access_rule": {
               "rule": "True_"
             },
@@ -6476,7 +6632,7 @@
           },
           {
             "name": "Checked 74",
-            "id": 1156,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6484,8 +6640,10 @@
               "name": "Checked 74",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6540,7 +6698,7 @@
         "locations": [
           {
             "name": "Check 56",
-            "id": 1157,
+            "id": 1078,
             "access_rule": {
               "rule": "True_"
             },
@@ -6553,7 +6711,7 @@
           },
           {
             "name": "Checked 56",
-            "id": 1158,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6561,8 +6719,10 @@
               "name": "Checked 56",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -6617,7 +6777,7 @@
         "locations": [
           {
             "name": "Check 30",
-            "id": 1159,
+            "id": 1079,
             "access_rule": {
               "rule": "True_"
             },
@@ -6630,7 +6790,7 @@
           },
           {
             "name": "Checked 30",
-            "id": 1160,
+            "id": null,
             "access_rule": {
               "rule": "True_"
             },
@@ -6638,8 +6798,10 @@
               "name": "Checked 30",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       }
@@ -6665,23 +6827,29 @@
       },
       "Checked 70": {
         "name": "Checked 70",
-        "id": 2,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 71": {
         "name": "Checked 71",
-        "id": 3,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: -": {
         "name": "Button: -",
-        "id": 4,
+        "id": 2,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -6689,15 +6857,18 @@
       },
       "Checked 58": {
         "name": "Checked 58",
-        "id": 5,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: +": {
         "name": "Button: +",
-        "id": 6,
+        "id": 3,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -6705,71 +6876,95 @@
       },
       "Checked 14": {
         "name": "Checked 14",
-        "id": 7,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 44": {
         "name": "Checked 44",
-        "id": 8,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 72": {
         "name": "Checked 72",
-        "id": 9,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 73": {
         "name": "Checked 73",
-        "id": 10,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 43": {
         "name": "Checked 43",
-        "id": 11,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 38": {
         "name": "Checked 38",
-        "id": 12,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 47": {
         "name": "Checked 47",
-        "id": 13,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 80": {
         "name": "Checked 80",
-        "id": 14,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: 0": {
         "name": "Button: 0",
-        "id": 15,
+        "id": 4,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -6777,31 +6972,40 @@
       },
       "Checked 45": {
         "name": "Checked 45",
-        "id": 16,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 39": {
         "name": "Checked 39",
-        "id": 17,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 32": {
         "name": "Checked 32",
-        "id": 18,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: /": {
         "name": "Button: /",
-        "id": 19,
+        "id": 5,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -6809,15 +7013,18 @@
       },
       "Checked 37": {
         "name": "Checked 37",
-        "id": 20,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: 1": {
         "name": "Button: 1",
-        "id": 21,
+        "id": 6,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -6825,15 +7032,18 @@
       },
       "Checked 24": {
         "name": "Checked 24",
-        "id": 22,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: 9": {
         "name": "Button: 9",
-        "id": 23,
+        "id": 7,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -6841,15 +7051,18 @@
       },
       "Checked 25": {
         "name": "Checked 25",
-        "id": 24,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: *": {
         "name": "Button: *",
-        "id": 25,
+        "id": 8,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -6857,63 +7070,84 @@
       },
       "Checked 48": {
         "name": "Checked 48",
-        "id": 26,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 75": {
         "name": "Checked 75",
-        "id": 27,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 79": {
         "name": "Checked 79",
-        "id": 28,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 76": {
         "name": "Checked 76",
-        "id": 29,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 31": {
         "name": "Checked 31",
-        "id": 30,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 22": {
         "name": "Checked 22",
-        "id": 31,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 23": {
         "name": "Checked 23",
-        "id": 32,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: 8": {
         "name": "Button: 8",
-        "id": 33,
+        "id": 9,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -6921,55 +7155,73 @@
       },
       "Checked 5": {
         "name": "Checked 5",
-        "id": 34,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 49": {
         "name": "Checked 49",
-        "id": 35,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 50": {
         "name": "Checked 50",
-        "id": 36,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 78": {
         "name": "Checked 78",
-        "id": 37,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 77": {
         "name": "Checked 77",
-        "id": 38,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 63": {
         "name": "Checked 63",
-        "id": 39,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: 7": {
         "name": "Button: 7",
-        "id": 40,
+        "id": 10,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -6977,39 +7229,51 @@
       },
       "Checked 27": {
         "name": "Checked 27",
-        "id": 41,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 26": {
         "name": "Checked 26",
-        "id": 42,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 17": {
         "name": "Checked 17",
-        "id": 43,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 10": {
         "name": "Checked 10",
-        "id": 44,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: 6": {
         "name": "Button: 6",
-        "id": 45,
+        "id": 11,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -7017,15 +7281,18 @@
       },
       "Checked 2": {
         "name": "Checked 2",
-        "id": 46,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: 4": {
         "name": "Button: 4",
-        "id": 47,
+        "id": 12,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -7033,151 +7300,205 @@
       },
       "Checked 8": {
         "name": "Checked 8",
-        "id": 48,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 68": {
         "name": "Checked 68",
-        "id": 49,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 51": {
         "name": "Checked 51",
-        "id": 50,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 52": {
         "name": "Checked 52",
-        "id": 51,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 67": {
         "name": "Checked 67",
-        "id": 52,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 62": {
         "name": "Checked 62",
-        "id": 53,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 61": {
         "name": "Checked 61",
-        "id": 54,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 33": {
         "name": "Checked 33",
-        "id": 55,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 11": {
         "name": "Checked 11",
-        "id": 56,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 1": {
         "name": "Checked 1",
-        "id": 57,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Victory": {
         "name": "Victory",
-        "id": 58,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 4": {
         "name": "Checked 4",
-        "id": 59,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 69": {
         "name": "Checked 69",
-        "id": 60,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 66": {
         "name": "Checked 66",
-        "id": 61,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 36": {
         "name": "Checked 36",
-        "id": 62,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 35": {
         "name": "Checked 35",
-        "id": 63,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 34": {
         "name": "Checked 34",
-        "id": 64,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 15": {
         "name": "Checked 15",
-        "id": 65,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Button: 3": {
         "name": "Button: 3",
-        "id": 66,
+        "id": 13,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -7185,227 +7506,311 @@
       },
       "Checked 13": {
         "name": "Checked 13",
-        "id": 67,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 3": {
         "name": "Checked 3",
-        "id": 68,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 6": {
         "name": "Checked 6",
-        "id": 69,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 60": {
         "name": "Checked 60",
-        "id": 70,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 65": {
         "name": "Checked 65",
-        "id": 71,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 64": {
         "name": "Checked 64",
-        "id": 72,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 40": {
         "name": "Checked 40",
-        "id": 73,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 41": {
         "name": "Checked 41",
-        "id": 74,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 19": {
         "name": "Checked 19",
-        "id": 75,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 18": {
         "name": "Checked 18",
-        "id": 76,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 7": {
         "name": "Checked 7",
-        "id": 77,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 12": {
         "name": "Checked 12",
-        "id": 78,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 59": {
         "name": "Checked 59",
-        "id": 79,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 55": {
         "name": "Checked 55",
-        "id": 80,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 16": {
         "name": "Checked 16",
-        "id": 81,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 42": {
         "name": "Checked 42",
-        "id": 82,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 9": {
         "name": "Checked 9",
-        "id": 83,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 20": {
         "name": "Checked 20",
-        "id": 84,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 21": {
         "name": "Checked 21",
-        "id": 85,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 53": {
         "name": "Checked 53",
-        "id": 86,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 54": {
         "name": "Checked 54",
-        "id": 87,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 28": {
         "name": "Checked 28",
-        "id": 88,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 46": {
         "name": "Checked 46",
-        "id": 89,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 57": {
         "name": "Checked 57",
-        "id": 90,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 29": {
         "name": "Checked 29",
-        "id": 91,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 74": {
         "name": "Checked 74",
-        "id": 92,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 56": {
         "name": "Checked 56",
-        "id": 93,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Checked 30": {
         "name": "Checked 30",
-        "id": 94,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       }
     }
   },
@@ -7532,166 +7937,85 @@
   "canonical_placements": {
     "1": {
       "Check 70": "Junk",
-      "Checked 70": "Checked 70",
       "Check 71": "Junk",
-      "Checked 71": "Checked 71",
       "Check 58": "Button: -",
-      "Checked 58": "Checked 58",
       "Check 14": "Button: +",
-      "Checked 14": "Checked 14",
       "Check 44": "Junk",
-      "Checked 44": "Checked 44",
       "Check 72": "Junk",
-      "Checked 72": "Checked 72",
       "Check 73": "Junk",
-      "Checked 73": "Checked 73",
       "Check 43": "Junk",
-      "Checked 43": "Checked 43",
       "Check 38": "Junk",
-      "Checked 38": "Checked 38",
       "Check 47": "Junk",
-      "Checked 47": "Checked 47",
       "Check 80": "Junk",
-      "Checked 80": "Checked 80",
       "Check 45": "Button: 0",
-      "Checked 45": "Checked 45",
       "Check 39": "Junk",
-      "Checked 39": "Checked 39",
       "Check 32": "Junk",
-      "Checked 32": "Checked 32",
       "Check 37": "Button: /",
-      "Checked 37": "Checked 37",
       "Check 24": "Button: 1",
-      "Checked 24": "Checked 24",
       "Check 25": "Button: 9",
-      "Checked 25": "Checked 25",
       "Check 48": "Button: *",
-      "Checked 48": "Checked 48",
       "Check 75": "Junk",
-      "Checked 75": "Checked 75",
       "Check 79": "Junk",
-      "Checked 79": "Checked 79",
       "Check 76": "Junk",
-      "Checked 76": "Checked 76",
       "Check 31": "Junk",
-      "Checked 31": "Checked 31",
       "Check 22": "Junk",
-      "Checked 22": "Checked 22",
       "Check 23": "Junk",
-      "Checked 23": "Checked 23",
       "Check 5": "Button: 8",
-      "Checked 5": "Checked 5",
       "Check 49": "Junk",
-      "Checked 49": "Checked 49",
       "Check 50": "Button: 1",
-      "Checked 50": "Checked 50",
       "Check 78": "Junk",
-      "Checked 78": "Checked 78",
       "Check 77": "Junk",
-      "Checked 77": "Checked 77",
       "Check 63": "Junk",
-      "Checked 63": "Checked 63",
       "Check 27": "Button: 7",
-      "Checked 27": "Checked 27",
       "Check 26": "Button: *",
-      "Checked 26": "Checked 26",
       "Check 17": "Junk",
-      "Checked 17": "Checked 17",
       "Check 10": "Junk",
-      "Checked 10": "Checked 10",
       "Check 2": "Button: 6",
-      "Checked 2": "Checked 2",
       "Check 8": "Button: 4",
-      "Checked 8": "Checked 8",
       "Check 68": "Junk",
-      "Checked 68": "Checked 68",
       "Check 51": "Junk",
-      "Checked 51": "Checked 51",
       "Check 52": "Junk",
-      "Checked 52": "Checked 52",
       "Check 67": "Junk",
-      "Checked 67": "Checked 67",
       "Check 62": "Junk",
-      "Checked 62": "Checked 62",
       "Check 61": "Junk",
-      "Checked 61": "Checked 61",
       "Check 33": "Junk",
-      "Checked 33": "Checked 33",
       "Check 11": "Button: 9",
-      "Checked 11": "Checked 11",
       "Check 1": "Junk",
-      "Checked 1": "Checked 1",
-      "Victory": "Victory",
       "Check 4": "Button: 1",
-      "Checked 4": "Checked 4",
       "Check 69": "Junk",
-      "Checked 69": "Checked 69",
       "Check 66": "Junk",
-      "Checked 66": "Checked 66",
       "Check 36": "Junk",
-      "Checked 36": "Checked 36",
       "Check 35": "Junk",
-      "Checked 35": "Checked 35",
       "Check 34": "Junk",
-      "Checked 34": "Checked 34",
       "Check 15": "Junk",
-      "Checked 15": "Checked 15",
       "Check 13": "Button: 3",
-      "Checked 13": "Checked 13",
       "Check 3": "Button: +",
-      "Checked 3": "Checked 3",
       "Check 6": "Junk",
-      "Checked 6": "Checked 6",
       "Check 60": "Junk",
-      "Checked 60": "Checked 60",
       "Check 65": "Junk",
-      "Checked 65": "Checked 65",
       "Check 64": "Junk",
-      "Checked 64": "Checked 64",
       "Check 40": "Junk",
-      "Checked 40": "Checked 40",
       "Check 41": "Junk",
-      "Checked 41": "Checked 41",
       "Check 19": "Junk",
-      "Checked 19": "Checked 19",
       "Check 18": "Junk",
-      "Checked 18": "Checked 18",
       "Check 7": "Button: *",
-      "Checked 7": "Checked 7",
       "Check 12": "Junk",
-      "Checked 12": "Checked 12",
       "Check 59": "Junk",
-      "Checked 59": "Checked 59",
       "Check 55": "Junk",
-      "Checked 55": "Checked 55",
       "Check 16": "Button: 3",
-      "Checked 16": "Checked 16",
       "Check 42": "Junk",
-      "Checked 42": "Checked 42",
       "Check 9": "Button: 6",
-      "Checked 9": "Checked 9",
       "Check 20": "Junk",
-      "Checked 20": "Checked 20",
       "Check 21": "Junk",
-      "Checked 21": "Checked 21",
       "Check 53": "Junk",
-      "Checked 53": "Checked 53",
       "Check 54": "Junk",
-      "Checked 54": "Checked 54",
       "Check 28": "Junk",
-      "Checked 28": "Checked 28",
       "Check 46": "Junk",
-      "Checked 46": "Checked 46",
       "Check 57": "Junk",
-      "Checked 57": "Checked 57",
       "Check 29": "Junk",
-      "Checked 29": "Checked 29",
       "Check 74": "Junk",
-      "Checked 74": "Checked 74",
       "Check 56": "Button: 4",
-      "Checked 56": "Checked 56",
-      "Check 30": "Junk",
-      "Checked 30": "Checked 30"
+      "Check 30": "Junk"
     }
   },
   "progression_mapping": {

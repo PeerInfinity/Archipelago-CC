@@ -36,6 +36,7 @@ import {
     computeSourceCounts,
     ruleItemWarnings,
     recordedConceptsOf,
+    sourceLocationsOf,
     serializeGrid,
     deserializeGrid,
 } from './procgenPipelineEngine.js';
@@ -133,6 +134,8 @@ function stepCompile(env, { onProgress = null } = {}) {
         },
         // The source's item group list, verbatim (its items carry theirs).
         sourceItemGroups: env.source?.item_groups?.['1'] ?? null,
+        // The source's locations: a source event location compiles as one.
+        sourceLocations: sourceLocationsOf(env.source, '1'),
         procgenMetadata: {
             driver: enriched ? 'top-down-sphere' : 'top-down',
             source_game: c.sourceGameName ?? null,

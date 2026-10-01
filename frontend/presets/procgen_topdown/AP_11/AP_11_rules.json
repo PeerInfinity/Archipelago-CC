@@ -425,7 +425,7 @@
           },
           {
             "name": "Chalice Home",
-            "id": 1019,
+            "id": null,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -439,8 +439,10 @@
               "name": "Victory",
               "player": 1,
               "advancement": true,
-              "type": "progression"
-            }
+              "type": "None"
+            },
+            "locked": true,
+            "event": true
           }
         ]
       },
@@ -458,7 +460,7 @@
         "locations": [
           {
             "name": "Red Maze Vault",
-            "id": 1020,
+            "id": 1019,
             "access_rule": {
               "rule": "True_"
             },
@@ -471,7 +473,7 @@
           },
           {
             "name": "Slay Yorgle",
-            "id": 1021,
+            "id": 1020,
             "access_rule": {
               "rule": "HasAll",
               "args": {
@@ -527,7 +529,7 @@
         "locations": [
           {
             "name": "RedMaze0",
-            "id": 1022,
+            "id": 1021,
             "access_rule": {
               "rule": "True_"
             },
@@ -540,7 +542,7 @@
           },
           {
             "name": "RedMaze1",
-            "id": 1023,
+            "id": 1022,
             "access_rule": {
               "rule": "True_"
             },
@@ -567,7 +569,7 @@
         "locations": [
           {
             "name": "Red Maze Vault Entrance",
-            "id": 1024,
+            "id": 1023,
             "access_rule": {
               "rule": "True_"
             },
@@ -682,15 +684,18 @@
       },
       "Victory": {
         "name": "Victory",
-        "id": 12,
-        "classification": "progression",
+        "id": null,
         "groups": [
           "Event"
-        ]
+        ],
+        "classification": "progression",
+        "event": true,
+        "type": "Event",
+        "max_count": 1
       },
       "Slow Grundle": {
         "name": "Slow Grundle",
-        "id": 13,
+        "id": 12,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -698,7 +703,7 @@
       },
       "Chalice": {
         "name": "Chalice",
-        "id": 14,
+        "id": 13,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -767,7 +772,6 @@
       "Southeast of Catacombs": "Right Difficulty Switch",
       "Slay Grundle": "Black Key",
       "Inside Yellow Castle": "Freeincarnate",
-      "Chalice Home": "Victory",
       "Red Maze Vault": "Slow Grundle",
       "Slay Yorgle": "Freeincarnate",
       "RedMaze0": "Chalice",

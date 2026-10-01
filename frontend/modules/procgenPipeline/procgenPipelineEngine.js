@@ -2647,6 +2647,11 @@ export function compileRegionGraph(grid, opts = {}) {
         // An item the source defines carries the source's `groups` VERBATIM; an
         // item it does not (every synthetic library item) gets `['Everything']`.
         sourceItems = null,
+        // The SOURCE world's locations (name → location; `sourceLocationsOf`).
+        // A source EVENT location (`id: null`, or `event: true`) compiles as one: no
+        // numeric id, its `locked`/`event` flags and its placed item's fields
+        // kept, and no canonical placement (the source writes none).
+        sourceLocations = null,
     } = opts;
     const itemLib = { [LIBRARY_SLOT_FILLER_ITEM]: { classification: 'filler' }, ...rawItemLib };
     const lockedItemSet = new Set(lockedItems);
@@ -2731,7 +2736,11 @@ export function compileRegionGraph(grid, opts = {}) {
 
     // One compiled location: a fresh numeric id; its item (when any) registered,
     // pooled and canonically placed. Shared by the grid's regions and the Menu.
+    // ⛓ A source EVENT location (`id: null` or `event: true`) keeps the source's shape instead:
+    // `compileEventLocation`.
     function compileLocation(globalName, item, rule) {
+        const sourceLoc = sourceLocations?.[globalName];
+        if (sourceLoc && (sourceLoc.id === null || sourceLoc.event === true)) return compileEventLocation(sourceLoc, globalName, item, rule);
         const numericId = nextLocationId++;
         let itemPlacement = null;
         if (item) {
@@ -2742,7 +2751,9 @@ export function compileRegionGraph(grid, opts = {}) {
             // First occurrence mints a numeric id that persists for
             // the item's lifetime in this compile.
             const classification = itemLib[item]?.classification ?? 'progression';
-            if (!items[item]) {
+            if (!items[item] && isIdlessSourceItem(item)) {
+                registerSourceItemDef(item);
+            } else if (!items[item]) {
                 const sourceGroups = sourceItems?.[item]?.groups;
                 items[item] = {
                     name: item,
@@ -2774,6 +2785,72 @@ export function compileRegionGraph(grid, opts = {}) {
                 ? { locked: true } : {}),
         };
     }
+
+    // A source item the source gave NO numeric id — an event (`id: null`) or an
+    // item whose id is not a number (ALTTP's crystals and pendants export SRAM
+    // data, a list, which world_generator reads as an event too).
+    function isIdlessSourceItem(item) {
+        const def = sourceItems?.[item];
+        return def != null && (def.id === null || Array.isArray(def.id) || def.event === true);
+    }
+
+    // Such an item's def is the source's, VERBATIM (id, event, type, groups —
+    // the backfill's rule); it takes no number from the compiled pool's run.
+    function registerSourceItemDef(item) {
+        items[item] = { ...sourceItems[item] };
+    }
+
+    // ⛓ A source EVENT location, marked as the source marks it: `id: null`, its
+    // placed item's `advancement` and `type` (`'Event'`, ALTTP's `'Crystal'`),
+    // and its `locked` / `event` flags VERBATIM; the name, the access rule and
+    // the item are the compiled ones. Its item is pooled as the source pools
+    // it (`itempool_counts`), registered (an id-less one verbatim), and given NO
+    // canonical placement — the source writes none for an event.
+    function compileEventLocation(sourceLoc, globalName, item, rule) {
+        if (item && !items[item]) {
+            if (isIdlessSourceItem(item)) {
+                registerSourceItemDef(item);
+            } else {
+                const sourceGroups = sourceItems?.[item]?.groups;
+                items[item] = {
+                    name: item,
+                    id: nextItemId++,
+                    classification: itemLib[item]?.classification ?? 'progression',
+                    groups: Array.isArray(sourceGroups) ? [...sourceGroups] : ['Everything'],
+                };
+            }
+        }
+        if (item) itempool_counts[item] = (itempool_counts[item] || 0) + 1;
+        return {
+            name: globalName,
+            id: null,
+            access_rule: rule,
+            ...(item ? {
+                item: {
+                    name: item,
+                    player: numericPlayerId,
+                    advancement: sourceLoc.item?.advancement ?? true,
+                    type: sourceLoc.item?.type ?? 'Event',
+                },
+            } : {}),
+            ...(Object.hasOwn(sourceLoc, 'locked') ? { locked: sourceLoc.locked } : {}),
+            ...(Object.hasOwn(sourceLoc, 'event') ? { event: sourceLoc.event } : {}),
+        };
+    }
+}
+
+/**
+ * ⛓ name → location over a source rules.json's regions for one player (through
+ * the ONE region reader) — `compileRegionGraph`'s `sourceLocations`.
+ */
+export function sourceLocationsOf(rulesJson, playerId = '1') {
+    const out = {};
+    for (const region of Object.values(regionsOf(rulesJson, String(playerId)))) {
+        for (const loc of region?.locations ?? []) {
+            if (loc?.name != null && !Object.hasOwn(out, loc.name)) out[loc.name] = loc;
+        }
+    }
+    return out;
 }
 
 // ScenarioPool now lives in shared/procgen/scenarioPool.js — it is
@@ -6940,6 +7017,9 @@ export function buildRulesJson(grid, opts = {}) {
         // this document's; null (every driver with no source world) keeps the
         // synthetic `['Everything']`.
         sourceItemGroups = null,
+        // The SOURCE world's locations, name → location (`sourceLocationsOf`):
+        // a source event location compiles as one (`compileRegionGraph`).
+        sourceLocations = null,
         // Item names whose canonical placement is ALWAYS locked
         // (compiled location gets locked:true → world_generator uses
         // place_locked_item). The sphere-growth bounce start passes
@@ -6969,6 +7049,7 @@ export function buildRulesJson(grid, opts = {}) {
         lockedItems: lockedCanonicalItems,
         menuRegion,
         sourceItems,
+        sourceLocations,
     });
 
     const scaffold = makeRulesJsonScaffold({
