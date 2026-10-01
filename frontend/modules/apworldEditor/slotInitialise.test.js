@@ -753,12 +753,12 @@ describe('S1 — the initialise op DECLARES the library items it built with', ()
         }));
     });
 
-    it('⛓ the deep diff: sidecars, metadata, return exits, items.<p>.<granted> (absent names only), starting_items — nothing else', () => {
+    it('⛓ the deep diff: sidecars, metadata, return exits, items.<p>.<granted> (absent names only), starting_items, itempool_counts.<p>.<granted> — nothing else', () => {
         const doc = DOCS.adventure;
         const { op, out } = hubInitialised(NEEDER);
         expect(out.ok, out.error).toBe(true);
         const gained = [...new Set(op.result.returnExits.map((r) => r.region))].sort();
-        expect(changedPaths(doc, out.doc)).toEqual(['items', 'preset_sidecars.1', 'procgen_metadata.1', 'starting_items',
+        expect(changedPaths(doc, out.doc)).toEqual(['itempool_counts', 'items', 'preset_sidecars.1', 'procgen_metadata.1', 'starting_items',
             ...gained.map((r) => `regions.1.${r}.exits`)].sort());
         const granted = op.result.grantedItems;
         const added = Object.keys(out.doc.items[P]).filter((n) => !Object.hasOwn(doc.items[P], n));
@@ -766,6 +766,9 @@ describe('S1 — the initialise op DECLARES the library items it built with', ()
         for (const n of Object.keys(doc.items[P])) expect(bytes(out.doc.items[P][n]), n).toBe(bytes(doc.items[P][n]));
         for (const n of granted) expect(out.doc.items[P][n]).toEqual(op.result.grantedDefs[n]);
         expect(out.doc.starting_items[P]).toEqual([...(doc.starting_items?.[P] ?? []), ...granted]);
+        // ⛓ …and pooled once each: the pool is precollected + placed (buildRulesJson's contract).
+        expect(out.doc.itempool_counts[P]).toEqual({ ...doc.itempool_counts[P],
+            ...Object.fromEntries(granted.map((n) => [n, 1])) });
         expect(out.description).toContain(grantsClause(granted));
         for (const n of granted) expect(out.description).toContain(n);
     });

@@ -409,7 +409,7 @@ describe('S1 — the per-region Generate declares the grants in the SAME op', ()
         const out = applyRulesDocOp(HUB, op);
         expect(out.ok, out.error).toBe(true);
         const changed = Object.keys(out.doc).filter((k) => bytes(out.doc[k]) !== bytes(HUB[k])).sort();
-        expect(changed).toEqual(['items', 'preset_sidecars', 'starting_items']);
+        expect(changed).toEqual(['itempool_counts', 'items', 'preset_sidecars', 'starting_items']);
         for (const p of Object.keys(HUB.preset_sidecars)) {
             for (const r of Object.keys(HUB.preset_sidecars[p])) {
                 if (p === '1' && r === REGION) continue;
@@ -418,6 +418,9 @@ describe('S1 — the per-region Generate declares the grants in the SAME op', ()
         }
         expect(Object.keys(out.doc.items['1']).filter((n) => !Object.hasOwn(HUB.items['1'], n))).toEqual(grants.starting);
         expect(out.doc.starting_items['1']).toEqual([...(HUB.starting_items?.['1'] ?? []), ...grants.starting]);
+        // ⛓ …and pooled once each: the pool is precollected + placed (buildRulesJson's contract).
+        expect(out.doc.itempool_counts['1']).toEqual({ ...(HUB.itempool_counts?.['1'] ?? {}),
+            ...Object.fromEntries(grants.starting.map((n) => [n, 1])) });
         expect(out.description).toContain(grantsClause(grants.starting));
         for (const row of startingNeedRows(out.doc, '1', [NEEDER])) {
             expect(row.met).toBe(true);

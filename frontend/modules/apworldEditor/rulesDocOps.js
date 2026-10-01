@@ -2933,12 +2933,18 @@ function grantsRefusal(doc, p, names, defs) {
 }
 
 /** ⛓ The grant written: a def per name into `items[p]`, the names appended to
- *  `starting_items[p]`. Nothing when there is nothing to grant. */
+ *  `starting_items[p]`, and one pool count each in `itempool_counts[p]` —
+ *  the compile's contract (`buildRulesJson`): the pool is precollected +
+ *  placed, and world_generator's pool is `itempool_counts − starting_items`.
+ *  Nothing when there is nothing to grant. */
 function withGrants(doc, p, names, defs) {
     if (!names.length) return doc;
-    const next = withItems(doc, p, {
+    let next = withItems(doc, p, {
         ...(doc?.items?.[p] ?? {}), ...Object.fromEntries(names.map((n) => [n, defs[n]])),
     });
+    const pool = { ...poolOf(doc, p) };
+    for (const n of names) pool[n] = (pool[n] ?? 0) + 1;
+    next = withPool(next, p, pool);
     const held = Array.isArray(doc?.starting_items?.[p]) ? doc.starting_items[p] : [];
     return withStarting(next, p, [...held, ...names]);
 }
