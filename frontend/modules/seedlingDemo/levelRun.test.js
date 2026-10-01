@@ -2756,7 +2756,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
  * GETTERS, BY OTHER NAMES.
  *
  * The same seam as C3's, twice: the player's bag and progress (12 fields) and
- * the Seedling event ledgers (30 kinds) each sit behind one keyed query, and
+ * the Seedling event ledgers (31 kinds) each sit behind one keyed query, and
  * both faces call one closure function (`PROGRESS_FIELDS` / `LEDGER_KINDS`
  * in `createLevelRun`). Every folded getter returns a fresh value or a
  * primitive, so the rows hold query to getter deep-strictly at every tick.
@@ -2772,7 +2772,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
 describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the getters, by other names', () => {
     const FOLDS = [
         { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 12, noun: 'progress field', plural: 'fields' },
-        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 30, noun: 'ledger kind', plural: 'kinds' },
+        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 31, noun: 'ledger kind', plural: 'kinds' },
     ];
     const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
     const queryOf = new Map(FOLDS.flatMap((f) => f.names.map((n) => [n, f.query])));
@@ -2886,6 +2886,28 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
             (t) => (t < 2000 ? heldKeysAt(tape, t) : new Set(['up'])));
         expect(bad).toEqual([]);
         expect(seen.has('pulserPlayerHits')).toBe(true);
+        for (const m of seen) witnessed.add(m);
+    });
+
+    /**
+     * ⛓ U9-swim: no committed tape holds the shield in a room with a stepped
+     * body (U9 W0's probe), so a staging does — `u9-shield-bob-shove`'s boot,
+     * the shield granted through the seam, walking down into `bob@64,64`.
+     */
+    it('L4, a shielded walk down into its bob: a shieldBumps entry, through the query', () => {
+        const run = createLevelRun({
+            levelSource,
+            boot: { level: 4, x: 64, y: 32 },
+            noDamage: false,
+            seam: { items: { hasShield: true } },
+            roles: ROLES,
+        });
+        const { bad, seen } = compareEveryTick(run, 30, () => new Set(['down']));
+        expect(bad).toEqual([]);
+        expect(run.ledger('shieldBumps')[0]).toMatchObject({
+            t: 16, level: 4, family: 'chaser', id: 'bob@64,64', shoved: true,
+        });
+        expect(seen.has('shieldBumps')).toBe(true);
         for (const m of seen) witnessed.add(m);
     });
 

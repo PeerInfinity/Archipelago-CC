@@ -117,7 +117,8 @@ import {
 import { FIRE as BOB_BOSS_FIRE } from './bobBoss.js';
 import {
     BOB_BOSS_ROCK_DEAD_FRAMES, beginBobBossDialogue, bobBossBox, bobBossHit, bobBossRockArms,
-    bobBossRockRect, bobBossShieldBump, createBobBossBody, stepBobBossBody,
+    bobBossRockRect, bobBossShieldBump, createBobBossBody, enemyKnockbackV, SHIELD_FORCE,
+    shieldBumpTouches, stepBobBossBody,
 } from './bobBossFight.js';
 // ⛓⛓⛓ R6 SLICE 6f: the FIFTEENTH family — the Owl, and the first fight on
 // the ladder whose GAMEPLAY reads random numbers. `finalBossRng` is the
@@ -344,6 +345,7 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'spinnerWrites',
     'turretKills',
     'bobBossEvents',
+    'shieldBumps',
 ]);
 
 /**
@@ -6154,6 +6156,9 @@ export function createLevelRun({
         let fshake = shake;
         /** ⛓ R9 slice 12b: the forecast's OWN clock, for the death staging. */
         let tickOffset = 0;
+        // ⛓ U9-swim: the bag is frozen for a preview (nothing is collected).
+        const shieldInForecast = inventory?.hasShield === true;
+        const darkShieldInForecast = inventory?.hasDarkShield === true;
         const worldRec = world.world;
         const target = bossCameraTarget;
         let first = true;
@@ -6201,8 +6206,18 @@ export function createLevelRun({
              * with. From the second call on, the incoming `playerPos` IS the
              * previous call's post-move player, so advancing here reproduces
              * that write rather than approximating it.
+             *
+             * ⛓⛓ U9-swim — AND THE SHIELD SHOVES THE PREVIEWED BODIES, after
+             * they have stepped (the live `shieldBumpNow`'s place: the player
+             * updates last). `playerPos` must then carry what the box reads —
+             * `vx`, `vy`, `direction` (a `stepV2` state does) — and
+             * `opts.slashing` the previewed player's slash flag as the previous
+             * tick left it (absent ⇒ false: the up/down box is then ≤ 1 px off
+             * during a swing, the one thing a caller that omits it gives up).
+             * A position-only `playerPos` bumps nothing. The dark shield is
+             * refused at the touch, as live.
              */
-            step(playerPos) {
+            step(playerPos, opts = {}) {
                 if (!first) advanceCamera(playerPos);
                 first = false;
                 for (const id of ids) {
@@ -6262,6 +6277,27 @@ export function createLevelRun({
                     // preview — the danger map prices the reach as `threatPad`.
                     c.attack = chaserAttackDecision(c.tag, c, playerPos) ?? c.attack;
                     if (c.attack && stepSpriteAnim(c.attack)) c.attack = null;
+                }
+                if (shieldInForecast && Number.isFinite(playerPos.vx)
+                        && Number.isFinite(playerPos.vy)) {
+                    const slashing = opts.slashing === true;
+                    const p = { x: playerPos.x, y: playerPos.y };
+                    for (const id of ids) {
+                        const c = bodies.get(id);
+                        if (!c || c.removed) continue;
+                        if (!shieldBumpTouches(playerPos, slashing, chaserBoxAt(c.tag, c.x, c.y))) continue;
+                        if (darkShieldInForecast && c.hitsTimer <= 0) {
+                            throw new Error(`chaserForecast: the DARK shield touches ${c.id} in a `
+                                + 'preview — `shieldBump` then HITS it, which the live run refuses '
+                                + 'by name (`shieldBumpNow`); a forecast must not price what the '
+                                + 'run cannot walk.');
+                        }
+                        // "die" is playing: live it is `c.dying`, in a preview the
+                        // kill's own `dyingAt` (`hit` below).
+                        if (c.destroy || c.dying || c.dyingAt !== undefined
+                            || !chaserKnocksBack(c.tag)) continue;
+                        c.v = enemyKnockbackV(c, c.v, SHIELD_FORCE, p);
+                    }
                 }
                 // ⛓⛓ R9 SLICE 12b — THE I-FRAME RUNS DOWN IN THE FORECAST TOO.
                 // `enemyHitUpdate` decrements once per enemy update, and a
@@ -10103,7 +10139,7 @@ export function createLevelRun({
          */
         // ⛓ Swim U5: `shieldBump()` sits above `slash()` in `Player.update` and
         // has no freeze gate either.
-        if (!noclip) bobShieldBumpNow();
+        if (!noclip) shieldBumpNow();
         slashState = slashTimerTick(slashState);
         // ⛓⛓⛓ R6 SLICE 3: AND SO DOES `hitUpdate()`, for the SAME reason one
         // line lower — it sits outside `super.update()` in `Player.update`,
@@ -10964,6 +11000,92 @@ export function createLevelRun({
         }
     }
 
+    /**
+     * ⛓⛓⛓ U9-swim — `Player.shieldBump` (`Player.as:1697-1712`) FOR EVERY
+     * STEPPED `Enemy`, not the boss alone (⚖ Q37).
+     *
+     * ```
+     *   if (shieldObj && v.length > 0) {
+     *     shieldObj.collideTypesInto(enemies, shieldObj.x, shieldObj.y, c_s_pos);
+     *     for each (var o:Enemy in c_s_pos)
+     *       if (hasDarkShield && o.hitsTimer <= 0) o.hit(shieldForce, Point(x,y), darkShieldDamage, "Shield");
+     *       else o.knockback(shieldForce, new Point(x, y));
+     *   }
+     * ```
+     *
+     * ⛓ ITS PLACE: `Player.update` calls `addShield(); shieldBump();` above
+     * `super.update()`, and every enemy is EARLIER in the update list than the
+     * player — so the bodies have already taken THIS tick's step (`stepChasersNow`,
+     * `stepSpinners`), and the shove is spent by their NEXT one (friction, then
+     * the move). No freeze gate, so both of `advance`'s paths call it.
+     *
+     * Per family, the knockback each class really has:
+     *   · the BOSS — `bobShieldBumpNow`, unchanged (U5's transcription, which
+     *     now calls the shared `shieldBumpTouches` / `enemyKnockbackV`);
+     *   · a CHASER — `Enemy.knockback`'s `!destroy && currentAnim != "die"`,
+     *     and only a class whose `knockback` is not EMPTY (`CHASERS[*].knocksBack`:
+     *     a puncher is touched and does not move, `Puncher.as:167-170`);
+     *   · a SPINNER — `Spinner` overrides no `knockback`, so it is shoved, and
+     *     its own `friction()` floor (`moveSpeed`) decays the shove back to
+     *     speed 1 along the new heading: the billiard's course changes.
+     *
+     * ⛔ The chasers are asked only where `stepChasersNow` steps them (not
+     * under `noDamage`): there they have no live position to shove.
+     *
+     * ⛔ THE DARK SHIELD IS REFUSED BY NAME, AT THE TOUCH. It turns the shove
+     * into `Enemy.hit(5, p, 0.5, "Shield")`, whose `hitByDarkStuff` latch lets
+     * the NEXT hit through a live i-frame — a field no family here carries.
+     * A touch on a body whose own `hitsTimer > 0` is the plain knockback and is
+     * modelled.
+     */
+    const shieldBumpLedger = [];
+    function shieldBumpNow() {
+        bobShieldBumpNow();
+        if (!inventory?.hasShield) return;
+        const slashing = slashState.slashing;
+        const p = { x: state.x, y: state.y };
+        const dark = inventory?.hasDarkShield === true;
+        const refuseDark = (id) => {
+            throw new Error(`levelRun: the DARK shield touched ${id} at tick ${ticksCompleted + 1} `
+                + `in level ${level} — \`shieldBump\` then HITS it (\`Enemy.hit(5, p, 0.5, "Shield")\`, `
+                + 'and `hitByDarkStuff` lets the next hit through a live i-frame), which no '
+                + 'stepped family models. Refused rather than shoved.');
+        };
+        const row = (r) => shieldBumpLedger.push({ t: ticksCompleted + 1, level, ...r });
+        if (!noDamage) {
+            const st = chaserStateFor(level);
+            for (const c of st.values()) {
+                if (c.removed) continue;
+                if (!shieldBumpTouches(state, slashing, chaserBoxAt(c.tag, c.x, c.y))) continue;
+                if (dark && c.hitsTimer <= 0) refuseDark(c.id);
+                // `Enemy.knockback`'s own gate: `!destroy` and not playing "die".
+                if (c.destroy || c.dying) {
+                    row({ family: 'chaser', id: c.id, shoved: false, why: 'destroy/die' });
+                    continue;
+                }
+                if (!chaserKnocksBack(c.tag)) {
+                    row({ family: 'chaser', id: c.id, shoved: false, why: 'empty knockback override' });
+                    continue;
+                }
+                c.v = enemyKnockbackV(c, c.v, SHIELD_FORCE, p);
+                row({ family: 'chaser', id: c.id, shoved: true, v: { x: c.v.x, y: c.v.y } });
+            }
+        }
+        const sp = spinnerStateFor(level);
+        for (const [id, s] of sp.byId) {
+            if (s.removed) continue;
+            if (!shieldBumpTouches(state, slashing, spinnerRect(s))) continue;
+            if (dark && s.hitsTimer <= 0) refuseDark(id);
+            if (s.destroy) {
+                row({ family: 'spinner', id, shoved: false, why: 'destroy' });
+                continue;
+            }
+            const v = enemyKnockbackV(s, { x: s.vx, y: s.vy }, SHIELD_FORCE, p);
+            sp.byId.set(id, { ...s, vx: v.x, vy: v.y });
+            row({ family: 'spinner', id, shoved: true, v });
+        }
+    }
+
     function bobBossSlashNow({ rect: r, reachLimit, weapon, pressTick, hits }) {
         const a = bobArena;
         if (!a || a.none || a.level !== level || !a.boss) return;
@@ -11000,6 +11122,8 @@ export function createLevelRun({
 
     /** `run.ledger('bobBossEvents')` — a copy of the encounter's event rows. */
     const bobBossEventsNow = () => bobBossLedger.map((r) => ({ ...r }));
+    /** ⛓ U9-swim: one row per body a moving shield touched — `shieldBumpNow`. */
+    const shieldBumpsNow = () => shieldBumpLedger.map((r) => ({ ...r, ...(r.v ? { v: { ...r.v } } : {}) }));
     /**
      * `run.entities('bobBoss')` — the arena's live members, keyed by role
      * (`rock`, `boss`, `dialogue`, `fire`, `transition`), each present only
@@ -11501,6 +11625,7 @@ export function createLevelRun({
         spinnerWrites: spinnerWritesNow,
         turretKills: turretKillsNow,
         bobBossEvents: bobBossEventsNow,
+        shieldBumps: shieldBumpsNow,
     });
 
     return {
@@ -12654,6 +12779,12 @@ export function createLevelRun({
         get turretKills() { return turretKillsNow(); },
         /** ⛓ Swim U5: the encounter's event rows — see `bobBossEventsNow`. */
         get bobBossEvents() { return bobBossEventsNow(); },
+        /**
+         * ⛓ U9-swim: `{t, level, family, id, shoved, v | why}` per body a MOVING
+         * shield's box touched (`shieldBumpNow`) — `chaser` or `spinner`; the
+         * boss's own rows stay in `bobBossEvents` (`what: 'shield-bump'`).
+         */
+        get shieldBumps() { return shieldBumpsNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 22 — THE FREEZE LEDGER, AND IT IS THE PRICE OF THE
          * KILL RATHER THAN AN ACCIDENT.
@@ -14665,7 +14796,7 @@ export function createLevelRun({
             // > 0) slashTimer--` runs at the top of `Player.update`, ABOVE
             // `super.update()` and therefore above the press that reads it.
             // ⛓ Swim U5: `shieldBump()` runs just above `slash()`.
-            if (!noclip && !pendingDeath) bobShieldBumpNow();
+            if (!noclip && !pendingDeath) shieldBumpNow();
             slashState = slashTimerTick(slashState);
             /**
              * ⛓⛓⛓ R9 SLICE 12c‴ — **ONE SWORD-WINDOW STEPPER, AND THE PREVIEW

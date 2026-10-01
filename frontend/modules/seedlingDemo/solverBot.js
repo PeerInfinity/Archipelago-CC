@@ -2798,7 +2798,8 @@ export function previewWalk(run, wps, tolerance = 0,
             // the previous tick left. Sampling the post-move player against
             // the same bodies would test a pair that never meets, which is
             // the arrows' note verbatim and true here for the same reason.
-            const chaserBodies = chasers ? chasers.step(st) : null;
+            const chaserBodies = chasers
+                ? chasers.step(st, { slashing: slashState?.slashing === true }) : null;
             // ⛓ R9 slice 12c′ — the sample carries WHICH LEG it belongs to, so a
             // caller can measure a corridor's own length rather than the whole
             // walk's. ⚖ Ruling 30(c) holds over a corridor's LENGTH (§27.8,
@@ -2901,7 +2902,8 @@ export function previewWalk(run, wps, tolerance = 0,
         for (let i = 0; i < standFor; i += 1) {
             tick += 1;
             const arrows = forecast ? forecast.step(st) : null;
-            const chaserBodies = chasers ? chasers.step(st) : null;
+            const chaserBodies = chasers
+                ? chasers.step(st, { slashing: slashState?.slashing === true }) : null;
             const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies,
                 phase: 'dwell', wp: wpIndex };
             samples.push(sample);

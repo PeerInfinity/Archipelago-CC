@@ -332,9 +332,10 @@ export function bobBossHit(b, { d, t = 'Sword', frozen = false }) {
  *   · `v.x > 0 || (v.x == 0 && direction == 0)`: 3x7 at (x + 4, y)
  * (`setHitbox` takes ints, so `sprShield.width / 2` = 3.5 is 3.)
  *
- * ⚠ BOSS ONLY. Every other `Enemy` the model steps is shoved by the same
- * line in the game and not here — a model-wide gap this family names and
- * does not close (the chaser family is another slice's).
+ * ⛓ U9-swim: NOT BOSS ONLY ANY MORE. The same line shoves every stepped
+ * `Enemy` — `levelRun`'s `shieldBumpNow` asks `shieldBumpTouches` and
+ * `enemyKnockbackV` below for the boss, the chasers and the spinners alike,
+ * so the transcription is this one and has three callers.
  */
 export function playerShieldRect(p, slashing) {
     const s = slashing ? 1 : 0;
@@ -347,18 +348,40 @@ export function playerShieldRect(p, slashing) {
     return null;
 }
 
+/**
+ * ⛓⛓ U9-swim — `shieldBump`'s two gates and its collide, for ANY body box:
+ * `if (shieldObj && v.length > 0)` (a STANDING player bumps nothing), then
+ * `shieldObj.collideTypesInto(enemies, …)` — `Entity.collide`'s strict test
+ * against the box `playerShieldRect` places. `bodyBox` is `{x, y, w, h}`.
+ */
+export function shieldBumpTouches(p, slashing, bodyBox) {
+    if (!(Math.hypot(p.vx, p.vy) > 0)) return false;
+    const r = playerShieldRect(p, slashing);
+    if (!r) return false;
+    return overlapsStrict({ ...bodyBox, right: bodyBox.x + bodyBox.w,
+        bottom: bodyBox.y + bodyBox.h }, r);
+}
+
+/**
+ * ⛓⛓ U9-swim — `Enemy.knockback(f, p)` (`Enemy.as:247-255`), the velocity it
+ * leaves: `a = atan2(y - p.y, x - p.x)`, both components added WHOLE (the
+ * ±0.5 per-component gate is `Player.knockback`'s, not this one's). The
+ * `!destroy` / "die" gate is the caller's, because each family spells its own.
+ */
+export function enemyKnockbackV(body, v, f, p) {
+    const a = Math.atan2(body.y - p.y, body.x - p.x);
+    return { x: v.x + f * Math.cos(a), y: v.y + f * Math.sin(a) };
+}
+
 /** `shieldBump` against the boss; returns true when it shoved. MUTATES `b.v`. */
 export function bobBossShieldBump(b, p, { slashing }) {
     if (b.removed || b.destroy) return false;
-    if (!(Math.hypot(p.vx, p.vy) > 0)) return false;
-    const r = playerShieldRect(p, slashing);
-    if (!r || !overlapsStrict(bobBossBox(b), r)) return false;
-    const a = Math.atan2(b.y - p.y, b.x - p.x);
-    b.v = { x: b.v.x + SHIELD_FORCE * Math.cos(a), y: b.v.y + SHIELD_FORCE * Math.sin(a) };
+    if (!shieldBumpTouches(p, slashing, bobBossBox(b))) return false;
+    b.v = enemyKnockbackV(b, b.v, SHIELD_FORCE, p);
     return true;
 }
 /** `Player.shieldForce`. */
-const SHIELD_FORCE = 5;
+export const SHIELD_FORCE = 5;
 
 /**
  * The arena rock's arm test, `FallRockLarge.update`'s `bossRock` branch:

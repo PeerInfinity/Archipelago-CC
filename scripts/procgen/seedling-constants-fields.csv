@@ -1476,8 +1476,10 @@ frontend/modules/seedlingDemo/bobBossFight.js|sign|sign,physics,sign,,FP.sign
 frontend/modules/seedlingDemo/bobBossFight.js|spin|spin,physics,derivation,Enemies/BobBoss.as:swordSpinningStep,swordSpinningStep: form ids; blade 2 at rate / 4; full turn 2PI
 frontend/modules/seedlingDemo/bobBossFight.js|stepBobBossBody|stepBobBossBody,rule,magnitude,Enemies/BobBoss.as:update,the update: timers; form < 2; directionFace -1/1; contact force 3 and 3 * damage
 frontend/modules/seedlingDemo/bobBossFight.js|playerShieldRect|playerShieldRect,physics,magnitude,Player.as:shieldOffset,the shield box Player.render places: offsets (2;3) and (4;0); 7x7 origin (3;3) or 3x7 origin (2;3); direction ids; slashing lifts it 1 px
-frontend/modules/seedlingDemo/bobBossFight.js|bobBossShieldBump|bobBossShieldBump,physics,bound,Player.as:shieldBump,v.length > 0: only a moving player bumps
+frontend/modules/seedlingDemo/bobBossFight.js|shieldBumpTouches|shieldBumpTouches,physics,bound,Player.as:shieldBump,v.length > 0: only a moving player bumps
 frontend/modules/seedlingDemo/bobBossFight.js|SHIELD_FORCE|(module),physics,magnitude,Player.as:shieldForce,shieldForce: Enemy.knockback(5; player point)
+frontend/modules/seedlingDemo/levelRun.js|step|hbaf0da28|0|0,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name in the forecast)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|shieldBumpNow,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,
