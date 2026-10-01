@@ -68,7 +68,7 @@
         "seal_parts": []
     },
     "rng": {
-        "seed": 328237658,
+        "seed": 852378121,
         "split": false,
         "cosmetic": 0,
         "fp": 1752443622
@@ -94,7 +94,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 10007,
+        "time": 10044,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 0,
