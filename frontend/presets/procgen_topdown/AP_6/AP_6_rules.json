@@ -7652,7 +7652,7 @@
       "Junk": 56,
       "Checked 32": 1,
       "Checked 39": 1,
-      "Button: 1": 4,
+      "Button: 1": 5,
       "Checked 40": 1,
       "Checked 53": 1,
       "Button: 8": 2,
@@ -7715,7 +7715,7 @@
       "Checked 4": 1,
       "Checked 8": 1,
       "Checked 22": 1,
-      "Button: 5": 1,
+      "Button: 5": 2,
       "Checked 23": 1,
       "Checked 27": 1,
       "Checked 64": 1,
@@ -7738,9 +7738,10 @@
       "Checked 68": 1,
       "Checked 69": 1,
       "Checked 59": 1,
-      "Button: 6": 1,
+      "Button: 6": 2,
       "Checked 60": 1,
-      "Checked 11": 1
+      "Checked 11": 1,
+      "Button: 0": 1
     }
   },
   "world": {

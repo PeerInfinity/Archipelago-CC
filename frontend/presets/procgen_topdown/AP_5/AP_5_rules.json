@@ -7095,7 +7095,7 @@
       "Checked 14": 1,
       "Button: *": 2,
       "Checked 3": 1,
-      "Button: 5": 1,
+      "Button: 5": 2,
       "Checked 5": 1,
       "Checked 20": 1,
       "Checked 21": 1,
@@ -7113,7 +7113,7 @@
       "Checked 46": 1,
       "Button: 6": 2,
       "Checked 8": 1,
-      "Button: 9": 1,
+      "Button: 9": 2,
       "Checked 4": 1,
       "Button: 7": 1,
       "Checked 9": 1,
@@ -7129,7 +7129,7 @@
       "Checked 39": 1,
       "Checked 22": 1,
       "Checked 42": 1,
-      "Button: 3": 2,
+      "Button: 3": 3,
       "Checked 43": 1,
       "Checked 57": 1,
       "Checked 17": 1,
@@ -7143,7 +7143,8 @@
       "Checked 51": 1,
       "Checked 63": 1,
       "Checked 45": 1,
-      "Checked 44": 1
+      "Checked 44": 1,
+      "Button: 4": 1
     }
   },
   "world": {
