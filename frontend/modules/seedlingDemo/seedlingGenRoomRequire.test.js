@@ -50,8 +50,12 @@ describe('⛓⛓ the `require` knob — absent is byte-identical, given is honou
         expect(JSON.stringify(req.record)).not.toBe(JSON.stringify(plain.record));
     }, 180000);
 
+    /** ⛓ SEEDLING SWIM U6 — the seed moved 3 → 8: with the strike's dwell priced
+     *  and `stepToward` scoring the diagonals, seed 3's FIRST draw meets
+     *  `hasSword` (rerolls 0, measured). Over seeds 1–10, seeds 1, 5, 8 and 9
+     *  still re-roll by `require`; 8 is the cheapest (one re-roll, ~0.4 s). */
     it('a draw that misses the directive is RE-ROLLED, and says why', () => {
-        const req = room(3, { biome: 'post-sword', require: 'hasSword' });
+        const req = room(8, { biome: 'post-sword', require: 'hasSword' });
         expect(req.generation.rerolls).toBeGreaterThan(0);
         expect(req.generation.rerollCause).toBe(GEN_ROOM_REROLL_CAUSES.require);
     }, 120000);

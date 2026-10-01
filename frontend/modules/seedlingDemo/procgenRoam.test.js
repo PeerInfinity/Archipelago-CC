@@ -285,22 +285,33 @@ describe('roam — the solver\'s refusal is the element\'s, BY NAME', () => {
     }
 
     /**
-     * ⛓ SEEDLING SWIM U4b — the post-sword half of the same room now CERTIFIES
-     * by a kill: the press arm's hammer test pairs each forecast row with the
-     * clock its own tick bills, and the kill admission continues past the
-     * bounded strike pass. Both bodies are placed and both are killed.
+     * ⛓ SEEDLING SWIM U4b — the post-sword half of the same room CERTIFIED by
+     * a kill (650 t): the press arm's hammer test paired each forecast row with
+     * the clock its own tick bills, and the kill admission continued past the
+     * bounded strike pass.
+     *
+     * ⛓⛓ SEEDLING SWIM U6 (D1) — **AND IT REFUSES AGAIN, BY THE DWELL.** The
+     * strike schedule now prices the wait between the walk's arrival and the
+     * train, and `execKillByPress` walks to an adopted strike AT ONCE and
+     * stands there. With two billiards in the room every strike far enough out
+     * to be reachable is a stand of hundreds of ticks, and the admission says
+     * so: *"269 reachable strike(s) were SKIPPED because the DWELL … meets a
+     * body or its hammer"* (measured; `branchy` 14x14 s12 is the same room and
+     * the same text). The refusal is accurate about the executor that exists;
+     * the lever is a LATE DEPARTURE (stand where it is safe, leave at
+     * `aimAt − eta`), which is an executor redesign and not U6's.
      */
-    it('winding 14x14 seed 12, post-sword: was the-solver-cannot-cross-the-roaming-body; now CERTIFIES by a kill', () => {
+    it('winding 14x14 seed 12, post-sword: certified at U4b; refuses by the DWELL since U6, with the count', () => {
         const seam = seedlingSeam({ seed: 12, items: POST_SWORD_ITEMS,
             skeleton: seedlingSkeletonSpec('winding'), defaults: { width: 14, height: 14 },
             elements: { name: 'roam' } });
         const c = seam.certification;
-        expect(c.certified).toBe(true);
-        expect(c.verdict).toBe('SOLVED');
-        expect(c.ticks).toBe(650);
-        expect(c.strategies).toEqual(['kill', 'collect']);
-        expect(seam.model.elements.ran).toBe(true);
-        expect(seam.model.roamingBodies.map((b) => b.id)).toEqual(['roam_body_0', 'roam_body_1']);
+        expect(c.certified).toBe(false);
+        expect(c.verdict).toBe('REFUSED');
+        expect(c.gap).toBe('the-solver-cannot-cross-the-roaming-body');
+        expect(c.reasonText).toMatch(/\d+ reachable strike\(s\) were SKIPPED because the DWELL/);
+        expect(seam.model.elements.ran).toBe(false);
+        expect(seam.model.roamingBodies).toEqual([]);
     });
 });
 

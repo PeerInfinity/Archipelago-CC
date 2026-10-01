@@ -297,10 +297,10 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 101,
-        "dangerMap.js": 14,
+        "dangerMap.js": 13,
         "solverBot.js": 64
       },
-      "sites": 179,
+      "sites": 178,
       "seen": "both",
       "via": [
         "direct"
@@ -382,7 +382,7 @@
           "botDriverV2.js": 5
         },
         "spinnerBodies": {
-          "dangerMap.js": 3,
+          "dangerMap.js": 2,
           "solverBot.js": 7
         },
         "strikeBodies": {
@@ -463,10 +463,11 @@
       "form": "event-ledger",
       "files": {
         "botDriverV2.js": 49,
+        "dangerMap.js": 1,
         "director.js": 4,
         "solverBot.js": 14
       },
-      "sites": 67,
+      "sites": 68,
       "seen": "both",
       "via": [
         "direct"
@@ -561,6 +562,7 @@
           "solverBot.js": 1
         },
         "spinnerPressHits": {
+          "dangerMap.js": 1,
           "solverBot.js": 2
         },
         "spinnerWrites": {
@@ -3613,9 +3615,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 4
       },
-      "sites": 2,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"
@@ -3649,9 +3651,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 4
       },
-      "sites": 2,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"
@@ -3667,9 +3669,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 4
       },
-      "sites": 2,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"
@@ -3834,9 +3836,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 4
       },
-      "sites": 2,
+      "sites": 4,
       "seen": "static",
       "via": [
         "import"

@@ -211,12 +211,16 @@ describe('procgen — the countable clock (slice 4e)', () => {
      * asserts the population rather than a count (trap 202): with a clock the
      * only arms `spinnerDanger` can emit are `body` and `hammer`, and the phase
      * it names is the run's own clock modulo the hammer period.
+     *
+     * ⛓ U6 D2 — horizon 2 reads forecast row 1, which swings at
+     * `gameTimeAt(1)` (`spinnerClockPairing.test.js`); this row asked
+     * `gameTimeAt(2)`, the clock the transit arm used to be one phase ahead on.
      */
     it('names the phase it priced, from the run\'s own clock', () => {
         const record = spinnerRoom();
         const run = runFor(record);
         const body = (run.spinnerBodies ?? [])[0];
-        const at = run.gameTimeAt(2);
+        const at = run.gameTimeAt(1);
         const hits = [];
         for (let a = 0; a < 360; a += 5) {
             const r = SPINNER.hammerLength - 2;
@@ -300,11 +304,18 @@ describe('procgen — the hammer-safety refusal is classifiable (slice 4e)', () 
      * (1,3), whose refusal is *"There is no step out."* (the step-out wall U4b
      * measured and did not ship). Ten of the twelve had read *"nowhere to be"*.
      * (6,3) and (5,4) refuse as a plain `SolverRefusal`, not this class.
+     *
+     * ⛓⛓ SEEDLING SWIM U6 RE-POINTED IT ONCE MORE, (1,3) -> (7,2), BY THE SAME
+     * 31-CELL SWEEP. With the dwell priced, the transit clock paired and
+     * `stepToward` scoring the diagonals, (1,3) SOLVES and 30 of the 31 cells
+     * solve; the one left is (7,2), *"There is no step out."* at
+     * (108.53,39.58) — the post-landing rebound wall U6 measured and did not
+     * remove.
      */
     it('a hammer-safety `SolverBotError` becomes REFUSED, text carried VERBATIM', () => {
         const out = solveRoom(room([
             { type: 'lock', ...oelAtTile(5, 5), attrs: { tset: '-1', tag: '1' } },
-            { type: 'spinner', ...oelAtTile(1, 3), attrs: { tag: '-1' } },
+            { type: 'spinner', ...oelAtTile(7, 2), attrs: { tag: '-1' } },
         ]));
         expect(out.verdict).toBe(VERDICT.REFUSED);
         expect(out.errorName).toBe('SolverBotError');

@@ -190,9 +190,15 @@ describe('watchGenOverlay — the layers', () => {
      * still drops (as do 4..8 and 10..19), so the subject is re-pointed, not
      * weakened — and the flip is the same one that moves `level post-sword s1`
      * in ruling 8's identity block.
+     *
+     * ⛓ SEEDLING SWIM U6 RE-POINTED IT AGAIN (3 -> 6), BY THE SAME SWEEP: with
+     * the strike's dwell priced, the transit clock paired and `stepToward`
+     * scoring the diagonals, `ran === true` over seeds 1..20 goes **10 -> 18**
+     * (measured against a pristine W0 worktree). Seeds 6 and 8 are the two that
+     * still drop, each carrying a certification geometry; 6 is the lowest.
      */
     it('⛔⛔ …even when the certification\'s GEOMETRY is attached to the model', () => {
-        const seam = seedlingSeam({ seed: 3, items: { hasSword: true },
+        const seam = seedlingSeam({ seed: 6, items: { hasSword: true },
             elements: { name: 'killgate' } });
         expect(seam.model.elements.ran).toBe(false);
         expect(seam.certification.geometry.length).toBeGreaterThan(0);

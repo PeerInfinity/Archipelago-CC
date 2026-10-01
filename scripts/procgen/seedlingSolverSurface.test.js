@@ -362,15 +362,16 @@ describe('the progress and ledger folds (engine-prep C4), mutants over a tempora
             /dangerMap\.js:\d+ reads run\.collected directly — it is folded behind run\.ledger\('collected'\)/)]);
     });
 
-    // ⚠ PREDICTED ONE LINE, MEASURED TWO (C4 D4): dangerMap.js reads no ledger and no progress, so a
-    // `run.ledger(…)` / `run.progress(…)` there is ALSO a new file on that row — the `files` rule fires
+    // ⚠ PREDICTED ONE LINE, MEASURED TWO (C4 D4): dangerMap.js read no ledger and no progress, so a
+    // `run.ledger(…)` / `run.progress(…)` there was ALSO a new file on that row — the `files` rule fired
     // beside the fold's own sentence. C3's dangerMap mutants never saw it: dangerMap already asks `entities`.
-    it('(b) run.ledger(\'chestOpen\') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS '
-        + '(and a file the run:ledger row does not name)', () => {
+    // ⛓ SEEDLING SWIM U6 — AND (b) IS ONE LINE AGAIN: dangerMap.js now reads `run.ledger('spinnerPressHits')`
+    // (`spinnersTheRunSteps`), so the run:ledger row names it and only the unknown-kind sentence fires.
+    // (c) keeps its two lines — dangerMap still reads no progress field.
+    it('(b) run.ledger(\'chestOpen\') — a typo ⇒ RED "unknown ledger kind", naming LEDGER_KINDS', () => {
         const lines = mutate({ [DANGER]: (s) => `${s}\nexport const mutantB = (run) => run.ledger('chestOpen');\n` });
-        expect(lines).toHaveLength(2);
-        expect(lines[0]).toMatch(/dangerMap\.js:\d+ reaches run:ledger — the row names only botDriverV2\.js, director\.js, solverBot\.js/);
-        expect(lines[1]).toMatch(/dangerMap\.js:\d+ run\.ledger\('chestOpen'\) — unknown ledger kind; levelRun\.js's LEDGER_KINDS holds collected, sealCollections, /);
+        expect(lines).toHaveLength(1);
+        expect(lines[0]).toMatch(/dangerMap\.js:\d+ run\.ledger\('chestOpen'\) — unknown ledger kind; levelRun\.js's LEDGER_KINDS holds collected, sealCollections, /);
     });
 
     it('(c) run.progress(f) with a variable ⇒ RED, a named blind spot (and a file the run:progress row does not name)', () => {
