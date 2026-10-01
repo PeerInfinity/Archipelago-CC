@@ -10589,6 +10589,12 @@ export const INSTRUMENTS = frz({
                         "startsWith"
                     ],
                     "name": "walk-report"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "win"
                 }
             ],
             "inheritedFlags": [
