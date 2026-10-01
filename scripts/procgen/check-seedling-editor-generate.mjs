@@ -226,9 +226,16 @@ const { formatSkeleton } = await CORE('skeletonKinds.js');
  * a level a hazard happened to clear. ⚠ 38 is cheaper in ticks and clears by
  * `pit` — a swordless boot would clear it too — so the tie-break is the cause
  * and not the clock, which is a change from the old rule and is said here.
+ *
+ * ⛓⛓⛓ **RE-SCANNED AT SEEDLING SWIM U8 (⚖ Q13)** — the post-sword default's
+ * `+` list grew to NINE heads, so seed 29's one `pick` now lands on `chamber`.
+ * Same rule, same range (post-sword, step 1, seeds 1..72): **three qualify,
+ * every one by the SWORD — 13 (365 ticks), 25 (455) and 33 (465)**. Five more
+ * draw `killgate` and do not certify (8, 22, 32, 44, 65). **Seed 13 is taken**:
+ * the cheapest, and its clear is the sword's.
  */
 const PRE = { seed: 1, biome: 'pre-sword', count: 4 };
-const CARRIER = { seed: 29, biome: 'post-sword', count: 1 };
+const CARRIER = { seed: 13, biome: 'post-sword', count: 1 };
 
 /**
  * ⛓ THE ROUND-TRIP SUBJECT, AND EVERY FIELD OF IT MOVES.
@@ -1407,11 +1414,16 @@ const catalogueOf = () => page.evaluate(() => ({
      * resolves through `defaultElementsFor(items)`.
      *
      * ⛔ THE SUBJECT IS **POST-SWORD**, because post-sword is where the biome
-     * default is a FOUR-head list (`killgate` joins it) — and it is seed 3
-     * because seed 3 is one where the default's room and `none`'s room really
-     * DIFFER, so the third check below can fail.
+     * default is the LONGER list (`killgate` and, since swim U8's ⚖ Q13 fold,
+     * the five sword heads join it) — and the seed is one where the default's
+     * room and `none`'s room really DIFFER, so the third check below can fail.
+     * ⛓ It was seed 3 until the fold. Seed 3's pick then landed on `shortcut`,
+     * which DROPS there, and a dropped head rebuilds `none`'s room byte for
+     * byte (measured over seeds 1..20: every seed whose drawn head drops reads
+     * `same`). **Seed 9** draws `rockgate`, a folded head that PLACES, and is
+     * no other claim's subject.
      */
-    const S = { seed: 3, biome: 'post-sword', count: 1 };
+    const S = { seed: 9, biome: 'post-sword', count: 1 };
     const base = `source=generate&seed=${S.seed}&biome=${S.biome}&count=${S.count}`
         + '&tries=8&k=3&anchortries=1';
     const nodeDefault = generateStep({ seed: S.seed, biome: S.biome, step: S.count });
@@ -3088,15 +3100,26 @@ if (!host) {
      * means *turn it off*. A page that spelled the absence as `none` would
      * disable the default silently, and this pair is what says it does not.
      */
-    const nodeNone = generateStep({ ...EL, step: 0, elements: { name: 'none' } });
-    const noneWeb = await load(`source=generate&seed=${EL.seed}&biome=${EL.biome}&count=0`
+    /**
+     * ⛓ ITS OWN SUBJECT SINCE SEEDLING SWIM U8 (⚖ Q13). At `EL`'s seed 2 the
+     * folded post-sword default draws `roam`, which DROPS, and a dropped head
+     * rebuilds `none`'s room byte for byte, so the pair could not differ. This
+     * half needs a seed whose DEFAULT places: **seed 5** draws `blockpocket` and
+     * places (scanned at step 0 over seeds 1..40; seed 5 is no other claim's
+     * post-sword subject). 10a keeps seed 2, whose explicit `killgate` is the
+     * one that certifies.
+     */
+    const ELB = { seed: 5, biome: 'post-sword' };
+    const nodeNone = generateStep({ ...ELB, step: 0, elements: { name: 'none' } });
+    const nodeBareB = generateStep({ ...ELB, step: 0 });
+    const noneWeb = await load(`source=generate&seed=${ELB.seed}&biome=${ELB.biome}&count=0`
         + '&elements=none');
     check(noneWeb.gen.elements === null,
         '⛔ ?elements=none reports NO element block — `null`, never an empty object',
         json(noneWeb.gen.elements));
     check(json(noneWeb.level) === json(nodeNone.record),
         '⛓⛓ …and the room is node\'s `none` room, byte for byte');
-    check(json(noneWeb.level) !== json(nodeBare.record),
+    check(json(noneWeb.level) !== json(nodeBareB.record),
         '⛔ …and it DIFFERS from the room the same URL without the parameter builds — '
         + 'absence is the BIOME DEFAULT here, not `none`');
     const nonePanel = await panelOf();

@@ -264,8 +264,22 @@ const SOLVE_STEPS = [
  * re-picking and was not re-picked; the claim below
  * (`elementFamilies === ['killgate']`) stands as written.
  *
+ * ⛓⛓⛓ **AND SEEDLING SWIM U8 (⚖ Q13) DID MOVE IT.** The default's list grew to
+ * NINE heads (the opt-in sword heads folded in), and seed 38's one `pick`
+ * landed on `arena;w=2;h=3`, refused (`no-cut-for-the-kill-lock`), so the room
+ * held no element. RE-MEASURED with the same command over the three post-sword
+ * seeds in 1..40 whose default draw is a CERTIFIED `killgate` at target 6
+ * (13, 25 and 33; `procgenPostSword.test.js`'s scan): final solves 393, 381
+ * and 454 ticks. **Seed 25 is taken, the shortest tape:**
+ *
+ *   node scripts/procgen/generate-seedling-level.mjs --seed=25 --biome=post-sword
+ *   ⇒ … -> drew `killgate` — kill-gate door (5,8) [tag 1]; clearer (4,7); wall
+ *     GREW 7 cell(s) · ⛔⛔ CERTIFIED: true — SOLVED
+ *     kept: 6 obstacle(s) over 13 attempt(s); solve 402 (skeleton) -> 381 (final)
+ *
  * ⇒ a CERTIFIED KILL GATE — a room whose lock is opened by killing a live
- * spinner — and a 360-tick certification tape, which is ~19 s of real game at
+ * spinner — and a 381-tick certification tape (360 at seed 38 before the fold),
+ * which is ~20 s of real game at
  * the rig's measured ~18.6 ticks/s. ⛔ `--count=` is omitted above because the
  * CLI's default obstacle target IS 6; the URL names `count=6` because the ROW
  * has to wait for `step === 6` and a wait cannot read a default it did not name
@@ -279,7 +293,7 @@ const SOLVE_STEPS = [
  * done: the published `step` equals the target, `#genRunAll` is re-enabled (the
  * page's own "the ladder is over"), and ▶ load in wasm is armed.
  */
-const GEN_SEED = 38;
+const GEN_SEED = 25;
 const GEN_BIOME = 'post-sword';
 const GEN_COUNT = 6;
 const GEN_PAGE = `${HOST}/frontend/modules/seedlingDemo/watch.html`

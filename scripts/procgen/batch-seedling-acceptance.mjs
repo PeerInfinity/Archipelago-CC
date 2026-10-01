@@ -219,7 +219,25 @@ const PHASES = Object.freeze({
         { name: 'the naturals, EXCLUDING every carrier — the control arm',
             seeds: NATURALS.filter((s) => !CARRIER_SEEDS.includes(s)), take: 2 },
     ],
+    /**
+     * ⛓ SEEDLING SWIM U8 (⚖ Q13) — `DEFAULT_CENSUS_BIOMES` names all five, so
+     * the three later boots walk the NATURALS, pre-sword's shape. ⛔ No carrier
+     * arm: the carrier obligation is the SWORD's (a kill template kept at
+     * target 6), and these boots hold the sword already. Their point is the
+     * folded heads, which the requirements column reports per level.
+     */
+    'post-shield': [{ name: 'the naturals, in order', seeds: NATURALS, take: 5 }],
+    'post-swim': [{ name: 'the naturals, in order', seeds: NATURALS, take: 5 }],
+    'post-feather': [{ name: 'the naturals, in order', seeds: NATURALS, take: 5 }],
 });
+/** ⛔ A census biome with no scan order refuses BY NAME, not as a TypeError mid-batch. */
+for (const biome of DEFAULT_CENSUS_BIOMES) {
+    if (!PHASES[biome]) {
+        process.stderr.write(`batch-seedling-acceptance: biome '${biome}' is in DEFAULT_CENSUS_BIOMES `
+            + 'but has no scan order in PHASES — name its seeds before the batch can take it.\n');
+        process.exit(2);
+    }
+}
 
 const sha = (v) => createHash('sha256').update(JSON.stringify(v)).digest('hex').slice(0, 16);
 const say = (line = '') => process.stdout.write(`${line}\n`);
