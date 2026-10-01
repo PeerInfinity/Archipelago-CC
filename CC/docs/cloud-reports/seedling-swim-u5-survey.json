@@ -2041,7 +2041,7 @@
         ],
         "earnedClears": []
       },
-      "ms": 115,
+      "ms": 108,
       "knownAnswer": null,
       "knownTicks": null,
       "agreesWithKnown": null,
@@ -2134,7 +2134,7 @@
           "{0,1}"
         ]
       },
-      "ms": 706,
+      "ms": 683,
       "knownAnswer": null,
       "knownTicks": null,
       "agreesWithKnown": null,
@@ -2225,7 +2225,7 @@
         ],
         "earnedClears": []
       },
-      "ms": 57,
+      "ms": 53,
       "knownAnswer": null,
       "knownTicks": null,
       "agreesWithKnown": null,
@@ -2316,7 +2316,7 @@
         ],
         "earnedClears": []
       },
-      "ms": 171,
+      "ms": 184,
       "knownAnswer": null,
       "knownTicks": null,
       "agreesWithKnown": null,
@@ -2415,7 +2415,7 @@
         ],
         "earnedClears": []
       },
-      "ms": 281,
+      "ms": 287,
       "knownAnswer": null,
       "knownTicks": null,
       "agreesWithKnown": null,
@@ -2514,7 +2514,7 @@
           "{31,0}"
         ]
       },
-      "ms": 490,
+      "ms": 475,
       "knownAnswer": null,
       "knownTicks": null,
       "agreesWithKnown": null,
@@ -2613,7 +2613,7 @@
           "{30,2}"
         ]
       },
-      "ms": 282,
+      "ms": 289,
       "knownAnswer": null,
       "knownTicks": null,
       "agreesWithKnown": null,
@@ -2685,26 +2685,43 @@
         }
       ],
       "views": {
-        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-30-boot.json"
+        "boot": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-30-boot.json",
+        "walk": "NewDocs/plans/seedling-editor-survey/through-2.2/views/step-30-walk.json"
       },
       "clock": {
         "gameTime": 8607,
         "refusal": null
       },
-      "verdict": "REFUSED",
-      "refusal": "solverBot(survey-step-30) encounter (64,128)->Fire: no encounter executor is registered for a 'Fire' drop in level 32. The model does not simulate this encounter: no entity family holds the boss, the arena's `fallrocklarge` never falls (`rockFalls` stays empty), no dialogue or form transition freezes the run, and nothing spawns the drop. `r5-bobboss-fire` DIVERGES from the game at t=15, the arm frame (`r5Chain.MODEL_EXEMPT`). An executor derived from the model needs the encounter MODELLED first, which is a simulation family, not a solver policy.",
-      "ticks": null,
-      "traceRows": null,
-      "replans": null,
-      "passes": null,
-      "declarations": null,
-      "replay": null,
-      "ms": 3,
+      "verdict": "SOLVED",
+      "refusal": null,
+      "ticks": 1056,
+      "traceRows": 15,
+      "replans": 0,
+      "passes": [
+        {
+          "pass": 1,
+          "kind": "solve",
+          "ticks": 1056
+        }
+      ],
+      "declarations": [],
+      "replay": {
+        "hits": 0,
+        "deaths": 0,
+        "endLevel": 30,
+        "transitions": [
+          "undefined->undefined@976"
+        ],
+        "earnedClears": [
+          "{32,0}"
+        ]
+      },
+      "ms": 3908,
       "knownAnswer": null,
       "knownTicks": null,
       "agreesWithKnown": null,
       "visit": 1,
-      "family": "ENCOUNTER-UNMODELLED — the 'Fire' drop's fight is not simulated by the model, so no executor can be derived from it; the missing piece is a simulation family, not a solver policy"
+      "family": null
     }
   ]
 }

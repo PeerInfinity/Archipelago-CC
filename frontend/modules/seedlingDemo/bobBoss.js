@@ -33,11 +33,13 @@
  * consequence of a MISSING case, so a transcription that copied the three
  * cases would have written 2 + ? + 2.
  *
- * **4. The boss cannot be knocked back, at all.** `BobBoss.hit` ends with
- * `super.hit(0, null, d, t)` — force zero AND point null — so
- * `Enemy.knockback`'s `if (p && ...)` never runs. Its position is chase and
- * nothing else, which is what makes a fixed stance viable in a room with no
- * cover.
+ * **4. A HIT cannot knock the boss back — but the SHIELD can.** `BobBoss.hit`
+ * ends with `super.hit(0, null, d, t)` — force zero AND point null — so a
+ * sword's `Enemy.knockback` never runs. ⛔ (Swim U5, measured against the live
+ * game: this note used to say "cannot be knocked back, at all".)
+ * `Player.shieldBump` calls `knockback(5, playerPoint)` directly, and BobBoss
+ * does not override `knockback`, so a moving player holding the shield shoves
+ * it (`bobBossFight.bobBossShieldBump`).
  *
  * **5. `player.hits = 0` is written by the BOSS, on the last frame of every
  * form transition** (`BobBoss.death`, beside `receiveInput = true`). The R5

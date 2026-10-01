@@ -10966,7 +10966,7 @@ With D1, seed 14's `--require=hasSword` without-arm planned 278 strikes, landed
   row are one index; a wall that fires first can hide a missing precondition;
   a (cell, tick) bound can spend itself on one cell.
 
-### Seedling substrate U5-swim — the encounter goal (2026-10-01)
+### Seedling substrate U5-swim — the encounter goal, the BobBoss simulation, step 30 solved (2026-10-01)
 
 The survey's step 30 (L32, `Level 032 - Bob Boss`) is a boss DROP, not a
 placement, and the solver had no goal kind for it. The report is
@@ -10990,9 +10990,10 @@ model:
 - `assertGoal` accepts `{kind: 'encounter', at, drop: {item}, then:
   'reach-pit' | null}`, and the unknown-kind refusal lists four kinds.
   `decisionTrace` knows the kind.
-- The executor is looked up by the drop in `ENCOUNTER_EXECUTORS`. The table is
-  empty, so the goal refuses before a tick, by name: obstacle
-  `unmodelled-encounter`, survey family `ENCOUNTER-UNMODELLED`.
+- The executor is looked up by the drop in `ENCOUNTER_EXECUTORS`. At D1 the
+  table was empty, so the goal refused before a tick, by name: obstacle
+  `unmodelled-encounter`, survey family `ENCOUNTER-UNMODELLED`. That refusal
+  is still what an unregistered drop gets.
 - The survey hands step 30 `at` (64,128), the atlas tile, and `drop` Fire. Its
   `then` is `'reach-pit'`, from the level's CONTROL BLOCK (`fallthrough 30`,
   pits (4,0) (5,0) under `burnabletree@64,0`), not from `pitEdgeFor`, which is
@@ -11003,22 +11004,68 @@ model:
 - Mutant (the `encounter` arm of `assertGoal` disabled): 3 rows red as
   predicted; restored md5-identical.
 
-**D2 — the executor: STOP.** It could not be derived from the model, because
-the model has none of the fight. There is no freeze to wait, no roster to
-verify a landing against, no dialogue page to tell from a swing, and no drop
-to observe. A getter cannot expose state the run never builds. Building that
-state means simulating the fight in `levelRun.js`, which is not a solver
-slice's region. `KILL_ARM_POLICY.BobBoss` stays `refused`.
+**D2/D3 — first a STOP, then licensed.** With no fight in the model there was
+nothing to derive an executor from, so D2 and D3 stopped. The user then
+licensed a BobBoss simulation family, and the rest of the slice built on it.
 
-**D3 — the witness: STOP.** With no executor there is no tape. A model
-differential of the fight would diverge at the arm frame by construction.
-`fixtures/**` is untouched.
+**The simulation (`bobBossFight.js`, run by `levelRun` per visit).**
+- Transcribed from `BobBoss`, `BobSoldier`, `Enemy`, `Mobile`,
+  `FallRockLarge` and `BobBossNPC`. A `thirdboss` rock only, so L82's rock
+  is unchanged.
+- The rock's arm frame is a live tick with a frozen player. 174 dead frames
+  follow. The release frame's step lands inside the arm tick.
+- Two source facts only the replay found:
+  - The ctor queues its NPC before the caller queues the boss, so the boss
+    updates FIRST and runs (forms, chases, swings) on every dialogue frame.
+  - The graphic-less `BobBossNPC` is a zero-size `Solid` at (80,80). The boss
+    spawns straddling it and cannot move until the NPC leaves.
+- `r5-bobboss-arm` (901 obs), `-fire` (2,501) and `-fire-control` (2,501)
+  match their oracles exactly. `r5Chain.MODEL_EXEMPT` is emptied. The live-game
+  differential is 84 PASS / 0 FAIL on the three tapes, the dead-frame budget
+  spent from the model's own spans.
+- The run gains entity family `bobBoss`, ledger kind `bobBossEvents`, and
+  `bobBossForecast()` (a `forecast` row). `inputRefused` covers a transition.
 
-**D4.** Step 30 is REFUSED as `ENCOUNTER-UNMODELLED` (3 ms). Steps 22, 23 and
-25–29 are byte-identical to U4's rows apart from wall-clock. HEADLINE **7/9**,
-unmoved; step 24 is the puncher's.
+**The executor (`ENCOUNTER_EXECUTORS.Fire`).**
+- Hold `up` until the rock arms.
+- Page each dialogue with `ceremonyCadenceStep`. A page is never a landing.
+- Search each strike against the forecast. A plan is: hold one of nine key
+  sets for n ticks, press, hold one of nine for 48 ticks. It is admitted only
+  if no sword line and no body touch the player and the press is an ordinary
+  `slash`.
+- Verify every landing on the boss's own hits.
+- Collect the Fire and equip slot 1 ONE TICK after the flag: the slot array is
+  rebuilt in the next frame's `inventory.update`.
+- Burn the tree with `runFire` (its `overPit` declaration), then fall the
+  nearest pit through the shared `reach-pit` code.
+- Mutants:
+  - (a) landings read off the player's hits: refuses at the first strike, as
+    predicted.
+  - (b) the dialogue branch dropped: refuses by name at t=23 (*"the forecast
+    landed … the run's boss reports 0 landing(s)"*). I had predicted the 8000
+    tick bound; the strike search planned through a frozen frame instead.
 
-**Residue: what a simulation slice needs, read off the game's recording.**
+**The witness, and the defect it found.**
+- The first recording of the solver's walk refuted the model. The positions
+  agreed for 418 ticks, then the game's player was knocked LEFT by
+  (−2.613, 0).
+- `Player.knockback` adds only components with |c| >= 0.5, which places the
+  hitter up and to the right. That was not where the model's boss was.
+- The cause is **`Player.shieldBump`**. A moving player with the shield shoves
+  every `Enemy` touching the shield's box (`knockback(5, playerPoint)`), and
+  `BobBoss` overrides `hit` but not `knockback`.
+- The model had no shield bump at all, and the R5 tapes never held a shield.
+- Transcribed for the boss (render-time box, no freeze gate). The model then
+  reproduced the game's own recording through that recording's death at
+  t=497, knockback to the digit.
+- The re-solved walk (`swim-u5-bobboss-encounter`, 1,056 ticks) records ALL
+  CHECKS PASSED against the live game, and the model reproduces the recording
+  it made (1,057 observations).
+
+**D4.** Step 30 SOLVES at 1,056 ticks with 0 hits and ends in L30. HEADLINE
+**8/9**; step 24 is the puncher's.
+
+**The W0 readings off the game's recording** (kept: what the simulation was built against).
 - The stream first reads y < 120 (the arm line) at t=12, y = 119. It holds
   still from t=14.
 - The first transition's teleport to (80,120) is visible between t=293 and
@@ -11029,6 +11076,16 @@ unmoved; step 24 is the puncher's.
 - Form deaths, landings and pages are not observable in a position stream.
   They need the game's own per-tick readout (the differential's item and
   `receiveInput` channels).
+
+**Residue after the simulation.**
+- `shieldBump` is modelled for the BobBoss ONLY. Every other `Enemy` the model
+  steps (bobs, spinners) is shoved in the game and not in the model whenever a
+  shielded player moves into it. That is a model-wide gap, in the chaser
+  family's region.
+- `burnableTree.js`'s header calls L32's tree `tag = -1`. The world builds it
+  `tag 0`, and the burn writes {32,0}.
+- `Enemy`'s ctor draws RNG (`coins`, `FP.choose`) at each of the three
+  constructions. The model does not count those draws.
 
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
