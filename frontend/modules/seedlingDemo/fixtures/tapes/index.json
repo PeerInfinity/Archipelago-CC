@@ -383,6 +383,22 @@
       ]
     },
     {
+      "file": "r3-drown.json",
+      "tickCount": 140,
+      "bootLevel": 47,
+      "tapeVersion": 8,
+      "noHazards": [
+        "waterfall"
+      ]
+    },
+    {
+      "file": "r3-lava.json",
+      "tickCount": 70,
+      "bootLevel": 96,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r3-pit-death.json",
       "tickCount": 100,
       "bootLevel": 4,

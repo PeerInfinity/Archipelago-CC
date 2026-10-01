@@ -82,7 +82,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ swim U13: 169 (+ the campaign segment `r9-solve-13-v2`).
         // ⛓ swim R1 + U13 (merged): 175.
         // ⛓ swim R3: 176 (+ `r3-pit-death`, inert).
-        expect(names.length).toBe(176);
+        // ⛓ swim R3: 178 (+ `r3-drown` and `r3-lava`, inert).
+        expect(names.length).toBe(178);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -126,7 +127,7 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(176);
+        expect(tally.swapped).toBe(178);
     }, 600_000);
 });
 

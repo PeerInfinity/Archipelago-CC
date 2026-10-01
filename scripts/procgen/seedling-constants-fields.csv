@@ -227,7 +227,7 @@ frontend/modules/seedlingDemo/levelRun.js|advance|hd5e683f5|0|0,rule,sentinel,,p
 frontend/modules/seedlingDemo/levelRun.js|advance|hf2ca60d1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hd4727287|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|h2bf0a6f8|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
-frontend/modules/seedlingDemo/levelRun.js|advance|ha5ff1365|0|0,rule,bound,,i-frame timer gate (the acting gate; swim U5 added bobNoInput)
+frontend/modules/seedlingDemo/levelRun.js|advance|h79fd2fd6|0|0,rule,bound,,i-frame timer gate (the acting gate; swim U5 added bobNoInput)
 frontend/modules/seedlingDemo/levelRun.js|advance|hee37f6e1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|h5e6f118d|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hb16ea419|0|0,physics,magnitude,,cutscene walk vy clamped to 0
@@ -1008,9 +1008,9 @@ frontend/modules/seedlingDemo/playerPhysicsV2.js|terrainEffectClass|terrainEffec
 frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|nextDirection,rule,sign,,velocity sign picks direction
 frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|he42cf9a9|-1|0,rule,sentinel,,directionFace -1 = none
 frontend/modules/seedlingDemo/playerPhysicsV2.js|nextDirection|h38f2089c|0|0,rule,sentinel,,directionFace >= 0
-frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|h06381514|0|0,rule,sentinel,,drown kind none
-frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|h94f1bc9a|1|0,rule,sentinel,,drown kind water
-frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|he89fb340|2|0,rule,sentinel,,drown kind lava
+frontend/modules/seedlingDemo/playerPhysicsV2.js|drowningHazardKind|h05bb1004|0|0,rule,sentinel,,drown kind none
+frontend/modules/seedlingDemo/playerPhysicsV2.js|drowningHazardKind|h328da960|1|0,rule,sentinel,,drown kind water
+frontend/modules/seedlingDemo/playerPhysicsV2.js|drowningHazardKind|h3484aa2d|2|0,rule,sentinel,,drown kind lava
 frontend/modules/seedlingDemo/playerPhysicsV2.js|checkDrowning|h2dd3e999|0|0,rule,sentinel,,drown kind none
 frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h143b1de1|0.5|0,rule,magnitude,,spiral timer step per tick (Player.drown)
 frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h55b1a3f4|2|0,physics,derivation,,angle = timer / DROWN_TIMER_MAX * 2PI
@@ -1018,7 +1018,7 @@ frontend/modules/seedlingDemo/playerPhysicsV2.js|drownStep|h46b9a606|2|0,physics
 frontend/modules/seedlingDemo/playerPhysicsV2.js|getStatePos|getStatePos,rule,sentinel,,-1 = no tile
 frontend/modules/seedlingDemo/playerPhysicsV2.js|fallDestination|snap,physics,bound,,clamp position >= 0 before tile snap
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h92086e66|0|0,physics,magnitude,,landing zeroes vy
-frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h4c9f2076|0|0,physics,sign,,feather exempts upward motion only (v.y >= 0)
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|hc2aa136d|0|0,physics,sign,,feather exempts upward motion only (v.y >= 0)
 frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h08da7fb0|0|0,rule,bound,,alpha <= 0 swaps level
 frontend/modules/seedlingDemo/pushables.js|*|*,structural,,,zero tests / centre halves / loop bounds / inits
 frontend/modules/seedlingDemo/pushables.js|DESTROYING_TILE_TYPES|(module),rule,sentinel,,Tile.t water/lava/pit
@@ -1483,7 +1483,7 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|shieldBumpNow,rule,boun
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|0,rule,bound,,U10 forecast punch: hitsTimer > 0 i-frame gate (attackPlayer)
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10 forecast punch: the hitUpdate decrement this tick applies before the graphic half
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
-frontend/modules/seedlingDemo/playerPhysicsV2.js|step|hffedc0b7|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|h79d32ac4|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
 frontend/modules/seedlingDemo/levelRun.js|stepOptsFor|h14b15328|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: stepOptsFor's default; the drive passes damage.directionFace)
 frontend/modules/seedlingDemo/bobBossFight.js|bobBossShieldBump|h7d55bf85|0|0,rule,bound,Player.as:shieldBump,the dark arm fires only when o.hitsTimer <= 0 (R1-swim D3: BobBoss.hit there; inside the i-frame it is the plain shove)
 frontend/modules/seedlingDemo/levelRun.js|previewStepper|h2e35f0c8|0|0,structural,,,U12-swim D1: a room with no pull gets the same closure (empty test)

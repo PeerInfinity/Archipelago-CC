@@ -15201,7 +15201,11 @@ export function createLevelRun({
             // One statement, three writers, one treatment.
             // ⛓ Swim U5: and `BobBoss.death`'s `player.receiveInput = false`, the
             // fourth writer of the same first term (`bobNoInput`).
-            const acting = (lockSnap || frozenTimer > 0 || cutsceneWalk || bobNoInput)
+            // ⛓ R3-swim D2: and `dying` (the drown spiral) skips `super.update()`
+            // whole, `input()` and its `useItem` with it — so a press there is
+            // lost like a frozen one.
+            const acting = (lockSnap || frozenTimer > 0 || cutsceneWalk || bobNoInput
+                || state.drown?.drowning === true)
                 ? NO_KEYS : held;
             // ── R4: the thrust the last tick's press scheduled ────────
             // After the blocks' own update (the block's `hit` refuses while
@@ -15410,6 +15414,18 @@ export function createLevelRun({
                 // enemies update first), so this is the facing `sprites()` pins.
                 directionFace: damage.directionFace,
             });
+            // ⛓⛓⛓ R3-swim D2: lava's `hit(null, 0, null, 0)`, which `step`
+            // calls from inside `checkDrowning` — ABOVE `super.update()`, so
+            // the i-frame it opens already refuses this tick's steering. Under
+            // `noDamage` `Player.hit` returns at its first line (and no row is
+            // written, as for a static body). Only the run's own step passes it.
+            stepOpts.lavaHit = () => {
+                if (!noDamage) {
+                    applyPlayerHit({ source: 'lava', id: `lava@L${level}`, force: 0, damage: 0,
+                        from: null, retaliate: null });
+                }
+                return !canSteer(damage);
+            };
             // ── ⛓⛓⛓ R5 SLICE 23: THE FREEZE-CLEARING FRAME'S OWN STEP ──
             //
             // ⛔⛔ A COLLAPSED FROZEN SPAN ENDS ON A FRAME THAT IS DEAD TO

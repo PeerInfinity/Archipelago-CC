@@ -58,6 +58,7 @@ import {
     playerBoxAt,
     resolveTerrainState,
     resolveTerrainState as getState,
+    deathRefusal,
     step,
     terrainProbeRect,
     updateTeleporters,
@@ -1076,22 +1077,33 @@ describe('R4: checkDrowning, and the timer that never resets', () => {
         expect(drownStep({ timer: 0.5, drowning: true }).dead).toBe(true);
     });
 
-    it('THROWS rather than modelling the death', () => {
-        // A death is a ROUTE failure, not a physics outcome to reproduce:
-        // an armed hazard is planner-forbidden floor. Naming it at the tick
-        // it happens is what turns "the recording diverged 2000 ticks later"
-        // into "leg 31 stood on lava".
+    it('⛓⛓⛓ R3-swim D2: the latch tick does not spin, the spiral stands still, and the twentieth spin is the DEATH', () => {
+        // `checkDrowning` is `if (drowning) drown(); else {…}` and `drown()`
+        // sets `dying`, which skips `super.update()`. The run reboots the
+        // death (`r3-drown`, `r3-lava` on the game); a PREVIEW refuses it
+        // with the old words (`deathRefusal`).
         const w = world({ rows: ['lava', 'lava', 'lava', 'lava'] });
         let s = {
             x: 40, y: 8, vx: 0, vy: 0, terrain: INITIAL_TERRAIN_STATE,
             hazard: INITIAL_HAZARD_FLAGS, drown: { timer: 0, drowning: false },
             latched: new Set(),
         };
-        expect(() => {
-            for (let i = 0; i < 40; i++) {
-                s = step(s, held(), { level: w, noclip: true, inventory: {}, ...PINNED });
-            }
-        }).toThrow(/DROWNED/);
+        const rows = [];
+        for (let i = 0; i < 40 && !s.death; i++) {
+            s = step(s, held('right'), { level: w, noclip: true, inventory: {}, ...PINNED });
+            rows.push(s);
+        }
+        const latch = rows.findIndex((r) => r.drown.drowning);
+        // The latch tick took no spin: its timer is the 0 it latched at.
+        expect(rows[latch].drown.timer).toBe(0);
+        expect(rows[latch + 1].drown.timer).toBe(9.5);
+        // Twenty spins, every one at the latch tick's position.
+        expect(rows.length - 1 - latch).toBe(20);
+        for (const r of rows.slice(latch + 1)) {
+            expect({ x: r.x, y: r.y }).toEqual({ x: rows[latch].x, y: rows[latch].y });
+        }
+        expect(s.death.source).toBe('lava');
+        expect(() => { throw deathRefusal(w, s, s.death); }).toThrow(/DROWNED/);
         // With the dark suit the same forty ticks are an ordinary slow walk.
         let safe = {
             x: 40, y: 8, vx: 0, vy: 0, terrain: INITIAL_TERRAIN_STATE,

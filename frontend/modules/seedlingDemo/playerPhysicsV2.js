@@ -462,9 +462,7 @@ export function hazardFlagsFor(effective) {
  */
 export function checkDrowning(drown, effective, inventory) {
     if (drown.drowning) return drown;
-    let kind = 0;
-    if (effective === WATER_STATE && !inventory.canSwim) kind = 1;
-    else if (effective === LAVA_STATE && !inventory.hasDarkSuit) kind = 2;
+    const kind = drowningHazardKind(effective, inventory);
     if (kind === 0) return drown;
     // `if (v == 2) hit(null, 0, null, 0)` — damage 0, and `Bot.noDamage`
     // guards the body regardless, so there is no health effect to model.
@@ -472,6 +470,16 @@ export function checkDrowning(drown, effective, inventory) {
     const timer = drown.timer - 1;
     if (timer <= 0) return { timer: 0, drowning: true };
     return { ...drown, timer };
+}
+
+/**
+ * `checkDrowning`'s `v`: 1 for water without `canSwim`, 2 for lava without
+ * `hasDarkSuit`, else 0 — read off the COERCED state, like the function.
+ */
+export function drowningHazardKind(effective, inventory) {
+    if (effective === WATER_STATE && !inventory.canSwim) return 1;
+    if (effective === LAVA_STATE && !inventory.hasDarkSuit) return 2;
+    return 0;
 }
 
 /**
@@ -1053,6 +1061,12 @@ export function step(state, held, opts = {}) {
          * it (`playerDamage.js`); `-1` derives the facing from `v` as before.
          */
         directionFace = -1,
+        /**
+         * ⛓⛓⛓ R3-swim D2: lava's `hit(null, 0, null, 0)`, a RUN callback —
+         * `() => steerBlocked` after the hit. The run owns `hitsTimer` and the
+         * shake; null (a preview) models no lava hit.
+         */
+        lavaHit = null,
         // ⛓ R5 slice 4: reported when an exact `nearestToPoint` tie is
         // DECIDED by the transcribed list order and its two candidates lead
         // somewhere different. Nothing here consumes it; a planner does.
@@ -1271,21 +1285,40 @@ export function step(state, held, opts = {}) {
     const heldItems = inventory ?? { canSwim: false, hasDarkSuit: false };
     let drown = state.drown ?? { timer: 0, drowning: false };
     let drownV = null;
-    drown = checkDrowning(drown, effective, heldItems);
-    if (drown.drowning) {
+    // ⛓⛓⛓ R3-swim D2: `checkDrowning` is `if (drowning) drown(); else {…}`,
+    // so the tick that LATCHES `drowning` does not spin — the spiral starts on
+    // the next one. And `drown()` sets `dying = true`, which skips this
+    // tick's `super.update()` (`if (!dying)`, `Player.as:573`): no friction,
+    // no input, no move. `dying` is never cleared on a `Player`, so every
+    // tick from the first spin to `die()` is a still one. Measured on the
+    // game: `r3-drown` holds (311.15, 144) from observation 84 to 103 and
+    // respawns on 104; `r3-lava` the same from 10 (it was already still).
+    const dying = drown.drowning === true;
+    let steerNow = steerBlocked;
+    if (dying) {
         const spun = drownStep(drown);
         drown = spun.drown;
         drownV = spun.v;
         if (spun.dead) {
-            throw new PhysicsV2Error(
-                `the player DROWNED in level ${level.level} at `
-                + `(${state.x}, ${state.y}) — terrain state ${effective}. `
-                + 'An armed hazard is PLANNER-FORBIDDEN FLOOR (the pit precedent): '
-                + '`drownTimer` is never reset off-hazard, so eleven cumulative ticks '
-                + 'on water without canSwim (the conch, R5) or lava without the dark '
-                + 'suit ends the run. Re-route, or coerce the hazard in `noHazards`.',
-            );
+            // The twentieth `drown()` is `die()`. The player cannot have left
+            // the hazard (no move since the latch), so the state names which.
+            const tile = level.nearestWalkableTile(state.x, state.y + CHECK_OFFSET_Y,
+                { beforeTypeFlip });
+            death = {
+                source: effective === LAVA_STATE ? 'lava' : 'drown',
+                id: `${effective === LAVA_STATE ? 'lava' : 'water'}@`
+                    + `${tile.x - TILE_SIZE / 2},${tile.y - TILE_SIZE / 2}`,
+            };
         }
+    } else {
+        // `if (v == 2) hit(null, 0, null, 0)` — ABOVE the timer, every lava
+        // tick. Damage 0 and no point, but inside `Player.hit`'s gate it still
+        // writes `hitsTimer = 20` (so this tick's `input()` does not steer)
+        // and `Game.shake += 5`. The RUN owns the damage state, so the hit is
+        // its callback, which answers whether steering is now blocked. A
+        // caller without one (a preview) models no lava hit.
+        if (lavaHit && drowningHazardKind(effective, heldItems) === 2) steerNow = lavaHit();
+        drown = checkDrowning(drown, effective, heldItems);
     }
 
     // 2. ⛓ THE SWIM SOUND TERM (R5 slice 4), and the mixer that drives it.
@@ -1347,8 +1380,10 @@ export function step(state, held, opts = {}) {
     // `Player.as:531`'s replay — READ FIRST (above), then play. Gated on
     // the incoming velocity, and only inside the wet arm, because that is
     // where the call site is.
+    // ⛓ R3-swim D2: `drown()` (inside `checkDrowning`, above this) has
+    // already written `v` on a spiral tick, so that is the `v` read here.
     if (wet && swim && !channelPlaying(swim)
-        && Math.hypot(state.vx ?? 0, state.vy ?? 0) > 0) {
+        && Math.hypot(drownV ? drownV.x : (state.vx ?? 0), drownV ? drownV.y : (state.vy ?? 0)) > 0) {
         swim = playChannel({ ...swim });
     }
 
@@ -1403,8 +1438,11 @@ export function step(state, held, opts = {}) {
      * the very key the check exists to miss.
      */
     const liveOpts = noclip ? null : normalizeLiveOpts(liveBag);
-    const next = stepV1({ ...state, ...(drownV ? { vx: drownV.x, vy: drownV.y } : {}) },
-        fall ? NO_KEYS : held, {
+    // ⛓⛓⛓ R3-swim D2: a `dying` tick skips `super.update()` whole — the
+    // spiral's `v` is written and nothing spends it.
+    const next = dying ? {
+        x: state.x, y: state.y, vx: drownV.x, vy: drownV.y, hitX: null, hitY: null,
+    } : stepV1(state, fall ? NO_KEYS : held, {
         terrainStateAt: () => effective,
         frozen,
         // ⛔ A DESCENT ALREADY DROPS THE KEYS (`fall ? NO_KEYS : held` above)
@@ -1415,7 +1453,7 @@ export function step(state, held, opts = {}) {
         // ⚠ A DESCENT DROPS THE KEYS ANYWAY (`fall ? NO_KEYS : held`), so
         // this term only ever matters on the ground — which is where every
         // contact happens.
-        steerBlocked,
+        steerBlocked: steerNow,
         friction,
         moveSpeed,
         // The WATERFALL push (`Player.as:1556-1560`). The feather exempts
