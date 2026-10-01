@@ -149,8 +149,9 @@ describe('the roster categories (⚖ 70)', () => {
         // single-room pickups no route produces. This row is the pin that
         // makes a change to a route fixture visible.
         expect(cats['map-walk'].length).toBe(21);
-        expect(cats.campaign.length).toBe(30);
-        expect(cats.mechanic.length).toBe(roster.length - 51);
+        // ⛓ swim U13: campaign 30 → 31 with `r9-solve-13-v2` (the chain's 22nd segment).
+        expect(cats.campaign.length).toBe(31);
+        expect(cats.mechanic.length).toBe(roster.length - 52);
     });
 
     it('`campaign` is CHAIN-CLOSED — every tape a chain owns, headlines included', () => {

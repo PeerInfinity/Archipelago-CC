@@ -174,9 +174,13 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
          * ⛓ R9 SLICE L18b — FOUR AGAIN: `r9-solve-19` takes boss key 0 (a pickup
          * ceremony) and became a seam's `from` when the terminal `r9-solve-20`
          * grew behind it. Derived, and pinned because the count is the claim.
+         *
+         * ⛓ swim U13 — FIVE: `r9-solve-20` takes the shield (a pickup ceremony)
+         * and became a seam's `from` when it gained the 2.2 route's exit and
+         * `r9-solve-13-v2` grew behind it.
          */
         expect(withCeremony.map((s) => s.from))
-            .toEqual(['r8-d2-19', 'r8-solve-10', 'r9-solve-11', 'r9-solve-19']);
+            .toEqual(['r8-d2-19', 'r8-solve-10', 'r9-solve-11', 'r9-solve-19', 'r9-solve-20']);
         for (const { from, to } of withCeremony) {
             const tape = loadTape(from);
             const run = runTape(tape, { levelSource });

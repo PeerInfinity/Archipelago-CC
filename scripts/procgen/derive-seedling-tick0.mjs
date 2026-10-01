@@ -74,7 +74,8 @@
  * rooms; nothing on disk derives either. The measured value is the answer,
  * and `seamRngPosture` says at which boundaries it can be ASSERTED.
  *
- * Run (the derivation needs Windows Chrome and a dev server on :8000):
+ * Run (the derivation drives the game headless, or `--win` for Windows Chrome,
+ * against the dev server on `SEEDLING_PORT`, default 8000):
  *   node scripts/procgen/derive-seedling-tick0.mjs --list     # the set, no game
  *   node scripts/procgen/derive-seedling-tick0.mjs --check    # re-derives NOTHING
  *   node scripts/procgen/derive-seedling-tick0.mjs            # drives + writes
@@ -82,10 +83,11 @@
  */
 
 import { dirname, join } from 'node:path';
-import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { driverChannel } from './seedlingDriver.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 
 
 import { argvHelp } from './argvHelp.js';
@@ -222,12 +224,23 @@ function zeroTickVariant(tape) {
     return parseTape(raw);
 }
 
-// ── THE WINDOWS CHANNEL ───────────────────────────────────────────────
+// ── THE DRIVER CHANNEL ────────────────────────────────────────────────
 
+/**
+ * ⛓ SWIM U13 — HEADLESS BY DEFAULT, `--win` FOR THE REAL-GPU ARM, the page on
+ * `SEEDLING_PORT`. This instrument spelled `py.exe` and `:8000` inline, so a
+ * cloud box could not measure a grown segment's tick-0 block at all (U6b's
+ * trap candidate 4, in the instrument it did not port). It now goes through
+ * `seedlingDriver.driverChannel`, on `solve-seedling-r9-campaign.mjs`'s
+ * `latchOf` precedent. ⛔ THE CACHE IS UNCHANGED: keyed on the bytes the game
+ * is handed, because a tick-0 reading is a function of those bytes, not of
+ * the channel that measured it.
+ */
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
-const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+const PAGE_PORT = process.env.SEEDLING_PORT || '8000';
+const PAGE_URL = `http://localhost:${PAGE_PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
+const WIN = process.argv.includes('--win');
 const WIN_SCRATCH_WSL = '/mnt/c/playwright';
-const WIN_SCRATCH_DOS = 'C:\\playwright';
 const WIN_PY = '/mnt/c/Windows/py.exe';
 const WIN_DRIVER = join(HERE, 'seedling-bot-replay-win.py');
 const CACHE = join(WIN_SCRATCH_WSL, 'tick0-cache');
@@ -257,34 +270,36 @@ function driveZeroTick(label, zeroTape) {
         console.log(`    ${label}: CACHED (${key})`);
         return JSON.parse(readFileSync(cached, 'utf8'));
     }
-    mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
-    writeFileSync(join(WIN_SCRATCH_WSL, 'seedling-bot-replay-win.py'),
-        readFileSync(WIN_DRIVER));
-    const outWsl = join(WIN_SCRATCH_WSL, `tick0-${label}.json`);
-    writeFileSync(join(WIN_SCRATCH_WSL, `tick0-tape-${label}.json`), shipped);
-    try { unlinkSync(outWsl); } catch { /* first run */ }
+    const channel = driverChannel({ win: WIN, winPy: WIN_PY, driver: WIN_DRIVER,
+        chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
+    channel.write(`tick0-tape-${label}.json`, shipped);
+    channel.clear(`tick0-${label}.json`);
     const t0 = Date.now();
     let out;
     try {
-        out = execFileSync(WIN_PY, [
-            '-3.12', `${WIN_SCRATCH_DOS}\\seedling-bot-replay-win.py`,
+        out = channel.run([
             '--url', PAGE_URL,
-            '--tape', `${WIN_SCRATCH_DOS}\\tick0-tape-${label}.json`,
-            '--out', `${WIN_SCRATCH_DOS}\\tick0-${label}.json`,
+            '--tape', channel.path(`tick0-tape-${label}.json`),
+            '--out', channel.path(`tick0-${label}.json`),
             // A zero-tick tape finishes on its first live frame; the whole
             // cost is the page load and the fade. 120 s is the page, not the
             // walk.
             '--deadline-sec', '120',
-        ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+        ], { stdio: ['ignore', 'pipe', 'pipe'] });
     } catch (e) {
         const said = [e.stdout, e.stderr].filter(Boolean).join('\n').trim();
+        channel.close({ keep: true });
         throw new Error(`${e.message}${said ? `\n${said}` : ''}`);
     }
     out.replace(/\r/g, '').split('\n')
         .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l))
         .forEach((l) => console.log(`    ${l}`));
-    if (!existsSync(outWsl)) throw new Error(`the driver wrote no stream for ${label}`);
-    const got = JSON.parse(readFileSync(outWsl, 'utf8'));
+    if (!existsSync(channel.local(`tick0-${label}.json`))) {
+        channel.close({ keep: true });
+        throw new Error(`the ${channel.name} driver wrote no stream for ${label}`);
+    }
+    const got = JSON.parse(channel.read(`tick0-${label}.json`));
+    channel.close();
     if (!got.seam) throw new Error(`${label}: the driver returned no seam block`);
     console.log(`    drove ${label}: ${got.stream.ticks.length} observation(s), `
         + `${got.status.dead_frames} dead, ${((Date.now() - t0) / 1000).toFixed(0)}s`);

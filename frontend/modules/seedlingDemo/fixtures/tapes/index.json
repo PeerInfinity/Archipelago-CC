@@ -1305,7 +1305,7 @@
       "file": "r9-solve-13-v2.json",
       "tickCount": 48,
       "bootLevel": 13,
-      "tapeVersion": 8,
+      "tapeVersion": 11,
       "noHazards": []
     },
     {

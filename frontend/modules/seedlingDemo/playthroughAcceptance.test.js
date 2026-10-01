@@ -964,8 +964,10 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         // ⛓ R9 slice L15: the tail was `r9-solve-15`, arriving in L16; ⛓ R9 slice
         // L16: it was `r9-solve-16`, arriving in L18; ⛓ R9 slice L18b: it is
         // `r9-solve-18`, arriving in L19; then `r9-solve-19`, arriving in L20; and the
-        // TERMINAL `r9-solve-20` ends the route IN L20 (it crosses nothing).
-        expect(arrivalOf(chain.segments.at(-1))).toBe(20);
+        // TERMINAL `r9-solve-20` ends the route IN L20 (it crosses nothing); ⛓ swim
+        // U13: `r9-solve-20` leaves by its stairs to L13, and the tail is
+        // `r9-solve-13-v2`, arriving in L0.
+        expect(arrivalOf(chain.segments.at(-1))).toBe(0);
     });
 
     /**

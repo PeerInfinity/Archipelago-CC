@@ -79,7 +79,9 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ swim U12: 168 (+ `u12-pull-carry` and `u12-pull-cross`).
         // ⛓ swim R1: 169 (+ `r1-dark-suit-bob`), 171 (+ the two `r1-dark-*-kill`),
         // 174 (+ the two `r1-dark-*-spinner` and `r1-dark-shield-bobboss`).
-        expect(names.length).toBe(174);
+        // ⛓ swim U13: 169 (+ the campaign segment `r9-solve-13-v2`).
+        // ⛓ swim R1 + U13 (merged): 175.
+        expect(names.length).toBe(175);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -123,7 +125,7 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(174);
+        expect(tally.swapped).toBe(175);
     }, 600_000);
 });
 
