@@ -1,0 +1,271 @@
+{
+  "what": "swim U13 D2 STOP: route step 23 (r9-solve-0-v3, L0 -> L12 by teleporter@304,176), solved by the model from r9-solve-13-v2's measured latch and recorded headless on the game (check-seedling-bot-differential --record --only=r9-solve-0-v3). The tape and its recording are NOT committed.",
+  "boot": {
+    "block": {
+      "level": 0,
+      "x": 48,
+      "y": 192
+    },
+    "seam": {
+      "beam": true,
+      "rock_set": false,
+      "hasShield": true,
+      "time": 12241
+    }
+  },
+  "tick_count": 229,
+  "firstDivergentTick": 3,
+  "differential": {
+    "reproduces": "tick 3 differs: expected (x=59.25, y=200, level=0), got (x=61.25, y=200, level=0) [dx=2, dy=0] — THE RECORDING IS VALID AND THE MODEL IS REFUTED",
+    "deadFrames": "511 dead = 0 modelled + 511 residue, against 1 load [10.1,23.6] — OUT OF BAND",
+    "clock": "game 12982, model 12511 (Δ 471 over 40 dead frame(s) the model counted)",
+    "latch": "arrival.velocity NOT CALM — v=(1.4999999999999998, 0) hits=0 hitsTimer=0",
+    "drown": "drownTimer=9 (≈2 contact tick(s))"
+  },
+  "attribution": "Moonrock.update (vendor/seedling/src/Scenery/Moonrock.as:66-118): while beam && canBeam it sets Game.freezeObjects and turns the player toward the rock, runs beamTimeMax frames, then drops the rock. Shield.removed() armed beam (the boot carries beam: true, rock_set: false). The model has no Moonrock beam.",
+  "perTick": [
+    {
+      "t": 0,
+      "held": null,
+      "game": {
+        "t": 0,
+        "x": 56,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 56,
+        "y": 200,
+        "vx": 0,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 1,
+      "held": [
+        "primary",
+        "right"
+      ],
+      "game": {
+        "t": 1,
+        "x": 56.8,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 56.8,
+        "y": 200,
+        "vx": 0.8,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 2,
+      "held": [
+        "right"
+      ],
+      "game": {
+        "t": 2,
+        "x": 58.15,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 58.15,
+        "y": 200,
+        "vx": 1.35,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 3,
+      "held": [
+        "primary",
+        "right"
+      ],
+      "game": {
+        "t": 3,
+        "x": 59.25,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 61.25,
+        "y": 200,
+        "vx": 3.1,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 4,
+      "held": [
+        "left"
+      ],
+      "game": {
+        "t": 4,
+        "x": 59.3,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 63.3,
+        "y": 200,
+        "vx": 2.05,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 5,
+      "held": [
+        "right"
+      ],
+      "game": {
+        "t": 5,
+        "x": 60.099999999999994,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 65.1,
+        "y": 200,
+        "vx": 1.7999999999999998,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 6,
+      "held": [
+        "right"
+      ],
+      "game": {
+        "t": 6,
+        "x": 61.449999999999996,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 66.64999999999999,
+        "y": 200,
+        "vx": 1.5499999999999998,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 7,
+      "held": [
+        "right"
+      ],
+      "game": {
+        "t": 7,
+        "x": 62.55,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 67.94999999999999,
+        "y": 200,
+        "vx": 1.2999999999999998,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 8,
+      "held": [
+        "right"
+      ],
+      "game": {
+        "t": 8,
+        "x": 63.4,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 68.99999999999999,
+        "y": 200,
+        "vx": 1.0499999999999998,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 9,
+      "held": [
+        "right"
+      ],
+      "game": {
+        "t": 9,
+        "x": 64.80000000000001,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 70.59999999999998,
+        "y": 200,
+        "vx": 1.5999999999999999,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 10,
+      "held": [
+        "left"
+      ],
+      "game": {
+        "t": 10,
+        "x": 65.15,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 71.14999999999998,
+        "y": 200,
+        "vx": 0.5499999999999998,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 11,
+      "held": [],
+      "game": {
+        "t": 11,
+        "x": 65.25,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 71.44999999999997,
+        "y": 200,
+        "vx": 0.2999999999999998,
+        "vy": 0,
+        "level": 0
+      }
+    },
+    {
+      "t": 12,
+      "held": [],
+      "game": {
+        "t": 12,
+        "x": 65.25,
+        "y": 200,
+        "level": 0
+      },
+      "model": {
+        "x": 71.44999999999997,
+        "y": 200,
+        "vx": 0,
+        "vy": 0,
+        "level": 0
+      }
+    }
+  ]
+}
