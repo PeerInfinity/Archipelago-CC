@@ -1,0 +1,33 @@
+{
+  "_generated": "node scripts/build/world-generator-files.mjs --write — do not edit by hand",
+  "package": "world_generator",
+  "files": [
+    "README.md",
+    "__init__.py",
+    "__main__.py",
+    "_codegen_utils.py",
+    "_helper_codegen.py",
+    "_helper_expressions.py",
+    "_helper_statements.py",
+    "_rule_analysis.py",
+    "_rule_converters.py",
+    "_rule_expressions.py",
+    "_sanitization.py",
+    "_template_init.py",
+    "_template_options.py",
+    "_template_regions.py",
+    "_template_rules.py",
+    "_template_utils.py",
+    "apworld.py",
+    "cli.py",
+    "constants.py",
+    "ext_template/__init__.py",
+    "ext_template/extra_rules.py",
+    "ext_template/world_mixin.py",
+    "extractors.py",
+    "generator.py",
+    "json_world_builder.py",
+    "rule_codegen.py",
+    "templates.py"
+  ]
+}

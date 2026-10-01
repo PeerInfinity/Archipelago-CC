@@ -409,6 +409,12 @@
             "_comment": "APWorld hub H2. Intercepts URL.createObjectURL and asserts the BLOB's bytes, not that a file appeared: a page-initiated download is inert in some sandboxes. A working-copy edit must be in those bytes, which a download reading applied state would fail."
         },
         {
+            "id": "apworld-build-downloads-a-loadable-apworld",
+            "enabled": true,
+            "category": "apworldEditor",
+            "_comment": "The hub's .apworld button: real world_generator under Pyodide (CDN, booted on first build). Reads the saved Blob back as a zip: named after its root dir, manifest stamped + renamed, a session edit in Locations.py."
+        },
+        {
             "id": "apworld-apply-keeps-the-sphere-log",
             "enabled": true,
             "category": "apworldEditor",

@@ -203,6 +203,19 @@ These files are located in the `scripts/lib/` subdirectory to clearly separate l
   ```bash
   python scripts/build/pack_apworld.py <world_name>
   ```
+  The packing rule itself lives in `world_generator/apworld.py`, shared with
+  `python -m world_generator rules.json --apworld DIR` and the APWorld Editor's
+  in-browser `⭳ .apworld` button.
+
+- **`build/world-generator-files.mjs`** - The file list the APWorld Editor's
+  in-browser build fetches (`frontend/modules/apworldEditor/worldGeneratorFiles.json`,
+  derived from `git ls-files world_generator`). Re-run with `--write` after
+  adding or removing a file under `world_generator/`; `apworldBuild.test.js`
+  fails while it is stale.
+  ```bash
+  node scripts/build/world-generator-files.mjs           # check
+  node scripts/build/world-generator-files.mjs --write   # regenerate
+  ```
 
 - **`build/bundle-frontend.js`** - Bundle the frontend for production using esbuild
   ```bash

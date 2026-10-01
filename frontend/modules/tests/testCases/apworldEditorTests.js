@@ -13886,3 +13886,99 @@ registerTest({
     category: 'apworldEditor',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+// ── .APWORLD BUILD ─────────────────────────────────────────────────────────
+import { loadJSZipBrowser, JSZIP_SCRIPT } from '../../presets/loadJSZipBrowser.js';
+
+/**
+ * ⛓⛓ **.APWORLD — REAL PYTHON, THE BYTES READ BACK.** Presses the hub's
+ * `⭳ .apworld` through its handler, which boots Pyodide (from the CDN, on the
+ * first build), runs the real `world_generator` and saves a zip. As with the
+ * rules.json row, `URL.createObjectURL` is intercepted and the BLOB is what is
+ * checked: it must open as a zip rooted at the directory its file is named
+ * after (AP refuses any other naming), carry a stamped manifest naming the
+ * game typed into the name field, and generate the working copy's own
+ * locations — an edit made in the session must reach `Locations.py`.
+ */
+export async function apworldBuildDownloadsALoadableApworld(testController) {
+    const realCreate = URL.createObjectURL;
+    const realClick = HTMLAnchorElement.prototype.click;
+    try {
+        const panel = await openHub(testController);
+        if (!panel) return testController.getOverallResult();
+
+        let captured = null;
+        let clicked = null;
+        URL.createObjectURL = function intercept(blob) {
+            captured = blob;
+            return realCreate.call(URL, blob);
+        };
+        HTMLAnchorElement.prototype.click = function noDownload() {
+            clicked = { download: this.download };
+        };
+
+        const renamed = 'Apworld Build Row';
+        const marker = 'Apworld Build Row Location';
+        const target = (() => {
+            for (const [region, data] of Object.entries(panel._regions())) {
+                const index = (data?.locations ?? []).findIndex(loc => loc?.name);
+                if (index >= 0) return { region, index };
+            }
+            return null;
+        })();
+        const locationName = !!target;
+        testController.reportCondition('the document has a location to rename', locationName);
+        if (target) {
+            panel._applyOp({ op: 'rename-location', ...target, to: marker, player: panel.playerId });
+        }
+        panel.apworldNameInput.value = renamed;
+
+        const built = await panel._handleApworldDownload();
+        testController.log(`status: ${panel.statusLabel.textContent}`);
+        testController.reportCondition('the build succeeded', !!built);
+        testController.reportCondition('…and saved a Blob through an anchor', !!captured && !!clicked);
+        if (!built || !captured || !clicked) return testController.getOverallResult();
+
+        const dir = built.gameDirectory;
+        testController.assertEqual('the file is named after its directory',
+            `${dir}.apworld`, String(clicked.download));
+
+        const JSZip = await loadJSZipBrowser({ src: JSZIP_SCRIPT });
+        const zip = await JSZip.loadAsync(await captured.arrayBuffer());
+        const names = Object.keys(zip.files).filter(n => !zip.files[n].dir);
+        testController.reportCondition('the zip has files', names.length > 0);
+        testController.reportCondition('…all under the one directory',
+            names.every(n => n.startsWith(`${dir}/`)));
+        testController.reportCondition('…including the package __init__.py',
+            names.includes(`${dir}/__init__.py`));
+
+        const manifest = JSON.parse(await zip.file(`${dir}/archipelago.json`).async('string'));
+        testController.assertEqual('the manifest names the game typed in', renamed, String(manifest.game));
+        testController.reportCondition('…and carries the container stamp',
+            Number.isInteger(manifest.compatible_version));
+
+        if (locationName) {
+            const locations = await zip.file(`${dir}/Locations.py`).async('string');
+            testController.reportCondition('a working-copy edit reached Locations.py',
+                locations.includes(marker));
+        }
+    } catch (error) {
+        testController.log(`ERROR: ${error.message}`);
+        testController.reportCondition('apworld build test error-free', false);
+    } finally {
+        URL.createObjectURL = realCreate;
+        HTMLAnchorElement.prototype.click = realClick;
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'apworld-build-downloads-a-loadable-apworld',
+    name: 'APWorld hub: ⭳ .apworld runs world_generator in the browser and saves a zip AP can load',
+    description: 'Boots Pyodide (CDN), builds the working copy through world_generator.apworld, and '
+               + 'reads the saved Blob back as a zip: named after its root directory, manifest '
+               + 'stamped and renamed, and a session edit present in Locations.py.',
+    testFunction: apworldBuildDownloadsALoadableApworld,
+    category: 'apworldEditor',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});

@@ -345,3 +345,8 @@ frontend/presets/jta_loctest_roundtrip_worldgen/
 # site-root-relative path, and only `frontend/` is published). ⛔ Build output,
 # never a source: the documents live in docs/json/developer/procgen/.
 frontend/docs/
+
+# ⛓ world_generator staged into the Pages artifact by the same workflow (the
+# apworld editor's `⭳ .apworld` fetches it from the site root). ⛔ Build output;
+# the source is world_generator/ at the repo root.
+frontend/world_generator/

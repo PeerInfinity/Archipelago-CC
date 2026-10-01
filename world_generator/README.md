@@ -45,6 +45,7 @@ python -m world_generator rules.json --dry-run
 | `--validate` | Validate JSON and report issues only |
 | `--canonical-seed N` | Enable seed=N canonical placement |
 | `--player-id` | Player ID to extract for multiworld (default: '1') |
+| `--apworld DIR` | Write `DIR/<game_directory>.apworld` instead of a world directory |
 | `-v, --verbose` | Verbose output |
 
 ## Directory Structure
@@ -109,6 +110,24 @@ generator = WorldGenerator(
 generator.load()
 generator.generate()
 ```
+
+### Build an .apworld
+
+```python
+from world_generator.apworld import build_apworld
+
+built = build_apworld('path/to/rules.json', game_name='My Game WorldGen')
+open(built['file_name'], 'wb').write(built['data'])   # <game_directory>.apworld
+```
+
+Generates into a temporary directory and packs it with the same rule as
+`scripts/build/pack_apworld.py` (which imports it): `<game_directory>/` at the
+archive root, `__pycache__` skipped, `compatible_version` stamped into
+`archipelago.json`. Use the returned `file_name` — AP loads an apworld only
+when its file name matches its directory.
+
+The APWorld Editor's `⭳ .apworld` button calls this same function in the
+browser, under Pyodide ([module docs](../docs/json/modules/apworldEditor.md#the-apworld-button)).
 
 ### Instantiate a World from JSON
 
@@ -210,12 +229,15 @@ Automatically detects counter item patterns like:
 
 ## Dependencies
 
-The world generator uses only:
-- Python standard library
-- Archipelago base classes (`BaseClasses`, `Options`, `worlds.AutoWorld`)
-- `rule_builder` module (for `RuleWorldMixin`)
+The generator itself imports only the Python standard library (`rule_builder`
+is used when present, with a fallback). That is a requirement, not an accident:
+the browser runs it under Pyodide, and
+`test/test_world_generator_apworld.py` builds from an isolated copy with
+`python -I` to hold it.
 
-No external packages required.
+The worlds it WRITES import Archipelago's base classes (`BaseClasses`,
+`Options`, `worlds.AutoWorld`) and `rule_builder` (vendored as `_ext/`), so
+they need an Archipelago install (0.6.7+) to load.
 
 ## Related Documentation
 

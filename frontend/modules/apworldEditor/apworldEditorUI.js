@@ -205,6 +205,7 @@ import {
 import { reconstructResultFromSidecars, refusedRegionsNote } from '../procgenPipeline/compositeMapDocument.js';
 import { SHOW_MENU_ON_MAP_SETTING, menuMarkerFor, showMenuOnMap } from './menuMarker.js';
 import { downloadJson, rulesDownloadName } from './downloadJson.js';
+import { buildApworld, downloadBytes } from './apworldBuild.js';
 import {
   needSentence, startingCountOf, startingGrantOp, startingInventoryList, startingNeedRows, substratesInSlot,
 } from './startingInventoryBlock.js';
@@ -1143,6 +1144,28 @@ class ApworldEditorUI {
     this.downloadButton.classList.add('apworld-download');
     this.downloadButton.title = 'Save this document as a rules.json file';
     toolbar.appendChild(this.downloadButton);
+
+    /**
+     * ⛓ .APWORLD — the document through the real `world_generator`, run in the
+     * browser under Pyodide (`apworldBuild.js`). The name field is optional:
+     * blank keeps the document's own game name; a new one avoids clashing
+     * with an installed world of the same name, and also renames the
+     * directory and so the file (AP loads an apworld only under its
+     * directory's name).
+     */
+    this.apworldNameInput = document.createElement('input');
+    this.apworldNameInput.type = 'text';
+    this.apworldNameInput.className = 'apworld-build-name';
+    this.apworldNameInput.placeholder = 'apworld game name';
+    this.apworldNameInput.title = 'Game name for the built .apworld — blank keeps the document\'s own';
+    Object.assign(this.apworldNameInput.style, { width: '130px', fontSize: '12px' });
+    toolbar.appendChild(this.apworldNameInput);
+
+    this.apworldButton = this._makeButton('⭳ .apworld', '#33506e', () => this._handleApworldDownload());
+    this.apworldButton.classList.add('apworld-build-download');
+    this.apworldButton.title = 'Generate an Archipelago world from this document and save it as an '
+      + '.apworld (runs world_generator in the browser; the first build loads Python, ~10 MB)';
+    toolbar.appendChild(this.apworldButton);
 
     this.clearButton = this._makeButton('Clear', '#8a2a2a', () => this._handleClear());
     this.clearButton.title = 'Remove all regions, exits, locations, and items (metadata kept)';
@@ -5274,6 +5297,52 @@ class ApworldEditorUI {
       this._flashButton(this.downloadButton, false);
       this._renderChrome();
     }
+  }
+
+  /**
+   * Build the .apworld and save it. Returns the build result (or null), so
+   * the in-app row can await the same promise the click starts.
+   */
+  async _handleApworldDownload() {
+    if (!this.rulesDoc) {
+      this._flashButton(this.apworldButton, false);
+      return null;
+    }
+    if (this._apworldBuilding) return this._apworldBuilding;
+    const stageText = {
+      'loading-python': 'loading Python (first build only)…',
+      'loading-generator': 'loading world_generator…',
+      'generating': 'generating…',
+    };
+    const say = (text) => {
+      this._opMessage = `.apworld: ${text}`;
+      this._renderChrome();
+    };
+    this.apworldButton.disabled = true;
+    say('starting…');
+    this._apworldBuilding = (async () => {
+      try {
+        const built = await buildApworld(this.rulesDoc, {
+          gameName: this.apworldNameInput?.value,
+          playerId: this.playerId,
+          onProgress: stage => say(stageText[stage] ?? stage),
+        });
+        const written = downloadBytes(built.fileName, built.bytes);
+        say(`downloaded ${written.fileName} (${written.bytes.toLocaleString()} bytes, `
+          + `game "${built.gameName}", ${built.ms} ms).`);
+        log('info', `Built ${written.fileName} — ${written.bytes} bytes in ${built.ms} ms.`);
+        return built;
+      } catch (err) {
+        log('error', '.apworld build failed:', err);
+        say(`build failed: ${err.message}`);
+        this._flashButton(this.apworldButton, false);
+        return null;
+      } finally {
+        this.apworldButton.disabled = false;
+        this._apworldBuilding = null;
+      }
+    })();
+    return this._apworldBuilding;
   }
 
   /**

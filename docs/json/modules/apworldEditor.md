@@ -44,6 +44,42 @@ document.
 | `../procgenPipeline/compositeMapDocument.js` | `reconstructResultFromSidecars` — `preset_sidecars` → a `Grid`; (M2) `mapBoundsFor`, the grid's size in cells, shared with the map moves |
 | `rawView.js` | the **Raw JSON** tab's text and its parse (the size limit was RETIRED by measurement — H2b) |
 | `downloadJson.js` | the download exit — the file name and the bytes |
+| `apworldBuild.js` | the **`.apworld` exit** — `buildApworld(doc, {gameName, playerId})` (the page side of the worker protocol), `worldGeneratorBaseUrl` (where `world_generator/` is served), `PYODIDE_VERSION` (pinned), `downloadBytes` |
+| `apworldBuildWorker.js` | the MODULE WORKER the build runs in — Pyodide from the CDN, booted on the first build and kept; the package files fetched per `worldGeneratorFiles.json`; calls `world_generator.apworld.build_apworld` |
+| `worldGeneratorFiles.json` | GENERATED (`node scripts/build/world-generator-files.mjs --write`, from `git ls-files world_generator`) — the files the worker fetches; `apworldBuild.test.js` fails when it is stale |
+
+## The `.apworld` button
+
+`⭳ .apworld` (toolbar, beside `⭳ Download`) turns the working copy into an
+`.apworld` that Archipelago can load, by running the real
+[`world_generator`](../../../world_generator/README.md) in the browser under
+[Pyodide](https://pyodide.org). Nothing is re-implemented in JavaScript: the
+worker calls `world_generator.apworld.build_apworld`, the function behind
+`python -m world_generator rules.json --apworld DIR`, so the page and the CLI
+produce the same archive.
+
+- **The name field** beside it is optional. Blank keeps the document's
+  `game_name`; a new name avoids clashing with an installed world of the same
+  name (the `--game-name` / `_worldgen` convention). The directory, and so the
+  file, are derived from whichever name is used — AP loads an apworld only
+  under its directory's name, so the file is never named by hand.
+- **The slot** built is the one the player selector shows (`player_id`).
+- **Cost.** Nothing loads until the first press. That press boots Pyodide
+  (~10 MB from jsDelivr, a few seconds) and fetches the package; the worker is
+  kept, so later builds pay only for generation. The status line reports each
+  stage, and a generator error's last line.
+- **Where the package comes from.** `world_generator/` at the repo root when
+  the dev server serves this tree (the page is `/frontend/index.html`); on
+  GitHub Pages, a copy `deploy-gh-pages.yml` stages into the site. A static
+  site cannot list a directory, so the worker fetches the files
+  `worldGeneratorFiles.json` names.
+- **Needs the network** for the Pyodide CDN, even on a local server.
+
+Tests: `apworldBuild.test.js` (the URL rule, the protocol, the manifest's
+freshness); `test/test_world_generator_apworld.py` (the archive's shape and
+stamp, and that the package builds with only the standard library — all
+Pyodide has); the in-app row `apworld-build-downloads-a-loadable-apworld`
+(real Pyodide; reads the saved zip back).
 
 ## The document is a session, and the only way in is an op
 

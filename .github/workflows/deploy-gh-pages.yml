@@ -56,6 +56,15 @@ jobs:
           mkdir -p frontend/docs/json/developer
           cp -r docs/json/developer/procgen frontend/docs/json/developer/procgen
 
+      # ⛓⛓ THE APWORLD EDITOR'S `⭳ .apworld` RUNS world_generator IN THE PAGE
+      # (Pyodide), fetching the files `worldGeneratorFiles.json` lists from
+      # `<siteRoot>/world_generator/` — the repo root locally, so the same path
+      # only exists on the site because of this copy
+      # (`apworldEditor/apworldBuild.js` → `worldGeneratorBaseUrl`).
+      # ⛔ `frontend/world_generator/` is in .gitignore, like `frontend/docs/`.
+      - name: Stage world_generator into the site
+        run: cp -r world_generator frontend/world_generator
+
       - name: Setup Pages
         uses: actions/configure-pages@v6.0.0
 
