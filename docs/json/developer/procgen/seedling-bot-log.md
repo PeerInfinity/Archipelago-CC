@@ -11512,6 +11512,128 @@ as TIMEOUT. The sweep went from 145 placed / 94 certified to 144 / 96.
   ends;
 - a goal satisfied before it was asked.
 
+### Seedling substrate U11-swim — the sixth wall is the fifth: step 24's Pull funnel; the facing in the i-frame; the dark shield (2026-10-01)
+
+⚖ Q39 (user, 2026-10-01: *"Yes, one slice"*). The report is
+`CC/docs/cloud-reports/seedling-swim-u11.md`. Step 24 is still refused, at the
+same wall U10 met, but the wall is now measured and it is not the one U10
+named. Two Player-model gaps close, each with game witnesses recorded before
+the fix.
+
+**D1 — wall 5 is L12's `Pull` funnel, not the opened lock row (STOP).** A
+file-sink probe at the survey's own refusal (t2048, the player at
+(423.7,258.1), tile (26,16); `openActivators` holding both opened bosslocks)
+read the two lock cells (26–27,15) CLEAR. The planner's flood from the player
+and from U10's fresh-boot point (424,224) reached the same 702 tiles and not
+the pit under the solver's plan bag; with `avoidVolumes: false` both reached
+it (7 and 6 waypoints). Keys and contacts made no difference. L12 has ONE pit
+tile, (36,43), and all four of its neighbours are `Pull` entities
+(`region1.oel` holds 14, force 1, pointing at the pit). `Pull.update` writes
+the player's `x`/`y` directly every tick, no model transcribes it ("routed
+around since R1", `combat.js`), and so the planner prices every pull tile as a
+proximity-hazard avoid volume and the pit is unreachable by construction. The
+frontier, which has no strategy for a pull, then names the next obstacle it
+can resolve: the keyType-1 `bosslock@80,656`. U10's *"the level admits the
+route"* was measured with the volumes off. Walking the funnel needs
+`Pull.update` transcribed, which is a simulation mechanic with its own witness
+and outside D1's solver scope, so D1 stops there.
+`probe-seedling-u11-wall5.mjs` re-measures it offline in about a second.
+
+**D2 — the facing during a knockback's i-frame.** `Player.hit` arms
+`hitsTimer` BEFORE calling `knockback`, so `knockback`'s `if (hitsTimer > 0)
+directionFace = direction` always parks the facing the hit found. `sprites()`
+(below `super.update()`) then writes `direction = directionFace` every tick of
+the i-frame, and `hitUpdate`'s recovery hands it back. `stepV2` derived
+`direction` from the post-move velocity, the knockback's own heading, so the
+next press (`pressFacing = state.direction`) swung the wrong way. `stepOptsFor`
+now carries `damage.directionFace` to `stepV2`, which passes it to
+`nextDirection`. U9's special case in the shield box's render snapshot folds
+into it: the box reads `state.direction`, which is now the game's.
+
+Every reader the brief listed reads the GAME's `direction`, so none needed a
+separate fix; none reads intent:
+
+| reader of `state.direction` | what it is | after D2 |
+|---|---|---|
+| `levelRun` `pressFacing` | `set slashing` / `set spearing` capture the facing the tick started with | follows `directionFace` (the gap U10 found) |
+| `levelRun` `shieldRenderState` | the shield box's facing | U9's special case, folded into the source |
+| `levelRun` `applyPlayerHit` (`direction:`) | what `knockback` parks as `directionFace` | unchanged: the pre-hit facing, as the game parks it |
+| `levelRun` the `direction` getter | the run's state | the game's facing |
+| `strikePolicy` `slashPressForecast` (×4) and `solverBot.previewWalk`'s `slashSet` | the press policy's facing, live and previewed | the game's facing in the drive; a preview takes no hit (see the residue) |
+| `botDriverV2.faceTowards` | "is the player already facing N?" before a tap | the game's facing (a tap inside an i-frame cannot turn it, and the verb refuses by name) |
+
+Witnesses (fixed keys, authored and recorded on the game BEFORE the fix):
+
+- `u11-facing-knockback`: L4, `down` ×20 into `bob@64,64`, the contact at t20,
+  the press at t21. The old model swings UP, misses, and reds at tick 44 (game
+  y 55.76, model 53.01: the bob's second contact); its bob disagrees from t22.
+  The fixed model reproduces all 81 observations and 81/81 bob samples.
+- `u11-facing-puncher`: U10's control boot (400,248), 50 ticks. The punch's
+  knockback is absorbed by a wall, so the player stream is blind. The old
+  model's puncher reads `hits` 1 against the game's 2 from t36 (15
+  disagreements); the fixed model agrees on 51/51.
+
+Of the 162 committed tapes, 16 hold a parked facing and none presses while
+the two facings differ, so the roster is press-inert: tapeRunner was unchanged
+on all 385 rows. U9's three shield witnesses' body probes still agree at every
+sample.
+
+**D3 — the dark shield's HIT.** With `hasDarkShield`, `shieldBump` calls
+`o.hit(shieldForce 5, Point(x,y), darkShieldDamage 0.5, "Shield")` on a body
+whose own `hitsTimer <= 0`, and the plain knockback otherwise.
+`levelRun.darkShieldHitChaser` transcribes it through `enemyHit`, the one path
+every chaser hit takes, live and in the chaser forecast. It deals 0.5, arms
+the 30-tick i-frame, knocks the body back unless its `knockback` is empty (the
+puncher), and LATCHES `hitByDarkStuff`, so the next damaging hit lands through
+that i-frame. The bump itself cannot use the latch, because its own gate is
+`o.hitsTimer <= 0`; its observable is a sword hit inside the i-frame. What
+stays refused by name, more narrowly than before:
+
+- a shield KILL (the `startDeath("Shield")` staging and the kill ledger);
+- a spinner (`hitSpinner` carries no latch, and `spinner.js` is outside the
+  licence);
+- the BobBoss, only where the dark arm fires (its `hit` adds a sword on the
+  third form, then calls `super.hit(0, null, …)`: damage, no shove, and a latch
+  `bobBossHit` lacks).
+
+`darkShieldDamage` is a new profile key (`Player.as:darkShieldDamage`; the
+profile md5 is now `cf76477e…`).
+
+- `u11-dark-shield-bob`: L4 (64,32) with the shield, the dark shield and a
+  sword, `down` ×40, a press at t19, 58 ticks. The bump hits the bob at t16
+  (0.5, i-frame 30, a shove); the press lands at t19 THROUGH that i-frame (hits
+  1.5), and the bob comes back and contacts the player at t57. The game's own
+  `hit_by_dark_stuff` reads true from t16 and false from t20. The tape ends
+  before t61, where the contact's throw starts the player's fall into L4's
+  lethal pit (the first, 100-tick recording measured it: `receiveInput` false
+  from t61, `die()` at t80). The model reproduces every observation and 59/59
+  bob samples.
+- `u11-dark-shield-puncher`: U9's puncher boot, `right` ×40, 60 ticks. The
+  bump hits the puncher at t13 and moves nothing, and inside its i-frame the
+  player walks through it untouched, where the plain shield takes the contact
+  at t15 and the punch at t35. The model reproduces it and 61/61 samples.
+
+The five committed `r2-walk-*` dark-shield tapes are `noDamage` and hold no
+stepped body, so they are vacuous for this change.
+
+**Mutants** (each predicted first; copies restored md5-identical):
+
+| mutant | predicted | measured |
+|---|---|---|
+| D2: `nextDirection` fed −1 | `u11-facing-knockback` red at t44; `u9-shield-bob-shove` red | **1 red / 384**: `u11-facing-knockback` at t44. `u9-shield-bob-shove`'s player stream cannot see the t27 shove (U9 found it with the body probe), so it stayed green |
+| (f) the latch dropped | `u11-dark-shield-bob` red at t57 | **1 red / 388**: `u11-dark-shield-bob` at t57 (game x 74.63, mutant 72.00) |
+
+**Trap candidates**, for the catalogue to number:
+
+- a comparison made under different policy flags (U10's fresh-boot plan
+  without `avoidVolumes`), which reads a policy wall as level geometry;
+- a reader patched in one place (U9's shield box) while the value it
+  corrected stayed wrong at the source;
+- a frontier that names the nearest obstacle it CAN resolve, so an
+  unmodelled one (a `Pull`) is reported as an unrelated sub-order;
+- a witness whose arm ends inside a death the model refuses: `receiveInput`
+  falls at the start of the pit lerp, twenty frames before the `die()`.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

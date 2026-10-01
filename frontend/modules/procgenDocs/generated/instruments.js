@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 39,
+            "count": 41,
             "id": "plan"
         },
         {
             "browser": 24,
-            "count": 63,
+            "count": 64,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 288,
+        "blockStyle": 291,
         "browser": 88,
-        "cited": 130,
-        "files": 299,
+        "cited": 131,
+        "files": 302,
         "lineStyle": 11,
-        "withDocblock": 299,
-        "withFlags": 220
+        "withDocblock": 302,
+        "withFlags": 222
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7528,6 +7528,60 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-u11-dark-shield.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-u11-dark-shield — ⛓⛓⛓ U11-swim D3: THE DARK SHIELD'S `shieldBump` HIT, WITNESSED ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-u11-dark-shield.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-u11-facing.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-u11-facing — ⛓⛓⛓ U11-swim D2: THE PLAYER'S FACING DURING A KNOCKBACK'S I-FRAME, WITNESSED ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-u11-facing.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-u7-puncher.mjs",
             "flags": [
                 {
@@ -9149,6 +9203,27 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-swim-sound — is the swim speed a function of WALL CLOCK?",
             "path": "scripts/procgen/probe-seedling-swim-sound.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-u11-wall5.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-u11-wall5 — ⛓⛓⛓ U11-swim D1: STEP 24'S FIFTH WALL, MEASURED.",
+            "path": "scripts/procgen/probe-seedling-u11-wall5.mjs"
         },
         {
             "argvHelpers": [
