@@ -101,7 +101,17 @@ const WRITE = !process.argv.includes('--no-write');
 const WRITE_FRONTIER = process.argv.includes('--write-frontier');
 const CHECK_FRONTIER = process.argv.includes('--check-frontier');
 const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'r9-slice5-census');
-const SURVEY_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey');
+/**
+ * ⛓ SWIM U13 (⚖ Q40) — THE FRONTIER'S SOURCE IS THE THROUGH-2.2 ROUTE. The
+ * chain walks past the shield now, so the route it is aligned against is the
+ * extended survey's: `survey-seedling-route.mjs --through=2.2` writes
+ * `through-2.2/route.json`, and its rows go to `through-2.2/survey.json` by
+ * `--out=` (the extended survey never writes the default `survey.json`):
+ *   node scripts/procgen/survey-seedling-route.mjs --through=2.2 \
+ *       --out=NewDocs/plans/seedling-editor-survey/through-2.2/survey.json --timeout=1500
+ * Both are gitignored like the default pair, which is why the frontier exists.
+ */
+const SURVEY_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey', 'through-2.2');
 
 /**
  * ⛓⛓⛓ THE SUBJECT, in sphere order (⚖ ruling 14) — **AND IT IS DERIVED NOW.**
@@ -482,6 +492,20 @@ function sourceDigests() {
     return out;
 }
 
+/**
+ * ⛓ SWIM U13 — the room a TERMINAL route step's walk ends in: its own, unless
+ * its last goal is an encounter whose `then` falls the arena's pit (L32's Bob
+ * Boss), which lands in the level the control block names. The route still
+ * ends at that step (`crossesTo: null`); the fall is the encounter's.
+ */
+function terminalEndLevel(step) {
+    const g = step.goals[step.goals.length - 1];
+    if (g?.kind === 'encounter' && g.then === 'reach-pit') {
+        return buildLevelWorld(source(step.level)).fallthrough.level;
+    }
+    return step.level;
+}
+
 function deriveFrontier(surveyRes) {
     const arrivals = CHAIN.map((n) => walkOf(n)).map((w) => (w.error ? null : w.endLevel));
     const base = {
@@ -509,7 +533,7 @@ function deriveFrontier(surveyRes) {
      * that step's own room. Every other step still aligns by its crossing.
      */
     const aligns = (k) => (steps[k].crossesTo === null
-        ? isTerminal(CHAIN[k]) && arrivals[k] === steps[k].level
+        ? isTerminal(CHAIN[k]) && arrivals[k] === terminalEndLevel(steps[k])
         : steps[k].crossesTo === arrivals[k]);
     let covered = 0;
     while (covered < arrivals.length && covered < steps.length && aligns(covered)) covered += 1;
@@ -530,7 +554,7 @@ function deriveFrontier(surveyRes) {
      */
     if (covered === steps.length) {
         return { ...base,
-            lastArrival: { step: last.step, level: last.crossesTo ?? last.level,
+            lastArrival: { step: last.step, level: last.crossesTo ?? terminalEndLevel(last),
                 segment: CHAIN.at(-1) },
             nextStep: null, refusal: null, covered, complete: true,
             why: `the chain walks all ${steps.length} route steps, from the `

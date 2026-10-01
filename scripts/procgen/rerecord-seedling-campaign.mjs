@@ -1983,7 +1983,9 @@ function report(ctx, s0, s1, s2) {
  *   node scripts/procgen/rerecord-seedling-campaign.mjs --grow --to=S0  # rehearse
  *   node scripts/procgen/rerecord-seedling-campaign.mjs --grow
  */
-const SURVEY_DIR = join(ROOT, 'NewDocs/plans/seedling-editor-survey');
+// ⛓ Swim U13: the frontier's source, `census-seedling-campaign.mjs`'s own — the
+//   through-2.2 route and its rows (`--through=2.2 --out=…/through-2.2/survey.json`).
+const SURVEY_DIR = join(ROOT, 'NewDocs/plans/seedling-editor-survey/through-2.2');
 const FRONTIER_PATH = join(MODULE, 'fixtures/campaign-frontier.json');
 const CHAIN_DECL = join(MODULE, 'campaignChain.js');
 

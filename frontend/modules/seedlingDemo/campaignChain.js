@@ -35,7 +35,7 @@
  * ── WHAT IS DATA AND WHAT IS DERIVED ──────────────────────────────────
  *
  * DATA (a human decided it): `name`, `level`, `to`, `promoted`, `collects`,
- * `why`.
+ * `exit`, `encounter`, `why`.
  * DERIVED elsewhere, never written here: every COORDINATE (the producer's
  * `placement`/`exitTo` read the atlas), every TICK COUNT (`playthroughWalk`'s
  * `withDerivedTicks` reads the committed tapes), the cuts, `endsAt`, and the
@@ -66,6 +66,13 @@
  * crosses nothing (the shield, `route.steps[].crossesTo === null`), so the
  * producer gives it its `collects` and NO `reach-exit`, and the chain ends in
  * that room. At most the tail may be terminal (`campaignChainBreaks`).
+ *
+ * ⛓ Swim U13 — the terminal segment is now L32's, and its goal is the
+ * encounter with `then: 'reach-pit'` (the route step's own goal, verbatim):
+ * after the burn the walk falls through the arena's pit into the room its
+ * control block names (L30). That one crossing is the ENCOUNTER's, not a door
+ * the route takes, so the route still ends at step 30. The producer and the
+ * census both accept exactly that one pit crossing on a terminal segment.
  *
  * `promoted` marks a segment this chain did NOT re-author: its boot already
  * IS its predecessor's latch (the census measured CONTINUES on every pair up
@@ -174,11 +181,88 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
             + 're-plan(s), passes [solve]',
     }),
     Object.freeze({
-        name: 'r9-solve-20', level: 20, to: null, collects: Object.freeze(['shield']),
+        name: 'r9-solve-20', level: 20, to: 13, collects: Object.freeze(['shield']),
         why: 'L20 — grown by `rerecord-seedling-campaign.mjs --grow` at route step '
             + '21: Level 020 - Shield (sphere 2.1) → Progressive Shield. The '
             + 'survey\'s own solve is 161 tick(s), 2 decision(s), 0 re-plan(s), '
+            + 'passes [solve]. Swim U13 (⚖ Q40) gave it the 2.2 route\'s exit, '
+            + 'stairsup@16,48 → L13: the through-2.2 survey\'s solve of the step is '
+            + '560 tick(s), 5 decision(s), 0 re-plan(s), passes [solve]',
+    }),
+    /**
+     * ⛓⛓ SWIM U13 (⚖ Q40, user 2026-10-01: "Yes, one slice") — route steps 22–30,
+     * the through-2.2 route (`survey-seedling-route.mjs --through=2.2`), appended
+     * by hand in one slice rather than by `--grow`, which grows one room per run
+     * and derives a name a second visit already holds. Each `why` keeps `--grow`'s
+     * form: the room, the route goals, and the survey's own solve.
+     *
+     * ⛓ TWO ROOMS ARE VISITED AGAIN, so their names say which visit:
+     * `r9-solve-13-v2` (L13, visit 2) and `r9-solve-0-v3` (L0, visit 3). The
+     * earlier visits keep `r9-solve-13` and `r9-solve-0` (trap 169's shape).
+     *
+     * ⛓ TWO NEW EXIT SHAPES, each DATA rather than a coordinate:
+     *  · `exit: 'pit'` — the room is left by a pit, not a door. The producer
+     *    derives the tile from the model (the level's `control` block names `to`,
+     *    and the room has exactly one pit tile) and asks `reach-pit`.
+     *  · `encounter: '<drop>'` — the room's goal is an encounter that DROPS the
+     *    item. The producer derives `at` from the playthrough atlas and `then`
+     *    from the control block (`'reach-pit'` when it names a fallthrough).
+     */
+    Object.freeze({
+        name: 'r9-solve-13-v2', level: 13, to: 0,
+        why: 'L13 — grown by swim U13 at route step 22 (visit 2): stairsup@64,144 → '
+            + 'L0. The survey\'s own solve is 48 tick(s), 1 decision(s), 0 re-plan(s), '
             + 'passes [solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-0-v3', level: 0, to: 12,
+        why: 'L0 — grown by swim U13 at route step 23 (visit 3): teleporter@304,176 → '
+            + 'L12. The survey\'s own solve is 229 tick(s), 2 decision(s), 0 '
+            + 're-plan(s), passes [solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-12', level: 12, to: 21, exit: 'pit',
+        why: 'L12 — grown by swim U13 at route step 24: pit@576,688 (out_pit_5_5, '
+            + 'tile 36,43) → L21, the puncher killed and the Pull funnel ridden into '
+            + 'the pit (U12). The survey\'s own solve is 2419 tick(s), 4 decision(s), '
+            + '0 re-plan(s), passes [solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-21', level: 21, to: 22,
+        why: 'L21 — grown by swim U13 at route step 25, arriving by the L12 pit: '
+            + 'teleporter@80,160 → L22. The survey\'s own solve is 26 tick(s), 1 '
+            + 'decision(s), 0 re-plan(s), passes [solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-22', level: 22, to: 29,
+        why: 'L22 — grown by swim U13 at route step 26: teleporter@192,64 → L29. The '
+            + 'survey\'s own solve is 89 tick(s), 1 decision(s), 0 re-plan(s), passes '
+            + '[solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-29', level: 29, to: 31, collects: Object.freeze(['bosskey']),
+        why: 'L29 — grown by swim U13 at route step 27: Level 029 - Boss Key 1 (sphere '
+            + '1.4) → Green Key; stairsdown@112,32 → L31. The survey\'s own solve is 383 '
+            + 'tick(s), 4 decision(s), 0 re-plan(s), passes [solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-31', level: 31, to: 30,
+        why: 'L31 — grown by swim U13 at route step 28: stairsup@160,384 → L30. The '
+            + 'survey\'s own solve is 336 tick(s), 2 decision(s), 0 re-plan(s), passes '
+            + '[solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-30', level: 30, to: 32,
+        why: 'L30 — grown by swim U13 at route step 29: stairsup@224,160 → L32. The '
+            + 'survey\'s own solve is 210 tick(s), 2 decision(s), 0 re-plan(s), passes '
+            + '[solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-32', level: 32, to: null, encounter: 'Fire',
+        why: 'L32 — grown by swim U13 at route step 30: Level 032 - Bob Boss (sphere '
+            + '2.2) → Fire, the encounter (U5\'s `bobBossFight.js`), then the burned '
+            + 'tree\'s pit. The survey\'s own solve is 1056 tick(s), 15 decision(s), 0 '
+            + 're-plan(s), passes [solve]',
     }),
 ]);
 
@@ -219,7 +303,8 @@ export const CAMPAIGN_SEGMENT_NAMES = Object.freeze(
  * its latch, so the CALM-ARRIVAL law — which exists so a successor can build a
  * fresh Player at v = 0 — is not asked of it (measured: `r9-solve-20` ends as
  * the shield pickup's freeze releases, v = (−0.55, 1.18), and the model
- * reproduces it tick for tick).
+ * reproduces it tick for tick). Since swim U13 the terminal segment is
+ * `r9-solve-32`, which ends after its encounter's pit fall.
  */
 export const isTerminalSegment = (name) =>
     CAMPAIGN_SEGMENTS.some((s) => s.name === name && s.to === null);

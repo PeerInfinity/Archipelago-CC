@@ -208,7 +208,7 @@ const { createLevelRun } = await import(join(MODULE, 'levelRun.js'));
 const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { solveSegment } = await import(join(MODULE, 'solverBot.js'));
 const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
-const { ROLES } = await import(join(MODULE, 'levelWorld.js'));
+const { ROLES, buildLevelWorld } = await import(join(MODULE, 'levelWorld.js'));
 const { segmentBootFromLatch, seamLatchFindings } =
     await import(join(MODULE, 'r7Acceptance.js'));
 const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
@@ -363,6 +363,73 @@ const collect = (level, type) => ({ kind: 'collect-placement', placement: placem
 const reach = (level, to) => ({ kind: 'reach-exit', exit: exitTo(level, to) });
 
 /**
+ * ⛓⛓ SWIM U13 — **THE PIT TO A NAMED LEVEL, FROM THE MODEL.** A pit is floor,
+ * not an entity with a `to`: where it lands is the level's `control` block
+ * (`world.fallthrough`, the run's own `fallDestination` input). So the goal is
+ * the room's pit tile when that block names `to`, and a room with more than one
+ * pit tile REFUSES as ambiguous rather than having one picked for it — the same
+ * law as `exitTo`. (The route survey's `pitEdgeFor` reaches the same tile by
+ * the AP export's `out_pit_*` exit; L12 has one pit tile, (36,43).)
+ */
+const pitTo = (level, to) => {
+    const world = buildLevelWorld(levelSource(level));
+    if (world.fallthrough?.level !== to) {
+        throw new Error(`L${level}'s control block falls to `
+            + `${world.fallthrough ? `L${world.fallthrough.level}` : 'nothing'}, not L${to}; `
+            + 'a reach-pit toward L' + `${to} has no pit to aim at`);
+    }
+    const pits = world.pitTiles ?? [];
+    if (pits.length !== 1) {
+        throw new Error(`L${level} has ${pits.length} pit tiles falling to L${to}; the goal `
+            + 'would be ambiguous');
+    }
+    const [p] = pits;
+    return { tx: p.tx, ty: p.ty, x: p.rect.x, y: p.rect.y };
+};
+const reachPit = (level, to) => ({ kind: 'reach-pit', pit: pitTo(level, to) });
+
+/**
+ * ⛓⛓ SWIM U13 — **AN ENCOUNTER THAT DROPS `item`, FROM THE ATLASES.** The
+ * location is the sphere order's row for that item IN THIS LEVEL, and `at` is
+ * that location's tile in the playthrough atlas (the route survey's
+ * `encounterCoords`). `then` is the control block's: a level with a
+ * fallthrough is left by its pit after the drop. The solver owns HOW the
+ * encounter is fought (`ENCOUNTER_EXECUTORS`); this names WHICH.
+ */
+const ATLASES = join(REPO, 'frontend', 'modules', 'flashPanel', 'atlases');
+const encounter = (level, item) => {
+    const spheres = JSON.parse(readFileSync(join(ATLASES, 'seedling-sphere-order.json'), 'utf8'));
+    const rows = spheres.order.filter((o) => o.item === item && o.level === level);
+    if (rows.length !== 1) {
+        throw new Error(`the sphere order has ${rows.length} rows dropping '${item}' in `
+            + `L${level}; the encounter would be ambiguous`);
+    }
+    const pt = JSON.parse(readFileSync(join(ATLASES, 'seedling-playthrough.json'), 'utf8'));
+    const loc = (pt.regions.find((r) => r.map_ref === level)?.locations ?? [])
+        .find((l) => l.name === rows[0].location);
+    if (!loc) throw new Error(`L${level}: the playthrough atlas has no location '${rows[0].location}'`);
+    const world = buildLevelWorld(levelSource(level));
+    return {
+        kind: 'encounter',
+        at: { x: loc.tile[0] * pt.tile_space.tile_size, y: loc.tile[1] * pt.tile_space.tile_size },
+        drop: { item },
+        then: world.fallthrough ? 'reach-pit' : null,
+    };
+};
+/**
+ * ⛓ SWIM U13 — the room a TERMINAL segment's walk ends in. It crosses nothing,
+ * unless its goal is an encounter whose `then` falls the arena's pit: that one
+ * crossing is the encounter's own, into the level the control block names.
+ */
+const terminalEndLevel = (seg) => {
+    const g = seg.goals[seg.goals.length - 1];
+    if (g?.kind === 'encounter' && g.then === 'reach-pit') {
+        return buildLevelWorld(levelSource(seg.level)).fallthrough.level;
+    }
+    return seg.level;
+};
+
+/**
  * ⛔⛔ THE SEGMENT LIST IS NOT DECLARED HERE ANY MORE — ⚖ ruling 38 item (1),
  * R9 slice 12d. It lives in `frontend/modules/seedlingDemo/campaignChain.js`,
  * the ONE declaration every consumer derives from, and this file's `SEGMENTS`
@@ -386,11 +453,16 @@ const reach = (level, to) => ({ kind: 'reach-exit', exit: exitTo(level, to) });
  * gets NO `reach-exit`: the route ends in that room (`route.steps[].crossesTo`
  * is null at the shield), so its goals are its `collects` alone.
  */
+/**
+ * ⛓ SWIM U13 — `encounter` is the room's goal after its `collects` (L32's Bob
+ * Boss), and `exit: 'pit'` turns the crossing toward `to` into `reach-pit`.
+ */
 const SEGMENTS = CAMPAIGN_SEGMENTS.map((s) => Object.freeze({
     ...s,
     goals: [
         ...(s.collects ?? []).map((type) => collect(s.level, type)),
-        ...(s.to === null ? [] : [reach(s.level, s.to)]),
+        ...(s.encounter ? [encounter(s.level, s.encounter)] : []),
+        ...(s.to === null ? [] : [s.exit === 'pit' ? reachPit(s.level, s.to) : reach(s.level, s.to)]),
     ],
 }));
 
@@ -473,9 +545,20 @@ function claimArrival(name, run, to, seg = null) {
      * it did not meet, so the row below restates that as the chain's claim.
      */
     if (to === null) {
-        check(`${name}: a TERMINAL segment crosses NOTHING — it ends the route in L${seg?.level}`,
-            run.transitions.length === 0 && run.level === seg?.level,
-            JSON.stringify(run.transitions.map((x) => `${x.t}:L${x.to_level}`))
+        /**
+         * ⛓ SWIM U13 — unless its encounter falls the arena's pit, which is
+         * then its ONE crossing, into the control block's level.
+         */
+        const end = terminalEndLevel(seg);
+        check(end === seg?.level
+            ? `${name}: a TERMINAL segment crosses NOTHING — it ends the route in L${seg?.level}`
+            : `${name}: a TERMINAL segment crosses only its encounter's pit — it ends the `
+                + `route in L${seg?.level} and falls to L${end}`,
+        end === seg?.level
+            ? run.transitions.length === 0 && run.level === seg?.level
+            : run.transitions.length === 1 && run.transitions[0].to_level === end
+                && run.level === end,
+        JSON.stringify(run.transitions.map((x) => `${x.t}:L${x.to_level}`))
                 + ` · ends in L${run.level}`);
         return null;
     }
