@@ -337,6 +337,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'u11-dark-shield-bob', 'u11-dark-shield-puncher',
             // ⛓⛓⛓ U12-swim: `Pull.update`'s witnesses, in the puncher's room.
             'u12-pull-carry', 'u12-pull-cross',
+            // ⛓⛓⛓ R1-swim: the dark suit's witnesses.
+            'r1-dark-suit-bob',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -355,9 +357,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ U11-swim takes it to 28 — the two facing witnesses and the two dark-shield
         // witnesses (L4, L12 each).
         // ⛓ U12-swim takes it to 30 — `u12-pull-carry` and `u12-pull-cross`, in L12.
-        expect(out.exposed).toBe(30);
+        // ⛓ R1-swim takes it to 31 — `r1-dark-suit-bob`, in L4.
+        expect(out.exposed).toBe(31);
         expect(out.tapes).toEqual([
-            'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
+            'r1-dark-suit-bob', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-13',
             'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'u10-puncher-dwell',
@@ -470,6 +473,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'u11-dark-shield-puncher': { tape: {}, levels: [12] },
             'u12-pull-carry': { tape: {}, levels: [12] },
             'u12-pull-cross': { tape: {}, levels: [12] },
+            'r1-dark-suit-bob': { tape: {}, levels: [4] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

@@ -23,7 +23,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-    DEATH_REBOOT, KNOCKBACK_COMPARATORS, PLAYER_DAMAGE, PlayerDamageError,
+    DARK_SUIT_DAMAGE, DARK_SUIT_FORCE, DEATH_REBOOT, KNOCKBACK_COMPARATORS, PLAYER_DAMAGE, PlayerDamageError,
     canSteer, createPlayerDamage, iFrameSteeringSpan, knockbackAxisLands,
     knockbackDelta, playerHit, stepPlayerDamage,
 } from './playerDamage.js';
@@ -161,6 +161,24 @@ describe('`Player.hit()` — the gates, in source order', () => {
     it('the darksuit retaliation is refused BY NAME, not silently skipped', () => {
         expect(() => playerHit(fresh(), { hitsMax: 3, hasDarkSuit: true, from: null }))
             .toThrow(/darkSuit|hasDarkSuit/i);
+    });
+
+    it('⛓ R1-swim D1: the darksuit retaliation is OWED only when the source passes `e`, inside the gate', () => {
+        const at = { x: 8, y: 0 };
+        const from = { x: 0, y: 0 };
+        const by = (byEnemy, s = fresh()) => playerHit(s, {
+            hitsMax: 3, force: 3, from, at, direction: 3, hasDarkSuit: true, byEnemy,
+        });
+        expect(by(true).retaliates).toBe(true);
+        expect(by(false).retaliates).toBe(false);
+        // The player's own hit is unchanged by the suit.
+        expect(by(true).state).toEqual(playerHit(fresh(), { hitsMax: 3, force: 3, from, at, direction: 3 }).state);
+        // A hit the player's i-frame swallows retaliates nothing.
+        expect(by(true, { hits: 1, hitsTimer: 5, directionFace: -1 }).retaliates).toBe(false);
+        // Without the suit nothing is owed, declared or not.
+        expect(playerHit(fresh(), { hitsMax: 3, from: null, byEnemy: true }).retaliates).toBe(false);
+        expect(DARK_SUIT_FORCE).toBe(1);
+        expect(DARK_SUIT_DAMAGE).toBe(1);
     });
 });
 

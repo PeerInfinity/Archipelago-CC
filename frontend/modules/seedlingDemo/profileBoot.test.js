@@ -8,7 +8,7 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 const GLOBAL = '__SEEDLING_PROFILE__';
-const DEFAULT_MD5 = 'cf76477ed5289765a0fcec3b292ac3f5';
+const DEFAULT_MD5 = 'd06ae110b5b7b093c6d91fbe0a90b966';
 const ROOT = new URL('https://example.test/repo/');
 let boot;
 

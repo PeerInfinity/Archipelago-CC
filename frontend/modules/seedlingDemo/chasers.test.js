@@ -217,6 +217,28 @@ describe('the tick order is friction, move, THEN chase', () => {
             { x: 104, y: 100 });
         expect(s.v).toEqual({ x: 0, y: 0 });
     });
+
+    it('⛓ R1-swim D1: the contact hook runs AFTER the move and BEFORE the chase, which reads what it wrote', () => {
+        // `Enemy.update`'s `hitUpdate(); hitPlayer();` sits between
+        // `super.update()` and `Bob.update`'s chase block: a dark-suit
+        // retaliation's shove lands in `v` before `pushed` is tested.
+        const seen = [];
+        const s = chaserStep('bob', { x: 100, y: 100, v: { x: 0, y: 0 } }, { x: 140, y: 100 }, {
+            hitPlayer: (mid) => {
+                seen.push(mid);
+                return { v: { x: -1, y: 0 }, dying: false };
+            },
+        });
+        expect(seen).toEqual([{ x: 100, y: 100, v: { x: 0, y: 0 }, iframesTicked: true }]);
+        // `pushed` (|v| 1 > 0.5) keeps the shove from being re-normalised:
+        // -1 + sign(0.5 - -1) * 0.5 = -0.5.
+        expect(s.v).toEqual({ x: -0.5, y: 0 });
+        // A hook that killed the body (`startDeath` plays "die") skips the chase.
+        const k = chaserStep('bob', { x: 100, y: 100, v: { x: 0, y: 0 } }, { x: 140, y: 100 }, {
+            hitPlayer: ({ v }) => ({ v, dying: true }),
+        });
+        expect(k.v).toEqual({ x: 0, y: 0 });
+    });
 });
 
 describe('the placements come from the census, not from here', () => {

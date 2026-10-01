@@ -81,8 +81,10 @@ describe('seedlingProfile — the one registry of physics and rule constants', (
         // and the change needs the arc's byte-neutral gates, not a new pin.
         // ⛓ U11-swim D3: 135 -> 136 with `darkShieldDamage` (0.5, a NEW key: no
         // existing value moved, and tapeRunner / the six --checks are unmoved).
-        expect(Object.keys(PROFILE)).toHaveLength(136);
-        expect(profileMd5()).toBe('cf76477ed5289765a0fcec3b292ac3f5');
+        // ⛓ R1-swim D1: 136 -> 138 with `darkSuitForce` and `darkSuitDamage` (1 and
+        // 1, NEW keys: `Player.hit`'s dark-suit retaliation; no existing value moved).
+        expect(Object.keys(PROFILE)).toHaveLength(138);
+        expect(profileMd5()).toBe('d06ae110b5b7b093c6d91fbe0a90b966');
     });
 
     it('profileMd5 moves with any one value by one ULP', () => {
@@ -180,13 +182,13 @@ describe('seedlingProfile — every AS3 anchor resolves to a literal EQUAL to th
         // every anchor resolves to a number today; a new anchor that does not
         // must say how (`as3Match`), not be skipped silently
         expect(unresolved).toEqual([]);
-        expect({ anchored: anchored.length, checked }).toEqual({ anchored: 70, checked: 70 });
+        expect({ anchored: anchored.length, checked }).toEqual({ anchored: 72, checked: 72 });
     });
 });
 
 // ── A3: overrides ────────────────────────────────────────────────────
 
-const DEFAULT_MD5 = 'cf76477ed5289765a0fcec3b292ac3f5';
+const DEFAULT_MD5 = 'd06ae110b5b7b093c6d91fbe0a90b966';
 /** The next double above `x` (x > 0): +1 ULP. */
 const nextUp = (x) => {
     const b = new DataView(new ArrayBuffer(8));
@@ -231,7 +233,7 @@ describe('seedlingProfile — overrides (A3): no override is byte-identical', ()
         expect(PROFILE_SOURCE).toBe('compiled-in default');
         expect(PROFILE_SOURCE).toBe(DEFAULT_SOURCE);
         expect(PROFILE_OVERRIDES).toEqual({});
-        expect(PROFILE_DEFAULTED).toBe(136);
+        expect(PROFILE_DEFAULTED).toBe(138);
         expect(PROFILE_FLAGS).toEqual([]); // the reserved flags section: empty
     });
 
@@ -260,7 +262,7 @@ describe('seedlingProfile — overrides (A3): the load-time semantics', () => {
         expect(validateProfile(m.profileStamp())).toEqual({ id: 'seedling-js-2026', md5: m.profileMd5() });
         expect(m.PROFILE_SOURCE).toBe('override:inline');
         expect(m.PROFILE_OVERRIDES).toEqual({ walkSpeed: v });
-        expect(m.PROFILE_DEFAULTED).toBe(135);
+        expect(m.PROFILE_DEFAULTED).toBe(137);
         expect(m.profileDefaultedKeys()).not.toContain('walkSpeed');
         expect(m.profileAnnouncements()).toContain(`set walkSpeed=${JSON.stringify(v)}`);
         // ...and a module imported in THIS (unreset) registry kept the default
@@ -276,18 +278,18 @@ describe('seedlingProfile — overrides (A3): the load-time semantics', () => {
         expect(m.profileAnnouncements()[0]).toBe(`profile: override:walk-plus (id walk-plus, md5 ${m.profileMd5()})`);
     });
 
-    it('⚖ A NO-OP OVERRIDE IS STILL A SET (RWK announces every set): md5 unchanged, 1 set, 135 defaulted', async () => {
+    it('⚖ A NO-OP OVERRIDE IS STILL A SET (RWK announces every set): md5 unchanged, 1 set, 137 defaulted', async () => {
         const [m] = await withOverride({ walkSpeed: 0.8 });
         expect(m.profileMd5()).toBe(DEFAULT_MD5); // the md5 says the profile did not move
         expect(m.PROFILE_OVERRIDES).toEqual({ walkSpeed: 0.8 });
-        expect(m.PROFILE_DEFAULTED).toBe(135);
+        expect(m.PROFILE_DEFAULTED).toBe(137);
         expect(m.PROFILE_SOURCE).toBe('override:inline');
         expect(m.PROFILE).not.toBe(m.PROFILE_DEFAULTS);
         expect(m.PROFILE).toEqual(m.PROFILE_DEFAULTS);
         expect(m.profileAnnouncements()).toEqual([
             `profile: override:inline (id seedling-js-2026, md5 ${DEFAULT_MD5})`,
             'set walkSpeed=0.8',
-            'defaulted: 135 of 136 keys',
+            'defaulted: 137 of 138 keys',
         ]);
     });
 

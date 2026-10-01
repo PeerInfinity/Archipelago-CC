@@ -171,8 +171,8 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow|1,struct
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow|2,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow|4,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepPulsersNow|5,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
-frontend/modules/seedlingDemo/levelRun.js|stepBlastsNow|h968f45de|0|0,physics,magnitude,,blast knockback force 0
-frontend/modules/seedlingDemo/levelRun.js|stepBlastsNow|h968f45de|1|0,rule,magnitude,,blast damage
+frontend/modules/seedlingDemo/levelRun.js|stepBlastsNow|hffb2183c|0|0,physics,magnitude,,blast knockback force 0
+frontend/modules/seedlingDemo/levelRun.js|stepBlastsNow|hffb2183c|1|0,rule,magnitude,,blast damage
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|drainBossRemovals,rule,sentinel,,REVIEW: Game.resetCamera target -1/-1; camera feeds onScreen gates and shake but may be presentation only
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyExplosion|2,physics,derivation,,blast square side = radius * 2
 frontend/modules/seedlingDemo/levelRun.js|applyExplosion|h3963c3f0|2|0,structural,,,
@@ -195,15 +195,15 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepSpinnerContactsNow|
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|collideLineSolid,physics,sign,,
 frontend/modules/seedlingDemo/levelRun.js|collideLineSolid|h21cbb2e8|1|0,physics,bound,,collideLine degenerate segment under 1px
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyPlayerHit|0,physics,magnitude,,default knockback force
-frontend/modules/seedlingDemo/levelRun.js|applyPlayerHit|h85b0a0cc|1|0,rule,magnitude,,default damage
+frontend/modules/seedlingDemo/levelRun.js|applyPlayerHit|h56326574|1|0,rule,magnitude,,default damage
 frontend/modules/seedlingDemo/levelRun.js|stepChasersNow|h7ceee914|0|0,physics,bound,,chaser row moves only if speed nonzero
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepChaserEntity|0,rule,bound,,pit fade alpha clamp; alpha 0 = removal
 frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|h65cc0531|0|0,rule,sentinel,,tile type default when no walkable tile
 frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|hee10ba2a|0|0,rule,bound,,pit fade finished -> destroy
 frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|hee10ba2a|0|1,rule,bound,,fade finished -> removal
-frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|h5b2326de|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|hitPlayer|hd00083b4|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|hae45b85b|1|0,rule,magnitude,,terrain death restarts fade at alpha 1; fade-out gates removal
-frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|h89e67ab9|1|0,rule,magnitude,,timer decrements one per tick
+frontend/modules/seedlingDemo/levelRun.js|hitPlayer|h89e67ab9|1|0,rule,magnitude,,timer decrements one per tick
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepChaserEntity|10,physics,magnitude,,pit fall pulls 1/10 of the way to tile centre per tick
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|assertNoCeremonyBesideLiveChaser,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|terrainAt,rule,sentinel,,tile type default when no walkable tile
@@ -234,7 +234,7 @@ frontend/modules/seedlingDemo/levelRun.js|advance|hb16ea419|0|0,physics,magnitud
 frontend/modules/seedlingDemo/levelRun.js|advance|h659f58d7|1|0,rule,magnitude,,timer decrements one per tick
 frontend/modules/seedlingDemo/levelRun.js|advance|h997443db|1|0,rule,magnitude,,cutscene hold tick counter step
 frontend/modules/seedlingDemo/levelRun.js|advance|ha0be1487|1|0,rule,sentinel,,cutscene id 1 (bloody seed reboot)
-frontend/modules/seedlingDemo/levelRun.js|advance|had4c8fda|1|0,rule,magnitude,,boss totem laser damage
+frontend/modules/seedlingDemo/levelRun.js|advance|h0b8becb4|1|0,rule,magnitude,,boss totem laser damage
 frontend/modules/seedlingDemo/levelRun.js|advance|hd7b0522b|2|0,rule,sentinel,,cutscene id 2 (plain seed reboot)
 frontend/modules/flashPanel/seedlingSemantics.js|*|*,structural,,,
 frontend/modules/flashPanel/seedlingSemantics.js|TILE_COLUMN_TO_TYPE|(module),rule,sentinel,,tileset column -> tile type id (Game.as switch)
@@ -1247,8 +1247,8 @@ frontend/modules/seedlingDemo/playerDamage.js|KNOCKBACK_COMPARATORS|(module),phy
 frontend/modules/seedlingDemo/playerDamage.js|createPlayerDamage|createPlayerDamage,structural,,,fresh hits/hitsTimer
 frontend/modules/seedlingDemo/playerDamage.js|createPlayerDamage|createPlayerDamage|-1,rule,sentinel,Player.as:directionFace,-1 = not set
 frontend/modules/seedlingDemo/playerDamage.js|knockbackDelta|knockbackDelta,structural,,,normalisation and zero deltas
-frontend/modules/seedlingDemo/playerDamage.js|playerHit|h6a58f89e|0|0,physics,magnitude,,default force 0 (no knockback)
-frontend/modules/seedlingDemo/playerDamage.js|playerHit|h6a58f89e|1|0,rule,magnitude,,default damage 1
+frontend/modules/seedlingDemo/playerDamage.js|playerHit|h37596f04|0|0,physics,magnitude,,default force 0 (no knockback)
+frontend/modules/seedlingDemo/playerDamage.js|playerHit|h37596f04|1|0,rule,magnitude,,default damage 1
 frontend/modules/seedlingDemo/playerDamage.js|playerHit|h0b03ed67|0|0,rule,bound,,hitsTimer > 0 refuses the hit
 frontend/modules/seedlingDemo/playerDamage.js|playerHit|playerHit,structural,,,zero knockback / zero shake on refusal
 frontend/modules/seedlingDemo/playerDamage.js|playerHit|nothing,structural,,,
@@ -1590,6 +1590,8 @@ frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd7b0d8d3|6|0,rule,sen
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hcf712235|1|0,rule,sentinel,,Tile.t pit/water/lava
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hdc4fc09e|17|0,rule,sentinel,,Tile.t pit/water/lava
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|ha659b9bb|0.5|0,rule,magnitude,Player.as:darkShieldDamage,"shieldBump with the dark shield: o.hit(shieldForce, p, darkShieldDamage, ""Shield"") on a body whose hitsTimer <= 0"
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|he5809055|1|0,physics,magnitude,Player.as:darkSuitForce,"Player.hit with the dark suit: e.hit(darkSuitForce, playerPoint, darkSuitDamage, ""Suit"") on the attacker, above hits += d"
+frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hd0d903b2|1|0,rule,magnitude,Player.as:darkSuitDamage,Player.hit with the dark suit: what the retaliation deals the attacker (e != null only)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h0c71790c|1|0,rule,magnitude,Player.as:swordDamage,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h64c32ce2|2|0,rule,magnitude,Player.as:darkSwordDamage,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h76a8b7b1|2|0,rule,magnitude,Player.as:spearDamage,

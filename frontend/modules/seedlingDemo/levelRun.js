@@ -170,7 +170,8 @@ import {
 // ⛓⛓⛓ R6 SLICE 3: `Player.hit`/`knockback`/`hitUpdate`/`die`, and the
 // contact source that calls them. `noDamage` stops being a refusal here.
 import {
-    DEATH_REBOOT, PLAYER_DAMAGE, canSteer, createPlayerDamage, playerHit, stepPlayerDamage,
+    DARK_SUIT_DAMAGE, DARK_SUIT_FORCE, DEATH_REBOOT, PLAYER_DAMAGE, PlayerDamageError, canSteer,
+    createPlayerDamage, playerHit, stepPlayerDamage,
 } from './playerDamage.js';
 import {
     ENEMY_CLASSES, TYPE_REWRITING_ENEMIES, contactPricing, contactRect, enemyHitPlayerFires,
@@ -282,7 +283,46 @@ function applyItem(inventory, name) {
  *   caller's to refuse: a shield kill's death staging is not transcribed.
  */
 function darkShieldHitChaser(c, p, frozen) {
-    const verdict = enemyHit(c, { d: DARK_SHIELD_DAMAGE, f: SHIELD_FORCE, t: 'Shield', frozen });
+    return darkHitChaser(c, p, { d: DARK_SHIELD_DAMAGE, f: SHIELD_FORCE, t: 'Shield', frozen });
+}
+
+/**
+ * ⛓⛓⛓ R1-swim D1 — THE DARK SUIT'S RETALIATION on one stepped chaser,
+ * `Player.hit`'s `if (e && hasDarkSuit) e.hit(darkSuitForce, new Point(x, y),
+ * darkSuitDamage, "Suit")` (`Player.as:1381-1384`). The same `Enemy.hit` as the
+ * dark shield's (`darkHitChaser`), with the suit's force (1) and damage (1):
+ * its gates are the body's own (`hitsTimer <= 0 || hitByDarkStuff`, the freeze,
+ * `hits < hitsMax`), a landed hit arms the 30-tick i-frame — which is what
+ * holds off the body's NEXT contact, `Enemy.hitPlayer` being gated on it — and
+ * latches `hitByDarkStuff`.
+ *
+ * ⛔ A KILL IS REFUSED BY NAME: `startDeath("Suit")`'s staging is D2's.
+ *
+ * @returns the `playerHits` row's `retaliation` field
+ */
+function darkSuitHitChaser(c, p, frozen) {
+    const { verdict, shoved } = darkHitChaser(c, p,
+        { d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit', frozen });
+    if (verdict.killed) {
+        throw new Error(`levelRun: the dark suit's retaliation KILLS ${c.id} — `
+            + '`Enemy.hit(darkSuitForce, p, darkSuitDamage, "Suit")` reaches `hits >= hitsMax` '
+            + 'and calls `startDeath("Suit")`, whose death staging and kill ledger are not '
+            + 'transcribed for this arm.');
+    }
+    return {
+        id: c.id, landed: verdict.landed, refusedAt: verdict.refusedAt,
+        hits: c.hits, hitsTimer: c.hitsTimer, shoved,
+    };
+}
+
+/**
+ * The one `Enemy.hit` a dark arm makes on a stepped chaser — the shield's
+ * (`"Shield"`) and the suit's (`"Suit"`) differ in the force and the damage.
+ * A landed non-killing hit calls `knockback(f, p)` (`f` capped by `maxForce`),
+ * which a class with an EMPTY override (the puncher) does not move.
+ */
+function darkHitChaser(c, p, { d, f, t, frozen }) {
+    const verdict = enemyHit(c, { d, f, t, frozen });
     const shoved = verdict.knockedBack && chaserKnocksBack(c.tag);
     if (shoved) c.v = enemyKnockbackV(c, c.v, verdict.force, p);
     return { verdict, shoved };
@@ -6590,6 +6630,8 @@ export function createLevelRun({
                     force: ARROW.speed,
                     damage: ARROW_PLAYER_ARM.damage,
                     from: { x: arrow.x, y: arrow.y },
+                    // `Arrow.as:49` — `hit(null, …)`: no attacker to retaliate into.
+                    retaliate: null,
                 })
                 : null;
             // A static `"Enemy"` body (refused by name — see
@@ -6827,6 +6869,7 @@ export function createLevelRun({
                         applyPlayerHit({
                             source: 'pulse', id, force: PULSER.force, damage: PULSER.damage,
                             from: { x: r.state.x, y: r.state.y },
+                            retaliate: null, // `Pulser.as:114` — `hit(null, …)`
                         });
                     }
                     pulserPlayerHits.push({ t: ticksCompleted + 1, level, id });
@@ -6940,6 +6983,7 @@ export function createLevelRun({
                     applyPlayerHit({
                         source: 'crusher', id, force: CRUSHER.force,
                         damage: CRUSHER.damage, from: { x: r.crusher.x, y: r.crusher.y },
+                        retaliate: null, // `Crusher.as:98` — `hit(null, …)`
                     });
                 }
             }
@@ -7015,6 +7059,7 @@ export function createLevelRun({
                 applyPlayerHit({
                     source: 'blast', id: b.id, force: 0, damage: 1,
                     from: { x: b.x, y: b.y },
+                    retaliate: null, // `IceTurretBlast.as:53` — `hit(null, …)`
                 });
             }
         }
@@ -7232,6 +7277,7 @@ export function createLevelRun({
                     force: Math.sqrt(s.vx * s.vx + s.vy * s.vy),
                     damage: BOSS_TOTEM_SHOT.playerDamage,
                     from: { x: s.x, y: s.y },
+                    retaliate: null, // `BossTotemShot.as:56` — `hit(null, …)`
                 });
             }
             if (r.explodeAt) {
@@ -7343,7 +7389,8 @@ export function createLevelRun({
             inSquare, hitPlayer: hit,
         });
         if (!hit) return;
-        applyPlayerHit({ source, id, force, damage: d, from: { x, y } });
+        // `Explosion.as:60` — `hit(null, …)`: no attacker to retaliate into.
+        applyPlayerHit({ source, id, force, damage: d, from: { x, y }, retaliate: null });
     }
 
     /**
@@ -7536,6 +7583,7 @@ export function createLevelRun({
                             force: ROCK_FALL.force,
                             damage: ROCK_FALL.damage,
                             from: { x: r.x, y: r.y },
+                            retaliate: null, // `RockFall.as:73` — `hit(null, …)`
                         });
                         if (pendingDeath) return { frozen: false };
                     }
@@ -7572,6 +7620,7 @@ export function createLevelRun({
                         force: GRENADE.force,
                         damage: GRENADE.damage,
                         from: { x: g.x, y: g.y },
+                        retaliate: null, // `Grenade.as:133` — `hit(null, …)`
                     });
                     if (pendingDeath) return { frozen: false };
                 }
@@ -8493,24 +8542,43 @@ export function createLevelRun({
      * because that is where the game writes it: the enemies update first,
      * so `friction()` decays the impulse on the SAME tick it lands.
      *
+     * ⛓⛓⛓ R1-swim D1 — `retaliate` IS THE AS3 CALL'S `e`. `null` for a source
+     * that calls `Player.hit(null, …)` (every projectile, trap and hazard); a
+     * function `(playerPoint) => row` for an attacker whose `Enemy.hit(…,
+     * "Suit")` is transcribed; ABSENT for a source that passes `e` and whose
+     * retaliation is not — under the dark suit that one is refused by name
+     * (`playerHit`'s `byEnemy`), naming the source.
+     *
      * @returns the `playerHit` result, so a caller can see `died`/`applied`
      */
-    function applyPlayerHit({ source, id, force = 0, damage: d = 1, from = null }) {
-        const r = playerHit(damage, {
-            hitsMax: inventory.hitsMax,
-            force,
-            damage: d,
-            from,
-            at: { x: state.x, y: state.y },
-            direction: state.direction,
-            noDamage,
-            // ⛔ §10.6, ONE CLASS FURTHER ON: the gate is INSIDE `Player.hit`,
-            // so a contact that lands inside a ceremony pays nothing at all
-            // — no damage, no shake, no knockback and no i-frames. It is the
-            // OPPOSITE of `hitUpdate`, which runs through the freeze.
-            frozen: ceremony !== null,
-            hasDarkSuit: !!inventory.hasDarkSuit,
-        });
+    function applyPlayerHit({ source, id, force = 0, damage: d = 1, from = null, retaliate = undefined }) {
+        let r;
+        try {
+            r = playerHit(damage, {
+                hitsMax: inventory.hitsMax,
+                force,
+                damage: d,
+                from,
+                at: { x: state.x, y: state.y },
+                direction: state.direction,
+                noDamage,
+                // ⛔ §10.6, ONE CLASS FURTHER ON: the gate is INSIDE `Player.hit`,
+                // so a contact that lands inside a ceremony pays nothing at all
+                // — no damage, no shake, no knockback and no i-frames. It is the
+                // OPPOSITE of `hitUpdate`, which runs through the freeze.
+                frozen: ceremony !== null,
+                hasDarkSuit: !!inventory.hasDarkSuit,
+                byEnemy: retaliate === undefined ? undefined : retaliate !== null,
+            });
+        } catch (e) {
+            if (!(e instanceof PlayerDamageError)) throw e;
+            throw new Error(`levelRun: the \`${source}\` hit (${id}) at tick `
+                + `${ticksCompleted + 1} in level ${level} — ${e.message}`);
+        }
+        // `if (e && hasDarkSuit) e.hit(darkSuitForce, new Point(x, y),
+        // darkSuitDamage, "Suit")` — the attacker's own `Enemy.hit`, from the
+        // player's position (which a hit does not move).
+        const retaliation = r.retaliates ? retaliate({ x: state.x, y: state.y }) : null;
         if (!r.applied) {
             contactsSuppressed.push({
                 t: ticksCompleted + 1, level, source, id, why: r.refusedAt,
@@ -8540,6 +8608,8 @@ export function createLevelRun({
             knockback: r.knockback
                 ? { dx: r.knockback.dx, dy: r.knockback.dy, landed: r.knockback.landed }
                 : null,
+            // Only under the dark suit, so every older row is byte-identical.
+            ...(retaliation ? { retaliation } : {}),
         });
         if (r.died) {
             pendingDeath = {
@@ -9067,6 +9137,9 @@ export function createLevelRun({
             force: a.force,
             damage: c.damage,
             from: { x: c.x, y: c.y },
+            // `p.hit(this, punchForce, …)` — the puncher is `e`, and its
+            // `knockback` is the empty override, so the suit shoves nothing.
+            retaliate: (p) => darkSuitHitChaser(c, p, ceremony !== null),
         });
         return pendingDeath ? 'player-died' : null;
     }
@@ -9297,12 +9370,34 @@ export function createLevelRun({
                 }
                 return null;
             }
+            /**
+             * ⛓⛓⛓ R1-swim D1 — `Enemy.update`'s TAIL RUNS BETWEEN THE MOVE AND
+             * THE CHASE, and the dark suit is what made the order observable.
+             * `Bob.update` is `super.update()` (move, `hitUpdate()`,
+             * `hitPlayer()`) and THEN its chase block; `hitPlayer` →
+             * `Player.hit(this, …)` → `this.hit(1, playerPoint, 1, "Suit")`
+             * writes the body's `v` (a shove of 1) before that block's `pushed`
+             * test reads it. Until the suit nothing in the contact wrote the
+             * body, so running it after the chase was byte-identical; it is now
+             * at its own place, through `chaserStep`'s `hitPlayer` hook.
+             */
+            let contact = null;
             const r = chaserStep(c.tag, {
                 x: c.x, y: c.y, v: c.v, dying: c.dying, attack: c.attack,
             }, playerPoint, {
                 onScreen,
                 frozen: ceremony !== null,
                 move,
+                hitPlayer: (mid) => {
+                    c.x = mid.x;
+                    c.y = mid.y;
+                    c.v = mid.v;
+                    // `Enemy.update`'s tail, in its own order: `hitUpdate()` then
+                    // `hitPlayer()`, and BOTH are inside `if (!destroy)`.
+                    if (mid.iframesTicked && c.hitsTimer > 0) c.hitsTimer -= 1;
+                    contact = chaserContactNow(c);
+                    return { v: c.v, dying: c.dying };
+                },
             });
             c.x = r.x;
             c.y = r.y;
@@ -9310,49 +9405,59 @@ export function createLevelRun({
             /**
              * ⛓⛓ U7-swim D2 — `Puncher.update`'s tail: within `attackRange` of
              * the player, `setSprite("attack")`. Decided at the position this
-             * tick's move left, in the same block as the chase (so it is not
-             * gated by the contact below, which belongs to `Enemy.update`).
+             * tick's move left, in the same block as the chase (below the
+             * contact, which belongs to `Enemy.update`; a body the contact's
+             * retaliation killed decides nothing — `chaserAttackDecision`
+             * reads `dying`).
              */
             c.attack = chaserAttackDecision(c.tag, c, playerPoint) ?? c.attack;
             assertSteppedChaserLifetime(c);
-            // `Enemy.update`'s tail, in its own order: `hitUpdate()` then
-            // `hitPlayer()`, and BOTH are inside `if (!destroy)`.
-            if (r.iframesTicked && c.hitsTimer > 0) c.hitsTimer -= 1;
             if (before.x !== c.x || before.y !== c.y) {
                 chaserWalks.push({
                     t: ticksCompleted + 1, level, id: c.id, x: c.x, y: c.y, vx: c.v.x, vy: c.v.y,
                 });
             }
-            // ── `Enemy.hitPlayer()`, at the position THIS tick left ──────
-            // `collide("Player", x, y)` against the body's own hitbox, gated
-            // on `!destroy`, `currentAnim != "die"` and `hitsTimer <= 0` —
-            // which is `enemyHitPlayerFires`, the same predicate the static
-            // census arm uses. One implementation, two callers.
-            const bodyNow = chaserBoxAt(c.tag, c.x, c.y);
-            if (!rectsOverlap(bodyNow, playerBoxAt(state.x, state.y))) return null;
-            const verdict = enemyHitPlayerFires(
-                { hitsTimer: c.hitsTimer, destroy: c.removed, dieAnim: c.dying },
-                onScreenNow(bodyNow, `${c.tag} ${c.id}`) ? 'on' : 'off',
-            );
-            if (!verdict.fires) {
-                contactsSuppressed.push({
-                    t: ticksCompleted + 1, level, source: 'chaser', id: c.id, why: verdict.refusedAt,
-                });
-                return null;
-            }
-            applyPlayerHit({
-                source: 'chaser',
-                id: c.id,
-                // `p.hit(this, 3, new Point(x, y), damage)` — the base class's
-                // force, the instance's `damage`, and the body's own ENTITY
-                // POINT, which for a chaser is where it stands NOW.
-                force: PLAYER_DAMAGE.contactForce,
-                damage: c.damage,
-                from: { x: c.x, y: c.y },
-            });
-            if (pendingDeath) return 'player-died';
+            return contact;
         }
-        return null;
+    }
+
+    /**
+     * `Enemy.hitPlayer()` for one stepped chaser, at the position this tick's
+     * move left — called from `chaserStep`'s `hitPlayer` hook, i.e. between
+     * `super.update()` and the subclass block.
+     *
+     * `collide("Player", x, y)` against the body's own hitbox, gated on
+     * `!destroy`, `currentAnim != "die"` and `hitsTimer <= 0` — which is
+     * `enemyHitPlayerFires`, the same predicate the static census arm uses.
+     * One implementation, two callers.
+     *
+     * @returns {?string} `'player-died'` when the contact killed the player
+     */
+    function chaserContactNow(c) {
+        const bodyNow = chaserBoxAt(c.tag, c.x, c.y);
+        if (!rectsOverlap(bodyNow, playerBoxAt(state.x, state.y))) return null;
+        const verdict = enemyHitPlayerFires(
+            { hitsTimer: c.hitsTimer, destroy: c.removed, dieAnim: c.dying },
+            onScreenNow(bodyNow, `${c.tag} ${c.id}`) ? 'on' : 'off',
+        );
+        if (!verdict.fires) {
+            contactsSuppressed.push({
+                t: ticksCompleted + 1, level, source: 'chaser', id: c.id, why: verdict.refusedAt,
+            });
+            return null;
+        }
+        applyPlayerHit({
+            source: 'chaser',
+            id: c.id,
+            // `p.hit(this, 3, new Point(x, y), damage)` — the base class's
+            // force, the instance's `damage`, and the body's own ENTITY
+            // POINT, which for a chaser is where it stands NOW.
+            force: PLAYER_DAMAGE.contactForce,
+            damage: c.damage,
+            from: { x: c.x, y: c.y },
+            retaliate: (p) => darkSuitHitChaser(c, p, ceremony !== null),
+        });
+        return pendingDeath ? 'player-died' : null;
     }
 
     /**
@@ -14918,6 +15023,7 @@ export function createLevelRun({
                                 // x against the BOSS's y, so the knockback is
                                 // pure south. Not the boss's x.
                                 from: { x: state.x, y: b.y },
+                                retaliate: null, // `BossTotem.as:486` — `hit(null, …)`
                             });
                         }
                     }

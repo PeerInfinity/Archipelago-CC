@@ -173,6 +173,13 @@
       ]
     },
     {
+      "file": "r1-dark-suit-bob.json",
+      "tickCount": 75,
+      "bootLevel": 4,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r2-walk-1-sword-shield.json",
       "tickCount": 928,
       "bootLevel": 0,

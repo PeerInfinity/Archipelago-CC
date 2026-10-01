@@ -222,6 +222,9 @@ export const PROFILE = load(Object.freeze({
     noBounceStates2: 17,
     // ── bobBossFight.js
     darkShieldDamage: 0.5,
+    // ── playerDamage.js
+    darkSuitForce: 1,
+    darkSuitDamage: 1,
     // ── presses.js
     swordDamage: 1,
     darkSwordDamage: 2,
@@ -406,6 +409,9 @@ export const PROFILE_FIELDS = Object.freeze([
     { key: 'noBounceStates2', class: 'rule', kind: 'sentinel', as3: '', source: 'playerPhysicsV2.js:NO_BOUNCE_STATES[2]', review: false, note: 'Tile.t pit/water/lava' },
     // ── bobBossFight.js
     { key: 'darkShieldDamage', class: 'rule', kind: 'magnitude', as3: 'Player.as:darkShieldDamage', source: 'bobBossFight.js:DARK_SHIELD_DAMAGE', review: false, note: 'shieldBump with the dark shield: o.hit(shieldForce, p, darkShieldDamage, "Shield") on a body whose hitsTimer <= 0' },
+    // ── playerDamage.js
+    { key: 'darkSuitForce', class: 'physics', kind: 'magnitude', as3: 'Player.as:darkSuitForce', source: 'playerDamage.js:DARK_SUIT_FORCE', review: false, note: 'Player.hit with the dark suit: e.hit(darkSuitForce, playerPoint, darkSuitDamage, "Suit") on the attacker, above hits += d' },
+    { key: 'darkSuitDamage', class: 'rule', kind: 'magnitude', as3: 'Player.as:darkSuitDamage', source: 'playerDamage.js:DARK_SUIT_DAMAGE', review: false, note: 'Player.hit with the dark suit: what the retaliation deals the attacker (e != null only)' },
     // ── presses.js
     { key: 'swordDamage', class: 'rule', kind: 'magnitude', as3: 'Player.as:swordDamage', source: 'presses.js:SWORD_DAMAGE', review: false, note: '' },
     { key: 'darkSwordDamage', class: 'rule', kind: 'magnitude', as3: 'Player.as:darkSwordDamage', source: 'presses.js:DARK_SWORD_DAMAGE', review: false, note: '' },

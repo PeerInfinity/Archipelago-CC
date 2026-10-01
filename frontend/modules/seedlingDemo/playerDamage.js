@@ -89,6 +89,17 @@
  * [[feedback_freeze_gates_are_not_uniform]]
  */
 
+import { PROFILE } from './seedlingProfile.js';
+
+/**
+ * `Player.darkSuitForce` / `Player.darkSuitDamage` (`Player.as:255-256`) — the
+ * dark suit's retaliation, `e.hit(darkSuitForce, new Point(x, y),
+ * darkSuitDamage, "Suit")`, which `Player.hit` makes on the attacker `e` inside
+ * its own gate and above `hits += d` (R1-swim D1).
+ */
+export const DARK_SUIT_FORCE = PROFILE.darkSuitForce;
+export const DARK_SUIT_DAMAGE = PROFILE.darkSuitDamage;
+
 /**
  * `Player.as:325-337` — the constants, each with its line.
  *
@@ -259,13 +270,24 @@ export function knockbackDelta(at, from, f) {
  * @param {number} [o.direction] the facing, for `directionFace`
  * @param {boolean} [o.noDamage] `Bot.noDamage`
  * @param {boolean} [o.frozen]   `Game.freezeObjects`
- * @param {boolean} [o.hasDarkSuit] refused by name — see below
+ * @param {boolean} [o.hasDarkSuit] `Player.hasDarkSuit`
+ * @param {boolean} [o.byEnemy] the AS3 call's `e != null` — `true` when the
+ *   source passes `this` (a body contact, a punch, a hammer), `false` when it
+ *   passes `null` (every projectile, trap and hazard). ⛔ NO DEFAULT under the
+ *   dark suit: a source that has not declared which it is would decide whether
+ *   an enemy takes damage, so an undeclared one is refused by name.
  * @returns {{state:object, applied:boolean, died:boolean, shakeDelta:number,
- *            knockback:{dx:number,dy:number}|null, refusedAt:string|null}}
+ *            knockback:{dx:number,dy:number}|null, refusedAt:string|null,
+ *            retaliates:boolean}} `retaliates` — the dark suit's
+ *            `e.hit(darkSuitForce, playerPoint, darkSuitDamage, "Suit")` is
+ *            owed to the attacker; the CALLER makes it (this module owns no
+ *            enemy). The game makes it before `hits += d`; the two writes touch
+ *            disjoint state and read only the player's position, which a hit
+ *            does not move, so their order inside the call is not observable.
  */
 export function playerHit(s, {
     hitsMax, force = 0, damage = 1, from = null, at = null, direction = null,
-    noDamage = false, frozen = false, hasDarkSuit = false,
+    noDamage = false, frozen = false, hasDarkSuit = false, byEnemy = undefined,
 } = {}) {
     if (!Number.isFinite(hitsMax)) {
         fail('playerHit: `hitsMax` is the RUN\'s `Main.hitsMax` and has no default here — '
@@ -274,6 +296,7 @@ export function playerHit(s, {
     }
     const nothing = (refusedAt) => ({
         state: s, applied: false, died: false, shakeDelta: 0, knockback: null, refusedAt,
+        retaliates: false,
     });
     // `if (Bot.noDamage) return` — the FIRST line, above everything.
     if (noDamage) return nothing('Bot.noDamage');
@@ -283,13 +306,16 @@ export function playerHit(s, {
     if (s.hitsTimer > 0) return nothing('hitsTimer');
     if (!(s.hits < hitsMax)) return nothing('hits >= hitsMax');
     if (frozen) return nothing('Game.freezeObjects');
-    if (hasDarkSuit) {
-        fail('playerHit: `hasDarkSuit` retaliates INTO the attacker — '
-            + '`e.hit(darkSuitForce, …, "Suit")` — which sets `hitByDarkStuff` and '
-            + 'retires that enemy\'s i-frames permanently (combat.js header). R6\'s '
-            + 'honest path holds no darksuit; the arm is refused by name rather than '
-            + 'transcribed untested.');
+    // ⛓⛓⛓ R1-swim D1 — `if (e && hasDarkSuit) e.hit(darkSuitForce, new
+    // Point(x, y), darkSuitDamage, "Suit")`, INSIDE the gate above: a hit the
+    // player's own i-frame swallows retaliates nothing.
+    if (hasDarkSuit && byEnemy === undefined) {
+        fail('playerHit: `hasDarkSuit` retaliates INTO the attacker when the call passes '
+            + '`e` (`e.hit(darkSuitForce, …, "Suit")`) and not when it passes `null` — and '
+            + 'this source has not declared which it is (`byEnemy`). Refused by name '
+            + 'rather than guessed: the answer decides whether an enemy takes damage.');
     }
+    const retaliates = hasDarkSuit && byEnemy === true;
     const hits = s.hits + damage;
     const next = { ...s, hits, hitsTimer: PLAYER_DAMAGE.hitsTimerMax };
     if (hits >= hitsMax) {
@@ -303,6 +329,7 @@ export function playerHit(s, {
             shakeDelta: PLAYER_DAMAGE.shakePerHit,
             knockback: null,
             refusedAt: null,
+            retaliates,
         };
     }
     if (from === null) {
@@ -315,6 +342,7 @@ export function playerHit(s, {
             shakeDelta: PLAYER_DAMAGE.shakePerHit,
             knockback: { dx: 0, dy: 0, landed: { x: false, y: false }, center: null },
             refusedAt: null,
+            retaliates,
         };
     }
     if (at === null) {
@@ -337,6 +365,7 @@ export function playerHit(s, {
         shakeDelta: PLAYER_DAMAGE.shakePerHit,
         knockback: kb,
         refusedAt: null,
+        retaliates,
     };
 }
 

@@ -953,6 +953,18 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'where it straddles two cells) into column 36 and the pit, the swap on t 34; '
                 + 'the puncher never leaves its cell.',
         }),
+        /**
+         * ⛓⛓⛓ R1-swim D1 — THE DARK SUIT'S RETALIATION: `Player.hit(e, …)` calls
+         * `e.hit(darkSuitForce 1, playerPoint, darkSuitDamage 1, "Suit")` on the
+         * attacker inside its gate.
+         */
+        Object.freeze({
+            name: 'r1-dark-suit-bob', levels: Object.freeze([4]), bobs: 1, ticks: 75,
+            addedBy: 'R1-swim D1 (the retaliation and the i-frame it opens)',
+            why: '`bob@64,64`\'s contact on t 20 is retaliated (bob `hits` 1, a 30-tick '
+                + 'i-frame, a shove of 1); `Enemy.hitPlayer` is gated on the bob\'s own '
+                + '`hitsTimer`, so its second contact lands on t 50, not t 44.',
+        }),
     ]),
 
     /**

@@ -477,9 +477,17 @@ export function chaseImpulse(tag, enemy, player) {
  *   planner already uses; a caller that has the level's solids passes the
  *   real one. It is a parameter rather than an import so this module has no
  *   opinion about which world it is stepping.
+ * @param {function=} opts.hitPlayer ⛓ R1-swim D1 — `Enemy.update`'s TAIL,
+ *   `hitUpdate(); hitPlayer();`, at its own place: AFTER `super.update()`'s
+ *   move and BEFORE the subclass block. `({x, y, v, iframesTicked}) =>
+ *   ?{v, dying}` — the caller's contact, which under the dark suit can write
+ *   the body's `v` (the `"Suit"` knockback) or kill it (`startDeath` plays
+ *   "die"), and the chase below must read both: `Bob.update`'s `pushed` test
+ *   sees the shove, and its `destroy || "die"` return skips the chase. Absent,
+ *   nothing is read back (the forecast's shape).
  */
 export function chaserStep(tag, enemy, player, {
-    onScreen = true, frozen = false, move = null,
+    onScreen = true, frozen = false, move = null, hitPlayer = null,
 } = {}) {
     const c = CHASERS[tag];
     if (!c) fail(`chaserStep: "${tag}" is not a transcribed chaser`);
@@ -501,12 +509,22 @@ export function chaserStep(tag, enemy, player, {
         iframesTicked = true;
     }
 
+    // ── `Enemy.update`'s tail: `hitUpdate(); hitPlayer();` ──────────────
+    let dying = enemy.dying === true;
+    if (hitPlayer) {
+        const after = hitPlayer({ x, y, v, iframesTicked });
+        if (after) {
+            v = after.v;
+            dying = after.dying === true;
+        }
+    }
+
     // ── the subclass block ────────────────────────────────────────────
     // ⚠ Runs whether or not the super returned early (note 2), and its
     // freeze gate is PER CLASS (note 1).
     // ⛓ U7-swim: and a puncher mid-attack does not chase — `Puncher.update`'s
     // block is `if (player && getSprite() != "attack")` (`:60`).
-    const blocked = enemy.dying === true || (c.freezesOnGameFreeze && frozen)
+    const blocked = dying || (c.freezesOnGameFreeze && frozen)
         || (enemy.attack !== null && enemy.attack !== undefined);
     if (!blocked) v = chaseImpulse(tag, { x, y, v }, player);
 
