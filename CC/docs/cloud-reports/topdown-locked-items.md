@@ -177,3 +177,103 @@ source would randomise.
 5. **The A3 trap** (a procgen world's own `lock=True` pre-fill freezes on re-derive) has no committed instance today.
    Note it only, or open a follow-up?
    **Recommend note only.** Fold it into the C′ slice if Q3 is ever built.
+
+## §5 ⚖ User rulings (verbatim)
+
+**R1 (2026-10-01, this chat), answering §4 Q1 by reframing it:**
+> If procgen is using "locked" to mean something different from what Archipelago uses it for, then I want to change procgen to use a different name for what it does.
+
+So `locked` keeps Archipelago's meaning everywhere, and procgen's "always here" moves to a new field. That replaces §3's
+`source_locked` marker. The revised design is in §6. §4 Q2–Q5 are superseded or restated in §6.4.
+
+## §6 Revised design under R1
+
+### 6.1 Does procgen's meaning differ? Yes, measured, and only for non-event locations
+
+- **Events:** procgen writes `locked: true` + `event: true` (`apcalcGeneratorEngine.js:952,964`,
+  `tileMapAnalyzer/rulesExporter.js:270`, `compileEventLocation` `procgenPipelineEngine.js:2836`), and world_generator
+  pins every event lock regardless (`_template_init.py:513-515`). That is Archipelago's meaning too, because an event is
+  always `place_locked_item`'d. **No rename is needed there.**
+- **Non-events:** these are where procgen means "always here, every seed". Sole producer: `compileRegionGraph`'s
+  `lockedItems` (`procgenPipelineEngine.js:2639,2784-2785`), fed by `buildRulesJson`'s `lockedCanonicalItems`
+  (`:7036,7067`). It is threaded through `sphereConfigHooks.js:56-79`, `sphereSteps.js:481`, `presetRun.js:417` and
+  `procgenPipelineUI.js:4580`. The users: the sphere-growth bounce start arrow (`sphereGrowth.slow.test.js:602`,
+  `braidSphereBot.slow.test.js:63`, `dump-sphere-byteidentity.mjs:64`) and the jta round trip's Victory pin
+  (`check-jta-locations-roundtrip.mjs:225-231`). Consumer: world_generator's `honor_locked_placements`, keyed on the
+  slot's `procgen_metadata` (`extractors.py:1358`, `_template_init.py:515,918`). That key is documented in
+  `generator.py:290`, `handler.py:2113` and `rules.schema.json:319,808`.
+- **Committed presets carrying a procgen-meaning non-event `locked`: 0** (the §1.3 scan: no slot with
+  `procgen_metadata` has a locked non-event). So the rename moves **no committed preset bytes** on its own.
+- **A side effect the rename removes:** `make-seedling-playthrough-rules.mjs:28-32` deliberately emits NO
+  `procgen_metadata` *because* its presence turns every lock into an always-lock. After the rename, `procgen_metadata`
+  no longer changes placement semantics.
+
+### 6.2 The design
+
+1. **A new location field for procgen's intent:** `pinned: true` (name to be confirmed, Q-A). It means "place this item
+   here on every seed (`place_locked_item`)". The compile option renames with it: `lockedCanonicalItems` →
+   `pinnedCanonicalItems`, and `lockedItems` → `pinnedItems`.
+2. **`locked` = Archipelago's meaning, everywhere.** The top-down compile carries a source location's `locked`
+   **verbatim** for non-events too, as it already does for events. That fixes the step that lost the information
+   (`compileLocation`), and §3's `source_locked` marker is no longer needed.
+3. **world_generator:**
+   - `LOCKED_PLACEMENTS` = event locks + `pinned` placements.
+   - A non-event `locked` is a canonical placement only, randomised per seed, in a procgen slot exactly as in any other
+     slot.
+   - `honor_locked_placements` and its `procgen_metadata` keying are deleted.
+   - `pinned` must reach the generated Location as an attribute, so the exporter's auto-discovery writes it back and a
+     re-derived world keeps the pin. A4 (§1.4) showed an extra location field already round-trips; the pin needs it to
+     be set on the Location as well as read into `LOCKED_PLACEMENTS`.
+4. **The A3 trap disappears.** A procgen world's own `lock=True` pre-fill exports as `locked: true`, which no longer
+   pins on re-derive.
+5. **Measured behaviour:**
+   - A top-down world whose source has observed non-event locks behaves as A0 (§1.4): randomised per seed, Fill OK,
+     with the `locked` information intact.
+   - An authored pin behaves as A1: frozen, Fill OK. The marker moves from `locked` to `pinned`.
+
+### 6.3 The slice it implies (after `topdown-apcalc-fill` lands)
+
+- **JS:**
+  - `procgenPipelineEngine.js`: `compileLocation` carries the source's `locked`, and the pin writes `pinned`; rename the
+    `lockedItems` and `lockedCanonicalItems` options.
+  - The four threading sites in §6.1, and `scripts/procgen/{sphere-step.js,dump-sphere-growth.js,
+    dump-sphere-byteidentity.mjs,check-region-step-editing.mjs,check-jta-locations-roundtrip.mjs}`.
+  - The tests naming the option (`sphereGrowth.slow`, `braidSphereBot.slow`, `presetRun`, `sphereSteps`).
+- **Python:**
+  - `world_generator/extractors.py`: read `pinned` into `pinned_placements`, and drop `honor_locked_placements`.
+  - `world_generator/_template_init.py`: the `LOCKED_PLACEMENTS` filter and its pool-subtraction mirror.
+  - Stale comments in `world_generator/generator.py:290` and `exporter/games/base/handler.py:2113`.
+- **Schema:** add `pinned` to `rules.schema.json`; strip the procgen caveat from `locked` (`:808`) and from the
+  `procgen_metadata` consumer list (`:319`).
+- **Docs:**
+  - The `make-seedling-playthrough-rules.mjs` header (the ⛔ reason is gone; whether to emit `procgen_metadata` there
+    becomes a separate decision, not part of this slice).
+  - `CC/adding-game-support.md` and `CC/debugging-worldgen-failures.md` if they describe the procgen keying.
+- **Presets:**
+  - procgen_topdown AP_1–12 are re-recorded by `generated_commands.sh:531-554`.
+  - Expected: AP_1–6 and AP_10–12 `cmp`-identical; AP_7–9 differ only by `locked: true` on the 96 source-locked
+    locations each.
+  - No other committed preset moves (0 pinned non-events today).
+- **Gates:**
+  - Bounded vitest on the touched tests.
+  - The CI suite number at the pushed SHA.
+  - `check-jta-locations-roundtrip.mjs`: Victory is still pinned, now via `pinned`.
+  - The sphere-growth bounce-arrow test.
+  - procgen_topdown spoiler tests.
+  - An AP_1 Generate.py round trip at seeds 1 and 2.
+  - The A1 recipe with `pinned` in place of `locked`: frozen across seeds.
+  - The A3 recipe: re-derive no longer freezes.
+
+### 6.4 ⚖ Remaining questions (each with a recommendation)
+
+- **Q-A, the name.** Choose between `pinned`, `fixed_placement` and `always_locked`.
+  **Recommend `pinned`.** It is short, and it collides with no Archipelago Location attribute or rules.json field
+  (`rg -a` finds no `pinned` in the schema or exporter).
+- **Q-B, compatibility.** Should world_generator still read a non-event `locked` in a `procgen_metadata` slot as a pin
+  when a rules.json has no `pinned` anywhere (old procgen downloads outside the repo)?
+  **Recommend no shim.** No committed file needs it, and a shim keeps the double meaning alive.
+- **Q-C (was Q3), ALTTP's dungeon grouping.** Should a per-seed "reshuffle within a group" ever be honoured?
+  **Recommend: not now.** Under R1 nothing is lost: `locked` is carried, and the source's region `dungeon` field
+  already sits on the source. Only AP_7–9 would use it, and they do not generate.
+- **Q-D (was Q4), AP_7–9.** **Recommend re-record with the recorded commands** (they gain the carried `locked`).
+- Q2 and Q5 are settled by R1: an observed `locked` randomises like any canonical placement, and the A3 trap is gone.
