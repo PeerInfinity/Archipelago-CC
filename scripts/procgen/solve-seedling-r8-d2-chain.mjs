@@ -66,8 +66,7 @@
  */
 
 import { dirname, join } from 'node:path';
-import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { committedTick0, tick0ParseFields, despawnField, tick0Field }
     from './tick0Carry.js';
@@ -77,6 +76,8 @@ import { emitSegments, SEGMENTS_FLAG } from './producerSegments.js';
 
 import { parseDashMode, dashModeNote } from './dashMode.js';
 import { takeBoxLockOrExit } from './boxLock.js';
+import { driverChannel } from './seedlingDriver.js';
+import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 
 /**
  * ⛓⛓⛓ R9 SLICE 12i — **`--dash=none|full|all`, AND THE TOKEN IS SPELLED
@@ -202,39 +203,48 @@ const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
  * all 46 signature rows rather than a claim.
  */
 const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
-const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
-const WIN_SCRATCH_WSL = '/mnt/c/playwright';
-const WIN_SCRATCH_DOS = 'C:\\playwright';
+/**
+ * ⛓ SEEDLING SWIM U6b — the page is the one `SEEDLING_PORT` serves and the
+ * latch is driven HEADLESS by default (`--win` keeps the real-GPU arm), on
+ * `solve-seedling-r9-campaign.mjs`'s L16 precedent: this producer still spelled
+ * the Windows launcher inline, so a box with no Windows Chrome could not
+ * re-record the chain at all. The `--check` path drives nothing, so its stdout
+ * is unchanged.
+ */
+const PAGE_PORT = process.env.SEEDLING_PORT || '8000';
+const PAGE_URL = `http://localhost:${PAGE_PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const WIN_PY = '/mnt/c/Windows/py.exe';
 const WIN_DRIVER = join(HERE, 'seedling-bot-replay-win.py');
+const WIN = process.argv.includes('--win');
 
 function latchOf(label, tapeObj) {
-    mkdirSync(WIN_SCRATCH_WSL, { recursive: true });
-    writeFileSync(join(WIN_SCRATCH_WSL, 'seedling-bot-replay-win.py'),
-        readFileSync(WIN_DRIVER));
-    const outWsl = join(WIN_SCRATCH_WSL, `stream-${label}.json`);
-    writeFileSync(join(WIN_SCRATCH_WSL, `tape-${label}.json`),
-        JSON.stringify(gameVisibleTape(parseTape(tapeObj))));
-    try { unlinkSync(outWsl); } catch { /* first run */ }
+    const channel = driverChannel({ win: WIN, winPy: WIN_PY, driver: WIN_DRIVER,
+        chromiumArgs: HEADLESS_LOGIC_ONLY_ARGS });
+    channel.write(`tape-${label}.json`, JSON.stringify(gameVisibleTape(parseTape(tapeObj))));
+    channel.clear(`stream-${label}.json`);
     const t0 = Date.now();
     let out;
     try {
-        out = execFileSync(WIN_PY, [
-            '-3.12', `${WIN_SCRATCH_DOS}\\seedling-bot-replay-win.py`,
+        out = channel.run([
             '--url', PAGE_URL,
-            '--tape', `${WIN_SCRATCH_DOS}\\tape-${label}.json`,
-            '--out', `${WIN_SCRATCH_DOS}\\stream-${label}.json`,
+            '--tape', channel.path(`tape-${label}.json`),
+            '--out', channel.path(`stream-${label}.json`),
             '--deadline-sec', String(Math.ceil(tapeObj.tick_count * 1.5) + 120),
-        ], { cwd: WIN_SCRATCH_WSL, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+        ], { stdio: ['ignore', 'pipe', 'pipe'] });
     } catch (e) {
         const said = [e.stdout, e.stderr].filter(Boolean).join('\n').trim();
+        channel.close({ keep: true });
         throw new Error(`${e.message}${said ? `\n${said}` : ''}`);
     }
     out.replace(/\r/g, '').split('\n')
         .filter((l) => l && !/wsl\.localhost|CMD\.EXE|UNC paths/i.test(l))
         .forEach((l) => console.log(`    ${l}`));
-    if (!existsSync(outWsl)) throw new Error(`windows driver wrote no stream for ${label}`);
-    const got = JSON.parse(readFileSync(outWsl, 'utf8'));
+    if (!existsSync(channel.local(`stream-${label}.json`))) {
+        channel.close({ keep: true });
+        throw new Error(`the ${channel.name} driver wrote no stream for ${label}`);
+    }
+    const got = JSON.parse(channel.read(`stream-${label}.json`));
+    channel.close();
     // ⛔ THE DURATION IS A WALL CLOCK, SO IT IS NOT PRINTED UNDER `--check`.
     // ⚖ Ruling 8 publishes a producer's `--check` stdout md5 as a byte-inertia
     // fingerprint, and R9 slice 9 caught this line moving one of them with
