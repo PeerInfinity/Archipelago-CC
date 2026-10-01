@@ -349,15 +349,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ U9-swim + U10-swim take it to 24 — the three shield-bump witnesses and the dwell witness + its control.
         expect(out.exposed).toBe(24);
         expect(out.tapes).toEqual([
-            'r7-act2-5', 'r7-act2-6', 'r7-act2-full',
-            'r8-hammer-arm', 'r8-l6-bob-contact', 'r8-solve-3', 'r8-solve-4',
-            'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
-            'r9-l6-harmless-control', 'r9-l6-harmless-press',
-            'r9-l6-sword-dash-hit', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15',
-            'r9-solve-16', 'u7-puncher-kill', 'u7-puncher-punch',
+            'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
+            'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
+            'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-13',
+            'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'u10-puncher-dwell',
+            'u10-puncher-dwell-refused', 'u7-puncher-kill', 'u7-puncher-punch',
             'u9-shield-bob-shove', 'u9-shield-bob-standing', 'u9-shield-puncher',
-            'r9-solve-16', 'u10-puncher-dwell', 'u10-puncher-dwell-refused',
-            'u7-puncher-kill', 'u7-puncher-punch',
         ]);
     });
 

@@ -865,6 +865,8 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             addedBy: 'U9-swim D2(c) (the standing-gate witness)',
             why: 'a shielded player STANDS while `bob@64,64` sits on the shield\'s box: '
                 + '`v.length > 0` is false, so nothing is shoved until the contact lands.',
+        }),
+        /**
          * ⛓⛓⛓ U10-swim D2 — THE GAME WITNESS FOR PRICING THE PUNCH BY THE
          * FORECAST rather than the static pad: an admitted stance and its
          * positive control, both in L12's one-puncher room.
