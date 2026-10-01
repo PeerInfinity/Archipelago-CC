@@ -121,14 +121,20 @@ describe('⛓⛓ the ceiling is what the room accepts: N seats, N+1 is refused b
      * spent, 29 seated at re-roll 0, 30 re-rolled by the locations cause, the
      * deserialized room refused in the tag sentence). A named head also keeps
      * the row still at the next default move.
+     *
+     * ⛓ RE-SEEDED 31 → 57 (swim planning-3, 2026-10-01): after U9/U10 seed 31's
+     * 30-item placement re-rolls 12 times (CI 59.5 s → 65.6 s against the 60 s
+     * bound, red at `f20ac752ae`). Over seeds 31..119, the rule is met by 31, 53,
+     * 57, 81, 89, 93, 108; 57 is the cheapest (ONE re-roll, 3.2 s for the three
+     * draws on the box). A chosen input that turns slow is re-seeded, not re-bounded.
      */
     const KILLGATE_ROOM = { exits: 1, biome: 'post-sword', elements: 'killgate' };
-    it('⛓⛓ a draw whose own element spends a tag is RE-ROLLED like one short of cells (post-sword drawn seed 31, `killgate` named)', () => {
-        const w = genRoom(31, KILLGATE_ROOM);
+    it('⛓⛓ a draw whose own element spends a tag is RE-ROLLED like one short of cells (post-sword drawn seed 57, `killgate` named)', () => {
+        const w = genRoom(57, KILLGATE_ROOM);
         expect(w.generation.rerolls).toBe(0);
         expect(ownTags(w)).toBe(1);
         // 29 = 30 less the lock's own tag: seated in the first draw
-        const a = genRoom(31, KILLGATE_ROOM);
+        const a = genRoom(57, KILLGATE_ROOM);
         room.placeGenItems(a, items(29));
         expect(a.generation.rerolls).toBe(0);
         // 30: that draw has 29 tags left, so the room re-rolls — and the next draw seats all 30
@@ -142,7 +148,7 @@ describe('⛓⛓ the ceiling is what the room accepts: N seats, N+1 is refused b
     });
 
     it('a deserialized room cannot re-roll: short of tags it refuses in the tag sentence, not the cell one', () => {
-        const w = genRoom(31, KILLGATE_ROOM);
+        const w = genRoom(57, KILLGATE_ROOM);
         delete w.drawnSeed;
         expect(() => room.placeGenItems(w, items(30)))
             .toThrow(room.GEN_ROOM_REFUSALS.tooFewTags('cap', 30, 29, 30));
