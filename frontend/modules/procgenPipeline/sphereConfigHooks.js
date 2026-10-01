@@ -53,7 +53,7 @@ export function collectSphereGrowthPrep({
     activeIds, itemPool, quotas, startSubstrate, seed, params,
 }) {
     const startingItems = [];
-    const lockedCanonicalItems = [];
+    const pinnedCanonicalItems = [];
     const exclusiveSpheres = {};
     const regionParams = {};
     const notes = [];
@@ -64,7 +64,7 @@ export function collectSphereGrowthPrep({
             itemPool, quotas, startSubstrate, seed, params, substrateId: id,
         }) || {};
         if (c.startingItems) startingItems.push(...c.startingItems);
-        if (c.lockedCanonicalItems) lockedCanonicalItems.push(...c.lockedCanonicalItems);
+        if (c.pinnedCanonicalItems) pinnedCanonicalItems.push(...c.pinnedCanonicalItems);
         for (const [k, v] of Object.entries(c.exclusiveSpheres ?? {})) {
             exclusiveSpheres[k] = [...(exclusiveSpheres[k] ?? []), ...v];
         }
@@ -76,7 +76,7 @@ export function collectSphereGrowthPrep({
         if (c.note) notes.push(c.note);
     }
     return {
-        startingItems, lockedCanonicalItems, exclusiveSpheres,
+        startingItems, pinnedCanonicalItems, exclusiveSpheres,
         regionParams, note: notes.join(' — '),
     };
 }

@@ -478,7 +478,7 @@ function stepCompile(env) {
         seed: c.seed,
         itemLib: c.itemLib,
         startingItems,
-        lockedCanonicalItems: c.lockedCanonicalItems ?? [],
+        pinnedCanonicalItems: c.pinnedCanonicalItems ?? [],
         // A starting item is placed at no location, so the compiled pool
         // doesn't carry it — backfill its definition (ids 999↓ stay clear
         // of the compiled pool's upward numbering).

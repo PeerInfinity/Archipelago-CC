@@ -26,11 +26,12 @@
  *      firewall's ALLOWED direction (§6.3): the generator reads the model, the
  *      model reads nothing back, and the artifact is one-way.
  *
- * ⛔ NO `procgen_metadata` (§8.3, verified by generating). Vanilla placement
- * travels on `location.item` + `--canonical-seed 1`; emitting
- * `procgen_metadata` would move every placement into `LOCKED_PLACEMENTS`,
- * which is always-locked for EVERY seed and would kill the randomisability the
- * AP path exists for.
+ * NO `procgen_metadata` (§8.3). Vanilla placement travels on `location.item`
+ * + `--canonical-seed 1`. The original ⛔ reason — emitting `procgen_metadata`
+ * moved every placement into `LOCKED_PLACEMENTS`, always-locked for EVERY seed
+ * — is retired (topdown-locked-items R1: `procgen_metadata` no longer changes
+ * placement; only a location's `pinned` does). Whether to emit it here now is a
+ * separate decision; until then the output stays as it is.
  *
  * Deterministic — no clock, no Math.random — so `--check` is an exact
  * regeneration gate, the shape every other generator in this tree uses.

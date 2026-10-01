@@ -101,7 +101,7 @@ describe('buildRunFromState — sphere growth', () => {
         const { mode, run } = buildRunFromState(bundle);
         expect(mode).toBe('sphereGrowth');
         expect(run.prep).toEqual({
-            startingItems: [], lockedCanonicalItems: [], exclusiveSpheres: {},
+            startingItems: [], pinnedCanonicalItems: [], exclusiveSpheres: {},
             regionParams: {}, note: '',
         });
         const { itemLib, ...config } = run.config;
@@ -123,7 +123,7 @@ describe('buildRunFromState — sphere growth', () => {
             victoryItem: 'victory',
             exclusiveSpheres: {},
             startingItems: [],
-            lockedCanonicalItems: [],
+            pinnedCanonicalItems: [],
             enableLoopMode: false,
             regionXpEffect: 'cost',
             itemPool: { victory: 1, key_red: 1 },

@@ -4577,7 +4577,7 @@ export class ProcgenPipelineUI {
         };
         const prep = {
             startingItems: config.startingItems ?? [],
-            lockedCanonicalItems: config.lockedCanonicalItems ?? [],
+            pinnedCanonicalItems: config.pinnedCanonicalItems ?? [],
             exclusiveSpheres: config.exclusiveSpheres ?? {},
             regionParams: config.regionParams ?? {},
             note: '',

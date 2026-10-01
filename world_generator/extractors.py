@@ -193,13 +193,14 @@ class ExtractedData:
     world_attributes: Dict[str, Any] = field(default_factory=dict)  # Game-specific world instance attributes
     dungeons: Dict[str, DungeonData] = field(default_factory=dict)  # dungeon_name -> DungeonData
     completion_condition: Optional[Dict[str, Any]] = None  # Analyzed completion condition rule
-    # Whether locked_placements carry authored always-lock intent. True for
-    # procgen-emitted rules.json (procgen_metadata present): locked:true means
-    # "place via place_locked_item even for non-event items" (e.g. the bounce
-    # start-stack arrow). False for original-world exports, where locked merely
-    # records generation-time placement (e.g. Lufia II Iris treasures) and
-    # non-event locked items must stay randomizable — see b891b9cda.
-    honor_locked_placements: bool = False
+    # location -> item for locations marked `pinned: true`: authored always-place
+    # intent (place_locked_item on EVERY seed, even for a non-event item — e.g.
+    # the procgen bounce start-stack arrow). Distinct from locked_placements:
+    # `locked` keeps Archipelago's meaning (the item was placed locked at the
+    # exporting generation, e.g. Lufia II Iris treasures, ALTTP dungeon items),
+    # so a non-event locked item stays randomizable — see b891b9cda and
+    # topdown-locked-items R1, which retired procgen's use of `locked` for this.
+    pinned_placements: Dict[str, str] = field(default_factory=dict)
 
 
 def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> GameMetadata:
@@ -409,11 +410,13 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
         player_id: Player ID to extract data for (default: '1')
 
     Returns:
-        Tuple of (locations dict, original_placements dict, locked_placements dict, canonical_placement_advancements dict)
+        Tuple of (locations dict, original_placements dict, locked_placements dict,
+        canonical_placement_advancements dict, pinned_placements dict)
     """
     locations: Dict[str, LocationData] = {}
     original_placements: Dict[str, str] = {}
     locked_placements: Dict[str, str] = {}
+    pinned_placements: Dict[str, str] = {}
     canonical_placement_advancements: Dict[str, bool] = {}  # location -> is_advancement
 
     regions_data = json_data.get('regions', {}).get(player_id, {})
@@ -463,8 +466,13 @@ def extract_locations(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[
                 # If the location is locked, also track it as a locked placement
                 if is_locked and item_name:
                     locked_placements[loc_name] = item_name
+                # `pinned` stays an extra attribute too (set on the generated
+                # Location), so the exporter writes it back and a re-derived
+                # world keeps the pin.
+                if loc_info.get('pinned') is True and item_name:
+                    pinned_placements[loc_name] = item_name
 
-    return locations, original_placements, locked_placements, canonical_placement_advancements
+    return locations, original_placements, locked_placements, canonical_placement_advancements, pinned_placements
 
 
 def extract_regions(json_data: Dict[str, Any], player_id: str = '1') -> Tuple[Dict[str, RegionData], Dict[str, ExitData]]:
@@ -1337,7 +1345,7 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
     """
     metadata = extract_game_metadata(json_data, player_id=player_id)
     items, item_groups, item_name_groups = extract_items(json_data, player_id=player_id)
-    locations, original_placements, locked_placements, canonical_placement_advancements = extract_locations(json_data, player_id=player_id)
+    locations, original_placements, locked_placements, canonical_placement_advancements, pinned_placements = extract_locations(json_data, player_id=player_id)
     regions, exits = extract_regions(json_data, player_id=player_id)
     start_region = extract_start_region(json_data, player_id=player_id)
     itempool_counts = extract_itempool_counts(json_data, player_id=player_id)
@@ -1351,11 +1359,6 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
 
     # Check if placements are vanilla (match original non-randomized game)
     is_vanilla = json_data.get('is_vanilla', False)
-
-    # Procgen-emitted rules.json marks locked locations as authored intent
-    # (always place via place_locked_item, even non-events). The block is
-    # per player (P1a): this slot's entry decides.
-    honor_locked_placements = bool(json_data.get('procgen_metadata', {}).get(str(player_id)))
 
     # Get preset label for frontend display (e.g., "canth s4")
     preset_label = json_data.get('preset_label', '')
@@ -1460,5 +1463,5 @@ def extract_all(json_data: Dict[str, Any], player_id: str = '1') -> ExtractedDat
         world_attributes=world_attributes,
         dungeons=dungeons,
         completion_condition=completion_condition,
-        honor_locked_placements=honor_locked_placements,
+        pinned_placements=pinned_placements,
     )

@@ -2110,8 +2110,9 @@ class BaseGameExportHandler(
         the shape `preset_sidecars` has). A package is ONE slot's world, so
         its file holds one block, and each worldgen slot's block lands under
         its own player. Carrying it through the export keeps a re-derived
-        world's semantics stable — extractors key honor_locked_placements
-        (always-lock non-event locked placements) on the slot's entry.
+        world's procgen metadata stable for the frontend's procgen readers.
+        (It no longer changes placement: always-place intent travels on the
+        location's own `pinned` field — topdown-locked-items R1.)
         """
         metadata = self._read_worldgen_package_json(world, '_worldgen_procgen_metadata.json', 'procgen metadata')
         if metadata is not None:

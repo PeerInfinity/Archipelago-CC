@@ -2633,10 +2633,13 @@ export function compileRegionGraph(grid, opts = {}) {
         startCell,
         playerId = 1,
         // Item names whose canonical placement must ALWAYS hold — the
-        // compiled location gets `locked: true`, which world_generator
-        // turns into place_locked_item (so even multiworld fill keeps
-        // the item there). Used for the bounce start-stack arrow.
-        lockedItems = [],
+        // compiled location gets `pinned: true`, which world_generator
+        // turns into place_locked_item on every seed (so even multiworld
+        // fill keeps the item there). Used for the bounce start-stack arrow.
+        // ⚖ `pinned`, not `locked`: `locked` keeps Archipelago's meaning (the
+        // item was locked at generation), so a source's `locked` is carried
+        // verbatim and never pins (topdown-locked-items R1).
+        pinnedItems = [],
         // ⛓ M1 (R8) — the SOURCE Menu a top-down layout stripped
         // (`finalizeTopDown`'s `menuRegion`: `{name, exits, locations}`, its
         // exits already filtered to placed targets). Compiled AFTER the grid, so
@@ -2655,7 +2658,7 @@ export function compileRegionGraph(grid, opts = {}) {
         sourceLocations = null,
     } = opts;
     const itemLib = { [LIBRARY_SLOT_FILLER_ITEM]: { classification: 'filler' }, ...rawItemLib };
-    const lockedItemSet = new Set(lockedItems);
+    const pinnedItemSet = new Set(pinnedItems);
     const numericPlayerId = Number.isFinite(Number(playerId)) ? Number(playerId) : 1;
 
     if (!startCell) throw new Error('compileRegionGraph: startCell required');
@@ -2737,6 +2740,9 @@ export function compileRegionGraph(grid, opts = {}) {
 
     // One compiled location: a fresh numeric id; its item (when any) registered,
     // pooled and canonically placed. Shared by the grid's regions and the Menu.
+    // A source location's `locked: true` (Archipelago's: placed locked at the
+    // source's generation, e.g. ALTTP's per-seed dungeon pre-fill) is carried;
+    // world_generator reads it as a canonical placement, never as a pin.
     // ⛓ A source EVENT location (`id: null` or `event: true`) keeps the source's shape instead:
     // `compileEventLocation`.
     function compileLocation(globalName, item, rule) {
@@ -2788,8 +2794,9 @@ export function compileRegionGraph(grid, opts = {}) {
             id: numericId,
             access_rule: rule,
             ...(itemPlacement ? { item: itemPlacement } : {}),
-            ...(itemPlacement && lockedItemSet.has(item)
-                ? { locked: true } : {}),
+            ...(sourceLoc?.locked === true ? { locked: true } : {}),
+            ...(itemPlacement && pinnedItemSet.has(item)
+                ? { pinned: true } : {}),
         };
     }
 
@@ -4805,7 +4812,7 @@ export function rebuildEnvelopeFromRulesJson(rulesJson, opts = {}) {
         victoryItem,
         exclusiveSpheres: {},
         startingItems,
-        lockedCanonicalItems: [],
+        pinnedCanonicalItems: [],
         enableLoopMode: !!rulesJson.loop_costs?.[playerId],
         regionXpEffect: opts.regionXpEffect ?? 'cost',
         itemPool,
@@ -7052,12 +7059,12 @@ export function buildRulesJson(grid, opts = {}) {
         // The SOURCE world's locations, name → location (`sourceLocationsOf`):
         // a source event location compiles as one (`compileRegionGraph`).
         sourceLocations = null,
-        // Item names whose canonical placement is ALWAYS locked
-        // (compiled location gets locked:true → world_generator uses
-        // place_locked_item). The sphere-growth bounce start passes
+        // Item names whose canonical placement is ALWAYS held
+        // (compiled location gets pinned:true → world_generator uses
+        // place_locked_item on every seed). The sphere-growth bounce start passes
         // its start-stack arrow here so even multiworld fill keeps
         // the intro pickup an arrow.
-        lockedCanonicalItems = [],
+        pinnedCanonicalItems = [],
         // When set to an item name, overwrite the scaffold's default
         // constant-true completion_condition with an item_check on
         // this item (state.has(itemName) at runtime). Grid-growth
@@ -7088,7 +7095,7 @@ export function buildRulesJson(grid, opts = {}) {
 
     const compiled = compileRegionGraph(grid, {
         startCell, itemLib, obstacleLib, playerId,
-        lockedItems: lockedCanonicalItems,
+        pinnedItems: pinnedCanonicalItems,
         menuRegion,
         sourceItems,
         sourceLocations,

@@ -200,6 +200,32 @@ def _find_first_item_check(rule_dict: Dict[str, Any]) -> Optional[Dict[str, Any]
     return None
 
 
+def _always_placed(data: ExtractedData, canonical_seed: Optional[int]) -> Dict[str, str]:
+    """location -> item for LOCKED_PLACEMENTS (place_locked_item on every seed).
+
+    With canonical placements (or a canonical seed), a non-event `locked`
+    placement is only canonical — randomizable on other seeds — so only event
+    locks go in. Without them, every locked placement goes in, as before.
+    Either way every `pinned` placement goes in (authored always-place).
+    The LOCKED_PLACEMENTS emitter and the item-pool subtraction both read this,
+    so they cannot drift apart.
+    """
+    out: Dict[str, str] = {}
+    canonical_mode = bool(data.canonical_placements) or canonical_seed is not None
+    for loc_name, item_name in data.locked_placements.items():
+        if not item_name:
+            continue
+        if canonical_mode:
+            item_data = data.items.get(item_name)
+            loc_data = data.locations.get(loc_name)
+            if not ((item_data and item_data.is_event) or (loc_data and loc_data.is_event)):
+                continue
+        out[loc_name] = item_name
+    for loc_name, item_name in data.pinned_placements.items():
+        out.setdefault(loc_name, item_name)
+    return out
+
+
 def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) -> str:
     """Generate __init__.py (main world file) content.
 
@@ -499,30 +525,14 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     # We determine this by checking if the item is an event (id=None).
     # When canonical_seed is set, we build canonical_placements from original_placements,
     # so non-event items will be placed via canonical_placements instead of LOCKED_PLACEMENTS.
-    # EXCEPTION: procgen-emitted rules.json (data.honor_locked_placements) marks
-    # locked locations as authored always-lock intent, so non-event locked
-    # placements go into LOCKED_PLACEMENTS too (e.g. the bounce start-stack arrow).
+    # PLUS every `pinned: true` placement (data.pinned_placements): authored
+    # always-place intent, e.g. the procgen bounce start-stack arrow. `locked`
+    # alone never pins a non-event item here (topdown-locked-items R1).
     locked_entries = []
-    if data.canonical_placements or canonical_seed is not None:
-        # Only include truly locked items (events) - not canonical placements
-        for loc_name, item_name in data.locked_placements.items():
-            if item_name:
-                # Check if this is an event item (id=None) or placed at an event location
-                item_data = data.items.get(item_name)
-                loc_data = data.locations.get(loc_name)
-                is_event_item = item_data and item_data.is_event
-                is_event_location = loc_data and loc_data.is_event
-                if is_event_item or is_event_location or data.honor_locked_placements:
-                    loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
-                    item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-                    locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
-    else:
-        # No canonical_placements - use all locked placements as before
-        for loc_name, item_name in data.locked_placements.items():
-            if item_name:
-                loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
-                item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
-                locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
+    for loc_name, item_name in _always_placed(data, canonical_seed).items():
+        loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
+        item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
+        locked_entries.append(f'    "{loc_escaped}": "{item_escaped}",')
 
     locked_content = '\n'.join(locked_entries)
 
@@ -905,18 +915,11 @@ class _ShopWrapper:
     #   so subtract all of them from the pool.
     itempool_entries = []
     if data.canonical_placements or canonical_seed is not None:
-        # Only subtract items that are in LOCKED_PLACEMENTS
-        # (event items or items at event locations; ALL locked placements
-        # when honor_locked_placements — must mirror the filter above)
+        # Only subtract items that are in LOCKED_PLACEMENTS — the same
+        # _always_placed set the filter above emits (events + pinned)
         locked_event_counts: Dict[str, int] = {}
-        for loc_name, item_name in data.locked_placements.items():
-            if item_name:
-                item_data = data.items.get(item_name)
-                loc_data = data.locations.get(loc_name)
-                is_event_item = item_data and item_data.is_event
-                is_event_location = loc_data and loc_data.is_event
-                if is_event_item or is_event_location or data.honor_locked_placements:
-                    locked_event_counts[item_name] = locked_event_counts.get(item_name, 0) + 1
+        for item_name in _always_placed(data, canonical_seed).values():
+            locked_event_counts[item_name] = locked_event_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():
             adjusted_count = count - locked_event_counts.get(item_name, 0)
@@ -931,11 +934,10 @@ class _ShopWrapper:
                 item_escaped = item_name.replace('\\', '\\\\').replace('"', '\\"')
                 itempool_entries.append(f'    "{item_escaped}": {adjusted_count},')
     else:
-        # No canonical_placements - subtract all locked items
+        # No canonical_placements - subtract all locked (and pinned) items
         locked_item_counts: Dict[str, int] = {}
-        for loc_name, item_name in data.locked_placements.items():
-            if item_name:
-                locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
+        for item_name in _always_placed(data, canonical_seed).values():
+            locked_item_counts[item_name] = locked_item_counts.get(item_name, 0) + 1
 
         for item_name, count in data.itempool_counts.items():
             adjusted_count = count - locked_item_counts.get(item_name, 0)

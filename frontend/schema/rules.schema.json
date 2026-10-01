@@ -316,7 +316,7 @@
     },
     "procgen_metadata": {
       "type": "object",
-      "description": "How each player slot's world was procedurally generated, keyed by player slot ID (string) — the shape `preset_sidecars`, `regions` and `items` use (APWORLD SUBSTRATE CHANGE P1a, 2026-09-27; a block at the document level is refused). A slot carries an entry only when a producer wrote one for it. Producers: frontend/modules/procgenPipeline/procgenPipelineEngine.js:6981 (`buildRulesJson`, for its `playerId`), frontend/modules/apworldEditor/rulesDocOps.js:3264 (the `initialise-procgen-layout` op, for the initialised slot) and exporter/games/base/handler.py:2118 (the worldgen `_worldgen_procgen_metadata.json` round-trip, under the exporting player; a `_P<n>` export carries only its own slot's entry). Consumers: apworldEditor (sidecarIssues, regionSizeFor, initialiseFacts), presets/presetUI.js `computeProcgenStats`, procgenPipeline (`mapBoundsFor`, the sphere rebuild), world_generator (generator.py writes the slot's block into the package; extractors.py keys honor_locked_placements on it).",
+      "description": "How each player slot's world was procedurally generated, keyed by player slot ID (string) — the shape `preset_sidecars`, `regions` and `items` use (APWORLD SUBSTRATE CHANGE P1a, 2026-09-27; a block at the document level is refused). A slot carries an entry only when a producer wrote one for it. Producers: frontend/modules/procgenPipeline/procgenPipelineEngine.js:6981 (`buildRulesJson`, for its `playerId`), frontend/modules/apworldEditor/rulesDocOps.js:3264 (the `initialise-procgen-layout` op, for the initialised slot) and exporter/games/base/handler.py:2118 (the worldgen `_worldgen_procgen_metadata.json` round-trip, under the exporting player; a `_P<n>` export carries only its own slot's entry). Consumers: apworldEditor (sidecarIssues, regionSizeFor, initialiseFacts), presets/presetUI.js `computeProcgenStats`, procgenPipeline (`mapBoundsFor`, the sphere rebuild), world_generator (generator.py writes the slot's block into the package). It does not change placement: always-place intent is a location's `pinned`.",
       "patternProperties": {
         "^[0-9]+$": {
           "type": "object",
@@ -805,7 +805,11 @@
         },
         "locked": {
           "type": "boolean",
-          "description": "True if the item was placed via place_locked_item at generation time. In procgen-emitted rules.json (the slot's `procgen_metadata` entry present) this is authored intent: world_generator places the item via place_locked_item so the placement holds even in multiworld fill."
+          "description": "Archipelago's meaning, in every rules.json: true if the item was placed locked at generation time (place_locked_item, or fill_restrictive with lock=True — e.g. ALTTP's per-seed dungeon pre-fill). An observation, not intent: world_generator pins a locked EVENT on every seed but treats a locked non-event placement as canonical only (randomized on other seeds) whenever canonical placements exist. Always-place intent is `pinned`."
+        },
+        "pinned": {
+          "type": "boolean",
+          "description": "Authored always-place intent (procgen's, e.g. the bounce start-stack arrow, the jta round trip's Victory): world_generator places this location's item via place_locked_item on EVERY seed, even in multiworld fill, and the pin survives an export → re-derive (it is a Location attribute the exporter writes back). Producer: procgenPipelineEngine.js compileRegionGraph's `pinnedItems` (buildRulesJson's `pinnedCanonicalItems`). Replaces procgen's former use of `locked` for this (topdown-locked-items R1, 2026-10-01)."
         }
       },
       "required": ["name", "id", "access_rule"],

@@ -346,14 +346,14 @@ async function main() {
             startSubstrate: config.start, seed: config.seed, params,
         })
         : {
-            startingItems: [], lockedCanonicalItems: [],
+            startingItems: [], pinnedCanonicalItems: [],
             exclusiveSpheres: {}, regionParams: {}, note: '',
         };
     const regionParams = assembleRegionParams({
         activeIds, mode: 'sphere', params, extra: prep.regionParams,
     });
     const startingItems = prep.startingItems;
-    const lockedCanonicalItems = prep.lockedCanonicalItems;
+    const pinnedCanonicalItems = prep.pinnedCanonicalItems;
     const exclusiveSpheres = prep.exclusiveSpheres;
     const arrowNote = prep.note;
 
@@ -426,7 +426,7 @@ async function main() {
         seed: config.seed,
         itemLib,
         startingItems,
-        lockedCanonicalItems,
+        pinnedCanonicalItems,
         ...(startingItems.length > 0 ? {
             sourceItems: Object.fromEntries(startingItems.map((name, i) => [name, {
                 name,

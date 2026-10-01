@@ -363,7 +363,7 @@ function buildEnvConfig() {
         victoryItem: 'Victory',
         exclusiveSpheres: prep.exclusiveSpheres ?? {},
         startingItems: prep.startingItems ?? [],
-        lockedCanonicalItems: [],
+        pinnedCanonicalItems: [],
         enableLoopMode: false,
         regionXpEffect: 'cost',
         itemPool: prep.itemPool ?? itemPool,

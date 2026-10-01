@@ -170,7 +170,7 @@ try {
     // The two are byte-identical (check-spiral-byteidentity), so this proves the
     // config-seam path — not just the global-install path — survives the whole
     // world_generator + Generate.py toolchain. Compile stays the guard's own
-    // buildRulesJson below (it pins Victory via lockedCanonicalItems, which the
+    // buildRulesJson below (it pins Victory via pinnedCanonicalItems, which the
     // stepped ④ compile doesn't); only grid production (the dataset carriage) is
     // under test here.
     let grid, startCell;
@@ -222,12 +222,12 @@ try {
         // it into free zone 0, making the seed winnable at sphere 0 — the
         // zone gates then order everything except the goal.
         //
-        // Both options are required: lockedCanonicalItems stamps locked:true
-        // on the compiled location, and procgen_metadata is what makes
-        // world_generator set honor_locked_placements (extractors.py:1367) so
-        // a non-event locked item survives into LOCKED_PLACEMENTS rather than
-        // being treated as a mere canonical placement and re-randomized.
-        lockedCanonicalItems: [victoryName],
+        // pinnedCanonicalItems stamps pinned:true on the compiled location,
+        // which world_generator puts in LOCKED_PLACEMENTS (place_locked_item on
+        // every seed) rather than treating it as a mere canonical placement
+        // and re-randomizing it. (Before topdown-locked-items R1 this was
+        // locked:true + procgen_metadata → honor_locked_placements.)
+        pinnedCanonicalItems: [victoryName],
         procgenMetadata: { driver: 'top-down' },
     });
 

@@ -36,7 +36,7 @@ function makeConfig(overrides = {}) {
         victoryItem: 'victory',
         exclusiveSpheres: {},
         startingItems: [],
-        lockedCanonicalItems: [],
+        pinnedCanonicalItems: [],
         enableLoopMode: false,
         regionXpEffect: 'cost',
         itemPool: { key_red: 1, key_blue: 1, key_green: 1, victory: 1 },
@@ -72,7 +72,7 @@ function monolithic(config) {
     });
     return buildRulesJson(grid, {
         startCell, seed: config.seed, itemLib: config.itemLib,
-        startingItems: [], lockedCanonicalItems: [],
+        startingItems: [], pinnedCanonicalItems: [],
         enableLoopMode: config.enableLoopMode,
         regionXpEffect: config.regionXpEffect,
         completionConditionItem: config.victoryItem,
@@ -118,7 +118,7 @@ function monolithicBatched(config, spheresPerBatch) {
     const { grid, stats, startCell, tree } = r.value;
     return buildRulesJson(grid, {
         startCell, seed: config.seed, itemLib: config.itemLib,
-        startingItems: [], lockedCanonicalItems: [],
+        startingItems: [], pinnedCanonicalItems: [],
         enableLoopMode: config.enableLoopMode,
         regionXpEffect: config.regionXpEffect,
         completionConditionItem: config.victoryItem,

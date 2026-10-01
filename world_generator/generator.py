@@ -286,9 +286,10 @@ class WorldGenerator:
         # the same way — a per-player map since APWORLD SUBSTRATE CHANGE P1a
         # (`{"<p>": block}`); the package holds its ONE slot's block. The
         # export handler re-injects it under the exporting player, so a
-        # world re-derived from an exported preset keeps procgen
-        # semantics — in particular honor_locked_placements, which keys
-        # on this field (see extractors.extract_all). A source with no
+        # world re-derived from an exported preset keeps its procgen
+        # metadata (the frontend's procgen readers key on it). It no longer
+        # changes placement: always-place intent is the location's own
+        # `pinned` field (topdown-locked-items R1). A source with no
         # entry for this player writes no file.
         procgen_metadata = source_json.get('procgen_metadata', {}).get(self.player_id)
         if procgen_metadata:

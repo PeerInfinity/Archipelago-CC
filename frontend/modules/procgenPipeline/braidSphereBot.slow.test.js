@@ -60,7 +60,7 @@ function buildBraidWorld(seed) {
     });
     const rulesJson = buildRulesJson(grid, {
         startCell, seed, embedSphereLog: false, startingItems: ['Right arrow'],
-        completionConditionItem: 'Victory', lockedCanonicalItems: ['Left arrow'],
+        completionConditionItem: 'Victory', pinnedCanonicalItems: ['Left arrow'],
     });
     return { grid, plan, rulesJson };
 }

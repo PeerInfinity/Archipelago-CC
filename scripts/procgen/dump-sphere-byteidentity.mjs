@@ -61,7 +61,7 @@ function bounceOnly() {
     });
     const rulesJson = buildRulesJson(grid, {
         startCell, seed: 1, embedSphereLog: false,
-        completionConditionItem: 'Victory', lockedCanonicalItems: ['Right arrow'],
+        completionConditionItem: 'Victory', pinnedCanonicalItems: ['Right arrow'],
     });
     return { grid: dumpGrid(grid), rulesJson, stats };
 }

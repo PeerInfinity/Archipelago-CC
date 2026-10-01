@@ -2179,6 +2179,34 @@ describe('buildRulesJson', () => {
         for (const c of ['filler', 'useful', 'trap']) expect(placedWith(c).advancement).toBe(false);
     });
 
+    it('carries a SOURCE non-event location\'s locked:true verbatim, and pins only via pinnedCanonicalItems (topdown-locked-items R1)', () => {
+        const { grid, startCell } = smallGrid();
+        const plain = buildRulesJson(grid, { startCell });
+        const placedLocs = Object.values(plain.regions['1']).flatMap((r) => r.locations).filter((l) => l.item);
+        expect(placedLocs.length).toBeGreaterThan(1);
+        const [lockedLoc, otherLoc] = placedLocs;
+        const out = buildRulesJson(grid, {
+            startCell,
+            sourceLocations: {
+                [lockedLoc.name]: { name: lockedLoc.name, id: 77, item: lockedLoc.item, locked: true },
+                [otherLoc.name]: { name: otherLoc.name, id: 78, item: otherLoc.item, locked: false },
+            },
+        });
+        const byName = (doc) => Object.fromEntries(Object.values(doc.regions['1'])
+            .flatMap((r) => r.locations).map((l) => [l.name, l]));
+        // Archipelago's `locked` rides through; the location stays an ordinary
+        // numbered, canonically placed one (world_generator randomizes it per seed)
+        expect(byName(out)[lockedLoc.name]).toEqual({ ...lockedLoc, locked: true });
+        expect(out.canonical_placements['1'][lockedLoc.name]).toBe(lockedLoc.item.name);
+        // `locked: false` is the default and adds nothing
+        expect(byName(out)[otherLoc.name]).toEqual(otherLoc);
+        // the authored pin is `pinned`, never `locked`
+        const pinnedOut = buildRulesJson(grid, { startCell, pinnedCanonicalItems: [otherLoc.item.name] });
+        expect(byName(pinnedOut)[otherLoc.name]).toEqual({ ...otherLoc, pinned: true });
+        expect(Object.values(plain.regions['1']).flatMap((r) => r.locations)
+            .some((l) => 'locked' in l && l.id != null)).toBe(false);
+    });
+
     it('sourceLocationsOf maps every source location name to its location, first one winning', () => {
         const src = { regions: { 1: {
             A: { name: 'A', locations: [{ name: 'x', id: 1 }, { name: 'y', id: null }] },

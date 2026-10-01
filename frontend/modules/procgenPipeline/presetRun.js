@@ -414,7 +414,7 @@ export function sphereRunConfig(cfg, prep, itemPool, { params, resolvedLibraries
         victoryItem: cfg.victoryItemId ?? null,
         exclusiveSpheres: prep.exclusiveSpheres ?? {},
         startingItems: prep.startingItems ?? [],
-        lockedCanonicalItems: prep.lockedCanonicalItems ?? [],
+        pinnedCanonicalItems: prep.pinnedCanonicalItems ?? [],
         enableLoopMode: cfg.enableLoopMode,
         regionXpEffect: cfg.regionXpEffect ?? 'cost',
         itemPool,

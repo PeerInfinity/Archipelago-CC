@@ -231,7 +231,7 @@ function buildConfig(args) {
             startSubstrate: args.start, seed: args.seed, params,
         })
         : {
-            startingItems: [], lockedCanonicalItems: [],
+            startingItems: [], pinnedCanonicalItems: [],
             exclusiveSpheres: {}, regionParams: {}, note: '',
         };
     const regionParams = assembleRegionParams({
@@ -254,7 +254,7 @@ function buildConfig(args) {
         victoryItem: victory,
         exclusiveSpheres: prep.exclusiveSpheres,
         startingItems: prep.startingItems,
-        lockedCanonicalItems: prep.lockedCanonicalItems,
+        pinnedCanonicalItems: prep.pinnedCanonicalItems,
         enableLoopMode: args.enableLoopMode,
         regionXpEffect: args.regionXpEffect,
         spheresPerBatch: args.spheresPerBatch,
