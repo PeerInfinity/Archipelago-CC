@@ -243,6 +243,33 @@ describe('the battery rooms, in-model (the differential is the game-side gate)',
         expect(rec.collectedAt).toBeGreaterThan(0);
         expect(out.transitions[out.transitions.length - 1].to_level).toBe(10);
     });
+
+    /**
+     * ⛓⛓ SEEDLING SWIM U10, D4 — a goal satisfied BEFORE it was asked. The
+     * sword's placement is asked for twice: the first goal takes it, so the
+     * second finds it in the run's own `takenPickups` and records
+     * `collected-in-passing` instead of walking at a pickup that is gone
+     * (which `runCollect` read as "walked at … without touching it" once its
+     * 400-tick budget ran out).
+     */
+    it('a collect goal whose pickup is already taken is met in passing, not re-walked', () => {
+        const { run, committed } = runFromCommitted('r8-solve-10');
+        const out = solveSegment({
+            run,
+            goals: [
+                { kind: 'collect-placement', placement: { x: 48, y: 48 } },
+                { kind: 'collect-placement', placement: { x: 48, y: 48 } },
+                { kind: 'reach-exit', exit: { x: 48, y: 16 } },
+            ],
+            name: 'r8-solve-10', boot: committed.boot,
+        });
+        const collects = out.records.filter((r) => r.goal === 'collect-placement');
+        expect(collects.map((r) => r.arm ?? null)).toEqual([null, 'collected-in-passing']);
+        expect(collects[1].pickup).toEqual({ tag: collects[0].pickup.tag, x: 48, y: 48 });
+        expect(collects[1].why).toMatch(/already taken before this goal began/);
+        expect(run.collected.length).toBe(1);
+        expect(out.transitions[out.transitions.length - 1].to_level).toBe(11);
+    });
 });
 
 describe('the trace producer — the first real producer of the slice-0 schema', () => {

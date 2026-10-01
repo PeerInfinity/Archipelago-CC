@@ -11231,6 +11231,38 @@ export function solveSegment({
         const what = `solverBot(${name}) ${resolved.strategy} `
             + `(${goal.placement.x},${goal.placement.y})`;
         /**
+         * ⛓⛓⛓ SEEDLING SWIM U10, D4 — **A GOAL SATISFIED BEFORE IT WAS ASKED.**
+         *
+         * A fight's dodge, or the walk to an earlier goal's stance, can walk
+         * over the pickup: the ceremony runs then and there, and `runCollect`
+         * — which waits for the `collected` ledger to grow past its START
+         * count — then walks at a pickup that is gone until its budget runs
+         * out, reading as *"walked at totempart … without touching it"* (U6
+         * § D5: four corridor-body cells). The run's own `takenPickups` names
+         * it, so the goal is recognised as met rather than re-walked; asked
+         * BEFORE the stance and again AFTER the walk to it, because either
+         * walk can be the one that took it (trap candidate: a goal satisfied
+         * before it was asked).
+         */
+        const collectedInPassing = (where) => {
+            const p = resolved.target;
+            if (resolved.strategy !== 'collect'
+                || !run.progress('takenPickups').has(`pickup:${p.tag}@${p.x},${p.y}`)) return false;
+            const row = run.ledger('collected').filter((c) => c.level === run.level).at(-1) ?? null;
+            records.push({
+                goal: 'collect-placement', strategy: 'collect', arm: 'collected-in-passing',
+                pickup: { tag: p.tag, x: p.x, y: p.y },
+                item: row?.item ?? null,
+                level: run.level,
+                // The last ceremony this level completed — the one that took it.
+                collectedAt: row?.t ?? null,
+                why: `${p.tag}@${p.x},${p.y} was already taken ${where} — the run's `
+                    + '`takenPickups` names it, so the goal is met and not walked at',
+            });
+            return true;
+        };
+        if (collectedInPassing('before this goal began')) continue;
+        /**
          * ⛔ CLEAR WHAT THE PLACEMENT IS INSIDE, BEFORE DERIVING A STANCE
          * NEAR IT. See `placementBlocker`: L19's boss key is inside the boss,
          * and a stance derivation cannot see that at all — it asks about
@@ -11306,6 +11338,7 @@ export function solveSegment({
                 ? `${what} stance (ladder-routed: ${stance.why})`
                 : `${what} stance`,
         });
+        if (collectedInPassing('on the walk to its stance')) continue;
         refuseDanger(run.state.x, run.state.y, goal, what);
         const verbTick = perTick.length;
         const exec = STRATEGY_EXECUTORS[resolved.strategy];
