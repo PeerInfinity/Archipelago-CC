@@ -1018,6 +1018,15 @@ export function step(state, held, opts = {}) {
          * `playerPhysicsV1.step`'s note.
          */
         steerBlocked = false,
+        /**
+         * ⛓⛓⛓ U11-swim D2: `Player.directionFace`, threaded like the two gates
+         * above. `sprites()` (below `super.update()`) writes `direction =
+         * directionFace` whenever it is `>= 0`, and a hit always parks it
+         * (`Player.hit` arms `hitsTimer` before `knockback`, whose `if (hitsTimer
+         * > 0) directionFace = direction` therefore always fires). The run owns
+         * it (`playerDamage.js`); `-1` derives the facing from `v` as before.
+         */
+        directionFace = -1,
         // ⛓ R5 slice 4: reported when an exact `nearestToPoint` tie is
         // DECIDED by the transcribed list order and its two candidates lead
         // somewhere different. Nothing here consumes it; a planner does.
@@ -1438,9 +1447,12 @@ export function step(state, held, opts = {}) {
         fall: nextFall,
         // `sprites()` runs AFTER `super.update()`, so it reads THIS tick's
         // post-move velocity — and the value it leaves is what the NEXT
-        // tick's press will capture as `spearDirection`.
+        // tick's press will capture as `spearDirection`. ⛓ U11-swim D2: a
+        // parked `directionFace` wins (`if (directionFace >= 0) direction =
+        // directionFace`), so a press inside a knockback's i-frame swings the
+        // way the hit found the player, not the way the knockback carries them.
         direction: nextDirection(
-            state.direction ?? INITIAL_DIRECTION, next.vx, next.vy,
+            state.direction ?? INITIAL_DIRECTION, next.vx, next.vy, directionFace,
         ),
     };
 }

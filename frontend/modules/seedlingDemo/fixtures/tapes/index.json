@@ -1379,6 +1379,20 @@
       "noHazards": []
     },
     {
+      "file": "u11-facing-knockback.json",
+      "tickCount": 80,
+      "bootLevel": 4,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "u11-facing-puncher.json",
+      "tickCount": 50,
+      "bootLevel": 12,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "u7-puncher-kill.json",
       "tickCount": 128,
       "bootLevel": 12,

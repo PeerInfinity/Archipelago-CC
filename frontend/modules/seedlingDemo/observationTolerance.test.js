@@ -75,7 +75,8 @@ describe('exact mode IS diffObservationStreams', () => {
     it(`agrees with it on all ${names.length} committed recordings vs the model, and on 3 perturbations of each`, () => {
         // ⛓ swim U5/U7: 157 recordings (+ the BobBoss encounter and the two puncher witnesses).
         // ⛓ swim U9 + U10: 162 (+ the three shield-bump witnesses and the two dwell witnesses).
-        expect(names.length).toBe(162);
+        // ⛓ swim U11: 164 (+ the two `u11-facing-*` witnesses).
+        expect(names.length).toBe(164);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -119,7 +120,7 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(162);
+        expect(tally.swapped).toBe(164);
     }, 600_000);
 });
 

@@ -229,7 +229,7 @@ frontend/modules/seedlingDemo/levelRun.js|advance|hd4727287|0|0,rule,bound,,i-fr
 frontend/modules/seedlingDemo/levelRun.js|advance|h2bf0a6f8|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|advance|ha5ff1365|0|0,rule,bound,,i-frame timer gate (the acting gate; swim U5 added bobNoInput)
 frontend/modules/seedlingDemo/levelRun.js|advance|hee37f6e1|0|0,rule,bound,,i-frame timer gate
-frontend/modules/seedlingDemo/levelRun.js|advance|h6d36784b|0|0,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|advance|h5e6f118d|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hb16ea419|0|0,physics,magnitude,,cutscene walk vy clamped to 0
 frontend/modules/seedlingDemo/levelRun.js|advance|h659f58d7|1|0,rule,magnitude,,timer decrements one per tick
 frontend/modules/seedlingDemo/levelRun.js|advance|h997443db|1|0,rule,magnitude,,cutscene hold tick counter step
@@ -1480,10 +1480,11 @@ frontend/modules/seedlingDemo/bobBossFight.js|shieldBumpTouches|shieldBumpTouche
 frontend/modules/seedlingDemo/bobBossFight.js|SHIELD_FORCE|(module),physics,magnitude,Player.as:shieldForce,shieldForce: Enemy.knockback(5; player point)
 frontend/modules/seedlingDemo/levelRun.js|step|hbaf0da28|0|0,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name in the forecast)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|shieldBumpNow,rule,bound,Player.as:shieldBump,hasDarkShield && o.hitsTimer <= 0: the dark shield HITS only a body out of its i-frame (refused by name)
-frontend/modules/seedlingDemo/levelRun.js|advance|h3bdba7db|0|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked; >= 0 is the hit-parked facing sprites() pins (the shield box's direction)
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|0,rule,bound,,U10 forecast punch: hitsTimer > 0 i-frame gate (attackPlayer)
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|1,rule,magnitude,,U10 forecast punch: the hitUpdate decrement this tick applies before the graphic half
 frontend/modules/seedlingDemo/levelRun.js|step|ha550babb|0|2,rule,bound,,U10 forecast punch: attackPlayer returns if hitsTimer > 0
+frontend/modules/seedlingDemo/playerPhysicsV2.js|step|hffedc0b7|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: the facing a hit parks; sprites() pins direction to it while >= 0)
+frontend/modules/seedlingDemo/levelRun.js|stepOptsFor|h14b15328|-1|0,rule,sentinel,Player.as:directionFace,directionFace -1 = not parked (U11-swim D2: stepOptsFor's default; the drive passes damage.directionFace)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

@@ -885,6 +885,25 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'a stance the forecast REFUSES by the punch: (400,248), where the forecast '
                 + 'names the punch at t 34 and the game lands it there (`hits` 1).',
         }),
+        /**
+         * ⛓⛓⛓ U11-swim D2 — THE FACING DURING A KNOCKBACK'S I-FRAME: a press
+         * on the tick after a hit swings the way the hit found the player
+         * (`sprites()` pins `direction` to the parked `directionFace`).
+         */
+        Object.freeze({
+            name: 'u11-facing-knockback', levels: Object.freeze([4]), bobs: 1, ticks: 80,
+            addedBy: 'U11-swim D2 (the stream-visible facing witness)',
+            why: '`bob@64,64`\'s contact at t 20 knocks the player north; the press at t 21 '
+                + 'swings DOWN (the parked facing) and lands, so the bob\'s second contact '
+                + '(t 44 under a facing derived from `v`) never comes.',
+        }),
+        Object.freeze({
+            name: 'u11-facing-puncher', levels: Object.freeze([12]), bobs: 1, ticks: 50,
+            addedBy: 'U11-swim D2 (U10\'s control, extended past the punch)',
+            why: 'the punch at t 34 parks the facing EAST and the press at t 35 lands on '
+                + '`puncher@416,256` (`hits` 2 from t 36); the player stream is the same '
+                + 'under either facing, the puncher\'s `hits` is the observable.',
+        }),
     ]),
 
     /**

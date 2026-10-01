@@ -5816,6 +5816,7 @@ export function createLevelRun({
      */
     function stepOptsFor({
         beforeTypeFlip, openActivators, inputBlocked, steerBlocked, dashImpulse = null,
+        directionFace = -1,
     }) {
         return {
             level: world,
@@ -5880,6 +5881,12 @@ export function createLevelRun({
             // `inputBlocked` for this would silently disarm every press in
             // a fight, which is the one place presses are the point.
             steerBlocked,
+            // ⛓⛓⛓ U11-swim D2: the facing a hit PARKED (`damage.directionFace`),
+            // which `sprites()` pins `direction` to for the whole i-frame. `-1`
+            // (the default, and every caller that takes no hit) derives it from
+            // `v`. Passed by the drive's own step and the rock's release frame —
+            // the two steps of a player that can be inside an i-frame.
+            directionFace,
         };
     }
 
@@ -10983,6 +10990,7 @@ export function createLevelRun({
                         inputBlocked: frozenTimer > 0,
                         steerBlocked: !canSteer(damage),
                         dashImpulse: null,
+                        directionFace: damage.directionFace,
                     }));
                     if (freed.transition) {
                         throw new Error('levelRun: the BobBoss rock\'s release frame produced a '
@@ -13588,14 +13596,17 @@ export function createLevelRun({
             // ⛔ Its `direction` is the GAME's, which `sprites()` pins to
             // `directionFace` while a hit has parked it (`Player.hit` arms
             // `hitsTimer` BEFORE `knockback`, whose `if (hitsTimer > 0)
-            // directionFace = direction` then always parks). `stepV2` derives
-            // `state.direction` from `v` alone, so a player knocked north reads
-            // 1 here while the game's box is still the pre-hit one. MEASURED by
-            // `u9-shield-bob-shove`: with `state.direction` the model missed the
-            // t 27 shove (Δv 5.0) the game's down box dealt.
+            // directionFace = direction` then always parks). MEASURED by
+            // `u9-shield-bob-shove`: a facing derived from `v` alone read 1 for
+            // a player knocked north and missed the t 27 shove (Δv 5.0) the
+            // game's down box dealt. ⛓⛓ U11-swim D2 FOLDED U9's special case
+            // here (`damage.directionFace >= 0 ? … : state.direction`) into
+            // `stepV2`, which now takes the parked facing itself — so
+            // `state.direction` IS the game's `direction`, for this box and for
+            // every other reader (the press's `pressFacing` first among them).
             shieldRenderState = {
                 x: state.x, y: state.y, vx: state.vx, vy: state.vy,
-                direction: damage.directionFace >= 0 ? damage.directionFace : state.direction,
+                direction: state.direction,
             };
             // ⛓ R7 slice 6d: the witnessed mid-run clears, BEFORE anything
             // reads geometry this tick — the flag is already false when the
@@ -15057,6 +15068,9 @@ export function createLevelRun({
                 inputBlocked: frozenTimer > 0,
                 steerBlocked: !canSteer(damage),
                 dashImpulse: slashPress?.outcome === 'dash' ? slashPress.impulse : null,
+                // ⛓ U11-swim D2 — this tick's hits have landed above (the
+                // enemies update first), so this is the facing `sprites()` pins.
+                directionFace: damage.directionFace,
             });
             // ── ⛓⛓⛓ R5 SLICE 23: THE FREEZE-CLEARING FRAME'S OWN STEP ──
             //
