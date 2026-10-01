@@ -77,7 +77,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -99,7 +99,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -121,7 +121,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -143,7 +143,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -165,7 +165,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -187,7 +187,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -209,7 +209,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -231,7 +231,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -253,7 +253,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -275,7 +275,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -297,7 +297,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -319,7 +319,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -341,7 +341,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -363,7 +363,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -385,7 +385,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -407,7 +407,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -429,7 +429,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -451,7 +451,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -473,7 +473,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -495,7 +495,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -517,7 +517,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -539,7 +539,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -561,7 +561,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -583,7 +583,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -605,7 +605,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -627,7 +627,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -649,7 +649,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -671,7 +671,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -693,7 +693,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -715,7 +715,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -737,7 +737,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -759,7 +759,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -781,7 +781,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -803,7 +803,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -825,7 +825,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -847,7 +847,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -869,7 +869,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -891,7 +891,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -913,7 +913,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -935,7 +935,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -957,7 +957,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -979,7 +979,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1001,7 +1001,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1023,7 +1023,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1045,7 +1045,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1067,7 +1067,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1089,7 +1089,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1111,7 +1111,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1133,7 +1133,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1155,7 +1155,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1177,7 +1177,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1199,7 +1199,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1221,7 +1221,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1243,7 +1243,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1265,7 +1265,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1287,7 +1287,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1309,7 +1309,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1331,7 +1331,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1353,7 +1353,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1375,7 +1375,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1397,7 +1397,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1419,7 +1419,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1441,7 +1441,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1463,7 +1463,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1485,7 +1485,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1507,7 +1507,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1529,7 +1529,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1551,7 +1551,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1573,7 +1573,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1595,7 +1595,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1617,7 +1617,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1639,7 +1639,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1661,7 +1661,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1683,7 +1683,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1705,7 +1705,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1727,7 +1727,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1749,7 +1749,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1771,7 +1771,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1793,7 +1793,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1815,7 +1815,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1837,7 +1837,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1859,7 +1859,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1881,7 +1881,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1903,7 +1903,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1925,7 +1925,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1947,7 +1947,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1969,7 +1969,7 @@
             "item": {
               "name": "LQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -1991,7 +1991,7 @@
             "item": {
               "name": "Locks Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -2013,7 +2013,7 @@
             "item": {
               "name": "Pots Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -2035,7 +2035,7 @@
             "item": {
               "name": "SQuests Supply Step",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "progression_skip_balancing"
             }
           },
@@ -2637,6 +2637,2096 @@
           "sphere_locations": []
         }
       }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_2"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "1.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_1"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_2"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "2.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_3"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "3.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_4"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "4.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_1"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "5.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_1"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "6.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_5"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_1"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "7.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_2"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_5"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "8.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_6"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_2"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "9.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_7"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_6"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "10.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_3"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_7"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "11.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_8"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "12.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_9"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_8"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "13.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_2"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_9"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "14.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_2"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_2"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "15.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_10"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_2"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "16.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_4"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_10"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "17.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_11"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "18.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_12"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_11"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "19.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_5"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_12"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "20.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_13"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_5"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "21.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_14"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_13"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "22.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_3"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_14"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "23.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_3"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "24.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_15"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_3"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "25.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_6"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_15"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "26.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_16"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_6"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "27.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_17"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_16"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "28.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_7"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_17"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "29.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_18"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_7"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "30.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_19"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_18"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "31.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_4"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_19"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "32.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_4"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "33.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_20"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_4"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "34.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_8"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_20"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "35.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_21"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_8"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "36.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_22"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_21"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "37.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_9"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_22"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "38.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_23"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_9"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "39.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_24"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_23"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "40.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_5"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_24"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "41.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_5"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_5"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "42.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_25"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_5"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "43.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_10"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_25"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "44.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_26"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_10"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "45.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_27"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_26"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "46.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_11"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_27"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "47.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_28"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_11"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "48.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_29"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_28"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "49.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_6"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_29"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "50.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_6"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_6"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "51.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_30"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_6"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "52.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_12"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_30"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "53.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_31"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_12"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "54.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_32"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_31"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "55.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_13"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_32"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "56.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_33"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_13"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "57.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_34"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_33"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "58.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_7"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_34"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "59.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_7"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_7"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "60.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_35"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_7"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "61.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_14"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_35"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "62.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_36"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_14"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "63.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_37"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_36"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "64.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_15"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_37"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "65.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_38"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_15"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "66.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_39"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_38"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "67.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_8"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_39"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "68.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_8"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_8"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "69.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_40"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_8"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "70.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_16"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_40"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "71.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_41"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_16"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "72.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_42"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_41"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "73.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_17"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_42"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "74.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_43"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_17"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "75.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_44"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_43"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "76.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_9"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_44"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "77.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_9"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_9"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "78.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_45"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_9"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "79.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_18"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_45"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "80.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_46"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_18"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "81.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_47"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_46"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "82.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_19"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_47"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "83.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_48"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_19"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "84.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_49"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_48"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "85.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_LQuests_10"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_49"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "86.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "LQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "LQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Locks_10"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_LQuests_10"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "87.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Locks Supply Step": 1
+            },
+            "resolved_items": {
+              "Locks Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_Pots_50"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Locks_10"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "88.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Pots Supply Step": 1
+            },
+            "resolved_items": {
+              "Pots Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [
+            "region_1_1__q_0_SQuests_20",
+            "region_1_1__travel_onward"
+          ],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_Pots_50"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "89.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "SQuests Supply Step": 1
+            },
+            "resolved_items": {
+              "SQuests Supply Step": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__q_0_SQuests_20"
+          ]
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "89.2",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Victory": 1
+            },
+            "resolved_items": {
+              "Victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__travel_onward"
+          ]
+        }
+      }
     }
   ],
   "loop_costs": {
@@ -2649,11 +4739,11 @@
           "xpEffect": "cost"
         },
         "region_0_0": {
-          "moveCost": 50,
+          "moveCost": 16,
           "xpEffect": "cost"
         },
         "region_1_0": {
-          "moveCost": 50,
+          "moveCost": 21,
           "xpEffect": "cost"
         }
       },
