@@ -266,6 +266,19 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
          * doing for slice 2 exactly what it did for slice 1's bridge bag.
          */
         Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'bobBoss arena step',
+            addedBy: 'swim U5', action: 'already',
+            why: 'the L32 encounter steps the boss (its chase and its sword lines) against '
+                + 'ONE bag built once per arena tick, normalised at the site — written after '
+                + 'the batch, in the batch\'s own shape (`bobBossFight.js`, swim U5).',
+        }),
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'advance BobBoss arm',
+            addedBy: 'swim U5', action: 'already',
+            why: '`advance`\'s BobBoss arm asks the live geometry once for the frame\'s '
+                + 'boss step and its player-hit tests, normalised at the site (swim U5).',
+        }),
+        Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'liveGeometryOpts getter',
             addedBy: 'R8 slice 2', action: 'brand',
             why: 'the solver hoists it once per PLAN (the cadence the per-visit state '
