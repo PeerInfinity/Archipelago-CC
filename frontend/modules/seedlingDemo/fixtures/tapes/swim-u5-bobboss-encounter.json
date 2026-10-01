@@ -1,0 +1,426 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "name": "swim-u5-bobboss-encounter",
+    "description": "⛓⛓ SEEDLING SWIM U5 — L32's BobBoss encounter, SOLVED by `solverBot`'s `encounter` executor (`ENCOUNTER_EXECUTORS.Fire`) from the through-2.2 survey's step-30 boot (r8-solve-11's v8 block re-pointed at L32@72,120: the sword latched, the SHIELD held, hitsMax 3, damage ON). Every decision reads the BobBoss simulation family (`bobBossFight.js`): the rock arms at y < 120 (t=8, 174 dead frames); three forms die to seven landings (2 + 3 + 2; kills at t=99, 426 and 657), each searched against `run.bobBossForecast()` so no sword line and no body touches the player, each verified on the boss's own hits; fourteen dialogue pages; the Fire collected at t=839 ({32,1} and the out-of-band {31,29}); slot 1 equipped at t=840 (one tick after the flag: the slot array is rebuilt in the next frame); the burnable tree pressed at t=880 ({32,0}); the pit falls to L30 at t=976 and the transport coasts to the ground at t=1056. It is the first recording to hold the shield in a fight, which is what found `Player.shieldBump` (the shield shoves the boss). `r5-bobboss-fire` (noDamage, no shield, a hand cadence) stays the control.",
+    "boot": {
+        "level": 32,
+        "x": 72,
+        "y": 120
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [
+        {
+            "t": 840,
+            "slot": 1
+        }
+    ],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 1056,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 9
+        },
+        {
+            "key": "primary",
+            "from": 10,
+            "to": 11
+        },
+        {
+            "key": "primary",
+            "from": 19,
+            "to": 20
+        },
+        {
+            "key": "primary",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "primary",
+            "from": 37,
+            "to": 38
+        },
+        {
+            "key": "primary",
+            "from": 46,
+            "to": 47
+        },
+        {
+            "key": "primary",
+            "from": 55,
+            "to": 56
+        },
+        {
+            "key": "primary",
+            "from": 63,
+            "to": 64
+        },
+        {
+            "key": "up",
+            "from": 57,
+            "to": 69
+        },
+        {
+            "key": "right",
+            "from": 64,
+            "to": 69
+        },
+        {
+            "key": "primary",
+            "from": 93,
+            "to": 94
+        },
+        {
+            "key": "primary",
+            "from": 221,
+            "to": 222
+        },
+        {
+            "key": "primary",
+            "from": 230,
+            "to": 231
+        },
+        {
+            "key": "primary",
+            "from": 239,
+            "to": 240
+        },
+        {
+            "key": "primary",
+            "from": 248,
+            "to": 249
+        },
+        {
+            "key": "primary",
+            "from": 257,
+            "to": 258
+        },
+        {
+            "key": "primary",
+            "from": 266,
+            "to": 267
+        },
+        {
+            "key": "primary",
+            "from": 275,
+            "to": 276
+        },
+        {
+            "key": "primary",
+            "from": 284,
+            "to": 285
+        },
+        {
+            "key": "primary",
+            "from": 293,
+            "to": 294
+        },
+        {
+            "key": "primary",
+            "from": 302,
+            "to": 303
+        },
+        {
+            "key": "primary",
+            "from": 311,
+            "to": 312
+        },
+        {
+            "key": "primary",
+            "from": 320,
+            "to": 321
+        },
+        {
+            "key": "primary",
+            "from": 329,
+            "to": 330
+        },
+        {
+            "key": "primary",
+            "from": 338,
+            "to": 339
+        },
+        {
+            "key": "primary",
+            "from": 348,
+            "to": 349
+        },
+        {
+            "key": "up",
+            "from": 340,
+            "to": 352
+        },
+        {
+            "key": "left",
+            "from": 349,
+            "to": 352
+        },
+        {
+            "key": "primary",
+            "from": 376,
+            "to": 377
+        },
+        {
+            "key": "up",
+            "from": 377,
+            "to": 382
+        },
+        {
+            "key": "right",
+            "from": 377,
+            "to": 382
+        },
+        {
+            "key": "primary",
+            "from": 420,
+            "to": 421
+        },
+        {
+            "key": "up",
+            "from": 421,
+            "to": 426
+        },
+        {
+            "key": "right",
+            "from": 421,
+            "to": 426
+        },
+        {
+            "key": "primary",
+            "from": 548,
+            "to": 549
+        },
+        {
+            "key": "primary",
+            "from": 557,
+            "to": 558
+        },
+        {
+            "key": "primary",
+            "from": 566,
+            "to": 567
+        },
+        {
+            "key": "primary",
+            "from": 575,
+            "to": 576
+        },
+        {
+            "key": "primary",
+            "from": 584,
+            "to": 585
+        },
+        {
+            "key": "primary",
+            "from": 593,
+            "to": 594
+        },
+        {
+            "key": "primary",
+            "from": 602,
+            "to": 603
+        },
+        {
+            "key": "primary",
+            "from": 611,
+            "to": 612
+        },
+        {
+            "key": "primary",
+            "from": 621,
+            "to": 622
+        },
+        {
+            "key": "up",
+            "from": 613,
+            "to": 627
+        },
+        {
+            "key": "right",
+            "from": 622,
+            "to": 627
+        },
+        {
+            "key": "primary",
+            "from": 651,
+            "to": 652
+        },
+        {
+            "key": "up",
+            "from": 779,
+            "to": 810
+        },
+        {
+            "key": "primary",
+            "from": 810,
+            "to": 811
+        },
+        {
+            "key": "primary",
+            "from": 819,
+            "to": 820
+        },
+        {
+            "key": "primary",
+            "from": 828,
+            "to": 829
+        },
+        {
+            "key": "primary",
+            "from": 837,
+            "to": 838
+        },
+        {
+            "key": "primary",
+            "from": 840,
+            "to": 841
+        },
+        {
+            "key": "left",
+            "from": 840,
+            "to": 846
+        },
+        {
+            "key": "right",
+            "from": 846,
+            "to": 847
+        },
+        {
+            "key": "right",
+            "from": 853,
+            "to": 854
+        },
+        {
+            "key": "primary",
+            "from": 854,
+            "to": 855
+        },
+        {
+            "key": "left",
+            "from": 858,
+            "to": 859
+        },
+        {
+            "key": "right",
+            "from": 865,
+            "to": 866
+        },
+        {
+            "key": "left",
+            "from": 870,
+            "to": 871
+        },
+        {
+            "key": "up",
+            "from": 840,
+            "to": 874
+        },
+        {
+            "key": "down",
+            "from": 874,
+            "to": 875
+        },
+        {
+            "key": "up",
+            "from": 875,
+            "to": 876
+        },
+        {
+            "key": "primary",
+            "from": 880,
+            "to": 881
+        },
+        {
+            "key": "primary",
+            "from": 934,
+            "to": 935
+        },
+        {
+            "key": "up",
+            "from": 934,
+            "to": 957
+        }
+    ]
+}

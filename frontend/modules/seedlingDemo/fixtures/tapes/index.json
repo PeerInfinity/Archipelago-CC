@@ -1344,6 +1344,13 @@
       "noHazards": []
     },
     {
+      "file": "swim-u5-bobboss-encounter.json",
+      "tickCount": 1056,
+      "bootLevel": 32,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "thread-the-gap.json",
       "tickCount": 197,
       "bootLevel": 0,
