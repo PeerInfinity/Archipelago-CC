@@ -88,7 +88,7 @@ export async function testMetaGameProgressBarIntegration(testController) {
       () => {
         const menuRegion = Array.from(document.querySelectorAll('.region-block'))
           .find(block => block.textContent.includes('Menu'));
-        return menuRegion !== null;
+        return menuRegion !== undefined; // find() misses with undefined
       },
       'Menu region block displayed',
       10000,
@@ -532,7 +532,7 @@ export async function testMetaGamePanelUI(testController) {
       () => {
         const menuRegion = Array.from(document.querySelectorAll('.region-block'))
           .find(block => block.textContent.includes('Menu'));
-        return menuRegion !== null;
+        return menuRegion !== undefined; // find() misses with undefined
       },
       'Menu region block displayed for modified test',
       10000,
