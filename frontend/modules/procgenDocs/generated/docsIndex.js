@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 26,
         "headings": 940,
         "indexHeadings": 2,
-        "lines": 21439,
+        "lines": 21440,
         "pages": 4,
-        "words": 250490
+        "words": 250675
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -68,7 +68,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 4413
+            "words": 4484
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -301,13 +301,13 @@ export const DOCS_INDEX = frz({
             "file": "pipeline-presets.md",
             "h1": "Pipeline Presets",
             "headings": 12,
-            "lines": 123,
+            "lines": 124,
             "links": [
                 "concepts.md",
                 "flash.md"
             ],
             "path": "docs/json/developer/procgen/pipeline-presets.md",
-            "words": 1865
+            "words": 1979
         },
         {
             "description": "The text-adventure substrate (id `text_adventure`) shows a region as prose: a description with clickable compass exits and clickable locations. At build time a region is a room, not a tile grid: exits sit on compass sides, and gates are the document's own rules.",
