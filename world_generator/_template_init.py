@@ -266,15 +266,6 @@ def generate_init_py(data: ExtractedData, canonical_seed: Optional[int] = None) 
     original_seed_placements_content = '\n'.join(original_seed_placement_entries)
     advancement_loc_content = '\n'.join(advancement_loc_entries)
 
-    # Build canonical advancement dict (maps location -> original advancement value)
-    # This is used by the exporter to preserve original advancement values during cross-validation
-    canonical_advancement_entries = []
-    if canonical_seed is not None and data.canonical_placement_advancements:
-        for loc_name, advancement in data.canonical_placement_advancements.items():
-            loc_escaped = loc_name.replace('\\', '\\\\').replace('"', '\\"')
-            canonical_advancement_entries.append(f'        "{loc_escaped}": {advancement},')
-    canonical_advancement_content = '\n'.join(canonical_advancement_entries)
-
     # Find victory location and item (heuristic: event with "victory" in name)
     victory_location = None
     victory_item = None
