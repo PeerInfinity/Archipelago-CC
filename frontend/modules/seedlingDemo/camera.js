@@ -263,6 +263,18 @@ export const SHAKE_WRITERS = Object.freeze({
         op: '+=', value: null, src: 'Scenery/RockFall.as:66',
         who: 'every RockFall landing — `scale + 1`, in [1.25, 1.75), a DRAW per rock',
     }),
+    /**
+     * ⛓ U14-swim D1 — the moonrock's landing (`moonrock.js`), the first of the
+     * "seven more" above that a modelled route reaches. It lands inside the
+     * beam's own freeze, 91 frames before the release, so the 60 has decayed to
+     * 0 by the first live tick after it (measured: `static.Game.shake` 0 in
+     * `u14-moonrock-beam`'s latch); the band it leaves is L0's, which holds no
+     * on-screen-gated body.
+     */
+    moonrockLanding: Object.freeze({
+        op: '=', value: 60, src: 'Scenery/Moonrock.as:115',
+        who: 'the moonrock\'s landing, once per game — inside its own freeze',
+    }),
 });
 
 /**

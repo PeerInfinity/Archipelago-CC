@@ -501,12 +501,15 @@ export const SEAM_BOOT_SPEC = Object.freeze([
             + 'its level, by which time the pickup it should have despawned is standing',
     })),
     Object.freeze({
-        key: 'beam', field: 'save.beam', type: 'boolean', modelled: false,
-        why: 'gates L0\'s 280-draw moonrock flare; `Shield.removed()` sets it',
+        key: 'beam', field: 'save.beam', type: 'boolean', modelled: true,
+        why: '⚠ GAMEPLAY: `Shield.removed()` sets it, and L0\'s moonrock consumes it — a '
+            + '300-frame beam, the fall and a 90-frame hold under `Game.freezeObjects`, 451 '
+            + 'dead frames (`moonrock.js`, swim U14; witnessed by `u14-moonrock-beam`)',
     }),
     Object.freeze({
-        key: 'rock_set', field: 'save.rockSet', type: 'boolean', modelled: false,
-        why: '⚠ GAMEPLAY: `Moonrock`\'s ctor drops the rock and makes it a 48x48 Solid',
+        key: 'rock_set', field: 'save.rockSet', type: 'boolean', modelled: true,
+        why: '⚠ GAMEPLAY: `Moonrock`\'s ctor drops the rock and makes it a 48x48 Solid '
+            + '(`moonrock.js`, swim U14; witnessed by `u14-moonrock-set`)',
     }),
     Object.freeze({
         key: 'hits_max', field: 'save.hitsMax', type: 'int', min: 1, max: 99,

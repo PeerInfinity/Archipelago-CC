@@ -669,7 +669,11 @@ describe('R7 slice 1 — SEAM_CHANNELS: every signature row can be declared', ()
         const carried = SEAM_BOOT_SPEC.filter((x) => !x.modelled).map((x) => x.key);
         expect(modelled.length).toBeGreaterThan(0);
         expect(carried.length).toBeGreaterThan(0);
-        expect(carried).toContain('beam');
+        // ⛓ swim U14: `beam` and `rock_set` are MODELLED now (`moonrock.js`);
+        // `first_use` is the carried row this assertion keeps.
+        expect(carried).toContain('first_use');
+        expect(modelled).toContain('beam');
+        expect(modelled).toContain('rock_set');
         expect(modelled).toContain('cutscene');
     });
 });

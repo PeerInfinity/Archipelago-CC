@@ -1500,6 +1500,20 @@
       "noHazards": []
     },
     {
+      "file": "u14-moonrock-beam.json",
+      "tickCount": 20,
+      "bootLevel": 0,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "u14-moonrock-set.json",
+      "tickCount": 40,
+      "bootLevel": 0,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "u7-puncher-kill.json",
       "tickCount": 128,
       "bootLevel": 12,

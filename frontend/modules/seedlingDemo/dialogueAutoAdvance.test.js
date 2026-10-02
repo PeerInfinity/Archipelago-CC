@@ -135,8 +135,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ swim R3: 176 (+ `r3-pit-death`, inert).
         // ⛓ swim R3: 178 (+ `r3-drown` and `r3-lava`, inert).
         // ⛓ swim R3: 179 (+ `r3-bobboss-death`, inert).
-        expect(rows).toHaveLength(179);
-        expect(rows.length - parted.length).toBe(178);
+        // ⛓ swim U14: 177 with `u14-moonrock-beam` and `u14-moonrock-set` — inert too.
+        expect(rows).toHaveLength(181);
+        expect(rows.length - parted.length).toBe(180);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**55 files, 4670 literals.** Class × position:
+**56 files, 4740 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1250 | 333 | 1588 |
-| rule | 6 | 905 | 407 | 1318 |
-| cosmetic | 0 | 43 | 8 | 51 |
-| structural | 10 | 310 | 1393 | 1713 |
+| physics | 5 | 1256 | 335 | 1596 |
+| rule | 6 | 911 | 420 | 1337 |
+| cosmetic | 0 | 43 | 10 | 53 |
+| structural | 10 | 310 | 1434 | 1754 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2508 | 2141 | 4670 |
+| total | 21 | 2520 | 2199 | 4740 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1331 | 0 | 89 | 113 | 4 | 51 | 1588 |
-| rule | 391 | 120 | 200 | 22 | 508 | 77 | 1318 |
+| physics | 1339 | 0 | 89 | 113 | 4 | 51 | 1596 |
+| rule | 397 | 120 | 204 | 22 | 517 | 77 | 1337 |
 
 Rows whose note starts `REVIEW:`: **105**.
 
@@ -464,7 +464,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `levelCount` | 116 | rule | count |  | tapeFormat.js `LEVEL_COUNT` |
 | `wandSpeed` | 3 | physics | magnitude | Player.as:wandSpeed | wandVerb.js `WAND_SPEED` |
 
-### The 34 derived or aliased top-level constants
+### The 35 derived or aliased top-level constants
 
 | name | file | initialiser |
 |---|---|---|
@@ -472,6 +472,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `TILE_SIZE` | seedlingDemo/levelWorld.js | `SEEDLING_TILE_SIZE` |
 | `NPC_LINE_LENGTH` | seedlingDemo/endingChain.js | `NPC_LINE_LENGTH_DEFAULT` |
 | `BLOODY_SEED_TEXT` | seedlingDemo/endingChain.js | `'The seed, covered in the blood of the Watcher, seems ' + 'almost to cower fr...` |
+| `BEAM_TIME_MAX` | seedlingDemo/moonrock.js | `MOONROCK.fps * MOONROCK.beamSeconds` |
 | `TICKS_PER_TILE` | seedlingDemo/pushables.js | `TILE / PUSHABLE_SPEED` |
 | `SLASH_REACH_DASH` | seedlingDemo/presses.js | `SLASH_REACH * SLASH_SCALE_DASH.x` |
 | `FIRE_PRESS_CADENCE` | seedlingDemo/fireVerb.js | `FIRE_WINDOW.endTick + 1` |
@@ -505,7 +506,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **134 small tables** (at most 16 literals) hold at least one (84 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **135 small tables** (at most 16 literals) hold at least one (85 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -550,6 +551,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `FALL_RESPONDER_ROOMS` | seedlingDemo/activators.js | 6 | 6 | rule | sentinel |  |
 | `FALL_ROCK` | seedlingDemo/fallRock.js | 11 | 11 | physics/rule | magnitude | Scenery/FallRock.as:fallRate Scenery/FallRock.as:waitToFallTimerMax Scenery/FallRock.as:cameraTimerMax |
 | `PLAYER_SNAP` | seedlingDemo/fallRock.js | 2 | 2 | physics | magnitude | Player.as:295 |
+| `MOONROCK` | seedlingDemo/moonrock.js | 11 | 11 | physics/rule | magnitude/sentinel | Main.as:FPS Scenery/Moonrock.as:fallRate Scenery/Moonrock.as:cameraTimerMax |
 | `DESTROYING_TILE_TYPES` | seedlingDemo/pushables.js | 3 | 3 | rule | sentinel |  |
 | `PUSH_STEP` | seedlingDemo/pushables.js | 8 | 8 | physics | sign | Player.as:1103 |
 | `SPEAR_HIT_TICKS_UNMODELLED` | seedlingDemo/presses.js | 3 | 3 | rule | magnitude |  |
@@ -616,7 +618,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `MAGICAL_LOCK_CALLBACK_TICK_OFFSET` | seedlingDemo/magicalLock.js | 1 | 1 | rule | derivation |  |
 | `MAGICAL_LOCK_MATRIX` | seedlingDemo/magicalLock.js | 8 | 8 | rule | sentinel |  |
 | `INVENTORY_TERM` | seedlingDemo/camera.js | 2 | 2 | rule | derivation |  |
-| `SHAKE_WRITERS` | seedlingDemo/camera.js | 3 | 3 | rule | magnitude |  |
+| `SHAKE_WRITERS` | seedlingDemo/camera.js | 4 | 4 | rule | magnitude |  |
 | `RANDOM_RANGE` | seedlingDemo/camera.js | 2 | 2 | rule | bound |  |
 | `CAMERA_DEAD_ZONE_RESIDUE` | seedlingDemo/camera.js | 2 | 2 | rule | bound |  |
 | `PLAYER_DAMAGE` | seedlingDemo/playerDamage.js | 5 | 4 | rule | count/magnitude | Player.as:hitsTimerMax Player.as:hitsTimerInt |

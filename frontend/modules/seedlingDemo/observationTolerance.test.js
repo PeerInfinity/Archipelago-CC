@@ -84,7 +84,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ swim R3: 176 (+ `r3-pit-death`, inert).
         // ⛓ swim R3: 178 (+ `r3-drown` and `r3-lava`, inert).
         // ⛓ swim R3: 179 (+ `r3-bobboss-death`, inert).
-        expect(names.length).toBe(179);
+        // ⛓ swim U14: 177 with `u14-moonrock-beam` and `u14-moonrock-set`.
+        expect(names.length).toBe(181);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -128,7 +129,7 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(179);
+        expect(tally.swapped).toBe(181);
     }, 600_000);
 });
 

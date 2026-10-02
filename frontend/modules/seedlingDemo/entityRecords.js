@@ -100,7 +100,7 @@ export const ENTITY_RECORDS_GLOBAL = '__SEEDLING_ENTITY_RECORDS__';
  */
 export const ENTITY_RECORD_MODULES = Object.freeze([
     'arrowTrap.js', 'chasers.js', 'combat.js', 'crusher.js', 'enemyDamage.js',
-    'fallRock.js', 'iceTurret.js', 'iceTurretBlast.js', 'pulser.js', 'spinner.js',
+    'fallRock.js', 'iceTurret.js', 'iceTurretBlast.js', 'moonrock.js', 'pulser.js', 'spinner.js',
 ]);
 
 /** Every refusal this module makes. The message names the record and path. */

@@ -60,6 +60,7 @@ import {
 import {
     createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
 } from './fallRock.js';
+import { MOONROCK, createMoonrock, moonrockRect, stepMoonrock } from './moonrock.js';
 import {
     BridgeError, TICKS_FROM_PRESS_TO_WALKABLE, withinOnScreenRadius,
 } from './bridges.js';
@@ -166,6 +167,8 @@ import {
     // ⛓ R9 SLICE 12c‴, ⚖ ruling 45: the same table MINUS `playerHit` — the
     // writers a room can open WITHOUT the player doing anything.
     BOSS_CLASS_SHAKE_WRITERS,
+    // ⛓ U14-swim D1: `Moonrock.update`'s camera target is `FP.screen`-relative.
+    SCREEN_H, SCREEN_W,
 } from './camera.js';
 // ⛓⛓⛓ R6 SLICE 3: `Player.hit`/`knockback`/`hitUpdate`/`die`, and the
 // contact source that calls them. `noDamage` stops being a refusal here.
@@ -525,11 +528,12 @@ export function createLevelRun({
      * it would build a DIFFERENT WORLD from the one the game builds.
      *
      * ⚠ NOT EVERY FIELD IS MODELLED, and `SEAM_BOOT_SPEC[].modelled` is the
-     * list. `beam`, `rock_set`, `time`, `grass_cut`, `secondary`,
-     * `first_use`, `extended`, the two music fields and `menu_state` are
-     * carried, validated and compared AT THE SEAM, and no physics here
-     * reads them. Saying which is which is the difference between a
-     * declared field and a silently ignored one.
+     * list. `grass_cut`, `secondary`, `first_use`, `extended`, the two music
+     * fields and `menu_state` are carried, validated and compared AT THE
+     * SEAM, and no physics here reads them (`time` became modelled at R8
+     * slice 8, `beam` and `rock_set` at swim U14 — the moonrock). Saying
+     * which is which is the difference between a declared field and a
+     * silently ignored one.
      */
     seam = null,
     /**
@@ -1179,6 +1183,41 @@ export function createLevelRun({
         }
         return fallRockStates.get(n);
     };
+    /**
+     * ── ⛓⛓⛓ U14-swim D1: THE MOONROCK (`moonrock.js`) ─────────────────
+     *
+     * `Moonrock.beam` IS `Main.beam` and `Game.moonrockSet` IS `Main.rockSet`:
+     * two SAVE statics, so they survive every world and are read off the boot
+     * block (`SEAM_BOOT_SPEC`'s `beam`/`rock_set` rows). `Shield.removed()`
+     * writes the first; the rock's landing writes the second and clears the
+     * first. The ROCK is per visit: a `new Game` constructs it again, parked
+     * at y −1000 or, once `rockSet`, standing at `fallTo` as a Solid.
+     *
+     * ⛔ `check()` REMOVES A ROCK WHOSE TAG IS CLEARED (`Moonrock.as:57-64`),
+     * so a cleared {0,0} means no rock at all — read when the visit builds.
+     */
+    let moonrockBeam = seamBoot['save.beam'] === true;
+    let moonrockSet = seamBoot['save.rockSet'] === true;
+    const moonrockStates = new Map();
+    const moonrockStateFor = (n) => {
+        if (!moonrockStates.has(n)) {
+            const st = new Map();
+            for (const e of recordFor(n).entities ?? []) {
+                if (e.type !== 'moonrock') continue;
+                const tag = Number(e.attrs?.tag ?? -1);
+                if (tag >= 0 && (clearedByLevel.get(n) ?? []).includes(tag)) continue;
+                const r = createMoonrock(Math.trunc(Number(e.x)), Math.trunc(Number(e.y)), tag,
+                    moonrockSet);
+                st.set(r.id, r);
+            }
+            moonrockStates.set(n, st);
+        }
+        return moonrockStates.get(n);
+    };
+    /** `{t, level, id, what, …}` per beam start, freeze, landing, release and write. */
+    const moonrockEvents = [];
+    /** The `moonrock_target` persistence write, one row per flag — an `earnedClears` feeder. */
+    const moonrockFlags = new Map();
     /**
      * ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHERS, THE NINTH FAMILY ────────────────
      *
@@ -1881,7 +1920,9 @@ export function createLevelRun({
     /** The boxes of every rock this visit has DROPPED — `collidesSolid`'s arm. */
     const fallenRocksNow = () => {
         const st = fallRockStateFor(level);
-        if (st.size === 0) return null;
+        // ⚠ No early `return null` for a room without FallRocks any more (U14):
+        // L0 has none and holds the moonrock. The tail returns null for an
+        // empty map, so every room without a Solid here answers exactly as before.
         const out = new Map();
         for (const [id, r] of st) {
             if (!r.landed) continue;
@@ -1893,6 +1934,14 @@ export function createLevelRun({
         if (bobArena && !bobArena.none && bobArena.level === level && bobArena.landed) {
             out.set(bobArena.rockId, { id: bobArena.rockId, tag: 'fallrocklarge',
                 rect: bobBossRockRect(), x: bobBossRockRect().x, y: bobBossRockRect().y });
+        }
+        // ⛓ U14-swim D1: a SET `Moonrock`, a 48x48 Solid from its landing (or
+        // from its ctor, once `Game.moonrockSet`). `noclip` builds none.
+        if (!noclip) {
+            for (const [id, r] of moonrockStateFor(level)) {
+                if (r.type !== MOONROCK.landedType) continue;
+                out.set(id, { id, tag: 'moonrock', rect: moonrockRect(r), x: r.x, y: r.y });
+            }
         }
         return out.size === 0 ? null : out;
     };
@@ -3336,6 +3385,8 @@ export function createLevelRun({
         return poleStates.get(n);
     };
     const freshVisitState = (n) => {
+        // ⛓ U14-swim D1: a new `Game` constructs the moonrock again, from `rockSet`.
+        moonrockStates.delete(n);
         bridgeStates.set(n, new Map());
         pushableStates.set(n, createPushableState(worldFor(n)));
         // R5 slice 13: a re-entered room rebuilds every spinner at its cell,
@@ -11058,6 +11109,180 @@ export function createLevelRun({
     };
 
     /**
+     * ⛓⛓⛓ U14-swim D1: ONE `Moonrock.update()` FOR THIS ROOM'S ROCK, AND ITS
+     * JOINS (`moonrock.js` owns the transcription).
+     *
+     * The rock is added after the Player (`Game.as:2345` against `:2227`) and
+     * `addUpdate` prepends, so it updates first and reads the position the
+     * last frame left — `state` at the top of this tick. Its writes land on:
+     *   · `Game.freezeObjects` — the arm below;
+     *   · `Player.directionFace` — `damage.directionFace`, the one field the
+     *     knockback writes too, which `sprites()` pins `direction` to;
+     *   · `Game.cameraTarget` — `bossCameraTarget`, the run's one copy of that
+     *     static (the boss is only its other writer);
+     *   · `Game.shake` — `camera.SHAKE_WRITERS.moonrockLanding`;
+     *   · `Main.beam`, `Main.rockSet` — `moonrockBeam`, `moonrockSet`;
+     *   · the snap, `p.y`, before the player's own update this frame;
+     *   · {2,0} — `moonrock_target`'s tag, cleared once per visit by the first
+     *     update that finds the stairs under a set rock (`Moonrock.as:131-136`).
+     *     The stairs become a teleporter to the same room; both are under the
+     *     Solid, so only the WRITE is modelled.
+     */
+    const moonrockFrameNow = (id, s) => {
+        const r = stepMoonrock(s, {
+            beam: moonrockBeam,
+            rockSet: moonrockSet,
+            player: { x: state.x, y: state.y },
+            playerBox: playerBoxAt(state.x, state.y),
+            playerFalling: !!state.fall,
+            screen: { width: SCREEN_W, height: SCREEN_H },
+        });
+        const rocks = moonrockStateFor(level);
+        rocks.set(id, r.state);
+        if (moonrockBeam && !r.beam && r.state.trigger) {
+            moonrockEvents.push({ t: ticksCompleted, level, id, what: 'beam-ended' });
+        }
+        moonrockBeam = r.beam;
+        moonrockSet = r.rockSet;
+        if (r.directionFace !== null) damage = { ...damage, directionFace: r.directionFace };
+        if (r.cameraTarget !== null) bossCameraTarget = { ...r.cameraTarget };
+        if (r.landed) {
+            shake = applyShakeWriter(shake, 'moonrockLanding');
+            moonrockEvents.push({ t: ticksCompleted, level, id, what: 'landed', y: r.state.y });
+        }
+        if (r.snapY !== null) state = { ...state, y: r.snapY };
+        if (r.stairsCheck && !r.state.stairsReplaced) {
+            const box = moonrockRect(r.state);
+            // `collide("Teleporter", x, y)` then `stairs is Stairs`.
+            const under = (world.teleporters ?? []).some((tp) => tp.isStairs === true
+                && rectsOverlap(box, tp.rect));
+            rocks.set(id, { ...r.state, stairsReplaced: true });
+            if (under) {
+                const flag = { level: MOONROCK.target.level, tag: MOONROCK.target.tag, value: false };
+                if (!moonrockFlags.has(ledgerKey(flag))) {
+                    moonrockFlags.set(ledgerKey(flag), { ...flag, id, t: ticksCompleted });
+                }
+                if (!pendingEarnedClears.has(flag.level)) pendingEarnedClears.set(flag.level, new Set());
+                pendingEarnedClears.get(flag.level).add(flag.tag);
+                moonrockEvents.push({ t: ticksCompleted, level, id, what: 'stairs-replaced', flag });
+            }
+        }
+        return r;
+    };
+    /**
+     * The families whose phase a frozen frame advances. The span below steps
+     * the rock, the camera and the player's own unfrozen lines; a room holding
+     * any of these is REFUSED rather than collapsed. L0 holds none.
+     */
+    const MOONROCK_SPAN_REFUSES = Object.freeze(['watchers', 'oracles', 'finalBosses', 'pods',
+        'activators', 'pressers', 'pushables', 'crushers', 'iceTurrets', 'bossTotems',
+        'shieldBosses', 'finalDoors', 'pulsers', 'arrowTraps', 'fallRocks', 'spinners',
+        'pressEnemies']);
+    const stepMoonrocksNow = (held) => {
+        const rocks = moonrockStateFor(level);
+        if (rocks.size === 0) return { frozen: false };
+        if (rocks.size > 1) {
+            throw new Error(`levelRun: level ${level} holds ${rocks.size} moonrocks. \`beam\` and `
+                + '`rockSet` are ONE pair of save statics, so the first to land would set the '
+                + 'other one\'s flag mid-update; one rock per game is the only shape transcribed.');
+        }
+        const [[id, s0]] = [...rocks];
+        const wasBeaming = moonrockBeam && s0.canBeam;
+        const r = moonrockFrameNow(id, s0);
+        if (!wasBeaming && moonrockBeam && r.state.canBeam && r.state.beamTime < s0.beamTime) {
+            moonrockEvents.push({ t: ticksCompleted, level, id, what: 'beam-started',
+                facing: damage.directionFace });
+        }
+        if (r.freeze !== true) return { frozen: false };
+        // ── the beam's FIRST FROZEN FRAME: live to the tape, frozen to the player ──
+        const busy = MOONROCK_SPAN_REFUSES.filter((k) => (world[k] ?? []).length > 0);
+        if ((world.combat?.enemies ?? []).length > 0) busy.push('combat.enemies');
+        if (pullsFor(level).length > 0) busy.push('pulls');
+        if (busy.length > 0 || damage.hitsTimer > 0 || frozenTimer > 0
+            || wandWindows.some((w) => ticksCompleted <= w.endTick)
+            || fireWindows.some((w) => ticksCompleted <= w.endTick)) {
+            throw new Error(`levelRun: the moonrock freezes level ${level} at tick `
+                + `${ticksCompleted} for ~450 frames, and ${busy.length ? `the room holds `
+                    + `${busy.join(', ')}` : 'a hit, an ice freeze, a wand or a fire window is open'}`
+                + ' — state this span does not step frame by frame. Refused rather than collapsed.');
+        }
+        // ⛔ A SWING ACROSS THE FREEZE IS BURNED, not refused. Its thrusts fire on
+        // frames `Game.freezeObjects` holds, where `genericHit` returns at its first
+        // line, and the span is longer than any swing — so every pending test is
+        // lost. Measured: `u14-moonrock-beam` presses at t0 and the game shows nothing.
+        if (swordWindow.pending || swordWindow.repeats.length > 0) {
+            moonrockEvents.push({ t: ticksCompleted, level, id, what: 'swing-burned',
+                pending: swordWindow.pending ? 1 : 0, repeats: swordWindow.repeats.length });
+            swordWindow = EMPTY_SWORD_WINDOW;
+        }
+        moonrockEvents.push({ t: ticksCompleted, level, id, what: 'frozen' });
+        return {
+            frozen: true,
+            why: 'the Moonrock beam',
+            after: () => {
+                // `sprites()` runs on the frozen frame too, under the parked facing.
+                if (damage.directionFace >= 0) state = { ...state, direction: damage.directionFace };
+                // ── the DEAD span: every frame to the release, inclusive ──
+                let frames = 0;
+                for (;;) {
+                    frames += 1;
+                    if (frames > 2000) {
+                        throw new Error('levelRun: the moonrock never released its freeze');
+                    }
+                    const f = moonrockFrameNow(id, moonrockStateFor(level).get(id));
+                    if (f.released) break;
+                    // `Player.update`'s lines outside `super.update()`, which the
+                    // freeze does not gate (see `runFrozenTick`).
+                    if (!noclip) shieldBumpNow();
+                    slashState = slashTimerTick(slashState);
+                    const d = stepPlayerDamage(damage);
+                    damage = d.state;
+                    if (damage.directionFace >= 0) state = { ...state, direction: damage.directionFace };
+                    stepCameraNow(state, world.world);
+                }
+                spendFrozen(frames, 'moonrock');
+                // The swing's animation ran out inside the span: `slashEnd`.
+                if (slashEndsAt !== null) {
+                    slashEndsAt = null;
+                    slashState = slashSet(slashState, {
+                        pressed: false,
+                        hasSword: inventory?.hasSword ?? false,
+                        hasGhostSword: inventory?.hasGhostSword ?? false,
+                        wanding: false,
+                        firing: false,
+                        deathRaying: false,
+                        spearing: false,
+                    }).state;
+                }
+                // ⛔ THE RELEASE FRAME IS THE LAST DEAD FRAME AND IT MOVES THE PLAYER.
+                // The rock lowers the flag above the Player, so the player steps once
+                // under the HELD keys (a dead frame dispatches no edge) with
+                // `directionFace` already −1 — the BobBoss rock's shape.
+                if (!noclip) shieldBumpNow();
+                slashState = slashTimerTick(slashState);
+                const keys = (lockSnap || frozenTimer > 0 || cutsceneWalk) ? NO_KEYS : held;
+                const freed = stepV2(state, keys, stepOptsFor({
+                    beforeTypeFlip: false,
+                    openActivators: openActivatorIds(activatorStateFor(level)),
+                    inputBlocked: frozenTimer > 0,
+                    steerBlocked: !canSteer(damage),
+                    dashImpulse: null,
+                    directionFace: damage.directionFace,
+                }));
+                if (freed.transition) {
+                    throw new Error('levelRun: the moonrock\'s release frame produced a '
+                        + 'TRANSITION, which a dead frame cannot show. Refused.');
+                }
+                state = freed;
+                damage = stepPlayerDamage(damage).state;
+                stepCameraNow(state, world.world);
+                moonrockEvents.push({ t: ticksCompleted, level, id, what: 'released',
+                    deadFrames: frames });
+            },
+        };
+    };
+
+    /**
      * ⛓ ENGINE-PREP C3 — THE ENTITIES FOLD: ONE FUNCTION, TWO FACES.
      *
      * Each arrow below is the body its getter on the returned object had,
@@ -11970,6 +12195,15 @@ export function createLevelRun({
             if (out.some((o) => o.level === n && o.tag === tag)) continue;
             out.push({ level: n, tag, by: r.id, t: r.t });
         }
+        // ⛓ U14-swim D1: the set moonrock's `moonrock_target` write — a
+        // CROSS-LEVEL in-band clear ({2,0} from L0), measured in the game's
+        // latch. Its own loop for the reason every family above has one.
+        for (const [key, r] of moonrockFlags) {
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            if (out.some((o) => o.level === n && o.tag === tag)) continue;
+            out.push({ level: n, tag, by: r.id, t: r.t });
+        }
         return out;
     };
     const grantsFiredNow = () => firedGrants.map((g) => ({ ...g, items: [...g.items] }));
@@ -12161,6 +12395,20 @@ export function createLevelRun({
          */
         get treeBurns() { return treeBurnsNow(); },
         get rockFalls() { return rockFalls.map((r) => ({ ...r, flag: r.flag && { ...r.flag } })); },
+        /**
+         * ⛓ U14-swim D1: the moonrock — `beam` and `rockSet` (the two save
+         * statics, live), this room's rocks, and the events the run made
+         * (`beam-armed`, `beam-started`, `frozen`, `swing-burned`, `beam-ended`,
+         * `landed`, `stairs-replaced`, `released` with its dead-frame count).
+         */
+        get moonrock() {
+            return {
+                beam: moonrockBeam,
+                rockSet: moonrockSet,
+                rocks: noclip ? [] : [...moonrockStateFor(level).values()].map((r) => ({ ...r })),
+                events: moonrockEvents.map((e) => ({ ...e, ...(e.flag ? { flag: { ...e.flag } } : {}) })),
+            };
+        },
         /**
          * ⛔⛔ R5 slice 13: every spinner that has LEFT THE WORLD this visit,
          * and what took it — `{id, tag, cause}` per level.
@@ -12857,6 +13105,10 @@ export function createLevelRun({
             const out = [];
             if (bossStateFor(level).size > 0) out.push('totemLaser', 'totemDeath');
             if (owlStateFor(level).bosses.size > 0) out.push('rockFallLanding');
+            // ⛓ U14-swim D1: a rock still to land this visit.
+            if (moonrockBeam && !moonrockSet && moonrockStateFor(level).size > 0) {
+                out.push('moonrockLanding');
+            }
             return out.filter((w) => BOSS_CLASS_SHAKE_WRITERS.includes(w));
         },
         /**
@@ -14557,6 +14809,33 @@ export function createLevelRun({
                 }
             }
 
+            // ── ⛓⛓⛓ U14-swim D1: THE MOONROCK, ABOVE THE PLAYER ────────
+            //
+            // `Game.loadlevel` adds it at `:2345`, after the Player (`:2227`),
+            // so it updates first. Every tick it runs one `Moonrock.update()`;
+            // the tick its `(beam && canBeam) || trigger` arm raises the freeze
+            // is a LIVE tape tick with a frozen player (the gate read false),
+            // and the dead span behind it — the beam's rest, the fall, the
+            // camera hold and the release's unobserved step — is resolved in
+            // this same advance, the BobBoss rock's shape (`stepMoonrocksNow`).
+            // The order against the families above is a bounded vacuity: L0
+            // holds no door, watcher, NPC dialogue or ceremony source.
+            if (!noclip) {
+                const mr = stepMoonrocksNow(held);
+                if (mr.frozen) {
+                    if (ceremony !== null) {
+                        throw new Error('levelRun: the moonrock\'s freeze and a pickup ceremony '
+                            + `are both up at tick ${ticksCompleted}. Both are DEAD-frame spans `
+                            + 'resolved as lumps; running them together would double-count one. '
+                            + 'Refused rather than approximated.');
+                    }
+                    prevHeld = new Set(held);
+                    const tick = runFrozenTick(activators, mr.why);
+                    mr.after();
+                    return tick;
+                }
+            }
+
             // ── ⛓⛓⛓ R6 SLICE 6f: THE OWL ROOM, IN ONE SLOT ────────────
             //
             // Rocks, grenades, pods and the boss, in `World.update`'s own
@@ -14902,6 +15181,15 @@ export function createLevelRun({
                     // contact, which is the whole difference between a real
                     // collection and R0's grant.
                     collectedPickups.add(pickupKey(ceremony.level, ceremony.pickup));
+                    // ⛓ U14-swim D1: `Shield.removed()` — `Moonrock.beam = true`
+                    // (`Pickups/Shield.as:46`), under the same `doActions` as the
+                    // item. A GRANTED shield never runs it, which is why the R2
+                    // walks that are handed the shield never beam.
+                    if (ceremony.pickup.tag === 'shield') {
+                        moonrockBeam = true;
+                        moonrockEvents.push({ t: ticksCompleted + 1, level, id: null,
+                            what: 'beam-armed' });
+                    }
                     // ⛓ Swim U5: `Fire.removed()` — `Player.hasFire = true` (the
                     // item, below) and `setPersistence(-1, false)`, which lands in
                     // the PREVIOUS level's last slot. Reported, not applied: an

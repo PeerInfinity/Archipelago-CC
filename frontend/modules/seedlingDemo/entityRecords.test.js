@@ -177,7 +177,8 @@ describe('entityRecords — the dump and its md5', () => {
 
     it('the model\'s records: the md5 is pinned', () => {
         // a change here is an entity-record change
-        expect(entitiesMd5()).toBe('e338c30f15387d6178191db9ef37acd1');
+        // ⛓ swim U14: e338c30f → 143e37e6, the `moonrock` record (13 leaves).
+        expect(entitiesMd5()).toBe('143e37e6155412084d3b3758ebaf4698');
         expect(entitiesStamp()).toEqual({ md5: entitiesMd5(), records: entityRecordNames().length });
     });
 });

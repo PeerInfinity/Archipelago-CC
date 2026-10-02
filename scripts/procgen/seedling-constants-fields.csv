@@ -1430,6 +1430,37 @@ frontend/modules/seedlingDemo/presses.js|slashRect|slashRect|2,physics,derivatio
 frontend/modules/seedlingDemo/presses.js|distanceRectPoint|distanceRectPoint,structural,,,
 frontend/modules/seedlingDemo/presses.js|fireRespondersIn|fireRespondersIn,structural,,,absent origin defaults to 0
 frontend/modules/seedlingDemo/fallRock.js|(module)|h6195d364|30|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
+frontend/modules/seedlingDemo/moonrock.js|MOONROCK|(module)|48,physics,magnitude,,setHitbox size (Moonrock.as:46)
+frontend/modules/seedlingDemo/moonrock.js|MOONROCK|(module)|52,physics,magnitude,,Spritemap frame size: canBeam's centre and radius read the SPRITE (Moonrock.as:17)
+frontend/modules/seedlingDemo/moonrock.js|MOONROCK|(module)|-1000,physics,magnitude,,parked y the fall starts from (Moonrock.as:49)
+frontend/modules/seedlingDemo/moonrock.js|MOONROCK|(module)|60,rule,magnitude,Main.as:FPS,beamTimeMax = Main.FPS * 5 (Moonrock.as:30): the beam holds Game.freezeObjects
+frontend/modules/seedlingDemo/moonrock.js|MOONROCK|(module)|5,rule,magnitude,,beamTimeMax = Main.FPS * 5 (Moonrock.as:30): the beam's seconds
+frontend/modules/seedlingDemo/moonrock.js|MOONROCK|(module)|20,physics,magnitude,Scenery/Moonrock.as:fallRate,
+frontend/modules/seedlingDemo/moonrock.js|MOONROCK|(module)|90,rule,magnitude,Scenery/Moonrock.as:cameraTimerMax,holds Game.freezeObjects
+frontend/modules/seedlingDemo/moonrock.js|MOONROCK|(module)|2,rule,sentinel,,moonrock_target's level (VanillaSet.as:132)
+frontend/modules/seedlingDemo/moonrock.js|MOONROCK|(module)|0,rule,sentinel,,the persistence tag the set rock clears in moonrock_target (Moonrock.as:135)
+frontend/modules/seedlingDemo/moonrock.js|createMoonrock|createMoonrock,structural,,,initial camera timer (0: a set rock releases on its first update)
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|he296401d|2|0,physics,magnitude,,sprite centre (x + width/2)
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hee0a0b2c|2|0,physics,magnitude,,sprite centre (fallTo + height/2)
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hcca79de8|3|0,rule,magnitude,,canBeam radius = sprite width * 3/4
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hcca79de8|4|0,rule,magnitude,,canBeam radius = sprite width * 3/4
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h9c7876a1|1|0,rule,sentinel,,int(p.x > centre) * 2: Player.direction ids (0 right / 2 left)
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h9c7876a1|0|0,rule,sentinel,,int(p.x > centre) * 2: Player.direction ids (0 right / 2 left)
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h9c7876a1|2|0,rule,sentinel,,int(p.x > centre) * 2: Player.direction ids (0 right / 2 left)
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hb16b30aa|2|0,cosmetic,,,camera target centring
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hb16b30aa|2|1,cosmetic,,,camera target centring
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h7b4c975d|0|0,rule,bound,,beamTime > 0
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hd4d3890b|1|0,structural,,,beamTime-- per update
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h403b910c|0|0,rule,bound,,beamTime <= 0 ends the beam
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hcc49d395|0|0,structural,,,beamTime = 0
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h5924982e|0|0,rule,bound,,cameraTimer > 0
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h8b461cf8|1|0,structural,,,cameraTimer-- per update
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h1039eeb7|0|0,rule,bound,,cameraTimer == 0 releases the freeze
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h39980168|-1|0,rule,sentinel,,cameraTarget (-1 -1) = Game.resetCamera()
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h39980168|-1|1,rule,sentinel,,cameraTarget (-1 -1) = Game.resetCamera()
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|h5bdad903|-1|0,rule,sentinel,,playersDirection(-1): directionFace off
+frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hc184d55f|-1|0,rule,sentinel,,cameraTimer = -1: released
+frontend/modules/seedlingDemo/moonrock.js|moonrockSpan|moonrockSpan,structural,,,the span simulator: counters
 frontend/modules/seedlingDemo/iceTurretBlast.js|(module)|h774b1553|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
 frontend/modules/seedlingDemo/playerDamage.js|(module)|h9d8ec539|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.jiggle|h9b54b306|2|0,rule,derivation,,REVIEW: shake / 2 half-amplitude of the Owl jiggle; unified with camera.js stepCameraJiggled
