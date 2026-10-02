@@ -1,0 +1,39 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 40,
+        "x": 400,
+        "y": 448
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {},
+    "tick0": null,
+    "hold": false,
+    "tick_count": 150,
+    "inputs": [],
+    "name": "r4-iceturret-bobs",
+    "description": "R4-swim D2: L40, boot (400,448) — the player at (408,456) in the bob room west of `iceturret@472,400`, damage on, 150 ticks still. `bob@352,448` and `bob@352,416` chase and fall into the room's pits (t 53, t 67); the turret, on screen, fires a volley on t 4, 49, 94 and 139 and its blasts break on the walls. The base refused AT BOOT (a bridged chaser beside a type-rewriting enemy); both sides of the turret's flip are on every bridged chaser's `solids`.",
+    "note": ""
+}

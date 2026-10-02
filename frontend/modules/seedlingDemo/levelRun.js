@@ -3312,7 +3312,28 @@ export function createLevelRun({
                 + 'stop the chaser against something the game lets it walk through. Give '
                 + '`collidesSolid` a mover before routing here.');
         }
-        const shifty = census.filter((e) => TYPE_REWRITING_ENEMIES.includes(e.as3));
+        /**
+         * ⛓⛓⛓ R4-swim D2: THE ICETURRET LEAVES THIS REFUSAL, BY DERIVATION.
+         *
+         * `IceTurret.as:94`'s flip is `"Enemy"` → `"Solid"`, and a chaser is
+         * blocked by EITHER whenever its own list carries both — which every
+         * bridged tag's does (`Bob.as:39` pushes "Enemy" onto the `Mobile`
+         * base list that already holds "Solid"; `Puncher.as:48` the same plus
+         * "Player"). So which side of the flip the turret is on cannot change
+         * whether it blocks, and what the census could not answer was never
+         * the TYPE: it is the BOX (32x32 alive, snapped 8 px down by its
+         * first on-screen `input()`; 16x16 as a corpse, which a press can
+         * slide). `stepChasersNow` reads that box from the stepped turret.
+         * ⚠ Derived per room, not asserted: a bridged tag whose list lacked
+         * either type would put the turret back in this refusal by name.
+         * `FinalBoss` and `BossTotem` stay: their bodies MOVE, and a moving
+         * "Enemy" is not a static box this sweep can read.
+         */
+        const flipBlind = [...new Set(census.filter((e) => isBridgedChaser(e.tag))
+            .map((e) => e.tag))]
+            .every((tag) => ['Enemy', 'Solid'].every((ty) => chaserSolids(tag).includes(ty)));
+        const shifty = census.filter((e) => TYPE_REWRITING_ENEMIES.includes(e.as3)
+            && !(flipBlind && e.as3 === 'IceTurret'));
         if (shifty.length > 0) {
             throw new Error(`levelRun: level ${n} holds a bridged chaser AND `
                 + `[${[...new Set(shifty.map((e) => e.as3))].join(', ')}], whose runtime `
@@ -6436,13 +6457,9 @@ export function createLevelRun({
         // behind it. The live driver pays it per tick because its geometry
         // moves.
         const solidOpts = normalizeLiveOpts(liveSolidOpts());
-        const staticEnemyBoxes = [];
-        for (const inst of (world.combat?.enemies ?? [])) {
-            if (isBridgedChaser(inst.tag)) continue;
-            if (inst.row.speed !== 0) continue;
-            const r = contactRect(inst);
-            if (r) staticEnemyBoxes.push({ id: `${inst.tag}@${inst.x},${inst.y}`, rect: r });
-        }
+        // ⛓ R4-swim D2: the drive's own list, so a forecast meets the turret
+        // where the drive does.
+        const staticEnemyBoxes = chaserStaticEnemyBoxesNow();
         // The camera, seeded from the live one and stepped by this forecast
         // alone. `cam`/`camBand` are exclusive in `stepCameraNow` and are
         // mirrored here as such.
@@ -9494,6 +9511,40 @@ export function createLevelRun({
         }
     }
 
+    /**
+     * The "Enemy" bodies a chaser's sweep meets that are NOT chasers —
+     * `stepChasersNow`'s and `chaserForecastNow`'s one list.
+     *
+     * The STATIC ones come from the census: a `SandTrap` is `type = "Enemy"`
+     * and never moves, so a trap the PLAYER walks past is a WALL to a chaser —
+     * L6 parks `bob@96,16` against one forever (trap 152). Their position is
+     * their placement, for the whole visit.
+     *
+     * ⛓⛓⛓ R4-swim D2: an `IceTurret` is NOT read from the census. It is
+     * stepped (`stepIceTurretsNow`), and its box is the stepped one: 32x32
+     * alive, at the y its first on-screen `input()` snapped it to (8 px below
+     * the `.oel` cell's), and 16x16 as a corpse a press can slide. Alive it is
+     * "Enemy"; a corpse is "Enemy" until the player steps off it and "Solid"
+     * after (`IceTurret.as:94`) — both on every bridged chaser's list, which
+     * `assertChaserSolidsBound` derives before this can run. A corpse that
+     * reached water, lava or a pit is removed and blocks nothing.
+     */
+    function chaserStaticEnemyBoxesNow() {
+        const out = [];
+        for (const inst of (world.combat?.enemies ?? [])) {
+            if (isBridgedChaser(inst.tag)) continue;
+            if (inst.row.speed !== 0) continue;
+            if (inst.as3 === 'IceTurret') continue;
+            const r = contactRect(inst);
+            if (r) out.push({ id: `${inst.tag}@${inst.x},${inst.y}`, rect: r });
+        }
+        for (const t of turretStateFor(level).values()) {
+            if (t.removed) continue;
+            out.push({ id: t.id, rect: iceTurretRect(t) });
+        }
+        return out;
+    }
+
     function stepChasersNow() {
         // ⛔ THE `noDamage` GATE IS `stepContactsNow`'s ARGUMENT, REUSED —
         // and it needs one more term, which `R8_ENEMY_BRIDGE.enemyBodyReaders`
@@ -9519,18 +9570,8 @@ export function createLevelRun({
         // chaser's sweep is 1 px steps on both axes exactly like a block's.
         // R8 slice 0's brand is what makes the normalise cost per TICK.
         const solidOpts = normalizeLiveOpts(liveSolidOpts());
-        // ⛓ THE STATIC "Enemy" BODIES, read once. A `SandTrap` is
-        // `type = "Enemy"` and never moves, so a trap the PLAYER walks past
-        // is a WALL to a chaser — L6 parks `bob@96,16` against one forever
-        // (trap 152). The census is the right source for these: their
-        // position is their placement, for the whole visit.
-        const staticEnemyBoxes = [];
-        for (const inst of (world.combat?.enemies ?? [])) {
-            if (isBridgedChaser(inst.tag)) continue;
-            if (inst.row.speed !== 0) continue;
-            const r = contactRect(inst);
-            if (r) staticEnemyBoxes.push({ id: `${inst.tag}@${inst.x},${inst.y}`, rect: r });
-        }
+        // ⛓ THE NON-CHASER "Enemy" BODIES, read once per tick (see the helper).
+        const staticEnemyBoxes = chaserStaticEnemyBoxesNow();
         // ⚠ THE UPDATE ORDER WITHIN THE FAMILY IS THE ADD ORDER, and the add
         // order is the `.oel`'s — `for each (o in xml.objects[0].bob)` walks
         // the placements in file order and PREPENDS each, so the LAST
@@ -10053,6 +10094,19 @@ export function createLevelRun({
                 onScreen: onScreenNow(iceTurretRect(t), `iceturret ${t.id}`),
                 blockedAt: (x, y) => {
                     const b = iceTurretRect({ ...t, x, y });
+                    // ⛓ R4-swim D2: a CORPSE's `solids` gains "Enemy"
+                    // (`IceTurret.as:148`), so a chaser in its slide would stop
+                    // it — an arm no witness has measured. Refused by name.
+                    if (t.dead && !noclip && !noDamage) {
+                        const c = chaserRectsNow()?.find((r) => rectsOverlap(b, r.rect));
+                        if (c) {
+                            throw new Error(`levelRun: the IceTurret corpse ${t.id} slides `
+                                + `into the chaser ${c.id} at tick ${ticksCompleted + 1} in level `
+                                + `${level} — a corpse's \`solids\` carries "Enemy" `
+                                + '(`IceTurret.as:148`), and that stop is not transcribed '
+                                + '(R4-swim D2). Refused by name.');
+                        }
+                    }
                     return !!world.collidesSolid(b, { ...opts, turrets: withoutSelf })
                         || rectsOverlap(b, playerBoxAt(state.x, state.y));
                 },
