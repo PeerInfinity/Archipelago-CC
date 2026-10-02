@@ -1,0 +1,666 @@
+{
+ "source": "seedling_atlas_location seed 1, default build seedling_bot_ap_p4e/game.html, probe-seedling-wasm-arrival-solve.mjs",
+ "arrivals": [
+  {
+   "label": "A host jump to the house spawn",
+   "seam": {
+    "beginEntry": {
+     "begin.level": 86,
+     "begin.tick": 0,
+     "rng.gameplay": 811240737,
+     "rng.cosmetic": 0,
+     "fp.seed": 1861733589,
+     "save.time": 4880
+    },
+    "seam": null,
+    "why": "",
+    "partial": false,
+    "latched": false
+   },
+   "status": {
+    "input": {
+     "release_totals": {},
+     "press_totals": {},
+     "held": [],
+     "released": [],
+     "pressed": [],
+     "t": -1
+    },
+    "seam": {
+     "why": "",
+     "partial": false,
+     "latched": false
+    },
+    "slash": {
+     "hits": 0,
+     "tests": 0
+    },
+    "menu_state": 0,
+    "rng": {
+     "hooks": true,
+     "split": false,
+     "seed": 0,
+     "cosmetic_state": 0,
+     "state": 771911645
+    },
+    "save": {
+     "has_all_seal_parts": false,
+     "has_all_totem_parts": false,
+     "seal_parts": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "keys": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "totem_parts": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "pins": {
+     "dead_frames": false,
+     "sound": false
+    },
+    "sound_pin": null,
+    "game_time": 4880,
+    "frozen_timer": 0,
+    "hits_timer": 0,
+    "hits": 0,
+    "drown_timer": 0,
+    "equips": [],
+    "inventory_slots": [],
+    "secondary": 0,
+    "primary": 0,
+    "saw_auto_advance": 0,
+    "persistence_cleared": [],
+    "persistence": [],
+    "grants": [],
+    "menu": false,
+    "cutscene": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "items": {
+     "hitsMax": 3,
+     "hasTorch": false,
+     "hasDarkSuit": false,
+     "hasSpear": false,
+     "hasFeather": false,
+     "canSwim": false,
+     "hasFireWand": false,
+     "hasWand": false,
+     "hasFire": false,
+     "hasDarkShield": false,
+     "hasShield": false,
+     "hasGhostSword": false,
+     "hasDarkSword": false,
+     "hasSword": false
+    },
+    "y": 56,
+    "x": 56,
+    "level": 86,
+    "saw_input_refused": false,
+    "receive_input": true,
+    "noclip": false,
+    "dead_frames": 0,
+    "buffered": 0,
+    "tick_count": 0,
+    "tick": 0,
+    "error": "",
+    "held": false,
+    "finished": false,
+    "arm": {
+     "armed_at": -1,
+     "pending": false
+    },
+    "armed": false,
+    "loaded": false
+   },
+   "state": {
+    "hasSword": false,
+    "hasDarkSword": false,
+    "hasGhostSword": false,
+    "hasShield": false,
+    "hasDarkShield": false,
+    "hasFire": false,
+    "hasWand": false,
+    "hasFireWand": false,
+    "canSwim": false,
+    "hasFeather": false,
+    "hasSpear": false,
+    "hasDarkSuit": false,
+    "hasTorch": false,
+    "hitsMax": 3,
+    "playerPositionX": 48,
+    "playerPositionY": 48,
+    "pendingExit": "",
+    "pendingCheck": "",
+    "keyMask": 0,
+    "totemCount": 0,
+    "level": 86
+   },
+   "statusMs": 34.5
+  },
+  {
+   "label": "B the locked door (no key) and the glue's bounce",
+   "seam": {
+    "beginEntry": {
+     "begin.level": 0,
+     "begin.tick": 0,
+     "rng.gameplay": 771911645,
+     "rng.cosmetic": 0,
+     "fp.seed": 1319693533,
+     "save.time": 5022
+    },
+    "seam": null,
+    "why": "",
+    "partial": false,
+    "latched": false
+   },
+   "status": {
+    "input": {
+     "release_totals": {},
+     "press_totals": {},
+     "held": [],
+     "released": [],
+     "pressed": [],
+     "t": -1
+    },
+    "seam": {
+     "why": "",
+     "partial": false,
+     "latched": false
+    },
+    "slash": {
+     "hits": 0,
+     "tests": 0
+    },
+    "menu_state": 0,
+    "rng": {
+     "hooks": true,
+     "split": false,
+     "seed": 0,
+     "cosmetic_state": 0,
+     "state": 724151788
+    },
+    "save": {
+     "has_all_seal_parts": false,
+     "has_all_totem_parts": false,
+     "seal_parts": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "keys": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "totem_parts": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "pins": {
+     "dead_frames": false,
+     "sound": false
+    },
+    "sound_pin": null,
+    "game_time": 5022,
+    "frozen_timer": 0,
+    "hits_timer": 0,
+    "hits": 0,
+    "drown_timer": 0,
+    "equips": [],
+    "inventory_slots": [],
+    "secondary": 0,
+    "primary": 0,
+    "saw_auto_advance": 0,
+    "persistence_cleared": [],
+    "persistence": [],
+    "grants": [],
+    "menu": false,
+    "cutscene": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "items": {
+     "hitsMax": 3,
+     "hasTorch": false,
+     "hasDarkSuit": false,
+     "hasSpear": false,
+     "hasFeather": false,
+     "canSwim": false,
+     "hasFireWand": false,
+     "hasWand": false,
+     "hasFire": false,
+     "hasDarkShield": false,
+     "hasShield": false,
+     "hasGhostSword": false,
+     "hasDarkSword": false,
+     "hasSword": false
+    },
+    "y": 296,
+    "x": 168,
+    "level": 0,
+    "saw_input_refused": false,
+    "receive_input": true,
+    "noclip": false,
+    "dead_frames": 0,
+    "buffered": 0,
+    "tick_count": 0,
+    "tick": 0,
+    "error": "",
+    "held": false,
+    "finished": false,
+    "arm": {
+     "armed_at": -1,
+     "pending": false
+    },
+    "armed": false,
+    "loaded": false
+   },
+   "state": {
+    "hasSword": false,
+    "hasDarkSword": false,
+    "hasGhostSword": false,
+    "hasShield": false,
+    "hasDarkShield": false,
+    "hasFire": false,
+    "hasWand": false,
+    "hasFireWand": false,
+    "canSwim": false,
+    "hasFeather": false,
+    "hasSpear": false,
+    "hasDarkSuit": false,
+    "hasTorch": false,
+    "hitsMax": 3,
+    "playerPositionX": 160,
+    "playerPositionY": 288,
+    "pendingExit": "1|86|teleporter|48|64|0",
+    "pendingCheck": "",
+    "keyMask": 0,
+    "totemCount": 0,
+    "level": 0
+   },
+   "statusMs": 15.5
+  },
+  {
+   "label": "B the locked door (no key) and the glue's bounce",
+   "seam": {
+    "beginEntry": {
+     "begin.level": 86,
+     "begin.tick": 0,
+     "rng.gameplay": 169176392,
+     "rng.cosmetic": 0,
+     "fp.seed": 878102915,
+     "save.time": 5024
+    },
+    "seam": null,
+    "why": "",
+    "partial": false,
+    "latched": false
+   },
+   "status": {
+    "input": {
+     "release_totals": {},
+     "press_totals": {},
+     "held": [],
+     "released": [],
+     "pressed": [],
+     "t": -1
+    },
+    "seam": {
+     "why": "",
+     "partial": false,
+     "latched": false
+    },
+    "slash": {
+     "hits": 0,
+     "tests": 0
+    },
+    "menu_state": 0,
+    "rng": {
+     "hooks": true,
+     "split": false,
+     "seed": 0,
+     "cosmetic_state": 0,
+     "state": 619347850
+    },
+    "save": {
+     "has_all_seal_parts": false,
+     "has_all_totem_parts": false,
+     "seal_parts": [
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "keys": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "totem_parts": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "pins": {
+     "dead_frames": false,
+     "sound": false
+    },
+    "sound_pin": null,
+    "game_time": 5024,
+    "frozen_timer": 0,
+    "hits_timer": 0,
+    "hits": 0,
+    "drown_timer": 0,
+    "equips": [],
+    "inventory_slots": [],
+    "secondary": 0,
+    "primary": 0,
+    "saw_auto_advance": 0,
+    "persistence_cleared": [],
+    "persistence": [],
+    "grants": [],
+    "menu": false,
+    "cutscene": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "items": {
+     "hitsMax": 3,
+     "hasTorch": false,
+     "hasDarkSuit": false,
+     "hasSpear": false,
+     "hasFeather": false,
+     "canSwim": false,
+     "hasFireWand": false,
+     "hasWand": false,
+     "hasFire": false,
+     "hasDarkShield": false,
+     "hasShield": false,
+     "hasGhostSword": false,
+     "hasDarkSword": false,
+     "hasSword": false
+    },
+    "y": 56,
+    "x": 56,
+    "level": 86,
+    "saw_input_refused": false,
+    "receive_input": true,
+    "noclip": false,
+    "dead_frames": 0,
+    "buffered": 0,
+    "tick_count": 0,
+    "tick": 0,
+    "error": "",
+    "held": false,
+    "finished": false,
+    "arm": {
+     "armed_at": -1,
+     "pending": false
+    },
+    "armed": false,
+    "loaded": false
+   },
+   "state": {
+    "hasSword": false,
+    "hasDarkSword": false,
+    "hasGhostSword": false,
+    "hasShield": false,
+    "hasDarkShield": false,
+    "hasFire": false,
+    "hasWand": false,
+    "hasFireWand": false,
+    "canSwim": false,
+    "hasFeather": false,
+    "hasSpear": false,
+    "hasDarkSuit": false,
+    "hasTorch": false,
+    "hitsMax": 3,
+    "playerPositionX": 48,
+    "playerPositionY": 48,
+    "pendingExit": "1|86|teleporter|48|64|0",
+    "pendingCheck": "",
+    "keyMask": 0,
+    "totemCount": 0,
+    "level": 86
+   },
+   "statusMs": 16.3
+  },
+  {
+   "label": "C a host jump after the chest",
+   "seam": {
+    "beginEntry": {
+     "begin.level": 86,
+     "begin.tick": 0,
+     "rng.gameplay": 1094361058,
+     "rng.cosmetic": 0,
+     "fp.seed": 768070221,
+     "save.time": 5323
+    },
+    "seam": null,
+    "why": "",
+    "partial": false,
+    "latched": false
+   },
+   "status": {
+    "input": {
+     "release_totals": {},
+     "press_totals": {},
+     "held": [],
+     "released": [],
+     "pressed": [],
+     "t": -1
+    },
+    "seam": {
+     "why": "",
+     "partial": false,
+     "latched": false
+    },
+    "slash": {
+     "hits": 0,
+     "tests": 0
+    },
+    "menu_state": 0,
+    "rng": {
+     "hooks": true,
+     "split": false,
+     "seed": 0,
+     "cosmetic_state": 0,
+     "state": 2091314362
+    },
+    "save": {
+     "has_all_seal_parts": false,
+     "has_all_totem_parts": false,
+     "seal_parts": [
+      6,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1,
+      -1
+     ],
+     "keys": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ],
+     "totem_parts": [
+      false,
+      false,
+      false,
+      false,
+      false
+     ]
+    },
+    "pins": {
+     "dead_frames": false,
+     "sound": false
+    },
+    "sound_pin": null,
+    "game_time": 5323,
+    "frozen_timer": 0,
+    "hits_timer": 0,
+    "hits": 0,
+    "drown_timer": 0,
+    "equips": [],
+    "inventory_slots": [],
+    "secondary": 0,
+    "primary": 0,
+    "saw_auto_advance": 0,
+    "persistence_cleared": [
+     {
+      "tag": 0,
+      "level": 86
+     }
+    ],
+    "persistence": [],
+    "grants": [],
+    "menu": false,
+    "cutscene": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "items": {
+     "hitsMax": 3,
+     "hasTorch": false,
+     "hasDarkSuit": false,
+     "hasSpear": false,
+     "hasFeather": false,
+     "canSwim": false,
+     "hasFireWand": false,
+     "hasWand": false,
+     "hasFire": false,
+     "hasDarkShield": false,
+     "hasShield": false,
+     "hasGhostSword": false,
+     "hasDarkSword": false,
+     "hasSword": false
+    },
+    "y": 56,
+    "x": 56,
+    "level": 86,
+    "saw_input_refused": false,
+    "receive_input": true,
+    "noclip": false,
+    "dead_frames": 0,
+    "buffered": 0,
+    "tick_count": 0,
+    "tick": 0,
+    "error": "",
+    "held": false,
+    "finished": false,
+    "arm": {
+     "armed_at": -1,
+     "pending": false
+    },
+    "armed": false,
+    "loaded": false
+   },
+   "state": {
+    "hasSword": false,
+    "hasDarkSword": false,
+    "hasGhostSword": false,
+    "hasShield": false,
+    "hasDarkShield": false,
+    "hasFire": false,
+    "hasWand": false,
+    "hasFireWand": false,
+    "canSwim": false,
+    "hasFeather": false,
+    "hasSpear": false,
+    "hasDarkSuit": false,
+    "hasTorch": false,
+    "hitsMax": 3,
+    "playerPositionX": 48,
+    "playerPositionY": 48,
+    "pendingExit": "1|86|teleporter|48|64|0",
+    "pendingCheck": "1|86|0|0",
+    "keyMask": 0,
+    "totemCount": 0,
+    "level": 86
+   },
+   "statusMs": 22.7
+  }
+ ]
+}
