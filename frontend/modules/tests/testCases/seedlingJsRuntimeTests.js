@@ -28,6 +28,7 @@ import { getActivePanelInstance } from '../../flashPanel/index.js';
 import { getGameStateSingleton } from '../../gameState/singleton.js';
 import { getActivePanel as getBotPanel } from '../../playbackBot/index.js';
 import { getSphereStateSingleton } from '../../sphereState/singleton.js';
+import { returnKey, returnSpawnTable } from '../../flashPanel/seedlingReturnSpawns.js';
 
 /**
  * ⛔ The walk helper imports `levelWorld.js`; a static import here would put
@@ -617,6 +618,96 @@ registerTest({
         + 'into the dungeon — four atlas → atlas crossings (level changes, one a stairsdown), each witnessed by '
         + 'gameState\'s path; no error: status, no death, no halt.',
     testFunction: seedlingJsRuntimeBotWalksAtlasRooms,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── Seedling solver-walk S1: the Playback Bot's SOLVER mode on the live page ──
+
+const SOLVER_WALK_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
+const VANILLA_MAP_URL = 'modules/flashPanel/atlases/seedling-map.json';
+/** The enemy witness (⚖ Q2): level 6, entered from level 5, out by its stairs up at (224, 32) — past the bobs. */
+const ENEMY_ROOM = Object.freeze({ level: 6, from: 5, stairs: { x: 224, y: 32 }, to: 7 });
+
+export async function seedlingJsRuntimeSolverWalksEnemyRoom(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = false;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, false); } catch { /* keep off */ }
+    try {
+        await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+        if (!ready) return tc.getOverallResult();
+        const { bot } = ready;
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, win, panel } = up;
+        tc.assertEqual('the panel\'s surface carries the setting (seedlingSolverWalk = true)', true,
+            panel.seedlingPlaybackSurface()?.solverWalk ?? null);
+        const pushed = await tc.pollForCondition(() => rt.playback.solverWalk === true,
+            'the setting reached the JS page (playback.solverWalk)', 5000, 100);
+        tc.reportCondition('the page is in solver mode', !!pushed);
+
+        // ── the room, derived from the map (no coordinates typed but the witness's own) ──
+        const map = await (await fetch(new URL(VANILLA_MAP_URL, document.baseURI).href)).json();
+        const room = map.levels.find((l) => l.level === ENEMY_ROOM.level);
+        const tile = (e) => [Math.floor(e.x / map.tile_size), Math.floor(e.y / map.tile_size)];
+        const door = room.entities.find((e) => Number(e.attrs?.to) === ENEMY_ROOM.from);
+        const stairs = room.entities.find((e) => e.x === ENEMY_ROOM.stairs.x && e.y === ENEMY_ROOM.stairs.y);
+        const spawn = returnSpawnTable(map).get(returnKey(ENEMY_ROOM.level, ...tile(door)));
+        tc.reportCondition(`level ${ENEMY_ROOM.level} has its door from ${ENEMY_ROOM.from}, its stairs and a return spawn`,
+            !!(door && stairs && spawn));
+        if (!door || !stairs || !spawn) return tc.getOverallResult();
+        const bobs = room.entities.filter((e) => /bob/i.test(e.type)).length;
+        tc.log(`level ${ENEMY_ROOM.level}: ${bobs} bob(s); spawn (${spawn.x}, ${spawn.y}); stairs tile ${JSON.stringify(tile(stairs))}`);
+        tc.assertEqual('the witness room has enemies (bobs)', true, bobs > 0);
+
+        // ── the page handle teleports the real page into the room (⚖ Q2: no new preset) ──
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [ENEMY_ROOM.level, spawn.x, spawn.y] }]);
+        const there = await tc.pollForCondition(() => rt.run?.level === ENEMY_ROOM.level,
+            `the page is in level ${ENEMY_ROOM.level}`, 10000, 100);
+        tc.reportCondition('teleported into the enemy room', !!there);
+        if (!there) return tc.getOverallResult();
+        const exitsBefore = reportedExits(win).length;
+        const answer = rt.playback.walkTo({ kind: 'exit', level: ENEMY_ROOM.level, tiles: [tile(stairs)] });
+        tc.assertEqual('the page accepted the stairs goal', true, !!answer?.ok);
+        rt.playback.play();
+        const crossed = await tc.pollForCondition(() => ['done', 'failed'].includes(rt.playback.state) || !!rt.halted,
+            'the solver-driven walk settled (done / failed / halted)', 60000, 200);
+        const s = rt.playback.solverStats;
+        tc.log(`walk: ${rt.playback.describe()}; solver ${JSON.stringify({ ...s, lastSolve: s.lastSolve
+            ? { ...s.lastSolve, goal: undefined } : null })}`);
+        tc.reportCondition('the walk settled', !!crossed);
+        tc.assertEqual('the walk is DONE (the stairs were taken)', 'done', rt.playback.state);
+        tc.assertEqual('the SOLVER drove it: solved once, no decline', '1/0', `${s.solves}/${s.declines}`);
+        tc.assertEqual('the plan used the solver\'s enemy verb (bait) — the J2 walker cannot', true,
+            (s.lastSolve?.verbs ?? []).includes('bait'));
+        tc.assertEqual('every planned key was played on the page clock (no refutation)', `${s.lastSolve?.keys}/0`,
+            `${s.played}/${s.refutations}`);
+        const exits = reportedExits(win).slice(exitsBefore);
+        tc.assertEqual(`the crossing was reported: a pendingExit from level ${ENEMY_ROOM.level} at the stairs to ${ENEMY_ROOM.to}`,
+            JSON.stringify({ fromLevel: ENEMY_ROOM.level, type: 'stairsup', ...ENEMY_ROOM.stairs, to: ENEMY_ROOM.to }),
+            JSON.stringify(exits[0] ?? null));
+        tc.assertEqual(`the page is in level ${ENEMY_ROOM.to}`, ENEMY_ROOM.to, rt.run?.level ?? null);
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+    } finally {
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-walks-enemy-room',
+    name: 'Seedling JS runtime: the solver mode walks a real ENEMY room (L6, past the bobs)',
+    description: 'With flashPanel.runtime = js and flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page '
+        + 'handle teleports the real page into level 6 (new_instance Game, ⚖ no new preset) and its Playback Bot '
+        + 'feet walk to the stairs (224, 32): the real solver (solveSegment with the session as prefix) plans a bait '
+        + 'past the bobs, the page plays it one key set per tick, and the stairs crossing is reported — 0 HALT, no '
+        + 'refutation, no error: status.',
+    testFunction: seedlingJsRuntimeSolverWalksEnemyRoom,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

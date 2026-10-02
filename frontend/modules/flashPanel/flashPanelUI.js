@@ -570,6 +570,8 @@ export class FlashPanelUI {
         // ⛓ The JS page has no ▶ Start: no GPU or audio context to unlock.
         this._setStatus('JS runtime loaded');
         this._panelLog('JS runtime page loaded (seedlingDemo model, rectangles)');
+        // ⛓ S1 — the page is up: hand it the solver mode now (the init read raced the iframe).
+        await this._refreshSolverWalk(this._solverWalk);
       } else {
         this._setStatus('click ▶ Start in the game');
         this._panelLog('wasm page loaded — click ▶ Start in the game to boot it');

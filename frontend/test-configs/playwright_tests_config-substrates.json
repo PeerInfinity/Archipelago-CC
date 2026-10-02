@@ -409,6 +409,12 @@
             "_comment": "Seedling JS J3. flashPanel.runtime = js on seedling_atlas: the bot walks between REAL atlas rooms — the house door to the chest, then out, down the owl's-nest stairs (a stairsdown) and the descent into the dungeon; four level-change crossings witnessed by gameState's path."
         },
         {
+            "id": "seedling-js-runtime-solver-walks-enemy-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S1. flashPanel.runtime = js + flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page handle teleports the real page into level 6 (⚖ Q2: no new preset) and the page's bot walks to the stairs (224, 32) past the bobs — the REAL solver (solveSegment with the session as prefix) plans a bait, the page plays it one key set per tick; the stairs crossing reported, 0 HALT, no refutation, no error: status. Fast batch, like the J1–J3 rows."
+        },
+        {
             "id": "apworld-document-tab-lists-every-schema-key",
             "enabled": true,
             "category": "apworldEditor",
