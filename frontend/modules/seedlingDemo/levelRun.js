@@ -185,6 +185,10 @@ import {
     ENEMY_CLASSES, TYPE_REWRITING_ENEMIES, contactPricing, contactRect, enemyHitPlayerFires,
 } from './combat.js';
 import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
+// ⛓⛓⛓ R2-swim D1: `Enemies/WallFlyer.as`, a stepped family (`stepWallFlyersNow`).
+import {
+    WALLFLYER, hitWallFlyer, newWallFlyer, stepWallFlyer, stepWallFlyerGraphic, wallFlyerRect,
+} from './wallFlyer.js';
 // ⛓⛓⛓ R5 SLICE 21: the kill's LEDGER half. `killLockLedger` is what turns
 // the R4 refusal's reason — "a death moves totalEnemies(), which opens
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
@@ -933,6 +937,8 @@ export function createLevelRun({
         // exactly. (No item grants or removes a chaser today; dropped
         // anyway, because "no item does" is a claim about the census.)
         chaserStates.delete(n);
+        // ⛓ R2-swim D1: and the wallflyers, built from the same census.
+        wallFlyerStates.delete(n);
         // R5 slice 15: the crusher roster is built from the world too. No
         // item grants or removes one today; dropped anyway, for the reason
         // the spinner's is.
@@ -2980,6 +2986,45 @@ export function createLevelRun({
         return spinnerStates.get(n);
     };
     /**
+     * ⛓⛓⛓ R2-swim D1 — THE WALLFLYERS, PER VISIT (`wallFlyer.js`).
+     *
+     * `WallFlyer` writes no persistence, so a re-entered room rebuilds every
+     * one at its `.oel` cell with `check()`'s settle velocity — a spinner's
+     * shape, one class over.
+     *
+     * ⛔ `decideMotion` probes `["Solid","Tree"]` while the class's own sweep
+     * reads `Mobile.solids`, which adds `Rock`, `Rope` and `ShieldBoss`. The
+     * run hands both the one solid query it has, so a room holding an entity
+     * of one of those three types is REFUSED here rather than probed with the
+     * wrong list (L22, L25 and L27 hold none).
+     */
+    const wallFlyerStates = new Map();
+    const wallFlyerEvents = [];
+    const wallFlyerStateFor = (n) => {
+        if (!wallFlyerStates.has(n)) {
+            const w = worldFor(n);
+            const placed = (w.combat?.enemies ?? []).filter((e) => e.tag === 'wallflyer');
+            const byId = new Map();
+            if (placed.length > 0) {
+                const extra = [...new Set((w.objectSolids ?? []).map((o) => o.cls?.type)
+                    .filter((t) => t && !WALLFLYER.triggerTypes.includes(t)
+                        && WALLFLYER.solids.includes(t)))];
+                if (extra.length > 0) {
+                    throw new Error(`levelRun: level ${n} holds wallflyer(s) AND an entity of type `
+                        + `[${extra.join(', ')}]. \`WallFlyer.decideMotion\` probes ["Solid","Tree"] `
+                        + 'while its sweep reads `Mobile.solids`, and this run has one solid query '
+                        + 'for both. Not transcribed; refused by name (R2-swim D1).');
+                }
+                for (const e of placed) {
+                    const id = `${e.tag}@${e.x},${e.y}`;
+                    byId.set(id, newWallFlyer({ id, x: e.x, y: e.y }));
+                }
+            }
+            wallFlyerStates.set(n, byId);
+        }
+        return wallFlyerStates.get(n);
+    };
+    /**
      * ⛓⛓⛓ R8 SLICE 1 — THE BRIDGED CHASERS, PER VISIT.
      *
      * ⚠ PER VISIT, exactly like a spinner and for the stronger version of its
@@ -3439,6 +3484,8 @@ export function createLevelRun({
         // FIGHT is per visit and the CLEAR is durable, which is what decides
         // where a segment may be cut.
         chaserStates.delete(n);
+        // ⛓ R2-swim D1: a wallflyer holds no persistence either.
+        wallFlyerStates.delete(n);
         /**
          * ⛓⛓⛓ R5 SLICE 15: AND A RE-ENTERED ROOM REBUILDS EVERY CRUSHER AT
          * ITS CONSTRUCTOR CELL — WITH NOTHING TO CARRY AND NOTHING TO CHECK.
@@ -8922,6 +8969,8 @@ export function createLevelRun({
                  * R8 slice 8 it BILLS there rather than refusing.
                  */
                 if (pricing.pricedBy === 'stepSpinnerContactsNow') continue;
+                // ⛓ R2-swim D1: a wallflyer is billed at its live position too.
+                if (pricing.pricedBy === 'stepWallFlyersNow') continue;
                 const verdict = chaserRoomVerdict(level);
                 if (verdict.stepped) continue;
                 throw new Error(`levelRun: the player is standing inside ${id} in level `
@@ -9314,6 +9363,106 @@ export function createLevelRun({
             why: led.why,
             declaredAt: led.opens.map((o) => declared.find((p) => p.tag === o.flag)?.at ?? null),
         });
+    }
+
+    /**
+     * ⛓⛓⛓ R2-swim D1 — ONE TICK OF EVERY WALLFLYER IN THE ROOM
+     * (`wallFlyer.stepWallFlyer`), and its contact through the run's one
+     * `applyPlayerHit` funnel.
+     *
+     * ⚠ THE SLOT: `loadlevel` adds the wallflyers at `Game.as:2392`, directly
+     * before the spinners (`:2393`), and `addUpdate` PREPENDS — so a spinner
+     * updates first, then the wallflyers, then the shieldspire, the blocks and
+     * the rest, and the Player last. The player box both halves read (the
+     * trigger ray and `hitPlayer`) is therefore where the PREVIOUS tick left
+     * it. Within the family the last placement updates first.
+     *
+     * ⛔ `noDamage` RETURNS, for `stepChasersNow`'s reason: under the flag a
+     * wallflyer's position has no reader (the contact is `Player.hit`'s first
+     * line, and the block sweep does not see the class — its roster row says
+     * `wedgeVisible: false`), so stepping is byte-inert and is not paid for.
+     *
+     * `Enemy.hitPlayer` is `p.hit(this, 3, new Point(x, y), damage)` — so the
+     * dark suit retaliates INTO the flyer (`e.hit(1, …, 1, "Suit")`, R1's
+     * table), whose `knockback` override is `v = -v`. A retaliation that
+     * would KILL one is refused by name: `startDeath` plays "die", and the die
+     * anim, the fade and `totalEnemies()` are not staged for this class.
+     */
+    function stepWallFlyersNow() {
+        if (noclip || noDamage) return;
+        const st = wallFlyerStateFor(level);
+        if (st.size === 0) return;
+        const sctx = spinnerCtx();
+        const t = ticksCompleted + 1;
+        for (const id of [...st.keys()].reverse()) {
+            const before = st.get(id);
+            if (before.removed) continue;
+            let retaliated = null;
+            const out = stepWallFlyer(before, {
+                collides: sctx.collides,
+                probe: sctx.collides,
+                tileTypeAt: sctx.tileTypeAt,
+                onScreen: (rect) => onScreenNow(rect, `wallflyer ${id}`),
+                frozen: ceremony !== null,
+                playerBox: playerBoxAt(state.x, state.y),
+                hitPlayer: (w) => {
+                    let cur = w;
+                    applyPlayerHit({
+                        source: 'wallflyer',
+                        id,
+                        force: WALLFLYER.contactForce,
+                        damage: WALLFLYER.damage,
+                        from: { x: w.x, y: w.y },
+                        retaliate: () => {
+                            const r = hitWallFlyer(cur, {
+                                damage: DARK_SUIT_DAMAGE, t: 'Suit', frozen: ceremony !== null,
+                            });
+                            if (r.killed) {
+                                throw new Error(`levelRun: the dark suit's retaliation KILLS ${id} at `
+                                    + `tick ${t} in level ${level}. \`WallFlyer.startDeath\` plays "die"; `
+                                    + 'its die anim, its fade and its place in `totalEnemies()` are not '
+                                    + 'staged for this class. Refused by name (R2-swim D1).');
+                            }
+                            cur = r.w;
+                            retaliated = { id, landed: r.landed, hits: cur.hits,
+                                hitsTimer: cur.hitsTimer, reversed: r.landed };
+                            return retaliated;
+                        },
+                    });
+                    return cur;
+                },
+            });
+            const w = stepWallFlyerGraphic(out.w);
+            st.set(id, w);
+            if (out.contact) wallFlyerEvents.push({ t, level, id, kind: 'contact', x: w.x, y: w.y,
+                ...(retaliated ? { retaliation: retaliated } : {}) });
+            if (out.launched) wallFlyerEvents.push({ t, level, id, kind: 'launch', x: w.x, y: w.y,
+                vx: w.vx, vy: w.vy });
+            if (w.destroy && !before.destroy) wallFlyerEvents.push({ t, level, id, kind: 'destroyed',
+                cause: w.deathCause, x: w.x, y: w.y });
+            if (w.removed) wallFlyerEvents.push({ t, level, id, kind: 'removed' });
+            if (pendingDeath) return;
+        }
+    }
+
+    /**
+     * ⛓ R2-swim D1: `assertNoCeremonyBesideLiveChaser`'s refusal, for the
+     * wallflyer. `hitUpdate` and `Mobile.death` run OUTSIDE the freeze, and a
+     * ceremony's phase A is a lump here, so a flyer inside its i-frame, dying,
+     * or IN FLIGHT (its motion parks, its trigger does not) refuses the
+     * ceremony by name.
+     */
+    function assertNoCeremonyBesideLiveWallFlyer(what) {
+        if (noclip || noDamage) return;
+        for (const w of wallFlyerStateFor(level).values()) {
+            if (w.removed) continue;
+            const moving = w.vx !== 0 || w.vy !== 0;
+            if (w.hitsTimer <= 0 && !w.destroy && w.dieAnim === null && !moving) continue;
+            throw new Error(`levelRun: a ${what} ceremony began in level ${level} beside `
+                + `${w.id}, which is ${moving ? 'IN FLIGHT' : 'inside its i-frame or dying'}. `
+                + 'Its `hitUpdate`/`death()` and its trigger run through `Game.freezeObjects`, '
+                + 'and this model spends phase A as a lump. Refused by name (R2-swim D1).');
+        }
     }
 
     function stepChasersNow() {
@@ -12633,6 +12782,20 @@ export function createLevelRun({
          * (`beam-armed`, `beam-started`, `frozen`, `swing-burned`, `beam-ended`,
          * `landed`, `stairs-replaced`, `released` with its dead-frame count).
          */
+        /**
+         * ⛓ R2-swim D1: the wallflyers — this room's bodies and the events the
+         * run made (`launch`, `contact` with its retaliation, `destroyed`,
+         * `removed`).
+         */
+        get wallFlyers() {
+            return {
+                bodies: noclip ? [] : [...wallFlyerStateFor(level).values()].map((w) => ({
+                    ...w, rect: wallFlyerRect(w), dieAnim: w.dieAnim && { ...w.dieAnim },
+                })),
+                events: wallFlyerEvents.map((e) => ({ ...e,
+                    ...(e.retaliation ? { retaliation: { ...e.retaliation } } : {}) })),
+            };
+        },
         get moonrock() {
             return {
                 beam: moonrockBeam,
@@ -14645,6 +14808,9 @@ export function createLevelRun({
             // because `Enemy.update`'s tail has no freeze test; the refusal
             // in `assertNoCeremonyBesideShieldBoss` is what keeps that
             // honest rather than approximate.
+            // ── ⛓⛓⛓ R2-swim D1: THE WALLFLYERS, directly below the spinners
+            // (`Game.as:2392` adds them one line above `:2393`'s spinners).
+            if (!noclip) stepWallFlyersNow();
             if (!noclip) stepShieldBossesNow();
             const pushState = pushableStateFor(level);
             if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());
@@ -15261,6 +15427,7 @@ export function createLevelRun({
                     // same asymmetry — see `assertNoCeremonyBesideLiveChaser`
                     // for why it refuses two STATES rather than a class.
                     if (!noclip) assertNoCeremonyBesideLiveChaser(hit.tag ?? 'pickup');
+                    if (!noclip) assertNoCeremonyBesideLiveWallFlyer(hit.tag ?? 'pickup');
                     const entry = ceremonyFor(hit);
                     ceremonyStarts.push({
                         t: ticksCompleted, level, tag: hit.tag ?? 'pickup', runtime: false,

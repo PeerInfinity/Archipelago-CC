@@ -6,7 +6,8 @@
  *
  * U7's `probe-seedling-u7-puncher-mobiles.mjs`, generalised by one argument:
  * `--class=Bob|Puncher|Spinner` picks the `botMobiles()` rows (`cls` ends in
- * it) and the model's body ids (`<tag>@`). ⛓ R1-swim D3: a `Spinner` is read
+ * it) and the model's body ids (`<tag>@`; ⛓ R2-swim D1 adds `WallFlyer`, read from
+ * `run.wallFlyers.bodies`, with velocity). ⛓ R1-swim D3: a `Spinner` is read
  * from `run.entities('spinnerBodies')`, which carries no velocity — so for a
  * spinner the comparison is position, `hits` and `hits_timer` (a position
  * equal to the bit on every tick pins the velocity that moved it). Everything else is U7's: an expectation
@@ -40,8 +41,8 @@ if (!TAPE) {
     process.exit(2);
 }
 const CLASS = arg('class') ?? 'Bob';
-if (!/^(Bob|Puncher|Spinner)$/.test(CLASS)) {
-    console.error(`probe-seedling-u9-shield-mobiles: --class=${CLASS} — Bob, Puncher or Spinner`);
+if (!/^(Bob|Puncher|Spinner|WallFlyer)$/.test(CLASS)) {
+    console.error(`probe-seedling-u9-shield-mobiles: --class=${CLASS} — Bob, Puncher, Spinner or WallFlyer`);
     process.exit(2);
 }
 const TAG = CLASS.toLowerCase();
@@ -75,7 +76,10 @@ const col = [];
     let r = st.next();
     while (!r.done) {
         const o = r.value.observation;
-        const ch = !run ? [] : (CLASS === 'Spinner' ? run.entities('spinnerBodies') : run.entities('chasers'));
+        // ⛓ R2-swim D1: a `WallFlyer` is read from `run.wallFlyers.bodies` (live, unremoved).
+        const ch = !run ? [] : (CLASS === 'Spinner' ? run.entities('spinnerBodies')
+            : CLASS === 'WallFlyer' ? run.wallFlyers.bodies.filter((w) => !w.removed)
+                : run.entities('chasers'));
         col[o.t] = {
             px: o.x, py: o.y,
             bodies: ch.map((c) => ({ id: c.id, x: c.x, y: c.y, vx: c.vx, vy: c.vy, hits: c.hits, hitsTimer: c.hitsTimer })),

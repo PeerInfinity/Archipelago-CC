@@ -833,6 +833,20 @@ export const MODELLED_ENEMY_CLASSES = Object.freeze({
         // ⛔ FALSE for Bob's reason: `pushableCtx().collides` sees spinners only.
         wedgeVisible: false,
     }),
+    /**
+     * ⛓⛓⛓ R2-swim D1 — THE FOURTH ROW: the wallflyer (`wallFlyer.js`), whose
+     * motion is a rest, a ray trigger on the player, and a 4 px/tick flight
+     * that stops at the first solid.
+     */
+    WallFlyer: Object.freeze({
+        module: 'wallFlyer.js',
+        why: 'a rest against its wall, a `collideLine` trigger on the player and a straight '
+            + '4 px/tick flight that stops at the first solid — every term a function of the '
+            + 'level geometry and the player box the run already holds',
+        stepped: 'levelRun.advance, directly below the spinners (`Game.as:2392` vs `:2393`)',
+        // ⛔ FALSE: `pushableCtx().collides` sees spinners only.
+        wedgeVisible: false,
+    }),
 });
 
 /**

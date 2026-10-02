@@ -1024,6 +1024,21 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             addedBy: 'U14-swim D2 (route step 26, L22 -> L29)',
             why: 'L22 walked to `teleporter@192,64` past `bob@96,144`; the game took no hit.',
         }),
+        /**
+         * ⛓⛓⛓ R2-swim D1 — THE WALLFLYER'S WITNESSES, in L22 (which holds
+         * `bob@96,144`), declared in the commit that wrote them. Both retire
+         * `noDamage`; the bob never reaches the player inside their 60 ticks.
+         */
+        Object.freeze({
+            name: 'r2-wallflyer-contact', levels: Object.freeze([22]), bobs: 1, ticks: 60,
+            addedBy: 'R2-swim D1 (the wallflyer\'s contact)',
+            why: '`wallflyer@48,112` launches on t 1 and hits the standing player on t 8.',
+        }),
+        Object.freeze({
+            name: 'r2-wallflyer-suit', levels: Object.freeze([22]), bobs: 1, ticks: 60,
+            addedBy: 'R2-swim D1 (the dark suit into a wallflyer)',
+            why: 'the t 8 contact retaliates into `wallflyer@48,112`, which reverses.',
+        }),
     ]),
 
     /**

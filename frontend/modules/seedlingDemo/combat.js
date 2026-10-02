@@ -1296,7 +1296,7 @@ export function plannerContactFree(body, onScreenVerdict) {
  * null for them), which is what keeps the totem out of this arm until
  * slice 4 wires its own.
  */
-export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', 'bob', 'puncher']);
+export const CONTACT_STEPPED_FAMILIES = Object.freeze(['spinner', 'iceturret', 'bob', 'puncher', 'wallflyer']);
 
 /**
  * ⛓⛓⛓ R8 SLICE 1 — WHICH `stepped` FAMILIES PRICE THEIR OWN CONTACT, AND
@@ -1349,6 +1349,8 @@ export const CONTACT_STEPPED_PRICED_BY = Object.freeze({
     bob: 'stepChasersNow',
     // ⛓ U7-swim: the second bridged chaser, billed by the same stepper.
     puncher: 'stepChasersNow',
+    // ⛓ R2-swim D1: `wallFlyer.js`, stepped and billed at its live position.
+    wallflyer: 'stepWallFlyersNow',
 });
 
 /**
@@ -1376,6 +1378,11 @@ export const CONTACT_STEPPED_WHY = Object.freeze({
         + 'the position this tick left. ⚠ Its own sweep carries `"Player"` '
         + '(`Puncher.as:48`), so it stops against the player rather than walking into '
         + 'them: the contact arm is reached when the PLAYER walks into the body.',
+    wallflyer: '⛓ R2-swim D1: `wallFlyer.stepWallFlyer` rests it on its wall, launches it at '
+        + '4 px/tick when the player crosses its `FP.screen.width` ray, and '
+        + '`stepWallFlyersNow` bills `Enemy.hitPlayer` at the position this tick left '
+        + '(force 3, `e = this`, so the dark suit retaliates — `knockback` is `v = -v`). '
+        + 'The census rect is the `.oel` cell, which a launched body has left.',
 });
 
 /**

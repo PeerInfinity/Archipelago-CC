@@ -1,0 +1,39 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 22,
+        "x": 80,
+        "y": 112
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {},
+    "tick0": null,
+    "hold": false,
+    "tick_count": 60,
+    "inputs": [],
+    "name": "r2-wallflyer-contact",
+    "description": "R2-swim D1: L22, boot (80,112) — the player at (88,120) on the y 120 row that `wallflyer@48,112` (ray east) and `wallflyer@144,112` (ray west) look down; `noDamage` false, no keys for 60 ticks. Both launch on t 1; the west one hits the player on t 8 (force 3, east); the east one's t 13 contact lands in the i-frame.",
+    "note": ""
+}

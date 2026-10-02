@@ -299,6 +299,20 @@
       ]
     },
     {
+      "file": "r2-wallflyer-contact.json",
+      "tickCount": 60,
+      "bootLevel": 22,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "r2-wallflyer-suit.json",
+      "tickCount": 60,
+      "bootLevel": 22,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r3-bobboss-death.json",
       "tickCount": 210,
       "bootLevel": 32,
