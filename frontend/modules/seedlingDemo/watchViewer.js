@@ -2064,6 +2064,18 @@ async function walkSequence(params, lifetime, levelSource) {
             }
             seq.boundaries[seq.boundaries.length - 1].forwardRows = forward
                 .map((c) => `${c.level}:${c.tag}@${c.at}`);
+            // ⛓ SWIM S1 — the window's EQUIPS, rebased the same way: a resumed run
+            // never re-stages, so without this `r9-solve-32`'s Fire (its t840) never
+            // equipped and the continuation ended in L32, not L30.
+            const equips = (parsedTapes[k].equips ?? []).map((e) => ({ t: e.t + offset, slot: e.slot }));
+            if (equips.length > 0) {
+                try {
+                    run.addEquips(equips);
+                } catch (e) {
+                    return stop(`window ${k} ("${names[k]}") declares an equip this run cannot take`,
+                        e.message);
+                }
+            }
         }
         const transitionsBefore = run ? run.transitions.length : 0;
         // eslint-disable-next-line no-await-in-loop

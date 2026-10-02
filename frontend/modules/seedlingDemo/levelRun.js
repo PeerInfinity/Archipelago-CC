@@ -13322,6 +13322,46 @@ export function createLevelRun({
          *
          * @param {object[]} rows `{level, tag, at}`, `at` already rebased
          */
+        /**
+         * ⛓⛓ SWIM S1 (⚖ 2026-10-02) — A LATER WINDOW'S `equips`, HANDED OVER
+         * the way its timed clears are. A continuation resumes this run for
+         * window k without re-staging it, so the window's own `equips` (a
+         * per-tape input, read at construction) never reached the run: U15
+         * measured `r9-solve-32`'s Fire at its t840 never equipped on the
+         * whole-chain continuation, which then ended in L32 while every
+         * per-window run falls to L30. The CALLER rebases each row's `t` into
+         * this run's tick numbering (`t + offset`), exactly as for
+         * `addTimedClears`; `advance` asks `applyEquipsAt` at the top of every
+         * tick, so a rebased row fires on its own tick.
+         *
+         * ⛔ It refuses a tick already passed (it could never fire) and a tick
+         * already holding an equip (two writes of `Main.primary` on one
+         * observation — `equipNow`'s and `parseEquips`'s rule). No data path:
+         * only a caller passes rows, so every existing caller is byte-inert.
+         *
+         * @param {object[]} rows `{t, slot}`, `t` already rebased
+         */
+        addEquips(rows) {
+            for (const e of rows ?? []) {
+                if (e === null || typeof e !== 'object' || !Number.isInteger(e.t)
+                        || !Number.isInteger(e.slot)) {
+                    throw new Error('levelRun.addEquips: a row is `{t, slot}` with `t` REBASED '
+                        + `into this run's tick numbering, got ${JSON.stringify(e)}`);
+                }
+                if (e.t < ticksCompleted) {
+                    throw new Error(`levelRun.addEquips: slot ${e.slot} at tick ${e.t} is in the `
+                        + `PAST — this run is at tick ${ticksCompleted}, so it could never fire. `
+                        + 'Was the row rebased by the window offset?');
+                }
+                if (equipsByTick.has(e.t)) {
+                    throw new Error(`levelRun.addEquips: tick ${e.t} already equips slot `
+                        + `${equipsByTick.get(e.t)} — two writes of \`Main.primary\` on one `
+                        + 'observation would leave the winner up to array order.');
+                }
+                equipsByTick.set(e.t, e.slot);
+            }
+        },
+
         addTimedClears(rows) {
             for (const c of rows ?? []) {
                 if (c === null || typeof c !== 'object' || !Number.isFinite(c.at)) {

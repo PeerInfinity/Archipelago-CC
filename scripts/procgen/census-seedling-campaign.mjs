@@ -327,6 +327,14 @@ function wholeChain(names) {
             const forward = (parsed[k].persistence ?? []).filter((c) => c.at !== undefined)
                 .map((c) => ({ ...c, at: c.at + offset }));
             if (forward.length > 0) run.addTimedClears(forward);
+            /**
+             * ⛓ SWIM S1 — and the window's EQUIPS, rebased the same way. A resumed
+             * run never re-stages, so a window's `equips` (`r9-solve-32`'s Fire at
+             * its t840) reached no run before this (U15's residue: the
+             * continuation ended in L32 while the window falls to L30).
+             */
+            const equips = (parsed[k].equips ?? []).map((e) => ({ t: e.t + offset, slot: e.slot }));
+            if (equips.length > 0) run.addEquips(equips);
         }
         const collected = collectRun(loadTape(names[k]), source, k === 0 ? {} : { run });
         if (collected.error) {
@@ -688,6 +696,27 @@ for (const [what, w, names] of [['chain', chainWhole, CHAIN], ['tail', tailWhole
             // third outcome, and printing it as an arrival crashed the report.
             : w.threwIn ? ` — THREW in ${w.threwIn}: ${w.why.join('; ')}`
                 : ` — end L${w.endLevel} (${w.endCtor.x},${w.endCtor.y}), ${w.ticks} ticks`));
+    /**
+     * ⛓⛓ SWIM S1 — THE END-STATE ASSERTION. The pairwise rows assert every
+     * BOUNDARY; nothing asserted the END, which is how a continuation that never
+     * equipped window 30's Fire still read "NO CHAIN ROOM MOVES" (U15's residue).
+     * A continuation that stepped every window must END where the last window's
+     * own per-window run ends: the same level, entered at the same `worldCtor`.
+     */
+    if (w.stepped === names.length) {
+        const last = walkOf(names.at(-1));
+        const same = !last.error && w.endLevel === last.endLevel
+            && w.endCtor.x === last.endCtor.x && w.endCtor.y === last.endCtor.y;
+        say(same
+            ? `    ✓ END-STATE: the continuation ends where ${names.at(-1)}'s own run ends `
+                + `(L${last.endLevel} (${last.endCtor.x},${last.endCtor.y}))`
+            : `    ⛔ END-STATE: the continuation ends in L${w.endLevel} (${w.endCtor.x},`
+                + `${w.endCtor.y}), but ${names.at(-1)}'s own run ends in `
+                + (last.error ? `an error (${last.error})` : `L${last.endLevel} `
+                    + `(${last.endCtor.x},${last.endCtor.y})`)
+                + ' — a per-tape input the continuation does not hand over?');
+        if (!same) process.exitCode = 1;
+    }
 }
 
 // ── THE FIX LIST ─────────────────────────────────────────────────────

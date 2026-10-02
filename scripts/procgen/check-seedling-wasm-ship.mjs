@@ -1031,6 +1031,9 @@ const deadFrameSharesOf = (windows) => {
             const forward = (tape.persistence ?? []).filter((c) => c.at !== undefined)
                 .map((c) => ({ ...c, at: c.at + offset }));
             if (forward.length > 0) live.addTimedClears(forward);
+            // ⛓ SWIM S1 — and the window's equips, rebased (`levelRun.addEquips`).
+            const equips = (tape.equips ?? []).map((e) => ({ t: e.t + offset, slot: e.slot }));
+            if (equips.length > 0) live.addEquips(equips);
         }
         const st = createTapeStepper(tape, i === 0
             ? { levelSource, onTick: (a, b, c, r) => { live = r; } }
