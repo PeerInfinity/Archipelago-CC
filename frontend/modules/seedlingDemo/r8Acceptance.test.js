@@ -348,8 +348,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r2-terrain-killlock',
             // ⛓⛓⛓ R4-swim D2: the bobs beside the IceTurret, in L40.
             'r4-iceturret-bobs',
-            // ⛓⛓⛓ Seedling fidelity F1: L5's kill lock on the removal, in L5.
-            'f1-l5-lock-removal',
+            // ⛓⛓⛓ Seedling fidelity F1: L5's kill lock on the removal, and the
+            // open-lock arrival's walk to its refusal, in L5.
+            'f1-l5-lock-removal', 'f1-l5-open-lock-bait',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -374,10 +375,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ R2-swim D1 takes it to 39 — `r2-wallflyer-contact` and `-suit`, in L22 —
         // and D3(c) to 40 with `r2-terrain-killlock` (L5).
         // ⛓ R4-swim D2 takes it to 41 — `r4-iceturret-bobs`, in L40.
-        // ⛓ Seedling fidelity F1 takes it to 42 — `f1-l5-lock-removal`, in L5.
-        expect(out.exposed).toBe(42);
+        // ⛓ Seedling fidelity F1 takes it to 43 — `f1-l5-lock-removal` and
+        // `f1-l5-open-lock-bait`, in L5.
+        expect(out.exposed).toBe(43);
         expect(out.tapes).toEqual([
-            'f1-l5-lock-removal', 'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
+            'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
@@ -507,6 +509,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r2-terrain-killlock': { tape: {}, levels: [5, 6] },
             'r4-iceturret-bobs': { tape: {}, levels: [40] },
             'f1-l5-lock-removal': { tape: {}, levels: [5, 6] },
+            'f1-l5-open-lock-bait': { tape: {}, levels: [5] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
