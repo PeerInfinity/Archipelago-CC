@@ -36,15 +36,54 @@
  *      its status — never silently.
  *   7. `instant` is the core's burst over the planned keys (a page tick each).
  *
+ * ⛓ S2 — THE WORKER AND THE BUDGET. Steps 2–3 run behind a SOLVE SERVICE
+ * (`solveService`): the page's is a module Worker
+ * (`jsRuntimeSolveService.createWorkerSolveService` →
+ * `jsRuntimeSolveWorker.js`), so the page never freezes; with none (node, and
+ * every S1 row) the solve runs in place, exactly as S1 did. While a solve is
+ * in flight `keysFor` answers `{solving}` and the page HOLDS the model — its
+ * frame clock, paint, queue drain and reports keep running, but the run does
+ * not step — so a plan is always played from the very state it was solved
+ * from (an idle tick would move the enemies under it). A solve whose run was
+ * replaced (a re-boot) or whose session moved meanwhile is STALE: refuted,
+ * never played. A solve past `budgetMs` (`SOLVER_BUDGET_MS`) is terminated
+ * and DECLINES by name ("the solver exceeded 5 s"); the walker walks and may
+ * RETRY (`jsRuntimeWalker`, `SOLVER_RETRY_*`).
+ *
  * ⛔ DOM-FREE AND CLOCK-FREE, like the walker. ⛔ It changes nothing in the
  * solver or the model: `prefix` (S0) is the only admission it uses.
  */
 
 import { createRunForStaging } from './tapeRunner.js';
 import { solveSegment } from './solverBot.js';
+import { levelSourceFromAtlas } from './atlasSource.js';
 
 /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
 export const MAX_REFUTATIONS = 3;
+
+/**
+ * ⛓ S2 — the wall-clock budget of ONE solve, from the moment the solver
+ * starts on it (a cold worker's module load is not charged — `LOAD_BUDGET_MS`
+ * bounds that). Measured (plan §1.3/§1.6, S1/S2 as-builts): the atlas legs
+ * solve in 6–64 ms, L6 in 0.2–0.7 s, L4 kit 0.8–1.1 s, L12 from mid-room
+ * 1.9–2.2 s and from its door 5.2 s; the three §1.3 legs that never returned
+ * ran past 90 s. 5 s holds every measured witness that returns with ~2.3×
+ * headroom over the slowest mid-room solve and costs the user at most five
+ * seconds of a held room before the walker takes over.
+ */
+export const SOLVER_BUDGET_MS = 5000;
+/** ⛓ S2 — a worker that has not STARTED a solve this long after it was asked (a module load that hangs) is a decline too. */
+export const LOAD_BUDGET_MS = 30000;
+/**
+ * ⛓ S2 — the decline-retry policy (S1 residue): a declined goal is walked,
+ * and the solver is asked AGAIN after a death, a crossing, or this many
+ * walker ticks — §1.6: from W=60 the solver refused the L6 leg, from W=150 it
+ * solved it — at most `SOLVER_RETRY_MAX` times per goal, each retry named.
+ */
+export const SOLVER_RETRY_AFTER_TICKS = 90;
+export const SOLVER_RETRY_MAX = 3;
+
+const seconds = (ms) => `${Math.round(ms / 100) / 10} s`;
 
 /**
  * The state a shadow must reproduce: §1.5's digest, plus the selected slot
@@ -96,37 +135,47 @@ export function solverGoalFor(goal, { run, resolved, placement = null, mounted =
     return { walker: `a ${goal?.kind ?? 'missing'} goal has no solver goal kind` };
 }
 
-/** Step 2 — the session's own tape replayed into a fresh run, asserted equal to the live run. */
-export function replayShadow(session, levelSource, { scratchPersistence = false, equips = null } = {}) {
-    const shadow = createRunForStaging(session.staging, levelSource, { scratchPersistence });
-    session.perTick.forEach((h, i) => {
+/** The session's tape replayed into a fresh run — a shadow, NOT yet checked against anything. */
+export function replayTape({ staging, perTick, levelSource, scratchPersistence = false, equips = null }) {
+    const shadow = createRunForStaging(staging, levelSource, { scratchPersistence });
+    perTick.forEach((h, i) => {
         // ⛓ An equip the PLAY made on the live run is not in the session's
         // keys (a tape carries an equip as a field) — re-made at its tick.
         const slot = equips?.get(i);
         if (slot !== undefined) shadow.equipNow(slot);
         shadow.advance(h);
     });
-    const live = runDigest(session.run);
-    const mine = runDigest(shadow);
-    if (mine !== live) {
+    return shadow;
+}
+
+/** A shadow whose digest is not the live one: the page's bug, by name. */
+function assertShadow(shadow, live, ticks) {
+    if (runDigest(shadow) !== live.digest) {
         throw new ShadowDivergence('the shadow replay of the page\'s own session does not reproduce the live run — '
-            + `a page bug, not a solver verdict (${session.perTick.length} tick(s) replayed; `
-            + `live ${showRow(rowOf(session.run))}, shadow ${showRow(rowOf(shadow))})`);
+            + `a page bug, not a solver verdict (${ticks} tick(s) replayed; `
+            + `live ${showRow(live.row)}, shadow ${showRow(rowOf(shadow))})`);
     }
     return shadow;
 }
 
+/** What the shadow must reproduce, off the live run: its digest and its row. */
+export const liveOf = (run) => ({ digest: runDigest(run), row: rowOf(run) });
+
+/** Step 2 — the session's own tape replayed into a fresh run, asserted equal to the live run. */
+export function replayShadow(session, levelSource, { scratchPersistence = false, equips = null } = {}) {
+    const shadow = replayTape({ staging: session.staging, perTick: session.perTick, levelSource, scratchPersistence, equips });
+    return assertShadow(shadow, liveOf(session.run), session.perTick.length);
+}
+
 /**
- * Steps 2–3 — solve `solverGoal` from the session's live state. Returns the
- * plan: `solution[i]` is the key set for the i-th tick after the solve,
- * `expected[i]` the row the live run must be at BEFORE that tick
- * (`expected[solution.length]` = where the solve ended), `equipsAt` maps a
- * tick index to the slot to equip before it. Throws the solver's refusal.
+ * ⛓ S2 — steps 2–3 from a TAPE (staging + the session's keys + the live
+ * digest), the form a worker receives: nothing in it is the live run. The
+ * plan it returns is structured-cloneable (Sets, a Map, plain rows).
  */
-export function solveFromLive({ session, levelSource, solverGoal, name = 'js-runtime-solve', scratchPersistence = false,
-    equips = null, clock = () => Date.now() }) {
+export function solveFromTape({ staging, perTick, live, levelSource, solverGoal, name = 'js-runtime-solve',
+    scratchPersistence = false, equips = null, clock = () => Date.now() }) {
     const t0 = clock();
-    const shadow = replayShadow(session, levelSource, { scratchPersistence, equips });
+    const shadow = assertShadow(replayTape({ staging, perTick, levelSource, scratchPersistence, equips }), live, perTick.length);
     const replayMs = clock() - t0;
     const expected = [rowOf(shadow)];
     const equipsAt = new Map();
@@ -150,18 +199,64 @@ export function solveFromLive({ session, levelSource, solverGoal, name = 'js-run
             return typeof v === 'function' ? v.bind(target) : v;
         },
     });
-    const prefix = session.perTick;
     const t1 = clock();
-    const out = solveSegment({ run, goals: [solverGoal], name, boot: session.staging.boot, prefix });
+    const out = solveSegment({ run, goals: [solverGoal], name, boot: staging.boot, prefix: perTick });
     const solveMs = clock() - t1;
-    const solution = out.perTick.slice(prefix.length).map((h) => new Set(h));
+    const solution = out.perTick.slice(perTick.length).map((h) => new Set(h));
     if (solution.length !== expected.length - 1) {
         // The recording and the tape disagree — the plan cannot be checked tick by tick.
         throw new ShadowDivergence(`the solve returned ${solution.length} key set(s) but the shadow advanced `
             + `${expected.length - 1} time(s) — the expected trajectory cannot be checked`);
     }
     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
-    return { solution, expected, equipsAt, verbs, replayMs, solveMs, prefixLength: prefix.length };
+    return { solution, expected, equipsAt, verbs, replayMs, solveMs, prefixLength: perTick.length };
+}
+
+/**
+ * Steps 2–3 — solve `solverGoal` from the session's live state. Returns the
+ * plan: `solution[i]` is the key set for the i-th tick after the solve,
+ * `expected[i]` the row the live run must be at BEFORE that tick
+ * (`expected[solution.length]` = where the solve ended), `equipsAt` maps a
+ * tick index to the slot to equip before it. Throws the solver's refusal.
+ */
+export function solveFromLive({ session, levelSource, solverGoal, name = 'js-runtime-solve', scratchPersistence = false,
+    equips = null, clock = () => Date.now() }) {
+    return solveFromTape({ staging: session.staging, perTick: session.perTick, live: liveOf(session.run), levelSource,
+        solverGoal, name, scratchPersistence, equips, clock });
+}
+
+/**
+ * ⛓ S2 — the answer a solve service settles with: `{ok: true, plan}`, or
+ * `{ok: false, kind, message}` where `kind` is `'divergence'` (the page's
+ * bug — the walk fails), `'refusal'` (the solver's own — declines), or
+ * `'budget'` (terminated — declines). A worker cannot throw a class across
+ * the boundary, so the kind travels as data.
+ */
+export function settleSolve(fn) {
+    try {
+        return { ok: true, plan: fn() };
+    } catch (err) {
+        return { ok: false, kind: err instanceof ShadowDivergence ? 'divergence' : 'refusal',
+            message: String(err?.message ?? err) };
+    }
+}
+
+/**
+ * ⛓ S2 — the in-place service (no worker): `start` solves synchronously and
+ * returns an already-settled handle. S1's behaviour exactly; the node rows'
+ * default. `request.levelSource` may be given directly here.
+ */
+export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
+    return {
+        kind: 'in-place',
+        start(request) {
+            const levelSource = request.levelSource ?? levelSourceFromAtlas(request.source.records);
+            const result = settleSolve(() => solveFromTape({ ...request, levelSource, clock }));
+            return { settled: true, started: true, result, cancel() {} };
+        },
+        warm() {},
+        dispose() {},
+    };
 }
 
 /**
@@ -170,21 +265,31 @@ export function solveFromLive({ session, levelSource, solverGoal, name = 'js-run
  * @param {object} deps
  * @param {() => object|null} deps.getSession   the page's live session
  * @param {() => object|null} deps.getLevelSource  the room source the session was booted from
+ * @param {() => Map|null} [deps.getRecords]  ⛓ S2 — that source's records (level → record), what a worker is sent
+ * @param {object|null} [deps.solveService]  ⛓ S2 — where steps 2–3 run (`createWorkerSolveService`); null = in place (S1)
+ * @param {number} [deps.budgetMs]  ⛓ S2 — one solve's wall-clock budget (`SOLVER_BUDGET_MS`)
  * @param {(goal:object) => ({x:number, y:number}|null)} deps.placementOf  a location's entity (OEL)
  * @param {() => boolean} deps.isMounted  a generated set is mounted
  * @param {(e:object) => void} [deps.onEvent]  `{type, message, …}` per solve / refutation / decline
  */
 export function createRuntimeSolver({
-    getSession, getLevelSource, placementOf = () => null, isMounted = () => false, onEvent = () => {},
-    maxRefutations = MAX_REFUTATIONS, clock = () => Date.now(),
+    getSession, getLevelSource, getRecords = () => null, placementOf = () => null, isMounted = () => false,
+    onEvent = () => {}, maxRefutations = MAX_REFUTATIONS, clock = () => Date.now(), solveService = null,
+    budgetMs = SOLVER_BUDGET_MS, loadBudgetMs = LOAD_BUDGET_MS,
 } = {}) {
     let enabled = false;
     let plan = null;
+    /** ⛓ S2 — the solve in flight: `{handle, run, session, prefixLength, goal, solverGoal, askedAt}`, or null. */
+    let pending = null;
     let refutations = 0;
     let lastRefutation = null;
+    let budget = budgetMs;
+    let service = solveService;
+    const inPlace = createInPlaceSolveService({ clock });
     /** session -> Map(perTick index -> slot): the equips the play made on each live session. */
     const playedEquips = new WeakMap();
-    const stats = { solves: 0, refutations: 0, declines: 0, played: 0, lastSolve: null, lastDecline: null };
+    const stats = { solves: 0, refutations: 0, declines: 0, played: 0, lastSolve: null, lastDecline: null,
+        expiries: 0, stale: 0, solving: false, lastWaitMs: null };
 
     const emit = (e) => { try { onEvent(e); } catch { /* a listener's bug is not the solve's */ } };
 
@@ -196,38 +301,130 @@ export function createRuntimeSolver({
         emit({ type: 'refuted', message: `[js runtime] solver plan refuted (${refutations}/${maxRefutations}) — ${why}` });
     }
 
-    function solve(run, goal, solverGoal) {
+    /** ⛓ S2 — drop the solve in flight: its worker is TERMINATED, its answer can never be played. */
+    function cancel(why = null) {
+        if (!pending) return;
+        const p = pending;
+        pending = null;
+        stats.solving = false;
+        try { p.handle.cancel(); } catch { /* a dead worker is already cancelled */ }
+        if (why) emit({ type: 'cancelled', message: `[js runtime] solve cancelled — ${why}` });
+    }
+
+    function decline(why) {
+        stats.declines += 1;
+        stats.lastDecline = why;
+        emit({ type: 'declined', message: `[js runtime] the solver declined — ${why}` });
+        return { declined: why };
+    }
+
+    /** Start a solve of `solverGoal` from the session's live state (steps 2–3, behind the service). */
+    function start(run, goal, solverGoal) {
         const session = getSession();
         if (!session || session.run !== run) throw new ShadowDivergence('the walker\'s run is not the page session\'s run');
-        const p = solveFromLive({
-            session, levelSource: getLevelSource(), solverGoal, clock, equips: playedEquips.get(session) ?? null,
-            name: `js-runtime-L${goal.level}-${goal.kind}`,
-        });
+        const request = {
+            staging: session.staging, perTick: session.perTick, live: liveOf(run), solverGoal,
+            name: `js-runtime-L${goal.level}-${goal.kind}`, scratchPersistence: false,
+            equips: playedEquips.get(session) ?? null,
+        };
+        const handle = service
+            ? service.start({ ...request, source: { records: getRecords() } })
+            : inPlace.start({ ...request, levelSource: getLevelSource() });
+        pending = { handle, run, session, prefixLength: session.perTick.length, goal, solverGoal, askedAt: clock(), startedAt: null };
+        stats.solving = true;
+        if (!handle.settled) {
+            emit({ type: 'solving', message: `[js runtime] solving ${solverGoal.kind} in level ${goal.level} `
+                + `(budget ${seconds(budget)}) — the room is held while the solver thinks` });
+        }
+    }
+
+    /** The answer in hand → a plan, a decline or a failure (null = keep waiting). */
+    function take(run) {
+        const p = pending;
+        const now = clock();
+        // ⛔ A plan is played only from the state it was solved from: a run
+        // replaced while the solver thinks makes its answer STALE at once.
+        if (p.run !== run || p.session !== getSession()) {
+            cancel();
+            stats.stale += 1;
+            refute('the run was re-booted while the solver thought (an item flag or a host teleport) — its answer is stale');
+            return null;
+        }
+        if (!p.handle.settled) {
+            // The budget runs on THIS clock, from the first tick that sees the worker started.
+            if (p.startedAt === null && p.handle.started) p.startedAt = now;
+            const startedAt = p.startedAt;
+            if (startedAt !== null && now - startedAt > budget) {
+                cancel();
+                stats.expiries += 1;
+                stats.lastWaitMs = now - p.askedAt;
+                return decline(`the solver exceeded ${seconds(budget)} on ${p.solverGoal.kind} in level ${p.goal.level} `
+                    + '(terminated) — walking');
+            }
+            if (startedAt === null && now - p.askedAt > loadBudgetMs) {
+                cancel();
+                stats.expiries += 1;
+                return decline(`the solver did not start within ${seconds(loadBudgetMs)} (its worker never loaded) — walking`);
+            }
+            return { solving: true };
+        }
+        pending = null;
+        stats.solving = false;
+        stats.lastWaitMs = now - p.askedAt;
+        const r = p.handle.result;
+        // ⛔ A plan is played only from the state it was solved from.
+        if (p.session.perTick.length !== p.prefixLength) {
+            stats.stale += 1;
+            refute(`the session ticked while the solver thought (${p.prefixLength} → ${p.session.perTick.length} `
+                + 'tick(s)) — its answer is stale');
+            return null;
+        }
+        if (!r.ok) {
+            if (r.kind === 'divergence') return { failed: r.message };
+            return decline(String(r.message).split('\n')[0]);
+        }
+        const plan0 = r.plan;
         stats.solves += 1;
-        stats.lastSolve = { level: goal.level, goal: solverGoal, keys: p.solution.length, verbs: p.verbs,
-            replayMs: p.replayMs, solveMs: p.solveMs, prefix: p.prefixLength,
+        stats.lastSolve = { level: p.goal.level, goal: p.solverGoal, keys: plan0.solution.length, verbs: plan0.verbs,
+            replayMs: plan0.replayMs, solveMs: plan0.solveMs, prefix: plan0.prefixLength, waitMs: stats.lastWaitMs,
+            where: service ? service.kind : inPlace.kind,
             /** Where the solved shadow ended — the live run must end there too. */
-            end: { ...p.expected[p.expected.length - 1] } };
-        emit({ type: 'solved', message: `[js runtime] solved ${solverGoal.kind} in level ${goal.level}: `
-            + `${p.solution.length} tick(s), verbs ${p.verbs.join(', ') || '—'} (replay ${p.replayMs} ms over `
-            + `${p.prefixLength} tick(s), solve ${p.solveMs} ms)` });
-        return { ...p, run, i: 0 };
+            end: { ...plan0.expected[plan0.expected.length - 1] } };
+        emit({ type: 'solved', message: `[js runtime] solved ${p.solverGoal.kind} in level ${p.goal.level}: `
+            + `${plan0.solution.length} tick(s), verbs ${plan0.verbs.join(', ') || '—'} (replay ${plan0.replayMs} ms over `
+            + `${plan0.prefixLength} tick(s), solve ${plan0.solveMs} ms${service ? `, ${service.kind}` : ''})` });
+        plan = { ...plan0, run, i: 0 };
+        return null;
     }
 
     return {
         get enabled() { return enabled; },
-        set enabled(v) { enabled = Boolean(v); if (!enabled) plan = null; },
+        set enabled(v) {
+            enabled = Boolean(v);
+            if (!enabled) { plan = null; cancel(); } else service?.warm?.();
+        },
         /** True while a plan is being played (the core's burst and `autoAdvanceText` read it). */
         get planning() { return plan !== null; },
+        /** ⛓ S2 — true while a solve is in flight (the page holds the model). */
+        get solving() { return pending !== null; },
         /** Planned keys not yet played. */
         get remaining() { return plan ? plan.solution.length - plan.i : 0; },
-        get stats() { return { ...stats, refutations: stats.refutations, current: refutations, lastRefutation }; },
-        /** A new goal (or none): forget the plan and the refutation count. */
-        clear() { plan = null; refutations = 0; lastRefutation = null; },
+        get stats() { return { ...stats, refutations: stats.refutations, current: refutations, lastRefutation, budgetMs: budget }; },
+        /** ⛓ S2 — one solve's budget, in ms (a test knob and the page's `?solverBudgetMs=`). */
+        get budgetMs() { return budget; },
+        set budgetMs(ms) { if (Number.isFinite(ms) && ms > 0) budget = ms; },
+        /** ⛓ S2 — swap the solve service (the page's worker; null = in place). Cancels a solve in flight. */
+        setSolveService(next) { cancel(); service = next ?? null; if (enabled) service?.warm?.(); },
+        get solveService() { return service; },
+        /** A new goal (or none): forget the plan, the solve in flight and the refutation count. */
+        clear() { plan = null; cancel(); refutations = 0; lastRefutation = null; },
+        /** ⛓ S2 — the walk left this goal's room or settled: a solve in flight is dropped (named). */
+        cancel(why) { cancel(why); },
         /**
-         * This tick's keys: `{held}`; `{declined: why}` (walk instead);
-         * `{failed: why}` (the goal fails); or null (not the solver's goal —
-         * the walker walks, nothing said).
+         * This tick's keys: `{held}`; `{solving}` (⛓ S2 — hold the room, a
+         * solve is in flight); `{declined: why}` (walk instead); `{failed:
+         * why}` (the goal fails); or null (not the solver's goal — the walker
+         * walks, nothing said).
          */
         keysFor(run, goal, resolved) {
             if (!enabled) return null;
@@ -235,7 +432,7 @@ export function createRuntimeSolver({
             const mapped = solverGoalFor(goal, {
                 run, resolved, mounted, placement: goal?.kind === 'location' && !mounted ? placementOf(goal) : null,
             });
-            if (mapped.walker) return null;
+            if (mapped.walker) { cancel(); return null; }
             if (plan) {
                 if (plan.run !== run) refute('the run was re-booted (an item flag or a host teleport) — a new session');
                 else if (plan.i >= plan.solution.length) refute('the plan played out and the goal is not complete');
@@ -243,19 +440,25 @@ export function createRuntimeSolver({
                     refute(`tick ${plan.i} of the plan: live ${showRow(rowOf(run))}, expected ${showRow(plan.expected[plan.i])}`);
                 }
             }
+            if (!plan && pending) {
+                const out = take(run);
+                if (out) return out;
+            }
             if (!plan) {
                 if (refutations >= maxRefutations) {
                     return { failed: `the solver's plan was refuted ${refutations} time(s) — last: ${lastRefutation}` };
                 }
                 try {
-                    plan = solve(run, goal, mapped.goal);
+                    start(run, goal, mapped.goal);
                 } catch (err) {
                     if (err instanceof ShadowDivergence) return { failed: err.message };
-                    stats.declines += 1;
-                    const why = String(err?.message ?? err).split('\n')[0];
-                    stats.lastDecline = why;
-                    emit({ type: 'declined', message: `[js runtime] the solver declined — ${why}` });
-                    return { declined: why };
+                    throw err;
+                }
+                const out = take(run);
+                if (out) return out;
+                if (!plan) {
+                    // A stale in-place answer cannot happen (nothing moves inside a synchronous solve).
+                    return { failed: `the solver's plan was refuted ${refutations} time(s) — last: ${lastRefutation}` };
                 }
             }
             const slot = plan.equipsAt.get(plan.i);

@@ -237,8 +237,13 @@ export function apItemsOf(record) {
  * @param {(prop: string, value: any) => void} [opts.onStateChanged] the host's
  *   report hook — the page forwards it to `__swfBridge.onStateChanged`.
  * @param {(msg: string) => void} [opts.log]
+ * @param {object|null} [opts.solveService]  ⛓ solver-walk S2 — where the
+ *   solver mode's solves run: the page passes its module Worker
+ *   (`jsRuntimeSolveService.createWorkerSolveService`); null (node) solves in
+ *   place, as S1 did.
+ * @param {number} [opts.solverBudgetMs]  ⛓ S2 — one solve's wall-clock budget
  */
-export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) {
+export function createJsRuntime({ onStateChanged = null, log = () => {}, solveService = null, solverBudgetMs = undefined } = {}) {
     let config = null;
     /** alias -> AS3 class name, from `configure`'s `classes`. */
     let aliases = new Map();
@@ -290,11 +295,16 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
     /**
      * ⛓ solver-walk S1 — the solver mode (`flashPanel.seedlingSolverWalk`,
      * OFF by default; `playback.setSolverWalk`). The walker consults it first;
-     * off, every tick is exactly the J2/J3 walk.
+     * off, every tick is exactly the J2/J3 walk. ⛓ S2 — with a `solveService`
+     * (the page's Worker) a solve is in flight across page ticks; those
+     * ticks HOLD the run (`tickOnce`: drained, flushed, not stepped).
      */
     const solver = createRuntimeSolver({
+        solveService,
+        ...(solverBudgetMs !== undefined ? { budgetMs: solverBudgetMs } : {}),
         getSession: () => session,
         getLevelSource: () => roomSource()?.source ?? null,
+        getRecords: () => roomSource()?.records ?? null,
         placementOf: (goal) => locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null),
         isMounted: () => mounted !== null,
         onEvent: (e) => note({ type: 'solver', solver: e.type, message: e.message }),
@@ -469,6 +479,13 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         const n0 = run.transitions.length;
         const inCeremony0 = Boolean(run.inCeremony);
         const walkHeld = walker.heldFor(run);
+        if (walker.solverHolding) {
+            // ⛓ S2 — a solve is in flight: the room is HELD (the run does not
+            // step, so the plan is played from the state it was solved from);
+            // the host's queue was drained above and the reports still flush.
+            flush();
+            return { stepped: false, solving: true };
+        }
         // ⛓ S1 — the solver's plan already presses every ceremony X; the page must not add one.
         const { held: drive } = session.heldFor(walkHeld ?? held, { autoAdvanceText: !walker.solverDriving });
         const deaths0 = run.playerDeaths.length;
@@ -775,6 +792,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         setSolverWalk(on) { solver.enabled = Boolean(on); },
         get solverWalk() { return solver.enabled; },
         get solverStats() { return solver.stats; },
+        /** ⛓ S2 — true while a solve is in flight (the room is held). */
+        get solving() { return solver.solving; },
+        /** ⛓ S2 — one solve's wall-clock budget, in ms (a test knob; the page reads `?solverBudgetMs=`). */
+        get solverBudgetMs() { return solver.budgetMs; },
+        setSolverBudgetMs(ms) { solver.budgetMs = Number(ms); },
+        /** ⛓ S2 — the solve service (the page's worker; null = in place). */
+        setSolveService(service) { solver.setSolveService(service); },
+        get solveService() { return solver.solveService; },
         get state() { return walker.state; },
         get reason() { return walker.reason; },
         get goal() { return walker.goal; },

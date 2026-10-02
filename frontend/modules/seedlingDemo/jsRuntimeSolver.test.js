@@ -171,7 +171,10 @@ describe('jsRuntimeSolver — refusal, refutation, instant, and OFF', () => {
         // §1.6's W=60 row: from this state the solver's own corridor stalls.
         const { rt } = midRoom({ region: 'level_6', fromId: 'in_L5_48_112', toId: 'out_stairsup_224_32', walkTicks: 60 });
         rt.playback.setSolverWalk(true);
-        for (let t = 0; t < 20; t += 1) rt.tick();
+        // ⛓ S2 — read the status AT the decline and a few walked ticks on: the
+        // retry policy asks again after a death (the decline-retry rows).
+        for (let t = 0; t < 20 && rt.playback.solverStats.declines === 0; t += 1) rt.tick();
+        for (let t = 0; t < 3; t += 1) rt.tick();
         expect(rt.playback.state).toBe(WALK_STATES.WALKING);
         expect(rt.playback.reason).toMatch(/^the solver declined — solverBot\(.*\) reach-exit \(224,32\)->L7: .*; walking instead$/);
         expect(rt.playback.describe()).toContain('the solver declined');

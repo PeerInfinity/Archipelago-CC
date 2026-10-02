@@ -36,9 +36,18 @@
  * `flash_seedling_gen` PlaybackController) hands the Playback Bot's goals to it
  * synchronously, and the walk then runs inside this page's own tick — while a
  * goal is being walked the keyboard is not read.
+ *
+ * ⛓ solver-walk S2 — the page hands the core a module-Worker solve service
+ * (`jsRuntimeSolveService.createWorkerSolveService`): the solver mode's
+ * solves run off this thread, so the clock below keeps running (and painting
+ * "solving…") while one is in flight, and a solve past its budget is
+ * terminated. `?solverBudgetMs=<ms>` on this page's URL sets the budget (a
+ * test knob; the default is `SOLVER_BUDGET_MS`). A browser without module
+ * workers solves in place, as S1 did — said once on the console.
  */
 
 import { createJsRuntime } from './jsRuntimeCore.js';
+import { createWorkerSolveService } from './jsRuntimeSolveService.js';
 import { heldFromCodes, KEYBOARD_BINDINGS } from './watchManual.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { createLifetime } from './watchLifetime.js';
@@ -75,12 +84,25 @@ export function mountJsRuntimePage(win = window) {
             win.console?.log?.('[swfBridge] stateChanged (unhandled):', name, value);
         },
     };
+    // ⛓ S2 — the solver mode's solves run in a module Worker.
+    let solveService = null;
+    if (typeof win.Worker === 'function') {
+        solveService = createWorkerSolveService({
+            createWorker: () => new win.Worker(new URL('./jsRuntimeSolveWorker.js', import.meta.url), { type: 'module', name: 'seedling-js-solver' }),
+            clock: () => win.performance.now(),
+        });
+    } else {
+        win.console?.warn?.('[js runtime] no Worker in this browser — the solver mode solves on the page thread (S1)');
+    }
+    const budgetParam = Number(new URL(win.location.href).searchParams.get('solverBudgetMs'));
     const runtime = createJsRuntime({
         onStateChanged: (name, value) => {
             bridge.stateLog.push({ name, value });
             bridge.onStateChanged(name, value);
         },
         log: (msg) => win.console?.log?.(msg),
+        solveService,
+        ...(Number.isFinite(budgetParam) && budgetParam > 0 ? { solverBudgetMs: budgetParam } : {}),
     });
     Object.assign(bridge.game, runtime.game);
     win.__swfBridge = bridge;

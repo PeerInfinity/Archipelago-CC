@@ -47,6 +47,7 @@
 import { planWaypoints, livePerVisitOpts, driveStepHeld, BotDriverV2Error } from './botDriverV2.js';
 import { hasArrived } from './botDriverV1.js';
 import { TILE_SIZE } from './levelWorld.js';
+import { SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX } from './jsRuntimeSolver.js';
 
 /** Re-plan cadence, in ticks (J0(b)'s demo: 8 reached both targets from a live state). */
 export const REPLAN_EVERY = 8;
@@ -108,10 +109,15 @@ const tileCentrePoint = ([tx, ty]) => ({ x: tx * TILE_SIZE + TILE_SIZE / 2, y: t
  *   once the goal is resolved; `{held}` drives the tick, `{declined}` hands
  *   the goal to this walk WITH the reason in the status, `{failed}` fails
  *   the goal, null (off, or not a solver goal) walks as before.
+ *   ⛓ S2 — `{solving}` HOLDS the tick (the core does not step the run; the
+ *   walk's give-up clock does not run), and a declined goal is offered to
+ *   the solver AGAIN after a death, a crossing, or `retryAfter` walked
+ *   ticks — at most `retryMax` times, each retry named in the status.
  * @param {object} [opts]
  */
 export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollected, onEvent = () => {}, solver = null } = {}, {
     replanEvery = REPLAN_EVERY, giveUpTicks = WALK_GIVE_UP_TICKS,
+    retryAfter = SOLVER_RETRY_AFTER_TICKS, retryMax = SOLVER_RETRY_MAX,
 } = {}) {
     let goal = null;
     let state = WALK_STATES.IDLE;
@@ -127,11 +133,21 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
     let declined = null;
     /** ⛓ S1 — whether THIS tick's keys came from the solver's plan. */
     let solverDriving = false;
+    /** ⛓ S2 — whether THIS tick is held while a solve is in flight. */
+    let solverHolding = false;
+    /** ⛓ S2 — the decline-retry state: retries made, walked ticks since the decline, a death/crossing seen since. */
+    let retries = 0;
+    let sinceDecline = 0;
+    let retryCause = null;
+    /** ⛓ S2 — every retry, named (`{n, after, declined}`), for the status and the rows. */
+    let retryLog = [];
 
     const emit = (type, message) => {
         try { onEvent({ type, state, goal: goal ? { ...goal } : null, message }); } catch { /* a listener's bug is not the walk's */ }
     };
     const settle = (next, why) => {
+        // ⛓ S2 — leaving the walk drops a solve in flight (its worker is terminated).
+        if (next !== WALK_STATES.WALKING) solver?.cancel?.(`the walk is ${next}`);
         state = next;
         reason = why ?? null;
         waypoints = null;
@@ -175,9 +191,11 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         get reason() { return reason; },
         get goal() { return goal ? { ...goal } : null; },
         get playing() { return playing; },
-        get stats() { return { plans, driven, planError, declined }; },
+        get stats() { return { plans, driven, planError, declined, retries, retryLog: retryLog.map((r) => ({ ...r })) }; },
         /** ⛓ S1 — true when the last `heldFor` returned the solver's keys. */
         get solverDriving() { return solverDriving; },
+        /** ⛓ S2 — true when the last `heldFor` HELD the tick for a solve in flight. */
+        get solverHolding() { return solverHolding; },
         /** Replace the goal. `null` clears it. */
         setGoal(next) {
             goal = next ? { ...next } : null;
@@ -186,6 +204,10 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             driven = 0;
             planError = null;
             declined = null;
+            retries = 0;
+            sinceDecline = 0;
+            retryCause = null;
+            retryLog = [];
             solver?.clear();
             if (goal) settle(WALK_STATES.WAITING, null);
             else settle(WALK_STATES.IDLE, null);
@@ -201,6 +223,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
          */
         heldFor(run) {
             solverDriving = false;
+            solverHolding = false;
             if (!goal || !run) return null;
             if (state === WALK_STATES.DONE || state === WALK_STATES.FAILED) return null;
             if (!playing && stepBudget === 0) return null;
@@ -219,18 +242,48 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                     + `${declined ? `; the solver declined: ${declined}` : ''}`);
                 return null;
             }
-            driven += 1;
+            if (solver && declined !== null && retries < retryMax && solver.enabled
+                && (retryCause || sinceDecline >= retryAfter)) {
+                // ⛓ S2 — the decline-retry policy: a later state may solve (§1.6: W=60 refused, W=150 solved).
+                retries += 1;
+                const after = retryCause ?? `${sinceDecline} walked tick(s)`;
+                retryLog.push({ n: retries, after, declined });
+                declined = null;
+                retryCause = null;
+                sinceDecline = 0;
+                reason = `asking the solver again (retry ${retries}/${retryMax}, after ${after})`;
+                emit(WALK_STATES.WALKING, reason);
+                emit('solver', reason);
+            }
             if (solver && declined === null) {
                 const s = solver.keysFor(run, goal, r);
-                if (s?.held) { solverDriving = true; return s.held; }
+                if (s?.solving) {
+                    // ⛓ S2 — the room is HELD while the worker thinks: the run does not step, the give-up clock does not run.
+                    solverHolding = true;
+                    if (stepBudget === 0 && !playing) stepBudget = 1;
+                    const note = `solving… (budget ${Math.round((solver.budgetMs ?? 0) / 100) / 10} s)`;
+                    if (reason !== note) { reason = note; emit('solver', note); }
+                    return null;
+                }
+                if (reason?.startsWith('solving…') || reason?.startsWith('asking the solver again')) {
+                    reason = null;
+                    if (s?.held) emit('solver', null);
+                }
+                if (s?.held) { driven += 1; solverDriving = true; return s.held; }
                 if (s?.failed) { settle(WALK_STATES.FAILED, s.failed); return null; }
                 if (s?.declined) {
                     declined = s.declined;
+                    sinceDecline = 0;
+                    retryCause = null;
                     // The status carries WHY the solver declined (plan §2.2 step 6) — never silently.
-                    reason = `the solver declined — ${declined}; walking instead`;
+                    reason = `the solver declined — ${declined}; walking instead`
+                        + `${retries > 0 ? ` (after ${retries} retr${retries === 1 ? 'y' : 'ies'})` : ''}`;
                     emit(WALK_STATES.WALKING, reason);
+                    emit('solver', reason);
                 }
             }
+            driven += 1;
+            if (declined !== null) sinceDecline += 1;
             if (waypoints === null || sincePlan >= replanEvery) {
                 try {
                     waypoints = planWaypoints(run.world, run.state, r.target, r.allowTeleporter,
@@ -256,8 +309,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 settle(WALK_STATES.DONE, null);
                 return;
             }
-            if (crossing) { waypoints = null; return; }
-            if (death) { waypoints = null; sincePlan = Infinity; }
+            if (crossing) { waypoints = null; if (declined !== null) retryCause = 'a crossing'; return; }
+            if (death) { waypoints = null; sincePlan = Infinity; if (declined !== null) retryCause = 'a death'; }
         },
         /** Exposed for the page's status line. */
         describe() {
