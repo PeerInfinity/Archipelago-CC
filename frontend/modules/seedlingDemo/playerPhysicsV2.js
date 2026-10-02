@@ -464,8 +464,10 @@ export function checkDrowning(drown, effective, inventory) {
     if (drown.drowning) return drown;
     const kind = drowningHazardKind(effective, inventory);
     if (kind === 0) return drown;
-    // `if (v == 2) hit(null, 0, null, 0)` — damage 0, and `Bot.noDamage`
-    // guards the body regardless, so there is no health effect to model.
+    // `if (v == 2) hit(null, 0, null, 0)` — damage 0, but NOT a no-op: inside
+    // `Player.hit`'s gate it opens the i-frame and adds to the shake. The RUN
+    // owns that state, so `step` makes the call (`lavaHit`, R3-swim D2), not
+    // this pure timer.
     if (drown.timer <= 0) return { ...drown, timer: DROWN_TIMER_MAX };
     const timer = drown.timer - 1;
     if (timer <= 0) return { timer: 0, drowning: true };
@@ -485,10 +487,11 @@ export function drowningHazardKind(effective, inventory) {
 /**
  * `Player.as:1411-1423` — `drown()`, the spiral.
  *
- * Writes `v` DIRECTLY, ahead of the friction/input/move block, so the
- * thrash is then subject to friction and the sweeps like any other
- * velocity. Distinctive and deterministic, which is what makes it a usable
- * PAIR witness short of the death it ends in.
+ * Writes `v` DIRECTLY — and sets `dying`, so `Player.update`'s
+ * `if (!dying) super.update()` skips the friction/input/move block and
+ * NOTHING spends that `v`: the player stands still for the whole spiral.
+ * (⛓ R3-swim D2 corrected this docblock's earlier claim that the thrash is
+ * moved like any other velocity; `r3-drown` measured the still player.)
  */
 export function drownStep(drown) {
     const timer = (drown.timer - 0.5 + DROWN_TIMER_MAX) % DROWN_TIMER_MAX;

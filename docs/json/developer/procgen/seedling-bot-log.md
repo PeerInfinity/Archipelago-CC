@@ -11848,6 +11848,82 @@ r9-solve-13-v2` GREEN over the 46-row signature.
   spelled `py.exe`) blocks a growth in the cloud after every solver and
   recording step has passed.
 
+### Seedling substrate R3-swim — death, the game's way (2026-10-01)
+
+⚖ The user's ruling (2026-10-01): *"player death in the JS model should work the
+way the real game does it"*, a BobBoss death's reboot included. The report is
+`CC/docs/cloud-reports/seedling-swim-r3.md`. Four deaths, one `Player.die()`:
+`dying = true; restartLevel()`, and `restartLevel()` is `FP.world = new
+Game(level, playerPosition.x, playerPosition.y)`, the CURRENT world's ctor args,
+swapped at end of tick, with no transition. The model rebooted the hit death
+only; the pit, the drowning and lava, and a death inside the BobBoss fight were
+refused by name, and the JS runtime page caught the first two and respawned the
+player itself. All four now run through the one reboot (`pendingDeath`,
+`playerDeaths`). Every witness was recorded on the game before its step
+(`plan-seedling-r3-death.mjs`, with `--check`), and the game agreed with the AS3
+reading on every predicted tick.
+
+**D1 — the pit.** `checkFallingInPit`'s `else die()` (`Game.fallthroughLevel ==
+-1`; 27 of the 116 levels) is now `death: {source: 'pit'}` from `step`. It runs
+after `super.update()`, so the death tick's move stands, unlike a hit death's.
+`r3-pit-death` (L4): the edge on t38, the respawn on observation 57 at (72,40).
+`fallDestination` stays the planner's question, and a PREVIEW that reaches a
+death still throws the old words (`deathRefusal`).
+
+**D2 — drowning and lava.** Two corrections to the unwitnessed spiral, both
+from `Player.update`'s order:
+
+- `checkDrowning` is `if (drowning) drown(); else {…}`, so the latch tick does
+  not spin; the model spun on it and died a tick early.
+- `drown()` sets `dying`, and `if (!dying) super.update()` then skips friction,
+  input and the move. The player stands still for all twenty spins; the model
+  moved them along the spiral's `v`. `r3-drown` (L47, no conch) holds
+  (311.15, 144) from observation 84 to 103 and respawns on 104.
+
+Lava calls `hit(null, 0, null, 0)` above the timer on every pre-latch tick. The
+model treated it as a no-op ("damage 0"); inside `Player.hit`'s gate it writes
+`hitsTimer = 20`, so that tick's `input()` does not steer, and `Game.shake += 5`.
+It is a run callback now (`lavaHit` → `applyPlayerHit`, source `lava`).
+`r3-lava` (L96, `noDamage` false): steering lost from t9, the player still from
+t10, the respawn on 39. Mutant: no callback, red at t10 (x 28.9, the game 29.6).
+
+**D3 — the BobBoss fight.** The rock's `fall()` writes `setPersistence(tag,
+false)`, a `Game` static, so a new `Game` in L32 builds `FallRockLarge` fallen
+(Solid, `cameraTimer = 0`). Its first live frame takes the `cameraTimer == 0` arm
+at once: `new BobBoss(72, 72)` (stepping from the next frame, dialogue and all)
+and `playerPosition = new Point(72, 104)`. The original release frame writes the
+same `playerPosition`, which the model had not, so `worldCtor` now follows it.
+`r3-bobboss-death` (U5's boot, `hits_max` 1): death on observation 148, respawn
+(80,112), and the re-added dialogue holds the player through `left` 160–200.
+
+**RNG.** A respawn's `Player` draws `fallSpinSpeed = 8 * FP.choose(-1, 1)` from
+FlashPunk's Lehmer generator, which only graphic angles read; the new `Game`'s
+`Tile`/`Enemy` ctors draw `Math.random`. The model consumes neither stream
+outside L112, so no death (the hit death included) was missing a draw. A death in
+L112 with the Owl's seeded stream open is refused by name: its rebuild's ctor
+draws land on that stream.
+
+**For the JS arc.** `run.advance` no longer throws either `DEATH_REFUSALS`
+message, so the page's catch cannot match; `jsRuntimeCore.test.js`'s pit row is
+red at this head because the run reboots itself (death t138, respawn (136,40),
+the point the page computed). That arc retires the catch.
+
+**Trap candidates**, for the catalogue to number:
+
+- a transcribed side effect that reads as a no-op by its arguments: lava's
+  `hit(null, 0, null, 0)` "deals 0", and still opens an i-frame that takes the
+  steering;
+- a flag set by a helper that gates the caller's next line: `drown()` sets
+  `dying`, which skips `super.update()`, so the spiral's `v` is written and never
+  spent;
+- an `if/else` read as two statements: `if (drowning) drown(); else latch` was
+  modelled as latch-then-spin on the same tick;
+- a ctor-arg write hidden in an entity's update: `FallRockLarge` rewrites
+  `playerPosition`, so the respawn of a fight is not the room's entry;
+- a final-state readout a death erases: the differential's "never started
+  drowning" row reads `drownTimer` 0 after a drowning, because the respawn is a
+  new `Player`.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

@@ -15816,6 +15816,18 @@ export function createLevelRun({
             // ⚠ IT TAKES PRECEDENCE OVER A TRANSITION BY CONSTRUCTION: a
             // death tick runs no physics, so `next.transition` is null.
             if (pendingDeath) {
+                // ⛔ R3-swim: THE ONE ROOM WHERE A REBUILD OWES THE MODEL DRAWS.
+                // Every other death's new `Game` draws only on streams nothing
+                // modelled reads (the respawn `Player`'s `fallSpinSpeed` is
+                // FlashPunk's Lehmer generator, a graphic's angle). L112's
+                // build draws `OWL_LEVEL_BUILD_SITES` on the SEEDED stream
+                // `owlStream` counts, after the respawn — not modelled.
+                if (owlStream !== null && level === owlStreamLevel) {
+                    throw new Error(`levelRun: the player died (${pendingDeath.source}) at tick `
+                        + `${pendingDeath.t} in level ${level}, the Owl's room. \`restartLevel()\` `
+                        + 'rebuilds it, and the build\'s ctor draws land on the seeded stream '
+                        + 'the Owl schedule counts; a mid-fight rebuild is not modelled.');
+                }
                 playerDeaths.push({
                     ...pendingDeath,
                     respawn: spawnFromBoot(worldCtor),

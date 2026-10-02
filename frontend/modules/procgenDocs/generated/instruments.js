@@ -124,7 +124,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 43,
+            "count": 44,
             "id": "plan"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 294,
+        "blockStyle": 295,
         "browser": 88,
-        "cited": 134,
-        "files": 305,
+        "cited": 135,
+        "files": 306,
         "lineStyle": 11,
-        "withDocblock": 305,
-        "withFlags": 225
+        "withDocblock": 306,
+        "withFlags": 226
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6542,6 +6542,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-r2-route — compute the R2 full-walk route and write it to `frontend/modules/seedlingDemo/fixtures/r2-route.json`.",
             "path": "scripts/procgen/plan-seedling-r2-route.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-r3-death.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-r3-death — ⛓⛓⛓ R3-swim: PLAYER DEATH THE GAME'S WAY, WITNESSED ON THE GAME BEFORE THE MODEL STEP EXISTED.",
+            "path": "scripts/procgen/plan-seedling-r3-death.mjs"
         },
         {
             "argvHelpers": [],
