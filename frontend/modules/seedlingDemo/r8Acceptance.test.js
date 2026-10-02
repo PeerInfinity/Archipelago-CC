@@ -344,6 +344,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r9-solve-0-v3', 'r9-solve-12', 'r9-solve-21', 'r9-solve-22',
             // ⛓⛓⛓ R2-swim D1: the wallflyer's two witnesses, in L22.
             'r2-wallflyer-contact', 'r2-wallflyer-suit',
+            // ⛓⛓⛓ R2-swim D3(c): the terrain death's kill lock, in L5.
+            'r2-terrain-killlock',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -365,11 +367,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ R1-swim takes it to 31 — `r1-dark-suit-bob`, in L4 — and to 33 with
         // `r1-dark-suit-kill` (L4) and `r1-dark-shield-kill` (L22).
         // ⛓ U14-swim takes it to 37 — four campaign segments in L12 and L22.
-        // ⛓ R2-swim D1 takes it to 39 — `r2-wallflyer-contact` and `-suit`, in L22.
-        expect(out.exposed).toBe(39);
+        // ⛓ R2-swim D1 takes it to 39 — `r2-wallflyer-contact` and `-suit`, in L22 —
+        // and D3(c) to 40 with `r2-terrain-killlock` (L5).
+        expect(out.exposed).toBe(40);
         expect(out.tapes).toEqual([
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
-            'r2-wallflyer-contact', 'r2-wallflyer-suit', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
+            'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-0-v3',
             'r9-solve-12', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-21',
@@ -494,6 +497,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓ R2-swim D1's two wallflyer witnesses, in L22.
             'r2-wallflyer-contact': { tape: {}, levels: [22] },
             'r2-wallflyer-suit': { tape: {}, levels: [22] },
+            'r2-terrain-killlock': { tape: {}, levels: [5, 6] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

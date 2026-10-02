@@ -1039,6 +1039,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             addedBy: 'R2-swim D1 (the dark suit into a wallflyer)',
             why: 'the t 8 contact retaliates into `wallflyer@48,112`, which reverses.',
         }),
+        /**
+         * ⛓⛓⛓ R2-swim D3(c) — L5's three bobs drown chasing the swimming player
+         * (t 39 / 111 / 173), and the third REMOVAL (t 183) opens the kill lock.
+         */
+        Object.freeze({
+            name: 'r2-terrain-killlock', levels: Object.freeze([5, 6]), bobs: 3, ticks: 320,
+            addedBy: 'R2-swim D3(c) (a terrain death opens a kill lock)',
+            why: 'all three bobs drown; the lock opens 101 steps after the last removal and the '
+                + 'player crosses to L6 on t 285.',
+        }),
     ]),
 
     /**
