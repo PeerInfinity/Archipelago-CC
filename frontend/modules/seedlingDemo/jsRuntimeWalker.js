@@ -56,8 +56,7 @@
 
 import { planWaypoints, livePerVisitOpts, driveStepHeld, BotDriverV2Error, isWalkableTile } from './botDriverV2.js';
 import { hasArrived } from './botDriverV1.js';
-import { TILE_SIZE, rectsOverlap } from './levelWorld.js';
-import { playerBoxAt } from './playerPhysicsV2.js';
+import { TILE_SIZE } from './levelWorld.js';
 import { SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX } from './jsRuntimeSolver.js';
 
 /** Re-plan cadence, in ticks (J0(b)'s demo: 8 reached both targets from a live state). */
@@ -111,9 +110,9 @@ export function latchedOn(run, index) {
 /**
  * ⛓ S5 — where to stand OFF a latched teleporter: the centres of the tiles
  * ringing its rect, nearest the player first, that are STANDABLE
- * (`isWalkableTile`, the planner's own node test, inside the level) and
- * whose player box overlaps NO teleporter (stepping off this one onto
- * another would fire that one). The first the planner routes TO wins (a
+ * (`isWalkableTile`, the planner's own node test, inside the level; with no
+ * teleporter allowed it refuses every teleporter's cell, so the step-off
+ * never lands on another door and fires it). The first the planner routes TO wins (a
  * route that ENDS on the cell: the planner snaps an unstandable goal to a
  * node nearby, which in a pocket is the door itself). Null when none can —
  * a closed pocket — and the walk fails by name.
@@ -133,8 +132,6 @@ export function stepOffPoint(run, index) {
         for (let tx = tx0; tx <= tx1; tx += 1) {
             if (!isWalkableTile(world, tx, ty, null, { ...opts, nodeMargin: 0 })) continue;
             const p = tileCentrePoint([tx, ty]);
-            const box = playerBoxAt(p.x, p.y);
-            if (world.teleporters.some((tp) => rectsOverlap(box, tp.rect))) continue;
             points.push({ ...p, d: (p.x - from.x) ** 2 + (p.y - from.y) ** 2 });
         }
     }

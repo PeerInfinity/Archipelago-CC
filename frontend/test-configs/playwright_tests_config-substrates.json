@@ -421,6 +421,12 @@
             "_comment": "Seedling solver-walk S3. Runtime js + the solver mode ON on seedling_atlas: the page handle teleports the real page into level 5 and walks to the teleporter (48, 112) behind the kill lock — the page boots on SCRATCH persistence (⚖ Q4), the solver's kill solves, the run writes the lock's clear itself and the crossing to level 6 is reported; the clear reported once as pendingCheck <seq>|5|0|0 (the game's Lock.turnOff), no AP location checked (no false check), 0 HALT."
         },
         {
+            "id": "seedling-js-runtime-solver-steps-off-the-door",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S5. Runtime js + the solver mode ON on seedling_atlas: the vanilla L3 <-> L11 round trip — the solver breaks L3's rock and takes the door to 11, 11's only door lands the player INSIDE L3's door (latched), and the walker steps off onto the rock's cell, the solver walks back on, the crossing to 11 is reported; 0 HALT, no decline."
+        },
+        {
             "id": "seedling-js-runtime-solver-budget-falls-back",
             "enabled": true,
             "category": "Seedling JS runtime",

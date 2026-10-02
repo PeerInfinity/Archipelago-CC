@@ -26,8 +26,10 @@
  *   m3 `solverGoalFor` maps a latched exit to the solver
  *        -> the ON rows red (the solver's corridor stalls on the door and
  *           declines: `declines` 0 fails)
- *   m4 the step-off cell may overlap ANOTHER teleporter
- *        -> 'no step-off cell overlaps a teleporter' reds
+ *   (an explicit "the step-off box overlaps no teleporter" filter was DEAD:
+ *   `isWalkableTile` with no teleporter allowed refuses every teleporter cell —
+ *   measured over every door of the map, none differs. The row
+ *   'no step-off cell overlaps a teleporter' keeps that property pinned.)
  */
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync, existsSync } from 'node:fs';

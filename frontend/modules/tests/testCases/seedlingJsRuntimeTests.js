@@ -817,6 +817,109 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+// ── Seedling solver-walk S5: an ARRIVAL ON THE DOOR (step off and back on) ──
+
+/**
+ * The S5 witness (plan §3 S5, §1.3 L3 r8c6): level 11's only door lands the
+ * player at (96, 128) in level 3 — INSIDE L3's door back to 11, so it is
+ * latched and fires only on an entry. The pocket is closed until
+ * `breakablerock@96,112` is broken, so the row walks the vanilla round trip:
+ * from level 4's arrival (112, 48) with the sword the solver breaks the rock
+ * and takes the door to 11, the bot takes 11's door back (landing latched),
+ * then steps off onto the rock's cell and back on — the crossing to 11.
+ */
+const DOOR_ROOM = Object.freeze({ level: 3, enter: { x: 112, y: 48 }, door: { x: 96, y: 128 }, to: 11 });
+
+export async function seedlingJsRuntimeSolverStepsOffTheDoor(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = true;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
+    try {
+        await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+        if (!ready) return tc.getOverallResult();
+        const { bot } = ready;
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, win } = up;
+        const pushed = await tc.pollForCondition(() => rt.playback.solverWalk === true,
+            'the setting reached the JS page (playback.solverWalk)', 5000, 100);
+        tc.reportCondition('the page is in solver mode', !!pushed);
+
+        // ── the doors, derived from the map ──
+        const map = await (await fetch(new URL(VANILLA_MAP_URL, document.baseURI).href)).json();
+        const tile = (e) => [Math.floor(e.x / map.tile_size), Math.floor(e.y / map.tile_size)];
+        const door = map.levels.find((l) => l.level === DOOR_ROOM.level).entities
+            .find((e) => e.x === DOOR_ROOM.door.x && e.y === DOOR_ROOM.door.y && Number(e.attrs?.to) === DOOR_ROOM.to);
+        const back = map.levels.find((l) => l.level === DOOR_ROOM.to).entities
+            .find((e) => e.type === 'teleporter' && Number(e.attrs?.to) === DOOR_ROOM.level);
+        tc.reportCondition(`level ${DOOR_ROOM.to}'s door back lands ON level ${DOOR_ROOM.level}'s door to it`,
+            !!(door && back && Number(back.attrs.playerx) === door.x && Number(back.attrs.playery) === door.y));
+        if (!door || !back) return tc.getOverallResult();
+
+        const walk = async (goal, what) => {
+            const answer = rt.playback.walkTo(goal);
+            tc.assertEqual(`the page accepted the goal: ${what}`, true, !!answer?.ok);
+            rt.playback.play();
+            const settled = await tc.pollForCondition(() => ['done', 'failed'].includes(rt.playback.state) || !!rt.halted,
+                `${what}: the walk settled`, 60000, 100);
+            tc.log(`${what}: ${rt.playback.describe()}; stepOffs ${rt.playback.stats.stepOffs}`);
+            return !!settled && rt.playback.state === 'done';
+        };
+
+        rt.queueItems([{ class: 'Main', property: 'hasSword', value: true },
+            { invocation: 'new_instance', className: 'Game', args: [DOOR_ROOM.level, DOOR_ROOM.enter.x, DOOR_ROOM.enter.y] }]);
+        const there = await tc.pollForCondition(() => rt.run?.level === DOOR_ROOM.level && rt.flags?.hasSword === true,
+            `the page is in level ${DOOR_ROOM.level} with the sword`, 10000, 100);
+        tc.reportCondition('teleported into level 3 with the sword', !!there);
+        if (!there) return tc.getOverallResult();
+        const doorGoal = { kind: 'exit', level: DOOR_ROOM.level, tiles: [tile(door)] };
+        if (!await walk(doorGoal, 'break the rock, take the door to 11')) return tc.getOverallResult();
+        tc.assertEqual('the solver broke the rock on the way', true,
+            (rt.playback.solverStats.lastSolve?.verbs ?? []).includes('break'));
+        if (!await walk({ kind: 'exit', level: DOOR_ROOM.to, tiles: [tile(back)] }, 'take 11\'s door back')) {
+            return tc.getOverallResult();
+        }
+        tc.assertEqual(`the arrival stands ON the door: level ${DOOR_ROOM.level}, latched`, `${DOOR_ROOM.level}/1`,
+            `${rt.run?.level}/${rt.run?.state?.latched?.size ?? 0}`);
+
+        const exitsBefore = reportedExits(win).length;
+        const solvesBefore = rt.playback.solverStats.solves;
+        const crossed = await walk(doorGoal, 'step off the door and back on');
+        const s = rt.playback.solverStats;
+        tc.log(`solver ${JSON.stringify({ ...s, lastSolve: s.lastSolve ? { ...s.lastSolve, goal: undefined } : null })}`);
+        tc.reportCondition('the walk from the arrival is DONE', crossed);
+        tc.assertEqual('the WALKER stepped off once (the latched phase is not the solver\'s)', 1, rt.playback.stats.stepOffs);
+        tc.assertEqual('the SOLVER walked it back: one more solve, no decline', `${solvesBefore + 1}/0`,
+            `${s.solves}/${s.declines}`);
+        tc.assertEqual('…and every planned key was played (no refutation)', 0, s.refutations);
+        const exits = reportedExits(win).slice(exitsBefore);
+        tc.assertEqual(`the crossing was reported: a pendingExit from level ${DOOR_ROOM.level} at the door to ${DOOR_ROOM.to}`,
+            JSON.stringify({ fromLevel: DOOR_ROOM.level, type: 'teleporter', ...DOOR_ROOM.door, to: DOOR_ROOM.to }),
+            JSON.stringify(exits[0] ?? null));
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+    } finally {
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-steps-off-the-door',
+    name: 'Seedling JS runtime: an arrival ON the door steps off and back on (L3 ↔ L11)',
+    description: 'With flashPanel.runtime = js and the solver mode ON, on seedling_atlas: with the sword the solver '
+        + 'breaks L3\'s rock and takes the door to 11; 11\'s only door lands the player back INSIDE that door '
+        + '(latched — it fires only on an entry). The walker steps off onto the rock\'s cell, the solver walks back on, '
+        + 'and the crossing to 11 is reported — 0 HALT, no decline, no error: status.',
+    testFunction: seedlingJsRuntimeSolverStepsOffTheDoor,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 // ── Seedling solver-walk S2: the solve runs in a WORKER, under a wall-clock budget ──
 
 /**
