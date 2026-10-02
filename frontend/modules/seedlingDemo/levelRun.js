@@ -147,6 +147,7 @@ import {
 // ⛓⛓⛓ U15-swim D1: `Turret` + `TurretSpit`, the shooter route step 27 met.
 import {
     TURRET_SPIT, createTurret, spitSpeed, stepTurret, stepTurretSpit, turretRect,
+    turretSpitRect,
 } from './turret.js';
 // ⛓⛓⛓ R6 SLICE 2: the THIRTEENTH family — the first projectile the PLAYER
 // makes, so the first per-visit body a tape is responsible for.
@@ -6273,6 +6274,70 @@ export function createLevelRun({
      * itself. Positions and liveness are what the danger map asks for; the
      * damage staging belongs to the arm that presses.
      */
+    /**
+     * ⛓⛓⛓ U15-swim D2 — **THE TURRET FORECAST**, `chaserForecastNow`'s
+     * sentence for a SHOOTER.
+     *
+     * A turret is PLAYER-COUPLED twice over — it aims at the player and its
+     * clock re-arms whenever the player leaves its range — and a spit is
+     * autonomous from the tick it leaves the barrel. So where the spits will be
+     * at a cell's ETA is a function of the WALK, and only a caller previewing
+     * one can ask: `previewWalk` steps this against the previewed player, beside
+     * the arrows and the chasers. The stepping is `stepSpitsNow` then
+     * `stepShootersNow`'s — the same `turret.js` functions on clones, in the
+     * same order, against the same blast-cover query and the same shield box.
+     *
+     * ⚠ WHAT IT LEAVES OUT, NAMED: the off-screen cull (a spit flies on in the
+     * forecast, which can only forbid MORE cells), and the hit itself — a
+     * preview takes no knockback (`previewWalk`'s law: the point is to find out
+     * whether one WOULD land). A spit the shield or cover takes is dropped; one
+     * that meets the player box is returned on that tick, so the sample's own
+     * box overlaps it.
+     *
+     * @returns {?{step: Function}} `null` when the room holds no turret and no spit
+     */
+    function spitForecastNow() {
+        if (noclip) return null;
+        const st = shooterStateFor(level);
+        const live = spitsFor(level);
+        if (st.size === 0 && live.length === 0) return null;
+        const turrets = [...st.keys()].reverse().map((id) => ({ ...st.get(id), spawned: null }));
+        const air = live.map((s) => ({ ...s, v: { ...s.v } }));
+        const solidOpts = normalizeLiveOpts(liveSolidOpts());
+        const shielded = inventory?.hasShield === true;
+        return {
+            /**
+             * One forecast tick. `playerPos` is the PREVIEWED player at the
+             * START of this tick (with `vx`/`direction`, which place the shield
+             * box the previous frame rendered); `opts.slashing` is its slash
+             * flag as that tick left it.
+             */
+            step(playerPos, { slashing = false } = {}) {
+                const box = playerBoxAt(playerPos.x, playerPos.y);
+                const shieldBox = shielded ? playerShieldRect(playerPos, slashing) : null;
+                const out = [];
+                for (const s of air) {
+                    const r = stepTurretSpit(s, {
+                        frozen: false, playerBox: box, shieldBox,
+                        blockedAt: (bx) => !!world.collidesBlast(bx, solidOpts),
+                    });
+                    if (!s.removed || r.hitPlayer) {
+                        out.push({ id: s.id, x: s.x, y: s.y, rect: turretSpitRect(s),
+                            hitsPlayer: r.hitPlayer });
+                    }
+                }
+                for (let i = air.length - 1; i >= 0; i -= 1) {
+                    if (air[i].removed) air.splice(i, 1);
+                }
+                for (const t of turrets) {
+                    stepTurret(t, { frozen: false, player: { x: playerPos.x, y: playerPos.y } });
+                    if (t.spawned) air.unshift(t.spawned);
+                }
+                return out;
+            },
+        };
+    }
+
     function chaserForecastNow() {
         // ⛔ THE SAME GATE `stepChasersNow` OPENS WITH, for its reason: under
         // these flags the run does not step a chaser, so it has no live
@@ -13948,6 +14013,13 @@ export function createLevelRun({
          */
         chaserForecast() {
             return chaserForecastNow();
+        },
+        /**
+         * ⛓ U15-swim D2: THE TURRET SUBSYSTEM, FORECAST — see `spitForecastNow`.
+         * `null` when the room holds no turret and no spit, and under `noclip`.
+         */
+        spitForecast() {
+            return spitForecastNow();
         },
         get arrowFlights() { return arrowFlightsNow(); },
         /**

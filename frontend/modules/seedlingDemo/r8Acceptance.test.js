@@ -1333,10 +1333,11 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
 
     it('the ladder is AVOID -> (PULL) -> TIME -> BAIT -> KILL and every rung names its tool', () => {
         // ⛓ R9 slice L16: PULL is the one CONDITIONAL rung (§59.4 D2).
+        // ⛓ U15-swim D2: DODGE is the second (a spit-only danger, a stall on the walk).
         expect(R8_STRATEGY_EXECUTORS.ladder.map((r) => r.rung))
-            .toEqual(['avoid', 'pull', 'time', 'bait', 'kill']);
+            .toEqual(['avoid', 'dodge', 'pull', 'time', 'bait', 'kill']);
         expect(R8_STRATEGY_EXECUTORS.ladder.filter((r) => r.conditional).map((r) => r.rung))
-            .toEqual(['pull']);
+            .toEqual(['dodge', 'pull']);
         for (const r of R8_STRATEGY_EXECUTORS.ladder) {
             expect(r.tool.length).toBeGreaterThan(20);
             expect(r.refusesWith.length).toBeGreaterThan(20);

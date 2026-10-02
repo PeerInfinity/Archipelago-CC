@@ -897,7 +897,7 @@ describe('⚖ §13.10a — the ETA-aware transit probe, against its two oracles'
     it('⛓ every ingredient of the union is classified by coupling', () => {
         const keys = Object.keys(TRANSIT_INGREDIENTS).sort();
         expect(keys).toEqual(['armedLanes', 'arrows', 'chasers', 'crushers',
-            'hazards', 'spinners', 'staticEnemies']);
+            'hazards', 'spinners', 'spits', 'staticEnemies']);
         /**
          * ⛔ EVERY `atEta: true` ROW IS AUTONOMOUS, AND THE TWO SETS ARE
          * ASSERTED EQUAL rather than a count being asserted.
@@ -941,9 +941,15 @@ describe('⚖ §13.10a — the ETA-aware transit probe, against its two oracles'
          */
         const atEta = keys.filter((k) => TRANSIT_INGREDIENTS[k].atEta);
         const autonomous = keys.filter((k) => TRANSIT_INGREDIENTS[k].coupling === 'autonomous');
-        expect(atEta).toEqual(['arrows', 'chasers', 'spinners']);
+        /**
+         * ⛓ U15-swim D2 — THE SECOND PLAYER-COUPLED ROW, AND THE DESIGN CHANGE IS
+         * THIS ONE: a turret AIMS at the player and re-arms its clock out of
+         * range, so its spits are forecast against the candidate path exactly
+         * as a bob is (`run.spitForecast()`, stepped by `previewWalk`).
+         */
+        expect(atEta).toEqual(['arrows', 'chasers', 'spinners', 'spits']);
         expect(autonomous).toEqual(['arrows', 'spinners']);
-        expect(atEta.filter((k) => !autonomous.includes(k))).toEqual(['chasers']);
+        expect(atEta.filter((k) => !autonomous.includes(k))).toEqual(['chasers', 'spits']);
         // …and every autonomous arm is still carried to the ETA: the widening
         // added a case, it did not drop one.
         expect(autonomous.every((k) => TRANSIT_INGREDIENTS[k].atEta)).toBe(true);

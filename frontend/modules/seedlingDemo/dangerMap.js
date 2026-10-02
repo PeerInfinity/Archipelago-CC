@@ -69,6 +69,7 @@ import {
     chaserBoxAt, isBridgedChaser,
     rect, rectsOverlap,
     SPINNER, hammerHitsPlayer, spinnerRect,
+    TURRET_SPIT,
 } from './solverView.js';
 import { hazardVolume, volumeHitsBox } from './hazards.js';
 
@@ -260,6 +261,50 @@ export function arrowDangerDuringTransit(run, box, horizon, arrows = null) {
                     why: 'an ARMED trap\'s lane — a STATE question, and still danger at '
                         + 'every horizon: the volley that has not fired yet is the one a '
                         + 'walk needs warning about' });
+            }
+        }
+    }
+    return out;
+}
+
+/**
+ * ⛓⛓⛓ U15-swim D2 — INGREDIENT (g), THE TURRET SPITS.
+ *
+ * TRANSIT: the spits AT THE CELL'S OWN ETA, from the walk's own forecast
+ * (`run.spitForecast()`, which `previewWalk` steps beside the arrows and the
+ * chasers and hands each sample as `spits`). A turret aims at the player and
+ * its clock re-arms on range, so only a caller previewing a WALK can say where
+ * the next spit will fly; a spit the forecast saw the shield or a tree take is
+ * already gone from it. A transit caller with no walk gets the spits already
+ * in the air, carried to the horizon by `stepTurretSpit`'s own sweep.
+ *
+ * WAIT: the spits already in the air, each box swept along its own velocity
+ * for the horizon — `arrowDanger`'s union over the window. ⚠ A turret that has
+ * not fired yet is NOT priced here: whether it fires, and where, is a question
+ * about where the player will be, which is a walk's question.
+ */
+export function spitDanger(run, box, horizon, spits = null) {
+    const out = [];
+    if (spits) {
+        for (const s of spits) {
+            if (rectsOverlap(box, s.rect)) {
+                out.push({ kind: 'spit', id: s.id, why: `a TurretSpit AT ITS PREDICTED POSITION `
+                    + `(${s.x.toFixed(1)},${s.y.toFixed(1)}), stepped with the walk by `
+                    + '`turret.js` against the previewed player' });
+            }
+        }
+        return out;
+    }
+    const hb = TURRET_SPIT.hitbox;
+    for (const t of run.entities('shooters') ?? []) {
+        for (const s of t.spits) {
+            const x1 = s.x + s.v.x * horizon;
+            const y1 = s.y + s.v.y * horizon;
+            const swept = rect(Math.min(s.x, x1) - hb.originX, Math.min(s.y, y1) - hb.originY,
+                Math.abs(x1 - s.x) + hb.w, Math.abs(y1 - s.y) + hb.h);
+            if (rectsOverlap(box, swept)) {
+                out.push({ kind: 'spit', id: s.id, why: `a live TurretSpit swept along its `
+                    + `velocity x ${horizon} tick(s)` });
             }
         }
     }
@@ -1038,6 +1083,19 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
     staticEnemies: Object.freeze({
         coupling: 'static', atEta: false, why: 'a `speed 0` census body at its placement',
     }),
+    /**
+     * ⛓ U15-swim D2 — the turret spits. The SHOOTER is player-coupled (it aims
+     * and re-arms on range) and the SPIT is autonomous, so the pair is forecast
+     * against the candidate path exactly as the chasers are.
+     */
+    spits: Object.freeze({
+        coupling: 'player-coupled',
+        atEta: true,
+        why: 'a turret aims at the player and its 40-tick clock re-arms out of range, so '
+            + 'where its next spit flies is a function of the walk — `previewWalk` steps '
+            + '`run.spitForecast()` per tick and each sample carries the spits as of its '
+            + 'own tick',
+    }),
     crushers: Object.freeze({
         coupling: 'snapshot', atEta: false,
         why: 'a charging crusher does not re-derive `v`; the run\'s own getter says the '
@@ -1057,7 +1115,9 @@ export const TRANSIT_INGREDIENTS = Object.freeze({
  *   about the difference should get the one that forbids more.
  * @returns {{danger: boolean, horizon: number, mode: string, sources: object[]}}
  */
-export function dangerAt(run, tick, box, { mode = 'wait', arrows = null, chasers = null } = {}) {
+export function dangerAt(run, tick, box, {
+    mode = 'wait', arrows = null, chasers = null, spits = null,
+} = {}) {
     if (!run || typeof run.level !== 'number') {
         fail('dangerAt: needs a live run — the whole point is that the positions are the '
             + 'ones the run has NOW, not the ones a level record was authored with.');
@@ -1093,6 +1153,8 @@ export function dangerAt(run, tick, box, { mode = 'wait', arrows = null, chasers
         ...spinnerDanger(run, box, horizon),
         ...staticEnemyDanger(run, box),
         ...crusherDanger(run, box),
+        // ⛓ U15-swim D2: the spits — the walk's own forecast in TRANSIT.
+        ...spitDanger(run, box, horizon, mode === 'transit' ? spits : null),
     ];
     return { danger: sources.length > 0, horizon, mode, sources };
 }
@@ -1107,8 +1169,9 @@ export function dangerAt(run, tick, box, { mode = 'wait', arrows = null, chasers
  * produces a schedule the walk does not keep, and a probe checked against a
  * schedule nobody drives is a probe of nothing.
  */
-export function dangerDuringTransit(run, tick, box, arrows = null, chasers = null) {
-    return dangerAt(run, tick, box, { mode: 'transit', arrows, chasers });
+export function dangerDuringTransit(run, tick, box, arrows = null, chasers = null,
+    spits = null) {
+    return dangerAt(run, tick, box, { mode: 'transit', arrows, chasers, spits });
 }
 
 /**

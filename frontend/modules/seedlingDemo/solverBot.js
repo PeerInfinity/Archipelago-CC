@@ -2438,7 +2438,7 @@ export function strikePolicyFor(run, { dashPlan = null,
  * held-set sequences.
  */
 export function previewWalk(run, wps, tolerance = 0,
-    { strike = null, standFor = 0, axisAligned = false } = {}) {
+    { strike = null, standFor = 0, axisAligned = false, stall = null } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     /**
@@ -2469,6 +2469,13 @@ export function previewWalk(run, wps, tolerance = 0,
      * it — same `chaserStep`, same order, same solids.
      */
     const chasers = run.chaserForecast?.() ?? null;
+    /**
+     * ⛓⛓⛓ U15-swim D2 — **AND THE TURRETS AND THEIR SPITS ADVANCE ON IT TOO**:
+     * a turret aims at the previewed player and re-arms when the walk leaves its
+     * range, so the spits at a sample's tick are the walk's own. `null` in a room
+     * with no turret, so every other preview is byte-identical.
+     */
+    const spitForecast = run.spitForecast?.() ?? null;
     /**
      * ⛔⛔⛔ R9 SLICE 12b — **THE STRIKE POLICY SEES THE PREVIOUS TICK'S
      * BODIES, ON BOTH SIDES, AND THAT IS THE ONLY READING A DRIVER CAN HAVE.**
@@ -2761,10 +2768,56 @@ export function previewWalk(run, wps, tolerance = 0,
         }
     };
     let wpIndex = -1;
+    /**
+     * ⛓⛓ U15-swim D2 — **A STALL INSIDE THE WALK** (`stall: {at, ticks}`): at
+     * walk-offset `at` the player stands `ticks` ticks with NO walk keys, then
+     * the walk resumes. The DODGE rung's question — a turret's clock and aim
+     * are the walk's, so standing a few ticks inside its range shifts every
+     * later spit. Stepped exactly as the standing TAIL below is (one forecast
+     * clock, one policy). `null` — every other caller — is byte-inert.
+     */
+    let stalled = stall === null;
+    const stallHere = () => {
+        stalled = true;
+        for (let i = 0; i < stall.ticks; i += 1) {
+            tick += 1;
+            const arrows = forecast ? forecast.step(st) : null;
+            const chaserBodies = chasers
+                ? chasers.step(st, { slashing: slashState?.slashing === true }) : null;
+            const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies,
+                phase: 'stall', wp: wpIndex };
+            if (spitForecast) {
+                sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
+            }
+            samples.push(sample);
+            let held = st.fall ? new Set() : NO_HELD_PREVIEW;
+            const combat = combatBefore(st, tick - 1, held, chaserBodies);
+            held = combat.held;
+            sample.held = held;
+            if (strike) bodiesForPolicy = (chasers ? chasers.bodies() : null) ?? [];
+            st = step(st, held, { dashImpulse: combat.dashImpulse });
+            combatAfter(tick - 1);
+            truncated = lethalFloorOf(st);
+            if (truncated) return;
+            if (st.transition) {
+                truncated = {
+                    kind: 'crossed',
+                    at: { x: st.x, y: st.y },
+                    why: `the stall crossed to level ${st.transition.to_level}`,
+                };
+                return;
+            }
+        }
+    };
     for (const wp of wps) {
         wpIndex += 1;
         let spent = 0;
         while (!hasArrived(st, wp, tolerance)) {
+            if (!stalled && tick - startTick === stall.at) {
+                stallHere();
+                if (truncated) break;
+                if (hasArrived(st, wp, tolerance)) break;
+            }
             if (spent >= DEFAULT_MAX_TICKS_PER_TARGET) {
                 truncated = {
                     kind: 'stalled',
@@ -2807,6 +2860,11 @@ export function previewWalk(run, wps, tolerance = 0,
             // trap 587), and a bound nobody can evaluate per leg is a bound
             // nobody can respect.
             const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies, wp: wpIndex };
+            // ⛓ U15-swim D2: a spit updates before the player too (run-time
+            // added, prepended), so it pairs with this PRE-move box.
+            if (spitForecast) {
+                sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
+            }
             samples.push(sample);
             // ⛔ `drive`'s own line, including the transport arm: a player in
             // flight presses nothing, and a preview that steered through a
@@ -2907,6 +2965,9 @@ export function previewWalk(run, wps, tolerance = 0,
                 ? chasers.step(st, { slashing: slashState?.slashing === true }) : null;
             const sample = { x: st.x, y: st.y, tick, arrows, chasers: chaserBodies,
                 phase: 'dwell', wp: wpIndex };
+            if (spitForecast) {
+                sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
+            }
             samples.push(sample);
             let held = st.fall ? new Set() : NO_HELD_PREVIEW;
             const combat = combatBefore(st, tick - 1, held, chaserBodies);
@@ -6214,7 +6275,7 @@ function deriveStrike(run, bodyId, contacts, notBefore = 0, { continuation = fal
         if (!walk.truncated) {
             for (const sm of walk.samples) {
                 const d = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
-                    sm.arrows, sm.chasers);
+                    sm.arrows, sm.chasers, sm.spits ?? null);
                 if (d.danger) { unsafe = { sm, d }; break; }
             }
         }
@@ -8829,7 +8890,15 @@ function execPull(run, perTick, resolved, ctx) {
  * typed beside the ruling (trap 89). A rung's own implementation is one
  * function below; the order is here and nowhere else.
  */
-export const ESCALATION_LADDER = Object.freeze(['avoid', 'pull', 'time', 'bait', 'kill']);
+export const ESCALATION_LADDER = Object.freeze(['avoid', 'dodge', 'pull', 'time', 'bait', 'kill']);
+
+/**
+ * ⛓ U15-swim D2 — THE DODGE RUNG's bounds: walk-offsets searched backwards from
+ * the hit in steps of `step`, stalls of 1..`maxTicks` (under one 54-tick volley
+ * period, so every phase of a turret's clock is reachable), and at most
+ * `maxPerSegment` stalls in one segment.
+ */
+const DODGE_RUNG = Object.freeze({ step: 4, maxTicks: 30, maxPerSegment: 12 });
 
 /**
  * The mover's search is SHORT — `mover.MOVER_RANGE`: tick-exact to ~8 px, an
@@ -9227,7 +9296,7 @@ export function deriveKillByChaser(run, body, contacts,
                 && !sm.chasers.some((b) => b.id === target.id)) deathTick = sm.tick;
             if (danger !== null) continue;
             const dg = dangerDuringTransit(run, sm.tick, playerBoxAt(sm.x, sm.y),
-                sm.arrows, sm.chasers);
+                sm.arrows, sm.chasers, sm.spits ?? null);
             if (dg.danger) danger = { tick: sm.tick, phase: sm.phase ?? 'transit', ...dg };
         }
         if (danger) {
@@ -10066,7 +10135,8 @@ export function solveSegment({
     const probeSamples = (samples, except = null) => {
         for (const s of samples) {
             const d = withoutSources(
-                dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers),
+                dangerDuringTransit(run, s.tick, playerBoxAt(s.x, s.y), s.arrows, s.chasers,
+                    s.spits ?? null),
                 except);
             if (d.danger) return { x: s.x, y: s.y, tick: s.tick, ...d };
         }
@@ -10209,8 +10279,10 @@ export function solveSegment({
      */
     /** ⛓ R9 slice L16 — the ropes whose pull stance a walk is heading for now. */
     const pullingRopes = new Set();
+    /** ⛓ U15-swim D2 — the DODGE rung's stalls this segment (`DODGE_RUNG.maxPerSegment`). */
+    let dodgesSpent = 0;
     const climbLadder = ({ goal, aim, contacts, allowTeleporter, what, hit,
-        dangerExcept = null }) => {
+        dangerExcept = null, corridor = null, axisAligned = false }) => {
         const escalations = [];
         climbNo += 1;
         const climb = climbNo;
@@ -10250,13 +10322,30 @@ export function solveSegment({
             .filter((v) => !(dangerExcept && dangerExcept.has(v.id)));
         let refused = null;
         let avoid = null;
-        try {
-            avoid = planWaypoints(run.world, run.state, aim, allowTeleporter,
-                solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: vols }));
-        } catch (e) {
-            if (!(e instanceof BotDriverV2Error)) throw e;
-            refused = { rung: 'avoid', why: `no admissible corridor with the danger map's `
-                + `${vols.length} volume(s) forbidden — ${e.message.slice(0, 200)}` };
+        /**
+         * ⛓ U15-swim D2 — A SPIT IS NOT A VOLUME. When every reason the probe gave
+         * is a `TurretSpit`, the danger is the walk's own TIMING (the turret aims
+         * at the player and its clock is the walk's), and no static volume the map
+         * can forbid holds it — so a re-plan around the volumes answers a
+         * different question. Measured: on L29 it chose a corridor that stalled
+         * 400 ticks against a tree, whose truncated preview then probed clean.
+         * Refused by name; DODGE below is the rung that asks the right one.
+         */
+        const spitOnly = hit.sources.length > 0 && hit.sources.every((s) => s.kind === 'spit');
+        if (spitOnly && corridor) {
+            refused = { rung: 'avoid', why: 'every reason the probe gave is a TurretSpit '
+                + `(${reasonsOf(hit).slice(0, 160)}); a spit is the walk's own timing, not a `
+                + 'static volume, so a re-plan around the danger map\'s volumes answers a '
+                + 'different question' };
+        } else {
+            try {
+                avoid = planWaypoints(run.world, run.state, aim, allowTeleporter,
+                    solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: vols }));
+            } catch (e) {
+                if (!(e instanceof BotDriverV2Error)) throw e;
+                refused = { rung: 'avoid', why: `no admissible corridor with the danger map's `
+                    + `${vols.length} volume(s) forbidden — ${e.message.slice(0, 200)}` };
+            }
         }
         if (avoid) {
             const still = probeCorridor(avoid, dangerExcept);
@@ -10271,6 +10360,68 @@ export function solveSegment({
                 + 'carry (a disc hazard); that gap is why the ladder has a second rung.' };
         }
         rowFor('avoid', null, { refusedWith: refused.why.slice(0, 120) });
+
+        /**
+         * ── rung 1¼: DODGE — the shooters' own clock (U15-swim D2) ──────────
+         *
+         * CONDITIONAL, like PULL: it exists only when every reason the probe
+         * gave is a `TurretSpit` (`dangerMap.spitDanger`). A turret's aim and
+         * its 40-tick clock are FUNCTIONS OF THE WALK — the clock re-arms out of
+         * range and the aim lags the player by a tenth per tick — so the same
+         * corridor walked a few ticks later inside a range meets every later
+         * spit somewhere else. The rung searches for that stall on the
+         * corridor's own preview: `at` from just before the hit backwards in
+         * steps of `DODGE_RUNG.step`, `ticks` from 1 to `DODGE_RUNG.maxTicks`,
+         * and the whole walk (the stall, then the corridor to its end) must
+         * probe clean with the same predicate (`probeSamples`).
+         *
+         * ⛓ IT DRIVES ONLY TO THE STALL'S END, then hands back `{}`: the walk
+         * re-plans from where it stands, with the turrets as THEY stand, and
+         * the ordinary probe certifies the rest. A corridor that still probes
+         * a spit climbs again; `DODGE_RUNG.maxPerSegment` bounds the stalls.
+         */
+        if (spitOnly && corridor) {
+            let dodge = null;
+            let dodgeWhy = null;
+            if (dodgesSpent >= DODGE_RUNG.maxPerSegment) {
+                dodgeWhy = `this segment has already stalled ${dodgesSpent} time(s) for a `
+                    + `spit (DODGE_RUNG.maxPerSegment ${DODGE_RUNG.maxPerSegment}) — a walk that `
+                    + 'keeps meeting one is not converging';
+            } else {
+                const lastAt = Math.max(0, hit.tick - run.ticksCompleted - 1);
+                search: for (let at = lastAt; at >= 0; at -= DODGE_RUNG.step) {
+                    for (let ticks = 1; ticks <= DODGE_RUNG.maxTicks; ticks += 1) {
+                        const walk = previewWalk(run, corridor, tolerance, axisAligned
+                            ? { strike: null, axisAligned, stall: { at, ticks } }
+                            : { strike: strikePolicyFor(run, { dashMode }), stall: { at, ticks } });
+                        if (walk.truncated && walk.truncated.kind !== 'crossed') continue;
+                        if (walk.samples.length < at + ticks) continue;
+                        if (probeSamples(walk.samples, dangerExcept)) continue;
+                        dodge = { at, ticks, walk };
+                        break search;
+                    }
+                }
+                if (!dodge) {
+                    dodgeWhy = `no stall of 1..${DODGE_RUNG.maxTicks} tick(s) at any walk-offset `
+                        + `${lastAt}..0 (step ${DODGE_RUNG.step}) clears the corridor of `
+                        + `${reasonsOf(hit)}`;
+                }
+            }
+            if (dodge) {
+                dodgesSpent += 1;
+                rowFor('dodge', refused, { stall: { at: dodge.at, ticks: dodge.ticks },
+                    spit: hit.sources[0].id });
+                for (const s of dodge.walk.samples.slice(0, dodge.at + dodge.ticks)) {
+                    const held = new Set(s.held);
+                    perTick.push(held);
+                    const { transition } = run.advance(held);
+                    if (transition) break;
+                }
+                return { escalations };
+            }
+            rowFor('dodge', refused);
+            refused = { rung: 'dodge', why: dodgeWhy };
+        }
 
         /**
          * ── rung 1½: PULL — the lane's own off switch (R9 slice L16, §59.4 D2) ──
@@ -11030,7 +11181,7 @@ export function solveSegment({
                  */
                 const climbed = climbLadder({
                     goal, aim, contacts, allowTeleporter, what, hit,
-                    dangerExcept: except,
+                    dangerExcept: except, corridor: wps, axisAligned,
                 });
                 if (climbed.wps) { wps = climbed.wps; } else { continue; }
             }

@@ -79,6 +79,8 @@ export { KILL_ARM_POLICY, MOBILE_DEATH_FADE, MODELLED_KILL_ARMS } from './enemyD
 export { FIRE_WINDOW, fireRect } from './fireVerb.js';
 // iceTurret.js — botDriverV2 · seedling 2
 export { ICE_TURRET, ICE_TURRET_PLAN } from './iceTurret.js';
+// ⛓ U15-swim D2: the turret spit's box, for `dangerMap.spitDanger`'s WAIT sweep.
+export { TURRET_SPIT } from './turret.js';
 // levelRun.js — botDriverV2 · physics 1
 export { createLevelRun } from './levelRun.js';
 // levelWorld.js — botDriverV2, dangerMap, hazards, solverBot, strikePolicy · seedling 3, physics 6

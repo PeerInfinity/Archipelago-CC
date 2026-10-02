@@ -178,6 +178,14 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
          * slice in a row this has happened to (trap 89). A re-derived tally
          * keeps being worth more than a list somebody remembers to edit.
          */
+        // ⛓ U15-swim D2: the turret forecast, the chaser forecast's shape exactly.
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'spitForecastNow',
+            addedBy: 'U15-swim D2', action: 'brand',
+            why: 'the spit forecast\'s blast-cover bag — hoisted once per FORECAST, for '
+                + '`chaserForecastNow`\'s reason: the previewed world is frozen at this '
+                + 'tick\'s geometry, so a per-tick rebuild would read nothing new.',
+        }),
         Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'chaserForecastNow',
             addedBy: 'R9 slice 12', action: 'brand',
@@ -1713,6 +1721,21 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
          * room skips it with no row — and `assertEscalationIsOrdered` accepts a
          * skip of a `conditional` rung and of no other.
          */
+        /**
+         * ⛓⛓ U15-swim D2 — THE SECOND CONDITIONAL RUNG, and it exists only where
+         * every reason the corridor probe gave is a `TurretSpit`: a turret's aim
+         * and clock are the walk's, so a STALL inside its range moves every later
+         * spit. Absent (no row) in any other climb.
+         */
+        Object.freeze({
+            rung: 'dodge',
+            conditional: true,
+            tool: 'a stall of 1..30 ticks at a walk-offset searched back from the hit, on the '
+                + 'corridor\'s own preview (`previewWalk`\'s `stall`), the whole walk probed '
+                + 'clean against `run.spitForecast()`; driven to the stall\'s end, then re-planned',
+            refusesWith: 'no stall clears the corridor (the rung is ABSENT, not refused, when '
+                + 'the probe named anything but a spit)',
+        }),
         Object.freeze({
             rung: 'pull',
             conditional: true,
