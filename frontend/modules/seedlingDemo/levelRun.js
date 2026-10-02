@@ -471,6 +471,14 @@ export const LEDGER_KIND_NAMES = Object.freeze([
  * state this model does not carry. The freeze is charged either way.
  * [[feedback_nodamage_prices_damage_not_freeze]]
  */
+/**
+ * ⛓ R4-swim D3: the key `previewStepper` carries the player's damage state on
+ * (`{hits, hitsTimer, directionFace}`) through a preview that started inside
+ * an i-frame. A SYMBOL so a state's JSON — and every memo keyed on it — is
+ * unchanged, while `{...st}` still copies it.
+ */
+const PREVIEW_DAMAGE = Symbol('previewDamage');
+
 export function createLevelRun({
     levelSource, boot, noclip = false, noHazards = [], noDamage = false, grants = [],
     persistence = [], equips = [], roles,
@@ -14227,16 +14235,52 @@ export function createLevelRun({
              * names a value instead of the name that holds it is a landmine
              * under the next flip (kickoff §40.6).
              */
+            /**
+             * ⛓⛓⛓ R4-swim D3 — **AND A PREVIEW STARTED INSIDE AN I-FRAME
+             * CARRIES IT**, the facing and the recovery both.
+             *
+             * The drive's own step passes `directionFace: damage.directionFace`
+             * (U11-swim D2) and `steerBlocked: !canSteer(damage)`, then runs
+             * `stepPlayerDamage` in the player's slot, which hands the parked
+             * facing back (`direction = directionFace`) on the recovery tick.
+             * A preview that froze both at the snapshot faced the way the
+             * knockback CARRIES the player for the whole window (measured on
+             * `u11-facing-knockback`'s staging: 18 of 18 ticks) and never
+             * steered again after it. The damage state rides the preview's own
+             * states on a SYMBOL key — `{...st}` copies it and `JSON.stringify`
+             * does not see it — and a caller's hand-built state falls back to
+             * the snapshot, which is exactly the old reading.
+             *
+             * ⛔ OUTSIDE AN I-FRAME NOTHING CHANGES: no hit has parked a facing
+             * and steering is open, so the closure is the one 12c built, field
+             * for field. No committed solve previews inside an i-frame.
+             */
+            const iFrame = damage.hitsTimer > 0 || damage.directionFace >= 0;
+            const damageAtStart = { ...damage };
             const step = (st, held, { dashImpulse = null } = {}) => {
-                const r = dashImpulse
-                    ? stepV2(st, held, { ...opts, dashImpulse })
-                    : stepV2(st, held, opts);
-                // ⛓ R3-swim: the RUN reboots a death; a PREVIEW has no world
-                // to reboot into, so it refuses with the words `step` used to
-                // throw — every planner caller already reads that refusal as a
-                // walk it cannot take.
+                if (!iFrame) {
+                    const r = dashImpulse
+                        ? stepV2(st, held, { ...opts, dashImpulse })
+                        : stepV2(st, held, opts);
+                    // ⛓ R3-swim: the RUN reboots a death; a PREVIEW has no world
+                    // to reboot into, so it refuses with the words `step` used to
+                    // throw — every planner caller already reads that refusal as a
+                    // walk it cannot take.
+                    if (r.death) throw deathRefusal(opts.level, st, r.death);
+                    return r;
+                }
+                const d = st[PREVIEW_DAMAGE] ?? damageAtStart;
+                const r = stepV2(st, held, {
+                    ...opts, dashImpulse, steerBlocked: !canSteer(d),
+                    directionFace: d.directionFace,
+                });
                 if (r.death) throw deathRefusal(opts.level, st, r.death);
-                return r;
+                const nd = stepPlayerDamage(d);
+                return {
+                    ...r,
+                    ...(nd.recovered && nd.direction !== null ? { direction: nd.direction } : {}),
+                    [PREVIEW_DAMAGE]: nd.state,
+                };
             };
             /**
              * ⛓⛓ U12-swim D1: AND THE PULLS, AHEAD OF THE STEP, as `advance`

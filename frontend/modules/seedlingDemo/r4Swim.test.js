@@ -10,6 +10,12 @@
  * (`r4-iceturret-bobs`) replays through tapeRunner; what it cannot show is the
  * DERIVATION the refusal was replaced by — both sides of the turret's flip on
  * every bridged chaser's own `solids`.
+ *
+ * D3: `previewStepper` from inside a knockback's i-frame. A preview is the
+ * solver's ETA for the walk the drive then takes (⚖ §13.10a), so the oracle
+ * is the drive itself: the same keys, from the same mid-knockback state, tick
+ * by tick. Held `up` (away from `bob@64,64`), so no second contact lands in
+ * the drive — a hit is the one thing a preview never models.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -65,5 +71,53 @@ describe('R4-swim D2: the IceTurret\'s flip is invisible to every bridged chaser
         expect(run.chaserTerrainDeaths.map((d) => `${d.id}:${d.cause}@${d.t}`))
             .toEqual(['bob@352,448:pit@53', 'bob@352,416:pit@67']);
         expect(run.volleys.map((v) => v.t)).toEqual([4, 49, 94, 139]);
+    });
+});
+
+describe('R4-swim D3: a preview started inside an i-frame is the drive', () => {
+    const HIT_AFTER = 21;
+    const AHEAD = 30;
+    const mid = () => {
+        const tape = loadTape('u11-facing-knockback');
+        const run = createRunForStaging(stagingFromTape(tape), atlasLevelSource());
+        for (let t = 0; t < HIT_AFTER; t += 1) run.advance(heldKeysAt(tape, t));
+        return run;
+    };
+
+    it('the staging is mid-knockback: the facing parked DOWN, the knockback carrying the player UP', () => {
+        const run = mid();
+        expect(run.damage).toEqual({ hits: 1, hitsTimer: 18, directionFace: 3 });
+        expect(run.state.vy).toBeLessThan(0);
+    });
+
+    it('facing, position and the recovery agree with the drive on every one of 30 ticks', () => {
+        const live = mid();
+        const step = live.previewStepper();
+        const held = new Set(['up']);
+        let st = live.state;
+        const preview = [];
+        for (let k = 0; k < AHEAD; k += 1) {
+            st = step(st, held);
+            preview.push({ x: st.x, y: st.y, direction: st.direction });
+        }
+        const drive = [];
+        for (let k = 0; k < AHEAD; k += 1) {
+            live.advance(held);
+            drive.push({ x: live.state.x, y: live.state.y, direction: live.state.direction });
+        }
+        expect(preview).toEqual(drive);
+        // The window really spans both halves: the parked facing (3) through
+        // the i-frame, then the hand-back and steering north (1) after it.
+        expect(drive[0].direction).toBe(3);
+        expect(drive[AHEAD - 1].direction).toBe(1);
+        expect(drive[AHEAD - 1].y).toBeLessThan(drive[17].y);
+    });
+
+    it('a preview OUTSIDE an i-frame carries no damage key — the 12c closure, unchanged', () => {
+        const tape = loadTape('u11-facing-knockback');
+        const run = createRunForStaging(stagingFromTape(tape), atlasLevelSource());
+        for (let t = 0; t < 5; t += 1) run.advance(heldKeysAt(tape, t));
+        const next = run.previewStepper()(run.state, new Set(['down']));
+        expect(Object.getOwnPropertySymbols(next)).toEqual([]);
     });
 });
