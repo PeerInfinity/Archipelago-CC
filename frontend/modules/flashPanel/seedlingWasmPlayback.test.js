@@ -281,12 +281,13 @@ describe('W3 — a divergence: botReset + forced re-arrival + re-solve, bounded,
     });
 
     it('a PERSISTENT divergence fails BY NAME after 3 recoveries (4 plans played), the tape released, nothing more started', () => {
-        const e = engineOver(A, { perturb: pushRight() });
+        // ⛓ W4 — a NEW divergence each attempt (tick 5, 6, 7, 8): an exact repeat fails sooner (next row)
+        const e = engineOver(A, { perturb: (rows, attempt) => pushRight(5 + attempt)(rows) });
         e.engine.walkTo(CHEST);
         e.timers.run();
         expect(e.dones).toEqual([]);
         expect(e.failures).toHaveLength(1);
-        expect(e.failures[0]).toMatch(/the game left the plan 4 times on Starting House - Chest in level 86 \(gave up after 3 forced re-arrivals, the bound is 3\); last at tick 5/);
+        expect(e.failures[0]).toMatch(/the game left the plan 4 times on Starting House - Chest in level 86 \(gave up after 3 forced re-arrivals, the bound is 3\); last at tick 8/);
         expect(e.teleports).toHaveLength(4);
         expect(e.service.seen).toHaveLength(4);
         expect(e.engine.stats.history.map((x) => x.outcome)).toEqual(['diverged', 'diverged', 'diverged', 'failed']);
@@ -296,8 +297,37 @@ describe('W3 — a divergence: botReset + forced re-arrival + re-solve, bounded,
         expect(e.timers.pending).toBe(0); // no silent wait left behind
     });
 
+    it('⛓ W4 — an EXACT repeat (same tick, same game row) fails BY NAME after 2 plans (1 forced re-arrival), not 4', () => {
+        const e = engineOver(A, { perturb: pushRight() });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones).toEqual([]);
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/^the game left the plan on Starting House - Chest in level 86 at the SAME tick with the SAME game row 2 times in a row \(gave up after 1 forced re-arrival: .*\); at tick 5: expected .*, game /);
+        expect(e.teleports).toHaveLength(2);
+        expect(e.service.seen).toHaveLength(2);
+        expect(e.engine.stats.history.map((x) => x.outcome)).toEqual(['diverged', 'failed']);
+        expect(e.engine.stats.history.at(-1).recoveries).toBe(1);
+        expect(e.engine.stats).toMatchObject({ divergences: 2, recoveries: 1, forced: 2, ships: 2 });
+        expect(e.game.calls.at(-1)).toBe('botReset');
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.timers.pending).toBe(0);
+    });
+
+    it('⛓ W4 — the repeat memory is PER GOAL: the next goal\'s first divergence (the same tick and row) recovers', () => {
+        const e = engineOver(A, { perturb: (rows, attempt) => (attempt === 0 || attempt === 2 ? pushRight()(rows) : rows) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones).toHaveLength(1);
+        e.game.be = { ...e.game.be, 'save.time': 0 };
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        // goal 2's first plan (attempt 2) diverges exactly as goal 1's did — a recovery, not a repeat
+        expect(e.engine.stats.history.map((x) => x.outcome)).toEqual(['diverged', 'done', 'diverged', 'done']);
+    });
+
     it('the bound is PER GOAL: the next goal starts with a fresh count', () => {
-        const e = engineOver(A, { perturb: (rows, attempt) => (attempt < 3 ? pushRight()(rows) : rows) });
+        const e = engineOver(A, { perturb: (rows, attempt) => (attempt < 3 ? pushRight(5 + attempt)(rows) : rows) });
         e.engine.walkTo(CHEST);
         e.timers.run();
         expect(e.dones[0].recoveries).toBe(3); // 3 spent, the 4th plan on plan: done, not failed
@@ -402,19 +432,26 @@ describe('WG — a GENERATED room (the recorded p4e arrivals on seedling_generat
         expect(e.dones[0].expectedEnd.level).toBe(2);
     });
 
-    it('W3 on a walker tape: ONE divergence recovers (re-entered, re-walked, done); a PERSISTENT one fails by name after 3', () => {
+    it('W3 on a walker tape: ONE divergence recovers (re-entered, re-walked, done); a PERSISTENT one fails by name after 3 (⛓ W4: an exact repeat after 1)', () => {
         const once = genEngine(G_A0, { perturb: (rows, attempt) => (attempt === 0 ? pushRight()(rows) : rows) });
         once.engine.walkTo(KEY_BLUE);
         once.timers.run();
         expect(once.failures).toEqual([]);
         expect(once.engine.stats.history.map((x) => [x.outcome, x.producer])).toEqual([['diverged', 'walker'], ['done', 'walker']]);
         expect(once.dones[0].recoveries).toBe(1);
-        const always = genEngine(G_A0, { perturb: pushRight() });
+        const always = genEngine(G_A0, { perturb: (rows, attempt) => pushRight(5 + attempt)(rows) });
         always.engine.walkTo(KEY_BLUE);
         always.timers.run();
         expect(always.failures).toHaveLength(1);
         expect(always.failures[0]).toMatch(/the game left the plan 4 times on region_0_0__key_blue_pickup in level 0 \(gave up after 3 forced re-arrivals, the bound is 3\)/);
         expect(always.timers.pending).toBe(0);
+        // ⛓ W4 — the same divergence every time: an exact repeat, failed after 2 walks
+        const same = genEngine(G_A0, { perturb: pushRight() });
+        same.engine.walkTo(KEY_BLUE);
+        same.timers.run();
+        expect(same.failures).toHaveLength(1);
+        expect(same.failures[0]).toMatch(/at the SAME tick with the SAME game row 2 times in a row/);
+        expect(same.timers.pending).toBe(0);
     });
 
     it('a goal the walker cannot turn into a tape: the producer\'s refusal RELEASES the freeze and fails by name', () => {

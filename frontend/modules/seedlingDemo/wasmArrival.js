@@ -44,7 +44,7 @@
 import { SEAM_BOOT_SPEC, SEAM_PREBUILD_FIELDS, SEAM_SIGNATURE, segmentBootFromLatch } from './r7Acceptance.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { liveOf, solverGoalFor } from './jsRuntimeSolver.js';
-import { goalTiles, latchedOn, nearestTeleporterAt } from './jsRuntimeWalker.js';
+import { goalTiles, latchedOn, nearestPitAt, nearestTeleporterAt, stepOffPoint } from './jsRuntimeWalker.js';
 import { JS_RUNTIME_PINS, locationEntityOf } from './jsRuntimeCore.js';
 import { ITEM_PROPERTIES, PIN_NAMES } from './tapeFormat.js';
 
@@ -329,10 +329,21 @@ export function arrivalStagingWitness(staging, { seam, status, state }) {
 /**
  * Step 3a — the solver goal for an AP-vocabulary goal (`resolveSeedlingAtlasGoal`'s
  * `{kind: 'location'|'exit', level, …}`) in the FRESH staged run — the JS page's
- * mapping (`jsRuntimeSolver.solverGoalFor`, with the walker's teleporter
+ * mapping (`jsRuntimeSolver.solverGoalFor`, with the walker's teleporter / pit
  * resolution and the core's location entity), not a second one.
  *
- * @returns {{goal: object}|{walker: string}} `walker` = the solver has no goal for it, named
+ * ⛓ W4 — two arrival composites the JS page serves with its walker:
+ *   · a PIT exit (S4): no teleporter on the exit's cells → the nearest live pit
+ *     → `reach-pit`. The fall is the game's own crossing (no `pendingExit`).
+ *   · an arrival LATCHED ON its goal door (S5): the answer carries
+ *     `stepOff: {index, point}` with the door's `reach-exit` — the request is
+ *     then the worker's `step-off` producer (`wasmWalkTape.stepOffSolveFromStaging`:
+ *     the walker steps off, the solver walks back, ONE tape from the arrival).
+ *     A closed pocket (no cell next to the door can be walked to — L3 bare,
+ *     L37's lava) is refused BY NAME here, before anything is solved.
+ *
+ * @returns {{goal: object, stepOff?: {index:number, point:{x:number, y:number}}}|{walker: string}}
+ *   `walker` = the solver has no goal for it, named
  */
 export function arrivalSolverGoal(goal, { staging, levelSource, record }) {
     if (goal?.level !== staging.boot.level) {
@@ -342,16 +353,23 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record }) {
     const run = createRunForStaging(staging, levelSource);
     let resolved = null;
     if (goal.kind === 'exit') {
-        const hit = nearestTeleporterAt(run.world, goalTiles(goal), run.state);
-        // ⛓ S5 / W3 — an arrival LATCHED ON its goal door: the solver's walk to a point it already
-        // stands on fires nothing (it would stall 400 ticks and decline). The JS page's walker steps
-        // off first; the wasm runtime has no step-off yet (it would solve from a non-arrival — the
-        // S0 `prefix` continuation), so the goal is refused BY NAME, before anything moves.
+        const tiles = goalTiles(goal);
+        const hit = nearestTeleporterAt(run.world, tiles, run.state);
         if (hit && latchedOn(run, hit.index)) {
-            return { walker: `the arrival stands latched ON the goal door ${goal.name ?? ''} (an arrival on the door, S5) — `
-                + 'the wasm runtime cannot step off it yet (a step-off needs a continuation solve from a non-arrival)' };
+            const point = stepOffPoint(run, hit.index);
+            if (!point) {
+                return { walker: `level ${goal.level}: the arrival stands latched on the teleporter at `
+                    + `(${hit.teleporter.x}, ${hit.teleporter.y}) and no cell next to it can be walked to `
+                    + '— a crossing needs the player to step off it and back on (a closed pocket, S5)' };
+            }
+            return { goal: { kind: 'reach-exit', exit: { x: hit.teleporter.x, y: hit.teleporter.y } },
+                stepOff: { index: hit.index, point } };
         }
-        resolved = { allowTeleporter: hit ? hit.index : null };
+        if (hit) resolved = { allowTeleporter: hit.index };
+        else {
+            const pit = nearestPitAt(run.world, tiles, run.state);
+            resolved = pit ? { allowTeleporter: null, pit: { tx: pit.tx, ty: pit.ty } } : { allowTeleporter: null };
+        }
     }
     const placement = goal.kind === 'location' ? locationEntityOf(record, goal.tag, goal.entityType ?? null) : null;
     return solverGoalFor(goal, { run, resolved, placement, mounted: false });
@@ -366,7 +384,7 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record }) {
  * W1's default (false) is kept for its fixture rows.
  */
 export function arrivalSolveRequest({ staging, solverGoal, levelSource, records, name = 'wasm-arrival-solve',
-    scratchPersistence = false }) {
+    scratchPersistence = false, stepOffGoal = null }) {
     const fresh = createRunForStaging(staging, levelSource);
     return {
         staging,
@@ -378,5 +396,11 @@ export function arrivalSolveRequest({ staging, solverGoal, levelSource, records,
         equips: null,
         levelSource,
         source: { records },
+        // ⛓ W4 — an arrival latched on its goal door: the worker's step-off producer (the
+        // walker's step-off as the solve's `prefix`, one composite plan from the arrival).
+        ...(stepOffGoal ? { producer: STEP_OFF_PRODUCER, goal: { ...stepOffGoal } } : {}),
     };
 }
+
+/** ⛓ W4 — the producer name of a latched-door composite (walker step-off ++ solver plan). */
+export const STEP_OFF_PRODUCER = 'step-off';

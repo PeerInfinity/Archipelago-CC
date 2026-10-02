@@ -39,9 +39,16 @@
  *      `botReset` + a FORCED RE-ARRIVAL at the spawn the arrival recorded +
  *      a fresh solve from the new arrival (steps 2–6 again), at most
  *      `MAX_RECOVERIES` per goal; the divergence after the last is a named
- *      failure (`divergenceFailure` → `playback:walkFailed`). A
- *      `SealController` freeze drains NO rows, so it is never a divergence
- *      (⚖ W0-Q2).
+ *      failure (`divergenceFailure` → `playback:walkFailed`). ⛓ W4: a
+ *      divergence that EXACTLY repeats the goal's previous one (same tick,
+ *      same game row — a deterministic residue a re-solve replays) fails at
+ *      once (`divergenceRepeatFailure`). A `SealController` freeze drains NO
+ *      rows, so it is never a divergence (⚖ W0-Q2).
+ *
+ * ⛓ W4 — ARRIVAL COMPOSITES. A PIT exit maps to `reach-pit` (the fall is the
+ * game's crossing). An arrival LATCHED ON its goal door is solved by the
+ * worker's `step-off` producer: the walker's step-off ++ the solver's walk
+ * back, ONE plan and ONE tape from the arrival (`wasmWalkTape.stepOffSolveFromStaging`).
  *
  * ⛓ WG — GENERATED ROOMS (`flash_seedling_gen`, `generated: true`). The
  * rooms are a MOUNTED level set, so the engine's level source is the set the
@@ -65,7 +72,7 @@
 
 import { arrivalSolveRequest, arrivalSolverGoal, isArrival, stagingFromWasmArrival } from '../seedlingDemo/wasmArrival.js';
 import {
-    divergenceAction, divergenceFailure, exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, MAX_RECOVERIES,
+    divergenceAction, divergenceFailure, divergenceRepeatFailure, exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, MAX_RECOVERIES,
     keysHeldAtReset, MID_ROOM_POLICY, shippedTape, TAPE_KEY_RELEASES, wasmGoalRefusal,
 } from '../seedlingDemo/wasmPlayback.js';
 import { LOAD_BUDGET_MS, SOLVER_BUDGET_MS } from '../seedlingDemo/jsRuntimeSolver.js';
@@ -125,6 +132,8 @@ export function createWasmPlayback({
     /** W3: the forced re-arrivals this goal has spent, and the spawn its arrival recorded. */
     let recoveries = 0;
     let spawn = null;
+    /** ⛓ W4 — this goal's last divergence (an exact repeat fails at once). */
+    let lastDivergence = null;
     /** Warm the worker now, so the first solve does not pay the module load inside its budget (S2). */
     try { svc().warm?.(); } catch { /* no Worker here: the first start says so */ }
     const stats = { arrivals: 0, forced: 0, solves: 0, ships: 0, hostStarts: [], done: 0, failed: 0, divergences: 0,
@@ -256,6 +265,7 @@ export function createWasmPlayback({
         reset();
         goal = g;
         recoveries = 0;
+        lastDivergence = null;
         spawn = action === 'force-re-arrival' ? { x: live.playerPositionX, y: live.playerPositionY } : null;
         if (action === 'force-re-arrival') {
             reArrive(`re-entering level ${g.level} to solve from an arrival (${MID_ROOM_POLICY})`);
@@ -338,8 +348,9 @@ export function createWasmPlayback({
         } else {
             const mapped = arrivalSolverGoal(goal, { staging, levelSource, record });
             if (!mapped.goal) { fail(`the solver has no goal for ${goal.name ?? goal.kind}: ${mapped.walker}`); return; }
+            // ⛓ W4 — latched on the goal door: the worker's step-off composite (one tape from the arrival).
             request = arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource, records,
-                name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
+                name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true, stepOffGoal: mapped.stepOff ? goal : null });
         }
         stats.solves += 1;
         play = { staging, arrivalStatus: st, t0: now() };
@@ -443,7 +454,8 @@ export function createWasmPlayback({
     function diverged() {
         const d = play.divergence;
         const st = status();
-        const action = divergenceAction({ goal, recoveries, status: st });
+        const action = divergenceAction({ goal, recoveries, status: st, divergence: d, previous: lastDivergence });
+        lastDivergence = d;
         if (action === 'done') {
             log(`[wasm playback] ${goal.name ?? goal.kind}: its clear already landed — done despite the divergence`, 'warn');
             release(st); // the tape is still armed; the room is the player's again
@@ -451,6 +463,7 @@ export function createWasmPlayback({
             return;
         }
         if (action === 'fail') { fail(divergenceFailure({ goal, recoveries, divergence: d })); return; }
+        if (action === 'repeat') { fail(divergenceRepeatFailure({ goal, recoveries, divergence: d })); return; }
         recoveries += 1;
         stats.recoveries += 1;
         history.push({ goal, outcome: 'diverged', producer: play.plan.producer ?? 'solver', recovery: recoveries, ticks: play.ticks, drained: play.progress.ticks,
@@ -463,7 +476,7 @@ export function createWasmPlayback({
     }
 
     function finish(st) {
-        const done = { goal, producer: play.plan.producer ?? 'solver', ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
+        const done = { goal, producer: play.plan.producer ?? 'solver', stepOff: play.plan.stepOff ?? null, ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
             solvedMs: play.solvedMs, divergence: play.divergence, recoveries, end: { level: st.level, x: st.x, y: st.y },
             expectedEnd: play.plan.expected.at(-1) };
         ours = false; // finished and un-held: nothing of ours is armed

@@ -12,7 +12,8 @@
  *   page → worker  `{type: 'solve', id, request}` — `request` is the tape
  *                  (`staging`, `perTick`, `live`, `solverGoal`, `name`,
  *                  `scratchPersistence`, `equips`; ⛓ WG: or `producer: 'walker'`
- *                  + `goal` — `wasmWalkTape.walkTapeFromStaging`) and `source: {id,
+ *                  + `goal` — `wasmWalkTape.walkTapeFromStaging`; ⛓ W4: or
+ *                  `producer: 'step-off'` + `goal` — `stepOffSolveFromStaging`) and `source: {id,
  *                  records?}`: the room records arrive ONCE per worker and are
  *                  kept by id (`records` omitted on later solves).
  *   worker → page  `{type: 'started', id}` the moment the solve begins (the
@@ -31,7 +32,8 @@
 
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { settleSolve, solveFromTape } from './jsRuntimeSolver.js';
-import { walkTapeFromStaging, WALK_TAPE_PRODUCER } from './wasmWalkTape.js';
+import { stepOffSolveFromStaging, walkTapeFromStaging, WALK_TAPE_PRODUCER } from './wasmWalkTape.js';
+import { STEP_OFF_PRODUCER } from './wasmArrival.js';
 
 /** source id -> `{levelSource, records}`: the room records this worker has been sent. */
 const sources = new Map();
@@ -47,9 +49,13 @@ self.onmessage = (event) => {
     self.postMessage({ type: 'started', id });
     // ⛓ WG — `producer: 'walker'` (a generated room on wasm): the J2 walker drives a fresh run
     // from the staging and its keys are the plan (`wasmWalkTape.js`); the plan has the same shape.
+    // ⛓ W4 — `producer: 'step-off'` (an arrival latched on its goal door): the walker's step-off
+    // as the solve's `prefix`, returned as ONE composite plan from the arrival.
     const produce = request.producer === WALK_TAPE_PRODUCER
         ? () => walkTapeFromStaging({ ...request, levelSource: held.levelSource, records: held.records, clock })
-        : () => solveFromTape({ ...request, levelSource: held.levelSource, clock });
+        : request.producer === STEP_OFF_PRODUCER
+            ? () => stepOffSolveFromStaging({ ...request, levelSource: held.levelSource, clock })
+            : () => solveFromTape({ ...request, levelSource: held.levelSource, clock });
     const answer = held
         ? settleSolve(produce)
         : { ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };

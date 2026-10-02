@@ -13,7 +13,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    MAX_RECOVERIES, MID_ROOM_POLICY, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure,
+    MAX_RECOVERIES, MID_ROOM_POLICY, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure, divergenceRepeatFailure, isExactRepeat,
     exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, keysHeldAtReset, shippedTape, wasmGoalRefusal,
 } from './wasmPlayback.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
@@ -180,6 +180,38 @@ describe('divergenceAction / divergenceFailure — W3\'s recovery policy (⚖ W-
             divergence: { t: 7, expected: { level: HOUSE, x: 56, y: 50 }, got: { level: HOUSE, x: 58, y: 50 } } });
         expect(msg).toBe('the game left the plan 4 times on Starting House - Chest in level 86 (gave up after 3 forced '
             + 're-arrivals, the bound is 3); last at tick 7: expected {"level":86,"x":56,"y":50}, game {"level":86,"x":58,"y":50}');
+    });
+});
+
+describe('⛓ W4 — an EXACT repeat fails fast (isExactRepeat, divergenceAction → repeat, divergenceRepeatFailure)', () => {
+    const DOOR = { kind: 'exit', level: HOUSE, tiles: [[3, 4]], name: 'exit_S' };
+    const CHEST = { kind: 'location', level: HOUSE, tag: 0, name: 'Starting House - Chest' };
+    const d = (t, x, y = 50) => ({ t, expected: { level: HOUSE, x: 56, y: 50 }, got: { level: HOUSE, x, y } });
+    it('the same tick and the same game row (===) is a repeat; another tick, x, y, level or no previous is not', () => {
+        expect(isExactRepeat(d(54, 58.1), d(54, 58.1))).toBe(true);
+        expect(isExactRepeat(d(54, 58.1), d(55, 58.1))).toBe(false);
+        expect(isExactRepeat(d(54, 58.1), d(54, 58.1 + 1e-14))).toBe(false);
+        expect(isExactRepeat(d(54, 58.1), d(54, 58.1, 51))).toBe(false);
+        expect(isExactRepeat(d(54, 58.1), { ...d(54, 58.1), got: { level: 0, x: 58.1, y: 50 } })).toBe(false);
+        expect(isExactRepeat(null, d(54, 58.1))).toBe(false);
+        expect(isExactRepeat(d(54, 58.1), null)).toBe(false);
+        // the EXPECTED side is the plan's — a re-solve may plan differently; only the game's row decides
+        expect(isExactRepeat(d(54, 58.1), { ...d(54, 58.1), expected: { level: HOUSE, x: 0, y: 0 } })).toBe(true);
+    });
+    it('divergenceAction: the first divergence recovers, its exact repeat → repeat (before the bound); a new one recovers', () => {
+        expect(divergenceAction({ goal: DOOR, recoveries: 0, divergence: d(54, 58.1), previous: null })).toBe('recover');
+        expect(divergenceAction({ goal: DOOR, recoveries: 1, divergence: d(54, 58.1), previous: d(54, 58.1) })).toBe('repeat');
+        expect(divergenceAction({ goal: DOOR, recoveries: 1, divergence: d(60, 58.1), previous: d(54, 58.1) })).toBe('recover');
+        expect(divergenceAction({ goal: DOOR, recoveries: 3, divergence: d(60, 58.1), previous: d(54, 58.1) })).toBe('fail');
+        // a landed clear still wins: the goal is done whatever the divergence was
+        expect(divergenceAction({ goal: CHEST, recoveries: 1, status: { persistence_cleared: [{ level: HOUSE, tag: 0 }] },
+            divergence: d(54, 58.1), previous: d(54, 58.1) })).toBe('done');
+    });
+    it('the repeat failure names the goal, the attempts, the tick and both rows', () => {
+        expect(divergenceRepeatFailure({ goal: DOOR, recoveries: 1, divergence: d(54, 58.1) })).toBe(
+            'the game left the plan on exit_S in level 86 at the SAME tick with the SAME game row 2 times in a row (gave up '
+            + 'after 1 forced re-arrival: an exact repeat is a deterministic model/game residue, which a re-solve from the '
+            + 'same arrival replays); at tick 54: expected {"level":86,"x":56,"y":50}, game {"level":86,"x":58.1,"y":50}');
     });
 });
 

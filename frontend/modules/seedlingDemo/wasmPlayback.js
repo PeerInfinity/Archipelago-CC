@@ -240,6 +240,12 @@ export const MAX_RECOVERIES = 3;
  *              open" refusal, so the leg ends done, its divergence recorded.
  *              An exit cannot get here: `firstDivergence` already counts a
  *              row out of the room as agreeing.
+ *   'repeat'   ⛓ W4 — this divergence EXACTLY repeats the goal's previous one
+ *              (`isExactRepeat`: the same tick, the same game row). A
+ *              re-arrival re-solves the same plan from the same staging, so a
+ *              deterministic model/game residue recurs every time (§1.2 of the
+ *              wasm-solver plan: L28/L30/L45/L88 diverged at the same tick and
+ *              position on all 4 attempts) — fail by name now, not after the bound.
  *   'recover'  `botReset` + a forced re-arrival + a fresh solve from it.
  *   'fail'     `recoveries` already spent `MAX_RECOVERIES` — a named failure,
  *              never a silent stall and never a walk on blind.
@@ -251,13 +257,26 @@ export const MAX_RECOVERIES = 3;
  * respawn (a position mismatch); a `SealController` freeze shows as NO new
  * rows (never a wrong row), so it can never reach this function (⚖ W0-Q2).
  *
- * @param {{goal:object, recoveries:number, status?:object|null}} o  `status` = one `botStatus` read at the divergence
- * @returns {'done'|'recover'|'fail'}
+ * @param {{goal:object, recoveries:number, status?:object|null, divergence?:object|null, previous?:object|null}} o
+ *   `status` = one `botStatus` read at the divergence; `previous` = the goal's last divergence (null on the first)
+ * @returns {'done'|'repeat'|'recover'|'fail'}
  */
-export function divergenceAction({ goal, recoveries, status = null }) {
+export function divergenceAction({ goal, recoveries, status = null, divergence = null, previous = null }) {
     if (goal?.kind === 'location' && Number.isInteger(goal.tag)
         && (status?.persistence_cleared ?? []).some((c) => c.level === goal.level && c.tag === goal.tag)) return 'done';
+    if (isExactRepeat(previous, divergence)) return 'repeat';
     return recoveries >= MAX_RECOVERIES ? 'fail' : 'recover';
+}
+
+/**
+ * ⛓ W4 — whether divergence `d` is EXACTLY `prev` again: the same tick and the
+ * same game row (level, x, y — the doubles the drain carried, compared with
+ * `===`). Anything less (another tick, a game row 1e-15 px off) is a new
+ * divergence and the recovery is spent as before.
+ */
+export function isExactRepeat(prev, d) {
+    if (!prev || !d) return false;
+    return prev.t === d.t && prev.got?.level === d.got?.level && prev.got?.x === d.got?.x && prev.got?.y === d.got?.y;
 }
 
 /** The named failure for a goal that diverged after spending every recovery. */
@@ -266,6 +285,15 @@ export function divergenceFailure({ goal, recoveries, divergence }) {
     return `the game left the plan ${recoveries + 1} times on ${goal?.name ?? goal?.kind} in level ${goal?.level} `
         + `(gave up after ${recoveries} forced re-arrival${recoveries === 1 ? '' : 's'}, the bound is ${MAX_RECOVERIES}); `
         + `last at tick ${d?.t}: expected ${JSON.stringify(d?.expected)}, game ${JSON.stringify(d?.got)}`;
+}
+
+/** ⛓ W4 — the named failure for a divergence that exactly repeats the previous one. */
+export function divergenceRepeatFailure({ goal, recoveries, divergence }) {
+    const d = divergence;
+    return `the game left the plan on ${goal?.name ?? goal?.kind} in level ${goal?.level} at the SAME tick with the SAME `
+        + `game row ${recoveries + 1} times in a row (gave up after ${recoveries} forced re-arrival${recoveries === 1 ? '' : 's'}: `
+        + 'an exact repeat is a deterministic model/game residue, which a re-solve from the same arrival replays); '
+        + `at tick ${d?.t}: expected ${JSON.stringify(d?.expected)}, game ${JSON.stringify(d?.got)}`;
 }
 
 /**
