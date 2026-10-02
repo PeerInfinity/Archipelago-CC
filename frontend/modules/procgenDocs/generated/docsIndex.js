@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 26,
         "headings": 957,
         "indexHeadings": 2,
-        "lines": 22661,
+        "lines": 22669,
         "pages": 4,
-        "words": 266864
+        "words": 267557
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -68,7 +68,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 4628
+            "words": 4673
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -177,7 +177,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/playback-and-debugging.md",
-            "words": 1116
+            "words": 1171
         },
         {
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",
@@ -395,7 +395,7 @@ export const DOCS_INDEX = frz({
             "file": "flash.md",
             "h1": "Flash Substrate",
             "headings": 29,
-            "lines": 404,
+            "lines": 412,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -406,7 +406,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 9179
+            "words": 9772
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",
