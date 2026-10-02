@@ -1,0 +1,220 @@
+{
+ "slice": "seedling-swim-u14",
+ "segment": "r9-solve-29",
+ "routeStep": 27,
+ "rooms": "L29 -> L31",
+ "tape": {
+  "ticks": 383,
+  "boot": {
+   "level": 29,
+   "x": 16,
+   "y": 224
+  }
+ },
+ "firstDivergentTick": 196,
+ "differential": "tick 196 differs: expected (x=108.42416035523557, y=149.2682929719388, level=29), got (x=109.05000000000003, y=151.7000000000001, level=29) [dx=0.6258396447644543, dy=2.431707028061311]",
+ "gameEnd": {
+  "hits": 1,
+  "hasKey": [
+   true,
+   false,
+   false,
+   false,
+   false
+  ],
+  "deadFrames": 192,
+  "saveTime": 16101
+ },
+ "modelEnd": {
+  "hits": 0,
+  "hasKey": [
+   true,
+   true,
+   false,
+   false,
+   false
+  ],
+  "deadFramesCounted": 190,
+  "clock": 16099
+ },
+ "turrets": [
+  {
+   "id": "turret@80,176",
+   "centre": {
+    "x": 88,
+    "y": 184
+   },
+   "gameEntersRangeAt": 31
+  },
+  {
+   "id": "turret@128,192",
+   "centre": {
+    "x": 136,
+    "y": 200
+   },
+   "gameEntersRangeAt": 89
+  },
+  {
+   "id": "turret@112,240",
+   "centre": {
+    "x": 120,
+    "y": 248
+   },
+   "gameEntersRangeAt": null
+  }
+ ],
+ "closestToTurret80_176": 15.9,
+ "attribution": "Enemies/Turret.as:64-76 (aim inside attackRange 64; shootTimerMax 40; startshot -> TurretSpit at shotSpeed 3) + Projectiles/TurretSpit.as:47-53 (collideTypesInto -> Player.hit(null, v.length, spit position)). The model steps neither (combat.js prices the turret as a 64 px volume; the solver's danger list at L29 was empty), so its walk passes 15.9 px from turret@80,176 and takes no hit.",
+ "perTick": [
+  {
+   "t": 188,
+   "held": "",
+   "gx": 103.55,
+   "gy": 152.05,
+   "mx": 103.55,
+   "my": 152.05,
+   "dTurret": "35.5/57.9/97.3",
+   "same": true
+  },
+  {
+   "t": 189,
+   "held": "",
+   "gx": 103.55,
+   "gy": 151.75,
+   "mx": 103.55,
+   "my": 151.75,
+   "dTurret": "35.8/58.1/97.6",
+   "same": true
+  },
+  {
+   "t": 190,
+   "held": "",
+   "gx": 103.55,
+   "gy": 151.7,
+   "mx": 103.55,
+   "my": 151.7,
+   "dTurret": "35.8/58.2/97.7",
+   "same": true
+  },
+  {
+   "t": 191,
+   "held": "",
+   "gx": 103.55,
+   "gy": 151.7,
+   "mx": 103.55,
+   "my": 151.7,
+   "dTurret": "35.8/58.2/97.7",
+   "same": true
+  },
+  {
+   "t": 192,
+   "held": "right",
+   "gx": 104.35,
+   "gy": 151.7,
+   "mx": 104.35,
+   "my": 151.7,
+   "dTurret": "36.2/57.7/97.6",
+   "same": true
+  },
+  {
+   "t": 193,
+   "held": "right",
+   "gx": 105.7,
+   "gy": 151.7,
+   "mx": 105.7,
+   "my": 151.7,
+   "dTurret": "36.8/57.0/97.4",
+   "same": true
+  },
+  {
+   "t": 194,
+   "held": "right",
+   "gx": 106.8,
+   "gy": 151.7,
+   "mx": 106.8,
+   "my": 151.7,
+   "dTurret": "37.4/56.4/97.2",
+   "same": true
+  },
+  {
+   "t": 195,
+   "held": "right",
+   "gx": 107.65,
+   "gy": 151.7,
+   "mx": 107.65,
+   "my": 151.7,
+   "dTurret": "37.8/56.0/97.1",
+   "same": true
+  },
+  {
+   "t": 196,
+   "held": "right",
+   "gx": 108.424,
+   "gy": 149.268,
+   "mx": 109.05,
+   "my": 151.7,
+   "dTurret": "40.3/57.7/99.4",
+   "same": false
+  },
+  {
+   "t": 197,
+   "held": "right",
+   "gx": 109.122,
+   "gy": 147.075,
+   "mx": 110.2,
+   "my": 151.7,
+   "dTurret": "42.5/59.4/101.5",
+   "same": false
+  },
+  {
+   "t": 198,
+   "held": "right",
+   "gx": 109.745,
+   "gy": 146.075,
+   "mx": 111.1,
+   "my": 151.7,
+   "dTurret": "43.7/60.0/102.4",
+   "same": false
+  },
+  {
+   "t": 199,
+   "held": "right",
+   "gx": 110.292,
+   "gy": 146.075,
+   "mx": 112.55,
+   "my": 151.7,
+   "dTurret": "44.0/59.7/102.4",
+   "same": false
+  },
+  {
+   "t": 200,
+   "held": "right",
+   "gx": 110.762,
+   "gy": 146.075,
+   "mx": 113.75,
+   "my": 151.7,
+   "dTurret": "44.2/59.5/102.3",
+   "same": false
+  },
+  {
+   "t": 201,
+   "held": "right",
+   "gx": 111.157,
+   "gy": 146.075,
+   "mx": 114.7,
+   "my": 151.7,
+   "dTurret": "44.4/59.4/102.3",
+   "same": false
+  },
+  {
+   "t": 202,
+   "held": "right",
+   "gx": 111.476,
+   "gy": 146.075,
+   "mx": 116.2,
+   "my": 151.7,
+   "dTurret": "44.6/59.2/102.3",
+   "same": false
+  }
+ ]
+}

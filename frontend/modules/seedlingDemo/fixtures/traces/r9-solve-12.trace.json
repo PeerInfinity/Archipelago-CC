@@ -1,0 +1,377 @@
+{
+    "trace_version": 1,
+    "tape": "r9-solve-12",
+    "tick_count": 2419,
+    "boot": {
+        "level": 12,
+        "x": 16,
+        "y": 80
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 12,
+                "x": 24,
+                "y": 88,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-pit",
+                "aim": {
+                    "x": 584,
+                    "y": 696
+                }
+            },
+            "obstacle": {
+                "kind": "solid",
+                "id": "shieldlocknorm@288,704"
+            },
+            "strategy": {
+                "verb": "touch",
+                "postCondition": "open"
+            },
+            "rejected": [
+                {
+                    "option": "hold",
+                    "why": "shieldlocknorm@288,704 forces `tSet = -2` (R2's FORCED_TSET finding), so no button in the game republishes it and there is no group to press. `activate` LATCHES on the touch and the fade runs to completion whatever the player does."
+                },
+                {
+                    "option": "sword-dash window: leg-bound",
+                    "why": "2843 of 2844 scanned preview(s) — first at walk-offset 0: its longest leg is 378 tick(s), past the preview/drive agreement bound of 195 (§27.8) — past that the walk would be certified against a preview the drive stops matching"
+                },
+                {
+                    "option": "sword-dash window: stalled",
+                    "why": "1 of 2844 scanned preview(s) — first at walk-offset 667: the dashed corridor STALLS — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "no dash window certified faster than the undashed 711 tick(s) — 711 start tick(s) x 4 preview(s) = 2844 scanned, each with its own reason"
+                }
+            ],
+            "keys": [
+                "right"
+            ],
+            "note": "merged: walk decided on the same tick"
+        },
+        {
+            "tick": 816,
+            "saw": {
+                "level": 12,
+                "x": 285.9262787987708,
+                "y": 711,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-pit",
+                "aim": {
+                    "x": 440,
+                    "y": 264
+                }
+            },
+            "obstacle": {
+                "kind": "danger",
+                "id": "puncher@416,256"
+            },
+            "strategy": {
+                "verb": "kill",
+                "rung": "kill",
+                "climb": 1,
+                "arm": "chaser",
+                "target": "puncher@416,256",
+                "stance": {
+                    "x": 376,
+                    "y": 248
+                },
+                "runnersUp": []
+            },
+            "rejected": [
+                {
+                    "option": "avoid",
+                    "why": "no admissible corridor with the danger map's 1 volume(s) forbidden — no walkable tile path in level 12 from tile (17,44) to (27,16). The two are in different connected components of the tiles the player box fits in — which at the v2 rung includes being separated by wat"
+                },
+                {
+                    "option": "time",
+                    "why": "the aim is 473 px away and `mover.MOVER_RANGE` measures this search reaching 48 px as an UPPER BOUND at dwell 4. TIME is the contested LAST-MILE tool (kickoff §3.1); it is not a room-crossing one, and the bound is named rather than widened."
+                },
+                {
+                    "option": "bait",
+                    "why": "no stance within puncher@416,256's leash (80) both pulls its straight line through a kill region and is itself danger-free: 0 cell(s) in leash, 0 of them crossing a region, none of those reachable. ⛔ A stance safe to PASS is not safe to WAIT in (trap 154), and this rung asks the waiting question."
+                },
+                {
+                    "option": "hold",
+                    "why": "bosslock@432,240 answers to no group at all — `BossLock`'s ctor forces `tSet` to -1, so no `Button.activateAll` ever republishes it and the re-close arm is unreachable. What opens it is the player standing on its one-pixel key line holding the key, which is a THIRD activation shape and not a button."
+                },
+                {
+                    "option": "sword-dash window: leg-bound",
+                    "why": "3530 of 3548 scanned preview(s) — first at walk-offset 0: its longest leg is 388 tick(s), past the preview/drive agreement bound of 195 (§27.8) — past that the walk would be certified against a preview the drive stops matching"
+                },
+                {
+                    "option": "sword-dash window: stalled",
+                    "why": "18 of 3548 scanned preview(s) — first at walk-offset 411: the dashed corridor STALLS — the preview spent 400 tick(s) without arriving — the walk is checked as far as it was previewed and no further"
+                },
+                {
+                    "option": "sword-dash",
+                    "why": "no dash window certified faster than the undashed 887 tick(s) — 887 start tick(s) x 4 preview(s) = 3548 scanned, each with its own reason"
+                }
+            ],
+            "keys": [
+                "left"
+            ],
+            "note": "merged: bait decided on the same tick; merged: walk decided on the same tick"
+        },
+        {
+            "tick": 1812,
+            "saw": {
+                "level": 12,
+                "x": 377.33707798757996,
+                "y": 251.97557486687154,
+                "vx": 0,
+                "vy": 0.8,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-pit",
+                "aim": {
+                    "x": 440,
+                    "y": 264
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 2,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 50,
+                    "baseline": 74,
+                    "saved": 24,
+                    "windows": [
+                        {
+                            "at": 3,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 23,
+                            "prefix": [
+                                0,
+                                2,
+                                8
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        12,
+                        38
+                    ],
+                    "scanned": 48,
+                    "why": null
+                }
+            },
+            "path": [
+                {
+                    "x": 376,
+                    "y": 264
+                },
+                {
+                    "x": 440,
+                    "y": 264
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "44 of 48 scanned preview(s) — first at walk-offset 0: 74 tick(s) against 74 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
+            "keys": [
+                "down",
+                "left"
+            ]
+        },
+        {
+            "tick": 1947,
+            "saw": {
+                "level": 12,
+                "x": 440.57096048968424,
+                "y": 258.13766288390667,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-pit",
+                "aim": {
+                    "x": 584,
+                    "y": 696
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 7,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 380,
+                    "baseline": 559,
+                    "saved": 179,
+                    "windows": [
+                        {
+                            "at": 151,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 171,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 191,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 211,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 236,
+                            "prefix": [
+                                0,
+                                2,
+                                8
+                            ]
+                        },
+                        {
+                            "at": 256,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 276,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 296,
+                            "prefix": [
+                                0,
+                                2
+                            ]
+                        },
+                        {
+                            "at": 348,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        },
+                        {
+                            "at": 368,
+                            "prefix": [
+                                0
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        44,
+                        89,
+                        21,
+                        85,
+                        20,
+                        51,
+                        70
+                    ],
+                    "scanned": 792,
+                    "why": null
+                }
+            },
+            "path": [
+                {
+                    "x": 440,
+                    "y": 216
+                },
+                {
+                    "x": 536,
+                    "y": 216
+                },
+                {
+                    "x": 536,
+                    "y": 232
+                },
+                {
+                    "x": 584,
+                    "y": 472
+                },
+                {
+                    "x": 568,
+                    "y": 472
+                },
+                {
+                    "x": 568,
+                    "y": 584
+                },
+                {
+                    "x": 584,
+                    "y": 696
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash window: leg-bound",
+                    "why": "607 of 792 scanned preview(s) — first at walk-offset 0: its longest leg is 211 tick(s), past the preview/drive agreement bound of 195 (§27.8) — past that the walk would be certified against a preview the drive stops matching"
+                },
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "162 of 792 scanned preview(s) — first at walk-offset 171: 548 tick(s) against 548 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 5 press(es), 3 of them dashes, and 0 were YIELDED"
+                }
+            ],
+            "keys": [
+                "up"
+            ]
+        }
+    ]
+}

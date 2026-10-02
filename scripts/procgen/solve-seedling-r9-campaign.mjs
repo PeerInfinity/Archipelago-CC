@@ -893,15 +893,26 @@ console.log(`## PLAYTHROUGH_CHAINS.r9-campaign: cuts [${cuts.join(', ')}], `
             const t = parseTape(here.promotedRaw);
             for (let k = 0; k < t.tick_count; k += 1) run.advance(heldAt(t, k));
         }
+        /**
+         * ⛓ SWIM U14 — THE SUCCESSOR'S CLOCK IS READ AT THE ARRIVAL'S
+         * `Game.begin()`, NOT AT THE TAPE'S LAST TICK. The two are the same
+         * tick for a door (the walk ends on its arrival), and they part for a
+         * PIT: `r9-solve-12` crosses at t2339 and walks on 80 ticks to a calm
+         * landing, while its latch's `beginEntry` (`begin.tick` 2339, `save.time`
+         * 15371) is what `segmentBootFromLatch` boots `r9-solve-21` from. So the
+         * oracle adds the arrival tick — the last transition's `t` — which is
+         * `tick_count` on every door seam the chain held before.
+         */
+        const arrivalTick = run.transitions.at(-1)?.t ?? here.out.perTick.length;
         const predicted = declaredSeamTimeAfter({
             declaredTime: declared,
             deadFramesOwed: run.deadFramesOwed,
-            tickCount: here.out.perTick.length,
+            tickCount: arrivalTick,
         });
         check(`⛓ the free oracle: ${next.seg.name} declares seam.time ${wants}`,
             predicted === wants,
             `${declared} + ${run.deadFramesOwed} − LOAD_FADE_FRAMES + `
-            + `${here.out.perTick.length} = ${predicted}`);
+            + `${arrivalTick} = ${predicted}`);
         rows.push(`${next.seg.name}=${wants}`);
     }
     console.log(`## the clock column: ${rows.join(' ')}`);

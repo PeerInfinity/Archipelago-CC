@@ -197,24 +197,59 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
      * ⛓ L13 is visited AGAIN, so the name says which visit: `r9-solve-13-v2`
      * (visit 2). The first visit keeps `r9-solve-13` (trap 169's shape).
      *
-     * ⛔ THE CHAIN STOPS HERE, AT A WALL THE GAME NAMED. Route step 23 (L0,
-     * visit 3, `teleporter@304,176` → L12) is the first L0 visit after the
-     * shield, and `Shield.removed()` armed `Moonrock.beam`: in the game,
-     * `Moonrock.update` sets `Game.freezeObjects` while `beam && canBeam` and
-     * runs the beam before the rock falls (`Moonrock.as:66-118`). The model has
-     * no Moonrock beam, so its solved walk dashes at t3 where the game's player
-     * does not, and the game owes ~471 dead frames the model never counts.
-     * The survey's 9/9 boots step 23 from `r8-solve-11`'s pre-shield block
-     * (`beam: false`), which is why it could not see it. The steps after it
-     * (L12's pit, L21, L22, L29, L31, L30, L32's encounter) wait on that family;
-     * the producer already derives their two new goal shapes (`exit: 'pit'`,
-     * `encounter: '<drop>'`, documented in its `SEGMENTS`).
+     * ⛓ U13 STOPPED HERE, AT A WALL THE GAME NAMED: route step 23 (L0, visit
+     * 3) is the first L0 visit after the shield, and `Shield.removed()` armed
+     * `Moonrock.beam`. Swim U14 transcribed `Moonrock.update` (`moonrock.js`,
+     * witnessed by `u14-moonrock-beam`/`-set`) and resumed the chain below.
      */
     Object.freeze({
         name: 'r9-solve-13-v2', level: 13, to: 0,
         why: 'L13 — grown by swim U13 at route step 22 (visit 2): stairsup@64,144 → '
             + 'L0. The survey\'s own solve is 48 tick(s), 1 decision(s), 0 re-plan(s), '
             + 'passes [solve]',
+    }),    /**
+     * ⛓⛓ SWIM U14 (⚖ Q46, user 2026-10-01: "Yes, one slice") — route steps 23–26,
+     * U13's declarations verbatim, resumed once the model steps the moonrock
+     * (`moonrock.js`): step 23's first L0 frame beams (451 dead frames, measured),
+     * and step 24 is the chain's first PIT seam (`exit: 'pit'`, the successor's
+     * clock read at the L21 arrival's `Game.begin()`, 80 ticks before the tape
+     * ends on its calm landing).
+     *
+     * ⛔ THE CHAIN STOPS HERE, AT A SECOND WALL THE GAME NAMED. Route step 27 (L29,
+     * `bosskey` → the Green Key, `stairsdown@112,32` → L31) solves in the model in
+     * 383 t with no hit, and the game refutes it at t196: the walk passes 15.9 px
+     * from `turret@80,176`, inside `attackRange` 64 from t31, and a `TurretSpit`
+     * knocks the player north-east (`Enemies/Turret.as:64-76`,
+     * `Projectiles/TurretSpit.as:47-53`). The model steps neither — `combat.js`
+     * prices the turret as a volume and the solver's L29 danger list was empty —
+     * so the game ends with `hits` 1 and NO Green Key. Steps 27–30 (`r9-solve-29`,
+     * `-31`, `-30`, `-32`) wait on that family; their declarations are U13's
+     * (`ee34b23`), and `seedling-swim-u14-wall.json` has the readout.
+     */
+    Object.freeze({
+        name: 'r9-solve-0-v3', level: 0, to: 12,
+        why: 'L0 — grown by swim U13 at route step 23 (visit 3): teleporter@304,176 → '
+            + 'L12. The survey\'s own solve is 229 tick(s), 2 decision(s), 0 '
+            + 're-plan(s), passes [solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-12', level: 12, to: 21, exit: 'pit',
+        why: 'L12 — grown by swim U13 at route step 24: pit@576,688 (out_pit_5_5, '
+            + 'tile 36,43) → L21, the puncher killed and the Pull funnel ridden into '
+            + 'the pit (U12). The survey\'s own solve is 2419 tick(s), 4 decision(s), '
+            + '0 re-plan(s), passes [solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-21', level: 21, to: 22,
+        why: 'L21 — grown by swim U13 at route step 25, arriving by the L12 pit: '
+            + 'teleporter@80,160 → L22. The survey\'s own solve is 26 tick(s), 1 '
+            + 'decision(s), 0 re-plan(s), passes [solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-22', level: 22, to: 29,
+        why: 'L22 — grown by swim U13 at route step 26: teleporter@192,64 → L29. The '
+            + 'survey\'s own solve is 89 tick(s), 1 decision(s), 0 re-plan(s), passes '
+            + '[solve]',
     }),
 ]);
 
