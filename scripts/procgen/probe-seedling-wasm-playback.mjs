@@ -18,6 +18,17 @@
  *       received ONCE, the binding's checks = 1 with no arming-window catch beyond G's, ONE
  *       regionMove out of the house (the glue's redirect, `region_2_3`), the engine's two goals
  *       done (the door's trajectory ends OUT of level 86 — "left 86"), every host botStart bracketed.
+ *       W3 adds (c): 0 divergences, 0 recoveries on the undisturbed walk.
+ *   R   (W3 (a), its own fresh page) the same bot walk with ONE injected divergence: on the chest's
+ *       first plan tape the injector (`installInjector`, on the game window's 0 ms timer) presses
+ *       ArrowRight for ~200 ms — a key the tape never pressed — so the drained rows leave the plan
+ *       (measured: +0.8 px in x at tick 5–9). The engine `botReset`s, re-enters the house at the
+ *       arrival's spawn, re-solves and replays: recoveries 1, the chest checked ONCE, the door
+ *       crossed, every botStart bracketed.
+ *   P   (W3 (b), its own fresh page) the injector fires on EVERY chest plan: after 3 recoveries the
+ *       4th divergence fails BY NAME (`playback:walkFailed` → the bot's `error:` status), no check
+ *       fired, AP inventory/checked unchanged, nothing armed or held, and no STALE key (the engine
+ *       releases the keys the diverged plan held — `keysHeldAtReset`; W3's own finding).
  *   K   (side mode, `--only=K`; not in the default run) the KILL-LOCK measurement S3 left to W2: a host
  *       jump into L5 (its lock opens on a kill), then the engine serves the teleporter exit with
  *       the lock clear left UNDECLARED (the solve runs scratch persistence, the model writes the
@@ -28,7 +39,9 @@
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build
  * (the `flashPanel/wasm` submodule), or this SKIPs (exit 0).
  *
- * Run: node scripts/procgen/probe-seedling-wasm-playback.mjs [--host=http://localhost:8000] [--only=G|B|K]
+ * The default run is three sessions, each on a fresh page: G+B, R, P.
+ *
+ * Run: node scripts/procgen/probe-seedling-wasm-playback.mjs [--host=http://localhost:8000] [--only=G|B|GB|R|P|K]
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
@@ -55,6 +68,47 @@ function installCounters() {
         game[name] = (...a) => { calls[name] += 1; return orig(...a); };
     }
     window.__w2 = { calls };
+    return true;
+}
+
+/**
+ * In the PAGE: the W3 divergence injector. On the game window's own 0 ms timer it watches the
+ * controller's wasm engine; each time a NEW plan tape starts playing for a location goal it presses
+ * ArrowRight into the game for ~200 ms (a synthetic keydown/keyup on the canvas, which bubbles to
+ * every target the emscripten runtime listens on) — a key the tape never pressed, so the game's
+ * drained rows leave the plan. `once` fires on the first such tape only; `always` on every one.
+ */
+async function installInjector({ mode, wasmPage }) {
+    const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
+    const frame = [...document.querySelectorAll('iframe')].find((f) => f.src.includes(wasmPage));
+    const gw = frame?.contentWindow;
+    if (!gw?.__swfBridge?.game) return 'no game window';
+    const inj = { mode, injected: [], seenShips: 0, stop: false };
+    window.__w3inj = inj;
+    const press = (type) => {
+        const ev = new gw.KeyboardEvent(type, { key: 'ArrowRight', code: 'ArrowRight', bubbles: true, cancelable: true });
+        Object.defineProperty(ev, 'keyCode', { get: () => 39 });
+        Object.defineProperty(ev, 'which', { get: () => 39 });
+        (gw.document.getElementById('canvas') ?? gw.document.body).dispatchEvent(ev);
+    };
+    const loop = () => {
+        if (inj.stop) return;
+        const e = substrateRegistry.get('flash_seedling')?.getPlaybackController?.()?._wasmEngine;
+        if (e) {
+            const s = e.status();
+            const ships = e.stats.ships;
+            if (s.phase === 'playing' && ships > inj.seenShips && s.goal?.kind === 'location') {
+                inj.seenShips = ships;
+                if (mode === 'always' || inj.injected.length === 0) {
+                    inj.injected.push({ ship: ships, drained: s.drained, recoveries: s.recoveries });
+                    gw.setTimeout(() => press('keydown'), 150);
+                    gw.setTimeout(() => press('keyup'), 350);
+                }
+            }
+        }
+        gw.setTimeout(loop, 0);
+    };
+    gw.setTimeout(loop, 0);
     return true;
 }
 
@@ -95,11 +149,25 @@ async function main() {
         save: { totem_parts: [], keys: [], seal_parts: [] }, rng: { seed: 0, split: false, cosmetic: 0, fp: 0 } }));
 
     const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
+    // Each session on a FRESH page (fresh room, fresh AP state): G+B (the W2 witness, + W3's "0 recoveries"),
+    // R (one injected divergence recovers), P (a persistent one fails by name after 3).
+    const SESSIONS = ONLY ? [ONLY] : ['GB', 'R', 'P'];
+    let failed = 0;
+    for (const MODE of SESSIONS) {
+        console.log(`INFO: ── session ${MODE} ──`);
+        // eslint-disable-next-line no-await-in-loop
+        failed += await runSession(MODE);
+    }
+    await browser.close();
+    console.log(failed === 0 ? 'ALL CHECKS PASSED' : `${failed} CHECK(S) FAILED`);
+    process.exit(failed === 0 ? 0 : 1);
+
+    async function runSession(MODE) {
     const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
     const logs = [];
     page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
     page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
-    const rp = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: 'w2' });
+    const rp = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: `w3-${MODE}` });
     const { check } = rp;
     const w = (fn, a) => rp.gameFrame().evaluate(fn, a);
     const ap = () => page.evaluate(async () => {
@@ -157,7 +225,7 @@ async function main() {
         check('the fresh room: the player in the house, nothing checked', state0.level === ROOM.level
             && ap0.checks.length === 0, `level ${state0.level}, checks ${JSON.stringify(ap0.checks)}`);
 
-        if (ONLY === 'K') {
+        if (MODE === 'K') {
             // ── K: the kill lock, undeclared ──────────────────────────────────
             const { returnSpawnTable, returnKey } = await import(join(FLASH_DIR, 'seedlingReturnSpawns.js'));
             const MAP = JSON.parse(readFileSync(join(FLASH_DIR, 'atlases/seedling-map.json'), 'utf8'));
@@ -204,7 +272,7 @@ async function main() {
                 !leg.divergence && leg.drained >= leg.ticks && out.level === 6, JSON.stringify({ leg, level: out.level }));
         }
 
-        if (ONLY !== 'B' && ONLY !== 'K') {
+        if (MODE === 'GB' || MODE === 'G') {
             // ── G: the guard ───────────────────────────────────────────────────
             const st0 = await status();
             const fake = zeroTick({ x: state0.playerPositionX, y: state0.playerPositionY, persistence: [{ level: ROOM.level, tag: 0 }] });
@@ -248,8 +316,14 @@ async function main() {
                 `${JSON.stringify(restored)}; cleared ${JSON.stringify(stR.persistence_cleared)}`);
         }
 
-        if (ONLY !== 'G' && ONLY !== 'K') {
+        if (['GB', 'B', 'R', 'P'].includes(MODE)) {
             // ── B: the Playback Bot on the wasm runtime ───────────────────────
+            // R/P: the W3 divergence INJECTOR rides the game window's own 0 ms timer (the engine's
+            // sampler arrangement) and fires on the chest's plan tapes: R on the FIRST only, P on EVERY one.
+            if (MODE === 'R' || MODE === 'P') {
+                const inj = await page.evaluate(installInjector, { mode: MODE === 'P' ? 'always' : 'once', wasmPage: WASM_PAGE });
+                check(`${MODE}: the divergence injector is armed on the game window`, inj === true, String(inj));
+            }
             const before = await ap();
             const booted = await page.evaluate(async (start) => {
                 const bus = (await import('./app/core/eventBus.js')).default;
@@ -288,11 +362,56 @@ async function main() {
             }
             const apB = await ap();
             const eng = await engineStats();
+            const inj = (MODE === 'R' || MODE === 'P') ? await page.evaluate(() => {
+                const i = window.__w3inj;
+                if (i) i.stop = true;
+                return i ? { injected: i.injected } : null;
+            }) : null;
+            if (inj) console.log(`INFO: ${MODE} injections ${JSON.stringify(inj)}`);
+            const hist = eng?.history ?? [];
+            const bracketed = (eng?.hostStarts?.length ?? 0) === 2 * hist.length && eng.hostStarts.every((h) => h.to >= h.from);
             const moves = await rp.glueMoves();
             const calls = await w(() => window.__w2.calls);
             console.log(`INFO: engine ${JSON.stringify(eng)}`);
             console.log(`INFO: glue moves ${JSON.stringify(moves.map((m) => m.targetRegion ?? m.destinationRegion ?? m))}`);
             console.log(`INFO: verb calls ${JSON.stringify(calls)}; binding ${JSON.stringify(apB.binding)}`);
+            if (MODE === 'P') {
+                // ── P: a PERSISTENT divergence — 3 recoveries, then FAILED by name ──
+                const legs = hist.filter((h) => h.goal?.kind === 'location');
+                check('P: the bot shows the engine\'s named failure (status error:, the count and the bound)',
+                    /^error:/.test(end?.status ?? '') && /the game left the plan 4 times/.test(end.status)
+                        && /gave up after 3 forced re-arrivals, the bound is 3/.test(end.status), `status "${end?.status}"`);
+                check('P: the engine recorded 3 recoveries then the failure (4 plans played, 4 injections)',
+                    eng?.recoveries === 3 && JSON.stringify(legs.map((h) => h.outcome)) === JSON.stringify(['diverged', 'diverged', 'diverged', 'failed'])
+                        && eng.ships === 4 && inj?.injected.length === 4,
+                    JSON.stringify({ recoveries: eng?.recoveries, outcomes: legs.map((h) => h.outcome), ships: eng?.ships, injected: inj?.injected.length }));
+                check('P: every divergence is a real (level, x, y) miss in the house (no level change, x off the plan)',
+                    legs.slice(0, 3).every((h) => h.divergence && h.divergence.got.level === ROOM.level
+                        && h.divergence.got.x !== h.divergence.expected.x), JSON.stringify(legs.map((h) => h.divergence)));
+                // ⛔ W3's own finding: botReset mid-span leaves the tape's keys HELD, so the next plan's press is
+                // lost (measured before the fix: attempt 2's echo `held ["right","up"]`, `press_totals.up 0`; once a
+                // stale `down` cancelled the next plan's `up` and it diverged at tick 1 with the player still).
+                const stale = legs.filter((h) => h.input).map((h) => (h.input.held ?? []).filter((k) => !(h.input.press_totals?.[k] >= 1)));
+                check('P: no STALE key — every key the game held at each divergence was pressed by THAT tape (the host releases the plan\'s held keys after each botReset with a keydown+keyup pair)',
+                    stale.length === 3 && stale.every((x) => x.length === 0) && (eng.keyReleases?.length ?? 0) >= 3,
+                    JSON.stringify({ stale, keyReleases: eng?.keyReleases, inputs: legs.map((h) => h.input && { held: h.input.held, press: h.input.press_totals }) }));
+                const chestChecks = apB.checks.filter((n) => n === CHEST).length - before.checks.filter((n) => n === CHEST).length;
+                check('P: NO check fired — dispatcher, state manager, binding (0 checks, nothing caught in a host window)',
+                    chestChecks === 0 && !apB.checked.includes(CHEST) && apB.binding.checks === (before.binding.checks ?? 0)
+                        && apB.binding.armingWindow === (before.binding.armingWindow ?? 0),
+                    `checks +${chestChecks}, binding ${JSON.stringify(apB.binding)}`);
+                check('P: AP state intact — inventory and checked locations exactly as before the bot',
+                    JSON.stringify(apB.inv) === JSON.stringify(before.inv)
+                        && JSON.stringify([...apB.checked].sort()) === JSON.stringify([...before.checked].sort()),
+                    JSON.stringify({ before: before.inv, after: apB.inv }));
+                check('P: no region move (the bot never left the house)', moves.filter((m) => m.targetRegion === CHILD).length === 0,
+                    JSON.stringify(moves.map((m) => m.targetRegion)));
+                const stP = await status();
+                check('P: nothing of ours left armed or held; the engine idle; the room is the player\'s',
+                    !stP.armed && !stP.held && eng?.status?.state === 'idle' && stP.level === ROOM.level,
+                    JSON.stringify({ armed: stP.armed, held: stP.held, engine: eng?.status?.state, level: stP.level }));
+                check('P: every host botStart bracketed by seq reads (freeze + plan per attempt)', bracketed, JSON.stringify(eng?.hostStarts));
+            } else {
             const errs = (end?.log ?? []).filter((l) => typeof l === 'string' && l.startsWith('error:'));
             check('B: the bot reached the end of the chest + door legs (status finished, or past the house) with no error: status',
                 errs.length === 0 && (end?.status.startsWith('finished') || moves.some((m) => m.targetRegion === CHILD)),
@@ -306,8 +425,7 @@ async function main() {
                 `checks ${apB.binding.checks}, armingWindow ${before.binding.armingWindow}→${apB.binding.armingWindow}`);
             const out = moves.filter((m) => m.targetRegion === CHILD);
             check(`B: the crossing out of the house reported ONCE (→ ${CHILD})`, out.length === 1, JSON.stringify(moves.map((m) => m.targetRegion)));
-            const hist = eng?.history ?? [];
-            const chestLeg = hist.find((h) => h.goal?.kind === 'location');
+            const chestLeg = hist.filter((h) => h.goal?.kind === 'location').at(-1);
             const doorLeg = hist.find((h) => h.goal?.kind === 'exit');
             check('B: the engine served the chest at an arrival (solved, shipped, finished)', chestLeg?.outcome === 'done',
                 JSON.stringify(chestLeg));
@@ -322,10 +440,25 @@ async function main() {
                 JSON.stringify(doorLeg));
             check('B: neither leg left the plan inside the house (the W3 compare, recorded)',
                 !chestLeg?.divergence && !doorLeg?.divergence, JSON.stringify([chestLeg?.divergence, doorLeg?.divergence]));
-            check('B: every host botStart bracketed by seq reads (2 per goal: freeze + plan)',
-                (eng?.hostStarts?.length ?? 0) === 2 * hist.length && eng.hostStarts.every((h) => h.to >= h.from),
+            check('B: every host botStart bracketed by seq reads (2 per attempt: freeze + plan)', bracketed,
                 JSON.stringify(eng?.hostStarts));
-            console.log(`INFO: divergences recorded (W3 acts): ${JSON.stringify(hist.map((h) => h.divergence))}`);
+            if (MODE === 'R') {
+                // ── R: ONE injected divergence on the chest's first plan — recovered ──
+                const legs = hist.filter((h) => h.goal?.kind === 'location');
+                check('R: the chest\'s first plan DIVERGED in the house (x off the plan, the injected key) and was recovered ONCE',
+                    eng?.recoveries === 1 && legs.length === 2 && legs[0].outcome === 'diverged' && legs[0].recovery === 1
+                        && legs[0].divergence?.got.level === ROOM.level && legs[0].divergence.got.x !== legs[0].divergence.expected.x
+                        && inj?.injected.length === 1,
+                    JSON.stringify({ recoveries: eng?.recoveries, legs: legs.map((h) => [h.outcome, h.divergence]), injected: inj?.injected }));
+                check('R: the recovered chest leg finished ON PLAN with recoveries 1 (re-entered, re-solved, played)',
+                    chestLeg?.outcome === 'done' && chestLeg.recoveries === 1 && !chestLeg.divergence && eng.ships === 3,
+                    JSON.stringify(chestLeg));
+            } else {
+                check('B/(c): 0 divergences, 0 recoveries on the undisturbed walk', eng?.divergences === 0 && eng?.recoveries === 0,
+                    JSON.stringify({ divergences: eng?.divergences, recoveries: eng?.recoveries }));
+            }
+            console.log(`INFO: divergences recorded: ${JSON.stringify(hist.map((h) => h.divergence))}`);
+            }
         }
         console.log(`INFO: ${logs.filter((l) => l.startsWith('[pageerror]')).length} page error(s) (the logic-only channel's device loss)`);
         const wp = logs.filter((l) => /wasm playback|\[playback\]/.test(l));
@@ -333,8 +466,7 @@ async function main() {
     } catch (e) {
         check(`fatal: ${e.message}`, false, e.stack?.split('\n').slice(0, 4).join(' / '));
     }
-    await browser.close();
-    const n = rp.failures();
-    console.log(n === 0 ? 'ALL CHECKS PASSED' : `${n} CHECK(S) FAILED`);
-    process.exit(n === 0 ? 0 : 1);
+    await page.close();
+    return rp.failures();
+    }
 }
