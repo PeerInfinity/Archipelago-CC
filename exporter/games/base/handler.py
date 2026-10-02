@@ -854,11 +854,14 @@ class BaseGameExportHandler(
             if len(processed_args) >= 2:
                 item_arg = processed_args[0]
                 locations_arg = processed_args[1]
-                # Player is filtered out; use player 1 for single-player exports
+                # The player arg was filtered out above; it is the player whose
+                # rules these are, i.e. this handler's world. Hardcoding 1 made the
+                # search fail for every slot but player 1 of a multiworld.
+                player = getattr(self.world, 'player', None) or 1
                 return {
                     'type': 'placement_search',
                     'item': item_arg,
-                    'player': {'type': 'constant', 'value': 1},
+                    'player': {'type': 'constant', 'value': player},
                     'locations': locations_arg
                 }
             else:

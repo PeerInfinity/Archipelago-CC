@@ -10669,7 +10669,7 @@
                       "rule": "AST_placement_search",
                       "args": {
                         "item": "Big Key (Ice Palace)",
-                        "player": 1,
+                        "player": 2,
                         "locations": [
                           [
                             "Ice Palace - Spike Room",
@@ -12020,7 +12020,7 @@
                   "rule": "AST_placement_search",
                   "args": {
                     "item": "Big Key (Turtle Rock)",
-                    "player": 1,
+                    "player": 2,
                     "locations": [
                       [
                         "Turtle Rock - Compass Chest",
@@ -12130,7 +12130,7 @@
                   "rule": "AST_placement_search",
                   "args": {
                     "item": "Big Key (Turtle Rock)",
-                    "player": 1,
+                    "player": 2,
                     "locations": [
                       [
                         "Turtle Rock - Compass Chest",
@@ -13840,7 +13840,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -13939,7 +13939,7 @@
                       "rule": "AST_placement_search",
                       "args": {
                         "item": "Big Key (Ganons Tower)",
-                        "player": 1,
+                        "player": 2,
                         "locations": [
                           [
                             "Ganons Tower - Bob's Chest",
@@ -14003,7 +14003,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -14102,7 +14102,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -14201,7 +14201,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -14300,7 +14300,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -14399,7 +14399,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Compass Room - Top Left",
@@ -14753,7 +14753,7 @@
                       "rule": "AST_placement_search",
                       "args": {
                         "item": "Big Key (Ganons Tower)",
-                        "player": 1,
+                        "player": 2,
                         "locations": [
                           [
                             "Ganons Tower - Randomizer Room - Top Left",
@@ -14836,7 +14836,7 @@
                               "rule": "AST_placement_search",
                               "args": {
                                 "item": "Big Key (Ganons Tower)",
-                                "player": 1,
+                                "player": 2,
                                 "locations": [
                                   [
                                     "Ganons Tower - Randomizer Room - Top Left",
@@ -14863,7 +14863,7 @@
                               "rule": "AST_placement_search",
                               "args": {
                                 "item": "Small Key (Ganons Tower)",
-                                "player": 1,
+                                "player": 2,
                                 "locations": [
                                   [
                                     "Ganons Tower - Firesnake Room",
@@ -14953,7 +14953,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Randomizer Room - Top Left",
@@ -15034,7 +15034,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Randomizer Room - Top Left",
@@ -15115,7 +15115,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Randomizer Room - Top Left",
@@ -15196,7 +15196,7 @@
                           "rule": "AST_placement_search",
                           "args": {
                             "item": "Big Key (Ganons Tower)",
-                            "player": 1,
+                            "player": 2,
                             "locations": [
                               [
                                 "Ganons Tower - Randomizer Room - Top Left",
