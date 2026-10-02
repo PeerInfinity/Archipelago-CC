@@ -1069,6 +1069,13 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: '`r8-solve-5`\'s three bobs die to the arrows (t 124, 127, 166); the last leaves '
                 + 'the world on t 201 and the player, on the lock from t 261, crosses to L6 on t 303.',
         }),
+        Object.freeze({
+            name: 'f1-l5-open-lock-bait', levels: Object.freeze([5]), bobs: 3, ticks: 437,
+            addedBy: 'Seedling fidelity F1 D2 (the open-lock arrival\'s walk to its refusal)',
+            why: 'with `{5,0}` already set the solver baits two bobs and holds the button: '
+                + '`bob@16,64` drowns (t 48), the arrows kill `bob@48,80` (t 182), and `bob@16,80` '
+                + 'survives with two hits in column 3, out of every lane.',
+        }),
     ]),
 
     /**
