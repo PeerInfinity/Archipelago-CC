@@ -101,6 +101,9 @@
 #   and gives a different digest for identical bytes; ruling 8's value is
 #   `--check 2>&1 | md5sum`.
 set -u
+# ⛓ SWIM S1 — a `$( a | b | m )` assignment's status is then a's when a fails (the
+# producer loop reads it instead of re-running the producer). No `r` row reads `$?`.
+set -o pipefail
 T="${1:-.}"
 cd "$T" || exit 1
 
@@ -144,20 +147,18 @@ r "level post-sword s1    [*]"  "$(node scripts/procgen/generate-seedling-level.
 # ⛓ SWIM S1 — the driver's scratch dir is a fresh `mktemp` (/tmp/seedling-driver-XXXXXX)
 # and lands in a failure message, so an unnormalised row made the whole-output md5
 # differ on every run. Normalised to the template.
-r "generated set"               "$(node scripts/procgen/check-seedling-generated-set.mjs 2>&1 | tail -1 \
-  | sed -E 's#/tmp/seedling-driver-[A-Za-z0-9]+#/tmp/seedling-driver-XXXXXX#g')"
+# (ONE line: `reachClosure.identityRows()` parses each `r "…" "$( … )"` row on its line.)
+r "generated set"               "$(node scripts/procgen/check-seedling-generated-set.mjs 2>&1 | tail -1 | sed -E 's#/tmp/seedling-driver-[A-Za-z0-9]+#/tmp/seedling-driver-XXXXXX#g')"
 
 echo "--- every producer's own --check (⚖ ruling 8's 2026-08-21 extension) ---"
 for p in solve-seedling-r8-battery solve-seedling-r8-d2-chain solve-seedling-r8-l18 \
          solve-seedling-r8-tail solve-seedling-r9-l3 solve-seedling-r9-campaign; do
-  # ⛓ SWIM S1 — ONE run per producer, not two: the output and the exit come from the
-  # same run through a temp file (byte-identical to the old stream, so every published
-  # digest is unmoved). The second run doubled the block's cost (~2 h measured).
-  o=$(mktemp)
-  node "scripts/procgen/$p.mjs" --check > "$o" 2>&1
+  # ⛓ SWIM S1 — ONE run per producer, not two (the second doubled the block: ~2 h). The
+  # `d=$( … )` line is kept BYTE-IDENTICAL — `reachClosure.identityRows()` reads it as
+  # the producers' command template (the FIRST `X=$( … )` line in this file) — and
+  # `pipefail` (set at the top) makes its exit status node's, read on the next line.
+  d=$(node "scripts/procgen/$p.mjs" --check 2>&1 | b | m)
   e=$?
-  d=$(b < "$o" | m)
-  rm -f "$o"
   r "$p --check" "$d [exit $e]"
 done
 
