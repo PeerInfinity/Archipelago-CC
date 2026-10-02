@@ -124,7 +124,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 49,
+            "count": 51,
             "id": "plan"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 306,
+        "blockStyle": 308,
         "browser": 93,
         "cited": 142,
-        "files": 317,
+        "files": 319,
         "lineStyle": 11,
-        "withDocblock": 317,
-        "withFlags": 237
+        "withDocblock": 319,
+        "withFlags": 239
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6417,6 +6417,60 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "mine-seedling-roster-history — the evidence half of R6 slice 0's roster trim (`note_roster_trim_evaluation`, kickoff §3.6).",
             "path": "scripts/procgen/mine-seedling-roster-history.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-f1-l5-lock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-f1-l5-lock — ⛓⛓⛓ SEEDLING FIDELITY F1: L5's KILL LOCK, ASKED OF THE GAME WITH A WALK THAT CAN TELL THE TWO READINGS APART.",
+            "path": "scripts/procgen/plan-seedling-f1-l5-lock.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-f1-l5-open-lock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-f1-l5-open-lock — ⛓⛓⛓ SEEDLING FIDELITY F1 D2: L5's OPEN-LOCK ARRIVAL, THE SOLVER'S OWN WALK UP TO ITS REFUSAL, AS A TAPE THE GAME CAN REPLAY.",
+            "path": "scripts/procgen/plan-seedling-f1-l5-open-lock.mjs"
         },
         {
             "argvHelpers": [],
