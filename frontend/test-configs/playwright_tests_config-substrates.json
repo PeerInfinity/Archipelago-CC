@@ -439,6 +439,18 @@
             "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12, 120 walker ticks in (a ~2 s solve that froze the S1 page). The solve runs in the worker: the page's 20 ms heartbeat never gaps past 250 ms while it does, the room is held, and the plan plays to level 36 — solved once, no decline, no refutation."
         },
         {
+            "id": "seedling-js-runtime-solver-falls-through-pit",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S4. Runtime js + the solver mode ON on seedling_atlas: the page handle teleports to seedling_playthrough's level_48__r2c10 arrival; the bot walks to out_pit_2_2 (a PIT tile, no teleporter — the page used to refuse it) — the solver plays reach-pit and the player falls to level 49; the walk completes on the fall, no pendingExit (the game writes none for a fall), 0 HALT. (L30's break-the-rock pit is a node row: seedling_atlas holds no sword.)"
+        },
+        {
+            "id": "seedling-js-runtime-solver-opens-chest",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S4. Runtime js + the solver mode ON on seedling_atlas: the page handle teleports to seedling_playthrough's level 17 arrival and the bot opens the chest (tag 0) through collect-placement (the chest verb); the clear reported once as pendingCheck <seq>|17|0|0, 0 HALT, no refutation."
+        },
+        {
             "id": "apworld-document-tab-lists-every-schema-key",
             "enabled": true,
             "category": "apworldEditor",

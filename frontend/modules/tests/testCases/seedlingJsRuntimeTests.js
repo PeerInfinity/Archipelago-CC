@@ -1121,3 +1121,156 @@ registerTest({
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
+
+// ── Seedling solver-walk S4: the solver's remaining verbs — a PIT exit, a CHEST beyond the house ──
+
+/**
+ * The S4 witnesses, read from the committed `seedling_playthrough` preset's
+ * own region payloads (the exit's cell, the arrival spawn): level 48's
+ * `out_pit_2_2` — a PIT tile, no teleporter — which the solver plays as
+ * `reach-pit` and falls to level 49; and level 17's chest (tag 0), a
+ * `collect-placement` of a room the house row does not reach. (L30's pit,
+ * where the solver must BREAK a rock with the sword, is a node row only:
+ * `seedling_atlas` holds no sword, and the host reconciles a page-side
+ * `hasSword` back to the AP inventory on the next report — measured.)
+ * Neither level is a region of `seedling_atlas`: the page handle teleports
+ * there, as the S1–S3 rows do (⚖ Q2).
+ */
+const PLAYTHROUGH_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules.json';
+const PIT_ROOM = Object.freeze({ region: 'level_48__r2c10', exitId: 'out_pit_2_2', to: 49 });
+const CHEST_ROOM = Object.freeze({ region: 'level_17', level: 17, tag: 0 });
+
+/** Runtime js + the solver mode ON on seedling_atlas, the page teleported to `region`'s first arrival spawn. */
+async function playthroughRoomOnPage(tc, region) {
+    await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+    if (!ready) return null;
+    const up = await atlasPanelOnJs(tc, staleAdapter);
+    if (!up) return null;
+    const { rt, win } = up;
+    const pushed = await tc.pollForCondition(() => rt.playback.solverWalk === true,
+        'the setting reached the JS page (playback.solverWalk)', 5000, 100);
+    tc.reportCondition('the page is in solver mode', !!pushed);
+    const rules = await (await fetch(new URL(PLAYTHROUGH_PATH, document.baseURI).href)).json();
+    const pl = rules.preset_sidecars?.['1']?.[region]?.playable_payload ?? null;
+    const spawn = pl?.exits?.find((e) => e.entrance_spawn)?.entrance_spawn ?? null;
+    tc.reportCondition(`seedling_playthrough has region ${region} with an arrival spawn`, !!spawn);
+    if (!spawn) return null;
+    rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [pl.level, spawn.x, spawn.y] }]);
+    const there = await tc.pollForCondition(() => rt.run?.level === pl.level, `the page is in level ${pl.level}`, 10000, 100);
+    tc.reportCondition(`teleported into level ${pl.level}`, !!there);
+    if (!there) return null;
+    return { rt, win, pl, bot: ready.bot };
+}
+
+/** The settled walk's solver stats, logged. */
+async function settledSolverWalk(tc, rt, ms = 60000) {
+    const settled = await tc.pollForCondition(() => ['done', 'failed'].includes(rt.playback.state) || !!rt.halted,
+        'the solver-driven walk settled (done / failed / halted)', ms, 200);
+    const s = rt.playback.solverStats;
+    tc.log(`walk: ${rt.playback.describe()}; solver ${JSON.stringify({ ...s, lastSolve: s.lastSolve
+        ? { ...s.lastSolve, goal: s.lastSolve.goal?.kind } : null })}`);
+    tc.reportCondition('the walk settled', !!settled);
+    return s;
+}
+
+export async function seedlingJsRuntimeSolverFallsThroughPit(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = true;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
+    let rt = null;
+    try {
+        const up = await playthroughRoomOnPage(tc, PIT_ROOM.region);
+        if (!up) return tc.getOverallResult();
+        ({ rt } = up);
+        const { win, pl, bot } = up;
+        const exit = pl.exits.find((e) => e.exit_id === PIT_ROOM.exitId);
+        const [tx, ty] = exit.exit_tiles[0];
+        tc.assertEqual(`level ${pl.level}'s exit cell (${tx}, ${ty}) is a PIT of the live room (no teleporter on it)`, true,
+            (rt.run.world.pitTiles ?? []).some((p) => p.tx === tx && p.ty === ty));
+        const exitsBefore = reportedExits(win).length;
+        const answer = rt.playback.walkTo({ kind: 'exit', level: pl.level, tiles: exit.exit_tiles });
+        tc.assertEqual('the page accepted the PIT exit goal (S4 — it used to refuse it)', true, !!answer?.ok);
+        rt.playback.play();
+        const s = await settledSolverWalk(tc, rt);
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+        tc.assertEqual('the walk is DONE (fell through the pit)', 'done', rt.playback.state);
+        tc.assertEqual('the SOLVER drove it: solved once, no decline, no refutation', '1/0/0',
+            `${s.solves}/${s.declines}/${s.refutations}`);
+        tc.assertEqual('the solver goal was reach-pit', 'reach-pit', s.lastSolve?.goal?.kind ?? null);
+        tc.assertEqual('the plan walked onto the pit', true, (s.lastSolve?.verbs ?? []).includes('walk'));
+        tc.assertEqual('the solve ran in the page\'s WORKER', 'worker', s.lastSolve?.where ?? null);
+        const landed = await tc.pollForCondition(() => rt.run?.level === PIT_ROOM.to && !rt.run.state.fall,
+            `the fall's transport landed in level ${PIT_ROOM.to}`, 10000, 100);
+        tc.reportCondition('landed', !!landed);
+        // A fall writes no pendingExit in the game (`Teleporter.as:107` is the only writer); the level move is the report.
+        tc.assertEqual('no pendingExit for a fall', '[]', JSON.stringify(reportedExits(win).slice(exitsBefore)));
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+    } finally {
+        try { rt?.playback.reset(); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-falls-through-pit',
+    name: 'Seedling JS runtime: the solver mode takes a PIT exit (L48 → L49, reach-pit)',
+    description: 'With flashPanel.runtime = js and the solver mode ON, on seedling_atlas: the page handle teleports '
+        + 'the real page to seedling_playthrough\'s level_48__r2c10 arrival; the bot walks to the out_pit_2_2 exit — '
+        + 'a PIT tile, no teleporter (S4: the page used to refuse it). The solver plays reach-pit and the player falls '
+        + 'to level 49; the walk completes on the fall, and no pendingExit is reported (the game writes none for a '
+        + 'fall). 0 HALT, no refutation.',
+    testFunction: seedlingJsRuntimeSolverFallsThroughPit,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+export async function seedlingJsRuntimeSolverOpensChest(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = true;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
+    let rt = null;
+    try {
+        const up = await playthroughRoomOnPage(tc, CHEST_ROOM.region);
+        if (!up) return tc.getOverallResult();
+        ({ rt } = up);
+        const { win, bot } = up;
+        const checksBefore = reportedChecks(win).length;
+        const answer = rt.playback.walkTo({ kind: 'location', level: CHEST_ROOM.level, tag: CHEST_ROOM.tag, entityType: 'chest' });
+        tc.assertEqual('the page accepted the chest goal', true, !!answer?.ok);
+        rt.playback.play();
+        const s = await settledSolverWalk(tc, rt);
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+        tc.assertEqual('the walk is DONE (the chest opened)', 'done', rt.playback.state);
+        tc.assertEqual('the SOLVER drove it: solved once, no decline, no refutation', '1/0/0',
+            `${s.solves}/${s.declines}/${s.refutations}`);
+        tc.assertEqual('collect-placement, by the chest verb', 'collect-placement/true',
+            `${s.lastSolve?.goal?.kind}/${(s.lastSolve?.verbs ?? []).includes('chest')}`);
+        tc.assertEqual(`the chest's clear was reported once: pendingCheck <seq>|${CHEST_ROOM.level}|${CHEST_ROOM.tag}|0`,
+            JSON.stringify([{ level: CHEST_ROOM.level, tag: CHEST_ROOM.tag, written: 0 }]),
+            JSON.stringify(reportedChecks(win).slice(checksBefore)));
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+    } finally {
+        try { rt?.playback.reset(); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-opens-chest',
+    name: 'Seedling JS runtime: the solver mode opens a CHEST beyond the house (L17, collect-placement)',
+    description: 'With flashPanel.runtime = js and the solver mode ON, on seedling_atlas: the page handle teleports '
+        + 'the real page to seedling_playthrough\'s level 17 arrival and the bot walks to the chest (tag 0) — the '
+        + 'solver\'s collect-placement plans the chest verb (stance, press, ceremony), the page plays it, and the '
+        + 'chest\'s clear is reported once as pendingCheck <seq>|17|0|0. 0 HALT, no refutation.',
+    testFunction: seedlingJsRuntimeSolverOpensChest,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
