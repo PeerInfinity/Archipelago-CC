@@ -206,6 +206,14 @@ describe('the solve — a fresh boot at the arrival, no prefix, no play', () => 
         expect(arrivalSolverGoal({ ...DOOR, level: 0 }, { staging, levelSource: SOURCE, record: RECORDS.get(0) }).walker)
             .toMatch(/the goal is in level 0, the arrival in level 86/);
     });
+    it('⛓ S5/W3: an arrival LATCHED ON the goal door → refused by name (no 400-tick stall); one tile off it → the solver', () => {
+        const { staging } = stage(A);
+        const at = (y) => arrivalSolverGoal(DOOR, { staging: { ...staging, boot: { ...staging.boot, y } }, levelSource: SOURCE,
+            record: RECORDS.get(HOUSE) });
+        expect(at(64).walker).toMatch(/latched ON the goal door exit_S .* cannot step off it yet/);
+        expect(at(56).walker).toMatch(/latched ON the goal door/);
+        expect(at(48).goal).toEqual({ kind: 'reach-exit', exit: { x: 48, y: 64 } });
+    });
     it('B86: the S2 WORKER (the real entry over worker_threads) answers the in-place plan, key for key', async () => {
         const ENTRY = new URL('./jsRuntimeSolveWorker.js', import.meta.url).href;
         const nodeWorker = () => {

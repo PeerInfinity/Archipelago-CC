@@ -44,7 +44,7 @@
 import { SEAM_BOOT_SPEC, SEAM_PREBUILD_FIELDS, SEAM_SIGNATURE, segmentBootFromLatch } from './r7Acceptance.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { liveOf, solverGoalFor } from './jsRuntimeSolver.js';
-import { goalTiles, nearestTeleporterAt } from './jsRuntimeWalker.js';
+import { goalTiles, latchedOn, nearestTeleporterAt } from './jsRuntimeWalker.js';
 import { JS_RUNTIME_PINS, locationEntityOf } from './jsRuntimeCore.js';
 import { ITEM_PROPERTIES, PIN_NAMES } from './tapeFormat.js';
 
@@ -343,6 +343,14 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record }) {
     let resolved = null;
     if (goal.kind === 'exit') {
         const hit = nearestTeleporterAt(run.world, goalTiles(goal), run.state);
+        // ⛓ S5 / W3 — an arrival LATCHED ON its goal door: the solver's walk to a point it already
+        // stands on fires nothing (it would stall 400 ticks and decline). The JS page's walker steps
+        // off first; the wasm runtime has no step-off yet (it would solve from a non-arrival — the
+        // S0 `prefix` continuation), so the goal is refused BY NAME, before anything moves.
+        if (hit && latchedOn(run, hit.index)) {
+            return { walker: `the arrival stands latched ON the goal door ${goal.name ?? ''} (an arrival on the door, S5) — `
+                + 'the wasm runtime cannot step off it yet (a step-off needs a continuation solve from a non-arrival)' };
+        }
         resolved = { allowTeleporter: hit ? hit.index : null };
     }
     const placement = goal.kind === 'location' ? locationEntityOf(record, goal.tag, goal.entityType ?? null) : null;
