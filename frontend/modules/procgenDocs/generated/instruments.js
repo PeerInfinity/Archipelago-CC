@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 28,
-            "count": 70,
+            "browser": 29,
+            "count": 71,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 305,
-        "browser": 92,
-        "cited": 141,
-        "files": 316,
+        "blockStyle": 306,
+        "browser": 93,
+        "cited": 142,
+        "files": 317,
         "lineStyle": 11,
-        "withDocblock": 316,
-        "withFlags": 236
+        "withDocblock": 317,
+        "withFlags": 237
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9744,6 +9744,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling JS solver-walk, slice W1 (plan `seedling-js-solver-walk-plan.md` §5.3) — a wasm room ARRIVAL on the live flashPanel page → a JS staging → the S2 worker's solve, with NO play.",
             "path": "scripts/procgen/probe-seedling-wasm-arrival-solve.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "record"
+            ],
+            "file": "probe-seedling-wasm-generated-playback.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling JS solver-walk, slice WG (plan `seedling-js-solver-walk-plan.md` §5, the WG AS-BUILT) — the Playback Bot walks GENERATED Seedling rooms (`flash_seedling_gen`) ON THE WASM RUNTIME (default build p4e, headless logic-only, under the box lock).",
+            "path": "scripts/procgen/probe-seedling-wasm-generated-playback.mjs"
         },
         {
             "argvHelpers": [

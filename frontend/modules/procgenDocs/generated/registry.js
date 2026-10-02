@@ -5094,9 +5094,9 @@ export const REGISTRY = frz({
                 {
                     "id": "flash_seedling_gen",
                     "present": true,
-                    "short": "with the Flash Panel's JS runtime",
+                    "short": "54 chars",
                     "type": "string",
-                    "value": "with the Flash Panel's JS runtime"
+                    "value": "with the Flash Panel's JS runtime, or its wasm runtime"
                 },
                 {
                     "id": "jta",
