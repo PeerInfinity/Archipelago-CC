@@ -56,8 +56,8 @@ describe('the banked observations are what the module says they are', () => {
     });
 
     it('the observations are the full roster, one row per tape', () => {
-        expect(BANKED.observations).toHaveLength(196);
-        expect(BANKED.observations.reduce((n, o) => n + o.loads, 0)).toBe(589);
+        expect(BANKED.observations).toHaveLength(FADE_STATS.tapes);
+        expect(BANKED.observations.reduce((n, o) => n + o.loads, 0)).toBe(FADE_STATS.loads);
         for (const o of BANKED.observations) {
             expect(o.residue).toBe(o.dead - o.modelled);
             expect(o.loads).toBeGreaterThan(0);
@@ -66,7 +66,7 @@ describe('the banked observations are what the module says they are', () => {
 });
 
 describe('ADMITS — every recorded residue is inside the band', () => {
-    it('all 196, two-sidedly', () => {
+    it(`all ${BANKED.observations.length}, two-sidedly`, () => {
         const outside = BANKED.observations.filter((o) => {
             const b = fadeBand(o.loads);
             return o.residue < b.lo || o.residue > b.hi;
