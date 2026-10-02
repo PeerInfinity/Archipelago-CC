@@ -346,6 +346,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r2-wallflyer-contact', 'r2-wallflyer-suit',
             // ⛓⛓⛓ R2-swim D3(c): the terrain death's kill lock, in L5.
             'r2-terrain-killlock',
+            // ⛓⛓⛓ R4-swim D2: the bobs beside the IceTurret, in L40.
+            'r4-iceturret-bobs',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -369,10 +371,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ U14-swim takes it to 37 — four campaign segments in L12 and L22.
         // ⛓ R2-swim D1 takes it to 39 — `r2-wallflyer-contact` and `-suit`, in L22 —
         // and D3(c) to 40 with `r2-terrain-killlock` (L5).
-        expect(out.exposed).toBe(40);
+        // ⛓ R4-swim D2 takes it to 41 — `r4-iceturret-bobs`, in L40.
+        expect(out.exposed).toBe(41);
         expect(out.tapes).toEqual([
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
-            'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
+            'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
+            'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-0-v3',
             'r9-solve-12', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-21',
@@ -498,6 +502,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r2-wallflyer-contact': { tape: {}, levels: [22] },
             'r2-wallflyer-suit': { tape: {}, levels: [22] },
             'r2-terrain-killlock': { tape: {}, levels: [5, 6] },
+            'r4-iceturret-bobs': { tape: {}, levels: [40] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -676,7 +681,8 @@ function syntheticExposureIo(rows) {
         // ⛓ U7-swim: L12 joins — the puncher is bridged and its witness is
         //   declared exposed there.
         // ⛓ R1-swim: L22 joins — `r1-dark-shield-kill` is declared exposed there.
-        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 22]),
+        // ⛓ R4-swim: L40 joins — `r4-iceturret-bobs` is declared exposed there.
+        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 22, 40]),
     };
 }
 

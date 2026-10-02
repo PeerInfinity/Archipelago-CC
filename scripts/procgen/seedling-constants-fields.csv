@@ -157,7 +157,7 @@ frontend/modules/seedlingDemo/levelRun.js|step|h89e67ab9|1|0,rule,magnitude,,tim
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|step|0,physics,bound,,airborne body still moving
 frontend/modules/seedlingDemo/levelRun.js|step|h98281141|0|0,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|step|hdf442f31|0|0,rule,bound,,i-frame timer gate
-frontend/modules/seedlingDemo/levelRun.js|chaserForecastNow|h7ceee914|0|0,physics,bound,,chaser row moves only if speed nonzero
+frontend/modules/seedlingDemo/levelRun.js|chaserStaticEnemyBoxesNow|h7ceee914|0|0,physics,bound,,chaser row moves only if speed nonzero (R4-swim D2: the forecast and the drive share one helper)
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|sweep,physics,sign,,
 frontend/modules/seedlingDemo/levelRun.js|sweep|h60d0f44f|0|0,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|sweep|h60d0f44f|0|1,structural,,,
@@ -196,7 +196,6 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|collideLineSolid,physic
 frontend/modules/seedlingDemo/levelRun.js|collideLineSolid|h21cbb2e8|1|0,physics,bound,,collideLine degenerate segment under 1px
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyPlayerHit|0,physics,magnitude,,default knockback force
 frontend/modules/seedlingDemo/levelRun.js|applyPlayerHit|h56326574|1|0,rule,magnitude,,default damage
-frontend/modules/seedlingDemo/levelRun.js|stepChasersNow|h7ceee914|0|0,physics,bound,,chaser row moves only if speed nonzero
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepChaserEntity|0,rule,bound,,pit fade alpha clamp; alpha 0 = removal
 frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|h65cc0531|0|0,rule,sentinel,,tile type default when no walkable tile
 frontend/modules/seedlingDemo/levelRun.js|stepChaserEntity|hee10ba2a|0|0,rule,bound,,pit fade finished -> destroy
@@ -223,6 +222,8 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|earnedClearsNow,rule,se
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crushersParkedNow,physics,bound,,crusher at rest
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|crusherScans,physics,bound,,crusher at rest
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|previewStepper,rule,bound,,i-frame timer gate
+frontend/modules/seedlingDemo/levelRun.js|previewStepper|h87e0089d|0|0,rule,bound,,i-frame timer gate (R4-swim D3: a preview started inside one carries it)
+frontend/modules/seedlingDemo/levelRun.js|previewStepper|h87e0089d|0|1,rule,sentinel,,directionFace >= 0 is a parked facing; -1 is unset
 frontend/modules/seedlingDemo/levelRun.js|advance|hd5e683f5|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|advance|hf2ca60d1|0|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|advance|hd4727287|0|0,rule,bound,,i-frame timer gate

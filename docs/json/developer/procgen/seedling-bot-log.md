@@ -12193,6 +12193,91 @@ faithful, the replay throws the same words, `reproduced` and `ok` are true.
 - a mid-flight re-trigger: `decideMotion` is asked every update, not only at
   rest, so a flyer passing a wall can turn.
 
+### Seedling substrate R4-swim — the gameplay RNG, the Owl outside its split, L40's IceTurret, the preview's i-frame (2026-10-02)
+
+⚖ The user ruled R4 (2026-10-02: *"Small items, then R4"*; on the shake band:
+*"Investigate. We might want to change the screen shake to use the cosmetic RNG
+instead of the main RNG"*). The report is
+`CC/docs/cloud-reports/seedling-swim-r4.md`; the game-side numbers are
+`seedling-swim-r4-shake-census.json` and `seedling-swim-r4-build-census.json`
+beside it. The witness was recorded on the game before its model step was
+committed (`plan-seedling-r4.mjs`, with `--check`).
+
+**D0 — the shake stream, measured (no model change, no AS3 edit).**
+`Game.view()` draws `Math.random()` twice per frame with `shake > 0`
+(`Game.as:1984-1988`). Every committed tape whose model run shakes (28 of 195)
+was re-run on the game under `split: true` (so the stream holds gameplay
+draws only) to its end and to the tick before its first shake. In 24 of the
+28, the jiggle's own two draws are the WHOLE gameplay stream after the first
+shake. The two Owl tapes spend 907 and 888 more (the fight the model reads),
+and `r6-contact-pair-heart`/`-live` spend 12 more each (after their deaths).
+3 of the 28 declare the split (`r6-owl-control`, `r6-owl-kill`,
+`u15-turret-spit`). The design note (the proposal, its re-record set and its
+limits) is the report's D0 section.
+
+**D1 — the Owl's stream: the split STAYS a premise, plus one guard.**
+
+- **The build census.** Booted at each level's arrival with `tick_count: 0`,
+  the game's gameplay build cost is `Enemy`'s `coins` (two for `Spinner` and
+  `WallFlyer`, which declare their own), one per `Orb`, and 24 per in-bounds
+  grass tile (`.oel` column 1 or 10). The prediction equals the game on 112 of
+  112 levels. Unsplit, each in-bounds `Tile` adds 3 and each grass blade 1
+  (L112: 2 and 677, with 675 = 225 × 3).
+- **Unsplit, tick by tick.** `r6-owl-control`, re-declared `split: false`,
+  agrees with the Owl schedule fed the 675-draw build offset through tick 15.
+  The sword press held at index 15 is the first INDEXED sound pick
+  (`Music.playSound(set, -1)`), and the game is one draw ahead from tick 16
+  (`Music.currentSet` "Text" → "Sword"). After that the two fights part (the
+  residual reads +1, +3, +2, 0, +1 at ticks 100–727). Modelling it would need
+  `Music`'s no-repeat state (page history) and every indexed site the room
+  reaches. The split removes them by construction, so the refusal stays by
+  name. Its stated reason was wrong (the rock's `playSound("Rock", 0)` names
+  its index and draws nothing) and is corrected.
+- **The guard.** L113's build costs 1 (its orb). A split run that walks
+  L113 → L112 had the game at 3 draws after the entry while the stream
+  claimed 2. `owlStreamFor` now opens the stream only in the boot room, on
+  its first build, and refuses otherwise by name.
+
+**D2 — L40's IceTurret beside the bridged chasers.** The refusal asked which
+side of `IceTurret.as:94`'s flip (`"Enemy"` → `"Solid"`) a chaser meets. Both
+are on every bridged chaser's `solids`, so `assertChaserSolidsBound` derives
+that and the turret leaves the refusal. The chaser sweep reads the STEPPED
+turret's box (32×32 alive, snapped by its first on-screen `input()`; 16×16 as
+a corpse) through `chaserStaticEnemyBoxesNow`, one helper for the drive and
+the forecast. A corpse sliding into a chaser is refused by name. Witness
+`r4-iceturret-bobs` (L40, damage on): 151/151 on the game, and the bob body
+probe agrees on 1,632 comparisons (both bobs fall into pits on t53 and t67).
+No reachable bob meets the turret's box (`wandlock@448,432` seals its
+corridor), so the box choice itself is unwitnessed.
+
+**D3 — `previewStepper` inside an i-frame.** A preview from mid-knockback
+faced the way the knockback carried the player (18 of 18 ticks on
+`u11-facing-knockback`'s staging) and never steered again after the window.
+The damage state now rides the preview's states on a Symbol key and steps as
+the drive's player slot does. Outside an i-frame the closure is unchanged.
+
+**D4 — pulled bodies: STOP.** One atlas room holds pulls (L12, 14 in
+x[560,608) y[640,736)). It has 0 pushables, 0 spinners and 0 solids under a
+pull, and one Enemy (`puncher@416,256`, which U12 found sealed off). The
+refusals stay.
+
+**D5 — the post-landing rebound: STOP.** It is the solver's step-out wall
+(U6's sweep cells, a vehicle and a ⚖ 47 boot), not a campaign step. All six
+producer `--check`s are green without it.
+
+**Trap candidates**, for the catalogue to number:
+
+- a refusal whose stated reason is a different site from the one that bites:
+  the Owl's split refusal named the rock's sound, which names its index and
+  draws nothing, and a test pinned the wrong cite;
+- a stream opened "at the room's build" that assumes the room was built
+  first: true at boot, silently one draw short after a walk-in from a room
+  with an orb;
+- a preview that freezes a per-tick gate at the snapshot: steering never
+  recovers in the forecast though it does in the drive;
+- a refusal on a TYPE question whose answer is the same for every reader: what
+  the census could not carry was the BOX.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

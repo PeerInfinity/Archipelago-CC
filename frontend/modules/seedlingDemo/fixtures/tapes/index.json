@@ -525,6 +525,13 @@
       ]
     },
     {
+      "file": "r4-iceturret-bobs.json",
+      "tickCount": 150,
+      "bootLevel": 40,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r4-walk-1-sword.json",
       "tickCount": 641,
       "bootLevel": 0,

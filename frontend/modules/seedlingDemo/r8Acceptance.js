@@ -1049,6 +1049,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'all three bobs drown; the lock opens 101 steps after the last removal and the '
                 + 'player crosses to L6 on t 285.',
         }),
+        /**
+         * ⛓⛓⛓ R4-swim D2 — L40's bobs beside the IceTurret, damage on: the
+         * two nearest chase the standing player and fall into the room's pits.
+         */
+        Object.freeze({
+            name: 'r4-iceturret-bobs', levels: Object.freeze([40]), bobs: 2, ticks: 150,
+            addedBy: 'R4-swim D2 (a bridged chaser beside the IceTurret)',
+            why: '`bob@352,448` and `bob@352,416` fall into pits on t 53 and t 67; the turret '
+                + 'fires on t 4, 49, 94 and 139.',
+        }),
     ]),
 
     /**
