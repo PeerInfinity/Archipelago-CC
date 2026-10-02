@@ -175,6 +175,23 @@ async function generate(preset, mods, outRoot) {
         startCell, seed: SEED, itemLib,
         gameName,
         completionConditionItem: victoryName,
+        // ⛓ The starting perk goes IN, through the compile's one starting-item
+        //   path: it is kept in `starting_items` AND pooled (the exporter's
+        //   `itempool_counts` is precollected + placed, and world_generator
+        //   subtracts `starting_items` from it). Set after the compile, as it
+        //   once was, it never reached that pooling, and the round trip
+        //   re-exported a pool entry the preset lacked. It is placed nowhere
+        //   (that is the point), so the compiled pool holds no def for it:
+        //   `sourceItems` backfills one (ids 999↓ stay clear of the compiled
+        //   pool's upward numbering — `sphereSteps.js`'s convention).
+        ...(startInventory?.length ? {
+            startingItems: [...startInventory],
+            sourceItems: Object.fromEntries(startInventory.map((name, i) => [name, {
+                name, id: 999 - i,
+                classification: itemLib[name]?.classification ?? 'progression',
+                groups: ['Everything'],
+            }])),
+        } : {}),
         // ⛓ R6b — the spiral compile's metadata (`spiralSteps.js` ④), so the
         //   compile records the installed jta config beside it.
         procgenMetadata: { driver: 'shuffled-spiral', stop_reason: stats.stopReason },
@@ -193,28 +210,6 @@ async function generate(preset, mods, outRoot) {
             defaultLocationCost: DEFAULT_LOCATION_COST,
         },
     };
-
-    // stateManager reads starting_items[playerId] as an array of item names and
-    // seeds the inventory with them before the first snapshot — but only for
-    // names it can find in the item table, which buildRulesJson populates from
-    // the PLACED items alone. A starting perk is placed nowhere (that is the
-    // point), so register it by hand. It stays out of itempool_counts: a
-    // starting item is not in the fill pool.
-    if (startInventory?.length) {
-        const playerId = Object.keys(rules.regions)[0];
-        rules.starting_items = { [playerId]: [...startInventory] };
-        const table = rules.items[playerId];
-        let nextId = Math.max(0, ...Object.values(table).map((it) => it.id ?? 0)) + 1;
-        for (const name of startInventory) {
-            if (table[name]) continue;
-            table[name] = {
-                name,
-                id: nextId++,
-                classification: itemLib[name]?.classification ?? 'progression',
-                groups: ['Everything'],
-            };
-        }
-    }
 
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(outFile, JSON.stringify(rules, null, 2) + '\n');

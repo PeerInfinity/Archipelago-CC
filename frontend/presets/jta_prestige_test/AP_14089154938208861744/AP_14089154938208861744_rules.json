@@ -348,7 +348,7 @@
       },
       "Energetic Memory": {
         "name": "Energetic Memory",
-        "id": 5,
+        "id": 999,
         "classification": "progression",
         "groups": [
           "Everything"
@@ -366,7 +366,8 @@
       "JtA Filler": 12,
       "How to Read": 1,
       "Victory": 1,
-      "How to Write": 1
+      "How to Write": 1,
+      "Energetic Memory": 1
     }
   },
   "world": {
@@ -527,8 +528,12 @@
       "player_data": {
         "1": {
           "new_inventory_details": {
-            "base_items": {},
-            "resolved_items": {}
+            "base_items": {
+              "Energetic Memory": 1
+            },
+            "resolved_items": {
+              "Energetic Memory": 1
+            }
           },
           "new_accessible_locations": [
             "region_0_0__10",
