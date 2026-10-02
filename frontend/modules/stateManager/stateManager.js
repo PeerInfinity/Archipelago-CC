@@ -444,21 +444,24 @@ export class StateManager {
         //  this.itempoolCounts
         //);
 
-        // Process special maximum values first to ensure state is properly configured
+        // Pool limits (ALttP's progressive_bottle_limit etc.) are not pool entries:
+        // they live with the world attributes, at world[player].difficulty_requirements.
         if (!this.gameStateModule.difficultyRequirements) {
           this.gameStateModule.difficultyRequirements = {};
         }
-        if (this.itempoolCounts['__max_progressive_bottle']) {
-          this.gameStateModule.difficultyRequirements.progressive_bottle_limit =
-            this.itempoolCounts['__max_progressive_bottle'];
-        }
-        if (this.itempoolCounts['__max_boss_heart_container']) {
-          this.gameStateModule.difficultyRequirements.boss_heart_container_limit =
-            this.itempoolCounts['__max_boss_heart_container'];
-        }
-        if (this.itempoolCounts['__max_heart_piece']) {
-          this.gameStateModule.difficultyRequirements.heart_piece_limit =
-            this.itempoolCounts['__max_heart_piece'];
+        const worldDifficulty =
+          this.rules?.world?.[this.playerId]?.difficulty_requirements;
+        if (worldDifficulty) {
+          for (const key of [
+            'progressive_bottle_limit',
+            'boss_heart_container_limit',
+            'heart_piece_limit',
+          ]) {
+            if (worldDifficulty[key]) {
+              this.gameStateModule.difficultyRequirements[key] =
+                worldDifficulty[key];
+            }
+          }
         }
 
         // Add items based on their counts from the pool

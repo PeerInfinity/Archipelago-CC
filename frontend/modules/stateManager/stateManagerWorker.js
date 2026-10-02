@@ -1116,7 +1116,7 @@ async function handleMessage(message) {
                 '[SMW APPLY_TEST] Using itempool_counts for base inventory (respecting exclusions and required items).'
               );
               Object.entries(itemPool).forEach(([itemName, count]) => {
-                if (itemName.startsWith('__')) return; // Skip special config values like __max_progressive_bottle
+                if (itemName.startsWith('__')) return; // Skip special config keys (none are exported today; pool limits live in world[p])
                 if (combinedExclusions.includes(itemName)) return; // Skip excluded items AND required items
                 if (
                   itemName.includes('Bottle') &&
