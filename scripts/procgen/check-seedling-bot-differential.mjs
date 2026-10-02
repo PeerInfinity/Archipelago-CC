@@ -417,15 +417,11 @@ const { isTerminalSegment } =
 // skipped: the game is asserted against `mirror + earned`, which is a
 // harder claim than the unamended one.
 const { MODEL_EXEMPT } = await import(join(REPO, 'frontend/modules/seedlingDemo/r5Chain.js'));
-// ⛓ The MEASURED ceremony constants, so the budget spends numbers the
-// model banked rather than literals this file invents.
-const {
-    CEREMONY_DEAD_FRAMES,
-} = await import(join(REPO, 'frontend/modules/seedlingDemo/sealCeremony.js'));
 // ⛓⛓ The fade band, R5 slice 12 — derived and asserted in the module, so
-// this file spends it rather than defining it.
+// this file spends it rather than defining it. ⛓ Swim R5 D5: and the budget's
+// terms (`deadFrameBudget`), which spend the MEASURED ceremony constants.
 const {
-    describeFadeBand, fadeBand,
+    deadFrameBudget, describeFadeBand, fadeBand,
 } = await import(join(REPO, 'frontend/modules/seedlingDemo/deadFrameBand.js'));
 // ⛔ The declared DROWN exemption — see `r5Swim.DROWN_EXPECTED`. Same
 // doctrine, different assert: an armed-water pair needs one arm whose timer
@@ -1279,33 +1275,16 @@ function checkReadout(name, tape, status, stream, seam) {
     // fade is never counted, because by the time it starts the bot has
     // stopped looking. A reboot on the tape's last observation costs the
     // dead-frame ledger nothing; every earlier one costs a whole fade.
-    const sameLevelReboots = (expected.endingReboots ?? [])
-        .filter((r) => r.sameLevel && r.t < tape.tick_count).length;
-    const loads = stream.transitions.length + 1 + (expected.playerDeaths?.length ?? 0)
-        + sameLevelReboots;
-    const sealFrames = (expected.sealCollections ?? [])
-        .reduce((n, c) => n + (c.deadFrames ?? 0), 0);
-    /**
-     * Every ordinary `special` pickup the run walked ONTO.
-     *
-     * ⛔ STARTED, NOT COMPLETED — R6 slice 6d. `Pickup.pick_up()` raises the
-     * freeze and counts `specialTimer` down on CONTACT, and it does not ask
-     * whether the dialogue after it will ever be dismissed. `collected` is
-     * the completion ledger, so a tape that ends mid-ceremony paid 150 dead
-     * frames the term could not see: `r6-seed-control` reported 170 dead
-     * against 0 modelled and blew the band by 150 on its first recording.
-     * The two lists are identical for every fixture that finishes what it
-     * starts, which is every fixture before this one.
-     */
-    const pickupFrames = (expected.ceremonyStarts ?? expected.collected ?? []).length
-        * CEREMONY_DEAD_FRAMES.pickup;
+    // ⛓⛓ SWIM R5, D5: the terms live in `deadFrameBand.deadFrameBudget`, which
+    // `probe-seedling-deadframe-band` calls too, so the probe that derives the
+    // band and this gate cannot drift apart again (the probe had missed every
+    // R6 term above, and the ceremony STARTS term below: a tape that ends
+    // mid-ceremony still paid its 150 frames, `r6-seed-control`'s first
+    // recording).
     const exempt = MODEL_EXEMPT[name] ?? null;
-    /** A reward spawned at RUNTIME freezes exactly like a placed pickup. */
-    const spawnedFrames = (exempt?.earned ?? []).length * CEREMONY_DEAD_FRAMES.pickup;
-    /** A freeze the tape's own exemption declares — the L32 rock. */
-    const declaredFreeze = exempt?.freezeFrames ?? 0;
-    const ceremonyFrames = sealFrames + pickupFrames + spawnedFrames + declaredFreeze;
-    const modelled = (expected.frozenFramesOwed ?? 0) + ceremonyFrames;
+    const {
+        loads, runFreeze, sealFrames, pickupFrames, spawnedFrames, declaredFreeze, modelled,
+    } = deadFrameBudget({ tape, expected, transitions: stream.transitions.length, exempt });
     const residue = status.dead_frames - modelled;
     const { lo, hi } = fadeBand(loads);
     check(`${name}: the dead frames are accounted for`,
@@ -1315,7 +1294,7 @@ function checkReadout(name, tape, status, stream, seam) {
         // exists to diagnose is "which freeze is missing", and a lump sum
         // makes every one of them look the same — the 26 that failed its
         // first run were told apart by hand arithmetic off a single number.
-        + `(${expected.frozenFramesOwed ?? 0} run freeze + ${sealFrames} seal + `
+        + `(${runFreeze} run freeze + ${sealFrames} seal + `
         + `${pickupFrames} pickup + ${spawnedFrames} spawned + ${declaredFreeze} declared) `
         + `+ ${residue} residue, against ${describeFadeBand(loads)}`
         + `${residue >= lo && residue <= hi ? '' : ' ⛔ OUT OF BAND — a '

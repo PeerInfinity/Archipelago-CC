@@ -82,7 +82,7 @@ const { CEREMONY_DEAD_FRAMES } = await import(join(MODULE_DIR, 'sealCeremony.js'
 const { MODEL_EXEMPT } = await import(join(MODULE_DIR, 'r5Chain.js'));
 const {
     FADE_STATS, LEGACY_FADE_PER_LOAD, MAX_HALF_WIDTH, SPREAD_PER_SQRT_LOAD,
-    fadeBand, legacyFadeBand,
+    deadFrameBudget, fadeBand, legacyFadeBand,
 } = await import(join(MODULE_DIR, 'deadFrameBand.js'));
 
 const arg = (flag) => {
@@ -110,21 +110,14 @@ function findPayloadDir() {
 }
 
 /**
- * The MODEL side of the budget, term for term as the verifier computes
- * it. ⚠ Deliberately duplicated arithmetic — if this drifts from the
- * verifier the probe stops describing the gate, so the terms are named
- * identically and both read the same banked constants.
+ * The MODEL side of the budget — ⛓ swim R5 D5: the GATE'S OWN terms
+ * (`deadFrameBand.deadFrameBudget`), not a copy. The copy that lived here
+ * never learned R6's death, same-level reboot and ceremony-start terms, so it
+ * rejected 8 residues the gate admits on the R4 harvest's full tier.
  */
-function modelledFrames(name, tape) {
+function modelledFrames(name, tape, transitions) {
     const expected = runTape(tape, { levelSource: atlasLevelSource() });
-    const sealFrames = (expected.sealCollections ?? [])
-        .reduce((n, c) => n + (c.deadFrames ?? 0), 0);
-    const pickupFrames = (expected.collected ?? []).length * CEREMONY_DEAD_FRAMES.pickup;
-    const exempt = MODEL_EXEMPT[name] ?? null;
-    const spawnedFrames = (exempt?.earned ?? []).length * CEREMONY_DEAD_FRAMES.pickup;
-    const declaredFreeze = exempt?.freezeFrames ?? 0;
-    return (expected.frozenFramesOwed ?? 0)
-        + sealFrames + pickupFrames + spawnedFrames + declaredFreeze;
+    return deadFrameBudget({ tape, expected, transitions, exempt: MODEL_EXEMPT[name] ?? null });
 }
 
 const payloadDir = findPayloadDir();
@@ -142,14 +135,14 @@ for (const file of readdirSync(payloadDir).filter((f) => f.endsWith('.json')).so
     const name = file.slice(0, -'.json'.length);
     const { stream, status } = JSON.parse(readFileSync(join(payloadDir, file), 'utf8'));
     if (typeof status?.dead_frames !== 'number') continue;
-    let modelled;
+    let budget;
     try {
-        modelled = modelledFrames(name, loadTape(name));
+        budget = modelledFrames(name, loadTape(name), stream.transitions.length);
     } catch (e) {
         console.log(`SKIP ${name}: the model does not run this tape — ${e.message}`);
         continue;
     }
-    const loads = stream.transitions.length + 1;
+    const { loads, modelled } = budget;
     const residue = status.dead_frames - modelled;
     rows.push({ name, loads, dead: status.dead_frames, modelled, residue, perLoad: residue / loads });
 }
@@ -304,5 +297,8 @@ if (BANK) {
 const bad = admitFails + missLow + missHigh + (drift ? 1 : 0);
 console.log(bad === 0
     ? '\nPASS: the band admits every recorded residue and catches every injected defect'
-    : `\nFAIL: ${admitFails} admit failure(s), ${missLow + missHigh} missed injection(s)`);
+    : `\nFAIL: ${admitFails} admit failure(s), ${missLow + missHigh} missed injection(s)`
+        // ⛓ swim R5 D5: the third cause was counted but never named, so a
+        // drift-only run read "FAIL: 0 admit failure(s), 0 missed injection(s)".
+        + `${drift ? ', and FADE_STATS drifts from these observations' : ''}`);
 process.exit(bad === 0 ? 0 : 1);

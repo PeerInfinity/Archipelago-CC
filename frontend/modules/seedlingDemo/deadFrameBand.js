@@ -185,3 +185,52 @@ export function describeFadeBand(loads) {
         + `${b.capped ? ' (CAPPED)' : ` (${SPREAD_PER_SQRT_LOAD}·√${loads})`} `
         + `= [${b.lo.toFixed(1)},${b.hi.toFixed(1)}]`;
 }
+
+/**
+ * ⛓⛓ SWIM R5, D5 — THE BUDGET'S TERMS, ONE IMPLEMENTATION.
+ *
+ * `check-seedling-bot-differential` gates on these terms and
+ * `probe-seedling-deadframe-band` derives the band from them. Until R5 the
+ * probe carried its own copy, written before R6 taught the gate three more:
+ * a death's same-level reload (`playerDeaths`), a same-level ending reboot
+ * short of the tape's last tick (`endingReboots`), and a ceremony STARTED
+ * rather than completed (`ceremonyStarts`). The copy never learned them, so
+ * on the R4 harvest's full tier it rejected 8 recorded residues the gate
+ * admits (`r3-bobboss-death`, `r3-drown`, `r3-lava`, `r3-pit-death`, both
+ * `r6-contact-pair-*`, both `r6-seed-*`) and, on `r6-seed-control`, measured
+ * a spurious ceremony against a residue 150 frames too high. Both now call
+ * this, so the two cannot drift again.
+ *
+ * Every term reads a banked constant or the MODEL's own ledger, so a model
+ * that invents a death, a reboot or a ceremony blows the band from the
+ * other side.
+ *
+ * @param {object} args
+ * @param {object} args.tape        the fixture (its `tick_count` fences the terminal reboot)
+ * @param {object} args.expected    `runTape`'s result for it
+ * @param {number} args.transitions the stream's transition count
+ * @param {object|null} [args.exempt] `MODEL_EXEMPT[name]`, or null
+ */
+export function deadFrameBudget({ tape, expected, transitions, exempt = null }) {
+    // ⛔ A terminal reboot (on the tape's last observation) starts its fade
+    // after `Bot.update` has disarmed, so it costs the ledger nothing.
+    const sameLevelReboots = (expected.endingReboots ?? [])
+        .filter((r) => r.sameLevel && r.t < tape.tick_count).length;
+    const deaths = expected.playerDeaths?.length ?? 0;
+    const loads = transitions + 1 + deaths + sameLevelReboots;
+    const sealFrames = (expected.sealCollections ?? [])
+        .reduce((n, c) => n + (c.deadFrames ?? 0), 0);
+    // ⛔ STARTED, NOT COMPLETED: `Pickup.pick_up()` raises the freeze on contact.
+    const pickupFrames = (expected.ceremonyStarts ?? expected.collected ?? []).length
+        * CEREMONY_DEAD_FRAMES.pickup;
+    // A reward spawned at RUNTIME freezes exactly like a placed pickup.
+    const spawnedFrames = (exempt?.earned ?? []).length * CEREMONY_DEAD_FRAMES.pickup;
+    // A freeze the tape's own exemption declares (the L32 rock).
+    const declaredFreeze = exempt?.freezeFrames ?? 0;
+    const runFreeze = expected.frozenFramesOwed ?? 0;
+    const ceremonyFrames = sealFrames + pickupFrames + spawnedFrames + declaredFreeze;
+    return {
+        loads, deaths, sameLevelReboots, runFreeze, sealFrames, pickupFrames, spawnedFrames,
+        declaredFreeze, ceremonyFrames, modelled: runFreeze + ceremonyFrames,
+    };
+}

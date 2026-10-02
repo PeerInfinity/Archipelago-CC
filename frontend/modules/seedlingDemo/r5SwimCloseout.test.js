@@ -13,6 +13,9 @@
  *
  * D4: a key's flip is its own placement witness (`GOAL_PLACEMENT_WITNESS`).
  *
+ * D5: the dead-frame budget's terms have ONE implementation, which both the
+ * differential and the band's probe call.
+ *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *
  *   m1 the bait re-entry guard removed (`solverBot.js`)
@@ -31,6 +34,8 @@ import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 import { returnKey, returnSpawnTable } from '../flashPanel/seedlingReturnSpawns.js';
 import { solveSegment } from './solverBot.js';
 import { R7_GOAL_LEDGER, GOAL_PLACEMENT_WITNESS, goalEarnedWitness } from './r7Acceptance.js';
+import { deadFrameBudget } from './deadFrameBand.js';
+import { CEREMONY_DEAD_FRAMES } from './sealCeremony.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
@@ -108,5 +113,45 @@ describe('R5-swim D4: a key\'s flip is its own placement witness', () => {
         const KEY0 = R7_GOAL_LEDGER.find((r) => r.id === 'bosskey0@L19');
         expect(goalEarnedWitness(KEY0, fields([]), fields([0], [{ level: 19, tag: 0 }, { level: 19, tag: 1 }])))
             .toBe('hasKey[0] 0 -> 1, and levelPersistence gains {19,0} {19,1} in level 19');
+    });
+});
+
+describe('R5-swim D5: the dead-frame budget has one implementation', () => {
+    const P = CEREMONY_DEAD_FRAMES.pickup;
+
+    it('a death and a non-terminal same-level reboot are loads; the terminal reboot is not', () => {
+        const b = deadFrameBudget({
+            tape: { tick_count: 100 },
+            expected: {
+                playerDeaths: [{ t: 10 }],
+                endingReboots: [{ sameLevel: true, t: 50 }, { sameLevel: true, t: 100 }, { sameLevel: false, t: 60 }],
+            },
+            transitions: 2,
+            exempt: null,
+        });
+        expect(b).toMatchObject({ loads: 2 + 1 + 1 + 1, deaths: 1, sameLevelReboots: 1, modelled: 0 });
+    });
+
+    it('a ceremony STARTED is paid even when it never completes, and an exemption adds its own', () => {
+        const b = deadFrameBudget({
+            tape: { tick_count: 10 },
+            expected: { ceremonyStarts: [{}, {}], collected: [{}], frozenFramesOwed: 7, sealCollections: [{ deadFrames: 3 }] },
+            transitions: 0,
+            exempt: { earned: ['fire'], freezeFrames: 174 },
+        });
+        expect(b).toMatchObject({
+            loads: 1, runFreeze: 7, sealFrames: 3, pickupFrames: 2 * P, spawnedFrames: P, declaredFreeze: 174,
+            modelled: 7 + 3 + 2 * P + P + 174,
+        });
+    });
+
+    it('the gate and the probe both CALL it, and neither carries its own copy of the terms', () => {
+        for (const rel of ['scripts/procgen/check-seedling-bot-differential.mjs',
+            'scripts/procgen/probe-seedling-deadframe-band.mjs']) {
+            const src = readFileSync(join(ROOT, rel), 'utf8');
+            expect(src, rel).toMatch(/deadFrameBudget\(\{/);
+            expect(src, rel).not.toMatch(/r\.sameLevel && r\.t < tape\.tick_count/);
+            expect(src, rel).not.toMatch(/\.length \* CEREMONY_DEAD_FRAMES\.pickup/);
+        }
     });
 });
