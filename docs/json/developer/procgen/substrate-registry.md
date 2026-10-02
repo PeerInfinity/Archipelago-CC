@@ -256,8 +256,8 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|
-| `getPlaybackController` | fn | — | — | fn | fn | fn | fn | fn | fn |
-| `playbackScope` | — | — | — | with the Flash Panel's JS runtime | — | — | — | — | — |
+| `getPlaybackController` | fn | — | fn | fn | fn | fn | fn | fn | fn |
+| `playbackScope` | — | — | with the Flash Panel's JS runtime | with the Flash Panel's JS runtime | — | — | — | — | — |
 
 **Action labelling**
 

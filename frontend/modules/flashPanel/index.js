@@ -5,6 +5,7 @@ import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
   substrateRegistryEntry as flashSeedlingEntry,
   FLASH_SEEDLING_LOAD_REGION_EVENT,
+  setSeedlingAtlasPlaybackController,
 } from './flashSeedlingLibrary.js';
 // Import side effect registers `flash_seedling_gen` — the LIGHT entry; its
 // generator is installed below through a computed specifier (seedling
@@ -16,7 +17,11 @@ import {
   SEEDLING_GEN_ROOM_MODULE_PATH,
   setSeedlingPlaybackController,
 } from './flashSeedlingGenLibrary.js';
-import { SeedlingPlaybackController } from './seedlingPlaybackController.js';
+import {
+  resolveSeedlingAtlasGoal,
+  SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+  SeedlingPlaybackController,
+} from './seedlingPlaybackController.js';
 import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
 import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
@@ -284,7 +289,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   // ⛓ Seedling JS J2 — the Playback Bot's controller for generated rooms. It
   // reads the live panel on every call (a preset switch replaces the iframe),
   // and refuses by name under any runtime but 'js'.
-  setSeedlingPlaybackController(new SeedlingPlaybackController({
+  const playbackDeps = {
     getSurface: () => {
       const surface = activePanelInstance?.seedlingPlaybackSurface?.() ?? null;
       return surface ? { ...surface, region: seedlingRegionGlue?.binding?.region ?? null } : null;
@@ -295,6 +300,14 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     },
     // A LATE refusal reaches the bot as a named status, never a silent wait.
     onWalkFailed: (e) => getModuleEventBus()?.publish?.(PLAYBACK_WALK_FAILED_EVENT, e),
+  };
+  setSeedlingPlaybackController(new SeedlingPlaybackController(playbackDeps));
+  // ⛓ J3 — the same page and walker, the atlas rooms' name → cell map.
+  setSeedlingAtlasPlaybackController(new SeedlingPlaybackController({
+    ...playbackDeps,
+    substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+    resolve: resolveSeedlingAtlasGoal,
+    mapOf: (surface) => surface?.atlas ?? null,
   }));
 
   // ⛓ AFTER the glue's own subscription, so the arrival is queued before the
@@ -312,6 +325,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     else activationBus.unsubscribe?.(FLASH_SEEDLING_LOAD_REGION_EVENT, onLoadRegionActivate);
     if (seedlingRegionGlue) { seedlingRegionGlue.stop(); seedlingRegionGlue = null; }
     setSeedlingPlaybackController(null);
+    setSeedlingAtlasPlaybackController(null);
   };
 }
 

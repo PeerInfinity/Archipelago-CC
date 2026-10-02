@@ -758,11 +758,34 @@ function serializeWorld(world, extractedRules, obstacleLib, itemLib, context) {
     return { ...rest, exits };
 }
 
+// ── the playback controller (Seedling JS J3) ──────────────────────────────
+
+/**
+ * ⛓ J3 — the Playback Bot's controller for the ATLAS rooms, INJECTED by
+ * `flashPanel/index.js` at `initialize` (the generated entry's J2 pattern:
+ * the library stays import-light; headless, or before the module
+ * initializes, the entry answers null). The controller
+ * (`seedlingPlaybackController.js`, substrate `flash_seedling`) refuses BY NAME
+ * under any runtime but the JS one, so declaring the field does not re-open
+ * P0's silent wait.
+ */
+let _playbackController = null;
+export function setSeedlingAtlasPlaybackController(controller) { _playbackController = controller ?? null; }
+
+/**
+ * ⛓ The chart's P2 degree (`substrateCapabilities.js`): the bot walks these
+ * rooms only on the JS runtime — the same words as the generated entry's
+ * (`flashSeedlingGenLibrary.SEEDLING_PLAYBACK_SCOPE`; a row holds them equal).
+ */
+export const SEEDLING_ATLAS_PLAYBACK_SCOPE = "with the Flash Panel's JS runtime";
+
 export const substrateRegistryEntry = Object.freeze({
     ...runtime,
     panelComponentType: FLASH_SEEDLING_PANEL_COMPONENT_TYPE,
     loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
     serializeWorld,
+    getPlaybackController: () => _playbackController,
+    playbackScope: SEEDLING_ATLAS_PLAYBACK_SCOPE,
 
     /**
      * ⛓⛓⛓ SEEDLING IN THE PIPELINE T1 — **THE CONTENT SOURCE** (see

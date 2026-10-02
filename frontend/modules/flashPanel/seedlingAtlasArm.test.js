@@ -247,3 +247,27 @@ describe('runSeedlingRandomizerLoad with no delivery: bind at once, no overlay, 
         expect(logs).toEqual(['[ap placement] 1 location(s) bound on the atlas arm — nothing delivered, nothing reset']);
     });
 });
+
+// ── Seedling JS J3: the atlas arm on the JS runtime ─────────────────────────
+
+describe('⛓ J3 — the atlas arm on the Seedling JS runtime (transport js, no manifest)', () => {
+    it('seedling_atlas_location loads on the ATLAS arm with no wasm manifest: bound, no delivery, no tag', async () => {
+        const rules = rulesOf('seedling_atlas_location');
+        const { r } = await load(rules, { transport: 'js', manifest: null });
+        expect(r).toMatchObject({ verdict: 'eligible', arm: RANDOMIZER_ARMS.ATLAS, delivery: null, set: null });
+        expect(r.entries.map((e) => [e.location, e.level, e.tag, e.entityType]))
+            .toEqual([['Starting House - Chest', 86, 0, 'chest']]);
+        expect(r.retags).toEqual([]);
+    });
+
+    it('a VANILLA-arm world (seedling_playthrough: 41/41 resolve) is refused on js BY NAME', async () => {
+        const { r } = await load(rulesOf('seedling_playthrough'), { transport: 'js', manifest: null });
+        expect(r).toMatchObject({ verdict: 'ineligible' });
+        expect(r.why).toMatch(/the vanilla arm delivers the whole rewritten 116-room set/);
+    });
+
+    it('⛔ the wasm answers do not move: the same atlas preset with the manifest, transport defaulted', async () => {
+        const { r } = await load(rulesOf('seedling_atlas_location'));
+        expect(r).toMatchObject({ verdict: 'eligible', arm: RANDOMIZER_ARMS.ATLAS });
+    });
+});

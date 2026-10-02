@@ -8,6 +8,8 @@ import {
 import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
 import { RANDOMIZER_ARMS, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
+// ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
+import { ATLAS_CHECK_PLAYER, atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
 import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
@@ -255,6 +257,8 @@ export class FlashPanelUI {
    * AP placement load finishes) and, on the JS runtime, the page's core
    * (`window.__seedlingJsRuntime` — same-origin, as `WasmBridgeAdapter` reads
    * `__swfBridge`).
+   * ⛓ J3 — and `atlas`: the atlas arm's name → cell map
+   * (`{entries, refused, regions}`; null until that load binds).
    */
   seedlingPlaybackSurface() {
     if (!this.adapter) return null;
@@ -266,6 +270,7 @@ export class FlashPanelUI {
       transport: this._initRuntime === undefined ? null : this.transport,
       setting: this._initRuntime ?? null,
       report: this._seedlingGenReport ?? null,
+      atlas: this._seedlingAtlas ?? null,
       jsRuntime,
     };
   }
@@ -273,6 +278,7 @@ export class FlashPanelUI {
   _teardownForReinit() {
     this._initRuntime = undefined;
     this._seedlingGenReport = null;
+    this._seedlingAtlas = null;
     this._heldKeys?.uninstall();
     if (this.adapter) {
       this._detachRegionGlue();
@@ -615,7 +621,10 @@ export class FlashPanelUI {
      */
     const rawRules = rulesOfRawPayload(getLastRawJsonData?.());
     const generated = generatedRoomCensus(rawRules);
-    const cheap = seedlingRandomizerEligibility({ flashPanel, transport, manifest, generated });
+    // ⛓ J3 — on the JS runtime the cheap call is also asked about real rooms:
+    // their (atlas) arm is the runtime's too, and stays an open question here.
+    const atlas = transport === 'js' ? { atlas: { rooms: atlasRoomRegions(rawRules).map((r) => r.region) } } : {};
+    const cheap = seedlingRandomizerEligibility({ flashPanel, transport, manifest, generated, ...atlas });
     if (cheap.verdict === 'ineligible') {
       // ⛓ ONE LINE, AND IT NAMES THE CHECK. "Nothing happened" with no reason
       // is the shape a data-driven feature fails in.
@@ -670,6 +679,14 @@ export class FlashPanelUI {
       }
       // ⛓ Seedling JS J2 — the assembly report is the Playback Bot's name → cell map.
       this._seedlingGenReport = generatedArm ? (loaded.report ?? null) : null;
+      // ⛓ J3 — the atlas arm's bound table and the rules' own real-room
+      // payloads are the Playback Bot's name → cell map for `flash_seedling`.
+      this._seedlingAtlas = loaded.arm === RANDOMIZER_ARMS.ATLAS ? {
+        entries: loaded.entries ?? [],
+        refused: loaded.refused ?? [],
+        regions: new Map(atlasRoomRegions(rawRules).map(({ region }) => [region,
+          rawRules.preset_sidecars[ATLAS_CHECK_PLAYER][region].playable_payload])),
+      } : null;
 
       const glue = getSeedlingRegionGlue();
       if (!glue) {

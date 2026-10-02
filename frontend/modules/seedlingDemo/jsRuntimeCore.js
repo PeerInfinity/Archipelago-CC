@@ -290,8 +290,11 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         // ⛓ J3 — a real room's location is an ENTITY of the room (a chest, a
         // pickup), walked to its own stance; an apitem is still the J1 row.
         locationPointOf: (goal) => {
-            const a = (mounted?.apItems.get(goal.level) ?? []).find((x) => x.tag === goal.tag);
-            if (a) return { x: (a.rect.x + a.rect.right) / 2, y: (a.rect.y + a.rect.bottom) / 2 };
+            // ⛔ A mounted set's locations are its apitems ONLY (validateGoal's rule).
+            if (mounted) {
+                const a = (mounted.apItems.get(goal.level) ?? []).find((x) => x.tag === goal.tag);
+                return a ? { x: (a.rect.x + a.rect.right) / 2, y: (a.rect.y + a.rect.bottom) / 2 } : null;
+            }
             return locationPointOf(locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null));
         },
         isCollected: (level, tag) => collected.has(`${level}:${tag}`) || reportedClears.has(`${level}:${tag}`),

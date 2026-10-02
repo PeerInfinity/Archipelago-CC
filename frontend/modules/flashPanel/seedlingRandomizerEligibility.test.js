@@ -298,11 +298,33 @@ describe('the JS runtime transport (Seedling JS J1)', () => {
         expect(JS_RUNTIME_CAPABILITIES).toEqual([AP_ITEM_CAPABILITY]);
     });
 
-    it('refuses a world with no generated rooms BY NAME, before the vanilla facts are asked', () => {
+    it('refuses a world with neither generated nor real rooms BY NAME, before the vanilla facts are asked', () => {
         const v = seedlingRandomizerEligibility({ flashPanel, transport: JS_TRANSPORT, manifest: null,
-            generated: { rooms: [], mixed: [] } });
+            generated: { rooms: [], mixed: [] }, atlas: { rooms: [] } });
         expect(v).toMatchObject({ eligible: false, verdict: 'ineligible', failed: 'generated' });
-        expect(v.why).toMatch(/GENERATED rooms only/);
+        expect(v.why).toMatch(/GENERATED rooms \(slice J1\) and real ATLAS rooms \(slice J3\)/);
+        // No atlas census at all reads the same (the atlas check passes, nothing diverts).
+        expect(seedlingRandomizerEligibility({ flashPanel, transport: JS_TRANSPORT, manifest: null,
+            generated: { rooms: [], mixed: [] } })).toMatchObject({ verdict: 'ineligible', failed: 'generated' });
+    });
+
+    it('⛓ J3: real rooms keep the question OPEN (undecided) until the ledger is resolved', () => {
+        const v = seedlingRandomizerEligibility({ flashPanel, transport: JS_TRANSPORT, manifest: null,
+            generated: { rooms: [], mixed: [] }, atlas: { rooms: ['region_2_2'] } });
+        expect(v).toMatchObject({ eligible: false, verdict: 'undecided', failed: null });
+        expect(v.why).toMatch(/^atlas: /);
+    });
+
+    it('⛓ J3: the ATLAS divert is the JS runtime\'s arm; the VANILLA arm is still refused by name', () => {
+        const assets = { recordSet: { url: 'r', ok: true }, map: { url: 'm', ok: true, source: 'default' } };
+        const atlas = seedlingRandomizerEligibility({ flashPanel, transport: JS_TRANSPORT, manifest: null,
+            generated: { rooms: [], mixed: [] }, atlas: { rooms: ['region_2_2'] },
+            placement: { resolved: 0, total: 41 }, assets });
+        expect(atlas).toMatchObject({ eligible: true, arm: 'atlas' });
+        const vanilla = seedlingRandomizerEligibility({ flashPanel, transport: JS_TRANSPORT, manifest: null,
+            generated: { rooms: [], mixed: [] }, atlas: { rooms: ['r'] }, placement: { resolved: 41, total: 41 }, assets });
+        expect(vanilla).toMatchObject({ eligible: false, verdict: 'ineligible', failed: 'generated' });
+        expect(vanilla.why).toMatch(/the vanilla arm delivers the whole rewritten 116-room set/);
     });
 
     it('a MIXED world is still refused by the generated check\'s own reason', () => {

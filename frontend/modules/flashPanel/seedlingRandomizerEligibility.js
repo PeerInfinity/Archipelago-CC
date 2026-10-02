@@ -145,11 +145,17 @@ export const WASM_BUILD_CAPABILITIES = Object.freeze(
  * The JS page (`seedlingDemo/jsRuntime.html`) is not a build in `builds.json`,
  * so the capability check cannot read it from the manifest; the runtime
  * declares its own list HERE, in the same vocabulary, and the wasm path's
- * answers do not move. ⛔ It plays the GENERATED arm only in J1 — the vanilla
- * and atlas arms deliver or bind the 116 real rooms, which are slice J3's.
+ * answers do not move. It plays the GENERATED arm (J1) and, ⛓ since J3, the
+ * ATLAS arm — which binds real rooms where they stand and delivers nothing, so
+ * the page runs its own vanilla map. ⛔ Not the VANILLA arm: that one delivers
+ * the whole rewritten 116-room set, and the JS runtime does not take it. ⛔ No
+ * `tag` here: an atlas location that needs a tag ALLOCATED (P4E) is refused by
+ * name, as on a wasm build without it.
  */
 export const JS_TRANSPORT = 'js';
 export const JS_RUNTIME_CAPABILITIES = Object.freeze([AP_ITEM_CAPABILITY]);
+/** ⛓ J3 — the diverting checks whose arm the JS runtime plays. */
+export const JS_RUNTIME_ARMS = Object.freeze(['generated', 'atlas']);
 
 /** The ids the five checks report themselves by, in the ruled order. */
 export const ELIGIBILITY_CHECK_IDS = Object.freeze(
@@ -417,12 +423,17 @@ export function seedlingRandomizerEligibility(inputs = {}) {
      * ⛓ SEEDLING JS J1: the JS runtime is decided BEFORE the vanilla facts are
      * asked for — a world it cannot play is refused here by name, not left
      * `undecided` behind a placement and two documents it would never use.
+     * ⛓ J3: the ATLAS divert is the JS runtime's too, and while the atlas
+     * check is still `unknown` (real rooms, the ledger not resolved yet) the
+     * question is OPEN — the verdict stays `undecided` so the heavy load can
+     * answer it. Only a world that is neither is refused.
      */
-    if (inputs.transport === JS_TRANSPORT && diverted?.id !== 'generated'
+    if (inputs.transport === JS_TRANSPORT && !JS_RUNTIME_ARMS.includes(diverted?.id)
+        && checks.find((c) => c.id === 'atlas')?.status !== 'unknown'
         && !checks.some((c) => c.status === 'fail')) {
-        const why = 'the Seedling JS runtime plays GENERATED rooms only (slice J1) — these rules '
-            + 'carry none, and the vanilla and atlas arms deliver or bind the real 116 rooms, which '
-            + 'the JS runtime does not mount yet (slice J3)';
+        const why = 'the Seedling JS runtime plays GENERATED rooms (slice J1) and real ATLAS rooms (slice J3) — '
+            + 'these rules are neither: the vanilla arm delivers the whole rewritten 116-room set, which the '
+            + 'JS runtime does not take';
         Object.assign(checks.find((c) => c.id === 'generated'), fail(why));
         return { eligible: false, verdict: 'ineligible', arm: null, failed: 'generated',
             why: `generated: ${why}`, checks };

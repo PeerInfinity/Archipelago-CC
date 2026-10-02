@@ -77,6 +77,8 @@ import {
     AP_ITEM_CAPABILITY,
     buildNameFromWasmPath,
     capabilitiesOf,
+    JS_RUNTIME_CAPABILITIES,
+    JS_TRANSPORT,
     RANDOMIZER_ARMS,
     seedlingRandomizerEligibility,
     TAG_CAPABILITY,
@@ -687,6 +689,8 @@ const defaultImportModule = (url) => import(/* @vite-ignore */ url);
 export async function loadSeedlingRandomizer({
     flashPanel,
     manifest,
+    /** ⛓ J3 — `'js'` asks the JS runtime's questions (its capabilities, its arms); default the wasm page's. */
+    transport = 'wasm',
     rawRules = null,
     locations,
     playerId,
@@ -716,7 +720,12 @@ export async function loadSeedlingRandomizer({
 
     // ── the cheap two, first: nothing heavy is fetched for a preset that
     //    cannot use it ────────────────────────────────────────────────────
-    const cheap = seedlingRandomizerEligibility({ flashPanel, transport: 'wasm', manifest });
+    // ⛓ J3 — the JS runtime's question is only open while the rules carry
+    // real rooms, so its cheap call is asked about them (the wasm one is not:
+    // its answer here is byte-for-byte the pre-J3 one).
+    const atlasRooms = transport === JS_TRANSPORT
+        ? { atlas: { rooms: atlasRoomRegions(rawRules).map((r) => r.region) } } : {};
+    const cheap = seedlingRandomizerEligibility({ flashPanel, transport, manifest, ...atlasRooms });
     if (cheap.verdict === 'ineligible') return refuse(cheap);
 
     // ── (iv) the two documents ──────────────────────────────────────────
@@ -738,7 +747,7 @@ export async function loadSeedlingRandomizer({
 
     if (!assets.recordSet.ok || !assets.map.ok) {
         return refuse(seedlingRandomizerEligibility(
-            { flashPanel, transport: 'wasm', manifest, assets }), { assets });
+            { flashPanel, transport, manifest, assets, ...atlasRooms }), { assets });
     }
 
     // ── the heavy modules ───────────────────────────────────────────────
@@ -763,7 +772,7 @@ export async function loadSeedlingRandomizer({
     // ── (iii) the placement, and the full verdict ───────────────────────
     const eligibility = seedlingRandomizerEligibility({
         flashPanel,
-        transport: 'wasm',
+        transport,
         manifest,
         // ⛓ G7: the real rooms, so a world the ledger cannot name DIVERTS
         // (check `atlas`) instead of failing (iii).
@@ -779,8 +788,9 @@ export async function loadSeedlingRandomizer({
             importModule, log,
             // ⛓ R9 slice P4E: the build's `tag` capability, from DATA, and what
             // a delivery needs if the table allocates a tag.
-            tagCapable: (capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm))
-                .capabilities ?? []).includes(TAG_CAPABILITY),
+            tagCapable: (transport === JS_TRANSPORT ? JS_RUNTIME_CAPABILITIES
+                : (capabilitiesOf(manifest, buildNameFromWasmPath(flashPanel?.wasm)).capabilities ?? []))
+                .includes(TAG_CAPABILITY),
             embed, bot,
         });
     }

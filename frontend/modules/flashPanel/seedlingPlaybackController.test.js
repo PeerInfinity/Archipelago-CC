@@ -10,10 +10,11 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    notJsRuntimeRefusal, PENDING_GIVE_UP_MS, resolveSeedlingGoal, SeedlingPlaybackController,
+    notJsRuntimeRefusal, PENDING_GIVE_UP_MS, resolveSeedlingAtlasGoal, resolveSeedlingGoal,
+    SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, SeedlingPlaybackController,
 } from './seedlingPlaybackController.js';
 import { substrateRegistryEntry as genEntry, SEEDLING_PLAYBACK_SCOPE } from './flashSeedlingGenLibrary.js';
-import { substrateRegistryEntry as atlasEntry } from './flashSeedlingLibrary.js';
+import { substrateRegistryEntry as atlasEntry, SEEDLING_ATLAS_PLAYBACK_SCOPE } from './flashSeedlingLibrary.js';
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { parsePendingExit } from './seedlingRegionBinding.js';
 import { createJsRuntime } from '../seedlingDemo/jsRuntimeCore.js';
@@ -168,16 +169,83 @@ describe('SeedlingPlaybackController — the contract', () => {
 });
 
 describe('the registry entry and the chart', () => {
-    it('flash_seedling_gen declares the controller and its scope; the atlas entry declares neither (J3)', () => {
+    it('both Seedling entries declare the controller and the SAME scope (J2 generated, J3 atlas)', () => {
         expect(typeof genEntry.getPlaybackController).toBe('function');
         expect(genEntry.playbackScope).toBe(SEEDLING_PLAYBACK_SCOPE);
-        expect(atlasEntry.getPlaybackController).toBeUndefined();
+        expect(typeof atlasEntry.getPlaybackController).toBe('function');
+        expect(atlasEntry.playbackScope).toBe(SEEDLING_ATLAS_PLAYBACK_SCOPE);
+        expect(SEEDLING_ATLAS_PLAYBACK_SCOPE).toBe(SEEDLING_PLAYBACK_SCOPE);
     });
 
-    it('P2 reads ◐ "with the Flash Panel\'s JS runtime" for flash_seedling_gen, ✗ for flash_seedling', () => {
+    it('P2 reads ◐ "with the Flash Panel\'s JS runtime" for flash_seedling_gen AND flash_seedling', () => {
         const p2 = CAPABILITY_STATEMENTS.find((s) => s.id === 'P2');
         expect(p2.answer(genEntry)).toEqual({ kind: CELL_KINDS.PARTIAL, text: SEEDLING_PLAYBACK_SCOPE });
-        expect(p2.answer(atlasEntry).kind).toBe(CELL_KINDS.NO);
+        expect(p2.answer(atlasEntry)).toEqual({ kind: CELL_KINDS.PARTIAL, text: SEEDLING_PLAYBACK_SCOPE });
         expect(p2.answer({ getPlaybackController: () => null }).kind).toBe(CELL_KINDS.YES);
+    });
+});
+
+// ── Seedling JS J3: the atlas rooms (`flash_seedling`) ───────────────────────
+
+const ATLAS_RULES = JSON.parse(readFileSync(
+    join(ROOT, 'frontend/presets/seedling_atlas_location/AP_1/AP_1_rules.json'), 'utf8'));
+const MAP = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+const HOUSE = ATLAS_RULES.preset_sidecars['1'].region_2_2.playable_payload;
+/** The panel's `surface.atlas` for this preset: the bound entry the atlas arm builds, and the sidecars. */
+const ATLAS_MAP = {
+    entries: [{ location: 'Starting House - Chest', level: 86, tag: 0, entityType: 'chest' }],
+    refused: [{ location: 'Somewhere - Sword', region: 'r', why: 'the property path reports it too' }],
+    regions: new Map([['region_2_2', HOUSE]]),
+};
+
+describe('SeedlingPlaybackController — the atlas rooms (J3)', () => {
+    it('resolves a bound location to its (level, tag, entity) and an exit to its exit_tiles', () => {
+        expect(resolveSeedlingAtlasGoal({ kind: 'location', name: 'Starting House - Chest' }, ATLAS_MAP)).toEqual({
+            goal: { kind: 'location', level: 86, tag: 0, entityType: 'chest', name: 'Starting House - Chest' } });
+        expect(resolveSeedlingAtlasGoal({ kind: 'exit', name: 'exit_S' }, ATLAS_MAP, { region: 'region_2_2' })).toEqual({
+            goal: { kind: 'exit', level: 86, tiles: [[3, 4]], name: 'exit_S' } });
+        expect(resolveSeedlingAtlasGoal({ kind: 'exit', name: 'door' }, ATLAS_MAP).goal?.tiles).toEqual([[3, 4]]);
+    });
+
+    it('refuses BY NAME: a location the atlas arm refused (with its reason), an unknown one, an unknown exit', () => {
+        expect(resolveSeedlingAtlasGoal({ kind: 'location', name: 'Somewhere - Sword' }, ATLAS_MAP).refused)
+            .toBe('"Somewhere - Sword" is an atlas location the atlas arm did NOT bind — the property path reports it too');
+        expect(resolveSeedlingAtlasGoal({ kind: 'location', name: 'nope' }, ATLAS_MAP).refused)
+            .toBe('"nope" is not a bound AP location of the atlas rooms');
+        expect(resolveSeedlingAtlasGoal({ kind: 'exit', name: 'nope' }, ATLAS_MAP).refused)
+            .toBe('"nope" is not an exit of the atlas rooms');
+    });
+
+    it('under wasm the atlas controller refuses by name, naming ITS substrate and rooms', () => {
+        const c = new SeedlingPlaybackController({ getSurface: () => ({ transport: 'wasm', setting: 'auto' }),
+            substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas });
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(false);
+        expect(c.lastRefusal).toBe(notJsRuntimeRefusal('wasm', 'auto', 'flash_seedling'));
+        expect(c.lastRefusal).toMatch(/^flash_seedling regions are walked only on the Seedling JS runtime .* walk atlas rooms$/);
+    });
+
+    it('walks end to end in node on the vanilla map: the chest check, then the house door, as the host reads them', () => {
+        const reports = [];
+        const rt = createJsRuntime({ onStateChanged: (p, v) => reports.push([p, v]) });
+        rt.game.configure(JSON.stringify({ classes: GAME_CONFIG.classes, state_properties: GAME_CONFIG.state_properties }));
+        rt.setVanilla(MAP);
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [86, 48, 48] }]);
+        rt.tick();
+        reports.length = 0;
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'js', atlas: ATLAS_MAP, jsRuntime: rt, region: 'region_2_2' }),
+            substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas,
+        });
+        const tickUntil = (pred, max = 3000) => { for (let i = 0; i < max && !pred(); i += 1) rt.tick(new Set()); };
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        c.play();
+        tickUntil(() => reports.some(([p]) => p === 'pendingCheck'));
+        expect(parsePendingCheck(reports.find(([p]) => p === 'pendingCheck')[1])).toMatchObject({ level: 86, tag: 0, cleared: true });
+        tickUntil(() => c.status().state === 'done');
+        expect(c.walkTo({ kind: 'exit', name: 'exit_S' })).toBe(true);
+        tickUntil(() => reports.some(([p]) => p === 'pendingExit'));
+        expect(parsePendingExit(reports.find(([p]) => p === 'pendingExit')[1]))
+            .toMatchObject({ fromLevel: 86, type: 'teleporter', x: 48, y: 64, to: 0 });
+        expect(c.status()).toMatchObject({ state: 'done' });
     });
 });

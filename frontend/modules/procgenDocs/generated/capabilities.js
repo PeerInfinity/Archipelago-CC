@@ -185,6 +185,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
+                    "statement": "The Playback Bot can walk it (replaying a world's solution)",
+                    "text": "with the Flash Panel's JS runtime"
+                },
+                {
+                    "group": "play",
                     "statement": "What the generator may do with it",
                     "text": "locations placed anywhere"
                 },
@@ -1173,16 +1178,16 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "partial",
+                    "text": "with the Flash Panel's JS runtime",
                     "why": [
                         {
                             "field": "getPlaybackController",
-                            "value": "—"
+                            "value": "fn"
                         },
                         {
                             "field": "playbackScope",
-                            "value": "—"
+                            "value": "with the Flash Panel's JS runtime"
                         }
                     ]
                 },

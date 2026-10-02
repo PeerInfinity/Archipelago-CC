@@ -134,7 +134,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         if (goal.kind === 'location') {
             if (locationPointOf) {
                 const p = locationPointOf(goal);
-                if (!p) return { refused: `level ${goal.level} has no ${goal.entityType ?? 'location'} with tag ${goal.tag}` };
+                if (!p) return { refused: `level ${goal.level} has no ${goal.entityType ?? 'apitem'} with tag ${goal.tag}` };
                 return { target: p, allowTeleporter: null };
             }
             const a = apItemOf(goal.level, goal.tag);

@@ -51,10 +51,22 @@
  * `play`/`stop`/`step`/`reset` pass through to the page's walker; `instant` is
  * `play` (the game has one 30 tick/s clock, and a burst of ticks off it would
  * be a second one); `setRate` is a no-op (bounce's answer: no scriptable clock).
+ *
+ * ── ⛓ J3 — THE SAME CLASS WALKS THE ATLAS ROOMS (`flash_seedling`) ───────
+ *
+ * One page, one walker, two name → cell maps: a second instance is built with
+ * `substrate: 'flash_seedling'`, `resolve: resolveSeedlingAtlasGoal` and
+ * `mapOf: (surface) => surface.atlas`. The atlas map is the atlas arm's BOUND
+ * entries (`seedlingAtlasCheckTable`: location → `{level, tag, entityType}`)
+ * plus the rules' own `flash_seedling` sidecars (an exit → its `exit_tiles` in
+ * its level). A location the arm REFUSED is refused here by the same name and
+ * reason — a check that cannot fire is never walked to.
  */
 
-/** The substrate this controller walks. */
+/** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
 export const SEEDLING_PLAYBACK_SUBSTRATE = 'flash_seedling_gen';
+/** ⛓ J3 — the atlas rooms' substrate, the second instance's. */
+export const SEEDLING_ATLAS_PLAYBACK_SUBSTRATE = 'flash_seedling';
 /** How often a held goal is retried, and when one is given up on (logged). */
 export const PENDING_RETRY_MS = 250;
 export const PENDING_GIVE_UP_MS = 60000;
@@ -93,11 +105,51 @@ export function resolveSeedlingGoal(target, report, { liveLevel = null, region =
     return { refused: `not a walk target: ${JSON.stringify(target)}` };
 }
 
+/**
+ * ⛓ J3 — map an AP-vocabulary target to a goal in a REAL room: `atlas` is the
+ * panel's `{entries, refused, regions}` (the atlas arm's bound table, its
+ * refusals, and `regionId → flash_seedling payload`).
+ *
+ * @returns {{goal:object}|{refused:string}}
+ */
+export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, region = null } = {}) {
+    const name = target?.name;
+    if (target?.kind === 'location') {
+        const e = (atlas?.entries ?? []).find((x) => x.location === name);
+        if (!e) {
+            const why = (atlas?.refused ?? []).find((r) => r.location === name)?.why ?? null;
+            return { refused: why ? `"${name}" is an atlas location the atlas arm did NOT bind — ${why}`
+                : `"${name}" is not a bound AP location of the atlas rooms` };
+        }
+        return { goal: { kind: 'location', level: e.level, tag: e.tag, entityType: e.entityType ?? null, name } };
+    }
+    if (target?.kind === 'exit') {
+        const regions = atlas?.regions instanceof Map ? atlas.regions : new Map(Object.entries(atlas?.regions ?? {}));
+        const order = [...(region && regions.has(region) ? [[region, regions.get(region)]] : []), ...regions];
+        for (const [, payload] of order) {
+            const exit = (payload?.exits ?? []).find((x) => x.exitName === name || x.exit_id === name);
+            if (!exit) continue;
+            if (!Array.isArray(exit.exit_tiles) || exit.exit_tiles.length === 0) {
+                return { refused: `the atlas exit "${name}" marks no exit tiles to walk onto` };
+            }
+            return { goal: { kind: 'exit', level: payload.level, tiles: exit.exit_tiles, name } };
+        }
+        return { refused: `"${name}" is not an exit of the atlas rooms` };
+    }
+    if (target?.kind === 'tile') {
+        if (!Number.isInteger(liveLevel)) return { refused: 'a tile target needs the player in an atlas room' };
+        return { goal: { kind: 'tile', level: liveLevel, tile: [target.x, target.y] } };
+    }
+    return { refused: `not a walk target: ${JSON.stringify(target)}` };
+}
+
+const ROOMS_OF = Object.freeze({ flash_seedling_gen: 'generated rooms', flash_seedling: 'atlas rooms' });
+
 /** The refusal for a panel that is not running the JS runtime. */
-export function notJsRuntimeRefusal(transport, setting) {
-    return `${SEEDLING_PLAYBACK_SUBSTRATE} regions are walked only on the Seedling JS runtime — the Flash Panel `
+export function notJsRuntimeRefusal(transport, setting, substrate = SEEDLING_PLAYBACK_SUBSTRATE) {
+    return `${substrate} regions are walked only on the Seedling JS runtime — the Flash Panel `
         + `is running the ${transport ?? 'unknown'} runtime (setting '${setting ?? 'auto'}'); set Flash Panel → `
-        + "Runtime to 'js' to let the Playback Bot walk generated rooms";
+        + `Runtime to 'js' to let the Playback Bot walk ${ROOMS_OF[substrate] ?? 'these rooms'}`;
 }
 
 export class SeedlingPlaybackController {
@@ -110,11 +162,18 @@ export class SeedlingPlaybackController {
      * @param {(e:{substrate:string, target:object, reason:string}) => void} [deps.onWalkFailed]
      * @param {object} [deps.timers] `{setInterval, clearInterval}` (tests)
      * @param {() => number} [deps.now]
+     * @param {string} [deps.substrate]  ⛓ J3 — which substrate this instance walks
+     * @param {function} [deps.resolve]  `(target, map, where) → {goal}|{refused}`
+     * @param {(surface:object) => object|null} [deps.mapOf]  the name → cell map off the surface
      */
     constructor({
         getSurface, log = () => {}, onWalkFailed = () => {}, now = () => Date.now(),
         timers = { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) },
+        substrate = SEEDLING_PLAYBACK_SUBSTRATE, resolve = resolveSeedlingGoal, mapOf = (surface) => surface?.report ?? null,
     } = {}) {
+        this.substrate = substrate;
+        this._resolve = resolve;
+        this._mapOf = mapOf;
         this._getSurface = getSurface;
         this._log = log;
         this._onWalkFailed = onWalkFailed;
@@ -133,7 +192,7 @@ export class SeedlingPlaybackController {
     walkTo(target) {
         this.lastRefusal = null;
         const s = this._getSurface?.() ?? null;
-        if (s && s.transport && s.transport !== 'js') return this._refuse(notJsRuntimeRefusal(s.transport, s.setting));
+        if (s && s.transport && s.transport !== 'js') return this._refuse(notJsRuntimeRefusal(s.transport, s.setting, this.substrate));
         const out = this._apply(target, s);
         if (out === 'pending') {
             this._hold(target);
@@ -171,9 +230,10 @@ export class SeedlingPlaybackController {
     /** true / false (refused) / 'pending' (not resolvable YET). */
     _apply(target, s) {
         const page = this._page(s);
-        if (!s || !s.transport || !page || !s.report) return 'pending';
+        const map = this._mapOf(s);
+        if (!s || !s.transport || !page || !map) return 'pending';
         const liveLevel = s.jsRuntime?.run?.level ?? null;
-        const r = resolveSeedlingGoal(target, s.report, { liveLevel, region: s.region ?? null });
+        const r = this._resolve(target, map, { liveLevel, region: s.region ?? null });
         if (r.refused) return this._refuse(r.refused);
         const answer = page.walkTo(r.goal);
         if (!answer?.ok) return this._refuse(`the JS runtime refused ${JSON.stringify(r.goal)}: ${answer?.reason ?? 'no answer'}`);
@@ -198,7 +258,7 @@ export class SeedlingPlaybackController {
     _fail(target, reason) {
         this.lastRefusal = reason;
         this._log(`[playback] ${reason}`, 'warn');
-        try { this._onWalkFailed({ substrate: SEEDLING_PLAYBACK_SUBSTRATE, target, reason }); } catch { /* a listener's bug */ }
+        try { this._onWalkFailed({ substrate: this.substrate, target, reason }); } catch { /* a listener's bug */ }
     }
 
     _hold(target) {
@@ -213,7 +273,7 @@ export class SeedlingPlaybackController {
         if (s && s.transport && s.transport !== 'js') {
             const { target } = this._pending;
             this._clearPending();
-            this._fail(target, notJsRuntimeRefusal(s.transport, s.setting));
+            this._fail(target, notJsRuntimeRefusal(s.transport, s.setting, this.substrate));
             return;
         }
         const { target } = this._pending;
@@ -226,7 +286,7 @@ export class SeedlingPlaybackController {
         if (this._now() - this._pending.since > PENDING_GIVE_UP_MS) {
             this._clearPending();
             this._fail(target, `the walkTo was never handed to the JS runtime — no `
-                + `${!s ? 'flash panel' : !s.report ? 'generated level set (the AP placement load)' : 'JS runtime page'} `
+                + `${!s ? 'flash panel' : !this._mapOf(s) ? `name → cell map for the ${ROOMS_OF[this.substrate] ?? this.substrate} (the AP placement load)` : 'JS runtime page'} `
                 + `within ${PENDING_GIVE_UP_MS / 1000} s`);
         }
     }

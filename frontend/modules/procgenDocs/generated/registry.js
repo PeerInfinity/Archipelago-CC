@@ -36,7 +36,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 30,
+            "fields": 32,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
@@ -2656,6 +2656,7 @@ export const REGISTRY = frz({
         {
             "carriedBy": [
                 "bounce",
+                "flash_seedling",
                 "flash_seedling_gen",
                 "jta",
                 "maze",
@@ -2680,9 +2681,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -5065,6 +5066,7 @@ export const REGISTRY = frz({
         },
         {
             "carriedBy": [
+                "flash_seedling",
                 "flash_seedling_gen"
             ],
             "cells": [
@@ -5084,10 +5086,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "flash_seedling",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "with the Flash Panel's JS runtime",
+                    "type": "string",
+                    "value": "with the Flash Panel's JS runtime"
                 },
                 {
                     "id": "flash_seedling_gen",

@@ -34,7 +34,8 @@ describe('flash_seedling substrate entry', () => {
 
     it('inherits the flash family runtime plumbing unchanged', () => {
         expect(substrateRegistryEntry.supportedFeatures).toEqual(['arbitrary_ap_locations']);
-        expect(substrateRegistryEntry.getPlaybackController).toBeUndefined();
+        // ⛓ Seedling JS J3: the Playback Bot's controller (injected by the panel; null headless).
+        expect(substrateRegistryEntry.getPlaybackController()).toBeNull();
         expect(substrateRegistryEntry.loopSupport.queueActions).toEqual(['regionMove']);
         expect(substrateRegistryEntry.generateRegionCore).toBeUndefined();
     });
