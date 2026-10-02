@@ -31,6 +31,13 @@
       "noHazards": []
     },
     {
+      "file": "f1-l5-lock-removal.json",
+      "tickCount": 380,
+      "bootLevel": 5,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "friction-stop.json",
       "tickCount": 30,
       "bootLevel": 0,

@@ -1,0 +1,188 @@
+{
+    "tape_version": 11,
+    "game": "seedling",
+    "boot": {
+        "level": 5,
+        "x": 80,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": "GAME-sourced: the player crosses lock@48,112 on t303 in the game; the last bob leaves the world on t201 and the lock opens 100 alpha steps later (scripts/procgen/plan-seedling-f1-l5-lock.mjs)",
+            "at": 301
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1129091,
+        "split": true,
+        "cosmetic": 544565574,
+        "fp": 750204808
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 5609,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Push Rock",
+            "index": 0
+        }
+    },
+    "tick0": {
+        "rng": {
+            "seed": 906110800,
+            "split": true,
+            "cosmetic": 245529354,
+            "fp": 341033166
+        },
+        "seam": {
+            "time": 5630
+        }
+    },
+    "hold": false,
+    "tick_count": 380,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "up",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "down",
+            "from": 12,
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 16,
+            "to": 19
+        },
+        {
+            "key": "down",
+            "from": 20,
+            "to": 22
+        },
+        {
+            "key": "left",
+            "from": 26,
+            "to": 53
+        },
+        {
+            "key": "right",
+            "from": 55,
+            "to": 57
+        },
+        {
+            "key": "right",
+            "from": 167,
+            "to": 178
+        },
+        {
+            "key": "left",
+            "from": 178,
+            "to": 179
+        },
+        {
+            "key": "right",
+            "from": 179,
+            "to": 181
+        },
+        {
+            "key": "left",
+            "from": 182,
+            "to": 184
+        },
+        {
+            "key": "down",
+            "from": 188,
+            "to": 215
+        },
+        {
+            "key": "up",
+            "from": 216,
+            "to": 218
+        },
+        {
+            "key": "left",
+            "from": 222,
+            "to": 233
+        },
+        {
+            "key": "right",
+            "from": 233,
+            "to": 234
+        },
+        {
+            "key": "left",
+            "from": 234,
+            "to": 236
+        },
+        {
+            "key": "right",
+            "from": 237,
+            "to": 239
+        },
+        {
+            "key": "down",
+            "from": 243,
+            "to": 263
+        },
+        {
+            "key": "down",
+            "from": 263,
+            "to": 380
+        }
+    ],
+    "name": "f1-l5-lock-removal",
+    "description": "⛓⛓⛓ SEEDLING FIDELITY F1 — L5's KILL LOCK OPENS ON THE REMOVAL, NOT THE KILL. `r8-solve-5`'s staging and keys through t199 (its three bobs die to the arrows at t124, t127 and t166; the last is destroyed at t190 and leaves the world at t201), then the segment's own walk to `lock@48,112` (its keys from t462) started at t167, then `down` against the lock. The player stands on the lock from about t261, before both readings: the kill (t166 + 101 = 267, what `twoPassSolve` declares) and the removal (t201 + 100 = 301). The game crosses to L6 on t303, which is the removal. `{5,0}@301` is GAME-sourced; the model replays the recording under it and its own ledger predicts 267. Authored by scripts/procgen/plan-seedling-f1-l5-lock.mjs.",
+    "note": ""
+}

@@ -2981,6 +2981,8 @@ export function createLevelRun({
         if (!arrowsInFlight.has(n)) arrowsInFlight.set(n, []);
         return arrowsInFlight.get(n);
     };
+    /** The tick each arrow joined `flight` — `arrowUpdateOrder`'s key (F1). */
+    const arrowSpawnTick = new WeakMap();
     /**
      * ⛔⛔ THE LIVE SEAL PIECE — at most one, and it is not in the census.
      *
@@ -6229,7 +6231,7 @@ export function createLevelRun({
         const solidOpts = normalizeLiveOpts(liveSolidOpts());
         const bodies = arrowBodiesNow();
         const coverAt = (box) => world.collidesArrowCover(box, solidOpts);
-        for (const a of flight) {
+        for (const a of arrowUpdateOrder(flight)) {
             const r = stepArrow(a, {
                 frozen, bound, bodies, coverAt,
             });
@@ -6240,7 +6242,56 @@ export function createLevelRun({
         }
         // `World.updateLists()` — the frame's own additions join HERE, below
         // every update this frame ran.
+        for (const a of spawned) arrowSpawnTick.set(a, ticksCompleted + 1);
         flight.push(...spawned);
+    }
+
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY F1 — THE ARROWS UPDATE NEWEST-FIRST, AND WHICH
+     * ARROW LANDS ON A BODY DECIDES WHICH WAY IT IS SHOVED.
+     *
+     * `flight` is kept in CREATION order (a tick's volleys appended in trap
+     * order, each volley `#k.0 #k.1 #k.2` as `ArrowTrap.shoot()` adds them at
+     * `x - 4`, `x`, `x + 4`). The game's update list is not that order:
+     * `World.updateLists()` walks `_add` in add order and `addUpdate`
+     * PREPENDS each one (`World.as:937-951`), so the newest arrow updates
+     * first. The traps themselves update in reverse load order, so the LAST
+     * trap's volley is created first and ends up behind the first trap's. The
+     * update order is therefore: newest spawn tick first; within a tick, the
+     * traps in load order; within a volley, `.2 .1 .0`.
+     *
+     * ⛔ IT DECIDES THE KNOCKBACK. Two arrows of one volley can overlap one
+     * body on the same tick. The first to update lands (`Enemy.hit` arms
+     * `hitsTimer`); the second is refused by the i-frames and only stops. The
+     * shove's angle is measured from the arrow that landed, and the two sit
+     * 4 px apart. ⛓ MEASURED on `r8-solve-5` t54: arrows at x = 36 and 40
+     * both overlap `bob@16,64` at (34.595, 67.813). The game shoves it from
+     * x = 40 — v (-2.6929, 2.3064), which is (0.3536, -0.3536) + 5 at
+     * atan2(4.8128, -5.405), friction, then the chase step — and creation
+     * order shoved it from x = 36, v (-0.4903, 3.7028). From that tick L5's
+     * bodies and its kill order left the game (swim R5 D3).
+     *
+     * ⚠ The STORAGE order is unchanged (`arrowsInFlight`, `arrowFlights` and
+     * the forecasts read it, and none of them ask a body); only this walk is.
+     */
+    function arrowUpdateOrder(flight) {
+        const ticks = [];
+        for (const a of flight) {
+            const t = arrowSpawnTick.get(a) ?? null;
+            const vk = a.id.slice(0, a.id.lastIndexOf('.'));
+            let tg = ticks[ticks.length - 1];
+            if (!tg || tg.t !== t) { tg = { t, volleys: [] }; ticks.push(tg); }
+            let vg = tg.volleys[tg.volleys.length - 1];
+            if (!vg || vg.k !== vk) { vg = { k: vk, arrows: [] }; tg.volleys.push(vg); }
+            vg.arrows.push(a);
+        }
+        const out = [];
+        for (let i = ticks.length - 1; i >= 0; i -= 1) {
+            for (const vg of ticks[i].volleys) {
+                for (let j = vg.arrows.length - 1; j >= 0; j -= 1) out.push(vg.arrows[j]);
+            }
+        }
+        return out;
     }
 
     /**

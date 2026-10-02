@@ -1059,6 +1059,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: '`bob@352,448` and `bob@352,416` fall into pits on t 53 and t 67; the turret '
                 + 'fires on t 4, 49, 94 and 139.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity F1 — L5's kill lock, asked of the game with a
+         * walk that stands on the lock before both readings.
+         */
+        Object.freeze({
+            name: 'f1-l5-lock-removal', levels: Object.freeze([5, 6]), bobs: 3, ticks: 380,
+            addedBy: 'Seedling fidelity F1 D1c (the kill lock opens on the removal)',
+            why: '`r8-solve-5`\'s three bobs die to the arrows (t 124, 127, 166); the last leaves '
+                + 'the world on t 201 and the player, on the lock from t 261, crosses to L6 on t 303.',
+        }),
     ]),
 
     /**
