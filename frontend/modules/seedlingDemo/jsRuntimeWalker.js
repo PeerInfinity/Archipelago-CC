@@ -42,11 +42,22 @@
  * with no teleporter on it is not a crossing on either runtime: the wasm
  * binding is level-granular (`seedlingRegionBinding.js`, ruling 1) and the
  * game reports no sub-level boundary, so such an exit is refused, by name.
+ *
+ * ⛓ S5 — AN ARRIVAL ON THE DOOR. Some arrivals stand the player INSIDE the
+ * goal's teleporter (L11 → L3 lands at (96,128), on the L3 → L11 door; the
+ * binding's `entrance_spawn` fallback lands on the door tile itself). The
+ * teleporter is LATCHED (`run.state.latched`, `Teleporter.check()`): it fires
+ * only on an entry, and a walk to a point it already stands on is a
+ * zero-length walk — no entry, no crossing, a stall. So while the run is
+ * latched on the goal's teleporter the walk heads for the nearest cell OFF it
+ * (`stepOffPoint`), the latch drops the tick the box clears the rect, and the
+ * walk turns back and earns the crossing (the maze bot's step-off-and-back).
  */
 
-import { planWaypoints, livePerVisitOpts, driveStepHeld, BotDriverV2Error } from './botDriverV2.js';
+import { planWaypoints, livePerVisitOpts, driveStepHeld, BotDriverV2Error, isWalkableTile } from './botDriverV2.js';
 import { hasArrived } from './botDriverV1.js';
-import { TILE_SIZE } from './levelWorld.js';
+import { TILE_SIZE, rectsOverlap } from './levelWorld.js';
+import { playerBoxAt } from './playerPhysicsV2.js';
 import { SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX } from './jsRuntimeSolver.js';
 
 /** Re-plan cadence, in ticks (J0(b)'s demo: 8 reached both targets from a live state). */
@@ -90,6 +101,54 @@ export function nearestTeleporterAt(world, tiles, from) {
         if (!best || d < best.d) best = { ...hit, tile, d };
     }
     return best;
+}
+
+/** ⛓ S5 — whether the run stands latched on teleporter `index` (on it, and it will not fire). */
+export function latchedOn(run, index) {
+    return Number.isInteger(index) && run?.state?.latched?.has?.(index) === true;
+}
+
+/**
+ * ⛓ S5 — where to stand OFF a latched teleporter: the centres of the tiles
+ * ringing its rect, nearest the player first, that are STANDABLE
+ * (`isWalkableTile`, the planner's own node test, inside the level) and
+ * whose player box overlaps NO teleporter (stepping off this one onto
+ * another would fire that one). The first the planner routes TO wins (a
+ * route that ENDS on the cell: the planner snaps an unstandable goal to a
+ * node nearby, which in a pocket is the door itself). Null when none can —
+ * a closed pocket — and the walk fails by name.
+ */
+export function stepOffPoint(run, index) {
+    const world = run.world;
+    const teleporter = world.teleporters[index];
+    const opts = { ...livePerVisitOpts(run), snapStart: true };
+    const r = teleporter.rect;
+    const tx0 = Math.floor(r.x / TILE_SIZE) - 1;
+    const ty0 = Math.floor(r.y / TILE_SIZE) - 1;
+    const tx1 = Math.floor((r.right - 1) / TILE_SIZE) + 1;
+    const ty1 = Math.floor((r.bottom - 1) / TILE_SIZE) + 1;
+    const from = run.state;
+    const points = [];
+    for (let ty = ty0; ty <= ty1; ty += 1) {
+        for (let tx = tx0; tx <= tx1; tx += 1) {
+            if (!isWalkableTile(world, tx, ty, null, { ...opts, nodeMargin: 0 })) continue;
+            const p = tileCentrePoint([tx, ty]);
+            const box = playerBoxAt(p.x, p.y);
+            if (world.teleporters.some((tp) => rectsOverlap(box, tp.rect))) continue;
+            points.push({ ...p, d: (p.x - from.x) ** 2 + (p.y - from.y) ** 2 });
+        }
+    }
+    points.sort((a, b) => a.d - b.d);
+    for (const { x, y } of points) {
+        try {
+            // The goal teleporter stays allowed: the route STARTS on it.
+            const end = planWaypoints(world, from, { x, y }, index, opts).at(-1);
+            if (end && end.x === x && end.y === y) return { x, y };
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+        }
+    }
+    return null;
 }
 
 const centreOf = (rect) => ({ x: (rect.x + rect.right) / 2, y: (rect.y + rect.bottom) / 2 });
@@ -141,6 +200,9 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
     let retryCause = null;
     /** ⛓ S2 — every retry, named (`{n, after, declined}`), for the status and the rows. */
     let retryLog = [];
+    /** ⛓ S5 — the cell this walk steps off a latched goal teleporter to (per run), and how many times it did. */
+    let stepOff = null;
+    let stepOffs = 0;
 
     const emit = (type, message) => {
         try { onEvent({ type, state, goal: goal ? { ...goal } : null, message }); } catch { /* a listener's bug is not the walk's */ }
@@ -173,6 +235,25 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 return { refused: `level ${goal.level} has no live teleporter on ${tiles.length === 1
                     ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
             }
+            if (latchedOn(run, hit.index)) {
+                // ⛓ S5 — standing latched on the door: step OFF it first (see the header).
+                if (stepOff?.run !== run || stepOff.index !== hit.index) {
+                    const point = stepOffPoint(run, hit.index);
+                    if (!point) {
+                        return { refused: `level ${goal.level}: the run stands latched on the teleporter at `
+                            + `(${hit.teleporter.x}, ${hit.teleporter.y}) and no cell next to it can be walked to `
+                            + '— a crossing needs the player to step off it and back on' };
+                    }
+                    stepOff = { run, index: hit.index, point };
+                    stepOffs += 1;
+                    waypoints = null;
+                    emit('step-off', `stepping off the latched teleporter at (${hit.teleporter.x}, ${hit.teleporter.y}) `
+                        + `to (${point.x}, ${point.y}) — it fires only on an entry`);
+                }
+                // The goal teleporter stays allowed: the step-off route STARTS on it.
+                return { target: stepOff.point, allowTeleporter: hit.index, stepOff: true };
+            }
+            if (stepOff) { stepOff = null; waypoints = null; }
             return { target: tileCentrePoint(hit.tile), allowTeleporter: hit.index };
         }
         return { target: tileCentrePoint(goal.tile), allowTeleporter: null };
@@ -191,7 +272,9 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         get reason() { return reason; },
         get goal() { return goal ? { ...goal } : null; },
         get playing() { return playing; },
-        get stats() { return { plans, driven, planError, declined, retries, retryLog: retryLog.map((r) => ({ ...r })) }; },
+        get stats() {
+            return { plans, driven, planError, declined, retries, retryLog: retryLog.map((r) => ({ ...r })), stepOffs };
+        },
         /** ⛓ S1 — true when the last `heldFor` returned the solver's keys. */
         get solverDriving() { return solverDriving; },
         /** ⛓ S2 — true when the last `heldFor` HELD the tick for a solve in flight. */
@@ -208,6 +291,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             sinceDecline = 0;
             retryCause = null;
             retryLog = [];
+            stepOff = null;
+            stepOffs = 0;
             solver?.clear();
             if (goal) settle(WALK_STATES.WAITING, null);
             else settle(WALK_STATES.IDLE, null);
@@ -239,6 +324,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             if (driven >= giveUpTicks) {
                 settle(WALK_STATES.FAILED, `not reached within ${giveUpTicks} ticks — stalled at `
                     + `(${run.state.x}, ${run.state.y})${planError ? `; the planner said: ${planError}` : ''}`
+                    + `${r.stepOff ? `; still latched on the goal teleporter — stepping off to (${r.target.x}, ${r.target.y}) never got there` : ''}`
                     + `${declined ? `; the solver declined: ${declined}` : ''}`);
                 return null;
             }
