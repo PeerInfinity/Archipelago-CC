@@ -372,6 +372,8 @@ For a synthesized fixture, "the driver still emits this tape" turns any geometry
 
 The chain is 26 windows and 9,054 ticks. Route step 27 stops it: L29's Green Key walk passes 15.9 px from `turret@80,176`, and the game's `TurretSpit` knocks the player at t196. The model steps neither the turret nor its spit, so the survey and the producer both solved that step in the model alone.
 
+**A solve from a run that has already ticked.** `solveSegment` takes its run fresh from `boot` (`ticksCompleted` 0) and refuses anything else, unless the caller passes `prefix`: the key sets it has already advanced the run through from `boot`. The returned `perTick` is then `prefix` followed by the solution, so it is still one tape from `boot`, and the trace's ticks and the danger queries' `tick` index that whole tape. The solver checks only that the run has ticked at least `prefix.length` times (dead frames make the run clock at least the tape clock); that the run really is the prefix replayed from `boot` is the caller's claim. A ticked run with no prefix refuses with the original message. The Playback Bot's solver mode uses it: the page replays its own session tape into a shadow run, solves the shadow with the session's keys as `prefix`, and plays the solution on the live run (`solverPrefix.test.js` has the L4 and L6 witnesses from a live mid-room state).
+
 ## Running it
 
 ```bash
