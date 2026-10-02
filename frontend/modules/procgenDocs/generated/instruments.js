@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 46,
+            "count": 48,
             "id": "plan"
         },
         {
             "browser": 25,
-            "count": 66,
+            "count": 67,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 298,
+        "blockStyle": 301,
         "browser": 89,
-        "cited": 136,
-        "files": 309,
+        "cited": 138,
+        "files": 312,
         "lineStyle": 11,
-        "withDocblock": 309,
-        "withFlags": 229
+        "withDocblock": 312,
+        "withFlags": 232
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6554,6 +6554,64 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-r2-singles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-r2-singles — ⛓⛓⛓ R2-swim D3: THE CENSUS SINGLES, WITNESSED ON THE GAME BEFORE THE MODEL STEP.",
+            "path": "scripts/procgen/plan-seedling-r2-singles.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-r2-wallflyer.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-r2-wallflyer — ⛓⛓⛓ R2-swim D1: THE WALLFLYER, WITNESSED ON THE GAME BEFORE THE RUN STEPPED IT.",
+            "path": "scripts/procgen/plan-seedling-r2-wallflyer.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-r3-death.mjs",
             "flags": [
                 {
@@ -8383,6 +8441,41 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-r1-suit-census — ⛓⛓ R1-swim D1: J0(a)'s twelve dark-suit levels, re-driven on the MODEL.",
             "path": "scripts/procgen/probe-seedling-r1-suit-census.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "levels"
+            ],
+            "file": "probe-seedling-r2-census.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "levels"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-r2-census — ⛓⛓ R2-swim D5: J0(a)'s census levels for R2's items, re-driven on the MODEL (R1's `probe-seedling-r1-suit-census.mjs`, widened to EVERY arrival and set to the census's own persistence setting).",
+            "path": "scripts/procgen/probe-seedling-r2-census.mjs"
         },
         {
             "argvHelpers": [],

@@ -497,15 +497,31 @@ describe('the seams that must stay loud', () => {
         expect(clear.y).toBeLessThan(40);
     });
 
-    it('THROWS when two teleporters fire on the same tick', () => {
+    it('⛓ R2-swim D3(b): two BARE teleporters on one tick — the FIRST `.oel` placement wins', () => {
         // `FP.world =` only records a `_goto`, so the LAST teleporter to
-        // update wins — and that order is FlashPunk's prepend order, which
-        // this module deliberately does not transcribe. The player's box at
-        // the centre of (2,1) is [38,42)x[22,27), which reaches into both of
-        // these 16x16 volumes.
+        // update wins; `addUpdate` PREPENDS, so that is the FIRST placement
+        // (`r2-two-teleporters` is the game's word: L113's `(16,0)` beats
+        // `(32,0)`). The player's box at the centre of (2,1) is
+        // [38,42)x[22,27), which reaches into both of these 16x16 volumes.
         const w = world({
             entities: [
                 { type: 'teleporter', x: 32, y: 16, attrs: { to: 94, playerx: 0, playery: 0 } },
+                { type: 'teleporter', x: 32, y: 8, attrs: { to: 12, playerx: 0, playery: 0 } },
+            ],
+        });
+        const { x, y } = centre(2, 1);
+        const r = step({ x, y, vx: 0, vy: 0, terrain: 0 }, held(), { level: w });
+        expect(r.transition.to_level).toBe(94);
+        expect(r.transition.alsoFired).toEqual([1]);
+    });
+
+    it('THROWS when a STAIR fires on the same tick as a teleporter', () => {
+        // Stairs are added in their own `loadlevel` loops above the
+        // teleporters, and the world does not carry which of the two a stair
+        // is — so a mixed tick stays refused by name.
+        const w = world({
+            entities: [
+                { type: 'stairsdown', x: 32, y: 16, attrs: { to: 94, playerx: 0, playery: 0 } },
                 { type: 'teleporter', x: 32, y: 8, attrs: { to: 12, playerx: 0, playery: 0 } },
             ],
         });

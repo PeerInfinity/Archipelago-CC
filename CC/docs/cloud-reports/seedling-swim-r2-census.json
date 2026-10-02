@@ -1,0 +1,357 @@
+[
+ {
+  "level": 5,
+  "boot": {
+   "level": 5,
+   "x": 80,
+   "y": 32
+  },
+  "from": "4:stairsdown",
+  "ticks": 715,
+  "deaths": 0,
+  "retaliations": 2,
+  "refusal": {
+   "t": 715,
+   "text": "levelRun: the removal of bob@48,80 at tick 715 (a press kill) OPENS 1 kill lock(s) in level 5 [{5,0}] (1 kill lock(s) OPEN: totalEnemies() went 3 -> 0) — and the tape DECLARES no clear for them. A `Lock`'s own hundred alpha steps and the durable write that follows are the declared v9 `at` channel; computing them here as well would make two writers of one persistence slot. So a clear this model can see coming and the tape does not carry is a blocker that opens in the game and stays shut here."
+  }
+ },
+ {
+  "level": 5,
+  "boot": {
+   "level": 5,
+   "x": 48,
+   "y": 96
+  },
+  "from": "6:teleporter",
+  "ticks": 844,
+  "deaths": 0,
+  "retaliations": 13,
+  "refusal": {
+   "t": 844,
+   "text": "levelRun: the removal of bob@16,80 at tick 844 (a press kill) OPENS 1 kill lock(s) in level 5 [{5,0}] (1 kill lock(s) OPEN: totalEnemies() went 3 -> 0) — and the tape DECLARES no clear for them. A `Lock`'s own hundred alpha steps and the durable write that follows are the declared v9 `at` channel; computing them here as well would make two writers of one persistence slot. So a clear this model can see coming and the tape does not carry is a blocker that opens in the game and stays shut here."
+  }
+ },
+ {
+  "level": 5,
+  "boot": {
+   "level": 5,
+   "x": 16,
+   "y": 32
+  },
+  "from": "12:stairsdown",
+  "ticks": 183,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": {
+   "t": 183,
+   "text": "levelRun: the removal of bob@48,80 at tick 183 (a terrain death) OPENS 1 kill lock(s) in level 5 [{5,0}] (1 kill lock(s) OPEN: totalEnemies() went 3 -> 0) — and the tape DECLARES no clear for them. A `Lock`'s own hundred alpha steps and the durable write that follows are the declared v9 `at` channel; computing them here as well would make two writers of one persistence slot. So a clear this model can see coming and the tape does not carry is a blocker that opens in the game and stays shut here."
+  }
+ },
+ {
+  "level": 16,
+  "boot": {
+   "level": 16,
+   "x": 32,
+   "y": 64
+  },
+  "from": "15:stairsdown",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 7,
+  "refusal": null
+ },
+ {
+  "level": 16,
+  "boot": {
+   "level": 16,
+   "x": 112,
+   "y": 48
+  },
+  "from": "17:stairsup",
+  "ticks": 9,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": {
+   "t": 9,
+   "text": "levelRun: whether bob bob@192,80 is on screen at tick 8 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not. Move the stance away from the screen edge, or wait the shake out."
+  }
+ },
+ {
+  "level": 16,
+  "boot": {
+   "level": 16,
+   "x": 352,
+   "y": 96
+  },
+  "from": "18:stairsdown",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 17,
+  "boot": {
+   "level": 17,
+   "x": 48,
+   "y": 48
+  },
+  "from": "16:stairsdown",
+  "ticks": 145,
+  "deaths": 0,
+  "retaliations": 1,
+  "refusal": {
+   "t": 145,
+   "text": "levelRun: whether bob bob@192,80 is on screen at tick 144 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are not indexable (camera.js, \"THE SHAKE, AND WHY IT IS A BAND\"). `Enemy.update` early-returns at ZERO margin, so this is the difference between a body that damages and one that does not. Move the stance away from the screen edge, or wait the shake out."
+  }
+ },
+ {
+  "level": 22,
+  "boot": {
+   "level": 22,
+   "x": 96,
+   "y": 16
+  },
+  "from": "21:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 22,
+  "boot": {
+   "level": 22,
+   "x": 16,
+   "y": 128
+  },
+  "from": "25:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 2,
+  "refusal": null
+ },
+ {
+  "level": 22,
+  "boot": {
+   "level": 22,
+   "x": 176,
+   "y": 64
+  },
+  "from": "29:teleporter",
+  "ticks": 922,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": {
+   "t": 922,
+   "text": "levelRun: the player is standing inside turret@80,176 in level 29 at tick 922 on a tape that does NOT declare `noDamage`, and this rung prices it as \"mover\" — Turret's position is an encounter script (speed 0, aggro static-shooter), and a contact tests the body where it IS. `Enemy.hitPlayer` collides against the body at its CURRENT position, so a contact with a body the model does not step is a number this run cannot produce. Declare `noDamage`, or route clear of it."
+  }
+ },
+ {
+  "level": 22,
+  "boot": {
+   "level": 22,
+   "x": 96,
+   "y": 176
+  },
+  "from": "30:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 3,
+  "refusal": null
+ },
+ {
+  "level": 25,
+  "boot": {
+   "level": 25,
+   "x": 128,
+   "y": 32
+  },
+  "from": "22:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 1,
+  "refusal": null
+ },
+ {
+  "level": 25,
+  "boot": {
+   "level": 25,
+   "x": 16,
+   "y": 96
+  },
+  "from": "26:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 1,
+  "refusal": null
+ },
+ {
+  "level": 25,
+  "boot": {
+   "level": 25,
+   "x": 96,
+   "y": 112
+  },
+  "from": "28:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 27,
+  "boot": {
+   "level": 27,
+   "x": 32,
+   "y": 16
+  },
+  "from": "26:teleporter",
+  "ticks": 839,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": {
+   "t": 839,
+   "text": "levelRun: the removal of puncher@80,168 at tick 839 (a dark-suit kill) OPENS 1 kill lock(s) in level 26 [{26,0}] (1 kill lock(s) OPEN: totalEnemies() went 2 -> 0) — and the tape DECLARES no clear for them. A `Lock`'s own hundred alpha steps and the durable write that follows are the declared v9 `at` channel; computing them here as well would make two writers of one persistence slot. So a clear this model can see coming and the tape does not carry is a blocker that opens in the game and stays shut here."
+  }
+ },
+ {
+  "level": 27,
+  "boot": {
+   "level": 27,
+   "x": 168,
+   "y": 32
+  },
+  "from": "28:teleporter",
+  "ticks": 927,
+  "deaths": 0,
+  "retaliations": 2,
+  "refusal": {
+   "t": 927,
+   "text": "levelRun: the dark suit's retaliation KILLS wallflyer@192,48 at tick 927 in level 27. `WallFlyer.startDeath` plays \"die\"; its die anim, its fade and its place in `totalEnemies()` are not staged for this class. Refused by name (R2-swim D1)."
+  }
+ },
+ {
+  "level": 33,
+  "boot": {
+   "level": 33,
+   "x": 32,
+   "y": 48
+  },
+  "from": "12:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 36,
+  "boot": {
+   "level": 36,
+   "x": 32,
+   "y": 112
+  },
+  "from": "12:teleporter",
+  "ticks": 733,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": {
+   "t": 733,
+   "text": "levelRun: the `enemy` hit (sandtrap@80,80) at tick 733 in level 36 — playerHit: `hasDarkSuit` retaliates INTO the attacker when the call passes `e` (`e.hit(darkSuitForce, …, \"Suit\")`) and not when it passes `null` — and this source has not declared which it is (`byEnemy`). Refused by name rather than guessed: the answer decides whether an enemy takes damage."
+  }
+ },
+ {
+  "level": 113,
+  "boot": {
+   "level": 113,
+   "x": 72,
+   "y": 128
+  },
+  "from": "112:teleporter",
+  "ticks": 620,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": {
+   "t": 620,
+   "text": "the Owl fight in level 112 needs `rng: { split: true }`. With the split off, `Rng.cos()` IS `Math.random()`, so `Music.as:673`'s sound-index pick draws from the gameplay stream once per ROCK LANDING and the schedule in `finalBossRng.js` is short by exactly that many. The stream would be reproducible and this model would still be wrong."
+  }
+ },
+ {
+  "level": 113,
+  "boot": {
+   "level": 113,
+   "x": 16,
+   "y": 16
+  },
+  "from": "114:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 113,
+  "boot": {
+   "level": 113,
+   "x": 32,
+   "y": 16
+  },
+  "from": "114:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 113,
+  "boot": {
+   "level": 113,
+   "x": 112,
+   "y": 16
+  },
+  "from": "115:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 113,
+  "boot": {
+   "level": 113,
+   "x": 128,
+   "y": 16
+  },
+  "from": "115:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 114,
+  "boot": {
+   "level": 114,
+   "x": 64,
+   "y": 128
+  },
+  "from": "113:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ },
+ {
+  "level": 114,
+  "boot": {
+   "level": 114,
+   "x": 80,
+   "y": 128
+  },
+  "from": "113:teleporter",
+  "ticks": 1000,
+  "deaths": 0,
+  "retaliations": 0,
+  "refusal": null
+ }
+]

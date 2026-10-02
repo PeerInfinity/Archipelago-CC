@@ -179,7 +179,9 @@ describe('entityRecords — the dump and its md5', () => {
         // a change here is an entity-record change
         // ⛓ swim U14: e338c30f → 143e37e6, the `moonrock` record (13 leaves).
         // ⛓ swim U15: 143e37e6 → f1a4c74f, the `turret` and `turretSpit` records.
-        expect(entitiesMd5()).toBe('f1a4c74fb07d32db5a747b50d818beb6');
+        // ⛓ swim R2 D1: 143e37e6 → abbcd286, the `wallFlyer` record.
+        // ⛓ swim U15 + R2 (merged): all three records.
+        expect(entitiesMd5()).toBe('d10864a049d5f84c2bff1a018b230a66');
         expect(entitiesStamp()).toEqual({ md5: entitiesMd5(), records: entityRecordNames().length });
     });
 });

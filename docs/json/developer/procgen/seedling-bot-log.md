@@ -12112,6 +12112,87 @@ differs.
   entity: read the `type =` assignment before deciding what a hitable list
   means.
 
+### Seedling substrate R2-swim — the wallflyer, the census singles, the shake band, a refusal witness (2026-10-02)
+
+⚖ The user ruled the un-parked model residue (2026-10-01); R2 is its second
+slice and ran beside U15 (⚖ 2026-10-02). The items are J0(a)'s measured
+non-death refusals. The report is `CC/docs/cloud-reports/seedling-swim-r2.md`.
+Every new behaviour was recorded on the game before its model step was
+committed (`plan-seedling-r2-wallflyer.mjs`, `plan-seedling-r2-singles.mjs`,
+both with `--check`).
+
+**D1 — the wallflyer (`wallFlyer.js`, `levelRun.stepWallFlyersNow`).**
+`Enemies/WallFlyer.as` in update order:
+
+- `check()` runs inside the world's first `Game.update`, so the tick-0 sample
+  reads `v = 0`; the first step sets `v = decideMotion(-4)` (into its wall)
+  and the body settles one pixel against it;
+- `Enemy.update`: the off-screen gate, the terrain switch, `mobileUpdate` at
+  `f = 0` (the dead band snaps the `-4·sin(π)` residue to 0), the
+  `moveX`/`moveY` override that ZEROES `v` on a collision, then `hitUpdate`
+  and `hitPlayer` with `e = this`;
+- the tail: `decideMotion(+4)` and a `collideLine("Player")` of
+  `FP.screen.width` (160). It re-triggers mid-flight off any wall the body
+  passes, which the game confirmed (`r2-wallflyer-contact`: a flyer turns DOWN
+  off `rock@96,96`'s underside).
+
+`knockback` is `v = -v`, so the dark suit's retaliation reverses a flyer. The
+census scan skips the class (`CONTACT_STEPPED_PRICED_BY.wallflyer`). Witnesses:
+`r2-wallflyer-contact` (the t8 hit, east, force 3) and `r2-wallflyer-suit`
+(the t8 retaliation: hits 1, i-frame 30, latch, reversal; relaunch on t12).
+Both are 61/61 on the game, and the body probe (`--class=WallFlyer`) agrees
+244/244 on each, worst 0. Refused by name: a suit KILL (the census reaches one
+in L27), a ceremony beside a flyer in flight or i-frames, and a room whose
+`Rock`/`Rope`/`ShieldBoss` types would split `decideMotion`'s probe from the
+sweep.
+
+**D2 — the shake band: STOP.** `Game.view()` jiggles the camera by
+`shake * Math.random() - shake/2` on both axes (`Game.as:1984-1988`): the
+gameplay LFSR, whose position the model carries only in L112's Owl schedule
+(`rng.split`). Of 185 committed tapes, 28 can shake (23 by a landed player hit; 5 more
+carry a rock-fall row), and 1 of those 28 declares `split: true` (`r6-owl-control`). A point
+camera needs a per-room census of every main-stream draw since the seed.
+
+**D3 — the singles.**
+
+- **(b) two teleporters on one tick.** `FP.world = new Game(…)` only records
+  `_goto`, so the last to update wins; `addUpdate` prepends, so that is the
+  FIRST `.oel` placement. `r2-two-teleporters`: L113's `(16,0)` beats
+  `(32,0)` (arrival (72,136)), and L114's `(64,144)` beats `(80,144)`
+  (arrival (24,24)). A stair among them stays refused.
+- **(c) a terrain death's kill lock — a model defect, found by its witness.**
+  `Lock.checkEnemies` reads `totalEnemies()` (`classCount(Bob)`), and a drowned
+  bob stays in the world through `Mobile.death`'s eleven-call fade. The chaser
+  terrain arms ran the kill-lock ledger at the DESTROY tick, 10 ticks early.
+  `r2-terrain-killlock` (L5, `canSwim`): the game crosses the opened lock on
+  t285; the destroy-tick clear read t275. The ledger runs at the removal now.
+- **(a) the X release in a talk circle: STOP.** L33 (`OverWorld/witchhut.oel`)
+  holds a teleporter, a bed, a dresser, a torch and a lightalpha, and no NPC.
+  The refusal fires only inside the bloody ending's scripted walk
+  (`cutsceneWalk`), so J0(a)'s L33@621 is not reproducible without its file.
+
+**D4 — a refusal witness for `foldRoundTrip`.** A seeded hand-drive scan over
+every committed staging found the reachable refusals. The witness walks
+`r2-two-teleporters`' staging out of L113's south door into L112: the Owl
+fight's stream is refused without `rng.split` (an R4 item) on t122, the fold is
+faithful, the replay throws the same words, `reproduced` and `ok` are true.
+
+**Trap candidates**, for the catalogue to number:
+
+- a ledger keyed to the wrong fencepost of a lifetime: `destroy` is not
+  removal, and `totalEnemies()` counts the body until `FP.world.remove`. The
+  terrain arms used the first for a lock that reads the second;
+- a declared replay that cannot see the computation it replaces: a tape
+  carrying the v9 `at` clear stays green whichever tick the run's own ledger
+  computes, so the defect was visible only to the GAME and to a scratch run
+  without the declaration;
+- an ordering refused as "not transcribed" that is one line of source:
+  `addUpdate` prepends, so the first placement updates last;
+- an entity's `check()` read as part of its construction: it runs on the
+  world's first update, after the tick-0 sample;
+- a mid-flight re-trigger: `decideMotion` is asked every update, not only at
+  rest, so a flyer passing a wall can turn.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

@@ -102,6 +102,7 @@ export const ENTITY_RECORD_MODULES = Object.freeze([
     'arrowTrap.js', 'chasers.js', 'combat.js', 'crusher.js', 'enemyDamage.js',
     'fallRock.js', 'iceTurret.js', 'iceTurretBlast.js', 'moonrock.js', 'pulser.js', 'spinner.js',
     'turret.js',
+    'wallFlyer.js',
 ]);
 
 /** Every refusal this module makes. The message names the record and path. */

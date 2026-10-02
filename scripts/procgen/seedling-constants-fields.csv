@@ -1583,6 +1583,82 @@ frontend/modules/seedlingDemo/turret.js|createTurret|h8909e65c|0|3,structural,,,
 frontend/modules/seedlingDemo/turret.js|createTurret|h8909e65c|0|4,structural,,,
 frontend/modules/seedlingDemo/turret.js|createTurret|h8909e65c|0|5,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|step|h98281141|0|1,structural,,,the spit forecast's backward splice loop
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h88396deb|2|0,structural,,,TILE / 2 cell centre (WallFlyer.as:26)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|he8961002|2|0,structural,,,TILE / 2 cell centre (WallFlyer.as:26)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h529d3cd9|14|0,physics,magnitude,,setHitbox(14; 14; 7; 7) (WallFlyer.as:38)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h0ef3d0f0|14|0,physics,magnitude,,setHitbox(14; 14; 7; 7) (WallFlyer.as:38)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h2a8e0578|7|0,physics,magnitude,,setHitbox origin (WallFlyer.as:38)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h70ee0471|7|0,physics,magnitude,,setHitbox origin (WallFlyer.as:38)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h0c336301|4|0,physics,magnitude,Enemies/WallFlyer.as:moveSpeed,launch speed; check() negates it
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h62316665|160|0,rule,magnitude,,attackRange = FP.screen.width and Main.as:36 is super(160; 160; FPS)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h8ca0c372|0|0,physics,magnitude,,f = 0 in the ctor (WallFlyer.as:36): friction keeps the length
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hb920933e|0.05|0,physics,magnitude,,Mobile.friction per-axis dead band (Mobile.as:76-83)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h690d35a0|3|0,rule,count,Enemies/Enemy.as:hitsMax,inherited
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h73dc854e|30|0,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,inherited i-frame
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h4df3d7f0|1|0,rule,magnitude,Enemies/Enemy.as:damage,inherited contact damage
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hac347a9f|3|0,physics,magnitude,,Enemy.hitPlayer: p.hit(this; 3; ...) (Enemy.as:218)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hf5dbec8f|4|0,cosmetic,,,add(die; [5;6;7;8]; 10): frames (the kill is refused)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h096f435c|10|0,cosmetic,,,add(die; [5;6;7;8]; 10): rate (the kill is refused)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h14980c01|0.05|0,physics,magnitude,Enemies/Enemy.as:fallAlphaSpeed,pit descent fade
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|h52e9f91c|0.1|0,physics,magnitude,,Mobile.death alpha -= 0.1 (Mobile.as:65)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|3|0,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|2|0,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|5|0,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|4|0,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|0|0,rule,sentinel,,decideMotion angle 0 (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|0|1,rule,sentinel,,decideMotion angle 0 (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|7|0,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|4|1,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|3|1,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|2|1,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|2|2,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|3|2,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|4|2,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|2|3,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|4|3,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|2|4,rule,derivation,,decideMotion angle expression; operand for operand (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|(module)|hccac1945|0|2,rule,sentinel,,decideMotion angle 0 (WallFlyer.as:122-161)
+frontend/modules/seedlingDemo/wallFlyer.js|decideMotion|hd564e893|0|0,structural,,,mask accumulator start
+frontend/modules/seedlingDemo/wallFlyer.js|decideMotion|h4a93db15|1|0,rule,sentinel,,decideMotion wall-mask bit (WallFlyer.as:117-120)
+frontend/modules/seedlingDemo/wallFlyer.js|decideMotion|h98465534|2|0,rule,sentinel,,decideMotion wall-mask bit (WallFlyer.as:117-120)
+frontend/modules/seedlingDemo/wallFlyer.js|decideMotion|h02bf1937|4|0,rule,sentinel,,decideMotion wall-mask bit (WallFlyer.as:117-120)
+frontend/modules/seedlingDemo/wallFlyer.js|decideMotion|hae332615|8|0,rule,sentinel,,decideMotion wall-mask bit (WallFlyer.as:117-120)
+frontend/modules/seedlingDemo/wallFlyer.js|decideMotion|h27b01a30|0|0,structural,,,default: return new Point() (zero vector)
+frontend/modules/seedlingDemo/wallFlyer.js|decideMotion|h27b01a30|0|1,structural,,,default: return new Point() (zero vector)
+frontend/modules/seedlingDemo/wallFlyer.js|newWallFlyer|h94276a07|0|0,structural,,,initial state (at rest; unhit; opaque; before check())
+frontend/modules/seedlingDemo/wallFlyer.js|newWallFlyer|h94276a07|0|1,structural,,,initial state (at rest; unhit; opaque; before check())
+frontend/modules/seedlingDemo/wallFlyer.js|newWallFlyer|h94276a07|0|2,structural,,,initial state (at rest; unhit; opaque; before check())
+frontend/modules/seedlingDemo/wallFlyer.js|newWallFlyer|h94276a07|0|3,structural,,,initial state (at rest; unhit; opaque; before check())
+frontend/modules/seedlingDemo/wallFlyer.js|newWallFlyer|h94276a07|1|0,structural,,,initial state (at rest; unhit; opaque; before check())
+frontend/modules/seedlingDemo/wallFlyer.js|newWallFlyer|h94276a07|0|4,structural,,,initial state (at rest; unhit; opaque; before check())
+frontend/modules/seedlingDemo/wallFlyer.js|wallFlyerFriction|h8a6ad385|0|0,rule,bound,,Point.normalize guard on a zero length
+frontend/modules/seedlingDemo/wallFlyer.js|wallFlyerFriction|h1a9e711f|0|0,physics,bound,,friction floor 0 (Mobile.friction)
+frontend/modules/seedlingDemo/wallFlyer.js|wallFlyerFriction|h6e9b004f|0|0,physics,magnitude,,velocity snapped to zero in dead band
+frontend/modules/seedlingDemo/wallFlyer.js|wallFlyerFriction|hcfb3654e|0|0,physics,magnitude,,velocity snapped to zero in dead band
+frontend/modules/seedlingDemo/wallFlyer.js|stopAxis|h60d0f44f|0|0,structural,,,loop start
+frontend/modules/seedlingDemo/wallFlyer.js|stopAxis|h40bda350|1|0,structural,,,loop step
+frontend/modules/seedlingDemo/wallFlyer.js|stopAxis|h10b9a735|1|0,physics,magnitude,,1 px movement step
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hfc8e1d84|2|0,structural,,,TILE / 2 cell centre
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hfc8e1d84|10|0,physics,magnitude,,pit drift a tenth per tick
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hc977e31b|2|0,structural,,,TILE / 2 cell centre
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hc977e31b|10|0,physics,magnitude,,pit drift a tenth per tick
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hb85f6007|0|0,rule,bound,,alpha <= 0 ends the fade
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h5d18506f|0|0,physics,magnitude,,moveX/moveY override zeroes v on a collision (WallFlyer.as:216-249)
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h7ab7a4d7|0|0,physics,magnitude,,moveX/moveY override zeroes v on a collision (WallFlyer.as:216-249)
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h5d18506f|0|1,physics,magnitude,,moveX/moveY override zeroes v on a collision (WallFlyer.as:216-249)
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h7ab7a4d7|0|1,physics,magnitude,,moveX/moveY override zeroes v on a collision (WallFlyer.as:216-249)
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hb85f6007|0|1,rule,bound,,alpha <= 0 ends the fade
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hfb4eb258|0|0,rule,bound,,hitUpdate i-frame drain
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hdb450094|1|0,rule,magnitude,,hitUpdate drains one per update
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hab8a8ab4|0|0,rule,bound,,hitPlayer gate hitsTimer <= 0 (Enemy.as:213)
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|hf879783f|0|0,rule,bound,,vTriggered.length > 0 (WallFlyer.as:62)
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h6978af44|0|0,rule,bound,,ledger: a launch is from rest or a turn (not a game quantity)
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h6978af44|0|1,rule,bound,,ledger: a launch is from rest or a turn (not a game quantity)
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h6978af44|0|2,rule,bound,,ledger: a launch is from rest or a turn (not a game quantity)
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h670883da|1|0,rule,count,,ledger launch counter
+frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h310413e7|0|0,rule,bound,,activeOffScreen = v.length > 0 (WallFlyer.as:71-75)
+frontend/modules/seedlingDemo/wallFlyer.js|hitWallFlyer|h64a52562|1|0,rule,magnitude,,Enemy.hit default damage d = 1
+frontend/modules/seedlingDemo/wallFlyer.js|hitWallFlyer|hdc3e5462|0|0,rule,bound,,Enemy.hit gate hitsTimer <= 0 || hitByDarkStuff (Enemy.as:147)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

@@ -140,8 +140,10 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ swim R3 + U14 (merged): 185 — R3's four death witnesses + U14's two moonrock witnesses and four segments.
         // ⛓ swim U15: 187 with `u15-turret-spit` and `u15-turret-shield` — inert too.
         // ⛓ swim U15: 191 with route steps 27–30 (`r9-solve-29`, `-31`, `-30`, `-32`).
-        expect(rows).toHaveLength(191);
-        expect(rows.length - parted.length).toBe(190);
+        // ⛓ swim R2: 189 — D1's two wallflyer witnesses, D3's two-teleporter and terrain-kill-lock witnesses.
+        // ⛓ swim U15 + R2 (merged): 195 — U15's 2 witnesses + 4 segments, R2's 4 witnesses.
+        expect(rows).toHaveLength(195);
+        expect(rows.length - parted.length).toBe(194);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {
