@@ -215,6 +215,13 @@
       "noHazards": []
     },
     {
+      "file": "r2-two-teleporters.json",
+      "tickCount": 60,
+      "bootLevel": 113,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "r2-walk-1-sword-shield.json",
       "tickCount": 928,
       "bootLevel": 0,

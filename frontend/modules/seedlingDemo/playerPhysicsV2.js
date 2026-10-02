@@ -1111,12 +1111,33 @@ export function step(state, held, opts = {}) {
             + 'tape so a trigger volume and a pit tile are never overlapped together.',
         );
     }
-    if (fired.length > 1) {
-        // `FP.world = ` only records a `_goto`, so two teleporters firing on
+    /**
+     * ⛓⛓⛓ R2-swim D3(b) — TWO BARE TELEPORTERS ON ONE TICK: THE FIRST `.oel`
+     * PLACEMENT WINS.
+     *
+     * `Teleporter.update` is `FP.world = new Game(to, playerPos)`, and
+     * `FP.world = ` only records `FP._goto` — so every teleporter that fires
+     * on the tick writes it, and the LAST to update wins the swap.
+     * `loadlevel` adds the teleporters in `.oel` order
+     * (`for each (o in xml.objects[0].teleporter)`, `Game.as:2364`) and
+     * `World.addUpdate` PREPENDS, so the LAST placement updates first and the
+     * FIRST updates last. `level.teleporters` keeps `.oel` element order, so
+     * among bare teleporters the winner is the lowest index. Witnessed by
+     * `r2-two-teleporters` (L113's `(16,0)` beats `(32,0)`; L114's `(64,144)`
+     * beats `(80,144)`).
+     *
+     * ⛔ A STAIR among them stays refused: `stairsup`/`stairsdown` are added
+     * in their own loops ABOVE the teleporters (`Game.as:2362-2363`), and
+     * `level.teleporters` does not carry which of the two a stair is.
+     */
+    const resolved = fired.length > 1 && fired.every((f) => !f.teleporter.isStairs)
+        ? [fired.reduce((a, b) => (b.index < a.index ? b : a))] : fired;
+    if (resolved.length > 1) {
+        // `FP.world = ` only records a `_goto`, so two triggers firing on
         // one tick means the LAST one in FlashPunk's update order wins — and
-        // that order is the prepend order of a list this module deliberately
-        // does not transcribe. An ambiguity we cannot resolve is a named
-        // error, not a guess: move the fixture.
+        // with a stair among them that order spans two `loadlevel` loops
+        // this module does not transcribe. An ambiguity we cannot resolve is
+        // a named error, not a guess: move the fixture.
         throw new PhysicsV2Error(
             `${fired.length} teleporters fired on the same tick in level ${level.level} `
             + `(${fired.map((f) => `(${f.teleporter.x},${f.teleporter.y})->`
@@ -1125,8 +1146,8 @@ export function step(state, held, opts = {}) {
             + 'so that at most one trigger volume is overlapped per tick.',
         );
     }
-    if (fired.length === 1) {
-        const { teleporter } = fired[0];
+    if (resolved.length === 1) {
+        const { teleporter } = resolved[0];
         if (teleporter.to === level.level) {
             // The oracle cannot see this one: the game's `transitions` are
             // derived from the level field (`Bot.as` hardcodes the array),
@@ -1145,7 +1166,9 @@ export function step(state, held, opts = {}) {
             from_level: level.level,
             to_level: teleporter.to,
             teleporter,
-            index: fired[0].index,
+            index: resolved[0].index,
+            // ⛓ R2-swim D3(b): the losers, when more than one fired.
+            ...(fired.length > 1 ? { alsoFired: fired.filter((f) => f !== resolved[0]).map((f) => f.index) } : {}),
         };
     }
 

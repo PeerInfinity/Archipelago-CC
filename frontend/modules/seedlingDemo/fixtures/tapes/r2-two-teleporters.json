@@ -1,0 +1,55 @@
+{
+    "tape_version": 8,
+    "game": "seedling",
+    "boot": {
+        "level": 113,
+        "x": 24,
+        "y": 24
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {},
+    "tick0": null,
+    "hold": false,
+    "tick_count": 60,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 14
+        },
+        {
+            "key": "right",
+            "from": 14,
+            "to": 19
+        },
+        {
+            "key": "down",
+            "from": 25,
+            "to": 60
+        }
+    ],
+    "name": "r2-two-teleporters",
+    "description": "R2-swim D3(b): L113, boot (24,24) — the player at (32,32) across the seam of `teleporter@16,0` and `teleporter@32,0` (both to L114); `up` fires both on t 14 and the FIRST `.oel` placement wins (it updates LAST): arrival (72,136). `right` ×5 and `down` from t 25 fire L114's `teleporter@64,144` and `@80,144` together on t 31: arrival (24,24).",
+    "note": ""
+}
