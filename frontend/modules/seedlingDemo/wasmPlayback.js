@@ -1,0 +1,224 @@
+/**
+ * seedlingDemo/wasmPlayback — **THE HOST TAPE A WASM PLAYBACK SHIPS, AND THE
+ * RULES IT SHIPS UNDER** (solver-walk W2; plan
+ * `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.3 W2, with W0's hard rules
+ * (§5.5) and W1's hand-off (§5.6 "For W2")). DOM-free and clock-free: the
+ * controller's engine (`flashPanel/seedlingWasmPlayback.js`) owns the game and
+ * the timers; everything here is a pure function of reads it was handed.
+ *
+ * ── THE TAPE (`shippedTape`) ─────────────────────────────────────────────
+ *
+ * Built from the SAME staging the solve ran from (`wasmArrival.stagingFromWasmArrival`),
+ * through `buildStagedTape` (W1 round-tripped it), then projected for the game
+ * (`gameVisibleTape`). Three blocks are NOT shipped as the solve saw them:
+ *
+ *   `seam`  → null. W0 ii.4: a declared item write reads as a player pickup.
+ *           ⛔ AND NO PARTIAL BLOCK IS POSSIBLE (W2, from the source): once a
+ *           tape declares a seam at all, `botStart` writes `beam`, `rockSet`,
+ *           `firstUse`, `extended`, `grassCut` and the music pair
+ *           UNCONDITIONALLY (`Bot.as` R7 block — only `hitsMax`/`time` are
+ *           gated on non-zero) — and those are exactly the rows no read-only
+ *           verb carries (`wasmArrival.UNREAD_FIELDS`). Keeping `time`,
+ *           `primary` or `cutscene` would therefore also overwrite seven live
+ *           fields with guesses. The world is the live one (same-world start),
+ *           so every seam value the solve declared IS already the game's.
+ *   `rng`   → seed 0, fp 0 (= "do not touch": `Bot.as` writes them only when
+ *           non-zero). The staging's seeds are the BEGIN record's — the
+ *           streams before the build drew from them (measured: begin
+ *           `rng.gameplay` 811240737 vs the live `rng.state` 771911645 at the
+ *           same arrival) — so re-declaring them would REWIND the live stream
+ *           under an already-built world. `split` IS written unconditionally
+ *           (`Rng.split = rngSplit`), so it ships the live value; a split
+ *           stream is REFUSED (a split `botStart` also resets the cosmetic
+ *           stream, whose live state no verb reads).
+ *   `hold`  → only the ZERO-TICK freeze tape holds (the W-Q2 worker solve
+ *           needs the room still while it thinks; W0 (i): it latches on the
+ *           first LIVE frame, before that frame's `super.update`, so the hold
+ *           costs no stepped frame). The PLAN tape ends UN-held: v1's next
+ *           goal re-arrives anyway (`MID_ROOM_POLICY`), and a hold across an
+ *           exit would block the glue's redirect (W0 i.11).
+ *
+ * Kept exactly: `boot` = this level + the SPAWN (same world, `Bot.as:1801`),
+ * `persistence` = `botStatus.persistence_cleared` EXACTLY, all THREE save
+ * arrays (W0 ii.5: an omitted array is wiped), `pins` = the pins it was solved
+ * under (W1).
+ *
+ * ── THE DECLARATION RULE (`exactDeclarationRefusal`) ─────────────────────
+ *
+ * W0 ii.6/ii.7: a declared clear the player never earned is a REAL check when
+ * it sorts last, and a silently-cleared flag otherwise. A tape is shipped only
+ * when its declarations equal the live `botStatus` field for field; the
+ * binding's arming-window guard (`seedlingCheckBinding.ignoreHostStart`,
+ * ⚖ W0-Q1) is the second, independent net.
+ */
+
+import { buildStagedTape } from './botDriverV1.js';
+import { gameVisibleTape, holdingWindowTape, parseTape } from './tapeFormat.js';
+import { UNREAD_MODELLED_READERS } from './wasmArrival.js';
+
+/** Thrown for a tape that must not ship — by name. */
+export class WasmPlaybackError extends Error {
+    constructor(message) { super(message); this.name = 'WasmPlaybackError'; }
+}
+const refuse = (why) => { throw new WasmPlaybackError(why); };
+
+/**
+ * ⚖ W-Q3 / W2: a goal asked for when the player is NOT at a fresh arrival is
+ * served by a FORCED RE-ARRIVAL — a host `new Game(level, spawn)` (the glue's
+ * own teleport recipe), so the room resets like a death and the solve starts
+ * from a real arrival. Chosen over a continuation solve from a held end
+ * (the S0 `prefix` path) because the next goal's start state is then the
+ * game's own begin record, never the model's prediction of where the last
+ * tape left the room.
+ */
+export const MID_ROOM_POLICY = 'forced-re-arrival';
+
+/** Booleans → their true indices (the tape's save-array spelling). */
+const indicesOf = (arr) => (arr ?? []).flatMap((v, i) => (v ? [i] : []));
+const sealValues = (seals) => {
+    const s = seals ?? [];
+    const firstEmpty = s.indexOf(-1);
+    return firstEmpty === -1 ? [...s] : s.slice(0, firstEmpty);
+};
+const sortClears = (list) => [...(list ?? [])].map((c) => ({ level: c.level, tag: c.tag }))
+    .sort((a, b) => a.level - b.level || a.tag - b.tag);
+const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+/**
+ * The game-visible tape for `staging` + `keys` (key sets, one per tick — the
+ * solve's `plan.solution`; `[]` = the zero-tick freeze tape).
+ *
+ * @returns {object} a parsed, game-visible tape (serialise with JSON.stringify)
+ */
+export function shippedTape({ staging, keys = [], hold = false, name = 'wasm-playback' }) {
+    if (!staging?.boot) refuse('wasmPlayback: no staging to ship a tape from');
+    if (staging.rng?.split) {
+        refuse('wasmPlayback: the arrival runs a SPLIT rng stream — a split botStart resets the cosmetic stream, '
+            + 'and no read-only verb carries its live state; the tape would rewind it to a guess');
+    }
+    const stripped = {
+        ...staging,
+        seam: null,
+        rng: { seed: 0, split: false, cosmetic: 0, fp: 0 },
+    };
+    const perTick = keys.map((k) => (k instanceof Set ? k : new Set(k)));
+    const parsed = parseTape(buildStagedTape({ staging: stripped, perTick, name }));
+    return gameVisibleTape(hold ? holdingWindowTape(parsed) : parsed);
+}
+
+/**
+ * null when `tape` declares EXACTLY the live state `status` reports, else the
+ * refusal naming the first difference. The shape rules (`seam` null, the rng
+ * left alone, the boot this level) are checked too, so a tape built by any
+ * other path is caught here as well.
+ */
+export function exactDeclarationRefusal(tape, status) {
+    if (!tape || !status) return 'no tape or no botStatus to check the declaration against';
+    if (tape.boot?.level !== status.level) {
+        return `the tape boots level ${tape.boot?.level}, the game is in level ${status.level} — a host tape `
+            + 'boots the room the player is in (same world)';
+    }
+    const declared = sortClears(tape.persistence);
+    const live = sortClears(status.persistence_cleared);
+    if (!same(declared, live)) {
+        const fake = declared.filter((c) => !live.some((l) => l.level === c.level && l.tag === c.tag));
+        const lost = live.filter((c) => !declared.some((d) => d.level === c.level && d.tag === c.tag));
+        return `the tape's persistence is not the game's cleared set — ${fake.length
+            ? `declares ${JSON.stringify(fake)} the player never cleared (a FAKE check if it sorts last, W0 ii.6)` : ''}${
+            fake.length && lost.length ? '; ' : ''}${lost.length
+            ? `omits ${JSON.stringify(lost)} (botStart would RESTORE them)` : ''}`;
+    }
+    const save = tape.save ?? {};
+    const rows = [
+        ['keys', indicesOf(status.save?.keys)],
+        ['totem_parts', indicesOf(status.save?.totem_parts)],
+        ['seal_parts', sealValues(status.save?.seal_parts)],
+    ];
+    for (const [k, want] of rows) {
+        if (!Array.isArray(save[k])) return `the tape omits save.${k} — botStart WIPES an omitted array (W0 ii.5)`;
+        if (!same(save[k], want)) return `save.${k} ${JSON.stringify(save[k])} is not the game's ${JSON.stringify(want)}`;
+    }
+    if (tape.seam !== null && tape.seam !== undefined) {
+        return 'the tape declares a seam block — an item write reads as a player pickup (W0 ii.4) and a declared '
+            + 'block writes seven fields no verb reads';
+    }
+    if ((tape.rng?.seed ?? 0) !== 0 || (tape.rng?.fp ?? 0) !== 0) {
+        return 'the tape re-seeds the rng — the staging\'s seeds are the begin record\'s, before the build drew';
+    }
+    if (Boolean(tape.rng?.split) !== Boolean(status.rng?.split)) {
+        return `the tape's rng.split ${tape.rng?.split} is not the game's ${status.rng?.split} (botStart writes it unconditionally)`;
+    }
+    return null;
+}
+
+/**
+ * A goal the wasm runtime refuses BY NAME before anything moves: a room with
+ * an entity that reads a modelled field no verb carries (W1: the moonrock's
+ * `beam`/`rockSet` — level 0, the overworld hub, holds one).
+ *
+ * @param {{level:number}} goal
+ * @param {object|null|undefined} record  the goal room's record; undefined = not loaded yet (no verdict)
+ * @returns {string|null}
+ */
+export function wasmGoalRefusal(goal, record) {
+    if (record === undefined) return null;
+    if (record === null) return `the vanilla map has no level ${goal?.level} to solve`;
+    const types = new Set((record.entities ?? []).map((e) => e.type));
+    for (const [field, readers] of Object.entries(UNREAD_MODELLED_READERS)) {
+        const hit = readers.filter((t) => types.has(t));
+        if (hit.length) {
+            return `level ${goal.level} holds a ${hit.join('/')}, which reads \`${field}\` — a modelled save field `
+                + 'no read-only verb carries, so the wasm runtime cannot stage the room (W1; the W5 seam rows would)';
+        }
+    }
+    return null;
+}
+
+/**
+ * What to do with a goal, given the live level and the engine's state.
+ *
+ *   'queue'            a plan tape is still playing — the goal waits for it to
+ *                      finish (⚖ W0-Q2: a SealController freeze is waited out,
+ *                      never cut by a teleport)
+ *   'await-arrival'    the player is not in the goal's room — wait for the
+ *                      crossing that brings them there
+ *   'force-re-arrival' the player is in the room, mid-play (`MID_ROOM_POLICY`)
+ */
+export function goalAction({ goal, liveLevel, playing = false }) {
+    if (playing) return 'queue';
+    if (liveLevel !== goal.level) return 'await-arrival';
+    return 'force-re-arrival';
+}
+
+/**
+ * Fold one `botDrain()` answer into the running progress. `ticks` is the
+ * count of stepped ticks drained so far; `rows` keeps them (the W3 compare).
+ */
+export function foldDrain(progress, drain) {
+    const rows = [...(progress?.rows ?? []), ...((drain?.ticks ?? []).map((r) => ({ t: r.t, level: r.level, x: r.x, y: r.y })))];
+    return { rows, ticks: rows.length };
+}
+
+/**
+ * ⛓ W-Q1 (detection only — W3 acts on it): the first drained row that is not
+ * where the plan said. `expected[i]` is the row BEFORE tick i (solveFromTape),
+ * and so is the game's drained row `t` — MEASURED (W2 live run): a 102-tick
+ * chest tape drains 103 rows, row 0 is the arrival (56, 56) = `expected[0]`
+ * and the last is the end row (56, 34.55) = `expected[102]`. Hence `offset` 0.
+ * A row in another level when the plan's row has also left
+ * `roomLevel` counts as agreeing (W1: the glue redirects the house's door, so
+ * a crossing is "left the room", never an exact (level, x, y)).
+ *
+ * @returns {{t:number, expected:object, got:object}|null}
+ */
+export function firstDivergence(expected, rows, { roomLevel, offset = 0 } = {}) {
+    for (const r of rows ?? []) {
+        const want = expected?.[r.t + offset];
+        if (!want) continue;
+        if (want.level !== roomLevel && r.level !== roomLevel) continue;
+        if (want.level !== r.level || want.x !== r.x || want.y !== r.y) {
+            return { t: r.t, expected: { level: want.level, x: want.x, y: want.y }, got: { level: r.level, x: r.x, y: r.y } };
+        }
+    }
+    return null;
+}

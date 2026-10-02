@@ -68,6 +68,20 @@
  * plus the rules' own `flash_seedling` sidecars (an exit → its `exit_tiles` in
  * its level). A location the arm REFUSED is refused here by the same name and
  * reason — a check that cannot fire is never walked to.
+ *
+ * ── ⛓ W2 — THE ATLAS INSTANCE ALSO WALKS ON THE WASM RUNTIME ────────────
+ *
+ * Built with `wasm: true` (the atlas instance only), a `walkTo` under the wasm
+ * runtime no longer refuses: it goes to the wasm playback ENGINE
+ * (`seedlingWasmPlayback.js`) — solve the room at an ARRIVAL in the S2 worker,
+ * ship ONE host tape, the game plays it. The engine is loaded by a
+ * COMPUTED-URL dynamic import on the first wasm goal (`loadWasmEngine`), so
+ * this file still imports no model; until it is up (and its map document in)
+ * the goal is HELD on the same retry timer a not-yet-mounted JS page uses.
+ * The engine's notes and late failures come back through `onWalkNote` /
+ * `onWalkFailed`, exactly as the JS page's do. The GENERATED instance keeps
+ * the refusal on wasm (its rooms are a mounted level set the engine does not
+ * stage yet — W2 AS-BUILT).
  */
 
 /** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
@@ -152,6 +166,17 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
 
 const ROOMS_OF = Object.freeze({ flash_seedling_gen: 'generated rooms', flash_seedling: 'atlas rooms' });
 
+/**
+ * ⛓ W2 — the default engine loader: the engine module by a COMPUTED URL (so
+ * no bundler follows it and the panel's static closure stays model-free —
+ * the `seedlingRandomizerWiring` precedent in `flashPanelUI.js`).
+ */
+export async function defaultLoadWasmEngine(deps) {
+    const url = new URL('modules/flashPanel/seedlingWasmPlayback.js', document.baseURI).href;
+    const mod = await import(/* @vite-ignore */ url);
+    return mod.loadWasmPlaybackEngine({ ...deps, baseUrl: document.baseURI });
+}
+
 /** The refusal for a panel that is not running the JS runtime. */
 export function notJsRuntimeRefusal(transport, setting, substrate = SEEDLING_PLAYBACK_SUBSTRATE) {
     return `${substrate} regions are walked only on the Seedling JS runtime — the Flash Panel `
@@ -174,12 +199,23 @@ export class SeedlingPlaybackController {
      * @param {string} [deps.substrate]  ⛓ J3 — which substrate this instance walks
      * @param {function} [deps.resolve]  `(target, map, where) → {goal}|{refused}`
      * @param {(surface:object) => object|null} [deps.mapOf]  the name → cell map off the surface
+     * @param {boolean} [deps.wasm]  ⛓ W2 — this instance walks under the wasm runtime too
+     * @param {(deps:object) => Promise<object>} [deps.loadWasmEngine]  ⛓ W2 — builds the engine
+     *   (`seedlingWasmPlayback.loadWasmPlaybackEngine`'s shape); tests inject a fake
      */
     constructor({
         getSurface, log = () => {}, onWalkFailed = () => {}, onWalkNote = () => {}, now = () => Date.now(),
         timers = { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) },
         substrate = SEEDLING_PLAYBACK_SUBSTRATE, resolve = resolveSeedlingGoal, mapOf = (surface) => surface?.report ?? null,
+        wasm = false, loadWasmEngine = defaultLoadWasmEngine,
     } = {}) {
+        this.wasm = wasm;
+        this._loadWasmEngine = loadWasmEngine;
+        /** ⛓ W2 — the engine, the game it was built for, and a load in flight / its failure. */
+        this._wasmEngine = null;
+        this._wasmGame = null;
+        this._wasmLoading = null;
+        this._wasmLoadError = null;
         this.substrate = substrate;
         this._resolve = resolve;
         this._mapOf = mapOf;
@@ -205,7 +241,7 @@ export class SeedlingPlaybackController {
     walkTo(target) {
         this.lastRefusal = null;
         const s = this._getSurface?.() ?? null;
-        if (s && s.transport && s.transport !== 'js') return this._refuse(notJsRuntimeRefusal(s.transport, s.setting, this.substrate));
+        if (s && s.transport && !this._walks(s.transport)) return this._refuse(notJsRuntimeRefusal(s.transport, s.setting, this.substrate));
         const out = this._apply(target, s);
         if (out === 'pending') {
             this._hold(target);
@@ -216,23 +252,97 @@ export class SeedlingPlaybackController {
     }
 
     play() { this._playing = true; this._instant = false; this._page()?.play(); }
-    stop() { this._playing = false; this._instant = false; this._clearPending(); this._page()?.stop(); }
+    stop() { this._playing = false; this._instant = false; this._clearPending(); this._page()?.stop(); this._wasmEngine?.stop(); }
     step() { this._page()?.step(); }
     instant() {
         this._playing = true;
         this._instant = true;
         this._go(this._page());
     }
-    reset() { this._playing = false; this._instant = false; this._clearPending(); this._page()?.reset(); }
+    reset() { this._playing = false; this._instant = false; this._clearPending(); this._page()?.reset(); this._wasmEngine?.stop(); }
     setRate() { /* the game's own 30 tick/s clock is the only clock */ }
 
     /** The page's walk state, for readouts and rows: `{state, reason, goal}` or null. */
     status() {
         const p = this._page();
+        if (!p && this._wasmEngine) {
+            const w = this._wasmEngine.status();
+            return { state: w.phase, reason: this.lastNote, goal: w.goal, pending: this._pending?.target ?? null, wasm: w };
+        }
         return p ? { state: p.state, reason: p.reason, goal: p.goal, pending: this._pending?.target ?? null } : null;
     }
 
     // ── internals ─────────────────────────────────────────────────────────
+
+    /** Does this instance walk under `transport`? 'js' always; ⛓ W2 'wasm' when built with `wasm: true`. */
+    _walks(transport) {
+        return transport === 'js' || (this.wasm && transport === 'wasm');
+    }
+
+    /**
+     * ⛓ W2 — the engine for the panel's CURRENT game, or null while it loads
+     * (a load is started). A different game object (a preset switch, a
+     * remount) is a new engine: the old one is stopped, never reused.
+     */
+    _engineFor(s) {
+        const game = s.wasm?.getGame?.() ?? null;
+        if (!game) return null;
+        if (this._wasmEngine && this._wasmGame === game) return this._wasmEngine;
+        if (this._wasmEngine) { try { this._wasmEngine.dispose(); } catch { /* gone */ } this._wasmEngine = null; }
+        if (this._wasmLoading?.game === game) return null;
+        const loading = { game };
+        this._wasmLoading = loading;
+        this._wasmLoadError = null;
+        const deps = {
+            mapPath: s.wasm.mapPath,
+            getGame: () => this._getSurface?.()?.wasm?.getGame?.() ?? null,
+            getWin: () => this._getSurface?.()?.wasm?.getWin?.() ?? null,
+            teleport: (p) => this._getSurface?.()?.wasm?.teleport?.(p) ?? false,
+            getCheckBinding: () => this._getSurface?.()?.checkBinding ?? null,
+            log: this._log,
+            onNote: (n) => this._relayNote(n),
+            onFailed: (reason) => this._fail(this._lastTarget, `the wasm playback failed: ${reason}`),
+        };
+        Promise.resolve().then(() => this._loadWasmEngine(deps)).then((engine) => {
+            if (this._wasmLoading !== loading) { try { engine?.dispose?.(); } catch { /* gone */ } return; }
+            this._wasmLoading = null;
+            this._wasmEngine = engine;
+            this._wasmGame = game;
+        }, (err) => {
+            if (this._wasmLoading !== loading) return;
+            this._wasmLoading = null;
+            this._wasmLoadError = String(err?.message ?? err);
+        });
+        return null;
+    }
+
+    _relayNote(note) {
+        this.lastNote = note ?? null;
+        try { this._onWalkNote({ substrate: this.substrate, target: this._lastTarget, note: this.lastNote }); } catch { /* a listener's bug */ }
+    }
+
+    /** ⛓ W2 — `_apply` under the wasm runtime: true / false (refused) / 'pending'. */
+    _applyWasm(target, s) {
+        const map = this._mapOf(s);
+        if (!map) return 'pending';
+        const engine = this._engineFor(s);
+        if (!engine) {
+            if (this._wasmLoadError) {
+                const why = this._wasmLoadError;
+                this._wasmLoadError = null;
+                return this._refuse(`the wasm playback engine did not load: ${why}`);
+            }
+            return 'pending';
+        }
+        const liveLevel = engine.liveLevel();
+        const r = this._resolve(target, map, { liveLevel, region: s.region ?? null });
+        if (r.refused) return this._refuse(r.refused);
+        this._lastTarget = target;
+        const answer = engine.walkTo(r.goal);
+        if (!answer?.ok) return this._refuse(`the wasm runtime refused ${JSON.stringify(r.goal)}: ${answer?.reason ?? 'no answer'}`);
+        this.lastGoal = r.goal;
+        return true;
+    }
 
     _page(surface = this._getSurface?.()) {
         return surface?.transport === 'js' ? (surface.jsRuntime?.playback ?? null) : null;
@@ -246,6 +356,7 @@ export class SeedlingPlaybackController {
 
     /** true / false (refused) / 'pending' (not resolvable YET). */
     _apply(target, s) {
+        if (s?.transport === 'wasm' && this.wasm) return this._applyWasm(target, s);
         const page = this._page(s);
         const map = this._mapOf(s);
         if (!s || !s.transport || !page || !map) return 'pending';
@@ -301,7 +412,7 @@ export class SeedlingPlaybackController {
     _retryPending() {
         if (!this._pending) { this._clearPending(); return; }
         const s = this._getSurface?.() ?? null;
-        if (s && s.transport && s.transport !== 'js') {
+        if (s && s.transport && !this._walks(s.transport)) {
             const { target } = this._pending;
             this._clearPending();
             this._fail(target, notJsRuntimeRefusal(s.transport, s.setting, this.substrate));
@@ -317,7 +428,8 @@ export class SeedlingPlaybackController {
         if (this._now() - this._pending.since > PENDING_GIVE_UP_MS) {
             this._clearPending();
             this._fail(target, `the walkTo was never handed to the JS runtime — no `
-                + `${!s ? 'flash panel' : !this._mapOf(s) ? `name → cell map for the ${ROOMS_OF[this.substrate] ?? this.substrate} (the AP placement load)` : 'JS runtime page'} `
+                + `${!s ? 'flash panel' : !this._mapOf(s) ? `name → cell map for the ${ROOMS_OF[this.substrate] ?? this.substrate} (the AP placement load)`
+                    : s.transport === 'wasm' ? 'started wasm game / playback engine' : 'JS runtime page'} `
                 + `within ${PENDING_GIVE_UP_MS / 1000} s`);
         }
     }

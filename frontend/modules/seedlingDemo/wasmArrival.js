@@ -352,8 +352,13 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record }) {
 /**
  * Step 3b — the S2 solve service's request (`createWorkerSolveService().start`
  * or `createInPlaceSolveService().start`) for a fresh boot at the arrival.
+ *
+ * ⛓ W2 — `scratchPersistence` is the S3 page's mode (a kill lock the model
+ * opens is written by the model, as `Lock.turnOff` writes it in the game);
+ * W1's default (false) is kept for its fixture rows.
  */
-export function arrivalSolveRequest({ staging, solverGoal, levelSource, records, name = 'wasm-arrival-solve' }) {
+export function arrivalSolveRequest({ staging, solverGoal, levelSource, records, name = 'wasm-arrival-solve',
+    scratchPersistence = false }) {
     const fresh = createRunForStaging(staging, levelSource);
     return {
         staging,
@@ -361,7 +366,7 @@ export function arrivalSolveRequest({ staging, solverGoal, levelSource, records,
         live: liveOf(fresh),
         solverGoal,
         name,
-        scratchPersistence: false,
+        scratchPersistence,
         equips: null,
         levelSource,
         source: { records },

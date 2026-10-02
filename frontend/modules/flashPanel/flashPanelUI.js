@@ -284,6 +284,15 @@ export class FlashPanelUI {
       report: this._seedlingGenReport ?? null,
       atlas: this._seedlingAtlas ?? null,
       jsRuntime,
+      // ⛓ W2 — the wasm playback engine's handles: the game's callback surface
+      // and window (re-read per call — a preset switch replaces the iframe),
+      // the panel's own teleport recipe, and the map document the preset names.
+      wasm: this.transport === 'wasm' ? {
+        getGame: () => this.adapter?._getFlash?.() ?? null,
+        getWin: () => this.adapter?._getWin?.() ?? null,
+        teleport: (p) => this.adapter?.teleport?.(p) ?? false,
+        mapPath: this._atlasMapPath ?? null,
+      } : null,
     };
   }
 
@@ -990,6 +999,8 @@ export class FlashPanelUI {
     const raw = rulesOfRawPayload(getLastRawJsonData?.());
     if (!raw?.region_atlas) return;
     const { path, source } = mapDocumentPath(raw);
+    // ⛓ W2 — the wasm playback engine solves against the SAME document.
+    this._atlasMapPath = path;
     try {
       const res = await fetch(new URL(path, document.baseURI).href);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);

@@ -309,11 +309,13 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
 
   // ⛓ Seedling JS J2 — the Playback Bot's controller for generated rooms. It
   // reads the live panel on every call (a preset switch replaces the iframe),
-  // and refuses by name under any runtime but 'js'.
+  // and refuses by name under any runtime but 'js' (⛓ W2: the atlas instance also walks on 'wasm').
   const playbackDeps = {
     getSurface: () => {
       const surface = activePanelInstance?.seedlingPlaybackSurface?.() ?? null;
-      return surface ? { ...surface, region: seedlingRegionGlue?.binding?.region ?? null } : null;
+      // ⛓ W2 — the check binding: the wasm engine hands it each host botStart's arming window (⚖ W0-Q1).
+      return surface ? { ...surface, region: seedlingRegionGlue?.binding?.region ?? null,
+        checkBinding: seedlingRegionGlue?.checkBinding ?? null } : null;
     },
     log: (msg, level) => {
       activePanelInstance?._panelLog?.(msg, level);
@@ -331,6 +333,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
     resolve: resolveSeedlingAtlasGoal,
     mapOf: (surface) => surface?.atlas ?? null,
+    // ⛓ W2 — real rooms also walk under the wasm runtime (solve at arrival, one host tape).
+    wasm: true,
   }));
 
   // ⛓ AFTER the glue's own subscription, so the arrival is queued before the

@@ -104,7 +104,42 @@ export class SeedlingCheckBinding {
         this.selfPlayer = selfPlayer;
         /** ⛔ A SET, so a re-entry that re-clears a slot cannot check twice. */
         this.checked = new Set();
-        this.stats = { reports: 0, malformed: 0, restores: 0, unknown: 0, checks: 0, repeats: 0 };
+        /** ⛓ W2 — the host `botStart` arming windows, `{from, to}` seq ranges (⚖ W0-Q1). */
+        this.hostStarts = [];
+        this.stats = { reports: 0, malformed: 0, restores: 0, unknown: 0, checks: 0, repeats: 0, armingWindow: 0 };
+    }
+
+    /**
+     * ⛓⛓ W2 — **⚖ W0-Q1: A CHECK FIRED INSIDE A HOST `botStart` IS NOT A CHECK.**
+     *
+     * `botStart` re-declares the tape's clears through `Game.setPersistence`
+     * (`Bot.as` R2 block), one `pendingCheck` each, BEFORE the first stepped
+     * tick (W0 ii.2/ii.8). A clear the player earned is already in `checked`
+     * (the dedupe), so the only clear that can reach a NEW check from inside
+     * that window is one the player never earned — the fake-check hazard
+     * (W0 ii.6). The playback engine declares exactly the live cleared set, so
+     * this is the second, independent net the user ruled for.
+     *
+     * The window is a `<seq>` RANGE, not a time: the engine reads
+     * `pendingCheck`'s seq just before `botStart` and just after it returns, in
+     * the same JS turn. `Game.pendingCheckSeq` is bump-only for the page's life
+     * (`Game.as:621`), and nothing steps between `botStart` and the next
+     * frame's `Bot.update`, so every report with `from < seq <= to` was written
+     * by that call and nothing else. (The seq is otherwise stripped and never
+     * compared — `parsePendingCheck` — this is its one other use.)
+     *
+     * @param {{from:number, to:number}} window  seqs read before / after `botStart`
+     */
+    ignoreHostStart({ from, to } = {}) {
+        if (!Number.isInteger(from) || !Number.isInteger(to) || to <= from) return false;
+        this.hostStarts.push({ from, to });
+        if (this.hostStarts.length > 32) this.hostStarts.shift();
+        return true;
+    }
+
+    /** Was `seq` written inside a host `botStart`'s arming window? */
+    insideHostStart(seq) {
+        return this.hostStarts.some((w) => seq > w.from && seq <= w.to);
     }
 
     /**
@@ -146,6 +181,13 @@ export class SeedlingCheckBinding {
             this.stats.repeats += 1;
             return [];
         }
+        if (this.insideHostStart(report.seq)) {
+            // ⚖ W0-Q1 — an UNEARNED declaration's echo, never a collection
+            // (an earned one was a repeat, above). Counted, so a gate can tell
+            // "caught" from "never fired".
+            this.stats.armingWindow += 1;
+            return [];
+        }
         this.checked.add(entry.location);
         this.stats.checks += 1;
         return [
@@ -160,5 +202,6 @@ export class SeedlingCheckBinding {
     /** The panel rebuilt its adapter; the game starts over, so may we. */
     onGameRestart() {
         this.checked.clear();
+        this.hostStarts = [];
     }
 }
