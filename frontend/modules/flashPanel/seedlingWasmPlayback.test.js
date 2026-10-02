@@ -50,7 +50,8 @@ function manualTimers() {
 }
 
 /** A game whose reads are a recorded arrival's. */
-function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrains = 0, clearedAfterDrain = null } = {}) {
+function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrains = 0, clearedAfterDrain = null,
+    midSpanOnFirstPlan = null } = {}) {
     const baseline = { ...arrival.seam.beginEntry, 'save.time': arrival.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
     const g = {
         be: baseline,
@@ -65,6 +66,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
             }
             return JSON.stringify({ ...arrival.status, game_time: arrival.status.game_time + gameTimeSkew,
                 ...(g.cleared ? { persistence_cleared: g.cleared } : {}),
+                ...(g.midSpan ? g.midSpan : {}),
                 held: g.held, armed: g.armed, finished: g.finished, error: '' });
         },
         readState() { return JSON.stringify({ ...arrival.state, pendingCheck: g.seq ? `${g.seq}|86|0|0` : '' }); },
@@ -80,7 +82,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
         },
         // A reset forgets the tape; the room the recovery re-enters is a NEW begin record (the fake
         // un-lands to the pre-arrival one, so the forced re-arrival's landing is a change again).
-        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; g.be = baseline; return 'ok'; },
+        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; g.midSpan = null; g.be = baseline; return 'ok'; },
         botDrain() {
             g.calls.push('botDrain');
             if (!g.armed || !g.drainRows) return JSON.stringify({ ticks: [] });
@@ -89,6 +91,8 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
             const ticks = g.drainRows;
             g.drainRows = null;
             if (clearedAfterDrain) g.cleared = clearedAfterDrain;
+            // The first plan still mid-span when its rows drain (the W3 key-release row): armed, at `tick`.
+            if (midSpanOnFirstPlan && g.tapes.length === 2) { g.midSpan = midSpanOnFirstPlan; return JSON.stringify({ ticks, transitions: [] }); }
             g.armed = false; g.finished = true;
             return JSON.stringify({ ticks, transitions: [] });
         },
@@ -131,6 +135,7 @@ function engineOver(arrival, opts = {}) {
     let t = 0;
     const engine = createWasmPlayback({
         getGame: () => game,
+        getWin: () => opts.win ?? null,
         teleport: (p) => { teleports.push(p); if (opts.land !== false) game.land(); return true; },
         getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
         records: RECORDS, solveService: service, timers, now: () => (t += 1),
@@ -320,5 +325,24 @@ describe('W3 — a divergence: botReset + forced re-arrival + re-solve, bounded,
         expect(e.dones[0].recoveries).toBe(0);
         expect(e.teleports).toHaveLength(1);
         expect(e.game.calls.at(-1)).toBe('botReset');
+    });
+
+    it('a recovery RELEASES the keys the diverged plan held mid-span (keydown+keyup pairs on the canvas, right after botReset); a person\'s key is left alone', () => {
+        const events = [];
+        class KeyboardEvent { constructor(type, init) { Object.assign(this, init, { type }); } }
+        let e = null;
+        const canvas = { dispatchEvent: (ev) => { events.push({ type: ev.type, code: ev.code, after: e.game.calls.length }); return true; } };
+        const win = { KeyboardEvent, document: { querySelector: (q) => (q === 'canvas' ? canvas : null) } };
+        e = engineOver(A, { win, perturb: (rows, attempt) => (attempt === 0 ? pushRight()(rows) : rows),
+            game: { midSpanOnFirstPlan: { tick: 10, input: { held: ['right', 'up'] } } } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones).toHaveLength(1);
+        const plan = e.service.seen[0].result.plan.solution;
+        expect([...plan[9]]).toContain('up'); // at tick 10 the tape holds solution[9]
+        expect([...plan[9]]).not.toContain('right');
+        expect(events.map((x) => `${x.type}:${x.code}`)).toEqual(['keydown:ArrowUp', 'keyup:ArrowUp']);
+        expect(e.game.calls[events[0].after - 1]).toBe('botReset');
+        expect(e.engine.stats.keyReleases).toEqual([['up']]);
     });
 });

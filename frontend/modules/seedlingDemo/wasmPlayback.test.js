@@ -13,8 +13,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    MAX_RECOVERIES, MID_ROOM_POLICY, WasmPlaybackError, divergenceAction, divergenceFailure, exactDeclarationRefusal,
-    firstDivergence, foldDrain, goalAction, shippedTape, wasmGoalRefusal,
+    MAX_RECOVERIES, MID_ROOM_POLICY, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure,
+    exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, keysHeldAtReset, shippedTape, wasmGoalRefusal,
 } from './wasmPlayback.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
 import { parseTape } from './tapeFormat.js';
@@ -180,5 +180,34 @@ describe('divergenceAction / divergenceFailure — W3\'s recovery policy (⚖ W-
             divergence: { t: 7, expected: { level: HOUSE, x: 56, y: 50 }, got: { level: HOUSE, x: 58, y: 50 } } });
         expect(msg).toBe('the game left the plan 4 times on Starting House - Chest in level 86 (gave up after 3 forced '
             + 're-arrivals, the bound is 3); last at tick 7: expected {"level":86,"x":56,"y":50}, game {"level":86,"x":58,"y":50}');
+    });
+});
+
+describe('keysHeldAtReset — the keys a mid-span botReset would leave held (W3, measured)', () => {
+    const sol = [['up'], ['up'], ['up', 'primary'], ['primary'], []];
+    const st = (tick, held, extra = {}) => ({ armed: true, finished: false, tick, input: { t: tick - 1, held }, ...extra });
+    it('at tick T the tape holds solution[T-1]: echo-held AND plan-held there', () => {
+        expect(keysHeldAtReset({ status: st(1, ['up']), solution: sol })).toEqual(['up']);
+        expect(keysHeldAtReset({ status: st(3, ['up', 'primary']), solution: sol })).toEqual(['up', 'primary']);
+        // the measured case: the plan changes keys on the NEXT tick — the key is still held now
+        expect(keysHeldAtReset({ status: st(3, ['up', 'primary']), solution: [...sol.slice(0, 3), ['down']] })).toEqual(['up', 'primary']);
+        expect(keysHeldAtReset({ status: st(4, ['primary']), solution: sol })).toEqual(['primary']);
+        expect(keysHeldAtReset({ status: st(5, []), solution: sol })).toEqual([]);
+    });
+    it('a key only a person holds, or one the echo does not report, is left alone (a pair would be a fresh PRESS)', () => {
+        expect(keysHeldAtReset({ status: st(1, ['up', 'right']), solution: sol })).toEqual(['up']);
+        expect(keysHeldAtReset({ status: st(2, []), solution: sol })).toEqual([]);
+    });
+    it('nothing for a finished / un-armed tape, tick 0, a tick past the plan, or no plan', () => {
+        expect(keysHeldAtReset({ status: st(1, ['up'], { finished: true }), solution: sol })).toEqual([]);
+        expect(keysHeldAtReset({ status: st(1, ['up'], { armed: false }), solution: sol })).toEqual([]);
+        expect(keysHeldAtReset({ status: st(0, ['up']), solution: sol })).toEqual([]);
+        expect(keysHeldAtReset({ status: st(6, ['up']), solution: sol })).toEqual([]);
+        expect(keysHeldAtReset({ status: st(1, ['up']), solution: null })).toEqual([]);
+        expect(keysHeldAtReset({ status: null, solution: sol })).toEqual([]);
+    });
+    it('the eight names are Bot.keyCodeFor\'s, with their Flash key codes', () => {
+        expect(TAPE_KEY_RELEASES.map((k) => [k.name, k.keyCode])).toEqual([['right', 39], ['up', 38], ['left', 37], ['down', 40],
+            ['primary', 88], ['secondary', 67], ['inventory', 86], ['inventory2', 73]]);
     });
 });

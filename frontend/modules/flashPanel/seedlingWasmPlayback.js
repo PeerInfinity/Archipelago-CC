@@ -56,7 +56,7 @@
 import { arrivalSolveRequest, arrivalSolverGoal, isArrival, stagingFromWasmArrival } from '../seedlingDemo/wasmArrival.js';
 import {
     divergenceAction, divergenceFailure, exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, MAX_RECOVERIES,
-    MID_ROOM_POLICY, shippedTape, wasmGoalRefusal,
+    keysHeldAtReset, MID_ROOM_POLICY, shippedTape, TAPE_KEY_RELEASES, wasmGoalRefusal,
 } from '../seedlingDemo/wasmPlayback.js';
 import { LOAD_BUDGET_MS, SOLVER_BUDGET_MS } from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
@@ -116,7 +116,7 @@ export function createWasmPlayback({
     /** Warm the worker now, so the first solve does not pay the module load inside its budget (S2). */
     try { svc().warm?.(); } catch { /* no Worker here: the first start says so */ }
     const stats = { arrivals: 0, forced: 0, solves: 0, ships: 0, hostStarts: [], done: 0, failed: 0, divergences: 0,
-        recoveries: 0 };
+        recoveries: 0, keyReleases: [] };
     const history = [];
 
     const game = () => getGame?.() ?? null;
@@ -140,11 +140,47 @@ export function createWasmPlayback({
     const status = () => J(game()?.botStatus?.());
     const seqNow = () => parsePendingCheck(readState().pendingCheck)?.seq ?? 0;
 
-    /** Release whatever tape we started (hold or armed) — `botReset` (W0 i.9). */
-    function release() {
+    /**
+     * Release whatever tape we started (hold or armed) — `botReset` (W0 i.9) —
+     * and then the KEYS a plan tape was holding mid-span (`keysHeldAtReset`:
+     * a reset leaves them down, and the next tape's press on them is lost).
+     * `st` = a `botStatus` read in this same JS turn (no tick runs between it
+     * and the reset); without one, a PLAYING plan pays one read here.
+     */
+    function release(st = undefined) {
         if (!ours) return;
         ours = false;
+        let held = [];
+        if (phase === 'playing' && play?.plan) {
+            const s = st === undefined ? status() : st;
+            held = keysHeldAtReset({ status: s, solution: play.plan.solution });
+        }
         try { game()?.botReset?.(); } catch { /* the page is gone */ }
+        if (held.length) releaseKeys(held);
+    }
+
+    /**
+     * A keydown + keyup PAIR per key on the game canvas. A lone keyup is
+     * DROPPED by the runtime (Ruffle's physical-key rule: a KeyUp needs a
+     * KeyDown it saw — `avm2_display.c` IN_KEY_UP, measured 0/4); the pair is
+     * queued in order and delivered on the next tick (`avm2_input_pump_tick`),
+     * where the keydown is a no-op on a key Flash already holds.
+     */
+    function releaseKeys(names) {
+        let win = null;
+        try { win = getWin?.() ?? null; } catch { win = null; }
+        const canvas = win?.document?.querySelector?.('canvas') ?? null;
+        const Ctor = win?.KeyboardEvent;
+        if (!canvas || typeof Ctor !== 'function') return;
+        for (const k of TAPE_KEY_RELEASES.filter((x) => names.includes(x.name))) {
+            for (const type of ['keydown', 'keyup']) {
+                try {
+                    canvas.dispatchEvent(new Ctor(type, { key: k.key, code: k.code, keyCode: k.keyCode, which: k.keyCode,
+                        bubbles: true, cancelable: true }));
+                } catch { /* the page is gone */ }
+            }
+        }
+        stats.keyReleases.push(names);
     }
 
     function reset() {
@@ -158,8 +194,8 @@ export function createWasmPlayback({
 
     function fail(reason) {
         const g = goal;
-        reset();
         release();
+        reset();
         goal = null;
         stats.failed += 1;
         history.push({ goal: g, outcome: 'failed', reason, recoveries });
@@ -202,8 +238,8 @@ export function createWasmPlayback({
             return { ok: true, action };
         }
         // A goal replacing one mid-solve: the freeze is ours, release it first.
-        reset();
         release();
+        reset();
         goal = g;
         recoveries = 0;
         spawn = action === 'force-re-arrival' ? { x: live.playerPositionX, y: live.playerPositionY } : null;
@@ -383,7 +419,7 @@ export function createWasmPlayback({
         const action = divergenceAction({ goal, recoveries, status: st });
         if (action === 'done') {
             log(`[wasm playback] ${goal.name ?? goal.kind}: its clear already landed — done despite the divergence`, 'warn');
-            release(); // the tape is still armed; the room is the player's again
+            release(st); // the tape is still armed; the room is the player's again
             finish(st ?? {});
             return;
         }
@@ -391,10 +427,10 @@ export function createWasmPlayback({
         recoveries += 1;
         stats.recoveries += 1;
         history.push({ goal, outcome: 'diverged', recovery: recoveries, ticks: play.ticks, drained: play.progress.ticks,
-            verbs: play.plan.verbs ?? null, solvedMs: play.solvedMs, divergence: d });
+            verbs: play.plan.verbs ?? null, solvedMs: play.solvedMs, divergence: d, input: st?.input ?? null });
         const queuedGoal = queued;
+        release(st);
         reset();
-        release();
         queued = queuedGoal; // a goal waiting on this tape keeps waiting for the recovered one
         reArrive(`left the plan at tick ${d.t} — recovery ${recoveries}/${MAX_RECOVERIES}: re-entering level ${goal.level} to re-solve`);
     }
@@ -442,8 +478,8 @@ export function createWasmPlayback({
                     divergence: play?.divergence ?? null, recoveries, lastRow: last, expectedEnd: play?.plan?.expected?.at(-1) ?? null });
             }
             queued = null;
-            reset();
             release();
+            reset();
             goal = null;
             note(null);
         },
@@ -452,7 +488,7 @@ export function createWasmPlayback({
             return { phase, goal, queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
                 drained: play?.progress?.ticks ?? null, divergence: play?.divergence ?? null, recoveries };
         },
-        get stats() { return { ...stats, hostStarts: [...stats.hostStarts], history: [...history] }; },
+        get stats() { return { ...stats, hostStarts: [...stats.hostStarts], keyReleases: [...stats.keyReleases], history: [...history] }; },
         dispose() { this.stop(); try { service?.dispose?.(); } catch { /* gone */ } },
     };
 }

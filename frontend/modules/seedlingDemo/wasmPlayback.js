@@ -266,3 +266,62 @@ export function divergenceFailure({ goal, recoveries, divergence }) {
         + `(gave up after ${recoveries} forced re-arrival${recoveries === 1 ? '' : 's'}, the bound is ${MAX_RECOVERIES}); `
         + `last at tick ${d?.t}: expected ${JSON.stringify(d?.expected)}, game ${JSON.stringify(d?.got)}`;
 }
+
+/**
+ * ⛔ W3, MEASURED: `botReset` FORGETS THE TAPE BUT NOT ITS KEYS. A plan tape
+ * presses its keys by dispatching stage `KeyboardEvent`s (`Bot.dispatchKey`);
+ * a tape's own spans release them at their end, but `botReset` mid-span
+ * releases nothing (`Bot.as` botReset — no `dispatchKey(…, false)`). The
+ * key stays held across the forced re-arrival (and across a `new Game`), and
+ * the NEXT plan's DOWN edge on it is a no-op: on the live recovery the
+ * re-solved chest tape's echo read `held ["up","down"]` with
+ * `press_totals.down 0`, and that attempt diverged at tick 1 with the player
+ * not moving at all (up + a stale down cancel, `Player.input`).
+ *
+ * ⛔ AND A LONE `keyup` DOES NOT RELEASE IT (scratch measurement, p4e
+ * headless, 0 of 4): the runtime drops a KeyUp for a key it never saw go down
+ * (Ruffle's physical-key rule, SWFRecomp `avm2_display.c` IN_KEY_UP), and
+ * the tape's keys never passed through it. A `keydown` + `keyup` PAIR does
+ * release (every trial): both are queued in order and delivered on the next
+ * tick, and the keydown is a no-op in FlashPunk's `Input` for a key already
+ * held (no press edge). The same pair on a key NOBODY holds would be a fresh
+ * PRESS edge (`primary` = a sword swing or an interaction), so the pair goes
+ * ONLY to `keysHeldAtReset`.
+ */
+export const TAPE_KEY_RELEASES = Object.freeze([
+    { name: 'right', key: 'ArrowRight', code: 'ArrowRight', keyCode: 39 },
+    { name: 'up', key: 'ArrowUp', code: 'ArrowUp', keyCode: 38 },
+    { name: 'left', key: 'ArrowLeft', code: 'ArrowLeft', keyCode: 37 },
+    { name: 'down', key: 'ArrowDown', code: 'ArrowDown', keyCode: 40 },
+    { name: 'primary', key: 'x', code: 'KeyX', keyCode: 88 },
+    { name: 'secondary', key: 'c', code: 'KeyC', keyCode: 67 },
+    { name: 'inventory', key: 'v', code: 'KeyV', keyCode: 86 },
+    { name: 'inventory2', key: 'i', code: 'KeyI', keyCode: 73 },
+].map(Object.freeze));
+
+/**
+ * The tape keys a `botReset` read by `status` would leave HELD. Each armed
+ * `Bot.update` dispatches tick `tick`'s span edges (DOWN at `from`, UP at
+ * `to`, spans `[from, to)`), records the edge echo, then `tick++` — so at
+ * `status.tick = T` the tape holds EXACTLY `solution[T-1]`, and the echo
+ * (`status.input`, `t = T-1`) is the game's own `Input.check` of the same
+ * frame. The answer is their intersection: a key only a person holds is not
+ * the tape's to release, and a key the plan does not hold is never paired
+ * (the pair would be a fresh press). A finished or un-armed tape holds
+ * nothing (its own UP edges ran).
+ *
+ * ⛔ Measured wrong first: requiring the plan to hold the key at `T` as well
+ * skipped `up` whenever the next tick changed keys (the chest plan's tick 10
+ * `up` → tick 11 `down`), and that reset left `up` stale (trace, 1 run in 3).
+ *
+ * @param {{status:object|null, solution:Array<Iterable<string>>|null}} o
+ * @returns {string[]} key names, in `TAPE_KEY_RELEASES` order
+ */
+export function keysHeldAtReset({ status, solution }) {
+    if (!status?.armed || status.finished || !Array.isArray(solution)) return [];
+    const t = status.tick;
+    if (!Number.isInteger(t) || t < 1 || t > solution.length) return [];
+    const plan = new Set(solution[t - 1] ?? []);
+    const echo = new Set(status.input?.held ?? []);
+    return TAPE_KEY_RELEASES.map((k) => k.name).filter((n) => echo.has(n) && plan.has(n));
+}
