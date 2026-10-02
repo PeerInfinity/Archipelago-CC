@@ -391,6 +391,24 @@
             "_comment": "Seedling JS J2. flashPanel.runtime = wasm: the bot's walkTo into a generated room is refused and its status NAMES the cannot-walk error (P0's rule: never a silent wait). The wasm page is loaded but never started."
         },
         {
+            "id": "seedling-js-runtime-atlas-room",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J3. flashPanel.runtime = js on seedling_atlas_location: the JS page runs the VANILLA map, the atlas arm binds (no delivery), the arrival lands in the real starting house (level 86); keys open its chest (a real user:locationCheck, key_blue arrives) and take its door into the maze child (pendingExit field for field with the wasm game). Fast batch, like the J1/J2 rows."
+        },
+        {
+            "id": "seedling-js-runtime-bot-completes-atlas-location",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J3. flashPanel.runtime = js: the Playback Bot drains seedling_atlas_location's sphere log through the flash_seedling controller (the real chest, the real door) and the maze controller — all locations checked, victory held, no error: status, crossings witnessed by gameState's path."
+        },
+        {
+            "id": "seedling-js-runtime-bot-walks-atlas-rooms",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling JS J3. flashPanel.runtime = js on seedling_atlas: the bot walks between REAL atlas rooms — the house door to the chest, then out, down the owl's-nest stairs (a stairsdown) and the descent into the dungeon; four level-change crossings witnessed by gameState's path."
+        },
+        {
             "id": "apworld-document-tab-lists-every-schema-key",
             "enabled": true,
             "category": "apworldEditor",

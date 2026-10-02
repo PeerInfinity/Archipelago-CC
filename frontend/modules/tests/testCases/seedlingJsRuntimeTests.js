@@ -210,7 +210,7 @@ registerTest({
  * (J1's trap: `loadRulesFromFile` leaves the catch-up on the previous preset),
  * and wait for the flash panel on `transport`. Returns `{bot, panel}` or null.
  */
-async function botOnSeedlingPreset(tc, runtime) {
+async function botOnSeedlingPreset(tc, runtime, { presetPath = PRESET_PATH, sphereLog = true } = {}) {
     // The bot panel must be mounted BEFORE the rules load: procgenPlayer's
     // synthetic initial user:regionMove is how it learns its start region.
     tc.eventBus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' });
@@ -228,10 +228,10 @@ async function botOnSeedlingPreset(tc, runtime) {
     // adapter that is not the one in place before the load.
     const staleAdapter = getActivePanelInstance()?.adapter ?? null;
     await settingsManager.updateSetting(RUNTIME_KEY, runtime, { persist: false });
-    tc.log(`runtime = ${runtime} (session override); loading seedling_generated_room…`);
-    const rulesJson = await (await fetch(PRESET_PATH)).json();
+    tc.log(`runtime = ${runtime} (session override); loading ${presetPath}…`);
+    const rulesJson = await (await fetch(presetPath)).json();
     const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
-    tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: PRESET_PATH });
+    tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: presetPath });
     await loaded;
     await tc.stateManager.pingWorker('after-rules-load', 5000);
     tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
@@ -243,6 +243,7 @@ async function botOnSeedlingPreset(tc, runtime) {
     }, `the flash panel mounted the ${transport} transport (a fresh adapter)`, 30000, 250);
     tc.assertEqual(`the panel is on the ${transport} transport`, transport, panel?.transport ?? null);
     if (!panel) return null;
+    if (!sphereLog) return { bot, panel };
 
     const sphereState = getSphereStateSingleton();
     const sphereLoaded = await tc.pollForCondition(() => (sphereState.getSphereData()?.length ?? 0) > 0,
@@ -377,6 +378,245 @@ registerTest({
         + 'by the controller and the bot\'s status names the cannot-walk error (only the JS runtime has feet) '
         + '— never a silent wait. The wasm page is never started.',
     testFunction: seedlingWasmRuntimeBotNamesItsRefusal,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── Seedling JS J3: REAL atlas rooms (`flash_seedling`) on the JS runtime ────
+
+const ATLAS_LOCATION_PATH = './presets/seedling_atlas_location/AP_1/AP_1_rules.json';
+const ATLAS_PATH = './presets/seedling_atlas/AP_1/AP_1_rules.json';
+const CHEST_LOCATION = 'Starting House - Chest';
+
+/** The state manager's snapshot facts the rows read. */
+function snapshotFacts(tc) {
+    const snap = tc.stateManager.getSnapshot?.() ?? null;
+    const list = snap?.checkedLocations ?? [];
+    const inv = snap?.inventory ?? {};
+    return {
+        checked: new Set(Array.isArray(list) ? list : [...list]),
+        held: (item) => Number((inv instanceof Map ? inv.get(item) : inv[item]) ?? 0),
+    };
+}
+
+/** The `pendingExit` values the page reported (its bridge's own log), parsed field by field. */
+function reportedExits(win) {
+    return (win?.__swfBridge?.stateLog ?? []).filter((r) => r.name === 'pendingExit' && r.value)
+        .map((r) => { const [, fromLevel, type, x, y, to] = String(r.value).split('|'); return { fromLevel: +fromLevel, type, x: +x, y: +y, to: +to }; });
+}
+
+/** Hold `code` on the frame's canvas until `until()` holds (or `maxMs`). */
+async function holdKeyUntil(win, code, until, maxMs = 10000) {
+    const canvas = win.document.querySelector('canvas');
+    const send = (type) => canvas.dispatchEvent(new win.KeyboardEvent(type, { code, key: code, bubbles: true, cancelable: true }));
+    send('keydown');
+    const t0 = performance.now();
+    try {
+        while (!until() && performance.now() - t0 < maxMs) {
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((r) => setTimeout(r, STEP_MS));
+        }
+    } finally { send('keyup'); }
+    return until();
+}
+
+/** Wait for a FRESH js panel that bound the atlas arm, and its page running a real room. */
+async function atlasPanelOnJs(tc, staleAdapter) {
+    const panel = await tc.pollForValue(() => {
+        const p = getActivePanelInstance();
+        return p?.transport === 'js' && p.adapter && p.adapter !== staleAdapter && p._initRuntime === 'js' ? p : null;
+    }, 'the flash panel mounted the JS runtime page (a fresh adapter)', 30000, 250);
+    tc.assertEqual('the panel is on the JS transport', 'js', panel?.transport ?? null);
+    if (!panel) return null;
+    const bound = await tc.pollForValue(() => (panel._apLoadResult && panel.seedlingPlaybackSurface()?.atlas ? panel : null),
+        'the panel bound the ATLAS arm (its AP load) and holds the atlas name → cell map', 30000, 250);
+    const panelLogTail = () => (document.querySelector('.flash-panel-log')?.textContent ?? '').split('\n').slice(-20).join(' | ');
+    if (!bound) tc.log(`panel log: ${panelLogTail()}`, 'error');
+    tc.reportCondition('the atlas arm loaded on the JS runtime', !!bound);
+    if (!bound) return null;
+    const load = panel._apLoadResult;
+    tc.assertEqual('the atlas arm only BINDS (no delivery, no reset)', 'bind',
+        load.ok ? load.steps.map((s) => s.name).filter((n) => /deliver|reset|bind/.test(n)).join(',') : JSON.stringify(load));
+    const rt = await tc.pollForValue(() => {
+        const r = frameOf(panel)?.__seedlingJsRuntime ?? null;
+        return r?.run && r.vanilla ? r : null;
+    }, 'the JS runtime page is running a room of the vanilla map', 15000, 200);
+    tc.reportCondition('the JS page runs the vanilla map', !!rt);
+    return rt ? { panel, rt, win: frameOf(panel) } : null;
+}
+
+export async function seedlingJsRuntimePlaysAtlasRoom(tc) {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        await settingsManager.updateSetting(RUNTIME_KEY, 'js', { persist: false });
+        tc.log('runtime = js (session override); loading seedling_atlas_location…');
+        const rulesJson = await (await fetch(ATLAS_LOCATION_PATH)).json();
+        const loaded = tc.waitForEvent('stateManager:rulesLoaded', 8000);
+        tc.eventBus.publish('files:jsonLoaded', { jsonData: rulesJson, selectedPlayerId: '1', sourceName: ATLAS_LOCATION_PATH });
+        await loaded;
+        await tc.stateManager.pingWorker('after-rules-load', 5000);
+        tc.eventBus.publish('ui:activatePanel', { panelId: 'flashPanel' });
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, win } = up;
+
+        // The arrival: the binding's teleport (released by the page's level-0
+        // first frame) lands the run in the REAL starting house, level 86.
+        const house = await tc.pollForValue(() => (rt.run?.level === 86 ? rt : null),
+            'the arrival teleport landed the JS run in the real starting house (level 86)', 15000, 200);
+        tc.assertEqual('the run is in level 86 (the starting house)', 86, house ? rt.run.level : rt.run?.level ?? null);
+        tc.assertEqual('gameState is in the atlas region', 'region_2_2', readCurrentRegion());
+        if (!house) return tc.getOverallResult();
+
+        // ── the chest, by keys: it is two tiles above the return spawn ────
+        const opened = await holdKeyUntil(win, 'ArrowUp', () => rt.events.some((e) => e.type === 'check' && e.level === 86));
+        tc.assertEqual('the chest opened by keys (the page reported pendingCheck "<seq>|86|0|0")', true, opened);
+        const checked = await tc.pollForValue(() => (snapshotFacts(tc).checked.has(CHEST_LOCATION) ? CHEST_LOCATION : null),
+            `the state manager checked "${CHEST_LOCATION}"`, 10000, 200);
+        tc.assertEqual('the atlas location was checked through the real dispatcher', CHEST_LOCATION, checked);
+        const key = await tc.pollForValue(() => (snapshotFacts(tc).held('key_blue') > 0 ? 'key_blue' : null),
+            'the chest\'s placed item (key_blue) arrived in the state manager', 10000, 200);
+        tc.assertEqual('key_blue is held (it opens the house door)', 'key_blue', key);
+
+        // ── the door, by keys: three tiles below; it leads into the maze child ──
+        const out = await holdKeyUntil(win, 'ArrowDown', () => readCurrentRegion() === 'region_2_3', 15000);
+        tc.assertEqual('the house door moved the AP region into the maze child (user:regionMove)', true, out);
+        const exits = reportedExits(win);
+        tc.assertEqual('the door was reported field for field: "<seq>|86|teleporter|48|64|0" (Teleporter.as:107)',
+            JSON.stringify({ fromLevel: 86, type: 'teleporter', x: 48, y: 64, to: 0 }), JSON.stringify(exits[exits.length - 1] ?? null));
+        tc.assertEqual('no death and no halt on the way', '0/null', `${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-atlas-room',
+    name: 'Seedling JS runtime: a REAL atlas room plays by keys (check + crossing)',
+    description: 'With flashPanel.runtime = js, loads seedling_atlas_location: the JS page runs the vanilla map, '
+        + 'the atlas arm binds, the arrival lands in the real starting house (level 86), keys open its chest (a real '
+        + 'user:locationCheck for "Starting House - Chest", key_blue arrives) and take its door into the maze child '
+        + '(a real user:regionMove; pendingExit field for field with the wasm game). No wasm artifact needed.',
+    testFunction: seedlingJsRuntimePlaysAtlasRoom,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+export async function seedlingJsRuntimeBotCompletesAtlasLocation(tc) {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_LOCATION_PATH });
+        if (!ready) return tc.getOverallResult();
+        const { bot } = ready;
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt } = up;
+        const expected = (getSphereStateSingleton().getSphereData() ?? []).flatMap((s) => s.locations ?? []);
+        tc.log(`sphere log locations: ${JSON.stringify(expected)}; bot start region '${bot.getCurrentRegion?.() ?? '?'}'`);
+        tc.assertEqual('the sphere log starts in the atlas room (its chest)', CHEST_LOCATION, expected[0] ?? null);
+        await bot.play();
+        const finished = await tc.pollForCondition(() => (bot.getStatus() || '').startsWith('finished')
+            || errorStatuses(bot).length > 0, 'the bot drained its sphere queue (or named an error)', 90000, 250);
+        if (!finished || errorStatuses(bot).length > 0) {
+            tc.log(`bot status "${bot.getStatus()}"; walk: ${rt.playback.describe()}; log tail `
+                + JSON.stringify(bot.getLog?.().slice(-8) ?? []), 'error');
+        }
+        tc.assertEqual('the Playback Bot completed seedling_atlas_location (an atlas room, then two maze rooms)', true,
+            (bot.getStatus() || '').startsWith('finished'));
+        await tc.stateManager.pingWorker('after-bot-run', 5000);
+        const facts = snapshotFacts(tc);
+        tc.assertEqual('every sphere-log location is checked', '[]', JSON.stringify(expected.filter((n) => !facts.checked.has(n))));
+        tc.assertEqual('victory is held', true, facts.held('victory') > 0);
+        const path = walkedRegions();
+        tc.log(`gameState path (regionMove destinations): ${JSON.stringify(path)}`);
+        tc.assertEqual('the bot crossed OUT of the atlas room through its door (gameState path: region_2_3, region_3_3)',
+            true, path.includes('region_2_3') && path.includes('region_3_3'));
+        tc.assertEqual('the page took the house door (a pendingExit from level 86)', true,
+            reportedExits(up.win).some((e) => e.fromLevel === 86 && e.type === 'teleporter'));
+        const log = bot.getLog?.() ?? [];
+        tc.assertEqual('the bot wrote a status log to read errors out of', true, log.length > 1);
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+        tc.assertEqual('no death and no halt on the JS runtime', '0/null', `${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-bot-completes-atlas-location',
+    name: 'Seedling JS runtime: the Playback Bot completes seedling_atlas_location (a real room)',
+    description: 'With flashPanel.runtime = js, the Playback Bot drains seedling_atlas_location\'s sphere log: the '
+        + 'flash_seedling controller walks the real starting house\'s chest (an atlas check) and its door into the '
+        + 'maze, the maze controller the rest — all locations checked, victory held, no error: status, crossings '
+        + 'witnessed by gameState\'s path.',
+    testFunction: seedlingJsRuntimeBotCompletesAtlasLocation,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+export async function seedlingJsRuntimeBotWalksAtlasRooms(tc) {
+    let previous = 'auto';
+    try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try {
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        // seedling_atlas carries no sphere log (its completion is constant-true):
+        // the bot is driven by its manual targets, which route region by region.
+        const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+        if (!ready) return tc.getOverallResult();
+        const { bot } = ready;
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, win } = up;
+        const start = await tc.pollForValue(() => (bot.getCurrentRegion?.() === 'overworld_start__r8c0' && rt.run?.level === 0 ? rt : null),
+            'the bot and the page are in the start region (overworld_start__r8c0, level 0)', 15000, 200);
+        tc.reportCondition('the bot starts in overworld_start__r8c0 on level 0', !!start);
+        if (!start) return tc.getOverallResult();
+
+        // ── leg 1: the chest, through the house door (an atlas → atlas crossing) ──
+        const before = walkedRegions().length;
+        bot.walkToLocation(CHEST_LOCATION);
+        const chest = await tc.pollForCondition(() => snapshotFacts(tc).checked.has(CHEST_LOCATION) || errorStatuses(bot).length > 0,
+            `the bot walked into the starting house and checked "${CHEST_LOCATION}"`, 60000, 250);
+        tc.assertEqual('the chest was checked', true, !!chest && snapshotFacts(tc).checked.has(CHEST_LOCATION));
+        tc.assertEqual('gameState\'s path records the crossing into starting_house', true,
+            walkedRegions().slice(before).includes('starting_house'));
+
+        // ── leg 2: out again, down the owl's-nest STAIRS and the descent into the dungeon ──
+        const mid = walkedRegions().length;
+        const r = bot.walkToTile('dungeon1_room1__r0c4', 4, 3);
+        tc.assertEqual('the bot took a cross-region tile target in the dungeon', true, !!r?.ok);
+        const deep = await tc.pollForCondition(() => walkedRegions().slice(mid).includes('dungeon1_room1__r0c4')
+            || errorStatuses(bot).length > 0, 'the bot routed into dungeon1_room1__r0c4', 60000, 250);
+        const legs = walkedRegions().slice(mid);
+        tc.log(`regions walked on leg 2: ${JSON.stringify(legs)}; bot "${bot.getStatus()}"; walk: ${rt.playback.describe()}`);
+        tc.assertEqual('gameState\'s path: starting_house → overworld_start__r8c0 → owls_nest_entrance → dungeon1_room1__r0c4',
+            JSON.stringify(['overworld_start__r8c0', 'owls_nest_entrance', 'dungeon1_room1__r0c4']), JSON.stringify(legs));
+        tc.reportCondition('the dungeon was reached', !!deep);
+        const types = reportedExits(win).map((e) => `${e.fromLevel}:${e.type}`);
+        tc.assertEqual('the page reported each link with its OWN exitType (a stairsdown among them)',
+            JSON.stringify(['0:teleporter', '86:teleporter', '0:stairsdown', '2:teleporter']), JSON.stringify(types));
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+        tc.assertEqual('no death and no halt on the JS runtime', '0/null', `${rt.deaths.length}/${rt.halted ? rt.halted.message : null}`);
+    } finally {
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-bot-walks-atlas-rooms',
+    name: 'Seedling JS runtime: the Playback Bot walks between REAL atlas rooms',
+    description: 'With flashPanel.runtime = js on seedling_atlas (ten real-room regions), the bot walks to the '
+        + 'starting house\'s chest through the house door, then out and down the owl\'s-nest stairs and the descent '
+        + 'into the dungeon — four atlas → atlas crossings (level changes, one a stairsdown), each witnessed by '
+        + 'gameState\'s path; no error: status, no death, no halt.',
+    testFunction: seedlingJsRuntimeBotWalksAtlasRooms,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });
