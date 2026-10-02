@@ -48,6 +48,11 @@ wasm when a `wasm` page is wired, real Flash otherwise), `flash`, `wasm`, or
 generated rooms only — see `docs/json/developer/procgen/flash.md` § The JS
 runtime). Changing it re-initializes the panel.
 
+Playback Bot solver mode: `moduleSettings.flashPanel.seedlingSolverWalk`
+(default off) — on the `js` runtime, the bot's walk in a real Seedling room
+asks the real solver for the room's plan first (the solve pauses the page while
+it plans). See `docs/json/developer/procgen/flash.md` § The solver mode.
+
 Note: preset rules.json files are generated artifacts — the `flash_panel`
 section is a hand-added block (on the seed-1 seedling preset and
 robotkitty_tilemap) that a regeneration would drop; re-add it after

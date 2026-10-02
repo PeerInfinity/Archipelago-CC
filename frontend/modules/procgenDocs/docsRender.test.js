@@ -268,7 +268,8 @@ describe('⛓ the links the render emits', () => {
         //   322 → 324: P3's seedling-solver-surface.md § Which blocks the solver models ⇄ concepts.md § Behaviour pair.
         //   324 → 325: swim U8's seedling-bot.md → flash.md § The element defaults by biome.
         //   325 → 327: Seedling JS J2's substrate-registry.md + playback-and-debugging.md → flash.md § The playback bot.
-        expect(checked).toBe(327);
+        //   327 → 329: solver-walk S1's flash.md § The solver mode → seedling-bot.md + playback-and-debugging.md → it.
+        expect(checked).toBe(329);
     });
 
     it('tags each link with the kind that produced it', () => {
