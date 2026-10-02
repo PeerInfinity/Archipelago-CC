@@ -12278,6 +12278,82 @@ producer `--check`s are green without it.
 - a refusal on a TYPE question whose answer is the same for every reader: what
   the census could not carry was the BOX.
 
+### Seedling substrate R5-swim — the close-out (2026-10-02)
+
+⚖ The user ruled the arc's end (2026-10-02: *"One cleanup slice, then
+close."*). The report, with the arc's remaining-residue list, is
+`CC/docs/cloud-reports/seedling-swim-r5.md`. Each D stood alone; one STOPPED
+with its numbers.
+
+**D1 — the mid-room solver stack overflow (fixed).** From L6
+(`in_L5_48_112` → `out_stairsup_224_32`) after 70 J2-walker ticks, the walk to
+`bob@96,16`'s bait stance probed danger and climbed the ladder again. The
+inner climb picked the same body, the same stance and the same tick, so it
+was the outer call over again: `walkTo` → `climbLadder` → `walkTo` … until
+*"Maximum call stack size exceeded"*, which the JS page reported as a
+decline. The bait rung now keys a walk in flight by `body@stance#tick`, and a
+re-entry is refused by name (`BAIT_REENTRY`); the ladder goes on to KILL. The
+W = 0..240 sweep of that room read 4 overflows (W 41, 70, 142, 214) before and
+0 after; the other 237 rows are byte-identical. Witness: `r5SwimCloseout`,
+through `solveSegment({prefix})` on the JS runtime's own staging and on the
+page.
+
+**D2 — `botReset` held keys in the swim tools: none (closed).** No swim tool
+calls `botReset`. `watchWasm` gives each ship a fresh frame and polls each
+window to `finished`; the director's driver, the differential's per-tape
+boots, the campaign producer's latch drives and `derive-seedling-tick0` all
+take a fresh page per tape. Adjacent and unmeasured: between two windows,
+`watchWasm` and the director's driver release a key still held at a window's
+end with a LONE `keyup`, the shape W3 measured as dropped.
+
+**D3 — press/arrow kill-lock timing: STOP, on a bigger finding.** A witness
+on `r8-solve-5`'s staging stood the player on `lock@48,112` before t 427 (the
+clear the model ledgers at the arrow kill, t 326 + 101). The game let the
+player through on t 423 and crossed to L6 on t 424; the model held it to
+t 427 and crossed on t 429. A `Lock` turns off 101 steps after
+`totalEnemies()` reaches zero, so the game's count was zero by about t 322:
+before the model's KILL tick, which neither reading (the kill, the removal)
+predicts. The bob body probe on committed `r8-solve-5` says why: the game's
+L5 bobs leave the model at t 54 (`bob@16,64`'s first arrow hit lands on the
+same tick with a different knockback: game v (−2.69, 2.31), model (−0.49,
+3.70)). By t 200 the game holds one bob (hits 3, no anim) against the model's
+`bob@48,80` alive at hits 1; worst |Δ| 23.06 px over 336 comparisons. The
+player stream never sees it, because the player waits at (56.15, 56.40) until
+long after the lock is open. The model's L5 kill sequence is not the game's,
+so the kill-vs-removal question cannot be asked there. The refuted witness is
+not committed.
+
+**D4 — the Green Key is credited.** A `key` ledger row asked for a clear in
+its level, and every vanilla `bosskey` has tag −1, so none ever writes one.
+`BossKey.removed()` is the only writer of `hasKey[kt] = true` during play, and
+each `keyType` has one vanilla placement, so the flip is the placement
+witness (`GOAL_PLACEMENT_WITNESS.key: false`, with the reason). Over the R4
+harvest's full-tier latches `r9-campaign` reads 6 earned = 6 declared
+(`bosskey1@L29` joins).
+
+**D5 — one dead-frame budget.** The band's probe carried its own copy of the
+gate's terms and had never learned R6's three (deaths, same-level reboots,
+ceremony starts): on the R4 full tier it admitted 188/196 and missed one
+injection. `deadFrameBand.deadFrameBudget` is now called by both. After:
+ADMITS 196/196, CATCHES 196/196 on both signs. The gate's terms are
+byte-identical on all 196 tapes. The probe's `FADE_STATS` drift (79 tapes /
+557 loads banked; 196 / 589 measured) is left for the coordinator, since
+re-deriving it moves the gate's band.
+
+**Trap candidates**, for the catalogue to number:
+
+- a refusal path that re-enters itself: a rung whose action is a call back
+  into the loop that chose it must carry a progress key, or a deterministic
+  state recurses until the stack ends the solve;
+- a measuring copy of a gate's arithmetic: it drifts the moment the gate
+  learns a term, and the probe's verdict then contradicts the gate's;
+- a placement witness that a whole KIND can never produce (an untagged key
+  writes no clear), which reads as "never earned" rather than as a rule that
+  cannot fire;
+- a model-sourced declaration whose bodies the game never checked: the player
+  stream can agree for hundreds of ticks while the room's bodies have
+  diverged, so a declared tick is evidence only for what the stream crosses.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
