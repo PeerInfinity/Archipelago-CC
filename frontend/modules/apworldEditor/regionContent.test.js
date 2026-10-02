@@ -558,7 +558,59 @@ describe('the op — one record, pure on refold', () => {
 
     it('unplacedPoolItems is pool minus placements, positive only', () => {
         const doc = { itempool_counts: { 1: { A: 2, B: 1, C: 0 } }, canonical_placements: { 1: { x: 'A', y: 'B' } } };
-        expect(unplacedPoolItems(doc, '1')).toEqual([{ item: 'A', pool: 2, placed: 1, unplaced: 1 }]);
+        expect(unplacedPoolItems(doc, '1')).toEqual([{ item: 'A', pool: 2, placed: 1, starting: 0, unplaced: 1 }]);
+    });
+
+    it('⛓ unplacedPoolItems takes the STARTING copies off — the pool is precollected + placed (`get_itempool_counts`)', () => {
+        // a name per copy and `{name, count}` both count, as `extract_starting_items` reads them
+        const doc = {
+            itempool_counts: { 1: { S: 1, T: 2, U: 2, A: 1 } },
+            starting_items: { 1: ['S', 'T', { name: 'U', count: 2 }] },
+            canonical_placements: { 1: { x: 'T', y: 'A' } },
+        };
+        expect(unplacedPoolItems(doc, '1')).toEqual([]);
+    });
+
+    it('⛓ …and a starting item with an EXTRA copy no location holds still lists the extra', () => {
+        const doc = {
+            itempool_counts: { 1: { S: 3, A: 1 } },
+            starting_items: { 1: ['S'] },
+            canonical_placements: { 1: { x: 'S', y: 'A' } },
+        };
+        expect(unplacedPoolItems(doc, '1')).toEqual([{ item: 'S', pool: 3, placed: 1, starting: 1, unplaced: 1 }]);
+    });
+
+    it('⛓ unplacedPoolItems counts the ALWAYS-PLACED locations (`_always_placed`): event locks and pins', () => {
+        const loc = (name, item, extra = {}) => ({ name, id: 1, item: { name: item }, ...extra });
+        const doc = {
+            itempool_counts: { 1: { A: 1, Ev: 1, EvLoc: 1, Pin: 1, NonEvLock: 1, Both: 1 } },
+            items: { 1: { A: { id: 1 }, Ev: { id: null, event: true }, EvLoc: { id: 3 }, Pin: { id: 4 },
+                NonEvLock: { id: 5 }, Both: { id: null, event: true } } },
+            canonical_placements: { 1: { a: 'A', both: 'Both' } },
+            regions: { 1: { R: { locations: [
+                loc('a', 'A'),
+                loc('ev', 'Ev', { locked: true }),               // the ITEM is an event
+                loc('evloc', 'EvLoc', { locked: true, id: null }), // the LOCATION is an event
+                loc('pin', 'Pin', { pinned: true }),
+                loc('lock', 'NonEvLock', { locked: true }),      // canonical: only canonical, randomised elsewhere
+                loc('both', 'Both', { locked: true }),           // in canonical_placements too: counted once
+            ] } } },
+        };
+        expect(unplacedPoolItems(doc, '1')).toEqual([{ item: 'NonEvLock', pool: 1, placed: 0, starting: 0, unplaced: 1 }]);
+        // ⛓ without canonical placements EVERY locked placement is always placed
+        const noCanon = { ...doc, itempool_counts: { 1: { NonEvLock: 1, A: 1 } }, canonical_placements: {} };
+        expect(unplacedPoolItems(noCanon, '1')).toEqual([{ item: 'A', pool: 1, placed: 0, starting: 0, unplaced: 1 }]);
+    });
+
+    it('⛓ the exporter-sourced topdown presets with starting buttons list NO starting item and NO event as placed nowhere', () => {
+        for (const n of [4, 5, 6]) {
+            const doc = JSON.parse(readFileSync(join(PRESETS, `procgen_topdown/AP_${n}/AP_${n}_rules.json`), 'utf8'));
+            const starting = new Set(doc.starting_items['1']);
+            expect(starting.size, `AP_${n}`).toBeGreaterThan(0);
+            const rows = unplacedPoolItems(doc, '1');
+            expect(rows.filter((r) => starting.has(r.item)), `AP_${n}`).toEqual([]);
+            expect(rows.filter((r) => doc.items['1'][r.item]?.event === true), `AP_${n}`).toEqual([]);
+        }
     });
 
     it('applyZoneContent with an inlined answer = the whole operation (the worker and the page agree)', () => {

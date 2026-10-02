@@ -852,22 +852,54 @@ export function zoneConfigSplitSentence(config, verifiedCount) {
 
 /**
  * ⛓⛓ **POOL ITEMS PLACED NOWHERE** — `itempool_counts[p][item]` minus the
- * canonical placements holding it, where positive. What the cascade leaves
- * behind (the displaced items) is exactly this; the Placements tab draws it.
+ * placements holding it minus the starting copies, where positive. What the
+ * cascade leaves behind (the displaced items) is exactly this; the Placements
+ * tab draws it.
  *
- * @returns {Array<{item: string, pool: number, placed: number, unplaced: number}>}
+ * ⛓ The pool's contract is the exporter's (`get_itempool_counts`: every
+ * PRECOLLECTED copy + every FILLED location) and world_generator reads it back
+ * as `count − _always_placed − starting_items` (`_template_init.py`). So the
+ * same two things come off here, or every starting item and every locked event
+ * reads as "placed nowhere":
+ *   · `starting_items[p]` — counted per entry (a name, or `{name, count}` as
+ *     `extract_starting_items` reads it);
+ *   · the ALWAYS-PLACED locations (`_always_placed`) — a `locked` location's
+ *     item (with canonical placements, only an event lock: the item is an
+ *     event, or the location has no id) and every `pinned` one — keyed by
+ *     LOCATION with `canonical_placements[p]`, so a location both name counts once.
+ *
+ * @returns {Array<{item: string, pool: number, placed: number, starting: number, unplaced: number}>}
  */
 export function unplacedPoolItems(doc, player) {
     const pool = doc?.itempool_counts?.[player] ?? {};
+    const canonical = doc?.canonical_placements?.[player] ?? {};
+    const byLocation = new Map(Object.entries(canonical).filter(([, item]) => typeof item === 'string'));
+    const canonicalMode = byLocation.size > 0;
+    const items = doc?.items?.[player] ?? {};
+    for (const region of Object.values(doc?.regions?.[player] ?? {})) {
+        for (const l of Array.isArray(region?.locations) ? region.locations : []) {
+            const item = l?.item?.name;
+            if (typeof l?.name !== 'string' || typeof item !== 'string' || !item || byLocation.has(l.name)) continue;
+            const def = items[item];
+            const eventLock = l.locked === true
+                && (!canonicalMode || l.id == null || (def != null && (def.id == null || def.event === true)));
+            if (eventLock || l.pinned === true) byLocation.set(l.name, item);
+        }
+    }
     const placed = {};
-    for (const item of Object.values(doc?.canonical_placements?.[player] ?? {})) {
-        if (typeof item === 'string') placed[item] = (placed[item] ?? 0) + 1;
+    for (const item of byLocation.values()) placed[item] = (placed[item] ?? 0) + 1;
+    const starting = {};
+    for (const e of Array.isArray(doc?.starting_items?.[player]) ? doc.starting_items[player] : []) {
+        const name = typeof e === 'string' ? e : e?.name;
+        const k = typeof e === 'string' ? 1 : (Number.isFinite(e?.count) ? e.count : 1);
+        if (typeof name === 'string' && name) starting[name] = (starting[name] ?? 0) + k;
     }
     const out = [];
     for (const [item, count] of Object.entries(pool)) {
         const n = Number.isFinite(count) ? count : 0;
         const k = placed[item] ?? 0;
-        if (n > k) out.push({ item, pool: n, placed: k, unplaced: n - k });
+        const s = starting[item] ?? 0;
+        if (n > k + s) out.push({ item, pool: n, placed: k, starting: s, unplaced: n - k - s });
     }
     return out;
 }
