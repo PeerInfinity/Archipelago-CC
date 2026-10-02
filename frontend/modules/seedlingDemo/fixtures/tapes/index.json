@@ -1542,6 +1542,20 @@
       "noHazards": []
     },
     {
+      "file": "u15-turret-shield.json",
+      "tickCount": 100,
+      "bootLevel": 29,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "u15-turret-spit.json",
+      "tickCount": 100,
+      "bootLevel": 29,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "u7-puncher-kill.json",
       "tickCount": 128,
       "bootLevel": 12,

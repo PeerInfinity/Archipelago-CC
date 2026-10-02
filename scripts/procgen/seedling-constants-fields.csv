@@ -1521,6 +1521,67 @@ frontend/modules/seedlingDemo/levelRun.js|previewStepper|h2e35f0c8|0|0,structura
 frontend/modules/seedlingDemo/levelRun.js|previewStepper|h00e3c357|0|0,structural,,,U12-swim D1: no pull pushed this preview tick (empty test)
 frontend/modules/seedlingDemo/pull.js|createPulls|hea6d6684|2|0,structural,,Puzzlements/Pull.as:direction,turn-to-radian conversion (_d * Math.PI * 2)
 frontend/modules/seedlingDemo/pull.js|*|*,structural,,,empty tests / the unit-axis test / the hop bound
+frontend/modules/seedlingDemo/turret.js|(module)|hd6a24b4a|8|0,physics,magnitude,Enemies/Turret.as:super,ctor centre: _x + Tile.w/2
+frontend/modules/seedlingDemo/turret.js|(module)|hd0716fd7|8|0,physics,magnitude,Enemies/Turret.as:super,ctor centre: _x + Tile.w/2
+frontend/modules/seedlingDemo/turret.js|(module)|h4488fa7a|16|0,physics,magnitude,Enemies/Turret.as:setHitbox,setHitbox(16; 16; 8; 8)
+frontend/modules/seedlingDemo/turret.js|(module)|h38f84e48|16|0,physics,magnitude,Enemies/Turret.as:setHitbox,setHitbox(16; 16; 8; 8)
+frontend/modules/seedlingDemo/turret.js|(module)|hfbfa64b5|8|0,physics,magnitude,Enemies/Turret.as:setHitbox,setHitbox(16; 16; 8; 8)
+frontend/modules/seedlingDemo/turret.js|(module)|he55052aa|8|0,physics,magnitude,Enemies/Turret.as:setHitbox,setHitbox(16; 16; 8; 8)
+frontend/modules/seedlingDemo/turret.js|(module)|hc6e98b31|64|0,rule,bound,Enemies/Turret.as:attackRange,the truncated range test d <= 64
+frontend/modules/seedlingDemo/turret.js|(module)|hb3704b58|40|0,rule,magnitude,Enemies/Turret.as:shootTimerMax,the 40-tick clock between shots (re-armed every animation tick)
+frontend/modules/seedlingDemo/turret.js|(module)|he0bfda5f|3|0,physics,magnitude,Enemies/Turret.as:shotSpeed,spit speed
+frontend/modules/seedlingDemo/turret.js|(module)|hd620c11e|10|0,physics,magnitude,Enemies/Turret.as:angleSpeedDivisor,aim turn divisor sets the spit direction
+frontend/modules/seedlingDemo/turret.js|(module)|hd12bc5c2|10|0,rule,magnitude,Enemies/Turret.as:attackAnimSpeed,shot anim rate: the wrap spawns the spit
+frontend/modules/seedlingDemo/turret.js|(module)|h785063d1|2|0,rule,count,Enemies/Turret.as:startshot,two-frame startshot
+frontend/modules/seedlingDemo/turret.js|(module)|h0b60fb9b|10|0,rule,magnitude,Enemies/Turret.as:attackAnimSpeed,shot anim rate: the wrap spawns the spit
+frontend/modules/seedlingDemo/turret.js|(module)|h82ce853b|2|0,rule,count,Enemies/Turret.as:finishshot,two-frame finishshot
+frontend/modules/seedlingDemo/turret.js|(module)|h2c60a270|10|0,rule,magnitude,Enemies/Turret.as:attackAnimSpeed,shot anim rate: the wrap ends the shot
+frontend/modules/seedlingDemo/turret.js|(module)|hd6c70732|6|0,cosmetic,,,die anim frames: unreachable
+frontend/modules/seedlingDemo/turret.js|(module)|ha5935c97|10|0,cosmetic,,,die anim rate: unreachable
+frontend/modules/seedlingDemo/turret.js|(module)|ha26d0ff3|1|0,cosmetic,,,hit anim never played
+frontend/modules/seedlingDemo/turret.js|(module)|hc03b75e8|0|0,cosmetic,,,hit anim never played
+frontend/modules/seedlingDemo/turret.js|(module)|h891f0b87|4|0,physics,magnitude,Projectiles/TurretSpit.as:setHitbox,setHitbox(4; 4; 2; 2)
+frontend/modules/seedlingDemo/turret.js|(module)|hfde58f93|4|0,physics,magnitude,Projectiles/TurretSpit.as:setHitbox,setHitbox(4; 4; 2; 2)
+frontend/modules/seedlingDemo/turret.js|(module)|hf73241e3|2|0,physics,magnitude,Projectiles/TurretSpit.as:setHitbox,setHitbox(4; 4; 2; 2)
+frontend/modules/seedlingDemo/turret.js|(module)|h88126280|2|0,physics,magnitude,Projectiles/TurretSpit.as:setHitbox,setHitbox(4; 4; 2; 2)
+frontend/modules/seedlingDemo/turret.js|(module)|h5fba91a8|0|0,physics,magnitude,Projectiles/TurretSpit.as:f,f = 0: no decay
+frontend/modules/seedlingDemo/turret.js|(module)|h5edc64f0|0.05|0,physics,bound,Mobile.as:friction,friction zeroes an axis below 0.05
+frontend/modules/seedlingDemo/turret.js|(module)|h1c1656d2|3|0,physics,magnitude,Enemies/Turret.as:shotSpeed,spit speed
+frontend/modules/seedlingDemo/turret.js|(module)|h8a1d87a4|12|0,rule,bound,Projectiles/TurretSpit.as:onScreen,off-screen cull margin = the spritemap width 12
+frontend/modules/seedlingDemo/turret.js|(module)|h89ec435b|1|0,rule,magnitude,Player.as:hit,hit damage default 1
+frontend/modules/seedlingDemo/turret.js|angleDifference|h866d8017|2|0,structural,,,2 pi wrap (FP.angle_difference)
+frontend/modules/seedlingDemo/turret.js|angleDifference|h10f96948|2|0,structural,,,2 pi wrap (FP.angle_difference)
+frontend/modules/seedlingDemo/turret.js|turretAim|h73ded93b|180|0,structural,,,degree/radian conversion
+frontend/modules/seedlingDemo/turret.js|turretAim|h73ded93b|180|1,structural,,,degree/radian conversion
+frontend/modules/seedlingDemo/turret.js|turretAim|hacbb9536|0|0,rule,bound,Enemies/Turret.as:shootTimer,shootTimer > 0 counts down
+frontend/modules/seedlingDemo/turret.js|turretAim|hc83f050e|1|0,structural,,,shootTimer-- per update
+frontend/modules/seedlingDemo/turret.js|turretAim|h4e79c135|0|0,rule,bound,Enemies/Enemy.as:hitsTimer,hitsTimer <= 0 gates the shot
+frontend/modules/seedlingDemo/turret.js|turretAim|h261aa06e|0|0,structural,,,play(): _index = 0
+frontend/modules/seedlingDemo/turret.js|turretAim|hb4a39d3d|0|0,structural,,,play(): _timer = 0
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|hc1bda304|0|0,structural,,,rate 0 never advances
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|h15ef4de5|1|0,structural,,,Spritemap _timer >= 1
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|hd125d2bd|1|0,structural,,,Spritemap _timer--
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|h27810831|1|0,structural,,,Spritemap _index++
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|h261aa06e|0|0,structural,,,loop wrap _index = 0
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|h261aa06e|0|1,structural,,,play(): _index = 0
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|hb4a39d3d|0|0,structural,,,play(): _timer = 0
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|h436d8715|1|0,structural,,,spit id counter
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|h261aa06e|0|2,structural,,,play(): _index = 0
+frontend/modules/seedlingDemo/turret.js|turretAnimStep|hb4a39d3d|0|1,structural,,,play(): _timer = 0
+frontend/modules/seedlingDemo/turret.js|spawnSpit|h6ce2d949|180|0,structural,,,degree/radian conversion
+frontend/modules/seedlingDemo/turret.js|stepTurretSpit|hab9fb5f0|0|0,physics,magnitude,Mobile.as:friction,an axis zeroed below 0.05
+frontend/modules/seedlingDemo/turret.js|stepTurretSpit|hbeb26f40|0|0,physics,magnitude,Mobile.as:friction,an axis zeroed below 0.05
+frontend/modules/seedlingDemo/turret.js|stepTurretSpit|h4d087e27|0|0,rule,bound,Projectiles/TurretSpit.as:update,v.length > 0 gates the collision
+frontend/modules/seedlingDemo/turret.js|stepTurretSpit|h7dfa3d56|0|0,structural,,,any contact removes the spit
+frontend/modules/seedlingDemo/turret.js|fpSign|fpSign,physics,sign,,FP.sign
+frontend/modules/seedlingDemo/turret.js|moveAxis|moveAxis,structural,,,one-pixel move sub-steps (Mobile.moveX/moveY)
+frontend/modules/seedlingDemo/turret.js|turretCadence|turretCadence,structural,,,the cadence simulator: counters
+frontend/modules/seedlingDemo/turret.js|createTurret|h8909e65c|0|0,structural,,,
+frontend/modules/seedlingDemo/turret.js|createTurret|h8909e65c|0|1,rule,magnitude,Enemies/Turret.as:shootTimer,seeded 0 so an in-range turret fires on tick one
+frontend/modules/seedlingDemo/turret.js|createTurret|h8909e65c|0|2,rule,magnitude,Enemies/Enemy.as:hitsTimer,0: the press that would set it is refused
+frontend/modules/seedlingDemo/turret.js|createTurret|h8909e65c|0|3,structural,,,
+frontend/modules/seedlingDemo/turret.js|createTurret|h8909e65c|0|4,structural,,,
+frontend/modules/seedlingDemo/turret.js|createTurret|h8909e65c|0|5,structural,,,
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

@@ -120,7 +120,7 @@ import {
     BOB_BOSS_ROCK_DEAD_FRAMES, beginBobBossDialogue, bobBossBox, bobBossHit, bobBossRockArms,
     bobBossRockRect, bobBossShieldBump, createBobBossBody, DARK_SHIELD_DAMAGE, enemyKnockbackV,
     SHIELD_FORCE,
-    shieldBumpTouches, stepBobBossBody,
+    playerShieldRect, shieldBumpTouches, stepBobBossBody,
 } from './bobBossFight.js';
 // ⛓⛓⛓ R6 SLICE 6f: the FIFTEENTH family — the Owl, and the first fight on
 // the ladder whose GAMEPLAY reads random numbers. `finalBossRng` is the
@@ -144,6 +144,10 @@ import {
 import {
     ICE_TURRET_BLAST, blastIsSpent, stepIceTurretBlast,
 } from './iceTurretBlast.js';
+// ⛓⛓⛓ U15-swim D1: `Turret` + `TurretSpit`, the shooter route step 27 met.
+import {
+    TURRET_SPIT, createTurret, spitSpeed, stepTurret, stepTurretSpit, turretRect,
+} from './turret.js';
 // ⛓⛓⛓ R6 SLICE 2: the THIRTEENTH family — the first projectile the PLAYER
 // makes, so the first per-visit body a tape is responsible for.
 import { WAND_PRESS_CADENCE, WAND_WINDOW, wandPress } from './wandVerb.js';
@@ -361,6 +365,7 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'talkCircles',
     'bobBoss',
     'pulls',
+    'shooters',
 ]);
 
 /**
@@ -418,6 +423,7 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'turretKills',
     'bobBossEvents',
     'shieldBumps',
+    'spitEvents',
 ]);
 
 /**
@@ -1701,6 +1707,36 @@ export function createLevelRun({
         }
         return blastReachCache.get(n);
     };
+    /**
+     * ── ⛓⛓⛓ U15-swim D1: THE TURRETS AND THEIR SPITS (`turret.js`) ─────
+     *
+     * PER VISIT, both. `Turret` has no `check()`, no `removed()` and no
+     * persistence, so every `new Game` builds each one afresh (angle 0,
+     * `shootTimer` 0); a spit is a runtime entity the reconstruction drops.
+     * The roster is read off the level RECORD (`Game.as:2272`, `.oel` order).
+     * The spits are the blasts' shape: a list, NEWEST FIRST (`addUpdate`
+     * prepends).
+     */
+    const shooterStates = new Map();
+    const shooterStateFor = (n) => {
+        if (!shooterStates.has(n)) {
+            const byId = new Map();
+            for (const e of levelSource(n).entities ?? []) {
+                if (e.type !== 'turret') continue;
+                const t = createTurret(e.x, e.y);
+                byId.set(t.id, t);
+            }
+            shooterStates.set(n, byId);
+        }
+        return shooterStates.get(n);
+    };
+    const spitStates = new Map();
+    const spitsFor = (n) => {
+        if (!spitStates.has(n)) spitStates.set(n, []);
+        return spitStates.get(n);
+    };
+    /** One row per spit spawned or removed — `{t, level, what, id, x, y, …}`. */
+    const spitEvents = [];
     /**
      * ── ⛓⛓⛓ R6 SLICE 2: THE MAGICAL LOCKS, THE TWELFTH ID JOIN ──────────
      *
@@ -3387,6 +3423,9 @@ export function createLevelRun({
     const freshVisitState = (n) => {
         // ⛓ U14-swim D1: a new `Game` constructs the moonrock again, from `rockSet`.
         moonrockStates.delete(n);
+        // ⛓ U15-swim D1: and every turret (angle 0, `shootTimer` 0) and no spit.
+        shooterStates.delete(n);
+        spitStates.delete(n);
         bridgeStates.set(n, new Map());
         pushableStates.set(n, createPushableState(worldFor(n)));
         // R5 slice 13: a re-entered room rebuilds every spinner at its cell,
@@ -3866,6 +3905,7 @@ export function createLevelRun({
         // corpse bug from the other side.
         blastStates.delete(fromLevel);
         wandShotStates.delete(fromLevel);
+        spitStates.delete(fromLevel);
         // ⛓ THE NEW `Game`'s OWN ARGS, for a later `restartLevel()`.
         worldCtor = { x: ctor.x, y: ctor.y };
         // ⛓ AND THE CAMERA IS A NEW `Game`'s TOO — `loadlevel` writes it raw
@@ -7099,6 +7139,75 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ U15-swim D1: ONE TICK OF EVERY TURRET SPIT, AND IT IS FIRST — the
+     * blasts' slot, for the blasts' two reasons (`stepBlastsNow`): a spit is
+     * added at run time and `addUpdate` PREPENDS, so it reads the world as the
+     * previous tick left it, and its knockback lands in `v` before the
+     * player's physics this tick.
+     *
+     * ⛔ `"Shield"` is the player's own shield ENTITY, placed by the previous
+     * frame's `render` (`playerShieldRect` at `shieldRenderState`, the bump's
+     * box): a spit that meets it first is removed with no hit.
+     *
+     * ⛔ AND THE CULL (`if (!onScreen(12)) remove`) reads `FP.camera` as the
+     * previous frame's `view()` left it — `cam`. Under a shake band an
+     * UNCERTAIN verdict is refused by name.
+     */
+    function stepSpitsNow() {
+        const list = spitsFor(level);
+        if (list.length === 0) return;
+        if (blastsFor(level).length > 0) {
+            throw new Error(`levelRun: level ${level} has a TurretSpit and an IceTurretBlast `
+                + 'in flight at once — their mutual update order is not transcribed.');
+        }
+        const opts = normalizeLiveOpts(liveSolidOpts());
+        const box = playerBoxAt(state.x, state.y);
+        const shieldBox = inventory?.hasShield
+            ? playerShieldRect(shieldRenderState ?? state, slashState.slashing) : null;
+        const onScreen = (b, margin) => {
+            if (camBand === null) return camOnScreen(b, cam, margin);
+            const verdict = onScreenUnderShake(b, camBand, margin);
+            // Under `Bot.noDamage` a spit reaches nothing the run observes
+            // (`Player.hit` returns at its first line), so an undecidable cull
+            // keeps it rather than refusing a tape the cull cannot change.
+            if (verdict === 'uncertain' && noDamage) return true;
+            if (verdict === 'uncertain') {
+                throw new Error(`levelRun: whether a TurretSpit is culled at tick `
+                    + `${ticksCompleted + 1} in level ${level} depends on where inside `
+                    + '`Game.shake`\'s jiggle the camera landed (camera.js, "THE SHAKE, AND WHY '
+                    + 'IT IS A BAND"). `TurretSpit.update` removes it at `onScreen(12)`.');
+            }
+            return verdict === 'on';
+        };
+        for (const s of list) {
+            const r = stepTurretSpit(s, {
+                frozen: ceremony !== null,
+                playerBox: box,
+                shieldBox,
+                blockedAt: (bx) => !!world.collidesBlast(bx, opts),
+                onScreen,
+            });
+            if (!r.removed) continue;
+            const what = r.culled ? 'cull' : r.hitPlayer ? 'hit'
+                : r.hitTypes.includes('Shield') ? 'shield' : 'cover';
+            spitEvents.push({ t: ticksCompleted + 1, level, what, id: s.id, x: s.x, y: s.y,
+                ...(r.hitTypes ? { types: [...r.hitTypes] } : {}) });
+            // `(hits[i] as Player).hit(null, v.length, new Point(x, y))` — `e`
+            // is null, so the dark suit does not retaliate.
+            if (r.hitPlayer) {
+                applyPlayerHit({
+                    source: 'spit', id: s.id, force: spitSpeed(s), damage: TURRET_SPIT.damage,
+                    from: { x: s.x, y: s.y }, retaliate: null,
+                });
+            }
+        }
+        // `FP.world.remove` is deferred to the frame's end; nothing reads a
+        // spit but this loop, so dropping it here is the same thing.
+        const kept = list.filter((s) => !s.removed);
+        if (kept.length !== list.length) spitStates.set(level, kept);
+    }
+
+    /**
      * ⛓⛓⛓ R6 SLICE 2: ONE UPDATE OF EVERY WAND SHOT, AND IT IS FIRST.
      *
      * A shot is added at RUN TIME and `World.addUpdate` PREPENDS, so it sits
@@ -9612,6 +9721,48 @@ export function createLevelRun({
         }
     }
 
+    /**
+     * ⛓⛓⛓ U15-swim D1: ONE TICK OF EVERY TURRET (`Turret.update` + its
+     * Spritemap), in the slot `Game.as:2272` gives it: added just before the
+     * `iceturret` and after the Player, and `addUpdate` prepends — so below
+     * the ice turrets and above the player, the LAST placed first. It reads
+     * the player as the previous tick left it. A spit its `endAnim` adds is
+     * deferred to the frame's end: it first updates on the next tick.
+     */
+    function stepShootersNow() {
+        const st = shooterStateFor(level);
+        if (st.size === 0) return;
+        if (turretStateFor(level).size > 0) {
+            throw new Error(`levelRun: level ${level} holds a Turret and an IceTurret — `
+                + 'their spits and blasts would share the prepend order, which is not transcribed.');
+        }
+        for (const id of [...st.keys()].reverse()) {
+            const t = st.get(id);
+            stepTurret(t, { frozen: ceremony !== null, player: { x: state.x, y: state.y } });
+            if (t.spawned) {
+                t.spawned.spawnedAt = ticksCompleted + 1;
+                spitsFor(level).unshift(t.spawned);
+                spitEvents.push({ t: ticksCompleted + 1, level, what: 'spawn', id: t.spawned.id,
+                    x: t.spawned.x, y: t.spawned.y, v: { ...t.spawned.v } });
+            }
+        }
+    }
+
+    /**
+     * ⛓ U15-swim D1: a pickup's phase A is a LUMP of dead frames, and every
+     * one of them is FROZEN to the turrets and spits: the spits do not move
+     * (their collision still runs), the turrets do not aim, and an animation
+     * already playing finishes — a spit in the barrel leaves on schedule.
+     * Stepped frame by frame here, at the ceremony's start.
+     */
+    function stepShootersThroughFreeze(frames) {
+        if (shooterStateFor(level).size === 0 && spitsFor(level).length === 0) return;
+        for (let k = 0; k < frames; k += 1) {
+            stepSpitsNow();
+            stepShootersNow();
+        }
+    }
+
     function stepIceTurretsNow() {
         const st = turretStateFor(level);
         if (st.size === 0) return;
@@ -11752,6 +11903,20 @@ export function createLevelRun({
      */
     const pullsNow = () => pullsFor(level).map((p) => ({ ...p, rect: { ...p.rect } }));
     /**
+     * ⛓ U15-swim D1: this room's turrets in `.oel` order, each with the spits
+     * of its own in flight — a copy, enough to step a forecast from.
+     */
+    const shootersNow = () => [...shooterStateFor(level).values()].map((t) => ({
+        id: t.id, x: t.x, y: t.y, rect: turretRect(t), angle: t.angle,
+        shootTimer: t.shootTimer, hitsTimer: t.hitsTimer, anim: t.anim,
+        animIndex: t.animIndex, animTimer: t.animTimer, shots: t.shots,
+        spits: spitsFor(level).filter((s) => s.id.startsWith(`${t.id}#`))
+            .map((s) => ({ id: s.id, x: s.x, y: s.y, v: { ...s.v }, spawnedAt: s.spawnedAt })),
+    }));
+    /** ⛓ U15-swim D1: one row per spit spawned or removed — `stepSpitsNow`. */
+    const spitEventsNow = () => spitEvents.map((r) => ({ ...r, ...(r.v ? { v: { ...r.v } } : {}),
+        ...(r.types ? { types: [...r.types] } : {}) }));
+    /**
      * `run.entities('bobBoss')` — the arena's live members, keyed by role
      * (`rock`, `boss`, `dialogue`, `fire`, `transition`), each present only
      * while it exists. EMPTY in every room without a `thirdboss` rock.
@@ -11946,6 +12111,7 @@ export function createLevelRun({
         talkCircles: talkCirclesNow,
         bobBoss: bobBossNow,
         pulls: pullsNow,
+        shooters: shootersNow,
     });
 
     /**
@@ -12263,6 +12429,7 @@ export function createLevelRun({
         turretKills: turretKillsNow,
         bobBossEvents: bobBossEventsNow,
         shieldBumps: shieldBumpsNow,
+        spitEvents: spitEventsNow,
     });
 
     return {
@@ -13442,6 +13609,10 @@ export function createLevelRun({
         get shieldBumps() { return shieldBumpsNow(); },
         /** ⛓ U12-swim D1: the room's pulls, in update order — see `pullsNow`. */
         get pulls() { return pullsNow(); },
+        /** ⛓ U15-swim D1: the room's turrets and their spits — see `shootersNow`. */
+        get shooters() { return shootersNow(); },
+        /** ⛓ U15-swim D1: the spit ledger — see `stepSpitsNow`. */
+        get spitEvents() { return spitEventsNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 22 — THE FREEZE LEDGER, AND IT IS THE PRICE OF THE
          * KILL RATHER THAN AN ACCIDENT.
@@ -14268,6 +14439,8 @@ export function createLevelRun({
                 stepMagicalLocksNow();
             }
             if (!noclip) stepBlastsNow();
+            // ⛓ U15-swim D1: the turret spits, beside the blasts and for their reasons.
+            if (!noclip) stepSpitsNow();
 
             // ── R4: the entities that update BEFORE the player ────────
             // `Game.loadlevel` adds the Player at `:2040` and the pushables
@@ -14533,6 +14706,10 @@ export function createLevelRun({
             // it; what runs through a freeze is `Enemy.update`'s terrain
             // switch, a claim about DYING rather than about moving.
             if (!noclip) stepIceTurretsNow();
+            // ── ⛓⛓⛓ U15-swim D1: THE TURRETS, BELOW THE ICE TURRETS ──────
+            // `Game.as:2272` adds them just before the `iceturret`
+            // (`:2273`), and `addUpdate` prepends.
+            if (!noclip) stepShootersNow();
 
             // ── ⛓⛓⛓ R5 SLICE 22: `Player.update`'s `freezeStep()` ────
             //
@@ -15044,6 +15221,8 @@ export function createLevelRun({
                         ...(hit.tag === 'seed'
                             ? { seed: { id: pickupKey(level, hit), arm: 'plain' } } : {}),
                     };
+                    // ⛓ U15-swim D1: phase A's dead frames, frozen, for the turrets.
+                    if (!noclip) stepShootersThroughFreeze(CEREMONY_DEAD_FRAMES.pickup);
                 }
             }
             if (ceremony !== null) {

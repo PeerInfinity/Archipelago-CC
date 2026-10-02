@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**56 files, 4740 literals.** Class × position:
+**57 files, 4834 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
-| physics | 5 | 1256 | 335 | 1596 |
-| rule | 6 | 911 | 420 | 1337 |
-| cosmetic | 0 | 43 | 10 | 53 |
-| structural | 10 | 310 | 1434 | 1754 |
+| physics | 5 | 1271 | 342 | 1618 |
+| rule | 6 | 920 | 425 | 1351 |
+| cosmetic | 0 | 47 | 10 | 57 |
+| structural | 10 | 310 | 1488 | 1808 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2520 | 2199 | 4740 |
+| total | 21 | 2548 | 2265 | 4834 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
-| physics | 1339 | 0 | 89 | 113 | 4 | 51 | 1596 |
-| rule | 397 | 120 | 204 | 22 | 517 | 77 | 1337 |
+| physics | 1355 | 0 | 90 | 118 | 4 | 51 | 1618 |
+| rule | 404 | 122 | 209 | 22 | 517 | 77 | 1351 |
 
 Rows whose note starts `REVIEW:`: **105**.
 
@@ -506,7 +506,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **135 small tables** (at most 16 literals) hold at least one (85 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **136 small tables** (at most 16 literals) hold at least one (86 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -601,6 +601,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `FREEZE_SPAN` | seedlingDemo/iceTurretBlast.js | 1 | 1 | rule | derivation |  |
 | `BLAST_DAMAGE` | seedlingDemo/iceTurretBlast.js | 4 | 4 | physics/rule | magnitude |  |
 | `BLAST_PLAN` | seedlingDemo/iceTurretBlast.js | 3 | 3 | rule | magnitude |  |
+| `TURRET_SPIT` | seedlingDemo/turret.js | 9 | 9 | physics/rule | bound/magnitude | Projectiles/TurretSpit.as:setHitbox Projectiles/TurretSpit.as:f Mobile.as:friction Enemies/Turret.as:shotSpeed Projectiles/TurretSpit.as:onScreen Player.as:hit |
 | `WAND_SPRITE` | seedlingDemo/wandVerb.js | 11 | 3 | physics/rule | count/magnitude | Player.as:48-51 |
 | `FIRE_WAND_SPRITE` | seedlingDemo/wandVerb.js | 11 | 2 | rule | count/magnitude |  |
 | `WAND_PRESS_CADENCE` | seedlingDemo/wandVerb.js | 1 | 1 | rule | derivation |  |

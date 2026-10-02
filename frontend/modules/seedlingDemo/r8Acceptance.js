@@ -218,6 +218,12 @@ export const R8_NORMALIZE_LIVE_BATCH = Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepBlastsNow',
             action: 'brand', why: 'already hoisted above the blast loop; branded',
         }),
+        // ⛓ U15-swim D1: the turret spits, the blasts' shape one family over.
+        Object.freeze({
+            file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepSpitsNow',
+            action: 'brand', why: 'hoisted above the spit loop (a spit moves nothing the bag '
+                + 'holds); branded',
+        }),
         Object.freeze({
             file: 'levelRun.js', builder: 'liveSolidOpts', at: 'stepWandShotsNow',
             action: 'brand', why: 'already hoisted above the shot loop; branded, and '

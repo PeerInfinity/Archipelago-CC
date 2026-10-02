@@ -2642,6 +2642,8 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
         { tape: 'r5-bobboss-fire', families: ['bobBoss'] },
         // ⛓ U12-swim: L12's funnel, ridden into the pit.
         { tape: 'u12-pull-carry', families: ['pulls'] },
+        // ⛓ U15-swim: L29's turret, standing in its range until a spit lands.
+        { tape: 'u15-turret-spit', families: ['shooters'] },
     ];
     const nontrivial = (v) => v === false
         || ((v instanceof Set || v instanceof Map) ? v.size > 0 : Array.isArray(v) ? v.length > 0 : false);
@@ -2677,7 +2679,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
             'strikeBodies', 'spinnerBodies', 'armedPulsers', 'turrets', 'chasers',
             'brokenRocks', 'crushersParked', 'pushesSettled', 'openBridges', 'arrowsInFlight',
             'burnedTrees', 'latchedGroups', 'pulledRopes', 'turretDamage', 'turretsSettled',
-            'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls',
+            'arrowFlights', 'bosses', 'talkCircles', 'bobBoss', 'pulls', 'shooters',
         ]);
         expect(Object.isFrozen(ENTITY_FAMILY_NAMES)).toBe(true);
         for (const f of ENTITY_FAMILY_NAMES) {
@@ -2774,7 +2776,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
 describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the getters, by other names', () => {
     const FOLDS = [
         { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 12, noun: 'progress field', plural: 'fields' },
-        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 31, noun: 'ledger kind', plural: 'kinds' },
+        { query: 'ledger', names: LEDGER_KIND_NAMES, count: 32, noun: 'ledger kind', plural: 'kinds' },
     ];
     const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];
     const queryOf = new Map(FOLDS.flatMap((f) => f.names.map((n) => [n, f.query])));
@@ -2792,6 +2794,8 @@ describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the gette
         { tape: 'r5-l37-burn', members: ['treeBurns'] },
         { tape: 'r5-l40-part5-control', members: ['blastFreezes', 'frozenTimer', 'turretKills'] },
         { tape: 'r5-bobboss-fire', members: ['bobBossEvents'] },
+        // ⛓ U15-swim: two spits spawned, one into cover and one onto the player.
+        { tape: 'u15-turret-spit', members: ['spitEvents'] },
     ];
     const text = (v) => JSON.stringify(v, (k, x) => (x instanceof Set || x instanceof Map ? [...x] : x));
     const sizeOf = (v) => (v instanceof Set || v instanceof Map ? v.size : Array.isArray(v) ? v.length : null);

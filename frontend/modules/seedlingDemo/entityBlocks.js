@@ -292,6 +292,9 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'pulls', kind: RUN_ENTITIES, blocks: ['stationary'],
         solverReads: ['solverBot'], strategies: [],
         why: 'the room\'s `Pull` currents in update order (`levelRun.pullsNow`, U12-swim `pull.js`); a pit leg rides the ones that drain into its pit (`solverBot.pitRides`).' },
+    { family: 'shooters', kind: RUN_ENTITIES, blocks: ['stationary', 'emitter'],
+        solverReads: [], strategies: [],
+        why: 'the room\'s `Turret`s in `.oel` order, each with its aim, its 40-tick clock, its animation and the `TurretSpit`s of its own in flight (`levelRun.shootersNow`, U15-swim `turret.js`).' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],
