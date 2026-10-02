@@ -367,9 +367,9 @@ Steps 2 and 3 run behind a solve service (solver-walk S2):
 
 What it buys: enemies (L6's bobs are baited, L5's are killed and its kill lock opens), puzzles (L4's shove and hold), chests, and walks the J2 walker stalls on (L12). Static enemies still decline, as above. The in-app row `seedling-js-runtime-solver-opens-kill-lock` teleports the page into level 5 and walks to the teleporter at (48, 112) behind its kill lock. The solver kills, the crossing to level 6 is reported, the clear is reported once as `<seq>|5|0|0`, and no AP location is checked. Its node rows are in `seedlingDemo/jsRuntimeDeclarations.test.js`. The in-app row `seedling-js-runtime-solver-walks-enemy-room` (same category and batch) sets the mode on, teleports the real page into level 6 through the page handle, and walks it to the stairs at (224, 32) past the bobs. The plan uses `bait`, every planned key is played with no refutation, the stairs crossing is reported, and there is no halt and no `error:` status. Two more rows cover S2. `seedling-js-runtime-solver-budget-falls-back` teleports to level 12's door under a 300 ms budget, and the worker is terminated and the walker takes the goal by name. `seedling-js-runtime-solver-keeps-the-frame-clock` solves level 12 from 120 walker ticks in: the page's 20 ms heartbeat never gaps past 250 ms during the solve, the run does not step, and the plan then plays to level 36. The node rows are in `seedlingDemo/jsRuntimeSolver.test.js` and, for the worker, `jsRuntimeSolveService.test.js`, which runs the real worker entry through `worker_threads`.
 
-#### Wasm playback (solver-walk W1: arrival → staging → solve)
+#### Wasm playback (solver-walk W1, W2)
 
-The wasm game only replays tapes, so the Playback Bot cannot walk it the way the JS runtime walks itself. The plan is to solve the room at its arrival on the JS model and ship the solution as one tape (`NewDocs/plans/seedling-js-solver-walk-plan.md` §5). W1 builds the first half and plays nothing. The controller still refuses `wasm` by name until W2.
+The wasm game only replays tapes, so the Playback Bot cannot walk it the way the JS runtime walks itself. Instead, a real room is solved at its arrival on the JS model and the solution is shipped as one tape (`NewDocs/plans/seedling-js-solver-walk-plan.md` §5). W1 built the arrival, the staging and the solve, playing nothing. W2 plays it: the `flash_seedling` controller walks real rooms on the wasm runtime. Generated rooms (`flash_seedling_gen`) are still refused by name on wasm.
 
 `seedlingDemo/wasmArrival.js` (DOM-free) does three things:
 
@@ -382,6 +382,33 @@ The wasm game only replays tapes, so the Playback Bot cannot walk it the way the
    - A `botStatus` level ahead of the begin record (a swap still pending) is refused, and so is a readout the build lacks.
    - `arrivalStagingWitness` checks the staging against the reads, field for field.
 3. **The solve.** `arrivalSolverGoal` maps an AP goal (from `resolveSeedlingAtlasGoal`) with the JS page's own mapping (`solverGoalFor`, the walker's teleporter resolution, `locationEntityOf`). `arrivalSolveRequest` builds the S2 solve service's request for a fresh boot: `perTick: []`, so no `prefix`, and the live digest is the fresh run's. `createWorkerSolveService().start(request)` solves it in the module Worker, unchanged. The plan carries the keys and the expected trajectory (`expected[0]` is where the game's player stands).
+
+**Playing it (W2).** The controller's atlas instance is built with `wasm: true`. A wasm `walkTo` loads the engine `flashPanel/seedlingWasmPlayback.js` on first use, by a computed-URL dynamic import so the panel's static imports stay model-free, and holds the goal until the engine is up. The engine serves one goal in one room:
+
+1. **Arrive.** If the player is in another room, the engine waits for the crossing that lands in the goal's room. If the player is already in it, the engine forces a re-arrival: a host `new Game(level, spawn)` through the panel's own teleport recipe, so the room resets like a death and the solve starts from a real arrival. A goal that comes while a plan tape is still playing waits for that tape to finish, which includes waiting out a `SealController` freeze rather than cutting it with a teleport. Rooms holding a moonrock (level 0) are refused by name before anything moves.
+2. **Stage and freeze, in one JS turn.** `botSeam()` is sampled on a 0 ms timer in the game's window. At the arrival the engine reads `botStatus` once and builds the staging. It then starts a zero-tick `hold` tape, which waits out the fade and holds on the first live frame, before that frame steps. The room stays still while the solve runs.
+3. **Solve** in the S2 module Worker with the S3 page's scratch persistence, under the same budget (`SOLVER_BUDGET_MS`).
+4. **Ship** the plan as one tape built from the same staging (`seedlingDemo/wasmPlayback.js` `shippedTape`):
+   - `boot` is this level and the spawn, so the tape plays on the same world.
+   - `persistence` is the live cleared set, and all three save arrays are declared.
+   - `pins` are the solve's.
+   - `seam` is null. No partial block is possible: once a tape declares a seam, `botStart` writes `beam`, `rockSet`, `firstUse`, `extended`, `grassCut` and the music pair unconditionally, and no read-only verb carries those seven.
+   - The rng is left alone (seed 0, fp 0). The staging's seeds come from the begin record, before the build drew from the stream, so re-declaring them would rewind the live stream.
+   - `split` ships the live value, and a split stream is refused.
+   - The plan tape ends un-held. A hold across an exit would block the glue's redirect.
+
+   The declarations are checked against a fresh `botStatus` (`exactDeclarationRefusal`). `botLoadTape` keeps the hold and `botStart` releases it.
+5. **Watch.** `botDrain()` runs every 100 ms for the progress note (*playing tick k/N*) and for the trajectory compare (`firstDivergence`). Drained row `t` is the row before tick `t`, the same as `expected[t]`. A divergence is recorded and logged; acting on it is W3. Once every planned tick has drained, the engine reads `botStatus` every 500 ms to see `finished`.
+
+The check and the crossing are the game's own. The chest opens for real and the check binding reports it; the door is walked and the region binding sees the crossing. **Guard (⚖ W0-Q1):** every `botStart` is bracketed by two reads of `pendingCheck`'s seq, and the range goes to `SeedlingCheckBinding.ignoreHostStart`. A clear reported inside that range that the binding has not already checked is a declaration's echo, never a collection: it is counted in `stats.armingWindow` and makes no AP check. **Kill locks** are left undeclared. In the measurement, the game cleared L5's lock itself, on the plan's tick.
+
+`scripts/procgen/probe-seedling-wasm-playback.mjs` is W2's live witness:
+
+- **G.** On a fresh house, a tape declaring the unearned chest clear is refused by `exactDeclarationRefusal`. Started anyway through the guard, it makes no AP check (`armingWindow` 1, `key_blue` not received).
+- **B.** The Playback Bot drains `seedling_atlas_location`'s sphere log on wasm. The chest is checked once, `key_blue` arrives once, and the binding makes one check. One crossing goes to `region_2_3`, with no `error:` status. Both legs follow the plan with no divergence: the chest takes 102 ticks and ends exactly on the plan's end row, and the door takes 6.
+- **K** (`--only=K`). L5's teleporter is reached behind its kill lock in 558 ticks (`kill`, `walk`). The game clears {5,0} itself and crosses to L6.
+
+The node rows are in `seedlingDemo/wasmPlayback.test.js` and `flashPanel/seedlingWasmPlayback.test.js`, which runs the engine over a fake game built from W1's recorded arrivals with a real solve.
 
 `scripts/procgen/probe-seedling-wasm-arrival-solve.mjs` is the live witness (headless logic-only, p4e, under the box lock). On `seedling_atlas_location` it takes four arrivals: a host jump into the Starting House; the locked door (the game's door to level 0, refused for its moonrock, then the glue's bounce back); and a jump after the chest is opened for real. Each is staged and witnessed. The chest and the door are solved in a real module Worker in the host page and agree key for key with the in-place solve: the chest takes 102 key sets (`chest`, `walk`), and the door takes 6 and ends in level 0, the vanilla teleporter's target. After the chest, its goal is the solver's own named refusal. `botLoadTape`, `botStart` and `botReset` are wrapped and counted, and the count is 0. `--record=<path>` writes the reads. `seedlingDemo/wasmArrival.test.js` runs on the recording committed as `fixtures/wasm-arrival-p4e.json`, including the real worker entry through `worker_threads`.
 

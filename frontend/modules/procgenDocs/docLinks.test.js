@@ -252,20 +252,22 @@ describe('the corpus census — printed, then pinned', () => {
          *   327 → 329  SEEDLING SOLVER-WALK S1 (2026-10-02): flash.md § The solver
          *              mode → seedling-bot.md, and playback-and-debugging.md →
          *              flash.md § The solver mode (`doc` 252 → 254).
+         *   329 → 330  SEEDLING SOLVER-WALK W2 (2026-10-02): playback-and-debugging.md →
+         *              flash.md § Wasm playback (`doc` 254 → 255).
          */
         expect(by).toEqual({
             'same-doc': 17,
-            doc: 254,
+            doc: 255,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(329);
+        expect(CORPUS.length).toBe(330);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(254);
+        expect(docs).toHaveLength(255);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

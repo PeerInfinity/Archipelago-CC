@@ -269,7 +269,8 @@ describe('⛓ the links the render emits', () => {
         //   324 → 325: swim U8's seedling-bot.md → flash.md § The element defaults by biome.
         //   325 → 327: Seedling JS J2's substrate-registry.md + playback-and-debugging.md → flash.md § The playback bot.
         //   327 → 329: solver-walk S1's flash.md § The solver mode → seedling-bot.md + playback-and-debugging.md → it.
-        expect(checked).toBe(329);
+        //   329 → 330: solver-walk W2's playback-and-debugging.md → flash.md § Wasm playback.
+        expect(checked).toBe(330);
     });
 
     it('tags each link with the kind that produced it', () => {

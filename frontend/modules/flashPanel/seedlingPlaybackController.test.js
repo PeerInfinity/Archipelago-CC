@@ -175,13 +175,15 @@ describe('the registry entry and the chart', () => {
         expect(genEntry.playbackScope).toBe(SEEDLING_PLAYBACK_SCOPE);
         expect(typeof atlasEntry.getPlaybackController).toBe('function');
         expect(atlasEntry.playbackScope).toBe(SEEDLING_ATLAS_PLAYBACK_SCOPE);
-        expect(SEEDLING_ATLAS_PLAYBACK_SCOPE).toBe(SEEDLING_PLAYBACK_SCOPE);
+        // ⛓ W2 — the atlas rooms also walk on wasm; the generated rooms do not (yet).
+        expect(SEEDLING_PLAYBACK_SCOPE).toBe("with the Flash Panel's JS runtime");
+        expect(SEEDLING_ATLAS_PLAYBACK_SCOPE).toBe("with the Flash Panel's JS runtime, or its wasm runtime");
     });
 
-    it('P2 reads ◐ "with the Flash Panel\'s JS runtime" for flash_seedling_gen AND flash_seedling', () => {
+    it('P2 reads ◐ — "JS runtime" for flash_seedling_gen, "JS runtime, or its wasm runtime" for flash_seedling (W2)', () => {
         const p2 = CAPABILITY_STATEMENTS.find((s) => s.id === 'P2');
         expect(p2.answer(genEntry)).toEqual({ kind: CELL_KINDS.PARTIAL, text: SEEDLING_PLAYBACK_SCOPE });
-        expect(p2.answer(atlasEntry)).toEqual({ kind: CELL_KINDS.PARTIAL, text: SEEDLING_PLAYBACK_SCOPE });
+        expect(p2.answer(atlasEntry)).toEqual({ kind: CELL_KINDS.PARTIAL, text: SEEDLING_ATLAS_PLAYBACK_SCOPE });
         expect(p2.answer({ getPlaybackController: () => null }).kind).toBe(CELL_KINDS.YES);
     });
 });

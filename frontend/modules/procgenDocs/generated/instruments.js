@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 27,
-            "count": 69,
+            "browser": 28,
+            "count": 70,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 303,
-        "browser": 91,
-        "cited": 139,
-        "files": 314,
+        "blockStyle": 304,
+        "browser": 92,
+        "cited": 140,
+        "files": 315,
         "lineStyle": 11,
-        "withDocblock": 314,
-        "withFlags": 234
+        "withDocblock": 315,
+        "withFlags": 235
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9767,6 +9767,48 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling JS solver-walk, slice W0 (plan `seedling-js-solver-walk-plan.md` §5.3) — MEASURE ONLY: can the wasm game take a HOST-BUILT tape mid-play, on the LIVE flashPanel page (the `seedling_atlas_location` atlas world, default build p4e)?",
             "path": "scripts/procgen/probe-seedling-wasm-host-tape.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only"
+            ],
+            "file": "probe-seedling-wasm-playback.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling JS solver-walk, slice W2 (plan `seedling-js-solver-walk-plan.md` §5.3) — the WASM PlaybackController's witness: on `seedling_atlas_location` (default build p4e, headless logic-only, under the box lock) the Playback Bot opens the Starting House chest and leaves by its door ON THE WASM RUNTIME — each goal sol…",
+            "path": "scripts/procgen/probe-seedling-wasm-playback.mjs"
         },
         {
             "argvHelpers": [
