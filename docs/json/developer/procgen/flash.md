@@ -301,7 +301,7 @@ How each wasm-side fact maps onto the model:
 | `queueItems`: flag writes, `menu`, `new_instance Game(level, x, y)` | Drained once per tick; a changed flag re-boots the run where the player stands (the run's inventory is fixed at boot), and the teleport boots a fresh run at the args |
 | `botLoadLevels` chunks, `botLevelSet` readback | `pending` per chunk and `ok` on the last; the readback carries `active`, `table_levels`, `start_level` |
 
-**Death.** The model refuses a terrain death by name: a pit in a room with no `control` block, or drowning (water without the conch, lava without the dark suit) throws a `PhysicsV2Error`. The page catches exactly those (`isDeathRefusal`) and boots a fresh run at the arrival the room was entered with, carrying its earned clears. A pit with a `control` block is a transition, not a throw, so it never reaches the catch. Any other refusal halts the page by name.
+**Death.** The model dies the game's way: a pit in a room with no `control` block, drowning (water without the conch, lava without the dark suit) and a hit at max health all go through `die()` and the game's restart inside the run, so the page respawns nothing. It reads the run's own `playerDeaths` and reports each death to the status line and the walker. A pit with a `control` block is a transition, not a death. Any refusal the model still throws halts the page by name.
 
 **Eligibility.** The JS page is not a build in `builds.json`, so `seedlingRandomizerEligibility` takes `transport: 'js'` and answers the capability check from `JS_RUNTIME_CAPABILITIES` (`apitem`). The JS runtime plays the generated arm only: a world with no generated rooms is refused by the `generated` check before any vanilla fact is asked. The wasm transport's answers are unchanged.
 

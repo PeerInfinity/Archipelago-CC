@@ -49,13 +49,15 @@
  *
  * ── ⚖ THE TWO APPROVED LIBERTIES (user, 2026-10-01) ───────────────────────
  *
- *  1. DEATH = RESPAWN AT THE ROOM'S ARRIVAL. The model REFUSES a terrain death
- *     by design (a pit with no `control` block, a drowning, lava) — it throws a
- *     `PhysicsV2Error`. The page catches exactly those (`isDeathRefusal`) and
- *     boots a fresh run at the arrival the dead run was constructed with,
- *     carrying the room's earned clears. The model is not changed. ⛔ A pit
- *     WITH a `control` block is a TRANSITION, not a throw, so it never reaches
- *     the catch; every other refusal HALTS the page by name.
+ *  1. DEATH IS THE MODEL'S. Since swim R3 the model dies the game's way — a
+ *     pit with no `control` block, a drowning, lava and a hit at max all go
+ *     through `die()` → the game's restart, inside `run.advance`, which no
+ *     longer throws them. The page only REPORTS a death (it reads the run's
+ *     own `playerDeaths`); it does not respawn anything. (J1's page-side
+ *     catch-and-respawn at the arrival was the stopgap this replaced — the
+ *     user's ruling, 2026-10-01: JS death matches the wasm game's.) ⛔ A pit
+ *     WITH a `control` block is still a TRANSITION; every refusal the model
+ *     still throws HALTS the page by name.
  *  2. The `apitem` class row (see above).
  *
  * ── ⛔ WHAT IS NOT MODELLED, BY NAME ──────────────────────────────────────
@@ -92,7 +94,10 @@ export const JS_RUNTIME_PINS = Object.freeze(['dead_frames', 'sound']);
 export { JS_RUNTIME_CAPABILITIES } from '../flashPanel/seedlingRandomizerEligibility.js';
 
 /**
- * ⛓ The refusals that ARE deaths. Both are thrown by `playerPhysicsV2` as a
+ * ⛓ The refusal WORDS a death used to throw. ⚠ Since swim R3 `run.advance` no
+ * longer throws them (the model dies the game's way) and the page does NOT
+ * catch them; they are kept because a PREVIEW step that reaches a death still
+ * refuses with these words, and probes classify them. Originally: thrown by `playerPhysicsV2` as a
  * `PhysicsV2Error`: `fallDestination` (a pit in a room with no `control`
  * block — `checkFallingInPit` calls `die()`) and the drown step (water without
  * the conch, lava without the dark suit — the same `drownTimer`).
@@ -281,21 +286,26 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         const inCeremony0 = Boolean(run.inCeremony);
         const walkHeld = walker.heldFor(run);
         const { held: drive } = session.heldFor(walkHeld ?? held);
+        const deaths0 = run.playerDeaths.length;
         try {
             session.step(drive);
         } catch (err) {
-            const kind = isDeathRefusal(err);
-            if (!kind) {
-                halted = { tick: ticks, message: err.message };
-                note({ type: 'halt', message: `[js runtime] HALTED — the model refused: ${err.message.split('\n')[0]}` });
-                flush();
-                return { stepped: false, halted };
-            }
-            deaths.push({ t: ticks, level: level0, kind, arrival: { ...arrival } });
-            note({ type: 'death', kind, level: level0, message: `[js runtime] death (${kind}) in level ${level0} — `
-                + `respawn at the arrival (${arrival.x}, ${arrival.y})` });
-            boot(arrival, `respawn after a ${kind} death`);
+            halted = { tick: ticks, message: err.message };
+            note({ type: 'halt', message: `[js runtime] HALTED — the model refused: ${err.message.split('\n')[0]}` });
+            flush();
+            return { stepped: false, halted };
+        }
+        const modelDeaths = run.playerDeaths;
+        if (modelDeaths.length > deaths0) {
+            // The model died and restarted the room itself (the game's
+            // `die()` → restart); the page only reports it.
+            const d = modelDeaths[modelDeaths.length - 1];
+            const kind = d.source;
             ticks += 1;
+            arrival = { level: run.level, ...run.worldCtor };
+            deaths.push({ t: ticks, level: level0, kind, respawn: d.respawn ? { ...d.respawn } : null });
+            note({ type: 'death', kind, level: level0, message: `[js runtime] death (${kind}) in level ${level0} — `
+                + 'the model restarted the room the game\'s way' });
             walker.observe({ death: kind });
             flush();
             return { stepped: true, death: kind };

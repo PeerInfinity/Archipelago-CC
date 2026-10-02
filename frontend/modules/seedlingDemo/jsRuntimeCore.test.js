@@ -160,7 +160,7 @@ describe('jsRuntimeCore — the check and the crossing', () => {
 });
 
 describe('jsRuntimeCore — ⚖ death = respawn at the arrival, and only death', () => {
-    it('a pit with NO control block is a death: the page respawns at the room\'s arrival, the run is not halted', () => {
+    it('a pit with NO control block is the MODEL\'s death: the run restarts the room itself and the page reports it', () => {
         const { rt } = started();
         walkTo(rt, { tx: 4, ty: 6 });
         let out = walkTo(rt, PIT_CELL, { allow: [PIT_CELL] });
@@ -169,10 +169,15 @@ describe('jsRuntimeCore — ⚖ death = respawn at the arrival, and only death',
         expect(rt.deaths).toHaveLength(1);
         expect(rt.halted).toBeNull();
         expect(rt.run.level).toBe(0);
+        // The respawn is the model's (swim R3: `die()` → the game's restart at
+        // the world's ctor args), recorded in the run's own `playerDeaths`.
+        expect(rt.run.playerDeaths).toHaveLength(1);
+        expect(rt.run.playerDeaths[0].source).toBe('pit');
+        expect(rt.deaths[0].respawn).toEqual(rt.run.playerDeaths[0].respawn);
         expect({ x: rt.run.state.x, y: rt.run.state.y }).toEqual({ x: 136, y: 40 });
     });
 
-    it('⛔ a pit WITH a control block is a TRANSITION — the catch never sees it', () => {
+    it('⛔ a pit WITH a control block is a TRANSITION, not a death', () => {
         const { rt, reports } = started({
             mutateSet: (set) => {
                 set.rooms[0].source.record.entities.push(
@@ -185,13 +190,14 @@ describe('jsRuntimeCore — ⚖ death = respawn at the arrival, and only death',
         for (let i = 0; i < 200 && rt.run.level === 0; i += 1) out = rt.tick(new Set(['up']));
         expect(rt.run.level).toBe(1);
         expect(rt.deaths).toHaveLength(0);
+        expect(rt.run.playerDeaths).toHaveLength(0);
         expect(out.crossing ?? null).toBeNull();
         // A fall writes no pendingExit in the game, and none here.
         expect(reports.filter(([p]) => p === 'pendingExit')).toEqual([]);
         expect(reports.filter(([p]) => p === 'level')).toEqual([['level', 1]]);
     });
 
-    it('names deaths by class and message only', () => {
+    it('isDeathRefusal still names the old refusal words (a PREVIEW step that reaches a death throws them)', () => {
         const pit = new PhysicsV2Error('the player fell into a pit in level 900, which has NO control block — …');
         const drown = new PhysicsV2Error('the player DROWNED in level 3 at (1, 2) — terrain state 1.');
         expect(isDeathRefusal(pit)).toBe('pit');
