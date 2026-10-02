@@ -681,6 +681,8 @@ export async function seedlingJsRuntimeSolverWalksEnemyRoom(tc) {
         tc.reportCondition('the walk settled', !!crossed);
         tc.assertEqual('the walk is DONE (the stairs were taken)', 'done', rt.playback.state);
         tc.assertEqual('the SOLVER drove it: solved once, no decline', '1/0', `${s.solves}/${s.declines}`);
+        // ⛓ S2 — off the page thread.
+        tc.assertEqual('the solve ran in the page\'s WORKER', 'worker', s.lastSolve?.where ?? null);
         tc.assertEqual('the plan used the solver\'s enemy verb (bait) — the J2 walker cannot', true,
             (s.lastSolve?.verbs ?? []).includes('bait'));
         tc.assertEqual('every planned key was played on the page clock (no refutation)', `${s.lastSolve?.keys}/0`,
@@ -708,6 +710,197 @@ registerTest({
         + 'past the bobs, the page plays it one key set per tick, and the stairs crossing is reported — 0 HALT, no '
         + 'refutation, no error: status.',
     testFunction: seedlingJsRuntimeSolverWalksEnemyRoom,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+// ── Seedling solver-walk S2: the solve runs in a WORKER, under a wall-clock budget ──
+
+/**
+ * The S2 witness room: level 12 entered through its teleporter at (304, 0),
+ * out by the teleporter at (168, 368) to level 36 — a walk the J2 walker
+ * cannot do and the solver can (§1.3), and the slowest measured solve: 5.2 s
+ * from the door, ~2 s after 120 walker ticks (§1.6).
+ */
+const SLOW_ROOM = Object.freeze({ level: 12, door: { x: 304, y: 0 }, exit: { x: 168, y: 368 }, to: 36 });
+
+/**
+ * Runtime js + the solver mode ON on seedling_atlas, the real page teleported
+ * into `SLOW_ROOM` at its door's return spawn. Returns `{rt, win, exitTile}`
+ * or null (a reported failure). The caller restores the settings.
+ */
+async function slowRoomOnPage(tc) {
+    await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
+    const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+    const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+    if (!ready) return null;
+    const up = await atlasPanelOnJs(tc, staleAdapter);
+    if (!up) return null;
+    const { rt, win } = up;
+    const pushed = await tc.pollForCondition(() => rt.playback.solverWalk === true,
+        'the setting reached the JS page (playback.solverWalk)', 5000, 100);
+    tc.reportCondition('the page is in solver mode', !!pushed);
+    tc.assertEqual('the page solves in a WORKER (its solve service)', 'worker', rt.playback.solveService?.kind ?? null);
+    const map = await (await fetch(new URL(VANILLA_MAP_URL, document.baseURI).href)).json();
+    const room = map.levels.find((l) => l.level === SLOW_ROOM.level);
+    const tile = (p) => [Math.floor(p.x / map.tile_size), Math.floor(p.y / map.tile_size)];
+    const at = (p) => room.entities.find((e) => e.x === p.x && e.y === p.y);
+    const spawn = returnSpawnTable(map).get(returnKey(SLOW_ROOM.level, ...tile(SLOW_ROOM.door)));
+    tc.reportCondition(`level ${SLOW_ROOM.level} has its door, its exit and a return spawn`,
+        !!(at(SLOW_ROOM.door) && at(SLOW_ROOM.exit) && spawn));
+    if (!at(SLOW_ROOM.door) || !at(SLOW_ROOM.exit) || !spawn) return null;
+    rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [SLOW_ROOM.level, spawn.x, spawn.y] }]);
+    const there = await tc.pollForCondition(() => rt.run?.level === SLOW_ROOM.level,
+        `the page is in level ${SLOW_ROOM.level}`, 10000, 100);
+    tc.reportCondition('teleported into the slow room', !!there);
+    return there ? { rt, win, exitTile: tile(SLOW_ROOM.exit) } : null;
+}
+
+export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = false;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, false); } catch { /* keep off */ }
+    let rt = null;
+    try {
+        const up = await slowRoomOnPage(tc);
+        if (!up) return tc.getOverallResult();
+        ({ rt } = up);
+        // A short budget (the test knob; the page also reads ?solverBudgetMs=) — the door solve needs ~5 s.
+        const budget = rt.playback.solverBudgetMs;
+        rt.playback.setSolverBudgetMs(300);
+        const solves0 = rt.playback.solveService.stats.terminated;
+        const ticks0 = rt.ticks;
+        rt.playback.walkTo({ kind: 'exit', level: SLOW_ROOM.level, tiles: [up.exitTile] });
+        rt.playback.play();
+        const declined = await tc.pollForCondition(() => rt.playback.solverStats.declines > 0,
+            'the solve was cut off at its budget and DECLINED', 15000, 50);
+        const s = rt.playback.solverStats;
+        tc.log(`decline after ${s.lastWaitMs} ms: ${s.lastDecline}; status: ${rt.playback.describe()}`);
+        tc.reportCondition('declined within the budget\'s reach', !!declined);
+        tc.assertEqual('the decline NAMES the budget', 'the solver exceeded 0.3 s on reach-exit in level 12 (terminated) — walking',
+            s.lastDecline);
+        tc.assertEqual('the status carries it (the walker took the goal, by name)',
+            'the solver declined — the solver exceeded 0.3 s on reach-exit in level 12 (terminated) — walking; walking instead',
+            rt.playback.reason);
+        tc.assertEqual('one expiry, no solve, nothing played', '1/0/0', `${s.expiries}/${s.solves}/${s.played}`);
+        tc.assertEqual('the worker was TERMINATED', solves0 + 1, rt.playback.solveService.stats.terminated);
+        tc.assertEqual('cut off at the budget, not before it', true, s.lastWaitMs >= 300 && s.lastWaitMs < 3000);
+        const walking = await tc.pollForCondition(() => rt.playback.stats.plans > 0 && rt.ticks > ticks0 + 10,
+            'the J2 walker walks the goal now (its planner runs, the page ticks)', 5000, 50);
+        tc.reportCondition('the walker took the goal', !!walking);
+        tc.assertEqual('the room is no longer held', false, rt.playback.solving);
+        rt.playback.setSolverBudgetMs(budget);
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+    } finally {
+        try { rt?.playback.reset(); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-budget-falls-back',
+    name: 'Seedling JS runtime: a solve past its budget is terminated and the walker takes the goal, by name',
+    description: 'With flashPanel.runtime = js and flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page is '
+        + 'teleported to level 12\'s door (the slowest measured solve, ~5 s) and its budget shortened to 300 ms '
+        + '(playback.setSolverBudgetMs, the test knob). The worker is terminated at the budget, the goal DECLINES with '
+        + '"the solver exceeded 0.3 s … (terminated) — walking", and the J2 walker walks it; nothing of the solve is played.',
+    testFunction: seedlingJsRuntimeSolverBudgetFallsBack,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
+export async function seedlingJsRuntimeSolverKeepsTheFrameClock(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = false;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, false); } catch { /* keep off */ }
+    let rt = null;
+    try {
+        const up = await slowRoomOnPage(tc);
+        if (!up) return tc.getOverallResult();
+        ({ rt } = up);
+        const { win } = up;
+        const goal = { kind: 'exit', level: SLOW_ROOM.level, tiles: [up.exitTile] };
+        // 120 walker ticks in (§1.6: a ~2 s solve from there — inside the 5 s budget, long enough to see a freeze).
+        rt.playback.setSolverWalk(false);
+        rt.playback.walkTo(goal);
+        rt.playback.play();
+        const t0 = rt.run.ticksCompleted;
+        await tc.pollForCondition(() => rt.run.ticksCompleted >= t0 + 120, 'the J2 walker walked 120 ticks', 15000, 20);
+        rt.playback.stop();
+        // ── the frame clock: the page's own heartbeat (a 20 ms interval) and its animation frames ──
+        const clock = { lastBeat: win.performance.now(), maxBeatGap: 0, lastFrame: null, maxFrameGap: 0, frames: 0,
+            solvingMs: 0, held: 0, ticksWhileSolving: null };
+        const beat = win.setInterval(() => {
+            const now = win.performance.now();
+            if (rt.playback.solving) clock.maxBeatGap = Math.max(clock.maxBeatGap, now - clock.lastBeat);
+            clock.lastBeat = now;
+        }, 20);
+        let raf = true;
+        const frame = (now) => {
+            if (!raf) return;
+            if (rt.playback.solving && clock.lastFrame !== null) { clock.maxFrameGap = Math.max(clock.maxFrameGap, now - clock.lastFrame); clock.frames += 1; }
+            clock.lastFrame = now;
+            win.requestAnimationFrame(frame);
+        };
+        win.requestAnimationFrame(frame);
+        let solveStart = null;
+        let runTicksAtStart = null;
+        // ⛔ Not a budget row (that is the row above): a loaded box can push this ~2 s solve past 5 s.
+        const budget = rt.playback.solverBudgetMs;
+        rt.playback.setSolverBudgetMs(30000);
+        try {
+            rt.playback.setSolverWalk(true);
+            rt.playback.walkTo(goal);
+            rt.playback.play();
+            const settled = await tc.pollForCondition(() => {
+                // Sampled only WHILE solving: the first and last solving samples bound the hold.
+                if (rt.playback.solving) {
+                    if (solveStart === null) { solveStart = performance.now(); runTicksAtStart = rt.run.ticksCompleted; }
+                    clock.solvingMs = performance.now() - solveStart;
+                    clock.ticksWhileSolving = rt.run.ticksCompleted - runTicksAtStart;
+                    clock.held += 1;
+                }
+                return ['done', 'failed'].includes(rt.playback.state) || !!rt.halted;
+            }, 'the solver-driven walk settled', 60000, 10);
+            tc.reportCondition('the walk settled', !!settled);
+        } finally {
+            raf = false;
+            win.clearInterval(beat);
+            rt.playback.setSolverBudgetMs(budget);
+        }
+        const s = rt.playback.solverStats;
+        tc.log(`solve ${s.lastSolve?.solveMs} ms in the worker (waited ${s.lastSolve?.waitMs} ms, observed ${Math.round(clock.solvingMs)} ms); `
+            + `max heartbeat gap while solving ${Math.round(clock.maxBeatGap)} ms; max animation-frame gap ${Math.round(clock.maxFrameGap)} ms `
+            + `over ${clock.frames} frame(s)`);
+        tc.assertEqual('the walk is DONE (level 12 → 36)', 'done', rt.playback.state);
+        tc.assertEqual('solved once in the worker, no decline, no refutation', '1/0/0/worker',
+            `${s.solves}/${s.declines}/${s.refutations}/${s.lastSolve?.where}`);
+        tc.assertEqual('a real solve was in flight (≥ 500 ms)', true, clock.solvingMs >= 500);
+        tc.assertEqual(`the room was HELD while it was (the run did not step over ${clock.held} sample(s))`, 0, clock.ticksWhileSolving);
+        tc.assertEqual('⛔ the page\'s frame clock did not stall: every heartbeat gap < 250 ms while solving', true,
+            clock.maxBeatGap > 0 && clock.maxBeatGap < 250);
+        tc.assertEqual(`the page is in level ${SLOW_ROOM.to}`, SLOW_ROOM.to, rt.run?.level ?? null);
+        tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
+    } finally {
+        try { rt?.playback.reset(); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-keeps-the-frame-clock',
+    name: 'Seedling JS runtime: the solver thinks in a worker — the page\'s frame clock never stalls',
+    description: 'With flashPanel.runtime = js and flashPanel.seedlingSolverWalk ON, on seedling_atlas: level 12, 120 '
+        + 'walker ticks in (a ~2 s solve, S1 froze the page for it). The solve runs in the worker; the page\'s 20 ms '
+        + 'heartbeat never gaps past 250 ms while it does, the room is held (the run does not step), and the plan then '
+        + 'plays to level 36 — solved once, no decline, no refutation.',
+    testFunction: seedlingJsRuntimeSolverKeepsTheFrameClock,
     category: 'Seedling JS runtime',
     enabled: false, // off by default — runs only in the test-substrates mode
 });

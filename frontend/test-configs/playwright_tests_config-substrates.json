@@ -415,6 +415,18 @@
             "_comment": "Seedling solver-walk S1. flashPanel.runtime = js + flashPanel.seedlingSolverWalk ON, on seedling_atlas: the page handle teleports the real page into level 6 (⚖ Q2: no new preset) and the page's bot walks to the stairs (224, 32) past the bobs — the REAL solver (solveSegment with the session as prefix) plans a bait, the page plays it one key set per tick; the stairs crossing reported, 0 HALT, no refutation, no error: status. Fast batch, like the J1–J3 rows."
         },
         {
+            "id": "seedling-js-runtime-solver-budget-falls-back",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12's door (the ~5 s solve) under a 300 ms budget (playback.setSolverBudgetMs) — the worker is terminated at the budget, the goal declines BY NAME (\"the solver exceeded 0.3 s … — walking\") and the J2 walker takes it; nothing of the solve is played."
+        },
+        {
+            "id": "seedling-js-runtime-solver-keeps-the-frame-clock",
+            "enabled": true,
+            "category": "Seedling JS runtime",
+            "_comment": "Seedling solver-walk S2. Runtime js + the solver mode ON on seedling_atlas: level 12, 120 walker ticks in (a ~2 s solve that froze the S1 page). The solve runs in the worker: the page's 20 ms heartbeat never gaps past 250 ms while it does, the room is held, and the plan plays to level 36 — solved once, no decline, no refutation."
+        },
+        {
             "id": "apworld-document-tab-lists-every-schema-key",
             "enabled": true,
             "category": "apworldEditor",
