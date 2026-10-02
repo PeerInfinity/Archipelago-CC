@@ -9471,6 +9471,18 @@ export function solveSegment({
      * measurement of the difference, five producers of seven.
      */
     dashMode = DEFAULT_DASH_MODE,
+    /**
+     * ⛓⛓ SEEDLING JS SOLVER-WALK S0 — **A RUN THAT HAS ALREADY TICKED, ADMITTED
+     * BY NAME.** `prefix` is the key sets the CALLER already advanced `run`
+     * through from `boot`; the returned `perTick` is `prefix` followed by the
+     * solution, so it is still one tape from `boot` and the trace's ticks index
+     * it. The Playback Bot's solver mode replays its own session into a SHADOW
+     * run and hands the replayed keys here, then plays the solution on the live
+     * page. ⛔ The solver cannot check that `run` IS the prefix replayed from
+     * `boot` — only the caller replayed it, so the caller owns that claim. The
+     * default `[]` is the v1 path, refusal and all.
+     */
+    prefix = [],
 }) {
     assertDashMode(dashMode, 'solveSegment');
     if (!run || typeof run.advance !== 'function') fail('solveSegment needs a live run');
@@ -9513,13 +9525,24 @@ export function solveSegment({
             + 'that matter and identical everywhere else. Pass `roles: ROLES` to '
             + '`createLevelRun`.');
     }
-    if (run.ticksCompleted !== 0) {
+    if (!Array.isArray(prefix) || !prefix.every((h) => h instanceof Set)) {
+        fail('solveSegment: prefix must be an array of key Sets — the ticks the caller '
+            + 'already advanced this run through from `boot`.');
+    }
+    const ticked = run.ticksCompleted;
+    if (prefix.length === 0 && ticked !== 0) {
         fail('solveSegment: the run must be fresh (ticksCompleted 0) — the solver owns '
             + 'the whole segment from its declared boot, so the tape and the trace '
             + 'describe the same run from tick 0.');
     }
+    if (prefix.length > 0 && ticked < prefix.length) {
+        fail(`solveSegment: a prefix of ${prefix.length} tick(s) on a run that has `
+            + `completed ${ticked} — the run cannot have been advanced through `
+            + 'its prefix (dead frames make the run clock AT LEAST the tape clock, never '
+            + 'less). The caller owns "this run is the prefix replayed from `boot`".');
+    }
 
-    const perTick = [];
+    const perTick = prefix.map((h) => new Set(h));
     /** Trace rows, buffered; keys are filled from `perTick` at finish. */
     const rows = [];
     const seeRow = (row) => { rows.push(row); return row; };
