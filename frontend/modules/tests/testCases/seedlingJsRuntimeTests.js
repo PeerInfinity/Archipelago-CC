@@ -714,6 +714,109 @@ registerTest({
     enabled: false, // off by default — runs only in the test-substrates mode
 });
 
+// ── Seedling solver-walk S3: a KILL LOCK on the live page (scratch persistence, ⚖ Q4) ──
+
+/**
+ * The S3 witness (plan §3 S3): level 5, entered from level 4's stairs, out by
+ * the teleporter at (48, 112) to level 6 — behind `lock@48,112`, a kill lock
+ * that opens when the room's three bobs are dead. J3's page HALTED by name at
+ * the first kill ("OPENS 1 kill lock … DECLARES no clear"); since S3 every
+ * room boots on scratch persistence and the run writes the clear itself.
+ */
+const KILL_ROOM = Object.freeze({ level: 5, from: 4, exit: { x: 48, y: 112 }, to: 6, lockTag: 0 });
+
+/** The `pendingCheck` values the page reported, parsed. */
+function reportedChecks(win) {
+    return (win?.__swfBridge?.stateLog ?? []).filter((r) => r.name === 'pendingCheck' && r.value)
+        .map((r) => { const [, level, tag, written] = String(r.value).split('|').map(Number); return { level, tag, written }; });
+}
+
+export async function seedlingJsRuntimeSolverOpensKillLock(tc) {
+    let previousRuntime = 'auto';
+    let previousSolver = true;
+    try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
+    try {
+        await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
+        const staleAdapter = getActivePanelInstance()?.adapter ?? null;
+        const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
+        if (!ready) return tc.getOverallResult();
+        const { bot } = ready;
+        const up = await atlasPanelOnJs(tc, staleAdapter);
+        if (!up) return tc.getOverallResult();
+        const { rt, win } = up;
+        const pushed = await tc.pollForCondition(() => rt.playback.solverWalk === true,
+            'the setting reached the JS page (playback.solverWalk)', 5000, 100);
+        tc.reportCondition('the page is in solver mode', !!pushed);
+
+        // ── the room, derived from the map ──
+        const map = await (await fetch(new URL(VANILLA_MAP_URL, document.baseURI).href)).json();
+        const room = map.levels.find((l) => l.level === KILL_ROOM.level);
+        const tile = (e) => [Math.floor(e.x / map.tile_size), Math.floor(e.y / map.tile_size)];
+        const door = room.entities.find((e) => Number(e.attrs?.to) === KILL_ROOM.from);
+        const exit = room.entities.find((e) => e.x === KILL_ROOM.exit.x && e.y === KILL_ROOM.exit.y && Number(e.attrs?.to) === KILL_ROOM.to);
+        const lock = room.entities.find((e) => e.type === 'lock' && Number(e.attrs?.tag) === KILL_ROOM.lockTag);
+        const spawn = door ? returnSpawnTable(map).get(returnKey(KILL_ROOM.level, ...tile(door))) : null;
+        tc.reportCondition(`level ${KILL_ROOM.level} has its door from ${KILL_ROOM.from}, the exit to ${KILL_ROOM.to}, `
+            + `its kill lock (tag ${KILL_ROOM.lockTag}) and a return spawn`, !!(door && exit && lock && spawn));
+        if (!door || !exit || !lock || !spawn) return tc.getOverallResult();
+
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [KILL_ROOM.level, spawn.x, spawn.y] }]);
+        const there = await tc.pollForCondition(() => rt.run?.level === KILL_ROOM.level,
+            `the page is in level ${KILL_ROOM.level}`, 10000, 100);
+        tc.reportCondition('teleported into the kill-lock room', !!there);
+        if (!there) return tc.getOverallResult();
+        tc.assertEqual('the page\'s run is on SCRATCH persistence (⚖ Q4)', true, rt.run.scratchPersistence);
+        const exitsBefore = reportedExits(win).length;
+        const checksBefore = reportedChecks(win).length;
+        const checkedBefore = snapshotFacts(tc).checked.size;
+        const answer = rt.playback.walkTo({ kind: 'exit', level: KILL_ROOM.level, tiles: [tile(exit)] });
+        tc.assertEqual('the page accepted the exit goal (behind the lock)', true, !!answer?.ok);
+        rt.playback.play();
+        const settled = await tc.pollForCondition(() => ['done', 'failed'].includes(rt.playback.state) || !!rt.halted,
+            'the solver-driven walk settled (done / failed / halted)', 90000, 200);
+        const s = rt.playback.solverStats;
+        tc.log(`walk: ${rt.playback.describe()}; solver ${JSON.stringify({ ...s, lastSolve: s.lastSolve
+            ? { ...s.lastSolve, goal: undefined } : null })}`);
+        tc.reportCondition('the walk settled', !!settled);
+        tc.assertEqual('0 HALT (J3 halted at the kill)', null, rt.halted ? rt.halted.message : null);
+        tc.assertEqual('the walk is DONE (crossed past the kill lock)', 'done', rt.playback.state);
+        tc.assertEqual('the SOLVER drove it: solved once, no decline', '1/0', `${s.solves}/${s.declines}`);
+        tc.assertEqual('the plan KILLED (the solver\'s kill verb)', true, (s.lastSolve?.verbs ?? []).includes('kill'));
+        tc.assertEqual('every planned key was played on the page clock (no refutation)', `${s.lastSolve?.keys}/0`,
+            `${s.played}/${s.refutations}`);
+        const exits = reportedExits(win).slice(exitsBefore);
+        tc.assertEqual(`the crossing was reported: a pendingExit from level ${KILL_ROOM.level} at (48, 112) to ${KILL_ROOM.to}`,
+            JSON.stringify({ fromLevel: KILL_ROOM.level, type: 'teleporter', ...KILL_ROOM.exit, to: KILL_ROOM.to }),
+            JSON.stringify(exits[0] ?? null));
+        // The clear is reported as the game reports `Lock.turnOff()` (`Lock.as:96`)…
+        const checks = reportedChecks(win).slice(checksBefore);
+        tc.assertEqual(`the lock's clear was reported once: pendingCheck <seq>|${KILL_ROOM.level}|${KILL_ROOM.lockTag}|0`,
+            JSON.stringify([{ level: KILL_ROOM.level, tag: KILL_ROOM.lockTag, written: 0 }]), JSON.stringify(checks));
+        // …and the host's check binding makes NO location check of it (a kill lock is no location).
+        await new Promise((r) => setTimeout(r, 500));
+        tc.assertEqual('no AP location was checked by the walk (no false check)', checkedBefore, snapshotFacts(tc).checked.size);
+        tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
+    } finally {
+        try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
+        try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
+    }
+    return tc.getOverallResult();
+}
+
+registerTest({
+    id: 'seedling-js-runtime-solver-opens-kill-lock',
+    name: 'Seedling JS runtime: the solver mode KILLS past a kill lock (L5, scratch persistence)',
+    description: 'With flashPanel.runtime = js and the solver mode ON, on seedling_atlas: the page handle teleports '
+        + 'the real page into level 5 and its Playback Bot feet walk to the teleporter at (48, 112) behind the kill '
+        + 'lock. The page boots on scratch persistence (⚖ Q4), so the solver\'s kill solves, the run writes the '
+        + 'lock\'s clear itself, and the crossing to level 6 is reported — the clear reported once as pendingCheck '
+        + '<seq>|5|0|0 (as the game\'s Lock.turnOff reports it), no AP location checked, 0 HALT.',
+    testFunction: seedlingJsRuntimeSolverOpensKillLock,
+    category: 'Seedling JS runtime',
+    enabled: false, // off by default — runs only in the test-substrates mode
+});
+
 // ── Seedling solver-walk S2: the solve runs in a WORKER, under a wall-clock budget ──
 
 /**
