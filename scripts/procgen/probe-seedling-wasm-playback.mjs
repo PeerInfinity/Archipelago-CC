@@ -18,13 +18,17 @@
  *       received ONCE, the binding's checks = 1 with no arming-window catch beyond G's, ONE
  *       regionMove out of the house (the glue's redirect, `region_2_3`), the engine's two goals
  *       done (the door's trajectory ends OUT of level 86 — "left 86"), every host botStart bracketed.
+ *   K   (side mode, `--only=K`; not in the default run) the KILL-LOCK measurement S3 left to W2: a host
+ *       jump into L5 (its lock opens on a kill), then the engine serves the teleporter exit with
+ *       the lock clear left UNDECLARED (the solve runs scratch persistence, the model writes the
+ *       clear as `Lock.turnOff` does) — does the game clear it itself, on the plan, and cross to L6?
  *
  * Prints `PASS:`/`FAIL:` rows and `ALL CHECKS PASSED` / `N CHECK(S) FAILED` (exit 1 on a fail).
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build
  * (the `flashPanel/wasm` submodule), or this SKIPs (exit 0).
  *
- * Run: node scripts/procgen/probe-seedling-wasm-playback.mjs [--host=http://localhost:8000] [--only=G|B]
+ * Run: node scripts/procgen/probe-seedling-wasm-playback.mjs [--host=http://localhost:8000] [--only=G|B|K]
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
@@ -153,7 +157,54 @@ async function main() {
         check('the fresh room: the player in the house, nothing checked', state0.level === ROOM.level
             && ap0.checks.length === 0, `level ${state0.level}, checks ${JSON.stringify(ap0.checks)}`);
 
-        if (ONLY !== 'B') {
+        if (ONLY === 'K') {
+            // ── K: the kill lock, undeclared ──────────────────────────────────
+            const { returnSpawnTable, returnKey } = await import(join(FLASH_DIR, 'seedlingReturnSpawns.js'));
+            const MAP = JSON.parse(readFileSync(join(FLASH_DIR, 'atlases/seedling-map.json'), 'utf8'));
+            const PT = JSON.parse(readFileSync(join(REPO, 'frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'), 'utf8'));
+            const L5 = PT.preset_sidecars['1'].level_5__r1c5.playable_payload;
+            const from = L5.exits.find((e) => e.exit_id === 'in_L4_64_16');
+            const to = L5.exits.find((e) => e.exit_id === 'out_teleporter_48_112');
+            const spawn = returnSpawnTable(MAP).get(returnKey(5, ...from.exit_tiles[0])) ?? from.entrance_spawn;
+            await rp.jump(5, spawn.x, spawn.y);
+            await rp.waitFor('the player in L5', async () => ((await rp.readGameState()).level === 5 ? 5 : null), 10000);
+            await page.waitForTimeout(1500);
+            const out = await page.evaluate(async ({ goal }) => {
+                const panel = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                const glue = (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue();
+                const s = panel.seedlingPlaybackSurface();
+                const mod = await import(new URL('modules/flashPanel/seedlingWasmPlayback.js', document.baseURI).href);
+                const notes = [];
+                let failed = null;
+                const engine = await mod.loadWasmPlaybackEngine({ mapPath: s.wasm.mapPath, baseUrl: document.baseURI,
+                    getGame: s.wasm.getGame, getWin: s.wasm.getWin, teleport: s.wasm.teleport,
+                    getCheckBinding: () => glue.checkBinding, onNote: (n) => notes.push(n), onFailed: (r) => { failed = r; } });
+                window.__w2k = engine;
+                const answer = engine.walkTo(goal);
+                const t0 = performance.now();
+                while (performance.now() - t0 < 90000) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await new Promise((r) => { setTimeout(r, 250); });
+                    if (failed || engine.stats.done > 0) break;
+                    const lv = JSON.parse(s.wasm.getGame().readState()).level;
+                    if (lv === 6 && engine.status().phase === 'playing') { engine.stop(); break; }
+                }
+                const st = JSON.parse(s.wasm.getGame().botStatus());
+                return { answer, failed, notes: notes.filter(Boolean).slice(-6), stats: JSON.parse(JSON.stringify(engine.stats)),
+                    level: st.level, cleared: st.persistence_cleared };
+            }, { goal: { kind: 'exit', level: 5, tiles: to.exit_tiles, name: to.exit_id } });
+            console.log(`INFO: K ${JSON.stringify(out)}`);
+            const leg = out.stats.history.at(-1) ?? {};
+            check('K: the engine accepted the L5 teleporter goal and solved it with a kill', out.answer?.ok
+                && (leg.verbs ?? []).includes('kill'), JSON.stringify({ answer: out.answer, verbs: leg.verbs, failed: out.failed }));
+            check('K: the game cleared the kill lock ITSELF ({5,0} in its cleared set; the tape declared none)',
+                out.cleared.some((c) => c.level === 5 && c.tag === 0)
+                    && out.stats.hostStarts.length >= 2, JSON.stringify(out.cleared));
+            check('K: every planned tick stepped ON PLAN (no divergence) and the game crossed to L6',
+                !leg.divergence && leg.drained >= leg.ticks && out.level === 6, JSON.stringify({ leg, level: out.level }));
+        }
+
+        if (ONLY !== 'B' && ONLY !== 'K') {
             // ── G: the guard ───────────────────────────────────────────────────
             const st0 = await status();
             const fake = zeroTick({ x: state0.playerPositionX, y: state0.playerPositionY, persistence: [{ level: ROOM.level, tag: 0 }] });
@@ -197,7 +248,7 @@ async function main() {
                 `${JSON.stringify(restored)}; cleared ${JSON.stringify(stR.persistence_cleared)}`);
         }
 
-        if (ONLY !== 'G') {
+        if (ONLY !== 'G' && ONLY !== 'K') {
             // ── B: the Playback Bot on the wasm runtime ───────────────────────
             const before = await ap();
             const booted = await page.evaluate(async (start) => {
