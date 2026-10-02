@@ -86,7 +86,7 @@ describe('skirt — L29, the pass', () => {
             strategy: { verb: 'skirt' } });
     });
 
-    it('from the ROUTE\'s arrival (16,224): an axis-aligned approach keeps x on the 0.05 grid, and the solve SKIRTS, collects the key and crosses at 383', () => {
+    it('from the ROUTE\'s arrival (16,224): an axis-aligned approach keeps x on the 0.05 grid, and the solve SKIRTS, collects the key and crosses at 379 (383 before swim U15\'s spit DODGE)', () => {
         const { run, boot } = l29Run(16, 224);
         const trail = [];
         const advance = run.advance.bind(run);
@@ -96,20 +96,22 @@ describe('skirt — L29, the pass', () => {
             return r;
         };
         const out = solveSegment({ run, goals: GOALS.map((g) => ({ ...g })), name: 'u2-skirt-route', boot });
-        expect(out.perTick.length).toBe(383);
-        expect(run.transitions).toEqual([{ t: 383, from_level: 29, to_level: 31 }]);
+        // ⛓ swim U15: 383 → 379 — L29's turrets are stepped now and the solve DODGES their
+        // spit (a stall at walk-offset 183), which also shortens the walk by 4 ticks.
+        expect(out.perTick.length).toBe(379);
+        expect(run.transitions).toEqual([{ t: 379, from_level: 29, to_level: 31 }]);
         expect(out.records[0]).toMatchObject({
-            strategy: 'skirt', target: 'button@112,128', lane: 'east', x: 126, from: 215, ticks: 38,
+            strategy: 'skirt', target: 'button@112,128', lane: 'east', x: 126, from: 211, ticks: 38,
             rocksStanding: ['fallrock@112,112'],
         });
         expect(out.records[1]).toMatchObject({ strategy: 'collect', pickup: { tag: 'bosskey', x: 112, y: 64 } });
-        expect(out.records[2]).toMatchObject({ goal: 'reach-exit', to: 31, t: 383 });
+        expect(out.records[2]).toMatchObject({ goal: 'reach-exit', to: 31, t: 379 });
         expect([...run.progress('keys')]).toEqual([1]);
         expect(run.rockFalls).toEqual([]);
         expect(run.playerHits).toEqual([]);
         // ⛔ THE DISCIPLINE, tick by tick over the approach and the skirt: never two
         // axes held, never two axes moving, and x on the 0.05 grid at the stance.
-        const approach = trail.slice(0, 215 + 38);
+        const approach = trail.slice(0, 211 + 38);  // ⛓ swim U15: the skirt starts at 211 (215 before)
         const X = ['left', 'right'];
         const Y = ['up', 'down'];
         expect(approach.filter((r) => r.held.some((k) => X.includes(k))
@@ -117,7 +119,7 @@ describe('skirt — L29, the pass', () => {
         expect(approach.filter((r) => r.vx !== 0 && r.vy !== 0)).toEqual([]);
         const stanceX = trail[214].x;
         expect(Math.abs(stanceX * 20 - Math.round(stanceX * 20))).toBeLessThan(1e-9);
-        expect(trail[215 + 10 - 1].x).toBe(126);
+        expect(trail[211 + 10 - 1].x).toBe(126);
     });
 
     it('`holdOneAxis`: a moving axis keeps the keys, a resting one loses them; from rest the farther axis wins', () => {
