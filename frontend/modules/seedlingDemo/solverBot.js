@@ -10963,6 +10963,10 @@ export function solveSegment({
                     contactsOverride: kill.exempt,
                 });
                 const holdFrom = run.ticksCompleted;
+                // The tick the target last took a hit, read off the hold's own
+                // per-tick test — the diagnosis below needs it on a refusal.
+                let lastHits = (run.entities('chasers') ?? []).find((b) => b.id === target.id)?.hits ?? null;
+                let lastHitAt = null;
                 let record;
                 try {
                     record = STRATEGY_EXECUTORS.hold(run, perTick, {
@@ -10971,7 +10975,11 @@ export function solveSegment({
                             ticks: KILL_BY_CEILING_BOUND,
                             until: {
                                 why: `${target.id} has left the world — ${kill.why}`,
-                                test: (r) => !(r.entities('chasers') ?? []).some((c) => c.id === target.id),
+                                test: (r) => {
+                                    const b = (r.entities('chasers') ?? []).find((c) => c.id === target.id);
+                                    if (b && b.hits !== lastHits) { lastHits = b.hits; lastHitAt = r.ticksCompleted; }
+                                    return !b;
+                                },
                             },
                         },
                     }, {
@@ -10989,27 +10997,25 @@ export function solveSegment({
                      * ([34,46) and [66,78)), where no armed lane reaches it.
                      * ⛓ The game agrees, body for body (F1 report § D2). So
                      * the refusal names what the hold measured: where the body
-                     * stands, which armed lanes still cover it, and when an
-                     * arrow last reached it.
+                     * stands, which armed lanes still cover it, and when it
+                     * last took a hit.
                      */
                     const c = (run.entities('chasers') ?? []).find((b) => b.id === target.id);
                     if (!c || !/for the whole bound of \d+ tick\(s\) and the condition never became true/
                         .test(String(e?.message))) throw e;
-                    const landed = (run.arrowBodyHits ?? []).filter((h) => h.body === target.id);
-                    const lastLanded = landed.length > 0 ? landed[landed.length - 1].t : null;
                     const armed = run.entities('armedArrowTraps') ?? new Set();
                     const box = bodyRectOf(c);
                     const lanesNow = (run.world.arrowTraps ?? [])
                         .filter((t) => armed.has(t.id) && rectsOverlapLocal(laneRectOf(run, t), box))
                         .map((t) => t.id);
                     const volleys = (run.ledger('arrowVolleys') ?? [])
-                        .filter((v) => v.t > (lastLanded ?? holdFrom) && armed.has(v.id)).length;
+                        .filter((v) => v.t > (lastHitAt ?? holdFrom) && armed.has(v.id)).length;
                     e.message += ` ⛓ At the bound ${target.id} is alive at (${c.x.toFixed(2)}, `
                         + `${c.y.toFixed(2)}) with ${c.hits} hit(s), and ${lanesNow.length === 0
                             ? `NO armed lane covers it (it has walked out of [${kill.covering.join(', ')}])`
-                            : `it stands in [${lanesNow.join(', ')}]`}. The last arrow that reached it `
-                        + `was ${lastLanded === null ? 'never' : `at t${lastLanded}`}, and the armed traps `
-                        + `fired ${volleys} volley(s) after that. The lane claim was the body's `
+                            : `it stands in [${lanesNow.join(', ')}]`}. It last took a hit `
+                        + `${lastHitAt === null ? `before the hold began (t${holdFrom})` : `at t${lastHitAt}`}, `
+                        + `and the armed traps fired ${volleys} volley(s) after that. The lane claim was the body's `
                         + 'position when the kill was planned, and a chaser walks: this body is OUT OF '
                         + 'THE CEILING\'S REACH (BODY_OUT_OF_LANE).';
                     throw e;

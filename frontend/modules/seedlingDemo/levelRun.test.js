@@ -1615,10 +1615,14 @@ describe('⛓⛓⛓ R8 slice 3: an arrow kills a chaser, and the staging is thre
     it('⛓⛓ a chaser that walks into a pit FALLS — a schedule, not an instant', () => {
         const run = createLevelRun({
             levelSource: atlasLevelSource(),
-            // The stance the dangerMap suite already boots — the one whose
-            // full-config run threw here at tick 14, kept so the witness and
-            // the finding are the same walk.
-            boot: { level: 4, x: 16, y: 64 },
+            // ⛓ fidelity F1: EAST of the pit. The stance this row used to
+            // boot, (16,64) — the dangerMap suite's, whose full-config run
+            // threw here at tick 14 — walks the bob under L4's traps, and
+            // with the arrows in the game's update order (`arrowUpdateOrder`)
+            // they kill it at t79 before it reaches the pit; the game agrees,
+            // body for body. From (96,64) no arrow touches the bob and it
+            // falls at t53, which the game also reads.
+            boot: { level: 4, x: 96, y: 64 },
             noclip: false,
             noDamage: false,
             roles: ROLES_ON,
