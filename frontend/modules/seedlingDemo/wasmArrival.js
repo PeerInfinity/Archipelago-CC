@@ -33,8 +33,13 @@
  * `UNREAD`: they are left UNDECLARED in the staging's `seam` block (never
  * guessed), and `stagingFromWasmArrival` REFUSES by name when one of them is
  * read by the model (`SEAM_BOOT_SPEC[].modelled`) AND by an entity of the
- * room being staged (`UNREAD_MODELLED_READERS`) — today only the moonrock's
- * `beam` / `rockSet`. The others (`grassCut`, `firstUse`, `extended`, the
+ * room being staged (`UNREAD_MODELLED_READERS`) — EMPTY since W5: the
+ * moonrock's `beam` / `rockSet` (W1's refusal of level 0, the overworld hub)
+ * are now `state` rows, read off `readState` because `games/seedling.json`
+ * declares them (BridgeGeneric takes ONE `configure`, so they are in the panel's
+ * own config). The staging DECLARES them (the solve needs them); the shipped
+ * tape still carries `seam: null`, so the game's own values are never
+ * overwritten. The five still unread (`grassCut`, `firstUse`, `extended`, the
  * music pair) no physics reads; they matter only to a TAPE W2 ships (its
  * `seam` block must not declare what nobody read).
  *
@@ -64,7 +69,8 @@ const ITEM_FLAGS = new Set(Object.values(ITEM_PROPERTIES).filter((p) => p.kind =
  *
  *   beginEntry  a PRE-BUILD row (`SEAM_PREBUILD_FIELDS`) — `Game.begin()`'s entry
  *   status      `botStatus` (ONE read per arrival: 14–16 ms, W0)
- *   state       the bridge's `readState` (the spawn — `botStatus` has the live player)
+ *   state       the bridge's `readState` (the spawn — `botStatus` has the live player;
+ *               ⛓ W5 the moonrock's `beam`/`rockSet`, declared in `games/seedling.json`)
  *   unread      no read-only verb carries it (a W5 seam row)
  *   invariant   a calm-arrival invariant; a boot block declares none of them
  *   excluded    the signature's own exclusion
@@ -88,8 +94,10 @@ export const ARRIVAL_FIELD_SOURCES = Object.freeze({
     'static.Rng.split': fromStatus((s) => s.rng?.split),
     'static.Bot.pins': fromStatus((s) => s.pins),
     ...Object.fromEntries(SEAM_PREBUILD_FIELDS.map((f) => [f, { from: 'beginEntry' }])),
-    'save.beam': { from: 'unread' },
-    'save.rockSet': { from: 'unread' },
+    // ⛓ W5 — the Moonrock's two save statics (`Main.as:159-160`), declared in
+    // `games/seedling.json` so the bridge's `readState` carries them.
+    'save.beam': { from: 'state', read: (_s, st) => st?.beam },
+    'save.rockSet': { from: 'state', read: (_s, st) => st?.rockSet },
     'save.firstUse': { from: 'unread' },
     'save.extended': { from: 'unread' },
     'save.grassCut': { from: 'unread' },
@@ -106,14 +114,14 @@ export const ARRIVAL_FIELD_SOURCES = Object.freeze({
 });
 
 /**
- * Which room entities READ a modelled field no read-only verb carries
- * (`levelRun.js`: `moonrockBeam` / `moonrockSet` are read when a moonrock
- * visit builds). A room holding none of them stages without the field.
+ * Which room entities READ a modelled field no read-only verb carries. A room
+ * holding none of them stages without the field; a room holding one is refused
+ * by name. ⛓ W5 — EMPTY: its only rows were the moonrock's `beam` / `rockSet`
+ * (`levelRun.js` `moonrockBeam` / `moonrockSet`), which `readState` now carries.
+ * Kept as the table `assertArrivalCoverage` demands for any modelled row that
+ * is ever classified `unread` again.
  */
-export const UNREAD_MODELLED_READERS = Object.freeze({
-    'save.beam': ['moonrock'],
-    'save.rockSet': ['moonrock'],
-});
+export const UNREAD_MODELLED_READERS = Object.freeze({});
 
 /** Every signature row classified, every class known — or a throw naming the gap. */
 export function assertArrivalCoverage() {
@@ -311,6 +319,9 @@ export function arrivalStagingWitness(staging, { seam, status, state }) {
     row('seam.secondary = botStatus.secondary', status.secondary, staging.seam?.secondary);
     row('seam.cutscene = botStatus.cutscene', status.cutscene, staging.seam?.cutscene);
     row('seam.menu_state = botStatus.menu_state', status.menu_state, staging.seam?.menu_state);
+    // ⛓ W5 — the moonrock's two statics, off the bridge's readState (games/seedling.json declares them).
+    row('seam.beam = readState.beam', state?.beam, staging.seam?.beam);
+    row('seam.rock_set = readState.rockSet', state?.rockSet, staging.seam?.rock_set);
     row('rng.split = botStatus.rng.split', status.rng?.split, staging.rng?.split);
     row('rng.seed = begin rng.gameplay', be['rng.gameplay'], staging.rng?.seed);
     row('rng.cosmetic = begin rng.cosmetic', be['rng.cosmetic'], staging.rng?.cosmetic);

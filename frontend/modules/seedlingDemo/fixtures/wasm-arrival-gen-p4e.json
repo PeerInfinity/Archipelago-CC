@@ -1,17 +1,16 @@
 {
- "source": "probe-seedling-wasm-generated-playback.mjs --only=R --record (solver-walk WG): the wasm engine's raw arrival reads on seedling_generated_room (p4e, headless logic-only), in arrival order",
+ "comment": "probe-seedling-wasm-generated-playback.mjs --record (WG): the wasm engine's raw arrival reads on seedling_generated_room (p4e, headless logic-only)",
  "game": "seedling_generated_room",
  "arrivals": [
   {
-   "label": "A0 the start room, fresh (the apitem leg)",
    "seam": {
     "beginEntry": {
      "begin.level": 0,
      "begin.tick": 0,
-     "rng.gameplay": 667857827,
+     "rng.gameplay": 255512205,
      "rng.cosmetic": 0,
-     "fp.seed": 386452931,
-     "save.time": 4875
+     "fp.seed": 1571184202,
+     "save.time": 4868
     },
     "seam": null,
     "why": "",
@@ -42,7 +41,7 @@
      "split": false,
      "seed": 0,
      "cosmetic_state": 0,
-     "state": 1185239407
+     "state": 982861246
     },
     "save": {
      "has_all_seal_parts": false,
@@ -85,7 +84,7 @@
      "sound": false
     },
     "sound_pin": null,
-    "game_time": 4875,
+    "game_time": 4868,
     "frozen_timer": 0,
     "hits_timer": 0,
     "hits": 0,
@@ -162,19 +161,20 @@
     "pendingCheck": "",
     "keyMask": 0,
     "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
     "level": 0
    }
   },
   {
-   "label": "B0 the start room re-entered after the apitem ({0,0} cleared \u2014 the door leg)",
    "seam": {
     "beginEntry": {
      "begin.level": 0,
      "begin.tick": 0,
-     "rng.gameplay": 1185239407,
+     "rng.gameplay": 982861246,
      "rng.cosmetic": 0,
-     "fp.seed": 1123862789,
-     "save.time": 5123
+     "fp.seed": 1433959502,
+     "save.time": 5129
     },
     "seam": null,
     "why": "",
@@ -223,7 +223,7 @@
      "split": false,
      "seed": 0,
      "cosmetic_state": 0,
-     "state": 1179541884
+     "state": 960071154
     },
     "save": {
      "has_all_seal_parts": false,
@@ -266,7 +266,7 @@
      "sound": false
     },
     "sound_pin": null,
-    "game_time": 5123,
+    "game_time": 5129,
     "frozen_timer": 0,
     "hits_timer": 0,
     "hits": 0,
@@ -348,19 +348,20 @@
     "pendingCheck": "1|0|0|0",
     "keyMask": 0,
     "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
     "level": 0
    }
   },
   {
-   "label": "C1 room 1 entered by the crossing (a clear in ANOTHER level)",
    "seam": {
     "beginEntry": {
      "begin.level": 1,
      "begin.tick": 7,
-     "rng.gameplay": 1406051064,
+     "rng.gameplay": 1866107874,
      "rng.cosmetic": 0,
-     "fp.seed": 1686534109,
-     "save.time": 5186
+     "fp.seed": 1123862789,
+     "save.time": 5188
     },
     "seam": {
      "level": 1,
@@ -384,7 +385,7 @@
      "save.hitsMax": 3,
      "save.firstUse": false,
      "save.extended": false,
-     "save.time": 5172,
+     "save.time": 5177,
      "save.primary": 0,
      "save.secondary": 0,
      "save.grassCut": 0,
@@ -445,9 +446,9 @@
       "dead_frames": true,
       "sound": true
      },
-     "rng.gameplay": 1406051064,
+     "rng.gameplay": 1866107874,
      "rng.cosmetic": 0,
-     "fp.seed": 1686534109,
+     "fp.seed": 1123862789,
      "arrival.blackCover": 0,
      "arrival.velocity": {
       "hits_timer": 0,
@@ -456,7 +457,7 @@
       "vx": 0
      },
      "latch.tick": 7,
-     "latch.dead_frames": 23
+     "latch.dead_frames": 22
     },
     "why": "",
     "partial": false,
@@ -506,7 +507,7 @@
      "split": false,
      "seed": 0,
      "cosmetic_state": 0,
-     "state": 1620819787
+     "state": 846134575
     },
     "save": {
      "has_all_seal_parts": false,
@@ -558,7 +559,7 @@
      ],
      "set": "Swim"
     },
-    "game_time": 5186,
+    "game_time": 5188,
     "frozen_timer": 0,
     "hits_timer": 0,
     "hits": 0,
@@ -611,7 +612,7 @@
     "saw_input_refused": false,
     "receive_input": true,
     "noclip": false,
-    "dead_frames": 23,
+    "dead_frames": 22,
     "buffered": 0,
     "tick_count": 7,
     "tick": 7,
@@ -619,7 +620,7 @@
     "held": false,
     "finished": true,
     "arm": {
-     "armed_at": 5142,
+     "armed_at": 5148,
      "pending": false
     },
     "armed": false,
@@ -646,6 +647,8 @@
     "pendingCheck": "3|0|0|0",
     "keyMask": 0,
     "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
     "level": 1
    }
   }

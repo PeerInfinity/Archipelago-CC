@@ -153,8 +153,10 @@ export function exactDeclarationRefusal(tape, status) {
 
 /**
  * A goal the wasm runtime refuses BY NAME before anything moves: a room with
- * an entity that reads a modelled field no verb carries (W1: the moonrock's
- * `beam`/`rockSet` — level 0, the overworld hub, holds one).
+ * an entity that reads a modelled field no verb carries
+ * (`wasmArrival.UNREAD_MODELLED_READERS`). ⛓ W5 — that table is EMPTY: W1's
+ * one case, the moonrock's `beam`/`rockSet` (level 0, the overworld hub), is
+ * read off `readState` now, so only "no such level" refuses today.
  *
  * @param {{level:number}} goal
  * @param {object|null|undefined} record  the goal room's record; undefined = not loaded yet (no verdict)
@@ -169,7 +171,7 @@ export function wasmGoalRefusal(goal, record, { source = 'vanilla map' } = {}) {
         const hit = readers.filter((t) => types.has(t));
         if (hit.length) {
             return `level ${goal.level} holds a ${hit.join('/')}, which reads \`${field}\` — a modelled save field `
-                + 'no read-only verb carries, so the wasm runtime cannot stage the room (W1; the W5 seam rows would)';
+                + 'no read-only verb carries, so the wasm runtime cannot stage the room';
         }
     }
     return null;

@@ -636,6 +636,11 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         return undefined;
     }
 
+    // ⛓ W5 — a declared property this page cannot answer (`valueOf` → undefined)
+    // is SKIPPED by `readAll` and `flush`, exactly as BridgeGeneric skips one a
+    // build cannot read: today the Moonrock's `beam` / `rockSet`, which
+    // `games/seedling.json` declares for the wasm arrival staging and which this
+    // page does not carry across room boots.
     function readAll() {
         const out = {};
         for (const p of config?.state_properties ?? []) {

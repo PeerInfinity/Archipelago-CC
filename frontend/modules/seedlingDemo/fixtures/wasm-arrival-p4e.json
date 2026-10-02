@@ -10,7 +10,7 @@
      "rng.gameplay": 811240737,
      "rng.cosmetic": 0,
      "fp.seed": 1861733589,
-     "save.time": 4880
+     "save.time": 4883
     },
     "seam": null,
     "why": "",
@@ -84,7 +84,7 @@
      "sound": false
     },
     "sound_pin": null,
-    "game_time": 4880,
+    "game_time": 4883,
     "frozen_timer": 0,
     "hits_timer": 0,
     "hits": 0,
@@ -161,9 +161,11 @@
     "pendingCheck": "",
     "keyMask": 0,
     "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
     "level": 86
    },
-   "statusMs": 34.5
+   "statusMs": 20.3
   },
   {
    "label": "B the locked door (no key) and the glue's bounce",
@@ -174,7 +176,7 @@
      "rng.gameplay": 771911645,
      "rng.cosmetic": 0,
      "fp.seed": 1319693533,
-     "save.time": 5022
+     "save.time": 5019
     },
     "seam": null,
     "why": "",
@@ -248,7 +250,7 @@
      "sound": false
     },
     "sound_pin": null,
-    "game_time": 5022,
+    "game_time": 5019,
     "frozen_timer": 0,
     "hits_timer": 0,
     "hits": 0,
@@ -325,9 +327,11 @@
     "pendingCheck": "",
     "keyMask": 0,
     "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
     "level": 0
    },
-   "statusMs": 15.5
+   "statusMs": 13.3
   },
   {
    "label": "B the locked door (no key) and the glue's bounce",
@@ -338,7 +342,7 @@
      "rng.gameplay": 169176392,
      "rng.cosmetic": 0,
      "fp.seed": 878102915,
-     "save.time": 5024
+     "save.time": 5021
     },
     "seam": null,
     "why": "",
@@ -412,7 +416,7 @@
      "sound": false
     },
     "sound_pin": null,
-    "game_time": 5024,
+    "game_time": 5021,
     "frozen_timer": 0,
     "hits_timer": 0,
     "hits": 0,
@@ -489,9 +493,11 @@
     "pendingCheck": "",
     "keyMask": 0,
     "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
     "level": 86
    },
-   "statusMs": 16.3
+   "statusMs": 11.4
   },
   {
    "label": "C a host jump after the chest",
@@ -502,7 +508,7 @@
      "rng.gameplay": 1094361058,
      "rng.cosmetic": 0,
      "fp.seed": 768070221,
-     "save.time": 5323
+     "save.time": 5333
     },
     "seam": null,
     "why": "",
@@ -576,7 +582,7 @@
      "sound": false
     },
     "sound_pin": null,
-    "game_time": 5323,
+    "game_time": 5333,
     "frozen_timer": 0,
     "hits_timer": 0,
     "hits": 0,
@@ -658,9 +664,11 @@
     "pendingCheck": "1|86|0|0",
     "keyMask": 0,
     "totemCount": 0,
+    "beam": false,
+    "rockSet": false,
     "level": 86
    },
-   "statusMs": 22.7
+   "statusMs": 16.8
   }
  ]
 }

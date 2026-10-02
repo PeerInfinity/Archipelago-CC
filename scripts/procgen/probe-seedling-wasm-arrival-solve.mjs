@@ -9,7 +9,8 @@
  * `botStatus` ONCE and the bridge's `readState`. Three arrivals are taken:
  *   A   a host `jump` to the Starting House at its spawn;
  *   B   the locked house door (a real ArrowDown, no key): the game's own door to level 0, then
- *       the glue's bounce back — two arrivals (B0 level 0, B86 the house's return spawn);
+ *       the glue's bounce back — two arrivals (B0 level 0, B86 the house's return spawn). ⛓ W5: B0
+ *       stages like any room (W1 refused it: the moonrock's `beam`/`rockSet`, now on readState);
  *   C   the chest opened for real (ArrowUp; the check and the SealPiece land), then a host
  *       `jump` — the house with a non-empty cleared set and `seal_parts`.
  * Each arrival is staged (`stagingFromWasmArrival`), witnessed field for field against its own
@@ -265,9 +266,10 @@ async function main() {
             try {
                 staged = W.stagingFromWasmArrival({ seam, status, state, record: records.get(status.level) ?? null });
             } catch (e) {
-                const moonrockRoom = (records.get(status.level)?.entities ?? []).some((x) => x.type === 'moonrock');
-                check(`${tag}: staged — or refused BY NAME for an unread modelled field`, moonrockRoom
-                    && /moonrock.*save\.(beam|rockSet)/.test(e.message), e.message.slice(0, 240));
+                // ⛓ W5 — no arrival is refused any more: level 0's moonrock reads `beam`/`rockSet`,
+                // which games/seedling.json now declares, so B0 stages off readState like any room.
+                check(`${tag}: staged (W5: the moonrock's beam/rockSet come off readState — no refusal)`, false,
+                    e.message.slice(0, 240));
                 continue;
             }
             const { staging, undeclared, gamePins } = staged;

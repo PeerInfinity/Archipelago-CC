@@ -25,7 +25,16 @@ const GAME_CONFIG = JSON.parse(readFileSync(join(ROOT, 'frontend/modules/flashPa
 const RULES = JSON.parse(readFileSync(
     join(ROOT, 'frontend/presets/seedling_generated_room/AP_1/AP_1_rules.json'), 'utf8'));
 const BRIDGE_CONFIG = JSON.stringify({ classes: GAME_CONFIG.classes, state_properties: GAME_CONFIG.state_properties });
-const DECLARED = GAME_CONFIG.state_properties.map((p) => p.property);
+/**
+ * ⛓ W5 — the two Moonrock statics `games/seedling.json` declares for the WASM
+ * arrival staging. The JS page does not carry them across room boots (each
+ * room boots from its own staging), so it answers nothing for them and the
+ * bridge contract's skip rule applies: an unanswerable property is left out of
+ * `readState` and the reports — as BridgeGeneric does for a property a build
+ * cannot read. Every other declared row is answered, in declaration order.
+ */
+const JS_PAGE_SKIPS = ['beam', 'rockSet'];
+const DECLARED = GAME_CONFIG.state_properties.map((p) => p.property).filter((p) => !JS_PAGE_SKIPS.includes(p));
 
 /** The assembled set the host delivers, and a runtime with it mounted and started. */
 function started({ mutateSet = null, chunkOpts = {} } = {}) {
@@ -71,6 +80,7 @@ describe('jsRuntimeCore — the bridge contract', () => {
         expect(rt.game.configure(BRIDGE_CONFIG)).toBe('ok');
         const state = JSON.parse(rt.game.readState());
         expect(Object.keys(state)).toEqual(DECLARED);
+        for (const p of JS_PAGE_SKIPS) expect(GAME_CONFIG.state_properties.map((q) => q.property)).toContain(p);
         expect(state.level).toBe(-1);
     });
 

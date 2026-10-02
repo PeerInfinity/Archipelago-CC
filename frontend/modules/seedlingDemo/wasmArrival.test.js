@@ -12,6 +12,8 @@
  *   B  the locked house door (no key): the game's own door to level 0, then
  *      the glue's bounce back to 86;
  *   C  a host jump after the chest was opened for real (a cleared row, a seal).
+ * ⛓ W5 re-recorded it with `beam`/`rockSet` declared in games/seedling.json, so
+ * every `state` carries the moonrock's two statics and B0 (level 0) stages.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -21,7 +23,7 @@ import { fileURLToPath } from 'node:url';
 import { Worker as NodeWorker } from 'node:worker_threads';
 
 import {
-    ARRIVAL_FIELD_SOURCES, UNREAD_FIELDS, WasmArrivalError, arrivalLatch, arrivalSolveRequest, arrivalSolverGoal,
+    ARRIVAL_FIELD_SOURCES, UNREAD_FIELDS, UNREAD_MODELLED_READERS, arrivalLatch, arrivalSolveRequest, arrivalSolverGoal,
     arrivalStagingWitness, assertArrivalCoverage, isArrival, stagingFromWasmArrival,
 } from './wasmArrival.js';
 import { SEAM_SIGNATURE } from './r7Acceptance.js';
@@ -38,6 +40,7 @@ const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
 const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4e.json').arrivals;
 const RECORDS = indexLevels(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
 const SOURCE = levelSourceFromAtlas(RECORDS);
+const GAME_CONFIG = readJson('frontend/modules/flashPanel/games/seedling.json');
 const HOUSE = 86;
 const CHEST = { kind: 'location', level: HOUSE, tag: 0, entityType: 'chest', name: 'Starting House - Chest' };
 const DOOR = { kind: 'exit', level: HOUSE, tiles: [[3, 4]], name: 'exit_S' };
@@ -68,9 +71,18 @@ describe('the field classification covers SEAM_SIGNATURE', () => {
         expect(assertArrivalCoverage()).toBe(true);
         expect(Object.keys(ARRIVAL_FIELD_SOURCES).sort()).toEqual(SEAM_SIGNATURE.map((r) => r.field).sort());
     });
-    it('what botStatus lacks, by name (§5.1: grassCut, beam, rockSet, firstUse/extended, the music pair)', () => {
-        expect(UNREAD_FIELDS).toEqual(['save.beam', 'save.rockSet', 'save.firstUse', 'save.extended', 'save.grassCut',
+    it('what no read-only verb carries, by name (§5.1: grassCut, firstUse/extended, the music pair)', () => {
+        expect(UNREAD_FIELDS).toEqual(['save.firstUse', 'save.extended', 'save.grassCut',
             'static.Music.currentSet', 'static.Music.currentIndex']);
+    });
+    it('⛓ W5 — the moonrock\'s beam/rockSet are READ off readState (games/seedling.json declares them); no modelled field is left unread', () => {
+        expect(ARRIVAL_FIELD_SOURCES['save.beam'].from).toBe('state');
+        expect(ARRIVAL_FIELD_SOURCES['save.rockSet'].from).toBe('state');
+        expect(UNREAD_MODELLED_READERS).toEqual({});
+        const declared = GAME_CONFIG.state_properties.map((p) => p.property);
+        expect(declared).toEqual(expect.arrayContaining(['beam', 'rockSet']));
+        // Every recorded arrival's readState carries them — the fresh game's real values.
+        for (const a of RECORDED) expect([a.state.beam, a.state.rockSet]).toEqual([false, false]);
     });
 });
 
@@ -91,7 +103,8 @@ describe('stagingFromWasmArrival on the recorded arrivals', () => {
             const rows = arrivalStagingWitness(staging, reads(a));
             expect(rows.filter((r) => !r.ok)).toEqual([]);
             expect(rows.length).toBeGreaterThan(25);
-            expect(undeclared).toEqual(['beam', 'rock_set', 'first_use', 'extended', 'grass_cut', 'music.set', 'music.index']);
+            expect(undeclared).toEqual(['first_use', 'extended', 'grass_cut', 'music.set', 'music.index']);
+            expect([staging.seam.beam, staging.seam.rock_set]).toEqual([a.state.beam, a.state.rockSet]);
         });
         it(`${name}: the staging round-trips the tape format, and the staged JS run stands where the game's player does`, () => {
             const { staging } = stage(a);
@@ -121,11 +134,22 @@ describe('stagingFromWasmArrival on the recorded arrivals', () => {
 });
 
 describe('refusals — by name, never rounded', () => {
-    it('B0: level 0 holds a moonrock, which reads the unread save.beam → refused', () => {
-        expect(() => stage(B0)).toThrow(WasmArrivalError);
-        expect(() => stage(B0)).toThrow(/level 0 holds a moonrock, which reads `save\.beam`/);
-        // Without the room record the check is not asked (the caller's statement).
-        expect(() => stagingFromWasmArrival(reads(B0))).not.toThrow();
+    it('⛓ W5 — B0: level 0 holds a moonrock and STAGES (W1 refused it), beam/rock_set DECLARED from readState', () => {
+        const { staging, undeclared } = stage(B0);
+        expect(staging.boot.level).toBe(0);
+        expect([staging.seam.beam, staging.seam.rock_set]).toEqual([false, false]);
+        expect(undeclared).not.toContain('beam');
+        expect(arrivalStagingWitness(staging, reads(B0)).filter((r) => !r.ok)).toEqual([]);
+        // and a beam the game reports TRUE (after the shield) is declared true, not guessed
+        const r = reads(B0);
+        r.state = { ...r.state, beam: true };
+        expect(stagingFromWasmArrival({ ...r, record: RECORDS.get(0) }).staging.seam.beam).toBe(true);
+    });
+    it('⛓ W5 — a build whose readState lacks beam is REFUSED by name (never guessed)', () => {
+        const r = reads(A);
+        const { beam, ...rest } = r.state;
+        r.state = rest;
+        expect(() => stagingFromWasmArrival(r)).toThrow(/`save\.beam` reads undefined from the bridge readState/);
     });
     it('no beginEntry (a botLoadTape cleared it) → refused', () => {
         const r = reads(A);

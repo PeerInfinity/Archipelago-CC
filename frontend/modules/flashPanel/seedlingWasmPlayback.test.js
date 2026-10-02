@@ -214,12 +214,11 @@ describe('the mid-room policy and the queue', () => {
 });
 
 describe('named refusals and failures', () => {
-    it('LEVEL 0 is refused synchronously, before anything moves (moonrock)', () => {
+    it('⛓ W5 — LEVEL 0 is ACCEPTED (W1–W4 refused it for the moonrock): a goal there waits for its arrival', () => {
         const e = engineOver(A);
         const r = e.engine.walkTo({ kind: 'exit', level: 0, tiles: [[1, 1]], name: 'x' });
-        expect(r.ok).toBe(false);
-        expect(r.reason).toMatch(/level 0 holds a moonrock/);
-        expect(e.teleports).toEqual([]);
+        expect(r.ok).toBe(true);
+        expect(r.reason ?? '').not.toMatch(/moonrock/);
         expect(e.game.calls).not.toContain('botStart');
     });
 

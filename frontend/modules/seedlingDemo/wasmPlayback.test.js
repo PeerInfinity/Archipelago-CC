@@ -1,6 +1,6 @@
 /**
  * wasmPlayback — solver-walk W2: the host tape a wasm playback ships, the
- * declaration rule it ships under, the mid-room policy, the moonrock / level-0
+ * declaration rule it ships under, the mid-room policy, the moonrock / level-0 (⛓ W5: staged, no longer refused)
  * refusal, and the trajectory compare (plan `NewDocs/plans/seedling-js-solver-walk-plan.md`
  * §5.3 W2). The engine that drives them (`flashPanel/seedlingWasmPlayback.js`)
  * has its own file; both read W1's RECORDED arrivals
@@ -117,10 +117,9 @@ describe('exactDeclarationRefusal — the fake-check rule (W0 ii.5–ii.8)', () 
 });
 
 describe('wasmGoalRefusal — the rooms the wasm runtime cannot stage', () => {
-    it('LEVEL 0 (the overworld hub) is REFUSED by name: it holds a moonrock, which reads beam/rockSet', () => {
-        const why = wasmGoalRefusal({ level: 0 }, RECORDS.get(0));
-        expect(why).toMatch(/level 0 holds a moonrock/);
-        expect(why).toMatch(/save\.(beam|rockSet)/);
+    it('⛓ W5 — LEVEL 0 (the overworld hub) is NOT refused: its moonrock\'s beam/rockSet come off readState now', () => {
+        expect((RECORDS.get(0)?.entities ?? []).some((e) => e.type === 'moonrock')).toBe(true);
+        expect(wasmGoalRefusal({ level: 0 }, RECORDS.get(0))).toBeNull();
     });
     it('the Starting House stages; a room not loaded yet gives no verdict; an unknown level is named', () => {
         expect(wasmGoalRefusal({ level: HOUSE }, RECORDS.get(HOUSE))).toBeNull();
