@@ -992,7 +992,16 @@ export function exportRulesJson(gameData) {
         classification: 'progression', event: true, type: 'Event', max_count: 1,
     };
 
+    // The exporter's contract: itempool_counts = precollected + placed
+    // (exporter/games/base/world_data.py get_itempool_counts), and
+    // world_generator's pool = itempool_counts − starting_items − locked events
+    // (_template_init.py). So the starting buttons are pooled here too, or
+    // world_generator subtracts copies that were never in the pool.
     const itemPoolCounts = { ...poolCounts };
+    for (const [label, count] of Object.entries(startingButtons)) {
+        const name = buttonItemName(label);
+        itemPoolCounts[name] = (itemPoolCounts[name] || 0) + count;
+    }
     for (const evt of allCheckedEvents) itemPoolCounts[evt] = 1;
     itemPoolCounts['Victory'] = 1;
 
