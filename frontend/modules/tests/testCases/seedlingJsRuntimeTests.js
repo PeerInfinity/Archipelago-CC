@@ -1126,22 +1126,22 @@ registerTest({
 
 /**
  * The S4 witnesses, read from the committed `seedling_playthrough` preset's
- * own region payloads (the exit's cell, the arrival spawn): level 48's
- * `out_pit_2_2` — a PIT tile, no teleporter — which the solver plays as
- * `reach-pit` and falls to level 49; and level 17's chest (tag 0), a
- * `collect-placement` of a room the house row does not reach. (L30's pit,
- * where the solver must BREAK a rock with the sword, is a node row only:
- * `seedling_atlas` holds no sword, and the host reconciles a page-side
- * `hasSword` back to the AP inventory on the next report — measured.)
+ * own region payloads (the exit's cell, the arrival spawn): level 30's
+ * `out_pit_3_34` — a PIT tile, no teleporter, with a breakable rock standing
+ * on it — which the solver plays as `reach-pit`: it BREAKS the rock (the
+ * sword, granted through the AP item path as the S5 row does, removed after:
+ * a page-side `hasSword` is set back by the host's item sync) and falls to
+ * level 31; and level 17's chest (tag 0), a `collect-placement` of a room the
+ * house row does not reach.
  * Neither level is a region of `seedling_atlas`: the page handle teleports
  * there, as the S1–S3 rows do (⚖ Q2).
  */
 const PLAYTHROUGH_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules.json';
-const PIT_ROOM = Object.freeze({ region: 'level_48__r2c10', exitId: 'out_pit_2_2', to: 49 });
+const PIT_ROOM = Object.freeze({ region: 'level_30__r2c10', exitId: 'out_pit_3_34', to: 31 });
 const CHEST_ROOM = Object.freeze({ region: 'level_17', level: 17, tag: 0 });
 
 /** Runtime js + the solver mode ON on seedling_atlas, the page teleported to `region`'s first arrival spawn. */
-async function playthroughRoomOnPage(tc, region) {
+async function playthroughRoomOnPage(tc, region, { sword = false } = {}) {
     await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
     const staleAdapter = getActivePanelInstance()?.adapter ?? null;
     const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
@@ -1157,11 +1157,21 @@ async function playthroughRoomOnPage(tc, region) {
     const spawn = pl?.exits?.find((e) => e.entrance_spawn)?.entrance_spawn ?? null;
     tc.reportCondition(`seedling_playthrough has region ${region} with an arrival spawn`, !!spawn);
     if (!spawn) return null;
+    if (sword) {
+        // The host owns the page's item flags: the sword goes through the AP item path (the caller removes it).
+        await tc.stateManager.addItemToInventory('Progressive Sword', 1);
+        await tc.stateManager.pingWorker('after-item-grant', 5000);
+        const armed = await tc.pollForCondition(() => rt.flags?.hasSword === true,
+            'the host delivered the sword to the page (Main.hasSword)', 10000, 100);
+        tc.reportCondition('the page holds the sword', !!armed);
+        if (!armed) return { rt, granted: true };
+    }
     rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [pl.level, spawn.x, spawn.y] }]);
-    const there = await tc.pollForCondition(() => rt.run?.level === pl.level, `the page is in level ${pl.level}`, 10000, 100);
+    const there = await tc.pollForCondition(() => rt.run?.level === pl.level && (!sword || rt.flags?.hasSword === true),
+        `the page is in level ${pl.level}${sword ? ' with the sword' : ''}`, 10000, 100);
     tc.reportCondition(`teleported into level ${pl.level}`, !!there);
-    if (!there) return null;
-    return { rt, win, pl, bot: ready.bot };
+    if (!there) return { rt, granted: sword };
+    return { rt, win, pl, bot: ready.bot, granted: sword, ok: true };
 }
 
 /** The settled walk's solver stats, logged. */
@@ -1181,10 +1191,12 @@ export async function seedlingJsRuntimeSolverFallsThroughPit(tc) {
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
     try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
     let rt = null;
+    let granted = false;
     try {
-        const up = await playthroughRoomOnPage(tc, PIT_ROOM.region);
-        if (!up) return tc.getOverallResult();
-        ({ rt } = up);
+        const up = await playthroughRoomOnPage(tc, PIT_ROOM.region, { sword: true });
+        granted = !!up?.granted;
+        rt = up?.rt ?? null;
+        if (!up?.ok) return tc.getOverallResult();
         const { win, pl, bot } = up;
         const exit = pl.exits.find((e) => e.exit_id === PIT_ROOM.exitId);
         const [tx, ty] = exit.exit_tiles[0];
@@ -1200,7 +1212,8 @@ export async function seedlingJsRuntimeSolverFallsThroughPit(tc) {
         tc.assertEqual('the SOLVER drove it: solved once, no decline, no refutation', '1/0/0',
             `${s.solves}/${s.declines}/${s.refutations}`);
         tc.assertEqual('the solver goal was reach-pit', 'reach-pit', s.lastSolve?.goal?.kind ?? null);
-        tc.assertEqual('the plan walked onto the pit', true, (s.lastSolve?.verbs ?? []).includes('walk'));
+        tc.assertEqual('the plan BROKE the rock on the pit (the J2 walker alone stalls there)', true,
+            (s.lastSolve?.verbs ?? []).includes('break'));
         tc.assertEqual('the solve ran in the page\'s WORKER', 'worker', s.lastSolve?.where ?? null);
         const landed = await tc.pollForCondition(() => rt.run?.level === PIT_ROOM.to && !rt.run.state.fall,
             `the fall's transport landed in level ${PIT_ROOM.to}`, 10000, 100);
@@ -1209,6 +1222,7 @@ export async function seedlingJsRuntimeSolverFallsThroughPit(tc) {
         tc.assertEqual('no pendingExit for a fall', '[]', JSON.stringify(reportedExits(win).slice(exitsBefore)));
         tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
     } finally {
+        if (granted) { try { await tc.stateManager.removeItemFromInventory('Progressive Sword', 1); } catch { /* best effort */ } }
         try { rt?.playback.reset(); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
@@ -1218,11 +1232,12 @@ export async function seedlingJsRuntimeSolverFallsThroughPit(tc) {
 
 registerTest({
     id: 'seedling-js-runtime-solver-falls-through-pit',
-    name: 'Seedling JS runtime: the solver mode takes a PIT exit (L48 → L49, reach-pit)',
-    description: 'With flashPanel.runtime = js and the solver mode ON, on seedling_atlas: the page handle teleports '
-        + 'the real page to seedling_playthrough\'s level_48__r2c10 arrival; the bot walks to the out_pit_2_2 exit — '
-        + 'a PIT tile, no teleporter (S4: the page used to refuse it). The solver plays reach-pit and the player falls '
-        + 'to level 49; the walk completes on the fall, and no pendingExit is reported (the game writes none for a '
+    name: 'Seedling JS runtime: the solver mode takes a PIT exit (L30 → L31, breaking the rock on the pit)',
+    description: 'With flashPanel.runtime = js and the solver mode ON, on seedling_atlas: the sword is granted through '
+        + 'the AP item path (removed after), the page handle teleports the real page to seedling_playthrough\'s '
+        + 'level_30__r2c10 arrival, and the bot walks to the out_pit_3_34 exit — a PIT tile, no teleporter (S4: the '
+        + 'page used to refuse it). The solver plays reach-pit: it BREAKS the rock standing on the pit and falls to '
+        + 'level 31; the walk completes on the fall, and no pendingExit is reported (the game writes none for a '
         + 'fall). 0 HALT, no refutation.',
     testFunction: seedlingJsRuntimeSolverFallsThroughPit,
     category: 'Seedling JS runtime',
@@ -1237,8 +1252,8 @@ export async function seedlingJsRuntimeSolverOpensChest(tc) {
     let rt = null;
     try {
         const up = await playthroughRoomOnPage(tc, CHEST_ROOM.region);
-        if (!up) return tc.getOverallResult();
-        ({ rt } = up);
+        rt = up?.rt ?? null;
+        if (!up?.ok) return tc.getOverallResult();
         const { win, bot } = up;
         const checksBefore = reportedChecks(win).length;
         const answer = rt.playback.walkTo({ kind: 'location', level: CHEST_ROOM.level, tag: CHEST_ROOM.tag, entityType: 'chest' });
