@@ -824,7 +824,8 @@ registerTest({
  * player at (96, 128) in level 3 — INSIDE L3's door back to 11, so it is
  * latched and fires only on an entry. The pocket is closed until
  * `breakablerock@96,112` is broken, so the row walks the vanilla round trip:
- * from level 4's arrival (112, 48) with the sword the solver breaks the rock
+ * from level 4's arrival (112, 48), with the sword granted through the AP item
+ * path ("Progressive Sword", removed again at the end), the solver breaks the rock
  * and takes the door to 11, the bot takes 11's door back (landing latched),
  * then steps off onto the rock's cell and back on — the crossing to 11.
  */
@@ -833,6 +834,7 @@ const DOOR_ROOM = Object.freeze({ level: 3, enter: { x: 112, y: 48 }, door: { x:
 export async function seedlingJsRuntimeSolverStepsOffTheDoor(tc) {
     let previousRuntime = 'auto';
     let previousSolver = true;
+    let granted = false;
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
     try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
     try {
@@ -869,8 +871,14 @@ export async function seedlingJsRuntimeSolverStepsOffTheDoor(tc) {
             return !!settled && rt.playback.state === 'done';
         };
 
-        rt.queueItems([{ class: 'Main', property: 'hasSword', value: true },
-            { invocation: 'new_instance', className: 'Game', args: [DOOR_ROOM.level, DOOR_ROOM.enter.x, DOOR_ROOM.enter.y] }]);
+        // The sword through the normal item path: the host owns the page's item flags.
+        await tc.stateManager.addItemToInventory('Progressive Sword', 1);
+        granted = true;
+        await tc.stateManager.pingWorker('after-item-grant', 5000);
+        const armed = await tc.pollForCondition(() => rt.flags?.hasSword === true,
+            'the host delivered the sword to the page (Main.hasSword)', 10000, 100);
+        tc.reportCondition('the page holds the sword', !!armed);
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [DOOR_ROOM.level, DOOR_ROOM.enter.x, DOOR_ROOM.enter.y] }]);
         const there = await tc.pollForCondition(() => rt.run?.level === DOOR_ROOM.level && rt.flags?.hasSword === true,
             `the page is in level ${DOOR_ROOM.level} with the sword`, 10000, 100);
         tc.reportCondition('teleported into level 3 with the sword', !!there);
@@ -886,15 +894,16 @@ export async function seedlingJsRuntimeSolverStepsOffTheDoor(tc) {
             `${rt.run?.level}/${rt.run?.state?.latched?.size ?? 0}`);
 
         const exitsBefore = reportedExits(win).length;
-        const solvesBefore = rt.playback.solverStats.solves;
+        const before = rt.playback.solverStats;   // cumulative over the page's goals: the rows read deltas
         const crossed = await walk(doorGoal, 'step off the door and back on');
         const s = rt.playback.solverStats;
         tc.log(`solver ${JSON.stringify({ ...s, lastSolve: s.lastSolve ? { ...s.lastSolve, goal: undefined } : null })}`);
         tc.reportCondition('the walk from the arrival is DONE', crossed);
         tc.assertEqual('the WALKER stepped off once (the latched phase is not the solver\'s)', 1, rt.playback.stats.stepOffs);
-        tc.assertEqual('the SOLVER walked it back: one more solve, no decline', `${solvesBefore + 1}/0`,
-            `${s.solves}/${s.declines}`);
-        tc.assertEqual('…and every planned key was played (no refutation)', 0, s.refutations);
+        tc.assertEqual('the SOLVER walked it back: one more solve, no decline', '1/0',
+            `${s.solves - before.solves}/${s.declines - before.declines}`);
+        tc.assertEqual('…a WALK, every planned key played, no refutation', `walk/${s.lastSolve?.keys}/0`,
+            `${(s.lastSolve?.verbs ?? []).join(',')}/${s.played - before.played}/${s.refutations - before.refutations}`);
         const exits = reportedExits(win).slice(exitsBefore);
         tc.assertEqual(`the crossing was reported: a pendingExit from level ${DOOR_ROOM.level} at the door to ${DOOR_ROOM.to}`,
             JSON.stringify({ fromLevel: DOOR_ROOM.level, type: 'teleporter', ...DOOR_ROOM.door, to: DOOR_ROOM.to }),
@@ -902,6 +911,8 @@ export async function seedlingJsRuntimeSolverStepsOffTheDoor(tc) {
         tc.assertEqual('0 HALT', null, rt.halted ? rt.halted.message : null);
         tc.assertEqual('no error: status at any point', '[]', JSON.stringify(errorStatuses(bot)));
     } finally {
+        // The row's own grant comes back out (in-app rows clean up their state).
+        if (granted) { try { await tc.stateManager.removeItemFromInventory('Progressive Sword', 1); } catch { /* best effort */ } }
         try { await settingsManager.updateSetting(SOLVER_WALK_KEY, previousSolver, { persist: false }); } catch { /* best effort */ }
         try { await settingsManager.updateSetting(RUNTIME_KEY, previousRuntime, { persist: false }); } catch { /* best effort */ }
     }
