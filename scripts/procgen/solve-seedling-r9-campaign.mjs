@@ -722,7 +722,14 @@ for (let i = 0; i < SEGMENTS.length; i += 1) {
     if (CHECK) {
         const committed = parseTape(JSON.parse(
             readFileSync(join(TAPES, `${seg.name}.json`), 'utf8')));
-        carried = { boot: committed.boot, state: stateOf(committed) };
+        /**
+         * ⛓ SWIM U15 — a committed tape's `equips` are ITS OWN slot selections
+         * (`out.equips`, re-derived by this very solve and appended below):
+         * the latch carries no `equips` block (`segmentBootFromLatch`), so the
+         * boot's are empty. Carrying the committed ones in would declare r9-
+         * solve-32's t840 equip twice.
+         */
+        carried = { boot: committed.boot, state: { ...stateOf(committed), equips: [] } };
     }
     const { boot, state } = carried;
     let run = runFrom(boot, state);
@@ -771,20 +778,34 @@ for (let i = 0; i < SEGMENTS.length; i += 1) {
          * the very kill lock the loop just declared — `undeclaredKillLock`,
          * measured on the first launch of this path.
          */
-        run = runFrom(boot, { ...state, persistence: solvedPersistence });
+        /**
+         * ⛓⛓ SWIM U15 — **AND WITH THE SOLVER'S OWN SLOT SELECTIONS.** An
+         * encounter that collects an item equips its slot one tick after the
+         * flag (`out.equips`, U5's L32 Fire at t840), and the run applies a
+         * tape's `equips` at their ticks, as `Bot.as` does. The replay and the
+         * emitted tape dropped them, so step 30's replay never fired, never
+         * burned the tree and never fell (measured: "ends in L32", where the
+         * solving run fell to L30 at t976). The survey has carried them since
+         * U5 (`survey-seedling-route.mjs`); every committed segment's
+         * `out.equips` is empty, so its tape is byte-identical.
+         */
+        run = runFrom(boot, { ...state, persistence: solvedPersistence,
+            equips: [...(state.equips ?? []), ...(out.equips ?? [])] });
         for (const held of out.perTick) run.advance(held);
     } else {
         out = solveSegment({ run, goals: seg.goals, name: seg.name, boot,
             dashMode: DASH_MODE });
     }
     claimArrival(seg.name, run, seg.to, seg);
-    results.push({ seg, run, out, boot, state: { ...state, persistence: solvedPersistence },
+    const solvedEquips = [...(state.equips ?? []), ...(out.equips ?? [])];
+    results.push({ seg, run, out, boot,
+        state: { ...state, persistence: solvedPersistence, equips: solvedEquips },
         before, to: seg.to });
     if (!CHECK && !last) {
         const provisional = {
             game: 'seedling', name: seg.name, boot,
             noclip: false, noDamage: false, noHazards: [], grants: [],
-            persistence: solvedPersistence, equips: state.equips, pins: state.pins,
+            persistence: solvedPersistence, equips: solvedEquips, pins: state.pins,
             save: state.save, rng: state.rng, seam: state.seam,
             tick_count: out.perTick.length,
             inputs: buildTape(out.perTick, boot, seg.name,

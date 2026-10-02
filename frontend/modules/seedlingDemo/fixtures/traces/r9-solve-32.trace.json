@@ -1,0 +1,481 @@
+{
+    "trace_version": 1,
+    "tape": "r9-solve-32",
+    "tick_count": 1056,
+    "boot": {
+        "level": 32,
+        "x": 72,
+        "y": 120
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 32,
+                "x": 80,
+                "y": 128,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "touch"
+            },
+            "rejected": [],
+            "keys": [
+                "up"
+            ]
+        },
+        {
+            "tick": 10,
+            "saw": {
+                "level": 32,
+                "x": 80,
+                "y": 116.85,
+                "vx": 0,
+                "vy": -0.9500000000000002,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "wait"
+            },
+            "rejected": [],
+            "keys": [
+                "primary"
+            ]
+        },
+        {
+            "tick": 57,
+            "saw": {
+                "level": 32,
+                "x": 80,
+                "y": 116.14999999999999,
+                "vx": 0,
+                "vy": -0.7000000000000002,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "kill"
+            },
+            "rejected": [],
+            "keys": [
+                "up"
+            ],
+            "obstacle": {
+                "kind": "bobboss",
+                "id": "bobboss#0"
+            }
+        },
+        {
+            "tick": 69,
+            "saw": {
+                "level": 32,
+                "x": 85.50823132754638,
+                "y": 101.74097802514855,
+                "vx": 0.9298989915169332,
+                "vy": -1.1744037563726786,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "kill"
+            },
+            "rejected": [],
+            "keys": [],
+            "obstacle": {
+                "kind": "bobboss",
+                "id": "bobboss#0"
+            }
+        },
+        {
+            "tick": 221,
+            "saw": {
+                "level": 32,
+                "x": 80,
+                "y": 120,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "wait"
+            },
+            "rejected": [],
+            "keys": [
+                "primary"
+            ]
+        },
+        {
+            "tick": 340,
+            "saw": {
+                "level": 32,
+                "x": 80,
+                "y": 120,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "kill"
+            },
+            "rejected": [],
+            "keys": [
+                "up"
+            ],
+            "obstacle": {
+                "kind": "bobboss",
+                "id": "bobboss#1"
+            }
+        },
+        {
+            "tick": 352,
+            "saw": {
+                "level": 32,
+                "x": 76.49164422430545,
+                "y": 105.91615062087756,
+                "vx": -1.2693897121402578,
+                "vy": -1.3750771786516922,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "kill"
+            },
+            "rejected": [],
+            "keys": [],
+            "obstacle": {
+                "kind": "bobboss",
+                "id": "bobboss#1"
+            }
+        },
+        {
+            "tick": 382,
+            "saw": {
+                "level": 32,
+                "x": 77.78628712595061,
+                "y": 96.00183793421535,
+                "vx": 0.8928932188134523,
+                "vy": -0.8928932188134523,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "kill"
+            },
+            "rejected": [],
+            "keys": [],
+            "obstacle": {
+                "kind": "bobboss",
+                "id": "bobboss#1"
+            }
+        },
+        {
+            "tick": 548,
+            "saw": {
+                "level": 32,
+                "x": 80,
+                "y": 120,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "wait"
+            },
+            "rejected": [],
+            "keys": [
+                "primary"
+            ]
+        },
+        {
+            "tick": 613,
+            "saw": {
+                "level": 32,
+                "x": 80,
+                "y": 120,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "kill"
+            },
+            "rejected": [],
+            "keys": [
+                "up"
+            ],
+            "obstacle": {
+                "kind": "bobboss",
+                "id": "bobboss#2"
+            }
+        },
+        {
+            "tick": 627,
+            "saw": {
+                "level": 32,
+                "x": 85.53840614573294,
+                "y": 103.71708132903132,
+                "vx": 0.9302370093121629,
+                "vy": -1.0076871350136019,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "kill"
+            },
+            "rejected": [],
+            "keys": [],
+            "obstacle": {
+                "kind": "bobboss",
+                "id": "bobboss#2"
+            }
+        },
+        {
+            "tick": 779,
+            "saw": {
+                "level": 32,
+                "x": 80,
+                "y": 120,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "collect"
+            },
+            "rejected": [],
+            "keys": [
+                "up"
+            ]
+        },
+        {
+            "tick": 840,
+            "saw": {
+                "level": 32,
+                "x": 80,
+                "y": 82.4,
+                "vx": 0,
+                "vy": -1.0500000000000005,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "aim": {
+                    "x": 72,
+                    "y": 40
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 25,
+                    "baseline": 40,
+                    "saved": 15,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8,
+                                14
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        25
+                    ],
+                    "scanned": 24,
+                    "why": null
+                }
+            },
+            "path": [
+                {
+                    "x": 72,
+                    "y": 40
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "22 of 24 scanned preview(s) — first at walk-offset 0: 40 tick(s) against 40 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
+            "keys": [
+                "left",
+                "primary",
+                "up"
+            ]
+        },
+        {
+            "tick": 880,
+            "saw": {
+                "level": 32,
+                "x": 71.12077844673605,
+                "y": 39.34584332605449,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "at": {
+                    "x": 64,
+                    "y": 128
+                }
+            },
+            "strategy": {
+                "verb": "fire"
+            },
+            "rejected": [],
+            "keys": [
+                "primary"
+            ],
+            "obstacle": {
+                "kind": "burnabletree",
+                "id": "burnabletree@64,0"
+            }
+        },
+        {
+            "tick": 934,
+            "saw": {
+                "level": 32,
+                "x": 71.12077844673605,
+                "y": 39.34584332605449,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "encounter",
+                "aim": {
+                    "x": 72,
+                    "y": 8
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 1,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 20,
+                    "baseline": 35,
+                    "saved": 15,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        20
+                    ],
+                    "scanned": 4,
+                    "why": null
+                }
+            },
+            "path": [
+                {
+                    "x": 72,
+                    "y": 8
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "1 of 4 scanned preview(s) — first at walk-offset 0: 35 tick(s) against 35 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
+            "keys": [
+                "primary",
+                "up"
+            ]
+        }
+    ]
+}

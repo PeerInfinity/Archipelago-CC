@@ -1,0 +1,303 @@
+{
+    "trace_version": 1,
+    "tape": "r9-solve-29",
+    "tick_count": 379,
+    "boot": {
+        "level": 29,
+        "x": 16,
+        "y": 224
+    },
+    "rows": [
+        {
+            "tick": 0,
+            "saw": {
+                "level": 29,
+                "x": 24,
+                "y": 232,
+                "vx": 0,
+                "vy": 0,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 126,
+                    "y": 152
+                }
+            },
+            "obstacle": {
+                "kind": "danger",
+                "id": "turret@80,176#3"
+            },
+            "strategy": {
+                "verb": "dodge",
+                "rung": "dodge",
+                "climb": 1,
+                "stall": {
+                    "at": 183,
+                    "ticks": 1
+                },
+                "spit": "turret@80,176#3"
+            },
+            "rejected": [
+                {
+                    "option": "avoid",
+                    "why": "every reason the probe gave is a TurretSpit (spit:turret@80,176#3 (a TurretSpit AT ITS PREDICTED POSITION (105.5,156.0), stepped with the walk by `turret.js` against the previewed player)); a spit is the walk's own timing, not a static volume, so a re-plan around the danger map's volumes answers a different question"
+                },
+                {
+                    "option": "hold",
+                    "why": "button@112,128's group t=0 answers only [fallrock@112,112] — a press opens nothing and DROPS a Solid into the room (`FALL_RESPONDERS`), so pressing is a trap: avoid, do not press"
+                }
+            ],
+            "keys": [
+                "right"
+            ],
+            "note": "merged: walk decided on the same tick"
+        },
+        {
+            "tick": 184,
+            "saw": {
+                "level": 29,
+                "x": 103.55000000000004,
+                "y": 151.45000000000016,
+                "vx": 0,
+                "vy": 0.55,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 126,
+                    "y": 152
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 2
+            },
+            "path": [
+                {
+                    "x": 104,
+                    "y": 152
+                },
+                {
+                    "x": 126,
+                    "y": 152
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                }
+            ],
+            "keys": []
+        },
+        {
+            "tick": 249,
+            "saw": {
+                "level": 29,
+                "x": 126,
+                "y": 119.10000000000015,
+                "vx": 0,
+                "vy": -1.2500000000000004,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "aim": {
+                    "x": 104,
+                    "y": 72
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 3,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 66,
+                    "baseline": 95,
+                    "saved": 29,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8
+                            ]
+                        },
+                        {
+                            "at": 25,
+                            "prefix": [
+                                0,
+                                2,
+                                8
+                            ]
+                        },
+                        {
+                            "at": 47,
+                            "prefix": [
+                                0,
+                                2,
+                                8
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        28,
+                        22,
+                        16
+                    ],
+                    "scanned": 40,
+                    "why": null
+                }
+            },
+            "path": [
+                {
+                    "x": 88,
+                    "y": 104
+                },
+                {
+                    "x": 88,
+                    "y": 72
+                },
+                {
+                    "x": 104,
+                    "y": 72
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "keep-plan",
+                    "why": "the previous corridor was refuted by the world (a blocked sweep or a stall); re-planned from the live position"
+                },
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "34 of 40 scanned preview(s) — first at walk-offset 0: 95 tick(s) against 95 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
+            "keys": [
+                "left",
+                "primary",
+                "up"
+            ]
+        },
+        {
+            "tick": 315,
+            "saw": {
+                "level": 29,
+                "x": 116.31007420141974,
+                "y": 71.57405930350257,
+                "vx": 1.1834649159913926,
+                "vy": 0.24548732924268823,
+                "danger": []
+            },
+            "goal": {
+                "kind": "collect-placement",
+                "placement": {
+                    "x": 112,
+                    "y": 64
+                }
+            },
+            "strategy": {
+                "verb": "collect"
+            },
+            "obstacle": null,
+            "rejected": [
+                {
+                    "option": "chest",
+                    "why": "placement (112,64) resolves to bosskey@112,64 in `world.pickups` — a live pickup with its own ceremony, no probe line to stand on"
+                }
+            ],
+            "keys": [
+                "right",
+                "up"
+            ]
+        },
+        {
+            "tick": 325,
+            "saw": {
+                "level": 29,
+                "x": 116.31007420141974,
+                "y": 71.57405930350257,
+                "vx": 1.1834649159913926,
+                "vy": 0.24548732924268823,
+                "danger": []
+            },
+            "goal": {
+                "kind": "reach-exit",
+                "aim": {
+                    "x": 120,
+                    "y": 40
+                }
+            },
+            "strategy": {
+                "verb": "walk",
+                "waypoints": 3,
+                "swordDash": {
+                    "planned": true,
+                    "ticks": 54,
+                    "baseline": 92,
+                    "saved": 38,
+                    "windows": [
+                        {
+                            "at": 0,
+                            "prefix": [
+                                0,
+                                2,
+                                8
+                            ]
+                        },
+                        {
+                            "at": 20,
+                            "prefix": [
+                                0,
+                                2
+                            ]
+                        },
+                        {
+                            "at": 40,
+                            "prefix": [
+                                0,
+                                2,
+                                8
+                            ]
+                        }
+                    ],
+                    "legs": [
+                        20,
+                        22,
+                        12
+                    ],
+                    "scanned": 12,
+                    "why": null
+                }
+            },
+            "path": [
+                {
+                    "x": 88,
+                    "y": 72
+                },
+                {
+                    "x": 88,
+                    "y": 40
+                },
+                {
+                    "x": 120,
+                    "y": 40
+                }
+            ],
+            "rejected": [
+                {
+                    "option": "sword-dash window: not-faster",
+                    "why": "3 of 12 scanned preview(s) — first at walk-offset 0: 92 tick(s) against 92 — a window that does not shorten the walk buys nothing, and ⚖ ruling 35 asks for speed only where it costs no certification. It scheduled 1 press(es), 0 of them dashes, and 0 were YIELDED"
+                }
+            ],
+            "keys": [
+                "left",
+                "primary"
+            ]
+        }
+    ]
+}

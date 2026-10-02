@@ -215,16 +215,22 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
      * clock read at the L21 arrival's `Game.begin()`, 80 ticks before the tape
      * ends on its calm landing).
      *
-     * ⛔ THE CHAIN STOPS HERE, AT A SECOND WALL THE GAME NAMED. Route step 27 (L29,
-     * `bosskey` → the Green Key, `stairsdown@112,32` → L31) solves in the model in
-     * 383 t with no hit, and the game refutes it at t196: the walk passes 15.9 px
-     * from `turret@80,176`, inside `attackRange` 64 from t31, and a `TurretSpit`
-     * knocks the player north-east (`Enemies/Turret.as:64-76`,
-     * `Projectiles/TurretSpit.as:47-53`). The model steps neither — `combat.js`
-     * prices the turret as a volume and the solver's L29 danger list was empty —
-     * so the game ends with `hits` 1 and NO Green Key. Steps 27–30 (`r9-solve-29`,
-     * `-31`, `-30`, `-32`) wait on that family; their declarations are U13's
-     * (`ee34b23`), and `seedling-swim-u14-wall.json` has the readout.
+     * U14 STOPPED AT A SECOND WALL THE GAME NAMED. Route step 27 (L29, `bosskey`
+     * → the Green Key, `stairsdown@112,32` → L31) solved in the model in 383 t
+     * with no hit, and the game refuted it at t196: a `TurretSpit` from
+     * `turret@80,176` knocked the player, who ended with `hits` 1 and no Green
+     * Key (`seedling-swim-u14-wall.json`).
+     */
+    /**
+     * ⛓⛓ SWIM U15 (⚖ Q47, user 2026-10-02: "Yes, one slice") — route steps 27–30,
+     * U13's declarations verbatim (`ee34b23`), resumed once the model steps the
+     * turret and its spit (`turret.js`, witnessed by `u15-turret-spit`/`-shield`)
+     * and the solver prices the spit (`dangerMap.spitDanger`, the DODGE rung):
+     * step 27 stalls one tick at walk-offset 183 and the spit that hit U14's walk
+     * dies on cover. Step 30 is the route's terminal: L32's Bob Boss encounter
+     * (U5's `bobBossFight.js`), the Fire, its slot equipped at t840, the tree
+     * burned and the fall to L30 at t976 — every tick's keys identical to U5's
+     * staged `swim-u5-bobboss-encounter`, and so is the game's stream.
      */
     Object.freeze({
         name: 'r9-solve-0-v3', level: 0, to: 12,
@@ -250,6 +256,31 @@ export const CAMPAIGN_SEGMENTS = Object.freeze([
         why: 'L22 — grown by swim U13 at route step 26: teleporter@192,64 → L29. The '
             + 'survey\'s own solve is 89 tick(s), 1 decision(s), 0 re-plan(s), passes '
             + '[solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-29', level: 29, to: 31, collects: Object.freeze(['bosskey']),
+        why: 'L29 — grown by swim U13 at route step 27: Level 029 - Boss Key 1 (sphere '
+            + '1.4) → Green Key; stairsdown@112,32 → L31. The survey\'s own solve is 383 '
+            + 'tick(s), 4 decision(s), 0 re-plan(s), passes [solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-31', level: 31, to: 30,
+        why: 'L31 — grown by swim U13 at route step 28: stairsup@160,384 → L30. The '
+            + 'survey\'s own solve is 336 tick(s), 2 decision(s), 0 re-plan(s), passes '
+            + '[solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-30', level: 30, to: 32,
+        why: 'L30 — grown by swim U13 at route step 29: stairsup@224,160 → L32. The '
+            + 'survey\'s own solve is 210 tick(s), 2 decision(s), 0 re-plan(s), passes '
+            + '[solve]',
+    }),
+    Object.freeze({
+        name: 'r9-solve-32', level: 32, to: null, encounter: 'Fire',
+        why: 'L32 — grown by swim U13 at route step 30: Level 032 - Bob Boss (sphere '
+            + '2.2) → Fire, the encounter (U5\'s `bobBossFight.js`), then the burned '
+            + 'tree\'s pit. The survey\'s own solve is 1056 tick(s), 15 decision(s), 0 '
+            + 're-plan(s), passes [solve]',
     }),
 ]);
 
