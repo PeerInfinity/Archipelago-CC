@@ -447,7 +447,8 @@ describe('who takes the box', () => {
             'check-seedling-atlas-location-play.mjs', 'check-seedling-generated-swim-play.mjs',
             'check-concept-trial-play.mjs',
             'probe-seedling-wasm-host-tape.mjs', 'probe-seedling-wasm-arrival-solve.mjs',
-            'probe-seedling-wasm-playback.mjs', 'probe-seedling-wasm-generated-playback.mjs'];
+            'probe-seedling-wasm-playback.mjs', 'probe-seedling-wasm-generated-playback.mjs',
+            'probe-seedling-wasm-solver-reach.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
