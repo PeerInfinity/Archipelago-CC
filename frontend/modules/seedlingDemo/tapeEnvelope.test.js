@@ -64,7 +64,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ swim R2: 189 — D1's two wallflyer witnesses, D3's two-teleporter and terrain-kill-lock witnesses.
         // ⛓ swim U15 + R2 (merged): 195 — U15's 2 witnesses + 4 segments, R2's 4 witnesses.
         // ⛓ swim R4: 196 — D2's `r4-iceturret-bobs`.
-        expect(names.length).toBe(196);
+        // ⛓ fidelity F1: 197 — D1c's `f1-l5-lock-removal`.
+        expect(names.length).toBe(197);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);
