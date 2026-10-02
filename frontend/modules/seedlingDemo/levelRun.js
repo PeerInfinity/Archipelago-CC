@@ -9254,6 +9254,16 @@ export function createLevelRun({
      * and an `Explosion` for "Wand" only — "Shield" and "Suit" add nothing.
      * `enemyHit` has already set `dying` (and, for a `fade` class, `destroy`).
      *
+     * ⛓⛓⛓ FIDELITY F1b — THE KILL-LOCK LEDGER IS **NOT** RUN HERE. It used to
+     * be, so `chaserKillLockOpens[].t` was the tick the die anim STARTS and
+     * the scratch layer and `twoPassSolve` opened L5's lock 35 ticks early on
+     * a Bob (die anim + `endAnim` + the eleven-call fade). `Lock.checkEnemies`
+     * reads `totalEnemies()`, which drops at `FP.world.remove` — MEASURED by
+     * `f1-l5-lock-removal`: the last bob dies on t166, leaves on t201, and the
+     * game crosses on t303 (declared 301 = 201 + 100). The kill now arms
+     * `removalLedger`, the same latch R2-swim D3(c) gave a terrain death, and
+     * the ledger runs in the removal branch below: ONE rule for every death.
+     *
      * @param {string} by    the ledger's `by` — 'arrow' | 'press' | 'shield' | 'suit'
      * @param {string} cause the declared-removal assert's wording
      * @param {object} extra the row's own fields, between `by` and `hits`
@@ -9262,7 +9272,7 @@ export function createLevelRun({
         c.anim = createDieAnim(c.tag);
         c.attack = null;
         chaserKills.push({ t: ticksCompleted + 1, level, id: c.id, by, ...extra, hits: c.hits });
-        assertChaserRemovalIsDeclared(c, cause);
+        c.removalLedger = cause;
     }
 
     /**
@@ -9343,13 +9353,14 @@ export function createLevelRun({
         // The body is still in the census roster (the census is the PLACED
         // list and does not move), so `bodiesAfter` is that list minus the
         // ones this run has removed — including the one being removed now.
-        // ⛔ `dying` COUNTS HERE AND NOT IN `totalEnemies()`. This ledger asks
-        // "what does the world look like once the staging finishes"; the
-        // ENGINE's count keeps a dying body until `FP.world.remove` (trap 87).
-        // Two different questions, and collapsing them would predict the lock
-        // opening 35 ticks early.
+        // ⛓ FIDELITY F1b: this runs AT THE REMOVAL (every death arms
+        // `removalLedger`), so it asks the ENGINE's question — `totalEnemies()`
+        // keeps a dying or fading body until `FP.world.remove` (trap 87). A
+        // body that is `dying` or `destroy` is still counted; only `removed`
+        // is gone. (Before F1b it ran at the kill and counted `dying` as gone,
+        // which opened L5's lock 35 ticks early: `f1-l5-lock-removal`.)
         const goneIds = new Set([...st.values()]
-            .filter((o) => o.destroy || o.removed || o.dying).map((o) => o.id));
+            .filter((o) => o.removed).map((o) => o.id));
         goneIds.add(c.id);
         const after = (census ?? []).filter((e) => !goneIds.has(`${e.tag}@${e.x},${e.y}`))
             .map((e) => ({ as3: e.as3 }));
@@ -9946,8 +9957,11 @@ export function createLevelRun({
                      * eleven 0.1 subtractions until `FP.world.remove`. Run at the
                      * destroy tick, the ledger opened L5's lock ten ticks early:
                      * MEASURED by `r2-terrain-killlock` (the game crosses on t 285,
-                     * the destroy-tick model on t 275). A press or arrow kill is
-                     * still ledgered at its kill tick (`stageChaserKill`).
+                     * the destroy-tick model on t 275). ⛓ FIDELITY F1b: a press,
+                     * arrow, shield or suit kill arms the same latch
+                     * (`stageChaserKill`), so every chaser death is ledgered
+                     * here — MEASURED by `f1-l5-lock-removal` (removal t201,
+                     * the game's crossing t303).
                      */
                     if (c.removed && c.removalLedger) {
                         const cause = c.removalLedger;

@@ -14,8 +14,10 @@
  *   L5  `lock@48,112` is `tset == -1`; three arrow kills take
  *       `Game.totalEnemies()` to zero, `checkEnemies()` arms the lock, and
  *       101 alpha steps later `turnOff()` writes `{5,0}`. The model COMPUTES
- *       the removal (`chaserKillLockOpens`) and `activators.opensOnTick`
- *       computes the fade — but it deliberately does not WRITE the flag
+ *       the removal (`chaserKillLockOpens`, the tick the last body leaves the
+ *       world — fidelity F1b) and `activators.opensOnTick` computes the fade,
+ *       declared as removal + 100 in the v9 `at` spelling — but it
+ *       deliberately does not WRITE the flag
  *       (§11.5: one writer per persistence slot).
  *   L8  two `SandTrap` bodies die to `arrowtrap@96,16`'s column. §11.4
  *       REFUSES to compute that death at all, so the model may not invent the

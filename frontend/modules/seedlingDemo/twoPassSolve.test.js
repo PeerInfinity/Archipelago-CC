@@ -144,8 +144,10 @@ describe('the MODEL-sourced arm — L5, derived and then WALLED', () => {
             });
         } catch (e) { raised = e; }
         expect(raised.name).toBe('PendingDeclaration');
-        expect(raised.pending).toMatchObject({ level: 5, tag: 0, source: 'model', fade: 101 });
-        expect(raised.pending.at).toBe(raised.pending.removedAt + 101);
+        // ⛓ F1b: the removal plus `opensOnTick(0.01)` in the v9 `at` spelling
+        // (one less — `fidelityF1b.test.js` holds the fencepost to the game).
+        expect(raised.pending).toMatchObject({ level: 5, tag: 0, source: 'model', fade: 100 });
+        expect(raised.pending.at).toBe(raised.pending.removedAt + 100);
         /**
          * ⛔ AND THE PREDICTION SITS FAR BELOW `r7-act2-5`'s COMMITTED
          * `at: 737`, which §11.5 already showed is the end of a PHASES BLOCK

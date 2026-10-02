@@ -28,9 +28,14 @@
  * t303. The model crosses on t269 with `{5,0}@267` (the kill reading) and on
  * t303 with `{5,0}@301` = the removal (t201) + 100. So the declaration this
  * tape carries is GAME-SOURCED, 301, and the model agrees with the recording
- * under it. ⛔ The model's own prediction (267) does not — the ledger's tick is
- * the kill's, 34 ticks early. That is swim R5's residue item 3, measured, and
- * it is not changed here.
+ * under it. ⛔ The model's own prediction at F1 (267) did not — the ledger's
+ * tick was the kill's, 34 ticks early (swim R5's residue item 3).
+ *
+ * ⛓ FIDELITY F1b moved the ledger to the removal: `chaserKillLockOpens[].t`
+ * is now 201, the scratch layer computes `{5,0}@301` itself, and the solver
+ * declares it (`fidelityF1b.test.js`). The tape is unchanged (its description
+ * is F1's record of the measurement); the checks below read the kills from
+ * `chaserKills` and the ledger at the removal.
  *
  * Run:
  *   node scripts/procgen/plan-seedling-f1-l5-lock.mjs            # write the tape
@@ -144,15 +149,19 @@ async function main() {
 
     const { obs, run, removedAt } = drive(tape);
     const cross = obs.find((o) => o.level !== 5);
-    const kills = run.chaserKillLockOpens.filter((o) => !o.nil);
+    const kills = run.chaserKills.filter((k) => k.level === 5).slice(-1);
+    const ledger = run.chaserKillLockOpens.filter((o) => !o.nil);
     const lastRemoval = Math.max(...[...removedAt.values()].filter((v) => v !== null));
     check('⛓ the walk takes ZERO hits', run.playerHits.length === 0,
         JSON.stringify(run.playerHits.map((h) => ({ t: h.t, source: h.source }))));
-    check('⛓ the kill lock is opened by a kill in the model (the third bob, t166)',
+    check('⛓ the last kill in L5 is the third bob\'s, t166',
         kills.length === 1 && kills[0].t === 166, JSON.stringify(kills.map((k) => ({ t: k.t, id: k.id }))));
     check('⛓ every L5 body has left the world, the last at t201',
         [...removedAt.values()].every((v) => v !== null) && lastRemoval === 201,
         JSON.stringify(Object.fromEntries(removedAt)));
+    check('⛓⛓ F1b: the kill-lock ledger reads that body\'s REMOVAL, not its kill',
+        ledger.length === 1 && ledger[0].t === lastRemoval && ledger[0].id === kills[0]?.id,
+        JSON.stringify(ledger.map((o) => ({ t: o.t, id: o.id }))));
     check('⛓⛓ the declaration is the removal + 100 (the game\'s crossing, t303)',
         lastRemoval + AFTER_REMOVAL === DECLARED, `${lastRemoval} + ${AFTER_REMOVAL} = ${DECLARED}`);
     const arrivedAt = obs.find((o) => o.y >= 108.5)?.t ?? null;

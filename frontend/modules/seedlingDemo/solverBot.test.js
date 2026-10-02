@@ -673,7 +673,8 @@ describe('the refusal shapes — never a silent stall', () => {
         expect(refusal.name).toBe('PendingDeclaration');
         expect(refusal.pending).toMatchObject({ level: 5, tag: 0, source: 'model' });
         expect(refusal.pending.at).toBe(refusal.pending.removedAt + refusal.pending.fade);
-        expect(refusal.pending.fade).toBe(101);
+        // ⛓ F1b: the v9 `at` spelling of `opensOnTick`'s fade (`fidelityF1b.test.js`).
+        expect(refusal.pending.fade).toBe(opensOnTick(RESPONDERS.lock.fade) - 1);
         // ⛔ Every counted body really is gone — the declaration is about the
         // FADE, not about a room the policy gave up on.
         expect(run.chaserKills.length + run.chaserTerrainDeaths.length).toBe(3);

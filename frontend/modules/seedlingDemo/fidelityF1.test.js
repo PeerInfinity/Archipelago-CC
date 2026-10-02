@@ -14,8 +14,10 @@
  * D1c: `f1-l5-lock-removal` is the game's answer to L5's kill lock with a walk
  * that stands on the lock before both readings. The game opens it on the
  * REMOVAL of the last body plus 100, and the tape's `{5,0}@301` is that
- * game-sourced value. The model's own ledger still reads the kill (t166 + 101
- * = 267): swim R5's residue item 3, measured and not changed here.
+ * game-sourced value. ⛓ F1 left the model's ledger on the kill (t166 + 101
+ * = 267); fidelity F1b moved it to the removal (`fidelityF1b.test.js`), so
+ * the kills row below now reads the kills from `chaserKills` and the ledger
+ * at the removal.
  *
  * D2: L5's OPEN-LOCK ARRIVAL. With `{5,0}` already set, the ladder kills
  * `bob@16,80` from the ceiling, and the chaser arm took the hold's
@@ -124,8 +126,11 @@ describe('F1 D1 — the arrows update newest-first, and the bodies are the game\
 
     it('⛓ the kills that open L5\'s lock are the game\'s: t124, t127 and t166 (they were t165 and t326)', () => {
         const { run } = bobsPerTick('r8-solve-5');
+        expect(run.chaserKills.filter((k) => k.level === 5).map((k) => [k.t, k.id]))
+            .toEqual([[124, 'bob@48,80'], [127, 'bob@16,64'], [166, 'bob@16,80']]);
+        // ⛓ F1b: the ledger runs at the REMOVAL of the last body, not at its kill.
         const opens = run.chaserKillLockOpens.filter((o) => !o.nil);
-        expect(opens.map((o) => [o.t, o.id])).toEqual([[166, 'bob@16,80']]);
+        expect(opens.map((o) => [o.t, o.id])).toEqual([[201, 'bob@16,80']]);
     });
 });
 
