@@ -388,7 +388,7 @@
             "id": "seedling-wasm-runtime-bot-names-refusal",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling JS J2. flashPanel.runtime = wasm: the bot's walkTo into a generated room is refused and its status NAMES the cannot-walk error (P0's rule: never a silent wait). The wasm page is loaded but never started."
+            "_comment": "Seedling JS J2; ⛓ WG: generated rooms ARE walked on wasm now, so the row names the refusal that REMAINS — a tile target in a generated room (no tape producer serves it) is refused and the bot's status NAMES it (P0's rule: never a silent wait). The wasm page is loaded but never started."
         },
         {
             "id": "seedling-js-runtime-atlas-room",

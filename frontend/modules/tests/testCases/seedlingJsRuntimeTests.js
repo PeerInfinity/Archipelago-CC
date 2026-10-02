@@ -341,19 +341,34 @@ export async function seedlingJsRuntimeBotCompletesGeneratedRoom(tc) {
     return tc.getOverallResult();
 }
 
+/**
+ * ⛓ WG — under wasm the generated rooms ARE walked now (the wasm engine stages
+ * the mounted set, the J2 walker produces the tapes), so the refusal this row
+ * names is the one that REMAINS: a `tile` target in a generated room — no
+ * producer turns a tile into a tape. Refused before the game is needed, so the
+ * wasm page is loaded but never started (as before).
+ *
+ * ⛔ The WITNESS that the bot walks generated rooms on wasm is NOT an in-app row:
+ * the in-app runner's Chromium (`playwright.config.js`: `--disable-gpu`, no
+ * WebGPU switches) has no WebGPU adapter — measured, `requestAdapter()` → null —
+ * so the recompiled game never starts in any in-app row. It is the headless
+ * probe `scripts/procgen/probe-seedling-wasm-generated-playback.mjs`.
+ */
 export async function seedlingWasmRuntimeBotNamesItsRefusal(tc) {
     let previous = 'auto';
     try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
     try {
-        const ready = await botOnSeedlingPreset(tc, 'wasm');
+        const ready = await botOnSeedlingPreset(tc, 'wasm', { sphereLog: false });
         if (!ready) return tc.getOverallResult();
         const { bot } = ready;
-        await bot.play();
-        const named = await tc.pollForValue(() => errorStatuses(bot).find((l) => l.includes('only on the Seedling JS runtime')) ?? null,
-            'the bot\'s status NAMES the cannot-walk error under the wasm runtime', 15000, 200);
+        const start = await tc.pollForValue(() => bot.getCurrentRegion?.() ?? null, 'the bot knows its start region', 10000, 200);
+        const r = bot.walkToTile(start, 3, 3);
+        tc.assertEqual('the bot took the tile target (and handed it to the generated rooms\' controller)', true, !!r?.ok);
+        const named = await tc.pollForValue(() => errorStatuses(bot).find((l) => l.includes('target is not walked in the generated rooms on the wasm runtime')) ?? null,
+            'the bot\'s status NAMES why a tile target in a generated room is not walked on wasm', 15000, 200);
         tc.log(`bot status: "${bot.getStatus()}"`);
-        tc.assertEqual('under wasm the bot says, by name, that it cannot walk the generated room', true, !!named);
-        tc.assertEqual('the named error names the runtime it is on', true, /running the wasm runtime/.test(named ?? ''));
+        tc.assertEqual('under wasm the bot says, by name, that a tile target in a generated room has no tape producer', true, !!named);
+        tc.assertEqual('the named error names what IS served (a location or an exit)', true, /serves a location or an exit/.test(named ?? ''));
     } finally {
         try { await settingsManager.updateSetting(RUNTIME_KEY, previous, { persist: false }); } catch { /* best effort */ }
     }
@@ -374,9 +389,9 @@ registerTest({
 
 registerTest({
     id: 'seedling-wasm-runtime-bot-names-refusal',
-    name: 'Seedling (wasm runtime): the Playback Bot names why it cannot walk a generated room',
-    description: 'With flashPanel.runtime = wasm, the bot\'s walkTo into a flash_seedling_gen region is refused '
-        + 'by the controller and the bot\'s status names the cannot-walk error (only the JS runtime has feet) '
+    name: 'Seedling (wasm runtime): the Playback Bot names why it cannot walk a tile target in a generated room',
+    description: 'With flashPanel.runtime = wasm, a tile target in a flash_seedling_gen region is refused by the '
+        + 'controller (⛓ WG: the walker producer serves a location or an exit) and the bot\'s status names it '
         + '— never a silent wait. The wasm page is never started.',
     testFunction: seedlingWasmRuntimeBotNamesItsRefusal,
     category: 'Seedling JS runtime',
