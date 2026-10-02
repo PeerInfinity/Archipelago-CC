@@ -19,7 +19,9 @@
  *       teleports) — every location checked ONCE, the generated leg by the walker, 0 fake checks.
  *   P   (`seedling_generated_room`, its own fresh page) W3's bound on the walker's tapes: a
  *       divergence injected into EVERY apitem plan (ArrowRight ~200 ms, the W3 injector) → 3 forced
- *       re-arrivals, then the bot's `error:` names the failure (the count and the bound); no check
+ *       re-arrivals, then the bot's `error:` names the failure (the count and the bound) — ⛓ W4: or
+ *       sooner, when one divergence EXACTLY repeats the previous one (same tick, same game row; the
+ *       probe names which); no check
  *       fired, AP state intact, nothing armed or held, no stale key.
  *
  * `--record=<path>` writes the engine's recorded arrival reads (`{seam, status, state}` per
@@ -254,12 +256,18 @@ async function main() {
             if (MODE === 'P') {
                 const inj = await page.evaluate(() => { const i = window.__wginj; if (i) i.stop = true; return i ? { injected: i.injected } : null; });
                 const legs = hist().filter((h) => h.goal?.kind === 'location');
-                check('P: the bot shows the engine\'s named failure (error:, the count and the bound)',
-                    /^error:/.test(end?.status ?? '') && /the game left the plan 4 times/.test(end.status)
-                        && /gave up after 3 forced re-arrivals, the bound is 3/.test(end.status), `status "${end?.status}"`);
-                check('P: 3 recoveries then the failure, on WALKER tapes (4 plans, 4 injections)',
-                    eng?.recoveries === 3 && JSON.stringify(legs.map((h) => h.outcome)) === JSON.stringify(['diverged', 'diverged', 'diverged', 'failed'])
-                        && legs.slice(0, 3).every((h) => h.producer === 'walker') && eng.ships === 4 && inj?.injected.length === 4,
+                // ⛓ W4 — an EXACT repeat (same tick, same game row) fails before the bound
+                const repeat = /at the SAME tick with the SAME game row/.test(end?.status ?? '');
+                const k = repeat ? legs.filter((h) => h.outcome === 'diverged').length : 3;
+                console.log(`INFO: P failed by ${repeat ? `an EXACT REPEAT after ${k + 1} plans` : 'the bound (4 plans)'}`);
+                check('P: the bot shows the engine\'s named failure (error:; the bound — or ⛓ W4 an exact repeat — named)',
+                    /^error:/.test(end?.status ?? '') && (repeat
+                        ? new RegExp(`${k + 1} times in a row \\(gave up after ${k} forced re-arrival`).test(end.status)
+                        : /the game left the plan 4 times/.test(end.status) && /gave up after 3 forced re-arrivals, the bound is 3/.test(end.status)),
+                    `status "${end?.status}"`);
+                check(`P: ${k} recover${k === 1 ? 'y' : 'ies'} then the failure, on WALKER tapes (${k + 1} plans, ${k + 1} injections)`,
+                    k >= 1 && eng?.recoveries === k && JSON.stringify(legs.map((h) => h.outcome)) === JSON.stringify([...Array(k).fill('diverged'), 'failed'])
+                        && legs.slice(0, k).every((h) => h.producer === 'walker') && eng.ships === k + 1 && inj?.injected.length === k + 1,
                     JSON.stringify({ recoveries: eng?.recoveries, outcomes: legs.map((h) => [h.outcome, h.producer]), ships: eng?.ships, injected: inj?.injected.length }));
                 const stale = legs.filter((h) => h.input).map((h) => (h.input.held ?? []).filter((k) => !(h.input.press_totals?.[k] >= 1)));
                 check('P: no STALE key at any divergence (the release pair after each botReset)', stale.every((x) => x.length === 0),

@@ -456,7 +456,7 @@ An apitem leg usually ends `stopped`, not `done`. The game reports the check on 
 
 - **R.** The bot drains `seedling_generated_room`'s sphere log on wasm. The apitem is checked once, by the walker's 220-tick tape, on plan. The binding makes one check and catches nothing in a host window. The bot is then sent to the maze region `region_1_1`. The generated door and the parking door are two 7-tick walker legs, and each crossing is reported once. There is no `error:` status, and every `botStart` is bracketed.
 - **L.** `seedling_generated_leaf`: the two maze locations, then the generated leaf's apitem behind them (95 ticks), after the crossing into the room.
-- **P.** W3's bound on walker tapes. The injector fires on every apitem plan, and after 3 forced re-arrivals the bot's `error:` names the failure. No check fires, and no key carries over from a reset.
+- **P.** W3's bound on walker tapes. The injector fires on every apitem plan, and after 3 forced re-arrivals the bot's `error:` names the failure, or after 1 when the divergence exactly repeats (W4). No check fires, and no key carries over from a reset.
 
 `--record=<path>` writes the engine's raw arrival reads (`engine.arrivalReads`). `flashPanel/seedlingWasmPlayback.test.js` runs the generated engine over that recording (`seedlingDemo/fixtures/wasm-arrival-gen-p4e.json`: the fresh start room, the room re-entered after the apitem, and room 1 entered by the crossing) with the real walker producer. ⛔ The witness cannot be an in-app row. The in-app runner's Chromium (`playwright.config.js`: `--disable-gpu`, no WebGPU switches) has no WebGPU adapter (`requestAdapter()` returns null), so the recompiled game starts in no in-app row.
 
