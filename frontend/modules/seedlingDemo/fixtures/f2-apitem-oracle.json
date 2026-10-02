@@ -1,0 +1,126 @@
+{
+  "source": "probe-seedling-f2-apitem.mjs --record (seedling fidelity F2)",
+  "build": "seedling_bot_ap_p4e",
+  "rooms": [
+    {
+      "preset": "seedling_generated_room",
+      "level": 0,
+      "tag": 0,
+      "apItem": "apitem@64,16",
+      "takenAt": 254,
+      "solveTicks": 266,
+      "take": {
+        "ticks": 255,
+        "cleared": true,
+        "error": ""
+      },
+      "before": {
+        "ticks": 254,
+        "cleared": false,
+        "error": ""
+      },
+      "positions": {
+        "compared": 256,
+        "worst": 0
+      },
+      "room": {
+        "apItems": [
+          {
+            "cls": "Pickups::APItem",
+            "x": 72,
+            "y": 24
+          }
+        ]
+      },
+      "clearedRoom": {
+        "apItems": [],
+        "persistence_cleared": [
+          {
+            "tag": 0,
+            "level": 0
+          }
+        ]
+      }
+    },
+    {
+      "preset": "seedling_generated_leaf",
+      "level": 0,
+      "tag": 0,
+      "apItem": "apitem@80,48",
+      "takenAt": 127,
+      "solveTicks": 140,
+      "take": {
+        "ticks": 128,
+        "cleared": true,
+        "error": ""
+      },
+      "before": {
+        "ticks": 127,
+        "cleared": false,
+        "error": ""
+      },
+      "positions": {
+        "compared": 129,
+        "worst": 0
+      },
+      "room": {
+        "apItems": [
+          {
+            "cls": "Pickups::APItem",
+            "x": 88,
+            "y": 56
+          }
+        ]
+      },
+      "clearedRoom": {
+        "apItems": [],
+        "persistence_cleared": [
+          {
+            "tag": 0,
+            "level": 0
+          }
+        ]
+      }
+    },
+    {
+      "preset": "seedling_generated_host",
+      "level": 0,
+      "tag": 0,
+      "apItem": "apitem@64,48",
+      "takenAt": 95,
+      "solveTicks": 106,
+      "take": {
+        "ticks": 96,
+        "cleared": true,
+        "error": ""
+      },
+      "before": {
+        "ticks": 95,
+        "cleared": false,
+        "error": ""
+      },
+      "positions": {
+        "compared": 97,
+        "worst": 0
+      },
+      "room": {
+        "apItems": [
+          {
+            "cls": "Pickups::APItem",
+            "x": 72,
+            "y": 56
+          }
+        ]
+      },
+      "clearedRoom": {
+        "apItems": [],
+        "persistence_cleared": [
+          {
+            "tag": 0,
+            "level": 0
+          }
+        ]
+      }
+    }
+  ]
+}

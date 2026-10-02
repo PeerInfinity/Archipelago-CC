@@ -3691,7 +3691,62 @@ function resolveCollectStrategy(run, placement) {
             }],
         };
     }
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY F2, D1a: **AN APITEM IS A THIRD WORLD FOR THE
+     * SAME GOAL.** A delivered set writes `<apitem>` into every randomized
+     * location, so the macro layer's `collect-placement` at that location's
+     * (x, y) is the goal, and which verb takes it is this selector's job (the
+     * `assertGoal` contract). It is not a new goal kind because nothing about
+     * WHAT is wanted differs from a pickup, and the JS arc's mapping
+     * (`jsRuntimeSolver.solverGoalFor`: a `location` becomes `collect-placement
+     * {placement}`) then reaches it with no new vocabulary. Its verb is
+     * `apitem`: walk until the game's own contact rule fires
+     * (`apItemTakenOnTick`), with no ceremony to run.
+     */
+    const apItem = (world.apItems ?? []).find((a) => a.x === placement.x && a.y === placement.y);
+    if (apItem) {
+        return {
+            strategy: 'apitem',
+            target: apItem,
+            rejected: [{
+                option: 'collect',
+                why: `placement (${placement.x},${placement.y}) resolves to ${apItem.id} in `
+                    + '`world.apItems` — an APItem never sets `special`, so its contact takes '
+                    + '`removeSelf()` with no freeze and no ceremony for `runCollect` to wait on',
+            }, {
+                option: 'chest',
+                why: `${apItem.id} is a Pickup, not a Solid with a probe line`,
+            }],
+        };
+    }
     return null;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY F2, D1a: **THE APITEM CONTACT, THE GAME'S RULE.**
+ *
+ * `Pickup.update` tests `collide("Player", x, y)` (`Pickups/Pickup.as:63-84`).
+ * An `APItem` never sets `special`, so a contact takes the `removeSelf()` arm
+ * (`:120-123`), and `APItem.removed()` clears its slot in the same frame
+ * (`APItem.as:127-133`). The entity updates BEFORE the player (the Player is
+ * added first, and `World.addUpdate` prepends), so the box it meets is the
+ * one the PREVIOUS tick left. No contact is tested on a tick that changed
+ * level, recorded a death, or began in a ceremony. These are the JS page's
+ * own three exclusions (`jsRuntimeCore.tickOnce`), and the page and this
+ * function are pinned equal tick for tick in `fidelityF2.test.js`. As on the
+ * page, at most one apitem is taken per tick, the first in `.oel` order.
+ *
+ * @param {Array} apItems  the level's `world.apItems`, less those already taken
+ * @param {{level:number, x:number, y:number, inCeremony:boolean, deaths:number,
+ *          transitions:number}} pre  the run before the tick
+ * @param {{level:number, deaths:number, transitions:number}} post  the run after it
+ * @returns {object|null} the apitem the tick takes
+ */
+export function apItemTakenOnTick(apItems, pre, post) {
+    if (pre.inCeremony || post.level !== pre.level || post.deaths !== pre.deaths
+        || post.transitions !== pre.transitions) return null;
+    const box = playerBoxAt(pre.x, pre.y);
+    return apItems.find((a) => rectsOverlapLocal(box, a.rect)) ?? null;
 }
 
 /**
@@ -9612,6 +9667,48 @@ export function solveSegment({
     }
 
     const perTick = prefix.map((h) => new Set(h));
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY F2, D1a: **THE APITEMS THIS SEGMENT TOOK,
+     * observed on every advance.** The run does not model an apitem (no role,
+     * no ledger: the JS page owns its report), so the take is a function of
+     * the trajectory alone. It is read at the one place every executor's tick
+     * passes through: `run.advance`. Any walk, wait or verb that crosses one
+     * takes it exactly as the game would, which is how a goal met in passing
+     * is recognised. The view is `Object.create(run)` with an own `advance`,
+     * so every other member is the run's own (its getters close over the run,
+     * not `this`), and a caller's recording Proxy (`jsRuntimeSolver`) sees
+     * exactly one advance per tick, as before. With no apitem in the level the
+     * observer reads three fields and changes nothing.
+     *
+     * Keyed `level:id`; the tick is the TAPE index of the advance that took
+     * it (the prefix included), so a tape of `tick + 1` ticks takes it.
+     */
+    const apItemsTaken = new Map();
+    {
+        const inner = run;
+        let tapeTick = prefix.length;
+        const advance = (held) => {
+            const items = inner.world?.apItems ?? [];
+            const pre = items.length === 0 ? null : {
+                level: inner.level, x: inner.state.x, y: inner.state.y,
+                inCeremony: Boolean(inner.progress('inCeremony')),
+                deaths: inner.ledger('playerDeaths').length,
+                transitions: inner.transitions.length,
+            };
+            const out = inner.advance(held);
+            if (pre) {
+                const open = items.filter((a) => !apItemsTaken.has(`${pre.level}:${a.id}`));
+                const a = apItemTakenOnTick(open, pre, {
+                    level: inner.level, deaths: inner.ledger('playerDeaths').length,
+                    transitions: inner.transitions.length,
+                });
+                if (a) apItemsTaken.set(`${pre.level}:${a.id}`, { tick: tapeTick, level: pre.level, apItem: a });
+            }
+            tapeTick += 1;
+            return out;
+        };
+        run = Object.create(inner, { advance: { value: advance } });
+    }
     /** Trace rows, buffered; keys are filled from `perTick` at finish. */
     const rows = [];
     const seeRow = (row) => { rows.push(row); return row; };
@@ -11476,11 +11573,61 @@ export function solveSegment({
         if (!resolved) {
             refuse(`solverBot(${name}): collect-placement (${goal.placement.x},`
                 + `${goal.placement.y}) resolves to NOTHING in level ${run.level} — `
-                + 'no chest and no pickup stands there. A goal about an absent thing '
+                + 'no chest, no pickup and no apitem stands there. A goal about an absent thing '
                 + 'is a macro-layer error, said here rather than walked at.', {
                 goal,
                 obstacle: { kind: 'absent-placement', id: null },
             });
+        }
+        if (resolved.strategy === 'apitem') {
+            /**
+             * ⛓⛓⛓ SEEDLING FIDELITY F2, D1a: THE `apitem` VERB. It walks to
+             * the box's centre with the loop's own `walkTo` (planner, danger
+             * gate, ladder), and the observer on `run.advance` says on which
+             * tick the game took it. Any approach that ends on the centre
+             * overlaps the box on its way in, so a walk that arrives and
+             * took nothing is a model defect, refused by name. The walk runs
+             * on to arrival after the take; the record names the take's
+             * tick, so a caller that wants the tape to end there cuts it at
+             * `takenAt + 1`.
+             */
+            const a = resolved.target;
+            const whatA = `solverBot(${name}) apitem (${a.x},${a.y})`;
+            const takenRow = () => apItemsTaken.get(`${run.level}:${a.id}`) ?? null;
+            const record = (t, arm) => ({
+                goal: 'collect-placement', strategy: 'apitem', arm,
+                apItem: { id: a.id, tag: a.tag, x: a.x, y: a.y }, level: t.level, takenAt: t.tick,
+                why: `${a.id} (tag ${a.tag}) was taken on tape tick ${t.tick}: the player box `
+                    + 'the previous tick left overlaps its `apItem` box (`apItemTakenOnTick`)',
+            });
+            if (takenRow()) {
+                records.push(record(takenRow(), 'collected-in-passing'));
+                continue;
+            }
+            const centre = { x: (a.rect.x + a.rect.right) / 2, y: (a.rect.y + a.rect.bottom) / 2 };
+            // The selection is recorded where it was made, before the walk:
+            // the walk row on the same tick merges under it (`substantive`).
+            seeRow({
+                tick: perTick.length,
+                saw: saw(),
+                goal: { kind: goal.kind, placement: { ...goal.placement } },
+                strategy: { verb: 'apitem' },
+                obstacle: null,
+                rejected: resolved.rejected,
+                keys: [],
+            });
+            walkTo(goal, centre, { what: `${whatA} contact` });
+            const taken = takenRow();
+            if (!taken) {
+                refuse(`${whatA}: the walk reached the apitem's centre (${centre.x},${centre.y}) `
+                    + `in level ${run.level} and the contact rule never fired. A box the player `
+                    + 'stands on is a box the previous tick overlapped, so this is the model '
+                    + 'disagreeing with itself, not a walk to retry.', {
+                    goal, obstacle: { kind: 'apitem', id: a.id },
+                });
+            }
+            records.push(record(taken, 'walk'));
+            continue;
         }
         let contacts = senseContacts(run);
         const what = `solverBot(${name}) ${resolved.strategy} `

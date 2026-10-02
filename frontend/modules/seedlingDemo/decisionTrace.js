@@ -112,6 +112,10 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
      * the current answer.
      */
     'break',
+    // ⛓ Seedling fidelity F2, D1a: the `apitem` verb (`solverBot`'s
+    // `collect-placement` resolving a delivered set's APItem), listed in the
+    // slice that first drives it, for `break`'s reason.
+    'apitem',
 ]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);

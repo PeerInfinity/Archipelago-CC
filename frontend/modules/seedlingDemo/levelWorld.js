@@ -2918,6 +2918,19 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
     health: 'despawn',                // Pickups/HealthPickup.as:38
     torchpickup: 'despawn',           // Pickups/Torch.as (Pickup.check)
     firewand: 'despawn',              // Pickups/FireWand.as (Pickup.check)
+    /**
+     * ⛓⛓ SEEDLING FIDELITY F2, D1b: the Archipelago placement pickup, which
+     * a delivered set writes into every randomized location. Its own
+     * `check()` is the vanilla pickups' shape: `if (tag >= 0 &&
+     * !Game.checkPersistence(tag)) { doActions = false; FP.world.remove(this); }`
+     * (`Pickups/APItem.as:135-143`), and `doActions = false` keeps `removed()`
+     * (`:127-133`) from writing the slot again. `Game.update`'s first frame
+     * runs `check()` on every entity (`Game.as:869-879`), so a room re-entered
+     * after the take holds no apitem. Until F2 a clear naming one refused the
+     * build ("no declared persistence response"), so the JS arc lifted the
+     * clear out of the model's staging (`wasmWalkTape.js:103-112`).
+     */
+    apitem: 'despawn',                // Pickups/APItem.as:135-143 (+ Game.as:2307 add, :869-879 the check() sweep)
 
     // ── declared, and REFUSED ─────────────────────────────────────────
     // ⚠ `MoonrockPile` is a FallRock in a mirror: `check()` removes it while
@@ -3716,6 +3729,8 @@ export function buildLevelWorld(levelRecord, {
     // The two R0 roles. Both are AVOID VOLUMES for a relaxed walk rather
     // than anything the physics consults — nothing here changes a tick.
     const pickups = [];
+    /** ⛓ F2: the placed `APItem`s — see the world's `apItems` docblock. */
+    const apItems = [];
     const proximityHazards = [];
     /**
      * ⛓ R6 SLICE 6b: hazards whose trigger is WORLD ENTRY rather than
@@ -4272,6 +4287,17 @@ export function buildLevelWorld(levelRecord, {
             }
         }
         if (clearedHere) continue;
+
+        // ⛓⛓ SEEDLING FIDELITY F2, D1a: an `apitem` is LISTED and nothing
+        // more. It has no role entry (its row), so no list the physics or
+        // the planner consults gains anything, and a cleared one never
+        // reaches here (`apitem: 'despawn'`, the `check()` sweep).
+        if (e.type === 'apitem') {
+            apItems.push({
+                id: `apitem@${x},${y}`, tag: tagOf(e.type, e.attrs), x, y,
+                look: e.attrs?.look ?? 'ap', rect: entityRect(cls.apItem, x, y),
+            });
+        }
 
         // ⚠ `control` is where a PIT GOES. It is not an entity — `loadlevel`
         // reads it as a parameter block (`Game.as:2050-2054`) into the
@@ -5440,6 +5466,17 @@ export function buildLevelWorld(levelRecord, {
         pixelmasks,
         teleporters,
         pickups,
+        /**
+         * ⛓⛓ SEEDLING FIDELITY F2, D1a: the placed `APItem`s,
+         * `{id, tag, x, y, look, rect}` in `.oel` order. `rect` is the class
+         * row's `apItem` box, the one `jsRuntimeCore.apItemsOf` computes. The
+         * solver resolves a `collect-placement` here as strategy `apitem`
+         * (`solverBot.apItemTakenOnTick` is the contact). Nothing that steps a
+         * tick reads it: an apitem is a Pickup with no ceremony and no
+         * collider, so the run neither stops at one nor walks around one.
+         * Empty on every vanilla level.
+         */
+        apItems,
         proximityHazards,
         entryHazards,
         watchers,
