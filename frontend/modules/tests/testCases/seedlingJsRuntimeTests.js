@@ -633,7 +633,7 @@ export async function seedlingJsRuntimeSolverWalksEnemyRoom(tc) {
     let previousRuntime = 'auto';
     let previousSolver = false;
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
-    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, false); } catch { /* keep off */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
     try {
         await settingsManager.updateSetting(SOLVER_WALK_KEY, true, { persist: false });
         const staleAdapter = getActivePanelInstance()?.adapter ?? null;
@@ -760,7 +760,7 @@ export async function seedlingJsRuntimeSolverBudgetFallsBack(tc) {
     let previousRuntime = 'auto';
     let previousSolver = false;
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
-    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, false); } catch { /* keep off */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
     let rt = null;
     try {
         const up = await slowRoomOnPage(tc);
@@ -816,7 +816,7 @@ export async function seedlingJsRuntimeSolverKeepsTheFrameClock(tc) {
     let previousRuntime = 'auto';
     let previousSolver = false;
     try { previousRuntime = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
-    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, false); } catch { /* keep off */ }
+    try { previousSolver = await settingsManager.getSetting(SOLVER_WALK_KEY, true); } catch { /* keep the default (on) */ }
     let rt = null;
     try {
         const up = await slowRoomOnPage(tc);

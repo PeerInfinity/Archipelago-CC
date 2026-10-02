@@ -280,7 +280,7 @@ export class FlashPanelUI {
       transport: this._initRuntime === undefined ? null : this.transport,
       setting: this._initRuntime ?? null,
       // ⛓ S1 — the controller hands it to the page with every walkTo.
-      solverWalk: this._solverWalk === true,
+      solverWalk: this._solverWalk !== false, // ⛓ S2 — the default (on) until the setting is read
       report: this._seedlingGenReport ?? null,
       atlas: this._seedlingAtlas ?? null,
       jsRuntime,
@@ -295,7 +295,7 @@ export class FlashPanelUI {
   async _refreshSolverWalk(value) {
     let next = value;
     if (next === undefined) {
-      try { next = await settingsManager.getSetting(SOLVER_WALK_SETTING_KEY, false); } catch { return; }
+      try { next = await settingsManager.getSetting(SOLVER_WALK_SETTING_KEY, true); } catch { return; }
     }
     this._solverWalk = next === true;
     try {

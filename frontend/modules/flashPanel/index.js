@@ -149,17 +149,18 @@ export function register(registrationApi) {
           + "(seedlingDemo) in rectangles, no sound — GENERATED rooms only for now.",
       },
       // ⛓ Seedling solver-walk S1 — the Playback Bot's solver mode (no reinit).
+      // ⛓ S2 — default ON since the solve moved into a worker under a budget (⚖ Q3).
       seedlingSolverWalk: {
         type: 'boolean',
-        default: false,
+        default: true,
         label: 'Seedling JS: Playback Bot uses the solver',
         description: "Runtime 'js' only, real (atlas) Seedling rooms. On: the Playback "
           + "Bot asks the real solver (seedlingDemo/solverBot) for the room's plan — "
           + "baiting and striking enemies, shoving and holding blocks, opening chests — "
           + "and plays it one key set per game tick, re-solving if the game leaves the "
           + "plan; a goal the solver declines is walked by the simple walker, with the "
-          + "solver's reason in the bot's status. Off (default): the simple walker "
-          + "only. The solve runs in a background worker: the room is HELD (the "
+          + "solver's reason in the bot's status (on by default). Off: the simple "
+          + "walker only. The solve runs in a background worker: the room is HELD (the "
           + "game does not advance) while it plans — typically 0.01–3 s, shown as "
           + "'solving…' in the bot's status — and a solve that takes more than 5 s "
           + "is stopped and the walker takes over, saying so; a declined goal is "
