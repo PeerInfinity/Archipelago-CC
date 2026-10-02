@@ -1494,11 +1494,25 @@ export function goalHeldBy(row, fields) {
  * clear in its own level; the Seed's `End/4.oel` placement is tag -1 and its
  * readout is `cutscene[2]`. An exemption with no reason is a hole, so each
  * is named here rather than defaulted.
+ *
+ * ⛓⛓ SWIM R5, D4 — A KEY IS ITS OWN PLACEMENT WITNESS. Every vanilla
+ * `bosskey` carries tag -1 (`BossKey.removed()` writes a clear only when
+ * `tag >= 0`), so no key ever writes a clear in its level, and L19's key was
+ * credited only because the ShieldBoss clears {19,0}/{19,1} in the same
+ * window. The Green Key in L29 was HELD (`hasKey[1]` 0 → 1 on the game,
+ * `r9-solve-29`) and read UNCLAIMED. The flip itself names the placement:
+ *   · `BossKey.removed()` is the only writer of `hasKey[kt] = true` during
+ *     play (`Pickups/BossKey.as:66`; `Bot.as`'s writes are the v6 `save`
+ *     boot staging, before tick 0, and `Main.as`'s are the save's load);
+ *   · each `keyType` has exactly ONE vanilla placement (the atlas: 0 in L19,
+ *     1 in L29, 2 in L40, 3 in L55, 4 in L67), which is the row's level.
+ * And a declaration cannot fake it: the boot block may say `keys: [1]`, but
+ * then the flag never flips between the boot and the latch.
  */
 export const GOAL_PLACEMENT_WITNESS = Object.freeze({
     pickup: true,
     chest: true,
-    key: true,
+    key: false,
     totempart: true,
     encounter: false,
     ending: false,

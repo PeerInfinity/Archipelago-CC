@@ -928,9 +928,11 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         //   two ledger rows, now credited from solver tapes (§14.5).
         // ⛓ R9 slice L18b: `r9-solve-19` adds the third — boss key 0 in L19 —
         //   and `r9-solve-20` the fourth, the shield in L20 (the route's end).
+        // ⛓ Swim U15: `r9-solve-32` the Fire; ⛓ swim R5 D4: `r9-solve-29` the
+        //   Green Key, a key's flip being its own placement witness now.
         const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
         expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20',
-            'fire@L32']);
+            'bosskey1@L29', 'fire@L32']);
     });
 
     /**
@@ -987,7 +989,7 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
             .toContain('chest@L15');
         expect(chain.earns).not.toContain('chest@L15');
         expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20',
-            'fire@L32']);
+            'bosskey1@L29', 'fire@L32']);
     });
 });
 

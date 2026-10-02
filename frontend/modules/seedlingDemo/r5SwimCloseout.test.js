@@ -11,10 +11,14 @@
  * is the JS runtime's own (imported read-only); the solve is `solveSegment`'s
  * `prefix` admission, the path the page's solver takes.
  *
+ * D4: a key's flip is its own placement witness (`GOAL_PLACEMENT_WITNESS`).
+ *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *
  *   m1 the bait re-entry guard removed (`solverBot.js`)
  *        -> both D1 rows red with "Maximum call stack size exceeded"
+ *   m2 `GOAL_PLACEMENT_WITNESS.key` back to true
+ *        -> 'a key that flips with NO clear in its level is EARNED' reds
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -26,6 +30,7 @@ import { replayTape } from './jsRuntimeSolver.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 import { returnKey, returnSpawnTable } from '../flashPanel/seedlingReturnSpawns.js';
 import { solveSegment } from './solverBot.js';
+import { R7_GOAL_LEDGER, GOAL_PLACEMENT_WITNESS, goalEarnedWitness } from './r7Acceptance.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
@@ -78,4 +83,30 @@ describe('R5-swim D1: the bait walk may not re-enter itself (the mid-room stack 
         // The page keeps the refusal's first line; the climb (with BAIT_REENTRY) is the row above.
         expect(s.lastDecline).toMatch(/^solverBot\(js-runtime-L6-exit\) reach-exit \(224,32\)->L7 -> bait \(bob@96,16\) stance: the combat ladder is EXHAUSTED/);
     }, 60_000);
+});
+
+describe('R5-swim D4: a key\'s flip is its own placement witness', () => {
+    const KEY1 = R7_GOAL_LEDGER.find((r) => r.id === 'bosskey1@L29');
+    const fields = (keys, clears = []) => ({
+        'save.hasKey': [0, 1, 2, 3, 4].map((i) => keys.includes(i)),
+        'save.levelPersistence': clears,
+    });
+
+    it('the ruling is stated: `key` owes no clear', () => {
+        expect(GOAL_PLACEMENT_WITNESS.key).toBe(false);
+    });
+
+    it('a key that flips with NO clear in its level is EARNED (L29\'s Green Key, `bosskey@112,64` tag -1)', () => {
+        expect(goalEarnedWitness(KEY1, fields([0]), fields([0, 1]))).toBe('hasKey[1] 0 -> 1');
+    });
+
+    it('a DECLARED key does not flip, so a boot block still cannot earn one', () => {
+        expect(goalEarnedWitness(KEY1, fields([0, 1]), fields([0, 1]))).toBe(null);
+    });
+
+    it('a key that flips beside a clear in its level still names the clear (L19\'s witness sentence is unchanged)', () => {
+        const KEY0 = R7_GOAL_LEDGER.find((r) => r.id === 'bosskey0@L19');
+        expect(goalEarnedWitness(KEY0, fields([]), fields([0], [{ level: 19, tag: 0 }, { level: 19, tag: 1 }])))
+            .toBe('hasKey[0] 0 -> 1, and levelPersistence gains {19,0} {19,1} in level 19');
+    });
 });

@@ -1229,14 +1229,16 @@ const CHAIN_DECLARATIONS = Object.freeze([
          * solver-roster differential measured it EARNED before it was declared.
          *
          * ⛓ SWIM U15 — the FIFTH: `r9-solve-32`'s encounter earns the Fire in L32
-         * (`fire@L32`, an encounter row: no placement witness owed). ⚠ The Green
-         * Key `r9-solve-29` collects is HELD (the game's `hasKey[1]` 0 → 1) and NOT
-         * credited: `bosskey@112,64` carries no tag, nothing else in L29 is
-         * cleared, and a `key` row's witness asks for a clear in its level
-         * (`GOAL_PLACEMENT_WITNESS`). L19's key is credited because the ShieldBoss
-         * clears {19,0}/{19,1} in the same window.
+         * (`fire@L32`, an encounter row: no placement witness owed).
+         *
+         * ⛓ SWIM R5, D4 — the SIXTH: the Green Key `r9-solve-29` collects in L29
+         * (`bosskey1@L29`, the game's `hasKey[1]` 0 → 1). U15 left it uncredited
+         * because a `key` row asked for a clear in its level and the vanilla
+         * `bosskey@112,64` carries no tag; a key's flip is now its own placement
+         * witness (`GOAL_PLACEMENT_WITNESS`, the reason beside it).
          */
-        earns: Object.freeze(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20', 'fire@L32']),
+        earns: Object.freeze(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20', 'bosskey1@L29',
+            'fire@L32']),
         /**
          * ⛓⛓ THE TIMED CLEARS, WITH THE INSTRUMENT THAT MEASURED EACH — THREE
          * ROWS FOR THREE CLEARS, one per `{level,tag}@at` a SEGMENT declares.
