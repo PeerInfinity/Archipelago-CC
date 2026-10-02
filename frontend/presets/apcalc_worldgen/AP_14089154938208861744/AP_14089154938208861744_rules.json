@@ -243,7 +243,7 @@
             "item": {
               "name": "Button: 1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -692,7 +692,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -819,7 +819,7 @@
             "item": {
               "name": "Button: /",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -946,7 +946,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1091,7 +1091,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -1406,7 +1406,7 @@
             "item": {
               "name": "Button: 0",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -1743,7 +1743,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2018,7 +2018,7 @@
             "item": {
               "name": "Button: 6",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2096,7 +2096,7 @@
             "item": {
               "name": "Button: 7",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2253,7 +2253,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2288,7 +2288,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2403,7 +2403,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2438,7 +2438,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -2495,7 +2495,7 @@
             "item": {
               "name": "Button: +",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2553,7 +2553,7 @@
             "item": {
               "name": "Button: -",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -2819,7 +2819,7 @@
             "item": {
               "name": "Button: 3",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3053,7 +3053,7 @@
             "item": {
               "name": "Button: 1",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3133,7 +3133,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3507,7 +3507,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3542,7 +3542,7 @@
             "item": {
               "name": "Button: *",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -3653,7 +3653,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -3816,7 +3816,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4025,7 +4025,7 @@
             "item": {
               "name": "Button: 9",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4118,7 +4118,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4188,7 +4188,7 @@
             "item": {
               "name": "Junk",
               "player": 1,
-              "advancement": true,
+              "advancement": false,
               "type": "None"
             },
             "locked": false
@@ -4244,7 +4244,7 @@
             "item": {
               "name": "Button: 4",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -4336,7 +4336,7 @@
             "item": {
               "name": "Button: 3",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
@@ -5009,7 +5009,7 @@
             "item": {
               "name": "Button: *",
               "player": 1,
-              "advancement": false,
+              "advancement": true,
               "type": "None"
             },
             "locked": false
