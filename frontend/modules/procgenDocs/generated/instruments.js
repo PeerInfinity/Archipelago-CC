@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 25,
-            "count": 67,
+            "browser": 27,
+            "count": 69,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 301,
-        "browser": 89,
-        "cited": 138,
-        "files": 312,
+        "blockStyle": 303,
+        "browser": 91,
+        "cited": 139,
+        "files": 314,
         "lineStyle": 11,
-        "withDocblock": 312,
-        "withFlags": 232
+        "withDocblock": 314,
+        "withFlags": 234
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9673,6 +9673,100 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-v8-seam — does the GAME honour a tape v8 `seam` block, and does its latch report back what the block declared?",
             "path": "scripts/procgen/probe-seedling-v8-seam.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "record"
+            ],
+            "file": "probe-seedling-wasm-arrival-solve.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling JS solver-walk, slice W1 (plan `seedling-js-solver-walk-plan.md` §5.3) — a wasm room ARRIVAL on the live flashPanel page → a JS staging → the S2 worker's solve, with NO play.",
+            "path": "scripts/procgen/probe-seedling-wasm-arrival-solve.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg",
+                "releaseAll"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host"
+            ],
+            "file": "probe-seedling-wasm-host-tape.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "fiii"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "jhold"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling JS solver-walk, slice W0 (plan `seedling-js-solver-walk-plan.md` §5.3) — MEASURE ONLY: can the wasm game take a HOST-BUILT tape mid-play, on the LIVE flashPanel page (the `seedling_atlas_location` atlas world, default build p4e)?",
+            "path": "scripts/procgen/probe-seedling-wasm-host-tape.mjs"
         },
         {
             "argvHelpers": [
