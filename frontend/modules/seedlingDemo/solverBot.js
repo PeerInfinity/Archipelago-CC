@@ -10279,6 +10279,8 @@ export function solveSegment({
      */
     /** ⛓ R9 slice L16 — the ropes whose pull stance a walk is heading for now. */
     const pullingRopes = new Set();
+    /** ⛓ Swim R5, D1 — the bait walks in flight (`body@stance#tick`): a re-entry is refused. */
+    const baitingBodies = new Set();
     /** ⛓ U15-swim D2 — the DODGE rung's stalls this segment (`DODGE_RUNG.maxPerSegment`). */
     let dodgesSpent = 0;
     const climbLadder = ({ goal, aim, contacts, allowTeleporter, what, hit,
@@ -10604,12 +10606,40 @@ export function solveSegment({
                 + 'never turns toward the player, so there is no line to bend. That is a KILL '
                 + 'question, and the kill is the player\'s own press.';
         } else {
-            const bait = deriveBaitStance(run, body, contacts);
+            const derived = deriveBaitStance(run, body, contacts);
+            /**
+             * ⛓⛓ SWIM R5, D1 — **THE BAIT WALK MAY NOT RE-ENTER ITSELF.** The
+             * walk to a bait stance is an ordinary `walkTo`, so its corridor is
+             * probed and a hit climbs THIS ladder again. When that inner climb
+             * lands on the same body, the same stance and the same tick, it is
+             * the outer call over again: nothing between the two spent a tick or
+             * moved the run, so it walks to the same stance, hits the same
+             * danger and climbs again until the JS stack runs out. Measured on
+             * L6 (`in_L5_48_112` → `out_stairsup_224_32`, 70 walker ticks in):
+             * `walkTo` → `climbLadder` → `walkTo` …, and the page declined with
+             * *"Maximum call stack size exceeded"*. The re-entry is the missing
+             * progress check, so it is refused BY NAME and the ladder goes on to
+             * KILL, as after any other bait refusal.
+             */
+            const baitKey = derived.stance
+                ? `${body.id}@${derived.stance.x},${derived.stance.y}#${perTick.length}` : null;
+            const bait = baitKey && baitingBodies.has(baitKey)
+                ? { stance: null, why: `${body.id}: the walk to its bait stance `
+                    + `(${derived.stance.x},${derived.stance.y}) is itself a corridor that needs `
+                    + `${body.id} baited — the ladder re-entered the same bait at tick `
+                    + `${perTick.length} with nothing spent between, so a second bait would be `
+                    + 'the first one again (BAIT_REENTRY).' }
+                : derived;
             if (bait.stance) {
                 rowFor('bait', refused, { stance: bait.stance, target: body.id });
-                walkTo(goal, bait.stance, {
-                    what: `${what} -> bait (${body.id}) stance`,
-                });
+                baitingBodies.add(baitKey);
+                try {
+                    walkTo(goal, bait.stance, {
+                        what: `${what} -> bait (${body.id}) stance`,
+                    });
+                } finally {
+                    baitingBodies.delete(baitKey);
+                }
                 const record = runDwell(run, perTick, {
                     ticks: bait.ticks,
                     why: `${body.id}: ${bait.why}`,
