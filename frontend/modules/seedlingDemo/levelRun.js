@@ -670,7 +670,7 @@ export function createLevelRun({
         if (declaredTime === undefined) return 'the boot block declares no `save.time`';
         if (!pinList.includes('dead_frames')) {
             return 'the tape does not declare `pins: ["dead_frames"]`, so a room load\'s '
-                + 'fade is a RENDER count (18..21, `deadFrameBand.FADE_STATS`) rather '
+                + 'fade is a RENDER count (17..20 headless, `deadFrameBand.FADE_STATS`) rather '
                 + 'than the fixed twenty this model counts';
         }
         if (cutscene && cutscene[0]) {

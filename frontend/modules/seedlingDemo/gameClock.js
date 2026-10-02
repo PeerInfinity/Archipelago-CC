@@ -46,7 +46,7 @@
  * Vanilla decays `blackCover` from `cover()`, i.e. per RENDER, while the gate
  * that reads it samples per UPDATE — so a room load costs "however many
  * renders fit inside twenty units of decay", which is the ±2 band R5 slice 0
- * measured and `deadFrameBand.FADE_STATS` banks (18..21 across 557 loads).
+ * measured and `deadFrameBand.FADE_STATS` banks (17..20 across 589 loads, headless).
  * `Bot.pinDeadFrames` moves the decay into `Game.update()` immediately after
  * the gate, and the count collapses to exact. Every tape this clock can serve
  * declares that pin; one that does not gets `null` and the hammer keeps

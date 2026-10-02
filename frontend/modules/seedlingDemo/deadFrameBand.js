@@ -56,8 +56,24 @@
 import { CEREMONY_DEAD_FRAMES } from './sealCeremony.js';
 
 /**
- * The per-load fade, re-derived from the differential sweep that gated
- * `247d859bb` (79/79 tapes, 1,162 checks). ⚠ LOAD-WEIGHTED: the quantity
+ * The per-load fade, re-derived (fidelity planner, 2026-10-02) from the
+ * headless full tier that gated the swim arc's last merge — run
+ * `37059822524` at `5e3def7397`, 196/196 tapes, its `tier-merged`
+ * payloads (`probe-seedling-deadframe-band --payloads=… --bank`). The
+ * first derivation (79 tapes / 557 loads, mean 19.1275, σ 0.4117, 18–21)
+ * came from the `--win` sweep that gated `247d859bb`; swim R5 D5 found the
+ * probe reading drift against the full tier.
+ *
+ * ⛓ ON THE 72 TAPES BOTH SWEEPS SHARE, the game's `dead_frames` is EXACTLY
+ * ONE LOWER PER TAPE (not per load: a 3-load tape moved by 1 too; the
+ * model side and the load count are identical on all 72). So the headless
+ * channel's count differs from the Windows one by a per-TAPE constant —
+ * every 1-load tape now reads 17, 19 or 20 instead of 18, 20 or 21. It is
+ * folded into the per-load mean here like any other residue (196/196
+ * admitted, every ±150 injection caught); a channel offset is a question
+ * for the deferred lockstep rebuild, not for this band.
+ *
+ * ⚠ LOAD-WEIGHTED: the quantity
  * is "what one load costs", so a 79-load tape is 79 observations of it
  * and a 1-load tape is one. An unweighted mean of per-tape means lets the
  * roster's many short tapes outvote the few long ones that measure the
@@ -70,13 +86,13 @@ import { CEREMONY_DEAD_FRAMES } from './sealCeremony.js';
  * why `c` below is NOT derived from it.
  */
 export const FADE_STATS = Object.freeze({
-    tapes: 79,
-    loads: 557,
-    min: 18.0,
-    max: 21.0,
-    mean: 19.1275,
-    sigma: 0.4117,
-    source: 'check-seedling-bot-differential --win, the sweep that gated 247d859bb; '
+    tapes: 196,
+    loads: 589,
+    min: 17.0,
+    max: 20.0,
+    mean: 19.2632,
+    sigma: 0.5734,
+    source: 'seedling-full-tier run 37059822524 (5e3def7397, headless), tier-merged payloads; '
         + 're-derived by probe-seedling-deadframe-band',
 });
 
@@ -136,6 +152,7 @@ export const MAX_HALF_WIDTH = CEREMONY_DEAD_FRAMES.pickup / 2;
  * frames it costs a long one, and √N gives a short tape no room for them.
  *
  *     the worst single-load starvation seen   19.1275 − 14 = 5.13
+ *     (19.2632 − 14 = 5.26 against the 2026-10-02 re-derivation)
  *
  * so the floor's half-width is never less than 9 (that plus margin). ONLY the
  * floor: starvation LOSES frames, so the residue only ever reads LOW, and the

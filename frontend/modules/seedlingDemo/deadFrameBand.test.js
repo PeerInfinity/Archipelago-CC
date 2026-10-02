@@ -42,7 +42,8 @@ const DEFECT = CEREMONY_DEAD_FRAMES.pickup;
 describe('the banked observations are what the module says they are', () => {
     it('⛔ the stats match the file, so a remembered number cannot drift in', () => {
         // §24.85's prose said mean 19.31 / σ 0.85 / 181 observations and
-        // the sweep it quoted says 19.1275 / 0.4117 / 557. The failure
+        // the sweep it quoted says 19.1275 / 0.4117 / 557 (re-derived
+        // 2026-10-02 from the headless full tier: 19.2632 / 0.5734 / 589). The failure
         // mode is not arithmetic, it is a constant that outlives the
         // measurement it came from, so both live in one file and this
         // check joins them.
@@ -55,8 +56,8 @@ describe('the banked observations are what the module says they are', () => {
     });
 
     it('the observations are the full roster, one row per tape', () => {
-        expect(BANKED.observations).toHaveLength(79);
-        expect(BANKED.observations.reduce((n, o) => n + o.loads, 0)).toBe(557);
+        expect(BANKED.observations).toHaveLength(196);
+        expect(BANKED.observations.reduce((n, o) => n + o.loads, 0)).toBe(589);
         for (const o of BANKED.observations) {
             expect(o.residue).toBe(o.dead - o.modelled);
             expect(o.loads).toBeGreaterThan(0);
@@ -65,7 +66,7 @@ describe('the banked observations are what the module says they are', () => {
 });
 
 describe('ADMITS — every recorded residue is inside the band', () => {
-    it('all 79, two-sidedly', () => {
+    it('all 196, two-sidedly', () => {
         const outside = BANKED.observations.filter((o) => {
             const b = fadeBand(o.loads);
             return o.residue < b.lo || o.residue > b.hi;
@@ -96,7 +97,7 @@ describe('CATCHES — a ±150-frame ceremony error is rejected on every tape', (
         expect(missed.map((o) => o.name)).toEqual([]);
     });
 
-    it('⛔⛔ and the LEGACY band was blind to a missed freeze on the four full walks', () => {
+    it('⛔⛔ and the LEGACY band was blind to a missed freeze on the full walks', () => {
         // The finding that makes this a strengthening rather than a
         // loosening. The old ceiling is 24/load against a fade of 19, so
         // its slack grows ~5 frames per load and passes 150 at 30 loads —
@@ -105,8 +106,10 @@ describe('CATCHES — a ±150-frame ceremony error is rejected on every tape', (
             .filter((o) => o.residue + DEFECT <= legacyFadeBand(o.loads).hi)
             .map((o) => o.name)
             .sort();
+        // Four at the first derivation; `r1-walk-full` (79 loads) RETIRED
+        // under ⚖ ruling 26 (`c828cee1a5`), so the re-derived bank has three.
         expect(legacyBlind).toEqual([
-            'r1-walk-full', 'r2-walk-full', 'r3-walk-full', 'r4-walk-full',
+            'r2-walk-full', 'r3-walk-full', 'r4-walk-full',
         ]);
         // …and the new band catches every one of them.
         for (const name of legacyBlind) {
@@ -161,14 +164,20 @@ describe('the shape, and the cap that keeps detection unconditional', () => {
         expect(fadeBand(1000).capped).toBe(true);
     });
 
-    it('the flake margin is real but not generous — 4.26 needed, 4.5 shipped', () => {
+    it('the flake margin — 4.26 needed on the first derivation, 4.497 on the re-derived mean, 4.5 shipped', () => {
         // The number `SPREAD_PER_SQRT_LOAD` is derived from, restated as a
         // test so a future edit has to argue with it: admitting 50 at
-        // three loads needs (19.1275*3 − 50)/√3.
+        // three loads needs (mean*3 − 50)/√3 — 4.26 at 19.1275, and 4.497
+        // at the 2026-10-02 re-derivation (19.2632). ⚠ That margin is now
+        // 0.003, but it no longer governs: below four loads the floor is
+        // `MIN_FLOOR_HALF_WIDTH` (the next row), and the flake's run, moved
+        // to the headless channel's one-lower-per-tape count (56 → 55, so
+        // 50 → 49), is still inside it.
         const needed = (FADE_STATS.mean * 3 - 50) / Math.sqrt(3);
-        expect(needed).toBeCloseTo(4.26, 2);
+        expect(needed).toBeCloseTo(4.497, 3);
         expect(SPREAD_PER_SQRT_LOAD).toBeGreaterThan(needed);
         expect(SPREAD_PER_SQRT_LOAD).toBeLessThan(needed * 1.5);
+        expect(49).toBeGreaterThanOrEqual(fadeBand(3).lo);
     });
 
     it('⛓⛓ trap 1484: a STARVED single-load tape (14 dead, twice on CI) is admitted by the floor', () => {
