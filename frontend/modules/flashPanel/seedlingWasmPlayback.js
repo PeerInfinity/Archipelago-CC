@@ -513,7 +513,8 @@ export function createWasmPlayback({
                     if (d) play.progress = foldDrain(play.progress, d);
                 }
                 const last = play?.progress?.rows?.at(-1) ?? null;
-                history.push({ goal, outcome: 'stopped', producer: play?.plan?.producer ?? null, phase, ticks: play?.ticks ?? null,
+                history.push({ goal, outcome: 'stopped', producer: play?.plan ? (play.plan.producer ?? 'solver') : null,
+                    stepOff: play?.plan?.stepOff ?? null, phase, ticks: play?.ticks ?? null,
                     drained: play?.progress?.ticks ?? null, verbs: play?.plan?.verbs ?? null, solvedMs: play?.solvedMs ?? null,
                     divergence: play?.divergence ?? null, recoveries, lastRow: last, expectedEnd: play?.plan?.expected?.at(-1) ?? null });
             }

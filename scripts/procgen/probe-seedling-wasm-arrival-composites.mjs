@@ -17,6 +17,9 @@
  *       (1 forced re-arrival) — an exact repeat (same tick, same game row) — not after 4.
  *
  * Each session is a FRESH page (the wasm game runs out of memory after ~100–140 world swaps, §1.2).
+ * ⛓ A host jump that CROSSES into a room the preset binds is re-placed by the region binding at the
+ * region's arrival spawn (the house: (48,48), the game's own return spawn); the probe then jumps again
+ * inside the room (no crossing, lands as asked) and checks the engine staged the arrival it named.
  * Prints `PASS:`/`FAIL:` rows, one `LEG {json}` per leg, and `ALL CHECKS PASSED` / `N CHECK(S) FAILED`
  * (exit 1 on a fail).
  *
@@ -123,7 +126,9 @@ async function serveLeg({ goal, budgetMs }) {
     if (end === 'timeout') engine.stop();
     const stats = JSON.parse(JSON.stringify(engine.stats));
     const st = JSON.parse(s.wasm.getGame().botStatus());
+    const arr = engine.arrivalReads.at(-1) ?? null;
     return { answer, end, failed: w4.failed, notes: w4.notes.slice(-6), legs: stats.history.slice(h0),
+        arrivedAt: arr ? { level: arr.status?.level, x: arr.state?.playerPositionX, y: arr.state?.playerPositionY } : null,
         forced: stats.forced, ships: stats.ships, level: st.level, armed: st.armed, held: st.held,
         ms: Math.round(performance.now() - t0) };
 }
@@ -190,15 +195,34 @@ async function main() {
                 await rp.waitFor(`the player in L${level}`, async () => ((await rp.readGameState()).level === level ? level : null), 15000);
                 // eslint-disable-next-line no-await-in-loop
                 await page.waitForTimeout(1200);
+                // ⛓ Where the jump really landed. A jump that CROSSES into a room the preset binds is a crossing
+                // to the region binding, which re-places the player at the region's arrival spawn (measured on
+                // seedling_atlas: 86 (48,64) → (48,48), L2 (48,16) → (48,32)). A jump inside the SAME level is no
+                // crossing, so a second jump lands as asked.
+                // eslint-disable-next-line no-await-in-loop
+                let g0 = await rp.readGameState();
+                let jumps = 1;
+                if (g0.level === level && (g0.playerPositionX !== x || g0.playerPositionY !== y)) {
+                    jumps += 1;
+                    // eslint-disable-next-line no-await-in-loop
+                    await rp.jump(level, x, y);
+                    // eslint-disable-next-line no-await-in-loop
+                    await page.waitForTimeout(1200);
+                    // eslint-disable-next-line no-await-in-loop
+                    g0 = await rp.readGameState();
+                }
+                const landed = { level: g0.level, x: g0.playerPositionX, y: g0.playerPositionY, jumps };
                 // eslint-disable-next-line no-await-in-loop
                 const r = await page.evaluate(serveLeg, { goal: leg.goal, budgetMs: leg.expect === 'repeat' ? 150000 : 90000 });
                 const plays = r.legs.filter((h) => h.outcome !== 'failed');
                 const last = r.legs.at(-1) ?? {};
                 console.log(`LEG ${JSON.stringify({ session: SESSION, name: leg.name, expect: leg.expect, end: r.end, failed: r.failed,
-                    answer: r.answer, level: r.level, ms: r.ms, legs: r.legs.map((h) => ({ outcome: h.outcome, producer: h.producer,
+                    answer: r.answer, level: r.level, ms: r.ms, arrivedAt: r.arrivedAt, landed, legs: r.legs.map((h) => ({ outcome: h.outcome, producer: h.producer,
                         stepOff: h.stepOff ?? null, ticks: h.ticks, drained: h.drained, verbs: h.verbs, divergence: h.divergence,
                         recovery: h.recovery, solvedMs: h.solvedMs })) })}`);
                 const dv = r.legs.map((h) => h.divergence).filter(Boolean);
+                check(`${SESSION} ${leg.name}: the engine staged the arrival at (${x}, ${y}) in L${level}`,
+                    r.arrivedAt?.level === level && r.arrivedAt.x === x && r.arrivedAt.y === y, JSON.stringify({ landed, arrivedAt: r.arrivedAt }));
                 // ⛔ STOP: a divergence at the walker→solver JOIN of a composite is the seam-free proof failing.
                 const joinHit = r.legs.find((h) => h.divergence && h.stepOff && Math.abs(h.divergence.t - h.stepOff.ticks) <= 1);
                 if (joinHit) console.log(`STOP: a composite diverged at its JOIN (t=${joinHit.divergence.t}, join ${joinHit.stepOff.ticks}): ${JSON.stringify(joinHit.divergence)}`);
