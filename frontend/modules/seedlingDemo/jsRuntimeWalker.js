@@ -33,6 +33,15 @@
  * controller (`flashPanel/seedlingPlaybackController.js`) maps an AP name to
  * `{kind:'location', level, tag}` or `{kind:'exit', level, tile:[tx, ty]}`;
  * this file maps those to a point and a teleporter of the LIVE world.
+ *
+ * ⛓ J3 — ATLAS GOALS. A real room's location is an entity of the room (a
+ * chest opened from below, a pickup touched), so the point comes from the
+ * injected `locationPointOf(goal)`; and an exit may name a SET of boundary
+ * cells (`tiles: [[tx, ty], …]`) — the walk heads for the NEAREST live
+ * teleporter among them (an atlas exit's `exit_tiles`). ⛔ A boundary cell
+ * with no teleporter on it is not a crossing on either runtime: the wasm
+ * binding is level-granular (`seedlingRegionBinding.js`, ruling 1) and the
+ * game reports no sub-level boundary, so such an exit is refused, by name.
  */
 
 import { planWaypoints, livePerVisitOpts, driveStepHeld, BotDriverV2Error } from './botDriverV2.js';
@@ -63,6 +72,25 @@ export function teleporterAtTile(world, [tx, ty]) {
     return index < 0 ? null : { index, teleporter: tps[index] };
 }
 
+/** ⛓ J3 — the cells an exit goal names: `tiles` (a boundary set) or the one `tile`. */
+export function goalTiles(goal) {
+    if (Array.isArray(goal?.tiles) && goal.tiles.length > 0) return goal.tiles;
+    return Array.isArray(goal?.tile) ? [goal.tile] : [];
+}
+
+/** ⛓ J3 — the live teleporter on any of `tiles` nearest `from`, or null. */
+export function nearestTeleporterAt(world, tiles, from) {
+    let best = null;
+    for (const tile of tiles) {
+        const hit = teleporterAtTile(world, tile);
+        if (!hit) continue;
+        const c = { x: tile[0] * TILE_SIZE + TILE_SIZE / 2, y: tile[1] * TILE_SIZE + TILE_SIZE / 2 };
+        const d = from ? (c.x - from.x) ** 2 + (c.y - from.y) ** 2 : 0;
+        if (!best || d < best.d) best = { ...hit, tile, d };
+    }
+    return best;
+}
+
 const centreOf = (rect) => ({ x: (rect.x + rect.right) / 2, y: (rect.y + rect.bottom) / 2 });
 const tileCentrePoint = ([tx, ty]) => ({ x: tx * TILE_SIZE + TILE_SIZE / 2, y: ty * TILE_SIZE + TILE_SIZE / 2 });
 
@@ -70,12 +98,14 @@ const tileCentrePoint = ([tx, ty]) => ({ x: tx * TILE_SIZE + TILE_SIZE / 2, y: t
  * @param {object} deps
  * @param {(level:number, tag:number) => ({rect}|null)} deps.apItemOf  the
  *   mounted room's apitem (`jsRuntimeCore`'s table), null when absent
+ * @param {(goal:object) => ({x:number, y:number}|null)} [deps.locationPointOf]
+ *   ⛓ J3 — where a location goal is taken; absent = the apitem's centre
  * @param {(level:number, tag:number) => boolean} deps.isCollected
  * @param {(e:object) => void} [deps.onEvent]  `{type, goal, message}` per
  *   state change — the page logs it, the host controller relays it
  * @param {object} [opts]
  */
-export function createRuntimeWalker({ apItemOf, isCollected, onEvent = () => {} } = {}, {
+export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollected, onEvent = () => {} } = {}, {
     replanEvery = REPLAN_EVERY, giveUpTicks = WALK_GIVE_UP_TICKS,
 } = {}) {
     let goal = null;
@@ -102,14 +132,23 @@ export function createRuntimeWalker({ apItemOf, isCollected, onEvent = () => {} 
     /** The point and the teleporter (if any) the goal names in the live run, or a refusal. */
     function resolve(run) {
         if (goal.kind === 'location') {
+            if (locationPointOf) {
+                const p = locationPointOf(goal);
+                if (!p) return { refused: `level ${goal.level} has no ${goal.entityType ?? 'location'} with tag ${goal.tag}` };
+                return { target: p, allowTeleporter: null };
+            }
             const a = apItemOf(goal.level, goal.tag);
             if (!a) return { refused: `level ${goal.level} has no apitem with tag ${goal.tag}` };
             return { target: centreOf(a.rect), allowTeleporter: null };
         }
         if (goal.kind === 'exit') {
-            const hit = teleporterAtTile(run.world, goal.tile);
-            if (!hit) return { refused: `level ${goal.level} has no live teleporter on tile (${goal.tile[0]}, ${goal.tile[1]})` };
-            return { target: tileCentrePoint(goal.tile), allowTeleporter: hit.index };
+            const tiles = goalTiles(goal);
+            const hit = nearestTeleporterAt(run.world, tiles, run.state);
+            if (!hit) {
+                return { refused: `level ${goal.level} has no live teleporter on ${tiles.length === 1
+                    ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
+            }
+            return { target: tileCentrePoint(hit.tile), allowTeleporter: hit.index };
         }
         return { target: tileCentrePoint(goal.tile), allowTeleporter: null };
     }
@@ -198,7 +237,7 @@ export function createRuntimeWalker({ apItemOf, isCollected, onEvent = () => {} 
         describe() {
             if (!goal) return 'bot: idle';
             const what = goal.kind === 'location' ? `apitem tag ${goal.tag}`
-                : goal.kind === 'exit' ? `door (${goal.tile.join(', ')})` : `tile (${goal.tile.join(', ')})`;
+                : goal.kind === 'exit' ? `door (${goalTiles(goal).map((t) => t.join(', ')).join(' | ')})` : `tile (${goal.tile.join(', ')})`;
             return `bot: ${state} → ${goal.name ?? what} in level ${goal.level}${reason ? ` — ${reason}` : ''}`
                 + `${playing ? '' : ' (paused)'}`;
         },

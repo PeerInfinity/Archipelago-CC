@@ -31,13 +31,25 @@
  *    (`APItem` never sets `special`, so `Pickup.pick_up()` takes the
  *    `removeSelf()` arm: no freeze, no text) → `apItemContact()` below, over
  *    the `apitem` class row's `apItem` box (`levelWorld.ENTITY_CLASSES`).
- *  · `Game.pendingExit = "<seq>|<from>|teleporter|<x>|<y>|<to>"` is written by
+ *  · `Game.pendingExit = "<seq>|<from>|<type>|<x>|<y>|<to>"` is written by
  *    `Teleporter.update()` in the frame its `new Game` is built (x, y are the
- *    TELEPORTER'S `.oel` position) → the run's `transitions` ledger, joined
- *    to the teleporter the player stood in on the tick before (a teleporter
- *    tests the position the previous tick left, `levelRun.pickupUnderfoot`'s
- *    note). A PIT FALL through a `control` block is a transition too, and the
- *    game writes no `pendingExit` for it; neither does this.
+ *    TELEPORTER'S `.oel` position; `<type>` is its `exitType` — `teleporter`,
+ *    or `stairsup`/`stairsdown` for a `Stairs`, `Stairs.as:25`) → the run's
+ *    `transitions` ledger, joined to the teleporter the player stood in on the
+ *    tick before (a teleporter tests the position the previous tick left,
+ *    `levelRun.pickupUnderfoot`'s note), its type read off the room's own
+ *    entity on that spot. A PIT FALL through a `control` block is a
+ *    transition too, and the game writes no `pendingExit` for it; neither
+ *    does this.
+ *  · ⛓ J3 — `Game.pendingCheck` is ALSO written by every OTHER
+ *    `setPersistence(tag, false)`: a chest opened, a lock turned off, a
+ *    tagged pickup taken (`Game.as:1908`, the choke point the atlas arm's
+ *    check table binds). The model keeps those writes in four ledgers
+ *    (`earnedClears`, `bankedClears`, `appliedTimedClears`, the out-of-band
+ *    `spinnerWrites` — `director.jsLiveEnvelope`'s fold); each NEW slot is
+ *    reported once, `"<seq>|<level>|<tag>|0"`. ⚠ The game also reports the
+ *    six RESTORING writers (`|1`); the model has no ledger of those and the
+ *    host's check binding drops them anyway (it requires a clear).
  *  · `queueItems` items are drained once per tick (`getItemQueue`'s cadence):
  *    `{class, property, value}` flag writes, `{class:'game', property:'menu'}`
  *    (accepted, nothing to do), and the teleport recipe
@@ -65,20 +77,32 @@
  *  · An item flag that changes MID-ROOM re-boots the run where the player
  *    stands (the run's inventory is fixed at boot). The room's earned clears
  *    are carried; its per-visit state (enemy positions, velocity) is not.
- *  · Only a MOUNTED level set is playable. The vanilla 116 (the `flash_seedling`
- *    atlas rooms) are slice J3's; before a set is delivered the page reports
- *    level −1, the game's own "no game" sentinel.
+ *  · ⛓ J3 — the VANILLA 116 are playable too: the page hands over the map
+ *    document (`setVanilla`) and a `new Game` teleport with no level set
+ *    mounted boots that level, exactly as the wasm game runs its own tables
+ *    when the atlas arm delivers nothing. A delivered set takes precedence.
+ *    A teleport that arrives before either is HELD and replayed. Before any
+ *    boot the page reports level −1, the game's own "no game" sentinel.
+ *  · A vanilla room is booted WITHOUT `scratchPersistence` (a kill-lock clear
+ *    stays the model's named refusal, the census's setting); a delivered
+ *    GENERATED set with it (J1). The model's refusals on real levels HALT the
+ *    page BY NAME — the J3 HALT roster (plan, J3 as-built).
+ *  · Items the PLAYER picks up in a real room (a vanilla sword) are the
+ *    run's own: `Main.*` reports the host's flag OR the run's live inventory,
+ *    and a re-boot folds what the run GAINED into the flags first.
  */
 
 import { createManualSession } from './watchManual.js';
 import { bootStaging } from './procgenOracle.js';
-import { levelSourceFromAtlas } from './atlasSource.js';
+import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 import { parseOelLevel } from './procgenLevelOel.js';
 import { assembleLevelSetChunks } from './levelSetValidator.js';
-import { ENTITY_CLASSES, entityRect } from './levelWorld.js';
+import { ENTITY_CLASSES, entityRect, STAIRS_TAGS, tagOf } from './levelWorld.js';
+import { chestStanceBand } from './chest.js';
+import { HITBOX } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
-import { ITEM_PROPERTIES } from './tapeFormat.js';
-import { createRuntimeWalker, WALK_STATES } from './jsRuntimeWalker.js';
+import { BUILD_SPAWN, ITEM_PROPERTIES } from './tapeFormat.js';
+import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
 
 /**
  * The pins every JS-runtime run carries. ⛔ `sound` is not optional: without
@@ -123,6 +147,61 @@ const MAIN = 'Main';
 const GAME = 'Game';
 
 const overlaps = (a, b) => a.x < b.right && b.x < a.right && a.y < b.bottom && b.y < a.bottom;
+
+/** The `exitType`s a `Teleporter` reports (`Teleporter.as:35`, `Stairs.as:25`). */
+export const EXIT_TYPES = Object.freeze(['teleporter', ...STAIRS_TAGS]);
+
+/**
+ * ⛓ J3 — the `exitType` a fired door reports: the type of the room's own
+ * link entity on the teleporter's `.oel` spot. `teleporter` when the record
+ * names none (a delivered room always does).
+ */
+export function exitTypeAt(record, x, y) {
+    const e = (record?.entities ?? []).find((en) => EXIT_TYPES.includes(en.type) && en.x === x && en.y === y);
+    return e ? e.type : 'teleporter';
+}
+
+/**
+ * ⛓ J3 — every persistence slot the run has CLEARED, across the four ledgers
+ * that hold one (`director.jsLiveEnvelope`'s fold, minus window 1's boot
+ * block, which a page run does not have).
+ */
+export function liveClears(run) {
+    const out = [];
+    const seen = new Set();
+    const add = (level, tag) => {
+        if (!Number.isInteger(level) || !Number.isInteger(tag) || tag < 0) return;
+        const k = `${level}:${tag}`;
+        if (seen.has(k)) return;
+        seen.add(k);
+        out.push({ level, tag });
+    };
+    for (const c of run.ledger('earnedClears') ?? []) add(c.level, c.tag);
+    for (const c of run.ledger('bankedClears') ?? []) add(c.level, c.tag);
+    for (const c of run.ledger('appliedTimedClears') ?? []) add(c.level, c.tag);
+    for (const w of run.ledger('spinnerWrites') ?? []) if (w.outOfBand) add(w.flag?.level, w.flag?.tag);
+    return out;
+}
+
+/**
+ * ⛓ J3 — where the walk stands to take the location a `(level, tag)` names in
+ * a real room: the entity holding that tag (of `type`, when the host knows
+ * it). A chest opens from BELOW, on its two-pixel stance band
+ * (`chest.chestStanceBand`, the run's own derivation); anything else is
+ * touched at its centre. null when the room holds no such entity.
+ */
+export function locationEntityOf(record, tag, type = null) {
+    return (record?.entities ?? []).find((e) => (type === null || e.type === type)
+        && ENTITY_CLASSES[e.type] && tagOf(e.type, e.attrs) === tag) ?? null;
+}
+export function locationPointOf(entity) {
+    if (!entity) return null;
+    if (entity.type === 'chest') {
+        const band = chestStanceBand(entity.x, entity.y, HITBOX);
+        return { x: entity.x + 8, y: band[0] };
+    }
+    return { x: entity.x + 8, y: entity.y + 8 };
+}
 
 /**
  * A mounted room's record, the `level` the model addresses it by stamped on.
@@ -171,6 +250,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
     let staged = null;          // { set_id, count, chunks: Map(index -> chunk) }
     let mounted = null;         // { set, records: Map(level -> record), source, apItems: Map(level -> [...]) }
     let levelSetError = null;
+    /** ⛓ J3 — the vanilla map: `{ records: Map(level -> record), source }`, or null. */
+    let vanilla = null;
+    /** ⛓ J3 — a `new Game` that arrived before any room source: replayed by `setVanilla`. */
+    let heldTeleport = null;
+    /** ⛓ J3 — "level:tag" persistence clears already reported as `pendingCheck`. */
+    const reportedClears = new Set();
+    /** ⛓ J3 — the items the current run was booted with (what it GAINED is the difference). */
+    let bootItems = null;
 
     let session = null;
     /** The constructor args the CURRENT room was entered with — the respawn point. */
@@ -200,7 +287,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
     const walkListeners = new Set();
     const walker = createRuntimeWalker({
         apItemOf: (level, tag) => (mounted?.apItems.get(level) ?? []).find((a) => a.tag === tag) ?? null,
-        isCollected: (level, tag) => collected.has(`${level}:${tag}`),
+        // ⛓ J3 — a real room's location is an ENTITY of the room (a chest, a
+        // pickup), walked to its own stance; an apitem is still the J1 row.
+        locationPointOf: (goal) => {
+            const a = (mounted?.apItems.get(goal.level) ?? []).find((x) => x.tag === goal.tag);
+            if (a) return { x: (a.rect.x + a.rect.right) / 2, y: (a.rect.y + a.rect.bottom) / 2 };
+            return locationPointOf(locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null));
+        },
+        isCollected: (level, tag) => collected.has(`${level}:${tag}`) || reportedClears.has(`${level}:${tag}`),
         onEvent: (e) => {
             note({ type: 'walk', state: e.state, message: `[js runtime] ${walker.describe()}` });
             for (const fn of walkListeners) { try { fn(e); } catch (err) { log(`[js runtime] a walk listener threw: ${err.message}`); } }
@@ -209,21 +303,64 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
 
     // ── the run ────────────────────────────────────────────────────────────
 
+    /** The room source a boot reads: a delivered set first, else the vanilla map. */
+    const roomSource = () => mounted ?? vanilla;
+    function roomRecord(level) { return roomSource()?.records.get(level) ?? null; }
+
+    /**
+     * Carry what the run cleared into the next boot. ⛓ J3: every in-band
+     * ledger, not `earnedClears` alone — a chest's open is BANKED
+     * (`levelRun.bankedClears`), and in a real room the next visit must find
+     * it despawned, as the game's persistence array does. An out-of-band
+     * write (a −1 tag) is reported but never carried: no entity reads it,
+     * and `buildLevelWorld` refuses such a clear.
+     */
     function bankClears() {
         if (!session) return;
-        for (const c of session.run.earnedClears ?? []) carried.set(`${c.level}:${c.tag}`, { level: c.level, tag: c.tag });
+        const run = session.run;
+        for (const c of [...(run.earnedClears ?? []), ...(run.ledger?.('bankedClears') ?? []),
+            ...(run.ledger?.('appliedTimedClears') ?? [])]) {
+            if (Number.isInteger(c.tag) && c.tag >= 0) carried.set(`${c.level}:${c.tag}`, { level: c.level, tag: c.tag });
+        }
+    }
+
+    /** ⛓ J3 — fold what the run GAINED in play (a vanilla pickup) into the flags, before it is replaced. */
+    function foldGainedItems() {
+        const inv = session?.run?.inventory ?? null;
+        if (!inv || !bootItems) return;
+        for (const prop of Object.keys(flags)) {
+            if (!(prop in inv)) continue;
+            if (typeof flags[prop] === 'number') {
+                if (Number(inv[prop]) > Number(bootItems[prop] ?? 0)) flags[prop] = Math.max(flags[prop], Number(inv[prop]));
+            } else if (inv[prop] === true && bootItems[prop] !== true) {
+                flags[prop] = true;
+            }
+        }
     }
 
     function boot({ level, x, y }, why) {
-        if (!mounted) throw new Error('jsRuntimeCore: no level set is mounted — nothing to boot');
-        if (!mounted.records.has(level)) {
-            throw new Error(`jsRuntimeCore: the mounted set has no level ${level} `
-                + `(it has ${mounted.records.size} rooms)`);
+        const src = roomSource();
+        if (!src) throw new Error('jsRuntimeCore: no level set is mounted and no vanilla map is loaded — nothing to boot');
+        if (!src.records.has(level)) {
+            throw new Error(`jsRuntimeCore: the ${mounted ? 'mounted set' : 'vanilla map'} has no level ${level} `
+                + `(it has ${src.records.size} rooms)`);
         }
         bankClears();
+        foldGainedItems();
         const staging = bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS] });
         staging.persistence = [...carried.values()].map((c) => ({ ...c }));
-        session = createManualSession({ levelSource: mounted.source, staging, name: 'js-runtime', scratchPersistence: true });
+        bootItems = { ...flags };
+        try {
+            session = createManualSession({ levelSource: src.source, staging, name: 'js-runtime', scratchPersistence: !!mounted });
+        } catch (err) {
+            // ⛓ J3 — a real level the model cannot BUILD (an entity it refuses
+            // by name) halts the page by name, the same as a refusal mid-play.
+            session = null;
+            halted = { tick: ticks, level, message: err.message };
+            note({ type: 'halt', level, message: `[js runtime] HALTED — the model refused to boot level ${level}: `
+                + `${err.message.split('\n')[0]}` });
+            return null;
+        }
         halted = null;
         deferredReboot = false;
         note({ type: 'boot', level, x, y, why, message: `[js runtime] boot level ${level} at (${x}, ${y}) — ${why}` });
@@ -235,14 +372,18 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         let level = Number(rawLevel);
         let x = Number(rawX);
         let y = Number(rawY);
-        if (!mounted) {
-            note({ type: 'refused', message: '[js runtime] teleport refused — no level set is mounted (the vanilla '
-                + 'rooms are slice J3\'s)' });
+        if (!mounted && !vanilla) {
+            // ⛓ J3 — the page fetches the map document beside the host's own
+            // load; a teleport that wins the race is held, not dropped.
+            heldTeleport = args;
+            note({ type: 'held', message: '[js runtime] teleport held — no level set is mounted and the vanilla '
+                + 'map is not loaded yet' });
             return;
         }
         if (!Number.isInteger(level) || level < 0) {
-            // The game's own new-game arm: `level < 0` starts at the set's start.
-            ({ level, x, y } = mounted.set.start);
+            // The game's own new-game arm: `level < 0` starts at the set's
+            // start — on the vanilla map, `Main.as:51`'s `new Game(0, 80, 128)`.
+            ({ level, x, y } = mounted ? mounted.set.start : BUILD_SPAWN);
         }
         if (!Number.isFinite(x) || !Number.isFinite(y)) {
             note({ type: 'refused', message: `[js runtime] teleport refused — no position in ${JSON.stringify(args)}` });
@@ -316,8 +457,9 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
             const tr = run.transitions[run.transitions.length - 1];
             const tp = firedTeleporter(world0, box0, tr.to_level);
             if (tp) {
-                pendingExit = `${++pendingExitSeq}|${tr.from_level}|teleporter|${Math.trunc(tp.x)}|${Math.trunc(tp.y)}|${tr.to_level}`;
-                crossing = { from: tr.from_level, to: tr.to_level, x: tp.x, y: tp.y };
+                const type = exitTypeAt(roomRecord(tr.from_level), tp.x, tp.y);
+                pendingExit = `${++pendingExitSeq}|${tr.from_level}|${type}|${Math.trunc(tp.x)}|${Math.trunc(tp.y)}|${tr.to_level}`;
+                crossing = { from: tr.from_level, to: tr.to_level, x: tp.x, y: tp.y, type };
             }
             arrival = { level: run.level, ...run.worldCtor };
             note({ type: 'transition', from: tr.from_level, to: tr.to_level, teleporter: !!tp,
@@ -327,9 +469,27 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
             // left (`World.addUpdate` prepends; the Player is added first).
             apItemContact(level0, box0);
         }
+        reportClears(run);
         walker.observe({ crossing });
         flush();
         return { stepped: true, crossing };
+    }
+
+    /**
+     * ⛓ J3 — one `pendingCheck` per persistence slot the run newly cleared,
+     * each FLUSHED as its own report: two clears in one tick would otherwise
+     * collapse into one changed value and the first would be lost.
+     */
+    function reportClears(run) {
+        for (const c of liveClears(run)) {
+            const k = `${c.level}:${c.tag}`;
+            if (reportedClears.has(k)) continue;
+            reportedClears.add(k);
+            pendingCheck = `${++pendingCheckSeq}|${c.level}|${c.tag}|0`;
+            note({ type: 'check', level: c.level, tag: c.tag, clear: true,
+                message: `[js runtime] persistence cleared — level ${c.level} tag ${c.tag}` });
+            flush();
+        }
     }
 
     function rebootInPlace(why) {
@@ -379,7 +539,12 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
             if (property === 'level') return run ? run.level : -1;
             if (property === 'playerPositionX') return run ? run.worldCtor.x : 0;
             if (property === 'playerPositionY') return run ? run.worldCtor.y : 0;
-            if (property in flags) return flags[property];
+            if (property in flags) {
+                // ⛓ J3 — the host's write, or what the run picked up itself.
+                const live = run?.inventory?.[property];
+                if (typeof flags[property] === 'number') return Math.max(flags[property], Number.isFinite(live) ? live : 0);
+                return flags[property] || live === true;
+            }
         }
         if (cls === GAME) {
             if (property === 'pendingExit') return pendingExit;
@@ -476,6 +641,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         // A new set is a new save: what the old one cleared means nothing here.
         carried.clear();
         collected.clear();
+        reportedClears.clear();
         session = null;
         arrival = null;
         halted = null;
@@ -486,29 +652,61 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
     }
 
     /**
+     * ⛓ J3 — the vanilla map document (`flashPanel/atlases/seedling-map.json`,
+     * `{levels: [...]}`, or an already-indexed Map). Mounting it changes no
+     * running room; a teleport held for it is replayed now.
+     */
+    function setVanilla(doc) {
+        const records = indexLevels(doc);
+        if (!(records instanceof Map) || records.size === 0) throw new Error('jsRuntimeCore: setVanilla needs a map document with levels');
+        vanilla = { records, source: levelSourceFromAtlas(records) };
+        note({ type: 'vanilla', message: `[js runtime] vanilla map loaded — ${records.size} level(s)` });
+        if (mounted || session) return;
+        if (heldTeleport) {
+            const args = heldTeleport;
+            heldTeleport = null;
+            teleport(args);
+        } else {
+            // ⛓ The wasm game's own first frame: `Main.as:51` builds
+            // `new Game(0, 80, 128)` on an empty save. That level-0 report is
+            // the region binding's BASELINE, the signal that releases its
+            // queued arrival teleport — without it an atlas world (which
+            // delivers nothing and resets nothing) would wait forever.
+            arrival = { ...BUILD_SPAWN };
+            boot(arrival, 'the game\'s own first frame (Main.as:51)');
+        }
+        flush();
+    }
+
+    /**
      * ⛓ J2 — a goal the host controller resolved, checked against the MOUNTED
      * set before it is accepted: `{ok:true}` or `{ok:false, reason}`. The
      * level must be a mounted room; a location must be one of its apitems; an
      * exit must be one of its teleporters (by `.oel` cell).
      */
     function validateGoal(goal) {
-        if (!mounted) return { ok: false, reason: 'no level set is mounted' };
+        if (!mounted && !vanilla) return { ok: false, reason: 'no level set is mounted' };
         if (!goal || !['location', 'exit', 'tile'].includes(goal.kind)) {
             return { ok: false, reason: `not a walk goal: ${JSON.stringify(goal)}` };
         }
-        const record = mounted.records.get(goal.level);
-        if (!record) return { ok: false, reason: `the mounted set has no level ${goal.level}` };
+        const record = roomRecord(goal.level);
+        if (!record) return { ok: false, reason: `the ${mounted ? 'mounted set' : 'vanilla map'} has no level ${goal.level}` };
         if (goal.kind === 'location') {
-            if (!(mounted.apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag)) {
-                return { ok: false, reason: `level ${goal.level} has no apitem with tag ${goal.tag}` };
-            }
-            return { ok: true };
+            if ((mounted?.apItems.get(goal.level) ?? []).some((a) => a.tag === goal.tag)) return { ok: true };
+            // ⛓ J3 — a real room's location: the entity holding the tag.
+            if (!mounted && locationEntityOf(record, goal.tag, goal.entityType ?? null)) return { ok: true };
+            return { ok: false, reason: mounted ? `level ${goal.level} has no apitem with tag ${goal.tag}`
+                : `level ${goal.level} has no ${goal.entityType ?? 'entity'} with tag ${goal.tag}` };
         }
-        const [tx, ty] = Array.isArray(goal.tile) ? goal.tile : [];
-        if (!Number.isInteger(tx) || !Number.isInteger(ty)) return { ok: false, reason: `no tile in ${JSON.stringify(goal)}` };
-        if (goal.kind === 'exit' && !(record.entities ?? []).some((e) => e.type === 'teleporter'
-            && Math.floor(e.x / 16) === tx && Math.floor(e.y / 16) === ty)) {
-            return { ok: false, reason: `level ${goal.level} has no teleporter on tile (${tx}, ${ty})` };
+        // ⛓ J3 — an exit may name a SET of boundary cells (`tiles`); `tile` is the one-cell form.
+        const tiles = goalTiles(goal);
+        if (tiles.length === 0 || tiles.some(([tx, ty]) => !Number.isInteger(tx) || !Number.isInteger(ty))) {
+            return { ok: false, reason: `no tile in ${JSON.stringify(goal)}` };
+        }
+        if (goal.kind === 'exit' && !tiles.some(([tx, ty]) => (record.entities ?? []).some((e) => EXIT_TYPES.includes(e.type)
+            && Math.floor(e.x / 16) === tx && Math.floor(e.y / 16) === ty))) {
+            return { ok: false, reason: `level ${goal.level} has no teleporter on ${tiles.length === 1
+                ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
         }
         return { ok: true };
     }
@@ -557,6 +755,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         }),
         botLoadLevels: (json) => botLoadLevels(json),
         botLevelSet: () => JSON.stringify({
+            vanilla: vanilla ? vanilla.records.size : 0,
             active: mounted?.set.set_id ?? null,
             mounted: mounted?.set.set_id ?? null,
             table_levels: mounted ? mounted.set.rooms.length : 0,
@@ -577,6 +776,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         },
         tick,
         flush,
+        setVanilla,
+        get vanilla() { return vanilla; },
         get session() { return session; },
         get run() { return session?.run ?? null; },
         get mounted() { return mounted; },
@@ -596,7 +797,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
                 level,
                 world: session.run.world,
                 state: session.run.state,
-                apItems: (mounted.apItems.get(level) ?? []).filter((a) => !collected.has(`${level}:${a.tag}`)),
+                apItems: (mounted?.apItems.get(level) ?? []).filter((a) => !collected.has(`${level}:${a.tag}`)),
             };
         },
     };

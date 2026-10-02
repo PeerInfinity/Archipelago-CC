@@ -148,7 +148,7 @@ describe('jsRuntimeCore — the check and the crossing', () => {
         reports.length = 0;
         walkTo(rt, { tx: 8, ty: 3 });
         const out = walkTo(rt, DOOR_ABOVE_START, { allow: [DOOR_ABOVE_START] });
-        expect(out.crossing).toEqual({ from: 0, to: 1, x: 128, y: 16 });
+        expect(out.crossing).toEqual({ from: 0, to: 1, x: 128, y: 16, type: 'teleporter' });
         const order = reports.map(([p]) => p);
         expect(order.indexOf('pendingExit')).toBeLessThan(order.indexOf('level'));
         const exit = parsePendingExit(reports.find(([p]) => p === 'pendingExit')[1]);

@@ -24,6 +24,12 @@
  *     (`rectPalette.js`): tiles, object solids, teleporters, the AP items and
  *     the player's hitbox.
  *
+ * ⛓ J3 — it also fetches the VANILLA map document
+ * (`flashPanel/atlases/seedling-map.json`, the one map every committed preset
+ * names, `mapDocumentPath.DEFAULT_MAP_DOCUMENT`) and hands it to the core
+ * (`setVanilla`): the atlas arm delivers nothing, so the real rooms are the
+ * vanilla ones, exactly as the wasm game runs its own tables.
+ *
  * `window.__seedlingJsRuntime` is the core itself. J1 used it as a TEST handle
  * (the in-app row reads the mounted rooms off it); ⛓ since J2 its `playback`
  * member is also the HOST's: `flashPanel/seedlingPlaybackController.js` (the
@@ -49,6 +55,8 @@ const PUMP_AFTER_MS = 250;
 const AP_ITEM_COLOUR = '#e8c040';
 const TELEPORTER_COLOUR = '#3fd8ce';
 const PLAYER_COLOUR = '#ffffff';
+/** ⛓ J3 — the vanilla map, page-relative (this page lives in `seedlingDemo/`). */
+export const VANILLA_MAP_PATH = '../flashPanel/atlases/seedling-map.json';
 
 export function mountJsRuntimePage(win = window) {
     const doc = win.document;
@@ -78,6 +86,19 @@ export function mountJsRuntimePage(win = window) {
     win.__swfBridge = bridge;
     win.__seedlingJsRuntime = runtime;
     win.__runtimeReady = true;
+
+    // ⛓ J3 — the vanilla rooms. A teleport that beats this fetch is held by
+    // the core and replayed; a failure is shown, never swallowed.
+    let vanillaError = null;
+    // `no-store`: a committed artifact is never read from a cache
+    // (`watchLifetime.test.js`'s one-busted-fetch rule, in spirit).
+    win.fetch(new URL(VANILLA_MAP_PATH, win.location.href).href, { cache: 'no-store' })
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+        .then((doc) => runtime.setVanilla(doc))
+        .catch((err) => {
+            vanillaError = err.message;
+            win.console?.error?.(`[js runtime] the vanilla map could not be loaded — ${err.message}`);
+        });
 
     // ── keys ──────────────────────────────────────────────────────────────
     const down = new Set();
@@ -128,7 +149,8 @@ export function mountJsRuntimePage(win = window) {
                 ? `HALTED — ${runtime.halted.message.split('\n')[0]}`
                 : (runtime.mounted
                     ? 'level set mounted — waiting for the host to start the game'
-                    : 'Seedling JS runtime — waiting for a level set (J1 plays GENERATED rooms only)');
+                    : (vanillaError ? `the vanilla map could not be loaded — ${vanillaError}`
+                        : 'Seedling JS runtime — loading the vanilla map…'));
             return;
         }
         const { world, state, apItems, level } = view;

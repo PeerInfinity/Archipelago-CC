@@ -84,7 +84,7 @@ describe('jsRuntimeWalker — walkTo on a live run (closed loop C)', () => {
         rt.playback.play();
         const r = settle(rt);
         expect(rt.playback.state).toBe(WALK_STATES.DONE);
-        expect(r.outs.map((o) => o.crossing)).toEqual([{ from: 0, to: 1, x: 128, y: 16 }]);
+        expect(r.outs.map((o) => o.crossing)).toEqual([{ from: 0, to: 1, x: 128, y: 16, type: 'teleporter' }]);
         const exit = parsePendingExit(reports.find(([p]) => p === 'pendingExit')[1]);
         expect(exit).toMatchObject({ fromLevel: 0, x: 128, y: 16, to: 1 });
         expect(rt.run.level).toBe(1);
@@ -116,7 +116,7 @@ describe('jsRuntimeWalker — walkTo on a live run (closed loop C)', () => {
         rt.playback.walkTo(ROOM1_BACK);
         const r = settle(rt);
         expect(rt.playback.state).toBe(WALK_STATES.DONE);
-        expect(r.outs.map((o) => o.crossing)).toEqual([{ from: 1, to: 0, x: 64, y: 48 }]);
+        expect(r.outs.map((o) => o.crossing)).toEqual([{ from: 1, to: 0, x: 64, y: 48, type: 'teleporter' }]);
     });
 
     it('stop() hands the run back to the keyboard; step() drives exactly one tick', () => {
