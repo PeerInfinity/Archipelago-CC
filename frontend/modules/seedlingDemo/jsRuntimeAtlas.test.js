@@ -254,18 +254,21 @@ describe('jsRuntimeWalker J3 — a boundary-cell target', () => {
 });
 
 describe('jsRuntimeCore J3 — a real level the model cannot run HALTS BY NAME', () => {
-    it('L40 refuses at BOOT (bridged chaser + IceTurret): halted, named, the page keeps reporting', () => {
+    // ⛓ Swim R4 modelled L40's IceTurret beside the bridged chasers (witnessed on the
+    // game, `r4-iceturret-bobs` 151/151), so L40 NO LONGER refuses at boot: this row
+    // was J3's boot-refusal witness and is now R4's positive one. ⚠ No committed level
+    // refuses at BOOT any more, so the page's boot-refusal branch (run null, `level`
+    // reported −1, recovery on the next teleport) has no natural witness left —
+    // recorded in the arc plan; L112 below still covers a first-tick halt.
+    it('L40 BOOTS since swim R4 (IceTurret beside the bridged chasers): the page runs it, no halt', () => {
         const { rt, reports } = vanillaRuntime();
         teleport(rt, { level: 40, x: 32, y: 32 });
-        expect(rt.run).toBeNull();
-        expect(rt.halted?.message).toMatch(/level 40 holds a bridged chaser AND \[IceTurret\]/);
-        expect(JSON.parse(rt.game.botStatus()).halted).toMatch(/IceTurret/);
-        expect(rt.events.find((e) => e.type === 'halt')?.message).toMatch(/refused to boot level 40/);
-        expect(reports.find(([p]) => p === 'level')).toEqual(['level', -1]);
-        // A later teleport to a room the model runs recovers the page.
-        teleport(rt, { level: HOUSE.level, ...HOME });
         expect(rt.halted).toBeNull();
-        expect(rt.run.level).toBe(86);
+        expect(rt.run.level).toBe(40);
+        expect(reports.find(([p]) => p === 'level')).toEqual(['level', 40]);
+        for (let t = 0; t < 600 && !rt.halted; t += 1) rt.tick();
+        expect(rt.halted).toBeNull();
+        expect(rt.run.level).toBe(40);
     });
 
     it('L112 refuses on its first tick (the Owl needs `rng.split`): the page halts by name, never silently', () => {

@@ -79,7 +79,7 @@ export const LOAD_BUDGET_MS = 30000;
 /**
  * ⛓ S2 — the decline-retry policy (S1 residue): a declined goal is walked,
  * and the solver is asked AGAIN after a death, a crossing, or this many
- * walker ticks — §1.6: from W=60 the solver refused the L6 leg, from W=150 it
+ * walker ticks — §1.6: from W=60 the solver refused the L6 leg (W=71 since swim R4), from W=150 it
  * solved it — at most `SOLVER_RETRY_MAX` times per goal, each retry named.
  */
 export const SOLVER_RETRY_AFTER_TICKS = 90;

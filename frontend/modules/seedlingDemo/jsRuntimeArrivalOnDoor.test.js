@@ -162,8 +162,9 @@ describe('S5 — the committed arrivals that land ON a door (derived)', () => {
         expect(ARRIVALS.length).toBeGreaterThan(200);
         expect([...ON_A_DOOR.keys()].sort()).toEqual(Object.keys(ARRIVALS_ON_A_DOOR).sort());
     });
-    it('the only levels no committed arrival can boot are the model\'s HALT rows (L40 at boot, L112 the Owl; the swim arc\'s)', () => {
-        expect([...HALTED].sort((a, b) => a - b)).toEqual([40, 112]);
+    // ⛓ Swim R4 modelled L40's IceTurret: L40 left this set (it was [40, 112]).
+    it('the only level no committed arrival can boot is the model\'s HALT row L112 (the Owl; the swim arc\'s)', () => {
+        expect([...HALTED].sort((a, b) => a - b)).toEqual([112]);
     });
 });
 

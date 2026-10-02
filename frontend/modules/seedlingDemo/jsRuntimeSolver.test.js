@@ -168,13 +168,15 @@ describe('jsRuntimeSolver — a LIVE mid-room state is solved, played on the pag
 
 describe('jsRuntimeSolver — refusal, refutation, instant, and OFF', () => {
     it('a refusal falls back to the J2 walker WITH the solver\'s reason in the status (never silently)', () => {
-        // §1.6's W=60 row: from this state the solver's own corridor stalls.
-        const { rt } = midRoom({ region: 'level_6', fromId: 'in_L5_48_112', toId: 'out_stairsup_224_32', walkTicks: 60 });
+        // From this state the solver declines (the danger map forbids its corridor).
+        // ⛓ W=71, not §1.6's W=60: swim R4's i-frame preview fix made W=60 SOLVE;
+        // the R4 sweep (W 0–240) leaves W=71 as the danger-map decline.
+        const { rt } = midRoom({ region: 'level_6', fromId: 'in_L5_48_112', toId: 'out_stairsup_224_32', walkTicks: 71 });
         rt.playback.setSolverWalk(true);
-        // ⛓ S2 — read the status AT the decline and a few walked ticks on: the
-        // retry policy asks again after a death (the decline-retry rows).
+        // ⛓ S2 — read the status AT the decline: the retry policy asks again after
+        // a death (the decline-retry rows), and from W=71 the walker meets a bob
+        // within a few ticks, so a later read would see the retry's solve.
         for (let t = 0; t < 20 && rt.playback.solverStats.declines === 0; t += 1) rt.tick();
-        for (let t = 0; t < 3; t += 1) rt.tick();
         expect(rt.playback.state).toBe(WALK_STATES.WALKING);
         expect(rt.playback.reason).toMatch(/^the solver declined — solverBot\(.*\) reach-exit \(224,32\)->L7: .*; walking instead$/);
         expect(rt.playback.describe()).toContain('the solver declined');

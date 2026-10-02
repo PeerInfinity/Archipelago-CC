@@ -19,7 +19,7 @@
  *   m3 a stale answer is played (no run / session check at arrival)
  *        -> 'a re-boot while the worker thinks …' reds
  *   m4 no retry after a decline
- *        -> 'decline → retry → SOLVED on the §1.6 W=60 leg' reds
+ *        -> 'decline → retry → SOLVED on the L6 W=71 leg' reds
  */
 import { afterEach, describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -201,9 +201,13 @@ describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', (
         expect(rt.playback.solving).toBe(false);
     }, 60000);
 
-    it('decline → retry → SOLVED on the §1.6 W=60 leg (each retry named)', async () => {
+    it('decline → retry → SOLVED on the L6 W=71 leg (each retry named)', async () => {
         const { service } = workerService();
-        const rt = midRoom({ ...WITNESSES[0], walkTicks: 60, solveService: service });
+        // ⛓ W=71, not §1.6's W=60: swim R4 (the i-frame preview carries facing +
+        // recovery) made the solver SOLVE from W=60. Swept at R4 (W 0–240): W=71
+        // is the danger-map decline this row needs. (W=70 declines on a solver
+        // stack overflow — reported to the swim arc; not a witness.)
+        const rt = midRoom({ ...WITNESSES[0], walkTicks: 71, solveService: service });
         rt.playback.setSolverWalk(true);
         const out = await settleAsync(rt);
         const s = rt.playback.solverStats;
@@ -212,7 +216,7 @@ describe('jsRuntimeSolveService — the budget, the retry, and no stale plan', (
         expect(out.crossings).toEqual([expect.objectContaining({ from: 6, to: 7 })]);
         expect(s.declines).toBe(1);
         expect(s.solves).toBe(1);
-        expect(s.lastDecline).toMatch(/reach-exit \(224,32\)->L7: .*stalled at/);
+        expect(s.lastDecline).toMatch(/reach-exit \(224,32\)->L7: the danger map forbids/);
         expect(w.retries).toBe(1);
         expect(w.retryLog).toEqual([expect.objectContaining({ n: 1, after: expect.stringMatching(/^(a death|a crossing|\d+ walked tick\(s\))$/) })]);
         expect(rt.events.filter((e) => e.type === 'walk').map((e) => e.message))
