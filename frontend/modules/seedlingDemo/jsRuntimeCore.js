@@ -23,7 +23,8 @@
  *    DECLARATION order (`games/seedling.json` `$comment_m1_seams`) →
  *    `flush()`: one pass over the configured `state_properties`, after every
  *    tick and every host call that can move one. The first pass after
- *    `configure` reports everything (the baseline burst).
+ *    `configure` reports everything (the baseline burst) — on the NEXT tick,
+ *    as the game's own per-frame poll does, never inside `configure`.
  *  · `Main.playerPositionX/Y` are the GAME CONSTRUCTOR'S args, written by
  *    `new Game(level, x, y)` — not the live position → `run.worldCtor`.
  *  · `Game.pendingCheck = "<seq>|<level>|<tag>|0"` is written by
@@ -741,7 +742,14 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
 
     const game = {
         wireCheck: () => 'ok:seedling-js',
-        configure: (json) => { const r = configure(json); flush(); return r; },
+        // ⛓ J3 — NO flush here: BridgeGeneric reports from its per-frame poll
+        // (`BridgeGeneric.as:192-216`), so the first burst lands on the frame
+        // AFTER configure — after the host has `attach()`ed, which is what lets
+        // `WasmBridgeAdapter` forward it. Flushed synchronously, the burst was
+        // DROPPED (the adapter is attached only after `configureBridge` returns)
+        // and the region binding never saw its baseline: measured, an atlas
+        // world's arrival was released by the player's first crossing instead.
+        configure: (json) => configure(json),
         readState: () => (config ? JSON.stringify(readAll()) : 'error:not configured'),
         botStatus: () => JSON.stringify({
             runtime: 'js',

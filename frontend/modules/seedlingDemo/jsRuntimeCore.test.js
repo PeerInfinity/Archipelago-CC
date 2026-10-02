@@ -34,6 +34,7 @@ function started({ mutateSet = null, chunkOpts = {} } = {}) {
     const reports = [];
     const rt = createJsRuntime({ onStateChanged: (p, v) => reports.push([p, v]) });
     expect(rt.game.configure(BRIDGE_CONFIG)).toBe('ok');
+    rt.tick();
     reports.length = 0; // the baseline burst — its own row asserts it
     const { chunks } = planLevelSetChunks(assembled.set, chunkOpts);
     const answers = chunks.map((c) => rt.game.botLoadLevels(JSON.stringify(c)));
@@ -77,6 +78,9 @@ describe('jsRuntimeCore — the bridge contract', () => {
         const reports = [];
         const rt = createJsRuntime({ onStateChanged: (p, v) => reports.push([p, v]) });
         rt.game.configure(BRIDGE_CONFIG);
+        // ⛓ J3: not inside configure — the host attaches only after it returns.
+        expect(reports).toEqual([]);
+        rt.tick();
         expect(reports.map(([p]) => p)).toEqual(DECLARED);
         reports.length = 0;
         rt.tick();

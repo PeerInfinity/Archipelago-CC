@@ -93,6 +93,8 @@ describe('jsRuntimeCore J3 — a real room boots on the JS page', () => {
         const reports = [];
         const rt = createJsRuntime({ onStateChanged: (p, v) => reports.push([p, v]) });
         rt.game.configure(BRIDGE_CONFIG);
+        expect(reports).toEqual([]);           // the burst is the NEXT frame's, as BridgeGeneric's is
+        rt.tick();
         expect(rt.run).toBeNull();
         expect(reports.find(([p]) => p === 'level')).toEqual(['level', -1]);
         reports.length = 0;
