@@ -12020,6 +12020,98 @@ nothing and declare no timed clear. The other records:
   unstepped shooter in: the survey solved step 27 for the same reason the
   producer did.
 
+### Seedling substrate U15-swim — the turret; the chain to the route's end (2026-10-02)
+
+⚖ Q47 (user, 2026-10-02: *"Yes, one slice"*): transcribe `Turret` and
+`TurretSpit`, witnessed on the game first, let the solver price the spit, and
+resume the campaign chain from route step 27. The report is
+`CC/docs/cloud-reports/seedling-swim-u15.md`. **The turret is modelled, the
+solver dodges its spit, and the chain walks all 30 route steps to the Bob
+Boss's pit.**
+
+**D1 — `Turret` + `TurretSpit`, transcribed (`turret.js`).** The IceTurret
+precedent with other numbers, plus two differences that matter: the spit
+KNOCKS (`hit(null, v.length, p)`, force ≈ 3) and it is CULLED at
+`onScreen(12)`.
+- The aim turns a tenth of `angle_difference` per tick; the range test is
+  `var d:int` (TRUNCATED), d ≤ 64; `shootTimer` is seeded 0 and re-armed to 40
+  out of range and on every animation tick.
+- Both shot animations are two frames at rate 10 under `FP.elapsed` 0.0333, so
+  each wraps on its SEVENTH update (0.333 × 3 = 0.999). A play at T spawns the
+  spit at T+6, it first moves at T+7, the turret idles at T+14 and plays again
+  at T+54 (`TURRET_CADENCE`, simulated). In range from a room's first frame it
+  fires on tick one; walking into range, 40 ticks after the entry.
+- The spit moves in 1 px sub-steps (`solids = []`) and is removed by any of
+  Player/Tree/Solid/Shield. ⛔ `"Shield"` is the player's OWN shield entity,
+  which `Player.render` places on the facing side: a spit that meets it first
+  dies with no hit.
+
+`levelRun` steps the spits beside the blasts (first) and the turrets below the
+ice turrets (`Game.as:2272` before `:2273`); a pickup's phase-A lump is stepped
+frozen for them (the animation runs through a freeze, the aim and the spit's
+move do not).
+
+| witness | stance (L29, route step 27's staging) | prediction | the game | the model |
+|---|---|---|---|---|
+| `u15-turret-spit` | (44,220), `left` tapped: shield WEST | plays t1, t55; spawns t7, t61; #2 HITS t80 | hits 1, t80 diverges from the old model | all observations; hits 1 |
+| `u15-turret-shield` | the same, `right` tapped: shield EAST | #2 dies on the SHIELD at t77 | hits 0 | all observations; hits 0 |
+
+`probe-seedling-u15-turret-mobiles.mjs` compares every turret's angle and
+animation and every spit's position and velocity per tick: 347 + 344
+comparisons, worst |Δ| 0 (and 625 against the prediction before the model step
+existed). The first stance tried, (40,200), put a tree's corner on the line of
+fire: the prediction showed spit #2 dying on cover, and the stance moved before
+anything was recorded. Mutant (the family off): 1 red / 431 at t80, as
+predicted. The ten committed tapes that enter a turret room are `noDamage`
+(and `r9-solve-22` ends on its arrival): inert.
+
+**D2 — the solver prices the spit.** `run.spitForecast()` steps clones of the
+room's turrets and spits against the PREVIEWED player; `previewWalk` carries
+them per sample, and `dangerMap.spitDanger` (ingredient (g), the second
+player-coupled at-ETA row) prices them in TRANSIT; WAIT sweeps the live spits.
+⛔ A spit is the walk's own timing, not a static volume: AVOID is refused by
+name when every reason is a spit (measured: on L29 it chose a corridor that
+stalled 400 ticks against a tree, whose truncated preview probed clean). The
+new conditional rung DODGE (`avoid → dodge → pull → …`) searches a stall on the
+corridor's own preview (`previewWalk`'s `stall: {at, ticks}`) and drives to its
+end, then re-plans. Route step 27 now DODGEs `turret@80,176#3` with a one-tick
+stall at walk-offset 183 and solves in 379 t, no spit landing. Mutant (the
+pricing off): U14's walk reappears and the model takes `#3` at t196, then
+refuses 46 ticks later at the button skirt.
+
+**D3 — the chain to the route's end.**
+
+| segment | route step | rooms | survey | solved | game |
+|---|---|---|---|---|---|
+| `r9-solve-29` | 27 | L29 → L31 (the Green Key) | 383 | **379** | 190 dead (150 pickup), clock exact, hits 0 |
+| `r9-solve-31` | 28 | L31 → L30 | 336 | **336** | clock exact |
+| `r9-solve-30` | 29 | L30 → L32 | 210 | **210** | clock exact |
+| `r9-solve-32` | 30 | L32's Bob Boss → the pit to L30 | 1,056 | **1,056** | 364 dead = 174 rock + 150 pickup + 40, clock exact, the Fire |
+
+The chain is **30 windows, 11,035 ticks**, and the frontier reads `complete`.
+Step 30 found a PRODUCER gap: an encounter equips its item's slot (`out.equips`,
+the Fire's at t840), and the producer's replay and tape dropped it, so the
+replay never fired, never burned the tree and never fell. The survey has carried
+equips since U5; the producer does now. The chain's L32 segment and U5's staged
+`swim-u5-bobboss-encounter` hold the same keys on all 1,056 ticks, and the
+game's two streams agree at all 1,057 observations, though their staging
+differs.
+
+**Trap candidates**, for the catalogue to number:
+
+- a stance chosen by distance alone can put cover on the line of fire: predict
+  the projectile against the world's own hitables before recording, or the
+  witness measures a tree;
+- a re-plan rung that routes around static volumes cannot answer a danger that
+  is the walk's own timing, and a STALLED preview that "probes clean" is a
+  walk that never reached the danger, not one that avoided it;
+- a producer that replays a solve from its keys alone drops whatever the solve
+  did beside the keys (here, a slot equip): the survey and the producer must
+  replay the same artifact;
+- a collision type named after an item (`"Shield"`) can be the PLAYER's own
+  entity: read the `type =` assignment before deciding what a hitable list
+  means.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -12811,7 +12903,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **26 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L29** arrival, **9054 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **11035 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12841,8 +12933,12 @@ its byte-frozen free oracle is compared against.
 | 24 | `r9-solve-12` | L12 → L21 | 2419 | — |
 | 25 | `r9-solve-21` | L21 → L22 | 26 | — |
 | 26 | `r9-solve-22` | L22 → L29 | 89 | — |
+| 27 | `r9-solve-29` | L29 → L31 | 379 | `bosskey@L29` |
+| 28 | `r9-solve-31` | L31 → L30 | 336 | — |
+| 29 | `r9-solve-30` | L30 → L32 | 210 | — |
+| 30 | `r9-solve-32` | L32 → END | 1056 | — |
 
-**NO REFUSED STEP** — no route step after the chain is refused by the survey — every remaining step SOLVES today, so the frontier is a GAP LIST rather than a refusal and this is a finding, not a stop.
+**ROUTE COMPLETE** — the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 2.2) → Fire); there is no next room on this route.
 
 <!-- GENERATED:campaign-chain END -->
 

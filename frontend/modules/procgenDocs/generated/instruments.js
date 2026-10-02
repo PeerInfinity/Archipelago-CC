@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 45,
+            "count": 46,
             "id": "plan"
         },
         {
-            "browser": 24,
-            "count": 65,
+            "browser": 25,
+            "count": 66,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 296,
-        "browser": 88,
-        "cited": 135,
-        "files": 307,
+        "blockStyle": 298,
+        "browser": 89,
+        "cited": 136,
+        "files": 309,
         "lineStyle": 11,
-        "withDocblock": 307,
-        "withFlags": 227
+        "withDocblock": 309,
+        "withFlags": 229
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7702,6 +7702,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-u15-turret.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-u15-turret — ⛓⛓⛓ U15-swim D1: `Turret` + `TurretSpit`, WITNESSED ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-u15-turret.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-u7-puncher.mjs",
             "flags": [
                 {
@@ -9381,6 +9408,58 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-u11-wall5 — ⛓⛓⛓ U11-swim D1: STEP 24'S FIFTH WALL, MEASURED.",
             "path": "scripts/procgen/probe-seedling-u11-wall5.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-u15-turret-mobiles.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "game-only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "upto"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "probe-seedling-u15-turret-mobiles — ⛓⛓⛓ U15-swim: THE TURRETS AND THEIR SPITS, ASKED OF THE GAME, TICK BY SAMPLED TICK.",
+            "path": "scripts/procgen/probe-seedling-u15-turret-mobiles.mjs"
         },
         {
             "argvHelpers": [

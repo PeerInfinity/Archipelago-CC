@@ -180,9 +180,14 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
          * ⛓ swim U13 — FIVE: `r9-solve-20` takes the shield (a pickup ceremony)
          * and became a seam's `from` when it gained the 2.2 route's exit and
          * `r9-solve-13-v2` grew behind it.
+         *
+         * ⛓ swim U15 — SIX: `r9-solve-29` takes the Green Key (a pickup ceremony,
+         * in a room whose turrets step through its frozen phase A) and is a
+         * seam's `from` now that `r9-solve-31` grew behind it.
          */
         expect(withCeremony.map((s) => s.from))
-            .toEqual(['r8-d2-19', 'r8-solve-10', 'r9-solve-11', 'r9-solve-19', 'r9-solve-20']);
+            .toEqual(['r8-d2-19', 'r8-solve-10', 'r9-solve-11', 'r9-solve-19', 'r9-solve-20',
+                'r9-solve-29']);
         for (const { from, to } of withCeremony) {
             const tape = loadTape(from);
             const run = runTape(tape, { levelSource });

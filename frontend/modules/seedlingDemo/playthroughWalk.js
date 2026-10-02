@@ -1227,8 +1227,16 @@ const CHAIN_DECLARATIONS = Object.freeze([
          * ⛓ R9 slice L18b — the THIRD: `r9-solve-19` takes boss key 0 in L19
          * (the ShieldBoss's room), the chain's first `save.keys` write, and the
          * solver-roster differential measured it EARNED before it was declared.
+         *
+         * ⛓ SWIM U15 — the FIFTH: `r9-solve-32`'s encounter earns the Fire in L32
+         * (`fire@L32`, an encounter row: no placement witness owed). ⚠ The Green
+         * Key `r9-solve-29` collects is HELD (the game's `hasKey[1]` 0 → 1) and NOT
+         * credited: `bosskey@112,64` carries no tag, nothing else in L29 is
+         * cleared, and a `key` row's witness asks for a clear in its level
+         * (`GOAL_PLACEMENT_WITNESS`). L19's key is credited because the ShieldBoss
+         * clears {19,0}/{19,1} in the same window.
          */
-        earns: Object.freeze(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20']),
+        earns: Object.freeze(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20', 'fire@L32']),
         /**
          * ⛓⛓ THE TIMED CLEARS, WITH THE INSTRUMENT THAT MEASURED EACH — THREE
          * ROWS FOR THREE CLEARS, one per `{level,tag}@at` a SEGMENT declares.

@@ -28,7 +28,11 @@
     "r9-solve-0-v3",
     "r9-solve-12",
     "r9-solve-21",
-    "r9-solve-22"
+    "r9-solve-22",
+    "r9-solve-29",
+    "r9-solve-31",
+    "r9-solve-30",
+    "r9-solve-32"
   ],
   "arrivals": [
     2,
@@ -56,7 +60,11 @@
     12,
     21,
     22,
-    29
+    29,
+    31,
+    30,
+    32,
+    30
   ],
   "sources": {
     "frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json": "c48453732f37ec0731adc5004c335ff9",
@@ -64,12 +72,13 @@
     "frontend/modules/flashPanel/atlases/seedling-sphere-order.json": "03f215201a5a64c472fa5cc51c51ee98"
   },
   "lastArrival": {
-    "step": 26,
-    "level": 29,
-    "segment": "r9-solve-22"
+    "step": 30,
+    "level": 30,
+    "segment": "r9-solve-32"
   },
   "nextStep": null,
   "refusal": null,
-  "covered": 26,
-  "why": "no route step after the chain is refused by the survey — every remaining step SOLVES today, so the frontier is a GAP LIST rather than a refusal and this is a finding, not a stop"
+  "covered": 30,
+  "complete": true,
+  "why": "the chain walks all 30 route steps, from the true start to route step 30 in L32 (Level 032 - Bob Boss (sphere 2.2) → Fire); there is no next room on this route"
 }

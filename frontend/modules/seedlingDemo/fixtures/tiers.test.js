@@ -151,9 +151,10 @@ describe('the roster categories (⚖ 70)', () => {
         expect(cats['map-walk'].length).toBe(21);
         // ⛓ swim U13: campaign 30 → 31 with `r9-solve-13-v2` (the chain's 22nd segment).
         // ⛓ swim U14: 31 → 35 with route steps 23–26 (the chain's 23rd–26th segments).
-        expect(cats.campaign.length).toBe(35);
-        // ⛓ swim U14: − 56 (campaign 35 + map-walk 21).
-        expect(cats.mechanic.length).toBe(roster.length - 56);
+        // ⛓ swim U15: 35 → 39 with route steps 27–30 (the chain's 27th–30th segments).
+        expect(cats.campaign.length).toBe(39);
+        // ⛓ swim U15: − 60 (campaign 39 + map-walk 21).
+        expect(cats.mechanic.length).toBe(roster.length - 60);
     });
 
     it('`campaign` is CHAIN-CLOSED — every tape a chain owns, headlines included', () => {

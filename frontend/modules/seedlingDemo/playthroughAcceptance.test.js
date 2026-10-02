@@ -929,7 +929,8 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         // ⛓ R9 slice L18b: `r9-solve-19` adds the third — boss key 0 in L19 —
         //   and `r9-solve-20` the fourth, the shield in L20 (the route's end).
         const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
-        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20']);
+        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20',
+            'fire@L32']);
     });
 
     /**
@@ -966,8 +967,9 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         // `r9-solve-18`, arriving in L19; then `r9-solve-19`, arriving in L20; and the
         // TERMINAL `r9-solve-20` ends the route IN L20 (it crosses nothing); ⛓ swim
         // U13: `r9-solve-20` leaves by its stairs to L13, and the tail is
-        // `r9-solve-13-v2`, arriving in L0; ⛓ swim U14: `r9-solve-22`, arriving in L29.
-        expect(arrivalOf(chain.segments.at(-1))).toBe(29);
+        // `r9-solve-13-v2`, arriving in L0; ⛓ swim U14: `r9-solve-22`, arriving in L29;
+        // ⛓ swim U15: the TERMINAL `r9-solve-32`, whose encounter falls L32's pit to L30.
+        expect(arrivalOf(chain.segments.at(-1))).toBe(30);
     });
 
     /**
@@ -984,7 +986,8 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         expect(R7_GOAL_LEDGER.filter((r) => r.level === 15).map((r) => r.id))
             .toContain('chest@L15');
         expect(chain.earns).not.toContain('chest@L15');
-        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20']);
+        expect(chain.earns).toEqual(['sword@L10', 'chest@L11', 'bosskey0@L19', 'shield@L20',
+            'fire@L32']);
     });
 });
 

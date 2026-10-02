@@ -89,7 +89,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // the four campaign segments (route steps 23–26).
         // ⛓ swim R3 + U14 (merged): 185 — R3's four death witnesses + U14's two moonrock witnesses and four segments.
         // ⛓ swim U15: 187 with `u15-turret-spit` and `u15-turret-shield`.
-        expect(names.length).toBe(187);
+        // ⛓ swim U15: 191 with route steps 27–30 (`r9-solve-29`, `-31`, `-30`, `-32`).
+        expect(names.length).toBe(191);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -133,7 +134,7 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(187);
+        expect(tally.swapped).toBe(191);
     }, 600_000);
 });
 

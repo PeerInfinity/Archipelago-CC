@@ -128,8 +128,9 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
 
     it('⛓ the boot levels are the declaration\'s own, deduplicated and sorted', () => {
         // ⛓ U14-swim: + L12, L21, L22 (route steps 24–26 boot there).
+        // ⛓ U15-swim: + L29, L30, L31, L32 (route steps 27–30).
         expect(campaignBootLevels()).toEqual([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19,
-            20, 21, 22]);
+            20, 21, 22, 29, 30, 31, 32]);
     });
 });
 

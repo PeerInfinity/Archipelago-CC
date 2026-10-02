@@ -1,5 +1,5 @@
 {
-    "tape_version": 8,
+    "tape_version": 11,
     "game": "seedling",
     "name": "r9-solve-30",
     "description": "⛓⛓⛓ R9 SLICE 6 — SEGMENT 29 of `r9-campaign`, THE TRUE-START SOLVER CHAIN (⚖ ruling 11, user 2026-08-20: \"a sequence of tapes to play back our solutions from the beginning of the game … recorded from the solver, not constructed manually\"). L30 — grown by swim U13 at route step 29: stairsup@224,160 → L32. The survey's own solve is 210 tick(s), 2 decision(s), 0 re-plan(s), passes [solve]. Solver: 210 ticks, 2 decision(s), 0 re-plan(s), ZERO hits. ⛔ ITS BOOT IS r9-solve-31's MEASURED LATCH — every field read out of the running game by `botSeam()` and turned into blocks by `segmentBootFromLatch`, not a staged declaration: the save arrays, the persistence set, the three RNG streams and `seam.time`. Two of those rows are `modelled: false` by `SEAM_BOOT_SPEC` on purpose, which is exactly why a Windows-driver run and not a model line produces them. GOALS come from the atlas (`placement` / `exitTo`); no stance, waypoint or hold tick was handed to the solver. Authored by scripts/procgen/solve-seedling-r9-campaign.mjs; trace sidecar in fixtures/traces/.",
@@ -149,6 +149,7 @@
             "note": ""
         }
     ],
+    "despawn": [],
     "equips": [],
     "pins": [
         "sound",
@@ -205,6 +206,17 @@
         "music": {
             "set": "Room",
             "index": 1
+        }
+    },
+    "tick0": {
+        "rng": {
+            "seed": 1134562721,
+            "split": true,
+            "cosmetic": 571530536,
+            "fp": 1093649398
+        },
+        "seam": {
+            "time": 16451
         }
     },
     "tick_count": 210,

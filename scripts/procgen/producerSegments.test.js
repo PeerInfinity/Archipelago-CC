@@ -77,7 +77,8 @@ describe('R9 P3 (C): the producers answer for themselves', () => {
         expect(derived).toEqual(prose);
         // ⛓ swim U13: 27 → 28 with `r9-solve-13-v2`, a campaign segment the producer emits.
         // ⛓ swim U14: 28 → 32 with `r9-solve-0-v3`, `-12`, `-21`, `-22`.
-        expect(derived.length).toBe(32);
+        // ⛓ swim U15: 32 → 36 with `r9-solve-29`, `-31`, `-30`, `-32`.
+        expect(derived.length).toBe(36);
     });
 
     /**
@@ -94,7 +95,8 @@ describe('R9 P3 (C): the producers answer for themselves', () => {
         }
         // ⛓ swim U13: 30 → 31, the roster's `r9-solve-13-v2`.
         // ⛓ swim U14: 31 → 35, the roster's four new campaign segments.
-        expect(derived.size + witnesses.length).toBe(35);
+        // ⛓ swim U15: 35 → 39, and four more (route steps 27–30).
+        expect(derived.size + witnesses.length).toBe(39);
     });
 });
 

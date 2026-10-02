@@ -60,7 +60,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // the four campaign segments (route steps 23–26).
         // ⛓ swim R3 + U14 (merged): 185 — R3's four death witnesses + U14's two moonrock witnesses and four segments.
         // ⛓ swim U15: 187 with `u15-turret-spit` and `u15-turret-shield`.
-        expect(names.length).toBe(187);
+        // ⛓ swim U15: 191 with route steps 27–30 (`r9-solve-29`, `-31`, `-30`, `-32`).
+        expect(names.length).toBe(191);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);
