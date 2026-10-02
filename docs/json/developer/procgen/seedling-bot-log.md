@@ -12354,6 +12354,64 @@ re-deriving it moves the gate's band.
   stream can agree for hundreds of ticks while the room's bodies have
   diverged, so a declared tick is evidence only for what the stream crosses.
 
+### Seedling fidelity F1 — L5's bodies + the open-lock arrival (2026-10-02)
+
+The first slice of the model-fidelity arc, picking up swim R5's residue row 1
+and the JS arc's L5 open-lock decline. The report is
+`CC/docs/cloud-reports/seedling-fidelity-f1.md`.
+
+**D1 — the arrows update newest-first (fixed).** FlashPunk's
+`World.addUpdate` PREPENDS, so a frame's new arrows join the update list
+ahead of everything: newest spawn tick first, the traps in load order, each
+volley `.2 .1 .0`. `levelRun` walked `flight` in creation order. When two
+arrows of one volley overlap one body on one tick, the first to update lands
+and the second meets the i-frames, so the order picks the knockback's source.
+On `r8-solve-5` t 54 the arrows at x = 36 and 40 both overlap `bob@16,64` at
+(34.595, 67.813). The game shoves it from x = 40 (v (−2.6929, 2.3064)) and
+the model shoved it from x = 36 (v (−0.4903, 3.7028)), which is R5 D3's
+divergence. `levelRun.arrowUpdateOrder` walks the game's order and leaves the
+storage order alone. Body probe, worst |Δ| before → after: `r8-solve-5`
+23.06 → 1.4e-14, `r7-act2-5` 23.06 → 1.4e-14, `r7-act2-full` 23.06 →
+1.4e-14 (to t 2019, where the polled game exits), `r8-solve-4` (L4's
+`bob@64,64`, from t 83) 11.94 → 8.9e-16, and `r2-terrain-killlock` already
+exact. A model census of all 196 tapes found only those four tapes' bodies or
+arrows moving, and tapeRunner's 449 old rows are identical. On `r8-solve-5`
+the L5 kills are now t 124, 127 and 166 (they were t 165 and 326), as in the
+game. `fixtures/f1-bodies-oracle.json` holds the game's Bob readouts, and
+`fidelityF1.test.js` holds the model to them.
+
+**D1c — L5's lock opens on the REMOVAL; no re-record.** `f1-l5-lock-removal`
+replays `r8-solve-5` through its kills, then walks onto the lock from t 261,
+before both readings. The game crosses on t 303, which is the last body's
+removal (t 201) + 100. The ledger's kill reading (t 166 + 101 = 267) is
+refuted, so the model's own lock tick is not the game's, and the four L5
+tapes are not re-recorded (the pre-licence's condition). The witness's
+`{5,0}@301` is game-sourced, and the model replays the recording under it.
+
+**D2 — the open-lock arrival: a false refusal removed, a true one named.**
+With `{5,0}` set, the ladder kills `bob@16,80` from the ceiling, and the
+chaser arm took `runHold`'s shut-before snapshot after the walk onto the
+button. Every trap already read armed, so the control refused with *"every
+responder in group t=0 [] is ALREADY OPEN before the hold begins"*. That was
+true of nothing: `armedArrowTraps` is [] before the walk and all four traps
+after it. The static-body arm already snapshots before the approach (§11.7's
+law, the fourth place it bites). With the fix the hold runs: `bob@16,64`
+drowns, the arrows kill `bob@48,80`, and `bob@16,80` takes two hits and ends
+at (58.87, 84.14), in column 3 between the lanes. The bound runs out, and the
+refusal now names that (`BODY_OUT_OF_LANE`). The game agrees body for body on
+`f1-l5-open-lock-bait`, the solve's own walk to the refusal (712
+comparisons, worst 8.5e-14).
+
+**Trap candidates**, for the catalogue to number:
+
+- an entity list walked in creation order where the engine prepends: two
+  same-tick actors that both reach one target are resolved by update order,
+  and the first-to-update rule decides a knockback's source;
+- a positive control snapshotted after the approach that arms the thing it
+  controls for: "already armed" is then a fact about the walk, not the room;
+- a lane (or any area) claim made from a chaser's position at planning time:
+  a body that walks leaves it, and a bound that runs out is the measurement.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
