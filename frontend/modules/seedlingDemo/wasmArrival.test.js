@@ -51,9 +51,8 @@ const reads = (a) => ({ seam: structuredClone(a.seam), status: structuredClone(a
 const stage = (a, extra = {}) => stagingFromWasmArrival({ ...reads(a), record: RECORDS.get(a.status.level), ...extra });
 
 describe('the recorded fixture is what it claims', () => {
-    it('four arrivals, each read before a stepped tick (Main.time = the begin record\'s)', () => {
-        expect([A, B0, B86, C].every(Boolean)).toBe(true);
-        expect(RECORDED).toHaveLength(4);
+    it('the arrivals A, B0, B86, C — and nothing else — each read before a stepped tick (Main.time = the begin record\'s)', () => {
+        expect(RECORDED.map((a) => `${a.label[0]}${a.status.level}`)).toEqual(['A86', 'B0', 'B86', 'C86']);
         for (const a of RECORDED) {
             expect(a.seam.beginEntry['begin.level']).toBe(a.status.level);
             expect(a.status.game_time).toBe(a.seam.beginEntry['save.time']);
