@@ -106,7 +106,7 @@ import { bootStaging } from './procgenOracle.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 import { parseOelLevel } from './procgenLevelOel.js';
 import { assembleLevelSetChunks } from './levelSetValidator.js';
-import { ENTITY_CLASSES, entityRect, STAIRS_TAGS, tagOf } from './levelWorld.js';
+import { buildLevelWorld, ENTITY_CLASSES, entityRect, STAIRS_TAGS, tagOf } from './levelWorld.js';
 import { chestStanceBand } from './chest.js';
 import { HITBOX } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
@@ -531,6 +531,11 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
                 const type = exitTypeAt(roomRecord(tr.from_level), tp.x, tp.y);
                 pendingExit = `${++pendingExitSeq}|${tr.from_level}|${type}|${Math.trunc(tp.x)}|${Math.trunc(tp.y)}|${tr.to_level}`;
                 crossing = { from: tr.from_level, to: tr.to_level, x: tp.x, y: tp.y, type };
+            } else if (run.transports.some((f) => f.t === tr.t && f.from_level === tr.from_level)) {
+                // ⛓ S4 — a pit FALL (`levelRun`'s `kind: 'fall'` transport): a crossing for the walk
+                // (a pit exit completes on it), and NO pendingExit — the game writes one only in
+                // `Teleporter.update()` (`Teleporter.as:107`); the host reads the level move.
+                crossing = { from: tr.from_level, to: tr.to_level, type: 'pit' };
             }
             arrival = { level: run.level, ...run.worldCtor };
             note({ type: 'transition', from: tr.from_level, to: tr.to_level, teleporter: !!tp,
@@ -749,6 +754,19 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         flush();
     }
 
+    /** ⛓ S4 — a vanilla room's pit tiles (`{tx, ty}`), off its record's own world; cached per level. */
+    const pitTilesCache = new Map();
+    function pitTilesOf(level, record) {
+        if (!pitTilesCache.has(level)) {
+            let pits = [];
+            try {
+                pits = buildLevelWorld(record).pitTiles.map((p) => ({ tx: p.tx, ty: p.ty }));
+            } catch { /* a room the model cannot build has no pit to name; the walk refuses it on arrival */ }
+            pitTilesCache.set(level, pits);
+        }
+        return pitTilesCache.get(level);
+    }
+
     /**
      * ⛓ J2 — a goal the host controller resolved, checked against the MOUNTED
      * set before it is accepted: `{ok:true}` or `{ok:false, reason}`. The
@@ -775,8 +793,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             return { ok: false, reason: `no tile in ${JSON.stringify(goal)}` };
         }
         if (goal.kind === 'exit' && !tiles.some(([tx, ty]) => (record.entities ?? []).some((e) => EXIT_TYPES.includes(e.type)
-            && Math.floor(e.x / 16) === tx && Math.floor(e.y / 16) === ty))) {
-            return { ok: false, reason: `level ${goal.level} has no teleporter on ${tiles.length === 1
+            && Math.floor(e.x / 16) === tx && Math.floor(e.y / 16) === ty))
+            // ⛓ S4 — a real room's PIT exit (`out_pit_*`): its cell is a pit tile of the room.
+            && !(!mounted && tiles.some(([tx, ty]) => pitTilesOf(goal.level, record).some((p) => p.tx === tx && p.ty === ty)))) {
+            return { ok: false, reason: `level ${goal.level} has no teleporter${mounted ? '' : ' or pit'} on ${tiles.length === 1
                 ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
         }
         return { ok: true };

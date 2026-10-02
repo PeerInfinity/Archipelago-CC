@@ -8,7 +8,8 @@
  * the walker asks this module for each tick's keys before walking itself:
  *
  *   1. MAP the goal (vanilla rooms only). A walker `exit` → `reach-exit
- *      {exit}` at the live teleporter the walker resolved (its OEL x, y); a
+ *      {exit}` at the live teleporter the walker resolved (its OEL x, y), or
+ *      ⛓ S4 `reach-pit {pit}` when it resolved a PIT tile (`out_pit_*`); a
  *      `location` → `collect-placement {placement}` at the entity's OEL x, y.
  *      A `tile` goal, and EVERY goal of a mounted GENERATED set, stay on the
  *      J2 walker (the solver has no apitem pickup and no tile goal — that
@@ -57,6 +58,7 @@
 import { createRunForStaging } from './tapeRunner.js';
 import { solveSegment } from './solverBot.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
+import { TILE_SIZE } from './levelWorld.js';
 
 /** Refutations of one goal's plans before the goal FAILS, by name (§2.2 step 5). */
 export const MAX_REFUTATIONS = 3;
@@ -124,6 +126,11 @@ export function solverGoalFor(goal, { run, resolved, placement = null, mounted =
     // solver-certified (no enemies, no puzzles to solve), its apitems are not
     // solver placements, and its sessions run on scratch persistence.
     if (mounted) return { walker: 'a generated level set keeps the J2 walker' };
+    if (goal?.kind === 'exit' && resolved?.pit) {
+        // ⛓ S4 — a pit exit → `reach-pit` at the pit TILE the walker resolved (its rect origin = tile·16).
+        const { tx, ty } = resolved.pit;
+        return { goal: { kind: 'reach-pit', pit: { tx, ty, x: tx * TILE_SIZE, y: ty * TILE_SIZE } } };
+    }
     if (goal?.kind === 'exit') {
         // ⛓ S5 — latched ON the goal's teleporter (an arrival on the door): the solver's walk to a point
         // it already stands on fires nothing (§1.3 L3 r8c6). The walker steps off; the solve follows.

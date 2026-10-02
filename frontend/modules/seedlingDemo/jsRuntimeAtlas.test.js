@@ -237,11 +237,11 @@ describe('jsRuntimeWalker J3 — a boundary-cell target', () => {
         expect(outs.find((o) => o.crossing)?.crossing).toMatchObject({ from: 86, to: 0 });
     });
 
-    it('a boundary with NO teleporter on any cell is refused by name (no sub-level crossing exists on either runtime)', () => {
+    it('a boundary with NO teleporter (⛓ S4: and no pit) on any cell is refused by name (no sub-level crossing exists on either runtime)', () => {
         const { rt } = vanillaRuntime();
         teleport(rt, { level: HOUSE.level, ...HOME });
         expect(rt.playback.walkTo({ kind: 'exit', level: 86, tiles: [[1, 3], [2, 3]] }))
-            .toEqual({ ok: false, reason: 'level 86 has no teleporter on any of the tiles [[1,3],[2,3]]' });
+            .toEqual({ ok: false, reason: 'level 86 has no teleporter or pit on any of the tiles [[1,3],[2,3]]' });
         expect(rt.playback.walkTo({ kind: 'location', level: 86, tag: 7 }))
             .toEqual({ ok: false, reason: 'level 86 has no entity with tag 7' });
     });

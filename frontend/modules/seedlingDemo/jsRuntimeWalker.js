@@ -52,6 +52,13 @@
  * latched on the goal's teleporter the walk heads for the nearest cell OFF it
  * (`stepOffPoint`), the latch drops the tick the box clears the rect, and the
  * walk turns back and earns the crossing (the maze bot's step-off-and-back).
+ *
+ * ⛓ solver-walk S4 — PIT EXITS. An atlas `out_pit_*` exit's cell is a PIT
+ * tile of a level whose `control` block names where its pits fall; with no
+ * teleporter on the cells, the walk heads for the nearest live pit among them
+ * (planned with that one pit exempted, `allowPit`), and the exit completes on
+ * the FALL (the core's `{type: 'pit'}` crossing) — never on a door, and a
+ * door exit never on a fall.
  */
 
 import { planWaypoints, livePerVisitOpts, driveStepHeld, BotDriverV2Error, isWalkableTile } from './botDriverV2.js';
@@ -148,6 +155,24 @@ export function stepOffPoint(run, index) {
     return null;
 }
 
+/**
+ * ⛓ solver-walk S4 — the live PIT tile on any of `tiles` nearest `from`, or
+ * null. An atlas `out_pit_*` exit names the pit tile it falls through (the
+ * level's `control` block names where every pit lands); there is no
+ * teleporter on it, and the crossing is the fall.
+ */
+export function nearestPitAt(world, tiles, from) {
+    let best = null;
+    for (const tile of tiles) {
+        const pit = (world?.pitTiles ?? []).find((p) => p.tx === tile[0] && p.ty === tile[1]);
+        if (!pit) continue;
+        const c = { x: tile[0] * TILE_SIZE + TILE_SIZE / 2, y: tile[1] * TILE_SIZE + TILE_SIZE / 2 };
+        const d = from ? (c.x - from.x) ** 2 + (c.y - from.y) ** 2 : 0;
+        if (!best || d < best.d) best = { tx: pit.tx, ty: pit.ty, tile, d };
+    }
+    return best;
+}
+
 const centreOf = (rect) => ({ x: (rect.x + rect.right) / 2, y: (rect.y + rect.bottom) / 2 });
 const tileCentrePoint = ([tx, ty]) => ({ x: tx * TILE_SIZE + TILE_SIZE / 2, y: ty * TILE_SIZE + TILE_SIZE / 2 });
 
@@ -185,6 +210,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
     let driven = 0;
     let plans = 0;
     let planError = null;
+    /** ⛓ S4 — how the exit goal was last resolved: `'door'` (a teleporter) or `'pit'`. */
+    let via = null;
     /** ⛓ S1 — the solver's reason for declining this goal (the walk then walks it), or null. */
     let declined = null;
     /** ⛓ S1 — whether THIS tick's keys came from the solver's plan. */
@@ -229,7 +256,10 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             const tiles = goalTiles(goal);
             const hit = nearestTeleporterAt(run.world, tiles, run.state);
             if (!hit) {
-                return { refused: `level ${goal.level} has no live teleporter on ${tiles.length === 1
+                // ⛓ S4 — a PIT exit: walked onto with that one pit exempted from the plan.
+                const pit = nearestPitAt(run.world, tiles, run.state);
+                if (pit) return { target: tileCentrePoint(pit.tile), allowTeleporter: null, pit: { tx: pit.tx, ty: pit.ty } };
+                return { refused: `level ${goal.level} has no live teleporter or pit on ${tiles.length === 1
                     ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
             }
             if (latchedOn(run, hit.index)) {
@@ -290,6 +320,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             retryLog = [];
             stepOff = null;
             stepOffs = 0;
+            via = null;
             solver?.clear();
             if (goal) settle(WALK_STATES.WAITING, null);
             else settle(WALK_STATES.IDLE, null);
@@ -316,6 +347,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             if (done(run)) { settle(WALK_STATES.DONE, null); return null; }
             const r = resolve(run);
             if (r.refused) { settle(WALK_STATES.FAILED, r.refused); return null; }
+            via = r.pit ? 'pit' : 'door';
             if (state !== WALK_STATES.WALKING) settle(WALK_STATES.WALKING, null);
             if (stepBudget > 0) stepBudget -= 1;
             if (driven >= giveUpTicks) {
@@ -370,7 +402,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             if (waypoints === null || sincePlan >= replanEvery) {
                 try {
                     waypoints = planWaypoints(run.world, run.state, r.target, r.allowTeleporter,
-                        { ...livePerVisitOpts(run), snapStart: true });
+                        { ...livePerVisitOpts(run), snapStart: true, ...(r.pit ? { allowPit: r.pit } : {}) });
                     planError = null;
                 } catch (e) {
                     if (!(e instanceof BotDriverV2Error)) throw e;
@@ -388,7 +420,9 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         /** What the tick did — a crossing completes an exit goal, a check a location one. */
         observe({ crossing = null, death = null } = {}) {
             if (!goal || state !== WALK_STATES.WALKING) return;
-            if (crossing && goal.kind === 'exit' && crossing.from === goal.level) {
+            // ⛓ S4 — a fall completes a PIT exit only, a door crossing a door exit only.
+            if (crossing && goal.kind === 'exit' && crossing.from === goal.level
+                    && (crossing.type === 'pit') === (via === 'pit')) {
                 settle(WALK_STATES.DONE, null);
                 return;
             }

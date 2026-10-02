@@ -195,8 +195,9 @@ describe('jsRuntimeCore — ⚖ death = respawn at the arrival, and only death',
         expect(rt.run.level).toBe(1);
         expect(rt.deaths).toHaveLength(0);
         expect(rt.run.playerDeaths).toHaveLength(0);
-        expect(out.crossing ?? null).toBeNull();
-        // A fall writes no pendingExit in the game, and none here.
+        // ⛓ solver-walk S4 — the fall IS a crossing for the walk (a pit exit completes on it)…
+        expect(out.crossing).toEqual({ from: 0, to: 1, type: 'pit' });
+        // …but a fall writes no pendingExit in the game, and none here.
         expect(reports.filter(([p]) => p === 'pendingExit')).toEqual([]);
         expect(reports.filter(([p]) => p === 'level')).toEqual([['level', 1]]);
     });
