@@ -216,6 +216,7 @@ export class SeedlingPlaybackController {
         this._wasmGame = null;
         this._wasmLoading = null;
         this._wasmLoadError = null;
+        this._wasmLoadErrorGame = null;
         this.substrate = substrate;
         this._resolve = resolve;
         this._mapOf = mapOf;
@@ -290,9 +291,12 @@ export class SeedlingPlaybackController {
         if (this._wasmEngine && this._wasmGame === game) return this._wasmEngine;
         if (this._wasmEngine) { try { this._wasmEngine.dispose(); } catch { /* gone */ } this._wasmEngine = null; }
         if (this._wasmLoading?.game === game) return null;
+        // ⛔ A load that FAILED for this game is not retried: `_applyWasm` turns it into a named refusal.
+        if (this._wasmLoadError && this._wasmLoadErrorGame === game) return null;
         const loading = { game };
         this._wasmLoading = loading;
         this._wasmLoadError = null;
+        this._wasmLoadErrorGame = null;
         const deps = {
             mapPath: s.wasm.mapPath,
             getGame: () => this._getSurface?.()?.wasm?.getGame?.() ?? null,
@@ -312,6 +316,7 @@ export class SeedlingPlaybackController {
             if (this._wasmLoading !== loading) return;
             this._wasmLoading = null;
             this._wasmLoadError = String(err?.message ?? err);
+            this._wasmLoadErrorGame = game;
         });
         return null;
     }
@@ -327,9 +332,11 @@ export class SeedlingPlaybackController {
         if (!map) return 'pending';
         const engine = this._engineFor(s);
         if (!engine) {
-            if (this._wasmLoadError) {
+            if (this._wasmLoadError && this._wasmLoadErrorGame === (s.wasm?.getGame?.() ?? null)) {
                 const why = this._wasmLoadError;
+                // Cleared, so the NEXT walkTo tries a fresh load (a fixed server, a new page).
                 this._wasmLoadError = null;
+                this._wasmLoadErrorGame = null;
                 return this._refuse(`the wasm playback engine did not load: ${why}`);
             }
             return 'pending';
