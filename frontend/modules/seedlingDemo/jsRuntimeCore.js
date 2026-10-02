@@ -84,10 +84,18 @@
  *    when the atlas arm delivers nothing. A delivered set takes precedence.
  *    A teleport that arrives before either is HELD and replayed. Before any
  *    boot the page reports level −1, the game's own "no game" sentinel.
- *  · A vanilla room is booted WITHOUT `scratchPersistence` (a kill-lock clear
- *    stays the model's named refusal, the census's setting); a delivered
- *    GENERATED set with it (J1). The model's refusals on real levels HALT the
- *    page BY NAME — the J3 HALT roster (plan, J3 as-built).
+ *  · ⛓ solver-walk S3 (⚖ Q4, the user, 2026-10-02) — EVERY room is booted
+ *    on `scratchPersistence`, the vanilla 116 as well as a delivered
+ *    GENERATED set (J1). The page's run has no tape behind it, so nobody owns
+ *    a kill lock's slot and the model's own arithmetic writes the clear
+ *    (`levelRun` `firePendingKillLockThrows`) at the tick the game's
+ *    `Lock.turnOff()` would — where J3 halted by name ("OPENS 1 kill lock …
+ *    DECLARES no clear"). The clear is REPORTED (`liveClears`, the run's
+ *    `scratchClears`) as the game reports it — `Lock.as:96` →
+ *    `Game.setPersistence(tag, false)` → `pendingCheck "…|0"`; the host's
+ *    placement table, not the page, decides it is no location — and CARRIED
+ *    into the next boot. The model's remaining refusals on real levels HALT
+ *    the page BY NAME — the HALT roster (plan, J3 + S3 as-builts).
  *  · Items the PLAYER picks up in a real room (a vanilla sword) are the
  *    run's own: `Main.*` reports the host's flag OR the run's live inventory,
  *    and a re-boot folds what the run GAINED into the flags first.
@@ -182,6 +190,8 @@ export function liveClears(run) {
     for (const c of run.ledger('bankedClears') ?? []) add(c.level, c.tag);
     for (const c of run.ledger('appliedTimedClears') ?? []) add(c.level, c.tag);
     for (const w of run.ledger('spinnerWrites') ?? []) if (w.outOfBand) add(w.flag?.level, w.flag?.tag);
+    // ⛓ S3 — a kill lock's clear the scratch layer wrote (`Lock.turnOff()`'s own write in the game).
+    for (const c of run.scratchClears ?? []) add(c.level, c.tag);
     return out;
 }
 
@@ -350,7 +360,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         if (!session) return;
         const run = session.run;
         for (const c of [...(run.earnedClears ?? []), ...(run.ledger?.('bankedClears') ?? []),
-            ...(run.ledger?.('appliedTimedClears') ?? [])]) {
+            ...(run.ledger?.('appliedTimedClears') ?? []), ...(run.scratchClears ?? [])]) {
             if (Number.isInteger(c.tag) && c.tag >= 0) carried.set(`${c.level}:${c.tag}`, { level: c.level, tag: c.tag });
         }
     }
@@ -382,7 +392,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         staging.persistence = [...carried.values()].map((c) => ({ ...c }));
         bootItems = { ...flags };
         try {
-            session = createManualSession({ levelSource: src.source, staging, name: 'js-runtime', scratchPersistence: !!mounted });
+            session = createManualSession({ levelSource: src.source, staging, name: 'js-runtime', scratchPersistence: true });
         } catch (err) {
             // ⛓ J3 — a real level the model cannot BUILD (an entity it refuses
             // by name) halts the page by name, the same as a refusal mid-play.

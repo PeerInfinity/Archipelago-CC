@@ -162,7 +162,10 @@ function assertShadow(shadow, live, ticks) {
 export const liveOf = (run) => ({ digest: runDigest(run), row: rowOf(run) });
 
 /** Step 2 — the session's own tape replayed into a fresh run, asserted equal to the live run. */
-export function replayShadow(session, levelSource, { scratchPersistence = false, equips = null } = {}) {
+export function replayShadow(session, levelSource, {
+    // ⛓ S3 — by default the shadow carries the session's own persistence mode.
+    scratchPersistence = session.run?.scratchPersistence === true, equips = null,
+} = {}) {
     const shadow = replayTape({ staging: session.staging, perTick: session.perTick, levelSource, scratchPersistence, equips });
     return assertShadow(shadow, liveOf(session.run), session.perTick.length);
 }
@@ -236,9 +239,35 @@ export function settleSolve(fn) {
     try {
         return { ok: true, plan: fn() };
     } catch (err) {
-        return { ok: false, kind: err instanceof ShadowDivergence ? 'divergence' : 'refusal',
-            message: String(err?.message ?? err) };
+        if (err instanceof ShadowDivergence) return { ok: false, kind: 'divergence', message: String(err.message) };
+        const pending = err?.name === 'PendingDeclaration' ? err.pending ?? null : null;
+        if (pending) return { ok: false, kind: 'refusal', declaration: { ...pending, phases: undefined }, message: declarationRefusal(pending, err) };
+        return { ok: false, kind: 'refusal', message: String(err?.message ?? err) };
     }
+}
+
+/**
+ * ⛓ S3 — a `PendingDeclaration` the page cannot discharge, said by name.
+ *
+ * The page's runs are SCRATCH (`jsRuntimeCore`, ⚖ Q4), so a kill lock's
+ * clear — the `model`-sourced declaration `twoPassSolve`'s discovery arm
+ * exists for — is written by the run itself and never reaches here. What
+ * does is `source: 'game'`: a static `"Enemy"` body (L8's sandtrap under the
+ * arrowtrap) whose death §11.4 refuses to compute, so only the RUNNING GAME's
+ * `persistence_cleared` may name its tick (`twoPassSolve`'s `gameTick`
+ * oracle). The JS page has no game to ask, and a tick the page invented
+ * would be the second writer of that slot — so it declines, and the walker
+ * walks. A `model`-sourced one here would be a scratch run that did not
+ * write its own clear: named as the defect it is.
+ */
+export function declarationRefusal(pending, err = null) {
+    const what = `{${pending.level},${pending.tag}}${pending.body ? ` (${pending.body})` : pending.lock ? ` (${pending.lock})` : ''}`;
+    if (pending.source === 'game') {
+        return `the goal waits on a GAME-sourced declaration ${what}: §11.4 refuses to compute that body's `
+            + 'death, so only the running game may name its tick, and the JS page has no game oracle';
+    }
+    return `the solver raised a ${pending.source}-sourced declaration ${what} on a scratch run, which should `
+        + `have written that clear itself — ${String(err?.message ?? '').split('\n')[0]}`;
 }
 
 /**
@@ -324,7 +353,9 @@ export function createRuntimeSolver({
         if (!session || session.run !== run) throw new ShadowDivergence('the walker\'s run is not the page session\'s run');
         const request = {
             staging: session.staging, perTick: session.perTick, live: liveOf(run), solverGoal,
-            name: `js-runtime-L${goal.level}-${goal.kind}`, scratchPersistence: false,
+            name: `js-runtime-L${goal.level}-${goal.kind}`,
+            // ⛓ S3 — the shadow carries the LIVE run's own persistence mode, never a second answer.
+            scratchPersistence: run.scratchPersistence === true,
             equips: playedEquips.get(session) ?? null,
         };
         const handle = service
