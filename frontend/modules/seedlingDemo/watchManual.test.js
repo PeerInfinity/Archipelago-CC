@@ -266,37 +266,39 @@ describe('⛓⛓⛓ ACCEPTANCE 1 — a hand-driven session REPLAYS frame-for-fra
         expect(parseTape(t).tick_count).toBe(115);
     });
 
-    it('⛓⛓ A REFUSED DRIVE ROUND-TRIPS ITS REFUSAL — same tick, same message', () => {
+    it('⛓⛓ A DRIVE INTO A LETHAL PIT DIES AND ROUND-TRIPS ITS DEATH — same tick, same respawn', () => {
         /**
-         * ⛔ THE CASE A HAND DRIVER MEETS CONSTANTLY, and the one a
-         * pass/fail round trip would have reported as a broken fold. L4's
-         * pit is LETHAL FLOOR (no control block), so walking into it is a
-         * named refusal from `levelRun` — everything up to it was really
-         * driven, so it folds, and the tape must meet the same wall.
+         * ⛔ THE CASE A HAND DRIVER MEETS CONSTANTLY. L4's pit is LETHAL FLOOR
+         * (no control block). Until swim R3 walking into it was a named
+         * REFUSAL from `levelRun` and this row asserted the refusal round-tripped
+         * (tick 272); since R3 the run DIES the game's way (`checkFallingInPit`
+         * → `die()` → `restartLevel()`), so the drive goes on after the respawn
+         * and the tape must meet the same death on the same tick.
          *
-         * Found by the BROWSER row, not by inspection: a first cut at
-         * `speed=4` walked far enough to fall in, and the check reported
-         * "ROUND TRIP FAILED" with an EMPTY mismatch list — which is the
-         * shape of a verdict answering the wrong question.
+         * ⚠ The refusal arm of `foldRoundTrip` (`reproduced`) lost its only
+         * witness with this re-aim — a mid-drive refusal a hand driver can
+         * still reach is owed (swim plan §18.19, residue for R2).
          */
-        const s = createManualSession({
-            levelSource, staging: stagingOf('r8-solve-4'), name: 'refused',
-        });
-        expect(() => drive(s, [
+        const s = drive(createManualSession({
+            levelSource, staging: stagingOf('r8-solve-4'), name: 'pit-death',
+        }), [
             [['ArrowRight'], 84], [[], 29], [['ArrowDown'], 72],
             [['KeyX'], 19], [[], 36], [['ArrowLeft'], 60],
-        ])).toThrow(/fell into a pit in level 4/);
-        expect(s.refusal.tick).toBe(272);
-        expect(s.tick).toBe(273);
-        // ⚠ ONE LONGER than the observations, and that is correct: the tick
-        // WAS dispatched, there is simply no state after it.
-        expect(s.observations).toHaveLength(273);
+        ]);
+        expect(s.refusal).toBeNull();
+        expect(s.tick).toBe(300);
+        expect(s.observations).toHaveLength(301);
+        expect(s.run.playerDeaths).toEqual([{
+            t: 273, level: 4, source: 'pit', id: 'pit@0,64', hits: 0, respawn: { x: 24, y: 24 },
+        }]);
+        // the observation the death lands on IS the respawn (the swap is end-of-tick)
+        expect([s.observations[273].x, s.observations[273].y]).toEqual([24, 24]);
 
         const trip = foldRoundTrip(s, levelSource);
         expect(trip.faithful).toBe(true);          // the fold lost nothing
         expect(trip.mismatches).toEqual([]);
-        expect(trip.reproduced).toBe(true);        // …and the wall is still there
-        expect(trip.error.message).toBe(s.refusal.message);
+        expect(trip.error).toBeNull();
+        expect(trip.collected.run.playerDeaths).toEqual(s.run.playerDeaths);
         expect(trip.ok).toBe(true);
     });
 

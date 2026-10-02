@@ -44,7 +44,8 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
         expect([...c.witnessedLevels].sort((a, b) => a - b)).toEqual([0, 37, 47, 87, 115]);
         expect(c.uncertifiedLevels).toHaveLength(18);
         expect(c.swimLevels.find((r) => r.level === 47).witnesses).toEqual(['r5-swim-cross.json', 'r5-swim-latch.json']);
-        expect(c.swimLevels.find((r) => r.level === 47).noSwimTapes).toEqual(['r5-swim-drown.json']);
+        // ⛓ swim R3: `r3-drown` (L47, no conch, the drowning death) joins `r5-swim-drown`.
+        expect(c.swimLevels.find((r) => r.level === 47).noSwimTapes).toEqual(['r3-drown.json', 'r5-swim-drown.json']);
     });
 
     it('ruleLabel spells nested rules in one line', () => {
