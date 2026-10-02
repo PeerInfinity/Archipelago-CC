@@ -10941,28 +10941,79 @@ export function solveSegment({
             const kill = deriveKillByCeiling(run, target, contacts);
             if (kill.presser) {
                 rowFor('kill', refused, { presser: kill.presser.tag, target: target.id });
+                /**
+                 * ⛓⛓⛓ SEEDLING FIDELITY F1 D2 — §11.7's law, the FOURTH place it
+                 * bites. The static-body arm above takes its shut-before
+                 * snapshot before the approach; this arm took it after. The
+                 * stance is inside the presser, so the walk arms the ceiling,
+                 * and a snapshot taken at hold start sees every trap already
+                 * firing. `runHold`'s positive control then refused with
+                 * *"every responder in group t=0 [] is ALREADY OPEN before the
+                 * hold begins"*, which was true of nothing. ⛓ MEASURED on L5's
+                 * open-lock arrival: `armedArrowTraps` is [] before the walk
+                 * and all four traps after it.
+                 */
+                const before = {
+                    open: run.entities('openActivators'),
+                    armed: run.entities('armedPulsers') ?? new Set(),
+                    trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
+                };
                 walkTo(goal, kill.stance, {
                     what: `${what} -> kill (${target.id}) stance`,
                     contactsOverride: kill.exempt,
                 });
-                const record = STRATEGY_EXECUTORS.hold(run, perTick, {
-                    target: { x: kill.presser.x, y: kill.presser.y },
-                    hold: {
-                        ticks: KILL_BY_CEILING_BOUND,
-                        until: {
-                            why: `${target.id} has left the world — ${kill.why}`,
-                            test: (r) => !(r.entities('chasers') ?? []).some((c) => c.id === target.id),
+                const holdFrom = run.ticksCompleted;
+                let record;
+                try {
+                    record = STRATEGY_EXECUTORS.hold(run, perTick, {
+                        target: { x: kill.presser.x, y: kill.presser.y },
+                        hold: {
+                            ticks: KILL_BY_CEILING_BOUND,
+                            until: {
+                                why: `${target.id} has left the world — ${kill.why}`,
+                                test: (r) => !(r.entities('chasers') ?? []).some((c) => c.id === target.id),
+                            },
                         },
-                    },
-                }, {
-                    maxTicksPerTarget,
-                    what: `${what} -> kill (${target.id})`,
-                    before: {
-                        open: run.entities('openActivators'),
-                        armed: run.entities('armedPulsers') ?? new Set(),
-                        trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
-                    },
-                });
+                    }, {
+                        maxTicksPerTarget,
+                        what: `${what} -> kill (${target.id})`,
+                        before,
+                    });
+                } catch (e) {
+                    /**
+                     * ⛓ F1 D2 — WHY THE BOUND RAN OUT, SAID FROM THE RUN. The
+                     * lane claim (`deriveKillByCeiling`) is the body's position
+                     * when the kill was planned. A chaser walks: on L5's
+                     * open-lock arrival `bob@16,80` takes two arrows and ends
+                     * at (58.87, 84.14), in column 3 between the lanes
+                     * ([34,46) and [66,78)), where no armed lane reaches it.
+                     * ⛓ The game agrees, body for body (F1 report § D2). So
+                     * the refusal names what the hold measured: where the body
+                     * stands, which armed lanes still cover it, and when an
+                     * arrow last reached it.
+                     */
+                    const c = (run.entities('chasers') ?? []).find((b) => b.id === target.id);
+                    if (!c || !/for the whole bound of \d+ tick\(s\) and the condition never became true/
+                        .test(String(e?.message))) throw e;
+                    const landed = (run.arrowBodyHits ?? []).filter((h) => h.body === target.id);
+                    const lastLanded = landed.length > 0 ? landed[landed.length - 1].t : null;
+                    const armed = run.entities('armedArrowTraps') ?? new Set();
+                    const box = bodyRectOf(c);
+                    const lanesNow = (run.world.arrowTraps ?? [])
+                        .filter((t) => armed.has(t.id) && rectsOverlapLocal(laneRectOf(run, t), box))
+                        .map((t) => t.id);
+                    const volleys = (run.ledger('arrowVolleys') ?? [])
+                        .filter((v) => v.t > (lastLanded ?? holdFrom) && armed.has(v.id)).length;
+                    e.message += ` ⛓ At the bound ${target.id} is alive at (${c.x.toFixed(2)}, `
+                        + `${c.y.toFixed(2)}) with ${c.hits} hit(s), and ${lanesNow.length === 0
+                            ? `NO armed lane covers it (it has walked out of [${kill.covering.join(', ')}])`
+                            : `it stands in [${lanesNow.join(', ')}]`}. The last arrow that reached it `
+                        + `was ${lastLanded === null ? 'never' : `at t${lastLanded}`}, and the armed traps `
+                        + `fired ${volleys} volley(s) after that. The lane claim was the body's `
+                        + 'position when the kill was planned, and a chaser walks: this body is OUT OF '
+                        + 'THE CEILING\'S REACH (BODY_OUT_OF_LANE).';
+                    throw e;
+                }
                 for (const c of kill.exempt) exemptions.add(c);
                 records.push({ goal: goal.kind, strategy: 'kill', target: target.id, ...record });
                 return { escalations };

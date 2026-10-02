@@ -38,6 +38,13 @@
       "noHazards": []
     },
     {
+      "file": "f1-l5-open-lock-bait.json",
+      "tickCount": 437,
+      "bootLevel": 5,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "friction-stop.json",
       "tickCount": 30,
       "bootLevel": 0,

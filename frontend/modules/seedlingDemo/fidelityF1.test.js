@@ -17,11 +17,24 @@
  * game-sourced value. The model's own ledger still reads the kill (t166 + 101
  * = 267): swim R5's residue item 3, measured and not changed here.
  *
+ * D2: L5's OPEN-LOCK ARRIVAL. With `{5,0}` already set, the ladder kills
+ * `bob@16,80` from the ceiling, and the chaser arm took the hold's
+ * shut-before snapshot AFTER the walk onto the button, so `runHold` refused
+ * with *"every responder in group t=0 [] is ALREADY OPEN before the hold
+ * begins"*. That was true of nothing: the traps are silent before the walk.
+ * With the snapshot taken first, the hold runs, and the arrival declines by
+ * the reason the hold measured: the body walks out of every armed lane
+ * (`BODY_OUT_OF_LANE`). The game agrees body for body
+ * (`f1-l5-open-lock-bait`).
+ *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *
  *   m1 `arrowUpdateOrder` returns `flight` unchanged (creation order)
- *        -> both oracle rows red (r8-solve-5 at t54, r8-solve-4 at t83) and
- *           the t54 pinpoint row red with v (-0.4903, 3.7028)
+ *        -> 6/6 red: both oracle rows (r8-solve-5 at t54, r8-solve-4 at t83),
+ *           the t54 pinpoint (v (-0.4903, 3.7028)), the kills row and both
+ *           D1c rows (the player reaches the lock at t285)
+ *   m2 the chaser kill-by-ceiling arm's `before` taken after the walk again
+ *        -> the D2 decline row red with the old *"ALREADY OPEN"* refusal
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -29,8 +42,13 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { loadTape } from './fixtures/index.js';
-import { createTapeStepper } from './tapeRunner.js';
+import { createRunForStaging, createTapeStepper } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
+import { solveSegment } from './solverBot.js';
+import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
+// The JS arc's modules, imported read-only: the staging and the arrival goal.
+import { createJsRuntime } from './jsRuntimeCore.js';
+import { arrivalSolverGoal } from './wasmArrival.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ORACLE = JSON.parse(readFileSync(join(HERE, 'fixtures', 'f1-bodies-oracle.json'), 'utf8'));
@@ -66,7 +84,9 @@ describe('F1 D1 — the arrows update newest-first, and the bodies are the game\
             }
             let worst = 0;
             let first = null;
+            const unsampled = new Set(ORACLE.unsampled[name]);
             for (let t = 0; t <= tape.tick_count; t += 1) {
+                if (unsampled.has(t)) continue;
                 const g = game.get(t) ?? [];
                 const m = perTick[t] ?? [];
                 if (g.length !== m.length) {
@@ -129,5 +149,43 @@ describe('F1 D1c — L5\'s kill lock opens on the REMOVAL (the game\'s answer, f
         expect(onLock.t).toBeLessThan(267);
         // held there until the removal reading opens it; the game crossed on t303
         expect(obs.find((o) => o.level !== 5).t).toBe(303);
+    });
+});
+
+describe('F1 D2 — L5\'s open-lock arrival declines by what the hold measured, not by a false control', () => {
+    const MAP = JSON.parse(readFileSync(join(HERE, '..', 'flashPanel', 'atlases', 'seedling-map.json'), 'utf8'));
+    const RECS = indexLevels(MAP);
+    const SRC = levelSourceFromAtlas(RECS);
+    const arrive = (clears) => {
+        const rt = createJsRuntime();
+        rt.setVanilla(MAP);
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [5, 80, 32] }]);
+        rt.tick();
+        const staging = { ...rt.session.staging, persistence: [...rt.session.staging.persistence, ...clears] };
+        const m = arrivalSolverGoal({ kind: 'exit', level: 5, tiles: [[3, 7]], name: 'l5' },
+            { staging, levelSource: SRC, record: RECS.get(5) });
+        const run = createRunForStaging(staging, SRC, { scratchPersistence: true });
+        try {
+            return { run, out: solveSegment({ run, goals: [m.goal], name: 'l5', boot: staging.boot }) };
+        } catch (e) {
+            return { run, err: e };
+        }
+    };
+
+    it('⛓ lock SHUT: the first arrival solves (403 ticks, zero hits)', () => {
+        const { run, out, err } = arrive([]);
+        expect(err).toBeUndefined();
+        expect(out.perTick.length).toBe(403);
+        expect(run.playerHits).toEqual([]);
+    });
+
+    it('⛓⛓ lock OPEN: the arrival declines with BODY_OUT_OF_LANE, and never with the false "ALREADY OPEN"', () => {
+        const { run, err } = arrive([{ level: 5, tag: 0 }]);
+        expect(err?.name).toBe('BotDriverV2Error');
+        expect(err.message).not.toMatch(/ALREADY OPEN/);
+        expect(err.message).toMatch(/kill \(bob@16,80\): held button@48,48 for the whole bound/);
+        expect(err.message).toMatch(/bob@16,80 is alive at \(58\.87, 84\.14\) with 2 hit\(s\), and NO armed lane covers it/);
+        expect(err.message).toMatch(/BODY_OUT_OF_LANE/);
+        expect(run.entities('chasers').map((c) => c.id)).toEqual(['bob@16,80']);
     });
 });
