@@ -52,6 +52,13 @@
  * `play` (the game has one 30 tick/s clock, and a burst of ticks off it would
  * be a second one); `setRate` is a no-op (bounce's answer: no scriptable clock).
  *
+ * ⛓ SOLVER-WALK S1 — the surface's `solverWalk` (`flashPanel.seedlingSolverWalk`,
+ * default OFF) is handed to the page with every goal (`playback.setSolverWalk`):
+ * on, the page's walk asks the REAL solver for the room's plan first
+ * (`seedlingDemo/jsRuntimeSolver.js`). With it on, `instant` asks the page to
+ * play a solved plan in one burst (`playback.instant`) — still one page tick
+ * per key set, so the checks and crossings report exactly as on the clock.
+ *
  * ── ⛓ J3 — THE SAME CLASS WALKS THE ATLAS ROOMS (`flash_seedling`) ───────
  *
  * One page, one walker, two name → cell maps: a second instance is built with
@@ -184,6 +191,7 @@ export class SeedlingPlaybackController {
         this._timers = timers;
         this._pending = null;
         this._playing = false;
+        this._instant = false;
         this._retry = null;
         this.lastRefusal = null;
         this.lastGoal = null;
@@ -202,11 +210,15 @@ export class SeedlingPlaybackController {
         return out;
     }
 
-    play() { this._playing = true; this._page()?.play(); }
-    stop() { this._playing = false; this._clearPending(); this._page()?.stop(); }
+    play() { this._playing = true; this._instant = false; this._page()?.play(); }
+    stop() { this._playing = false; this._instant = false; this._clearPending(); this._page()?.stop(); }
     step() { this._page()?.step(); }
-    instant() { this.play(); }
-    reset() { this._playing = false; this._clearPending(); this._page()?.reset(); }
+    instant() {
+        this._playing = true;
+        this._instant = true;
+        this._go(this._page());
+    }
+    reset() { this._playing = false; this._instant = false; this._clearPending(); this._page()?.reset(); }
     setRate() { /* the game's own 30 tick/s clock is the only clock */ }
 
     /** The page's walk state, for readouts and rows: `{state, reason, goal}` or null. */
@@ -235,13 +247,22 @@ export class SeedlingPlaybackController {
         const liveLevel = s.jsRuntime?.run?.level ?? null;
         const r = this._resolve(target, map, { liveLevel, region: s.region ?? null });
         if (r.refused) return this._refuse(r.refused);
+        // ⛓ S1 — the solver mode travels with the goal (the page may be newer than the setting's last push).
+        page.setSolverWalk?.(s.solverWalk === true);
         const answer = page.walkTo(r.goal);
         if (!answer?.ok) return this._refuse(`the JS runtime refused ${JSON.stringify(r.goal)}: ${answer?.reason ?? 'no answer'}`);
         this.lastGoal = r.goal;
         this._lastTarget = target;
         this._watch(page);
-        if (this._playing) page.play();
+        if (this._playing) this._go(page);
         return true;
+    }
+
+    /** Start the page's walk: `instant` (a solved plan in one burst) when asked and offered, else `play`. */
+    _go(page) {
+        if (!page) return;
+        if (this._instant && typeof page.instant === 'function') page.instant();
+        else page.play();
     }
 
     /** Relay the page's FAILED walks (one subscription per page; a remount is a new page). */

@@ -249,3 +249,58 @@ describe('SeedlingPlaybackController — the atlas rooms (J3)', () => {
         expect(c.status()).toMatchObject({ state: 'done' });
     });
 });
+
+describe('SeedlingPlaybackController — the solver mode (solver-walk S1)', () => {
+    const vanillaAt86 = () => {
+        const reports = [];
+        const rt = createJsRuntime({ onStateChanged: (p, v) => reports.push([p, v]) });
+        rt.game.configure(JSON.stringify({ classes: GAME_CONFIG.classes, state_properties: GAME_CONFIG.state_properties }));
+        rt.setVanilla(MAP);
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [86, 48, 48] }]);
+        rt.tick();
+        reports.length = 0;
+        return { rt, reports };
+    };
+    const controllerOn = (rt, surface) => new SeedlingPlaybackController({
+        getSurface: () => ({ transport: 'js', atlas: ATLAS_MAP, jsRuntime: rt, region: 'region_2_2', ...surface() }),
+        substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas,
+    });
+
+    it('the surface\'s solverWalk travels with every goal: on → the page solves; off (or absent) → the page walks', () => {
+        const { rt } = vanillaAt86();
+        let solverWalk = true;
+        const c = controllerOn(rt, () => ({ solverWalk }));
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        expect(rt.playback.solverWalk).toBe(true);
+        solverWalk = false;
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        expect(rt.playback.solverWalk).toBe(false);
+        const absent = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'js', atlas: ATLAS_MAP, jsRuntime: rt, region: 'region_2_2' }),
+            substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas,
+        });
+        rt.playback.setSolverWalk(true);
+        expect(absent.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        expect(rt.playback.solverWalk).toBe(false);
+    });
+
+    it('end to end with the solver: the chest check, then the house door by `instant` — one page tick plays the plan', () => {
+        const { rt, reports } = vanillaAt86();
+        const c = controllerOn(rt, () => ({ solverWalk: true }));
+        const tickUntil = (pred, max = 3000) => { for (let i = 0; i < max && !pred(); i += 1) rt.tick(new Set()); };
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        c.play();
+        tickUntil(() => c.status().state === 'done');
+        expect(parsePendingCheck(reports.find(([p]) => p === 'pendingCheck')[1])).toMatchObject({ level: 86, tag: 0, cleared: true });
+        expect(rt.playback.solverStats.lastSolve.verbs).toContain('chest');
+        tickUntil(() => !rt.run.inCeremony);
+        c.instant();
+        expect(c.walkTo({ kind: 'exit', name: 'exit_S' })).toBe(true);
+        const out = rt.tick(new Set());
+        expect(out.burst).toBeGreaterThan(0);
+        expect(parsePendingExit(reports.find(([p]) => p === 'pendingExit')[1]))
+            .toMatchObject({ fromLevel: 86, type: 'teleporter', x: 48, y: 64, to: 0 });
+        expect(c.status()).toMatchObject({ state: 'done' });
+        expect(rt.playback.solverStats).toMatchObject({ solves: 2, refutations: 0, declines: 0 });
+    });
+});

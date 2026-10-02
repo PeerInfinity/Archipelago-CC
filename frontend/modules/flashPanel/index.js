@@ -148,6 +148,21 @@ export function register(registrationApi) {
           + "'js' (Seedling only) plays the JavaScript model of the game "
           + "(seedlingDemo) in rectangles, no sound — GENERATED rooms only for now.",
       },
+      // ⛓ Seedling solver-walk S1 — the Playback Bot's solver mode (no reinit).
+      seedlingSolverWalk: {
+        type: 'boolean',
+        default: false,
+        label: 'Seedling JS: Playback Bot uses the solver',
+        description: "Runtime 'js' only, real (atlas) Seedling rooms. On: the Playback "
+          + "Bot asks the real solver (seedlingDemo/solverBot) for the room's plan — "
+          + "baiting and striking enemies, shoving and holding blocks, opening chests — "
+          + "and plays it one key set per game tick, re-solving if the game leaves the "
+          + "plan; a goal the solver declines is walked by the simple walker, with the "
+          + "solver's reason in the bot's status. Off (default): the simple walker "
+          + "only. ⚠ The solve runs on the page's main thread: the game pauses while "
+          + "it plans (typically 0.2–5 s; a few rooms take much longer). Generated "
+          + "rooms always use the simple walker.",
+      },
     },
   });
 

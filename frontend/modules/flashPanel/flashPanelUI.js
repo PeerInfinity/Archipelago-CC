@@ -40,6 +40,13 @@ const RUFFLE_CDN = 'https://unpkg.com/@ruffle-rs/ruffle';
 // wasm build — the same iframe contract, so the same init flow.
 const RUNTIME_SETTING_KEY = 'moduleSettings.flashPanel.runtime';
 /**
+ * ⛓ Seedling solver-walk S1 — the Playback Bot's SOLVER mode on the JS
+ * runtime (default OFF: the solve is synchronous on the page's main thread
+ * until S2's Worker lands). Read at init and on change WITHOUT a reinit — it
+ * changes how the bot picks keys, not which game page runs.
+ */
+const SOLVER_WALK_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
+/**
  * ⛓ Seedling JS J1 — the JS runtime's page, document-relative like WASM_DIR.
  * ⛔ A PATH, never an import: the page's closure is the whole JS model, and a
  * static import here would put it in the shipped panel bundle.
@@ -164,6 +171,9 @@ export class FlashPanelUI {
      * switching wasm ↔ js on the loaded preset did nothing at all.
      */
     this._settingsChangedHandler = async (data) => {
+      if (data?.key === SOLVER_WALK_SETTING_KEY || data?.key === '*') {
+        this._refreshSolverWalk(data.key === '*' ? undefined : data.value);
+      }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
       if (!this.isInitialized) return;
       if (this.componentState.configPath || this.componentState.swfPath
@@ -269,10 +279,28 @@ export class FlashPanelUI {
     return {
       transport: this._initRuntime === undefined ? null : this.transport,
       setting: this._initRuntime ?? null,
+      // ⛓ S1 — the controller hands it to the page with every walkTo.
+      solverWalk: this._solverWalk === true,
       report: this._seedlingGenReport ?? null,
       atlas: this._seedlingAtlas ?? null,
       jsRuntime,
     };
+  }
+
+  /**
+   * ⛓ S1 — cache `flashPanel.seedlingSolverWalk` (the surface is read
+   * synchronously) and hand it to a live JS page at once. `value` undefined =
+   * read it from the settings.
+   */
+  async _refreshSolverWalk(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(SOLVER_WALK_SETTING_KEY, false); } catch { return; }
+    }
+    this._solverWalk = next === true;
+    try {
+      this.seedlingPlaybackSurface?.()?.jsRuntime?.playback?.setSolverWalk?.(this._solverWalk);
+    } catch { /* the page is not up yet — the next walkTo carries it */ }
   }
 
   _teardownForReinit() {
@@ -851,6 +879,7 @@ export class FlashPanelUI {
         runtime = await settingsManager.getSetting(RUNTIME_SETTING_KEY, 'auto');
       } catch { /* keep 'auto' */ }
       this._initRuntime = runtime;
+      await this._refreshSolverWalk();
       this.transport = 'wasm';
       if (runtime === 'js') {
         // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME
