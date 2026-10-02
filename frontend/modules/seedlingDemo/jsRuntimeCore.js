@@ -104,6 +104,7 @@ import { HITBOX } from './playerPhysicsV1.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { BUILD_SPAWN, ITEM_PROPERTIES } from './tapeFormat.js';
 import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
+import { createRuntimeSolver } from './jsRuntimeSolver.js';
 
 /**
  * The pins every JS-runtime run carries. ⛔ `sound` is not optional: without
@@ -286,7 +287,23 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
      * no goal (or is paused) the keyboard drives, exactly as in J1.
      */
     const walkListeners = new Set();
+    /**
+     * ⛓ solver-walk S1 — the solver mode (`flashPanel.seedlingSolverWalk`,
+     * OFF by default; `playback.setSolverWalk`). The walker consults it first;
+     * off, every tick is exactly the J2/J3 walk.
+     */
+    const solver = createRuntimeSolver({
+        getSession: () => session,
+        getLevelSource: () => roomSource()?.source ?? null,
+        placementOf: (goal) => locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null),
+        isMounted: () => mounted !== null,
+        onEvent: (e) => note({ type: 'solver', solver: e.type, message: e.message }),
+    });
+    /** ⛓ S1 — `instant`: play the solver's planned keys in one burst (a page tick each). */
+    let instant = false;
+    let bursting = false;
     const walker = createRuntimeWalker({
+        solver,
         apItemOf: (level, tag) => (mounted?.apItems.get(level) ?? []).find((a) => a.tag === tag) ?? null,
         // ⛓ J3 — a real room's location is an ENTITY of the room (a chest, a
         // pickup), walked to its own stance; an apitem is still the J1 row.
@@ -418,8 +435,30 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         return null;
     }
 
-    /** One movement tick. `held` is a Set of tape key names. */
+    /**
+     * One movement tick. `held` is a Set of tape key names. ⛓ S1 — in
+     * `instant` mode a tick that leaves the solver mid-plan plays the rest of
+     * the plan at once (each key set a full page tick: checks, crossings and
+     * reports exactly as on the clock).
+     */
     function tick(held = new Set()) {
+        const out = tickOnce(held);
+        if (!instant || bursting || !solver.planning) return out;
+        bursting = true;
+        let burst = 0;
+        try {
+            // Bounded by the plan in hand when the burst began; the next clock tick resumes the rest.
+            for (let n = solver.remaining; n > 0 && solver.planning && !halted && walker.state === WALK_STATES.WALKING; n -= 1) {
+                tickOnce(new Set());
+                burst += 1;
+            }
+        } finally {
+            bursting = false;
+        }
+        return { ...out, burst };
+    }
+
+    function tickOnce(held) {
         drainQueue();
         if (!session || halted) { flush(); return { stepped: false }; }
         if (deferredReboot && !session.run.inCeremony) rebootInPlace('an item flag changed');
@@ -430,7 +469,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
         const n0 = run.transitions.length;
         const inCeremony0 = Boolean(run.inCeremony);
         const walkHeld = walker.heldFor(run);
-        const { held: drive } = session.heldFor(walkHeld ?? held);
+        // ⛓ S1 — the solver's plan already presses every ceremony X; the page must not add one.
+        const { held: drive } = session.heldFor(walkHeld ?? held, { autoAdvanceText: !walker.solverDriving });
         const deaths0 = run.playerDeaths.length;
         try {
             session.step(drive);
@@ -725,10 +765,16 @@ export function createJsRuntime({ onStateChanged = null, log = () => {} } = {}) 
             walker.setGoal(goal);
             return v;
         },
-        play() { walker.play(); },
-        stop() { walker.stop(); },
+        play() { instant = false; walker.play(); },
+        stop() { instant = false; walker.stop(); },
         step() { walker.step(); },
-        reset() { walker.reset(); },
+        reset() { instant = false; walker.reset(); },
+        /** ⛓ S1 — play; with the solver mode on, a solved plan plays in one burst. */
+        instant() { instant = true; walker.play(); },
+        /** ⛓ S1 — the solver mode (`flashPanel.seedlingSolverWalk`). */
+        setSolverWalk(on) { solver.enabled = Boolean(on); },
+        get solverWalk() { return solver.enabled; },
+        get solverStats() { return solver.stats; },
         get state() { return walker.state; },
         get reason() { return walker.reason; },
         get goal() { return walker.goal; },

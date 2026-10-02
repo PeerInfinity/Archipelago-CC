@@ -103,9 +103,14 @@ const tileCentrePoint = ([tx, ty]) => ({ x: tx * TILE_SIZE + TILE_SIZE / 2, y: t
  * @param {(level:number, tag:number) => boolean} deps.isCollected
  * @param {(e:object) => void} [deps.onEvent]  `{type, goal, message}` per
  *   state change — the page logs it, the host controller relays it
+ * @param {object} [deps.solver]  ⛓ solver-walk S1 — the solver mode
+ *   (`jsRuntimeSolver.createRuntimeSolver`): asked FIRST for a tick's keys
+ *   once the goal is resolved; `{held}` drives the tick, `{declined}` hands
+ *   the goal to this walk WITH the reason in the status, `{failed}` fails
+ *   the goal, null (off, or not a solver goal) walks as before.
  * @param {object} [opts]
  */
-export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollected, onEvent = () => {} } = {}, {
+export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollected, onEvent = () => {}, solver = null } = {}, {
     replanEvery = REPLAN_EVERY, giveUpTicks = WALK_GIVE_UP_TICKS,
 } = {}) {
     let goal = null;
@@ -118,6 +123,10 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
     let driven = 0;
     let plans = 0;
     let planError = null;
+    /** ⛓ S1 — the solver's reason for declining this goal (the walk then walks it), or null. */
+    let declined = null;
+    /** ⛓ S1 — whether THIS tick's keys came from the solver's plan. */
+    let solverDriving = false;
 
     const emit = (type, message) => {
         try { onEvent({ type, state, goal: goal ? { ...goal } : null, message }); } catch { /* a listener's bug is not the walk's */ }
@@ -166,7 +175,9 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
         get reason() { return reason; },
         get goal() { return goal ? { ...goal } : null; },
         get playing() { return playing; },
-        get stats() { return { plans, driven, planError }; },
+        get stats() { return { plans, driven, planError, declined }; },
+        /** ⛓ S1 — true when the last `heldFor` returned the solver's keys. */
+        get solverDriving() { return solverDriving; },
         /** Replace the goal. `null` clears it. */
         setGoal(next) {
             goal = next ? { ...next } : null;
@@ -174,6 +185,8 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             sincePlan = Infinity;
             driven = 0;
             planError = null;
+            declined = null;
+            solver?.clear();
             if (goal) settle(WALK_STATES.WAITING, null);
             else settle(WALK_STATES.IDLE, null);
         },
@@ -187,6 +200,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
          * (no goal, paused, settled, or the run is in another level).
          */
         heldFor(run) {
+            solverDriving = false;
             if (!goal || !run) return null;
             if (state === WALK_STATES.DONE || state === WALK_STATES.FAILED) return null;
             if (!playing && stepBudget === 0) return null;
@@ -201,10 +215,22 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             if (stepBudget > 0) stepBudget -= 1;
             if (driven >= giveUpTicks) {
                 settle(WALK_STATES.FAILED, `not reached within ${giveUpTicks} ticks — stalled at `
-                    + `(${run.state.x}, ${run.state.y})${planError ? `; the planner said: ${planError}` : ''}`);
+                    + `(${run.state.x}, ${run.state.y})${planError ? `; the planner said: ${planError}` : ''}`
+                    + `${declined ? `; the solver declined: ${declined}` : ''}`);
                 return null;
             }
             driven += 1;
+            if (solver && declined === null) {
+                const s = solver.keysFor(run, goal, r);
+                if (s?.held) { solverDriving = true; return s.held; }
+                if (s?.failed) { settle(WALK_STATES.FAILED, s.failed); return null; }
+                if (s?.declined) {
+                    declined = s.declined;
+                    // The status carries WHY the solver declined (plan §2.2 step 6) — never silently.
+                    reason = `the solver declined — ${declined}; walking instead`;
+                    emit(WALK_STATES.WALKING, reason);
+                }
+            }
             if (waypoints === null || sincePlan >= replanEvery) {
                 try {
                     waypoints = planWaypoints(run.world, run.state, r.target, r.allowTeleporter,
