@@ -22,7 +22,7 @@ import {
   SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
   SeedlingPlaybackController,
 } from './seedlingPlaybackController.js';
-import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
+import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
 import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT, SeedlingRegionGlue } from './seedlingRegionGlue.js';
 import { createDoorGate, createSnapshotInterfaceLoader } from './seedlingDoorGate.js';
 import { stateManagerProxySingleton } from '../stateManager/index.js';
@@ -159,9 +159,12 @@ export function register(registrationApi) {
           + "and plays it one key set per game tick, re-solving if the game leaves the "
           + "plan; a goal the solver declines is walked by the simple walker, with the "
           + "solver's reason in the bot's status. Off (default): the simple walker "
-          + "only. ⚠ The solve runs on the page's main thread: the game pauses while "
-          + "it plans (typically 0.2–5 s; a few rooms take much longer). Generated "
-          + "rooms always use the simple walker.",
+          + "only. The solve runs in a background worker: the room is HELD (the "
+          + "game does not advance) while it plans — typically 0.01–3 s, shown as "
+          + "'solving…' in the bot's status — and a solve that takes more than 5 s "
+          + "is stopped and the walker takes over, saying so; a declined goal is "
+          + "offered to the solver again after a death, a crossing or 90 walked "
+          + "ticks (at most 3 times). Generated rooms always use the simple walker.",
       },
     },
   });
@@ -210,6 +213,8 @@ export function register(registrationApi) {
   // ⛓ Seedling JS J2 — the playback controller's LATE refusal (same trap a
   // third time: unregistered, the publish is skipped with a warn).
   registrationApi.registerEventBusPublisher(PLAYBACK_WALK_FAILED_EVENT);
+  // ⛓ solver-walk S2 — the live walk's note ("solving…", a decline, a retry).
+  registrationApi.registerEventBusPublisher(PLAYBACK_WALK_NOTE_EVENT);
 
   log('info', '[FlashPanel Module] Registration complete.');
 }
@@ -315,6 +320,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     },
     // A LATE refusal reaches the bot as a named status, never a silent wait.
     onWalkFailed: (e) => getModuleEventBus()?.publish?.(PLAYBACK_WALK_FAILED_EVENT, e),
+    // ⛓ S2 — "solving…" (and a decline / a retry) reaches the bot's status line.
+    onWalkNote: (e) => getModuleEventBus()?.publish?.(PLAYBACK_WALK_NOTE_EVENT, e),
   };
   setSeedlingPlaybackController(new SeedlingPlaybackController(playbackDeps));
   // ⛓ J3 — the same page and walker, the atlas rooms' name → cell map.

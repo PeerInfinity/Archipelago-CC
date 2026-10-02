@@ -1228,6 +1228,25 @@ describe('PlaybackBotUI — an unresolvable walkTo is a NAMED failure, not a sta
         expect(bot.getStatus()).toContain('not reached within 1800 ticks');
     });
 
+    it('⛓ S2 — a live walk\'s note (playback:walkNote → onWalkNote) rides after the status and clears', () => {
+        const controller = makeFakeController();
+        const bot = new PlaybackBotUI({
+            getSphereData: () => sphereData,
+            getStaticData: () => staticData,
+            getActiveController: () => controller,
+        });
+        bot.onRegionMove({ targetRegion: 'region_a' });
+        bot.play();
+        const status = bot.getStatus();
+        bot.onWalkNote({ substrate: 'flash_seedling', target: { kind: 'location', name: 'Loc A' }, note: 'solving… (budget 5 s)' });
+        expect(bot.getWalkNote()).toBe('solving… (budget 5 s)');
+        expect(bot.getStatus()).toBe(status);
+        expect(bot.getLog()).toContain(`${status} — solving… (budget 5 s)`);
+        bot.onWalkNote({ note: null });
+        expect(bot.getWalkNote()).toBeNull();
+        expect(bot.getStatus()).not.toContain('error:');
+    });
+
     it('a controller that accepts the target is unaffected', () => {
         const controller = makeFakeController();
         const bot = new PlaybackBotUI({

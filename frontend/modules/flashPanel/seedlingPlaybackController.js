@@ -167,6 +167,8 @@ export class SeedlingPlaybackController {
      *   — or null when no panel is mounted
      * @param {(msg:string, level?:string) => void} [deps.log]
      * @param {(e:{substrate:string, target:object, reason:string}) => void} [deps.onWalkFailed]
+     * @param {(e:{substrate:string, target:object, note:string|null}) => void} [deps.onWalkNote]  ⛓ S2 —
+     *   the page's solver-mode notes ("solving…", a decline, a retry; null clears)
      * @param {object} [deps.timers] `{setInterval, clearInterval}` (tests)
      * @param {() => number} [deps.now]
      * @param {string} [deps.substrate]  ⛓ J3 — which substrate this instance walks
@@ -174,7 +176,7 @@ export class SeedlingPlaybackController {
      * @param {(surface:object) => object|null} [deps.mapOf]  the name → cell map off the surface
      */
     constructor({
-        getSurface, log = () => {}, onWalkFailed = () => {}, now = () => Date.now(),
+        getSurface, log = () => {}, onWalkFailed = () => {}, onWalkNote = () => {}, now = () => Date.now(),
         timers = { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) },
         substrate = SEEDLING_PLAYBACK_SUBSTRATE, resolve = resolveSeedlingGoal, mapOf = (surface) => surface?.report ?? null,
     } = {}) {
@@ -184,6 +186,9 @@ export class SeedlingPlaybackController {
         this._getSurface = getSurface;
         this._log = log;
         this._onWalkFailed = onWalkFailed;
+        this._onWalkNote = onWalkNote;
+        /** ⛓ S2 — the last note relayed (null = none). */
+        this.lastNote = null;
         this._now = now;
         this._watched = null;
         this._unwatch = null;
@@ -265,12 +270,17 @@ export class SeedlingPlaybackController {
         else page.play();
     }
 
-    /** Relay the page's FAILED walks (one subscription per page; a remount is a new page). */
+    /** Relay the page's FAILED walks and ⛓ S2 its solver notes (one subscription per page; a remount is a new page). */
     _watch(page) {
         if (this._watched === page) return;
         this._unwatch?.();
         this._watched = page;
         this._unwatch = typeof page.onWalk === 'function' ? page.onWalk((e) => {
+            if (e?.type === 'solver') {
+                this.lastNote = e.message ?? null;
+                try { this._onWalkNote({ substrate: this.substrate, target: this._lastTarget, note: this.lastNote }); } catch { /* a listener's bug */ }
+                return;
+            }
             if (e?.state !== 'failed') return;
             this._fail(this._lastTarget, `the JS runtime's walk failed: ${e.message ?? page.reason ?? 'no reason given'}`);
         }) : null;

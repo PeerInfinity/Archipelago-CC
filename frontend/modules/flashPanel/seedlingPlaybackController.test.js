@@ -18,6 +18,7 @@ import { substrateRegistryEntry as atlasEntry, SEEDLING_ATLAS_PLAYBACK_SCOPE } f
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { parsePendingExit } from './seedlingRegionBinding.js';
 import { createJsRuntime } from '../seedlingDemo/jsRuntimeCore.js';
+import { createInPlaceSolveService } from '../seedlingDemo/jsRuntimeSolver.js';
 import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedSet.js';
 import { planLevelSetChunks } from '../seedlingDemo/levelSetValidator.js';
 import { CAPABILITY_STATEMENTS, CELL_KINDS } from '../procgenCore/substrateCapabilities.js';
@@ -302,5 +303,40 @@ describe('SeedlingPlaybackController — the solver mode (solver-walk S1)', () =
             .toMatchObject({ fromLevel: 86, type: 'teleporter', x: 48, y: 64, to: 0 });
         expect(c.status()).toMatchObject({ state: 'done' });
         expect(rt.playback.solverStats).toMatchObject({ solves: 2, refutations: 0, declines: 0 });
+    });
+
+    it('⛓ S2 — a solve in flight: the page HOLDS, "solving…" reaches onWalkNote, and the note clears when the plan plays', () => {
+        const { rt } = vanillaAt86();
+        // A solve service that answers only when told (the worker's shape, in place).
+        const inPlace = createInPlaceSolveService();
+        let release = null;
+        rt.playback.setSolveService({
+            kind: 'deferred', warm() {}, dispose() {},
+            start(request) {
+                const h = { settled: false, started: true, result: null, cancel() {} };
+                release = () => { const done = inPlace.start(request); h.result = done.result; h.settled = true; };
+                return h;
+            },
+        });
+        const notes = [];
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'js', atlas: ATLAS_MAP, jsRuntime: rt, region: 'region_2_2', solverWalk: true }),
+            substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas,
+            onWalkNote: (e) => notes.push(e),
+        });
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        c.play();
+        const ticks = rt.run.ticksCompleted;
+        expect(rt.tick(new Set())).toEqual({ stepped: false, solving: true });
+        expect(rt.tick(new Set())).toEqual({ stepped: false, solving: true });
+        expect(rt.run.ticksCompleted).toBe(ticks);
+        expect(notes).toEqual([{ substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, target: { kind: 'location', name: 'Starting House - Chest' },
+            note: 'solving… (budget 5 s)' }]);
+        expect(c.lastNote).toBe('solving… (budget 5 s)');
+        release();
+        expect(rt.tick(new Set()).stepped).toBe(true);
+        expect(rt.run.ticksCompleted).toBe(ticks + 1);
+        expect(notes.map((n) => n.note)).toEqual(['solving… (budget 5 s)', null]);
+        expect(c.lastNote).toBeNull();
     });
 });

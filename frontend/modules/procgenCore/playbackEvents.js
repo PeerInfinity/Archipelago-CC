@@ -13,3 +13,13 @@
  * asynchronous refusal is never a silent wait.
  */
 export const PLAYBACK_WALK_FAILED_EVENT = 'playback:walkFailed';
+
+/**
+ * ⛓ solver-walk S2 — `{ substrate, target, note }`: a controller's walk is
+ * still live but has something the user should see beside the bot's own
+ * status — the JS runtime's solver mode is `solving… (budget 5 s)` (the room
+ * is held while a worker thinks), declined and walking, or asking the solver
+ * again. `note: null` clears it. Never terminal: a walk that ends badly is
+ * `PLAYBACK_WALK_FAILED_EVENT`.
+ */
+export const PLAYBACK_WALK_NOTE_EVENT = 'playback:walkNote';

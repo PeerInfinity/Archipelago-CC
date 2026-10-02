@@ -186,6 +186,7 @@ export class PlaybackBotUI {
         // pickup event), and the cursor would stall.
         this._checkedSoFar = new Set();
         this._status = 'idle';
+        this._walkNote = null;
         // Append-only log of bot state transitions (one entry per
         // status change). _render paints the most-recent entries into
         // the widget so the user can scroll back through what the bot
@@ -303,6 +304,7 @@ export class PlaybackBotUI {
         this._lastPublishedTarget = null;
         this._currentRegion = null;
         this._status = 'idle';
+        this._walkNote = null;
         this._log = [];                 // start a fresh transition history
         this._pendingManualTarget = null;
         this._dispatcherLog = [];       // dispatcher event log is run-scoped
@@ -692,6 +694,24 @@ export class PlaybackBotUI {
         this._render();
     }
 
+    /**
+     * ⛓ solver-walk S2 — `playback:walkNote`: a controller's live walk has a
+     * note beside the bot's status (the Seedling JS runtime's solver mode:
+     * `solving… (budget 5 s)` while a worker thinks and the room is held, a
+     * decline, a retry). Shown after the status, logged once; `note: null`
+     * clears it. Never terminal — that is `onWalkFailed`.
+     */
+    onWalkNote(data) {
+        const note = typeof data?.note === 'string' && data.note ? data.note : null;
+        if (note === this._walkNote) return;
+        this._walkNote = note;
+        if (note && this._log[this._log.length - 1] !== `${this._status} — ${note}`) this._log.push(`${this._status} — ${note}`);
+        this._render();
+    }
+
+    /** ⛓ S2 — the live walk's note, or null. */
+    getWalkNote() { return this._walkNote ?? null; }
+
     onConsumableCollected() {
         if (!this._isActive) return;
         if (this._mazeCollect !== COLLECT_ALWAYS) return;
@@ -833,6 +853,8 @@ export class PlaybackBotUI {
         const sig = `${this._currentRegion}:${target.kind}:${tail}`;
         if (sig === this._lastPublishedTarget) return;
         this._lastPublishedTarget = sig;
+        // ⛓ S2 — a new target: the last walk's note is stale.
+        this._walkNote = null;
         // A substrate whose registry entry declares NO controller (flash and
         // both Seedling entries today) can never take this target. `_dispatch`
         // reads that as "no panel mounted yet" and returns undefined, so the
@@ -1156,7 +1178,8 @@ export class PlaybackBotUI {
         // sphere log is available.
         if (this._statusEl) {
             if (this._status && this._status !== 'idle') {
-                this._statusEl.textContent = this._status;
+                // ⛓ S2 — a live walk's note ("solving…") rides after the status.
+                this._statusEl.textContent = this._walkNote ? `${this._status} — ${this._walkNote}` : this._status;
             } else {
                 const data = this._getSphereData?.() ?? [];
                 const total = Array.isArray(data) ? data.length : 0;

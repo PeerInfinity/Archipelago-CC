@@ -20,7 +20,7 @@ import { describe, expect, it } from 'vitest';
 import { initialize, register, setActivePanelInstance } from './index.js';
 import { AP_ITEM_FOUND_EVENT, DOOR_LOCKED_EVENT } from './seedlingRegionGlue.js';
 import { FLASH_SEEDLING_LOAD_REGION_EVENT } from './flashSeedlingLibrary.js';
-import { PLAYBACK_WALK_FAILED_EVENT } from '../procgenCore/playbackEvents.js';
+import { PLAYBACK_WALK_FAILED_EVENT, PLAYBACK_WALK_NOTE_EVENT } from '../procgenCore/playbackEvents.js';
 
 /** A registrationApi that records rather than registers. */
 function recordRegistration() {
@@ -93,6 +93,8 @@ describe('the flashPanel module\'s bus registration', () => {
             FLASH_SEEDLING_LOAD_REGION_EVENT,
             // ⛓ Seedling JS J2 — the playback controller's late refusal.
             PLAYBACK_WALK_FAILED_EVENT,
+            // ⛓ solver-walk S2 — the live walk's note ("solving…").
+            PLAYBACK_WALK_NOTE_EVENT,
         };
         expect([...published].filter((n) => !(n in known)), 'published names this row cannot resolve').toEqual([]);
         const names = [...published].map((n) => known[n]);
