@@ -350,8 +350,11 @@ describe('finalBossRng — the arithmetic at each site', () => {
 
 describe('finalBossRng — the premise the table is only complete under', () => {
     it('refuses `split: false`, naming the site that would be missed', () => {
+        // ⛓ R4-swim D1 re-aimed this from `Music.as:673` (the rock's pick): the
+        // rock names its index and draws nothing. The measured sites are the
+        // build's `Tile` draws and the INDEXED pick, `playSound(set, -1)`.
         expect(() => assertOwlStreamPremises({ seed: 5, split: false }))
-            .toThrow(/Music\.as:673/);
+            .toThrow(/three per `Tile` \(675 in L112\) and every INDEXED sound pick \(`Music\.playSound\(set, -1\)`/);
     });
 
     it('refuses seed 0, because "the build\'s boot state" is not an ORIGIN', () => {

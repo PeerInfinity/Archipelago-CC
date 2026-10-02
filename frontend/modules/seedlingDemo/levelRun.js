@@ -1499,11 +1499,17 @@ export function createLevelRun({
      * `null` until a room with an Owl is entered. `assertOwlStreamPremises`
      * refuses a tape that has not declared `rng: { seed, split: true }` — see
      * `finalBossRng.js` for why the split is a premise and not a preference
-     * (without it `Music.playSound("Rock", 0)` draws from this stream once
-     * per rock LANDING and the schedule is short by exactly that many).
+     * (without it the build's `Tile` draws and every indexed sound pick land
+     * on this stream — R4-swim D1 measured both).
      */
     let owlStream = null;
     let owlStreamLevel = null;
+    /**
+     * ⛓ R4-swim D1: how many `new Game`s this run has built AFTER its boot —
+     * a transition, a death reboot, an ending reboot (`enterWorld`). The Owl's
+     * stream may open only while it is 0 (see `owlStreamFor`).
+     */
+    let worldEntries = 0;
     const owlStreamFor = (n) => {
         if (owlStream !== null) {
             if (owlStreamLevel !== n) {
@@ -1516,6 +1522,28 @@ export function createLevelRun({
             return owlStream;
         }
         assertOwlStreamPremises(rng, `the Owl fight in level ${n}`);
+        /**
+         * ⛓⛓⛓ R4-swim D1: AND THE ROOM MUST BE THE BOOT ROOM, ON ITS FIRST
+         * BUILD.
+         *
+         * `levelBuild()` below charges L112's own two ctor draws and nothing
+         * else, which is the stream exactly when `Bot.botStart`'s reseed is
+         * followed by THIS room's `loadlevel`. A run that booted elsewhere
+         * walked in having paid the boot room's build and every gameplay draw
+         * of the walk — measured per level by R4's build census (L0 1296, L12
+         * 3145: `Enemy`'s `coins`, `Orb`, 24 per grass tile) — and a re-entry
+         * pays the rooms between and a second L112 build. Neither is counted
+         * here, so both are refused by name rather than opened at the wrong
+         * position.
+         */
+        if (n !== boot.level || worldEntries > 0) {
+            throw new Error(`levelRun: the Owl's draw stream would open in level ${n} `
+                + `${n !== boot.level ? `after a boot in level ${boot.level}` : 'on a re-entry'}. `
+                + '`OwlDrawStream.levelBuild` charges only this room\'s own build, which is '
+                + 'the seeded stream only when the room is built FIRST after `botStart`\'s '
+                + 'reseed; the walk in paid another build and its own gameplay draws '
+                + '(R4-swim D1), which this rung does not count.');
+        }
         owlStream = new OwlDrawStream(rng.seed);
         owlStreamLevel = n;
         // ⛔⛔ THE LEVEL BUILD IS ON THE SEEDED STREAM. `Bot.botStart` reseeds
@@ -3879,6 +3907,7 @@ export function createLevelRun({
      */
     const enterWorld = ({ toLevel, fromLevel, carriedSwim, arrivalFor, ctor }) => {
         level = toLevel;
+        worldEntries += 1;
         // A `Game` is constructed here, so this is where `Lock.check()` runs
         // and where a flag the player turned off finally removes its lock.
         applyEarnedClears(level);

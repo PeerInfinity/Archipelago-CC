@@ -95,11 +95,13 @@
  *
  * A W-owl tape declares `rng: { seed, split: true }`. With the split ON the
  * ~30 `Rng.cos()` sites move to a second generator, and the two that would
- * otherwise fire in this room every few ticks are `Music`'s sound-index pick
- * (`Music.as:673` — one per `Music.playSound("Rock", 0)`, i.e. one per
- * LANDING) and `Tile`'s three per-tile constructor draws. Both cost this
+ * otherwise fire in this room are `Tile`'s three per-tile constructor draws
+ * (675 at the build) and `Music`'s INDEXED sound pick (`Music.as:726-733`,
+ * `playSound(set, -1)` only — a sword swing, a hurt, an explosion; the rock's
+ * `playSound("Rock", 0)` names its index and draws nothing). Both cost this
  * stream nothing under the split, and the split is why the schedule above is
- * a short table rather than an audit of the whole room.
+ * a short table rather than an audit of the whole room (R4-swim D1 measured
+ * it; see `assertOwlStreamPremises`).
  *
  * ⚠ **WITHOUT THE SPLIT THE TABLE IS INCOMPLETE BY CONSTRUCTION**, so
  * `assertOwlStreamPremises` refuses a tape that asks this model for an exact
@@ -453,14 +455,31 @@ export class OwlDrawStream {
  * ⛔ THE REFUSAL THAT KEEPS THE TABLE HONEST.
  *
  * The schedule above is complete only for a run whose cosmetic draws are on
- * their own generator. `Music.playSound("Rock", 0)` fires on EVERY rock
- * landing and `Music.as:673` picks its variant with `Rng.cos()`; with
- * `split: false` that is a `Math.random()` on this stream, interleaved
- * between a rock's update and the boss's, and this module would be silently
- * one draw per landing behind.
+ * their own generator.
  *
- * So an exact fight refuses a tape that has not declared the split, by name,
- * rather than producing a stream position that drifts once per rock.
+ * ⛔⛔ R4-swim D1 CORRECTED THE REASON THIS USED TO GIVE. It said
+ * `Music.playSound("Rock", 0)` picks its variant with `Rng.cos()` on every
+ * rock landing. It does not: an explicit index takes `playSound`'s ELSE arm
+ * (`Music.as:734-735`) and draws nothing. What a `split: false` run really
+ * puts on this stream, measured on the game against this module fed the
+ * build offset (`r6-owl-control` re-declared unsplit, truncated tick by tick):
+ *
+ *   · the BUILD — three `Rng.cos()` per `Tile` ctor (L112: 225 tiles, 675
+ *     draws) and one per grass blade, ahead of the two gameplay ctor draws.
+ *     Exact: model and game agree on ticks 1–15 (677 … 689);
+ *   · every INDEXED sound pick, `playSound(set, -1)`: one draw, or a
+ *     rejection loop while the pick repeats `Music`'s last (set, index) — a
+ *     page-history pair ("Text", 0 at this boot). The sword press held at
+ *     index 15 is the first: tick 16 reads 691 against 690, and the latch's
+ *     `currentSet` flips "Text" → "Sword" on that tick. In this room the
+ *     sword, `Player.hit`'s hurt and a grenade's explosion all pick;
+ *   · and once one pick lands the two fights are different fights (the
+ *     residual reads +1, +3, +2, 0, +1 at ticks 100, 150, 300, 500, 727).
+ *
+ * So an exact fight refuses a tape that has not declared the split, by name.
+ * Modelling it instead would mean `Music`'s no-repeat state and every
+ * indexed site the room can reach, each a silent drift if missed — the split
+ * removes all of them by construction.
  */
 export function assertOwlStreamPremises(rngBlock, what = 'the Owl fight') {
     if (!rngBlock || typeof rngBlock !== 'object') {
@@ -468,10 +487,13 @@ export function assertOwlStreamPremises(rngBlock, what = 'the Owl fight') {
     }
     if (rngBlock.split !== true) {
         throw new OwlRngError(`${what} needs \`rng: { split: true }\`. With the split `
-            + 'off, `Rng.cos()` IS `Math.random()`, so `Music.as:673`\'s sound-index '
-            + 'pick draws from the gameplay stream once per ROCK LANDING and the '
-            + 'schedule in `finalBossRng.js` is short by exactly that many. The '
-            + 'stream would be reproducible and this model would still be wrong.');
+            + 'off, `Rng.cos()` IS `Math.random()`, so the room\'s build pays three per '
+            + '`Tile` (675 in L112) and every INDEXED sound pick (`Music.playSound(set, -1)`: '
+            + 'a sword swing, a hurt, a grenade\'s explosion) draws from the gameplay '
+            + 'stream — once, or a rejection loop on a repeat — and the schedule in '
+            + '`finalBossRng.js` carries none of them (R4-swim D1, measured: the first '
+            + 'sword pick puts the game one draw ahead on tick 16). The stream would be '
+            + 'reproducible and this model would still be wrong.');
     }
     if (!Number.isInteger(rngBlock.seed) || rngBlock.seed <= 0) {
         throw new OwlRngError(`${what} needs a declared \`rng.seed\` in 1..2147483647; `
