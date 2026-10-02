@@ -48,7 +48,7 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 61,
+            "browser": 60,
             "count": 98,
             "id": "check"
         },
@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 49,
+            "count": 51,
             "id": "plan"
         },
         {
-            "browser": 35,
-            "count": 77,
+            "browser": 29,
+            "count": 71,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 312,
-        "browser": 100,
-        "cited": 148,
-        "files": 323,
+        "blockStyle": 308,
+        "browser": 93,
+        "cited": 142,
+        "files": 319,
         "lineStyle": 11,
-        "withDocblock": 323,
-        "withFlags": 243
+        "withDocblock": 319,
+        "withFlags": 239
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -2792,22 +2792,14 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-seedling-atlas-location-play.mjs"
         },
         {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
+            "argvHelpers": [],
+            "browser": false,
             "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-atlas-maze.mjs",
             "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
                 {
                     "how": [
                         "includes"
@@ -2819,10 +2811,6 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "argvHelp.js",
                     "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "Phase-5b gate for the region atlas (CC/docs/plans/region-atlas-plan.md): the atlas's analyzed tile map, projected into the MAZE substrate, is a payload the runtime can actually play — and the committed preset still IS that projection.",
@@ -6434,6 +6422,60 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-f1-l5-lock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-f1-l5-lock — ⛓⛓⛓ SEEDLING FIDELITY F1: L5's KILL LOCK, ASKED OF THE GAME WITH A WALK THAT CAN TELL THE TWO READINGS APART.",
+            "path": "scripts/procgen/plan-seedling-f1-l5-lock.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-f1-l5-open-lock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-f1-l5-open-lock — ⛓⛓⛓ SEEDLING FIDELITY F1 D2: L5's OPEN-LOCK ARRIVAL, THE SOLVER'S OWN WALK UP TO ITS REFUSAL, AS A TAPE THE GAME CAN REPLAY.",
+            "path": "scripts/procgen/plan-seedling-f1-l5-open-lock.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
@@ -8153,62 +8195,6 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-deadframes.mjs"
         },
         {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "record"
-            ],
-            "file": "probe-seedling-f2-apitem.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "record"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Seedling fidelity F2, D1b/D1c: **THE APITEM ON THE GAME.** Every generated preset room whose apitem the solver reaches (`collect-placement` resolving an APItem, strategy `apitem`) is mounted on the headless game (default build p4e, logic-only), and the solver's own tape is played on it.",
-            "path": "scripts/procgen/probe-seedling-f2-apitem.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "json"
-            ],
-            "file": "probe-seedling-f2-boundary.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "startsWith"
-                    ],
-                    "name": "json"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "Seedling fidelity F2, D2: **IS A KEY STILL HELD WHEN A WINDOW ENDS?** (residue row 25: the LONE-KEYUP risk at window boundaries).",
-            "path": "scripts/procgen/probe-seedling-f2-boundary.mjs"
-        },
-        {
             "argvHelpers": [
                 "arg"
             ],
@@ -9783,98 +9769,6 @@ export const INSTRUMENTS = frz({
             "docblockStyle": "block",
             "documentedFlags": [
                 "host",
-                "only",
-                "wait-for-box"
-            ],
-            "file": "probe-seedling-wasm-adopt.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Seedling solver-walk, slice W8 (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.13) — can the wasm Playback Bot ADOPT a room it never saw arrive (the COLD START), with no re-arrival?",
-            "path": "scripts/procgen/probe-seedling-wasm-adopt.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/flash.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host",
-                "legs",
-                "only"
-            ],
-            "file": "probe-seedling-wasm-arrival-composites.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "legs"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Seedling solver-walk, slice W4 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.1/§3 W4) — the live witness of the wasm ARRIVAL COMPOSITES and the fail-fast on an exact repeat, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
-            "path": "scripts/procgen/probe-seedling-wasm-arrival-composites.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/flash.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host",
                 "record"
             ],
             "file": "probe-seedling-wasm-arrival-solve.mjs",
@@ -9904,62 +9798,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling JS solver-walk, slice W1 (plan `seedling-js-solver-walk-plan.md` §5.3) — a wasm room ARRIVAL on the live flashPanel page → a JS staging → the S2 worker's solve, with NO play.",
             "path": "scripts/procgen/probe-seedling-wasm-arrival-solve.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/flash.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "c",
-                "host",
-                "only",
-                "wait-for-box"
-            ],
-            "file": "probe-seedling-wasm-continuation.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "base"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "c"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Seedling solver-walk, slice W7 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §1.3/§2.4/§3 W7) — the live witness that the wasm Playback Bot KEEPS THE ROOM STILL between goals and solves the next goal as a CONTINUATION (S0's prefix from the held room), with no forced re-arrival on the main path.",
-            "path": "scripts/procgen/probe-seedling-wasm-continuation.mjs"
         },
         {
             "argvHelpers": [
@@ -10061,48 +9899,6 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling JS solver-walk, slice W0 (plan `seedling-js-solver-walk-plan.md` §5.3) — MEASURE ONLY: can the wasm game take a HOST-BUILT tape mid-play, on the LIVE flashPanel page (the `seedling_atlas_location` atlas world, default build p4e)?",
             "path": "scripts/procgen/probe-seedling-wasm-host-tape.mjs"
-        },
-        {
-            "argvHelpers": [
-                "arg"
-            ],
-            "browser": true,
-            "category": "probe",
-            "citedBy": [
-                "docs/json/developer/procgen/flash.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "host",
-                "only"
-            ],
-            "file": "probe-seedling-wasm-level0.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "host"
-                },
-                {
-                    "how": [
-                        "arg"
-                    ],
-                    "name": "only"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                },
-                {
-                    "from": "boxLock.js",
-                    "name": "wait-for-box"
-                }
-            ],
-            "oneLiner": "Seedling solver-walk, slice W5 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.2/§3 W5) — the live witness of LEVEL 0 (the overworld hub) on the wasm solver, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
-            "path": "scripts/procgen/probe-seedling-wasm-level0.mjs"
         },
         {
             "argvHelpers": [
@@ -10909,9 +10705,7 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "region",
-            "citedBy": [
-                "docs/json/developer/procgen/flash.md"
-            ],
+            "citedBy": [],
             "docblockStyle": "line",
             "documentedFlags": [
                 "game-config",
@@ -10931,12 +10725,6 @@ export const INSTRUMENTS = frz({
                         "has"
                     ],
                     "name": "check"
-                },
-                {
-                    "how": [
-                        "has"
-                    ],
-                    "name": "embed-sphere-log"
                 },
                 {
                     "how": [
