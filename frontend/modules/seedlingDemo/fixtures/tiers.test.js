@@ -150,8 +150,10 @@ describe('the roster categories (⚖ 70)', () => {
         // makes a change to a route fixture visible.
         expect(cats['map-walk'].length).toBe(21);
         // ⛓ swim U13: campaign 30 → 31 with `r9-solve-13-v2` (the chain's 22nd segment).
-        expect(cats.campaign.length).toBe(31);
-        expect(cats.mechanic.length).toBe(roster.length - 52);
+        // ⛓ swim U14: 31 → 35 with route steps 23–26 (the chain's 23rd–26th segments).
+        expect(cats.campaign.length).toBe(35);
+        // ⛓ swim U14: − 56 (campaign 35 + map-walk 21).
+        expect(cats.mechanic.length).toBe(roster.length - 56);
     });
 
     it('`campaign` is CHAIN-CLOSED — every tape a chain owns, headlines included', () => {

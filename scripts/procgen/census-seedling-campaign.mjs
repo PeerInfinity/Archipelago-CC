@@ -184,6 +184,10 @@ function stagedWalk(name) {
         parsed,
         run,
         ticks: parsed.tick_count,
+        // ⛓ SWIM U14 — the ARRIVAL's tick, which `declaredSeamTimeAfter` counts
+        // to: the last transition's `t`. A door seam ends on it; a PIT seam walks
+        // on to a calm landing (`r9-solve-12`: 2339 against 2419 ticks).
+        arrivalTick: run.transitions.at(-1)?.t ?? parsed.tick_count,
         deadFramesOwed: run.deadFramesOwed,
         endLevel: run.level,
         endCtor: run.worldCtor,
@@ -236,7 +240,7 @@ function censusPair(a, b, index) {
         const predicted = declaredSeamTimeAfter({
             declaredTime: wa.declaredTime,
             deadFramesOwed: wa.deadFramesOwed,
-            tickCount: wa.ticks,
+            tickCount: wa.arrivalTick,
         });
         const declared = wb.parsed.seam.time;
         oracle = {

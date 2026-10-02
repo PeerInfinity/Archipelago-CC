@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 26,
-        "headings": 955,
+        "headings": 954,
         "indexHeadings": 2,
-        "lines": 22531,
+        "lines": 22550,
         "pages": 4,
-        "words": 264782
+        "words": 264216
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -177,7 +177,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/playback-and-debugging.md",
-            "words": 1062
+            "words": 1052
         },
         {
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",
@@ -332,7 +332,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot.md",
             "h1": "The Seedling Real-Game Bot",
             "headings": 36,
-            "lines": 552,
+            "lines": 564,
             "links": [
                 "architecture.md",
                 "flash.md",
@@ -341,7 +341,7 @@ export const DOCS_INDEX = frz({
                 "seedling-editor.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot.md",
-            "words": 11658
+            "words": 11679
         },
         {
             "description": "The Seedling solver reaches the simulation through a single run object and a set of imported helpers.",
@@ -360,7 +360,7 @@ export const DOCS_INDEX = frz({
             "file": "seedling-bot-log.md",
             "h1": "Seedling Bot and Procgen Arcs: the Build Log",
             "headings": 511,
-            "lines": 16961,
+            "lines": 16981,
             "links": [
                 "architecture.md",
                 "demos.md",
@@ -368,17 +368,17 @@ export const DOCS_INDEX = frz({
                 "seedling-bot.md"
             ],
             "path": "docs/json/developer/procgen/seedling-bot-log.md",
-            "words": 171231
+            "words": 171443
         },
         {
             "description": "Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`.",
             "file": "seedling-constants.md",
             "h1": "Seedling Constants Census",
             "headings": 16,
-            "lines": 662,
+            "lines": 664,
             "links": [],
             "path": "docs/json/developer/procgen/seedling-constants.md",
-            "words": 9886
+            "words": 9912
         },
         {
             "description": "The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate.",
@@ -394,8 +394,8 @@ export const DOCS_INDEX = frz({
             "description": "The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room).",
             "file": "flash.md",
             "h1": "Flash Substrate",
-            "headings": 28,
-            "lines": 388,
+            "headings": 27,
+            "lines": 373,
             "links": [
                 "architecture.md",
                 "bounce.md",
@@ -405,7 +405,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 8532
+            "words": 7717
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",

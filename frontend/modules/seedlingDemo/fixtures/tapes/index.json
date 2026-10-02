@@ -1318,6 +1318,13 @@
       "noHazards": []
     },
     {
+      "file": "r9-solve-0-v3.json",
+      "tickCount": 299,
+      "bootLevel": 0,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "r9-solve-0.json",
       "tickCount": 145,
       "bootLevel": 0,
@@ -1328,6 +1335,13 @@
       "file": "r9-solve-11.json",
       "tickCount": 97,
       "bootLevel": 11,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "r9-solve-12.json",
+      "tickCount": 2419,
+      "bootLevel": 12,
       "tapeVersion": 11,
       "noHazards": []
     },
@@ -1391,6 +1405,20 @@
       "file": "r9-solve-20.json",
       "tickCount": 560,
       "bootLevel": 20,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "r9-solve-21.json",
+      "tickCount": 26,
+      "bootLevel": 21,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "r9-solve-22.json",
+      "tickCount": 89,
+      "bootLevel": 22,
       "tapeVersion": 11,
       "noHazards": []
     },

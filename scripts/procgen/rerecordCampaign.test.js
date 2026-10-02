@@ -404,7 +404,9 @@ describe('R9 12e′ RE-RUN: the record set is the game-visible projection diff',
             'r8-solve-11', 'r8-solve-10', 'r9-solve-11', 'r9-solve-3', 'r9-solve-2',
             'r9-solve-0', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-18', 'r9-solve-19', 'r9-solve-20',
             // ⛓ swim U13: the chain grew a successor, which the cascade now reaches.
-            'r9-solve-13-v2'];
+            'r9-solve-13-v2',
+            // ⛓ swim U14: four more successors (route steps 23–26).
+            'r9-solve-0-v3', 'r9-solve-12', 'r9-solve-21', 'r9-solve-22'];
         // Two tapes the run does not touch, so the diff has something to be
         // silent about — an all-movers fixture could not tell a selector from
         // a constant.

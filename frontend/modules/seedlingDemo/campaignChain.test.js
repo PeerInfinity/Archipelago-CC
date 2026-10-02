@@ -127,7 +127,9 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
     });
 
     it('⛓ the boot levels are the declaration\'s own, deduplicated and sorted', () => {
-        expect(campaignBootLevels()).toEqual([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20]);
+        // ⛓ U14-swim: + L12, L21, L22 (route steps 24–26 boot there).
+        expect(campaignBootLevels()).toEqual([0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19,
+            20, 21, 22]);
     });
 });
 
@@ -165,9 +167,12 @@ describe('the campaign\'s bridged rooms all have a prediction row', () => {
         // ⛓ MEASURED: L4, L5, L6, L14 and L16 are the campaign's bridged rooms
         // — L16 joined at R9 slice L15, as the seventeenth segment's ARRIVAL,
         // and R9 slice L16's eighteenth segment WALKS it.
+        // ⛓ U14-swim: L12 (the puncher) and L22 (a bob) join, by two arrivals
+        // and two walks.
         expect(out.touching).toEqual([
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6',
             'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16',
+            'r9-solve-0-v3', 'r9-solve-12', 'r9-solve-21', 'r9-solve-22',
         ]);
     });
 

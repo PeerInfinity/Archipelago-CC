@@ -982,6 +982,34 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + '(`startDeath("Shield")`), and it leaves the world on t 512. The player is '
                 + 'never hit.',
         }),
+        /**
+         * ⛓⛓⛓ U14-swim D2/D3 — THE CAMPAIGN GROWS THROUGH L12 AND L22, written
+         * before the roster measured them (`campaignBridgeCoverageFindings` named
+         * all four at the declaration). Each retires `noDamage` and its stream
+         * enters a room holding a bridged body: L12's `puncher@416,256`, L22's
+         * `bob@96,144`. Two are exposed at their ARRIVAL only, the
+         * `r8-solve-3`/`r9-solve-13` shape.
+         */
+        Object.freeze({
+            name: 'r9-solve-0-v3', levels: Object.freeze([12]), bobs: 1, ticks: 299,
+            addedBy: 'U14-swim D2 (route step 23, L0 -> L12)',
+            why: 'the moonrock visit; the walk ARRIVES in L12 on its last tick and never walks it.',
+        }),
+        Object.freeze({
+            name: 'r9-solve-12', levels: Object.freeze([12]), bobs: 1, ticks: 2419,
+            addedBy: 'U14-swim D2 (route step 24, L12 -> L21 by the pit)',
+            why: 'the puncher room walked to its pit (U12\'s funnel); the game took no hit.',
+        }),
+        Object.freeze({
+            name: 'r9-solve-21', levels: Object.freeze([22]), bobs: 1, ticks: 26,
+            addedBy: 'U14-swim D2 (route step 25, L21 -> L22)',
+            why: 'the walk ARRIVES in L22 on its last tick and never walks it.',
+        }),
+        Object.freeze({
+            name: 'r9-solve-22', levels: Object.freeze([22]), bobs: 1, ticks: 89,
+            addedBy: 'U14-swim D2 (route step 26, L22 -> L29)',
+            why: 'L22 walked to `teleporter@192,64` past `bob@96,144`; the game took no hit.',
+        }),
     ]),
 
     /**

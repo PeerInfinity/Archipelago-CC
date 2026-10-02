@@ -339,6 +339,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'u12-pull-carry', 'u12-pull-cross',
             // ⛓⛓⛓ R1-swim: the dark suit's witnesses, and the dark stuff's kills.
             'r1-dark-suit-bob', 'r1-dark-suit-kill', 'r1-dark-shield-kill',
+            // ⛓⛓⛓ U14-swim: the campaign through L12 and L22, declared before the
+            // roster measured them (two at their arrival only).
+            'r9-solve-0-v3', 'r9-solve-12', 'r9-solve-21', 'r9-solve-22',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -359,12 +362,14 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ U12-swim takes it to 30 — `u12-pull-carry` and `u12-pull-cross`, in L12.
         // ⛓ R1-swim takes it to 31 — `r1-dark-suit-bob`, in L4 — and to 33 with
         // `r1-dark-suit-kill` (L4) and `r1-dark-shield-kill` (L22).
-        expect(out.exposed).toBe(33);
+        // ⛓ U14-swim takes it to 37 — four campaign segments in L12 and L22.
+        expect(out.exposed).toBe(37);
         expect(out.tapes).toEqual([
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
-            'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-13',
-            'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'u10-puncher-dwell',
+            'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-0-v3',
+            'r9-solve-12', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-21',
+            'r9-solve-22', 'u10-puncher-dwell',
             'u10-puncher-dwell-refused', 'u11-dark-shield-bob', 'u11-dark-shield-puncher',
             'u11-facing-knockback', 'u11-facing-puncher',
             'u12-pull-carry', 'u12-pull-cross',
@@ -477,6 +482,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r1-dark-suit-bob': { tape: {}, levels: [4] },
             'r1-dark-suit-kill': { tape: {}, levels: [4] },
             'r1-dark-shield-kill': { tape: {}, levels: [22] },
+            // ⛓ U14-swim's four campaign segments, at their declared rooms — the mirror rule.
+            'r9-solve-0-v3': { tape: {}, levels: [12] },
+            'r9-solve-12': { tape: {}, levels: [12] },
+            'r9-solve-21': { tape: {}, levels: [22] },
+            'r9-solve-22': { tape: {}, levels: [22] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

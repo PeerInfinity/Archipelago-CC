@@ -275,6 +275,13 @@ export function beginEntryTimeFromDeclared(declared) {
  * ⚠ It assumes the segment ENDS AT AN ARRIVAL — the last transition's tick is
  * the tape's last — which is what a seam is: a segment cut anywhere else has
  * no `Game.begin()` for its successor to boot from.
+ *
+ * ⛓ SWIM U14 — EXCEPT A PIT. `r9-solve-12` crosses L12's pit at t2339 and
+ * walks on to a calm landing at t2419; the latch's `beginEntry` (the L21
+ * `Game.begin()`, `save.time` 15371) is what the successor boots from. So
+ * `tickCount` is the ARRIVAL's tick — the last transition's `t` — and the
+ * producer and the census both pass that; on every door seam it is the tape's
+ * length, as before.
  */
 export function declaredSeamTimeAfter({ declaredTime, deadFramesOwed, tickCount }) {
     if (!Number.isFinite(declaredTime) || !Number.isFinite(deadFramesOwed)

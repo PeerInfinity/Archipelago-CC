@@ -11924,6 +11924,102 @@ the point the page computed). That arc retires the catch.
   drowning" row reads `drownTimer` 0 after a drowning, because the respawn is a
   new `Player`.
 
+### Seedling substrate U14-swim — the Moonrock beam; the chain to L29 (2026-10-01)
+
+⚖ Q46 (user, 2026-10-01: *"Yes, one slice"*): transcribe `Moonrock.update`,
+witnessed on the game first, then resume the campaign chain from route step
+23 until it reaches L32 or the next unmodelled event. The report is
+`CC/docs/cloud-reports/seedling-swim-u14.md`. **The moonrock is modelled, and
+the chain grew four rooms and stopped at a second wall the game named.**
+
+**D1 — `Moonrock.update`, transcribed (`moonrock.js`).** `Shield.removed()`
+arms `Moonrock.beam` (= `Main.beam`). The rock updates before the Player
+(`Game.as:2345` after `:2227`), and its freeze arm reads the PREVIOUS frame's
+`canBeam`. So the frame the beam starts (t0) is live and unfrozen, and the next
+(t1) is a live tape tick with a frozen player. Then come **451 dead frames**:
+- the beam's rest (`beamTimeMax = Main.FPS * 5`, and `Main.FPS` is **60**, so
+  300 frames, not 150);
+- the 63-frame fall from y −1000 to 256;
+- the 90-frame camera hold;
+- and a release frame on which the player steps once, unobserved, under the
+  held keys.
+
+`slash()`'s 20-frame double-tap window drains through every frozen frame,
+which is what U13's t3 refutation was: a second press after the freeze is a
+fresh swing, not a dash. A swing across the freeze is burned (`genericHit`
+returns under the flag).
+
+The landing sets `rockSet` and `Game.shake = 60` (`camera.SHAKE_WRITERS
+.moonrockLanding`), and makes a 48x48 Solid (through `fallenRocksNow`, no new
+`liveSolidOpts(` site). The set rock's first update replaces the stairs under
+it and clears `{2,0}` (`moonrock_target`).
+
+| witness | arm | the game | the model |
+|---|---|---|---|
+| `u14-moonrock-beam` | step 23's staging, `beam: true`; sword t0, t2; `right` t0–t9 | 471 dead = 20 + **451** (predicted 451); clock 451 ahead; t3 = 59.25 (no dash); latch beam false, rockSet true, {2,0} cleared, shake 0 | all 21 observations, clock 12733 = 12733, 451 modelled |
+| `u14-moonrock-set` | `rock_set: true`, walking into the rock | stops at 237.95 | all 41 observations |
+
+The mutant (the family off) gives 2 reds / 411, at t3 and t27, as predicted.
+U13's 511 dead frames were 451 + 40 + 20. The 40 belonged to the refuted walk,
+not the beam: that walk desynced at t3, never reached L12, and touched water
+(`drownTimer` non-zero). The witness, standing still, read 471 and
+`drownTimer` 0.
+
+**D2 — the chain resumed: four rooms, recorded on the game, reproduced exactly.**
+
+| segment | route step | rooms | survey | solved | game |
+|---|---|---|---|---|---|
+| `r9-solve-0-v3` | 23 | L0 → L12 | 229 | **299** | 491 dead (451 the beam), clock = model |
+| `r9-solve-12` | 24 | L12 → L21 (the pit) | 2,419 | **2,419** | crossing t2339, calm landing t2419 |
+| `r9-solve-21` | 25 | L21 → L22 | 26 | **26** | clock = model |
+| `r9-solve-22` | 26 | L22 → L29 | 89 | **89** | clock = model |
+
+The chain is **26 windows, 9,054 ticks**. Step 23 is 70 ticks longer than the
+survey's model-only solve, and the traces place it: both open with the same
+tick-0 decision (`break` `breakablerock@288,176`), and the walks part at t3. The
+old model's t2 press dashed. The new one is a fresh swing, because the window
+drained through the freeze, so the break leg's press train re-plans from there
+and ends at t288 instead of t218.
+
+Step 24 is the chain's first PIT seam. The successor's clock is read at the
+arrival's `Game.begin()` (the latch's `beginEntry`, `begin.tick` 2339), not at
+the tape's last tick, so the free oracle now counts to the ARRIVAL tick (the
+producer, the census, `gameClock.test`), which is `tick_count` on every door.
+The continuous sequence carries the 80 walk-on ticks as a clock phase from that
+boundary on; no room downstream reads `Game.time` yet.
+
+**The wall: L29's turret spit.** Route step 27 (`r9-solve-29`, the Green Key)
+solves in the model in 383 t with no hit. The game refutes it at **t196**: the
+walk passes 15.9 px from `turret@80,176` (in range from t31), and a
+`TurretSpit` knocks the player north-east (`Enemies/Turret.as:64-76`,
+`Projectiles/TurretSpit.as:47-53`). The game ends with `hits` 1 and NO Green
+Key. The model steps neither the turret nor its spit (`combat.js` prices it as
+a 64 px volume; the solver's L29 danger list was empty).
+`CC/docs/cloud-reports/seedling-swim-u14-wall.json` has the readout.
+
+**D3.** No new `earns` or `clears` row is owed: the four segments collect
+nothing and declare no timed clear. The other records:
+- the frontier: covered 22 → 26, `--check-frontier` 4/0;
+- the census: NO CHAIN ROOM MOVES, 26/26;
+- R8 `exposed` 33 → 37: four prediction rows written before the roster
+  measured them (L12's puncher, L22's bob);
+- the differential over the whole chain plus the witnesses: 827 PASS / 0 FAIL /
+  61 SKIP.
+
+**Trap candidates**, for the catalogue to number:
+
+- a brief's frame count derived from a constant it did not read (`Main.FPS`
+  is 60, not 30): the beam's length was off by 150 frames before anything ran;
+- a refuted walk's dead-frame residue is not the event's cost. U13's 511 held
+  a desync's consequences (40), and only a witness that stands still prices
+  the event alone;
+- an oracle whose formula assumes the walk ends on its arrival (`tick_count`)
+  holds on every door and breaks on the first pit, which walks on past the
+  `Game.begin()` its successor boots from;
+- a model-only survey's "SOLVED" is not evidence for a room the model has an
+  unstepped shooter in: the survey solved step 27 for the same reason the
+  producer did.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -12715,7 +12811,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **22 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L0** arrival, **6221 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **26 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L29** arrival, **9054 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -12741,6 +12837,10 @@ its byte-frozen free oracle is compared against.
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
 | 21 | `r9-solve-20` | L20 → L13 | 560 | `shield@L20` |
 | 22 | `r9-solve-13-v2` | L13 → L0 | 48 | — |
+| 23 | `r9-solve-0-v3` | L0 → L12 | 299 | — |
+| 24 | `r9-solve-12` | L12 → L21 | 2419 | — |
+| 25 | `r9-solve-21` | L21 → L22 | 26 | — |
+| 26 | `r9-solve-22` | L22 → L29 | 89 | — |
 
 **NO REFUSED STEP** — no route step after the chain is refused by the survey — every remaining step SOLVES today, so the frontier is a GAP LIST rather than a refusal and this is a finding, not a stop.
 

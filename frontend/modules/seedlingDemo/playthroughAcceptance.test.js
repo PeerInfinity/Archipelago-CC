@@ -966,8 +966,8 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         // `r9-solve-18`, arriving in L19; then `r9-solve-19`, arriving in L20; and the
         // TERMINAL `r9-solve-20` ends the route IN L20 (it crosses nothing); ⛓ swim
         // U13: `r9-solve-20` leaves by its stairs to L13, and the tail is
-        // `r9-solve-13-v2`, arriving in L0.
-        expect(arrivalOf(chain.segments.at(-1))).toBe(0);
+        // `r9-solve-13-v2`, arriving in L0; ⛓ swim U14: `r9-solve-22`, arriving in L29.
+        expect(arrivalOf(chain.segments.at(-1))).toBe(29);
     });
 
     /**

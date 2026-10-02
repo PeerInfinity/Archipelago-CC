@@ -135,9 +135,11 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ swim R3: 176 (+ `r3-pit-death`, inert).
         // ⛓ swim R3: 178 (+ `r3-drown` and `r3-lava`, inert).
         // ⛓ swim R3: 179 (+ `r3-bobboss-death`, inert).
-        // ⛓ swim U14: 177 with `u14-moonrock-beam` and `u14-moonrock-set` — inert too.
-        expect(rows).toHaveLength(181);
-        expect(rows.length - parted.length).toBe(180);
+        // ⛓ swim U14: 177 with `u14-moonrock-beam` and `u14-moonrock-set` — inert too;
+        // 181 with the four campaign segments `r9-solve-0-v3`, `-12`, `-21`, `-22`.
+        // ⛓ swim R3 + U14 (merged): 185 — R3's four death witnesses + U14's two moonrock witnesses and four segments.
+        expect(rows).toHaveLength(185);
+        expect(rows.length - parted.length).toBe(184);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

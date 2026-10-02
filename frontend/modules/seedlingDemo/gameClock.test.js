@@ -141,10 +141,12 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
             const next = loadTape(to);
             const run = runTape(tape, { levelSource });
             expect(run.gameTimeRefusal).toBeNull();
+            // ⛓ swim U14: counted to the ARRIVAL — the last transition's tick, which
+            // is `tick_count` on a door seam and 2339 of 2419 on `r9-solve-12`'s pit.
             expect(declaredSeamTimeAfter({
                 declaredTime: tape.seam.time,
                 deadFramesOwed: run.deadFramesOwed,
-                tickCount: tape.tick_count,
+                tickCount: run.transitions.at(-1)?.t ?? tape.tick_count,
             })).toBe(next.seam.time);
         });
 
@@ -284,14 +286,22 @@ describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the
         const out = [];
         let run = null;
         let offset = 0;
+        let carried = 0;
         for (let k = 0; k < chain.segments.length; k += 1) {
             const tape = loadTape(chain.segments[k]);
             if (k > 0) {
+                // ⛓ swim U14: the ticks the predecessor walked PAST its arrival —
+                // 0 at a door, the landing after a pit (`r9-solve-12`: 80).
+                const prev = loadTape(chain.segments[k - 1]);
+                const arrival = runTape(prev, { levelSource }).transitions.at(-1)?.t
+                    ?? prev.tick_count;
                 out.push({
                     chain: chain.id,
                     boundary: `${chain.segments[k - 1]} -> ${chain.segments[k]}`,
                     declared: tape.seam.time,
                     live: run.gameTime,
+                    walkOn: prev.tick_count - arrival,
+                    carried: (carried += prev.tick_count - arrival),
                 });
                 // ⛔ THE SAME FOLD `watchViewer` DOES, and for the same reason:
                 //    a v9 timed row is the window's OWN clear, rebased into the
@@ -358,7 +368,17 @@ describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the
      * the same law the fully-declared chain above obeys, over sixteen
      * game-measured declarations it was never handed.
      */
-    it('⛓ a chain booting the TRUE START: `null` at its first boundary, then declared + 21 at every one', () => {
+    /**
+     * ⛓⛓ SWIM U14 — AND A PIT SEAM CARRIES ITS WALK-ON. The game boots a
+     * segment from the clock its predecessor latched at the arrival's
+     * `Game.begin()`; a door ends the walk there, a pit does not (`r9-solve-12`
+     * crosses at t2339 and lands calm at t2419). The continuous run keeps those
+     * 80 ticks, so its live clock from that boundary ON is the declaration's
+     * `+ 21 + 80`. It is a PHASE the chain's continuous play and the per-segment
+     * game disagree on — inert while no room downstream reads `Game.time`
+     * (L21, L22 hold no spinner) — and it is asserted rather than absorbed.
+     */
+    it('⛓ a chain booting the TRUE START: `null` at its first boundary, then declared + 21 (+ any pit walk-on) at every one', () => {
         const chain = PLAYTHROUGH_CHAINS.find((c) => c.id === 'r9-campaign');
         const rows = boundariesOf(chain);
         expect(rows.length).toBe(chain.segments.length - 1);
@@ -366,8 +386,10 @@ describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the
         expect(rows.length).toBeGreaterThan(2);
         for (const r of rows.slice(1)) {
             expect(`${r.boundary}: ${r.live}`)
-                .toBe(`${r.boundary}: ${r.declared + BOOT_COST_FRAMES}`);
+                .toBe(`${r.boundary}: ${r.declared + BOOT_COST_FRAMES + r.carried}`);
         }
+        expect(rows.filter((r) => r.walkOn !== 0).map((r) => `${r.boundary}: ${r.walkOn}`))
+            .toEqual(['r9-solve-12 -> r9-solve-21: 80']);
     });
 
     it.each(continuable.map((c) => ({ id: c.id, chain: c })))(

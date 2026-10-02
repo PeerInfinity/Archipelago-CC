@@ -216,7 +216,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 295,
         "browser": 88,
-        "cited": 135,
+        "cited": 134,
         "files": 306,
         "lineStyle": 11,
         "withDocblock": 306,
@@ -6547,35 +6547,6 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
-            "citedBy": [
-                "docs/json/developer/procgen/seedling-bot-log.md"
-            ],
-            "docblockStyle": "block",
-            "documentedFlags": [
-                "check"
-            ],
-            "file": "plan-seedling-r3-death.mjs",
-            "flags": [
-                {
-                    "how": [
-                        "includes"
-                    ],
-                    "name": "check"
-                }
-            ],
-            "inheritedFlags": [
-                {
-                    "from": "argvHelp.js",
-                    "name": "help"
-                }
-            ],
-            "oneLiner": "plan-seedling-r3-death — ⛓⛓⛓ R3-swim: PLAYER DEATH THE GAME'S WAY, WITNESSED ON THE GAME BEFORE THE MODEL STEP EXISTED.",
-            "path": "scripts/procgen/plan-seedling-r3-death.mjs"
-        },
-        {
-            "argvHelpers": [],
-            "browser": false,
-            "category": "plan",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [
@@ -7665,6 +7636,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-u12-pull — ⛓⛓⛓ U12-swim D1: `Pull.update`, WITNESSED ON THE GAME.",
             "path": "scripts/procgen/plan-seedling-u12-pull.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-u14-moonrock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-u14-moonrock — ⛓⛓⛓ U14-swim D1: `Moonrock.update`, WITNESSED ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-u14-moonrock.mjs"
         },
         {
             "argvHelpers": [],
