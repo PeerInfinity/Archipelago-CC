@@ -21,6 +21,11 @@ on:
       # driver could leave the gate broken and report green on a row it never
       # ran.
       - 'scripts/**/*.py'
+      # ⛓ SWIM S1 (2026-10-02) — THE SAME HOLE A FIFTH TIME: `reachClosure.identityRows()`
+      # PARSES `identity-block.sh` (the producers' command template, every `r` row), and
+      # `ciGatePlan`/`rowInputKey`/`standingValues` read what it derives — so a `.sh`-only
+      # change reached tests this trigger never ran (b8582d17c3 drew no vitest run).
+      - 'scripts/**/*.sh'
       # ⚠ THE SAME HOLE, ONE DIRECTORY OVER — named by the same criterion
       # rather than left for the next slice to rediscover: `include` also
       # collects `test_json/unit/**/*.test.js`.
@@ -76,6 +81,11 @@ on:
       # driver could leave the gate broken and report green on a row it never
       # ran.
       - 'scripts/**/*.py'
+      # ⛓ SWIM S1 (2026-10-02) — THE SAME HOLE A FIFTH TIME: `reachClosure.identityRows()`
+      # PARSES `identity-block.sh` (the producers' command template, every `r` row), and
+      # `ciGatePlan`/`rowInputKey`/`standingValues` read what it derives — so a `.sh`-only
+      # change reached tests this trigger never ran (b8582d17c3 drew no vitest run).
+      - 'scripts/**/*.sh'
       # ⚠ THE SAME HOLE, ONE DIRECTORY OVER — named by the same criterion
       # rather than left for the next slice to rediscover: `include` also
       # collects `test_json/unit/**/*.test.js`.
