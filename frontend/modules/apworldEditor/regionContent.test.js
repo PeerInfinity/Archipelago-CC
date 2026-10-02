@@ -309,11 +309,14 @@ describe('the cascade — a region taking another zone, every clause on the docu
         }
         expect(unplacedPoolItems(doc, p)).toEqual([]);
         expect(unplaced).toEqual(displacedCount);
-        // ⛓⛓ R6 — the brief's invariant, per item: pool = placed + non-filler unplaced
+        // ⛓⛓ R6 — the brief's invariant, per item: pool = starting + placed + non-filler unplaced
+        //   (the exporter's pool is precollected + placed; jta_prestige_test pools its starting perk)
         const placed = {};
         for (const item of Object.values(cp)) placed[item] = (placed[item] ?? 0) + 1;
+        const starting = {};
+        for (const item of next.starting_items?.[p] ?? []) starting[item] = (starting[item] ?? 0) + 1;
         for (const [k, n] of Object.entries(next.itempool_counts[p])) {
-            expect(n, `pool of ${k}`).toBe((placed[k] ?? 0) + (displacedCount[k] ?? 0));
+            expect(n, `pool of ${k}`).toBe((starting[k] ?? 0) + (placed[k] ?? 0) + (displacedCount[k] ?? 0));
         }
         const desc = describeZoneReplacement({ region, substrate: 'jta', zoneIdx: z, res });
         const f = res.fillerDropped.length;
