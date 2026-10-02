@@ -340,3 +340,82 @@ describe('SeedlingPlaybackController — the solver mode (solver-walk S1)', () =
         expect(c.lastNote).toBeNull();
     });
 });
+
+describe('⛓ W2 — the atlas instance walks under the WASM runtime (the engine is injected)', () => {
+    const fakeEngine = () => {
+        const e = { goals: [], stops: 0, live: HOUSE, answer: { ok: true, action: 'force-re-arrival' } };
+        return Object.assign(e, {
+            walkTo(g) { e.goals.push(g); return e.answer; },
+            stop() { e.stops += 1; },
+            liveLevel() { return e.live; },
+            status() { return { phase: 'idle', goal: null }; },
+            dispose() {},
+        });
+    };
+    const game = { botStatus() {} };
+    const wasmSurface = (extra = {}) => ({ transport: 'wasm', setting: 'auto', atlas: ATLAS_MAP, region: 'region_2_2',
+        wasm: { getGame: () => game, getWin: () => null, teleport: () => true, mapPath: 'm.json' }, ...extra });
+    const flush = () => new Promise((r) => { setTimeout(r, 0); });
+
+    it('a wasm walkTo is HELD while the engine loads, then handed to it with the resolved goal', async () => {
+        const ft = fakeTimers();
+        const engine = fakeEngine();
+        const loads = [];
+        const c = new SeedlingPlaybackController({ getSurface: () => wasmSurface(), substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+            resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true, timers: ft.timers, now: ft.now,
+            loadWasmEngine: async (deps) => { loads.push(deps); return engine; } });
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        expect(c.lastRefusal).toBeNull();
+        expect(engine.goals).toEqual([]);
+        await flush();
+        expect(loads).toHaveLength(1);
+        expect(loads[0].mapPath).toBe('m.json');
+        ft.fire();
+        expect(engine.goals).toEqual([{ kind: 'location', level: 86, tag: 0, entityType: 'chest', name: 'Starting House - Chest' }]);
+        expect(ft.armed).toBe(false);
+        // A second goal goes straight to the same engine.
+        expect(c.walkTo({ kind: 'exit', name: 'exit_S' })).toBe(true);
+        expect(engine.goals.at(-1)).toEqual({ kind: 'exit', level: 86, tiles: [[3, 4]], name: 'exit_S' });
+        c.stop();
+        expect(engine.stops).toBe(1);
+    });
+
+    it('the engine\'s synchronous refusal is FALSE with its reason; its late failure and notes are relayed', async () => {
+        const engine = fakeEngine();
+        const failed = [];
+        const notes = [];
+        let deps = null;
+        const c = new SeedlingPlaybackController({ getSurface: () => wasmSurface(), substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+            resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true, timers: fakeTimers().timers,
+            onWalkFailed: (e) => failed.push(e), onWalkNote: (e) => notes.push(e.note),
+            loadWasmEngine: async (d) => { deps = d; return engine; } });
+        c.walkTo({ kind: 'location', name: 'Starting House - Chest' });
+        await flush();
+        engine.answer = { ok: false, reason: 'level 86 holds a moonrock' };
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(false);
+        expect(c.lastRefusal).toMatch(/the wasm runtime refused .* level 86 holds a moonrock/);
+        deps.onNote('solving… (budget 5 s)');
+        deps.onFailed('the solver declined');
+        expect(notes).toEqual(['solving… (budget 5 s)']);
+        expect(failed.at(-1).reason).toBe('the wasm playback failed: the solver declined');
+    });
+
+    it('a failed engine load reaches the bot as a named failure, never a silent wait', async () => {
+        const ft = fakeTimers();
+        const failed = [];
+        const c = new SeedlingPlaybackController({ getSurface: () => wasmSurface(), substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+            resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true, timers: ft.timers, now: ft.now,
+            onWalkFailed: (e) => failed.push(e), loadWasmEngine: async () => { throw new Error('404 m.json'); } });
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        await flush();
+        ft.fire();
+        expect(failed[0].reason).toBe('the wasm playback engine did not load: 404 m.json');
+    });
+
+    it('the GENERATED instance keeps its refusal under wasm (and so does an atlas instance built without `wasm`)', () => {
+        const gen = new SeedlingPlaybackController({ getSurface: () => wasmSurface({ report }),
+            loadWasmEngine: async () => { throw new Error('never'); } });
+        expect(gen.walkTo({ kind: 'exit', name: 'exit_0' })).toBe(false);
+        expect(gen.lastRefusal).toBe(notJsRuntimeRefusal('wasm', 'auto'));
+    });
+});

@@ -222,3 +222,47 @@ describe('the dependencies are INJECTED, and it refuses without them', () => {
         expect(seen).toEqual([[entry.level, entry.tag]]);
     });
 });
+
+describe('⛓ W2 — ⚖ W0-Q1: a check fired inside a host botStart\'s arming window is NOT a check', () => {
+    it('an UNEARNED clear whose seq falls in the window makes no check — counted in armingWindow', () => {
+        const b = bindingFor();
+        const entry = entries[0];
+        expect(b.ignoreHostStart({ from: 4, to: 5 })).toBe(true);
+        expect(b.onStateReport('pendingCheck', report(entry, { seq: 5 }))).toEqual([]);
+        expect(b.stats).toMatchObject({ checks: 0, armingWindow: 1 });
+        expect(b.checked.size).toBe(0);
+    });
+
+    it('the SAME clear collected for real, after the window (a later seq), checks once', () => {
+        const b = bindingFor();
+        const entry = entries[0];
+        b.ignoreHostStart({ from: 4, to: 5 });
+        b.onStateReport('pendingCheck', report(entry, { seq: 5 }));
+        expect(types(b.onStateReport('pendingCheck', report(entry, { seq: 6 })))).toEqual(['locationCheck', 'apItemFound']);
+        expect(b.stats).toMatchObject({ checks: 1, armingWindow: 1 });
+    });
+
+    it('an EARNED clear re-declared in the window stays a repeat (the dedupe answers first)', () => {
+        const b = bindingFor();
+        const entry = entries[0];
+        b.onStateReport('pendingCheck', report(entry, { seq: 1 }));
+        b.ignoreHostStart({ from: 1, to: 2 });
+        expect(b.onStateReport('pendingCheck', report(entry, { seq: 2 }))).toEqual([]);
+        expect(b.stats).toMatchObject({ checks: 1, repeats: 1, armingWindow: 0 });
+    });
+
+    it('a seq at the window\'s lower bound (written BEFORE the botStart) still checks; an empty window is refused', () => {
+        const b = bindingFor();
+        b.ignoreHostStart({ from: 4, to: 6 });
+        expect(types(b.onStateReport('pendingCheck', report(entries[0], { seq: 4 })))).toEqual(['locationCheck', 'apItemFound']);
+        expect(b.ignoreHostStart({ from: 3, to: 3 })).toBe(false);
+        expect(b.ignoreHostStart({ from: 'a', to: 3 })).toBe(false);
+    });
+
+    it('a game restart forgets the windows (the seq counter restarts with the page)', () => {
+        const b = bindingFor();
+        b.ignoreHostStart({ from: 0, to: 1 });
+        b.onGameRestart();
+        expect(types(b.onStateReport('pendingCheck', report(entries[0], { seq: 1 })))).toEqual(['locationCheck', 'apItemFound']);
+    });
+});
