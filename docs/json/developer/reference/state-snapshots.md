@@ -250,9 +250,9 @@ The static data object contains the following properties:
 
 - **Type**: `Object | undefined`
 - **Description**: Count of each item in the item pool for this game/seed
-- **Example**: `{ "Progressive Sword": 4, "Bow": 1, "__max_progressive_bottle": 4 }`
+- **Example**: `{ "Progressive Sword": 4, "Bow": 1 }`
 - **Source**: `sm.itempoolCounts`
-- **Note**: Special keys starting with `__max_` indicate maximum limits for certain progressive items
+- **Note**: Real items only. Pool limits (e.g. ALttP's `progressive_bottle_limit`) are world attributes, exported at `world[player].difficulty_requirements`
 
 #### `startRegions`
 

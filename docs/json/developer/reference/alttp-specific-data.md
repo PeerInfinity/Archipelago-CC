@@ -24,17 +24,17 @@ ALTTP adds the following properties to snapshots through the `gameStateModule` (
 **Properties**:
 - **`progressive_bottle_limit`** (number): Maximum number of bottles that can be obtained
   - Default: 4
-  - Set from `__max_progressive_bottle` in itempool (line 434 in stateManager.js)
+  - Set from `world[player].difficulty_requirements.progressive_bottle_limit` (`initializeInventoryForTest` in stateManager.js)
   - Used by `bottle_count()` helper to cap effective bottle count
 
 - **`boss_heart_container_limit`** (number): Maximum boss heart containers that count toward health
   - Default: 10
-  - Set from `__max_boss_heart_container` in itempool (line 438 in stateManager.js)
+  - Set from `world[player].difficulty_requirements.boss_heart_container_limit` (`initializeInventoryForTest` in stateManager.js)
   - Used by `heart_count()` helper to calculate total hearts
 
 - **`heart_piece_limit`** (number): Maximum heart pieces that count toward health
   - Default: 24
-  - Set from `__max_heart_piece` in itempool (line 442 in stateManager.js)
+  - Set from `world[player].difficulty_requirements.heart_piece_limit` (`initializeInventoryForTest` in stateManager.js)
   - Used by `heart_count()` helper (4 pieces = 1 heart)
 
 **Example**:
@@ -410,14 +410,14 @@ For each dungeon, the exporter adds:
 - Palace of Darkness, Swamp Palace, Skull Woods, Thieves Town
 - Ice Palace, Misery Mire, Turtle Rock, Ganons Tower
 
-#### Special Max Count Markers
+#### Pool limits are not pool entries
 
-Prefixed with `__max_` to distinguish from regular items:
-- **`__max_progressive_bottle`**: Maximum bottles from difficulty settings
-- **`__max_boss_heart_container`**: Maximum boss hearts from difficulty settings
-- **`__max_heart_piece`**: Maximum heart pieces from difficulty settings
-
-**Usage**: These are read during state initialization (stateManager.js:433-443) to set `difficultyRequirements` in the snapshot.
+The difficulty limits (`progressive_bottle_limit`, `boss_heart_container_limit`, `heart_piece_limit`, …) are not written
+into `itempool_counts`, which carries real items only. They are exported with the other runtime world attributes at
+`world[player].difficulty_requirements`, where both the rule helpers (`world.difficulty_requirements.*`) and
+`initializeInventoryForTest` (stateManager.js) read them. Until 2026-10 the exporter also wrote them into the pool as
+`__max_progressive_bottle` / `__max_boss_heart_container` / `__max_heart_piece` pseudo-items; see
+`CC/docs/cloud-reports/pool-max-keys.md`.
 
 ### Region Attribute Extensions
 
@@ -527,15 +527,14 @@ Python Generation (exporter)
 │   └─> Medallion requirements extracted
 │
 ├─> Itempool Counts
-│   ├─> Dungeon keys added dynamically
-│   └─> Special __max_* markers added
+│   └─> Dungeon keys added dynamically
 │
 └─> Collections (location groups)
 
 ↓ Exported as staticData
 
 JavaScript StateManager Initialization
-├─> Reads __max_* from itempool
+├─> Reads world[player].difficulty_requirements (test inventories)
 │   └─> Sets difficultyRequirements in gameStateModule
 │
 ├─> Initializes gameStateModule via alttpStateModule
@@ -557,9 +556,9 @@ UI Components
 
 ## Key Design Patterns
 
-1. **Dual Storage**: Difficulty limits stored in both itempool (`__max_*`) and snapshot (`difficultyRequirements`)
-   - Itempool: Source of truth during export
-   - Snapshot: Accessible to runtime logic
+1. **Difficulty limits**: exported once, at `world[player].difficulty_requirements`
+   - Rule helpers read them there (`world.difficulty_requirements.*`)
+   - Snapshot copy (`difficultyRequirements`) is set from it for test inventories
 
 2. **Flag-Based Logic**: Settings like `swordless`, `retro_bow` stored as:
    - Settings in staticData (configuration)
@@ -645,7 +644,7 @@ return has(snapshot, staticData, medallion);
 | **Snapshot Fields** | 15 standard fields | +6 ALTTP-specific fields via gameStateModule |
 | **Settings** | ~5 generic settings | +30 ALTTP-specific settings |
 | **Item Properties** | 7 standard properties | +progressive mapping, max counts, event overrides |
-| **Itempool Data** | Basic counts | +dungeon keys, +special __max_* markers |
+| **Itempool Data** | Basic counts | +dungeon keys |
 | **Helper Functions** | Generic (has, count) | 100+ game-specific helpers |
 | **Collections** | None | 3 predefined location collections |
 | **Region Attributes** | None | +is_light_world, +is_dark_world |
@@ -664,7 +663,7 @@ return has(snapshot, staticData, medallion);
 
 3. **Difficulty Propagation**: Difficulty limits flow through three stages:
    - World generation → world.difficulty_requirements
-   - Exporter → itempool __max_* markers
+   - Exporter → world[player].difficulty_requirements
    - StateManager → snapshot.difficultyRequirements
 
 4. **Medallion Dual Storage**: Medallions stored in two forms:
