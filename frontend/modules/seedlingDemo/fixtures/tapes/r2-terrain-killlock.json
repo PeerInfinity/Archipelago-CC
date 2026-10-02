@@ -1,0 +1,66 @@
+{
+    "tape_version": 9,
+    "game": "seedling",
+    "boot": {
+        "level": 5,
+        "x": 16,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": "R2-swim D3(c): the scratch layer computed bob@48,80's terrain removal at 183 (t 173 + the eleven-call fade) and `activators.opensOnTick(0.01)` is 101",
+            "at": 283
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 1,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 0
+    },
+    "seam": {
+        "items": {
+            "canSwim": true
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 320,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 180,
+            "to": 230
+        },
+        {
+            "key": "right",
+            "from": 200,
+            "to": 240
+        },
+        {
+            "key": "down",
+            "from": 240,
+            "to": 320
+        }
+    ],
+    "name": "r2-terrain-killlock",
+    "description": "R2-swim D3(c): L5, boot (16,32) with `canSwim` — the player waits in the water and the three bobs chase it in and drown (t 39, 111, 173). The third removal empties `totalEnemies()`, which opens `lock@48,112` (tset -1, tag 0). From t 180 the player walks to the lock and presses into it; when it opens, the teleporter under it carries the player to L6 on t 285 (the game; the destroy-tick model read t 275).",
+    "note": ""
+}

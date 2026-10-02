@@ -9676,7 +9676,8 @@ export function createLevelRun({
                         x: c.x,
                         y: c.y,
                     });
-                    assertChaserRemovalIsDeclared(c, 'a terrain death');
+                    // ⛓ R2-swim D3(c): the kill-lock ledger runs at the REMOVAL, below.
+                    c.removalLedger = 'a terrain death';
                 }
                 /**
                  * ⛓⛓⛓ R8 SLICE 3 — `case 6`, THE PIT, TRANSCRIBED AT LAST,
@@ -9743,7 +9744,8 @@ export function createLevelRun({
                     chaserTerrainDeaths.push({
                         t: ticksCompleted + 1, level, id: c.id, cause: 'pit', x: c.x, y: c.y,
                     });
-                    assertChaserRemovalIsDeclared(c, 'a pit fall');
+                    // ⛓ R2-swim D3(c): the kill-lock ledger runs at the REMOVAL, below.
+                    c.removalLedger = 'a pit fall';
                 }
                 /**
                  * ⛓⛓ U9-swim — AND THE CHASE IS BELOW IT, FROM WHERE THE LERP
@@ -9807,6 +9809,22 @@ export function createLevelRun({
                 if (onScreen) {
                     c.alpha -= MOBILE_DEATH_FADE.alphaStep;
                     if (c.alpha <= 0) c.removed = true;
+                    /**
+                     * ⛓⛓⛓ R2-swim D3(c) — A TERRAIN DEATH'S KILL-LOCK LEDGER RUNS
+                     * HERE, AT THE REMOVAL, NOT AT THE DESTROY. `Lock.checkEnemies`
+                     * reads `totalEnemies()`, which is `classCount(Bob)` — and a
+                     * drowned body stays in the world through `Mobile.death`'s
+                     * eleven 0.1 subtractions until `FP.world.remove`. Run at the
+                     * destroy tick, the ledger opened L5's lock ten ticks early:
+                     * MEASURED by `r2-terrain-killlock` (the game crosses on t 285,
+                     * the destroy-tick model on t 275). A press or arrow kill is
+                     * still ledgered at its kill tick (`stageChaserKill`).
+                     */
+                    if (c.removed && c.removalLedger) {
+                        const cause = c.removalLedger;
+                        c.removalLedger = null;
+                        assertChaserRemovalIsDeclared(c, cause);
+                    }
                 }
                 return null;
             }

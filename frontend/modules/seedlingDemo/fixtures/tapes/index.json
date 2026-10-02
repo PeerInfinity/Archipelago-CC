@@ -215,6 +215,13 @@
       "noHazards": []
     },
     {
+      "file": "r2-terrain-killlock.json",
+      "tickCount": 320,
+      "bootLevel": 5,
+      "tapeVersion": 9,
+      "noHazards": []
+    },
+    {
       "file": "r2-two-teleporters.json",
       "tickCount": 60,
       "bootLevel": 113,

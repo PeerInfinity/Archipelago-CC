@@ -15,6 +15,16 @@
  *     At the base the run refuses t 14 by name ("2 teleporters fired on the
  *     same tick").
  *
+ *   `r2-terrain-killlock` (D3 c) — L5, boot (16,32) with `canSwim`: the player
+ *     waits in the water and the three bobs follow it in and drown (t 39, 111,
+ *     173). The third REMOVAL empties `totalEnemies()` and `lock@48,112` (tset
+ *     −1) fades 101 steps open; the player, pressed into it from t ~250, falls
+ *     through to the teleporter under it. The game crosses on t 285. The model
+ *     ran the kill-lock ledger at the DESTROY tick and read t 275; it now runs
+ *     it at the removal (t 183, after `Mobile.death`'s eleven-call fade). The
+ *     tape declares the clear (`at` 283) because a vanilla run refuses an
+ *     undeclared one by name; `gameVisibleTape` withholds it from the game.
+ *
  * ⛔ THE KEYS ARE A FIXED SCHEDULE and the tapes are emitted from it alone.
  * Each was recorded on the game (`check-seedling-bot-differential.mjs --record
  * --only=…`) before its model step was committed. `--check` re-derives them.
@@ -52,24 +62,26 @@ const check = (name, ok, detail) => {
 
 const levelSource = atlasLevelSource();
 const NO_KEYS = new Set();
-function stage(boot, seam) {
+function stage(boot, seam, persistence = []) {
     return createLevelRun({
         levelSource, boot: { ...boot }, noclip: false, noHazards: [], noDamage: false,
-        grants: [], persistence: [], despawn: [], equips: [], pins: [...PIN_NAMES],
+        grants: [], persistence: structuredClone(persistence), despawn: [], equips: [], pins: [...PIN_NAMES],
         save: { totem_parts: [], keys: [], seal_parts: [] }, rng: null,
         seam: structuredClone(seam), roles: ROLES,
     });
 }
 
-function tapeJson(name, boot, seam, perTick, description) {
+function tapeJson(name, boot, seam, perTick, description, { persistence = [] } = {}) {
     const folded = buildTape(perTick, boot, name,
         { noclip: false, noDamage: false, noHazards: [], grants: [] });
     const tape = {
         game: 'seedling', name, boot: { ...boot }, noclip: false, noDamage: false, noHazards: [],
-        grants: [], persistence: [], equips: [], pins: [...PIN_NAMES],
+        grants: [], persistence: structuredClone(persistence), equips: [], pins: [...PIN_NAMES],
         save: { totem_parts: [], keys: [], seal_parts: [] },
         rng: { seed: 1, split: false }, seam: structuredClone(seam),
-        tick_count: perTick.length, inputs: folded.inputs, tape_version: 8,
+        tick_count: perTick.length, inputs: folded.inputs,
+        // v9 is the first version whose persistence rows carry `at`.
+        tape_version: persistence.some((r) => r.at !== undefined) ? 9 : 8,
     };
     const parsed = parseTape({ ...tape, description });
     return `${JSON.stringify({ ...parsed, description, note: '' }, null, 4)}\n`;
@@ -87,8 +99,8 @@ function emit(name, json) {
     }
 }
 
-function drive(boot, seam, perTick) {
-    const run = stage(boot, seam);
+function drive(boot, seam, perTick, persistence = []) {
+    const run = stage(boot, seam, persistence);
     let t = 0;
     try {
         for (const held of perTick) { run.advance(held); t += 1; }
@@ -122,6 +134,44 @@ function schedule(n, spans) {
         const tr = run.transitions.map((x) => `${x.from_level}->${x.to_level}@${x.t}`);
         check(`${NAME}: 113->114 on t 14 and 114->113 on t 31`,
             JSON.stringify(tr) === JSON.stringify(['113->114@14', '114->113@31']), JSON.stringify(tr));
+    }
+}
+
+// ── r2-terrain-killlock (D3 c) ───────────────────────────────────────
+{
+    const NAME = 'r2-terrain-killlock';
+    const BOOT = Object.freeze({ level: 5, x: 16, y: 32 });
+    const SEAM = Object.freeze({ items: { canSwim: true } });
+    /**
+     * The clear the scratch layer COMPUTES for this walk (`scratchClears`:
+     * `bob@48,80` drowns on t 173 and is REMOVED on t 183, after `Mobile.death`'s
+     * eleven-call fade; `opensOnTick(0.01)` 101 ⇒ `at` 284, the v9 spelling 283) — declared, because a vanilla run without the scratch
+     * layer refuses an undeclared kill-lock clear by name (the census's
+     * setting). `gameVisibleTape` withholds the timed row, so the GAME opens
+     * the lock from its own `totalEnemies()`.
+     */
+    const PERSISTENCE = Object.freeze([{
+        level: 5, tag: 0, at: 283,
+        note: 'R2-swim D3(c): the scratch layer computed bob@48,80\'s terrain removal at 183 (t 173 + the eleven-call fade) '
+            + 'and `activators.opensOnTick(0.01)` is 101',
+    }]);
+    const perTick = schedule(320, [[180, 230, 'down'], [200, 240, 'right'], [240, 320, 'down']]);
+    emit(NAME, tapeJson(NAME, BOOT, SEAM, perTick,
+        'R2-swim D3(c): L5, boot (16,32) with `canSwim` — the player waits in the water and '
+        + 'the three bobs chase it in and drown (t 39, 111, 173). The third removal empties '
+        + '`totalEnemies()`, which opens `lock@48,112` (tset -1, tag 0). From t 180 the player '
+        + 'walks to the lock and presses into it; when it opens, the teleporter under it '
+        + 'carries the player to L6 on t 285 (the game; the destroy-tick model read t 275).', { persistence: PERSISTENCE }));
+    const { run, refused } = drive(BOOT, SEAM, perTick, PERSISTENCE);
+    check(`${NAME}: the run takes all 320 ticks`, refused === null, refused ?? '');
+    if (!refused) {
+        const deaths = run.chaserTerrainDeaths.map((d) => `${d.id}:${d.cause}@${d.t}`);
+        check(`${NAME}: the three bobs drown on t 39, 111 and 173`, JSON.stringify(deaths)
+            === JSON.stringify(['bob@16,64:water@39', 'bob@16,80:water@111', 'bob@48,80:water@173']),
+        JSON.stringify(deaths));
+        const tr = run.transitions.map((x) => `${x.from_level}->${x.to_level}@${x.t}`);
+        check(`${NAME}: the opened lock lets the player through to L6 on t 285`,
+            JSON.stringify(tr) === JSON.stringify(['5->6@285']), JSON.stringify(tr));
     }
 }
 
