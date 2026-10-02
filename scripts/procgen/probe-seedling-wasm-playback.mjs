@@ -26,7 +26,9 @@
  *       arrival's spawn, re-solves and replays: recoveries 1, the chest checked ONCE, the door
  *       crossed, every botStart bracketed.
  *   P   (W3 (b), its own fresh page) the injector fires on EVERY chest plan: after 3 recoveries the
- *       4th divergence fails BY NAME (`playback:walkFailed` → the bot's `error:` status), no check
+ *       4th divergence fails BY NAME (`playback:walkFailed` → the bot's `error:` status) — ⛓ W4: or
+ *       sooner, on the first divergence that EXACTLY repeats the previous one (same tick, same game
+ *       row; the injector is timer-driven, so either can happen, and the check names which) — no check
  *       fired, AP inventory/checked unchanged, nothing armed or held, and no STALE key (the engine
  *       releases the keys the diverged plan held — `keysHeldAtReset`; W3's own finding).
  *   K   (side mode, `--only=K`; not in the default run) the KILL-LOCK measurement S3 left to W2: a host
@@ -378,22 +380,29 @@ async function main() {
             if (MODE === 'P') {
                 // ── P: a PERSISTENT divergence — 3 recoveries, then FAILED by name ──
                 const legs = hist.filter((h) => h.goal?.kind === 'location');
-                check('P: the bot shows the engine\'s named failure (status error:, the count and the bound)',
-                    /^error:/.test(end?.status ?? '') && /the game left the plan 4 times/.test(end.status)
-                        && /gave up after 3 forced re-arrivals, the bound is 3/.test(end.status), `status "${end?.status}"`);
-                check('P: the engine recorded 3 recoveries then the failure (4 plans played, 4 injections)',
-                    eng?.recoveries === 3 && JSON.stringify(legs.map((h) => h.outcome)) === JSON.stringify(['diverged', 'diverged', 'diverged', 'failed'])
-                        && eng.ships === 4 && inj?.injected.length === 4,
+                const dl = legs.filter((h) => h.outcome === 'diverged');
+                // ⛓ W4 — an EXACT repeat (same tick, same game row) fails before the bound
+                const repeat = /at the SAME tick with the SAME game row/.test(end?.status ?? '');
+                const k = repeat ? dl.length : 3;
+                console.log(`INFO: P failed by ${repeat ? `an EXACT REPEAT after ${dl.length + 1} plans` : 'the bound (4 plans)'}`);
+                check('P: the bot shows the engine\'s named failure (status error:; the bound — or ⛓ W4 an exact repeat — named)',
+                    /^error:/.test(end?.status ?? '') && (repeat
+                        ? new RegExp(`${dl.length + 1} times in a row \\(gave up after ${dl.length} forced re-arrival`).test(end.status)
+                        : /the game left the plan 4 times/.test(end.status) && /gave up after 3 forced re-arrivals, the bound is 3/.test(end.status)),
+                    `status "${end?.status}"`);
+                check(`P: the engine recorded ${k} recover${k === 1 ? 'y' : 'ies'} then the failure (${k + 1} plans played, ${k + 1} injections)`,
+                    k >= 1 && eng?.recoveries === k && JSON.stringify(legs.map((h) => h.outcome)) === JSON.stringify([...Array(k).fill('diverged'), 'failed'])
+                        && eng.ships === k + 1 && inj?.injected.length === k + 1,
                     JSON.stringify({ recoveries: eng?.recoveries, outcomes: legs.map((h) => h.outcome), ships: eng?.ships, injected: inj?.injected.length }));
                 check('P: every divergence is a real (level, x, y) miss in the house (no level change, x off the plan)',
-                    legs.slice(0, 3).every((h) => h.divergence && h.divergence.got.level === ROOM.level
+                    dl.length === k && dl.every((h) => h.divergence && h.divergence.got.level === ROOM.level
                         && h.divergence.got.x !== h.divergence.expected.x), JSON.stringify(legs.map((h) => h.divergence)));
                 // ⛔ W3's own finding: botReset mid-span leaves the tape's keys HELD, so the next plan's press is
                 // lost (measured before the fix: attempt 2's echo `held ["right","up"]`, `press_totals.up 0`; once a
                 // stale `down` cancelled the next plan's `up` and it diverged at tick 1 with the player still).
                 const stale = legs.filter((h) => h.input).map((h) => (h.input.held ?? []).filter((k) => !(h.input.press_totals?.[k] >= 1)));
                 check('P: no STALE key — every key the game held at each divergence was pressed by THAT tape (the host releases the plan\'s held keys after each botReset with a keydown+keyup pair)',
-                    stale.length === 3 && stale.every((x) => x.length === 0) && (eng.keyReleases?.length ?? 0) >= 3,
+                    stale.length === k && stale.every((x) => x.length === 0) && (eng.keyReleases?.length ?? 0) >= k,
                     JSON.stringify({ stale, keyReleases: eng?.keyReleases, inputs: legs.map((h) => h.input && { held: h.input.held, press: h.input.press_totals }) }));
                 const chestChecks = apB.checks.filter((n) => n === CHEST).length - before.checks.filter((n) => n === CHEST).length;
                 check('P: NO check fired — dispatcher, state manager, binding (0 checks, nothing caught in a host window)',
