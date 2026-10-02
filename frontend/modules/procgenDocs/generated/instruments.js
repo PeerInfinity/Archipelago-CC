@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 29,
-            "count": 71,
+            "browser": 30,
+            "count": 72,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 306,
-        "browser": 93,
-        "cited": 142,
-        "files": 317,
+        "blockStyle": 307,
+        "browser": 94,
+        "cited": 143,
+        "files": 318,
         "lineStyle": 11,
-        "withDocblock": 317,
-        "withFlags": 237
+        "withDocblock": 318,
+        "withFlags": 238
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9702,6 +9702,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-v8-seam — does the GAME honour a tape v8 `seam` block, and does its latch report back what the block declared?",
             "path": "scripts/procgen/probe-seedling-v8-seam.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "legs",
+                "only"
+            ],
+            "file": "probe-seedling-wasm-arrival-composites.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "legs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling solver-walk, slice W4 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.1/§3 W4) — the live witness of the wasm ARRIVAL COMPOSITES and the fail-fast on an exact repeat, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
+            "path": "scripts/procgen/probe-seedling-wasm-arrival-composites.mjs"
         },
         {
             "argvHelpers": [

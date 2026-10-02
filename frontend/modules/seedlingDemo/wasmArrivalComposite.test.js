@@ -14,14 +14,16 @@
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *
  *   m1 no pit arm (`arrivalSolverGoal` maps a pit exit as before)
- *        -> 'a PIT exit maps to reach-pit' + 'the pit plans fall' red
+ *        -> 'a PIT exit maps to reach-pit' + 'the pit plans fall' red (2)
  *   m2 no step-off prefix (the composite solves from the arrival itself)
  *        -> every 'crosses' row red (the solver's walk to where it stands
- *           fires nothing: the plan never leaves the room)
+ *           fires nothing: the plan never leaves the room) — 9 red, the worker row too
  *   m3 expected rows not concatenated (the plan's rows only)
- *        -> 'the composite IS one trajectory' red (expected ≠ the fresh replay)
+ *        -> 'the composite IS one trajectory' red (expected ≠ the fresh replay), and
+ *           every 'crosses' row (expected no longer starts at the arrival) — 7 red
  *   (m4, the repeat check off, is caught in `wasmPlayback.test.js` and the
- *   engine's `seedlingWasmPlayback.test.js`.)
+ *   engine's `seedlingWasmPlayback.test.js` — 3 red: the policy row, the
+ *   engine's exact-repeat row and the WG walker row.)
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
