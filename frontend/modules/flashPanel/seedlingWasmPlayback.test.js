@@ -50,12 +50,12 @@ function manualTimers() {
 }
 
 /** A game whose reads are a recorded arrival's. */
-function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0 } = {}) {
+function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrains = 0, clearedAfterDrain = null } = {}) {
     const baseline = { ...arrival.seam.beginEntry, 'save.time': arrival.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
     const g = {
         be: baseline,
         held: false, armed: false, finished: false, seq: 0, tape: null, drainRows: null, freezePolls: 0,
-        calls: [], tapes: [],
+        calls: [], tapes: [], stalls: stallDrains, cleared: null,
         land() { g.be = arrival.seam.beginEntry; },
         botSeam() { g.calls.push('botSeam'); return JSON.stringify({ beginEntry: g.be, latched: false }); },
         botStatus() {
@@ -64,6 +64,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0 } = {}) {
                 g.armed = false; g.finished = true; g.held = !!g.tape.hold;
             }
             return JSON.stringify({ ...arrival.status, game_time: arrival.status.game_time + gameTimeSkew,
+                ...(g.cleared ? { persistence_cleared: g.cleared } : {}),
                 held: g.held, armed: g.armed, finished: g.finished, error: '' });
         },
         readState() { return JSON.stringify({ ...arrival.state, pendingCheck: g.seq ? `${g.seq}|86|0|0` : '' }); },
@@ -77,12 +78,17 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0 } = {}) {
             } else { g.armed = true; g.finished = false; }
             return 'ok';
         },
-        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; return 'ok'; },
+        // A reset forgets the tape; the room the recovery re-enters is a NEW begin record (the fake
+        // un-lands to the pre-arrival one, so the forced re-arrival's landing is a change again).
+        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; g.be = baseline; return 'ok'; },
         botDrain() {
             g.calls.push('botDrain');
             if (!g.armed || !g.drainRows) return JSON.stringify({ ticks: [] });
+            // A SealController-class freeze: the armed tape counts dead frames, so NO rows drain.
+            if (g.stalls > 0) { g.stalls -= 1; return JSON.stringify({ ticks: [] }); }
             const ticks = g.drainRows;
             g.drainRows = null;
+            if (clearedAfterDrain) g.cleared = clearedAfterDrain;
             g.armed = false; g.finished = true;
             return JSON.stringify({ ticks, transitions: [] });
         },
@@ -90,8 +96,12 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0 } = {}) {
     return g;
 }
 
-/** An in-place solve service that hands the fake game the plan's rows to drain. */
-function capturingService(game) {
+/**
+ * An in-place solve service that hands the fake game the plan's rows to drain —
+ * through `perturb(rows, attempt)` (attempt 0 = the first solve), the W3
+ * divergence injector.
+ */
+function capturingService(game, perturb = (rows) => rows) {
     const inner = createInPlaceSolveService();
     const seen = [];
     return {
@@ -99,7 +109,10 @@ function capturingService(game) {
         start(request) {
             const h = inner.start(request);
             seen.push({ request, result: h.result });
-            if (h.result.ok) game.drainRows = h.result.plan.expected.map((r, t) => ({ t, level: r.level, x: r.x, y: r.y }));
+            if (h.result.ok) {
+                game.drainRows = perturb(h.result.plan.expected.map((r, t) => ({ t, level: r.level, x: r.x, y: r.y })),
+                    seen.length - 1);
+            }
             return { ...h, startedAt: 0 };
         },
         warm() {}, dispose() {},
@@ -114,7 +127,7 @@ function engineOver(arrival, opts = {}) {
     const notes = [];
     const failures = [];
     const dones = [];
-    const service = capturingService(game);
+    const service = capturingService(game, opts.perturb);
     let t = 0;
     const engine = createWasmPlayback({
         getGame: () => game,
@@ -231,5 +244,81 @@ describe('named refusals and failures', () => {
         expect(h.phase).toBe('playing');
         expect(h.drained).toBe(h.ticks + 1);
         expect(e.engine.status().phase).toBe('idle');
+    });
+});
+
+/** W3's injector: from tick `at` on, the game stands `dx` px right of the plan (a key the tape never pressed). */
+const pushRight = (at = 5, dx = 2) => (rows) => rows.map((r) => (r.t >= at ? { ...r, x: r.x + dx } : r));
+
+describe('W3 — a divergence: botReset + forced re-arrival + re-solve, bounded, then FAILED by name', () => {
+    it('ONE injected divergence recovers: the leg is recorded diverged, the room re-entered at the arrival\'s spawn, re-solved, done', () => {
+        const e = engineOver(A, { perturb: (rows, attempt) => (attempt === 0 ? pushRight()(rows) : rows) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0].recoveries).toBe(1);
+        expect(e.dones[0].divergence).toBeNull(); // the recovered tape played on plan
+        const spawnAt = { level: HOUSE, x: A.state.playerPositionX, y: A.state.playerPositionY };
+        expect(e.teleports).toEqual([spawnAt, spawnAt]);
+        expect(e.service.seen).toHaveLength(2);
+        const h = e.engine.stats.history;
+        expect(h.map((x) => x.outcome)).toEqual(['diverged', 'done']);
+        expect(h[0].divergence).toMatchObject({ t: 5, got: { x: h[0].divergence.expected.x + 2 } });
+        expect(e.engine.stats).toMatchObject({ divergences: 1, recoveries: 1, forced: 2, solves: 2, ships: 2 });
+        // freeze + plan per attempt, every one bracketed; the diverged tape was RELEASED before the teleport
+        expect(e.engine.stats.hostStarts.map((x) => x.label)).toEqual(['freeze', 'plan', 'freeze', 'plan']);
+        const i = e.game.calls.indexOf('botReset');
+        expect(i).toBeGreaterThan(e.game.calls.indexOf('botStart'));
+        expect(e.notes.some((n) => /recovery 1\/3/.test(n ?? ''))).toBe(true);
+    });
+
+    it('a PERSISTENT divergence fails BY NAME after 3 recoveries (4 plans played), the tape released, nothing more started', () => {
+        const e = engineOver(A, { perturb: pushRight() });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones).toEqual([]);
+        expect(e.failures).toHaveLength(1);
+        expect(e.failures[0]).toMatch(/the game left the plan 4 times on Starting House - Chest in level 86 \(gave up after 3 forced re-arrivals, the bound is 3\); last at tick 5/);
+        expect(e.teleports).toHaveLength(4);
+        expect(e.service.seen).toHaveLength(4);
+        expect(e.engine.stats.history.map((x) => x.outcome)).toEqual(['diverged', 'diverged', 'diverged', 'failed']);
+        expect(e.engine.stats.history.at(-1).recoveries).toBe(3);
+        expect(e.game.calls.at(-1)).toBe('botReset');
+        expect(e.engine.status().phase).toBe('idle');
+        expect(e.timers.pending).toBe(0); // no silent wait left behind
+    });
+
+    it('the bound is PER GOAL: the next goal starts with a fresh count', () => {
+        const e = engineOver(A, { perturb: (rows, attempt) => (attempt < 3 ? pushRight()(rows) : rows) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.dones[0].recoveries).toBe(3); // 3 spent, the 4th plan on plan: done, not failed
+        expect(e.failures).toEqual([]);
+        e.game.be = { ...e.game.be, 'save.time': 0 };
+        e.engine.walkTo(DOOR);
+        expect(e.engine.status().recoveries).toBe(0);
+    });
+
+    it('a SealController-class FREEZE (no rows drain for a while) is NOT a divergence', () => {
+        const e = engineOver(A, { game: { stallDrains: 40 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.engine.stats).toMatchObject({ divergences: 0, recoveries: 0, forced: 1 });
+        expect(e.game.stalls).toBe(0);
+    });
+
+    it('a divergence AFTER the goal\'s clear landed ends the leg done (re-solving would meet "already open"), tape released', () => {
+        const e = engineOver(A, { perturb: pushRight(), game: { clearedAfterDrain: [{ level: HOUSE, tag: 0 }] } });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0].divergence).toMatchObject({ t: 5 });
+        expect(e.dones[0].recoveries).toBe(0);
+        expect(e.teleports).toHaveLength(1);
+        expect(e.game.calls.at(-1)).toBe('botReset');
     });
 });

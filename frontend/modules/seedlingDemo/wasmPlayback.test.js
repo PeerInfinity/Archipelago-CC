@@ -13,8 +13,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    MID_ROOM_POLICY, WasmPlaybackError, exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, shippedTape,
-    wasmGoalRefusal,
+    MAX_RECOVERIES, MID_ROOM_POLICY, WasmPlaybackError, divergenceAction, divergenceFailure, exactDeclarationRefusal,
+    firstDivergence, foldDrain, goalAction, shippedTape, wasmGoalRefusal,
 } from './wasmPlayback.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
 import { parseTape } from './tapeFormat.js';
@@ -156,5 +156,29 @@ describe('foldDrain + firstDivergence — the W3 compare, recorded only', () => 
         const rows = [{ t: 3, level: 71, x: 10, y: 10 }];
         expect(firstDivergence(expected, rows, { roomLevel: 86 })).toBeNull();
         expect(firstDivergence(expected, [{ t: 2, level: 71, x: 10, y: 10 }], { roomLevel: 86 })).not.toBeNull();
+    });
+});
+
+describe('divergenceAction / divergenceFailure — W3\'s recovery policy (⚖ W-Q3: bounded 3, then by name)', () => {
+    const CHEST = { kind: 'location', level: HOUSE, tag: 0, name: 'Starting House - Chest' };
+    const DOOR = { kind: 'exit', level: HOUSE, tiles: [[3, 4]], name: 'exit_S' };
+    const open = { persistence_cleared: [{ level: HOUSE, tag: 0 }] };
+    it('recover while recoveries < MAX_RECOVERIES (3), fail at 3', () => {
+        expect(MAX_RECOVERIES).toBe(3);
+        expect([0, 1, 2, 3, 4].map((recoveries) => divergenceAction({ goal: DOOR, recoveries })))
+            .toEqual(['recover', 'recover', 'recover', 'fail', 'fail']);
+    });
+    it('a location whose clear already landed is DONE (even at the bound); a different clear, or an exit, is not', () => {
+        expect(divergenceAction({ goal: CHEST, recoveries: 0, status: open })).toBe('done');
+        expect(divergenceAction({ goal: CHEST, recoveries: 3, status: open })).toBe('done');
+        expect(divergenceAction({ goal: { ...CHEST, tag: 1 }, recoveries: 0, status: open })).toBe('recover');
+        expect(divergenceAction({ goal: DOOR, recoveries: 0, status: open })).toBe('recover');
+        expect(divergenceAction({ goal: CHEST, recoveries: 0, status: null })).toBe('recover');
+    });
+    it('the failure names the goal, the count, the bound and the last divergence', () => {
+        const msg = divergenceFailure({ goal: CHEST, recoveries: 3,
+            divergence: { t: 7, expected: { level: HOUSE, x: 56, y: 50 }, got: { level: HOUSE, x: 58, y: 50 } } });
+        expect(msg).toBe('the game left the plan 4 times on Starting House - Chest in level 86 (gave up after 3 forced '
+            + 're-arrivals, the bound is 3); last at tick 7: expected {"level":86,"x":56,"y":50}, game {"level":86,"x":58,"y":50}');
     });
 });

@@ -30,10 +30,18 @@
  *      against a fresh `botStatus` (`exactDeclarationRefusal`); `botLoadTape`
  *      keeps the hold, `botStart` releases it and arms on the SAME world.
  *   6. WATCH. `botDrain()` every `DRAIN_MS` (cheap) for the progress readout
- *      and the W3 trajectory compare (RECORDED here, acted on in W3); one
- *      `botStatus` per `STATUS_MS` only once every planned tick has drained,
- *      to see `finished`. ⛔ Never `botStatus` per frame (W0: it halves the
- *      frame rate).
+ *      and the trajectory compare (`firstDivergence`, 0 px); one `botStatus`
+ *      per `STATUS_MS` only once every planned tick has drained, to see
+ *      `finished`. ⛔ Never `botStatus` per frame (W0: it halves the frame
+ *      rate).
+ *   7. RECOVER (W3, ⚖ W-Q3). A drained row off the plan → ONE `botStatus`
+ *      (`divergenceAction`): the goal's clear already landed → done; else
+ *      `botReset` + a FORCED RE-ARRIVAL at the spawn the arrival recorded +
+ *      a fresh solve from the new arrival (steps 2–6 again), at most
+ *      `MAX_RECOVERIES` per goal; the divergence after the last is a named
+ *      failure (`divergenceFailure` → `playback:walkFailed`). A
+ *      `SealController` freeze drains NO rows, so it is never a divergence
+ *      (⚖ W0-Q2).
  *
  * Every `botStart` is bracketed by two `pendingCheck` seq reads and handed to
  * the check binding (`ignoreHostStart`, ⚖ W0-Q1), so a declaration's echo can
@@ -47,7 +55,8 @@
 
 import { arrivalSolveRequest, arrivalSolverGoal, isArrival, stagingFromWasmArrival } from '../seedlingDemo/wasmArrival.js';
 import {
-    exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, MID_ROOM_POLICY, shippedTape, wasmGoalRefusal,
+    divergenceAction, divergenceFailure, exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, MAX_RECOVERIES,
+    MID_ROOM_POLICY, shippedTape, wasmGoalRefusal,
 } from '../seedlingDemo/wasmPlayback.js';
 import { LOAD_BUDGET_MS, SOLVER_BUDGET_MS } from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
@@ -101,9 +110,13 @@ export function createWasmPlayback({
     let handle = null;
     let ours = false; // a tape WE started may be armed or holding
     let play = null;
+    /** W3: the forced re-arrivals this goal has spent, and the spawn its arrival recorded. */
+    let recoveries = 0;
+    let spawn = null;
     /** Warm the worker now, so the first solve does not pay the module load inside its budget (S2). */
     try { svc().warm?.(); } catch { /* no Worker here: the first start says so */ }
-    const stats = { arrivals: 0, forced: 0, solves: 0, ships: 0, hostStarts: [], done: 0, failed: 0, divergences: 0 };
+    const stats = { arrivals: 0, forced: 0, solves: 0, ships: 0, hostStarts: [], done: 0, failed: 0, divergences: 0,
+        recoveries: 0 };
     const history = [];
 
     const game = () => getGame?.() ?? null;
@@ -149,7 +162,7 @@ export function createWasmPlayback({
         release();
         goal = null;
         stats.failed += 1;
-        history.push({ goal: g, outcome: 'failed', reason });
+        history.push({ goal: g, outcome: 'failed', reason, recoveries });
         log(`[wasm playback] ${reason}`, 'warn');
         note(null);
         try { onFailed(reason); } catch { /* a listener's bug */ }
@@ -192,19 +205,35 @@ export function createWasmPlayback({
         reset();
         release();
         goal = g;
+        recoveries = 0;
+        spawn = action === 'force-re-arrival' ? { x: live.playerPositionX, y: live.playerPositionY } : null;
+        if (action === 'force-re-arrival') {
+            reArrive(`re-entering level ${g.level} to solve from an arrival (${MID_ROOM_POLICY})`);
+        } else {
+            baseline = seam().beginEntry ?? null;
+            phase = 'await-arrival';
+            deadline = now() + ARRIVAL_WAIT_MS;
+            note(`waiting to arrive in level ${g.level}`);
+            schedule(sample, 0);
+        }
+        return { ok: true, action };
+    }
+
+    /**
+     * A FORCED RE-ARRIVAL into the goal's room at `spawn` (`MID_ROOM_POLICY`;
+     * W3's recovery). The baseline is read BEFORE the teleport, so the arrival
+     * is the begin record CHANGING (a same-level rebuild included). The caller
+     * has released our tape: a `new Game` queued under a hold never lands (W0 i.11).
+     */
+    function reArrive(why) {
         baseline = seam().beginEntry ?? null;
         phase = 'await-arrival';
         deadline = now() + ARRIVAL_WAIT_MS;
-        if (action === 'force-re-arrival') {
-            stats.forced += 1;
-            const ok = teleport({ level: g.level, x: live.playerPositionX, y: live.playerPositionY });
-            if (ok === false) { fail('the panel could not queue the forced re-arrival (no teleport recipe)'); return { ok: true, action }; }
-            note(`re-entering level ${g.level} to solve from an arrival (${MID_ROOM_POLICY})`);
-        } else {
-            note(`waiting to arrive in level ${g.level}`);
-        }
+        stats.forced += 1;
+        const ok = spawn ? teleport({ level: goal.level, x: spawn.x, y: spawn.y }) : false;
+        if (ok === false) { fail('the panel could not queue the forced re-arrival (no teleport recipe, or no spawn recorded)'); return; }
+        note(why);
         schedule(sample, 0);
-        return { ok: true, action };
     }
 
     function sample() {
@@ -233,6 +262,10 @@ export function createWasmPlayback({
             fail(`the arrival was read after a stepped tick (game_time ${st.game_time}, begin ${be['save.time']}) — `
                 + 'the staging would not be the room the game is in');
             return;
+        }
+        // The arrival's own spawn — what a W3 recovery re-enters at, even if a divergence carried the player out.
+        if (Number.isFinite(state.playerPositionX) && Number.isFinite(state.playerPositionY)) {
+            spawn = { x: state.playerPositionX, y: state.playerPositionY };
         }
         const record = records.get(goal.level) ?? null;
         let staging;
@@ -320,7 +353,9 @@ export function createWasmPlayback({
             if (play.divergence) {
                 stats.divergences += 1;
                 log(`[wasm playback] the game left the plan at tick ${play.divergence.t}: expected `
-                    + `${JSON.stringify(play.divergence.expected)}, game ${JSON.stringify(play.divergence.got)} (recorded — W3 acts on it)`, 'warn');
+                    + `${JSON.stringify(play.divergence.expected)}, game ${JSON.stringify(play.divergence.got)}`, 'warn');
+                diverged();
+                return;
             }
         }
         const k = Math.min(play.progress.ticks, play.ticks);
@@ -341,9 +376,32 @@ export function createWasmPlayback({
         schedule(watch, DRAIN_MS);
     }
 
+    /** W3 — act on `play.divergence` (`divergenceAction`): done, a recovery, or the named failure. */
+    function diverged() {
+        const d = play.divergence;
+        const st = status();
+        const action = divergenceAction({ goal, recoveries, status: st });
+        if (action === 'done') {
+            log(`[wasm playback] ${goal.name ?? goal.kind}: its clear already landed — done despite the divergence`, 'warn');
+            release(); // the tape is still armed; the room is the player's again
+            finish(st ?? {});
+            return;
+        }
+        if (action === 'fail') { fail(divergenceFailure({ goal, recoveries, divergence: d })); return; }
+        recoveries += 1;
+        stats.recoveries += 1;
+        history.push({ goal, outcome: 'diverged', recovery: recoveries, ticks: play.ticks, drained: play.progress.ticks,
+            verbs: play.plan.verbs ?? null, solvedMs: play.solvedMs, divergence: d });
+        const queuedGoal = queued;
+        reset();
+        release();
+        queued = queuedGoal; // a goal waiting on this tape keeps waiting for the recovered one
+        reArrive(`left the plan at tick ${d.t} — recovery ${recoveries}/${MAX_RECOVERIES}: re-entering level ${goal.level} to re-solve`);
+    }
+
     function finish(st) {
         const done = { goal, ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
-            solvedMs: play.solvedMs, divergence: play.divergence, end: { level: st.level, x: st.x, y: st.y },
+            solvedMs: play.solvedMs, divergence: play.divergence, recoveries, end: { level: st.level, x: st.x, y: st.y },
             expectedEnd: play.plan.expected.at(-1) };
         ours = false; // finished and un-held: nothing of ours is armed
         reset();
@@ -381,7 +439,7 @@ export function createWasmPlayback({
                 const last = play?.progress?.rows?.at(-1) ?? null;
                 history.push({ goal, outcome: 'stopped', phase, ticks: play?.ticks ?? null,
                     drained: play?.progress?.ticks ?? null, verbs: play?.plan?.verbs ?? null, solvedMs: play?.solvedMs ?? null,
-                    divergence: play?.divergence ?? null, lastRow: last, expectedEnd: play?.plan?.expected?.at(-1) ?? null });
+                    divergence: play?.divergence ?? null, recoveries, lastRow: last, expectedEnd: play?.plan?.expected?.at(-1) ?? null });
             }
             queued = null;
             reset();
@@ -392,7 +450,7 @@ export function createWasmPlayback({
         liveLevel() { const l = readState().level; return Number.isInteger(l) ? l : null; },
         status() {
             return { phase, goal, queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
-                drained: play?.progress?.ticks ?? null, divergence: play?.divergence ?? null };
+                drained: play?.progress?.ticks ?? null, divergence: play?.divergence ?? null, recoveries };
         },
         get stats() { return { ...stats, hostStarts: [...stats.hostStarts], history: [...history] }; },
         dispose() { this.stop(); try { service?.dispose?.(); } catch { /* gone */ } },

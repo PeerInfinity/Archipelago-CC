@@ -222,3 +222,47 @@ export function firstDivergence(expected, rows, { roomLevel, offset = 0 } = {}) 
     }
     return null;
 }
+
+/**
+ * ⚖ W-Q3 (W3): how many FORCED RE-ARRIVALS one goal may spend on divergences
+ * before it fails by name. The divergence after the last one is the failure —
+ * so a goal plays at most `MAX_RECOVERIES + 1` plan tapes.
+ */
+export const MAX_RECOVERIES = 3;
+
+/**
+ * W3 — what a divergence (`firstDivergence`'s answer) does to the goal.
+ *
+ *   'done'     the goal's effect already LANDED (a location goal whose clear
+ *              is in the game's cleared set — the game reported the check
+ *              itself): re-solving would only meet the solver's "already
+ *              open" refusal, so the leg ends done, its divergence recorded.
+ *              An exit cannot get here: `firstDivergence` already counts a
+ *              row out of the room as agreeing.
+ *   'recover'  `botReset` + a forced re-arrival + a fresh solve from it.
+ *   'fail'     `recoveries` already spent `MAX_RECOVERIES` — a named failure,
+ *              never a silent stall and never a walk on blind.
+ *
+ * The tolerance is ZERO px, on purpose: every leg W2 measured (102 + 6 + 558
+ * rows, chest / door / kill-lock) agreed with the plan EXACTLY — the drained
+ * Numbers and the model's are the same doubles — so any non-zero gap is the
+ * game and the model disagreeing, not noise. A death shows as a row at the
+ * respawn (a position mismatch); a `SealController` freeze shows as NO new
+ * rows (never a wrong row), so it can never reach this function (⚖ W0-Q2).
+ *
+ * @param {{goal:object, recoveries:number, status?:object|null}} o  `status` = one `botStatus` read at the divergence
+ * @returns {'done'|'recover'|'fail'}
+ */
+export function divergenceAction({ goal, recoveries, status = null }) {
+    if (goal?.kind === 'location' && Number.isInteger(goal.tag)
+        && (status?.persistence_cleared ?? []).some((c) => c.level === goal.level && c.tag === goal.tag)) return 'done';
+    return recoveries >= MAX_RECOVERIES ? 'fail' : 'recover';
+}
+
+/** The named failure for a goal that diverged after spending every recovery. */
+export function divergenceFailure({ goal, recoveries, divergence }) {
+    const d = divergence;
+    return `the game left the plan ${recoveries + 1} times on ${goal?.name ?? goal?.kind} in level ${goal?.level} `
+        + `(gave up after ${recoveries} forced re-arrival${recoveries === 1 ? '' : 's'}, the bound is ${MAX_RECOVERIES}); `
+        + `last at tick ${d?.t}: expected ${JSON.stringify(d?.expected)}, game ${JSON.stringify(d?.got)}`;
+}
