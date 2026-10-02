@@ -302,6 +302,33 @@ describe('⛓⛓⛓ ACCEPTANCE 1 — a hand-driven session REPLAYS frame-for-fra
         expect(trip.ok).toBe(true);
     });
 
+    it('⛓⛓ R2-swim D4: A MID-DRIVE REFUSAL ROUND-TRIPS — the replay refuses on the same tick, same words', () => {
+        /**
+         * The witness `foldRoundTrip`'s refusal arm (`reproduced`) lost when R3
+         * turned the L4 pit drive into a death. A hand driver still meets a
+         * refusal walking out of L113's south door into L112 on a tape with
+         * `rng.split` off: the Owl fight's stream is not modelled without the
+         * split (`finalBossRng.assertOwlStreamPremises`, an R4 item). The
+         * staging is `r2-two-teleporters`' (L113, `rng: {seed: 1, split: false}`).
+         */
+        const s = createManualSession({
+            levelSource, staging: stagingOf('r2-two-teleporters'), name: 'owl-refusal',
+        });
+        expect(() => drive(s, [
+            [['ArrowDown'], 30], [['ArrowRight'], 35], [['ArrowDown'], 100],
+        ])).toThrow(/the Owl fight in level 112 needs `rng: \{ split: true \}`/);
+        expect(s.refusal).not.toBeNull();
+        expect(s.refusal.tick).toBe(122);
+        expect(s.perTick).toHaveLength(s.observations.length);
+
+        const trip = foldRoundTrip(s, levelSource);
+        expect(trip.faithful).toBe(true);           // the fold lost nothing before the wall
+        expect(trip.mismatches).toEqual([]);
+        expect(trip.error?.message).toBe(s.refusal.message);
+        expect(trip.reproduced).toBe(true);
+        expect(trip.ok).toBe(true);
+    });
+
     it('⛔ a session driven with NOTHING HELD still round-trips — 0 spans', () => {
         // The degenerate case a span fold is most likely to get wrong, and
         // the one a hand driver produces by pressing START and waiting.
@@ -444,8 +471,10 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         //   when the deletion landed, by name, before the list was moved.
         // ⛓ R9 slice L18b: `r9-solve-18` joined — the campaign's L18 segment
         //   declares the kill lock's timed `{18,0}@342`, as `r8-solve-18` does.
+        // ⛓ R2-swim D3(c): `r2-terrain-killlock` joined — L5's kill lock, opened
+        //   by a terrain death, declared at the removal tick (`{5,0}@283`).
         expect(byAt.sort()).toEqual([
-            'r7-act2-5', 'r7-act2-full',
+            'r2-terrain-killlock', 'r7-act2-5', 'r7-act2-full',
             'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8', 'r9-solve-18',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);
