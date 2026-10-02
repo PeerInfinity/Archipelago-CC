@@ -287,7 +287,9 @@ export class FlashPanelUI {
       // ⛓ W2 — the wasm playback engine's handles: the game's callback surface
       // and window (re-read per call — a preset switch replaces the iframe),
       // the panel's own teleport recipe, and the map document the preset names.
+      // ⛓ WG — and the generated arm's assembled set (null on any other arm, or until the AP load).
       wasm: this.transport === 'wasm' ? {
+        levelSet: this._seedlingGenSet ?? null,
         getGame: () => this.adapter?._getFlash?.() ?? null,
         getWin: () => this.adapter?._getWin?.() ?? null,
         teleport: (p) => this.adapter?.teleport?.(p) ?? false,
@@ -315,6 +317,7 @@ export class FlashPanelUI {
   _teardownForReinit() {
     this._initRuntime = undefined;
     this._seedlingGenReport = null;
+    this._seedlingGenSet = null;
     this._seedlingAtlas = null;
     this._heldKeys?.uninstall();
     if (this.adapter) {
@@ -718,6 +721,8 @@ export class FlashPanelUI {
       }
       // ⛓ Seedling JS J2 — the assembly report is the Playback Bot's name → cell map.
       this._seedlingGenReport = generatedArm ? (loaded.report ?? null) : null;
+      // ⛓ WG — and the assembled SET is the wasm playback engine's level source (the rooms as mounted).
+      this._seedlingGenSet = generatedArm ? (loaded.set ?? null) : null;
       // ⛓ J3 — the atlas arm's bound table and the rules' own real-room
       // payloads are the Playback Bot's name → cell map for `flash_seedling`.
       this._seedlingAtlas = loaded.arm === RANDOMIZER_ARMS.ATLAS ? {

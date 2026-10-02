@@ -43,6 +43,16 @@
  *      `SealController` freeze drains NO rows, so it is never a divergence
  *      (⚖ W0-Q2).
  *
+ * ⛓ WG — GENERATED ROOMS (`flash_seedling_gen`, `generated: true`). The
+ * rooms are a MOUNTED level set, so the engine's level source is the set the
+ * generated arm delivered (`wasmWalkTape.mountedRecordsOf`: the delivery's
+ * own chunk plan, the level ids as mounted), never the preset's map document.
+ * Every step above is unchanged except step 4's PRODUCER: the solver has no
+ * goal kind for an `apitem`, so the S2 worker runs the J2 WALKER on a fresh
+ * run from the same staging (`producer: 'walker'`, `wasmWalkTape.js`) and its
+ * held keys are the plan — the same `{solution, expected}` shape, shipped,
+ * watched and recovered exactly as a solver plan is.
+ *
  * Every `botStart` is bracketed by two `pendingCheck` seq reads and handed to
  * the check binding (`ignoreHostStart`, ⚖ W0-Q1), so a declaration's echo can
  * never become an AP check.
@@ -62,6 +72,7 @@ import { LOAD_BUDGET_MS, SOLVER_BUDGET_MS } from '../seedlingDemo/jsRuntimeSolve
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { parsePendingCheck } from './seedlingCheckBinding.js';
+import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
 
 /** How long a goal waits for its arrival (a crossing, or the forced re-arrival) before it fails by name. */
 export const ARRIVAL_WAIT_MS = 15000;
@@ -80,7 +91,8 @@ const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
  * @param {() => Window|null} [deps.getWin]  the game's window — its timers run the sampler (W0/W1's arrangement)
  * @param {(p:{level:number, x:number, y:number}) => boolean} deps.teleport  the panel's teleport recipe
  * @param {() => object|null} [deps.getCheckBinding]  the glue's `SeedlingCheckBinding`
- * @param {Map} deps.records  level → record (the preset's map document)
+ * @param {Map} deps.records  level → record (the preset's map document; ⛓ WG the mounted set's)
+ * @param {boolean} [deps.generated]  ⛓ WG — `records` are a MOUNTED generated set: goals go to the walker producer
  * @param {object} [deps.solveService]  default `createWorkerSolveService()`
  * @param {object} [deps.timers]  `{setTimeout, clearTimeout}` — default the GAME window's
  * @param {() => number} [deps.now]
@@ -91,7 +103,7 @@ const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
  * @param {number} [deps.budgetMs]
  */
 export function createWasmPlayback({
-    getGame, getWin = () => null, teleport, getCheckBinding = () => null, records, solveService = null, timers = null,
+    getGame, getWin = () => null, teleport, getCheckBinding = () => null, records, generated = false, solveService = null, timers = null,
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetMs = SOLVER_BUDGET_MS,
 }) {
@@ -118,6 +130,8 @@ export function createWasmPlayback({
     const stats = { arrivals: 0, forced: 0, solves: 0, ships: 0, hostStarts: [], done: 0, failed: 0, divergences: 0,
         recoveries: 0, keyReleases: [] };
     const history = [];
+    /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
+    const arrivalReads = [];
 
     const game = () => getGame?.() ?? null;
     const T = () => {
@@ -227,7 +241,7 @@ export function createWasmPlayback({
 
     function begin(g) {
         const record = records.get(g.level);
-        const refusal = wasmGoalRefusal(g, record ?? null);
+        const refusal = wasmGoalRefusal(g, record ?? null, { source: generated ? 'mounted generated set' : 'vanilla map' });
         if (refusal) return { ok: false, reason: refusal };
         const live = readState();
         if (!Number.isInteger(live.level)) return { ok: false, reason: 'the game reports no level (is it started?)' };
@@ -294,6 +308,8 @@ export function createWasmPlayback({
         const state = readState();
         const be = se.beginEntry;
         if (!st) { fail('botStatus answered nothing at the arrival'); return; }
+        arrivalReads.push({ seam: se, status: st, state });
+        if (arrivalReads.length > 8) arrivalReads.shift();
         if (st.game_time !== be['save.time']) {
             fail(`the arrival was read after a stepped tick (game_time ${st.game_time}, begin ${be['save.time']}) — `
                 + 'the staging would not be the room the game is in');
@@ -314,15 +330,22 @@ export function createWasmPlayback({
         if (decl) { fail(`the freeze tape was not shipped — ${decl}`); return; }
         const started = hostStart(freeze, 'freeze');
         if (started) { fail(started); return; }
-        const mapped = arrivalSolverGoal(goal, { staging, levelSource, record });
-        if (!mapped.goal) { fail(`the solver has no goal for ${goal.name ?? goal.kind}: ${mapped.walker}`); return; }
-        const request = arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource, records,
-            name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
+        let request;
+        if (generated) {
+            // ⛓ WG — the walker producer: the goal as the controller resolved it, the same staging.
+            request = { producer: WALK_TAPE_PRODUCER, staging, goal: { ...goal }, name: `wasm-walk-${goal.kind}-${goal.level}`,
+                scratchPersistence: true, levelSource, source: { records } };
+        } else {
+            const mapped = arrivalSolverGoal(goal, { staging, levelSource, record });
+            if (!mapped.goal) { fail(`the solver has no goal for ${goal.name ?? goal.kind}: ${mapped.walker}`); return; }
+            request = arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource, records,
+                name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
+        }
         stats.solves += 1;
         play = { staging, arrivalStatus: st, t0: now() };
         handle = svc().start(request);
         phase = 'solving';
-        note(`solving… (budget ${Math.round(budgetMs / 1000)} s)`);
+        note(`${generated ? 'walking a tape' : 'solving'}… (budget ${Math.round(budgetMs / 1000)} s)`);
         schedule(pollSolve, SOLVE_POLL_MS);
     }
 
@@ -341,7 +364,11 @@ export function createWasmPlayback({
             return;
         }
         const res = handle.result;
-        if (!res?.ok) { fail(`the solver declined ${goal.name ?? goal.kind} in level ${goal.level} (${res?.kind}): ${res?.message}`); return; }
+        if (!res?.ok) {
+            fail(`the ${generated ? 'walker producer' : 'solver'} declined ${goal.name ?? goal.kind} in level ${goal.level} `
+                + `(${res?.kind}): ${res?.message}`);
+            return;
+        }
         play.plan = res.plan;
         play.solvedMs = Math.round(t - play.t0);
         ship();
@@ -426,7 +453,7 @@ export function createWasmPlayback({
         if (action === 'fail') { fail(divergenceFailure({ goal, recoveries, divergence: d })); return; }
         recoveries += 1;
         stats.recoveries += 1;
-        history.push({ goal, outcome: 'diverged', recovery: recoveries, ticks: play.ticks, drained: play.progress.ticks,
+        history.push({ goal, outcome: 'diverged', producer: play.plan.producer ?? 'solver', recovery: recoveries, ticks: play.ticks, drained: play.progress.ticks,
             verbs: play.plan.verbs ?? null, solvedMs: play.solvedMs, divergence: d, input: st?.input ?? null });
         const queuedGoal = queued;
         release(st);
@@ -436,7 +463,7 @@ export function createWasmPlayback({
     }
 
     function finish(st) {
-        const done = { goal, ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
+        const done = { goal, producer: play.plan.producer ?? 'solver', ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
             solvedMs: play.solvedMs, divergence: play.divergence, recoveries, end: { level: st.level, x: st.x, y: st.y },
             expectedEnd: play.plan.expected.at(-1) };
         ours = false; // finished and un-held: nothing of ours is armed
@@ -473,7 +500,7 @@ export function createWasmPlayback({
                     if (d) play.progress = foldDrain(play.progress, d);
                 }
                 const last = play?.progress?.rows?.at(-1) ?? null;
-                history.push({ goal, outcome: 'stopped', phase, ticks: play?.ticks ?? null,
+                history.push({ goal, outcome: 'stopped', producer: play?.plan?.producer ?? null, phase, ticks: play?.ticks ?? null,
                     drained: play?.progress?.ticks ?? null, verbs: play?.plan?.verbs ?? null, solvedMs: play?.solvedMs ?? null,
                     divergence: play?.divergence ?? null, recoveries, lastRow: last, expectedEnd: play?.plan?.expected?.at(-1) ?? null });
             }
@@ -484,11 +511,15 @@ export function createWasmPlayback({
             note(null);
         },
         liveLevel() { const l = readState().level; return Number.isInteger(l) ? l : null; },
+        /** ⛓ WG — whether this engine stages a mounted generated set. */
+        get generated() { return generated; },
         status() {
-            return { phase, goal, queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
+            return { phase, goal, generated, queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
                 drained: play?.progress?.ticks ?? null, divergence: play?.divergence ?? null, recoveries };
         },
         get stats() { return { ...stats, hostStarts: [...stats.hostStarts], keyReleases: [...stats.keyReleases], history: [...history] }; },
+        /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
+        get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },
         dispose() { this.stop(); try { service?.dispose?.(); } catch { /* gone */ } },
     };
 }
@@ -496,8 +527,11 @@ export function createWasmPlayback({
 /**
  * Load the preset's map document and build the engine. `mapPath` is the one
  * the preset NAMES (`mapDocumentPath`), resolved against `baseUrl`.
+ * ⛓ WG — given `levelSet` (the generated arm's assembled set), the engine's
+ * rooms are that MOUNTED set instead (`mountedRecordsOf`), and no map is fetched.
  */
-export async function loadWasmPlaybackEngine({ mapPath, baseUrl, fetchImpl = globalThis.fetch, ...deps }) {
+export async function loadWasmPlaybackEngine({ mapPath, levelSet = null, baseUrl, fetchImpl = globalThis.fetch, ...deps }) {
+    if (levelSet) return createWasmPlayback({ ...deps, records: mountedRecordsOf(levelSet), generated: true });
     if (!mapPath) throw new Error('no map document named by the preset (region_atlas) — the wasm playback has no rooms to solve');
     const res = await fetchImpl(new URL(mapPath, baseUrl).href);
     if (!res.ok) throw new Error(`the map document ${mapPath} did not load: ${res.status} ${res.statusText}`);

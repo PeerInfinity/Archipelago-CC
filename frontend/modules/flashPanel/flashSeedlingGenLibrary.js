@@ -352,13 +352,19 @@ export function renderSeedlingGenProcgenParams({ params, onChange = () => {} } =
  * import-light, and headless — or before the module initializes — the entry
  * answers null, which the bot reads as "panel still mounting"). The controller
  * itself (`seedlingPlaybackController.js`) refuses BY NAME under any runtime
- * but the JS one, so declaring the field does not re-open P0's silent wait.
+ * but the JS one (⛓ WG: and the wasm one), so declaring the field does not re-open P0's silent wait.
  */
 let _playbackController = null;
 export function setSeedlingPlaybackController(controller) { _playbackController = controller ?? null; }
 
-/** ⛓ The chart's P2 degree (`substrateCapabilities.js`): the bot walks these rooms only on the JS runtime. */
-export const SEEDLING_PLAYBACK_SCOPE = "with the Flash Panel's JS runtime";
+/**
+ * ⛓ The chart's P2 degree (`substrateCapabilities.js`): the bot walks these
+ * rooms on the JS runtime, and ⛓ since solver-walk WG on the WASM runtime too
+ * (the engine stages the MOUNTED set; the J2 walker produces the tapes —
+ * `seedlingDemo/wasmWalkTape.js`; a tile target is refused by name). The
+ * witness: `scripts/procgen/probe-seedling-wasm-generated-playback.mjs`.
+ */
+export const SEEDLING_PLAYBACK_SCOPE = "with the Flash Panel's JS runtime, or its wasm runtime";
 
 // ── the entry ──────────────────────────────────────────────────────────────
 

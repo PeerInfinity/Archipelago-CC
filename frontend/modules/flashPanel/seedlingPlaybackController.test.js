@@ -175,12 +175,12 @@ describe('the registry entry and the chart', () => {
         expect(genEntry.playbackScope).toBe(SEEDLING_PLAYBACK_SCOPE);
         expect(typeof atlasEntry.getPlaybackController).toBe('function');
         expect(atlasEntry.playbackScope).toBe(SEEDLING_ATLAS_PLAYBACK_SCOPE);
-        // ⛓ W2 — the atlas rooms also walk on wasm; the generated rooms do not (yet).
-        expect(SEEDLING_PLAYBACK_SCOPE).toBe("with the Flash Panel's JS runtime");
+        // ⛓ W2 — the atlas rooms also walk on wasm; ⛓ WG — and so do the generated rooms.
+        expect(SEEDLING_PLAYBACK_SCOPE).toBe("with the Flash Panel's JS runtime, or its wasm runtime");
         expect(SEEDLING_ATLAS_PLAYBACK_SCOPE).toBe("with the Flash Panel's JS runtime, or its wasm runtime");
     });
 
-    it('P2 reads ◐ — "JS runtime" for flash_seedling_gen, "JS runtime, or its wasm runtime" for flash_seedling (W2)', () => {
+    it('P2 reads ◐ — "JS runtime, or its wasm runtime" for flash_seedling (W2) and flash_seedling_gen (WG)', () => {
         const p2 = CAPABILITY_STATEMENTS.find((s) => s.id === 'P2');
         expect(p2.answer(genEntry)).toEqual({ kind: CELL_KINDS.PARTIAL, text: SEEDLING_PLAYBACK_SCOPE });
         expect(p2.answer(atlasEntry)).toEqual({ kind: CELL_KINDS.PARTIAL, text: SEEDLING_ATLAS_PLAYBACK_SCOPE });
@@ -414,10 +414,95 @@ describe('⛓ W2 — the atlas instance walks under the WASM runtime (the engine
         expect(failed[0].reason).toBe('the wasm playback engine did not load: 404 m.json');
     });
 
-    it('the GENERATED instance keeps its refusal under wasm (and so does an atlas instance built without `wasm`)', () => {
+    it('an instance built WITHOUT `wasm` keeps its refusal under wasm (the J2 default)', () => {
         const gen = new SeedlingPlaybackController({ getSurface: () => wasmSurface({ report }),
             loadWasmEngine: async () => { throw new Error('never'); } });
         expect(gen.walkTo({ kind: 'exit', name: 'exit_0' })).toBe(false);
         expect(gen.lastRefusal).toBe(notJsRuntimeRefusal('wasm', 'auto'));
+    });
+});
+
+describe('⛓ WG — the GENERATED instance walks under the WASM runtime (the mounted set; the engine is injected)', () => {
+    const fakeEngine = () => {
+        const e = { goals: [], stops: 0, disposed: 0, live: 0, answer: { ok: true, action: 'force-re-arrival' } };
+        return Object.assign(e, {
+            walkTo(g) { e.goals.push(g); return e.answer; },
+            stop() { e.stops += 1; },
+            liveLevel() { return e.live; },
+            status() { return { phase: 'idle', goal: null }; },
+            dispose() { e.disposed += 1; },
+        });
+    };
+    const game = { botStatus() {} };
+    const surface = (levelSet, extra = {}) => ({ transport: 'wasm', setting: 'wasm', report, region: 'region_0_0',
+        wasm: { getGame: () => game, getWin: () => null, teleport: () => true, mapPath: null, levelSet }, ...extra });
+    const flush = () => new Promise((r) => { setTimeout(r, 0); });
+    const genController = (getSurface, more = {}) => new SeedlingPlaybackController({ getSurface, wasm: true,
+        wasmLevelSetOf: (s) => s?.wasm?.levelSet ?? null, ...more });
+
+    it('a location goal is HELD while the engine loads FROM THE DELIVERED SET, then handed over resolved', async () => {
+        const ft = fakeTimers();
+        const engine = fakeEngine();
+        const loads = [];
+        const c = genController(() => surface(set), { timers: ft.timers, now: ft.now,
+            loadWasmEngine: async (deps) => { loads.push(deps); return engine; } });
+        expect(c.walkTo({ kind: 'location', name: 'region_0_0__key_blue_pickup' })).toBe(true);
+        await flush();
+        expect(loads).toHaveLength(1);
+        expect(loads[0].levelSet).toBe(set);
+        ft.fire();
+        expect(engine.goals).toEqual([{ kind: 'location', level: 0, tag: 0, name: 'region_0_0__key_blue_pickup' }]);
+        expect(c.walkTo({ kind: 'exit', name: 'exit_0' })).toBe(true);
+        expect(engine.goals.at(-1)).toEqual({ kind: 'exit', level: 0, tile: [8, 1], name: 'exit_0' });
+    });
+
+    it('no delivered set yet (the AP load) → HELD, and no engine is loaded until it arrives', async () => {
+        const ft = fakeTimers();
+        let current = null;
+        const loads = [];
+        const c = genController(() => surface(current), { timers: ft.timers, now: ft.now,
+            loadWasmEngine: async (deps) => { loads.push(deps); return fakeEngine(); } });
+        expect(c.walkTo({ kind: 'location', name: 'region_0_0__key_blue_pickup' })).toBe(true);
+        await flush();
+        ft.fire();
+        expect(loads).toEqual([]);
+        current = set;
+        ft.fire();
+        await flush();
+        expect(loads).toHaveLength(1);
+    });
+
+    it('a TILE target is refused synchronously, by name, before anything loads (no producer serves it)', () => {
+        const loads = [];
+        const c = genController(() => surface(set), { loadWasmEngine: async (d) => { loads.push(d); return fakeEngine(); } });
+        expect(c.walkTo({ kind: 'tile', x: 3, y: 3 })).toBe(false);
+        expect(c.lastRefusal).toBe('a tile target is not walked in the generated rooms on the wasm runtime — their tapes '
+            + 'come from the walker producer, which serves a location or an exit');
+        expect(loads).toEqual([]);
+    });
+
+    it('a NEW delivered set (a new object) is a new engine; the old one is disposed', async () => {
+        const ft = fakeTimers();
+        const engines = [];
+        let current = set;
+        const c = genController(() => surface(current), { timers: ft.timers, now: ft.now,
+            loadWasmEngine: async () => { const e = fakeEngine(); engines.push(e); return e; } });
+        c.walkTo({ kind: 'location', name: 'region_0_0__key_blue_pickup' });
+        await flush();
+        ft.fire();
+        current = { ...set };
+        c.walkTo({ kind: 'location', name: 'region_0_0__key_blue_pickup' });
+        await flush();
+        ft.fire();
+        expect(engines).toHaveLength(2);
+        expect(engines[0].disposed).toBe(1);
+        expect(engines[1].goals).toHaveLength(1);
+    });
+
+    it('under a runtime it does not walk (flash), the refusal names BOTH runtimes it does', () => {
+        const c = genController(() => surface(set, { transport: 'flash', setting: 'flash' }));
+        expect(c.walkTo({ kind: 'location', name: 'region_0_0__key_blue_pickup' })).toBe(false);
+        expect(c.lastRefusal).toBe(notJsRuntimeRefusal('flash', 'flash', 'flash_seedling_gen', true));
+        expect(c.lastRefusal).toMatch(/only on the Seedling JS or wasm runtime .* set Flash Panel → Runtime to 'js' or 'wasm'/);
     });
 });

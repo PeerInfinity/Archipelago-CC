@@ -326,7 +326,12 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     // ⛓ S2 — "solving…" (and a decline / a retry) reaches the bot's status line.
     onWalkNote: (e) => getModuleEventBus()?.publish?.(PLAYBACK_WALK_NOTE_EVENT, e),
   };
-  setSeedlingPlaybackController(new SeedlingPlaybackController(playbackDeps));
+  // ⛓ WG — generated rooms walk on wasm too: the engine stages the MOUNTED set the generated arm delivered.
+  setSeedlingPlaybackController(new SeedlingPlaybackController({
+    ...playbackDeps,
+    wasm: true,
+    wasmLevelSetOf: (surface) => surface?.wasm?.levelSet ?? null,
+  }));
   // ⛓ J3 — the same page and walker, the atlas rooms' name → cell map.
   setSeedlingAtlasPlaybackController(new SeedlingPlaybackController({
     ...playbackDeps,

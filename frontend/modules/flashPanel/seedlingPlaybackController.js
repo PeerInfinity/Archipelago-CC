@@ -79,9 +79,18 @@
  * this file still imports no model; until it is up (and its map document in)
  * the goal is HELD on the same retry timer a not-yet-mounted JS page uses.
  * The engine's notes and late failures come back through `onWalkNote` /
- * `onWalkFailed`, exactly as the JS page's do. The GENERATED instance keeps
- * the refusal on wasm (its rooms are a mounted level set the engine does not
- * stage yet — W2 AS-BUILT).
+ * `onWalkFailed`, exactly as the JS page's do.
+ *
+ * ── ⛓ WG — THE GENERATED INSTANCE WALKS ON WASM TOO ────────────────────
+ *
+ * Built with `wasm: true` and `wasmLevelSetOf` (the surface's
+ * `wasm.levelSet`, the set the generated arm delivered), the engine stages
+ * that MOUNTED set — not a map document — and its tapes come from the J2
+ * walker (`seedlingDemo/wasmWalkTape.js`), since the solver has no goal kind
+ * for an apitem. A location and an exit are served; a `tile` target is
+ * refused on wasm BY NAME (no producer serves it), as is a goal the walker
+ * cannot reach (the engine's named failure). A new delivered set (a new
+ * object) is a new engine, like a new game.
  */
 
 /** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
@@ -177,11 +186,14 @@ export async function defaultLoadWasmEngine(deps) {
     return mod.loadWasmPlaybackEngine({ ...deps, baseUrl: document.baseURI });
 }
 
-/** The refusal for a panel that is not running the JS runtime. */
-export function notJsRuntimeRefusal(transport, setting, substrate = SEEDLING_PLAYBACK_SUBSTRATE) {
-    return `${substrate} regions are walked only on the Seedling JS runtime — the Flash Panel `
+/**
+ * The refusal for a panel that is not running a runtime this instance walks:
+ * the JS runtime, and ⛓ W2/WG (`wasm` true) the wasm runtime too.
+ */
+export function notJsRuntimeRefusal(transport, setting, substrate = SEEDLING_PLAYBACK_SUBSTRATE, wasm = false) {
+    return `${substrate} regions are walked only on the Seedling JS${wasm ? ' or wasm' : ''} runtime — the Flash Panel `
         + `is running the ${transport ?? 'unknown'} runtime (setting '${setting ?? 'auto'}'); set Flash Panel → `
-        + `Runtime to 'js' to let the Playback Bot walk ${ROOMS_OF[substrate] ?? 'these rooms'}`;
+        + `Runtime to 'js'${wasm ? " or 'wasm'" : ''} to let the Playback Bot walk ${ROOMS_OF[substrate] ?? 'these rooms'}`;
 }
 
 export class SeedlingPlaybackController {
@@ -200,16 +212,21 @@ export class SeedlingPlaybackController {
      * @param {function} [deps.resolve]  `(target, map, where) → {goal}|{refused}`
      * @param {(surface:object) => object|null} [deps.mapOf]  the name → cell map off the surface
      * @param {boolean} [deps.wasm]  ⛓ W2 — this instance walks under the wasm runtime too
-     * @param {(deps:object) => Promise<object>} [deps.loadWasmEngine]  ⛓ W2 — builds the engine
+     * @param {(surface:object) => object|null} [deps.wasmLevelSetOf]  ⛓ WG — the MOUNTED level set the
+ *   engine stages (the generated instance); absent = the preset's map document (`wasm.mapPath`)
+ * @param {(deps:object) => Promise<object>} [deps.loadWasmEngine]  ⛓ W2 — builds the engine
      *   (`seedlingWasmPlayback.loadWasmPlaybackEngine`'s shape); tests inject a fake
      */
     constructor({
         getSurface, log = () => {}, onWalkFailed = () => {}, onWalkNote = () => {}, now = () => Date.now(),
         timers = { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) },
         substrate = SEEDLING_PLAYBACK_SUBSTRATE, resolve = resolveSeedlingGoal, mapOf = (surface) => surface?.report ?? null,
-        wasm = false, loadWasmEngine = defaultLoadWasmEngine,
+        wasm = false, loadWasmEngine = defaultLoadWasmEngine, wasmLevelSetOf = null,
     } = {}) {
         this.wasm = wasm;
+        this._wasmLevelSetOf = wasmLevelSetOf;
+        /** ⛓ WG — the level set the current engine was built from (null = the map document). */
+        this._wasmSet = null;
         this._loadWasmEngine = loadWasmEngine;
         /** ⛓ W2 — the engine, the game it was built for, and a load in flight / its failure. */
         this._wasmEngine = null;
@@ -242,7 +259,7 @@ export class SeedlingPlaybackController {
     walkTo(target) {
         this.lastRefusal = null;
         const s = this._getSurface?.() ?? null;
-        if (s && s.transport && !this._walks(s.transport)) return this._refuse(notJsRuntimeRefusal(s.transport, s.setting, this.substrate));
+        if (s && s.transport && !this._walks(s.transport)) return this._refuse(notJsRuntimeRefusal(s.transport, s.setting, this.substrate, this.wasm));
         const out = this._apply(target, s);
         if (out === 'pending') {
             this._hold(target);
@@ -288,17 +305,20 @@ export class SeedlingPlaybackController {
     _engineFor(s) {
         const game = s.wasm?.getGame?.() ?? null;
         if (!game) return null;
-        if (this._wasmEngine && this._wasmGame === game) return this._wasmEngine;
+        const levelSet = this._wasmLevelSetOf ? (this._wasmLevelSetOf(s) ?? null) : null;
+        if (this._wasmLevelSetOf && !levelSet) return null;
+        if (this._wasmEngine && this._wasmGame === game && this._wasmSet === levelSet) return this._wasmEngine;
         if (this._wasmEngine) { try { this._wasmEngine.dispose(); } catch { /* gone */ } this._wasmEngine = null; }
-        if (this._wasmLoading?.game === game) return null;
+        if (this._wasmLoading?.game === game && this._wasmLoading.levelSet === levelSet) return null;
         // ⛔ A load that FAILED for this game is not retried: `_applyWasm` turns it into a named refusal.
         if (this._wasmLoadError && this._wasmLoadErrorGame === game) return null;
-        const loading = { game };
+        const loading = { game, levelSet };
         this._wasmLoading = loading;
         this._wasmLoadError = null;
         this._wasmLoadErrorGame = null;
         const deps = {
             mapPath: s.wasm.mapPath,
+            ...(levelSet ? { levelSet } : {}),
             getGame: () => this._getSurface?.()?.wasm?.getGame?.() ?? null,
             getWin: () => this._getSurface?.()?.wasm?.getWin?.() ?? null,
             teleport: (p) => this._getSurface?.()?.wasm?.teleport?.(p) ?? false,
@@ -312,6 +332,7 @@ export class SeedlingPlaybackController {
             this._wasmLoading = null;
             this._wasmEngine = engine;
             this._wasmGame = game;
+            this._wasmSet = levelSet;
         }, (err) => {
             if (this._wasmLoading !== loading) return;
             this._wasmLoading = null;
@@ -328,6 +349,12 @@ export class SeedlingPlaybackController {
 
     /** ⛓ W2 — `_apply` under the wasm runtime: true / false (refused) / 'pending'. */
     _applyWasm(target, s) {
+        // ⛓ WG — refused before anything loads: no producer turns a tile into a tape (the walker
+        // producer serves a location or an exit), so waiting for the game would only delay the NO.
+        if (this._wasmLevelSetOf && target?.kind !== 'location' && target?.kind !== 'exit') {
+            return this._refuse(`a ${target?.kind ?? 'missing'} target is not walked in the ${ROOMS_OF[this.substrate] ?? this.substrate} `
+                + 'on the wasm runtime — their tapes come from the walker producer, which serves a location or an exit');
+        }
         const map = this._mapOf(s);
         if (!map) return 'pending';
         const engine = this._engineFor(s);
@@ -422,7 +449,7 @@ export class SeedlingPlaybackController {
         if (s && s.transport && !this._walks(s.transport)) {
             const { target } = this._pending;
             this._clearPending();
-            this._fail(target, notJsRuntimeRefusal(s.transport, s.setting, this.substrate));
+            this._fail(target, notJsRuntimeRefusal(s.transport, s.setting, this.substrate, this.wasm));
             return;
         }
         const { target } = this._pending;

@@ -158,11 +158,12 @@ export function exactDeclarationRefusal(tape, status) {
  *
  * @param {{level:number}} goal
  * @param {object|null|undefined} record  the goal room's record; undefined = not loaded yet (no verdict)
+ * @param {{source?: string}} [o]  ⛓ WG — what the records are, for the "no such level" text
  * @returns {string|null}
  */
-export function wasmGoalRefusal(goal, record) {
+export function wasmGoalRefusal(goal, record, { source = 'vanilla map' } = {}) {
     if (record === undefined) return null;
-    if (record === null) return `the vanilla map has no level ${goal?.level} to solve`;
+    if (record === null) return `the ${source} has no level ${goal?.level} to solve`;
     const types = new Set((record.entities ?? []).map((e) => e.type));
     for (const [field, readers] of Object.entries(UNREAD_MODELLED_READERS)) {
         const hit = readers.filter((t) => types.has(t));

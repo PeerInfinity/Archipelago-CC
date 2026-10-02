@@ -776,8 +776,8 @@ export function setSeedlingAtlasPlaybackController(controller) { _playbackContro
  * ⛓ The chart's P2 degree (`substrateCapabilities.js`): the bot walks these
  * rooms on the JS runtime, and ⛓ since solver-walk W2 on the WASM runtime too
  * (solve at arrival, one host tape — `seedlingWasmPlayback.js`; level 0 and
- * any other moonrock room are refused by name). The generated entry's words
- * (`flashSeedlingGenLibrary.SEEDLING_PLAYBACK_SCOPE`) stay JS-only.
+ * any other moonrock room are refused by name). ⛓ WG — the generated entry's
+ * words (`flashSeedlingGenLibrary.SEEDLING_PLAYBACK_SCOPE`) now read the same.
  */
 export const SEEDLING_ATLAS_PLAYBACK_SCOPE = "with the Flash Panel's JS runtime, or its wasm runtime";
 
