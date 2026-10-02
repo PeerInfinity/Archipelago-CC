@@ -7212,7 +7212,21 @@ function execKill(run, perTick, resolved, ctx) {
      * not step a kill-lock's fade — §11.5's ruling, so that ONE writer owns
      * the persistence slot — so the run's own ledger has the REMOVAL tick and
      * `activators.opensOnTick` has the fade, and the sum is the declaration.
+     *
+     * ⛓⛓⛓ FIDELITY F1b — AND THE SUM IS SPELLED IN THE v9 `at` CONVENTION,
+     * which is ONE LESS than `opensOnTick`. The ledger stamps the removal
+     * `ticksCompleted + 1`; `turnOff()` lands on the 101st alpha step, in the
+     * advance that completes tick `removal + 100`; and a declared v9 row fires
+     * when `ticksCompleted === at`, i.e. at the start of that same advance —
+     * the scratch layer's own `declaredAt: p.at - 1`, one rule for both
+     * writers. MEASURED, not reasoned (`f1-l5-lock-removal`): removal t201,
+     * `{5,0}@301` replays to the game's crossing on t303, and `@302` crosses
+     * on t304. (`r2-terrain-killlock` agrees: removal 183, `@283`, t285.)
+     * Until F1b this read `removal + 101` from a ledger that held the KILL,
+     * and the two errors did not cancel: 166 + 101 = 267 against the game's
+     * 301.
      */
+    const declaredFade = fadeTicks - 1;
     const opens = (run.ledger('chaserKillLockOpens') ?? []).filter((o) => !o.nil && o.level === run.level);
     const mine = opens.filter((o) => o.opens.some((x) => x.at === resolved.lock.id));
     const last = mine[mine.length - 1] ?? opens[opens.length - 1] ?? null;
@@ -7243,16 +7257,18 @@ function execKill(run, perTick, resolved, ctx) {
         + `${fadeTicks}-step fade has run and \`turnOff()\` writes the durable clear at the `
         + 'end of it. This model does not step a kill-lock\'s fade (§11.5: one writer per '
         + 'persistence slot), so the tick is the run\'s own ledger plus the responder\'s '
-        + `own arithmetic: ${last.t} + ${fadeTicks} = ${last.t + fadeTicks}.`,
+        + `own arithmetic, in the v9 \`at\` spelling: ${last.t} + ${declaredFade} = `
+        + `${last.t + declaredFade}.`,
     { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock.id },
         perTick: [...perTick],
         pending: {
             level: run.level, tag: resolved.lock.persistTag ?? null,
-            source: 'model', at: last.t + fadeTicks, removedAt: last.t, fade: fadeTicks,
+            source: 'model', at: last.t + declaredFade, removedAt: last.t, fade: declaredFade,
             lock: resolved.lock.id, phases,
-            why: `\`chaserKillLockOpens\` computed the removal at ${last.t} and `
-                + `\`activators.opensOnTick(${RESPONDERS[resolved.lock.tag]?.fade
-                    ?? RESPONDERS.lock.fade})\` is ${fadeTicks}`,
+            why: `\`chaserKillLockOpens\` computed the removal (the last body leaves the `
+                + `world) at ${last.t}, and \`activators.opensOnTick(${RESPONDERS[resolved.lock.tag]?.fade
+                    ?? RESPONDERS.lock.fade})\` is ${fadeTicks}, which a declared v9 row spells `
+                + `${declaredFade}`,
         } });
 }
 

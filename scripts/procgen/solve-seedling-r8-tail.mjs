@@ -13,7 +13,8 @@
  *               `Game.totalEnemies()` to zero; `chaserKillLockOpens` has the
  *               removal tick and `activators.opensOnTick` has `lock@48,112`'s
  *               own 101-step fade. The model owns both terms, so the loop
- *               declares their sum and the GAME then adjudicates by replaying
+ *               declares removal + 100 (the v9 `at` spelling; fidelity F1b
+ *               witnessed it) and the GAME then adjudicates by replaying
  *               the tape byte for byte.
  *   r8-solve-8  L8 — GAME-sourced. §11.4 REFUSES to compute a static
  *               `"Enemy"` body's arrow death, precisely so that ONE writer
@@ -343,8 +344,9 @@ const ROWS = Object.freeze([
         source: 'model',
         why: 'L5 — the KILL-LOCK. `lock@48,112` is `tset == -1`, so no button in the game '
             + 'answers it; the ceiling kills all three bobs, `Game.totalEnemies()` reaches '
-            + 'zero, and the tick is `chaserKillLockOpens`\'s removal plus '
-            + '`activators.opensOnTick`\'s 101-step fade. Both terms are the model\'s own.',
+            + 'zero, and the tick is `chaserKillLockOpens`\'s removal (the last body leaves '
+            + 'the world) plus `activators.opensOnTick`\'s 101-step fade, spelled 100 in a '
+            + 'v9 `at` row. Both terms are the model\'s own.',
     }),
     Object.freeze({
         segNo: 8,

@@ -2223,9 +2223,10 @@ export const R8_TWO_PASS = Object.freeze({
 
     tickSources: Object.freeze({
         model: Object.freeze({
-            oracle: 'the run\'s own ledger — `chaserKillLockOpens[].t` (the REMOVAL tick) '
+            oracle: 'the run\'s own ledger — `chaserKillLockOpens[].t` (the REMOVAL tick: '
+                + 'the last body leaves the world, which since fidelity F1b it really is) '
                 + 'plus `activators.opensOnTick(RESPONDERS[tag].fade)` (the responder\'s '
-                + 'own fade, 101 for a `Lock`)',
+                + 'own fade, 101 for a `Lock`) in the v9 `at` spelling, one less',
             allowedWhen: 'the model COMPUTES the consequence end to end',
             room: 'L5 — `lock@48,112`, `tset == -1`, opened by three arrow kills',
             check: 'pass 2 recomputes the ledger and its tick must EQUAL the declared one',
