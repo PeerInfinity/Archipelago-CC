@@ -573,7 +573,77 @@ export function createActivatorState(world) {
     // The cross-room presser ids whose write this visit has already made,
     // and the groups a `room = -1` press has LATCHED open (see
     // `localPublish` — the setter cannot be reset to false).
-    return { byId, level: world.level, roomWritten: new Set(), latched: new Map() };
+    const state = { byId, level: world.level, roomWritten: new Set(), latched: new Map() };
+    for (const p of world.pressers ?? []) bootPress(state, p, world);
+    return state;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY F6 (I03) — A `ButtonRoom` THAT BOOTS PRESSED.
+ *
+ * `ButtonRoom.check()` (`Puzzlements/ButtonRoom.as:40-50`) is
+ *
+ *     _active = !Game.checkPersistence(tag);
+ *     activate = _active;
+ *
+ * and `Game.update`'s first frame runs `check()` on every entity before any
+ * `update()` (`Game.as:871-879`). So a button whose own tag is cleared calls
+ * its setter with `true` at build — the same setter a press calls (`:67-98`):
+ *
+ *   - `room == -1`: every `Activators` sharing `t` gets `activate = persist`.
+ *     With `flip = 0` that is TRUE, and nothing can set it false again (the
+ *     setter's whole body is `if (a)`): the group is LATCHED from the build,
+ *     so a `Lock` in it runs `activationStep`'s fade from its first update —
+ *     101 updates to `turnOff()`, exactly as if the button had been pressed on
+ *     the first live tick. `flip = 1` publishes FALSE, which latches nothing.
+ *   - `room >= 0`: `Game.setPersistence(t, persist, room)`. Re-written, not
+ *     newly written: the button's own tag is cleared only because the same
+ *     setter already wrote that flag, and a `flip = 1` write is a CLEAR that
+ *     nothing in the four vanilla targets writes back. A `flip = 0` one would
+ *     write TRUE over whatever the target holds now — a state this model does
+ *     not carry across levels — so it is REFUSED by name. None exists in the
+ *     extract (`L38→39`, `L38→37`, `L61→63`, `L63→62` are all `flip = 1`).
+ *   - `Game.setPersistence(tag, !activate)`: the button's own tag, cleared
+ *     again — already cleared.
+ *
+ * ⚠ THE PRESSER IS MARKED WRITTEN, so the run's first press of it this visit
+ * emits no second `roomwrite`: the game's setter fires again on that press,
+ * but every write is a re-write of a value it already holds.
+ *
+ * ⛓⛓ AND THE GROUP IS ONE FADE STEP IN AT CREATION — MEASURED, `f6-l20-reentry`.
+ * The game's first `update()` of a new world runs in the frame that records
+ * the arrival observation (a boot's tick 0, a walk-in's transition tick), and
+ * a `Lock` updates before the Player, so its first `alpha -= 0.01` is in that
+ * frame. The model's first `stepActivators` for the new world is one tick
+ * later: on a transition tick `levelRun` still steps the level being LEFT, and
+ * a boot has no movement tick 0. A press by the player cannot tell — nothing
+ * is pressed before the first live tick — but a group latched by `check()` is
+ * active from the build, so the model starts it one update in. Uncredited, the
+ * model opened `lock@32,80` on t109 and the game on t108. Applied to the fade
+ * rows (`RESPONDERS`); a `Pulser` or `ArrowTrap` in a latched group reads
+ * `state.latched` from the run's next tick and is one update behind the game
+ * the same way — unwitnessed (no committed or witness tape boots one).
+ */
+function bootPress(state, p, world) {
+    if (p.tag !== 'buttonroom' || p.bootPressed !== true) return;
+    if (p.room >= 0 && !p.flip) {
+        fail(`level ${state.level}: buttonroom@${p.x},${p.y} boots PRESSED (its tag ${p.persistTag} `
+            + `is cleared) and is a cross-room button with flip = 0, so \`check()\` re-runs `
+            + `\`Game.setPersistence(${p.t}, true, ${p.room})\` — a TRUE written over whatever level `
+            + `${p.room} holds now, which this model does not carry across levels. Refused by name `
+            + 'rather than assumed idempotent; no vanilla ButtonRoom has this shape.');
+    }
+    state.roomWritten.add(`${p.tag}@${p.x},${p.y}`);
+    const publish = localPublish(p);
+    if (!publish || !publish.value || state.latched.get(publish.group) === true) return;
+    state.latched.set(publish.group, true);
+    for (const a of world.activators) {
+        if (a.t !== publish.group || !RESPONDERS[a.tag] || TOUCH_RESPONDERS[a.tag] || KEY_RESPONDERS[a.tag]) continue;
+        const s = state.byId.get(a.id);
+        s.alpha = clampAlpha(s.alpha - RESPONDERS[a.tag].fade);
+        if (RESPONDERS[a.tag].fade === 0.1 && s.alpha <= 0) s.open = true;
+        s.held += 1;
+    }
 }
 
 /**

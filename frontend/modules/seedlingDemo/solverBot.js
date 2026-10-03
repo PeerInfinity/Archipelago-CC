@@ -1284,6 +1284,8 @@ function skirtAlignment(x0, vx0, lane) {
  * so.
  */
 function resolveHoldStrategy(run, obstacle, contacts, blocked = [], alsoRejected = []) {
+    const latchedWait = latchedFadeWait(run, obstacle, alsoRejected);
+    if (latchedWait) return latchedWait;
     const opener = openerPresserFor(run, obstacle);
     if (!opener) return null;
     const presser = opener.presser;
@@ -1312,6 +1314,82 @@ function resolveHoldStrategy(run, obstacle, contacts, blocked = [], alsoRejected
                 + '(trap 147)',
         }, ...opener.rejected, ...alsoRejected],
     };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY F6 (I03) — A RESPONDER WHOSE GROUP IS ALREADY LATCHED
+ * NEEDS NO PRESSER: THE HOLD IS A WAIT WHERE THE PLAYER STANDS.
+ *
+ * A `room = -1` ButtonRoom's publish latches its group (`localPublish`, the
+ * setter's *"Can't be reset to false!!"*), and since F6 a ButtonRoom whose own
+ * tag is cleared latches it at BUILD (`activators.createActivatorState`). The
+ * fade then runs to `turnOff()` whoever stands where. L20 re-entered from L13
+ * is the case: the player arrives in the pocket behind `lock@32,80`, and the
+ * group's presser, `buttonroom@192,16`, is on the far side of that same lock —
+ * so `hold`'s walk to the presser asked for a corridor through the lock, which
+ * raised `hold` again, four times, with no tick spent.
+ *
+ * `null` unless `obstacle` is a fade responder (`RESPONDERS`, not a touch or key
+ * one) whose group the LIVE run reports latched (`latchedGroups`). The wait's
+ * bound is the fade's own count (`opensOnTick`) plus `HOLD_SLACK`, and its stop
+ * is the responder open in the live run (`execHold`'s latched arm).
+ */
+function latchedFadeWait(run, obstacle, alsoRejected = []) {
+    const row = (run.world.activators ?? []).find((a) => a.id === obstacle.id);
+    if (!row || !(row.t >= 0) || !RESPONDERS[row.tag]
+        || TOUCH_RESPONDERS[row.tag] || KEY_RESPONDERS[row.tag]) return null;
+    if (!(run.entities('latchedGroups') ?? new Set()).has(row.t)) return null;
+    if (run.entities('openActivators').has(row.id)) return null;
+    return {
+        strategy: 'hold',
+        target: null,
+        stance: null,
+        latched: true,
+        hold: {
+            ticks: opensOnTick(RESPONDERS[row.tag].fade) + HOLD_SLACK,
+            latched: true,
+            why: null,
+            until: {
+                why: `${row.id} is open — its group t=${row.t} is LATCHED in the live run, `
+                    + 'so the fade completes whoever is standing where',
+                test: (r) => r.entities('openActivators').has(row.id),
+            },
+        },
+        rejected: [{
+            option: 'presser',
+            why: `group t=${row.t} is already LATCHED in the live run, so no presser is `
+                + `needed — walking to one would ask for a corridor through ${row.id} itself`,
+        }, ...alsoRejected],
+    };
+}
+
+/**
+ * The latched arm of `execHold` — stand still until the latched responder is
+ * open, inside the fade's own bound, or refuse by name.
+ */
+function runLatchedWait(run, perTick, resolved, what) {
+    const { ticks, until } = resolved.hold;
+    const start = { x: run.state.x, y: run.state.y };
+    const NO_KEYS = new Set();
+    let heldFor = 0;
+    while (!until.test(run) && heldFor < ticks) {
+        perTick.push(NO_KEYS);
+        heldFor += 1;
+        const { transition } = run.advance(NO_KEYS);
+        if (transition) {
+            throw new SolverRefusal(`${what}: the latched wait crossed from level `
+                + `${transition.from_level} to ${transition.to_level} on its tick ${heldFor}. `
+                + 'A wait stands still.', { obstacle: { kind: 'solid', id: resolved.hold.until.why } });
+        }
+    }
+    if (!until.test(run)) {
+        throw new SolverRefusal(`${what}: waited the whole bound of ${ticks} tick(s) and the `
+            + `condition never became true — ${until.why}. The bound is the fade's own count, so `
+            + 'running it out is a measurement that the latch is not what the run reports.',
+        { obstacle: { kind: 'solid', id: 'latched-wait' } });
+    }
+    return { presser: null, latched: true, ticks, heldFor, stoppedOn: until.why, at: start,
+        opened: [], armed: [], traps: [], volleys: 0, wrote: [] };
 }
 
 /**
@@ -5380,6 +5458,9 @@ const hypothesisRejection = (discharged) => (discharged?.length ? [{
  * the stance from the presser's rect, the duration from the mechanism.
  */
 function execHold(run, perTick, resolved, ctx) {
+    if (resolved.latched === true && resolved.stance === null) {
+        return runLatchedWait(run, perTick, resolved, ctx.what);
+    }
     return runHold(run, perTick, {
         presser: { x: resolved.target.x, y: resolved.target.y },
         ticks: resolved.hold.ticks,
