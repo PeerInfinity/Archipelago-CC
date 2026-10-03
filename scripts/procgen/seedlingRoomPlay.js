@@ -237,6 +237,85 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
     }
 
     /**
+     * IN-PAGE: has the region binding finished with the level the game reports? null while a crossing can
+     * still be in flight (the binding has not read the level, or a swap is marked or queued); otherwise the
+     * glue's teleport count and the arrival spawn its re-placement sends the player to.
+     */
+    const bindingSettled = (level) => page.evaluate(async (lv) => {
+        const { getSeedlingRegionGlue } = await import('./modules/flashPanel/index.js');
+        const glue = getSeedlingRegionGlue();
+        if (!glue) return { glue: false };
+        const b = glue.binding;
+        if (b.active && b.lastLevel !== lv) return null;
+        const sw = glue.swapState();
+        if (sw.marks.some((m) => m !== 'parked') || sw.queued > 0) return null;
+        const { resolveArrivalSpawn } = await import('./modules/flashPanel/seedlingRegionBinding.js');
+        const spawn = b.world ? resolveArrivalSpawn(b.world, b.arrivedFrom, b.returnSpawns) : null;
+        return { glue: true, teleports: glue.stats.teleports,
+            spawn: spawn ? { level: spawn.level, x: spawn.x, y: spawn.y } : null };
+    }, level);
+
+    /** Poll until the game's checkpoint is `(level, x, y)`; true when it got there, false at `timeoutMs`. */
+    async function gameAt(level, x, y, timeoutMs) {
+        const start = Date.now();
+        for (;;) {
+            // eslint-disable-next-line no-await-in-loop
+            const g = await readGameState();
+            if (g.level === level && g.playerPositionX === x && g.playerPositionY === y) return true;
+            if (Date.now() - start > timeoutMs) return false;
+            // eslint-disable-next-line no-await-in-loop
+            await page.waitForTimeout(100);
+        }
+    }
+
+    /**
+     * ⛓ **A HOST JUMP, SETTLED — THE BINDING'S RE-PLACEMENT IS WAITED FOR, NEVER TIMED** (L3-REPLACE).
+     * A `jump` that crosses into a room the preset binds is a crossing to the region binding, which
+     * re-places the player at the region's arrival spawn (W4, on `seedling_atlas`: 86 (48,64) → (48,48),
+     * L2 (48,16) → (48,32), L3 (96,128) → (64,16)); a jump inside the SAME level is no crossing and lands as
+     * asked. The witnesses used to wait a FIXED 1200 ms and re-jump once if the player stood elsewhere. The
+     * re-placement lands 0.8–2.3 s after the jump is queued (measured — the chain is the game's swap, its
+     * level report, the binding, the glue's teleport and the adapter's next queue drain, all on the page's
+     * one main thread), so on a slow pass the read came FIRST: the witness saw the jump's own cell, did not
+     * re-jump, and the engine then staged the binding's spawn (W7's `closed L3 bare` red; the L2 flake).
+     *
+     * So the wait is on the chain itself: the binding has read the level (`lastLevel`), nothing is marked
+     * or queued (`swapState`), and — when the glue teleported since the jump — the game stands on the spawn
+     * it was sent to. A re-placement that never lands throws by name. Returns `{level, x, y, jumps,
+     * replaced}` (`replaced` = the spawn the binding moved the player to, or null); the caller checks it.
+     */
+    async function jumpSettled(level, x, y, { timeoutMs = 15000 } = {}) {
+        let replaced = null;
+        let jumps = 0;
+        for (;;) {
+            // eslint-disable-next-line no-await-in-loop
+            const teleports0 = (await glueStats())?.teleports ?? 0;
+            jumps += 1;
+            // eslint-disable-next-line no-await-in-loop
+            await jump(level, x, y);
+            // eslint-disable-next-line no-await-in-loop
+            // ⛔ a string, not the level: `waitFor` reads a FALSY answer as "not yet", and the hub is level 0
+            // eslint-disable-next-line no-await-in-loop
+            await waitFor(`the player in L${level}`, async () => ((await readGameState()).level === level ? `L${level}` : null), timeoutMs);
+            // eslint-disable-next-line no-await-in-loop
+            const s = await waitFor(`the region binding settled after the jump to L${level}`, () => bindingSettled(level), timeoutMs);
+            if (s.glue && s.teleports > teleports0 && s.spawn) {
+                replaced = s.spawn;
+                // eslint-disable-next-line no-await-in-loop
+                if (!await gameAt(s.spawn.level, s.spawn.x, s.spawn.y, timeoutMs)) {
+                    throw new Error(`the binding re-placed the jump to L${level} (${x}, ${y}) at (${s.spawn.x}, ${s.spawn.y}) `
+                        + `in L${s.spawn.level}, and the game never stood there (${timeoutMs} ms)`);
+                }
+            // eslint-disable-next-line no-await-in-loop
+            } else if (await gameAt(level, x, y, 3000)) break;
+            if (jumps >= 2) break;
+        }
+        // eslint-disable-next-line no-await-in-loop
+        const g = await readGameState();
+        return { level: g.level, x: g.playerPositionX, y: g.playerPositionY, jumps, replaced };
+    }
+
+    /**
      * ⛔ GIVE THE GAME REAL FOCUS, THE WAY A PLAYER DOES. The flashPanel and mazeRoomPanel
      * tabs share one stack, and walking the maze back brings the maze tab
      * forward; `canvas.focus()` inside the iframe then does NOT move the page's
@@ -457,7 +536,7 @@ export function createRoomPlay({ page, wasmPage, logs, name }) {
     return {
         check, failures: () => failures, waitFor, gameFrame, readGameState, livePlayer,
         activeTabTypes, currentRegion, glueStats, glueMoves, activeSubstrates, arrival,
-        installWatchers, jump, focusGame, focusChain, gameHasKeys, keyMovesPlayer, holdUntil,
+        installWatchers, jump, jumpSettled, focusGame, focusChain, gameHasKeys, keyMovesPlayer, holdUntil,
         invoked, parsePending, mazeRegionNow, mazeKeyPlan, pressKeys, mazePlayer, mazeHasKeys,
         readLevelSet, walkPath,
     };
