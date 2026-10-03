@@ -594,6 +594,12 @@ function claimArrival(name, run, to, seg = null) {
  * (`solve-seedling-r8-tail.mjs --game`), never a guess. ⛔ It is not a model
  * substitution: the number is the GAME's, and the guard is the statement that
  * it is still the same measurement.
+ *
+ * ⛓ fidelity F5: L8 no longer asks it. F4 taught the model `SandTrap`'s arrow
+ * death (`STATIC_ARROW_DEATH`, game-witnessed by `f4-l8-sandtraps`), so the
+ * re-solve of `r8-solve-8` raises no pending declaration for `{8,0}`/`{8,1}`
+ * and the run's own `removed()` writes both tags (t248/t648, the game's).
+ * The oracle stays for any game-sourced row a future window owns.
  */
 function makeRebasedOracle(owners) {
     return async ({ perTick, pending, name }) => {

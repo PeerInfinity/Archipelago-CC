@@ -947,6 +947,8 @@ const CHAIN_DECLARATIONS = Object.freeze([
      *   `{8,1}`@645  246-tick truncation of this walk carries the tag and a
      *                245-tick one does not (645/644 likewise). A one-sided
      *                reading measures "cleared by now", which is a band.
+     *                ⛓ RETIRED at fidelity F5: the model computes the death
+     *                (F4), and the re-solve declares neither row.
      *
      * ⛔ AND `r8-battery-5` IS THE ROW SLICE 4 COULD NOT ADD. Its first walk
      * was REFUTED by the game (§13.1) and banked rather than committed; this
@@ -974,31 +976,17 @@ const CHAIN_DECLARATIONS = Object.freeze([
             })]),
         }),
         Object.freeze({ seg: 6, earns: [] }),
-        Object.freeze({
-            seg: 8,
-            earns: [],
-            clears: Object.freeze([
-                Object.freeze({
-                    level: 8, tag: 0, source: 'game',
-                    evidence: Object.freeze({
-                        carriesAt: 246,
-                        absentAt: 245,
-                        why: 'the GAME\'s own `persistence_cleared`, by truncation — '
-                            + '§11.4 REFUSES to compute a static `"Enemy"` body\'s arrow '
-                            + 'death, so the model may not substitute here',
-                    }),
-                }),
-                Object.freeze({
-                    level: 8, tag: 1, source: 'game',
-                    evidence: Object.freeze({
-                        carriesAt: 645,
-                        absentAt: 644,
-                        why: 'the second `SandTrap`, the same instrument — a boundary '
-                            + 'measured on both sides rather than a poll',
-                    }),
-                }),
-            ]),
-        }),
+        /**
+         * ⛓ fidelity F5: `r8-solve-8` declares NO sandtrap clear any more. F4
+         * taught the model `SandTrap`'s arrow death (`STATIC_ARROW_DEATH`,
+         * game-witnessed by `f4-l8-sandtraps`: removed and `{8,0}`/`{8,1}`
+         * written on t248/t648), so the run's own `removed()` write carries
+         * both tags, and the re-solve has no `at` row for a provenance to name.
+         * The rows that stood here (`carriesAt` 246/645, by truncation) were
+         * the §11.4 era's game-sourced substitute; the game's own removal is
+         * two/three ticks later (F4 D1).
+         */
+        Object.freeze({ seg: 8, earns: [] }),
         Object.freeze({ seg: 7, earns: [] }),
         Object.freeze({ seg: 9, earns: [] }),
         Object.freeze({ seg: 10, earns: ['sword@L10'] }),
@@ -1275,25 +1263,9 @@ const CHAIN_DECLARATIONS = Object.freeze([
                         + 'spelling (`opensOnTick − 1`)',
                 }),
             }),
-            Object.freeze({
-                level: 8, tag: 0, source: 'game',
-                evidence: Object.freeze({
-                    carriesAt: 246,
-                    absentAt: 245,
-                    why: 'the GAME\'s own `persistence_cleared`, by truncation — §11.4 '
-                        + 'REFUSES to compute a static `"Enemy"` body\'s arrow death, so '
-                        + 'the model may not substitute here',
-                }),
-            }),
-            Object.freeze({
-                level: 8, tag: 1, source: 'game',
-                evidence: Object.freeze({
-                    carriesAt: 645,
-                    absentAt: 644,
-                    why: 'the second `SandTrap`, the same instrument — a boundary '
-                        + 'measured on both sides rather than a poll',
-                }),
-            }),
+            // ⛓ fidelity F5: L8's two `game` rows (`carriesAt` 246/645) left with
+            // `r8-solve-8`'s declarations — the run computes the sandtraps' death
+            // and writes both tags itself (F4); see `r8-battery-8` above.
             /**
              * ⛓ R9 SLICE L16 — L18's kill lock, the first timed clear a GROWN
              * segment declares (`r9-solve-18`, authored through the two-pass
@@ -1309,15 +1281,19 @@ const CHAIN_DECLARATIONS = Object.freeze([
              * lock TWO ticks before this spelling (the spinner ledger stamps one
              * step late, and `+ 101` is the pending spelling); the walk waits out
              * the fade at its loiter cell, so the replay does not see it.
+             * ⛓ fidelity F5 landed that fix (the ledger stamps the alpha-zero
+             * step; the arm declares the v9 spelling): removal 350 + 100 = 450,
+             * and the window re-solved to 510 t.
              */
             Object.freeze({
                 level: 18, tag: 0, source: 'model',
                 evidence: Object.freeze({
-                    removedAt: 351,
-                    fade: 101,
+                    removedAt: 350,
+                    fade: 100,
                     why: '`spinnerKillLockOpens`\'s removal (the second spinner dies to '
                         + 'the player\'s presses and `Game.totalEnemies()` reaches zero) '
-                        + 'plus `activators.opensOnTick(0.01)`',
+                        + 'plus `activators.opensOnTick(0.01)` in the v9 `at` spelling '
+                        + '(`opensOnTick − 1`)',
                 }),
             }),
         ]),
