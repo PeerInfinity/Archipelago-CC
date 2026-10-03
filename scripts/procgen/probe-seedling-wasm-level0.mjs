@@ -253,17 +253,9 @@ async function main() {
             if (SESSION === 'S') {
                 // ── the shield, for real ──
                 const [lv, x, y] = SHIELD.at;
-                await rp.jump(lv, x, y);
-                await rp.waitFor(`the player in L${lv}`, async () => ((await rp.readGameState()).level === lv ? `L${lv}` : null), 15000);
-                await page.waitForTimeout(1200);
-                let gs = await rp.readGameState();
-                if (gs.playerPositionX !== x || gs.playerPositionY !== y) {
-                    await rp.jump(lv, x, y);
-                    await page.waitForTimeout(1200);
-                    gs = await rp.readGameState();
-                }
-                check(`S: landed in L20 at (${x}, ${y})`, gs.level === lv && gs.playerPositionX === x && gs.playerPositionY === y,
-                    JSON.stringify({ level: gs.level, x: gs.playerPositionX, y: gs.playerPositionY }));
+                // ⛓ a cross-level jump into a bound room is re-placed by the binding — WAITED FOR, never timed
+                const gs = await rp.jumpSettled(lv, x, y);
+                check(`S: landed in L20 at (${x}, ${y})`, gs.level === lv && gs.x === x && gs.y === y, JSON.stringify(gs));
                 const sh = await leg('S', 'the shield (L20)', SHIELD.goal);
                 check('S the shield: collected ON PLAN (done, 0 divergences)', sh.r.answer.ok && sh.r.end === 'done'
                     && sh.r.legs.every((h) => !h.divergence), JSON.stringify({ end: sh.r.end, failed: sh.r.failed, legs: sh.plays.map((h) => [h.outcome, h.ticks, h.drained, h.verbs]) }));
@@ -275,22 +267,13 @@ async function main() {
                 console.log(`INFO: S checks ${JSON.stringify(apS.checks)}; binding ${JSON.stringify(apS.binding)}`);
                 // ── the hub with beam: true ──
                 const [bl, bx, by] = BEAM_LEG.at;
-                await rp.jump(bl, bx, by);
-                // ⛔ `waitFor` treats a FALSY answer as "not yet" — and the hub is level 0. Answer a string.
-                await rp.waitFor(`the player in L${bl}`, async () => ((await rp.readGameState()).level === bl ? `L${bl}` : null), 15000);
-                await page.waitForTimeout(800);
-                let gb = await rp.readGameState();
-                let jumps = 1;
-                if (gb.playerPositionX !== bx || gb.playerPositionY !== by) {
-                    // ⛓ W4's recipe: a cross-level jump into a bound room is re-placed by the binding; re-jump inside.
-                    jumps += 1;
-                    await rp.jump(bl, bx, by);
-                    await page.waitForTimeout(800);
-                    gb = await rp.readGameState();
-                }
+                // ⛓ W4's recipe: a cross-level jump into a bound room is re-placed by the binding; re-jump inside —
+                // the re-placement WAITED FOR (`jumpSettled`), never timed.
+                const { jumps, replaced } = await rp.jumpSettled(bl, bx, by);
+                const gb = await rp.readGameState();
                 check(`S: in the hub at (${bx}, ${by}) with beam still true (${jumps} jump(s); each new Game rebuilds the rock, so the beam restarts)`,
                     gb.level === bl && gb.playerPositionX === bx && gb.playerPositionY === by && gb.beam === true && gb.rockSet === false,
-                    JSON.stringify({ level: gb.level, x: gb.playerPositionX, y: gb.playerPositionY, beam: gb.beam, rockSet: gb.rockSet, jumps }));
+                    JSON.stringify({ level: gb.level, x: gb.playerPositionX, y: gb.playerPositionY, beam: gb.beam, rockSet: gb.rockSet, jumps, replaced }));
                 const b = await leg('S', 'hub → out_teleporter_0_128 with beam: true', BEAM_LEG.goal, { budgetMs: 120000 });
                 const s0 = b.staged.at(-1) ?? {};
                 check('S beam leg: the engine staged the hub arrival with beam: true DECLARED (read off readState, not guessed)',

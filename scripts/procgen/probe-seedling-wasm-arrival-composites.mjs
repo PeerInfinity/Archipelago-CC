@@ -192,29 +192,13 @@ async function main() {
             await page.waitForTimeout(1500);
             for (const leg of legs) {
                 const [level, x, y] = leg.at;
-                // eslint-disable-next-line no-await-in-loop
-                await rp.jump(level, x, y);
-                // eslint-disable-next-line no-await-in-loop
-                await rp.waitFor(`the player in L${level}`, async () => ((await rp.readGameState()).level === level ? level : null), 15000);
-                // eslint-disable-next-line no-await-in-loop
-                await page.waitForTimeout(1200);
                 // ⛓ Where the jump really landed. A jump that CROSSES into a room the preset binds is a crossing
                 // to the region binding, which re-places the player at the region's arrival spawn (measured on
-                // seedling_atlas: 86 (48,64) → (48,48), L2 (48,16) → (48,32)). A jump inside the SAME level is no
-                // crossing, so a second jump lands as asked.
+                // seedling_atlas: 86 (48,64) → (48,48), L2 (48,16) → (48,32), L3 (96,128) → (64,16)). A jump
+                // inside the SAME level is no crossing, so a second jump lands as asked. ⛔ The re-placement is
+                // WAITED FOR (`jumpSettled`), never timed: a fixed 1200 ms read raced it (W7's L3 bare red).
                 // eslint-disable-next-line no-await-in-loop
-                let g0 = await rp.readGameState();
-                let jumps = 1;
-                if (g0.level === level && (g0.playerPositionX !== x || g0.playerPositionY !== y)) {
-                    jumps += 1;
-                    // eslint-disable-next-line no-await-in-loop
-                    await rp.jump(level, x, y);
-                    // eslint-disable-next-line no-await-in-loop
-                    await page.waitForTimeout(1200);
-                    // eslint-disable-next-line no-await-in-loop
-                    g0 = await rp.readGameState();
-                }
-                const landed = { level: g0.level, x: g0.playerPositionX, y: g0.playerPositionY, jumps };
+                const landed = await rp.jumpSettled(level, x, y);
                 // eslint-disable-next-line no-await-in-loop
                 const r = await page.evaluate(serveLeg, { goal: leg.goal, budgetMs: leg.expect === 'repeat' ? 150000 : 90000 });
                 const plays = r.legs.filter((h) => h.outcome !== 'failed');
