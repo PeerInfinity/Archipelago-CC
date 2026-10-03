@@ -438,7 +438,8 @@ describe('who takes the box', () => {
          * WG its generated-rooms sibling, `probe-seedling-wasm-generated-playback.mjs`;
          * W4 the arrival-composites witness, `probe-seedling-wasm-arrival-composites.mjs`;
          * W5 the level-0 (overworld hub) witness, `probe-seedling-wasm-level0.mjs`; fidelity F2 its two
-         * game witnesses, `probe-seedling-f2-apitem.mjs` and `probe-seedling-f2-boundary.mjs`.)
+         * game witnesses, `probe-seedling-f2-apitem.mjs` and `probe-seedling-f2-boundary.mjs`; W7 the
+         * held-room / continuation witness, `probe-seedling-wasm-continuation.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -452,7 +453,8 @@ describe('who takes the box', () => {
             'probe-seedling-wasm-host-tape.mjs', 'probe-seedling-wasm-arrival-solve.mjs',
             'probe-seedling-wasm-playback.mjs', 'probe-seedling-wasm-generated-playback.mjs',
             'probe-seedling-wasm-arrival-composites.mjs', 'probe-seedling-wasm-level0.mjs',
-            'probe-seedling-f2-apitem.mjs', 'probe-seedling-f2-boundary.mjs'];
+            'probe-seedling-f2-apitem.mjs', 'probe-seedling-f2-boundary.mjs',
+            'probe-seedling-wasm-continuation.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
