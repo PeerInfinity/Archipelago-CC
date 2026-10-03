@@ -12412,6 +12412,54 @@ comparisons, worst 8.5e-14).
 - a lane (or any area) claim made from a chaser's position at planning time:
   a body that walks leaves it, and a bound that runs out is the measurement.
 
+### Seedling fidelity F1b — the ledger on the removal + the chain from window 5 (2026-10-03)
+
+F1's residue 1, built on F1's head. ⚖ The user, 2026-10-02: *"F1b: ledger,
+then re-record chain."* The report is
+`CC/docs/cloud-reports/seedling-fidelity-f1b.md`.
+
+**D1 — the kill-lock ledger reads the REMOVAL (fixed, game-witnessed).**
+`stageChaserKill` ran `assertChaserRemovalIsDeclared` on the kill tick, so
+`chaserKillLockOpens[].t` was the tick the die anim STARTS, and the solver
+declared it + 101. `Lock.checkEnemies` reads `totalEnemies()`, which drops at
+`FP.world.remove`. A kill now arms `removalLedger`, the latch R2-swim D3(c)
+gave a terrain death, so every chaser death is ledgered in the removal branch:
+one rule. The ledger's census counts only `removed` bodies gone. The solver
+declares `removal + opensOnTick(0.01) - 1`, which is the v9 `at` spelling the
+scratch layer already used (`declaredAt: p.at - 1`). The witness settled the
+fencepost, not arithmetic. On `f1-l5-lock-removal` the ledger reads 201 (it
+was 166), the scratch layer computes `{5,0}@301` and crosses on t303, which
+is the game's crossing, and the solver declares 301 (it was 267). Declaring
+302 crosses on t304. Mutants: the kill-tick reading gives 4 red; dropping
+the v9 spelling gives 1 red. A model census of all 198 tapes found 194
+identical; the four L5 tapes move their ledger tick by +35, and no committed
+replay moves.
+
+**D2 — STOP at window 19 (`r9-solve-18`, L18).** Window 5 re-solves to
+403 t `@301`, as predicted. Windows 6–18 re-solve to their committed lengths
+from the new latches, and the clock is 155 ticks earlier. L18's spinner hammer
+rides on `Game.time` (`spinner.hammerLine`), so the new boot moves its phase
+from residue 17 to residue 42 (period 45). There the press kill refuses:
+`HAMMER_SAFETY`, *"every key set … lands the player box on a body's 7x7 rect
+or on the 13 px hammer line … at (140.47,52.24)"*. A model sweep of the
+committed staging over all 45 residues found 12 that refuse
+({4,5,6,9,10,18,19,20,21,40,41,42}). The other 33 solve, in 25 distinct
+(length, `{18,0}`) pairs. Nothing was written: the producer emits at its end,
+so no tape moved, and `solve-seedling-r9-campaign --check` still exits 1.
+
+**Trap candidates**, for the catalogue to number:
+
+- a ledger named for one fencepost and run at another: the label said
+  "removal" and the tick was the kill, and only a walk that waited ON the lock
+  could tell them apart;
+- two writers of one tick in two spellings: the pending row
+  (`ticksCompleted + 1 >= at`) and the declared v9 row (`ticksCompleted ===
+  at`) are one apart, and an author who adds `opensOnTick` to either is right
+  for one and wrong for the other;
+- a "boot-only" cascade through a room whose mechanism reads the clock: a
+  phase-driven body turns a shift of the chain's total length into a
+  different solve, or a refusal, many windows downstream.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
