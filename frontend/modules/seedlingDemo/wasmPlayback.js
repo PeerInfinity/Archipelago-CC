@@ -31,12 +31,13 @@
  *           (`Rng.split = rngSplit`), so it ships the live value; a split
  *           stream is REFUSED (a split `botStart` also resets the cosmetic
  *           stream, whose live state no verb reads).
- *   `hold`  → only the ZERO-TICK freeze tape holds (the W-Q2 worker solve
+ *   `hold`  → the ZERO-TICK freeze tape holds (the W-Q2 worker solve
  *           needs the room still while it thinks; W0 (i): it latches on the
  *           first LIVE frame, before that frame's `super.update`, so the hold
- *           costs no stepped frame). The PLAN tape ends UN-held: v1's next
- *           goal re-arrives anyway (`MID_ROOM_POLICY`), and a hold across an
- *           exit would block the glue's redirect (W0 i.11).
+ *           costs no stepped frame). ⛓ W7: a LOCATION plan ends HELD too
+ *           (`endsHeld`), so the next goal in the room is a CONTINUATION from
+ *           the shadow (`MID_ROOM_POLICY`). An EXIT plan still ends UN-held:
+ *           a hold across its crossing would block the glue's redirect (W0 i.11).
  *
  * Kept exactly: `boot` = this level + the SPAWN (same world, `Bot.as:1801`),
  * `persistence` = `botStatus.persistence_cleared` EXACTLY, all THREE save
@@ -63,15 +64,27 @@ export class WasmPlaybackError extends Error {
 const refuse = (why) => { throw new WasmPlaybackError(why); };
 
 /**
- * ⚖ W-Q3 / W2: a goal asked for when the player is NOT at a fresh arrival is
- * served by a FORCED RE-ARRIVAL — a host `new Game(level, spawn)` (the glue's
- * own teleport recipe), so the room resets like a death and the solve starts
- * from a real arrival. Chosen over a continuation solve from a held end
- * (the S0 `prefix` path) because the next goal's start state is then the
- * game's own begin record, never the model's prediction of where the last
- * tape left the room.
+ * ⛓ W7 (plan `seedling-wasm-solver-plan.md` §2.4; ⚖ the user 2026-10-03: the
+ * solver must not need to exit and re-enter a room to solve it): a goal asked
+ * for in a room the engine HOLDS — a held arrival, or a location plan's held
+ * end — is a CONTINUATION: `solveFromTape({staging: the arrival's, perTick:
+ * every key shipped since})` (S0's `prefix`), shipped as one more same-world
+ * tape with the persistence/save re-declared live (`liveDeclarations`). The
+ * held room IS the shadow (`replayTape(arrival, shipped)`, measured equal to
+ * the bit, §1.3), and the engine checks that before it solves.
+ *
+ * W2's policy survives as the FALLBACK (`FALLBACK_POLICY`): a FORCED
+ * RE-ARRIVAL (`new Game(level, spawn)`, the room resets like a death) for a
+ * room the engine never saw arrive (the COLD START: the bot's first goal in a
+ * room that ran unwatched), a continuation the solver declines / runs out of
+ * budget on, the X-split rule (`primarySplitRefusal`), a latched continuation,
+ * and a shadow that is not the game (`shadowMismatch` — a staging bug, named).
  */
-export const MID_ROOM_POLICY = 'forced-re-arrival';
+export const MID_ROOM_POLICY = 'continuation';
+export const FALLBACK_POLICY = 'forced-re-arrival';
+
+/** ⛓ W7 — the plans that END HELD: a location (the room is still the bot's after it); never an exit (W0 i.11). */
+export const endsHeld = (goal) => goal?.kind === 'location';
 
 /** Booleans → their true indices (the tape's save-array spelling). */
 const indicesOf = (arr) => (arr ?? []).flatMap((v, i) => (v ? [i] : []));
@@ -183,14 +196,107 @@ export function wasmGoalRefusal(goal, record, { source = 'vanilla map' } = {}) {
  *   'queue'            a plan tape is still playing — the goal waits for it to
  *                      finish (⚖ W0-Q2: a SealController freeze is waited out,
  *                      never cut by a teleport)
+ *   'continue'         ⛓ W7 — the engine HOLDS the goal's room (`heldLevel`):
+ *                      a continuation from the shadow (`MID_ROOM_POLICY`)
  *   'await-arrival'    the player is not in the goal's room — wait for the
- *                      crossing that brings them there
- *   'force-re-arrival' the player is in the room, mid-play (`MID_ROOM_POLICY`)
+ *                      crossing that brings them there (its arrival is held)
+ *   'force-re-arrival' the player is in the room and the engine holds no
+ *                      staging of it (`FALLBACK_POLICY`: the cold start)
  */
-export function goalAction({ goal, liveLevel, playing = false }) {
+export function goalAction({ goal, liveLevel, playing = false, heldLevel = null }) {
     if (playing) return 'queue';
+    if (heldLevel !== null && heldLevel === goal.level) return 'continue';
     if (liveLevel !== goal.level) return 'await-arrival';
     return 'force-re-arrival';
+}
+
+/**
+ * ⛓ W7 — `staging` with its DECLARATIONS replaced by the live ones: the
+ * persistence = `botStatus.persistence_cleared` exactly, the three save arrays
+ * as the game holds them. A continuation's tape boots the same arrival staging
+ * (the model's start) but declares what the game holds NOW (a chest the last
+ * plan opened is cleared), so `exactDeclarationRefusal` holds by construction.
+ */
+export function liveDeclarations(staging, status) {
+    if (!staging || !status) refuse('wasmPlayback: no staging or no botStatus to re-declare');
+    return {
+        ...staging,
+        persistence: sortClears(status.persistence_cleared),
+        save: { ...(staging.save ?? {}), keys: indicesOf(status.save?.keys), totem_parts: indicesOf(status.save?.totem_parts),
+            seal_parts: sealValues(status.save?.seal_parts) },
+    };
+}
+
+/**
+ * ⛓ W7 — the X-SPLIT RULE (§1.3: "not measured: `primary` held across a
+ * seam"). A tape's span ending at its last tick RELEASES the key at the finish
+ * (`Bot.as` span loop), and the next tape presses it again: for a movement key
+ * that is harmless (measured, L6 `right`, L86 `up`), but for `primary` (X) the
+ * re-press is a fresh `Input.pressed` — a SWING the model, which saw X held
+ * straight through, never planned. A continuation whose first tick presses X
+ * while the previous shipped tick held it is refused (→ the fallback).
+ *
+ * @param {Array<Iterable<string>>} shipped  every key set shipped since the arrival
+ * @param {Array<Iterable<string>>} solution  the continuation's key sets
+ * @returns {string|null}
+ */
+export function primarySplitRefusal(shipped, solution) {
+    const last = shipped?.length ? new Set(shipped[shipped.length - 1]) : null;
+    const first = solution?.length ? new Set(solution[0]) : null;
+    if (last?.has('primary') && first?.has('primary')) {
+        return 'the continuation\'s first tick presses X (primary) while the previous tape held it at its end — the '
+            + 'finish released X, so the game would see a fresh press (a swing) the model never planned (the X-split rule)';
+    }
+    return null;
+}
+
+/**
+ * ⛓ W7 — the HELD game against the shadow (`replayTape(arrival, shipped)`):
+ * null when the player row is equal to the bit (level, x, y — §1.3 measured
+ * 9/9 exact), else `{expected, got}`. ⛔ A mismatch is a STAGING BUG (the
+ * plan's STOP), never noise: the engine names it and falls back.
+ */
+export function shadowMismatch(shadowRow, status) {
+    if (!shadowRow || !status) return { expected: shadowRow ?? null, got: null };
+    if (shadowRow.level === status.level && shadowRow.x === status.x && shadowRow.y === status.y) return null;
+    return { expected: { level: shadowRow.level, x: shadowRow.x, y: shadowRow.y }, got: { level: status.level, x: status.x, y: status.y } };
+}
+
+/**
+ * ⛓ W7 — THE GLUE QUERY: may the engine hold the arrival it just saw? A hold
+ * BLOCKS every world swap, the glue's own included (W0 i.11), so an arrival
+ * the glue is about to REDIRECT must not be held — the redirect's own landing
+ * (a later begin record) is the one to hold. Measured (`seedling_atlas`, hub →
+ * house door): the glue's teleport is queued in the SAME frame as the game's
+ * door report, but it waits in the adapter's invoke queue until the 100 ms
+ * push, so the door's own begin lands first (~0.3 s) and the redirect's ~0.5 s
+ * later. Three arms, each its own reason:
+ *
+ *   marks    the region binding is waiting on a swap (`pendingArrival` — a
+ *            cross-level teleport not landed, `pendingBounce` — a refused
+ *            door, `pendingDeparture` — an external door) or is PARKED
+ *   queued   a teleport sits in the adapter's invoke queue, not yet pushed
+ *   pushed   a teleport was pushed to the game WHILE THIS begin record was
+ *            the live one (the adapter stamps each push with the begin record
+ *            it saw, `WasmBridgeAdapter.lastInvocationPush`): its swap lands
+ *            NEXT. A same-level teleport arms no mark and its landing is a
+ *            begin record and nothing else, so only the stamp can see it. The
+ *            measured hazard: the 100 ms push fired between the game's door
+ *            frame and the sampler's read (here 0.3 s apart) — queue empty,
+ *            no mark, the redirect in flight.
+ *
+ * @param {{marks?:string[], queued?:number, pushedOn?:object|null}|null} swap  `SeedlingRegionGlue.swapState()`
+ * @param {object|null} beginEntry  the begin record just seen (`botSeam().beginEntry`)
+ * @returns {string|null} why not, or null (hold)
+ */
+export function arrivalHoldBlocker(swap, beginEntry) {
+    if (!swap) return null;
+    if (swap.marks?.length) return `the region binding waits on a swap (${swap.marks.join(', ')})`;
+    if ((swap.queued ?? 0) > 0) return `${swap.queued} teleport(s) queued for the game, not yet pushed`;
+    if (swap.pushedOn && beginEntry && same(swap.pushedOn, beginEntry)) {
+        return 'a teleport was pushed to the game after this arrival landed — its swap lands next';
+    }
+    return null;
 }
 
 /**

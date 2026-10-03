@@ -431,3 +431,38 @@ describe('H6 — the check binding, wired', () => {
         expect(check.restarts).toBe(2);
     });
 });
+
+describe('⛓ W7 — swapState(): the glue query the wasm engine asks before it HOLDS an arrival', () => {
+    /** The adapter's own shape: a teleport is an invocation on `invokeQueue`, drained by the push loop. */
+    const queueingAdapter = () => {
+        const a = { invokeQueue: [], onStateReport: null, invocationPushes: 0, lastInvocationPush: null };
+        a.teleport = vi.fn((p) => { a.invokeQueue.push({ invocation: 'new_instance', className: 'Game', args: [p.level, p.x, p.y] }); return true; });
+        a.push = (begin) => { a.invokeQueue = []; a.invocationPushes += 1; a.lastInvocationPush = { seq: a.invocationPushes, begin }; };
+        return a;
+    };
+    it('quiet: no marks, nothing queued, nothing pushed', () => {
+        const a = queueingAdapter();
+        h.glue.attachAdapter(a);
+        expect(h.glue.swapState()).toEqual({ marks: [], queued: 0, pushedOn: null, pushes: 0 });
+    });
+    it('an arrival teleport: QUEUED (and its cross-level echo MARK) until pushed; then the push STAMP names the begin record it went under', () => {
+        const a = queueingAdapter();
+        h.glue.attachAdapter(a);
+        loadRegion('starting_house', { exit_id: 'door' });
+        a.onStateReport('level', 0); // baseline → the arrival teleport into 86
+        expect(h.glue.swapState()).toMatchObject({ marks: ['arrival teleport to level 86'], queued: 1, pushedOn: null });
+        const B = { 'begin.level': 0, 'save.time': 10 };
+        a.push(B);
+        expect(h.glue.swapState()).toMatchObject({ queued: 0, pushedOn: B, pushes: 1 });
+        a.onStateReport('level', 86); // the echo lands: the mark clears
+        expect(h.glue.swapState().marks).toEqual([]);
+    });
+    it('a PARKED substrate is a mark (its game is not the AP region\'s)', () => {
+        h.glue.attachAdapter(queueingAdapter());
+        h.emitActive('maze', 'region_2_3');
+        expect(h.glue.swapState().marks).toEqual(['parked']);
+    });
+    it('no adapter: an empty queue, never a throw', () => {
+        expect(h.glue.swapState()).toEqual({ marks: [], queued: 0, pushedOn: null, pushes: 0 });
+    });
+});

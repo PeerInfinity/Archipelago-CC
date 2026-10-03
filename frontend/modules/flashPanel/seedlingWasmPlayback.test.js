@@ -65,9 +65,13 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
             if (g.armed && g.tape?.tick_count === 0 && ++g.freezePolls > freezeLatchesAfter) {
                 g.armed = false; g.finished = true; g.held = !!g.tape.hold;
             }
-            return JSON.stringify({ ...arrival.status, game_time: arrival.status.game_time + gameTimeSkew,
+            return JSON.stringify({ ...arrival.status,
+                // ⛓ W7 — `gameTimeFromBegin`: the read is in the begin record's own frame (a staged arrival), whichever lands
+                game_time: (g.gameTimeFromBegin ? g.be['save.time'] : arrival.status.game_time) + gameTimeSkew,
                 ...(g.cleared ? { persistence_cleared: g.cleared } : {}),
                 ...(g.midSpan ? g.midSpan : {}),
+                // ⛓ W7 — where the last drained row left the player (a held end is read against the shadow)
+                ...(g.pos ? { level: g.pos.level, x: g.pos.x, y: g.pos.y } : {}),
                 held: g.held, armed: g.armed, finished: g.finished, error: '' });
         },
         readState() { return JSON.stringify({ ...arrival.state, pendingCheck: g.seq ? `${g.seq}|86|0|0` : '' }); },
@@ -83,7 +87,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
         },
         // A reset forgets the tape; the room the recovery re-enters is a NEW begin record (the fake
         // un-lands to the pre-arrival one, so the forced re-arrival's landing is a change again).
-        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; g.midSpan = null; g.be = baseline; return 'ok'; },
+        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; g.midSpan = null; g.be = baseline; g.pos = null; return 'ok'; },
         botDrain() {
             g.calls.push('botDrain');
             if (!g.armed || !g.drainRows) return JSON.stringify({ ticks: [] });
@@ -94,7 +98,8 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
             if (clearedAfterDrain) g.cleared = clearedAfterDrain;
             // The first plan still mid-span when its rows drain (the W3 key-release row): armed, at `tick`.
             if (midSpanOnFirstPlan && g.tapes.length === 2) { g.midSpan = midSpanOnFirstPlan; return JSON.stringify({ ticks, transitions: [] }); }
-            g.armed = false; g.finished = true;
+            // ⛓ W7 — a tape declared `hold` latches HELD at its finish, the player where its last row is.
+            g.armed = false; g.finished = true; g.held = !!g.tape.hold; g.pos = ticks.at(-1) ?? g.pos;
             return JSON.stringify({ ticks, transitions: [] });
         },
     };
@@ -135,26 +140,28 @@ function engineOver(arrival, opts = {}) {
     const dones = [];
     const service = capturingService(game, opts.perturb);
     let t = 0;
+    const swap = { state: opts.swap ?? null };
     const engine = createWasmPlayback({
         getGame: () => game,
+        getSwapState: () => swap.state,
         getWin: () => opts.win ?? null,
         teleport: (p) => { teleports.push(p); if (opts.land !== false) game.land(); return true; },
         getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
         records: opts.records ?? RECORDS, generated: opts.generated ?? false, solveService: service, timers, now: () => (t += 1),
         onNote: (n) => notes.push(n), onFailed: (r) => failures.push(r), onDone: (d) => dones.push(d),
     });
-    return { engine, game, timers, teleports, windows, notes, failures, dones, service };
+    return { engine, game, timers, teleports, windows, notes, failures, dones, service, swap };
 }
 
 describe('the engine serves a goal at an arrival (fake game over the recorded reads, real solve)', () => {
-    it('chest on a fresh room: forced re-arrival at the SPAWN → freeze (zero-tick, hold) → solve → plan tape (un-held) → drained → done', () => {
+    it('chest on a fresh room: forced re-arrival at the SPAWN (the cold start) → freeze (zero-tick, hold) → solve → plan tape ⛓ W7 ending HELD → drained → done, the room held', () => {
         const e = engineOver(A);
         expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
         expect(e.teleports).toEqual([{ level: HOUSE, x: A.state.playerPositionX, y: A.state.playerPositionY }]);
         e.timers.run();
         expect(e.failures).toEqual([]);
         expect(e.game.tapes.map((t) => [t.tick_count, t.hold ?? false, t.seam])).toEqual([[0, true, null],
-            [e.service.seen[0].result.plan.solution.length, false, null]]);
+            [e.service.seen[0].result.plan.solution.length, true, null]]);
         expect(e.service.seen[0].request.scratchPersistence).toBe(true);
         expect(e.service.seen[0].result.plan.verbs).toEqual(['chest', 'walk']);
         expect(e.dones).toHaveLength(1);
@@ -162,6 +169,11 @@ describe('the engine serves a goal at an arrival (fake game over the recorded re
         expect(e.dones[0].drained).toBe(e.dones[0].ticks + 1);
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
         expect(e.notes.at(-1)).toBeNull();
+        // ⛓ W7 — a location plan ends HELD: the room is the engine's, its recipe = the arrival + the plan's keys
+        expect(e.dones[0].heldEnd).toBe(true);
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: e.dones[0].ticks, plans: 1 } });
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.game.held).toBe(true);
     });
 
     it('door after the chest (C): both tapes re-declare the earned chest; each botStart\'s window goes to the binding', () => {
@@ -189,7 +201,7 @@ describe('the engine serves a goal at an arrival (fake game over the recorded re
 });
 
 describe('the mid-room policy and the queue', () => {
-    it('a goal while a plan tape plays is QUEUED, then served by its own forced re-arrival', () => {
+    it('a goal while a plan tape plays is QUEUED, then ⛓ W7 served as a CONTINUATION from the held end (no second teleport)', () => {
         const e = engineOver(A);
         e.engine.walkTo(CHEST);
         // Run up to the plan's ship, then ask for the door while it plays.
@@ -197,10 +209,22 @@ describe('the mid-room policy and the queue', () => {
         expect(e.engine.status().phase).toBe('playing');
         expect(e.engine.walkTo(DOOR)).toEqual({ ok: true, action: 'queue' });
         expect(e.engine.status().queued).toEqual(DOOR);
-        e.game.be = { ...e.game.be, 'save.time': 0 }; // the next forced arrival must CHANGE the begin record
         e.timers.run();
-        expect(e.teleports).toHaveLength(2);
         expect(e.failures).toEqual([]);
+        expect(e.teleports).toHaveLength(1); // the cold start only
+        const chest = e.service.seen[0].result.plan;
+        const door = e.service.seen[1];
+        expect(door.request.perTick).toHaveLength(chest.solution.length); // the chest's keys = the prefix
+        expect(door.result.ok).toBe(true);
+        expect(door.result.plan.prefixLength).toBe(chest.solution.length);
+        expect(e.engine.stats).toMatchObject({ continuations: 1, forced: 1, forcedBy: { 'cold-start': 1 } });
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: chest.solution.length, equal: true })]);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'continuation']);
+        // the door's tape is UN-held (its crossing must reach the glue) and boots the same arrival
+        expect(e.game.tapes.map((t) => [t.tick_count, t.hold ?? false, t.boot.level])).toEqual([[0, true, HOUSE],
+            [chest.solution.length, true, HOUSE], [door.result.plan.solution.length, false, HOUSE]]);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation, d.prefix])).toEqual([[CHEST.name, false, 0], [DOOR.name, true, chest.solution.length]]);
+        expect(e.dones[1].expectedEnd.level).not.toBe(HOUSE);
     });
 
     it('a goal in ANOTHER room waits for the crossing; no arrival within the window → failed by name', () => {
@@ -318,6 +342,7 @@ describe('W3 — a divergence: botReset + forced re-arrival + re-solve, bounded,
         e.engine.walkTo(CHEST);
         e.timers.run();
         expect(e.dones).toHaveLength(1);
+        e.engine.stop(); // ⛓ W7 — a paused bot hands the room back; the next goal is a cold start again
         e.game.be = { ...e.game.be, 'save.time': 0 };
         e.engine.walkTo(CHEST);
         e.timers.run();
@@ -375,6 +400,178 @@ describe('W3 — a divergence: botReset + forced re-arrival + re-solve, bounded,
         expect(events.map((x) => `${x.type}:${x.code}`)).toEqual(['keydown:ArrowUp', 'keyup:ArrowUp']);
         expect(e.game.calls[events[0].after - 1]).toBe('botReset');
         expect(e.engine.stats.keyReleases).toEqual([['up']]);
+    });
+});
+
+// ── ⛓ W7 — the room kept still between goals: held ends, continuations, the arrival hold ─────────
+
+/** Run the manual timers in small slices until `pred()` (the arrival watch reschedules itself at 0 ms forever). */
+function runUntil(e, pred, max = 4000) {
+    for (let i = 0; i < max && !pred(); i++) e.timers.run(1);
+    return pred();
+}
+/** A service whose plans are edited per attempt (`edit(plan, attempt)`), over the capturing one. */
+function editingService(game, edit) {
+    const inner = capturingService(game);
+    return {
+        seen: inner.seen,
+        start(request) {
+            const h = inner.start(request);
+            if (h.result.ok) edit(h.result.plan, inner.seen.length - 1);
+            return h;
+        },
+        warm() {}, dispose() {},
+    };
+}
+
+describe('W7 — continuations from a held room, and their named fallbacks', () => {
+    it('the X-SPLIT rule: the chest plan ends holding X, the door\'s continuation opens on X → NOT shipped; a forced re-arrival (x-split) serves it', () => {
+        const e = engineOver(A);
+        const svc = editingService(e.game, (plan, attempt) => {
+            if (attempt === 0) plan.solution[plan.solution.length - 1].add('primary');
+            if (attempt === 1) plan.solution[0].add('primary');
+        });
+        e.service.start = svc.start;
+        e.service.seen = svc.seen;
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['x-split']);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(/X-split rule/);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1, 'x-split': 1 });
+        // the refused continuation was never shipped: freeze, chest plan, (re-arrival) freeze, door plan
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'freeze', 'plan']);
+        expect(e.dones[1]).toMatchObject({ continuation: false });
+    });
+
+    it('a continuation the solver DECLINES falls back (named), never a failure: a 2nd chest goal in the held room (the model says "already open")', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.history.map((h) => [h.outcome, h.kind ?? null])).toEqual([['done', null], ['fallback', 'continuation-declined'], ['done', null]]);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(/declined .*\(refusal\)/);
+        expect(e.engine.stats.forced).toBe(2);
+    });
+
+    it('a continuation over BUDGET is terminated and falls back (continuation-budget)', () => {
+        const e = engineOver(A);
+        const inner = e.service.start;
+        let n = 0;
+        e.service.start = (request) => {
+            n += 1;
+            if (n === 2) return { settled: false, started: true, startedAt: 0, result: null, cancel() { this.settled = true; } };
+            return inner(request);
+        };
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0, 20000);
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['continuation-budget']);
+        expect(e.engine.stats.fallbacks[0].why).toMatch(/exceeded 5 s/);
+    });
+
+    it('a HELD game that is not the shadow is the STOP condition: named, logged, never solved past (shadow-mismatch → the fallback)', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.game.pos = { ...e.game.pos, x: e.game.pos.x + 0.05 };
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ equal: false })]);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toEqual(['shadow-mismatch']);
+        expect(e.engine.stats.continuations).toBe(0); // nothing was solved from the bad staging
+        expect(e.service.seen).toHaveLength(2); // chest at the cold start, door at the re-arrival
+    });
+
+    it('stop() RELEASES a held room (a held room ignores the keyboard): botReset, the room dropped, idle', () => {
+        const e = engineOver(A);
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.game.held).toBe(true);
+        e.engine.stop();
+        expect(e.game.calls.at(-1)).toBe('botReset');
+        expect(e.game.held).toBe(false);
+        expect(e.engine.status()).toMatchObject({ phase: 'idle', room: null, driving: false });
+        expect(e.timers.run()).toBe(0); // no guard left ticking
+    });
+
+    it('a swap the glue asks for WHILE a room is held (a raced redirect) is let through: released, the room dropped, watching', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.engine.status().phase === 'held');
+        e.swap.state = { marks: [], queued: 1, pushedOn: null, pushes: 0 };
+        runUntil(e, () => e.engine.stats.releasedForSwap > 0);
+        expect(e.game.calls).toContain('botReset');
+        expect(e.game.held).toBe(false);
+        expect(e.engine.status()).toMatchObject({ room: null, arriving: true });
+    });
+});
+
+describe('W7 — the arrival HOLD after an exit plan, and the glue query\'s three arms', () => {
+    /**
+     * A door plan from A (un-held), then the crossing: begin record B1 (the game's own door) lands with
+     * `swapAtB1`, then the redirect's landing (A's begin again) with the glue clear. `gameTimeFromBegin`:
+     * each begin record is read in its own frame, so only the glue query can refuse B1.
+     */
+    function crossing(swapAtB1) {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        expect(e.engine.status()).toMatchObject({ phase: 'idle', arriving: true, room: null });
+        e.game.pos = null; // the crossing landed: the player stands at the new room's arrival
+        const B1 = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 7 };
+        e.swap.state = swapAtB1(B1);
+        e.game.be = B1;
+        e.timers.run(50);
+        const atB1 = { blocked: [...e.engine.stats.holdBlocked], held: e.engine.stats.held };
+        e.swap.state = { marks: [], queued: 0, pushedOn: B1, pushes: 1 };
+        e.game.be = A.seam.beginEntry;
+        runUntil(e, () => e.engine.status().phase === 'held');
+        return { e, atB1 };
+    }
+    const heldAfter = ({ e, atB1 }) => {
+        expect(atB1.held).toBe(1); // the cold start's arrival only — B1 was NOT held
+        expect(e.engine.stats.held).toBe(2); // the redirect's landing WAS
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 0 }, arriving: false });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan', 'freeze']);
+    };
+    it('arm 1 — a binding MARK (bounce / cross-level arrival / external door / parked) refuses B1', () => {
+        const r = crossing(() => ({ marks: ['arrival teleport to level 86'], queued: 0, pushedOn: null, pushes: 0 }));
+        expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/waits on a swap/)]);
+        heldAfter(r);
+    });
+    it('arm 2 — a teleport QUEUED in the adapter refuses B1 (the measured case: the redirect pushed ~0.4 s after the door)', () => {
+        const r = crossing(() => ({ marks: [], queued: 1, pushedOn: null, pushes: 0 }));
+        expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/queued for the game/)]);
+        heldAfter(r);
+    });
+    it('arm 3 — a teleport PUSHED while B1 was live refuses B1 (its swap lands next)', () => {
+        const r = crossing((B1) => ({ marks: [], queued: 0, pushedOn: { ...B1 }, pushes: 1 }));
+        expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/pushed to the game after this arrival/)]);
+        heldAfter(r);
+    });
+    it('no redirect (the glue clear) → the door\'s own arrival IS held; the next goal there is solved from it with no teleport', () => {
+        const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        e.game.pos = null;
+        e.game.be = JSON.parse(JSON.stringify(A.seam.beginEntry));
+        e.game.be['rng.gameplay'] = 2; // a NEW record, read in its own frame
+        runUntil(e, () => e.engine.status().phase === 'held');
+        expect(e.engine.stats.held).toBe(2);
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'continue' });
+        runUntil(e, () => e.dones.length === 2 || e.failures.length > 0);
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toHaveLength(1); // the cold start only
+        expect(e.dones[1]).toMatchObject({ continuation: false, heldEnd: true });
     });
 });
 

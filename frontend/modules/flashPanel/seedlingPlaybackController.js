@@ -323,6 +323,8 @@ export class SeedlingPlaybackController {
             getWin: () => this._getSurface?.()?.wasm?.getWin?.() ?? null,
             teleport: (p) => this._getSurface?.()?.wasm?.teleport?.(p) ?? false,
             getCheckBinding: () => this._getSurface?.()?.checkBinding ?? null,
+            // ⛓ W7 — the glue query: may the engine hold the arrival it just saw (no redirect in flight)?
+            getSwapState: () => this._getSurface?.()?.swapState?.() ?? null,
             log: this._log,
             onNote: (n) => this._relayNote(n),
             onFailed: (reason) => this._fail(this._lastTarget, `the wasm playback failed: ${reason}`),

@@ -172,7 +172,25 @@ export class WasmBridgeAdapter extends FlashBridgeAdapter {
     if (!bridge) return;
     this.installStateHook();
     const items = this._buildQueue();
-    if (items.length > 0) bridge.queueItems(items);
+    if (items.length > 0) {
+      bridge.queueItems(items);
+      if (items.some((i) => i?.invocation)) this._stampInvocationPush();
+    }
+  }
+
+  /**
+   * ⛓ W7 — the seedling wasm playback's GLUE QUERY (`SeedlingRegionGlue.swapState`):
+   * a pushed teleport's swap lands at the game's NEXT begin record, so each push
+   * that carried an invocation is stamped with the begin record live when it
+   * went (`botSeam().beginEntry`, ~0.1 ms; only on such pushes). An arrival
+   * whose begin record IS the stamp has a swap in flight behind it. A game
+   * without `botSeam` stamps null (no answer — never a guess).
+   */
+  _stampInvocationPush() {
+    let begin = null;
+    try { begin = JSON.parse(this._getFlash?.()?.botSeam?.() ?? 'null')?.beginEntry ?? null; } catch { begin = null; }
+    this.invocationPushes = (this.invocationPushes ?? 0) + 1;
+    this.lastInvocationPush = { seq: this.invocationPushes, begin };
   }
 
   detach() {

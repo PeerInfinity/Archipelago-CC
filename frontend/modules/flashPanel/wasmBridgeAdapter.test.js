@@ -131,3 +131,33 @@ describe('the window walk and the two gates', () => {
         expect(adapterFor(() => null).installStateHook()).toBe(false);
     });
 });
+
+describe('⛓ W7 — a pushed INVOCATION is stamped with the begin record live when it went', () => {
+    const page = (beginEntry) => {
+        const pushed = [];
+        const game = { wireCheck() {}, botStatus() {}, botSeam: () => JSON.stringify({ beginEntry }) };
+        return { pushed, win: { __runtimeReady: true, __swfBridge: { game, queueItems: (items) => pushed.push(items) } } };
+    };
+    it('a teleport push carries the stamp + a count; a push without an invocation stamps nothing', () => {
+        const B = { 'begin.level': 86, 'save.time': 4910 };
+        const p = page(B);
+        const a = adapterFor(() => p.win);
+        a._getFlash = () => p.win.__swfBridge.game;
+        a.teleport({ level: 86, x: 48, y: 48 });
+        a._pushTick();
+        expect(p.pushed).toHaveLength(1);
+        expect(a.lastInvocationPush).toEqual({ seq: 1, begin: B });
+        expect(a.invocationPushes).toBe(1);
+        a._pushTick(); // nothing queued (the game is not ready: no property writes either)
+        expect(a.invocationPushes).toBe(1);
+    });
+    it('a game without botSeam stamps null (no answer — never a guess)', () => {
+        const p = page(null);
+        delete p.win.__swfBridge.game.botSeam;
+        const a = adapterFor(() => p.win);
+        a._getFlash = () => p.win.__swfBridge.game;
+        a.teleport({ level: 1, x: 2, y: 3 });
+        a._pushTick();
+        expect(a.lastInvocationPush).toEqual({ seq: 1, begin: null });
+    });
+});

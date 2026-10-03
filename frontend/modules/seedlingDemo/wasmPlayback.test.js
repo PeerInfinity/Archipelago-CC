@@ -13,8 +13,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    MAX_RECOVERIES, MID_ROOM_POLICY, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure, divergenceRepeatFailure, isExactRepeat,
+    FALLBACK_POLICY, MAX_RECOVERIES, MID_ROOM_POLICY, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure, divergenceRepeatFailure, isExactRepeat,
     exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, keysHeldAtReset, shippedTape, wasmGoalRefusal,
+    arrivalHoldBlocker, endsHeld, liveDeclarations, primarySplitRefusal, shadowMismatch,
 } from './wasmPlayback.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
 import { parseTape } from './tapeFormat.js';
@@ -129,8 +130,12 @@ describe('wasmGoalRefusal — the rooms the wasm runtime cannot stage', () => {
 });
 
 describe('goalAction — the mid-room policy', () => {
-    it(`a goal in the room the player is in → ${MID_ROOM_POLICY}; another room → wait for the arrival; a tape playing → queue`, () => {
-        expect(MID_ROOM_POLICY).toBe('forced-re-arrival');
+    it(`⛓ W7 — a goal in the room the engine HOLDS → ${MID_ROOM_POLICY}; in the room but nothing held (the cold start) → ${FALLBACK_POLICY}; another room → wait for the arrival; a tape playing → queue`, () => {
+        expect(MID_ROOM_POLICY).toBe('continuation');
+        expect(FALLBACK_POLICY).toBe('forced-re-arrival');
+        expect(goalAction({ goal: { level: HOUSE }, liveLevel: HOUSE, heldLevel: HOUSE })).toBe('continue');
+        expect(goalAction({ goal: { level: HOUSE }, liveLevel: HOUSE, heldLevel: HOUSE, playing: true })).toBe('queue');
+        expect(goalAction({ goal: { level: HOUSE }, liveLevel: 0, heldLevel: 0 })).toBe('await-arrival');
         expect(goalAction({ goal: { level: HOUSE }, liveLevel: HOUSE })).toBe('force-re-arrival');
         expect(goalAction({ goal: { level: HOUSE }, liveLevel: 0 })).toBe('await-arrival');
         expect(goalAction({ goal: { level: HOUSE }, liveLevel: HOUSE, playing: true })).toBe('queue');
@@ -240,5 +245,66 @@ describe('keysHeldAtReset — the keys a mid-span botReset would leave held (W3,
     it('the eight names are Bot.keyCodeFor\'s, with their Flash key codes', () => {
         expect(TAPE_KEY_RELEASES.map((k) => [k.name, k.keyCode])).toEqual([['right', 39], ['up', 38], ['left', 37], ['down', 40],
             ['primary', 88], ['secondary', 67], ['inventory', 86], ['inventory2', 73]]);
+    });
+});
+
+// ── ⛓ W7 — keep the room still between goals: the continuation's pure rules ───────────────
+
+describe('W7 — endsHeld + liveDeclarations', () => {
+    it('a LOCATION plan ends held; an exit never does (its crossing must reach the glue, W0 i.11)', () => {
+        expect(endsHeld({ kind: 'location' })).toBe(true);
+        expect(endsHeld({ kind: 'exit' })).toBe(false);
+        expect(endsHeld(null)).toBe(false);
+    });
+    it('the arrival staging re-declared LIVE: A\'s staging + C\'s botStatus (the chest since opened) passes C\'s declaration rule; A\'s own does not', () => {
+        const live = liveDeclarations(stage(A), C.status);
+        expect(live.boot).toEqual(stage(A).boot); // the model's start is the ARRIVAL's
+        expect(live.persistence).toEqual([{ level: HOUSE, tag: 0 }]);
+        expect(live.save.seal_parts).toEqual([C.status.save.seal_parts[0]]);
+        expect(exactDeclarationRefusal(shippedTape({ staging: live, keys: KEYS }), C.status)).toBeNull();
+        expect(exactDeclarationRefusal(shippedTape({ staging: stage(A), keys: KEYS }), C.status)).toMatch(/omits/);
+        expect(() => liveDeclarations(stage(A), null)).toThrow(WasmPlaybackError);
+    });
+});
+
+describe('W7 — the X-split rule (primarySplitRefusal)', () => {
+    it('X held at the previous end AND pressed on the continuation\'s first tick → refused (the finish released it: a fresh press = a swing)', () => {
+        expect(primarySplitRefusal([['up'], ['primary']], [['primary', 'up']])).toMatch(/X-split rule/);
+    });
+    it('anything else ships: X not held at the end, X not on the first tick, a movement key across the seam, nothing shipped', () => {
+        expect(primarySplitRefusal([['primary'], ['up']], [['primary']])).toBeNull();
+        expect(primarySplitRefusal([['primary']], [['up'], ['primary']])).toBeNull();
+        expect(primarySplitRefusal([['right']], [['right']])).toBeNull();
+        expect(primarySplitRefusal([], [['primary']])).toBeNull();
+    });
+});
+
+describe('W7 — shadowMismatch: the held game against the shadow, to the bit', () => {
+    it('equal level/x/y → null; any difference (1e-15 px included) → both rows', () => {
+        const row = { level: HOUSE, x: 56, y: 34.55, deaths: 0 };
+        expect(shadowMismatch(row, { level: HOUSE, x: 56, y: 34.55 })).toBeNull();
+        expect(shadowMismatch(row, { level: HOUSE, x: 56 + 1e-14, y: 34.55 })).toEqual({ expected: { level: HOUSE, x: 56, y: 34.55 },
+            got: { level: HOUSE, x: 56 + 1e-14, y: 34.55 } });
+        expect(shadowMismatch(row, { level: 0, x: 56, y: 34.55 })).not.toBeNull();
+        expect(shadowMismatch(row, null)).not.toBeNull();
+    });
+});
+
+describe('W7 — arrivalHoldBlocker: the glue query, its three arms', () => {
+    const be = { 'begin.level': HOUSE, 'save.time': 4910 };
+    it('nothing in flight → hold (null); no glue to ask → hold', () => {
+        expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: null }, be)).toBeNull();
+        expect(arrivalHoldBlocker(null, be)).toBeNull();
+    });
+    it('arm 1 MARKS: the binding waits on a swap (or is parked) → not held', () => {
+        expect(arrivalHoldBlocker({ marks: ['bounce from level 86'], queued: 0 }, be)).toMatch(/waits on a swap \(bounce from level 86\)/);
+    });
+    it('arm 2 QUEUED: a teleport waits in the adapter\'s invoke queue → not held (measured: the redirect is pushed ~0.4 s after the door)', () => {
+        expect(arrivalHoldBlocker({ marks: [], queued: 1 }, be)).toMatch(/1 teleport\(s\) queued/);
+    });
+    it('arm 3 PUSHED ON THIS BEGIN: a teleport pushed while this begin record was live lands next → not held; one stamped with an EARLIER record has landed', () => {
+        expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: { ...be } }, be)).toMatch(/pushed to the game after this arrival/);
+        expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: { ...be, 'save.time': 4800 } }, be)).toBeNull();
+        expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: null }, be)).toBeNull();
     });
 });

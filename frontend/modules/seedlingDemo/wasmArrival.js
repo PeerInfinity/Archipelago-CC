@@ -48,7 +48,7 @@
 
 import { SEAM_BOOT_SPEC, SEAM_PREBUILD_FIELDS, SEAM_SIGNATURE, segmentBootFromLatch } from './r7Acceptance.js';
 import { createRunForStaging } from './tapeRunner.js';
-import { liveOf, solverGoalFor } from './jsRuntimeSolver.js';
+import { liveOf, replayTape, solverGoalFor } from './jsRuntimeSolver.js';
 import { goalTiles, latchedOn, nearestPitAt, nearestTeleporterAt, stepOffPoint } from './jsRuntimeWalker.js';
 import { JS_RUNTIME_PINS, locationEntityOf } from './jsRuntimeCore.js';
 import { ITEM_PROPERTIES, PIN_NAMES } from './tapeFormat.js';
@@ -356,12 +356,13 @@ export function arrivalStagingWitness(staging, { seam, status, state }) {
  * @returns {{goal: object, stepOff?: {index:number, point:{x:number, y:number}}}|{walker: string}}
  *   `walker` = the solver has no goal for it, named
  */
-export function arrivalSolverGoal(goal, { staging, levelSource, record }) {
+export function arrivalSolverGoal(goal, { staging, levelSource, record, run: given = null }) {
     if (goal?.level !== staging.boot.level) {
         return { walker: `the goal is in level ${goal?.level}, the arrival in level ${staging.boot.level} — `
             + 'the bot plans ONE goal in ONE room (⚖ Q5)' };
     }
-    const run = createRunForStaging(staging, levelSource);
+    // ⛓ W7 — a continuation maps its goal on the SHADOW (where the held player stands), not the arrival.
+    const run = given ?? createRunForStaging(staging, levelSource);
     let resolved = null;
     if (goal.kind === 'exit') {
         const tiles = goalTiles(goal);
@@ -415,3 +416,36 @@ export function arrivalSolveRequest({ staging, solverGoal, levelSource, records,
 
 /** ⛓ W4 — the producer name of a latched-door composite (walker step-off ++ solver plan). */
 export const STEP_OFF_PRODUCER = 'step-off';
+
+/**
+ * ⛓ W7 — a CONTINUATION's request (plan `seedling-wasm-solver-plan.md` §2.4):
+ * the goal in a room the engine HOLDS, solved from the arrival's `staging` with
+ * every key shipped since as S0's `prefix`. The SHADOW (`replayTape(staging,
+ * shipped)`, scratch persistence as the plans were solved) is what the held
+ * game must equal (`wasmPlayback.shadowMismatch` — the engine checks it before
+ * shipping anything), and its digest is the request's `live`, so the worker's
+ * own replay is asserted against it (`solveFromTape`).
+ *
+ * @returns {{request?: object, shadowRow: object, mapped: object, refusal?: string}}
+ *   `refusal` = no continuation (the goal maps to nothing, or the shadow is
+ *   latched on the goal door: a step-off composite starts at an ARRIVAL) — the
+ *   engine falls back, named
+ */
+export function continuationSolveRequest({ staging, shipped, goal, levelSource, records, record, name = 'wasm-continuation' }) {
+    const perTick = shipped.map((h) => new Set(h));
+    const shadow = replayTape({ staging, perTick, levelSource, scratchPersistence: true });
+    const live = liveOf(shadow);
+    const mapped = arrivalSolverGoal(goal, { staging, levelSource, record,
+        run: replayTape({ staging, perTick, levelSource, scratchPersistence: true }) });
+    if (!mapped.goal) return { shadowRow: live.row, mapped, refusal: `the solver has no goal for ${goal?.name ?? goal?.kind}: ${mapped.walker}` };
+    if (mapped.stepOff) {
+        return { shadowRow: live.row, mapped, refusal: 'the held player stands latched on the goal door — a step-off '
+            + 'composite starts at an arrival, not mid-room' };
+    }
+    return {
+        shadowRow: live.row,
+        mapped,
+        request: { staging, perTick, live, solverGoal: mapped.goal, name, scratchPersistence: true, equips: null, levelSource,
+            source: { records } },
+    };
+}

@@ -315,7 +315,9 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       const surface = activePanelInstance?.seedlingPlaybackSurface?.() ?? null;
       // ⛓ W2 — the check binding: the wasm engine hands it each host botStart's arming window (⚖ W0-Q1).
       return surface ? { ...surface, region: seedlingRegionGlue?.binding?.region ?? null,
-        checkBinding: seedlingRegionGlue?.checkBinding ?? null } : null;
+        checkBinding: seedlingRegionGlue?.checkBinding ?? null,
+        // ⛓ W7 — the glue query the wasm engine asks before it holds an arrival.
+        swapState: () => seedlingRegionGlue?.swapState?.() ?? null } : null;
     },
     log: (msg, level) => {
       activePanelInstance?._panelLog?.(msg, level);

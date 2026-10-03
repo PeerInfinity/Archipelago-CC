@@ -248,6 +248,29 @@ export class SeedlingRegionGlue {
         this.apply(effects);
     }
 
+    /**
+     * ⛓ W7 — THE GLUE QUERY the seedling wasm playback asks before it HOLDS an
+     * arrival (`wasmPlayback.arrivalHoldBlocker` reads it): a hold blocks every
+     * world swap, this glue's redirects included (W0 i.11). `marks` = the
+     * binding's swaps in flight (or the park), `queued` = teleports waiting in
+     * the adapter's invoke queue, `pushedOn` = the begin record a pushed
+     * teleport was stamped with (`WasmBridgeAdapter.lastInvocationPush`), `pushes` =
+     * how many teleports were pushed so far (a held room's guard: a push after
+     * the hold is a swap the hold would block).
+     * Read-only; a glue with no adapter answers an empty queue.
+     */
+    swapState() {
+        const b = this.binding;
+        const marks = [];
+        if (!b.active) marks.push('parked');
+        if (b.pendingArrival) marks.push(`arrival teleport to level ${b.pendingArrival.level}`);
+        if (b.pendingBounce) marks.push(`bounce from level ${b.pendingBounce.level}`);
+        if (b.pendingDeparture) marks.push(`external door to level ${b.pendingDeparture.level}`);
+        const queued = (this.adapter?.invokeQueue ?? []).filter((i) => i?.invocation).length;
+        return { marks, queued, pushedOn: this.adapter?.lastInvocationPush?.begin ?? null,
+            pushes: this.adapter?.invocationPushes ?? 0 };
+    }
+
     apply(effects) {
         for (const effect of effects ?? []) {
             switch (effect.type) {
