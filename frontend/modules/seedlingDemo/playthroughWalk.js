@@ -1157,11 +1157,15 @@ const CHAIN_DECLARATIONS = Object.freeze([
         clears: Object.freeze([Object.freeze({
             level: 18, tag: 0, source: 'model',
             evidence: Object.freeze({
-                removedAt: 321,
-                fade: 101,
+                // ⛓ fidelity F5: the spinner ledger stamps the alpha-zero step (320,
+                // was 321) and the fade is spelled v9 (100, was 101) — F1c D2's fix,
+                // game-witnessed by `f1c-l18-lock-removal`; 420 (was 422).
+                removedAt: 320,
+                fade: 100,
                 why: '`spinnerKillLockOpens`\'s removal (the second Spinner body leaves '
                     + 'and `Game.totalEnemies()` reaches zero) plus '
-                    + '`activators.opensOnTick(0.01)`, the `Lock`\'s own fade — the same '
+                    + '`activators.opensOnTick(0.01)`, the `Lock`\'s own fade in the v9 '
+                    + '`at` spelling (one less) — the same '
                     + 'number `solve-seedling-r8-l18.mjs` computed for the standalone '
                     + 'tape and the re-derived headline computes again',
             }),

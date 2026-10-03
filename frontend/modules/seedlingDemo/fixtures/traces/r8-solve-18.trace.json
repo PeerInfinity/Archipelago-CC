@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r8-solve-18",
-    "tick_count": 522,
+    "tick_count": 520,
     "boot": {
         "level": 18,
         "x": 16,
@@ -49,7 +49,7 @@
             ]
         },
         {
-            "tick": 423,
+            "tick": 421,
             "saw": {
                 "level": 18,
                 "x": 40.06773190240427,
