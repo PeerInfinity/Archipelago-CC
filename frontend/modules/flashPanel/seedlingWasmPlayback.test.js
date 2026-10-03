@@ -895,7 +895,8 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         const keys = [];
         let reads = 0;
         const u = unwatched({ begin: { 'begin.level': -1 }, startLevel: HOUSE, state: { freezeObjects: false },
-            tick: (w) => { reads += 1; w.elapsed += 1; if (reads === 2) w.state.freezeObjects = true; } });
+            // read 1 = the walkTo's, read 2 = the ceremony's first poll (quiet), read 3 = the Help's first update
+            tick: (w) => { reads += 1; w.elapsed += 1; if (reads === 3) w.state.freezeObjects = true; } });
         const win = fakeWin((ev) => { keys.push([ev.type, ev.key]); if (ev.type === 'keydown') u.state.freezeObjects = false; });
         const e = engineOver(A, { swap: CLEAR, win, game: { unwatched: u } });
         expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
