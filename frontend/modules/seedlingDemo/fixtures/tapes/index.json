@@ -59,6 +59,27 @@
       "noHazards": []
     },
     {
+      "file": "f6-l17-reentry.json",
+      "tickCount": 60,
+      "bootLevel": 17,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "f6-l2-reentry.json",
+      "tickCount": 120,
+      "bootLevel": 3,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "f6-l20-reentry.json",
+      "tickCount": 240,
+      "bootLevel": 13,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "friction-stop.json",
       "tickCount": 30,
       "bootLevel": 0,
