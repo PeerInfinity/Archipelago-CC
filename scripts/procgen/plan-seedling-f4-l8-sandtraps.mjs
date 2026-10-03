@@ -76,7 +76,16 @@ async function main() {
     const keyOf = (s) => [...s].sort().join('+');
 
     // ── the solve, on r8-solve-8's staging ──────────────────────────────
-    const base = loadTape('r8-solve-8');
+    /**
+     * ⛓ FIDELITY F5 — THE BASE IS THE SEGMENT AS THIS WITNESS WAS CUT FROM IT
+     * (F1c's pattern). F4 was cut before F1c re-recorded the campaign chain,
+     * whose boot move (`seam.time` −155, `rng.cosmetic`) reached `r8-solve-8`,
+     * and F5 re-recorded the window itself (no sandtrap declaration); the
+     * witness (game-recorded) is neither. `r8-solve-8` as F4 read it (at
+     * `5c4ea0eec2`) is kept byte for byte in `fixtures/witness-bases/`,
+     * outside the tape roster, for this script.
+     */
+    const base = parseTape(readFileSync(join(MODULE, 'fixtures', 'witness-bases', 'r8-solve-8.f4.json'), 'utf8'));
     const boot = base.persistence.filter((p) => p.at === undefined);
     const persistence = [
         ...boot.map((p) => ({ level: p.level, tag: p.tag, note: p.note })),
