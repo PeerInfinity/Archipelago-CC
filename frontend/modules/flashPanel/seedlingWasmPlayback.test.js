@@ -18,6 +18,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
+import { TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
 import { assembleGeneratedSeedlingSet } from '../seedlingDemo/seedlingGeneratedSet.js';
@@ -878,6 +879,7 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
         expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
         // The adoption waited for the Help's fade: more than TUTORIAL_FADE_FRAMES game frames after the press.
+        expect(e.engine.arrivalReads.at(-1).status.game_time - e.engine.stats.dismissed[0].gameTime).toBeGreaterThan(TUTORIAL_FADE_FRAMES);
         expect(e.dones).toHaveLength(1);
     });
     it('⛓ W8c — …the adoption is the room\'s staging under the RESOLVED level, and its recorded reads restage (W5\'s probe)', () => {
@@ -913,6 +915,14 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(keys).toEqual([]);
         expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, dismissed: [] });
         expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ W8c — the glue query is asked with the record AS LATCHED (−1): a teleport pushed on it blocks the adoption', () => {
+        const e = newGameOver();
+        e.swap.state = { ...CLEAR, pushedOn: { ...A.seam.beginEntry, 'begin.level': -1 }, pushes: 1 };
+        e.engine.walkTo(CHEST);
+        e.timers.run(300);
+        expect(e.engine.stats.adopted).toBe(0);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual(['glue']);
     });
     it('⛓ W8c — a Help an arrow does NOT dismiss (the freeze outlives the fade) → the named cold-start re-arrival, one press only', () => {
         const e = newGameOver({ stubborn: true });
