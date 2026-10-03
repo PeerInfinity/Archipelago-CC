@@ -83,7 +83,14 @@ async function main() {
         console.log(`${ok ? 'PASS' : 'FAIL'}: ${name}${detail ? ` — ${detail}` : ''}`);
     };
 
-    const base = loadTape('r8-solve-5');
+    /**
+     * ⛓ FIDELITY F1c — THE BASE IS THE SEGMENT AS THIS WITNESS WAS CUT FROM IT.
+     * F1c's D3 re-recorded the campaign chain, so `fixtures/tapes/r8-solve-5.json`
+     * is a different walk now; the witness (game-recorded) is not. The segment
+     * as committed at F1b's chain is kept byte for byte in
+     * `fixtures/witness-bases/` (outside the tape roster) for this script.
+     */
+    const base = parseTape(readFileSync(join(MODULE, 'fixtures', 'witness-bases', 'r8-solve-5.f1b.json'), 'utf8'));
     const shift = START - WALK_FROM;
     const inputs = [];
     for (const k of base.inputs) {

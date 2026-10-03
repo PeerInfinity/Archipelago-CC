@@ -12,13 +12,14 @@
  * ahead and, cornered, searches a hold that meets the line at another phase.
  *
  * Every residue below is DERIVED from the committed tape's own clock: the
- * shift that puts it at residue r is `((r − time mod 45) mod 45) − 45`.
+ * shift that puts it at residue r is `((r − time mod 45) mod 45) − 45`. Since
+ * F1c's D3 the committed `r9-solve-18` IS the chain-residue solve (512 t).
  *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *
  *   m1 the rung off (`hammerPhaseRung` returns `{fired: false}`)
  *        -> the chain-residue row red (HAMMER_SAFETY, "There is no step out.");
- *           the committed-walk row and the remainder row stay green
+ *           the no-corner row and the remainder row stay green
  *
  * D2 (the spinner arm's declared spelling) is a GAME MEASUREMENT here, not a
  * fix: `f1c-l18-lock-removal` (recorded twice) crosses on the tick the model
@@ -46,8 +47,10 @@ const TAPE = loadTape(NAME);
 const STAGING = stagingFromTape(TAPE);
 const PERIOD = SPINNER.hammerPeriod;
 const RESIDUE = ((STAGING.seam.time % PERIOD) + PERIOD) % PERIOD;
-/** The chain's L18 residue after F1b's window-5 re-solve (F1b D2: 17 → 42). */
+/** The chain's L18 residue after F1b's window-5 re-solve (F1b D2: 17 → 42) — the committed one. */
 const CHAIN_RESIDUE = 42;
+/** The committed residue BEFORE F1c re-recorded the window (`seam.time` 10052): no corner forms. */
+const PRE_F1C_RESIDUE = 17;
 /** A residue the rung names rather than solves: a landing's rebound (the sweep's 18–21). */
 const REBOUND_RESIDUE = 18;
 const shiftTo = (r) => ((((r - RESIDUE) % PERIOD) + PERIOD) % PERIOD) - PERIOD;
@@ -80,18 +83,19 @@ describe('F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer\'s pha
         });
     });
 
-    it('⛓⛓ at the committed residue the rung never fires: the committed walk, key for key', async () => {
+    it('⛓⛓ where no corner forms the rung never fires (the residue the window had before F1c)', async () => {
+        const r = await solveAt(shiftTo(PRE_F1C_RESIDUE));
+        expect(pressRecords(r.out).length).toBeGreaterThan(0);
+        expect(pressRecords(r.out).every((p) => p.phaseStalls === undefined)).toBe(true);
+    }, 120_000);
+
+    it('⛓⛓⛓ the committed window IS at the chain\'s residue, and IS the rung\'s solve, key for key: a stall meets the line at another phase, no hit, the crossing to L19', async () => {
+        expect(RESIDUE).toBe(CHAIN_RESIDUE);
         const r = await solveAt(0);
         expect(r.out.perTick.length).toBe(TAPE.tick_count);
         for (let t = 0; t < TAPE.tick_count; t += 1) {
             expect([...r.out.perTick[t]].sort()).toEqual([...heldKeysAt(TAPE, t)].sort());
         }
-        expect(pressRecords(r.out).every((p) => p.phaseStalls === undefined)).toBe(true);
-    }, 120_000);
-
-    it('⛓⛓⛓ at the chain\'s residue the press kill SOLVES: a stall meets the line at another phase, no hit, the crossing to L19', async () => {
-        const shift = shiftTo(CHAIN_RESIDUE);
-        const r = await solveAt(shift);
         const stalls = pressRecords(r.out).flatMap((p) => p.phaseStalls ?? []);
         expect(stalls.length).toBeGreaterThan(0);
         for (const s of stalls) {
@@ -100,9 +104,8 @@ describe('F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer\'s pha
             expect(s.ticks).toBeLessThanOrEqual(HAMMER_PHASE_RUNG.maxTicks);
             expect(s.corner - s.t).toBeLessThan(HAMMER_PHASE_RUNG.horizon);
         }
-        const run = createRunForStaging({ ...STAGING, seam: { ...STAGING.seam,
-            time: STAGING.seam.time + shift }, persistence: r.persistence, equips: [] },
-        atlasLevelSource());
+        const run = createRunForStaging({ ...STAGING, persistence: r.persistence, equips: [] },
+            atlasLevelSource());
         for (const held of r.out.perTick) run.advance(held);
         expect(run.playerHits).toEqual([]);
         expect(run.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
@@ -136,6 +139,14 @@ describe('F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase4
         expect({ ...w.seam, time: null }).toEqual({ ...STAGING.seam, time: null });
         expect(w.rng).toEqual(STAGING.rng);
         expect(w.boot).toEqual(STAGING.boot);
+    });
+
+    it('⛓⛓ the witness walks the committed window\'s keys: the solve depends on the residue, not the absolute clock', () => {
+        const w = loadTape(WITNESS);
+        expect(w.tick_count).toBe(TAPE.tick_count);
+        for (let t = 0; t < TAPE.tick_count; t += 1) {
+            expect([...heldKeysAt(w, t)].sort()).toEqual([...heldKeysAt(TAPE, t)].sort());
+        }
     });
 
     it('⛓⛓ replayed, no hammer and no body touches the player, and it crosses when the game did', () => {
