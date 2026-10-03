@@ -1221,7 +1221,7 @@
     },
     {
       "file": "r8-d2.json",
-      "tickCount": 1828,
+      "tickCount": 1826,
       "bootLevel": 18,
       "tapeVersion": 9,
       "noHazards": []
@@ -1277,7 +1277,7 @@
     },
     {
       "file": "r8-solve-18.json",
-      "tickCount": 522,
+      "tickCount": 520,
       "bootLevel": 18,
       "tapeVersion": 11,
       "noHazards": []
