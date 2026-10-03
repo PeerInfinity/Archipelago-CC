@@ -809,6 +809,8 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.failures).toEqual([]);
         expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [], fallbacks: [] });
         expect(e.engine.status().room).toMatchObject({ talkCircles: 0 });
+        // The adoption's reads are recorded like an arrival's (the staging, taken late).
+        expect(e.engine.arrivalReads.map((r) => r.status.level)).toEqual([HOUSE]);
         expect(e.dones).toHaveLength(1);
         expect(e.service.seen[0].result.plan.solution.some((k) => new Set(k).has('primary'))).toBe(false);
     });
