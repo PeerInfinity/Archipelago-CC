@@ -6624,30 +6624,7 @@ const STEP_LOOKAHEAD = 4;
  */
 function safeStep(run, held, alternatives, what, bodyId) {
     if ((run.entities('spinnerBodies') ?? []).length === 0) return held;
-    /**
-     * ⛔⛔⛔ INDEX **1**, NOT 0, AND THE OFF-BY-ONE IS THE WHOLE CHECK.
-     * `advance` steps the spinners and THEN asserts, against the position the
-     * PREVIOUS tick left: at `ticksCompleted = n` the assert about to run
-     * compares `P(n)` with `S(n+1)` — already decided, whatever key is held.
-     * The first assert this step can still change is the NEXT one, `P(n+1)`
-     * against `S(n+2)`, and `spinnerForecast(2)[1]` is exactly that. Checking
-     * index 0 is checking a verdict that has already been reached, which is
-     * why the first cut of this guard changed nothing and the game's own
-     * refusal still fired at tick 130.
-     */
-    const ahead = run.spinnerForecast(2)[1] ?? null;
-    if (!ahead) return held;
-    const step = run.previewStepper();
-    const lands = (keys) => {
-        const next = step({ ...run.state }, keys);
-        // ⚠ `[ahead]` is a ONE-ELEMENT forecast whose index 0 is the run's
-        // own index 1, so the clock is asked for `gameTimeAt(1)` by hand
-        // rather than by the shared convention — see the comment above
-        // (⛓ U4b: forecast row i swings at `gameTimeAt(i)`, `clearOfHammersAt`).
-        return clearOfHammersAt(
-            { gameTimeAt: (i) => run.gameTimeAt(i + 1) },
-            playerBoxAt(next.x, next.y), [ahead], 0);
-    };
+    const lands = (keys) => landsClearOfHammers(run, keys);
     if (lands(held)) return held;
     if (held.has('primary')) {
         return fail(`${what}: the derived PRESS tick against ${bodyId} would land the `
@@ -6664,6 +6641,252 @@ function safeStep(run, held, alternatives, what, bodyId) {
         + `rect or on ${hammerTestAt(run)}, on the next tick, at `
         + `(${run.state.x.toFixed(2)},${run.state.y.toFixed(2)}) in level ${run.level}. `
         + 'There is no step out.', { code: HAMMER_SAFETY });
+}
+
+/**
+ * ⛓ `safeStep`'s own landing test, lifted out so the HAMMER-PHASE rung's
+ * preview (F1c) asks the SAME question of a previewed tick that the guard asks
+ * of the live one — one predicate, two callers, no second spelling.
+ */
+function landsClearOfHammers(run, keys) {
+    /**
+     * ⛔⛔⛔ INDEX **1**, NOT 0, AND THE OFF-BY-ONE IS THE WHOLE CHECK.
+     * `advance` steps the spinners and THEN asserts, against the position the
+     * PREVIOUS tick left: at `ticksCompleted = n` the assert about to run
+     * compares `P(n)` with `S(n+1)` — already decided, whatever key is held.
+     * The first assert this step can still change is the NEXT one, `P(n+1)`
+     * against `S(n+2)`, and `spinnerForecast(2)[1]` is exactly that. Checking
+     * index 0 is checking a verdict that has already been reached, which is
+     * why the first cut of this guard changed nothing and the game's own
+     * refusal still fired at tick 130.
+     */
+    const ahead = run.spinnerForecast(2)[1] ?? null;
+    // ⚠ No row at index 1 is "nothing to land in" — `safeStep`'s old early return.
+    if (!ahead) return true;
+    const next = run.previewStepper()({ ...run.state }, keys);
+    // ⚠ `[ahead]` is a ONE-ELEMENT forecast whose index 0 is the run's
+    // own index 1, so the clock is asked for `gameTimeAt(1)` by hand
+    // rather than by the shared convention — see the comment above
+    // (⛓ U4b: forecast row i swings at `gameTimeAt(i)`, `clearOfHammersAt`).
+    return clearOfHammersAt(
+        { gameTimeAt: (i) => run.gameTimeAt(i + 1) },
+        playerBoxAt(next.x, next.y), [ahead], 0);
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY F1c — THE HAMMER-PHASE RUNG's PREVIEW: the press
+ * kill's own approach, walked forward on the forecast without touching the run.
+ *
+ * ⛔ WHY A PREVIEW AND NOT A REWIND. `levelRun` has one mutator (`advance`) and
+ * no snapshot, so "back off to an earlier safe point" cannot mean undoing ticks.
+ * It means seeing the corner BEFORE the walk is in it. Three facts make that
+ * exact during an approach:
+ *   1. a `Spinner`'s path is a function of the room and the tick, not of the
+ *      player (`spinnerForecast`'s docblock), until a press LANDS — and no
+ *      press is held on an approach tick;
+ *   2. the hammer's phase is `gameTimeAt(i)`, arithmetic on the clock;
+ *   3. the step is `previewStepper()`, the run's own `stepV2`.
+ * So a VIEW of the run `o` ticks ahead — the forecast and the clock shifted by
+ * `o`, the player at the previewed state — answers `stepToward`'s and
+ * `safeStep`'s questions exactly as the run will answer them `o` ticks later.
+ *
+ * The walk is the executor's: `chooseHeld` toward the strike cell (or nothing
+ * once arrived), `stepToward`, then `safeStep`'s landing test with its own
+ * alternatives. It ENDS
+ *   · `reach` — the live arm's in-reach test passes (the executor aims there;
+ *     its own `trainIsSafeHere` prices the press, so the preview stops);
+ *   · `lapse` — the strike's `pressAt` passes (the executor re-derives from the
+ *     run; nothing here can predict that derivation, so it is not claimed);
+ *   · `unknown` — the forecast loses a body (a fade ends) or has no row;
+ *   · `horizon` — `limit` ticks walked with a safe step every tick;
+ *   · `corner` — a tick where no key set lands clear: what `safeStep` would
+ *     refuse as *"There is no step out."*, seen `at` ticks early.
+ *
+ * `stall` = `{at, ticks}`: from preview offset `at`, the walk HOLDS for `ticks`
+ * ticks — `stepToward` aimed at where it stood when the stall began, from an
+ * empty key set, so the hold is the same safe-first chooser the approach uses
+ * (a "safe holding step", not a frozen stand that a body can walk into).
+ */
+function previewPressApproach(run, { index, hitsTimer, lastPressAt, strike, stall = null,
+    limit, alternatives, from = 0, st0 = null, trail = null }) {
+    const n = run.ticksCompleted;
+    const live = run.entities('spinnerBodies') ?? [];
+    const rows = run.spinnerForecast(limit + STEP_LOOKAHEAD + 2);
+    const step = run.previewStepper();
+    let st = st0 ?? { ...run.state };
+    let hold = null;
+    const viewAt = (o, state) => ({
+        state,
+        level: run.level,
+        world: run.world,
+        ticksCompleted: n + o,
+        entities: (k) => run.entities(k),
+        spinnerForecast: (h) => run.spinnerForecast(o + Math.max(0, Math.ceil(h))).slice(o),
+        gameTimeAt: (i) => run.gameTimeAt(o + i),
+        previewStepper: () => step,
+        collideLineSolid: (...a) => run.collideLineSolid(...a),
+    });
+    for (let o = from; o < limit; o += 1) {
+        if (trail) trail[o] = st;
+        const bodies = o === 0 ? live.map((b) => b.rect) : rows[o - 1];
+        if (!bodies || bodies.length !== live.length || !rows[o + 1]) return { end: 'unknown', at: o };
+        const view = viewAt(o, st);
+        const rect = bodies[index];
+        const keyToward = FACING_KEYS[facingToward(st, rect)];
+        // ⛓ The executor's live in-reach test, verbatim in its conditions.
+        if (n + o - lastPressAt > SLASH_HIT_TICKS
+            && Math.max(0, hitsTimer - o) === 0
+            && distanceRectPoint(st.x, st.y, rect) <= SLASH_REACH
+            && rectsOverlapLocal(slashRect(st.x, st.y, facingToward(st, rect)), rect)
+            && trainIsSafeHere(view, new Set([keyToward]))
+            && !trainLineBlockedHere(view, facingToward(st, rect), new Set([keyToward]))) {
+            return { end: 'reach', at: o };
+        }
+        if (n + o > strike.pressAt) return { end: 'lapse', at: o };
+        let held;
+        if (stall && o >= stall.at && o < stall.at + stall.ticks) {
+            if (o === stall.at) hold = { x: st.x, y: st.y };
+            held = stepToward(view, hold, new Set());
+        } else {
+            held = hasArrived(st, strike.cell, DEFAULT_TOLERANCE)
+                ? new Set() : chooseHeld(st, strike.cell, DEFAULT_TOLERANCE);
+            held = stepToward(view, strike.cell, held);
+        }
+        const safe = [held, ...alternatives].find((k) => landsClearOfHammers(view, k));
+        if (!safe) return { end: 'corner', at: o };
+        st = step({ ...st }, safe);
+    }
+    if (trail) trail[limit] = st;
+    return { end: 'horizon', at: limit };
+}
+
+/**
+ * ⛓ F1c — THE RUNG's PER-TICK PREVIEW, CARRIED FORWARD rather than re-walked.
+ *
+ * The preview is a pure function of (the player's state, the tick, the strike,
+ * `lastPressAt`, and the bodies' forecast). When the run's state this tick IS
+ * the state the last preview walked to for this tick, and nothing the forecast
+ * cannot see has happened since (no press hit — `spinnerPressHits` is the
+ * only player-coupled input to a body), the new preview is the old one shifted
+ * by a tick, so only its far end is walked. Anything else re-walks it whole.
+ * ⛔ Byte-inert by construction: the cache is the same walk, not a cheaper one.
+ * Measured on the committed L18 solve: 4.5 s re-walking every tick, 1.3 s
+ * carried, the same 455-tick walk byte for byte.
+ */
+function clearAhead(run, args, cache) {
+    const now = run.ticksCompleted;
+    const limit = HAMMER_PHASE_RUNG.horizon;
+    const hits = (run.ledger('spinnerPressHits') ?? []).length;
+    const c = cache.last;
+    const same = c && c.strike === args.strike && c.lastPressAt === args.lastPressAt
+        && c.hits === hits && c.level === run.level && now > c.t && c.trail[now - c.t]
+        && sameState(c.trail[now - c.t], run.state);
+    if (same) {
+        const shift = now - c.t;
+        if (c.end === 'reach' || c.end === 'lapse' || c.end === 'unknown') {
+            // a terminal end is the same tick, nearer (a CORNER is always re-walked)
+            if (c.t + c.at > now) return { end: c.end, at: c.t + c.at - now };
+        } else if (c.end === 'horizon') {
+            const trail = c.trail.slice(shift);
+            const out = previewPressApproach(run, { ...args, limit,
+                from: c.at - shift, st0: trail[c.at - shift], trail });
+            cache.last = { ...c, t: now, trail, end: out.end, at: out.at };
+            return out;
+        }
+    }
+    const trail = [];
+    const out = previewPressApproach(run, { ...args, limit, trail });
+    cache.last = { t: now, trail, end: out.end, at: out.at, strike: args.strike,
+        lastPressAt: args.lastPressAt, hits, level: run.level };
+    return out;
+}
+
+/** Two player states are one state: every field, compared by value. */
+function sameState(a, b) {
+    const ka = Object.keys(a);
+    if (ka.length !== Object.keys(b).length) return false;
+    for (const k of ka) {
+        const x = a[k];
+        const y = b[k];
+        if (x === y) continue;
+        if (x && y && typeof x === 'object' && typeof y === 'object'
+            && JSON.stringify(x) === JSON.stringify(y)) continue;
+        return false;
+    }
+    return true;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY F1c — THE HAMMER-PHASE RUNG (⚖ the user, 2026-10-03:
+ * *"F1c: phase-robust L18 kill, then re-record"*). U15's DODGE shape, asked of
+ * the hammer's clock instead of a turret's.
+ *
+ * ⛔ WHAT IT FIXES, MEASURED. The press kill's approach is chosen a tick at a
+ * time (`stepToward`, `STEP_LOOKAHEAD` deep) and guarded a tick at a time
+ * (`safeStep`). A corner deeper than the lookahead is walked into: on
+ * `r9-solve-18`'s staging at hammer residue 42 a press lands at t234, the
+ * knocked-back body comes off the wall, and at t249 every key set meets the
+ * line at its own phase — *"There is no step out."* F1b measured 12 of the 45
+ * residues refusing that way. The approach meets the hammer at a PHASE, and a
+ * different arrival tick is a different phase.
+ *
+ * ⇒ on every approach tick (a strike set, no stall in flight) the executor's
+ * own walk is previewed one hammer period ahead (`previewPressApproach`). Clear
+ * — which is every tick of every committed walk — and the rung does nothing,
+ * so those walks are byte-identical. Cornered at `+c`, it searches a STALL:
+ * walk-offsets `at` from `c − 1` back to `0`, holds of `1 … maxTicks`, first
+ * one whose walk previews clear for the stall plus one more period wins; the
+ * executor drives it (the hold re-asked of the live run every tick, and still
+ * under `safeStep`) and then re-previews. No stall clears it ⇒ the refusal
+ * that follows says so by name: no phase of the hammer admits a step.
+ */
+function hammerPhaseRung(run, { index, hitsTimer, lastPressAt, strike, alternatives, cache }) {
+    const ahead = clearAhead(run, { index, hitsTimer, lastPressAt, strike, alternatives }, cache);
+    if (ahead.end !== 'corner') return { fired: false };
+    const corner = ahead.at;
+    let tried = 0;
+    for (let at = corner - 1; at >= 0; at -= HAMMER_PHASE_RUNG.step) {
+        for (let ticks = 1; ticks <= HAMMER_PHASE_RUNG.maxTicks; ticks += 1) {
+            tried += 1;
+            // ⛓ Up to `at` the walk IS the cornered preview's, so it starts there.
+            const walk = previewPressApproach(run, { index, hitsTimer, lastPressAt, strike,
+                stall: { at, ticks }, limit: at + ticks + HAMMER_PHASE_RUNG.horizon,
+                alternatives, from: at, st0: cache.last.trail[at] });
+            if (walk.end === 'corner') continue;
+            return { fired: true, corner, stall: { at, ticks }, end: walk.end, tried };
+        }
+    }
+    return { fired: true, corner, stall: null, tried };
+}
+
+/**
+ * ⛓ F1c — WHAT THE RUNG KNOWS ABOUT A CORNER `safeStep` REFUSED, in words, or
+ * `null` when it knows nothing (the refusal then reads exactly as before).
+ *
+ * ⛔ THE REMAINDER IT NAMES, MEASURED ON THE 45-RESIDUE SWEEP: every corner the
+ * rung cannot clear forms within a few ticks of a press LANDING on the body
+ * (L18: t262 → t263…t267, t188 → t189). A landing's knockback is
+ * player-coupled — `spinnerForecast` holds no hit it has not seen — so no
+ * forecast taken before the landing carries the rebound, and from the landing
+ * on the body comes off the wall faster than the player can leave the line's
+ * reach. That is not "no phase admits a step" before the press; it is "the
+ * press decided it", and the sentence says which.
+ */
+function hammerPhaseRefusal(run, searched, landings, bodyId) {
+    const mine = landings.filter((l) => l.id === bodyId);
+    const last = mine.length ? mine[mine.length - 1].t : null;
+    const recent = last !== null && run.ticksCompleted - last <= HAMMER_PHASE_RUNG.horizon;
+    const landed = recent
+        ? `The corner formed ${run.ticksCompleted - last} tick(s) after the press on ${bodyId} `
+            + `LANDED at t${last}: a landing's knockback is player-coupled, so no forecast taken `
+            + 'before it carries the rebound (HAMMER_PHASE_RUNG).'
+        : null;
+    if (searched === null) {
+        return landed === null ? null
+            : `${landed} The rung's preview saw no corner on this approach before it (it ends `
+                + 'where the strike lapses, and a refuge wait is not previewed).';
+    }
+    return `${searched} (HAMMER_PHASE_RUNG).${landed === null ? '' : ` ${landed}`}`;
 }
 
 /**
@@ -7376,11 +7599,16 @@ function execKillByPress(run, perTick, resolved, ctx) {
     const economies = ctx.economies ?? ECONOMIES_ROSTER_WIDE;
     const NO_KEYS = new Set();
     const PRESS = new Set(['primary']);
+    /** `safeStep`'s alternatives — the stand and the four facings, fresh per tick. */
+    const alternativesNow = () => [NO_KEYS, ...Object.values(FACING_KEYS)
+        .map((k) => new Set([k]))];
     const from = perTick.length;
     const landings = [];
     const cycles = [];
     const contacts = new Set();
     let refuge = null;
+    /** ⛓ F1c — the HAMMER-PHASE rung's stalls this kill (`HAMMER_PHASE_RUNG`). */
+    const phaseStalls = [];
     for (const plan of resolved.plans) {
         /**
          * ⛔ THE BOUND IS THE DERIVATION'S OWN HORIZON PER LANDING. Three
@@ -7444,6 +7672,16 @@ function execKillByPress(run, perTick, resolved, ctx) {
          * to allow.
          */
         let lastPressAt = -KILL_PRESS_CADENCE;
+        /**
+         * ⛓ F1c — the stall in flight (absolute ticks `[from, until)` and the
+         * cell it holds around), and the rung's last refusal, which rides the
+         * `safeStep` refusal it predicted.
+         */
+        let phaseStall = null;
+        let phaseRefusal = null;
+        let phaseSeen = null;
+        let phaseSpent = 0;
+        const phaseCache = { last: null };
         /**
          * ⛓ U4b D3 — A STRIKE ONLY THE ADMISSION'S CONTINUATION FOUND IS
          * ADOPTED, not re-derived: the executor's own derivation is the bounded
@@ -7543,6 +7781,55 @@ function execKillByPress(run, perTick, resolved, ctx) {
                  * is the only thing that can answer it.
                  */
                 held = stepToward(run, aim, held);
+                /**
+                 * ⛓⛓⛓ F1c — THE HAMMER-PHASE RUNG (`hammerPhaseRung`). Only on a
+                 * STRIKE approach: a refuge wait re-derives a strike every tick
+                 * from the run, which no preview can predict. A stall in flight
+                 * is driven to its end before the walk is previewed again.
+                 */
+                const now = run.ticksCompleted;
+                if (phaseStall && now >= phaseStall.until) phaseStall = null;
+                if (phaseStall && now >= phaseStall.from) {
+                    if (now === phaseStall.from) phaseStall.hold = { x: run.state.x, y: run.state.y };
+                    held = stepToward(run, phaseStall.hold, NO_KEYS);
+                } else if (!phaseStall && strike && aim === strike.cell) {
+                    const verdict = hammerPhaseRung(run, {
+                        index: (run.entities('spinnerBodies') ?? [])
+                            .findIndex((b) => b.id === plan.id),
+                        hitsTimer: body.hitsTimer,
+                        lastPressAt,
+                        strike,
+                        alternatives: alternativesNow(),
+                        cache: phaseCache,
+                    });
+                    if (!verdict.fired) phaseSeen = null;
+                    else if (phaseSeen === null) phaseSeen = now;
+                    phaseRefusal = null;
+                    if (verdict.fired && verdict.stall && phaseSpent < HAMMER_PHASE_RUNG.maxPerKill) {
+                        phaseSpent += 1;
+                        phaseStall = { from: now + verdict.stall.at,
+                            until: now + verdict.stall.at + verdict.stall.ticks, hold: null };
+                        phaseStalls.push({ body: plan.id, t: now, corner: now + verdict.corner,
+                            from: phaseStall.from, ticks: verdict.stall.ticks,
+                            phase: run.gameTimeAt(verdict.stall.at) % SPINNER.hammerPeriod,
+                            tried: verdict.tried });
+                        if (verdict.stall.at === 0) {
+                            phaseStall.hold = { x: run.state.x, y: run.state.y };
+                            held = stepToward(run, phaseStall.hold, NO_KEYS);
+                        }
+                    } else if (verdict.fired) {
+                        phaseRefusal = verdict.stall
+                            ? `the HAMMER-PHASE rung first saw this corner at t${phaseSeen} and has `
+                                + `already stalled ${phaseSpent} time(s) on ${plan.id} `
+                                + `(HAMMER_PHASE_RUNG.maxPerKill ${HAMMER_PHASE_RUNG.maxPerKill}, one per `
+                                + 'landing) — a walk that keeps meeting the line is not converging'
+                            : `the HAMMER-PHASE rung first saw this corner at t${phaseSeen}, and from `
+                                + `t${now} NO PHASE admits a step: no hold of `
+                                + `1..${HAMMER_PHASE_RUNG.maxTicks} tick(s) at any walk-offset `
+                                + `${verdict.corner - 1}..0 (${verdict.tried} tried) walks the approach `
+                                + `clear for one more hammer period (${HAMMER_PHASE_RUNG.horizon} ticks)`;
+                    }
+                }
             }
             /**
              * ⛓⛓⛓ THE PER-TICK NEXT-CELL CHECK — ⚖ §14.2 ruling 3, and it is
@@ -7558,8 +7845,15 @@ function execKillByPress(run, perTick, resolved, ctx) {
              * own refusal caught it at tick 130, which is the accurate wall
              * doing its job and not a reason to widen anything.
              */
-            held = safeStep(run, held, [NO_KEYS, ...Object.values(FACING_KEYS)
-                .map((k) => new Set([k]))], ctx.what, plan.id);
+            try {
+                held = safeStep(run, held, alternativesNow(), ctx.what, plan.id);
+            } catch (e) {
+                const why = e instanceof SolverBotError && e.code === HAMMER_SAFETY
+                    ? hammerPhaseRefusal(run, phaseRefusal, landings, plan.id) : null;
+                if (why === null) throw e;
+                // ⛓ F1c — the first sentence is unchanged; the rung's verdict follows it.
+                throw new SolverBotError(`${e.message} ${why}`, { code: e.code });
+            }
             const before = (run.ledger('spinnerPressHits') ?? []).length;
             perTick.push(held);
             const { transition } = run.advance(held);
@@ -7608,7 +7902,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
         : 0;
     if (!resolved.lock) {
         return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
-            landings, cycles, bodies: resolved.bodies };
+            landings, cycles, bodies: resolved.bodies,
+            ...(phaseStalls.length ? { phaseStalls } : {}) };
     }
     /**
      * ⛔⛔⛔ R8 SLICE 8 — THE TAIL WAS `run.openActivators.has(lock)`, AND THAT
@@ -7732,7 +8027,8 @@ function execKillByPress(run, perTick, resolved, ctx) {
         if (!(run.world.activators ?? []).some((a) => a.id === resolved.lock.id)) {
             return { verb: 'kill', arm: 'press', from, ticks: perTick.length - from,
                 landings, cycles, bodies: resolved.bodies,
-                ...(economies ? { earlyWalk } : {}) };
+                ...(economies ? { earlyWalk } : {}),
+                ...(phaseStalls.length ? { phaseStalls } : {}) };
         }
         /**
          * ⚠ THE FADE IS A WAIT TOO, and with the bodies gone the discs are
@@ -8970,6 +9266,31 @@ export const ESCALATION_LADDER = Object.freeze(['avoid', 'dodge', 'pull', 'time'
  * `maxPerSegment` stalls in one segment.
  */
 const DODGE_RUNG = Object.freeze({ step: 4, maxTicks: 30, maxPerSegment: 12 });
+
+/**
+ * ⛓ SEEDLING FIDELITY F1c — THE HAMMER-PHASE RUNG's bounds, beside DODGE's and
+ * DERIVED, not tuned (`hammerPhaseRung`):
+ *   · `horizon` = `SPINNER.hammerPeriod` (45): one revolution of the line. A
+ *     corner the line makes is made inside one turn; a walk previewed clear
+ *     for a whole turn has met every phase once.
+ *   · `maxTicks` = `hammerPeriod − 1` (44): a hold of 1 … 44 ticks shifts the
+ *     arrival to every OTHER phase of the turn, and a 45th is the 0th again.
+ *   · `step` = 1: the corner is decided at tick resolution — a body moves
+ *     `SPINNER.moveSpeed` (1 px) a tick and the line sweeps 360/45 = 8° a tick,
+ *     which is up to `hammerLength` · 8° ≈ 1.8 px at its tip, so a coarser step
+ *     could skip the one offset where the player still stands outside the
+ *     `hammerLength` (13 px) reach.
+ *   · `maxPerKill` = `SPINNER.hitsMax` (3): a press that LANDS is the only
+ *     thing the forecast cannot see (the knockback is player-coupled), so a
+ *     faithful preview is invalidated at most once per landing, and a kill has
+ *     `hitsMax` landings.
+ */
+export const HAMMER_PHASE_RUNG = Object.freeze({
+    horizon: SPINNER.hammerPeriod,
+    maxTicks: SPINNER.hammerPeriod - 1,
+    step: 1,
+    maxPerKill: SPINNER.hitsMax,
+});
 
 /**
  * The mover's search is SHORT — `mover.MOVER_RANGE`: tick-exact to ~8 px, an
