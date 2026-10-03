@@ -581,8 +581,9 @@ export async function seedlingJsRuntimeBotWalksAtlasRooms(tc) {
     try { previous = await settingsManager.getSetting(RUNTIME_KEY, 'auto'); } catch { /* keep auto */ }
     try {
         const staleAdapter = getActivePanelInstance()?.adapter ?? null;
-        // seedling_atlas carries no sphere log (its completion is constant-true):
-        // the bot is driven by its manual targets, which route region by region.
+        // seedling_atlas's sphere log (tool-built, `--embed-sphere-log`) holds only
+        // the chest; this walk goes past it, so the bot is driven by its manual
+        // targets, which route region by region, and the log is not awaited.
         const ready = await botOnSeedlingPreset(tc, 'js', { presetPath: ATLAS_PATH, sphereLog: false });
         if (!ready) return tc.getOverallResult();
         const { bot } = ready;

@@ -454,7 +454,7 @@ The node rows are in `seedlingDemo/wasmPlayback.test.js` and `flashPanel/seedlin
 
 - **Z.** From the game's own boot in the hub, with no host jump: the house door's real entry (hub → house), the house door back out, and the owls-nest stairs (→ L2). Each crosses on plan, and each level-0 arrival declared `beam` and `rockSet` read off `readState`.
 - **S.** The engine collects the shield in L20 for real, and `readState` then reports `beam: true`. In the hub, `out_teleporter_0_128` is served with `beam: true` staged. The plan outlasts the beam, so the rock lands mid-plan; the crossing is on plan, and afterwards the game itself reports `beam: false, rockSet: true`.
-- **B.** The Playback Bot walks the starter `seedling_atlas` on wasm from the hub (`overworld_start__r8c0`): the house door, then the chest. Its status is `finished`, the chest is checked once, and there are no divergences.
+- **B.** The Playback Bot walks the starter `seedling_atlas` on wasm from the hub (`overworld_start__r8c0`): the house door, then the chest. Its status is `finished`, the chest is checked once, and there are no divergences. The bot's queue is the preset's own embedded `sphere_log`, which `region-atlas-compile.mjs --embed-sphere-log` builds with the forward simulator's `generateSphereLog`. The app loads it on boot and nothing is injected; B checks that the loaded log is the committed one.
 
 **Generated rooms (WG).** The generated instance is built with `wasm: true` and `wasmLevelSetOf` (the surface's `wasm.levelSet`, the set the generated arm assembled and delivered). What differs from the atlas rooms is below; everything else above (the arrival, the freeze, the shipped tape, the guard, the recovery) is the same code:
 

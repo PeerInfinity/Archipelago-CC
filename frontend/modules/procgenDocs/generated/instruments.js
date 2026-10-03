@@ -216,7 +216,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 310,
         "browser": 97,
-        "cited": 145,
+        "cited": 146,
         "files": 321,
         "lineStyle": 11,
         "withDocblock": 321,
@@ -10798,7 +10798,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": false,
             "category": "region",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
             "docblockStyle": "line",
             "documentedFlags": [
                 "game-config",
@@ -10818,6 +10820,12 @@ export const INSTRUMENTS = frz({
                         "has"
                     ],
                     "name": "check"
+                },
+                {
+                    "how": [
+                        "has"
+                    ],
+                    "name": "embed-sphere-log"
                 },
                 {
                     "how": [
