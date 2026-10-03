@@ -12681,6 +12681,87 @@ live, and F1c's chain re-record had moved its boot; it now reads a
   learns to compute a clear, the tape stops declaring it, and the row that
   vouched for it reds as a claim about a walk nobody took.
 
+### Seedling fidelity F6 — re-entry in the game's own state (I01–I03)
+
+I1's first three rows, on F1 + F1b + F1c. ⚖ The user, 2026-10-03: *"I don't
+want it to have to clear the save, and I don't want it to have to exit and
+reenter the room in order to solve it."* The campaign's latched persistence
+carried three clears the model refused to BUILD, so once the chain had passed
+them L17, L2 and L20 could not be entered again in the game's own state (I1's
+M2: 50 of 53 committed slots booted). The report is
+`CC/docs/cloud-reports/seedling-fidelity-f6.md`.
+
+**D1 — `{17,29}` is inert (PASS, game-witnessed).** L18's two `tag="-1"`
+spinners write `{17,29}` out of band. The run reports that write and never
+applies it, but the game's latch carries it, and the successor's build refused
+it as "a clear which no entity in this level reads". The build now accepts an
+orphan only when a map-placed writer in the NEXT level lands on exactly that
+slot (`outOfBandWritersOnto`). The writer must be a type in
+`OUT_OF_BAND_WRITER_CLASSES`, carry an explicit negative `tag` attribute, and
+land there by `outOfBandFlagForWriter`'s arithmetic. The accepted slot is
+reported in `world.outOfBandClears`. `levelRun.worldFor` passes
+`levelSource(n + 1)` only when slot 29 is cleared. A hand-authored orphan is
+still refused, with the same text: `{71,29}`, `{17,28}`, and any clear built
+without a neighbour. The witness `f6-l17-reentry` boots L17 in the chain-end
+state; the model reproduces all 61 observations. The game walks the same keys
+byte-identically without the clear.
+
+**D2 — `{2,0}` builds the MoonrockPile (PASS, game-witnessed).** What writes it
+(I1's open question 3): L0's set moonrock, the first update after it lands on
+the stairs (`Moonrock.as:131-136`). That is window 23's (`r9-solve-0-v3`) t2,
+after the 451 beam and fall dead frames, measured as a hold bracket on the
+game: the flag is absent after 1 tick and present after 2. `appear` left
+`REFUSED_CLEAR_RESPONSES`, and the pile is the class row's 32×16 Solid at
+(40,16). **It covers `stairsup@48,16`, L2's stairs back to L0**, and the set
+rock covers L0's stairs to L2, so once the rock has fallen L0↔L2 by those
+stairs is closed in both directions. That is the game's state, and the solver's
+L2→L0 arrival now declines by a true name (`solid:moonrockpile`). L2→L3 solves.
+`f6-l2-reentry` enters L2 from L3 and stops under the pile (121 observations,
+reproduced). Without the clear, the game leaves for L0.
+
+**D3 — a pressed ButtonRoom boots its group fading (PASS, game-witnessed).**
+`ButtonRoom.check()` runs the press setter at build (`_active =
+!checkPersistence(tag); activate = _active`), so a `room = -1` button latches
+its group before any update. `press` left the refused table. The presser row
+carries `bootPressed`, and `activators.createActivatorState` latches the group
+and marks the presser written: every write `check()` makes is a re-write. A
+cross-room `flip = 0` button would write TRUE over another level's slot, so it
+is refused by name; no vanilla ButtonRoom has that shape.
+
+⚠ The latched group starts **one update in**, and the game measured why. Its
+first update of a new world runs in the frame that records the arrival. The
+model's first `stepActivators` for that world is one tick later, because on a
+transition tick `levelRun` still steps the level being left. Uncredited, the
+model opened `lock@32,80` on t109 and the game on t108 (= arrival t7 +
+`opensOnTick` 101).
+
+The solver had a second wall. `hold` walked to the presser, which from the L13
+arrival is on the far side of the same lock, so it raised `hold` again, four
+times, without spending a tick. A fade responder whose group the live run
+reports latched now resolves to a wait where the player stands
+(`latchedFadeWait`). From the chain-end L20 arrival the solver reaches L19 in
+289 t with no hit.
+
+**D4.** M2 is **53/53**. The chain-end staging boots L2, L13, L16, L17 and L20.
+Per row, removing the fix brings back the old refusal (m1–m3). Removing the
+credit makes the model one tick late against the recording (m4). Removing the
+wait brings back "applied 4 strategies" (m5).
+
+**Trap candidates**, for the catalogue to number:
+
+- two ledgers for one write: the run keeps an out-of-band write out of what
+  the next BUILD is handed, while the game's array keeps it. Once a successor
+  booted from the array, the run's own good bookkeeping became a refusal.
+  Provenance (which entity wrote the slot) tells the two apart; the slot number
+  alone does not;
+- state that is live from the build is one update ahead of state a player
+  creates. On an arrival tick the model steps the old level's activators, so
+  every per-visit machine the build turns on starts a tick late in the model
+  (the latched fade here; a latched pulser or arrow trap is unwitnessed);
+- a strategy whose stance needs the obstacle it is clearing: `hold`'s walk to a
+  presser behind its own lock re-raised the same `hold`, and the bound reported
+  "not making progress" with no tick spent.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
