@@ -44,7 +44,8 @@
  * ── THE SOLVE, AND ITS NUMBERS ARE THE ROOM'S ────────────────────────
  *
  * Two bodies, three landed presses each, `hitsTimer` 30 apart; the kill lock's
- * clear declared at `removal + opensOnTick(0.01)`; the exit crossed to L19.
+ * clear declared at `removal + opensOnTick(0.01) − 1` (the v9 spelling, F5); the
+ * exit crossed to L19.
  * ⛔ ZERO HITS AND ZERO SPINNER CONTACTS, on a tape that does NOT declare
  * `noDamage` — which is the whole difference from `r8-l18-spinner-press`, and
  * the reason that tape stays exactly where it is as the conservative era's
@@ -132,6 +133,13 @@ const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
 const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
 const { ROLES } = await import(join(MODULE, 'levelWorld.js'));
+const { RESPONDERS, opensOnTick } = await import(join(MODULE, 'activators.js'));
+/**
+ * ⛓ SEEDLING FIDELITY F5 — the `Lock`'s fade in the v9 `at` spelling: one less
+ * than `opensOnTick`, read rather than typed (the chaser arm's spelling since
+ * F1b, the spinner arm's since F5; game-witnessed by `f1c-l18-lock-removal`).
+ */
+const V9_FADE = opensOnTick(RESPONDERS.lock.fade) - 1;
 
 let failures = 0;
 const check = (name, ok, detail) => {
@@ -319,9 +327,9 @@ check('⛓⛓ the kill-lock scan RAN at the REMOVAL and is NOT nil', opens.lengt
     JSON.stringify((run.spinnerKillLockOpens ?? []).map((o) => ({ t: o.t, nil: o.nil }))));
 const declared = solved.persistence.find((p) => p.level === 18 && p.tag === 0);
 check('⛓⛓⛓ {18,0} is DECLARED at the tick the model computed — the removal '
-    + 'plus the `Lock`\'s own fade',
-    Boolean(declared) && declared.at === opens[0]?.t + 101,
-    `declared at ${declared?.at} = removal ${opens[0]?.t} + 101 (${declared?.note})`);
+    + 'plus the `Lock`\'s own fade, in the v9 `at` spelling',
+    Boolean(declared) && declared.at === opens[0]?.t + V9_FADE,
+    `declared at ${declared?.at} = removal ${opens[0]?.t} + ${V9_FADE}, the v9 spelling (${declared?.note})`);
 check('⛔ and the loop CONVERGED — a discover pass, a measure pass, a solve pass',
     solved.passes.map((p) => p.kind).join(',') === 'discover,measure,solve',
     JSON.stringify(solved.passes));
@@ -375,7 +383,8 @@ const description = '⛓⛓⛓ R8 SLICE 8 — **THE HONEST L18**. The live solve
     + `other kill arm already had. Both bodies die to three landed presses (${landed.length} `
     + `of ${tests.length} hit TESTS — the receiver\'s own \`hitsTimer\` refuses the rest, `
     + `traps 85/93), \`{18,0}\` is declared at ${declared?.at} = the removal plus the `
-    + '`Lock`\'s own 101-step fade, and the walk crosses to L19. Boot: r7-act2-11\'s '
+    + '`Lock`\'s own fade in the v9 `at` spelling (101 steps, declared as 100), and '
+    + 'the walk crosses to L19. Boot: r7-act2-11\'s '
     + 'committed v8 block at L18\'s own arrival from L16 (⚖ §16.3 ruling 1 — L13 has no '
     + `edge to L18). Solver: ${out.perTick.length} ticks, `
     + `${out.trace.rows.length} decision(s), ${out.replans} re-plan(s). ⚠ `

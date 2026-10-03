@@ -596,7 +596,7 @@ const headSolved = await twoPassSolve({
             + `[${[...(headSolved.out.perTick[firstDiff] ?? [])].sort().join(', ')}]`);
     /**
      * ⛓⛓ AND THE DECLARED CLEAR IS THE SAME TICK. `{18,0}` is model-sourced —
-     * the spinner removal plus the `Lock`'s own 101-step fade — so a headline
+     * the spinner removal plus the `Lock`'s own fade, spelled v9 (100; F5) — so a headline
      * that walked L18 identically must compute it identically, and the chain's
      * `clears` provenance row is authored against ONE number rather than two.
      */

@@ -8088,6 +8088,18 @@ function execKillByPress(run, perTick, resolved, ctx) {
      * same arithmetic rather than two readings of it. Nothing between there and
      * here can add a row: every counted body is already gone.
      */
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY F5 (F1c D2's fix) — SPELLED IN THE v9 `at`
+     * CONVENTION, ONE LESS than `opensOnTick`, as the chaser arm has since
+     * F1b: a declared v9 row fires when `ticksCompleted === at`, i.e. at the
+     * start of the advance that completes `removal + 100`, where `turnOff()`
+     * lands. The ledger now stamps the alpha-zero step (`levelRun`'s
+     * `assertSpinnerRemovalIsDeclared`), so the two together give the game's
+     * tick: `f1c-l18-lock-removal` declares the ledger's own 416 = 316 + 100,
+     * and the model crosses on t444 = the game's. Until F5 this read
+     * `removal + 101` from a ledger one step late, two ticks after the game.
+     */
+    const declaredFade = fade - 1;
     const last = removal;
     if (!last) {
         return fail(`${ctx.what}: every counted body is dead and the run's own kill-lock `
@@ -8099,16 +8111,18 @@ function execKillByPress(run, perTick, resolved, ctx) {
         + `${last.t} (${last.id}) and ${resolved.lock.id} is ARMING — its own ${fade}-step `
         + 'fade has run and `turnOff()` writes the durable clear at the end of it. This '
         + 'model does not step a kill-lock\'s fade (§11.5: one writer per persistence '
-        + `slot), so the tick is ${last.t} + ${fade} = ${last.t + fade}.`,
+        + `slot), so the tick is the run's own ledger plus the responder's own arithmetic, `
+        + `in the v9 \`at\` spelling: ${last.t} + ${declaredFade} = ${last.t + declaredFade}.`,
     { goal: ctx.goal, obstacle: { kind: 'kill-lock', id: resolved.lock.id },
         perTick: [...perTick],
         pending: {
             level: run.level, tag: resolved.lock.persistTag ?? null,
-            source: 'model', at: last.t + fade, removedAt: last.t, fade,
+            source: 'model', at: last.t + declaredFade, removedAt: last.t, fade: declaredFade,
             lock: resolved.lock.id,
             why: `\`spinnerKillLockOpens\` computed the removal at ${last.t} and `
                 + `\`activators.opensOnTick(${RESPONDERS[resolved.lock.tag]?.fade
-                    ?? RESPONDERS.lock.fade})\` is ${fade}`,
+                    ?? RESPONDERS.lock.fade})\` is ${fade}, which a declared v9 row spells `
+                + `${declaredFade}`,
         } });
 }
 
