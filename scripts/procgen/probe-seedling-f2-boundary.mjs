@@ -44,6 +44,7 @@
 import { existsSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { chromium } from 'playwright';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
@@ -59,7 +60,6 @@ async function main() {
     const REPO = join(HERE, '..', '..');
     const { takeBoxLockOrExit } = await import('./boxLock.js');
     takeBoxLockOrExit({ name: 'probe-seedling-f2-boundary.mjs', kind: 'browser' });
-    const { chromium } = await import('playwright');
     const { HEADLESS_LOGIC_ONLY_ARGS } = await import('./headlessChromium.js');
     const { assertLogicOnlyChannel } = await import('./seedlingChannel.js');
     const { driverChannel } = await import('./seedlingDriver.js');

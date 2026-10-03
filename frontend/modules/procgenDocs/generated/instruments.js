@@ -128,7 +128,7 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 31,
+            "browser": 33,
             "count": 75,
             "id": "probe"
         },
@@ -215,7 +215,7 @@ export const INSTRUMENTS = frz({
     ],
     "counts": {
         "blockStyle": 310,
-        "browser": 95,
+        "browser": 97,
         "cited": 145,
         "files": 321,
         "lineStyle": 11,
@@ -8142,7 +8142,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [],
-            "browser": false,
+            "browser": true,
             "category": "probe",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md"
@@ -8171,7 +8171,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [],
-            "browser": false,
+            "browser": true,
             "category": "probe",
             "citedBy": [],
             "docblockStyle": "block",
