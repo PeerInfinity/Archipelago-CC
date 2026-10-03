@@ -1076,6 +1076,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + '`bob@16,64` drowns (t 48), the arrows kill `bob@48,80` (t 182), and `bob@16,80` '
                 + 'survives with two hits in column 3, out of every lane.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity F6 (I01) — L17 booted in the chain-end state,
+         * `{17,29}` carried: the room's three bobs wake on the walk.
+         */
+        Object.freeze({
+            name: 'f6-l17-reentry', levels: Object.freeze([17]), bobs: 3, ticks: 60,
+            addedBy: 'Seedling fidelity F6 D1 (a game-written out-of-band clear is inert at build)',
+            why: 'booted at the L16 arrival among `bob@96,32`, `bob@112,80` and `bob@80,64`; '
+                + 'the walk right, up and left takes no hit and kills nothing.',
+        }),
     ]),
 
     /**

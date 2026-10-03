@@ -351,6 +351,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓⛓⛓ Seedling fidelity F1: L5's kill lock on the removal, and the
             // open-lock arrival's walk to its refusal, in L5.
             'f1-l5-lock-removal', 'f1-l5-open-lock-bait',
+            // ⛓⛓⛓ Seedling fidelity F6 (I01): L17 booted in the chain-end state.
+            'f6-l17-reentry',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -377,9 +379,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ R4-swim D2 takes it to 41 — `r4-iceturret-bobs`, in L40.
         // ⛓ Seedling fidelity F1 takes it to 43 — `f1-l5-lock-removal` and
         // `f1-l5-open-lock-bait`, in L5.
-        expect(out.exposed).toBe(43);
+        // ⛓ Seedling fidelity F6 takes it to 44 — `f6-l17-reentry`, in L17.
+        expect(out.exposed).toBe(44);
         expect(out.tapes).toEqual([
-            'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
+            'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
@@ -510,6 +513,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r4-iceturret-bobs': { tape: {}, levels: [40] },
             'f1-l5-lock-removal': { tape: {}, levels: [5, 6] },
             'f1-l5-open-lock-bait': { tape: {}, levels: [5] },
+            'f6-l17-reentry': { tape: {}, levels: [17] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -689,7 +693,8 @@ function syntheticExposureIo(rows) {
         //   declared exposed there.
         // ⛓ R1-swim: L22 joins — `r1-dark-shield-kill` is declared exposed there.
         // ⛓ R4-swim: L40 joins — `r4-iceturret-bobs` is declared exposed there.
-        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 22, 40]),
+        // ⛓ Seedling fidelity F6: L17 joins — `f6-l17-reentry` is declared exposed there.
+        bridgedLevels: () => new Set([4, 5, 6, 12, 14, 16, 17, 22, 40]),
     };
 }
 
