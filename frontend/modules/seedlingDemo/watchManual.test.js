@@ -475,8 +475,11 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         //   by a terrain death, declared at the removal tick (`{5,0}@283`).
         // ⛓ fidelity F1 D1c: `f1-l5-lock-removal` joined — L5's kill lock after
         //   an arrow kill, game-sourced at the removal + 100 (`{5,0}@301`).
+        // ⛓ fidelity F1c: `f1c-l18-lock-removal` (L18's kill lock, game-sourced
+        //   `{18,0}@416`) and `f1c-l18-phase42` (the rung's solve, `{18,0}@452`) joined.
         expect(byAt.sort()).toEqual([
-            'f1-l5-lock-removal', 'r2-terrain-killlock', 'r7-act2-5', 'r7-act2-full',
+            'f1-l5-lock-removal', 'f1c-l18-lock-removal', 'f1c-l18-phase42',
+            'r2-terrain-killlock', 'r7-act2-5', 'r7-act2-full',
             'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8', 'r9-solve-18',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);

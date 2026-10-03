@@ -1,0 +1,600 @@
+{
+    "tape_version": 11,
+    "game": "seedling",
+    "boot": {
+        "level": 18,
+        "x": 16,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 3,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 11,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 15,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 4,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 6,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 7,
+            "note": ""
+        },
+        {
+            "level": 18,
+            "tag": 0,
+            "note": "GAME-sourced: the player crosses lock@144,112 on t444 in the game; the model crosses with it under @416, which is (317 − 1) + 100 (scripts/procgen/plan-seedling-f1c-l18-lock.mjs)",
+            "at": 416
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": [
+            0
+        ]
+    },
+    "rng": {
+        "seed": 1502252165,
+        "split": true,
+        "cosmetic": 175575509,
+        "fp": 1847462486
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 10052,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 192,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": {
+        "rng": {
+            "seed": 681093320,
+            "split": true,
+            "cosmetic": 1011576403,
+            "fp": 2098665036
+        },
+        "seam": {
+            "time": 10073
+        }
+    },
+    "hold": false,
+    "tick_count": 470,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 27
+        },
+        {
+            "key": "up",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "left",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "down",
+            "from": 43,
+            "to": 44
+        },
+        {
+            "key": "primary",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "up",
+            "from": 45,
+            "to": 46
+        },
+        {
+            "key": "down",
+            "from": 50,
+            "to": 70
+        },
+        {
+            "key": "right",
+            "from": 50,
+            "to": 70
+        },
+        {
+            "key": "left",
+            "from": 70,
+            "to": 71
+        },
+        {
+            "key": "down",
+            "from": 71,
+            "to": 74
+        },
+        {
+            "key": "right",
+            "from": 71,
+            "to": 95
+        },
+        {
+            "key": "up",
+            "from": 78,
+            "to": 79
+        },
+        {
+            "key": "left",
+            "from": 95,
+            "to": 97
+        },
+        {
+            "key": "down",
+            "from": 112,
+            "to": 113
+        },
+        {
+            "key": "primary",
+            "from": 113,
+            "to": 114
+        },
+        {
+            "key": "up",
+            "from": 114,
+            "to": 124
+        },
+        {
+            "key": "right",
+            "from": 114,
+            "to": 127
+        },
+        {
+            "key": "up",
+            "from": 127,
+            "to": 128
+        },
+        {
+            "key": "left",
+            "from": 128,
+            "to": 129
+        },
+        {
+            "key": "down",
+            "from": 129,
+            "to": 131
+        },
+        {
+            "key": "up",
+            "from": 131,
+            "to": 132
+        },
+        {
+            "key": "right",
+            "from": 138,
+            "to": 152
+        },
+        {
+            "key": "left",
+            "from": 152,
+            "to": 154
+        },
+        {
+            "key": "down",
+            "from": 155,
+            "to": 156
+        },
+        {
+            "key": "primary",
+            "from": 156,
+            "to": 157
+        },
+        {
+            "key": "up",
+            "from": 157,
+            "to": 159
+        },
+        {
+            "key": "down",
+            "from": 159,
+            "to": 160
+        },
+        {
+            "key": "down",
+            "from": 162,
+            "to": 179
+        },
+        {
+            "key": "primary",
+            "from": 179,
+            "to": 180
+        },
+        {
+            "key": "down",
+            "from": 180,
+            "to": 186
+        },
+        {
+            "key": "left",
+            "from": 186,
+            "to": 188
+        },
+        {
+            "key": "up",
+            "from": 187,
+            "to": 189
+        },
+        {
+            "key": "down",
+            "from": 189,
+            "to": 192
+        },
+        {
+            "key": "right",
+            "from": 190,
+            "to": 193
+        },
+        {
+            "key": "up",
+            "from": 193,
+            "to": 195
+        },
+        {
+            "key": "down",
+            "from": 195,
+            "to": 196
+        },
+        {
+            "key": "left",
+            "from": 195,
+            "to": 196
+        },
+        {
+            "key": "right",
+            "from": 199,
+            "to": 206
+        },
+        {
+            "key": "up",
+            "from": 199,
+            "to": 206
+        },
+        {
+            "key": "left",
+            "from": 206,
+            "to": 207
+        },
+        {
+            "key": "up",
+            "from": 207,
+            "to": 215
+        },
+        {
+            "key": "right",
+            "from": 207,
+            "to": 217
+        },
+        {
+            "key": "left",
+            "from": 217,
+            "to": 218
+        },
+        {
+            "key": "up",
+            "from": 217,
+            "to": 227
+        },
+        {
+            "key": "primary",
+            "from": 227,
+            "to": 228
+        },
+        {
+            "key": "left",
+            "from": 228,
+            "to": 239
+        },
+        {
+            "key": "up",
+            "from": 228,
+            "to": 242
+        },
+        {
+            "key": "right",
+            "from": 242,
+            "to": 243
+        },
+        {
+            "key": "up",
+            "from": 243,
+            "to": 253
+        },
+        {
+            "key": "down",
+            "from": 253,
+            "to": 254
+        },
+        {
+            "key": "left",
+            "from": 269,
+            "to": 301
+        },
+        {
+            "key": "down",
+            "from": 269,
+            "to": 303
+        },
+        {
+            "key": "primary",
+            "from": 303,
+            "to": 304
+        },
+        {
+            "key": "down",
+            "from": 304,
+            "to": 312
+        },
+        {
+            "key": "left",
+            "from": 304,
+            "to": 313
+        },
+        {
+            "key": "right",
+            "from": 313,
+            "to": 314
+        },
+        {
+            "key": "down",
+            "from": 314,
+            "to": 315
+        },
+        {
+            "key": "right",
+            "from": 315,
+            "to": 316
+        },
+        {
+            "key": "left",
+            "from": 316,
+            "to": 317
+        },
+        {
+            "key": "primary",
+            "from": 331,
+            "to": 332
+        },
+        {
+            "key": "down",
+            "from": 331,
+            "to": 334
+        },
+        {
+            "key": "right",
+            "from": 331,
+            "to": 360
+        },
+        {
+            "key": "primary",
+            "from": 333,
+            "to": 334
+        },
+        {
+            "key": "up",
+            "from": 334,
+            "to": 335
+        },
+        {
+            "key": "down",
+            "from": 335,
+            "to": 340
+        },
+        {
+            "key": "primary",
+            "from": 339,
+            "to": 340
+        },
+        {
+            "key": "up",
+            "from": 340,
+            "to": 342
+        },
+        {
+            "key": "down",
+            "from": 342,
+            "to": 346
+        },
+        {
+            "key": "primary",
+            "from": 345,
+            "to": 346
+        },
+        {
+            "key": "up",
+            "from": 347,
+            "to": 352
+        },
+        {
+            "key": "primary",
+            "from": 351,
+            "to": 352
+        },
+        {
+            "key": "down",
+            "from": 352,
+            "to": 354
+        },
+        {
+            "key": "primary",
+            "from": 353,
+            "to": 354
+        },
+        {
+            "key": "up",
+            "from": 354,
+            "to": 355
+        },
+        {
+            "key": "down",
+            "from": 355,
+            "to": 356
+        },
+        {
+            "key": "up",
+            "from": 356,
+            "to": 357
+        },
+        {
+            "key": "down",
+            "from": 357,
+            "to": 358
+        },
+        {
+            "key": "up",
+            "from": 358,
+            "to": 359
+        },
+        {
+            "key": "down",
+            "from": 359,
+            "to": 360
+        },
+        {
+            "key": "primary",
+            "from": 359,
+            "to": 360
+        },
+        {
+            "key": "left",
+            "from": 360,
+            "to": 361
+        },
+        {
+            "key": "up",
+            "from": 360,
+            "to": 361
+        },
+        {
+            "key": "right",
+            "from": 361,
+            "to": 366
+        },
+        {
+            "key": "primary",
+            "from": 365,
+            "to": 366
+        },
+        {
+            "key": "left",
+            "from": 366,
+            "to": 367
+        },
+        {
+            "key": "right",
+            "from": 367,
+            "to": 470
+        }
+    ],
+    "name": "f1c-l18-lock-removal",
+    "description": "⛓⛓⛓ SEEDLING FIDELITY F1c D2 — L18's SPINNER KILL LOCK, ASKED OF THE GAME. `r9-solve-18`'s staging and keys through t320 (the last body, `spinner@112,48`, is stamped removed by the model's ledger on t317), then the segment's own walk to the teleporter (its keys from t418) started at t330, then `right`. The player is against `lock@144,112`'s west face from t374, before every reading. The game crosses to L19 on t444: {18,0}@416 is GAME-SOURCED, and the model crosses with it. The model's own readings, the v9 spelling 317 + 100 = 417 and the spinner arm's 317 + 101 = 418, cross on t445 and t446: the spinner ledger stamps the removal one step after the chaser convention does. Authored by scripts/procgen/plan-seedling-f1c-l18-lock.mjs.",
+    "note": ""
+}
