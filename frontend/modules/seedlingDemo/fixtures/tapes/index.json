@@ -59,6 +59,13 @@
       "noHazards": []
     },
     {
+      "file": "f4-l8-sandtraps.json",
+      "tickCount": 827,
+      "bootLevel": 8,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "friction-stop.json",
       "tickCount": 30,
       "bootLevel": 0,
