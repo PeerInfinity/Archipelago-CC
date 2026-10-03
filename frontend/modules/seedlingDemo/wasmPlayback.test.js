@@ -17,6 +17,7 @@ import {
     exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, keysHeldAtReset, shippedTape, wasmGoalRefusal,
     arrivalHoldBlocker, endsHeld, liveDeclarations, primarySplitRefusal, shadowMismatch,
     ADOPT_CLAUSES, INERT_MOBILES, adoptionRefusal, inertMobilesRefusal, talkCircleGuard, talkCirclesAt,
+    newGameBeginEntry, newGameCeremony, TUTORIAL_DISMISS_KEY,
 } from './wasmPlayback.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
 import { parseTape } from './tapeFormat.js';
@@ -321,7 +322,7 @@ describe('⛓ W8b — level 0\'s inert NPC Mobiles (introchar, statue2) are ADMI
     const STATUS = { level: 0, game_time: 400, x: 80, y: 128, inventory_slots: [], hits: 0, hits_timer: 0, drown_timer: 0, frozen_timer: 0,
         receive_input: true, menu: false, cutscene: [] };
     const refusal = (rows, o = {}) => adoptionRefusal({ beginEntry: BEGIN, status: { ...STATUS, ...o.status }, mobiles: { mobiles: rows },
-        record: o.record ?? L0, shadow: o.shadow ?? SHADOW });
+        record: o.record ?? L0, shadow: o.shadow ?? SHADOW, state: { freezeObjects: false, ...o.state } });
     const clauseOf = (rows, o) => refusal(rows, o)?.clause ?? null;
 
     it('the record holds exactly the two admitted NPCs, and the inert clauses sit between MOBILES and TIMED', () => {
@@ -332,6 +333,15 @@ describe('⛓ W8b — level 0\'s inert NPC Mobiles (introchar, statue2) are ADMI
     });
     it('untouched: ADOPTED (no clause refuses)', () => {
         expect(refusal([STATUE, INTRO, PLAYER])).toBeNull();
+    });
+    it('⛓ W8c — clause FREEZE sits right after PLAYER-STATE', () => {
+        expect(ADOPT_CLAUSES.slice(ADOPT_CLAUSES.indexOf('player-state'), ADOPT_CLAUSES.indexOf('player-state') + 2)).toEqual(['player-state', 'freeze']);
+    });
+    it('⛓ W8c — clause FREEZE — a freeze no botStatus row shows (a Help, a dialogue) refuses, and so does a bridge that does not report it', () => {
+        expect(clauseOf([STATUE, INTRO, PLAYER], { state: { freezeObjects: true } })).toBe('freeze');
+        expect(refusal([STATUE, INTRO, PLAYER], { state: { freezeObjects: true } }).why).toMatch(/DEAD/);
+        expect(clauseOf([STATUE, INTRO, PLAYER], { state: { freezeObjects: undefined } })).toBe('freeze');
+        expect(refusal([STATUE, INTRO, PLAYER], { state: { freezeObjects: undefined } }).why).toMatch(/cannot be ruled out/);
     });
     it('MOBILES — a class that is not admitted (an Enemy beside the NPCs) still refuses', () => {
         expect(clauseOf([STATUE, INTRO, PLAYER, { cls: 'Enemies::Bob', x: 10, y: 10, vx: 0, vy: 0 }])).toBe('mobiles');
@@ -386,5 +396,30 @@ describe('⛓ W8b — talkCircleGuard: adopted inside a talk circle, no X until 
         const stay = Array(6).fill({ x: 168, y: 296 });
         expect(talkCircleGuard({ circles: CIRCLE, solution: Array(5).fill([]), expected: stay })).toEqual({ refusal: null, left: false });
         expect(talkCircleGuard({ circles: CIRCLE, solution: [[], [], [], [], ['primary']], expected: stay }).refusal).toMatch(/tick 4/);
+    });
+});
+
+describe('⛓ W8c — the new-game arm\'s cold start (seedling_playthrough): its −1 begin record, its ceremony, the FREEZE clause', () => {
+    // Measured live (plan §5.15): the host's level-set reset boots `new Game(-1, 16, 128)`; the record latches
+    // BEFORE `applyStart` resolves the level (`Game.as:741` vs `:832-840`).
+    const ARM = { 'begin.level': -1, 'begin.tick': 0, 'rng.gameplay': 98141226, 'rng.cosmetic': 0, 'fp.seed': 1861733589, 'save.time': 4803 };
+    const L0_STATUS = { level: 0, cutscene: [false, false, false, false], receive_input: true, menu: false };
+
+    it('the −1 record resolves to the set\'s start level when the game stands in it, every other field kept', () => {
+        expect(newGameBeginEntry(ARM, { status: L0_STATUS, startLevel: 0 })).toEqual({ ...ARM, 'begin.level': 0 });
+    });
+    it('…and only then: a real record, no start level, or a game standing elsewhere → null', () => {
+        expect(newGameBeginEntry({ ...ARM, 'begin.level': 0 }, { status: L0_STATUS, startLevel: 0 })).toBeNull();
+        expect(newGameBeginEntry(ARM, { status: L0_STATUS, startLevel: undefined })).toBeNull();
+        expect(newGameBeginEntry(ARM, { status: L0_STATUS, startLevel: -1 })).toBeNull();
+        expect(newGameBeginEntry(ARM, { status: { ...L0_STATUS, level: 13 }, startLevel: 0 })).toBeNull();
+        expect(newGameBeginEntry(null, { status: L0_STATUS, startLevel: 0 })).toBeNull();
+    });
+    it('the ceremony: the wind cutscene → wait; the arrow-key tutorial (a freeze, input accepted) → dismiss; else none', () => {
+        expect(newGameCeremony({ status: { ...L0_STATUS, cutscene: [true, false, false, false], receive_input: false }, state: { freezeObjects: true } })).toBe('cutscene');
+        expect(newGameCeremony({ status: L0_STATUS, state: { freezeObjects: true } })).toBe('tutorial');
+        expect(newGameCeremony({ status: { ...L0_STATUS, menu: true }, state: { freezeObjects: true } })).toBeNull();
+        expect(newGameCeremony({ status: L0_STATUS, state: { freezeObjects: false } })).toBeNull();
+        expect(TUTORIAL_DISMISS_KEY).toBe('right'); // `Help.as:23` keys[2] = RIGHT, UP, LEFT, DOWN
     });
 });

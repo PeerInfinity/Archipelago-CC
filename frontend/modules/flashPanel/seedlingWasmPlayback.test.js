@@ -66,6 +66,8 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
         botSeam() { g.calls.push('botSeam'); return JSON.stringify({ beginEntry: g.be, latched: false }); },
         botStatus() {
             g.calls.push('botStatus');
+            // ⛓ W8c — an unwatched room may script itself read by read (the new game's ceremony)
+            if (g.unwatched?.tick) g.unwatched.tick(g.unwatched);
             if (g.armed && g.tape?.tick_count === 0 && ++g.freezePolls > freezeLatchesAfter) {
                 g.armed = false; g.finished = true; g.held = !!g.tape.hold;
             }
@@ -79,7 +81,10 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
                 ...(g.pos ? { level: g.pos.level, x: g.pos.x, y: g.pos.y } : {}),
                 held: g.held, armed: g.armed, finished: g.finished, error: '' });
         },
-        readState() { return JSON.stringify({ ...arrival.state, pendingCheck: g.seq ? `${g.seq}|86|0|0` : '' }); },
+        // ⛓ W8c — `freezeObjects` (games/seedling.json): false unless the unwatched room says otherwise
+        readState() { return JSON.stringify({ freezeObjects: false, ...arrival.state, ...(g.unwatched?.state ?? {}), pendingCheck: g.seq ? `${g.seq}|86|0|0` : '' }); },
+        // ⛓ W8c — the active set's start level (the new-game arm resolves a −1 begin record to it)
+        botLevelSet() { return JSON.stringify({ start_level: g.unwatched?.startLevel ?? 0 }); },
         botLoadTape(json) { g.calls.push('botLoadTape'); g.tape = JSON.parse(json); g.tapes.push(g.tape); return 'ok'; },
         botStart() {
             g.calls.push('botStart');
@@ -153,7 +158,7 @@ function engineOver(arrival, opts = {}) {
         getWin: () => opts.win ?? null,
         teleport: (p) => { teleports.push(p); if (opts.land !== false) game.land(); return true; },
         getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
-        records: opts.records ?? RECORDS, generated: opts.generated ?? false, solveService: service, timers, now: () => (t += 1),
+        records: opts.records ?? RECORDS, generated: opts.generated ?? false, solveService: service, timers, now: opts.now ?? (() => (t += 1)),
         onNote: (n) => notes.push(n), onFailed: (r) => failures.push(r), onDone: (d) => dones.push(d),
     });
     return { engine, game, timers, teleports, windows, notes, failures, dones, service, swap };
@@ -827,5 +832,126 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         const e = adoptOver({}, { noGlue: true });
         expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
         expect(e.engine.stats).toMatchObject({ adopted: 0, adoptRefused: [], forcedBy: { 'cold-start': 1 } });
+    });
+
+    // ── ⛓ W8c — the new-game arm's cold start (`seedling_playthrough`, plan §5.15) ─────────────────────────
+    /** A game window whose canvas hands each dispatched key event to `onKey`. */
+    const fakeWin = (onKey) => {
+        class KeyboardEvent { constructor(type, o) { Object.assign(this, o, { type }); } }
+        const canvas = { dispatchEvent(ev) { onKey(ev); return true; } };
+        return { KeyboardEvent, document: { querySelector: (q) => (q === 'canvas' ? canvas : null) } };
+    };
+    /**
+     * The house standing in for the arm's room: begin.level −1, the set's start = the house; the cutscene runs for
+     * `cutsceneReads` botStatus reads, then the tutorial's freeze holds until an arrow (unless `stubborn`); every
+     * read is one frame (`Game.time` +1).
+     */
+    function newGameOver({ cutsceneReads = 4, stubborn = false, startLevel = HOUSE, endsCutscene = true, patchAfter = {}, opts = {} } = {}) {
+        const keys = [];
+        let reads = 0;
+        const u = unwatched({ begin: { 'begin.level': -1 }, startLevel, state: { freezeObjects: true },
+            patch: { cutscene: [true, false, false, false], receive_input: false },
+            tick: (w) => {
+                reads += 1;
+                w.elapsed += 1;
+                if (endsCutscene && reads === cutsceneReads) w.patch = { cutscene: [false, false, false, false], receive_input: true, ...patchAfter };
+            } });
+        const win = fakeWin((ev) => {
+            keys.push([ev.type, ev.key]);
+            if (!stubborn && ev.type === 'keydown' && ev.key === 'ArrowRight') u.state.freezeObjects = false;
+        });
+        const e = engineOver(A, { swap: CLEAR, win, ...opts, game: { unwatched: u } });
+        return { ...e, keys, u };
+    }
+
+    it('⛓ W8c — the new game\'s room: the −1 record resolved, the cutscene WAITED OUT, the tutorial dismissed by ONE arrow pair, then ADOPTED — 0 teleports', () => {
+        const e = newGameOver();
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        expect(e.engine.status().phase).toBe('ceremony');
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.keys).toEqual([['keydown', 'ArrowRight'], ['keyup', 'ArrowRight']]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [], continuations: 1, keyReleases: [] });
+        expect(e.engine.stats.dismissed).toEqual([expect.objectContaining({ level: HOUSE, key: 'right' })]);
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ level: HOUSE, began: 'cutscene', adopted: true })]);
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
+        // The adoption waited for the Help's fade: more than TUTORIAL_FADE_FRAMES game frames after the press.
+        expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ W8c — …the adoption is the room\'s staging under the RESOLVED level, and its recorded reads restage (W5\'s probe)', () => {
+        const e = newGameOver();
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.engine.room.level).toBe(HOUSE);
+        expect(e.engine.room.staging.boot.level).toBe(HOUSE);
+        // Recorded RESOLVED: `stagingFromWasmArrival` refuses a record whose level is not the game's.
+        expect(e.engine.arrivalReads.at(-1).seam.beginEntry).toMatchObject({ 'begin.level': HOUSE, 'save.time': e.u.elapsed > 0 ? expect.any(Number) : null });
+    });
+    it('⛓ W8c — THE WINDOW: the scene just ended and its Help is still QUEUED (no freeze yet) → not adopted; the Help surfaces a frame later and is dismissed', () => {
+        const keys = [];
+        let reads = 0;
+        const u = unwatched({ begin: { 'begin.level': -1 }, startLevel: HOUSE, state: { freezeObjects: false },
+            tick: (w) => { reads += 1; w.elapsed += 1; if (reads === 2) w.state.freezeObjects = true; } });
+        const win = fakeWin((ev) => { keys.push([ev.type, ev.key]); if (ev.type === 'keydown') u.state.freezeObjects = false; });
+        const e = engineOver(A, { swap: CLEAR, win, game: { unwatched: u } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run();
+        expect(keys).toEqual([['keydown', 'ArrowRight'], ['keyup', 'ArrowRight']]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {} });
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ began: 'none', adopted: true })]);
+        expect(e.engine.stats.dismissed).toHaveLength(1);
+        expect(e.failures).toEqual([]);
+    });
+    it('⛓ W8c — a new game\'s room long past its ceremony: quiet for CEREMONY_QUIET_FRAMES, then ADOPTED, nothing pressed', () => {
+        const keys = [];
+        const u = unwatched({ begin: { 'begin.level': -1 }, startLevel: HOUSE, state: { freezeObjects: false }, tick: (w) => { w.elapsed += 1; } });
+        const e = engineOver(A, { swap: CLEAR, win: fakeWin((ev) => keys.push(ev.type)), game: { unwatched: u } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run();
+        expect(keys).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, dismissed: [] });
+        expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ W8c — a Help an arrow does NOT dismiss (the freeze outlives the fade) → the named cold-start re-arrival, one press only', () => {
+        const e = newGameOver({ stubborn: true });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run(200);
+        expect(e.keys).toEqual([['keydown', 'ArrowRight'], ['keyup', 'ArrowRight']]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.teleports).toHaveLength(1);
+        expect(e.notes.some((n) => /outlived the arrow/.test(n ?? ''))).toBe(true);
+    });
+    it('⛓ W8c — a ceremony that never ends within CEREMONY_WAIT_MS → the named cold-start re-arrival', () => {
+        let t = 0;
+        const e = newGameOver({ endsCutscene: false, opts: { now: () => (t += 10000) } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-ceremony' });
+        e.timers.run(100);
+        expect(e.keys).toEqual([]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.notes.some((n) => /did not end within 180 s/.test(n ?? ''))).toBe(true);
+    });
+    it('⛓ W8c — after the ceremony the clauses still rule: a player who moved → refused POSITION, the named cold-start re-arrival', () => {
+        const e = newGameOver({ patchAfter: { x: 70 } });
+        e.engine.walkTo(CHEST);
+        e.timers.run(200);
+        expect(e.engine.stats.adopted).toBe(0);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual(['position']);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.engine.stats.ceremonies).toEqual([expect.objectContaining({ adopted: false })]);
+    });
+    it('⛓ W8c — a −1 record whose set starts ELSEWHERE is not resolved → refused BEGIN, no ceremony, no key', () => {
+        const e = newGameOver({ startLevel: 0 });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual(['begin']);
+        expect(e.keys).toEqual([]);
+        expect(e.engine.stats.ceremonies).toEqual([]);
+    });
+    it('⛓ W8c — clause FREEZE: an ordinary cold start under a freeze botStatus cannot show → refused, and NOTHING is pressed (only the arm\'s tutorial is)', () => {
+        const keys = [];
+        const e = engineOver(A, { swap: CLEAR, win: fakeWin((ev) => keys.push(ev.type)), game: { unwatched: unwatched({ state: { freezeObjects: true } }) } });
+        refusedBy(e, 'freeze');
+        expect(keys).toEqual([]);
     });
 });

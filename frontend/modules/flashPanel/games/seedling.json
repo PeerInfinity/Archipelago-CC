@@ -21,6 +21,8 @@
 
   "$comment_w5_moonrock": "⛓ W5 (solver-walk, 2026-10-02): `beam` and `rockSet` are the Moonrock's two save statics (public static getters, Main.as:159-160 — VANILLA AS3, so every bridged build reads them). They are declared so a wasm arrival can STAGE level 0 (the overworld hub holds the moonrock, and botStatus carries neither): seedlingDemo/wasmArrival reads them off `readState`. BridgeGeneric takes ONE `configure` (a second answers `error:already configured`, measured), so they must be in this config, not a later one. INERT to the AP path: neither names a `locations[].property`, so the adapter's location detection never fires on them, and no binding reads them (pinned in flashBridgeAdapter.test.js). Declared BEFORE `level` like the M1 seams; the JS runtime page does not carry them across room boots and skips them (its valueOf answers undefined).",
 
+  "$comment_w8c_freeze": "⛓ W8c (solver-walk, 2026-10-03): `freezeObjects` is `Game.freezeObjects` (public static, Game.as:511 — VANILLA AS3). Declared so the wasm adoption can SEE a freeze botStatus does not carry: a `Help`, a dialogue, the new game's cutscene. seedling_playthrough's cold start ends its wind cutscene with `Help(2)` (\"press an arrow key\"), which holds the flag every frame; every tape frame is then DEAD (the bot's autoAdvance presses X), and the adoption's hold never latched with every other clause passing (measured: dead frames 7 → 201 in 15 s). seedlingDemo/wasmPlayback.adoptionRefusal's `freeze` clause reads it off `readState`. INERT to the AP path (no `locations[].property` names it, no binding reads it — pinned in flashBridgeAdapter.test.js); the JS runtime page cannot answer it and skips it, as for `beam`/`rockSet`.",
+
   "state_properties": [
     { "class": "main", "property": "hasSword",      "type": "boolean" },
     { "class": "main", "property": "hasDarkSword",   "type": "boolean" },
@@ -46,6 +48,7 @@
 
     { "class": "main", "property": "beam",            "type": "boolean" },
     { "class": "main", "property": "rockSet",         "type": "boolean" },
+    { "class": "game", "property": "freezeObjects",   "type": "boolean" },
 
     { "class": "main", "property": "level",           "type": "int" }
   ],

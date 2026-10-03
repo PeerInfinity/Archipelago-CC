@@ -120,10 +120,17 @@ export const endsHeld = (goal) => goal?.kind === 'location';
  *     false; the house build is 91 steps, level 0 1200). It cannot be a clause
  *     without the build's draw count, which nothing reads at a cold start; the
  *     input and item clauses stand in for it.
+ *   - ⛓ W8c — a FREEZE. `Game.freezeObjects` (a sticky static: a `Help`, a
+ *     dialogue, an open inventory, the wind cutscene) is in no `botStatus` row,
+ *     and while it is up every tape frame is DEAD — the adoption's own hold
+ *     never latches (measured: `seedling_playthrough`'s `Help(2)`, dead frames
+ *     7 → 201 in 15 s, every other clause passing). It is read off the bridge's
+ *     declared `freezeObjects` state property (`games/seedling.json`); a bridge
+ *     that does not report it cannot rule a freeze out, and refuses.
  * The clauses run in this order; the first that fails is the refusal.
  */
 export const ADOPT_CLAUSES = Object.freeze([
-    'begin', 'tape', 'fade', 'inventory', 'player-state',
+    'begin', 'tape', 'fade', 'inventory', 'player-state', 'freeze',
     'mobiles', 'inert-velocity', 'inert-position', 'inert-idle', 'inert-talk',
     'timed', 'velocity', 'position', 'facing',
 ]);
@@ -263,6 +270,67 @@ export function inertMobilesRefusal({ rows, record, shadow }) {
  */
 export const ADOPT_MIN_ELAPSED = 2 * LEGACY_FADE_PER_LOAD.max;
 
+/**
+ * ⛓ W8c — THE NEW-GAME ARM'S BEGIN RECORD (plan §5.15). The host's level-set
+ * reset (`seedlingRandomizerWiring.resetTargetFor`, mode `new-game-arm`: a set
+ * whose start names a level and no position) boots `new Game(-1, x, y)`, and
+ * `Game.begin()` latches `level` as its FIRST line (`Game.as:741`) — before
+ * `if (level < 0) LevelSet.active().applyStart(this)` (`Game.as:832-840`)
+ * resolves it. So the record of that build reads `begin.level −1`, and every
+ * other field of it is the build's own (taken at the same instant as any
+ * arrival's: the arm's `Music.playSound("Wind", 0)` draws nothing, index 0).
+ * `applyStart` writes exactly `level = startLevel`, which `botLevelSet()`'s
+ * `start_level` reads through the same getter.
+ *
+ * Returns the record with its level RESOLVED, or null when this is not that
+ * record (a non-negative level, no start level, or a game not standing in it).
+ * ⚠ The arm also rewrites `Game.time` (`dayLength / 2`) AFTER the latch, and
+ * its cutscene decays `timeRate`, so `save.time` is not this room's clock.
+ * The model reads the clock only through time-coupled puzzlements, which the
+ * `timed` clause already refuses — the same contract as every adoption's
+ * unknown N.
+ */
+export function newGameBeginEntry(beginEntry, { status, startLevel }) {
+    if (!beginEntry || !(beginEntry['begin.level'] < 0)) return null;
+    if (!Number.isInteger(startLevel) || startLevel < 0 || startLevel !== status?.level) return null;
+    return { ...beginEntry, 'begin.level': startLevel };
+}
+
+/**
+ * ⛓ W8c — the new-game arm's CEREMONY, in the room it built (`Game.as:832-1006`):
+ *   - `'cutscene'` — the wind scene (`cutscene[0]`): the player takes no input,
+ *     the dust draws the gameplay rng, `timeRate` decays to 0 and the text pages
+ *     itself. It ENDS ON ITS OWN (measured: `Game.time` 4800 → 5000.5, then
+ *     ~13 s more of text). Wait. (A re-arrival does not end it: `cutscene` is a
+ *     static, so the re-arrived world replays the scene — measured, the plan
+ *     diverges at tick 1, twice, and the goal fails.)
+ *   - `'tutorial'` — the scene ends with `add(new Help(2))` ("press an arrow
+ *     key"), which sets `freezeObjects` every frame until an ARROW is pressed
+ *     (`Help.as:23,92`). A tape cannot press it: the frames are dead, and the
+ *     bot's `autoAdvance` presses X. Measured: ONE arrow keydown+keyup pair
+ *     clears the freeze in a frame and leaves position, v, the stand animation
+ *     and the rng unchanged (the frozen player's `mobileUpdate` skips `input()`).
+ *   - null — neither: the room is adopted or refused by the clauses.
+ */
+export function newGameCeremony({ status, state }) {
+    if (status?.cutscene?.[0]) return 'cutscene';
+    if (state?.freezeObjects === true && status?.receive_input !== false && !status?.menu) return 'tutorial';
+    return null;
+}
+
+/**
+ * ⛓ W8c — game frames with NO ceremony before the new game's room is adopted. The scene's last frame
+ * clears the freeze and QUEUES `add(new Help(2))` (`Game.as:1005`; `World.add` lands at the frame's end),
+ * so the Help's freeze is raised one frame later: two frames of quiet rule a pending Help out.
+ */
+export const CEREMONY_QUIET_FRAMES = 2;
+/** ⛓ W8c — how long the engine waits out the new-game ceremony before the named re-arrival. */
+export const CEREMONY_WAIT_MS = 180000;
+/** ⛓ W8c — the key that dismisses `Help(2)` (any arrow, `Help.as:23`). */
+export const TUTORIAL_DISMISS_KEY = 'right';
+/** ⛓ W8c — game frames after the dismissal before the adoption: the Help fades at 0.1 alpha a frame (`Help.as:28`). */
+export const TUTORIAL_FADE_FRAMES = 12;
+
 /** `Player.sprites()`'s stand animation for a `direction` (0 right, 1 up, 2 left, 3 down; 0 and 2 share `side`). */
 export const standAnimFor = (direction) => (direction === 1 ? 'up' : direction === 3 ? 'down' : 'side');
 
@@ -275,8 +343,9 @@ export const standAnimFor = (direction) => (direction === 1 ? 'up' : direction =
  * @param {object} o.mobiles  `botMobiles()` parsed (`{mobiles: [...]}`)
  * @param {object|null} o.record  the room's map record (its `entities`)
  * @param {{x:number, y:number, direction:number}} o.shadow  the shadow's player after ONE idle tick
+ * @param {object} o.state    the bridge's `readState()` (⛓ W8c: `freezeObjects`)
  */
-export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow }) {
+export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow, state }) {
     const no = (clause, why) => ({ clause, why });
     if (!beginEntry || beginEntry['begin.level'] !== status?.level) {
         return no('begin', `no begin record for level ${status?.level} (got ${beginEntry ? beginEntry['begin.level'] : 'none'}) — `
@@ -294,6 +363,11 @@ export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow })
         || status.menu || (status.cutscene ?? []).some(Boolean)) {
         return no('player-state', `hits ${status.hits}, hits_timer ${status.hits_timer}, drown ${status.drown_timer}, frozen ${status.frozen_timer}, `
             + `receive_input ${status.receive_input}, menu ${status.menu}`);
+    }
+    if (state?.freezeObjects !== false) {
+        return no('freeze', state?.freezeObjects === true
+            ? 'Game.freezeObjects is set (a Help, a dialogue or an open inventory holds the room) — every tape frame would be DEAD'
+            : 'the bridge reports no Game.freezeObjects (games/seedling.json declares it) — a freeze cannot be ruled out');
     }
     const rows = mobiles?.mobiles ?? [];
     const player = rows.filter((r) => /Player/.test(r.cls ?? ''));

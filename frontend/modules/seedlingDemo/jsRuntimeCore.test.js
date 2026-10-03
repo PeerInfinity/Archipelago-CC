@@ -32,8 +32,10 @@ const BRIDGE_CONFIG = JSON.stringify({ classes: GAME_CONFIG.classes, state_prope
  * bridge contract's skip rule applies: an unanswerable property is left out of
  * `readState` and the reports — as BridgeGeneric does for a property a build
  * cannot read. Every other declared row is answered, in declaration order.
+ * ⛓ W8c — and `freezeObjects` (`Game.freezeObjects`, read by the wasm
+ * adoption's `freeze` clause): the JS page has no freeze to report either.
  */
-const JS_PAGE_SKIPS = ['beam', 'rockSet'];
+const JS_PAGE_SKIPS = ['beam', 'rockSet', 'freezeObjects'];
 const DECLARED = GAME_CONFIG.state_properties.map((p) => p.property).filter((p) => !JS_PAGE_SKIPS.includes(p));
 
 /** The assembled set the host delivers, and a runtime with it mounted and started. */

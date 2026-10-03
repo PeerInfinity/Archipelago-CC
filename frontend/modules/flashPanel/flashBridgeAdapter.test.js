@@ -158,6 +158,44 @@ describe('the M1 declarations in games/seedling.json', () => {
     });
 });
 
+/**
+ * The inertness harness (W5; ⛓ W8c reuses it): one game's reports through the adapter and the glue's two
+ * bindings, under `config` — `changes` after the baseline burst.
+ */
+function runInertness(config, changes, inventory) {
+    const pub = [];
+    const reports = [];
+    const a = new FlashBridgeAdapter({
+        config,
+        flashObjectId: `w5-${Math.random()}`,
+        stateManager: { getLatestStateSnapshot: () => ({ inventory }) },
+        dispatcher: { publish: (name, data) => pub.push({ name, location: data.locationName }) },
+        eventBus: { subscribe: () => () => {} },
+        log: () => {},
+    });
+    const region = new SeedlingRegionBinding({ now: () => 1_000_000 });
+    region.onLoadRegion({ region_id: OVERWORLD, world: worldFor(OVERWORLD), arrivedFrom: null });
+    const check = new SeedlingCheckBinding({ table: new Map(), placementKey: (l, t) => `${l}:${t}` });
+    const effects = [];
+    a.onStateReport = (p, v) => {
+        reports.push([p, v]);
+        effects.push(...region.onStateReport(p, v), ...check.onStateReport(p, v));
+    };
+    const declared = new Set(config.state_properties.map((p) => p.property));
+    // What BridgeGeneric would report: the baseline burst in declaration order,
+    // then the changes — a property the config does not declare is never reported.
+    const baseline = { hasSword: false, hasShield: false, level: 0, playerPositionX: 160, playerPositionY: 288,
+        pendingExit: '', pendingCheck: '', keyMask: 0, totemCount: 0, beam: false, rockSet: false, freezeObjects: false };
+    for (const p of config.state_properties) {
+        a._onStateChanged(p.property, baseline[p.property] ?? (p.type === 'int' ? 0 : false));
+    }
+    const queue0 = a._buildQueue();
+    for (const [p, v] of changes) if (declared.has(p)) a._onStateChanged(p, v);
+    const queue1 = a._buildQueue();
+    return { pub, reports, effects, queue0, queue1, gameState: { ...a.gameState },
+        bridge: JSON.parse(JSON.stringify({ state_properties: config.state_properties })) };
+}
+
 describe('⛓ W5 — `beam` / `rockSet` (the Moonrock statics) are INERT on the AP path', () => {
     /**
      * W5 declares the moonrock's two save statics in `games/seedling.json` so a
@@ -173,48 +211,15 @@ describe('⛓ W5 — `beam` / `rockSet` (the Moonrock statics) are INERT on the 
     const WITHOUT = { ...CONFIG, state_properties: CONFIG.state_properties.filter((p) => !NEW.includes(p.property)) };
     const INVENTORY = { 'Progressive Sword': 1, 'Red Key': 1 };
 
-    const run = (config) => {
-        const pub = [];
-        const reports = [];
-        const a = new FlashBridgeAdapter({
-            config,
-            flashObjectId: `w5-${Math.random()}`,
-            stateManager: { getLatestStateSnapshot: () => ({ inventory: INVENTORY }) },
-            dispatcher: { publish: (name, data) => pub.push({ name, location: data.locationName }) },
-            eventBus: { subscribe: () => () => {} },
-            log: () => {},
-        });
-        const region = new SeedlingRegionBinding({ now: () => 1_000_000 });
-        region.onLoadRegion({ region_id: OVERWORLD, world: worldFor(OVERWORLD), arrivedFrom: null });
-        const check = new SeedlingCheckBinding({ table: new Map(), placementKey: (l, t) => `${l}:${t}` });
-        const effects = [];
-        a.onStateReport = (p, v) => {
-            reports.push([p, v]);
-            effects.push(...region.onStateReport(p, v), ...check.onStateReport(p, v));
-        };
-        const declared = new Set(config.state_properties.map((p) => p.property));
-        // What BridgeGeneric would report: the baseline burst in declaration order,
-        // then the changes — a property the config does not declare is never reported.
-        const baseline = { hasSword: false, hasShield: false, level: 0, playerPositionX: 160, playerPositionY: 288,
-            pendingExit: '', pendingCheck: '', keyMask: 0, totemCount: 0, beam: false, rockSet: false };
-        for (const p of config.state_properties) {
-            a._onStateChanged(p.property, baseline[p.property] ?? (p.type === 'int' ? 0 : false));
-        }
-        const queue0 = a._buildQueue();
-        const changes = [
-            ['hasShield', true],                       // a player pickup → check + undo
-            ['beam', true],                            // Shield.removed() → Main.beam
-            ['pendingCheck', '1|0|5|0'],               // a clear (not a location here)
-            ['rockSet', true],                         // the moonrock lands
-            ['playerPositionX', 48], ['playerPositionY', 64],
-            ['level', 86],                             // a crossing
-            ['beam', false],
-        ];
-        for (const [p, v] of changes) if (declared.has(p)) a._onStateChanged(p, v);
-        const queue1 = a._buildQueue();
-        return { pub, reports, effects, queue0, queue1, gameState: { ...a.gameState },
-            bridge: JSON.parse(JSON.stringify({ state_properties: config.state_properties })) };
-    };
+    const run = (config) => runInertness(config, [
+        ['hasShield', true],                       // a player pickup → check + undo
+        ['beam', true],                            // Shield.removed() → Main.beam
+        ['pendingCheck', '1|0|5|0'],               // a clear (not a location here)
+        ['rockSet', true],                         // the moonrock lands
+        ['playerPositionX', 48], ['playerPositionY', 64],
+        ['level', 86],                             // a crossing
+        ['beam', false],
+    ], INVENTORY);
 
     it('the shipped config declares exactly the two new rows, BEFORE `level`, mapping to no location', () => {
         const names = CONFIG.state_properties.map((p) => p.property);
@@ -248,5 +253,53 @@ describe('⛓ W5 — `beam` / `rockSet` (the Moonrock statics) are INERT on the 
             ['beam', true], ['rockSet', true], ['beam', false]]);
         const strip = (g) => Object.fromEntries(Object.entries(g).filter(([k]) => !NEW.includes(k)));
         expect(strip(w.gameState)).toEqual(wo.gameState);
+    });
+});
+
+describe('⛓ W8c — `freezeObjects` (the Game static a Help / a dialogue / the cutscene sets) is INERT on the AP path', () => {
+    /**
+     * W8c declares `Game.freezeObjects` so the wasm adoption can SEE a freeze no
+     * botStatus row carries (`wasmPlayback.adoptionRefusal`'s `freeze` clause):
+     * the arrow-key tutorial `Help(2)` after the new game's cutscene left every
+     * tape frame dead with every other clause passing (plan §5.15). Same
+     * proof as W5's two rows: WITH vs WITHOUT it, the same checks, undos, writes
+     * and binding effects.
+     */
+    const NEW = ['freezeObjects'];
+    const WITHOUT = { ...CONFIG, state_properties: CONFIG.state_properties.filter((p) => !NEW.includes(p.property)) };
+    const run = (config) => runInertness(config, [
+        ['freezeObjects', true],                   // a Help comes up
+        ['hasShield', true],                       // a player pickup → check + undo
+        ['freezeObjects', false],                  // dismissed
+        ['pendingCheck', '1|0|5|0'],
+        ['playerPositionX', 48], ['playerPositionY', 64],
+        ['level', 86],                             // a crossing
+        ['freezeObjects', true],                   // a dialogue in the next room
+    ], { 'Progressive Sword': 1, 'Red Key': 1 });
+
+    it('the shipped config declares it once, on the Game class, BEFORE `level`, mapping to no location', () => {
+        const names = CONFIG.state_properties.map((p) => p.property);
+        expect(names.filter((n) => n === 'freezeObjects')).toHaveLength(1);
+        expect(names.indexOf('freezeObjects')).toBeLessThan(names.indexOf('level'));
+        expect(CONFIG.state_properties.find((p) => p.property === 'freezeObjects')).toEqual({ class: 'game', property: 'freezeObjects', type: 'boolean' });
+        expect(CONFIG.locations.some((l) => l.property === 'freezeObjects')).toBe(false);
+        expect(adapterFor().propertyToLocationFlash).not.toHaveProperty('freezeObjects');
+    });
+    it('WITH vs WITHOUT it: the same checks, undos, writes and binding effects', () => {
+        const w = run(CONFIG);
+        const wo = run(WITHOUT);
+        expect(w.pub).toEqual(wo.pub);
+        expect(w.pub.map((p) => p.name)).toEqual(['user:locationCheck']);
+        expect(w.queue0).toEqual(wo.queue0);
+        expect(w.queue1).toEqual(wo.queue1);
+        expect(w.effects).toEqual(wo.effects);
+        expect(w.effects.length).toBeGreaterThan(0);
+    });
+    it('the reports differ by EXACTLY its rows (the binding hook sees them; nothing acts on them)', () => {
+        const w = run(CONFIG);
+        const wo = run(WITHOUT);
+        expect(w.reports.filter(([p]) => !NEW.includes(p))).toEqual(wo.reports);
+        expect(w.reports.filter(([p]) => NEW.includes(p))).toEqual([['freezeObjects', false], ['freezeObjects', true],
+            ['freezeObjects', false], ['freezeObjects', true]]);
     });
 });

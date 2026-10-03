@@ -49,6 +49,13 @@
  * "its arrival + N idle ticks" (`wasmPlayback.adoptionRefusal`'s clauses + the
  * glue query): held where it stands, the goal a continuation from the shadow
  * "arrival + 1 idle tick". Any refusal → the named `cold-start` re-arrival.
+ * ⛓ W8c — a NEW GAME's room (the host's level-set reset boots the game's
+ * new-game arm, whose begin record reads level −1: `newGameBeginEntry`
+ * resolves it to the set's start level) is adopted too, AFTER its ceremony:
+ * the wind cutscene is waited out (a re-arrival would replay it), the
+ * arrow-key tutorial it ends with is dismissed by one arrow pair
+ * (`awaitCeremony`), and a `freeze` no `botStatus` row shows refuses any
+ * adoption (`readState().freezeObjects`).
  * ⛓ W4 — ARRIVAL COMPOSITES. A PIT exit maps to `reach-pit` (the fall is the
  * game's crossing). An arrival LATCHED ON its goal door is solved by the
  * worker's `step-off` producer: the walker's step-off ++ the solver's walk
@@ -78,9 +85,9 @@ import {
     arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest, isArrival, stagingFromWasmArrival,
 } from '../seedlingDemo/wasmArrival.js';
 import {
-    adoptionRefusal, arrivalHoldBlocker, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
-    firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, primarySplitRefusal, shadowMismatch,
-    talkCircleGuard, talkCirclesAt,
+    adoptionRefusal, arrivalHoldBlocker, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
+    firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
+    primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, TAPE_KEY_RELEASES, wasmGoalRefusal,
 } from '../seedlingDemo/wasmPlayback.js';
 import { LOAD_BUDGET_MS, replayTape, SOLVER_BUDGET_MS } from '../seedlingDemo/jsRuntimeSolver.js';
@@ -95,6 +102,8 @@ export const ARRIVAL_WAIT_MS = 15000;
 export const QUEUE_WAIT_MS = 60000;
 /** Solve poll, drain poll, and the `finished` read's cadence once every planned tick drained. */
 export const SOLVE_POLL_MS = 20;
+/** ⛓ W8c — the new-game ceremony's poll (`awaitCeremony`). */
+export const CEREMONY_POLL_MS = 100;
 export const DRAIN_MS = 100;
 export const STATUS_MS = 500;
 
@@ -135,7 +144,10 @@ export function createWasmPlayback({
      */
     const glueQuery = holds && typeof getSwapState === 'function';
 
-    /** idle | await-arrival | ⛓ W8 adopting (the adoption's freeze latching) | solving | playing | held (⛓ W7: our tape holds a room, no goal) */
+    /**
+     * idle | await-arrival | ⛓ W8 adopting (the adoption's freeze latching) | ⛓ W8c ceremony (the new-game arm's
+     * cutscene / tutorial, waited out before the adoption) | solving | playing | held (⛓ W7: our tape holds a room, no goal)
+     */
     let phase = 'idle';
     let goal = null;
     let queued = null;
@@ -174,7 +186,9 @@ export function createWasmPlayback({
         // ⛓ W7 — why each forced re-arrival was spent, the held arrivals, the continuations, the glue query's refusals
         forcedBy: {}, held: 0, continuations: 0, fallbacks: [], heldChecks: [], holdBlocked: [], releasedForSwap: 0,
         // ⛓ W8 — cold starts adopted as they stand, and the clause each refused one failed
-        adopted: 0, adoptRefused: [] };
+        adopted: 0, adoptRefused: [],
+        // ⛓ W8c — the new-game arm's ceremonies waited out, and the tutorial Helps dismissed (one arrow pair each)
+        ceremonies: [], dismissed: [] };
     const history = [];
     /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
     const arrivalReads = [];
@@ -230,11 +244,16 @@ export function createWasmPlayback({
      * where the keydown is a no-op on a key Flash already holds.
      */
     function releaseKeys(names) {
+        if (pressPairs(names)) stats.keyReleases.push(names);
+    }
+
+    /** The keydown + keyup pairs `releaseKeys` describes; false when there is no canvas to dispatch on. */
+    function pressPairs(names) {
         let win = null;
         try { win = getWin?.() ?? null; } catch { win = null; }
         const canvas = win?.document?.querySelector?.('canvas') ?? null;
         const Ctor = win?.KeyboardEvent;
-        if (!canvas || typeof Ctor !== 'function') return;
+        if (!canvas || typeof Ctor !== 'function') return false;
         for (const k of TAPE_KEY_RELEASES.filter((x) => names.includes(x.name))) {
             for (const type of ['keydown', 'keyup']) {
                 try {
@@ -243,7 +262,7 @@ export function createWasmPlayback({
                 } catch { /* the page is gone */ }
             }
         }
-        stats.keyReleases.push(names);
+        return true;
     }
 
     function reset() {
@@ -335,6 +354,7 @@ export function createWasmPlayback({
             // ⛓ W8 — the cold start: ADOPT the unwatched room when it provably is "its arrival + idle ticks".
             const adopted = holds && glueQuery && !room ? adoptLive(g) : null;
             if (adopted === true) return { ok: true, action: 'adopt' };
+            if (adopted && typeof adopted === 'object') { awaitCeremony(adopted); return { ok: true, action: 'await-ceremony' }; }
             reArrive(`re-entering level ${g.level} to solve from an arrival (${FALLBACK_POLICY}: the cold start — the room ran `
                 + `before the bot drove${adopted ? `, and it cannot be adopted: ${adopted}` : ', so no arrival staging of it exists'})`, 'cold-start');
         } else {
@@ -359,14 +379,20 @@ export function createWasmPlayback({
      * must rule out a redirect in flight, as for a held arrival.
      * Returns true (adopted, or failed by name) or the refusal, `clause: why`.
      */
-    function adoptLive(g) {
-        const se = seam();
-        const be = se.beginEntry ?? null;
+    function adoptLive(g, { ceremonyOver = false } = {}) {
+        const arrived = seam();
         const st = status();
         const state = readState();
         const record = records.get(g.level) ?? null;
         const refused = (clause, why) => { stats.adoptRefused.push({ level: g.level, clause, why }); return `${clause}: ${why}`; };
         if (!st) return refused('begin', 'botStatus answered nothing');
+        // ⛓ W8c — the new-game arm's record reads begin.level −1: resolved to the set's start level
+        // (`newGameBeginEntry`), and its ceremony is waited out (`awaitCeremony`) before any clause is asked.
+        const newGame = newGameBeginEntry(arrived.beginEntry ?? null, { status: st, startLevel: J(game()?.botLevelSet?.())?.start_level });
+        const se = newGame ? { ...arrived, beginEntry: newGame } : arrived;
+        const be = se.beginEntry ?? null;
+        // Always through `awaitCeremony`, even when none shows now: the scene's last frame queues the tutorial's Help.
+        if (newGame && !ceremonyOver) return { ceremony: newGameCeremony({ status: st, state }), begin: arrived.beginEntry };
         let staging = null;
         let shadow = null;
         if (be && be['begin.level'] === st.level) {
@@ -377,10 +403,11 @@ export function createWasmPlayback({
             } catch (err) { return refused('staging', String(err?.message ?? err).split('\n')[0]); }
         }
         const mobiles = J(game()?.botMobiles?.());
-        const r = adoptionRefusal({ beginEntry: be, status: st, mobiles, record, shadow });
+        const r = adoptionRefusal({ beginEntry: be, status: st, mobiles, record, shadow, state });
         if (r) return refused(r.clause, r.why);
         const sw = swapState();
-        const blocked = sw ? arrivalHoldBlocker(sw, be) : 'the glue answered no swap state (a redirect cannot be ruled out)';
+        // The glue stamps pushes with the record AS LATCHED (⛓ W8c: the arm's, unresolved).
+        const blocked = sw ? arrivalHoldBlocker(sw, arrived.beginEntry ?? null) : 'the glue answered no swap state (a redirect cannot be ruled out)';
         if (blocked) return refused('glue', blocked);
         let freeze;
         try { freeze = shippedTape({ staging, keys: [], hold: true, name: `wasm-adopt-${g.level}` }); } catch (err) { return refused('tape', err.message); }
@@ -395,8 +422,8 @@ export function createWasmPlayback({
         arrivalReads.push({ seam: se, status: st, state });
         if (arrivalReads.length > 8) arrivalReads.shift();
         stats.held += 1;
-        room = { level: g.level, staging, shipped: [[]], spawn: { x: state.playerPositionX, y: state.playerPositionY }, begin: be,
-            pushes: sw?.pushes ?? null, adopted: true,
+        room = { level: g.level, staging, shipped: [[]], spawn: { x: state.playerPositionX, y: state.playerPositionY }, begin: arrived.beginEntry,
+            pushes: sw?.pushes ?? null, adopted: true, newGame: !!newGame,
             // ⛓ W8b — talk circles the player was adopted in: their NPC's `talked` is unread (`talkCircleGuard`).
             talkCircles: talkCirclesAt(mobiles?.mobiles, shadow) };
         spawn = room.spawn;
@@ -407,6 +434,72 @@ export function createWasmPlayback({
         deadline = now() + ARRIVAL_WAIT_MS;
         schedule(adoptLatched, SOLVE_POLL_MS);
         return true;
+    }
+
+    /**
+     * ⛓ W8c — THE NEW-GAME ARM'S CEREMONY, waited out in the room it built
+     * (`wasmPlayback.newGameCeremony`): the wind cutscene ends on its own; the
+     * tutorial `Help(2)` that follows is dismissed with ONE arrow pair (no tape
+     * can: its frames are dead and `autoAdvance` presses X), then the Help's fade
+     * runs out and the room is adopted as it stands — the same clauses, the
+     * position / facing / velocity ones catching a press that moved anything.
+     * ⛔ Only after `CEREMONY_QUIET_FRAMES` game frames with NO ceremony: the
+     * scene's last frame clears the freeze and QUEUES `add(new Help(2))`, whose
+     * first update raises it again a frame later. Measured: a poll in that
+     * window adopted with the Help still pending, and only the plan's first
+     * key happening to be an arrow (it dismissed the Help on a live frame)
+     * kept the walk on plan — an idle first tick would have left every frame
+     * dead.
+     * Nothing here re-enters the room: a re-arrival REPLAYS the cutscene
+     * (`cutscene` is a static), so the fallback is only for a ceremony that
+     * never ends (`CEREMONY_WAIT_MS`), a Help an arrow did not dismiss, or a
+     * clause that still refuses.
+     */
+    function awaitCeremony(first) {
+        phase = 'ceremony';
+        deadline = now() + CEREMONY_WAIT_MS;
+        const c = { level: goal.level, began: first.ceremony ?? 'none', cutscene: first.ceremony === 'cutscene', dismissedAt: null, quietSince: null, adopted: false };
+        stats.ceremonies.push(c);
+        note(first.ceremony === 'cutscene' ? 'waiting out the new game\'s opening cutscene (no re-arrival: it would replay it)'
+            : first.ceremony === 'tutorial' ? 'dismissing the new game\'s arrow-key tutorial' : 'checking the new game\'s room is past its ceremony');
+        const step = () => {
+            if (phase !== 'ceremony') return;
+            const st = status();
+            const state = readState();
+            if (now() > deadline) {
+                reArrive(`re-entering level ${goal.level} (${FALLBACK_POLICY}: the new game's ceremony did not end within `
+                    + `${CEREMONY_WAIT_MS / 1000} s — ${newGameCeremony({ status: st, state }) ?? 'the Help never faded'})`, 'cold-start');
+                return;
+            }
+            const ceremony = newGameCeremony({ status: st, state });
+            if (ceremony) c.quietSince = null;
+            if (ceremony === 'cutscene') { c.cutscene = true; schedule(step, CEREMONY_POLL_MS); return; }
+            if (ceremony === 'tutorial') {
+                if (c.dismissedAt !== null) {
+                    if (st.game_time - c.dismissedAt > TUTORIAL_FADE_FRAMES) {
+                        reArrive(`re-entering level ${goal.level} (${FALLBACK_POLICY}: the freeze outlived the arrow that dismisses `
+                            + 'the new game\'s tutorial — it is not that Help)', 'cold-start');
+                        return;
+                    }
+                    schedule(step, CEREMONY_POLL_MS);
+                    return;
+                }
+                if (!pressPairs([TUTORIAL_DISMISS_KEY])) { reArrive(`re-entering level ${goal.level} (${FALLBACK_POLICY}: no canvas to dismiss the tutorial on)`, 'cold-start'); return; }
+                c.dismissedAt = st.game_time;
+                stats.dismissed.push({ level: goal.level, key: TUTORIAL_DISMISS_KEY, gameTime: st.game_time });
+                schedule(step, CEREMONY_POLL_MS);
+                return;
+            }
+            // No ceremony shows: it must stay so for CEREMONY_QUIET_FRAMES (a queued Help surfaces), and a dismissed Help must fade out.
+            if (c.quietSince === null) c.quietSince = st.game_time;
+            if (st.game_time - c.quietSince < CEREMONY_QUIET_FRAMES
+                || (c.dismissedAt !== null && !(st.game_time - c.dismissedAt > TUTORIAL_FADE_FRAMES))) { schedule(step, CEREMONY_POLL_MS); return; }
+            const adopted = adoptLive(goal, { ceremonyOver: true });
+            if (adopted === true) { c.adopted = true; return; }
+            reArrive(`re-entering level ${goal.level} to solve from an arrival (${FALLBACK_POLICY}: the new game's room, after `
+                + `its ceremony, cannot be adopted: ${adopted})`, 'cold-start');
+        };
+        schedule(step, CEREMONY_POLL_MS);
     }
 
     /** ⛓ W8 — the adoption's freeze latched → the held check + the continuation solve; never latched → failed by name. */
@@ -960,7 +1053,8 @@ export function createWasmPlayback({
         get stats() {
             return { ...stats, hostStarts: [...stats.hostStarts], keyReleases: [...stats.keyReleases], history: [...history],
                 forcedBy: { ...stats.forcedBy }, fallbacks: [...stats.fallbacks], heldChecks: [...stats.heldChecks],
-                holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused] };
+                holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused],
+                ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed] };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },
