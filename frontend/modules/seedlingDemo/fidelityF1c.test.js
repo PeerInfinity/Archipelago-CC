@@ -21,15 +21,20 @@
  *        -> the chain-residue row red (HAMMER_SAFETY, "There is no step out.");
  *           the no-corner row and the remainder row stay green
  *
- * D2 (the spinner arm's declared spelling) is a GAME MEASUREMENT here, not a
- * fix: `f1c-l18-lock-removal` (recorded twice) crosses on the tick the model
- * reaches only under `{18,0}@416`, one tick before the v9 spelling of the
- * spinner ledger's own removal and two before the arm's `removal + 101`. The
- * fix (the ledger's stamp and the spelling) moves every generated spinner
- * kill-lock certification and the `r8-d2` cascade, which the brief did not
- * license, so it is a STOP with the measured moved set in the F1c report; the
- * D2 rows below pin the MEASUREMENT, and name the model's two readings as
- * refuted rather than treating either as right.
+ *   m2 (F5) the spinner ledger's old stamp (`removedAt = ticksCompleted + 1`)
+ *        -> the two F5 game-equality rows red (the v9 reading crosses t445
+ *           against the game's t444; the game's 416 against the ledger's 417);
+ *           the solver-spelling row and the game-sourced replay stay green
+ *
+ * D2 (the spinner arm's declared spelling) was a GAME MEASUREMENT at F1c:
+ * `f1c-l18-lock-removal` (recorded twice) crosses on the tick the model
+ * reaches only under `{18,0}@416`. F1c found two errors adding to two ticks —
+ * the spinner ledger stamped one step late (`removePending`), and the arm
+ * declared the pending-spelled `removal + 101` — and stopped at the fix,
+ * because it moved generated certifications and the `r8-d2` cascade.
+ * ⚖ The user (2026-10-03) licensed it; F5 landed both edits. The D2 rows now
+ * pin the model's reading AS the game's: the ledger's own removal spelled v9
+ * is the game-sourced 416, and the solver declares exactly that spelling.
  */
 import { describe, expect, it } from 'vitest';
 
@@ -172,16 +177,30 @@ describe('F1c D2 — L18\'s spinner kill lock, asked of the game (f1c-l18-lock-r
         expect(replay(WITNESS).transitions.map((x) => x.t)).toEqual(GAME_CROSSING);
     });
 
-    it('⛓⛓ the model\'s own readings are REFUTED: the v9 spelling of its ledger crosses one tick late, the arm\'s removal + 101 two', () => {
+    it('⛓⛓⛓ F5: the model\'s reading IS the game\'s — the ledger\'s own removal spelled v9 crosses when the game did, and the old readings cross one and two ticks late', () => {
         expect(removal.length).toBe(1);
         const v9 = replay(WITNESS, at(removal[0] + V9_FADE)).transitions.map((x) => x.t);
-        const arm = replay(WITNESS, at(removal[0] + V9_FADE + 1)).transitions.map((x) => x.t);
-        expect(v9).toEqual(GAME_CROSSING.map((t) => t + 1));
-        expect(arm).toEqual(GAME_CROSSING.map((t) => t + 2));
+        const oldStamp = replay(WITNESS, at(removal[0] + 1 + V9_FADE)).transitions.map((x) => x.t);
+        const oldArm = replay(WITNESS, at(removal[0] + 1 + V9_FADE + 1)).transitions.map((x) => x.t);
+        expect(v9).toEqual(GAME_CROSSING);
+        expect(oldStamp).toEqual(GAME_CROSSING.map((t) => t + 1));
+        expect(oldArm).toEqual(GAME_CROSSING.map((t) => t + 2));
     });
 
-    it('⛓ the gap is ONE ledger step: the game\'s tick is the spinner ledger\'s stamp − 1, spelled v9', () => {
-        expect(GAME_AT).toBe(removal[0] - 1 + V9_FADE);
+    it('⛓⛓ F5: the game-sourced tick IS the spinner ledger\'s stamp spelled v9 (the chaser convention, one rule)', () => {
+        expect(GAME_AT).toBe(removal[0] + V9_FADE);
     });
+
+    it('⛓⛓⛓ F5: the solver, asked the chain-window staging, DECLARES the game\'s spelling — its pending row is the ledger\'s removal + the v9 fade', async () => {
+        const r = await solveAt(0);
+        const p = r.persistence.find((c) => c.level === 18 && c.tag === 0);
+        const led = createRunForStaging({ ...STAGING, persistence: r.persistence, equips: [] },
+            atlasLevelSource());
+        for (const held of r.out.perTick) led.advance(held);
+        const rem = led.ledger('spinnerKillLockOpens').filter((o) => !o.nil && o.level === 18);
+        expect(rem.length).toBe(1);
+        expect(p.at).toBe(rem[0].t + V9_FADE);
+        expect(led.playerHits).toEqual([]);
+        expect(led.transitions.map((x) => x.to_level)).toEqual([TAPE.boot.level + 1]);
+    }, 300_000);
 });
-

@@ -8903,6 +8903,20 @@ export function createLevelRun({
      * open"*; this is the removal.
      */
     function assertSpinnerRemovalIsDeclared(sp) {
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY F5 (F1c D2's fix) — THE STAMP IS THE ALPHA-ZERO
+         * STEP, THE CHASER CONVENTION. `stepSpinner` keeps a body whose alpha
+         * reached zero for one more step (`removePending`, then `removed` at
+         * the top of the next step), and this runs on that next step — so
+         * `ticksCompleted + 1` here read the removal ONE TICK LATER than
+         * `stepChasersNow` stamps the same event. The alpha-zero step is the
+         * tick this one completes from: `ticksCompleted`.
+         * ⛓ MEASURED (`f1c-l18-lock-removal`, recorded twice): the game opens
+         * `lock@144,112` on the tick this stamp + the v9 fade names (416), and
+         * the model crosses on t444 = the game's. The old stamp + v9 is 417
+         * (t445) and the old arm's `removal + 101` was 418 (t446).
+         */
+        const removedAt = ticksCompleted;
         const census = world.combat?.enemies ?? null;
         const roster = (census ?? []).filter((e) => !e.removed).map((e) => ({ as3: e.as3 }));
         const spSt = spinnerStateFor(level);
@@ -8925,7 +8939,7 @@ export function createLevelRun({
         }
         if (led.nil) {
             spinnerKillLockOpens.push({
-                t: ticksCompleted + 1, level, id: sp.id, opens: [], nil: true, why: led.why,
+                t: removedAt, level, id: sp.id, opens: [], nil: true, why: led.why,
             });
             return;
         }
@@ -8962,18 +8976,18 @@ export function createLevelRun({
                 // ⛓ SLICE 4b hoisted the arithmetic to `killLockClearTick` so
                 // the chaser arm computes the SAME number rather than a second
                 // one; the value here is unchanged.
-                at: killLockClearTick(ticksCompleted + 1, led.opens),
+                at: killLockClearTick(removedAt, led.opens),
                 level,
                 flags: undeclared.map((o) => o.flag),
                 locks: undeclared.map((o) => `${o.tag}@${o.x},${o.y}`),
-                removedAt: ticksCompleted + 1,
+                removedAt,
                 id: sp.id,
                 cause: sp.deathCause ?? 'removed',
                 why: led.why,
             });
         }
         spinnerKillLockOpens.push({
-            t: ticksCompleted + 1,
+            t: removedAt,
             level,
             id: sp.id,
             opens: led.opens.map((o) => ({ flag: o.flag, at: `${o.tag}@${o.x},${o.y}` })),
