@@ -26,8 +26,15 @@
  *     the start sub-region's world, matching the committed payload tile for tile.
  *     Walking it is the in-app suite's job (seedlingAtlasMazeTests.js).
  *
- * Prereq for Phase D: dev server on :8000. Run:
- *   node scripts/procgen/check-seedling-atlas-maze.mjs [--no-browser]
+ * Prereq for Phase D: a REPO-ROOT dev server at `--host=` (default
+ * `http://localhost:8000`; a worktree passes its own port). Run:
+ *   node scripts/procgen/check-seedling-atlas-maze.mjs [--no-browser] [--host=http://localhost:8160]
+ *
+ * ⛓ Phase D TAKES THE BOX LOCK (`boxLock.js`), and only when it will drive the
+ * page: `--no-browser` is a headless run and must not queue behind a drive, and
+ * an IMPORT of this file (check-procgen-help's import door) neither drives nor
+ * takes — the same entry-point guard the other conditional takers carry. A
+ * host that does not answer is a FAILED check by name, not a stack trace.
  * @ci-box V3b adopted this script's NAME, not its RUN: it has never been priced on a runner, and `planCiShards` gives an unpriced arm a whole 600 s shard — adopting it is a costed decision, not a rename's side effect.
  *   ⇒ deleting this one line is how a later slice adopts it into CI.
  */
@@ -36,9 +43,19 @@ import fs from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 
-import { argvHelp } from './argvHelp.js';
+import { chromium } from 'playwright';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
+import { takeBoxLockOrExit } from './boxLock.js';
+import { LOCAL_HOST } from './gateRoster.js';
 
 argvHelp(import.meta.url);
+const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
+    ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
+const HOST = arg('host', LOCAL_HOST).replace(/\/+$/, '');
+const noBrowser = process.argv.includes('--no-browser');
+/** ⛓ Launched, not imported — an import door must not drive a page or take the box. */
+const launched = isEntryPoint(import.meta.url);
+if (launched && !noBrowser) takeBoxLockOrExit({ name: 'check-seedling-atlas-maze.mjs', kind: 'browser' });
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '../..');
 const ATLAS_FILE = path.join(repoRoot, 'frontend/modules/flashPanel/atlases/seedling.json');
@@ -47,7 +64,6 @@ const CONFIG_FILE = path.join(repoRoot, 'frontend/modules/flashPanel/games/seedl
 const PRESET_FILE = path.join(repoRoot, 'frontend/presets/seedling_atlas_maze/AP_1/AP_1_rules.json');
 const PRESET_ID = 'seedling_atlas_maze';
 
-const noBrowser = process.argv.includes('--no-browser');
 
 const load = (p) => import(pathToFileURL(path.join(repoRoot, p)));
 const { compileRegionAtlas, formatCompileReport } = await load('frontend/modules/procgenPipeline/regionAtlasCompiler.js');
@@ -181,18 +197,27 @@ check('the atlas validates', report.atlas_valid, report.atlas_errors.join('; '))
 for (const line of formatCompileReport(report)) console.log(`      ${line}`);
 
 // ── Phase D — it loads in the default mode ───────────────────────────────────
-if (noBrowser) {
-    console.log('\nSKIP: Phase D (--no-browser)');
+let served = false;
+if (noBrowser || !launched) {
+    console.log(`\nSKIP: Phase D (${noBrowser ? '--no-browser' : 'imported, not launched'})`);
 } else {
-    console.log('\nPhase D — the preset loads in the default (procgen) mode');
-    const { chromium } = await import('playwright');
+    console.log(`\nPhase D — the preset loads in the default (procgen) mode (${HOST})`);
+    /** ⛔ No server there is a FAILED check by name, before a browser launches.
+     *  ⛓ It counts only when it fails, so the standing row's PASS count is unmoved. */
+    served = await fetch(`${HOST}/frontend/`).then((r) => r.ok, () => false);
+    if (!served) {
+        check(`a dev server answers at ${HOST}`, false,
+            `nothing serves ${HOST}/frontend/ — start one there, or pass --host=`);
+    }
+}
+if (served) {
     const browser = await chromium.launch();
     const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
     const logs = [];
     page.on('console', (m) => logs.push(`[${m.type()}] ${m.text()}`));
     page.on('pageerror', (e) => { logs.push(`[pageerror] ${e.message}`); failures += 1; });
     try {
-        await page.goto(`http://localhost:8000/frontend/?game=${PRESET_ID}&seed=1`,
+        await page.goto(`${HOST}/frontend/?game=${PRESET_ID}&seed=1`,
             { waitUntil: 'domcontentloaded' });
         // Hand-rolled poll rather than waitForFunction: the predicate has to
         // dynamic-import the panel module, which THROWS until the app's own

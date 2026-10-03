@@ -48,7 +48,7 @@ export const INSTRUMENTS = frz({
             "id": "census"
         },
         {
-            "browser": 60,
+            "browser": 61,
             "count": 98,
             "id": "check"
         },
@@ -215,7 +215,7 @@ export const INSTRUMENTS = frz({
     ],
     "counts": {
         "blockStyle": 311,
-        "browser": 98,
+        "browser": 99,
         "cited": 147,
         "files": 322,
         "lineStyle": 11,
@@ -2792,14 +2792,22 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/check-seedling-atlas-location-play.mjs"
         },
         {
-            "argvHelpers": [],
-            "browser": false,
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
             "category": "check",
             "citedBy": [],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "check-seedling-atlas-maze.mjs",
             "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
                 {
                     "how": [
                         "includes"
@@ -2811,6 +2819,10 @@ export const INSTRUMENTS = frz({
                 {
                     "from": "argvHelp.js",
                     "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
                 }
             ],
             "oneLiner": "Phase-5b gate for the region atlas (CC/docs/plans/region-atlas-plan.md): the atlas's analyzed tile map, projected into the MAZE substrate, is a payload the runtime can actually play — and the committed preset still IS that projection.",
