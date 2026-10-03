@@ -143,7 +143,7 @@ function engineOver(arrival, opts = {}) {
     const swap = { state: opts.swap ?? null };
     const engine = createWasmPlayback({
         getGame: () => game,
-        getSwapState: () => swap.state,
+        getSwapState: opts.noGlue ? undefined : () => swap.state,
         getWin: () => opts.win ?? null,
         teleport: (p) => { teleports.push(p); if (opts.land !== false) game.land(); return true; },
         getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
@@ -556,6 +556,36 @@ describe('W7 — the arrival HOLD after an exit plan, and the glue query\'s thre
         const r = crossing((B1) => ({ marks: [], queued: 0, pushedOn: { ...B1 }, pushes: 1 }));
         expect(r.atB1.blocked.map((b) => b.why)).toEqual([expect.stringMatching(/pushed to the game after this arrival/)]);
         heldAfter(r);
+    });
+    it('an engine built WITHOUT the glue query holds no arrival between goals (a redirect cannot be ruled out); its location end is still held', () => {
+        const e = engineOver(A, { noGlue: true });
+        e.game.gameTimeFromBegin = true;
+        e.engine.walkTo(DOOR);
+        runUntil(e, () => e.dones.length === 1);
+        expect(e.engine.status()).toMatchObject({ phase: 'idle', arriving: false });
+        e.game.pos = null;
+        e.game.be = { ...A.seam.beginEntry, 'rng.gameplay': 3 };
+        e.timers.run(200);
+        expect(e.engine.stats.held).toBe(1); // the cold start only
+        expect(e.timers.pending).toBe(0); // no watch running
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.dones.length === 2);
+        expect(e.dones[1].heldEnd).toBe(true);
+    });
+    it('a glue that answers NOTHING never lets an arrival be held between goals', () => {
+        const r = (() => {
+            const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });
+            e.game.gameTimeFromBegin = true;
+            e.engine.walkTo(DOOR);
+            runUntil(e, () => e.dones.length === 1);
+            e.game.pos = null;
+            e.swap.state = null;
+            e.game.be = { ...A.seam.beginEntry, 'rng.gameplay': 4 };
+            e.timers.run(50);
+            return e;
+        })();
+        expect(r.engine.stats.held).toBe(1);
+        expect(r.engine.stats.holdBlocked.at(-1).why).toMatch(/answered no swap state/);
     });
     it('no redirect (the glue clear) → the door\'s own arrival IS held; the next goal there is solved from it with no teleport', () => {
         const e = engineOver(A, { swap: { marks: [], queued: 0, pushedOn: null, pushes: 0 } });

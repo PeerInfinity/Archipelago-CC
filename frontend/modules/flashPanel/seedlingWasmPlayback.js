@@ -113,7 +113,7 @@ const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
  * @param {number} [deps.budgetMs]
  */
 export function createWasmPlayback({
-    getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = () => null, records, generated = false,
+    getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, records, generated = false,
     solveService = null, timers = null,
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetMs = SOLVER_BUDGET_MS,
@@ -123,6 +123,12 @@ export function createWasmPlayback({
     const svc = () => { service ??= createWorkerSolveService(); return service; };
     /** ⛓ W7 — held rooms and continuations serve the SOLVER (vanilla) rooms; a generated set keeps W2's flow. */
     const holds = !generated;
+    /**
+     * ⛓ W7 — the arrival watch (holding the arrival an exit plan's crossing leads to) needs the GLUE QUERY:
+     * an engine built without `getSwapState` cannot know a redirect is in flight, so it holds no arrival
+     * between goals (W2's flow there); its held location ends and continuations are unaffected.
+     */
+    const glueQuery = holds && typeof getSwapState === 'function';
 
     /** idle | await-arrival | solving | playing | held (⛓ W7: our tape holds a room, no goal) */
     let phase = 'idle';
@@ -186,7 +192,7 @@ export function createWasmPlayback({
     const seam = () => J(game()?.botSeam?.()) ?? {};
     const status = () => J(game()?.botStatus?.());
     const seqNow = () => parsePendingCheck(readState().pendingCheck)?.seq ?? 0;
-    const swapState = () => { try { return getSwapState?.() ?? null; } catch { return null; } };
+    const swapState = () => { try { return glueQuery ? (getSwapState() ?? null) : null; } catch { return null; } };
 
     /**
      * Release whatever tape we started (hold or armed) — `botReset` (W0 i.9) —
@@ -296,7 +302,7 @@ export function createWasmPlayback({
         const heldLevel = holds && room && phase === 'held' ? room.level : null;
         let action = goalAction({ goal: g, liveLevel: live.level, playing: phase === 'playing', heldLevel });
         // ⛓ W7 — an exit plan's crossing is in flight: the goal waits for the HELD arrival, never a teleport back.
-        if (action === 'force-re-arrival' && holds && arriving) action = 'await-arrival';
+        if (action === 'force-re-arrival' && glueQuery && arriving) action = 'await-arrival';
         if (action === 'queue') {
             queued = { goal: g, since: now() };
             note(`queued behind the playing tape (${goal?.name ?? 'the last goal'})`);
@@ -313,7 +319,7 @@ export function createWasmPlayback({
             return { ok: true, action };
         }
         // A goal replacing one mid-solve (no held room): the freeze is ours, release it first.
-        const keepWatch = action === 'await-arrival' && holds && arriving;
+        const keepWatch = action === 'await-arrival' && glueQuery && arriving;
         release();
         reset();
         if (!keepWatch) stopWatch();
@@ -325,7 +331,7 @@ export function createWasmPlayback({
             phase = 'await-arrival';
             deadline = now() + ARRIVAL_WAIT_MS;
             note(`waiting to arrive in level ${g.level}`);
-            if (holds) startWatch();
+            if (glueQuery) startWatch();
             else {
                 baseline = seam().beginEntry ?? null;
                 schedule(sample, 0);
@@ -364,7 +370,8 @@ export function createWasmPlayback({
             baseline = se.beginEntry;
             if (se.beginEntry['begin.level'] === goal.level) {
                 // ⛓ W7 — the glue query: an arrival the glue is about to redirect is not the room to hold.
-                const blocked = holds ? arrivalHoldBlocker(swapState(), se.beginEntry) : null;
+                const sw = holds ? swapState() : null;
+                const blocked = sw ? arrivalHoldBlocker(sw, se.beginEntry) : null;
                 if (blocked) stats.holdBlocked.push({ level: goal.level, why: blocked });
                 else { arrive(se); return; }
             }
@@ -407,7 +414,8 @@ export function createWasmPlayback({
         if (isArrival(watchBaseline, se)) {
             watchBaseline = se.beginEntry;
             const level = se.beginEntry['begin.level'];
-            const blocked = arrivalHoldBlocker(swapState(), se.beginEntry);
+            const sw = swapState();
+            const blocked = sw ? arrivalHoldBlocker(sw, se.beginEntry) : 'the glue answered no swap state (a redirect cannot be ruled out)';
             if (blocked) stats.holdBlocked.push({ level, why: blocked });
             else if (!records.has(level)) stats.holdBlocked.push({ level, why: 'the vanilla map has no such level' });
             else if (holdArrival(se)) return;
@@ -714,7 +722,7 @@ export function createWasmPlayback({
         }
         note(`playing ${play.ticks} ticks (${(plan.verbs ?? []).join(',') || 'walk'})`);
         // ⛓ W7 — an exit plan's crossing: hold the arrival it leads to (the glue's redirect landing, if any).
-        if (holds && !hold) { arriving = true; startWatch(); }
+        if (glueQuery && !hold) { arriving = true; startWatch(); }
         schedule(watch, DRAIN_MS);
     }
 

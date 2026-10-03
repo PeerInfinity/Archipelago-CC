@@ -371,7 +371,10 @@ async function main() {
             }) : null;
             if (inj) console.log(`INFO: ${MODE} injections ${JSON.stringify(inj)}`);
             const hist = eng?.history ?? [];
-            const bracketed = (eng?.hostStarts?.length ?? 0) === 2 * hist.length && eng.hostStarts.every((h) => h.to >= h.from);
+            // ⛓ W7 — one hold per ARRIVAL + one tape per SHIP: a continuation ships from the held room with no freeze of
+            // its own, so the W2 count "2 per leg" became arrivals + ships (= 2 per leg while every leg had its own arrival).
+            const bracketed = (eng?.hostStarts?.length ?? 0) === (eng?.arrivals ?? 0) + (eng?.ships ?? 0)
+                && eng.hostStarts.every((h) => h.to >= h.from);
             const moves = await rp.glueMoves();
             const calls = await w(() => window.__w2.calls);
             console.log(`INFO: engine ${JSON.stringify(eng)}`);
@@ -419,7 +422,7 @@ async function main() {
                 check('P: nothing of ours left armed or held; the engine idle; the room is the player\'s',
                     !stP.armed && !stP.held && eng?.status?.state === 'idle' && stP.level === ROOM.level,
                     JSON.stringify({ armed: stP.armed, held: stP.held, engine: eng?.status?.state, level: stP.level }));
-                check('P: every host botStart bracketed by seq reads (freeze + plan per attempt)', bracketed, JSON.stringify(eng?.hostStarts));
+                check('P: every host botStart bracketed by seq reads (freeze + plan per attempt = arrivals + ships)', bracketed, JSON.stringify(eng?.hostStarts));
             } else {
             const errs = (end?.log ?? []).filter((l) => typeof l === 'string' && l.startsWith('error:'));
             check('B: the bot reached the end of the chest + door legs (status finished, or past the house) with no error: status',
@@ -449,7 +452,7 @@ async function main() {
                 JSON.stringify(doorLeg));
             check('B: neither leg left the plan inside the house (the W3 compare, recorded)',
                 !chestLeg?.divergence && !doorLeg?.divergence, JSON.stringify([chestLeg?.divergence, doorLeg?.divergence]));
-            check('B: every host botStart bracketed by seq reads (2 per attempt: freeze + plan)', bracketed,
+            check('B: every host botStart bracketed by seq reads (⛓ W7: one hold per arrival + one tape per ship)', bracketed,
                 JSON.stringify(eng?.hostStarts));
             if (MODE === 'R') {
                 // ── R: ONE injected divergence on the chest's first plan — recovered ──

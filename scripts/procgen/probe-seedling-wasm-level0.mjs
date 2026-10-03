@@ -106,7 +106,10 @@ async function serveLeg({ goal, budgetMs }) {
             }
         }
     }
-    if (end === 'timeout') engine.stop();
+    // ⛓ W7 — a LOCATION plan now ends HELD (the room stays the engine's between goals), and a held room blocks the
+    // next leg's host jump (W0 i.11). This witness serves one leg at a time, so it pauses the engine after every
+    // leg — the bot's ⏸ (`stop()` releases the hold).
+    if (end !== 'crossed') engine.stop();
     const stats = JSON.parse(JSON.stringify(engine.stats));
     const st = JSON.parse(s.wasm.getGame().botStatus());
     const live = JSON.parse(s.wasm.getGame().readState());
