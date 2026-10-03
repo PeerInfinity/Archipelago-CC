@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 34,
-            "count": 76,
+            "browser": 35,
+            "count": 77,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 311,
-        "browser": 99,
-        "cited": 147,
-        "files": 322,
+        "blockStyle": 312,
+        "browser": 100,
+        "cited": 148,
+        "files": 323,
         "lineStyle": 11,
-        "withDocblock": 322,
-        "withFlags": 242
+        "withDocblock": 323,
+        "withFlags": 243
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9770,6 +9770,49 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-v8-seam — does the GAME honour a tape v8 `seam` block, and does its latch report back what the block declared?",
             "path": "scripts/procgen/probe-seedling-v8-seam.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-wasm-adopt.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling solver-walk, slice W8 (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.13) — can the wasm Playback Bot ADOPT a room it never saw arrive (the COLD START), with no re-arrival?",
+            "path": "scripts/procgen/probe-seedling-wasm-adopt.mjs"
         },
         {
             "argvHelpers": [

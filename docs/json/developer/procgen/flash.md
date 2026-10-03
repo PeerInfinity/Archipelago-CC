@@ -477,14 +477,48 @@ The node rows are in `seedlingDemo/wasmPlayback.test.js` and `flashPanel/seedlin
 - **Every pause releases.** `stop()` releases the hold, because a held room ignores human input. That covers the bot's ⏸, its `finished` and `error:` stops, and the substrate change on a crossing.
 - **Generated rooms keep W2's flow** (the walker producer has no prefix form).
 
-On `seedling_atlas_location` the walk spends one forced re-arrival, the cold start. The chest's plan ends held, and the door is a continuation from it. That makes 2 world swaps, where W2 walked 3.
+On `seedling_atlas_location` W7's walk spent one forced re-arrival, the cold start. The chest's plan ends held, and the door is a continuation from it. That made 2 world swaps, where W2 walked 3 (W8 below adopts the cold start: 1).
 
 `scripts/procgen/probe-seedling-wasm-continuation.mjs` is the live witness (p4e, headless logic-only, under the box lock), each session on a fresh page:
 
 - **C.** §1.3's C rows through the engine's own pieces (`wasmContinuationLab.js`, imported by URL). These play on plan: the L6 re-solves at K 60, 150 and 200, the L4 rests at K 40, 80 and 120, and the L86 re-solve at K 10. The held game equals the shadow at every point. L4's re-solve diverges at t 41, and its seam-free composite (prefix ++ re-solve as one tape) diverges at K + 41 with the same rows. That names it model residue on the re-solved shove approach, not the seam.
-- **W.** The bot on `seedling_atlas_location`, with 0 forced re-arrivals besides the cold start. `--base` makes a report-only run against a server on another tree.
+- **W.** The bot on `seedling_atlas_location`, with 0 forced re-arrivals (W8 adopts the cold start). `--base` makes a report-only run against a server on another tree.
 - **A.** The bot on `seedling_atlas` (hub → house → chest). The house's first begin record is refused by the glue query, and the redirect's landing is held. The chest is solved from that held arrival.
 - **R.** The chest's plan ends held, and the room ignores ArrowLeft. Then the bot's pause releases it, and ArrowLeft moves the player.
+
+**Adopting the cold start (W8).** The cold start was W7's one remaining forced re-arrival: the bot's first goal finds a room that ran before it drove, and no staging was taken at its arrival. W8 adopts that room where it stands when the live game provably is "its arrival plus N idle stepped ticks". Then the engine holds it and serves the goal as a continuation from the shadow "arrival + 1 idle tick" (`room.shipped = [[]]`, the usual held check first). Measured live on p4e (the house cold start, plus L7, L9 and L13 left unwatched after a host jump): in a room with no `Mobile` but the player and no timed puzzlement, every N from 1 to 2000 gives the same shadow (minus the tick count) and the same plan, and each plan plays on plan. `wasmPlayback.adoptionRefusal` checks these clauses in order, and the first that fails is the refusal (`stats.adoptRefused`, `{clause, why}`):
+
+- **begin**: the begin record names the level `botStatus` reports;
+- **tape**: no tape is armed, holding or pending;
+- **fade**: more than `ADOPT_MIN_ELAPSED` game frames (two legacy fade bands) since the begin record, so the fade is over and at least one tick stepped;
+- **inventory**: `inventory_slots` is empty;
+- **player-state**: no hits, i-frames, drowning or freeze, input accepted, no menu or cutscene;
+- **mobiles**: `botMobiles` holds the player and nothing else;
+- **timed**: the room record holds no `combat.PUZZLEMENT_HAZARDS` type;
+- **velocity**: the player row's `vx` and `vy` are 0;
+- **position**: the player stands where the shadow does;
+- **facing**: the player row's stand animation is the shadow's (`standAnimFor(direction)`, `down-stand` at an arrival).
+
+The engine also asks the glue query (`glue`, as for a held arrival). An engine built without it adopts nothing. Any refusal falls back to the named `cold-start` re-arrival.
+
+What no readout sees, and why the clauses look this way:
+
+- **A person's keys are not logged outside an armed tape** (`Bot.as` `recordEdges` runs below `if (!armed) return`). Measured: a frame-exact right-then-left tap puts the player back on the spawn to the bit, with v = 0, no rng draw and unchanged persistence, yet turned (`side-stand`). Position catches a person who walked away; facing catches this one.
+- **Item state is hidden**: slash and spear timers, a cut `Grass`. So a player with anything to use is not adopted.
+- **The rng cannot be a clause.** "Live `rng.state` equals the begin record's `rng.gameplay`" is false at every arrival: with `split` false the build's draws land on the gameplay stream (the house build is 91 LFSR steps, level 0 is 1200), and nothing reads that count at a cold start.
+
+On `seedling_atlas_location` the walk now spends **0 forced re-arrivals and 1 world swap** (the door). `seedling_atlas` and `seedling_playthrough` start in level 0, which holds `introchar` and `statue2` (Mobiles), so their cold start still re-arrives. Of the committed arrival regions, 44 of 176 (30 of 113 levels) are no-mobile and untimed.
+
+`scripts/procgen/probe-seedling-wasm-adopt.mjs` is the measurement and the live witness (p4e, headless logic-only, under the box lock), each session on a fresh page. **H**, **P** and **R** measure through `wasmAdoptLab.js`, imported by URL, outside the engine:
+
+- **H**: the house, untouched;
+- **P**: the frame-exact person;
+- **R**: L7, L9 and L13 left unwatched.
+
+**W** and **K** go through the engine:
+
+- **W**: the bot walks the house with 0 forced re-arrivals in total;
+- **K**: real keys move the player first, the adoption is refused by name, and the cold-start re-arrival serves the walk.
 
 **Generated rooms (WG).** The generated instance is built with `wasm: true` and `wasmLevelSetOf` (the surface's `wasm.levelSet`, the set the generated arm assembled and delivered). What differs from the atlas rooms is below; everything else above (the arrival, the freeze, the shipped tape, the guard, the recovery) is the same code:
 
