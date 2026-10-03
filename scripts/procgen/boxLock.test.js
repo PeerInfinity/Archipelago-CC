@@ -442,7 +442,8 @@ describe('who takes the box', () => {
          * held-room / continuation witness, `probe-seedling-wasm-continuation.mjs`;
          * procgen-tooling-fixes the atlas maze gate, `check-seedling-atlas-maze.mjs`,
          * whose take guards on BOTH reasons: `--no-browser` and the import door;
-         * W8 the cold-start adoption probe + witness, `probe-seedling-wasm-adopt.mjs`.)
+         * W8 the cold-start adoption probe + witness, `probe-seedling-wasm-adopt.mjs`; fidelity F6
+         * its re-entry witness, `probe-seedling-f6-reentry.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -458,7 +459,7 @@ describe('who takes the box', () => {
             'probe-seedling-wasm-arrival-composites.mjs', 'probe-seedling-wasm-level0.mjs',
             'probe-seedling-f2-apitem.mjs', 'probe-seedling-f2-boundary.mjs',
             'probe-seedling-wasm-continuation.mjs', 'check-seedling-atlas-maze.mjs',
-            'probe-seedling-wasm-adopt.mjs'];
+            'probe-seedling-wasm-adopt.mjs', 'probe-seedling-f6-reentry.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

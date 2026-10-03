@@ -1,0 +1,96 @@
+{
+  "source": "probe-seedling-f6-reentry.mjs --record (seedling fidelity F6)",
+  "build": "seedling_bot_ap_p4e",
+  "arms": [
+    {
+      "arm": "MOONROCK-BEFORE",
+      "ticks": 1,
+      "cleared20": false,
+      "error": ""
+    },
+    {
+      "arm": "MOONROCK-TAKE",
+      "ticks": 2,
+      "cleared20": true,
+      "error": ""
+    },
+    {
+      "arm": "CONTROL-L17",
+      "tape": "f6-l17-reentry",
+      "dropped": {
+        "level": 17,
+        "tag": 29
+      },
+      "observations": 61,
+      "last": {
+        "level": 17,
+        "y": 31.358590534855008,
+        "x": 66.1991490246082,
+        "t": 60
+      },
+      "vsModel": {
+        "worst": 0,
+        "n": 61,
+        "at": -1
+      },
+      "vsWitness": {
+        "worst": 0,
+        "n": 61,
+        "at": -1
+      },
+      "error": ""
+    },
+    {
+      "arm": "CONTROL-L2",
+      "tape": "f6-l2-reentry",
+      "dropped": {
+        "level": 2,
+        "tag": 0
+      },
+      "observations": 121,
+      "last": {
+        "level": 0,
+        "y": 191.09999999999997,
+        "x": 264,
+        "t": 120
+      },
+      "vsModel": {
+        "worst": 0,
+        "n": 121,
+        "at": -1
+      },
+      "vsWitness": {
+        "worst": null,
+        "n": 121,
+        "at": 67
+      },
+      "error": ""
+    },
+    {
+      "arm": "CONTROL-L20",
+      "tape": "f6-l20-reentry",
+      "dropped": {
+        "level": 20,
+        "tag": 4
+      },
+      "observations": 241,
+      "last": {
+        "level": 20,
+        "y": 50.674147924831466,
+        "x": 45.99717603318636,
+        "t": 240
+      },
+      "vsModel": {
+        "worst": 0,
+        "n": 241,
+        "at": -1
+      },
+      "vsWitness": {
+        "worst": 32.254806301937734,
+        "n": 241,
+        "at": -1
+      },
+      "error": ""
+    }
+  ]
+}

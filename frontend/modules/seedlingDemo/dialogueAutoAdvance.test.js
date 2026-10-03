@@ -146,8 +146,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity F1: 198 — D1c's `f1-l5-lock-removal` and D2's `f1-l5-open-lock-bait`, inert.
         // ⛓ fidelity F1c: 200 — D1's `f1c-l18-phase42` and D2's `f1c-l18-lock-removal`, inert.
         // ⛓ Seedling fidelity F4: 201 — D1's `f4-l8-sandtraps`, inert.
-        expect(rows).toHaveLength(201);
-        expect(rows.length - parted.length).toBe(200);
+        // ⛓ fidelity F6: 204 — `f6-l17-reentry`, `f6-l2-reentry`, `f6-l20-reentry`, inert.
+        expect(rows).toHaveLength(204);
+        expect(rows.length - parted.length).toBe(203);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {
