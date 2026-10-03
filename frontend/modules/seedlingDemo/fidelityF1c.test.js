@@ -146,10 +146,19 @@ describe('F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase4
         expect(w.boot).toEqual(STAGING.boot);
     });
 
-    it('⛓⛓ the witness walks the committed window\'s keys: the solve depends on the residue, not the absolute clock', () => {
+    /**
+     * ⛓ F5: the window re-solved with the spinner ledger's fix (510 t,
+     * `{18,0}@450`), and the witness — game-recorded at F1c, declaring the
+     * F1c-era `@452` — was not re-cut (no licence covers a witness tape). The
+     * two walks are the same keys through the window's own declaration; after
+     * it the witness waits out its later one, two ticks longer.
+     */
+    it('⛓⛓ the witness walks the committed window\'s keys through the window\'s declared tick: the solve depends on the residue, not the absolute clock', () => {
         const w = loadTape(WITNESS);
-        expect(w.tick_count).toBe(TAPE.tick_count);
-        for (let t = 0; t < TAPE.tick_count; t += 1) {
+        const atOf = (tape) => tape.persistence.find((p) => p.level === 18 && p.tag === 0).at;
+        const windowAt = atOf(TAPE);
+        expect(atOf(w) - windowAt).toBe(w.tick_count - TAPE.tick_count);
+        for (let t = 0; t <= windowAt; t += 1) {
             expect([...heldKeysAt(w, t)].sort()).toEqual([...heldKeysAt(TAPE, t)].sort());
         }
     });
