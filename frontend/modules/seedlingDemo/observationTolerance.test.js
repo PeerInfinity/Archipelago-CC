@@ -95,7 +95,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ swim R4: 196 — D2's `r4-iceturret-bobs`.
         // ⛓ fidelity F1: 198 — D1c's `f1-l5-lock-removal` and D2's `f1-l5-open-lock-bait`.
         // ⛓ fidelity F1c: 200 — D1's `f1c-l18-phase42` and D2's `f1c-l18-lock-removal`.
-        expect(names.length).toBe(200);
+        // ⛓ Seedling fidelity F4: 201 — D1's `f4-l8-sandtraps`.
+        expect(names.length).toBe(201);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -139,7 +140,7 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(200);
+        expect(tally.swapped).toBe(201);
     }, 600_000);
 });
 
