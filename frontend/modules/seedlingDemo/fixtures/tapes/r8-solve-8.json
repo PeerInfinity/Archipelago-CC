@@ -17,18 +17,6 @@
             "level": 5,
             "tag": 0,
             "note": ""
-        },
-        {
-            "level": 8,
-            "tag": 0,
-            "note": "game-sourced by twoPassSolve: the GAME's own `persistence_cleared`, measured on r8-solve-8 at tick 246 by `solve-seedling-r8-tail.mjs --game`'s binary search over truncated probe tapes, and TRANSPORTED here by 0 because this walk is byte-identical to that one for 247 tick(s) — held set for held set, checked above",
-            "at": 246
-        },
-        {
-            "level": 8,
-            "tag": 1,
-            "note": "game-sourced by twoPassSolve: the GAME's own `persistence_cleared`, measured on r8-solve-8 at tick 645 by `solve-seedling-r8-tail.mjs --game`'s binary search over truncated probe tapes, and TRANSPORTED here by 0 because this walk is byte-identical to that one for 646 tick(s) — held set for held set, checked above",
-            "at": 645
         }
     ],
     "despawn": [],
@@ -210,23 +198,23 @@
         },
         {
             "key": "down",
-            "from": 247,
-            "to": 258
+            "from": 249,
+            "to": 260
         },
         {
             "key": "up",
-            "from": 258,
-            "to": 259
-        },
-        {
-            "key": "down",
-            "from": 259,
+            "from": 260,
             "to": 261
         },
         {
+            "key": "down",
+            "from": 261,
+            "to": 263
+        },
+        {
             "key": "up",
-            "from": 262,
-            "to": 264
+            "from": 264,
+            "to": 266
         },
         {
             "key": "right",
@@ -370,23 +358,23 @@
         },
         {
             "key": "down",
-            "from": 646,
-            "to": 657
-        },
-        {
-            "key": "up",
-            "from": 657,
-            "to": 658
-        },
-        {
-            "key": "down",
-            "from": 658,
+            "from": 649,
             "to": 660
         },
         {
             "key": "up",
+            "from": 660,
+            "to": 661
+        },
+        {
+            "key": "down",
             "from": 661,
             "to": 663
+        },
+        {
+            "key": "up",
+            "from": 664,
+            "to": 666
         },
         {
             "key": "right",
