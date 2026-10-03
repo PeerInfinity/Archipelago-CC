@@ -1660,6 +1660,9 @@ frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h670883da|1|0,rule,coun
 frontend/modules/seedlingDemo/wallFlyer.js|stepWallFlyer|h310413e7|0|0,rule,bound,,activeOffScreen = v.length > 0 (WallFlyer.as:71-75)
 frontend/modules/seedlingDemo/wallFlyer.js|hitWallFlyer|h64a52562|1|0,rule,magnitude,,Enemy.hit default damage d = 1
 frontend/modules/seedlingDemo/wallFlyer.js|hitWallFlyer|hdc3e5462|0|0,rule,bound,,Enemy.hit gate hitsTimer <= 0 || hitByDarkStuff (Enemy.as:147)
+frontend/modules/seedlingDemo/enemyDamage.js|STATIC_ARROW_DEATH|(module)|6,rule,count,,SandTrap die anim frames; endAnim removes the body (F4)
+frontend/modules/seedlingDemo/enemyDamage.js|STATIC_ARROW_DEATH|(module)|10,rule,magnitude,,SandTrap die anim rate (F4)
+frontend/modules/seedlingDemo/enemyDamage.js|createStaticBodyDamage|createStaticBodyDamage,rule,magnitude,,alpha starts at 1 (unread for an anim corpse)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,
