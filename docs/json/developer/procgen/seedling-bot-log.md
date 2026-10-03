@@ -12354,6 +12354,63 @@ re-deriving it moves the gate's band.
   stream can agree for hundreds of ticks while the room's bodies have
   diverged, so a declared tick is evidence only for what the stream crosses.
 
+### Seedling fidelity F2 — the apitem goal + the window-boundary release (2026-10-02)
+
+⚖ The user, 2026-10-02: the `apitem` goal kind is its own slice, it carries
+the lone-keyup measurement with it, and it runs alongside F1b. The report is
+`CC/docs/cloud-reports/seedling-fidelity-f2.md`.
+
+**D1 — an apitem is a third world for `collect-placement`.** A delivered set
+writes `<apitem>` into every randomized location. The solver had no answer
+for one: *"resolves to NOTHING"*. So on wasm every generated goal went through
+the J2 walker. The goal kind is not new. `resolveCollectStrategy` now
+resolves an APItem as strategy `apitem`. The solver walks to the box's centre
+with its own `walkTo`. The take is the game's contact rule
+(`solverBot.apItemTakenOnTick`): the box the previous tick left meets the
+`apItem` box, on a tick with no level change, no death and no ceremony. It is
+observed on every `run.advance` of the segment, so a take in passing counts
+too. `levelWorld` lists the room's apitems as `world.apItems`, and no list
+that steps a tick reads them. Over the solver's own keys, the JS page reports
+its check on the very tick the solver names: room 254, leaf 127, host 95. The
+swim room's apitem, across water, refuses by name, as the walker does.
+
+On the game (p4e, headless), the solver's tape cut at `takenAt + 1` ticks
+with `hold` clears the slot, and cut at `takenAt` it does not. Positions are
+0 px off over the whole cut. Recorded twice, identically
+(`fixtures/f2-apitem-oracle.json`, `probe-seedling-f2-apitem.mjs`).
+
+**D1b — the persistence response is `despawn`.** `APItem.check()` removes a
+cleared one, with `doActions = false`, on the first frame's sweep. Until now a
+staging that cleared an apitem's tag refused the build, so the JS arc lifted
+the clear out of the model's staging. Now it boots with no apitem, and the
+game's room holds none either (`botMobiles`; the uncleared control holds one,
+at the placement + 8).
+
+**D2 — the lone keyup at a window boundary releases nothing, because nothing
+is held.** Measured on the boundary the driver's own comment names:
+`r4-walk-1-sword` holds `up` 591..641 against `tick_count` 641. At the latch
+the game's edge echo reads `released [up]`, `held []`, and `up` has 7 presses
+and 7 releases. `Bot.update` dispatches a span's KEY_UP on its `to` tick, and
+for a span that runs to the end that is the finish tick, before the latch.
+The dispatch is AS3's own `FP.stage.dispatchEvent`, so the runtime's
+physical-key filter never sees it. Two seconds of free-running world with no
+release leave the player at (264,264). The real driver, headless, with and
+without its `releaseKeyCodes`, reads `moved_at_boundary false`, and window 1
+is byte-identical to its recording both ways. Control: a DOM keydown the
+runtime does see moves the player 4 px in 150 ms. Neither tool changes.
+R9 RR had already said this from the code; this is the first game
+measurement at a boundary.
+
+**Trap candidates**, for the catalogue to number:
+
+- a goal the solver cannot resolve, routed to a second producer and then
+  forgotten: the walker's tapes and the solver's are different walks (the
+  walker's tape takes the room's apitem in 220 ticks, the solver's in 255);
+- a "control" pin that asserts a refusal: removing the refusal it guards reds
+  it in another arc's file;
+- a comment's claim about held keys, copied into a driver as a remedy: the
+  remedy can be inert for years without anything failing.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
