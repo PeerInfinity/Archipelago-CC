@@ -436,7 +436,8 @@ describe('who takes the box', () => {
          * W1 its arrival → staging → solve sibling, `probe-seedling-wasm-arrival-solve.mjs`;
          * W2 the wasm PlaybackController's witness, `probe-seedling-wasm-playback.mjs`;
          * WG its generated-rooms sibling, `probe-seedling-wasm-generated-playback.mjs`;
-         * W4 the arrival-composites witness, `probe-seedling-wasm-arrival-composites.mjs`.)
+         * W4 the arrival-composites witness, `probe-seedling-wasm-arrival-composites.mjs`;
+         * W5 the level-0 (overworld hub) witness, `probe-seedling-wasm-level0.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -449,7 +450,7 @@ describe('who takes the box', () => {
             'check-concept-trial-play.mjs',
             'probe-seedling-wasm-host-tape.mjs', 'probe-seedling-wasm-arrival-solve.mjs',
             'probe-seedling-wasm-playback.mjs', 'probe-seedling-wasm-generated-playback.mjs',
-            'probe-seedling-wasm-arrival-composites.mjs'];
+            'probe-seedling-wasm-arrival-composites.mjs', 'probe-seedling-wasm-level0.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
