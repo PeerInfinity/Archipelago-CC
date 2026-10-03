@@ -15,8 +15,8 @@
  *       rests play ON PLAN; L4's re-solve DIVERGES and its composite diverges at the SAME tick (K + t), which
  *       names it as model residue on the re-solved shove approach, not the seam.
  *   W   the MAIN PATH on `seedling_atlas_location`: the Playback Bot opens the Starting House chest and leaves by
- *       its door. The chest is the COLD START (the house ran before the bot drove, so it is the ONE forced
- *       re-arrival, counted apart as `cold-start`). The chest plan ends HELD, and the door is a continuation from
+ *       its door. The chest is the COLD START (the house ran before the bot drove); ⛓ W8 ADOPTS it (no forced
+ *       re-arrival at all — `probe-seedling-wasm-adopt.mjs` is its own witness). The chest plan ends HELD, and the door is a continuation from
  *       the held end: 0 other forced re-arrivals, the held game == the shadow, 0 divergences, the crossing once,
  *       the room handed back when the bot finishes. World swaps are COUNTED (host `new Game` pushes + the game's
  *       own door swaps). `--base` = report-only (point `--host` at a server running the base tree; the counts
@@ -310,9 +310,18 @@ async function main() {
                     const chestChecks = apW.checks.filter((n) => n === CHEST).length - before.checks.filter((n) => n === CHEST).length;
                     check(`${S}: the chest checked EXACTLY ONCE`, chestChecks === 1 && apW.binding?.checks === 1, `${chestChecks}; binding ${JSON.stringify(apW.binding)}`);
                     const other = Object.entries(st.forcedBy ?? {}).filter(([k]) => k !== 'cold-start');
-                    check(`${S}: 0 forced re-arrivals on the main path — the ONE forced re-arrival is the cold start`,
-                        st.forced === 1 && (st.forcedBy?.['cold-start'] ?? 0) === 1 && other.length === 0 && (st.fallbacks ?? []).length === 0,
-                        JSON.stringify({ forced: st.forced, forcedBy: st.forcedBy, fallbacks: st.fallbacks }));
+                    if (S === 'W') {
+                        // ⛓ W8 — the house cold start is ADOPTED (no Mobile, nothing to use, untouched): 0 forced re-arrivals in total.
+                        check('W: 0 forced re-arrivals IN TOTAL — ⛓ W8 adopted the cold start (W7 spent one there)',
+                            st.forced === 0 && st.adopted === 1 && Object.keys(st.forcedBy ?? {}).length === 0 && (st.fallbacks ?? []).length === 0,
+                            JSON.stringify({ forced: st.forced, adopted: st.adopted, forcedBy: st.forcedBy, refused: st.adoptRefused, fallbacks: st.fallbacks }));
+                    } else {
+                        // Level 0 holds Mobiles (introchar, statue2): its cold start is not adopted (named), and re-arrives.
+                        check(`${S}: 0 forced re-arrivals on the main path — the ONE forced re-arrival is the cold start (level 0 is refused adoption by its Mobiles)`,
+                            st.forced === 1 && (st.forcedBy?.['cold-start'] ?? 0) === 1 && other.length === 0 && (st.fallbacks ?? []).length === 0
+                                && st.adoptRefused?.[0]?.clause === 'mobiles',
+                            JSON.stringify({ forced: st.forced, forcedBy: st.forcedBy, refused: st.adoptRefused, fallbacks: st.fallbacks }));
+                    }
                     check(`${S}: 0 divergences, 0 recoveries`, st.divergences === 0 && st.recoveries === 0,
                         JSON.stringify({ divergences: st.divergences, recoveries: st.recoveries }));
                     check(`${S}: the held game == the shadow at EVERY held point the engine solved from`,
@@ -324,12 +333,14 @@ async function main() {
                         const door = hist.find((h) => h.goal?.kind === 'exit');
                         const chest = hist.find((h) => h.goal?.kind === 'location' && h.outcome === 'done');
                         check('W: the chest plan ended HELD (the room stays the bot\'s between goals)', chest?.heldEnd === true, JSON.stringify(chest && legsOf([chest])));
-                        check('W: the door was a CONTINUATION from the held end (prefix = the chest plan\'s keys), solved after an exact held check',
-                            st.continuations === 1 && (st.heldChecks ?? []).length === 1 && st.heldChecks[0].shipped === chest?.ticks
-                                && !!door && (door.drained ?? 0) >= 1, JSON.stringify({ continuations: st.continuations, door: door && legsOf([door]) }));
+                        // ⛓ W8 — the chest is itself a continuation from the adopted "arrival + 1 idle tick", so the door's prefix is 1 + the chest's keys.
+                        check('W: the door was a CONTINUATION from the held end (prefix = the idle tick + the chest plan\'s keys), solved after an exact held check',
+                            st.continuations === 2 && (st.heldChecks ?? []).length === 2 && st.heldChecks[0].shipped === 1
+                                && st.heldChecks[1].shipped === 1 + chest?.ticks && !!door && (door.drained ?? 0) >= 1,
+                            JSON.stringify({ continuations: st.continuations, heldChecks: st.heldChecks, door: door && legsOf([door]) }));
                         check('W: the crossing out of the house reported ONCE', doors === 1, JSON.stringify(moves.map((m) => m.targetRegion)));
-                        check('W: world swaps = 2 (the cold start\'s new Game + the door) — base walks 3 (a second forced new Game before the door)',
-                            swaps.hostNewGame + doors === 2, `host ${swaps.hostNewGame} + doors ${doors}`);
+                        check('W: world swaps = 1 (the door) — ⛓ W8 adopted the cold start; W7 walked 2, W2 3',
+                            swaps.hostNewGame + doors === 1, `host ${swaps.hostNewGame} + doors ${doors}`);
                     } else {
                         const blocked = (st.holdBlocked ?? []).filter((b) => b.level === 86);
                         check('A: the house\'s FIRST begin record (the game\'s own door) was NOT held — the glue query saw its redirect in flight',
