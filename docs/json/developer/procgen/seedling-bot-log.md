@@ -12583,6 +12583,53 @@ windows were recorded on the game, and the model reproduces every one.
   re-record that moves a boot leaves the carried block stale until the
   zero-tick derivation runs again, and the stale block parses and replays.
 
+### Seedling fidelity F4 — the static body's arrow death (L8's sandtraps) (2026-10-03)
+
+⚖ The user, 2026-10-03: the solver must handle L8 with its sandtraps cleared
+or not, know which state it is in, and neither clear the save nor leave and
+re-enter the room. They chose to teach the model the sandtrap's death over a
+live-game oracle. The report is `CC/docs/cloud-reports/seedling-fidelity-f4.md`.
+
+**D1 — the game's rule.** `f4-l8-sandtraps` is the solver's own L8 solve,
+recorded twice (`plan-seedling-f4-l8-sandtraps.mjs`). Read off `botMobiles()`
+on every tick: an arrow is `Enemy.hit(5, p)`, so one damage and 30 i-frames.
+Only the body's own update runs the i-frames down, so the hit's own observation
+reads 29, and the volley that lands is the first after `hitsTimer` reaches 0:
+t164, t197, t230 on the trap's 11-tick cadence. `SandTrap.knockback` is empty.
+The third hit plays "die" (six frames at rate 10, 19 updates, the first on the
+killing tick), and `endAnim` removes the body on t248. `removed()` writes {8,0}
+on the same observation. `sandtrap@96,128` dies the same way: t564, t597, t630,
+gone with {8,1} on t648. Three hits, not one. The committed declarations are
+not the game's removal ticks: `r8-solve-8` says 246/645, and `r7-act2-full`
+says 2515/3067 for bodies the game removes on 2383/2905. Both tapes keep their
+declarations, and no player stream moves.
+
+**D2 — the model.** The arrow arm now runs `enemyHit` on a static body whose
+class `enemyDamage.STATIC_ARROW_DEATH` lists (SandTrap only). `levelRun` keeps
+the body's damage state (`staticBodyStates`), steps `hitUpdate` (behind
+`onScreen`) and the "die" graphic in the body's own slot, below the traps, and
+lands the removal at the top of the next tick. The body leaves the level record
+(the despawn path), and its tag is written through one of three channels: the
+declaration when the tape owns the slot, the scratch layer in a scratch run,
+or the next build's earned clears otherwise. Every sandtrap row on every
+sampled L8 tick of the three tapes is the game's
+(`fixtures/f4-sandtraps-oracle.json`, `fidelityF4.test.js`), and the
+differential now asserts each model death's tag in the game's own array. The
+JS arc's L8 arrival solves from all four boot states (827 / 650 / 509 / 294
+ticks, zero hits), and the uncleared solve is key for key the recorded witness.
+The §11.4 refusal stays for every other static class.
+
+**Trap candidates**, for the catalogue to number:
+
+- a mechanism's tick measured by truncation without a `hold`: the game runs on
+  past the truncated tape before the flag is read, so the "measured" tick is
+  early (246 for 248) or late (2515 for 2383), and nothing downstream can tell;
+- a guess at a hit count from an elapsed time ("88 ticks, so probably one
+  hit"): three hits on an 11-tick volley cadence behind 30 i-frames also fit;
+- a body's removal edited out of the level record while a later declaration
+  still clears its tag: the builder's orphan guard reads that as a clear
+  nobody reads.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
