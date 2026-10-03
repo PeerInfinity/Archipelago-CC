@@ -204,7 +204,7 @@ if (noBrowser || !launched) {
     console.log(`\nPhase D — the preset loads in the default (procgen) mode (${HOST})`);
     /** ⛔ No server there is a FAILED check by name, before a browser launches.
      *  ⛓ It counts only when it fails, so the standing row's PASS count is unmoved. */
-    served = await fetch(`${HOST}/frontend/`).then((r) => r.ok, () => false);
+    served = await fetch(`${HOST}/frontend/`, { method: 'HEAD' }).then((r) => r.ok, () => false);
     if (!served) {
         check(`a dev server answers at ${HOST}`, false,
             `nothing serves ${HOST}/frontend/ — start one there, or pass --host=`);
