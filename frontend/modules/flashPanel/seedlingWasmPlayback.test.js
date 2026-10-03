@@ -116,7 +116,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
  * through `perturb(rows, attempt)` (attempt 0 = the first solve), the W3
  * divergence injector.
  */
-function capturingService(game, perturb = (rows) => rows) {
+function capturingService(game, perturb = (rows) => rows, editPlan = null) {
     // ⛓ WG — the produce service: a solver request solves, a `producer: 'walker'` one walks.
     const inner = createInPlaceProduceService();
     const seen = [];
@@ -124,6 +124,7 @@ function capturingService(game, perturb = (rows) => rows) {
         seen,
         start(request) {
             const h = inner.start(request);
+            if (h.result.ok && editPlan) h.result.plan = editPlan(h.result.plan);
             seen.push({ request, result: h.result });
             if (h.result.ok) {
                 game.drainRows = perturb(h.result.plan.expected.map((r, t) => ({ t, level: r.level, x: r.x, y: r.y })),
@@ -143,7 +144,7 @@ function engineOver(arrival, opts = {}) {
     const notes = [];
     const failures = [];
     const dones = [];
-    const service = capturingService(game, opts.perturb);
+    const service = capturingService(game, opts.perturb, opts.editPlan);
     let t = 0;
     const swap = { state: opts.swap ?? null };
     const engine = createWasmPlayback({
@@ -791,6 +792,34 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.failures).toEqual([]);
         expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
         expect(e.dones).toHaveLength(1);
+    });
+    // ⛓ W8b — an admitted inert NPC (introchar) beside the house spawn: oel (64,48) → the entity at (72,56), 16 px from (56,56).
+    const INTRO = { cls: 'NPCs::IntroCharacter', x: 72, y: 56, vx: 0, vy: 0, type: 'Solid', destroy: false, collidable: true, anim: '' };
+    const withIntro = () => {
+        const records = new Map(RECORDS);
+        const house = RECORDS.get(HOUSE);
+        records.set(HOUSE, { ...house, entities: [...house.entities, { type: 'introchar', x: 64, y: 48, attrs: { text: 'hello', tag: '-1' } }] });
+        return records;
+    };
+    it('⛓ W8b — an admitted inert NPC whose talk circle holds the spawn: ADOPTED, the circle recorded, spent once the plan leaves it', () => {
+        const e = adoptOver({ mobiles: [INTRO, PLAYER] }, { records: withIntro() });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        expect(e.engine.status().room).toMatchObject({ talkCircles: 1 });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [], fallbacks: [] });
+        expect(e.engine.status().room).toMatchObject({ talkCircles: 0 });
+        expect(e.dones).toHaveLength(1);
+        expect(e.service.seen[0].result.plan.solution.some((k) => new Set(k).has('primary'))).toBe(false);
+    });
+    it('⛓ W8b — …a plan that presses X before leaving that circle → the named adopt-talk fallback (a forced re-arrival), never shipped', () => {
+        const e = adoptOver({ mobiles: [INTRO, PLAYER] }, { records: withIntro(),
+            editPlan: (plan) => ({ ...plan, solution: plan.solution.map((k, i) => (i === 0 ? [...k, 'primary'] : k)) }) });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        for (let i = 0; i < 200 && !e.engine.stats.fallbacks.length; i++) e.timers.run(1);
+        expect(e.engine.stats.fallbacks).toEqual([expect.objectContaining({ kind: 'adopt-talk', why: expect.stringMatching(/X \(primary\) at tick 0, .*talked/) })]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'adopt-talk': 1 });
+        expect(e.game.tapes.map((t) => t.tick_count)).toEqual([0]); // the adoption's freeze only — the plan never shipped
     });
     it('an engine WITHOUT the glue query adopts nothing (W7\'s rule) — the cold start re-arrives, no clause recorded', () => {
         const e = adoptOver({}, { noGlue: true });

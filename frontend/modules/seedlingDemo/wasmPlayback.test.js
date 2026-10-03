@@ -16,6 +16,7 @@ import {
     FALLBACK_POLICY, MAX_RECOVERIES, MID_ROOM_POLICY, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure, divergenceRepeatFailure, isExactRepeat,
     exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, keysHeldAtReset, shippedTape, wasmGoalRefusal,
     arrivalHoldBlocker, endsHeld, liveDeclarations, primarySplitRefusal, shadowMismatch,
+    ADOPT_CLAUSES, INERT_MOBILES, adoptionRefusal, inertMobilesRefusal, talkCircleGuard, talkCirclesAt,
 } from './wasmPlayback.js';
 import { stagingFromWasmArrival } from './wasmArrival.js';
 import { parseTape } from './tapeFormat.js';
@@ -306,5 +307,84 @@ describe('W7 — arrivalHoldBlocker: the glue query, its three arms', () => {
         expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: { ...be } }, be)).toMatch(/pushed to the game after this arrival/);
         expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: { ...be, 'save.time': 4800 } }, be)).toBeNull();
         expect(arrivalHoldBlocker({ marks: [], queued: 0, pushedOn: null }, be)).toBeNull();
+    });
+});
+
+describe('⛓ W8b — level 0\'s inert NPC Mobiles (introchar, statue2) are ADMITTED by the adoption, each check live', () => {
+    const L0 = RECORDS.get(0);
+    // The live `botMobiles` rows at an untouched level-0 cold start (measured, plan §5.14).
+    const PLAYER = { cls: 'Player', x: 80, y: 128, vx: 0, vy: 0, anim: 'down-stand' };
+    const INTRO = { cls: 'NPCs::IntroCharacter', x: 152, y: 296, vx: 0, vy: 0, type: 'Solid', destroy: false, collidable: true, anim: '' };
+    const STATUE = { cls: 'NPCs::Statue', x: 208, y: 160, vx: 0, vy: 0, type: 'Solid', destroy: false, collidable: true, anim: '' };
+    const SHADOW = { x: 80, y: 128, direction: 3 };
+    const BEGIN = { 'begin.level': 0, 'save.time': 100 };
+    const STATUS = { level: 0, game_time: 400, x: 80, y: 128, inventory_slots: [], hits: 0, hits_timer: 0, drown_timer: 0, frozen_timer: 0,
+        receive_input: true, menu: false, cutscene: [] };
+    const refusal = (rows, o = {}) => adoptionRefusal({ beginEntry: BEGIN, status: { ...STATUS, ...o.status }, mobiles: { mobiles: rows },
+        record: o.record ?? L0, shadow: o.shadow ?? SHADOW });
+    const clauseOf = (rows, o) => refusal(rows, o)?.clause ?? null;
+
+    it('the record holds exactly the two admitted NPCs, and the inert clauses sit between MOBILES and TIMED', () => {
+        expect(L0.entities.filter((e) => Object.values(INERT_MOBILES).some((s) => s.types.includes(e.type))).map((e) => e.type).sort())
+            .toEqual(['introchar', 'statue2']);
+        expect(ADOPT_CLAUSES.slice(ADOPT_CLAUSES.indexOf('mobiles'), ADOPT_CLAUSES.indexOf('timed')))
+            .toEqual(['mobiles', 'inert-velocity', 'inert-position', 'inert-idle', 'inert-talk']);
+    });
+    it('untouched: ADOPTED (no clause refuses)', () => {
+        expect(refusal([STATUE, INTRO, PLAYER])).toBeNull();
+    });
+    it('MOBILES — a class that is not admitted (an Enemy beside the NPCs) still refuses', () => {
+        expect(clauseOf([STATUE, INTRO, PLAYER, { cls: 'Enemies::Bob', x: 10, y: 10, vx: 0, vy: 0 }])).toBe('mobiles');
+    });
+    it('INERT-VELOCITY — an NPC with v ≠ 0', () => {
+        expect(clauseOf([STATUE, { ...INTRO, vx: 0.25 }, PLAYER])).toBe('inert-velocity');
+    });
+    it('INERT-POSITION — an NPC off its record position (1 px), or a second row on one entity', () => {
+        expect(clauseOf([{ ...STATUE, x: 209 }, INTRO, PLAYER])).toBe('inert-position');
+        expect(clauseOf([STATUE, INTRO, { ...INTRO }, PLAYER])).toBe('inert-position');
+        expect(inertMobilesRefusal({ rows: [INTRO], record: RECORDS.get(HOUSE), shadow: SHADOW })?.clause).toBe('inert-position');
+    });
+    it('INERT-IDLE — introchar playing "talk", a destroyed or uncollidable row', () => {
+        expect(clauseOf([STATUE, { ...INTRO, anim: 'talk' }, PLAYER])).toBe('inert-idle');
+        expect(clauseOf([{ ...STATUE, destroy: true }, INTRO, PLAYER])).toBe('inert-idle');
+        expect(clauseOf([STATUE, { ...INTRO, collidable: false }, PLAYER])).toBe('inert-idle');
+    });
+    it('INERT-TALK — a Statue (no talk animation) inside ITS circle refuses, and its circle is 32, not NPC\'s 24', () => {
+        const near = (x, y) => ({ shadow: { x, y, direction: 3 }, status: { x, y } });
+        // 25.3 px from the statue's centre: outside 24, inside Statue.as:25's 32 (measured live: the game opens the dialogue there).
+        expect(clauseOf([STATUE, INTRO, { ...PLAYER, x: 200, y: 136 }], near(200, 136))).toBe('inert-talk');
+        expect(clauseOf([STATUE, INTRO, { ...PLAYER, x: 200, y: 120 }], near(200, 120))).toBeNull();
+        expect(INERT_MOBILES['NPCs::Statue']).toMatchObject({ talkRange: 32, talkAnim: null });
+        expect(INERT_MOBILES['NPCs::IntroCharacter']).toMatchObject({ talkRange: 24, talkAnim: 'talk' });
+    });
+    it('the seedling_atlas cold start (168,296), 16 px from introchar: ADMITTED (its open dialogue shows as anim "talk"), the circle recorded', () => {
+        const at = { shadow: { x: 168, y: 296, direction: 3 }, status: { x: 168, y: 296 } };
+        expect(refusal([STATUE, INTRO, { ...PLAYER, x: 168, y: 296 }], at)).toBeNull();
+        expect(clauseOf([STATUE, { ...INTRO, anim: 'talk' }, { ...PLAYER, x: 168, y: 296 }], at)).toBe('inert-idle');
+        expect(talkCirclesAt([STATUE, INTRO, PLAYER], { x: 168, y: 296 })).toEqual([{ cls: 'NPCs::IntroCharacter', x: 152, y: 296, talkRange: 24 }]);
+        expect(talkCirclesAt([STATUE, INTRO, PLAYER], { x: 80, y: 128 })).toEqual([]);
+    });
+});
+
+describe('⛓ W8b — talkCircleGuard: adopted inside a talk circle, no X until the plan has left it (`talked` is unread)', () => {
+    const CIRCLE = [{ cls: 'NPCs::IntroCharacter', x: 152, y: 296, talkRange: 24 }];
+    const walkOut = Array.from({ length: 12 }, (_, i) => ({ x: 168 + 2 * i, y: 296 })); // leaves (d > 24) at row 5: x 178
+    it('a plan with no X: no refusal, and the rows LEAVE the circle (the guard is spent)', () => {
+        expect(talkCircleGuard({ circles: CIRCLE, solution: Array(11).fill(['right']), expected: walkOut })).toEqual({ refusal: null, left: true });
+    });
+    it('X while still inside, or on the tick right after the first row outside → refused by name', () => {
+        for (const t of [0, 3, 5, 6]) {
+            const sol = Array(11).fill(['right']).map((k, i) => (i === t ? ['right', 'primary'] : k));
+            expect(talkCircleGuard({ circles: CIRCLE, solution: sol, expected: walkOut }).refusal).toMatch(new RegExp(`X \\(primary\\) at tick ${t}, .*talked`));
+        }
+    });
+    it('X once two ticks past the exit: allowed', () => {
+        const sol = Array(11).fill(['right']).map((k, i) => (i === 7 ? ['primary'] : k));
+        expect(talkCircleGuard({ circles: CIRCLE, solution: sol, expected: walkOut }).refusal).toBeNull();
+    });
+    it('a plan that never leaves the circle: X anywhere is refused, and the guard is NOT spent', () => {
+        const stay = Array(6).fill({ x: 168, y: 296 });
+        expect(talkCircleGuard({ circles: CIRCLE, solution: Array(5).fill([]), expected: stay })).toEqual({ refusal: null, left: false });
+        expect(talkCircleGuard({ circles: CIRCLE, solution: [[], [], [], [], ['primary']], expected: stay }).refusal).toMatch(/tick 4/);
     });
 });
