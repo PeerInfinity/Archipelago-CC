@@ -196,9 +196,17 @@ describe('watchGenOverlay — the layers', () => {
      * scoring the diagonals, `ran === true` over seeds 1..20 goes **10 -> 18**
      * (measured against a pristine W0 worktree). Seeds 6 and 8 are the two that
      * still drop, each carrying a certification geometry; 6 is the lowest.
+     *
+     * ⛓ SEEDLING FIDELITY F1+F1b+F1c RE-POINTED IT AGAIN (6 -> 64), BY THE SAME
+     * SWEEP: with L5's arrows updating newest-first, the kill-lock ledger on the
+     * REMOVAL and the hammer-phase rung, `ran === true` over seeds 1..20 goes
+     * **18 -> 20**. Every one of them certifies. Over 1..120 the seeds that still
+     * drop are 26, 28, 64, 67, 85 and 118; 26, 28 and 118 carry NO certification
+     * geometry, so they cannot be this row's subject. 64 is the lowest that drops
+     * WITH geometry.
      */
     it('⛔⛔ …even when the certification\'s GEOMETRY is attached to the model', () => {
-        const seam = seedlingSeam({ seed: 6, items: { hasSword: true },
+        const seam = seedlingSeam({ seed: 64, items: { hasSword: true },
             elements: { name: 'killgate' } });
         expect(seam.model.elements.ran).toBe(false);
         expect(seam.certification.geometry.length).toBeGreaterThan(0);
