@@ -1435,30 +1435,30 @@
       "channel": "headless"
     },
     "roster: --tier=full": {
-      "value": "196 tapes 4268/0/0",
+      "value": "200 tapes 4361/0/0",
       "command": null,
       "kind": "identity",
       "cheap": false,
       "quoted": true,
-      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 904/0/0 MEASURED @5e3def7397 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @5e3def7397 [channel: headless] · mechanic 136 tape(s) 2915/0/0 MEASURED @5e3def7397 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all.",
-      "measuredAt": "5e3def7397",
+      "why": "DERIVED from the parts (⚖ 70 (c)) — campaign 39 tape(s) 904/0/0 MEASURED @79fa3f1c66 [channel: headless] · map-walk 21 tape(s) 449/0/0 MEASURED @79fa3f1c66 [channel: headless] · mechanic 140 tape(s) 3008/0/0 MEASURED @79fa3f1c66 [channel: headless]. Each part carries its OWN head: a category is owed a drive when the tree moved under IT, not when the tree moved at all.",
+      "measuredAt": "79fa3f1c66",
       "categories": {
         "campaign": {
           "tapes": 39,
           "value": "904/0/0",
-          "measuredAt": "5e3def7397",
+          "measuredAt": "79fa3f1c66",
           "channel": "headless"
         },
         "map-walk": {
           "tapes": 21,
           "value": "449/0/0",
-          "measuredAt": "5e3def7397",
+          "measuredAt": "79fa3f1c66",
           "channel": "headless"
         },
         "mechanic": {
-          "tapes": 136,
-          "value": "2915/0/0",
-          "measuredAt": "5e3def7397",
+          "tapes": 140,
+          "value": "3008/0/0",
+          "measuredAt": "79fa3f1c66",
           "channel": "headless"
         }
       }
