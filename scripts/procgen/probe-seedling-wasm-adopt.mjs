@@ -24,6 +24,14 @@
  *      `introchar` and `statue2`, sampled idle (v 0, at their record positions, idle anim, no rng draw); the cold
  *      start ADOPTED with them admitted as inert NPCs (`wasmPlayback.INERT_MOBILES`) — the walk hub → house →
  *      chest spends **0 forced re-arrivals in total** (W8 spent one: refused `mobiles`); 0 divergences.
+ *   N  ⛓ W8c — THE NEW GAME (`seedling_playthrough`, loaded by `?rules=`: the `?game=` form resolves another
+ *      seed with no flash_panel). The host's level-set reset boots the game's new-game arm: its begin record
+ *      reads level −1 (latched before `applyStart`), then the wind cutscene, then the arrow-key tutorial
+ *      `Help(2)`, whose freeze no botStatus row shows (`readState().freezeObjects` does). The Playback Bot
+ *      cannot walk this preset at all (the vanilla arm binds no name → cell map — checked by name), so the
+ *      CONTROLLER's own engine (its production deps) is driven from the first frame of the cutscene: level 0's
+ *      stairs, then L13's — the cutscene WAITED OUT, the tutorial dismissed by one arrow pair, the room
+ *      ADOPTED, the L13 arrival held: **0 forced re-arrivals in total**, every held check equal, 0 divergences.
  *   K  a person's REAL keys move the player before the bot drives → the adoption is REFUSED by name (a
  *      clause: position / velocity / facing) and the named `cold-start` re-arrival serves the walk, which
  *      still finishes.
@@ -34,7 +42,7 @@
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build (the
  * `flashPanel/wasm` submodule), or this SKIPs (exit 0).
  *
- * Run: node scripts/procgen/probe-seedling-wasm-adopt.mjs [--host=http://localhost:8000] [--only=H,P,R,W,K,L]
+ * Run: node scripts/procgen/probe-seedling-wasm-adopt.mjs [--host=http://localhost:8000] [--only=H,P,R,W,K,L,N]
  *      [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
@@ -56,6 +64,11 @@ export const UNWATCHED_ROOMS = [
     { level: 7, x: 96, y: 32, goal: { kind: 'exit', level: 7, tiles: [[12, 2]], name: 'out_stairsdown_192_32' } },
     { level: 9, x: 80, y: 16, goal: { kind: 'exit', level: 9, tiles: [[1, 0]], name: 'out_teleporter_16_0' } },
     { level: 13, x: 64, y: 96, goal: { kind: 'exit', level: 13, tiles: [[2, 2]], name: 'out_stairsdown_32_32' } },
+];
+/** N — the new game's first rooms: level 0's stairs (beside the spawn (16, 128)), then L13's (W8's R room). */
+export const NEW_GAME_LEGS = [
+    { kind: 'exit', level: 0, tiles: [[2, 12]], name: 'out_stairsdown_32_192' },
+    { kind: 'exit', level: 13, tiles: [[2, 2]], name: 'out_stairsdown_32_32' },
 ];
 /** P — the frame-exact person: one tick right, settle, one tick left, settle (back on the spawn, turned). */
 export const PERSON_KEYS = [['right'], ...Array(40).fill([]), ['left'], ...Array(40).fill([])];
@@ -84,14 +97,14 @@ async function main() {
     const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
         ?.slice(name.length + 3) ?? fallback);
     const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
-    const SESSIONS = arg('only', 'H,P,R,W,K,L').split(',').filter(Boolean);
+    const SESSIONS = arg('only', 'H,P,R,W,K,L,N').split(',').filter(Boolean);
     /** The house walk (H/P/R/W/K) and ⛓ W8b's level-0 cold start (L: `seedling_atlas`, from its hub). */
     const presetOf = (game) => {
         const preset = JSON.parse(readFileSync(join(REPO, `frontend/presets/${game}/AP_1/AP_1_rules.json`), 'utf8'));
         const regions = preset.regions['1'];
         return { GAME: game, PRESET: preset, REGIONS: regions, START: regions.Menu.exits[0].connected_region };
     };
-    const PRESETS = { house: presetOf('seedling_atlas_location'), level0: presetOf('seedling_atlas') };
+    const PRESETS = { house: presetOf('seedling_atlas_location'), level0: presetOf('seedling_atlas'), newGame: presetOf('seedling_playthrough') };
     const WASM_PAGE = PRESETS.house.PRESET.flash_panel?.wasm ?? '';
     if (!WASM_PAGE || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE))) {
         console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
@@ -109,7 +122,7 @@ async function main() {
     process.exit(failed === 0 ? 0 : 1);
 
     async function runSession(S) {
-        const { GAME, PRESET, REGIONS, START } = S === 'L' ? PRESETS.level0 : PRESETS.house;
+        const { GAME, PRESET, REGIONS, START } = S === 'N' ? PRESETS.newGame : S === 'L' ? PRESETS.level0 : PRESETS.house;
         const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
         const logs = [];
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
@@ -196,7 +209,9 @@ async function main() {
         }
 
         try {
-            await page.goto(`${HOST}/frontend/?game=${GAME}&seed=1`, { waitUntil: 'domcontentloaded' });
+            // ⛓ W8c — the playthrough by its rules file: `?game=seedling_playthrough&seed=1` loads another seed (no flash_panel).
+            await page.goto(S === 'N' ? `${HOST}/frontend/?rules=./presets/${GAME}/AP_1/AP_1_rules.json` : `${HOST}/frontend/?game=${GAME}&seed=1`,
+                { waitUntil: 'domcontentloaded' });
             await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
             await rp.installWatchers();
             await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
@@ -308,6 +323,85 @@ async function main() {
                 }
             }
 
+
+            if (S === 'N') {
+                // ⛓ W8c — the boot: the arm's record, the set's start, the cutscene running; the bot's named reason.
+                const boot = await L(() => {
+                    const a = window.__adopt;
+                    const r = a.readouts();
+                    const ls = JSON.parse(a.game().botLevelSet());
+                    return { begin: r.beginEntry, level: r.level, x: r.x, y: r.y, cutscene: r._status.cutscene, receive: r._status.receive_input,
+                        freeze: r._state.freezeObjects, startLevel: ls.start_level, set: ls.active };
+                });
+                out('N boot', boot);
+                check('N: the new-game arm ran — begin record level −1, the set starts in level 0, the game stands in level 0',
+                    boot.begin?.['begin.level'] === -1 && boot.startLevel === 0 && boot.level === 0, JSON.stringify(boot));
+                check('N: the bot drives from INSIDE the ceremony (the wind cutscene running, no input taken)',
+                    boot.cutscene?.[0] === true && boot.receive === false, JSON.stringify({ cutscene: boot.cutscene, receive: boot.receive }));
+                const surf = await page.evaluate(async () => {
+                    const s = (await import('./modules/flashPanel/index.js')).getActivePanelInstance().seedlingPlaybackSurface();
+                    return { atlas: !!s.atlas, report: !!s.report };
+                });
+                check('N: the Playback Bot cannot walk this preset — the vanilla arm binds no name → cell map (atlas / report null)',
+                    !surf.atlas && !surf.report, JSON.stringify(surf));
+                const run = await page.evaluate(async ({ legs }) => {
+                    const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
+                    const c = substrateRegistry.get('flash_seedling')?.getPlaybackController?.();
+                    let engine = null;
+                    for (let i = 0; i < 100 && !engine; i++) {
+                        engine = c._engineFor(c._getSurface());
+                        // eslint-disable-next-line no-await-in-loop
+                        if (!engine) await new Promise((r) => { setTimeout(r, 100); });
+                    }
+                    if (!engine) return { error: 'the controller built no wasm engine' };
+                    const game = () => c._getSurface().wasm.getGame();
+                    const answers = [];
+                    const legsOut = [];
+                    for (const leg of legs) {
+                        const doneBefore = engine.stats.done;
+                        // The goal waits for the previous crossing's HELD arrival (W7), so the second walkTo comes after it.
+                        for (let i = 0; i < 300 && leg !== legs[0] && engine.status().phase !== 'held'; i++) {
+                            // eslint-disable-next-line no-await-in-loop
+                            await new Promise((r) => { setTimeout(r, 100); });
+                        }
+                        answers.push(engine.walkTo(leg));
+                        const t0 = performance.now();
+                        let level = null;
+                        while (performance.now() - t0 < 240000) {
+                            // eslint-disable-next-line no-await-in-loop
+                            await new Promise((r) => { setTimeout(r, 250); });
+                            level = JSON.parse(game().readState()).level;
+                            if (engine.stats.failed > 0 || (engine.stats.done > doneBefore && level !== leg.level)) break;
+                        }
+                        legsOut.push({ leg: leg.name, level, ms: Math.round(performance.now() - t0) });
+                        if (engine.stats.failed > 0) break;
+                    }
+                    const st = engine.stats;
+                    return { answers, legs: legsOut, stats: JSON.parse(JSON.stringify({ adopted: st.adopted, forced: st.forced, forcedBy: st.forcedBy,
+                        adoptRefused: st.adoptRefused, ceremonies: st.ceremonies, dismissed: st.dismissed, held: st.held, heldChecks: st.heldChecks,
+                        continuations: st.continuations, divergences: st.divergences, recoveries: st.recoveries, failed: st.failed, done: st.done,
+                        hostStarts: st.hostStarts.map((h) => h.label), history: st.history.map((h) => ({ goal: h.goal?.name, outcome: h.outcome,
+                            continuation: h.continuation ?? false, prefix: h.prefix ?? 0, divergence: h.divergence ?? null, reason: h.reason ?? null })) })) };
+                }, { legs: NEW_GAME_LEGS });
+                out('N run', run);
+                const st = run.stats ?? {};
+                check('N: the first goal waited for the ceremony (action await-ceremony): the cutscene waited out, ONE arrow pair dismissed the tutorial, the room ADOPTED',
+                    run.answers?.[0]?.action === 'await-ceremony' && st.ceremonies?.length === 1 && st.ceremonies[0].began === 'cutscene'
+                        && st.ceremonies[0].adopted === true && st.dismissed?.length === 1 && st.dismissed[0].key === 'right'
+                        && st.adopted === 1 && st.hostStarts?.[0] === 'adopt',
+                    JSON.stringify({ answer: run.answers?.[0], ceremonies: st.ceremonies, dismissed: st.dismissed, hostStarts: st.hostStarts }));
+                check('N: both legs crossed — level 0 → L13, then out of L13', run.legs?.length === 2 && run.legs[0].level === 13 && run.legs[1].level !== 13,
+                    JSON.stringify(run.legs));
+                check('N: 0 forced re-arrivals IN TOTAL, nothing refused (today: the arm\'s record refused `begin`, and a re-arrival REPLAYED the cutscene)',
+                    st.forced === 0 && Object.keys(st.forcedBy ?? {}).length === 0 && (st.adoptRefused ?? []).length === 0,
+                    JSON.stringify({ forced: st.forced, forcedBy: st.forcedBy, refused: st.adoptRefused }));
+                // A held CHECK is taken at a continuation only; the L13 leg is a held ARRIVAL (freeze + plan) — measured: 1 check, 3 holds.
+                check('N: the adoption\'s held check equal (the adopted room == the shadow "arrival + 1 idle tick"); the L13 and L14 arrivals HELD',
+                    (st.heldChecks ?? []).length === 1 && st.heldChecks[0].shipped === 1 && st.heldChecks[0].equal && st.held === 3,
+                    JSON.stringify({ heldChecks: st.heldChecks, held: st.held }));
+                check('N: 0 divergences, 0 recoveries, 0 failed', st.divergences === 0 && st.recoveries === 0 && st.failed === 0,
+                    JSON.stringify({ d: st.divergences, r: st.recoveries, f: st.failed, history: st.history }));
+            }
             if (S === 'L') {
                 // ⛓ W8b — level 0's NPC Mobiles, untouched: sampled idle (v 0, at the record, idle anim, no rng draw) and admitted.
                 const samples = await L(async () => {

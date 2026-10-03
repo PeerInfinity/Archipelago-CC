@@ -233,5 +233,5 @@ export async function createLab() {
         return { error: `no arrival in ${level}` };
     }
 
-    return { readouts, idleSamples, adopt, solveN, play, person, jump, status, seam, mobiles, playerRow, resetClean, hostStarts, records, rngDistance };
+    return { readouts, idleSamples, adopt, solveN, play, person, jump, status, seam, mobiles, playerRow, resetClean, hostStarts, records, rngDistance, game };
 }
