@@ -22,10 +22,9 @@
  *       `beam: false, rockSet: true` (its own writes — the tape declared no seam).
  *   B   the Playback Bot walks the starter `seedling_atlas` on wasm FROM THE HUB (its start region
  *       `overworld_start__r8c0`): hub → house door → the chest; status `finished`, the chest checked ONCE,
- *       0 divergences, the first leg staged in level 0. ⛔ The starter preset embeds NO sphere log, so the
- *       probe loads the one its rules imply (one location whose path Menu → hub → house → chest is all
- *       `True_` → one sphere; derived from the preset, refused otherwise) through sphereState's own
- *       `loadSphereLog`.
+ *       0 divergences, the first leg staged in level 0. The bot's queue is the preset's own embedded
+ *       `sphere_log` (built by `region-atlas-compile.mjs --embed-sphere-log`), loaded by the app on boot —
+ *       nothing injected; B asserts the loaded log is the committed one.
  *
  * Each session is a FRESH page (the wasm game runs out of memory after ~100–140 world swaps).
  * Prints `PASS:`/`FAIL:` rows, one `LEG {json}` per engine leg, and `ALL CHECKS PASSED` /
@@ -306,36 +305,32 @@ async function main() {
             }
 
             if (SESSION === 'B') {
-                // ⛔ The starter `seedling_atlas` preset embeds NO sphere log (only `seedling_atlas_location`
-                // does), so the bot would have no queue ("no sphere log"). Its rules are all `True_`, so the
-                // log they imply is one sphere: every location accessible at 0, collected at 0.1. Derived here
-                // from the preset itself, refused if any rule is not `True_`, and loaded through sphereState's
-                // own `loadSphereLog` — the bot reads it exactly as it reads an embedded one.
-                // What the one-sphere log needs: the chest's own PATH is free (Menu → the hub → the house →
-                // the chest, every rule `True_`). Other overworld exits carry `Has`/`Or` rules; the starter
-                // atlas has no other location, so they decide nothing about this queue.
-                const locs = Object.values(REGIONS).flatMap((r) => r.locations ?? []);
-                const HOUSE_REGION = Object.keys(REGIONS).find((k) => (REGIONS[k].locations ?? []).length > 0);
-                const path = [REGIONS.Menu.exits[0], REGIONS[START].exits.find((e) => e.connected_region === HOUSE_REGION),
-                    ...REGIONS[HOUSE_REGION].locations];
-                check(`B: one location, and its path (Menu → ${START} → ${HOUSE_REGION} → the chest) is all True_ — the implied log is ONE sphere`,
-                    locs.length === 1 && path.every((x) => x && (x.access_rule?.rule ?? 'True_') === 'True_'),
-                    JSON.stringify(path.map((x) => [x?.name, x?.access_rule?.rule])));
-                const accessible = ['Menu', START, HOUSE_REGION];
-                const items = Object.fromEntries(locs.map((l) => [l.item.name, 1]));
-                const LOG = [
-                    { type: 'metadata', seed: 1, seed_name: '', event_locations: {}, event_items: {} },
-                    { type: 'state_update', sphere_index: '0', player_data: { 1: { new_inventory_details: { base_items: {}, resolved_items: {} },
-                        new_accessible_locations: locs.map((l) => l.name), new_accessible_regions: accessible, sphere_locations: [] } } },
-                    { type: 'state_update', sphere_index: '0.1', player_data: { 1: { new_inventory_details: { base_items: items, resolved_items: items },
-                        new_accessible_locations: [], new_accessible_regions: [], sphere_locations: locs.map((l) => l.name) } } },
-                ].map((e) => JSON.stringify(e)).join('\n');
-                const loaded = await page.evaluate(async (text) => {
-                    const { getSphereStateSingleton } = await import('./modules/sphereState/singleton.js');
-                    const ok = await getSphereStateSingleton().loadSphereLog('probe-seedling-wasm-level0:seedling_atlas-implied', text);
-                    return { ok, spheres: (getSphereStateSingleton().getSphereData() ?? []).length };
-                }, LOG);
-                check(`B: the implied sphere log loaded (${locs.length} location(s): ${locs.map((l) => l.name).join(', ')})`, loaded.ok, JSON.stringify(loaded));
+                // The bot's queue is the preset's OWN embedded `sphere_log` — the forward simulator's
+                // `generateSphereLog` over the compiled graph (`region-atlas-compile.mjs --embed-sphere-log`;
+                // ⚖ the user 2026-10-03: a tool-built log, never a hand-made one). Nothing is injected: the app
+                // loads it on boot (sphereState's embedded-first path), and B asserts the loaded log IS the
+                // committed one. (W5 injected a one-sphere log derived here; it named 3 sphere-0 regions where
+                // the tool names all 6, so it was replaced rather than claimed equal.)
+                const committed = (PRESET.sphere_log ?? []).filter((e) => e.type === 'state_update');
+                check(`B: the committed preset carries a sphere log (${committed.length} sphere(s)) with "${CHEST}" collected in it`,
+                    committed.length > 0 && committed.some((e) => (e.player_data?.['1']?.sphere_locations ?? []).includes(CHEST)),
+                    JSON.stringify(committed.map((e) => e.sphere_index)));
+                let loaded = null;
+                for (let i = 0; i < 100; i++) {
+                    // eslint-disable-next-line no-await-in-loop
+                    loaded = await page.evaluate(async () => {
+                        const { getSphereStateSingleton } = await import('./modules/sphereState/singleton.js');
+                        const ss = getSphereStateSingleton();
+                        return { spheres: (ss.getSphereData() ?? []).length,
+                            raw: JSON.parse(JSON.stringify((ss.rawData ?? []).filter((e) => e.type === 'state_update'))) };
+                    });
+                    if (loaded.spheres > 0) break;
+                    // eslint-disable-next-line no-await-in-loop
+                    await page.waitForTimeout(100);
+                }
+                check('B: the app loaded the EMBEDDED log on boot (no injection), and it is the committed one',
+                    loaded.spheres > 0 && JSON.stringify(loaded.raw) === JSON.stringify(committed),
+                    JSON.stringify({ spheres: loaded.spheres, loaded: loaded.raw.map((e) => e.sphere_index) }));
                 const before = await ap();
                 const booted = await page.evaluate(async (start) => {
                     const bus = (await import('./app/core/eventBus.js')).default;
