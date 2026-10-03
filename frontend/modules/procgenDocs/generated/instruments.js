@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 54,
+            "count": 55,
             "id": "plan"
         },
         {
-            "browser": 35,
-            "count": 77,
+            "browser": 36,
+            "count": 78,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 317,
-        "browser": 100,
+        "blockStyle": 319,
+        "browser": 101,
         "cited": 149,
-        "files": 328,
+        "files": 330,
         "lineStyle": 11,
-        "withDocblock": 328,
-        "withFlags": 248
+        "withDocblock": 330,
+        "withFlags": 250
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6577,6 +6577,33 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-f6-reentry.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-f6-reentry — ⛓⛓⛓ SEEDLING FIDELITY F6: THREE ROOMS RE-ENTERED IN THE GAME'S OWN SAVED STATE (I1's I01 · I02 · I03).",
+            "path": "scripts/procgen/plan-seedling-f6-reentry.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
@@ -8350,6 +8377,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity F2, D2: **IS A KEY STILL HELD WHEN A WINDOW ENDS?** (residue row 25: the LONE-KEYUP risk at window boundaries).",
             "path": "scripts/procgen/probe-seedling-f2-boundary.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-f6-reentry.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity F6: **THE THREE RE-ENTRY CLEARS, ASKED OF THE GAME.** Every arm runs on a FRESH page of the headless game (default build p4e, logic-only), one arm per page:",
+            "path": "scripts/procgen/probe-seedling-f6-reentry.mjs"
         },
         {
             "argvHelpers": [
