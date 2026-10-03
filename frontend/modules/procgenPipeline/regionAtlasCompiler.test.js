@@ -22,6 +22,7 @@ import { rulesJsonSchemaErrors } from '../procgenCore/jsonSchemaCheck.js';
 import { loadRulesSchema } from '../procgenCore/jsonSchemaFiles.js';
 import { seedlingMazeProjectionDeps } from '../flashPanel/seedlingAtlasAnalysis.js';
 import { MAZE_SUBSTRATE } from './regionAtlasMazeProjection.js';
+import { generateSphereLog, SphereLogNotEvaluableError } from '../shared/procgen/forwardSimulator.js';
 import { apRegionName, stampAtlasIdentity } from './regionAtlasValidator.js';
 import {
     compileRegionAtlas,
@@ -812,9 +813,65 @@ describe('determinism', () => {
     it('the COMMITTED seedling_atlas preset is exactly what the atlas compiles to', () => {
         // The gate scripts/procgen/region-atlas-compile.mjs --check enforces on
         // the command line, enforced here too: an atlas edit that is not
-        // followed by a recompile fails the suite.
+        // followed by a recompile fails the suite. The preset is compiled WITH
+        // its sphere log (`--embed-sphere-log`; see 'the opt-in sphere log').
         expect(readFileSync(PRESET_PATH, 'utf8'))
-            .toBe(`${stringifyRulesJson(compileStarter().rules)}\n`);
+            .toBe(`${stringifyRulesJson(compileStarter({ embedSphereLog: true }).rules)}\n`);
+    });
+});
+
+/**
+ * The opt-in sphere log (⚖ the user, 2026-10-03: "built using one of the
+ * existing tools that create a sphere log, rather than constructing one
+ * manually"). The tool is the forward simulator's generateSphereLog — the
+ * procgen engine's own embedder — run over the compiled graph.
+ */
+describe('the opt-in sphere log (embedSphereLog)', () => {
+    const presetRules = (name) => read(`../../presets/${name}/AP_1/AP_1_rules.json`);
+
+    it('is OFF by default: a plain compile carries no sphere_log and no report row', () => {
+        const { rules, report } = compileStarter();
+        expect(rules).not.toHaveProperty('sphere_log');
+        expect(report).not.toHaveProperty('sphere_log_entries');
+        expect(formatCompileReport(report).some((l) => l.startsWith('sphere_log:'))).toBe(false);
+    });
+
+    it('CONTROL: the same tool reproduces the committed logs of the other atlas presets', () => {
+        // Whatever wrote these, the tool regenerates them exactly — so the log
+        // the compiler embeds is the shape the committed atlas presets already
+        // carry, not a new dialect.
+        for (const name of ['seedling_atlas_location', 'seedling_atlas_host']) {
+            const rules = presetRules(name);
+            expect(Array.isArray(rules.sphere_log), name).toBe(true);
+            expect(generateSphereLog(rules, { playerId: 1 }), name).toEqual(rules.sphere_log);
+        }
+    });
+
+    it('embeds the walk of the compiled graph: hub regions + the chest, then its Seal', () => {
+        const { rules, report } = compileStarter({ embedSphereLog: true });
+        const log = rules.sphere_log;
+        expect(log).toEqual(generateSphereLog({ ...rules, sphere_log: undefined }, { playerId: 1 }));
+        expect(report.sphere_log_entries).toBe(log.length);
+        expect(log.map((e) => e.sphere_index ?? e.type)).toEqual(['metadata', '0', '0.1']);
+        expect(log[0]).toMatchObject({ seed: rules.generation_seed, seed_name: rules.seed_name });
+        expect(log[1].player_data['1'].new_accessible_locations).toEqual(['Starting House - Chest']);
+        expect(log[1].player_data['1'].new_accessible_regions).toContain('starting_house');
+        expect(log[2].player_data['1'].sphere_locations).toEqual(['Starting House - Chest']);
+        expect(log[2].player_data['1'].new_inventory_details.base_items).toEqual({ Seal: 1 });
+    });
+
+    it('REFUSES by name, never a guessed log, when an inventory cannot decide a rule', () => {
+        const atlas = clone(STARTER);
+        for (const loc of atlasRegion(atlas, 'starting_house').locations) {
+            loc.access_rule = { rule: 'CanReachRegion', args: { region_name: MENU_REGION } };
+        }
+        // allowInvalid: the validator has its own view of this rule; the row is
+        // about the walk's refusal, so get past the validator to reach it.
+        const opts = { mapDoc: MAP_DOC, allowInvalid: true };
+        expect(() => compileRegionAtlas(clone(atlas), { ...opts, embedSphereLog: true }))
+            .toThrow(SphereLogNotEvaluableError);
+        // …and without the opt-in the same atlas still compiles.
+        expect(compileRegionAtlas(clone(atlas), opts).rules).not.toHaveProperty('sphere_log');
     });
 });
 

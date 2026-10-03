@@ -30,10 +30,15 @@
 // Usage:
 //   node scripts/procgen/region-atlas-compile.mjs <atlas.json> [-o out.json]
 //        [--maze] [--game-config PATH] [--game-name NAME] [--seed N]
-//        [--check] [--quiet] [--allow-invalid]
+//        [--embed-sphere-log] [--check] [--quiet] [--allow-invalid]
+//
+// --embed-sphere-log (opt-in) embeds the forward simulator's generateSphereLog
+// walk of the compiled graph as `sphere_log` — the procgen engine's own
+// embedder, so the log is a tool's output, never hand-written. A graph an
+// inventory cannot decide is REFUSED by name (exit 1), never given a guessed log.
 //
 //   # regenerate the committed Seedling presets, then gate them
-//   node scripts/procgen/region-atlas-compile.mjs \
+//   node scripts/procgen/region-atlas-compile.mjs --embed-sphere-log \
 //       frontend/modules/flashPanel/atlases/seedling.json \
 //       -o frontend/presets/seedling_atlas/AP_1/AP_1_rules.json
 //   node scripts/procgen/region-atlas-compile.mjs --maze \
@@ -58,7 +63,7 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // silently empty projection.
 const MAZE_PROJECTIONS = { seedling: seedlingMazeProjectionDeps };
 
-const USAGE = 'usage: node scripts/procgen/region-atlas-compile.mjs <atlas.json> [-o out.json] [--maze] [--game-config PATH] [--game-name NAME] [--seed N] [--check] [--quiet] [--allow-invalid]';
+const USAGE = 'usage: node scripts/procgen/region-atlas-compile.mjs <atlas.json> [-o out.json] [--maze] [--game-config PATH] [--game-name NAME] [--seed N] [--embed-sphere-log] [--check] [--quiet] [--allow-invalid]';
 
 const argv = process.argv.slice(2);
 const has = (flag) => argv.includes(flag);
@@ -127,10 +132,13 @@ try {
         allowInvalid,
         gameName: valueOf('--game-name'),
         seed: seedArg === undefined ? undefined : Number(seedArg),
+        embedSphereLog: has('--embed-sphere-log'),
         ...(maze ? { sidecarFlavor: 'maze', mazeProjection } : {}),
     });
 } catch (e) {
-    console.error(`ERROR: ${e.message}`);
+    // A SphereLogNotEvaluableError lands here too, named: its message lists the
+    // undecided rule kinds and endpoints, and nothing is written.
+    console.error(`ERROR: ${e.name === 'Error' ? '' : `${e.name}: `}${e.message}`);
     process.exit(1);
 }
 const { rules, report } = result;

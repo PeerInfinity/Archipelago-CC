@@ -26,11 +26,18 @@ become AP exits, and locations carry their `vanilla_item`. It is **graph only** 
 no `preset_sidecars`; play-time walking runs the real game (Phase 4).
 
 ```sh
-node scripts/procgen/region-atlas-compile.mjs atlases/seedling.json \
+node scripts/procgen/region-atlas-compile.mjs --embed-sphere-log atlases/seedling.json \
     -o frontend/presets/seedling_atlas/AP_1/AP_1_rules.json
-node scripts/procgen/region-atlas-compile.mjs atlases/seedling.json \
+node scripts/procgen/region-atlas-compile.mjs --embed-sphere-log atlases/seedling.json \
     -o frontend/presets/seedling_atlas/AP_1/AP_1_rules.json --check   # gate
 ```
+
+`--embed-sphere-log` (opt-in) embeds the forward simulator's `generateSphereLog`
+walk of the compiled graph as `sphere_log` — the procgen engine's own embedder,
+so the committed log is a tool's output, never hand-written. A graph whose rules
+an inventory cannot decide is refused by name (`SphereLogNotEvaluableError`),
+never given a guessed log. Without the flag the compile carries no log, which is
+what the marking tool's buttons and every other caller get.
 
 The output has no timestamp, so `--check` is exact. Unwired boundary exits are
 **omitted** from the graph and named in the report — the compile is not a silent

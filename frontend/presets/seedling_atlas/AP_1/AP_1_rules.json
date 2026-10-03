@@ -708,5 +708,59 @@
         }
       }
     }
-  }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "Starting House - Chest"
+          ],
+          "new_accessible_regions": [
+            "dungeon1_room1__r0c4",
+            "Menu",
+            "overworld_start__r1c6",
+            "overworld_start__r8c0",
+            "owls_nest_entrance",
+            "starting_house"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Seal": 1
+            },
+            "resolved_items": {
+              "Seal": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "Starting House - Chest"
+          ]
+        }
+      }
+    }
+  ]
 }

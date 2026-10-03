@@ -81,6 +81,7 @@ import {
     formatMazeProjectionNotes,
     MAZE_SUBSTRATE,
 } from './regionAtlasMazeProjection.js';
+import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
 
 // AP id namespaces for compiled atlases. Deliberately clear of the per-game
 // engine-binding namespace — frontend/modules/flashPanel/games/seedling.json
@@ -375,6 +376,12 @@ function deriveIdentifiers(atlas, options) {
  * @param {number} [options.seed] rules.json generation_seed (default 1)
  * @param {string} [options.seedName] rules.json seed_name (default '')
  * @param {string} [options.playerName] player 1's name (default 'Player1')
+ * @param {boolean} [options.embedSphereLog] embed the forward simulator's
+ *   `generateSphereLog` walk of the compiled graph as `sphere_log` (default
+ *   false — opt-in, so every existing compile stays byte-identical). The same
+ *   call, metadata and name the procgen engine's `embedSphereLog` uses. ⛔ A
+ *   graph an inventory cannot decide THROWS `SphereLogNotEvaluableError` out of
+ *   this compile: the caller asked for a log, and a guessed one is never given.
  * @returns {{ rules: object, report: object }}
  */
 export function compileRegionAtlas(atlas, options = {}) {
@@ -799,6 +806,17 @@ export function compileRegionAtlas(atlas, options = {}) {
         atlas_errors: validation.errors,
         atlas_warnings: validation.warnings,
     };
+
+    // Last, so the walk sees the finished graph (sidecars carry no logic, but
+    // nothing below can change what it reads). The log is the TOOL's: the
+    // same walk the procgen engine embeds, never authored by hand.
+    if (options.embedSphereLog) {
+        rules.sphere_log = generateSphereLog(rules, {
+            playerId: 1,
+            metadata: { seed: rules.generation_seed, seed_name: rules.seed_name },
+        });
+        report.sphere_log_entries = rules.sphere_log.length;
+    }
     return { rules, report };
 }
 
@@ -835,6 +853,9 @@ export function formatCompileReport(report) {
     if (report.regions_without_map_ref?.length > 0 && report.sidecar_regions?.length > 0) {
         lines.push(`${report.regions_without_map_ref.length} region(s) have no map_ref — no play-time binding: `
             + report.regions_without_map_ref.join(', '));
+    }
+    if (report.sphere_log_entries !== undefined) {
+        lines.push(`sphere_log: ${report.sphere_log_entries} entries (generateSphereLog over the compiled graph)`);
     }
     return lines;
 }
