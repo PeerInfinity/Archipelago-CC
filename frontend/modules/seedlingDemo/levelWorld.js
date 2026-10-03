@@ -2953,9 +2953,12 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
     moonrockpile: 'appear',           // Scenery/MoonrockPile.as:23-32
     // ⚠ `ButtonRoom` reads `_active = !checkPersistence(tag)`
     // (`Puzzlements/ButtonRoom.as:43`), so a cleared tag boots it ALREADY
-    // PRESSED and its group starts fading from frame one. `activators.js`
-    // presses on the player alone and would report those locks shut for the
-    // whole run.
+    // PRESSED and its group starts fading from frame one.
+    // ⛓⛓ SEEDLING FIDELITY F6 (I03): modelled, no longer refused. The presser
+    // row carries `bootPressed`, and `activators.createActivatorState` runs
+    // the setter `check()` runs (`:44`, `activate = _active`): a `room = -1`
+    // press LATCHES its group, a cross-room one re-writes flags that already
+    // hold those values.
     buttonroom: 'press',              // Puzzlements/ButtonRoom.as:43
     // `Watcher.update` runs `super.update()` only while the flag holds
     // (`NPCs/Watcher.as:62-66`), so a clear SILENCES it — the talk circle
@@ -3226,8 +3229,6 @@ export function outOfBandWritersOnto(level, nextLevelRecord) {
 export const REFUSED_CLEAR_RESPONSES = Object.freeze({
     arm: 'clearing it does not remove it — it BUILDS IT FALLEN, Solid and live, '
         + "and its update writes the player's y",
-    press: 'a cleared tag boots it ALREADY PRESSED, so its whole Activators group '
-        + 'starts fading from frame one — which `activators.js` does not model',
 });
 
 /**
@@ -4494,6 +4495,10 @@ export function buildLevelWorld(levelRecord, {
                     room: intAttr(e.attrs, 'room', -1),
                     flip: intAttr(e.attrs, 'flip', 0) !== 0,
                     persistTag: entityTag,
+                    // ⛓ F6 (I03): `check()`'s `_active = !checkPersistence(tag)`
+                    // (`ButtonRoom.as:43`) — a cleared tag boots it pressed.
+                    bootPressed: entityTag >= 0 && clearedTags !== null
+                        && clearedTags.has(entityTag),
                 } : {}),
             });
         }
