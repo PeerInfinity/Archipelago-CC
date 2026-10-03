@@ -937,9 +937,12 @@ const CHAIN_DECLARATIONS = Object.freeze([
      * refused when absent — and the match is TWO-SIDED, so a provenance no
      * tape carries reds exactly as loudly as a clear no provenance names.
      *
-     *   `{5,0}`@427  MODEL-sourced. `chaserKillLockOpens` computes the
-     *                removal at 326 and `activators.opensOnTick` is 101; the
-     *                finding re-adds them rather than trusting the sum.
+     *   `{5,0}`@301  MODEL-sourced. `chaserKillLockOpens` computes the
+     *                removal (the last body leaves the world) at 201 and
+     *                `activators.opensOnTick` is 101, which a declared v9 row
+     *                spells 100; the finding re-adds them rather than trusting
+     *                the sum. ⛓ Fidelity F1/F1b witnessed the tick on the game
+     *                (`f1-l5-lock-removal`), and F1c re-recorded the window.
      *   `{8,0}`@246  GAME-sourced, and a BOUNDARY MEASURED ON BOTH SIDES: a
      *   `{8,1}`@645  246-tick truncation of this walk carries the tag and a
      *                245-tick one does not (645/644 likewise). A one-sided
@@ -961,11 +964,12 @@ const CHAIN_DECLARATIONS = Object.freeze([
             clears: Object.freeze([Object.freeze({
                 level: 5, tag: 0, source: 'model',
                 evidence: Object.freeze({
-                    removedAt: 326,
-                    fade: 101,
-                    why: '`chaserKillLockOpens`\'s removal (the third bob dies to the '
-                        + 'ceiling and `Game.totalEnemies()` reaches zero) plus '
-                        + '`activators.opensOnTick(RESPONDERS.lock.fade)`',
+                    removedAt: 201,
+                    fade: 100,
+                    why: '`chaserKillLockOpens`\'s removal (the last bob leaves the world '
+                        + 'and `Game.totalEnemies()` reaches zero) plus '
+                        + '`activators.opensOnTick(RESPONDERS.lock.fade)` in the v9 `at` '
+                        + 'spelling (`opensOnTick − 1`)',
                 }),
             })]),
         }),
@@ -1259,11 +1263,12 @@ const CHAIN_DECLARATIONS = Object.freeze([
             Object.freeze({
                 level: 5, tag: 0, source: 'model',
                 evidence: Object.freeze({
-                    removedAt: 326,
-                    fade: 101,
-                    why: '`chaserKillLockOpens`\'s removal (the third bob dies to the '
-                        + 'ceiling and `Game.totalEnemies()` reaches zero) plus '
-                        + '`activators.opensOnTick(RESPONDERS.lock.fade)`',
+                    removedAt: 201,
+                    fade: 100,
+                    why: '`chaserKillLockOpens`\'s removal (the last bob leaves the world '
+                        + 'and `Game.totalEnemies()` reaches zero) plus '
+                        + '`activators.opensOnTick(RESPONDERS.lock.fade)` in the v9 `at` '
+                        + 'spelling (`opensOnTick − 1`)',
                 }),
             }),
             Object.freeze({
@@ -1294,11 +1299,17 @@ const CHAIN_DECLARATIONS = Object.freeze([
              * spinner now dies at 317, so the clear is at 418 — the tape's own
              * `persistence` note, which this row must equal (half 1 and half 2
              * of `stagedClearFindings` both red on 342 at the first full tier).
+             * ⛓ fidelity F1c re-recorded it at hammer residue 42 with the
+             * HAMMER-PHASE rung (512 t): the second spinner is removed at 351,
+             * so the clear is at 452. ⚠ F1c D2 measured that the game opens L18's
+             * lock TWO ticks before this spelling (the spinner ledger stamps one
+             * step late, and `+ 101` is the pending spelling); the walk waits out
+             * the fade at its loiter cell, so the replay does not see it.
              */
             Object.freeze({
                 level: 18, tag: 0, source: 'model',
                 evidence: Object.freeze({
-                    removedAt: 317,
+                    removedAt: 351,
                     fade: 101,
                     why: '`spinnerKillLockOpens`\'s removal (the second spinner dies to '
                         + 'the player\'s presses and `Game.totalEnemies()` reaches zero) '

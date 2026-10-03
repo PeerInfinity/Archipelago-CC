@@ -1305,7 +1305,7 @@
     },
     {
       "file": "r8-solve-5.json",
-      "tickCount": 558,
+      "tickCount": 403,
       "bootLevel": 5,
       "tapeVersion": 11,
       "noHazards": []
@@ -1445,7 +1445,7 @@
     },
     {
       "file": "r9-solve-18.json",
-      "tickCount": 455,
+      "tickCount": 512,
       "bootLevel": 18,
       "tapeVersion": 11,
       "noHazards": []
