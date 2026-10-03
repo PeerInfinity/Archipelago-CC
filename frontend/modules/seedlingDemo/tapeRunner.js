@@ -880,6 +880,8 @@ export function createTapeStepper(tape, opts = {}) {
             bossShotsFired: run ? run.bossShotsFired : [],
             bossHits: run ? run.bossHits : [],
             bossKills: run ? run.bossKills : [],
+            // ⛓ F4: the static bodies the run killed; each `removed()` writes its tag.
+            staticBodyDeaths: run ? run.staticBodyDeaths : [],
             bossBlasts: run ? run.bossBlasts : [],
             /**
              * ⛓⛓⛓ R6 SLICE 5 — THE SHIELDSPIRE'S FOUR, and they are its

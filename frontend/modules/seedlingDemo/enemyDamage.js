@@ -633,6 +633,21 @@ export const CORPSE_COUNTING = Object.freeze({
             + '`removed()` writes `Game.setPersistence(tag, false)` — see `KILL_SIDE_WRITES`.',
         src: 'Enemies/Spinner.as:57-64 (removed); Enemies/Enemy.as:182-186 (startDeath)',
     }),
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY F4: A FIFTH SHAPE, `anim`. `SandTrap.startDeath`
+     * plays "die" and never sets `destroy`, and its `endAnim` calls
+     * `FP.world.remove(this)` itself, so there is no `Mobile.death` fade at
+     * all: the body leaves the world on the animation's last update. Measured
+     * on the game (`f4-l8-sandtraps`): the arrow kill on t230, "die" from that
+     * tick, gone on t248, the 19th update counting the killing tick's.
+     */
+    SandTrap: Object.freeze({
+        shape: 'anim', removesBody: true, chaserTag: null,
+        why: '`startDeath` is `play("die"); dieEffects(t)` with no `destroy`, and `endAnim`\'s '
+            + '"die" arm is `FP.world.remove(this)`. `classCount(SandTrap)` drops on the '
+            + 'animation\'s 19th update, and `removed()` writes the tag on the same tick.',
+        src: 'Enemies/SandTrap.as:88-104 (startDeath, endAnim), :82-86 (removed)',
+    }),
 });
 
 /**
@@ -665,6 +680,8 @@ export function removalTicksAfterHit(as3, deathAnimTicks = null) {
             + `animation's length from \`chasers.deathTicks('${row.chaserTag}')\`; got `
             + `${deathAnimTicks}.`);
     }
+    // ⛓ F4: an `anim` row has no fade — its `endAnim` removes the body itself.
+    if (row.shape === 'anim') return deathAnimTicks;
     return deathAnimTicks + MOBILE_DEATH_FADE.ticks;
 }
 
@@ -780,7 +797,73 @@ export const KILL_SIDE_WRITES = Object.freeze({
             + 'carries one (L40\'s three are 17, 18, 19), so the −1 arm is a bounded '
             + 'vacuity with no witness — named, not skipped.',
     }),
+    // ⛓ F4: `removed()` is `super.removed(); Game.setPersistence(tag, false)`, with no
+    // guard: the game writes {8,0} on the observation the body is gone (`f4-l8-sandtraps`).
+    SandTrap: Object.freeze({
+        writes: 'ownTag',
+        site: 'removed',
+        guard: null,
+        why: '`removed()` writes the tag unconditionally, and `endAnim`\'s "die" arm is what '
+            + 'removes the body, so the write lands on the animation\'s last update. '
+            + '`check()` removes a cleared one at build time, which also reaches `removed()`: '
+            + 'that write is the same flag, already false.',
+        sentinel: '`SandTrap(_x, _y, _tag:int = -1)`, so a `<sandtrap>` with no `tag` would '
+            + 'write OUT OF BAND. All thirteen in the extract carry one, so the −1 arm is a '
+            + 'bounded vacuity — and the model refuses that kill by name.',
+    }),
 });
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY F4 — A STATIC `"Enemy"` BODY'S ARROW DEATH, PER CLASS.
+ *
+ * `Arrow.update` calls `(hits[i] as Enemy).hit(v.length, new Point(x, y))` on
+ * every `"Enemy"` it overlaps (`Arrow.as:51-53`), so a static census body takes
+ * the same `Enemy.hit` a chaser does: `d` 1, `t` "", 30 i-frames, death at
+ * `hitsMax`. What differs per class is its `knockback`, its `startDeath` and its
+ * `removed()`, so a class is computed here only once its death has been read off
+ * the game. Every other static class still stops the arrow and takes nothing in
+ * this model, and the solver refuses its death by name (§11.4).
+ *
+ * `SandTrap` (`f4-l8-sandtraps`, recorded on the game): hits on t164, t197 and
+ * t230 (the i-frames run down only in the body's own update, so the volley that
+ * lands is the first one after `hitsTimer` reaches 0); `knockback` is an empty
+ * override; "die" is six frames at rate 10, 19 updates with the first on the
+ * killing tick; `endAnim` removes the body on t248 and `removed()` writes {8,0}
+ * on that same observation.
+ */
+export const STATIC_ARROW_DEATH = Object.freeze({
+    SandTrap: Object.freeze({
+        policy: 'modelled',
+        dieAnim: Object.freeze({ frames: 6, rate: 10, src: 'SandTrap.as:33 add("die", [4, 5, 6, 7, 8, 9], 10)' }),
+        knocksBack: false,
+        witness: 'f4-l8-sandtraps',
+        src: 'Enemies/SandTrap.as:77-80 (knockback), :82-104 (removed, startDeath, endAnim); '
+            + 'Enemies/Enemy.as:141-181 (hit), :223-245 (hitUpdate); Projectiles/Arrow.as:44-62',
+    }),
+});
+
+/**
+ * The damage state of one static census body whose arrow death this model
+ * computes. ⛔ Refuses every class `STATIC_ARROW_DEATH` does not list: a state
+ * for an unwitnessed class would be a death the game was never asked about.
+ */
+export function createStaticBodyDamage(as3) {
+    const p = STATIC_ARROW_DEATH[as3];
+    if (!p || p.policy !== 'modelled') {
+        fail(`createStaticBodyDamage: "${as3}" has no modelled STATIC_ARROW_DEATH row — `
+            + '§11.4 refuses to compute a static "Enemy" body\'s arrow death until the '
+            + 'game has been asked about that class.');
+    }
+    const { src, ...fields } = ENEMY_DAMAGE_DEFAULTS;
+    return {
+        as3,
+        ...fields,
+        dying: false,
+        destroy: false,
+        alpha: 1,
+        removed: false,
+    };
+}
 
 /**
  * A damage state for ONE body.

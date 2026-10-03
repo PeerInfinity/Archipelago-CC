@@ -6,8 +6,9 @@
  *   1. the MODEL-sourced arm closes L5 end to end, from the committed boot
  *      block with the room's own timed clear STRIPPED — the tick is derived
  *      and then verified, never handed over;
- *   2. the GAME-sourced arm raises the declaration L8 needs and refuses to
- *      substitute the model for it, BY NAME, when no oracle is supplied;
+ *   2. the GAME-sourced arm refuses to substitute the model for a declaration
+ *      it needs, BY NAME, when no oracle is supplied (⛓ F4: driven
+ *      synthetically now — L8, its only room, solves with no declaration);
  *   3. the PREFIX AGREEMENT is the loop's only non-vacuity check and it runs
  *      on every pass;
  *   4. the SENTINEL never reaches an emitted tape;
@@ -41,7 +42,7 @@ import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import { ROLES } from './levelWorld.js';
 import { parseTape } from './tapeFormat.js';
-import { PENDING_AT, solveSegment } from './solverBot.js';
+import { PENDING_AT, PendingDeclaration, solveSegment } from './solverBot.js';
 import {
     MAX_PASSES, TwoPassError, assertNoPendingRows, twoPassSolve,
 } from './twoPassSolve.js';
@@ -161,40 +162,86 @@ describe('the MODEL-sourced arm — L5, derived and then WALLED', () => {
     });
 });
 
-describe('the GAME-sourced arm — L8, and the refusal to substitute', () => {
+/**
+ * ⛓⛓ SEEDLING FIDELITY F4 — L8 WAS THE GAME-SOURCED ARM'S ONLY ROOM, AND IT NO
+ * LONGER NEEDS IT. The run now computes `SandTrap`'s arrow death (the game's own
+ * ticks, `f4-l8-sandtraps`), so the first row below is L8 solving in ONE pass with
+ * no declaration and no oracle. The arm itself is still live for every static class
+ * the run does not compute, and no room on the map reaches it, so its control flow is
+ * driven by `syntheticGameArm`: the real L8 run, wrapped so that `advance` raises the
+ * game-sourced `PendingDeclaration` at a fixed tick for each tag the rows have not
+ * declared early enough. ⚠ SYNTHETIC, like the oracles below: it proves the LOOP's
+ * control flow, never a tick.
+ */
+function syntheticGameArm(makeRun) {
+    const RAISE = [{ tag: 0, at: 60 }, { tag: 1, at: 120 }];
+    return (persistence) => {
+        const run = makeRun(persistence);
+        const held = [];
+        return new Proxy(run, {
+            get(target, prop) {
+                if (prop !== 'advance') {
+                    const v = Reflect.get(target, prop, target);
+                    return typeof v === 'function' ? v.bind(target) : v;
+                }
+                return (keys) => {
+                    for (const r of RAISE) {
+                        const owner = persistence.find((p) => p.level === 8 && p.tag === r.tag);
+                        if (held.length === r.at && !(owner && owner.at < r.at)) {
+                            throw new PendingDeclaration(`SYNTHETIC game-sourced {8,${r.tag}}`, {
+                                goal: null, obstacle: { kind: 'static-enemy', id: `synthetic#${r.tag}` },
+                                perTick: held.map((k) => new Set(k)),
+                                pending: { level: 8, tag: r.tag, source: 'game', body: `synthetic#${r.tag}`,
+                                    why: 'SYNTHETIC — the loop\'s control flow only' },
+                            });
+                        }
+                    }
+                    held.push([...keys]);
+                    return target.advance(keys);
+                };
+            },
+        });
+    };
+}
+
+describe('the GAME-sourced arm, and the refusal to substitute', () => {
+    it('⛓⛓ F4: L8 itself now SOLVES in one pass — no declaration, no oracle (the run computes the sandtraps\' death)', async () => {
+        const { t, base, makeRun } = harnessFor('r8-solve-8');
+        const r = await twoPassSolve({
+            makeRun, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+            name: 'probe-2pass-l8-f4', boot: t.boot, persistence: base,
+        });
+        expect(r.passes.map((p) => p.kind)).toEqual(['solve']);
+        expect(r.declarations).toEqual([]);
+        expect(r.out.perTick.length).toBe(827);
+    });
+
     it('⛔ refuses to substitute the MODEL for a game-sourced tick, BY NAME', async () => {
         const { t, base, makeRun } = harnessFor('r8-solve-8');
         await expect(twoPassSolve({
-            makeRun, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+            makeRun: syntheticGameArm(makeRun), goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
             name: 'probe-2pass-l8', boot: t.boot, persistence: base,
         })).rejects.toThrow(/needs a GAME-sourced tick for \{8,0\}/);
     });
 
-    it('⛓ with an oracle, L8 converges — and every pass is a MEASURE or a SOLVE', async () => {
+    it('⛓ with an oracle, the loop converges — and every pass is a MEASURE or a SOLVE', async () => {
         const { t, base, makeRun } = harnessFor('r8-solve-8');
         /**
          * ⚠ A SYNTHETIC ORACLE, AND IT IS NOT A MEASUREMENT. It answers with
-         * a tick inside the prefix so the LOOP's shape can be driven offline;
-         * the real one truncates the prefix against the running game. What
-         * this row proves is the CONTROL FLOW — that a game-sourced answer
-         * discharges its declaration and the next pass gets further — never
-         * that any particular tick is right. The tick's own oracle is the
-         * `--win` differential, and it says so here rather than in a commit
-         * message.
+         * a tick inside the prefix so the LOOP's shape can be driven offline.
          */
         const oracle = async ({ perTick }) => ({
-            at: perTick.length - 120, evidence: 'SYNTHETIC — the loop\'s control flow only',
+            at: perTick.length - 20, evidence: 'SYNTHETIC — the loop\'s control flow only',
         });
         const r = await twoPassSolve({
-            makeRun, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+            makeRun: syntheticGameArm(makeRun), goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
             name: 'probe-2pass-l8-synth', boot: t.boot, persistence: base, gameTick: oracle,
         });
         expect(r.declarations.map((d) => `${d.level},${d.tag}`)).toEqual(['8,0', '8,1']);
         for (const d of r.declarations) expect(d.source).toBe('game');
         expect(r.passes.map((p) => p.kind)).toEqual(['measure', 'measure', 'solve']);
         // ⛔ THE PREFIX AGREEMENT RAN ON EVERY PASS, and one of them was
-        // verified by the NEXT REFUSAL rather than by the solve — which is
-        // the case a loop that only checked at the end would miss.
+        // verified by the NEXT REFUSAL rather than by the solve.
         expect(r.prefixChecks).toHaveLength(2);
         expect(r.prefixChecks.map((c) => c.verifiedBy))
             .toEqual(['pass 2\'s own refusal', 'the solving pass']);
@@ -206,12 +253,11 @@ describe('the GAME-sourced arm — L8, and the refusal to substitute', () => {
     it('⛔ a declaration that unblocks NOTHING is named at the SECOND occurrence', async () => {
         const { t, base, makeRun } = harnessFor('r8-solve-8');
         // An oracle answering with the very END of the prefix: the clear
-        // lands after the hold it was measured in, so the next pass raises
-        // the same declaration again. The bound would eventually catch it;
-        // the guard catches it immediately and says why.
+        // lands after the tick it was measured at, so the next pass raises
+        // the same declaration again, and the guard says why.
         const oracle = async ({ perTick }) => ({ at: perTick.length, evidence: 'end of prefix' });
         await expect(twoPassSolve({
-            makeRun, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+            makeRun: syntheticGameArm(makeRun), goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
             name: 'probe-2pass-l8-stuck', boot: t.boot, persistence: base, gameTick: oracle,
         })).rejects.toThrow(/\{8,0\} was raised as a pending declaration TWICE/);
     });
@@ -220,7 +266,7 @@ describe('the GAME-sourced arm — L8, and the refusal to substitute', () => {
         const { t, base, makeRun } = harnessFor('r8-solve-8');
         const oracle = async ({ perTick }) => ({ at: perTick.length + 1, evidence: 'too far' });
         await expect(twoPassSolve({
-            makeRun, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+            makeRun: syntheticGameArm(makeRun), goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
             name: 'probe-2pass-l8-far', boot: t.boot, persistence: base, gameTick: oracle,
         })).rejects.toThrow(/is BEYOND the .* tick\(s\) the measuring pass spent/);
     });
@@ -228,7 +274,7 @@ describe('the GAME-sourced arm — L8, and the refusal to substitute', () => {
     it('⛔ an oracle that answers with a non-integer is refused', async () => {
         const { t, base, makeRun } = harnessFor('r8-solve-8');
         await expect(twoPassSolve({
-            makeRun, goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
+            makeRun: syntheticGameArm(makeRun), goals: [{ kind: 'reach-exit', exit: { x: 96, y: 192 } }],
             name: 'probe-2pass-l8-junk', boot: t.boot, persistence: base,
             gameTick: async () => ({ evidence: 'no tick at all' }),
         })).rejects.toThrow(/must return \{at, evidence\}/);
