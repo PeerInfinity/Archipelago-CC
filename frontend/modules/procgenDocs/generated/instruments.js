@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 29,
-            "count": 71,
+            "count": 73,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 306,
+        "blockStyle": 308,
         "browser": 93,
-        "cited": 142,
-        "files": 317,
+        "cited": 143,
+        "files": 319,
         "lineStyle": 11,
-        "withDocblock": 317,
-        "withFlags": 237
+        "withDocblock": 319,
+        "withFlags": 239
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8139,6 +8139,62 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-deadframes — how much does the fade cost VARY, and does it care about wall-clock?",
             "path": "scripts/procgen/probe-seedling-deadframes.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-f2-apitem.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity F2, D1b/D1c: **THE APITEM ON THE GAME.** Every generated preset room whose apitem the solver reaches (`collect-placement` resolving an APItem, strategy `apitem`) is mounted on the headless game (default build p4e, logic-only), and the solver's own tape is played on it.",
+            "path": "scripts/procgen/probe-seedling-f2-apitem.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "probe-seedling-f2-boundary.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity F2, D2: **IS A KEY STILL HELD WHEN A WINDOW ENDS?** (residue row 25: the LONE-KEYUP risk at window boundaries).",
+            "path": "scripts/procgen/probe-seedling-f2-boundary.mjs"
         },
         {
             "argvHelpers": [
