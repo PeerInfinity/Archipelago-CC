@@ -495,6 +495,7 @@ On `seedling_atlas_location` W7's walk spent one forced re-arrival, the cold sta
 - **fade**: more than `ADOPT_MIN_ELAPSED` game frames (two legacy fade bands) since the begin record, so the fade is over and at least one tick stepped;
 - **inventory**: `inventory_slots` is empty;
 - **player-state**: no hits, i-frames, drowning or freeze, input accepted, no menu or cutscene;
+- **freeze** (W8c): `readState().freezeObjects` is false. `Game.freezeObjects` is set by a `Help`, an open dialogue or the opening cutscene, and no `botStatus` row carries it, so `games/seedling.json` declares it as a state property. A bridge that does not report it refuses;
 - **mobiles**: `botMobiles` holds the player and, besides it, only admitted inert NPCs (`INERT_MOBILES`, W8b below);
 - **inert-velocity**, **inert-position**, **inert-idle**, **inert-talk**: each admitted NPC's checks (W8b below);
 - **timed**: the room record holds no `combat.PUZZLEMENT_HAZARDS` type;
@@ -508,6 +509,7 @@ What no readout sees, and why the clauses look this way:
 
 - **A person's keys are not logged outside an armed tape** (`Bot.as` `recordEdges` runs below `if (!armed) return`). Measured: a frame-exact right-then-left tap puts the player back on the spawn to the bit, with v = 0, no rng draw and unchanged persistence, yet turned (`side-stand`). Position catches a person who walked away; facing catches this one.
 - **Item state is hidden**: slash and spear timers, a cut `Grass`. So a player with anything to use is not adopted.
+- **A freeze is invisible to `botStatus`.** While `Game.freezeObjects` is up every tape frame is dead, so the adoption's own hold never latches. Measured on `seedling_playthrough` before the `freeze` clause existed: every other clause passed, the engine adopted, and the dead frames climbed from 7 to 201 in 15 s until the goal failed.
 - **The rng cannot be a clause.** "Live `rng.state` equals the begin record's `rng.gameplay`" is false at every arrival: with `split` false the build's draws land on the gameplay stream (the house build is 91 LFSR steps, level 0 is 1200), and nothing reads that count at a cold start.
 
 On `seedling_atlas_location` the walk now spends **0 forced re-arrivals and 1 world swap** (the door). Of the committed arrival regions, 44 of 176 (30 of 113 levels) are no-mobile and untimed.
@@ -524,6 +526,16 @@ The `seedling_atlas` cold start stands at (168, 296), 16 px from `introchar`: in
 
 ⚠ The MODEL tests every placed talker at 24 px, so a statue's 24–32 px band is a model defect (measured: at 25.3 px the game opens the dialogue and freezes, and the model walks on). The adoption does not depend on it; it belongs to the fidelity arc.
 
+**The new game's cold start (W8c).** `seedling_playthrough` loads through the vanilla randomizer arm, which delivers the AP record set and resets the player to its start (`seedlingRandomizerWiring.resetTargetFor`). That set's start names a level and no position, so the reset takes the game's own new-game arm: `new Game(-1, x, y)`. Three things follow from the game's code, and each was measured live:
+
+- **The begin record reads level −1.** `Game.begin()` latches `level` as its first line (`Game.as:741`), before `if (level < 0) LevelSet.active().applyStart(this)` resolves it to the set's start level. `wasmPlayback.newGameBeginEntry` resolves the record to `botLevelSet().start_level` when the game stands in that level, and keeps every other field. The arm then rewrites `Game.time`, so `save.time` is not the room's clock; the model reads the clock only through timed puzzlements, which the `timed` clause refuses anyway.
+- **The wind cutscene runs first** (`cutscene[0]`): the player takes no input, the dust draws the gameplay rng, and `timeRate` decays to 0 before the text pages itself. It ends on its own. A re-arrival does not end it: `cutscene` is a static, so the re-arrived world replays the scene. Measured: the plan diverged at tick 1, twice, and the goal failed.
+- **Then the arrow-key tutorial.** The scene ends with `add(new Help(2))` ("press an arrow key"), which sets `freezeObjects` every frame until an arrow is pressed. No tape can press it, because its frames are dead and the bot's `autoAdvance` presses X.
+
+So the engine waits the ceremony out instead of re-entering (`awaitCeremony`, phase `ceremony`, `wasmPlayback.newGameCeremony`). It polls until the cutscene ends. When the tutorial's freeze shows, it dispatches ONE arrow keydown + keyup pair; measured, that clears the freeze in a frame and leaves position, v, facing and the rng unchanged. It then waits `TUTORIAL_FADE_FRAMES` for the Help to fade out, and adopts the room as usual, through every clause. ⚠ The scene's last frame clears the freeze and QUEUES the Help, which raises the freeze one frame later. A poll in that window once adopted with the Help still pending, and the walk stayed on plan only because the plan's first key happened to be an arrow. So the room must show no ceremony for `CEREMONY_QUIET_FRAMES` game frames before it is adopted. The fallbacks are named `cold-start` re-arrivals: a ceremony past `CEREMONY_WAIT_MS`, a freeze an arrow does not end, or any clause that still refuses. `stats.ceremonies` and `stats.dismissed` record each wait and each press.
+
+The Playback Bot itself cannot walk `seedling_playthrough`: the vanilla arm binds no name → cell map (the surface's `atlas` and `report` are null), so the bot's first walk fails before the engine is asked. The witness therefore drives the controller's own engine.
+
 `scripts/procgen/probe-seedling-wasm-adopt.mjs` is the measurement and the live witness (p4e, headless logic-only, under the box lock), each session on a fresh page. **H**, **P** and **R** measure through `wasmAdoptLab.js`, imported by URL, outside the engine:
 
 - **H**: the house, untouched;
@@ -535,6 +547,7 @@ The `seedling_atlas` cold start stands at (168, 296), 16 px from `introchar`: in
 - **W**: the bot walks the house with 0 forced re-arrivals in total;
 - **K**: real keys move the player first, the adoption is refused by name, and the cold-start re-arrival serves the walk;
 - **L** (W8b): `seedling_atlas` from its hub. The two NPC rows are sampled idle, and the walk hub → house → chest spends 0 forced re-arrivals in total.
+- **N** (W8c): `seedling_playthrough` (loaded by `?rules=`; the `?game=` form resolves a seed with no `flash_panel`), driven through the controller's engine from inside the cutscene: level 0's stairs, then L13's. The cutscene is waited out, one arrow pair dismisses the tutorial, the room is adopted, and the walk spends 0 forced re-arrivals in total.
 
 **Generated rooms (WG).** The generated instance is built with `wasm: true` and `wasmLevelSetOf` (the surface's `wasm.levelSet`, the set the generated arm assembled and delivered). What differs from the atlas rooms is below; everything else above (the arrival, the freeze, the shipped tape, the guard, the recovery) is the same code:
 
