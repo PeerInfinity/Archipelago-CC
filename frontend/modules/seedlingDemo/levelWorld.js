@@ -2936,13 +2936,20 @@ export const PERSISTENCE_RESPONSE = Object.freeze({
      */
     apitem: 'despawn',                // Pickups/APItem.as:135-143 (+ Game.as:2307 add, :869-879 the check() sweep)
 
-    // ── declared, and REFUSED ─────────────────────────────────────────
+    // ── declared, and BUILT from the other side of the flag ───────────
     // ⚠ `MoonrockPile` is a FallRock in a mirror: `check()` removes it while
     // the flag is TRUE ("false = there, true = not there", its own comment),
     // so a fresh boot has none and a CLEAR builds a 32x16 Solid. Its ctor
     // also forces `tag = 0` (`Scenery/MoonrockPile.as:23`) whatever the .oel
     // says — the second forced constructor value in this file. One exists,
     // in L2, which is the third level of the walk.
+    // ⛓⛓ SEEDLING FIDELITY F6 (I02): and the clear is BUILT, no longer
+    // refused. `{2,0}` is the game's own write — L0's set moonrock finds the
+    // stairs under it (`Moonrock.as:131-136`, `moonrock_target`) — so every
+    // window after the rock sets carries it, and L2 was closed to the model
+    // from then on. The pile is an ordinary `moonrockpile` row
+    // (`ENTITY_CLASSES`, 32x16 at the placement), and it covers L2's
+    // `stairsup@48,16`, the stairs back to L0.
     moonrockpile: 'appear',           // Scenery/MoonrockPile.as:23-32
     // ⚠ `ButtonRoom` reads `_active = !checkPersistence(tag)`
     // (`Puzzlements/ButtonRoom.as:43`), so a cleared tag boots it ALREADY
@@ -3219,8 +3226,6 @@ export function outOfBandWritersOnto(level, nextLevelRecord) {
 export const REFUSED_CLEAR_RESPONSES = Object.freeze({
     arm: 'clearing it does not remove it — it BUILDS IT FALLEN, Solid and live, '
         + "and its update writes the player's y",
-    appear: 'it exists ONLY while its flag is false, so a clear ADDS a 32x16 Solid '
-        + 'that a fresh boot does not have',
     press: 'a cleared tag boots it ALREADY PRESSED, so its whole Activators group '
         + 'starts fading from frame one — which `activators.js` does not model',
 });
@@ -4321,8 +4326,8 @@ export function buildLevelWorld(levelRecord, {
         // flag holds there is NO 32x16 Solid, and the model was building
         // one. Level 2 is the third level of the walk and its arrival tile
         // is the pile's; the route reported the whole map unreachable.
-        // Clearing the tag is refused (REFUSED_CLEAR_RESPONSES), so the
-        // "it is there" arm is unreachable rather than unmodelled.
+        // ⛓ F6 (I02): a CLEARED tag falls through to the ordinary build, which
+        // is the "it is there" arm — the class row's 32x16 Solid.
         if (PERSISTENCE_RESPONSE[e.type] === 'appear'
             && !(clearedTags && entityTag >= 0 && clearedTags.has(entityTag))) {
             continue;
