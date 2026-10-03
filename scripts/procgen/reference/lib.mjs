@@ -12,7 +12,8 @@
  * only reads source text and writes deterministic output.
  */
 
-import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -25,6 +26,42 @@ export const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`-
 export const flag = (name) => process.argv.includes(`--${name}`);
 
 export const src = (rel) => readFileSync(join(REPO, rel), 'utf8');
+
+/**
+ * ⛓⛓ THE FILES THE REPO TRACKS directly in `dir` (repo-relative), ending in
+ * `ext`, sorted — `git ls-files`, so a session's UNTRACKED scratch file is not
+ * a row. ⛔ The directory listing it replaces made `--check` red the moment
+ * anyone left a `.mjs` beside the instruments: the generated table described
+ * the box it ran on, not the tree every other checkout has.
+ *
+ * ⛓ Tracked means IN THE INDEX: a newly `git add`ed file is a row before its
+ * commit, and a tracked file deleted from disk (but not yet `git rm`ed) is not,
+ * because there is nothing to read. Works wherever `.git` resolves — a CI
+ * checkout (shallow included) and a linked worktree alike.
+ *
+ * ⛔ WITHOUT GIT (no binary, or a tree that is not a repository — an exported
+ * tarball) it DEGRADES TO THE DIRECTORY LISTING, untracked files included, and
+ * says so on stderr: the table is then exact for a pristine tree and wrong only
+ * by the scratch files present, which is the behaviour before this helper.
+ */
+export function trackedFilesIn(dir, { ext, repo = REPO } = {}) {
+    const keep = (f) => !ext || f.endsWith(ext);
+    let listed;
+    try {
+        listed = execFileSync('git', ['-C', repo, 'ls-files', '-z', '--', dir],
+            { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 1 << 26 });
+    } catch (e) {
+        process.stderr.write(`⚠ trackedFilesIn(${dir}): git ls-files failed (${String(e.message).split('\n')[0]}) `
+            + '— DEGRADED to the directory listing, untracked files included\n');
+        return readdirSync(join(repo, dir)).filter(keep).sort();
+    }
+    const prefix = `${dir.replace(/\/+$/, '')}/`;
+    return listed.split('\0')
+        .filter((p) => p.startsWith(prefix) && !p.slice(prefix.length).includes('/'))
+        .map((p) => p.slice(prefix.length))
+        .filter((f) => keep(f) && existsSync(join(repo, dir, f)))
+        .sort();
+}
 
 /* ══════════════════════════════════════════════════════════════════════
  * THE SCAN — one region rule, one string-run reader

@@ -6,8 +6,12 @@
  * sentence naming a dozen of them; there are 221, and a list a human keeps is a
  * list that is wrong the day somebody adds a probe.
  *
- *   the DIRECTORY LISTING  the rows — a file on disk that is not in the module
- *                          fails `--check`, which is the non-vacuity gate
+ *   the TRACKED LISTING    the rows — a file the repo tracks that is not in the
+ *                          module fails `--check`, which is the non-vacuity gate.
+ *                          ⛔ Tracked (`git ls-files`, `lib.mjs`'s
+ *                          `trackedFilesIn`), NOT the directory listing it
+ *                          once was: an untracked scratch `.mjs` made `--check`
+ *                          red on that box alone (procgen-tooling-fixes).
  *   the leading DOCBLOCK   the one-liner
  *   a DECLARED argv scan   the flags it accepts
  *   a scan of the docs     which document cites it (and which cites a script
@@ -40,7 +44,7 @@ import {
     DOCUMENTED_FLAG_RE, FLAG_PATTERNS, HELPER_DECL_RE, HELPER_WINDOW, allOf2, argvHelpersIn,
     docblockOf, documentedFlagsIn, flagsIn, headerOf, inheritedFlagsIn,
 } from '../argvScan.js';
-import { REPO, firstSentence, src } from './lib.mjs';
+import { REPO, firstSentence, src, trackedFilesIn } from './lib.mjs';
 import { M } from './sources.mjs';
 
 export const SCRIPT_DIR = 'scripts/procgen';
@@ -142,8 +146,7 @@ export function buildInstruments() {
                 + `${JSON.stringify(t)}, which the GLOSSARY does not define`);
         }
     }
-    const names = readdirSync(join(REPO, SCRIPT_DIR))
-        .filter((f) => f.endsWith('.mjs')).sort();
+    const names = trackedFilesIn(SCRIPT_DIR, { ext: '.mjs' });
     /**
      * ⛓⛓ THE DOCS AS THEIR AUTHORS WROTE THEM — every GENERATED REGION is cut
      * out before the citation scan. ⛔ Otherwise the generator cites itself:
@@ -228,7 +231,7 @@ export function buildInstruments() {
      * script with no path and it lives two directories over" and "a reader
      * following this lands nowhere" are different facts, and only the second
      * one is a dead citation. Four of the five here are the first. */
-    const onDisk = new Set(readdirSync(join(REPO, SCRIPT_DIR)));
+    const onDisk = new Set(trackedFilesIn(SCRIPT_DIR));
     for (const [name, where] of [...citedBy].sort()) {
         if (onDisk.has(name)) continue;
         const elsewhere = findEverywhere(REPO, name);

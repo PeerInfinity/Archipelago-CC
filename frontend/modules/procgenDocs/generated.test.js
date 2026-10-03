@@ -26,7 +26,8 @@
  */
 
 import { execFileSync } from 'node:child_process';
-import { readFileSync, readdirSync } from 'node:fs';
+import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync, mkdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 import { beforeAll, describe, expect, it } from 'vitest';
@@ -51,6 +52,7 @@ import {
 } from '../../../scripts/procgen/reference/lib.mjs';
 import { REGISTRY_LIBRARIES } from '../../../scripts/procgen/reference/registry.mjs';
 import { SCRIPT_DIR } from '../../../scripts/procgen/reference/instruments.mjs';
+import { trackedFilesIn } from '../../../scripts/procgen/reference/lib.mjs';
 import {
     DOC_DIR, PAGE_DIR, README_ORDER,
 } from '../../../scripts/procgen/reference/docsIndex.mjs';
@@ -740,11 +742,15 @@ describe('the capability chart is every statement × every registered entry', ()
  * ══════════════════════════════════════════════════════════════════════ */
 
 describe('the instruments index is one row per file in scripts/procgen', () => {
-    const onDisk = readdirSync(join(ROOT, SCRIPT_DIR)).filter((f) => f.endsWith('.mjs')).sort();
+    /** ⛓ Asked of git directly, not through the generator's own helper. */
+    const tracked = execFileSync('git', ['-C', ROOT, 'ls-files', '-z', '--', SCRIPT_DIR],
+        { encoding: 'utf8' }).split('\0')
+        .map((p) => p.slice(SCRIPT_DIR.length + 1))
+        .filter((f) => f.endsWith('.mjs') && !f.includes('/')).sort();
 
-    it('⛓⛓ the DIRECTORY LISTING is the source — every `.mjs` on disk is a row, '
-        + `in order (${onDisk.length} of them)`, () => {
-        expect(INSTRUMENTS.rows.map((r) => r.file)).toEqual(onDisk);
+    it('⛓⛓ the TRACKED LISTING is the source — every tracked `.mjs` is a row, '
+        + `in order (${tracked.length} of them); an UNTRACKED scratch file is not`, () => {
+        expect(INSTRUMENTS.rows.map((r) => r.file)).toEqual(tracked);
     });
 
     it('⛔ every row carries a category, a path and a docblock STYLE or an '
@@ -934,4 +940,44 @@ describe('the docs index is one row per .md in the procgen docs directory', () =
         /* ⛓ …and the index file really is the one document with no row. */
         expect(DOCS_INDEX.docs.map((d) => d.file)).not.toContain('README.md');
     });
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+ * ⛓⛓ trackedFilesIn — the roster is what the repo TRACKS (procgen-tooling-fixes)
+ * ══════════════════════════════════════════════════════════════════════ */
+
+describe('trackedFilesIn lists what git tracks, not what the directory holds', () => {
+    const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { stdio: 'ignore' });
+    const scratch = (fn) => {
+        const dir = mkdtempSync(join(tmpdir(), 'tracked-files-'));
+        try { return fn(dir); } finally { rmSync(dir, { recursive: true, force: true }); }
+    };
+
+    it('⛔ an UNTRACKED file is not listed; a COMMITTED and a newly ADDED one are', () => scratch((repo) => {
+        git(repo, 'init', '-q');
+        mkdirSync(join(repo, 'd/sub'), { recursive: true });
+        for (const f of ['d/a.mjs', 'd/b.mjs', 'd/c.mjs', 'd/x.js', 'd/sub/n.mjs']) writeFileSync(join(repo, f), '');
+        git(repo, 'add', 'd/a.mjs', 'd/x.js', 'd/sub/n.mjs');
+        git(repo, '-c', 'user.name=t', '-c', 'user.email=t@t', 'commit', '-q', '-m', 'a');
+        git(repo, 'add', 'd/b.mjs'); /* added, not committed — still tracked */
+        /* d/c.mjs stays untracked: the scratch file the old listing counted */
+        expect(trackedFilesIn('d', { ext: '.mjs', repo })).toEqual(['a.mjs', 'b.mjs']);
+        expect(trackedFilesIn('d', { repo })).toEqual(['a.mjs', 'b.mjs', 'x.js']);
+        /* a tracked file deleted from disk has nothing to read, so it is not a row */
+        rmSync(join(repo, 'd/a.mjs'));
+        expect(trackedFilesIn('d', { ext: '.mjs', repo })).toEqual(['b.mjs']);
+    }));
+
+    it('⛓ with no repository it DEGRADES to the directory listing, untracked included', () => scratch((root) => {
+        mkdirSync(join(root, 'd'));
+        for (const f of ['b.mjs', 'a.mjs', 'x.js']) writeFileSync(join(root, 'd', f), '');
+        const env = process.env.GIT_CEILING_DIRECTORIES;
+        process.env.GIT_CEILING_DIRECTORIES = tmpdir();
+        try {
+            expect(trackedFilesIn('d', { ext: '.mjs', repo: root })).toEqual(['a.mjs', 'b.mjs']);
+        } finally {
+            if (env === undefined) delete process.env.GIT_CEILING_DIRECTORIES;
+            else process.env.GIT_CEILING_DIRECTORIES = env;
+        }
+    }));
 });
