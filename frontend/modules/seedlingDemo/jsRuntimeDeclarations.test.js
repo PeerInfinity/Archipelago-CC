@@ -149,7 +149,10 @@ describe('jsRuntime S3 — scratch persistence on vanilla rooms (⚖ Q4)', () =>
         expect(rt.playback.state).toBe(WALK_STATES.DONE);
         expect(s.solves).toBe(1);
         expect(s.refutations).toBe(0);
-        expect(s.declines).toBe(0);
+        // Fidelity F1/F1b/F1c (game-exact bodies, arrows newest-first): the first attempt's kill-lock DWELL for
+        // bob@48,80 never sees the body enter arrowtrap@64,48's lane inside its 100-tick bound → ONE decline; the S2
+        // retry solves and crosses, and the lock opens at the body's REMOVAL (F1b's ledger).
+        expect(s.declines).toBe(1);
         expect(s.lastSolve.verbs).toEqual(expect.arrayContaining(['kill']));
         expect(s.played).toBe(s.lastSolve.keys);
         expect(crossings).toEqual([expect.objectContaining({ from: 5, to: 6 })]);
