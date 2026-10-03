@@ -190,8 +190,9 @@ describe('wasmWalkTape — over the RECORDED wasm arrivals (p4e)', () => {
     it('B0: the door leg after the apitem — its clear is LIFTED from the model\'s staging only; the shipped tape still declares it exactly', () => {
         const staging = stage(B0);
         expect(staging.persistence).toEqual([{ level: 0, tag: 0 }]);
-        // ⛔ The model itself refuses an apitem clear (no PERSISTENCE_RESPONSE for the class): the control.
-        expect(() => createRunForStaging(staging, levelSource, { scratchPersistence: true })).toThrow(/apitem.*NO declared persistence response/s);
+        // Since F2 the model ACCEPTS an apitem clear (`PERSISTENCE_RESPONSE.apitem = 'despawn'`): the room boots with no apitem.
+        // The producer still lifts it (WG's workaround, harmless: the apitem has no collider).
+        expect(createRunForStaging(staging, levelSource, { scratchPersistence: true }).world.apItems).toEqual([]);
         const plan = walkTapeFromStaging({ staging, levelSource, records, goal: { kind: 'exit', level: 0, tile: [8, 1] } });
         expect([plan.end, plan.solution.length, plan.apItemClearsLifted]).toEqual(['crossed', 7, [{ level: 0, tag: 0 }]]);
         const tape = shippedTape({ staging, keys: plan.solution });
@@ -218,12 +219,12 @@ describe('wasmWalkTape — refusals, by name', () => {
     ])('%s', (_what, goal, why) => {
         expect(() => walkTapeFromStaging({ staging, levelSource, records, goal })).toThrow(why);
     });
-    it('(b) lost: the solver has no goal kind for an apitem — `collect-placement` there resolves to NOTHING', () => {
+    it('(b) found: since F2 `collect-placement` at an apitem resolves (strategy `apitem`) — the producer is still the walker', () => {
         const fresh = createRunForStaging(staging, levelSource, { scratchPersistence: true });
         const r = settleSolve(() => solveFromTape({ staging, perTick: [], live: liveOf(fresh), levelSource, scratchPersistence: true,
             solverGoal: { kind: 'collect-placement', placement: { x: 64, y: 16 } } }));
-        expect(r.ok).toBe(false);
-        expect(r.message).toMatch(/collect-placement \(64,16\) resolves to NOTHING in level 0/);
+        expect(r.ok).toBe(true);
+        expect(r.plan.verbs).toContain('apitem');
     });
     it('the in-place service settles a refusal as data (kind refusal, the message)', () => {
         const h = createInPlaceProduceService().start({ producer: WALK_TAPE_PRODUCER, staging, goal: { kind: 'location', level: 0, tag: 7 },
