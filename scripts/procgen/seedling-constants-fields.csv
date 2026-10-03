@@ -87,6 +87,8 @@ frontend/modules/seedlingDemo/levelWorld.js|FORCED_TSET|(module),rule,sentinel,,
 frontend/modules/seedlingDemo/levelWorld.js|FORCED_TAG|(module),rule,sentinel,,forced persistence tags
 frontend/modules/seedlingDemo/levelWorld.js|tagOf|tagOf,rule,sentinel,,absent tag = -1 (none)
 frontend/modules/seedlingDemo/levelWorld.js|clearedAwayByTag|clearedAwayByTag,rule,sentinel,,tag >= 0 tagged; tSet < 0 lock-despawn
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h227be15a|-1|0,rule,sentinel,,ButtonRoom room default -1
+frontend/modules/seedlingDemo/levelWorld.js|outOfBandWritersOnto|outOfBandWritersOnto,rule,sentinel,,a tag -1 write lands one level back (level + 1's writers); tag < 0 is the sentinel
 frontend/modules/seedlingDemo/levelWorld.js|addedTimeKey|addedTimeKey,structural,,,0/1 booleans in a cache key
 frontend/modules/seedlingDemo/levelWorld.js|UNTOUCHABLE_CLEARS|(module),rule,sentinel,,level id 114 and Watcher tag 0 (FinalDoor.as:50)
 frontend/modules/seedlingDemo/levelWorld.js|LIGHTPOLE_PRESS_BOX|(module),physics,magnitude,,ctor offset / setHitbox geometry
@@ -105,7 +107,6 @@ frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hca08c4d0|0|0,rule,s
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hd21f290c|0|0,rule,sentinel,,tag >= 0 means tagged
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hd21f290c|0|1,rule,sentinel,,"keyType default int("""")=0"
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hd21f290c|0|2,rule,sentinel,,"totemPart default int("""")=0"
-frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h727f4e4a|-1|0,rule,sentinel,,ButtonRoom room default -1
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hb6e5f66f|0|0,rule,sentinel,,"keyType default int("""")=0"
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h0cb35226|1|0,rule,sentinel,,rockType 1 = ghost rock
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h0cb35226|0|2,rule,sentinel,,rockType 0 = normal rock
