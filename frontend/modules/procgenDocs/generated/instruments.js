@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 33,
-            "count": 75,
+            "browser": 34,
+            "count": 76,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 310,
-        "browser": 97,
-        "cited": 146,
-        "files": 321,
+        "blockStyle": 311,
+        "browser": 98,
+        "cited": 147,
+        "files": 322,
         "lineStyle": 11,
-        "withDocblock": 321,
-        "withFlags": 241
+        "withDocblock": 322,
+        "withFlags": 242
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9849,6 +9849,62 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling JS solver-walk, slice W1 (plan `seedling-js-solver-walk-plan.md` §5.3) — a wasm room ARRIVAL on the live flashPanel page → a JS staging → the S2 worker's solve, with NO play.",
             "path": "scripts/procgen/probe-seedling-wasm-arrival-solve.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "c",
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-wasm-continuation.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "base"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "c"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling solver-walk, slice W7 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §1.3/§2.4/§3 W7) — the live witness that the wasm Playback Bot KEEPS THE ROOM STILL between goals and solves the next goal as a CONTINUATION (S0's prefix from the held room), with no forced re-arrival on the main path.",
+            "path": "scripts/procgen/probe-seedling-wasm-continuation.mjs"
         },
         {
             "argvHelpers": [
