@@ -20,6 +20,10 @@
  *   W  `seedling_atlas_location`: the bot walks the house (chest, door) with **0 forced re-arrivals in total**
  *      — the cold start ADOPTED, the chest a continuation from "arrival + 1 idle tick", the door a continuation
  *      from the chest's held end; the chest checked once; 0 divergences; swaps 1 (the door).
+ *   L  ⛓ W8b — LEVEL 0 (`seedling_atlas`, the bot from its hub): the room's two Mobiles besides the player,
+ *      `introchar` and `statue2`, sampled idle (v 0, at their record positions, idle anim, no rng draw); the cold
+ *      start ADOPTED with them admitted as inert NPCs (`wasmPlayback.INERT_MOBILES`) — the walk hub → house →
+ *      chest spends **0 forced re-arrivals in total** (W8 spent one: refused `mobiles`); 0 divergences.
  *   K  a person's REAL keys move the player before the bot drives → the adoption is REFUSED by name (a
  *      clause: position / velocity / facing) and the named `cold-start` re-arrival serves the walk, which
  *      still finishes.
@@ -30,7 +34,7 @@
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build (the
  * `flashPanel/wasm` submodule), or this SKIPs (exit 0).
  *
- * Run: node scripts/procgen/probe-seedling-wasm-adopt.mjs [--host=http://localhost:8000] [--only=H,P,R,W,K]
+ * Run: node scripts/procgen/probe-seedling-wasm-adopt.mjs [--host=http://localhost:8000] [--only=H,P,R,W,K,L]
  *      [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
@@ -80,12 +84,15 @@ async function main() {
     const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
         ?.slice(name.length + 3) ?? fallback);
     const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
-    const SESSIONS = arg('only', 'H,P,R,W,K').split(',').filter(Boolean);
-    const GAME = 'seedling_atlas_location';
-    const PRESET = JSON.parse(readFileSync(join(REPO, `frontend/presets/${GAME}/AP_1/AP_1_rules.json`), 'utf8'));
-    const REGIONS = PRESET.regions['1'];
-    const START = REGIONS.Menu.exits[0].connected_region;
-    const WASM_PAGE = PRESET.flash_panel?.wasm ?? '';
+    const SESSIONS = arg('only', 'H,P,R,W,K,L').split(',').filter(Boolean);
+    /** The house walk (H/P/R/W/K) and ⛓ W8b's level-0 cold start (L: `seedling_atlas`, from its hub). */
+    const presetOf = (game) => {
+        const preset = JSON.parse(readFileSync(join(REPO, `frontend/presets/${game}/AP_1/AP_1_rules.json`), 'utf8'));
+        const regions = preset.regions['1'];
+        return { GAME: game, PRESET: preset, REGIONS: regions, START: regions.Menu.exits[0].connected_region };
+    };
+    const PRESETS = { house: presetOf('seedling_atlas_location'), level0: presetOf('seedling_atlas') };
+    const WASM_PAGE = PRESETS.house.PRESET.flash_panel?.wasm ?? '';
     if (!WASM_PAGE || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE))) {
         console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
         process.exit(0);
@@ -102,6 +109,7 @@ async function main() {
     process.exit(failed === 0 ? 0 : 1);
 
     async function runSession(S) {
+        const { GAME, PRESET, REGIONS, START } = S === 'L' ? PRESETS.level0 : PRESETS.house;
         const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
         const logs = [];
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
@@ -298,6 +306,52 @@ async function main() {
                     // eslint-disable-next-line no-await-in-loop
                     await page.waitForTimeout(1500);
                 }
+            }
+
+            if (S === 'L') {
+                // ⛓ W8b — level 0's NPC Mobiles, untouched: sampled idle (v 0, at the record, idle anim, no rng draw) and admitted.
+                const samples = await L(async () => {
+                    const a = window.__adopt;
+                    const rows = [];
+                    for (let i = 0; i < 6; i++) {
+                        const st = a.status();
+                        const npc = (a.mobiles().mobiles ?? []).filter((r) => !/Player/.test(r.cls))
+                            .map((r) => ({ cls: r.cls, x: r.x, y: r.y, vx: r.vx, vy: r.vy, anim: r.anim, type: r.type, destroy: r.destroy, collidable: r.collidable }));
+                        rows.push({ gt: st.game_time, rng: st.rng?.state, x: st.x, y: st.y, npc: JSON.stringify(npc) });
+                        // eslint-disable-next-line no-await-in-loop
+                        await new Promise((r) => { setTimeout(r, 500); });
+                    }
+                    return rows;
+                });
+                out('L idle', { n: samples.length, gt: [samples[0].gt, samples.at(-1).gt], npc: [...new Set(samples.map((r) => r.npc))] });
+                const npc0 = JSON.parse(samples[0].npc);
+                check('L: level 0 holds exactly introchar + statue2, v 0, idle, at (152,296) / (208,160) — unchanged over 2.5 s of ticks',
+                    new Set(samples.map((r) => r.npc)).size === 1 && samples.at(-1).gt > samples[0].gt
+                        && JSON.stringify(npc0.map((r) => [r.cls, r.x, r.y, r.vx, r.vy]).sort()) === JSON.stringify([['NPCs::IntroCharacter', 152, 296, 0, 0], ['NPCs::Statue', 208, 160, 0, 0]]),
+                    samples[0].npc);
+                check('L: idle in level 0 the rng takes NO draw and the player stays put', samples.every((r) => r.rng === samples[0].rng && r.x === samples[0].x && r.y === samples[0].y),
+                    JSON.stringify(samples.map((r) => [r.rng, r.x, r.y])));
+                const end = await botWalk();
+                const eng = await engine();
+                const st = eng?.stats ?? {};
+                const swaps = await rp.gameFrame().evaluate(() => window.__w8swaps);
+                const checks = await L(() => window.__checks ?? []);
+                console.log(`INFO: L adopted ${st.adopted}; adoptRefused ${JSON.stringify(st.adoptRefused)}; forced ${st.forced} ${JSON.stringify(st.forcedBy)}; `
+                    + `continuations ${st.continuations}; heldChecks ${JSON.stringify(st.heldChecks)}; hostStarts ${JSON.stringify((st.hostStarts ?? []).map((h) => h.label))}; `
+                    + `host new Game ${swaps?.hostNewGame}`);
+                check('L: the bot FINISHED the seedling_atlas walk from the hub', (end?.status ?? '').startsWith('finished'), `status "${end?.status}"`);
+                // The one host `new Game` left is the region GLUE's redirect into the house (W7 §5.12 measured it), not the engine's:
+                // the engine's re-arrivals are `forced`. W8 walked 2 (its cold-start re-arrival + the redirect).
+                check('L: level 0\'s cold start ADOPTED — 0 forced re-arrivals IN TOTAL, nothing refused; host new Game 1 = the glue\'s redirect only',
+                    st.adopted === 1 && st.forced === 0 && Object.keys(st.forcedBy ?? {}).length === 0 && (st.adoptRefused ?? []).length === 0
+                        && swaps?.hostNewGame === 1 && (st.hostStarts ?? [])[0]?.label === 'adopt',
+                    JSON.stringify({ adopted: st.adopted, forced: st.forced, forcedBy: st.forcedBy, refused: st.adoptRefused, swaps }));
+                check('L: every held check equal (the adopted level 0 == the shadow "arrival + 1 idle tick")',
+                    (st.heldChecks ?? []).length >= 1 && st.heldChecks[0].shipped === 1 && st.heldChecks.every((h) => h.equal),
+                    JSON.stringify(st.heldChecks));
+                const chestName = Object.values(REGIONS).flatMap((r) => r.locations ?? []).map((l) => l.name).find((n) => /Chest/.test(n));
+                check('L: the chest checked EXACTLY ONCE', checks.filter((n) => n === chestName).length === 1, JSON.stringify(checks));
+                check('L: 0 divergences, 0 recoveries', st.divergences === 0 && st.recoveries === 0, JSON.stringify({ d: st.divergences, r: st.recoveries }));
             }
 
             if (S === 'W' || S === 'K') {

@@ -24,7 +24,8 @@
  *   A   the ARRIVAL HOLD on `seedling_atlas` (hub → house door → chest; the preset's sphere log, or the one its
  *       rules imply): the house arrival's FIRST begin record (the game's own door) is NOT held — the glue's
  *       redirect is queued behind it (`arrivalHoldBlocker`) — and the redirect's landing IS held; the chest is
- *       solved from that held arrival, no forced re-arrival but the cold start.
+ *       solved from that held arrival. ⛓ W8b: level 0's cold start is ADOPTED (its NPCs are admitted inert), so
+ *       the walk spends NO forced re-arrival at all.
  *   R   RELEASE: the chest served through the controller, its plan ends HELD (the room ignores the keyboard —
  *       ⚖ Q4), then the BOT's pause (`playbackBotUI.stop` → the controller's stop) hands the room back: nothing
  *       held, and a real ArrowLeft moves the player.
@@ -316,11 +317,11 @@ async function main() {
                             st.forced === 0 && st.adopted === 1 && Object.keys(st.forcedBy ?? {}).length === 0 && (st.fallbacks ?? []).length === 0,
                             JSON.stringify({ forced: st.forced, adopted: st.adopted, forcedBy: st.forcedBy, refused: st.adoptRefused, fallbacks: st.fallbacks }));
                     } else {
-                        // Level 0 holds Mobiles (introchar, statue2): its cold start is not adopted (named), and re-arrives.
-                        check(`${S}: 0 forced re-arrivals on the main path — the ONE forced re-arrival is the cold start (level 0 is refused adoption by its Mobiles)`,
-                            st.forced === 1 && (st.forcedBy?.['cold-start'] ?? 0) === 1 && other.length === 0 && (st.fallbacks ?? []).length === 0
-                                && st.adoptRefused?.[0]?.clause === 'mobiles',
-                            JSON.stringify({ forced: st.forced, forcedBy: st.forcedBy, refused: st.adoptRefused, fallbacks: st.fallbacks }));
+                        // ⛓ W8b — level 0's Mobiles (introchar, statue2) are admitted inert NPCs: its cold start is ADOPTED too.
+                        check(`${S}: 0 forced re-arrivals IN TOTAL — ⛓ W8b adopted level 0's cold start (its NPCs admitted inert; W8 spent one there)`,
+                            st.forced === 0 && st.adopted === 1 && other.length === 0 && Object.keys(st.forcedBy ?? {}).length === 0
+                                && (st.adoptRefused ?? []).length === 0 && (st.fallbacks ?? []).length === 0,
+                            JSON.stringify({ forced: st.forced, adopted: st.adopted, forcedBy: st.forcedBy, refused: st.adoptRefused, fallbacks: st.fallbacks }));
                     }
                     check(`${S}: 0 divergences, 0 recoveries`, st.divergences === 0 && st.recoveries === 0,
                         JSON.stringify({ divergences: st.divergences, recoveries: st.recoveries }));
@@ -348,8 +349,8 @@ async function main() {
                         const hub = hist.find((h) => h.goal?.kind === 'exit');
                         check('A: the hub leg (house door) ended at a HELD arrival in the house (the redirect\'s landing)',
                             hub?.outcome === 'done' && hub.heldArrival === 86, JSON.stringify(hub && legsOf([hub])));
-                        check('A: the chest was solved from that held arrival: 2 held arrivals (the cold start + the house), 0 continuations needed',
-                            st.held === 2 && st.solves === 2, JSON.stringify({ held: st.held, solves: st.solves }));
+                        check('A: the chest was solved from that held arrival: 2 held rooms (the adopted cold start + the house); the hub leg is the one continuation',
+                            st.held === 2 && st.solves === 2 && st.continuations === 1, JSON.stringify({ held: st.held, solves: st.solves, continuations: st.continuations }));
                     }
                 }
             }
