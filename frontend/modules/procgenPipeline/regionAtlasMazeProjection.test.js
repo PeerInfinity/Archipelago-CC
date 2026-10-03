@@ -648,10 +648,11 @@ const MAP_DOC = read('../flashPanel/atlases/seedling-map.json');
 const GAME_CONFIG = read('../flashPanel/games/seedling.json');
 const PRESET_PATH = fileURLToPath(new URL('../../presets/seedling_atlas_maze/AP_1/AP_1_rules.json', import.meta.url));
 
-const compileMaze = (atlas = STARTER) => compileRegionAtlas(clone(atlas), {
+const compileMaze = (atlas = STARTER, options = {}) => compileRegionAtlas(clone(atlas), {
     mapDoc: MAP_DOC,
     sidecarFlavor: 'maze',
     mazeProjection: seedlingMazeProjectionDeps({ mapDoc: MAP_DOC, gameConfig: GAME_CONFIG }),
+    ...options,
 });
 
 describe('the real Seedling starter atlas as a maze world', () => {
@@ -784,8 +785,11 @@ describe('the real Seedling starter atlas as a maze world', () => {
     it('the COMMITTED seedling_atlas_maze preset is exactly what the atlas compiles to', () => {
         // The same gate the flash preset carries: a semantics-table or atlas edit
         // that changes the projection shows up red here rather than leaving the
-        // committed preset quietly disagreeing with the map it describes.
-        expect(`${stringifyRulesJson(rules)}\n`).toBe(readFileSync(PRESET_PATH, 'utf8'));
+        // committed preset quietly disagreeing with the map it describes. The
+        // preset is compiled WITH its sphere log (`--embed-sphere-log`), the
+        // same as seedling_atlas; the log is generateSphereLog's, never written.
+        expect(`${stringifyRulesJson(compileMaze(STARTER, { embedSphereLog: true }).rules)}\n`)
+            .toBe(readFileSync(PRESET_PATH, 'utf8'));
     });
 
     it('projects the SAME graph as the flash flavour — only the sidecars differ', () => {

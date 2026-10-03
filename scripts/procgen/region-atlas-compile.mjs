@@ -41,7 +41,7 @@
 //   node scripts/procgen/region-atlas-compile.mjs --embed-sphere-log \
 //       frontend/modules/flashPanel/atlases/seedling.json \
 //       -o frontend/presets/seedling_atlas/AP_1/AP_1_rules.json
-//   node scripts/procgen/region-atlas-compile.mjs --maze \
+//   node scripts/procgen/region-atlas-compile.mjs --maze --embed-sphere-log \
 //       frontend/modules/flashPanel/atlases/seedling.json \
 //       -o frontend/presets/seedling_atlas_maze/AP_1/AP_1_rules.json --check
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';

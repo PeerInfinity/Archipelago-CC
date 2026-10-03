@@ -172,6 +172,8 @@ const { rules, report } = compileRegionAtlas(JSON.parse(JSON.stringify(atlas)), 
     mapDoc,
     sidecarFlavor: 'maze',
     mazeProjection: seedlingMazeProjectionDeps({ mapDoc, gameConfig }),
+    // The committed preset carries generateSphereLog's walk (--embed-sphere-log).
+    embedSphereLog: true,
 });
 check('the committed preset is byte-identical to what the atlas compiles to',
     `${stringifyRulesJson(rules)}\n` === fs.readFileSync(PRESET_FILE, 'utf8'));
