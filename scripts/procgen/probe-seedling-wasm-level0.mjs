@@ -366,7 +366,7 @@ async function main() {
                 const first = hist[0] ?? {};
                 const r0 = (eng?.reads ?? []).find((rd) => rd.status?.level === 0);
                 const st0 = r0 ? restage(r0) : null;
-                check('B: the FIRST leg is the hub → house door, served at a level-0 arrival (W1–W4 refused it: the moonrock)',
+                check('B: the FIRST leg is the hub → house door, served at a level-0 arrival — ⛓ W8b: the ADOPTED cold start, its reads recorded as an arrival\'s (W1–W4 refused it: the moonrock)',
                     first.goal?.level === 0 && first.goal?.kind === 'exit' && ['done', 'stopped'].includes(first.outcome) && !first.divergence
                         && st0?.level === 0 && st0.beam === false && st0.rockSet === false,
                     JSON.stringify({ first: { goal: first.goal, outcome: first.outcome, ticks: first.ticks, drained: first.drained }, staged: st0 }));
