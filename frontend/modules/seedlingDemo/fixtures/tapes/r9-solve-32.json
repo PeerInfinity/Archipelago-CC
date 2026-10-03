@@ -202,7 +202,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 16562,
+        "time": 16560,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 523,
@@ -226,7 +226,7 @@
             "fp": 652897513
         },
         "seam": {
-            "time": 16583
+            "time": 16581
         }
     },
     "tick_count": 1056,
