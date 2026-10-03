@@ -917,9 +917,13 @@ describe('chainGoalFindings — EARNED is measured, and the set is two-sided', (
         //   the HEADLINE's own rebased declarations, retired with the tape
         //   (⚖ ruling 37). `carriesAt`/`absentAt` are the surviving evidence
         //   fields, and they are measurements in exactly the same sense.
+        // ⛓ fidelity F5: the last `carriesAt`/`absentAt` rows (L8's two sandtrap
+        //   clears, by truncation) retired with `r8-solve-8`'s declarations — the
+        //   model computes that death now (F4), so no tape declares it. The model
+        //   rows' `removedAt` and `fade` are the surviving evidence fields.
         expect(declarations).toMatch(/removedAt: \d+/);
-        expect(declarations).toMatch(/carriesAt: \d+/);
-        expect(declarations).toMatch(/absentAt: \d+/);
+        expect(declarations).toMatch(/fade: \d+/);
+        expect(declarations).not.toMatch(/carriesAt: \d+/);
     });
 
     it('⛓ THE REAL CHAIN declares exactly the rows R7 ends on', () => {
@@ -1364,9 +1368,12 @@ describe('⚖ condition 1 — the staged arm does not touch custody chains', () 
         // the chain has to carry the provenance for it. The pin is exact on
         // purpose: a chain that gains or loses a timed clear should red here
         // and be looked at, which is what happened.
-        expect(withClears).toBe(3);
+        // ⛓ fidelity F5: THREE -> TWO. `r8-battery-8` lost its two L8 clears:
+        // F4 taught the model the sandtraps' arrow death, so `r8-solve-8`'s
+        // re-solve declares neither and the run's own death earns both tags.
+        expect(withClears).toBe(2);
         expect(staged.filter((c) => (c.clears ?? []).length > 0).map((c) => c.id).sort())
-            .toEqual(['r8-battery-5', 'r8-battery-8', 'r8-d2']);
+            .toEqual(['r8-battery-5', 'r8-d2']);
     });
 });
 

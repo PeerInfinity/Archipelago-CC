@@ -382,9 +382,14 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
          * family, two rows in L8 — `{8,0}` and `{8,1}` — at 246 and 645 where
          * the hand walk had 380 and 932. The tick values are the WALK; the
          * claim is the FAMILY, and the family still has a witness here.
+         * ⛓ SEEDLING FIDELITY F5: `r8-solve-8` declares NO timed row now (the
+         * model computes the sandtraps' death, F4, and the re-solve earns both
+         * tags), so it folds to v8 and leaves; the L8 family's witness here is
+         * `f4-l8-sandtraps`, which declares `{8,0}`/`{8,1}` game-sourced at the
+         * game's removal ticks, 248 and 648.
          */
         const five = ['r7-act2-5', 'r7-act2-full',
-            'r8-solve-5', 'r8-solve-8', 'r8-solve-18'];
+            'r8-solve-5', 'f4-l8-sandtraps', 'r8-solve-18'];
         for (const n of five) {
             const committed = tape(n);
             // ⚠ `solveStaging`, because that is what the callers hand over —
@@ -479,10 +484,12 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         //   `{18,0}@416`) and `f1c-l18-phase42` (the rung's solve, `{18,0}@452`) joined.
         // ⛓ Seedling fidelity F4: `f4-l8-sandtraps` joined — L8's two sandtrap
         //   clears, game-sourced at the removal ticks (`{8,0}@248`, `{8,1}@648`).
+        // ⛓ Seedling fidelity F5: `r8-solve-8` LEFT — its re-solve declares no
+        //   sandtrap clear (the run computes the death, F4, and earns both tags).
         expect(byAt.sort()).toEqual([
             'f1-l5-lock-removal', 'f1c-l18-lock-removal', 'f1c-l18-phase42',
             'f4-l8-sandtraps', 'r2-terrain-killlock', 'r7-act2-5', 'r7-act2-full',
-            'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8', 'r9-solve-18',
+            'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r9-solve-18',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);
         expect(names.length).toBeGreaterThan(140);   // and the sweep really swept
