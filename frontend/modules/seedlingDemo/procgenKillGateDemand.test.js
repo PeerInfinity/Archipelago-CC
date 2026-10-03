@@ -236,9 +236,15 @@ describe('`summary.require` — omitted when untyped, and NAMED on every refusal
          * refusals are ordered by the PIPELINE (trap 357) and this row is what
          * holds that order — a placement check asked first reports every
          * uncertified gate as one the ROOM could not host.
+         *
+         * ⛓ FIDELITY F1c: the scan reached seed 8 through F1b, whose gate the
+         * press kill refused on HAMMER SAFETY; the HAMMER-PHASE rung certifies
+         * it, and the first seed whose gate still refuses its certification is
+         * past 12. The bound is widened, never the subject picked.
          */
+        const SCAN = 120;
         let hit = null;
-        for (let seed = 1; seed <= 12 && !hit; seed += 1) {
+        for (let seed = 1; seed <= SCAN && !hit; seed += 1) {
             let out;
             try {
                 out = generateSeedlingLevel({
@@ -248,11 +254,11 @@ describe('`summary.require` — omitted when untyped, and NAMED on every refusal
             const r = out.summary.require;
             if (!r.met && /did-not-certify/.test(r.refused.reason)) hit = { seed, r };
         }
-        expect(hit, 'some seed in 1..12 places a kill gate the solver cannot certify')
+        expect(hit, `some seed in 1..${SCAN} places a kill gate the solver cannot certify`)
             .not.toBe(null);
         expect(hit.r.refused.reason).toMatch(/^the-required-element-did-not-certify: /);
         expect(hit.r.grade).toBe(null);
-    });
+    }, 600_000);
 });
 
 

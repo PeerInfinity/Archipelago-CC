@@ -825,9 +825,13 @@ describe('createTapeStepper — the resume run', () => {
      * earns them on its own tick; the MODEL cannot, because `levelRun` refuses
      * to compute a kill-lock clear itself and an undeclared one THROWS.
      *
-     * ⛔ THE SUBJECT IS `r8-solve-5` `{5,0}@427`, resumed after `r8-solve-4`.
+     * ⛔ THE SUBJECT IS `r8-solve-5`'s `{5,0}` (`@427` until fidelity F1c
+     * re-recorded the window at the removal, `@301`), resumed after `r8-solve-4`.
+     * The tick is READ off the window's own timed row, not typed.
      */
     describe('⛓⛓ addTimedClears — a later window\'s FORWARD declarations, rebased', () => {
+        const AT = loadTape('r8-solve-5').persistence
+            .find((p) => p.level === 5 && p.tag === 0 && p.at !== undefined).at;
         const resumedAfter4 = () => {
             let live = null;
             stream(loadTape('r8-solve-4'),
@@ -838,11 +842,11 @@ describe('createTapeStepper — the resume run', () => {
         it('⛓ the row lands at the REBASED tick, not the tape-local one', () => {
             const live = resumedAfter4();
             const offset = live.ticksCompleted;
-            live.addTimedClears([{ level: 5, tag: 0, at: 427 + offset }]);
+            live.addTimedClears([{ level: 5, tag: 0, at: AT + offset }]);
             // ⛔ not applied yet — the walk has not reached the tick.
             expect(live.appliedTimedClears).toEqual([]);
             stream(loadTape('r8-solve-5'), { run: live });
-            expect(live.appliedTimedClears).toEqual([{ level: 5, tag: 0, at: 427 + offset }]);
+            expect(live.appliedTimedClears).toEqual([{ level: 5, tag: 0, at: AT + offset }]);
         });
 
         it('⛔⛔ WITHOUT it the resumed window THROWS — `undeclaredKillLock`', () => {
@@ -860,7 +864,7 @@ describe('createTapeStepper — the resume run', () => {
 
         it('⛔ a row the world ALREADY HOLDS is refused — two writers of one slot', () => {
             const live = resumedAfter4();
-            live.addTimedClears([{ level: 5, tag: 0, at: live.ticksCompleted + 427 }]);
+            live.addTimedClears([{ level: 5, tag: 0, at: live.ticksCompleted + AT }]);
             stream(loadTape('r8-solve-5'), { run: live });
             expect(() => live.addTimedClears([{ level: 5, tag: 0, at: 99999 }]))
                 .toThrow(/ALREADY CLEAR/);
@@ -868,7 +872,7 @@ describe('createTapeStepper — the resume run', () => {
 
         it('⛔ a DUPLICATE of a row still pending is refused, and names its tick', () => {
             const live = resumedAfter4();
-            const at = live.ticksCompleted + 427;
+            const at = live.ticksCompleted + AT;
             live.addTimedClears([{ level: 5, tag: 0, at }]);
             expect(() => live.addTimedClears([{ level: 5, tag: 0, at: at + 1 }]))
                 .toThrow(new RegExp(`already PENDING on this run at tick ${at}`));
