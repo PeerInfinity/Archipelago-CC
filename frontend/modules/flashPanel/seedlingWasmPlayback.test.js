@@ -737,7 +737,8 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
         expect(e.game.tapes[0]).toMatchObject({ tick_count: 0, hold: true, seam: null });
         // The held check ran against the shadow after ONE idle tick, and matched.
-        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true })]);
+        // …read only once the adoption's freeze LATCHED (W7's invariant: the held check reads a held game).
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
         expect(e.service.seen[0].request.perTick).toEqual([new Set()]);
         expect(e.service.seen[0].result.plan.verbs).toEqual(['chest', 'walk']);
         expect(e.dones).toHaveLength(1);
@@ -780,6 +781,16 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
     });
     it('the GLUE has a redirect in flight → not adopted (as for a held arrival)', () => {
         refusedBy(adoptOver({}, { swap: { marks: [], queued: 1, pushedOn: null, pushes: 0 } }), 'glue');
+    });
+    it('the held check waits for the adoption\'s freeze to LATCH (a freeze still armed is polled, never checked against)', () => {
+        const e = engineOver(A, { swap: CLEAR, game: { unwatched: unwatched(), freezeLatchesAfter: 3 } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        expect(e.engine.status().phase).toBe('adopting');
+        expect(e.engine.stats.heldChecks).toEqual([]);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true, held: true })]);
+        expect(e.dones).toHaveLength(1);
     });
     it('an engine WITHOUT the glue query adopts nothing (W7\'s rule) — the cold start re-arrives, no clause recorded', () => {
         const e = adoptOver({}, { noGlue: true });

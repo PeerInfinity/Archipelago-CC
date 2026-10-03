@@ -134,7 +134,7 @@ export function createWasmPlayback({
      */
     const glueQuery = holds && typeof getSwapState === 'function';
 
-    /** idle | await-arrival | solving | playing | held (⛓ W7: our tape holds a room, no goal) */
+    /** idle | await-arrival | ⛓ W8 adopting (the adoption's freeze latching) | solving | playing | held (⛓ W7: our tape holds a room, no goal) */
     let phase = 'idle';
     let goal = null;
     let queued = null;
@@ -395,8 +395,21 @@ export function createWasmPlayback({
         spawn = room.spawn;
         arriving = false;
         note(`adopted level ${g.level} as it stands (no re-arrival)`);
-        solveInRoom();
+        // The held check reads a HELD game (W7's invariant): wait for the freeze to latch (one frame), then solve.
+        phase = 'adopting';
+        deadline = now() + ARRIVAL_WAIT_MS;
+        schedule(adoptLatched, SOLVE_POLL_MS);
         return true;
+    }
+
+    /** ⛓ W8 — the adoption's freeze latched → the held check + the continuation solve; never latched → failed by name. */
+    function adoptLatched() {
+        if (phase !== 'adopting') return;
+        const st = status();
+        if (st?.held) { phase = 'held'; solveInRoom(); return; }
+        if (st?.error) { fail(`the adoption's freeze tape errored: ${st.error}`); return; }
+        if (now() > deadline) { fail(`the adoption's freeze never latched in level ${goal.level} within ${ARRIVAL_WAIT_MS / 1000} s`); return; }
+        schedule(adoptLatched, SOLVE_POLL_MS);
     }
 
     /**
