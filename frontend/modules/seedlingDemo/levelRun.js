@@ -35,7 +35,7 @@
 
 import {
     PLAYER_SOLID_TYPES, TILE_SIZE,
-    addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap,
+    addedTimeKey, buildLevelWorld, normalizeLiveOpts, rect, rectsOverlap, tagOf,
 } from './levelWorld.js';
 import {
     INITIAL_FRAMES_THIS_CHARACTER, PICKUP_CEREMONY, PICKUP_CEREMONY_BY_KEYTYPE,
@@ -93,8 +93,8 @@ import {
 // `CHASERS` x `MODELLED_ENEMY_CLASSES`, never typed here.
 import {
     ENEMY_PIT_TILE, ENEMY_TERRAIN_DESTROYS, chaserAttackDecision, chaserBoxAt, chaserSolids,
-    chaserKnocksBack, chaserStep, createDieAnim, deathTicks, isBridgedChaser, puncherPunchRect,
-    stepSpriteAnim, CHASERS,
+    chaserKnocksBack, chaserStep, createDieAnim, createSpriteAnim, deathTicks, isBridgedChaser,
+    puncherPunchRect, stepSpriteAnim, CHASERS,
 } from './chasers.js';
 import { CRUSHER, alwaysArmed, crusherRect, scanCrusher, stepCrusher } from './crusher.js';
 import {
@@ -194,8 +194,8 @@ import {
 // tSet == -1 locks" — from a blanket policy into an arithmetic the run
 // computes at every kill.
 import {
-    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, MODELLED_KILL_ARMS, PIT_FADE, enemyHit,
-    killLockLedger, removalTicksAfterHit,
+    ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, MODELLED_KILL_ARMS, PIT_FADE, STATIC_ARROW_DEATH,
+    createStaticBodyDamage, enemyHit, enemyHitUpdate, killLockLedger, removalTicksAfterHit,
 } from './enemyDamage.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
@@ -371,6 +371,7 @@ export const ENTITY_FAMILY_NAMES = Object.freeze([
     'bobBoss',
     'pulls',
     'shooters',
+    'staticBodies',
 ]);
 
 /**
@@ -429,6 +430,7 @@ export const LEDGER_KIND_NAMES = Object.freeze([
     'bobBossEvents',
     'shieldBumps',
     'spitEvents',
+    'staticBodyDeaths',
 ]);
 
 /**
@@ -863,10 +865,25 @@ export function createLevelRun({
         }
         return { ...rec, entities: kept };
     };
+    /**
+     * ⛓ SEEDLING FIDELITY F4: the tags of the static bodies this run removed itself
+     * (`stepStaticBodiesNow`), by level. Such a body leaves the record through
+     * `despawnedByLevel`, and its own `removed()` clears its tag as well, so the built
+     * room has nothing left that reads that tag. That is the game's state, not an
+     * orphan clear, and `worldFor` keeps the builder's orphan guard from reading it as one.
+     */
+    const staticRemovedTags = new Map();
+    const clearedForBuild = (n, cleared) => {
+        const gone = staticRemovedTags.get(n);
+        if (!gone || gone.size === 0) return cleared;
+        const rec = recordFor(n);
+        return cleared.filter((t) => !gone.has(t)
+            || rec.entities.some((e) => tagOf(e.type, e.attrs) === t));
+    };
     const worldFor = (n) => {
         if (!worlds.has(n)) {
             const opts = { ...(roles ? { roles } : {}), inventory };
-            if (clearedByLevel.has(n)) opts.cleared = clearedByLevel.get(n);
+            if (clearedByLevel.has(n)) opts.cleared = clearedForBuild(n, clearedByLevel.get(n));
             worlds.set(n, buildLevelWorld(recordFor(n), opts));
         }
         return worlds.get(n);
@@ -947,6 +964,8 @@ export function createLevelRun({
         chaserStates.delete(n);
         // ⛓ R2-swim D1: and the wallflyers, built from the same census.
         wallFlyerStates.delete(n);
+        // ⛓ F4: and the static bodies' damage roster, for the same reason.
+        staticBodyStates.delete(n);
         // R5 slice 15: the crusher roster is built from the world too. No
         // item grants or removes one today; dropped anyway, for the reason
         // the spinner's is.
@@ -2537,6 +2556,25 @@ export function createLevelRun({
      */
     const scratchClears = [];
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY F4 — THE STATIC BODIES THIS RUN KILLED, one row per
+     * removal: `{level, id, as3, tag, killedAt, removedAt, write, declaredAt}`.
+     *
+     * `removed()` writes the body's own tag (`KILL_SIDE_WRITES.SandTrap`), and
+     * `write` says which channel carries it in this run:
+     *
+     *   `declared` — the staging declares the slot, so the declaration is its
+     *                one writer and nothing is written here; `declaredAt` is the
+     *                declared tick, and a row whose `declaredAt` is not its
+     *                `removedAt` is a declaration the model disagrees with;
+     *   `scratch`  — a scratch run (no tape owns the slot): the clear is written
+     *                now, through `applyClearNow`, and `scratchClears` names it;
+     *   `earned`   — otherwise: banked in `pendingEarnedClears`, which the next
+     *                build of the level cashes. A spinner's `removed()` write
+     *                takes the same channel.
+     */
+    const staticBodyDeaths = [];
+    const pendingStaticRemovals = [];
+    /**
      * The clear's own tick, from the LOCK's own fade — the arithmetic
      * `assertSpinnerRemovalIsDeclared` already wrote, hoisted so the chaser
      * arm computes the same number rather than a second one. `opensOnTick`
@@ -2562,6 +2600,62 @@ export function createLevelRun({
             + 'channel left empty; two writers of one persistence slot is the exact thing '
             + 'it must not become. This promotion is a defect in the layer, not a level '
             + 'verdict.');
+    };
+    /**
+     * ⛓ F4: a static body `stepStaticBodiesNow` removed on the previous tick
+     * leaves the level record now (the `despawn` path, so no list the world
+     * derives can keep it), and its tag is written through its channel.
+     */
+    const fireStaticRemovals = () => {
+        for (const p of pendingStaticRemovals) {
+            if (p.applied || ticksCompleted < p.removedAt) continue;
+            p.applied = true;
+            const present = (worldFor(p.level).combat?.enemies ?? [])
+                .some((e) => `${e.tag}@${e.x},${e.y}` === p.id);
+            if (present) {
+                if (!despawnedByLevel.has(p.level)) despawnedByLevel.set(p.level, new Set());
+                despawnedByLevel.get(p.level).add(p.id);
+                if (!staticRemovedTags.has(p.level)) staticRemovedTags.set(p.level, new Set());
+                staticRemovedTags.get(p.level).add(p.persistTag);
+                worlds.delete(p.level);
+                if (p.level === level) world = worldFor(p.level);
+            }
+            const owner = declaredClears.find((c) => c.level === p.level && c.tag === p.persistTag);
+            let write;
+            if (owner) {
+                write = 'declared';
+            } else if (scratchPersistence) {
+                write = 'scratch';
+                assertScratchSlotIsFree({ level: p.level, id: p.id, removedAt: p.removedAt }, p.persistTag);
+                applyClearNow({ level: p.level, tag: p.persistTag });
+                scratchClears.push({
+                    level: p.level,
+                    tag: p.persistTag,
+                    at: p.removedAt + 1,
+                    // The v9 spelling: the flag is false when tick `removedAt` ends.
+                    declaredAt: p.removedAt,
+                    removedAt: p.removedAt,
+                    by: p.id,
+                    lock: null,
+                    cause: `${p.id}'s arrow death`,
+                    why: `\`${p.as3}.removed()\` writes its own tag`,
+                });
+            } else {
+                write = 'earned';
+                if (!pendingEarnedClears.has(p.level)) pendingEarnedClears.set(p.level, new Set());
+                pendingEarnedClears.get(p.level).add(p.persistTag);
+            }
+            staticBodyDeaths.push({
+                level: p.level,
+                id: p.id,
+                as3: p.as3,
+                tag: p.persistTag,
+                killedAt: p.killedAt,
+                removedAt: p.removedAt,
+                write,
+                declaredAt: owner ? (owner.at ?? null) : null,
+            });
+        }
     };
     const firePendingKillLockThrows = () => {
         for (let i = 0; i < pendingKillLockThrows.length; i += 1) {
@@ -3183,6 +3277,42 @@ export function createLevelRun({
         }
         return { stepped: true, why: null };
     };
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY F4 — THE STATIC BODIES WHOSE ARROW DEATH THIS RUN
+     * COMPUTES, per level, keyed by census id (`sandtrap@96,80`).
+     *
+     * A static census body does not move, so its placement is its position for
+     * the whole visit; what an arrow changes is `Enemy`'s own damage state, which
+     * this roster carries (`createStaticBodyDamage`, the fields `enemyHit` reads).
+     * Only the classes `STATIC_ARROW_DEATH` lists get a row; every other static
+     * body still stops the arrow and takes nothing (`applyArrowHit`).
+     *
+     * ⚠ BUILT ON THE FIRST ARROW THAT MEETS ONE, never eagerly, so a room no arrow
+     * reaches has no roster and no per-tick step. Per VISIT, like the chasers': a
+     * new `Game` constructs every body unhit (`freshVisitState`).
+     */
+    const staticBodyStates = new Map();
+    const staticBodyStateFor = (n) => {
+        if (!staticBodyStates.has(n)) {
+            const byId = new Map();
+            for (const e of (worldFor(n).combat?.enemies ?? [])) {
+                if (STATIC_ARROW_DEATH[e.as3]?.policy !== 'modelled') continue;
+                const id = `${e.tag}@${e.x},${e.y}`;
+                byId.set(id, {
+                    ...createStaticBodyDamage(e.as3),
+                    id,
+                    tag: e.tag,
+                    persistTag: tagOf(e.tag, e.attrs),
+                    rect: contactRect(e),
+                    dieAnim: null,
+                    killedAt: null,
+                    removedAt: null,
+                });
+            }
+            staticBodyStates.set(n, byId);
+        }
+        return staticBodyStates.get(n);
+    };
     const chaserStates = new Map();
     const chaserStateFor = (n) => {
         if (!chaserStates.has(n)) {
@@ -3545,6 +3675,8 @@ export function createLevelRun({
         chaserStates.delete(n);
         // ⛓ R2-swim D1: a wallflyer holds no persistence either.
         wallFlyerStates.delete(n);
+        // ⛓ F4: nor a static body's hits; its DEATH is durable through its tag.
+        staticBodyStates.delete(n);
         /**
          * ⛓⛓⛓ R5 SLICE 15: AND A RE-ENTERED ROOM REBUILDS EVERY CRUSHER AT
          * ITS CONSTRUCTOR CELL — WITH NOTHING TO CARRY AND NOTHING TO CHECK.
@@ -6295,6 +6427,40 @@ export function createLevelRun({
     }
 
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY F4 — `SandTrap.update`, AND ITS GRAPHIC, IN THE
+     * BODY'S OWN SLOT.
+     *
+     * `loadlevel` adds `sandtrap` (`Game.as:2268`) below `arrowtrap` (`:2320`)
+     * and above `bob` (`:2253`) and the Player (`:2227`), and the arrows are
+     * run-time additions, so the order in one tick is: the arrows (an arrow's
+     * hit lands here first), the traps, then this body. Its update is
+     * `Enemy.update`: behind `onScreen()` at zero margin, `hitUpdate()` runs the
+     * i-frames down (so a hit's 30 reads 29 on its own observation, as the game
+     * reports). Then `World.update` advances the graphic, outside that gate:
+     * "die" plays its 19 updates and `endAnim` removes the body on the last.
+     *
+     * The removal itself (the record edit, and `removed()`'s write of the tag)
+     * lands at the top of the next tick, `fireStaticRemovals`: the body leaves
+     * the world at the end of this tick, after everything that could read it.
+     */
+    function stepStaticBodiesNow() {
+        const st = staticBodyStates.get(level);
+        if (!st) return;
+        for (const b of st.values()) {
+            if (b.removed) continue;
+            if (b.hitsTimer > 0) enemyHitUpdate(b, { onScreen: onScreenNow(b.rect, b.id) });
+            if (b.dieAnim && stepSpriteAnim(b.dieAnim)) {
+                b.removed = true;
+                b.removedAt = ticksCompleted + 1;
+                pendingStaticRemovals.push({
+                    level, id: b.id, as3: b.as3, persistTag: b.persistTag,
+                    killedAt: b.killedAt, removedAt: b.removedAt, applied: false,
+                });
+            }
+        }
+    }
+
+    /**
      * ⛓⛓⛓ R8 SLICE 5 — THE ARROW SUBSYSTEM, FORECAST ALONG A WALK THAT HAS
      * NOT HAPPENED YET.
      *
@@ -6890,6 +7056,55 @@ export function createLevelRun({
      */
     function applyArrowHit(arrow, hit, frozen) {
         const c = hit.chaser ?? null;
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY F4 — A STATIC BODY WHOSE ARROW DEATH IS COMPUTED.
+         *
+         * `Arrow.as:51-53` hands every overlapped `"Enemy"` the same
+         * `hit(v.length, new Point(x, y))`, so a static body takes the chaser
+         * arm's `enemyHit` below, with the same `ARROW_ENEMY_HIT` arguments: one
+         * damage, 30 i-frames, death at `hitsMax`. Its `knockback` is the
+         * class's own (`SandTrap`'s is empty, so nothing moves), and its death
+         * is its `startDeath`: "die" plays from this tick, and the body's own
+         * slot (`stepStaticBodiesNow`) steps it to the removal.
+         */
+        const sb = (!c && !hit.cover && hit.type === 'Enemy')
+            ? (staticBodyStateFor(level).get(hit.id) ?? null) : null;
+        if (sb) {
+            const verdict = enemyHit(sb, {
+                d: ARROW_ENEMY_HIT.damage,
+                f: ARROW_ENEMY_HIT.force,
+                t: ARROW_ENEMY_HIT.type,
+                frozen,
+            });
+            if (verdict.knockedBack && STATIC_ARROW_DEATH[sb.as3].knocksBack) {
+                throw new Error(`levelRun: ${sb.id} is a static body whose \`knockback\` moves it, `
+                    + 'and this model keeps a static body at its placement. Refused by name (F4).');
+            }
+            if (verdict.killed) {
+                // ⛔ A `-1` tag would write OUT OF BAND (`KILL_SIDE_WRITES.SandTrap.sentinel`).
+                if (!(sb.persistTag >= 0)) {
+                    throw new Error(`levelRun: ${sb.id} dies to ${arrow.id} at tick ${ticksCompleted + 1} `
+                        + `and carries no persistence tag, so its \`removed()\` would write OUT OF BAND. `
+                        + 'No placement in the extract does this; refused by name rather than guessed (F4).');
+                }
+                const anim = STATIC_ARROW_DEATH[sb.as3].dieAnim;
+                sb.killedAt = ticksCompleted + 1;
+                sb.dieAnim = createSpriteAnim(anim.frames, anim.rate);
+            }
+            arrowBodyHits.push({
+                t: ticksCompleted + 1,
+                level,
+                arrow: arrow.id,
+                body: hit.id,
+                type: hit.type,
+                arm: 'static-body',
+                damaged: verdict.damaged,
+                killed: verdict.killed,
+                refusedAt: verdict.refusedAt,
+                hitsAfter: sb.hits,
+            });
+            return;
+        }
         if (!c) {
             /**
              * ⛔⛔⛔ R8 SLICE 5 — THE PLAYER ARM IS A BILL, AND FOR TWO SLICES
@@ -9098,12 +9313,14 @@ export function createLevelRun({
             // `Enemy.update`'s own early return is `onScreen()` at ZERO
             // margin, so an off-screen body neither moves nor damages —
             // and under shake the verdict can be a refusal.
+            // ⛓ F4: a static body an arrow has hit carries its own i-frames and
+            // its "die" anim (`stepStaticBodiesNow`), and `Enemy.hitPlayer`
+            // gates on both. A body no arrow has reached has none of either.
+            const live = staticBodyStates.get(level)?.get(id) ?? null;
             const verdict = enemyHitPlayerFires(
-                // A static trap is never hit on this rung (nothing shoots it),
-                // so its own i-frames and die anim are constants — stated
-                // rather than tracked, and stated where a future stepper
-                // would have to replace them.
-                { hitsTimer: 0, destroy: false, dieAnim: false },
+                live
+                    ? { hitsTimer: live.hitsTimer, destroy: false, dieAnim: live.dying === true }
+                    : { hitsTimer: 0, destroy: false, dieAnim: false },
                 onScreenNow(rect, id) ? 'on' : 'off',
             );
             if (!verdict.fires) {
@@ -12473,6 +12690,18 @@ export function createLevelRun({
         die: a.die, alpha: a.alpha, removed: a.removed,
     }));
     const pushesSettledNow = () => noclip ? true : pushablesSettled(pushableStateFor(level));
+    /**
+     * ⛓ F4: this level's static bodies an arrow has reached (`staticBodyStates`), as
+     * the game's `botMobiles()` would describe them: hits, i-frames, the "die"
+     * frame. A room no arrow has reached returns [] (the roster is built lazily).
+     */
+    const staticBodiesNow = () => [...(staticBodyStates.get(level)?.values() ?? [])]
+        .map((b) => ({
+            id: b.id, as3: b.as3, persistTag: b.persistTag, hits: b.hits,
+            hitsTimer: b.hitsTimer, dying: b.dying === true,
+            dieIndex: b.dieAnim ? b.dieAnim.index : null,
+            killedAt: b.killedAt, removed: b.removed === true, removedAt: b.removedAt,
+        }));
     const ENTITY_FAMILIES = Object.freeze({
         openActivators: openActivatorsNow,
         pushables: pushablesNow,
@@ -12500,6 +12729,7 @@ export function createLevelRun({
         bobBoss: bobBossNow,
         pulls: pullsNow,
         shooters: shootersNow,
+        staticBodies: staticBodiesNow,
     });
 
     /**
@@ -12771,6 +13001,7 @@ export function createLevelRun({
     const spinnerKillLockOpensNow = () => spinnerKillLockOpens.map((k) => ({ ...k }));
     const spinnerWritesNow = () => spinnerWrites.map((w) => ({ ...w, flag: { ...w.flag } }));
     const turretKillsNow = () => turretKills.map((k) => ({ ...k }));
+    const staticBodyDeathsNow = () => staticBodyDeaths.map((d) => ({ ...d }));
     const PROGRESS_FIELDS = Object.freeze({
         inventory: inventoryNow,
         keys: keysNow,
@@ -12818,6 +13049,7 @@ export function createLevelRun({
         bobBossEvents: bobBossEventsNow,
         shieldBumps: shieldBumpsNow,
         spitEvents: spitEventsNow,
+        staticBodyDeaths: staticBodyDeathsNow,
     });
 
     return {
@@ -14053,8 +14285,12 @@ export function createLevelRun({
         get pulls() { return pullsNow(); },
         /** ⛓ U15-swim D1: the room's turrets and their spits — see `shootersNow`. */
         get shooters() { return shootersNow(); },
+        /** ⛓ F4: the static bodies an arrow has reached (see `staticBodiesNow`). */
+        get staticBodies() { return staticBodiesNow(); },
         /** ⛓ U15-swim D1: the spit ledger — see `stepSpitsNow`. */
         get spitEvents() { return spitEventsNow(); },
+        /** ⛓ F4: the static bodies this run killed (see `staticBodyDeaths`). */
+        get staticBodyDeaths() { return staticBodyDeathsNow(); },
         /**
          * ⛓⛓⛓ R5 SLICE 22 — THE FREEZE LEDGER, AND IT IS THE PRICE OF THE
          * KILL RATHER THAN AN ACCIDENT.
@@ -14888,6 +15124,8 @@ export function createLevelRun({
             // ⛓ R8 slice 8: and the kill-lock openings the tape owes, checked
             // at the tick the CLEAR lands rather than at the removal.
             firePendingKillLockThrows();
+            // ⛓ F4: and the static bodies whose death the previous tick finished.
+            fireStaticRemovals();
             // ⛓ R7 slice 6e: and the witnessed mid-run REMOVALS, beside them
             // and for the same reason — the body is already gone when the
             // tick numbered `at` begins, which is what "the game removed it
@@ -15153,6 +15391,8 @@ export function createLevelRun({
             // tick's. Stepping it here, after the movement, is the same
             // labelling `stepActivators` already justifies.
             if (!noclip) stepArrowTrapsNow(activators);
+            // ⛓ F4: the static bodies the arrows just hit, in their own slot.
+            if (!noclip) stepStaticBodiesNow();
             // ── ⛓⛓⛓ R5 SLICE 15: THE CRUSHER, IN ITS OWN SLOT ────────
             //
             // `Game.loadlevel` adds it at `:2142` and `World.addUpdate`

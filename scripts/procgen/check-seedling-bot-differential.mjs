@@ -1794,6 +1794,24 @@ function checkReadout(name, tape, status, stream, seam) {
                 : `${missing.join(', ')} still SET in the game`);
     }
 
+    // ── ⛓ SEEDLING FIDELITY F4: A STATIC BODY THE MODEL KILLED WROTE ITS TAG ──
+    //
+    // `SandTrap.removed()` runs `Game.setPersistence(tag, false)` when `endAnim`
+    // removes the body, so every row of the model's `staticBodyDeaths` must be off
+    // in the game's own array, whichever channel the model wrote it through.
+    const staticDeaths = expected.staticBodyDeaths ?? [];
+    if (staticDeaths.length > 0) {
+        const missing = staticDeaths
+            .filter((d) => !clearedInGame.has(`${d.level}:${d.tag}`))
+            .map((d) => `${d.id} (${d.level}:${d.tag})`);
+        check(`${name}: every static body the model killed wrote its own tag in the game`,
+            missing.length === 0,
+            missing.length === 0
+                ? staticDeaths.map((d) => `${d.id} -> ${d.level}:${d.tag} (removed t${d.removedAt}, `
+                    + `${d.write})`).join(', ')
+                : `${missing.join(', ')} still SET — the model removed a body the game did not`);
+    }
+
     // ── ⛓⛓⛓ R6 SLICE 4: THE BOSS-KILL LEDGER, FROM THE GAME'S OWN ARRAY ──
     //
     // The rung's HEADLINE (§3.1) is "kills by persistence tag, asserted

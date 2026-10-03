@@ -102,7 +102,7 @@ import {
     // value than since R5. The press arm never consulted it; the game found out.
     DASH_CHAIN, DASH_DISPLACEMENT, KILL_PRESS_CADENCE, ORDINARY_SWING_PERIOD,
     SLASH_ANIM_TICKS, slashScaleFor, slashSet, slashTimerTick,
-    MOBILE_DEATH_FADE,
+    MOBILE_DEATH_FADE, STATIC_ARROW_DEATH,
     fallDestination, PhysicsV2Error, playerBoxAt,
     HITBOX, WALK_SPEED,
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
@@ -493,6 +493,8 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * `"Enemy"` body §11.4 refuses to compute the death at all. Both are
      * finished by a DECLARED clear, which is why this executor is the one
      * that raises a PENDING declaration instead of inventing a tick.
+     * (⛓ F4: except a static class whose arrow death the run computes,
+     * `STATIC_ARROW_DEATH` — its removal is the run's own, like a chaser's.)
      */
     kill: execKill,
     /**
@@ -5578,6 +5580,9 @@ function execWeigh(run, perTick, resolved, ctx) {
  *   `game`  — §11.4 REFUSES the consequence, so the model may not invent it.
  *             A static `"Enemy"` body's arrow death is this case: its clear
  *             is the declared v9 row precisely so ONE writer owns the slot.
+ *             (⛓ F4: every static class but the ones `STATIC_ARROW_DEATH`
+ *             lists, whose death the run computes and whose removal writes
+ *             the tag itself — `SandTrap`, witnessed on `f4-l8-sandtraps`.)
  */
 export class PendingDeclaration extends SolverRefusal {
     constructor(message, opts) {
@@ -7141,6 +7146,14 @@ function deriveCeilingBait(run, body, contacts, regions) {
 export const PENDING_AT = Number.MAX_SAFE_INTEGER;
 
 /**
+ * ⛓ SEEDLING FIDELITY F4: does the run compute this static census body's arrow
+ * death? True only for a class `STATIC_ARROW_DEATH` lists as `modelled` (the
+ * ones whose death was read off the game). Every other static body keeps the
+ * §11.4 refusal: the run cannot watch it die, so its clear is the game's.
+ */
+const staticDeathComputed = (row) => STATIC_ARROW_DEATH[row?.as3]?.policy === 'modelled';
+
+/**
  * ⛓⛓⛓ R8 SLICE 4 — THE COLUMN HAS TO DRAIN, AND THE NUMBER IS THE COLUMN'S
  * OWN ARITHMETIC.
  *
@@ -7370,8 +7383,24 @@ function execKill(run, perTick, resolved, ctx) {
              * so the model cannot watch it die, and §11.4 refuses to compute
              * the death of a static `"Enemy"` body. That is a GAME-SOURCED
              * declaration, raised rather than invented.
+             *
+             * ⛓ F4: unless it is a class whose arrow death the run DOES
+             * compute (`STATIC_ARROW_DEATH`). Then the `clear` phase above
+             * already held for every one under a lane, and a body still here
+             * stands outside every lane: the ceiling cannot reach it, and the
+             * game would say the same. That is a refusal, not a declaration.
              */
             const stuck = left[0];
+            const computed = left.filter((b) => staticDeathComputed(b));
+            if (computed.length > 0) {
+                throw new SolverRefusal(`${ctx.what}: the count is still waiting on `
+                    + `[${computed.map((b) => `${b.tag}@${b.x},${b.y}`).join(', ')}], static `
+                    + 'bodies whose arrow death this run computes (F4) — and none of them '
+                    + 'stands in a lane this ceiling fires, so no hold kills them and no bait '
+                    + 'moves them (a static body never writes `v`).',
+                { goal: ctx.goal, obstacle: { kind: 'static-enemy', id: `${computed[0].tag}@${computed[0].x},${computed[0].y}` },
+                    perTick: [...perTick] });
+            }
             throw new PendingDeclaration(`${ctx.what}: the count is still waiting on `
                 + `[${left.map((b) => `${b.tag}@${b.x},${b.y}`).join(', ')}] and none of `
                 + 'them is a body this run STEPS — so the model cannot watch it die, and '
@@ -11110,6 +11139,15 @@ export function solveSegment({
              * refusal now RAISES the declaration it needs instead of stopping
              * the room, so the single writer of that persistence slot is
              * still the tape — and the tick in it is the game's own.
+             *
+             * ⛓⛓ SEEDLING FIDELITY F4 — EXCEPT FOR A CLASS WHOSE DEATH THE RUN
+             * NOW COMPUTES (`STATIC_ARROW_DEATH`: `SandTrap`, read off the game
+             * on `f4-l8-sandtraps`). The hold is the same hold; its `until`
+             * reads the LIVE room, and the run removes the body on the tick the
+             * game does (the record edit and `removed()`'s write of the tag), so
+             * the hold ends by itself and no declaration is owed. A body the run
+             * has already removed is never a target: a staging that boots with
+             * its tag cleared builds the room without it.
              */
             const weapon = deriveCeilingWeapon(run, contacts);
             if (!weapon.presser) {
@@ -11146,7 +11184,9 @@ export function solveSegment({
                         until: {
                             why: `${target.id} has left level ${run.level} — which for a `
                                 + 'static "Enemy" body means its DECLARED clear fired and '
-                                + 'the room was rebuilt without it',
+                                + 'the room was rebuilt without it (⛓ F4: or, for a class '
+                                + 'whose arrow death the run computes, that the run removed it '
+                                + 'on the tick the game does)',
                             test: gone,
                         },
                     }, `${what} -> kill (${target.id})`, before);
@@ -11168,6 +11208,19 @@ export function solveSegment({
                      */
                     const spent = perTick.length - spentBefore;
                     if (!(e instanceof BotDriverV2Error) || gone(run) || spent < bound) throw e;
+                    /**
+                     * ⛓ F4: a class whose death the run computes did NOT die in
+                     * the bound. That is the model's own answer, not a tick the
+                     * game owes, so it is a refusal by name.
+                     */
+                    if (staticDeathComputed(target.row)) {
+                        const sb = (run.entities('staticBodies') ?? []).find((b) => b.id === target.id);
+                        e.message += ` · ⛓ F4: the run COMPUTES ${target.id}'s arrow death `
+                            + `(\`STATIC_ARROW_DEATH.${target.row.as3}\`), and after the whole ${bound}-tick `
+                            + `bound it is still standing with ${sb ? `${sb.hits} hit(s)` : 'no arrow landed'}`
+                            + ' — so the ceiling does not kill it from this stance, in the model or in the game.';
+                        throw e;
+                    }
                     /**
                      * ⛔ THE BOUND RAN OUT AND THE BODY IS STILL THERE — WHICH
                      * FOR THIS CLASS IS THE MEASUREMENT, NOT A FAILED CLAIM.
@@ -11281,7 +11334,9 @@ export function solveSegment({
                 + 'spinner the run steps; a live body without a recorded removal is not a '
                 + 'target), and ⛔ a static "Enemy" body\'s own arrow death is REFUSED by '
                 + 'name (§11.4): its clear is the tape\'s DECLARED v9 `at` row, and a second '
-                + 'writer of one persistence slot is two cost models.';
+                + 'writer of one persistence slot is two cost models. (F4: the classes whose '
+                + `death the run computes, [${Object.keys(STATIC_ARROW_DEATH).join(', ')}], are `
+                + 'targets of the static arm, not of this one.)';
         } else {
             const kill = deriveKillByCeiling(run, target, contacts);
             if (kill.presser) {
