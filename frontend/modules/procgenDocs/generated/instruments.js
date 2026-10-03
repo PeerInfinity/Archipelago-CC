@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 30,
-            "count": 72,
+            "browser": 31,
+            "count": 73,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 307,
-        "browser": 94,
-        "cited": 143,
-        "files": 318,
+        "blockStyle": 308,
+        "browser": 95,
+        "cited": 144,
+        "files": 319,
         "lineStyle": 11,
-        "withDocblock": 318,
-        "withFlags": 238
+        "withDocblock": 319,
+        "withFlags": 239
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9894,6 +9894,48 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling JS solver-walk, slice W0 (plan `seedling-js-solver-walk-plan.md` §5.3) — MEASURE ONLY: can the wasm game take a HOST-BUILT tape mid-play, on the LIVE flashPanel page (the `seedling_atlas_location` atlas world, default build p4e)?",
             "path": "scripts/procgen/probe-seedling-wasm-host-tape.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only"
+            ],
+            "file": "probe-seedling-wasm-level0.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling solver-walk, slice W5 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.2/§3 W5) — the live witness of LEVEL 0 (the overworld hub) on the wasm solver, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
+            "path": "scripts/procgen/probe-seedling-wasm-level0.mjs"
         },
         {
             "argvHelpers": [
