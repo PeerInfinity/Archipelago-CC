@@ -82,7 +82,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 9128,
+        "time": 9126,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 0,
@@ -100,13 +100,13 @@
     },
     "tick0": {
         "rng": {
-            "seed": 1178651500,
+            "seed": 1628209558,
             "split": false,
             "cosmetic": 0,
             "fp": 1752443622
         },
         "seam": {
-            "time": 9112
+            "time": 9147
         }
     },
     "tick_count": 746,

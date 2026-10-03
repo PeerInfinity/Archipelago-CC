@@ -1,7 +1,7 @@
 {
     "trace_version": 1,
     "tape": "r8-d2",
-    "tick_count": 1828,
+    "tick_count": 1826,
     "boot": {
         "level": 18,
         "x": 16,
@@ -49,7 +49,7 @@
             ]
         },
         {
-            "tick": 423,
+            "tick": 421,
             "saw": {
                 "level": 18,
                 "x": 40.06773190240427,
@@ -159,7 +159,7 @@
             ]
         },
         {
-            "tick": 522,
+            "tick": 520,
             "saw": {
                 "level": 19,
                 "x": 24,
@@ -203,7 +203,7 @@
             "note": "merged: walk decided on the same tick"
         },
         {
-            "tick": 1004,
+            "tick": 1002,
             "saw": {
                 "level": 19,
                 "x": 104.42432832535793,
@@ -275,7 +275,7 @@
             ]
         },
         {
-            "tick": 1051,
+            "tick": 1049,
             "saw": {
                 "level": 19,
                 "x": 105.33520025509253,
@@ -307,7 +307,7 @@
             ]
         },
         {
-            "tick": 1090,
+            "tick": 1088,
             "saw": {
                 "level": 19,
                 "x": 105.33520025509253,
@@ -349,7 +349,7 @@
             "note": "merged: walk decided on the same tick"
         },
         {
-            "tick": 1203,
+            "tick": 1201,
             "saw": {
                 "level": 19,
                 "x": 56.003959587755006,
@@ -446,7 +446,7 @@
             ]
         },
         {
-            "tick": 1268,
+            "tick": 1266,
             "saw": {
                 "level": 20,
                 "x": 200,
@@ -565,7 +565,7 @@
             ]
         },
         {
-            "tick": 1390,
+            "tick": 1388,
             "saw": {
                 "level": 20,
                 "x": 118.68384576779738,
@@ -597,7 +597,7 @@
             ]
         },
         {
-            "tick": 1429,
+            "tick": 1427,
             "saw": {
                 "level": 20,
                 "x": 118.68384576779738,
@@ -647,7 +647,7 @@
             "note": "merged: hold decided on the same tick; merged: walk decided on the same tick"
         },
         {
-            "tick": 1568,
+            "tick": 1566,
             "saw": {
                 "level": 20,
                 "x": 173.8972027629171,
@@ -710,7 +710,7 @@
             ]
         },
         {
-            "tick": 1677,
+            "tick": 1675,
             "saw": {
                 "level": 20,
                 "x": 200.34720276291702,
