@@ -45,6 +45,20 @@
       "noHazards": []
     },
     {
+      "file": "f1c-l18-lock-removal.json",
+      "tickCount": 470,
+      "bootLevel": 18,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "f1c-l18-phase42.json",
+      "tickCount": 512,
+      "bootLevel": 18,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "friction-stop.json",
       "tickCount": 30,
       "bootLevel": 0,

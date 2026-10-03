@@ -19,16 +19,27 @@
  *   m1 the rung off (`hammerPhaseRung` returns `{fired: false}`)
  *        -> the chain-residue row red (HAMMER_SAFETY, "There is no step out.");
  *           the committed-walk row and the remainder row stay green
+ *
+ * D2 (the spinner arm's declared spelling) is a GAME MEASUREMENT here, not a
+ * fix: `f1c-l18-lock-removal` (recorded twice) crosses on the tick the model
+ * reaches only under `{18,0}@416`, one tick before the v9 spelling of the
+ * spinner ledger's own removal and two before the arm's `removal + 101`. The
+ * fix (the ledger's stamp and the spelling) moves every generated spinner
+ * kill-lock certification and the `r8-d2` cascade, which the brief did not
+ * license, so it is a STOP with the measured moved set in the F1c report; the
+ * D2 rows below pin the MEASUREMENT, and name the model's two readings as
+ * refuted rather than treating either as right.
  */
 import { describe, expect, it } from 'vitest';
 
-import { loadTape } from './fixtures/index.js';
+import { loadExpectation, loadTape } from './fixtures/index.js';
 import { heldKeysAt } from './tapeFormat.js';
 import { atlasLevelSource } from './levelSource.js';
 import { createRunForStaging, stagingFromTape } from './tapeRunner.js';
 import { HAMMER_PHASE_RUNG, HAMMER_SAFETY } from './solverBot.js';
 import { twoPassSolve } from './twoPassSolve.js';
 import { SPINNER } from './spinner.js';
+import { RESPONDERS, opensOnTick } from './activators.js';
 
 const NAME = 'r9-solve-18';
 const TAPE = loadTape(NAME);
@@ -106,3 +117,60 @@ describe('F1c D1 — the HAMMER-PHASE rung (r9-solve-18 across the hammer\'s pha
         expect(raised.message).toMatch(/HAMMER_PHASE_RUNG/);
     }, 300_000);
 });
+
+/** Replay a committed tape's keys under a persistence block; the run. */
+function replay(name, persistence = null) {
+    const tape = loadTape(name);
+    const st = stagingFromTape(tape);
+    const run = createRunForStaging({ ...st, ...(persistence ? { persistence } : {}) },
+        atlasLevelSource());
+    for (let t = 0; t < tape.tick_count; t += 1) run.advance(heldKeysAt(tape, t));
+    return run;
+}
+
+describe('F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase42, recorded twice)', () => {
+    const WITNESS = 'f1c-l18-phase42';
+    it('⛓⛓ the witness IS the chain-residue staging: the committed boot with only the clock moved', () => {
+        const w = stagingFromTape(loadTape(WITNESS));
+        expect(((w.seam.time % PERIOD) + PERIOD) % PERIOD).toBe(CHAIN_RESIDUE);
+        expect({ ...w.seam, time: null }).toEqual({ ...STAGING.seam, time: null });
+        expect(w.rng).toEqual(STAGING.rng);
+        expect(w.boot).toEqual(STAGING.boot);
+    });
+
+    it('⛓⛓ replayed, no hammer and no body touches the player, and it crosses when the game did', () => {
+        const run = replay(WITNESS);
+        expect(run.playerHits).toEqual([]);
+        expect(run.spinnerContacts).toEqual([]);
+        expect(run.transitions.map((x) => x.t))
+            .toEqual(loadExpectation(WITNESS).stream.transitions.map((x) => x.t));
+    });
+});
+
+describe('F1c D2 — L18\'s spinner kill lock, asked of the game (f1c-l18-lock-removal, recorded twice)', () => {
+    const WITNESS = 'f1c-l18-lock-removal';
+    const GAME_AT = loadTape(WITNESS).persistence.find((p) => p.level === 18 && p.tag === 0).at;
+    const GAME_CROSSING = loadExpectation(WITNESS).stream.transitions.map((x) => x.t);
+    const untimed = stagingFromTape(loadTape(WITNESS)).persistence.filter((p) => p.at === undefined);
+    const at = (n) => untimed.concat([{ level: 18, tag: 0, at: n }]);
+    const removal = replay(WITNESS).ledger('spinnerKillLockOpens')
+        .filter((o) => !o.nil && o.level === 18).map((o) => o.t);
+    const V9_FADE = opensOnTick(RESPONDERS.lock.fade) - 1;
+
+    it('⛓⛓ under the game-sourced declaration the model crosses when the game did', () => {
+        expect(replay(WITNESS).transitions.map((x) => x.t)).toEqual(GAME_CROSSING);
+    });
+
+    it('⛓⛓ the model\'s own readings are REFUTED: the v9 spelling of its ledger crosses one tick late, the arm\'s removal + 101 two', () => {
+        expect(removal.length).toBe(1);
+        const v9 = replay(WITNESS, at(removal[0] + V9_FADE)).transitions.map((x) => x.t);
+        const arm = replay(WITNESS, at(removal[0] + V9_FADE + 1)).transitions.map((x) => x.t);
+        expect(v9).toEqual(GAME_CROSSING.map((t) => t + 1));
+        expect(arm).toEqual(GAME_CROSSING.map((t) => t + 2));
+    });
+
+    it('⛓ the gap is ONE ledger step: the game\'s tick is the spinner ledger\'s stamp − 1, spelled v9', () => {
+        expect(GAME_AT).toBe(removal[0] - 1 + V9_FADE);
+    });
+});
+

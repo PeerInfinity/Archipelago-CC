@@ -2890,6 +2890,23 @@ export const R8_D2_SHIELD = Object.freeze({
                     + 'THROUGH that i-frame on `hitByDarkStuff` (`hits` 1.5) — no kill. Named by '
                     + 'this assertion driving the roster.',
             }),
+            Object.freeze({
+                name: 'f1c-l18-phase42',
+                level: 18,
+                addedBy: 'Seedling fidelity F1c D1 (the hammer-phase rung, on the game)',
+                why: '`r9-solve-18`\'s staging at hammer residue 42, solved with the HAMMER-PHASE '
+                    + 'rung: the same two spinners killed by presses, one 8-tick hold for the '
+                    + 'line\'s phase, `lock@144,112` opened. Named by this assertion driving the '
+                    + 'roster.',
+            }),
+            Object.freeze({
+                name: 'f1c-l18-lock-removal',
+                level: 18,
+                addedBy: 'Seedling fidelity F1c D2 (L18\'s kill lock, asked of the game)',
+                why: '`r9-solve-18`\'s own kills through t320, then a walk pressed against '
+                    + '`lock@144,112` before every reading; its presses are `r9-solve-18`\'s. '
+                    + 'Named by this assertion driving the roster.',
+            }),
         ]),
     }),
 
