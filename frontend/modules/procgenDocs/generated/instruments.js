@@ -124,7 +124,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 49,
+            "count": 50,
             "id": "plan"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 310,
+        "blockStyle": 311,
         "browser": 97,
-        "cited": 145,
-        "files": 321,
+        "cited": 146,
+        "files": 322,
         "lineStyle": 11,
-        "withDocblock": 321,
-        "withFlags": 241
+        "withDocblock": 322,
+        "withFlags": 242
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6417,6 +6417,41 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "mine-seedling-roster-history — the evidence half of R6 slice 0's roster trim (`note_roster_trim_evaluation`, kickoff §3.6).",
             "path": "scripts/procgen/mine-seedling-roster-history.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-f4-l8-sandtraps.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "out"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-f4-l8-sandtraps — Seedling fidelity F4, D1: L8's two sandtraps die to `arrowtrap@96,16`'s column, measured on the game, as a committed witness tape.",
+            "path": "scripts/procgen/plan-seedling-f4-l8-sandtraps.mjs"
         },
         {
             "argvHelpers": [],

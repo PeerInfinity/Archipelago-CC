@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**58 files, 4937 literals.** Class × position:
+**58 files, 4948 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1281 | 351 | 1637 |
-| rule | 6 | 941 | 445 | 1392 |
+| rule | 6 | 943 | 446 | 1395 |
 | cosmetic | 0 | 49 | 10 | 59 |
-| structural | 10 | 312 | 1527 | 1849 |
+| structural | 10 | 312 | 1535 | 1857 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2583 | 2333 | 4937 |
+| total | 21 | 2585 | 2342 | 4948 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1374 | 0 | 90 | 118 | 4 | 51 | 1637 |
-| rule | 409 | 124 | 221 | 22 | 525 | 91 | 1392 |
+| rule | 411 | 125 | 221 | 22 | 525 | 91 | 1395 |
 
 Rows whose note starts `REVIEW:`: **105**.
 
@@ -507,7 +507,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **136 small tables** (at most 16 literals) hold at least one (86 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **137 small tables** (at most 16 literals) hold at least one (87 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -629,6 +629,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `ENEMY_DAMAGE_DEFAULTS` | seedlingDemo/enemyDamage.js | 6 | 3 | rule | count/magnitude | Enemies/Enemy.as:damage Enemies/Enemy.as:hitsMax Enemies/Enemy.as:hitsTimerMax |
 | `MOBILE_DEATH_FADE` | seedlingDemo/enemyDamage.js | 3 | 3 | rule | magnitude | Image.as:157 |
 | `PIT_FADE` | seedlingDemo/enemyDamage.js | 3 | 3 | rule | magnitude | Enemies/Enemy.as:fallAlphaSpeed |
+| `STATIC_ARROW_DEATH` | seedlingDemo/enemyDamage.js | 2 | 2 | rule | count/magnitude | Arrow.as:51-53 |
 | `SLASH_SPRITES` | seedlingDemo/combatVerbs.js | 6 | 6 | physics | magnitude | Player.as:41-45 |
 | `SLASH_SCALE_NORMAL` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude | Player.as:1258-1265 |
 | `SLASH_SCALE_DASH` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude |  |
