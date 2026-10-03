@@ -78,7 +78,7 @@ import {
 import { FIRE_PRESS_CADENCE, FIRE_WINDOW, fireRect } from './fireVerb.js';
 import { hitPushableFromPoint } from './pushables.js';
 import {
-    brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
+    TAGS_PER_LEVEL, brokenRockIds, createRockState, hitRock, outOfBandFlagFor, rockBreaksUnder,
 } from './breakableRocks.js';
 import {
     burnTree, burnWrites, burnedTreeIds, createBurnState,
@@ -867,6 +867,14 @@ export function createLevelRun({
         if (!worlds.has(n)) {
             const opts = { ...(roles ? { roles } : {}), inventory };
             if (clearedByLevel.has(n)) opts.cleared = clearedByLevel.get(n);
+            // ⛓ Seedling fidelity F6 (I01): the next level's record, the only
+            // one whose `tag = -1` writers land here — the provenance the build
+            // needs to accept a game-written `{n, 29}` as inert. Asked only when
+            // that slot is cleared; a level with no successor has no writer, and
+            // the build's orphan refusal then says so.
+            if (opts.cleared?.includes(TAGS_PER_LEVEL - 1)) {
+                try { opts.nextLevelRecord = levelSource(n + 1); } catch { opts.nextLevelRecord = null; }
+            }
             worlds.set(n, buildLevelWorld(recordFor(n), opts));
         }
         return worlds.get(n);

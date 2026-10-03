@@ -76,6 +76,10 @@ import { treeBuiltIn } from './burnableTree.js';
 // all, so this is the leaf-most edge in the file — same care as the two above.
 import { PLACED_NPC_TALK, TALK_OWNED_ELSEWHERE } from './dialogue.js';
 import { PROFILE } from './seedlingProfile.js';
+// ⛓ Seedling fidelity F6: the out-of-band writer registry, for the build's
+// acceptance of a game-written `{L, 29}`. `outOfBandLedger.js` imports only
+// `breakableRocks.js` — leaf-ward again, not a cycle.
+import { outOfBandFlagForWriter } from './outOfBandLedger.js';
 
 /**
  * The player hitbox origin, for recovering the entity position from a box.
@@ -3141,6 +3145,77 @@ export const UNTOUCHABLE_CLEARS = Object.freeze([
     }),
 ]);
 
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY F6 (I01) — THE MAP-PLACED `tag = -1` WRITERS, BY
+ * ENTITY TYPE, and the `OUT_OF_BAND_WRITERS` member each one IS.
+ *
+ * `Main.levelPersistenceSet` indexes `level * 30 + tag` with no bounds check,
+ * so a writer carrying the sentinel lands on the PREVIOUS level's last slot
+ * (`outOfBandLedger`). The run REPORTS such a write and never applies it
+ * (`levelRun`'s spinner arm: "a ledger entry, never a permission"); but the
+ * GAME's latch carries it, so the next tape whose `persistence` was read out of
+ * that latch names `{L, 29}` — and the build used to refuse it as an orphan.
+ * L18's two `tag="-1"` spinners write `{17,29}`, which closed L17 (the sphere
+ * 0.3 Seal) to every chain window after 19 (I1's I01).
+ *
+ * ⚠ BY NAME AND BY CITATION, never "a class that writes its tag": each row's
+ * write site is `OUT_OF_BAND_WRITERS[as3]`'s, and the subclasses are listed
+ * because they inherit it — `WandLock`, `GrassLock` and `ShieldLock` extend
+ * `Lock` (`Puzzlements/*.as:8`) and `ShieldLock.turnOff` calls
+ * `super.turnOff()` first (`:43-45`).
+ *
+ * ⚠ ONLY AN EXPLICIT `tag` ATTRIBUTE COUNTS. `tagOf` reads a missing attribute
+ * as −1, while `Game.as:2333`'s `o.@tag` on a missing attribute is `int("")`
+ * = 0 — an in-band write. Provenance that rested on that default would accept
+ * a clear the game cannot have made. In the vanilla extract the explicit −1
+ * writers are L18's two spinners (→ `{17,29}`) and L92's spinner and two
+ * breakable rocks (→ `{91,29}`).
+ *
+ * ⚠ THE RUNTIME SPAWNS ARE NOT HERE. `BobBoss.death` adds `new Fire(…, -1)`
+ * (→ `{31,29}`) and `Witch.doneTalking` a `DarkSword` with the default −1
+ * (→ `{11,29}`); neither writer is in any `.oel`, so their landing has no
+ * map-placed provenance and stays refused at build — a named residue, not a
+ * silence.
+ */
+export const OUT_OF_BAND_WRITER_CLASSES = Object.freeze({
+    spinner: 'Spinner',                 // Enemies/Spinner.as:57-64 removed()
+    breakablerock: 'BreakableRock',     // Puzzlements/BreakableRock.as:66-70 endAnim()
+    breakablerockghost: 'BreakableRock',
+    burnabletree: 'BurnableTree',       // Scenery/BurnableTree.as:52-57 removed()
+    rope: 'RopeStart',                  // Puzzlements/RopeStart.as:41-49 hit()
+    lock: 'Lock',                       // Puzzlements/Lock.as:90-107 turnOff()/returnToNormal()
+    wandlock: 'Lock',
+    grasslock: 'Lock',
+    shieldlock: 'Lock',
+    shieldlocknorm: 'Lock',
+});
+
+/**
+ * The map-placed writers in `nextLevelRecord` whose `tag = -1` write lands in
+ * `level` — `[{id, type, as3, from, slot}]`, `slot` the tag it lands on.
+ *
+ * `nextLevelRecord` must be level `level + 1`'s record: a −1 write lands one
+ * level BACK, so that is the only level whose writers can reach this one.
+ */
+export function outOfBandWritersOnto(level, nextLevelRecord) {
+    if (!nextLevelRecord) return [];
+    if (nextLevelRecord.level !== level + 1) {
+        fail(`outOfBandWritersOnto: a tag -1 write lands one level back, so level ${level}'s `
+            + `writers are level ${level + 1}'s — got the record of level ${nextLevelRecord.level}`);
+    }
+    const out = [];
+    for (const e of nextLevelRecord.entities ?? []) {
+        const as3 = OUT_OF_BAND_WRITER_CLASSES[e.type];
+        if (!as3 || e.attrs?.tag === undefined) continue;
+        const tag = tagOf(e.type, e.attrs);
+        if (!(tag < 0)) continue;
+        const flag = outOfBandFlagForWriter({ as3, level: nextLevelRecord.level, tag });
+        if (flag.level !== level) continue;
+        out.push({ id: `${e.type}@${e.x},${e.y}`, type: e.type, as3, from: nextLevelRecord.level, slot: flag.tag });
+    }
+    return out;
+}
+
 export const REFUSED_CLEAR_RESPONSES = Object.freeze({
     arm: 'clearing it does not remove it — it BUILDS IT FALLEN, Solid and live, '
         + "and its update writes the player's y",
@@ -3693,7 +3768,7 @@ export function assertNormalizedLiveOpts(o, what) {
 }
 
 export function buildLevelWorld(levelRecord, {
-    roles = PRE_R5_ROLES, cleared = null, inventory = null,
+    roles = PRE_R5_ROLES, cleared = null, inventory = null, nextLevelRecord = null,
 } = {}) {
     if (!levelRecord || typeof levelRecord !== 'object') {
         fail('buildLevelWorld needs a level record from seedling-map.json');
@@ -5363,8 +5438,23 @@ export function buildLevelWorld(levelRecord, {
     // its level is a bookkeeping error in the derivation — and the failure
     // it would otherwise cause is a route planned around a door that never
     // opened, which surfaces as a physics divergence 2000 ticks later.
+    //
+    // ⛓⛓⛓ SEEDLING FIDELITY F6 (I01): EXCEPT A SLOT THE GAME WROTE OUT OF BAND.
+    // An orphan is accepted — as INERT, and reported in `outOfBandClears` — only
+    // when a map-placed `tag = -1` writer in the NEXT level lands on exactly that
+    // slot (`outOfBandWritersOnto`). The provenance is the writer, not the slot
+    // number: `{17,29}` with L18's two spinners is the game's own latch and L17
+    // boots unchanged in the game; `{71,29}` with no writer in L72 is still the
+    // derivation error this throw exists for, and so is any clear when the
+    // caller passed no `nextLevelRecord`.
+    let outOfBandClears = [];
     if (clearedTags) {
-        const orphans = [...clearedTags].filter((t) => !clearsUsed.has(t));
+        const raw = [...clearedTags].filter((t) => !clearsUsed.has(t));
+        const writers = raw.length > 0 ? outOfBandWritersOnto(level, nextLevelRecord) : [];
+        outOfBandClears = raw
+            .map((tag) => ({ tag, writers: writers.filter((w) => w.slot === tag).map((w) => w.id) }))
+            .filter((c) => c.writers.length > 0);
+        const orphans = raw.filter((t) => !outOfBandClears.some((c) => c.tag === t));
         if (orphans.length > 0) {
             fail(`${where}: the tape clears tag(s) ${orphans.join(', ')}, which no `
                 + 'entity in this level reads. A clear is derived from a named blocker; '
@@ -5400,6 +5490,13 @@ export function buildLevelWorld(levelRecord, {
          */
         addedTimeRemoved,
         addedTimeKey: addedTimeKey(inventory),
+        /**
+         * ⛓ Seedling fidelity F6 (I01): `[{tag, writers}]`, the cleared slots
+         * no entity here reads that a `tag = -1` writer in the next level
+         * wrote. Inert — nothing in this level changes — and listed so a
+         * caller can say which state it built.
+         */
+        outOfBandClears,
         /**
          * Where a pit in THIS level drops the player, from its `control`
          * block: `{level, offsetX, offsetY, sign}`, or **null** when the
