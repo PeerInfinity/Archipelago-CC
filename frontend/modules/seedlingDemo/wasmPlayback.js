@@ -58,6 +58,8 @@ import { gameVisibleTape, holdingWindowTape, parseTape } from './tapeFormat.js';
 import { UNREAD_MODELLED_READERS } from './wasmArrival.js';
 import { PUZZLEMENT_HAZARDS } from './combat.js';
 import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
+import { ENTITY_CLASSES } from './levelWorld.js';
+import { TALK_RANGE } from './endingChain.js';
 
 /** Thrown for a tape that must not ship — by name. */
 export class WasmPlaybackError extends Error {
@@ -121,8 +123,137 @@ export const endsHeld = (goal) => goal?.kind === 'location';
  * The clauses run in this order; the first that fails is the refusal.
  */
 export const ADOPT_CLAUSES = Object.freeze([
-    'begin', 'tape', 'fade', 'inventory', 'player-state', 'mobiles', 'timed', 'velocity', 'position', 'facing',
+    'begin', 'tape', 'fade', 'inventory', 'player-state',
+    'mobiles', 'inert-velocity', 'inert-position', 'inert-idle', 'inert-talk',
+    'timed', 'velocity', 'position', 'facing',
 ]);
+
+/**
+ * ⛓ W8b — the Mobiles an adoption ADMITS besides the player: NPC classes that
+ * are INERT while nobody talks to them (plan §5.14; level 0's `introchar` and
+ * `statue2`, the cold start of `seedling_atlas` and `seedling_playthrough`).
+ * Keyed by `botMobiles`' `cls` (`getQualifiedClassName`).
+ *
+ * Why they are inert, from the AS3:
+ *   - `NPC extends Mobile`, and nothing in either class (or `NPC`) writes `v`,
+ *     so `Mobile.mobileUpdate`'s friction/move block moves them by 0.
+ *   - They draw no rng: `NPC.talk()` reads distance and `Input.released(X)`;
+ *     the "Text" sounds pass an index (no `Rng.cos()`); `IntroCharacter`'s
+ *     `render()` reads `Game.worldFrame`, not the rng.
+ *   - Their only behaviour is the dialogue (`NPC.as:186-239`): an X release
+ *     inside `talkRange` opens it and raises `Game.freezeObjects`; leaving the
+ *     circle closes it and resets `talked`. Neither class overrides
+ *     `doneTalking()`, so a dialogue writes no world state
+ *     (`dialogue.PLACED_NPC_TALK`: `doneTalking: null`).
+ * The model already plays both (solid rects + the placed-talk arm); nothing
+ * here is a model change.
+ *
+ * The dialogue state is two fields no readout carries directly:
+ *   - `talking` (a dialogue is OPEN). `IntroCharacter.render()` plays its
+ *     "talk" animation exactly while talking, so `botMobiles`' `anim` shows
+ *     it (measured: `anim` "talk" after an X release in range). A `Statue`
+ *     has no such animation (`talkAnim: null`).
+ *   - `talked` (a dialogue already ran since the player came in range). It
+ *     changes only one thing: the NEXT X release inside the circle does not
+ *     reopen. `NPC.talk()`'s out-of-range arm resets it.
+ * Outside an NPC's circle, the out-of-range arm has run on the last update,
+ * so neither field can differ from the shadow's. Inside it (the
+ * `seedling_atlas` cold start stands 16 px from `introchar`, measured):
+ *   - a class with a `talkAnim` is admitted when its `anim` is idle (no
+ *     dialogue open), and the engine's `talkCircleGuard` keeps the first plans
+ *     from releasing X until the shadow has left the circle (`talked` unread);
+ *   - a class without one is refused (`inert-talk`): an open dialogue would
+ *     be invisible.
+ * ⚠ `talkRange` is the CLASS's own: `Statue.as:25` sets 32 (`NPC.as:27`'s
+ * default is 24). The MODEL still tests 24 for a statue (`levelRun`'s talker
+ * arm): a fidelity defect, measured live at 25.3 px (plan §5.14), routed to
+ * the fidelity planner and not changed here.
+ *
+ * `idleAnims`: the `anim` a row may read while idle. `IntroCharacter.render()`
+ * otherwise sets `frame`, which clears the animation; `Statue.render()` only
+ * sets `frame`.
+ */
+export const INERT_MOBILES = Object.freeze({
+    'NPCs::IntroCharacter': Object.freeze({ types: Object.freeze(['introchar']), talkRange: TALK_RANGE, talkAnim: 'talk',
+        idleAnims: Object.freeze(['', null]), src: 'NPCs/IntroCharacter.as + NPCs/NPC.as' }),
+    'NPCs::Statue': Object.freeze({ types: Object.freeze(['statue1', 'statue2']), talkRange: 32, talkAnim: null,
+        idleAnims: Object.freeze(['', null]), src: 'NPCs/Statue.as:18-26 (talkRange = 32) + NPCs/NPC.as' }),
+});
+
+/** The admitted NPCs whose talk circle holds the point `at` (`FP.distance <= talkRange`, `NPC.as:190`). */
+export function talkCirclesAt(rows, at) {
+    return (rows ?? []).filter((r) => INERT_MOBILES[r.cls] && Math.hypot(r.x - at?.x, r.y - at?.y) <= INERT_MOBILES[r.cls].talkRange)
+        .map((r) => ({ cls: r.cls, x: r.x, y: r.y, talkRange: INERT_MOBILES[r.cls].talkRange }));
+}
+
+/**
+ * ⛓ W8b — an ADOPTED room whose player starts inside a talk circle: the NPC's
+ * `talked` is unread, so a plan may not release X (`primary`, which is also
+ * the talk key, `Player.as:59` keys[6]) while the player can still be inside
+ * it. Refused: any X in `solution[t]` for t up to one tick after the first
+ * expected row outside every circle (a release lands on the tick after the
+ * press, and `NPC.talk()` reads the distance in its own update). `left`: the
+ * plan's rows leave every circle, after which the out-of-range arm has reset
+ * `talked` and the guard is spent.
+ *
+ * @param {object} o
+ * @param {Array<{x:number,y:number,talkRange:number}>} o.circles
+ * @param {Array<Iterable<string>>} o.solution
+ * @param {Array<{x:number,y:number}>} o.expected  the plan's rows (`expected[0]` = the start, `[t + 1]` after tick t)
+ * @returns {{refusal: string|null, left: boolean}}
+ */
+export function talkCircleGuard({ circles, solution, expected }) {
+    const inside = (row) => circles.some((c) => Math.hypot(c.x - row.x, c.y - row.y) <= c.talkRange);
+    const out = (expected ?? []).findIndex((row) => !inside(row));
+    const last = out === -1 ? (solution?.length ?? 0) - 1 : out + 1;
+    for (let t = 0; t <= last && t < (solution?.length ?? 0); t++) {
+        if (new Set(solution[t]).has('primary')) {
+            return { refusal: `the plan presses X (primary) at tick ${t}, before the player has left the talk circle of `
+                + `${circles.map((c) => `${c.cls} at (${c.x}, ${c.y})`).join(', ')} it was adopted in — that NPC's \`talked\` is unread, `
+                + 'so the game may not open the dialogue the model would', left: false };
+        }
+    }
+    return { refusal: null, left: out !== -1 };
+}
+
+/**
+ * null when every non-player `botMobiles` row is an admitted inert NPC in its
+ * idle state, else `{clause, why}`. Checks, per row:
+ *   mobiles         the class is in `INERT_MOBILES`;
+ *   inert-velocity  v = 0;
+ *   inert-position  it stands where the record puts it (`ENTITY_CLASSES[type]`'s
+ *                   `dx`/`dy`, the model's own placement), one row per entity;
+ *   inert-idle      not destroyed, Solid and collidable, an idle `anim` (for
+ *                   `IntroCharacter`: no dialogue open);
+ *   inert-talk      the shadow's player is outside its talk circle, unless the
+ *                   class shows an open dialogue (`talkAnim`; then the engine's
+ *                   `talkCircleGuard` covers `talked`).
+ */
+export function inertMobilesRefusal({ rows, record, shadow }) {
+    const no = (clause, why) => ({ clause, why });
+    const others = rows.filter((r) => !/Player/.test(r.cls ?? ''));
+    const strange = [...new Set(others.filter((r) => !INERT_MOBILES[r.cls]).map((r) => r.cls))];
+    if (strange.length) return no('mobiles', `the room holds Mobile(s) besides the player that are not admitted inert: ${strange.join(', ')}`);
+    const used = new Set();
+    for (const r of others) {
+        const spec = INERT_MOBILES[r.cls];
+        const name = `${r.cls} at (${r.x}, ${r.y})`;
+        if (r.vx !== 0 || r.vy !== 0) return no('inert-velocity', `${name} is moving (v ${r.vx}, ${r.vy})`);
+        const at = (record?.entities ?? []).findIndex((e, i) => !used.has(i) && spec.types.includes(e.type)
+            && e.x + ENTITY_CLASSES[e.type].dx === r.x && e.y + ENTITY_CLASSES[e.type].dy === r.y);
+        if (at < 0) return no('inert-position', `${name} is not at any ${spec.types.join('/')} record position of the room`);
+        used.add(at);
+        if (r.destroy || r.type !== 'Solid' || r.collidable === false || !spec.idleAnims.includes(r.anim ?? null)) {
+            return no('inert-idle', `${name} is not idle: destroy ${r.destroy}, type ${r.type}, collidable ${r.collidable}, anim ${JSON.stringify(r.anim)}`);
+        }
+        const d = Math.hypot(r.x - shadow?.x, r.y - shadow?.y);
+        if (!(d > spec.talkRange) && !spec.talkAnim) {
+            return no('inert-talk', `the player stands ${d.toFixed(2)} px from ${name}, inside its talk range ${spec.talkRange}, `
+                + 'and the class has no talk animation: an open dialogue would not be readable');
+        }
+    }
+    return null;
+}
 
 /**
  * The fade must be OVER, with at least one stepped tick after it (the shadow's
@@ -166,9 +297,9 @@ export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow })
     }
     const rows = mobiles?.mobiles ?? [];
     const player = rows.filter((r) => /Player/.test(r.cls ?? ''));
-    const others = rows.filter((r) => !/Player/.test(r.cls ?? ''));
     if (player.length !== 1) return no('mobiles', `${player.length} player row(s) in botMobiles`);
-    if (others.length) return no('mobiles', `the room holds Mobile(s) besides the player: ${[...new Set(others.map((r) => r.cls))].join(', ')}`);
+    const inert = inertMobilesRefusal({ rows, record, shadow });
+    if (inert) return inert;
     const timed = [...new Set((record?.entities ?? []).map((e) => e.type).filter((t) => Object.prototype.hasOwnProperty.call(PUZZLEMENT_HAZARDS, t)))];
     if (timed.length) return no('timed', `the room holds a timed puzzlement (${timed.join(', ')}) — its phase rides on ticks nobody counted`);
     const p = player[0];

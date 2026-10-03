@@ -80,6 +80,7 @@ import {
 import {
     adoptionRefusal, arrivalHoldBlocker, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, primarySplitRefusal, shadowMismatch,
+    talkCircleGuard, talkCirclesAt,
     shippedTape, TAPE_KEY_RELEASES, wasmGoalRefusal,
 } from '../seedlingDemo/wasmPlayback.js';
 import { LOAD_BUDGET_MS, replayTape, SOLVER_BUDGET_MS } from '../seedlingDemo/jsRuntimeSolver.js';
@@ -375,7 +376,8 @@ export function createWasmPlayback({
                 shadow = { x: one.state.x, y: one.state.y, direction: one.state.direction };
             } catch (err) { return refused('staging', String(err?.message ?? err).split('\n')[0]); }
         }
-        const r = adoptionRefusal({ beginEntry: be, status: st, mobiles: J(game()?.botMobiles?.()), record, shadow });
+        const mobiles = J(game()?.botMobiles?.());
+        const r = adoptionRefusal({ beginEntry: be, status: st, mobiles, record, shadow });
         if (r) return refused(r.clause, r.why);
         const sw = swapState();
         const blocked = sw ? arrivalHoldBlocker(sw, be) : 'the glue answered no swap state (a redirect cannot be ruled out)';
@@ -391,7 +393,9 @@ export function createWasmPlayback({
         stats.arrivals += 1;
         stats.held += 1;
         room = { level: g.level, staging, shipped: [[]], spawn: { x: state.playerPositionX, y: state.playerPositionY }, begin: be,
-            pushes: sw?.pushes ?? null, adopted: true };
+            pushes: sw?.pushes ?? null, adopted: true,
+            // ⛓ W8b — talk circles the player was adopted in: their NPC's `talked` is unread (`talkCircleGuard`).
+            talkCircles: talkCirclesAt(mobiles?.mobiles, shadow) };
         spawn = room.spawn;
         arriving = false;
         note(`adopted level ${g.level} as it stands (no re-arrival)`);
@@ -771,6 +775,9 @@ export function createWasmPlayback({
         // ⛓ W7 — the X-split rule: a continuation may not open with a re-press of an X the last tape held.
         const split = play.continuation ? primarySplitRefusal(room?.shipped, plan.solution) : null;
         if (split) { fallback(split, 'x-split'); return; }
+        // ⛓ W8b — adopted inside a talk circle: no X until the plan has left it.
+        const talk = room?.talkCircles?.length ? talkCircleGuard({ circles: room.talkCircles, solution: plan.solution, expected: plan.expected }) : null;
+        if (talk?.refusal) { fallback(talk.refusal, 'adopt-talk'); return; }
         const hold = holds && endsHeld(goal);
         let tape;
         try {
@@ -791,6 +798,7 @@ export function createWasmPlayback({
         if (room) {
             room.shipped = [...room.shipped, ...plan.solution.map((h) => [...h])];
             room.plans = (room.plans ?? 0) + 1;
+            if (talk?.left) room.talkCircles = [];
         }
         note(`playing ${play.ticks} ticks (${(plan.verbs ?? []).join(',') || 'walk'})`);
         // ⛓ W7 — an exit plan's crossing: hold the arrival it leads to (the glue's redirect landing, if any).
@@ -944,7 +952,7 @@ export function createWasmPlayback({
             return { phase, goal, generated, queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
                 drained: play?.progress?.ticks ?? null, divergence: play?.divergence ?? null, recoveries,
                 // ⛓ W7 — the held room (its level and how many key sets the shadow replays), and whether a crossing is in flight
-                room: room ? { level: room.level, shipped: room.shipped.length, plans: room.plans ?? 0 } : null, driving, arriving };
+                room: room ? { level: room.level, shipped: room.shipped.length, plans: room.plans ?? 0, talkCircles: room.talkCircles?.length ?? 0 } : null, driving, arriving };
         },
         get stats() {
             return { ...stats, hostStarts: [...stats.hostStarts], keyReleases: [...stats.keyReleases], history: [...history],
