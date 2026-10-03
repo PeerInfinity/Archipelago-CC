@@ -495,7 +495,8 @@ On `seedling_atlas_location` W7's walk spent one forced re-arrival, the cold sta
 - **fade**: more than `ADOPT_MIN_ELAPSED` game frames (two legacy fade bands) since the begin record, so the fade is over and at least one tick stepped;
 - **inventory**: `inventory_slots` is empty;
 - **player-state**: no hits, i-frames, drowning or freeze, input accepted, no menu or cutscene;
-- **mobiles**: `botMobiles` holds the player and nothing else;
+- **mobiles**: `botMobiles` holds the player and, besides it, only admitted inert NPCs (`INERT_MOBILES`, W8b below);
+- **inert-velocity**, **inert-position**, **inert-idle**, **inert-talk**: each admitted NPC's checks (W8b below);
 - **timed**: the room record holds no `combat.PUZZLEMENT_HAZARDS` type;
 - **velocity**: the player row's `vx` and `vy` are 0;
 - **position**: the player stands where the shadow does;
@@ -509,7 +510,19 @@ What no readout sees, and why the clauses look this way:
 - **Item state is hidden**: slash and spear timers, a cut `Grass`. So a player with anything to use is not adopted.
 - **The rng cannot be a clause.** "Live `rng.state` equals the begin record's `rng.gameplay`" is false at every arrival: with `split` false the build's draws land on the gameplay stream (the house build is 91 LFSR steps, level 0 is 1200), and nothing reads that count at a cold start.
 
-On `seedling_atlas_location` the walk now spends **0 forced re-arrivals and 1 world swap** (the door). `seedling_atlas` and `seedling_playthrough` start in level 0, which holds `introchar` and `statue2` (Mobiles), so their cold start still re-arrives. Of the committed arrival regions, 44 of 176 (30 of 113 levels) are no-mobile and untimed.
+On `seedling_atlas_location` the walk now spends **0 forced re-arrivals and 1 world swap** (the door). Of the committed arrival regions, 44 of 176 (30 of 113 levels) are no-mobile and untimed.
+
+**Inert NPCs (W8b).** `seedling_atlas` and `seedling_playthrough` start in level 0, which holds two `Mobile`s besides the player: `introchar` (`IntroCharacter`) and `statue2` (`Statue`). Both are `NPC`s. Nothing in their classes writes `v`, they draw no rng, and their only behaviour is the dialogue: an X release inside `talkRange` opens it and freezes the game, and leaving the circle closes it. Neither overrides `doneTalking()`. The model already plays both, as solid rects and through the placed-talk arm. `wasmPlayback.INERT_MOBILES` admits these two classes, and each row must pass, in order:
+
+- **mobiles**: its class is admitted (any other `Mobile` still refuses);
+- **inert-velocity**: v = 0;
+- **inert-position**: it stands at a record entity's position (the model's own `ENTITY_CLASSES` offset), one row per entity;
+- **inert-idle**: not destroyed, Solid, collidable, and an idle `anim`. `IntroCharacter` plays `talk` exactly while its dialogue is open, so this clause also means no dialogue is open;
+- **inert-talk**: the player stands outside its talk circle, unless the class shows an open dialogue (`talkAnim`). The circle is the CLASS's: `Statue.as:25` sets 32, where `NPC.as`'s default is 24.
+
+The `seedling_atlas` cold start stands at (168, 296), 16 px from `introchar`: inside its circle. There `talked` (a dialogue already ran) is unread, and it changes only whether the next X release reopens the dialogue. So the engine records the circles the player was adopted in, and `talkCircleGuard` refuses a plan that presses X before its rows leave them (to one tick past the first row outside); the refusal falls back to a named `adopt-talk` re-arrival. Once a shipped plan leaves the circles, the guard is spent.
+
+⚠ The MODEL tests every placed talker at 24 px, so a statue's 24–32 px band is a model defect (measured: at 25.3 px the game opens the dialogue and freezes, and the model walks on). The adoption does not depend on it; it belongs to the fidelity arc.
 
 `scripts/procgen/probe-seedling-wasm-adopt.mjs` is the measurement and the live witness (p4e, headless logic-only, under the box lock), each session on a fresh page. **H**, **P** and **R** measure through `wasmAdoptLab.js`, imported by URL, outside the engine:
 
@@ -520,7 +533,8 @@ On `seedling_atlas_location` the walk now spends **0 forced re-arrivals and 1 wo
 **W** and **K** go through the engine:
 
 - **W**: the bot walks the house with 0 forced re-arrivals in total;
-- **K**: real keys move the player first, the adoption is refused by name, and the cold-start re-arrival serves the walk.
+- **K**: real keys move the player first, the adoption is refused by name, and the cold-start re-arrival serves the walk;
+- **L** (W8b): `seedling_atlas` from its hub. The two NPC rows are sampled idle, and the walk hub → house → chest spends 0 forced re-arrivals in total.
 
 **Generated rooms (WG).** The generated instance is built with `wasm: true` and `wasmLevelSetOf` (the surface's `wasm.levelSet`, the set the generated arm assembled and delivered). What differs from the atlas rooms is below; everything else above (the arrival, the freeze, the shipped tape, the guard, the recovery) is the same code:
 
