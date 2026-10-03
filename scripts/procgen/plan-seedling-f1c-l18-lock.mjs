@@ -123,8 +123,19 @@ async function main() {
     const probe = drive(base.persistence.find((c) => c.at !== undefined).at);
     const ledger = probe.run.ledger('spinnerKillLockOpens').filter((o) => !o.nil && o.level === LEVEL);
     const removal = ledger.length ? ledger[ledger.length - 1].t : null;
-    const V9 = removal + V9_FADE;
-    const ARM = removal + V9_FADE + 1;
+    /**
+     * ⛓⛓ FIDELITY F5 LANDED D2's FIX: the spinner ledger now stamps the
+     * alpha-zero step (the chaser convention), so `removal` reads 316 here and
+     * its v9 spelling IS the game's 416. The tape's words are F1c's
+     * measurement, in F1c's ledger: that ledger stamped one step later
+     * (`F1C_STAMP` = removal + 1 = 317), and its two readings were the v9
+     * spelling of that stamp (417) and the arm's `+ 101` (418). They are kept
+     * as written so the game-recorded witness stays byte-identical (rewriting
+     * it is a witness move no licence covers); the checks say what is true now.
+     */
+    const F1C_STAMP = removal + 1;
+    const V9 = F1C_STAMP + V9_FADE;
+    const ARM = F1C_STAMP + V9_FADE + 1;
     const DECLARED = GAME_AT;
     const crossOf = (d) => d.obs.find((o) => o.level !== LEVEL)?.t ?? null;
     const game = drive(GAME_AT);
@@ -141,21 +152,21 @@ async function main() {
         pressedAt !== null && pressedAt < GAME_AT, `against the lock at t${pressedAt}; game ${GAME_AT}, v9 ${V9}, arm ${ARM}`);
     check('⛓⛓ under the GAME-SOURCED declaration the model crosses when the game did',
         crossOf(game) === GAME_CROSS, `@${GAME_AT} crosses t${crossOf(game)}; the game t${GAME_CROSS}`);
-    check('⛓⛓ the model\'s own two readings are REFUTED: one and two ticks late',
+    check('⛓⛓ F1c\'s two readings (its ledger\'s stamp, one step late) cross one and two ticks late',
         crossOf(v9) === GAME_CROSS + 1 && crossOf(arm) === GAME_CROSS + 2,
         `v9 @${V9} crosses t${crossOf(v9)}; arm @${ARM} crosses t${crossOf(arm)}`);
-    check('⛓⛓ the game\'s tick is the CHASER convention\'s removal (the alpha-zero step, one before the '
-        + 'spinner ledger\'s stamp) + the v9 fade', GAME_AT === (removal - 1) + V9_FADE,
-        `(${removal} − 1) + ${V9_FADE} = ${(removal - 1) + V9_FADE}`);
+    check('⛓⛓⛓ F5: the game\'s tick IS the spinner ledger\'s own removal (the alpha-zero step, the '
+        + 'chaser convention) + the v9 fade', GAME_AT === removal + V9_FADE,
+        `${removal} + ${V9_FADE} = ${removal + V9_FADE}`);
 
     const description = '⛓⛓⛓ SEEDLING FIDELITY F1c D2 — L18\'s SPINNER KILL LOCK, ASKED OF THE GAME. '
         + `\`r9-solve-18\`'s staging and keys through t${CUT} (the last body, \`spinner@112,48\`, is `
-        + `stamped removed by the model's ledger on t${removal}), then the segment's own walk to the `
+        + `stamped removed by the model's ledger on t${F1C_STAMP}), then the segment's own walk to the `
         + `teleporter (its keys from t${WALK_FROM}) started at t${START}, then \`right\`. The player is `
         + `against \`lock@144,112\`'s west face from t${pressedAt}, before every reading. The game crosses `
         + `to L19 on t${GAME_CROSS}: {18,0}@${GAME_AT} is GAME-SOURCED, and the model crosses with it. `
-        + `The model's own readings, the v9 spelling ${removal} + ${V9_FADE} = ${V9} and the spinner `
-        + `arm's ${removal} + ${V9_FADE + 1} = ${ARM}, cross on t${crossOf(v9)} and t${crossOf(arm)}: the `
+        + `The model's own readings, the v9 spelling ${F1C_STAMP} + ${V9_FADE} = ${V9} and the spinner `
+        + `arm's ${F1C_STAMP} + ${V9_FADE + 1} = ${ARM}, cross on t${crossOf(v9)} and t${crossOf(arm)}: the `
         + 'spinner ledger stamps the removal one step after the chaser convention does. Authored by '
         + 'scripts/procgen/plan-seedling-f1c-l18-lock.mjs.';
 
@@ -163,7 +174,7 @@ async function main() {
         level: c.level,
         tag: c.tag,
         note: `GAME-sourced: the player crosses lock@144,112 on t${GAME_CROSS} in the game; the model `
-            + `crosses with it under @${GAME_AT}, which is (${removal} − 1) + ${V9_FADE} `
+            + `crosses with it under @${GAME_AT}, which is (${F1C_STAMP} − 1) + ${V9_FADE} `
             + '(scripts/procgen/plan-seedling-f1c-l18-lock.mjs)',
         at: DECLARED,
     } : c));
@@ -181,7 +192,7 @@ async function main() {
         console.log(`wrote ${path.slice(REPO.length + 1)}`);
     }
     console.log(`## ${NAME}: ${TICKS} ticks, against the lock t${pressedAt}, ledger removal t${removal}, `
-        + `game @${GAME_AT} → t${crossOf(game)}, v9 @${V9} → t${crossOf(v9)}, arm @${ARM} → t${crossOf(arm)}`);
+        + `game @${GAME_AT} → t${crossOf(game)}, F1c's v9 @${V9} → t${crossOf(v9)}, F1c's arm @${ARM} → t${crossOf(arm)}`);
 
     if (failures > 0) {
         console.error(`\n${failures} CHECK(S) FAILED`);
