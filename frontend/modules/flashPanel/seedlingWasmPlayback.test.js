@@ -52,10 +52,14 @@ function manualTimers() {
 
 /** A game whose reads are a recorded arrival's. */
 function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrains = 0, clearedAfterDrain = null,
-    midSpanOnFirstPlan = null } = {}) {
+    midSpanOnFirstPlan = null, unwatched = null } = {}) {
     const baseline = { ...arrival.seam.beginEntry, 'save.time': arrival.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
     const g = {
-        be: baseline,
+        // ⛓ W8 — `unwatched`: the room ran since ITS begin record before the bot drove (the cold start),
+        // `{elapsed, mobiles, patch, begin}` = game frames since that begin, the botMobiles rows, botStatus overrides.
+        be: unwatched ? { ...arrival.seam.beginEntry, ...(unwatched.begin ?? {}) } : baseline,
+        unwatched,
+        botMobiles() { g.calls.push('botMobiles'); return unwatched ? JSON.stringify({ tick: 0, mobiles: unwatched.mobiles, pods: [] }) : undefined; },
         held: false, armed: false, finished: false, seq: 0, tape: null, drainRows: null, freezePolls: 0,
         calls: [], tapes: [], stalls: stallDrains, cleared: null,
         land() { g.be = arrival.seam.beginEntry; },
@@ -67,7 +71,8 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
             }
             return JSON.stringify({ ...arrival.status,
                 // ⛓ W7 — `gameTimeFromBegin`: the read is in the begin record's own frame (a staged arrival), whichever lands
-                game_time: (g.gameTimeFromBegin ? g.be['save.time'] : arrival.status.game_time) + gameTimeSkew,
+                game_time: (g.unwatched ? g.be['save.time'] + g.unwatched.elapsed : g.gameTimeFromBegin ? g.be['save.time'] : arrival.status.game_time) + gameTimeSkew,
+                ...(g.unwatched?.patch ?? {}),
                 ...(g.cleared ? { persistence_cleared: g.cleared } : {}),
                 ...(g.midSpan ? g.midSpan : {}),
                 // ⛓ W7 — where the last drained row left the player (a held end is read against the shadow)
@@ -704,5 +709,81 @@ describe('WG — a GENERATED room (the recorded p4e arrivals on seedling_generat
         expect(engine.generated).toBe(true);
         expect(fetched).toBe(0);
         engine.dispose();
+    });
+});
+
+describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly when the room is "its arrival + idle ticks"', () => {
+    const PLAYER = { cls: 'Player', x: 56, y: 56, vx: 0, vy: 0, anim: 'down-stand' };
+    const unwatched = (o = {}) => ({ elapsed: 200, mobiles: [PLAYER], patch: {}, ...o });
+    const CLEAR = { marks: [], queued: 0, pushedOn: null, pushes: 0 };
+    const adoptOver = (o = {}, opts = {}) => engineOver(A, { swap: CLEAR, ...opts, game: { unwatched: unwatched(o) } });
+    /** The refusal a mutated read earns: the named clause, and W2's cold-start re-arrival serves the goal. */
+    function refusedBy(e, clause) {
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.engine.stats.adopted).toBe(0);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual([clause]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.teleports).toHaveLength(1);
+        expect(e.game.tapes).toEqual([]);
+    }
+
+    it('the house, unwatched, nobody touched it: ADOPTED — held where it stands, the chest solved as a continuation from "arrival + 1 idle tick", 0 teleports', () => {
+        const e = adoptOver();
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, continuations: 1, held: 1, adoptRefused: [] });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
+        expect(e.game.tapes[0]).toMatchObject({ tick_count: 0, hold: true, seam: null });
+        // The held check ran against the shadow after ONE idle tick, and matched.
+        expect(e.engine.stats.heldChecks).toEqual([expect.objectContaining({ shipped: 1, equal: true })]);
+        expect(e.service.seen[0].request.perTick).toEqual([new Set()]);
+        expect(e.service.seen[0].result.plan.verbs).toEqual(['chest', 'walk']);
+        expect(e.dones).toHaveLength(1);
+        expect(e.dones[0]).toMatchObject({ continuation: true, prefix: 1, divergence: null, heldEnd: true });
+        expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 1 + e.dones[0].ticks } });
+    });
+
+    it('clause BEGIN — the begin record names another level (a swap pending) → not adopted', () => {
+        refusedBy(adoptOver({ begin: { 'begin.level': 0 } }), 'begin');
+    });
+    it('clause TAPE — a tape is armed (the room is somebody\'s) → not adopted', () => {
+        refusedBy(adoptOver({ patch: { arm: { pending: true, armed_at: -1 } } }), 'tape');
+    });
+    it('clause FADE — too few frames since the begin record (the fade may be running) → not adopted', () => {
+        refusedBy(adoptOver({ elapsed: 30 }), 'fade');
+    });
+    it('clause INVENTORY — the player has something to USE (hidden slash/wand state) → not adopted', () => {
+        refusedBy(adoptOver({ patch: { inventory_slots: [0] } }), 'inventory');
+    });
+    it('clause PLAYER-STATE — i-frames still running → not adopted', () => {
+        refusedBy(adoptOver({ patch: { hits_timer: 12 } }), 'player-state');
+    });
+    it('clause MOBILES — a Mobile besides the player → not adopted', () => {
+        refusedBy(adoptOver({ mobiles: [PLAYER, { cls: 'Enemies::Bob', x: 10, y: 10, vx: 0, vy: 0, anim: 'stand' }] }), 'mobiles');
+    });
+    it('clause TIMED — a timed puzzlement in the room record (combat.PUZZLEMENT_HAZARDS) → not adopted', () => {
+        const records = new Map(RECORDS);
+        const house = RECORDS.get(HOUSE);
+        records.set(HOUSE, { ...house, entities: [...house.entities, { type: 'spinningaxe', x: 80, y: 48 }] });
+        refusedBy(adoptOver({}, { records }), 'timed');
+    });
+    it('clause VELOCITY — the player is still moving → not adopted', () => {
+        refusedBy(adoptOver({ mobiles: [{ ...PLAYER, vx: 0.5 }] }), 'velocity');
+    });
+    it('clause POSITION — the player is not where the arrival\'s shadow stands → not adopted', () => {
+        refusedBy(adoptOver({ patch: { x: 57.5 } }), 'position');
+    });
+    it('clause FACING — back on the spawn, v = 0, but turned (the measured right-then-left person) → not adopted', () => {
+        refusedBy(adoptOver({ mobiles: [{ ...PLAYER, anim: 'side-stand' }] }), 'facing');
+    });
+    it('the GLUE has a redirect in flight → not adopted (as for a held arrival)', () => {
+        refusedBy(adoptOver({}, { swap: { marks: [], queued: 1, pushedOn: null, pushes: 0 } }), 'glue');
+    });
+    it('an engine WITHOUT the glue query adopts nothing (W7\'s rule) — the cold start re-arrives, no clause recorded', () => {
+        const e = adoptOver({}, { noGlue: true });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
+        expect(e.engine.stats).toMatchObject({ adopted: 0, adoptRefused: [], forcedBy: { 'cold-start': 1 } });
     });
 });

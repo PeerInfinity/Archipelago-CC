@@ -45,6 +45,10 @@
  *      once (`divergenceRepeatFailure`). A `SealController` freeze drains NO
  *      rows, so it is never a divergence (⚖ W0-Q2).
  *
+ * ⛓ W8 — THE COLD START IS ADOPTED, not re-entered, when the room provably IS
+ * "its arrival + N idle ticks" (`wasmPlayback.adoptionRefusal`'s clauses + the
+ * glue query): held where it stands, the goal a continuation from the shadow
+ * "arrival + 1 idle tick". Any refusal → the named `cold-start` re-arrival.
  * ⛓ W4 — ARRIVAL COMPOSITES. A PIT exit maps to `reach-pit` (the fall is the
  * game's crossing). An arrival LATCHED ON its goal door is solved by the
  * worker's `step-off` producer: the walker's step-off ++ the solver's walk
@@ -74,11 +78,11 @@ import {
     arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest, isArrival, stagingFromWasmArrival,
 } from '../seedlingDemo/wasmArrival.js';
 import {
-    arrivalHoldBlocker, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
+    adoptionRefusal, arrivalHoldBlocker, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, primarySplitRefusal, shadowMismatch,
     shippedTape, TAPE_KEY_RELEASES, wasmGoalRefusal,
 } from '../seedlingDemo/wasmPlayback.js';
-import { LOAD_BUDGET_MS, SOLVER_BUDGET_MS } from '../seedlingDemo/jsRuntimeSolver.js';
+import { LOAD_BUDGET_MS, replayTape, SOLVER_BUDGET_MS } from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { parsePendingCheck } from './seedlingCheckBinding.js';
@@ -167,7 +171,9 @@ export function createWasmPlayback({
     const stats = { arrivals: 0, forced: 0, solves: 0, ships: 0, hostStarts: [], done: 0, failed: 0, divergences: 0,
         recoveries: 0, keyReleases: [],
         // ⛓ W7 — why each forced re-arrival was spent, the held arrivals, the continuations, the glue query's refusals
-        forcedBy: {}, held: 0, continuations: 0, fallbacks: [], heldChecks: [], holdBlocked: [], releasedForSwap: 0 };
+        forcedBy: {}, held: 0, continuations: 0, fallbacks: [], heldChecks: [], holdBlocked: [], releasedForSwap: 0,
+        // ⛓ W8 — cold starts adopted as they stand, and the clause each refused one failed
+        adopted: 0, adoptRefused: [] };
     const history = [];
     /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
     const arrivalReads = [];
@@ -325,8 +331,11 @@ export function createWasmPlayback({
         if (!keepWatch) stopWatch();
         spawn = action === 'force-re-arrival' ? { x: live.playerPositionX, y: live.playerPositionY } : null;
         if (action === 'force-re-arrival') {
+            // ⛓ W8 — the cold start: ADOPT the unwatched room when it provably is "its arrival + idle ticks".
+            const adopted = holds && glueQuery && !room ? adoptLive(g) : null;
+            if (adopted === true) return { ok: true, action: 'adopt' };
             reArrive(`re-entering level ${g.level} to solve from an arrival (${FALLBACK_POLICY}: the cold start — the room ran `
-                + 'before the bot drove, so no arrival staging of it exists)', 'cold-start');
+                + `before the bot drove${adopted ? `, and it cannot be adopted: ${adopted}` : ', so no arrival staging of it exists'})`, 'cold-start');
         } else {
             phase = 'await-arrival';
             deadline = now() + ARRIVAL_WAIT_MS;
@@ -338,6 +347,56 @@ export function createWasmPlayback({
             }
         }
         return { ok: true, action };
+    }
+
+    /**
+     * ⛓ W8 — ADOPT the room the player is in (the cold start), with no re-arrival:
+     * stage it from its begin record + the live reads, check `adoptionRefusal`
+     * (the room IS "its arrival + N idle ticks", N ≥ 1, and the shadow does not
+     * depend on N), then HOLD it and serve the goal as a continuation from the
+     * shadow `arrival + 1 idle tick` (`room.shipped = [[]]`). The glue query
+     * must rule out a redirect in flight, as for a held arrival.
+     * Returns true (adopted, or failed by name) or the refusal, `clause: why`.
+     */
+    function adoptLive(g) {
+        const se = seam();
+        const be = se.beginEntry ?? null;
+        const st = status();
+        const state = readState();
+        const record = records.get(g.level) ?? null;
+        const refused = (clause, why) => { stats.adoptRefused.push({ level: g.level, clause, why }); return `${clause}: ${why}`; };
+        if (!st) return refused('begin', 'botStatus answered nothing');
+        let staging = null;
+        let shadow = null;
+        if (be && be['begin.level'] === st.level) {
+            try {
+                ({ staging } = stagingFromWasmArrival({ seam: se, status: st, state, record }));
+                const one = replayTape({ staging, perTick: [new Set()], levelSource, scratchPersistence: true });
+                shadow = { x: one.state.x, y: one.state.y, direction: one.state.direction };
+            } catch (err) { return refused('staging', String(err?.message ?? err).split('\n')[0]); }
+        }
+        const r = adoptionRefusal({ beginEntry: be, status: st, mobiles: J(game()?.botMobiles?.()), record, shadow });
+        if (r) return refused(r.clause, r.why);
+        const sw = swapState();
+        const blocked = sw ? arrivalHoldBlocker(sw, be) : 'the glue answered no swap state (a redirect cannot be ruled out)';
+        if (blocked) return refused('glue', blocked);
+        let freeze;
+        try { freeze = shippedTape({ staging, keys: [], hold: true, name: `wasm-adopt-${g.level}` }); } catch (err) { return refused('tape', err.message); }
+        const decl = exactDeclarationRefusal(freeze, st);
+        if (decl) return refused('declaration', decl);
+        const started = hostStart(freeze, 'adopt');
+        if (started) { fail(started); return true; }
+        stats.adopted += 1;
+        // An adoption is the room's STAGING, taken late: it counts as its arrival (one hold per arrival + one tape per ship).
+        stats.arrivals += 1;
+        stats.held += 1;
+        room = { level: g.level, staging, shipped: [[]], spawn: { x: state.playerPositionX, y: state.playerPositionY }, begin: be,
+            pushes: sw?.pushes ?? null, adopted: true };
+        spawn = room.spawn;
+        arriving = false;
+        note(`adopted level ${g.level} as it stands (no re-arrival)`);
+        solveInRoom();
+        return true;
     }
 
     /**
@@ -877,7 +936,7 @@ export function createWasmPlayback({
         get stats() {
             return { ...stats, hostStarts: [...stats.hostStarts], keyReleases: [...stats.keyReleases], history: [...history],
                 forcedBy: { ...stats.forcedBy }, fallbacks: [...stats.fallbacks], heldChecks: [...stats.heldChecks],
-                holdBlocked: [...stats.holdBlocked] };
+                holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused] };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },

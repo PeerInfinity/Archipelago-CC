@@ -56,6 +56,8 @@
 import { buildStagedTape } from './botDriverV1.js';
 import { gameVisibleTape, holdingWindowTape, parseTape } from './tapeFormat.js';
 import { UNREAD_MODELLED_READERS } from './wasmArrival.js';
+import { PUZZLEMENT_HAZARDS } from './combat.js';
+import { LEGACY_FADE_PER_LOAD } from './deadFrameBand.js';
 
 /** Thrown for a tape that must not ship — by name. */
 export class WasmPlaybackError extends Error {
@@ -79,12 +81,107 @@ const refuse = (why) => { throw new WasmPlaybackError(why); };
  * room that ran unwatched), a continuation the solver declines / runs out of
  * budget on, the X-split rule (`primarySplitRefusal`), a latched continuation,
  * and a shadow that is not the game (`shadowMismatch` — a staging bug, named).
+ * ⛓ W8: the cold start is ADOPTED instead when `adoptionRefusal` passes.
  */
 export const MID_ROOM_POLICY = 'continuation';
 export const FALLBACK_POLICY = 'forced-re-arrival';
 
 /** ⛓ W7 — the plans that END HELD: a location (the room is still the bot's after it); never an exit (W0 i.11). */
 export const endsHeld = (goal) => goal?.kind === 'location';
+
+/**
+ * ⛓ W8 — ADOPT the cold start (plan `seedling-js-solver-walk-plan.md` §5.13;
+ * ⚖ the user 2026-10-03: the solver must not need to exit and re-enter a room
+ * to solve it). The bot's first goal finds a room that ran UNWATCHED: no
+ * staging was taken at its arrival. It is adopted, with no re-arrival, exactly
+ * when the live game provably IS "its arrival + N idle stepped ticks", and the
+ * model's shadow of that is the same for every N ≥ 1. The engine then holds it
+ * and serves the goal as a continuation from the shadow `arrival + 1 idle tick`.
+ *
+ * Measured live (p4e, the house cold start + host jumps into L7/L9/L13 left
+ * unwatched): in a room with no `Mobile` but the player and no timed
+ * puzzlement, N ∈ {1, 19, ~60–200, 2000} gives the SAME shadow digest (minus
+ * the tick count) and the SAME plan, and each plan played on plan. ⛔ What
+ * the readouts can NOT see, and what the clauses below therefore exclude:
+ *   - a person's input. Not logged outside an armed tape (`Bot.as`
+ *     `recordEdges` sits below `if (!armed) return`). A person who walked away
+ *     and came back is caught by POSITION; one who pressed right then left for
+ *     one tick each is back on the spawn to the bit with v = 0 and no rng draw,
+ *     but FACING another way (measured: `down-stand` → `side-stand`). The
+ *     model's `direction` would then be wrong, so FACING is a clause, read off
+ *     `botMobiles`' player row (the stand animation names up/down/side).
+ *   - hidden item state: slash/spear timers, a cut `Grass`, `slashDashed`. No
+ *     readout carries them, so a player with ANYTHING to use
+ *     (`inventory_slots`, the game's own scan) is not adopted.
+ *   - the rng. "live `rng.state` == begin `rng.gameplay`" is FALSE at every
+ *     arrival, because the build's draws land on the gameplay stream (`split`
+ *     false; the house build is 91 steps, level 0 1200). It cannot be a clause
+ *     without the build's draw count, which nothing reads at a cold start; the
+ *     input and item clauses stand in for it.
+ * The clauses run in this order; the first that fails is the refusal.
+ */
+export const ADOPT_CLAUSES = Object.freeze([
+    'begin', 'tape', 'fade', 'inventory', 'player-state', 'mobiles', 'timed', 'velocity', 'position', 'facing',
+]);
+
+/**
+ * The fade must be OVER, with at least one stepped tick after it (the shadow's
+ * N ≥ 1). `Game.time` counts the fade's frames too, and the fade is a render
+ * band (`deadFrameBand.LEGACY_FADE_PER_LOAD`, 17–24 per load), so the margin
+ * is two bands' worth past the begin record.
+ */
+export const ADOPT_MIN_ELAPSED = 2 * LEGACY_FADE_PER_LOAD.max;
+
+/** `Player.sprites()`'s stand animation for a `direction` (0 right, 1 up, 2 left, 3 down; 0 and 2 share `side`). */
+export const standAnimFor = (direction) => (direction === 1 ? 'up' : direction === 3 ? 'down' : 'side');
+
+/**
+ * null when the live room may be adopted, else `{clause, why}`.
+ *
+ * @param {object} o
+ * @param {object|null} o.beginEntry  `botSeam().beginEntry` (read before any `botLoadTape`)
+ * @param {object} o.status   one `botStatus()`
+ * @param {object} o.mobiles  `botMobiles()` parsed (`{mobiles: [...]}`)
+ * @param {object|null} o.record  the room's map record (its `entities`)
+ * @param {{x:number, y:number, direction:number}} o.shadow  the shadow's player after ONE idle tick
+ */
+export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow }) {
+    const no = (clause, why) => ({ clause, why });
+    if (!beginEntry || beginEntry['begin.level'] !== status?.level) {
+        return no('begin', `no begin record for level ${status?.level} (got ${beginEntry ? beginEntry['begin.level'] : 'none'}) — `
+            + 'a swap may still be pending, or a tape load cleared it');
+    }
+    if (status.armed || status.held || status.arm?.pending) return no('tape', 'a tape is armed or holding — the room is not unwatched');
+    const elapsed = status.game_time - beginEntry['save.time'];
+    if (!(elapsed > ADOPT_MIN_ELAPSED)) {
+        return no('fade', `only ${elapsed} game frame(s) since the begin record (needs > ${ADOPT_MIN_ELAPSED}): the fade may not be over`);
+    }
+    if ((status.inventory_slots ?? []).length > 0) {
+        return no('inventory', `the player can use ${JSON.stringify(status.inventory_slots)} — a slash/spear/wand leaves state no readout carries`);
+    }
+    if (status.hits || status.hits_timer || status.drown_timer || status.frozen_timer || status.receive_input === false
+        || status.menu || (status.cutscene ?? []).some(Boolean)) {
+        return no('player-state', `hits ${status.hits}, hits_timer ${status.hits_timer}, drown ${status.drown_timer}, frozen ${status.frozen_timer}, `
+            + `receive_input ${status.receive_input}, menu ${status.menu}`);
+    }
+    const rows = mobiles?.mobiles ?? [];
+    const player = rows.filter((r) => /Player/.test(r.cls ?? ''));
+    const others = rows.filter((r) => !/Player/.test(r.cls ?? ''));
+    if (player.length !== 1) return no('mobiles', `${player.length} player row(s) in botMobiles`);
+    if (others.length) return no('mobiles', `the room holds Mobile(s) besides the player: ${[...new Set(others.map((r) => r.cls))].join(', ')}`);
+    const timed = [...new Set((record?.entities ?? []).map((e) => e.type).filter((t) => Object.prototype.hasOwnProperty.call(PUZZLEMENT_HAZARDS, t)))];
+    if (timed.length) return no('timed', `the room holds a timed puzzlement (${timed.join(', ')}) — its phase rides on ticks nobody counted`);
+    const p = player[0];
+    if (p.vx !== 0 || p.vy !== 0) return no('velocity', `the player is moving (v ${p.vx}, ${p.vy})`);
+    if (status.x !== shadow?.x || status.y !== shadow?.y) {
+        return no('position', `the player stands at (${status.x}, ${status.y}), the arrival's shadow at (${shadow?.x}, ${shadow?.y})`);
+    }
+    const want = `${standAnimFor(shadow.direction)}-stand`;
+    if (!String(p.anim ?? '').endsWith(want)) {
+        return no('facing', `the player's stand animation is ${JSON.stringify(p.anim)}, the arrival's facing is ${want} — someone turned the player`);
+    }
+    return null;
+}
 
 /** Booleans → their true indices (the tape's save-array spelling). */
 const indicesOf = (arr) => (arr ?? []).flatMap((v, i) => (v ? [i] : []));
