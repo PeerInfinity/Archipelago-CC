@@ -6720,7 +6720,15 @@ function previewPressApproach(run, { index, hitsTimer, lastPressAt, strike, stal
         level: run.level,
         world: run.world,
         ticksCompleted: n + o,
-        entities: (k) => run.entities(k),
+        // ⚠ The only family a previewed tick asks for is the bodies (`stepToward`'s
+        // emptiness test); any other is a question the preview cannot answer.
+        entities: (k) => {
+            if (k !== 'spinnerBodies') {
+                throw new Error(`previewPressApproach: a previewed tick has no '${k}' — the view `
+                    + 'carries the spinner bodies only.');
+            }
+            return live;
+        },
         spinnerForecast: (h) => run.spinnerForecast(o + Math.max(0, Math.ceil(h))).slice(o),
         gameTimeAt: (i) => run.gameTimeAt(o + i),
         previewStepper: () => step,

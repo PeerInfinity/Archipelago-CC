@@ -124,7 +124,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 51,
+            "count": 53,
             "id": "plan"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 308,
+        "blockStyle": 310,
         "browser": 93,
         "cited": 142,
-        "files": 319,
+        "files": 321,
         "lineStyle": 11,
-        "withDocblock": 319,
-        "withFlags": 239
+        "withDocblock": 321,
+        "withFlags": 241
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6471,6 +6471,60 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-f1-l5-open-lock — ⛓⛓⛓ SEEDLING FIDELITY F1 D2: L5's OPEN-LOCK ARRIVAL, THE SOLVER'S OWN WALK UP TO ITS REFUSAL, AS A TAPE THE GAME CAN REPLAY.",
             "path": "scripts/procgen/plan-seedling-f1-l5-open-lock.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-f1c-l18-lock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-f1c-l18-lock — ⛓⛓⛓ SEEDLING FIDELITY F1c D2: L18's SPINNER KILL LOCK, ASKED OF THE GAME WITH A WALK THAT TELLS THE TWO SPELLINGS APART.",
+            "path": "scripts/procgen/plan-seedling-f1c-l18-lock.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-f1c-l18-phase.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-f1c-l18-phase — ⛓⛓⛓ SEEDLING FIDELITY F1c D1: THE HAMMER-PHASE RUNG's SOLVE, HANDED TO THE GAME.",
+            "path": "scripts/procgen/plan-seedling-f1c-l18-phase.mjs"
         },
         {
             "argvHelpers": [],
