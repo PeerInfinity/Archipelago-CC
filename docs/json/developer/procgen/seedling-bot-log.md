@@ -12460,6 +12460,72 @@ so no tape moved, and `solve-seedling-r9-campaign --check` still exits 1.
   phase-driven body turns a shift of the chain's total length into a
   different solve, or a refusal, many windows downstream.
 
+### Seedling fidelity F1c — the hammer-phase rung + the chain from window 5 (2026-10-03)
+
+F1b's STOP, built on F1b's head. ⚖ The user, 2026-10-03: *"F1c: phase-robust
+L18 kill, then re-record."* The report is
+`CC/docs/cloud-reports/seedling-fidelity-f1c.md`.
+
+**D1 — the HAMMER-PHASE rung (PASS, game-witnessed).** The press kill chose
+and guarded its approach a tick at a time (`stepToward`'s 4-tick lookahead,
+`safeStep`), so a corner deeper than the lookahead was walked into. At
+`r9-solve-18`'s hammer residue 42 (the chain's clock after F1b), a press lands
+at t234 and the knocked-back body comes off the wall; at t249 every key set
+meets the line. The rung previews the executor's own approach one hammer
+period ahead on the forecast. Bodies are player-independent until a press
+lands, the phase is `gameTimeAt`, and the step is `previewStepper`. Cornered,
+it searches a hold (walk-offset `c−1 … 0`, 1–44 ticks) whose walk previews
+clear for one more period, and drives it under `safeStep`. The bounds,
+`HAMMER_PHASE_RUNG` beside `DODGE_RUNG`, are derived from `SPINNER`: horizon =
+`hammerPeriod`, `maxTicks` = `hammerPeriod − 1`, step 1, `maxPerKill` =
+`hitsMax`. The sweep over the 45 residues went from 33 solving to **37**. All
+33 earlier solves are byte-identical, and 10, 40, 41 and 42 now solve (42:
+512 t, `{18,0}@452`, 0 hits). The 8 that still refuse are a landing's rebound.
+The corner forms 1–5 ticks after a press lands, and the knockback is
+player-coupled, so the refusal now names the landing. The game witness
+`f1c-l18-phase42` was recorded twice. Mutant (rung off): residue 42 refuses
+again. Generated seed 8's kill-gate certifies where it was refused, so `c3`
+and `c6` move.
+
+**D2 — STOP at the fix (the game refutes both spellings).**
+`f1c-l18-lock-removal` (recorded twice) presses the player against
+`lock@144,112` before every reading. The game crosses on t444, which neither
+reading predicts: the v9 spelling of the spinner ledger's removal
+(317 + 100 = 417) crosses t445, and the arm's `removal + 101` crosses t446.
+The model crosses with the game under `{18,0}@416`. `stepSpinner` holds an
+alpha-zero body for one step (`removePending`), so the spinner ledger stamps
+one tick after the chaser convention that `f1-l5-lock-removal` measured. The
+fix (the ledger's stamp plus the v9 spelling), measured in a worktree, moves
+`r8-solve-18` (522 → 520 t), `r8-d2` and its `r8-d2-19/20` cascade, and every
+generated spinner kill-lock certification (acceptance batch, killgate
+s2/s5/s9, c3/c4/c6, ENEMY census). The brief licensed `r8-d2` and
+`r8-solve-18` only, so the fix did not land; the witness declares the
+game-sourced 416.
+
+**D3 — the chain from window 5 (PASS).** Driven fresh and headless:
+- window 5 is **403 t `@301`**;
+- windows 6–18 keep their committed walks;
+- window 19 (L18) is **512 t `@452`**, with the rung's one 8-tick hold;
+- windows 20–30 keep their walks.
+
+The 24 boot-only windows move `seam.time` (−155 before L18 and −98 after) and,
+in windows 6–15, `rng.cosmetic`. Their `tick0` blocks were re-derived on the
+game. The chain is **30 windows, 10,937 t** (it was 11,035). All 26 moved
+windows were recorded on the game, and the model reproduces every one.
+`solve-seedling-r9-campaign --check` exits 0, the first time since F1.
+
+**Trap candidates**, for the catalogue to number:
+
+- a guard one tick deep against a hazard whose period is 45: the corner a
+  rotating line makes is decided a full revolution ahead, and a lookahead
+  shorter than the period walks into it at some phases and not others;
+- a removal stamped by two classes in two conventions: a body that is held
+  for one step before `removed` stamps its ledger one tick later than a body
+  removed on its alpha-zero step, and one `totalEnemies()` reads both;
+- a producer that carries a game measurement it cannot derive (`tick0`): a
+  re-record that moves a boot leaves the carried block stale until the
+  zero-tick derivation runs again, and the stale block parses and replays.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -13251,7 +13317,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **11035 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10937 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -13259,7 +13325,7 @@ its byte-frozen free oracle is compared against.
 | 2 ⛓ | `r8-solve-2` | L2 → L3 | 47 | — |
 | 3 ⛓ | `r8-solve-3` | L3 → L4 | 245 | — |
 | 4 ⛓ | `r8-solve-4` | L4 → L5 | 255 | — |
-| 5 | `r8-solve-5` | L5 → L6 | 558 | — |
+| 5 | `r8-solve-5` | L5 → L6 | 403 | — |
 | 6 | `r8-solve-6` | L6 → L7 | 294 | — |
 | 7 | `r8-solve-7` | L7 → L8 | 146 | — |
 | 8 | `r8-solve-8` | L8 → L9 | 827 | — |
@@ -13273,7 +13339,7 @@ its byte-frozen free oracle is compared against.
 | 16 | `r9-solve-14` | L14 → L15 | 118 | — |
 | 17 | `r9-solve-15` | L15 → L16 | 456 | — |
 | 18 | `r9-solve-16` | L16 → L18 | 625 | — |
-| 19 | `r9-solve-18` | L18 → L19 | 455 | — |
+| 19 | `r9-solve-18` | L18 → L19 | 512 | — |
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
 | 21 | `r9-solve-20` | L20 → L13 | 560 | `shield@L20` |
 | 22 | `r9-solve-13-v2` | L13 → L0 | 48 | — |
