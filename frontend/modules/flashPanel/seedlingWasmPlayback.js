@@ -389,8 +389,11 @@ export function createWasmPlayback({
         const started = hostStart(freeze, 'adopt');
         if (started) { fail(started); return true; }
         stats.adopted += 1;
-        // An adoption is the room's STAGING, taken late: it counts as its arrival (one hold per arrival + one tape per ship).
+        // An adoption is the room's STAGING, taken late: it counts as its arrival (one hold per arrival + one tape per ship),
+        // and its reads are recorded like an arrival's (⛓ W8b: W5's level-0 probe restages them).
         stats.arrivals += 1;
+        arrivalReads.push({ seam: se, status: st, state });
+        if (arrivalReads.length > 8) arrivalReads.shift();
         stats.held += 1;
         room = { level: g.level, staging, shipped: [[]], spawn: { x: state.playerPositionX, y: state.playerPositionY }, begin: be,
             pushes: sw?.pushes ?? null, adopted: true,
