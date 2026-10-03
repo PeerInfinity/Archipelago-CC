@@ -119,10 +119,15 @@ describe('F4 D1/D2 — the sandtraps\' arrow death is the game\'s, row for row',
     });
 
     it('⛓ the committed declarations the model now disagrees with, by the game\'s own removal ticks', () => {
-        // r8-solve-8 declares {8,0}@246 and {8,1}@645; the game removes them on t248 and t648.
+        // ⛓ fidelity F5 re-recorded r8-solve-8: it declared {8,0}@246 and {8,1}@645 (the
+        // game removes them on t248 and t648); the re-solve declares neither, and the run's
+        // own death EARNS both tags on the game's ticks (recorded on the game, F5 D2:
+        // "sandtrap@96,80 -> 8:0 (removed t248, earned)"). The oracle's r8-solve-8 rows were
+        // sampled on the pre-F5 walk, which is the same walk until t247.
         const r8 = sandtrapsPerTick(loadTape('r8-solve-8')).run.staticBodyDeaths
-            .map((d) => [d.id, d.removedAt, d.declaredAt]);
-        expect(r8).toEqual([['sandtrap@96,80', 248, 246], ['sandtrap@96,128', 648, 645]]);
+            .map((d) => [d.id, d.removedAt, d.write, d.declaredAt]);
+        expect(r8).toEqual([['sandtrap@96,80', 248, 'earned', null], ['sandtrap@96,128', 648, 'earned', null]]);
+        expect(loadTape('r8-solve-8').persistence.filter((p) => p.level === 8 && p.at !== undefined)).toEqual([]);
         expect(ORACLE.cleared['r8-solve-8']).toEqual({ '8,0': 248, '8,1': 648 });
         // r7-act2-full declares {8,0}@2515 and {8,1}@3067; the game removes them on t2383 and t2905.
         const r7 = sandtrapsPerTick(loadTape('r7-act2-full')).run.staticBodyDeaths

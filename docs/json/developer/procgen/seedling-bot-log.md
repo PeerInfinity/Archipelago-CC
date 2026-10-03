@@ -12630,6 +12630,57 @@ The §11.4 refusal stays for every other static class.
   still clears its tag: the builder's orphan guard reads that as a clear
   nobody reads.
 
+### Seedling fidelity F5 — the sandtrap death + the spinner ledger, re-recorded (2026-10-03)
+
+⚖ The user, 2026-10-03: *"Merge F1 set now; F5 does both."* F5 lands F4 (the
+sandtraps' arrow death) on the joint F1 + F1b + F1c base, lands F1c D2's
+spinner-ledger fix, and re-records what the two move — every move pre-licensed
+and every move recorded on the game. The report is
+`CC/docs/cloud-reports/seedling-fidelity-f5.md`.
+
+**D1 — the spinner ledger stamps the alpha-zero step.** `stepSpinner` keeps a
+body whose alpha reached zero for one more step (`removePending`), and
+`assertSpinnerRemovalIsDeclared` ran on that next step and stamped
+`ticksCompleted + 1`, one tick later than `stepChasersNow` stamps the same
+event. It now stamps `ticksCompleted`, and `execKillByPress`'s tail declares
+the v9 spelling (`last.t + fade − 1`), as the chaser arm has since F1b. On
+`f1c-l18-lock-removal` the ledger reads 316, and 316 + 100 is the game's
+game-sourced 416; the model crosses on t444 with the game. The old stamp makes
+the same reading cross on t445 (the mutant).
+
+**D2 — the re-record.** `r8-solve-18` 522 → 520 t (`{18,0}@420`); the `r8-d2`
+headline 1828 → 1826 t, its first 520 ticks `r8-solve-18`'s; `r8-d2-19`/`-20`
+boot-only (`seam.time` −2), their `tick0` blocks re-derived. The campaign
+chain: window 8 (`r8-solve-8`) re-solves in its 827 ticks with no sandtrap
+declaration — the run computes the death and writes both tags itself — and its
+keys part from the old walk at t247; window 19 (`r9-solve-18`) 512 → 510 t,
+`{18,0}@450`, the same 8-tick hammer-phase hold; windows 20–30 boot-only. The
+chain is 30 windows and 10,935 ticks. Every moved window was recorded on the
+game and reproduced by the model; the whole chain passes the differential
+(30/30). All six producer `--check`s exit 0, and so does `derive-seedling-tick0
+--check`, for the first time since U13. The provenance rows follow:
+`r8-battery-8`'s and the campaign's L8 `game` rows are retired (no tape
+declares them now), and L18's read `320 + 100` and `350 + 100`.
+
+**Witnesses were not re-cut.** `f4-l8-sandtraps`' planner read `r8-solve-8`
+live, and F1c's chain re-record had moved its boot; it now reads a
+`witness-bases/` copy (F1c's pattern). `f1c-l18-lock-removal` keeps its words
+(F1c's measurement, in F1c's ledger). `f1c-l18-phase42` would re-cut to window
+19's new walk; no licence covers a witness tape, so it stays, and its planner's
+`--check` reads DRIFT.
+
+**Trap candidates**, for the catalogue to number:
+
+- two conventions for "the tick an event happened" in sibling arms (a chaser
+  stamped on its alpha-zero step, a spinner one step later): each arm's own
+  arithmetic is right, and every downstream sum is off by the difference;
+- a witness planner that reads a live chain window as its base: the next chain
+  re-record moves the base under a witness the game recorded, and the planner
+  drifts with nothing wrong in the witness;
+- a provenance row for a declaration the model no longer needs: when the model
+  learns to compute a clear, the tape stops declaring it, and the row that
+  vouched for it reds as a claim about a walk nobody took.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -13421,7 +13472,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10937 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10935 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -13443,7 +13494,7 @@ its byte-frozen free oracle is compared against.
 | 16 | `r9-solve-14` | L14 → L15 | 118 | — |
 | 17 | `r9-solve-15` | L15 → L16 | 456 | — |
 | 18 | `r9-solve-16` | L16 → L18 | 625 | — |
-| 19 | `r9-solve-18` | L18 → L19 | 512 | — |
+| 19 | `r9-solve-18` | L18 → L19 | 510 | — |
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
 | 21 | `r9-solve-20` | L20 → L13 | 560 | `shield@L20` |
 | 22 | `r9-solve-13-v2` | L13 → L0 | 48 | — |
