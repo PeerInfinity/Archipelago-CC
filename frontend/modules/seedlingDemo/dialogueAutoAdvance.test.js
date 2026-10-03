@@ -143,8 +143,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ swim R2: 189 — D1's two wallflyer witnesses, D3's two-teleporter and terrain-kill-lock witnesses.
         // ⛓ swim U15 + R2 (merged): 195 — U15's 2 witnesses + 4 segments, R2's 4 witnesses.
         // ⛓ swim R4: 196 — D2's `r4-iceturret-bobs`.
-        expect(rows).toHaveLength(196);
-        expect(rows.length - parted.length).toBe(195);
+        // ⛓ Seedling fidelity F4: 197 — D1's `f4-l8-sandtraps`, inert.
+        expect(rows).toHaveLength(197);
+        expect(rows.length - parted.length).toBe(196);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

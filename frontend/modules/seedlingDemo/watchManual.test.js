@@ -473,8 +473,10 @@ describe('⛓⛓⛓ THE ONE FOLD DERIVES ITS OWN VERSION (slice 5)', () => {
         //   declares the kill lock's timed `{18,0}@342`, as `r8-solve-18` does.
         // ⛓ R2-swim D3(c): `r2-terrain-killlock` joined — L5's kill lock, opened
         //   by a terrain death, declared at the removal tick (`{5,0}@283`).
+        // ⛓ Seedling fidelity F4: `f4-l8-sandtraps` joined — L8's two sandtrap
+        //   clears, game-sourced at the removal ticks (`{8,0}@248`, `{8,1}@648`).
         expect(byAt.sort()).toEqual([
-            'r2-terrain-killlock', 'r7-act2-5', 'r7-act2-full',
+            'f4-l8-sandtraps', 'r2-terrain-killlock', 'r7-act2-5', 'r7-act2-full',
             'r8-d2', 'r8-solve-18', 'r8-solve-5', 'r8-solve-8', 'r9-solve-18',
         ]);
         expect(byDespawn.sort()).toEqual(['r7-act2-6', 'r7-act2-full']);
