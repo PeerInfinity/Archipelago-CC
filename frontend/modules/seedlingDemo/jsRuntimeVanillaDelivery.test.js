@@ -17,6 +17,7 @@
  * exits only). Mutants this file kills (measured, §5.18):
  *   m1 the split off — every mounted set GENERATED → the witness walks (0 solves), the pit is refused
  *   m2 an apitem location via the walker (no placement handed to the solver) → the witness's location leg
+ *   m3 the mount reports `Main.playerPositionX/Y` as 0 (the run is gone) → the host's reset lands in `tree@0,0`
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -29,7 +30,8 @@ import { WALK_STATES } from './jsRuntimeWalker.js';
 import { planLevelSetChunks } from './levelSetValidator.js';
 import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
 import { assembleGeneratedSeedlingSet } from './seedlingGeneratedSet.js';
-import { loadSeedlingRandomizer } from '../flashPanel/seedlingRandomizerWiring.js';
+import { BUILD_SPAWN } from './tapeFormat.js';
+import { loadSeedlingRandomizer, runSeedlingRandomizerLoad } from '../flashPanel/seedlingRandomizerWiring.js';
 import { realRoomPlaybackMap, resolveSeedlingAtlasGoal } from '../flashPanel/seedlingPlaybackController.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -49,12 +51,13 @@ const locationsOf = (rules) => {
     }
     return out;
 };
-const LOADED = await loadSeedlingRandomizer({
+const loadJs = () => loadSeedlingRandomizer({
     flashPanel: PT.flash_panel, manifest: null, transport: 'js', rawRules: PT, locations: locationsOf(PT),
     playerId: Object.keys(PT.regions)[0], gameConfig: GAME, baseUrl: pathToFileURL(join(ROOT, 'frontend/')).href,
     fetchJson: async (u) => JSON.parse(readFileSync(fileURLToPath(u), 'utf8')),
     importModule: (u) => import(/* @vite-ignore */ u),
 });
+const LOADED = await loadJs();
 const MAP = realRoomPlaybackMap(LOADED, PT);
 const goalOf = (q) => {
     const r = resolveSeedlingAtlasGoal(q, MAP, {});
@@ -120,6 +123,64 @@ describe('§5.18 — the split: what a mounted set\'s rooms ARE, read off its ow
         expect(rt.run.level).toBe(0);
         expect(rt.mounted.records.get(0)).toBeDefined();
         expect(rt.events.find((e) => e.type === 'mount').message).toMatch(new RegExp(`${LOADED.set.rooms.length} real room`));
+    });
+});
+
+describe('§5.18 — the HOST\'s load on the JS page: delivered, reset, and the player where the game boots', () => {
+    /**
+     * ⛔ The live witness (probe J) found this: the reset of a set whose start
+     * carries no position takes the GAME's boot position — the region
+     * binding's last declared `playerPositionX/Y` — and the page's mount used
+     * to report (0, 0) for those, so the player was sent into `tree@0,0`. Here
+     * the binding is a stand-in that keeps `lastSpawn` / `lastLevel` exactly as
+     * `SeedlingRegionBinding.onStateReport` does (`:487-488`; a negative level
+     * is no room), fed by the page's own reports.
+     */
+    it('runSeedlingRandomizerLoad: the explicit start at the game\'s first-frame position, landed, the player standable', async () => {
+        const loaded = await loadJs();
+        const binding = { lastSpawn: { x: null, y: null }, lastLevel: null };
+        const rt = createJsRuntime({ onStateChanged: (p, v) => {
+            if (p === 'playerPositionX') binding.lastSpawn.x = Number(v);
+            if (p === 'playerPositionY') binding.lastSpawn.y = Number(v);
+            if (p === 'level' && Number.isInteger(v) && v >= 0) binding.lastLevel = v;
+        } });
+        expect(rt.game.configure(BRIDGE_CONFIG)).toBe('ok');
+        rt.setVanilla(MAP_DOC);   // the game's own first frame (`Main.as:51`), before the AP load
+        rt.tick();
+        const bot = (name, arg) => (typeof rt.game[name] === 'function' ? rt.game[name](arg) : null);
+        const res = await runSeedlingRandomizerLoad({
+            loaded,
+            glue: { binding, setDelivery: () => {}, setCheckBinding: () => {} },
+            teleport: (t) => rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [t.level, t.x, t.y] }]),
+            bot,
+            overlay: { show() {}, hide() {}, setText() {} },
+            waitFrame: async () => { rt.tick(); },
+            sleep: async () => { rt.tick(); },
+        });
+        expect(res.ok, res.why).toBe(true);
+        expect(res.delivered.ok).toBe(true);
+        expect(rt.mounted.kind).toBe(MOUNTED_KINDS.REAL);
+        expect(res.reset).toMatchObject({ mode: 'explicit-start', intro: false, level: 0,
+            x: BUILD_SPAWN.x, y: BUILD_SPAWN.y, landed: true });
+        expect(rt.run.level).toBe(0);
+        expect(rt.run.worldCtor).toEqual({ x: BUILD_SPAWN.x, y: BUILD_SPAWN.y });
+    });
+
+    it('after a mount (no run) the position statics read the last constructor\'s args — a door crossed in-run included; the level reads −1', () => {
+        const reports = [];
+        const rt = createJsRuntime({ onStateChanged: (p, v) => reports.push([p, v]) });
+        rt.game.configure(BRIDGE_CONFIG);
+        rt.setVanilla(MAP_DOC);
+        rt.tick();
+        // The game's first frame, then L0 → L86 walked IN the run (a door crossing moves the constructor's args, no boot).
+        walk(rt, doorGoal(0, 86));
+        expect(rt.run.level).toBe(86);
+        const ctor = { ...rt.run.worldCtor };
+        expect(ctor).not.toEqual({ x: BUILD_SPAWN.x, y: BUILD_SPAWN.y });
+        planLevelSetChunks(LOADED.set).chunks.forEach((c) => rt.game.botLoadLevels(JSON.stringify(c)));
+        expect(rt.run).toBeNull();
+        expect(JSON.parse(rt.game.readState())).toMatchObject({ level: -1, playerPositionX: ctor.x, playerPositionY: ctor.y });
+        expect(reports.filter(([p, v]) => p.startsWith('playerPosition') && v === 0)).toEqual([]);
     });
 });
 

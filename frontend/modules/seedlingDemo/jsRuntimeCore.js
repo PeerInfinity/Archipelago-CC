@@ -27,6 +27,10 @@
  *    as the game's own per-frame poll does, never inside `configure`.
  *  · `Main.playerPositionX/Y` are the GAME CONSTRUCTOR'S args, written by
  *    `new Game(level, x, y)` — not the live position → `run.worldCtor`.
+ *    ⛓ §5.18 — they are STATICS: a level-set mount does not touch them, so
+ *    with no run (after a mount) they still read the last constructor's args
+ *    (`lastCtor`), never 0. `Main.level` reads −1 there, as measured on the
+ *    wasm game (`seedlingRegionBinding`'s G2 note).
  *  · `Game.pendingCheck = "<seq>|<level>|<tag>|0"` is written by
  *    `APItem.removed()` → `Game.setPersistence(tag, false)` on CONTACT
  *    (`APItem` never sets `special`, so `Pickup.pick_up()` takes the
@@ -302,6 +306,15 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     let bootItems = null;
 
     let session = null;
+    /**
+     * ⛓ §5.18 — the last `new Game` constructor's (x, y): `Main.playerPositionX/Y`
+     * are statics the constructor writes, and nothing else does. MEASURED (the
+     * vanilla-map probe's J, before this): the mount nulled the run, the page
+     * reported (0, 0), the region binding took that as the game's boot position,
+     * and the vanilla arm's reset (a start with no position) put the player at
+     * (0, 0) — inside `tree@0,0`, the P1-e run-4 trap.
+     */
+    let lastCtor = null;
     /** The constructor args the CURRENT room was entered with — the respawn point. */
     let arrival = null;
     /** "level:tag" persistence slots earned by previous runs, carried into the next. */
@@ -416,6 +429,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         }
         bankClears();
         foldGainedItems();
+        // The constructor writes the statics before it builds anything (a room the model refuses included).
+        lastCtor = { x, y };
         const staging = bootStaging({ boot: { level, x, y }, items: { ...flags }, pins: [...JS_RUNTIME_PINS] });
         staging.persistence = [...carried.values()].map((c) => ({ ...c }));
         bootItems = { ...flags };
@@ -641,8 +656,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         const run = session?.run ?? null;
         if (cls === MAIN) {
             if (property === 'level') return run ? run.level : -1;
-            if (property === 'playerPositionX') return run ? run.worldCtor.x : 0;
-            if (property === 'playerPositionY') return run ? run.worldCtor.y : 0;
+            if (property === 'playerPositionX') return run ? run.worldCtor.x : (lastCtor?.x ?? 0);
+            if (property === 'playerPositionY') return run ? run.worldCtor.y : (lastCtor?.y ?? 0);
             if (property in flags) {
                 // ⛓ J3 — the host's write, or what the run picked up itself.
                 const live = run?.inventory?.[property];
@@ -746,6 +761,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             apItems.set(room.id, apItemsOf(record));
         }
         bankClears();
+        // ⛓ §5.18 — the statics outlive the run (a door crossed in-run moved them since its boot).
+        if (session) lastCtor = { x: session.run.worldCtor.x, y: session.run.worldCtor.y };
         mounted = { set, kind: mountedKindOf(set), records, apItems, source: levelSourceFromAtlas(records) };
         // A new set is a new save: what the old one cleared means nothing here.
         carried.clear();
