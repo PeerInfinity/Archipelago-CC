@@ -1390,7 +1390,7 @@ routes themselves remain untried.
   puzzles → enemies) matches how the mass is distributed.
 - **v1 KICKOFF DESIGNED (2026-07-30, Fable design session)** — brief:
   **`CC/docs/plans/seedling-bot-v1-opus-kickoff.md`** (moved out of the
-  gitignored `NewDocs/` when implementation started, 2026-07-30). Four
+  gitignored planning tree when implementation started, 2026-07-30). Four
   rulings taken (user, 2026-07-30):
   (1) the JS-side stage code lives in a **new frontend module
   `frontend/modules/seedlingDemo/`** (runnerDemo precedent: pure engine core
@@ -1496,8 +1496,7 @@ routes themselves remain untried.
     and the unconfigured-BridgeGeneric page errors are both present in the
     untouched teleport build and mean nothing.
 - **v2 KICKOFF DESIGNED (2026-07-30, Fable design session)** — brief:
-  `NewDocs/plans/seedling-bot-v2-opus-kickoff.md` (→ `CC/docs/plans/` when
-  implementation starts). Queue §5c's three questions plus one the recon
+  `CC/docs/plans/seedling-bot-v2-opus-kickoff.md`. Queue §5c's three questions plus one the recon
   surfaced, all ruled (user, 2026-07-30):
   1. **Geometry: consume the committed Phase-2 extract directly**
      (`flashPanel/atlases/seedling-map.json` + `seedlingSemantics.js`'s
@@ -1639,15 +1638,15 @@ routes themselves remain untried.
       transport modelled + planner-aware, the fall-only underworld cluster
       walked, all 13 items granted room-by-room, exactly differentially
       verified end-to-end — kickoff ready
-      (`NewDocs/plans/seedling-bot-r1-opus-kickoff.md`)
+      (`CC/docs/plans/seedling-bot-r1-opus-kickoff.md`)
 - [ ] R2: solids return (noclip off) — **RULED 2026-08-01, kickoff ready**
-      (`NewDocs/plans/seedling-bot-r2-opus-kickoff.md`): persistence-clear
+      (`CC/docs/plans/seedling-bot-r2-opus-kickoff.md`): persistence-clear
       crutch (one AS3 change), pushables routed-around-or-escalated, R1
       recordings frozen + tiered sweep — pays the blocking-role class table
       (sizing: v2 kickoff §13) + pixelmask extraction; interactive blockers
       bridged by named persistence grants
 - [ ] R3: interactions + real collection — **RULED 2026-08-01, kickoff
-      ready** (`NewDocs/plans/seedling-bot-r3-opus-kickoff.md`): one rung,
+      ready** (`CC/docs/plans/seedling-bot-r3-opus-kickoff.md`): one rung,
       ordered slices; target 11 real; raw tapes + chunked load;
       kill-enemy locks stay cleared → R5 (item use, rocks/ropes, locks;
       grants retired) — absorbs old v3/v4's item-gate + puzzle scope

@@ -1,6 +1,6 @@
 /**
  * seedlingDemo/jsRuntimeSolveWorker — **THE SOLVER MODE'S WORKER ENTRY**
- * (solver-walk S2; plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §3 S2).
+ * (solver-walk S2).
  *
  * A module Worker that runs `jsRuntimeSolver.solveFromTape` — the shadow
  * replay and `solveSegment` with the session as `prefix` — OFF the page's main

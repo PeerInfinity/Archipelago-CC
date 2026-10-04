@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Seedling solver-walk, slice W8 (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.13) — can the wasm
+ * Seedling solver-walk, slice W8 — can the wasm
  * Playback Bot ADOPT a room it never saw arrive (the COLD START), with no re-arrival? ⚖ The user (2026-10-03):
  * the solver must not need to exit and re-enter a room to solve it. Default build p4e, headless logic-only,
  * under the box lock; every session on a FRESH page (the wasm game runs out of memory after ~150–170 swaps).

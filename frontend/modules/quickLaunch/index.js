@@ -3,9 +3,9 @@
  * link per user guide. The contents are derived from the live registry every
  * render (quickLaunchCatalog.js); nothing about other modules is listed here.
  *
- * Plan: NewDocs/plans/quick-launch-panel-plan.md (Q1: the virtual groups,
- * docs links, activation; Q2: the stored tree, edit mode, Unfiled; Q3: categories,
- * the cards view, the filter, collapsed groups).
+ * Built in three steps: Q1 the virtual groups, docs links, activation; Q2 the
+ * stored tree, edit mode, Unfiled; Q3 categories, the cards view, the filter,
+ * collapsed groups.
  */
 
 import { MODULE_ID, QuickLaunchUI, VIEWS } from './quickLaunchUI.js';

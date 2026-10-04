@@ -1,6 +1,6 @@
 /**
  * wasmArrival — solver-walk W1: a wasm room ARRIVAL → a JS staging → a solve
- * request (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.3 W1).
+ * request.
  *
  * The fixture is a RECORDING, not a hand-written latch:
  * `fixtures/wasm-arrival-p4e.json` holds the raw reads of four real arrivals

@@ -1,7 +1,6 @@
 /**
  * seedlingDemo/jsRuntimeCore — **THE SEEDLING JS RUNTIME, SPEAKING THE WASM
- * PAGE'S CONTRACT** (Seedling JS runtime arc, slice J1; plan
- * `NewDocs/plans/seedling-js-substrate-plan.md`).
+ * PAGE'S CONTRACT** (Seedling JS runtime arc, slice J1).
  *
  * The flash panel talks to a recompiled Seedling page through
  * `WasmBridgeAdapter`: a same-origin iframe exposing `window.__swfBridge`

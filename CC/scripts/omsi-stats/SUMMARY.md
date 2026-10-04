@@ -548,8 +548,7 @@ rep-gap tracker shipped (fork `2b79ceb`, Round-12 census `b32f9d33b`).
 
 ## Round 14 — §11.10 targeted mode T0+T1: goal-regression engine SHIPPED; the bank:20 escape is economy-walled, not scoring-walled (2026-07-13, Opus)
 
-Targeted-mode plan `NewDocs/plans/omsiloops/omsi-loops-targeted-mode-plan.md`
-(§12 = T0 results). Fork `automation`: T1 adds `regressAction` /
+Targeted-mode plan (untracked; its §12 = T0 results). Fork `automation`: T1 adds `regressAction` /
 `generateTargeted` / `planTargeted` (a goal-directed backward regression that
 generalizes `buildPushes`), a new orthogonal `plannerStrategy: heuristic |
 targeted` (§7 Option X, byte-inert at the default), and the runner flag
@@ -671,8 +670,8 @@ fires but cannot escape until the economy is fixed).
 
 ## Round 15 — Part A: un-gated town-0 capacity probe SHIPPED; the bank:20 headline gate now PASSES; reference deliberately re-frozen (2026-07-13, Opus)
 
-Parent design: multitown-planner-plan §11.9 Part A; brief
-`NewDocs/plans/omsiloops/omsi-loops-part-a-rebaseline-plan.md`. This is the
+Parent design: multitown-planner-plan §11.9 Part A (and an untracked
+rebaseline brief). This is the
 FIRST deliberate move of the frozen byte-reference since v0. **A1 only** landed
 (A2 dropped — see below).
 

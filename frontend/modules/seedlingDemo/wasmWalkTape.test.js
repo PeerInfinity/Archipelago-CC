@@ -1,7 +1,6 @@
 /**
  * wasmWalkTape — solver-walk WG: the J2 WALKER as the tape producer for a
- * GENERATED room on the wasm runtime (plan
- * `NewDocs/plans/seedling-js-solver-walk-plan.md` §5, the WG AS-BUILT).
+ * GENERATED room on the wasm runtime (solver-walk WG).
  *
  *   · the mounted-set level source (`mountedRecordsOf`) IS the JS page's;
  *   · every committed generated preset room × every arrival × every goal:

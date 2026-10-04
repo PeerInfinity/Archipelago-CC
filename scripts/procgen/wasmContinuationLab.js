@@ -1,6 +1,5 @@
 /**
- * IN-PAGE half of `probe-seedling-wasm-continuation.mjs` (solver-walk W7; plan
- * `NewDocs/plans/seedling-wasm-solver-plan.md` §1.3 / §2.4). A browser ES module
+ * IN-PAGE half of `probe-seedling-wasm-continuation.mjs` (solver-walk W7). A browser ES module
  * the probe imports BY URL into the live Archipelago page
  * (`/scripts/procgen/wasmContinuationLab.js`). It re-runs §1.3's C rows — a plan
  * stopped MID-ROOM and continued — through the SAME committed pieces the W7

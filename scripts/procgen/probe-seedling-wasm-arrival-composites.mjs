@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Seedling solver-walk, slice W4 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.1/§3 W4) — the
+ * Seedling solver-walk, slice W4 — the
  * live witness of the wasm ARRIVAL COMPOSITES and the fail-fast on an exact repeat, on `seedling_atlas`
  * (default build p4e, headless logic-only, under the box lock). Each leg is a host jump to an arrival the
  * committed atlas worlds name, then the wasm playback engine (`flashPanel/seedlingWasmPlayback.js`, built

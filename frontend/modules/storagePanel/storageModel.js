@@ -3,8 +3,6 @@
  * `moduleInfo.storage` declarations, match keys to them, and build the view
  * (sections → owner groups → rows). No DOM, no localStorage: the UI passes the
  * key sizes in, so vitest drives every rule here.
- *
- * Plan: NewDocs/plans/quick-launch-panel-plan.md §37 (the survey), §38 (the ruling).
  */
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 

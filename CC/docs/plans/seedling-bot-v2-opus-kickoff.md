@@ -473,7 +473,7 @@ without artifact). Additions:
 5. **Docs + memory**: `seedling-bot.md` v2 section (the transitions
    contract + the resolver semantics + the pixelmask seam),
    plan-doc Phase 8 checkboxes, queue §5c, memory topic. Move this
-   kickoff NewDocs → `CC/docs/plans/` when implementation starts.
+   kickoff from the planning tree to `CC/docs/plans/` when implementation starts.
 
 Baselines at kickoff (2026-07-30, re-measure fresh): vitest 3876/3876;
 the rest per v1 close (slow tier 364, `--batch=fast` 61 — v2 adds no legs

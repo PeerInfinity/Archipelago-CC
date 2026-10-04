@@ -1,7 +1,6 @@
 /**
  * seedlingDemo/jsRuntimeSolver — **THE PLAYBACK BOT'S SOLVER MODE ON THE
- * SEEDLING JS RUNTIME** (solver-walk S1; plan
- * `NewDocs/plans/seedling-js-solver-walk-plan.md` §2.2 "(C) in detail").
+ * SEEDLING JS RUNTIME** (solver-walk S1).
  *
  * Opt-in (`flashPanel.seedlingSolverWalk`, default OFF — ⚖ Q3: the solve is
  * SYNCHRONOUS on the page's main thread until S2's Worker lands). With it on,

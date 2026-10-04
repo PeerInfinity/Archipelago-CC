@@ -1,7 +1,6 @@
 /**
  * seedlingDemo/wasmWalkTape — **THE J2 WALKER AS A TAPE PRODUCER, FOR A
- * GENERATED ROOM ON THE WASM RUNTIME** (solver-walk WG; plan
- * `NewDocs/plans/seedling-js-solver-walk-plan.md` §5, the WG AS-BUILT).
+ * GENERATED ROOM ON THE WASM RUNTIME** (solver-walk WG).
  *
  * On wasm there is no live walker: the game only plays tapes, so every goal
  * must become a TAPE before the game moves. The solver has no goal kind for a

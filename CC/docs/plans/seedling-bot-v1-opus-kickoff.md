@@ -505,7 +505,7 @@ runnerDemo is the structural precedent (pure core + `*.test.js` +
 5. **Docs + memory** — procgen doc (new `seedling-bot.md` or a § in
    `flash.md`, implementer's call), plan-doc Phase 8 checkbox + as-built
    notes, memory topic update. Move this kickoff
-   NewDocs→`CC/docs/plans/` per convention when implementation starts.
+   from the planning tree to `CC/docs/plans/` per convention when implementation starts.
 
 ## 5. Witness gates — what "v1 done" means
 

@@ -96,8 +96,7 @@ const V0_REFERENCE = { seed: 12345, loops: 461, ticks: 5_195_188, hash: "9d9952e
 // A worldConfig installs the P2 award schedule and the lootable priority prefs
 // into every sim context this run builds, so headless sweeps can plan the
 // world that actually exists (the same payload automation.js/predictor.js ride
-// into the live workers). See NewDocs/plans/cross-game-p2-automation-transport
-// -opus-kickoff.md §3.1.
+// into the live workers).
 //
 // A run WITH a worldConfig is a DIFFERENT WORLD and therefore never asserts the
 // frozen V0 reference — knobsAtDefaults excludes it.

@@ -1,6 +1,6 @@
 /**
  * In-app tests for the Storage panel and the quota notice (enrolled in the
- * regression roster). Plan: NewDocs/plans/quick-launch-panel-plan.md §38, §39.
+ * regression roster).
  *
  * ⚖ RULED (the user, 2026-09-26): every row SETS the state it expects and
  * cleans up after itself. Each row writes only scratch keys (removed in

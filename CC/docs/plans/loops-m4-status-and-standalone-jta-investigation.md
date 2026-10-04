@@ -33,7 +33,7 @@
 
 **Written 2026-07-23 (Opus session, mid-M4). Paused at slice 3 pending an
 architectural decision the user flagged for a fresh session.** Companion to
-the kickoff `NewDocs/plans/loops-m4-jta-opus-kickoff.md` (which holds the
+the (untracked) M4 kickoff (which holds the
 settled M4 design rulings — don't re-litigate those).
 
 > **⚠ RESOLVED 2026-07-23 (Fable review session, USER RULING): jta regions
@@ -189,7 +189,7 @@ not cleanly separate.
 - Fork commit (slice 1): submodule `755056809` (UNPUSHED; gitlink un-bumped).
 - Slice 2 commit: `59ddb867f`.
 - Substrates run log this session: was under the session scratchpad.
-- Kickoff (design rulings): `NewDocs/plans/loops-m4-jta-opus-kickoff.md`.
+- Kickoff (design rulings): the untracked M4 JtA kickoff.
 - Memory: `project_loops_block_modes`.
 
 ## Ruling + revised plan (Fable review session, 2026-07-23 — THE plan for the resuming session)

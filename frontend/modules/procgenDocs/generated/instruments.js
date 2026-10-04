@@ -6232,7 +6232,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "The SUB-REGION PARTITION of the Seedling atlases: which tile of a level is in which sub-region (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.17, logical sub-region links).",
+            "oneLiner": "The SUB-REGION PARTITION of the Seedling atlases: which tile of a level is in which sub-region (solver-walk §5.17, logical sub-region links).",
             "path": "scripts/procgen/make-seedling-subregion-partition.mjs"
         },
         {
@@ -10037,7 +10037,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling solver-walk, slice W8 (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.13) — can the wasm Playback Bot ADOPT a room it never saw arrive (the COLD START), with no re-arrival?",
+            "oneLiner": "Seedling solver-walk, slice W8 — can the wasm Playback Bot ADOPT a room it never saw arrive (the COLD START), with no re-arrival?",
             "path": "scripts/procgen/probe-seedling-wasm-adopt.mjs"
         },
         {
@@ -10086,7 +10086,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling solver-walk, slice W4 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.1/§3 W4) — the live witness of the wasm ARRIVAL COMPOSITES and the fail-fast on an exact repeat, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
+            "oneLiner": "Seedling solver-walk, slice W4 — the live witness of the wasm ARRIVAL COMPOSITES and the fail-fast on an exact repeat, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
             "path": "scripts/procgen/probe-seedling-wasm-arrival-composites.mjs"
         },
         {
@@ -10184,7 +10184,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling solver-walk, slice W7 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §1.3/§2.4/§3 W7) — the live witness that the wasm Playback Bot KEEPS THE ROOM STILL between goals and solves the next goal as a CONTINUATION (S0's prefix from the held room), with no forced re-arrival on the main path.",
+            "oneLiner": "Seedling solver-walk, slice W7 — the live witness that the wasm Playback Bot KEEPS THE ROOM STILL between goals and solves the next goal as a CONTINUATION (S0's prefix from the held room), with no forced re-arrival on the main path.",
             "path": "scripts/procgen/probe-seedling-wasm-continuation.mjs"
         },
         {
@@ -10327,7 +10327,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling solver-walk, slice W5 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.2/§3 W5) — the live witness of LEVEL 0 (the overworld hub) on the wasm solver, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
+            "oneLiner": "Seedling solver-walk, slice W5 — the live witness of LEVEL 0 (the overworld hub) on the wasm solver, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
             "path": "scripts/procgen/probe-seedling-wasm-level0.mjs"
         },
         {
@@ -10377,7 +10377,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling solver-walk §5.17 — LOGICAL SUB-REGION LINKS on the wasm runtime (plan `NewDocs/plans/seedling-js-solver-walk-plan.md`). `seedling_playthrough` loaded by `?rules=`, default build p4e, headless logic-only, under the box lock; every session on a FRESH page.",
+            "oneLiner": "Seedling solver-walk §5.17 — LOGICAL SUB-REGION LINKS on the wasm runtime. `seedling_playthrough` loaded by `?rules=`, default build p4e, headless logic-only, under the box lock; every session on a FRESH page.",
             "path": "scripts/procgen/probe-seedling-wasm-logical-links.mjs"
         },
         {
@@ -10476,7 +10476,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling solver-walk, slice VANILLA MAP (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.16) — the Playback Bot walks `seedling_playthrough`, the VANILLA randomizer arm's world, through the name → cell map `seedlingPlaybackController.realRoomPlaybackMap` derives (the arm's own placement table read off the se…",
+            "oneLiner": "Seedling solver-walk, slice VANILLA MAP — the Playback Bot walks `seedling_playthrough`, the VANILLA randomizer arm's world, through the name → cell map `seedlingPlaybackController.realRoomPlaybackMap` derives (the arm's own placement table read off the set it DELIVERED; the sidecars' exit_tiles).",
             "path": "scripts/procgen/probe-seedling-wasm-vanilla-map.mjs"
         },
         {

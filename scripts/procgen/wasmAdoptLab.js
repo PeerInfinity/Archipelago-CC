@@ -1,6 +1,5 @@
 /**
- * IN-PAGE half of `probe-seedling-wasm-adopt.mjs` (solver-walk W8; plan
- * `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.13). A browser ES module the
+ * IN-PAGE half of `probe-seedling-wasm-adopt.mjs` (solver-walk W8). A browser ES module the
  * probe imports BY URL into the live Archipelago page (`/scripts/procgen/wasmAdoptLab.js`).
  * It MEASURES the cold-start adoption, outside the engine:
  *

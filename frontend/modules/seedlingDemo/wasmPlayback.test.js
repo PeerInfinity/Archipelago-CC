@@ -1,8 +1,7 @@
 /**
  * wasmPlayback — solver-walk W2: the host tape a wasm playback ships, the
  * declaration rule it ships under, the mid-room policy, the moonrock / level-0 (⛓ W5: staged, no longer refused)
- * refusal, and the trajectory compare (plan `NewDocs/plans/seedling-js-solver-walk-plan.md`
- * §5.3 W2). The engine that drives them (`flashPanel/seedlingWasmPlayback.js`)
+ * refusal, and the trajectory compare (solver-walk W2). The engine that drives them (`flashPanel/seedlingWasmPlayback.js`)
  * has its own file; both read W1's RECORDED arrivals
  * (`fixtures/wasm-arrival-p4e.json`), never a hand-written latch.
  */

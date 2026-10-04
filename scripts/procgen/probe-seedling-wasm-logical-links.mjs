@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Seedling solver-walk §5.17 — LOGICAL SUB-REGION LINKS on the wasm runtime (plan
- * `NewDocs/plans/seedling-js-solver-walk-plan.md`). `seedling_playthrough` loaded by `?rules=`, default build
+ * Seedling solver-walk §5.17 — LOGICAL SUB-REGION LINKS on the wasm runtime.
+ * `seedling_playthrough` loaded by `?rules=`, default build
  * p4e, headless logic-only, under the box lock; every session on a FRESH page.
  *
  *   H  A HUMAN WALK (no bot): keys pressed on the game canvas, the region glue reading the position. From a

@@ -1,7 +1,6 @@
 /**
  * seedlingDemo/wasmArrival — **A WASM ROOM ARRIVAL → A JS STAGING → A SOLVE
- * REQUEST** (solver-walk W1; plan `NewDocs/plans/seedling-js-solver-walk-plan.md`
- * §5.3 W1, with W0's corrections in §5.5). It PLAYS NOTHING: every input is a
+ * REQUEST** (solver-walk W1, with W0's corrections). It PLAYS NOTHING: every input is a
  * read-only verb's answer.
  *
  *   1. DETECT. `isArrival(prev, seamEnvelope)` — an arrival is the

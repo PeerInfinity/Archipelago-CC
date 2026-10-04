@@ -78,7 +78,7 @@
  * Run:
  *   node scripts/procgen/sweep-yield-table.mjs --substrate=maze
  *   node scripts/procgen/sweep-yield-table.mjs --substrate=seedling --seeds=1-8 \
- *       --cellbudget=120 --json=NewDocs/plans/seedling-constructive-yield/seedling-before.json
+ *       --cellbudget=120 --json=.cache/seedling-before.json
  *   node scripts/procgen/sweep-yield-table.mjs --substrate=maze --estimate-only
  */
 

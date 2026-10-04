@@ -873,8 +873,8 @@ teleport through content the bot was meant to play."*
   triage call.
 
 **Not fixed here.** Per the slice's own rule — DESIGN ⇒ record the reproduction, the site and the question,
-and stop. No product code and no instrument was touched by V2b; the probes were throwaways in gitignored
-`NewDocs/scratch/`.
+and stop. No product code and no instrument was touched by V2b; the probes were throwaways in a gitignored
+scratch directory.
 
 ---
 

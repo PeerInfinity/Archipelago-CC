@@ -1081,8 +1081,7 @@ both halves (the harness already re-extracts the committed HEAD per run).
     (3) optional `zones[].key` (unique stable string) — a
     position-independent zone identity for post-v1 branching topology and
     theme references. Full context and rationale:
-    `NewDocs/plans/jta/jta-synthetic-post-v1-design.md` §2.6 (gitignored;
-    the zone-randomization memory topic is the durable pointer).
+    `CC/docs/plans/jta-synthetic-post-v1-design.md` §2.6.
   - **5g FINDINGS (implemented 2026-07-11; fork `1f0b731`, outer
     `74cafbc34`..; plan-contact corrections flagged in the commits):**
     1. **The plan's "three zone-keyed sites already routed through ECONOMY"
@@ -1198,7 +1197,7 @@ both halves (the harness already re-extracts the committed HEAD per run).
   green-light; see jta-zone-randomization-plan.md §5/§6.
 
 Post-v1 — now DESIGNED + RULED (2026-07-11, all seven rulings accepted):
-`NewDocs/plans/jta/jta-synthetic-post-v1-design.md` sequences phases
+`CC/docs/plans/jta-synthetic-post-v1-design.md` sequences phases
 0(=5g)/A(structure policy v2)/B(pipeline step ②d)/C(branching)/D(effects
 migration ladder)/E(theme v2) with gates; supersedes the informal list that
 stood here (per-behavior effects migration, branching/grid-fit via

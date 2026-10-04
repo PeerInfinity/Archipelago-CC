@@ -51,11 +51,11 @@ function run({ tree, load }) {
             why: [
                 ...(load ? ['ran past the 5000 ms ceiling and was killed'] : ['exit 0']),
                 `printed ${7 + load * 400} line(s) to stdout on a bare import: # CENSUS`,
-                `wrote ${11 + load} file(s) under the repo: NewDocs/survey/route.json …`,
+                `wrote ${11 + load} file(s) under the repo: .cache/seedling-survey/route.json …`,
             ],
             /** ⛓ measured: a killed writer wrote 11 files, then 12 — and elsewhere nothing at all. */
-            wrote: load ? ['__pycache__/x.pyc', 'NewDocs/survey/route.json',
-                ...Array.from({ length: 11 }, (_, i) => `NewDocs/survey/views/step-${i}.json`)] : [],
+            wrote: load ? ['__pycache__/x.pyc', '.cache/seedling-survey/route.json',
+                ...Array.from({ length: 11 }, (_, i) => `.cache/seedling-survey/views/step-${i}.json`)] : [],
             stdout: '[stateManagerProxy] Worker is not defined\n# CENSUS',
         }, { stdout: '[stateManagerProxy] Worker is not defined\nusage' }),
         row('refuser.mjs', {
@@ -127,8 +127,8 @@ function runWithBrokenHelp({ tree, load }) {
                 ...(load ? ['ran past the 5000 ms ceiling and was killed (SIGKILL)'] : ['exit 1']),
                 `printed to stderr: cannot open /tmp/procgen-help-tree-${tree}/x.swf`,
                 `printed ${3 + load * 40} line(s) to stdout on a bare --help: usage`,
-                `wrote ${1 + load} file(s) under the repo: NewDocs/x.json`,
-                'the repo\'s `git status --porcelain` MOVED — RESTORED NewDocs/x.json',
+                `wrote ${1 + load} file(s) under the repo: .cache/x.json`,
+                'the repo\'s `git status --porcelain` MOVED — RESTORED .cache/x.json',
             ],
         }),
     ];

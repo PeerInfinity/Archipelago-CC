@@ -55,7 +55,7 @@ Everything generated lives in gitignored `upstream/`, `fork-head/`,
 ## How both engines are driven
 
 Boot recipe proven by the experiments lineage (probe-harness → play-harness →
-planner-harness, see `NewDocs/plans/omsiloops/experiments/`): Node `vm`
+planner-harness, in the untracked planning notes): Node `vm`
 context per engine, the exact 11-file `importScripts` list from
 `predictor-worker.js`, ~40 lines of DOM/View stubs, story-function shims,
 `loadDefaults()` + the two headless-boot fixups (`stonesUsed`,

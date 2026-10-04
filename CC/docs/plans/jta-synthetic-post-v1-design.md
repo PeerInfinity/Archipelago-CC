@@ -14,7 +14,7 @@ and `skillCount` is **add-only** (reducing would sever the role couplings).
 Acceptance (`CC/scripts/jta-stats/results/dataset-passb/profiled-batch.md`):
 the xp_mult co-solve lever stays UNBUILT — zero floor-clamped milestone stalls
 on generated C4-clean profiled worlds; 5f emergent gate PASSES on all.
-**This doc moved from `NewDocs/plans/jta/` into git when Phase A implementation
+**This doc moved from the gitignored planning tree into git when Phase A implementation
 started (standing convention).** **Phase B SHIPPED 2026-07-13 (Opus, on `main`,
 NOT pushed)** — as the "reshaped Phase B" on the stepped-spiral pipeline (the
 2026-07-12 re-sequencing: spiral parity first, so ②d lands on JtA's actual path,

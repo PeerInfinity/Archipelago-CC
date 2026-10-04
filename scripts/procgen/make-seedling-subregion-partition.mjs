@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * The SUB-REGION PARTITION of the Seedling atlases: which tile of a level is in which sub-region
- * (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.17, logical sub-region links).
+ * (solver-walk §5.17, logical sub-region links).
  *
  * A region with a subgraph is split by the reachability analyzer into walkable COMPONENTS, and each kept
  * component is a sub-region (`level_0__r8c0`). The atlas keeps the ids and the crossings between them,

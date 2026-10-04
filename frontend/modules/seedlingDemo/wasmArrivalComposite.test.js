@@ -1,6 +1,6 @@
 /**
  * wasmArrivalComposite — solver-walk W4: the two ARRIVAL COMPOSITES the wasm
- * runtime gains (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.1/§3 W4).
+ * runtime gains.
  *
  *   · a PIT exit (S4's arm in `wasmArrival.arrivalSolverGoal`): no teleporter on
  *     the exit's cells → the nearest live pit → `reach-pit`;

@@ -11797,7 +11797,7 @@ room with more than one pit tile refuses as ambiguous) or `encounter: '<drop>'`
 block). A terminal segment may cross exactly its encounter's pit, and the
 census aligns a terminal route step on the room that pit falls to. The
 frontier's source is now the through-2.2 route
-(`NewDocs/plans/seedling-editor-survey/through-2.2/{route,survey}.json`).
+(`through-2.2/{route,survey}.json` in the survey cache, `.cache/seedling-survey/` since 2026-10-04).
 
 **D2 — solved, latched and recorded headless, in chain order.**
 

@@ -1,6 +1,5 @@
 /**
- * ⛓⛓ **THE PLAYBACK BOT'S FEET ON THE WASM RUNTIME** (solver-walk W2; plan
- * `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.3 W2). The engine behind
+ * ⛓⛓ **THE PLAYBACK BOT'S FEET ON THE WASM RUNTIME** (solver-walk W2). The engine behind
  * `SeedlingPlaybackController`'s wasm branch, for REAL atlas rooms
  * (`flash_seedling`). It is loaded by a COMPUTED-URL dynamic import
  * (`loadWasmPlaybackEngine`), so the panel's static import closure stays

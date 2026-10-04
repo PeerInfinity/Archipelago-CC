@@ -1,7 +1,6 @@
 /**
  * seedlingDemo/jsRuntimeWalker — **THE PLAYBACK BOT'S FEET ON THE SEEDLING JS
- * RUNTIME** (Seedling JS runtime J2; plan
- * `NewDocs/plans/seedling-js-substrate-plan.md`, J0(b) option C).
+ * RUNTIME** (Seedling JS runtime J2; J0(b) option C).
  *
  * The walk is a CLOSED LOOP over the page's own live run — there is no run
  * clone to solve against (J0(b)), and re-booting a fresh run to solve from

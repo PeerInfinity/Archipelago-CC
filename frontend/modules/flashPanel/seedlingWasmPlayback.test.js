@@ -1,6 +1,6 @@
 /**
  * seedlingWasmPlayback — solver-walk W2: the ENGINE behind the controller's
- * wasm branch (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.3 W2).
+ * wasm branch.
  *
  * The game is a FAKE whose reads are W1's RECORDED arrivals
  * (`seedlingDemo/fixtures/wasm-arrival-p4e.json`): `botSeam` answers the

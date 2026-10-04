@@ -1,7 +1,6 @@
 /**
  * `flash_seedling_gen` — **A GENERATED SEEDLING ROOM AS A PIPELINE REGION**
- * (seedling generated levels G1; `NewDocs/plans/seedling-generated-plan.md` §0,
- * §2.2; ⚖ the user 2026-09-23, Q1–Q7 as recommended).
+ * (seedling generated levels G1; ⚖ the user 2026-09-23, Q1–Q7 as recommended).
  *
  * `flash_seedling` places a REAL room of the installed atlas; this entry asks
  * the Seedling GENERATOR for a new one, built to the pipeline's spec — its size,

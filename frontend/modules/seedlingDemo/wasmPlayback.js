@@ -1,8 +1,7 @@
 /**
  * seedlingDemo/wasmPlayback — **THE HOST TAPE A WASM PLAYBACK SHIPS, AND THE
- * RULES IT SHIPS UNDER** (solver-walk W2; plan
- * `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.3 W2, with W0's hard rules
- * (§5.5) and W1's hand-off (§5.6 "For W2")). DOM-free and clock-free: the
+ * RULES IT SHIPS UNDER** (solver-walk W2, with W0's hard rules and W1's
+ * hand-off). DOM-free and clock-free: the
  * controller's engine (`flashPanel/seedlingWasmPlayback.js`) owns the game and
  * the timers; everything here is a pure function of reads it was handed.
  *

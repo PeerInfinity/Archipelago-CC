@@ -1,7 +1,6 @@
 /**
  * seedlingGenCapacity — **HOW MANY AP LOCATIONS A GENERATED SEEDLING ROOM
- * HOLDS** (SEEDLING GENERATED G9; `NewDocs/plans/seedling-generated-plan.md`
- * §15–§16; the vocabulary is `procgenCore/locationCapacity.js`). The
+ * HOLDS** (SEEDLING GENERATED G9; the vocabulary is `procgenCore/locationCapacity.js`). The
  * `flash_seedling_gen` entry's `locationCapacity.capacityAt`.
  *
  * ⛔ LIGHT: the entry is in the flash panel's static closure, so this module

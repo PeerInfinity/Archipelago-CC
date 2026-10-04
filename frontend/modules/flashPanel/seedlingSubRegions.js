@@ -1,5 +1,5 @@
 /**
- * ⛓⛓ **LOGICAL SUB-REGION LINKS** (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.17; ⚖ the
+ * ⛓⛓ **LOGICAL SUB-REGION LINKS** (solver-walk §5.17; ⚖ the
  * user, 2026-10-03: the controller and the region binding learn a region move INSIDE a level — this amends
  * the level-granular binding, ruling 1 of 2026-07-27, for logical links).
  *

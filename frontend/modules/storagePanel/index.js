@@ -2,8 +2,6 @@
  * storagePanel — the Storage panel (every localStorage key with its owner, kind
  * and size; Clear per row / section / family) and the quota notice (a banner
  * when a write does not fit, fed by app/core/storageQuota.js).
- *
- * Plan: NewDocs/plans/quick-launch-panel-plan.md §37 (survey), §38 (ruling), §39 (as-built).
  */
 import eventBus from '../../app/core/eventBus.js';
 import { onStorageWriteFailure } from '../../app/core/storageQuota.js';

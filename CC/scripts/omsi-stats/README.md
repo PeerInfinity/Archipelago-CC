@@ -31,7 +31,7 @@ rolled-back evaluation is fully deterministic.
   **535 loops / 5,965,890 ticks / final-state hash `e23f020400162f9a`**. Part A
   (§11.9, 2026-07-13) deliberately re-froze this from the original queue-planner
   v0 **500 / 5,432,753 / `54506b48ec1758af`**
-  (`NewDocs/plans/omsiloops/experiments/PLANNER-REPORT.md`): A1 un-gated the
+  (the untracked omsi planner report): A1 un-gated the
   town-0 capacity probe, which reshapes the healthy trajectory (500 → 535) AND
   melts the bank:20 fixation hole (DNF@1200 → escapes @538). This check is the
   proof that a planner change either preserves the reference or is a deliberate

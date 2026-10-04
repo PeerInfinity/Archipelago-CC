@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Seedling solver-walk, slice W5 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.2/§3 W5) — the
+ * Seedling solver-walk, slice W5 — the
  * live witness of LEVEL 0 (the overworld hub) on the wasm solver, on `seedling_atlas` (default build
  * p4e, headless logic-only, under the box lock). W1–W4 refused every level-0 goal by name: its moonrock
  * reads the save statics `beam`/`rockSet`, which no read-only verb carried. `games/seedling.json` now

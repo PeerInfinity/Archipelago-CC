@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Seedling solver-walk, slice W7 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §1.3/§2.4/§3 W7) — the
+ * Seedling solver-walk, slice W7 — the
  * live witness that the wasm Playback Bot KEEPS THE ROOM STILL between goals and solves the next goal as a
  * CONTINUATION (S0's prefix from the held room), with no forced re-arrival on the main path. ⚖ The user
  * (2026-10-03): the solver must not need to exit and re-enter a room, or clear the save, to solve it.

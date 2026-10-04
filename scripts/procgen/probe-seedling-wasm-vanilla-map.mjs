@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Seedling solver-walk, slice VANILLA MAP (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.16) — the
+ * Seedling solver-walk, slice VANILLA MAP — the
  * Playback Bot walks `seedling_playthrough`, the VANILLA randomizer arm's world, through the name → cell map
  * `seedlingPlaybackController.realRoomPlaybackMap` derives (the arm's own placement table read off the set it
  * DELIVERED; the sidecars' exit_tiles). Default build p4e, headless logic-only, under the box lock; every

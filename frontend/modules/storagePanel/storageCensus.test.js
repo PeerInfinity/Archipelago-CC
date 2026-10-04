@@ -1,8 +1,7 @@
 /**
- * Coverage: every key the §37.2 census found the app (and the games it wraps)
+ * Coverage: every key the storage census found the app (and the games it wraps)
  * writing resolves to a declaration — so a fresh profile's Storage panel has an
- * EMPTY Unknown section — and the known orphans of §37.9 stay Unknown.
- * Plan: NewDocs/plans/quick-launch-panel-plan.md §37.2, §37.9.
+ * EMPTY Unknown section — and the census's known orphans stay Unknown.
  */
 import { describe, expect, it } from 'vitest';
 import { normalizeDeclarations, ownerOf, buildView } from './storageModel.js';

@@ -1,7 +1,6 @@
 /**
  * seedlingDemo/seedlingGenRoom — **A GENERATED SEEDLING ROOM, AS A PIPELINE
- * REGION** (seedling generated levels G1; `NewDocs/plans/seedling-generated-plan.md`
- * §2.2 item 1, ⚖ Q1–Q7 ruled 2026-09-23).
+ * REGION** (seedling generated levels G1; ⚖ Q1–Q7 ruled 2026-09-23).
  *
  * The pipeline SPECIFIES a room — its size, the exits it must have, the AP
  * locations it must hold — and this module answers with a room the Seedling

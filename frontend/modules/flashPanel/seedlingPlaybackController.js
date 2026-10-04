@@ -1,6 +1,6 @@
 /**
  * ⛓⛓ **THE PLAYBACK BOT'S CONTROLLER FOR GENERATED SEEDLING ROOMS** (Seedling
- * JS runtime J2; plan `NewDocs/plans/seedling-js-substrate-plan.md`).
+ * JS runtime J2).
  *
  * The registry entry `flash_seedling_gen` returns this from
  * `getPlaybackController()`. It is a HOST-SIDE object that answers the

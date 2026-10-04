@@ -522,7 +522,7 @@ if (!IN_PLACE && IS_ENTRY_POINT) {
      * "the tree moved" means here. `npm ci` into a throwaway would cost
      * minutes per run to isolate a population nothing observes.
      *
-     * ⛓ AND ONLY THIS ONE. The other gitignored trees (`NewDocs/`, the nested
+     * ⛓ AND ONLY THIS ONE. The other gitignored trees (the planning docs tree, the nested
      * `node_modules` under `frontend/libs/` and `iframe_games/`) are NOT
      * linked: an instrument that needs gitignored CONTENT at import time is
      * doing work at import, which is the finding this gate exists to make.

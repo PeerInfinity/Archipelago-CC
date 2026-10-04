@@ -3,8 +3,6 @@
  * it is, how big; a Clear per row, per section (none for your own data) and per
  * declared family ("Clear all saved modes"). Nothing about other modules is
  * listed here: owners come from their `moduleInfo.storage` (declarationSource.js).
- *
- * Plan: NewDocs/plans/quick-launch-panel-plan.md §37 (survey), §38 (ruling), §39 (as-built).
  */
 import settingsManager from '../../app/core/settingsManager.js';
 import { LOCAL_STORAGE_QUOTA_CHARS } from '../../app/core/storageKinds.js';

@@ -10,6 +10,12 @@ Note: files under `frontend/modules/shared/` and `frontend/modules/textAdventure
 
 > **STATUS 2026-07-01: COMPLETE.** Every group below is done — `LC_ALL=C grep -rn "NewDocs"` over all code directories (frontend/modules incl. both submodules, scripts, world_generator, exporter, rule_builder, iframe_games, WebHostLib) returns nothing. Submodule commits: shared `7f16589`, textAdventureEngine `df70fb7`, pointer bump `f1f1c8cfd`. This file is retained as the record of what replaced what.
 
+> **SECOND SWEEP 2026-10-04: COMPLETE, AND NOW GUARDED.** Nothing held the July sweep, and by 2026-10-04 80 tracked files named `NewDocs/` again — mostly "plan `NewDocs/plans/…` §N" provenance lines in the Seedling JS runtime, solver-walk, generated-levels and Storage/Quick Launch modules, plus five tools that read or wrote there. What replaced what:
+> - **Tools:** the Seedling route survey (`survey-seedling-route` → `census-seedling-campaign`, `rerecord-seedling-campaign --grow`) is a regenerable cache at `.cache/seedling-survey/` (`scripts/procgen/seedlingSurveyDir.js`, override `SEEDLING_SURVEY_DIR`); the census fix list goes to `.cache/seedling-census/`; `harvest-procgen-terms` writes `.cache/procgen-term-candidates.json`; the slice-record tools read the cross-arc queue only when the caller names it (`SLICE_QUEUE_DOC`).
+> - **Comments and docs:** the plan path is dropped and the slice name kept ("solver-walk W2"); tracked plans now point at their tracked copies under `CC/docs/plans/`.
+> - **Kept, by design:** the files in the guard's allowlist — `.gitignore`, this record, `CC/overview.md`, `CC/docs/cleanup-backlog.md`, a recorded `.gitignore` diff, the glossary's own guard and its test, a directory skip list, and the historical run records in `CC/docs/cloud-reports/`.
+> - **The guard:** `scripts/test/noNewDocsReferences.test.js` (vitest) fails on any new mention outside that allowlist, and on an allowlist entry that no longer needs to be there.
+
 ## Repointable now (official doc already exists)
 
 | NewDocs target | Refs | Referencing files | Replacement |

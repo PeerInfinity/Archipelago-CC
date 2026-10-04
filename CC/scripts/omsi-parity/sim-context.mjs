@@ -1,6 +1,6 @@
 // sim-context.mjs — headless Idle Loops sim boot for the parity harness.
 //
-// Boot recipe proven by NewDocs/plans/omsiloops/experiments/sim-boot.mjs
+// Boot recipe proven by the untracked omsi experiments' sim-boot.mjs
 // (probe-harness → play-harness → planner-harness lineage): Node vm context,
 // the exact 11-file importScripts list from predictor-worker.js, ~40 lines of
 // stubs, story-function shims (they live in views/main.view.js, outside the

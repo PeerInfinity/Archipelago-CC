@@ -1,6 +1,6 @@
 /**
  * seedlingDemo/jsRuntimeSolveService — **THE SOLVER MODE'S WORKER, PAGE SIDE**
- * (solver-walk S2; plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §3 S2).
+ * (solver-walk S2).
  *
  * `createWorkerSolveService()` is the `solveService` the JS runtime page hands
  * `jsRuntimeSolver.createRuntimeSolver` (through `createJsRuntime`): `start`
