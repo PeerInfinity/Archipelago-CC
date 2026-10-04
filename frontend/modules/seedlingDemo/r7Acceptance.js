@@ -1873,6 +1873,14 @@ export const R7_SECOND_BATCH = Object.freeze({
      * whose boot state is authored FROM a latch, so it is the only one a
      * change in what the latch offers can move. The two `from` values are
      * what is on disk at `acfe939f7`; `to` is what the batch predicts.
+     *
+     * ⛓ A RECORD, NOT A PIN OF TODAY'S TAPE (seedling-wasm-leak L4, 2026-10-04).
+     * `r7-ends-meet-2`'s committed `rng.seed` has since moved 2258182 →
+     * 1410304934 — ⚖ user 2026-10-04: 3′b page-boot re-declarations licensed.
+     * p4f runs tapeless play split, so the page boot no longer feeds the tile
+     * draws to the gameplay stream that `r7-ends-meet-1` (seed 0) inherits.
+     * These numbers stay what R7 measured: rewriting them would falsify the
+     * prediction/outcome pair and break the 1562-step relation below.
      */
     predictedTapeChange: Object.freeze({
         tape: 'r7-ends-meet-2',
