@@ -10391,7 +10391,12 @@ function solveSegmentUnder({
                     level: inner.level, deaths: inner.ledger('playerDeaths').length,
                     transitions: inner.transitions.length,
                 });
-                if (a) apItemsTaken.set(`${pre.level}:${a.id}`, { tick: tapeTick, level: pre.level, apItem: a });
+                if (a) {
+                    apItemsTaken.set(`${pre.level}:${a.id}`, { tick: tapeTick, level: pre.level, apItem: a });
+                    // ⛓ F7 (D-B): `removed()`'s write, on the take tick, into the
+                    // RUN's ledger — so a revisit in this run builds without it.
+                    inner.takeApItem({ level: pre.level, id: a.id, tag: a.tag });
+                }
             }
             tapeTick += 1;
             return out;
