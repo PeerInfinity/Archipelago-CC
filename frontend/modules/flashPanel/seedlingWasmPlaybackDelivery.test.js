@@ -1,0 +1,279 @@
+/**
+ * seedlingWasmPlayback ⛓ MID-ROOM REPLAN — the engine's DELIVERY GATE (⚖ the user, 2026-10-03: an item that
+ * arrives mid-room, from another player too, is replanned IN the room; never by leaving and re-entering it).
+ *
+ * The game is a FAKE over W1's recorded house arrival (`seedlingDemo/fixtures/wasm-arrival-p4f.json`) that
+ * drains a plan a few rows per read and honours `botHold` (a frozen tape drains nothing); the adapter is a
+ * fake delivery handle (`{setItemGate, writesOf, inventory, push}`) whose `push()` writes what the gate
+ * returns. The SOLVE is real (the in-place service over the vanilla map). The live witness is
+ * `scripts/procgen/probe-seedling-wasm-midroom-replan.mjs`.
+ *
+ * ── THE MUTATION LIST (run during development, each row's catcher named) ──
+ *
+ *   m1 the gate off (`gateFilter` returns the live inventory: the item written mid-tape)
+ *        -> 'a delivery while a plan PLAYS: …' reds (the item reaches the game before any freeze)
+ *   m2 the replan without the item staged (`room.staging` left as the arrival read it)
+ *        -> 'a delivery while a plan PLAYS: …' and 'a delivery into the HELD room …' red
+ *   m3 the hold never released (a refused delivery leaves `botHold("on")` standing)
+ *        -> 'a delivery the model cannot take …' reds (the plan never drains on)
+ */
+import { describe, expect, it } from 'vitest';
+import { readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { createWasmPlayback } from './seedlingWasmPlayback.js';
+import { indexLevels } from '../seedlingDemo/atlasSource.js';
+import { createInPlaceProduceService } from '../seedlingDemo/wasmWalkTape.js';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(HERE, '../../..');
+const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
+const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json').arrivals;
+const RECORDS = indexLevels(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
+const HOUSE = 86;
+const A = RECORDED.find((a) => a.label.startsWith('A ') && a.status.level === HOUSE);
+const CHEST = { kind: 'location', level: HOUSE, tag: 0, entityType: 'chest', name: 'Starting House - Chest' };
+const DOOR = { kind: 'exit', level: HOUSE, tiles: [[3, 4]], name: 'exit_S' };
+
+/** The panel's inventory → write mapping, cut down to the items these rows deliver (a key writes nothing). */
+const WRITES = { 'Progressive Sword': 'hasSword', 'Progressive Shield': 'hasShield', Fire: 'hasFire' };
+const writesOf = (counts) => Object.entries(counts).filter(([n, c]) => c > 0 && WRITES[n]).map(([n]) => ({ property: WRITES[n], value: true }));
+
+function manualTimers() {
+    let q = [];
+    let id = 0;
+    return {
+        setTimeout(fn, ms) { q.push({ id: ++id, fn, ms }); return id; },
+        clearTimeout(h) { q = q.filter((t) => t.id !== h); },
+        run(max = 5000) {
+            let n = 0;
+            while (q.length && n < max) { const t = q.shift(); t.fn(); n += 1; }
+            return n;
+        },
+    };
+}
+
+/** A game over the recorded house arrival whose plan tapes drain `chunk` rows per read and stop while frozen. */
+function fakeGame({ chunk = 4, items = {}, slots = [] } = {}) {
+    const baseline = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
+    const g = {
+        be: baseline, held: false, armed: false, finished: false, frozen: false, tape: null, rows: null, drained: 0, tick: 0,
+        pos: null, seq: 0, calls: [], tapes: [],
+        items: { ...A.status.items, ...items }, slots: [...slots],
+        land() { g.be = A.seam.beginEntry; },
+        botSeam() { return JSON.stringify({ beginEntry: g.be, latched: false }); },
+        botStatus() {
+            const keys = g.armed && g.tape && g.tick >= 1 ? heldAt(g.tape, g.tick - 1) : [];
+            return JSON.stringify({ ...A.status, game_time: g.be['save.time'], items: { ...g.items }, inventory_slots: [...g.slots],
+                ...(g.pos ? { level: g.pos.level, x: g.pos.x, y: g.pos.y } : {}),
+                input: { ...A.status.input, held: keys, t: g.tick - 1 },
+                held: g.held, armed: g.armed, finished: g.finished, frozen: g.frozen, tick: g.tick, error: '' });
+        },
+        readState() { return JSON.stringify({ freezeObjects: false, ...A.state, ...g.items, pendingCheck: g.seq ? `${g.seq}|86|0|0` : '' }); },
+        botLevelSet() { return JSON.stringify({ start_level: 0 }); },
+        botMobiles() { return undefined; },
+        botHold(arg) { g.calls.push(`botHold:${arg}`); g.frozen = arg === 'on'; return 'ok'; },
+        botLoadTape(json) { g.calls.push('botLoadTape'); g.tape = JSON.parse(json); g.tapes.push(g.tape); g.armed = false; return 'ok'; },
+        botStart() {
+            g.calls.push('botStart');
+            g.seq += g.tape.persistence.length;
+            g.held = false;
+            g.frozen = false;
+            g.tick = 0;
+            g.drained = 0;
+            if (g.tape.tick_count === 0) { g.armed = false; g.finished = true; g.held = !!g.tape.hold; } else { g.armed = true; g.finished = false; }
+            // A continuation behind a LEAD tick is one tick longer than its solve's rows: its first row is where the player stands.
+            if (g.rows && g.pos && g.tape.tick_count === g.rows.length) g.rows = [{ ...g.pos, t: 0 }, ...g.rows.map((r, t) => ({ ...r, t: t + 1 }))];
+            return 'ok';
+        },
+        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; g.frozen = false; g.be = baseline; g.pos = null; return 'ok'; },
+        botDrain() {
+            if (!g.armed || g.frozen || !g.rows) return JSON.stringify({ ticks: [] });
+            const ticks = g.rows.slice(g.drained, g.drained + chunk);
+            g.drained += ticks.length;
+            g.tick = Math.min(g.drained, g.tape.tick_count);
+            // After k rows (0..k-1) the player stands where row k says (the game's measured semantics).
+            if (ticks.length) g.pos = g.rows[Math.min(g.drained, g.rows.length - 1)];
+            if (g.drained >= g.rows.length) { g.armed = false; g.finished = true; g.held = !!g.tape.hold; }
+            return JSON.stringify({ ticks, transitions: [] });
+        },
+    };
+    return g;
+}
+
+/** The keys a game-visible tape holds at tick `t` (its spans `[from, to)`). */
+function heldAt(tape, t) {
+    const out = new Set();
+    for (const i of tape.inputs ?? []) if (i.from <= t && t < i.to) out.add(i.key);
+    return [...out];
+}
+
+/** A fake panel adapter: the live AP inventory, the gate the engine installs, and the writes a push makes. */
+function fakeDelivery(game, live = {}) {
+    const d = {
+        live: { ...live }, gate: null, gateCalls: 0, pushes: 0,
+        setItemGate(fn) { d.gate = typeof fn === 'function' ? fn : null; },
+        writesOf,
+        inventory() { return { ...d.live }; },
+        /** One adapter push: the gate's answer is what the game receives. */
+        push() {
+            d.pushes += 1;
+            const inv = d.gate ? (d.gateCalls += 1, d.gate({ ...d.live })) : d.live;
+            for (const w of writesOf(inv)) game.items[w.property] = w.value;
+        },
+        receive(name) { d.live[name] = (d.live[name] ?? 0) + 1; },
+    };
+    return d;
+}
+
+function setup({ game: gopts = {}, live = {}, decline = false } = {}) {
+    const game = fakeGame(gopts);
+    const timers = manualTimers();
+    const delivery = fakeDelivery(game, live);
+    const inner = createInPlaceProduceService();
+    const seen = [];
+    const service = {
+        start(request) {
+            const h = inner.start(request);
+            if (decline && seen.length > 0) h.result = { ok: false, kind: 'refusal', message: 'declined (the test)' };
+            seen.push({ request, result: h.result });
+            if (h.result.ok) game.rows = h.result.plan.expected.map((r, t) => ({ t, level: r.level, x: r.x, y: r.y }));
+            return { ...h, startedAt: 0 };
+        },
+        warm() {}, dispose() {},
+    };
+    const failures = [];
+    const dones = [];
+    let t = 0;
+    const engine = createWasmPlayback({
+        getGame: () => game, teleport: () => { game.land(); return true; }, records: RECORDS, solveService: service, timers,
+        now: () => (t += 1), getDelivery: () => delivery, onFailed: (r) => failures.push(r), onDone: (x) => dones.push(x),
+    });
+    const runUntil = (pred, max = 4000) => { for (let i = 0; i < max && !pred(); i++) timers.run(1); };
+    return { engine, game, timers, delivery, seen, failures, dones, runUntil };
+}
+
+describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
+    it('a delivery while a plan PLAYS: held back, the room FROZEN, the item written, re-staged at the arrival, replanned from the frozen tick behind a lead tick', () => {
+        const e = setup({ live: { 'Red Key': 1 } });
+        expect(e.engine.walkTo(CHEST).ok).toBe(true);
+        expect(e.delivery.gate).toBeTypeOf('function');
+        // (the chest plan holds `up` over ticks 26..30: the freeze's own drain lands it inside that span)
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 24);
+        expect(e.engine.status().phase).toBe('playing');
+        // Another player's sword arrives; the adapter pushes: the GATE holds it back.
+        e.delivery.receive('Progressive Sword');
+        e.delivery.push();
+        expect(e.game.items.hasSword).toBe(false);
+        expect(e.engine.status().gate).toEqual({ pending: true, deferred: null });
+        e.runUntil(() => e.engine.stats.deliveries.length > 0);
+        const k = e.engine.stats.deliveries[0].tick;
+        expect(k).toBeGreaterThanOrEqual(24);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        // Frozen, then written, then ONE new tape over the frozen one: no reset in between.
+        const tail = e.game.calls.slice(e.game.calls.indexOf('botHold:on'));
+        expect(tail.slice(0, 3)).toEqual(['botHold:on', 'botLoadTape', 'botStart']);
+        expect(e.game.items.hasSword).toBe(true);
+        const row = e.engine.stats.deliveries[0];
+        expect(row).toMatchObject({ phase: 'playing', outcome: 'replanned', items: [{ property: 'hasSword', from: false, to: true }] });
+        expect(Number.isFinite(row.freezeMs) && Number.isFinite(row.landMs)).toBe(true);
+        // The continuation: the arrival WITH the sword staged, the frozen prefix (+ the lead tick) as S0's prefix.
+        const cont = e.seen[1].request;
+        expect(cont.staging.seam.items.hasSword).toBe(true);
+        expect(cont.perTick).toHaveLength(k + row.lead.length);
+        expect(row.heldKeys).toEqual(['up']);
+        expect(row.lead).toEqual([['up']]);
+        const tape = e.game.tapes.at(-1);
+        for (const key of row.heldKeys) expect(heldAt(tape, 0)).toContain(key);
+        expect(e.engine.stats.heldChecks.at(-1)).toMatchObject({ frozen: true, equal: true, shipped: k });
+        expect(e.dones.map((d) => [d.goal.name, d.continuation, d.prefix])).toEqual([[CHEST.name, true, k]]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.engine.stats.history.map((h) => h.outcome)).toEqual(['interrupted', 'done']);
+    });
+
+    it('a delivery the game cannot SEE (a key) is admitted at once: no freeze', () => {
+        const e = setup();
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 12);
+        e.delivery.receive('Red Key');
+        e.delivery.push();
+        expect(e.engine.status().gate).toEqual({ pending: false, deferred: null });
+        e.timers.run();
+        expect(e.game.calls.filter((c) => c.startsWith('botHold'))).toEqual([]);
+        expect(e.engine.stats.deliveries).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+    });
+
+    it('a delivery the model cannot take mid-run (the slots it would push out of order) waits out the room: the tape resumes, named', () => {
+        // Fire held (slot [1]); a sword pushed after it would make the game's slots [1, 0], the model's [0, 1].
+        const e = setup({ game: { items: { hasFire: true }, slots: [1] }, live: { Fire: 1 } });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 16);
+        e.delivery.receive('Progressive Sword');
+        e.delivery.push();
+        e.runUntil(() => e.engine.stats.deliveryDeferred.length > 0);
+        expect(e.engine.stats.deliveryDeferred[0]).toMatchObject({ clause: 'slot-order', at: 'playing' });
+        expect(e.game.calls.slice(-2)).toEqual(['botHold:on', 'botHold:off']);
+        expect(e.game.frozen).toBe(false);
+        e.timers.run(3000);
+        expect(e.failures).toEqual([]);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false]]); // the SAME tape, finished
+        expect(e.game.items.hasSword).toBe(false); // still held back: the room is the same
+        expect(e.engine.status().gate).toMatchObject({ pending: true, deferred: { clause: 'slot-order' } });
+        e.engine.stop();
+        expect(e.delivery.gate).toBeNull();
+        e.delivery.push();
+        expect(e.game.items.hasSword).toBe(true); // outside bot driving: as before
+    });
+
+    it('a delivery into the HELD room (between goals) lands at once and the next goal is solved from it', () => {
+        const e = setup();
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.engine.status().phase).toBe('held');
+        e.delivery.receive('Progressive Shield');
+        e.delivery.push();
+        e.timers.run(200);
+        expect(e.game.items.hasShield).toBe(true);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'held', outcome: 'staged' });
+        expect(e.game.calls.filter((c) => c.startsWith('botHold'))).toEqual([]);
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.seen.at(-1).request.staging.seam.items.hasShield).toBe(true);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false], [DOOR.name, true]]);
+    });
+
+    it('a replan the solver DECLINES while frozen: the interrupted plan RESUMES (the item changes none of its ticks) — no re-entry', () => {
+        const e = setup({ decline: true });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 20);
+        e.delivery.receive('Progressive Shield');
+        e.delivery.push();
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ outcome: 'resumed' });
+        expect(e.engine.stats.deliveries[0].why).toMatch(/declined/);
+        expect(e.game.calls.filter((c) => c === 'botHold:off')).toHaveLength(1);
+        expect(e.game.calls.filter((c) => c === 'botLoadTape')).toHaveLength(2); // the freeze + the plan: nothing re-shipped
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false]]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.game.items.hasShield).toBe(true);
+    });
+
+    it('an engine without the gate handle (W4/W5\'s own engines) installs nothing and plays as before', () => {
+        const game = fakeGame();
+        const timers = manualTimers();
+        const inner = createInPlaceProduceService();
+        const engine = createWasmPlayback({
+            getGame: () => game, teleport: () => { game.land(); return true; }, records: RECORDS, timers,
+            solveService: { start(r) { const h = inner.start(r); if (h.result.ok) game.rows = h.result.plan.expected.map((x, t) => ({ t, ...x })); return { ...h, startedAt: 0 }; }, warm() {}, dispose() {} },
+        });
+        engine.walkTo(CHEST);
+        timers.run();
+        expect(engine.status().gate).toBeNull();
+        expect(engine.stats.done).toBe(1);
+    });
+});

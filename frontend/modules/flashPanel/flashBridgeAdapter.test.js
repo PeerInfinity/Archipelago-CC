@@ -303,3 +303,39 @@ describe('⛓ W8c — `freezeObjects` (the Game static a Help / a dialogue / the
             ['freezeObjects', false], ['freezeObjects', true]]);
     });
 });
+
+describe('⛓ MID-ROOM REPLAN — the delivery gate (`itemGate`): a driver decides which inventory a push writes', () => {
+    const adapterWith = (inventory) => new FlashBridgeAdapter({
+        config: CONFIG, flashObjectId: `test-${Math.random()}`,
+        stateManager: { getLatestStateSnapshot: () => ({ inventory }) },
+        dispatcher: { publish: () => {} }, eventBus: { subscribe: () => () => {} }, log: () => {},
+    });
+    const sword = (writes) => writes.find((w) => w.property === 'hasSword')?.value;
+
+    it('no gate: the inventory as it stands (as before); a gate: what it returns, until it is cleared', () => {
+        const a = adapterWith({ 'Progressive Sword': 1 });
+        expect(a.itemGate).toBeNull();
+        expect(sword(a._buildItemWritesFromInventory())).toBe(true);
+        const seen = [];
+        a.setItemGate((live) => { seen.push(live); return {}; });
+        expect(sword(a._buildItemWritesFromInventory())).toBe(false); // held back = the property's clearing write
+        expect(seen).toEqual([{ 'Progressive Sword': 1 }]);
+        a.setItemGate(null);
+        expect(sword(a._buildItemWritesFromInventory())).toBe(true);
+    });
+
+    it('_itemWritesFor answers "what would this inventory write" (a key writes no item property); liveInventory copies the snapshot', () => {
+        const a = adapterWith({ 'Red Key': 1 });
+        expect(a._itemWritesFor({ 'Red Key': 1 }, { quiet: true }).filter((w) => w.value === true)).toEqual([]);
+        expect(sword(a._itemWritesFor({ 'Progressive Sword': 1 }, { quiet: true }))).toBe(true);
+        const inv = a.liveInventory();
+        inv.x = 1;
+        expect(a.liveInventory()).toEqual({ 'Red Key': 1 });
+    });
+
+    it('a gate that throws is logged and the push writes the live inventory', () => {
+        const a = adapterWith({ 'Progressive Sword': 1 });
+        a.setItemGate(() => { throw new Error('boom'); });
+        expect(sword(a._buildItemWritesFromInventory())).toBe(true);
+    });
+});
