@@ -285,8 +285,8 @@ export class FlashPanelUI {
       solverWalk: this._solverWalk !== false, // ⛓ S2 — the default (on) until the setting is read
       report: this._seedlingGenReport ?? null,
       atlas: this._seedlingAtlas ?? null,
-      // ⛓ VANILLA MAP — why the AP placement load bound NO map (e.g. the JS runtime refuses the vanilla
-      // arm), or null while it runs / once it bound one.
+      // ⛓ VANILLA MAP — why the AP placement load bound NO map (e.g. a load refused by its eligibility),
+      // or null while it runs / once it bound one.
       apRefusal: this._apLoadRefusal ?? null,
       jsRuntime,
       // ⛓ W2 — the wasm playback engine's handles: the game's callback surface
@@ -737,8 +737,8 @@ export class FlashPanelUI {
       // ⛓ WG — and the assembled SET is the wasm playback engine's level source (the rooms as mounted).
       this._seedlingGenSet = generatedArm ? (loaded.set ?? null) : null;
       // ⛓ J3 — the atlas arm's bound table and the rules' own real-room payloads; ⛓ VANILLA MAP — or the
-      // vanilla arm's own table, each entity read off the set it DELIVERED (`realRoomPlaybackMap`). The JS
-      // runtime never loads the vanilla arm (it refuses it by name), so that map is the wasm game's.
+      // vanilla arm's own table, each entity read off the set it DELIVERED (`realRoomPlaybackMap`) — on
+      // either runtime (⛓ §5.18: the JS page takes the vanilla delivery too; the map is arm-keyed).
       this._seedlingAtlas = realRoomPlaybackMap(loaded, rawRules);
       // ⛓ VANILLA MAP — the REAL rooms the game plays when an arm delivered them (the vanilla rewrite; an
       // atlas arm's retag): the wasm playback engine stages these, not the map document.

@@ -23,9 +23,15 @@
  *      NEAREST through doors only (derived here from the rules: BFS over the `True_` sidecar-door exits), then
  *      the next from where it stands, up to `--max-checks` (default 3) — the ceremony waited out, the cold
  *      start ADOPTED, each location checked once, **0 forced re-arrivals**; the first refusal by name ends it.
- *   J  JS — the same preset on the JS runtime: the AP load REFUSES the vanilla arm by name (⚖ planner,
- *      option (a)), the panel binds no map, and the Playback Bot's first walkTo fails AT ONCE with that
- *      reason (not a 60 s hold).
+ *   J  ⛓ §5.18 — JS: the same preset on the JS runtime. The AP load TAKES the vanilla arm (⚖ the user,
+ *      2026-10-03, "WITH THE SOLVER"): the page mounts the delivered set as REAL rooms
+ *      (`jsRuntimeCore.mountedKindOf`, `botLevelSet().kind`), the reset's explicit start (skip-intro) boots
+ *      level 0, and the panel binds the same vanilla map as on wasm. The browser's mount cost of the 116 rooms
+ *      is measured on a FRESH runtime instance (`ROW J mount`). Then, routed on the directed graph (D's labelled
+ *      probe-side override — the AP layer's bidirectional routing is the first refusal, §5.16 V), the
+ *      Playback Bot walks D's greedy door-only targets: the starting house's chest (an APITEM) is checked
+ *      once, the page's solver DRIVING (`solverStats`: every leg solved, the location by verb `apitem`), and
+ *      the first refusal by name ends it (recorded, `ROW J reach`).
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
  * `N CHECK(S) FAILED` (exit 1).
@@ -296,39 +302,160 @@ async function main() {
                 eng.divergences === 0 && eng.recoveries === 0, JSON.stringify({ d: eng.divergences, r: eng.recoveries, f: eng.failed, history: eng.history }));
         }
 
+        /** Count `user:locationCheck` as it leaves the adapter's dispatcher (`flashBridgeAdapter.js`), into `window.__checks`. */
+        const wrapDispatcher = () => page.evaluate(async () => {
+            window.__checks = window.__checks ?? [];
+            const { getActivePanelInstance } = await import('./modules/flashPanel/index.js');
+            const d = getActivePanelInstance()?.adapter?.dispatcher ?? null;
+            if (!d) return false;
+            if (!d.__vm) {
+                const orig = d.publish.bind(d);
+                d.publish = (n, p, o) => {
+                    if (n === 'user:locationCheck') window.__checks.push(p?.locationName ?? null);
+                    return orig(n, p, o);
+                };
+                d.__vm = true;
+            }
+            return true;
+        });
+
+        /** J — the JS runtime takes the vanilla delivery; the solver drives its real rooms (§5.18). */
+        async function runJs() {
+            await page.evaluate(async () => {
+                const sm = (await import('./app/core/settingsManager.js')).default;
+                await sm.updateSetting('moduleSettings.flashPanel.runtime', 'js', { persist: false });
+            });
+            await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
+            const surface = () => page.evaluate(async () => {
+                const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                const s = p?.seedlingPlaybackSurface?.();
+                const rt = s?.jsRuntime ?? null;
+                return s ? JSON.parse(JSON.stringify({ transport: s.transport, arm: s.atlas?.arm ?? null, entries: s.atlas?.entries?.length ?? null,
+                    apRefusal: s.apRefusal, loaded: !!p._apLoadResult, reset: p._apLoadResult?.reset ?? null,
+                    levelSet: rt ? JSON.parse(rt.game.botLevelSet()) : null, level: rt?.run?.level ?? null, solverWalk: s.solverWalk })) : null;
+            });
+            const surf = await rp.waitFor('the JS page mounted the delivered set and the reset landed', async () => {
+                const x = await surface();
+                return x?.transport === 'js' && (x.apRefusal || (x.loaded && x.levelSet?.kind)) ? x : null;
+            }, 120000);
+            out('J surface', surf);
+            check('J: on the JS runtime the AP load TAKES the vanilla arm — the map bound, no refusal',
+                surf?.arm === 'vanilla' && surf.entries > 0 && surf.apRefusal === null, JSON.stringify(surf));
+            check('J: the page mounted the delivered set as REAL rooms (all of them), and the explicit start booted level 0',
+                surf?.levelSet?.kind === 'real' && surf.levelSet.rooms > 0 && surf.levelSet.rooms === surf.levelSet.table_levels
+                    && surf.reset?.mode === 'explicit-start' && surf.reset?.landed === true && surf.level === 0,
+                JSON.stringify({ levelSet: surf?.levelSet, reset: surf?.reset, level: surf?.level }));
+            // ⛔ The reset of a start with no position takes the GAME's boot position (`Main.as:51`). First run of this
+            // session: the page's mount reported (0, 0) and the player was sent into `tree@0,0` (§5.18, fixed in jsRuntimeCore).
+            // The wiring's rule: the position the game itself booted at = the region binding's last declared spawn (here the
+            // arrival into the bot's start region, before the load ran — the same rule the adopt probe's N pins on wasm).
+            const boot = await page.evaluate(async () => (await import('./modules/flashPanel/index.js')).getActivePanelInstance()
+                ._apLoadResult?.steps?.find((x) => x.name === 'reset-begin')?.detail?.bootPosition ?? null);
+            check('J: the reset sent the GAME\'s boot position (the binding\'s declared spawn), never (0, 0); the player stands there',
+                boot && surf?.reset?.x === boot.x && surf?.reset?.y === boot.y && !(boot.x === 0 && boot.y === 0)
+                    && surf?.reset?.observed?.player?.x === boot.x + 8 && surf?.reset?.observed?.player?.y === boot.y + 8,
+                JSON.stringify({ boot, args: [surf?.reset?.x, surf?.reset?.y], player: surf?.reset?.observed?.player }));
+            // The browser's cost of the mount: the SAME chunks on a FRESH runtime instance (the live one is untouched).
+            const mount = await page.evaluate(async () => {
+                const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                const set = p._seedlingRealSet;
+                const { planLevelSetChunks } = await import('./modules/seedlingDemo/levelSetValidator.js');
+                const { createJsRuntime } = await import('./modules/seedlingDemo/jsRuntimeCore.js');
+                const runs = [];
+                for (let i = 0; i < 3; i += 1) {
+                    const t0 = performance.now();
+                    const { chunks } = planLevelSetChunks(set);
+                    const t1 = performance.now();
+                    const rt = createJsRuntime();
+                    const per = chunks.map((c) => { const a = performance.now(); const ans = rt.game.botLoadLevels(JSON.stringify(c)); return [Math.round(performance.now() - a), ans]; });
+                    runs.push({ planMs: Math.round(t1 - t0), mountMs: Math.round(performance.now() - t1), chunks: chunks.length,
+                        lastChunkMs: per.at(-1)[0], answer: per.at(-1)[1], kind: rt.mounted?.kind ?? null, rooms: rt.mounted?.records.size ?? null });
+                }
+                return runs;
+            });
+            out('J mount', mount);
+            check('J: a fresh runtime mounts the same delivered set (ok, real, every room)',
+                mount.every((m) => m.answer === 'ok' && m.kind === 'real' && m.rooms === surf?.levelSet?.rooms), JSON.stringify(mount));
+
+            const pinned = await page.evaluate(() => {
+                const proxy = window.stateManagerProxy;
+                proxy.getEffectiveBidirectionalSetting();
+                proxy._bidirectionalDetectionCache = { assumeBidirectional: false, source: 'probe', detection: null };
+                return proxy.getEffectiveBidirectionalSetting();
+            });
+            check('J: the proxy routes on the directed graph (the probe\'s labelled override, as D)', pinned.assumeBidirectional === false && pinned.source === 'probe',
+                JSON.stringify(pinned));
+            await rp.waitFor('dispatcher wrapped', wrapDispatcher, 20000);
+            const booted = await startBot();
+            check(`J: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
+            await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                getActivePanel()?.getBot?.().stop?.();
+            });
+            const order = await page.evaluate(async () => {
+                const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                return (getActivePanel()?.getBot?.()._queue ?? []).map((h) => h.locationName);
+            });
+            const pageStats = () => page.evaluate(async () => {
+                const s = (await import('./modules/flashPanel/index.js')).getActivePanelInstance().seedlingPlaybackSurface();
+                const rt = s.jsRuntime;
+                const { getSeedlingRegionGlue } = await import('./modules/flashPanel/index.js');
+                return JSON.parse(JSON.stringify({ solver: rt.playback.solverStats, level: rt.run?.level ?? null, deaths: rt.deaths.length,
+                    collected: [...rt.collected], binding: getSeedlingRegionGlue()?.checkBinding?.stats ?? null,
+                    halted: rt.halted?.message ?? null, solved: rt.events.filter((e) => e.type === 'solver' && e.solver === 'solved').map((e) => e.message) }));
+            });
+            const legs = [];
+            let where = START;
+            let refusal = null;
+            const t0 = Date.now();
+            while (legs.length < MAX_CHECKS && Date.now() - t0 < BUDGET_MS) {
+                // eslint-disable-next-line no-await-in-loop
+                const done = await page.evaluate(() => window.__checks ?? []);
+                const target = nearestDoorOnlyTarget(PRESET, where, order.filter((n) => !done.includes(n)));
+                out('J target', { from: where, ...target });
+                if (!target) break;
+                // eslint-disable-next-line no-await-in-loop
+                const s0 = await pageStats();
+                // eslint-disable-next-line no-await-in-loop
+                await page.evaluate(async (name) => {
+                    const { getActivePanel } = await import('./modules/playbackBot/index.js');
+                    getActivePanel()?.getBot?.().walkToLocation(name);
+                }, target.location);
+                const before = done.length;
+                // eslint-disable-next-line no-await-in-loop
+                const w = await watchBot(`J → ${target.location}`, async () => (await page.evaluate(() => window.__checks ?? [])).length > before,
+                    BUDGET_MS - (Date.now() - t0));
+                // eslint-disable-next-line no-await-in-loop
+                const s1 = await pageStats();
+                // eslint-disable-next-line no-await-in-loop
+                const after = await page.evaluate(() => window.__checks ?? []);
+                legs.push({ target: target.location, doors: target.route.length, checked: after.length > before ? after.at(-1) : null,
+                    seconds: w.seconds, status: w.end?.status ?? null, solves: s1.solver.solves - s0.solver.solves,
+                    declines: s1.solver.declines - s0.solver.declines, lastVerbs: s1.solver.lastSolve?.verbs ?? null,
+                    lastGoal: s1.solver.lastSolve?.goal?.kind ?? null, lastDecline: s1.solver.lastDecline });
+                if (after.length <= before) { refusal = w.end?.status ?? s1.solver.lastDecline ?? null; break; }
+                where = target.region;
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForTimeout(1000);
+            }
+            const st = await pageStats();
+            const checks = await page.evaluate(() => window.__checks ?? []);
+            out('J reach', { seconds: Math.round((Date.now() - t0) / 1000), legs, checks, page: st, firstRefusal: refusal });
+            check('J: the bot CHECKED the starting house\'s chest (its first door-only target), each location once',
+                legs[0]?.checked === legs[0]?.target && /Chest/.test(legs[0]?.target ?? '') && new Set(checks).size === checks.length,
+                JSON.stringify({ legs, checks }));
+            check('J: the page\'s SOLVER drove that leg — the doors solved, the apitem by verb `apitem`, nothing declined',
+                legs[0]?.solves >= 2 && legs[0]?.declines === 0 && legs[0]?.lastGoal === 'collect-placement'
+                    && JSON.stringify(legs[0]?.lastVerbs) === '["apitem"]', JSON.stringify(legs[0]));
+            check('J: the walk never HALTED the page (a decline is the first refusal, recorded)', st.halted === null, JSON.stringify(st.halted));
+        }
+
         try {
             await page.goto(`${HOST}/frontend/?rules=${RULES_PATH}`, { waitUntil: 'domcontentloaded' });
             await rp.waitFor('rules loaded', () => page.evaluate(() => window.stateManagerProxy?.getStaticData?.()?.regions?.size > 0));
             await rp.installWatchers();
 
-            if (S === 'J') {
-                await page.evaluate(async () => {
-                    const sm = (await import('./app/core/settingsManager.js')).default;
-                    await sm.updateSetting('moduleSettings.flashPanel.runtime', 'js', { persist: false });
-                });
-                await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
-                const surf = await rp.waitFor('the JS panel holds the AP load\'s refusal', () => page.evaluate(async () => {
-                    const s = (await import('./modules/flashPanel/index.js')).getActivePanelInstance()?.seedlingPlaybackSurface?.();
-                    return s?.transport === 'js' && s.apRefusal ? { transport: s.transport, atlas: s.atlas, apRefusal: s.apRefusal } : null;
-                }), 120000);
-                out('J surface', surf);
-                check('J: on the JS runtime the AP load REFUSES the vanilla arm by name, and no map is bound',
-                    surf?.atlas === null && /the JS runtime does not take/.test(surf?.apRefusal ?? ''), JSON.stringify(surf));
-                const booted = await startBot();
-                check(`J: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
-                const t0 = Date.now();
-                let end = await botStatus();
-                while (Date.now() - t0 < 20000 && !end.status.startsWith('error')) {
-                    // eslint-disable-next-line no-await-in-loop
-                    await page.waitForTimeout(250);
-                    // eslint-disable-next-line no-await-in-loop
-                    end = await botStatus();
-                }
-                out('J bot', { ...end, ms: Date.now() - t0 });
-                check('J: the bot\'s first walkTo fails AT ONCE (≪ the 60 s hold) with the load\'s own reason',
-                    end.status.startsWith('error') && end.status.includes('the AP placement load bound none')
-                        && end.status.includes('the JS runtime does not take') && Date.now() - t0 < 20000, end.status);
-            }
+            if (S === 'J') await runJs();
 
             if (S === 'V' || S === 'D') {
                 await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
@@ -345,21 +472,7 @@ async function main() {
                     const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
                     return !!p?._apLoadResult;
                 }), 120000);
-                await rp.waitFor('dispatcher wrapped', () => page.evaluate(async () => {
-                    window.__checks = window.__checks ?? [];
-                    const { getActivePanelInstance } = await import('./modules/flashPanel/index.js');
-                    const d = getActivePanelInstance()?.adapter?.dispatcher ?? null;
-                    if (!d) return false;
-                    if (!d.__vm) {
-                        const orig = d.publish.bind(d);
-                        d.publish = (n, p, o) => {
-                            if (n === 'user:locationCheck') window.__checks.push(p?.locationName ?? null);
-                            return orig(n, p, o);
-                        };
-                        d.__vm = true;
-                    }
-                    return true;
-                }), 20000);
+                await rp.waitFor('dispatcher wrapped', wrapDispatcher, 20000);
                 await rp.gameFrame().evaluate(installSwapCounter);
                 const map = await page.evaluate(async () => {
                     const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();

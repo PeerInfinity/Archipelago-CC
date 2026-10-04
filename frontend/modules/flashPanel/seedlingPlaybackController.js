@@ -506,7 +506,7 @@ export class SeedlingPlaybackController {
 
     /**
      * ⛓ VANILLA MAP — no name → cell map: 'pending' while the AP placement load may still bind one, or a
-     * refusal BY THE LOAD'S OWN REASON once it bound none (the JS runtime refuses the vanilla arm) — never
+     * refusal BY THE LOAD'S OWN REASON once it bound none (an ineligible load) — never
      * a silent hold until `PENDING_GIVE_UP_MS`.
      */
     _noMap(s) {
