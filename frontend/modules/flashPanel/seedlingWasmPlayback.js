@@ -109,6 +109,10 @@ import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
+import {
+    deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, firstTickSlotRefusal, itemDelta, itemsAfterWrites, slotsAfterDelivery,
+    stageItems,
+} from '../seedlingDemo/wasmDelivery.js';
 
 /** How long a goal waits for its arrival (a crossing, or the forced re-arrival) before it fails by name. */
 export const ARRIVAL_WAIT_MS = 15000;
@@ -123,6 +127,9 @@ export const DRAIN_MS = 100;
 export const ADOPT_WAIT_MS = 15000;
 export const ADOPT_POLL_MS = 100;
 export const STATUS_MS = 500;
+/** ⛓ MID-ROOM REPLAN — how long a delivery the gate let through may take to show in `botStatus.items`, and the poll. */
+export const DELIVERY_LAND_MS = 3000;
+export const DELIVERY_POLL_MS = 20;
 
 const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
 const secs = (ms) => `${Math.round(ms / 100) / 10} s`;
@@ -147,13 +154,15 @@ const secs = (ms) => `${Math.round(ms / 100) / 10} s`;
  *   read at each solve's start; a non-positive / non-finite answer = `budgetMs`
  * @param {() => number|null} [deps.getUpgradeWindowMs]  ⛓ SHOULD-STOP — the upgrade window
  *   (`flashPanel.seedlingSolverUpgradeWindowMs`), read at each solve's start; null = the whole budget
+ * @param {() => object|null} [deps.getDelivery]  ⛓ MID-ROOM REPLAN — the panel adapter's delivery gate
+ *   (`{setItemGate, writesOf, inventory, push}`); absent = items reach the game as they arrive (no gate)
  */
 export function createWasmPlayback({
     getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, records, generated = false,
     solveService = null, timers = null,
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetMs = SOLVER_BUDGET_MS,
-    getBudgetMs = null, getUpgradeWindowMs = null,
+    getBudgetMs = null, getUpgradeWindowMs = null, getDelivery = null,
 }) {
     /** ⛓ O3 — the budget a solve starts with: the knob's live value, else the engine's own. */
     let ownBudget = budgetMs;
@@ -224,6 +233,19 @@ export function createWasmPlayback({
     let watchTimer = null;
     let watchToken = 0;
     let watchBaseline = null;
+    /**
+     * ⛓ MID-ROOM REPLAN — the DELIVERY GATE (`getDelivery`): installed on the panel adapter while the bot
+     * drives a solver room. `admitted` = the inventory the game may hold; `pending` = a delivery the game
+     * would SEE, held back until a safe point; `deferred` = the room a refused delivery waits out
+     * (`DELIVERY_FALLBACK`). `handle` = the adapter handle it was installed on.
+     */
+    let gate = null;
+    /** ⛓ the tape `botHold("on")` froze mid-span for a delivery: `{tick, solution, heldKeys, at, slots…}`. */
+    let frozen = null;
+    /** ⛓ a delivery let through, waiting to show in `botStatus.items`: `{items, since, then, row}`. */
+    let landing = null;
+    let deliveryTimer = null;
+    let deliveryToken = 0;
     /** Warm the worker now, so the first solve does not pay the module load inside its budget (S2). */
     try { svc().warm?.(); } catch { /* no Worker here: the first start says so */ }
     const stats = { arrivals: 0, forced: 0, solves: 0, ships: 0, hostStarts: [], done: 0, failed: 0, divergences: 0,
@@ -235,7 +257,9 @@ export function createWasmPlayback({
         // ⛓ W8c — the new-game arm's ceremonies waited out, and the tutorial Helps dismissed (one arrow pair each)
         ceremonies: [], dismissed: [],
         // ⛓ ANYTIME / O2 — expiries, the provisional plans they played, the held retries, and each plan's pass
-        expiries: 0, provisionalPlays: 0, retries: 0, passes: {} };
+        expiries: 0, provisionalPlays: 0, retries: 0, passes: {},
+        // ⛓ MID-ROOM REPLAN — deliveries the gate held back, each one's outcome (freeze, land, replan), and the refused
+        deliveries: [], deliveryDeferred: [], gateHeld: 0 };
     const history = [];
     /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
     const arrivalReads = [];
@@ -272,12 +296,17 @@ export function createWasmPlayback({
      */
     function release(st = undefined) {
         room = null;
+        const wasFrozen = frozen;
+        frozen = null;
         if (!ours) return;
         ours = false;
         let held = [];
         if (phase === 'playing' && play?.plan) {
             const s = st === undefined ? status() : st;
             held = keysHeldAtReset({ status: s, solution: play.plan.solution });
+        } else if (wasFrozen) {
+            // ⛓ MID-ROOM REPLAN — a tape frozen for a delivery still holds what it held at the freeze.
+            held = wasFrozen.heldKeys;
         }
         try { game()?.botReset?.(); } catch { /* the page is gone */ }
         if (held.length) releaseKeys(held);
@@ -365,6 +394,13 @@ export function createWasmPlayback({
         const live = readState();
         if (!Number.isInteger(live.level)) return { ok: false, reason: 'the game reports no level (is it started?)' };
         driving = true;
+        engageGate();
+        // ⛓ MID-ROOM REPLAN — a delivery is landing in the held room: the goal waits for it (then is served from it).
+        if (phase === 'delivering') {
+            queued = { goal: g, since: now() };
+            note('queued behind an item delivery');
+            return { ok: true, action: 'queue' };
+        }
         // ⛓ W7 — a goal replacing one mid-solve in the HELD room keeps the hold (the room is still the shadow).
         if (holds && phase === 'solving' && room) {
             token += 1;
@@ -833,16 +869,25 @@ export function createWasmPlayback({
         }
         const st = status();
         let c;
+        // ⛓ MID-ROOM REPLAN — a room frozen MID-SPAN continues with a LEAD tick holding exactly the keys the frozen
+        // tape held (`room.lead`): the new tape owns them (its DOWN on a held key is no edge) and its own span
+        // releases them, so the solve starts from the shadow one tick later. The held check reads the shadow BEFORE it.
+        const lead = r.lead ?? [];
+        let heldRow = null;
         try {
-            c = continuationSolveRequest({ staging: r.staging, shipped: r.shipped, goal, levelSource, records, record,
+            c = continuationSolveRequest({ staging: r.staging, shipped: [...r.shipped, ...lead], goal, levelSource, records, record,
                 name: `wasm-continue-${goal.kind}-${goal.level}` });
+            if (lead.length) {
+                const before = replayTape({ staging: r.staging, perTick: r.shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true });
+                heldRow = { level: before.level, x: before.state.x, y: before.state.y, deaths: before.playerDeaths.length };
+            }
         } catch (err) {
-            fallback(`the continuation could not be built: ${String(err?.message ?? err).split('\n')[0]}`, 'continuation-error');
+            contFallback(`the continuation could not be built: ${String(err?.message ?? err).split('\n')[0]}`, 'continuation-error');
             return;
         }
-        const mismatch = shadowMismatch(c.shadowRow, st);
-        stats.heldChecks.push({ level: r.level, shipped: r.shipped.length, shadow: c.shadowRow, game: st && { level: st.level, x: st.x, y: st.y },
-            held: st?.held ?? null, equal: !mismatch });
+        const mismatch = shadowMismatch(heldRow ?? c.shadowRow, st);
+        stats.heldChecks.push({ level: r.level, shipped: r.shipped.length, shadow: heldRow ?? c.shadowRow, game: st && { level: st.level, x: st.x, y: st.y },
+            held: st?.held ?? null, frozen: st?.frozen ?? null, equal: !mismatch });
         if (mismatch) {
             // ⛔ The plan's STOP condition: the held game is not the shadow — a staging bug, named, never solved past.
             log(`[wasm playback] the HELD game is not the shadow in level ${r.level} after ${r.shipped.length} shipped tick(s): `
@@ -851,9 +896,9 @@ export function createWasmPlayback({
                 'shadow-mismatch');
             return;
         }
-        if (c.refusal) { fallback(c.refusal, 'continuation-refused'); return; }
+        if (c.refusal) { contFallback(c.refusal, 'continuation-refused'); return; }
         stats.continuations += 1;
-        startSolve(c.request, { staging: r.staging, continuation: true, prefix: r.shipped.length });
+        startSolve(c.request, { staging: r.staging, continuation: true, prefix: r.shipped.length, lead, heldRow });
     }
 
     /**
@@ -930,6 +975,46 @@ export function createWasmPlayback({
         reArrive(`re-entering level ${g.level} (${FALLBACK_POLICY}: ${why})`, kind);
     }
 
+    /**
+     * ⛓ MID-ROOM REPLAN — a continuation that cannot be served while a delivery froze the tape: the INTERRUPTED
+     * plan resumes (`botHold("off")`, the same tape, no seam) when the model, with the items staged, still plays it
+     * exactly (`deliveryRefusal` over the whole plan); otherwise W7's fallback, by name.
+     */
+    function contFallback(why, kind) {
+        if (frozen && resumeFrozen(why)) return;
+        fallback(why, kind);
+    }
+
+    function resumeFrozen(why) {
+        const f = frozen;
+        const g = game();
+        const full = [...f.shippedBefore];
+        const refusal = deliveryRefusal({ staging: f.stagingBefore, shipped: full, items: f.items, status: f.statusAt, levelSource });
+        if (refusal) {
+            log(`[wasm playback] the interrupted plan cannot resume with the delivered item (${refusal.clause}: ${refusal.why})`, 'warn');
+            return false;
+        }
+        try { if (g?.botHold?.('off') !== 'ok') return false; } catch { return false; }
+        token += 1;
+        cancelTimer();
+        if (handle && !handle.settled) handle.cancel();
+        handle = null;
+        room.shipped = f.shippedBefore;
+        room.lead = null;
+        room.slotLag = null;
+        play = f.leg;
+        frozen = null;
+        const row = stats.deliveries.at(-1);
+        if (row && row.outcome === 'replanning') { row.outcome = 'resumed'; row.freezeMs = Math.round(now() - f.at); row.why = why; }
+        history.push({ goal, outcome: 'resumed', why });
+        log(`[wasm playback] ${goal?.name ?? goal?.kind}: ${why} — the interrupted plan resumes (the delivered item changes none of its ticks)`, 'warn');
+        phase = 'playing';
+        note(`playing tick ${play.progress.ticks}/${play.ticks} (resumed after an item delivery)`);
+        if (glueQuery && !play.hold) { arriving = true; startWatch(); }
+        schedule(watch, DRAIN_MS);
+        return true;
+    }
+
     function pollSolve() {
         if (phase !== 'solving') return;
         const t = now();
@@ -940,7 +1025,7 @@ export function createWasmPlayback({
             if (!handle.started && t - play.t0 > LOAD_BUDGET_MS) {
                 handle.cancel();
                 const why = `the solver exceeded the ${LOAD_BUDGET_MS / 1000} s load budget on ${goal.kind} in level ${goal.level} (terminated)`;
-                if (play.continuation) { fallback(why, 'continuation-budget'); return; }
+                if (play.continuation) { contFallback(why, 'continuation-budget'); return; }
                 fail(why);
                 return;
             }
@@ -965,7 +1050,7 @@ export function createWasmPlayback({
             } else {
                 const refusal = betterAnswer(play.best, cut.provisional) ? cut.provisional : play.best;
                 const why = expiryFailure({ goal, budgets: play.budgets, refusal });
-                if (play.continuation) { fallback(why, 'continuation-budget'); return; }
+                if (play.continuation) { contFallback(why, 'continuation-budget'); return; }
                 fail(why);
                 return;
             }
@@ -977,7 +1062,7 @@ export function createWasmPlayback({
         if (!res?.ok) {
             const why = `the ${generated ? 'walker producer' : 'solver'} declined ${goal.name ?? goal.kind} in level ${goal.level} `
                 + `(${res?.kind}): ${res?.message}`;
-            if (play.continuation) { fallback(why, 'continuation-declined'); return; }
+            if (play.continuation) { contFallback(why, 'continuation-declined'); return; }
             fail(why);
             return;
         }
@@ -1018,20 +1103,33 @@ export function createWasmPlayback({
 
     function ship() {
         const st = status();
-        if (st?.armed && !st?.finished) {
+        // ⛓ MID-ROOM REPLAN — a tape frozen mid-span for a delivery IS the held room (armed, `frozen`).
+        const isFrozen = !!(frozen && st?.frozen);
+        if (st?.armed && !st?.finished && !isFrozen) {
             // The solve beat the fade: the freeze tape has not latched yet. Wait for it.
             schedule(ship, DRAIN_MS);
             return;
         }
-        if (!st?.held) {
+        if (!st?.held && !isFrozen) {
             fail('the room was not held when the plan was ready — the freeze tape did not latch (it is the only '
                 + 'thing that keeps the game where the solve started)');
             return;
         }
-        const { plan, staging } = play;
+        // ⛓ MID-ROOM REPLAN — the lead tick (`solveInRoom`) goes first, its row the held one.
+        const lead = play.lead ?? [];
+        if (lead.length && !play.leadShipped) {
+            play.plan = { ...play.plan, solution: [...lead.map((h) => new Set(h)), ...play.plan.solution], expected: [play.heldRow, ...play.plan.expected] };
+            play.leadShipped = true;
+        }
+        const { plan } = play;
+        const { staging } = play;
         // ⛓ W7 — the X-split rule: a continuation may not open with a re-press of an X the last tape held.
-        const split = play.continuation ? primarySplitRefusal(room?.shipped, plan.solution) : null;
+        // ⛓ A frozen tape's keys are NOT released at the seam (the lead tick keeps them): no re-press to refuse.
+        const split = play.continuation && !isFrozen ? primarySplitRefusal(room?.shipped, plan.solution) : null;
         if (split) { fallback(split, 'x-split'); return; }
+        // ⛓ MID-ROOM REPLAN — a slot item delivered into this room reaches `useItem` one frame late.
+        const lag = room?.slotLag ? firstTickSlotRefusal({ ...room.slotLag, solution: [pressesOf(plan.solution[0], room.slotLag.held)] }) : null;
+        if (lag) { fallback(lag, 'delivery-first-tick'); return; }
         // ⛓ W8b — adopted inside a talk circle: no X until the plan has left it.
         const talk = room?.talkCircles?.length ? talkCircleGuard({ circles: room.talkCircles, solution: plan.solution, expected: plan.expected }) : null;
         if (talk?.refusal) { fallback(talk.refusal, 'adopt-talk'); return; }
@@ -1045,6 +1143,22 @@ export function createWasmPlayback({
         if (decl) { fail(`the plan tape was not shipped — ${decl}`); return; }
         const started = hostStart(tape, play.continuation ? 'continuation' : 'plan');
         if (started) { fail(started); return; }
+        // ⛓ MID-ROOM REPLAN — the frozen tape is replaced (`botLoadTape` disarms it, `botStart` lifts the freeze).
+        if (frozen) {
+            const row = stats.deliveries.at(-1);
+            if (row && row.outcome === 'replanning') {
+                row.outcome = 'replanned';
+                row.freezeMs = Math.round(now() - frozen.at);
+                row.replanMs = play.solvedMs ?? null;
+                row.ticks = plan.solution.length;
+                row.lead = lead.map((h) => [...h]);
+            }
+            frozen = null;
+        } else if (room?.slotLag) {
+            const row = stats.deliveries.at(-1);
+            if (row && row.outcome === 'replanning') { row.outcome = 'replanned'; row.replanMs = play.solvedMs ?? null; row.ticks = plan.solution.length; }
+        }
+        if (room) room.slotLag = null;
         stats.ships += 1;
         play.ticks = plan.solution.length;
         play.hold = hold;
@@ -1053,6 +1167,7 @@ export function createWasmPlayback({
         play.lastStatusAt = 0;
         phase = 'playing';
         if (room) {
+            room.lead = null;
             room.shipped = [...room.shipped, ...plan.solution.map((h) => [...h])];
             room.plans = (room.plans ?? 0) + 1;
             if (talk?.left) room.talkCircles = [];
@@ -1166,6 +1281,253 @@ export function createWasmPlayback({
         schedule(heldGuard, DRAIN_MS);
     }
 
+
+    // ── ⛓ MID-ROOM REPLAN: the delivery gate ─────────────────────────────
+
+    /** The keys a tick PRESSES (an edge): those it holds that were not held going in. */
+    function pressesOf(keys, held = []) {
+        const h = new Set(held);
+        return [...(keys ?? [])].filter((k) => !h.has(k));
+    }
+
+    function delivery() { try { return getDelivery?.() ?? null; } catch { return null; } }
+
+    /**
+     * Install the gate on the panel adapter (once per drive): the inventory as it stands is admitted; from now
+     * on a delivery the game would SEE is held back (`gateFilter`) until `deliveryStep` finds a safe point.
+     */
+    function engageGate() {
+        if (!holds || gate) return;
+        const d = delivery();
+        if (typeof d?.setItemGate !== 'function') return;
+        let inv = null;
+        try { inv = d.inventory?.() ?? null; } catch { inv = null; }
+        gate = { handle: d, admitted: inv ? { ...inv } : null, pending: null, since: null, deferred: null, waiting: null };
+        d.setItemGate(gateFilter);
+    }
+
+    /** Remove the gate (the bot stopped): the adapter's next push writes the inventory as it stands, as before. */
+    function disengageGate() {
+        const g = gate;
+        gate = null;
+        stopDelivery();
+        landing = null;
+        try { g?.handle?.setItemGate?.(null); } catch { /* the panel is gone */ }
+    }
+
+    const sameWrites = (d, a, b) => {
+        const key = (inv) => JSON.stringify((d.writesOf(inv) ?? []).map((w) => [w.property, w.value]).sort());
+        return key(a) === key(b);
+    };
+
+    /**
+     * The gate itself — the adapter calls it on every push with the live inventory and writes what it returns.
+     * A change the game cannot see (a key, a totem shard, nothing) is admitted at once; one it can see is held
+     * back (what was admitted, with any count that FELL passed through) and `deliveryStep` is started.
+     */
+    function gateFilter(live) {
+        const g = gate;
+        if (!g) return live;
+        if (!g.admitted) { g.admitted = { ...live }; return live; }
+        const held = {};
+        for (const [k, v] of Object.entries(live)) held[k] = Math.min(v || 0, g.admitted[k] || 0);
+        let visible = true;
+        try { visible = !sameWrites(g.handle, live, held); } catch { visible = true; }
+        if (!visible) { g.admitted = { ...live }; g.pending = null; return live; }
+        if (!g.pending || JSON.stringify(g.pending) !== JSON.stringify(live)) {
+            if (!g.pending) { g.since = now(); stats.gateHeld += 1; }
+            g.pending = { ...live };
+            kickDelivery();
+        }
+        return held;
+    }
+
+    function stopDelivery() {
+        deliveryToken += 1;
+        if (deliveryTimer) { try { deliveryTimer.t.clearTimeout(deliveryTimer.h); } catch { /* gone */ } deliveryTimer = null; }
+    }
+    function scheduleDelivery(fn, ms) {
+        const my = deliveryToken;
+        const t = T();
+        deliveryTimer = { t, h: t.setTimeout(() => { if (my === deliveryToken) fn(); }, ms) };
+    }
+    function kickDelivery() { if (!deliveryTimer && !landing) scheduleDelivery(deliveryStep, 0); }
+    const later = () => scheduleDelivery(deliveryStep, DRAIN_MS);
+
+    /**
+     * Where is the next SAFE POINT for the held delivery? A tape playing in a room we staged → freeze it NOW
+     * (`botHold("on")`); a room we hold (between goals, or a solve in flight) → at once; anything else (a
+     * crossing, an adoption, a re-arrival, a ceremony) → wait: the room the next arrival holds is staged
+     * from the game as it is then.
+     */
+    function deliveryStep() {
+        deliveryTimer = null;
+        const g = gate;
+        if (!g?.pending || landing) return;
+        if (g.deferred && g.deferred.room === room && room) { later(); return; }
+        if (g.deferred) g.deferred = null;
+        if (room && phase === 'playing' && play?.plan) { freezeAndDeliver(); return; }
+        if (room && (phase === 'held' || phase === 'solving')) { deliverHeld(); return; }
+        later();
+    }
+
+    /** The items the held delivery would write, over the game's live readout. */
+    function predicted(st) {
+        return itemsAfterWrites(st?.items ?? {}, gate.handle.writesOf(gate.pending) ?? []);
+    }
+
+    /** A delivery the model cannot take mid-run waits out the room (`DELIVERY_FALLBACK`): the next arrival stages it. */
+    function deferDelivery(refusal, at) {
+        gate.deferred = { room, ...refusal };
+        stats.deliveryDeferred.push({ level: room?.level ?? null, at, clause: refusal.clause, why: refusal.why });
+        log(`[wasm playback] an item delivery waits for the room's end (${DELIVERY_FALLBACK}) — ${refusal.clause}: ${refusal.why}`, 'warn');
+        later();
+    }
+
+    /** Let the held delivery through and wait for the game to show it; `then()` runs once it has. */
+    function admit(items, row, then) {
+        const g = gate;
+        g.admitted = { ...g.pending };
+        g.pending = null;
+        g.deferred = null;
+        g.waiting = null;
+        landing = { items, since: now(), row, then };
+        try { g.handle.push?.(); } catch { /* the next tick pushes it */ }
+        scheduleDelivery(awaitLanded, 0);
+    }
+
+    function awaitLanded() {
+        deliveryTimer = null;
+        const l = landing;
+        if (!l) return;
+        const st = status();
+        if (st && itemDelta(st.items, l.items).length === 0) {
+            l.row.landMs = Math.round(now() - l.since);
+            landing = null;
+            l.then(st);
+            if (gate?.pending) kickDelivery();
+            return;
+        }
+        if (now() - l.since > DELIVERY_LAND_MS) {
+            landing = null;
+            l.row.outcome = 'unlanded';
+            fail(`an item delivery did not show in the game within ${DELIVERY_LAND_MS / 1000} s (${itemDelta(st?.items, l.items).map((d) => d.property).join(', ')})`);
+            return;
+        }
+        scheduleDelivery(awaitLanded, DELIVERY_POLL_MS);
+    }
+
+    /**
+     * A plan tape is PLAYING: freeze it at the frame boundary (`botHold("on")`), ask the model whether it can take
+     * the items from this room's arrival (`deliveryRefusal`, with the PREDICTED items, before any write), then
+     * write them and replan the goal as a continuation from the frozen tick. A refusal (or a moment that is not
+     * mid-room: a dead frame, a crossing, the tape's own end) lets the tape go on untouched.
+     */
+    function freezeAndDeliver() {
+        const g = game();
+        if (typeof g?.botHold !== 'function') { deferDelivery({ clause: 'no-freeze', why: 'this build has no botHold' }, 'playing'); return; }
+        const wait = (why) => {
+            if (gate.waiting !== why) { gate.waiting = why; log(`[wasm playback] an item delivery waits: ${why}`); }
+            later();
+        };
+        // Cheap reads first: a dead frame (a seal / dialogue freeze) or a crossing within reach is not mid-room.
+        if (readState().freezeObjects === true) { wait('the game is in a freeze (dead frames)'); return; }
+        const near = play.progress?.ticks ?? 0;
+        if (play.plan.expected.slice(0, near + 4).some((r) => r.level !== room.level)) { wait('a crossing is in flight'); return; }
+        const t0 = now();
+        if (g.botHold('on') !== 'ok') { deferDelivery({ clause: 'no-freeze', why: 'botHold("on") refused' }, 'playing'); return; }
+        const st = status();
+        const resume = (why) => { try { g.botHold('off'); } catch { /* gone */ } wait(why); };
+        if (!st?.frozen || !st.armed || st.finished) { resume('the tape is not mid-span'); return; }
+        const d = J(g.botDrain?.());
+        if (d) play.progress = foldDrain(play.progress, d);
+        const k = st.tick;
+        const plan = play.plan;
+        if (!Number.isInteger(k) || k > plan.solution.length || play.progress.ticks !== k) { resume(`the drained rows (${play.progress.ticks}) are not the tape's tick (${k})`); return; }
+        if (firstDivergence(plan.expected, play.progress.rows, { roomLevel: goal.level })) { resume('the tape already left the plan'); return; }
+        if (readState().freezeObjects === true) { resume('the game is in a freeze (dead frames)'); return; }
+        if (st.level !== room.level || plan.expected.slice(0, k + 2).some((r) => r.level !== room.level)) { resume('a crossing is in flight'); return; }
+        const items = predicted(st);
+        // `room.shipped` already holds this whole plan (`ship()` appends it): the prefix is what came before it + its first k.
+        const prefix = [...room.shipped.slice(0, room.shipped.length - plan.solution.length), ...plan.solution.slice(0, k).map((h) => [...h])];
+        const refusal = deliveryRefusal({ staging: room.staging, shipped: prefix, items, status: st, levelSource });
+        if (refusal) { try { g.botHold('off'); } catch { /* gone */ } deferDelivery(refusal, 'playing'); return; }
+        const heldKeys = keysHeldAtReset({ status: st, solution: plan.solution });
+        const leg = play;
+        // What a resume needs (`resumeFrozen`): the room as it stood, the interrupted leg, the freeze-time readout.
+        frozen = { tick: k, solution: plan.solution, heldKeys, at: t0, leg, items, statusAt: st,
+            stagingBefore: room.staging, shippedBefore: room.shipped };
+        const post = slotsAfterDelivery({ slots: st.inventory_slots ?? [], primary: st.primary, secondary: st.secondary }, items);
+        const row = { level: room.level, goal: goal?.name ?? goal?.kind, phase: 'playing', tick: k, of: plan.solution.length,
+            items: itemDelta(st.items, items), heldKeys, outcome: 'replanning', policy: DELIVERY_POLICY };
+        stats.deliveries.push(row);
+        // The interrupted leg: its tape stops at k (frozen); the goal is served by the continuation.
+        token += 1;
+        cancelTimer();
+        stopWatch();
+        history.push({ goal, outcome: 'interrupted', why: 'item delivery', producer: leg.plan.producer ?? 'solver', ticks: leg.ticks,
+            drained: k, continuation: leg.continuation ?? false, prefix: leg.prefix ?? 0, ...solvedBy(leg) });
+        play = null;
+        phase = 'delivering';
+        note('an item arrived — the room is frozen while it lands and the plan is redone');
+        admit(items, row, (landed) => {
+            room.shipped = prefix;
+            room.lead = heldKeys.length ? [heldKeys] : null;
+            room.staging = stageItems(room.staging, landed.items);
+            room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: heldKeys };
+            phase = 'held';
+            if (goal) { solveInRoom(); return; }
+            enterHeld();
+        });
+    }
+
+    /**
+     * The room is HELD (between goals, or a solve in flight on it): ask, write, re-stage; a solve in flight is
+     * asked again from the re-staged room. A refusal at an ARRIVAL (nothing shipped: the item shapes the room
+     * itself, or its slots) is written anyway and the goal served by today's forced re-arrival, by name.
+     */
+    function deliverHeld() {
+        const st = status();
+        if (!st) { later(); return; }
+        const items = predicted(st);
+        const refusal = deliveryRefusal({ staging: room.staging, shipped: room.shipped, items, status: st, levelSource });
+        const atArrival = room.shipped.length === 0 || (room.adopted && room.shipped.length === 1 && room.shipped[0].length === 0);
+        if (refusal && !atArrival) { deferDelivery(refusal, phase); return; }
+        const row = { level: room.level, goal: goal?.name ?? goal?.kind ?? null, phase, tick: room.shipped.length, items: itemDelta(st.items, items),
+            heldKeys: [], outcome: refusal ? 'forced' : 'replanning', policy: DELIVERY_POLICY, ...(refusal ? { clause: refusal.clause, why: refusal.why } : {}) };
+        stats.deliveries.push(row);
+        const solving = phase === 'solving';
+        if (solving) {
+            token += 1;
+            cancelTimer();
+            if (handle && !handle.settled) handle.cancel();
+            handle = null;
+            play = null;
+        }
+        const post = slotsAfterDelivery({ slots: st.inventory_slots ?? [], primary: st.primary, secondary: st.secondary }, items);
+        phase = 'delivering';
+        note('an item arrived — it lands in the held room before the plan is made');
+        admit(items, row, (landed) => {
+            if (refusal) {
+                // The room was built without the item (or holds its slots in another order): enter it again.
+                phase = 'held';
+                if (goal) { fallback(`an item arrived that this room's arrival cannot take — ${refusal.clause}: ${refusal.why}`, 'delivery-refused'); return; }
+                const why = `${refusal.clause}: ${refusal.why}`;
+                release();
+                reset();
+                log(`[wasm playback] the held room was released: an item arrived it cannot take (${why}) — the next goal re-enters it`, 'warn');
+                return;
+            }
+            room.staging = stageItems(room.staging, landed.items);
+            room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: [] };
+            if (!solving) row.outcome = 'staged';
+            phase = 'held';
+            if (goal) { solveInRoom(); return; }
+            enterHeld();
+            if (queued) { const q = queued; queued = null; const r = begin(q.goal); if (!r.ok) fail(r.reason); }
+        });
+    }
+
     return {
         /** `{ok:true, action}` or `{ok:false, reason}` — a refusal before anything moved. */
         walkTo(g) {
@@ -1201,6 +1563,8 @@ export function createWasmPlayback({
             release();
             reset();
             stopWatch();
+            // ⛓ MID-ROOM REPLAN — the gate comes off: whatever it held reaches the game on the adapter's next push.
+            disengageGate();
             driving = false;
             arriving = false;
             goal = null;
@@ -1219,13 +1583,17 @@ export function createWasmPlayback({
             return { phase, goal, generated, queued: queued?.goal ?? null, ticks: play?.ticks ?? null,
                 drained: play?.progress?.ticks ?? null, divergence: play?.divergence ?? null, recoveries,
                 // ⛓ W7 — the held room (its level and how many key sets the shadow replays), and whether a crossing is in flight
-                room: room ? { level: room.level, shipped: room.shipped.length, plans: room.plans ?? 0, talkCircles: room.talkCircles?.length ?? 0 } : null, driving, arriving };
+                room: room ? { level: room.level, shipped: room.shipped.length, plans: room.plans ?? 0, talkCircles: room.talkCircles?.length ?? 0 } : null, driving, arriving,
+                // ⛓ MID-ROOM REPLAN — the gate: installed, a delivery held back, the room a refused one waits out
+                gate: gate ? { pending: !!gate.pending, deferred: gate.deferred ? { clause: gate.deferred.clause, why: gate.deferred.why } : null } : null,
+                frozen: frozen ? { tick: frozen.tick, heldKeys: [...frozen.heldKeys] } : null };
         },
         get stats() {
             return { ...stats, hostStarts: [...stats.hostStarts], keyReleases: [...stats.keyReleases], history: [...history],
                 forcedBy: { ...stats.forcedBy }, fallbacks: [...stats.fallbacks], heldChecks: [...stats.heldChecks],
                 holdBlocked: [...stats.holdBlocked], adoptRefused: [...stats.adoptRefused],
-                ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed] };
+                ceremonies: stats.ceremonies.map((c) => ({ ...c })), dismissed: [...stats.dismissed],
+                deliveries: stats.deliveries.map((d) => ({ ...d })), deliveryDeferred: [...stats.deliveryDeferred] };
         },
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },

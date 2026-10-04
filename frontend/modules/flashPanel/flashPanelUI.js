@@ -314,6 +314,14 @@ export class FlashPanelUI {
         mapPath: this._atlasMapPath ?? null,
         // ⛓ O3 — the solve budget knob (null until the setting is read: the engine's own default then).
         solverBudgetMs: this._wasmSolverBudgetMs ?? null,
+        // ⛓ MID-ROOM REPLAN — the delivery gate (`FlashBridgeAdapter.itemGate`): the engine holds an item that
+        // arrives while it drives, and lets it through where it can replan around it.
+        delivery: {
+          setItemGate: (gate) => this.adapter?.setItemGate?.(gate),
+          writesOf: (counts) => this.adapter?._itemWritesFor?.(counts, { quiet: true }) ?? [],
+          inventory: () => this.adapter?.liveInventory?.() ?? null,
+          push: () => this.adapter?._pushTick?.(),
+        },
       } : null,
       // ⛓ SHOULD-STOP — the upgrade window, both runtimes: undefined until the setting is read, then a
       // number or null (0 / unset = the whole budget). The JS page gets it with every goal.

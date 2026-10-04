@@ -153,6 +153,17 @@ export class FlashBridgeAdapter {
      */
     this.hostOwnedLocations = new Set();
 
+    /**
+     * ⛓⛓ **THE DELIVERY GATE** (Seedling mid-room replan). Optional
+     * `(inventoryCounts) => inventoryCounts` installed by a host-side driver
+     * (the wasm Playback Bot's engine, while it drives): every push writes the
+     * inventory IT returns, so a delivery it holds back reaches the game only
+     * when it says so — at a point where the driver can replan around it.
+     * null (the default, and whenever no driver drives) = the inventory as it
+     * stands, exactly as before.
+     */
+    this.itemGate = null;
+
     this._buildLookups(config);
     adapters.set(flashObjectId, this);
     ensureGlobalEntryPoints();
@@ -599,11 +610,22 @@ export class FlashBridgeAdapter {
    */
   _buildItemWritesFromInventory() {
     const snapshot = this.stateManager.getLatestStateSnapshot?.();
-    const inventoryCounts = snapshot?.inventory || {};
+    let inventoryCounts = snapshot?.inventory || {};
+    // ⛓ The delivery gate: a driver may hold a delivery back (see `itemGate`).
+    if (this.itemGate) {
+      try { inventoryCounts = this.itemGate(inventoryCounts) ?? inventoryCounts; } catch (e) { this.log(`item gate threw: ${e?.message ?? e}`); }
+    }
+    return this._itemWritesFor(inventoryCounts);
+  }
 
+  /**
+   * ⛓ The property writes an inventory maps to (the gate's question: "would
+   * the game see this delivery?"). `quiet` skips the inventory-change log line.
+   */
+  _itemWritesFor(inventoryCounts, { quiet = false } = {}) {
     // Classify each owned item into flash items, expanding progressives
     // and fusions using the same logic as flash-ap-api.
-    const flashItems = this._inventoryToFlashItems(inventoryCounts);
+    const flashItems = this._inventoryToFlashItems(inventoryCounts, { quiet });
 
     const writes = [];
     const addAccum = {}; // property -> { def, total }
@@ -657,7 +679,7 @@ export class FlashBridgeAdapter {
     return writes;
   }
 
-  _inventoryToFlashItems(inventoryCounts) {
+  _inventoryToFlashItems(inventoryCounts, { quiet = false } = {}) {
     const result = [];
     const progressiveCounts = {};
     const fusionFlags = {};
@@ -669,7 +691,7 @@ export class FlashBridgeAdapter {
       .filter((n) => (inventoryCounts[n] || 0) > 0)
       .sort();
     const ownedKey = ownedNames.join('|');
-    if (ownedKey !== this._lastOwnedKey) {
+    if (!quiet && ownedKey !== this._lastOwnedKey) {
       this._lastOwnedKey = ownedKey;
       this.log(`inventory changed (${ownedNames.length} owned): ${ownedNames.join(', ') || '(empty)'}`);
       const unknown = ownedNames.filter((n) => this._apNameToFlash(n) === null);
@@ -736,6 +758,19 @@ export class FlashBridgeAdapter {
     }
 
     return result;
+  }
+
+  /**
+   * ⛓ The delivery gate's handle for a driver: install / clear the gate, ask
+   * what an inventory would write, read the live inventory, and push NOW
+   * (rather than at the next tick) once a held delivery is let through.
+   */
+  setItemGate(gate) {
+    this.itemGate = typeof gate === 'function' ? gate : null;
+  }
+
+  liveInventory() {
+    return { ...(this.stateManager.getLatestStateSnapshot?.()?.inventory || {}) };
   }
 
   _apNameToFlash(apName) {

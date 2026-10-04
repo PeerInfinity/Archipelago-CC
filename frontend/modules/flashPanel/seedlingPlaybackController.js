@@ -458,6 +458,8 @@ export class SeedlingPlaybackController {
             getBudgetMs: () => this._getSurface?.()?.wasm?.solverBudgetMs ?? null,
             // ⛓ SHOULD-STOP — the upgrade window, read live at each solve's start (null = the whole budget).
             getUpgradeWindowMs: () => this._getSurface?.()?.solverUpgradeWindowMs ?? null,
+            // ⛓ MID-ROOM REPLAN — the delivery gate's handle (re-read per call: a remount is a new adapter).
+            getDelivery: () => this._getSurface?.()?.wasm?.delivery ?? null,
             log: this._log,
             onNote: (n) => this._relayNote(n),
             onFailed: (reason) => this._fail(this._lastTarget, `the wasm playback failed: ${reason}`),
