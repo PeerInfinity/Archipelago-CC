@@ -19,9 +19,10 @@
  *    visit find the lock gone, as the game's persistence array does.
  *  · With no solver at all (the walker, or nobody at the keys) the same room no
  *    longer HALTS: the census's terrain-death throw is the run's own clear now.
- *  · L8: the sandtrap under the arrowtrap is a GAME-sourced declaration (§11.4)
- *    — the JS page has no game oracle, so the solver DECLINES by name and the
- *    walker walks. (The plan's "L8 played" witness is overturned: S3 as-built.)
+ *  · L8: the sandtraps under the arrowtrap. Until fidelity F4/F5 they were a
+ *    GAME-sourced declaration (§11.4) the JS page had no oracle for, so the
+ *    solver declined by name. F5 lifted §11.4 for the SandTrap: the run computes
+ *    {8,0}/{8,1} itself, and the solver plays L8 through on the page.
  *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *
@@ -34,7 +35,7 @@
  *   m4 `bankClears` without `scratchClears`
  *        -> the carry row (the lock stands again on the next boot)
  *   m5 a game-sourced declaration declines with the raw solver message
- *        -> the L8 row and the unit row
+ *        -> the unit row (since F5 no committed room raises a game-sourced declaration)
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -233,19 +234,21 @@ describe('jsRuntime S3 — scratch persistence on vanilla rooms (⚖ Q4)', () =>
     });
 });
 
-describe('jsRuntime S3 — a GAME-sourced declaration declines by name (L8\'s sandtrap)', () => {
-    it('L8: the solver\'s PendingDeclaration (source game) → declined NAMING the missing oracle; the walker walks', () => {
+describe('jsRuntime S3 — L8\'s sandtraps: the model computes their arrow deaths (fidelity F5), the solver plays it through', () => {
+    it('L8: no PendingDeclaration any more — ONE solve, no decline, the run clears {8,0} then {8,1} itself and crosses to L9', () => {
         const { rt } = midRoom({ region: 'level_8', fromId: 'in_L7_192_32', toId: 'out_teleporter_96_192', walkTicks: 0 });
         rt.playback.setSolverWalk(true);
-        for (let t = 0; t < 30 && rt.playback.solverStats.declines === 0; t += 1) rt.tick();
+        for (let t = 0; t < 1200 && rt.playback.state !== WALK_STATES.DONE && !rt.halted; t += 1) rt.tick();
         const s = rt.playback.solverStats;
-        expect(s.declines).toBe(1);
-        expect(s.lastDecline).toMatch(/GAME-sourced declaration \{8,\d+\} \(sandtrap@96,80\)/);
-        expect(s.lastDecline).toMatch(/no game oracle/);
-        expect(rt.playback.reason).toMatch(/the solver declined — the goal waits on a GAME-sourced declaration/);
-        expect(rt.playback.state).toBe(WALK_STATES.WALKING);
         expect(rt.halted).toBeNull();
-    });
+        expect(rt.playback.state).toBe(WALK_STATES.DONE);
+        expect([s.solves, s.declines, s.refutations]).toEqual([1, 0, 0]);
+        expect(s.lastSolve.verbs).toEqual(expect.arrayContaining(['kill', 'shove']));
+        expect(s.played).toBe(s.lastSolve.keys);
+        expect(rt.run.level).toBe(9);
+        // Both sandtraps die on the LIVE run, in order (the game's removals: t248 / t648).
+        expect(rt.run.scratchClears.map(({ level, tag }) => ({ level, tag }))).toEqual([{ level: 8, tag: 0 }, { level: 8, tag: 1 }]);
+    }, 120000);
 
     it('declarationRefusal / settleSolve: game → the oracle named; model → named as the scratch defect it is', () => {
         const game = new PendingDeclaration('x', { pending: { level: 8, tag: 3, source: 'game', body: 'sandtrap@96,80' } });

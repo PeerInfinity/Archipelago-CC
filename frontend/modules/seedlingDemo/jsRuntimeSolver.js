@@ -263,10 +263,11 @@ export function settleSolve(fn) {
  * The page's runs are SCRATCH (`jsRuntimeCore`, ⚖ Q4), so a kill lock's
  * clear — the `model`-sourced declaration `twoPassSolve`'s discovery arm
  * exists for — is written by the run itself and never reaches here. What
- * does is `source: 'game'`: a static `"Enemy"` body (L8's sandtrap under the
- * arrowtrap) whose death §11.4 refuses to compute, so only the RUNNING GAME's
- * `persistence_cleared` may name its tick (`twoPassSolve`'s `gameTick`
- * oracle). The JS page has no game to ask, and a tick the page invented
+ * does is `source: 'game'`: a static `"Enemy"` body whose death §11.4 refuses
+ * to compute, so only the RUNNING GAME's `persistence_cleared` may name its
+ * tick (`twoPassSolve`'s `gameTick` oracle). (L8's sandtrap was the one case
+ * until fidelity F5 lifted §11.4 for the SandTrap; no committed room raises
+ * one now.) The JS page has no game to ask, and a tick the page invented
  * would be the second writer of that slot — so it declines, and the walker
  * walks. A `model`-sourced one here would be a scratch run that did not
  * write its own clear: named as the defect it is.
