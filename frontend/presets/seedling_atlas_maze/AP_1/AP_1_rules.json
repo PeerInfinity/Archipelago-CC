@@ -33,13 +33,6 @@
                 }
               ]
             }
-          },
-          {
-            "name": "overworld_start__r1c6 -> overworld_start__r8c0",
-            "connected_region": "overworld_start__r8c0",
-            "access_rule": {
-              "rule": "True_"
-            }
           }
         ],
         "locations": []
@@ -149,13 +142,6 @@
               "args": {
                 "item_name": "Progressive Swim"
               }
-            }
-          },
-          {
-            "name": "overworld_start__r8c0 -> overworld_start__r1c6",
-            "connected_region": "overworld_start__r1c6",
-            "access_rule": {
-              "rule": "True_"
             }
           },
           {
@@ -419,7 +405,7 @@
     "1": []
   },
   "region_atlas": {
-    "atlas_id": "seedling-ab0b2709",
+    "atlas_id": "seedling-9ff3df2a",
     "game": "seedling",
     "map_document": "seedling-map.json"
   },
@@ -1243,7 +1229,6 @@
           "new_accessible_regions": [
             "dungeon1_room1__r0c4",
             "Menu",
-            "overworld_start__r1c6",
             "overworld_start__r8c0",
             "owls_nest_entrance",
             "starting_house"

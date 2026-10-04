@@ -743,9 +743,11 @@ describe('the real Seedling starter atlas as a maze world', () => {
         expect(names.has('Starting House - Chest')).toBe(true);
     });
 
-    it('WALLS the one crossing the analyzer could not label, in both directions', () => {
+    it('has no unlabelled crossing left to wall: the house\'s r1c6 <-> r8c0 is model-sealed, not a row', () => {
+        // RULES starter-atlas-links: the producer's physics-model oracle settles the one
+        // crossing the transcription could not label (it used to be walled here, both ways).
         const walled = report.maze_notes.filter((n) => n.kind === 'walled_unlabelled');
-        expect(walled.map((n) => `${n.from}->${n.to}`)).toEqual(['r1c6->r8c0', 'r8c0->r1c6']);
+        expect(walled).toEqual([]);
         const p = sidecars.overworld_start__r1c6.playable_payload;
         expect(p.exits.map((e) => e.atlas_exit_id)).toEqual(['cross_r2c13']);
     });

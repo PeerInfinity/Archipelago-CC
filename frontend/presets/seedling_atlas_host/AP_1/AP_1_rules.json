@@ -234,7 +234,7 @@
     "1": []
   },
   "region_atlas": {
-    "atlas_id": "seedling-ab0b2709",
+    "atlas_id": "seedling-9ff3df2a",
     "game": "seedling",
     "map_document": "seedling-map.json"
   },
@@ -520,7 +520,7 @@
         },
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "overworld_start",
           "atlas_sub_region": "r8c0",
           "level": 0,

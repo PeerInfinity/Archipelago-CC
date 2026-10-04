@@ -32,7 +32,7 @@
  *
  * Run:
  *   node scripts/procgen/census-seedling-atlas-doors.mjs
- *   node scripts/procgen/census-seedling-atlas-doors.mjs --atlas=seedling-ab0b2709
+ *   node scripts/procgen/census-seedling-atlas-doors.mjs --atlas=seedling-9ff3df2a
  *   node scripts/procgen/census-seedling-atlas-doors.mjs --atlas=path/to/atlas.json --json=/tmp/doors.json
  */
 import { dirname, join, resolve } from 'node:path';

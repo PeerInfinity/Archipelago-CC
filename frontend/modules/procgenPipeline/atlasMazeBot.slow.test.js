@@ -768,10 +768,12 @@ describe('region atlas Phase 8 — the projected Seedling map is fully TRAVERSAB
         expect(crossingsOnRoute(strict)).toEqual([]);
     });
 
-    it('never crosses an exit the AP graph lists but the projection WALLED', () => {
-        // r1c6 <-> r8c0 is an unlabelled crossing: Phase 5b walls it in both
-        // directions, but the AP compiler still emits the pair. A router
-        // trusting AP picks it, resolves no tile, and stalls in silence.
+    it('the AP graph lists no exit the projection WALLED (and the bot never crosses one)', () => {
+        // r1c6 <-> r8c0 was an unlabelled crossing: Phase 5b walled it in both
+        // directions while the AP compiler still emitted the pair, so a router
+        // trusting AP picked it, resolved no tile, and stalled in silence. Since
+        // RULES starter-atlas-links the producer's physics-model oracle seals it,
+        // so neither side carries it: the two graphs agree.
         const apOnly = [];
         for (const [region, def] of Object.entries(rulesDoc.regions[PLAYER])) {
             const world = bot.worlds.get(region);
@@ -780,10 +782,7 @@ describe('region atlas Phase 8 — the projected Seedling map is fully TRAVERSAB
                 if (!world.exits.has(exit.name)) apOnly.push(`${region}|${exit.name}`);
             }
         }
-        expect(apOnly, 'the walled pair is still in the AP graph').toEqual([
-            'overworld_start__r1c6|overworld_start__r1c6 -> overworld_start__r8c0',
-            'overworld_start__r8c0|overworld_start__r8c0 -> overworld_start__r1c6',
-        ]);
+        expect(apOnly, 'an AP exit the projection walled').toEqual([]);
         for (const key of apOnly) expect(bot.crossed.has(key), key).toBe(false);
     });
 

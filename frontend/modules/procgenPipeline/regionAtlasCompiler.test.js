@@ -245,9 +245,10 @@ describe('compiling the real Seedling starter atlas', () => {
         expect(exitTo(rules, 'owls_nest_entrance', 'overworld_start__r8c0')).toBeTruthy();
         expect(exitTo(rules, 'owls_nest_entrance', 'dungeon1_room1__r0c4')).toBeTruthy();
         expect(exitTo(rules, 'dungeon1_room1__r0c4', 'owls_nest_entrance')).toBeTruthy();
-        // 3 connections x 2 directions + GameStart + 16 internal-exit edges
-        // (9 rows, 7 of them bidirectional).
-        expect(report.exits).toBe(23);
+        // 3 connections x 2 directions + GameStart + 14 internal-exit edges
+        // (8 rows, 6 of them bidirectional — the house's r1c6 <-> r8c0 is
+        // model-sealed, RULES starter-atlas-links).
+        expect(report.exits).toBe(21);
     });
 
     it('places the one vanilla item the starter atlas records', () => {

@@ -33,13 +33,6 @@
                 }
               ]
             }
-          },
-          {
-            "name": "overworld_start__r1c6 -> overworld_start__r8c0",
-            "connected_region": "overworld_start__r8c0",
-            "access_rule": {
-              "rule": "True_"
-            }
           }
         ],
         "locations": []
@@ -149,13 +142,6 @@
               "args": {
                 "item_name": "Progressive Swim"
               }
-            }
-          },
-          {
-            "name": "overworld_start__r8c0 -> overworld_start__r1c6",
-            "connected_region": "overworld_start__r1c6",
-            "access_rule": {
-              "rule": "True_"
             }
           },
           {
@@ -419,7 +405,7 @@
     "1": []
   },
   "region_atlas": {
-    "atlas_id": "seedling-ab0b2709",
+    "atlas_id": "seedling-9ff3df2a",
     "game": "seedling",
     "map_document": "seedling-map.json"
   },
@@ -433,7 +419,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "overworld_start",
           "atlas_sub_region": "r1c6",
           "level": 0,
@@ -445,7 +431,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "overworld_start",
           "atlas_sub_region": "r2c13",
           "level": 0,
@@ -457,7 +443,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "overworld_start",
           "atlas_sub_region": "r4c16",
           "level": 0,
@@ -469,7 +455,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "overworld_start",
           "atlas_sub_region": "r8c0",
           "level": 0,
@@ -534,7 +520,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "overworld_start",
           "atlas_sub_region": "r11c19",
           "level": 0,
@@ -546,7 +532,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "overworld_start",
           "atlas_sub_region": "r14c0",
           "level": 0,
@@ -558,7 +544,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "starting_house",
           "level": 86,
           "tile_size": 16,
@@ -596,7 +582,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "owls_nest_entrance",
           "level": 2,
           "tile_size": 16,
@@ -660,7 +646,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "dungeon1_room1",
           "atlas_sub_region": "r0c4",
           "level": 3,
@@ -699,7 +685,7 @@
         "substrate": "flash_seedling",
         "playable_payload": {
           "gameId": "seedling",
-          "atlas_ref": "seedling-ab0b2709",
+          "atlas_ref": "seedling-9ff3df2a",
           "atlas_region": "dungeon1_room1",
           "atlas_sub_region": "r8c6",
           "level": 3,
@@ -732,7 +718,6 @@
           "new_accessible_regions": [
             "dungeon1_room1__r0c4",
             "Menu",
-            "overworld_start__r1c6",
             "overworld_start__r8c0",
             "owls_nest_entrance",
             "starting_house"

@@ -160,20 +160,21 @@ describe('top-down over the seedling_atlas source, mix {flash_seedling_gen: 1}',
 
     /**
      * ⛓ T3 §17.6 measured top-down REFUSING `flash_seedling` here: the start
-     * region asks for 7 "sides" and the zone realiser's four ran dry. A
-     * procedural room mints one door per exit, so the seven-door room BUILDS —
-     * given room for seven non-adjacent doors (10x10) and a grid that places all
-     * ten source regions (5x5).
+     * region asked for 7 "sides" and the zone realiser's four ran dry. A
+     * procedural room mints one door per exit, so the many-door room BUILDS —
+     * given room for its non-adjacent doors (10x10) and a grid that places all
+     * ten source regions (5x5). SIX doors since RULES starter-atlas-links: the
+     * house's r8c0 <-> r1c6 is model-sealed, so r8c0 lost that door.
      */
-    it.each([1, 4])('seed %i: all ten source regions, the start region a SEVEN-door room', async (seed) => {
+    it.each([1, 4])('seed %i: all ten source regions, the start region a SIX-door room', async (seed) => {
         const { rulesJson, ms } = await topDown(seed, { regionWidth: 10, regionHeight: 10, gridWidth: 5, gridHeight: 5 });
         console.log(`top-down seedling_atlas seed ${seed}: ${ms} ms`);
         assertWorldSound(rulesJson);
         const generated = assertGeneratedSidecars(rulesJson);
         expect(generated).toHaveLength(Object.keys(SEEDLING_ATLAS.regions['1']).length - 1); // all but Menu
         const start = rulesJson.preset_sidecars['1'].overworld_start__r8c0.playable_payload;
-        expect(start.exits).toHaveLength(7);
-        // ⛓ G8: the seven-door room seats at 10x10 within its budget — it does NOT grow
+        expect(start.exits).toHaveLength(6);
+        // ⛓ G8: the six-door room seats at 10x10 within its budget — it does NOT grow
         expect(start.size).toEqual({ width: 10, height: 10 });
         expect(start.generation.grownFrom).toBeUndefined();
         // the source's one location keeps its name, on its room's goal cell
@@ -183,14 +184,16 @@ describe('top-down over the seedling_atlas source, mix {flash_seedling_gen: 1}',
 
     /**
      * ⛓ Until G8 the default 8x6 REFUSED here (the start room's doors did not fit).
-     * Since G8 the start room GROWS — MEASURED: to 12x10 on attempt 18 (two budgets
-     * spent), every other room at 8x6. At 10x10 (the row above) nothing grows.
+     * Since G8 the start room GROWS — MEASURED: to 10x8 on attempt 9 (one budget
+     * spent), every other room at 8x6. (12x10 on attempt 18 while it had SEVEN
+     * doors, before RULES starter-atlas-links sealed r8c0 <-> r1c6.) At 10x10 (the
+     * row above) nothing grows.
      */
-    it('at the default 8x6 the start room GROWS (G8) — to 12x10; nothing else grows', async () => {
+    it('at the default 8x6 the start room GROWS (G8) — to 10x8; nothing else grows', async () => {
         const { rulesJson } = await topDown(1, {});
         const start = rulesJson.preset_sidecars['1'].overworld_start__r8c0.playable_payload;
-        expect(start.size).toEqual({ width: 12, height: 10 });
-        expect(start.generation).toMatchObject({ rerolls: 18, grownFrom: { width: 8, height: 6 } });
+        expect(start.size).toEqual({ width: 10, height: 8 });
+        expect(start.generation).toMatchObject({ rerolls: 9, grownFrom: { width: 8, height: 6 } });
         for (const [id, s] of Object.entries(rulesJson.preset_sidecars['1'])) {
             if (s.substrate !== FLASH_SEEDLING_GEN_SUBSTRATE_ID || id === 'overworld_start__r8c0') continue;
             expect([id, s.playable_payload.size, s.playable_payload.generation.grownFrom]).toEqual([id, { width: 8, height: 6 }, undefined]);

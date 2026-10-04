@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-ab0b2709",
+  "atlas_id": "seedling-9ff3df2a",
   "game": "seedling",
   "name": "Seedling — vanilla (starter)",
   "description": "PARTIAL: the first regions around the game start, authored with the region-marking tool as the seed to grow the full map from. Geometry is derived from seedling-map.json, so every exit tile is a real level-link entity; the sub-region splits and their access rules are computed by the Phase-5a reachability analyzer.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "ab0b2709" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "9ff3df2a" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -68,8 +68,8 @@
       ],
       "locations": [],
       "annotations": {
-        "rules_source": "mixed",
-        "notes": "The room the game starts in. Its split is analyzer-computed: the water, the waterfall and the breakable rocks are all real traversal obstacles, and the one crossing left unlabelled goes through a building, whose per-pixel collision mask is not transcribed."
+        "rules_source": "analyzer",
+        "notes": "The room the game starts in. Its split is analyzer-computed: the water, the waterfall and the breakable rocks are all real traversal obstacles. The one crossing the transcription cannot read goes through a building (its per-pixel collision mask is not transcribed); the physics model settles it as sealed, so it is no crossing."
       },
       "subgraph": {
         "sub_regions": ["r1c6","r2c13","r4c16","r8c0","r11c19","r14c0"],
@@ -107,7 +107,6 @@
               ]
             }
           },
-          { "from": "r1c6", "to": "r8c0", "bidirectional": true, "source": "manual" },
           {
             "from": "r2c13",
             "to": "r4c16",
