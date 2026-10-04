@@ -156,14 +156,14 @@
             0
         ],
         "seal_parts": [
-            0
+            8
         ]
     },
     "rng": {
-        "seed": 1957537603,
+        "seed": 1629551709,
         "split": true,
-        "cosmetic": 68471068,
-        "fp": 584032791
+        "cosmetic": 2128179163,
+        "fp": 466199780
     },
     "seam": {
         "items": {
@@ -189,7 +189,7 @@
         "time": 15425,
         "primary": 0,
         "secondary": 0,
-        "grass_cut": 507,
+        "grass_cut": 516,
         "cutscene": [
             false,
             false,
@@ -204,10 +204,10 @@
     },
     "tick0": {
         "rng": {
-            "seed": 868103962,
+            "seed": 1301078681,
             "split": true,
-            "cosmetic": 1036141676,
-            "fp": 1373896226
+            "cosmetic": 1437089826,
+            "fp": 1287809510
         },
         "seam": {
             "time": 15446
