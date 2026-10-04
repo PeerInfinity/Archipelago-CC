@@ -86,7 +86,8 @@ takeBoxLockOrExit({ name: 'probe-seedling-r6-owl-prefix.mjs', kind: 'browser' })
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
-const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
+// `SEEDLING_PORT` moves the server, as in the differential and the campaign pipeline.
+const PAGE_URL = `http://localhost:${process.env.SEEDLING_PORT || '8000'}/frontend/modules/flashPanel/wasm/`
     + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f'}/game.html`;
 
 const outArg = process.argv.indexOf('--out');
@@ -243,8 +244,17 @@ async function runArm(ticks, inputs) {
 
         let st = null;
         const DEADLINE = Date.now() + 30 * 60 * 1000;
+        // ⛔ Status and mobiles in ONE JS turn, so both describe the same frame
+        // (two awaited calls let a frame land between them — measured on the
+        // sibling `probe-seedling-r6-owl-rng.mjs`, seedling-wasm-leak L4).
+        let mobRaw = null;
         for (;;) {
-            st = await botJson('botStatus');
+            const pair = await page.evaluate(() => {
+                const g = window.__swfBridge.game;
+                return { st: String(g.botStatus()), mob: String(g.botMobiles()) };
+            });
+            st = JSON.parse(pair.st);
+            mobRaw = pair.mob;
             if (st.finished) break;
             if (Date.now() > DEADLINE) {
                 throw new Error(`deadline at tick ${st.tick}/${st.tick_count}, `
@@ -252,7 +262,7 @@ async function runArm(ticks, inputs) {
             }
             await page.waitForTimeout(60);
         }
-        const mob = await botJson('botMobiles');
+        const mob = JSON.parse(mobRaw);
         const drained = await botJson('botDrain');
         return { status: st, mobiles: mob, stream: drained };
     } finally {

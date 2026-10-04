@@ -1120,13 +1120,17 @@ describe('segmentBootFromLatch — the PRE-BUILD half (R7 slice 2b)', () => {
         expect(() => segmentBootFromLatch({
             ...l, beginEntry: { ...l.beginEntry, 'rng.gameplay': 0 },
         })).toThrow(/inherit the page/);
-        // …and a cosmetic state with split off is still the silently-dropped
-        // declaration it always was, read from the entry block now.
-        expect(() => segmentBootFromLatch({
+        // …and a cosmetic state with split off is NOT carried (p4f 3′b: the
+        // tapeless boot runs split by default, so an unsplit latch can hold a
+        // non-zero position the unsplit window never reads). The boot declares
+        // the format's "not declared" 0 — never the dropped value.
+        const unsplit = segmentBootFromLatch({
             ...l,
             seam: { ...l.seam, 'static.Rng.split': false },
             beginEntry: { ...l.beginEntry, 'rng.cosmetic': 99 },
-        })).toThrow(/silently drops/);
+        });
+        expect(unsplit.rng.split).toBe(false);
+        expect(unsplit.rng.cosmetic).toBe(0);
     });
 
     it('⛓⛓ THE CLOCK ROUND-TRIPS THROUGH THE BOOT FRAME, and a wrong constant '

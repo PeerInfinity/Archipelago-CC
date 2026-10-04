@@ -445,7 +445,8 @@ describe('who takes the box', () => {
          * W8 the cold-start adoption probe + witness, `probe-seedling-wasm-adopt.mjs`; fidelity F6
          * its re-entry witness, `probe-seedling-f6-reentry.mjs`;
          * §5.16 the vanilla arm's map witness, `probe-seedling-wasm-vanilla-map.mjs`;
-         * §5.17 the logical sub-region links witness, `probe-seedling-wasm-logical-links.mjs`.)
+         * §5.17 the logical sub-region links witness, `probe-seedling-wasm-logical-links.mjs`;
+         * seedling-wasm-leak L4 the since-begin witness, `probe-seedling-since-begin.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -461,7 +462,8 @@ describe('who takes the box', () => {
             'probe-seedling-wasm-arrival-composites.mjs', 'probe-seedling-wasm-level0.mjs',
             'probe-seedling-f2-apitem.mjs', 'probe-seedling-f2-boundary.mjs',
             'probe-seedling-wasm-continuation.mjs', 'check-seedling-atlas-maze.mjs',
-            'probe-seedling-wasm-adopt.mjs', 'probe-seedling-f6-reentry.mjs', 'probe-seedling-wasm-vanilla-map.mjs', 'probe-seedling-wasm-logical-links.mjs'];
+            'probe-seedling-wasm-adopt.mjs', 'probe-seedling-f6-reentry.mjs', 'probe-seedling-wasm-vanilla-map.mjs', 'probe-seedling-wasm-logical-links.mjs',
+            'probe-seedling-since-begin.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')

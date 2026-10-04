@@ -331,7 +331,9 @@ export const SEAM_SIGNATURE = Object.freeze([
         field: 'rng.cosmetic', group: 'rng', comparable: 'split-qualified-equality',
         qualifier: 'static.Rng.split', prebuild: true,
         readout: 'Rng.cosmeticState / the cosmetic hooks', cite: 'Rng.as:98-116',
-        why: '⛔⛔ THE SECOND GENERATOR IS NOT RUNNING WHILE `split` IS OFF, and R7 '
+        why: '⛔⛔ THE SECOND GENERATOR IS NOT READ WHILE `split` IS OFF (p4f: its '
+            + 'position may be non-zero, from the tapeless boot that now runs split by '
+            + 'default — still not part of an unsplit window), and R7 '
             + 'slice 2\'s seam probe is what made that a checkable fact instead of a '
             + 'sentence. With `Rng.split` false (the default, and what all 118 fixtures '
             + 'run), `Rng.cos()` draws from the GAMEPLAY stream and `cosmeticState` '
@@ -1122,15 +1124,17 @@ export function segmentBootFromLatch(envelope) {
     // ⛔ A COSMETIC STATE WITH NO SPLIT IS A DECLARATION THE GAME DROPS.
     // `botStart` writes it only under `if (rngSplit)` (`Bot.as:1698`), so a
     // tape naming one without `split` names a state that never lands — the
-    // silent-ignore shape the whole tape format exists to refuse. With
-    // `split` false the generator is not running at all and its 0 is
-    // correct, which is why this refuses only the NON-zero case.
-    if (!rng.split && rng.cosmetic !== 0) {
-        refuse(`⛔ the latch carries \`rng.cosmetic\` ${rng.cosmetic} with `
-            + '`static.Rng.split` false. `botStart` applies a cosmetic state only under '
-            + '`if (rngSplit)`, so a segment declaring this would boot a state the game '
-            + 'silently drops.');
-    }
+    // silent-ignore shape the whole tape format exists to refuse.
+    // ⛓ p4f (seedling-wasm-leak L4 3′b): the split is ON by default when no tape
+    // is armed, so the page's TAPELESS boot world now draws from the cosmetic
+    // generator before any window starts, and an UNSPLIT latch carries its
+    // non-zero position (605713666 for the bot builds' boot). That state is
+    // NOT part of an unsplit segment: its window never reads the generator
+    // (`Rng.cos()` is `Math.random()` there), and the seam row qualifies
+    // `rng.cosmetic` on `static.Rng.split` for exactly that reason (N/A). So the
+    // inverse agrees with the seam: an unsplit latch boots `cosmetic: 0`, the
+    // format's "not declared" value — it is not carried, rather than refused.
+    if (!rng.split) rng.cosmetic = 0;
 
     // ── the v8 block, keyed by SEAM_BOOT_SPEC, refusing what it cannot say
     const flat = {};

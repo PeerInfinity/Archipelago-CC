@@ -442,8 +442,9 @@ describe('finalBossFight — the room, and the phase loop', () => {
 
     it('the level build is consumed BEFORE tick 0', () => {
         const room = createOwlRoom({ tiles: world.tiles, seed: 55 });
-        expect(room.stream.count).toBe(2);
-        expect(room.stream.log.map((d) => d.site)).toEqual(['enemyCoins', 'orbRandVal']);
+        // ⛓ p4f 3′a: the Orb's draw is cosmetic, so the build is ONE gameplay draw.
+        expect(room.stream.count).toBe(1);
+        expect(room.stream.log.map((d) => d.site)).toEqual(['enemyCoins']);
     });
 
     it('refuses a room with no tiles, by name', () => {

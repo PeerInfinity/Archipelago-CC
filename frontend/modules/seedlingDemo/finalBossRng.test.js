@@ -6,10 +6,10 @@ import { fileURLToPath } from 'node:url';
 import { SeedlingRng } from './rng.js';
 import {
     ENEMY_COINS_BASE, ENEMY_COINS_SPAN, GRENADE_FREQUENCY, OWL_DRAW_SITES,
-    OWL_JIGGLE_SITES, OWL_PHASE_SITES, OwlDrawStream, OwlRngError, ROCK_FREQUENCY,
+    OWL_PHASE_SITES, OwlDrawStream, OwlRngError, ROCK_FREQUENCY,
     OWL_LEVEL_BUILD_DRAWS, OWL_LEVEL_BUILD_SITES,
     ROCK_RADIUS, ROCK_SCALE_BASE, ROCK_SCALE_SPAN, ROCK_STEPS_AHEAD,
-    as3Int, assertOwlStreamPremises, owlTickDraws, owlTickSites,
+    as3Int, assertOwlStreamPremises, owlTickDraws, owlTickSites, shakeJiggle,
 } from './finalBossRng.js';
 import { createOwlRoom, stepOwlRoom } from './finalBossFight.js';
 import { buildLevelWorld, ROLES } from './levelWorld.js';
@@ -210,8 +210,6 @@ describe('finalBossRng — the schedule', () => {
         s.grenadeRoll();
         s.enemyCoins();
         s.deathRockX();
-        s.orbRandVal();
-        s.jiggle(3);
         const emitted = new Set(s.log.map((d) => d.site));
         expect([...emitted].sort()).toEqual(Object.keys(OWL_DRAW_SITES).sort());
     });
@@ -222,7 +220,6 @@ describe('finalBossRng — the schedule', () => {
                 expect(OWL_DRAW_SITES[site], `${phase} -> ${site}`).toBeTruthy();
             }
         }
-        for (const site of OWL_JIGGLE_SITES) expect(OWL_DRAW_SITES[site]).toBeTruthy();
     });
 
     it('prices the four phases that cost nothing, and says why', () => {
@@ -244,23 +241,27 @@ describe('finalBossRng — the schedule', () => {
         expect(owlTickDraws('deathAnim', false)).toBe(10);
     });
 
-    it('the jiggle is a property of the FRAME, appended last', () => {
-        // ⛔ Not folded into the phase rows: it fires on ticks the boss is
-        // frozen, dead or coasting, and folding it in would make "0 draws
-        // while coasting" false in exactly the case a plan leans on.
-        expect(owlTickSites('coast', true)).toEqual(['jiggleX', 'jiggleY']);
-        expect(owlTickSites('barrageSpawn', true))
-            .toEqual(['barrageRoll', 'spawnX', 'spawnY', 'rockScale', 'jiggleX', 'jiggleY']);
-        expect(owlTickDraws('intro', true)).toBe(2);
+    it('the jiggle draws NOTHING since p4f (seedling-wasm-leak L4 3′c) — a shaking frame costs its phase only', () => {
+        // ⛓ Under `rng.split` the jiggle is `Game.shakeJiggle(Game.time, axis)`.
+        // The `+2` per shaking frame the table used to append is gone, and with
+        // it the jiggle sites themselves.
+        expect(owlTickSites('coast')).toEqual([]);
+        expect(owlTickSites('barrageSpawn')).toEqual(['barrageRoll', 'spawnX', 'spawnY', 'rockScale']);
+        expect(owlTickDraws('intro')).toBe(0);
+        expect(OWL_DRAW_SITES.jiggleX).toBeUndefined();
+        expect(OWL_DRAW_SITES.jiggleY).toBeUndefined();
     });
 
-    it('the level build is TWO draws, both attributed, and the room consumes them', () => {
+    it('the level build is ONE draw since p4f — the Orb moved to the cosmetic stream — and the room consumes it', () => {
         // ⛔ `Game.begin()` — not the constructor — is where `loadlevel` lives,
         // so `Bot.botStart`'s `Rng.setState` lands BEFORE the world is built
         // and the build's own draws are on the seeded stream. The shipped
         // comment at `Bot.as:1160` says the opposite.
-        expect(OWL_LEVEL_BUILD_SITES).toEqual(['enemyCoins', 'orbRandVal']);
-        expect(OWL_LEVEL_BUILD_DRAWS).toBe(2);
+        // ⛓ p4f 3′a: `Orb.randVal` is `Rng.cos()` (an Orb has no hitbox), so under
+        // the split it is on the other generator. Measured: the oracle's 2-tick
+        // intro arm reads 1 draw on p4f (2 on p4e).
+        expect(OWL_LEVEL_BUILD_SITES).toEqual(['enemyCoins']);
+        expect(OWL_LEVEL_BUILD_DRAWS).toBe(1);
         const s = new OwlDrawStream(777);
         s.levelBuild();
         expect(s.count).toBe(OWL_LEVEL_BUILD_DRAWS);
@@ -322,13 +323,18 @@ describe('finalBossRng — the arithmetic at each site', () => {
         }
     });
 
-    it('the jiggle draws x then y and is centred on zero', () => {
-        const s = new OwlDrawStream(2024);
-        const { dx, dy } = s.jiggle(4);
-        expect(s.log.map((d) => d.site)).toEqual(['jiggleX', 'jiggleY']);
-        for (const d of [dx, dy]) {
-            expect(d).toBeGreaterThanOrEqual(-2);
-            expect(d).toBeLessThan(2);
+    it('shakeJiggle is Game.shakeJiggle — the AS3 expression, in [0, 1), integer-exact', () => {
+        // `(floor(t) * 2531 + axis * 1777) % 4093 / 4093` (fork `Game.as`, 3′c).
+        expect(shakeJiggle(0, 0)).toBe(0);
+        expect(shakeJiggle(0, 1)).toBe(1777 / 4093);
+        expect(shakeJiggle(4928, 0)).toBe(((4928 * 2531) % 4093) / 4093);
+        expect(shakeJiggle(4928.9, 0)).toBe(shakeJiggle(4928, 0));
+        for (let t = 0; t < 5000; t += 37) {
+            for (const axis of [0, 1]) {
+                const v = shakeJiggle(t, axis);
+                expect(v).toBeGreaterThanOrEqual(0);
+                expect(v).toBeLessThan(1);
+            }
         }
     });
 
