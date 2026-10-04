@@ -140,23 +140,75 @@ async function main() {
             out('H start', g0);
             const back = cross.dir === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft';
             const centre = ([tx, ty]) => ({ x: tx * 16 + 8, y: ty * 16 + 8 });
+            const trace = [];
             const reach = async (key, tile, ceilingMs) => rp.holdUntil(key, async () => {
-                const t = tileOf(await rp.livePlayer());
+                const p = await rp.livePlayer();
+                const t = tileOf(p);
+                if (p && JSON.stringify(trace.at(-1)?.t) !== JSON.stringify(t)) trace.push({ key, t, p });
                 return t && t[0] === tile[0] && t[1] === tile[1] ? t : null;
             }, ceilingMs);
+            /**
+             * Put the player on `tile`: a `new Game(0, x, y)` spawn is not the entity's centre, so the first jump
+             * MEASURES the offset (live − asked) and a second one corrects it. `{asked, live, offset}`.
+             */
+            const standOn = async (tile) => {
+                const want = centre(tile);
+                await rp.jump(0, want.x, want.y);
+                await page.waitForTimeout(1500);
+                const live = await rp.livePlayer();
+                const off = { x: (live?.x ?? want.x) - want.x, y: (live?.y ?? want.y) - want.y };
+                if (JSON.stringify(tileOf(live)) !== JSON.stringify(tile)) {
+                    await rp.jump(0, want.x - off.x, want.y - off.y);
+                    await page.waitForTimeout(1500);
+                }
+                const at = await rp.livePlayer();
+                return { asked: want, firstLive: live, offset: off, at, tile: tileOf(at) };
+            };
             const movesNow = async () => (await rp.glueMoves()).map((m) => ({ from: m.sourceRegion, to: m.targetRegion,
                 exit: m.exitName, logical: m.logical === true }));
 
+            // 0. The new game's ceremony (this base has no skip-intro: §5.15's cutscene, then Help(2)'s freeze
+            //    until an arrow): waited out with the engine's own reading (`wasmPlayback.newGameCeremony`), the
+            //    Help dismissed by ONE arrow pair, then two quiet reads. A no-op once the intro is skipped.
+            const { newGameCeremony } = await import('../../frontend/modules/seedlingDemo/wasmPlayback.js');
+            const ceremony = { seen: [], dismissed: 0, ms: 0 };
+            const c0 = Date.now();
+            await rp.focusGame();
+            for (let quiet = 0; quiet < 2 && Date.now() - c0 < 180000;) {
+                // eslint-disable-next-line no-await-in-loop
+                const st = JSON.parse(await rp.gameFrame().evaluate(() => window.__swfBridge.game.botStatus()));
+                // eslint-disable-next-line no-await-in-loop
+                const what = newGameCeremony({ status: st, state: await rp.readGameState() });
+                if (what && ceremony.seen.at(-1) !== what) ceremony.seen.push(what);
+                quiet = what ? 0 : quiet + 1;
+                if (what === 'tutorial' && ceremony.dismissed === 0) {
+                    ceremony.dismissed += 1;
+                    // eslint-disable-next-line no-await-in-loop
+                    await page.keyboard.down('ArrowRight');
+                    // eslint-disable-next-line no-await-in-loop
+                    await page.waitForTimeout(100);
+                    // eslint-disable-next-line no-await-in-loop
+                    await page.keyboard.up('ArrowRight');
+                }
+                // eslint-disable-next-line no-await-in-loop
+                await page.waitForTimeout(500);
+            }
+            ceremony.ms = Date.now() - c0;
+            out('H ceremony', ceremony);
+
             // 1. WITHOUT the item.
-            await rp.jump(0, centre(cross.fromTile).x, centre(cross.fromTile).y);
-            await page.waitForTimeout(1500);
+            const stood = await standOn(cross.fromTile);
+            out('H stand', stood);
+            check('H: the player stands on the crossing\'s r8c0 tile', JSON.stringify(stood.tile) === JSON.stringify(cross.fromTile),
+                JSON.stringify(stood));
             await rp.focusGame();
             const before = await movesNow();
             const dry = await reach(cross.dir, cross.toTile, 4000);
             await page.waitForTimeout(1000);
             const dryMoves = (await movesNow()).slice(before.length);
             const gDry = await glue();
-            out('H without the item', { reached: dry.value, at: tileOf(await rp.livePlayer()), moves: dryMoves, glue: gDry });
+            out('H without the item', { reached: dry.value, at: tileOf(await rp.livePlayer()), moves: dryMoves, glue: gDry,
+                trace: trace.splice(0).map((x) => x.t) });
             check('H: WITHOUT Progressive Swim no logical move is credited, wherever the player got',
                 dryMoves.length === 0 && gDry.region === START, JSON.stringify({ dryMoves, region: gDry.region }));
 
@@ -166,8 +218,7 @@ async function main() {
                 await proxy.addItemToInventory('Progressive Swim');
             });
             await rp.waitFor('the game can swim', async () => ((await rp.readGameState()).canSwim === true ? true : null), 20000);
-            await rp.jump(0, centre(cross.fromTile).x, centre(cross.fromTile).y);
-            await page.waitForTimeout(1500);
+            out('H stand again', await standOn(cross.fromTile));
             const g1 = await glue();
             check('H: back on r8c0 after the jump, the AP region unmoved', g1.region === START, JSON.stringify(g1));
             await rp.focusGame();
@@ -183,6 +234,7 @@ async function main() {
             const region2 = await rp.currentRegion();
             const wet = (await movesNow()).slice(base);
             out('H with the item', { over: over.value, back: ret.value, moves: wet, gameState: [region1, region2],
+                trace: trace.splice(0).map((x) => `${x.key[5]}${x.t}`),
                 glue: gBack, teleports: gBack.stats.teleports - teleports0, positionReads: gBack.stats.positionReads });
             const OUT = 'level_0__r14c0';
             check('H: the walk reached the other sub-region and came back', !!over.value && !!ret.value,

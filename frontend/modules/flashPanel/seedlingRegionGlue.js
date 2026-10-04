@@ -65,9 +65,10 @@ export const AP_ITEM_FOUND_EVENT = 'flashSeedling:apItemFound';
 export const DOOR_LOCKED_EVENT = 'flashSeedling:doorLocked';
 
 /**
- * ⛓ LOGICAL LINKS — how often the player's position is read on a level with sub-regions. MEASURED
- * (§5.17): a wasm `botStatus` costs ~MEASURED ms of the page's main thread, so four reads a second are
- * a few percent of it; the JS runtime's is free.
+ * ⛓ LOGICAL LINKS — how often the player's position is read on a level with sub-regions. A wasm
+ * `botStatus` costs 14–16 ms of the page's main thread (measured at W1, `flash.md` § Wasm playback: "read
+ * it once per arrival, never per frame"), so four reads a second are ~6 % of it, and only on a level with
+ * sub-regions and no bot walk in flight. The JS runtime's read is a property access.
  */
 export const POSITION_POLL_MS = 250;
 
