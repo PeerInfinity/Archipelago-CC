@@ -1,5 +1,6 @@
 /**
- * Seedling fidelity F7: a LATCHED publisher re-publishes its group on RE-ENTRY.
+ * Seedling fidelity F7: a LATCHED publisher re-publishes its group on RE-ENTRY,
+ * and the APItem take writes its clear.
  *
  *   · D-A (the rope): `RopeStart.check()` (`Puzzlements/RopeStart.as:31-38`)
  *     calls `hit()` on a new `Game`'s first frame when the rope's tag is
@@ -11,6 +12,11 @@
  *     (recorded by `check-seedling-bot-differential --record`; tapeRunner holds
  *     the model to them) and `fixtures/f7-reentry-oracle.json`
  *     (`probe-seedling-f7-reentry.mjs --record`: each witness without `{16,0}`).
+ *   · D-B (the apitem take): `APItem.removed()` (`Pickups/APItem.as:127-133`)
+ *     clears its tag on the take frame; the solver's observer now writes that
+ *     clear into the run (`run.takeApItem`), so a revisit in the same run
+ *     builds the room without the item. The game's side is F2's bracket
+ *     (`fixtures/f2-apitem-oracle.json`: `takenAt + 1` ticks clear the slot).
  */
 
 import { describe, expect, it } from 'vitest';
@@ -24,10 +30,12 @@ import { createActivatorState, latchAtBuild } from './activators.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { solveSegment } from './solverBot.js';
+import { f2ApItemCase } from './fidelityF2.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
 const BASE = parseTape(readFileSync(join(HERE, 'fixtures', 'witness-bases', 'r9-solve-32.f6.json'), 'utf8'));
+const F2_ORACLE = JSON.parse(readFileSync(join(HERE, 'fixtures', 'f2-apitem-oracle.json'), 'utf8'));
 const ORACLE = JSON.parse(readFileSync(join(HERE, 'fixtures', 'f7-reentry-oracle.json'), 'utf8'));
 const SRC = atlasLevelSource();
 const TRAPS = ['arrowtrap@96,32', 'arrowtrap@112,32', 'arrowtrap@128,32'].sort();
@@ -116,5 +124,48 @@ describe('fidelity F7 — D-A: a pulled rope re-publishes its group at build', (
         expect(st.byId.get('lock@32,80')).toMatchObject({ alpha: 0.99, held: 1 });
         expect(latchAtBuild(st, 0, world)).toBe(false);
         expect(st.byId.get('lock@32,80')).toMatchObject({ alpha: 0.99, held: 1 });
+    });
+});
+
+describe('fidelity F7 — D-B: the apitem take writes its clear into the run', () => {
+    const c = f2ApItemCase(ROOT, 'seedling_generated_room');
+    const row = F2_ORACLE.rooms.find((r) => r.preset === 'seedling_generated_room');
+    /** Take the L0 apitem, leave for L1 (`teleporter@128,16`), and come back (`teleporter@64,48`). */
+    const roundTrip = () => {
+        const run = createRunForStaging(c.staging, c.levelSource, { scratchPersistence: true });
+        const out = solveSegment({
+            run, name: 'f7-apitem-out', boot: c.staging.boot,
+            goals: [{ kind: 'collect-placement', placement: { x: c.apItem.x, y: c.apItem.y } },
+                { kind: 'reach-exit', exit: { x: 128, y: 16 } }],
+        });
+        const away = { level: run.level, earned: run.ledger('earnedClears'), banked: run.ledger('bankedClears') };
+        solveSegment({ run, name: 'f7-apitem-back', boot: c.staging.boot, prefix: out.perTick,
+            goals: [{ kind: 'reach-exit', exit: { x: 64, y: 48 } }] });
+        return { run, out, away };
+    };
+    it('the game clears the slot after `takenAt + 1` ticks (F2\'s bracket, quoted)', () => {
+        expect([row.takenAt, row.take, row.before]).toEqual([254,
+            { ticks: 255, cleared: true, error: '' }, { ticks: 254, cleared: false, error: '' }]);
+    });
+    it('the take banks {0,0} on its own tick: an earned clear, by the apitem, cashed by the next build', () => {
+        const { out, away } = roundTrip();
+        expect(out.records[0]).toMatchObject({ strategy: 'apitem', takenAt: row.takenAt, level: 0 });
+        expect(away.level).toBe(1);
+        expect(away.earned).toEqual([{ level: 0, tag: 0, by: c.apItem.id, t: row.takenAt + 1 }]);
+        expect(away.banked).toEqual([{ level: 0, tag: 0 }]);
+    });
+    it('the revisit in the same run builds L0 WITHOUT the item (`despawn`)', () => {
+        const { run } = roundTrip();
+        expect(run.level).toBe(0);
+        expect(run.world.apItems).toEqual([]);
+    });
+    it('`takeApItem`: a second report is a no-op; tag -1 banks nothing; another level refuses', () => {
+        const run = createRunForStaging(c.staging, c.levelSource, { scratchPersistence: true });
+        const first = run.takeApItem({ level: 0, id: c.apItem.id, tag: 0 });
+        expect(run.takeApItem({ level: 0, id: c.apItem.id, tag: 0 })).toEqual(first);
+        expect(first).toMatchObject({ level: 0, tag: 0, banked: true });
+        expect(run.takeApItem({ level: 0, id: 'apitem@0,0', tag: -1 })).toMatchObject({ banked: false });
+        expect(run.ledger('bankedClears')).toEqual([{ level: 0, tag: 0 }]);
+        expect(() => run.takeApItem({ level: 1, id: c.apItem.id, tag: 0 })).toThrow(/reported taken in level 1/);
     });
 });
