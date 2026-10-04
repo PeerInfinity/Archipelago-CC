@@ -323,7 +323,18 @@ export function arrivalStagingWitness(staging, { seam, status, state }) {
     row('seam.rock_set = readState.rockSet', state?.rockSet, staging.seam?.rock_set);
     row('rng.split = botStatus.rng.split', status.rng?.split, staging.rng?.split);
     row('rng.seed = begin rng.gameplay', be['rng.gameplay'], staging.rng?.seed);
-    row('rng.cosmetic = begin rng.cosmetic', be['rng.cosmetic'], staging.rng?.cosmetic);
+    // ⛓ QUALIFIED ON THE STAGED SPLIT, as the seam row is (`r7Acceptance`'s
+    // `rng.cosmetic`, qualifier `static.Rng.split`). An UNSPLIT continuation never
+    // reads the cosmetic generator, so its state is N/A there — and since p4f (3′b,
+    // the split ON by default for tapeless play) a live arrival's begin carries a
+    // non-zero cosmetic position that `segmentBootFromLatch` rightly stages as 0.
+    if (staging.rng?.split === false) {
+        rows.push({ name: 'rng.cosmetic = begin rng.cosmetic', ok: staging.rng?.cosmetic === 0,
+            detail: `N/A — the staged window is unsplit, so the cosmetic generator is not part of it `
+                + `(begin carries ${JSON.stringify(be['rng.cosmetic'])}; staged ${JSON.stringify(staging.rng?.cosmetic)})` });
+    } else {
+        row('rng.cosmetic = begin rng.cosmetic', be['rng.cosmetic'], staging.rng?.cosmetic);
+    }
     row('rng.fp = begin fp.seed', be['fp.seed'], staging.rng?.fp);
     rows.push({ name: 'seam.time = begin save.time − BOOT_PRESWAP_FRAMES (segmentBootFromLatch\'s convention)',
         ok: Number.isFinite(staging.seam?.time) && staging.seam.time < be['save.time'],

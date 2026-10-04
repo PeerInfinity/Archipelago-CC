@@ -8,7 +8,7 @@
  *     exactly, ending on the apitem's contact or the door's crossing — or a
  *     named refusal (a new member fails until it is classified);
  *   · the producer's keys ARE the JS page's own walk, tick for tick;
- *   · the RECORDED wasm arrivals (`fixtures/wasm-arrival-gen-p4e.json`) stage
+ *   · the RECORDED wasm arrivals (`fixtures/wasm-arrival-gen-p4f.json`) stage
  *     and walk, the apitem clear lifted from the MODEL's staging only;
  *   · the refusals that remain, by name; (b)'s loss (the solver has no goal
  *     kind for an apitem); the real worker entry answers the in-place plan.
@@ -42,7 +42,7 @@ const GAME_CONFIG = readJson('frontend/modules/flashPanel/games/seedling.json');
 const BRIDGE_CONFIG = JSON.stringify({ classes: GAME_CONFIG.classes, state_properties: GAME_CONFIG.state_properties });
 const PRESETS = ['seedling_generated_room', 'seedling_generated_leaf', 'seedling_generated_host', 'seedling_generated_swim'];
 const FLAGS = Object.fromEntries(Object.values(ITEM_PROPERTIES).map((s) => [s.property, s.kind === 'add' ? s.base : false]));
-const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-gen-p4e.json').arrivals;
+const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-gen-p4f.json').arrivals;
 
 function presetOf(name) {
     const rules = readJson(`frontend/presets/${name}/AP_1/AP_1_rules.json`);
