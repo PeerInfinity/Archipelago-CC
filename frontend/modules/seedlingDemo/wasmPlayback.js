@@ -715,6 +715,56 @@ export function isExactRepeat(prev, d) {
     return prev.t === d.t && prev.got?.level === d.got?.level && prev.got?.x === d.got?.x && prev.got?.y === d.got?.y;
 }
 
+/**
+ * ⛓ ANYTIME / O2 — a wasm solve past its budget is a HELD RETRY, not the end
+ * of the walk. While the worker thinks, the game is held by the freeze tape
+ * (W2) — a longer solve costs wall clock only, never correctness — so the
+ * expired goal is asked again ONCE, from the same staging, with the budget ×
+ * `SOLVE_RETRY_BUDGET_FACTOR`. Why 4 (the L16 budget report §1.2/§4 (d),
+ * measured on the captured live arrival): the full L16 search finishes in
+ * 10.6–17.8 s at load 3–7 and its dashless pass in 4.6–5.9 s, so 4 × 5 s =
+ * 20 s holds the full search at the measured loads and the dashless pass with
+ * 3.4× headroom — and a retry RESUMES the passes (`passesAfter`), so a
+ * pass that already answered (a dashless DECLINE) is not paid again. 2× (10 s) would lose the full
+ * search on every measured run; 8× (40 s) would hold a slow REFUSAL (S4's
+ * L16 pit, 14 s) twice as long and still lose L71 kit (68.7 s full — its
+ * dashless pass is what plays there). Only the expired legs pay: L16 worst
+ * case 5 + 20 s of a held room.
+ */
+export const SOLVE_RETRY_BUDGET_FACTOR = 4;
+/** ⛓ O2 — held retries per solve (each at `SOLVE_RETRY_BUDGET_FACTOR`× the one before); the next expiry is the failure. */
+export const MAX_SOLVE_RETRIES = 1;
+
+/**
+ * ⛓ ANYTIME / O2 — what a wasm solve past its budget does.
+ *   'provisional'  a pass already landed a PLAN (`handle.provisional`): play
+ *                  it — the later pass's search is the only thing given up;
+ *   'retry'        no plan in hand and a held retry left: ask again, held;
+ *   'give-up'      the retries are spent: the goal ends by name
+ *                  (`expiryFailure`) — a continuation falls back (W7).
+ * @param {{provisional?:object|null, retries:number}} o
+ * @returns {'provisional'|'retry'|'give-up'}
+ */
+export function expiryAction({ provisional = null, retries = 0 }) {
+    if (provisional?.ok) return 'provisional';
+    return retries < MAX_SOLVE_RETRIES ? 'retry' : 'give-up';
+}
+
+/**
+ * ⛓ O2 — the named failure of a solve that ran out of every budget. A pass
+ * that DECLINED before the expiry is the solver's word and leads (the door-only
+ * L14 decline races the budget, report §1.3): its reason, then the budgets spent.
+ */
+export function expiryFailure({ goal, budgets = [], refusal = null }) {
+    const spent = budgets.map((ms) => `${Math.round(ms / 100) / 10} s`).join(', then ');
+    const over = `the solver exceeded ${spent}${budgets.length > 1 ? ' on its held retry' : ''} on ${goal?.kind} in level ${goal?.level} (terminated)`;
+    if (refusal && refusal.kind === 'refusal') {
+        return `the solver declined ${goal?.name ?? goal?.kind} in level ${goal?.level} (pass ${refusal.pass ?? '?'}): `
+            + `${String(refusal.message).split('\n')[0]} — and ${over}`;
+    }
+    return over;
+}
+
 /** The named failure for a goal that diverged after spending every recovery. */
 export function divergenceFailure({ goal, recoveries, divergence }) {
     const d = divergence;

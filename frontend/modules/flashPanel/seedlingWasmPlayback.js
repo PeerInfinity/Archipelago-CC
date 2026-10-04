@@ -24,7 +24,15 @@
  *      stands still while the worker thinks (⚖ W-Q2).
  *   4. SOLVE in the S2 Worker (`createWorkerSolveService`), budget
  *      `SOLVER_BUDGET_MS` from the worker's own start (a cold module load is
- *      not charged, `LOAD_BUDGET_MS` bounds it).
+ *      not charged, `LOAD_BUDGET_MS` bounds it). ⛓ ANYTIME: the worker runs
+ *      the solver's passes cheapest first (`ANYTIME_PASSES`: dashless, then
+ *      full); past the budget a plan a pass already found PLAYS (the room is
+ *      held, so it is from this very staging), else ⛓ O2 the room stays held
+ *      and the solve is asked AGAIN once at `SOLVE_RETRY_BUDGET_FACTOR`× the
+ *      budget, resuming at the first unanswered pass; only that retry's
+ *      expiry ends the goal, by name (`expiryFailure`, a pass's decline
+ *      first). ⛓ O3 the budget is the `flashPanel.seedlingWasmSolverBudgetMs`
+ *      knob when set (`getBudgetMs`).
  *   5. SHIP the plan as ONE tape from the same staging, declarations re-checked
  *      against a fresh `botStatus` (`exactDeclarationRefusal`); `botLoadTape`
  *      keeps the hold, `botStart` releases it and arms on the SAME world.
@@ -87,9 +95,11 @@ import {
     adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
-    shippedTape, TAPE_KEY_RELEASES, wasmGoalRefusal,
+    shippedTape, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
 } from '../seedlingDemo/wasmPlayback.js';
-import { LOAD_BUDGET_MS, replayTape, SOLVER_BUDGET_MS } from '../seedlingDemo/jsRuntimeSolver.js';
+import {
+    ANYTIME_PASSES, betterAnswer, LOAD_BUDGET_MS, passesAfter, replayTape, SOLVER_BUDGET_MS,
+} from '../seedlingDemo/jsRuntimeSolver.js';
 import { createWorkerSolveService } from '../seedlingDemo/jsRuntimeSolveService.js';
 import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.js';
 import { parsePendingCheck } from './seedlingCheckBinding.js';
@@ -110,6 +120,7 @@ export const ADOPT_POLL_MS = 100;
 export const STATUS_MS = 500;
 
 const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
+const secs = (ms) => `${Math.round(ms / 100) / 10} s`;
 
 /**
  * @param {object} deps
@@ -126,14 +137,25 @@ const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
  * @param {(reason:string) => void} [deps.onFailed]
  * @param {(e:object) => void} [deps.onDone]
  * @param {(msg:string, level?:string) => void} [deps.log]
- * @param {number} [deps.budgetMs]
+ * @param {number} [deps.budgetMs]  one solve's budget (`SOLVER_BUDGET_MS`)
+ * @param {() => number|null} [deps.getBudgetMs]  ⛓ O3 — the live knob (`flashPanel.seedlingWasmSolverBudgetMs`),
+ *   read at each solve's start; a non-positive / non-finite answer = `budgetMs`
  */
 export function createWasmPlayback({
     getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, records, generated = false,
     solveService = null, timers = null,
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetMs = SOLVER_BUDGET_MS,
+    getBudgetMs = null,
 }) {
+    /** ⛓ O3 — the budget a solve starts with: the knob's live value, else the engine's own. */
+    let ownBudget = budgetMs;
+    const baseBudget = () => {
+        let v = null;
+        try { v = getBudgetMs?.() ?? null; } catch { v = null; }
+        const n = Number(v);
+        return v !== null && Number.isFinite(n) && n > 0 ? n : ownBudget;
+    };
     const levelSource = levelSourceFromAtlas(records);
     let service = solveService;
     const svc = () => { service ??= createWorkerSolveService(); return service; };
@@ -197,7 +219,9 @@ export function createWasmPlayback({
         // ⛓ W8 — cold starts adopted as they stand, and the clause each refused one failed
         adopted: 0, adoptRefused: [],
         // ⛓ W8c — the new-game arm's ceremonies waited out, and the tutorial Helps dismissed (one arrow pair each)
-        ceremonies: [], dismissed: [] };
+        ceremonies: [], dismissed: [],
+        // ⛓ ANYTIME / O2 — expiries, the provisional plans they played, the held retries, and each plan's pass
+        expiries: 0, provisionalPlays: 0, retries: 0, passes: {} };
     const history = [];
     /** ⛓ WG — the reads of the last few arrivals (the probe's fixture recorder; never read back here). */
     const arrivalReads = [];
@@ -715,7 +739,7 @@ export function createWasmPlayback({
             enterHeld();
             const done = { goal: g, producer: leg.plan.producer ?? 'solver', stepOff: leg.plan.stepOff ?? null, ticks: leg.ticks,
                 drained: leg.progress.ticks, verbs: leg.plan.verbs, solvedMs: leg.solvedMs, divergence: leg.divergence, recoveries,
-                end: { level, x: st.x, y: st.y }, expectedEnd: leg.plan.expected.at(-1), heldArrival: level };
+                end: { level, x: st.x, y: st.y }, expectedEnd: leg.plan.expected.at(-1), heldArrival: level, ...solvedBy(leg) };
             stats.done += 1;
             history.push({ ...done, outcome: 'done' });
             try { onDone(done); } catch { /* a listener's bug */ }
@@ -818,14 +842,51 @@ export function createWasmPlayback({
         startSolve(c.request, { staging: r.staging, continuation: true, prefix: r.shipped.length });
     }
 
+    /**
+     * ⛓ ANYTIME — how a leg's plan was made, for its history row: the PASS (`dashless` / `full`; null for
+     * the walker / step-off producers), whether a later pass was cut at the budget (`expired`), the held
+     * retries spent, and every budget the solve ran under.
+     */
+    function solvedBy(p) {
+        return { pass: p.pass ?? null, expired: p.expired === true, retries: p.retries ?? 0, budgets: p.budgets ? [...p.budgets] : [],
+            passes: p.plan?.passes ?? null };
+    }
+
     function startSolve(request, playInit) {
         stats.solves += 1;
-        play = { ...playInit, t0: now() };
-        handle = svc().start(request);
+        const budget = baseBudget();
+        // ⛓ ANYTIME — a solver request carries its passes (a held retry sends the ones not yet answered).
+        const req = request.producer ? request : { ...request, passes: request.passes ?? ANYTIME_PASSES };
+        play = { ...playInit, t0: now(), request: req, budget, budgets: [budget], retries: 0, best: null };
+        handle = svc().start(req);
         phase = 'solving';
         note(`${generated ? 'walking a tape' : playInit.continuation ? 'solving on from the held room' : 'solving'}… `
-            + `(budget ${Math.round(budgetMs / 1000)} s)`);
+            + `(budget ${secs(budget)})`);
         schedule(pollSolve, SOLVE_POLL_MS);
+    }
+
+    /**
+     * ⛓ O2 — the HELD RETRY: the freeze (or the held end) still holds the room, so the same
+     * staging is asked again with `SOLVE_RETRY_BUDGET_FACTOR`× the budget, resuming at the first
+     * pass that had not answered. What a pass answered before the cut is kept (`play.best`).
+     */
+    function retrySolve(cut) {
+        stats.retries += 1;
+        play.retries += 1;
+        if (betterAnswer(play.best, cut.provisional)) play.best = cut.provisional;
+        const req = play.request.producer ? play.request
+            : { ...play.request, passes: passesAfter(play.request.passes, cut.answered) };
+        if (!req.producer && req.passes.length === 0) return false;
+        play.request = req;
+        play.budget *= SOLVE_RETRY_BUDGET_FACTOR;
+        play.budgets.push(play.budget);
+        play.t0 = now();
+        handle = svc().start(req);
+        log(`[wasm playback] ${goal.name ?? goal.kind}: the solver exceeded ${secs(play.budgets.at(-2))} in level ${goal.level} `
+            + `— asking again with ${secs(play.budget)}, the room held (retry ${play.retries})`, 'warn');
+        note(`solving again, the room held… (budget ${secs(play.budget)}, retry ${play.retries})`);
+        schedule(pollSolve, SOLVE_POLL_MS);
+        return true;
     }
 
     /**
@@ -853,20 +914,43 @@ export function createWasmPlayback({
         const t = now();
         // ⛓ W7 — the glue asked for a swap while we hold (a redirect that raced the hold): let it land.
         if (holds && room && releaseForSwap()) return;
+        let res;
         if (!handle.settled) {
-            const over = handle.started ? t - (handle.startedAt ?? play.t0) > budgetMs : t - play.t0 > LOAD_BUDGET_MS;
-            if (over) {
+            if (!handle.started && t - play.t0 > LOAD_BUDGET_MS) {
                 handle.cancel();
-                const why = `the solver exceeded ${handle.started ? `${budgetMs / 1000} s` : `the ${LOAD_BUDGET_MS / 1000} s load budget`} `
-                    + `on ${goal.kind} in level ${goal.level} (terminated)`;
+                const why = `the solver exceeded the ${LOAD_BUDGET_MS / 1000} s load budget on ${goal.kind} in level ${goal.level} (terminated)`;
                 if (play.continuation) { fallback(why, 'continuation-budget'); return; }
                 fail(why);
                 return;
             }
-            schedule(pollSolve, SOLVE_POLL_MS);
-            return;
+            if (!(handle.started && t - (handle.startedAt ?? play.t0) > play.budget)) {
+                schedule(pollSolve, SOLVE_POLL_MS);
+                return;
+            }
+            // ⛓ ANYTIME / O2 — past the budget: a provisional plan plays, else a held retry, else the end by name.
+            const cut = { provisional: handle.provisional ?? null, answered: handle.answered ?? 0 };
+            handle.cancel();
+            stats.expiries += 1;
+            const action = expiryAction({ provisional: cut.provisional, retries: play.retries });
+            if (action === 'retry' && retrySolve(cut)) return;
+            if (action === 'provisional') {
+                stats.provisionalPlays += 1;
+                play.expired = true;
+                log(`[wasm playback] ${goal.name ?? goal.kind}: the solver exceeded ${secs(play.budget)} in level ${goal.level} `
+                    + `— playing the ${cut.provisional.pass} pass's plan it already had`, 'warn');
+                res = cut.provisional;
+            } else {
+                const refusal = betterAnswer(play.best, cut.provisional) ? cut.provisional : play.best;
+                const why = expiryFailure({ goal, budgets: play.budgets, refusal });
+                if (play.continuation) { fallback(why, 'continuation-budget'); return; }
+                fail(why);
+                return;
+            }
+        } else {
+            res = handle.result;
+            // ⛓ O2 — a retry's answer against what the cut attempt's passes had answered.
+            if (play.best && !betterAnswer(play.best, res)) res = play.best;
         }
-        const res = handle.result;
         if (!res?.ok) {
             const why = `the ${generated ? 'walker producer' : 'solver'} declined ${goal.name ?? goal.kind} in level ${goal.level} `
                 + `(${res?.kind}): ${res?.message}`;
@@ -876,6 +960,9 @@ export function createWasmPlayback({
         }
         play.plan = res.plan;
         play.solvedMs = Math.round(t - play.t0);
+        // ⛓ ANYTIME — which pass made the plan (a walker / step-off producer has none).
+        play.pass = res.plan.pass ?? null;
+        if (play.pass) stats.passes[play.pass] = (stats.passes[play.pass] ?? 0) + 1;
         ship();
     }
 
@@ -947,7 +1034,8 @@ export function createWasmPlayback({
             room.plans = (room.plans ?? 0) + 1;
             if (talk?.left) room.talkCircles = [];
         }
-        note(`playing ${play.ticks} ticks (${(plan.verbs ?? []).join(',') || 'walk'})`);
+        note(`playing ${play.ticks} ticks (${(plan.verbs ?? []).join(',') || 'walk'}`
+            + `${play.pass ? `; ${play.pass} pass${play.expired ? ', the later pass ran out of budget' : ''}` : ''})`);
         // ⛓ W7 — an exit plan's crossing: hold the arrival it leads to (the glue's redirect landing, if any).
         if (glueQuery && !hold) { arriving = true; startWatch(); }
         schedule(watch, DRAIN_MS);
@@ -1018,7 +1106,8 @@ export function createWasmPlayback({
     function finish(st) {
         const done = { goal, producer: play.plan.producer ?? 'solver', stepOff: play.plan.stepOff ?? null, ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
             solvedMs: play.solvedMs, divergence: play.divergence, recoveries, end: { level: st.level, x: st.x, y: st.y },
-            expectedEnd: play.plan.expected.at(-1), continuation: play.continuation ?? false, prefix: play.prefix ?? 0, heldEnd: !!(play.hold && st.held) };
+            expectedEnd: play.plan.expected.at(-1), continuation: play.continuation ?? false, prefix: play.prefix ?? 0, heldEnd: !!(play.hold && st.held),
+            ...solvedBy(play) };
         const heldEnd = done.heldEnd && room !== null;
         if (!heldEnd) {
             ours = false; // finished and un-held: nothing of ours is armed
@@ -1093,6 +1182,10 @@ export function createWasmPlayback({
             note(null);
         },
         liveLevel() { const l = readState().level; return Number.isInteger(l) ? l : null; },
+        /** ⛓ O3 — the budget the next solve starts with (the knob's live value, else the engine's own), in ms. */
+        get budgetMs() { return baseBudget(); },
+        /** ⛓ O3 — the engine's own budget (the twin of the JS page's `setSolverBudgetMs`); the knob, when set, wins. */
+        setBudgetMs(ms) { const n = Number(ms); if (Number.isFinite(n) && n > 0) ownBudget = n; },
         /** ⛓ WG — whether this engine stages a mounted generated set. */
         get generated() { return generated; },
         status() {

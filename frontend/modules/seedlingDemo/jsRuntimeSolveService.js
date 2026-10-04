@@ -13,7 +13,11 @@
  *                there — a cold worker's module load is not charged to the
  *                solve); `startedAt` is that moment on this service's clock;
  *   `cancel()`   TERMINATES the worker (a solve cannot be interrupted any
- *                other way); the next `start` builds a fresh one.
+ *                other way); the next `start` builds a fresh one;
+ *   `provisional` ⛓ ANYTIME — the best answer of the solver passes that
+ *                have landed (`jsRuntimeSolver.betterAnswer`), null until
+ *                one did; `answered` how many; `passes` one row each. A
+ *                budget expiry plays a provisional PLAN instead of declining.
  *
  * One solve is in flight at a time (the solver keeps one). The room records
  * are posted once per worker, by id. A worker that errors (a module that
@@ -70,6 +74,12 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             const msg = event.data;
             if (!current || msg?.id !== current.id) return;
             if (msg.type === 'started') { current.started = true; current.startedAt = clock(); }
+            else if (msg.type === 'pass') {
+                // ⛓ ANYTIME — the best answer so far: what an expiry plays (a plan) or says (a refusal).
+                current.answered = msg.index + 1;
+                current.provisional = msg.best ?? null;
+                current.passes.push({ pass: msg.pass, ok: msg.answer?.ok === true, kind: msg.answer?.kind ?? null });
+            }
             else if (msg.type === 'result') {
                 const { type, id, ...result } = msg;
                 settle(current, result);
@@ -102,6 +112,8 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             if (current && !current.settled) current.cancel();
             const handle = {
                 id: nextId++, settled: false, started: false, result: null, startedAt: null,
+                // ⛓ ANYTIME — the passes that landed, and the best answer among them (null until one did)
+                answered: 0, provisional: null, passes: [],
                 cancel() {
                     if (handle.settled) return;
                     settle(handle, { ok: false, kind: 'budget', message: 'cancelled' });

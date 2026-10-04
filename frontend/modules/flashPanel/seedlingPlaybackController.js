@@ -454,6 +454,8 @@ export class SeedlingPlaybackController {
             getCheckBinding: () => this._getSurface?.()?.checkBinding ?? null,
             // ⛓ W7 — the glue query: may the engine hold the arrival it just saw (no redirect in flight)?
             getSwapState: () => this._getSurface?.()?.swapState?.() ?? null,
+            // ⛓ O3 — the solve budget knob, read live at each solve's start (null = the engine's own).
+            getBudgetMs: () => this._getSurface?.()?.wasm?.solverBudgetMs ?? null,
             log: this._log,
             onNote: (n) => this._relayNote(n),
             onFailed: (reason) => this._fail(this._lastTarget, `the wasm playback failed: ${reason}`),

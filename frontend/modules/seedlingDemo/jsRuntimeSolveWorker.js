@@ -18,6 +18,9 @@
  *                  kept by id (`records` omitted on later solves).
  *   worker → page  `{type: 'started', id}` the moment the solve begins (the
  *                  budget runs from here, not from a cold module load);
+ *                  ⛓ ANYTIME `{type: 'pass', id, index, pass, answer, best}`
+ *                  as each solver pass lands (`jsRuntimeSolver.ANYTIME_PASSES`:
+ *                  dashless, then full) — `best` is the PROVISIONAL answer;
  *                  `{type: 'result', id, ok, plan | kind, message}` —
  *                  `jsRuntimeSolver.settleSolve`'s answer.
  *
@@ -31,7 +34,7 @@
  */
 
 import { levelSourceFromAtlas } from './atlasSource.js';
-import { settleSolve, solveFromTape } from './jsRuntimeSolver.js';
+import { ANYTIME_PASSES, settleSolve, solveAnytime } from './jsRuntimeSolver.js';
 import { stepOffSolveFromStaging, walkTapeFromStaging, WALK_TAPE_PRODUCER } from './wasmWalkTape.js';
 import { STEP_OFF_PRODUCER } from './wasmArrival.js';
 
@@ -55,9 +58,19 @@ self.onmessage = (event) => {
         ? () => walkTapeFromStaging({ ...request, levelSource: held.levelSource, records: held.records, clock })
         : request.producer === STEP_OFF_PRODUCER
             ? () => stepOffSolveFromStaging({ ...request, levelSource: held.levelSource, clock })
-            : () => solveFromTape({ ...request, levelSource: held.levelSource, clock });
-    const answer = held
-        ? settleSolve(produce)
-        : { ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };
+            : null;
+    let answer;
+    if (!held) answer = { ok: false, kind: 'refusal', message: `the solver worker was never sent room source ${source.id}` };
+    else if (produce) answer = settleSolve(produce);
+    else {
+        // ⛓ ANYTIME — the solver's passes in order (`ANYTIME_PASSES`, or the request's own — a held retry
+        // sends the passes not yet answered); each lands as a `pass` message, so the page holds the best
+        // so far as its PROVISIONAL plan when a later pass is terminated at the budget.
+        const { passes = ANYTIME_PASSES, ...tape } = request;
+        answer = solveAnytime({ ...tape, levelSource: held.levelSource, clock }, {
+            passes, clock,
+            onPass: (one, best, index) => self.postMessage({ type: 'pass', id, index, pass: one.pass, answer: one, best }),
+        });
+    }
     self.postMessage({ type: 'result', id, ...answer });
 };

@@ -49,6 +49,8 @@ const RUNTIME_SETTING_KEY = 'moduleSettings.flashPanel.runtime';
  * changes how the bot picks keys, not which game page runs.
  */
 const SOLVER_WALK_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
+/** ⛓ Seedling solver-walk O3 — the wasm engine's solve budget (read live by the engine at each solve). */
+const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSolverBudgetMs';
 /**
  * ⛓ Seedling JS J1 — the JS runtime's page, document-relative like WASM_DIR.
  * ⛔ A PATH, never an import: the page's closure is the whole JS model, and a
@@ -177,6 +179,9 @@ export class FlashPanelUI {
       if (data?.key === SOLVER_WALK_SETTING_KEY || data?.key === '*') {
         this._refreshSolverWalk(data.key === '*' ? undefined : data.value);
       }
+      if (data?.key === WASM_SOLVER_BUDGET_SETTING_KEY || data?.key === '*') {
+        this._refreshWasmSolverBudget(data.key === '*' ? undefined : data.value);
+      }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
       if (!this.isInitialized) return;
       if (this.componentState.configPath || this.componentState.swfPath
@@ -302,6 +307,8 @@ export class FlashPanelUI {
         getWin: () => this.adapter?._getWin?.() ?? null,
         teleport: (p) => this.adapter?.teleport?.(p) ?? false,
         mapPath: this._atlasMapPath ?? null,
+        // ⛓ O3 — the solve budget knob (null until the setting is read: the engine's own default then).
+        solverBudgetMs: this._wasmSolverBudgetMs ?? null,
       } : null,
     };
   }
@@ -320,6 +327,16 @@ export class FlashPanelUI {
     try {
       this.seedlingPlaybackSurface?.()?.jsRuntime?.playback?.setSolverWalk?.(this._solverWalk);
     } catch { /* the page is not up yet — the next walkTo carries it */ }
+  }
+
+  /** ⛓ O3 — cache `flashPanel.seedlingWasmSolverBudgetMs` (the engine reads it through the surface per solve). */
+  async _refreshWasmSolverBudget(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(WASM_SOLVER_BUDGET_SETTING_KEY, null); } catch { return; }
+    }
+    const n = Number(next);
+    this._wasmSolverBudgetMs = next !== null && next !== '' && Number.isFinite(n) && n > 0 ? n : null;
   }
 
   _teardownForReinit() {
@@ -910,6 +927,7 @@ export class FlashPanelUI {
       } catch { /* keep 'auto' */ }
       this._initRuntime = runtime;
       await this._refreshSolverWalk();
+      await this._refreshWasmSolverBudget();
       this.transport = 'wasm';
       if (runtime === 'js') {
         // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME

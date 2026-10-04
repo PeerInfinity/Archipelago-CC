@@ -56,7 +56,7 @@
  */
 
 import { createRunForStaging } from './tapeRunner.js';
-import { solveSegment } from './solverBot.js';
+import { DEFAULT_DASH_MODE, solveSegment } from './solverBot.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 import { TILE_SIZE } from './levelWorld.js';
 
@@ -107,6 +107,105 @@ const showRow = (r) => `level ${r.level} (${r.x}, ${r.y}) deaths ${r.deaths}`;
 /** A shadow that is not the live run: a PAGE bug (step 2), never a solver verdict. */
 export class ShadowDivergence extends Error {
     constructor(message) { super(message); this.name = 'ShadowDivergence'; }
+}
+
+/** ⛓ ANYTIME — a pass that would only repeat the one before it (its added strategy is unusable): not run, named. */
+export class PassSkipped extends Error {
+    constructor(message) { super(message); this.name = 'PassSkipped'; }
+}
+
+/**
+ * ⛓ ANYTIME — the optional strategies a later pass ADDS, each with its
+ * availability on the shadow at the solve's start: a reason it is unusable,
+ * or null. Unusable → the pass would search exactly what the pass before it
+ * searched, so it is skipped (a door-only L14 decline would otherwise be
+ * paid twice, 4.9–8.2 s each — the L16 budget report §1.3).
+ * `sword-dash`: `planSwordDash` and `strikePolicyFor` act only with a sword
+ * in hand (`solverBot.js`: `hasSword || hasGhostSword`), so without one
+ * `dashMode` changes nothing.
+ */
+export const PASS_STRATEGIES = Object.freeze({
+    'sword-dash': (run) => {
+        const inv = run.progress('inventory') ?? {};
+        return inv.hasSword || inv.hasGhostSword ? null : 'the run holds no sword';
+    },
+});
+
+/**
+ * ⛓ ANYTIME (the user, 2026-10-04: *"first search for solutions that don't
+ * involve sword dashes, then if it finds a dashless solution, and runs out of
+ * time while searching the dash options, it falls back on the solution it
+ * already found. This same pattern might work for other expensive and
+ * optional strategies."*) — the passes one solve runs, CHEAPEST FIRST. Each
+ * later pass ADDS one expensive optional strategy (`adds`, `PASS_STRATEGIES`)
+ * and keeps everything the passes before it had; its plan replaces the one in
+ * hand only when it is BETTER (`betterAnswer`). Only what `solveSegment`
+ * already exposes is a pass: today that is `dashMode` (R9 12i). Measured
+ * (`seedling-js-l16-budget-report.md` §3): dash planning is 62–99 % of the
+ * slow solves (L16, B L14, L71 kit) and in the plan on 9 of 24 legs, each
+ * saving 8–95 ticks; dashless, 23 of 24 captured legs solve in ≤ 1.4 s.
+ * `full` is `DEFAULT_DASH_MODE` — the one search every solve made before.
+ */
+export const ANYTIME_PASSES = Object.freeze([
+    Object.freeze({ pass: 'dashless', dashMode: 'none' }),
+    Object.freeze({ pass: 'full', dashMode: DEFAULT_DASH_MODE, adds: 'sword-dash' }),
+]);
+
+/**
+ * ⛓ ANYTIME — does the answer `next` (a later pass) replace `best` (the one in
+ * hand)? A PLAN beats no plan; between two plans the later replaces the
+ * earlier only with STRICTLY FEWER TICKS (`solution.length` = game ticks to
+ * the goal) — a tie keeps the plan found first, which is the cheaper search's
+ * (L71 kit: both passes the same 527 ticks, the dashless one is kept). With
+ * no plan in hand, a later REFUSAL is the fuller search's word and replaces
+ * an earlier one; a skipped pass never replaces anything.
+ */
+export function betterAnswer(best, next) {
+    if (!next || next.kind === 'skipped') return false;
+    if (!best || best.kind === 'skipped') return true;
+    if (best.ok) return next.ok === true && next.plan.solution.length < best.plan.solution.length;
+    return true;
+}
+
+/**
+ * ⛓ ANYTIME — run `passes` in order, each a `solveFromTape` of the same tape,
+ * and answer with the best (`betterAnswer`). `onPass(answer, best, index)`
+ * hears every pass as it lands (the worker posts it: the page keeps `best` as
+ * its PROVISIONAL plan, so a budget expiry in a later pass plays it). A
+ * divergence ends at once (the page's bug — every later pass replays the same
+ * shadow). Every answer is stamped with its `pass`, and the result carries
+ * `passes`: one `{pass, ok, kind, ticks, ms}` row per pass that ran.
+ */
+export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => {}, clock = request.clock ?? (() => Date.now()) } = {}) {
+    let best = null;
+    let last = null;
+    const rows = [];
+    for (let i = 0; i < passes.length; i += 1) {
+        const p = passes[i];
+        const t0 = clock();
+        const answer = settleSolve(() => solveFromTape({ ...request, clock, dashMode: p.dashMode, adds: p.adds ?? null }));
+        answer.pass = p.pass;
+        if (answer.ok) answer.plan.pass = p.pass;
+        rows.push({ pass: p.pass, ok: answer.ok, kind: answer.kind ?? null, ticks: answer.ok ? answer.plan.solution.length : null,
+            ms: Math.round(clock() - t0) });
+        last = answer;
+        if (betterAnswer(best, answer)) best = answer;
+        try { onPass(answer, best, i); } catch { /* a listener's bug is not the solve's */ }
+        if (answer.kind === 'divergence') { best = answer; break; }
+    }
+    // Every pass skipped (a held retry resumed at a pass the run cannot use): the skip itself is the
+    // answer — `betterAnswer` never lets it replace what an earlier attempt's passes said.
+    best ??= last ?? { ok: false, kind: 'refusal', message: 'no solver pass ran' };
+    return { ...best, passes: rows, ...(best.ok ? { plan: { ...best.plan, passes: rows } } : {}) };
+}
+
+/** ⛓ ANYTIME — the passes not yet answered when a solve was cut (`answered` = how many landed). */
+export const passesAfter = (passes, answered) => passes.slice(Math.max(0, answered | 0));
+
+/** ⛓ ANYTIME — how a plan's pass reads in a note: `dashless` / `full`, and why when it was not the last word. */
+export function passNote(plan, { expired = false } = {}) {
+    if (!plan?.pass) return '';
+    return expired ? `pass ${plan.pass}, the later pass ran out of budget` : `pass ${plan.pass}`;
 }
 
 /**
@@ -188,10 +287,14 @@ export function replayShadow(session, levelSource, {
  * plan it returns is structured-cloneable (Sets, a Map, plain rows).
  */
 export function solveFromTape({ staging, perTick, live, levelSource, solverGoal, name = 'js-runtime-solve',
-    scratchPersistence = false, equips = null, clock = () => Date.now() }) {
+    scratchPersistence = false, equips = null, clock = () => Date.now(), dashMode = DEFAULT_DASH_MODE, adds = null }) {
     const t0 = clock();
     const shadow = assertShadow(replayTape({ staging, perTick, levelSource, scratchPersistence, equips }), live, perTick.length);
     const replayMs = clock() - t0;
+    // ⛓ ANYTIME — a pass whose added strategy the run cannot use would replay the pass before it exactly.
+    const available = adds ? PASS_STRATEGIES[adds] : null;
+    const unusable = !adds ? null : available ? available(shadow) : `no strategy is named ${adds}`;
+    if (unusable) throw new PassSkipped(`${adds} is not available here: ${unusable}`);
     const expected = [rowOf(shadow)];
     const equipsAt = new Map();
     const run = new Proxy(shadow, {
@@ -215,7 +318,7 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
         },
     });
     const t1 = clock();
-    const out = solveSegment({ run, goals: [solverGoal], name, boot: staging.boot, prefix: perTick });
+    const out = solveSegment({ run, goals: [solverGoal], name, boot: staging.boot, prefix: perTick, dashMode });
     const solveMs = clock() - t1;
     const solution = out.perTick.slice(perTick.length).map((h) => new Set(h));
     if (solution.length !== expected.length - 1) {
@@ -224,7 +327,7 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
             + `${expected.length - 1} time(s) — the expected trajectory cannot be checked`);
     }
     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
-    return { solution, expected, equipsAt, verbs, replayMs, solveMs, prefixLength: perTick.length };
+    return { solution, expected, equipsAt, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode };
 }
 
 /**
@@ -252,6 +355,7 @@ export function settleSolve(fn) {
         return { ok: true, plan: fn() };
     } catch (err) {
         if (err instanceof ShadowDivergence) return { ok: false, kind: 'divergence', message: String(err.message) };
+        if (err instanceof PassSkipped) return { ok: false, kind: 'skipped', message: String(err.message) };
         const pending = err?.name === 'PendingDeclaration' ? err.pending ?? null : null;
         if (pending) return { ok: false, kind: 'refusal', declaration: { ...pending, phases: undefined }, message: declarationRefusal(pending, err) };
         return { ok: false, kind: 'refusal', message: String(err?.message ?? err) };
@@ -293,7 +397,9 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
         kind: 'in-place',
         start(request) {
             const levelSource = request.levelSource ?? levelSourceFromAtlas(request.source.records);
-            const result = settleSolve(() => solveFromTape({ ...request, levelSource, clock }));
+            // ⛓ ANYTIME — no budget in place: every pass runs, the best answer is the result.
+            const { passes = ANYTIME_PASSES, ...rest } = request;
+            const result = solveAnytime({ ...rest, levelSource, clock }, { passes, clock });
             return { settled: true, started: true, result, cancel() {} };
         },
         warm() {},
@@ -331,7 +437,7 @@ export function createRuntimeSolver({
     /** session -> Map(perTick index -> slot): the equips the play made on each live session. */
     const playedEquips = new WeakMap();
     const stats = { solves: 0, refutations: 0, declines: 0, played: 0, lastSolve: null, lastDecline: null,
-        expiries: 0, stale: 0, solving: false, lastWaitMs: null };
+        expiries: 0, stale: 0, solving: false, lastWaitMs: null, provisionalPlays: 0 };
 
     const emit = (e) => { try { onEvent(e); } catch { /* a listener's bug is not the solve's */ } };
 
@@ -394,28 +500,44 @@ export function createRuntimeSolver({
             refute('the run was re-booted while the solver thought (an item flag or a host teleport) — its answer is stale');
             return null;
         }
+        let r = null;
+        let expired = false;
         if (!p.handle.settled) {
             // The budget runs on THIS clock, from the first tick that sees the worker started.
             if (p.startedAt === null && p.handle.started) p.startedAt = now;
             const startedAt = p.startedAt;
             if (startedAt !== null && now - startedAt > budget) {
+                // ⛓ ANYTIME — the best answer of the passes that landed (dashless before full) is kept.
+                const provisional = p.handle.provisional ?? null;
                 cancel();
                 stats.expiries += 1;
                 stats.lastWaitMs = now - p.askedAt;
-                return decline(`the solver exceeded ${seconds(budget)} on ${p.solverGoal.kind} in level ${p.goal.level} `
-                    + '(terminated) — walking');
+                const over = `the solver exceeded ${seconds(budget)} on ${p.solverGoal.kind} in level ${p.goal.level} (terminated)`;
+                if (provisional?.ok) {
+                    stats.provisionalPlays += 1;
+                    emit({ type: 'expired-provisional', message: `[js runtime] ${over} — playing the ${provisional.pass} pass's plan` });
+                    r = provisional;
+                    expired = true;
+                } else if (provisional && provisional.kind === 'refusal') {
+                    // A decline that landed before the expiry is the solver's word: said, not the budget.
+                    return decline(`${String(provisional.message).split('\n')[0]} (pass ${provisional.pass}; the later pass ${over})`);
+                } else {
+                    return decline(`${over} — walking`);
+                }
             }
-            if (startedAt === null && now - p.askedAt > loadBudgetMs) {
+            if (!expired && startedAt === null && now - p.askedAt > loadBudgetMs) {
                 cancel();
                 stats.expiries += 1;
                 return decline(`the solver did not start within ${seconds(loadBudgetMs)} (its worker never loaded) — walking`);
             }
-            return { solving: true };
+            if (!expired) return { solving: true };
         }
         pending = null;
         stats.solving = false;
-        stats.lastWaitMs = now - p.askedAt;
-        const r = p.handle.result;
+        if (!expired) {
+            stats.lastWaitMs = now - p.askedAt;
+            r = p.handle.result;
+        }
         // ⛔ A plan is played only from the state it was solved from.
         if (p.session.perTick.length !== p.prefixLength) {
             stats.stale += 1;
@@ -432,11 +554,14 @@ export function createRuntimeSolver({
         stats.lastSolve = { level: p.goal.level, goal: p.solverGoal, keys: plan0.solution.length, verbs: plan0.verbs,
             replayMs: plan0.replayMs, solveMs: plan0.solveMs, prefix: plan0.prefixLength, waitMs: stats.lastWaitMs,
             where: service ? service.kind : inPlace.kind,
+            // ⛓ ANYTIME — which pass made the plan, whether a later pass was cut at the budget, and every pass's row
+            pass: plan0.pass ?? null, expired, passes: plan0.passes ?? p.handle.passes ?? null,
             /** Where the solved shadow ended — the live run must end there too. */
             end: { ...plan0.expected[plan0.expected.length - 1] } };
         emit({ type: 'solved', message: `[js runtime] solved ${p.solverGoal.kind} in level ${p.goal.level}: `
             + `${plan0.solution.length} tick(s), verbs ${plan0.verbs.join(', ') || '—'} (replay ${plan0.replayMs} ms over `
-            + `${plan0.prefixLength} tick(s), solve ${plan0.solveMs} ms${service ? `, ${service.kind}` : ''})` });
+            + `${plan0.prefixLength} tick(s), solve ${plan0.solveMs} ms${service ? `, ${service.kind}` : ''}`
+            + `${plan0.pass ? `; ${passNote(plan0, { expired })}` : ''})` });
         plan = { ...plan0, run, i: 0 };
         return null;
     }

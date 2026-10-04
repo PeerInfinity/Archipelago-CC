@@ -167,6 +167,19 @@ export function register(registrationApi) {
           + "offered to the solver again after a death, a crossing or 90 walked "
           + "ticks (at most 3 times). Generated rooms always use the simple walker.",
       },
+      // ⛓ Seedling solver-walk O3 — the wasm engine's solve budget (the twin of the JS page's ?solverBudgetMs=).
+      seedlingWasmSolverBudgetMs: {
+        type: 'number',
+        default: 5000,
+        minimum: 100,
+        label: 'Seedling wasm: solver budget (ms)',
+        description: "Runtime 'wasm', solver (atlas / vanilla) rooms. How long the Playback Bot's "
+          + "solver may think about one room before the budget runs out (the game is HELD meanwhile). "
+          + "The solver searches without sword dashes first and then with them; when the budget runs "
+          + "out and a plan is already in hand, that plan is played. Without one, the room stays held "
+          + "and the solver is asked once more with 4× this budget, and only then does the walk stop, "
+          + "saying why. Raise it on a busy machine. Read at the start of each solve.",
+      },
     },
   });
 
