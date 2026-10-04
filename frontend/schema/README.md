@@ -16,9 +16,12 @@ The **generic base schema** that defines the structure for all Archipelago games
 - Canonical placements for deterministic seed generation
 - The procgen / preset extension keys — `preset_sidecars` (typed by `$defs/presetSidecarEntry`),
   `procgen_metadata`, `loop_costs` (these three are per-player maps, `^[0-9]+$` → one slot's
-  block), `assume_bidirectional_exits`, `region_atlas`, `flash_panel`,
-  `provenance`, `preset_label` and `playerId`. Each carries a `description` naming the file that
-  WRITES it; see `docs/json/developer/procgen/architecture.md` § rules.json extensions.
+  block), `region_atlas`, `flash_panel`, `provenance`, `preset_label` and `playerId`. Each
+  carries a `description` naming the file that WRITES it; see
+  `docs/json/developer/procgen/architecture.md` § rules.json extensions.
+  `assume_bidirectional_exits` is NOT among them: it is per player and lives only in the slot's
+  `exporter["<p>"]` block (rules F1, 2026-10-03); the strict top level rejects it, and the
+  runtime loader refuses it by name.
 
 The top level is **strict** (`additionalProperties: false`, APWorld hub H1, ⚖ user 2026-09-04), so a
 producer that adds an undeclared top-level key fails `test/general/test_schema_validation.py` until the

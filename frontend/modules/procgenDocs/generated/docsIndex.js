@@ -25,9 +25,9 @@ export const DOCS_INDEX = frz({
         "docs": 26,
         "headings": 970,
         "indexHeadings": 2,
-        "lines": 23678,
+        "lines": 23679,
         "pages": 4,
-        "words": 285444
+        "words": 285487
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -37,7 +37,7 @@ export const DOCS_INDEX = frz({
             "file": "architecture.md",
             "h1": "Procedural Generation Architecture",
             "headings": 18,
-            "lines": 256,
+            "lines": 257,
             "links": [
                 "demos.md",
                 "editing-core.md",
@@ -51,7 +51,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/architecture.md",
-            "words": 3957
+            "words": 4000
         },
         {
             "description": "`frontend/modules/shared/procgen/substrateRegistry.js` connects the pipeline, the runtime player and the substrates: each substrate registers an **entry**, and consumers look entries up by `id` instead of importing substrate modules. This page documents the entry fields, the generated capability matrix, and how to add a substrate.",

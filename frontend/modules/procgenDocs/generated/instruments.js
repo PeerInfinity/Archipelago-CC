@@ -6396,7 +6396,9 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/measure-seedling-solver-surface.mjs"
         },
         {
-            "argvHelpers": [],
+            "argvHelpers": [
+                "dest"
+            ],
             "browser": false,
             "category": "migrate",
             "citedBy": [],
@@ -6423,7 +6425,7 @@ export const INSTRUMENTS = frz({
                     "name": "help"
                 }
             ],
-            "oneLiner": "migrate-per-player-blocks.mjs — **THE ONE-TIME SHAPE MOVE of the committed corpus's `procgen_metadata` / `loop_costs` into per-player maps** (APWORLD SUBSTRATE CHANGE P1a; ⚖ user 2026-09-27, plan §34.5 / §36.5: *\"I want to replace the old format, the old presets, and the code for them entirely, and not add any compa…",
+            "oneLiner": "migrate-per-player-blocks.mjs — **THE SHAPE MOVES of the committed corpus's top-level per-player keys into their per-player homes**, and the census that keeps them moved: - `procgen_metadata` / `loop_costs` → `{\"<p>\": block}` (APWORLD SUBSTRATE CHANGE P1a; ⚖ user 2026-09-27, plan §34.5 / §36.5: *\"I want to replace t…",
             "path": "scripts/procgen/migrate-per-player-blocks.mjs"
         },
         {

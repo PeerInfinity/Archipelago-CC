@@ -43,7 +43,9 @@
  * loaded — measured P2 W0 — but the gate names its precondition.)
  *
  * Requires a repo-root dev server: `--host=<origin>` wins, then
- * PROCGEN_UI_HOST, then http://localhost:8000.
+ * PROCGEN_UI_HOST, then the test server (scripts/test/testServer.js:
+ * http://localhost:$TEST_PORT, default 8000 — so a worktree's `TEST_PORT`
+ * reaches this gate as it reaches `npm test`).
  *
  * Run:
  *   node scripts/procgen/check-procgen-presets.mjs [--host=<origin>]
@@ -72,6 +74,7 @@ import {
  */
 
 import { argvHelp } from './argvHelp.js';
+import { TEST_BASE_URL } from '../test/testServer.js';
 import { checkLine, failOnCrash, totalLine } from './gateTotal.js';
 
 argvHelp(import.meta.url);
@@ -80,7 +83,7 @@ takeBoxLockOrExit({ name: 'check-procgen-presets.mjs', kind: 'browser' });
 
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
     ?.slice(name.length + 3) ?? fallback);
-const HOST = (arg('host', null) ?? process.env.PROCGEN_UI_HOST ?? 'http://localhost:8000').replace(/\/$/, '');
+const HOST = (arg('host', null) ?? process.env.PROCGEN_UI_HOST ?? TEST_BASE_URL).replace(/\/$/, '');
 const PAGE_URL = `${HOST}/frontend/?game=adventure&seed=1`;
 
 /**

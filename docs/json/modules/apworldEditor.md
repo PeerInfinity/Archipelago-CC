@@ -2400,7 +2400,7 @@ assumed the arrows. The defs are the pipeline's (`grantedItemDef`: id 999 − i,
 result carries `grantedItems` + `grantedDefs` inline; an inlined grant naming an
 item the slot already defines or holds, or taking a used id, is refused; a
 record made before S1 (no grants) replays as it was. **Never**: a location, an
-existing item, a placement, an existing rule, or `assume_bidirectional_exits`
+existing item, a placement, an existing rule, or the slot's `exporter[p].assume_bidirectional_exits`
 (⚖ Q2 — the runtime auto-detects, and the return exits carry the forward rule). With loop mode on (S3) it also writes `loop_costs` and the payloads carry `manaEnabled: true` (above). Location names ride into the payloads verbatim
 (`useSourceLocationName`), so the placements, the sphere log and the loop costs
 still name what the rooms carry. Undo takes the whole thing back in one step.

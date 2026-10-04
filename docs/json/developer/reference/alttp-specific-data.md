@@ -179,10 +179,10 @@ The following properties are added to `staticData.settings` (or `staticData.sett
 - **Usage**: Used in `is_invincible()` to check if triforce hunt mode makes player invincible
 - **Note**: Values are numeric in exported data (not strings)
 
-**`assume_bidirectional_exits`** (boolean)
+**`assume_bidirectional_exits`** (boolean) — *not a setting*
 - **Description**: Whether exits can be traversed in both directions
-- **Source**: Exporter line 417
-- **Value**: Always `true` for ALTTP
+- **Where it lives**: the slot's `exporter["<p>"].assume_bidirectional_exits` — per player, never top level, never under `world` (rules F1, 2026-10-03)
+- **Value for ALTTP**: absent. The ALTTP handler does not set `ASSUME_BIDIRECTIONAL_EXITS`, so its exports state nothing and the frontend auto-detects (`StateManagerProxy.getEffectiveBidirectionalSetting`)
 
 #### Enemy and Combat Settings
 

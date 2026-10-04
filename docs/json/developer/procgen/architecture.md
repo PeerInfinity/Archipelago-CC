@@ -142,16 +142,17 @@ A procgen-compiled `rules.json` is a standard rules file plus extra top-level ke
 | `procgen_metadata` | Per player (`{"<p>": block}`): generation metadata — source counts, the sphere tree, and enough structure to rebuild a stepped-pipeline envelope from a compiled file (`rebuildEnvelopeFromRulesJson`). A slot has an entry only when a producer wrote one. |
 | `loop_costs` | Per player (`{"<p>": block}`): per-action mana costs for loop mode. A slot's entry turns loop mode on for that slot's world. Inside a block, `regions` maps a region name to a cost **object** (`moveCost`, `timeDrainPerSecond`, `xpEffect`), while `locations` maps a location name straight to a **number**. |
 
-Six more appear in committed presets, each written by one producer:
+Five more appear in committed presets, each written by one producer:
 
 | Key | Producer | Purpose |
 |-----|----------|---------|
-| `assume_bidirectional_exits` | `procgenPipelineEngine.js` | Every back-exit inherits its forward exit's rule, and consumers may construct back-exits the document does not list. Not the same field as the exporter's nested `exporter_settings.assume_bidirectional_exits`. |
 | `region_atlas` | `procgenPipeline/regionAtlasCompiler.js` | Which atlas this graph was compiled from (`atlas_id`, `game`, optional `map_document`). The id ends in the atlas content hash, so a changed atlas visibly invalidates a stale preset. |
 | `flash_panel` | `regionAtlasCompiler.js` (`FLASH_PANEL_WIRING`) and `tileMapAnalyzer/rulesExporter.js` | Wiring that boots the recompiled original game (`config`, `wasm` or `swf`). |
 | `provenance` | `regionAtlasCompiler.js`, from `options.provenance`; `procgenCore/contentIdentity.js` adds `content_hash` | Opaque: whatever the producing generator wants to record about its inputs. |
 | `preset_label` | `exporter/exporter.py`, from the world class's `preset_label` attribute | Short label on the preset's frontend button. |
 | `playerId` | `exporter/exporter.py` | The slot id of a player-specific export; absent from the combined multiworld document. |
+
+The compile also states the slot's `assume_bidirectional_exits` — every back-exit inherits its forward exit's rule — but NOT as a top-level key: it lives in the slot's `exporter["<p>"]` block, where the AP exporter writes it too (rules F1, 2026-10-03). The strict schema rejects a top-level copy and the runtime loader refuses one by name; absent from the slot, the runtime auto-detects. A world_generator world carries the value back to its export as a class attribute.
 
 All of these are declared in `frontend/schema/rules.schema.json`, with sidecar entries typed by `$defs/presetSidecarEntry` (`substrate` required; `playable_payload` opaque because it belongs to the substrate). The top level is strict (`additionalProperties: false`), so a producer that adds an undeclared top-level key fails schema validation.
 
