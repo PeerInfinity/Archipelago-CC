@@ -17,7 +17,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
+import { ADOPT_WAIT_MS, createWasmPlayback, loadWasmPlaybackEngine } from './seedlingWasmPlayback.js';
 import { TUTORIAL_FADE_FRAMES } from '../seedlingDemo/wasmPlayback.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService, mountedRecordsOf } from '../seedlingDemo/wasmWalkTape.js';
@@ -53,13 +53,14 @@ function manualTimers() {
 
 /** A game whose reads are a recorded arrival's. */
 function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrains = 0, clearedAfterDrain = null,
-    midSpanOnFirstPlan = null, unwatched = null } = {}) {
+    midSpanOnFirstPlan = null, unwatched = null, realSeam = false } = {}) {
     const baseline = { ...arrival.seam.beginEntry, 'save.time': arrival.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
     const g = {
         // ⛓ W8 — `unwatched`: the room ran since ITS begin record before the bot drove (the cold start),
         // `{elapsed, mobiles, patch, begin}` = game frames since that begin, the botMobiles rows, botStatus overrides.
         be: unwatched ? { ...arrival.seam.beginEntry, ...(unwatched.begin ?? {}) } : baseline,
         unwatched,
+        get be0() { return { ...arrival.seam.beginEntry, ...(unwatched?.begin ?? {}) }; },
         botMobiles() { g.calls.push('botMobiles'); return unwatched ? JSON.stringify({ tick: 0, mobiles: unwatched.mobiles, pods: [] }) : undefined; },
         held: false, armed: false, finished: false, seq: 0, tape: null, drainRows: null, freezePolls: 0,
         calls: [], tapes: [], stalls: stallDrains, cleared: null,
@@ -74,7 +75,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
             }
             return JSON.stringify({ ...arrival.status,
                 // ⛓ W7 — `gameTimeFromBegin`: the read is in the begin record's own frame (a staged arrival), whichever lands
-                game_time: (g.unwatched ? g.be['save.time'] + g.unwatched.elapsed : g.gameTimeFromBegin ? g.be['save.time'] : arrival.status.game_time) + gameTimeSkew,
+                game_time: (g.unwatched ? (g.be ?? g.be0)['save.time'] + g.unwatched.elapsed : g.gameTimeFromBegin ? g.be['save.time'] : arrival.status.game_time) + gameTimeSkew,
                 ...(g.unwatched?.patch ?? {}),
                 ...(g.cleared ? { persistence_cleared: g.cleared } : {}),
                 ...(g.midSpan ? g.midSpan : {}),
@@ -86,7 +87,8 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
         readState() { return JSON.stringify({ freezeObjects: false, ...arrival.state, ...(g.unwatched?.state ?? {}), pendingCheck: g.seq ? `${g.seq}|86|0|0` : '' }); },
         // ⛓ W8c — the active set's start level (the new-game arm resolves a −1 begin record to it)
         botLevelSet() { return JSON.stringify({ start_level: g.unwatched?.startLevel ?? 0 }); },
-        botLoadTape(json) { g.calls.push('botLoadTape'); g.tape = JSON.parse(json); g.tapes.push(g.tape); return 'ok'; },
+        // ⛓ §5.19 — `realSeam`: as the game does, a tape load CLEARS the begin record and a reset leaves it alone.
+        botLoadTape(json) { g.calls.push('botLoadTape'); g.tape = JSON.parse(json); g.tapes.push(g.tape); if (realSeam) g.be = null; return 'ok'; },
         botStart() {
             g.calls.push('botStart');
             g.seq += g.tape.persistence.length;
@@ -98,7 +100,7 @@ function fakeGame(arrival, { gameTimeSkew = 0, freezeLatchesAfter = 0, stallDrai
         },
         // A reset forgets the tape; the room the recovery re-enters is a NEW begin record (the fake
         // un-lands to the pre-arrival one, so the forced re-arrival's landing is a change again).
-        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; g.midSpan = null; g.be = baseline; g.pos = null; return 'ok'; },
+        botReset() { g.calls.push('botReset'); g.held = false; g.armed = false; g.midSpan = null; if (!realSeam) g.be = baseline; g.pos = null; return 'ok'; },
         botDrain() {
             g.calls.push('botDrain');
             if (!g.armed || !g.drainRows) return JSON.stringify({ ticks: [] });
@@ -723,7 +725,7 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
     const PLAYER = { cls: 'Player', x: 56, y: 56, vx: 0, vy: 0, anim: 'down-stand' };
     const unwatched = (o = {}) => ({ elapsed: 200, mobiles: [PLAYER], patch: {}, ...o });
     const CLEAR = { marks: [], queued: 0, pushedOn: null, pushes: 0 };
-    const adoptOver = (o = {}, opts = {}) => engineOver(A, { swap: CLEAR, ...opts, game: { unwatched: unwatched(o) } });
+    const adoptOver = (o = {}, opts = {}) => engineOver(A, { swap: CLEAR, ...opts, game: { unwatched: unwatched(o), ...(opts.game ?? {}) } });
     /** The refusal a mutated read earns: the named clause, and W2's cold-start re-arrival serves the goal. */
     function refusedBy(e, clause) {
         expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'force-re-arrival' });
@@ -753,14 +755,66 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.engine.status()).toMatchObject({ phase: 'held', room: { level: HOUSE, shipped: 1 + e.dones[0].ticks } });
     });
 
-    it('clause BEGIN — the begin record names another level (a swap pending) → not adopted', () => {
-        refusedBy(adoptOver({ begin: { 'begin.level': 0 } }), 'begin');
+    /**
+     * ⛓ §5.19 — a TRANSIENT clause (`ADOPT_TRANSIENT_CLAUSES`) WAITS, bounded: the goal answers `await-adoption`,
+     * nothing is recorded or teleported while it waits, and only a clause that outlives `ADOPT_WAIT_MS` is recorded
+     * and spends the cold-start re-arrival (named).
+     */
+    function waitedOutBy(e, clause) {
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-adoption' });
+        expect(e.engine.status().phase).toBe('adopt-wait');
+        expect(e.engine.stats.adoptRefused).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        e.timers.run(20000);
+        expect(e.engine.stats.adopted).toBe(0);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual([clause]);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+        expect(e.teleports).toHaveLength(1);
+        expect(e.notes.some((n) => n?.includes(`waited ${ADOPT_WAIT_MS / 1000} s on "${clause}"`))).toBe(true);
+    }
+    it('clause BEGIN — the begin record names another level (a swap pending) and never lands → WAITED, then not adopted (named)', () => {
+        waitedOutBy(adoptOver({ begin: { 'begin.level': 0 } }), 'begin');
     });
     it('clause TAPE — a tape is armed (the room is somebody\'s) → not adopted', () => {
         refusedBy(adoptOver({ patch: { arm: { pending: true, armed_at: -1 } } }), 'tape');
     });
-    it('clause FADE — too few frames since the begin record (the fade may be running) → not adopted', () => {
-        refusedBy(adoptOver({ elapsed: 30 }), 'fade');
+    it('clause FADE — too few frames since the begin record, and the clock never moves → WAITED, then not adopted (named)', () => {
+        waitedOutBy(adoptOver({ elapsed: 30 }), 'fade');
+    });
+    it('⛓ §5.19 — clause FADE is TRANSIENT: the measured skip-intro case (36 frames, needs > 48) WAITS for the fade, then ADOPTS — 0 forced, nothing refused', () => {
+        const e = adoptOver({ elapsed: 36, tick: (w) => { w.elapsed += 4; } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-adoption' });
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.teleports).toEqual([]);
+        expect(e.engine.stats).toMatchObject({ adopted: 1, forced: 0, forcedBy: {}, adoptRefused: [] });
+        expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['adopt', 'continuation']);
+        expect(e.dones).toHaveLength(1);
+    });
+    it('⛓ §5.19 — a PERMANENT clause refusing while a transient one is waited on is recorded AT ONCE (no wait-out)', () => {
+        const e = adoptOver({ elapsed: 36, tick: (w) => { w.elapsed += 4; if (w.elapsed > 44) w.patch = { x: 57.5 }; } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-adoption' });
+        e.timers.run(3);
+        expect(e.engine.stats.adoptRefused.map((r) => r.clause)).toEqual(['position']);
+        expect(e.engine.stats.forcedBy).toEqual({ 'cold-start': 1 });
+    });
+    it('⛓ §5.19 — the begin record OUR tape load cleared is read back: adopt, stop, adopt again — 0 forced (the vanilla-map D sequence)', () => {
+        const e = adoptOver({}, { game: { realSeam: true } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        expect(e.game.be).toBe(null); // the adoption's freeze tape cleared it, as the game's botLoadTape does
+        e.engine.stop();
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        expect(e.engine.stats).toMatchObject({ adopted: 2, forced: 0, forcedBy: {}, adoptRefused: [] });
+    });
+    it('⛓ §5.19 — …but not after a teleport was PUSHED since (its swap lands a new room): the begin clause waits for it', () => {
+        const e = adoptOver({}, { game: { realSeam: true } });
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'adopt' });
+        e.engine.stop();
+        e.swap.state = { ...CLEAR, pushes: 1 };
+        expect(e.engine.walkTo(CHEST)).toEqual({ ok: true, action: 'await-adoption' });
+        e.game.be = A.seam.beginEntry; // the pushed swap lands
+        e.timers.run();
+        expect(e.engine.stats).toMatchObject({ adopted: 2, forced: 0, adoptRefused: [] });
     });
     it('clause INVENTORY — the player has something to USE (hidden slash/wand state) → not adopted', () => {
         refusedBy(adoptOver({ patch: { inventory_slots: [0] } }), 'inventory');

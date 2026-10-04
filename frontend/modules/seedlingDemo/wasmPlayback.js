@@ -334,11 +334,35 @@ export const TUTORIAL_DISMISS_KEY = 'right';
 /** ⛓ W8c — game frames after the dismissal before the adoption: the Help fades at 0.1 alpha a frame (`Help.as:28`). */
 export const TUTORIAL_FADE_FRAMES = 12;
 
+/**
+ * ⛓ §5.19 — the adoption clauses that TIME cures, so a refusal by one of them WAITS (bounded, named on its
+ * timeout) instead of spending the cold-start re-arrival:
+ *   - `fade`  — the begin record is too fresh; the fade runs out on its own. Since skip-intro (§5.16) the
+ *     explicit start lands the player with no ceremony, so the bot's first goal can come inside the fade
+ *     (measured: 36 frames, needs > 48).
+ *   - `begin` — no begin record for the player's level: a swap still pending lands one.
+ * Every other clause (position, velocity, facing, inventory, mobiles, …) is a fact about the room that
+ * waiting does not change, and refuses at once.
+ */
+export const ADOPT_TRANSIENT_CLAUSES = Object.freeze(['fade', 'begin']);
+
+/**
+ * ⛓ §5.19 — is this refusal one time cures? A `begin` refusal over the new-game arm's UNRESOLVED −1 record
+ * (`newGameBeginEntry` declined it: the set starts elsewhere) is not a swap in flight — nothing will land — so it
+ * refuses at once, as before.
+ */
+export function adoptRefusalIsTransient(clause, beginEntry) {
+    if (!ADOPT_TRANSIENT_CLAUSES.includes(clause)) return false;
+    return !(clause === 'begin' && Number(beginEntry?.['begin.level']) < 0);
+}
+
 /** `Player.sprites()`'s stand animation for a `direction` (0 right, 1 up, 2 left, 3 down; 0 and 2 share `side`). */
 export const standAnimFor = (direction) => (direction === 1 ? 'up' : direction === 3 ? 'down' : 'side');
 
 /**
  * null when the live room may be adopted, else `{clause, why}`.
+ * ⛓ §5.19 — `waitingOutFade`: skip the `fade` clause, to ask whether any OTHER clause refuses already (a
+ * permanent one is reported at once rather than after the fade was waited out).
  *
  * @param {object} o
  * @param {object|null} o.beginEntry  `botSeam().beginEntry` (read before any `botLoadTape`)
@@ -348,7 +372,7 @@ export const standAnimFor = (direction) => (direction === 1 ? 'up' : direction =
  * @param {{x:number, y:number, direction:number}} o.shadow  the shadow's player after ONE idle tick
  * @param {object} o.state    the bridge's `readState()` (⛓ W8c: `freezeObjects`)
  */
-export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow, state }) {
+export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow, state, waitingOutFade = false }) {
     const no = (clause, why) => ({ clause, why });
     if (!beginEntry || beginEntry['begin.level'] !== status?.level) {
         return no('begin', `no begin record for level ${status?.level} (got ${beginEntry ? beginEntry['begin.level'] : 'none'}) — `
@@ -356,7 +380,7 @@ export function adoptionRefusal({ beginEntry, status, mobiles, record, shadow, s
     }
     if (status.armed || status.held || status.arm?.pending) return no('tape', 'a tape is armed or holding — the room is not unwatched');
     const elapsed = status.game_time - beginEntry['save.time'];
-    if (!(elapsed > ADOPT_MIN_ELAPSED)) {
+    if (!waitingOutFade && !(elapsed > ADOPT_MIN_ELAPSED)) {
         return no('fade', `only ${elapsed} game frame(s) since the begin record (needs > ${ADOPT_MIN_ELAPSED}): the fade may not be over`);
     }
     if ((status.inventory_slots ?? []).length > 0) {

@@ -85,7 +85,7 @@ import {
     arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest, isArrival, stagingFromWasmArrival,
 } from '../seedlingDemo/wasmArrival.js';
 import {
-    adoptionRefusal, arrivalHoldBlocker, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
+    adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
     shippedTape, TAPE_KEY_RELEASES, wasmGoalRefusal,
@@ -105,6 +105,9 @@ export const SOLVE_POLL_MS = 20;
 /** ⛓ W8c — the new-game ceremony's poll (`awaitCeremony`). */
 export const CEREMONY_POLL_MS = 100;
 export const DRAIN_MS = 100;
+/** ⛓ §5.19 — how long a cold start waits on a TRANSIENT adoption clause (`ADOPT_TRANSIENT_CLAUSES`), and its poll. */
+export const ADOPT_WAIT_MS = 15000;
+export const ADOPT_POLL_MS = 100;
 export const STATUS_MS = 500;
 
 const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
@@ -171,6 +174,13 @@ export function createWasmPlayback({
      * crossing in flight).
      */
     let room = null;
+    /**
+     * ⛓ §5.19 — the begin record OUR last `botLoadTape` cleared (`flash.md` § Wasm playback: a tape load clears
+     * `beginEntry`), with the glue's push count then: `{entry, pushes}`. A null `beginEntry` after it is OUR
+     * doing, not a pending swap — while no later begin landed (the game sets a new one) and no teleport was
+     * pushed since, the room is still the one that record describes, and an adoption may read it.
+     */
+    let cleared = null;
     /** ⛓ W7 — the bot is driving (a walkTo since the last stop()): arrivals are held. */
     let driving = false;
     /** ⛓ W7 — an exit plan's crossing is in flight: the next held arrival is where the next goal starts. */
@@ -296,6 +306,8 @@ export function createWasmPlayback({
         const g = game();
         if (!g?.botLoadTape || !g?.botStart) return 'the game exposes no botLoadTape/botStart';
         const from = seqNow();
+        const live = seam().beginEntry ?? null;
+        if (live) cleared = { entry: live, pushes: swapState()?.pushes ?? null };
         const loaded = g.botLoadTape(JSON.stringify(tape));
         if (loaded !== 'ok') return `botLoadTape refused the ${label} tape: ${loaded}`;
         const started = g.botStart();
@@ -354,6 +366,7 @@ export function createWasmPlayback({
             // ⛓ W8 — the cold start: ADOPT the unwatched room when it provably is "its arrival + idle ticks".
             const adopted = holds && glueQuery && !room ? adoptLive(g) : null;
             if (adopted === true) return { ok: true, action: 'adopt' };
+            if (adopted?.transient) { awaitAdoption(adopted.transient); return { ok: true, action: 'await-adoption' }; }
             if (adopted && typeof adopted === 'object') { awaitCeremony(adopted); return { ok: true, action: 'await-ceremony' }; }
             reArrive(`re-entering level ${g.level} to solve from an arrival (${FALLBACK_POLICY}: the cold start — the room ran `
                 + `before the bot drove${adopted ? `, and it cannot be adopted: ${adopted}` : ', so no arrival staging of it exists'})`, 'cold-start');
@@ -378,13 +391,24 @@ export function createWasmPlayback({
      * shadow `arrival + 1 idle tick` (`room.shipped = [[]]`). The glue query
      * must rule out a redirect in flight, as for a held arrival.
      * Returns true (adopted, or failed by name) or the refusal, `clause: why`.
+     * ⛓ §5.19 — or `{transient: {clause, why}}` for a clause time cures (`ADOPT_TRANSIENT_CLAUSES`): the
+     * caller WAITS (`awaitAdoption`) and records it only if it outlives the wait (`transient: false`).
      */
-    function adoptLive(g, { ceremonyOver = false } = {}) {
-        const arrived = seam();
+    function adoptLive(g, { ceremonyOver = false, transient = true } = {}) {
+        const live = seam();
+        // ⛓ §5.19 — a begin record OUR tape load cleared is read back (`cleared`): no begin landed since (the
+        // seam would hold it) and no teleport was pushed since (its swap would land a new room).
+        const sw0 = swapState();
+        const mine = !live.beginEntry && cleared && (cleared.pushes ?? null) === (sw0?.pushes ?? null) ? cleared.entry : null;
+        const arrived = mine ? { ...live, beginEntry: mine } : live;
         const st = status();
         const state = readState();
         const record = records.get(g.level) ?? null;
-        const refused = (clause, why) => { stats.adoptRefused.push({ level: g.level, clause, why }); return `${clause}: ${why}`; };
+        const refused = (clause, why) => {
+            if (transient && adoptRefusalIsTransient(clause, arrived.beginEntry)) return { transient: { clause, why } };
+            stats.adoptRefused.push({ level: g.level, clause, why });
+            return `${clause}: ${why}`;
+        };
         if (!st) return refused('begin', 'botStatus answered nothing');
         // ⛓ W8c — the new-game arm's record reads begin.level −1: resolved to the set's start level
         // (`newGameBeginEntry`), and its ceremony is waited out (`awaitCeremony`) before any clause is asked.
@@ -403,7 +427,9 @@ export function createWasmPlayback({
             } catch (err) { return refused('staging', String(err?.message ?? err).split('\n')[0]); }
         }
         const mobiles = J(game()?.botMobiles?.());
-        const r = adoptionRefusal({ beginEntry: be, status: st, mobiles, record, shadow, state });
+        let r = adoptionRefusal({ beginEntry: be, status: st, mobiles, record, shadow, state });
+        // ⛓ §5.19 — the fade is waited out only when nothing ELSE refuses: a permanent clause refuses now.
+        if (r?.clause === 'fade') r = adoptionRefusal({ beginEntry: be, status: st, mobiles, record, shadow, state, waitingOutFade: true }) ?? r;
         if (r) return refused(r.clause, r.why);
         const sw = swapState();
         // The glue stamps pushes with the record AS LATCHED (⛓ W8c: the arm's, unresolved).
@@ -496,10 +522,36 @@ export function createWasmPlayback({
                 || (c.dismissedAt !== null && !(st.game_time - c.dismissedAt > TUTORIAL_FADE_FRAMES))) { schedule(step, CEREMONY_POLL_MS); return; }
             const adopted = adoptLive(goal, { ceremonyOver: true });
             if (adopted === true) { c.adopted = true; return; }
+            if (adopted?.transient) { awaitAdoption(adopted.transient, { ceremonyOver: true, ceremony: c }); return; }
             reArrive(`re-entering level ${goal.level} to solve from an arrival (${FALLBACK_POLICY}: the new game's room, after `
                 + `its ceremony, cannot be adopted: ${adopted})`, 'cold-start');
         };
         schedule(step, CEREMONY_POLL_MS);
+    }
+
+    /**
+     * ⛓ §5.19 — a cold start refused by a TRANSIENT clause (`adoptRefusalIsTransient`: the fade not over, a
+     * begin record not landed) WAITS for it, re-asking every clause each `ADOPT_POLL_MS`: adopted the moment
+     * they all pass; a permanent clause refusing meanwhile, or the transient one outliving `ADOPT_WAIT_MS`, is
+     * recorded (`adoptRefused`) and the named cold-start re-arrival serves the goal, as before.
+     */
+    function awaitAdoption(first, { ceremonyOver = false, ceremony = null } = {}) {
+        phase = 'adopt-wait';
+        deadline = now() + ADOPT_WAIT_MS;
+        let last = first;
+        note(`waiting to adopt level ${goal.level} (${first.clause}: ${first.why})`);
+        const step = () => {
+            if (phase !== 'adopt-wait') return;
+            const timedOut = now() > deadline;
+            const adopted = adoptLive(goal, { ceremonyOver, transient: !timedOut });
+            if (adopted === true) { if (ceremony) ceremony.adopted = true; return; }
+            if (adopted?.transient) { last = adopted.transient; schedule(step, ADOPT_POLL_MS); return; }
+            if (adopted && typeof adopted === 'object') { awaitCeremony(adopted); return; }
+            reArrive(`re-entering level ${goal.level} to solve from an arrival (${FALLBACK_POLICY}: the cold start — `
+                + `${timedOut ? `the adoption waited ${ADOPT_WAIT_MS / 1000} s on "${last.clause}"` : 'the room changed while the adoption waited'}, `
+                + `and it cannot be adopted: ${adopted})`, 'cold-start');
+        };
+        schedule(step, ADOPT_POLL_MS);
     }
 
     /** ⛓ W8 — the adoption's freeze latched → the held check + the continuation solve; never latched → failed by name. */
