@@ -482,7 +482,7 @@ export class SeedlingPlaybackController {
                 + 'on the wasm runtime — their tapes come from the walker producer, which serves a location or an exit');
         }
         const map = this._mapOf(s);
-        if (!map) return 'pending';
+        if (!map) return this._noMap(s);
         const engine = this._engineFor(s);
         if (!engine) {
             if (this._wasmLoadError && this._wasmLoadErrorGame === (s.wasm?.getGame?.() ?? null)) {
@@ -504,6 +504,17 @@ export class SeedlingPlaybackController {
         return true;
     }
 
+    /**
+     * ⛓ VANILLA MAP — no name → cell map: 'pending' while the AP placement load may still bind one, or a
+     * refusal BY THE LOAD'S OWN REASON once it bound none (the JS runtime refuses the vanilla arm) — never
+     * a silent hold until `PENDING_GIVE_UP_MS`.
+     */
+    _noMap(s) {
+        if (!s?.apRefusal) return 'pending';
+        return this._refuse(`no name → cell map for the ${ROOMS_OF[this.substrate] ?? this.substrate}: the AP placement load `
+            + `bound none — ${s.apRefusal}`);
+    }
+
     _page(surface = this._getSurface?.()) {
         return surface?.transport === 'js' ? (surface.jsRuntime?.playback ?? null) : null;
     }
@@ -519,6 +530,7 @@ export class SeedlingPlaybackController {
         if (s?.transport === 'wasm' && this.wasm) return this._applyWasm(target, s);
         const page = this._page(s);
         const map = this._mapOf(s);
+        if (s?.transport && !map) return this._noMap(s);
         if (!s || !s.transport || !page || !map) return 'pending';
         const liveLevel = s.jsRuntime?.run?.level ?? null;
         const r = this._resolve(target, map, { liveLevel, region: s.region ?? null });

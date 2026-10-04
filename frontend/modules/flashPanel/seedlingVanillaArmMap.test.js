@@ -209,3 +209,29 @@ describe('the wasm engine stages the DELIVERED rooms (solver flow)', () => {
         engine.dispose();
     });
 });
+
+describe('the JS runtime keeps refusing the vanilla arm (⚖ planner, slice option (a)) — and the bot hears WHY at once', () => {
+    it('the load refuses seedling_playthrough on js by name; the controller refuses by that reason, not a 60 s hold', async () => {
+        const refused = await load(PT, { transport: 'js', manifest: null });
+        expect(refused.eligibility.eligible).toBe(false);
+        expect(refused.why).toMatch(/^generated: the Seedling JS runtime plays GENERATED rooms .* the JS runtime does not take$/);
+        expect(realRoomPlaybackMap(refused, PT)).toBeNull();
+        const page = { walkTo: () => ({ ok: true }) };
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'js', atlas: null, apRefusal: refused.why, jsRuntime: { playback: page } }),
+            substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas,
+            timers: { setInterval: () => { throw new Error('a refusal is never held'); }, clearInterval: () => {} } });
+        expect(c.walkTo({ kind: 'location', name: LOADED.entries[0].location })).toBe(false);
+        expect(c.lastRefusal).toBe(`no name → cell map for the atlas rooms: the AP placement load bound none — ${refused.why}`);
+    });
+
+    it('while the load is still running (no refusal yet) the goal is HELD as before', () => {
+        let held = 0;
+        const c = new SeedlingPlaybackController({
+            getSurface: () => ({ transport: 'wasm', atlas: null, apRefusal: null, wasm: { getGame: () => null } }),
+            substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE, resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true,
+            timers: { setInterval: () => { held += 1; return 1; }, clearInterval: () => {} } });
+        expect(c.walkTo({ kind: 'location', name: LOADED.entries[0].location })).toBe(true);
+        expect(held).toBe(1);
+    });
+});

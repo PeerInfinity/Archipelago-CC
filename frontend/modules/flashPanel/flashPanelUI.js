@@ -285,6 +285,9 @@ export class FlashPanelUI {
       solverWalk: this._solverWalk !== false, // ⛓ S2 — the default (on) until the setting is read
       report: this._seedlingGenReport ?? null,
       atlas: this._seedlingAtlas ?? null,
+      // ⛓ VANILLA MAP — why the AP placement load bound NO map (e.g. the JS runtime refuses the vanilla
+      // arm), or null while it runs / once it bound one.
+      apRefusal: this._apLoadRefusal ?? null,
       jsRuntime,
       // ⛓ W2 — the wasm playback engine's handles: the game's callback surface
       // and window (re-read per call — a preset switch replaces the iframe),
@@ -324,6 +327,7 @@ export class FlashPanelUI {
     this._seedlingGenSet = null;
     this._seedlingAtlas = null;
     this._seedlingRealSet = null;
+    this._apLoadRefusal = null;
     this._heldKeys?.uninstall();
     if (this.adapter) {
       this._detachRegionGlue();
@@ -644,6 +648,7 @@ export class FlashPanelUI {
    * same base `GAMES_DIR` and friends already fetch against.
    */
   async _startSeedlingRandomizer(adapter) {
+    this._apLoadRefusal = null;
     const staticData = stateManager.getStaticData?.() ?? null;
     const flashPanel = staticData?.flash_panel ?? null;
     const transport = this.transport === 'js' ? 'js' : 'wasm';
@@ -676,6 +681,7 @@ export class FlashPanelUI {
       // ⛓ ONE LINE, AND IT NAMES THE CHECK. "Nothing happened" with no reason
       // is the shape a data-driven feature fails in.
       this._panelLog(`ap placement: not applicable — ${cheap.why}`);
+      this._apLoadRefusal = cheap.why;
       return;
     }
 
@@ -721,6 +727,8 @@ export class FlashPanelUI {
       if (this.adapter !== adapter) { overlay.remove(); return; }
       if (!loaded.eligibility?.eligible) {
         this._panelLog(`ap placement: not applicable — ${loaded.why}`);
+        // ⛓ VANILLA MAP — the Playback Bot's controllers refuse by THIS reason rather than wait for a map.
+        this._apLoadRefusal = loaded.why;
         overlay.remove();
         return;
       }
@@ -762,6 +770,7 @@ export class FlashPanelUI {
       });
     } catch (err) {
       this._panelLog(`ap placement: ${err.message}`, 'error');
+      this._apLoadRefusal = `the load threw: ${err.message}`;
       overlay.setText(`the randomized rooms could not be prepared — ${err.message}`, 'error');
       log('error', '[flashPanelUI] seedling randomizer load failed', err);
     } finally {
