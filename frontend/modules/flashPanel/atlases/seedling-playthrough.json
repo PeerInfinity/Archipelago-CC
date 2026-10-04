@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-0faa7fee",
+  "atlas_id": "seedling-e5d9f89e",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "0faa7fee" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "e5d9f89e" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -919,6 +919,32 @@
           },
           {
             "from": "r0c19",
+            "to": "r13c6",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "CanReachRegion", "args": { "region_name": "level_12__r13c6" } },
+                { "rule": "Has", "args": { "item_name": "Yellow Key" } }
+              ]
+            }
+          },
+          {
+            "from": "r0c19",
+            "to": "r40c4",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "CanReachRegion", "args": { "region_name": "level_12__r40c4" } },
+                { "rule": "Has", "args": { "item_name": "Green Key" } }
+              ]
+            }
+          },
+          {
+            "from": "r0c19",
             "to": "r44c19",
             "bidirectional": true,
             "source": "analyzer",
@@ -929,7 +955,19 @@
             "to": "r0c19",
             "bidirectional": false,
             "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
+                {
+                  "rule": "And",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Red Key" } },
+                    { "rule": "CanReachRegion", "args": { "region_name": "level_12__r0c19" } }
+                  ]
+                }
+              ]
+            }
           },
           { "from": "r0c37", "to": "r44c19", "bidirectional": true, "source": "manual" },
           {
@@ -1345,6 +1383,19 @@
       "subgraph": {
         "sub_regions": ["r1c1","r1c5","r3c3","r5c5"],
         "internal_exits": [
+          {
+            "from": "r1c1",
+            "to": "r3c3",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "CanReachRegion", "args": { "region_name": "level_19__r3c3" } },
+                { "rule": "Has", "args": { "item_name": "Red Key" } }
+              ]
+            }
+          },
           {
             "from": "r1c5",
             "to": "r3c3",
@@ -2036,6 +2087,19 @@
         "sub_regions": ["r0c4","r2c10","r8c13","r16c17","r17c11"],
         "internal_exits": [
           {
+            "from": "r0c4",
+            "to": "r2c10",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "CanReachRegion", "args": { "region_name": "level_30__r2c10" } },
+                { "rule": "Has", "args": { "item_name": "Green Key" } }
+              ]
+            }
+          },
+          {
             "from": "r16c17",
             "to": "r17c11",
             "bidirectional": true,
@@ -2069,6 +2133,19 @@
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Green Key" } }
+          },
+          {
+            "from": "r8c13",
+            "to": "r2c10",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Green Key" } },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_30__r2c10" } }
+              ]
+            }
           }
         ]
       }
@@ -2121,6 +2198,19 @@
       "subgraph": {
         "sub_regions": ["r5c24","r24c10"],
         "internal_exits": [
+          {
+            "from": "r24c10",
+            "to": "r5c24",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Green Key" } },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_31__r5c24" } }
+              ]
+            }
+          },
           {
             "from": "r5c24",
             "to": "r24c10",
@@ -2640,6 +2730,19 @@
       "subgraph": {
         "sub_regions": ["r0c53","r23c29","r32c36","r36c35","r36c37"],
         "internal_exits": [
+          {
+            "from": "r0c53",
+            "to": "r23c29",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "CanReachRegion", "args": { "region_name": "level_40__r23c29" } },
+                { "rule": "Has", "args": { "item_name": "Purple Key" } }
+              ]
+            }
+          },
           {
             "from": "r23c29",
             "to": "r0c53",
@@ -3635,6 +3738,19 @@
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": { "rule": "Has", "args": { "item_name": "Blue Key" } }
+          },
+          {
+            "from": "r4c3",
+            "to": "r2c10",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Blue Key" } },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_48__r2c10" } }
+              ]
+            }
           },
           {
             "from": "r4c3",
@@ -5144,6 +5260,33 @@
       "subgraph": {
         "sub_regions": ["r1c1","r3c1"],
         "internal_exits": [
+          {
+            "from": "r1c1",
+            "to": "r3c1",
+            "bidirectional": false,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "CanReachRegion", "args": { "region_name": "level_68__r3c1" } },
+                { "rule": "Has", "args": { "item_name": "Yellow Key" } },
+                {
+                  "rule": "Or",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Wand" } },
+                    {
+                      "rule": "And",
+                      "children": [
+                        { "rule": "Has", "args": { "item_name": "Fire Wand Fusion" } },
+                        { "rule": "Has", "args": { "item_name": "Wand" } },
+                        { "rule": "Has", "args": { "item_name": "Fire" } }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
           {
             "from": "r3c1",
             "to": "r1c1",
