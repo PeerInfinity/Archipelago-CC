@@ -99,7 +99,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 7,
+            "count": 8,
             "id": "make"
         },
         {
@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 37,
-            "count": 79,
+            "browser": 38,
+            "count": 80,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 320,
-        "browser": 102,
+        "blockStyle": 322,
+        "browser": 103,
         "cited": 150,
-        "files": 331,
+        "files": 333,
         "lineStyle": 11,
-        "withDocblock": 331,
-        "withFlags": 251
+        "withDocblock": 333,
+        "withFlags": 253
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6212,6 +6212,31 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "make-seedling-subregion-partition.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "The SUB-REGION PARTITION of the Seedling atlases: which tile of a level is in which sub-region (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.17, logical sub-region links).",
+            "path": "scripts/procgen/make-seedling-subregion-partition.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "make",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-editor.md"
             ],
@@ -10300,6 +10325,54 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling solver-walk, slice W5 (plan `NewDocs/plans/seedling-wasm-solver-plan.md` §2.2/§3 W5) — the live witness of LEVEL 0 (the overworld hub) on the wasm solver, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
             "path": "scripts/procgen/probe-seedling-wasm-level0.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-wasm-logical-links.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling solver-walk §5.17 — LOGICAL SUB-REGION LINKS on the wasm runtime (plan `NewDocs/plans/seedling-js-solver-walk-plan.md`). `seedling_playthrough` loaded by `?rules=`, default build p4e, headless logic-only, under the box lock; every session on a FRESH page.",
+            "path": "scripts/procgen/probe-seedling-wasm-logical-links.mjs"
         },
         {
             "argvHelpers": [
