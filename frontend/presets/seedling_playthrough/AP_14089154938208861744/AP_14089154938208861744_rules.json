@@ -10319,7 +10319,11 @@
       "world_directory": "seedling_playthrough"
     }
   },
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": false
+    }
+  },
   "game_info": {
     "1": {
       "completion_condition": {

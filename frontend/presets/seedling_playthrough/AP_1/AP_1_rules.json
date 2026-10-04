@@ -10698,7 +10698,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": false
+    }
+  },
   "canonical_placements": {
     "1": {}
   },

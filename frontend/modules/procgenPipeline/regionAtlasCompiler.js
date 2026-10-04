@@ -376,6 +376,8 @@ function deriveIdentifiers(atlas, options) {
  * @param {number} [options.seed] rules.json generation_seed (default 1)
  * @param {string} [options.seedName] rules.json seed_name (default '')
  * @param {string} [options.playerName] player 1's name (default 'Player1')
+ * @param {boolean} [options.assumeBidirectionalExits] when a boolean, declared as
+ *   `exporter["1"].assume_bidirectional_exits`; omitted, the key is not written
  * @param {boolean} [options.embedSphereLog] embed the forward simulator's
  *   `generateSphereLog` walk of the compiled graph as `sphere_log` (default
  *   false — opt-in, so every existing compile stays byte-identical). The same
@@ -595,6 +597,16 @@ export function compileRegionAtlas(atlas, options = {}) {
     rules.items = { 1: items };
     rules.itempool_counts = { 1: itempoolCounts };
     rules.world['1'].world_directory = gameDirectory;
+    // ⛓ RULES RA (after F1): the bidirectional flag, declared only when the
+    // caller states it. Its ONE home is `exporter["<p>"]` (⚖ rules F1). This
+    // projection's graph is DIRECTED by construction — every connection is a
+    // one-way pair and a two-way crossing is two rows — but an atlas whose
+    // directed graph strands regions is not ready to say so. The caller that
+    // has MEASURED it (`strand 0`) passes `assumeBidirectionalExits: false`;
+    // omitted, nothing is written and the runtime auto-detects as before.
+    if (typeof options.assumeBidirectionalExits === 'boolean') {
+        rules.exporter['1'] = { ...rules.exporter['1'], assume_bidirectional_exits: options.assumeBidirectionalExits };
+    }
     // ⛓ R7 slice 4: a real GOAL. The scaffold's default is `constant true`,
     // which is right for a partial atlas that is not a game yet and wrong for a
     // whole map: with a trivially-satisfied completion, AP's fill has nothing to

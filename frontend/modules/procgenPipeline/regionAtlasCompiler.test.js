@@ -802,6 +802,30 @@ describe('schema conformance', () => {
     });
 });
 
+// ⛓ RULES RA (after F1) — the bidirectional flag is DECLARED by the caller that
+// measured its graph, into its one home `exporter["1"]`; never inferred here.
+describe('assumeBidirectionalExits — declared per player, only when stated', () => {
+    it('omitted: nothing is written, so every other atlas compile is byte-inert', () => {
+        const { rules } = compileStarter();
+        expect(rules.exporter).toEqual({});
+        expect(rules).not.toHaveProperty('assume_bidirectional_exits');
+    });
+
+    it('false (or true): exporter["1"] carries exactly that, and the document stays schema-valid', () => {
+        for (const value of [false, true]) {
+            const { rules } = compileStarter({ assumeBidirectionalExits: value });
+            expect(rules.exporter).toEqual({ 1: { assume_bidirectional_exits: value } });
+            expect(rules).not.toHaveProperty('assume_bidirectional_exits');
+            expect(rulesJsonSchemaErrors(rules, loadRulesSchema())).toEqual([]);
+        }
+    });
+
+    it('the committed seedling_playthrough rules declare false (its producer passes it; strand 0)', () => {
+        const rules = read('../../presets/seedling_playthrough/AP_1/AP_1_rules.json');
+        expect(rules.exporter).toEqual({ 1: { assume_bidirectional_exits: false } });
+    });
+});
+
 describe('determinism', () => {
     it('compiling the same atlas twice is byte-identical', () => {
         expect(stringifyRulesJson(compileStarter().rules))

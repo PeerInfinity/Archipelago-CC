@@ -666,6 +666,11 @@ function main() {
         seed: 1,
         completionItem: VICTORY_ITEM,
         provenance: provenanceOf(doc),
+        // ⛓ RULES RA: the graph is DIRECTED and MEASURED so — `strand.py` reads
+        // 0 of 242 stranded since fixes (A)+(B). Declared, it stops the runtime's
+        // auto-detection from covering the one-way pits and locks with reverse
+        // edges that do not exist in the game.
+        assumeBidirectionalExits: false,
     });
     const rulesText = stringifyRulesJson(rules);
 
