@@ -17,6 +17,12 @@
  *   bounce     -> (G4) a teleport home: a refused door's swap is REVERSED
  *   locked     -> (G4) a panel line + `flashSeedling:doorLocked` on the bus
  *
+ * ⛓⛓ **LOGICAL LINKS** (§5.17): it also READS THE PLAYER'S POSITION (`botStatus`, every
+ * `POSITION_POLL_MS`) while the binding `wantsPosition()` — a level with sub-regions — and no bot walk is in
+ * flight (`isBotWalking`: the bot's route credits its links itself, `creditLogicalLink`). The first read
+ * after a bot walk is a BASELINE (where the player stands, no move). A logical `regionMove` is the same
+ * `user:regionMove`, carrying `logical: true`.
+ *
  * ⛓⛓ **AND IT SUBSCRIBES `procgen:activeSubstrateChanged`** (EDITOR INTEGRATION
  * W6, H2; plan §11.1 A2 / §11.6 item 2). flashPanel is not procgen-only, so it
  * deliberately has no `SubstrateInactiveOverlay` and the game keeps running
@@ -58,6 +64,13 @@ export const AP_ITEM_FOUND_EVENT = 'flashSeedling:apItemFound';
  */
 export const DOOR_LOCKED_EVENT = 'flashSeedling:doorLocked';
 
+/**
+ * ⛓ LOGICAL LINKS — how often the player's position is read on a level with sub-regions. MEASURED
+ * (§5.17): a wasm `botStatus` costs ~MEASURED ms of the page's main thread, so four reads a second are
+ * a few percent of it; the JS runtime's is free.
+ */
+export const POSITION_POLL_MS = 250;
+
 export class SeedlingRegionGlue {
     /**
      * @param {object} deps
@@ -74,7 +87,8 @@ export class SeedlingRegionGlue {
      *   (`seedlingDoorGate.createDoorGate` over the state manager); absent =
      *   every door passes, today's behaviour
      */
-    constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now, canPass } = {}) {
+    constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now, canPass, isBotWalking,
+        timers } = {}) {
         this.eventBus = eventBus ?? null;
         this.getDispatcher = getDispatcher ?? (() => null);
         this.loadRegionEvent = loadRegionEvent;
@@ -92,7 +106,61 @@ export class SeedlingRegionGlue {
         // Diagnostics — the verify script reads these rather than inferring
         // behaviour from console text.
         this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
-            resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0, doorsLocked: 0, bounces: 0 };
+            resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0, doorsLocked: 0, bounces: 0,
+            logicalMoves: 0, positionReads: 0 };
+        /** ⛓ LOGICAL LINKS — is a Playback Bot walk in flight (its route credits its own links)? */
+        this.isBotWalking = isBotWalking ?? (() => false);
+        this._timers = timers ?? { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) };
+        this._positionTimer = null;
+        /** The next position read is a BASELINE (set while a bot walk is in flight). */
+        this._baselineNext = false;
+    }
+
+    /** ⛓ LOGICAL LINKS — the sub-region map (`seedlingSubRegions.buildSubRegionMap`), or null. */
+    setSubRegions(map) {
+        this.binding.setSubRegions(map);
+        this._baselineNext = false;
+        return this;
+    }
+
+    /**
+     * ⛓ LOGICAL LINKS — the Playback Bot's route names a link: the binding credits it, and the move is
+     * PUBLISHED on the next turn (the bot's `walkTo` is still on the stack, and the move re-enters the bot).
+     * `{ok}` or `{ok: false, reason}`.
+     */
+    creditLogicalLink(name) {
+        const r = this.binding.creditLink(name);
+        if (!r.ok) return r;
+        Promise.resolve().then(() => this.apply(r.effects));
+        return { ok: true };
+    }
+
+    /** One position read: the game's `botStatus` (live player), handed to the binding. */
+    readPosition() {
+        if (!this.adapter || !this.binding.wantsPosition()) return;
+        if (this.isBotWalking()) { this._baselineNext = true; return; }
+        let st = null;
+        try {
+            const game = this.adapter._getFlash?.() ?? null;
+            const raw = game?.botStatus?.();
+            st = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        } catch { st = null; }
+        if (!st || !Number.isInteger(st.level) || st.level < 0) return;
+        this.stats.positionReads += 1;
+        const baseline = this._baselineNext;
+        this._baselineNext = false;
+        this.apply(this.binding.onPlayerPosition({ level: st.level, x: Number(st.x), y: Number(st.y) }, { baseline }));
+    }
+
+    _startPositionWatch() {
+        if (this._positionTimer) return;
+        this._positionTimer = this._timers.setInterval(() => this.readPosition(), POSITION_POLL_MS);
+    }
+
+    _stopPositionWatch() {
+        if (!this._positionTimer) return;
+        this._timers.clearInterval(this._positionTimer);
+        this._positionTimer = null;
     }
 
     start() {
@@ -104,6 +172,7 @@ export class SeedlingRegionGlue {
          */
         this._unsubs.push(this._subscribe(this.loadRegionEvent, this._handler));
         this._unsubs.push(this._subscribe(ACTIVE_SUBSTRATE_EVENT, this._activeHandler));
+        this._startPositionWatch();
     }
 
     /** eventBus.subscribe returns an unsubscribe fn in some hosts and nothing
@@ -116,6 +185,7 @@ export class SeedlingRegionGlue {
     stop() {
         for (const off of this._unsubs) off();
         this._unsubs = [];
+        this._stopPositionWatch();
         this.detachAdapter();
     }
 
@@ -326,7 +396,7 @@ export class SeedlingRegionGlue {
         } catch { /* a bus that refuses an unknown event is not a gate failure */ }
     }
 
-    _regionMove({ sourceRegion, targetRegion, exitName, fromLevel, toLevel }) {
+    _regionMove({ sourceRegion, targetRegion, exitName, fromLevel, toLevel, logical = false, why = null }) {
         const dispatcher = this.getDispatcher();
         if (!dispatcher?.publish) {
             this._warn('[region atlas] no dispatcher — the boundary crossing was detected but not published');
@@ -337,8 +407,16 @@ export class SeedlingRegionGlue {
             targetRegion,
             exitName,
             source: 'seedlingRegionGlue',
+            // ⛓ LOGICAL LINKS — additive: a move inside one level, no door crossed.
+            ...(logical ? { logical: true } : {}),
         }, { initialTarget: 'bottom' });
         this.stats.regionMoves += 1;
+        if (logical) {
+            this.stats.logicalMoves += 1;
+            this._log(`[region atlas] level ${fromLevel}: logical link "${exitName}" -> region "${targetRegion}"`
+                + `${why ? ` (${why})` : ''}`);
+            return;
+        }
         this._log(`[region atlas] level ${fromLevel} -> ${toLevel}: crossing "${exitName}" `
             + `-> region "${targetRegion}"`);
     }

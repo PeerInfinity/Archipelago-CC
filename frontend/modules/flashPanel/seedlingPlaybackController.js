@@ -171,10 +171,10 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
             return { goal: { kind: 'exit', level: payload.level, tiles: exit.exit_tiles, name } };
         }
         // ⛓ VANILLA MAP — a rules exit between two sub-regions of ONE level is a LOGICAL link (it carries a
-        // rule, not a door): no sidecar marks a tile for it, and the region binding is level-granular
-        // (`seedlingRegionBinding.js`, ruling 1, 2026-07-27), so no crossing would ever report it.
+        // rule, not a door): no sidecar marks a tile for it. ⛓ LOGICAL LINKS (§5.17) — it is answered as a
+        // `link`, which the controller asks the region binding to CREDIT (no walk: the next door is walked).
         const link = (atlas?.links ?? []).find((l) => l.name === name);
-        if (link) return { refused: SUB_REGION_LINK_REFUSAL(link) };
+        if (link) return { link };
         return { refused: `"${name}" is not an exit of the atlas rooms` };
     }
     if (target?.kind === 'tile') {
@@ -184,11 +184,17 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
     return { refused: `not a walk target: ${JSON.stringify(target)}` };
 }
 
-/** ⛓ VANILLA MAP — why a logical sub-region link has no cell (`resolveSeedlingAtlasGoal`). */
+/**
+ * ⛓ VANILLA MAP — why a logical sub-region link has no cell; ⛓ LOGICAL LINKS (§5.17) — said only when no
+ * region binding is there to credit it (the surface carries no `creditLink`).
+ */
 export const SUB_REGION_LINK_REFUSAL = (link) => `the exit "${link.name}" links two sub-regions of level `
     + `${link.level} (${link.from} → ${link.to}): a LOGICAL link that carries a rule, not a door — no sidecar `
-    + 'marks a tile for it, and the region binding is level-granular (ruling 1, 2026-07-27), so no crossing '
-    + 'would ever report it';
+    + 'marks a tile for it, and no region binding is there to credit the move';
+
+/** ⛓ LOGICAL LINKS — the binding refused to credit a link the route named. */
+export const LINK_CREDIT_REFUSAL = (link, why) => `the logical link "${link.name}" (${link.from} → ${link.to}) `
+    + `was not credited: ${why}`;
 
 /**
  * ⛓ VANILLA MAP — the rules' LOGICAL links between real-room regions: every rules exit whose two ends
@@ -497,11 +503,39 @@ export class SeedlingPlaybackController {
         const liveLevel = engine.liveLevel();
         const r = this._resolve(target, map, { liveLevel, region: s.region ?? null });
         if (r.refused) return this._refuse(r.refused);
+        if (r.link) return this._creditLink(r.link, s, target);
         this._lastTarget = target;
         const answer = engine.walkTo(r.goal);
         if (!answer?.ok) return this._refuse(`the wasm runtime refused ${JSON.stringify(r.goal)}: ${answer?.reason ?? 'no answer'}`);
         this.lastGoal = r.goal;
         return true;
+    }
+
+    /**
+     * ⛓⛓ LOGICAL LINKS (§5.17) — the route names a link between two sub-regions of one level: the region
+     * binding CREDITS it at once (`surface.creditLink`; it refuses a link its gate keeps closed), and the
+     * move reaches the bot as an ordinary `user:regionMove` on the next turn. Nothing is walked: the next
+     * goal is a door or a location, and the solver plans the whole room to it.
+     */
+    _creditLink(link, s, target) {
+        if (typeof s?.creditLink !== 'function') return this._refuse(SUB_REGION_LINK_REFUSAL(link));
+        const out = s.creditLink(link.name);
+        if (!out?.ok) return this._refuse(LINK_CREDIT_REFUSAL(link, out?.reason ?? 'no answer'));
+        this._lastTarget = target;
+        this.lastGoal = { kind: 'link', name: link.name, from: link.from, to: link.to, level: link.level };
+        return true;
+    }
+
+    /**
+     * ⛓ LOGICAL LINKS — is a walk of this instance in flight? The region glue reads no position while one
+     * is (the route credits its own links); only an idle engine (or none) is not walking.
+     */
+    busy() {
+        const p = this._page();
+        if (p) return p.state === 'walking' || p.state === 'waiting';
+        const w = this._wasmEngine?.status?.() ?? null;
+        // 'held' counts: the game is frozen between the bot's goals, and its next goal is coming.
+        return !!w && w.phase !== 'idle';
     }
 
     /**
@@ -535,6 +569,7 @@ export class SeedlingPlaybackController {
         const liveLevel = s.jsRuntime?.run?.level ?? null;
         const r = this._resolve(target, map, { liveLevel, region: s.region ?? null });
         if (r.refused) return this._refuse(r.refused);
+        if (r.link) return this._creditLink(r.link, s, target);
         // ⛓ S1 — the solver mode travels with the goal (the page may be newer than the setting's last push).
         page.setSolverWalk?.(s.solverWalk === true);
         const answer = page.walkTo(r.goal);

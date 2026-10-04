@@ -15,7 +15,6 @@ import { describe, expect, it } from 'vitest';
 import {
     ENCOUNTER_REFUSAL,
     SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
-    SUB_REGION_LINK_REFUSAL,
     SeedlingPlaybackController,
     realRoomLinks,
     realRoomPlaybackMap,
@@ -91,7 +90,7 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
         }
     });
 
-    it('every exit: a door → its sidecar exit_tiles; a same-level sub-region link → refused by name; nothing else but the Menu', () => {
+    it('every exit: a door → its sidecar exit_tiles; a same-level sub-region link → a LINK (credited, §5.17); nothing else but the Menu', () => {
         const tally = { door: 0, link: 0, other: [] };
         for (const exit of EXITS) {
             const r = resolveSeedlingAtlasGoal({ kind: 'exit', name: exit.name }, MAP, { region: exit.region });
@@ -103,7 +102,8 @@ describe('the vanilla arm\'s map — seedling_playthrough, every name accounted 
             } else if (realRegion(exit.region) && realRegion(exit.connected_region)
                 && SIDECARS[exit.region].playable_payload.level === SIDECARS[exit.connected_region].playable_payload.level) {
                 const link = MAP.links.find((l) => l.name === exit.name);
-                expect(r.refused).toBe(SUB_REGION_LINK_REFUSAL(link));
+                // ⛓ LOGICAL LINKS (§5.17) — answered as the link itself; the controller asks the binding to credit it.
+                expect(r.link).toBe(link);
                 tally.link += 1;
             } else {
                 tally.other.push({ region: exit.region, name: exit.name, refused: r.refused });
@@ -171,7 +171,7 @@ describe('the atlas arm keeps its map (J3), and gains only the links', () => {
             .filter((r) => rules.preset_sidecars['1'][r].substrate === ATLAS_ROOM_SUBSTRATE_ID).sort());
         expect(map.links.length).toBeGreaterThan(0);
         for (const l of map.links) {
-            expect(resolveSeedlingAtlasGoal({ kind: 'exit', name: l.name }, map).refused).toBe(SUB_REGION_LINK_REFUSAL(l));
+            expect(resolveSeedlingAtlasGoal({ kind: 'exit', name: l.name }, map).link).toBe(l);
         }
     });
 });

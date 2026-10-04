@@ -220,6 +220,12 @@ const gridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS } = {}) => SEM.bu
 );
 /** ⛓ SWIM T4 — the analyzer grid this generator builds for one level (the census's read). Additive. */
 export const playthroughGridFor = (level, options) => gridFor(level, options);
+/**
+ * ⛓ LOGICAL LINKS — the analyzer options this generator runs with, so a reader that re-runs the analysis
+ * (`make-seedling-subregion-partition.mjs`: which tile is in which sub-region) gets this run's components
+ * exactly. Additive.
+ */
+export const playthroughAnalyzerOptions = analyzerOptions;
 
 // ── what the derivation needs, and what this script keeps ─────────────────
 //

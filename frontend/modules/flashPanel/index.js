@@ -292,6 +292,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
   // a preset whose sidecars name the flash_seedling substrate is loaded, and
   // subscribing here (rather than when a flash region first appears) is what
   // keeps it ahead of procgenPlayer's start-region publish.
+  /** ⛓ LOGICAL LINKS — the two Playback Bot controllers, filled below (the glue asks whether either walks). */
+  const playbackControllers = [];
   seedlingRegionGlue = new SeedlingRegionGlue({
     eventBus: getModuleEventBus(),
     getDispatcher: () => moduleDispatcher,
@@ -304,6 +306,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       getStaticData: () => stateManagerProxySingleton.getStaticData?.() ?? null,
       getSnapshotInterface: snapshotInterfaceLoader.get,
     }),
+    // ⛓ LOGICAL LINKS — no position is read while a Playback Bot walk is in flight (its route credits its links).
+    isBotWalking: () => playbackControllers.some((c) => c?.busy?.() === true),
   });
   seedlingRegionGlue.start();
 
@@ -317,7 +321,9 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       return surface ? { ...surface, region: seedlingRegionGlue?.binding?.region ?? null,
         checkBinding: seedlingRegionGlue?.checkBinding ?? null,
         // ⛓ W7 — the glue query the wasm engine asks before it holds an arrival.
-        swapState: () => seedlingRegionGlue?.swapState?.() ?? null } : null;
+        swapState: () => seedlingRegionGlue?.swapState?.() ?? null,
+        // ⛓ LOGICAL LINKS — the route's link, credited by the region binding (no walk).
+        creditLink: (name) => seedlingRegionGlue?.creditLogicalLink?.(name) ?? { ok: false, reason: 'no region glue' } } : null;
     },
     log: (msg, level) => {
       activePanelInstance?._panelLog?.(msg, level);
@@ -329,13 +335,14 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     onWalkNote: (e) => getModuleEventBus()?.publish?.(PLAYBACK_WALK_NOTE_EVENT, e),
   };
   // ⛓ WG — generated rooms walk on wasm too: the engine stages the MOUNTED set the generated arm delivered.
-  setSeedlingPlaybackController(new SeedlingPlaybackController({
+  const genController = new SeedlingPlaybackController({
     ...playbackDeps,
     wasm: true,
     wasmLevelSetOf: (surface) => surface?.wasm?.levelSet ?? null,
-  }));
+  });
+  setSeedlingPlaybackController(genController);
   // ⛓ J3 — the same page and walker, the atlas rooms' name → cell map.
-  setSeedlingAtlasPlaybackController(new SeedlingPlaybackController({
+  const atlasController = new SeedlingPlaybackController({
     ...playbackDeps,
     substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
     resolve: resolveSeedlingAtlasGoal,
@@ -344,7 +351,9 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     wasm: true,
     // ⛓ VANILLA MAP — staged from the rooms an arm DELIVERED (the vanilla rewrite), else the map document.
     wasmDeliveredSetOf: (surface) => surface?.wasm?.deliveredSet ?? null,
-  }));
+  });
+  setSeedlingAtlasPlaybackController(atlasController);
+  playbackControllers.push(genController, atlasController);
 
   // ⛓ AFTER the glue's own subscription, so the arrival is queued before the
   // tab switch that resumes the game's page.

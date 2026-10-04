@@ -18,6 +18,7 @@ import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
 import { mapDocumentPath, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
+import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
 
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -1001,6 +1002,37 @@ export class FlashPanelUI {
       this._panelLog(`region-atlas glue attach failed: ${err.message}`, 'error');
     }
     this._loadReturnSpawns(adapter);
+    this._loadSubRegions(adapter);
+  }
+
+  /**
+   * ⛓ LOGICAL LINKS (§5.17) — the sub-region map for a preset whose real-room regions are split into
+   * sub-regions: the generated partition (which tile is in which sub-region, by the rules' `atlas_id`) and
+   * the rules' logical links. Without it the binding cannot tell a seam was crossed (it still learns the
+   * bot's credited links and a door's sibling), and the log says so.
+   */
+  async _loadSubRegions(adapter) {
+    const raw = rulesOfRawPayload(getLastRawJsonData?.());
+    const glue = getSeedlingRegionGlue();
+    glue?.setSubRegions?.(null);
+    if (!raw?.region_atlas) return;
+    try {
+      const res = await fetch(new URL(SUB_REGION_PARTITION_PATH, document.baseURI).href);
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      const { map, why } = buildSubRegionMap({ rules: raw, partition: await res.json() });
+      if (this.adapter !== adapter) return;
+      if (!map) {
+        if (why) this._panelLog(`[region atlas] ${why}`, 'error');
+        return;
+      }
+      glue?.setSubRegions?.(map);
+      const links = [...map.links.values()].reduce((n, l) => n + l.length, 0);
+      this._panelLog(`[region atlas] sub-regions: ${[...map.levels.values()].flat().length} level(s) partitioned, `
+        + `${links} logical link(s) (${map.atlasId})`);
+    } catch (err) {
+      this._panelLog(`[region atlas] the sub-region partition did NOT load from ${SUB_REGION_PARTITION_PATH} — `
+        + `a seam crossed on foot is not recognised: ${err.message}`, 'error');
+    }
   }
 
   /**

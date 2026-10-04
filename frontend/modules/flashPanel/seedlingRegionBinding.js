@@ -39,6 +39,27 @@
  * report doubles as the "the game is alive and reporting" signal, which is when
  * a deferred initial arrival teleport is released.
  *
+ * ## ⛓⛓ Logical sub-region links (§5.17; ⚖ the user, 2026-10-03 — amends ruling 1 for logical links)
+ *
+ * A region with a subgraph compiles to one AP region per sub-region, all in ONE level, joined by LOGICAL
+ * links (an exit with a rule and no door). The game reports nothing when one is crossed, so the binding
+ * learns the move three ways (`seedlingSubRegions.js` holds the partition and the links):
+ *
+ *   position   `onPlayerPosition` — the player's tile entering ANOTHER sub-region's tiles (the glue reads
+ *              it off the game). EDGE-triggered: only a CHANGE of the sub-region the player is seen in is
+ *              news, and a tile in no sub-region (a wall, water, the seam) is no news, so a seam cannot
+ *              flicker. This is the one that is exact for a human.
+ *   the bot    `creditLink` — the Playback Bot's route names a link; the controller credits it at once and
+ *              the next door is walked physically (the solver plans the whole room).
+ *   a door     `_resolveCrossing` — a level change the CURRENT sub-region has no departure to, while a
+ *              SIBLING sub-region of the level does: the logical hop(s) are credited first, then the
+ *              crossing. Exact for a door fired before a position read saw the seam.
+ *
+ * ⛔ A MOVE IS CREDITED ONLY THROUGH LINKS THE GATE OPENS (`canPass`, the door gate). A player standing in
+ * a sub-region the rules say needs an item they lack is WARNED about and the AP region stays — the binding
+ * never credits a move the logic does not allow. A logical move publishes `regionMove` (`logical: true`),
+ * and the region load it causes is NOT an arrival: nothing is teleported (`pendingLogical`).
+ *
  * ## Unmapped levels
  *
  * The atlas covers 3 of Seedling's 116 levels, and that is by design — it grows
@@ -72,6 +93,7 @@
 import { parseSeqPayload } from './seqPayload.js';
 import { returnKey } from './seedlingReturnSpawns.js';
 import { DOOR_GATE_ERROR_DEFAULT, lockedDoorMessage, ruleItemNames } from './seedlingDoorGate.js';
+import { levelHasSubRegions, linkPath, subRegionAt } from './seedlingSubRegions.js';
 
 /** How long an in-flight arrival teleport stays armed before it is written off. */
 export const ARRIVAL_ECHO_TIMEOUT_MS = 15000;
@@ -343,6 +365,120 @@ export class SeedlingRegionBinding {
         this.warnedLevels = new Set();
         /** T2b U2b — the game's own return spawns (`setReturnSpawns`); null = door tiles. */
         this.returnSpawns = null;
+        /** ⛓ LOGICAL LINKS — `seedlingSubRegions.buildSubRegionMap`'s map (null = no sub-regions known). */
+        this.subRegions = null;
+        /** The sub-region the player was last SEEN in (a position read); the edge the watcher fires on. */
+        this.physicalSub = null;
+        /** Logical moves published, awaiting their region load (which must not teleport): `{region, at}`. */
+        this.pendingLogical = [];
+        /** `from>to` pairs already warned about (a closed link): said once per region load. */
+        this.warnedLinks = new Set();
+        this.logicalMoves = 0;
+    }
+
+    /** ⛓ LOGICAL LINKS — the host hands over the sub-region map once the rules and the partition are in. */
+    setSubRegions(map) {
+        this.subRegions = map ?? null;
+        this.physicalSub = null;
+    }
+
+    /**
+     * Should the glue read the player's position now? Only while this substrate is active and reporting,
+     * no swap of ours is in flight, and the CURRENT region's level has sub-regions to tell apart.
+     */
+    wantsPosition() {
+        if (!this.active || !this.baselineSeen || !this.subRegions) return false;
+        if (this.pendingArrival || this.pendingDeparture || this.pendingBounce) return false;
+        const level = this.world?.level;
+        return Number.isInteger(level) && level === this.lastLevel && levelHasSubRegions(this.subRegions, level);
+    }
+
+    /**
+     * ⛓ LOGICAL LINKS — the player's live position. `baseline: true` records where the player stands
+     * WITHOUT moving (the glue's first read after a bot walk, whose route already credited its links).
+     */
+    onPlayerPosition({ level, x, y } = {}, { baseline = false } = {}) {
+        if (!this.wantsPosition() || level !== this.lastLevel) return [];
+        const sub = subRegionAt(this.subRegions, level, x, y);
+        if (!sub || sub === this.physicalSub) return [];
+        if (baseline || sub === this.region) { this.physicalSub = sub; return []; }
+        // ⛔ A REFUSED move leaves the edge ARMED: the next read asks again (warned once), so an item that
+        // arrives while the player stands there moves the region then — not only after a step out and back.
+        const effects = this._logicalMoveTo(sub, `the player walked into ${sub}'s tiles`);
+        if (this.region === sub) this.physicalSub = sub;
+        return effects;
+    }
+
+    /**
+     * ⛓ LOGICAL LINKS — the Playback Bot's route names the link `name`: credit it NOW (the next door is
+     * walked physically). `{ok, effects}` or `{ok: false, reason}`; a link the gate refuses is refused.
+     */
+    creditLink(name) {
+        const link = [...(this.subRegions?.links?.values() ?? [])].flat().find((l) => l.name === name) ?? null;
+        if (!link) return { ok: false, reason: `"${name}" is not a logical sub-region link of this preset` };
+        if (!this.active) return { ok: false, reason: 'another substrate owns the region (the binding is parked)' };
+        if (link.from !== this.region) {
+            return { ok: false, reason: `the link "${name}" leaves ${link.from}, but the AP region is ${this.region ?? 'none'}` };
+        }
+        const verdict = this._linkVerdict(link);
+        if (!verdict.pass) {
+            return { ok: false, reason: `the link "${name}" is closed — ${lockedDoorMessage(link.to, this._needs(verdict, link))}` };
+        }
+        return { ok: true, effects: this._hop(link, verdict, 'the Playback Bot\'s route') };
+    }
+
+    _linkVerdict(link) {
+        return doorVerdict(this.canPass, { exitName: link.name, exit_id: link.name, access_rule: link.access_rule },
+            { region: link.from });
+    }
+
+    _needs(verdict, link) {
+        return verdict.missing?.length ? verdict.missing : (verdict.needs?.length ? verdict.needs : ruleItemNames(link.access_rule));
+    }
+
+    /** One logical hop: the AP region becomes `link.to` HERE (a later level report resolves against it). */
+    _hop(link, verdict, why) {
+        const effects = [];
+        if (verdict.error) {
+            effects.push({ type: 'warn', message: `[door gate] could not evaluate the rule on the logical link "${link.name}" — `
+                + `${verdict.error}; the link is ${verdict.pass ? 'left OPEN' : 'LOCKED'} (the declared default)` });
+        }
+        this.region = link.to;
+        this.world = this.subRegions.worlds.get(link.to) ?? this.world;
+        this.arrivedFrom = { exit_id: link.name, source_region: link.from };
+        this.pendingLogical.push({ region: link.to, at: this._now() });
+        this.warnedLinks.clear();
+        this.logicalMoves += 1;
+        effects.push({
+            type: 'regionMove',
+            sourceRegion: link.from,
+            targetRegion: link.to,
+            exitName: link.name,
+            exitId: link.name,
+            fromLevel: link.level,
+            toLevel: link.level,
+            logical: true,
+            why,
+        });
+        return effects;
+    }
+
+    /** Move the AP region to `target` through the open links; a closed way is WARNED once and not taken. */
+    _logicalMoveTo(target, why) {
+        const from = this.region;
+        const route = linkPath(this.subRegions, from, target, (link) => this._linkVerdict(link));
+        if (route.path) return route.path.flatMap(({ link, verdict }) => this._hop(link, verdict, why));
+        const key = `${from}>${target}`;
+        if (this.warnedLinks.has(key)) return [];
+        this.warnedLinks.add(key);
+        const closed = route.refused.find((r) => r.link.to === target) ?? route.refused[0] ?? null;
+        const needs = closed ? this._needs(closed.verdict, closed.link) : [];
+        return [{
+            type: 'warn',
+            message: `[region atlas] ${why}, but no OPEN logical link leads there from ${from}`
+                + `${closed ? ` (the link "${closed.link.name}" needs ${needs.length ? needs.join(', ') : 'its rule met'})` : ''}`
+                + ' — the AP region was NOT moved: the logic does not allow this move yet',
+        }];
     }
 
     /**
@@ -359,6 +495,22 @@ export class SeedlingRegionBinding {
 
     /** procgen loaded a region into this substrate. */
     onLoadRegion({ region_id: regionId, world, arrivedFrom } = {}) {
+        /**
+         * ⛓ LOGICAL LINKS — the load a logical move caused is NOT an arrival: the player is already
+         * standing where they are, and the binding moved itself when it published the move. Swallowed
+         * (no teleport), the mark aged like every other.
+         */
+        this.pendingLogical = this.pendingLogical.filter((m) => this._now() - m.at <= ARRIVAL_ECHO_TIMEOUT_MS);
+        const logical = this.pendingLogical.findIndex((m) => m.region === regionId);
+        if (logical >= 0) {
+            this.pendingLogical.splice(logical, 1);
+            this.region = regionId;
+            this.world = world ?? this.world;
+            return [{ type: 'info', message: `[region atlas] "${regionId}" entered by a logical link — no teleport` }];
+        }
+        this.pendingLogical = [];
+        this.physicalSub = regionId ?? null;
+        this.warnedLinks.clear();
         this.region = regionId ?? null;
         this.world = world ?? null;
         this.arrivedFrom = arrivedFrom ?? null;
@@ -424,6 +576,8 @@ export class SeedlingRegionBinding {
     }
 
     onGameRestart() {
+        this.physicalSub = null;
+        this.pendingLogical = [];
         this.baselineSeen = false;
         this.lastLevel = null;
         this.lastSpawn = { x: null, y: null };
@@ -456,6 +610,9 @@ export class SeedlingRegionBinding {
             // ⛓ G4 — and a bounce not yet answered: the swap it waits for is
             // no longer ours to read.
             this.pendingBounce = null;
+            // ⛓ LOGICAL LINKS — and where the player was last seen: the excursion ends with a fresh read.
+            this.physicalSub = null;
+            this.pendingLogical = [];
             return [{
                 type: 'info',
                 message: `[region atlas] another substrate now owns the region — "${this.region}" `
@@ -697,7 +854,23 @@ export class SeedlingRegionBinding {
     }
 
     _resolveCrossing(level, fromLevel) {
-        const exit = resolveCrossingExit(this.world, level, this.lastSpawn);
+        /**
+         * ⛓ LOGICAL LINKS — the CURRENT sub-region has no departure to `level`, a sibling of the same level
+         * does: the player crossed a seam no position read saw (or the route's bucket put the door in the
+         * sibling). Its logical hop(s) are credited first, through OPEN links only, then the crossing.
+         */
+        const own = exitList(this.world).some((e) => e.target_level === level && e.targetRegion);
+        const sibling = own ? null : this._siblingDeparture(level);
+        if (sibling) {
+            const hops = sibling.path.flatMap(({ link, verdict }) => this._hop(link, verdict,
+                `a door to level ${level} fired from ${sibling.region}'s side of the level`));
+            return hops.concat(this._crossing(sibling.exit, level, fromLevel));
+        }
+        // ⛔ An entry with no `targetRegion` is an ARRIVAL-only row of the sidecar (`in_L2_…`: where a door of
+        // another level lands), not a way out: a move to `null` would PARK this substrate (procgenPlayer's
+        // "no substrate owns the player"), so it is the unmapped case below.
+        const found = resolveCrossingExit(this.world, level, this.lastSpawn);
+        const exit = found && (found.targetRegion || !this.subRegions) ? found : null;
         if (!exit) {
             const first = !this.warnedLevels.has(level);
             this.warnedLevels.add(level);
@@ -711,6 +884,10 @@ export class SeedlingRegionBinding {
                     + 'Tool to make it a real boundary.',
             }];
         }
+        return this._crossing(exit, level, fromLevel);
+    }
+
+    _crossing(exit, level, fromLevel) {
         return [{
             type: 'regionMove',
             sourceRegion: this.region,
@@ -720,5 +897,25 @@ export class SeedlingRegionBinding {
             fromLevel,
             toLevel: level,
         }];
+    }
+
+    /**
+     * The sibling sub-region of the current level with a DEPARTURE to `level`, reached through open links:
+     * `{region, exit, path}` or null. Several: the one whose door the reported spawn is nearest, then the
+     * shortest route.
+     */
+    _siblingDeparture(level) {
+        const own = this.world?.level;
+        if (!this.subRegions || !Number.isInteger(own) || !levelHasSubRegions(this.subRegions, own)) return null;
+        const found = [];
+        for (const [region, payload] of this.subRegions.worlds) {
+            if (region === this.region || payload?.level !== own) continue;
+            const exit = resolveCrossingExit({ exits: exitList(payload).filter((e) => e.targetRegion) }, level, this.lastSpawn);
+            if (!exit) continue;
+            const route = linkPath(this.subRegions, this.region, region, (link) => this._linkVerdict(link));
+            if (route.path) found.push({ region, exit, path: route.path, d: dist2(this.lastSpawn, exit.target_spawn) });
+        }
+        found.sort((a, b) => (a.d - b.d) || (a.path.length - b.path.length));
+        return found[0] ?? null;
     }
 }
