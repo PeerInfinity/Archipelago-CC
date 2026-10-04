@@ -9,7 +9,7 @@
  *   V  WASM — the playthrough loaded by `?rules=` (the `?game=` form resolves another seed with no
  *      flash_panel). The map is BOUND (arm `vanilla`, one entry per table entry, entity = the delivered
  *      room's), the controller's engine STAGES THE DELIVERED SET (not the map document), and the Playback
- *      Bot walks from the new-game start — W8c's ceremony waited out, the cold start ADOPTED — through the
+ *      Bot walks from the explicit start (skip-intro: no ceremony), the cold start ADOPTED — through the
  *      first rooms and checks: **0 forced re-arrivals**. The sphere log is DERIVED from the rules
  *      (`forwardSimulator.generateSphereLog`; `AP_1` ships none). How far it gets and the FIRST refusal by
  *      name are recorded (`ROW V reach`), not asserted beyond the first check: the solver's coverage of the
@@ -22,7 +22,7 @@
  *      binding CREDITS since §5.17 (the bot is stopped there and the reverse link credited back); (2) GREEDY
  *      door-only walks: the bot's manual `walkToLocation` to the queue location
  *      NEAREST through doors only (derived here from the rules: BFS over the `True_` sidecar-door exits), then
- *      the next from where it stands, up to `--max-checks` (default 3) — the ceremony waited out, the cold
+ *      the next from where it stands, up to `--max-checks` (default 3) — the fade waited out (§5.19), the cold
  *      start ADOPTED, each location checked once, **0 forced re-arrivals**; the first refusal by name ends it.
  *   J  ⛓ §5.18 — JS: the same preset on the JS runtime. The AP load TAKES the vanilla arm (⚖ the user,
  *      2026-10-03, "WITH THE SOLVER"): the page mounts the delivered set as REAL rooms
@@ -32,7 +32,10 @@
  *      probe-side override — the AP layer's bidirectional routing is the first refusal, §5.16 V), the
  *      Playback Bot walks D's greedy door-only targets: the starting house's chest (an APITEM) is checked
  *      once, the page's solver DRIVING (`solverStats`: every leg solved, the location by verb `apitem`), and
- *      the first refusal by name ends it (recorded, `ROW J reach`).
+ *      the first refusal by name ends it (recorded, `ROW J reach`). ⛓ §5.19: the load holds the region glue's
+ *      position watch across the mount + reset (no read inside it), and a logical move at the start is the
+ *      bot's ROUTE crediting its first goal's link (`ROW J start state`); the mounted region is read before
+ *      `play()`.
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
  * `N CHECK(S) FAILED` (exit 1).
@@ -166,8 +169,12 @@ async function main() {
                 if (!bot) return { ok: false, why: 'no playback bot panel' };
                 bot.onRegionMove({ targetRegion: start });
                 bot.refresh();
+                // ⛓ §5.19 — the region the bot is MOUNTED in is read before `play()`: play starts the sphere queue,
+                // whose first route may credit a logical link at once (the JS controller does, in a microtask before
+                // play resolves; the wasm engine's load is async, so D read START by timing alone — measured).
+                const region = bot.getCurrentRegion();
                 await bot.play();
-                return { ok: true, region: bot.getCurrentRegion() };
+                return { ok: true, region, afterPlay: bot.getCurrentRegion() };
             }, START);
         }
         const botStatus = () => page.evaluate(async () => {
@@ -313,8 +320,11 @@ async function main() {
             check('D: the controller\'s engine STAGES THE DELIVERED SET', eng.stagesDelivered === true, JSON.stringify(eng.stagesDelivered));
             check('D: the bot CHECKED its first door-only target, each location once',
                 legs[0]?.checked === legs[0]?.target && new Set(checks).size === checks.length, JSON.stringify({ legs, checks }));
-            check('D: the cold start ADOPTED through W8c\'s ceremony — 0 forced re-arrivals in total, nothing refused',
-                eng.adopted === 1 && eng.forced === 0 && Object.keys(eng.forcedBy ?? {}).length === 0 && (eng.adoptRefused ?? []).length === 0
+            // ⛓ §5.19 — no ceremony since skip-intro: the first goal can come inside the explicit start's fade, which the
+            // adoption WAITS out (a transient clause); the probe's stop hands the room back, so the next goal adopts AGAIN
+            // (the begin record the engine's own tape load cleared is read back) — every cold start adopted, none forced.
+            check('D: every cold start ADOPTED (the fade waited out, §5.19) — 0 forced re-arrivals in total, nothing refused',
+                eng.adopted >= 1 && eng.forced === 0 && Object.keys(eng.forcedBy ?? {}).length === 0 && (eng.adoptRefused ?? []).length === 0
                     && eng.hostStarts?.[0] === 'adopt',
                 JSON.stringify({ adopted: eng.adopted, forced: eng.forced, forcedBy: eng.forcedBy, refused: eng.adoptRefused, hostStarts: eng.hostStarts }));
             check('D: 0 divergences, 0 recoveries (a solver DECLINE is recorded as the first refusal, not a divergence)',
@@ -345,6 +355,21 @@ async function main() {
                 await sm.updateSetting('moduleSettings.flashPanel.runtime', 'js', { persist: false });
             });
             await rp.waitFor('the flashPanel tab activated', () => clickPanelTab(page, FLASH_PANEL));
+            // ⛓ §5.19 — the region glue's logical moves (with WHY: the bot's route, or a position read) and its position
+            // reads, stamped against the randomized load's position HOLD (mount + reset), installed before the load runs.
+            await page.evaluate(async () => {
+                const glue = (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue();
+                const w = { moves: [], reads: [], holds: [] };
+                window.__startState = w;
+                const move = glue._regionMove.bind(glue);
+                glue._regionMove = (e) => { if (e.logical) w.moves.push({ exit: e.exitName, why: e.why ?? null }); return move(e); };
+                const pos = glue.binding.onPlayerPosition.bind(glue.binding);
+                glue.binding.onPlayerPosition = (p, o) => { w.reads.push({ held: !!glue._positionHold, p: [p.level, p.x, p.y] }); return pos(p, o); };
+                const hold = glue.holdPositionWatch.bind(glue);
+                glue.holdPositionWatch = (why) => { w.holds.push({ why, reads: w.reads.length }); return hold(why); };
+                const release = glue.releasePositionWatch.bind(glue);
+                glue.releasePositionWatch = () => { const h = w.holds.at(-1); if (h) h.readsAtRelease = w.reads.length; return release(); };
+            });
             const surface = () => page.evaluate(async () => {
                 const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
                 const s = p?.seedlingPlaybackSurface?.();
@@ -407,6 +432,14 @@ async function main() {
             await rp.waitFor('dispatcher wrapped', wrapDispatcher, 20000);
             const booted = await startBot();
             check(`J: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
+            // ⛓ §5.19 — measured: the r1c6 this row once read was the ROUTE crediting the queue's first link (the player at the
+            // explicit start), not a position read; no read may land inside the load's hold.
+            const ss = await page.evaluate(() => window.__startState);
+            out('J start state', { ...ss, reads: ss.reads.slice(0, 12), afterPlay: booted.afterPlay });
+            check('J: the load HELD the glue\'s position watch (mount + reset) and no position was read inside it; every logical move at the start is the bot\'s ROUTE (§5.19)',
+                ss.holds.length === 1 && ss.holds[0].readsAtRelease === ss.holds[0].reads && ss.reads.every((r) => !r.held)
+                    && ss.moves.every((m) => m.why === 'the Playback Bot\'s route'),
+                JSON.stringify({ holds: ss.holds, heldReads: ss.reads.filter((r) => r.held).length, moves: ss.moves }));
             await page.evaluate(async () => {
                 const { getActivePanel } = await import('./modules/playbackBot/index.js');
                 getActivePanel()?.getBot?.().stop?.();

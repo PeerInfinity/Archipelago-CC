@@ -318,6 +318,39 @@ describe('the glue reads the position, and stands down while the bot walks', () 
         expect(r.published.filter((p) => p.event === 'user:regionMove')).toHaveLength(1);
     });
 
+    it('⛓ §5.19 — no read during the randomized load\'s mount + reset window: a TRANSIENT position there credits nothing; after the landing the edge is re-armed and a human step is exact', () => {
+        let at = tilesOf('level_0__r8c0')[0];
+        const r = rig({ status: () => ({ level: 0, x: at.x, y: at.y }) });
+        r.glue.readPosition();
+        expect(r.glue.binding.physicalSub).toBe('level_0__r8c0');
+        r.glue.holdPositionWatch('the randomized load (mount + reset)');
+        at = tilesOf('level_0__r14c0')[0]; // the page's pre-reset boot / the mount: somewhere else, for a moment
+        r.glue.readPosition();
+        r.glue.readPosition();
+        expect(r.glue.stats.positionReads).toBe(1);
+        at = tilesOf('level_0__r8c0')[1]; // the explicit start lands
+        r.glue.releasePositionWatch();
+        expect(r.glue.binding.physicalSub).toBe(null); // re-armed
+        r.glue.readPosition();
+        expect(r.published.filter((p) => p.event === 'user:regionMove')).toEqual([]);
+        expect(r.glue.binding).toMatchObject({ region: 'level_0__r8c0', physicalSub: 'level_0__r8c0' });
+        at = tilesOf('level_0__r14c0')[1]; // a human step
+        r.glue.readPosition();
+        const moved = r.published.filter((p) => p.event === 'user:regionMove');
+        expect(moved.map((p) => p.data.targetRegion)).toEqual(['level_0__r14c0']);
+    });
+
+    it('⛓ §5.19 — …and a reset that LANDS the player in another sub-region than the AP region moves it there on the first read (re-armed, through the gate)', () => {
+        let at = tilesOf('level_0__r8c0')[0];
+        const r = rig({ status: () => ({ level: 0, x: at.x, y: at.y }) });
+        r.glue.readPosition();
+        r.glue.holdPositionWatch('reset');
+        at = tilesOf('level_0__r14c0')[0];
+        r.glue.releasePositionWatch();
+        r.glue.readPosition();
+        expect(r.published.filter((p) => p.event === 'user:regionMove').map((p) => p.data.targetRegion)).toEqual(['level_0__r14c0']);
+    });
+
     it('creditLogicalLink answers at once and PUBLISHES on the next turn (the bot\'s walkTo is on the stack)', async () => {
         const r = rig({ status: () => ({ level: 0, x: 0, y: 0 }) });
         expect(r.glue.creditLogicalLink(SWORD_LINK)).toEqual({ ok: true });

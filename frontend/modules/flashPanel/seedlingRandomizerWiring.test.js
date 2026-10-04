@@ -631,6 +631,21 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
         expect(overlay.calls.at(-1)).toBe('hide');
     });
 
+    it('⛓ §5.19 — the glue\'s POSITION WATCH is held across the whole mount + reset window (the teleport included) and released after, landed or refused', async () => {
+        for (const result of [{ ok: true, chunks: 9, why: null }, { ok: false, chunks: 0, why: 'refused' }]) {
+            const order = [];
+            const glue = fakeGlue(order);
+            glue.holdPositionWatch = (why) => order.push(`hold:${why}`);
+            glue.releasePositionWatch = () => order.push('release');
+            // eslint-disable-next-line no-await-in-loop
+            await run({ order, glue, loaded: loadedFor(result, undefined, order), teleport: () => order.push('teleport') });
+            expect(order[0]).toMatch(/^hold:/);
+            expect(order.at(-1)).toBe('release');
+            expect(order.filter((o) => o === 'release')).toHaveLength(1);
+            if (result.ok) expect(order.indexOf('teleport')).toBeLessThan(order.indexOf('release'));
+        }
+    });
+
     /**
      * ⛔⛔ THE ORDERING CLAIM, AS A ROW. `setDelivery` reaches the glue BEFORE
      * `deliver()` runs, so a `loadRegion` arriving mid-load meets an armed

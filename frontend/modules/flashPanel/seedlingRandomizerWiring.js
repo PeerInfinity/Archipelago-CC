@@ -512,7 +512,22 @@ const defaultWaitFrame = () => new Promise((r) => {
  * never called, and `hostOwnedLocations()` therefore never stands the adapter
  * down.
  */
-export async function runSeedlingRandomizerLoad({
+export async function runSeedlingRandomizerLoad(args = {}) {
+    /**
+     * ⛓ §5.19 — THE MOUNT + RESET WINDOW HOLDS THE GLUE'S POSITION WATCH: the player's positions in it are
+     * transient (the pre-reset boot, the mount, the explicit start), and a logical move credited off one is
+     * a move nobody made. Released — and the edge re-armed — when the load ends, landed or refused.
+     */
+    const glue = args.glue;
+    glue?.holdPositionWatch?.('the randomized load (mount + reset)');
+    try {
+        return await runSeedlingRandomizerLoadSteps(args);
+    } finally {
+        glue?.releasePositionWatch?.();
+    }
+}
+
+async function runSeedlingRandomizerLoadSteps({
     loaded,
     glue,
     teleport,

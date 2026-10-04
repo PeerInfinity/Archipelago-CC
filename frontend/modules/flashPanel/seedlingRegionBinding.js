@@ -402,6 +402,11 @@ export class SeedlingRegionBinding {
         return Number.isInteger(level) && level === this.lastLevel && levelHasSubRegions(this.subRegions, level);
     }
 
+    /** ⛓ §5.19 — forget the sub-region the player was last seen in: the next position read is news (the reset landed). */
+    rearmPosition() {
+        this.physicalSub = null;
+    }
+
     /**
      * ⛓ LOGICAL LINKS — the player's live position. `baseline: true` records where the player stands
      * WITHOUT moving (the glue's first read after a bot walk, whose route already credited its links).

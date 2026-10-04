@@ -115,6 +115,30 @@ export class SeedlingRegionGlue {
         this._positionTimer = null;
         /** The next position read is a BASELINE (set while a bot walk is in flight). */
         this._baselineNext = false;
+        /** ⛓ §5.19 — why no position is read now (the randomized load's mount + reset window), or null. */
+        this._positionHold = null;
+    }
+
+    /**
+     * ⛓ §5.19 — THE RESET WINDOW. While the randomized load mounts the set and resets the player
+     * (`seedlingRandomizerWiring.runSeedlingRandomizerLoad`), the player stands at TRANSIENT positions: the
+     * page's pre-reset boot (`Main.as:51`), the mount, then the explicit start. A logical move credited off
+     * one of them is a move nobody made (the reset sends no swap the binding marks, so `wantsPosition` cannot
+     * see the window). No position is read while held.
+     */
+    holdPositionWatch(why) {
+        this._positionHold = why || 'held';
+    }
+
+    /**
+     * ⛓ §5.19 — the reset LANDED (or the load ended): the edge is RE-ARMED (`binding.rearmPosition`), so the
+     * first read after it is judged where the player now stands — a human the reset put in another sub-region
+     * than the AP region is moved there, through the gate, exactly as a step would.
+     */
+    releasePositionWatch() {
+        if (!this._positionHold) return;
+        this._positionHold = null;
+        this.binding.rearmPosition();
     }
 
     /** ⛓ LOGICAL LINKS — the sub-region map (`seedlingSubRegions.buildSubRegionMap`), or null. */
@@ -139,6 +163,7 @@ export class SeedlingRegionGlue {
     /** One position read: the game's `botStatus` (live player), handed to the binding. */
     readPosition() {
         if (!this.adapter || !this.binding.wantsPosition()) return;
+        if (this._positionHold) return;
         if (this.isBotWalking()) { this._baselineNext = true; return; }
         let st = null;
         try {
