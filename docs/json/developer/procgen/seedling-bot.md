@@ -411,7 +411,7 @@ node scripts/procgen/check-seedling-bot-differential.mjs --record \
 | `--win` | drive real-GPU Windows Chrome instead of headless Chromium |
 | `--wait-for-box=<sec>` | queue for the box lock instead of refusing |
 
-It drives the build `builds.json` marks `default` (`seedling_bot_ap_p4e`); `SEEDLING_PAGE=<build directory>` drives another pinned build, such as the `control` one. The payload filename is read from `game.html`'s `<script src>`, because it does not always match the directory name. Without the `frontend/modules/flashPanel/wasm/` submodule checked out it prints `SKIP` and exits 0.
+It drives the build `builds.json` marks `default` (`seedling_bot_ap_p4f`); `SEEDLING_PAGE=<build directory>` drives another pinned build, such as the `control` one. The payload filename is read from `game.html`'s `<script src>`, because it does not always match the directory name. Without the `frontend/modules/flashPanel/wasm/` submodule checked out it prints `SKIP` and exits 0.
 
 **Always pass `--only=` when recording.** `--record` does not compare before it writes, so without it a genuine drift in an old fixture would be baked in instead of reported.
 

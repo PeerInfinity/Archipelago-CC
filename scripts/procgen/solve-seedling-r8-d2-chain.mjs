@@ -203,7 +203,7 @@ const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
  * does. That is what makes `boot(N+1) == latch(N)` a MEASURED equality over
  * all 46 signature rows rather than a claim.
  */
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 /**
  * ⛓ SEEDLING SWIM U6b — the page is the one `SEEDLING_PORT` serves and the
  * latch is driven HEADLESS by default (`--win` keeps the real-GPU arm), on

@@ -78,7 +78,7 @@ if (!process.argv.includes(SEGMENTS_FLAG)) {
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 const PAGE_URL = `http://localhost:8000/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const TAPES = join(REPO, 'frontend', 'modules', 'seedlingDemo', 'fixtures', 'tapes');
