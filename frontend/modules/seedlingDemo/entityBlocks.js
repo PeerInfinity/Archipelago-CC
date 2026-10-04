@@ -295,6 +295,9 @@ export const FAMILY_BLOCKS = deepFreeze([
     { family: 'shooters', kind: RUN_ENTITIES, blocks: ['stationary', 'emitter'],
         solverReads: ['dangerMap'], strategies: [],
         why: 'the room\'s `Turret`s in `.oel` order, each with its aim, its 40-tick clock, its animation and the `TurretSpit`s of its own in flight (`levelRun.shootersNow`, U15-swim `turret.js`).' },
+    { family: 'staticBodies', kind: RUN_ENTITIES, blocks: ['stationary', 'hp'],
+        solverReads: ['solverBot'], strategies: [],
+        why: 'the static `"Enemy"` bodies an arrow has reached (fidelity F4: `levelRun.staticBodiesNow`, `STATIC_ARROW_DEATH.SandTrap`): `hits`, `hitsTimer`, the "die" frame and the removal that writes the body\'s tag.' },
 
     /* ── the hazard volumes (`hazards.hazardVolume`, avoid volumes, unions over phase) ── */
     { family: 'volume:crusher', kind: VOLUME, blocks: ['lane-charge', 'contact'],
