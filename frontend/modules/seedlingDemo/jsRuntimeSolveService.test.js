@@ -30,8 +30,9 @@ import { Worker as NodeWorker } from 'node:worker_threads';
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { createRuntimeWalker, WALK_STATES } from './jsRuntimeWalker.js';
 import {
-    createInPlaceSolveService, runDigest, SOLVER_BUDGET_MS, SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX,
+    ANYTIME_PASSES, createInPlaceSolveService, liveOf, runDigest, SOLVER_BUDGET_MS, SOLVER_RETRY_AFTER_TICKS, SOLVER_RETRY_MAX,
 } from './jsRuntimeSolver.js';
+import { indexLevels } from './atlasSource.js';
 import { createWorkerSolveService } from './jsRuntimeSolveService.js';
 import { returnKey, returnSpawnTable } from '../flashPanel/seedlingReturnSpawns.js';
 
@@ -336,4 +337,85 @@ describe('the decline-retry policy, unit (a scripted solver)', () => {
     it('the in-place service is S1: settled at once', () => {
         expect(createInPlaceSolveService().kind).toBe('in-place');
     });
+});
+
+describe('⛓ ANYTIME — the worker posts each pass; the page plays the provisional plan at the budget', () => {
+    const KIT_SRC = indexLevels(MAP);
+    /** L11's chest from (32,16) with the kit (the L16 budget report's census leg): dashless 180 t, full 160 t. */
+    function l11ChestKit() {
+        const rt = createJsRuntime();
+        rt.setVanilla(MAP);
+        rt.queueItems(KIT.map((p) => ({ class: 'Main', property: p, value: true })));
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [11, 32, 16] }]);
+        rt.tick();
+        const s = rt.session;
+        return { staging: s.staging, perTick: s.perTick, live: liveOf(rt.run), name: 'anytime-worker-L11',
+            solverGoal: { kind: 'collect-placement', placement: { x: 32, y: 48 } }, scratchPersistence: rt.run.scratchPersistence === true,
+            source: { records: KIT_SRC } };
+    }
+
+    it('the REAL worker: the dashless plan lands first as the PROVISIONAL answer, then the full plan (fewer ticks) settles', async () => {
+        const { service } = workerService();
+        const h = service.start(l11ChestKit());
+        let firstProvisional = null;
+        const t0 = Date.now();
+        while (!h.settled && Date.now() - t0 < 60000) {
+            if (!firstProvisional && h.provisional) firstProvisional = { pass: h.provisional.pass, ticks: h.provisional.plan.solution.length, settled: h.settled };
+            await sleep(2);
+        }
+        expect(firstProvisional).toEqual({ pass: 'dashless', ticks: 180, settled: false });
+        expect(h.passes).toEqual([{ pass: 'dashless', ok: true, kind: null }, { pass: 'full', ok: true, kind: null }]);
+        expect(h.result.ok).toBe(true);
+        expect(h.result.plan.pass).toBe('full');
+        expect(h.result.plan.solution.length).toBe(160);
+        // structured-cloned across the boundary: still Sets and a Map
+        expect(h.result.plan.solution[0]).toBeInstanceOf(Set);
+        expect(h.provisional.plan.equipsAt).toBeInstanceOf(Map);
+    }, 90000);
+
+    /** A service whose solve never settles, with `provisional(request)` as the pass that already landed. */
+    function stuckWith(provisional) {
+        const inPlace = createInPlaceSolveService();
+        const made = [];
+        return {
+            made, kind: 'stuck', warm() {}, dispose() {},
+            start(request) {
+                const p = provisional(request, inPlace);
+                const h = { settled: false, started: true, result: null, provisional: p, answered: p ? 1 : 0, passes: [],
+                    cancel() { h.settled = true; h.cancelled = true; } };
+                made.push(h);
+                return h;
+            },
+        };
+    }
+
+    it('at the budget the page PLAYS the dashless pass\'s plan it already had — terminated, named, and it crosses (L6 bait)', async () => {
+        const service = stuckWith((request, inPlace) => inPlace.start({ ...request, levelSource: undefined, passes: [ANYTIME_PASSES[0]] }).result);
+        const rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: service, solverBudgetMs: 1 });
+        rt.playback.setSolverWalk(true);
+        const out = await settleAsync(rt);
+        const s = rt.playback.solverStats;
+        expect(rt.playback.state).toBe(WALK_STATES.DONE);
+        expect(out.crossings).toEqual([expect.objectContaining({ from: 6, to: 7 })]);
+        expect(s).toMatchObject({ solves: 1, declines: 0, expiries: 1, provisionalPlays: 1 });
+        expect(s.lastSolve).toMatchObject({ pass: 'dashless', expired: true });
+        expect(service.made[0].cancelled).toBe(true);
+        expect(rt.events.map((e) => e.message)).toEqual(expect.arrayContaining([
+            expect.stringMatching(/the solver exceeded 0 s on reach-exit in level 6 \(terminated\) — playing the dashless pass's plan/),
+            expect.stringMatching(/solved reach-exit in level 6: .*; pass dashless, the later pass ran out of budget\)/),
+        ]));
+    }, 120000);
+
+    it('a pass that DECLINED before the budget is the decline said (not "exceeded … walking"); no pass → the budget is said', async () => {
+        const declined = { ok: false, kind: 'refusal', pass: 'dashless', message: 'the danger map forbids it\nsecond line' };
+        let rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: stuckWith(() => declined), solverBudgetMs: 1 });
+        rt.playback.setSolverWalk(true);
+        for (let i = 0; i < 50 && rt.playback.solverStats.declines === 0; i += 1) { rt.tick(); await sleep(2); }
+        expect(rt.playback.solverStats.lastDecline).toBe('the danger map forbids it (pass dashless; the later pass the solver '
+            + 'exceeded 0 s on reach-exit in level 6 (terminated))');
+        rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: stuckWith(() => null), solverBudgetMs: 1 });
+        rt.playback.setSolverWalk(true);
+        for (let i = 0; i < 50 && rt.playback.solverStats.declines === 0; i += 1) { rt.tick(); await sleep(2); }
+        expect(rt.playback.solverStats.lastDecline).toBe('the solver exceeded 0 s on reach-exit in level 6 (terminated) — walking');
+    }, 120000);
 });
