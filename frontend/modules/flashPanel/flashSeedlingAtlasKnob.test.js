@@ -124,7 +124,8 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         + 'tree\'s gate veto (`canHostExitGates`) reads it', () => {
         entry.prepareSphereGrowth({ params: { [SEEDLING_ATLAS_ID_KEY]: SEEDLING_PLAYTHROUGH_ATLAS.atlas_id } });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_PLAYTHROUGH_ATLAS.atlas_id);
-        expect(entry.zoneCount).toBe(168);
+        // ⛓ RULES (B): 168 -> 169 — `level_71__r14c12` gains its first door, the pit into L82.
+        expect(entry.zoneCount).toBe(169);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });

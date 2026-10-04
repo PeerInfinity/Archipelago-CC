@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-e5d9f89e",
+  "atlas_id": "seedling-bbddca3d",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "e5d9f89e" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "bbddca3d" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -5382,6 +5382,13 @@
           "sub_region": "r16c19"
         },
         {
+          "exit_id": "out_pit_10_17",
+          "kind": "teleporter",
+          "exit_tiles": [[12,13]],
+          "entrance_tile": [12,13],
+          "sub_region": "r14c12"
+        },
+        {
           "exit_id": "in_L72_0_256",
           "kind": "teleporter",
           "exit_tiles": [[18,6]],
@@ -5920,14 +5927,39 @@
       "substrate": "flash_seedling",
       "exits": [
         {
+          "exit_id": "in_pit_L71_10_17",
+          "kind": "teleporter",
+          "exit_tiles": [[10,17]],
+          "entrance_tile": [10,17]
+        },
+        {
           "exit_id": "out_teleporter_144_0",
           "kind": "teleporter",
           "exit_tiles": [[9,0]],
-          "entrance_tile": [9,0]
+          "entrance_tile": [9,0],
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+              {
+                "rule": "Or",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                  { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "exit_id": "in_L96_32_64",
+          "kind": "teleporter",
+          "exit_tiles": [[9,1]],
+          "entrance_tile": [9,1]
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "mixed" }
     },
     {
       "region_id": "level_83",
@@ -7051,6 +7083,25 @@
           "entrance_tile": [2,2]
         },
         {
+          "exit_id": "out_teleporter_32_64",
+          "kind": "teleporter",
+          "exit_tiles": [[2,4]],
+          "entrance_tile": [2,4],
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+              {
+                "rule": "Or",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                  { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                ]
+              }
+            ]
+          }
+        },
+        {
           "exit_id": "in_L97_32_48",
           "kind": "teleporter",
           "exit_tiles": [[2,3]],
@@ -7058,7 +7109,7 @@
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "manual" }
+      "annotations": { "rules_source": "mixed" }
     },
     {
       "region_id": "level_97",
@@ -9130,6 +9181,11 @@
         "one_way": true
       },
       {
+        "from": ["level_71","out_pit_10_17"],
+        "to": ["level_82","in_pit_L71_10_17"],
+        "one_way": true
+      },
+      {
         "from": ["level_72","out_teleporter_0_256"],
         "to": ["level_71","in_L72_0_256"],
         "one_way": true
@@ -9387,6 +9443,11 @@
       {
         "from": ["level_96","out_stairsup_32_32"],
         "to": ["level_97","in_L96_32_32"],
+        "one_way": true
+      },
+      {
+        "from": ["level_96","out_teleporter_32_64"],
+        "to": ["level_82","in_L96_32_64"],
         "one_way": true
       },
       {

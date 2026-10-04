@@ -34,7 +34,7 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // one-sided locks (286 -> 295). None of them is a swim row, so 217 holds — but L12's
     // r0c37 -> r0c19 is now Or(Swim, And(Red Key, reached r0c19)), so plain Has(Swim) is 180 -> 179.
     it('52 regions carry a subgraph: 189 sub-regions, 295 internal exits, 217 of them need Progressive Swim', () => {
-        expect(c.atlasId).toBe('seedling-e5d9f89e');
+        expect(c.atlasId).toBe('seedling-bbddca3d');
         expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 52, 189, 295, 217]);
         expect(c.swimLevels).toHaveLength(23);
         expect(c.byRule.slice(0, 2)).toEqual([

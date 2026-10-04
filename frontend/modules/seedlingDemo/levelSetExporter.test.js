@@ -861,8 +861,10 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
 
         // The counts, pinned — a comparison of two empty things is also equal.
         expect(fromMap.atlas.regions).toHaveLength(113);
-        expect(fromMap.atlas.regions.flatMap((r) => r.exits ?? [])).toHaveLength(624);
-        expect(fromMap.atlas.vanilla_layout.connections).toHaveLength(312);
+        // ⛓ RULES (B): 624 -> 628 exits, 312 -> 314 connections — L71's pit into L82
+        //   and L96's door into it, both ends, now L82 is not never-enter.
+        expect(fromMap.atlas.regions.flatMap((r) => r.exits ?? [])).toHaveLength(628);
+        expect(fromMap.atlas.vanilla_layout.connections).toHaveLength(314);
         expect(fromMap.dropped).toHaveLength(3);
 
         expect(stableStringify(derivedFacts(fromXml.atlas)))
@@ -893,7 +895,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-e5d9f89e');   // ⛓ RULES (A) restamp
+        expect(committed.atlas_id).toBe('seedling-bbddca3d');   // ⛓ RULES (A)+(B) restamps
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

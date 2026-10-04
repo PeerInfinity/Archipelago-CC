@@ -6781,6 +6781,13 @@
                 "item_name": "Dark Suit"
               }
             }
+          },
+          {
+            "name": "level_71__r14c12 -> level_82",
+            "connected_region": "level_82",
+            "access_rule": {
+              "rule": "True_"
+            }
           }
         ],
         "locations": []
@@ -7272,7 +7279,24 @@
             "name": "level_82 -> level_96",
             "connected_region": "level_96",
             "access_rule": {
-              "rule": "True_"
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "item_names": [
+                      "Ghost Spear",
+                      "Progressive Sword"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -8733,6 +8757,30 @@
             "connected_region": "level_97",
             "access_rule": {
               "rule": "True_"
+            }
+          },
+          {
+            "name": "level_96 -> level_82",
+            "connected_region": "level_82",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "item_names": [
+                      "Ghost Spear",
+                      "Progressive Sword"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Dark Suit"
+                  }
+                }
+              ]
             }
           }
         ],

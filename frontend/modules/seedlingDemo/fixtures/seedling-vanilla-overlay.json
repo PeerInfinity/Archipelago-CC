@@ -300,6 +300,23 @@
         }
       ]
     },
+    "82": {
+      "rules": {
+        "exit:out_teleporter_144_0": {
+          "rule": "And",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+            {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          ]
+        }
+      }
+    },
     "86": {
       "locations": [
         { "entity": { "type": "chest", "x": 48, "y": 16 }, "name": "Chest", "vanilla_item": "Seal" }
@@ -318,6 +335,23 @@
       "locations": [
         { "entity": { "type": "chest", "x": 48, "y": 32 }, "name": "Chest", "vanilla_item": "Seal" }
       ]
+    },
+    "96": {
+      "rules": {
+        "exit:out_teleporter_32_64": {
+          "rule": "And",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Dark Suit" } },
+            {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+              ]
+            }
+          ]
+        }
+      }
     },
     "98": {
       "locations": [
@@ -362,6 +396,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "e2d5c131" },
-  "overlay_id": "seedling-vanilla-overlay-e2d5c131"
+  "provenance": { "content_hash": "240110b8" },
+  "overlay_id": "seedling-vanilla-overlay-240110b8"
 }
