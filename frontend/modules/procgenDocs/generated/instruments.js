@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 36,
-            "count": 78,
+            "browser": 37,
+            "count": 79,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 319,
-        "browser": 101,
+        "blockStyle": 320,
+        "browser": 102,
         "cited": 149,
-        "files": 330,
+        "files": 331,
         "lineStyle": 11,
-        "withDocblock": 330,
-        "withFlags": 250
+        "withDocblock": 331,
+        "withFlags": 251
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10342,6 +10342,54 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling JS solver-walk, slice W2 (plan `seedling-js-solver-walk-plan.md` §5.3) — the WASM PlaybackController's witness: on `seedling_atlas_location` (default build p4e, headless logic-only, under the box lock) the Playback Bot opens the Starting House chest and leaves by its door ON THE WASM RUNTIME — each goal sol…",
             "path": "scripts/procgen/probe-seedling-wasm-playback.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-wasm-vanilla-map.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling solver-walk, slice VANILLA MAP (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.16) — the Playback Bot walks `seedling_playthrough`, the VANILLA randomizer arm's world, through the name → cell map `seedlingPlaybackController.realRoomPlaybackMap` derives (the arm's own placement table read off the se…",
+            "path": "scripts/procgen/probe-seedling-wasm-vanilla-map.mjs"
         },
         {
             "argvHelpers": [

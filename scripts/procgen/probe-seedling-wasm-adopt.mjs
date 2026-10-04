@@ -27,9 +27,9 @@
  *   N  ⛓ W8c — THE NEW GAME (`seedling_playthrough`, loaded by `?rules=`: the `?game=` form resolves another
  *      seed with no flash_panel). The host's level-set reset boots the game's new-game arm: its begin record
  *      reads level −1 (latched before `applyStart`), then the wind cutscene, then the arrow-key tutorial
- *      `Help(2)`, whose freeze no botStatus row shows (`readState().freezeObjects` does). The Playback Bot
- *      cannot walk this preset at all (the vanilla arm binds no name → cell map — checked by name), so the
- *      CONTROLLER's own engine (its production deps) is driven from the first frame of the cutscene: level 0's
+ *      `Help(2)`, whose freeze no botStatus row shows (`readState().freezeObjects` does). The CONTROLLER's own
+ *      engine (its production deps) is driven from the first frame of the cutscene (⛓ §5.16: the vanilla arm's
+ *      map is now bound — checked; the Playback Bot's own walk is `probe-seedling-wasm-vanilla-map.mjs`): level 0's
  *      stairs, then L13's — the cutscene WAITED OUT, the tutorial dismissed by one arrow pair, the room
  *      ADOPTED, the L13 arrival held: **0 forced re-arrivals in total**, every held check equal, 0 divergences.
  *   K  a person's REAL keys move the player before the bot drives → the adoption is REFUSED by name (a
@@ -340,10 +340,12 @@ async function main() {
                     boot.cutscene?.[0] === true && boot.receive === false, JSON.stringify({ cutscene: boot.cutscene, receive: boot.receive }));
                 const surf = await page.evaluate(async () => {
                     const s = (await import('./modules/flashPanel/index.js')).getActivePanelInstance().seedlingPlaybackSurface();
-                    return { atlas: !!s.atlas, report: !!s.report };
+                    return { atlas: s.atlas?.arm ?? null, report: !!s.report };
                 });
-                check('N: the Playback Bot cannot walk this preset — the vanilla arm binds no name → cell map (atlas / report null)',
-                    !surf.atlas && !surf.report, JSON.stringify(surf));
+                // ⛓ §5.16 — the vanilla arm now binds its map (`realRoomPlaybackMap`); the Playback Bot's walk of this preset is
+                // `probe-seedling-wasm-vanilla-map.mjs`. N keeps driving the controller's engine directly.
+                check('N: the vanilla arm binds the flash_seedling name → cell map (§5.16; the generated report stays null)',
+                    surf.atlas === 'vanilla' && !surf.report, JSON.stringify(surf));
                 const run = await page.evaluate(async ({ legs }) => {
                     const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
                     const c = substrateRegistry.get('flash_seedling')?.getPlaybackController?.();
