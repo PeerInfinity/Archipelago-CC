@@ -273,7 +273,10 @@ export const ADOPT_MIN_ELAPSED = 2 * LEGACY_FADE_PER_LOAD.max;
 /**
  * ⛓ W8c — THE NEW-GAME ARM'S BEGIN RECORD (plan §5.15). The host's level-set
  * reset (`seedlingRandomizerWiring.resetTargetFor`, mode `new-game-arm`: a set
- * whose start names a level and no position) boots `new Game(-1, x, y)`, and
+ * whose start names a level and no position, WITH the intro asked for —
+ * ⚖ 2026-10-03 the default `NEW_GAME_INTRO` is false, so the reset sends the
+ * explicit start and this record no longer occurs on a default page; this
+ * and the ceremony stay as that option's fallback) boots `new Game(-1, x, y)`, and
  * `Game.begin()` latches `level` as its FIRST line (`Game.as:741`) — before
  * `if (level < 0) LevelSet.active().applyStart(this)` (`Game.as:832-840`)
  * resolves it. So the record of that build reads `begin.level −1`, and every
