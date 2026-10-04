@@ -57,12 +57,8 @@ class TestBase(unittest.TestCase):
             "level_58__r3c3",
             "level_58__r4c1",
             "level_58__r6c5",
-            # TODO(R8): L82 is NOT settled. R1's fall table verifies `71 ⇓ 82` (pit (12,13) ->
-            # arrival (10,17)) and the R1 bot walked it, but rules v1 emits no entrance at all --
-            # unlike `83 ⇓ 84`, the next row of the same table, which is emitted. Under armed lava
-            # the pit's L71 component is unreachable, so this may be a deliberate drop; if not, the
-            # edge is missing from the transcription and this line should be removed.
-            "level_82",
+            # L82 is NOT here since RULES (B) (2026-10-04): `71 ⇓ 82` is wired (L82 was never-enter
+            # by ruling, which stranded all of Dungeon 7) and the LavaBoss arena is gated both ways.
             # L84 is a pass-through: the 83 -> 84 fall lands on pit with no walkable neighbour, so
             # only the arrival room r2c4 is entered. These two components have no inbound edge.
             "level_84__r0c0",
