@@ -10,8 +10,8 @@
  *
  * ⛔ **REPORT ONLY.** Nothing here writes `fixtures/tapes/`,
  * `fixtures/traces/`, or any committed artifact. Every solve runs IN
- * MEMORY; the outputs are a table and some PNGs under `NewDocs/plans/
- * seedling-editor-survey/` (gitignored by design — the as-built carries
+ * MEMORY; the outputs are a table and some PNGs under `.cache/seedling-survey/`
+ * (a regenerable cache, see `seedlingSurveyDir.js` — the as-built carries
  * the table inline as the durable record). Tapes for newly-solved rooms
  * are R9's business, recorded there under R9's own licence.
  *
@@ -133,6 +133,7 @@ import { parseDashMode, dashModeNote } from './dashMode.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { seedlingSurveyDir } from './seedlingSurveyDir.js';
 
 argvHelp(import.meta.url);
 const DASH_MODE = parseDashMode(
@@ -145,7 +146,7 @@ const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
 const TAPES = join(MODULE, 'fixtures', 'tapes');
-const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey',
+const OUT_DIR = join(seedlingSurveyDir(REPO),
     ...(process.argv.some((a) => a.startsWith('--through=')) ? ['through-2.2'] : []));
 
 const argOf = (k, dflt) => {

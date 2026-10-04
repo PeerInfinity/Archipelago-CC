@@ -138,6 +138,7 @@ import {
     REHEARSAL_PLAN, buildRehearsalTree, readRehearsalMarker,
 } from './rehearsalTree.js';
 import { takeBoxLock } from './boxLock.js';
+import { seedlingSurveyDir } from './seedlingSurveyDir.js';
 import { driverChannel } from './seedlingDriver.js';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 
@@ -1985,7 +1986,7 @@ function report(ctx, s0, s1, s2) {
  */
 // ⛓ Swim U13: the frontier's source, `census-seedling-campaign.mjs`'s own — the
 //   through-2.2 route and its rows (`--through=2.2 --out=…/through-2.2/survey.json`).
-const SURVEY_DIR = join(ROOT, 'NewDocs/plans/seedling-editor-survey/through-2.2');
+const SURVEY_DIR = join(seedlingSurveyDir(ROOT), 'through-2.2');
 const FRONTIER_PATH = join(MODULE, 'fixtures/campaign-frontier.json');
 const CHAIN_DECL = join(MODULE, 'campaignChain.js');
 

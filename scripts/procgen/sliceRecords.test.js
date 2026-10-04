@@ -20,7 +20,7 @@ import { execFileSync } from 'node:child_process';
 import { afterAll, describe, expect, it } from 'vitest';
 
 import {
-    DOCS_INDEX, HEADER_RE, LADDER_FROZEN_AT, QUEUE_DOC, TRACKED_DOC, bareTitle, deriveFromGit, factLines, landedIn, memoryDir,
+    DOCS_INDEX, HEADER_RE, LADDER_FROZEN_AT, TRACKED_DOC, bareTitle, deriveFromGit, factLines, landedIn, memoryDir,
     parseSection, rulingsIn, sectionText, shallowRefusal, REPO,
 } from './sliceRecords.js';
 import { insertionPoint, replaceRegion } from './record-slice.mjs';
@@ -415,14 +415,16 @@ describe('⛓ Q1: the gate on a tree WITHOUT the untracked queue SKIPs, and asse
     const drive = () => {
         try {
             const out = execFileSync('node', [GATE, `--repo=${QREPO}`, `--memory=${MEM}`, '--json'],
-                { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+                { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
+                    env: { ...process.env, SLICE_QUEUE_DOC: QUEUE_REL } });
             return { exit: 0, ...JSON.parse(out) };
         } catch (e) {
             return { exit: e.status, ...JSON.parse(e.stdout) };
         }
     };
     const rowsFor = (r, id) => r.rows.filter((x) => x.m.startsWith(`${id}: `));
-    const queuePath = join(QREPO, QUEUE_DOC);
+    const QUEUE_REL = 'planning/queue.md';
+    const queuePath = join(QREPO, QUEUE_REL);
 
     it('ABSENT: (1) is a SKIP naming the untracked record, Z0\'s repaired regen is a SKIP, exit 0', () => {
         rmSync(queuePath, { force: true });

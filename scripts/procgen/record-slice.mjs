@@ -9,11 +9,11 @@
  * what a fold should say on the other four surfaces, and — under `--write` —
  * places the three it can place.
  *
- * ⛔⛔ **THE KICKOFF PATH IS AN ARGUMENT AND NEVER A CONSTANT.** `NewDocs/` is
- * gitignored by design and is not in a linked worktree at all, so a kickoff is
- * the caller's to name. Tracked docs never cite `NewDocs/`; the repository names
- * it only where a tool reads or writes there — a scratch output's default, the
- * untracked cross-arc queue (`sliceRecords.QUEUE_DOC`) — never as a citation.
+ * ⛔⛔ **THE KICKOFF PATH IS AN ARGUMENT AND NEVER A CONSTANT.** The planning
+ * tree is gitignored by design and is not in a linked worktree at all, so a
+ * kickoff is the caller's to name — and so is the untracked cross-arc queue
+ * (`SLICE_QUEUE_DOC`, see `sliceRecords.QUEUE_DOC`). Tracked files never name a
+ * path in that tree, not even as a default.
  *
  * ⛔ **THIS TOOL NEVER EDITS THE RECORD.** It reads §N, derives, and reports
  * disagreements as FINDINGS (`generate-procgen-reference`'s rule, same reason).
@@ -69,7 +69,7 @@ import { join } from 'node:path';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import {
-    INDEX_FILE, LADDER_FILE, LADDER_FROZEN_AT, QUEUE_DOC, R9_FILE, REPO,
+    INDEX_FILE, LADDER_FILE, LADDER_FROZEN_AT, QUEUE_DOC, queueDocPath, R9_FILE, REPO,
     TRACKED_DOC, TRAPS_DIR,
     deriveFromGit, factLines, memoryDir, memoryTrapBullet, parseSection,
 } from './sliceRecords.js';
@@ -167,7 +167,7 @@ const CAL = [
     },
     {
         surface: 'queue header',
-        file: () => join(REPO, QUEUE_DOC),
+        file: () => queueDocPath(REPO) ?? '(SLICE_QUEUE_DOC unset)',
         find: (lines, slice) => lines.find((l) => l.startsWith('**⇒ ')
             && new RegExp(`\\b${slice}\\b`).test(l) && /\b(CLOSED|SHIPPED)\b/.test(l)),
     },
@@ -426,14 +426,14 @@ export function main() {
         /* ⛓ the queue header — inserted ONLY if absent; the body stays a human's. */
         if (!doQueue) {
             console.log('SKIP  the queue (--only=memory)');
-        } else if (!existsSync(join(REPO, QUEUE_DOC))) {
+        } else if (!queueDocPath(REPO) || !existsSync(queueDocPath(REPO))) {
             /* ⛓ Q1: the queue is an untracked record; a tree without it gets no write (and
              * `writes` is only counted — nothing here stages, so no ignored path is ever staged). */
-            console.log(`SKIP  the queue doc is not on this machine (\`${QUEUE_DOC}\`, untracked)`);
+            console.log(`SKIP  the queue doc is not on this machine (${QUEUE_DOC ? `\`${QUEUE_DOC}\`, untracked` : 'SLICE_QUEUE_DOC unset'})`);
         } else if (derived.queue.line) {
             console.log(`SKIP  ${QUEUE_DOC} already has a block at :${derived.queue.line}`);
         } else {
-            const q = join(REPO, QUEUE_DOC);
+            const q = queueDocPath(REPO);
             const at = insertionPoint(readFileSync(q, 'utf8').split('\n'));
             const qLines = readFileSync(q, 'utf8').split('\n');
             qLines.splice(at, 0, '', lines.queueHeader);

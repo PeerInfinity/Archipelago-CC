@@ -51,7 +51,7 @@
  *
  * ── ⛔⛔ THE BOUND, NAMED: WHAT CI CANNOT ASK ─────────────────────────
  *
- * The kickoff (`NewDocs/`, gitignored) and the memory directory (outside the
+ * The kickoff (gitignored planning tree) and the memory directory (outside the
  * repository entirely) DO NOT EXIST in a CI checkout. So:
  *
  *   the CI FACE is (1), (2) and the BELOW-FREEZE half of (3) — all three
@@ -128,7 +128,7 @@ import { join } from 'node:path';
 
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import {
-    DOCS_INDEX, LADDER_FROZEN_AT, QUEUE_DOC, REPO, TRACKED_DOC, TRACKED_DOC_HISTORY,
+    DOCS_INDEX, LADDER_FROZEN_AT, QUEUE_DOC, queueDocPath, REPO, TRACKED_DOC, TRACKED_DOC_HISTORY,
     deriveFromGit, memoryDir, parseSection, shallowRefusal,
 } from './sliceRecords.js';
 import { trapFiles, trapsCitedIn } from './sliceTraps.js';
@@ -224,8 +224,9 @@ const slices = docLines.flatMap((l, i) => {
 });
 
 /** ⛓ Q1: the queue is untracked — ABSENT is a fact this gate reports, not an empty queue. */
-const queuePresent = existsSync(join(ROOT, QUEUE_DOC));
-const queueLines = queuePresent ? readFileSync(join(ROOT, QUEUE_DOC), 'utf8').split('\n') : [];
+const queuePath = queueDocPath(ROOT);
+const queuePresent = queuePath !== null && existsSync(queuePath);
+const queueLines = queuePresent ? readFileSync(queuePath, 'utf8').split('\n') : [];
 
 /** ⛓ The trap numbers a `traps/` file holds — `null` when we cannot look. */
 const localTraps = LOCAL
@@ -275,7 +276,7 @@ const conventionSlice = withBlock.find((s) => s.when === conventionFrom) ?? null
 for (const s of slices) {
     /* ── (1) the queue block ─────────────────────────────────────────── */
     if (!queuePresent) {
-        skip(`${s.id}: the queue is an untracked record (\`${QUEUE_DOC}\` is not on this machine) — `
+        skip(`${s.id}: the queue is an untracked record (${QUEUE_DOC ? `\`${QUEUE_DOC}\` is not on this machine` : 'none named — set SLICE_QUEUE_DOC'}) — `
             + 'asserted only where it exists; not claimed green');
     } else if (s.at >= 0) {
         pass(`${s.id}: queue block at ${QUEUE_DOC}:${s.at + 1}`);

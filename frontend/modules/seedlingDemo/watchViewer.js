@@ -1664,7 +1664,7 @@ let frontierMemo = null;
 
 /**
  * The census's committed projection of the route survey. ⚠ The survey JSON
- * itself is gitignored (`NewDocs/*`), so this artifact is the only thing a
+ * itself is a local cache (`.cache/seedling-survey/`), so this artifact is the only thing a
  * BROWSER can read — and `census-seedling-campaign.mjs --check-frontier` is
  * what keeps it honest against the survey on a machine that has one.
  *

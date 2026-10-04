@@ -57,7 +57,8 @@ const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name
     ?? `--${name}=${fallback}`).slice(`--${name}=`.length);
 
 const DOCS_DIR = join(ROOT, 'docs/json/developer/procgen');
-const OUT = arg('out', join(ROOT, 'NewDocs/plans/procgen-docs-P2-term-candidates.json'));
+// ⛓ A regenerable scratch output: `.cache/` is gitignored and exists in every clone.
+const OUT = arg('out', join(ROOT, '.cache/procgen-term-candidates.json'));
 const MIN = Number(arg('min', 1));
 
 /**

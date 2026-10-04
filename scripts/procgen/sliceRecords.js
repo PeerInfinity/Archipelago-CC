@@ -64,7 +64,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -97,7 +97,16 @@ export const TRACKED_DOC = 'docs/json/developer/procgen/seedling-bot-log.md';
  * the new path alone would name the split commit for every slice.
  */
 export const TRACKED_DOC_HISTORY = Object.freeze([TRACKED_DOC, 'docs/json/developer/procgen/seedling-bot.md']);
-export const QUEUE_DOC = 'NewDocs/plans/fable-to-opus-handoff-2026-07.md';
+/**
+ * ⛓ The untracked cross-arc queue, NAMED BY THE CALLER: `SLICE_QUEUE_DOC`
+ * (relative to the repository root, or absolute). Unset means "no queue on this
+ * machine" — check (1) SKIPs and `record-slice` writes nothing there. ⛔ No
+ * default: a tracked tool never hard-codes a path into the gitignored planning
+ * tree.
+ */
+export const QUEUE_DOC = process.env.SLICE_QUEUE_DOC || null;
+/** @returns {string|null} the queue's absolute path under `repo`, or null when none is named */
+export const queueDocPath = (repo) => (QUEUE_DOC ? resolve(repo, QUEUE_DOC) : null);
 /** ⛓ The artifact ⚖ 22 requires in the SAME commit as a procgen-doc edit. */
 export const DOCS_INDEX = 'frontend/modules/procgenDocs/generated/docsIndex.js';
 /** ⛓ The tape directory ⚖ 40's "NO TAPE MOVED" is a diff over. */
@@ -576,9 +585,9 @@ export function deriveFromGit(parsed, { repo = REPO, head = null } = {}) {
 
     /* ── the queue block ─────────────────────────────────────────────── */
     const queuePrefix = `**⇒ ${parsed.slice} CLOSED`;
-    const queuePath = join(repo, QUEUE_DOC);
+    const queuePath = queueDocPath(repo);
     let queue = { prefix: queuePrefix, line: null };
-    if (existsSync(queuePath)) {
+    if (queuePath && existsSync(queuePath)) {
         const qLines = readFileSync(queuePath, 'utf8').split('\n');
         const at = qLines.findIndex((l) => l.startsWith(queuePrefix));
         if (at >= 0) queue.line = at + 1;

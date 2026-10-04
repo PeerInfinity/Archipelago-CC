@@ -77,6 +77,7 @@ import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
+import { seedlingCensusDir, seedlingSurveyDir } from './seedlingSurveyDir.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -100,7 +101,7 @@ const WRITE = !process.argv.includes('--no-write');
 /** ⛓ R9 slice 10 — the two frontier modes (see `FRONTIER` below). */
 const WRITE_FRONTIER = process.argv.includes('--write-frontier');
 const CHECK_FRONTIER = process.argv.includes('--check-frontier');
-const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'r9-slice5-census');
+const OUT_DIR = seedlingCensusDir(REPO);
 /**
  * ⛓ SWIM U13 (⚖ Q40) — THE FRONTIER'S SOURCE IS THE THROUGH-2.2 ROUTE. The
  * chain walks past the shield now, so the route it is aligned against is the
@@ -108,10 +109,11 @@ const OUT_DIR = join(REPO, 'NewDocs', 'plans', 'r9-slice5-census');
  * `through-2.2/route.json`, and its rows go to `through-2.2/survey.json` by
  * `--out=` (the extended survey never writes the default `survey.json`):
  *   node scripts/procgen/survey-seedling-route.mjs --through=2.2 \
- *       --out=NewDocs/plans/seedling-editor-survey/through-2.2/survey.json --timeout=1500
- * Both are gitignored like the default pair, which is why the frontier exists.
+ *       --out=.cache/seedling-survey/through-2.2/survey.json --timeout=1500
+ * Both are a regenerable cache like the default pair (`seedlingSurveyDir.js`),
+ * which is why the committed frontier exists.
  */
-const SURVEY_DIR = join(REPO, 'NewDocs', 'plans', 'seedling-editor-survey', 'through-2.2');
+const SURVEY_DIR = join(seedlingSurveyDir(REPO), 'through-2.2');
 
 /**
  * ⛓⛓⛓ THE SUBJECT, in sphere order (⚖ ruling 14) — **AND IT IS DERIVED NOW.**
@@ -473,7 +475,7 @@ function surveyRows() {
  * inventing a stop for it would be this script answering a question it was
  * handed the wrong inputs for.
  *
- * ⛔ THE SURVEY JSON IS GITIGNORED (`NewDocs/*`), WHICH IS WHY THE ARTIFACT
+ * ⛔ THE SURVEY JSON IS A LOCAL CACHE (`.cache/`), WHICH IS WHY THE ARTIFACT
  * EXISTS. `campaign-frontier.json` is the COMMITTED PROJECTION of it: the page
  * reads the artifact — it has no other way to know what the next work order is
  * — and `--check-frontier` is what keeps the projection honest against the
