@@ -295,25 +295,25 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**58 files, 4967 literals.** Class × position:
+**58 files, 4965 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1281 | 351 | 1637 |
-| rule | 6 | 943 | 449 | 1398 |
-| cosmetic | 0 | 49 | 10 | 59 |
-| structural | 10 | 312 | 1551 | 1873 |
+| rule | 6 | 940 | 445 | 1391 |
+| cosmetic | 0 | 49 | 14 | 63 |
+| structural | 10 | 312 | 1552 | 1874 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2585 | 2361 | 4967 |
+| total | 21 | 2582 | 2362 | 4965 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1374 | 0 | 90 | 118 | 4 | 51 | 1637 |
-| rule | 411 | 125 | 221 | 22 | 528 | 91 | 1398 |
+| rule | 411 | 121 | 220 | 22 | 528 | 89 | 1391 |
 
-Rows whose note starts `REVIEW:`: **105**.
+Rows whose note starts `REVIEW:`: **103**.
 
 ### The 0 names declared in more than one file
 
@@ -597,7 +597,7 @@ None: a name declared in several files now reads one profile key (the table belo
 | `GRENADE_HIT_UPDATES` | seedlingDemo/finalBossFight.js | 2 | 2 | rule | count/magnitude |  |
 | `ROCK_FALL` | seedlingDemo/finalBossFight.js | 5 | 5 | physics/rule | magnitude | Scenery/RockFall.as:fallHeight Scenery/RockFall.as:g Scenery/RockFall.as:startingSpeed Scenery/RockFall.as:force Scenery/RockFall.as:damage |
 | `GRENADE` | seedlingDemo/finalBossFight.js | 8 | 8 | physics/rule | bound/magnitude | Enemies/Grenade.as:hitRadius Enemies/Grenade.as:force |
-| `OWL_DRAW_SITES` | seedlingDemo/finalBossRng.js | 10 | 10 | rule | count |  |
+| `OWL_DRAW_SITES` | seedlingDemo/finalBossRng.js | 7 | 7 | rule | count |  |
 | `ICE_TURRET_BLAST` | seedlingDemo/iceTurretBlast.js | 9 | 9 | physics/rule | count/magnitude | Enemies/IceTurret.as:shotSpeed Enemies/IceTurret.as:distBtwnShots |
 | `FREEZE_SPAN` | seedlingDemo/iceTurretBlast.js | 1 | 1 | rule | derivation |  |
 | `BLAST_DAMAGE` | seedlingDemo/iceTurretBlast.js | 4 | 4 | physics/rule | magnitude |  |
