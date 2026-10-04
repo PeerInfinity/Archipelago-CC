@@ -1402,10 +1402,30 @@ const PANEL_JS = {
      * the first is "some rules are loaded", the second is "the rules I loaded
      * are the ones answered". `check-seedling-wasm-bridge.mjs` has the same
      * fence spelled as an assertion (*"panel idle on the fallback preset"*).
+     *
+     * ⛔⛔ **THE SWITCH IS `files:jsonLoaded`, NOT `proxy.loadRules`.** Until
+     * slice `seedling-atlas-win-elig` (2026-10-03) this called
+     * `proxy.loadRules` directly. That moves the WORKER's static data, but
+     * not `stateManager`'s `getLastRawJsonData()`: only the
+     * `files:jsonLoaded` subscriber (`stateManager/index.js`) sets that, and
+     * the picker publishes the event (`presetUI.loadRulesFile`), which
+     * `app/initialization` turns into the `loadRules` call. The panel reads
+     * the raw payload for every raw-rules-only field (`preset_sidecars`,
+     * `region_atlas`), so with the old switch it saw the ADVENTURE fallback.
+     * The atlas census found 0 real rooms, and `seedling_atlas` was refused
+     * at (iii) with *"0 of 41 goal-ledger locations resolve"*. The vanilla
+     * arms passed only because nothing they read is raw-rules-only.
+     * MEASURED with a scratch probe: after `proxy.loadRules(seedling_atlas)`
+     * the static data said `seedling`, while the raw payload was Adventure
+     * with 0 sidecars. After the publish, the raw payload was
+     * `seedling_atlas` with 10. ⇒ `rawSource` is returned, and a row asserts
+     * that it is the preset loaded.
      */
     loadPreset: `async ([src, patch]) => {
         const { default: proxy } = await import(
             '/frontend/modules/stateManager/stateManagerProxySingleton.js');
+        const { getLastRawJsonData } = await import('/frontend/modules/stateManager/index.js');
+        const { default: eventBus } = await import('/frontend/app/core/eventBus.js');
         const settle = async (want, deadlineMs) => {
             const t0 = Date.now();
             for (;;) {
@@ -1419,10 +1439,16 @@ const PANEL_JS = {
         const rules = await fetch(src).then((r) => r.json());
         if (patch && patch.wasm) rules.flash_panel = { ...rules.flash_panel, wasm: patch.wasm };
         const want = rules.flash_panel ? rules.flash_panel.wasm : null;
-        await proxy.loadRules(rules, { playerId: 1 }, src);
+        // ⛓ the picker's own publish: the event, the player, the source name,
+        // and the publisher name it is registered under (\`presets/index.js\`).
+        eventBus.publish('files:jsonLoaded',
+            { jsonData: rules, selectedPlayerId: 1, sourceName: src }, 'presets');
         const after = await settle(
             (sd) => Boolean(sd) && (sd.flash_panel ? sd.flash_panel.wasm : null) === want, 120000);
+        const raw = getLastRawJsonData();
         return {
+            rawSource: raw ? raw.source : null,
+            rawIsTheRules: Boolean(raw) && raw.rawJsonData === rules,
             wasm: want,
             fallbackGame: fallback ? fallback.game_name : null,
             settledGame: after ? after.game_name : null,
@@ -1760,6 +1786,9 @@ if (PANEL_ARMS_ENABLED) {
         check(`${tag}: the preset switch SETTLED — the fallback landed first and did not `
             + 'clobber it', lp?.settled === true,
         `fallback=${JSON.stringify(lp?.fallbackGame)} -> settled=${JSON.stringify(lp?.settledGame)}`);
+        check(`${tag}: the raw payload the panel reads is THIS preset's rules, not the fallback's`,
+            lp?.rawIsTheRules === true && lp?.rawSource === preset.src,
+            `rawSource=${JSON.stringify(lp?.rawSource)} same-object=${lp?.rawIsTheRules}`);
         check(`${tag}: the panel loaded the ${M1_PAGE} page the preset names`,
             String(shape?.flashPanelWasm ?? '').startsWith(M1_PAGE),
             String(shape?.flashPanelWasm));
