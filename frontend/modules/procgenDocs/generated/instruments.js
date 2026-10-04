@@ -10344,6 +10344,7 @@ export const INSTRUMENTS = frz({
                 "budget-s",
                 "host",
                 "only",
+                "solver-budget-ms",
                 "wait-for-box"
             ],
             "file": "probe-seedling-wasm-logical-links.mjs",
@@ -10365,6 +10366,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "only"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "solver-budget-ms"
                 }
             ],
             "inheritedFlags": [

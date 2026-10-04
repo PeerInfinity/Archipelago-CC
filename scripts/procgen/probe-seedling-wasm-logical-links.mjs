@@ -17,6 +17,11 @@
  *      gone, so the route opens with `level_0__r8c0 -> level_2` and nothing is credited at r1c6. The Sword
  *      CHECKED, and the walk continues to the next named refusal (`ROW B reach`), within `--budget-s`. ⚠ On a base without fidelity F4 (the sandtraps' arrow death) the solver declines
  *      L8 → L9 by name before the Sword; the check accepts exactly that decline there.
+ *      ⛓ ANYTIME (solver-walk anytime): every solver leg is named by the PASS that made its plan (`dashless` / `full`), and
+ *      0 divergences. `--solver-budget-ms=<ms>` sets the wasm solve budget through its setting
+ *      (`flashPanel.seedlingWasmSolverBudgetMs`, session-only) and checks the engine runs under it: a short
+ *      budget makes the sword legs whose full search is slow PLAY their dashless plan (the live witness that
+ *      a dashless plan plays on plan on the game).
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
  * `N CHECK(S) FAILED` (exit 1).
@@ -25,7 +30,7 @@
  * `flashPanel/wasm` submodule), or this SKIPs (exit 0).
  *
  * Run: node scripts/procgen/probe-seedling-wasm-logical-links.mjs [--host=http://localhost:8000] [--only=H,B]
- *      [--budget-s=900] [--wait-for-box=<sec>]
+ *      [--budget-s=900] [--solver-budget-ms=<ms>] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
@@ -81,6 +86,7 @@ async function main() {
     const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
     const SESSIONS = arg('only', 'H,B').split(',').filter(Boolean);
     const BUDGET_MS = Number(arg('budget-s', '900')) * 1000;
+    const SOLVER_BUDGET_MS = arg('solver-budget-ms', null) === null ? null : Number(arg('solver-budget-ms', null));
     const PRESET = JSON.parse(readFileSync(join(REPO, 'frontend', RULES_PATH), 'utf8'));
     const PARTITION = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-subregion-partition.json'), 'utf8'));
     const REGIONS = PRESET.regions['1'];
@@ -294,8 +300,11 @@ async function main() {
                 engine: true, adopted: st.adopted, forced: st.forced, forcedBy: st.forcedBy, adoptRefused: st.adoptRefused,
                 held: st.held, continuations: st.continuations, divergences: st.divergences, recoveries: st.recoveries,
                 failed: st.failed, done: st.done, hostStarts: (st.hostStarts ?? []).map((h) => h.label),
+                // ⛓ ANYTIME — the budget the engine solves under, its expiries / provisional plays / held retries
+                budgetMs: e.budgetMs, expiries: st.expiries, provisionalPlays: st.provisionalPlays, retries: st.retries, passes: st.passes,
                 history: (st.history ?? []).map((h) => ({ goal: h.goal?.name, level: h.goal?.level, outcome: h.outcome,
-                    reason: h.reason ?? null })),
+                    reason: h.reason ?? null, producer: h.producer ?? null, pass: h.pass ?? null, expired: h.expired ?? null,
+                    retries: h.retries ?? null, ticks: h.ticks ?? null, verbs: h.verbs ?? null, divergence: h.divergence ?? null })),
                 lastRefusal: c.lastRefusal }));
         });
 
@@ -307,6 +316,12 @@ async function main() {
             });
             check('B: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`)',
                 routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
+            if (SOLVER_BUDGET_MS !== null) {
+                await page.evaluate(async (ms) => {
+                    const sm = (await import('./app/core/settingsManager.js')).default;
+                    await sm.updateSetting('moduleSettings.flashPanel.seedlingWasmSolverBudgetMs', ms, { persist: false });
+                }, SOLVER_BUDGET_MS);
+            }
             const booted = await startBot();
             out('B boot', booted);
             check(`B: the bot is mounted in ${START}, its first goal in level 10`, booted.ok && booted.region === START
@@ -354,6 +369,19 @@ async function main() {
                 (swordAt !== null && checks.filter((c) => c === sword).length === 1) || (swordAt === null && sandtrapDecline),
                 JSON.stringify({ swordAt, checks, sandtrapDecline }));
             check('B: every location checked once', new Set(checks).size === checks.length, JSON.stringify(checks));
+            // ⛓ ANYTIME (§5.20) — every solver plan named by its pass; nothing left the plan.
+            const solved = (eng.history ?? []).filter((h) => h.outcome === 'done' && h.producer === 'solver');
+            out('B passes', { budgetMs: eng.budgetMs, expiries: eng.expiries, provisionalPlays: eng.provisionalPlays, retries: eng.retries,
+                passes: eng.passes, legs: solved.map((h) => `L${h.level} ${h.pass}${h.expired ? '*' : ''}${h.retries ? `+r${h.retries}` : ''} ${h.ticks}t`) });
+            check('B: every solver leg is named by the PASS that made its plan (dashless / full)',
+                solved.length > 0 && solved.every((h) => h.pass === 'dashless' || h.pass === 'full'),
+                JSON.stringify(solved.map((h) => [h.level, h.pass])));
+            check('B: 0 divergences (every played plan, dashless or full, stayed on plan)', eng.divergences === 0
+                && solved.every((h) => !h.divergence), JSON.stringify({ divergences: eng.divergences }));
+            if (SOLVER_BUDGET_MS !== null) {
+                check(`B: the engine solves under the --solver-budget-ms knob (${SOLVER_BUDGET_MS} ms, the setting)`,
+                    eng.budgetMs === SOLVER_BUDGET_MS, JSON.stringify({ budgetMs: eng.budgetMs }));
+            }
             check('B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall',
                 (end?.status ?? '').startsWith('finished') || (end?.status ?? '').startsWith('error') || Date.now() - t0 >= BUDGET_MS,
                 end?.status ?? '');
