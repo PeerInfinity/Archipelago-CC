@@ -53,7 +53,7 @@
     },
     {
       "file": "f1c-l18-phase42.json",
-      "tickCount": 512,
+      "tickCount": 510,
       "bootLevel": 18,
       "tapeVersion": 11,
       "noHazards": []
