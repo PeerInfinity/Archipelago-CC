@@ -928,7 +928,7 @@ export function createWasmPlayback({
                 return;
             }
             // ⛓ ANYTIME / O2 — past the budget: a provisional plan plays, else a held retry, else the end by name.
-            const cut = { provisional: handle.provisional ?? null, answered: handle.answered ?? 0 };
+            const cut = { provisional: handle.provisional ?? null, answered: handle.answered ?? 0, passes: handle.passes ?? [] };
             handle.cancel();
             stats.expiries += 1;
             const action = expiryAction({ provisional: cut.provisional, retries: play.retries });
@@ -938,7 +938,9 @@ export function createWasmPlayback({
                 play.expired = true;
                 log(`[wasm playback] ${goal.name ?? goal.kind}: the solver exceeded ${secs(play.budget)} in level ${goal.level} `
                     + `— playing the ${cut.provisional.pass} pass's plan it already had`, 'warn');
-                res = cut.provisional;
+                // the pass rows that landed, and the one cut at the budget
+                res = { ...cut.provisional, plan: { ...cut.provisional.plan,
+                    passes: [...cut.passes, ...passesAfter(play.request.passes ?? [], cut.answered).map((p) => ({ pass: p.pass, ok: false, kind: 'budget' }))] } };
             } else {
                 const refusal = betterAnswer(play.best, cut.provisional) ? cut.provisional : play.best;
                 const why = expiryFailure({ goal, budgets: play.budgets, refusal });

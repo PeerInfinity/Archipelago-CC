@@ -475,6 +475,7 @@ describe('⛓ ANYTIME / O2 / O3 — a solve past its budget: the provisional pla
         expect(e.engine.stats.hostStarts.map((h) => h.label)).toEqual(['freeze', 'plan']);
         expect(e.teleports).toHaveLength(1); // the cold start only
         expect(e.engine.stats.history.at(-1)).toMatchObject({ outcome: 'done', pass: 'dashless', expired: true });
+        expect(e.dones[0].passes).toEqual([{ pass: 'full', ok: false, kind: 'budget' }]); // the fake landed no pass rows
     });
 
     it('a solve that lands in time is named by the pass that won (the house, no sword: dashless; full SKIPPED)', () => {
