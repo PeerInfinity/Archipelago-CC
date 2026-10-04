@@ -90,3 +90,38 @@ describe('an exit no component reaches binds to the component the model reaches 
         expect(() => refuseUnboundMembers({ region_id: 'level_9', subgraph: {} }, [])).not.toThrow();
     });
 });
+
+// ⛓ The playthrough's FIRST AP goal must keep a route at sphere 0 (the planner's gate). The REAL StateManager
+// (as the worker builds it) and the REAL PathFinder, over the committed rules.json; the bidirectional setting is
+// the proxy's own derivation (exporter["1"] declares false). Before this slice the route was 10 hops through the
+// sealed logical link `level_0__r8c0 -> level_0__r1c6`; now the stairs leave r8c0 itself.
+describe('the Sword keeps its sphere-0 route (PathFinder over the real StateManager)', () => {
+    it('level_0__r8c0 -> level_10 in 9 hops, the stairs taken straight from r8c0', async () => {
+        const { StateManager } = await import('../../frontend/modules/stateManager/stateManager.js');
+        const { StateManagerProxy } = await import('../../frontend/modules/stateManager/stateManagerProxy.js');
+        const { evaluateRule } = await import('../../frontend/modules/shared/ruleEngine.js');
+        const { workerLoggerInstance } = await import('../../frontend/app/core/universalLogger.js');
+        const { PathFinder } = await import('../../frontend/modules/shared/pathfinder.js');
+        const rules = JSON.parse(readFileSync(fileURLToPath(new URL(
+            '../../frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json', import.meta.url)), 'utf8'));
+        const sm = new StateManager(evaluateRule, workerLoggerInstance);
+        sm.loadFromJSON(structuredClone(rules), '1');
+        const sd = sm.getStaticGameData();
+        const snap = sm.getSnapshot();
+        expect(Object.values(snap.inventory).every((n) => n === 0)).toBe(true);
+        const bidir = StateManagerProxy.prototype.getEffectiveBidirectionalSetting.call({ staticDataCache: sd });
+        expect(bidir).toMatchObject({ assumeBidirectional: false, source: 'explicit' });
+        expect(sd.locations.get('Level 010 - Sword').parent_region_name).toBe('level_10');
+        const pf = new PathFinder({
+            getStaticData: () => sd, getLatestStateSnapshot: () => snap, getEffectiveBidirectionalSetting: () => bidir,
+        });
+        expect(pf.findPath('level_0__r8c0', 'level_10')).toEqual({
+            steps: ['level_0__r8c0', 'level_2', 'level_3__r0c4', 'level_4', 'level_5__r1c5', 'level_6', 'level_7',
+                'level_8', 'level_9', 'level_10'],
+            nextExit: 'level_0__r8c0 -> level_2',
+            length: 9,
+        });
+        // r1c6 is not a sphere-0 place any more: only the Sword's rock leads there.
+        expect(pf.findPath('level_0__r8c0', 'level_0__r1c6')).toBeNull();
+    }, 60_000);
+});
