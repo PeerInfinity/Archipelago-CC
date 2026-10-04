@@ -3,7 +3,7 @@
  * declaration rule it ships under, the mid-room policy, the moonrock / level-0 (⛓ W5: staged, no longer refused)
  * refusal, and the trajectory compare (solver-walk W2). The engine that drives them (`flashPanel/seedlingWasmPlayback.js`)
  * has its own file; both read W1's RECORDED arrivals
- * (`fixtures/wasm-arrival-p4e.json`), never a hand-written latch.
+ * (`fixtures/wasm-arrival-p4f.json`), never a hand-written latch.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -25,7 +25,7 @@ import { indexLevels } from './atlasSource.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
-const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4e.json').arrivals;
+const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json').arrivals;
 const RECORDS = indexLevels(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
 const HOUSE = 86;
 const byLabel = (prefix, level) => RECORDED.find((a) => a.label.startsWith(prefix) && a.status.level === level);
@@ -54,8 +54,11 @@ describe('shippedTape — the tape the game is handed', () => {
     it('the rng is left alone (seed 0, fp 0 = untouched) — the staging\'s seeds are the BEGIN record\'s, not the live stream', () => {
         const staging = stage(A);
         expect(staging.rng.seed).toBe(A.seam.beginEntry['rng.gameplay']);
-        // The live stream at the same arrival is NOT the begin record's (the build drew from it):
-        expect(A.status.rng.state).not.toBe(A.seam.beginEntry['rng.gameplay']);
+        // ⛓ p4f (seedling-wasm-leak L4 3′b): tapeless play runs SPLIT by default, so this
+        // room's build drew only from the COSMETIC generator and the live gameplay stream
+        // still equals the begin record (on p4e the build's tile draws had moved it).
+        // The staging takes the begin record either way, which is the property pinned here.
+        expect(A.status.rng.state).toBe(A.seam.beginEntry['rng.gameplay']);
         const t = shippedTape({ staging, keys: KEYS });
         expect(t.rng).toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
     });
