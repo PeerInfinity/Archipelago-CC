@@ -212,7 +212,7 @@ describe('SeedlingPlaybackController — the atlas rooms (J3)', () => {
 
     it('refuses BY NAME: a location the atlas arm refused (with its reason), an unknown one, an unknown exit', () => {
         expect(resolveSeedlingAtlasGoal({ kind: 'location', name: 'Somewhere - Sword' }, ATLAS_MAP).refused)
-            .toBe('"Somewhere - Sword" is an atlas location the atlas arm did NOT bind — the property path reports it too');
+            .toBe("\"Somewhere - Sword\" is a location the atlas arm's map did NOT bind — the property path reports it too");
         expect(resolveSeedlingAtlasGoal({ kind: 'location', name: 'nope' }, ATLAS_MAP).refused)
             .toBe('"nope" is not a bound AP location of the atlas rooms');
         expect(resolveSeedlingAtlasGoal({ kind: 'exit', name: 'nope' }, ATLAS_MAP).refused)

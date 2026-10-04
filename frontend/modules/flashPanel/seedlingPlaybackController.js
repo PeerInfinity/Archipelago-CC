@@ -93,6 +93,10 @@
  * object) is a new engine, like a new game.
  */
 
+// ⛓ VANILLA MAP — both import-free, so the controller still imports no model.
+import { RANDOMIZER_ARMS } from './seedlingRandomizerEligibility.js';
+import { ATLAS_CHECK_PLAYER, atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
+
 /** The substrate this controller walks (the default instance; J3 builds a second for the atlas rooms). */
 export const SEEDLING_PLAYBACK_SUBSTRATE = 'flash_seedling_gen';
 /** ⛓ J3 — the atlas rooms' substrate, the second instance's. */
@@ -148,7 +152,9 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
         const e = (atlas?.entries ?? []).find((x) => x.location === name);
         if (!e) {
             const why = (atlas?.refused ?? []).find((r) => r.location === name)?.why ?? null;
-            return { refused: why ? `"${name}" is an atlas location the atlas arm did NOT bind — ${why}`
+            // ⛓ VANILLA MAP — the map names its arm (absent = the atlas arm's map, J3's shape).
+            const arm = atlas?.arm ?? 'atlas';
+            return { refused: why ? `"${name}" is a location the ${arm} arm's map did NOT bind — ${why}`
                 : `"${name}" is not a bound AP location of the atlas rooms` };
         }
         return { goal: { kind: 'location', level: e.level, tag: e.tag, entityType: e.entityType ?? null, name } };
@@ -164,6 +170,11 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
             }
             return { goal: { kind: 'exit', level: payload.level, tiles: exit.exit_tiles, name } };
         }
+        // ⛓ VANILLA MAP — a rules exit between two sub-regions of ONE level is a LOGICAL link (it carries a
+        // rule, not a door): no sidecar marks a tile for it, and the region binding is level-granular
+        // (`seedlingRegionBinding.js`, ruling 1, 2026-07-27), so no crossing would ever report it.
+        const link = (atlas?.links ?? []).find((l) => l.name === name);
+        if (link) return { refused: SUB_REGION_LINK_REFUSAL(link) };
         return { refused: `"${name}" is not an exit of the atlas rooms` };
     }
     if (target?.kind === 'tile') {
@@ -171,6 +182,107 @@ export function resolveSeedlingAtlasGoal(target, atlas, { liveLevel = null, regi
         return { goal: { kind: 'tile', level: liveLevel, tile: [target.x, target.y] } };
     }
     return { refused: `not a walk target: ${JSON.stringify(target)}` };
+}
+
+/** ⛓ VANILLA MAP — why a logical sub-region link has no cell (`resolveSeedlingAtlasGoal`). */
+export const SUB_REGION_LINK_REFUSAL = (link) => `the exit "${link.name}" links two sub-regions of level `
+    + `${link.level} (${link.from} → ${link.to}): a LOGICAL link that carries a rule, not a door — no sidecar `
+    + 'marks a tile for it, and the region binding is level-granular (ruling 1, 2026-07-27), so no crossing '
+    + 'would ever report it';
+
+/**
+ * ⛓ VANILLA MAP — the rules' LOGICAL links between real-room regions: every rules exit whose two ends
+ * are `flash_seedling` regions of the SAME level and that no sidecar names (a sidecar exit is a door
+ * with tiles). Read off the rules alone: `regions` (the exits) and `preset_sidecars` (region → level).
+ *
+ * @param {object} rules  the raw rules.json
+ * @param {Map<string, object>|object} regions  regionId → `flash_seedling` payload
+ * @returns {Array<{name:string, from:string, to:string, level:number}>}
+ */
+export function realRoomLinks(rules, regions) {
+    const payloads = regions instanceof Map ? regions : new Map(Object.entries(regions ?? {}));
+    const doors = new Set([...payloads.values()].flatMap((p) => (p?.exits ?? []).map((x) => x.exitName)).filter(Boolean));
+    const out = [];
+    for (const slot of Object.values(rules?.regions ?? {})) {
+        for (const [from, region] of Object.entries(slot ?? {})) {
+            const level = payloads.get(from)?.level;
+            if (!Number.isInteger(level)) continue;
+            for (const exit of region?.exits ?? []) {
+                const to = exit.connected_region;
+                if (doors.has(exit.name) || payloads.get(to)?.level !== level) continue;
+                out.push({ name: exit.name, from, to, level });
+            }
+        }
+    }
+    return out;
+}
+
+/** ⛓ VANILLA MAP — why the vanilla arm's encounter rows have no cell. */
+export const ENCOUNTER_REFUSAL = (e) => `"${e.location}" is an ENCOUNTER (a ${e.entityType} in level ${e.level}): `
+    + 'the vanilla arm does not rewrite it (it grants through a fight or a trade, not a pickup) and its check '
+    + 'comes from the property path — there is no entity to walk onto';
+
+/**
+ * ⛓⛓ VANILLA MAP — the Playback Bot's name → cell map for the VANILLA randomizer arm
+ * (`seedling_playthrough`), in the atlas map's shape (`{entries, refused, regions, links}`), so
+ * `resolveSeedlingAtlasGoal` serves both arms unchanged. Nothing is typed by hand:
+ *
+ *   locations  the arm's own placement table (`loaded.entries`: location → `{level, tag, entity}`),
+ *              each entry's `entityType` read off the DELIVERED set — the room the game plays holds the
+ *              rewrite's entity at that tag and position, not the vanilla one. An entry the delivered room
+ *              does not hold, and every `encounters` row, is REFUSED by name.
+ *   exits      the rules' own `flash_seedling` sidecars (`regions`), as on the atlas arm, plus the logical
+ *              sub-region links (`realRoomLinks`), each refused by name.
+ *
+ * @param {object} o
+ * @param {Array} o.entries      the vanilla arm's placement entries
+ * @param {Array} [o.encounters] the vanilla arm's encounter rows
+ * @param {object} o.set         the delivered (rewritten) level set: `rooms[]` of `{id, source:{record}}`
+ * @param {Map<string, object>} o.regions  regionId → `flash_seedling` payload
+ * @param {object} o.rules       the raw rules.json (for the links)
+ */
+export function vanillaArmPlaybackMap({ entries = [], encounters = [], set = null, regions, rules = null }) {
+    const rooms = new Map((set?.rooms ?? []).map((r) => [r.id, r]));
+    const bound = [];
+    const refused = encounters.map((e) => ({ location: e.location, why: ENCOUNTER_REFUSAL(e) }));
+    for (const e of entries) {
+        const record = rooms.get(e.level)?.source?.record ?? null;
+        const held = (record?.entities ?? []).find((x) => x.x === e.entity?.x && x.y === e.entity?.y
+            && Number(x.attrs?.tag) === e.tag);
+        if (!held) {
+            refused.push({ location: e.location, why: `the delivered level ${e.level} holds no entity with tag ${e.tag} `
+                + `at (${e.entity?.x}, ${e.entity?.y}) — ${record ? 'the rewrite did not land there' : 'the set carries no record of that room'}` });
+            continue;
+        }
+        bound.push({ location: e.location, level: e.level, tag: e.tag, entityType: held.type });
+    }
+    return { arm: RANDOMIZER_ARMS.VANILLA, entries: bound, refused, regions, links: realRoomLinks(rules, regions) };
+}
+
+/**
+ * ⛓⛓ VANILLA MAP — the `flash_seedling` instance's name → cell map for a finished AP placement load
+ * (`loadSeedlingRandomizer`'s result), or null. ONE decision for every arm, so the panel holds no
+ * per-arm recipe:
+ *   atlas      J3's map — the arm's bound table and refusals, the rules' sidecars (+ the links);
+ *   vanilla    `vanillaArmPlaybackMap` over the table it built and the set it DELIVERED;
+ *   generated  null (that arm's map is its assembly report, the other instance's).
+ *
+ * @param {object} loaded    the load's result (`arm`, `entries`, `refused`, `encounters`, `set`)
+ * @param {object} rawRules  the raw rules.json
+ */
+export function realRoomPlaybackMap(loaded, rawRules) {
+    if (!loaded?.eligibility?.eligible || loaded.arm === RANDOMIZER_ARMS.GENERATED) return null;
+    const regions = new Map(atlasRoomRegions(rawRules).map(({ region }) => [region,
+        rawRules.preset_sidecars[ATLAS_CHECK_PLAYER][region].playable_payload]));
+    if (loaded.arm === RANDOMIZER_ARMS.ATLAS) {
+        return { arm: RANDOMIZER_ARMS.ATLAS, entries: loaded.entries ?? [], refused: loaded.refused ?? [],
+            regions, links: realRoomLinks(rawRules, regions) };
+    }
+    // The vanilla arm's result carries no `arm` field (its shape predates the other two): it is the arm
+    // whose load DELIVERED a rewritten set.
+    if (!loaded.set) return null;
+    return vanillaArmPlaybackMap({ entries: loaded.entries ?? [], encounters: loaded.encounters ?? [],
+        set: loaded.set, regions, rules: rawRules });
 }
 
 const ROOMS_OF = Object.freeze({ flash_seedling_gen: 'generated rooms', flash_seedling: 'atlas rooms' });
@@ -214,6 +326,8 @@ export class SeedlingPlaybackController {
      * @param {boolean} [deps.wasm]  ⛓ W2 — this instance walks under the wasm runtime too
      * @param {(surface:object) => object|null} [deps.wasmLevelSetOf]  ⛓ WG — the MOUNTED level set the
  *   engine stages (the generated instance); absent = the preset's map document (`wasm.mapPath`)
+ * @param {(surface:object) => object|null} [deps.wasmDeliveredSetOf]  ⛓ VANILLA MAP — the REAL-room set
+ *   an arm delivered (the vanilla arm's rewrite; an atlas arm's retag): the engine stages it, solver flow
  * @param {(deps:object) => Promise<object>} [deps.loadWasmEngine]  ⛓ W2 — builds the engine
      *   (`seedlingWasmPlayback.loadWasmPlaybackEngine`'s shape); tests inject a fake
      */
@@ -221,10 +335,13 @@ export class SeedlingPlaybackController {
         getSurface, log = () => {}, onWalkFailed = () => {}, onWalkNote = () => {}, now = () => Date.now(),
         timers = { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) },
         substrate = SEEDLING_PLAYBACK_SUBSTRATE, resolve = resolveSeedlingGoal, mapOf = (surface) => surface?.report ?? null,
-        wasm = false, loadWasmEngine = defaultLoadWasmEngine, wasmLevelSetOf = null,
+        wasm = false, loadWasmEngine = defaultLoadWasmEngine, wasmLevelSetOf = null, wasmDeliveredSetOf = null,
     } = {}) {
         this.wasm = wasm;
         this._wasmLevelSetOf = wasmLevelSetOf;
+        this._wasmDeliveredSetOf = wasmDeliveredSetOf;
+        /** ⛓ VANILLA MAP — the delivered real-room set the current engine stages (null = the map document). */
+        this._wasmDelivered = null;
         /** ⛓ WG — the level set the current engine was built from (null = the map document). */
         this._wasmSet = null;
         this._loadWasmEngine = loadWasmEngine;
@@ -307,18 +424,24 @@ export class SeedlingPlaybackController {
         if (!game) return null;
         const levelSet = this._wasmLevelSetOf ? (this._wasmLevelSetOf(s) ?? null) : null;
         if (this._wasmLevelSetOf && !levelSet) return null;
-        if (this._wasmEngine && this._wasmGame === game && this._wasmSet === levelSet) return this._wasmEngine;
+        // ⛓ VANILLA MAP — the game plays the DELIVERED rooms (an apitem where the map document has a chest):
+        // the engine stages those, and a new delivered set is a new engine, like a new game.
+        const deliveredSet = this._wasmDeliveredSetOf ? (this._wasmDeliveredSetOf(s) ?? null) : null;
+        if (this._wasmEngine && this._wasmGame === game && this._wasmSet === levelSet
+            && this._wasmDelivered === deliveredSet) return this._wasmEngine;
         if (this._wasmEngine) { try { this._wasmEngine.dispose(); } catch { /* gone */ } this._wasmEngine = null; }
-        if (this._wasmLoading?.game === game && this._wasmLoading.levelSet === levelSet) return null;
+        if (this._wasmLoading?.game === game && this._wasmLoading.levelSet === levelSet
+            && this._wasmLoading.deliveredSet === deliveredSet) return null;
         // ⛔ A load that FAILED for this game is not retried: `_applyWasm` turns it into a named refusal.
         if (this._wasmLoadError && this._wasmLoadErrorGame === game) return null;
-        const loading = { game, levelSet };
+        const loading = { game, levelSet, deliveredSet };
         this._wasmLoading = loading;
         this._wasmLoadError = null;
         this._wasmLoadErrorGame = null;
         const deps = {
             mapPath: s.wasm.mapPath,
             ...(levelSet ? { levelSet } : {}),
+            ...(deliveredSet ? { deliveredSet } : {}),
             getGame: () => this._getSurface?.()?.wasm?.getGame?.() ?? null,
             getWin: () => this._getSurface?.()?.wasm?.getWin?.() ?? null,
             teleport: (p) => this._getSurface?.()?.wasm?.teleport?.(p) ?? false,
@@ -335,6 +458,7 @@ export class SeedlingPlaybackController {
             this._wasmEngine = engine;
             this._wasmGame = game;
             this._wasmSet = levelSet;
+            this._wasmDelivered = deliveredSet;
         }, (err) => {
             if (this._wasmLoading !== loading) return;
             this._wasmLoading = null;

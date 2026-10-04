@@ -9,7 +9,9 @@ import { AP_ITEM_FOUND_EVENT } from './seedlingRegionGlue.js';
 import { RANDOMIZER_ARMS, seedlingRandomizerEligibility } from './seedlingRandomizerEligibility.js';
 import { generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 // ⛓ J3 — import-free (it imports nothing), so the panel's closure gains one small file.
-import { ATLAS_CHECK_PLAYER, atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
+import { atlasRoomRegions } from '../seedlingDemo/seedlingAtlasCheckTable.js';
+// ⛓ VANILLA MAP — import-free (the controller imports no model): the real-room name → cell map.
+import { realRoomPlaybackMap } from './seedlingPlaybackController.js';
 import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
@@ -290,6 +292,8 @@ export class FlashPanelUI {
       // ⛓ WG — and the generated arm's assembled set (null on any other arm, or until the AP load).
       wasm: this.transport === 'wasm' ? {
         levelSet: this._seedlingGenSet ?? null,
+        // ⛓ VANILLA MAP — the delivered REAL-room set (null = the map document is what the game plays).
+        deliveredSet: this._seedlingRealSet ?? null,
         getGame: () => this.adapter?._getFlash?.() ?? null,
         getWin: () => this.adapter?._getWin?.() ?? null,
         teleport: (p) => this.adapter?.teleport?.(p) ?? false,
@@ -319,6 +323,7 @@ export class FlashPanelUI {
     this._seedlingGenReport = null;
     this._seedlingGenSet = null;
     this._seedlingAtlas = null;
+    this._seedlingRealSet = null;
     this._heldKeys?.uninstall();
     if (this.adapter) {
       this._detachRegionGlue();
@@ -723,14 +728,13 @@ export class FlashPanelUI {
       this._seedlingGenReport = generatedArm ? (loaded.report ?? null) : null;
       // ⛓ WG — and the assembled SET is the wasm playback engine's level source (the rooms as mounted).
       this._seedlingGenSet = generatedArm ? (loaded.set ?? null) : null;
-      // ⛓ J3 — the atlas arm's bound table and the rules' own real-room
-      // payloads are the Playback Bot's name → cell map for `flash_seedling`.
-      this._seedlingAtlas = loaded.arm === RANDOMIZER_ARMS.ATLAS ? {
-        entries: loaded.entries ?? [],
-        refused: loaded.refused ?? [],
-        regions: new Map(atlasRoomRegions(rawRules).map(({ region }) => [region,
-          rawRules.preset_sidecars[ATLAS_CHECK_PLAYER][region].playable_payload])),
-      } : null;
+      // ⛓ J3 — the atlas arm's bound table and the rules' own real-room payloads; ⛓ VANILLA MAP — or the
+      // vanilla arm's own table, each entity read off the set it DELIVERED (`realRoomPlaybackMap`). The JS
+      // runtime never loads the vanilla arm (it refuses it by name), so that map is the wasm game's.
+      this._seedlingAtlas = realRoomPlaybackMap(loaded, rawRules);
+      // ⛓ VANILLA MAP — the REAL rooms the game plays when an arm delivered them (the vanilla rewrite; an
+      // atlas arm's retag): the wasm playback engine stages these, not the map document.
+      this._seedlingRealSet = !generatedArm ? (loaded.set ?? null) : null;
 
       const glue = getSeedlingRegionGlue();
       if (!glue) {

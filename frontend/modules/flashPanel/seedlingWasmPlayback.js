@@ -1069,9 +1069,14 @@ export function createWasmPlayback({
  * the preset NAMES (`mapDocumentPath`), resolved against `baseUrl`.
  * ⛓ WG — given `levelSet` (the generated arm's assembled set), the engine's
  * rooms are that MOUNTED set instead (`mountedRecordsOf`), and no map is fetched.
+ * ⛓ VANILLA MAP — given `deliveredSet` (a REAL-room set an arm delivered: the vanilla arm's rewrite,
+ * an atlas arm's retag), the rooms are that set too — the game plays them, not the map document (an
+ * `apitem` stands where the map has a chest) — but they stay SOLVER rooms (holds, continuations, the
+ * adoption): only `generated` sends goals to the walker producer.
  */
-export async function loadWasmPlaybackEngine({ mapPath, levelSet = null, baseUrl, fetchImpl = globalThis.fetch, ...deps }) {
+export async function loadWasmPlaybackEngine({ mapPath, levelSet = null, deliveredSet = null, baseUrl, fetchImpl = globalThis.fetch, ...deps }) {
     if (levelSet) return createWasmPlayback({ ...deps, records: mountedRecordsOf(levelSet), generated: true });
+    if (deliveredSet) return createWasmPlayback({ ...deps, records: mountedRecordsOf(deliveredSet) });
     if (!mapPath) throw new Error('no map document named by the preset (region_atlas) — the wasm playback has no rooms to solve');
     const res = await fetchImpl(new URL(mapPath, baseUrl).href);
     if (!res.ok) throw new Error(`the map document ${mapPath} did not load: ${res.status} ${res.statusText}`);

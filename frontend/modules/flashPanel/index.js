@@ -342,6 +342,8 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     mapOf: (surface) => surface?.atlas ?? null,
     // ⛓ W2 — real rooms also walk under the wasm runtime (solve at arrival, one host tape).
     wasm: true,
+    // ⛓ VANILLA MAP — staged from the rooms an arm DELIVERED (the vanilla rewrite), else the map document.
+    wasmDeliveredSetOf: (surface) => surface?.wasm?.deliveredSet ?? null,
   }));
 
   // ⛓ AFTER the glue's own subscription, so the arrival is queued before the
