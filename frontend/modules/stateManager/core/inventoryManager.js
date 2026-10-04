@@ -39,6 +39,8 @@
  * @module stateManager/core/inventoryManager
  */
 
+import { additiveProgressionGains, isAdditiveProgressionCounter } from '../../shared/progressionMapping.js';
+
 // Log function is not directly imported - we use StateManager's _logDebug method
 // which is passed in via the 'sm' parameter
 
@@ -257,16 +259,13 @@ export function _addItemToInventory(sm, itemName, count = 1) {
   // Skip virtual progression counter items with type="additive" (e.g., "rep" in Bomb Rush Cyberfunk)
   // These are managed automatically by progression_mapping when their component items are added
   // DO NOT skip level-based progressive items (e.g., "Progressive Sword") - those should be added normally
-  if (sm.progressionMapping && itemName in sm.progressionMapping) {
-    const mapping = sm.progressionMapping[itemName];
-    if (mapping && mapping.type === 'additive') {
-      sm._logDebug(
-        `[InventoryManager] Skipping additive progression counter "${itemName}" - it's managed by progression_mapping`
-      );
-      return;
-    }
-    // If it's not additive (e.g., level-based like Progressive Sword), continue to add it normally
+  if (isAdditiveProgressionCounter(sm.progressionMapping, itemName)) {
+    sm._logDebug(
+      `[InventoryManager] Skipping additive progression counter "${itemName}" - it's managed by progression_mapping`
+    );
+    return;
   }
+  // If it's not additive (e.g., level-based like Progressive Sword), continue to add it normally
 
   // Canonical format: plain object
   if (!(itemName in sm.inventory)) {
@@ -281,19 +280,14 @@ export function _addItemToInventory(sm, itemName, count = 1) {
   sm.inventory[itemName] = Math.min(currentCount + count, maxCount);
 
   // Handle progression mapping (e.g., REP items in Bomb Rush Cyberfunk)
-  if (sm.progressionMapping) {
-    for (const [virtualItemName, mapping] of Object.entries(sm.progressionMapping)) {
-      if (mapping.type === 'additive' && mapping.items && itemName in mapping.items) {
-        const valueToAdd = mapping.items[itemName] * count;
-        if (!(virtualItemName in sm.inventory)) {
-          sm.inventory[virtualItemName] = 0;
-        }
-        sm.inventory[virtualItemName] += valueToAdd;
-        sm._logDebug(
-          `[InventoryManager] Progression mapping: Added ${valueToAdd} to "${virtualItemName}" from "${itemName}"`
-        );
-      }
+  for (const [virtualItemName, valueToAdd] of additiveProgressionGains(sm.progressionMapping, itemName, count)) {
+    if (!(virtualItemName in sm.inventory)) {
+      sm.inventory[virtualItemName] = 0;
     }
+    sm.inventory[virtualItemName] += valueToAdd;
+    sm._logDebug(
+      `[InventoryManager] Progression mapping: Added ${valueToAdd} to "${virtualItemName}" from "${itemName}"`
+    );
   }
 
   // Process event items using game-specific logic module (e.g., for Timespinner boss kills)
@@ -376,17 +370,12 @@ export function _removeItemFromInventory(sm, itemName, count = 1) {
   );
 
   // Handle progression mapping removal (e.g., REP items in Bomb Rush Cyberfunk)
-  if (sm.progressionMapping) {
-    for (const [virtualItemName, mapping] of Object.entries(sm.progressionMapping)) {
-      if (mapping.type === 'additive' && mapping.items && itemName in mapping.items) {
-        const valueToRemove = mapping.items[itemName] * count;
-        if (virtualItemName in sm.inventory) {
-          sm.inventory[virtualItemName] = Math.max(0, sm.inventory[virtualItemName] - valueToRemove);
-          sm._logDebug(
-            `[InventoryManager] Progression mapping: Removed ${valueToRemove} from "${virtualItemName}" due to "${itemName}"`
-          );
-        }
-      }
+  for (const [virtualItemName, valueToRemove] of additiveProgressionGains(sm.progressionMapping, itemName, count)) {
+    if (virtualItemName in sm.inventory) {
+      sm.inventory[virtualItemName] = Math.max(0, sm.inventory[virtualItemName] - valueToRemove);
+      sm._logDebug(
+        `[InventoryManager] Progression mapping: Removed ${valueToRemove} from "${virtualItemName}" due to "${itemName}"`
+      );
     }
   }
 
