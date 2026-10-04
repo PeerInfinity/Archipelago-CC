@@ -797,7 +797,16 @@ export async function seedlingJsRuntimeSolverOpensKillLock(tc) {
         tc.reportCondition('the walk settled', !!settled);
         tc.assertEqual('0 HALT (J3 halted at the kill)', null, rt.halted ? rt.halted.message : null);
         tc.assertEqual('the walk is DONE (crossed past the kill lock)', 'done', rt.playback.state);
-        tc.assertEqual('the SOLVER drove it: solved once, no decline', '1/0', `${s.solves}/${s.declines}`);
+        // Fidelity F1/F1b/F1c (game-exact bodies): the first attempt may decline ONCE — measured on CI 8/8 (the
+        // node row `jsRuntimeDeclarations.test.js` pins the dwell's timeout for bob@48,80 exactly); the S2 retry
+        // solves and crosses. More than one decline, or a decline that names something else, is a defect.
+        tc.assertEqual('the SOLVER drove it: solved once, at most one decline before it', true,
+            s.solves === 1 && s.declines <= 1);
+        if (s.declines === 1) {
+            tc.log(`the one decline: ${s.lastDecline}`);
+            tc.reportCondition(`the one decline is the kill-lock dwell or the solve budget: ${s.lastDecline}`,
+                /dwell|never became true|exceeded .* s on/.test(String(s.lastDecline ?? '')));
+        }
         tc.assertEqual('the plan KILLED (the solver\'s kill verb)', true, (s.lastSolve?.verbs ?? []).includes('kill'));
         tc.assertEqual('every planned key was played on the page clock (no refutation)', `${s.lastSolve?.keys}/0`,
             `${s.played}/${s.refutations}`);
