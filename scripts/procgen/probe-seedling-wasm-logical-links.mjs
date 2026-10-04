@@ -10,12 +10,12 @@
  *      tiles of neither). First WITHOUT the link's item (`Progressive Swim`): no move, however far the
  *      player gets. Then WITH it: exactly ONE logical `user:regionMove` each way, `logical: true`, no
  *      teleport, and gameState's region follows.
- *   B  THE PLAYBACK BOT on the rules' DIRECTED graph (§5.16 D's labelled in-page override of the proxy's
- *      auto-detected `assumeBidirectional`; the bidirectional-exits slice fixes that in the rules): the
- *      sphere queue's first goal (the Sword, level 10) through the LOGICAL link
- *      `level_0__r8c0 -> level_0__r1c6`, credited by the binding at once, the next door (`level_0__r1c6 ->
- *      level_2`) walked. The Sword CHECKED, and the walk continues to the next named refusal (`ROW B reach`),
- *      within `--budget-s`. ⚠ On a base without fidelity F4 (the sandtraps' arrow death) the solver declines
+ *   B  THE PLAYBACK BOT on the rules' DIRECTED graph (the rules DECLARE `exporter["1"].assume_bidirectional_exits:
+ *      false` since `9a35ad8989`: the proxy's source reads `explicit`, no in-page override): the sphere queue's
+ *      first goal (the Sword, level 10) in 9 hops through DOORS ONLY — since the rules' logical-links recompile
+ *      (`ce1cba867a`) L0's stairs bind to r8c0 and the model-sealed `level_0__r8c0 -> level_0__r1c6` link is
+ *      gone, so the route opens with `level_0__r8c0 -> level_2` and nothing is credited at r1c6. The Sword
+ *      CHECKED, and the walk continues to the next named refusal (`ROW B reach`), within `--budget-s`. ⚠ On a base without fidelity F4 (the sandtraps' arrow death) the solver declines
  *      L8 → L9 by name before the Sword; the check accepts exactly that decline there.
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
@@ -273,8 +273,10 @@ async function main() {
                 bot.refresh();
                 bot._ensureQueueBuilt?.();
                 const head = bot._queue?.[0] ?? null;
+                const route = head ? bot._pathFinder?.findPath?.(start, head.regionName) ?? null : null;
                 await bot.play();
-                return { ok: true, region: bot.getCurrentRegion(), head: head && { location: head.locationName, region: head.regionName } };
+                return { ok: true, region: bot.getCurrentRegion(), head: head && { location: head.locationName, region: head.regionName },
+                    route };
             }, START);
         }
         const botStatus = () => page.evaluate(async () => {
@@ -297,20 +299,21 @@ async function main() {
                 lastRefusal: c.lastRefusal }));
         });
 
-        /** B — the bot through the Sword's logical link (directed routing, the labelled override). */
+        /** B — the bot to the Sword on the rules' declared directed graph: doors only, no logical link. */
         async function runBot() {
-            const pinned = await page.evaluate(() => {
-                const proxy = window.stateManagerProxy;
-                proxy.getEffectiveBidirectionalSetting();
-                proxy._bidirectionalDetectionCache = { assumeBidirectional: false, source: 'probe', detection: null };
-                return proxy.getEffectiveBidirectionalSetting();
+            const routing = await page.evaluate(() => {
+                const b = window.stateManagerProxy.getEffectiveBidirectionalSetting();
+                return { assumeBidirectional: b.assumeBidirectional, source: b.source };
             });
-            check('B: the proxy routes on the directed graph (the probe\'s labelled override)', pinned.assumeBidirectional === false
-                && pinned.source === 'probe', JSON.stringify(pinned));
+            check('B: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`)',
+                routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
             const booted = await startBot();
             out('B boot', booted);
             check(`B: the bot is mounted in ${START}, its first goal in level 10`, booted.ok && booted.region === START
                 && /^level_10(__|$)/.test(booted.head?.region ?? ''), JSON.stringify(booted));
+            check('B: the Sword\'s route is 9 hops, opening with r8c0\'s OWN stairs (`level_0__r8c0 -> level_2`), never through r1c6',
+                booted.route?.length === 9 && booted.route?.nextExit === `${START} -> level_2`
+                    && !(booted.route?.steps ?? []).some((r) => r.startsWith('level_0__r1c6')), JSON.stringify(booted.route));
             await clickPanelTab(page, FLASH_PANEL).catch(() => null);
             const sword = booted.head?.location;
             const t0 = Date.now();
@@ -339,11 +342,10 @@ async function main() {
             out('B reach', { seconds: Math.round((Date.now() - t0) / 1000), sword, swordAt, checks, moves,
                 logicalMoves: g.stats.logicalMoves, finalStatus: end?.status, region: end?.region, statuses: statuses.slice(-15) });
             out('B next refusal', { status: (end?.status ?? '').startsWith('error') ? end.status : null, engineRefusal: eng.lastRefusal ?? null });
-            check('B: the Sword\'s logical link was CREDITED (a logical move r8c0 → r1c6)',
-                moves.includes('~level_0__r8c0 -> level_0__r1c6'), JSON.stringify(moves.slice(0, 6)));
-            const linkAt = moves.indexOf('~level_0__r8c0 -> level_0__r1c6');
-            check('B: the door AFTER the link was walked from the credited sub-region (level_0__r1c6 -> level_2)',
-                linkAt >= 0 && moves[linkAt + 1] === 'level_0__r1c6 -> level_2', JSON.stringify(moves.slice(0, 4)));
+            check(`B: the first move is the stairs walked straight from ${START} (\`${START} -> level_2\`, not logical)`,
+                moves[0] === `${START} -> level_2`, JSON.stringify(moves.slice(0, 6)));
+            check('B: nothing is credited at r1c6 (the sealed link is gone from the rules)',
+                !moves.some((m) => m.includes('level_0__r1c6')), JSON.stringify(moves.filter((m) => m.includes('r1c6'))));
             // ⛓ The Sword (L10) lies past L8, whose sandtraps the solver declines on a base without fidelity F4
             // ("the model computes a SandTrap's arrow death"): there the walk must end on THAT named decline.
             const sandtrapDecline = /declined level_8 -> level_9 .*sandtrap/.test(end?.status ?? '');

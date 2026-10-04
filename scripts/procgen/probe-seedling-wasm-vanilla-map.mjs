@@ -13,14 +13,14 @@
  *      first rooms and checks: **0 forced re-arrivals**. The sphere log is DERIVED from the rules
  *      (`forwardSimulator.generateSphereLog`; `AP_1` ships none). How far it gets and the FIRST refusal by
  *      name are recorded (`ROW V reach`), not asserted beyond the first check: the solver's coverage of the
- *      whole playthrough is S4's census.
- *   D  WASM, ROUTED ON THE RULES' DIRECTED GRAPH. V's first refusal is the AP layer's: the playthrough rules
- *      declare no `assume_bidirectional_exits`, the proxy AUTO-DETECTS "bidirectional", and the PathFinder
- *      routes backwards through a one-way door under its forward name (§5.16). D pins the proxy's setting to
- *      `false` IN THE PAGE (a probe-side override, labelled `source: 'probe'`; no data or code changes), then:
- *      (1) the sphere queue's first goal: its route opens with a LOGICAL sub-region link, which the region
- *      binding CREDITS since §5.17 (the bot is stopped there and the reverse link credited back); (2) GREEDY
- *      door-only walks: the bot's manual `walkToLocation` to the queue location
+ *      whole playthrough is S4's census. The proxy routes on the DIRECTED graph the rules declare
+ *      (`exporter["1"].assume_bidirectional_exits: false` since rules `9a35ad8989`; source `explicit`) — §5.16's
+ *      first refusal (the auto-detected "bidirectional", a one-way door routed backwards) is gone from the data.
+ *   D  WASM, ROUTED ON THE RULES' DIRECTED GRAPH (the rules' own declaration, as V; the probe-side override this
+ *      row once carried is redundant and dropped), then: (1) the sphere queue's first goal, the Sword: the bot's
+ *      own PathFinder routes it in 9 hops opening with r8c0's OWN stairs (`level_0__r8c0 -> level_2`) — since
+ *      the rules' logical-links recompile (`ce1cba867a`) there is no logical link on it, and none is credited;
+ *      (2) GREEDY door-only walks: the bot's manual `walkToLocation` to the queue location
  *      NEAREST through doors only (derived here from the rules: BFS over the `True_` sidecar-door exits), then
  *      the next from where it stands, up to `--max-checks` (default 3) — the fade waited out (§5.19), the cold
  *      start ADOPTED, each location checked once, **0 forced re-arrivals**; the first refusal by name ends it.
@@ -28,14 +28,13 @@
  *      2026-10-03, "WITH THE SOLVER"): the page mounts the delivered set as REAL rooms
  *      (`jsRuntimeCore.mountedKindOf`, `botLevelSet().kind`), the reset's explicit start (skip-intro) boots
  *      level 0, and the panel binds the same vanilla map as on wasm. The browser's mount cost of the 116 rooms
- *      is measured on a FRESH runtime instance (`ROW J mount`). Then, routed on the directed graph (D's labelled
- *      probe-side override — the AP layer's bidirectional routing is the first refusal, §5.16 V), the
- *      Playback Bot walks D's greedy door-only targets: the starting house's chest (an APITEM) is checked
+ *      is measured on a FRESH runtime instance (`ROW J mount`). Then, routed on the directed graph the rules
+ *      declare (source `explicit`, as V and D), the Playback Bot walks D's greedy door-only targets: the starting house's chest (an APITEM) is checked
  *      once, the page's solver DRIVING (`solverStats`: every leg solved, the location by verb `apitem`), and
  *      the first refusal by name ends it (recorded, `ROW J reach`). ⛓ §5.19: the load holds the region glue's
- *      position watch across the mount + reset (no read inside it), and a logical move at the start is the
- *      bot's ROUTE crediting its first goal's link (`ROW J start state`); the mounted region is read before
- *      `play()`.
+ *      position watch across the mount + reset (no read inside it), and NO logical move at the start (the first
+ *      goal's route opens with a door since `ce1cba867a`; `ROW J start state`); the mounted region is read
+ *      before `play()`.
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
  * `N CHECK(S) FAILED` (exit 1).
@@ -149,7 +148,8 @@ async function main() {
             .split('\n').slice(-12).join(' | '));
 
         /** Mount the Playback Bot in START with the DERIVED sphere log, and play. */
-        async function startBot() {
+        /** Mount the bot in START with the derived sphere queue; `play: false` builds the queue and reads its first route only. */
+        async function startBot({ play = true } = {}) {
             await page.evaluate(async (rulesPath) => {
                 const rules = await (await fetch(rulesPath)).json();
                 const { generateSphereLog } = await import('./modules/shared/procgen/forwardSimulator.js');
@@ -157,7 +157,7 @@ async function main() {
                 const { getSphereStateSingleton } = await import('./modules/sphereState/singleton.js');
                 return getSphereStateSingleton().loadSphereLog('probe-seedling-wasm-vanilla-map:derived', text);
             }, RULES_PATH);
-            return page.evaluate(async (start) => {
+            return page.evaluate(async ({ start, doPlay }) => {
                 const bus = (await import('./app/core/eventBus.js')).default;
                 bus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' }, 'tests');
                 const { getActivePanel } = await import('./modules/playbackBot/index.js');
@@ -173,9 +173,13 @@ async function main() {
                 // whose first route may credit a logical link at once (the JS controller does, in a microtask before
                 // play resolves; the wasm engine's load is async, so D read START by timing alone — measured).
                 const region = bot.getCurrentRegion();
-                await bot.play();
-                return { ok: true, region, afterPlay: bot.getCurrentRegion() };
-            }, START);
+                bot._ensureQueueBuilt?.();
+                const head = bot._queue?.[0] ?? null;
+                const route = head ? bot._pathFinder?.findPath?.(start, head.regionName) ?? null : null;
+                if (doPlay) await bot.play();
+                return { ok: true, region, afterPlay: bot.getCurrentRegion(), head: head && { location: head.locationName, region: head.regionName },
+                    route };
+            }, { start: START, doPlay: play });
         }
         const botStatus = () => page.evaluate(async () => {
             const { getActivePanel } = await import('./modules/playbackBot/index.js');
@@ -220,7 +224,7 @@ async function main() {
             return { end, statuses, seconds: Math.round((Date.now() - t0) / 1000) };
         }
 
-        /** V — the bot as it ships: the sphere queue, the proxy's own (auto-detected) routing. */
+        /** V — the bot as it ships: the sphere queue, the proxy's own routing (the rules' explicit declaration). */
         async function runDefault() {
             const booted = await startBot();
             check(`V: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
@@ -230,6 +234,8 @@ async function main() {
                 return { assumeBidirectional: b.assumeBidirectional, source: b.source, mode: b.detection?.mode ?? null };
             });
             out('V routing', routing);
+            check('V: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`)',
+                routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
             const w = await watchBot('V', (e) => e.status.startsWith('finished'), BUDGET_MS);
             const eng = await engineStats();
             const checks = await page.evaluate(() => window.__checks ?? []);
@@ -241,47 +247,29 @@ async function main() {
             if (eng.engine) check('V: the controller\'s engine STAGES THE DELIVERED SET (the rooms the game plays)', eng.stagesDelivered === true, JSON.stringify(eng.stagesDelivered));
         }
 
-        /** D — routing pinned to the rules' directed graph (probe-side), then the sphere queue's refusal and a door-only walk. */
+        /** D — the rules' directed graph: the sphere queue's first route (doors only), then greedy door-only walks. */
         async function runDirected() {
-            const pinned = await page.evaluate(() => {
-                const proxy = window.stateManagerProxy;
-                proxy.getEffectiveBidirectionalSetting();
-                proxy._bidirectionalDetectionCache = { assumeBidirectional: false, source: 'probe', detection: null };
-                return proxy.getEffectiveBidirectionalSetting();
+            const routing = await page.evaluate(() => {
+                const b = window.stateManagerProxy.getEffectiveBidirectionalSetting();
+                return { assumeBidirectional: b.assumeBidirectional, source: b.source };
             });
-            check('D: the proxy routes on the directed graph (the probe\'s labelled override)', pinned.assumeBidirectional === false && pinned.source === 'probe',
-                JSON.stringify(pinned));
-            const booted = await startBot();
+            check('D: the proxy routes on the directed graph the RULES declare (exporter["1"], source `explicit`)',
+                routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
+            // The queue is built and its first route read; nothing is played, so the door-only walks start in START.
+            const booted = await startBot({ play: false });
             check(`D: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
             await clickPanelTab(page, FLASH_PANEL).catch(() => null);
-            // ⛓ §5.17 — the Sword's route opens with the LOGICAL link `level_0__r8c0 -> level_0__r1c6`, which the
-            // region binding now CREDITS (it used to be refused here). Seen, the bot is stopped at once and the
-            // reverse link (True_) credited back, so the door-only walks below start in START as before.
-            const LINK = `${START} -> level_0__r1c6`;
-            const q = await watchBot('D queue', async () => (await rp.glueMoves()).some((m) => m.exitName === LINK && m.logical),
-                30000);
             const order = await page.evaluate(async () => {
                 const { getActivePanel } = await import('./modules/playbackBot/index.js');
-                const bot = getActivePanel()?.getBot?.();
-                bot.stop?.();
-                return (bot._queue ?? []).map((h) => h.locationName);
+                return (getActivePanel()?.getBot?.()._queue ?? []).map((h) => h.locationName);
             });
-            const credited = (await rp.glueMoves()).filter((m) => m.logical).map((m) => m.exitName);
-            out('D queue first step', { status: q.end?.status, credited });
-            check('D: the sphere queue\'s first goal opens with a logical sub-region link, and the binding CREDITS it (§5.17)',
-                credited[0] === LINK && !(q.end?.status ?? '').startsWith('error'), JSON.stringify({ credited, status: q.end?.status }));
-            const back = await page.evaluate(async (name) => {
-                const glue = (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue();
-                for (let i = 0; i < 100 && glue.binding.region !== name.split(' -> ')[0]; i++) {
-                    // eslint-disable-next-line no-await-in-loop
-                    await new Promise((r) => { setTimeout(r, 100); });
-                }
-                const r = glue.creditLogicalLink(name);
-                await new Promise((res) => { setTimeout(res, 500); });
-                return { ...r, region: glue.binding.region };
-            }, `level_0__r1c6 -> ${START}`);
-            check(`D: the reverse link is credited back to ${START} before the door-only walks`, back.ok && back.region === START,
-                JSON.stringify(back));
+            out('D queue first step', { head: booted.head, route: booted.route });
+            // ⛓ rules `ce1cba867a`: L0's stairs bind to r8c0 and the model-sealed `level_0__r8c0 -> level_0__r1c6` is gone,
+            // so the Sword's route (§5.17's logical-link row until then) is doors only.
+            check('D: the sphere queue\'s first goal (level 10) routes in 9 hops opening with r8c0\'s OWN stairs — no logical sub-region link on it',
+                /^level_10(__|$)/.test(booted.head?.region ?? '') && booted.route?.length === 9 && booted.route?.nextExit === `${START} -> level_2`
+                    && booted.route.steps.filter((r) => r.startsWith('level_0__')).length === 1,
+                JSON.stringify({ head: booted.head, route: booted.route }));
             const legs = [];
             let where = START;
             let refusal = null;
@@ -421,24 +409,23 @@ async function main() {
             check('J: a fresh runtime mounts the same delivered set (ok, real, every room)',
                 mount.every((m) => m.answer === 'ok' && m.kind === 'real' && m.rooms === surf?.levelSet?.rooms), JSON.stringify(mount));
 
-            const pinned = await page.evaluate(() => {
-                const proxy = window.stateManagerProxy;
-                proxy.getEffectiveBidirectionalSetting();
-                proxy._bidirectionalDetectionCache = { assumeBidirectional: false, source: 'probe', detection: null };
-                return proxy.getEffectiveBidirectionalSetting();
+            const routing = await page.evaluate(() => {
+                const b = window.stateManagerProxy.getEffectiveBidirectionalSetting();
+                return { assumeBidirectional: b.assumeBidirectional, source: b.source };
             });
-            check('J: the proxy routes on the directed graph (the probe\'s labelled override, as D)', pinned.assumeBidirectional === false && pinned.source === 'probe',
-                JSON.stringify(pinned));
+            check('J: the proxy routes on the directed graph the RULES declare (source `explicit`, as V and D)',
+                routing.assumeBidirectional === false && routing.source === 'explicit', JSON.stringify(routing));
             await rp.waitFor('dispatcher wrapped', wrapDispatcher, 20000);
             const booted = await startBot();
             check(`J: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
             // ⛓ §5.19 — measured: the r1c6 this row once read was the ROUTE crediting the queue's first link (the player at the
-            // explicit start), not a position read; no read may land inside the load's hold.
+            // explicit start), not a position read; no read may land inside the load's hold. Since rules `ce1cba867a` that
+            // route opens with a door, so NO logical move is made at the start at all.
             const ss = await page.evaluate(() => window.__startState);
             out('J start state', { ...ss, reads: ss.reads.slice(0, 12), afterPlay: booted.afterPlay });
-            check('J: the load HELD the glue\'s position watch (mount + reset) and no position was read inside it; every logical move at the start is the bot\'s ROUTE (§5.19)',
+            check('J: the load HELD the glue\'s position watch (mount + reset) and no position was read inside it; NO logical move at the start (the first route opens with a door)',
                 ss.holds.length === 1 && ss.holds[0].readsAtRelease === ss.holds[0].reads && ss.reads.every((r) => !r.held)
-                    && ss.moves.every((m) => m.why === 'the Playback Bot\'s route'),
+                    && ss.moves.length === 0,
                 JSON.stringify({ holds: ss.holds, heldReads: ss.reads.filter((r) => r.held).length, moves: ss.moves }));
             await page.evaluate(async () => {
                 const { getActivePanel } = await import('./modules/playbackBot/index.js');
