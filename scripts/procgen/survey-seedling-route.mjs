@@ -92,6 +92,7 @@
  *   node scripts/procgen/survey-seedling-route.mjs --only=12,13
  *   node scripts/procgen/survey-seedling-route.mjs --timeout=600
  *   node scripts/procgen/survey-seedling-route.mjs --through=2.2 --out=<file.json> --only=21,22,…
+ *   node scripts/procgen/survey-seedling-route.mjs --through=end --out=<file.json>
  *
  * ── `--through=2.2` AND `--out=` (SEEDLING SWIM S2, D5) ────────────────
  *
@@ -105,6 +106,25 @@
  * It REQUIRES `--out=<file>`: the survey rows go there, the route and the views
  * to `…/through-2.2/` in the gitignored survey directory, and `survey.json`
  * is never read or written. Without the flag nothing below moves.
+ *
+ * ── `--through=<sphere>|end` (RULES ARC, `rules-route-survey`) ─────────
+ *
+ * The bound is now ANY sphere-order row (`--through=4.7`) or `end`, and the
+ * legs are DERIVED: every row of `seedling-sphere-order.json` up to and
+ * including the bound, in AP's collection order, one BFS leg each
+ * (`surveyRoute.js`). S2 D5's two typed rows are gone, so `--through=2.2` is
+ * now the sixteen rows 0.1 … 2.2, not the shield route plus 1.4 and 2.2. Three
+ * things the derivation names rather than hides:
+ *  · AP's order is NOT A WALK on the directed graph — a row with no path from
+ *    where the route stands is deferred, the earliest reachable remaining row
+ *    is taken (`outOfOrder` on that leg, the blocking exits quoted);
+ *  · a crossing is the AP EXIT the leg's BFS passed, resolved to its atlas
+ *    entity through the sidecar (`hopEdge`), so a double-wide door or two
+ *    stairs between one pair of levels is no longer a refusal;
+ *  · a staged row's grant lists what a boot cannot present (`unpresentable`:
+ *    Seals, Totem Shards, Health) — such a row is solved WITHOUT them.
+ * Each `--through` writes under `…/through-<sphere>/`; the alternative-leg
+ * addendum is the default survey's only.
  */
 
 import { dirname, join, resolve as resolvePath } from 'node:path';
@@ -114,6 +134,7 @@ import { fileURLToPath } from 'node:url';
 
 import { familyOf } from './surveyFamily.js';
 import { deriveStagedGrant } from './surveyGrants.js';
+import { deriveLegs, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath } from './surveyRoute.js';
 
 import { parseDashMode, dashModeNote } from './dashMode.js';
 
@@ -146,8 +167,6 @@ const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 
 const TAPES = join(MODULE, 'fixtures', 'tapes');
-const OUT_DIR = join(seedlingSurveyDir(REPO),
-    ...(process.argv.some((a) => a.startsWith('--through=')) ? ['through-2.2'] : []));
 
 const argOf = (k, dflt) => {
     const hit = process.argv.find((a) => a.startsWith(`--${k}=`));
@@ -157,18 +176,16 @@ const STEP = argOf('step', null);
 const ONLY = argOf('only', null);
 const THROUGH = argOf('through', null);
 const OUT_FILE = argOf('out', null);
-if (THROUGH !== null && THROUGH !== '2.2') {
-    console.error(`ERROR: --through=${THROUGH} — the survey extends through sphere 2.2 only (the legs 1.4 and 2.2)`);
-    process.exit(2);
-}
 if (THROUGH !== null && STEP === null && !OUT_FILE) {
-    console.error('ERROR: --through=2.2 needs --out=<file.json> — the extended survey never writes survey.json');
+    console.error(`ERROR: --through=${THROUGH} needs --out=<file.json> — the extended survey never writes survey.json`);
     process.exit(2);
 }
 if (OUT_FILE && THROUGH === null) {
-    console.error('ERROR: --out= is the extended survey\'s (--through=2.2); the default survey writes survey.json');
+    console.error('ERROR: --out= is the extended survey\'s (--through=<sphere>|end); the default survey writes survey.json');
     process.exit(2);
 }
+/** `.cache/seedling-survey/`, or `…/through-<sphere>/` under `--through` (gitignored either way). */
+const OUT_DIR = join(seedlingSurveyDir(REPO), ...(THROUGH !== null ? [`through-${THROUGH}`] : []));
 const DERIVE_ONLY = process.argv.includes('--derive-only');
 /**
  * ⛔ THE TIMEOUT IS A NAMED BOUND, NOT A GENEROUS ONE. Measured on this
@@ -257,13 +274,14 @@ const MODEL = THROUGH ? {
     ...(await import(join(MODULE, 'levelSource.js'))),
     ...(await import(join(MODULE, 'playerPhysicsV2.js'))),
 } : null;
-function pitEdgeFor(from, to) {
+function pitEdgeFor(from, to, onlyExitId = null) {
     const world = MODEL.buildLevelWorld(MODEL.atlasLevelSource()(from));
     if (!world.fallthrough || world.fallthrough.level !== to) return null;
     const exits = [];
     for (const [region, side] of Object.entries(apRules.preset_sidecars?.['1'] ?? {})) {
         if (levelOfRegion(region) !== from) continue;
         for (const e of side?.playable_payload?.exits ?? []) {
+            if (onlyExitId !== null && e.exit_id !== onlyExitId) continue;
             if (/^out_pit_/.test(e.exit_id ?? '') && e.target_level === to) exits.push({ region, ...e });
         }
     }
@@ -301,49 +319,79 @@ function pitEdgeFor(from, to) {
     };
 }
 
+/**
+ * ⛓ `rules-route-survey`: a pit hop the two sources cannot settle (an
+ * ambiguous landing, a disagreement) is RECORDED on the step under
+ * `--through`, as a door with no `to` entity already is — the steps after it
+ * that are derivable still get surveyed. `{edge: null, refusal: null}` means
+ * no pit falls that way at all.
+ */
+function pitEdgeOrRefusal(from, to, onlyExitId = null) {
+    try { return { edge: pitEdgeFor(from, to, onlyExitId), refusal: null }; } catch (e) {
+        return { edge: null, refusal: e.message };
+    }
+}
+
+/**
+ * ⛓⛓ `rules-route-survey` — **THE DOOR AP's PATH TOOK, NOT A DOOR BETWEEN TWO
+ * LEVELS.** `edgeFor` asks the atlas for THE edge `from → to` and refuses when
+ * there are two (a double-wide doorway, L88's two teleporters to L87, L101's
+ * two stairs to L102): measured, 35 of the full route's 265 steps lost their
+ * crossing that way. The route is a path of AP EXITS, and each exit's sidecar
+ * row names its entity (`exitName` → `exit_id` = `out_<type>_<x>_<y>`, the
+ * atlas derivation's `outExitId`), so the hop resolves to exactly the entity
+ * the BFS passed. A pit exit (`out_pit_*`) resolves to its own tile through
+ * `pitEdgeFor`. Without a sidecar row the old resolution stands: the one `to`
+ * entity, else the one pit tile, else a named refusal.
+ *
+ * @param {?{region: string, name: string}} hop the AP exit out of `from`
+ * @returns {{edge: ?object, refusal: ?string}}
+ */
+function hopEdge(from, to, hop) {
+    const side = hop ? (apRules.preset_sidecars?.['1']?.[hop.region]?.playable_payload?.exits ?? [])
+        .filter((e) => e.exitName === hop.name) : [];
+    if (side.length > 1) {
+        return { edge: null, refusal: `the AP exit '${hop.name}' has ${side.length} sidecar rows `
+            + `(${side.map((e) => e.exit_id).join(', ')}) — the crossing would be a guess.` };
+    }
+    if (side.length === 1) {
+        const id = side[0].exit_id ?? '';
+        if (/^out_pit_/.test(id)) {
+            const pit = pitEdgeOrRefusal(from, to, id);
+            return pit.edge ? pit : { edge: null, refusal: pit.refusal
+                ?? `the AP exit '${hop.name}' is ${id}, and L${from}'s control block does not fall to L${to}.` };
+        }
+        const m = /^out_([a-z]+)_(-?\d+)_(-?\d+)$/.exec(id);
+        const edge = m && atlasEdges(from).find((e) => e.to === to && e.via === `${m[1]}@${m[2]},${m[3]}`);
+        if (edge) return { edge, refusal: null };
+        return { edge: null, refusal: `the AP exit '${hop.name}' is ${id || '(no exit_id)'}, and the `
+            + `atlas has no such entity with \`to\` ${to} in L${from} — the two sources disagree.` };
+    }
+    try { return { edge: edgeFor(from, to), refusal: null }; } catch (e) {
+        const pit = pitEdgeOrRefusal(from, to);
+        return pit.edge ? pit : { edge: null, refusal: pit.refusal ?? e.message };
+    }
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // 2. THE ROUTE — three BFS legs over AP's own region graph
 // ─────────────────────────────────────────────────────────────────────
 
-/** AP's rule vocabulary, whole — an unknown rule THROWS rather than passing. */
-function ruleHolds(rule, items) {
-    if (!rule) return true;
-    switch (rule.rule) {
-    case 'True_': return true;
-    case 'Has': return (items[rule.args.item_name] ?? 0) >= (rule.args.count ?? 1);
-    case 'HasAny': return rule.args.item_names.some((n) => (items[n] ?? 0) > 0);
-    case 'HasAll': return rule.args.item_names.every((n) => (items[n] ?? 0) > 0);
-    case 'And': return rule.children.every((c) => ruleHolds(c, items));
-    case 'Or': return rule.children.some((c) => ruleHolds(c, items));
-    default:
-        throw new Error(`unknown AP access rule '${rule.rule}' — a rule this evaluator `
-            + 'does not know must never read as SATISFIED, because a route derived through '
-            + 'a door nobody evaluated is a route nobody derived.');
-    }
-}
+/**
+ * ⛓⛓ `rules-route-survey` — **AP's OWN EVALUATOR, not a third copy.** This was
+ * a six-rule switch (`True_`/`Has`/`HasAny`/`HasAll`/`And`/`Or`) that THREW on
+ * the `CanReachRegion` return edges the rules carry since RULES (A), so the
+ * survey could not derive its route at all. The rule is now decided by the
+ * shared engine, `CanReachRegion` from `computeReachableRegions`' fixed point
+ * (`surveyRoute.makeRuleHolds`), and an undecidable rule still THROWS by name.
+ */
+const ruleHolds = makeRuleHolds(apRules);
 
 const levelOfRegion = (name) => Number(name.split('__')[0].split('_')[1]);
 
 /** Shortest region path under a fixed item set; null when there is none. */
-function regionPath(src, dst, items, banned = new Set()) {
-    const prev = new Map([[src, null]]);
-    const queue = [src];
-    while (queue.length) {
-        const u = queue.shift();
-        if (u === dst) break;
-        for (const e of REGIONS[u]?.exits ?? []) {
-            const v = e.connected_region;
-            if (prev.has(v) || banned.has(v)) continue;
-            if (!ruleHolds(e.access_rule, items)) continue;
-            prev.set(v, u);
-            queue.push(v);
-        }
-    }
-    if (!prev.has(dst)) return null;
-    const out = [];
-    for (let u = dst; u !== null; u = prev.get(u)) out.push(u);
-    return out.reverse();
-}
+const regionPath = (src, dst, items, banned) =>
+    surveyRegionPath(REGIONS, ruleHolds, src, dst, items, banned);
 
 /** A region path projected onto the LEVELS it visits, in order. */
 function levelsOf(path) {
@@ -415,16 +463,28 @@ function d2EntryProbe() {
     });
 }
 
-/** The three route pickups, read out of the sphere order rather than typed. */
-const ROUTE_PICKUPS = [
+/**
+ * The route pickups.
+ *
+ * DEFAULT: the three the ⚖ ROUTE-ONLY ruling bounds this survey to, each
+ * matched against AP's own collection order (the item it grants is asserted).
+ *
+ * ⛓⛓ `--through=<sphere>|end` (`rules-route-survey`): **EVERY sphere-order row
+ * up to and including `<sphere>`, in AP's order — one leg per row, nothing
+ * typed** (`surveyRoute.pickupsThrough`). This replaced S2 D5's two typed rows
+ * (1.4 and 2.2 appended AFTER the shield), so `--through=2.2` now walks the
+ * sixteen rows 0.1 … 2.2 in the order AP collects them — the seals and the
+ * Light included, and the Green Key (1.4) before the Shield (2.1).
+ */
+const ROUTE_PICKUPS = THROUGH !== null ? (() => {
+    try { return pickupsThrough(spheres.order, THROUGH); } catch (e) {
+        console.error(`ERROR: ${e.message}`);
+        return process.exit(2);
+    }
+})() : [
     { match: /Level 010 - Sword/, item: 'Progressive Sword' },
     { match: /Level 019 - Boss Key 0/, item: 'Red Key' },
     { match: /Level 020 - Shield/, item: 'Progressive Shield' },
-    // ⛓ `--through=2.2` (S2 D5): the two legs the sphere order adds after 2.1.
-    ...(THROUGH ? [
-        { match: /Level 029 - Boss Key 1/, item: 'Green Key' },
-        { match: /Level 032 - Bob Boss/, item: 'Fire' },
-    ] : []),
 ].map((want) => {
     const row = spheres.order.find((o) => want.match.test(o.location));
     if (!row) throw new Error(`the sphere order has no row matching ${want.match} — the `
@@ -436,6 +496,12 @@ const ROUTE_PICKUPS = [
     return { ...row, item: row.item };
 });
 
+/**
+ * The rows a leg's goal is looked up in: the route pickups, or under
+ * `--through` the whole order (a row past the bound can be pulled forward).
+ */
+const PICKUP_ROWS = THROUGH !== null ? spheres.order : ROUTE_PICKUPS;
+
 /** Where each pickup lives, as an AP region + the placement's own coordinates. */
 function placementOf(locationName) {
     for (const [name, reg] of Object.entries(REGIONS)) {
@@ -446,22 +512,72 @@ function placementOf(locationName) {
     throw new Error(`no AP region holds location '${locationName}'`);
 }
 
-/** The pickup ENTITY in the atlas — the `collect-placement` goal's coordinates. */
-const PICKUP_ENTITY = { 10: 'sword', 19: 'bosskey', 20: 'shield', ...(THROUGH ? { 29: 'bosskey' } : {}) };
+/** The pickup ENTITY in the atlas — the DEFAULT route's `collect-placement` coordinates. */
+const PICKUP_ENTITY = { 10: 'sword', 19: 'bosskey', 20: 'shield' };
+
+/**
+ * ⛓⛓ `--through` — **WHICH ENTITY A SPHERE ROW IS, ASKED OF THE DERIVATION.**
+ * The playthrough's locations are named by `seedlingAtlasDerivation.labelFor`
+ * over the R7 goal ledger, and `entityForLedgerRow` says which atlas entity
+ * each ledger row MEANT (five rows share a tile with another entity, so a
+ * by-tile join would guess). A pickup, key, totem part, chest or the ending
+ * is a `collect-placement` of that entity; an `encounter` (the Bob Boss's
+ * drop, the Witch's trade) is an `encounter` goal. The ledger's item must be
+ * the sphere row's, or the row refuses by name.
+ */
+const LEDGER = THROUGH !== null ? {
+    ...(await import(join(MODULE, 'r7Acceptance.js'))),
+    ...(await import(join(MODULE, 'seedlingAtlasDerivation.js'))),
+} : null;
+function ledgerRowFor(pickup) {
+    const hits = LEDGER.R7_GOAL_LEDGER.filter((r) =>
+        `${LEDGER.levelName(r.level)} - ${LEDGER.labelFor(r)}` === pickup.location);
+    if (hits.length !== 1) {
+        throw new Error(`sphere row ${pickup.sphere} '${pickup.location}': ${hits.length} R7 ledger `
+            + 'rows carry that name — the goal would be a guess.');
+    }
+    const row = hits[0];
+    const { entity, item } = LEDGER.entityForLedgerRow(levelsByNo.get(row.level), row);
+    if (!entity) throw new Error(`sphere row ${pickup.sphere}: ledger row ${row.id} has no entity in L${row.level}`);
+    if (item !== pickup.item) {
+        throw new Error(`sphere row ${pickup.sphere} '${pickup.location}' grants '${pickup.item}', `
+            + `the ledger row ${row.id} '${item}' — the seed's placement moved.`);
+    }
+    return { row, entity };
+}
 /**
  * ⛓ S2 D5 — an ENCOUNTER location has no pickup entity (L32's Bob Boss drops
  * Fire), so it is anchored at the location's own tile in the playthrough atlas
  * (the `encounter` goal's `at` since U5).
  */
-function encounterCoords(level) {
+function encounterCoords(level, pickup) {
     const pt = JSON.parse(readFileSync(
         join(REPO, 'frontend/modules/flashPanel/atlases/seedling-playthrough.json'), 'utf8'));
     const locs = (pt.regions.find((r) => r.map_ref === level)?.locations ?? []);
-    const pickup = ROUTE_PICKUPS.find((p) => p.level === level);
     const loc = locs.find((l) => l.name === pickup?.location);
     if (!loc) throw new Error(`L${level}: the playthrough atlas has no location '${pickup?.location}'`);
     return { x: loc.tile[0] * pt.tile_space.tile_size, y: loc.tile[1] * pt.tile_space.tile_size };
 }
+/**
+ * ⛓⛓ `--through`: a sphere row's goal, by what the ledger says the row IS.
+ * `crossing` is the step's onward edge (`undefined` when the route ends here):
+ * an encounter whose room is left by a pit takes the fall as its own `then`,
+ * a door leaves `then` null and the crossing follows as its own goal.
+ */
+function throughPickupGoal(level, pickup, crossing) {
+    const { row, entity } = ledgerRowFor(pickup);
+    if (row.kind === 'encounter') {
+        return encounterGoal(level, pickup, crossing === undefined ? undefined
+            : (crossing?.kind === 'pit' ? 'reach-pit' : null));
+    }
+    return {
+        kind: 'collect-placement',
+        placement: { x: entity.x, y: entity.y },
+        why: `${pickup.location} (sphere ${pickup.sphere}) → ${pickup.item}`,
+        location: pickup.location,
+    };
+}
+
 /**
  * ⛓ SWIM U5 D1 — the encounter location's GOAL, not a `collect-placement` of
  * its tile. U2–U4 handed L32 `collect-placement (64,128)`, and the solver
@@ -474,14 +590,15 @@ function encounterCoords(level) {
  * pick one, because `pitEdgeFor` is keyed on a route hop and this route ends in
  * L32.
  */
-function encounterGoal(level, pickup) {
+function encounterGoal(level, pickup, then) {
     const world = MODEL.buildLevelWorld(MODEL.atlasLevelSource()(level));
     return {
         kind: 'encounter',
-        at: encounterCoords(level),
+        at: encounterCoords(level, pickup),
         drop: { item: pickup.item },
-        then: world.fallthrough ? 'reach-pit' : null,
+        then: then !== undefined ? then : (world.fallthrough ? 'reach-pit' : null),
         why: `${pickup.location} (sphere ${pickup.sphere}) → ${pickup.item}`,
+        location: pickup.location,
     };
 }
 function pickupCoords(level) {
@@ -496,31 +613,20 @@ function pickupCoords(level) {
 
 function deriveRoute() {
     const startRegion = REGIONS.Menu.exits[0].connected_region;
-    const items = {};
-    const legs = [];
-    let here = startRegion;
-    for (const pickup of ROUTE_PICKUPS) {
-        const target = placementOf(pickup.location);
-        const path = regionPath(here, target.region, items);
-        if (!path) {
-            throw new Error(`AP's own rules give NO path from ${here} to `
-                + `${target.region} with items {${Object.keys(items).join(', ') || 'none'}} — `
-                + 'the route is not derivable and nothing below it means anything.');
-        }
-        legs.push({
-            sphere: pickup.sphere,
-            goal: pickup.location,
-            item: pickup.item,
-            from: here,
-            to: target.region,
-            itemsHeld: Object.keys(items).slice(),
-            regions: path,
-            levels: levelsOf(path),
-            alternatives: alternativesFor(here, target.region, path, { ...items }),
-        });
-        items[pickup.item] = (items[pickup.item] ?? 0) + 1;
-        here = target.region;
-    }
+    // ⛓ `rules-route-survey`: one BFS leg per pickup (`surveyRoute.deriveLegs`),
+    //   each with exactly the items the earlier legs earned.
+    //   Under `--through` the rows past the bound are `spare`: AP's order is
+    //   not a walk on a directed graph, and a leg it cannot walk takes the
+    //   earliest remaining row it can (named on the leg as `outOfOrder`).
+    const derived = deriveLegs({
+        regions: REGIONS, ruleHolds, start: startRegion, pickups: ROUTE_PICKUPS,
+        spare: THROUGH !== null ? spheres.order.slice(ROUTE_PICKUPS.length) : null,
+    });
+    const legs = derived.legs.map((leg, i) => ({
+        ...leg,
+        levels: levelsOf(leg.regions),
+        alternatives: alternativesFor(leg.from, leg.to, leg.regions, { ...derived.held[i] }),
+    }));
 
     // The level visit sequence: the legs concatenated, with each leg's first
     // level dropped (it is the previous leg's last — the same visit).
@@ -531,6 +637,17 @@ function deriveRoute() {
             visits.push({ level: n, leg: i });
         });
     });
+    // ⛓ `rules-route-survey`: each visit's way OUT, as the AP exit the leg's
+    //   BFS took (`hopEdge` resolves a crossing by it). One per level change,
+    //   in the same order the visits were made — asserted, not assumed.
+    const outs = legs.flatMap((leg, i) => leg.regions.slice(1).flatMap((r, j) =>
+        (levelOfRegion(r) !== levelOfRegion(leg.regions[j])
+            ? [{ region: leg.regions[j], name: derived.hops[i][j] }] : [])));
+    if (outs.length !== visits.length - 1) {
+        throw new Error(`the route has ${visits.length} visits and ${outs.length} level-changing `
+            + 'AP exits — each crossing must be exactly one exit.');
+    }
+    outs.forEach((o, k) => { visits[k].exitOut = o; });
 
     return { legs, visits, steps: buildSteps(visits, legs, (i) => i + 1) };
 }
@@ -548,6 +665,11 @@ function deriveRoute() {
  * alternative can tell them apart. R9's budget needs the difference.
  */
 function deriveAlternative(route) {
+    // ⛓ `rules-route-survey`: the DEFAULT route's. Under `--through` the legs
+    //   are the sphere order's rows, so `legs[1]` is the 0.2 chest, not the
+    //   Boss Key 0 leg this addendum was measured for — and the brief's
+    //   frontier is past 2.2, not the leg-2 detour.
+    if (THROUGH !== null) return null;
     const alt = route.legs[1].alternatives.find((a) => !a.forced);
     if (!alt) return null;
     const visits = [];
@@ -567,33 +689,60 @@ function deriveAlternative(route) {
  * the shield.
  */
 function buildSteps(visits, legs, id) {
+    /**
+     * ⛓ `rules-route-survey`: a leg ENDS at the last visit whose leg is ≤ it.
+     * For a leg with visits of its own that is its own last visit (the old
+     * rule); for a leg that never leaves the room the previous leg ended in
+     * (L40's Chest → L40's Totem Part) it is that SAME visit, which then
+     * carries both pickups in order. A leg with no visit of its own had no
+     * step at all before, and its pickup was silently never asked for.
+     */
+    const endOf = legs.map((_, k) => visits.reduce((at, v, i) => (v.leg <= k ? i : at), -1));
     return visits.map((v, i) => {
         const next = visits[i + 1];
         const goals = [];
-        const pickupHere = ROUTE_PICKUPS.find((p) => p.level === v.level
-            && legs[v.leg].goal === p.location && (!next || next.leg !== v.leg));
-        if (pickupHere && THROUGH && PICKUP_ENTITY[v.level] === undefined) {
-            goals.push(encounterGoal(v.level, pickupHere));
-        } else if (pickupHere) {
-            goals.push({
-                kind: 'collect-placement',
-                placement: pickupCoords(v.level),
-                why: `${pickupHere.location} (sphere ${pickupHere.sphere}) → ${pickupHere.item}`,
-            });
-        }
+        const pickupsHere = legs.map((leg, k) => (endOf[k] === i
+            ? PICKUP_ROWS.find((p) => p.level === v.level && leg.goal === p.location) : null))
+            .filter(Boolean);
+        // ⛓ `rules-route-survey`: under `--through` the crossing is the exit AP's
+        //   own path took (`hopEdge`), resolved ONCE and used by both halves.
+        const crossing = next && THROUGH ? hopEdge(v.level, next.level, v.exitOut) : null;
         let edge = null;
+        if (next && !THROUGH) {
+            try { edge = edgeFor(v.level, next.level); } catch { edge = null; }
+        } else if (crossing) {
+            edge = crossing.edge;
+        }
+        for (const pickupHere of pickupsHere) {
+            if (THROUGH) {
+                goals.push(throughPickupGoal(v.level, pickupHere, next ? edge : undefined));
+            } else {
+                goals.push({
+                    kind: 'collect-placement',
+                    placement: pickupCoords(v.level),
+                    why: `${pickupHere.location} (sphere ${pickupHere.sphere}) → ${pickupHere.item}`,
+                });
+            }
+        }
+        edge = null;
         // ⛓ S2 D5: under `--through`, a hop with no `to` entity (a pit fall, a
         //   map edge) is RECORDED on the step instead of ending the derivation —
         //   the steps after it that are derivable still get surveyed.
         let crossingRefusal = null;
         if (next) {
-            try { edge = edgeFor(v.level, next.level); } catch (e) {
-                if (!THROUGH) throw e;
-                // ⛓ SWIM T3 D3: no `to` entity — but a pit may be the hop.
-                edge = pitEdgeFor(v.level, next.level);
-                if (!edge) crossingRefusal = e.message;
+            if (THROUGH) {
+                // ⛓ SWIM T3 D3 + `rules-route-survey`: the AP exit's own entity,
+                //   else the one `to` entity, else a pit — or a named refusal.
+                edge = crossing.edge;
+                if (!edge) crossingRefusal = crossing.refusal;
+            } else {
+                edge = edgeFor(v.level, next.level);
             }
-            if (edge?.kind === 'pit') {
+            if (edge?.kind === 'pit' && goals.some((g) => g.kind === 'encounter' && g.then === 'reach-pit')) {
+                // ⛓ the encounter's own `then: 'reach-pit'` IS this crossing
+                //   (the solver falls through after the drop); a second
+                //   reach-pit goal would ask for the fall twice.
+            } else if (edge?.kind === 'pit') {
                 goals.push({ kind: 'reach-pit', pit: { ...edge.pit }, why: `${edge.via} → L${next.level}` });
             } else if (edge) {
                 goals.push({ kind: 'reach-exit', exit: edge.exit, why: `${edge.via} → L${next.level}` });
@@ -604,12 +753,13 @@ function buildSteps(visits, legs, id) {
         let arrivalRefusal = null;
         let arrivalVia = null;
         if (prev) {
-            try { arrival = edgeFor(prev.level, v.level).arrival; } catch (e) {
-                if (!THROUGH) throw e;
-                const pit = pitEdgeFor(prev.level, v.level);
-                arrival = pit ? pit.arrival : null;
-                if (pit) arrivalVia = pit.via;
-                else arrivalRefusal = e.message;
+            if (THROUGH) {
+                const { edge: hop, refusal } = hopEdge(prev.level, v.level, prev.exitOut);
+                arrival = hop ? hop.arrival : null;
+                if (hop?.kind === 'pit') arrivalVia = hop.via;
+                if (!hop) arrivalRefusal = refusal;
+            } else {
+                arrival = edgeFor(prev.level, v.level).arrival;
             }
         }
         return {
@@ -723,9 +873,12 @@ function stagedGrantFor(step, latchItems) {
     if (!THROUGH || typeof step.step !== 'number') return null;
     const grant = deriveStagedGrant({
         earlier: route.steps.filter((s) => typeof s.step === 'number' && s.step < step.step),
-        pickups: ROUTE_PICKUPS,
+        pickups: PICKUP_ROWS,
         game: GAME,
         latchItems,
+        // ⛓ `rules-route-survey`: a Seal, a Totem Shard or Health cannot be
+        //   presented by a boot; the grant names it rather than crashing the row.
+        unpresentable: 'report',
     });
     const sword = grant?.from.find((f) => f.item === 'Progressive Sword');
     if (sword && sword.grants !== 'latched hasSword') {
@@ -1214,6 +1367,11 @@ for (const leg of route.legs) {
     console.log(`  items held entering: {${leg.itemsHeld.join(', ') || 'none'}}`);
     console.log(`  levels: ${leg.levels.map((n) => `L${n}`).join(' → ')}`);
     console.log(`  regions: ${leg.regions.join(' > ')}`);
+    if (leg.outOfOrder) {
+        console.log(`  ⚠ OUT OF AP's ORDER${leg.pulledForward ? ' (pulled forward past the bound)' : ''}: `
+            + `deferred ${leg.outOfOrder.deferred.join(', ')} — ${leg.outOfOrder.because}; blocked by `
+            + leg.outOfOrder.blocked.map((b) => `${b.from} -> ${b.to} ${JSON.stringify(b.rule)}`).join('; '));
+    }
     const detours = leg.alternatives.filter((a) => !a.forced);
     const forced = leg.alternatives.filter((a) => a.forced).map((a) => a.banned);
     console.log(`  FORCED rooms (no route avoids them): ${forced.join(', ') || 'none'}`);
@@ -1290,11 +1448,11 @@ const ALL_LAYERS = 'player,enemies,pushables,action,damage,events,volumes,hitbox
  * committed descriptions — so "disagrees with the known answer" can be told
  * apart from "answers a different question in the same room".
  */
-const DIFFERENT_ERRAND = new Map([
+const DIFFERENT_ERRAND = new Map(THROUGH !== null ? [] : [
     [11, 'exits NORTH to L3; r8-solve-11 takes the chest and leaves EAST to L10'],
     [21, 'the shield ALONE; r8-d2-20 also crosses west through the three gates to L13'],
     ['A10', 'exits to L9 (the alternative leg); r8-solve-10 exits to L11'],
-]);
+]); // ⛓ keyed on the DEFAULT route's step ids; `--through` renumbers them
 
 /**
  * ── `--table`: THE DELIVERABLE, IN MARKDOWN ───────────────────────────
@@ -1316,6 +1474,11 @@ if (process.argv.includes('--table')) {
         L.push(`- **leg ${leg.sphere} → ${leg.goal}** (+${leg.item}), holding `
             + `{${leg.itemsHeld.join(', ') || 'nothing'}}: `
             + `${leg.levels.map((n) => `L${n}`).join(' → ')}`);
+        if (leg.outOfOrder) {
+            L.push(`  - ⚠ out of AP's order: deferred ${leg.outOfOrder.deferred.join(', ')} — `
+                + `${leg.outOfOrder.because}; blocked by `
+                + leg.outOfOrder.blocked.map((b) => `\`${b.from} -> ${b.to}\``).join(', '));
+        }
         for (const alt of leg.alternatives.filter((a) => !a.forced)) {
             L.push(`  - alternative without \`${alt.banned}\`: `
                 + `${alt.levels.map((n) => `L${n}`).join(' → ')} `

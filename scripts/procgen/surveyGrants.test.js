@@ -66,4 +66,34 @@ describe('deriveStagedGrant — the route\'s own pickups', () => {
         expect(() => deriveStagedGrant({ earlier: [collect(1, 99)], pickups: PICKUPS, game: GAME,
             latchItems: {} })).toThrow(/no route pickup names/);
     });
+
+    // ⛓ `rules-route-survey`: the whole order (`--through=end`).
+    const at = (step, level, location, kind = 'collect-placement') => ({ step, level,
+        goals: [kind === 'encounter' ? { kind, location, drop: {} } : { kind, location }] });
+    const ROWS = [
+        { level: 40, item: 'Seal', location: 'Level 040 - Chest' },
+        { level: 40, item: 'Purple Key', location: 'Level 040 - Boss Key 2' },
+        { level: 32, item: 'Fire', location: 'Level 032 - Bob Boss' },
+        { level: 68, item: 'Health', location: 'Level 068 - Health' },
+    ];
+
+    it('a goal carrying its LOCATION is matched by it (L40 holds four pickups); an encounter with one grants its drop', () => {
+        const g = deriveStagedGrant({ earlier: [at(1, 40, 'Level 040 - Boss Key 2'),
+            at(2, 32, 'Level 032 - Bob Boss', 'encounter')], pickups: ROWS, game: GAME, latchItems: {} });
+        expect(g.from).toEqual([
+            { step: 1, item: 'Purple Key', grants: 'save.keys[2]' },
+            { step: 2, item: 'Fire', grants: 'seam.items.hasFire' },
+        ]);
+    });
+
+    it('unpresentable: \'report\' NAMES what a boot cannot present instead of throwing', () => {
+        const earlier = [at(1, 40, 'Level 040 - Chest'), at(2, 68, 'Level 068 - Health'),
+            at(3, 40, 'Level 040 - Boss Key 2')];
+        expect(() => deriveStagedGrant({ earlier, pickups: ROWS, game: GAME, latchItems: {} }))
+            .toThrow(/'!seal' copy 1 has no rung/);
+        const g = deriveStagedGrant({ earlier, pickups: ROWS, game: GAME, latchItems: {},
+            unpresentable: 'report' });
+        expect(g.keys).toEqual([2]);
+        expect(g.unpresentable.map((u) => [u.step, u.item])).toEqual([[1, 'Seal'], [2, 'Health']]);
+    });
 });

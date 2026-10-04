@@ -22,7 +22,8 @@ import { ARENA } from './bobBoss.js';
 
 const TAPE = JSON.parse(readFileSync(
     new URL('./fixtures/tapes/r5-bobboss-fire.json', import.meta.url), 'utf8'));
-/** The survey's step-30 goal, as `survey-seedling-route.mjs --through=2.2` hands it. */
+/** The survey's L32 encounter goal, as `survey-seedling-route.mjs --through=2.2` handed it at
+ * step 30 (step 88 since the legs are the whole sphere order, which also adds `location`). */
 const L32_GOAL = Object.freeze({
     kind: 'encounter', at: { x: 64, y: 128 }, drop: { item: 'Fire' }, then: 'reach-pit',
 });

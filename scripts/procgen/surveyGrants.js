@@ -23,6 +23,18 @@
  *
  * Pure: every input is handed in, so the unit rows (`surveyGrants.test.js`) run
  * without the survey's route derivation.
+ *
+ * ⛓⛓ `rules-route-survey` — THE WHOLE ORDER. `--through=<sphere>|end` walks
+ * every sphere row, so three things the five-pickup route never met:
+ *  · a level holds SEVERAL route pickups (L40: four; L12: the chest and the
+ *    Witch), so a goal that carries its `location` is matched by it — a goal
+ *    without one keeps the level match;
+ *  · an `encounter` that carries its `location` grants its `drop.item` to the
+ *    steps after it (the Fire after L32) — one without keeps being skipped;
+ *  · `unpresentable: 'report'` turns the refusals a boot presentation cannot
+ *    honour (a Seal or a Totem Shard has no `items` row, Health adds) into a
+ *    named list on the grant instead of a throw. ⚠ A staged row past such a
+ *    pickup is then solved WITHOUT it, and the grant says so.
  */
 
 /**
@@ -33,20 +45,30 @@
  *        route pickups (`ROUTE_PICKUPS`: AP's own sphere rows)
  * @param {object} a.game  `games/seedling.json` (`ap_items`, `progressive_items`, `items`)
  * @param {object} a.latchItems  the staging's `seam.items` (what the latch holds)
+ * @param {'throw'|'report'} [a.unpresentable='throw']  `report` lists what a boot
+ *        presentation cannot honour on the grant (`unpresentable`) instead of throwing
  * @returns {{keys:number[], items:string[], latched:string[],
  *            from:Array<{step:number, item:string, grants:string}>}|null}
  *          `null` when no earlier step collected anything
  */
-export function deriveStagedGrant({ earlier, pickups, game, latchItems }) {
+export function deriveStagedGrant({ earlier, pickups, game, latchItems, unpresentable = 'throw' }) {
     const keys = new Set();
     const items = new Set();
     const latched = new Set();
     const from = [];
+    const cannot = [];
     const copies = new Map();
+    const refuse = (step, item, message) => {
+        if (unpresentable !== 'report') throw new Error(message);
+        cannot.push({ step, item, why: message.replace(/^surveyGrants: /, '') });
+    };
     for (const s of earlier) {
         for (const g of s.goals) {
-            if (g.kind !== 'collect-placement') continue;
-            const pick = pickups.find((p) => p.level === s.level);
+            const drop = g.kind === 'encounter' && g.location;
+            if (g.kind !== 'collect-placement' && !drop) continue;
+            const pick = g.location
+                ? pickups.find((p) => p.location === g.location)
+                : pickups.find((p) => p.level === s.level);
             if (!pick) {
                 throw new Error(`surveyGrants: step ${s.step} (L${s.level}) collects a placement `
                     + 'no route pickup names — the grant cannot be derived from a pickup it '
@@ -60,8 +82,9 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems }) {
                 copies.set(flash, n);
                 const ladder = game.progressive_items[flash];
                 if (!ladder || !ladder[n - 1]) {
-                    throw new Error(`surveyGrants: progressive '${flash}' copy ${n} has no rung `
+                    refuse(s.step, pick.item, `surveyGrants: progressive '${flash}' copy ${n} has no rung `
                         + `(progressive_items: ${JSON.stringify(ladder ?? null)})`);
+                    continue;
                 }
                 flash = ladder[n - 1];
             }
@@ -72,11 +95,15 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems }) {
                 continue;
             }
             const row = game.items.find((r) => r.flash_name === flash);
-            if (!row) throw new Error(`surveyGrants: flash item '${flash}' is not in items`);
+            if (!row) {
+                refuse(s.step, pick.item, `surveyGrants: flash item '${flash}' is not in items`);
+                continue;
+            }
             if (row.value !== true || row.op !== undefined) {
-                throw new Error(`surveyGrants: '${flash}' → ${row.property} is not a boolean `
+                refuse(s.step, pick.item, `surveyGrants: '${flash}' → ${row.property} is not a boolean `
                     + `grant (${JSON.stringify(row)}) — a boot presentation declares a flag, it `
                     + 'cannot add.');
+                continue;
             }
             if (latchItems?.[row.property] === true) {
                 latched.add(row.property);
@@ -87,11 +114,12 @@ export function deriveStagedGrant({ earlier, pickups, game, latchItems }) {
             }
         }
     }
-    if (from.length === 0) return null;
+    if (from.length === 0 && cannot.length === 0) return null;
     return {
         keys: [...keys].sort((x, y) => x - y),
         items: [...items].sort(),
         latched: [...latched].sort(),
         from,
+        ...(unpresentable === 'report' ? { unpresentable: cannot } : {}),
     };
 }
