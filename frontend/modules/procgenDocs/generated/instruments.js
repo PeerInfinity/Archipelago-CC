@@ -216,7 +216,7 @@ export const INSTRUMENTS = frz({
     "counts": {
         "blockStyle": 322,
         "browser": 103,
-        "cited": 150,
+        "cited": 152,
         "files": 333,
         "lineStyle": 11,
         "withDocblock": 333,
@@ -6212,7 +6212,9 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "make",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [],
             "file": "make-seedling-subregion-partition.mjs",
@@ -10332,7 +10334,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "budget-s",
