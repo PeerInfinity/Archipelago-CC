@@ -178,7 +178,7 @@ export const FLASH_PANEL_WIRING = Object.freeze({
      * regeneration drops it (`flashPanel/README.md` — the seed-1 `seedling`
      * preset's block is PROVISIONAL until the producing side declares it).
      */
-    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4e/game.html' }),
+    seedling: Object.freeze({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4f/game.html' }),
 });
 
 const endpointKey = (regionId, exitId) => `${regionId}/${exitId}`;

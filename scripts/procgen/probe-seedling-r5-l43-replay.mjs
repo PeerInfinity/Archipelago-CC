@@ -52,7 +52,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
 const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
-    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e'}/game.html`;
+    + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f'}/game.html`;
 
 const ONLY = process.argv.filter((a) => a.startsWith('--only='))
     .map((a) => a.slice('--only='.length)).pop();

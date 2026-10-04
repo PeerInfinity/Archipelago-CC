@@ -54,7 +54,7 @@ takeBoxLockOrExit({ name: 'probe-seedling-u9-shield-mobiles.mjs', kind: 'browser
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const PAGE_URL = `http://localhost:${process.env.SEEDLING_PORT || '8000'}`
     + `/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 

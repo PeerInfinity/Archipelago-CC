@@ -40,7 +40,7 @@
  * ── Prereqs ───────────────────────────────────────────────────────────
  *   - dev server on :8000 at the REPO ROOT (`python -m http.server 8000`)
  *   - the wasm artifact at
- *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4e/ — the DEFAULT
+ *     frontend/modules/flashPanel/wasm/seedling_bot_ap_p4f/ — the DEFAULT
  *     since R9 slice DEF (⚖ user, 2026-09-27; licence: the CI full tier on
  *     p4e, run 36350758799, 154 tapes 3745/0/46), p4d before it from EDITOR
  *     INTEGRATION slice P2 (⚖ user, 2026-08-30) — p4d stays pinned as the
@@ -327,7 +327,7 @@ takeBoxLockOrExit({ name: 'check-seedling-bot-differential.mjs',
 // sweep against both, and swapping directories on disk to do that is how a
 // baseline gets lost. The artifact identity rides in the checkpoint
 // fingerprint below, so a resumed run can never reuse another build's verdict.
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 // ⚠ THE DIRECTORY IS NOT THE PAYLOAD NAME, IN EITHER DIRECTION.
 // `deploy_wasm_avm2.sh` names the payload after the BUILD, not the folder, so

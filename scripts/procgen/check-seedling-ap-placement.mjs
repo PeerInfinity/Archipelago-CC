@@ -111,7 +111,7 @@ takeBoxLockOrExit({ name: 'check-seedling-ap-placement.mjs',
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 if (!existsSync(join(ARTIFACT, 'game.html'))) {
     console.log(`SKIP: no wasm artifact at ${ARTIFACT} — `
@@ -339,7 +339,7 @@ const browser = await chromium.launch({
  * for retirement while an instrument still loads it. Spelt as a literal path
  * it is spelling 1, and the pin is real.
  */
-const M1_ARTIFACT = join(REPO, 'frontend/modules/flashPanel/wasm/seedling_bot_ap_p4e');
+const M1_ARTIFACT = join(REPO, 'frontend/modules/flashPanel/wasm/seedling_bot_ap_p4f');
 const M1_PAGE = basename(M1_ARTIFACT);
 const M1_URL = `http://127.0.0.1:${PORT}/frontend/modules/flashPanel/wasm/${M1_PAGE}/game.html`;
 /** The same page, on the host+port Windows Chrome can reach. */

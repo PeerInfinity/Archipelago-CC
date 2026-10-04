@@ -69,7 +69,7 @@ takeBoxLockOrExit({ name: 'check-seedling-save-stamp.mjs', kind: WIN ? 'windows'
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 /** ⛓ R9 slice DEF: `SEEDLING_PORT` aims this gate at a worktree's own server;
  *  the default stays :8000 (the PRIMARY tree — trap 1003), so no caller moves. */

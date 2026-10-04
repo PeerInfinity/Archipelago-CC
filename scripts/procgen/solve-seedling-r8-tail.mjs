@@ -133,7 +133,7 @@ const check = (name, ok, detail) => {
  * checked against the artifact below, so the next wrong name fails in a second
  * with the reason instead of in three minutes without one.
  */
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
     + `${PAGE_NAME}/game.html`;
 if (USE_GAME && !existsSync(join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm',

@@ -236,7 +236,7 @@ function zeroTickVariant(tape) {
  * is handed, because a tick-0 reading is a function of those bytes, not of
  * the channel that measured it.
  */
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const PAGE_PORT = process.env.SEEDLING_PORT || '8000';
 const PAGE_URL = `http://localhost:${PAGE_PORT}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;
 const WIN = process.argv.includes('--win');

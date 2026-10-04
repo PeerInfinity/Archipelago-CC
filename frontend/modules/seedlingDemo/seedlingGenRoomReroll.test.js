@@ -506,11 +506,16 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      * from the top level into `exporter["1"]`. With it moved back (top level after
      * `starting_items`, `exporter: {}`) each build still hashes to the value above
      * (8c9983b5 / 714ac4ef / a4303571 — measured), so the move is the whole delta.
+     * ⛓ RE-MEASURED at the seedling-wasm-leak L4 rebuild (2026-10-04): the
+     * compiler's `flash_panel.wasm` moved p4e → p4f (the default move, ⚖ D2).
+     * Each build names it ONCE, and with `seedling_bot_ap_p4f` substituted back
+     * to p4e each hashes to its previous value (96e9e65a / 980ca6eb / c6830310 —
+     * measured), so the wiring is the whole move.
      */
     it.each([
-        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '96e9e65a'],
-        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '980ca6eb'],
-        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), 'c6830310'],
+        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '855fb31a'],
+        ['grid 10x10 seed 7', () => GRID(7, 10, 10), 'c581247e'],
+        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), 'aa6355f2'],
     ])('%s built before G8: byte-identical', async (_name, state, md5) => {
         const rulesJson = await build(state());
         expect(createHash('md5').update(JSON.stringify(rulesJson)).digest('hex').slice(0, 8)).toBe(md5);

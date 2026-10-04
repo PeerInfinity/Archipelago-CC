@@ -95,7 +95,7 @@ const REPO = join(HERE, '..', '..');
 // Phase 3b", with nothing wrong in the tree. A standing red that nobody owns is
 // a gate people learn to ignore. The older builds are still reachable through
 // SEEDLING_PAGE.
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const ARTIFACT = join(REPO, 'frontend', 'modules', 'flashPanel', 'wasm', PAGE_NAME);
 /** ⛓ R9 slice DEF: `SEEDLING_PORT` aims this gate at a worktree's own server;
  *  the default stays :8000 (the PRIMARY tree — trap 1003), so no caller moves. */

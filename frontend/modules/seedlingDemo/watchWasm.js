@@ -159,7 +159,7 @@ export const BOOT_COST_FRAMES = LOAD_FADE_FRAMES + BOOT_PRESWAP_FRAMES;
  * would be invisible to it and could clear the build for retirement while this
  * page still loaded it (§18.14.5, trap 411).
  */
-export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4e/game.html';
+export const WASM_PAGE = '../flashPanel/wasm/seedling_bot_ap_p4f/game.html';
 
 /** The pin manifest beside the builds — the capabilities are read from it. */
 export const WASM_MANIFEST = '../flashPanel/wasm/builds.json';
