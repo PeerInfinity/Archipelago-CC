@@ -84,8 +84,8 @@
         {
             "level": 18,
             "tag": 0,
-            "note": "model-sourced by twoPassSolve: `spinnerKillLockOpens` computed the removal at 351 and `activators.opensOnTick(0.01)` is 101",
-            "at": 452
+            "note": "model-sourced by twoPassSolve: `spinnerKillLockOpens` computed the removal at 350 and `activators.opensOnTick(0.01)` is 101, which a declared v9 row spells 100",
+            "at": 450
         }
     ],
     "despawn": [],
@@ -146,7 +146,7 @@
     },
     "tick0": null,
     "hold": false,
-    "tick_count": 512,
+    "tick_count": 510,
     "inputs": [
         {
             "key": "down",
@@ -425,47 +425,52 @@
         },
         {
             "key": "left",
-            "from": 453,
-            "to": 467
+            "from": 451,
+            "to": 465
         },
         {
             "key": "primary",
-            "from": 467,
-            "to": 468
+            "from": 465,
+            "to": 466
         },
         {
             "key": "right",
+            "from": 465,
+            "to": 466
+        },
+        {
+            "key": "primary",
             "from": 467,
             "to": 468
         },
         {
-            "key": "primary",
-            "from": 469,
-            "to": 470
-        },
-        {
             "key": "down",
-            "from": 470,
-            "to": 482
+            "from": 468,
+            "to": 480
         },
         {
             "key": "primary",
-            "from": 475,
-            "to": 476
+            "from": 473,
+            "to": 474
         },
         {
             "key": "primary",
-            "from": 481,
-            "to": 482
+            "from": 479,
+            "to": 480
         },
         {
             "key": "up",
-            "from": 482,
-            "to": 484
+            "from": 480,
+            "to": 482
         },
         {
             "key": "down",
-            "from": 484,
+            "from": 482,
+            "to": 485
+        },
+        {
+            "key": "primary",
+            "from": 486,
             "to": 487
         },
         {
@@ -474,37 +479,32 @@
             "to": 489
         },
         {
-            "key": "primary",
-            "from": 490,
-            "to": 491
-        },
-        {
             "key": "right",
-            "from": 491,
-            "to": 503
+            "from": 489,
+            "to": 501
         },
         {
             "key": "primary",
-            "from": 496,
-            "to": 497
+            "from": 494,
+            "to": 495
         },
         {
             "key": "primary",
-            "from": 502,
-            "to": 503
+            "from": 500,
+            "to": 501
         },
         {
             "key": "left",
-            "from": 503,
-            "to": 504
+            "from": 501,
+            "to": 502
         },
         {
             "key": "right",
-            "from": 504,
-            "to": 512
+            "from": 502,
+            "to": 510
         }
     ],
     "name": "f1c-l18-phase42",
-    "description": "⛓⛓⛓ SEEDLING FIDELITY F1c D1 — THE HAMMER-PHASE RUNG's SOLVE ON THE GAME. `r9-solve-18`'s committed staging with `seam.time` 10052 → 10032 (hammer residue 17 → 42, the campaign chain's after F1b; nothing else moved), solved by `twoPassSolve` as `solve-seedling-r9-campaign` calls it. Without the rung this staging refuses HAMMER_SAFETY (\"There is no step out.\" at (140.47,52.24)); with it the press kill holds 8 tick(s) from t238 and solves in 512 ticks with no hit, {18,0}@452 model-sourced. Authored by scripts/procgen/plan-seedling-f1c-l18-phase.mjs.",
+    "description": "⛓⛓⛓ SEEDLING FIDELITY F1c D1 — THE HAMMER-PHASE RUNG's SOLVE ON THE GAME. `r9-solve-18`'s committed staging with `seam.time` 10052 → 10032 (hammer residue 17 → 42, the campaign chain's after F1b; nothing else moved), solved by `twoPassSolve` as `solve-seedling-r9-campaign` calls it. Without the rung this staging refuses HAMMER_SAFETY (\"There is no step out.\" at (140.47,52.24)); with it the press kill holds 8 tick(s) from t238 and solves in 510 ticks with no hit, {18,0}@450 model-sourced. Authored by scripts/procgen/plan-seedling-f1c-l18-phase.mjs.",
     "note": ""
 }
