@@ -720,7 +720,7 @@ export function isExactRepeat(prev, d) {
  * of the walk. While the worker thinks, the game is held by the freeze tape
  * (W2) — a longer solve costs wall clock only, never correctness — so the
  * expired goal is asked again ONCE, from the same staging, with the budget ×
- * `SOLVE_RETRY_BUDGET_FACTOR`. Why 4 (the L16 budget report §1.2/§4 (d),
+ * `SOLVE_RETRY_BUDGET_FACTOR`. Why 4 (slice `seedling-js-l16-budget`,
  * measured on the captured live arrival): the full L16 search finishes in
  * 10.6–17.8 s at load 3–7 and its dashless pass in 4.6–5.9 s, so 4 × 5 s =
  * 20 s holds the full search at the measured loads and the dashless pass with
@@ -753,7 +753,7 @@ export function expiryAction({ provisional = null, retries = 0 }) {
 /**
  * ⛓ O2 — the named failure of a solve that ran out of every budget. A pass
  * that DECLINED before the expiry is the solver's word and leads (the door-only
- * L14 decline races the budget, report §1.3): its reason, then the budgets spent.
+ * L14 decline races the budget): its reason, then the budgets spent.
  */
 export function expiryFailure({ goal, budgets = [], refusal = null }) {
     const spent = budgets.map((ms) => `${Math.round(ms / 100) / 10} s`).join(', then ');

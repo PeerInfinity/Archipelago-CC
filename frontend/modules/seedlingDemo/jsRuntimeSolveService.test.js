@@ -341,7 +341,7 @@ describe('the decline-retry policy, unit (a scripted solver)', () => {
 
 describe('⛓ ANYTIME — the worker posts each pass; the page plays the provisional plan at the budget', () => {
     const KIT_SRC = indexLevels(MAP);
-    /** L11's chest from (32,16) with the kit (the L16 budget report's census leg): dashless 180 t, full 160 t. */
+    /** L11's chest from (32,16) with the kit (slice `seedling-js-l16-budget`'s census leg): dashless 180 t, full 160 t. */
     function l11ChestKit() {
         const rt = createJsRuntime();
         rt.setVanilla(MAP);

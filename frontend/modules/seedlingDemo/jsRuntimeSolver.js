@@ -119,7 +119,7 @@ export class PassSkipped extends Error {
  * availability on the shadow at the solve's start: a reason it is unusable,
  * or null. Unusable → the pass would search exactly what the pass before it
  * searched, so it is skipped (a door-only L14 decline would otherwise be
- * paid twice, 4.9–8.2 s each — the L16 budget report §1.3).
+ * paid twice, 4.9–8.2 s each, measured by slice `seedling-js-l16-budget`).
  * `sword-dash`: `planSwordDash` and `strikePolicyFor` act only with a sword
  * in hand (`solverBot.js`: `hasSword || hasGhostSword`), so without one
  * `dashMode` changes nothing.
@@ -141,7 +141,7 @@ export const PASS_STRATEGIES = Object.freeze({
  * and keeps everything the passes before it had; its plan replaces the one in
  * hand only when it is BETTER (`betterAnswer`). Only what `solveSegment`
  * already exposes is a pass: today that is `dashMode` (R9 12i). Measured
- * (`seedling-js-l16-budget-report.md` §3): dash planning is 62–99 % of the
+ * (slice `seedling-js-l16-budget`, captured live arrivals): dash planning is 62–99 % of the
  * slow solves (L16, B L14, L71 kit) and in the plan on 9 of 24 legs, each
  * saving 8–95 ticks; dashless, 23 of 24 captured legs solve in ≤ 1.4 s.
  * `full` is `DEFAULT_DASH_MODE` — the one search every solve made before.

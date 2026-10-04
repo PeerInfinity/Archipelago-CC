@@ -2,10 +2,10 @@
  * jsRuntimeSolver ⛓ ANYTIME — the solver's passes, cheapest first (the user,
  * 2026-10-04: search without sword dashes first, keep that plan, and fall back
  * on it when the dash search runs out of time), and the wasm engine's expiry
- * policy (O2: a held retry, then a named failure). Plan: §5.20 of
- * `seedling-js-solver-walk-plan.md`; measurement: `seedling-js-l16-budget-report.md`.
+ * policy (O2: a held retry, then a named failure). Design: `docs/json/developer/procgen/flash.md`
+ * (the solver mode's anytime passes; Wasm playback step 3); measurement: slice `seedling-js-l16-budget`.
  *
- * The real witness is a census leg the report measured (§3): L11's chest from
+ * The real witness is a census leg slice `seedling-js-l16-budget` measured: L11's chest from
  * (32,16) with the full kit — dashless 180 ticks in ~0.1 s, full 160 ticks
  * (one sword dash saving 21) in ~1.5 s — so the full plan REPLACES the
  * dashless one. L71's chest BARE (no sword, 552 ticks either way): the full
