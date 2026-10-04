@@ -7347,7 +7347,7 @@ export function buildRulesJson(grid, opts = {}) {
             });
         } catch (e) {
             // ⚖ (the user, 2026-10-01) A world whose rules an inventory
-            // cannot decide (a game helper, CanReachRegion, …) carries NO
+            // cannot decide (a game helper, CanReachLocation, …) carries NO
             // log rather than a guessed one: its absence reads as "no sphere
             // log" to the app and fails the spoiler test by name. The reason
             // is `sphereLogRefusal(rulesJson)`, which callers report.

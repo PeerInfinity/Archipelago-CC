@@ -886,8 +886,10 @@ describe('the opt-in sphere log (embedSphereLog)', () => {
 
     it('REFUSES by name, never a guessed log, when an inventory cannot decide a rule', () => {
         const atlas = clone(STARTER);
+        // CanReachLocation: CanReachRegion is DECIDED (from the reached set,
+        // AP's semantics, ⚖ 2026-10-04), so it can no longer drive a refusal.
         for (const loc of atlasRegion(atlas, 'starting_house').locations) {
-            loc.access_rule = { rule: 'CanReachRegion', args: { region_name: MENU_REGION } };
+            loc.access_rule = { rule: 'CanReachLocation', args: { location_name: loc.name } };
         }
         // allowInvalid: the validator has its own view of this rule; the row is
         // about the walk's refusal, so get past the validator to reach it.
