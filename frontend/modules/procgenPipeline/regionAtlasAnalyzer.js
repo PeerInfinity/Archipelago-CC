@@ -32,6 +32,16 @@
 //   cell.enter[dir]  gate on ENTERING the cell moving that way (read from the
 //                    entered cell only, so leaving is free); null blocks —
 //                    a lock that opens only from one side (swim T4)
+//   cell.latch       the cell's `enter` gates refuse only while it is CLOSED:
+//                    once entered through an open direction it stays open (a
+//                    persistence tag), so a blocked entry is priced as the
+//                    synthetic condition "this cell was opened" rather than
+//                    refused (RULES (A)). That condition resolves, per region,
+//                    to Or over the components that can open it of
+//                    And(CanReachRegion(<that component>), <what opening
+//                    costs>). It never makes a new place reachable: you only
+//                    hold it once the near side is already reached. Ignored on
+//                    a sink (falling in is not re-entering).
 //   cell.manual[]    why a blocker has no derivable rule
 //
 // plus two helpers the caller supplies, because condition VALUES are the game's:
@@ -51,6 +61,7 @@ import {
     derivedRulesSource,
     internalExitSource,
     DEFAULT_EXIT_SOURCE,
+    apRegionName,
 } from './regionAtlasValidator.js';
 
 const DIRS = Object.freeze({ N: [0, -1], E: [1, 0], S: [0, 1], W: [-1, 0] });
@@ -144,7 +155,7 @@ export function findComponents(grid) {
  * be the one that declares it. The direction gate is read from both cells too,
  * because a two-tile-tall waterfall gates the climb at every tile of it.
  */
-function stepCost(grid, ui, vi, dir) {
+function stepCost(grid, ui, vi, dir, { latch = false } = {}) {
     const u = grid.cells[ui];
     const v = grid.cells[vi];
     if (u.kind === 'wall' || v.kind === 'wall') return null;
@@ -156,7 +167,7 @@ function stepCost(grid, ui, vi, dir) {
     const gates = [
         u.faces?.[dir], v.faces?.[OPPOSITE[dir]],
         u.dirs?.[dir], v.dirs?.[dir],
-        v.enter?.[dir],
+        latch && v.latch && v.kind !== 'sink' && v.enter?.[dir] === null ? latchCondition(grid, vi) : v.enter?.[dir],
     ];
     for (const gate of gates) {
         if (gate === null) return null;
@@ -172,6 +183,19 @@ function stepCost(grid, ui, vi, dir) {
 }
 
 const isSubset = (a, b) => (a & b) === a;
+
+/**
+ * RULES (A) — the synthetic condition "the latched cell at this ATLAS tile was
+ * opened". The analyzer mints and resolves it itself (it is about the region's
+ * own geometry, not the game's items), so the caller's helpers never see it.
+ */
+const latchCondition = (grid, ci) => {
+    const x = ci % grid.width;
+    const y = (ci - x) / grid.width;
+    return { latchOpened: [x + (grid.origin?.x ?? 0), y + (grid.origin?.y ?? 0)] };
+};
+const isLatchCondition = (c) => Array.isArray(c?.latchOpened);
+const latchKey = (c) => `latch:${c.latchOpened[0]},${c.latchOpened[1]}`;
 
 /**
  * Keep only the ways across that nothing cheaper subsumes: a condition set that
@@ -212,7 +236,7 @@ export function findCrossings(grid, componentsResult, options = {}) {
     const bitOf = new Map();
     const conditionOf = [];
     const bitFor = (condition) => {
-        const k = conditionKey(condition);
+        const k = isLatchCondition(condition) ? latchKey(condition) : conditionKey(condition);
         if (!bitOf.has(k)) {
             bitOf.set(k, bitOf.size);
             conditionOf.push(condition);
@@ -223,6 +247,20 @@ export function findCrossings(grid, componentsResult, options = {}) {
     const sinks = [];
     const results = new Map(); // "from>to" -> { from, to, ways: [] }
     const overflow = [];
+    // RULES (A) — who can OPEN each latched cell: a step INTO it through a
+    // direction its `enter` gates allow, from a component, with the mask paid
+    // so far. "latch:x,y" -> [{ from, mask }]. A way that itself needed some
+    // other latch open is not kept (no chains: fewer ways is the safe side).
+    const openers = new Map();
+    const noteOpener = (vi, dir, from, mask) => {
+        const v = cells[vi];
+        if (!v.latch || v.kind === 'sink' || v.enter?.[dir] === null) return;
+        if (conditionOf.some((c, bit) => ((mask >> bit) & 1) && isLatchCondition(c))) return;
+        const k = latchKey(latchCondition(grid, vi));
+        if (!openers.has(k)) openers.set(k, []);
+        openers.get(k).push({ from, mask });
+    };
+    const latchStep = { latch: true };
 
     for (const source of components) {
         // best[cell] = list of masks reached; `manual` paths are tracked
@@ -265,7 +303,7 @@ export function findCrossings(grid, componentsResult, options = {}) {
                 if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
                 const vi = ny * width + nx;
                 if (indexOf[vi] === source.index) continue;
-                const cost = stepCost(grid, ui, vi, dir);
+                const cost = stepCost(grid, ui, vi, dir, latchStep);
                 if (!cost) continue;
                 let mask = 0;
                 let overflowed = false;
@@ -278,6 +316,7 @@ export function findCrossings(grid, componentsResult, options = {}) {
                     overflow.push([nx + ox, ny + oy]);
                     continue;
                 }
+                if (!cost.manual) noteOpener(vi, dir, source.id, mask);
                 const state = {
                     cellIndex: vi, mask, manual: cost.manual, reasons: cost.manualReasons, tiles: [[nx, ny]],
                 };
@@ -301,7 +340,7 @@ export function findCrossings(grid, componentsResult, options = {}) {
                 if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
                 const vi = ny * width + nx;
                 if (indexOf[vi] === source.index) continue; // back where we started
-                const cost = stepCost(grid, state.cellIndex, vi, dir);
+                const cost = stepCost(grid, state.cellIndex, vi, dir, latchStep);
                 if (!cost) continue;
                 let mask = state.mask;
                 let overflowed = false;
@@ -311,6 +350,7 @@ export function findCrossings(grid, componentsResult, options = {}) {
                     mask |= 1 << bit;
                 }
                 if (overflowed) { overflow.push([nx + ox, ny + oy]); continue; }
+                if (!state.manual && !cost.manual) noteOpener(vi, dir, source.id, mask);
                 const next = {
                     cellIndex: vi,
                     mask,
@@ -331,6 +371,15 @@ export function findCrossings(grid, componentsResult, options = {}) {
     // Reduce each pair to its Pareto-minimal ways. A manual way and a labelled
     // way between the same pair both survive: the labelled one is the rule, the
     // manual one is a second crossing someone still has to look at.
+    // A way through a latch NOBODY can open is no way at all: drop it before
+    // the reduction, so it never surfaces as a crossing (or a hand-authoring
+    // row). That is also why latches are inert where they are absent.
+    const openable = (mask) => conditionOf.every((c, bit) => (
+        !((mask >> bit) & 1) || !isLatchCondition(c) || openers.has(latchKey(c))
+    ));
+    for (const entry of results.values()) entry.ways = entry.ways.filter((w) => openable(w.mask));
+    for (const [k, entry] of [...results.entries()]) if (entry.ways.length === 0) results.delete(k);
+
     const crossings = [];
     for (const entry of [...results.values()].sort((a, b) => a.from.localeCompare(b.from) || a.to.localeCompare(b.to))) {
         const labelled = paretoMinimal(entry.ways.filter((w) => !w.manual));
@@ -352,8 +401,21 @@ export function findCrossings(grid, componentsResult, options = {}) {
         });
     }
 
+    const latches = new Map([...openers.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([k, list]) => {
+        const byFrom = new Map();
+        for (const o of list) {
+            if (!byFrom.has(o.from)) byFrom.set(o.from, []);
+            byFrom.get(o.from).push(o);
+        }
+        return [k, [...byFrom.keys()].sort().map((from) => ({
+            from,
+            conditionSets: paretoMinimal(byFrom.get(from)).map((w) => conditionOf.filter((_, bit) => (w.mask >> bit) & 1)),
+        }))];
+    }));
+
     return {
         crossings,
+        latches,
         sinks: dedupeSinks(sinks),
         conditionVocabulary: conditionOf,
         overflow: [...new Set(overflow.map(String))].map((s) => s.split(',').map(Number)),
@@ -802,6 +864,33 @@ export function componentForTile(grid, componentsResult, tile, options = {}) {
 }
 
 /**
+ * RULES (A) — resolve "the latched cell was opened" for one region: Or over
+ * every component that can open it of And(CanReachRegion(<that component's AP
+ * region>), <what opening costs from there>). Holding it implies the opener's
+ * side is already reachable, so a crossing priced with it adds a way BACK and
+ * never a new place. Every other condition goes to the caller's resolver.
+ */
+function latchResolver(regionId, latches, resolveCondition) {
+    if (typeof resolveCondition !== 'function') return resolveCondition;
+    return (condition, ...rest) => {
+        if (!isLatchCondition(condition)) return resolveCondition(condition, ...rest);
+        const ways = [];
+        for (const { from, conditionSets } of latches?.get(latchKey(condition)) ?? []) {
+            for (const set of conditionSets) {
+                const parts = set.map((c) => resolveCondition(c, ...rest));
+                if (parts.some((p) => !p)) continue;
+                ways.push(simplifyRule({
+                    rule: 'And',
+                    children: [{ rule: 'CanReachRegion', args: { region_name: apRegionName(regionId, from) } }, ...parts],
+                }));
+            }
+        }
+        if (ways.length === 0) return null;
+        return simplifyRule(ways.length === 1 ? ways[0] : { rule: 'Or', children: ways });
+    };
+}
+
+/**
  * Analyze one atlas region against its grid.
  *
  * Pure: it computes a PROPOSAL and touches nothing. `applyRegionAnalysis`
@@ -819,8 +908,11 @@ export function analyzeRegion(region, grid, options = {}) {
         crossingsResult = findCrossings(grid, componentsResult, options);
     }
     const { components } = componentsResult;
-    const { crossings, sinks, overflow } = crossingsResult;
-    const { rows, needsAuthoring, unresolvedConditions } = buildInternalExits(crossings, options);
+    const { crossings, sinks, overflow, latches } = crossingsResult;
+    const { rows, needsAuthoring, unresolvedConditions } = buildInternalExits(crossings, {
+        ...options,
+        resolveCondition: latchResolver(region.region_id, latches, options.resolveCondition),
+    });
 
     const bindings = [];
     for (const exit of region.exits ?? []) {

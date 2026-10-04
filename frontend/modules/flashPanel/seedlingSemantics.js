@@ -332,7 +332,14 @@ export const ENTITY_SEMANTICS = Object.freeze({
     // one-pixel row BELOW the lock (BossLock.as:62), so it opens from the south
     // only. Read ONLY under `buildSeedlingRegionGrid`'s `directionalLocks`
     // option (default off), which turns it into `enter` gates.
-    bosslock: { kind: 'gated', class: 'BossLock', conditionFromAttr: 'keyType', condition: null, probe: 'S' },
+    // ⛓ RULES (A) — `persistAttr: 'tag'`: once opened, a lock whose `tag` is
+    // >= 0 STAYS open, on every later visit too (BossLock.as:43 removes it when
+    // `!Game.checkPersistence(tag)`; :81 writes that when it fades). So its
+    // `enter` gates refuse only while it is CLOSED: the cell is `latch`ed, and
+    // the analyzer lets the far side back through once the near side opened it.
+    bosslock: {
+        kind: 'gated', class: 'BossLock', conditionFromAttr: 'keyType', condition: null, probe: 'S', persistAttr: 'tag',
+    },
 
     // PushableBlockFire / PushableBlockSpear (Puzzlements/*.as:30 type "Solid";
     // pushed by Player.genericHit's Fire and Spear branches, Player.as:1092-1098).
@@ -532,7 +539,12 @@ export function entitySemantics(entity) {
         if (!Number.isInteger(index)) {
             return { ...base, kind: 'manual', reason: `${base.class}: ${base.conditionFromAttr}="${raw}" is not an integer key index` };
         }
-        return { ...base, condition: key(index) };
+        const resolved = { ...base, condition: key(index) };
+        if (base.persistAttr) {
+            const tag = Number(entity.attrs?.[base.persistAttr]);
+            resolved.persists = Number.isInteger(tag) && tag >= 0;
+        }
+        return resolved;
     }
     return base;
 }
@@ -936,7 +948,10 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     const RANK = { open: 0, gated: 1, directional: 1, sink: 2, manual: 3, wall: 4 };
     // ⛓ SWIM T4 — a one-sided lock (`probe`) is entered only by stepping in FROM
     // its probe side; every other entry is walled. Leaving is free, because once
-    // it is open it stays open (the persistence tag).
+    // it is open it stays open (the persistence tag). ⛓ RULES (A): and so is
+    // ENTERING it from the far side, once it is open — a lock that `persists`
+    // marks its cell `latch`, and the analyzer prices that re-entry as "the
+    // lock was opened" instead of refusing it.
     const { directionalLocks = false } = options;
     const STEP_FROM = { S: 'N', N: 'S', E: 'W', W: 'E' };
     const cells = new Array(width * height);
@@ -960,7 +975,10 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             for (const key of ['faces', 'dirs', 'enter']) {
                 const gates = key === 'enter' ? enterOf : semantics[key];
                 if (!gates) continue;
-                if (key === 'enter') cell.enter ??= {};
+                if (key === 'enter') {
+                    cell.enter ??= {};
+                    if (semantics.persists) cell.latch = true;
+                }
                 for (const [dir, cond] of Object.entries(gates)) {
                     if (cell[key][dir] === null) continue;
                     if (cond === null) cell[key][dir] = null;

@@ -285,6 +285,26 @@ describe('grid construction over real levels', () => {
         expect(on.cells.filter((c) => c.enter)).toHaveLength(2); // L30's two locks
     });
 
+    // ⛓ RULES (A) — a bosslock whose `tag` is >= 0 stays open once opened
+    // (BossLock.as:43,81), so its cell is `latch`ed — and only under `directionalLocks`.
+    it('a persistent bosslock latches its `enter` gates under `directionalLocks`, and a tag < 0 one does not', () => {
+        const level = levelById(30);
+        const bounds = { x: 0, y: 0, w: level.width, h: level.height };
+        const lockCell = (g) => g.cells[2 * g.width + 4]; // bosslock@64,32 {tag 0}
+        expect(lockCell(buildSeedlingRegionGrid(bounds, level)).latch).toBeUndefined();
+        expect(lockCell(buildSeedlingRegionGrid(bounds, level, { directionalLocks: true })).latch).toBe(true);
+        const lock = level.entities.find((e) => e.type === 'bosslock' && e.x === 64 && e.y === 32);
+        expect(entitySemantics(lock).persists).toBe(true);
+        expect(entitySemantics({ ...lock, attrs: { ...lock.attrs, tag: '-1' } }).persists).toBe(false);
+        const unpersisted = {
+            ...level,
+            entities: level.entities.map((e) => (e === lock ? { ...e, attrs: { ...e.attrs, tag: '-1' } } : e)),
+        };
+        const off = lockCell(buildSeedlingRegionGrid(bounds, unpersisted, { directionalLocks: true }));
+        expect(off.enter).toEqual({ E: null, S: null, W: null });
+        expect(off.latch).toBeUndefined();
+    });
+
     it('builds a fully classified grid for the starting house', () => {
         const level = levelById(86);
         const grid = buildSeedlingRegionGrid({ x: 0, y: 0, w: level.width, h: level.height }, level);

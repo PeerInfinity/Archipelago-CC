@@ -12,15 +12,20 @@
  * `check()` removes it on every later entry). Every one of the 14 placements
  * carries a tag >= 0.
  *
- * Consequence for reachability: the crossing is exactly one-way.
+ * Consequence for reachability: ENTRY is one-way.
  * - SOUTH -> NORTH holds under the key.
- * - NORTH -> SOUTH is never needed: if the south side is reachable at all, the
- *   player can open the lock from there, and the south side is already
- *   reached.
+ * - NORTH -> SOUTH holds only once the lock is OPEN, i.e. once the south side
+ *   was reached and paid the key. ⛓ RULES (A): T4 called this direction "never
+ *   needed" because the south side is then already reached — true for AP's
+ *   fill, false for a directed graph's RETURN: L68's Health room, L40's north
+ *   half and L48's north pocket had no way back, and 28 regions stranded.
  *
  * A rule that crosses NORTH -> SOUTH on the key alone is therefore too
  * PERMISSIVE. It is the class `REFUTATION_LOG` entry 2 records: a wall the
- * analyzer could not see, so AP walked through it.
+ * analyzer could not see, so AP walked through it. A rule that crosses it on
+ * the key AND `CanReachRegion(<the south side>)` is the RETURN through the
+ * opened lock, and is not two-way: it never reaches a place the key alone did
+ * not already reach from the south.
  *
  * ── WHAT THE ATLAS SAYS ───────────────────────────────────────────────
  *
@@ -43,6 +48,20 @@ const itemNames = (rule) => (!rule ? [] : [
     ...(rule.args?.item_names ?? []),
     ...(rule.children ?? []).flatMap(itemNames),
 ]);
+
+/**
+ * True when `rule` pays one of `keys` on some branch that is NOT guarded by
+ * `CanReachRegion(probeRegion)` — the key spent from the far side without the
+ * lock having been opened from the probe side. A branch ANDed with that reach
+ * is the RETURN through the opened lock (RULES (A)).
+ */
+const paysKeyUnopened = (rule, keys, probeRegion) => {
+    if (!rule) return false;
+    if (rule.rule === 'And' && (rule.children ?? []).some((c) => c.rule === 'CanReachRegion'
+        && c.args?.region_name === probeRegion)) return false;
+    if (keys.some((k) => itemNames({ args: rule.args }).includes(k))) return true;
+    return (rule.children ?? []).some((c) => paysKeyUnopened(c, keys, probeRegion));
+};
 
 /** The class-level probe side of each one-sided lock class, read off the AS3. */
 export const LOCK_PROBE_SIDES = Object.freeze({
@@ -110,7 +129,13 @@ export function censusLocks({ levels, atlas, gridFor, findComponents, tags = ['b
             // forward rule names. A reverse that pays something else (L12's water) is another way.
             const keys = itemNames(edge?.access_rule).filter((n) => LOCK_ITEM[e.type].test(n));
             const reverse = between.filter((x) => x.bidirectional || (farComps.includes(x.from) && x.to === probeComp));
-            const twoWay = !!edge && reverse.some((x) => keys.some((k) => itemNames(x.access_rule).includes(k)));
+            const probeRegion = `${region?.region_id}__${probeComp}`;
+            const twoWay = !!edge && reverse.some((x) => paysKeyUnopened(x.access_rule, keys, probeRegion));
+            // ⛓ RULES (A) — the far side's way back once the lock is open.
+            const returnRows = reverse.filter((x) => !x.bidirectional
+                && keys.some((k) => itemNames(x.access_rule).includes(k))
+                && !paysKeyUnopened(x.access_rule, keys, probeRegion))
+                .map((x) => `${x.from}->${x.to}`);
             // Does the far side have a way in that is not this crossing? (A boundary `in_*` exit
             // bound to it, or another internal exit into it — one hop, not a reachability proof.)
             const farEntrances = (region?.exits ?? []).filter((x) => farComps.includes(x.sub_region) && /^in_/.test(x.exit_id))
@@ -144,6 +169,7 @@ export function censusLocks({ levels, atlas, gridFor, findComponents, tags = ['b
                 farDirs,
                 rule: edge ? { from: edge.from, to: edge.to, bidirectional: !!edge.bidirectional, access_rule: edge.access_rule ?? null } : null,
                 ruleDirections: edge ? (twoWay ? 'both' : `${probeComp}->${farComps.join('|')}`) : null,
+                returnRows,
                 farEntrances,
                 farOther,
                 verdict,

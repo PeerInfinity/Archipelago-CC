@@ -52,6 +52,7 @@ const OPTIONS = {
  *   'v' one-way south (free down, blocked up)   'o' pit sink
  *   '?' manual blocker   'c' cave: north FACE walled, sides free
  *   'k' one-sided lock: gated on `a`, ENTERED only moving north (from below)
+ *   'K' the same lock, LATCHED: once opened it stays open (RULES (A))
  */
 function gridOf(rows, origin = { x: 0, y: 0 }) {
     const width = rows[0].length;
@@ -68,6 +69,9 @@ function gridOf(rows, origin = { x: 0, y: 0 }) {
             else if (ch === '?') { cell.kind = 'manual'; cell.manual = ['a puzzle']; }
             else if (ch === 'c') { cell.kind = 'directional'; cell.faces = { N: null }; }
             else if (ch === 'k') { cell.kind = 'gated'; cell.conditions = ['a']; cell.enter = { S: null, E: null, W: null }; }
+            else if (ch === 'K') {
+                cell.kind = 'gated'; cell.conditions = ['a']; cell.enter = { S: null, E: null, W: null }; cell.latch = true;
+            }
             cells.push(cell);
         }
     }
@@ -124,6 +128,50 @@ describe('crossings', () => {
         const side = analyzeRegion({ region_id: 'r', exits: [], locations: [] }, gridOf(['#.#', '#k.', '#.#']), OPTIONS);
         expect(rowsOf(side).map((x) => `${x.from}${x.bidirectional ? '<->' : '->'}${x.to}`).sort())
             .toEqual(['r2c1->r0c1', 'r2c1->r1c2']);
+    });
+
+    // ⛓ RULES (A) — a LATCHED one-sided lock: the far side gets back through it once
+    // it is OPEN, and "open" is "the near side was reached and paid the key". That
+    // is CanReachRegion(near) — which never makes a new place reachable — so an
+    // unopened lock still refuses the far side exactly as before.
+    it('`latch`: the far side returns through an OPENED one-sided lock, and an unopened one still refuses', () => {
+        const analysis = analyzeRegion({ region_id: 'L', exits: [], locations: [] }, gridOf(['.', 'K', '.']), OPTIONS);
+        expect(idsOf(analysis)).toEqual(['r0c0', 'r2c0']);
+        expect(rowsOf(analysis)).toEqual([
+            {
+                from: 'r0c0',
+                to: 'r2c0',
+                bidirectional: false,
+                source: 'analyzer',
+                access_rule: {
+                    rule: 'And',
+                    children: [
+                        { rule: 'CanReachRegion', args: { region_name: 'L__r2c0' } },
+                        { rule: 'Has', args: { item_name: 'a' } },
+                    ],
+                },
+            },
+            {
+                from: 'r2c0',
+                to: 'r0c0',
+                bidirectional: false,
+                source: 'analyzer',
+                access_rule: { rule: 'Has', args: { item_name: 'a' } },
+            },
+        ]);
+        // The ENTRY is unchanged: from above, the lock is still never opened — the
+        // only way IN to the near side through it is the "was opened" one.
+        const toNear = rowsOf(analysis).find((r) => r.to === 'r2c0');
+        expect(JSON.stringify(toNear.access_rule)).toContain('CanReachRegion');
+        // Not latched: exactly T4's one row, nothing back.
+        const unlatched = analyzeRegion({ region_id: 'L', exits: [], locations: [] }, gridOf(['.', 'k', '.']), OPTIONS);
+        expect(rowsOf(unlatched).map((r) => `${r.from}->${r.to}`)).toEqual(['r2c0->r0c0']);
+    });
+
+    it('`latch`: a lock NOBODY can open (its open side walled) stays a wall both ways — no row, no hand-authoring row', () => {
+        const analysis = analyzeRegion({ region_id: 'L', exits: [], locations: [] }, gridOf(['.', 'K', '#']), OPTIONS);
+        expect(rowsOf(analysis)).toEqual([]);
+        expect(analysis.needs_authoring).toEqual([]);
     });
 
     it('labels a gated strip with its condition, both ways', () => {

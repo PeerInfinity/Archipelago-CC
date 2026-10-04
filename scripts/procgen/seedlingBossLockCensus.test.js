@@ -37,11 +37,34 @@ describe('SWIM T4 D2 — every bosslock against the committed atlas', () => {
         expect(r.farEntrances).toEqual(['in_L22_96_192']);
         expect(r.verdict).toMatch(/^AGREES/);
     });
-    it('L12\'s red locks keep a reverse row, but it pays the WATER, not the key (so it is another way, not the lock)', () => {
+    it('L12\'s red locks keep a reverse row: the WATER, or the key only once the lock is OPEN (another way, and a return)', () => {
         const r = rows.find((x) => x.level === 12 && x.at === '416,240');
         expect(r.verdict).toMatch(/^AGREES/);
+        expect(r.returnRows).toEqual(['r0c37->r0c19']);
         const back = ATLAS.regions.find((g) => g.map_ref === 12).subgraph.internal_exits
             .find((x) => x.from === 'r0c37' && x.to === 'r0c19');
-        expect(back.access_rule).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim' } });
+        expect(back.access_rule).toEqual({
+            rule: 'Or',
+            children: [
+                { rule: 'Has', args: { item_name: 'Progressive Swim' } },
+                {
+                    rule: 'And',
+                    children: [
+                        { rule: 'Has', args: { item_name: 'Red Key' } },
+                        { rule: 'CanReachRegion', args: { region_name: 'level_12__r0c19' } },
+                    ],
+                },
+            ],
+        });
+    });
+    // ⛓ RULES (A) — every separating lock now has its RETURN row, priced on the
+    // probe side having been reached; none is two-way on the key alone.
+    it('every separating lock has a return row gated on reaching its probe side (RULES (A))', () => {
+        const separating = rows.filter((x) => /^AGREES/.test(x.verdict));
+        expect(separating).toHaveLength(11);
+        expect(separating.filter((x) => x.returnRows.length > 0).map((x) => `L${x.level}@${x.at}`)).toEqual([
+            'L12@416,240', 'L12@432,240', 'L12@80,656', 'L12@112,192', 'L19@48,32', 'L30@64,32', 'L30@224,208',
+            'L31@192,432', 'L40@480,352', 'L48@48,144', 'L68@16,32',
+        ]);
     });
 });
