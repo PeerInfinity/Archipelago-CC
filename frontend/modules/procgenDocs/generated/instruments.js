@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 44,
-            "count": 87,
+            "browser": 45,
+            "count": 88,
             "id": "probe"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 333,
-        "browser": 109,
-        "cited": 158,
-        "files": 344,
+        "blockStyle": 334,
+        "browser": 110,
+        "cited": 159,
+        "files": 345,
         "lineStyle": 11,
-        "withDocblock": 344,
-        "withFlags": 262
+        "withDocblock": 345,
+        "withFlags": 263
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10826,6 +10826,63 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling solver-walk §5.17 — LOGICAL SUB-REGION LINKS on the wasm runtime. `seedling_playthrough` loaded by `?rules=`, default build p4f, headless logic-only, under the box lock; every session on a FRESH page.",
             "path": "scripts/procgen/probe-seedling-wasm-logical-links.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "host",
+                "item",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-wasm-midroom-replan.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "item"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling solver-walk — MID-ROOM REPLAN on an item delivery.",
+            "path": "scripts/procgen/probe-seedling-wasm-midroom-replan.mjs"
         },
         {
             "argvHelpers": [
