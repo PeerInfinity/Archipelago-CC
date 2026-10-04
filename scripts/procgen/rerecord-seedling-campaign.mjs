@@ -1029,7 +1029,7 @@ async function predict(ctx) {
  * bytes the game is handed, not of the channel that measured it.
  */
 const WIN = process.argv.includes('--win');
-const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4e';
+const PAGE_NAME = process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f';
 const PAGE_PORT = process.env.SEEDLING_PORT || '8000';
 const PAGE_HOST = `http://localhost:${PAGE_PORT}`;
 const PAGE_URL = `${PAGE_HOST}/frontend/modules/flashPanel/wasm/${PAGE_NAME}/game.html`;

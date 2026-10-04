@@ -149,7 +149,7 @@ if (!ROOT) { console.log('FAIL: --root=<siteRoot> is required'); process.exit(1)
  * another build is `check-seedling-bot-differential.mjs`'s job; it honours
  * `SEEDLING_PAGE` for real, because it opens the game page itself.
  */
-const BUILD = 'seedling_bot_ap_p4e';
+const BUILD = 'seedling_bot_ap_p4f';
 const GAME = `${ROOT}/modules/flashPanel/wasm/${BUILD}/game.html`;
 const WASM = `${ROOT}/modules/flashPanel/wasm/${BUILD}/${BUILD}.wasm`;
 const TAPE = 'frontend/modules/seedlingDemo/fixtures/tapes/pit-fall-chain-85.json';

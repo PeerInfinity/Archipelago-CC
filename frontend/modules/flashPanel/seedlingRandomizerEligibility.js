@@ -133,12 +133,30 @@ export const HOLD_CAPABILITY = 'hold';
 export const TAG_CAPABILITY = 'tag';
 
 /**
+ * ⛓ seedling-wasm-leak L4 item 4a (⚖ D3, 2026-10-03): A HOST FREEZE. A build
+ * declaring `freeze` exposes `botHold("on"|"off")`: the game stops NOW, mid-tape,
+ * moving no state (no world step, no mixer, no render, the tape's tick and held
+ * keys kept), and resumes exactly. For host-side replanning on a mid-room item
+ * delivery. Declared ahead of its first consumer, as `arm` was.
+ */
+export const FREEZE_CAPABILITY = 'freeze';
+
+/**
+ * ⛓ seedling-wasm-leak L4 item 4c (⚖ D3): `botSeam().sinceBegin` —
+ * `{stepped, dead, input_frames, pressed, held_at_begin, rng_first}`, what a
+ * world has done since its `latchBeginEntry`, for adopting a room the host did
+ * not start.
+ */
+export const SINCE_BEGIN_CAPABILITY = 'sincebegin';
+
+/**
  * ⛓ THE DECLARED VOCABULARY. A manifest entry may only name capabilities from
  * this list — otherwise `"apitm"` would silently mean "this build does not
  * have it" and the feature would vanish with no error anywhere.
  */
 export const WASM_BUILD_CAPABILITIES = Object.freeze(
-    [AP_ITEM_CAPABILITY, ARM_CAPABILITY, HOLD_CAPABILITY, TAG_CAPABILITY]);
+    [AP_ITEM_CAPABILITY, ARM_CAPABILITY, HOLD_CAPABILITY, TAG_CAPABILITY,
+        FREEZE_CAPABILITY, SINCE_BEGIN_CAPABILITY]);
 
 /**
  * ⛓ SEEDLING JS J1 — THE JS RUNTIME'S OWN ANSWER (`flashPanel.runtime: 'js'`).
