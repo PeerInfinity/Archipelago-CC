@@ -384,7 +384,7 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record, run: giv
         }
     }
     const placement = goal.kind === 'location' ? locationEntityOf(record, goal.tag, goal.entityType ?? null) : null;
-    return solverGoalFor(goal, { run, resolved, placement, mounted: false });
+    return solverGoalFor(goal, { run, resolved, placement, generated: false });
 }
 
 /**

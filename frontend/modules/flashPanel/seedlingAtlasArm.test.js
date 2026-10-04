@@ -260,10 +260,12 @@ describe('⛓ J3 — the atlas arm on the Seedling JS runtime (transport js, no 
         expect(r.retags).toEqual([]);
     });
 
-    it('a VANILLA-arm world (seedling_playthrough: 41/41 resolve) is refused on js BY NAME', async () => {
+    it('⛓ §5.18: a VANILLA-arm world (seedling_playthrough: 41/41 resolve) LOADS on js — the rewritten set, no manifest', async () => {
         const { r } = await load(rulesOf('seedling_playthrough'), { transport: 'js', manifest: null });
-        expect(r).toMatchObject({ verdict: 'ineligible' });
-        expect(r.why).toMatch(/the vanilla arm delivers the whole rewritten 116-room set/);
+        expect(r).toMatchObject({ verdict: 'eligible' });
+        expect(r.eligibility.arm).toBe(RANDOMIZER_ARMS.VANILLA);
+        expect(r.delivery).not.toBeNull();
+        expect(r.replaced).toBe(r.table.size);
     });
 
     it('⛔ the wasm answers do not move: the same atlas preset with the manifest, transport defaulted', async () => {

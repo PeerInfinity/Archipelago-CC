@@ -131,7 +131,7 @@ describe('S4 — PIT exits: the goal mapping and the page', () => {
         expect(solverGoalFor({ kind: 'exit' }, { run, resolved: { allowTeleporter: null, pit: { tx: 11, ty: 3 } } }))
             .toEqual({ goal: { kind: 'reach-pit', pit: { tx: 11, ty: 3, x: 176, y: 48 } } });
         // A generated set still keeps the walker, pit or no pit.
-        expect(solverGoalFor({ kind: 'exit' }, { run, resolved: { pit: { tx: 1, ty: 1 } }, mounted: true }).walker)
+        expect(solverGoalFor({ kind: 'exit' }, { run, resolved: { pit: { tx: 1, ty: 1 } }, generated: true }).walker)
             .toMatch(/generated level set keeps the J2 walker/);
     });
 

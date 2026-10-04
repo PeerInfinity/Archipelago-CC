@@ -147,15 +147,22 @@ export const WASM_BUILD_CAPABILITIES = Object.freeze(
  * declares its own list HERE, in the same vocabulary, and the wasm path's
  * answers do not move. It plays the GENERATED arm (J1) and, ⛓ since J3, the
  * ATLAS arm — which binds real rooms where they stand and delivers nothing, so
- * the page runs its own vanilla map. ⛔ Not the VANILLA arm: that one delivers
- * the whole rewritten 116-room set, and the JS runtime does not take it. ⛔ No
- * `tag` here: an atlas location that needs a tag ALLOCATED (P4E) is refused by
- * name, as on a wasm build without it.
+ * the page runs its own vanilla map. ⛓ And, since solver-walk §5.18 (⚖ the
+ * user, 2026-10-03: "the JS runtime takes the vanilla delivery, WITH THE
+ * SOLVER"), the VANILLA arm: the whole rewritten 116-room set is delivered to
+ * the page's `botLoadLevels` like a generated one, and the page tells the two
+ * apart by the set's own provenance (`jsRuntimeCore.mountedKindOf`) so the
+ * real rooms keep the solver. ⛔ No `tag` here: an atlas location that needs a
+ * tag ALLOCATED (P4E) is refused by name, as on a wasm build without it.
  */
 export const JS_TRANSPORT = 'js';
 export const JS_RUNTIME_CAPABILITIES = Object.freeze([AP_ITEM_CAPABILITY]);
-/** ⛓ J3 — the diverting checks whose arm the JS runtime plays. */
-export const JS_RUNTIME_ARMS = Object.freeze(['generated', 'atlas']);
+/**
+ * ⛓ J3 — the arms the JS runtime plays, by the arm an eligible verdict names
+ * (`RANDOMIZER_ARMS`: a diverting check's id, or `vanilla` when none diverts).
+ * ⛓ §5.18 — `vanilla` joined.
+ */
+export const JS_RUNTIME_ARMS = Object.freeze(['generated', 'atlas', 'vanilla']);
 
 /** The ids the five checks report themselves by, in the ruled order. */
 export const ELIGIBILITY_CHECK_IDS = Object.freeze(
@@ -428,12 +435,17 @@ export function seedlingRandomizerEligibility(inputs = {}) {
      * question is OPEN — the verdict stays `undecided` so the heavy load can
      * answer it. Only a world that is neither is refused.
      */
-    if (inputs.transport === JS_TRANSPORT && !JS_RUNTIME_ARMS.includes(diverted?.id)
+    /**
+     * ⛓ §5.18 — the vanilla arm is the JS runtime's too, so today no world
+     * reaches this refusal; it stays keyed on `JS_RUNTIME_ARMS` so the list is
+     * the one place that says which arms the page plays.
+     */
+    const arm = diverted ? ARM_OF_DIVERT[diverted.id] : RANDOMIZER_ARMS.VANILLA;
+    if (inputs.transport === JS_TRANSPORT && !JS_RUNTIME_ARMS.includes(arm)
         && checks.find((c) => c.id === 'atlas')?.status !== 'unknown'
         && !checks.some((c) => c.status === 'fail')) {
-        const why = 'the Seedling JS runtime plays GENERATED rooms (slice J1) and real ATLAS rooms (slice J3) — '
-            + 'these rules are neither: the vanilla arm delivers the whole rewritten 116-room set, which the '
-            + 'JS runtime does not take';
+        const why = `the Seedling JS runtime plays the ${JS_RUNTIME_ARMS.join(', ')} arm(s) — these rules `
+            + `are the ${arm} arm's, which it does not take`;
         Object.assign(checks.find((c) => c.id === 'generated'), fail(why));
         return { eligible: false, verdict: 'ineligible', arm: null, failed: 'generated',
             why: `generated: ${why}`, checks };
@@ -463,7 +475,7 @@ export function seedlingRandomizerEligibility(inputs = {}) {
     return {
         eligible: true,
         verdict: 'eligible',
-        arm: diverted ? ARM_OF_DIVERT[diverted.id] : RANDOMIZER_ARMS.VANILLA,
+        arm,
         failed: null,
         why: checks.filter((c) => c.status !== 'skipped').map((c) => `${c.id}: ${c.why}`).join(' · '),
         checks,

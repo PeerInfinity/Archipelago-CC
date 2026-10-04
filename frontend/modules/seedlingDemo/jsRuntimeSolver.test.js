@@ -114,7 +114,7 @@ describe('jsRuntimeSolver — step 1, the goal mapping', () => {
     it('a tile goal, and every goal of a mounted GENERATED set, keep the J2 walker', () => {
         expect(solverGoalFor({ kind: 'tile' }, { run, resolved: {} }).walker).toMatch(/no solver goal kind/);
         for (const kind of ['exit', 'location', 'tile']) {
-            expect(solverGoalFor({ kind }, { run, resolved: { allowTeleporter: 0 }, mounted: true, placement: { x: 0, y: 0 } }).walker)
+            expect(solverGoalFor({ kind }, { run, resolved: { allowTeleporter: 0 }, generated: true, placement: { x: 0, y: 0 } }).walker)
                 .toMatch(/generated level set keeps the J2 walker/);
         }
     });

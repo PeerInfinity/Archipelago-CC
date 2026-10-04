@@ -99,6 +99,14 @@
  *  · Items the PLAYER picks up in a real room (a vanilla sword) are the
  *    run's own: `Main.*` reports the host's flag OR the run's live inventory,
  *    and a re-boot folds what the run GAINED into the flags first.
+ *  · ⛓ solver-walk §5.18 (⚖ the user, 2026-10-03: the JS runtime takes the
+ *    VANILLA delivery, WITH THE SOLVER) — a mounted set is one of TWO kinds
+ *    (`mountedKindOf`, read off the set's own provenance): GENERATED rooms
+ *    (J1: the J2 walker for every goal, teleporter exits only) or REAL rooms
+ *    delivered by the vanilla arm (the 116 rewritten only at their AP
+ *    locations: every S1–S5 arm the vanilla map has — the solver drives, kill
+ *    locks, step-off, pits). Either kind's locations are its APITEMS (the
+ *    solver's `collect-placement` resolves one as strategy `apitem`, F2).
  */
 
 import { createManualSession } from './watchManual.js';
@@ -113,6 +121,7 @@ import { playerBoxAt } from './playerPhysicsV2.js';
 import { BUILD_SPAWN, ITEM_PROPERTIES } from './tapeFormat.js';
 import { createRuntimeWalker, goalTiles, WALK_STATES } from './jsRuntimeWalker.js';
 import { createRuntimeSolver } from './jsRuntimeSolver.js';
+import { VANILLA_RECORD_SET_ID_BASE } from './levelSetExporter.js';
 
 /**
  * The pins every JS-runtime run carries. ⛔ `sound` is not optional: without
@@ -216,6 +225,22 @@ export function locationPointOf(entity) {
 }
 
 /**
+ * ⛓ solver-walk §5.18 — WHAT A MOUNTED SET'S ROOMS ARE. The page receives
+ * only chunks, but chunk 0 carries the set's metadata, and a set the vanilla
+ * arm delivered names the vanilla record set it rewrote
+ * (`apPlacementRewriter.rewriteRecordSet`: `provenance.derived_from.set_id`
+ * = `seedling-vanilla-record-<hash>`). That is the positive evidence of REAL
+ * rooms; anything else keeps today's GENERATED path (a set that says nothing
+ * is not promoted to real rooms on a guess).
+ */
+export const MOUNTED_KINDS = Object.freeze({ GENERATED: 'generated', REAL: 'real' });
+export function mountedKindOf(set) {
+    const from = set?.provenance?.derived_from?.set_id;
+    return typeof from === 'string' && from.startsWith(`${VANILLA_RECORD_SET_ID_BASE}-`)
+        ? MOUNTED_KINDS.REAL : MOUNTED_KINDS.GENERATED;
+}
+
+/**
  * A mounted room's record, the `level` the model addresses it by stamped on.
  * ⛔ `planLevelSetChunks` renders a `record` room to `{xml}` before it
  * crosses, so the page parses the SAME document the wasm game reads.
@@ -265,7 +290,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     let queue = [];
 
     let staged = null;          // { set_id, count, chunks: Map(index -> chunk) }
-    let mounted = null;         // { set, records: Map(level -> record), source, apItems: Map(level -> [...]) }
+    let mounted = null;         // { set, kind, records: Map(level -> record), source, apItems: Map(level -> [...]) }
     let levelSetError = null;
     /** ⛓ J3 — the vanilla map: `{ records: Map(level -> record), source }`, or null. */
     let vanilla = null;
@@ -316,7 +341,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         getLevelSource: () => roomSource()?.source ?? null,
         getRecords: () => roomSource()?.records ?? null,
         placementOf: (goal) => locationEntityOf(roomRecord(goal.level), goal.tag, goal.entityType ?? null),
-        isMounted: () => mounted !== null,
+        // ⛓ §5.18 — only GENERATED rooms keep the walker; a delivered set of REAL rooms is the solver's.
+        isGenerated: () => generatedMounted(),
         onEvent: (e) => note({ type: 'solver', solver: e.type, message: e.message }),
     });
     /** ⛓ S1 — `instant`: play the solver's planned keys in one burst (a page tick each). */
@@ -346,6 +372,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
 
     /** The room source a boot reads: a delivered set first, else the vanilla map. */
     const roomSource = () => mounted ?? vanilla;
+    /** ⛓ §5.18 — a GENERATED set is mounted (a delivered set of real rooms is not). */
+    const generatedMounted = () => mounted?.kind === MOUNTED_KINDS.GENERATED;
     function roomRecord(level) { return roomSource()?.records.get(level) ?? null; }
 
     /**
@@ -718,7 +746,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             apItems.set(room.id, apItemsOf(record));
         }
         bankClears();
-        mounted = { set, records, apItems, source: levelSourceFromAtlas(records) };
+        mounted = { set, kind: mountedKindOf(set), records, apItems, source: levelSourceFromAtlas(records) };
         // A new set is a new save: what the old one cleared means nothing here.
         carried.clear();
         collected.clear();
@@ -728,7 +756,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         halted = null;
         levelSetError = null;
         walker.setGoal(null);
-        note({ type: 'mount', message: `[js runtime] level set ${set.set_id} mounted — ${set.rooms.length} room(s)` });
+        note({ type: 'mount', kind: mounted.kind,
+            message: `[js runtime] level set ${set.set_id} mounted — ${set.rooms.length} ${mounted.kind} room(s)` });
         flush();
     }
 
@@ -799,9 +828,10 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         }
         if (goal.kind === 'exit' && !tiles.some(([tx, ty]) => (record.entities ?? []).some((e) => EXIT_TYPES.includes(e.type)
             && Math.floor(e.x / 16) === tx && Math.floor(e.y / 16) === ty))
-            // ⛓ S4 — a real room's PIT exit (`out_pit_*`): its cell is a pit tile of the room.
-            && !(!mounted && tiles.some(([tx, ty]) => pitTilesOf(goal.level, record).some((p) => p.tx === tx && p.ty === ty)))) {
-            return { ok: false, reason: `level ${goal.level} has no teleporter${mounted ? '' : ' or pit'} on ${tiles.length === 1
+            // ⛓ S4 — a real room's PIT exit (`out_pit_*`): its cell is a pit tile of the room
+            // (⛓ §5.18 — a delivered set's real rooms too; a generated room has none to walk).
+            && !(!generatedMounted() && tiles.some(([tx, ty]) => pitTilesOf(goal.level, record).some((p) => p.tx === tx && p.ty === ty)))) {
+            return { ok: false, reason: `level ${goal.level} has no teleporter${generatedMounted() ? '' : ' or pit'} on ${tiles.length === 1
                 ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
         }
         return { ok: true };
@@ -875,6 +905,8 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
             vanilla: vanilla ? vanilla.records.size : 0,
             active: mounted?.set.set_id ?? null,
             mounted: mounted?.set.set_id ?? null,
+            // ⛓ §5.18 — `generated` | `real` (`mountedKindOf`), null with nothing mounted.
+            kind: mounted?.kind ?? null,
             table_levels: mounted ? mounted.set.rooms.length : 0,
             rooms: mounted ? mounted.set.rooms.length : 0,
             start_level: mounted?.set.start?.level ?? null,

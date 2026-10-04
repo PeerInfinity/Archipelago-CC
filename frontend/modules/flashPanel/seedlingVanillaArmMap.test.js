@@ -210,11 +210,21 @@ describe('the wasm engine stages the DELIVERED rooms (solver flow)', () => {
     });
 });
 
-describe('the JS runtime keeps refusing the vanilla arm (⚖ planner, slice option (a)) — and the bot hears WHY at once', () => {
-    it('the load refuses seedling_playthrough on js by name; the controller refuses by that reason, not a 60 s hold', async () => {
-        const refused = await load(PT, { transport: 'js', manifest: null });
+describe('⛓ §5.18 — the JS runtime TAKES the vanilla arm; a load that binds no map is still heard at once', () => {
+    it('the load on js is the vanilla arm and binds the SAME map as on wasm (the map is arm-, not transport-keyed)', async () => {
+        const js = await load(PT, { transport: 'js', manifest: null });
+        expect(js.verdict, js.why).toBe('eligible');
+        expect(js.eligibility.arm).toBe('vanilla');
+        expect(js.set.set_id).toBe(LOADED.set.set_id);
+        const map = realRoomPlaybackMap(js, PT);
+        expect(map?.arm).toBe('vanilla');
+        expect(JSON.stringify(map)).toBe(JSON.stringify(MAP));
+    });
+
+    it('a load refused by name (here: the flash transport) — the controller refuses by that reason, not a 60 s hold', async () => {
+        const refused = await load(PT, { transport: 'flash', manifest: null });
         expect(refused.eligibility.eligible).toBe(false);
-        expect(refused.why).toMatch(/^generated: the Seedling JS runtime plays GENERATED rooms .* the JS runtime does not take$/);
+        expect(refused.why).toMatch(/^transport: /);
         expect(realRoomPlaybackMap(refused, PT)).toBeNull();
         const page = { walkTo: () => ({ ok: true }) };
         const c = new SeedlingPlaybackController({
