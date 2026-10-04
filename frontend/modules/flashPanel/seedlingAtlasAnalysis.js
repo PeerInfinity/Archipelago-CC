@@ -101,9 +101,18 @@ export function seedlingAnalyzerOptions(gameConfig) {
  *
  * @param {object} atlas    the atlas document
  * @param {string} regionId which region
- * @param {{ mapDoc:object, gameConfig:object }} deps
+ * `deps.modelOracles(level, grid)` (optional) returns the analyzer's two
+ * physics-model oracles for that level (`seedlingDemo/seedlingModelOracles.js`
+ * is the one there is). It is INJECTED rather than imported, so this glue stays
+ * light for the panel; a caller that omits it gets the transcription-only
+ * analysis, byte for byte. A producer that builds with it must be re-analysed
+ * with it too (`region-atlas-analyze.mjs`, the partition generator).
+ *
+ * @param {object} atlas    the atlas document
+ * @param {string} regionId which region
+ * @param {{ mapDoc:object, gameConfig:object, modelOracles?:Function }} deps
  */
-export function analyzeSeedlingRegion(atlas, regionId, { mapDoc, gameConfig }) {
+export function analyzeSeedlingRegion(atlas, regionId, { mapDoc, gameConfig, modelOracles }) {
     const region = (atlas.regions ?? []).find((r) => r.region_id === regionId);
     if (!region) throw new Error(`atlas has no region "${regionId}"`);
     if (region.map_ref === undefined || region.map_ref === null) {
@@ -115,7 +124,8 @@ export function analyzeSeedlingRegion(atlas, regionId, { mapDoc, gameConfig }) {
     }
     const grid = buildSeedlingRegionGrid(region.bounds, level);
     const options = seedlingAnalyzerOptions(gameConfig);
-    const analysis = analyzeRegion(region, grid, options);
+    const analysis = analyzeRegion(region, grid,
+        typeof modelOracles === 'function' ? { ...options, ...modelOracles(level, grid) } : options);
     return { ...analysis, grid, level: region.map_ref, binding_unresolved: options.unresolved };
 }
 

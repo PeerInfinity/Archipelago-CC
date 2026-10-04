@@ -43,6 +43,8 @@ const { compactJsonFile } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/procgenPipeline/compactJson.js')));
 const { analyzeSeedlingRegion, applySeedlingRegionAnalysis } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/flashPanel/seedlingAtlasAnalysis.js')));
+const { seedlingModelOracles, refuseUnboundMembers } = await import(pathToFileURL(
+    path.join(repoRoot, 'frontend/modules/seedlingDemo/seedlingModelOracles.js')));
 
 const MAP = JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
 // The per-game engine binding, which is where the analyzer's engine-flag ->
@@ -97,9 +99,9 @@ const REGIONS = [
         name: 'Overworld — Start',
         level: 0,
         notes: 'The room the game starts in. Its split is analyzer-computed: the water, the '
-            + 'waterfall and the breakable rocks are all real traversal obstacles, and the one '
-            + 'crossing left unlabelled goes through a building, whose per-pixel collision mask is '
-            + 'not transcribed.',
+            + 'waterfall and the breakable rocks are all real traversal obstacles. The one crossing '
+            + 'the transcription cannot read goes through a building (its per-pixel collision mask is '
+            + 'not transcribed); the physics model settles it as sealed, so it is no crossing.',
         exits: [
             { exit_id: 'west_crossing', to: 94, kind: 'edge' },
             { exit_id: 'north_crossing', to: 89, kind: 'edge' },
@@ -165,6 +167,7 @@ const CONNECTIONS = [
  */
 export function buildStarterAtlas() {
     analysisNotes.length = 0;
+    modelVerdicts.length = 0;
     const session = new AtlasSession(createEmptyAtlas({
         game: 'seedling',
         name: 'Seedling — vanilla (starter)',
@@ -217,14 +220,33 @@ export function buildStarterAtlas() {
     //
     // Applied with `stamp: false` so toDocument() stays the single stamping
     // path, exactly as the panel's Accept does.
+    //
+    // ⛓ RULES logical-links: with the PHYSICS MODEL's two oracles, the same ones
+    // the playthrough generator runs with (`seedlingDemo/seedlingModelOracles.js`),
+    // so a crossing through a building's sprite rect is settled by the model
+    // (walkable = a labelled row, sealed = no crossing) instead of shipping as an
+    // open hand-authoring row, and a member no component reaches through the
+    // material is bound by the model's flood or REFUSED BY NAME.
     for (const region of session.regions().map((r) => r.region_id)) {
-        const analysis = analyzeSeedlingRegion(session.atlas, region, { mapDoc: MAP, gameConfig: GAME_CONFIG });
+        const analysis = analyzeSeedlingRegion(session.atlas, region, STARTER_ANALYSIS_DEPS);
         if (analysis.skipped) continue;
         const applied = applySeedlingRegionAnalysis(session.atlas, analysis, { stamp: false });
         for (const p of applied.problems) analysisNotes.push(`${region}: ${p.message}`);
         for (const n of analysis.needs_authoring) {
             analysisNotes.push(`${region}: ${n.from} ${n.bidirectional ? '<->' : '->'} ${n.to} NEEDS A HAND-WRITTEN RULE — ${n.reasons.join('; ')}`);
         }
+        for (const v of analysis.model_verdicts) {
+            const ways = v.ways.map((w) => (w.length === 0 ? 'free' : w.map((c) => JSON.stringify(c)).join(' + ')));
+            modelVerdicts.push(`${region}/${v.from}->${v.to} ${v.walkable ? `WALKABLE [${ways.join(' | ')}]` : 'SEALED'}`);
+            analysisNotes.push(`${region}: ${v.from} -> ${v.to} through ${v.reasons.join('; ')} — the physics model's flood `
+                + (v.walkable
+                    ? `walks it: an analyzer row costing ${ways.join(' OR ')} (${v.sealed} way(s) sealed)`
+                    : 'cannot walk any way of it: NO crossing (was a hand-authoring row)'));
+        }
+        for (const b of analysis.bindings) {
+            if (b.model) analysisNotes.push(`${region}: ${b.kind} "${b.id}" at [${b.tile}] bound to "${b.component.id}" by the physics model — ${b.reason}`);
+        }
+        refuseUnboundMembers(session.region(region), analysis.bindings.filter((b) => !b.component));
     }
     return session.toDocument();
 }
@@ -235,6 +257,16 @@ export function buildStarterAtlas() {
  * regeneration never hides them.
  */
 export const analysisNotes = [];
+
+/** Every manual crossing the physics model settled (walkable or sealed), by buildStarterAtlas. */
+export const modelVerdicts = [];
+
+/**
+ * The analysis deps this producer builds with — the model oracles included — so
+ * a re-analyser (the partition generator, `region-atlas-analyze.mjs`) reproduces
+ * its components exactly.
+ */
+export const STARTER_ANALYSIS_DEPS = { mapDoc: MAP, gameConfig: GAME_CONFIG, modelOracles: seedlingModelOracles };
 
 export const STARTER_ATLAS_PATH = OUT_FILE;
 

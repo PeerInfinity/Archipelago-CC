@@ -120,11 +120,16 @@ atlas, the CLI loads it and resolves every `map_ref` against a real level.
   ```
 
   The analyzer owns only the rows it wrote (`source: "analyzer"`). Hand-authored
-  rows survive with their endpoints remapped, and one crossing here is
-  deliberately left for hand authoring: it goes through a building, whose
-  per-pixel collision mask is not transcribed. **An internal exit with no
-  `access_rule` compiles to a FREE AP exit**, so that list is a logic
-  obligation, not a cosmetic one.
+  rows survive with their endpoints remapped. A crossing through a building,
+  whose per-pixel collision mask is not transcribed, is settled by the PHYSICS
+  MODEL ([`seedlingModelOracles.js`](../../seedlingDemo/seedlingModelOracles.js),
+  the same oracles the playthrough generator runs with): walkable becomes a
+  labelled analyzer row, sealed is no crossing. The start room's one such
+  crossing (`r1c6 <-> r8c0`, through the house) is sealed, so the starter atlas
+  has no hand-authoring row. Both the producer and this CLI analyse with the
+  model; the marking tool's button does not, so there it reopens as a
+  hand-authoring row. **An internal exit with no `access_rule` compiles to a FREE
+  AP exit**, so any such row is a logic obligation, not a cosmetic one.
 
 - `seedling-fixture.json` — the Phase-1 test anchor. Three regions using
   Seedling's real region and item names, but **invented geometry**: it exists to

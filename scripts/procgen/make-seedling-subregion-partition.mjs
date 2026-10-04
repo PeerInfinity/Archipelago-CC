@@ -9,7 +9,7 @@
  * re-runs each atlas's OWN analysis (the same grid, the same options) and writes the tiles down:
  *
  *   seedling-playthrough.json  `make-seedling-playthrough-rules.mjs`'s grid + analyzer options
- *   seedling.json (starter)    `seedlingAtlasAnalysis.analyzeSeedlingRegion` (the starter generator's)
+ *   seedling.json (starter)    `seedlingAtlasAnalysis.analyzeSeedlingRegion` with the starter generator's deps (model oracles included)
  *
  * A tile in no kept sub-region is `.`: a wall, crossing material (water, a bush, a building's sprite
  * rect), or a pocket the generator pruned. The binding treats `.` as "no news", so a seam never flickers.
@@ -121,6 +121,7 @@ export async function buildSubRegionPartition() {
     const { analyzeRegion } = await imp('frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
     const PT = await imp('scripts/procgen/make-seedling-playthrough-rules.mjs');
     const { analyzeSeedlingRegion } = await imp('frontend/modules/flashPanel/seedlingAtlasAnalysis.js');
+    const STARTER = await imp('scripts/procgen/make-seedling-starter-atlas.mjs');
 
     const playthrough = read('seedling-playthrough.json');
     const starter = read('seedling.json');
@@ -139,7 +140,7 @@ export async function buildSubRegionPartition() {
     out.atlases[playthrough.atlas_id] = p.doc;
     stats[playthrough.atlas_id] = p.checked;
     const s = atlasPartition('seedling.json', starter, (region) => {
-        const a = analyzeSeedlingRegion(starter, region.region_id, { mapDoc: MAP, gameConfig: GAME_CONFIG });
+        const a = analyzeSeedlingRegion(starter, region.region_id, { ...STARTER.STARTER_ANALYSIS_DEPS, mapDoc: MAP, gameConfig: GAME_CONFIG });
         const b = region.bounds;
         return { componentsResult: a.componentsResult, origin: [b.x, b.y], width: b.w, height: b.h };
     });

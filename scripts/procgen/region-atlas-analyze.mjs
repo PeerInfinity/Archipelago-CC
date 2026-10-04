@@ -37,6 +37,7 @@ import {
 } from '../../frontend/modules/procgenPipeline/regionAtlasAnalyzer.js';
 import { validateRegionAtlas } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
 import { analyzeSeedlingRegion } from '../../frontend/modules/flashPanel/seedlingAtlasAnalysis.js';
+import { seedlingModelOracles } from '../../frontend/modules/seedlingDemo/seedlingModelOracles.js';
 
 
 import { argvHelp } from './argvHelp.js';
@@ -48,6 +49,10 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // what Phase 7 adds RWK to, and an unknown game is an error rather than a
 // silent no-op that would report "nothing to do" for a whole map.
 const ANALYZERS = { seedling: analyzeSeedlingRegion };
+// The game's PHYSICS MODEL oracles (RULES logical-links), the ones its atlas
+// producers build with — so a re-analysis reproduces a producer's settled
+// crossings rather than re-opening them as hand-authoring rows.
+const MODEL_ORACLES = { seedling: seedlingModelOracles };
 
 const USAGE = 'usage: node scripts/procgen/region-atlas-analyze.mjs <atlas.json> [--check] [--dry-run] [--quiet] [--region <id>]... [--game-config <path>]';
 
@@ -113,7 +118,7 @@ const gameConfig = JSON.parse(readFileSync(configPath, 'utf8'));
 
 // --- run ---------------------------------------------------------------------
 
-const deps = { mapDoc, gameConfig };
+const deps = { mapDoc, gameConfig, modelOracles: MODEL_ORACLES[atlas.game] };
 const targets = (atlas.regions ?? [])
     .map((r) => r.region_id)
     .filter((id) => only.size === 0 || only.has(id));
