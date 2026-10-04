@@ -13,8 +13,10 @@
  *   B  THE PLAYBACK BOT on the rules' DIRECTED graph (§5.16 D's labelled in-page override of the proxy's
  *      auto-detected `assumeBidirectional`; the bidirectional-exits slice fixes that in the rules): the
  *      sphere queue's first goal (the Sword, level 10) through the LOGICAL link
- *      `level_0__r8c0 -> level_0__r1c6`, credited by the binding at once, the next door walked. The Sword
- *      CHECKED; the walk continues to the next named refusal (`ROW B reach`), within `--budget-s`.
+ *      `level_0__r8c0 -> level_0__r1c6`, credited by the binding at once, the next door (`level_0__r1c6 ->
+ *      level_2`) walked. The Sword CHECKED, and the walk continues to the next named refusal (`ROW B reach`),
+ *      within `--budget-s`. ⚠ On a base without fidelity F4 (the sandtraps' arrow death) the solver declines
+ *      L8 → L9 by name before the Sword; the check accepts exactly that decline there.
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
  * `N CHECK(S) FAILED` (exit 1).
@@ -339,8 +341,16 @@ async function main() {
             out('B next refusal', { status: (end?.status ?? '').startsWith('error') ? end.status : null, engineRefusal: eng.lastRefusal ?? null });
             check('B: the Sword\'s logical link was CREDITED (a logical move r8c0 → r1c6)',
                 moves.includes('~level_0__r8c0 -> level_0__r1c6'), JSON.stringify(moves.slice(0, 6)));
-            check(`B: the bot reached and CHECKED the Sword ("${sword}")`, swordAt !== null && checks.filter((c) => c === sword).length === 1,
-                JSON.stringify({ swordAt, checks }));
+            const linkAt = moves.indexOf('~level_0__r8c0 -> level_0__r1c6');
+            check('B: the door AFTER the link was walked from the credited sub-region (level_0__r1c6 -> level_2)',
+                linkAt >= 0 && moves[linkAt + 1] === 'level_0__r1c6 -> level_2', JSON.stringify(moves.slice(0, 4)));
+            // ⛓ The Sword (L10) lies past L8, whose sandtraps the solver declines on a base without fidelity F4
+            // ("the model computes a SandTrap's arrow death"): there the walk must end on THAT named decline.
+            const sandtrapDecline = /declined level_8 -> level_9 .*sandtrap/.test(end?.status ?? '');
+            out('B sword', { swordAt, sandtrapDecline });
+            check(`B: the bot CHECKED the Sword ("${sword}") — or, on a base without F4, ends on L8's named sandtrap decline`,
+                (swordAt !== null && checks.filter((c) => c === sword).length === 1) || (swordAt === null && sandtrapDecline),
+                JSON.stringify({ swordAt, checks, sandtrapDecline }));
             check('B: every location checked once', new Set(checks).size === checks.length, JSON.stringify(checks));
             check('B: the walk ends FINISHED, with a NAMED refusal, or on the budget — never a silent stall',
                 (end?.status ?? '').startsWith('finished') || (end?.status ?? '').startsWith('error') || Date.now() - t0 >= BUDGET_MS,

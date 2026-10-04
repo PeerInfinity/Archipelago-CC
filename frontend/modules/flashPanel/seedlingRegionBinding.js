@@ -274,7 +274,16 @@ const dist2 = (a, b) => {
  * the coordinates are already in hand when the level report arrives.
  */
 export function resolveCrossingExit(world, level, spawn) {
-    const candidates = exitList(world).filter((e) => e.target_level === level);
+    const reaching = exitList(world).filter((e) => e.target_level === level);
+    /**
+     * ⛔ A DEPARTURE BEATS AN ARRIVAL ROW (§5.17, measured live). A sidecar also lists where doors of OTHER
+     * levels land (`in_L3_96_128`: `exitName`/`targetRegion` null) with the same `target_level`, and on
+     * `level_11` that row shares its `target_spawn` with the real door (`level_11 -> level_3__r8c6`), so the
+     * tie-break kept whichever came first: the arrival row, a move to `null`, and the bot stalled in L3.
+     * Arrival rows are candidates only when no departure reaches the level.
+     */
+    const departures = reaching.filter((e) => e.targetRegion);
+    const candidates = departures.length > 0 ? departures : reaching;
     if (candidates.length <= 1) return candidates[0] ?? null;
     let best = candidates[0];
     let bestD = dist2(spawn, best.target_spawn);

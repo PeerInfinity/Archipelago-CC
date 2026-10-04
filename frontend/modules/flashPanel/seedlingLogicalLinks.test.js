@@ -252,6 +252,19 @@ describe('a door fired from a SIBLING sub-region (no position read saw the seam)
     });
 });
 
+describe('⛔ a departure beats an arrival row (measured live: the bot stalled in L3 after L11)', () => {
+    it('level_11 → level 3: the door, not `in_L3_…` (same target spawn, listed first)', () => {
+        const rows = world('level_11').exits.filter((e) => e.target_level === 3);
+        expect(rows.some((e) => !e.targetRegion)).toBe(true);
+        expect(rows.some((e) => e.targetRegion)).toBe(true);
+        const b = standing('level_11');
+        b.onStateReport('playerPositionX', rows[0].target_spawn.x);
+        b.onStateReport('playerPositionY', rows[0].target_spawn.y);
+        expect(moves(b.onStateReport('level', 3))).toEqual([expect.objectContaining({ sourceRegion: 'level_11',
+            targetRegion: 'level_3__r8c6', exitName: 'level_11 -> level_3__r8c6' })]);
+    });
+});
+
 describe('the glue reads the position, and stands down while the bot walks', () => {
     function rig({ walking = false, status = null } = {}) {
         const published = [];
