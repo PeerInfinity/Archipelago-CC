@@ -71,8 +71,8 @@ export const DAMAGE_SITES = Object.freeze({
         { kind: 'hit', file: 'Enemies/Flyer.as', line: 68 },
     ],
     Game: [
-        { kind: 'move', file: 'Game.as', line: 2212 },
-        { kind: 'move', file: 'Game.as', line: 2213 },
+        { kind: 'move', file: 'Game.as', line: 2235 },
+        { kind: 'move', file: 'Game.as', line: 2236 },
     ],
     Grenade: [
         { kind: 'hit', file: 'Enemies/Grenade.as', line: 133 },

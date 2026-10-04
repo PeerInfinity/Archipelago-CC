@@ -190,8 +190,6 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|spawnGrenade,physics,ma
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|spawnGrenade|1,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|spawnGrenade|h1a22893d|8|0,physics,magnitude,,grenade spawn point mirrored in event row
 frontend/modules/seedlingDemo/levelRun.js|spawnGrenade|h1a22893d|8|1,physics,magnitude,,grenade spawn point mirrored in event row
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|owlJiggleNow,rule,bound,,no shake = no jiggle RNG draws
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|owlJiggleNow|2,rule,count,,view() jiggle spends exactly two RNG draws
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|stepSpinnerContactsNow|0,rule,bound,,i-frame timer gate
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|collideLineSolid,physics,sign,,
 frontend/modules/seedlingDemo/levelRun.js|collideLineSolid|h21cbb2e8|1|0,physics,bound,,collideLine degenerate segment under 1px
@@ -1235,13 +1233,14 @@ frontend/modules/seedlingDemo/dialogue.js|autoAdvanceArrivals|autoAdvanceArrival
 frontend/modules/seedlingDemo/dialogue.js|PLACED_NPC_TALK|(module),rule,bound,,REVIEW: Statue _lineLength 34; wrap decides dialogue ticks
 frontend/modules/seedlingDemo/finalBossRng.js|OWL_DRAW_SITES|(module),rule,count,,Math.random draws per site
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.constructor,structural,,,per-site counter init
+frontend/modules/seedlingDemo/finalBossRng.js|shakeJiggle|shakeJiggle,cosmetic,,Game.as:shakeJiggle,3′c deterministic camera jiggle hash (2531/1777/4093): a render offset that takes no draw
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream._draw,structural,,,
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.spawnX,rule,derivation,,ROCK_RADIUS * 2 scatter width
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.spawnY,rule,derivation,,ROCK_RADIUS * 2 scatter width
 frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream|OwlDrawStream.deathRockX,rule,magnitude,,FinalBoss.as:216 death rock x = 120 + r*8 - 4
 frontend/modules/seedlingDemo/finalBossRng.js|assertOwlStreamPremises|assertOwlStreamPremises,structural,,,
 frontend/modules/seedlingDemo/seedlingDamageSites.js|*|*,structural,,,generated AS3 source line citations
-frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.constructor|h9bbf687e|0|0,rule,sentinel,,seed 0 = build boot seed
+frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.constructor|hff5d680a|0|0,rule,sentinel,,seed 0 = build boot seed
 frontend/modules/seedlingDemo/playerDamage.js|PLAYER_DAMAGE|(module)|20,rule,magnitude,Player.as:hitsTimerMax,i-frame window
 frontend/modules/seedlingDemo/playerDamage.js|PLAYER_DAMAGE|(module)|10,cosmetic,,Player.as:hitsTimerInt,flash period only
 frontend/modules/seedlingDemo/playerDamage.js|PLAYER_DAMAGE|(module)|3,rule,count,,
@@ -1465,8 +1464,6 @@ frontend/modules/seedlingDemo/moonrock.js|stepMoonrock|hc184d55f|-1|0,rule,senti
 frontend/modules/seedlingDemo/moonrock.js|moonrockSpan|moonrockSpan,structural,,,the span simulator: counters
 frontend/modules/seedlingDemo/iceTurretBlast.js|(module)|h774b1553|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
 frontend/modules/seedlingDemo/playerDamage.js|(module)|h9d8ec539|5|0,rule,magnitude,,REVIEW: a Game.shake writer; unified with camera.js SHAKE_WRITERS (shake moves onScreen verdicts and costs Owl-room jiggle draws)
-frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.jiggle|h9b54b306|2|0,rule,derivation,,REVIEW: shake / 2 half-amplitude of the Owl jiggle; unified with camera.js stepCameraJiggled
-frontend/modules/seedlingDemo/finalBossRng.js|OwlDrawStream.jiggle|h40d304c7|2|0,rule,derivation,,REVIEW: shake / 2 half-amplitude of the Owl jiggle; unified with camera.js stepCameraJiggled
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|*,structural,,,default: the envelope reader's validation floors and indices (engine prep B1 joined the closure through tapeFormat.js)
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|inclusiveToHalfOpen|1,rule,magnitude,,the inclusive-to-half-open bridge: an engine span [a b] is the envelope span {from a; to b+1} (tape-envelope.md § 4)
 frontend/modules/seedlingDemo/tapeEnvelope.js|*|halfOpenToInclusive|1,rule,magnitude,,the reverse bridge: to - 1 (tape-envelope.md § 4)
