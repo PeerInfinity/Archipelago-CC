@@ -54,13 +54,13 @@
         "totem_parts": [],
         "keys": [],
         "seal_parts": [
-            0
+            8
         ]
     },
     "rng": {
-        "seed": 2074525764,
+        "seed": 726245500,
         "split": true,
-        "cosmetic": 290593999,
+        "cosmetic": 1084821095,
         "fp": 1414699912
     },
     "seam": {
@@ -102,9 +102,9 @@
     },
     "tick0": {
         "rng": {
-            "seed": 2074525764,
+            "seed": 726245500,
             "split": true,
-            "cosmetic": 1753797431,
+            "cosmetic": 2084858267,
             "fp": 2069965047
         },
         "seam": {
