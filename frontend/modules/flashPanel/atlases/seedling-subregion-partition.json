@@ -3,7 +3,7 @@
   "description": "GENERATED — do not edit. Which tile of a level is in which sub-region, per atlas; one character per tile, the sub-region's index in \"sub_regions\" over \"ABC…\", \".\" for none. Regenerate after either atlas changes.",
   "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
   "atlases": {
-    "seedling-bbddca3d": {
+    "seedling-aeb590c4": {
       "atlas": "seedling-playthrough.json",
       "tile_size": 16,
       "regions": {
@@ -929,18 +929,18 @@
           "origin": [0,0],
           "width": 10,
           "height": 12,
-          "sub_regions": ["r1c2","r5c4","r9c8"],
+          "sub_regions": ["r5c4","r9c8"],
           "rows": [
             "..........",
-            "..A.......",
-            "..A.......",
             "..........",
             "..........",
-            "....BB....",
-            "....BB....",
-            ".....B....",
-            ".....B....",
-            ".....BB.CC",
+            "..........",
+            "..........",
+            "....AA....",
+            "....AA....",
+            ".....A....",
+            ".....A....",
+            ".....AA.BB",
             "..........",
             ".........."
           ]
@@ -1187,11 +1187,9 @@
           "origin": [0,0],
           "width": 15,
           "height": 18,
-          "sub_regions": ["r1c0","r1c13","r10c7","r14c7"],
+          "sub_regions": ["r10c7","r14c7"],
           "rows": [
             "...............",
-            "AA...........BB",
-            "AA...........BB",
             "...............",
             "...............",
             "...............",
@@ -1199,14 +1197,16 @@
             "...............",
             "...............",
             "...............",
-            ".......C.......",
+            "...............",
+            "...............",
+            ".......A.......",
             "...............",
             "...............",
             "...............",
-            ".......D.......",
-            ".......D.......",
-            ".......D.......",
-            ".......D......."
+            ".......B.......",
+            ".......B.......",
+            ".......B.......",
+            ".......B......."
           ]
         },
         "level_94": {

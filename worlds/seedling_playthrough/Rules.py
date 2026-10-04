@@ -2031,16 +2031,6 @@ def set_rules(world: "World") -> None:
     )
 
     world.set_rule(
-        multiworld.get_entrance("level_93__r1c0 -> level_93__r1c13", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
-        multiworld.get_entrance("level_93__r1c13 -> level_93__r1c0", player),
-        Has('Progressive Swim', 1)
-    )
-
-    world.set_rule(
         multiworld.get_entrance("level_93__r10c7 -> level_93__r14c7", player),
         HasAll('Dark Suit', 'Ghost Spear')
     )

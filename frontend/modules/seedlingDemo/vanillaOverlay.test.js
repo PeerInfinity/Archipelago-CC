@@ -322,8 +322,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   opened one-sided locks — internal exits and the content hash only, as before.
         // ⛓ RULES (B) once more (bc710e63… -> 5c600bcd): L82 wired (its pit and door arrivals)
         //   and its two doors charged — exits, connections and the hash; no location moves.
+        // ⛓ RULES logical-links (5c600bcd… -> 9e791548): the model-sealed True_ rows dropped, three pockets
+        //   pruned, L0's stairs bound to r8c0 — internal exits, sub-regions and two exit bindings; no location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('5c600bcd4bb2fa8e344bad4b204721eb');
+            .toBe('9e79154854d7a94ebed363c3c22077ad');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

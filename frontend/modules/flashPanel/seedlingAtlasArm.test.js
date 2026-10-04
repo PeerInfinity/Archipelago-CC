@@ -115,7 +115,8 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
             expect(atlasRoomRegions(rulesOf(id)).length, id).toBeGreaterThan(0);
             expect(generatedRoomCensus(rulesOf(id)).rooms, id).toEqual([]);
         }
-        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(250);
+        // ⛓ RULES logical-links: 250 -> 247, three pockets only a model-sealed True_ row reached are pruned.
+        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(247);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);
     });

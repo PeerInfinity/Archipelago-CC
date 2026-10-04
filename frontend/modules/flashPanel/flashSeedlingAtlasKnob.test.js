@@ -125,7 +125,9 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         entry.prepareSphereGrowth({ params: { [SEEDLING_ATLAS_ID_KEY]: SEEDLING_PLAYTHROUGH_ATLAS.atlas_id } });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_PLAYTHROUGH_ATLAS.atlas_id);
         // ⛓ RULES (B): 168 -> 169 — `level_71__r14c12` gains its first door, the pit into L82.
-        expect(entry.zoneCount).toBe(169);
+        // ⛓ RULES logical-links: 169 -> 168 — `level_0__r1c6` loses its only doors: the L2 stairs and the
+        //   L110 pit arrival bind to r8c0, the component the physics model's flood reaches from them.
+        expect(entry.zoneCount).toBe(168);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });

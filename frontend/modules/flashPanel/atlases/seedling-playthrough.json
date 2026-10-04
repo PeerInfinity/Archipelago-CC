@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-bbddca3d",
+  "atlas_id": "seedling-aeb590c4",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "bbddca3d" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "aeb590c4" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -61,7 +61,7 @@
           "kind": "teleporter",
           "exit_tiles": [[16,17]],
           "entrance_tile": [16,17],
-          "sub_region": "r1c6"
+          "sub_region": "r8c0"
         },
         {
           "exit_id": "out_teleporter_304_176",
@@ -131,11 +131,11 @@
           "kind": "teleporter",
           "exit_tiles": [[16,17]],
           "entrance_tile": [16,17],
-          "sub_region": "r1c6"
+          "sub_region": "r8c0"
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "mixed" },
+      "annotations": { "rules_source": "analyzer" },
       "subgraph": {
         "sub_regions": ["r1c6","r2c13","r4c16","r8c0","r11c19","r14c0"],
         "internal_exits": [
@@ -172,7 +172,6 @@
               ]
             }
           },
-          { "from": "r1c6", "to": "r8c0", "bidirectional": true, "source": "manual" },
           {
             "from": "r2c13",
             "to": "r4c16",
@@ -900,7 +899,7 @@
           "sub_region": "r0c19"
         }
       ],
-      "annotations": { "rules_source": "mixed" },
+      "annotations": { "rules_source": "analyzer" },
       "subgraph": {
         "sub_regions": ["r0c19","r0c37","r13c6","r40c4","r44c19"],
         "internal_exits": [
@@ -969,7 +968,6 @@
               ]
             }
           },
-          { "from": "r0c37", "to": "r44c19", "bidirectional": true, "source": "manual" },
           {
             "from": "r13c6",
             "to": "r0c19",
@@ -5167,11 +5165,10 @@
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "mixed" },
+      "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r1c2","r5c4","r9c8"],
+        "sub_regions": ["r5c4","r9c8"],
         "internal_exits": [
-          { "from": "r1c2", "to": "r5c4", "bidirectional": true, "source": "manual" },
           {
             "from": "r5c4",
             "to": "r9c8",
@@ -6791,9 +6788,9 @@
         }
       ],
       "locations": [],
-      "annotations": { "rules_source": "mixed" },
+      "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r1c0","r1c13","r10c7","r14c7"],
+        "sub_regions": ["r10c7","r14c7"],
         "internal_exits": [
           {
             "from": "r10c7",
@@ -6807,15 +6804,6 @@
                 { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
               ]
             }
-          },
-          { "from": "r10c7", "to": "r1c0", "bidirectional": true, "source": "manual" },
-          { "from": "r10c7", "to": "r1c13", "bidirectional": true, "source": "manual" },
-          {
-            "from": "r1c0",
-            "to": "r1c13",
-            "bidirectional": true,
-            "source": "analyzer",
-            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
           }
         ]
       }

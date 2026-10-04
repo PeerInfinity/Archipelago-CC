@@ -33,19 +33,24 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // ⛓ RULES (A) — restamped again (0faa7fee -> e5d9f89e): +9 return rows through the OPENED
     // one-sided locks (286 -> 295). None of them is a swim row, so 217 holds — but L12's
     // r0c37 -> r0c19 is now Or(Swim, And(Red Key, reached r0c19)), so plain Has(Swim) is 180 -> 179.
-    it('52 regions carry a subgraph: 189 sub-regions, 295 internal exits, 217 of them need Progressive Swim', () => {
-        expect(c.atlasId).toBe('seedling-bbddca3d');
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 52, 189, 295, 217]);
-        expect(c.swimLevels).toHaveLength(23);
+    // ⛓ RULES logical-links — restamped (bbddca3d -> aeb590c4): the physics model SEALED the five True_
+    // hand rows (L0, L12, L66, L93 x2), and three pockets they alone reached were pruned (L66 r1c2, L93
+    // r1c0/r1c13): 189 -> 186 sub-regions, 295 -> 289 internal exits. L93's r1c0 <-> r1c13 Has(Swim) row
+    // joined two of those pockets, so swim 217 -> 216, plain Has(Swim) 179 -> 178, and L93 is no swim level.
+    it('52 regions carry a subgraph: 186 sub-regions, 289 internal exits, 216 of them need Progressive Swim', () => {
+        expect(c.atlasId).toBe('seedling-aeb590c4');
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 52, 186, 289, 216]);
+        expect(c.swimLevels).toHaveLength(22);
         expect(c.byRule.slice(0, 2)).toEqual([
-            { rule: 'Has(Progressive Swim)', count: 179 },
+            { rule: 'Has(Progressive Swim)', count: 178 },
             { rule: 'Has(Progressive Swim, 2)', count: 33 },
         ]);
     });
 
-    it('the witnessed levels are derived from the tapes: 0, 37, 47, 87, 115 — the other 18 are BOT-UNCERTIFIED', () => {
+    // ⛓ RULES logical-links: 18 -> 17, L93 has no swim row left (above).
+    it('the witnessed levels are derived from the tapes: 0, 37, 47, 87, 115 — the other 17 are BOT-UNCERTIFIED', () => {
         expect([...c.witnessedLevels].sort((a, b) => a - b)).toEqual([0, 37, 47, 87, 115]);
-        expect(c.uncertifiedLevels).toHaveLength(18);
+        expect(c.uncertifiedLevels).toHaveLength(17);
         expect(c.swimLevels.find((r) => r.level === 47).witnesses).toEqual(['r5-swim-cross.json', 'r5-swim-latch.json']);
         // ⛓ swim R3: `r3-drown` (L47, no conch, the drowning death) joins `r5-swim-drown`.
         expect(c.swimLevels.find((r) => r.level === 47).noSwimTapes).toEqual(['r3-drown.json', 'r5-swim-drown.json']);
