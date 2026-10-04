@@ -1086,6 +1086,23 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'booted at the L16 arrival among `bob@96,32`, `bob@112,80` and `bob@80,64`; '
                 + 'the walk right, up and left takes no hit and kills nothing.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity F7 (D-A) — L16 re-entered in the chain-end
+         * state, `{16,0}` carried: the rope is pulled at build and the three
+         * arrow traps stay silent; the room's seven bobs are the exposure.
+         */
+        Object.freeze({
+            name: 'f7-l16-reentry', levels: Object.freeze([16]), bobs: 7, ticks: 60,
+            addedBy: 'Seedling fidelity F7 D2 (a pulled rope re-publishes its group at build)',
+            why: 'booted at the L17 return arrival (112,48) in the lane of `arrowtrap@112,32`; it '
+                + 'stands 30 t and walks left 30 t under the silent traps, takes no hit and kills nothing.',
+        }),
+        Object.freeze({
+            name: 'f7-l16-walkin', levels: Object.freeze([16, 17]), bobs: 10, ticks: 60,
+            addedBy: 'Seedling fidelity F7 D2 (the order arm: the publish is visible on the arrival frame)',
+            why: 'booted in L17 beside `stairsup@32,48` among its three bobs, it steps onto the stairs '
+                + 'and stands in L16\'s arrival lane among seven; no hit, no kill.',
+        }),
     ]),
 
     /**
