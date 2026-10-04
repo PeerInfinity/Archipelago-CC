@@ -27,6 +27,7 @@ import {
     AP_ASSET_PATHS,
     AP_MODULE_PATHS,
     LEDGER_FLASH_NAME_REMAINDER,
+    NEW_GAME_INTRO,
     buildLocationResolver,
     flashNameForLedgerRow,
     RESET_MODES,
@@ -456,18 +457,48 @@ describe('the reset target is chosen by the SET, not by preference', () => {
      * player landed at pixel (0, 0) — and **level 0 has `tree@0,0`**. The
      * fallback is the position the GAME booted at, read live.
      */
-    it('a start with only a LEVEL takes the new-game arm with the GAME\'s own position', () => {
+    /**
+     * ⚖ THE USER, 2026-10-03: *"For now, let's just always skip the cutscene.
+     * We might want to add an option to enable it later."* So the DEFAULT for
+     * a level-only start is the EXPLICIT start into the set's start level, at
+     * the position the game booted at: no `level < 0`, so no wind cutscene, no
+     * `Help(2)` freeze. The choice lives in ONE constant; these rows pin it.
+     */
+    it('the intro is SKIPPED by default — one constant, false', () => {
+        expect(NEW_GAME_INTRO).toBe(false);
+    });
+
+    it('a start with only a LEVEL takes the EXPLICIT start with the GAME\'s own position (intro skipped)', () => {
         const t = resetTargetFor({ start: { level: 0 } }, { x: 80, y: 128 });
+        expect(t).toMatchObject({ mode: RESET_MODES.EXPLICIT_START, level: 0, expectLevel: 0,
+            x: 80, y: 128, intro: false, position: 'boot' });
+        expect(t.level).not.toBe(-1);
+        expect(t.why).toMatch(/the position the GAME itself booted at/);
+        expect(t.why).toMatch(/intro is skipped/);
+    });
+
+    it('…and with the intro asked for, the game\'s own new-game arm (the later option\'s one line)', () => {
+        const t = resetTargetFor({ start: { level: 0 } }, { x: 80, y: 128 }, { intro: true });
         expect(t).toMatchObject({ mode: RESET_MODES.NEW_GAME_ARM, level: -1, expectLevel: 0,
-            x: 80, y: 128 });
+            x: 80, y: 128, intro: true });
         expect(t.why).toMatch(/the position the GAME itself booted at/);
     });
 
-    it('…and with NO boot position it carries null rather than zero', () => {
-        const t = resetTargetFor({ start: { level: 0 } }, null);
-        expect(t).toMatchObject({ mode: RESET_MODES.NEW_GAME_ARM, level: -1 });
-        expect(t.x).toBeNull();
-        expect(t.y).toBeNull();
+    it('…and with NO boot position it carries null rather than zero, either way', () => {
+        for (const intro of [false, true]) {
+            const t = resetTargetFor({ start: { level: 0 } }, null, { intro });
+            expect(t.level).toBe(intro ? -1 : 0);
+            expect(t.x).toBeNull();
+            expect(t.y).toBeNull();
+        }
+    });
+
+    it('a set that names its OWN start is unaffected by the intro choice (no intro either way)', () => {
+        for (const intro of [false, true]) {
+            const t = resetTargetFor({ start: { level: 7, x: 32, y: 64 } }, { x: 80, y: 128 }, { intro });
+            expect(t).toMatchObject({ mode: RESET_MODES.EXPLICIT_START, level: 7, x: 32, y: 64,
+                position: 'set' });
+        }
     });
 
     /**
@@ -486,6 +517,9 @@ describe('the reset target is chosen by the SET, not by preference', () => {
     it('a level-only start in a DIFFERENT room refuses rather than borrowing the spawn', () => {
         const t = resetTargetFor({ start: { level: 47 } }, { x: 80, y: 128, level: 0 });
         expect(t.refused).toBe(true);
+        // ⛓ refused in the skip mode too: the explicit start would have sent the borrowed tile
+        expect(resetTargetFor({ start: { level: 47 } }, { x: 80, y: 128, level: 0 }, { intro: true }).refused)
+            .toBe(true);
         expect(t.x).toBeNull();
         expect(t.y).toBeNull();
         expect(t.why).toMatch(/says nothing about this one/);
@@ -588,8 +622,10 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
                 'bind', 'overlay-off']);
         expect(glue.order).toEqual(['setDelivery', 'deliver', 'setCheckBinding']);
         // ⛓ the args are the GAME's boot position recovered from the roster
-        // (88,136) minus the map's own half-tile (16/2) — never zeros.
-        expect(teleports).toEqual([{ level: -1, x: 80, y: 128 }]);
+        // (88,136) minus the map's own half-tile (16/2) — never zeros. ⚖ The
+        // intro is skipped (2026-10-03): level 0, the set's start, never −1.
+        expect(teleports).toEqual([{ level: 0, x: 80, y: 128 }]);
+        expect(r.reset).toMatchObject({ mode: RESET_MODES.EXPLICIT_START, intro: false, landed: true });
         expect(overlay.shown).toBe(false);
         expect(overlay.calls[0]).toBe('show');
         expect(overlay.calls.at(-1)).toBe('hide');
@@ -675,7 +711,7 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
         const { teleports, r } = await run({
             binding: { lastSpawn: { x: 64, y: 96 }, lastLevel: 0 },
         });
-        expect(teleports).toEqual([{ level: -1, x: 64, y: 96 }]);
+        expect(teleports).toEqual([{ level: 0, x: 64, y: 96 }]);
         const began = r.steps.find((s) => s.name === 'reset-begin');
         expect(began.detail.bootPosition).toMatchObject({ x: 64, y: 96, level: 0 });
         expect(began.detail.bootPosition.source).toMatch(/declared playerPosition/);
@@ -695,7 +731,7 @@ describe('the load sequence — overlay on, deliver, reset, overlay off', () => 
 
     it('falls back to the roster when the binding has seen nothing', async () => {
         const { teleports, r } = await run({ binding: { lastSpawn: { x: null, y: null } } });
-        expect(teleports).toEqual([{ level: -1, x: 80, y: 128 }]);
+        expect(teleports).toEqual([{ level: 0, x: 80, y: 128 }]);
         expect(r.steps.find((s) => s.name === 'reset-begin').detail.bootPosition.source)
             .toMatch(/half-tile/);
     });

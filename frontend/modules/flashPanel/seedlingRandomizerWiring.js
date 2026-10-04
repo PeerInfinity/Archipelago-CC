@@ -323,7 +323,31 @@ export const RESET_MODES = Object.freeze({
     NEW_GAME_ARM: 'new-game-arm',
 });
 
-export function resetTargetFor(set, bootPosition = null) {
+/**
+ * ⛓⛓ **THE INTRO IS SKIPPED — AND THIS IS THE ONE PLACE THAT SAYS SO.**
+ * ⚖ The user, 2026-10-03: *"For now, let's just always skip the cutscene. We
+ * might want to add an option to enable it later."* A later option is a
+ * one-line wiring into `resetTargetFor`'s `intro` argument; nothing else reads
+ * this.
+ *
+ * WHAT THE NEW-GAME ARM DOES THAT THE EXPLICIT START DOES NOT
+ * (`Game.as:832-840`, `:956-1005`; MEASURED live on `seedling_playthrough`,
+ * plan §5.16): `time = dayLength / 2`, the `"Wind"` sound, `cutscene[0]` —
+ * the wind scene (no input, dust drawing the gameplay rng, `timeRate`
+ * decaying the clock 4800 → 5000.5) — and then `add(new Help(2))`, whose
+ * freeze holds until an arrow is pressed. Everything else the scene touches
+ * it puts back (`freezeObjects`, `receiveInput`, `directionFace` −1,
+ * `ALIGN`, `timeRate` 1, the camera). `applyStart` adds nothing for a set
+ * with no position. So the skip leaves the game in a real new game's
+ * post-intro state, with ONE named difference: the clock. The fresh save the
+ * delivery wrote reads `dayLength / 2` (`Main.time`'s own getter), so the
+ * skipped game starts ~200 frames EARLIER in the same midday (no threshold
+ * between; `daysPassed` is write-only) and on a whole frame instead of the
+ * scene's `.5`. The rng is not advanced by the dust it never drew.
+ */
+export const NEW_GAME_INTRO = false;
+
+export function resetTargetFor(set, bootPosition = null, { intro = NEW_GAME_INTRO } = {}) {
     const start = set?.start ?? null;
     if (!start || !Number.isInteger(start.level)) return null;
     if (Number.isInteger(start.x) && Number.isInteger(start.y)) {
@@ -333,6 +357,8 @@ export function resetTargetFor(set, bootPosition = null) {
             x: start.x,
             y: start.y,
             expectLevel: start.level,
+            intro: false,
+            position: 'set',
             why: `the set names its own start — level ${start.level} at (${start.x}, ${start.y})`,
         };
     }
@@ -377,15 +403,37 @@ export function resetTargetFor(set, bootPosition = null) {
      */
     if (bootPosition && bootPosition.level != null && bootPosition.level !== start.level) {
         return {
-            mode: RESET_MODES.NEW_GAME_ARM,
-            level: -1,
+            mode: intro ? RESET_MODES.NEW_GAME_ARM : RESET_MODES.EXPLICIT_START,
+            level: intro ? -1 : start.level,
             x: null,
             y: null,
             expectLevel: start.level,
+            intro,
             refused: true,
             why: `the set starts in level ${start.level} and carries no position, but the only `
                 + `position the host has was read in level ${bootPosition.level} — a standable `
                 + 'tile of THAT room says nothing about this one',
+        };
+    }
+    /**
+     * ⛓ THE SKIP (the default): the SAME constructor args the arm would get,
+     * sent with the set's start level instead of −1 — `Game.begin()` then
+     * never enters `if (level < 0)`, so no cutscene and no tutorial. The
+     * position is still the GAME's boot position, never `Main.as:51`'s
+     * constant: `applyStart` would have supplied nothing else.
+     */
+    if (!intro) {
+        return {
+            mode: RESET_MODES.EXPLICIT_START,
+            level: start.level,
+            x: bootPosition?.x ?? null,
+            y: bootPosition?.y ?? null,
+            expectLevel: start.level,
+            intro: false,
+            position: 'boot',
+            why: `the set's start names level ${start.level} and NO position; the new game's `
+                + 'intro is skipped (⚖ 2026-10-03), so the explicit start is sent, with the '
+                + 'constructor args taken from the position the GAME itself booted at',
         };
     }
     return {
@@ -394,6 +442,8 @@ export function resetTargetFor(set, bootPosition = null) {
         x: bootPosition?.x ?? null,
         y: bootPosition?.y ?? null,
         expectLevel: start.level,
+        intro: true,
+        position: 'boot',
         why: `the set's start names level ${start.level} and NO position, so the game's own `
             + 'new-game arm (level < 0) runs, with the constructor args taken from the '
             + 'position the GAME itself booted at',
@@ -589,7 +639,7 @@ export async function runSeedlingRandomizerLoad({
     }
 
     overlay.setText(`starting the randomized game (${target.mode})…`);
-    step('reset-begin', { mode: target.mode, level: target.level,
+    step('reset-begin', { mode: target.mode, level: target.level, intro: target.intro,
         expectLevel: target.expectLevel, args: { x: target.x, y: target.y }, halfTile,
         bootPosition,
         world: { level: before.level, rosterSize: before.rosterSize, time: before.time,
