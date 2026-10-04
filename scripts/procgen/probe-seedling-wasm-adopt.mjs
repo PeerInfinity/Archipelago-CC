@@ -24,14 +24,15 @@
  *      `introchar` and `statue2`, sampled idle (v 0, at their record positions, idle anim, no rng draw); the cold
  *      start ADOPTED with them admitted as inert NPCs (`wasmPlayback.INERT_MOBILES`) — the walk hub → house →
  *      chest spends **0 forced re-arrivals in total** (W8 spent one: refused `mobiles`); 0 divergences.
- *   N  ⛓ W8c — THE NEW GAME (`seedling_playthrough`, loaded by `?rules=`: the `?game=` form resolves another
- *      seed with no flash_panel). The host's level-set reset boots the game's new-game arm: its begin record
- *      reads level −1 (latched before `applyStart`), then the wind cutscene, then the arrow-key tutorial
- *      `Help(2)`, whose freeze no botStatus row shows (`readState().freezeObjects` does). The CONTROLLER's own
- *      engine (its production deps) is driven from the first frame of the cutscene (⛓ §5.16: the vanilla arm's
- *      map is now bound — checked; the Playback Bot's own walk is `probe-seedling-wasm-vanilla-map.mjs`): level 0's
- *      stairs, then L13's — the cutscene WAITED OUT, the tutorial dismissed by one arrow pair, the room
- *      ADOPTED, the L13 arrival held: **0 forced re-arrivals in total**, every held check equal, 0 divergences.
+ *   N  ⛓ W8c / skip-intro — THE NEW GAME (`seedling_playthrough`, loaded by `?rules=`: the `?game=` form
+ *      resolves another seed with no flash_panel). ⚖ 2026-10-03 the host's level-set reset SKIPS the intro
+ *      (`seedlingRandomizerWiring.NEW_GAME_INTRO` false): the explicit start into level 0 at the game's boot
+ *      position, so the begin record reads level 0, no wind cutscene, no `Help(2)` freeze. The CONTROLLER's
+ *      own engine (its production deps) is driven at once (⛓ §5.16: the vanilla arm's map is now bound — checked;
+ *      the Playback Bot's own walk is `probe-seedling-wasm-vanilla-map.mjs`): level 0's stairs, then L13's — the room
+ *      ADOPTED straight through (no `ceremony` phase entered; W8c's ceremony stays as the fallback for a page
+ *      that shows the intro, pinned in vitest), the L13 arrival held: **0 forced re-arrivals in total**, every
+ *      held check equal, 0 divergences.
  *   K  a person's REAL keys move the player before the bot drives → the adoption is REFUSED by name (a
  *      clause: position / velocity / facing) and the named `cold-start` re-arrival serves the walk, which
  *      still finishes.
@@ -325,19 +326,29 @@ async function main() {
 
 
             if (S === 'N') {
-                // ⛓ W8c — the boot: the arm's record, the set's start, the cutscene running; the bot's named reason.
+                // ⛓ skip-intro — the boot: the reset's EXPLICIT start (the intro skipped), no ceremony running.
                 const boot = await L(() => {
                     const a = window.__adopt;
                     const r = a.readouts();
                     const ls = JSON.parse(a.game().botLevelSet());
-                    return { begin: r.beginEntry, level: r.level, x: r.x, y: r.y, cutscene: r._status.cutscene, receive: r._status.receive_input,
+                    return { begin: r.beginEntry, level: r.level, x: r.x, y: r.y, gt: r.gt, cutscene: r._status.cutscene, receive: r._status.receive_input,
                         freeze: r._state.freezeObjects, startLevel: ls.start_level, set: ls.active };
                 });
                 out('N boot', boot);
-                check('N: the new-game arm ran — begin record level −1, the set starts in level 0, the game stands in level 0',
-                    boot.begin?.['begin.level'] === -1 && boot.startLevel === 0 && boot.level === 0, JSON.stringify(boot));
-                check('N: the bot drives from INSIDE the ceremony (the wind cutscene running, no input taken)',
-                    boot.cutscene?.[0] === true && boot.receive === false, JSON.stringify({ cutscene: boot.cutscene, receive: boot.receive }));
+                const reset = await page.evaluate(async () => {
+                    const r = (await import('./modules/flashPanel/index.js')).getActivePanelInstance()._apLoadResult;
+                    const b = r?.steps?.find((x) => x.name === 'reset-begin')?.detail ?? null;
+                    return { mode: r?.reset?.mode, intro: r?.reset?.intro, level: r?.reset?.level, landed: r?.reset?.landed, args: b?.args, boot: b?.bootPosition };
+                });
+                out('N reset', reset);
+                check('N: the reset SKIPPED the intro — the explicit start into level 0 at the game\'s boot position',
+                    reset.mode === 'explicit-start' && reset.intro === false && reset.level === 0 && reset.landed === true
+                        && reset.args?.x === reset.boot?.x && reset.args?.y === reset.boot?.y, JSON.stringify(reset));
+                check('N: the begin record reads level 0 (not the arm\'s −1), the set starts in level 0, the game stands in level 0',
+                    boot.begin?.['begin.level'] === 0 && boot.startLevel === 0 && boot.level === 0, JSON.stringify(boot));
+                check('N: no ceremony on the page — no wind cutscene, input taken, no freeze (no Help)',
+                    boot.cutscene?.[0] === false && boot.receive === true && boot.freeze === false,
+                    JSON.stringify({ cutscene: boot.cutscene, receive: boot.receive, freeze: boot.freeze }));
                 const surf = await page.evaluate(async () => {
                     const s = (await import('./modules/flashPanel/index.js')).getActivePanelInstance().seedlingPlaybackSurface();
                     return { atlas: s.atlas?.arm ?? null, report: !!s.report };
@@ -387,14 +398,13 @@ async function main() {
                 }, { legs: NEW_GAME_LEGS });
                 out('N run', run);
                 const st = run.stats ?? {};
-                check('N: the first goal waited for the ceremony (action await-ceremony): the cutscene waited out, ONE arrow pair dismissed the tutorial, the room ADOPTED',
-                    run.answers?.[0]?.action === 'await-ceremony' && st.ceremonies?.length === 1 && st.ceremonies[0].began === 'cutscene'
-                        && st.ceremonies[0].adopted === true && st.dismissed?.length === 1 && st.dismissed[0].key === 'right'
+                check('N: the first goal ADOPTED straight through — no ceremony entered, nothing dismissed',
+                    run.answers?.[0]?.action !== 'await-ceremony' && (st.ceremonies ?? []).length === 0 && (st.dismissed ?? []).length === 0
                         && st.adopted === 1 && st.hostStarts?.[0] === 'adopt',
                     JSON.stringify({ answer: run.answers?.[0], ceremonies: st.ceremonies, dismissed: st.dismissed, hostStarts: st.hostStarts }));
                 check('N: both legs crossed — level 0 → L13, then out of L13', run.legs?.length === 2 && run.legs[0].level === 13 && run.legs[1].level !== 13,
                     JSON.stringify(run.legs));
-                check('N: 0 forced re-arrivals IN TOTAL, nothing refused (today: the arm\'s record refused `begin`, and a re-arrival REPLAYED the cutscene)',
+                check('N: 0 forced re-arrivals IN TOTAL, nothing refused',
                     st.forced === 0 && Object.keys(st.forcedBy ?? {}).length === 0 && (st.adoptRefused ?? []).length === 0,
                     JSON.stringify({ forced: st.forced, forcedBy: st.forcedBy, refused: st.adoptRefused }));
                 // A held CHECK is taken at a continuation only; the L13 leg is a held ARRIVAL (freeze + plan) — measured: 1 check, 3 holds.

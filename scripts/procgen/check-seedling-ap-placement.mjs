@@ -1806,9 +1806,11 @@ if (PANEL_ARMS_ENABLED) {
              */
             const resetStep = (obs.load?.steps ?? []).find((s) => s.name === 'reset-end');
             const beganStep = (obs.load?.steps ?? []).find((s) => s.name === 'reset-begin');
-            check(`${tag}: a reset was ISSUED, in the mode the SET's own start chose`,
-                beganStep?.detail?.mode === 'new-game-arm'
-                    && beganStep?.detail?.level === -1
+            // ⚖ 2026-10-03 (the user): the new game's intro is ALWAYS skipped — a level-only
+            // start takes the EXPLICIT start into the set's start level, never `level −1`.
+            check(`${tag}: a reset was ISSUED, the EXPLICIT start into the set's start level (the intro skipped)`,
+                beganStep?.detail?.mode === 'explicit-start'
+                    && beganStep?.detail?.level === (REWRITTEN_SET.start?.level ?? 0)
                     && beganStep?.detail?.expectLevel === (REWRITTEN_SET.start?.level ?? 0),
                 JSON.stringify(beganStep?.detail));
             check(`${tag}: the reset was OBSERVED, polled rather than slept`,
