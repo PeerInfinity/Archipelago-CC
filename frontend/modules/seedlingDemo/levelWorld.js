@@ -5330,6 +5330,13 @@ export function buildLevelWorld(levelRecord, {
                 // string. Named, not renamed: the collision is the game's.
                 ropeT: tSetOf(e.type, e.attrs),
                 ropeTag: entityTag,
+                // ⛓⛓ SEEDLING FIDELITY F7 (D-A): A CLEARED ROPE IS PULLED
+                // AGAIN AT BUILD. `RopeStart.check()` (`:31-38`) calls `hit()`
+                // on the first frame, so the shrink above is not all of it:
+                // `set activate` re-publishes the group too. The run reads this
+                // flag (`levelRun.bootPulledRopes`); the presser row's
+                // `bootPressed` is the same fact for a ButtonRoom.
+                bootPulled: clearedHere2(e, entityTag, clearedTags),
             };
             solids.push(solid);
             objectSolids.push(solid);

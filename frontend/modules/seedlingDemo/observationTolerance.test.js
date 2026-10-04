@@ -97,7 +97,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity F1c: 200 — D1's `f1c-l18-phase42` and D2's `f1c-l18-lock-removal`.
         // ⛓ Seedling fidelity F4: 201 — D1's `f4-l8-sandtraps`.
         // ⛓ fidelity F6: 204 — `f6-l17-reentry`, `f6-l2-reentry`, `f6-l20-reentry`.
-        expect(names.length).toBe(204);
+        // ⛓ fidelity F7: 206 — `f7-l16-reentry`, `f7-l16-walkin`.
+        expect(names.length).toBe(206);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -141,7 +142,7 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(204);
+        expect(tally.swapped).toBe(206);
     }, 600_000);
 });
 

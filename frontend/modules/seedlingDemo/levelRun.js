@@ -55,7 +55,7 @@ import {
 } from './endingChain.js';
 import {
     RESPONDERS, createActivatorState, fallRocksArmedBy, opensOnTick, openActivatorIds,
-    pressedGroups, ropePublish, stepActivators,
+    latchAtBuild, pressedGroups, ropePublish, stepActivators,
 } from './activators.js';
 import {
     createFallRock, fallRockFreezeTicks, fallRockRect, publishActivate, stepFallRock,
@@ -1026,13 +1026,25 @@ export function createLevelRun({
      * lock open across a round trip the game closes.
      */
     const activatorStates = new Map();
+    /**
+     * ⛓⛓ SEEDLING FIDELITY F7: a new `Game`'s activator state is the build's
+     * AND its first frame's `check()` pass — `createActivatorState` boots the
+     * pressed ButtonRooms (F6), and `bootPulledRopes` the pulled ropes. ONE
+     * constructor for both callers, so a lazy first read and a world swap
+     * cannot build two different rooms.
+     */
+    const buildActivatorState = (n) => {
+        const st = createActivatorState(worldFor(n));
+        bootPulledRopes(n, st);
+        return st;
+    };
     const activatorStateFor = (n) => {
-        const w = worldFor(n);
-        if (!activatorStates.has(n)) activatorStates.set(n, createActivatorState(w));
+        worldFor(n);
+        if (!activatorStates.has(n)) activatorStates.set(n, buildActivatorState(n));
         return activatorStates.get(n);
     };
     const freshActivatorState = (n) => {
-        activatorStates.set(n, createActivatorState(worldFor(n)));
+        activatorStates.set(n, buildActivatorState(n));
         return activatorStates.get(n);
     };
     /**
@@ -1195,6 +1207,10 @@ export function createLevelRun({
         return out;
     };
     const pulledRopeIdsNow = () => {
+        // ⛓ F7: a rope the build re-pulled joins the set when the level's
+        // activator state is built (`bootPulledRopes`), which is lazy — so the
+        // set is never read ahead of the `check()` pass that fills it.
+        if (!noclip) activatorStateFor(level);
         const st = ropeStateFor(level);
         return st.size === 0 ? null : st;
     };
@@ -1230,6 +1246,154 @@ export function createLevelRun({
             fallRockStates.set(n, st);
         }
         return fallRockStates.get(n);
+    };
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY F7 (D-A): A PULLED ROPE PUBLISHES ITS GROUP — ONE
+     * BODY FOR THE PULL AND FOR THE RE-ENTRY.
+     *
+     * `RopeStart.set activate` (`:79-91`) assigns `activate = true` to every
+     * `Activators` sharing `t`. Two callers reach it in the game: `hit()` from a
+     * press in this visit (`pullRope`), and `hit()` from `check()` on a new
+     * `Game`'s first frame when the rope's tag is already cleared (`:31-38`) —
+     * a re-entry. Before F7 the re-entry rebuilt only the shrunk geometry
+     * (`clearedHere2`), so L16's three `shoot = 1` arrow traps fired again on
+     * the way back from L17, where the game holds them silent.
+     *
+     *   `atBuild` false  the pull: the group latches from the next update.
+     *   `atBuild` true   the first frame's `check()`: `activators.latchAtBuild`,
+     *                    the ONE latch a build's re-publish takes (F6's pressed
+     *                    ButtonRoom takes it too), so a fade row starts one
+     *                    update in. A `shoot = 1` trap is silent from its first
+     *                    update — the `check()` pass runs before any `update()`
+     *                    (`Game.as:869-879`), MEASURED by `f7-l16-walkin`.
+     *
+     * The members whose own `set activate` does more than the latch are the
+     * same for both, and stay here so they cannot drift apart: a `FallRock`
+     * (`fall()`), refused at build by name; a `Pulser`, which reads the latch.
+     *
+     * @param {number} n          the level (the pull's is always the run's own)
+     * @param {object} ropeSolid  the world's rope solid (`ropeT`, `ropeId`, …)
+     * @param {object} act        that level's activator state
+     */
+    const publishRopeGroup = (n, ropeSolid, act, { atBuild = false } = {}) => {
+        const pub = ropePublish({ as3: 'RopeStart', t: ropeSolid?.ropeT ?? -1 });
+        if (pub) {
+            if (atBuild) latchAtBuild(act, pub.group, worldFor(n));
+            else act.latched.set(pub.group, pub.value);
+            // …and the members whose own `set activate` DOES
+            // something the latch alone cannot express.
+            const rocks = fallRockStateFor(n);
+            for (const [rid, rock] of rocks) {
+                if (rock.t !== pub.group || rock.landed) continue;
+                if (atBuild) {
+                    // ⛔ `RopeStart.check()` -> `hit()` -> `set activate` reaches
+                    // `FallRock.set activate`, which calls `fall()` ON THE FIRST
+                    // FRAME: a 60-frame wait, a freeze and a camera span at the
+                    // arrival, which this model does not build. The game never
+                    // produces the state either (`fall()` writes the rock's tag on
+                    // the PULL frame, and a cleared rock tag is refused at build,
+                    // `REFUSED_CLEAR_RESPONSES.arm`), so it is refused by name.
+                    throw new Error(`levelRun: ${ropeSolid.ropeId} in level ${n} boots PULLED (its `
+                        + `tag ${ropeSolid.ropeTag} is cleared), so \`RopeStart.check()\` re-publishes `
+                        + `group ${pub.group} on the first frame — and ${rid} (tag ${rock.persistTag}) `
+                        + 'is in that group and has NOT fallen, so the game would drop it at the '
+                        + 'arrival. The pull writes the rock\'s tag on the same frame as the rope\'s, '
+                        + 'so no walk of the game reaches this state, and this model does not build '
+                        + 'a fall at build. Declare both tags or neither.');
+                }
+                const dropped = dropRock(rock, rid);
+                if (!dropped.fell) continue;
+                rocks.set(rid, dropped.state);
+                // `fall()`'s FIRST line is the persistence write, at
+                // TRIGGER time — 197 frames before the landing. The
+                // run banks it as an earned clear like any other.
+                if (dropped.write) {
+                    const rf = outOfBandFlagFor(n, dropped.write.tag);
+                    if (!pendingEarnedClears.has(rf.level)) {
+                        pendingEarnedClears.set(rf.level, new Set());
+                    }
+                    pendingEarnedClears.get(rf.level).add(rf.tag);
+                }
+                // ⛔ AND THE SNAP, IF THE PULL WAS MADE STANDING IN
+                // THE ROCK'S CELL. There is no deferring it by a tick
+                // the way a ShieldLock's is deferred: the whole span
+                // is frozen, so the game's LAST snap of the span is
+                // the position the next live tick starts from.
+                // ⛔⛔ AND THE FREEZE ADVANCES EVERY PULSER, because a
+                // `Pulser` is an `Activators` and NOT a `Mobile`:
+                // `Mobile.mobileUpdate`'s `if (!Game.freezeObjects)`
+                // guard is the one thing a frozen frame skips, and a
+                // Pulser has no part of it. So its cycle runs for the
+                // whole span while the tape's tick index does not —
+                // and a model that stepped it once per TAPE tick puts
+                // its ring `frames` out of phase, permanently.
+                //
+                // ⚠ 197 mod 51 = 44, so this is not a small error and
+                // it is not a rounding one. Same family as
+                // `Game.time`'s (`fallRock.TIME_COUPLED`); different
+                // clock, and this one the model owns.
+                const pst = pulserStateFor(n);
+                for (const [pid, p] of pst) {
+                    if (p.t !== pub.group) continue;
+                    // ⛓ NOTHING MOVES DURING THE SPAN, and the hit
+                    // test is a FIXED 22 px ring (`radiusHit`, not
+                    // the growing radius) — so ONE clearance check
+                    // covers all 197 frames rather than 197 of them.
+                    const frozen = [
+                        ...[...pushableRects(pushableStateFor(n))]
+                            .filter(([, r]) => !r.removed)
+                            .map(([bid, r]) => ({
+                                id: bid, type: 'Solid', as3: 'PushableBlockFire',
+                                x: r.rect.x + 8, y: r.rect.y + 8,
+                                originX: 8, originY: 8, w: 16, h: 16,
+                            })),
+                        {
+                            id: 'player', type: 'Player', as3: 'Player',
+                            x: state.x, y: state.y,
+                            originX: 2, originY: 2, w: 4, h: 5,
+                        },
+                    ];
+                    const reached = pulseReaches(p, frozen)
+                        .filter((c) => !(c.arm === 'player' && noDamage));
+                    if (reached.length > 0) {
+                        throw new Error(`levelRun: ${pid}'s ring reaches `
+                            + `[${reached.map((c) => c.id).join(', ')}] during the `
+                            + `${dropped.frames}-frame freeze ${rid} holds. Nothing `
+                            + 'can move out of it — the whole span is frozen — so '
+                            + 'this rung refuses the stance rather than modelling '
+                            + 'a pulse chain nobody can observe.');
+                    }
+                    let s = p;
+                    for (let i = 0; i < dropped.frames; i += 1) {
+                        s = stepPulser(s, true).state;
+                    }
+                    pst.set(pid, s);
+                }
+                if (dropped.snapY !== null) {
+                    throw new Error(`levelRun: ${rid} landed on the player at tick `
+                        + `${ticksCompleted} in level ${n} and wrote y = `
+                        + `${dropped.snapY}. \`FallRock.update\` snaps an `
+                        + 'overlapping player to the rock\'s top on every tick of '
+                        + 'a span the player cannot move during, and this rung '
+                        + 'does not model a route that pulls a rope while standing '
+                        + 'where the rock lands. Move the stance.');
+                }
+            }
+        }
+    };
+    /**
+     * The re-entry half of `publishRopeGroup`: every rope the build made
+     * `bootPulled` is pulled already — in the run's pulled set (so a press is
+     * `hit()`'s `if (!activate)` no-op, not a second pull) and published. ⚠ No
+     * `ropePulls` row and no banked clear: the tag is cleared already, and
+     * `hit()`'s own write is a re-write of it.
+     */
+    const bootPulledRopes = (n, act) => {
+        for (const s of worldFor(n).solids) {
+            if (!s.ropeId || s.bootPulled !== true) continue;
+            ropeStateFor(n).add(s.ropeId);
+            publishRopeGroup(n, s, act, { atBuild: true });
+        }
     };
     /**
      * ── ⛓⛓⛓ U14-swim D1: THE MOONROCK (`moonrock.js`) ─────────────────
@@ -4884,93 +5048,7 @@ export function createLevelRun({
         // `t` and mean different things. The group comes off the
         // SOLID, keyed on the same `ropeId` the geometry query uses.
         const ropeSolid = world.solids.find((s) => s.ropeId === id);
-        const pub = ropePublish({ as3: 'RopeStart', t: ropeSolid?.ropeT ?? -1 });
-        if (pub) {
-            activatorStateFor(level).latched.set(pub.group, pub.value);
-            // …and the members whose own `set activate` DOES
-            // something the latch alone cannot express.
-            const rocks = fallRockStateFor(level);
-            for (const [rid, rock] of rocks) {
-                if (rock.t !== pub.group || rock.landed) continue;
-                const dropped = dropRock(rock, rid);
-                if (!dropped.fell) continue;
-                rocks.set(rid, dropped.state);
-                // `fall()`'s FIRST line is the persistence write, at
-                // TRIGGER time — 197 frames before the landing. The
-                // run banks it as an earned clear like any other.
-                if (dropped.write) {
-                    const rf = outOfBandFlagFor(level, dropped.write.tag);
-                    if (!pendingEarnedClears.has(rf.level)) {
-                        pendingEarnedClears.set(rf.level, new Set());
-                    }
-                    pendingEarnedClears.get(rf.level).add(rf.tag);
-                }
-                // ⛔ AND THE SNAP, IF THE PULL WAS MADE STANDING IN
-                // THE ROCK'S CELL. There is no deferring it by a tick
-                // the way a ShieldLock's is deferred: the whole span
-                // is frozen, so the game's LAST snap of the span is
-                // the position the next live tick starts from.
-                // ⛔⛔ AND THE FREEZE ADVANCES EVERY PULSER, because a
-                // `Pulser` is an `Activators` and NOT a `Mobile`:
-                // `Mobile.mobileUpdate`'s `if (!Game.freezeObjects)`
-                // guard is the one thing a frozen frame skips, and a
-                // Pulser has no part of it. So its cycle runs for the
-                // whole span while the tape's tick index does not —
-                // and a model that stepped it once per TAPE tick puts
-                // its ring `frames` out of phase, permanently.
-                //
-                // ⚠ 197 mod 51 = 44, so this is not a small error and
-                // it is not a rounding one. Same family as
-                // `Game.time`'s (`fallRock.TIME_COUPLED`); different
-                // clock, and this one the model owns.
-                const pst = pulserStateFor(level);
-                for (const [pid, p] of pst) {
-                    if (p.t !== pub.group) continue;
-                    // ⛓ NOTHING MOVES DURING THE SPAN, and the hit
-                    // test is a FIXED 22 px ring (`radiusHit`, not
-                    // the growing radius) — so ONE clearance check
-                    // covers all 197 frames rather than 197 of them.
-                    const frozen = [
-                        ...[...pushableRects(pushableStateFor(level))]
-                            .filter(([, r]) => !r.removed)
-                            .map(([bid, r]) => ({
-                                id: bid, type: 'Solid', as3: 'PushableBlockFire',
-                                x: r.rect.x + 8, y: r.rect.y + 8,
-                                originX: 8, originY: 8, w: 16, h: 16,
-                            })),
-                        {
-                            id: 'player', type: 'Player', as3: 'Player',
-                            x: state.x, y: state.y,
-                            originX: 2, originY: 2, w: 4, h: 5,
-                        },
-                    ];
-                    const reached = pulseReaches(p, frozen)
-                        .filter((c) => !(c.arm === 'player' && noDamage));
-                    if (reached.length > 0) {
-                        throw new Error(`levelRun: ${pid}'s ring reaches `
-                            + `[${reached.map((c) => c.id).join(', ')}] during the `
-                            + `${dropped.frames}-frame freeze ${rid} holds. Nothing `
-                            + 'can move out of it — the whole span is frozen — so '
-                            + 'this rung refuses the stance rather than modelling '
-                            + 'a pulse chain nobody can observe.');
-                    }
-                    let s = p;
-                    for (let i = 0; i < dropped.frames; i += 1) {
-                        s = stepPulser(s, true).state;
-                    }
-                    pst.set(pid, s);
-                }
-                if (dropped.snapY !== null) {
-                    throw new Error(`levelRun: ${rid} landed on the player at tick `
-                        + `${ticksCompleted} in level ${level} and wrote y = `
-                        + `${dropped.snapY}. \`FallRock.update\` snaps an `
-                        + 'overlapping player to the rock\'s top on every tick of '
-                        + 'a span the player cannot move during, and this rung '
-                        + 'does not model a route that pulls a rope while standing '
-                        + 'where the rock lands. Move the stance.');
-                }
-            }
-        }
+        publishRopeGroup(level, ropeSolid, activatorStateFor(level));
         return { as3: 'RopeStart', id, pulled: true, why: null };
     };
 

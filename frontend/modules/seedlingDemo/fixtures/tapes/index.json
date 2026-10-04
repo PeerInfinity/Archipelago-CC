@@ -87,6 +87,20 @@
       "noHazards": []
     },
     {
+      "file": "f7-l16-reentry.json",
+      "tickCount": 60,
+      "bootLevel": 16,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "f7-l16-walkin.json",
+      "tickCount": 60,
+      "bootLevel": 17,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "friction-stop.json",
       "tickCount": 30,
       "bootLevel": 0,
