@@ -470,7 +470,7 @@ export function stepFinalBoss(b, ctx) {
      * see the arm: the walk/coast split is `v.length <= moveSpeed` measured
      * AFTER friction, the move and the cap, and a consumer that tested the
      * boss's speed before or after the step would get the other answer part
-     * of the time. `levelRun` asserts `owlTickDraws(phase, shaking)` against
+     * of the time. `levelRun` asserts `owlTickDraws(phase)` against
      * the stream's own delta on every tick, which is the
      * one-table-two-computations law applied to a draw schedule.
      */
@@ -1031,12 +1031,13 @@ export function finalBossCoast({
  *      LAST. Each entity's `update()` is immediately followed by its own
  *      `_graphic.update()` in the same pass — which is trap 104's whole
  *      mechanism and why the death arm's five rocks draw in the boss's slot.
- *   2. `view()` — the jiggle, 2 draws whenever `shake > 0`, then the
- *      one-per-FRAME decay.
+ *   2. `view()` — the jiggle, then the one-per-FRAME decay. ⛓ Since p4f
+ *      (seedling-wasm-leak L4 3′c) the jiggle takes NO draw under the split
+ *      (`finalBossRng.shakeJiggle`).
  *   3. `updateLists()` — the queued adds and removes land, which is why a
  *      rock's first update is the tick AFTER the boss made it.
  *
- * ⇒ every tick's draws are `[the boss's, if any] ++ [the jiggle's, if any]`,
+ * ⇒ every tick's draws are `[the boss's, if any]`,
  * and nothing else in this room can get between them.
  */
 export function createOwlRoom({ tiles, seed, bossX = 72, bossY = 104, tag = 0,
@@ -1167,10 +1168,12 @@ export function stepOwlRoom(room, ctx = {}) {
     //     needs from it is `playerShake`.
     room.shake += playerShake;
 
-    // 2. `view()` — the jiggle, then the decay, once per FRAME.
+    // 2. `view()` — the jiggle, then the decay, once per FRAME. ⛓ p4f 3′c: the
+    //    split jiggle is a pure function of `Game.time` and takes NO draw; this
+    //    model does not carry the clock, so it reports the shake `view()` read.
     let jiggle = null;
     if (room.shake > 0) {
-        jiggle = room.stream.jiggle(room.shake);
+        jiggle = { shake: room.shake, draws: 0 };
         room.shake = Math.max(room.shake - 1, 0);
     }
     out.jiggle = jiggle;

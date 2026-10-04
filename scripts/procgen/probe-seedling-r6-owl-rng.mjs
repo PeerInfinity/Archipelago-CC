@@ -79,6 +79,7 @@ import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { headlessWebgpuArgs } from './headlessChromium.js';
+import { OWL_LEVEL_BUILD_DRAWS } from '../../frontend/modules/seedlingDemo/finalBossRng.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 
 /**
@@ -98,7 +99,8 @@ takeBoxLockOrExit({ name: 'probe-seedling-r6-owl-rng.mjs', kind: 'browser' });
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
-const PAGE_URL = 'http://localhost:8000/frontend/modules/flashPanel/wasm/'
+// `SEEDLING_PORT` moves the server, as in the differential and the campaign pipeline.
+const PAGE_URL = `http://localhost:${process.env.SEEDLING_PORT || '8000'}/frontend/modules/flashPanel/wasm/`
     + `${process.env.SEEDLING_PAGE || 'seedling_bot_ap_p4f'}/game.html`;
 
 const outArg = process.argv.indexOf('--out');
@@ -244,7 +246,9 @@ async function runArm(seed, ticks) {
             equips: [],
             pins: ['sound', 'dead_frames'],
             save: { totem_parts: [], keys: [], seal_parts: [] },
-            rng: { seed, split: true },
+            // ⛓ v8-aware builds refuse a v7 `rng` that omits the two v8 fields: v7 means
+            // `{cosmetic: 0, fp: 0}` BY DEFINITION and the game checks the VALUES.
+            rng: { seed, split: true, cosmetic: 0, fp: 0 },
             tick_count: ticks,
             inputs: ticks > INTRO_PRESS.from ? [INTRO_PRESS] : [],
         };
@@ -257,8 +261,20 @@ async function runArm(seed, ticks) {
         // FRAMES between the finish and the read. 60 ms is under two frames
         // at the engine's own rate and is what keeps the spread at 0..1.
         const DEADLINE = Date.now() + 30 * 60 * 1000;
+        // ⛔ THE TWO READOUTS IN ONE JS TURN (seedling-wasm-leak L4, measured on
+        // p4f): `botStatus` and `botMobiles` read in two awaited calls let a game
+        // frame land BETWEEN them — the count came from frame N and the boss
+        // from N + 1 on two arms (seed 1234567 @60, seed 101 @90), which the
+        // test's one-offset fit then refused. A frame cannot run inside one
+        // synchronous evaluate, so both now come from the same frame.
+        let mobRaw = null;
         for (;;) {
-            st = await botJson('botStatus');
+            const pair = await page.evaluate(() => {
+                const g = window.__swfBridge.game;
+                return { st: String(g.botStatus()), mob: String(g.botMobiles()) };
+            });
+            st = JSON.parse(pair.st);
+            mobRaw = pair.mob;
             if (st.finished) break;
             if (Date.now() > DEADLINE) {
                 throw new Error(`deadline at tick ${st.tick}/${st.tick_count}, `
@@ -288,7 +304,7 @@ async function runArm(seed, ticks) {
         // his displacement counts his moving ticks exactly. This is the field
         // that settled the release-edge question, and it is recorded so the
         // next reading does not have to re-measure it.
-        const mob = JSON.parse(await bot('botMobiles'));
+        const mob = JSON.parse(mobRaw);
         const boss = (mob.mobiles ?? []).find((m) => String(m.cls).includes('FinalBoss'));
         return {
             draws,
@@ -372,7 +388,9 @@ try {
         /** MEASURED, not derived from the span convention. See `INTRO_PRESS`. */
         introEndsAt: INTRO_ENDS_AT,
         /** What `createOwlRoom` must consume before tick 0. */
-        levelBuildDraws: 2,
+        // The model's own constant (1 since p4f: the Orb's draw is cosmetic), not a literal —
+        // the intro arm below is the measurement that must agree with it.
+        levelBuildDraws: OWL_LEVEL_BUILD_DRAWS,
         repeats: REPEATS,
         noDamage: true,
         split: true,

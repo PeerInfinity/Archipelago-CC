@@ -8098,10 +8098,11 @@ export function createLevelRun({
      *      AFTER this function returns. `applyThrust` is called from the
      *      player's slot for exactly that reason.
      *
-     * ⛓ AND `view()` IS NOT IN HERE. The jiggle's two draws are a property of
-     * the FRAME, not of the boss — they fire on ticks he is frozen, dead and
-     * coasting — so they are spent at the camera step, below the player, where
-     * `Game.update` really calls `view()`. `owlJiggleNow` is that call.
+     * ⛓ AND `view()` IS NOT IN HERE — and since p4f (seedling-wasm-leak L4
+     * 3′c) it spends nothing: under `rng.split`, which every Owl window
+     * declares, the jiggle is `Game.shakeJiggle(Game.time, axis)` and takes no
+     * draw, so the frame-level `+2` (and the `owlJiggleNow` that booked it) is
+     * gone.
      *
      * @returns {{frozen: boolean}} `frozen` is the INTRO's freeze, which is a
      *   `Game.talking` freeze and therefore TAPE TICKS rather than dead frames
@@ -8481,16 +8482,15 @@ export function createLevelRun({
          * ⛔⛔ THE SCHEDULE, CHECKED AGAINST ITSELF — the one-table-two-
          * computations law on a DRAW COUNT.
          *
-         * `owlTickDraws(phase, shaking)` walks `OWL_PHASE_SITES` and counts;
+         * `owlTickDraws(phase)` walks `OWL_PHASE_SITES` and counts;
          * `stream.count` is what the fight actually booked. They are two
          * computations of one number and a disagreement is the §19.2 defect
          * (a census of SITES that does not discharge a schedule of TICKS)
          * happening again — so it throws by name here rather than surfacing as
          * a rock 40 px from where the game put it.
          *
-         * ⚠ THE JIGGLE IS NOT IN THIS COMPARISON. It is spent below the
-         * player, at `view()`, so `shaking: false` is right for this call and
-         * `owlJiggleNow` makes its own assertion.
+         * ⛓ THE JIGGLE IS NOT IN THIS COMPARISON because it draws nothing since
+         * p4f (3′c) — see `finalBossRng.shakeJiggle`.
          */
         const spent = stream.count - drawsBefore;
         /**
@@ -8502,7 +8502,7 @@ export function createLevelRun({
          * returns right after `super.update()` and costs the stream nothing.
          * The ten draws come from the GRAPHIC: `endAnim`'s "dead" arm, in the
          * same pass, five rocks at two draws each. So a tick's site list is
-         * `phase ++ (deathAnim if the callback fired) ++ jiggle`, and reading
+         * `phase ++ (deathAnim if the callback fired)`, and reading
          * the phase alone is one row short exactly once per fight.
          *
          * ⛓ Found by the check rather than by a recording, which is the whole
@@ -8510,8 +8510,8 @@ export function createLevelRun({
          * SITES that does not discharge a schedule of TICKS) recurring inside
          * the very slice that banked the lesson.
          */
-        const owed = owlTickDraws(step.phase, false)
-            + (deathArmFired ? owlTickDraws('deathAnim', false) : 0);
+        const owed = owlTickDraws(step.phase)
+            + (deathArmFired ? owlTickDraws('deathAnim') : 0);
         if (spent !== owed) {
             throw new Error(`levelRun: the Owl's tick ${ticksCompleted} took phase `
                 + `"${step.phase}"${deathArmFired ? ' + the death arm' : ''}, which `
@@ -8539,33 +8539,6 @@ export function createLevelRun({
         return { frozen: step.introFreeze };
     }
 
-    /**
-     * `view()`'s two draws, spent where `Game.update` really spends them.
-     *
-     * ⛔ ONE CALL PER FRAME AND IT IS BELOW EVERY ENTITY. `Game.as:1879-1880`
-     * is `FP.camera.x += shake * Math.random() - shake / 2` and the same for
-     * `y`, with the decay `shake = Math.max(shake - 1, 0)` on the line after —
-     * so the draws are made against the shake AFTER every rock that landed
-     * this tick has added to it, and the decay is once per FRAME however many
-     * landed.
-     *
-     * ⚠ THE CAMERA STAYS A BAND. §11.6's carry: the jiggle's VALUES are
-     * modelled now, and `stepCameraBand` still keeps the interval, because
-     * `onScreen` within 9 px of a screen edge is a refusal either way and
-     * collapsing the band would be a second change with no witness. What this
-     * function owns is the STREAM POSITION, which is the quantity the fight
-     * reads.
-     */
-    function owlJiggleNow() {
-        if (owlStream === null || level !== owlStreamLevel) return;
-        if (shake <= 0) return;
-        const before = owlStream.count;
-        owlStream.jiggle(shake);
-        if (owlStream.count - before !== 2) {
-            throw new Error('levelRun: the Owl room\'s jiggle spent '
-                + `${owlStream.count - before} draws, and \`view()\` makes exactly two.`);
-        }
-    }
 
     /**
      * ⛓ A grenade's REMOVAL moves `classCount(Grenade)`, and `Grenade` IS in
@@ -15818,7 +15791,6 @@ export function createLevelRun({
                             + 'approximated.');
                     }
                     prevHeld = new Set(held);
-                    owlJiggleNow();
                     return runFrozenTick(activators, 'the Owl\'s intro');
                 }
             }
@@ -16965,13 +16937,8 @@ export function createLevelRun({
             // `onScreen` tests are gated against. On a transition the swap
             // happens below and rebuilds it, which is `Game`'s own
             // reconstruction.
-            // ⛓⛓⛓ R6 SLICE 6f: AND `view()`'s TWO DRAWS ARE PART OF IT.
-            // `Game.as:1879-1880` jiggles the camera from `Game.shake` before
-            // the decay on the line below, so the draws are spent against a
-            // shake every rock that landed this tick has already added to.
-            // Above `stepCameraNow` because that call is what performs the
-            // decay, and the two draws come first.
-            owlJiggleNow();
+            // ⛓ R6 slice 6f booked `view()`'s two jiggle draws here; since p4f
+            // (seedling-wasm-leak L4 3′c) the split jiggle takes none.
             if (!next.transition) stepCameraNow(next, world.world);
             // ...and THEN Button.update and Lock.update run, against where
             // the player ended up.
