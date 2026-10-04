@@ -3,7 +3,7 @@
  * request (plan `NewDocs/plans/seedling-js-solver-walk-plan.md` §5.3 W1).
  *
  * The fixture is a RECORDING, not a hand-written latch:
- * `fixtures/wasm-arrival-p4e.json` holds the raw reads of four real arrivals
+ * `fixtures/wasm-arrival-p4f.json` holds the raw reads of four real arrivals
  * on the live flashPanel page (`seedling_atlas_location`, default build p4e,
  * headless logic-only), taken by `scripts/procgen/probe-seedling-wasm-arrival-solve.mjs
  * --record=…` — `botSeam()` at the arrival, the ONE `botStatus` read in the
@@ -37,7 +37,7 @@ import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
-const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4e.json').arrivals;
+const RECORDED = readJson('frontend/modules/seedlingDemo/fixtures/wasm-arrival-p4f.json').arrivals;
 const RECORDS = indexLevels(readJson('frontend/modules/flashPanel/atlases/seedling-map.json'));
 const SOURCE = levelSourceFromAtlas(RECORDS);
 const GAME_CONFIG = readJson('frontend/modules/flashPanel/games/seedling.json');

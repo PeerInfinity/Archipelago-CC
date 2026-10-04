@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 38,
-            "count": 80,
+            "browser": 39,
+            "count": 81,
             "id": "probe"
         },
         {
@@ -214,12 +214,12 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 322,
-        "browser": 103,
+        "blockStyle": 323,
+        "browser": 104,
         "cited": 152,
-        "files": 333,
+        "files": 334,
         "lineStyle": 11,
-        "withDocblock": 333,
+        "withDocblock": 334,
         "withFlags": 253
     },
     "dir": "scripts/procgen",
@@ -9704,6 +9704,24 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-shortcut-grade — ⛔⛔⛔ **WHY `SHORTENS` IS NOT REACHABLE ON SEEDLING, EVEN WITH THE `break` VERB REGISTERED.** R9 slice 4 (kickoff §3.5's generator half); the successor to arc 5 slice 5's `probe-rock.mjs`.",
             "path": "scripts/procgen/probe-seedling-shortcut-grade.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-since-begin.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "THE SINCE-BEGIN RECORD, MEASURED ON THE GAME (seedling-wasm-leak L4 item 4c, ⚖ D3 capability `sincebegin`) — the acceptance witness for `botSeam().sinceBegin = {stepped, dead, input_frames, pressed, held_at_begin, rng_first}`, which p4f added so a host can adopt a room it did not start.",
+            "path": "scripts/procgen/probe-seedling-since-begin.mjs"
         },
         {
             "argvHelpers": [
