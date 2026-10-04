@@ -48,6 +48,32 @@
 // `conditionKey` (equal conditions get equal keys) and `resolveCondition`
 // (condition -> Rule Builder tree, or null when no item backs it).
 //
+// And two OPTIONAL oracles, for a game that has a physics model finer than its
+// tile transcription (RULES logical-links). Each answers only the question the
+// transcription cannot, and each is consulted only where the transcription has
+// already given up, so a caller that supplies neither gets the old analysis:
+//
+//   manualCrossingVerdict({ from, to, via, corridor, conditions })  asked once
+//                    per WAY of a crossing that has only manual ways (no
+//                    labelled one). `from`/`to` are atlas tiles of the two
+//                    components, `via` the region's manual cells, `corridor`
+//                    the tiles that way crossed and `conditions` what its gated
+//                    cells charge. true = the model walks it (the way becomes a
+//                    LABELLED way with exactly those conditions — free when
+//                    there are none), false = the model cannot (the way is
+//                    dropped, not defaulted open), undefined = no verdict (the
+//                    crossing stays a hand-authoring row). A crossing whose
+//                    ways are all settled and all sealed is no crossing.
+//   modelReach({ tile, enterable })  a tile NO component reaches through the
+//                    crossing material: the atlas tiles the model's flood from
+//                    it reaches, nearest first, entering only tiles for which
+//                    `enterable(x, y)` holds. The analyzer allows `open`,
+//                    `wall` and `manual` cells: the model is the authority on
+//                    what is SOLID, the transcription on what a crossing COSTS,
+//                    so the flood never enters gated material. The first tile
+//                    in a component binds; none = the old proximity
+//                    finding, then no component.
+//
 // Deterministic: components are named for their own geometry and everything is
 // emitted in sorted order, so re-running on unchanged input reproduces the
 // document byte for byte (the CLI's `--check` gate).
@@ -397,6 +423,10 @@ export function findCrossings(grid, componentsResult, options = {}) {
             })),
             manual: !free && labelled.length === 0 && manual.length > 0,
             manualReasons: free || labelled.length > 0 ? [] : [...new Set(manual.flatMap((w) => w.reasons))],
+            // The manual ways, one per distinct condition set, each with every
+            // tile any way of that set crossed — what a physics model is asked
+            // about (`manualCrossingVerdict`).
+            manualWays: free || labelled.length > 0 ? [] : manualWaysOf(manual, conditionOf),
             tiles: (free ? labelled.find((w) => w.mask === 0) : (labelled[0] ?? manual[0]))?.tiles ?? [],
         });
     }
@@ -420,6 +450,19 @@ export function findCrossings(grid, componentsResult, options = {}) {
         conditionVocabulary: conditionOf,
         overflow: [...new Set(overflow.map(String))].map((s) => s.split(',').map(Number)),
     };
+}
+
+function manualWaysOf(manual, conditionOf) {
+    const byMask = new Map();
+    for (const w of manual) {
+        if (!byMask.has(w.mask)) byMask.set(w.mask, new Map());
+        for (const t of w.tiles) byMask.get(w.mask).set(`${t[0]},${t[1]}`, t);
+    }
+    return [...byMask.keys()].sort((a, b) => a - b).map((mask) => ({
+        mask,
+        conditions: conditionOf.filter((_, bit) => (mask >> bit) & 1),
+        tiles: [...byMask.get(mask).values()].sort((a, b) => (a[1] - b[1]) || (a[0] - b[0])),
+    }));
 }
 
 function dedupeSinks(sinks) {
@@ -849,6 +892,44 @@ export function componentForTile(grid, componentsResult, tile, options = {}) {
         };
     }
 
+    if (typeof options.modelReach === 'function') {
+        // The model is asked only for what is SOLID; gated material is the
+        // transcription's, so the flood stays out of it (see the contract).
+        const enterable = (ax, ay) => {
+            const gx = ax - ox;
+            const gy = ay - oy;
+            if (gx < 0 || gy < 0 || gx >= width || gy >= height) return false;
+            const kind = grid.cells[gy * width + gx]?.kind;
+            return kind === 'open' || kind === 'wall' || kind === 'manual';
+        };
+        let distance = 0;
+        for (const [ax, ay] of options.modelReach({ tile: [x + ox, y + oy], enterable }) ?? []) {
+            distance += 1;
+            const gx = ax - ox;
+            const gy = ay - oy;
+            if (gx < 0 || gy < 0 || gx >= width || gy >= height) continue;
+            const hit = indexOf[gy * width + gx];
+            if (hit < 0) continue;
+            return {
+                component: components[hit],
+                exact: false,
+                reachable: true,
+                free: true,
+                manual: false,
+                conditionSets: [],
+                manualReasons: [],
+                model: true,
+                reason: 'tile is not walkable in the transcription and no component reaches it through the crossing '
+                    + `material; the physics model's flood from it reaches this component first (at [${ax},${ay}], `
+                    + `the ${distance}${distance === 1 ? 'st' : 'th'} tile it enters)`,
+            };
+        }
+        // The model reached no component either: fall through to the named
+        // proximity FINDING (a pit field's inner pits, which only a fall
+        // reaches), and past it to no component at all, which the caller
+        // refuses by name rather than bucketing.
+    }
+
     const near = nearestComponent(grid, componentsResult, x, y);
     if (near) {
         return {
@@ -891,6 +972,65 @@ function latchResolver(regionId, latches, resolveCondition) {
 }
 
 /**
+ * RULES logical-links — settle the manual crossings with the caller's physics
+ * model (`options.manualCrossingVerdict`, see the contract).
+ *
+ * Applied AFTER the free-pair fusion, on purpose: a model-walkable crossing
+ * becomes a free ROW and never fuses its components, so the sub-region names
+ * (which are AP region names) stay what the transcription made them. A sealed
+ * one is dropped: the transcription's open-by-default for material it cannot
+ * read was a permissive guess, and the model has now answered it.
+ */
+function applyManualCrossingVerdicts(grid, componentsResult, crossings, options) {
+    const verdictOf = options.manualCrossingVerdict;
+    if (typeof verdictOf !== 'function') return { crossings, modelVerdicts: [] };
+    const ox = grid.origin?.x ?? 0;
+    const oy = grid.origin?.y ?? 0;
+    const atlasTiles = (tiles) => tiles.map(([x, y]) => [x + ox, y + oy]);
+    const byId = new Map(componentsResult.components.map((c) => [c.id, c]));
+    const via = [];
+    for (let i = 0; i < grid.cells.length; i += 1) {
+        if (grid.cells[i]?.kind !== 'manual') continue;
+        via.push([(i % grid.width) + ox, Math.floor(i / grid.width) + oy]);
+    }
+    const out = [];
+    const modelVerdicts = [];
+    for (const c of crossings) {
+        if (!c.manual || !(c.manualWays?.length > 0)) { out.push(c); continue; }
+        const from = atlasTiles(byId.get(c.from).tiles);
+        const to = atlasTiles(byId.get(c.to).tiles);
+        const verdicts = c.manualWays.map((w) => verdictOf({
+            from, to, via, corridor: w.tiles, conditions: w.conditions,
+        }));
+        // One undecided way leaves the whole crossing to a hand: settling the
+        // rest would claim a completeness the model did not give.
+        if (verdicts.some((v) => v === undefined)) { out.push(c); continue; }
+        const walked = c.manualWays.filter((_, i) => verdicts[i] === true);
+        const ways = paretoMinimal(walked);
+        modelVerdicts.push({
+            from: c.from,
+            to: c.to,
+            walkable: ways.length > 0,
+            ways: ways.map((w) => w.conditions),
+            sealed: c.manualWays.length - walked.length,
+            reasons: c.manualReasons,
+        });
+        if (ways.length === 0) continue;
+        const free = ways.some((w) => w.mask === 0);
+        out.push({
+            ...c,
+            free,
+            manual: false,
+            manualWays: [],
+            manualReasons: [],
+            conditionSets: free ? [] : ways.map((w) => ({ conditions: w.conditions, tiles: w.tiles })),
+            tiles: ways[0].tiles,
+        });
+    }
+    return { crossings: out, modelVerdicts };
+}
+
+/**
  * Analyze one atlas region against its grid.
  *
  * Pure: it computes a PROPOSAL and touches nothing. `applyRegionAnalysis`
@@ -908,7 +1048,8 @@ export function analyzeRegion(region, grid, options = {}) {
         crossingsResult = findCrossings(grid, componentsResult, options);
     }
     const { components } = componentsResult;
-    const { crossings, sinks, overflow, latches } = crossingsResult;
+    const { sinks, overflow, latches } = crossingsResult;
+    const { crossings, modelVerdicts } = applyManualCrossingVerdicts(grid, componentsResult, crossingsResult.crossings, options);
     const { rows, needsAuthoring, unresolvedConditions } = buildInternalExits(crossings, {
         ...options,
         resolveCondition: latchResolver(region.region_id, latches, options.resolveCondition),
@@ -943,6 +1084,7 @@ export function analyzeRegion(region, grid, options = {}) {
         internal_exits: rows,
         bindings,
         needs_authoring: needsAuthoring,
+        model_verdicts: modelVerdicts,
         boundary_candidates: boundaryCandidates,
         unresolved_conditions: unresolvedConditions,
         unclassified: grid.unclassified ?? [],

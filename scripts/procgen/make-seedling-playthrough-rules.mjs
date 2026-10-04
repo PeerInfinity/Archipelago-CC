@@ -59,7 +59,7 @@ const PRESET_OUT = path.join(repoRoot,
 const GAME_NAME = 'Seedling Playthrough';
 
 const { AtlasSession } = await imp('frontend/modules/regionMarkingTool/atlasSession.js');
-const { validateRegionAtlas } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
+const { validateRegionAtlas, derivedRulesSource } = await imp('frontend/modules/procgenPipeline/regionAtlasValidator.js');
 const { compactJsonFile } = await imp('frontend/modules/procgenPipeline/compactJson.js');
 const { analyzeRegion, applyRegionAnalysis } = await imp('frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
 const { compileRegionAtlas } = await imp('frontend/modules/procgenPipeline/regionAtlasCompiler.js');
@@ -227,6 +227,115 @@ export const playthroughGridFor = (level, options) => gridFor(level, options);
  */
 export const playthroughAnalyzerOptions = analyzerOptions;
 
+// ── ⛓ RULES logical-links: the PHYSICS MODEL answers what the transcription cannot ──
+//
+// Two questions the tile transcription gives up on, both about what is SOLID:
+//   - a crossing whose only way runs through a building's sprite rect (`manual`:
+//     the per-pixel outline is not transcribed). It used to be emitted OPEN as a
+//     "NEEDS A HAND-WRITTEN RULE" row, and 6 such links the model cannot walk
+//     shipped as True_ — the Sword's `level_0__r8c0 <-> r1c6` among them (the
+//     house's outline and the row-7 poles wall r1c6 off; walk-plan §5.17).
+//   - an exit tile NO component reaches through the crossing material. It used
+//     to bind to NO component and be bucketed into the FIRST sub-region — L0's
+//     L2 stairs (16,17) into r1c6, though they stand beside r8c0 (the
+//     transcription walls the Moonrock's sprite over them; the model, every
+//     solid live, does not).
+// The model's answer is a 1-PIXEL flood of the player's own box through
+// `levelWorld.collidesSolid`, every solid live (`levelSetExits.walkableCellsFrom`'s
+// question at sub-tile resolution: a cell-centre flood is exactly the tile
+// coarsening `--masks` measured sealing the Owl's Nest). It never enters gated
+// material: the analyzer owns what a crossing COSTS (see its contract).
+//
+// ⛓ The firewall's allowed direction (§6.3): the generator reads the model.
+const modelWorlds = new Map();
+const modelWorldOf = (level) => {
+    if (!modelWorlds.has(level.level)) modelWorlds.set(level.level, buildLevelWorld(level));
+    return modelWorlds.get(level.level);
+};
+
+/**
+ * The tiles the player's box can reach from `seeds` (atlas tiles), entering a
+ * tile only when `enterable(tx, ty)`, in first-reach order (pixel distance).
+ * Every free pixel position of a seed tile is a start.
+ */
+export function modelFloodTiles(level, seeds, enterable) {
+    const world = modelWorldOf(level);
+    const W = level.width * TILE;
+    const H = level.height * TILE;
+    const freeAt = (x, y) => world.collidesSolid(playerBoxAt(x, y), {}) === null;
+    const seen = new Uint8Array(W * H);
+    const queue = [];
+    for (const [tx, ty] of seeds) {
+        for (let y = ty * TILE; y < (ty + 1) * TILE; y += 1) {
+            for (let x = tx * TILE; x < (tx + 1) * TILE; x += 1) {
+                if (x >= W || y >= H || seen[y * W + x] || !freeAt(x, y)) continue;
+                seen[y * W + x] = 1;
+                queue.push(y * W + x);
+            }
+        }
+    }
+    const order = [];
+    const reached = new Set();
+    for (let head = 0; head < queue.length; head += 1) {
+        const at = queue[head];
+        const x = at % W;
+        const y = (at - x) / W;
+        const tk = `${Math.floor(x / TILE)},${Math.floor(y / TILE)}`;
+        if (!reached.has(tk)) { reached.add(tk); order.push([Math.floor(x / TILE), Math.floor(y / TILE)]); }
+        for (const [dx, dy] of [[0, -1], [-1, 0], [1, 0], [0, 1]]) {
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= W || ny >= H || seen[ny * W + nx]) continue;
+            const ntx = Math.floor(nx / TILE);
+            const nty = Math.floor(ny / TILE);
+            if ((ntx !== Math.floor(x / TILE) || nty !== Math.floor(y / TILE)) && !enterable(ntx, nty)) continue;
+            seen[ny * W + nx] = 1;
+            if (!freeAt(nx, ny)) continue;
+            queue.push(ny * W + nx);
+        }
+    }
+    return order;
+}
+
+/** True when no pixel position in the tile is free for the player's box. */
+const tileSolidInModel = (level, [tx, ty]) => modelFloodTiles(level, [[tx, ty]], () => false).length === 0;
+
+/** The analyzer options for ONE level: the shared ones plus the two model oracles. */
+export function playthroughAnalyzerOptionsFor(level) {
+    const grid = gridFor(level);
+    const charged = (t) => {
+        const c = grid.cells[t[1] * grid.width + t[0]];
+        return c && c.kind !== 'manual' && c.kind !== 'open'
+            && ((c.conditions?.length ?? 0) > 0 || Object.keys(c.dirs ?? {}).length > 0
+                || Object.keys(c.faces ?? {}).length > 0 || Object.keys(c.enter ?? {}).length > 0);
+    };
+    return {
+        ...analyzerOptions,
+        // One way of a manual crossing: can the player's box get from `from` to
+        // `to` inside the building's cells and that way's own corridor? The
+        // corridor's gated cells are walked as the model has them (water is not
+        // solid); a corridor through a gated SOLID (a rock an item breaks) gets
+        // NO verdict, since every solid is live here and the item is the point.
+        manualCrossingVerdict: ({ from, to, via, corridor }) => {
+            if (corridor.some((t) => charged(t) && tileSolidInModel(level, t))) return undefined;
+            const key = (t) => `${t[0]},${t[1]}`;
+            const allowed = new Set([...from, ...to, ...via, ...corridor].map(key));
+            const target = new Set(to.map(key));
+            const reached = modelFloodTiles(level, from, (tx, ty) => allowed.has(`${tx},${ty}`));
+            return reached.some((t) => target.has(key(t)));
+        },
+        // A tile with no free pixel (an NPC, a door drawn on a wall) is used
+        // from BESIDE it, so the flood then starts from its enterable neighbours.
+        modelReach: ({ tile, enterable }) => {
+            const own = modelFloodTiles(level, [tile], enterable);
+            if (own.length > 0) return own;
+            const [tx, ty] = tile;
+            const beside = [[tx, ty - 1], [tx - 1, ty], [tx + 1, ty], [tx, ty + 1]].filter(([x, y]) => enterable(x, y));
+            return modelFloodTiles(level, beside, enterable);
+        },
+    };
+}
+
 // ── what the derivation needs, and what this script keeps ─────────────────
 //
 // ⛓⛓ EDITOR v3 slice D0b — `linksOf`, `pitOf`, `tileOf`/`arrivalTileOf`,
@@ -299,6 +408,7 @@ export function buildPlaythroughAtlas() {
     lavaTrapLifts.length = 0;
     locationGuards.length = 0;
     permissiveBindings.length = 0;
+    modelVerdicts.length = 0;
     crossingCharged.length = 0;
     arrivalsUncharged.length = 0;
     /**
@@ -322,19 +432,30 @@ export function buildPlaythroughAtlas() {
     for (const region of [...session.atlas.regions]) {
         const regionId = region.region_id;
         const level = levelOf(region.map_ref);
-        const analysis = analyzeRegion(region, gridFor(level), analyzerOptions);
+        const analysis = analyzeRegion(region, gridFor(level), playthroughAnalyzerOptionsFor(level));
         const applied = applyRegionAnalysis(session.atlas, analysis, { stamp: false });
         for (const p of applied.problems) note(`${regionId}: ${p.message}`);
         for (const n of analysis.needs_authoring) {
             note(`${regionId}: ${n.from} ${n.bidirectional ? '<->' : '->'} ${n.to} `
                 + `NEEDS A HAND-WRITTEN RULE — ${n.reasons.join('; ')}`);
         }
+        for (const v of analysis.model_verdicts) {
+            const ways = v.ways.map((w) => (w.length === 0 ? 'free' : w.map((c) => SEM.conditionKey(c)).join(' + ')));
+            modelVerdicts.push(`${regionId}/${v.from}->${v.to} ${v.walkable ? `WALKABLE [${ways.join(' | ')}]` : 'SEALED'}`);
+            note(`${regionId}: ${v.from} -> ${v.to} through ${v.reasons.join('; ')} — the physics model's flood `
+                + (v.walkable
+                    ? `walks it: an analyzer row costing ${ways.join(' OR ')} (${v.sealed} way(s) sealed)`
+                    : 'cannot walk any way of it: NO crossing (was a True_ hand-authoring default)'));
+        }
+        const unbound = analysis.bindings.filter((b) => !b.component);
+        for (const b of unbound) note(`${regionId}: ${b.kind} "${b.id}" binds to NO walkable component — ${b.reason}`);
         for (const b of analysis.bindings) {
-            if (!b.component) note(`${regionId}: ${b.kind} "${b.id}" binds to NO walkable component — ${b.reason}`);
+            if (b.model) note(`${regionId}: ${b.kind} "${b.id}" at [${b.tile}] bound to "${b.component.id}" by the physics model — ${b.reason}`);
         }
         applyCrossingCostToBindings(session.atlas, regionId, analysis);
         applyLavaTrapPulls(session.atlas, regionId, level, analysis);
         pruneUnreachableSubRegions(session.atlas, regionId);
+        refuseUnboundMembers(session.atlas.regions.find((r) => r.region_id === regionId), unbound);
     }
     applyHandRulings(session.atlas);
     return session.toDocument();
@@ -510,7 +631,9 @@ function applyHandRulings(atlas) {
         if (!rule) throw new Error(`charged door ${door.level}/${door.exitId} does not resolve to a rule`);
         exit.access_rule = exit.access_rule === undefined
             ? rule : { rule: 'And', children: [exit.access_rule, rule] };
-        region.annotations.rules_source = 'mixed';
+        // `rules_source` is DERIVED from the internal exits (the validator's
+        // rule); a charged EXIT is not one, so it only fills the gap.
+        region.annotations.rules_source = derivedRulesSource(region) ?? 'mixed';
         crossingCharged.push(`${regionIdFor(door.level)}/${door.exitId}`);
         note(`${regionIdFor(door.level)}: ${door.exitId} CHARGED its approach by hand — `
             + `${door.why} (${door.cite})`);
@@ -593,6 +716,24 @@ function pruneUnreachableSubRegions(atlas, regionId) {
         if (atlas.vanilla_layout?.start_region === regionId) delete atlas.vanilla_layout.start_sub_region;
     }
 }
+
+/**
+ * ⛔ REFUSED BY NAME, NOT BUCKETED (RULES logical-links): an exit or location that
+ * binds to NO component, in a region that is still SPLIT after pruning, would sit
+ * in whichever sub-region `applyRegionAnalysis` put first — a route no player
+ * walks. An unsplit region has no sub-region to be wrong about (L50/L52's
+ * swim-only doors), so it passes.
+ */
+export function refuseUnboundMembers(region, unbound) {
+    if (!region?.subgraph || unbound.length === 0) return;
+    throw new Error(`${region.region_id} is split into sub-regions, and `
+        + `${unbound.map((b) => `${b.kind} "${b.id}" at [${b.tile}]`).join(', ')} binds to NO walkable component `
+        + '(neither the crossing material nor the physics model reaches one) — it would be bucketed into the first '
+        + 'sub-region, a route no player walks');
+}
+
+/** Every manual crossing the physics model settled (walkable or sealed). */
+export const modelVerdicts = [];
 
 /** Every pocket this run dropped, so the count is derived and never typed. */
 export const prunedPockets = [];

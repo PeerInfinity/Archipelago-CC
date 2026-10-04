@@ -337,6 +337,100 @@ describe('rule tidying', () => {
     });
 });
 
+// ⛓ RULES logical-links — the two OPTIONAL physics-model oracles. A fake model
+// stands in for the game's: the analyzer is game-agnostic, so the contract is
+// what is under test, not Seedling's collision.
+describe('a physics model settles what the transcription cannot (RULES logical-links)', () => {
+    const region = { region_id: 'r', exits: [], locations: [] };
+    const verdict = (answer) => ({ ...OPTIONS, manualCrossingVerdict: () => answer });
+
+    it('drops a manual crossing the model cannot walk — it is NOT emitted as a True_ row', () => {
+        const analysis = analyzeRegion(region, gridOf(['.?.']), verdict(false));
+        expect(rowsOf(analysis)).toEqual([]);
+        expect(analysis.needs_authoring).toEqual([]);
+        expect(analysis.model_verdicts).toEqual([
+            expect.objectContaining({ from: 'r0c0', to: 'r0c2', walkable: false, ways: [] }),
+            expect.objectContaining({ from: 'r0c2', to: 'r0c0', walkable: false, ways: [] }),
+        ]);
+    });
+
+    it('makes a manual crossing the model walks a FREE analyzer row', () => {
+        const analysis = analyzeRegion(region, gridOf(['.?.']), verdict(true));
+        expect(rowsOf(analysis)).toEqual([{ from: 'r0c0', to: 'r0c2', bidirectional: true, source: 'analyzer' }]);
+        expect(analysis.needs_authoring).toEqual([]);
+        // ...and does NOT fuse the two: the sub-region names are AP region names.
+        expect(idsOf(analysis)).toEqual(['r0c0', 'r0c2']);
+    });
+
+    it('keeps the gated part of a walked manual way: it is charged, never True_', () => {
+        // The way crosses the manual cell AND water ('~' = a). Before the model,
+        // the whole crossing was one ruleless row, which dropped the `a`.
+        const analysis = analyzeRegion(region, gridOf(['.?~.']), verdict(true));
+        expect(rowsOf(analysis)).toEqual([{
+            from: 'r0c0', to: 'r0c3', bidirectional: true, source: 'analyzer',
+            access_rule: { rule: 'Has', args: { item_name: 'a' } },
+        }]);
+    });
+
+    it('asks once per way, with the way\'s own corridor and conditions', () => {
+        const asked = [];
+        analyzeRegion(region, gridOf(['.?~.']), {
+            ...OPTIONS,
+            manualCrossingVerdict: (q) => { asked.push(q); return false; },
+        });
+        expect(asked).toHaveLength(2); // one way each direction
+        expect(asked[0]).toEqual({
+            from: [[0, 0]], to: [[3, 0]], via: [[1, 0]], corridor: [[1, 0], [2, 0], [3, 0]], conditions: ['a'],
+        });
+    });
+
+    it('leaves the crossing to a hand when the model gives no verdict', () => {
+        const analysis = analyzeRegion(region, gridOf(['.?.']), verdict(undefined));
+        expect(rowsOf(analysis)).toEqual([{ from: 'r0c0', to: 'r0c2', bidirectional: true, source: 'manual' }]);
+        expect(analysis.needs_authoring).toHaveLength(1);
+        expect(analysis.model_verdicts).toEqual([]);
+    });
+
+    it('never asks about a crossing that already has a labelled way', () => {
+        let asked = 0;
+        analyzeRegion(region, gridOf(['.~.', '.?.']), { ...OPTIONS, manualCrossingVerdict: () => { asked += 1; return false; } });
+        expect(asked).toBe(0);
+    });
+
+    // The stairs-beside-the-wrong-room defect: a tile the transcription walls in
+    // (so nothing reaches it) but the model stands on, next to the far room.
+    const boxed = gridOf(['.#.']);
+    const boxedComponents = findComponents(boxed);
+
+    it('binds an unreachable tile to the component the MODEL reaches first, not the nearest', () => {
+        const hit = componentForTile(boxed, boxedComponents, [1, 0], {
+            ...OPTIONS,
+            modelReach: ({ tile }) => (tile[0] === 1 ? [[1, 0], [2, 0], [0, 0]] : []),
+        });
+        expect(hit.component.id).toBe('r0c2');   // proximity ties and picks r0c0
+        expect(hit.model).toBe(true);
+        expect(hit.reachable).toBe(true);
+        expect(hit.reason).toMatch(/physics model's flood/);
+    });
+
+    it('lets the model enter only open, wall and manual cells — never gated material', () => {
+        let enterable = null;
+        componentForTile(gridOf(['.#~?.']), findComponents(gridOf(['.#~?.'])), [1, 0], {
+            ...OPTIONS,
+            modelReach: (q) => { enterable = q.enterable; return []; },
+        });
+        expect([0, 1, 2, 3, 4].map((x) => enterable(x, 0))).toEqual([true, true, false, true, true]);
+        expect(enterable(9, 0)).toBe(false);
+    });
+
+    it('falls back to the named proximity finding when the model reaches nothing', () => {
+        const hit = componentForTile(boxed, boxedComponents, [1, 0], { ...OPTIONS, modelReach: () => [] });
+        expect(hit.component.id).toBe('r0c0');
+        expect(hit.reachable).toBe(false);
+        expect(hit.reason).toMatch(/a finding, not a placement/);
+    });
+});
+
 describe('placing exits and locations', () => {
     const grid = gridOf(['.~.']);
     const componentsResult = findComponents(grid);
