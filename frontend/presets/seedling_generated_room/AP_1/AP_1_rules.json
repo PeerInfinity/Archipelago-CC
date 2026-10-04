@@ -165,7 +165,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "region_0_0__key_blue_pickup": "key_blue"
@@ -177,7 +181,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "flash_panel": {
     "config": "seedling.json",
     "wasm": "seedling_bot_ap_p4e/game.html"

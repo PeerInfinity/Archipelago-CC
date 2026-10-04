@@ -1679,10 +1679,10 @@ export function layoutTopDown(rulesJson, opts, rng) {
         regionSizeBase = { width: 6, height: 6 },
         seed = 1,
         teleporterMinGap = 2,
-        // Honor the source's flag, default true. When set, every
+        // Honor the source slot's `exporter[playerId]` flag, default true. When set, every
         // BFS-tree-edge gets a back-exit on the child for round-
         // tripping back through the entrance.
-        assumeBidirectional = rulesJson?.assume_bidirectional_exits !== false,
+        assumeBidirectional = rulesJson?.exporter?.[String(playerId)]?.assume_bidirectional_exits !== false,
         // Substrate assignment inputs (resolution order in pickSubstrate:
         // per-region override > source tag > picker > weighted mix > 'maze').
         // ① resolves each region's substrate ONCE and records it; ② reads the
@@ -7010,8 +7010,8 @@ export function buildRulesJson(grid, opts = {}) {
         playerId = '1',
         itemLib = DEFAULT_ITEMS,
         obstacleLib = DEFAULT_OBSTACLES,
-        // Whether back-exits inherit their forward exit's rule. Mirrors
-        // the source rules.json's top-level flag. For grid-growth
+        // Whether back-exits inherit their forward exit's rule. Written
+        // as the slot's `exporter[playerId]` flag. For grid-growth
         // output (this driver) the default is true — every gate is
         // bidirectional.
         assumeBidirectional = true,
@@ -7174,11 +7174,12 @@ export function buildRulesJson(grid, opts = {}) {
         for (const name of scaffold.starting_items[playerId]) pool[name] = (pool[name] || 0) + 1;
     }
 
-    // Top-level flag: every back-exit inherits the forward exit's
-    // rule. The source-rules.json schema's `assume_bidirectional_exits`
-    // is what the player module / future top-down driver consult to
-    // decide whether to construct back-exits in the first place.
-    scaffold.assume_bidirectional_exits = assumeBidirectional;
+    // The slot's flag: every back-exit inherits the forward exit's rule.
+    // `exporter[playerId].assume_bidirectional_exits` is the key's ONE home
+    // (⚖ user 2026-10-03, rules F1 — per player, never top level); the
+    // runtime (`StateManagerProxy.getEffectiveBidirectionalSetting`) and a
+    // top-down layout over this document read it there.
+    scaffold.exporter[playerId] = { ...scaffold.exporter[playerId], assume_bidirectional_exits: assumeBidirectional };
 
     // Bidirectional rule inheritance: for every back-exit in the
     // compiled regions, copy the paired forward exit's compiled rule.

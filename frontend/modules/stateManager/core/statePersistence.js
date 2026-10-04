@@ -373,17 +373,6 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
         }
       }
 
-      // Legacy fallback: check world_attributes for computed runtime values
-      // In new structure, these are merged into 'world' directly, but check here for backwards compatibility
-      if (rawValue === undefined && sm.rules?.world_attributes) {
-        let worldAttrsToUse = sm.rules.world_attributes;
-        // Check if world_attributes is keyed by player ID
-        if (worldAttrsToUse[playerIdKey] && typeof worldAttrsToUse[playerIdKey] === 'object') {
-          worldAttrsToUse = worldAttrsToUse[playerIdKey];
-        }
-        rawValue = worldAttrsToUse?.[settingName];
-      }
-
       // Special case: item_name_groups needs to be constructed dynamically
       // This is needed for world_attribute rules that reference item_name_groups
       // (used by helpers like has_relic_combo in AHIT)
@@ -504,16 +493,6 @@ export function _createSelfSnapshotInterface(sm, contextVariables = {}) {
               worldObj[key] = value;
             }
           }
-        }
-
-        // Legacy fallback: check world_attributes for older exports
-        if (sm.rules?.world_attributes) {
-          let worldAttrs = sm.rules.world_attributes;
-          // Check if world_attributes is keyed by player ID
-          if (worldAttrs[playerIdKey] && typeof worldAttrs[playerIdKey] === 'object') {
-            worldAttrs = worldAttrs[playerIdKey];
-          }
-          Object.assign(worldObj, worldAttrs);
         }
 
         // Merge in game-specific properties from game_info
@@ -1000,11 +979,6 @@ export function getStaticGameData(sm) {
     // World data - player options and runtime attributes keyed by player ID
     world: sm.rules?.world,  // Full world object (game, options, runtime attributes) keyed by player ID
     exporter: sm.rules?.exporter,  // Exporter-specific settings (keyed by player ID for multiworld)
-    // Top-level explicit setting; honored by getEffectiveBidirectionalSetting
-    // when no exporter section is present (procgen outputs put this at
-    // the top of rules.json instead of nesting inside an exporter block).
-    assume_bidirectional_exits: sm.rules?.assume_bidirectional_exits,
-    world_attributes: sm.rules?.world_attributes,  // Legacy: now merged into world
     helpers: sm.rules?.helpers,  // Helper function definitions (keyed by player ID for multiworld)
     // Starting items (precollected items)
     starting_items: sm.rules?.starting_items,

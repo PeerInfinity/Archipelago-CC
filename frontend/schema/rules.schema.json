@@ -219,7 +219,7 @@
             },
             "assume_bidirectional_exits": {
               "type": "boolean",
-              "description": "Whether region connections are bidirectional by default."
+              "description": "This slot's statement that its region connections are bidirectional by default: when true, every back-exit inherits its paired forward exit's rule, and consumers may construct back-exits that the document does not list. Per player, and this is its ONLY place — a top-level `assume_bidirectional_exits` is not part of the schema and the runtime loader refuses it by name (rules F1, 2026-10-03; scripts/procgen/migrate-per-player-blocks.mjs moves an old document). ABSENT means the slot states nothing: the runtime auto-detects (stateManagerProxy.js `getEffectiveBidirectionalSetting`, via shared/bidirectionalDetector.js), and a top-down layout over this slot treats it as true. Producers: exporter/games/base/handler.py `get_exporter_settings` (the game handler's `ASSUME_BIDIRECTIONAL_EXITS`, or failing that a world_generator world's `assume_bidirectional_exits` class attribute, which carries its source slot's value — world_generator/_template_init.py) and frontend/modules/procgenPipeline/procgenPipelineEngine.js `buildRulesJson` (for its `playerId`)."
             },
             "use_resolved_items": {
               "type": "boolean",
@@ -297,10 +297,6 @@
       "type": "string",
       "description": "Short label shown on this preset's frontend button (e.g. 'canth s4'). Producer: exporter/exporter.py:1391-1396, copied from the first player world declaring a `preset_label` class attribute (world_generator/_template_init.py:688-694).",
       "minLength": 1
-    },
-    "assume_bidirectional_exits": {
-      "type": "boolean",
-      "description": "When true, every back-exit inherits its paired forward exit's rule, and consumers may construct back-exits that the document does not list. Producer: frontend/modules/procgenPipeline/procgenPipelineEngine.js:6292 (the top-level flag; the exporter's same-named `exporter_settings` field, exporter/games/base/handler.py:1817-1820, is a DIFFERENT, nested field)."
     },
     "preset_sidecars": {
       "type": "object",

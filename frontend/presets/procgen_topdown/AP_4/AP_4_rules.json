@@ -7933,7 +7933,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "Check 70": "Junk",
@@ -8029,7 +8033,6 @@
       "Button: 7"
     ]
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "C": {

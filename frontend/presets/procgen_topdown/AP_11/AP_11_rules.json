@@ -750,7 +750,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "Dungeon Vault": "Freeincarnate",
@@ -785,7 +789,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "Overworld": {

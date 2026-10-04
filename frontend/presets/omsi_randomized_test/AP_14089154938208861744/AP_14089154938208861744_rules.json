@@ -2147,7 +2147,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "region_1_1__q_0_Pots_1": "Pots Supply Step",
@@ -2249,7 +2253,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "region_0_0": {

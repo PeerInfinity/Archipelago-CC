@@ -45,7 +45,7 @@ function mazeSource() {
     const T = { rule: 'True_' };
     return {
         start_regions: { '1': { default: ['Menu'] } },
-        assume_bidirectional_exits: true,
+        exporter: { '1': { assume_bidirectional_exits: true } },
         game_name: 'MazeStepCheck',
         regions: {
             '1': {
@@ -79,7 +79,7 @@ function check(label, source, opts) {
             seed: opts.seed,
             enableLoopMode: false,
             regionXpEffect: 'cost',
-            assumeBidirectional: source.assume_bidirectional_exits !== false,
+            assumeBidirectional: source.exporter?.['1']?.assume_bidirectional_exits !== false,
             startingItems: opts.freeItems ?? [],
             grantedItems: [],
             sourceItemDefs: source.items?.['1'] ?? {},
@@ -113,7 +113,7 @@ function envFor(source, opts) {
             seed: opts.seed,
             enableLoopMode: false,
             regionXpEffect: 'cost',
-            assumeBidirectional: source.assume_bidirectional_exits !== false,
+            assumeBidirectional: source.exporter?.['1']?.assume_bidirectional_exits !== false,
             startingItems: opts.freeItems ?? [],
             grantedItems: [],
             sourceItemDefs: source.items?.['1'] ?? {},

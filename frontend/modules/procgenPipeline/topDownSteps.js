@@ -286,7 +286,7 @@ export function buildTopDownEnvelope({
             seed,
             enableLoopMode,
             regionXpEffect,
-            assumeBidirectional: source?.assume_bidirectional_exits !== false,
+            assumeBidirectional: source?.exporter?.['1']?.assume_bidirectional_exits !== false,
             startingItems,
             grantedItems,
             sourceItemDefs,

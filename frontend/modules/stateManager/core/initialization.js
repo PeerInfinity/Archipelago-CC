@@ -134,10 +134,46 @@ function validateJSONData(jsonData, selectedPlayerId) {
     throw new Error('loadFromJSON called without selectedPlayerId');
   }
 
+  refuseRetiredTopLevelKeys(jsonData);
+
   if (!jsonData.schema_version || jsonData.schema_version !== 3) {
     console.error(
       `[Initialization] Invalid JSON schema version: ${jsonData.schema_version}. Expected 3.`
     );
+  }
+}
+
+/**
+ * ⛔ Top-level keys that MOVED into a per-player home, refused by name.
+ * key → [its per-player home, the script that moves a document].
+ *
+ * This is a REFUSAL, not a compatibility read: nothing reads the old value.
+ * For `assume_bidirectional_exits` an ignored old value would be worse than an
+ * error — absent means auto-detection, which misjudges procgen exits (see
+ * `StateManagerProxy.getEffectiveBidirectionalSetting`), so an old document
+ * would load and silently regress (⚖ user 2026-10-03, rules F1).
+ */
+export const RETIRED_TOP_LEVEL_KEYS = Object.freeze({
+  assume_bidirectional_exits: [
+    'exporter["<player>"].assume_bidirectional_exits',
+    'scripts/procgen/migrate-per-player-blocks.mjs --write',
+  ],
+});
+
+/**
+ * Throws naming the first retired top-level key `jsonData` carries.
+ *
+ * @param {Object} jsonData - The rules JSON data
+ * @throws {Error} If a retired key is present at the top level
+ */
+export function refuseRetiredTopLevelKeys(jsonData) {
+  for (const [key, [home, script]] of Object.entries(RETIRED_TOP_LEVEL_KEYS)) {
+    if (Object.hasOwn(jsonData, key)) {
+      throw new Error(
+        `rules.json carries a top-level \`${key}\`, which is per player: its home is ${home}. `
+        + `Nothing reads the top-level copy — move the document with ${script}.`
+      );
+    }
   }
 }
 

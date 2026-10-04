@@ -3,14 +3,17 @@
 exports[`mixed substrates — end to end > top-down > compiles a stable logic graph for an all-maze top-down layout 1`] = `
 {
   "archipelago_version": "0.6.7",
-  "assume_bidirectional_exits": true,
   "canonical_placements": {
     "1": {
       "region_1_0__key_red_pickup__1_4": "key_red",
       "region_1_0__key_red_pickup__3_4": "key_red",
     },
   },
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true,
+    },
+  },
   "game_directory": "procgen_maze_worldgen",
   "game_info": {
     "1": {
@@ -354,14 +357,17 @@ exports[`mixed substrates — end to end > top-down > compiles a stable logic gr
 exports[`mixed substrates — end to end > top-down > compiles a stable logic graph for an all-text-adventure top-down layout 1`] = `
 {
   "archipelago_version": "0.6.7",
-  "assume_bidirectional_exits": true,
   "canonical_placements": {
     "1": {
       "region_1_0__key_red_pickup__1_4": "key_red",
       "region_1_0__key_red_pickup__3_4": "key_red",
     },
   },
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true,
+    },
+  },
   "game_directory": "procgen_maze_worldgen",
   "game_info": {
     "1": {

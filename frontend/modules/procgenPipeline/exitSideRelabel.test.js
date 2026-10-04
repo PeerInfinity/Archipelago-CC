@@ -130,7 +130,7 @@ function textAdventureTopDown() {
     const T = { rule: 'True_' };
     const source = {
         start_regions: { 1: { default: ['Menu'] } },
-        assume_bidirectional_exits: true,
+        exporter: { '1': { assume_bidirectional_exits: true } },
         game_name: 'R2TextAdventureTopDown',
         regions: {
             1: {

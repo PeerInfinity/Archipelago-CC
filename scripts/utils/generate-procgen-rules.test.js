@@ -18,8 +18,12 @@ const WRITER = path.join(path.dirname(fileURLToPath(import.meta.url)), 'generate
 // a maze-engine change that moves the default seed-1 document reds this row —
 // re-record it then, with that change named. (C1's fixpoint `cb4f583cb7` was
 // measured NOT to move it.)
+// Re-recorded at rules F1 (2026-10-03): `assume_bidirectional_exits` moved from
+// the top level into `exporter["1"]`. Measured: moving it back in the new output
+// (top level after `starting_items`, `exporter: {}`) hashes to the old value
+// baf3285f…dfcd7d4 exactly, so the move is the whole delta.
 const PRE_FLAG_DEFAULT_SEED_1_SHA256 =
-    'baf3285fe1c708c5e0b1ec5d536342b6b215b4eacec4327c032eef3a9dfcd7d4';
+    '4fa87bb17043c6b75478d789507c5a84e8a5d2dd533286e42b7faf2832a49b9f';
 
 let tmp;
 beforeAll(() => { tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'gen-procgen-rules-')); });

@@ -106,7 +106,7 @@ const REGEN_WORLDS = [10, 11, 12].map((seed) => {
         prev = placed;
     }
     const doc = buildRulesJson(built.grid, {
-        startCell: built.startCell, seed, assumeBidirectional: source.assume_bidirectional_exits !== false,
+        startCell: built.startCell, seed, assumeBidirectional: source.exporter?.['1']?.assume_bidirectional_exits !== false,
         startingItems: source.starting_items?.['1'] ?? [], sourceItems: source.items?.['1'] ?? null,
         sourceItemGroups: source.item_groups?.['1'] ?? null, sourceLocations: sourceLocationsOf(source, '1'),
         procgenMetadata: {

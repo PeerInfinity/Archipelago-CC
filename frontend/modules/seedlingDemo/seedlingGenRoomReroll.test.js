@@ -502,11 +502,15 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      *     LOST `key_red` that way — `key_blue` was dropped on its tile in
      *     `region_1_0`, 2 locations of 3 — and now has all 3, so the draws after
      *     that pair moved.
+     * ⛓ RE-MEASURED at rules F1 (2026-10-03): `assume_bidirectional_exits` moved
+     * from the top level into `exporter["1"]`. With it moved back (top level after
+     * `starting_items`, `exporter: {}`) each build still hashes to the value above
+     * (8c9983b5 / 714ac4ef / a4303571 — measured), so the move is the whole delta.
      */
     it.each([
-        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '8c9983b5'],
-        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '714ac4ef'],
-        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), 'a4303571'],
+        ['grid 8x6 seed 2', () => GRID(2, 8, 6), '96e9e65a'],
+        ['grid 10x10 seed 7', () => GRID(7, 10, 10), '980ca6eb'],
+        ['host (committed state) seed 3', () => withSeed(SEEDLING_GENERATED_HOST_STATE, 3), 'c6830310'],
     ])('%s built before G8: byte-identical', async (_name, state, md5) => {
         const rulesJson = await build(state());
         expect(createHash('md5').update(JSON.stringify(rulesJson)).digest('hex').slice(0, 8)).toBe(md5);

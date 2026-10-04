@@ -1809,7 +1809,7 @@ class BaseGameExportHandler(
     # Exporter settings and game info methods
     # ==========================================================================
 
-    def get_exporter_settings(self) -> Dict[str, Any]:
+    def get_exporter_settings(self, world=None) -> Dict[str, Any]:
         """Get exporter-specific settings (not part of the Archipelago world).
 
         These settings control how the frontend processes the exported data.
@@ -1817,10 +1817,17 @@ class BaseGameExportHandler(
         """
         exporter_settings = {}
 
-        # assume_bidirectional_exits: Whether region connections are bidirectional by default
-        # Only include when explicitly set (True or False); omitting allows frontend auto-detection
-        if self.ASSUME_BIDIRECTIONAL_EXITS is not None:
-            exporter_settings['assume_bidirectional_exits'] = self.ASSUME_BIDIRECTIONAL_EXITS
+        # assume_bidirectional_exits: Whether region connections are bidirectional by default.
+        # Written into exporter[player] — the key's one home (rules F1). Only included when
+        # explicitly set (True or False); omitting allows frontend auto-detection. The game's
+        # handler decides; failing that, a world_generator world carries its source slot's
+        # value as the `assume_bidirectional_exits` class attribute.
+        assume_bidirectional = self.ASSUME_BIDIRECTIONAL_EXITS
+        if assume_bidirectional is None:
+            carried = getattr(type(world), 'assume_bidirectional_exits', None) if world is not None else None
+            assume_bidirectional = carried if isinstance(carried, bool) else None
+        if assume_bidirectional is not None:
+            exporter_settings['assume_bidirectional_exits'] = assume_bidirectional
 
         # use_resolved_items: When true, eventProcessor uses resolved_items
         # Default is False, so only include when True

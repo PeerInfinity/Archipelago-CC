@@ -17739,7 +17739,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "Stumpy": "Bombs (3)",
@@ -17999,7 +18003,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "Links House": {

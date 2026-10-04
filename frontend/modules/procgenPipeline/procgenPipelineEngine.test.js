@@ -23,6 +23,7 @@ import {
     spiralCells, buildShuffledSubstrateSequence, arrangeShuffledSpiral,
     computeSourceCounts,
     moveSphereRegion, swapSphereRegions, relayoutSphereGrid,
+    getRegionExits,
 } from './procgenPipelineEngine.js';
 import { deserializeMazeWorld } from '../mazeRoom/mazeRoomEngine.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
@@ -1925,10 +1926,13 @@ describe('buildRulesJson', () => {
         expect(out.item_groups['1']).toEqual(['Everything']);
     });
 
-    it('emits assume_bidirectional_exits=true at the top level', () => {
+    it("writes assume_bidirectional_exits in the slot's exporter block, never at the top level (rules F1)", () => {
         const { grid, startCell } = smallGrid();
         const out = buildRulesJson(grid, { startCell });
-        expect(out.assume_bidirectional_exits).toBe(true);
+        expect(out.exporter).toEqual({ '1': { assume_bidirectional_exits: true } });
+        expect(Object.hasOwn(out, 'assume_bidirectional_exits')).toBe(false);
+        const off = buildRulesJson(smallGrid().grid, { startCell, assumeBidirectional: false });
+        expect(off.exporter['1'].assume_bidirectional_exits).toBe(false);
     });
 
     it('omits procgen_metadata when the caller does not supply it', () => {
@@ -2467,7 +2471,7 @@ describe('topDownFromRulesJson — per-region sub-seeds (1b)', () => {
         const reg = (name, exits, locs) => ({ name, exits, locations: locs });
         return {
             start_regions: { '1': { default: ['Menu'] } },
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: reg('Menu', [{ name: 'go', connected_region: 'A', access_rule: T }], []),
@@ -2635,13 +2639,43 @@ describe('topDownFromRulesJson', () => {
         }
     });
 
-    it('emits assume_bidirectional_exits=true on the output (default)', () => {
+    it("emits the slot's assume_bidirectional_exits=true on the output (default)", () => {
         const rulesJson = makeGridGrowthRulesJson();
         const { grid, startCell } = topDownFromRulesJson(rulesJson, {
             gridDims: { width: 5, height: 5 }, seed: 1,
         });
         const out = buildRulesJson(grid, { startCell });
-        expect(out.assume_bidirectional_exits).toBe(true);
+        expect(out.exporter['1'].assume_bidirectional_exits).toBe(true);
+        expect(Object.hasOwn(out, 'assume_bidirectional_exits')).toBe(false);
+    });
+
+    it("the layout honours the SOURCE slot's exporter flag — `false` there mints no back-exit (rules F1)", () => {
+        const backExits = (rulesJson) => {
+            const { grid } = topDownFromRulesJson(rulesJson, { gridDims: { width: 5, height: 5 }, seed: 1 });
+            return [...grid.allRegions()].flatMap((r) => [...(getRegionExits(r)?.values() ?? [])])
+                .filter((e) => e.isBackExit).length;
+        };
+        // A one-way chain: the source declares no reverse route, so every
+        // back-exit is the layout's (a grown source already carries its own).
+        const T = { rule: 'True_' };
+        const reg = (name, exits) => ({ name, exits, locations: [] });
+        const on = {
+            schema_version: 3,
+            exporter: { '1': { assume_bidirectional_exits: true } },
+            start_regions: { '1': { default: ['Menu'] } },
+            regions: { '1': {
+                Menu: reg('Menu', [{ name: 'GameStart', connected_region: 'A', access_rule: T }]),
+                A: reg('A', [{ name: 'toB', connected_region: 'B', access_rule: T }]),
+                B: reg('B', [{ name: 'toC', connected_region: 'C', access_rule: T }]),
+                C: reg('C', []),
+            } },
+        };
+        const off = { ...on, exporter: { '1': { assume_bidirectional_exits: false } } };
+        // ⛔ A TOP-LEVEL `false` is not read: the slot's block is the one home.
+        const flat = { ...on, exporter: {}, assume_bidirectional_exits: false };
+        expect(backExits(on)).toBeGreaterThan(0);
+        expect(backExits(off)).toBe(0);
+        expect(backExits(flat)).toBe(backExits(on));
     });
 
     it('places teleporters when the layout cannot fit a region adjacently', () => {
@@ -2649,7 +2683,7 @@ describe('topDownFromRulesJson', () => {
         // forcing the layout to use teleporters once 4 sides are taken.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2710,7 +2744,7 @@ describe('topDownFromRulesJson', () => {
         // continues past tile-pick failures rather than breaking.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2754,7 +2788,7 @@ describe('topDownFromRulesJson', () => {
         // the substrate honors the pin via spec.tile.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2819,7 +2853,7 @@ describe('topDownFromRulesJson', () => {
         // exit's tile (per top-down-driver.md §4 + §7).
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2878,7 +2912,7 @@ describe('topDownFromRulesJson', () => {
         // sources.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2920,7 +2954,7 @@ describe('topDownFromRulesJson', () => {
         // down now overrides both with the source data.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
@@ -2984,7 +3018,7 @@ describe('topDownFromRulesJson', () => {
         // exercise the clockwise walk across multiple sides.
         const rulesJson = {
             schema_version: 3,
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {

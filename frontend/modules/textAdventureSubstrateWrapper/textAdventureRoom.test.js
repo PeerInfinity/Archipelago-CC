@@ -420,7 +420,7 @@ describe('through the engine — top-down, the rebuild path, the spiral', () => 
     });
     const doc = buildRulesJson(built.grid, {
         startCell: built.startCell, seed: SEED,
-        assumeBidirectional: source.assume_bidirectional_exits !== false,
+        assumeBidirectional: source.exporter?.['1']?.assume_bidirectional_exits !== false,
         procgenMetadata: { driver: 'top-down-sphere', sphere_tree: built.sphereTree, sphere_plan: built.spherePlan },
     });
     const sidecars = doc.preset_sidecars['1'];
@@ -464,7 +464,7 @@ describe('through the engine — top-down, the rebuild path, the spiral', () => 
         const env = rebuildEnvelopeFromRulesJson(doc);
         const rebuilt = buildRulesJson(env.grow.grid, {
             startCell: env.startCell, seed: SEED,
-            assumeBidirectional: source.assume_bidirectional_exits !== false,
+            assumeBidirectional: source.exporter?.['1']?.assume_bidirectional_exits !== false,
         });
         for (const r of taRegions) {
             expect(rulesOf(rebuilt.regions['1'][r]), r).toEqual(rulesOf(doc.regions['1'][r]));

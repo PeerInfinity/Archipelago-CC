@@ -727,10 +727,13 @@ const NON_GRANTING = initialiseTargets().find((t) => !Object.values(substrateReg
 /**
  * ⛓⛓ The keys the pipeline's compile writes and the hub must NOT (plan §22.1:
  * the document's own identity, the exporter's placements, the compile's
- * bidirectional flag — ⚖ Q2 — and the embedded log — ⚖ Q3). A NEW differing
- * key is a new gap, and turns this list's row red.
+ * bidirectional flag — ⚖ Q2; since rules F1 it is the slot's
+ * `exporter[p].assume_bidirectional_exits`, so the differing key is `exporter`
+ * and the row below pins that the flag is ALL that differs there — and the
+ * embedded log — ⚖ Q3). A NEW differing key is a new gap, and turns this
+ * list's row red.
  */
-const MUST_NOT = ['archipelago_version', 'assume_bidirectional_exits', 'canonical_placements', 'game_directory',
+const MUST_NOT = ['archipelago_version', 'canonical_placements', 'exporter', 'game_directory',
     'game_info', 'game_name', 'seed_name', 'sphere_log', 'world'];
 /** ⛓ The keys both write, compared by what they MEAN (the compile re-spells ids, order, the item shape). */
 const BOTH_WRITE = ['itempool_counts', 'items', 'procgen_metadata', 'regions'];
@@ -823,6 +826,11 @@ describe('S1 — the initialise op DECLARES the library items it built with', ()
             const differ = [...new Set([...Object.keys(pipe), ...Object.keys(hub)])]
                 .filter((x) => bytes(pipe[x]) !== bytes(hub[x])).sort();
             expect(differ, t).toEqual([...MUST_NOT, ...BOTH_WRITE].sort());
+            // ⚖ Q2: the compile states the slot's flag; the hub leaves the slot to auto-detection.
+            expect(pipe.exporter[P]?.assume_bidirectional_exits, t).toBe(true);
+            expect(hub.exporter?.[P]?.assume_bidirectional_exits, t).toBeUndefined();
+            const { assume_bidirectional_exits: _flag, ...pipeRest } = pipe.exporter[P];
+            expect(bytes(pipeRest), t).toBe(bytes(hub.exporter?.[P] ?? {}));
             expect(bytes(hub.preset_sidecars[P]), t).toBe(bytes(pipe.preset_sidecars[P]));
             expect(hub.starting_items[P], t).toEqual(pipe.starting_items[P]);
             const grantedOf = (d) => Object.keys(d.items[P]).filter((n) => DOCS.adventure.items[P][n] == null);

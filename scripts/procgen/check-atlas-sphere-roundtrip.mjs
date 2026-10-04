@@ -243,6 +243,14 @@ try {
     ok(atlasRegionIds.every((id) => exRegionNames.has(id)),
         'Generate.py: the exported rules.json keeps every atlas region, under its map name');
 
+    // rules F1: the slot's bidirectional flag survives procgen → world_generator →
+    // export, in its one home (world_generator carries it as a class attribute).
+    const srcBidir = rules.exporter?.['1']?.assume_bidirectional_exits;
+    ok(typeof srcBidir === 'boolean'
+        && exportedRules.exporter?.['1']?.assume_bidirectional_exits === srcBidir
+        && !Object.hasOwn(exportedRules, 'assume_bidirectional_exits'),
+        `Generate.py: the export keeps the source slot's exporter["1"].assume_bidirectional_exits (${srcBidir})`);
+
     const exAtlasLocs = Object.values(exportedRules.regions ?? {})
         .flatMap((byName) => Object.entries(byName))
         .filter(([name]) => atlasRegionIds.includes(name))

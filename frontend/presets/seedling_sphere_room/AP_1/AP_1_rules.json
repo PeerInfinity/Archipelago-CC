@@ -215,7 +215,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "region_2_2__loc_0__2_3": "key_blue",
@@ -229,7 +233,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "region_atlas": {
     "atlas_id": "seedling-ab0b2709",
     "game": "seedling",

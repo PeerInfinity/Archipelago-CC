@@ -48,6 +48,10 @@ class GameMetadata:
     resolved_values: Dict[str, Any] = field(default_factory=dict)  # Resolved values from seed (options + world attributes)
     option_definitions: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # Option class definitions (type, range, choices, etc.)
     use_auto_indirect_conditions: bool = False  # When True, use auto sweep for indirect region dependencies
+    # The slot's exporter[player_id].assume_bidirectional_exits (rules F1): None = the
+    # document states none (the frontend auto-detects); the generated world carries a
+    # bool back to its export as a class attribute.
+    assume_bidirectional_exits: Optional[bool] = None
     original_world_class_name: Optional[str] = None  # Original class name from exporter (preserved during game name override)
 
 
@@ -321,8 +325,8 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         game_options=game_options,
         resolved_values=resolved_values,
         option_definitions=option_definitions,
-        # use_auto_indirect_conditions is now in exporter[player_id], fallback to world_data for legacy
-        use_auto_indirect_conditions=exporter_data.get('use_auto_indirect_conditions', False) or world_data.get('use_auto_indirect_conditions', False),
+        use_auto_indirect_conditions=exporter_data.get('use_auto_indirect_conditions', False),
+        assume_bidirectional_exits=exporter_data.get('assume_bidirectional_exits'),
         # Track original world class name from exporter (preserved during game name override)
         original_world_class_name=original_world_class_name,
     )

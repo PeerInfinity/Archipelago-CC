@@ -131,7 +131,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "region_1_1__start_journey": "Victory"
@@ -143,7 +147,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "region_0_0": {

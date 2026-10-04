@@ -386,7 +386,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "region_0_0__10": "JtA Filler",
@@ -414,7 +418,6 @@
       "Energetic Memory"
     ]
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "region_0_0": {

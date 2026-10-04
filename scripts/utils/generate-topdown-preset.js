@@ -313,7 +313,7 @@ async function main() {
     const rulesJson = buildRulesJson(grid, {
         startCell,
         seed: args.seed,
-        assumeBidirectional: source.assume_bidirectional_exits !== false,
+        assumeBidirectional: source.exporter?.['1']?.assume_bidirectional_exits !== false,
         startingItems: source.starting_items?.['1'] ?? [],
         sourceItems: source.items?.['1'] ?? null,
         sourceItemGroups: source.item_groups?.['1'] ?? null,

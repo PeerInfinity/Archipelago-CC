@@ -170,7 +170,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "canonical_placements": {
     "1": {
       "region_1_0__key_red_pickup__5_5": "key_red",
@@ -184,7 +188,6 @@
   "starting_items": {
     "1": []
   },
-  "assume_bidirectional_exits": true,
   "preset_sidecars": {
     "1": {
       "region_1_1": {

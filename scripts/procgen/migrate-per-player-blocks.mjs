@@ -1,20 +1,33 @@
 #!/usr/bin/env node
 /**
- * migrate-per-player-blocks.mjs — **THE ONE-TIME SHAPE MOVE of the committed
- * corpus's `procgen_metadata` / `loop_costs` into per-player maps**
- * (APWORLD SUBSTRATE CHANGE P1a; ⚖ user 2026-09-27, plan §34.5 / §36.5:
- * *"I want to replace the old format, the old presets, and the code for them
- * entirely, and not add any compatibility features for the old format."*).
+ * migrate-per-player-blocks.mjs — **THE SHAPE MOVES of the committed corpus's
+ * top-level per-player keys into their per-player homes**, and the census that
+ * keeps them moved:
+ *   - `procgen_metadata` / `loop_costs` → `{"<p>": block}` (APWORLD SUBSTRATE
+ *     CHANGE P1a; ⚖ user 2026-09-27, plan §34.5 / §36.5: *"I want to replace
+ *     the old format, the old presets, and the code for them entirely, and not
+ *     add any compatibility features for the old format."*);
+ *   - `assume_bidirectional_exits` → `exporter["<p>"].assume_bidirectional_exits`
+ *     (rules F1; ⚖ user 2026-10-03: *"If there are presets that set the
+ *     bidirectional flag at the top level, then that's a bug. The flag should be
+ *     specific to one player."*).
  *
  *   node scripts/procgen/migrate-per-player-blocks.mjs --check   # exit 1 naming every unmigrated file
  *   node scripts/procgen/migrate-per-player-blocks.mjs --write   # move them (idempotent: a second run writes 0 bytes)
  *
- * ── WHAT IT MOVED FROM (said once, here, dated 2026-09-27) ────────────────
+ * ── WHAT IT MOVED FROM (said once, here, dated 2026-09-27 / 2026-10-03) ────
  *
  * Until P1a both keys sat at the top level as ONE block describing ONE slot.
  * They are now `{"<p>": block}` — the shape `preset_sidecars`, `regions` and
  * `items` have. No reader of the old shape exists anywhere else in the tree;
  * this docblock is the only place it is described.
+ *
+ * Until rules F1 the procgen pipeline wrote `assume_bidirectional_exits` at the
+ * top level (one boolean for the document). Its home is now the slot's
+ * `exporter["<p>"]` block — where the AP exporter's handler already wrote it.
+ * The runtime loader REFUSES the old key by name
+ * (`stateManager/core/initialization.js` `RETIRED_TOP_LEVEL_KEYS`) and the
+ * strict schema rejects it; no reader of the old place exists.
  *
  * ── ⛓ WHAT A MOVE IS ────────────────────────────────────────────────────
  *
@@ -26,7 +39,11 @@
  *      A file no candidate reproduces is REFUSED by name: the written diff must
  *      be provably the moved block and nothing else, so there is no best effort;
  *   2. wrap each present block at the SAME key position:
- *      `block` → `{"<p>": block}`;
+ *      `block` → `{"<p>": block}`; and DROP a top-level
+ *      `assume_bidirectional_exits`, writing its value as the LAST key of
+ *      `exporter["<p>"]` (the order the pipeline's writer produces) at
+ *      `exporter`'s own position. A document whose `exporter["<p>"]` already
+ *      names the flag is REFUSED: two values, no rule picks one;
  *   3. write with the writer + newline rule step 1 found.
  * A block whose keys are all slot ids of the document is already moved (the
  * old block's keys are field names — `driver`, `regions`, … — never digits).
@@ -64,6 +81,8 @@ const ROOT = join(HERE, '..', '..');
 const { stringifyRulesJson } = await import(join(ROOT, 'frontend/modules/shared/rulesJsonBuilder.js'));
 
 const KEYS = ['procgen_metadata', 'loop_costs'];
+/** ⛓ The flat flag whose home is `exporter["<p>"]` (rules F1). */
+const EXPORTER_FLAGS = ['assume_bidirectional_exits'];
 const MW = 'frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311';
 /** ⛓ The measured table (docblock): path → the slots that carry the block. `[]` = the key goes. */
 const TABLE = new Map([
@@ -108,19 +127,19 @@ let tableDropped = 0;
 for (const rel of files) {
     const path = join(ROOT, rel);
     const text = readFileSync(path, 'utf8');
-    if (!KEYS.some((k) => text.includes(`"${k}"`))) {
+    if (![...KEYS, ...EXPORTER_FLAGS].some((k) => text.includes(`"${k}"`))) {
         if (TABLE.has(rel) && TABLE.get(rel).length === 0) tableDropped += 1;
         continue;
     }
     const doc = JSON.parse(text);
-    const present = KEYS.filter((k) => Object.hasOwn(doc, k));
+    const present = [...KEYS, ...EXPORTER_FLAGS].filter((k) => Object.hasOwn(doc, k));
     if (present.length === 0) {
         if (TABLE.has(rel) && TABLE.get(rel).length === 0) tableDropped += 1;
         continue;
     }
     carriers += 1;
     const slotIds = new Set(Object.keys(isPlain(doc.regions) ? doc.regions : {}));
-    const done = (k) => isPlain(doc[k]) && Object.keys(doc[k]).length > 0
+    const done = (k) => !EXPORTER_FLAGS.includes(k) && isPlain(doc[k]) && Object.keys(doc[k]).length > 0
         && Object.keys(doc[k]).every((p) => /^[0-9]+$/.test(p) && slotIds.has(p));
     const todo = present.filter((k) => !done(k));
     if (todo.length === 0) continue;
@@ -135,16 +154,39 @@ for (const rel of files) {
         }
         slots = sidecarSlots;
     }
+    const flags = todo.filter((k) => EXPORTER_FLAGS.includes(k));
+    if (flags.length && slots.length !== 1) {
+        refused.push(`${rel}: ${flags.join(', ')} at the top level of a document with ${slots.length} slot(s) — `
+            + 'one top-level value cannot be given to one slot');
+        continue;
+    }
+    if (flags.length && !isPlain(doc.exporter)) {
+        refused.push(`${rel}: ${flags.join(', ')} at the top level but no \`exporter\` map to move it into`);
+        continue;
+    }
+    const clash = flags.filter((k) => Object.hasOwn(doc.exporter?.[slots[0]] ?? {}, k));
+    if (clash.length) {
+        refused.push(`${rel}: ${clash.join(', ')} both at the top level and in exporter["${slots[0]}"] — two values`);
+        continue;
+    }
     const writer = writerOf(doc, text);
     if (!writer) {
         refused.push(`${rel}: no known writer reproduces its bytes — the move could not be proved to be the block alone`);
         continue;
     }
-    unmigrated.push(`${rel} (${todo.join(', ')} → ${slots.length ? `{${slots.map((p) => `"${p}"`).join(', ')}}` : 'key dropped'}; ${writer.name}${writer.nl ? ' + \\n' : ''})`);
+    const dest = (k) => (EXPORTER_FLAGS.includes(k) ? `exporter["${slots[0]}"]`
+        : slots.length ? `{${slots.map((p) => `"${p}"`).join(', ')}}` : 'key dropped');
+    unmigrated.push(`${rel} (${todo.map((k) => `${k} → ${dest(k)}`).join(', ')}; ${writer.name}${writer.nl ? ' + \\n' : ''})`);
     if (mode !== 'write') continue;
 
     const out = {};
     for (const [k, v] of Object.entries(doc)) {
+        if (k === 'exporter' && flags.length) {
+            const p = slots[0];
+            out[k] = { ...v, [p]: { ...v[p], ...Object.fromEntries(flags.map((f) => [f, doc[f]])) } };
+            continue;
+        }
+        if (EXPORTER_FLAGS.includes(k) && todo.includes(k)) continue;
         if (!todo.includes(k)) { out[k] = v; continue; }
         if (slots.length === 0) continue;
         out[k] = Object.fromEntries(slots.map((p) => [p, v]));

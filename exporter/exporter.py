@@ -1188,7 +1188,7 @@ def _prepare_export_data_impl(multiworld) -> Dict[str, Any]:
 
         # Get exporter-specific settings
         try:
-            exporter_settings = game_handler.get_exporter_settings()
+            exporter_settings = game_handler.get_exporter_settings(world)
             if exporter_settings:
                 export_data['exporter'][player_str] = exporter_settings
         except Exception as e:

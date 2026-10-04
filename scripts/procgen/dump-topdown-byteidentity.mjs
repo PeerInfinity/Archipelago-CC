@@ -44,7 +44,7 @@ function dumpGrid(grid) {
 function mazeSource() {
     return {
         start_regions: { '1': { default: ['Menu'] } },
-        assume_bidirectional_exits: true,
+        exporter: { '1': { assume_bidirectional_exits: true } },
         game_name: 'MazeByteIdentity',
         regions: {
             '1': {
@@ -108,7 +108,7 @@ function mazeSource() {
 function mixedSource() {
     return {
         start_regions: { '1': { default: ['Menu'] } },
-        assume_bidirectional_exits: true,
+        exporter: { '1': { assume_bidirectional_exits: true } },
         game_name: 'MixedByteIdentity',
         regions: {
             '1': {
@@ -149,7 +149,7 @@ function run(source, opts) {
         const rulesJson = buildRulesJson(res.grid, {
             startCell: res.startCell, seed: opts.seed ?? 1, embedSphereLog: false,
             menuRegion: res.menuRegion ?? null,
-            assumeBidirectional: source.assume_bidirectional_exits !== false,
+            assumeBidirectional: source.exporter?.['1']?.assume_bidirectional_exits !== false,
         });
         return {
             grid: dumpGrid(res.grid),

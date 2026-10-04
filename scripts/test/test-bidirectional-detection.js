@@ -72,9 +72,9 @@ async function main() {
         continue;
       }
 
-      // Get the current setting from exporter_settings
-      const exporterSettings = rulesData.world?.['1'] || {};
-      const currentSetting = exporterSettings.assume_bidirectional_exits;
+      // The current setting: player 1's exporter block — the key's one home,
+      // read as StateManagerProxy.getEffectiveBidirectionalSetting reads it.
+      const currentSetting = rulesData.exporter?.['1']?.assume_bidirectional_exits;
 
       // Run detection
       const detection = detectBidirectionalMode(regions);

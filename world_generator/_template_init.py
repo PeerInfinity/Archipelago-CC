@@ -1030,6 +1030,16 @@ class _ShopWrapper:
     else:
         use_auto_indirect_conditions_section = ''
 
+    # Carry the slot's exporter[p].assume_bidirectional_exits (rules F1): the exporter's
+    # base handler writes it back into exporter[p] when the game's handler sets none.
+    # Absent from the source = absent here (the frontend auto-detects).
+    if isinstance(data.metadata.assume_bidirectional_exits, bool):
+        assume_bidirectional_exits_section = f'''
+    # The source slot's exporter[p].assume_bidirectional_exits, re-exported by the exporter
+    assume_bidirectional_exits: ClassVar[bool] = {data.metadata.assume_bidirectional_exits}'''
+    else:
+        assume_bidirectional_exits_section = ''
+
     # Build fill_slot_data content
     # Check if slot_data fields match option names - if so, generate dynamic references
     # NOTE: We only dynamically reference 'randomize_items' since that's the only option
@@ -1174,7 +1184,7 @@ class {world_class}(RuleWorldMixin, World):
     options: {class_name}Options
 {base_id_section}{origin_region_name_section}
     # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
-    rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}
+    rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}{assume_bidirectional_exits_section}
 
     item_name_to_id: ClassVar[Dict[str, int]] = {{
         name: data.id for name, data in item_table.items() if data.id is not None

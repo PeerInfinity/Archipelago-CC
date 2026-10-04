@@ -75,7 +75,7 @@ const SRC_PATH = '/tmp/td-verify-source.json';
 // the extra exits ("bounce zone 'Hub': unknown exit side").
 const SOURCE = {
     start_regions: { '1': { default: ['Menu'] } },
-    assume_bidirectional_exits: true,
+    exporter: { '1': { assume_bidirectional_exits: true } },
     game_name: 'TDVerifyMaze',
     regions: {
         '1': {

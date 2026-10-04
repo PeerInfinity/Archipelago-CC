@@ -42,7 +42,7 @@ import { computeItemSpheres } from './spherePlanner.js';
 function mixedSource() {
     return {
         start_regions: { '1': { default: ['Menu'] } },
-        assume_bidirectional_exits: true,
+        exporter: { '1': { assume_bidirectional_exits: true } },
         regions: {
             '1': {
                 Menu: {
@@ -95,7 +95,7 @@ function fourExitBounceSource() {
     });
     return {
         start_regions: { '1': { default: ['Menu'] } },
-        assume_bidirectional_exits: true,
+        exporter: { '1': { assume_bidirectional_exits: true } },
         regions: {
             '1': {
                 Menu: {
@@ -174,7 +174,7 @@ describe('top-down — bounce region with surplus arrowless exits (free-arrow dr
         const dirs = ['N', 'E', 'W', 'S'];
         const source = {
             start_regions: { '1': { default: ['Menu'] } },
-            assume_bidirectional_exits: true,
+            exporter: { '1': { assume_bidirectional_exits: true } },
             regions: {
                 '1': {
                     Menu: {
