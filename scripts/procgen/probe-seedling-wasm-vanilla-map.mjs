@@ -3,7 +3,7 @@
  * Seedling solver-walk, slice VANILLA MAP — the
  * Playback Bot walks `seedling_playthrough`, the VANILLA randomizer arm's world, through the name → cell map
  * `seedlingPlaybackController.realRoomPlaybackMap` derives (the arm's own placement table read off the set it
- * DELIVERED; the sidecars' exit_tiles). Default build p4e, headless logic-only, under the box lock; every
+ * DELIVERED; the sidecars' exit_tiles). Default build p4f, headless logic-only, under the box lock; every
  * session on a FRESH page (the wasm game runs out of memory after ~150–170 swaps).
  *
  *   V  WASM — the playthrough loaded by `?rules=` (the `?game=` form resolves another seed with no

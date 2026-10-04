@@ -2,7 +2,7 @@
 /**
  * Seedling solver-walk, slice W5 — the
  * live witness of LEVEL 0 (the overworld hub) on the wasm solver, on `seedling_atlas` (default build
- * p4e, headless logic-only, under the box lock). W1–W4 refused every level-0 goal by name: its moonrock
+ * p4f, headless logic-only, under the box lock). W1–W4 refused every level-0 goal by name: its moonrock
  * reads the save statics `beam`/`rockSet`, which no read-only verb carried. `games/seedling.json` now
  * declares them, so the bridge's `readState` carries them and the wasm engine
  * (`flashPanel/seedlingWasmPlayback.js`, built the way the controller builds it) stages level 0 DECLARING
