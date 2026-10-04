@@ -10356,6 +10356,7 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "budget-s",
                 "host",
+                "max-checks",
                 "only",
                 "wait-for-box"
             ],
@@ -10372,6 +10373,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "max-checks"
                 },
                 {
                     "how": [
