@@ -18,8 +18,9 @@
  *      declare no `assume_bidirectional_exits`, the proxy AUTO-DETECTS "bidirectional", and the PathFinder
  *      routes backwards through a one-way door under its forward name (§5.16). D pins the proxy's setting to
  *      `false` IN THE PAGE (a probe-side override, labelled `source: 'probe'`; no data or code changes), then:
- *      (1) the sphere queue's first goal and its refusal by name (the Sword's route opens with a LOGICAL
- *      sub-region link); (2) GREEDY door-only walks: the bot's manual `walkToLocation` to the queue location
+ *      (1) the sphere queue's first goal: its route opens with a LOGICAL sub-region link, which the region
+ *      binding CREDITS since §5.17 (the bot is stopped there and the reverse link credited back); (2) GREEDY
+ *      door-only walks: the bot's manual `walkToLocation` to the queue location
  *      NEAREST through doors only (derived here from the rules: BFS over the `True_` sidecar-door exits), then
  *      the next from where it stands, up to `--max-checks` (default 3) — the ceremony waited out, the cold
  *      start ADOPTED, each location checked once, **0 forced re-arrivals**; the first refusal by name ends it.
@@ -246,16 +247,34 @@ async function main() {
             const booted = await startBot();
             check(`D: the bot is mounted in ${START}`, booted.ok && booted.region === START, JSON.stringify(booted));
             await clickPanelTab(page, FLASH_PANEL).catch(() => null);
-            const q = await watchBot('D queue', () => false, 30000);
-            out('D queue first refusal', { status: q.end?.status });
-            check('D: the sphere queue\'s first goal is refused BY NAME — its route opens with a logical sub-region link',
-                /links two sub-regions of level \d+ .* a LOGICAL link/.test(q.end?.status ?? ''), q.end?.status ?? '');
+            // ⛓ §5.17 — the Sword's route opens with the LOGICAL link `level_0__r8c0 -> level_0__r1c6`, which the
+            // region binding now CREDITS (it used to be refused here). Seen, the bot is stopped at once and the
+            // reverse link (True_) credited back, so the door-only walks below start in START as before.
+            const LINK = `${START} -> level_0__r1c6`;
+            const q = await watchBot('D queue', async () => (await rp.glueMoves()).some((m) => m.exitName === LINK && m.logical),
+                30000);
             const order = await page.evaluate(async () => {
                 const { getActivePanel } = await import('./modules/playbackBot/index.js');
                 const bot = getActivePanel()?.getBot?.();
                 bot.stop?.();
                 return (bot._queue ?? []).map((h) => h.locationName);
             });
+            const credited = (await rp.glueMoves()).filter((m) => m.logical).map((m) => m.exitName);
+            out('D queue first step', { status: q.end?.status, credited });
+            check('D: the sphere queue\'s first goal opens with a logical sub-region link, and the binding CREDITS it (§5.17)',
+                credited[0] === LINK && !(q.end?.status ?? '').startsWith('error'), JSON.stringify({ credited, status: q.end?.status }));
+            const back = await page.evaluate(async (name) => {
+                const glue = (await import('./modules/flashPanel/index.js')).getSeedlingRegionGlue();
+                for (let i = 0; i < 100 && glue.binding.region !== name.split(' -> ')[0]; i++) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await new Promise((r) => { setTimeout(r, 100); });
+                }
+                const r = glue.creditLogicalLink(name);
+                await new Promise((res) => { setTimeout(res, 500); });
+                return { ...r, region: glue.binding.region };
+            }, `level_0__r1c6 -> ${START}`);
+            check(`D: the reverse link is credited back to ${START} before the door-only walks`, back.ok && back.region === START,
+                JSON.stringify(back));
             const legs = [];
             let where = START;
             let refusal = null;
