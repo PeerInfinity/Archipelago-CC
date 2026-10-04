@@ -3794,6 +3794,17 @@ export function createLevelRun({
      * the guard fourteen of the fifteen writes sit behind.
      */
     const pickupFlags = new Map();
+    /**
+     * ⛓⛓ SEEDLING FIDELITY F7 (D-B): one record per APItem TAKEN —
+     * `"<level>:<tag>" -> {id, level, tag, t}`. `APItem.removed()`
+     * (`Pickups/APItem.as:127-133`) runs `Game.setPersistence(tag, false)` on
+     * the take frame, and `check()` (`:135-143`) despawns it on the next build.
+     * The run does not model the contact (F2: the solver's observer does, the
+     * page's own rule); it is TOLD of the take through `takeApItem` and banks
+     * the clear exactly as a pickup's — this ledger, plus `pendingEarnedClears`
+     * so a revisit in the same run builds the room without the item.
+     */
+    const apItemFlags = new Map();
     /** ⛓ R5 slice 12: one record per BURN — `{id, level, t, goneAt, flag}`. */
     const treeBurns = [];
     const polesOf = (n) => worldFor(n).pressResponders.filter((r) => r.as3 === 'LightPole');
@@ -13052,6 +13063,14 @@ export function createLevelRun({
             if (out.some((o) => o.level === n && o.tag === tag)) continue;
             out.push({ level: n, tag, by: r.id, t: r.t });
         }
+        // ⛓⛓ F7 (D-B): an APItem's take — a pickup's write, from a class the
+        // fourteen-property mirror does not hold (`takeApItem`).
+        for (const [key, r] of apItemFlags) {
+            const [n, tag] = key.split(':').map(Number);
+            if ((clearedByLevel.get(n) ?? []).includes(tag)) continue;
+            if (out.some((o) => o.level === n && o.tag === tag)) continue;
+            out.push({ level: n, tag, by: r.id, t: r.t });
+        }
         // ⛓ U14-swim D1: the set moonrock's `moonrock_target` write — a
         // CROSS-LEVEL in-band clear ({2,0} from L0), measured in the game's
         // latch. Its own loop for the reason every family above has one.
@@ -15144,6 +15163,44 @@ export function createLevelRun({
         },
         /** Build (and memoise) another level's world — for planning ahead. */
         worldFor,
+
+        /**
+         * ⛓⛓ SEEDLING FIDELITY F7 (D-B): THE APITEM TAKE'S OWN WRITE.
+         *
+         * `APItem.removed()` is `if (doActions) Game.setPersistence(tag, false)`
+         * on the take frame (`Pickups/APItem.as:127-133`), and its `check()`
+         * despawns it on every later build. The contact is the solver's to
+         * observe (`solverBot.apItemTakenOnTick`, F2), so the caller reports
+         * the take on the tick that made it and the run banks the clear the
+         * way a pickup's is banked: `earnedClears` (by `apitem@x,y`) and
+         * `pendingEarnedClears`, which the next build of the level cashes, so
+         * a revisit in this run builds it without the item (`'despawn'`).
+         *
+         * ⚠ A `tag = -1` APItem writes out of band, and `APItem` is not a
+         * registered out-of-band writer (`OUT_OF_BAND_WRITERS`): the take is
+         * reported with `banked: false` and nothing is written. A second report
+         * of one take is a no-op, as `doActions` makes a second `removed()`.
+         *
+         * @param {{level:number, id:string, tag:number}} take
+         * @returns {{id, level, tag, t, banked:boolean}}
+         */
+        takeApItem({ level: at, id, tag }) {
+            if (at !== level) {
+                throw new Error(`levelRun.takeApItem: ${id} was reported taken in level ${at}, `
+                    + `but the run is in level ${level}. A take happens inside the visit that `
+                    + 'made it, and a tick that changed level takes nothing (F2\'s exclusions).');
+            }
+            if (!(tag >= 0)) {
+                return { id, level, tag, t: ticksCompleted, banked: false };
+            }
+            const key = `${level}:${tag}`;
+            if (!apItemFlags.has(key)) {
+                apItemFlags.set(key, { id, level, tag, t: ticksCompleted });
+                if (!pendingEarnedClears.has(level)) pendingEarnedClears.set(level, new Set());
+                pendingEarnedClears.get(level).add(tag);
+            }
+            return { ...apItemFlags.get(key), banked: true };
+        },
 
         /**
          * Run one tick with `held` down, applying the end-of-tick swap if a
