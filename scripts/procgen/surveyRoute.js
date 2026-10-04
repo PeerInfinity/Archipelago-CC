@@ -64,36 +64,55 @@ export function pickupsThrough(order, through) {
  */
 export function makeRuleHolds(rulesDoc, playerId = '1') {
     const model = buildAccessibilityModel(rulesDoc, playerId);
-    const reachedCache = new Map();
-    const inventoryOf = (items) => new Map(Object.entries(items).filter(([, n]) => n > 0));
-    const reachedFor = (items) => {
-        const key = JSON.stringify(Object.entries(items).filter(([, n]) => n > 0).sort());
-        if (!reachedCache.has(key)) {
-            const undecided = new Map();
-            const reached = computeReachableRegions(model, inventoryOf(items), undecided);
-            if (undecided.size) {
-                const [endpoint, { rule }] = [...undecided][0];
-                throw new Error(`AP access rule at ${endpoint} is undecidable over an inventory `
-                    + `(${undeterminedRuleKinds(rule, inventoryOf(items), model.playerId).join(', ')}) — `
-                    + 'a rule this evaluator cannot decide must never read as SATISFIED, '
-                    + 'because a route derived through a door nobody evaluated is a route '
-                    + 'nobody derived.');
-            }
-            reachedCache.set(key, reached);
+    /**
+     * ⚡ ONE fixed point and one inventory per item set, and one verdict per
+     * (rule, item set). A leg's alternatives re-run the BFS once per banned
+     * region, so the same rules are asked of the same items thousands of
+     * times; without these caches `--through=end`'s derivation took ~22 s,
+     * paid again by every one of its 265 step children.
+     */
+    const byItems = new Map();
+    const verdicts = new WeakMap();
+    const stateFor = (items) => {
+        let key = '';
+        for (const name of Object.keys(items).sort()) {
+            if (items[name] > 0) key += `${name}\u0000${items[name]}\u0001`;
         }
-        return reachedCache.get(key);
+        let state = byItems.get(key);
+        if (state) return state;
+        const inventory = new Map(Object.entries(items).filter(([, n]) => n > 0));
+        const undecided = new Map();
+        const reached = computeReachableRegions(model, inventory, undecided);
+        if (undecided.size) {
+            const [endpoint, { rule }] = [...undecided][0];
+            throw new Error(`AP access rule at ${endpoint} is undecidable over an inventory `
+                + `(${undeterminedRuleKinds(rule, inventory, model.playerId).join(', ')}) — `
+                + 'a rule this evaluator cannot decide must never read as SATISFIED, '
+                + 'because a route derived through a door nobody evaluated is a route '
+                + 'nobody derived.');
+        }
+        state = {
+            key,
+            inventory,
+            isRegionReachable: (name) => (model.regions.has(name) ? reached.has(name) : undefined),
+        };
+        byItems.set(key, state);
+        return state;
     };
     return function ruleHolds(rule, items) {
         if (!rule) return true;
-        const reached = reachedFor(items);
-        const verdict = evaluateRuleWithInventory(rule, inventoryOf(items), model.playerId,
-            (name) => (model.regions.has(name) ? reached.has(name) : undefined),
-            model.progressionMapping);
+        const state = stateFor(items);
+        let memo = verdicts.get(rule);
+        if (!memo) verdicts.set(rule, (memo = new Map()));
+        if (memo.has(state.key)) return memo.get(state.key);
+        const verdict = evaluateRuleWithInventory(rule, state.inventory, model.playerId,
+            state.isRegionReachable, model.progressionMapping);
         if (verdict === undefined) {
             throw new Error(`unknown AP access rule '${rule.rule}' — a rule this evaluator `
                 + 'does not know must never read as SATISFIED, because a route derived through '
                 + 'a door nobody evaluated is a route nobody derived.');
         }
+        memo.set(state.key, verdict);
         return verdict;
     };
 }

@@ -274,8 +274,21 @@ const MODEL = THROUGH ? {
     ...(await import(join(MODULE, 'levelSource.js'))),
     ...(await import(join(MODULE, 'playerPhysicsV2.js'))),
 } : null;
+/**
+ * ⚡ ONE `levelWorld` per level. The derivation asks a room's control block on
+ * every pit hop and every encounter, and a world rebuilt per ask makes
+ * `buildLevelWorld` hot enough for V8 (node 18) to tier part of the model up —
+ * a TurboFan job measured at 12-26 s, which process EXIT waits for
+ * (`--no-opt`: 0.7 s vs 12.3 s for the same 121 builds). `--through=end` paid
+ * it in the parent and again in each of its 265 step children.
+ */
+const WORLDS = new Map();
+function worldOf(level) {
+    if (!WORLDS.has(level)) WORLDS.set(level, MODEL.buildLevelWorld(MODEL.atlasLevelSource()(level)));
+    return WORLDS.get(level);
+}
 function pitEdgeFor(from, to, onlyExitId = null) {
-    const world = MODEL.buildLevelWorld(MODEL.atlasLevelSource()(from));
+    const world = worldOf(from);
     if (!world.fallthrough || world.fallthrough.level !== to) return null;
     const exits = [];
     for (const [region, side] of Object.entries(apRules.preset_sidecars?.['1'] ?? {})) {
@@ -591,7 +604,7 @@ function throughPickupGoal(level, pickup, crossing) {
  * L32.
  */
 function encounterGoal(level, pickup, then) {
-    const world = MODEL.buildLevelWorld(MODEL.atlasLevelSource()(level));
+    const world = worldOf(level);
     return {
         kind: 'encounter',
         at: encounterCoords(level, pickup),
