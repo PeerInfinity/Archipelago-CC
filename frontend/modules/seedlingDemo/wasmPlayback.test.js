@@ -12,7 +12,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-    FALLBACK_POLICY, MAX_RECOVERIES, MID_ROOM_POLICY, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure, divergenceRepeatFailure, isExactRepeat,
+    FALLBACK_POLICY, MAX_RECOVERIES, MID_ROOM_POLICY, SHIPPED_RNG, TAPE_KEY_RELEASES, WasmPlaybackError, divergenceAction, divergenceFailure, divergenceRepeatFailure, isExactRepeat,
     exactDeclarationRefusal, firstDivergence, foldDrain, goalAction, keysHeldAtReset, shippedTape, wasmGoalRefusal,
     arrivalHoldBlocker, endsHeld, liveDeclarations, primarySplitRefusal, shadowMismatch,
     ADOPT_CLAUSES, INERT_MOBILES, adoptionRefusal, inertMobilesRefusal, talkCircleGuard, talkCirclesAt,
@@ -60,14 +60,21 @@ describe('shippedTape — the tape the game is handed', () => {
         // The staging takes the begin record either way, which is the property pinned here.
         expect(A.status.rng.state).toBe(A.seam.beginEntry['rng.gameplay']);
         const t = shippedTape({ staging, keys: KEYS });
-        expect(t.rng).toEqual({ seed: 0, split: false, cosmetic: 0, fp: 0 });
+        expect(t.rng).toEqual({ seed: 0, split: true, cosmetic: 0, fp: 0 });
+        expect(t.rng).toEqual(SHIPPED_RNG);
     });
 
-    it('a SPLIT stream is refused by name (a split botStart resets the cosmetic stream no verb reads)', () => {
-        const staging = stage(A);
-        staging.rng = { ...staging.rng, split: true };
-        expect(() => shippedTape({ staging, keys: [] })).toThrow(WasmPlaybackError);
-        expect(() => shippedTape({ staging, keys: [] })).toThrow(/SPLIT/);
+    it('the COSMETIC split is declared ON whatever botStatus echoes (the echo is the last tape\'s flag, not the live one)', () => {
+        // p4f (3′b): tapeless play runs split; `botStatus.rng.split` echoes `Bot.rngSplit`, false after botReset.
+        expect(A.status.rng.split).toBe(false);
+        for (const split of [false, true]) {
+            const staging = stage(A);
+            staging.rng = { ...staging.rng, split };
+            const t = shippedTape({ staging, keys: [] });
+            expect(t.rng.split).toBe(true);
+            expect(exactDeclarationRefusal(t, A.status)).toBeNull();
+            expect(exactDeclarationRefusal(t, { ...A.status, rng: { ...A.status.rng, split: true } })).toBeNull();
+        }
     });
 
     it('ALL THREE save arrays declared, persistence = the live cleared set (C: the chest row + the seal slot value)', () => {
@@ -112,11 +119,12 @@ describe('exactDeclarationRefusal — the fake-check rule (W0 ii.5–ii.8)', () 
         expect(exactDeclarationRefusal({ ...tC, save: { keys: [], totem_parts: [] } }, C.status)).toMatch(/omits save.seal_parts/);
         expect(exactDeclarationRefusal({ ...tC, save: { ...tC.save, seal_parts: [] } }, C.status)).toMatch(/seal_parts/);
     });
-    it('a declared seam, a re-seeded rng, a mismatched split, another level — each refused', () => {
+    it('a declared seam, a re-seeded rng, an UNSPLIT stream, a declared cosmetic state, another level — each refused', () => {
         const t = tapeA();
         expect(exactDeclarationRefusal({ ...t, seam: { time: 1 } }, A.status)).toMatch(/seam/);
         expect(exactDeclarationRefusal({ ...t, rng: { ...t.rng, seed: 5 } }, A.status)).toMatch(/re-seeds/);
-        expect(exactDeclarationRefusal({ ...t, rng: { ...t.rng, split: true } }, A.status)).toMatch(/split/);
+        expect(exactDeclarationRefusal({ ...t, rng: { ...t.rng, split: false } }, A.status)).toMatch(/split false/);
+        expect(exactDeclarationRefusal({ ...t, rng: { ...t.rng, cosmetic: 7 } }, A.status)).toMatch(/cosmetic 7/);
         expect(exactDeclarationRefusal({ ...t, boot: { ...t.boot, level: 0 } }, A.status)).toMatch(/same world/);
     });
 });

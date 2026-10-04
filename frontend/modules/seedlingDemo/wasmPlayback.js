@@ -26,10 +26,23 @@
  *           streams before the build drew from them (measured: begin
  *           `rng.gameplay` 811240737 vs the live `rng.state` 771911645 at the
  *           same arrival) — so re-declaring them would REWIND the live stream
- *           under an already-built world. `split` IS written unconditionally
- *           (`Rng.split = rngSplit`), so it ships the live value; a split
- *           stream is REFUSED (a split `botStart` also resets the cosmetic
- *           stream, whose live state no verb reads).
+ *           under an already-built world.
+ *           `split` → TRUE, `cosmetic` 0 (post-p4f rng-split slice). `botStart`
+ *           writes `Rng.split` UNCONDITIONALLY, and since p4f (3′b) tapeless
+ *           play runs split — so a tape declaring false turns the game's own
+ *           default OFF for its window and every cosmetic draw (a chest, a
+ *           sword's sound pick, the shake's jiggle) lands on the gameplay
+ *           stream the model's lifts assume clean (measured on p4f: during
+ *           the house chest plan `rng.state` moved, `cosmetic_state` froze).
+ *           ⛔ `botStatus.rng.split` is NOT the live flag: it echoes the LAST
+ *           TAPE's declaration (`Bot.rngSplit`, false after `botReset` while
+ *           `Rng.split` is true) — so W2's "ships the live value" shipped
+ *           false on p4f, and its "a split stream is REFUSED" never fired.
+ *           A split `botStart` re-seeds the COSMETIC stream (0 = the build's
+ *           boot seed); the model reads no cosmetic draw (its one `rng`
+ *           reader is the Owl's gameplay stream, `assertOwlStreamPremises`),
+ *           so no live cosmetic state is owed and the rewind is invisible to
+ *           every modelled row.
  *   `hold`  → the ZERO-TICK freeze tape holds (the W-Q2 worker solve
  *           needs the room still while it thinks; W0 (i): it latches on the
  *           first LIVE frame, before that frame's `super.update`, so the hold
@@ -426,6 +439,14 @@ const sortClears = (list) => [...(list ?? [])].map((c) => ({ level: c.level, tag
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 /**
+ * The `rng` block every shipped tape declares: the gameplay stream and the FP
+ * LCG untouched (0 = not written), the COSMETIC split ON — the game's own
+ * tapeless default since p4f (3′b), which a `split: false` tape would switch
+ * off for its window (see the header's `rng` row).
+ */
+export const SHIPPED_RNG = Object.freeze({ seed: 0, split: true, cosmetic: 0, fp: 0 });
+
+/**
  * The game-visible tape for `staging` + `keys` (key sets, one per tick — the
  * solve's `plan.solution`; `[]` = the zero-tick freeze tape).
  *
@@ -433,14 +454,10 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
  */
 export function shippedTape({ staging, keys = [], hold = false, name = 'wasm-playback' }) {
     if (!staging?.boot) refuse('wasmPlayback: no staging to ship a tape from');
-    if (staging.rng?.split) {
-        refuse('wasmPlayback: the arrival runs a SPLIT rng stream — a split botStart resets the cosmetic stream, '
-            + 'and no read-only verb carries its live state; the tape would rewind it to a guess');
-    }
     const stripped = {
         ...staging,
         seam: null,
-        rng: { seed: 0, split: false, cosmetic: 0, fp: 0 },
+        rng: { ...SHIPPED_RNG },
     };
     const perTick = keys.map((k) => (k instanceof Set ? k : new Set(k)));
     const parsed = parseTape(buildStagedTape({ staging: stripped, perTick, name }));
@@ -486,8 +503,11 @@ export function exactDeclarationRefusal(tape, status) {
     if ((tape.rng?.seed ?? 0) !== 0 || (tape.rng?.fp ?? 0) !== 0) {
         return 'the tape re-seeds the rng — the staging\'s seeds are the begin record\'s, before the build drew';
     }
-    if (Boolean(tape.rng?.split) !== Boolean(status.rng?.split)) {
-        return `the tape's rng.split ${tape.rng?.split} is not the game's ${status.rng?.split} (botStart writes it unconditionally)`;
+    // ⛔ NOT compared with `status.rng.split`: that echoes the last tape's declaration, not the live flag.
+    if (tape.rng?.split !== true || (tape.rng?.cosmetic ?? 0) !== 0) {
+        return `the tape declares rng.split ${tape.rng?.split} / cosmetic ${tape.rng?.cosmetic} — a shipped tape keeps `
+            + 'the game\'s own split stream ON (botStart writes it unconditionally; false would put every cosmetic draw on '
+            + 'the gameplay stream) and declares no cosmetic state (nothing modelled reads it)';
     }
     return null;
 }

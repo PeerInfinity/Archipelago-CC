@@ -18,7 +18,9 @@
  *       received ONCE, the binding's checks = 1 with no arming-window catch beyond G's, ONE
  *       regionMove out of the house (the glue's redirect, `region_2_3`), the engine's two goals
  *       done (the door's trajectory ends OUT of level 86 — "left 86"), every host botStart bracketed.
- *       W3 adds (c): 0 divergences, 0 recoveries on the undisturbed walk.
+ *       W3 adds (c): 0 divergences, 0 recoveries on the undisturbed walk. ⛓ rng-split (post-p4f) adds
+ *       B/split: every engine tape declares the cosmetic split ON, and the chest plan ran on it (the held
+ *       end's latch reads `static.Rng.split` true; the window took exactly 1 gameplay draw — 2 unsplit).
  *   R   (W3 (a), its own fresh page) the same bot walk with ONE injected divergence: on the chest's
  *       first plan tape the injector (`installInjector`, on the game window's 0 ms timer) presses
  *       ArrowRight for ~200 ms — a key the tape never pressed — so the drained rows leave the plan
@@ -65,11 +67,37 @@ function installCounters() {
     const game = window.__swfBridge.game;
     if (window.__w2) return true;
     const calls = { botLoadTape: 0, botStart: 0, botReset: 0, botStatus: 0, botDrain: 0, botSeam: 0 };
+    const raw = { status: game.botStatus.bind(game), seam: game.botSeam.bind(game) };
     for (const name of Object.keys(calls)) {
         const orig = game[name].bind(game);
         game[name] = (...a) => { calls[name] += 1; return orig(...a); };
     }
-    window.__w2 = { calls };
+    // ⛓ rng-split: each loaded tape's `rng` block + the gameplay stream at the load, and the FIRST held
+    // status after it (a plan's held end) with the latch's live `static.Rng.split` — off the raw verbs, so
+    // the counts above stay the engine's.
+    const tapes = [];
+    const load = game.botLoadTape;
+    game.botLoadTape = (...a) => {
+        let rng = null;
+        let inputs = 0;
+        try { const t = JSON.parse(a[0]); rng = t.rng ?? null; inputs = (t.inputs ?? []).length; } catch { /* the verb refuses it */ }
+        tapes.push({ rng, inputs, state: JSON.parse(raw.status()).rng?.state ?? null, held: null });
+        return load(...a);
+    };
+    const poll = () => {
+        const open = tapes.at(-1);
+        if (open && !open.held) {
+            try {
+                const st = JSON.parse(raw.status());
+                if (st.held && !st.armed) {
+                    open.held = { state: st.rng?.state ?? null, split: JSON.parse(raw.seam())?.seam?.['static.Rng.split'] ?? null };
+                }
+            } catch { /* a status mid-swap */ }
+        }
+        setTimeout(poll, 20);
+    };
+    poll();
+    window.__w2 = { calls, tapes };
     return true;
 }
 
@@ -134,6 +162,13 @@ async function main() {
     const SD = join(REPO, 'frontend/modules/seedlingDemo');
     const { parseTape, gameVisibleTape } = await import(join(SD, 'tapeFormat.js'));
     const { exactDeclarationRefusal } = await import(join(SD, 'wasmPlayback.js'));
+    const { step } = await import(join(SD, 'rng.js'));
+    /** Gameplay draws between two `rng.state` readings (null past 100k). */
+    const gameplayDraws = (from, to) => {
+        let u = from;
+        for (let i = 0; i <= 100000; i++) { if (u === to) return i; u = step(u); }
+        return null;
+    };
 
     const REGIONS = PRESET.regions['1'];
     const SIDECARS = PRESET.preset_sidecars['1'];
@@ -327,6 +362,7 @@ async function main() {
                 check(`${MODE}: the divergence injector is armed on the game window`, inj === true, String(inj));
             }
             const before = await ap();
+            const tapeMark = await w(() => window.__w2.tapes.length);
             const booted = await page.evaluate(async (start) => {
                 const bus = (await import('./app/core/eventBus.js')).default;
                 bus.publish('ui:activatePanel', { panelId: 'playbackBotPanel' }, 'tests');
@@ -468,6 +504,19 @@ async function main() {
             } else {
                 check('B/(c): 0 divergences, 0 recoveries on the undisturbed walk', eng?.divergences === 0 && eng?.recoveries === 0,
                     JSON.stringify({ divergences: eng?.divergences, recoveries: eng?.recoveries }));
+                // ⛓ rng-split (post-p4f): the engine's tapes keep the game's own COSMETIC split ON (3′b) — a
+                // `split: false` tape turns it off for its window and every cosmetic draw lands on the gameplay stream.
+                const engineTapes = (await w(() => window.__w2.tapes)).slice(tapeMark);
+                check('B/split: every engine tape declares rng {seed 0, split TRUE, cosmetic 0, fp 0} (the gameplay stream untouched, the cosmetic split kept on)',
+                    engineTapes.length === (eng?.ships ?? 0) + (eng?.arrivals ?? 0) && engineTapes.every((t) => JSON.stringify(t.rng)
+                        === JSON.stringify({ seed: 0, split: true, cosmetic: 0, fp: 0 })), JSON.stringify(engineTapes.map((t) => t.rng)));
+                // The chest window's gameplay draws, counted by stepping the generator from the load's state to the
+                // held end's: the chest's seal-slot pick (`Chest.as:87`, empty set → first try) is the ONE gameplay
+                // draw; its sound pick (`Music.as:730`, `Rng.cos()`) is cosmetic. Measured unsplit: 2.
+                const plan = engineTapes.find((t) => t.inputs > 0);
+                const draws = plan?.held ? gameplayDraws(plan.state, plan.held.state) : null;
+                check('B/split: the chest plan ran on the SPLIT stream — the held end\'s latch reads static.Rng.split true, and the window took EXACTLY 1 gameplay draw (the seal slot; the "Chest" sound pick drew from the cosmetic stream)',
+                    plan?.held?.split === true && draws === 1, JSON.stringify({ held: plan?.held, from: plan?.state, draws }));
             }
             console.log(`INFO: divergences recorded: ${JSON.stringify(hist.map((h) => h.divergence))}`);
             }

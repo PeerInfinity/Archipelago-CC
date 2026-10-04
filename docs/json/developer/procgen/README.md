@@ -8,7 +8,7 @@ Developer documentation for the procedural-generation ("procgen") system: the pi
 
 <!-- GENERATED:procgen-docs-index BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**26 documents · 4 pages · 286,211 words.**
+**26 documents · 4 pages · 286,292 words.**
 
 Order: `README_ORDER` in `scripts/procgen/reference/docsIndex.mjs` — the reading order. A document missing from that list fails the generator, so every document is indexed.
 
@@ -39,7 +39,7 @@ Descriptions: the document's own first paragraph, collapsed onto one line; past 
 | [Seedling Bot and Procgen Arcs: the Build Log](./seedling-bot-log.md) | This is the chronological build log of the Seedling real-game bot (rungs R1–R9) and of the procgen arcs built on `watch.html` — each slice as it was built, with its findings, decisions and handed-on debts. | 179538 |
 | [Seedling Constants Census](./seedling-constants.md) | Every numeric literal in Seedling's JS simulation — the static import closure of `frontend/modules/seedlingDemo/levelRun.js` — is one row of a generated census, `scripts/procgen/seedling-constants-census.csv`, and every row carries a REVIEWED class (`physics`, `rule`, `cosmetic`, `structural`) joined from `scripts/procgen/seedling-constants-fields.csv`. | 9954 |
 | [The Tape Envelope and the Observation Core](./tape-envelope.md) | The contract two bots share: what every input tape says whatever game it drives (the envelope), how Seedling's tape and Robot Wants Kitty's two tape forms map onto it, the core every observation stream reports, and why the gates compare exactly. `frontend/modules/seedlingDemo/tapeEnvelope.js` reads the envelope and `observationTolerance.js` is the diagnostic comparator; neither is a gate. | 2075 |
-| [Flash Substrate](./flash.md) | The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room). | 20150 |
+| [Flash Substrate](./flash.md) | The flash substrates host recompiled Flash games (SWF → C → WASM via SWFRecomp-CC) as procgen regions. This page covers the generic iframe machinery (`flashSubstrate/`) and the two Seedling entries that play rooms of the real game in the flash panel: `flash_seedling` (a real room from the region atlas) and `flash_seedling_gen` (a generated room). | 20231 |
 | [JtA Substrate](./jta.md) | The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool. | 2921 |
 | [Omsi Substrate (Idle Loops)](./omsi.md) | The omsi substrate (`frontend/modules/omsiSubstrateWrapper/`, id `omsi`) runs the `PeerInfinity/omsi-loops` fork of Idle Loops, from the `frontend/modules/omsi-loops/` submodule, in a same-origin iframe as a loop-mode substrate. The host owns the game clock, and the game's per-loop mana budget is the shared mana pool. | 4321 |
 

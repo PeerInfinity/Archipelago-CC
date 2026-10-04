@@ -438,7 +438,7 @@ The wasm game only replays tapes, so the Playback Bot cannot walk it the way the
    - `pins` are the solve's.
    - `seam` is null. No partial block is possible: once a tape declares a seam, `botStart` writes `beam`, `rockSet`, `firstUse`, `extended`, `grassCut` and the music pair unconditionally, and no read-only verb carries five of those seven. With `seam` null the game's own values, `beam` and `rockSet` included, are never overwritten.
    - The rng is left alone (seed 0, fp 0). The staging's seeds come from the begin record, before the build drew from the stream, so re-declaring them would rewind the live stream.
-   - `split` ships the live value, and a split stream is refused.
+   - `split` is declared on, and no cosmetic state is declared. Since p4f the game runs split by default when no tape is armed, and `botStart` writes `Rng.split` unconditionally. A `split: false` tape would turn the split off for its window and put every cosmetic draw (a sound pick, the build's tile draws) on the gameplay stream. `botStatus.rng.split` is not the live flag: it echoes the last tape's declaration, which is false after `botReset`. A split `botStart` re-seeds the cosmetic stream at the build's boot seed; nothing in the model reads that stream.
    - An exit plan ends un-held: a hold across its crossing would block the glue's redirect. A location plan ends held (W7, below).
 
    The declarations are checked against a fresh `botStatus` (`exactDeclarationRefusal`). `botLoadTape` keeps the hold and `botStart` releases it.
