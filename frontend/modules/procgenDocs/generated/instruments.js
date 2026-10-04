@@ -12356,8 +12356,7 @@ export const INSTRUMENTS = frz({
                 },
                 {
                     "how": [
-                        "argOf",
-                        "startsWith"
+                        "argOf"
                     ],
                     "name": "through"
                 },
