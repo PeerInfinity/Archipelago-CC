@@ -36,8 +36,7 @@ import {
     describeRule,
 } from '../../frontend/modules/procgenPipeline/regionAtlasAnalyzer.js';
 import { validateRegionAtlas } from '../../frontend/modules/procgenPipeline/regionAtlasValidator.js';
-import { analyzeSeedlingRegion } from '../../frontend/modules/flashPanel/seedlingAtlasAnalysis.js';
-import { seedlingModelOracles } from '../../frontend/modules/seedlingDemo/seedlingModelOracles.js';
+import { regionAnalyzerFor } from '../../frontend/modules/regionMarkingTool/regionAnalyzers.js';
 
 
 import { argvHelp } from './argvHelp.js';
@@ -48,11 +47,11 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // Which analyzer a game's atlas goes through. One entry today; the shape is
 // what Phase 7 adds RWK to, and an unknown game is an error rather than a
 // silent no-op that would report "nothing to do" for a whole map.
-const ANALYZERS = { seedling: analyzeSeedlingRegion };
-// The game's PHYSICS MODEL oracles (RULES logical-links), the ones its atlas
-// producers build with — so a re-analysis reproduces a producer's settled
-// crossings rather than re-opening them as hand-authoring rows.
-const MODEL_ORACLES = { seedling: seedlingModelOracles };
+// The registry is the marking tool's own (regionAnalyzers.js), so the panel's
+// Analyze button and this CLI propose the same thing — the game's PHYSICS MODEL
+// oracles included, the ones its atlas producers build with, so a re-analysis
+// reproduces a producer's settled crossings rather than re-opening them as
+// hand-authoring rows.
 
 const USAGE = 'usage: node scripts/procgen/region-atlas-analyze.mjs <atlas.json> [--check] [--dry-run] [--quiet] [--region <id>]... [--game-config <path>]';
 
@@ -87,7 +86,7 @@ const atlasPath = resolve(file);
 const original = readFileSync(atlasPath, 'utf8');
 const atlas = JSON.parse(original);
 
-const analyze = ANALYZERS[atlas.game];
+const analyze = regionAnalyzerFor(atlas.game);
 if (!analyze) {
     console.error(`ERROR: no analyzer is registered for game "${atlas.game}" — the tile semantics for it have not been transcribed yet`);
     process.exit(2);
@@ -118,7 +117,7 @@ const gameConfig = JSON.parse(readFileSync(configPath, 'utf8'));
 
 // --- run ---------------------------------------------------------------------
 
-const deps = { mapDoc, gameConfig, modelOracles: MODEL_ORACLES[atlas.game] };
+const deps = { mapDoc, gameConfig };
 const targets = (atlas.regions ?? [])
     .map((r) => r.region_id)
     .filter((id) => only.size === 0 || only.has(id));

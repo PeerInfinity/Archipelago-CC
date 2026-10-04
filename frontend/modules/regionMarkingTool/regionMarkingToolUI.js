@@ -22,12 +22,12 @@ import { buildLevelView, indexLevels, levelLabel, entityMarkers } from './mapSou
 import { compactJsonFile } from '../procgenPipeline/compactJson.js';
 import { compileRegionAtlas, formatCompileReport } from '../procgenPipeline/regionAtlasCompiler.js';
 import { formatAnalysisReport, describeRule } from '../procgenPipeline/regionAtlasAnalyzer.js';
-import { analyzeSeedlingRegion } from '../flashPanel/seedlingAtlasAnalysis.js';
+import { regionAnalyzerFor } from './regionAnalyzers.js';
 import { stringifyRulesJson } from '../shared/rulesJsonBuilder.js';
 
-// Per-game analyzers, the same registry shape the batch CLI carries
-// (scripts/procgen/region-atlas-analyze.mjs). One entry today; Phase 7 adds RWK.
-const ANALYZERS = { seedling: analyzeSeedlingRegion };
+// Per-game analyzers: the SAME registry the batch CLI reads
+// (scripts/procgen/region-atlas-analyze.mjs), model oracles included — see
+// regionAnalyzers.js.
 const GAME_CONFIG_URL = (game) => `modules/flashPanel/games/${game}.json`;
 
 function log(level, message, ...data) {
@@ -687,7 +687,7 @@ export class RegionMarkingToolUI {
     async _analyzeRegion() {
         const region = this._currentRegion();
         if (!region) { this._setStatus('select a region first', true); return; }
-        const analyze = ANALYZERS[this.session.atlas.game];
+        const analyze = regionAnalyzerFor(this.session.atlas.game);
         if (!analyze) {
             this._setStatus(`no analyzer for game "${this.session.atlas.game}" — its tile semantics have not been transcribed`, true);
             return;

@@ -78,8 +78,12 @@ const { compileRegionAtlas } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/procgenPipeline/regionAtlasCompiler.js')));
 const { stringifyRulesJson } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/shared/rulesJsonBuilder.js')));
-const { analyzeSeedlingRegion, applySeedlingRegionAnalysis } = await import(pathToFileURL(
+const { applySeedlingRegionAnalysis } = await import(pathToFileURL(
     path.join(repoRoot, 'frontend/modules/flashPanel/seedlingAtlasAnalysis.js')));
+// The panel's own analyzer registry (model oracles included), so the headless
+// mirror proposes exactly what the Analyze button does.
+const { regionAnalyzerFor } = await import(pathToFileURL(
+    path.join(repoRoot, 'frontend/modules/regionMarkingTool/regionAnalyzers.js')));
 
 // ⛓ B-a — the host was hardcoded; the DEFAULT is unchanged, so every existing
 //   invocation still points at :8000 and a parallel worktree can serve its own.
@@ -138,7 +142,7 @@ function headlessAfterAnalyze() {
     const s = headlessSession();
     s.addRegion({ region_id: SPLIT_REGION_ID, bounds: SPLIT_BOUNDS, map_ref: SPLIT_LEVEL });
     s.addExit(SPLIT_REGION_ID, { exit_id: SPLIT_EXIT_ID, tiles: [SPLIT_EXIT_TILE], kind: 'teleporter' });
-    const analysis = analyzeSeedlingRegion(s.atlas, SPLIT_REGION_ID, { mapDoc: MAP_DOC, gameConfig: GAME_CONFIG });
+    const analysis = regionAnalyzerFor('seedling')(s.atlas, SPLIT_REGION_ID, { mapDoc: MAP_DOC, gameConfig: GAME_CONFIG });
     applySeedlingRegionAnalysis(s.atlas, analysis, { stamp: false });
     return { text: compactJsonFile(s.toDocument()), analysis };
 }
