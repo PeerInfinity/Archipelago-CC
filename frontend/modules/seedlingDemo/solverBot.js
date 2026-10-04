@@ -5064,7 +5064,9 @@ function deriveHoldStance(run, presser, contacts, blocked = [], { prerequisites 
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
     /** ⛓ guard (iii)'s rejects, kept so the refusal below can NAME them. */
     const walls = [];
-    const hypothesis = stanceHypothesis(run, blocked, contacts, walls);
+    // ⛓ SF1: asked only once a candidate's direct plan fails — and `walls` is
+    // filled by that same ask, so every reader below forces it first.
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts, walls);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, exempt, hypothesis);
         if (reached) {
@@ -5102,7 +5104,7 @@ function deriveHoldStance(run, presser, contacts, blocked = [], { prerequisites 
      * probe for it. (Arc-2 §9d's cost work is why that sentence is here.)
      */
     const pre = prerequisites
-        ? stancePrerequisite(run, candidates, exempt, hypothesis, contacts, blocked) : null;
+        ? stancePrerequisite(run, candidates, exempt, hypothesis(), contacts, blocked) : null;
     if (pre) {
         return {
             stance: pre.stance,
@@ -5117,7 +5119,7 @@ function deriveHoldStance(run, presser, contacts, blocked = [], { prerequisites 
         + 'the button and none of them plans a corridor from '
         + `(${run.state.x},${run.state.y}). A hold that cannot be stood on is not a `
         + 'strategy for this obstacle.'
-        + (prerequisites ? prerequisiteRefusalClause(run, hypothesis, walls, blocked) : ''),
+        + (prerequisites ? prerequisiteRefusalClause(run, hypothesis(), walls, blocked) : ''),
         { obstacle: { kind: 'proximity-hazard', id: `${presser.tag}@${presser.x},${presser.y}` } });
 }
 
@@ -5380,6 +5382,35 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY SF1 — **THE HYPOTHESIS IS ASKED ONLY WHEN A DIRECT
+ * PLAN HAS FAILED**, which is the only place `stanceReaches` ever read it.
+ *
+ * ⛔ WHY IT WAS A COST AND NOT A VALUE. Every stance derivation (hold, fight,
+ * keylock, touch, swing) computed `stanceHypothesis` BEFORE its first
+ * candidate, and a `weigh` activator in the room makes that a `deriveWeigh` →
+ * `deriveBlockRoute` search. MEASURED (the l16-budget report §2): on L16's
+ * live arrival that search was ~30 % of the full solve and ~80 % of the
+ * dashless one, for a plan whose verbs are `pull, walk` — a stance reached
+ * directly, so the hypothesis was never read.
+ *
+ * ⇒ a thunk, memoised: the first candidate that fails its direct plan asks
+ * it, every later one reuses the answer, and a derivation whose first
+ * candidate reaches pays nothing. The value is the eager one exactly (same
+ * arguments, same `walls` out-parameter), so a stance that needed it gets the
+ * same hypothesis it always got.
+ *
+ * ⚠ THE ONE DIFFERENCE IS A THROW. `deriveWeigh` can throw (a block-route
+ * bound, or its own `fail`); eagerly that throw escaped even when a candidate
+ * was then reached directly. Lazily it escapes only when the hypothesis is
+ * read. Measured over every solve the SF slice could run: the eager call never
+ * threw (SF report, D1), so no committed solve depends on the old order.
+ */
+function lazyStanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = []) {
+    let memo = null;
+    return () => (memo ??= stanceHypothesis(run, blocked, contacts, walls));
+}
+
+/**
  * The branded bag with a hypothesis set discharged — see `stanceHypothesis`.
  * ⚠ Returns the bag UNCHANGED when the set is empty, so a room with nothing to
  * hypothesise pays nothing and probes exactly the world it is in.
@@ -5405,13 +5436,14 @@ function bagWithDischarged(run, bag, hypothesis) {
  * derivation that leaned on optimism it did not need would make guard (ii)
  * fire for nothing.
  */
-function stanceReaches(run, aim, contacts, hypothesis) {
+function stanceReaches(run, aim, contacts, hypothesisOf) {
     try {
         planWaypoints(run.world, run.state, aim, null, solverPlanOpts(run, contacts));
         return { discharged: [] };
     } catch (e) {
         if (!(e instanceof BotDriverV2Error)) throw e;
     }
+    const hypothesis = hypothesisOf();
     if (!hypothesis.length) return null;
     /**
      * ⛔⛔ DISCHARGING A LOCK OPENS THE **SOLID** AND LEAVES THE **VOLUME**,
@@ -8265,7 +8297,7 @@ function deriveFightStance(run, boss, contacts, blocked = []) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    const hypothesis = stanceHypothesis(run, blocked, contacts);
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) {
@@ -8546,7 +8578,7 @@ function deriveKeylockStance(run, row, contacts, blocked = []) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    const hypothesis = stanceHypothesis(run, blocked, contacts);
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
@@ -8740,7 +8772,7 @@ function deriveTouchStance(run, row, contacts, blocked = []) {
         }
     }
     candidates.sort((a, b) => a.d - b.d || a.y - b.y || a.x - b.x);
-    const hypothesis = stanceHypothesis(run, blocked, contacts);
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
     for (const c of candidates) {
         const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
         if (reached) return { stance: { x: c.x, y: c.y }, discharged: reached.discharged };
@@ -9097,7 +9129,7 @@ function deriveSwingStance(run, target, contacts, blocked, refusal, admit = null
     }
     const { candidates, outOfReach, noRect } = breakStanceCandidates(run, target,
         solverPlanOpts(run, contacts, { nodeMargin: 0, triggerMargin: 0 }));
-    const hypothesis = stanceHypothesis(run, blocked, contacts);
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
     let unsafe = 0;
     for (const c of candidates) {
         if (admit && !admit(c)) { unsafe += 1; continue; }
