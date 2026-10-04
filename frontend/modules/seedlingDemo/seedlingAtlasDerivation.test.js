@@ -32,7 +32,7 @@ import { loadAtlasSchema, loadRulesSchema } from '../procgenCore/jsonSchemaFiles
 import {
     ITEM_FOR_TAG, LINK_TAGS, TRIGGER_FOR_NAMED_ROOM, deriveAtlas, inExitId, levelName,
     linksOf, namedInExitId, namedRoomArrivals, namedRoomTriggersAreNotLinks,
-    outExitId, regionIdFor,
+    outExitId, pitOf, regionIdFor,
 } from './seedlingAtlasDerivation.js';
 
 const ATLAS_SCHEMA = loadAtlasSchema();
@@ -328,6 +328,41 @@ describe('the AUTHORED half travels in the overlay', () => {
     });
 });
 
+// ⛓ RULES (B) — a `<control fallthrough>` is a ONE-WAY pit exit, and every one in
+// the vanilla map derives. The brief that opened RULES (B) said L71's pit into L82
+// was "never derived"; it was derived and then left unwired by a never-enter
+// ruling, which is a different defect with a different fix.
+describe('⛓ RULES (B) — every pit `fallthrough` derives a one-way exit', () => {
+    const MAP = JSON.parse(readFileSync(fileURLToPath(
+        new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8'));
+    const roomById = new Map(MAP.levels.map((l) => [l.level, l]));
+    const deps = { roomById, tileSize: TILE, tileTypeForPlacement };
+    const withFallthrough = MAP.levels
+        .filter((l) => l.entities.some((e) => e.type === 'control' && e.attrs?.fallthrough !== undefined));
+
+    it('L71\'s pit drops to L82 — Player.as:758-764 arithmetic, one arrival, one tile', () => {
+        expect(pitOf(roomById.get(71), deps)).toEqual({ to: 82, groups: [{ arrival: [10, 17], tiles: [[12, 13]] }] });
+    });
+
+    it('the census: all 12 fallthrough rooms derive a pit, none silently null', () => {
+        const derived = withFallthrough.map((l) => [l.level, pitOf(l, deps)?.to ?? null]);
+        expect(derived).toEqual([
+            [12, 21], [16, 17], [30, 31], [32, 30], [40, 43], [48, 49],
+            [56, 57], [70, 69], [71, 82], [83, 84], [84, 85], [110, 0],
+        ]);
+    });
+
+    it('the derivation wires each pit ONE-WAY, and L71 -> L82 is wired now L82 is not never-enter', () => {
+        const { atlas } = deriveAtlas(MAP.levels, {
+            neverEnter: { levels: OV.NEVER_ENTER_LEVELS, cite: OV.NEVER_ENTER_CITE },
+        }, { tileSize: TILE, tileTypeForPlacement });
+        const pit = atlas.vanilla_layout.connections
+            .filter((c) => c.from[0] === regionIdFor(71) && c.from[1].startsWith('out_pit_'));
+        expect(pit).toEqual([{ from: [regionIdFor(71), 'out_pit_10_17'], to: [regionIdFor(82), 'in_pit_L71_10_17'], one_way: true }]);
+        expect(OV.NEVER_ENTER_LEVELS).toEqual([57, 69]);
+    });
+});
+
 describe('the derived document is UNSTAMPED — the caller owns identity', () => {
     /**
      * ⛔ D0a §18.9 hard #3: `contentIdentity` is load-bearing for ten committed
@@ -503,11 +538,10 @@ describe('⛓⛓ E5 — a `named_rooms` arrival is a connection, and its source 
             namedRooms: set.named_rooms,
         };
         /**
-         * ⛔ THE LIST IS THE PLAYTHROUGH OVERLAY'S OWN, NEVER TYPED. It is
-         * [57, 69, **82**] — three rooms, and the third is easy to miss because
-         * only the first two are DROPPED from the committed atlas (L82 keeps
-         * its outbound doors, so it survives the drop pass). A row that typed
-         * `[57, 69]` would be measuring a ruling nobody made.
+         * ⛔ THE LIST IS THE PLAYTHROUGH OVERLAY'S OWN, NEVER TYPED. It was
+         * [57, 69, **82**] until ⛓ RULES (B) (⚖ 2026-10-04) lifted L82, and is
+         * [57, 69] now — a row that typed either would be measuring a ruling
+         * rather than reading it.
          */
         const overlay = {
             neverEnter: {
@@ -522,15 +556,15 @@ describe('⛓⛓ E5 — a `named_rooms` arrival is a connection, and its source 
             .filter((c) => /^in_(moonrock_target|dark_shrum_death|bloody_seed_ending|light_boss_exit|tentacle_beast_mouth)_/
                 .test(c.to[1]));
         expect(namedOf(open)).toHaveLength(15);
-        expect(namedOf(guarded)).toHaveLength(10);
+        expect(namedOf(guarded)).toHaveLength(11);
         expect(namedOf(guarded).map((c) => c.from[0])
             .filter((r) => OV.NEVER_ENTER_LEVELS.some((l) => r === `level_${l}`)))
             .toEqual([]);
-        // ⛓ FIVE refused, not three: L57 and L69 each hold TWO triggers (a
-        //   `<watcher>` and the trap room's own boss controller) and L82 holds
-        //   one — 15 - 5 = 10.
+        // ⛓ FOUR refused: L57 and L69 each hold TWO triggers (a `<watcher>`
+        //   and the trap room's own boss controller) — 15 - 4 = 11. ⛓ RULES (B):
+        //   it was FIVE while L82 (one trigger) was never-enter too.
         const refused = notes.filter((n) => n.includes('NOT WIRED') && n.includes('warp'));
-        expect(refused).toHaveLength(5);
+        expect(refused).toHaveLength(4);
         expect(refused.some((n) => n.includes('`tentacle_beast_mouth`') && n.includes('leaves a trap room')))
             .toBe(true);
         expect(refused.some((n) => n.includes('`light_boss_exit`') && n.includes('leaves a trap room')))
@@ -603,13 +637,14 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
      * this says exactly what `named_rooms` ADDS to that comparison — and it is
      * NOT the fifteen the editor sees, because the committed atlas is built
      * under `NEVER_ENTER_LEVELS` = [57, 69, 82] and FIVE of the fifteen leave a
-     * trap room (L57 and L69 hold two triggers each, L82 one).
+     * trap room (L57 and L69 hold two triggers each). ⛓ RULES (B) lifted L82
+     * from never-enter (⚖ 2026-10-04), so its one trigger is now wired: TEN -> ELEVEN.
      *
      * ⛔ §27.6 PREDICTED `level_58` WOULD MOVE TO REACHED HERE. IT DOES NOT, and
      * the reason is the measurement rather than a shrug: L57 is the only source
      * of the warp that reaches it.
      */
-    it('adds TEN connections to the playthrough-shaped derivation, and none reach level_58', () => {
+    it('adds ELEVEN connections to the playthrough-shaped derivation, and none reach level_58', () => {
         const committed = JSON.parse(readFileSync(fileURLToPath(
             new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url)), 'utf8'));
         const { set } = vanillaRecordSet(
@@ -631,7 +666,7 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
         const added = guarded.atlas.vanilla_layout.connections
             .filter((c) => /^in_(moonrock_target|dark_shrum_death|bloody_seed_ending|light_boss_exit|tentacle_beast_mouth)_/
                 .test(c.to[1]));
-        expect(added).toHaveLength(15 - 5);
+        expect(added).toHaveLength(15 - 4);
         /**
          * ⛓ EVERY ONE OF THEM IS A NEW **DOOR** — no arrival id the manifest
          * mints exists in the committed atlas.
@@ -658,6 +693,7 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
             'level_32 -> level_1',
             'level_37 -> level_1',
             'level_43 -> level_1',
+            'level_82 -> level_1',
             'level_89 -> level_1',
             'level_94 -> level_1',
         ].sort());
@@ -684,6 +720,7 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
         // …and the shape the hole is part of, so a rebuild that silently gained
         // the manifest's connections is a VALUE failure here.
         expect(out).toContain('113 regions');
-        expect(out).toContain('312 one-way connections');
+        // ⛓ RULES (B): 312 -> 314, L71's pit into L82 and L96's door into it.
+        expect(out).toContain('314 one-way connections');
     }, 120000);
 });

@@ -36,6 +36,7 @@ import {
     COMPLETION,
     IGNEOUS_IS_FREE,
     LAVATRAP_PULL,
+    LAVABOSS_ARENA,
     LOCATION_GUARDS,
     PLAYTHROUGH_TILE_OVERLAY,
     isRefutation,
@@ -362,15 +363,48 @@ describe('location guards — the gate that is not a door', () => {
 });
 
 describe('the charged doors and the completion condition', () => {
-    it('charges the D7 entrance and BOTH cells the FinalDoor covers', () => {
+    it('charges the D7 entrance, BOTH cells the FinalDoor covers, and BOTH LavaBoss arena doors', () => {
         expect(CHARGED_DOORS.map((d) => `${d.level}/${d.exitId}`)).toEqual([
             '12/out_teleporter_32_848',
             '113/out_teleporter_112_0',
             '113/out_teleporter_128_0',
+            '82/out_teleporter_144_0',
+            '96/out_teleporter_32_64',
         ]);
         for (const door of CHARGED_DOORS.filter((d) => d.level === 113)) {
             expect(door.condition).toEqual({ seals: 16 });
         }
+    });
+
+    // ⛓ RULES (B) — L82 is wired (⚖ "Lift; gate both ways"), and the logic never
+    // sends a player into the LavaBoss arena unable to leave it.
+    it('L82 is no longer never-enter; its arena is gated BOTH ways on the Dark Suit and a weapon', () => {
+        expect(NEVER_ENTER_LEVELS).not.toContain(LAVABOSS_ARENA.level);
+        expect(NEVER_ENTER_LEVELS).toEqual([57, 69]);
+        expect(LAVABOSS_ARENA.condition).toEqual({ all: [{ flag: 'hasDarkSuit' }, A_WEAPON] });
+        for (const door of CHARGED_DOORS.filter((d) => d.condition === LAVABOSS_ARENA.condition)) {
+            expect(door.cite).toMatch(/LavaBoss\.as:53,143-165/);
+        }
+        // …and in the COMMITTED rules, both directions carry it; the way in by
+        // L71's pit is free because its source is already behind the Dark Suit.
+        const rules = JSON.parse(readFileSync(fileURLToPath(new URL(
+            '../../presets/seedling_playthrough/AP_1/AP_1_rules.json', import.meta.url)), 'utf8'));
+        const exitsOf = (name) => rules.regions['1'][name].exits;
+        const gate = {
+            rule: 'And',
+            children: [
+                { rule: 'Has', args: { item_name: 'Dark Suit' } },
+                { rule: 'Or', children: [
+                    { rule: 'Has', args: { item_name: 'Progressive Sword' } },
+                    { rule: 'Has', args: { item_name: 'Ghost Spear' } },
+                ] },
+            ],
+        };
+        expect(exitsOf('level_82')).toEqual([{ name: 'level_82 -> level_96', connected_region: 'level_96', access_rule: gate }]);
+        expect(exitsOf('level_96').find((e) => e.connected_region === 'level_82').access_rule).toEqual(gate);
+        expect(exitsOf('level_71__r14c12').find((e) => e.connected_region === 'level_82').access_rule).toEqual({ rule: 'True_' });
+        expect(JSON.stringify(exitsOf('level_71__r0c6').find((e) => e.connected_region === 'level_71__r14c12').access_rule))
+            .toContain('Dark Suit');
     });
 
     it('states the goal as the BLOODLESS seed and names the other ending a non-goal', () => {

@@ -357,26 +357,63 @@ export function overlayEntitySemantics(entity, base, ctx = null) {
 }
 
 /**
- * ⛔ THE THREE TRAP ROOMS — never-enter, and the ruling is §6.1's.
+ * ⛔ THE TWO TRAP ROOMS — never-enter, and the ruling is §6.1's.
  *
  * L57 (TentacleBeast) and L69 (LightBoss) have NO EXIT until their boss dies
  * (`TentacleBeast.as:213`, `LightBossController.as:104` create the exit
  * teleporter on death), so a planner that wanders in unprepared soft-locks the
- * run. L82 (LavaBoss) is the third by ruling. §8.1 measured the exclusion's
- * cost as a PAIR against a positive control: NONE — no item, no key, no goal
- * target is lost in either the never-enter or the never-touch arm.
+ * run. §8.1 measured the exclusion's cost as a PAIR against a positive control:
+ * NONE — no item, no key, no goal target is lost in either the never-enter or
+ * the never-touch arm.
  *
  * The rules artifact encodes this by refusing to emit the CONNECTIONS into
  * them: AP's fill can then never route a collectible through a room there are
  * no collectibles in.
+ *
+ * ⛓ RULES (B) — L82 (LavaBoss) WAS THE THIRD, AND IS NO LONGER (⚖ the user,
+ * 2026-10-04: "Lift; gate both ways"). §8.1's flood ran on a graph whose exits
+ * were auto-detected bidirectional, so Dungeon 7 could "climb back" up its
+ * one-way pits (L83 -> L84 -> L85 -> L71). On the directed graph the exclusion
+ * stranded all of D7 — 23 regions, the Dark Shield and the Dark Suit among
+ * them — because L82 is D7's ONLY exit. It is not a dynamic exit like L57/L69:
+ * its `teleporter@144,0 {to 96}` is static level data, and the boss BODY is the
+ * door (R7 §2.4). The census of exits the AS3 builds at runtime finds exactly
+ * three sites (Moonrock.as:134, TentacleBeast.as:213,
+ * LightBossController.as:104), none in L71-L85. So L82 is wired, and the
+ * arena is gated in BOTH directions by `LAVABOSS_ARENA` below.
  */
-export const NEVER_ENTER_LEVELS = Object.freeze([57, 69, 82]);
+export const NEVER_ENTER_LEVELS = Object.freeze([57, 69]);
 
 export const NEVER_ENTER_CITE = Object.freeze({
     57: 'Enemies/TentacleBeast.as:213 — the exit teleporter is created on death',
     69: 'Enemies/LightBossController.as:104 — the exit teleporter is created on death',
-    82: 'R7 §6.1 ruling + §8.1 (the paired flood: excluding all three costs NOTHING '
-        + 'against a positive control that does register a loss)',
+});
+
+/**
+ * ⛓ RULES (B) — WHAT LEAVING THE LAVABOSS ARENA COSTS, charged on BOTH of its
+ * doors so the logic never sends a player in who cannot get out.
+ *
+ * - The way out, `teleporter@144,0 {to 96}` at L82 (9,0), is reached only
+ *   through the lava corridor (columns 9-10, rows 0-8; every cell is lava),
+ *   which is the DARK SUIT.
+ * - The boss body stands in it until the boss dies. A hit counts only inside
+ *   a LavaBall stun window or once `hitByDarkStuff` latches
+ *   (`LavaBoss.as:143-165`), and the latch itself is set only BY a counted
+ *   hit. So the kill needs a REFLECTED LavaBall: `Player.genericHit` reflects
+ *   one with any attack (`Player.as:1129` -> `LavaBall.hit`). Fire never
+ *   counts unless `hitByFire`. That attack is `A_WEAPON`.
+ * - The ctor sends every L82 arrival to (152,176) (`LavaBoss.as:53`), the
+ *   arena floor, whichever door it came by — hence the same gate on the
+ *   way IN from L96. L71's pit needs no charge: it leaves from L71's
+ *   r14c12, which is already behind the Dark Suit, and the weapon is long held.
+ */
+export const LAVABOSS_ARENA = Object.freeze({
+    level: 82,
+    condition: allOf(flag('hasDarkSuit'), A_WEAPON),
+    cite: 'Enemies/LavaBoss.as:53,143-165 + Projectiles/LavaBall.as:45-53 + Player.as:1129 '
+        + '+ Dungeon7 L82 teleporter@144,0 behind the lava corridor + R7 kickoff §2.4 + ⚖ RULES (B) 2026-10-04',
+    why: 'the arena is left only across lava (the Dark Suit) and past the LavaBoss, which dies only to '
+        + 'reflected LavaBalls and a follow-up hit (a weapon); its ctor puts every arrival on the arena floor.',
 });
 
 /**
@@ -464,6 +501,21 @@ export const CHARGED_DOORS = Object.freeze([
         condition: { seals: 16 },
         cite: 'Scenery/FinalDoor.as:52-64 + End/2.oel finaldoor@112,0',
         why: 'the second of the two cells the FinalDoor covers.',
+    }),
+    // ⛓ RULES (B) — the LavaBoss arena's two doors (`LAVABOSS_ARENA`).
+    Object.freeze({
+        level: LAVABOSS_ARENA.level,
+        exitId: 'out_teleporter_144_0',
+        condition: LAVABOSS_ARENA.condition,
+        cite: LAVABOSS_ARENA.cite,
+        why: `the way OUT of the arena: ${LAVABOSS_ARENA.why}`,
+    }),
+    Object.freeze({
+        level: 96,
+        exitId: 'out_teleporter_32_64',
+        condition: LAVABOSS_ARENA.condition,
+        cite: LAVABOSS_ARENA.cite,
+        why: `the way INTO the arena from L96, gated the same so it is never a trap: ${LAVABOSS_ARENA.why}`,
     }),
 ]);
 
