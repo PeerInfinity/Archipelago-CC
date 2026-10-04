@@ -84,12 +84,12 @@
  * | walk, grenade                      | 2     | grenadeRoll, enemyCoins    |
  * | coast (`|v| > moveSpeed`, shoved)  | 0     | ⛓ every arm is skipped     |
  * | `endAnim` "dead"                   | 10    | 5 x (deathRockX, rockScale)|
- * | ANY frame with `shake > 0`         | +2    | jiggleX, jiggleY, LAST     |
+ * | ANY frame with `shake > 0`         | 0     | ⛓ p4f 3′c: no draw (below) |
  *
  * ⛓ **THE COAST ROW IS THE ONE THAT MAKES THE FIGHT MODELLABLE.** A shoved
  * Owl fails `v.length <= moveSpeed` for the whole coast and takes no arm at
  * all, so the 18 ticks after a sword press cost the stream nothing from him
- * — the only draws in that span are the jiggle's, if a rock is still ringing.
+ * — and since p4f (3′c) the jiggle draws nothing either, so that span is free.
  *
  * ── WHAT IS NOT HERE, AND WHY ─────────────────────────────────────────
  *
@@ -206,26 +206,6 @@ export const OWL_DRAW_SITES = Object.freeze({
         what: '`120 + Math.random() * 8 - 4` — the x of each of the death arm\'s '
             + 'five rocks. The y argument (`i / n * Tile.h * 2`) draws nothing.',
     }),
-    jiggleX: Object.freeze({
-        draws: 1,
-        cite: 'Game.as:1879',
-        what: '`FP.camera.x += shake * Math.random() - shake / 2`',
-    }),
-    jiggleY: Object.freeze({
-        draws: 1,
-        cite: 'Game.as:1880',
-        what: '`FP.camera.y += shake * Math.random() - shake / 2`, and the decay '
-            + '`shake = Math.max(shake - 1, 0)` is on the line below — ONE per '
-            + 'FRAME, against `+= scale + 1` per landing.',
-    }),
-    orbRandVal: Object.freeze({
-        draws: 1,
-        cite: 'Scenery/Orb.as:27',
-        what: '⛔ A LEVEL-BUILD DRAW THE MODEL OWES. `private const randVal:Number = '
-            + 'Math.random()` on L112\'s one `orb@120,128`. §16.8 called it "ABOVE '
-            + '`botStart`\'s seed reset and therefore free"; it is not — see '
-            + '`OWL_LEVEL_BUILD_DRAWS`.',
-    }),
 });
 
 /**
@@ -259,11 +239,12 @@ export const OWL_DRAW_SITES = Object.freeze({
  * left on the gameplay stream is
  *
  *   1. `Enemy.as:30`'s `coins`, once, for the one `finalboss@64,96`
- *      (`Game.as:2135`), and
+ *      (`Game.as:2135`) — and, until p4f, also
  *   2. `Scenery/Orb.as:27`'s `randVal`, once, for the one `orb@120,128`
- *      (`Game.as:2217`),
+ *      (`Game.as:2217`), which seedling-wasm-leak L4 3′a moved to `Rng.cos()`
+ *      (an Orb has no hitbox), so under the split it is on the OTHER generator.
  *
- * in that order, because `loadlevel` adds them in that order. Nothing else
+ * `loadlevel` adds them in that order. Nothing else
  * in the room's object list reaches `Math.random()`: the pods, the four
  * plant torches, the rock lock, the two teleporters and the player are all
  * clean, and L112 holds no `t == 0` or `t == 8` tile so `Tile.addGrass` —
@@ -272,7 +253,10 @@ export const OWL_DRAW_SITES = Object.freeze({
  * ⚠ IT IS A PER-LEVEL NUMBER, not a universal one. A different boot level
  * pays its own census, which is why this is named for the room.
  */
-export const OWL_LEVEL_BUILD_SITES = Object.freeze(['enemyCoins', 'orbRandVal']);
+// ⛓ p4f (seedling-wasm-leak L4 3′a): `Orb.randVal` is a COSMETIC draw (`Rng.cos()`) — an
+// Orb has no hitbox — so under the split it is off this stream and the build is ONE draw.
+// Measured: `owl-rng-oracle.json`'s 2-tick intro arm reads 1 (it read 2 on p4e).
+export const OWL_LEVEL_BUILD_SITES = Object.freeze(['enemyCoins']);
 export const OWL_LEVEL_BUILD_DRAWS = OWL_LEVEL_BUILD_SITES.length;
 
 /**
@@ -310,27 +294,41 @@ export const OWL_PHASE_SITES = Object.freeze({
     ]),
 });
 
-/** The two frame-level sites, in the order `view()` makes them. */
-export const OWL_JIGGLE_SITES = Object.freeze(['jiggleX', 'jiggleY']);
+/**
+ * ⛓ p4f (seedling-wasm-leak L4 3′c): under `rng.split` — which every Owl window
+ * declares — the camera jiggle TAKES NO DRAW. It is `Game.shakeJiggle(Game.time,
+ * axis)`, transcribed below, so the frame-level `+2` this table used to append
+ * on every shaking frame is gone, and the Owl schedule no longer depends on the
+ * shake bookkeeping (the rock-landing → shake → +2 feedback loop §16.8 named).
+ *
+ * `t` is the `Game.time` `view()` reads, which is BEFORE that frame's
+ * `time += timeRate` — i.e. `botStatus.game_time − 1` read after the frame.
+ * Integer-exact on doubles, so this is the game's own value, bit for bit
+ * (measured: 174/174 shaking frames at 0 px on p4f).
+ *
+ * @returns {number} in [0, 1)
+ */
+export function shakeJiggle(t, axis) {
+    return ((Math.floor(t) * 2531 + axis * 1777) % 4093) / 4093;
+}
 
 /**
  * The ordered site list for one frame.
  *
  * @param {string} phase a key of `OWL_PHASE_SITES`
- * @param {boolean} shaking was `Game.shake > 0` when `view()` ran?
  */
-export function owlTickSites(phase, shaking) {
+export function owlTickSites(phase) {
     const rows = OWL_PHASE_SITES[phase];
     if (!rows) {
         throw new OwlRngError(`owlTickSites: "${phase}" is not a phase; the phases are `
             + `${Object.keys(OWL_PHASE_SITES).join(', ')}`);
     }
-    return shaking ? [...rows, ...OWL_JIGGLE_SITES] : [...rows];
+    return [...rows];
 }
 
 /** How many draws one frame of a given phase costs. */
-export function owlTickDraws(phase, shaking) {
-    return owlTickSites(phase, shaking).length;
+export function owlTickDraws(phase) {
+    return owlTickSites(phase).length;
 }
 
 /**
@@ -420,11 +418,6 @@ export class OwlDrawStream {
         return 120 + this._draw('deathRockX') * 8 - 4;
     }
 
-    /** `Scenery/Orb.as:27` — a level-build draw whose value nothing gameplay reads. */
-    orbRandVal() {
-        return this._draw('orbRandVal');
-    }
-
     /**
      * The room's own construction, in `Game.loadlevel`'s add order.
      *
@@ -434,21 +427,8 @@ export class OwlDrawStream {
      */
     levelBuild() {
         this.enemyCoins();
-        this.orbRandVal();
     }
 
-    /**
-     * `Game.as:1879-1880` — the camera offset, both axes, in that order.
-     *
-     * ⚠ The DECAY is the caller's: `view()` runs `shake = max(shake - 1, 0)`
-     * on the line after the two draws, once per frame regardless of how many
-     * rocks landed into it.
-     */
-    jiggle(shake) {
-        const dx = shake * this._draw('jiggleX') - shake / 2;
-        const dy = shake * this._draw('jiggleY') - shake / 2;
-        return { dx, dy };
-    }
 }
 
 /**
