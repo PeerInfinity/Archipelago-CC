@@ -1,0 +1,98 @@
+{
+  "source": "probe-seedling-f7-reentry.mjs --record (seedling fidelity F7)",
+  "build": "seedling_bot_ap_p4f",
+  "arms": [
+    {
+      "arm": "WITNESS-REENTRY",
+      "tape": "f7-l16-reentry",
+      "observations": 61,
+      "last": {
+        "level": 16,
+        "y": 56,
+        "x": 84.75,
+        "t": 60
+      },
+      "vsRecorded": {
+        "worst": 0,
+        "n": 61,
+        "first": -1
+      },
+      "vsModel": {
+        "worst": 0,
+        "n": 61,
+        "first": -1
+      },
+      "hits": 0,
+      "error": ""
+    },
+    {
+      "arm": "CONTROL-REENTRY",
+      "tape": "f7-l16-reentry",
+      "dropped": {
+        "level": 16,
+        "tag": 0
+      },
+      "observations": 61,
+      "last": {
+        "level": 16,
+        "y": 56,
+        "x": 116.75000000000001,
+        "t": 60
+      },
+      "vsWitness": {
+        "worst": 32.000000000000014,
+        "n": 61,
+        "first": 6
+      },
+      "hits": 1,
+      "modelControl": "levelRun: whether bob bob@192,80 is on screen at tick 8 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are no",
+      "error": ""
+    },
+    {
+      "arm": "WITNESS-WALKIN",
+      "tape": "f7-l16-walkin",
+      "observations": 61,
+      "last": {
+        "level": 16,
+        "y": 56,
+        "x": 114.85000000000004,
+        "t": 60
+      },
+      "vsRecorded": {
+        "worst": 0,
+        "n": 61,
+        "first": -1
+      },
+      "vsModel": {
+        "worst": 0,
+        "n": 61,
+        "first": -1
+      },
+      "hits": 0,
+      "error": ""
+    },
+    {
+      "arm": "CONTROL-WALKIN",
+      "tape": "f7-l16-walkin",
+      "dropped": {
+        "level": 16,
+        "tag": 0
+      },
+      "observations": 61,
+      "last": {
+        "level": 16,
+        "y": 34.15033898006137,
+        "x": 79.87331783636687,
+        "t": 60
+      },
+      "vsWitness": {
+        "worst": 34.97668216363317,
+        "n": 61,
+        "first": 13
+      },
+      "hits": 0,
+      "modelControl": "levelRun: whether bob bob@192,80 is on screen at tick 14 depends on where inside `Game.shake`'s jiggle the camera landed, and the two draws that decide it are n",
+      "error": ""
+    }
+  ]
+}

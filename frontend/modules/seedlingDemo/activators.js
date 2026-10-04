@@ -635,15 +635,35 @@ function bootPress(state, p, world) {
     }
     state.roomWritten.add(`${p.tag}@${p.x},${p.y}`);
     const publish = localPublish(p);
-    if (!publish || !publish.value || state.latched.get(publish.group) === true) return;
-    state.latched.set(publish.group, true);
+    if (!publish || !publish.value) return;
+    latchAtBuild(state, publish.group, world);
+}
+
+/**
+ * ⛓⛓ A GROUP LATCHED BY A `check()` — the ONE latch-at-build, shared by every
+ * publisher that re-publishes on a new `Game`'s first frame: a pressed
+ * `ButtonRoom` (`bootPress`, F6) and a pulled `RopeStart` (F7,
+ * `levelRun.bootPulledRopes`). Both setters assign `activate = true` to every
+ * `Activators` sharing `t` before any `update()` runs, so both latch the group
+ * and both start its fade rows ONE UPDATE IN (the arrival-frame credit
+ * `bootPress`'s docblock measured, `f6-l20-reentry`).
+ *
+ * ⚠ A group already latched is not credited twice: the game's second
+ * `activate = true` is a re-assignment, and the fade itself lives in `update()`.
+ *
+ * @returns {boolean} true when this call latched the group
+ */
+export function latchAtBuild(state, group, world) {
+    if (state.latched.get(group) === true) return false;
+    state.latched.set(group, true);
     for (const a of world.activators) {
-        if (a.t !== publish.group || !RESPONDERS[a.tag] || TOUCH_RESPONDERS[a.tag] || KEY_RESPONDERS[a.tag]) continue;
+        if (a.t !== group || !RESPONDERS[a.tag] || TOUCH_RESPONDERS[a.tag] || KEY_RESPONDERS[a.tag]) continue;
         const s = state.byId.get(a.id);
         s.alpha = clampAlpha(s.alpha - RESPONDERS[a.tag].fade);
         if (RESPONDERS[a.tag].fade === 0.1 && s.alpha <= 0) s.open = true;
         s.held += 1;
     }
+    return true;
 }
 
 /**

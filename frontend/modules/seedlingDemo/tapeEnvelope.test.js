@@ -68,7 +68,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ fidelity F1c: 200 — D1's `f1c-l18-phase42` and D2's `f1c-l18-lock-removal`.
         // ⛓ Seedling fidelity F4: 201 — D1's `f4-l8-sandtraps`.
         // ⛓ fidelity F6: 204 — `f6-l17-reentry`, `f6-l2-reentry`, `f6-l20-reentry`.
-        expect(names.length).toBe(204);
+        // ⛓ fidelity F7: 206 — `f7-l16-reentry`, `f7-l16-walkin`.
+        expect(names.length).toBe(206);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);

@@ -353,6 +353,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f1-l5-lock-removal', 'f1-l5-open-lock-bait',
             // ⛓⛓⛓ Seedling fidelity F6 (I01): L17 booted in the chain-end state.
             'f6-l17-reentry',
+            // ⛓⛓⛓ Seedling fidelity F7 (D-A): L16 re-entered with its rope pulled.
+            'f7-l16-reentry', 'f7-l16-walkin',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -380,9 +382,12 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity F1 takes it to 43 — `f1-l5-lock-removal` and
         // `f1-l5-open-lock-bait`, in L5.
         // ⛓ Seedling fidelity F6 takes it to 44 — `f6-l17-reentry`, in L17.
-        expect(out.exposed).toBe(44);
+        // ⛓ Seedling fidelity F7 takes it to 46 — `f7-l16-reentry` (L16) and
+        // `f7-l16-walkin` (L17 → L16).
+        expect(out.exposed).toBe(46);
         expect(out.tapes).toEqual([
-            'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
+            'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
+            'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
@@ -514,6 +519,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f1-l5-lock-removal': { tape: {}, levels: [5, 6] },
             'f1-l5-open-lock-bait': { tape: {}, levels: [5] },
             'f6-l17-reentry': { tape: {}, levels: [17] },
+            'f7-l16-reentry': { tape: {}, levels: [16] },
+            'f7-l16-walkin': { tape: {}, levels: [16, 17] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
