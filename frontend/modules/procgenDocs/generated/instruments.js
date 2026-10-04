@@ -10104,7 +10104,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling solver-walk, slice W4 — the live witness of the wasm ARRIVAL COMPOSITES and the fail-fast on an exact repeat, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
+            "oneLiner": "Seedling solver-walk, slice W4 — the live witness of the wasm ARRIVAL COMPOSITES and the fail-fast on an exact repeat, on `seedling_atlas` (default build p4f, headless logic-only, under the box lock).",
             "path": "scripts/procgen/probe-seedling-wasm-arrival-composites.mjs"
         },
         {
@@ -10345,7 +10345,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling solver-walk, slice W5 — the live witness of LEVEL 0 (the overworld hub) on the wasm solver, on `seedling_atlas` (default build p4e, headless logic-only, under the box lock).",
+            "oneLiner": "Seedling solver-walk, slice W5 — the live witness of LEVEL 0 (the overworld hub) on the wasm solver, on `seedling_atlas` (default build p4f, headless logic-only, under the box lock).",
             "path": "scripts/procgen/probe-seedling-wasm-level0.mjs"
         },
         {
@@ -10395,7 +10395,7 @@ export const INSTRUMENTS = frz({
                     "name": "wait-for-box"
                 }
             ],
-            "oneLiner": "Seedling solver-walk §5.17 — LOGICAL SUB-REGION LINKS on the wasm runtime. `seedling_playthrough` loaded by `?rules=`, default build p4e, headless logic-only, under the box lock; every session on a FRESH page.",
+            "oneLiner": "Seedling solver-walk §5.17 — LOGICAL SUB-REGION LINKS on the wasm runtime. `seedling_playthrough` loaded by `?rules=`, default build p4f, headless logic-only, under the box lock; every session on a FRESH page.",
             "path": "scripts/procgen/probe-seedling-wasm-logical-links.mjs"
         },
         {

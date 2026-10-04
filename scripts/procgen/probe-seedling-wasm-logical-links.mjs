@@ -2,7 +2,7 @@
 /**
  * Seedling solver-walk §5.17 — LOGICAL SUB-REGION LINKS on the wasm runtime.
  * `seedling_playthrough` loaded by `?rules=`, default build
- * p4e, headless logic-only, under the box lock; every session on a FRESH page.
+ * p4f, headless logic-only, under the box lock; every session on a FRESH page.
  *
  *   H  A HUMAN WALK (no bot): keys pressed on the game canvas, the region glue reading the position. From a
  *      tile of `level_0__r8c0` the player walks west through the pond into `level_0__r14c0` and back (the

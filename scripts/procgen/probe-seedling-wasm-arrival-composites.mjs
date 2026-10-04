@@ -2,7 +2,7 @@
 /**
  * Seedling solver-walk, slice W4 — the
  * live witness of the wasm ARRIVAL COMPOSITES and the fail-fast on an exact repeat, on `seedling_atlas`
- * (default build p4e, headless logic-only, under the box lock). Each leg is a host jump to an arrival the
+ * (default build p4f, headless logic-only, under the box lock). Each leg is a host jump to an arrival the
  * committed atlas worlds name, then the wasm playback engine (`flashPanel/seedlingWasmPlayback.js`, built
  * the way the controller builds it) serves ONE exit goal there: forced re-arrival → freeze → worker solve →
  * one tape → watch. Measure only: nothing tracked changes.
