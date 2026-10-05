@@ -19,6 +19,8 @@
  *   byte-identical to no hook at all.
  * - SF2 `block-route`: `r8-solve-4`'s shove is the plan, so a trip there is a
  *   REFUSAL, and it says so by name.
+ * - SF3: two slow refusals proved before their scans — L16's pit `(13,4)`
+ *   (relaxed reachability) and swordless L14's chaser arm (no sword).
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -30,7 +32,7 @@ import { createLevelRun } from './levelRun.js';
 import { atlasLevelSource } from './levelSource.js';
 import { ROLES } from './levelWorld.js';
 import {
-    DEADLINE_SITES, SolverRefusal, solveSegment,
+    DEADLINE_SITES, SolverRefusal, deriveBlockRoute, solveSegment,
 } from './solverBot.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -73,6 +75,11 @@ function counter(n) {
     const shouldStop = (site) => { asked.push(site); return asked.length > n; };
     return { shouldStop, asked };
 }
+
+const freshRun = (boot, grants = []) => createLevelRun({
+    levelSource, boot, noclip: false, noHazards: [], noDamage: false, grants,
+    despawn: [], roles: ROLES,
+});
 
 describe('SF2: the anytime deadline — `sword-dash` is an UPGRADE, so a trip keeps the dashless plan', () => {
     const DASH_ROOM = ['r9-solve-2', 0];
@@ -139,5 +146,37 @@ describe('SF2: the anytime deadline — a REQUIRED rung that trips is a refusal,
         expect(err.message).toMatch(/hit `deadline`/);
         expect(err.message).toMatch(/⏱ DEADLINE/);
         expect(err.deadline).toMatchObject({ tripped: true, first: 'block-route' });
+    });
+});
+
+describe('SF3: bounded refusals — the refusal is proved before the scan', () => {
+    it('L16\'s pit (13,4): unreachable even in the RELAXED room, so the block-route search is not run', () => {
+        const boot = { level: 16, x: 32, y: 64 };
+        const run = freshRun(boot);
+        const row = run.world.pushables.find((p) => p.id === 'pushableblock@256,80');
+        const r = deriveBlockRoute(run, row,
+            { kind: 'clear-path', aim: { x: 216, y: 72 }, allowTeleporter: null }, new Set());
+        expect(r.steps).toBeNull();
+        expect(r.expansions).toBe(0);
+        // the EXHAUSTED shape ("there is none"), never a bound ("I could not decide")
+        expect(r.refused.bound).toBeNull();
+        expect(r.refused.why).toMatch(/every pushable removed.*SF3/);
+        // and the solve it served is still a refusal
+        expect(() => solveSegment({
+            run: freshRun(boot), name: 'sf3-l16-pit', boot,
+            goals: [{ kind: 'reach-pit', pit: { tx: 13, ty: 4, x: 208, y: 64 } }],
+        })).toThrow(SolverRefusal);
+    });
+
+    it('swordless L14: the chaser arm refuses on the missing sword without its stance scan; with the sword it still solves', () => {
+        const boot = { level: 14, x: 160, y: 64 };
+        const exit = exitToward(14, 15);
+        const goals = [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }];
+        expect(() => solveSegment({ run: freshRun(boot), goals, name: 'sf3-l14', boot }))
+            .toThrow(/chaser arm: this run holds no sword.*stance scan was not run \(SF3\)/s);
+        const run = freshRun(boot, [{ level: 14, items: ['sword'] }]);
+        solveSegment({ run, goals, name: 'sf3-l14-sword', boot });
+        expect(run.level).toBe(15);
+        expect(run.playerDeaths.length).toBe(0);
     });
 });
