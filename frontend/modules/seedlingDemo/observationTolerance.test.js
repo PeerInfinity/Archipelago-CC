@@ -99,7 +99,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity F6: 204 — `f6-l17-reentry`, `f6-l2-reentry`, `f6-l20-reentry`.
         // ⛓ fidelity F7: 206 — `f7-l16-reentry`, `f7-l16-walkin`.
         // ⛓ fidelity BURN: 208 — `burn-l24-reach-exit`, `burn-l44-reach-exit`.
-        expect(names.length).toBe(208);
+        // ⛓ fidelity L14: 209 — `l14-swordless-detour`.
+        expect(names.length).toBe(209);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -143,7 +144,7 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.pass).toBeGreaterThan(0);
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
-        expect(tally.swapped).toBe(208);
+        expect(tally.swapped).toBe(209);
     }, 600_000);
 });
 
