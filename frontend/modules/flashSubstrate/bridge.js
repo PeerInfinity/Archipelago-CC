@@ -47,6 +47,13 @@
  *     after a transition) is held pending and re-applied after
  *     configure. The game plays itself through its real physics — the
  *     bridge never simulates anything.
+ *   - Host state (optional, N4b): a `hostState` command on the same
+ *     playback-control event is handed to the game as
+ *     __swfBridge.setHostState(state), untouched — whatever the substrate's
+ *     own host module tells its page (Noiz2sa: loop mode and the visit's
+ *     bot options). The last one is re-applied after every configure, so
+ *     the order of the two does not matter. A game without setHostState
+ *     ignores it; a substrate whose host sends none never sees it.
  *
  * The loadRegion event name is read from the iframe URL's
  * `loadRegionEvent` query param (set by the panel's iframeSrc), so
@@ -343,6 +350,19 @@ function _pushGateStates() {
 // here ({target, options}) and re-applied after configure; last write wins.
 let _pendingWalkTo = null;
 
+// The last `hostState` command (see the header), re-applied after configure.
+let _hostState = null;
+
+function _applyHostState() {
+    const b = _bridge();
+    if (!_hostState || !b || typeof b.setHostState !== 'function') return;
+    try {
+        b.setHostState(_hostState);
+    } catch (err) {
+        log('error', 'setHostState threw:', err);
+    }
+}
+
 /**
  * Translate an AP-vocabulary walkTo target into a game-local goal.
  * Returns { kind: 'pickup' | 'portal', id } or null when the target
@@ -423,6 +443,10 @@ function _handlePlaybackControl(payload) {
             return;
         case 'setRate':
             return; // no scriptable clock to retune
+        case 'hostState':
+            _hostState = args[0] && typeof args[0] === 'object' ? args[0] : null;
+            _applyHostState();
+            return;
         default:
             log('warn', 'playback control: unknown method', method);
     }
@@ -497,6 +521,8 @@ function _handleLoadRegion(payload) {
     // response fires snapshotUpdated, which re-polls items + gate states
     // with the real inventory — the same proven path location checks use.
     _client?.requestStateSnapshot?.();
+    // The host's state for its page (hostState), whichever came first.
+    _applyHostState();
     // A bot walkTo that outran this loadRegion resolves now.
     if (_pendingWalkTo && _applyWalkTo(_pendingWalkTo)) _pendingWalkTo = null;
     log('debug', `loaded region ${regionId} (gameId=${world.gameId ?? '?'})`);
