@@ -276,8 +276,9 @@ export function beginEntryTimeFromDeclared(declared) {
  * the tape's last — which is what a seam is: a segment cut anywhere else has
  * no `Game.begin()` for its successor to boot from.
  *
- * ⛓ SWIM U14 — EXCEPT A PIT. `r9-solve-12` crosses L12's pit at t2339 and
- * walks on to a calm landing at t2419; the latch's `beginEntry` (the L21
+ * ⛓ SWIM U14 — EXCEPT A PIT. `r9-solve-12` crosses L12's pit at t2284 and
+ * walks on to a calm landing at t2364 (t2339 / t2419 before WATCHERFLIP's
+ * re-record; the 80-tick walk-on is unchanged); the latch's `beginEntry` (the L21
  * `Game.begin()`, `save.time` 15371) is what the successor boots from. So
  * `tickCount` is the ARRIVAL's tick — the last transition's `t` — and the
  * producer and the census both pass that; on every door seam it is the tape's

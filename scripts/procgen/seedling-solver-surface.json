@@ -1606,7 +1606,7 @@
         "direct"
       ],
       "dynamic": null,
-      "why": "The level's talking-hazard placements whose talk() can never run {tag, x, y, id, why, held?}: a Watcher placed with no text (NPC.talk's myText[0].length > 0 guard), or one whose tag the build was handed cleared; the talk verb reads it to walk through a held square at zero cost."
+      "why": "The level's talking-hazard placements whose talk() can never run {tag, x, y, id, why}: a Watcher placed with no text (NPC.talk's myText[0].length > 0 guard), or one whose tag the build was handed cleared; the talk verb's silent arm reads it (a guard since WATCHERFLIP: a silent placement is no planner volume, so no frontier names one)."
     },
     {
       "surface": "world",

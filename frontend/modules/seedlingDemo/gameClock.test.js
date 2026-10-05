@@ -142,7 +142,7 @@ describe('⛓⛓⛓ THE FREE ORACLE — the game latched every one of these', ()
             const run = runTape(tape, { levelSource });
             expect(run.gameTimeRefusal).toBeNull();
             // ⛓ swim U14: counted to the ARRIVAL — the last transition's tick, which
-            // is `tick_count` on a door seam and 2339 of 2419 on `r9-solve-12`'s pit.
+            // is `tick_count` on a door seam and 2284 of 2364 on `r9-solve-12`'s pit.
             expect(declaredSeamTimeAfter({
                 declaredTime: tape.seam.time,
                 deadFramesOwed: run.deadFramesOwed,
@@ -377,7 +377,7 @@ describe('⛓⛓⛓ THE RESUMED CLOCK — (d′) has no JS half, and this is the
      * ⛓⛓ SWIM U14 — AND A PIT SEAM CARRIES ITS WALK-ON. The game boots a
      * segment from the clock its predecessor latched at the arrival's
      * `Game.begin()`; a door ends the walk there, a pit does not (`r9-solve-12`
-     * crosses at t2339 and lands calm at t2419). The continuous run keeps those
+     * crosses at t2284 and lands calm at t2364). The continuous run keeps those
      * 80 ticks, so its live clock from that boundary ON is the declaration's
      * `+ 21 + 80`. It is a PHASE the chain's continuous play and the per-segment
      * game disagree on — inert while no room downstream reads `Game.time`
