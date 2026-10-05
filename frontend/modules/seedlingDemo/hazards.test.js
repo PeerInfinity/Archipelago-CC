@@ -233,3 +233,56 @@ describe('the volumes', () => {
         expect(v.rects[0].h).toBeCloseTo(32 + BEAM_BOB_SPAN, 3);
     });
 });
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY AXE, D1 — the spinning axe at its own update count,
+ * against the GAME. Each row is one arm of `probe-seedling-axe-phase.mjs`
+ * (`CC/docs/cloud-reports/seedling-fidelity-axe-evidence/axe-phase-oracle.json`):
+ * the player stands still at `stood`, the arrival observation is `V`, and the
+ * game first knocks it on frame `f`. The claim: the first update `u` whose blade
+ * or hub reaches the box is `f − V` (the box of observation f − 1, tested by the
+ * axe's update in frame f — it updates before the Player).
+ */
+describe('⛓ AXE D1 — the axe\'s update count, as the game measured it', async () => {
+    const { axeHitsPlayer, collideLinePlayer, axeLine } = await import('./hazards.js');
+    const { playerBoxAt } = await import('./playerPhysicsV2.js');
+    const ARMS = [
+        { arm: 'l61-a-south', axe: { cx: 72, cy: 152, rate: 5 }, stood: { x: 72, y: 172 }, V: 0, f: 53 },
+        { arm: 'l61-a-north', axe: { cx: 72, cy: 152, rate: 5 }, stood: { x: 72, y: 132 }, V: 0, f: 17 },
+        { arm: 'l61-b-south', axe: { cx: 168, cy: 88, rate: 7 }, stood: { x: 168, y: 108 }, V: 0, f: 38 },
+        { arm: 'l61-door', axe: { cx: 72, cy: 152, rate: 5 }, stood: { x: 63.29999999999998, y: 168 }, V: 10, f: 57 },
+        { arm: 'l61-door-east', axe: { cx: 168, cy: 88, rate: 7 }, stood: { x: 183.5, y: 109.8 }, V: 10, f: 53 },
+        { arm: 'l101-west', axe: { cx: 88, cy: 232, rate: -5 }, stood: { x: 68, y: 232 }, V: 0, f: 34 },
+    ];
+    const firstHit = (a, test = axeHitsPlayer) => {
+        const box = playerBoxAt(a.stood.x, a.stood.y);
+        for (let u = 1; u < 400; u += 1) if (test(a.axe, u, box)) return u;
+        return null;
+    };
+    for (const a of ARMS) {
+        it(`${a.arm}: the first update that reaches the box is f − V = ${a.f - a.V}`, () => {
+            expect(firstHit(a)).toBe(a.f - a.V);
+        });
+    }
+    it('⛔ the sample is NOT truncated — the door arm stands at a fractional x and the game hits on 57', () => {
+        const a = ARMS.find((r) => r.arm === 'l61-door');
+        const truncating = (axe, u, box) => {
+            const l = axeLine(axe, u);
+            const t = { ...box };
+            // the shared transcription's reading: compare trunc(sample) — emulated by
+            // flooring the box's fractional left edge up to the next integer
+            t.x = Math.ceil(box.x);
+            return collideLinePlayer(t, l.x0, l.y0, l.x1, l.y1);
+        };
+        expect(firstHit(a, truncating)).toBe(48);
+        expect(firstHit(a)).toBe(47);
+    });
+    it('the hub test is collideRect\'s INCLUSIVE 12x12: a box touching the hub\'s 8x8 Solid is hit at any angle', () => {
+        const axe = { cx: 72, cy: 152, rate: 5 };
+        // flush against the hub's east face (x = 76): box.x = 76
+        const box = { x: 76, y: 150, right: 80, bottom: 155 };
+        expect(axeHitsPlayer(axe, 36, box)?.arm).toBe('hub');
+        // one pixel beyond the 12x12 rect's inclusive edge (cx + 6 = 78): clear of the hub
+        expect(axeHitsPlayer(axe, 36, { ...box, x: 79, right: 83 })).toBeNull();
+    });
+});
