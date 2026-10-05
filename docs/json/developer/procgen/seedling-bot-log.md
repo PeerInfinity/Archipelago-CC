@@ -12886,6 +12886,57 @@ PASS 4,965 → 4,966; `pullRope`'s seven targets are re-anchored on
   the camera, and the model refuses a bob inside the shake band, so the
   control is read against the witness on the game, not against a model stream.
 
+### Seedling fidelity STEP-OFF — the exit tile re-trigger
+
+Planning-2's wave of 2026-10-04, on `fidelity-harvest/sf-f7` `0aab89b4d8`. ⚖
+The user, 2026-10-04: *"The model should model this behavior, and the solver
+should know that it needs to step off the exit tile before it will
+re-trigger."* The report is `CC/docs/cloud-reports/seedling-fidelity-stepoff.md`.
+
+**D1 — the rule, measured.** `Teleporter.check()` (`Teleporter.as:67-74`)
+sets `playerTouching` on a new `Game`'s first frame when the player box
+overlaps the door's 16x16 hitbox; `update()` (`:89-118`) fires only
+`if (!playerTouching)` and clears the flag on the first update with no overlap.
+`Stairs.update()` is `super.update()`, so stairs and teleporters share it, and
+no `new Game` path resets it otherwise. `probe-seedling-stepoff.mjs` played nine
+arms on the game (L87 and L106 teleporters, L17's `stairsup@32,48`; stand,
+`nMin - 1` away and back, `nMin` away and back): standing and the short arm
+never cross, the `nMin` arm crosses on t13 / t12 / t13. The box was 0.05–0.15 px
+off the rect for two updates. `fixtures/stepoff-oracle.json`.
+
+**D2 — the model (PASS, nothing to change).** The model has carried the guard
+since R0: `playerPhysicsV2.initialLatch` / `updateTeleporters`
+(`state.latched`), armed at every boot, crossing and respawn. All nine game
+streams equal the model's, worst 0 px. Mutant m1 (`initialLatch` empty) reds
+13/16 `fidelityStepOff` rows and 11 tapeRunner rows: eight committed
+recordings (r2/r3/r4 walks, `r9-solve-3`) already crossed through a latched
+arrival.
+
+**D3 — the solver.** `solveSegment`'s `reach-exit` now steps off a door the run
+stands latched on (`stepOffCellFor`: the nearest standable, routable cell
+ringing the door whose box is off its rect), then walks the crossing. A door
+no such cell rings refuses as `closed`, by name. The record carries `stepOff`
+only when one was planned; trace verb `step-off`. Of `ARRIVALS_ON_A_DOOR`, the
+five `crosses` rows SOLVE (32–39 t); L3 and L37 (and L34 under its lock)
+refuse as `closed`; the pits and the deactivated door keep their names. The
+game plays the solver's plan on all three D1 doors (worst 0 px). Mutant m2
+(step-off skipped): 11/31 red.
+
+**D4.** No committed tape, expectation or declaration moved; the two tapes that
+boot latched (`r3-lava`, `r9-solve-3`) never aim at their own door. Surface
+GREEN 194 (`state:latched` now read statically, re-written). Constants 4,966,
+entities 518, profile 138 unmoved. Instruments 336 → 337.
+
+**Trap candidates**, for the catalogue to number:
+
+- a planner's sensed contacts exempt the volume the player stands in, so a
+  "cells around the door" ring offered the door's own tile back as the
+  step-off cell — a zero-tick walk;
+- "the model does not know X" can be a solver gap over a model that already
+  transcribes X: measure the model first (here `initialLatch`, since R0);
+- a step-off is sub-pixel: 0.05 px off the rect for one update re-arms the
+  door, so "one tile away" is far more than the rule asks.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
