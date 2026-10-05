@@ -289,6 +289,9 @@ for (const c of Object.values(classes).sort((a, b) => a.as3.localeCompare(b.as3)
         },
         rules: tagsOf.map((t) => ({ tag: t, ...tagRows.find((r) => r.tag === t).rules })),
         route: {
+            // steps whose OWN refusal text names a placement of this class (`<tag>@x,y`) — causation, not co-location
+            namedByRefusal: surveySteps.filter((st) => st.verdict !== 'SOLVED' && tagsOf.some((t) => new RegExp(`(^|[^a-z0-9])${t}@`).test(String(st.refusal ?? ''))))
+                .map((st) => `s${st.step}:L${st.level}`),
             surveyRooms: roomsArr.filter((r) => surveyRooms.has(r)),
             surveyRefusedRooms: roomsArr.filter((r) => surveyRefusedRooms.has(r)),
             sphereRooms: roomsArr.filter((r) => sphereRooms.has(r)),

@@ -18,25 +18,28 @@ const arg = (k, d) => (process.argv.find((a) => a.startsWith(`--${k}=`)) ?? `=${
 const DIR = arg('dir');
 const rd = (f) => (existsSync(join(DIR, f)) ? JSON.parse(readFileSync(join(DIR, f), 'utf8')) : null);
 
-export const FAMILIES = [
-    // [id, owner, regex over the refusal, phrase to locate the site]
-    ['TIMEOUT', 'MODEL (solver budget)', null, null],
-    ['NO-ARRIVAL/NO-EDGE', 'RULES (route derivation)', null, null],
-    ['KILL-NO-WEAPON', 'MODEL (verb: a kill without a weapon)', /kill work order has no weapon/, 'the kill work order has no weapon'],
-    ['KEY-NOT-HELD', 'RULES/SURVEY (the leg inventory lacks a key the room needs)', /needs a key this run does not hold/, 'needs a key this run does not hold'],
-    ['PICKUP-IN-SOLID', 'MODEL (a placement inside a solid)', /placement is INSIDE solid/, 'the placement is INSIDE'],
-    ['COMBAT-LADDER-EXHAUSTED', 'MODEL (ENCOUNTER: no rung clears the danger)', /combat ladder is EXHAUSTED/, 'the combat ladder is EXHAUSTED'],
-    ['DANGER-MAP-FORBIDS', 'MODEL (ENCOUNTER: an armed lane / hazard forbids the cell)', /danger map forbids/, 'the danger map forbids'],
-    ['CHEST-STANCE-LOOP', 'MODEL (VERB: the chest-open stance never lands)', /chest stance \(chest@[^)]*\) -> chest stance/, 'chest stance'],
-    ['STANCE-UNREACHABLE', 'MODEL (corridor: no reachable stance for a verb)', /no REACHABLE stance/, 'no REACHABLE stance'],
-    ['CORRIDOR:wandlock', 'MODEL (VERB-MISSING: the wand opener)', /Obstacle: solid:wandlock/, 'no corridor for goal'],
-    ['CORRIDOR:pushable', 'MODEL (VERB-MISSING: fire/spear push or glide geometry)', /Obstacle: solid:pushableblock/, 'no corridor for goal'],
-    ['CORRIDOR:button', 'MODEL (a trap button the planner skirts)', /Obstacle: proximity-hazard:button/, 'no corridor for goal'],
-    ['CORRIDOR:pickup-obstacle', 'MODEL (a pickup treated as an obstacle)', /Obstacle: pickup:/, 'no corridor for goal'],
-    ['CORRIDOR:other', 'MODEL (corridor stall)', /no corridor|corridor failed/, 'no corridor for goal'],
-    ['SEALED', 'MODEL/RULES (a sealed door or cell)', /SEALED|sealed/, 'SEALED'],
+// The survey stamps its OWN family on every row (`row.family`, "<FAMILY> — <why>"); that is the PRIMARY key.
+// The SUB-family is extracted here: the obstacle for a VERB-* row, the danger source for a LADDER row, and a
+// named cause for an "unclassified" row (the regexes below; anything they miss stays "unclassified:other").
+export const UNCLASSIFIED_CAUSES = [
+    // [sub-family, owner, regex, phrase that locates the site in the model]
+    ['kill-no-weapon:no-live-spinner', 'MODEL (a kill-lock room whose bodies the run does not track)', /kill work order has no weapon — level \d+ tracks NO live spinner/, 'tracks NO live spinner'],
+    ['kill-no-weapon', 'MODEL (a kill with no weapon cell/tick)', /kill work order has no weapon/, 'the kill work order has no weapon'],
+    ['keylock-sub-order', 'MODEL (the key is a sub-order the planner does not chain)', /needs a key this run does not hold/, 'needs a key this run does not hold'],
+    ['keylock-stance-loop', 'MODEL (VERB: the keylock stance never lands)', /keylock stance \(bosslock@[^)]*\) -> keylock stance/, '} stance (${blocker.id})'],
+    ['chest-stance-loop', 'MODEL (VERB: the chest-open stance never lands)', /chest stance \(chest@[^)]*\) -> chest stance/, '} stance (${blocker.id})'],
+    ['button-stance-unreachable', 'MODEL (corridor to a button stance)', /no REACHABLE stance inside button/, 'no REACHABLE stance inside'],
+    ['swing-stance-unreachable', 'MODEL (corridor to a swing stance)', /no REACHABLE stance for a swing/, 'no REACHABLE stance for a swing'],
+    ['danger-map:armed-arrow-lane', 'MODEL (ENCOUNTER: an armed arrow lane blocks the only corridor)', /danger map forbids .*arrowLane/, 'the danger map forbids'],
+    ['replanned-corridor-failed', 'MODEL (corridor stall: a waypoint not reached)', /re-planned corridor failed too/, 'the re-planned corridor failed too'],
+    ['collect-stance-no-corridor', 'MODEL (corridor to a pickup stance)', /ladder-routed: no corridor from/, 'ladder-routed'],
+    ['press-on-frozen-tick', 'MODEL (a press during a pickup ceremony refused)', /FROZEN tick/, 'FROZEN tick'],
+    ['ghostsword-press', 'MODEL (ghostsword slash arm not modelled)', /ghostsword press/, 'ghostsword press'],
+    ['door-on-pit', 'MODEL (a coincidence refusal: door and pit fire in one tick)', /stands ON a PIT tile/, 'a PIT tile (${tx},${ty})'],
+    ['walk-stall-at-pickup', 'MODEL (walked at a pickup and stalled)', /without touching it; stalled/, 'without touching it'],
 ];
-const srcFiles = ['frontend/modules/seedlingDemo'].flatMap((d) => readdirSync(join(REPO, d)).filter((f) => f.endsWith('.js') && !f.includes('.test.')).map((f) => join(d, f)));
+const srcFiles = ['frontend/modules/seedlingDemo'].flatMap((d) => readdirSync(join(REPO, d)).filter((f) => f.endsWith('.js') && !f.includes('.test.') && !f.startsWith('procgen')).map((f) => join(d, f)))
+    .concat(['scripts/procgen/survey-seedling-route.mjs']);
 const srcText = Object.fromEntries(srcFiles.map((f) => [f, readFileSync(join(REPO, f), 'utf8').split('\n')]));
 const siteOf = (phrase) => {
     if (!phrase) return [];
@@ -47,26 +50,51 @@ const siteOf = (phrase) => {
 
 const survey = rd('survey-end.json');
 const rows = survey?.rows ?? [];
+const PRIMARY_OWNER = {
+    'VERB-MISSING': 'MODEL (no strategy row for the obstacle)',
+    'VERB-SELECTED-NOT-REGISTERED': 'MODEL (the table names a verb with no executor)',
+    'VERB-APPLY': 'MODEL (a registered verb did not apply)',
+    LADDER: 'MODEL (ENCOUNTER: every combat-ladder rung refused the danger)',
+    'ENCOUNTER-UNMODELLED': 'MODEL (a fight the model does not simulate)',
+    'ITEM-GATE': 'RULES/SURVEY (the obstacle is item-gated and the leg inventory lacks it)',
+    TIMEOUT: 'MODEL (solver budget; no verdict)',
+};
 const fam = new Map();
-const claim = (id, r) => { if (!fam.has(id)) fam.set(id, []); fam.get(id).push(r); };
+const claim = (id, sub, owner, phrase, r) => {
+    const k = `${id}|${sub}`;
+    if (!fam.has(k)) fam.set(k, { id, sub, owner, phrase, rows: [] });
+    fam.get(k).rows.push(r);
+};
 for (const r of rows) {
     if (r.verdict === 'SOLVED') continue;
     const msg = String(r.refusal ?? r.error ?? r.why ?? '');
-    if (r.verdict === 'TIMEOUT' || r.verdict === 'CRASHED') { claim('TIMEOUT', r); continue; }
-    if (/NO-ARRIVAL|NO-EDGE/.test(r.verdict)) { claim('NO-ARRIVAL/NO-EDGE', r); continue; }
-    const f = FAMILIES.find(([, , re]) => re && re.test(msg));
-    claim(f ? f[0] : 'UNCLASSIFIED', r);
+    if (r.verdict === 'TIMEOUT' || r.verdict === 'CRASHED') { claim('TIMEOUT', '-', PRIMARY_OWNER.TIMEOUT, null, r); continue; }
+    const id = String(r.family ?? 'unclassified').split(' — ')[0].trim();
+    if (id === 'unclassified') {
+        const c = UNCLASSIFIED_CAUSES.find(([, , re]) => re.test(msg));
+        if (c) claim('unclassified', c[0], c[1], c[3], r); else claim('unclassified', 'other', 'UNCLASSIFIED', null, r);
+        continue;
+    }
+    let sub = '-';
+    const ob = msg.match(/Obstacle: ([a-z-]+:[a-z0-9]+|no-corridor)/);
+    const danger = msg.match(/danger at \([^)]*\) — ((?:enemy|hazard):[a-z0-9]+)/);
+    const verb = String(r.family).match(/names '(\w+)'/);
+    if (ob) sub = ob[1]; else if (danger) sub = danger[1]; else if (verb) sub = `verb:${verb[1]}`;
+    else if (/INSIDE solid/.test(msg)) sub = 'pickup-inside-solid';
+    else if (/ladder-routed/.test(msg)) sub = 'collect-stance-no-corridor';
+    else if (/touch stance/.test(msg)) sub = 'touch-stance';
+    else if (/breakablerock/.test(msg)) sub = (msg.match(/(breakablerock\w*)@/) ?? [])[1] ?? '-';
+    claim(id, sub, PRIMARY_OWNER[id] ?? id, id === 'LADDER' ? 'the combat ladder is EXHAUSTED' : (id === 'VERB-APPLY' ? 'failed to apply' : /^VERB/.test(id) ? 'No strategy row exists' : null), r);
 }
-const families = [...fam.entries()].map(([id, rs]) => {
-    const def = FAMILIES.find((f) => f[0] === id);
+const families = [...fam.values()].map(({ id, sub, owner, phrase, rows: rs }) => {
     return {
-        family: id, owner: def?.[1] ?? 'UNCLASSIFIED', steps: rs.length,
-        rooms: [...new Set(rs.map((r) => r.level))].sort((a, b) => a - b),
-        site: siteOf(def?.[3]),
-        rows: rs.map((r) => ({ step: r.step, level: r.level, verdict: r.verdict, boot: r.boot?.kind ?? r.bootKind ?? r.boot ?? null,
+        family: id, sub, owner, steps: rs.length,
+        rooms: [...new Set(rs.map((r) => Number(r.level)))].sort((a, b) => a - b),
+        site: siteOf(phrase),
+        rows: rs.map((r) => ({ step: r.step, level: r.level, verdict: r.verdict, family: r.family ?? null, boot: r.boot?.kind ?? null,
             refusal: String(r.refusal ?? r.error ?? '').slice(0, 600) })),
     };
-}).sort((a, b) => b.steps - a.steps);
+}).sort((a, b) => a.family.localeCompare(b.family) || b.steps - a.steps);
 const verdicts = {}; for (const r of rows) verdicts[r.verdict] = (verdicts[r.verdict] ?? 0) + 1;
 
 const out = {
@@ -87,4 +115,4 @@ const out = {
 };
 writeFileSync(arg('out'), JSON.stringify(out, null, 1));
 console.log('survey verdicts', verdicts);
-for (const f of families) console.log(`${f.family} [${f.owner}] ${f.steps} steps, rooms ${f.rooms.join(',')} site ${f.site.slice(0, 3).join(' ')}`);
+for (const f of families) console.log(`${f.family} / ${f.sub} [${f.owner}] ${f.steps} steps, rooms ${f.rooms.join(',')} site ${f.site.slice(0, 3).join(' ')}`);

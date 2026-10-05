@@ -21,7 +21,7 @@ const DIRS = ['frontend/modules/seedlingDemo', 'frontend/modules/flashPanel'];
 const corpus = [];
 for (const d of DIRS) for (const f of readdirSync(join(REPO, d))) {
     if (!f.endsWith('.js') || f.includes('.test.')) continue;
-    corpus.push([`${d.split('/').pop()}/${f}`, readFileSync(join(REPO, d, f), 'utf8').replace(/'\s*\n\s*\+\s*'/g, '').replace(/`\s*\n\s*\+\s*`/g, '')]);
+    corpus.push([`${d.split('/').pop()}/${f}`, readFileSync(join(REPO, d, f), 'utf8').replace(/(['"`])\s*\+\s*\n?\s*(['"`])/g, '').replace(/(['"`])\s*\n\s*\+\s*(['"`])/g, '')]);
 }
 const norm = (s) => s.replace(/\s+/g, ' ');
 const corpusN = corpus.map(([f, t]) => [f, norm(t)]);
