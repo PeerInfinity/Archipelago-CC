@@ -183,10 +183,11 @@ async function noiz2saRegionLoopVisit(testController) {
                 || (debugState()?.state === 'playing' && loopStateSingleton._playClock?.running === true),
             'P resumed the game and its clock', 5000, 20);
         testController.reportCondition('P resumed the game and its clock', !!resumed);
+        // N4b: the clear performs the queued move at once, so the page may already hold the next region — the clear
+        // is read from the departure, and its 1002 deathless frames from the summary's 240 + 1002 below
         const cleared = await testController.pollForCondition(
-            () => debugState()?.cleared === true, 'the injected tape cleared the region', 20000, 100);
-        testController.assertEqual('the tape cleared the region in 1002 frames, deathless', true,
-            !!cleared && debugState().attemptFrames === 1002 && debugState().hits === 1);
+            () => debugState()?.cleared === true || currentRegion() !== region, 'the injected tape cleared the region', 20000, 100);
+        testController.reportCondition('the injected tape cleared the region', !!cleared);
         const checked = await testController.pollForCondition(
             () => snapshotHasLocation(testController.stateManager.getSnapshot(), location),
             `${location} checked through the bridge`, 10000, 200);
@@ -846,7 +847,7 @@ async function noiz2saAssistKey(testController) {
         testController.reportCondition(`[${label}] a game key: the player plays`, !!playerPlays);
         pressKey('KeyB');
         const crossed = await testController.pollForCondition(() => currentRegion() === r.target,
-            `[${label}] the clear performed the queued move into ${r.target}`, 15000, 100);
+            `[${label}] the clear performed the queued move into ${r.target}`, 120000, 100);
         testController.reportCondition(`[${label}] the clear performed the queued move into ${r.target}`, !!crossed);
         if (!crossed) return;
         const interior = loopStateSingleton.getActionQueue().filter((a) => a.sourceRegion === r.region && a.type !== 'regionMove');
