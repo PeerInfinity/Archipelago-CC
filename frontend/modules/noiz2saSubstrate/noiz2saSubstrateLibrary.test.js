@@ -39,7 +39,11 @@ describe('the registry entry', () => {
     });
     it('N4c: the move and the location check are two queue actions; no move+check special case', () => {
         expect(entry.loopSupport.queueActions).toEqual(['regionMove', 'locationCheck']);
-        expect(Object.keys(entry.loopSupport)).not.toContain('moveIncludesCheck');
+        // exactly runner's declarations plus the play clock: no move+check special case (N4b's is removed)
+        expect(Object.keys(entry.loopSupport).sort()).toEqual([
+            'customQueues', 'executeVia', 'instant', 'manual', 'playClock', 'playback', 'queueActions', 'record',
+            'summaryRecording',
+        ]);
     });
     it('the Bot is the walkTo solver, through the injected proxy (null headless); Bot × Instant stays NO', () => {
         expect(solverKindOf(entry)).toBe('walkTo');

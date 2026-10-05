@@ -585,7 +585,7 @@ export const CAPABILITIES = frz({
                 {
                     "group": "loop",
                     "statement": "What you can queue for it",
-                    "text": "moves between regions"
+                    "text": "moves between regions, location checks"
                 },
                 {
                     "group": "loop",
@@ -981,9 +981,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 87,
+        "fields": 86,
         "fieldsRead": 38,
-        "fieldsUnread": 46,
+        "fieldsUnread": 45,
         "statements": 29,
         "substrates": 10
     },
@@ -2129,11 +2129,11 @@ export const CAPABILITIES = frz({
                 {
                     "id": "noiz2sa",
                     "kind": "yes",
-                    "text": "moves between regions",
+                    "text": "moves between regions, location checks",
                     "why": [
                         {
                             "field": "loopSupport.queueActions",
-                            "value": "regionMove"
+                            "value": "regionMove, locationCheck"
                         }
                     ]
                 },
@@ -5320,7 +5320,6 @@ export const CAPABILITIES = frz({
         "libraryEntryRefusal",
         "loadRegionEvent",
         "loopSupport.customQueues",
-        "loopSupport.moveIncludesCheck",
         "loopSupport.playClock",
         "onContentEdit",
         "pipelineConfigFromParams",

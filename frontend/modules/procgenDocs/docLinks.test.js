@@ -265,28 +265,24 @@ describe('the corpus census — printed, then pinned', () => {
          *   341 → 344  BULLETML N4 (2026-10-05): loop-recording.md → noiz2sa.md (§ The
          *              bot's training from the Playback flow, the play clock's game-time
          *              bullet, § The bot from the Bot flow) (`doc` 266 → 269).
-         *   344 → 351  BULLETML N4b (2026-10-05): flash.md's host-state row → noiz2sa.md § Loop
-         *              mode, substrate-registry.md's `moveIncludesCheck` row and noiz2sa.md →
-         *              loop-recording.md § A check that rides on the move, and loop-recording.md →
-         *              noiz2sa.md § Loop mode (`doc` 269 → 273); two same-doc links in
-         *              loop-recording.md to that section and one in noiz2sa.md to § Loop mode
-         *              (`same-doc` 17 → 20).
-         *   351 → 353  BULLETML N4b brief change (2026-10-05): noiz2sa.md's sendExit and
-         *              requestHost lines → its own § Loop mode (`same-doc` 20 → 22).
+         *   344 → 347  BULLETML N4b/N4c (2026-10-05; N4b's move+check special case and its
+         *              links removed by N4c): flash.md's host-state row → noiz2sa.md § Loop mode
+         *              (`doc` 269 → 270); noiz2sa.md's configure and requestHost lines → its own
+         *              § Loop mode (`same-doc` 17 → 19).
          */
         expect(by).toEqual({
-            'same-doc': 22,
-            doc: 273,
+            'same-doc': 19,
+            doc: 270,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(353);
+        expect(CORPUS.length).toBe(347);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(273);
+        expect(docs).toHaveLength(270);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

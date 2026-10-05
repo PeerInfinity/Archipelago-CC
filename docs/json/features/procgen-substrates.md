@@ -10,7 +10,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 
 <!-- GENERATED:substrate-capability-chart BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**29 statements · 10 substrates · 38 registry fields read (41 of the developer matrix's 87, counting the parents of the fields read) · 46 not yet read.**
+**29 statements · 10 substrates · 38 registry fields read (41 of the developer matrix's 86, counting the parents of the fields read) · 45 not yet read.**
 
 ## Play
 
@@ -28,7 +28,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 | | What you can do | Bounce Demo | Flash | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Runner Demo | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | L1 | You can play it in loop mode | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| L2 | What you can queue for it | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions, location checks | ✓ moves between regions, location checks, exploring |
+| L2 | What you can queue for it | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions | ✓ moves between regions, location checks, exploring | ✓ moves between regions, location checks | ✓ moves between regions | ✓ moves between regions, location checks | ✓ moves between regions, location checks, exploring |
 | L3 | You can record a visit and replay it | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | L4 | How a replay works | ✓ applies the result instantly | n/a | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ applies the result instantly | ✓ re-runs the queued actions |
 | L5 | Instant fast-forward | ✓ always — a replay is already instant | ✗ | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle |
@@ -232,7 +232,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Play* — It brings progression items of its own: Victory, Noiz2sa Star
 - *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode
-- *Loop mode* — What you can queue for it: moves between regions
+- *Loop mode* — What you can queue for it: moves between regions, location checks
 - *Loop mode* — You can record a visit and replay it
 - *Loop mode* — How a replay works: applies the result instantly
 - *Loop mode* — Instant fast-forward: always — a replay is already instant
@@ -311,8 +311,8 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 
 ## Fields no statement reads yet
 
-46 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
+45 fields of the developer matrix are not behind any row above — plumbing a person does not choose a substrate by, or a capability not yet put into words:
 
-`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.moveIncludesCheck`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `renderLibraryProcgenParams`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
+`applyContentModules`, `applyPipelineConfig`, `backPortalGated`, `buildLibraryRegionParams`, `buildRegionContract`, `buildRegionParams`, `buildZoneSpecs`, `canHostExitGatesBraid`, `defaultProcgenParams`, `driftItems`, `emitsSpiralContent`, `exitGateVeto`, `extractPathsAndObstacles`, `extractZoneRules`, `gateHostingHint`, `gateableItems`, `getSpiralContent`, `hostsSurplusExitsNatively`, `id`, `iframeId`, `instantiateAtlasEntryForSpecs`, `instantiateLibraryEntryForSpecs`, `label`, `libraryEntryRefusal`, `loadRegionEvent`, `loopSupport.customQueues`, `loopSupport.playClock`, `onContentEdit`, `pipelineConfigFromParams`, `pipelineConfigKeys`, `placeFromItems`, `placeFromRules`, `prepareSphereGrowth`, `procgenParamsFromPayload`, `recordablePipelineConfig`, `regionGeometry`, `renderLibraryProcgenParams`, `rulesJsonBlocks`, `serializeWorld`, `sidecarFields`, `spiralContentConfigKey`, `validateLibraryEntry`, `victoryItem`, `zoneConfigFromSlot`, `zoneOfPayload`
 
 <!-- GENERATED:substrate-capability-chart END -->

@@ -23,11 +23,11 @@ const frz = (v) => {
 export const DOCS_INDEX = frz({
     "counts": {
         "docs": 27,
-        "headings": 1001,
+        "headings": 1000,
         "indexHeadings": 2,
-        "lines": 24984,
+        "lines": 24990,
         "pages": 4,
-        "words": 305157
+        "words": 305907
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -58,7 +58,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 22,
-            "lines": 266,
+            "lines": 265,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -68,7 +68,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 4843
+            "words": 4770
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -183,8 +183,8 @@ export const DOCS_INDEX = frz({
             "description": "How loop mode records what a player does in a region and plays it back: per-block modes (Manual, Record, Playback, Bot) and the Instant toggle, the saved-recording store, the capture contract that decides who records, queue annotations, summary substrates, reset handling and multi-run replay, and the strict action gate.",
             "file": "loop-recording.md",
             "h1": "Loop Recording and Block Modes",
-            "headings": 26,
-            "lines": 290,
+            "headings": 25,
+            "lines": 280,
             "links": [
                 "bounce.md",
                 "gotchas.md",
@@ -197,7 +197,7 @@ export const DOCS_INDEX = frz({
                 "text-adventure.md"
             ],
             "path": "docs/json/developer/procgen/loop-recording.md",
-            "words": 4799
+            "words": 4654
         },
         {
             "description": "The maze substrate (`frontend/modules/mazeRoom/`, substrate id `maze`) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and leaves through exit tiles. It is the only substrate with saved custom queues, and it doubles as the second binding of the procgen level generator.",
@@ -407,7 +407,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/flash.md",
-            "words": 23406
+            "words": 23431
         },
         {
             "description": "The JtA substrate (`frontend/modules/jtaSubstrateWrapper/`, id `jta`) runs the Journey to Ascension fork, an incremental game in the `frontend/modules/journey-to-ascension/` submodule, in a same-origin iframe as a loop-mode substrate. One AP region is one JtA zone, and the game's energy is mirrored into the host's shared mana pool.",
@@ -446,7 +446,7 @@ export const DOCS_INDEX = frz({
             "file": "noiz2sa.md",
             "h1": "Noiz2sa Substrate",
             "headings": 12,
-            "lines": 133,
+            "lines": 150,
             "links": [
                 "flash.md",
                 "loop-recording.md",
@@ -454,7 +454,7 @@ export const DOCS_INDEX = frz({
                 "substrate-registry.md"
             ],
             "path": "docs/json/developer/procgen/noiz2sa.md",
-            "words": 3944
+            "words": 4887
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",
