@@ -66,7 +66,7 @@ import {
 } from './botDriverV1.js';
 import {
     BotDriverV2Error, DEFAULT_LATTICE, coastThroughTransport, contactsAt, drive, findExit,
-    holdOneAxis, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, runChest, runCollect,
+    holdOneAxis, isWalkableTile, nodeCentre, nodeAt, plannerObstacleAt, planWaypoints, runChest, runCollect,
     runHold,
     runShove, runDwell, SHOVE_STEP,
     CEREMONY_CADENCE_START, ceremonyCadenceStep, runFire,
@@ -95,7 +95,7 @@ import {
     ARROW, arrowLaneForPlacement, arrowLaneRect, arrowTrapFires,
     bridgedChaserTags, chaserBoxAt, killWindowTicks,
     DESTROYING_TILE_TYPES,
-    rect, TILE_SIZE,
+    rect, rectsOverlap, TILE_SIZE,
     ENEMY_CLASSES, KILL_LOCK_TAGS, KILL_LOCK_TSET, contactPricing,
     // ⛓ R8 slice 8: the PRESSER's own cadence floor — the dash rule plus the
     // receiver's i-frames, in one constant `killSchedule` has refused a smaller
@@ -2187,6 +2187,50 @@ function placementBlocker(run, resolved, contacts) {
  * without them `plannerObstacleAt` priced every water tile as a wall whether or
  * not the boot granted the conch (`procgenSwimSolver.test.js`).
  */
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY STEP-OFF, D3 — **WHERE TO STAND OFF A LATCHED DOOR.**
+ * The centres of the tiles ringing the door's rect, nearest the player first,
+ * that are STANDABLE (`isWalkableTile` with no teleporter allowed, so the cell
+ * is never another door) and that the planner routes TO — a route that ENDS on
+ * the cell (the planner snaps an unstandable aim to a nearby node, which in a
+ * pocket is the door itself). Null when none can: the door is `closed`.
+ * The same ring the JS arc's walker steps to (`jsRuntimeWalker.stepOffPoint`),
+ * asked with the solver's own plan bag.
+ */
+export function stepOffCellFor(run, index, planOpts) {
+    const world = run.world;
+    const r = world.teleporters[index].rect;
+    const tx0 = Math.floor(r.x / TILE_SIZE) - 1;
+    const ty0 = Math.floor(r.y / TILE_SIZE) - 1;
+    const tx1 = Math.floor((r.right - 1) / TILE_SIZE) + 1;
+    const ty1 = Math.floor((r.bottom - 1) / TILE_SIZE) + 1;
+    const from = run.state;
+    const cells = [];
+    for (let ty = ty0; ty <= ty1; ty += 1) {
+        for (let tx = tx0; tx <= tx1; tx += 1) {
+            const x = tx * TILE_SIZE + TILE_SIZE / 2;
+            const y = ty * TILE_SIZE + TILE_SIZE / 2;
+            // ⚠ OFF the door, by the latch's own test: the run's sensed contacts
+            // exempt the volume it stands in, so the planner alone would offer
+            // the door's own tile back.
+            if (rectsOverlap(playerBoxAt(x, y), r)) continue;
+            if (!isWalkableTile(world, tx, ty, null, { ...planOpts, lattice: TILE_SIZE, nodeMargin: 0 })) continue;
+            cells.push({ x, y, d: (x - from.x) ** 2 + (y - from.y) ** 2 });
+        }
+    }
+    cells.sort((a, b) => a.d - b.d);
+    for (const { x, y } of cells) {
+        try {
+            // The door stays allowed: the route STARTS on it.
+            const end = planWaypoints(world, from, { x, y }, index, planOpts).at(-1);
+            if (end && end.x === x && end.y === y) return { x, y };
+        } catch (e) {
+            if (!(e instanceof BotDriverV2Error)) throw e;
+        }
+    }
+    return null;
+}
+
 function solverPlanOpts(run, contacts, extra = {}) {
     return {
         liveBag: run.liveGeometryOpts(),
@@ -12245,6 +12289,49 @@ function solveSegmentUnder({
             .filter((p) => pullModelled(p, run.world).modelled)
             .map((p) => `proximity-hazard:${p.id}`));
 
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY STEP-OFF, D3 — **A DOOR THE RUN STANDS LATCHED ON
+     * IS CROSSED BY STEPPING OFF IT FIRST.** `Teleporter.check()` latches
+     * `playerTouching` on a new `Game`'s first frame when the arrival box
+     * overlaps the door, and `update()` clears it only on an update the box is
+     * OFF the rect (`fidelityStepOff.js`, measured on the game: 0.05 px off is
+     * enough, and the next overlap fires). The model carries the latch
+     * (`run.state.latched`), so a walk aimed at the centre of the door the run
+     * already stands on is a zero-length walk that never crosses — the old
+     * 400-tick stall. So: walk to the nearest STANDABLE cell ringing the door
+     * (`stepOffCellFor`), then the ordinary crossing walk back. A door no
+     * standable, routable cell rings refuses as `closed`, by name.
+     *
+     * Returns the step-off's record, or null when the door is not latched.
+     */
+    const stepOffIfLatched = (goal, index, teleporter, whatExit) => {
+        if (run.state.latched?.has?.(index) !== true) return null;
+        const id = `${teleporter.isStairs ? 'stairs' : 'teleporter'}@${teleporter.x},${teleporter.y}`;
+        const contacts = new Set([...senseContacts(run), ...exemptions, ...goalRides]);
+        const cell = stepOffCellFor(run, index, solverPlanOpts(run, contacts, goalPlanExtra));
+        if (cell === null) {
+            refuse(`${whatExit}: closed — the run stands LATCHED on ${id} in level ${run.level} `
+                + '(`Teleporter.check()` latched it on the arrival frame) and no standable cell '
+                + 'next to it can be walked to. The door fires only on an update the player box '
+                + 'is off its rect and the next one it is back on, so a crossing needs the player '
+                + 'to step off it and back on.', {
+                goal, obstacle: { kind: 'closed', id },
+            });
+        }
+        const at = perTick.length;
+        seeRow({
+            tick: at,
+            saw: saw(),
+            goal: { kind: goal.kind, exit: { x: goal.exit.x, y: goal.exit.y } },
+            obstacle: { kind: 'latched-door', id },
+            strategy: { verb: 'step-off', to: { x: cell.x, y: cell.y } },
+            rejected: [],
+            keys: [],
+        });
+        walkTo(goal, cell, { allowTeleporter: index, what: `${whatExit} step-off to (${cell.x},${cell.y})` });
+        return { door: id, to: { x: cell.x, y: cell.y }, from: at, ticks: perTick.length - at };
+    };
+
     // ── the goals, in order ───────────────────────────────────────────
     for (const goal of goals) {
         // The bound is PER GOAL: clearing L4's button for the crossing says
@@ -12351,13 +12438,15 @@ function solveSegmentUnder({
                 y: teleporter.rect.y + TILE_SIZE / 2,
             };
             const crossTo = { level: teleporter.to, arrival: { ...teleporter.arrival } };
+            const whatExit = `solverBot(${name}) reach-exit (${goal.exit.x},${goal.exit.y})`
+                + `->L${teleporter.to}`;
+            const stepOff = stepOffIfLatched(goal, index, teleporter, whatExit);
             const t = walkTo(goal, centre, {
                 allowTeleporter: index,
                 crossTo,
-                what: `solverBot(${name}) reach-exit (${goal.exit.x},${goal.exit.y})`
-                    + `->L${teleporter.to}`,
+                what: whatExit,
             });
-            records.push({ goal: 'reach-exit', to: teleporter.to, t: t.t });
+            records.push({ goal: 'reach-exit', to: teleporter.to, t: t.t, ...(stepOff ? { stepOff } : {}) });
             continue;
         }
         // collect-placement

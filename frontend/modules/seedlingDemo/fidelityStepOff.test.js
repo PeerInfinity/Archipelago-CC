@@ -31,7 +31,8 @@ import { atlasLevelSource } from './levelSource.js';
 import { runTape, createRunForStaging } from './tapeRunner.js';
 import { initialLatch } from './playerPhysicsV2.js';
 import { buildLevelWorld } from './levelWorld.js';
-import { STEPOFF_DOORS, stepOffArms, stepOffStagingAt, compactTicks } from './fidelityStepOff.js';
+import { STEPOFF_DOORS, stepOffArms, stepOffSolverArm, stepOffStagingAt, compactTicks } from './fidelityStepOff.js';
+import { solveSegment } from './solverBot.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ORACLE = JSON.parse(readFileSync(join(HERE, 'fixtures', 'stepoff-oracle.json'), 'utf8'));
@@ -41,7 +42,7 @@ const oracleArm = (arm) => ORACLE.arms.find((r) => r.arm === arm);
 
 describe('fidelity STEP-OFF — D1: the game\'s rule, measured', () => {
     it('the oracle holds every arm, recorded clean (no error, no hit)', () => {
-        expect(ORACLE.arms.filter((r) => !r.arm.startsWith('SOLVER-')).map((r) => r.arm)).toEqual(ARMS.map((a) => a.arm));
+        expect(ORACLE.arms.map((r) => r.arm)).toEqual([...ARMS.map((a) => a.arm), ...STEPOFF_DOORS.map((d) => `SOLVER-${d.door}`)]);
         for (const r of ORACLE.arms) expect([r.arm, r.error, r.hits]).toEqual([r.arm, '', 0]);
     });
     it.each(STEPOFF_DOORS.map((d) => [d.door, d]))('%s: the arrival boots LATCHED on its own door, and only that one', (_, d) => {
@@ -77,5 +78,65 @@ describe('fidelity STEP-OFF — D2: the model carries the guard (every game arm,
             // One tile off the door is not latched.
             expect([...initialLatch(world, d.boot.x + 8 + 16, d.boot.y + 8)].length, d.door).toBe(0);
         }
+    });
+});
+
+/**
+ * Every arrival `jsRuntimeArrivalOnDoor`'s ARRIVALS_ON_A_DOOR names, solved for
+ * `reach-exit` on the door it stands latched on, from a fresh JS-runtime
+ * staging. `crosses` SOLVES now (step-off, then the walk back); the rest refuse,
+ * each by a true name.
+ */
+const SOLVER_ROWS = [
+    ['3|96|128', 'closed', /: closed — the run stands LATCHED on teleporter@96,128 in level 3 /],
+    ['34|128|0', 'lock', /: closed — the run stands LATCHED on teleporter@128,0 in level 34 /],
+    ['37|576|144', 'closed', /: closed — the run stands LATCHED on stairs@576,144 in level 37 /],
+    ['43|144|64', 'pit', /the teleporter at \(144,64\) in level 43 stands ON a PIT tile/],
+    ['58|80|16', 'deactivated', /the teleporter at \(80,16\) in level 58 is DEACTIVATED/],
+    ['87|432|304', 'crosses', { to: 88, ticks: 32, door: 'teleporter@432,304', off: { x: 440, y: 296 } }],
+    ['100|288|96', 'pit', /the teleporter at \(288,96\) in level 100 stands ON a PIT tile/],
+    ['101|96|16', 'crosses', { to: 110, ticks: 39, door: 'teleporter@104,24', off: { x: 104, y: 8 } }],
+    ['102|224|96', 'crosses', { to: 107, ticks: 33, door: 'teleporter@224,96', off: { x: 216, y: 104 } }],
+    ['106|64|48', 'crosses', { to: 101, ticks: 33, door: 'teleporter@64,48', off: { x: 56, y: 56 } }],
+    ['109|160|48', 'crosses', { to: 101, ticks: 33, door: 'teleporter@160,48', off: { x: 152, y: 56 } }],
+];
+
+describe('fidelity STEP-OFF — D3: the solver steps off a latched door before crossing it', () => {
+    it.each(SOLVER_ROWS)('%s (%s)', (key, kind, want) => {
+        const [level, x, y] = key.split('|').map(Number);
+        const run = createRunForStaging(stepOffStagingAt({ level, x, y }), SRC);
+        const [index] = [...run.state.latched];
+        const tp = run.world.teleporters[index];
+        const solve = () => solveSegment({ run, goals: [{ kind: 'reach-exit', exit: { x: tp.x, y: tp.y } }],
+            name: `stepoff-${key}`, boot: { level, x, y } });
+        if (kind !== 'crosses') {
+            expect(solve).toThrow(want);
+            return;
+        }
+        const out = solve();
+        expect(run.level).toBe(want.to);
+        expect(run.ledger('playerDeaths')).toEqual([]);
+        expect(out.perTick).toHaveLength(want.ticks);
+        expect(out.records).toHaveLength(1);
+        expect(out.records[0]).toMatchObject({ goal: 'reach-exit', to: want.to, stepOff: { door: want.door, to: want.off, from: 0 } });
+        expect(out.trace.rows.map((r) => r.strategy?.verb).filter(Boolean)).toEqual(['step-off', 'walk']);
+    });
+    it('a door the run is NOT latched on crosses with no step-off (the record carries no `stepOff`)', () => {
+        const run = createRunForStaging(stepOffStagingAt({ level: 87, x: 432, y: 288 }), SRC);
+        expect([...run.state.latched]).toEqual([]);
+        const out = solveSegment({ run, goals: [{ kind: 'reach-exit', exit: { x: 432, y: 304 } }],
+            name: 'stepoff-control', boot: { level: 87, x: 432, y: 288 } });
+        expect(run.level).toBe(88);
+        expect(out.records[0].stepOff).toBeUndefined();
+    });
+    it.each(STEPOFF_DOORS.map((d) => [`SOLVER-${d.door}`, d]))('%s: the game played the solver\'s plan and crossed; the model\'s stream is the game\'s', (_, d) => {
+        const a = stepOffSolverArm(d, SRC);
+        const game = oracleArm(a.arm);
+        expect(game.transitions).toHaveLength(1);
+        expect(game.transitions[0]).toMatchObject({ from_level: a.door.boot.level, t: a.tape.tick_count });
+        const model = runTape(a.tape, { levelSource: SRC });
+        expect(model.transitions).toEqual(game.transitions);
+        expect(compactTicks(model.ticks)).toEqual(game.ticks);
+        expect(a.out.records[0].stepOff).toMatchObject({ from: 0, ticks: 26 });
     });
 });
