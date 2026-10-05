@@ -24,7 +24,7 @@ import { liveOf, replayTape, solveFromTape } from './jsRuntimeSolver.js';
 import { arrivalSolveRequest, continuationSolveRequest } from './wasmArrival.js';
 import { indexLevels } from './atlasSource.js';
 import { shadowMismatch, shippedTape, tapeEquips } from './wasmPlayback.js';
-import { equipSlotRefusal } from './wasmDelivery.js';
+import { equipSlotRefusal, slotOrderRefusal } from './wasmDelivery.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = atlasLevelSource();
@@ -158,5 +158,21 @@ describe('WASM EQUIPS — a slot the game cannot select as the model did is refu
     });
     it('no equips: nothing to refuse', () => {
         expect(equipSlotRefusal({ equipsAt: new Map(), slots: [] })).toBeNull();
+    });
+});
+
+describe('WASM EQUIPS — the game\'s slot ORDER is acquisition order (`Inventory.items` is static; only a new game / load rebuilds it)', () => {
+    const items = { hasSword: true, hasFire: true };
+    it('the game\'s [1, 0] (Fire received first) against the model\'s [0, 1]: the BURN plan is refused at its first slot use (its walk taps X with the sword from tick 0)', () => {
+        expect(slotOrderRefusal({ solution: PLAN.solution, equipsAt: PLAN.equipsAt, items, slots: [1, 0] }))
+            .toMatch(/the plan presses a slot key at tick 0, and the game holds its slots in acquisition order \[1,0\] where the model derives \[0,1\]/);
+    });
+    it('a plan that uses no slot plays whatever the order', () => {
+        expect(slotOrderRefusal({ solution: [new Set(['left']), new Set()], equipsAt: new Map(), items, slots: [1, 0] })).toBeNull();
+    });
+    it('the canonical order (or the sword still to be appended: [1] + sword = [1, 0]) — same / refused', () => {
+        expect(slotOrderRefusal({ solution: PLAN.solution, equipsAt: PLAN.equipsAt, items, slots: [0, 1] })).toBeNull();
+        expect(slotOrderRefusal({ solution: [new Set()], equipsAt: new Map([[0, 1]]), items, slots: [1, 0] })).toMatch(/selects a slot at tick 0/);
+        expect(slotOrderRefusal({ solution: PLAN.solution, equipsAt: PLAN.equipsAt, items, slots: [1] })).toMatch(/\[1,0\]/);
     });
 });

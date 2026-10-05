@@ -354,7 +354,7 @@ describe('⛓ WASM EQUIPS — the engine ships the solver\'s slot selections', (
         e.engine.walkTo(CHEST);
         e.timers.run();
         expect(e.failures).toHaveLength(1);
-        expect(JSON.stringify(e.failures[0])).toMatch(/the plan tape was not shipped — the plan selects slot 1 at tick 5: the model's slots are \[0,1\]/);
+        expect(JSON.stringify(e.failures[0])).toMatch(/the plan tape was not shipped — the plan (presses a slot key|selects a slot) at tick \d+, and the game holds its slots in acquisition order \[1,0\] where the model derives/);
         expect(e.game.tapes.filter((t) => t.tick_count > 0)).toEqual([]);
     });
 });

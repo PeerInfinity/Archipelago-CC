@@ -111,7 +111,7 @@ import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.j
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
 import {
-    deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, slotsAfterDelivery,
+    deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, slotOrderRefusal, itemDelta, itemsAfterWrites, slotsAfterDelivery,
     stageItems,
 } from '../seedlingDemo/wasmDelivery.js';
 
@@ -1146,7 +1146,8 @@ export function createWasmPlayback({
         const talk = room?.talkCircles?.length ? talkCircleGuard({ circles: room.talkCircles, solution: plan.solution, expected: plan.expected }) : null;
         if (talk?.refusal) { fallback(talk.refusal, 'adopt-talk'); return; }
         // ⛓ WASM EQUIPS — a slot the game cannot select as the model did is refused BY NAME, before anything ships.
-        const slotWhy = equipSlotRefusal({ equipsAt: plan.equipsAt, equipItems: plan.equipItems, slots: st?.inventory_slots ?? [] });
+        const slotWhy = slotOrderRefusal({ solution: plan.solution, equipsAt: plan.equipsAt, items: staging?.seam?.items, slots: st?.inventory_slots ?? [] })
+            ?? equipSlotRefusal({ equipsAt: plan.equipsAt, equipItems: plan.equipItems, slots: st?.inventory_slots ?? [] });
         if (slotWhy) { fail(`the plan tape was not shipped — ${slotWhy}`); return; }
         const equips = tapeEquips(plan.equipsAt);
         const hold = holds && endsHeld(goal);
@@ -1252,7 +1253,7 @@ export function createWasmPlayback({
         stats.recoveries += 1;
         history.push({ goal, outcome: 'diverged', producer: play.plan.producer ?? 'solver', recovery: recoveries, ticks: play.ticks, drained: play.progress.ticks,
             verbs: play.plan.verbs ?? null, solvedMs: play.solvedMs, divergence: d, input: st?.input ?? null,
-            continuation: play.continuation ?? false });
+            continuation: play.continuation ?? false, equips: play.equips ?? [] });
         const queuedGoal = queued;
         // The spawn the room's ARRIVAL recorded (W3), whatever the divergence carried the player to.
         if (room?.spawn) spawn = room.spawn;
@@ -1266,7 +1267,8 @@ export function createWasmPlayback({
         const done = { goal, producer: play.plan.producer ?? 'solver', ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
             solvedMs: play.solvedMs, divergence: play.divergence, recoveries, end: { level: st.level, x: st.x, y: st.y },
             expectedEnd: play.plan.expected.at(-1), continuation: play.continuation ?? false, prefix: play.prefix ?? 0, heldEnd: !!(play.hold && st.held),
-            ...solvedBy(play) };
+            // ⛓ WASM EQUIPS — the slot selections the tape shipped (`[{t, slot}]`, its own ticks)
+            equips: play.equips ?? [], ...solvedBy(play) };
         const heldEnd = done.heldEnd && room !== null;
         if (!heldEnd) {
             ours = false; // finished and un-held: nothing of ours is armed

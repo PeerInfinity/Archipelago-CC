@@ -249,6 +249,34 @@ export function equipSlotRefusal({ equipsAt, equipItems, slots }) {
 }
 
 /**
+ * ⛓ WASM EQUIPS — the game's slot ORDER is acquisition order for the whole
+ * session (`Inventory.items` is STATIC: only `Main`'s new game / load clears
+ * it, `addItemsFromSave` only appends), while the model always derives the
+ * canonical `inventorySlotsFor` order. When the two differ, a plan that
+ * presses a slot key (`primary` / `secondary`) or selects a slot acts with a
+ * different item on the game — refused BY NAME before it ships.
+ *
+ * @param {object} o
+ * @param {Array<Iterable<string>>} o.solution  the plan's key sets
+ * @param {Map<number, number>} [o.equipsAt]   its slot selections
+ * @param {object} o.items                     the model's items (the staging's `seam.items`)
+ * @param {number[]} o.slots                   the game's `botStatus.inventory_slots` now
+ * @returns {string|null}
+ */
+export function slotOrderRefusal({ solution, equipsAt, items, slots }) {
+    const model = inventorySlotsFor(items ?? {});
+    const game = slotsAfterDelivery({ slots: slots ?? [] }, items ?? {}).slots;
+    if (JSON.stringify(model) === JSON.stringify(game)) return null;
+    const press = (solution ?? []).findIndex((h) => SLOT_KEYS.some((k) => new Set(h).has(k)));
+    const equip = equipsAt?.size ? Math.min(...equipsAt.keys()) : -1;
+    if (press < 0 && equip < 0) return null;
+    const what = press >= 0 && (equip < 0 || press <= equip) ? `presses a slot key at tick ${press}` : `selects a slot at tick ${equip}`;
+    return `the plan ${what}, and the game holds its slots in acquisition order ${JSON.stringify(game)} where the model derives `
+        + `${JSON.stringify(model)} — the same index names another item on the game (a slot received late is APPENDED; only a new `
+        + 'game or a load rebuilds the order)';
+}
+
+/**
  * ⛔ THE FIRST LIVE FRAME LAGS THE SLOTS. `Game.update` runs `inventory.update()`
  * (and so `addItemsFromSave`) AFTER `super.update()` steps the player, so on
  * the first frame after the release `useItem` still reads the slots as they
