@@ -17,6 +17,7 @@
  *
  * ⛔ No clock is read: every budget here is the deterministic consult counter.
  */
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 import { loadTape } from './fixtures/index.js';
@@ -24,7 +25,7 @@ import { stagingFromTape, createRunForStaging } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
 import { SolverRefusal, deriveChaserDetour } from './solverBot.js';
 import {
-    CanCrossError, DEFAULT_CONSULT_BUDGET, VERDICTS, buildArrivalStaging, canCross, classifyError,
+    CAN_CROSS_DASH_MODE, CanCrossError, DEFAULT_CONSULT_BUDGET, VERDICTS, buildArrivalStaging, canCross, classifyError,
     deriveMinimalSets, doorArrival, importClosure, solverStamp,
 } from './seedlingCanCross.js';
 
@@ -169,4 +170,17 @@ describe('deriveMinimalSets — the derivation question, with its caveats visibl
         expect(d.nonMonotone).toEqual([['sword', 'conch']]);
         expect(d.solver).toBe(solverStamp().id);
     }, 120_000);
+});
+
+describe('the game witness — a door-built arrival\'s `can`, recorded on the game (D3)', () => {
+    it('`cancross-l16-sword-none` IS canCross\'s witness for L16 → L17 with the Sword, byte for byte', () => {
+        expect(CAN_CROSS_DASH_MODE).toBe('none');
+        const r = canCross({ level: 16, exit: 17, arrival: { from: 15 }, inventory: ['sword'],
+            name: 'cancross-l16-sword-none' });
+        expect(r.verdict).toBe('can');
+        expect(r.plan).toMatchObject({ ticks: 206, landed: 17, hits: 0, rungs: ['pull'] });
+        const path = new URL('./fixtures/tapes/cancross-l16-sword-none.json', import.meta.url);
+        expect(`${JSON.stringify(r.witness.tape, null, 4)}\n`).toBe(readFileSync(path, 'utf8'));
+        expect(r.witness.replayed).toEqual({ observations: 207, landed: 17, agrees: true });
+    });
 });
