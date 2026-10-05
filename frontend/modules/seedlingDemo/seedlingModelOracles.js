@@ -18,8 +18,9 @@
 // and the re-analysers that must reproduce them). ⛓ The firewall's allowed
 // direction (§6.3): an atlas producer reads the model; the model reads nothing back.
 
-import { buildLevelWorld, TILE_SIZE } from './levelWorld.js';
+import { buildLevelWorld, rectsOverlap, TILE_SIZE } from './levelWorld.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
+import { spawnFromBoot } from './playerPhysicsV1.js';
 
 // One model world per level DOCUMENT (a caller that rewrites a level gets a new
 // object, so a fresh world).
@@ -134,4 +135,99 @@ export function refuseUnboundMembers(region, unbound) {
         + `${unbound.map((b) => `${b.kind} "${b.id}" at [${b.tile}]`).join(', ')} binds to NO walkable component `
         + '(neither the crossing material nor the physics model reaches one) — it would be bucketed into the first '
         + 'sub-region, a route no player walks');
+}
+
+// ⛓ RULES arrival-spawns — WHERE AN ARRIVAL MAY STAND (solver-walk S5's census:
+// the region binding's `entrance_spawn` fallback stood the player inside L34's
+// magical lock, over L43's and L100's pits, and on L58's dead door).
+
+/**
+ * Why the model cannot boot the player at the OEL spawn `(x, y)` (the
+ * `new Game(level, x, y)` argument; the Player adds the half-tile offset), or
+ * null when it can. Three refusals, each the model's own reading:
+ *   - the player's box is inside a SOLID (`collidesSolid`, every solid live):
+ *     the player cannot move;
+ *   - the probe point stands on a PIT tile: every boot falls;
+ *   - the box is on a door that is not LIVE (`deactivated`): a door cell the
+ *     game never lands anyone on, and no crossing starts there.
+ * A live door is NOT a refusal: an arrival latched on it steps off and back on
+ * (S5's walker), and the game's own stairs do land there (L3, L37, L87).
+ */
+export function arrivalStandRefusal(level, x, y) {
+    const world = modelWorldOf(level);
+    const at = spawnFromBoot({ x, y });
+    const box = playerBoxAt(at.x, at.y);
+    const solid = world.collidesSolid(box, {});
+    if (solid) return `inside a solid (${solid.cls?.as3 ?? solid.tag ?? solid.blocker?.cls?.as3 ?? solid.kind})`;
+    const tx = Math.floor(at.x / TILE_SIZE);
+    const ty = Math.floor((at.y + 1) / TILE_SIZE);
+    if (world.pitTiles.some((t) => t.tx === tx && t.ty === ty)) return `over a pit at tile (${tx}, ${ty})`;
+    const dead = world.teleporters.find((tp) => tp.deactivated && rectsOverlap(box, tp.rect));
+    if (dead) return `on a door that is not live (the teleporter at (${dead.x}, ${dead.y}), tag ${dead.tag})`;
+    return null;
+}
+
+/** How far (4-connected tiles) from an exit's tiles its approach cell may be. */
+export const APPROACH_RING_LIMIT = 2;
+
+/**
+ * The arrival spawn (OEL pixels) for one atlas exit. A LANDING (the arrival
+ * end of a one-way connection) is the game's own `playerx/playery` (or a
+ * pit's landing arithmetic) and is kept as it is, even where the model has a
+ * solid there: the game put it there (L12's magical lock from L83, L113's
+ * final door from L115 — the lock is the far side of the door you came
+ * through). A DEPARTURE door's entrance is the door tile, which the game never
+ * lands anyone on, so in this order: the entrance, when the model can stand
+ * there; else the GAME's
+ * own arrival at this door (`returnSpawn`, the reverse link's
+ * `playerx/playery` — `seedlingReturnSpawns`); else the door's APPROACH cell —
+ * the nearest ring of tiles around the exit (≤ `APPROACH_RING_LIMIT`), nearest the entrance tile first, that the
+ * model can stand on and `inComponent` accepts (the generated rooms' rule: the
+ * cell you step into the door from). None → REFUSED by name.
+ *
+ * @param {object} level the map document's level record
+ * @param {object} exit the atlas exit (`exit_id`, `exit_tiles`, `entrance_tile`)
+ * @param {{x:number, y:number}} entranceSpawn the exit's `entrance_tile` in pixels
+ * @param {object} [opts]
+ * @param {boolean} [opts.landing] the exit is a connection's landing end
+ * @param {{x:number, y:number}|null} [opts.returnSpawn]
+ * @param {(tile:number[]) => boolean} [opts.inComponent] the approach cell's region test
+ * @returns {{x:number, y:number, via:'landing'|'entrance'|'return-link'|'approach', why?:string}}
+ */
+export function seedlingArrivalSpawn(level, exit, entranceSpawn, {
+    landing = false, returnSpawn = null, inComponent = () => true, tileSize = TILE_SIZE,
+} = {}) {
+    if (landing) return { x: entranceSpawn.x, y: entranceSpawn.y, via: 'landing' };
+    const why = arrivalStandRefusal(level, entranceSpawn.x, entranceSpawn.y);
+    if (why === null) return { x: entranceSpawn.x, y: entranceSpawn.y, via: 'entrance' };
+    if (returnSpawn && arrivalStandRefusal(level, returnSpawn.x, returnSpawn.y) === null) {
+        return { x: returnSpawn.x, y: returnSpawn.y, via: 'return-link', why };
+    }
+    // Rings outward from the exit's own tiles (a pit field's inner pit has only pits beside it), nearest the
+    // entrance tile first within a ring, at most APPROACH_RING_LIMIT rings.
+    const seen = new Set(exit.exit_tiles.map(([tx, ty]) => `${tx},${ty}`));
+    const [ex, ey] = exit.entrance_tile;
+    let ring = exit.exit_tiles.map(([tx, ty]) => [tx, ty]);
+    for (let depth = 1; depth <= APPROACH_RING_LIMIT && ring.length > 0; depth += 1) {
+        const next = [];
+        for (const [tx, ty] of ring) {
+            for (const [nx, ny] of [[tx, ty - 1], [tx - 1, ty], [tx + 1, ty], [tx, ty + 1]]) {
+                if (nx < 0 || ny < 0 || nx >= level.width || ny >= level.height || seen.has(`${nx},${ny}`)) continue;
+                seen.add(`${nx},${ny}`);
+                next.push([nx, ny]);
+            }
+        }
+        next.sort((a, b) => (((a[0] - ex) ** 2 + (a[1] - ey) ** 2) - ((b[0] - ex) ** 2 + (b[1] - ey) ** 2))
+            || (a[1] - b[1]) || (a[0] - b[0]));
+        for (const [tx, ty] of next) {
+            if (!inComponent([tx, ty])) continue;
+            if (arrivalStandRefusal(level, tx * tileSize, ty * tileSize) !== null) continue;
+            return { x: tx * tileSize, y: ty * tileSize, via: 'approach', why };
+        }
+        ring = next;
+    }
+    throw new Error(`level ${level.level}: exit "${exit.exit_id}" has no arrival spawn the game could put the player on `
+        + `— its entrance (${entranceSpawn.x}, ${entranceSpawn.y}) is ${why}`
+        + `${returnSpawn ? ', the reverse link\'s landing is not standable either' : ', no reverse link lands beside it'}`
+        + `, and no cell within ${APPROACH_RING_LIMIT} tiles of it is standable in its own component`);
 }

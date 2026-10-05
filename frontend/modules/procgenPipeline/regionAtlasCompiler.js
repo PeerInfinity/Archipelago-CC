@@ -190,6 +190,32 @@ const toPixels = (tile, tileSize) => ({
 });
 
 /**
+ * ⛓ RULES arrival-spawns — WHERE AN ARRIVAL THROUGH THIS EXIT LANDS, in pixels.
+ *
+ * By default the exit's own `entrance_tile`. That is the game's own arrival
+ * for an arrival exit (its `playerx/playery`), but for a DOOR it is the door
+ * tile itself, and a door tile is not always a place to stand: the region
+ * binding's fallback put the player inside a lock, over a pit and on a dead
+ * door (solver-walk S5's census). The compiler cannot know which: what is
+ * solid, what falls and what is live are the GAME's. So a caller that does
+ * know passes `options.arrivalSpawn(region, exit, {tileSize, entranceSpawn,
+ * landing})` → `{x, y}` (and refuses by throwing); the default is unchanged.
+ * `landing` is true for the LANDING end of a one-way connection: its entrance
+ * tile is where the game itself puts the player, not a door.
+ */
+function arrivalSpawnOf(region, exit, info, tileSize, options) {
+    const entranceSpawn = toPixels(exit.entrance_tile, tileSize);
+    if (typeof options.arrivalSpawn !== 'function') return entranceSpawn;
+    const landing = info.arrivalOnly === true;
+    const spawn = options.arrivalSpawn(region, exit, { tileSize, entranceSpawn, landing });
+    if (!Number.isFinite(spawn?.x) || !Number.isFinite(spawn?.y)) {
+        throw new Error(`options.arrivalSpawn returned no {x, y} for ${region.region_id}/${exit.exit_id} — `
+            + 'an arrival spawn is a pixel position; a caller that cannot place one refuses by throwing');
+    }
+    return { x: spawn.x, y: spawn.y };
+}
+
+/**
  * The (sub-)regions one atlas region binds to, paired with the sub_region name
  * whose exits and locations belong to each. A region without a subgraph is a
  * single implicit sub-region and its exits carry no `sub_region` at all
@@ -270,7 +296,7 @@ function buildFlashRegionSidecars(atlas, region, wiredInfo, substrate, options) 
                 ...(exit.side === undefined ? {} : { side: exit.side }),
                 exit_tiles: exit.exit_tiles,
                 entrance_tile: exit.entrance_tile,
-                entrance_spawn: toPixels(exit.entrance_tile, tileSize),
+                entrance_spawn: arrivalSpawnOf(region, exit, info, tileSize, options),
                 exitName: info.apExitName,
                 targetRegion: info.targetApRegion,
                 targetExitId: info.target.exit.exit_id,
@@ -376,6 +402,9 @@ function deriveIdentifiers(atlas, options) {
  * @param {number} [options.seed] rules.json generation_seed (default 1)
  * @param {string} [options.seedName] rules.json seed_name (default '')
  * @param {string} [options.playerName] player 1's name (default 'Player1')
+ * @param {Function} [options.arrivalSpawn] `(region, exit, {tileSize, entranceSpawn, landing})`
+ *   → `{x, y}`: the flash sidecar's `entrance_spawn` for one exit (default: the
+ *   exit's `entrance_tile` in pixels). See `arrivalSpawnOf`.
  * @param {boolean} [options.assumeBidirectionalExits] when a boolean, declared as
  *   `exporter["1"].assume_bidirectional_exits`; omitted, the key is not written
  * @param {boolean} [options.embedSphereLog] embed the forward simulator's

@@ -74,7 +74,8 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
 const { deriveAtlas, regionIdFor, VICTORY_ITEM } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
 const { buildLevelWorld, ROLES, maskHitsBox } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
 const { playerBoxAt } = await imp('frontend/modules/seedlingDemo/playerPhysicsV2.js');
-const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
+const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
+const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 
 const MAP = JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
 const GAME_CONFIG = JSON.parse(fs.readFileSync(
@@ -317,6 +318,7 @@ export function buildPlaythroughAtlas() {
     modelVerdicts.length = 0;
     crossingCharged.length = 0;
     arrivalsUncharged.length = 0;
+    exitComponents.clear();
     /**
      * ⛓⛓ THE ATLAS IS DERIVED; ONLY THE OVERLAY IS AUTHORED (plan §16.3, ⚖
      * ruled by the user 2026-08-25). Everything this call produces — one region
@@ -358,6 +360,7 @@ export function buildPlaythroughAtlas() {
         for (const b of analysis.bindings) {
             if (b.model) note(`${regionId}: ${b.kind} "${b.id}" at [${b.tile}] bound to "${b.component.id}" by the physics model — ${b.reason}`);
         }
+        exitComponents.set(regionId, componentTestsFor(level, analysis));
         applyCrossingCostToBindings(session.atlas, regionId, analysis);
         applyLavaTrapPulls(session.atlas, regionId, level, analysis);
         pruneUnreachableSubRegions(session.atlas, regionId);
@@ -655,6 +658,59 @@ export const crossingCharged = [];
  */
 export const arrivalsUncharged = [];
 
+/**
+ * ⛓ RULES arrival-spawns — per region, per exit: "is this tile in the component the analyzer bound the exit
+ * to?" (walkable in the transcription, same component). The approach cell of a door that cannot be stood on
+ * must be on the door's own side, not across a wall in another sub-region.
+ */
+export const exitComponents = new Map();
+
+function componentTestsFor(level, analysis) {
+    const grid = gridFor(level);
+    const { indexOf, components } = analysis.componentsResult;
+    const ox = grid.origin?.x ?? 0;
+    const oy = grid.origin?.y ?? 0;
+    const byExit = new Map();
+    for (const b of analysis.bindings) {
+        if (b.kind !== 'exit') continue;
+        const id = b.component?.id ?? null;
+        byExit.set(b.id, ([tx, ty]) => {
+            const gx = tx - ox;
+            const gy = ty - oy;
+            if (id === null || gx < 0 || gy < 0 || gx >= grid.width || gy >= grid.height) return false;
+            const c = indexOf[gy * grid.width + gx];
+            return c >= 0 && components[c].id === id;
+        });
+    }
+    return byExit;
+}
+
+/** Every exit whose arrival spawn is NOT its entrance tile, and why — derived, printed, never typed. */
+export const movedArrivalSpawns = [];
+
+const RETURN_SPAWNS = returnSpawnTable(MAP);
+
+/**
+ * ⛓ RULES arrival-spawns — the compiler's `arrivalSpawn` hook for this atlas: the exit's entrance when the
+ * physics model can stand there, else the game's own landing beside the door, else the door's approach cell,
+ * else a named refusal (`seedlingModelOracles.seedlingArrivalSpawn`). Run after `buildPlaythroughAtlas`, whose
+ * analysis pass recorded each exit's component.
+ */
+export function playthroughArrivalSpawn(region, exit, { entranceSpawn, landing }) {
+    const level = levelOf(region.map_ref);
+    const [tx, ty] = exit.entrance_tile;
+    const back = RETURN_SPAWNS.get(returnKey(region.map_ref, tx, ty)) ?? null;
+    const inComponent = exitComponents.get(region.region_id)?.get(exit.exit_id) ?? (() => false);
+    const spawn = seedlingArrivalSpawn(level, exit, entranceSpawn, {
+        landing, returnSpawn: back, inComponent, tileSize: TILE,
+    });
+    if (spawn.via !== 'entrance' && spawn.via !== 'landing') {
+        movedArrivalSpawns.push(`${region.region_id}/${exit.exit_id}: (${entranceSpawn.x}, ${entranceSpawn.y}) is `
+            + `${spawn.why} → ${spawn.via} (${spawn.x}, ${spawn.y})`);
+    }
+    return spawn;
+}
+
 export const analysisNotes = notes;
 export const PLAYTHROUGH_ATLAS_PATH = ATLAS_OUT;
 export const PLAYTHROUGH_PRESET_PATH = PRESET_OUT;
@@ -692,6 +748,7 @@ function main() {
     for (const e of result.errors) console.error(`ERROR: ${e}`);
     if (!result.ok) process.exit(1);
 
+    movedArrivalSpawns.length = 0;
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
         gameName: GAME_NAME,
@@ -703,6 +760,7 @@ function main() {
         // auto-detection from covering the one-way pits and locks with reverse
         // edges that do not exist in the game.
         assumeBidirectionalExits: false,
+        arrivalSpawn: playthroughArrivalSpawn,
     });
     const rulesText = stringifyRulesJson(rules);
 
@@ -736,5 +794,7 @@ function main() {
     );
     console.log(`rules.json — ${report.ap_regions} AP regions, ${report.exits} exits, `
         + `${report.locations ?? s.locations} locations, ${report.unwired_exits?.length ?? 0} unwired exit(s)`);
+    console.log(`${movedArrivalSpawns.length} arrival spawn(s) moved off a cell the model cannot stand on`
+        + `${quiet ? '' : movedArrivalSpawns.map((m) => `\n  ${m}`).join('')}`);
     console.log(`${notes.length} analysis note(s)${quiet ? ' (suppressed; drop --quiet to read them)' : ''}`);
 }
