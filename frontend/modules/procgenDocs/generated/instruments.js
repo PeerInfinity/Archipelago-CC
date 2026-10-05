@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 16,
+            "count": 17,
             "id": "census"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 334,
+        "blockStyle": 335,
         "browser": 110,
-        "cited": 158,
-        "files": 345,
+        "cited": 160,
+        "files": 346,
         "lineStyle": 11,
-        "withDocblock": 345,
-        "withFlags": 263
+        "withDocblock": 346,
+        "withFlags": 264
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -957,6 +957,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-constants — every numeric literal in Seedling's JS simulation, with its reviewed class (engine-prep A1).",
             "path": "scripts/procgen/census-seedling-constants.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-dash-window.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-dash-window — Seedling fidelity DASH, D4: **WHICH COMMITTED TAPES LEAN ON THE DASH TEST THE GAME DOES NOT RUN?** Model-only; it plays nothing and drives no browser.",
+            "path": "scripts/procgen/census-seedling-dash-window.mjs"
         },
         {
             "argvHelpers": [
@@ -8515,7 +8544,9 @@ export const INSTRUMENTS = frz({
             ],
             "browser": true,
             "category": "probe",
-            "citedBy": [],
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
             "docblockStyle": "block",
             "documentedFlags": [
                 "out",

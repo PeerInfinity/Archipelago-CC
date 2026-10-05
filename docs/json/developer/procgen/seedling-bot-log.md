@@ -13256,6 +13256,71 @@ So `canCross` asks `dashMode: 'none'` by default.
   It is false of the solver. A derivation should report both claims rather than
   let one stand in for the other.
 
+### Seedling fidelity DASH — a dash buys four hit tests, and the game said so
+
+CANCROSS's D3 left one refutation undiagnosed: L16 → L17 with the Sword, the
+solver's `all` plan (111 t, `5b1f924b52`) certifies 0 hits and the game hits the
+player at t104. This slice found why, on the game. The report is
+`CC/docs/cloud-reports/seedling-fidelity-dash.md`.
+
+**The cause (D1, `probe-seedling-dash-window.mjs`).** The game's own counter,
+`Bot.slashTests` (`botStatus.slash.tests`), rises on **four** observations after
+each DASH press and five after a plain one. The model ran five for both.
+- `Spritemap.update` accumulates `frameRate × FP.elapsed`, and `FP.elapsed` is
+  the `MAX_ELAPSED` clamp **0.0333**, not 1/30. So `slash` (5 frames at 30) steps
+  0.999 an update and wraps on update 6, and `slashnarrow` (3 at 20) wraps on
+  update 5. The press tick's own `sprites()` is update 1, so a swing tests on
+  `T+1 … T+5` and a dash on `T+1 … T+4`.
+- `combatVerbs.animCompleteTicks` used `frameRate / 30`. That gives 5 for both,
+  right for the swing by a coincidence of the arithmetic.
+- On L16 the model's fifth dash test (fired 88, the PULL rung's walk to the
+  rope stance) pulled `rope@32,16`. That silenced `arrowtrap@96/112/128,32` one
+  volley early. The game fired at t100, and arrow (100, 52) hit the player at
+  t104, (−3.09, −3.27) off the model's position.
+- The arrival, the rng, the bobs and the strike policy played no part. The
+  arrows, the hitbox and the knockback were transcribed right.
+
+**The fix (D2), gated OFF.** `SLASH_ANIM_TICKS_GAME` = {slash 5, slashnarrow 4};
+`swordWindowStep` reads the thrust's own `anim`. With
+`DASH_WINDOW_ROSTER_WIDE = true`:
+- the model reproduces the refuted plan's game stream byte for byte, hit
+  included;
+- every tape replays (tapeRunner 479/479), and five of six producer `--check`s
+  are byte-identical;
+- ⛔ but the campaign `--check` goes red. The solver re-derives `r9-solve-14`
+  (118 t → 98 t) and `r9-solve-16` (625 t → 688 t).
+
+No re-record is licensed, so the gate is `false` and the flip is the next
+slice's one line. At `true`, the L16 `all` plan is 117 t (`12575cff30`): the
+roster witness `dash-l16-sword-all`, `--record` *"THE MODEL REPRODUCES THE
+RECORDING IT JUST MADE"*, 0 hits.
+
+**`out.dashes` (D3).** `solveSegment` returns `{count, windows, walks}`.
+- `count` is read off the run's own dash arm.
+- `windows` and `walks` cover every walk the planner was asked for, inner rung
+  walks included.
+- L16 `all`: count 11, windows 5 (4 of them in the PULL walk). The trace's rows
+  carry 1 of the 5.
+
+**The census (D4, `census-seedling-dash-window.mjs`).** 213 tapes; 35 press a
+dash. Three are suspects, all with the one cause: the fifth test of the dash
+pressed at t83 pulls `rope@32,16`. They are `dash-l16-sword-all`,
+`refuted/dash-l16-sword-refuted` and the committed campaign segment
+**`r9-solve-16`**. No tape presses five ticks after a dash.
+
+**Trap candidates**, for the catalogue to number:
+
+- **`frameRate / assignedFrameRate` is not FlashPunk's accumulator.** It is
+  `frameRate × FP.elapsed`, and under the 0.0333 clamp a 30-fps animation steps
+  0.999 a frame, never 1. Every other clock in the tree knew this. The one that
+  did not was right for its first animation, by accident.
+- **A stream that agrees can hide a side effect that disagrees.** The 117 t L16
+  witness pulls its rope on the model-only fifth test too. Its trajectory still
+  matches the game, but its arrows do not (the game's t100 volley). A recording
+  of the player alone was blind to this. The game's per-tick counters were not.
+- **A rung's inner walk is a walk.** The dash that broke L16 was planned by a
+  walk no trace row recorded. Count at the run, not at the rows.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
