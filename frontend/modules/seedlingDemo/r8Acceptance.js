@@ -1118,6 +1118,37 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'no kill.',
         }),
         /**
+         * ⛓⛓⛓ Seedling fidelity SLOTS — four more walks of the same L24 leg, each
+         * ending as BURN's does on L12's arrival, where `puncher@416,256` is the
+         * room's chaser: Fire received before the sword (the model's witness and
+         * the solver's), and BURN's own plan cut mid-burn and after the burn.
+         */
+        Object.freeze({
+            name: 'slots-l24-fire-first', levels: Object.freeze([12]), bobs: 1, ticks: 164,
+            addedBy: 'Seedling fidelity SLOTS (the slot array in arrival order; BURN\'s residues)',
+            why: 'Fire first ([1, 0]): its one X press, with slot 0, burns the tree and the walk ends on the L12 arrival (40,704), far from the puncher; no hit, no kill.',
+        }),
+        Object.freeze({
+            name: 'slots-l24-burn-fire-first', levels: Object.freeze([12]), bobs: 1, ticks: 125,
+            addedBy: 'Seedling fidelity SLOTS (the slot array in arrival order; BURN\'s residues)',
+            why: 'the solver\'s plan from the Fire-first order (an idle tick, the sword\'s slot 1, Fire\'s 0, the sword\'s 1); it ends on the L12 arrival, far from the puncher; no hit, no kill.',
+        }),
+        Object.freeze({
+            name: 'slots-l24-burn-cut-80', levels: Object.freeze([12]), bobs: 1, ticks: 115,
+            addedBy: 'Seedling fidelity SLOTS (the slot array in arrival order; BURN\'s residues)',
+            why: 'BURN\'s plan cut mid-burn and continued (the sword\'s slot, the burn waited out); it ends on the L12 arrival, far from the puncher; no hit, no kill.',
+        }),
+        Object.freeze({
+            name: 'slots-l24-burn-cut-110', levels: Object.freeze([12]), bobs: 1, ticks: 121,
+            addedBy: 'Seedling fidelity SLOTS (the slot array in arrival order; BURN\'s residues)',
+            why: 'BURN\'s plan cut with Fire\'s slot selected and continued (the sword\'s slot first); it ends on the L12 arrival, far from the puncher; no hit, no kill.',
+        }),
+        Object.freeze({
+            name: 'slots-l24-burn-fencepost', levels: Object.freeze([12]), bobs: 1, ticks: 115,
+            addedBy: 'Seedling fidelity SLOTS (the slot array in arrival order; BURN\'s residues)',
+            why: 'cut-80 with its walk one tick earlier (blocked by the still-solid tree on t104); it ends on the L12 arrival, far from the puncher; no hit, no kill.',
+        }),
+        /**
          * ⛓⛓⛓ Seedling fidelity L14 — the swordless crossing the DETOUR rung
          * found: route D's live L13 → L14 arrival, six bobs, no weapon.
          */

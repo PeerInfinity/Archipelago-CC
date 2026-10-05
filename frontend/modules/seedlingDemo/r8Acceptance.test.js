@@ -357,6 +357,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f7-l16-reentry', 'f7-l16-walkin',
             // ⛓⛓⛓ Seedling fidelity BURN: route step 93's plan, ending on L12's arrival.
             'burn-l24-reach-exit',
+            // ⛓⛓⛓ Seedling fidelity SLOTS: the same leg four ways, each ending on L12's arrival.
+            'slots-l24-fire-first', 'slots-l24-burn-fire-first', 'slots-l24-burn-cut-80', 'slots-l24-burn-cut-110',
+            'slots-l24-burn-fencepost',
             // ⛓⛓⛓ Seedling fidelity L14: the swordless crossing, in L14.
             'l14-swordless-detour',
             // ⛓⛓⛓ Seedling fidelity CANCROSS: the oracle's door-built L16 witness.
@@ -402,7 +405,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity RETURN adds two — `return-l15-walkin` (L16 → L15) and `return-l15-conch` (L15 → L14).
         // ⛓ Seedling fidelity DASH's `dash-l16-sword-all` (L16 → L17) makes it 52.
         // ⛓ Seedling fidelity ROBUST adds two — `robust-l16-sword-idle1` (L16 → L17), `robust-l16-l18-sword-conch` (L16).
-        expect(out.exposed).toBe(54);
+        // ⛓ Seedling fidelity SLOTS adds five — `slots-l24-fire-first`, `slots-l24-burn-fire-first`,
+        // `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost` (L24 → L12).
+        expect(out.exposed).toBe(59);
         expect(out.tapes).toEqual([
             'burn-l24-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
@@ -411,7 +416,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-0-v3',
             'r9-solve-12', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-21',
-            'r9-solve-22', 'return-l15-conch', 'return-l15-walkin', 'robust-l16-l18-sword-conch', 'robust-l16-sword-idle1', 'u10-puncher-dwell',
+            'r9-solve-22', 'return-l15-conch', 'return-l15-walkin', 'robust-l16-l18-sword-conch', 'robust-l16-sword-idle1',
+            'slots-l24-burn-cut-110', 'slots-l24-burn-cut-80', 'slots-l24-burn-fencepost', 'slots-l24-burn-fire-first', 'slots-l24-fire-first',
+            'u10-puncher-dwell',
             'u10-puncher-dwell-refused', 'u11-dark-shield-bob', 'u11-dark-shield-puncher',
             'u11-facing-knockback', 'u11-facing-puncher',
             'u12-pull-carry', 'u12-pull-cross',
@@ -548,6 +555,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'return-l15-conch': { tape: {}, levels: [14] },
             'robust-l16-sword-idle1': { tape: {}, levels: [16, 17] },
             'robust-l16-l18-sword-conch': { tape: {}, levels: [16] },
+            'slots-l24-fire-first': { tape: {}, levels: [12] },
+            'slots-l24-burn-fire-first': { tape: {}, levels: [12] },
+            'slots-l24-burn-cut-80': { tape: {}, levels: [12] },
+            'slots-l24-burn-cut-110': { tape: {}, levels: [12] },
+            'slots-l24-burn-fencepost': { tape: {}, levels: [12] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

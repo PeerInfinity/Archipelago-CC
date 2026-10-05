@@ -1647,6 +1647,41 @@
       "noHazards": []
     },
     {
+      "file": "slots-l24-burn-cut-110.json",
+      "tickCount": 121,
+      "bootLevel": 24,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "slots-l24-burn-cut-80.json",
+      "tickCount": 115,
+      "bootLevel": 24,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "slots-l24-burn-fencepost.json",
+      "tickCount": 115,
+      "bootLevel": 24,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "slots-l24-burn-fire-first.json",
+      "tickCount": 125,
+      "bootLevel": 24,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "slots-l24-fire-first.json",
+      "tickCount": 164,
+      "bootLevel": 24,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "statue-press.json",
       "tickCount": 150,
       "bootLevel": 0,

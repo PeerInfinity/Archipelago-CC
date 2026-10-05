@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 60,
+            "count": 61,
             "id": "plan"
         },
         {
-            "browser": 47,
-            "count": 90,
+            "browser": 48,
+            "count": 91,
             "id": "probe"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 339,
-        "browser": 112,
-        "cited": 162,
-        "files": 350,
+        "blockStyle": 341,
+        "browser": 113,
+        "cited": 163,
+        "files": 352,
         "lineStyle": 11,
-        "withDocblock": 350,
-        "withFlags": 268
+        "withDocblock": 352,
+        "withFlags": 270
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8144,6 +8144,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-slots-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-slots-witness — ⛓⛓⛓ SEEDLING FIDELITY SLOTS: THE SLOT ARRAY IN ARRIVAL ORDER, ON THE GAME.",
+            "path": "scripts/procgen/plan-seedling-slots-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-u10-puncher-dwell.mjs",
             "flags": [
                 {
@@ -10298,6 +10325,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "THE SINCE-BEGIN RECORD, MEASURED ON THE GAME (seedling-wasm-leak L4 item 4c, ⚖ D3 capability `sincebegin`) — the acceptance witness for `botSeam().sinceBegin = {stepped, dead, input_frames, pressed, held_at_begin, rng_first}`, which p4f added so a host can adopt a room it did not start.",
             "path": "scripts/procgen/probe-seedling-since-begin.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-slot-order.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity SLOTS, D1: **THE SLOT ARRAY IS SESSION STATE, ON THE GAME.** `Inventory.items` is static (`Inventory.as:51`); `addItemsFromSave` (`:291-332`) only appends what the item flags imply and the array lacks, and its two fusions splice; only `Main.clearSave` / `freshSaveForLevelSet` (`Inventory.clearItems…",
+            "path": "scripts/procgen/probe-seedling-slot-order.mjs"
         },
         {
             "argvHelpers": [
