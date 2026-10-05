@@ -1255,14 +1255,15 @@ function resolveTalkStrategy(run, obstacle, contacts, blocked = []) {
     const exempt = new Set([...contacts, `proximity-hazard:${obstacle.id}`]);
     const silent = (run.world.silentHazards ?? []).find((h) => h.id === obstacle.id);
     if (silent) {
-        // ⛔ A SILENT watcher (no text) whose square the census HOLDS as a
-        // planner volume for the committed plans (`levelWorld`'s `held` push):
-        // the game never talks, freezes or writes a tag for it, so where the
-        // square is a wall the verb walks through at zero cost.
+        // ⛔ A SILENT watcher (no text, or its tag cleared): the game never
+        // talks, freezes or writes a tag for it, so the verb walks through at
+        // zero cost. ⛓ WATCHERFLIP released WATCHER's held square, so the
+        // census builds no volume for a silent placement and no frontier names
+        // one: this arm is a guard, unreachable from `buildLevelWorld` today.
         return {
             strategy: 'talk', watcher: w.id, already: 'silent', stance: null, exempt: [...exempt],
             rejected: [{ option: `talk ${w.id}`, why: `${w.id} is SILENT — ${silent.why} — so its `
-                + 'held square is walked through: no dialogue opens' }],
+                + 'body is walked through: no dialogue opens' }],
         };
     }
     if (w.cleared) {

@@ -1393,10 +1393,9 @@ describe('roles: pickups and proximity hazards are AVOID VOLUMES', () => {
         // ⛓⛓⛓ FIDELITY WATCHER: `NPC.talk()` runs only
         // `if (p && myText[0].length > 0)` (`NPCs/NPC.as:188`), so L94's
         // `watcher@152,128` (text "") never talks: no circle, no freeze.
-        // ⛔ Its old square stays as a HELD planner volume only (D1's STOP:
-        // the committed plans detour around such squares).
+        // ⛓ WATCHERFLIP released WATCHER's held square: no planner volume.
         const w = relaxed(94);
-        expect(w.proximityHazards.map((h) => [h.kind, h.held])).toEqual([['held-silent', true]]);
+        expect(w.proximityHazards).toEqual([]);
         expect(w.silentHazards).toEqual([expect.objectContaining({
             tag: 'watcher', id: 'watcher@152,128', why: expect.stringMatching(/myText\[0\]\.length > 0/),
         })]);
