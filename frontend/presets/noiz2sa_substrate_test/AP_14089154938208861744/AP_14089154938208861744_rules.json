@@ -1,0 +1,385 @@
+{
+  "schema_version": 3,
+  "game_name": "Noiz2sa Substrate Test",
+  "game_directory": "procgen_maze_worldgen",
+  "archipelago_version": "0.6.7",
+  "generation_seed": 1,
+  "seed_name": "",
+  "player_names": {
+    "1": "Player1"
+  },
+  "regions": {
+    "1": {
+      "Menu": {
+        "name": "Menu",
+        "exits": [
+          {
+            "name": "GameStart",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "region_0_0": {
+        "name": "region_0_0",
+        "exits": [
+          {
+            "name": "exit_E",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_0_0__clear",
+            "id": 1000,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Noiz2sa Star",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          }
+        ]
+      },
+      "region_1_0": {
+        "name": "region_1_0",
+        "exits": [
+          {
+            "name": "exit_S",
+            "connected_region": "region_1_1",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "exit_W",
+            "connected_region": "region_0_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_0__clear",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Noiz2sa Star",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          }
+        ]
+      },
+      "region_1_1": {
+        "name": "region_1_1",
+        "exits": [
+          {
+            "name": "exit_N",
+            "connected_region": "region_1_0",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "region_1_1__clear",
+            "id": 1002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Victory",
+              "player": 1,
+              "advancement": true,
+              "type": "progression"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "start_regions": {
+    "1": {
+      "default": [
+        "Menu"
+      ],
+      "available": []
+    }
+  },
+  "items": {
+    "1": {
+      "Noiz2sa Star": {
+        "name": "Noiz2sa Star",
+        "id": 1,
+        "classification": "filler",
+        "groups": [
+          "Everything"
+        ]
+      },
+      "Victory": {
+        "name": "Victory",
+        "id": 2,
+        "classification": "progression",
+        "groups": [
+          "Everything"
+        ]
+      }
+    }
+  },
+  "item_groups": {
+    "1": [
+      "Everything"
+    ]
+  },
+  "itempool_counts": {
+    "1": {
+      "Noiz2sa Star": 2,
+      "Victory": 1
+    }
+  },
+  "world": {
+    "1": {
+      "game": "Noiz2sa Substrate Test",
+      "world_class_name": "ProcgenMazeWorld",
+      "options": {}
+    }
+  },
+  "game_info": {
+    "1": {
+      "completion_condition": {
+        "type": "item_check",
+        "item": "Victory"
+      }
+    }
+  },
+  "helpers": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
+  "canonical_placements": {
+    "1": {
+      "region_0_0__clear": "Noiz2sa Star",
+      "region_1_0__clear": "Noiz2sa Star",
+      "region_1_1__clear": "Victory"
+    }
+  },
+  "progression_mapping": {
+    "1": {}
+  },
+  "starting_items": {
+    "1": []
+  },
+  "preset_sidecars": {
+    "1": {
+      "region_0_0": {
+        "substrate": "noiz2sa",
+        "render_hint": "noiz2sa",
+        "grid_cell": {
+          "gx": 0,
+          "gy": 0
+        },
+        "playable_payload": {
+          "gameId": "noiz2sa",
+          "start": {
+            "stage": 0,
+            "scene": 0
+          },
+          "end": {
+            "stage": 0,
+            "scene": 0
+          },
+          "seed": 1,
+          "ap_locations": {
+            "clear": "region_0_0__clear"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_E",
+              "side": "E",
+              "exitName": "exit_E",
+              "targetRegion": "region_1_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_1_0": {
+        "substrate": "noiz2sa",
+        "render_hint": "noiz2sa",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 0
+        },
+        "playable_payload": {
+          "gameId": "noiz2sa",
+          "start": {
+            "stage": 0,
+            "scene": 1
+          },
+          "end": {
+            "stage": 0,
+            "scene": 2
+          },
+          "seed": 1,
+          "ap_locations": {
+            "clear": "region_1_0__clear"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_S",
+              "side": "S",
+              "exitName": "exit_S",
+              "targetRegion": "region_1_1",
+              "isBackExit": false,
+              "isTeleporter": false
+            },
+            {
+              "exit_id": "exit_W",
+              "side": "W",
+              "exitName": "exit_W",
+              "targetRegion": "region_0_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      },
+      "region_1_1": {
+        "substrate": "noiz2sa",
+        "render_hint": "noiz2sa",
+        "grid_cell": {
+          "gx": 1,
+          "gy": 1
+        },
+        "playable_payload": {
+          "gameId": "noiz2sa",
+          "start": {
+            "stage": 0,
+            "scene": 9
+          },
+          "end": {
+            "stage": 1,
+            "scene": 0
+          },
+          "seed": 1,
+          "ap_locations": {
+            "clear": "region_1_1__clear"
+          },
+          "exits": [
+            {
+              "exit_id": "exit_N",
+              "side": "N",
+              "exitName": "exit_N",
+              "targetRegion": "region_1_0",
+              "isBackExit": false,
+              "isTeleporter": false
+            }
+          ],
+          "fogEnabled": true
+        }
+      }
+    }
+  },
+  "sphere_log": [
+    {
+      "type": "metadata",
+      "seed": 1,
+      "seed_name": "",
+      "event_locations": {},
+      "event_items": {}
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {},
+            "resolved_items": {}
+          },
+          "new_accessible_locations": [
+            "region_0_0__clear",
+            "region_1_0__clear",
+            "region_1_1__clear"
+          ],
+          "new_accessible_regions": [
+            "Menu",
+            "region_0_0",
+            "region_1_0",
+            "region_1_1"
+          ],
+          "sphere_locations": []
+        }
+      }
+    },
+    {
+      "type": "state_update",
+      "sphere_index": "0.1",
+      "player_data": {
+        "1": {
+          "new_inventory_details": {
+            "base_items": {
+              "Victory": 1
+            },
+            "resolved_items": {
+              "Victory": 1
+            }
+          },
+          "new_accessible_locations": [],
+          "new_accessible_regions": [],
+          "sphere_locations": [
+            "region_1_1__clear"
+          ]
+        }
+      }
+    }
+  ],
+  "loop_costs": {
+    "1": {
+      "version": "1.0",
+      "generatedFrom": "scripts/test/generate-noiz2sa-substrate-test-preset.mjs",
+      "regions": {
+        "Menu": {
+          "moveCost": 0,
+          "xpEffect": "cost"
+        },
+        "region_0_0": {
+          "timeDrainPerSecond": 1,
+          "xpEffect": "cost"
+        },
+        "region_1_0": {
+          "timeDrainPerSecond": 1,
+          "xpEffect": "cost"
+        },
+        "region_1_1": {
+          "timeDrainPerSecond": 1,
+          "xpEffect": "cost"
+        }
+      },
+      "locations": {},
+      "defaultRegionCost": 50,
+      "defaultLocationCost": 10,
+      "defaultRegionXpEffect": "cost"
+    }
+  }
+}

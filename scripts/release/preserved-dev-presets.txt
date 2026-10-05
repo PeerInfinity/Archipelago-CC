@@ -35,6 +35,7 @@ omsi_region_split_test
 omsi_scaled_test
 omsi_schedule_test
 omsi_substrate_test
+noiz2sa_substrate_test
 seedling_atlas
 seedling_atlas_host
 seedling_atlas_location
