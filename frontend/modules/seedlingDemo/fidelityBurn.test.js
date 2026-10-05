@@ -34,6 +34,7 @@ import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, solveSegment } from './solverB
 import { buildStagedTape } from './botDriverV1.js';
 import { runTape } from './tapeRunner.js';
 import { HIT_TO_GONE_TICKS } from './burnableTree.js';
+import { KNOWN_STRATEGY_VERBS, summarizeTrace } from './decisionTrace.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = atlasLevelSource();
@@ -90,6 +91,13 @@ describe.each(CASES)('fidelity BURN — route step $step ($name)', ({ name, leve
         expect(run.progress('primaryWeapon')).toBe('sword');
         // The burn wrote the tree's clear (`removed()` → `setPersistence(tag, false)`).
         expect(run.earnedClears.some((c) => c.level === level && c.by === 'burnabletree')).toBe(true);
+    });
+    it('the trace names the `burn` verb, a KNOWN verb, on the tree', () => {
+        const { out } = solve(t, goal);
+        expect(KNOWN_STRATEGY_VERBS).toContain('burn');
+        const row = out.trace.rows.find((r) => r.strategy.verb === 'burn');
+        expect(row.obstacle?.id).toBe(tree);
+        expect(summarizeTrace(out.trace).unknownStrategyVerbs).toEqual([]);
     });
     it('the committed witness IS the solver\'s plan (keys and equips)', () => {
         const { out, staging } = solve(t, goal);
