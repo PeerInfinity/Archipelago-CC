@@ -15,8 +15,9 @@
  *     4. walking out of the start works: ArrowLeft from the start fires L0's west teleporter, and the binding
  *        publishes the crossing out of the start region (gameState follows);
  *     5. a Playback Bot walk interrupted by Restart: the bot walks the derived sphere queue out of the start, the
- *        Restart lands while a walk is in flight, the walk is STOPPED (the glue's `stoppedWalks`), the player is
- *        back at the start, and the bot RE-PLANS from there: it leaves the start region again (or names its
+ *        Restart lands while a walk is in flight, the player is back at the start spawn, the bot's next leg is routed
+ *        FROM the start (the Playback Bot stops the old controller on the substrate change; the glue's own stop,
+ *        `stoppedWalks`, is recorded), and the bot RE-PLANS from there: it leaves the start region again (or names its
  *        refusal) within `--budget-s`. Never a silent stall.
  *
  * Prints `PASS:`/`FAIL:` rows, `ROW <tag> {json}` measurement rows, and `ALL CHECKS PASSED` /
@@ -307,8 +308,15 @@ async function main() {
                     && sameSpot(s.game.ctor, spawn), 'the interrupted bot\'s player back at the start', 30000).catch(() => null);
                 const r = (await snap()).lastRestart;
                 out('bot restart', { lastRestart: r, landed: landed?.game ?? null, bot: await botState() });
-                check(`${S}: Restart mid-walk — the walk was STOPPED and the player landed at the start spawn`,
-                    !!landed && r?.taken === true && r?.stoppedWalks >= 1, JSON.stringify({ r, game: landed?.game }));
+                const botNow = await botState();
+                // ⛓ WHO stops the walk is recorded, not asserted: the Playback Bot stops the old substrate's controller
+                // itself on the substrate change to `Menu` (`playbackBotUI.onRegionMove`), so the glue's own stop
+                // (`stoppedWalks`, for a walk the bot module is not driving) finds it idle on wasm (measured 0) and
+                // still winding down on the JS page (measured 2). What is asserted is the outcome: the player at the
+                // spawn, and the bot's next leg routed FROM the start.
+                check(`${S}: Restart mid-walk — the player landed at the start spawn and the walk re-routes from the start`,
+                    !!landed && r?.taken === true && botNow.region === START
+                        && botNow.status.includes(`routing via "${START} ->`), JSON.stringify({ r, game: landed?.game, bot: botNow }));
                 check(`${S}: Restart mid-walk — no location check fired by the warp`,
                     (landed?.checks.length ?? -1) === pre.checks.length, JSON.stringify(landed?.checks.slice(pre.checks.length)));
                 const t1 = Date.now();
