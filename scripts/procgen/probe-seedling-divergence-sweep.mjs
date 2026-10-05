@@ -179,10 +179,15 @@ async function main() {
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
         page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
         const rp = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: `div-${MODE}-${pageNo}` });
-        if (BUILD) {
+        // ⛓ only a build OTHER than the preset's is routed. ⛔ And a response that is not the rules JSON passes
+        // through untouched: the glob also matches a fetch the server answers with an HTML 404, and `r.json()` on it
+        // threw out of the handler and killed every shard of CI run 37376313790 in 0.5 s.
+        if (BUILD && WASM_PAGE !== PRESET.flash_panel?.wasm) {
             await page.route(`**/presets/${GAME}/AP_1/AP_1_rules.json`, async (route) => {
                 const r = await route.fetch();
-                const doc = await r.json();
+                let doc = null;
+                try { doc = r.ok() ? JSON.parse(await r.text()) : null; } catch { doc = null; }
+                if (!doc) { await route.fulfill({ response: r }); return; }
                 doc.flash_panel = { ...(doc.flash_panel ?? {}), wasm: WASM_PAGE };
                 await route.fulfill({ response: r, json: doc });
             });
