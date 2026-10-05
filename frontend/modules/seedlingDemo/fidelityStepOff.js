@@ -40,9 +40,14 @@ import { atlasLevelSource } from './levelSource.js';
 const BASE_FLAGS = Object.freeze(Object.fromEntries(Object.values(ITEM_PROPERTIES)
     .filter((s) => s.kind !== 'add').map((s) => [s.property, false])));
 
-/** The staging a fresh JS-runtime boot at `{level, x, y}` carries. */
-export const stepOffStagingAt = ({ level, x, y }) => bootStaging({
-    boot: { level, x, y }, items: { ...BASE_FLAGS }, pins: [...JS_RUNTIME_PINS],
+/**
+ * The staging a fresh JS-runtime boot at `{level, x, y}` carries; `items`
+ * (STEPOFF2) sets item flags true by property (`['hasSword']`).
+ */
+export const stepOffStagingAt = ({ level, x, y }, items = []) => bootStaging({
+    boot: { level, x, y },
+    items: { ...BASE_FLAGS, ...Object.fromEntries(items.map((p) => [p, true])) },
+    pins: [...JS_RUNTIME_PINS],
 });
 
 /** How long a stand arm stands, and how long an arm walks back. */
@@ -65,6 +70,23 @@ export const STEPOFF_DOORS = Object.freeze([
     Object.freeze({ door: 'L87-teleporter', boot: { level: 87, x: 432, y: 304 }, exit: { x: 432, y: 304 }, stairs: false, dir: 'up', nMin: 10 }),
     Object.freeze({ door: 'L106-teleporter', boot: { level: 106, x: 64, y: 48 }, exit: { x: 64, y: 48 }, stairs: false, dir: 'left', nMin: 9 }),
     Object.freeze({ door: 'L17-stairs', boot: { level: 17, x: 32, y: 48 }, exit: { x: 32, y: 48 }, stairs: true, dir: 'up', nMin: 10 }),
+]);
+
+/**
+ * ⛓ STEPOFF2 (D2/D3) — the doors the MINIMAL step-off opened, played on the
+ * game as the solver's own plan (`stepOffSolverArm`). Each boots ON the door
+ * (a boot is a `new Game`, the arrival's first frame):
+ *   · L12 `teleporter@40,688` -> L24: the door straddles two tiles, so no tile
+ *     centre ringing it is standable; a sub-pixel hold down clears it.
+ *   · L65 `teleporter@184,64` -> L68: the same class (a half-tile door, x 184).
+ *   · L3 `teleporter@96,128` -> L11 WITH THE SWORD: the pocket under
+ *     `breakablerock@96,112`; the solver breaks the rock from the door, then
+ *     steps off up into the cell the rock left.
+ */
+export const STEPOFF2_DOORS = Object.freeze([
+    Object.freeze({ door: 'L12-teleporter-40-688', boot: { level: 12, x: 40, y: 688 }, exit: { x: 40, y: 688 }, stairs: false }),
+    Object.freeze({ door: 'L65-teleporter-184-64', boot: { level: 65, x: 184, y: 64 }, exit: { x: 184, y: 64 }, stairs: false }),
+    Object.freeze({ door: 'L3-pocket-sword', boot: { level: 3, x: 96, y: 128 }, exit: { x: 96, y: 128 }, stairs: false, items: Object.freeze(['hasSword']) }),
 ]);
 
 /** The arm's tape: stand (`n = null`) or `dir` for `n` ticks, then back. */
@@ -108,7 +130,7 @@ export const compactTicks = (ticks) => ticks.map((o) => [o.t, o.level, o.x, o.y]
  * step-off cell and its ticks).
  */
 export function stepOffSolverArm(door, levelSource) {
-    const staging = stepOffStagingAt(door.boot);
+    const staging = stepOffStagingAt(door.boot, door.items ?? []);
     const run = createRunForStaging(staging, levelSource);
     const out = solveSegment({
         run, goals: [{ kind: 'reach-exit', exit: { ...door.exit } }],
@@ -119,7 +141,7 @@ export function stepOffSolverArm(door, levelSource) {
         expect: { crosses: true, why: 'the solver\'s step-off plan crosses' } };
 }
 
-/** Every D3 arm (one per door). */
+/** Every solver arm (one per door): STEP-OFF's three, then STEPOFF2's. */
 export function stepOffSolverArms(levelSource = atlasLevelSource()) {
-    return STEPOFF_DOORS.map((d) => stepOffSolverArm(d, levelSource));
+    return [...STEPOFF_DOORS, ...STEPOFF2_DOORS].map((d) => stepOffSolverArm(d, levelSource));
 }
