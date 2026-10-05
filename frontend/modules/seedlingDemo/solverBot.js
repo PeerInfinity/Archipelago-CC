@@ -3290,6 +3290,8 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
         return refuse('this room holds no sword, so `set slashing`\'s outer gate refuses '
             + 'every press and no schedule can buy a single pixel');
     }
+    // ⛓ SF2: a deadline already reached costs this corridor not even its baseline.
+    if (deadlineReached('sword-dash')) return refuse('deadline');
     /**
      * ⛓⛓ R9 SLICE 12c‴, ⚖ RULING 45(a) — the two things a modelled hit is still
      * refused for, both read ONCE per corridor because both are facts about the
@@ -3512,6 +3514,14 @@ export function planSwordDash(run, wps, { tolerance = 0, certify = null,
     while (at < startTick + current) {
         let best = null;
         for (const pattern of prefixes) {
+            /**
+             * ⛓ SF2 — THE DEADLINE IS ASKED BETWEEN PREVIEWS. On a trip the whole
+             * schedule is dropped (`plan: null`, even windows already accepted)
+             * and `walkTo` drives `wps` as it does after any refused scan: the
+             * corridor was certified before this function was asked, the dash
+             * is only its upgrade.
+             */
+            if (deadlineReached('sword-dash')) return { ...refuse('deadline'), baseline };
             const got = evaluateAt(at, pattern);
             candidates.push(got.row);
             if (!got.row.certified) continue;
@@ -4299,6 +4309,15 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
             break;
         }
         if (state.steps.length >= MAX_ROUTE_ORDERS) { ordersBound = true; continue; }
+        // ⛓ SF2: the caller's deadline is a bound too, refused in the same shape.
+        if (deadlineReached('block-route')) {
+            return { steps: null, rejected, found, expansions, refused: {
+                bound: 'deadline',
+                why: `the caller's anytime deadline (\`shouldStop\`) was reached after `
+                    + `${expansions} expansion(s), before the \`${goal.kind}\` post-condition `
+                    + 'was met — the search was stopped, not exhausted',
+            } };
+        }
         expansions += 1;
         if (expansions > MAX_ROUTE_EXPANSIONS) {
             return { steps: null, rejected, found, expansions, refused: {
@@ -5407,7 +5426,9 @@ function stanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = [])
  */
 function lazyStanceHypothesis(run, blocked = [], contacts = NO_CONTACTS, walls = []) {
     let memo = null;
-    return () => (memo ??= stanceHypothesis(run, blocked, contacts, walls));
+    // ⛓ SF2: a reached deadline answers "nothing to hypothesise" (and memoises it).
+    return () => (memo ??= deadlineReached('stance-hypothesis')
+        ? [] : stanceHypothesis(run, blocked, contacts, walls));
 }
 
 /**
@@ -9755,6 +9776,16 @@ export function deriveKillByChaser(run, body, contacts,
      * cannot plan to it from where it already stands, the test carries no
      * information about a stance and is not run.
      */
+    /**
+     * ⛓ SF2 — the stance scan below is the rung's cost (89 % of D's L14
+     * decline, the l16-budget report §2), so a reached deadline refuses the rung
+     * here, by name, and the ladder goes on.
+     */
+    if (deadlineReached('kill-chaser')) {
+        return { stance: null, why: 'deadline — the caller\'s anytime deadline '
+            + '(`shouldStop`) was reached before this rung\'s stance scan, so the scan '
+            + 'was not run' };
+    }
     const aimIsPlannable = aim !== null
         && corridorPlans(run.world, run.state, aim, allowTeleporter, planOpts);
     // ── condition 1, and the cheap half of 3 and 4 ────────────────────
@@ -10046,6 +10077,79 @@ function laneRectOf(run, trap) {
 const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY SF2 — **THE ANYTIME DEADLINE**, the user's idea at the
+ * solver's own grain (2026-10-04: *"first search for solutions that don't
+ * involve sword dashes … and runs out of time while searching the dash
+ * options, it falls back on the solution it already found. This same pattern
+ * might work for other expensive and optional strategies."*).
+ *
+ * ⛔⛔ THE CLOCK IS THE CALLER'S, NEVER THIS MODULE'S. A wall-clock budget makes
+ * a solve depend on machine load, and every committed solve (tapes, `--check`s,
+ * certifications, CI) must stay byte-identical. So the hook is a CALLBACK the
+ * caller owns — the live worker passes a clock, a test passes a deterministic
+ * counter — and `solveSegment` without one (`shouldStop` null, the default) is
+ * today's search exactly: no site below consults anything when no deadline is
+ * active.
+ *
+ * ⛓ IT IS ASKED PER SITE, AND IT LATCHES PER SITE. `shouldStop(site)` names
+ * the site asking (one of `DEADLINE_SITES`), so a caller may bound only the
+ * lossless one (`site === 'sword-dash'`) or all of them; once it has answered
+ * true for a site it is never asked for that site again, and that site stays
+ * refused for the rest of the segment. A clock or a counter ignores the
+ * argument and trips every site from the same instant, and the remainder of
+ * the solve is a pure function of where each site tripped.
+ *
+ * ⛓ THE SITES, and what a trip there does (`DEADLINE_SITES`):
+ *  - `sword-dash` — `planSwordDash`, before each candidate preview. It
+ *    returns the ordinary refusal shape with `why: 'deadline'`, so `walkTo`
+ *    drives the corridor it had ALREADY certified with no dash plan — the same
+ *    branch every walk whose scan found no faster window takes. ⇒ a trip here
+ *    cannot itself refuse anything.
+ *  - `stance-hypothesis` — the lazy thunk (SF1) answers `[]`: a stance that
+ *    needed another obstacle discharged is not found. CAN turn a solve into a
+ *    refusal.
+ *  - `block-route` — `deriveBlockRoute`, before each expansion: refused with
+ *    `bound: 'deadline'`, the shape `MAX_ROUTE_EXPANSIONS` already has. CAN turn
+ *    a solve into a refusal.
+ *  - `kill-chaser` — `deriveKillByChaser`, before its stance scan: the rung
+ *    refuses by name and the ladder continues. CAN turn a solve into a refusal.
+ *
+ * ⛔ IT IS NEVER SILENT: a segment that tripped returns `deadline` beside its
+ * trace (the first site, and per-site counts), and a refusal raised after a
+ * trip carries the same object and says so in its words.
+ */
+export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
+    'block-route', 'kill-chaser']);
+
+/** The deadline the segment being solved runs under — `null` is "none". */
+let activeDeadline = null;
+
+/**
+ * Has the active deadline been reached for `site`? Asked by a site, before its
+ * optional work. ⛔ With no deadline active this returns false and calls nothing.
+ */
+function deadlineReached(site) {
+    const d = activeDeadline;
+    if (d === null) return false;
+    if (!d.tripped.has(site)) {
+        if (!d.shouldStop(site)) return false;
+        d.tripped.add(site);
+        d.first ??= site;
+    }
+    d.sites[site] = (d.sites[site] ?? 0) + 1;
+    return true;
+}
+
+/** The `deadline` object a tripped segment reports. */
+const deadlineReport = (d) => ({ tripped: true, first: d.first, sites: { ...d.sites } });
+
+/** The sentence a refusal raised after a trip carries. */
+const deadlineClause = (d) => ` ⏱ DEADLINE: the caller's \`shouldStop\` tripped (first at `
+    + `\`${d.first}\`) and refused ${Object.entries(d.sites)
+        .map(([k, n]) => `${n} \`${k}\` scan(s)`).join(', ')} — this refusal may be the `
+    + 'deadline\'s, not the room\'s.';
+
+/**
  * ── THE LOOP ──────────────────────────────────────────────────────────
  *
  * @param {object} o
@@ -10055,10 +10159,44 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  * @param {object} [o.boot] `{level, x, y}` for the trace envelope
  * @param {number} [o.tolerance]
  * @param {number} [o.maxTicksPerTarget]
+ * @param {?function} [o.shouldStop] SF2's anytime deadline: `(site) => boolean`,
+ *   the caller's own (a clock live, a counter in a test). Consulted before each
+ *   optional scan, with the site's name (`DEADLINE_SITES`), and latched per site
+ *   once true. Omitted or `null`: no deadline, today's search exactly — every
+ *   committed solve passes none.
  * @returns {{perTick: Array<Set>, trace: object, transitions: Array,
- *            waypointsPlanned: number, replans: number, records: Array}}
+ *            waypointsPlanned: number, replans: number, records: Array,
+ *            deadline?: {tripped: true, first: string, sites: object}}}
+ *   `deadline` is present only when the hook tripped.
  */
-export function solveSegment({
+export function solveSegment(o) {
+    const shouldStop = o?.shouldStop ?? null;
+    // ⛔ No hook: the segment runs under whatever deadline is already active —
+    // none at all for every committed caller — so the default is untouched.
+    if (shouldStop === null) return solveSegmentUnder(o);
+    if (typeof shouldStop !== 'function') {
+        fail(`solveSegment: shouldStop must be a function (site) => boolean or null, got `
+            + `${typeof shouldStop} — the deadline is a callback the caller owns, never a `
+            + 'number of milliseconds this module would read a clock for.');
+    }
+    const outer = activeDeadline;
+    const deadline = { shouldStop, first: null, tripped: new Set(), sites: {} };
+    activeDeadline = deadline;
+    try {
+        const out = solveSegmentUnder(o);
+        return deadline.first === null ? out : { ...out, deadline: deadlineReport(deadline) };
+    } catch (e) {
+        if (deadline.first !== null && e instanceof SolverRefusal) {
+            e.message += deadlineClause(deadline);
+            e.deadline = deadlineReport(deadline);
+        }
+        throw e;
+    } finally {
+        activeDeadline = outer;
+    }
+}
+
+function solveSegmentUnder({
     run, goals, name, boot,
     tolerance = DEFAULT_TOLERANCE,
     maxTicksPerTarget = DEFAULT_MAX_TICKS_PER_TARGET,
