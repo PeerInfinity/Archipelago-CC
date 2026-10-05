@@ -15,7 +15,8 @@
  *      on plan — including the seam that a keydown+keyup release broke (L4 `down`) and an X press held.
  *   D  THE WITNESS (`seedling_playthrough` by `?rules=`, the Playback Bot on the derived sphere log): while a
  *      solver plan PLAYS mid-room, an item arrives the way a remote player's does — a `ReceivedItems` packet
- *      from player 2 on the client's `connection:message` (the AP layer's receive path, not a page poke). The
+ *      from player 2 on the client's `connection:message` (the AP layer's receive path, not a page poke; the
+ *      game's DataPackage is sent first, as a server does at connect, so the client can name the item). The
  *      room freezes, the item lands, the goal is replanned (or the interrupted plan resumes, by name), and the
  *      goal finishes in that room with no forced re-arrival and 0 divergences. Freeze and replan times are
  *      measured (`ROW D delivery`).
@@ -190,6 +191,13 @@ async function main() {
             const { getClientModuleEventBus } = await import('./modules/client/index.js');
             const bus = getClientModuleEventBus?.() ?? (await import('./app/core/eventBus.js')).default;
             const before = proxy.getLatestStateSnapshot?.()?.inventory?.[itemName] ?? 0;
+            // A server sends its DataPackage at connect: the id → name tables the client reads a ReceivedItems by.
+            // Offline there is none, so the game's own (the loaded rules') is sent first, as that server would.
+            const sd = proxy.getStaticData();
+            const locs = sd.locationNameToId instanceof Map ? Object.fromEntries(sd.locationNameToId) : (sd.locationNameToId ?? {});
+            bus.publish('connection:message', [{ cmd: 'DataPackage', data: { games: { [sd.game_name]: {
+                item_name_to_id: Object.fromEntries(entries.map(([k, v]) => [v?.name ?? k, v?.id]).filter(([, i]) => Number.isInteger(i))),
+                location_name_to_id: locs } } } }], 'client');
             bus.publish('connection:message', [{ cmd: 'ReceivedItems', index: 1,
                 items: [{ item: id, location: 987654321, player: 2, flags: 1 }] }], 'client');
             for (let i = 0; i < 100; i += 1) {
