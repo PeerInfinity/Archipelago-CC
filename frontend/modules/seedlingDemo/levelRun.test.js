@@ -2771,7 +2771,7 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
  * ⛓ ENGINE-PREP C4 — `run.progress(field)` AND `run.ledger(kind)` ARE THE
  * GETTERS, BY OTHER NAMES.
  *
- * The same seam as C3's, twice: the player's bag and progress (12 fields) and
+ * The same seam as C3's, twice: the player's bag and progress (13 fields) and
  * the Seedling event ledgers (31 kinds) each sit behind one keyed query, and
  * both faces call one closure function (`PROGRESS_FIELDS` / `LEDGER_KINDS`
  * in `createLevelRun`). Every folded getter returns a fresh value or a
@@ -2787,7 +2787,8 @@ describe('engine-prep C3: run.entities(family) is the getter, by another name', 
  */
 describe('engine-prep C4: run.progress(field) and run.ledger(kind) are the getters, by other names', () => {
     const FOLDS = [
-        { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 12, noun: 'progress field', plural: 'fields' },
+        // ⛓ fidelity SLOTS: 13 — `inventorySlots`, the slot array as run state.
+        { query: 'progress', names: PROGRESS_FIELD_NAMES, count: 13, noun: 'progress field', plural: 'fields' },
         { query: 'ledger', names: LEDGER_KIND_NAMES, count: 33, noun: 'ledger kind', plural: 'kinds' },
     ];
     const ALL = [...PROGRESS_FIELD_NAMES, ...LEDGER_KIND_NAMES];

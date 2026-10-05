@@ -454,7 +454,8 @@ describe('who takes the box', () => {
          * fidelity DESCENT the fall-onto-a-door witness, `probe-seedling-descent.mjs`;
          * the mid-room replan witness, `probe-seedling-wasm-midroom-replan.mjs`;
          * fidelity DASH the sword's hit-test window witness, `probe-seedling-dash-window.mjs`;
-         * RESTART the Menu panel's Restart warp witness, `probe-seedling-restart-warp.mjs`.)
+         * RESTART the Menu panel's Restart warp witness, `probe-seedling-restart-warp.mjs`;
+         * fidelity SLOTS the slot-array-is-session-state witness, `probe-seedling-slot-order.mjs`.)
          */
         const guarded = ['derive-seedling-tick0.mjs', 'plan-seedling-r7-ends-meet.mjs',
             'solve-seedling-r8-d2-chain.mjs', 'solve-seedling-r8-tail.mjs',
@@ -474,7 +475,7 @@ describe('who takes the box', () => {
             'probe-seedling-since-begin.mjs', 'probe-seedling-f7-reentry.mjs',
             'probe-seedling-stepoff.mjs', 'probe-seedling-burn-write.mjs', 'probe-seedling-moonrock.mjs',
             'probe-seedling-descent.mjs', 'probe-seedling-wasm-midroom-replan.mjs', 'probe-seedling-dash-window.mjs',
-            'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs'];
+            'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs', 'probe-seedling-slot-order.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
