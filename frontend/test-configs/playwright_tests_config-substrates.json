@@ -110,19 +110,19 @@
             "id": "noiz2sa-region-loop-visit",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N3: the Noiz2sa substrate's one row. Loop mode (the preset carries loop_costs): a Record block on the 1:1 region; injected idle fire is hit at frame 240 and the region restarts with nothing checked; a clearing tape (the game's Ace bot, 1002 frames) checks the clear; leaving saves a summary priced by the live time drain; instant Playback spends the repriced summary. Batch fast: the injected input runs 8 game frames per 16 ms, a few seconds of wall clock."
+            "_comment": "bulletml-incremental N3 (N4c: the move run). Loop mode (the preset carries loop_costs): the move out of 1:1 queued, a Record block parks on it; injected idle fire is hit at frame 240 and the region restarts with nothing checked; a clearing tape (the game's Ace bot, 1002 frames) clears the move span and the clear performs the move, checking nothing; the Record block saves a summary priced by the live time drain; instant Playback spends the repriced summary. Batch fast: the injected input runs 8 game frames per 16 ms, a few seconds of wall clock."
         },
         {
             "id": "noiz2sa-bot-block-trains",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N4: the Noiz2sa Bot block and the bot's training. Twice on a fresh load and a fresh trainer (tracks 0, Even): a Bot block on 1:1 hands its exit to the page's humanlike bot (a worker), which clears the region deathless in 1002 frames, score 17330 (the headless runSegment at tracks 0), and leaves; the clear is checked, the visit costs floor(16.032) game seconds x the rate, the bot earns the visit's points and the tracks rise to 2/2/2/1/1. Once at 1x, once at 2x (the bot-speed setting): the same frames, the same mana. Batch fast: ~16 s + ~8 s of bot play."
+            "_comment": "bulletml-incremental N4: the Noiz2sa Bot block and the bot's training. Twice on a fresh load and a fresh trainer (tracks 0, Even): a Bot block on 1:1 hands its exit to the page's humanlike bot (a worker), which clears the move run deathless in 1002 frames, score 17330 (the headless runSegment at tracks 0), and leaves (N4c: the move's clear checks nothing); the visit costs floor(16.032) game seconds x the rate, the bot earns the visit's points and the tracks rise to 2/2/2/1/1. Once at 1x, once at 2x (the bot-speed setting): the same frames, the same mana. Batch fast: ~16 s + ~8 s of bot play."
         },
         {
-            "id": "noiz2sa-bot-replays-cleared-region",
+            "id": "noiz2sa-bot-plays-check",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N4b (a): in loop mode the move out of a Noiz2sa region is played to a clear on every visit. A Bot block clears 1:1 (bot seed 1, tracks 0 By hand, 4x) and leaves; back on the region (cleared before) the page keeps its exits closed and the same Bot block plays it again (1002 frames, score 17330), costs floor(16.032) game seconds of drain and trains the bot. Batch fast: two ~4 s bot clears."
+            "_comment": "bulletml-incremental N4c (c): a Bot block plays a queued check. [check, move] on 1:1 (bot seed 1, tracks 100 By hand: the check span is past the tracks-0 bot, 4x): the bot plays the check run (1:1-1:2, its clearing attempt ends two scenes, 1:1 at 1002 frames), the location is checked and the player stays; then the move run leaves. Back on the region (checked), the check is skipped and the move run plays again: floor(its game seconds) of drain, the visit's points. Batch fast: three 4x bot runs."
         },
         {
             "id": "noiz2sa-first-entry-explores",
@@ -131,10 +131,22 @@
             "_comment": "bulletml-incremental N4b (b, as changed 2026-10-05: fully explored on FIRST ENTRY, not first clear). The second region is fogged (location and exits undiscovered) and the player is moved into it: on that first entry it reads fully explored (every location and exit discovered, through loop:exploreCompleted), nothing checked. Batch fast: no play."
         },
         {
-            "id": "noiz2sa-choose-exit",
+            "id": "noiz2sa-choice-list",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N4b (the 2026-10-05 change): with no move queued in loop mode the page lists the exits and waits; choosing one queues the move in the Loops queue, the queue parks a Record block and the game starts; the bot (B, seed 1, tracks 0 By hand, 4x) clears it and the clear performs the chosen move. Batch fast: one 4x bot clear."
+            "_comment": "bulletml-incremental N4c (b): the choice list. Loop mode, nothing queued on 1:1: the page offers every exit and the check; choosing the check queues a locationCheck, the queue parks a Record block and the check run starts; the bot (B, seed 1, tracks 100 By hand, 4x) clears it, the location is checked and the list offers the exits only; choosing the exit queues the move and its clear performs it (the summary holds the check, departing by the exit). Batch fast: two 4x bot clears."
+        },
+        {
+            "id": "noiz2sa-queued-check",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c (a): a queued locationCheck (no move) on 1:1, a Record block parked on it: the page plays the check run 1:1-1:2 (twice the move's scenes); the bot (B, seed 1, tracks 100 By hand, 4x) clears it in an attempt that ends two scenes (1:1 at 1002 frames), the location is checked and the player stays, the choice list offering the exits only. Batch fast: one 4x bot check clear."
+        },
+        {
+            "id": "noiz2sa-choice-list-outside-loop-mode",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c (d): outside loop mode the same choice list. Loop mode off on 1:1: the page offers the exits and the check; the check run starts at once, the bot (B) clears it and the location is checked; back at the choice list (exits only); the exit starts the move run and its clear leaves. No mana moved, and the page asked the host to queue nothing. Batch fast: two 4x bot clears."
         },
         {
             "id": "noiz2sa-bot-seed-per-visit",
@@ -146,13 +158,13 @@
             "id": "noiz2sa-assist-key",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N4b (d): the B key. A Record block on 1:1: B hands the controls to the bot, B hands them back (paused, nothing drains), a game key resumes the player, B again and the bot plays to the clear and stays; the summary's playStats count the bot's frames, the visit cost its game seconds and trained the bot. Batch fast: ~17 s of 1x bot play."
+            "_comment": "bulletml-incremental N4b (d): the B key. A Record block on 1:1: B hands the controls to the bot, B hands them back (paused, nothing drains), a game key resumes the player, B again and the bot plays the move run to its clear, which performs the move; the summary's playStats count the bot's frames, the block interior holds no check, the visit cost its game seconds and trained the bot. Batch fast: ~17 s of 1x bot play."
         },
         {
             "id": "noiz2sa-refused-clear-resent",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N3b fix 2: the shared flash bridge's location ledger. A Record block parks on 1:1; with the queue paused its clear is refused by the loop-mode action gate (loops:clickIgnored); unpaused, on the same visit (no loadRegion), R plays the region again and the resent clear checks the location; a third clear dispatches nothing (loops observes one parked check). Batch fast: three injected clears at 8 frames per 16 ms."
+            "_comment": "bulletml-incremental N3b fix 2 (N4c: on the check run): the shared flash bridge's location ledger. The check of 1:1 queued, a Record block parks on it; with the queue paused the bot's (B) check clear is refused by the loop-mode action gate (loops:clickIgnored); unpaused, on the same visit (no loadRegion), R plays the check again and the resent clear checks the location (loops observes one parked check); the player stays, back at the choice list with the exits only. Batch fast: two 4x bot check clears."
         },
         {
             "id": "runner-bot-block-summary-economy",
