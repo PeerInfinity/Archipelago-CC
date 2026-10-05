@@ -227,7 +227,10 @@ const description = '⛓⛓⛓ R9 SLICE 12 — THE PRESS ARM\'S DRIVEN WITNESS A
 
 function tapeJson(obj) {
     const parsed = parseTape({ ...obj, description });
-    return `${JSON.stringify({ ...parsed, description, note: '' }, null, 4)}\n`;
+    // ⛓ the committed tape predates `parseTape`'s default `hold: false` (p4f's botHold);
+    // a false hold is the default, so it is omitted and the tape reproduces byte for byte.
+    const { hold, ...withoutHold } = parsed;
+    return `${JSON.stringify({ ...(hold ? parsed : withoutHold), description, note: '' }, null, 4)}\n`;
 }
 
 const path = join(TAPES, `${NAME}.json`);

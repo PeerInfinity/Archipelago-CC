@@ -430,7 +430,10 @@ const tapeJson = (obj) => {
     const { why, ...rest } = obj;
     const d = description[obj.name];
     const parsed = parseTape({ ...rest, description: d });
-    return `${JSON.stringify({ ...parsed, description: d, note: '' }, null, 4)}\n`;
+    // ⛓ the committed tape predates `parseTape`'s default `hold: false` (p4f's botHold);
+    // a false hold is the default, so it is omitted and the tape reproduces byte for byte.
+    const { hold, ...withoutHold } = parsed;
+    return `${JSON.stringify({ ...(hold ? parsed : withoutHold), description: d, note: '' }, null, 4)}\n`;
 };
 
 const written = [];
