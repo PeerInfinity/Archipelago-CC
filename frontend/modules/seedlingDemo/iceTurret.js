@@ -250,6 +250,18 @@ export function createIceTurret(x, y) {
     };
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — the live body's contact, `Enemy.hitPlayer`
+ * (`Enemies/Enemy.as:211-221`): `p.hit(this, 3, new Point(x, y), damage)` with
+ * `Enemy.damage = 1` (`:20`), which `IceTurret` does not override. Billed by
+ * `levelRun.stepIceTurretsNow` (`combat.CONTACT_STEPPED_PRICED_BY.iceturret`).
+ */
+export const ICE_TURRET_CONTACT = Object.freeze({
+    force: 3,
+    damage: 1,
+    src: 'Enemies/Enemy.as:20,211-221 + Enemies/IceTurret.as:127-133',
+});
+
 /** The box the body occupies right now — 32x32 alive, 16x16 dead. */
 export function iceTurretRect(state) {
     const b = state.dead ? ICE_TURRET.corpse : ICE_TURRET.alive;
@@ -667,6 +679,7 @@ export function stepIceTurret(state, ctx = {}) {
     const {
         frozen = false, onScreen = true,
         blockedAt = null, terrainAt = null, playerOverlaps = null, player = null,
+        hitPlayer = null,
     } = ctx;
     if (state.removed) return state;
     state.ticks += 1;
@@ -725,7 +738,27 @@ export function stepIceTurret(state, ctx = {}) {
             // `Enemy.update`'s own tail — and it reads `destroy` AFTER
             // `death()` may have cleared it, which is why a turret's FIRST
             // dead tick still runs `hitUpdate`.
-            if (!state.destroy) enemyHitUpdate(state, { onScreen });
+            if (!state.destroy) {
+                enemyHitUpdate(state, { onScreen });
+                /**
+                 * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **THE LIVE BODY'S CONTACT.**
+                 * `Enemy.update`'s tail is `if (!destroy) { hitUpdate();
+                 * hitPlayer(); }`, and `IceTurret.hitPlayer` forwards to
+                 * `Enemy.hitPlayer` only while `currentAnim != "dead"`
+                 * (`IceTurret.as:127-133`), which collides the player against the
+                 * body where it IS and calls `p.hit(this, 3, new Point(x, y),
+                 * damage)` behind `hitsTimer <= 0` (`Enemy.as:211-221`). Not
+                 * frozen-gated here: `Player.hit` carries `!Game.freezeObjects`
+                 * itself. A corpse never bills (its `type` is "Solid" from the
+                 * latch, and the forward is off). The caller's callback is the
+                 * one `applyPlayerHit` funnel; absent (every pre-proximity
+                 * caller, and every `noDamage` tape) nothing is billed.
+                 */
+                if (hitPlayer && !state.dead && state.hitsTimer <= 0 && playerOverlaps
+                    && playerOverlaps(iceTurretRect(state))) {
+                    hitPlayer(state);
+                }
+            }
         }
     }
 

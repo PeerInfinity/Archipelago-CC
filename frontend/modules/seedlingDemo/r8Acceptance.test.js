@@ -361,7 +361,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'slots-l24-fire-first', 'slots-l24-burn-fire-first', 'slots-l24-burn-cut-80', 'slots-l24-burn-cut-110',
             'slots-l24-burn-fencepost',
             // ⛓⛓⛓ Seedling fidelity PROXIMITY's witnesses (L29 → L22; the L40 turret pair).
-            'prox-l29-key-return',
+            'prox-l29-key-return', 'prox-l40-turret-volley', 'prox-l40-turret-contact',
             // ⛓⛓⛓ Seedling fidelity L14: the swordless crossing, in L14.
             'l14-swordless-detour',
             // ⛓⛓⛓ Seedling fidelity CANCROSS: the oracle's door-built L16 witness.
@@ -409,11 +409,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity ROBUST adds two — `robust-l16-sword-idle1` (L16 → L17), `robust-l16-l18-sword-conch` (L16).
         // ⛓ Seedling fidelity SLOTS adds five — `slots-l24-fire-first`, `slots-l24-burn-fire-first`,
         // `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost` (L24 → L12).
-        // ⛓ Seedling fidelity PROXIMITY adds `prox-l29-key-return` (L29 → L22).
-        expect(out.exposed).toBe(60);
+        // ⛓ Seedling fidelity PROXIMITY adds three — `prox-l29-key-return` (L29 → L22), `prox-l40-turret-volley` and `prox-l40-turret-contact` (L40).
+        expect(out.exposed).toBe(62);
         expect(out.tapes).toEqual([
             'burn-l24-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
-            'prox-l29-key-return',
+            'prox-l29-key-return', 'prox-l40-turret-contact', 'prox-l40-turret-volley',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
@@ -565,6 +565,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'slots-l24-burn-cut-110': { tape: {}, levels: [12] },
             'slots-l24-burn-fencepost': { tape: {}, levels: [12] },
             'prox-l29-key-return': { tape: {}, levels: [22] },
+            'prox-l40-turret-volley': { tape: {}, levels: [40] },
+            'prox-l40-turret-contact': { tape: {}, levels: [40] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -633,11 +635,15 @@ describe('R8_ENEMY_BRIDGE — the partitions the bridge has to keep total', () =
              * conversion; now that a second stepped family names a pricer,
              * the honest set is the union — and the control the assertion
              * exists for ("nothing steps them, so the pricer cannot exist")
-             * is unchanged, because `iceturret` is still in neither.
+             * is unchanged — and since fidelity PROXIMITY no live family is
+             * refused, so the control rides the MUTATION rows below.
              */
             // ⛓ R2-swim D1: the wallflyer is stepped (`stepWallFlyersNow`) and joins.
-            bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer'],
-        })).toEqual({ families: 5, bridged: ['bob', 'puncher', 'spinner', 'wallflyer'], refused: ['iceturret'] });
+            // ⛓ Seedling fidelity PROXIMITY: the ice turret is stepped AND now billed
+            // (`stepIceTurretsNow`'s contact arm), so it joins — and no family is refused.
+            bridged: [...bridgedChaserTags(), 'spinner', 'wallflyer', 'iceturret'],
+        })).toEqual({ families: 5, bridged: ['bob', 'puncher', 'spinner', 'wallflyer', 'iceturret'],
+            refused: [] });
     });
 
     it('⛔ MUTATION: a family in one table and not another reds by name (trap 94)', () => {

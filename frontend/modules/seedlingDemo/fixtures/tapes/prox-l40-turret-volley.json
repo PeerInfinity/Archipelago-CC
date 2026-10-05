@@ -1,0 +1,103 @@
+{
+    "game": "seedling",
+    "name": "prox-l40-turret-volley",
+    "boot": {
+        "level": 40,
+        "x": 480,
+        "y": 456
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1,
+            2,
+            3
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": true,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 120,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 48
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — THE RANGE IS A VOLLEY, NOT A WALL: boots (entity (488,464)) in the corridor 48 px south of `iceturret@472,400`'s entity point (inside its 129 px range, clear of its body), walks `down` the corridor in its line of fire and rests. The turret aims and fires; a blast that lands freezes the player for 15 ticks and costs one hit, and nothing stops the walk. (No shield: with it, facing the turret blocks the blasts). The survey's staging (`r8-solve-11`'s committed block re-pointed at L40 (480,456), keys [0, 1, 2, 3], items [canSwim, hasFire, hasTorch]). Hand-authored keys: 120 t, equips []. Authored by scripts/procgen/plan-seedling-proximity-witness.mjs."
+}

@@ -28,6 +28,8 @@ import {
 } from './solverBot.js';
 import { R8_STRATEGY_EXECUTORS } from './r8Acceptance.js';
 import { KNOWN_STRATEGY_VERBS, summarizeTrace } from './decisionTrace.js';
+import { contactPricing } from './combat.js';
+import { ICE_TURRET_CONTACT } from './iceTurret.js';
 import {
     PROXIMITY_WITNESSES, proximityStaging,
 } from '../../../scripts/procgen/plan-seedling-proximity-witness.mjs';
@@ -96,6 +98,11 @@ describe('fidelity PROXIMITY D1 — the census the rows rest on', () => {
             'L61 buttonroom@176,40 -> L63 flip 1', 'L63 buttonroom@32,64 -> L62 flip 1',
         ].sort());
     });
+
+    it('the ice turret\'s contact is PRICED (`stepIceTurretsNow`), force 3 / damage 1 (`Enemy.as:20,211-221`)', () => {
+        expect(contactPricing('iceturret')).toMatchObject({ kind: 'stepped', pricedBy: 'stepIceTurretsNow' });
+        expect(ICE_TURRET_CONTACT).toMatchObject({ force: 3, damage: 1 });
+    });
 });
 
 describe('fidelity PROXIMITY D2 — the ButtonRoom row, the covered chest and `pulse` (L38)', () => {
@@ -163,5 +170,38 @@ describe('fidelity PROXIMITY D2 — the trap button skirted OUT and BACK (L29)',
         const press = { x: 116, y: 133, w: 8, h: 6, right: 124, bottom: 139 };
         expect(game.ticks.filter((o) => o.level === 29 && rectsOverlap(playerBoxAt(o.x, o.y), press)))
             .toEqual([]);
+    });
+});
+
+describe('fidelity PROXIMITY D3 — the ice turret', () => {
+    it('the table names `brave` for `proximity-hazard:iceturret`, registered and derived', () => {
+        expect(OBSTACLE_STRATEGIES['proximity-hazard:iceturret']).toBe('brave');
+        expect(typeof STRATEGY_EXECUTORS.brave).toBe('function');
+        expect(R8_STRATEGY_EXECUTORS.executorDerivations.brave.length).toBeGreaterThan(0);
+        expect(KNOWN_STRATEGY_VERBS).toContain('brave');
+    });
+
+    it('`prox-l40-turret-contact`: the run BILLS the live body\'s contact (it used to refuse it)', () => {
+        const t = tape('prox-l40-turret-contact');
+        const run = createRunForStaging({ ...t, equips: [] }, SRC);
+        for (let i = 0; i < t.tick_count; i += 1) {
+            run.advance(new Set(t.inputs.filter((sp) => sp.from <= i && i < sp.to).map((sp) => sp.key)));
+        }
+        const hits = run.ledger('playerHits').filter((h) => h.source === 'iceturret');
+        expect(hits.length).toBeGreaterThan(0);
+        expect(hits[0]).toMatchObject({ id: 'iceturret@472,400', hits: 1 });
+        expect(hits[0].knockback.dy).toBeLessThan(0);
+    });
+
+    it('`prox-l40-turret-volley`: inside the range a blast FREEZES the walk; nothing walls it', () => {
+        const t = tape('prox-l40-turret-volley');
+        const out = runTape(t, { levelSource: SRC });
+        expect(out.blastFreezes.length).toBeGreaterThan(0);
+        expect(out.volleys.length).toBeGreaterThan(1);
+        expect(out.ticks.at(-1).y).toBeGreaterThan(t.boot.y + 8);
+    });
+
+    it.each(['prox-l40-turret-contact', 'prox-l40-turret-volley'])('THE GAME agrees: %s, observation for observation (0 px)', (name) => {
+        expectGameIsModel(name);
     });
 });

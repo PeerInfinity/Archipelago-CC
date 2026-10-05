@@ -457,6 +457,13 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
      * volume at all (`levelWorld`'s `speaksFrom`), so it never reaches this row.
      */
     'proximity-hazard:watcher': 'talk',
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **AN ICE TURRET'S RANGE IS CROSSED, NOT
+     * WALLED.** The volume is `attackRange` (a 129 px disc), and what the game
+     * charges inside it is a volley — `freeze(15)` and one damage per blast —
+     * which stops no walk and which the run steps (`resolveBraveStrategy`).
+     */
+    'proximity-hazard:iceturret': 'brave',
     'pickup': 'collect',
 });
 
@@ -604,6 +611,13 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * button the responder answers to. See `resolvePulseStrategy`.
      */
     pulse: execPulse,
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — the first verb whose cost is PAID
+     * rather than avoided: an ice turret's range exempted, and the run's own
+     * volleys, freezes and hits on the walk through it. See
+     * `resolveBraveStrategy`.
+     */
+    brave: execBrave,
 });
 
 /**
@@ -1653,6 +1667,7 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'weigh') return resolveWeighStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'skirt') return resolveSkirtStrategy(run, obstacle, contacts);
     if (strategy === 'pulse') return resolvePulseStrategy(run, obstacle, contacts, blocked);
+    if (strategy === 'brave') return resolveBraveStrategy(run, obstacle, contacts);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -1928,6 +1943,65 @@ function execSkirt(run, perTick, resolved, ctx) {
     SKIRTED.set(run, { level: run.level, cameFromBelow: up, rowY: (presser.rect.y + presser.rect.bottom) / 2 });
     return { verb: 'skirt', target: id, lane: lane.side, x: lane.x, from,
         ticks: run.ticksCompleted - from, rocksStanding: [...rocks] };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — RESOLVE a `brave`: **AN ICE TURRET'S RANGE IS
+ * CROSSED, AND THE RUN PAYS WHAT THE GAME CHARGES.**
+ *
+ * The census volume is `IceTurret.attackRange` (128, `d` an `int`, so a 129 px
+ * disc from the entity point), and the census priced it as a wall. The game
+ * charges something else (`IceTurret.as:54-96`, `IceTurretBlast.as`): inside the
+ * range the turret turns a tenth of the angle per tick toward the player and,
+ * every `shootTimerMax` 25 ticks plus its "startshot"/"finishshot" animation,
+ * fires three 6 px/tick blasts along its OWN angle. A blast that reaches the
+ * player calls `freeze(15)` (fifteen ticks with no input block) and
+ * `hit(null, 0, …)` (one damage, no knockback, behind `hitsTimer`). Nothing in it
+ * stops a walk, and the run steps all of it (`stepIceTurretsNow`, the volleys,
+ * `iceTurretBlast`, the freeze, `applyPlayerHit` and the reboot on a death).
+ *
+ * ⇒ the verb is a ZERO-TICK EXEMPTION of the disc for this goal: the walk the
+ * loop then plans goes through the range, and every volley it draws is the
+ * run's own tick. A crossing that dies is the run's death, refused downstream in
+ * the walk's own words; one that survives is what the game does.
+ *
+ * ⛔ A turret the live run reports dead or removed is no range at all (a corpse
+ * does not shoot); the same exemption, with the reason.
+ */
+function resolveBraveStrategy(run, obstacle, contacts) {
+    const t = (run.world.iceTurrets ?? []).find((q) => q.id === obstacle.id);
+    if (!t) return null;
+    const live = run.entities('turrets')?.get?.(obstacle.id) ?? null;
+    const dead = live ? Boolean(live.dead || live.removed) : false;
+    return {
+        strategy: 'brave',
+        target: { x: t.x, y: t.y },
+        turret: obstacle.id,
+        stance: null,
+        dead,
+        exempt: new Set([...contacts, `proximity-hazard:${obstacle.id}`]),
+        rejected: [{
+            option: 'route-around',
+            why: `${obstacle.id}'s 129 px range is on the frontier of the reachable component, `
+                + 'so there is no route around it',
+        }, {
+            option: 'wall',
+            why: dead ? `${obstacle.id} is a CORPSE in the live run — a dead turret does not shoot`
+                : 'the range stops nothing: a volley is `freeze(15)` and one damage per blast '
+                    + '(`IceTurretBlast.as:53-55`), which the run steps tick for tick',
+        }],
+    };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — THE `brave` EXECUTOR: zero ticks. The
+ * resolution's exemption is the whole verb (the walk that follows is the
+ * loop's), so the record names what was exempted and the player's damage state
+ * at the moment the range was entered.
+ */
+function execBrave(run, perTick, resolved) {
+    return { verb: 'brave', target: resolved.turret, dead: resolved.dead, ticks: 0,
+        hitsTaken: (run.ledger('playerHits') ?? []).length };
 }
 
 /**
