@@ -866,6 +866,45 @@ describe('R1: the pit transport, hand-derived from Player.as', () => {
             { level: L83, noclip: true, noHazards: R1 }))
             .toThrow(/while a pit transport was in flight/);
     });
+
+    // ⛓⛓⛓ seedling fidelity DESCENT: the refusal above is the FALL-OUT's. A
+    // descent is the new Game's arrival, and `Teleporter.update` has no
+    // `fallFromCeiling` guard — so a door the descent crosses fires.
+    // (Game-witnessed: `fidelityDescent.test.js`.)
+    const descendOnto = (level, ctor) => {
+        let s = arriveFromFall(level, ctor);
+        const rows = [s];
+        for (let i = 0; i < 120 && s.fall && !s.transition; i += 1) {
+            s = step(s, new Set(['left', 'down']), { level, noclip: true, noHazards: R1 });
+            rows.push(s);
+        }
+        return rows;
+    };
+
+    it('a DESCENT landing on a door: latched by the arrival frame, released by the drop, FIRED on the way down', () => {
+        // Level 83's teleporter (32,64): a fall whose ctor IS that tile.
+        const door = L83.teleporters.findIndex((tp) => tp.x === 32 && tp.y === 64);
+        expect(door).toBeGreaterThanOrEqual(0);
+        const rows = descendOnto(L83, { x: 32, y: 64 });
+        expect([...rows[0].latched]).toEqual([door]);        // check() saw the CTOR position
+        expect(rows[1].latched.has(door)).toBe(false);       // 83 px up: released on the first update
+        const last = rows.at(-1);
+        expect(last.transition).toMatchObject({
+            kind: 'teleporter', from_level: 83, to_level: L83.teleporters[door].to, index: door,
+        });
+        expect(last.fall).toBeNull();                        // the door's arrival ends the fall
+        // the held keys did nothing: x never left the ctor column
+        expect(new Set(rows.map((r) => r.x))).toEqual(new Set([40]));
+    });
+
+    it('a DEACTIVATED door on the descent column neither fires nor stops the landing', () => {
+        const dead = Object.create(L83, {
+            teleporters: { value: L83.teleporters.map((tp) => ({ ...tp, deactivated: true })) },
+        });
+        const rows = descendOnto(dead, { x: 32, y: 64 });
+        expect(rows.some((r) => r.transition)).toBe(false);
+        expect(rows.at(-1).fall).toBeNull();                 // it landed (or bounced and landed)
+    });
 });
 
 // ─────────────────────────────────────────────────────────────────────────
