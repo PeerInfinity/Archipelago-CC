@@ -114,9 +114,11 @@ describe('the rect-input sweep', () => {
         // constructs at the placement's half-tile, so the two cancel: one
         // cell, exactly on the placement. The 48x48 in `ENTITY_CLASSES`
         // is the auto-talk hazard and answers a different question.
+        // ⛓ FIDELITY WATCHER: that hazard is now the 24 px talk DISC (it was
+        // the 48x48 square bounding it); still not the press box.
         expect(entityRect(WATCHER_PRESS_BOX, 64, 96))
             .toMatchObject({ x: 64, y: 96, right: 80, bottom: 112 });
-        expect(ENTITY_CLASSES.watcher.hazard.w).toBe(48);
+        expect(ENTITY_CLASSES.watcher.hazard.point).toEqual({ dx: 8, dy: 8, r: 24, inclusive: true });
     });
 
     it('⛔ L43\'s Watcher — the wand room — has a real press rect now', () => {
