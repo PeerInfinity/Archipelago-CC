@@ -1103,7 +1103,17 @@ export function step(state, held, opts = {}) {
     // swap lands at end of tick, the fall needs twenty more), but "would
     // win" is bookkeeping this module does not get to assume — and the R1
     // route does not cross level 100.
-    if (fired.length > 0 && fall) {
+    //
+    // ⛓⛓⛓ seedling fidelity DESCENT: the refusal is the FALL-OUT's only. A
+    // DESCENT is not a transport in flight — `checkFallingInPit`'s swap already
+    // happened, the descent is the NEW `Game`'s arrival (`fallFromCeiling`), and
+    // `Teleporter.update` has no `fallFromCeiling` guard. So a door the
+    // descending player overlaps FIRES, the game's own order: the door updates
+    // before the player, writes `FP.world = new Game(to, playerx, playery)`, and
+    // the run arrives at the door's target on the ground (no fall). It is the
+    // ordinary transition below, made by the descent arm (0b). Witnessed:
+    // L110's pit → L0 `stairsdown@256,272` → L2 (48,32), `moonrock-oracle.json`.
+    if (fired.length > 0 && fall && fall.phase !== 'descent') {
         throw new PhysicsV2Error(
             `a teleporter at (${fired[0].teleporter.x},${fired[0].teleporter.y}) fired in `
             + `level ${level.level} while a pit transport was in flight (phase `
@@ -1176,15 +1186,13 @@ export function step(state, held, opts = {}) {
     //     is an ELSE against everything below — no getState, no
     //     friction/input/move, no world clamp — so a descent tick is a
     //     ballistic y and nothing else, with x frozen at the arrival value.
+    //
+    //     ⛓⛓⛓ seedling fidelity DESCENT: a door that fires here is the tick's
+    //     transition. The old player still runs this tick's descent in the OLD
+    //     level (the swap is end-of-tick), and that last step is never observed;
+    //     the arrival is the door's own (`arriveIn`), on the ground, so the fall
+    //     ends with the swap.
     if (fall && fall.phase === 'descent') {
-        if (transition) {
-            throw new PhysicsV2Error(
-                `a teleporter fired in level ${level.level} during a fall-from-ceiling `
-                + 'descent. The descent sweeps 83 px of one column, so a trigger volume '
-                + 'on that column is crossed at speed — route the fall to a different '
-                + 'pit tile.',
-            );
-        }
         const vy = Math.min(state.vy + DESCENT_GRAVITY, DESCENT_MAX_FALL);
         let y = state.y + vy;
         let nextFall = fall;
@@ -1228,8 +1236,8 @@ export function step(state, held, opts = {}) {
             // so the two agree and the pin is what is transcribed.
             direction: directionAfterFall(),
             latched,
-            fall: nextFall,
-            transition: null,
+            fall: transition ? null : nextFall,
+            transition,
         };
     }
 
