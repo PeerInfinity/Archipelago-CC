@@ -16,7 +16,8 @@ import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
 
 import {
-    DESCENT_ARMS, DESCENT_TAPES, builtInMap, censusFallsOntoDoors, descentSet, descentWorld,
+    DESCENT_ARMS, DESCENT_TAPES, L110_ARRIVAL, builtInMap, censusFallsOntoDoors, descentSet,
+    descentSolverArm, descentWorld,
 } from './fidelityDescent.js';
 import { runTape } from './tapeRunner.js';
 
@@ -125,5 +126,27 @@ describe('D2 — the model: a descent FIRES the live door it crosses (MODEL = GA
         // and the census's descent is the game's: t39 into the descent is the oracle's t66 − t27
         const b = game('fall', 'builtin');
         expect(b.transitions[1].t - b.transitions[0].t).toBe(row.fires.t);
+    });
+});
+
+describe('D3 — the solver: `reach-pit` plans the fall and reports where the run ENDS', () => {
+    it('L110\'s arrival → its only pit: the run ends in L2 (48,32) via L0\'s stairs, named in `chained`', () => {
+        const { out, ends } = descentSolverArm();
+        expect(out.transitions.map((t) => [t.from_level, t.to_level])).toEqual([[110, 0], [0, 2]]);
+        expect(ends).toEqual({ level: 2, x: 56, y: 40 });
+        // `to` stays the control's level; `chained` is present only because a door fired in the coast
+        expect(out.records).toEqual([{
+            goal: 'reach-pit', to: 0, t: 194, coast: 39,
+            chained: { via: [{ t: 233, from_level: 0, to_level: 2 }], ends: { level: 2, x: 56, y: 40 } },
+        }]);
+    });
+
+    it('GAME plays the solver\'s plan: L110 (48,112) → L0 t194 → L2 (56,40) t233 — MODEL = GAME', () => {
+        const g = game('solver', 'builtin');
+        expect(g.ticks[0]).toEqual([0, L110_ARRIVAL.x + 8, L110_ARRIVAL.y + 8, 110]);
+        expect(levels(g)).toEqual([[110, 0], [0, 2]]);
+        expect(g.transitions.map((t) => t.t)).toEqual([194, 233]);
+        expect(g.final).toEqual({ t: 233, x: 56, y: 40, level: 2 });
+        expect(g.model.worst).toBe(0);
     });
 });
