@@ -102,7 +102,12 @@ const PINS = Object.freeze(['sound', 'dead_frames']);
 
 const keysAt = (spans, t) => new Set(spans.filter(([, a, b]) => t >= a && t < b).map(([k]) => k));
 
-function tapeOf({ name, boot, flags, ticks, spans, description }) {
+/**
+ * Route step 23's staging around fixed key spans (`[key, from, to)`), one tape.
+ * ⛓ Exported for `fidelityDescent.js` (seedling fidelity DESCENT), whose fall
+ * tapes are this staging with other keys, so the two slices play one staging.
+ */
+export function tapeOf({ name, boot, flags, ticks, spans, description }) {
     const perTick = Array.from({ length: ticks }, (_, t) => keysAt(spans, t));
     const folded = buildTape(perTick, boot, name, { noclip: false, noDamage: false, noHazards: [], grants: [] });
     return parseTape({
