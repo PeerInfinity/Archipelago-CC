@@ -21,6 +21,14 @@
  *   T   the PIT exits: L48, L83, L84 fallen on plan (`reach-pit`; the fall is the game's crossing).
  *   X   the deterministic RESIDUE legs (§1.2: L28, L30, L45, L88 ×2): each fails BY NAME after 2 plans
  *       (1 forced re-arrival) — an exact repeat (same tick, same game row) — not after 4.
+ *   E   ⛓ WASM EQUIPS — fidelity BURN's step 93 (L24 → L12 under `burnabletree@32,128`), the AP items granted
+ *       first (`addItemToInventory`, in the session's order): the Sword then Fire → the plan's tape ships TWO
+ *       slot selections (Fire's slot on the press, the sword's again), the tree burns (`{24,0}` cleared), the
+ *       leg crosses ON PLAN with the sword's slot selected. (Before the engine shipped equips, the same leg left
+ *       the plan at the first tick after the press: the press was a sword slash.)
+ *   F   the same leg with Fire granted FIRST: the game appends the sword (`inventory_slots` [1, 0] — acquisition
+ *       order, kept across rooms: `Inventory.items` is static), the model derives [0, 1], so every X press and the
+ *       plan's slot 1 would act with the other item — refused BY NAME before anything ships.
  *
  * Each session is a FRESH page (the wasm game runs out of memory after ~100–140 world swaps, §1.2).
  * ⛓ A host jump that CROSSES into a room the preset binds is re-placed by the region binding at the
@@ -32,7 +40,7 @@
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build
  * (the `flashPanel/wasm` submodule), or this SKIPs (exit 0).
  *
- * Run: node scripts/procgen/probe-seedling-wasm-arrival-composites.mjs [--host=http://localhost:8000] [--only=D|T|X] [--legs=<name,name>]
+ * Run: node scripts/procgen/probe-seedling-wasm-arrival-composites.mjs [--host=http://localhost:8000] [--only=D|T|X|E|F] [--legs=<name,name>]
  */
 import { chromium } from 'playwright';
 import { existsSync, readFileSync } from 'node:fs';
@@ -76,6 +84,14 @@ export const LEGS = {
         { name: 'pit L83', at: [83, 32, 48], goal: exit(83, [[2, 1]], 'out_pit_2_2'), expect: 'cross', producer: 'solver' },
         { name: 'pit L84', at: [84, 16, 16], goal: exit(84, [[1, 1]], 'out_pit_2_3'), expect: 'cross', producer: 'solver' },
     ],
+    E: [
+        { name: 'burn L24 → L12 (the Sword, then Fire)', at: [24, 96, 80], goal: exit(24, [[2, 9]], 'out_teleporter_32_144'),
+            expect: 'burn', grant: ['Progressive Sword', 'Fire'] },
+    ],
+    F: [
+        { name: 'burn L24 → L12 (Fire, then the Sword)', at: [24, 96, 80], goal: exit(24, [[2, 9]], 'out_teleporter_32_144'),
+            expect: 'slot-order', grant: ['Fire', 'Progressive Sword'] },
+    ],
     X: [
         { name: 'residue L28', at: [28, 96, 16], goal: exit(28, [[0, 6]], 'out_teleporter_0_96'), expect: 'repeat' },
         { name: 'residue L30', at: [30, 16, 128], goal: exit(30, [[12, 3]], 'out_stairsdown_192_48'), expect: 'repeat' },
@@ -107,6 +123,18 @@ async function serveLeg({ goal, budgetMs }) {
     w4.failed = null;
     w4.notes = [];
     const engine = w4.engine;
+    // ⛓ E/F — every tape the engine hands the game (its `equips` and length), read in the GAME frame's own call.
+    const g = s.wasm.getGame();
+    if (!g.__w4tap) {
+        const load = g.botLoadTape.bind(g);
+        g.botLoadTape = (json) => {
+            const t = JSON.parse(json);
+            (window.__w4tapes ??= []).push({ name: t.name, ticks: t.tick_count, equips: t.equips ?? null });
+            return load(json);
+        };
+        g.__w4tap = true;
+    }
+    const tapes = [];
     const h0 = engine.stats.history.length;
     const done0 = engine.stats.done;
     const answer = engine.walkTo(goal);
@@ -117,6 +145,7 @@ async function serveLeg({ goal, budgetMs }) {
         // eslint-disable-next-line no-await-in-loop
         await new Promise((r) => { setTimeout(r, 200); });
         if (!answer.ok) { end = 'refused'; break; }
+        tapes.push(...(window.__w4tapes?.splice(0) ?? []));
         if (w4.failed) { end = 'failed'; break; }
         if (engine.stats.done > done0) { end = 'done'; break; }
         const lv = JSON.parse(s.wasm.getGame().readState()).level;
@@ -138,7 +167,9 @@ async function serveLeg({ goal, budgetMs }) {
     const stats = JSON.parse(JSON.stringify(engine.stats));
     const st = JSON.parse(s.wasm.getGame().botStatus());
     const arr = engine.arrivalReads.at(-1) ?? null;
-    return { answer, end, failed: w4.failed, notes: w4.notes.slice(-6), legs: stats.history.slice(h0),
+    tapes.push(...(window.__w4tapes?.splice(0) ?? []));
+    return { answer, end, failed: w4.failed, notes: w4.notes.slice(-6), legs: stats.history.slice(h0), tapes,
+        primary: st.primary, slots: st.inventory_slots ?? null, cleared: st.persistence_cleared ?? [],
         arrivedAt: arr ? { level: arr.status?.level, x: arr.state?.playerPositionX, y: arr.state?.playerPositionY } : null,
         forced: stats.forced, ships: stats.ships, level: st.level, armed: st.armed, held: st.held,
         ms: Math.round(performance.now() - t0) };
@@ -162,7 +193,7 @@ async function main() {
     }
     const browser = await chromium.launch({ args: HEADLESS_LOGIC_ONLY_ARGS });
     let failed = 0;
-    for (const SESSION of ONLY ? [ONLY] : ['D', 'T', 'X']) {
+    for (const SESSION of ONLY ? [ONLY] : ['D', 'T', 'X', 'E', 'F']) {
         const legs = LEGS[SESSION].filter((l) => PICK.length === 0 || PICK.some((p) => l.name.includes(p)));
         if (legs.length === 0) continue;
         console.log(`INFO: ── session ${SESSION} (${legs.length} legs, a fresh page) ──`);
@@ -200,6 +231,22 @@ async function main() {
             await page.waitForTimeout(1500);
             for (const leg of legs) {
                 const [level, x, y] = leg.at;
+                if (leg.grant) {
+                    // ⛓ E/F — the AP items, in order, each landed in the game before the next (the slot order is the point).
+                    for (const item of leg.grant) {
+                        // eslint-disable-next-line no-await-in-loop
+                        await page.evaluate(async (name) => {
+                            const { default: proxy } = await import('./modules/stateManager/stateManagerProxySingleton.js');
+                            await proxy.addItemToInventory(name);
+                        }, item);
+                        // eslint-disable-next-line no-await-in-loop
+                        await rp.waitFor(`${item} landed in the game's slots`, () => page.evaluate(async (n) => {
+                            const p = (await import('./modules/flashPanel/index.js')).getActivePanelInstance();
+                            const st = JSON.parse(p.seedlingPlaybackSurface().wasm.getGame().botStatus());
+                            return (st.inventory_slots ?? []).length >= n ? JSON.stringify(st.inventory_slots) : null;
+                        }, leg.grant.indexOf(item) + 1).catch(() => null), 15000);
+                    }
+                }
                 // ⛓ Where the jump really landed. A jump that CROSSES into a room the preset binds is a crossing
                 // to the region binding, which re-places the player at the region's arrival spawn (measured on
                 // seedling_atlas: 86 (48,64) → (48,48), L2 (48,16) → (48,32), L3 (96,128) → (64,16)). A jump
@@ -211,6 +258,7 @@ async function main() {
                 const r = await page.evaluate(serveLeg, { goal: leg.goal, budgetMs: leg.expect === 'repeat' ? 150000 : 90000 });
                 const plays = r.legs.filter((h) => h.outcome !== 'failed');
                 const last = r.legs.at(-1) ?? {};
+                if (leg.grant) console.log(`TAPES ${JSON.stringify({ name: leg.name, tapes: r.tapes, primary: r.primary, slots: r.slots })}`);
                 console.log(`LEG ${JSON.stringify({ session: SESSION, name: leg.name, expect: leg.expect, end: r.end, failed: r.failed,
                     answer: r.answer, level: r.level, ms: r.ms, arrivedAt: r.arrivedAt, landed, legs: r.legs.map((h) => ({ outcome: h.outcome, producer: h.producer,
                         ticks: h.ticks, drained: h.drained, verbs: h.verbs, divergence: h.divergence,
@@ -243,6 +291,23 @@ async function main() {
                         r.end === 'failed' && /at the SAME tick with the SAME game row 2 times in a row/.test(r.failed ?? '')
                             && JSON.stringify(r.legs.map((h) => h.outcome)) === JSON.stringify(['diverged', 'failed']),
                         JSON.stringify({ end: r.end, failed: r.failed, outcomes: r.legs.map((h) => h.outcome) }));
+                }
+                if (leg.expect === 'burn') {
+                    const plan = r.tapes.filter((t) => t.ticks > 0);
+                    check(`${SESSION} ${leg.name}: crossed ON PLAN out of L${level} (0 divergences, 1 plan)`,
+                        r.answer.ok && ['crossed', 'done'].includes(r.end) && r.level !== level && dv.length === 0 && plays.length === 1,
+                        JSON.stringify({ end: r.end, level: r.level, failed: r.failed, legs: plays.map((h) => [h.outcome, h.ticks, h.drained, h.divergence]) }));
+                    check(`${SESSION} ${leg.name}: the plan tape shipped TWO slot selections — Fire's slot (1), then the sword's (0)`,
+                        plan.length === 1 && JSON.stringify(plan[0].equips?.map((e) => e.slot)) === '[1,0]', JSON.stringify(plan));
+                    check(`${SESSION} ${leg.name}: the tree burned on the game ({24,0} cleared)`,
+                        r.cleared.some((c) => c.level === 24 && c.tag === 0), JSON.stringify(r.cleared));
+                    check(`${SESSION} ${leg.name}: the sword's slot is selected again (primary 0)`, r.primary === 0, String(r.primary));
+                } else if (leg.expect === 'slot-order') {
+                    check(`${SESSION} ${leg.name}: the game holds [1, 0] (the sword appended after Fire)`, JSON.stringify(r.slots) === '[1,0]', JSON.stringify(r.slots));
+                    check(`${SESSION} ${leg.name}: refused BY NAME before the plan shipped (the game appends a late slot)`,
+                        r.end === 'failed' && /the plan tape was not shipped — the plan (presses a slot key|selects a slot) at tick \d+, and the game holds its slots in acquisition order \[1,0\] where the model derives \[0,1\]/.test(r.failed ?? '')
+                            && r.tapes.every((t) => t.ticks === 0),
+                        JSON.stringify({ end: r.end, failed: r.failed, tapes: r.tapes }));
                 }
                 check(`${SESSION} ${leg.name}: nothing of ours left armed or held`, !r.armed && !r.held, JSON.stringify({ armed: r.armed, held: r.held }));
             }
