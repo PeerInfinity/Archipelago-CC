@@ -38,6 +38,13 @@
       "noHazards": []
     },
     {
+      "file": "dash-l16-sword-all.json",
+      "tickCount": 117,
+      "bootLevel": 16,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "diagonal-run.json",
       "tickCount": 40,
       "bootLevel": 0,

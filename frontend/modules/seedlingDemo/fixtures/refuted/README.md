@@ -14,6 +14,7 @@ finding (§22.7).
 | file | what it refuted | where the account lives |
 |---|---|---|
 | `r8-solve-5.tape.json` + `.expectation.json` | The first walk R8 slice 4's two-pass loop produced. The game reported `hits: 1` against the model's 0, first divergence at t=207. R8 slice 5 localised it to **three** model defects — the missing player-arrow bill, an arrow moving on its own spawn tick, and the trap arming one frame too fresh — and the fixed model now reproduces this stream byte for byte through tick 276, hit included. It is also the **negative oracle** for the ETA-aware transit probe (⚖ kickoff §13.10a gate (i)). | kickoff §13.1/§13.2 (the refutation), §14 (the fixes), `r8Acceptance.R8_ETA_PROBE` |
+| `dash-l16-sword-refuted.tape.json` + `.expectation.json` | Seedling fidelity DASH: CANCROSS's L16 → L17 `all` plan (111 t, `5b1f924b52`). The game hits the player at t104 and never crosses; the model certified 0 hits. The model ran FIVE hit tests per dash press, the game runs FOUR (`Bot.slashTests`), and the fifth pulled `rope@32,16` a volley early. With `combatVerbs.DASH_WINDOW_ROSTER_WIDE` on, the model reproduces this stream byte for byte, hit included; with it off (the roster), it is CANCROSS's divergence exactly. | `fidelityDash.test.js`, the DASH report § D1/D2 |
 
 The full bank — trace, `--win` log and the original file names — stays in
 R8's untracked planning record. What is copied HERE is exactly what a

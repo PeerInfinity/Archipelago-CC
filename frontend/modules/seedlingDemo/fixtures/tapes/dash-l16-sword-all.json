@@ -1,0 +1,307 @@
+{
+    "game": "seedling",
+    "name": "dash-l16-sword-all",
+    "boot": {
+        "level": 16,
+        "x": 32,
+        "y": 64
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 0,
+        "split": false
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasDarkSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasDarkShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasFeather": false,
+            "hasSpear": false,
+            "hasDarkSuit": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "primary": 0,
+        "secondary": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0
+    },
+    "tick_count": 117,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "right",
+            "from": 0,
+            "to": 6
+        },
+        {
+            "key": "primary",
+            "from": 5,
+            "to": 6
+        },
+        {
+            "key": "left",
+            "from": 6,
+            "to": 9
+        },
+        {
+            "key": "right",
+            "from": 9,
+            "to": 12
+        },
+        {
+            "key": "primary",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 18
+        },
+        {
+            "key": "left",
+            "from": 13,
+            "to": 18
+        },
+        {
+            "key": "primary",
+            "from": 17,
+            "to": 18
+        },
+        {
+            "key": "right",
+            "from": 18,
+            "to": 19
+        },
+        {
+            "key": "up",
+            "from": 18,
+            "to": 20
+        },
+        {
+            "key": "right",
+            "from": 20,
+            "to": 23
+        },
+        {
+            "key": "down",
+            "from": 20,
+            "to": 23
+        },
+        {
+            "key": "left",
+            "from": 23,
+            "to": 24
+        },
+        {
+            "key": "up",
+            "from": 23,
+            "to": 24
+        },
+        {
+            "key": "right",
+            "from": 24,
+            "to": 25
+        },
+        {
+            "key": "down",
+            "from": 24,
+            "to": 25
+        },
+        {
+            "key": "left",
+            "from": 25,
+            "to": 26
+        },
+        {
+            "key": "right",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "up",
+            "from": 28,
+            "to": 29
+        },
+        {
+            "key": "primary",
+            "from": 29,
+            "to": 30
+        },
+        {
+            "key": "primary",
+            "from": 31,
+            "to": 32
+        },
+        {
+            "key": "right",
+            "from": 32,
+            "to": 44
+        },
+        {
+            "key": "primary",
+            "from": 43,
+            "to": 44
+        },
+        {
+            "key": "left",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "primary",
+            "from": 49,
+            "to": 50
+        },
+        {
+            "key": "right",
+            "from": 45,
+            "to": 52
+        },
+        {
+            "key": "primary",
+            "from": 51,
+            "to": 52
+        },
+        {
+            "key": "left",
+            "from": 52,
+            "to": 53
+        },
+        {
+            "key": "left",
+            "from": 54,
+            "to": 58
+        },
+        {
+            "key": "right",
+            "from": 58,
+            "to": 59
+        },
+        {
+            "key": "primary",
+            "from": 69,
+            "to": 70
+        },
+        {
+            "key": "primary",
+            "from": 71,
+            "to": 72
+        },
+        {
+            "key": "primary",
+            "from": 77,
+            "to": 78
+        },
+        {
+            "key": "up",
+            "from": 61,
+            "to": 84
+        },
+        {
+            "key": "primary",
+            "from": 83,
+            "to": 84
+        },
+        {
+            "key": "down",
+            "from": 84,
+            "to": 85
+        },
+        {
+            "key": "up",
+            "from": 85,
+            "to": 96
+        },
+        {
+            "key": "down",
+            "from": 96,
+            "to": 97
+        },
+        {
+            "key": "left",
+            "from": 99,
+            "to": 100
+        },
+        {
+            "key": "primary",
+            "from": 100,
+            "to": 101
+        },
+        {
+            "key": "primary",
+            "from": 102,
+            "to": 103
+        },
+        {
+            "key": "right",
+            "from": 102,
+            "to": 111
+        },
+        {
+            "key": "down",
+            "from": 102,
+            "to": 111
+        },
+        {
+            "key": "primary",
+            "from": 110,
+            "to": 111
+        },
+        {
+            "key": "left",
+            "from": 111,
+            "to": 112
+        },
+        {
+            "key": "up",
+            "from": 111,
+            "to": 112
+        },
+        {
+            "key": "right",
+            "from": 112,
+            "to": 117
+        },
+        {
+            "key": "down",
+            "from": 112,
+            "to": 117
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓ SEEDLING FIDELITY DASH — the L16 → L17 `all` plan the solver derives under the GAME's dash window (`combatVerbs.DASH_WINDOW_ROSTER_WIDE = true`: a dash buys four hit tests): `canCross({level: 16, exit: 17, arrival: {from: 15}, inventory: ['sword'], dashMode: 'all'})`, 117 t, hash 12575cff30, PULL + 11 dash presses in 5 planned windows, 0 hits. It replays identically under the roster's legacy window too. Written by scripts/procgen/can-cross-seedling.mjs --witness with the gate on."
+}
