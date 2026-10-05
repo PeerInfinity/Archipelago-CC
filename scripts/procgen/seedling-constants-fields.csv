@@ -940,10 +940,12 @@ frontend/modules/seedlingDemo/combatVerbs.js|SLASH_SCALE_NORMAL|(module),physics
 frontend/modules/seedlingDemo/combatVerbs.js|SLASH_SCALE_DASH|(module),physics,magnitude,,slash rect scale when dashing
 frontend/modules/seedlingDemo/combatVerbs.js|SWORD_DAMAGE|(module),rule,magnitude,,
 frontend/modules/seedlingDemo/combatVerbs.js|KILL_PRESS_CADENCE|(module),rule,derivation,,ENEMY_IFRAMES + 1
-frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|hd3d08480|30|0,rule,magnitude,,FP.assignedFrameRate 30
-frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|h5aaf8498|1|0,structural,,,REVIEW: Spritemap unit-frame accumulator threshold
-frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|he50a9b4e|1|0,structural,,,REVIEW: Spritemap unit-frame accumulator step
-frontend/modules/seedlingDemo/combatVerbs.js|SLASH_ANIM_TICKS|(module),rule,count,,slash / slashnarrow frame counts; wrap fires slashEnd
+frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicksLegacy|h02dd27b2|30|0,rule,magnitude,,FP.assignedFrameRate 30: the legacy 1/30 accumulator the roster runs behind DASH_WINDOW_ROSTER_WIDE (fidelity DASH)
+frontend/modules/seedlingDemo/combatVerbs.js|animCompleteUpdates|h5aaf8498|1|0,structural,,,REVIEW: Spritemap unit-frame accumulator threshold
+frontend/modules/seedlingDemo/combatVerbs.js|animCompleteUpdates|he50a9b4e|1|0,structural,,,REVIEW: Spritemap unit-frame accumulator step
+frontend/modules/seedlingDemo/combatVerbs.js|animCompleteTicks|h036255f1|1|0,rule,derivation,,the press tick's own sprites() is animation update 1 (Player.update: input() then sprites()); fidelity DASH
+frontend/modules/seedlingDemo/combatVerbs.js|SLASH_ANIM_TICKS_GAME|(module),rule,count,,slash / slashnarrow frame counts under the FP.elapsed clamp; wrap fires slashEnd (fidelity DASH: 5 / 4)
+frontend/modules/seedlingDemo/combatVerbs.js|SLASH_ANIM_TICKS_LEGACY|(module),rule,count,,slash / slashnarrow frame counts under the legacy 1/30 accumulator (5 / 5); the roster's until DASH_WINDOW_ROSTER_WIDE flips
 frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hdfaa2622|0|0,rule,sentinel,,direction code
 frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hdfaa2622|1|0,rule,sentinel,,direction code
 frontend/modules/seedlingDemo/combatVerbs.js|slashRect|hdfaa2622|2|0,rule,sentinel,,direction code
