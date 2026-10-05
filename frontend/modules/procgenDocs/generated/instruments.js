@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 56,
+            "count": 57,
             "id": "plan"
         },
         {
-            "browser": 40,
-            "count": 82,
+            "browser": 41,
+            "count": 83,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 325,
-        "browser": 105,
-        "cited": 152,
-        "files": 336,
+        "blockStyle": 327,
+        "browser": 106,
+        "cited": 153,
+        "files": 338,
         "lineStyle": 11,
-        "withDocblock": 336,
-        "withFlags": 255
+        "withDocblock": 338,
+        "withFlags": 257
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6468,6 +6468,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-burn-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-burn-witness — ⛓⛓⛓ SEEDLING FIDELITY BURN: A BURNABLE TREE ON THE FRONTIER OF A REACH-EXIT, BURNED BY THE SOLVER'S `burn` VERB.",
+            "path": "scripts/procgen/plan-seedling-burn-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-f1-l5-lock.mjs",
             "flags": [
                 {
@@ -8222,6 +8249,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-build-cost — what does ONE level build cost the gameplay stream, and how many dead frames does its fade take?",
             "path": "scripts/procgen/probe-seedling-build-cost.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-burn-write.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity BURN, D1: **WHEN THE BURN'S PERSISTENCE WRITE LANDS, ON THE GAME.** `BurnableTree.hit()` removes nothing; `burnEnd -> die()` removes the tree twenty animation frames later, and `removed()` calls `Game.setPersistence(tag, false)` (`Scenery/BurnableTree.as:39-54`).",
+            "path": "scripts/procgen/probe-seedling-burn-write.mjs"
         },
         {
             "argvHelpers": [

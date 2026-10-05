@@ -12886,6 +12886,67 @@ PASS 4,965 → 4,966; `pullRope`'s seven targets are re-anchored on
   the camera, and the model refuses a bob inside the shake band, so the
   control is read against the witness on the game, not against a model stream.
 
+### Seedling fidelity BURN — the tree as a reach-exit obstacle
+
+Planning-2's slice on `fidelity-harvest/sf-f7` (`0aab89b`). ⚖ The user,
+2026-10-04: *"Burn as a reach-exit move."* The rules arc's route survey
+(`--through=end`) refused six steps on *"Obstacle: solid:burnabletree … No
+strategy row exists for this obstacle"* (30, 62, 72, 93, 101, 102: L44, L24,
+L37), the largest named-obstacle family past sphere 2.2. The report is
+`CC/docs/cloud-reports/seedling-fidelity-burn.md`.
+
+**D1 — the game's rule (measured).** `BurnableTree.hit(t)` acts only on
+`t == "Fire"` (`Scenery/BurnableTree.as:29-37`), which only `Player.fire()`
+passes (`Player.as:1032`; `useItem` case 1, or case 5 for the Fire Wand). The
+tree stays SOLID through its 20-frame animation; `burnEnd -> die()` removes
+it and `removed()` writes `setPersistence(tag, false)` (`:39-54`); `check()`
+drops a cleared tree at build (`:56-63`). `probe-seedling-burn-write.mjs`
+brackets the write on the game: `{24,0}` is absent after 105 updates and
+present after 106, `{44,0}` absent after 87 and present after 88. That is the
+model's `goneAt` + 1 in both rooms, 41 updates after the first fire hit
+(`HIT_TO_GONE_TICKS`). The model's `applyFire` arm needed no change.
+
+**D2 — the `burn` verb (PASS, game-witnessed).**
+`OBSTACLE_STRATEGIES['solid:burnabletree'] = 'burn'`, registered as
+`execBurn`. `resolveBurnStrategy` gates on the inventory: no Fire, or the
+Fire Wand, refuses by name. The stance comes from `burnStanceCandidates`,
+hoisted out of the Bob Boss leg's `burnStanceFor` (whose pick is unchanged),
+and is asked of `presses.auditFire`: the tree burns and no other responder
+acts. Where a cell centre is cut by the 16 px radius, the verb LEANS one key
+toward the tree first. `execBurn` selects Fire's slot (a tape `equips` row),
+runs `runFire`'s `burns` arm, and selects the old slot again.
+`runFire` gains `fire.overExit` (L24's tree stands on both L12 teleporters).
+The two witnesses are the solver's own plans in the survey's staging,
+recorded on the game, and the model reproduces both: `burn-l24-reach-exit`
+(step 93, 124 t, lean `down` at (56,120), press t60) and
+`burn-l44-reach-exit` (step 102, 212 t). The survey goes from 142 to **144/265**:
+93 and 102 solve; 30/62/72 (and 32/34, whose frontier now names the tree)
+refuse as **ITEM-GATE** (the tree needs Fire, a new `surveyFamily` row); 101
+burns and stops at `watcher@104,264`. The new first refusal past 2.2 is
+**step 95, L37: `proximity-hazard:watcher`**, VERB-MISSING. Mutants: the row
+removed gives the old VERB-MISSING words byte for byte; the executor removed
+gives VERB-SELECTED-NOT-REGISTERED; the resolver nulled gives VERB-APPLY.
+
+**For the rules arc.** AP_1's region graph lets L24 → L12 (`True_`), and
+L44's r4c2 and L37's r0c18 exits, through without Fire. In the game, both L24
+teleporters to L12 sit under `burnabletree@32,128`. L44's L87 arrival and its
+L37 exit are on opposite sides of `burnabletree@48,64` (the rule there names
+Fire only between r0c4 and r4c2).
+
+**Trap candidates**, for the catalogue to number:
+
+- a radius transcribed with the wrong origin decides stances: the fire's
+  16 px cut uses the PLAYER's `originY` for the target, so a 32x32 tree reads
+  14 px low, a cell centre above it is out of reach, and one against its top
+  edge is in;
+- a verb that switches the weapon has to switch it back: the strike policy
+  reads the inventory's sword and presses `primary`, so a walk after a burn
+  with Fire still selected would press fire;
+- registering a verb reorders a frontier: the registered-first sort now names
+  a tree a Fire-less run cannot burn ahead of a nearer unregistered wall or a
+  farther keyed lock (steps 32 and 34). The refusal is still true, but its
+  subject moved.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
