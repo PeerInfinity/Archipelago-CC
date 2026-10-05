@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 40,
-            "count": 82,
+            "browser": 41,
+            "count": 83,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 325,
-        "browser": 105,
-        "cited": 152,
-        "files": 336,
+        "blockStyle": 326,
+        "browser": 106,
+        "cited": 153,
+        "files": 337,
         "lineStyle": 11,
-        "withDocblock": 336,
-        "withFlags": 255
+        "withDocblock": 337,
+        "withFlags": 256
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -9824,6 +9824,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-span-ceiling — how many input SPANS can `botLoadTape` actually take before the recompiled runtime runs out of heap?",
             "path": "scripts/procgen/probe-seedling-span-ceiling.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-stepoff.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity STEP-OFF (D1/D2/D3): **AN ARRIVAL ON A DOOR, ASKED OF THE GAME.** Every arm runs on a FRESH page of the headless game (default build p4f, logic-only), one arm per page.",
+            "path": "scripts/procgen/probe-seedling-stepoff.mjs"
         },
         {
             "argvHelpers": [
