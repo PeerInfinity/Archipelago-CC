@@ -1162,6 +1162,24 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'from the L16 return arrival (144,32) it swims the water round `lock@128,48` and '
                 + 'takes `stairsup@32,64`; its last tick is the L14 arrival; no hit, no kill.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity ROBUST — D2's one idle tick and D3's Conch, the
+         * two crossings the PULL rung's later-lane probe made solvable.
+         */
+        Object.freeze({
+            name: 'robust-l16-sword-idle1', levels: Object.freeze([16, 17]), bobs: 10, ticks: 220,
+            addedBy: 'Seedling fidelity ROBUST D2 (one idle tick no longer flips L16)',
+            why: 'one idle tick at the L15 door wakes the bobs; the corridor\'s first danger is '
+                + '`bob@48,96`, the probe finds `arrowtrap@96,32`\'s lane behind it, PULL silences '
+                + 'the lanes, and the walk reaches L17 among its three bobs. No hit, no kill.',
+        }),
+        Object.freeze({
+            name: 'robust-l16-l18-sword-conch', levels: Object.freeze([16]), bobs: 7, ticks: 797,
+            addedBy: 'Seedling fidelity ROBUST D3 (the Conch no longer loses L16 → L18)',
+            why: 'with the Conch the corridor\'s first danger is `sandtrap@48,32`; the probe finds '
+                + 'the lane behind it, PULL silences the lanes, AVOID routes round the trap, and the '
+                + 'weighed walk reaches `stairsup@352,80`. No hit, no kill.',
+        }),
     ]),
 
     /**

@@ -153,8 +153,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity CANCROSS: 210 — `cancross-l16-sword-none`, inert.
         // ⛓ fidelity DASH: 211 — `dash-l16-sword-all`, inert.
         // ⛓ fidelity RETURN: 215 — `return-l15-reentry`, `return-l15-walkin`, `return-l15-reentry-unclear`, `return-l15-conch`, inert.
-        expect(rows).toHaveLength(215);
-        expect(rows.length - parted.length).toBe(214);
+        // ⛓ fidelity ROBUST: 217 — `robust-l16-sword-idle1`, `robust-l16-l18-sword-conch`, inert.
+        expect(rows).toHaveLength(217);
+        expect(rows.length - parted.length).toBe(216);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

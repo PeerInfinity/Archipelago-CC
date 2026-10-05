@@ -712,9 +712,9 @@
       "files": {
         "botDriverV2.js": 29,
         "director.js": 1,
-        "solverBot.js": 41
+        "solverBot.js": 42
       },
-      "sites": 71,
+      "sites": 72,
       "seen": "both",
       "via": [
         "const-alias",
@@ -755,7 +755,7 @@
         },
         "primaryWeapon": {
           "botDriverV2.js": 3,
-          "solverBot.js": 7
+          "solverBot.js": 8
         },
         "saveState": {
           "director.js": 1
@@ -954,9 +954,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 56,
-        "solverBot.js": 136
+        "solverBot.js": 138
       },
-      "sites": 192,
+      "sites": 194,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1070,9 +1070,9 @@
       "form": "constant",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 10
+        "solverBot.js": 11
       },
-      "sites": 12,
+      "sites": 13,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1581,9 +1581,9 @@
       "form": "geometry-query",
       "files": {
         "botDriverV2.js": 2,
-        "solverBot.js": 3
+        "solverBot.js": 4
       },
-      "sites": 5,
+      "sites": 6,
       "seen": "both",
       "via": [
         "direct"
@@ -2356,9 +2356,9 @@
       "class": "seedling",
       "form": "function",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 3
       },
-      "sites": 2,
+      "sites": 3,
       "seen": "static",
       "via": [
         "import"
