@@ -4277,6 +4277,56 @@ export function deriveBlockRoute(run, row, goal, contacts, blocked = [],
         }
         return null;
     };
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY SF3 — **A CHEAP PROOF OF "THERE IS NONE", ASKED
+     * BEFORE THE SEARCH**, for a `clear-path` goal.
+     *
+     * MEASURED (the l16-budget report §2): the S4 census's L16 pit `(13,4)` with
+     * the kit spent 99 % of a 14 s refusal here, hitting `MAX_ROUTE_EXPANSIONS`
+     * — and the pit is in another connected component even with this block
+     * GONE, every rock broken and every lock open. No order of shoves and
+     * breaks could have opened it.
+     *
+     * ⇒ the RELAXED bag: every pushable removed, every breakable rock broken,
+     * every activator open, and every volume the search could ever exempt
+     * exempted (`contacts`, the `crossable` pressers, each activator's own
+     * `proximity-hazard`). Every bag `bagsOf` can build is a restriction of it
+     * — a route only moves THIS block (or sinks it), breaks rocks and holds
+     * groups open, and none of those adds an obstacle (`liveRectOf` answers
+     * `null` for an open, broken or removed solid) — and the search's own
+     * connectivity is this flood (the goal test of every route longer than
+     * one order) or A\* at the same lattice, which the flood never refuses
+     * where A\* passes (four-connected, margin 0). So a flood that cannot
+     * reach the aim from the live position in the relaxed world proves the
+     * search would never meet the post-condition.
+     *
+     * ⛔ THE ANSWER IS THE EXHAUSTED SHAPE (`bound: null`), not a bound —
+     * the comment at `deriveShove`'s caller is why: "I could not decide" and
+     * "there is none" are different claims, and this one is the second, so
+     * the frontier reports it as it reports a search that ran dry.
+     */
+    if (goal.kind === 'clear-path') {
+        const relaxed = {
+            ...base,
+            pushables: new Map([...(base.pushables ?? new Map())]
+                .map(([id, p]) => [id, { ...p, removed: true }])),
+            brokenRocks: new Set([...liveRocks, ...rocks.map((r) => r.rockId)]),
+            openActivators: new Set([...(base.openActivators ?? []),
+                ...(run.world.activators ?? []).map((a) => a.id)]),
+        };
+        const relaxedExempt = new Set([...contacts, ...crossable,
+            ...(run.world.activators ?? []).map((a) => `proximity-hazard:${a.id}`)]);
+        if (!floodReaches(run.state, goal.aim, relaxed, relaxedExempt)) {
+            const why = `(${goal.aim.x},${goal.aim.y}) is not reachable from `
+                + `(${run.state.x},${run.state.y}) even with every pushable removed, every `
+                + `breakable rock broken (${rocks.length} live) and every lock open — no `
+                + 'sequence of leans and breaks can open a corridor the relaxed room does '
+                + 'not have (SF3: proved before the search, which was not run)';
+            return { steps: null, found: [], expansions: 0,
+                rejected: [{ option: `a block route for ${row.id}`, why }],
+                refused: { bound: null, why } };
+        }
+    }
     const refusedMoves = new Set();
     let expansions = 0;
     let ordersBound = false;
@@ -11709,8 +11759,23 @@ function solveSegmentUnder({
              * 17), and it needs no second forecast.
              */
             const hunted = interceptOrder(removable, hit)[0] ?? target;
-            const hunt = deriveKillByChaser(run, hunted, contacts,
-                { aim, allowTeleporter, tolerance, dashMode });
+            /**
+             * ⛓⛓ SEEDLING FIDELITY SF3 — **NO SWORD, NO CHASER ARM, AND NO SCAN.**
+             * Both of this arm's outcomes without a sword are refusals: no stance
+             * (the scan's own words) or a stance and *"this run holds no sword"*
+             * below. MEASURED on D's swordless L14 (the l16-budget report §2):
+             * the scan was 89 % of a 4.8 s decline that could not have ended in
+             * anything else. So the gate `strikePolicyFor` would read after the
+             * scan is read before it, and the arm refuses in its words.
+             */
+            const swordless = !(run.progress('inventory')?.hasSword
+                || run.progress('inventory')?.hasGhostSword);
+            const hunt = swordless
+                ? { stance: null, why: `this run holds no sword, so \`set slashing\`'s `
+                    + `outer gate refuses every press — no stance could strike ${hunted.id}, `
+                    + 'and the stance scan was not run (SF3)' }
+                : deriveKillByChaser(run, hunted, contacts,
+                    { aim, allowTeleporter, tolerance, dashMode });
             if (hunt.stance) {
                 rowFor('kill', refused, { arm: 'chaser', target: hunted.id,
                     stance: hunt.stance, runnersUp: hunt.runnersUp });
