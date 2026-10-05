@@ -16,6 +16,10 @@
  *        -> 'a delivery while a plan PLAYS: …' and 'a delivery into the HELD room …' red
  *   m3 the hold never released (a refused delivery leaves `botHold("on")` standing)
  *        -> 'a delivery the model cannot take …' reds (the plan never drains on)
+ *   ⛓ SLOTS CONSUMER (measured, restored md5-identical):
+ *   s1 the slot-lag check off (`ship()` never asks `firstTickSlotRefusal`) -> 'the SLOT LAG …' reds (1)
+ *   s2 the delivery re-stage without the game's array (`stageItems` with no `slots`) -> 'two slot items …' reds (1)
+ *   s3 the arrival stages no slot array -> 13 red over this file + `wasmArrival.test.js`
  */
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -25,6 +29,9 @@ import { fileURLToPath } from 'node:url';
 import { createWasmPlayback } from './seedlingWasmPlayback.js';
 import { indexLevels } from '../seedlingDemo/atlasSource.js';
 import { createInPlaceProduceService } from '../seedlingDemo/wasmWalkTape.js';
+import { appendInventorySlots } from '../seedlingDemo/tapeFormat.js';
+import { createRunForStaging } from '../seedlingDemo/tapeRunner.js';
+import { atlasLevelSource } from '../seedlingDemo/levelSource.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '../../..');
@@ -37,7 +44,8 @@ const CHEST = { kind: 'location', level: HOUSE, tag: 0, entityType: 'chest', nam
 const DOOR = { kind: 'exit', level: HOUSE, tiles: [[3, 4]], name: 'exit_S' };
 
 /** The panel's inventory → write mapping, cut down to the items these rows deliver (a key writes nothing). */
-const WRITES = { 'Progressive Sword': 'hasSword', 'Progressive Shield': 'hasShield', Fire: 'hasFire', 'Ghost Spear': 'hasSpear' };
+const WRITES = { 'Progressive Sword': 'hasSword', 'Progressive Shield': 'hasShield', Fire: 'hasFire', 'Ghost Spear': 'hasSpear',
+    'Ghost Sword': 'hasGhostSword' };
 const writesOf = (counts) => Object.entries(counts).filter(([n, c]) => c > 0 && WRITES[n]).map(([n]) => ({ property: WRITES[n], value: true }));
 
 function manualTimers() {
@@ -121,6 +129,8 @@ function fakeDelivery(game, live = {}) {
             d.pushes += 1;
             const inv = d.gate ? (d.gateCalls += 1, d.gate({ ...d.live })) : d.live;
             for (const w of writesOf(inv)) game.items[w.property] = w.value;
+            // the frame's tail (`addItemsFromSave`): a slot item is APPENDED to the game's array
+            game.slots = appendInventorySlots(game.slots, game.items).slots;
         },
         receive(name) { d.live[name] = (d.live[name] ?? 0) + 1; },
     };
@@ -207,26 +217,47 @@ describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
         expect(e.dones).toHaveLength(1);
     });
 
-    it('a delivery the model cannot take mid-run (the slots it would push out of order) waits out the room: the tape resumes, named', () => {
-        // Fire held (slot [1]); a sword pushed after it would make the game's slots [1, 0], the model's [0, 1].
+    it('⛓ SLOTS CONSUMER — a LATE slot (Fire held [1], the sword delivered mid-plan): replanned in the game\'s order, the re-stage carries its array', () => {
+        // The game's slots become [1, 0]; the model, staged over [1], appends the sword as the game does (was: deferred, `slot-order`).
         const e = setup({ game: { items: { hasFire: true }, slots: [1] }, live: { Fire: 1 } });
         e.engine.walkTo(CHEST);
-        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 16);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 24);
+        expect(e.seen[0].request.staging.inventory_slots).toEqual([1]);
         e.delivery.receive('Progressive Sword');
         e.delivery.push();
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.engine.stats.deliveryDeferred).toEqual([]);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'playing', outcome: 'replanned' });
+        expect(e.game.slots).toEqual([1, 0]);
+        const cont = e.seen[1].request;
+        expect(cont.staging.inventory_slots).toEqual([1]);
+        expect(createRunForStaging(cont.staging, atlasLevelSource()).inventorySlots).toEqual([1, 0]);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, true]]);
+    });
+
+    it('a delivery the model cannot take mid-run (a fusion moves the selected slot) waits out the room: the tape resumes, named', () => {
+        // The sword and the spear held ([0, 3], primary 1); the ghost sword fuses them: [4], primary 1 % 1 = 0. The model,
+        // re-staged over [0, 3], fuses at construction, so its FIRST row's primary is not the game's: `build` names it.
+        const e = setup({ game: { items: { hasSword: true, hasSpear: true }, slots: [0, 3], status: { primary: 1 } },
+            live: { 'Progressive Sword': 1, 'Ghost Spear': 1 } });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 16);
+        e.delivery.receive('Ghost Sword');
+        e.delivery.push();
         e.runUntil(() => e.engine.stats.deliveryDeferred.length > 0);
-        expect(e.engine.stats.deliveryDeferred[0]).toMatchObject({ clause: 'slot-order', at: 'playing' });
+        expect(e.engine.stats.deliveryDeferred[0]).toMatchObject({ clause: 'build', at: 'playing' });
         expect(e.game.calls.slice(-2)).toEqual(['botHold:on', 'botHold:off']);
         expect(e.game.frozen).toBe(false);
         e.timers.run(3000);
         expect(e.failures).toEqual([]);
         expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false]]); // the SAME tape, finished
-        expect(e.game.items.hasSword).toBe(false); // still held back: the room is the same
-        expect(e.engine.status().gate).toMatchObject({ pending: true, deferred: { clause: 'slot-order' } });
+        expect(e.game.items.hasGhostSword).toBe(false); // still held back: the room is the same
+        expect(e.engine.status().gate).toMatchObject({ pending: true, deferred: { clause: 'build' } });
         e.engine.stop();
         expect(e.delivery.gate).toBeNull();
         e.delivery.push();
-        expect(e.game.items.hasSword).toBe(true); // outside bot driving: as before
+        expect(e.game.items.hasGhostSword).toBe(true); // outside bot driving: as before
     });
 
     it('a delivery into the HELD room (between goals) lands at once and the next goal is solved from it', () => {
@@ -247,21 +278,45 @@ describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
         expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false], [DOOR.name, true]]);
     });
 
-    it('the SLOT LAG: a spear delivered into the held room changes slot 1 one frame late — a continuation pressing X there first falls back, named', () => {
-        // Sword held as [0] with primary 1 (past the end: reads 0, the sword); the spear makes it [0, 3] (slot 1 = the spear).
-        const e = setup({ game: { items: { hasSword: true }, slots: [0], status: { primary: 1 } }, live: { 'Progressive Sword': 1 },
+    it('the SLOT LAG: Fire delivered into the held room fills slot 0 one frame late — a continuation pressing X there first falls back, named', () => {
+        // Nothing held: [] with primary 0 (past the end: reads 0, the sword's id); Fire makes it [1] (slot 0 = Fire).
+        // ⛓ SLOTS CONSUMER: re-staged from the lag at primary 0 on an EMPTY array — the chest plan presses nothing
+        // without a weapon, so staging Fire moves no prefix tick (the spear over [0] at primary 1 now changed the
+        // prefix's dash presses: getItem's out-of-range index reads the sword, the staged spear's slot does not).
+        const e = setup({ game: { items: {}, slots: [], status: { primary: 0 } },
             editPlan: (plan, n) => (n === 1 ? { ...plan, solution: [new Set(['primary', ...plan.solution[0]]), ...plan.solution.slice(1)] } : plan) });
         e.engine.walkTo(CHEST);
         e.timers.run();
         expect(e.engine.status().phase).toBe('held');
-        e.delivery.receive('Ghost Spear');
+        expect(e.seen[0].result.plan.solution.some((h) => h.has('primary'))).toBe(false);
+        e.delivery.receive('Fire');
         e.delivery.push();
         e.timers.run(200);
         expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'held', outcome: 'staged' });
         e.engine.walkTo(DOOR);
         e.timers.run(3000);
         expect(e.engine.stats.fallbacks.map((f) => f.kind)).toContain('delivery-first-tick');
-        expect(e.engine.stats.fallbacks.find((f) => f.kind === 'delivery-first-tick').why).toMatch(/first tick.*0 → 3/);
+        expect(e.engine.stats.fallbacks.find((f) => f.kind === 'delivery-first-tick').why).toMatch(/presses primary on its first tick.*\(0 → 1\)/);
+    });
+
+    it('⛓ SLOTS CONSUMER — two slot items into the held room (Fire, then the sword): each re-stage carries the game\'s array as it stood, so the model holds [1, 0]', () => {
+        const e = setup();
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        e.delivery.receive('Fire');
+        e.delivery.push();
+        e.timers.run(200);
+        e.delivery.receive('Progressive Sword');
+        e.delivery.push();
+        e.timers.run(200);
+        expect(e.engine.stats.deliveries.map((d) => d.outcome)).toEqual(['staged', 'staged']);
+        expect(e.game.slots).toEqual([1, 0]);
+        e.engine.walkTo(DOOR);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        const staging = e.seen.at(-1).request.staging;
+        expect(staging.inventory_slots).toEqual([1]);
+        expect(createRunForStaging(staging, atlasLevelSource()).inventorySlots).toEqual([1, 0]);
     });
 
     it('a replan the solver DECLINES while frozen: the interrupted plan RESUMES (the item changes none of its ticks) — no re-entry', () => {
@@ -348,13 +403,26 @@ describe('⛓ WASM EQUIPS — the engine ships the solver\'s slot selections', (
         expect(e.engine.room.equips).toEqual([{ t: row.tick + 4, slot: 0 }]);
     });
 
-    it('a slot the game holds in another order is refused BY NAME before the plan ships (Fire first: the game\'s [1, 0])', () => {
-        const e = setup({ game: { items: { hasSword: true, hasFire: true }, slots: [1, 0] },
-            editPlan: (plan) => ({ ...plan, equipsAt: new Map([[5, 1]]), equipItems: new Map([[5, { hasSword: true, hasFire: true }]]) }) });
+    it('⛓ SLOTS CONSUMER — Fire first (the game\'s [1, 0]): the arrival stages the array and the plan\'s selection of the sword\'s slot 1 SHIPS (was refused, `slotOrderRefusal`)', () => {
+        const kit = { hasSword: true, hasFire: true };
+        const e = setup({ game: { items: kit, slots: [1, 0] },
+            editPlan: (plan) => ({ ...plan, equipsAt: new Map([[5, 1]]), equipItems: new Map([[5, kit]]) }) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.seen[0].request.staging.inventory_slots).toEqual([1, 0]);
+        expect(e.game.tapes.find((t) => t.tick_count > 0).equips).toEqual([{ t: 5, slot: 1 }]);
+        expect(e.dones).toHaveLength(1);
+    });
+
+    it('an UNOWNED slot (past the end of the game\'s array) is refused BY NAME before the plan ships', () => {
+        const kit = { hasSword: true, hasFire: true };
+        const e = setup({ game: { items: kit, slots: [1, 0] },
+            editPlan: (plan) => ({ ...plan, equipsAt: new Map([[5, 2]]), equipItems: new Map([[5, kit]]) }) });
         e.engine.walkTo(CHEST);
         e.timers.run();
         expect(e.failures).toHaveLength(1);
-        expect(JSON.stringify(e.failures[0])).toMatch(/the plan tape was not shipped — the plan (presses a slot key|selects a slot) at tick \d+, and the game holds its slots in acquisition order \[1,0\] where the model derives/);
+        expect(JSON.stringify(e.failures[0])).toMatch(/the plan tape was not shipped — the plan selects slot 2 at tick 5, and the game will hold 2 slot\(s\) \[1,0\] — an UNOWNED slot/);
         expect(e.game.tapes.filter((t) => t.tick_count > 0)).toEqual([]);
     });
 });

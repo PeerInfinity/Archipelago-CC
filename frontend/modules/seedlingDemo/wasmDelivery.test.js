@@ -63,6 +63,11 @@ describe('wasmDelivery — the slots the game will hold (`addItemsFromSave` over
         expect(inventorySlotsFor({ hasSword: true, hasFire: true })).toEqual([0, 1]);
     });
 
+    it('an EMPTIED array is `% 0`: the int setters make primary AND secondary 0 (the model\'s appendInventorySlots)', () => {
+        expect(slotsAfterDelivery({ slots: [0], primary: 2, secondary: 3 }, { hasSword: true, hasSpear: true, hasGhostSword: true }))
+            .toEqual({ slots: [4], primary: 0, secondary: 0 });
+    });
+
     it('a fusion splices, and its removeItem takes primary/secondary modulo the shorter array', () => {
         expect(slotsAfterDelivery({ slots: [0, 3], primary: 1, secondary: 0 }, { hasSword: true, hasSpear: true, hasGhostSword: true }))
             .toEqual({ slots: [4], primary: 0, secondary: 0 });
@@ -84,7 +89,7 @@ describe('wasmDelivery — the slots the game will hold (`addItemsFromSave` over
 
 describe('wasmDelivery — deliveryRefusal, clause by clause', () => {
     it('the clauses, in order', () => {
-        expect(DELIVERY_CLAUSES).toEqual(['build', 'prefix', 'slot-use', 'slot-order', 'slot-index']);
+        expect(DELIVERY_CLAUSES).toEqual(['build', 'prefix', 'slot-use', 'slot-index']);
     });
 
     it('nothing changes → null; a sword into the house mid-walk (no slot key pressed) → null', () => {
@@ -103,11 +108,21 @@ describe('wasmDelivery — deliveryRefusal, clause by clause', () => {
         expect(deliveryRefusal({ staging, shipped: [['primary'], [], []], items: { ...HOUSE.status.items, hasShield: true }, status: status(), levelSource: SRC })).toBeNull();
     });
 
-    it('slot-order and slot-index', () => {
-        const staging = stageItems(houseStaging(), { ...HOUSE.status.items, hasFire: true });
-        const fire = status({ hasFire: true });
-        expect(deliveryRefusal({ staging, shipped: [], items: { ...fire.items, hasSword: true }, status: fire, levelSource: SRC }))
-            .toMatchObject({ clause: 'slot-order' });
+    it('⛓ SLOTS CONSUMER — a LATE slot (Fire held, the sword delivered) is taken: re-staged over the game\'s array, the model appends it as the game does', () => {
+        const fire = status({ hasFire: true }, { inventory_slots: [1] });
+        const staging = stageItems(houseStaging(), fire.items, { slots: [1] });
+        const items = { ...fire.items, hasSword: true };
+        expect(deliveryRefusal({ staging, shipped: [], items, status: fire, levelSource: SRC })).toBeNull();
+        const restaged = stageItems(staging, items, { slots: fire.inventory_slots });
+        expect(restaged.inventory_slots).toEqual([1]);
+        const run = createRunForStaging(restaged, SRC, { scratchPersistence: true });
+        expect(run.inventorySlots).toEqual(slotsAfterDelivery({ slots: [1] }, items).slots);
+        expect(run.inventorySlots).toEqual([1, 0]);
+        // omitted = the staging's own array
+        expect(stageItems(staging, items).inventory_slots).toEqual([1]);
+    });
+
+    it('slot-index: a fusion moves the selected slot on the frame it lands', () => {
         const kit = { ...HOUSE.status.items, hasSword: true, hasSpear: true };
         const ss = stageItems(houseStaging(), kit);
         expect(deliveryRefusal({ staging: ss, shipped: [], items: { ...kit, hasGhostSword: true }, status: status(kit, { primary: 1 }), levelSource: SRC }))

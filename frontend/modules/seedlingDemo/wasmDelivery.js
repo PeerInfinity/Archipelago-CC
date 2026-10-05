@@ -4,7 +4,7 @@
  * mid-room, from other players too; the solver replans IN the room, never by
  * leaving and re-entering it). The pure decisions behind the wasm engine's
  * DELIVERY GATE (`flashPanel/seedlingWasmPlayback.js`): what an item changes,
- * whether the model can take it mid-run, and the slot order the game will hold.
+ * whether the model can take it mid-run, and the slot array the game will hold.
  *
  * The gate's mechanism (the engine's): while the bot drives, the panel adapter
  * writes the inventory through the engine's gate, which holds back a delivery
@@ -24,12 +24,17 @@
  * tick; kit: `hasDarkSword` (5 legs, at a slash), `hasGhostSword` (6 — the
  * model REFUSES the ghost press) and `hasDarkShield` (1, L14) did. So the
  * check is not a table of items: it is the replay itself (`prefix`), plus the
- * state no digest carries (`slot-use`, `slot-order`, `slot-index`).
+ * state no digest carries (`slot-use`, `slot-index`).
+ *
+ * ⛓ SLOTS CONSUMER — the slot ORDER is no longer a clause: every live staging
+ * carries the game's own array (`inventory_slots`, off `botStatus`), and the
+ * model grows it as the game does (`tapeFormat.appendInventorySlots`), so the
+ * model's array after a delivery IS `slotsAfterDelivery`'s by construction.
  *
  * ⛔ DOM-FREE and clock-free. No solver or model change.
  */
 
-import { INVENTORY_ITEM_IDS, ITEM_PROPERTIES, inventorySlotsFor } from './tapeFormat.js';
+import { ITEM_PROPERTIES, appendInventorySlots } from './tapeFormat.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { runDigest } from './jsRuntimeSolver.js';
 
@@ -51,7 +56,7 @@ export const SLOT_ITEM_PROPERTIES = Object.freeze(['hasSword', 'hasGhostSword', 
 export const SLOT_KEYS = Object.freeze(['primary', 'secondary', 'inventory', 'inventory2']);
 
 /** `deliveryRefusal`'s clauses, in the order they are asked. */
-export const DELIVERY_CLAUSES = Object.freeze(['build', 'prefix', 'slot-use', 'slot-order', 'slot-index']);
+export const DELIVERY_CLAUSES = Object.freeze(['build', 'prefix', 'slot-use', 'slot-index']);
 
 /**
  * The game's items after the adapter's `writes` (`[{property, value}]`, the
@@ -77,9 +82,15 @@ export function itemDelta(before, after) {
  * the item had been held when it began). The arrival staging carries them in
  * `seam.items` (and `hitsMax` beside them as `seam.hits_max` where the
  * latch authored it).
+ *
+ * ⛓ SLOTS CONSUMER — `slots` (the game's `botStatus.inventory_slots` BEFORE the
+ * write) replaces the staged `inventory_slots`: the model appends the delivered
+ * slot items to it at construction (`appendInventorySlots`), which is the array
+ * the game will hold (`slotsAfterDelivery`). Omitted = the staging's own array.
  */
-export function stageItems(staging, items) {
+export function stageItems(staging, items, { slots } = {}) {
     const s = structuredClone(staging);
+    if (Array.isArray(slots)) s.inventory_slots = [...slots];
     s.seam = s.seam ?? {};
     s.seam.items = { ...(s.seam.items ?? {}) };
     for (const p of ITEM_PROPERTY_NAMES) {
@@ -95,37 +106,18 @@ export function stageItems(staging, items) {
 
 /**
  * `Inventory.addItemsFromSave` (`Inventory.as:291-330`) applied to the game's
- * CURRENT slot array — what the game will hold after a delivery. ⚠ Not
- * `inventorySlotsFor`: that rebuilds the array from nothing in a fixed order,
- * while the game only ADDS (a push at the end, or a fusion's splice), so a
- * slot that arrives late lands after the ones already held. `removeItem`'s
- * `Main.primary %= items.length` (and secondary) is carried too.
+ * CURRENT slot array — what the game will hold after a delivery: the model's
+ * own transcription (`tapeFormat.appendInventorySlots`), asked once for
+ * `Main.primary` and once for `Main.secondary` (`removeItem` takes both modulo
+ * the shorter array, `Inventory.as:118-119`; an emptied array is `% 0`, which
+ * the `int` setters coerce to 0). The slot array does not depend on the index.
  *
  * @returns {{slots:number[], primary:number, secondary:number}}
  */
 export function slotsAfterDelivery({ slots, primary = 0, secondary = 0 }, items) {
-    const s = [...(slots ?? [])];
-    let p = primary;
-    let q = secondary;
-    const has = (id) => s.includes(id);
-    // `removeItem`'s loop splices without stepping back — transcribed as is.
-    const remove = (id) => {
-        for (let i = 0; i < s.length; i += 1) if (s[i] === id) s.splice(i, 1);
-        if (s.length > 0) { p %= s.length; q %= s.length; }
-    };
-    const add = (id, pos = -1) => { if (pos >= 0) s.splice(pos, 0, id); else s.push(id); };
-    const { sword, fire, wand, spear, ghostsword, firewand } = INVENTORY_ITEM_IDS;
-    if (!items.hasGhostSword) {
-        if (items.hasSword && !has(sword)) add(sword);
-    } else if (!has(ghostsword)) { remove(sword); remove(spear); add(ghostsword, 0); }
-    if (!items.hasFireWand) {
-        if (items.hasFire && !has(fire)) add(fire);
-        if (items.hasWand && !has(wand)) add(wand);
-    } else if (!has(firewand)) { remove(fire); remove(wand); add(firewand, 1); }
-    if (!items.hasGhostSword) {
-        if (items.hasSpear && !has(spear)) add(spear);
-    }
-    return { slots: s, primary: p, secondary: q };
+    const p = appendInventorySlots(slots ?? [], items ?? {}, { primary });
+    const q = appendInventorySlots(slots ?? [], items ?? {}, { primary: secondary });
+    return { slots: p.slots, primary: p.primary, secondary: q.primary };
 }
 
 /** `Inventory.getItem(i)`: an index past the end reads `undefined`, coerced to the int **0** — the sword's id. */
@@ -150,10 +142,14 @@ const witness = (run) => `${runDigest(run)}|hits ${hitsOf(run)}`;
  *   slot-use    a SLOT item, and the prefix pressed a slot key: the weapon's
  *               timers (`slashing`, `firing`, …) are state no digest carries,
  *               and the model's would have run with the item
- *   slot-order  the slots the game will hold (`slotsAfterDelivery`: added at
- *               the end) are not the ones the model derives (`inventorySlotsFor`)
  *   slot-index  a fusion's `removeItem` moves `Main.primary` / `secondary`
- *               (modulo the shorter array) off the staged index
+ *               (modulo the shorter array) off the staged index: the game
+ *               moves it on the frame the item lands, the re-staged model at
+ *               the arrival, so the held game is not the shadow. (⛓ SLOTS
+ *               CONSUMER: a re-staging over the game's array fuses at the
+ *               model's construction, so a moved `primary` is already
+ *               `build`'s first-row difference; this clause is what is left —
+ *               `secondary`, which the model does not carry.)
  *
  * @param {object} o
  * @param {object} o.staging  the room's arrival staging (the shadow's recipe)
@@ -202,11 +198,6 @@ export function deliveryRefusal({ staging, shipped, items, status, levelSource, 
     }
     const pre = { slots: status?.inventory_slots ?? [], primary: status?.primary ?? 0, secondary: status?.secondary ?? 0 };
     const post = slotsAfterDelivery(pre, items);
-    const canonical = inventorySlotsFor(items);
-    if (JSON.stringify(post.slots) !== JSON.stringify(canonical)) {
-        return no('slot-order', `the game will hold slots ${JSON.stringify(post.slots)} (added at the end), the model derives `
-            + `${JSON.stringify(canonical)}`);
-    }
     if (post.primary !== pre.primary || post.secondary !== pre.secondary) {
         return no('slot-index', `the delivery moves the selected slots (primary ${pre.primary} → ${post.primary}, secondary `
             + `${pre.secondary} → ${post.secondary}) off the staged ones`);
@@ -215,14 +206,16 @@ export function deliveryRefusal({ staging, shipped, items, status, levelSource, 
 }
 
 /**
- * ⛓ WASM EQUIPS — null when every slot selection a plan ships lands on the
- * item the model selected, else the refusal BY NAME (the engine refuses the
- * tape before shipping it, never discovers it as a divergence). The model's
- * slot array is `inventorySlotsFor` (a fixed order rebuilt from the items);
- * the game's is the array it holds NOW with each later item APPENDED
- * (`slotsAfterDelivery` — measured: `[fire]` + sword is the game's `[1, 0]`,
- * the model's `[0, 1]`), so an index can name a different item, or one the
- * game does not hold (`Inventory.getItem` past the end reads 0, the sword).
+ * ⛓ WASM EQUIPS — null when every slot selection a plan ships names a slot the
+ * game will HOLD at that tick, else the refusal BY NAME (the engine refuses the
+ * tape before shipping it, never discovers it as a divergence). The game's
+ * array there is the one it holds NOW with the items the model holds at the
+ * equip appended (`slotsAfterDelivery`); an index past its end is an UNOWNED
+ * slot (`Inventory.getItem` reads 0, the sword, whatever the model selected).
+ *
+ * ⛓ SLOTS CONSUMER — the ORDER is not checked here any more: every live
+ * staging carries the game's array (`inventory_slots`) and the solver indexes
+ * it (`progress('inventorySlots')`), so the model's index names the game's item.
  *
  * @param {object} o
  * @param {Map<number, number>} o.equipsAt     plan index → slot (`solveFromTape`)
@@ -234,46 +227,13 @@ export function equipSlotRefusal({ equipsAt, equipItems, slots }) {
     for (const [t, slot] of equipsAt ?? []) {
         const items = equipItems?.get(t);
         if (!items) return `the plan selects slot ${slot} at tick ${t} and carries no record of the model's inventory there — the game's slot cannot be checked`;
-        const model = inventorySlotsFor(items);
         const game = slotsAfterDelivery({ slots: slots ?? [] }, items).slots;
         if (slot >= game.length) {
             return `the plan selects slot ${slot} at tick ${t}, and the game will hold ${game.length} slot(s) ${JSON.stringify(game)} `
-                + '— an index past the end reads 0, the sword';
-        }
-        if (game[slot] !== model[slot]) {
-            return `the plan selects slot ${slot} at tick ${t}: the model's slots are ${JSON.stringify(model)} (item ${model[slot]}), the `
-                + `game's ${JSON.stringify(game)} (item ${game[slot]}) — the game appends a late slot, so the index names another item`;
+                + '— an UNOWNED slot: an index past the end reads 0, the sword';
         }
     }
     return null;
-}
-
-/**
- * ⛓ WASM EQUIPS — the game's slot ORDER is acquisition order for the whole
- * session (`Inventory.items` is STATIC: only `Main`'s new game / load clears
- * it, `addItemsFromSave` only appends), while the model always derives the
- * canonical `inventorySlotsFor` order. When the two differ, a plan that
- * presses a slot key (`primary` / `secondary`) or selects a slot acts with a
- * different item on the game — refused BY NAME before it ships.
- *
- * @param {object} o
- * @param {Array<Iterable<string>>} o.solution  the plan's key sets
- * @param {Map<number, number>} [o.equipsAt]   its slot selections
- * @param {object} o.items                     the model's items (the staging's `seam.items`)
- * @param {number[]} o.slots                   the game's `botStatus.inventory_slots` now
- * @returns {string|null}
- */
-export function slotOrderRefusal({ solution, equipsAt, items, slots }) {
-    const model = inventorySlotsFor(items ?? {});
-    const game = slotsAfterDelivery({ slots: slots ?? [] }, items ?? {}).slots;
-    if (JSON.stringify(model) === JSON.stringify(game)) return null;
-    const press = (solution ?? []).findIndex((h) => SLOT_KEYS.some((k) => new Set(h).has(k)));
-    const equip = equipsAt?.size ? Math.min(...equipsAt.keys()) : -1;
-    if (press < 0 && equip < 0) return null;
-    const what = press >= 0 && (equip < 0 || press <= equip) ? `presses a slot key at tick ${press}` : `selects a slot at tick ${equip}`;
-    return `the plan ${what}, and the game holds its slots in acquisition order ${JSON.stringify(game)} where the model derives `
-        + `${JSON.stringify(model)} — the same index names another item on the game (a slot received late is APPENDED; only a new `
-        + 'game or a load rebuilds the order)';
 }
 
 /**

@@ -110,7 +110,10 @@ describe('stagingFromWasmArrival on the recorded arrivals', () => {
             const { staging } = stage(a);
             const back = stagingFromTape(parseTape(buildStagedTape({ staging, perTick: [], name: `w1-${name}` })));
             back.persistence = back.persistence.map(({ level, tag }) => ({ level, tag }));
-            expect(back).toEqual(staging);
+            // ⛓ SLOTS CONSUMER — the slot array is staged off botStatus and no tape carries it (the tape is unchanged).
+            const { inventory_slots: slots, ...format } = staging;
+            expect(back).toEqual(format);
+            expect(slots).toEqual(a.status.inventory_slots);
             const run = createRunForStaging(staging, SOURCE);
             expect([run.level, run.state.x, run.state.y]).toEqual([a.status.level, a.status.x, a.status.y]);
         });
@@ -124,6 +127,21 @@ describe('stagingFromWasmArrival on the recorded arrivals', () => {
         // parseTape accepts a non-empty seal_parts (no W0 tape declared one).
         expect(parseTape(buildStagedTape({ staging, perTick: [], name: 'w1-C' })).save.seal_parts)
             .toEqual(staging.save.seal_parts);
+    });
+    it('⛓ SLOTS CONSUMER — the game\'s SLOT ARRAY is staged (acquisition order): Fire first boots the model in [1, 0]; no readout → refused by name', () => {
+        const r = reads(A);
+        r.status.items = { ...r.status.items, hasSword: true, hasFire: true };
+        r.status.inventory_slots = [1, 0];
+        const { staging } = stagingFromWasmArrival({ ...r, record: RECORDS.get(HOUSE) });
+        expect(staging.inventory_slots).toEqual([1, 0]);
+        expect(createRunForStaging(staging, SOURCE).inventorySlots).toEqual([1, 0]);
+        expect(arrivalStagingWitness(staging, r).find((w) => w.name.startsWith('inventory_slots'))).toMatchObject({ ok: true });
+        // a copy, never the readout's own array
+        r.status.inventory_slots.push(2);
+        expect(staging.inventory_slots).toEqual([1, 0]);
+        const bare = reads(A);
+        delete bare.status.inventory_slots;
+        expect(() => stagingFromWasmArrival(bare)).toThrow(/botStatus carries no `inventory_slots` array/);
     });
     it('the pins are the HOST tape\'s (sound + dead_frames), not the live game\'s (none)', () => {
         const out = stage(A);

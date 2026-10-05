@@ -236,6 +236,10 @@ function deleteSeamKey(block, key) {
  */
 export function stagingFromWasmArrival({ seam, status, state, record = undefined, pins = JS_RUNTIME_PINS }) {
     const { envelope, unread } = arrivalLatch({ seam, status, state });
+    if (!Array.isArray(status.inventory_slots)) {
+        refuse('wasmArrival: botStatus carries no `inventory_slots` array — the game\'s slot ORDER is session state '
+            + '(acquisition order) the items cannot rebuild, and staging a fresh game\'s order would index another item');
+    }
     const unknownPins = pins.filter((p) => !PIN_NAMES.includes(p));
     if (unknownPins.length) refuse(`wasmArrival: no such pin ${JSON.stringify(unknownPins)} (the format's: ${PIN_NAMES.join(', ')})`);
     if (record !== undefined) {
@@ -280,6 +284,10 @@ export function stagingFromWasmArrival({ seam, status, state, record = undefined
         save: blocks.save,
         rng: blocks.rng,
         seam: Object.keys(seamBlock).length > 0 ? seamBlock : null,
+        // ⛓ SLOTS CONSUMER — the game's SLOT ARRAY (session state: acquisition order, `Inventory.items` is
+        // static), staged so the model indexes the game's order (`tapeRunner.createRunForStaging`). No tape
+        // carries it (`buildStagedTape` copies the format's fields only), so the shipped tapes are unchanged.
+        inventory_slots: [...status.inventory_slots],
     };
     return { staging, unread, undeclared, gamePins: blocks.pins };
 }
@@ -315,6 +323,7 @@ export function arrivalStagingWitness(staging, { seam, status, state }) {
     for (const prop of ITEM_FLAGS) row(`seam.items.${prop} = botStatus.items.${prop}`, status.items?.[prop], staging.seam?.items?.[prop]);
     row('seam.hits_max = botStatus.items.hitsMax', status.items?.hitsMax, staging.seam?.hits_max);
     row('seam.primary = botStatus.primary', status.primary, staging.seam?.primary);
+    row('inventory_slots = botStatus.inventory_slots', status.inventory_slots, staging.inventory_slots);
     row('seam.secondary = botStatus.secondary', status.secondary, staging.seam?.secondary);
     row('seam.cutscene = botStatus.cutscene', status.cutscene, staging.seam?.cutscene);
     row('seam.menu_state = botStatus.menu_state', status.menu_state, staging.seam?.menu_state);

@@ -974,7 +974,8 @@ describe('⛓ W8 — the cold start ADOPTED as it stands (no re-arrival) exactly
         expect(e.engine.stats).toMatchObject({ adopted: 2, forced: 0, adoptRefused: [] });
     });
     it('clause INVENTORY — the player has something to USE (hidden slash/wand state) → not adopted', () => {
-        refusedBy(adoptOver({ patch: { inventory_slots: [0] } }), 'inventory');
+        // (the sword held too: ⛓ SLOTS CONSUMER — the staging stages the slot array, and a slot without its item refuses `staging`)
+        refusedBy(adoptOver({ patch: { inventory_slots: [0], items: { ...A.status.items, hasSword: true } } }), 'inventory');
     });
     it('clause PLAYER-STATE — i-frames still running → not adopted', () => {
         refusedBy(adoptOver({ patch: { hits_timer: 12 } }), 'player-state');

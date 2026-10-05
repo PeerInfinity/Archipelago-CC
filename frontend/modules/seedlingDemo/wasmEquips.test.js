@@ -24,7 +24,7 @@ import { liveOf, replayTape, solveFromTape } from './jsRuntimeSolver.js';
 import { arrivalSolveRequest, continuationSolveRequest } from './wasmArrival.js';
 import { indexLevels } from './atlasSource.js';
 import { shadowMismatch, shippedTape, tapeEquips } from './wasmPlayback.js';
-import { equipSlotRefusal, slotOrderRefusal } from './wasmDelivery.js';
+import { equipSlotRefusal } from './wasmDelivery.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = atlasLevelSource();
@@ -145,19 +145,18 @@ describe('WASM EQUIPS — a continuation in the held room', () => {
     });
 });
 
-describe('WASM EQUIPS — a slot the game cannot select as the model did is refused BY NAME', () => {
+describe('WASM EQUIPS — a selection of a slot the game will not hold is refused BY NAME', () => {
     const items = { hasSword: true, hasFire: true };
-    it('the game holds the sword then Fire ([0, 1], the model\'s order): no refusal', () => {
+    it('the game holds the sword then Fire ([0, 1]), or the sword still to be appended ([0]): no refusal', () => {
         expect(equipSlotRefusal({ equipsAt: PLAN.equipsAt, equipItems: PLAN.equipItems, slots: [0, 1] })).toBeNull();
         expect(equipSlotRefusal({ equipsAt: PLAN.equipsAt, equipItems: PLAN.equipItems, slots: [0] })).toBeNull();
     });
-    it('Fire arrived first ([1], + the sword appended = [1, 0]): slot 1 is the SWORD on the game — refused', () => {
-        expect(equipSlotRefusal({ equipsAt: new Map([[60, 1]]), equipItems: new Map([[60, items]]), slots: [1] }))
-            .toMatch(/the model's slots are \[0,1\] \(item 1\), the game's \[1,0\] \(item 0\) — the game appends a late slot/);
+    it('⛓ SLOTS CONSUMER — Fire arrived first ([1] + the sword = [1, 0]): NOT refused — the order is the staged array\'s, the solver indexes it', () => {
+        expect(equipSlotRefusal({ equipsAt: new Map([[60, 1]]), equipItems: new Map([[60, items]]), slots: [1] })).toBeNull();
     });
-    it('a slot the game does not hold: refused (an index past the end reads 0, the sword)', () => {
+    it('an UNOWNED slot (past the end of the array the game will hold): refused — an index past the end reads 0, the sword', () => {
         expect(equipSlotRefusal({ equipsAt: new Map([[5, 1]]), equipItems: new Map([[5, { hasSword: true }]]), slots: [0] }))
-            .toMatch(/selects slot 1 at tick 5, and the game will hold 1 slot\(s\) \[0\]/);
+            .toMatch(/selects slot 1 at tick 5, and the game will hold 1 slot\(s\) \[0\] — an UNOWNED slot/);
     });
     it('an equip with no record of the model\'s inventory: refused (cannot be checked)', () => {
         expect(equipSlotRefusal({ equipsAt: new Map([[5, 0]]), equipItems: new Map(), slots: [0] }))
@@ -168,18 +167,52 @@ describe('WASM EQUIPS — a slot the game cannot select as the model did is refu
     });
 });
 
-describe('WASM EQUIPS — the game\'s slot ORDER is acquisition order (`Inventory.items` is static; only a new game / load rebuilds it)', () => {
-    const items = { hasSword: true, hasFire: true };
-    it('the game\'s [1, 0] (Fire received first) against the model\'s [0, 1]: the BURN plan is refused at its first slot use (its walk taps X with the sword from tick 0)', () => {
-        expect(slotOrderRefusal({ solution: PLAN.solution, equipsAt: PLAN.equipsAt, items, slots: [1, 0] }))
-            .toMatch(/the plan presses a slot key at tick 0, and the game holds its slots in acquisition order \[1,0\] where the model derives \[0,1\]/);
+/**
+ * ⛓ SLOTS CONSUMER — the game's slot ORDER is acquisition order for the whole session (`Inventory.items` is
+ * static), and every live staging now carries it (`inventory_slots`, off `botStatus`; `stagingFromWasmArrival`).
+ * Fire received first is the game's `[1, 0]`: the solve from that staging indexes it, and its tape — played
+ * on a `[1, 0]` game — is the plan. (Before: `slotOrderRefusal` refused every slot-using plan there by name;
+ * live session F of the composites probe.)
+ *
+ *   mutant: `continuationSolveRequest` drops the staged `inventory_slots` -> the K=30 continuation row reds
+ *   (with two rows of the engine's delivery file: 3 in all, measured)
+ */
+describe('⛓ SLOTS CONSUMER — Fire first (the game\'s [1, 0]) STAGED: the plan indexes the game\'s order and plays', () => {
+    const STAGED = { ...STAGING, inventory_slots: [1, 0] };
+    const PLAN10 = solveFromTape(arrivalSolveRequest({ staging: STAGED, solverGoal: EXIT, levelSource: SRC, records: new Map(),
+        scratchPersistence: true }));
+    const TAPE10 = ship(PLAN10.solution, tapeEquips(PLAN10.equipsAt), STAGED);
+
+    it('the arrival solve selects by the GAME\'s indices (the sword 1, Fire 0, the sword 1) and its tape, on a [1, 0] game, is the plan', () => {
+        expect([...PLAN10.equipsAt]).toEqual([[0, 1], [60, 0], [114, 1]]);
+        expect(TAPE10.equips).toEqual([{ t: 0, slot: 1 }, { t: 60, slot: 0 }, { t: 114, slot: 1 }]);
+        // the tape itself carries no slot array (the format's fields only): the game holds its own
+        expect(TAPE10.inventory_slots).toBeUndefined();
+        const rows = playTape(createRunForStaging(STAGED, SRC, { scratchPersistence: true }), TAPE10);
+        expect(rows).toEqual(PLAN10.expected);
+        expect(rows.at(-1).level).toBe(12);
+        expect(equipSlotRefusal({ equipsAt: PLAN10.equipsAt, equipItems: PLAN10.equipItems, slots: [1, 0] })).toBeNull();
     });
-    it('a plan that uses no slot plays whatever the order', () => {
-        expect(slotOrderRefusal({ solution: [new Set(['left']), new Set()], equipsAt: new Map(), items, slots: [1, 0] })).toBeNull();
+
+    it('CONTROL: the fresh-game plan ([0, 1]\'s indices) on the [1, 0] game presses FIRE where it meant the sword (the model refuses the cadence)', () => {
+        expect(() => playTape(createRunForStaging(STAGED, SRC, { scratchPersistence: true }), ship(PLAN.solution, tapeEquips(PLAN.equipsAt))))
+            .toThrow(/a fire press at tick \d+ lands inside the window/);
     });
-    it('the canonical order (or the sword still to be appended: [1] + sword = [1, 0]) — same / refused', () => {
-        expect(slotOrderRefusal({ solution: PLAN.solution, equipsAt: PLAN.equipsAt, items, slots: [0, 1] })).toBeNull();
-        expect(slotOrderRefusal({ solution: [new Set()], equipsAt: new Map([[0, 1]]), items, slots: [1, 0] })).toMatch(/selects a slot at tick 0/);
-        expect(slotOrderRefusal({ solution: PLAN.solution, equipsAt: PLAN.equipsAt, items, slots: [1] })).toMatch(/\[1,0\]/);
+
+    it('a CONTINUATION from the staged room (K=30) is solved over the game\'s array: its request stages it, and the room replays exactly', () => {
+        const K = 30;
+        const prefix = PLAN10.solution.slice(0, K).map((h) => [...h]);
+        const roomEquips = new Map(tapeEquips(PLAN10.equipsAt).filter((e) => e.t < K).map((e) => [e.t, e.slot]));
+        const c = continuationSolveRequest({ staging: STAGED, shipped: prefix, goal: GOAL, levelSource: SRC, records: RECORDS, record: RECORD,
+            equips: roomEquips });
+        expect(c.refusal).toBeUndefined();
+        expect(c.request.staging.inventory_slots).toEqual([1, 0]);
+        const cont = solveFromTape(c.request);
+        const game = createRunForStaging(STAGED, SRC, { scratchPersistence: true });
+        playTape(game, { ...TAPE10, tick_count: K, equips: TAPE10.equips.filter((e) => e.t < K) });
+        expect(shadowMismatch(c.shadowRow, { level: game.level, x: game.state.x, y: game.state.y, primary: game.primary })).toBeNull();
+        const rows = playTape(game, ship(cont.solution, tapeEquips(cont.equipsAt), STAGED));
+        expect(rows).toEqual(cont.expected);
+        expect(game.level).toBe(12);
     });
 });

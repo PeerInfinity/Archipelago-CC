@@ -111,7 +111,7 @@ import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.j
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
 import {
-    deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, slotOrderRefusal, itemDelta, itemsAfterWrites, slotsAfterDelivery,
+    deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, slotsAfterDelivery,
     stageItems,
 } from '../seedlingDemo/wasmDelivery.js';
 
@@ -1145,9 +1145,9 @@ export function createWasmPlayback({
         // ⛓ W8b — adopted inside a talk circle: no X until the plan has left it.
         const talk = room?.talkCircles?.length ? talkCircleGuard({ circles: room.talkCircles, solution: plan.solution, expected: plan.expected }) : null;
         if (talk?.refusal) { fallback(talk.refusal, 'adopt-talk'); return; }
-        // ⛓ WASM EQUIPS — a slot the game cannot select as the model did is refused BY NAME, before anything ships.
-        const slotWhy = slotOrderRefusal({ solution: plan.solution, equipsAt: plan.equipsAt, items: staging?.seam?.items, slots: st?.inventory_slots ?? [] })
-            ?? equipSlotRefusal({ equipsAt: plan.equipsAt, equipItems: plan.equipItems, slots: st?.inventory_slots ?? [] });
+        // ⛓ WASM EQUIPS — a selection of a slot the game will not hold is refused BY NAME, before anything ships.
+        // (⛓ SLOTS CONSUMER: the ORDER needs no check — the staging carries the game's array and the solver indexes it.)
+        const slotWhy = equipSlotRefusal({ equipsAt: plan.equipsAt, equipItems: plan.equipItems, slots: st?.inventory_slots ?? [] });
         if (slotWhy) { fail(`the plan tape was not shipped — ${slotWhy}`); return; }
         const equips = tapeEquips(plan.equipsAt);
         const hold = holds && endsHeld(goal);
@@ -1497,7 +1497,8 @@ export function createWasmPlayback({
             room.shipped = prefix;
             room.equips = prefixEquips;
             room.lead = heldKeys.length ? [heldKeys] : null;
-            room.staging = stageItems(room.staging, landed.items);
+            // ⛓ SLOTS CONSUMER — the game's array as it stood before the write: the model appends the delivered slot.
+            room.staging = stageItems(room.staging, landed.items, { slots: st.inventory_slots });
             room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: heldKeys };
             phase = 'held';
             if (goal) { solveInRoom(); return; }
@@ -1542,7 +1543,7 @@ export function createWasmPlayback({
                 log(`[wasm playback] the held room was released: an item arrived it cannot take (${why}) — the next goal re-enters it`, 'warn');
                 return;
             }
-            room.staging = stageItems(room.staging, landed.items);
+            room.staging = stageItems(room.staging, landed.items, { slots: st.inventory_slots });
             room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: [] };
             if (!solving) row.outcome = 'staged';
             phase = 'held';
