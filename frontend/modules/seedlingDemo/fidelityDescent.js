@@ -46,6 +46,12 @@ import { vanillaRecordSet } from './levelSetExporter.js';
 import { PATCH_L110_FALL_TO_L2, SEEDLING_SET_PATCHES } from './seedlingSetPatches.js';
 import { ROLES, TILE_SIZE, buildLevelWorld, rectsOverlap } from './levelWorld.js';
 import { arriveFromFall, fallDestination, playerBoxAt, step } from './playerPhysicsV2.js';
+import { parseTape } from './tapeFormat.js';
+import { buildStagedTape } from './botDriverV1.js';
+import { createRunForStaging } from './tapeRunner.js';
+import { solveSegment } from './solverBot.js';
+import { atlasLevelSource } from './levelSource.js';
+import { stepOffStagingAt } from './fidelityStepOff.js';
 
 const EMBED_PATH = 'frontend/modules/seedlingDemo/fixtures/seedling-vanilla-set.json';
 
@@ -127,7 +133,31 @@ export const DESCENT_TAPES = Object.freeze({
             + 'the fall-out and the descent ignore it, the arrival after the stairs does not. '
             + 'Authored by fidelityDescent.js.',
     }),
+    /** D3: the solver's plan from L110's arrival into the pit (`descentSolverArm`). */
+    solver: () => descentSolverArm().tape,
 });
+
+/**
+ * ⛓ D3 — THE SOLVER'S OWN FALL. L110 entered the only way the atlas enters it
+ * (L101's `teleporter@104,24` → L110 (48,112), a fresh JS-runtime boot there),
+ * then `solveSegment`'s `reach-pit` on the room's only pit (4,4). The solver
+ * plans the walk and the fall; the descent chains through L0's stairs, and the
+ * record's `chained` names where the run really ended (L2). The plan's key sets
+ * as a tape (`buildStagedTape`), so the game plays exactly what the solver chose.
+ */
+export const L110_ARRIVAL = Object.freeze({ level: 110, x: 48, y: 112 });
+export const L110_PIT = Object.freeze({ tx: 4, ty: 4, x: 64, y: 64 });
+
+export function descentSolverArm(levelSource = atlasLevelSource()) {
+    const staging = stepOffStagingAt(L110_ARRIVAL);
+    const run = createRunForStaging(staging, levelSource);
+    const out = solveSegment({
+        run, goals: [{ kind: 'reach-pit', pit: { ...L110_PIT } }],
+        name: 'descent-solver-l110-pit', boot: { ...L110_ARRIVAL },
+    });
+    const tape = parseTape(buildStagedTape({ staging, perTick: out.perTick, name: 'descent-solver-l110-pit' }));
+    return { tape, out, ends: { level: run.level, x: run.state.x, y: run.state.y } };
+}
 
 /** The arms the probe plays and the rows hold the model to: `[tape, world]`. */
 export const DESCENT_ARMS = Object.freeze([
@@ -136,6 +166,7 @@ export const DESCENT_ARMS = Object.freeze([
     ['fallAct', 'builtin'],
     ['fall', 'delivered:approved'],
     ['fall', 'delivered:latch-probe'],
+    ['solver', 'builtin'],
 ]);
 
 /**
