@@ -62,6 +62,19 @@ describe('the survey derivation may Restart only where the flag says so', () => 
         expect(() => derive(false)).toThrow(/NO path from B to A/);
     });
 
+    // ⛓ FRONTIER2's route-only mode WALKS (`walk: true`: CanReachRegion by where the route has stood). The Restart
+    //   rides the leg's own rule decider, so it behaves the same in both route modes.
+    it.each([false, true])('walk=%s: without the flag refused, with it the leg Restarts', (walk) => {
+        const derive2 = (flag) => {
+            const rules = toyWorld({ flag });
+            return deriveLegs({ regions: rules.regions['1'], ruleHolds: makeRuleHolds(rules), start: 'B', pickups: PICKUPS, restart: flag, walk });
+        };
+        expect(() => derive2(false)).toThrow(/NO path from B to A/);
+        const { legs, hops } = derive2(true);
+        expect(legs[0]).toMatchObject({ regions: ['B', 'Menu', 'A'], restart: true });
+        expect(hops[0]).toEqual(['Restart', 'GameStart']);
+    });
+
     it('with it the leg Restarts: B -> Menu -> (GameStart) A, marked `restart`', () => {
         const { legs, hops } = derive(true);
         expect(legs[0]).toMatchObject({ regions: ['B', 'Menu', 'A'], restart: true });
