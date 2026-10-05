@@ -474,7 +474,7 @@ describe('who takes the box', () => {
             'probe-seedling-since-begin.mjs', 'probe-seedling-f7-reentry.mjs',
             'probe-seedling-stepoff.mjs', 'probe-seedling-burn-write.mjs', 'probe-seedling-moonrock.mjs',
             'probe-seedling-descent.mjs', 'probe-seedling-wasm-midroom-replan.mjs', 'probe-seedling-dash-window.mjs',
-            'probe-seedling-restart-warp.mjs'];
+            'probe-seedling-restart-warp.mjs', 'probe-seedling-divergence-sweep.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
