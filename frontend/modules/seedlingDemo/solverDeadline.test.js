@@ -127,7 +127,7 @@ describe('SF2: the anytime deadline — `sword-dash` is an UPGRADE, so a trip ke
         const got = solveRoom(...DASH_ROOM, { shouldStop: (site) => site !== 'sword-dash' });
         expect(got.json).toBe(bare.json);
         expect(DEADLINE_SITES).toEqual(['sword-dash', 'stance-hypothesis', 'block-route',
-            'kill-chaser']);
+            'kill-chaser', 'detour']);
     });
 
     it('a deadline that is not a callback is refused by name', () => {
@@ -168,15 +168,45 @@ describe('SF3: bounded refusals — the refusal is proved before the scan', () =
         })).toThrow(SolverRefusal);
     });
 
-    it('swordless L14: the chaser arm refuses on the missing sword without its stance scan; with the sword it still solves', () => {
+    it('swordless L14: the chaser arm refuses on the missing sword without its stance scan; DETOUR then solves; with the sword it still solves', () => {
+        // ⛓ fidelity L14 (the DETOUR rung) turned this arrival from a refusal into a solve:
+        // KILL's SF3 refusal now shows as the trace's rejected `kill` row, ahead of `detour`.
         const boot = { level: 14, x: 160, y: 64 };
         const exit = exitToward(14, 15);
         const goals = [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }];
-        expect(() => solveSegment({ run: freshRun(boot), goals, name: 'sf3-l14', boot }))
-            .toThrow(/chaser arm: this run holds no sword.*stance scan was not run \(SF3\)/s);
+        const bare = freshRun(boot);
+        const out = solveSegment({ run: bare, goals, name: 'sf3-l14', boot });
+        expect(bare.level).toBe(15);
+        const row = out.trace.rows.find((r) => r.strategy?.rung === 'detour');
+        const kill = row.rejected.find((r) => r.option === 'kill');
+        expect(JSON.stringify(kill)).toMatch(/chaser arm: this run holds no sword.*stance scan was not run \(SF3\)/s);
         const run = freshRun(boot, [{ level: 14, items: ['sword'] }]);
         solveSegment({ run, goals, name: 'sf3-l14-sword', boot });
         expect(run.level).toBe(15);
         expect(run.playerDeaths.length).toBe(0);
+    });
+});
+
+describe('the `detour` deadline site — the DETOUR rung is bounded by the same hook', () => {
+    it('`detour` is a named site, and a trip there refuses swordless L14 BY NAME (no hook: it solves)', () => {
+        expect(DEADLINE_SITES).toContain('detour');
+        const boot = { level: 14, x: 160, y: 64 };
+        const exit = exitToward(14, 15);
+        const goals = [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }];
+        let asked = 0;
+        let err = null;
+        try {
+            solveSegment({ run: freshRun(boot), goals, name: 'detour-deadline', boot,
+                shouldStop: (site) => site === 'detour' && ++asked > 3 });
+        } catch (e) { err = e; }
+        expect(err).toBeInstanceOf(SolverRefusal);
+        expect(err.message).toMatch(/DETOUR search after 3 preview\(s\)/);
+        expect(err.message).toMatch(/⏱ DEADLINE/);
+        expect(err.deadline).toMatchObject({ tripped: true, first: 'detour' });
+        // a callback that bounds only the OTHER sites leaves the rung, and the solve, untouched
+        const run = freshRun(boot);
+        solveSegment({ run, goals, name: 'detour-other-sites', boot,
+            shouldStop: (site) => site === 'block-route' });
+        expect(run.level).toBe(15);
     });
 });

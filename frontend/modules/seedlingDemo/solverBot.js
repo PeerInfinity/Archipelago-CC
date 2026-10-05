@@ -10578,7 +10578,16 @@ export function deriveChaserDetour(run, {
     let previews = 0;
     let candidates = 0;
     let pruned = 0;
+    /**
+     * ⛓ the `detour` deadline site (SF2's hook): asked before each preview, so a
+     * trip refuses the rung by name with the work it had done, and the climb's
+     * refusal says so (the ⏱ clause). With no deadline active it answers false.
+     */
+    const deadlineWhy = () => `deadline — the caller's anytime deadline (\`shouldStop\`) was `
+        + `reached in the DETOUR search after ${previews} preview(s) and ${planned} leg(s), so `
+        + 'the rest of the search was not run';
     while (open.length > 0 && previews < maxPreviews && planned < maxPlanned) {
+        if (deadlineReached('detour')) return { wps: null, previews, planned, why: deadlineWhy() };
         const node = heapPop();
         const last = node.seq[node.seq.length - 1];
         if (!node.prefix) {
@@ -10739,13 +10748,18 @@ const bodyRectOf = (body) => chaserBoxAt(body.tag, body.x, body.y);
  *    a solve into a refusal.
  *  - `kill-chaser` — `deriveKillByChaser`, before its stance scan: the rung
  *    refuses by name and the ladder continues. CAN turn a solve into a refusal.
+ *  - `detour` — `deriveChaserDetour` (the L14 DETOUR rung), before its search
+ *    and before each candidate preview: the rung answers no corridor, with a
+ *    `deadline` reason, and the climb ends EXHAUSTED by name. It is the rung's
+ *    whole cost on a failing chaser-only climb (L16's pre-sword refusal ~10–14 s,
+ *    the L14 report). CAN turn a solve into a refusal (L14 swordless).
  *
  * ⛔ IT IS NEVER SILENT: a segment that tripped returns `deadline` beside its
  * trace (the first site, and per-site counts), and a refusal raised after a
  * trip carries the same object and says so in its words.
  */
 export const DEADLINE_SITES = Object.freeze(['sword-dash', 'stance-hypothesis',
-    'block-route', 'kill-chaser']);
+    'block-route', 'kill-chaser', 'detour']);
 
 /** The deadline the segment being solved runs under — `null` is "none". */
 let activeDeadline = null;
