@@ -418,4 +418,41 @@ describe('⛓ ANYTIME — the worker posts each pass; the page plays the provisi
         for (let i = 0; i < 50 && rt.playback.solverStats.declines === 0; i += 1) { rt.tick(); await sleep(2); }
         expect(rt.playback.solverStats.lastDecline).toBe('the solver exceeded 0 s on reach-exit in level 6 (terminated) — walking');
     }, 120000);
+    it('⛓ SHOULD-STOP — the page sends its budget and the upgrade window with every solve (`?solverUpgradeWindowMs=` / the setting); 0 / null = the budget', async () => {
+        const asked = [];
+        const service = { kind: 'capture', warm() {}, dispose() {},
+            start(request) { asked.push(request); return { settled: false, started: true, result: null, provisional: null, answered: 0, passes: [], cancel() {} }; } };
+        const rt = midRoom({ ...WITNESSES[0], walkTicks: 150, solveService: service, solverBudgetMs: 4000 });
+        expect(rt.playback.solverUpgradeWindowMs).toBeNull();
+        rt.playback.setSolverUpgradeWindowMs(1000);
+        expect(rt.playback.solverUpgradeWindowMs).toBe(1000);
+        rt.playback.setSolverWalk(true);
+        for (let i = 0; i < 5 && asked.length === 0; i += 1) rt.tick();
+        expect(asked[0]).toMatchObject({ budgetMs: 4000, upgradeWindowMs: 1000 });
+        rt.playback.setSolverUpgradeWindowMs(0);
+        expect(rt.playback.solverUpgradeWindowMs).toBeNull();
+        rt.playback.setSolverUpgradeWindowMs(null);
+        expect(rt.playback.solverUpgradeWindowMs).toBeNull();
+        expect(createJsRuntime({ solverUpgradeWindowMs: 750 }).playback.solverUpgradeWindowMs).toBe(750);
+    }, 120000);
+
+    it('⛓ SHOULD-STOP — a pass refusal CUT by its deadline is not "answered" (a held retry runs that pass again); a plain refusal is', () => {
+        let w = null;
+        const service = createWorkerSolveService({ createWorker: () => (w = { onmessage: null, onerror: null, postMessage() {}, terminate() {} }) });
+        const post = (h, data) => w.onmessage({ data: { id: h.id, ...data } });
+        const cut = { ok: false, kind: 'refusal', pass: 'dashless', message: '… ⏱ DEADLINE: …', deadline: { tripped: true, first: 'block-route', sites: { 'block-route': 1 } } };
+        let h = service.start({ source: { records: null } });
+        post(h, { type: 'started' });
+        post(h, { type: 'pass', index: 0, pass: 'dashless', answer: cut, best: cut });
+        expect(h.answered).toBe(0);
+        expect(h.provisional).toBe(cut); // still the word an expiry says
+        expect(h.passes).toEqual([{ pass: 'dashless', ok: false, kind: 'refusal', deadline: 'block-route' }]);
+        post(h, { type: 'pass', index: 1, pass: 'full', answer: { ok: false, kind: 'refusal', pass: 'full', message: 'no' }, best: cut });
+        expect(h.answered).toBe(0); // the cut pass still leads: nothing after it counts as answered
+        h = service.start({ source: { records: null } });
+        post(h, { type: 'pass', index: 0, pass: 'dashless', answer: { ok: false, kind: 'refusal', pass: 'dashless', message: 'no' }, best: null });
+        expect(h.answered).toBe(1);
+        expect(h.passes).toEqual([{ pass: 'dashless', ok: false, kind: 'refusal' }]);
+        service.dispose();
+    });
 });

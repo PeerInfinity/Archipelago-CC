@@ -164,6 +164,7 @@ function engineOver(arrival, opts = {}) {
         getCheckBinding: () => ({ ignoreHostStart: (w) => { windows.push(w); return true; } }),
         records: opts.records ?? RECORDS, generated: opts.generated ?? false, solveService: service, timers, now: opts.now ?? (() => (t += 1)),
         ...(opts.getBudgetMs ? { getBudgetMs: opts.getBudgetMs } : {}),
+        ...(opts.getUpgradeWindowMs ? { getUpgradeWindowMs: opts.getUpgradeWindowMs } : {}),
         onNote: (n) => notes.push(n), onFailed: (r) => failures.push(r), onDone: (d) => dones.push(d),
     });
     return { engine, game, timers, teleports, windows, notes, failures, dones, service, swap };
@@ -550,6 +551,39 @@ describe('⛓ ANYTIME / O2 / O3 — a solve past its budget: the provisional pla
         expect(e.engine.budgetMs).toBe(8000);
         knob = 'junk';
         expect(e.engine.budgetMs).toBe(8000);
+    });
+    it('⛓ SHOULD-STOP — every solver request carries its budget and the upgrade window; the retry carries 4×, and a dashless refusal CUT by its deadline (not answered) runs again', () => {
+        let windowKnob = 1000;
+        const e = engineOver(A, { getUpgradeWindowMs: () => windowKnob });
+        expect(e.engine.upgradeWindowMs).toBe(1000);
+        const cut = { ok: false, kind: 'refusal', pass: 'dashless', message: 'the block-route search hit `deadline` ⏱ DEADLINE: …',
+            deadline: { tripped: true, first: 'block-route', sites: { 'block-route': 1 } } };
+        scriptSolves(e, { 1: { provisional: cut, answered: 0 }, 2: 'hang' });
+        e.engine.walkTo(CHEST);
+        runUntil(e, () => e.failures.length > 0, 80000);
+        expect(e.service.seen[0].request).toMatchObject({ budgetMs: 5000, upgradeWindowMs: 1000 });
+        expect(e.service.seen[1].request).toMatchObject({ budgetMs: 20000, upgradeWindowMs: 1000 });
+        expect(e.service.seen[1].request.passes.map((p) => p.pass)).toEqual(['dashless', 'full']);
+        expect(e.failures[0]).toBe('the solver declined Starting House - Chest in level 86 (pass dashless): the block-route search hit '
+            + '`deadline` ⏱ DEADLINE: … — and the solver exceeded 5 s, then 20 s on its held retry on location in level 86 (terminated)');
+        windowKnob = 0; // the default: the whole budget
+        expect(e.engine.upgradeWindowMs).toBeNull();
+        const d = engineOver(A);
+        d.engine.walkTo(CHEST);
+        d.timers.run();
+        expect(d.service.seen[0].request).toMatchObject({ budgetMs: 5000, upgradeWindowMs: null });
+    });
+
+    it('⛓ SHOULD-STOP — a plan whose pass tripped its deadline is named: the done row\'s `deadline`, the pass row, the playing note', () => {
+        const deadline = { tripped: true, first: 'sword-dash', sites: { 'sword-dash': 1 } };
+        const e = engineOver(A, { editPlan: (plan) => ({ ...plan, deadline,
+            passes: [{ pass: 'dashless', ok: true, kind: null }, { pass: 'full', ok: true, kind: null, deadline: 'sword-dash' }] }) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones[0]).toMatchObject({ pass: 'dashless', deadline });
+        expect(e.dones[0].passes[1]).toEqual({ pass: 'full', ok: true, kind: null, deadline: 'sword-dash' });
+        expect(e.notes.some((n) => /; dashless pass; full stopped at its deadline \(sword-dash\)\)/.test(n ?? ''))).toBe(true);
     });
 });
 
