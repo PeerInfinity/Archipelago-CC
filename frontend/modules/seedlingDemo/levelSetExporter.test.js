@@ -373,6 +373,14 @@ describe('buildLevelSet({link}) — exits as data', () => {
 // `procgenLevelOel.test.js:59`'s row and is NOT repeated here; what these rows
 // own is the JOIN — WHICH record fed WHICH room — plus the manifest carry, the
 // empty `invented`, and the id that must never be mistaken for the embed set's.
+/**
+ * ⚖ MOONROCK: `vanillaRecordSet` applies the delivery's record patches by
+ * DEFAULT (`seedlingSetPatches.test.js` pins that set and its id). The rows that
+ * measure the JOIN, the id and the render bound measure them on the GAME's rooms,
+ * which is `{patches: []}` — byte-identical to the set these rows were written for.
+ */
+const NO_PATCHES = Object.freeze({ patches: [] });
+
 describe('vanillaRecordSet — the manifest and the map extract in, a record-sourced set out', () => {
     const embedSet = fixture('seedling-vanilla-set.json');
     const mapDoc = JSON.parse(readFileSync(fileURLToPath(
@@ -432,7 +440,7 @@ describe('vanillaRecordSet — the manifest and the map extract in, a record-sou
      * pinned id instead of a comment saying it is derived.
      */
     it('stamps its own id, which can never be mistaken for the embed set\'s', () => {
-        const { set } = vanillaRecordSet(embedSet, mapDoc);
+        const { set } = vanillaRecordSet(embedSet, mapDoc, NO_PATCHES);
         /**
          * ⛓⛓⛓ **EDITOR v3 E1b — THE ID MOVED, AND PLAN §23.12 ITEM 6 SAID IT
          * WOULD.** E1 pinned `seedling-vanilla-xml-02a70624`, the hash of the
@@ -455,7 +463,7 @@ describe('vanillaRecordSet — the manifest and the map extract in, a record-sou
     });
 
     it('joins by PATH: every room\'s record IS the map record whose path it embeds', () => {
-        const { set, report } = vanillaRecordSet(embedSet, mapDoc);
+        const { set, report } = vanillaRecordSet(embedSet, mapDoc, NO_PATCHES);
         set.rooms.forEach((room, i) => {
             const mapRecord = recordFor(embedSet.rooms[i].source.embed);
             // ⛓ THE CORE FOUR, and NOT `level`/`class`/`path`/
@@ -594,6 +602,7 @@ describe('export-seedling-level-set --vanilla', () => {
             fixture('seedling-vanilla-set.json'),
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+            NO_PATCHES,
         );
         expect(a.stdout).toContain(`set_id:       ${set.set_id}`);
         expect(a.stdout).toContain(`derived_from: ${set.provenance.derived_from.set_id}`);
@@ -733,6 +742,7 @@ describe('OEL is rendered at the chunk boundary, and the bound is measured there
         fixture('seedling-vanilla-set.json'),
         JSON.parse(readFileSync(fileURLToPath(
             new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+        NO_PATCHES,
     ).set;
 
     it('a RECORD set and its xml-rendered twin produce IDENTICAL chunk documents', () => {

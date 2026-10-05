@@ -833,6 +833,7 @@ describe('the VANILLA 116, through the set editor\'s pure half', () => {
                 new URL('./fixtures/seedling-vanilla-set.json', import.meta.url)), 'utf8')),
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+            { patches: [] }, // ⚖ MOONROCK: the editor's vanilla 116 (`#editLoadVanilla`)
         );
         const record = setRecord(set, emptyOverlay());
         return createSetSession(adapter, record, { base: { kind: 'set', set_id: set.set_id } });
