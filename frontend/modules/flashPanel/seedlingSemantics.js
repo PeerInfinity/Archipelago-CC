@@ -308,7 +308,13 @@ export const ENTITY_SEMANTICS = Object.freeze({
 
     // BurnableTree (Scenery/BurnableTree.as:24 type "Solid"; hit(t) burns only
     // when t == "Fire", which Player.as:1003 emits under `if (hasFire)`).
-    burnabletree: G(flag('hasFire'), { class: 'BurnableTree' }),
+    // ⛓ RULES burnable-trees — it EXTENDS `Tree` (BurnableTree.as:11, :21
+    // `super(_x, _y, ...)`), so it inherits Tree's 32x32 hitbox
+    // (Scenery/Tree.as:23 `setHitbox(32, 32, 16, 16)` after the +16,+16 move):
+    // a 2x2 footprint, exactly as `tree` above. Without the size it claimed ONE
+    // tile, the flood walked round the other three, and the crossings it blocks
+    // (L24's teleporters to L12, L44 r4c2, L37 r0c18) shipped True_.
+    burnabletree: G(flag('hasFire'), { class: 'BurnableTree', size: [2, 2] }),
 
     // MagicalLock (Puzzlements/MagicalLock.as:40 type "Solid"). Opened by a
     // WandShot whose `shotType` is 1 when the player holds the Fire Wand

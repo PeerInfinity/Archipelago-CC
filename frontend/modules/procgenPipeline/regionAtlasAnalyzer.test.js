@@ -53,6 +53,7 @@ const OPTIONS = {
  *   '?' manual blocker   'c' cave: north FACE walled, sides free
  *   'k' one-sided lock: gated on `a`, ENTERED only moving north (from below)
  *   'K' the same lock, LATCHED: once opened it stays open (RULES (A))
+ *   'O' a pit under a solid gated on `a` (RULES burnable-trees)
  */
 function gridOf(rows, origin = { x: 0, y: 0 }) {
     const width = rows[0].length;
@@ -66,6 +67,7 @@ function gridOf(rows, origin = { x: 0, y: 0 }) {
             else if (ch === '=') { cell.kind = 'gated'; cell.conditions = ['b']; }
             else if (ch === 'v') { cell.kind = 'directional'; cell.dirs = { N: null }; }
             else if (ch === 'o') { cell.kind = 'sink'; cell.labels = ['pit']; }
+            else if (ch === 'O') { cell.kind = 'sink'; cell.labels = ['pit']; cell.conditions = ['a']; }
             else if (ch === '?') { cell.kind = 'manual'; cell.manual = ['a puzzle']; }
             else if (ch === 'c') { cell.kind = 'directional'; cell.faces = { N: null }; }
             else if (ch === 'k') { cell.kind = 'gated'; cell.conditions = ['a']; cell.enter = { S: null, E: null, W: null }; }
@@ -428,6 +430,41 @@ describe('a physics model settles what the transcription cannot (RULES logical-l
         expect(hit.component.id).toBe('r0c0');
         expect(hit.reachable).toBe(false);
         expect(hit.reason).toMatch(/a finding, not a placement/);
+    });
+});
+
+describe('a door INSIDE an item-gated solid carries its own cell (RULES burnable-trees)', () => {
+    // The door at x=2 stands on `a` material, reached only across `b`: the
+    // path's conjunction is a+b, but only `a` is NECESSARY whatever the way in.
+    const exitAt = (x) => ({ region_id: 'r', exits: [{ exit_id: 'out_door', entrance_tile: [x, 0] }], locations: [] });
+    const solid = (answer) => ({ ...OPTIONS, tileSolid: () => answer });
+    const door = (analysis) => analysis.bindings.find((b) => b.id === 'out_door');
+
+    it('a door on gated material the model calls SOLID carries the cell\'s own conditions, not the path\'s', () => {
+        const b = door(analyzeRegion(exitAt(2), gridOf(['.=~']), solid(true)));
+        expect(b.conditionSets.map((w) => [...w.conditions].sort())).toEqual([['a', 'b']]);
+        expect(b.sealedIn).toEqual({ conditions: ['a'] });
+    });
+
+    it('carries nothing when the model has room for the body there (water is gated, not solid)', () => {
+        expect(door(analyzeRegion(exitAt(2), gridOf(['.=~']), solid(false))).sealedIn).toBeUndefined();
+        expect(door(analyzeRegion(exitAt(2), gridOf(['.=~']), OPTIONS)).sealedIn).toBeUndefined();
+    });
+
+    it('a pit under the solid is sealed the same way; a bare pit and an open tile are never asked', () => {
+        expect(door(analyzeRegion(exitAt(1), gridOf(['.O']), solid(true))).sealedIn).toEqual({ conditions: ['a'] });
+        const asked = [];
+        const ask = { ...OPTIONS, tileSolid: ({ tile }) => { asked.push(tile); return true; } };
+        expect(door(analyzeRegion(exitAt(1), gridOf(['.o']), ask)).sealedIn).toBeUndefined();
+        expect(door(analyzeRegion(exitAt(0), gridOf(['.~']), ask)).sealedIn).toBeUndefined();
+        expect(asked).toEqual([]);
+    });
+
+    it('asks in ATLAS tiles (the grid origin added)', () => {
+        const asked = [];
+        const region = { region_id: 'r', exits: [{ exit_id: 'out_door', entrance_tile: [12, 20] }], locations: [] };
+        analyzeRegion(region, gridOf(['.=~'], { x: 10, y: 20 }), { ...OPTIONS, tileSolid: ({ tile }) => { asked.push(tile); return false; } });
+        expect(asked).toEqual([[12, 20]]);
     });
 });
 

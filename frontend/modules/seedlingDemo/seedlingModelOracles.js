@@ -1,7 +1,8 @@
-// ⛓ RULES logical-links — the PHYSICS MODEL's answers to the two questions the
-// tile transcription gives up on, as the analyzer's two OPTIONAL oracles
-// (`procgenPipeline/regionAtlasAnalyzer.js`, its contract: `manualCrossingVerdict`
-// and `modelReach`). Both are about what is SOLID:
+// ⛓ RULES logical-links — the PHYSICS MODEL's answers to the questions the
+// tile transcription gives up on, as the analyzer's OPTIONAL oracles
+// (`procgenPipeline/regionAtlasAnalyzer.js`, its contract: `manualCrossingVerdict`,
+// `modelReach` and, since RULES burnable-trees, `tileSolid` — a door INSIDE an
+// item-gated solid). All are about what is SOLID:
 //   - a crossing whose only way runs through a building's sprite rect (`manual`:
 //     the per-pixel outline is not transcribed). It used to ship OPEN as a
 //     "NEEDS A HAND-WRITTEN RULE" True_ row — L0's `r8c0 <-> r1c6` among them
@@ -79,7 +80,7 @@ export function modelFloodTiles(level, seeds, enterable, { tileSize = TILE_SIZE 
  * The analyzer's two model oracles for ONE level and the grid the analyzer is
  * running on (atlas tiles = grid cell + `grid.origin`).
  *
- * @returns {{ manualCrossingVerdict:Function, modelReach:Function }}
+ * @returns {{ manualCrossingVerdict:Function, modelReach:Function, tileSolid:Function }}
  */
 export function seedlingModelOracles(level, grid, { tileSize = TILE_SIZE } = {}) {
     const flood = (seeds, enterable) => modelFloodTiles(level, seeds, enterable, { tileSize });
@@ -119,6 +120,9 @@ export function seedlingModelOracles(level, grid, { tileSize = TILE_SIZE } = {})
             const beside = [[tx, ty - 1], [tx - 1, ty], [tx + 1, ty], [tx, ty + 1]].filter(([x, y]) => enterable(x, y));
             return flood(beside, enterable);
         },
+        // RULES burnable-trees: no free pixel for the body on the tile, every
+        // solid live, so a door there is used only once its solid is gone.
+        tileSolid: ({ tile }) => tileSolidInModel(tile),
     };
 }
 

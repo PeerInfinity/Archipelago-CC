@@ -238,9 +238,34 @@ export const playthroughAnalyzerOptions = analyzerOptions;
 // readers that import them from this generator.
 export { modelFloodTiles, refuseUnboundMembers };
 
-/** The analyzer options for ONE level: the shared ones plus the two model oracles. */
+/**
+ * ⛓ RULES burnable-trees — the tiles an ITEM-GATED SOLID of the game's own
+ * transcription seals in `level` (`seedlingSemantics.ENTITY_SEMANTICS` rows of
+ * kind `gated`, read WITHOUT the overlay). A door inside one is used only once
+ * the item has removed it (a burnable tree, a breakable rock, a magical lock).
+ * The overlay's puzzle-policy rulings are left out on purpose: a `lock` it prices
+ * as a weapon is a POLICY about a room-clear puzzle, and charging a door under
+ * one (L5's way to L6, before the Sword) seals the map — measured, this slice.
+ */
+function gameGatedSolidTiles(level) {
+    const tiles = new Set();
+    for (const entity of level.entities ?? []) {
+        const base = SEM.entitySemantics(entity);
+        if (base?.kind !== 'gated') continue;
+        for (const [tx, ty] of SEM.entitySealedTiles(entity, base)) tiles.add(`${tx},${ty}`);
+    }
+    return tiles;
+}
+
+/** The analyzer options for ONE level: the shared ones plus the model oracles. */
 export function playthroughAnalyzerOptionsFor(level) {
-    return { ...analyzerOptions, ...seedlingModelOracles(level, gridFor(level), { tileSize: TILE }) };
+    const oracles = seedlingModelOracles(level, gridFor(level), { tileSize: TILE });
+    const gated = gameGatedSolidTiles(level);
+    return {
+        ...analyzerOptions,
+        ...oracles,
+        tileSolid: ({ tile }) => gated.has(`${tile[0]},${tile[1]}`) && oracles.tileSolid({ tile }),
+    };
 }
 
 // ── what the derivation needs, and what this script keeps ─────────────────
@@ -317,6 +342,7 @@ export function buildPlaythroughAtlas() {
     permissiveBindings.length = 0;
     modelVerdicts.length = 0;
     crossingCharged.length = 0;
+    sealedDoorsCharged.length = 0;
     arrivalsUncharged.length = 0;
     exitComponents.clear();
     /**
@@ -421,7 +447,10 @@ function applyCrossingCostToBindings(atlas, regionId, analysis) {
         // regions, with the SWORD unreachable — so the arrival side is left
         // permissive and counted instead.
         if (!b.id.startsWith('out_')) { arrivalsUncharged.push(`${regionId}/${b.id}`); continue; }
-        if (!CHARGE_CROSSINGS) { permissiveBindings.push(`${regionId}/${b.id}`); continue; }
+        if (!CHARGE_CROSSINGS) {
+            chargeSealedDoor(region, regionId, b);
+            continue;
+        }
         const ways = [];
         for (const set of b.conditionSets) {
             const parts = set.conditions.map((c) => analyzerOptions.resolveCondition(c));
@@ -442,6 +471,39 @@ function applyCrossingCostToBindings(atlas, regionId, analysis) {
             : { rule: 'And', children: [exit.access_rule, cost] };
         crossingCharged.push(`${regionId}/${b.id}`);
     }
+}
+
+/**
+ * ⛓ RULES burnable-trees — **A DOOR INSIDE AN ITEM-GATED SOLID COSTS ITS SOLID.**
+ *
+ * The general charge above stays off (it prices one PATH's whole conjunction).
+ * What is always sound is narrower: when the physics model has no place for the
+ * player's body on the door's own tile (`binding.sealedIn`, the analyzer's
+ * `tileSolid` oracle), the door is touched only once that solid is gone, so its
+ * own cell's conditions are NECESSARY on every way in. L24's two teleporters to
+ * L12 sit inside `burnabletree@32,128` and shipped True_; this charges them Fire.
+ * Only the transcription's OWN item-gated solids count (`gameGatedSolidTiles`).
+ * The departure is still counted permissive when the rest of its approach costs
+ * more than its own cell.
+ */
+function chargeSealedDoor(region, regionId, b) {
+    const own = b.sealedIn?.conditions ?? [];
+    const parts = own.map((c) => analyzerOptions.resolveCondition(c));
+    const exit = (region.exits ?? []).find((e) => e.exit_id === b.id);
+    if (own.length === 0 || parts.some((p) => !p) || !exit) {
+        permissiveBindings.push(`${regionId}/${b.id}`);
+        return;
+    }
+    const cost = parts.length === 1 ? parts[0] : { rule: 'And', children: parts };
+    exit.access_rule = exit.access_rule === undefined ? cost : { rule: 'And', children: [exit.access_rule, cost] };
+    sealedDoorsCharged.push(`${regionId}/${b.id}`);
+    const ownKey = own.map((c) => analyzerOptions.conditionKey(c)).sort().join('+');
+    const whole = b.conditionSets.length === 1
+        && b.conditionSets[0].conditions.map((c) => analyzerOptions.conditionKey(c)).sort().join('+') === ownKey;
+    if (!whole) permissiveBindings.push(`${regionId}/${b.id}`);
+    note(`${regionId}: exit "${b.id}" at [${b.tile}] sits INSIDE an item-gated solid (the physics model has no `
+        + `place for the body on it) — CHARGED its own cell (${own.map((c) => SEM.conditionKey(c)).join(' + ')})`
+        + (whole ? '' : '; the rest of its approach stays uncharged (permissive)'));
 }
 
 /**
@@ -650,6 +712,9 @@ export const permissiveBindings = [];
 
 /** Every exit this run CHARGED its approach cost to (applyCrossingCostToBindings). */
 export const crossingCharged = [];
+
+/** ⛓ RULES burnable-trees — every departure charged its OWN cell because it sits inside an item-gated solid. */
+export const sealedDoorsCharged = [];
 
 /**
  * Every ARRIVAL exit standing on gated material whose approach cost was NOT

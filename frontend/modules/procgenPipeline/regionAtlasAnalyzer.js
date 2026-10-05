@@ -73,6 +73,17 @@
 //                    so the flood never enters gated material. The first tile
 //                    in a component binds; none = the old proximity
 //                    finding, then no component.
+//   tileSolid({ tile })  (RULES burnable-trees) asked only for an exit or
+//                    location tile on a GATED cell, or a SINK, with conditions:
+//                    true when the model has NO position on that tile for the
+//                    player's body, i.e. the door is INSIDE an item-gated solid
+//                    (two teleporters under a burnable tree; a pit under one,
+//                    which nobody falls into while it stands). Then the cell's
+//                    own conditions are NECESSARY to use it, whatever the way
+//                    in, and the binding carries them as `sealedIn` for the
+//                    caller to charge. Unlike `conditionSets` (one path's whole
+//                    conjunction) this is never stricter than the game. Water
+//                    and a bare pit are not solid, so they never answer true.
 //
 // Deterministic: components are named for their own geometry and everything is
 // emitted in sorted order, so re-running on unchanged input reproduces the
@@ -1031,6 +1042,22 @@ function applyManualCrossingVerdicts(grid, componentsResult, crossings, options)
 }
 
 /**
+ * RULES burnable-trees — `{ sealedIn: { conditions } }` when the tile's own cell
+ * is gated (or a sink) with conditions and the caller's `tileSolid` oracle says the body has no place on it
+ * (see the contract); otherwise nothing.
+ */
+function sealedInOf(grid, tile, options) {
+    if (typeof options.tileSolid !== 'function') return {};
+    const x = tile[0] - (grid.origin?.x ?? 0);
+    const y = tile[1] - (grid.origin?.y ?? 0);
+    if (x < 0 || y < 0 || x >= grid.width || y >= grid.height) return {};
+    const cell = grid.cells[y * grid.width + x];
+    if ((cell?.kind !== 'gated' && cell?.kind !== 'sink') || !(cell.conditions?.length > 0)) return {};
+    if (options.tileSolid({ tile: [tile[0], tile[1]] }) !== true) return {};
+    return { sealedIn: { conditions: cell.conditions } };
+}
+
+/**
  * Analyze one atlas region against its grid.
  *
  * Pure: it computes a PROPOSAL and touches nothing. `applyRegionAnalysis`
@@ -1060,11 +1087,12 @@ export function analyzeRegion(region, grid, options = {}) {
         const hit = componentForTile(grid, componentsResult, exit.entrance_tile, options);
         bindings.push({
             kind: 'exit', id: exit.exit_id, tile: exit.entrance_tile, ...hit,
+            ...sealedInOf(grid, exit.entrance_tile, options),
         });
     }
     for (const loc of region.locations ?? []) {
         const hit = componentForTile(grid, componentsResult, loc.tile, options);
-        bindings.push({ kind: 'location', id: loc.name, tile: loc.tile, ...hit });
+        bindings.push({ kind: 'location', id: loc.name, tile: loc.tile, ...hit, ...sealedInOf(grid, loc.tile, options) });
     }
 
     // A pit that drops out of this region is a real exit the atlas does not
