@@ -122,6 +122,10 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // `burnabletree` on the frontier), listed in the slice that first drives
     // it, for `break`'s reason.
     'burn',
+    // ⛓ Seedling fidelity WATCHER: the `talk` verb (`solverBot.execTalk`, a
+    // speaking watcher's circle on the frontier), listed in the slice that
+    // first drives it, for `break`'s reason.
+    'talk',
 ]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);

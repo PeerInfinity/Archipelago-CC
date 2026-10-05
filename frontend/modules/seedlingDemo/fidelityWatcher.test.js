@@ -17,12 +17,15 @@
  *     circle was priced as the 48x48 square (`inRange` is `FP.distance <= 24`,
  *     a disc, inclusive), and a CLEARED tag left the volume in place although
  *     `Watcher.update` runs `talk()` only while the tag holds.
+ *   · The `talk` verb (`solverBot.resolveTalkStrategy` / `execTalk`): a speaking
+ *     watcher's circle on the frontier is passed by its dialogue — approach until
+ *     it opens, page it on the ceremony cadence, and the cleared tag silences it.
  *   · The witnesses (`scripts/procgen/plan-seedling-watcher-witness.mjs`,
  *     recorded on the game): `watcher-l37-reach-l38` (step 95) and
  *     `watcher-l37-reach-l44` (step 101) are the solver's plans, each crossing
  *     the old 48x48 square; `watcher-l37-silent-lean` stands inside the 24 px
  *     circle itself and walks on; `watcher-l114-silent` walks through L114's
- *     circle with `{114,0}` cleared.
+ *     circle with `{114,0}` cleared; `watcher-l114-talk` talks its way through.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -35,7 +38,9 @@ import { buildLevelWorld, rectsOverlap, RELAXED_ROLES, ROLES } from './levelWorl
 import { playerBoxAt } from './playerPhysicsV2.js';
 import { parseTape } from './tapeFormat.js';
 import { createRunForStaging, runTape } from './tapeRunner.js';
-import { solveSegment } from './solverBot.js';
+import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, solveSegment } from './solverBot.js';
+import { R8_STRATEGY_EXECUTORS } from './r8Acceptance.js';
+import { KNOWN_STRATEGY_VERBS, summarizeTrace } from './decisionTrace.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = atlasLevelSource();
@@ -188,5 +193,67 @@ describe('fidelity WATCHER — L114: the circle exactly, and the cleared state',
         const inside = game.ticks.filter((o) => o.level === 114
             && Math.hypot(o.x - L114_WATCHER.ex, o.y - L114_WATCHER.ey) <= TALK_RANGE);
         expect(inside.length).toBeGreaterThan(5);
+    });
+});
+
+describe('fidelity WATCHER — the `talk` verb', () => {
+    it('the table names `talk` for `proximity-hazard:watcher`, the executor is registered and derived', () => {
+        expect(OBSTACLE_STRATEGIES['proximity-hazard:watcher']).toBe('talk');
+        expect(typeof STRATEGY_EXECUTORS.talk).toBe('function');
+        expect(R8_STRATEGY_EXECUTORS.executorDerivations.talk.length).toBeGreaterThan(0);
+        expect(KNOWN_STRATEGY_VERBS).toContain('talk');
+    });
+
+    const t = tape('watcher-l114-talk');
+    const goal = { kind: 'reach-exit', exit: { x: 64, y: 144 } };
+    it('`watcher-l114-talk`: the solver pages the whole dialogue, earns {114,0} and crosses into L113', () => {
+        const run = createRunForStaging({ ...t, equips: [] }, SRC);
+        expect(run.world.proximityHazards.map((h) => h.tag)).toEqual(['watcher']);
+        const out = solveSegment({ run, goals: [goal], name: 'watcher-l114-talk-resolve', boot: t.boot });
+        expect(run.level).toBe(113);
+        expect(out.perTick.length).toBe(t.tick_count);
+        const [rec] = out.records.filter((r) => r.strategy === 'talk');
+        expect(rec).toMatchObject({ verb: 'talk', target: L114_WATCHER.id, cause: 'done', stance: null });
+        expect(rec.pages).toBeGreaterThan(1);
+        expect(run.watcherTalks).toEqual([expect.objectContaining({ id: L114_WATCHER.id, cause: 'done' })]);
+        expect(run.watcherFlags).toEqual([expect.objectContaining({ level: 114, tag: 0, value: false })]);
+        const summary = summarizeTrace(out.trace);
+        expect(summary.unknownStrategyVerbs).toEqual([]);
+    });
+
+    it('the committed tape IS the plan, and every page is a press-then-release of X', () => {
+        const run = createRunForStaging({ ...t, equips: [] }, SRC);
+        const out = solveSegment({ run, goals: [goal], name: 'watcher-l114-talk-resolve', boot: t.boot });
+        const keysAt = (i) => [...out.perTick[i]].sort().join('+');
+        const tapeKeysAt = (i) => t.inputs.filter((sp) => sp.from <= i && i < sp.to).map((sp) => sp.key)
+            .sort().join('+');
+        for (let i = 0; i < t.tick_count; i += 1) expect(tapeKeysAt(i), `t${i}`).toBe(keysAt(i));
+        const presses = t.inputs.filter((sp) => sp.key === 'primary');
+        expect(presses.every((sp) => sp.to - sp.from === 1)).toBe(true);
+    });
+
+    it('CONTROL: the same boot with {114,0} cleared is no obstacle at all — no `talk` row runs', () => {
+        const run = createRunForStaging({ ...t, equips: [],
+            persistence: [...t.persistence, { level: 114, tag: 0, note: 'control' }] }, SRC);
+        const out = solveSegment({ run, goals: [goal], name: 'watcher-l114-talk-control', boot: t.boot });
+        expect(run.level).toBe(113);
+        expect(out.records.filter((r) => r.strategy === 'talk')).toEqual([]);
+        expect(out.perTick.length).toBeLessThan(t.tick_count);
+    });
+
+    it('THE GAME agrees: the walk freezes inside the circle for the dialogue and leaves to L113', () => {
+        const game = expectation('watcher-l114-talk');
+        const model = runTape(t, { levelSource: SRC });
+        expect(game.ticks).toHaveLength(model.ticks.length);
+        expect(game.transitions).toEqual([{ t: t.tick_count, from_level: 114, to_level: 113 }]);
+        // The longest run of identical positions is the dialogue's freeze.
+        let best = 0;
+        let run = 0;
+        for (let i = 1; i < game.ticks.length; i += 1) {
+            const same = game.ticks[i].x === game.ticks[i - 1].x && game.ticks[i].y === game.ticks[i - 1].y;
+            run = same ? run + 1 : 0;
+            best = Math.max(best, run);
+        }
+        expect(best).toBeGreaterThan(300);
     });
 });
