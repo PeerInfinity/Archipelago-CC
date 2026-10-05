@@ -1010,7 +1010,9 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'the moonrock visit; the walk ARRIVES in L12 on its last tick and never walks it.',
         }),
         Object.freeze({
-            name: 'r9-solve-12', levels: Object.freeze([12]), bobs: 1, ticks: 2419,
+            // ⛓ WATCHERFLIP re-recorded it 2,419 -> 2,364 t (the silent L12
+            // watcher's held square released); the same room, the same pit.
+            name: 'r9-solve-12', levels: Object.freeze([12]), bobs: 1, ticks: 2364,
             addedBy: 'U14-swim D2 (route step 24, L12 -> L21 by the pit)',
             why: 'the puncher room walked to its pit (U12\'s funnel); the game took no hit.',
         }),

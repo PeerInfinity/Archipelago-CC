@@ -188,7 +188,7 @@ function stagedWalk(name) {
         ticks: parsed.tick_count,
         // ⛓ SWIM U14 — the ARRIVAL's tick, which `declaredSeamTimeAfter` counts
         // to: the last transition's `t`. A door seam ends on it; a PIT seam walks
-        // on to a calm landing (`r9-solve-12`: 2339 against 2419 ticks).
+        // on to a calm landing (`r9-solve-12`: 2284 against 2364 ticks).
         arrivalTick: run.transitions.at(-1)?.t ?? parsed.tick_count,
         deadFramesOwed: run.deadFramesOwed,
         endLevel: run.level,

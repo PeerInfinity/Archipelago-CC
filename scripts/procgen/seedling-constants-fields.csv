@@ -9,14 +9,6 @@ frontend/modules/seedlingDemo/levelWorld.js|ENTITY_CLASSES|(module),physics,magn
 frontend/modules/seedlingDemo/levelWorld.js|(module)|h486de3ef|8|0,rule,derivation,,watcher talk disc centre: the NPC ctor half-tile (+8)
 frontend/modules/seedlingDemo/levelWorld.js|(module)|hac732560|8|0,rule,derivation,,watcher talk disc centre: the NPC ctor half-tile (+8)
 frontend/modules/seedlingDemo/levelWorld.js|(module)|h3e0021ff|24|0,rule,derivation,NPCs/NPC.as:talkRange,watcher talk disc radius = NPC talkRange 24 (inclusive: FP.distance <= talkRange)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|h0a4cf078|8|0,rule,derivation,,held watcher square (silent placements): ctor half-tile 8 minus NPC talkRange 24
-frontend/modules/seedlingDemo/levelWorld.js|(module)|h0a4cf078|24|0,rule,derivation,NPCs/NPC.as:talkRange,held watcher square (silent placements): ctor half-tile 8 minus NPC talkRange 24
-frontend/modules/seedlingDemo/levelWorld.js|(module)|ha8200e71|8|0,rule,derivation,,held watcher square (silent placements): ctor half-tile 8 minus NPC talkRange 24
-frontend/modules/seedlingDemo/levelWorld.js|(module)|ha8200e71|24|0,rule,derivation,NPCs/NPC.as:talkRange,held watcher square (silent placements): ctor half-tile 8 minus NPC talkRange 24
-frontend/modules/seedlingDemo/levelWorld.js|(module)|hbd8c89e5|48|0,rule,derivation,,held watcher square side = 2 * NPC talkRange (24)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|hcd8ef735|48|0,rule,derivation,,held watcher square side = 2 * NPC talkRange (24)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|h851d5c31|0|0,rule,bound,,avoid-volume origin
-frontend/modules/seedlingDemo/levelWorld.js|(module)|h69228302|0|0,rule,bound,,avoid-volume origin
 frontend/modules/seedlingDemo/levelWorld.js|(module)|h7997cd72|0|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
 frontend/modules/seedlingDemo/levelWorld.js|(module)|h7f88596f|0|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
 frontend/modules/seedlingDemo/levelWorld.js|(module)|hcc53e68d|16|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
