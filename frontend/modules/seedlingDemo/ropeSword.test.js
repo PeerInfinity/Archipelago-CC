@@ -211,13 +211,13 @@ describe('D2 — the PULL rung: the silencer is derived, the latch is asserted o
         expect(run.ropePulls).toHaveLength(1);
         expect(run.ropePulls[0]).toMatchObject({ id: 'rope@32,16', level: 16,
             flag: { level: 16, tag: 0, outOfBand: false } });
-        // ⛓ MEASURED: the APPROACH pulled it — a sword-dash press walking up the
-        // handle's column swung into the rope's rect at t=88, before the stance.
-        // The verb asks its post-condition first, finds the group latched, and
-        // spends NO tick on a press `hit()`'s `if (!activate)` would make a no-op.
-        expect(pulls[0]).toMatchObject({ ticks: 0, pressedAt: null });
-        expect(pulls[0].pulledBy).toMatch(/^the approach — rope@32,16 was pulled at tick 88/);
-        expect(run.ropePulls[0].t).toBeLessThanOrEqual(pulls[0].from);
+        // ⛓ DASHFLIP: the PULL verb presses the rope itself — at t100 from the stance
+        // (3 ticks), the persistence write on t101. Before DASHFLIP the approach's
+        // sword dash "pulled" it at t88 with a FIFTH hit test the game never runs
+        // (DASH D1: a dash buys four); the game's own clear lands at obs 101, as here.
+        expect(pulls[0]).toMatchObject({ from: 99, ticks: 3, pressedAt: 100 });
+        expect(pulls[0].pulledBy).toBeUndefined();
+        expect(run.ropePulls[0].t).toBe(pulls[0].pressedAt + 1);
         expect(run.playerHits).toEqual([]);
         // …and the walk reached the stairs: the one transition is into L17.
         expect(run.transitions.map((t) => t.to_level)).toEqual([17]);
