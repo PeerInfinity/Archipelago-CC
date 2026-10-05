@@ -54,6 +54,10 @@
  *     bot options). The last one is re-applied after every configure, so
  *     the order of the two does not matter. A game without setHostState
  *     ignores it; a substrate whose host sends none never sees it.
+ *     The other way, a game may call __swfBridge.requestHost(request): the
+ *     bridge relays the eventBus event `substrate:hostRequest`
+ *     {region, request} for the active region, and the substrate's own host
+ *     module answers it (Noiz2sa: the player chose the exit to leave by).
  *
  * The loadRegion event name is read from the iframe URL's
  * `loadRegionEvent` query param (set by the panel's iframeSrc), so
@@ -272,6 +276,17 @@ function _onSetPlayClock(running, stats) {
     // {gameSeconds, score}. `gameSeconds` turns the drain into game time.
     if (stats && typeof stats === 'object') report.stats = { ...stats };
     _client.publishEventBus('substrate:playClock', report);
+}
+
+/**
+ * The game's request to its host module (optional, N4b): relayed as the
+ * eventBus event `substrate:hostRequest` {region, request}. Only the
+ * substrate's own host module listens (it checks the region is its own).
+ */
+function _onRequestHost(request) {
+    if (!_isActive || !_currentRegionId || !request || typeof request !== 'object') return;
+    if (!_client) return;
+    _client.publishEventBus('substrate:hostRequest', { region: _currentRegionId, request: { ...request } });
 }
 
 /**
@@ -550,6 +565,7 @@ async function main() {
     _w.__swfBridge.sendLocation = _onSendLocation;
     _w.__swfBridge.sendExit = _onSendExit;
     _w.__swfBridge.setPlayClock = _onSetPlayClock;
+    _w.__swfBridge.requestHost = _onRequestHost;
 
     // Step 3: subscribe to host events.
     _client.subscribeEventBus(LOAD_REGION_EVENT, _handleLoadRegion);

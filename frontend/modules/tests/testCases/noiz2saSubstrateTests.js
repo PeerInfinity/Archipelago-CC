@@ -191,13 +191,11 @@ async function noiz2saRegionLoopVisit(testController) {
             () => snapshotHasLocation(testController.stateManager.getSnapshot(), location),
             `${location} checked through the bridge`, 10000, 200);
         testController.assertEqual(`the clear checked ${location}`, true, !!checked);
-        testController.assertEqual('the exits open after the clear', true, debugState().exitsOpen);
 
-        // ── 5. leave → the Record block saves a summary ──
-        gameWindow().__noiz2saTest.leave(exitId);
+        // ── 5. N4b: the clear PERFORMS the queued move → the Record block saves a summary ──
         const crossed = await testController.pollForCondition(
-            () => currentRegion() === target, `the page left by ${exitId} into ${target}`, 15000, 100);
-        testController.assertEqual(`the page left by ${exitId} into ${target}`, true, !!crossed);
+            () => currentRegion() === target, `the clear performed the queued move: left by ${exitId} into ${target}`, 15000, 100);
+        testController.assertEqual(`the clear performed the queued move: left by ${exitId} into ${target}`, true, !!crossed);
         if (!crossed) return testController.getOverallResult();
         await testController.stateManager.pingWorker('after-record', 3000);
 
@@ -301,7 +299,9 @@ async function noiz2saRefusedClearResent(testController) {
     };
     const clearOnce = async (label) => {
         gameWindow().__noiz2saTest.play(NOIZ2SA_CLEAR_TAPE, { speed: SPEED });
-        const ok = await testController.pollForCondition(() => debugState()?.cleared === true, label, 20000, 100);
+        // cleared — or, N4b, the accepted clear already performed the queued move (the page has the next region)
+        const ok = await testController.pollForCondition(
+            () => debugState()?.cleared === true || currentRegion() !== region, label, 20000, 100);
         testController.reportCondition(label, !!ok);
         return !!ok;
     };
@@ -352,16 +352,14 @@ async function noiz2saRefusedClearResent(testController) {
             () => snapshotHasLocation(testController.stateManager.getSnapshot(), location),
             `${location} checked by the resent clear`, 10000, 100);
         testController.assertEqual(`the resent clear checked ${location}`, true, !!checked);
-        testController.assertEqual('loops observed exactly one parked check', 1, parkedChecks);
-        testController.assertEqual('the page was not reconfigured meanwhile', true, debugState()?.clearedThisVisit === true);
-
-        // ── 3. an accepted clear is never dispatched twice ──
-        gameWindow().__noiz2saTest.again();
-        if (!(await clearOnce('third clear (already accepted)'))) return testController.getOverallResult();
-        await new Promise((r) => setTimeout(r, 1000));
-        await testController.stateManager.pingWorker('after-third', 3000);
-        testController.assertEqual('the accepted clear was not dispatched again (still one parked check, one refusal)',
-            true, parkedChecks === 1 && refusals.length === 1);
+        testController.assertEqual('loops observed exactly one parked check, after one refusal', true,
+            parkedChecks === 1 && refusals.length === 1);
+        // N4b: the accepted clear performs the queued move (the refused one could not: the queue was paused). The
+        // N3b third clear on the same visit is gone with it; "an accepted clear is never sent twice" stays pinned by
+        // locationReportLedger.test.js.
+        const crossed = await testController.pollForCondition(() => currentRegion() === exit.connected_region,
+            `the accepted clear performed the queued move into ${exit.connected_region}`, 15000, 100);
+        testController.reportCondition(`the accepted clear performed the queued move into ${exit.connected_region}`, !!crossed);
     } finally {
         loopStateSingleton.observeParkedLiveAction = realObserve;
         loopStateSingleton.isPaused = false;
@@ -698,68 +696,51 @@ async function noiz2saBotReplaysClearedRegion(testController) {
 }
 
 /**
- * N4b (b) — ⚖ "a first clear should have the effects that fully exploring the region would have in other substrates".
- * The start region is fully discovered at load, so the row first undiscovers its location and exits (fog). A Record
- * block parks on it, the clearing tape clears it, and the region reads FULLY EXPLORED (every location and exit
- * discovered, loops' `_isRegionFullyExplored`). Leaving saves a summary whose `checks` hold the clear, while the
- * block's rewritten interior holds NO check and no explore (⚖ "there is no explore or check location action").
+ * N4b (b) — ⚖ "The Noiz2sa regions should count as fully explored when they are first entered, not when they are first
+ * cleared." The row fogs the second region (its location and exits undiscovered), then moves the player into it (a
+ * reset teleport, so no queue is involved): on that first entry the region reads FULLY EXPLORED — every location and
+ * exit discovered (loops' `_isRegionFullyExplored`), the exits through `discovery:exitDiscovered`, as explores do.
  */
-async function noiz2saFirstClearExplores(testController) {
-    return withTrainer(testController, async (mod, service, gs) => {
-        const label = 'first clear';
+async function noiz2saFirstEntryExplores(testController) {
+    return withTrainer(testController, async (mod) => {
+        const label = 'first entry';
         const r = await loadStartRegion(testController, label);
         if (!r) return;
         const { default: discovery } = await import('../../discovery/singleton.js');
         const staticData = testController.stateManager.getStaticData();
-        discovery.undiscoverLocation(r.location);
-        for (const e of r.regionData.exits ?? []) discovery.undiscoverExit(r.region, e.name);
-        testController.assertEqual(`[${label}] fogged: ${r.region} is not fully explored`, false,
-            loopStateSingleton._isRegionFullyExplored(r.region, staticData));
-        const exploresSeen = [];
-        const onExplore = (d) => { if (d?.regionName === r.region) exploresSeen.push(d); };
-
-        const before = debugState()?.configures ?? 0;
-        const block = queueBlock(testController, r, 'record', label);
-        if (!block) return;
-        gs.refillMana();
-        loopStateSingleton.startProcessing();
-        const parked = await testController.pollForCondition(() => loopStateSingleton.livePlayRegion() === r.region,
-            `[${label}] the Record block parked for live play`, 15000, 100);
-        testController.reportCondition(`[${label}] the Record block parked for live play`, !!parked);
-        if (!parked) return;
-        testController.eventBus.publish('ui:activatePanel', { panelId: 'noiz2saSubstratePanel' });
-        const configured = await testController.pollForCondition(() => {
-            const d = debugState(); return d?.regionId === r.region && d.state === 'ready' && d.configures >= before;
-        }, `[${label}] the page is configured`, 30000, 100);
-        testController.reportCondition(`[${label}] the page is configured`, !!configured);
-        if (!configured) return;
-        testController.eventBus.subscribe('discovery:exitDiscovered', onExplore);
-        gameWindow().__noiz2saTest.play(NOIZ2SA_CLEAR_TAPE, { speed: SPEED });
-        const cleared = await testController.pollForCondition(() => debugState()?.cleared === true,
-            `[${label}] the tape cleared the region`, 20000, 100);
-        testController.reportCondition(`[${label}] the tape cleared the region`, !!cleared);
-        const explored = await testController.pollForCondition(
-            () => loopStateSingleton._isRegionFullyExplored(r.region, staticData),
-            `[${label}] the first clear made ${r.region} FULLY EXPLORED`, 10000, 100);
-        testController.eventBus.unsubscribe?.('discovery:exitDiscovered', onExplore);
-        testController.reportCondition(`[${label}] the first clear made ${r.region} FULLY EXPLORED`, !!explored);
-        if (!explored) testController.log(`DIAG: first clears ${JSON.stringify(mod.getFirstClearState())}`, 'error');
-        testController.assertEqual(`[${label}] every exit of ${r.region} is discovered, through discovery:exitDiscovered`,
-            true, (r.regionData.exits ?? []).every((e) => discovery.isExitDiscovered(r.region, e.name))
-                && exploresSeen.length === (r.regionData.exits ?? []).length);
-        testController.assertEqual(`[${label}] the clear location is discovered`, true, discovery.isLocationDiscovered(r.location));
-
-        gameWindow().__noiz2saTest.leave(r.exit.name);
-        const crossed = await testController.pollForCondition(() => currentRegion() === r.target,
-            `[${label}] left into ${r.target}`, 15000, 100);
-        testController.reportCondition(`[${label}] left into ${r.target}`, !!crossed);
-        if (!crossed) return;
-        const saved = loopStateSingleton._lookupBoundSummary(r.region, block.instance);
-        testController.assertEqual(`[${label}] the summary's checks hold the clear`, JSON.stringify([r.location]),
-            JSON.stringify(saved?.summary?.checks ?? null));
-        const interior = loopStateSingleton.getActionQueue().filter((a) => a.sourceRegion === r.region && a.type !== 'regionMove');
-        testController.assertEqual(`[${label}] the block's interior holds no check and no explore (the move is the clear)`,
-            '[]', JSON.stringify(interior.map((a) => a.type)));
+        const next = r.target, nextData = staticData?.regions?.get(next);
+        testController.assertEqual(`[${label}] ${next} is a Noiz2sa region with a location and exits`, true,
+            loopStateSingleton.getRegionCaptureShape?.(next) === 'summary' && (nextData?.locations?.length ?? 0) > 0
+            && (nextData?.exits?.length ?? 0) > 0);
+        for (const l of nextData?.locations ?? []) discovery.undiscoverLocation(l.name);
+        for (const e of nextData?.exits ?? []) discovery.undiscoverExit(next, e.name);
+        testController.assertEqual(`[${label}] fogged: ${next} is not fully explored`, false,
+            loopStateSingleton._isRegionFullyExplored(next, staticData));
+        testController.assertEqual(`[${label}] ${next} not entered yet`, false, mod.getFirstEntryState().entered.includes(next));
+        const exitsSeen = [];
+        const onExit = (d) => { if (d?.regionName === next) exitsSeen.push(d.exitName); };
+        testController.eventBus.subscribe('discovery:exitDiscovered', onExit);
+        try {
+            loopStateSingleton.dispatcher.publish('user:regionMove', {
+                sourceRegion: r.region, targetRegion: next, fromReset: true, updatePath: false,
+            }, { initialTarget: 'bottom' });
+            const entered = await testController.pollForCondition(() => currentRegion() === next,
+                `[${label}] the player entered ${next}`, 10000, 100);
+            testController.reportCondition(`[${label}] the player entered ${next}`, !!entered);
+            if (!entered) return;
+            const explored = await testController.pollForCondition(
+                () => loopStateSingleton._isRegionFullyExplored(next, staticData),
+                `[${label}] the first entry made ${next} FULLY EXPLORED`, 10000, 50);
+            testController.reportCondition(`[${label}] the first entry made ${next} FULLY EXPLORED`, !!explored);
+            if (!explored) testController.log(`DIAG: ${JSON.stringify(mod.getFirstEntryState())}`, 'error');
+        } finally {
+            testController.eventBus.unsubscribe?.('discovery:exitDiscovered', onExit);
+        }
+        testController.assertEqual(`[${label}] every exit of ${next} discovered through discovery:exitDiscovered`, true,
+            (nextData.exits ?? []).every((e) => discovery.isExitDiscovered(next, e.name) && exitsSeen.includes(e.name)));
+        testController.assertEqual(`[${label}] its location discovered, nothing checked`, true,
+            (nextData.locations ?? []).every((l) => discovery.isLocationDiscovered(l.name)
+                && !snapshotHasLocation(testController.stateManager.getSnapshot(), l.name)));
     });
 }
 
@@ -778,13 +759,10 @@ async function assistedRecordVisit(testController, mod, gs, label) {
     if (!parked || !(await pageConfigured(testController, r.region, before, label, mod.getVisitBotSeed))) return null;
     const seed = debugState().visitBotSeed;
     pressKey('KeyB');
-    const cleared = await testController.pollForCondition(() => debugState()?.cleared === true,
-        `[${label}] B: the bot played the region to a clear`, 120000, 100);
-    testController.reportCondition(`[${label}] B: the bot played the region to a clear`, !!cleared);
-    if (!cleared) return null;
-    gameWindow().__noiz2saTest.leave(r.exit.name);
+    // the clear performs the queued move (N4b)
     const crossed = await testController.pollForCondition(() => currentRegion() === r.target,
-        `[${label}] left into ${r.target}`, 15000, 100);
+        `[${label}] B: the bot played the region to a clear, which performed the move into ${r.target}`, 120000, 100);
+    testController.reportCondition(`[${label}] B: the bot played the region to a clear, which performed the move`, !!crossed);
     if (!crossed) return null;
     const saved = loopStateSingleton._lookupBoundSummary(r.region, block.instance);
     testController.log(`[${label}] seed ${seed}; summary ${JSON.stringify(saved?.summary)}`);
@@ -822,8 +800,9 @@ async function noiz2saBotSeedPerVisit(testController) {
 /**
  * N4b (d) — the bot-assist key. A Record block on 1:1 (bot seed 1, tracks 0 By hand, 1×): B hands the controls to the
  * bot (the clock runs, the drain charges), B again hands them back (the game pauses, the clock stops, nothing drains),
- * a game key resumes the player's play, B gives it to the bot again, which plays to the clear and stays (the player
- * leaves). The summary holds the bot's play (botFrames), the visit cost its game seconds, and the bot trained.
+ * a game key resumes the player's play, B gives it to the bot again, which plays to the clear, and the clear performs
+ * the queued move. The summary holds the bot's play (botFrames), the block's interior no check, the visit cost its game
+ * seconds, and the bot trained.
  */
 async function noiz2saAssistKey(testController) {
     return withTrainer(testController, async (mod, service, gs) => {
@@ -866,18 +845,13 @@ async function noiz2saAssistKey(testController) {
         }, `[${label}] a game key: the player plays`, 5000, 10);
         testController.reportCondition(`[${label}] a game key: the player plays`, !!playerPlays);
         pressKey('KeyB');
-        const cleared = await testController.pollForCondition(() => debugState()?.cleared === true,
-            `[${label}] B: the bot played on to the clear`, 120000, 100);
-        testController.reportCondition(`[${label}] B: the bot played on to the clear`, !!cleared);
-        if (!cleared) return;
-        const d = debugState();
-        testController.assertEqual(`[${label}] the bot stays at the clear (the exits open, the player leaves)`, true,
-            d.state === 'cleared' && d.exitsOpen && currentRegion() === r.region);
-        gameWindow().__noiz2saTest.leave(r.exit.name);
         const crossed = await testController.pollForCondition(() => currentRegion() === r.target,
-            `[${label}] left into ${r.target}`, 15000, 100);
-        testController.reportCondition(`[${label}] left into ${r.target}`, !!crossed);
+            `[${label}] the clear performed the queued move into ${r.target}`, 15000, 100);
+        testController.reportCondition(`[${label}] the clear performed the queued move into ${r.target}`, !!crossed);
         if (!crossed) return;
+        const interior = loopStateSingleton.getActionQueue().filter((a) => a.sourceRegion === r.region && a.type !== 'regionMove');
+        testController.assertEqual(`[${label}] the block's interior holds no check and no explore (the move is the clear)`,
+            '[]', JSON.stringify(interior.map((a) => a.type)));
         const saved = loopStateSingleton._lookupBoundSummary(r.region, block.instance);
         const ps = saved?.summary?.playStats ?? null;
         testController.log(`[${label}] summary ${JSON.stringify(saved?.summary)}`);
@@ -893,6 +867,70 @@ async function noiz2saAssistKey(testController) {
     });
 }
 
+/**
+ * N4b (e) — ⚖ "if there isn't already a move queued, then the Noiz2sa panel should display a list of available exits,
+ * and when the player chooses one of the exits, that's when the game starts. When the level is cleared, the move to
+ * the exit that the player chose is performed." An empty queue in loop mode: the page waits in `choosing` (its clock
+ * stopped, game keys do nothing); choosing the exit queues the move (the Loops queue holds it, the queue starts and
+ * parks a Record block) and starts the game; B lets the bot clear it, and the clear performs the chosen move.
+ */
+async function noiz2saChooseExit(testController) {
+    return withTrainer(testController, async (mod, service, gs) => {
+        const label = 'choose';
+        handTrainer(service, 4);
+        mod.pinBotSeed(1);
+        const r = await loadStartRegion(testController, label);
+        if (!r) return;
+        loopStateSingleton.stopProcessing?.();
+        gs.clearPath?.();
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'noiz2saSubstratePanel' });
+        const choosing = await testController.pollForCondition(() => {
+            const d = debugState(); return d?.regionId === r.region && d.state === 'choosing' && d.loopMode && d.move === null;
+        }, `[${label}] no move queued: the page shows the exits and waits for a choice`, 30000, 100);
+        testController.reportCondition(`[${label}] no move queued: the page shows the exits and waits for a choice`, !!choosing);
+        if (!choosing) { testController.log(`DIAG: ${JSON.stringify(debugState())}`, 'error'); return; }
+        pressKey('KeyZ');
+        await new Promise((res) => setTimeout(res, 500));
+        testController.assertEqual(`[${label}] a game key does not start it; nothing steps`, true,
+            debugState()?.state === 'choosing' && debugState()?.frames === 0);
+        gs.refillMana();
+        gameWindow().__noiz2saTest.choose(r.exit.name);
+        const started = await testController.pollForCondition(() => {
+            const d = debugState();
+            return d?.state === 'playing' && d.queuedExit === r.exit.name && loopStateSingleton.livePlayRegion() === r.region;
+        }, `[${label}] choosing ${r.exit.name} queued the move, the queue parked, the game started`, 15000, 20);
+        testController.reportCondition(`[${label}] choosing ${r.exit.name} queued the move, the queue parked, the game started`, !!started);
+        if (!started) { testController.log(`DIAG: ${JSON.stringify(debugState())} queue ${JSON.stringify(loopStateSingleton.getActionQueue().map((a) => [a.type, a.sourceRegion, a.exitUsed]))} state ${loopStateSingleton.getProcessingState()}`, 'error'); return; }
+        const q = loopStateSingleton.getActionQueue().filter((a) => a.type === 'regionMove' && a.sourceRegion === r.region);
+        testController.assertEqual(`[${label}] the Loops queue holds the chosen move`, JSON.stringify([[r.exit.name, r.target]]),
+            JSON.stringify(q.map((a) => [a.exitUsed, a.destinationRegion])));
+        pressKey('KeyB');
+        const crossed = await testController.pollForCondition(() => currentRegion() === r.target,
+            `[${label}] the clear performed the chosen move into ${r.target}`, 120000, 100);
+        testController.reportCondition(`[${label}] the clear performed the chosen move into ${r.target}`, !!crossed);
+        if (!crossed) return;
+        await testController.stateManager.pingWorker('after-choose', 3000);
+        testController.assertEqual(`[${label}] the clear checked ${r.location}`, true,
+            snapshotHasLocation(testController.stateManager.getSnapshot(), r.location));
+        const block = resolveBlockFor(r.region);
+        const saved = block ? loopStateSingleton._lookupBoundSummary(r.region, block.instance) : null;
+        testController.assertEqual(`[${label}] the Record block saved the visit, departing by the chosen exit`, true,
+            !!saved && saved.departureExitId === r.exit.name && (saved.summary?.checks ?? []).includes(r.location));
+    });
+}
+
+registerTest({
+    id: 'noiz2sa-choose-exit',
+    name: 'Noiz2sa N4b: with no move queued the page lists the exits; choosing one queues it and starts the game; the clear performs it',
+    description: 'Loop mode, an empty queue on 1:1: the page waits in choosing (a game key does nothing). Choosing the '
+        + 'exit queues the move in the Loops queue, the queue parks a Record block and the game starts; B lets the bot '
+        + 'clear it (seed 1, tracks 0 By hand, 4×), and the clear performs the chosen move: the location is checked and '
+        + 'the Record summary departs by that exit.',
+    testFunction: restoresSavedQueues(noiz2saChooseExit),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
 registerTest({
     id: 'noiz2sa-bot-replays-cleared-region',
     name: 'Noiz2sa N4b: in loop mode a Bot block on an already-cleared region plays it again, costs mana and trains',
@@ -906,13 +944,12 @@ registerTest({
 });
 
 registerTest({
-    id: 'noiz2sa-first-clear-explores',
-    name: 'Noiz2sa N4b: a region\'s first clear explores it fully; the check is no queue action',
-    description: 'Loads noiz2sa_substrate_test and fogs its start region (location and exits undiscovered). A Record '
-        + 'block parks on it and the clearing tape clears it: the region reads fully explored (every exit through '
-        + 'discovery:exitDiscovered). Leaving saves a summary with the clear in checks, and the block interior holds no '
-        + 'check and no explore.',
-    testFunction: restoresSavedQueues(noiz2saFirstClearExplores),
+    id: 'noiz2sa-first-entry-explores',
+    name: 'Noiz2sa N4b: a region\'s first entry explores it fully',
+    description: 'Loads noiz2sa_substrate_test, fogs its second region (location and exits undiscovered) and moves the '
+        + 'player into it: on that first entry the region reads fully explored, every exit discovered through '
+        + 'discovery:exitDiscovered, nothing checked.',
+    testFunction: restoresSavedQueues(noiz2saFirstEntryExplores),
     category: 'noiz2saSubstrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)
 });
@@ -933,8 +970,8 @@ registerTest({
     name: 'Noiz2sa N4b: B hands the controls to the bot and back; the Record summary holds the bot\'s play',
     description: 'A Record block on 1:1 (bot seed 1, tracks 0 By hand): B — the bot plays and the clock runs; B — the '
         + 'player\'s controls, paused, nothing steps or drains; a game key — the player plays; B — the bot plays on to '
-        + 'the clear and stays. Leaving saves a summary whose playStats count the bot\'s frames; the visit cost its game '
-        + 'seconds and trained the bot.',
+        + 'the clear, which performs the queued move. The summary\'s playStats count the bot\'s frames, the block '
+        + 'interior holds no check, the visit cost its game seconds and trained the bot.',
     testFunction: restoresSavedQueues(noiz2saAssistKey),
     category: 'noiz2saSubstrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)

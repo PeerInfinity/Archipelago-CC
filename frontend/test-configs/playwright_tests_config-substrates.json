@@ -125,10 +125,16 @@
             "_comment": "bulletml-incremental N4b (a): in loop mode the move out of a Noiz2sa region is played to a clear on every visit. A Bot block clears 1:1 (bot seed 1, tracks 0 By hand, 4x) and leaves; back on the region (cleared before) the page keeps its exits closed and the same Bot block plays it again (1002 frames, score 17330), costs floor(16.032) game seconds of drain and trains the bot. Batch fast: two ~4 s bot clears."
         },
         {
-            "id": "noiz2sa-first-clear-explores",
+            "id": "noiz2sa-first-entry-explores",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N4b (b): a first clear explores the region fully. The start region is fogged (location and exits undiscovered); a Record block's injected clear makes it fully explored (every location and exit discovered, through loop:exploreCompleted); the summary's checks hold the clear and the block interior holds no check and no explore. Batch fast: one injected clear at 8 frames per 16 ms."
+            "_comment": "bulletml-incremental N4b (b, as changed 2026-10-05: fully explored on FIRST ENTRY, not first clear). The second region is fogged (location and exits undiscovered) and the player is moved into it: on that first entry it reads fully explored (every location and exit discovered, through loop:exploreCompleted), nothing checked. Batch fast: no play."
+        },
+        {
+            "id": "noiz2sa-choose-exit",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4b (the 2026-10-05 change): with no move queued in loop mode the page lists the exits and waits; choosing one queues the move in the Loops queue, the queue parks a Record block and the game starts; the bot (B, seed 1, tracks 0 By hand, 4x) clears it and the clear performs the chosen move. Batch fast: one 4x bot clear."
         },
         {
             "id": "noiz2sa-bot-seed-per-visit",

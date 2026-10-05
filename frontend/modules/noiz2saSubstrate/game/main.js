@@ -15,9 +15,12 @@
  *                      {kind: 'portal', id: exitName} (play until the clear, then leave by it); options = the
  *                      host's bot settings {knobs, tracks, botSeed, speed, retryCap} (noiz2saTraining.js
  *                      botWalkOptions); botStop() hands the region back.
- *   host state (N4b):  setHostState({loopMode, bot}) — whether loop mode is on, and the bot's options for this visit
- *                      (the visit's bot seed, the knobs at the CURRENT tracks); sent on every region load and on
- *                      every change, in any order with configure.
+ *   host state (N4b):  setHostState({loopMode, bot, move}) — whether loop mode is on, the bot's options for this
+ *                      visit (the visit's bot seed, the knobs at the CURRENT tracks), and the move the loops queue
+ *                      has queued out of the region ({region, exit}, or null); sent on every region load and on every
+ *                      change, in any order with configure.
+ *                      requestHost({kind: 'chooseExit', exitName}) — no move is queued: the player chose this exit
+ *                      (the host queues the move and runs the queue).
  * Opened directly in a tab (no host), the page plays the region in its URL: ?start=1:2&end=1:3&seed=1.
  *
  * The game only steps while the player is playing it: a configured region waits for a game key (or a click), and
@@ -33,8 +36,12 @@
  * take the controls back), 1–9 leave by that exit once the exits are open.
  *
  * N4b — in LOOP MODE the move out of a region IS playing it to a clear (⚖ 2026-10-05: "clearing the level should be
- * counted as part of the "move" action"): the exits open only after a clear on THIS visit, cleared before or not.
- * Outside loop mode an already-checked region opens its exits at once, as before. Every visit plays with its own bot
+ * counted as part of the "move" action"): the exits open only after a clear on THIS visit, cleared before or not, and
+ * the clear PERFORMS the queued move (the page leaves by its exit). With no move queued (⚖ "the Noiz2sa panel should
+ * display a list of available exits, and when the player chooses one of the exits, that's when the game starts") the
+ * region waits in `choosing`: the exit buttons are the choice, and picking one asks the host to queue that move; the
+ * game starts when the host reports it queued. Outside loop mode an already-checked region opens its exits at once,
+ * and the player leaves by hand, as before. Every visit plays with its own bot
  * seed (the host draws it per region load), reported in the play-clock stats as `botSeed` (so a Record summary
  * carries it); `botFrames` counts the frames the bot played on the visit.
  *
@@ -63,7 +70,7 @@ const app = {
     pending: null,          // a configure that arrived before the patterns
     regionId: null, span: null, exits: [], alreadyChecked: false,
     run: null,
-    state: 'waiting',       // waiting (no region) | ready | playing | paused | cleared
+    state: 'waiting',       // waiting (no region) | choosing (loop mode, no move queued) | ready | playing | paused | cleared
     clearSent: false, clearedThisVisit: false,
     tape: null, tapeAt: 0, injected: false, speed: 1,
     effects: [], message: '', lastTime: null, acc: 0,
@@ -75,6 +82,8 @@ const app = {
     loopMode: false,        // N4b, from the host: in loop mode the exits open only after a clear on this visit
     hostBot: null,          // N4b, from the host: the bot's options for this visit (seed, knobs at the current tracks)
     botFrames: 0,           // the frames the bot played on this visit
+    move: null,             // N4b, from the host: the queued move out of the region {region, exit}, or null
+    chosenExit: null,       // N4b: the exit the player picked in `choosing` (the game starts when it is queued)
 };
 
 // ── keyboard ──
@@ -141,8 +150,25 @@ function startRegion({ regionId, span, exits, alreadyChecked }) {
     app.run = createRegionRun(span, { engine: { newGame, stepGame }, patterns: app.patterns });
     app.clearSent = false; app.clearedThisVisit = false; app.tape = null; app.injected = false; app.effects = []; app.message = '';
     app.visitFrames = 0; app.scoreFolded = 0; app.attemptInputs = []; app.speed = 1; app.botFrames = 0;
-    setState('ready');
+    app.chosenExit = null;
+    setState(needsChoice() ? 'choosing' : 'ready');
     renderExits();
+}
+
+/** the exit of the move queued out of THIS region, or null */
+const queuedExit = () => (app.move && app.move.region === app.regionId ? app.move.exit : null);
+/** loop mode, no move queued, nobody driving: the player picks the exit before the game starts (N4b) */
+const needsChoice = () => app.loopMode && !!app.regionId && !queuedExit() && !app.bot && !app.chosenExit && app.exits.length > 0;
+
+/** `choosing`: the player picked an exit — the host queues the move; the game starts when it reports it queued */
+function chooseExit(exitName) {
+    if (app.state !== 'choosing' || !app.exits.some((e) => e.exitName === exitName)) return false;
+    app.chosenExit = exitName;
+    app.message = `chosen: leave by ${exitName} — queueing the move`;
+    showStatus();
+    renderExits();
+    window.__swfBridge?.requestHost?.({ kind: 'chooseExit', exitName });
+    return true;
 }
 
 function configureNow(config) {
@@ -154,6 +180,7 @@ function configureNow(config) {
 }
 
 function leaveBy(exitName) {
+    if (app.state === 'choosing') return chooseExit(exitName);
     if (!exitName || !exitsOpen()) return false;
     const exit = app.exits.find((e) => e.exitName === exitName);
     if (!exit) return false;
@@ -193,17 +220,24 @@ function renderExits() {
         exitsEl.appendChild(n);
         return;
     }
+    const choosing = app.state === 'choosing';
+    if (choosing) {
+        const n = document.createElement('span'); n.className = 'note';
+        n.textContent = app.chosenExit ? 'queueing the move…' : 'no move is queued: choose the exit — the game starts, and the clear leaves by it';
+        exitsEl.appendChild(n);
+    }
     app.exits.forEach((e, i) => {
         const b = document.createElement('button');
-        b.textContent = `${i + 1}: leave → ${e.targetRegion ?? e.exitName}`;
+        b.textContent = `${i + 1}: ${choosing ? 'go' : 'leave'} → ${e.targetRegion ?? e.exitName}`;
         b.title = `${e.exitName}${e.side ? ` (side ${e.side})` : ''}`;
-        b.disabled = !exitsOpen();
+        b.disabled = choosing ? !!app.chosenExit : !exitsOpen();
         b.dataset.exit = e.exitName;
         b.addEventListener('click', () => leaveBy(e.exitName));
         exitsEl.appendChild(b);
     });
-    if (!exitsOpen()) {
-        const n = document.createElement('span'); n.className = 'note'; n.textContent = 'clear the region to leave';
+    if (!choosing && !exitsOpen()) {
+        const n = document.createElement('span'); n.className = 'note';
+        n.textContent = queuedExit() && app.loopMode ? `clear the region: the clear leaves by ${queuedExit()}` : 'clear the region to leave';
         exitsEl.appendChild(n);
     }
 }
@@ -218,6 +252,12 @@ function onCleared() {
     }
     app.message = app.alreadyChecked ? 'cleared again' : 'REGION CLEAR';
     renderExits();
+}
+
+/** N4b: in loop mode the clear performs the queued move (a Bot walk leaves by its own portal goal) */
+function performQueuedMove() {
+    const exit = app.loopMode ? queuedExit() : null;
+    if (exit) leaveBy(exit);
 }
 
 /** one game frame; false when the bot's next input has not arrived yet (the page waits, it never guesses) */
@@ -261,6 +301,7 @@ function stepOnce() {
         stopBot();
         onCleared();
         if (bot?.goal.kind === 'portal') leaveBy(bot.goal.id);
+        else performQueuedMove();
     } else if (app.state === 'playing' && app.visitFrames % FPS_FRAMES_PER_REPORT === 0) {
         reportPlayClock();
     }
@@ -328,7 +369,7 @@ function botWalkTo(goal, options) {
  * game pauses until the player's next game key). A Bot block's own walk is the queue's: B leaves it alone.
  */
 function toggleAssist() {
-    if (!app.run || app.state === 'cleared' || app.state === 'waiting') return false;
+    if (!app.run || app.state === 'cleared' || app.state === 'waiting' || app.state === 'choosing') return false;
     if (app.bot) {
         if (app.bot.goal.kind !== 'assist') return false;
         stopBot();
@@ -355,6 +396,22 @@ function setHostState(state) {
         app.hostBot = normalizeBotOptions(state.bot);
         // an assisting bot plays its next attempt at the new tracks (a walk gets them from the host's proxy)
         if (app.bot?.goal.kind === 'assist') { app.bot.next = app.hostBot; app.speed = app.hostBot.speed; }
+    }
+    if ('move' in state) app.move = state.move && typeof state.move === 'object' ? state.move : null;
+    if (state.refused?.kind === 'chooseExit' && app.chosenExit && app.state === 'choosing') {
+        app.message = `could not queue the move by ${app.chosenExit}: ${state.refused.why ?? 'refused'}`;
+        app.chosenExit = null;
+    }
+    if (app.state === 'choosing' && !needsChoice()) {
+        // a move is queued now (the player's choice, or the Loops panel): a chosen exit starts the game at once
+        const chosen = app.chosenExit && queuedExit() === app.chosenExit;
+        app.message = chosen ? `leaving by ${app.chosenExit} on the clear` : '';
+        app.injected = false; app.speed = 1;
+        setState(chosen ? 'playing' : 'ready');
+    } else if (app.state === 'ready' && needsChoice() && app.run.attemptFrames === 0 && app.visitFrames === 0) {
+        setState('choosing'); // loop mode turned on, or the queued move went away, before play began
+    } else if (app.state === 'cleared') {
+        performQueuedMove(); // a move queued after the clear
     }
     renderExits();
     reportPlayClock();
@@ -425,7 +482,8 @@ function render() {
     VIEW.effects = app.effects;
     VIEW.modeLabel = app.span ? `REGION ${showSpan(app.span)}` : 'NOIZ2SA';
     VIEW.paused = app.state === 'paused';
-    VIEW.banner = app.state === 'ready' ? 'press Z or click to start'
+    VIEW.banner = app.state === 'choosing' ? (app.chosenExit ? 'queueing the move…' : 'choose an exit (1-9) to start')
+        : app.state === 'ready' ? 'press Z or click to start'
         : app.state === 'cleared' ? 'REGION CLEAR — leave by an exit (R: play again)'
             : app.message.startsWith('HIT') && run?.attemptFrames < 90 ? 'HIT — the region restarts' : '';
     draw(ctx, run?.g ?? null, VIEW);
@@ -508,6 +566,9 @@ window.__noiz2saDebug = () => ({
     loopMode: app.loopMode,
     visitBotSeed: visitBotSeed(),
     botFrames: app.botFrames,
+    move: app.move,
+    queuedExit: queuedExit(),
+    chosenExit: app.chosenExit,
 });
 window.__noiz2saTest = {
     /** play an injected tape from the current attempt's next frame; `speed` game frames per 16 ms */
@@ -526,6 +587,8 @@ window.__noiz2saTest = {
     again: () => playAgain(),
     /** B: the bot plays for the player, or hands the controls back */
     assist: () => toggleAssist(),
+    /** `choosing`: pick the exit (as the exit button does) */
+    choose: (exitName) => chooseExit(exitName),
 };
 
 // ── boot ──

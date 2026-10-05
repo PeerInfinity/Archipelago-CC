@@ -20,13 +20,18 @@
  *
  * N4b:
  *  - the HOST STATE for the page (the bridge's `hostState` command → `__swfBridge.setHostState`): loop mode (in loop
- *    mode the page opens a region's exits only after a clear on this visit: the move IS the clear) and the bot's
- *    options for this visit, sent on every region load and on every change of loop mode, the tracks or the settings;
+ *    mode the page opens a region's exits only after a clear on this visit, and the clear performs the queued move:
+ *    the move IS the clear), the bot's options for this visit, and the move the loops queue holds out of the region
+ *    (`move: {region, exit}`), sent on every region load and on every change of loop mode, the tracks, the settings
+ *    or the queue;
+ *  - the page's REQUEST (`substrate:hostRequest`, the bridge's `requestHost`): with no move queued, the player chose
+ *    an exit — queue that move (as the Loops panel does) and run the queue, if it can run from here;
  *  - a BOT SEED PER VISIT (`drawBotSeed`, drawn on every region load), carried by the walk and the host state; the page
  *    reports it in its play-clock stats, so a Record summary carries it (`playStats.botSeed`). `pinBotSeed(n)` pins it
  *    (tests: the measured runs are at seed 1);
- *  - the FIRST CLEAR explores the region fully (`noiz2saFirstClear.js`): as many `loop:exploreCompleted` as it has
- *    locations and exits, the first time its clear is in the host's checked set.
+ *  - the FIRST ENTRY explores the region fully (`noiz2saFirstEntry.js`, ⚖ "fully explored when they are first
+ *    entered"): as many `loop:exploreCompleted` as it has locations and exits, on its first region load since the
+ *    last rules load.
  */
 
 import { createSubstrateIframePanelClass } from '../flashSubstrate/flashSubstratePanel.js';
@@ -45,9 +50,10 @@ import {
 } from './noiz2saSubstrateLibrary.js';
 import { createTrainerService, drawBotSeed, NOIZ2SA_SETTINGS_SCHEMA, NOIZ2SA_SETTINGS_DEFAULTS } from './noiz2saTraining.js';
 import { createTrainingSection } from './noiz2saTrainingSection.js';
-import { clearsOf, checkedNamesOf, exploresToFullyExplore, createFirstClearWatcher } from './noiz2saFirstClear.js';
+import { exploresToFullyExplore, createFirstEntryWatcher, queuedMoveFrom } from './noiz2saFirstEntry.js';
 import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
 import { getGameStateSingleton } from '../gameState/singleton.js';
+import loopStateSingleton from '../loops/loopStateSingleton.js';
 
 // In an iframe the page plays the region the bridge configures; opened directly in a tab it plays a region
 // from its own URL (?start=1:2&end=1:3&seed=1), for development.
@@ -106,37 +112,85 @@ function isLoopModeActive() {
     try { return getGameStateSingleton()?.getLoopModeActive?.() === true; } catch { return false; }
 }
 let _loopMode = false;
-/** the page's host state: loop mode and the visit's bot options (the bridge hands it to `__swfBridge.setHostState`) */
-function publishHostState() {
+
+const currentRegion = () => { try { return getGameStateSingleton()?.getCurrentRegion?.() ?? null; } catch { return null; } };
+/** the move the loops queue holds out of `region` for this visit ({exit, target, index}), or null */
+function queuedMoveOut(region) {
+    const ls = loopStateSingleton;
+    if (!region || !ls?.getActionQueue) return null;
+    const started = ls.isProcessing || ls.isPaused || ls._queueCompleted || ls._manualActionEntered;
+    return queuedMoveFrom(ls.getActionQueue(), started ? ls.currentActionIndex : 0, region);
+}
+/**
+ * The page's host state (the bridge hands it to `__swfBridge.setHostState`): loop mode, the visit's bot options, and
+ * the queued move out of the current region (`{region, exit}`; null = none queued: the page asks the player).
+ */
+function publishHostState(extra = {}) {
+    const region = _regions.has(currentRegion()) ? currentRegion() : _lastRegion;
+    const m = _loopMode ? queuedMoveOut(region) : null;
     _eventBus?.publish(NOIZ2SA_PLAYBACK_CONTROL_EVENT, {
-        method: 'hostState', args: [{ loopMode: _loopMode, bot: visitBotOptions() }],
+        method: 'hostState',
+        args: [{ loopMode: _loopMode, bot: visitBotOptions(), move: m ? { region, exit: m.exit } : null, ...extra }],
     }, 'noiz2saSubstrate');
 }
 
-// ── N4b: a first clear explores the region fully ──
-const _firstClears = createFirstClearWatcher();
-function exploreFirstClears(snapshot) {
+/**
+ * The page's request: with no move queued, the player chose `exitName` (⚖ "when the player chooses one of the exits,
+ * that's when the game starts. When the level is cleared, the move to the exit that the player chose is performed").
+ * Queue the move as the Loops panel does (gameState `updatePath`), then run the queue if it can run from here: a
+ * queue that ran to its end resumes from the new move, a queue never started starts (the move is its first); a
+ * paused queue stays paused (the move is queued, the player resumes it). The new host state starts the game.
+ */
+function handleHostRequest(data) {
+    const region = data?.region, req = data?.request;
+    if (!_regions.has(region) || req?.kind !== 'chooseExit') return;
+    const refuse = (why) => publishHostState({ refused: { kind: 'chooseExit', exitName: req.exitName ?? null, why } });
+    if (!_loopMode) { refuse('loop mode is off'); return; }
+    if (region !== currentRegion()) { refuse('the player is not in this region'); return; }
+    if (queuedMoveOut(region)) { publishHostState(); return; }
     const warehouse = _initApi?.getModuleFunction?.('procgenPlayer', 'getWarehouse')?.() ?? null;
-    const regions = _firstClears.note(clearsOf(warehouse, NOIZ2SA_SUBSTRATE_ID), checkedNamesOf(snapshot));
-    if (!regions.length || !_dispatcher) return;
-    const staticRegions = stateManager?.getStaticData?.()?.regions;
-    for (const region of regions) {
-        const n = exploresToFullyExplore(staticRegions?.get?.(region));
-        // The explores the discovery module answers one by one, as a full explore does elsewhere. `fromLoop`: loops
-        // must not gate or capture them — the clear they follow already passed the action gate, and this
-        // substrate has no explore action to record (⚖ N4b).
-        for (let i = 0; i < n; i++) {
-            _exploresSent++;
-            _dispatcher.publish('loop:exploreCompleted', {
-                regionName: region, fromLoop: true, source: 'noiz2sa:firstClear',
-            }, { initialTarget: 'bottom' });
+    const world = warehouse?.get?.(region)?.world ?? warehouse?.regions?.get?.(region)?.world ?? null;
+    const exits = world?.exits instanceof Map ? [...world.exits.values()] : (Array.isArray(world?.exits) ? world.exits : []);
+    const exit = exits.find((e) => (e?.exitName ?? e?.exit_id) === req.exitName);
+    const updatePath = _initApi?.getModuleFunction?.('gameState', 'updatePath');
+    if (!exit?.targetRegion || typeof updatePath !== 'function') { refuse(`no exit ${req.exitName} to queue`); return; }
+    updatePath(exit.targetRegion, req.exitName, region);
+    const ls = loopStateSingleton;
+    const state = ls.getProcessingState?.();
+    if (state === 'completed' || state === 'waiting') {
+        // the queue ran to its end: resume from the new move (a 'waiting' queue already did, on pathUpdated). The
+        // cursor of a finished queue is its old end; one left past the new move (the path was cleared since) is moved
+        // onto it.
+        const queue = ls.getActionQueue();
+        const idx = queue.length - 1;
+        if (queue[idx]?.type === 'regionMove' && queue[idx].sourceRegion === region && ls.currentActionIndex > idx) {
+            ls.currentActionIndex = idx;
         }
+        ls.resumeProcessing?.();
+    } else if (state === 'idle' && queuedMoveFrom(ls.getActionQueue(), 0, region)) {
+        ls.startProcessing?.(); // never started, and the move is its first: start it
+    }
+    publishHostState();
+}
+
+// ── N4b: a first entry explores the region fully ──
+const _firstEntries = createFirstEntryWatcher();
+function exploreOnFirstEntry(region) {
+    if (!_dispatcher || !_firstEntries.enter(region)) return;
+    const n = exploresToFullyExplore(stateManager?.getStaticData?.()?.regions?.get?.(region));
+    // The explores the discovery module answers one by one, as a full explore does elsewhere. `fromLoop`: loops must
+    // not gate or capture them — an arrival is no player action, and this substrate has no explore action (⚖ N4b).
+    for (let i = 0; i < n; i++) {
+        _exploresSent++;
+        _dispatcher.publish('loop:exploreCompleted', {
+            regionName: region, fromLoop: true, source: 'noiz2sa:firstEntry',
+        }, { initialTarget: 'bottom' });
     }
 }
 let _dispatcher = null;
 let _exploresSent = 0;
-/** test surface: the regions explored by a first clear since the last rules load, and the explores sent */
-export const getFirstClearState = () => ({ explored: _firstClears.explored(), exploresSent: _exploresSent });
+/** test surface: the regions entered (and so explored) since the last rules load, and the explores sent */
+export const getFirstEntryState = () => ({ entered: _firstEntries.entered(), exploresSent: _exploresSent });
 
 const BasePanel = createSubstrateIframePanelClass({
     componentType: NOIZ2SA_PANEL_COMPONENT_TYPE,
@@ -226,7 +280,7 @@ export function register(registrationApi) {
     // exit) up the dispatcher chain.
     registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
     registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
-    // N4b: a region's first clear explores it fully (noiz2saFirstClear.js).
+    // N4b: a region's first entry explores it fully (noiz2saFirstEntry.js).
     registrationApi.registerDispatcherSender('loop:exploreCompleted', 'bottom');
 
     // procgenPlayer publishes noiz2sa:loadRegion (the entry's loadRegionEvent); the bridge picks it up through
@@ -241,8 +295,11 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent('substrate:playClock');
     registrationApi.registerEventBusSubscriberIntent('loops:summaryApplied');
     registrationApi.registerEventBusSubscriberIntent('gameState:loopModeChanged');
-    registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
     registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
+    for (const ev of ['gameState:pathUpdated', 'loopState:queueUpdated', 'loopState:manualEntered', 'loopState:queueCompleted',
+        'loopState:loopReset', 'gameState:loopReset', 'gameState:regionChanged', 'substrate:hostRequest']) {
+        registrationApi.registerEventBusSubscriberIntent(ev);
+    }
 
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {
         substrateRegistry.register(substrateRegistryEntry);
@@ -288,8 +345,8 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
             newVisitSeed();
             _loopMode = isLoopModeActive();
             publishHostState();
-            // the first-clear watcher's baseline: the clears' state as the visit starts
-            exploreFirstClears(stateManager?.getLatestStateSnapshot?.());
+            // a first entry explores the region fully
+            exploreOnFirstEntry(payload.region_id);
         }
         const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
         if (isFocusLocked?.()) return;
@@ -306,14 +363,15 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         _loopMode = data?.active === true;
         publishHostState();
     }, 'noiz2saSubstrate');
-    // N4b: a region's first clear explores it fully; a rules load starts over.
-    eventBus.subscribe('stateManager:snapshotUpdated', (data) => {
-        exploreFirstClears(data?.snapshot ?? stateManager?.getLatestStateSnapshot?.());
-    }, 'noiz2saSubstrate');
-    eventBus.subscribe('stateManager:rulesLoaded', (data) => {
-        _firstClears.reset();
-        exploreFirstClears(data?.snapshot ?? null);
-    }, 'noiz2saSubstrate');
+    // N4b: a rules load starts the first entries over.
+    eventBus.subscribe('stateManager:rulesLoaded', () => _firstEntries.reset(), 'noiz2saSubstrate');
+    // N4b: the queued move out of the region may change — tell the page.
+    for (const ev of ['gameState:pathUpdated', 'loopState:queueUpdated', 'loopState:manualEntered',
+        'loopState:queueCompleted', 'loopState:loopReset', 'gameState:loopReset', 'gameState:regionChanged']) {
+        eventBus.subscribe(ev, () => { if (_regions.has(currentRegion())) publishHostState(); }, 'noiz2saSubstrate');
+    }
+    // N4b: the page's requests (the player chose the exit to leave by)
+    eventBus.subscribe('substrate:hostRequest', (data) => handleHostRequest(data), 'noiz2saSubstrate');
     // …and an instant Playback of a Noiz2sa summary earns the recorded visit.
     eventBus.subscribe('loops:summaryApplied', (data) => {
         if (data?.substrate !== NOIZ2SA_SUBSTRATE_ID) return;
