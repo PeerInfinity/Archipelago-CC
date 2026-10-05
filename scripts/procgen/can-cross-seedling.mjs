@@ -18,6 +18,7 @@
  *   node scripts/procgen/can-cross-seedling.mjs --level=14 --exit=15 --from=13 --witness=/tmp/w.json
  *   node scripts/procgen/can-cross-seedling.mjs --level=14 --exit=15 --from=13 --no-budget --budget-ms=5000
  *   node scripts/procgen/can-cross-seedling.mjs --level=6 --exit=7 --from=5 --time=6138 --persistence=5:0 --primary=0
+ *   node scripts/procgen/can-cross-seedling.mjs --level=14 --exit=15 --from=13 --derive=sword,spear,wand --dash=none
  *
  * Flags: `--level=<n>` (required); `--exit=<to-level>` or `--exit=<x>,<y>` (a door);
  * `--from=<level>` (the door the game lands you by) or `--spawn=<x>,<y>`;
@@ -26,7 +27,9 @@
  * `--budget=<consults>` (deterministic, default `DEFAULT_CONSULT_BUDGET`) or
  * `--budget-ms=<ms>` (wall clock, marked non-deterministic) or `--no-budget`;
  * `--json` (the whole result, the witness tape included); `--witness=<path>`
- * (write the witness tape on `can`). Exit 0 on any verdict; 2 on a bad request.
+ * (write the witness tape on `can`); `--derive=a,b,c` (every subset of the pool
+ * asked, the minimal `can` sets printed — `deriveMinimalSets`, a demo of the
+ * question, never a rule). Exit 0 on any verdict; 2 on a bad request.
  */
 
 import { writeFileSync } from 'node:fs';
@@ -80,8 +83,31 @@ export function requestFromArgv(argv) {
 }
 
 async function main() {
-    const { canCross, CanCrossError } = await import(join(MODULE, 'seedlingCanCross.js'));
+    const { canCross, CanCrossError, deriveMinimalSets } = await import(join(MODULE, 'seedlingCanCross.js'));
     const argv = process.argv.slice(2);
+    const pool = opt('--derive', argv);
+    if (pool !== undefined) {
+        let d;
+        try {
+            const { inventory: _, ...req } = requestFromArgv(argv);
+            d = deriveMinimalSets({ ...req, pool: pool.split(',').filter(Boolean) });
+        } catch (e) {
+            if (!(e instanceof CanCrossError) && e.constructor !== Error) throw e;
+            console.error(`can-cross-seedling: ${e.message}`);
+            process.exit(2);
+        }
+        const name = (s) => `{${s.join(', ') || '∅'}}`;
+        if (argv.includes('--json')) {
+            console.log(JSON.stringify(d, null, 2));
+            return;
+        }
+        for (const row of d.rows) console.log(`${name(row.set).padEnd(28)} ${row.verdict.padEnd(14)} ${row.why.replace(/\s+/g, ' ').slice(0, 140)}`);
+        console.log(`MINIMAL: ${d.minimal.map(name).join(' ') || 'none'}`);
+        for (const [k, v] of Object.entries(d.unprovedBelow)) console.log(`⚠ {${k}} not proved minimal: ${v.map(name).join(' ')} undecided/refused`);
+        if (d.nonMonotone.length) console.log(`⛔ NON-MONOTONE: ${d.nonMonotone.map(name).join(' ')} cannot, above a set that can`);
+        console.log(`solver: ${d.solver}`);
+        return;
+    }
     let r;
     try {
         r = canCross(requestFromArgv(argv));

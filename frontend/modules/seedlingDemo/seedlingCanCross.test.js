@@ -10,6 +10,11 @@
  *                  and the DETOUR rung's own bound words (prose basis, named)
  *   model-refused  the Ghost Sword on L14: `levelRun` refuses the press arm
  *
+ * and D2's derivation over L16 → L18 (`stairsup@352,80`) from L15, pool
+ * {sword, conch}: the block-route search's REAL `MAX_ROUTE_ORDERS` bound
+ * (`undecided`, prose basis), a minimal set not proved minimal, and the solver
+ * NOT monotone in the inventory (the Conch turns the Sword's `can` into `cannot`).
+ *
  * ⛔ No clock is read: every budget here is the deterministic consult counter.
  */
 import { describe, expect, it } from 'vitest';
@@ -20,7 +25,7 @@ import { atlasLevelSource } from './levelSource.js';
 import { SolverRefusal, deriveChaserDetour } from './solverBot.js';
 import {
     CanCrossError, DEFAULT_CONSULT_BUDGET, VERDICTS, buildArrivalStaging, canCross, classifyError,
-    doorArrival, importClosure, solverStamp,
+    deriveMinimalSets, doorArrival, importClosure, solverStamp,
 } from './seedlingCanCross.js';
 
 const SRC = atlasLevelSource();
@@ -150,4 +155,18 @@ describe('canCross — deterministic, and stamped', () => {
         expect(s.files).toBeGreaterThan(closure.length);
         expect(ask({ arrival: { from: 13 }, inventory: ['sword'], witness: false }).solver.id).toBe(s.id);
     });
+});
+
+describe('deriveMinimalSets — the derivation question, with its caveats visible', () => {
+    it('L16 → L18 from L15 over {sword, conch}: {sword} is minimal but unproved, and {sword, conch} is a NON-MONOTONE cannot', () => {
+        const d = deriveMinimalSets({ level: 16, exit: { x: 352, y: 80 }, arrival: { from: 15 }, dashMode: 'none',
+            pool: ['sword', 'conch'] });
+        expect(d.rows.map((r) => [r.set.join('+') || '∅', r.verdict])).toEqual([
+            ['∅', 'undecided'], ['conch', 'undecided'], ['sword', 'can'], ['sword+conch', 'cannot']]);
+        expect(d.rows[0].why).toMatch(/^bound: .*hit `MAX_ROUTE_ORDERS`/);
+        expect(d.minimal).toEqual([['sword']]);
+        expect(d.unprovedBelow).toEqual({ sword: [[]] });
+        expect(d.nonMonotone).toEqual([['sword', 'conch']]);
+        expect(d.solver).toBe(solverStamp().id);
+    }, 120_000);
 });
