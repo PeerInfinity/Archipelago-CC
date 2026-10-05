@@ -1480,7 +1480,7 @@
     },
     {
       "file": "r9-solve-12.json",
-      "tickCount": 2419,
+      "tickCount": 2364,
       "bootLevel": 12,
       "tapeVersion": 11,
       "noHazards": []
