@@ -13136,6 +13136,69 @@ the string-pull), L25/L26 ~2–6 s.
   corridors go where no committed walk went, and in L22 the drive stalled on a
   corridor the preview walked clean.
 
+### Seedling fidelity CANCROSS — the solver as an oracle
+
+⚖ The user, 2026-10-04: *"… we shouldn't hardcode it. We should derive the
+requirements from what the solver can do."* The rules arc's playthrough
+generator asks, per crossing and item set, *"can the bot cross A → B starting
+with inventory I?"*. This slice built that question as one call over today's
+solver, with no solver change. The report is
+`CC/docs/cloud-reports/seedling-fidelity-cancross.md`.
+
+**The API.** `seedlingDemo/seedlingCanCross.canCross({level, exit | goal,
+inventory, arrival?, budget?, dashMode?})` returns `{verdict, ms, why, cause,
+witness?, solver, arrival, budget}`. The CLI is
+`scripts/procgen/can-cross-seedling.mjs`.
+- **`verdict`** is one of four:
+  - `can`: solved, crossed, no death. `witness` is the `buildStagedTape` body, replayed through the model.
+  - `cannot`: a true `SolverRefusal`.
+  - `undecided`: `e.deadline`, a search bound, a `PendingDeclaration`, or a `SolverBotError`.
+  - `model-refused`: any other model throw.
+- **`cause.basis`** says whether the arm was read from a field or from prose. Two bounds exist only in prose: the
+  block-route `hit \`MAX_ROUTE_*\``, and the DETOUR rung's `… candidate(s) left unasked`.
+- **The budget** is a deterministic counter of `shouldStop` consults (default 5,000; the measured maximum is 1,807).
+- **The arrival** is built from the atlas door (the link's own `playerx/playery`), and every defaulted field is listed
+  in `assumed`.
+- **`solver`** is an md5 over the import closure of the solve, plus the atlas.
+
+**Fresh vs live (D2).** A fresh-built arrival and the captured one gave the
+same verdict and the same plan hash on **40 / 40** rows: every captured arrival
+in both captures, both dash modes, minus 3 walker goals. L14's item table
+reproduces through `canCross`, with one exception: the **Fire Wand now solves**
+(DETOUR, 173 t). The swordless walk never presses X. The l16-budget report's
+"a fresh JS boot refuses L16" was **one idle tick**. The JS boot ticks once
+before it solves, the bobs wake on that tick, and the same staging solves from
+tick 0 and refuses from tick 1. The rng, the seam and the persistence played no
+part.
+
+**Derivation demo.**
+- L14 → L15 over {sword, spear, wand}: minimal **{∅}**.
+- L16 → L18 over {sword, conch}:
+  - {sword} is minimal but **unproved**: ∅ is `undecided` at a real `MAX_ROUTE_ORDERS`.
+  - {sword, conch} is `cannot`. **The solver is not monotone in the inventory**: swimming widens the corridor onto a
+    sandtrap.
+
+**The game witness (D3).** `cancross-l16-sword-none` is a door-built arrival
+(L16 from L15, Sword) solved by PULL in 206 t, hits 0. The model reproduces the
+game's recording: 207 observations, 1 transition. ⛔ The same crossing under
+`all` (111 t, one dash) is **refuted by the game**:
+- the player is hit on the game, and the stream parts at tick 104;
+- this happens from the door-built arrival AND from the captured live one, alike.
+
+So `canCross` asks `dashMode: 'none'` by default.
+
+**Trap candidates**, for the catalogue to number:
+
+- **"fresh vs live" can be a TICK, not a field.** One idle tick before a solve
+  wakes the room's bobs. A comparison of stagings field by field cannot see a
+  difference that lives in when the solve starts.
+- **A `can` from a dash plan is a model claim the game may refute.** A preview
+  that certified a dash corridor is not a recording of one.
+- **An oracle over a greedy ladder is not monotone in its inputs.** "A superset
+  of a `can` set also can" is true of the game, because an item can be ignored.
+  It is false of the solver. A derivation should report both claims rather than
+  let one stand in for the other.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
