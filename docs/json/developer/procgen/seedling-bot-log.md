@@ -13294,6 +13294,17 @@ the model reproduces each one:
 The disc alone frees steps 95/101 (the m1 mutant keeps them solved), and the
 census rule is what makes the ten `silentHazards` true.
 
+**⛔ D1's silent-placement half STOPPED at the planner, and it is HELD.** The
+AFTER identity block measured `r9-campaign --check` exit 1 (`393808af…`):
+`r9-solve-12` re-derives 2,419 → 2,364 ticks without L12's silent square,
+because the committed plan detours around it. No re-record is licensed, so a
+text-silent placement keeps its old square as a planner volume
+(`kind: 'held-silent'`, `held: true`), and it is still listed in
+`silentHazards`. Where the held square is a wall, the `talk` verb's SILENT arm
+walks through it at zero cost. With that, the campaign is `b29b589b…` (exit 0)
+and steps 95/101 still solve. Dropping the hold is one deletion plus
+`r9-solve-12`'s re-record.
+
 **D2 — the `talk` verb (PASS, game-witnessed).**
 `OBSTACLE_STRATEGIES['proximity-hazard:watcher'] = 'talk'` is registered as
 `execTalk`.
@@ -13313,11 +13324,12 @@ census rule is what makes the ten `silentHazards` true.
 
 **D3 — the survey**, at `b116c69` → the head: **146/116/3 → 148/114/3**.
 
-- Steps 95 and 101 solve.
+- Steps 95 and 101 solve (the held square is the frontier's wall, and `talk`'s
+  silent arm walks through it).
 - Step 66 (L37, no Fire) moves from VERB-MISSING to ITEM-GATE on the tree
   behind the watcher.
-- Steps 27, 152 and 164 (L12) and 130 (L37) solve 32–50 ticks sooner: the
-  silent watchers' squares were detours.
+- Without the hold, steps 27, 152 and 164 (L12) and 130 (L37) solve 32–50
+  ticks sooner (the silent squares were detours); with it they are unchanged.
 - The new first refusal past 2.2 is **step 96 (L38):
   `proximity-hazard:buttonroom`**, VERB-MISSING. Step 94 (L12) is still a
   TIMEOUT. One profile puts ~94% of its planner time in `planWaypoints`'
@@ -13339,6 +13351,9 @@ witnesses land one dash hit on the watcher before leaving by the door.
 - one class row, many placements: a hazard decided by a per-placement
   attribute (`text`) cannot be priced by the class alone, and ten of eleven
   rows were pricing a mechanism that never runs;
+- a planner volume nobody needs can still be load-bearing: removing a square
+  the game never prices moved a committed campaign tape by 55 ticks, because
+  the committed plan's detour went around it;
 - talking changes what the sword can do: a watcher's tag gates `talk()` ON
   and `hit()` OFF, so the dialogue that clears a corridor also arms the bloody
   branch, and the solver's dash then lands a hit (one, in both L114
