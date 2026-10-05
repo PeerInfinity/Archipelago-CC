@@ -64,7 +64,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
-import { FLASH_PANEL, clickPanelTab } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, clickPanelTab, slotBlockOf } from './seedlingRoomPlay.js';
 import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
 
 argvHelp(import.meta.url);
@@ -112,7 +112,7 @@ const TO_HOUSE = exitOf(START_REGION, 'house_door');
  * (`region_atlas.map_document`), the exit's `entrance_spawn` only without one.
  */
 const RETURNS = returnSpawnTable(JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases',
-    PRESET.region_atlas?.map_document ?? 'seedling-map.json'), 'utf8')));
+    slotBlockOf(PRESET, 'region_atlas')?.map_document ?? 'seedling-map.json'), 'utf8')));
 const arrivalAt = (region, exit) => {
     const [tx, ty] = exit.entrance_tile ?? exit.exit_tiles[0];
     const back = RETURNS.get(returnKey(payload(region).level, tx, ty));

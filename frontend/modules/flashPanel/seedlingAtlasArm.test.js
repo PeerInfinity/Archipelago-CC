@@ -53,7 +53,7 @@ const load = (rules, over = {}) => {
     const logs = [];
     const imports = [];
     return loadSeedlingRandomizer({
-        flashPanel: rules.flash_panel,
+        flashPanel: rules.flash_panel['1'],
         manifest: MANIFEST,
         rawRules: rules,
         locations: locationsMapOf(rules),
@@ -130,7 +130,7 @@ describe('loadSeedlingRandomizer hands the four pipeline real-room worlds to the
         expect(r).toMatchObject({ arm: RANDOMIZER_ARMS.ATLAS, delivery: null, set: null, replaced: 0,
             selfPlayer: 1, tileSize: 16 });
         expect(r.checkBinding).toBeInstanceOf(SeedlingCheckBinding);
-        expect(r.assets.atlas).toMatchObject({ ok: true, atlasId: rulesOf(id).region_atlas.atlas_id });
+        expect(r.assets.atlas).toMatchObject({ ok: true, atlasId: rulesOf(id).region_atlas['1'].atlas_id });
         expect(imports.some((u) => u.endsWith(AP_ATLAS_MODULE_PATHS.levelWorld))).toBe(true);
         expect(logs.at(-1)[0]).toMatch(/^\[ap placement\] atlas arm: \d+ real room\(s\), \d+ of \d+ location\(s\) bound where they stand/);
     });
@@ -210,7 +210,7 @@ describe('loadSeedlingRandomizer hands the four pipeline real-room worlds to the
 
     it('an atlas the index does not list is refused by sentence, before anything is bound', async () => {
         const rules = rulesOf('seedling_atlas');
-        rules.region_atlas.atlas_id = 'seedling-nowhere';
+        rules.region_atlas['1'].atlas_id = 'seedling-nowhere';
         const { r } = await load(rules);
         expect(r).toMatchObject({ verdict: 'ineligible', arm: RANDOMIZER_ARMS.ATLAS, checkBinding: null });
         expect(r.why).toMatch(/^atlas: the atlas index lists no atlas "seedling-nowhere"/);

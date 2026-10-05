@@ -52,7 +52,7 @@ const locationsOf = (rules) => {
     return out;
 };
 const loadJs = () => loadSeedlingRandomizer({
-    flashPanel: PT.flash_panel, manifest: null, transport: 'js', rawRules: PT, locations: locationsOf(PT),
+    flashPanel: PT.flash_panel['1'], manifest: null, transport: 'js', rawRules: PT, locations: locationsOf(PT),
     playerId: Object.keys(PT.regions)[0], gameConfig: GAME, baseUrl: pathToFileURL(join(ROOT, 'frontend/')).href,
     fetchJson: async (u) => JSON.parse(readFileSync(fileURLToPath(u), 'utf8')),
     importModule: (u) => import(/* @vite-ignore */ u),

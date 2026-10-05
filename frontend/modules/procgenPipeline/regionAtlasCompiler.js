@@ -426,6 +426,19 @@ export function compileRegionAtlas(atlas, options = {}) {
     }
 
     const { gameName, gameDirectory, worldClassName } = deriveIdentifiers(atlas, options);
+    // ⛓ The document first, so every per-player write below names the scaffold's
+    // ONE slot rather than typing `'1'` (rules F2: a per-player block is keyed
+    // by the slot that owns it, and that slot is the scaffold's to say).
+    const rules = makeRulesJsonScaffold({
+        gameName,
+        gameDirectory,
+        worldClassName,
+        seed: options.seed ?? 1,
+        seedName: options.seedName ?? '',
+        playerName: options.playerName ?? 'Player1',
+        startRegions: [MENU_REGION],
+    });
+    const [player] = Object.keys(rules.player_names);
     const atlasRegions = Array.isArray(atlas.regions) ? atlas.regions : [];
 
     // --- AP regions ------------------------------------------------------
@@ -573,7 +586,7 @@ export function compileRegionAtlas(atlas, options = {}) {
             // Real classifications need per-game knowledge the atlas does not
             // hold (decision 6 keeps engine binding out of it).
             entry.item = {
-                name: loc.vanilla_item, player: 1, advancement: true, type: 'progression',
+                name: loc.vanilla_item, player: Number(player), advancement: true, type: 'progression',
             };
             itempoolCounts[loc.vanilla_item] = (itempoolCounts[loc.vanilla_item] ?? 0) + 1;
             placedItems += 1;
@@ -613,19 +626,10 @@ export function compileRegionAtlas(atlas, options = {}) {
     regions[MENU_REGION] = makeRegion(MENU_REGION, menuExits, []);
 
     // --- assemble ---------------------------------------------------------
-    const rules = makeRulesJsonScaffold({
-        gameName,
-        gameDirectory,
-        worldClassName,
-        seed: options.seed ?? 1,
-        seedName: options.seedName ?? '',
-        playerName: options.playerName ?? 'Player1',
-        startRegions: [MENU_REGION],
-    });
-    rules.regions = { 1: regions };
-    rules.items = { 1: items };
-    rules.itempool_counts = { 1: itempoolCounts };
-    rules.world['1'].world_directory = gameDirectory;
+    rules.regions = { [player]: regions };
+    rules.items = { [player]: items };
+    rules.itempool_counts = { [player]: itempoolCounts };
+    rules.world[player].world_directory = gameDirectory;
     // ⛓ RULES RA (after F1): the bidirectional flag, declared only when the
     // caller states it. Its ONE home is `exporter["<p>"]` (⚖ rules F1). This
     // projection's graph is DIRECTED by construction — every connection is a
@@ -634,7 +638,7 @@ export function compileRegionAtlas(atlas, options = {}) {
     // has MEASURED it (`strand 0`) passes `assumeBidirectionalExits: false`;
     // omitted, nothing is written and the runtime auto-detects as before.
     if (typeof options.assumeBidirectionalExits === 'boolean') {
-        rules.exporter['1'] = { ...rules.exporter['1'], assume_bidirectional_exits: options.assumeBidirectionalExits };
+        rules.exporter[player] = { ...rules.exporter[player], assume_bidirectional_exits: options.assumeBidirectionalExits };
     }
     // ⛓ R7 slice 4: a real GOAL. The scaffold's default is `constant true`,
     // which is right for a partial atlas that is not a game yet and wrong for a
@@ -642,16 +646,18 @@ export function compileRegionAtlas(atlas, options = {}) {
     // route toward and the sphere log stops being a collection ORDER. An atlas
     // that names its goal item gets it; everything else keeps the constant.
     if (options.completionItem) {
-        rules.game_info['1'].completion_condition = {
+        rules.game_info[player].completion_condition = {
             type: 'item_check', item: options.completionItem,
         };
     }
     // Whatever the generator wants to say about where this graph came from.
     // Stamped rather than derived, because only the generator knows its inputs.
-    if (options.provenance) rules.provenance = options.provenance;
+    // ⛓ rules F2: `provenance`, `region_atlas` and `flash_panel` are the SLOT's
+    // (`{"<p>": block}`, the P1a shape): a second Seedling slot names its own.
+    if (options.provenance) rules.provenance = { [player]: options.provenance };
     // Provenance: which atlas this graph came from. atlas_id ends in the
     // content hash, so a restamped atlas visibly invalidates a stale preset.
-    rules.region_atlas = regionAtlasReference(atlas);
+    rules.region_atlas = { [player]: regionAtlasReference(atlas) };
 
     // --- projection 3: play-time binding -----------------------------------
     //
@@ -803,9 +809,9 @@ export function compileRegionAtlas(atlas, options = {}) {
         // all-maze one still must not have it.
         if (anyFlash) {
             const wiring = options.flashPanel ?? FLASH_PANEL_WIRING[atlas.game];
-            if (wiring) rules.flash_panel = { ...wiring };
+            if (wiring) rules.flash_panel = { [player]: { ...wiring } };
         }
-        rules.preset_sidecars = { 1: sidecars };
+        rules.preset_sidecars = { [player]: sidecars };
     }
 
     const report = {
@@ -835,7 +841,7 @@ export function compileRegionAtlas(atlas, options = {}) {
         external_exits: externalExits,
         sidecar_flavor: mazeFlavor ? MAZE_SUBSTRATE : 'flash',
         sidecar_regions: sidecarRegions,
-        flash_panel: rules.flash_panel ?? null,
+        flash_panel: rules.flash_panel?.[player] ?? null,
         // Maze flavour only: every approximation, carve and walled crossing the
         // projection took, so a fidelity fence is recorded rather than assumed.
         maze_notes: mazeNotes,
@@ -853,7 +859,7 @@ export function compileRegionAtlas(atlas, options = {}) {
     // same walk the procgen engine embeds, never authored by hand.
     if (options.embedSphereLog) {
         rules.sphere_log = generateSphereLog(rules, {
-            playerId: 1,
+            playerId: Number(player),
             metadata: { seed: rules.generation_seed, seed_name: rules.seed_name },
         });
         report.sphere_log_entries = rules.sphere_log.length;

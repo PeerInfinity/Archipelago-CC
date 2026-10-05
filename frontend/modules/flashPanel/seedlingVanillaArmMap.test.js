@@ -44,7 +44,7 @@ const locationsOf = (rules) => {
     return out;
 };
 const load = (rules, over = {}) => loadSeedlingRandomizer({
-    flashPanel: rules.flash_panel, manifest: MANIFEST, rawRules: rules, locations: locationsOf(rules),
+    flashPanel: rules.flash_panel['1'], manifest: MANIFEST, rawRules: rules, locations: locationsOf(rules),
     playerId: Object.keys(rules.regions)[0], gameConfig: GAME_CONFIG, baseUrl: BASE, fetchJson,
     importModule: (u) => import(/* @vite-ignore */ u), ...over,
 });

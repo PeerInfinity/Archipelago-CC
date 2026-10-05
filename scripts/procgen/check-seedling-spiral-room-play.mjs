@@ -94,6 +94,7 @@ import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
 import {
     FLASH_PANEL, MAZE_ROOM_PANEL, activePanelTypes, clickPanelTab, createRoomPlay, STEP_OFF_PX, HOLD_CEILING_MS,
+    slotBlockOf,
 } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
@@ -118,7 +119,7 @@ async function main() {
         join(REPO, `frontend/presets/${GAME}/AP_1/AP_1_rules.json`), 'utf8'));
     const FLASH_DIR = join(REPO, 'frontend/modules/flashPanel');
     /** ⛔ The build the preset's OWN `flash_panel` block names, not a default of this script. */
-    const WASM_PAGE = PRESET.flash_panel?.wasm ?? '';
+    const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
     const ARTIFACT = join(FLASH_DIR, 'wasm', dirname(WASM_PAGE));
     const WASM_FILE = join(ARTIFACT, `${dirname(WASM_PAGE)}.wasm`);
     if (!WASM_PAGE || !existsSync(join(FLASH_DIR, 'wasm', WASM_PAGE)) || !existsSync(WASM_FILE)) {
@@ -158,7 +159,7 @@ async function main() {
     // its tile.
     const ATLAS = JSON.parse(readFileSync(join(FLASH_DIR, 'atlases/seedling.json'), 'utf8'));
     const MAP = JSON.parse(readFileSync(join(FLASH_DIR, 'atlases',
-        PRESET.region_atlas?.map_document ?? 'seedling-map.json'), 'utf8'));
+        slotBlockOf(PRESET, 'region_atlas')?.map_document ?? 'seedling-map.json'), 'utf8'));
     const bound = new Set(DOORS.map((d) => d.exit_id));
     const atlasRegion = ATLAS.regions.find((r) => r.region_id === ROOM?.atlas_region);
     const LEVEL = MAP.levels.find((l) => l.level === ROOM?.level);

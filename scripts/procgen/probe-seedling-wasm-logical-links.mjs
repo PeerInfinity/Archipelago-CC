@@ -46,7 +46,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { FLASH_PANEL, clickPanelTab, createRoomPlay } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -98,7 +98,7 @@ async function main() {
     const PARTITION = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-subregion-partition.json'), 'utf8'));
     const REGIONS = PRESET.regions['1'];
     const START = REGIONS.Menu.exits[0].connected_region;
-    const WASM_PAGE = PRESET.flash_panel?.wasm ?? '';
+    const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
     if (!WASM_PAGE || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE))) {
         console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
         process.exit(0);
@@ -134,7 +134,7 @@ async function main() {
 
         /** H — a person's keys across a seam. */
         async function runHuman() {
-            const entry = PARTITION.atlases[PRESET.region_atlas.atlas_id].regions.level_0;
+            const entry = PARTITION.atlases[slotBlockOf(PRESET, 'region_atlas')?.atlas_id].regions.level_0;
             // The model's own flood from the start (every solid live; water is not solid) — the tiles a body fits.
             const MAP_DOC = JSON.parse(readFileSync(join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
             const { walkableCellsFrom } = await import('../../frontend/modules/seedlingDemo/levelSetExits.js');

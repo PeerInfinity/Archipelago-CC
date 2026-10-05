@@ -54,7 +54,7 @@ async function worldOf(mode, params) {
     const refs = Object.values(rulesJson.preset_sidecars['1'])
         .filter((s) => s.substrate === FLASH_SEEDLING_SUBSTRATE_ID)
         .map((s) => s.playable_payload.atlas_ref);
-    return { atlasId: rulesJson.region_atlas?.atlas_id, refs };
+    return { atlasId: rulesJson.region_atlas?.['1']?.atlas_id, refs };
 }
 
 /** The picker's DOM, just enough of it: `select`/`option`/`div`/`label` with their events. */

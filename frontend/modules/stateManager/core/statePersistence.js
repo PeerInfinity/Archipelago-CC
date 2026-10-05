@@ -953,7 +953,9 @@ export function getStaticGameData(sm) {
   return {
     game_name: sm.rules?.game_name,
     game_directory: sm.rules?.game_directory,
-    flash_panel: sm.rules?.flash_panel,
+    // ⛓ rules F2: `flash_panel` is per player (`{"<p>": block}`); the panel
+    // gets the LOADED slot's block, never another slot's.
+    flash_panel: sm.rules?.flash_panel?.[sm.playerId],
     playerId: sm.playerId, // String player ID
     // Every player named by the rules file, not just the loaded one — UI that
     // labels a player (cost debugger status, spoiler checklist) already reads

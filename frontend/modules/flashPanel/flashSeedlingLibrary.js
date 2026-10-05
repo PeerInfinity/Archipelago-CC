@@ -178,10 +178,11 @@ export function buildSeedlingContentSource(atlasDoc) {
             + validation.errors.join('; '));
     }
     const { rules } = compileRegionAtlas(atlasDoc);
-    const apRegions = rules.regions['1'];
+    const [player] = Object.keys(rules.player_names);
+    const apRegions = rules.regions[player];
     const zones = [];
     const doorless = [];
-    for (const [apName, sidecar] of Object.entries(rules.preset_sidecars?.['1'] ?? {})) {
+    for (const [apName, sidecar] of Object.entries(rules.preset_sidecars?.[player] ?? {})) {
         if (sidecar.substrate !== FLASH_SEEDLING_SUBSTRATE_ID) continue;
         const payload = sidecar.playable_payload;
         if (payload.exits.length === 0) { doorless.push(apName); continue; }
@@ -197,11 +198,12 @@ export function buildSeedlingContentSource(atlasDoc) {
         atlasId: atlasDoc.atlas_id,
         zones,
         doorless,
-        // The two top-level blocks the flash panel engages on, as THIS compile
-        // wrote them (`rulesJsonBlocks` below).
+        // The two blocks the flash panel engages on, as THIS compile wrote them
+        // for its one slot (`rulesJsonBlocks` below) — block-valued: the hub
+        // lands them under the slot it initialises (rules F2).
         blocks: {
-            region_atlas: rules.region_atlas,
-            ...(rules.flash_panel ? { flash_panel: rules.flash_panel } : {}),
+            region_atlas: rules.region_atlas[player],
+            ...(rules.flash_panel?.[player] ? { flash_panel: rules.flash_panel[player] } : {}),
         },
     };
 }
@@ -577,9 +579,9 @@ const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
  * `zoneConfigFromSlot` contract, `apworldEditor/regionContent.js`). What the
  * document records, and where:
  *
- *   · the atlas's IDENTITY — `region_atlas.atlas_id` (a document-level block
- *     this entry's `rulesJsonBlocks` writes; the hub hands it in as
- *     `blocks.region_atlas`), which every placed room's `atlas_ref` repeats;
+ *   · the atlas's IDENTITY — `region_atlas.atlas_id` (the slot's block
+ *     this entry's `rulesJsonBlocks` writes; the hub hands in the slot's
+ *     `region_atlas[p]` as `blocks.region_atlas`), which every placed room's `atlas_ref` repeats;
  *   · NOT the atlas itself — `region_atlas.map_document` names the LEVEL map,
  *     not an atlas. The id is resolved through the served index
  *     (`atlas_files.json`), and the atlas is FETCHED: the answer is `{ok: false,
@@ -597,7 +599,7 @@ function zoneConfigFromSlot({ entries = {}, blocks = {}, fetched = {} } = {}) {
         if (!isPlainObject(blocks[key])) {
             return {
                 ok: false,
-                why: `the document carries no \`${key}\` block — a placed room needs both top-level blocks this `
+                why: `the slot carries no \`${key}\` block — a placed room needs both blocks this `
                     + `entry writes [${Object.keys(blocks).join(', ')}] (\`region_atlas\` names the atlas the room `
                     + 'is read from; the flash panel engages on `flash_panel`)',
             };

@@ -12,7 +12,9 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { ATLAS_DIR, DEFAULT_MAP_DOCUMENT, mapDocumentPath, rulesOfRawPayload } from './mapDocumentPath.js';
+import {
+    ATLAS_DIR, DEFAULT_MAP_DOCUMENT, mapDocumentPath, playerOfRawPayload, regionAtlasOf, rulesOfRawPayload,
+} from './mapDocumentPath.js';
 import { AP_ASSET_PATHS, loadSeedlingRandomizer, resolveMapPath } from './seedlingRandomizerWiring.js';
 import { ATLAS_PATH } from '../seedlingDemo/levelSource.js';
 import { LAB_EVENTS, LAB_PAYLOAD_FIELDS } from '../procgenCore/labProtocol.js';
@@ -32,17 +34,41 @@ describe('mapDocumentPath — one relative path, three bases', () => {
     });
 
     it('honours a preset\'s `region_atlas.map_document`, and NAMES it as the source', () => {
-        expect(mapDocumentPath({ region_atlas: { map_document: 'other-map.json' } })).toEqual({
+        expect(mapDocumentPath({ region_atlas: { 1: { map_document: 'other-map.json' } } }, '1')).toEqual({
             path: `${ATLAS_DIR}other-map.json`,
             name: 'other-map.json',
             source: 'region_atlas.map_document',
         });
     });
 
+    /**
+     * ⛓⛓ rules F2 — **THE BLOCK IS THE SLOT'S.** Two slots name two maps; each
+     * reader answers for the slot it names, never another's, and a document
+     * carrying the key read with NO slot throws rather than answer the default.
+     */
+    it('⛓ rules F2: each slot answers its OWN map_document; a slot with none takes the default', () => {
+        const two = { region_atlas: { 1: { map_document: 'one.json' }, 2: { map_document: 'two.json' } } };
+        expect(mapDocumentPath(two, '1').name).toBe('one.json');
+        expect(mapDocumentPath(two, 2).name).toBe('two.json');
+        expect(mapDocumentPath(two, '3').source).toBe('the atlases default');
+        expect(regionAtlasOf(two, '2')).toEqual({ map_document: 'two.json' });
+        expect(regionAtlasOf({}, '1')).toBeNull();
+        expect(regionAtlasOf(null, undefined)).toBeNull();
+    });
+
+    it('⛔ rules F2: a document carrying `region_atlas` read with the slot OMITTED throws, naming the key', () => {
+        const one = { region_atlas: { 1: { map_document: 'one.json' } } };
+        expect(() => mapDocumentPath(one)).toThrow(/region_atlas.*per player/);
+        expect(() => regionAtlasOf(one, undefined)).toThrow(/no slot was named/);
+        // ⛓ a slot PASSED blank names no slot: no atlas (the caller's slot check refuses it by name)
+        expect(regionAtlasOf(one, null)).toBeNull();
+        expect(regionAtlasOf(one, '')).toBeNull();
+    });
+
     /** ⛓ EMPTY IS NOT A DOCUMENT — the same rule the seq parsers spell. */
     it('an EMPTY or non-string map_document is not a declaration', () => {
         for (const bad of ['', 0, null, false, 42, {}, []]) {
-            expect(mapDocumentPath({ region_atlas: { map_document: bad } }).source)
+            expect(mapDocumentPath({ region_atlas: { 1: { map_document: bad } } }, '1').source)
                 .toBe('the atlases default');
         }
     });
@@ -69,7 +95,7 @@ describe('mapDocumentPath — one relative path, three bases', () => {
         expect(resolveMapPath(null)).toEqual({
             path: mapDocumentPath(null).path, source: 'the atlases default',
         });
-        expect(resolveMapPath({ region_atlas: { map_document: 'other-map.json' } }))
+        expect(resolveMapPath({ region_atlas: { 1: { map_document: 'other-map.json' } } }, '1'))
             .toEqual({ path: `${ATLAS_DIR}other-map.json`, source: 'region_atlas.map_document' });
         expect(Object.keys(resolveMapPath(null))).toEqual(['path', 'source']);
     });
@@ -143,7 +169,9 @@ describe('⚖ F7b — the override has no instance in the tree, and no channel t
         const files = rulesFiles();
         expect(files.length).toBeGreaterThan(3);   // the walk found presets at all
         const named = files
-            .map((f) => JSON.parse(readFileSync(f, 'utf8'))?.region_atlas?.map_document)
+            // ⛓ rules F2: `region_atlas` is `{"<p>": block}` — every slot's block is read.
+            .flatMap((f) => Object.values(JSON.parse(readFileSync(f, 'utf8'))?.region_atlas ?? {}))
+            .map((b) => b?.map_document)
             .filter((d) => typeof d === 'string');
         // ⛓ 4 since seedling-pipeline T2 (2026-09-23): `seedling_spiral_room`, a
         //   spiral world with a placed flash_seedling room, carries the installed
@@ -177,9 +205,16 @@ describe('⚖ F7b — the override has no instance in the tree, and no channel t
  */
 describe('T4 — a preset\'s map_document reaches the wiring through the catch-up', () => {
     const PLAYTHROUGH = JSON.parse(source('frontend/presets/seedling_playthrough/AP_1/AP_1_rules.json'));
-    const OTHER = { ...PLAYTHROUGH, region_atlas: { ...PLAYTHROUGH.region_atlas, map_document: 'other-map.json' } };
+    const OTHER = { ...PLAYTHROUGH, region_atlas: { 1: { ...PLAYTHROUGH.region_atlas['1'], map_document: 'other-map.json' } } };
     /** The payload stateManager publishes (`stateManager/index.js`, files:jsonLoaded). */
     const PAYLOAD = { source: 'presets/seedling_playthrough', rawJsonData: OTHER, selectedPlayerInfo: { playerId: '1' } };
+
+    it('⛓ rules F2 — the payload\'s SLOT is its `selectedPlayerInfo.playerId`, as a string', () => {
+        expect(playerOfRawPayload(PAYLOAD)).toBe('1');
+        expect(playerOfRawPayload({ selectedPlayerInfo: { playerId: 2 } })).toBe('2');
+        expect(playerOfRawPayload(null)).toBeNull();
+        expect(playerOfRawPayload({ rawJsonData: {} })).toBeNull();
+    });
 
     it('the rules OF the payload are its `rawJsonData`; nothing else is', () => {
         expect(rulesOfRawPayload(PAYLOAD)).toBe(OTHER);
@@ -191,7 +226,7 @@ describe('T4 — a preset\'s map_document reaches the wiring through the catch-u
     it('⛔ a rules.json naming a DIFFERENT map_document reaches the wiring as that name', async () => {
         const asked = [];
         const r = await loadSeedlingRandomizer({
-            flashPanel: OTHER.flash_panel,
+            flashPanel: OTHER.flash_panel['1'],
             manifest: JSON.parse(source('frontend/modules/flashPanel/wasm/builds.json')),
             rawRules: rulesOfRawPayload(PAYLOAD),
             locations: new Map(),
@@ -218,11 +253,11 @@ describe('T4 — a preset\'s map_document reaches the wiring through the catch-u
      * node moment. Every catch-up read in it goes through `rulesOfRawPayload`;
      * the live proof is the AP-placement gate (a wrapper now throws there).
      */
-    it('every `getLastRawJsonData` read in the flash panel is unwrapped by rulesOfRawPayload', () => {
+    it('every `getLastRawJsonData` read in the flash panel is unwrapped by rulesOfRawPayload (or, rules F2, playerOfRawPayload)', () => {
         const body = source('frontend/modules/flashPanel/flashPanelUI.js').split('\n')
             .filter((line) => !/^\s*(\*|\/\/|\/\*)/.test(line)).join('\n');
         const calls = body.match(/[\w.?]*\(?getLastRawJsonData\?*\.?\(\)[^,;\n]*/g) ?? [];
         expect(calls.length).toBeGreaterThanOrEqual(2);
-        for (const c of calls) expect(c).toMatch(/^rulesOfRawPayload\(getLastRawJsonData\?\.\(\)\)/);
+        for (const c of calls) expect(c).toMatch(/^(rulesOfRawPayload|playerOfRawPayload)\(getLastRawJsonData\?\.\(\)\)/);
     });
 });

@@ -199,7 +199,7 @@ describe('the oracle — every committed room, as its OWN room', () => {
         const source = buildSeedlingContentSource(SEEDLING_STARTER_ATLAS);
         for (const g of RECORDS) {
             const d = byGame(g);
-            expect(d.doc.region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
+            expect(d.doc.region_atlas['1'].atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
             const rec = installedZoneConfigFrom(d.doc, d.p, S);
             expect(rec.ok, rec.why).toBe(true);
             expect(rec.cfg.atlasDoc).toBe(SEEDLING_STARTER_ATLAS);
@@ -263,7 +263,7 @@ describe('the read-back refuses by name', () => {
 function fetchedAtlasDoc() {
     const s = sphereWithRelabelledLeaf();
     const pt = JSON.parse(readFileSync(join(FRONTEND, `${ATLAS_DIR}seedling-playthrough.json`), 'utf8'));
-    s.doc.region_atlas = { ...s.doc.region_atlas, atlas_id: pt.atlas_id };
+    s.doc.region_atlas = { ...s.doc.region_atlas, 1: { ...s.doc.region_atlas['1'], atlas_id: pt.atlas_id } };
     // the starter room's region goes back to a label its atlas does not contradict
     s.doc.preset_sidecars[s.p][s.room].substrate = 'maze';
     return { ...s, atlasId: pt.atlas_id, atlasPath: `${ATLAS_DIR}seedling-playthrough.json` };
@@ -288,7 +288,7 @@ describe('the atlas intake — a FETCH, resolved through the served index', () =
 
     it('an id the index does not list — refused, naming the index', async () => {
         const f = fetchedAtlasDoc();
-        f.doc.region_atlas.atlas_id = 'seedling-00000000';
+        f.doc.region_atlas['1'].atlas_id = 'seedling-00000000';
         const got = await resolveZoneFetches(f.doc, f.p, S, diskFetch);
         expect(got.ok).toBe(true);
         const rec = installedZoneConfigFrom(f.doc, f.p, S, { fetched: got.fetched });
@@ -449,7 +449,7 @@ describe('jta is untouched by the contract change', () => {
             if (!Object.keys(entries).length) continue;
             const locations = {};
             const bare = jta.zoneConfigFromSlot({ entries, locations });
-            const full = jta.zoneConfigFromSlot({ entries, locations, blocks: { region_atlas: doc.region_atlas }, fetched: { x: 1 } });
+            const full = jta.zoneConfigFromSlot({ entries, locations, blocks: { region_atlas: doc.region_atlas?.['1'] }, fetched: { x: 1 } });
             expect(bytes(full)).toBe(bytes(bare));
             for (const e of Object.values(entries)) {
                 expect(jta.zoneOfPayload(e.playable_payload, { atlasDoc: SEEDLING_STARTER_ATLAS }))

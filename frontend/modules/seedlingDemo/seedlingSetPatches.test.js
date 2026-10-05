@@ -194,7 +194,7 @@ describe('where it does NOT apply', () => {
         const map = MAP();
         for (const id of ['seedling_atlas', 'seedling_atlas_location', 'seedling_atlas_host', 'seedling_atlas_maze']) {
             const rules = rulesOf(id);
-            const file = INDEX.atlases.find((a) => a.atlas_id === rules.region_atlas.atlas_id).file;
+            const file = INDEX.atlases.find((a) => a.atlas_id === rules.region_atlas['1'].atlas_id).file;
             const byName = new Map();
             for (const r of Object.values(rules.regions['1'])) for (const l of r.locations ?? []) byName.set(l.name, l.item);
             const { retags } = buildAtlasCheckTable({

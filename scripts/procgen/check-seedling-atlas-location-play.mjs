@@ -52,7 +52,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
-import { FLASH_PANEL, clickPanelTab, createRoomPlay } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -74,7 +74,7 @@ async function main() {
 
     const PRESET = JSON.parse(readFileSync(join(REPO, `frontend/presets/${GAME}/AP_1/AP_1_rules.json`), 'utf8'));
     const FLASH_DIR = join(REPO, 'frontend/modules/flashPanel');
-    const WASM_PAGE = PRESET.flash_panel?.wasm ?? '';
+    const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
     const ARTIFACT = join(FLASH_DIR, 'wasm', dirname(WASM_PAGE));
     if (!WASM_PAGE || !existsSync(join(FLASH_DIR, 'wasm', WASM_PAGE))
         || !existsSync(join(ARTIFACT, `${dirname(WASM_PAGE)}.wasm`))) {
@@ -105,11 +105,11 @@ async function main() {
     /** The chest's address: the atlas tile of the location → the map entity granting its vanilla item → its @tag. */
     const INDEX = JSON.parse(readFileSync(join(FLASH_DIR, 'atlases', 'atlas_files.json'), 'utf8'));
     const ATLAS = JSON.parse(readFileSync(join(REPO, 'frontend',
-        atlasPathInIndex(INDEX, PRESET.region_atlas.atlas_id)), 'utf8'));
+        atlasPathInIndex(INDEX, slotBlockOf(PRESET, 'region_atlas')?.atlas_id)), 'utf8'));
     const ATLAS_LOC = ATLAS.regions.find((r) => r.region_id === ROOM?.atlas_region)?.locations
         ?.find((l) => l.name === LOC?.name) ?? null;
     const MAP = JSON.parse(readFileSync(join(FLASH_DIR, 'atlases',
-        PRESET.region_atlas?.map_document ?? 'seedling-map.json'), 'utf8'));
+        slotBlockOf(PRESET, 'region_atlas')?.map_document ?? 'seedling-map.json'), 'utf8'));
     const LEVEL = MAP.levels.find((l) => l.level === ROOM?.level);
     const onTile = (t) => (LEVEL?.entities ?? []).filter((e) => Math.floor(e.x / MAP.tile_size) === t[0]
         && Math.floor(e.y / MAP.tile_size) === t[1]);

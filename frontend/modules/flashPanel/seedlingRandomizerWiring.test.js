@@ -208,18 +208,18 @@ describe('`selfPlayer` — the M1-b trap', () => {
 
 describe('the map document is NAMED by the preset when the preset names one', () => {
     it('takes region_atlas.map_document, and says where the answer came from', () => {
-        expect(resolveMapPath(RULES.seedling_playthrough))
+        expect(resolveMapPath(RULES.seedling_playthrough, '1'))
             .toEqual({ path: `${AP_ASSET_PATHS.atlasDir}seedling-map.json`,
                 source: 'region_atlas.map_document' });
     });
 
     it('falls back to the atlases default for a preset with no region_atlas', () => {
-        expect(resolveMapPath(RULES.seedling).source).toBe('the atlases default');
-        expect(resolveMapPath(RULES.seedling).path).toBe(AP_ASSET_PATHS.defaultMap);
+        expect(resolveMapPath(RULES.seedling, '1').source).toBe('the atlases default');
+        expect(resolveMapPath(RULES.seedling, '1').path).toBe(AP_ASSET_PATHS.defaultMap);
     });
 
     it('both answers name the SAME document for every shipped seedling preset', () => {
-        const paths = new Set(Object.values(RULES).map((r) => resolveMapPath(r).path));
+        const paths = new Set(Object.values(RULES).map((r) => resolveMapPath(r, '1').path));
         expect([...paths]).toEqual([AP_ASSET_PATHS.defaultMap]);
     });
 });
@@ -255,7 +255,7 @@ describe('the REAL stateManager builder, driven in node', () => {
         const sd = await staticDataFor('seedling');
         expect(sd.locations).toBeInstanceOf(Map);
         expect(typeof sd.playerId).toBe('string');
-        expect(sd.flash_panel).toEqual(RULES.seedling.flash_panel);
+        expect(sd.flash_panel).toEqual(RULES.seedling.flash_panel['1']);
         const rec = sd.locations.get("Penguin's Feather");
         expect(rec.id).toBe(20000000);
         expect(rec.item).toMatchObject({ name: expect.any(String), player: 1 });
@@ -300,7 +300,7 @@ describe('the whole construction, driven in node', () => {
     const importModule = (u) => import(/* @vite-ignore */ u);
 
     const load = (preset, over = {}) => loadSeedlingRandomizer({
-        flashPanel: RULES[preset].flash_panel,
+        flashPanel: RULES[preset].flash_panel['1'],
         manifest,
         rawRules: RULES[preset],
         locations: locationsMapOf(RULES[preset]),

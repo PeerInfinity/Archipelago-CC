@@ -42,3 +42,36 @@ describe('loadFromJSON — retired top-level keys', () => {
     }
   });
 });
+
+/**
+ * ⛓ rules F2 — `region_atlas`, `flash_panel` and `provenance` keep their names
+ * and became slot maps; the document-level BLOCK is the retired shape, refused
+ * by name.
+ */
+describe('loadFromJSON — the F2 slot-map keys refuse their document-level block', () => {
+  const OLD = {
+    region_atlas: { atlas_id: 'seedling-abc', game: 'seedling', map_document: 'seedling-map.json' },
+    flash_panel: { config: 'seedling.json', wasm: 'seedling_bot_ap_p4f/game.html' },
+    provenance: { generator: 'make-seedling-playthrough-rules' },
+  };
+
+  for (const [key, block] of Object.entries(OLD)) {
+    it(`refuses a document-level \`${key}\` block, naming the key, its home and the script`, () => {
+      const doc = { schema_version: 3, [key]: block };
+      expect(() => loadFromJSON(stubStateManager(), doc, '1')).toThrow(new RegExp(`\`${key}\` block`));
+      expect(() => loadFromJSON(stubStateManager(), doc, '1')).toThrow(new RegExp(`${key}\\["<player>"\\]`));
+      expect(() => loadFromJSON(stubStateManager(), doc, '1')).toThrow(/migrate-per-player-blocks\.mjs/);
+    });
+
+    it(`lets the slot map \`${key}\` through (one slot, two slots, none)`, () => {
+      expect(() => refuseRetiredTopLevelKeys({ [key]: { 1: block } })).not.toThrow();
+      expect(() => refuseRetiredTopLevelKeys({ [key]: { 1: block, 2: block } })).not.toThrow();
+      expect(() => refuseRetiredTopLevelKeys({ [key]: {} })).not.toThrow();
+    });
+  }
+
+  it('refuses a map that mixes a slot with a field name — not a slot map', () => {
+    expect(() => refuseRetiredTopLevelKeys({ flash_panel: { 1: OLD.flash_panel, config: 'x' } }))
+      .toThrow(/flash_panel/);
+  });
+});

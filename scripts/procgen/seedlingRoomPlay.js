@@ -26,6 +26,21 @@
  * `scripts/`.** Every gate that needs a tab imports these; this file has no
  * imports and no side effects, so a gate that uses nothing else here pays nothing.
  */
+/**
+ * ⛓ rules F2 — a ONE-SLOT preset's per-player block (`flash_panel`,
+ * `region_atlas`, `provenance` are `{"<p>": block}`): the entry of its one
+ * `player_names` slot, or undefined. A preset with any other slot count throws
+ * — a gate that picked slot 1 of a multi-slot document would be guessing.
+ */
+export function slotBlockOf(rules, key) {
+    const slots = Object.keys(rules?.player_names ?? {});
+    if (slots.length !== 1) {
+        throw new Error(`slotBlockOf: the preset names ${slots.length} player slot(s) [${slots.join(', ')}] — `
+            + `\`${key}\` is per player, and a one-slot gate cannot choose`);
+    }
+    return rules?.[key]?.[slots[0]];
+}
+
 export const FLASH_PANEL = 'flashPanel';
 export const MAZE_ROOM_PANEL = 'mazeRoomPanel';
 /**

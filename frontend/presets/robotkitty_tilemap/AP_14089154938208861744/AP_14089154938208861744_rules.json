@@ -3,8 +3,10 @@
   "game_name": "Robot Wants Kitty",
   "game_directory": "robotkitty",
   "flash_panel": {
-    "config": "robotkitty.json",
-    "swf": "robotkitty_injected.swf"
+    "1": {
+      "config": "robotkitty.json",
+      "swf": "robotkitty_injected.swf"
+    }
   },
   "archipelago_version": "0.6.7",
   "generation_seed": 1,

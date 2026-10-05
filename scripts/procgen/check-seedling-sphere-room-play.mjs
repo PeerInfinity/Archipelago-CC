@@ -60,7 +60,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
-import { FLASH_PANEL, createRoomPlay } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -84,7 +84,7 @@ async function main() {
         join(REPO, `frontend/presets/${GAME}/AP_1/AP_1_rules.json`), 'utf8'));
     const FLASH_DIR = join(REPO, 'frontend/modules/flashPanel');
     /** ⛔ The build the preset's OWN `flash_panel` block names, not a default of this script. */
-    const WASM_PAGE = PRESET.flash_panel?.wasm ?? '';
+    const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
     const ARTIFACT = join(FLASH_DIR, 'wasm', dirname(WASM_PAGE));
     const WASM_FILE = join(ARTIFACT, `${dirname(WASM_PAGE)}.wasm`);
     if (!WASM_PAGE || !existsSync(join(FLASH_DIR, 'wasm', WASM_PAGE)) || !existsSync(WASM_FILE)) {
@@ -121,7 +121,7 @@ async function main() {
     });
 
     const MAP = JSON.parse(readFileSync(join(FLASH_DIR, 'atlases',
-        PRESET.region_atlas?.map_document ?? 'seedling-map.json'), 'utf8'));
+        slotBlockOf(PRESET, 'region_atlas')?.map_document ?? 'seedling-map.json'), 'utf8'));
     /** ⛓ T2b U2b — where an arrival through `door` lands, off the SAME table the panel builds. */
     const RETURNS = returnSpawnTable(MAP);
     const arrivalOf = (door) => {

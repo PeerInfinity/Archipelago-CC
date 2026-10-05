@@ -1437,8 +1437,10 @@ const PANEL_JS = {
         };
         const fallback = await settle((sd) => Boolean(sd && sd.game_name), 120000);
         const rules = await fetch(src).then((r) => r.json());
-        if (patch && patch.wasm) rules.flash_panel = { ...rules.flash_panel, wasm: patch.wasm };
-        const want = rules.flash_panel ? rules.flash_panel.wasm : null;
+        // rules F2: the wiring is slot 1's (the player this load selects).
+        const fp = rules.flash_panel ? rules.flash_panel['1'] : undefined;
+        if (patch && patch.wasm) rules.flash_panel = { ...rules.flash_panel, 1: { ...fp, wasm: patch.wasm } };
+        const want = rules.flash_panel ? rules.flash_panel['1'].wasm : null;
         // ⛓ the picker's own publish: the event, the player, the source name,
         // and the publisher name it is registered under (\`presets/index.js\`).
         eventBus.publish('files:jsonLoaded',

@@ -74,7 +74,7 @@ function assertGeneratedSidecars(rulesJson) {
         if (p.locations.length) expect(p.locations[0].cell, at).toEqual(p.goal_cell);
         expect(new Set(p.locations.map((l) => l.tag)).size, at).toBe(p.locations.length);
     });
-    expect(rulesJson.flash_panel).toEqual(seedlingFlashPanelBlock());
+    expect(rulesJson.flash_panel).toEqual({ 1: seedlingFlashPanelBlock() });
     expect(Object.hasOwn(rulesJson, 'region_atlas')).toBe(false);
     return generated;
 }

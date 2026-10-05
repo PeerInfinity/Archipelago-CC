@@ -7266,8 +7266,10 @@ export function buildRulesJson(grid, opts = {}) {
     // `region_atlas` (the map document it resolves). Asked ONLY of the
     // substrates that realised ≥1 region here, in grid order, so a world
     // without one carries none of its blocks and every other world's bytes are
-    // what they were. A key the document already holds is refused — two
-    // writers of one block would overwrite each other silently.
+    // what they were. ⛓ rules F2: each block is the SLOT's — written as
+    // `{[playerId]: block}` (the P1a shape), never at the document level. A key
+    // the document already holds is refused — two writers of one block would
+    // overwrite each other silently.
     const realisedSubstrates = [];
     for (const region of grid.allRegions()) {
         const id = region.substrate ?? DEFAULT_SUBSTRATE_ID;
@@ -7281,7 +7283,7 @@ export function buildRulesJson(grid, opts = {}) {
                     + 'which this rules.json already carries — two writers of one block would overwrite '
                     + 'each other silently, so the compile refuses rather than pick one.');
             }
-            scaffold[key] = value;
+            scaffold[key] = { [String(playerId)]: value };
         }
     }
     scaffold.preset_sidecars = buildPresetSidecars(grid, {

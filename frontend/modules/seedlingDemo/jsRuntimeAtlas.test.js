@@ -77,7 +77,7 @@ function settle(rt, { maxTicks = 3000, stop = () => false } = {}) {
 
 /** The host's REAL atlas check table for a preset (the wiring's own construction). */
 function atlasTableOf(rules) {
-    const atlasDoc = readJson(ATLASES + INDEX.atlases.find((a) => a.atlas_id === rules.region_atlas.atlas_id).file);
+    const atlasDoc = readJson(ATLASES + INDEX.atlases.find((a) => a.atlas_id === rules.region_atlas['1'].atlas_id).file);
     const byName = new Map();
     for (const r of Object.values(rules.regions['1'])) for (const l of r.locations ?? []) byName.set(l.name, l.item);
     return buildAtlasCheckTable({

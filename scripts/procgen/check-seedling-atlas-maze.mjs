@@ -47,6 +47,7 @@ import { chromium } from 'playwright';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { LOCAL_HOST } from './gateRoster.js';
+import { slotBlockOf } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))
@@ -101,7 +102,7 @@ check('the preset carries maze sidecars for every AP region but Menu',
     && names.sort().join('|') === Object.keys(apRegions).filter((n) => n !== 'Menu').sort().join('|'),
     `${names.length} sidecar(s)`);
 check('no flash_panel wiring — nothing here boots the original engine',
-    preset.flash_panel === undefined);
+    slotBlockOf(preset, 'flash_panel') === undefined);
 
 const problems = [];
 let exitCount = 0;

@@ -34,7 +34,7 @@ const MAP = readJson(`${ATLASES}seedling-map.json`);
 const INDEX = readJson(`${ATLASES}atlas_files.json`);
 const GAME = readJson('frontend/modules/flashPanel/games/seedling.json');
 const atlasOf = (rules) => readJson(ATLASES
-    + INDEX.atlases.find((a) => a.atlas_id === rules.region_atlas.atlas_id).file);
+    + INDEX.atlases.find((a) => a.atlas_id === rules.region_atlas['1'].atlas_id).file);
 const rulesOf = (id) => readJson(`frontend/presets/${id}/AP_1/AP_1_rules.json`);
 
 /** The rules' own placement, as the state manager's `locations` Map answers it. */

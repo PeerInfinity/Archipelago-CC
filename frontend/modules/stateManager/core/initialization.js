@@ -145,19 +145,33 @@ function validateJSONData(jsonData, selectedPlayerId) {
 
 /**
  * ⛔ Top-level keys that MOVED into a per-player home, refused by name.
- * key → [its per-player home, the script that moves a document].
+ * key → [its per-player home, the script that moves a document, and — for a
+ * key that STAYS at the top level but changed shape — the test that the value
+ * is the retired shape (absent: any value is retired)].
  *
  * This is a REFUSAL, not a compatibility read: nothing reads the old value.
  * For `assume_bidirectional_exits` an ignored old value would be worse than an
  * error — absent means auto-detection, which misjudges procgen exits (see
  * `StateManagerProxy.getEffectiveBidirectionalSetting`), so an old document
  * would load and silently regress (⚖ user 2026-10-03, rules F1).
+ *
+ * ⛓ rules F2: `region_atlas`, `flash_panel` and `provenance` keep their names
+ * and became slot maps (`{"<p>": block}`, the P1a shape). A document-level
+ * block is the retired shape — a slot map's keys are all slot ids, an old
+ * block's are field names (`atlas_id`, `config`, …) — and is refused by name:
+ * read as absent, it would boot no panel and name no atlas, silently.
  */
+const MIGRATE_SCRIPT = 'scripts/procgen/migrate-per-player-blocks.mjs --write';
+const isNotSlotMap = (v) => !v || typeof v !== 'object' || Array.isArray(v)
+  || Object.keys(v).some((k) => !/^[0-9]+$/.test(k));
 export const RETIRED_TOP_LEVEL_KEYS = Object.freeze({
   assume_bidirectional_exits: [
     'exporter["<player>"].assume_bidirectional_exits',
-    'scripts/procgen/migrate-per-player-blocks.mjs --write',
+    MIGRATE_SCRIPT,
   ],
+  region_atlas: ['region_atlas["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
+  flash_panel: ['flash_panel["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
+  provenance: ['provenance["<player>"]', MIGRATE_SCRIPT, isNotSlotMap],
 });
 
 /**
@@ -167,13 +181,14 @@ export const RETIRED_TOP_LEVEL_KEYS = Object.freeze({
  * @throws {Error} If a retired key is present at the top level
  */
 export function refuseRetiredTopLevelKeys(jsonData) {
-  for (const [key, [home, script]] of Object.entries(RETIRED_TOP_LEVEL_KEYS)) {
-    if (Object.hasOwn(jsonData, key)) {
-      throw new Error(
-        `rules.json carries a top-level \`${key}\`, which is per player: its home is ${home}. `
-        + `Nothing reads the top-level copy — move the document with ${script}.`
-      );
-    }
+  for (const [key, [home, script, retired]] of Object.entries(RETIRED_TOP_LEVEL_KEYS)) {
+    if (!Object.hasOwn(jsonData, key)) continue;
+    if (retired && !retired(jsonData[key])) continue;
+    throw new Error(
+      `rules.json carries a ${retired ? 'document-level' : 'top-level'} \`${key}\`${retired ? ' block' : ''}, `
+      + `which is per player: its home is ${home}. `
+      + `Nothing reads the ${retired ? 'document-level block' : 'top-level copy'} — move the document with ${script}.`
+    );
   }
 }
 

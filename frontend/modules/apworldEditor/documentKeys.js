@@ -109,7 +109,9 @@ const META_TAB_EXTRA_KEYS = Object.freeze(['start_regions', 'game_info']);
  * ⛓ **The other three are a ⚖ (user, 2026-09-08):** *"Let's put region_atlas,
  * flash_panel, and provenance in the sidecars tab for now."* They are the region
  * ATLAS compiler's outputs rather than worldgen's, and "for now" is on the
- * record — their real home is a replan question (plan §5).
+ * record — their real home is a replan question (plan §5). Since rules F2 all
+ * three are slot maps (`{"<p>": block}`), so `perPlayer` derives true and the
+ * tab draws the SELECTED slot's block.
  *
  * ⛔ A key here is OWNED, which is what makes the Document tab draw its
  * *"Edited in the Sidecars tab"* pointer for it (W0's rule: the pointer AND the
@@ -294,7 +296,7 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
         note: 'This block is a REFERENCE to an atlas ({atlas_id, game, map_document}), not the '
             + 'atlas itself, and nothing resolves an atlas id back to its file — so the tool '
             + 'opens on the atlas it already holds (New / Load a .json there). Its Save comes '
-            + 'back here as ONE `set-key region_atlas` naming what you saved.',
+            + 'back here as ONE `set-key region_atlas` for the selected slot, naming what you saved.',
         open: async ({ key, onSave }) => {
             const [{ openRegionMarkingTool }, { regionAtlasReference }] = await Promise.all([
                 import('../regionMarkingTool/index.js'),
@@ -510,7 +512,8 @@ export const DOCUMENT_KEY_EDITORS = Object.freeze({
  * rows pin byte-equal to a full compile.
  */
 export function regionAtlasSetKeyOp(key, reference) {
-    return { op: 'set-key', key, value: reference, scope: 'document' };
+    // ⛓ rules F2: the block is the SLOT's — the hub's stamp names which.
+    return { op: 'set-key', key, value: reference, scope: 'player' };
 }
 
 /** ⛓ The three answers a `returns` can carry, so nothing spells a fourth. */

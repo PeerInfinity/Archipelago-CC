@@ -394,6 +394,24 @@ describe('S1 — the Sidecars tab knows which keys are sidecar data, and why', (
     });
 
     /**
+     * ⛓⛓ rules F2 — the three are slot maps in the schema, so `perPlayer`
+     * DERIVES true and a row is the SELECTED slot's block: slot 2's row never
+     * shows slot 1's atlas.
+     */
+    it('⛓⛓ rules F2: the three derive `perPlayer` and a row is the selected slot\'s block', () => {
+        const byKey = Object.fromEntries(buildDocumentKeys(SCHEMA).map((e) => [e.key, e]));
+        for (const key of ['region_atlas', 'flash_panel', 'provenance']) {
+            expect(byKey[key].perPlayer, key).toBe(true);
+        }
+        const doc = { region_atlas: { 1: { atlas_id: 'a', game: 'seedling' }, 2: { atlas_id: 'b', game: 'seedling' } } };
+        const row = (player) => documentKeyRows(doc, SCHEMA, { player }).find((r) => r.key === 'region_atlas');
+        expect(row('1').value).toEqual({ atlas_id: 'a', game: 'seedling' });
+        expect(row('2').value).toEqual({ atlas_id: 'b', game: 'seedling' });
+        expect(row('3').present).toBe(false);
+        expect(playerSlotsOf(doc, SCHEMA)).toEqual(['1', '2']);
+    });
+
+    /**
      * ⛔ A key owned by TWO tabs is a row whose pointer is decided by the
      * inversion's iteration order — a second home nobody chose. Asserted over
      * the whole table rather than about the new tab, because that is the law.
@@ -619,10 +637,10 @@ describe('the editor slot — FILLED by H5', () => {
     });
 
     it('⛓ `regionAtlasSetKeyOp` is the op the marking tool\'s save becomes — one '
-        + 'document-scope set-key carrying the reference verbatim', () => {
+        + 'PLAYER-scope set-key carrying the reference verbatim (rules F2: the block is the slot\'s)', () => {
         const reference = { atlas_id: 'seedling-deadbeef', game: 'seedling' };
         expect(regionAtlasSetKeyOp('region_atlas', reference)).toEqual({
-            op: 'set-key', key: 'region_atlas', value: reference, scope: 'document',
+            op: 'set-key', key: 'region_atlas', value: reference, scope: 'player',
         });
         // ⛔ The reference goes in BY IDENTITY: the door derives it once, from
         //    the stamped document, and nothing here re-shapes it.

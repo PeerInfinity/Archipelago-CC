@@ -69,7 +69,7 @@ import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
 import { returnKey, returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
-import { createRoomPlay, STEP_OFF_PX } from './seedlingRoomPlay.js';
+import { createRoomPlay, STEP_OFF_PX, slotBlockOf } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -91,7 +91,7 @@ async function main() {
 
     const PRESET = JSON.parse(readFileSync(join(REPO, `frontend/presets/${GAME}/AP_1/AP_1_rules.json`), 'utf8'));
     const FLASH_DIR = join(REPO, 'frontend/modules/flashPanel');
-    const WASM_PAGE = PRESET.flash_panel?.wasm ?? '';
+    const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
     const ARTIFACT = join(FLASH_DIR, 'wasm', dirname(WASM_PAGE));
     if (!WASM_PAGE || !existsSync(join(FLASH_DIR, 'wasm', WASM_PAGE))
         || !existsSync(join(ARTIFACT, `${dirname(WASM_PAGE)}.wasm`))) {
@@ -131,7 +131,7 @@ async function main() {
     const COMPLETION = PRESET.game_info?.['1']?.completion_condition ?? null;
     const VICTORY_AT = whereIs(COMPLETION?.item);
     const MAP = JSON.parse(readFileSync(join(FLASH_DIR, 'atlases',
-        PRESET.region_atlas?.map_document ?? 'seedling-map.json'), 'utf8'));
+        slotBlockOf(PRESET, 'region_atlas')?.map_document ?? 'seedling-map.json'), 'utf8'));
     const LEVEL = MAP.levels.find((l) => l.level === ROOM?.level);
     const tileOf = (door) => door.exit_tiles[0];
     const entityOf = (door) => LEVEL?.entities.find((e) => Math.floor(e.x / MAP.tile_size) === tileOf(door)[0]

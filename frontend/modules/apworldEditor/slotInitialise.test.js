@@ -31,6 +31,7 @@ import { validateRules } from './rulesUtils.js';
 import { freeItemsFor, regionRealiserKind, regionSizeFor } from './regionRegenerate.js';
 import { GRANTED_ITEM_FIRST_ID, buildTopDownEnvelope, runTopDownToStep } from '../procgenPipeline/topDownSteps.js';
 import { regionsOf, startRegionsOf } from '../procgenCore/rulesGraph.js';
+import { installedZoneConfigFrom } from './regionContent.js';
 import {
     INITIALISE_BARE_ONLY, INITIALISE_RETURN_EXITS_ADDED, INITIALISE_RETURN_EXITS_OFF,
     INITIALISE_RULES_UNCHANGED, INITIALISE_UNPLACED, REGENERATE_SEED_REQUIRED, RULES_OP_KINDS,
@@ -1264,5 +1265,81 @@ describe('P1a — `procgen_metadata` and `loop_costs` are per slot: a second slo
         // ⛔ and a second initialise of slot 2 is now refused by SLOT 2's block, by name
         expect(initialiseOpRefusal({ ...out.doc, preset_sidecars: { ...out.doc.preset_sidecars, [Q]: {} } }, args))
             .toContain(`player ${Q} already carries a \`procgen_metadata\` block`);
+    });
+});
+
+/* ── rules F2: the substrate's blocks are per slot ───────────────────────── */
+
+/**
+ * ⛓⛓ rules F2 — `region_atlas` / `flash_panel` are the SLOT's (`{"<p>": block}`),
+ * so the hub lands a substrate's `rulesJsonBlocks()` under the slot it
+ * initialises. Before F2 the second Seedling slot of one document was REFUSED
+ * ("two writers of one block"): the flat shape made it impossible. The source is
+ * built here — two slots of the smallest world `flash_seedling` places (Menu →
+ * Hall ⇄ Yard, no locations), every other per-player key copied from adventure.
+ */
+function twoSlotSeedlingSource() {
+    const doc = JSON.parse(JSON.stringify(DOCS.adventure));
+    for (const [k, v] of Object.entries(doc)) {
+        if (v && typeof v === 'object' && !Array.isArray(v) && Object.hasOwn(v, P)) v['2'] = JSON.parse(JSON.stringify(v[P]));
+    }
+    const slot = () => ({
+        Menu: { name: 'Menu', exits: [{ name: 'Start', connected_region: 'Hall', access_rule: null }], locations: [] },
+        Hall: { name: 'Hall', exits: [{ name: 'Hall -> Yard', connected_region: 'Yard', access_rule: null }], locations: [] },
+        Yard: { name: 'Yard', exits: [{ name: 'Yard -> Hall', connected_region: 'Hall', access_rule: null }], locations: [] },
+    });
+    doc.regions = { [P]: slot(), 2: slot() };
+    return doc;
+}
+
+describe('rules F2 — a second Seedling slot initialises beside the first, each with its own blocks', () => {
+    const SEEDLING = 'flash_seedling';
+    const argsOf = (player) => ({ player, substrate: SEEDLING, gridDims: { width: 2, height: 2 }, seed: 1, backExits: BACK_EXITS.ADD });
+    const land = (doc, player) => {
+        const res = initialiseSlot({ doc, ...argsOf(player) });
+        expect(res.ok, res.why).toBe(true);
+        return { res, out: applyRulesDocOp(doc, initialiseOpFor(argsOf(player), res)) };
+    };
+
+    it('⛓⛓ BOTH slots take Seedling; each slot\'s `region_atlas[p]` / `flash_panel[p]` is its own; a same-slot second write is refused', () => {
+        const Q = '2';
+        const src = twoSlotSeedlingSource();
+        const one = land(src, P);
+        expect(one.out.ok, one.out.error).toBe(true);
+        expect(Object.keys(one.res.blocks).sort()).toEqual(['flash_panel', 'region_atlas']);
+        for (const k of ['region_atlas', 'flash_panel']) expect(Object.keys(one.out.doc[k]), k).toEqual([P]);
+
+        // ⛓ slot 1's block is MADE distinct, so "its own" is a fact a shared block could not satisfy
+        const mid = JSON.parse(JSON.stringify(one.out.doc));
+        mid.region_atlas[P] = { ...mid.region_atlas[P], atlas_id: 'seedling-00000000' };
+        const two = land(mid, Q);
+        expect(two.out.ok, two.out.error).toBe(true);
+        for (const k of ['region_atlas', 'flash_panel']) {
+            expect(Object.keys(two.out.doc[k]).sort(), k).toEqual([P, Q]);
+            expect(two.out.doc[k][Q], k).toEqual(two.res.blocks[k]);
+        }
+        expect(two.out.doc.region_atlas[P].atlas_id, 'slot 1 untouched by slot 2').toBe('seedling-00000000');
+        expect(two.out.doc.region_atlas[Q].atlas_id).toBe(one.res.blocks.region_atlas.atlas_id);
+        // ⛓ the read-back answers per slot: slot 2 recovers its rooms, slot 1 refuses ITS (tampered) atlas by name
+        expect(installedZoneConfigFrom(two.out.doc, Q, SEEDLING).ok).toBe(true);
+        expect(installedZoneConfigFrom(two.out.doc, P, SEEDLING).ok).toBe(false);
+
+        // ⛔ a second write of the SAME slot is still two writers of one block
+        const again = applyRulesDocOp(
+            { ...two.out.doc, preset_sidecars: { ...two.out.doc.preset_sidecars, [Q]: {} }, procgen_metadata: { [P]: two.out.doc.procgen_metadata[P] } },
+            initialiseOpFor(argsOf(Q), two.res));
+        expect(again.ok).toBe(false);
+        expect(again.error).toContain(`player ${Q} already carries`);
+        expect(again.error).toMatch(/`(region_atlas|flash_panel)\[2\]`/);
+    });
+
+    it('⛔ a key the document holds at the DOCUMENT level (not a slot map) is refused, never written into', () => {
+        const src = twoSlotSeedlingSource();
+        const { res } = land(src, P);
+        const flat = { ...src, flash_panel: { config: 'seedling.json' } };
+        const out = applyRulesDocOp(flat, initialiseOpFor(argsOf(P), res));
+        expect(out.ok).toBe(false);
+        expect(out.error).toContain('`flash_panel`');
+        expect(out.error).toContain('not as a slot map');
     });
 });

@@ -139,7 +139,7 @@ There is no setting or flag: the decision comes from data. When the bridge comes
 3. **`generated`** — the rules carry generated rooms (`seedlingGenRoomPayload.generatedRoomCensus`). If so, the verdict is the `generated` arm. A world with both generated and real rooms is refused, since the game mounts one level set at a time.
 4. **`atlas`** — the rules carry `flash_seedling` rooms and zero goal-ledger locations resolve. If so, the verdict is the `atlas` arm. It stays undecided until that count exists.
 5. **`placement`** — at least one goal-ledger location resolves against the loaded placement; the count is reported either way.
-6. **`assets`** — the vanilla record set and the room map are reachable. The map is the preset's `region_atlas.map_document` when named, else the atlases default. `region_atlas` is not in the panel's static data, so it is read from `getLastRawJsonData()`.
+6. **`assets`** — the vanilla record set and the room map are reachable. The map is the loaded slot's `region_atlas["<p>"].map_document` when named, else the atlases default. `region_atlas` is not in the panel's static data, so it is read from `getLastRawJsonData()` (the slot is the payload's `selectedPlayerInfo.playerId`).
 
 Check 5 joins by AP id, because presets name locations differently (the stage-1 `seedling` preset uses the upstream APWorld's names). The wiring derives each ledger row's `flash_name` from data and joins row → `flash_name` → `ap_id_offset + ap_locations[k].id` → loaded location. A row that does not resolve is reported and filtered out rather than refusing the preset; it keeps the property path.
 
@@ -180,7 +180,7 @@ The entry is also a zone content source ([Substrate Registry § Build-time — c
 - **Only rooms with a wired door are placeable**, because a placed room is entered through a door. `zoneCount` counts them in compile order and `zoneNames` lists them.
 - **Doors bind to sides by order** (`bindDoorsToSides`). A Seedling door has no side, so the k-th side the driver asks for takes the k-th door. The door keeps its atlas `exit_id`, `exitName` carries the engine's `exit_<side>`, and a surplus door is left out with a `pruned_exit` note (surfaced on `stats.contentNotes`); it stays in the level and fires the game's own transition. A cell needing more sides than the room has doors is refused by name.
 - **Every bound door is `external`**, with `target_level` and `target_spawn` null. The null keeps a door out of `resolveCrossingExit`'s level match, since its far side is whatever the grid put there. `target_substrate` is resolved after stitching through `serializeWorld`'s context argument (`substrateOfRegion`); no consumer reads it. The field is present-or-absent, never `external: false`, so committed sidecars without crossings do not move.
-- **Top-level blocks.** Such a world carries the compile's `region_atlas` and `flash_panel` (`rulesJsonBlocks()`); the flash panel engages on `flash_panel`.
+- **Per-slot blocks.** Such a world carries the compile's `region_atlas` and `flash_panel` (`rulesJsonBlocks()`), each under its slot (`{"<p>": block}`, rules F2); the flash panel engages on the loaded slot's `flash_panel`.
 
 A placed room's unbound doors warn and move nothing. The spiral links no reverse exits, so both sides resolve the door by `source_region`: the maze lands the player on its exit back to the room ([Maze Substrate § Panel and runtime](./maze.md#panel-and-runtime)), and the binding picks the door leading to the maze region.
 
@@ -207,7 +207,7 @@ When a real room hosts, each side's requirement compiles to rule-lock obstacles 
 
 The entry's `zoneConfigFromSlot` and `zoneOfPayload` let the APWorld hub's `replace-region-content` put another real room of the same atlas into a region, without a pipeline run ([APWorld Editor](../../modules/apworldEditor.md)).
 
-- **Which atlas.** A rules.json names its atlas by `region_atlas.atlas_id` (`map_document` is the level map, not an atlas). Any atlas but the bundled starter is resolved through `atlases/atlas_files.json` (`mapDocumentPath.atlasPathInIndex`) and fetched in the generation worker.
+- **Which atlas.** A rules.json names a slot's atlas by `region_atlas["<p>"].atlas_id` (`map_document` is the level map, not an atlas). Any atlas but the bundled starter is resolved through `atlases/atlas_files.json` (`mapDocumentPath.atlasPathInIndex`) and fetched in the generation worker.
 - **Which room.** `zoneOfPayload` matches `atlas_region` + `atlas_sub_region`; the picker disables rooms in use and doorless rooms, with the reason.
 - **Doors and items.** The k-th door binds to the region's k-th existing exit. `extractZoneRules` takes optional `locationSpecs` (`[{name, item}]`), so AP's fill owns the items and the room owns the geometry.
 - **What round-trips.** Content-source documents (e.g. `seedling_spiral_room`, `seedling_atlas_location`) take their own room back byte-identically. The compiler's projections (`seedling_atlas`, `seedling_playthrough`) are refused: their exits are level transitions, not doors bound to sides. The lab's edit arm is refused (`regionRoundTrip.refused`): a payload is an atlas reference, not a room record.

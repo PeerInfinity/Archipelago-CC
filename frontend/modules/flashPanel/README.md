@@ -28,13 +28,17 @@ inverted plumbing).
 
 ## Wiring
 
-A world's preset `rules.json` carries a `flash_panel` section:
+A world's preset `rules.json` carries a `flash_panel` section, keyed by player
+slot (rules F2: the wiring is the slot's, and the panel reads the LOADED slot's
+block; a document-level block is refused by the loader):
 
 ```json
 "flash_panel": {
-  "config": "seedling.json",
-  "swf": "seedling_injected.swf",
-  "wasm": "seedling_bot_ap_p4f/game.html"
+  "1": {
+    "config": "seedling.json",
+    "swf": "seedling_injected.swf",
+    "wasm": "seedling_bot_ap_p4f/game.html"
+  }
 }
 ```
 

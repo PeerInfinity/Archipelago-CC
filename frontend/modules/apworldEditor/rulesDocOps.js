@@ -2885,6 +2885,8 @@ export const INITIALISE_RETURN_EXITS_OFF = 'return exits OFF — the rooms keep 
 export const INITIALISE_UNPLACED = 'unplaced';
 
 const isPlainObj = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+/** ⛓ rules F2 — `{"<p>": …}`: a plain object whose every key is a slot id (`{}` included). */
+const isSlotMap = (v) => isPlainObj(v) && Object.keys(v).every((k) => /^[0-9]+$/.test(k));
 
 /* ── the grants an op DECLARES (APWORLD SUBSTRATE CHANGE S1) ──────────── */
 
@@ -3141,10 +3143,21 @@ function initialiseResultRefusal(doc, p, result) {
     if (grant) return grant;
     const blocks = result.blocks ?? {};
     if (!isPlainObj(blocks)) return `apworld: \`blocks\` is an object, got ${describeValue(blocks)}.`;
-    const held = Object.keys(blocks).filter((k) => Object.hasOwn(doc, k));
+    // ⛓ rules F2: a block is the SLOT's (`doc[k][p]`, the P1a shape), so the
+    //   refusal is per slot — a SECOND slot takes its own block; the same slot
+    //   written twice is still two writers of one block. ⛔ A key the document
+    //   holds as anything but a slot map is a document-level value: writing
+    //   `[k, p]` into it would clobber it, so that is refused by name too.
+    const flat = Object.keys(blocks).filter((k) => Object.hasOwn(doc, k) && !isSlotMap(doc[k]));
+    if (flat.length) {
+        return `apworld: the substrate asks for per-slot block(s) ${listNames(flat.map((k) => `\`${k}\``))}, which `
+            + 'the document carries at the document level, not as a slot map — the op refuses rather than '
+            + 'overwrite it.';
+    }
+    const held = Object.keys(blocks).filter((k) => Object.hasOwn(doc[k] ?? {}, p));
     if (held.length) {
-        return `apworld: the substrate asks for top-level block(s) ${listNames(held.map((k) => `\`${k}\``))}, which `
-            + 'the document already carries — two writers of one block would overwrite each other silently, '
+        return `apworld: the substrate asks for block(s) ${listNames(held.map((k) => `\`${k}[${p}]\``))}, which `
+            + `player ${p} already carries — two writers of one block would overwrite each other silently, `
             + 'so the op refuses rather than pick one.';
     }
     // ⛓ S3 — a record made before S3 (or with loop mode off) carries no block.
@@ -3268,7 +3281,7 @@ function opInitialiseProcgenLayout(doc, op) {
 
     let next = setPath(doc, ['preset_sidecars', p], result.entries);
     next = setPath(next, ['procgen_metadata', p], result.procgen_metadata);
-    for (const [k, v] of Object.entries(result.blocks ?? {})) next = setPath(next, [k], v);
+    for (const [k, v] of Object.entries(result.blocks ?? {})) next = setPath(next, [k, p], v);
     for (const { region, exit } of result.returnExits) {
         const r = regionsOf(next, p)[region];
         next = withRegion(next, p, region, withKey(r, 'exits', [...(r.exits ?? []), exit]));

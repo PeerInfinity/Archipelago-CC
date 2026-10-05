@@ -117,7 +117,7 @@ describe('loadSeedlingGenerated over the headless spiral world', () => {
     afterEach(() => { vi.unstubAllGlobals(); });
 
     const load = (over = {}) => loadSeedlingGenerated({
-        flashPanel: rules.flash_panel,
+        flashPanel: rules.flash_panel['1'],
         manifest: MANIFEST,
         rawRules: rules,
         locations: locationsMapOf(rules),
@@ -142,7 +142,7 @@ describe('loadSeedlingGenerated over the headless spiral world', () => {
 
     it('returns loadSeedlingRandomizer\'s SHAPE — every key the vanilla arm returns', async () => {
         const vanilla = await loadSeedlingRandomizer({
-            flashPanel: VANILLA.seedling_playthrough.flash_panel, manifest: MANIFEST,
+            flashPanel: VANILLA.seedling_playthrough.flash_panel['1'], manifest: MANIFEST,
             rawRules: VANILLA.seedling_playthrough, locations: locationsMapOf(VANILLA.seedling_playthrough),
             playerId: '1', gameConfig: GAME_CONFIG, baseUrl: BASE,
             fetchJson: async (u) => JSON.parse(readFileSync(fileURLToPath(u), 'utf8')),

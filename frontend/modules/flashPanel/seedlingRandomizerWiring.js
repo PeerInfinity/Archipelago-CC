@@ -87,7 +87,7 @@ import {
 import { GEN_ROOM_TILE_SIZE, generatedRoomCensus } from '../seedlingDemo/seedlingGenRoomPayload.js';
 import { SeedlingCheckBinding } from './seedlingCheckBinding.js';
 import { SeedlingLevelSetDelivery } from './seedlingLevelSetDelivery.js';
-import { ATLAS_DIR, atlasIndexPath, atlasPathInIndex, mapDocumentPath } from './mapDocumentPath.js';
+import { ATLAS_DIR, atlasIndexPath, atlasPathInIndex, mapDocumentPath, regionAtlasOf } from './mapDocumentPath.js';
 // ⛓ G7 — DEPENDENCY-FREE (it imports nothing), so a static import costs this
 // lazy module one small file and the panel's static closure nothing.
 import {
@@ -285,8 +285,8 @@ export function buildLocationResolver({ ledger, gameConfig, locations, roomsByLe
  * module's callers and its rows read; the path itself is `mapDocumentPath`'s,
  * shared with the two spellings on the lab's side (F-b / plan §17.1 F7).
  */
-export function resolveMapPath(rawRules) {
-    const { path, source } = mapDocumentPath(rawRules);
+export function resolveMapPath(rawRules, player) {
+    const { path, source } = mapDocumentPath(rawRules, player);
     return { path, source };
 }
 
@@ -809,7 +809,7 @@ export async function loadSeedlingRandomizer({
     if (cheap.verdict === 'ineligible') return refuse(cheap);
 
     // ── (iv) the two documents ──────────────────────────────────────────
-    const mapPath = resolveMapPath(rawRules);
+    const mapPath = resolveMapPath(rawRules, playerId);
     const assets = {
         recordSet: { url: url(AP_ASSET_PATHS.recordSet), ok: false },
         map: { url: url(mapPath.path), ok: false, source: mapPath.source },
@@ -1123,7 +1123,7 @@ export async function loadSeedlingAtlas({
     }
 
     // ── the atlas document the rules name, through the served index ─────
-    const atlasId = rawRules?.region_atlas?.atlas_id ?? null;
+    const atlasId = regionAtlasOf(rawRules, playerId)?.atlas_id ?? null;
     let atlasDoc = null;
     let atlasUrl = null;
     try {

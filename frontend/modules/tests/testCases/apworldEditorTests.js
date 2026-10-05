@@ -2569,7 +2569,7 @@ export async function apworldRegionAtlasDoorRefusesAModuleThisAppLacks(testContr
         testController.assertEqual(
             'the document carries region_atlas as a three-field REFERENCE',
             'atlas_id,game,map_document',
-            Object.keys(panel.rulesDoc.region_atlas ?? {}).sort().join(','));
+            Object.keys(panel.rulesDoc.region_atlas?.[panel.playerId] ?? {}).sort().join(','));
 
         selectTab(panel, 'document');
         const btn = await testController.pollForValue(
@@ -4449,8 +4449,9 @@ export async function apworldADoorCanDeclineToRaiseTheHub(testController) {
 
         const tabBefore = panel.activeTab;
         const opsBefore = panel.session.ops().length;
-        /** ⛓ The value is the SCHEMA's own required field list, not a shape typed here. */
-        const required = panel._rulesSchema.properties[KEY].required ?? [];
+        /** ⛓ The value is the SCHEMA's own required field list, not a shape typed here
+         *  (rules F2: the block is the slot's, so the list is the slot entry's). */
+        const required = panel._rulesSchema.properties[KEY].patternProperties?.['^[0-9]+$']?.required ?? [];
         testController.reportCondition(
             'the schema names required fields for the key — the op\'s premise',
             required.length > 0);
@@ -4468,7 +4469,7 @@ export async function apworldADoorCanDeclineToRaiseTheHub(testController) {
         testController.assertEqual('…and APPLIED — the op list grew by one',
             String(opsBefore + 1), String(panel.session.ops().length));
         testController.assertEqual('…and the document really carries the block now',
-            'true', String(JSON.stringify(panel.rulesDoc[KEY]) === JSON.stringify(value)));
+            'true', String(JSON.stringify(panel.rulesDoc[KEY]?.[panel.playerId]) === JSON.stringify(value)));
 
         // ⛓ …and the seam's own answer was recorded — the half the flag does
         //   NOT gate, and what tells "declined to raise" from "never ran".
@@ -11199,10 +11200,10 @@ export async function apworldAnUnservedAtlasIsRefusedByName(testController) {
         testController.reportCondition('slot 1 selected', await onRegionsTabFor(testController, panel, '1'));
         if (!await pickSubstrateAndOpenForm(testController, panel, room, 'maze')) return testController.getOverallResult();
         const unserved = 'seedling-00000000';
-        const applied = panel._applyOp({ op: 'set-key', key: 'region_atlas', scope: 'document',
-            value: { ...panel.rulesDoc.region_atlas, atlas_id: unserved } });
-        testController.reportCondition('⛓ the document now names an unserved atlas (one set-key op)',
-            applied.ok && panel.rulesDoc.region_atlas.atlas_id === unserved);
+        const applied = panel._applyOp({ op: 'set-key', key: 'region_atlas', scope: 'player', player: '1',
+            value: { ...panel.rulesDoc.region_atlas['1'], atlas_id: unserved } });
+        testController.reportCondition('⛓ slot 1 now names an unserved atlas (one set-key op)',
+            applied.ok && panel.rulesDoc.region_atlas['1'].atlas_id === unserved);
         panel._zoneFetched = {};
         const opsBefore = panel.session.ops().length;
         if (!await openRoomSource(testController, panel, leaf)) return testController.getOverallResult();

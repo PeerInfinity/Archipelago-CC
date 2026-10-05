@@ -153,15 +153,17 @@ export function zoneSourceLabelOf(entry) {
 }
 
 /**
- * ⛓ R5c — the document's top-level blocks the target WRITES (`rulesJsonBlocks`),
- * keyed by the entry's own answer, never typed: a read-back may need them (an
- * atlas is named only in `region_atlas`). A key the document lacks is present
- * with `undefined`, so the read-back can refuse it by name.
+ * ⛓ R5c — the SLOT's blocks the target WRITES (`rulesJsonBlocks`), keyed by
+ * the entry's own answer, never typed: a read-back may need them (an atlas is
+ * named only in `region_atlas`). Each is read at `doc[k][player]` — the block is
+ * the slot's (rules F2), so a second slot's never answers for this one. A key
+ * the slot lacks is present with `undefined`, so the read-back can refuse it by
+ * name.
  */
-function blocksOf(doc, entry) {
+function blocksOf(doc, entry, player) {
     let keys = [];
     try { keys = Object.keys(entry?.rulesJsonBlocks?.() ?? {}); } catch { keys = []; }
-    return Object.fromEntries(keys.map((k) => [k, doc?.[k]]));
+    return Object.fromEntries(keys.map((k) => [k, doc?.[k]?.[player]]));
 }
 
 /** ⛓ R5c — a region's exit SIDES in document order (a side-bound channel binds one door per side). */
@@ -210,7 +212,7 @@ export function installedZoneConfigFrom(doc, player, substrate, { fetched = {} }
     const res = entry[ZONE_CONFIG_HOOK]({
         entries: entriesOf(doc, player, substrate),
         locations: locationsByRegion(doc, player),
-        blocks: blocksOf(doc, entry),
+        blocks: blocksOf(doc, entry, player),
         fetched,
         recorded: recordedConfigOf(doc, substrate, player),
     });

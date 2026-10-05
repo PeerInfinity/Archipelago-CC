@@ -54,7 +54,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { FLASH_PANEL, clickPanelTab, createRoomPlay } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, clickPanelTab, createRoomPlay, slotBlockOf } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -106,7 +106,7 @@ async function main() {
         return { GAME: game, PRESET: preset, REGIONS: regions, START: regions.Menu.exits[0].connected_region };
     };
     const PRESETS = { house: presetOf('seedling_atlas_location'), level0: presetOf('seedling_atlas'), newGame: presetOf('seedling_playthrough') };
-    const WASM_PAGE = PRESETS.house.PRESET.flash_panel?.wasm ?? '';
+    const WASM_PAGE = slotBlockOf(PRESETS.house.PRESET, 'flash_panel')?.wasm ?? '';
     if (!WASM_PAGE || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE))) {
         console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
         process.exit(0);

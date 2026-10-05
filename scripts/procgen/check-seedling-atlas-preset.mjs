@@ -43,6 +43,7 @@ import { takeBoxLockOrExit } from './boxLock.js';
  */
 
 import { argvHelp } from './argvHelp.js';
+import { slotBlockOf } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 takeBoxLockOrExit({ name: 'check-seedling-atlas-preset.mjs', kind: 'browser' });
@@ -179,8 +180,8 @@ try {
         payloadExitNames.length > 0 && payloadExitNames.every((n) => graphExitNames.has(n)),
         `${payloadExitNames.length} payload exits`);
     check('Phase C: the preset carries the flashPanel wiring that boots the game',
-        preset.flash_panel?.config === 'seedling.json' && !!preset.flash_panel?.wasm,
-        JSON.stringify(preset.flash_panel));
+        slotBlockOf(preset, 'flash_panel')?.config === 'seedling.json' && !!slotBlockOf(preset, 'flash_panel')?.wasm,
+        JSON.stringify(slotBlockOf(preset, 'flash_panel')));
 } finally {
     await browser.close();
 }

@@ -182,7 +182,7 @@ describe('compiling the Phase-1 fixture (subgraphs, internal exits, start sub-re
     });
 
     it('records the atlas it came from, hash and all', () => {
-        expect(rules.region_atlas).toEqual({ atlas_id: FIXTURE.atlas_id, game: 'seedling' });
+        expect(rules.region_atlas['1']).toEqual({ atlas_id: FIXTURE.atlas_id, game: 'seedling' });
         expect(rules.game_name).toBe('seedling');
         expect(rules.world['1'].world_directory).toBe('seedling');
         expect(rules.world['1'].world_class_name).toBe('SeedlingWorld');
@@ -259,7 +259,7 @@ describe('compiling the real Seedling starter atlas', () => {
     });
 
     it('carries the atlas identity, map document included', () => {
-        expect(rules.region_atlas).toEqual({
+        expect(rules.region_atlas['1']).toEqual({
             atlas_id: STARTER.atlas_id, game: 'seedling', map_document: 'seedling-map.json',
         });
     });
@@ -354,7 +354,7 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
     });
 
     it('stamps the flashPanel wiring so a regeneration can no longer drop it', () => {
-        expect(rules.flash_panel).toEqual({
+        expect(rules.flash_panel['1']).toEqual({
             config: 'seedling.json', wasm: 'seedling_bot_ap_p4f/game.html',
         });
         // The flavour is named now that there are two of them (Phase 5b).
@@ -424,7 +424,7 @@ describe('projection 3 — play-time sidecars (Phase 4)', () => {
             substrateId: 'flash_other', flashPanel: { config: 'other.json' },
         });
         expect(over.preset_sidecars['1'].starting_house.substrate).toBe('flash_other');
-        expect(over.flash_panel).toEqual({ config: 'other.json' });
+        expect(over.flash_panel['1']).toEqual({ config: 'other.json' });
     });
 });
 
@@ -499,7 +499,7 @@ describe('per-region substrate dispatch (EDITOR INTEGRATION W1)', () => {
         const mixed = compileRegionAtlas(twoRegionAtlas(MAZE_SUBSTRATE), {
             mapDoc: MAP_DOC, mazeProjection: mazeDeps(),
         });
-        expect(mixed.rules.flash_panel).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4f/game.html' });
+        expect(mixed.rules.flash_panel['1']).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4f/game.html' });
 
         const allMaze = compileRegionAtlas(twoRegionAtlas(undefined), {
             mapDoc: MAP_DOC, sidecarFlavor: 'maze', mazeProjection: mazeDeps(),
@@ -519,7 +519,7 @@ describe('per-region substrate dispatch (EDITOR INTEGRATION W1)', () => {
             mapDoc: MAP_DOC, sidecarFlavor: 'maze', mazeProjection: mazeDeps(),
         });
         expect(reverse.report.substrates).toEqual({ flash_seedling: 1, [MAZE_SUBSTRATE]: 1 });
-        expect(reverse.rules.flash_panel).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4f/game.html' });
+        expect(reverse.rules.flash_panel['1']).toEqual({ config: 'seedling.json', wasm: 'seedling_bot_ap_p4f/game.html' });
     });
 
     it('the SAME atlas compiled --maze yields two maze sidecars — the field agrees with the default', () => {
@@ -669,7 +669,7 @@ describe('per-region substrate dispatch (EDITOR INTEGRATION W1)', () => {
         expect(sidecars.starting_house.substrate).toBe('flash_seedling');
         expect(sidecars.owls_nest_entrance.substrate).toBe('flash_other');
         expect(report.substrates).toEqual({ flash_seedling: 1, flash_other: 1 });
-        expect(rules.flash_panel).toEqual({ config: 'other.json' });
+        expect(rules.flash_panel['1']).toEqual({ config: 'other.json' });
     });
 });
 
@@ -945,7 +945,7 @@ describe('regionAtlasReference — the block the compiler writes, hoisted', () =
     it('⛓⛓ is BYTE-EQUAL to what a full compile puts in rules.region_atlas', () => {
         for (const atlas of [FIXTURE, STARTER]) {
             const { rules } = compileRegionAtlas(atlas, { mapDoc: MAP_DOC, allowInvalid: true });
-            expect(regionAtlasReference(atlas)).toEqual(rules.region_atlas);
+            expect(regionAtlasReference(atlas)).toEqual(rules.region_atlas['1']);
         }
     });
 
@@ -978,9 +978,37 @@ describe('regionAtlasReference — the block the compiler writes, hoisted', () =
         // three-field reference, so nothing downstream can rebuild the atlas.
         for (const name of ['seedling_atlas', 'seedling_atlas_maze', 'seedling_playthrough']) {
             const doc = read(`../../presets/${name}/AP_1/AP_1_rules.json`);
-            expect(Object.keys(doc.region_atlas).sort())
+            expect(Object.keys(doc.region_atlas['1']).sort())
                 .toEqual(['atlas_id', 'game', 'map_document']);
-            expect(doc.region_atlas.regions).toBeUndefined();
+            expect(doc.region_atlas['1'].regions).toBeUndefined();
+        }
+    });
+});
+
+/**
+ * ⛓⛓ rules F2 — **THE THREE BLOCKS ARE THE SLOT'S.** `region_atlas`,
+ * `flash_panel` and `provenance` are `{"<p>": block}` keyed by the scaffold's
+ * ONE slot (the compile no longer types `'1'`), so a second Seedling slot can
+ * name its own and a `_P<n>` slice carries only its own. The schema agrees.
+ */
+describe('rules F2 — the compile writes slot maps', () => {
+    it('⛓ every per-slot block is keyed by the slot `player_names` names, and nothing else', () => {
+        const { rules } = compileStarter({ provenance: { generator: 'this row' } });
+        const slots = Object.keys(rules.player_names);
+        expect(slots).toHaveLength(1);
+        for (const key of ['region_atlas', 'flash_panel', 'provenance', 'regions', 'preset_sidecars']) {
+            expect(Object.keys(rules[key]), key).toEqual(slots);
+        }
+        expect(rules.provenance[slots[0]]).toEqual({ generator: 'this row' });
+        expect(rules.world[slots[0]].world_directory).toBe(rules.game_directory);
+        expect(rulesJsonSchemaErrors(rules, loadRulesSchema())).toEqual([]);
+    });
+
+    it('⛔ the schema refuses a DOCUMENT-LEVEL block of any of the three', () => {
+        const { rules } = compileStarter({ provenance: { generator: 'this row' } });
+        for (const key of ['region_atlas', 'flash_panel', 'provenance']) {
+            const flat = { ...rules, [key]: rules[key]['1'] };
+            expect(rulesJsonSchemaErrors(flat, loadRulesSchema()).join(' | '), key).toMatch(new RegExp(key));
         }
     });
 });

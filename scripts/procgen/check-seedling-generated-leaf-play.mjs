@@ -64,7 +64,7 @@ import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 import { assertLogicOnlyChannel } from './seedlingChannel.js';
 import { takeBoxLockOrExit } from './boxLock.js';
 import { argvHelp, isEntryPoint } from './argvHelp.js';
-import { FLASH_PANEL, createRoomPlay, roomPath } from './seedlingRoomPlay.js';
+import { FLASH_PANEL, createRoomPlay, roomPath, slotBlockOf } from './seedlingRoomPlay.js';
 
 argvHelp(import.meta.url);
 
@@ -106,7 +106,7 @@ async function main() {
 
     const PRESET = JSON.parse(readFileSync(join(REPO, `frontend/presets/${GAME}/AP_1/AP_1_rules.json`), 'utf8'));
     const FLASH_DIR = join(REPO, 'frontend/modules/flashPanel');
-    const WASM_PAGE = PRESET.flash_panel?.wasm ?? '';
+    const WASM_PAGE = slotBlockOf(PRESET, 'flash_panel')?.wasm ?? '';
     const ARTIFACT = join(FLASH_DIR, 'wasm', dirname(WASM_PAGE));
     if (!WASM_PAGE || !existsSync(join(FLASH_DIR, 'wasm', WASM_PAGE))
         || !existsSync(join(ARTIFACT, `${dirname(WASM_PAGE)}.wasm`))) {

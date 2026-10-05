@@ -85,3 +85,39 @@ def test_slicing_the_combined_document_gives_the_committed_player_file(slot):
 
     assert set(sliced) == set(committed), sorted(set(sliced) ^ set(committed))
     assert sliced == committed
+
+
+F2_KEYS = ("provenance", "region_atlas", "flash_panel")
+
+
+@pytest.mark.parametrize("slot", ["1", "2", "3"])
+def test_a_slice_carries_only_its_own_f2_blocks(slot):
+    """rules F2: `region_atlas`, `flash_panel` and `provenance` are per-player
+    maps, so a `_P<n>` slice carries ONLY slot n's entry — never slot 1's wiring
+    — and no key at all for a slot with none. The combined export keeps every
+    slot's entry. A synthetic three-slot document: slots 1 and 2 are Seedling
+    slots with DIFFERENT blocks, slot 3 carries none."""
+    blocks = {
+        "1": {"provenance": {"generator": "g1"},
+              "region_atlas": {"atlas_id": "seedling-aaaa", "game": "seedling"},
+              "flash_panel": {"config": "seedling.json", "wasm": "a/game.html"}},
+        "2": {"provenance": {"generator": "g2"},
+              "region_atlas": {"atlas_id": "seedling-bbbb", "game": "seedling"},
+              "flash_panel": {"config": "seedling.json", "wasm": "b/game.html"}},
+    }
+    doc = {
+        "schema_version": 3,
+        "player_names": {"1": "A", "2": "B", "3": "C"},
+        "regions": {"1": {}, "2": {}, "3": {}},
+        **{key: {p: blocks[p][key] for p in blocks} for key in F2_KEYS},
+    }
+    combined = create_ordered_export_data(doc)
+    for key in F2_KEYS:
+        assert combined[key] == doc[key], key
+
+    sliced = create_ordered_export_data(doc, player_id=slot)
+    for key in F2_KEYS:
+        if slot in blocks:
+            assert sliced[key] == {slot: blocks[slot][key]}, (key, sliced.get(key))
+        else:
+            assert key not in sliced, (key, sliced.get(key))

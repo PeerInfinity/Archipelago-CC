@@ -16,7 +16,7 @@ import { createApFoundReadout } from './seedlingRandomizerReadout.js';
 import { FlashBridgeAdapter } from './flashBridgeAdapter.js';
 import { WasmBridgeAdapter } from './wasmBridgeAdapter.js';
 import { createHeldKeyRelease, focusGameCanvas } from './gameInput.js';
-import { mapDocumentPath, rulesOfRawPayload } from './mapDocumentPath.js';
+import { mapDocumentPath, playerOfRawPayload, rulesOfRawPayload } from './mapDocumentPath.js';
 import { returnSpawnTable } from './seedlingReturnSpawns.js';
 import { SUB_REGION_PARTITION_PATH, buildSubRegionMap } from './seedlingSubRegions.js';
 
@@ -1059,13 +1059,14 @@ export class FlashPanelUI {
    */
   async _loadSubRegions(adapter) {
     const raw = rulesOfRawPayload(getLastRawJsonData?.());
+    const player = playerOfRawPayload(getLastRawJsonData?.());
     const glue = getSeedlingRegionGlue();
     glue?.setSubRegions?.(null);
-    if (!raw?.region_atlas) return;
+    if (!raw?.region_atlas?.[player]) return;
     try {
       const res = await fetch(new URL(SUB_REGION_PARTITION_PATH, document.baseURI).href);
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-      const { map, why } = buildSubRegionMap({ rules: raw, partition: await res.json() });
+      const { map, why } = buildSubRegionMap({ rules: raw, partition: await res.json(), player });
       if (this.adapter !== adapter) return;
       if (!map) {
         if (why) this._panelLog(`[region atlas] ${why}`, 'error');
@@ -1093,8 +1094,9 @@ export class FlashPanelUI {
     // the rules are its `rawJsonData` (measured: `region_atlas` is not on the
     // wrapper).
     const raw = rulesOfRawPayload(getLastRawJsonData?.());
-    if (!raw?.region_atlas) return;
-    const { path, source } = mapDocumentPath(raw);
+    const player = playerOfRawPayload(getLastRawJsonData?.());
+    if (!raw?.region_atlas?.[player]) return;
+    const { path, source } = mapDocumentPath(raw, player);
     // ⛓ W2 — the wasm playback engine solves against the SAME document.
     this._atlasMapPath = path;
     try {

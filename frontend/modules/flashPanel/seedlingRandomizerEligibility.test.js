@@ -217,7 +217,7 @@ describe('the THREE SHIPPED PRESETS against the SHIPPED manifest', () => {
 
     it('all three name a wasm page, and it is the SAME build', () => {
         const names = Object.values(rules)
-            .map((r) => buildNameFromWasmPath(r.flash_panel?.wasm));
+            .map((r) => buildNameFromWasmPath(r.flash_panel?.['1']?.wasm));
         expect(new Set(names).size).toBe(1);
         expect(names[0]).toBeTruthy();
     });
@@ -226,7 +226,7 @@ describe('the THREE SHIPPED PRESETS against the SHIPPED manifest', () => {
         const manifest = readJson(MANIFEST_PATH);
         for (const [name, r] of Object.entries(rules)) {
             const v = seedlingRandomizerEligibility({
-                flashPanel: r.flash_panel,
+                flashPanel: r.flash_panel['1'],
                 transport: 'wasm',
                 manifest,
                 placement: OK_PLACEMENT,
@@ -251,7 +251,7 @@ describe('the THREE SHIPPED PRESETS against the SHIPPED manifest', () => {
         };
         for (const [name, r] of Object.entries(rules)) {
             const v = seedlingRandomizerEligibility({
-                flashPanel: r.flash_panel,
+                flashPanel: r.flash_panel['1'],
                 transport: 'wasm',
                 manifest: stripped,
                 placement: OK_PLACEMENT,
@@ -289,7 +289,7 @@ describe('the THREE SHIPPED PRESETS against the SHIPPED manifest', () => {
 describe('the JS runtime transport (Seedling JS J1)', () => {
     const generatedRules = readJson('../../presets/seedling_generated_room/AP_1/AP_1_rules.json');
     const GENERATED = { rooms: ['region_0_0', 'region_0_1'], mixed: [] };
-    const flashPanel = generatedRules.flash_panel;
+    const flashPanel = generatedRules.flash_panel['1'];
 
     it('is eligible on the GENERATED arm with NO manifest at all', () => {
         const v = seedlingRandomizerEligibility({ flashPanel, transport: JS_TRANSPORT, manifest: null,

@@ -536,8 +536,9 @@ function cellExtent(entries) {
 }
 
 /**
- * ⛓ The top-level blocks the realised substrate asks the document to carry
+ * ⛓ The blocks the realised substrate asks the document to carry
  * (`rulesJsonBlocks`, the compile's rule): `{key: value}`, possibly empty.
+ * Block-valued: the op lands each under its slot (`doc[key][p]`, rules F2).
  */
 export function substrateBlocksFor(substrate) {
     try {

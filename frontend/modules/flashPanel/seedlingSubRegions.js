@@ -48,7 +48,8 @@ export function buildSubRegionMap({ rules, partition, player = '1' }) {
     }
     const subLevel = [...worlds.entries()].filter(([id]) => id.includes('__'));
     if (subLevel.length === 0) return { map: null, why: null };
-    const atlasId = rules?.region_atlas?.atlas_id ?? null;
+    // ⛓ rules F2: the atlas is the SLOT's (`region_atlas[player]`).
+    const atlasId = rules?.region_atlas?.[player]?.atlas_id ?? null;
     const atlas = atlasId ? partition?.atlases?.[atlasId] : null;
     if (!atlas) return { map: null, why: NO_PARTITION(atlasId) };
     const alphabet = partition.alphabet;

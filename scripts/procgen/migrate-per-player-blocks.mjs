@@ -11,11 +11,14 @@
  *     (rules F1; ⚖ user 2026-10-03: *"If there are presets that set the
  *     bidirectional flag at the top level, then that's a bug. The flag should be
  *     specific to one player."*).
+ *   - `region_atlas` / `flash_panel` / `provenance` → `{"<p>": block}` (rules
+ *     F2, 2026-10-05; ⚖ user: *"If the schema allows both, then the schema is
+ *     wrong."*) — the region-atlas compile's blocks, the P1a move again.
  *
  *   node scripts/procgen/migrate-per-player-blocks.mjs --check   # exit 1 naming every unmigrated file
  *   node scripts/procgen/migrate-per-player-blocks.mjs --write   # move them (idempotent: a second run writes 0 bytes)
  *
- * ── WHAT IT MOVED FROM (said once, here, dated 2026-09-27 / 2026-10-03) ────
+ * ── WHAT IT MOVED FROM (said once, here, dated 2026-09-27 / 2026-10-03 / 2026-10-05) ──
  *
  * Until P1a both keys sat at the top level as ONE block describing ONE slot.
  * They are now `{"<p>": block}` — the shape `preset_sidecars`, `regions` and
@@ -28,6 +31,12 @@
  * The runtime loader REFUSES the old key by name
  * (`stateManager/core/initialization.js` `RETIRED_TOP_LEVEL_KEYS`) and the
  * strict schema rejects it; no reader of the old place exists.
+ *
+ * Until rules F2 the region-atlas compile (and the tile-map analyzer, the
+ * procgen pipeline and the hub's initialise op) wrote `region_atlas`,
+ * `flash_panel` and `provenance` as ONE document-level block each, describing
+ * the one Seedling slot. They are now `{"<p>": block}` like the P1a keys; the
+ * loader REFUSES a document-level block by name (`RETIRED_TOP_LEVEL_KEYS`).
  *
  * ── ⛓ WHAT A MOVE IS ────────────────────────────────────────────────────
  *
@@ -48,8 +57,10 @@
  * A block whose keys are all slot ids of the document is already moved (the
  * old block's keys are field names — `driver`, `regions`, … — never digits).
  *
- * ⛓ THE SLOT is the document's ONE `preset_sidecars` slot (a document with
- * any other count is refused unless the table below names it).
+ * ⛓ THE SLOT is the document's ONE `preset_sidecars` slot; a document whose
+ * `preset_sidecars` names no slot (rules F2: `robotkitty_tilemap` has no map,
+ * the seed-1 `seedling` export an empty one) takes its ONE `player_names`
+ * slot. Any other count is refused unless the table below names it.
  *
  * ⛓⛓ THE TABLE — the one committed multi-slot document, measured (plan
  * §36.1): `multiworld/AP_05594871498841892311` is one generation in five
@@ -80,7 +91,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..', '..');
 const { stringifyRulesJson } = await import(join(ROOT, 'frontend/modules/shared/rulesJsonBuilder.js'));
 
-const KEYS = ['procgen_metadata', 'loop_costs'];
+const KEYS = ['procgen_metadata', 'loop_costs', 'provenance', 'region_atlas', 'flash_panel'];
 /** ⛓ The flat flag whose home is `exporter["<p>"]` (rules F1). */
 const EXPORTER_FLAGS = ['assume_bidirectional_exits'];
 const MW = 'frontend/presets/multiworld/AP_05594871498841892311/AP_05594871498841892311';
@@ -146,9 +157,11 @@ for (const rel of files) {
 
     let slots = TABLE.get(rel);
     if (!slots) {
-        const sidecarSlots = Object.keys(isPlain(doc.preset_sidecars) ? doc.preset_sidecars : {});
+        const hasSidecarSlots = isPlain(doc.preset_sidecars) && Object.keys(doc.preset_sidecars).length > 0;
+        const from = hasSidecarSlots ? 'preset_sidecars' : 'player_names';
+        const sidecarSlots = Object.keys(isPlain(doc[from]) ? doc[from] : {});
         if (sidecarSlots.length !== 1) {
-            refused.push(`${rel}: ${sidecarSlots.length} preset_sidecars slots (${sidecarSlots.join(', ') || 'none'}) — `
+            refused.push(`${rel}: ${sidecarSlots.length} ${from} slots (${sidecarSlots.join(', ') || 'none'}) — `
                 + 'the slot is not derivable and the file is not in the table');
             continue;
         }

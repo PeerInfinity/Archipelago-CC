@@ -401,6 +401,8 @@ tool on *this document's* atlas; it opens the tool on the atlas the tool holds,
 and a Save writes the document's reference to whatever was saved, through the
 compiler's own `regionAtlasCompiler.regionAtlasReference` — the same three
 fields `compileRegionAtlas` writes, hoisted so the two spellings cannot drift.
+Since rules F2 the block is the slot's (`region_atlas["<p>"]`), so the Save is a
+**player-scope** `set-key` for the selected slot (`regionAtlasSetKeyOp`).
 
 #### `procgen_metadata` — the pipeline says what it can do
 
@@ -1178,7 +1180,7 @@ source is a **room**: the Source row reads the entry's own word for it
 (`zoneSourceLabel`: *Atlas room*; jta keeps *Zone N*; the hub names no substrate),
 and the rest is R5b's path — the same op, cascade and refusals.
 
-**The intake.** A rules.json names its atlas only by `region_atlas.atlas_id`
+**The intake.** A rules.json names a slot's atlas only by `region_atlas["<p>"].atlas_id`
 (`map_document` is the level map, not an atlas). The bundled starter atlas is
 read in place; any other is resolved through the served index
 `modules/flashPanel/atlases/atlas_files.json` and **fetched** — by the picker, for
@@ -1194,7 +1196,7 @@ existing exit sides in order; a room with fewer doors than the region has exits
 is refused in the channel's sentence. The Region's exits are unchanged, and their
 targets carry over onto the bound doors.
 
-**What refuses it, by name**, beyond R5b's list: a document without the
+**What refuses it, by name**, beyond R5b's list: a slot without its
 `region_atlas` or `flash_panel` block (the atlas is named only in the first, the
 flash panel engages on the second); a room whose `atlas_ref` is not the
 document's atlas; **the atlas compiler's projection** (`seedling_atlas`,
@@ -2384,7 +2386,9 @@ reads it without the procgen engine.
 document's `game_name`), `source_counts` (`computeSourceCounts`, as the pipeline
 records it), `stop_reason`, `region_count`, `grid_dims` = the cells' extent,
 `substrate_configs` per R6b when a declaring substrate realised a region), the
-substrate's own top-level blocks the document lacks (`rulesJsonBlocks`), with
+substrate's own blocks (`rulesJsonBlocks`), each landed under the slot
+(`region_atlas[p]`, `flash_panel[p]`, rules F2 — so a second Seedling slot of one
+document initialises beside the first), with
 return exits ON one exit per return route appended to `regions[p][R].exits`, and
 (S1) **the grants**: every non-victory library item of the target that the slot
 does not define or hold gets a definition in `items[p]` and is appended to
@@ -2455,7 +2459,8 @@ no reachable sphere log, or one without the slot's entries
 (`initialiseSphereLogRefusal`); a generator throw refuses the build in its own
 words. An inlined result is checked too: entries only for
 the slot's regions, return exits only between them and under names they do not
-already use, top-level blocks the document does not already carry, a `loop_costs`
+already use, blocks THIS slot does not already carry (a key the document holds
+at the document level, not as a slot map, is refused too), a `loop_costs`
 that is a cost block and agrees with the payloads' mana flag (loop mode is ONE
 setting for the block and every payload).
 

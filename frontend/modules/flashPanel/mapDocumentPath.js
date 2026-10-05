@@ -89,19 +89,25 @@ export function atlasPathInIndex(index, atlasId) {
  * so this reader answered the default for EVERY preset, silently. Unwrap with
  * `rulesOfRawPayload`; a wrapper handed here throws instead.
  *
+ * ⛓ rules F2 — the block is the SLOT's (`region_atlas["<p>"]`), so the reader
+ * names the slot: `player` is the LOADED one. No document-level read exists.
+ *
  * @param {object|null} rawRules  a preset's `rules.json`, or null/anything for
  *   the default — the LAB calls it with nothing, because the lab is never told.
+ * @param {string|number|null} [player]  the loaded slot; required whenever
+ *   `rawRules` carries a `region_atlas` (an omitted one throws rather than
+ *   answer the default for a preset that named its map).
  * @returns {{path: string, name: string, source: string}} `path` is relative to
  *   `frontend/`; `name` is the document's own file name; `source` says whether
  *   the preset asked for it.
  */
-export function mapDocumentPath(rawRules) {
+export function mapDocumentPath(rawRules, player) {
     if (rawRules && typeof rawRules === 'object' && 'rawJsonData' in rawRules) {
         throw new TypeError('mapDocumentPath: handed the stateManager:rawJsonDataLoaded '
             + 'WRAPPER ({source, rawJsonData, selectedPlayerInfo}), not the rules — '
             + 'unwrap it with rulesOfRawPayload()');
     }
-    const named = rawRules?.region_atlas?.map_document;
+    const named = regionAtlasOf(rawRules, player)?.map_document;
     const declared = typeof named === 'string' && named !== '';
     const name = declared ? named : DEFAULT_MAP_DOCUMENT;
     return {
@@ -120,4 +126,42 @@ export function mapDocumentPath(rawRules) {
  */
 export function rulesOfRawPayload(payload) {
     return payload?.rawJsonData ?? null;
+}
+
+/**
+ * ⛓ rules F2 — the loaded SLOT of a `stateManager:rawJsonDataLoaded` payload
+ * (its `selectedPlayerInfo.playerId`), else null: the slot whose
+ * `region_atlas["<p>"]` the raw rules answer for.
+ *
+ * @param {{selectedPlayerInfo?: {playerId?: string|number}}|null|undefined} payload
+ * @returns {string|null}
+ */
+export function playerOfRawPayload(payload) {
+    const p = payload?.selectedPlayerInfo?.playerId;
+    return p === undefined || p === null ? null : String(p);
+}
+
+/**
+ * ⛓ rules F2 — **THE SLOT'S `region_atlas` BLOCK**, the one read of it.
+ * `region_atlas` is `{"<p>": block}`; a document-level block is the RETIRED
+ * shape (the loader refuses it by name), never read here. A document carrying
+ * the key read with the slot argument OMITTED throws: answering "no atlas" for
+ * a caller that forgot the slot would be the silent default trap 1405 was. A
+ * slot that is PASSED but blank (`null`, `''`) names no slot and reads no
+ * atlas — the caller's own slot check refuses it by name (the wiring's
+ * *"not an integer player id"*).
+ *
+ * @param {object|null} rules  a rules.json (never the event wrapper)
+ * @param {string|number|null} player  the slot
+ * @returns {object|null} `{atlas_id, game, map_document?}` or null
+ */
+export function regionAtlasOf(rules, player) {
+    const map = rules?.region_atlas;
+    if (map === undefined || map === null) return null;
+    if (player === undefined) {
+        throw new TypeError('regionAtlasOf: the rules carry `region_atlas`, which is per player '
+            + '(`region_atlas["<p>"]`), and no slot was named — pass the loaded player');
+    }
+    if (player === null || player === '') return null;
+    return map[String(player)] ?? null;
 }

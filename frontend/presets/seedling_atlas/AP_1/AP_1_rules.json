@@ -405,13 +405,17 @@
     "1": []
   },
   "region_atlas": {
-    "atlas_id": "seedling-9ff3df2a",
-    "game": "seedling",
-    "map_document": "seedling-map.json"
+    "1": {
+      "atlas_id": "seedling-9ff3df2a",
+      "game": "seedling",
+      "map_document": "seedling-map.json"
+    }
   },
   "flash_panel": {
-    "config": "seedling.json",
-    "wasm": "seedling_bot_ap_p4f/game.html"
+    "1": {
+      "config": "seedling.json",
+      "wasm": "seedling_bot_ap_p4f/game.html"
+    }
   },
   "preset_sidecars": {
     "1": {

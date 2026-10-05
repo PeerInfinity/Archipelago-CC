@@ -80,7 +80,7 @@ const walk = (b, points) => points.flatMap((p) => b.onPlayerPosition({ level: b.
 describe('the sub-region map is DERIVED from the rules and the committed partition', () => {
     it('the playthrough: every partitioned sub-region is a rules region, and the links are the controller\'s', () => {
         expect(MAP).not.toBeNull();
-        expect(MAP.atlasId).toBe(PT.region_atlas.atlas_id);
+        expect(MAP.atlasId).toBe(PT.region_atlas['1'].atlas_id);
         const regions = new Map(Object.entries(SIDECARS).filter(([, s]) => s.substrate === 'flash_seedling')
             .map(([r, s]) => [r, s.playable_payload]));
         const fromController = realRoomLinks(PT, regions);
@@ -95,13 +95,13 @@ describe('the sub-region map is DERIVED from the rules and the committed partiti
 
     it('the starter atlas has its own entry (its links = the controller\'s), and an unknown atlas is refused BY NAME', () => {
         const starter = buildSubRegionMap({ rules: STARTER, partition: PARTITION });
-        expect(starter.map.atlasId).toBe(STARTER.region_atlas.atlas_id);
+        expect(starter.map.atlasId).toBe(STARTER.region_atlas['1'].atlas_id);
         // ⚠ 16 at this slice (§5.16 said 17): derived, never typed.
         const starterRegions = new Map(Object.entries(STARTER.preset_sidecars['1'])
             .filter(([, s]) => s.substrate === 'flash_seedling').map(([r, s]) => [r, s.playable_payload]));
         expect([...starter.map.links.values()].flat().map((l) => l.name).sort())
             .toEqual(realRoomLinks(STARTER, starterRegions).map((l) => l.name).sort());
-        const stale = { ...PT, region_atlas: { ...PT.region_atlas, atlas_id: 'seedling-00000000' } };
+        const stale = { ...PT, region_atlas: { 1: { ...PT.region_atlas['1'], atlas_id: 'seedling-00000000' } } };
         expect(buildSubRegionMap({ rules: stale, partition: PARTITION })).toEqual({ map: null, why: NO_PARTITION('seedling-00000000') });
         // A preset with no sub-regions needs no partition, and says nothing.
         expect(buildSubRegionMap({ rules: { preset_sidecars: {} }, partition: PARTITION })).toEqual({ map: null, why: null });

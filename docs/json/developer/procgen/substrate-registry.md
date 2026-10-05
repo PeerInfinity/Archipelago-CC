@@ -140,7 +140,7 @@ A **content source** supplies existing region content by ordinal: its Nth planne
 | `zoneOfPayload(payload, cfg)` | The zone a region's payload plays, or `null`; the editor refuses a zone already in use. |
 | `zoneSourceLabel` | The editor's name for this zone source. If absent, *Zone N*. |
 | `onContentEdit(doc)` | Restamp a hand-edited content document (hash, id suffix, validation); idempotent. A changed id clears downstream steps. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
-| `rulesJsonBlocks()` | Top-level `rules.json` blocks this substrate's runtime reads, merged by `buildRulesJson` for substrates that realised a region. A key already present is refused, so one world cannot realise both Seedling entries (both write `flash_panel`). |
+| `rulesJsonBlocks()` | `rules.json` blocks this substrate's runtime reads, merged by `buildRulesJson` (and the APWorld Editor's initialise op) for substrates that realised a region, each under the slot (`{"<p>": block}`, rules F2). A key already present is refused, so one world cannot realise both Seedling entries (both write `flash_panel`). |
 | `victoryItem` | The goal item, used as the completion item when the scenario pool has no `is_victory` item. |
 
 A source that feeds a *document* into the pipeline (jta's dataset) declares `emitsSpiralContent: true` and names its config field with `spiralContentConfigKey` (default `datasetDoc`). Only jta is truly pre-built (indices into one game build); bounce and runner generate their zones and store them by value.
