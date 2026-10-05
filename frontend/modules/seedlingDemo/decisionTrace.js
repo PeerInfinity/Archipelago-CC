@@ -126,6 +126,10 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     // speaking watcher's circle on the frontier), listed in the slice that
     // first drives it, for `break`'s reason.
     'talk',
+    // ⛓ Seedling fidelity PROXIMITY: the `pulse` verb (`solverBot.execPulse`, a
+    // responder whose momentary button a Pulser parks a fire block on), listed
+    // in the slice that first drives it, for `break`'s reason.
+    'pulse',
 ]);
 
 const isPlainObject = (v) => !!v && typeof v === 'object' && !Array.isArray(v);

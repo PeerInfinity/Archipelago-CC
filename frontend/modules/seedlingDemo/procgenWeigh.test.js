@@ -295,6 +295,26 @@ describe('⛓ EVERY REFINEMENT ROW IS DRIVEN — the table cannot drift silently
                 goals: [{ kind: 'collect-placement', placement: { x: 112, y: 64 } }] });
             return { ...out, verdict: VERDICT.SOLVED };
         },
+        /**
+         * ⛓ Seedling fidelity PROXIMITY — the ATLAS room the refinement was
+         * written for (no generator element seats a pulser): L38, the survey's
+         * staged boot for route step 103, reaching the north door. The chest
+         * under `cover@144,112` is the cover's order first, and the cover's only
+         * opener is `button@80,192` — momentary, parked on by the pulse.
+         */
+        'hold -> pulse': () => {
+            const staging = solveStaging(stagingFromTape(parseTape(JSON.parse(readFileSync(
+                new URL('./fixtures/tapes/r8-solve-11.json', import.meta.url), 'utf8')))));
+            staging.boot = { level: 38, x: 144, y: 288 };
+            staging.save = { ...staging.save, keys: [0, 1, 2, 3] };
+            staging.seam = { ...staging.seam, items: { ...staging.seam.items,
+                canSwim: true, hasFire: true, hasShield: true, hasTorch: true } };
+            staging.persistence = (staging.persistence ?? []).filter((r) => r.at === undefined);
+            const run = createRunForStaging(staging, atlasLevelSource());
+            const out = solveSegment({ run, name: 'refinement-hold-to-pulse', boot: staging.boot,
+                goals: [{ kind: 'reach-exit', exit: { x: 144, y: 0 } }] });
+            return { ...out, verdict: VERDICT.SOLVED, level: run.level };
+        },
     };
     const EXPECTED = {
         'hold -> kill': (out) => {
@@ -309,13 +329,18 @@ describe('⛓ EVERY REFINEMENT ROW IS DRIVEN — the table cannot drift silently
             expect(verbsOf(out)).toContain('skirt');
             expect(verbsOf(out).has('hold')).toBe(false);
         },
+        'hold -> pulse': (out) => {
+            expect(out.level).toBe(39);
+            expect(verbsOf(out)).toContain('pulse');
+        },
     };
 
     it('the table carries the refinements this arc knows about, pinned by NAME', () => {
         // ⛓ A roster is pinned by its names, never its length (the gate-label
         // lint's own rule): a row that counted would pass with the wrong three.
         const keys = STRATEGY_REFINEMENTS.map((r) => `${r.from} -> ${r.to}`);
-        expect(keys).toEqual(expect.arrayContaining(['hold -> kill', 'hold -> weigh', 'hold -> skirt']));
+        expect(keys).toEqual(expect.arrayContaining(['hold -> kill', 'hold -> weigh', 'hold -> skirt',
+            'hold -> pulse']));
     });
 
     for (const r of STRATEGY_REFINEMENTS) {

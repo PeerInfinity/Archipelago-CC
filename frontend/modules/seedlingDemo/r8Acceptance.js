@@ -1149,6 +1149,17 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'cut-80 with its walk one tick earlier (blocked by the still-solid tree on t104); it ends on the L12 arrival, far from the puncher; no hit, no kill.',
         }),
         /**
+         * ⛓⛓⛓ Seedling fidelity PROXIMITY — route step 57's witness ends on the
+         * L22 arrival, where `bob@96,144` is the room's chaser.
+         */
+        Object.freeze({
+            name: 'prox-l29-key-return', levels: Object.freeze([22]), bobs: 1, ticks: 596,
+            addedBy: 'Seedling fidelity PROXIMITY D2 (the trap button skirted out and back)',
+            why: 'skirts `button@112,128` north and back, collects the Boss Key and walks onto '
+                + '`teleporter@0,224`; the crossing\'s last tick is the L22 arrival (184,72); no hit, '
+                + 'no kill.',
+        }),
+        /**
          * ⛓⛓⛓ Seedling fidelity L14 — the swordless crossing the DETOUR rung
          * found: route D's live L13 → L14 arrival, six bobs, no weapon.
          */
@@ -2163,6 +2174,19 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
             'the pages: `ceremonyCadenceStep` (a one-tick press of X, then its release, at '
                 + '`PRESS_GAP`) until the run reports the tag cleared, ending released; then the '
                 + 'freeze\'s kept velocity settles, and the volume joins the segment\'s exemptions']),
+        /** ⛓⛓⛓ Seedling fidelity PROXIMITY — `solverBot.resolvePulseStrategy`. */
+        pulse: Object.freeze([
+            'the gate: every opener of the responder\'s group is a MOMENTARY `button` '
+                + '(`localPublish` null), so a hold would shut it the tick the walker left',
+            'the machine: a room `Pulser` whose group a LATCHING presser publishes, with a live '
+                + '`pushableblockfire` inside its 22 px reach whose pulse push '
+                + '(`pulser.pulsePushes`) lands it on one of those buttons (`pulseWeighFor`)',
+            'the press: the publisher\'s own `hold` (stance, exemption, prerequisite); when the '
+                + 'publisher is under a SHUT `Cover` whose opener latches, that opener is held first '
+                + '(the `uncover` stage); a group the walk already latched needs no press',
+            'the wait: until the live run reports the responder open, bounded by two pulser '
+                + 'cycles (`pulserCycle().totalTicks`), the responder\'s fade (`opensOnTick`) and '
+                + '`HOLD_SLACK` — a wait that runs out refuses by name']),
     }),
 
     /**
