@@ -789,7 +789,9 @@ export function createWasmPlayback({
             enterHeld();
             const done = { goal: g, producer: leg.plan.producer ?? 'solver', stepOff: leg.plan.stepOff ?? null, ticks: leg.ticks,
                 drained: leg.progress.ticks, verbs: leg.plan.verbs, solvedMs: leg.solvedMs, divergence: leg.divergence, recoveries,
-                end: { level, x: st.x, y: st.y }, expectedEnd: leg.plan.expected.at(-1), heldArrival: level, ...solvedBy(leg) };
+                end: { level, x: st.x, y: st.y }, expectedEnd: leg.plan.expected.at(-1), heldArrival: level,
+                // ⛓ MID-ROOM REPLAN — an exit leg ended by its held arrival names its continuation like `finish()` does.
+                continuation: leg.continuation ?? false, prefix: leg.prefix ?? 0, ...solvedBy(leg) };
             stats.done += 1;
             history.push({ ...done, outcome: 'done' });
             try { onDone(done); } catch { /* a listener's bug */ }
