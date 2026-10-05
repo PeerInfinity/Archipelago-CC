@@ -68,29 +68,42 @@ export const NOIZ2SA_LIBRARY_ITEMS = Object.freeze({
  * or boss), and `locations`, how many locations the region has — ABSENT means none (⚖ N4c: "I want them to have none
  * by default"). Three spans that cover the three shapes a region has: one scene, two scenes, and a boss into the next
  * stage; and the three location cases: one, none, two. Every region plays on seed 1. The last location of the last
- * zone that has any holds Victory. A location's check span is its default one (`defaultCheckSpans`: twice the move's
- * scenes each, the first from the move's start, each next one from the scene after the previous one's end).
+ * zone that has any holds Victory; a table whose zones declare none gets ONE location on its last zone, holding Victory
+ * (⚖ "Add one location to the last region": `zoneLocationPlan`). A location's check span is the default one
+ * (`defaultCheckSpans`: from the move's start, twice its scenes — every location of a region the same by default).
  */
 export const NOIZ2SA_ZONES = Object.freeze([
     Object.freeze({ start: '1:1', end: '1:1', locations: 1 }),
     Object.freeze({ start: '1:2', end: '1:3' }),
     Object.freeze({ start: '1:boss', end: '2:1', locations: 2 }),
 ]);
-/** how many locations zone i has (absent: none) */
+/** how many locations a zone declares (absent: none) */
 const zoneLocationCount = (z) => (Number.isInteger(z?.locations) && z.locations > 0 ? z.locations : 0);
-/** the zone holding Victory: the last zone with a location (-1: none has one) */
-const VICTORY_ZONE = NOIZ2SA_ZONES.map(zoneLocationCount).findLastIndex((n) => n > 0);
+/**
+ * A zone table's locations: `{counts, victoryZone}` — each zone's location count (absent: none), and the zone whose
+ * LAST location holds Victory: the last zone with a location. A table whose zones declare none would leave Victory
+ * nowhere, so its LAST zone gets one location, holding Victory (⚖ the user, 2026-10-05: "Add one location to the last
+ * region"). An empty table → no counts, no Victory zone (-1).
+ */
+export function zoneLocationPlan(zones) {
+    const counts = zones.map(zoneLocationCount);
+    if (counts.length && counts.every((n) => n === 0)) counts[counts.length - 1] = 1;
+    return { counts, victoryZone: counts.findLastIndex((n) => n > 0) };
+}
 const ZONE_SEED = 1;
 
-/** zone i → its region `{move: {start, end}, seed, locations: [{id, check: {start, end}}]}` */
-export function zoneRegion(zoneIdx) {
-    const z = NOIZ2SA_ZONES[zoneIdx];
-    if (!z) throw new Error(`noiz2sa: no zone ${zoneIdx} (have ${NOIZ2SA_ZONES.length})`);
+/** zone i of a table → its region `{move: {start, end}, seed, locations: [{id, check: {start, end}}]}` */
+function zoneRegionOf(zones, zoneIdx) {
+    const z = zones[zoneIdx];
+    if (!z) throw new Error(`noiz2sa: no zone ${zoneIdx} (have ${zones.length})`);
     const { start, end, seed } = regionSpanOf({ start: parsePosition(z.start), end: parsePosition(z.end), seed: ZONE_SEED });
     const move = { start, end };
-    const locations = defaultCheckSpans(move, zoneLocationCount(z)).map((check, i) => ({ id: noiz2saLocationId(i), check }));
+    const n = zoneLocationPlan(zones).counts[zoneIdx];
+    const locations = defaultCheckSpans(move, n).map((check, i) => ({ id: noiz2saLocationId(i), check }));
     return { move, seed, locations };
 }
+/** zone i → its region (the shipped zone table) */
+export const zoneRegion = (zoneIdx) => zoneRegionOf(NOIZ2SA_ZONES, zoneIdx);
 
 /** The region's exits as the game page lists them (its "leave" buttons): from the payload's envelope. */
 export function exitButtonsOf(exits) {
@@ -178,10 +191,10 @@ export const NOIZ2SA_SIDECAR_FIELDS = Object.freeze({
         type: 'array', required: true, derived: true,
         description: 'The region\'s locations, zero or more (⚖ N4c: none by default): `[{id, check: {start, end}}]`. `id` '
             + 'is the location\'s id in the game (`check1`, `check2`, …; `ap_locations` maps it to its AP name); `check` is '
-            + 'its own CHECK span, what a check of it plays, its clear checking it (the player stays). By default each is '
-            + 'twice the move span\'s scenes, the first from the move\'s start, each next one from the scene after the '
-            + `previous one's end (\`defaultCheckSpans\`), by ${ZONE_RULES}. A location without \`check\` gets its `
-            + 'default span on load; a payload without `locations` has one per `ap_locations` key.',
+            + 'its own CHECK span, what a check of it plays, its clear checking it (the player stays). By default every '
+            + 'location of a region has the same span: from the move span\'s start, twice its scenes '
+            + `(\`defaultCheckSpans\`), by ${ZONE_RULES}. A location without \`check\` gets the default span on load; `
+            + 'a payload without `locations` has one per `ap_locations` key.',
         schema: Object.freeze({
             items: Object.freeze({
                 type: 'object',
@@ -214,15 +227,18 @@ export const NOIZ2SA_SIDECAR_FIELDS = Object.freeze({
     }),
 });
 
-/** zone i → the zone-locations channel result (`procgenPipelineEngine.synthesizeZoneRegion`); a zone with no locations
- * yields a region with none (still a region: its exits are its AP entrances) */
-function extractZoneRules(zoneIdx, { region_id } = {}) {
-    const region = zoneRegion(zoneIdx);
+/**
+ * zone i of a table → the zone-locations channel result (`procgenPipelineEngine.synthesizeZoneRegion`); a zone with no
+ * locations yields a region with none (still a region: its exits are its AP entrances). Exported for the tests.
+ */
+export function zoneRulesOf(zones, zoneIdx, { region_id } = {}) {
+    const region = zoneRegionOf(zones, zoneIdx);
+    const { victoryZone } = zoneLocationPlan(zones);
     const n = region.locations.length;
     return {
         locations: region.locations.map((l, i) => ({
             id: l.id,
-            item: zoneIdx === VICTORY_ZONE && i === n - 1 ? NOIZ2SA_VICTORY_ITEM_NAME : NOIZ2SA_FILLER_ITEM_NAME,
+            item: zoneIdx === victoryZone && i === n - 1 ? NOIZ2SA_VICTORY_ITEM_NAME : NOIZ2SA_FILLER_ITEM_NAME,
             position: null,
         })),
         payload: {
@@ -232,6 +248,8 @@ function extractZoneRules(zoneIdx, { region_id } = {}) {
         },
     };
 }
+/** the shipped zone table's zone-locations channel */
+const extractZoneRules = (zoneIdx, ctx) => zoneRulesOf(NOIZ2SA_ZONES, zoneIdx, ctx);
 
 export const substrateRegistryEntry = Object.freeze({
     id: NOIZ2SA_SUBSTRATE_ID,

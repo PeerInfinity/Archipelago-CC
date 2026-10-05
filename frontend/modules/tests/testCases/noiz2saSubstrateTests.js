@@ -1085,7 +1085,7 @@ async function noiz2saChoiceListOutsideLoopMode(testController) {
  * span). The preset's three regions cover the cases: 1:1 has one location, 1:2–1:3 none, 1:boss–2:1 two. Outside loop
  * mode (no queue to route), the row visits each: the choice list offers the exits plus one entry per unchecked
  * location (none for the region with none), and choosing a location starts ITS check run on ITS span — 1:boss–2:1's
- * check2 plays 2:4–2:7, the default span after check1's 1:boss–2:3.
+ * check2 plays the default span, 1:boss–2:3 (⚖ "By default, they are the same").
  */
 async function noiz2saLocationsPerRegion(testController) {
     return withTrainer(testController, async (mod, service, gs) => {
@@ -1103,7 +1103,7 @@ async function noiz2saLocationsPerRegion(testController) {
         const expect = {
             region_0_0: [['check1', { start: P(0, 0), end: P(0, 1) }]],
             region_1_0: [],
-            region_1_1: [['check1', { start: P(0, 9), end: P(1, 2) }], ['check2', { start: P(1, 3), end: P(1, 6) }]],
+            region_1_1: [['check1', { start: P(0, 9), end: P(1, 2) }], ['check2', { start: P(0, 9), end: P(1, 2) }]],
         };
         let from = r.region;
         for (const id of ['region_1_0', 'region_1_1', 'region_0_0']) {
@@ -1138,19 +1138,77 @@ async function noiz2saLocationsPerRegion(testController) {
         if (!there) return;
         gameWindow().__noiz2saTest.chooseCheck('check2');
         const d2 = debugState();
-        testController.assertEqual(`[${label}] choosing check2 starts its check run on its own span 2:4–2:7`,
+        testController.assertEqual(`[${label}] choosing check2 starts its check run on its own span (the default, 1:boss–2:3, as check1's)`,
             JSON.stringify(['playing', 'check', 'check2', { ...expect.region_1_1[1][1], seed: 1 }]),
             JSON.stringify([d2.state, d2.runKind, d2.runLoc, d2.span]));
         pressKey('KeyP');
     });
 }
 
+/**
+ * N4c follow-up (⚖ 2026-10-05: "After a check run clears and the next queued action is the move: START THE MOVE RUN AT
+ * ONCE (no key wait)"). A Record block on 1:1 queued [check, move] (bot seed 1, tracks 100 By hand, 4×): B's bot clears
+ * the check run, the location is checked, and the move run starts at once — no key pressed — with B's bot playing on;
+ * its clear performs the move, and the Record summary holds the check and departs by the queued exit.
+ */
+async function noiz2saCheckThenMove(testController) {
+    return withTrainer(testController, async (mod, service, gs) => {
+        const label = 'check then move';
+        handTrainer(service, 4, CHECK_TRACKS);
+        mod.pinBotSeed(1);
+        const r = await loadStartRegion(testController, label);
+        if (!r) return;
+        const before = debugState()?.configures ?? 0;
+        const block = queueBlock(testController, r, 'record', label, { check: true, move: true });
+        if (!block) return;
+        gs.refillMana();
+        loopStateSingleton.startProcessing();
+        const parked = await testController.pollForCondition(() => loopStateSingleton.livePlayRegion() === r.region,
+            `[${label}] the Record block parked`, 15000, 100);
+        testController.reportCondition(`[${label}] the Record block parked`, !!parked);
+        if (!parked || !(await pageConfigured(testController, r.region, before, label, mod.getVisitBotSeed))) return;
+        testController.assertEqual(`[${label}] the queued check plays first`, 'check', debugState()?.runKind);
+        pressKey('KeyB');
+        let seen = null;
+        const moving = await testController.pollForCondition(() => {
+            const d = debugState();
+            if (d?.runKind === 'move' && d.state === 'playing') seen = d;
+            return !!seen || currentRegion() !== r.region;
+        }, `[${label}] the check cleared and the move run started at once`, 120000, 10);
+        testController.reportCondition(`[${label}] the check cleared and the move run started at once (no key pressed)`,
+            !!seen && seen.checkClearedThisVisit && seen.runExit === r.exit.name);
+        if (!seen) { testController.log(`DIAG: ${JSON.stringify(debugState())}`, 'error'); return; }
+        testController.assertEqual(`[${label}] B's bot plays on into the move run`, 'assist', seen.bot?.goal?.kind);
+        const crossed = await testController.pollForCondition(() => currentRegion() === r.target,
+            `[${label}] the move's clear performed the move into ${r.target}`, 120000, 100);
+        testController.reportCondition(`[${label}] the move's clear performed the move into ${r.target}`, !!crossed);
+        if (!crossed) return;
+        await testController.stateManager.pingWorker('after-check-then-move', 3000);
+        testController.assertEqual(`[${label}] ${r.location} checked`, true,
+            snapshotHasLocation(testController.stateManager.getSnapshot(), r.location));
+        const saved = loopStateSingleton._lookupBoundSummary(r.region, block.instance);
+        testController.assertEqual(`[${label}] the Record summary holds the check and departs by ${r.exit.name}`, true,
+            !!saved && saved.departureExitId === r.exit.name && JSON.stringify(saved.summary?.checks ?? []) === JSON.stringify([r.location]));
+    });
+}
+
+registerTest({
+    id: 'noiz2sa-check-then-move',
+    name: 'Noiz2sa N4c: after a check run clears, the queued move run starts at once',
+    description: 'A Record block on 1:1 queued [check, move] (seed 1, tracks 100 By hand, 4×): B\'s bot clears the check '
+        + 'run, the location is checked, and the move run starts at once (no key) with the bot playing on; its clear '
+        + 'performs the move, the summary holding the check and departing by the queued exit.',
+    testFunction: restoresSavedQueues(noiz2saCheckThenMove),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
 registerTest({
     id: 'noiz2sa-locations-per-region',
     name: 'Noiz2sa N4c: a region has zero or more locations, each with its own check span, each in the choice list',
     description: 'The preset\'s 1:1 has one location, 1:2–1:3 none, 1:boss–2:1 two. Outside loop mode the row visits '
         + 'each: the choice list offers the exits plus one entry per location (none for the region with none), each '
-        + 'location with its own default span; choosing 1:boss–2:1\'s check2 starts its check run on 2:4–2:7.',
+        + 'location with its own (default) span; choosing 1:boss–2:1\'s check2 starts its check run on 1:boss–2:3.',
     testFunction: restoresSavedQueues(noiz2saLocationsPerRegion),
     category: 'noiz2saSubstrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)

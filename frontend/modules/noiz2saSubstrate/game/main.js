@@ -48,8 +48,8 @@
  * nothing queued (or outside loop mode, one behaviour everywhere) the region waits in `choosing`, offering every exit
  * and every unchecked location. In loop mode a pick asks the host to queue the action as the Loops
  * panel does, and the run starts when the host reports it queued; outside loop mode the run starts at once (nothing is
- * queued and nothing drains). After a check run the region goes back to the choice list (now exits only) or to the
- * next queued action. Every visit plays with its own bot seed (the host draws it per region load), reported in the
+ * queued and nothing drains). After a check run the region goes back to the choice list (without that location), or
+ * the next queued action's run starts at once (B's bot, if it cleared the check, plays on). Every visit plays with its own bot seed (the host draws it per region load), reported in the
  * play-clock stats as `botSeed` (so a Record summary carries it); `botFrames` counts the frames the bot played on the
  * visit.
  *
@@ -100,6 +100,7 @@ const app = {
     next: null,             // N4c, from the host: the next queued action for the region {region, kind, exit?}, or null
     hostChecked: null,      // N4c, from the host: the ids of the region's checked locations (null: not said yet)
     hostLive: false,        // N4c, from the host: the loops queue is parked on the region (a pick's run starts then)
+    assistCarry: false,     // B's bot cleared the last run: the run that starts at once after a check plays on with it
     chosen: null,           // N4c, loop mode: the pick from the choice list {kind, id} (the run starts when queued)
     runs: [],               // N4c, test surface: this visit's runs so far {kind, exit, location, span, cleared, clearFrames, sceneEnds}
     sceneEnds: [],          // the current attempt's scene ends (attempt frames)
@@ -178,7 +179,7 @@ function startRegion({ regionId, spans, exits, configChecked }) {
     // a pick from the choice list survives the region configured again (a queue never started starts from its first
     // move, which enters the region again): the run starts once the host reports the pick queued
     if (regionId !== prevRegion) app.chosen = null;
-    app.hostChecked = null; app.hostLive = false; // the host's word is per region (setHostState)
+    app.hostChecked = null; app.hostLive = false; app.assistCarry = false; // the host's word is per region (setHostState)
     if (app.next && app.next.region !== regionId) app.next = null;
     // a region always has a run to draw: the move run until something else is decided
     prepareRun('move', null);
@@ -245,15 +246,21 @@ function decide() {
         // the player's pick, now queued: its run starts once the queue is parked on the region (`live`) — a queue never
         // started starts from its first move, which may enter the region again first
         const picked = !!app.chosen && app.chosen.kind === n.kind && app.chosen.id === idOf(n);
-        const go = picked && app.hostLive;
-        if (!picked || go) app.chosen = null;
         if (app.state === 'cleared' && runIs(n) && n.kind === 'check' && !picked) return; // the clear is still on its way
         if (app.state === 'cleared' && app.runKind === 'move') return; // the move run leaves (afterClear)
+        // after a check run's clear the next queued action starts at once, as the queue goes on for other substrates
+        // (⚖ 2026-10-05: "START THE MOVE RUN AT ONCE (no key wait)") — while the queue is parked on the region
+        const afterCheck = app.state === 'cleared' && app.runKind === 'check';
+        const go = (picked || afterCheck) && app.hostLive;
+        if (!picked || go) app.chosen = null;
+        const carry = afterCheck && go && app.assistCarry;
+        app.assistCarry = false;
         if (app.state === 'ready' && runIs(n)) {
             if (go) { app.message = ''; setState('playing'); renderExits(); }
             return;
         }
         prepareRun(n.kind, idOf(n), { start: go });
+        if (carry) toggleAssist(); // B's bot cleared the check: it plays on
         return;
     }
     if (app.state === 'cleared' && app.runKind === 'move') return;
@@ -433,6 +440,7 @@ function stepOnce() {
                 frames: app.run.totalFrames, visitSeconds: app.visitFrames / FPS, score: app.scoreFolded + app.run.score };
         }
         stopBot();
+        app.assistCarry = bot?.goal.kind === 'assist';
         onCleared();
         if (bot?.goal.kind === 'portal') leaveBy(bot.goal.id);
         else afterClear();

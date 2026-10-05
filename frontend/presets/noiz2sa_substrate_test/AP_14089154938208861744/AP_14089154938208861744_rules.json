@@ -319,12 +319,12 @@
               "id": "check2",
               "check": {
                 "start": {
-                  "stage": 1,
-                  "scene": 3
+                  "stage": 0,
+                  "scene": 9
                 },
                 "end": {
                   "stage": 1,
-                  "scene": 6
+                  "scene": 2
                 }
               }
             }

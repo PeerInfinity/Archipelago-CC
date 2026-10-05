@@ -15,6 +15,7 @@ import { sceneCount } from './noiz2saRegion.js';
 import {
     substrateRegistryEntry, NOIZ2SA_ZONES, NOIZ2SA_VICTORY_ITEM_NAME, NOIZ2SA_FILLER_ITEM_NAME,
     NOIZ2SA_LOAD_REGION_EVENT, NOIZ2SA_IFRAME_ID, zoneRegion, exitButtonsOf, describeRegion, setPlaybackProxy,
+    zoneLocationPlan, zoneRulesOf,
 } from './noiz2saSubstrateLibrary.js';
 import { solverKindOf, botHonorsInstant } from '../procgenCore/substratePredicates.js';
 
@@ -88,9 +89,9 @@ describe('payload ↔ world', () => {
         const none = { ...payload, locations: [], ap_locations: {} };
         expect(sidecarPayloadErrors(sidecarFieldsOf(entry), none)).toEqual([]);
         expect(entry.deserializeWorld(none).params.locations).toEqual([]);
-        // a location without its span gets the default one, by its position
+        // a location without its span gets the default one — the same for every location (⚖ "By default, they are the same")
         expect(entry.deserializeWorld({ ...payload, locations: [{ id: 'check1' }, { id: 'check2' }] }).params.locations)
-            .toEqual([{ id: 'check1', check }, { id: 'check2', check: check2 }]);
+            .toEqual([{ id: 'check1', check }, { id: 'check2', check }]);
         // a stored span wins
         const longer = { start: move.start, end: { stage: 0, scene: 8 } };
         expect(entry.deserializeWorld({ ...payload, locations: [{ id: 'check1', check: longer }] }).params.locations)
@@ -120,7 +121,7 @@ describe('the zone table', () => {
         expect(entry.zoneCount).toBe(NOIZ2SA_ZONES.length);
         const shapes = NOIZ2SA_ZONES.map((_, i) => describeRegion(zoneRegion(i)));
         expect(shapes).toEqual(['1:1, check1 1:1–1:2 (seed 1)', '1:2–1:3, no location (seed 1)',
-            '1:boss–2:1, check1 1:boss–2:3, check2 2:4–2:7 (seed 1)']);
+            '1:boss–2:1, check1 1:boss–2:3, check2 1:boss–2:3 (seed 1)']);
     });
     it('extractZoneRules: a zone\'s locations (none when it declares none), Victory on the last location; the payload is declared', () => {
         const ids = (z) => z.locations.map((l) => `${l.id}:${l.item}`);
@@ -138,6 +139,16 @@ describe('the zone table', () => {
         });
         expect(zoneRegion(1).locations).toEqual([]); // ⚖ none by default: the zone declares none
         expect(entry.libraryItems[NOIZ2SA_VICTORY_ITEM_NAME].is_victory).toBe(true);
+    });
+    it('⚖ "Add one location to the last region": a table whose zones declare no location gets one, on its last zone, holding Victory', () => {
+        const bare = [{ start: '1:1', end: '1:1' }, { start: '1:2', end: '1:3' }, { start: '1:boss', end: '2:1' }];
+        expect(zoneLocationPlan(bare)).toEqual({ counts: [0, 0, 1], victoryZone: 2 });
+        const z = bare.map((_, i) => zoneRulesOf(bare, i, { region_id: `r${i}` }));
+        expect(z.map((zr) => zr.locations.map((l) => `${l.id}:${l.item}`))).toEqual([[], [], [`check1:${NOIZ2SA_VICTORY_ITEM_NAME}`]]);
+        expect(z[2].payload.ap_locations).toEqual({ check1: 'r2__check1' });
+        // a table that declares any location keeps its own counts; Victory on the last zone with one
+        expect(zoneLocationPlan([{ locations: 2 }, {}])).toEqual({ counts: [2, 0], victoryZone: 0 });
+        expect(zoneLocationPlan([])).toEqual({ counts: [], victoryZone: -1 });
     });
 });
 

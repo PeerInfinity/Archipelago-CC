@@ -87,23 +87,25 @@ describe('N4c — the move span and the locations\' check spans (twice its scene
             expect(sceneCount(checkSpanOf(s))).toBe(2 * sceneCount(s));
         }
     });
-    it('defaultCheckSpans: each next location starts at the scene after the previous one\'s end', () => {
-        expect(defaultCheckSpans(span('2:4', '2:5'), 3).map(showSpan)).toEqual(['2:4–2:7', '2:8–3:1', '3:2–3:5']);
-        expect(defaultCheckSpans(span('1:boss', '2:1'), 2).map(showSpan)).toEqual(['1:boss–2:3', '2:4–2:7']);
+    it('defaultCheckSpans: every location of a region gets the same span by default (⚖ "By default, they are the same")', () => {
+        expect(defaultCheckSpans(span('2:4', '2:5'), 3).map(showSpan)).toEqual(['2:4–2:7', '2:4–2:7', '2:4–2:7']);
+        expect(defaultCheckSpans(span('1:boss', '2:1'), 2).map(showSpan)).toEqual(['1:boss–2:3', '1:boss–2:3']);
         expect(defaultCheckSpans(span('1:1', '1:1'), 0)).toEqual([]);
+        const [a, b] = defaultCheckSpans(span('1:1', '1:1'), 2);
+        expect(a).not.toBe(b); // each location its own copy
     });
     it('cut short at the last scene the game reaches: stage 10\'s boss, or the endless mode\'s', () => {
         expect(showSpan(checkSpanOf(span('10:5', '10:9')))).toBe('10:5–10:boss');
         expect(showSpan(checkSpanOf(span('ENDLESS:3', 'ENDLESS:6')))).toBe('ENDLESS:3–ENDLESS:boss');
         expect(scenesAfter(parsePosition('10:boss'), 1)).toEqual(parsePosition('10:boss'));
-        expect(defaultCheckSpans(span('10:7', '10:8'), 2).map(showSpan)).toEqual(['10:7–10:boss', '10:boss']);
+        expect(defaultCheckSpans(span('10:7', '10:8'), 2).map(showSpan)).toEqual(['10:7–10:boss', '10:7–10:boss']);
     });
     it('regionSpansOf: the move span and each location\'s own span; zero locations; the older shapes', () => {
         const move = span('2:4', '2:5');
         const mine = span('2:4', '2:9');
         expect(regionSpansOf({ move, seed: 3, locations: [] })).toEqual({ move, seed: 3, locations: [] });
         expect(regionSpansOf({ move, seed: 3, locations: [{ id: 'check1', check: mine }, { id: 'check2' }] })).toEqual({
-            move, seed: 3, locations: [{ id: 'check1', check: mine }, { id: 'check2', check: span('2:8', '3:1') }],
+            move, seed: 3, locations: [{ id: 'check1', check: mine }, { id: 'check2', check: span('2:4', '2:7') }],
         });
         // pre-N4c: {start, end} is the move span, a location per ap_locations key
         expect(regionSpansOf({ ...move, ap_locations: { clear: 'r__clear' } })).toEqual({

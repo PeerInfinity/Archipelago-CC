@@ -137,10 +137,16 @@
             "_comment": "bulletml-incremental N4c (b): the choice list. Loop mode, nothing queued on 1:1: the page offers every exit and the check; choosing the check queues a locationCheck, the queue parks a Record block and the check run starts; the bot (B, seed 1, tracks 100 By hand, 4x) clears it, the location is checked and the list offers the exits only; choosing the exit queues the move and its clear performs it (the summary holds the check, departing by the exit). Batch fast: two 4x bot clears."
         },
         {
+            "id": "noiz2sa-check-then-move",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c follow-up: after a check run clears, the next queued action's run starts at once. A Record block on 1:1 queued [check, move] (B, seed 1, tracks 100 By hand, 4x): the check clears, the move run starts with no key and the bot plays on; its clear performs the move (the summary holds the check). Batch fast: two 4x bot clears."
+        },
+        {
             "id": "noiz2sa-locations-per-region",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N4c correction: zero or more locations per region, none by default, each with its own check span. The preset's 1:1 has one location, 1:2-1:3 none, 1:boss-2:1 two; outside loop mode the row visits each: the choice list is the exits plus one entry per location, and 1:boss-2:1's check2 starts its check run on its own span 2:4-2:7. Batch fast: no clear, a few seconds."
+            "_comment": "bulletml-incremental N4c correction: zero or more locations per region, none by default, each with its own check span. The preset's 1:1 has one location, 1:2-1:3 none, 1:boss-2:1 two; outside loop mode the row visits each: the choice list is the exits plus one entry per location, and 1:boss-2:1's check2 starts its check run on its own span (the default, 1:boss-2:3, the same as check1's). Batch fast: no clear, a few seconds."
         },
         {
             "id": "noiz2sa-queued-check",

@@ -104,23 +104,15 @@ export function scenesAfter(pos, n) {
 
 /**
  * N4c (⚖ 2026-10-05): the default CHECK spans of a region's `count` locations ("we can have the location check launch a
- * longer set of stages, maybe twice as long as the move action"; the correction: each location stores its own span).
- * Each is twice the move span's scenes; the first starts at the move span's start, and each next one starts at the
- * scene after the previous one's end: move 2:4–2:5 → 2:4–2:7, 2:8–3:1, … A span is cut short at the last scene the
- * game reaches (`scenesAfter`), and a start past it is that last scene.
+ * longer set of stages, maybe twice as long as the move action"). Each location stores its own span; by default they are
+ * all the same (⚖ "By default, they are the same. We might want to tune this later"): from the move span's start, twice
+ * its scenes (2:4–2:5 → 2:4–2:7), cut short at the last scene the game reaches (`scenesAfter`).
  */
 export function defaultCheckSpans(move, count) {
-    const len = 2 * sceneCount(move);
-    const out = [];
-    let start = { ...move.start };
-    for (let i = 0; i < count; i++) {
-        const end = scenesAfter(start, len - 1);
-        out.push({ start, end });
-        start = scenesAfter(end, 1);
-    }
-    return out;
+    const end = scenesAfter(move.start, 2 * sceneCount(move) - 1);
+    return Array.from({ length: count }, () => ({ start: { ...move.start }, end: { ...end } }));
 }
-/** the first location's default check span (twice the move span's scenes, from its start) */
+/** a location's default check span */
 export const checkSpanOf = (move) => defaultCheckSpans(move, 1)[0];
 
 const spanOf = (s) => ({ start: { stage: s.start.stage, scene: s.start.scene }, end: { stage: s.end.stage, scene: s.end.scene } });
@@ -129,7 +121,7 @@ const spanOf = (s) => ({ start: { stage: s.start.stage, scene: s.start.scene }, 
  * A region payload, checked (N4c): `{move: {start, end}, seed, locations: [{id, check: {start, end}}]}`. The payload
  * carries `move` and `locations` (zero or more, each with its own check span). Read the older ways too: a payload without
  * `move` has its move span in the top-level `{start, end}`; one without `locations` has a location per `ap_locations` key
- * (in key order), and a location without a `check` span gets its default one (`defaultCheckSpans`, by its position).
+ * (in key order), and a location without a `check` span gets the default one (`defaultCheckSpans`).
  * Throws on a malformed one.
  */
 export function regionSpansOf(payload) {
