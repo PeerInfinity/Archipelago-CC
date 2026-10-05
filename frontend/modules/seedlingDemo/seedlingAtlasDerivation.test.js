@@ -405,6 +405,7 @@ describe('⛓⛓ E5 — a `named_rooms` arrival is a connection, and its source 
                 new URL('./fixtures/seedling-vanilla-set.json', import.meta.url)), 'utf8')),
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+            { patches: [] }, // ⚖ MOONROCK: the editor's vanilla 116 (`#editLoadVanilla`)
         );
         return { set, rooms: set.rooms.map((r, level) => ({ ...r.source.record, level })) };
     };
@@ -652,6 +653,7 @@ describe('⛔ E5 — the producer keeps the hole, and the committed atlas does n
                 new URL('./fixtures/seedling-vanilla-set.json', import.meta.url)), 'utf8')),
             JSON.parse(readFileSync(fileURLToPath(
                 new URL('../flashPanel/atlases/seedling-map.json', import.meta.url)), 'utf8')),
+            { patches: [] }, // ⚖ MOONROCK: the editor's vanilla 116 (`#editLoadVanilla`)
         );
         const rooms = set.rooms.map((r, level) => ({ ...r.source.record, level }));
         const overlay = {

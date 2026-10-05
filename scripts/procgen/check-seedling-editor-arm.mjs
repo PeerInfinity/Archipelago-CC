@@ -586,7 +586,8 @@ check(D2_ROWS.length === D2_ROOMS && D2_ROWS.reduce((n, r) => n + r.exits, 0) > 
  * proof rather than a coincidence.
  * ══════════════════════════════════════════════════════════════════════ */
 
-const VANILLA_XML = vanillaRecordSet(VANILLA, ATLAS).set;
+// ⚖ MOONROCK: `{patches: []}`, exactly as the page's `#editLoadVanilla` passes it.
+const VANILLA_XML = vanillaRecordSet(VANILLA, ATLAS, { patches: [] }).set;
 check(VANILLA_XML.rooms.length === VANILLA.rooms.length
     // ⛓⛓ EDITOR v3 E1b — EVERY ROOM IS A `record` NOW, and NOT ONE carries the
     //    rendered text: OEL appears only inside a chunk (claim 27b below).

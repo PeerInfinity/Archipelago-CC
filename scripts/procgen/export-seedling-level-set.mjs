@@ -236,7 +236,9 @@ let set;
 let report;
 if (VANILLA) {
     const embedSet = JSON.parse(readFileSync(VANILLA_SET_PATH, 'utf8'));
-    ({ set, report } = vanillaRecordSet(embedSet, loadAtlas()));
+    // ⚖ MOONROCK: the same vanilla 116 the page's `#editLoadVanilla` builds —
+    // the game's own rooms, without the delivery's record patches.
+    ({ set, report } = vanillaRecordSet(embedSet, loadAtlas(), { patches: [] }));
     note(`  ${report.join.rooms} room(s) joined by path, `
         + `${report.join.matched_by_suffix} on the shared suffix`);
 } else {
