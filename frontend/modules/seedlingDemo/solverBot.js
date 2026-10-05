@@ -1242,6 +1242,18 @@ function resolveTalkStrategy(run, obstacle, contacts, blocked = []) {
     const w = (run.watchers ?? []).find((x) => x.id === obstacle.id);
     if (!w) return null;
     const exempt = new Set([...contacts, `proximity-hazard:${obstacle.id}`]);
+    const silent = (run.world.silentHazards ?? []).find((h) => h.id === obstacle.id);
+    if (silent) {
+        // ⛔ A SILENT watcher (no text) whose square the census HOLDS as a
+        // planner volume for the committed plans (`levelWorld`'s `held` push):
+        // the game never talks, freezes or writes a tag for it, so where the
+        // square is a wall the verb walks through at zero cost.
+        return {
+            strategy: 'talk', watcher: w.id, already: 'silent', stance: null, exempt: [...exempt],
+            rejected: [{ option: `talk ${w.id}`, why: `${w.id} is SILENT — ${silent.why} — so its `
+                + 'held square is walked through: no dialogue opens' }],
+        };
+    }
     if (w.cleared) {
         // Talked to already THIS visit: the circle is silent, nothing to drive.
         return {
@@ -1339,6 +1351,9 @@ function execTalk(run, perTick, resolved, ctx) {
         const { transition } = run.advance(held);
         if (transition) refuse(`the run crossed to level ${transition.to_level} ${what}.`);
     };
+    if (resolved.already === 'silent') {
+        return { verb: 'talk', target: resolved.watcher, from, ticks: 0, pages: 0, already: 'silent' };
+    }
     if (resolved.already === 'cleared' || watcher()?.cleared) {
         return { verb: 'talk', target: resolved.watcher, from, ticks: 0, pages: 0, already: 'cleared' };
     }
