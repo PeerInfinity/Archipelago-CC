@@ -179,7 +179,7 @@ export async function createLab() {
             const es = eng.status();
             if (goal.kind === 'exit' && lv !== goal.level && es.phase === 'playing') {
                 leftAt ??= performance.now();
-                if ((es.drained ?? 0) >= (es.ticks ?? Infinity) || performance.now() - leftAt > 5000) { eng.stop(); end = 'crossed'; break; }
+                if ((es.drained ?? 0) >= (es.ticks ?? Infinity) || performance.now() - leftAt > 500) { eng.stop(); end = 'crossed'; break; }
             }
         }
         if (end !== 'crossed') eng.stop();

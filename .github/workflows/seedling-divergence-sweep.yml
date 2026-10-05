@@ -1,0 +1,260 @@
+name: Seedling divergence sweep (manual)
+
+# ⛓ THE LIVE WASM DIVERGENCE SWEEP, ON RUNNERS, ON DEMAND ONLY (measure-only; planner seedling-js-planning-3).
+# Every exit / location leg of seedling_playthrough, from each resolved arrival, with the AP route's inventory,
+# served by the PRODUCTION wasm playback engine on the live page; one jsonl row per leg (the engine's history,
+# the plans, and each divergence's model and game rows). Nothing is asserted about the MODEL: a refusal or a
+# divergence is a row, not a red job. The jobs go red only when the SWEEP itself is incomplete.
+#
+# ⚖ USER RULING (2026-10-05, via planner-3): the live sweep runs in CI, SHARDED, off the box.
+# ⇒ `workflow_dispatch:` and NOTHING ELSE — never push, pull_request or schedule.
+#   plan   the leg list (`seedling-divergence-legs.mjs`, pure node) and its partition
+#          (`probe-seedling-divergence-sweep.mjs --shard-plan=<n> --json`: price-balanced, longest first, so the
+#          location legs and the big rooms spread across shards). No browser.
+#   shard  `--shard=i/n` per matrix entry, headless logic-only; asserts the CHANNEL line; uploads its rows.
+#   merge  concatenates the shards' rows and fails BY NAME when the distinct leg ids != the plan's leg count,
+#          or when a leg's page never booted.
+#
+# ⛓ HEADLESS LOGIC-ONLY, as the full tier: the probe launches on HEADLESS_LOGIC_ONLY_ARGS and refuses unless the
+# page's `__swfGpu.lost >= 1` (`assertLogicOnlyChannel`), printing the CHANNEL line each shard greps.
+# ⚠ The solver's budget is WALL-CLOCK: a runner's 2 shared CPUs can cut a solve the box would finish. The report
+# tags those legs BUDGET-BOUND and re-runs them before calling any a model gap.
+
+on:
+  workflow_dispatch:
+    inputs:
+      shards:
+        description: The number of shard jobs the leg list is split across.
+        type: number
+        default: 10
+      page:
+        description: The wasm build to drive (a directory under frontend/modules/flashPanel/wasm).
+        type: string
+        default: seedling_bot_ap_p4f
+      mode:
+        description: inv (the AP route's inventory, granted through the AP path) or bare (no grants).
+        type: string
+        default: inv
+      producer:
+        description: solver (the production engine) or walker (the same engine built the WG way — the J2 walker's tape).
+        type: string
+        default: solver
+      ids:
+        description: Comma-separated leg ids to run (empty = every leg) — the BUDGET-BOUND re-run, the walker pass.
+        type: string
+        default: ''
+
+jobs:
+  plan:
+    name: Divergence sweep — plan (${{ inputs.shards }} shards)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      timeout: ${{ steps.plan.outputs.timeout }}
+      legs: ${{ steps.plan.outputs.legs }}
+    steps:
+      # ⛓ NO submodules: the leg list reads the committed rules and the map document, not the wasm.
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Derive the leg list and the partition
+        id: plan
+        env:
+          SHARDS: ${{ inputs.shards }}
+          IDS: ${{ inputs.ids }}
+        run: |
+          set -o pipefail
+          mkdir -p test-results/divergence-sweep
+          L=test-results/divergence-sweep/legs.jsonl
+          node scripts/procgen/seedling-divergence-legs.mjs --out="$L" --presets=seedling_playthrough --blocks | tee plan.txt
+          P=scripts/procgen/probe-seedling-divergence-sweep.mjs
+          if [ -n "$IDS" ]; then
+            # ⛓ an id list is partitioned too (the subset, by the same price)
+            node -e "const fs=require('fs');const ids=new Set(process.env.IDS.split(',').map(Number));fs.writeFileSync('$L.sub',fs.readFileSync('$L','utf8').split('\n').filter(Boolean).filter(l=>ids.has(JSON.parse(l).id)).join('\n')+'\n')"
+            mv "$L.sub" "$L"
+          fi
+          node "$P" --legs="$L" --shard-plan="$SHARDS" | tee -a plan.txt
+          node "$P" --legs="$L" --shard-plan="$SHARDS" --json > plan.json
+          echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
+          echo "timeout=$(node -p "require('./plan.json').timeoutMinutes")" >> "$GITHUB_OUTPUT"
+          echo "legs=$(node -p "require('./plan.json').legs")" >> "$GITHUB_OUTPUT"
+          echo "MEASURED: legs sha256 $(sha256sum "$L" | cut -c1-16) at ${GITHUB_SHA}"
+          { echo '```'; cat plan.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the leg list
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: divergence-legs
+          path: test-results/divergence-sweep/legs.jsonl
+          retention-days: 90
+
+  shard:
+    name: Divergence sweep — shard ${{ matrix.shard }}/${{ inputs.shards }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ fromJSON(needs.plan.outputs.timeout) }}
+    strategy:
+      # ⛓ every shard reports; one red shard must not cancel the others' evidence.
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Resolve the pinned Playwright version (the cache key)
+        id: pwver
+        run: |
+          V=$(node -p "require('./package-lock.json').packages['node_modules/playwright'].version")
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+
+      - name: Cache the Playwright browser
+        id: pwcache
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ms-playwright-${{ runner.os }}-${{ steps.pwver.outputs.version }}
+
+      - name: Install Chromium for Playwright
+        timeout-minutes: 12
+        run: node node_modules/playwright/cli.js install chromium
+
+      - name: Download the leg list
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: divergence-legs
+          path: test-results/divergence-sweep
+
+      - name: 'Run shard ${{ matrix.shard }}/${{ inputs.shards }} (${{ inputs.mode }}, ${{ inputs.producer }}, ${{ inputs.page }})'
+        id: sweep
+        env:
+          SHARD: ${{ matrix.shard }}/${{ inputs.shards }}
+          I: ${{ matrix.shard }}
+          MODE: ${{ inputs.mode }}
+          PRODUCER: ${{ inputs.producer }}
+          PAGE: ${{ inputs.page }}
+        run: |
+          set -o pipefail
+          python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
+          echo $! > /tmp/httpd.pid
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:8000/frontend/index.html && break
+            sleep 1
+          done
+          D=test-results/divergence-sweep
+          L=$D/shard.log
+          DUMP=""; [ "$I" = "1" ] && DUMP="--dump=$D/delivered-set.json"
+          S=$(date +%s)
+          set +e
+          node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=$D/legs.jsonl --shard="$SHARD" --mode="$MODE" \
+            --producer="$PRODUCER" --page="$PAGE" --out=$D/rows-$I.jsonl $DUMP 2>&1 | tee "$L"
+          RC=$?
+          set -e
+          echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"
+          kill "$(cat /tmp/httpd.pid)" 2>/dev/null || true
+          # ⛔ THE CHANNEL, ASSERTED (an empty shard boots no page)
+          if ! grep -aq "^SHARD $SHARD: 0 legs" "$L" && ! grep -aq '^CHANNEL: headless logic-only' "$L"; then
+            echo "::error::shard $SHARD printed no 'CHANNEL: headless logic-only' line"
+            exit 1
+          fi
+          exit $RC
+
+      - name: Summary
+        if: always()
+        env:
+          SHARD: ${{ matrix.shard }}/${{ inputs.shards }}
+          I: ${{ matrix.shard }}
+        run: |
+          D=test-results/divergence-sweep
+          {
+            echo "## Divergence sweep — shard ${SHARD} — \`${{ steps.sweep.outcome }}\`"
+            echo '```'
+            grep -aE '^SHARD |^CHANNEL:|^INFO: page|^FAIL' "$D/shard.log" 2>/dev/null | cut -c1-300 || true
+            echo "rows $(wc -l < "$D/rows-$I.jsonl" 2>/dev/null || echo 0)"
+            node -e "const fs=require('fs');const m={};for(const l of fs.readFileSync('$D/rows-$I.jsonl','utf8').split('\n').filter(Boolean)){const e=JSON.parse(l).end;m[e]=(m[e]||0)+1}console.log(JSON.stringify(m))" 2>/dev/null || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the shard's rows and log
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: divergence-shard-${{ matrix.shard }}
+          path: test-results/divergence-sweep/
+          retention-days: 90
+
+  merge:
+    name: Divergence sweep — merge (${{ inputs.shards }} shards)
+    needs: [plan, shard]
+    # ⛓ ALWAYS, so a failed or missing shard is NAMED here.
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download every shard's rows
+        uses: actions/download-artifact@v8.0.1
+        with:
+          pattern: divergence-shard-*
+          path: shards
+
+      - name: Concatenate, and count the legs against the plan
+        env:
+          LEGS: ${{ needs.plan.outputs.legs }}
+          MATRIX: ${{ needs.plan.outputs.matrix }}
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          mkdir -p merged
+          : > merged/rows.jsonl
+          for i in $(node -p "JSON.parse(process.env.MATRIX).join(' ')"); do
+            F="shards/divergence-shard-$i/rows-$i.jsonl"
+            echo "SHARD $i/$SHARDS: $(wc -l < "$F" 2>/dev/null || echo 'NO ROWS') row(s); $(grep -aE '^INFO: page .* booted' "shards/divergence-shard-$i/shard.log" 2>/dev/null | wc -l) page(s) booted"
+            [ -f "$F" ] && cat "$F" >> merged/rows.jsonl
+          done
+          cp shards/divergence-shard-1/delivered-set.json merged/ 2>/dev/null || true
+          node - <<'JS' | tee merged/summary.txt
+          const fs = require('fs');
+          const rows = fs.readFileSync('merged/rows.jsonl', 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+          const ids = new Set(rows.map((r) => r.id));
+          const ends = {};
+          for (const r of rows) ends[r.end] = (ends[r.end] || 0) + 1;
+          const booted = rows.filter((r) => r.end === 'page-boot-failed').length;
+          console.log(`MERGE: ${rows.length} rows, ${ids.size} distinct legs of ${process.env.LEGS}; ends ${JSON.stringify(ends)}`);
+          if (ids.size !== Number(process.env.LEGS)) { console.log(`MERGE-FAIL: ${ids.size} distinct legs, the plan holds ${process.env.LEGS}`); process.exitCode = 1; }
+          if (booted) { console.log(`MERGE-FAIL: ${booted} leg(s) on a page that never booted`); process.exitCode = 1; }
+          JS
+          { echo '```'; cat merged/summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          if grep -q '^MERGE-FAIL' merged/summary.txt; then
+            echo "::error::$(grep '^MERGE-FAIL' merged/summary.txt | head -1)"
+            exit 1
+          fi
+
+      - name: Upload the merged rows
+        if: always()
+        uses: actions/upload-artifact@v7.0.0
+        with:
+          name: divergence-merged
+          path: |
+            merged/
+            shards/*/shard.log
+          retention-days: 90

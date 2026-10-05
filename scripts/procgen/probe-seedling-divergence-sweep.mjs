@@ -17,6 +17,9 @@
  *   --from=N --limit=N   a window of the (mode-ordered) list — yield the box in chunks
  *   --page-legs=N        a fresh page every N legs (default 60; the row records the page's leg index)
  *   --ids=a,b            only these leg ids
+ *   --shard=i/n          only shard i of n (`partitionLegs`: price-balanced, longest first — CI's matrix)
+ *   --shard-plan=n [--json]  print the partition (no browser, no box) — the CI plan job
+ *   --page=<build>       drive another staged build (also SEEDLING_PAGE), e.g. seedling_bot_ap_p4f
  *   --out=<jsonl>        append rows here (default stdout only)
  *   --producer=walker    §3: the same engine built the WG way (`generated: true`): the J2 WALKER's tape, shipped to the game
  *   --dump=<json>        write the page's delivered set + name map (the node bare pass stages from it)
@@ -26,7 +29,7 @@
  *
  * Prereqs: a dev server at the repo root (`--host=`, default http://localhost:8000); the wasm build.
  *
- * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…] [--out=…] [--wait-for-box=<sec>]
+ * Run: node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=<jsonl> [--mode=bare|inv] [--shard=i/n|--shard-plan=n [--json]] [--page=<build>] [--producer=solver|walker] [--host=…] [--from=N] [--limit=N] [--page-legs=N] [--ids=…] [--out=…] [--wait-for-box=<sec>]
  */
 import { chromium } from 'playwright';
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -61,14 +64,62 @@ export function orderLegs(legs, mode, pageLegs) {
     return pages;
 }
 
+/**
+ * A leg's EXPECTED price in seconds (the shard balance, not a measurement): a page boot is shared, so a leg pays
+ * its jump + solve + play. Measured on the box (chunk 0, load ~18): refusals 5–8 s, crossings 4–29 s, a location
+ * 17 s; play time grows with the room. So: 10 s, +10 s for a location (a check ceremony), + the room's tile area /
+ * 60 (the walk). Exported for the plan job and its reader.
+ */
+export function legPrice(leg, areaOf) {
+    return 10 + (leg.goal.kind === 'location' ? 10 : 0) + Math.round((areaOf(leg.level) ?? 300) / 60);
+}
+
+/** Longest-processing-time-first into exactly `n` shards (deterministic: price desc, then id). */
+export function partitionLegs(legs, n, areaOf) {
+    const shards = Array.from({ length: n }, (_, i) => ({ shard: i + 1, price: 0, ids: [] }));
+    const priced = legs.map((l) => ({ id: l.id, p: legPrice(l, areaOf) })).sort((a, b) => b.p - a.p || a.id - b.id);
+    for (const { id, p } of priced) {
+        const s = shards.reduce((m, x) => (x.price < m.price ? x : m), shards[0]);
+        s.ids.push(id);
+        s.price += p;
+    }
+    for (const s of shards) s.ids.sort((a, b) => a - b);
+    return shards;
+}
+
+/** The map's room areas, in tiles. */
+export function roomAreas(repo) {
+    const map = JSON.parse(readFileSync(join(repo, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+    // ⛓ the map's `width`/`height` are in TILES already (L5: 7 × 8)
+    const areas = new Map((map.levels ?? []).map((l) => [l.level, (l.width ?? 20) * (l.height ?? 15)]));
+    return (level) => areas.get(level);
+}
+
 /** ⛔ NOTHING RUNS ON IMPORT (`check-procgen-help.mjs`'s import door). */
 if (isEntryPoint(import.meta.url)) await main();
 
 async function main() {
-    takeBoxLockOrExit({ name: 'probe-seedling-divergence-sweep.mjs', kind: 'browser' });
     const HERE = dirname(fileURLToPath(import.meta.url));
     const REPO = join(HERE, '..', '..');
     const arg = (name, fallback) => (process.argv.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? fallback);
+    const PLAN = arg('shard-plan', '');
+    if (PLAN) {
+        // the plan job: no browser, no box — the partition and the leg count, for the matrix and the merge
+        const legs0 = readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+        const shards = partitionLegs(legs0, Number(PLAN), roomAreas(REPO));
+        const maxPrice = Math.max(...shards.map((x) => x.price));
+        if (process.argv.includes('--json')) {
+            console.log(JSON.stringify({ legs: legs0.length, matrix: shards.map((x) => x.shard),
+                // ⛓ the shard timeout: the priciest shard's estimate ×4 (a 2-CPU runner vs the estimate's box)
+                // + the page boots and the setup (20 min)
+                timeoutMinutes: Math.ceil((maxPrice * 4) / 60) + 20, shards }));
+        } else {
+            console.log(`SHARD PLAN: ${legs0.length} legs into ${shards.length} shards (price = legPrice, seconds)`);
+            for (const x of shards) console.log(`  shard ${x.shard}: ${x.ids.length} legs, ~${Math.round(x.price / 60)} min`);
+        }
+        process.exit(0);
+    }
+    takeBoxLockOrExit({ name: 'probe-seedling-divergence-sweep.mjs', kind: 'browser' });
     const HOST = arg('host', 'http://localhost:8000').replace(/\/+$/, '');
     const MODE = arg('mode', 'bare');
     const OUT = arg('out', '');
@@ -78,15 +129,26 @@ async function main() {
     const DUMP = arg('dump', '');
     const PRODUCER = arg('producer', 'solver');
     const IDS = arg('ids', '').split(',').filter(Boolean).map(Number);
+    const SHARD = arg('shard', '');
     const GAME = 'seedling_playthrough';
-    const PRESET = JSON.parse(readFileSync(join(REPO, `frontend/presets/${GAME}/AP_1/AP_1_rules.json`), 'utf8'));
-    const WASM_PAGE = PRESET.flash_panel?.wasm ?? '';
+    const RULES = `frontend/presets/${GAME}/AP_1/AP_1_rules.json`;
+    const PRESET = JSON.parse(readFileSync(join(REPO, RULES), 'utf8'));
+    // ⛓ --page=<build> (e.g. seedling_bot_ap_p4f) drives another staged build: the rules the page fetches name it
+    const BUILD = arg('page', '') || process.env.SEEDLING_PAGE || '';
+    const WASM_PAGE = BUILD ? `${BUILD}/game.html` : (PRESET.flash_panel?.wasm ?? '');
     if (!WASM_PAGE || !existsSync(join(REPO, 'frontend/modules/flashPanel/wasm', WASM_PAGE))) {
         console.log(`SKIP: seedling wasm artifact not staged (${JSON.stringify(WASM_PAGE)})`);
         process.exit(0);
     }
     const all = readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
-    const pages = orderLegs(IDS.length ? all.filter((l) => IDS.includes(l.id)) : all, MODE, PAGE_LEGS);
+    let pick = IDS.length ? all.filter((l) => IDS.includes(l.id)) : all;
+    if (SHARD) {
+        const [i, n] = SHARD.split('/').map(Number);
+        const mine = new Set(partitionLegs(pick, n, roomAreas(REPO))[i - 1].ids);
+        pick = pick.filter((l) => mine.has(l.id));
+        console.log(`SHARD ${SHARD}: ${pick.length} legs`);
+    }
+    const pages = orderLegs(pick, MODE, PAGE_LEGS);
     // the window, over the flattened order (pages kept)
     let n = 0;
     const windowed = pages.map((p) => p.filter(() => { const keep = n >= FROM && n < FROM + LIMIT; n += 1; return keep; })).filter((p) => p.length);
@@ -117,6 +179,14 @@ async function main() {
         page.on('console', (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
         page.on('pageerror', (e) => logs.push(`[pageerror] ${e.message}`));
         const rp = createRoomPlay({ page, wasmPage: WASM_PAGE, logs, name: `div-${MODE}-${pageNo}` });
+        if (BUILD) {
+            await page.route(`**/presets/${GAME}/AP_1/AP_1_rules.json`, async (route) => {
+                const r = await route.fetch();
+                const doc = await r.json();
+                doc.flash_panel = { ...(doc.flash_panel ?? {}), wasm: WASM_PAGE };
+                await route.fulfill({ response: r, json: doc });
+            });
+        }
         const tb = Date.now();
         let booted = false;
         let bootErr = null;
