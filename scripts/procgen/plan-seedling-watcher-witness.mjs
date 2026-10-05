@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * plan-seedling-watcher-witness — ⛓⛓⛓ SEEDLING FIDELITY WATCHER: A SILENT
- * WATCHER ON THE FRONTIER OF A REACH-EXIT IS NOT AN OBSTACLE.
+ * WATCHER ON THE FRONTIER OF A REACH-EXIT IS NOT AN OBSTACLE, AND A SPEAKING
+ * ONE IS PASSED BY ITS DIALOGUE.
  *
  * The route survey (`survey-seedling-route.mjs --through=end`) refused steps 95
  * and 101 on L37's `watcher@104,264`: *"Obstacle: proximity-hazard:watcher …
@@ -44,6 +45,12 @@
  *                           solver walks from the corridor's top (`spawn`
  *                           (72,56), 25.3 px from it) straight through the
  *                           circle to `teleporter@64,144` (L113).
+ *   watcher-l114-talk       THE `talk` VERB (D2). The same boot with the tag
+ *                           SET: the circle cuts the two-tile corridor, the
+ *                           frontier names `proximity-hazard:watcher`, and the
+ *                           solver steps into the circle, pages the dialogue on
+ *                           the ceremony cadence until `doneTalking()` writes
+ *                           `{114,0}`, and walks out to L113.
  *
  * THE STAGING (the survey's, written out): `r8-solve-11`'s committed block
  * (`solveStaging`), re-pointed at the step's atlas arrival, with the save keys
@@ -146,6 +153,22 @@ export const WATCHER_WITNESSES = Object.freeze([
             + 'The census lists it silent (`Watcher.update` gates `talk()` on the tag), and the solver '
             + 'walks from the top of the two-tile corridor straight through the 24 px circle to '
             + '`teleporter@64,144` with no dialogue',
+    }),
+    Object.freeze({
+        name: 'watcher-l114-talk',
+        step: null,
+        boot: { level: 114, x: 64, y: 48 },
+        keys: [],
+        items: [],
+        goal: { kind: 'reach-exit', exit: { x: 64, y: 144 } },
+        to: 113,
+        watcher: L114_WATCHER,
+        check: 'talk',
+        what: 'THE `talk` VERB: L114\'s SPEAKING `watcher@72,72` with its tag SET. Its 24 px circle '
+            + 'cuts the two-tile corridor, so the frontier names `proximity-hazard:watcher`; the solver '
+            + 'steps from the corridor\'s top into the circle, the dialogue opens on proximity, the '
+            + 'solver pages it on the ceremony cadence until `doneTalking()` writes `{114,0}`, and '
+            + 'walks out to `teleporter@64,144`',
     }),
 ]);
 
@@ -253,7 +276,7 @@ async function main() {
         check(`${w.name}: the model replays it into L${w.to}`, last?.level === w.to,
             `${out.ticks.length} observations, ends ${JSON.stringify({ level: last?.level, x: last?.x, y: last?.y })}`);
         const visit = talkCircleVisit(out.ticks, w.watcher);
-        if (w.check === 'silent-walk') {
+        if (w.check === 'silent-walk' || w.check === 'talk') {
             const run = createRunForStaging({ ...tape, equips: [] }, levelSource);
             for (let i = 0; i < tape.tick_count; i += 1) {
                 run.advance(new Set(tape.inputs.filter((sp) => sp.from <= i && i < sp.to).map((sp) => sp.key)));
@@ -261,8 +284,21 @@ async function main() {
             const talks = run.watcherTalks.filter((r) => r.id === w.watcher.id);
             check(`${w.name}: the walk enters ${w.watcher.id}'s talk circle`, visit.inside > 0,
                 `closest ${visit.min.toFixed(2)} px, ${visit.inside} observation(s) within ${TALK_RANGE}`);
-            check(`${w.name}: the run never talks to it`, talks.length === 0,
+            if (w.check === 'silent-walk') {
+                check(`${w.name}: the run never talks to it`, talks.length === 0
+                    && solved.out.records.every((r) => r.strategy !== 'talk'),
                 JSON.stringify(talks));
+            } else {
+                const rec = solved.out.records.filter((r) => r.strategy === 'talk');
+                check(`${w.name}: the plan talks to ${w.watcher.id} once, and the run's dialogue `
+                    + 'ends DONE (paged), not LEFT', rec.length === 1 && talks.length === 1
+                    && talks[0].cause === 'done',
+                JSON.stringify({ records: rec.map((r) => [r.openedAt, r.closedAt, r.pages]),
+                    talks: talks.map((r) => [r.t, r.cause, r.pages, r.page]) }));
+                check(`${w.name}: the run earns {${w.watcher.level},0}`,
+                    run.watcherFlags.some((f) => f.level === w.watcher.level && f.tag === 0),
+                    JSON.stringify(run.watcherFlags));
+            }
         } else if (w.check === 'lean') {
             check(`${w.name}: the walk stands inside ${L37_WATCHER.id}'s talk circle`, visit.inside > 0,
                 `closest ${visit.min.toFixed(2)} px, ${visit.inside} observation(s) within ${TALK_RANGE}`);
