@@ -1131,6 +1131,14 @@ describe('⚖ slice 10: `SolverRefusal` carries the danger record', () => {
      * state before L10), aiming at the L17 stairs under the lanes, still climbs
      * AVOID → TIME → BAIT → KILL and refuses at the top: no sword means no
      * press arm for the bobs and no swing at the rope.
+     *
+     * ⛓ FIDELITY L14 (the DETOUR rung) added a fifth rung to this climb, and
+     * its search is the whole cost of this refusal (~10-14 s alone, 34-42 s on a
+     * loaded box, against the 60 s test budget, three times). These rows are
+     * about the refusal's DANGER RECORD, not about DETOUR (`fidelityL14` and
+     * `solverDeadline` own that), so they bound the rung with its own deadline
+     * site: the climb still refuses EXHAUSTED by name, now with the ⏱ clause,
+     * and the record still carries every query the earlier rungs asked.
      */
     const L16_BOOT = { level: 16, x: 32, y: 64 };
     const refuseInL16 = () => {
@@ -1139,6 +1147,7 @@ describe('⚖ slice 10: `SolverRefusal` carries the danger record', () => {
             solveSegment({
                 run, goals: [{ kind: 'reach-exit', exit: { x: 112, y: 64 } }],
                 name: 'slice10-danger-on-refusal', boot: { ...L16_BOOT },
+                shouldStop: (site) => site === 'detour',
             });
         } catch (e) { return e; }
         return null;
