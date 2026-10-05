@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 40,
-            "count": 82,
+            "browser": 41,
+            "count": 83,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 325,
-        "browser": 105,
-        "cited": 152,
-        "files": 336,
+        "blockStyle": 326,
+        "browser": 106,
+        "cited": 153,
+        "files": 337,
         "lineStyle": 11,
-        "withDocblock": 336,
-        "withFlags": 255
+        "withDocblock": 337,
+        "withFlags": 256
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8759,6 +8759,61 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-level-set-transport — the RECEIVER's half of the level-set delivery, driven in the built artifact.",
             "path": "scripts/procgen/probe-seedling-level-set-transport.mjs"
+        },
+        {
+            "argvHelpers": [
+                "ONLY",
+                "VARIANTS",
+                "WORLDS",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only",
+                "record",
+                "variants",
+                "worlds"
+            ],
+            "file": "probe-seedling-moonrock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "variants"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "worlds"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity MOONROCK, D3: **THE DELIVERED SET'S MOONROCK, ON THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-moonrock.mjs"
         },
         {
             "argvHelpers": [],

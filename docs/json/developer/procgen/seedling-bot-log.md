@@ -12886,6 +12886,81 @@ PASS 4,965 → 4,966; `pullRope`'s seven targets are re-anchored on
   the camera, and the model refuses a bob inside the shake band, so the
   control is read against the witness on the game, not against a model stream.
 
+### Seedling fidelity MOONROCK — the event removed, L110 falls to L2
+
+Planning-2's slice on `fidelity-harvest/sf-f7` `0aab89b4d8`. ⚖ The user,
+2026-10-04: *"… change it so that the moon rock event is never triggered, and
+the entrance that would normally be reached from falling into the moon rock is
+instead reached directly from the fall from the room above it."* Approved the
+same day as two edits to the DELIVERED set: L0 without its `<moonrock>`, and
+L110's `<control>` repointed (`fallthrough 2, xOff -48, yOff -32`). The report
+is `CC/docs/cloud-reports/seedling-fidelity-moonrock.md`.
+
+**Where it lives.** ONE table, `seedlingSetPatches.SEEDLING_SET_PATCHES`, and
+ONE applier, `applySetPatches(levels)`, called inside
+`levelSetExporter.vanillaRecordSet` before the join. Every delivery starts
+there (the AP rewrite, the atlas arm's retag, `seedlingLevelSetDelivery`, the
+wasm engine's `deliveredSet`, the JS page's real-room mount, the vanilla-map
+playback map). `{patches: []}` is the unpatched vanilla, byte-identical to
+`seedling-vanilla-record-1040ace1`; the patched delivery is
+`seedling-vanilla-record-329dd9d9` (`provenance.patches: ["moonrock-removed"]`).
+The map extract is not edited. The set editor's `#editLoadVanilla`, its CLI and
+node twins, and the vanilla-overlay producer opt out: they show the game's own
+rooms. The four atlas presets allocate 0 retags, so they get no delivery and
+keep the built-in map, rock included.
+
+**Edit 1 — the event removed (PASS, game-witnessed).** `moonrock-shield` boots
+L0 at (256,208) after the Shield (`beam true`, `rock_set false`), walks down onto
+`stairsdown@256,272` and back up L2's `stairsup@48,16`. On the delivered set:
+L0 → L2 (48,32) → L0 (256,256), no beam freeze, `rock_set` false, `{2,0}` never
+written. The model reproduces it row for row. On the built-in map (the
+control), the rock beams (471 dead frames), lands, covers the stairs and writes
+`{2,0}`: no transition. The model reproduces that too, and the unpatched
+delivery is the built-in game, frame for frame.
+
+**Edit 2 — the L110 repoint: STOPPED, measured on the game.** A fall arrives
+FROM THE CEILING (`Player.check()` puts the player at the camera top), and
+`Teleporter.update` fires on any overlap with no `fallFromCeiling` guard. So:
+- repointed to L2 (48,32) as approved: the descent crosses L2's
+  `stairsup@48,16` and the fall ENDS IN **L0 (256,256)** (L110 → L2 → L0);
+- not repointed: the fall lands on L0's stairs tile and the descent fires the
+  stairs → **L2 (48,32)**, the `moonrock_target`. Vanilla does the same with the
+  rock unset, and with it set (through the rock's Teleporter, writing `{2,0}`);
+- repointed to L2 (64,32) (`PATCH_L110_FALL_OFF_STAIRS`): the fall ends in L2
+  (64,32) directly, and the model reproduces it.
+Edit 1 alone already gives the user's outcome, and the approved coordinates
+defeat it. Both repoints are exported, named and unapplied, for the user's
+choice.
+
+**The model gap.** The model refuses a teleporter that fires during a
+fall-from-ceiling descent by name (*"… fired in level N while a pit transport
+was in flight (phase "descent")"*), on the delivered set and on the built-in
+map alike. On the game it simply fires. This gap predates the slice and is
+left to the transitions owner.
+
+**D4.** The witnesses are `probe-seedling-moonrock.mjs` and
+`fixtures/moonrock-oracle.json`: 3 tapes × 5 worlds, 27 PASS, p4f. The rows are
+`fidelityMoonrock.test.js` (9) and `seedlingSetPatches.test.js` (15). Mutant M1
+(the applier removed from `vanillaRecordSet`) was predicted and measured at 7
+red, all by name. No committed tape moves, because no tape runs on a delivered
+set. Roster 206, tapeRunner 469, surface GREEN 194, constants, entities 518 and
+profile 138 are all unchanged. The identity block and the six `--check`s are
+byte-identical (`aa46950b…`). Instruments 336 → 337 (the probe).
+
+**Trap candidates**, for the catalogue to number:
+
+- a fall's arrival is a DESCENT through the room, not a placement: a target tile
+  under a door's column re-triggers the door on the way down, so "lands at
+  (x,y)" is a claim about the end of a path that crosses everything above it;
+- the vanilla behaviour the patch was meant to replace was already reaching the
+  target: the fall onto L0's stairs tile fires the stairs, rock or no rock. A
+  design premise read off the data ("lands on L0's stairs tile") needs the
+  game's NEXT step measured too;
+- a patch applied at the delivery's single source reaches every reader of that
+  source, including the ones that are not deliveries (the set editor's
+  "vanilla"). Census the callers of the function, not only the readers of the
+  file.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
