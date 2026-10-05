@@ -5554,14 +5554,88 @@ function deriveHoldStance(run, presser, contacts, blocked = [], { prerequisites 
             prerequisite: pre.prerequisite,
         };
     }
-    throw new SolverRefusal(
+    const clause = prerequisites ? prerequisiteRefusalClause(run, hypothesis(), walls, blocked) : '';
+    const sealed = sealedBehindWall(run, presser, candidates, exempt, walls);
+    const refusal = new SolverRefusal(
         `solverBot: no REACHABLE stance inside ${presser.tag}@${presser.x},${presser.y} `
         + `in level ${run.level} — ${candidates.length} cell(s) land the player box in `
         + 'the button and none of them plans a corridor from '
         + `(${run.state.x},${run.state.y}). A hold that cannot be stood on is not a `
         + 'strategy for this obstacle.'
-        + (prerequisites ? prerequisiteRefusalClause(run, hypothesis(), walls, blocked) : ''),
+        + clause + (sealed ? sealedRefusalClause(sealed) : ''),
         { obstacle: { kind: 'proximity-hazard', id: `${presser.tag}@${presser.x},${presser.y}` } });
+    // ⛓ RETURN: an optional instance field, set after construction so the
+    // constructor's own field list is untouched. Absent unless the stance is
+    // sealed behind a guard-(iii) wall.
+    if (sealed) refusal.sealed = sealed;
+    throw refusal;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY RETURN — **THE PRESSER IS SEALED BEHIND A WALL**, and
+ * the refusal says which one.
+ *
+ * Measured on L15 (`Dungeon2_2`) on the way back from L16 (the RETURN report,
+ * D1). The forward trip shoves `pushableblock@64,64` onto `button@112,32`, and
+ * that opens `lock@128,48` (tset 0). The return re-builds the room, and in the
+ * game the lock comes back CLOSED whatever its tag:
+ *   - `Lock.check()` removes a lock only when `tSet < 0` (`Lock.as:39-46`);
+ *   - `PushableBlock` reads no persistence, so the block is back at (64,64).
+ * The game's own stream (`return-l15-reentry`, and `-unclear` without the
+ * clears) is held at x 146.5 by the lock. The arrival column (x 144..159) is
+ * closed by Water to the south (`Player.as:1456`, no `canSwim`). So the button
+ * and the block both lie on the far side of the very lock the button opens.
+ *
+ * Before this, the refusal was right (it is `cannot` in the game too) but it
+ * was named wrong. Guard (iii)'s wall reads *"NO block in this room can reach
+ * it"*, and a reader takes that for a fact about the room. `deriveWeigh` asks
+ * it from the walker's side, and the forward trip is a block that DID reach it.
+ *
+ * ⇒ one more question, asked only on the throw path, so no plan that solves
+ * pays for it. For each guard-(iii) wall: does a stance candidate plan once
+ * THAT wall is discharged (opened, and its volume exempted, as
+ * `stanceReaches` does)? If one does, the presser is sealed behind that wall.
+ * `ownOpener` says the wall is one this presser itself opens (L15's shape:
+ * nothing on this side can ever open it). The candidate list is the caller's,
+ * in the caller's order.
+ */
+function sealedBehindWall(run, presser, candidates, exempt, walls) {
+    const presserId = `${presser.tag}@${presser.x},${presser.y}`;
+    for (const w of walls) {
+        const opener = openerPresserFor(run, { id: w.id, tag: w.tag });
+        const through = new Set([...exempt, `proximity-hazard:${w.id}`]);
+        const bag = bagWithDischarged(run, run.liveGeometryOpts(),
+            [{ id: w.id, kind: 'activator', tag: w.tag }]);
+        for (const c of candidates) {
+            if (!corridorPlans(run.world, run.state, { x: c.x, y: c.y }, null,
+                solverPlanOpts(run, through, { liveBag: bag }))) continue;
+            const openerId = opener ? `${opener.presser.tag}@${opener.presser.x},${opener.presser.y}` : null;
+            return {
+                wall: w.id,
+                presser: presserId,
+                ownOpener: openerId === presserId,
+                group: opener ? opener.group : null,
+                from: { x: run.state.x, y: run.state.y },
+                stance: { x: c.x, y: c.y },
+            };
+        }
+    }
+    return null;
+}
+
+/** The sentence `sealedBehindWall`'s answer owes the refusal. */
+function sealedRefusalClause(s) {
+    return ` ⛔ SEALED BEHIND ${s.ownOpener ? 'ITS OWN LOCK' : 'A WALL'}: with ${s.wall} discharged `
+        + `a corridor from (${s.from.x},${s.from.y}) reaches the stance (${s.stance.x},${s.stance.y}); `
+        + `with it shut none does. ${s.ownOpener
+            ? `So ${s.presser} lies on the far side of the very lock it opens (group t=${s.group}), `
+                + 'and no block on this side can reach it: the "no block in this room" above is '
+                + 'asked from the walker\'s side of that lock. An earlier visit that opened it '
+                + 'does not carry over: a tSet ≥ 0 lock is rebuilt closed whatever its tag '
+                + '(`Lock.as:39-46`), and a pushable block is rebuilt at its placement'
+            : `${s.wall} is a wall nothing on this side can redeem durably (guard iii)`}. `
+        + 'From this arrival, with this inventory, the button is out of reach. That is a '
+        + 'fact about the room, not a rung the ladder lacks.';
 }
 
 /**

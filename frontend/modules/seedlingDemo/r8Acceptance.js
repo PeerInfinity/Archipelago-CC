@@ -1125,6 +1125,23 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'from (160,64) the corridor bends through (120,40) and (104,24), over the pack, '
                 + 'onto `stairsdown@32,64`; it takes no hit, kills nothing, and crosses on t 173.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity RETURN — L15 re-entered from L16 on the way
+         * back: the walk-in's first ticks are in L16 among its seven bobs, and
+         * the Conch crossing ends in L14 among its six.
+         */
+        Object.freeze({
+            name: 'return-l15-walkin', levels: Object.freeze([16]), bobs: 7, ticks: 60,
+            addedBy: 'Seedling fidelity RETURN D1 (the game rebuilds L15\'s tSet-0 lock closed)',
+            why: 'booted in L16 at (32,64) beside `stairsup@16,64`, it is in L15 by t7 and presses '
+                + 'left into the closed lock; no hit, no kill.',
+        }),
+        Object.freeze({
+            name: 'return-l15-conch', levels: Object.freeze([14]), bobs: 6, ticks: 222,
+            addedBy: 'Seedling fidelity RETURN D2 (with the Conch the return arrival swims round the lock)',
+            why: 'from the L16 return arrival (144,32) it swims the water round `lock@128,48` and '
+                + 'takes `stairsup@32,64`; its last tick is the L14 arrival; no hit, no kill.',
+        }),
     ]),
 
     /**
