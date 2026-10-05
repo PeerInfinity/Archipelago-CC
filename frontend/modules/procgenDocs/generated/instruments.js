@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 55,
+            "count": 56,
             "id": "plan"
         },
         {
-            "browser": 39,
-            "count": 81,
+            "browser": 40,
+            "count": 82,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 323,
-        "browser": 104,
+        "blockStyle": 325,
+        "browser": 105,
         "cited": 152,
-        "files": 334,
+        "files": 336,
         "lineStyle": 11,
-        "withDocblock": 334,
-        "withFlags": 253
+        "withDocblock": 336,
+        "withFlags": 255
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6633,6 +6633,33 @@ export const INSTRUMENTS = frz({
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-f7-reentry.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-f7-reentry — ⛓⛓⛓ SEEDLING FIDELITY F7 (D-A): L16 RE-ENTERED WITH ITS ROPE ALREADY PULLED.",
+            "path": "scripts/procgen/plan-seedling-f7-reentry.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
             "citedBy": [
                 "docs/json/developer/procgen/seedling-bot-log.md"
             ],
@@ -8433,6 +8460,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "Seedling fidelity F6: **THE THREE RE-ENTRY CLEARS, ASKED OF THE GAME.** Every arm runs on a FRESH page of the headless game (default build p4e, logic-only), one arm per page:",
             "path": "scripts/procgen/probe-seedling-f6-reentry.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-f7-reentry.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity F7 (D-A): **L16 RE-ENTERED WITH ITS ROPE PULLED, ASKED OF THE GAME — AND WITHOUT IT.** Every arm runs on a FRESH page of the headless game (default build p4f, logic-only), one arm per page:",
+            "path": "scripts/procgen/probe-seedling-f7-reentry.mjs"
         },
         {
             "argvHelpers": [
