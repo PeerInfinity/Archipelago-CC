@@ -239,12 +239,18 @@ export async function createLab() {
         return out;
     }
 
+    /** What the game holds: its slots (acquisition order) and every true `has*` item property. */
+    function heldItems() {
+        const st = status() ?? {};
+        return { slots: st.inventory_slots ?? [], has: Object.entries(st.items ?? {}).filter(([k, v]) => /^has|^can/.test(k) && v === true).map(([k]) => k).sort() };
+    }
+
     /** One status read of the shapes (for the report's field list). */
     function peek() {
         return { status: status(), mobiles: J(game().botMobiles()), seam: seam(), state: readState(),
             lastRows: tap.rows.slice(-2), surfaceKeys: Object.keys(surface()), delivered: !!surface().wasm.deliveredSet };
     }
 
-    return { serveLeg, peek, surface, engine, status, readState, tap, splitPlays, firstField, isArrival, stagingFromWasmArrival,
+    return { serveLeg, peek, heldItems, surface, engine, status, readState, tap, splitPlays, firstField, isArrival, stagingFromWasmArrival,
         shippedTape, exactDeclarationRefusal, liveDeclarations, TAPE_KEY_RELEASES, firstDivergence, parsePendingCheck, win };
 }

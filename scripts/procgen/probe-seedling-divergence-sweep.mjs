@@ -15,7 +15,8 @@
  *
  *   --mode=bare|inv      bare: no grants (exits first, the location legs last); inv: legs in sphere order, grants
  *   --from=N --limit=N   a window of the (mode-ordered) list — yield the box in chunks
- *   --page-legs=N        a fresh page every N legs (default 60; the row records the page's leg index)
+ *   --page-legs=N        a fresh page every N legs (default 60; the row records the page's leg index). ⛔ 1 = one
+ *                        clean game per leg, the start ASSERTED empty (CI's default: the game's items are session-wide)
  *   --ids=a,b            only these leg ids
  *   --shard=i/n          only shard i of n (`partitionLegs`: price-balanced, longest first — CI's matrix)
  *   --shard-plan=n [--json]  print the partition (no browser, no box) — the CI plan job
@@ -107,6 +108,9 @@ async function main() {
         // the plan job: no browser, no box — the partition and the leg count, for the matrix and the merge
         const legs0 = readFileSync(arg('legs', ''), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
         const shards = partitionLegs(legs0, Number(PLAN), roomAreas(REPO));
+        // ⛓ a page boot is paid once per `--page-legs` legs (CI measured 18–21 s; priced 30 s)
+        const perPage = Number(arg('page-legs', '60'));
+        for (const x of shards) x.price += Math.ceil(x.ids.length / perPage) * 30;
         const maxPrice = Math.max(...shards.map((x) => x.price));
         if (process.argv.includes('--json')) {
             console.log(JSON.stringify({ legs: legs0.length, matrix: shards.map((x) => x.shard),
@@ -247,6 +251,19 @@ async function main() {
             const row = { id: leg.id, mode: MODE, producer: PRODUCER, page: pageNo, pageLeg: i, level: leg.level, arrive: [leg.arrive.x, leg.arrive.y],
                 goal: leg.goal.name, kind: leg.goal.kind, sphere: leg.sphere?.label ?? null };
             try {
+                // ⛔ THE CLEAN START (planner-3's trace, 2026-10-05): the game's `Inventory.items` is STATIC and
+                // append-only for the session — an item an earlier leg PICKED UP stays in the game for every later leg
+                // on the page (legs 174/184 held the sword with a granted set of []). So the game's held items are read
+                // BEFORE the grants; on a fresh page (`--page-legs=1`, CI's default) they must be empty, else the leg
+                // fails BY NAME (`dirty-start`) and runs nothing.
+                // eslint-disable-next-line no-await-in-loop
+                const before = await page.evaluate(() => window.__div.heldItems());
+                row.before = before;
+                if (PAGE_LEGS === 1 && (before.slots.length || before.has.length)) {
+                    row.end = 'dirty-start';
+                    row.error = `the game already holds ${JSON.stringify(before)} before this leg's grants — not a clean start`;
+                    throw Object.assign(new Error(row.error), { dirty: true });
+                }
                 if (MODE === 'inv') {
                     const want = leg.sphere?.inventory ?? null;
                     const need = want ? multisetMinus(want, granted) : [];
@@ -262,6 +279,9 @@ async function main() {
                     }
                     row.granted = need;
                     row.holding = granted.length;
+                    // what the game holds after the grants (the slot ORDER is the game's own: acquisition order)
+                    // eslint-disable-next-line no-await-in-loop
+                    row.after = await page.evaluate(() => window.__div.heldItems());
                 }
                 // eslint-disable-next-line no-await-in-loop
                 const landed = await rp.jumpSettled(leg.level, leg.arrive.x, leg.arrive.y);
@@ -273,6 +293,7 @@ async function main() {
                 Object.assign(row, r);
                 swaps += (r.history ?? []).length;
             } catch (e) {
+                if (e.dirty) { emit(row); continue; }
                 row.end = 'probe-error';
                 row.error = e.message.split('\n')[0].slice(0, 400);
                 row.consoleTail = logs.slice(-12);

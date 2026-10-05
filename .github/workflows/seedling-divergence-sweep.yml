@@ -39,6 +39,12 @@ on:
         description: solver (the production engine) or walker (the same engine built the WG way — the J2 walker's tape).
         type: string
         default: solver
+      page_legs:
+        description: >-
+          Legs per page. 1 = one clean game per leg, its start ASSERTED empty (the game's items are session-wide:
+          a leg's pickups leaked into later legs on a shared page — planner-3's trace, 2026-10-05).
+        type: number
+        default: 1
       ids:
         description: Comma-separated leg ids to run (empty = every leg) — the BUDGET-BOUND re-run, the walker pass.
         type: string
@@ -77,6 +83,7 @@ jobs:
         env:
           SHARDS: ${{ inputs.shards }}
           IDS: ${{ inputs.ids }}
+          PAGE_LEGS: ${{ inputs.page_legs }}
         run: |
           set -o pipefail
           mkdir -p test-results/divergence-sweep
@@ -88,8 +95,8 @@ jobs:
             node -e "const fs=require('fs');const ids=new Set(process.env.IDS.split(',').map(Number));fs.writeFileSync('$L.sub',fs.readFileSync('$L','utf8').split('\n').filter(Boolean).filter(l=>ids.has(JSON.parse(l).id)).join('\n')+'\n')"
             mv "$L.sub" "$L"
           fi
-          node "$P" --legs="$L" --shard-plan="$SHARDS" | tee -a plan.txt
-          node "$P" --legs="$L" --shard-plan="$SHARDS" --json > plan.json
+          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" | tee -a plan.txt
+          node "$P" --legs="$L" --shard-plan="$SHARDS" --page-legs="$PAGE_LEGS" --json > plan.json
           echo "matrix=$(node -p "JSON.stringify(require('./plan.json').matrix)")" >> "$GITHUB_OUTPUT"
           echo "timeout=$(node -p "require('./plan.json').timeoutMinutes")" >> "$GITHUB_OUTPUT"
           echo "legs=$(node -p "require('./plan.json').legs")" >> "$GITHUB_OUTPUT"
@@ -159,6 +166,7 @@ jobs:
           MODE: ${{ inputs.mode }}
           PRODUCER: ${{ inputs.producer }}
           PAGE: ${{ inputs.page }}
+          PAGE_LEGS: ${{ inputs.page_legs }}
         run: |
           set -o pipefail
           python3 -m http.server 8000 >/tmp/httpd.log 2>&1 &
@@ -173,7 +181,7 @@ jobs:
           S=$(date +%s)
           set +e
           node scripts/procgen/probe-seedling-divergence-sweep.mjs --legs=$D/legs.jsonl --shard="$SHARD" --mode="$MODE" \
-            --producer="$PRODUCER" --page="$PAGE" --out=$D/rows-$I.jsonl $DUMP 2>&1 | tee "$L"
+            --producer="$PRODUCER" --page="$PAGE" --page-legs="$PAGE_LEGS" --out=$D/rows-$I.jsonl $DUMP 2>&1 | tee "$L"
           RC=$?
           set -e
           echo "MEASURED: shard $SHARD rc=$RC wall $(( $(date +%s) - S ))s load $(cut -d' ' -f1-3 /proc/loadavg) nproc $(nproc) at ${GITHUB_SHA}"
@@ -247,6 +255,8 @@ jobs:
           const ends = {};
           for (const r of rows) ends[r.end] = (ends[r.end] || 0) + 1;
           const booted = rows.filter((r) => r.end === 'page-boot-failed').length;
+          const dirty = rows.filter((r) => r.end === 'dirty-start').length;
+          if (dirty) { console.log(`MERGE-FAIL: ${dirty} leg(s) started on a game already holding items (dirty-start)`); process.exitCode = 1; }
           console.log(`MERGE: ${rows.length} rows, ${ids.size} distinct legs of ${process.env.LEGS}; ends ${JSON.stringify(ends)}`);
           if (ids.size !== Number(process.env.LEGS)) { console.log(`MERGE-FAIL: ${ids.size} distinct legs, the plan holds ${process.env.LEGS}`); process.exitCode = 1; }
           if (booted) { console.log(`MERGE-FAIL: ${booted} leg(s) on a page that never booted`); process.exitCode = 1; }
