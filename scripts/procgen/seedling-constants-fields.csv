@@ -246,6 +246,8 @@ frontend/modules/flashPanel/seedlingSemantics.js|ENTITY_SEMANTICS|(module)|0,rul
 frontend/modules/flashPanel/seedlingSemantics.js|ENTITY_SEMANTICS|(module)|1,rule,sentinel,,entity variant type code
 frontend/modules/flashPanel/seedlingSemantics.js|(module)|h245445a1|1|0,physics,magnitude,,entity hitbox size in tiles
 frontend/modules/flashPanel/seedlingSemantics.js|(module)|h2dee78db|1|0,physics,magnitude,,entity hitbox size in tiles
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h33debac4|2|0,physics,magnitude,,entity hitbox size in tiles (burnabletree: Tree.as:23 32x32)
+frontend/modules/flashPanel/seedlingSemantics.js|(module)|h33debac4|2|1,physics,magnitude,,entity hitbox size in tiles (burnabletree: Tree.as:23 32x32)
 frontend/modules/flashPanel/seedlingSemantics.js|(module)|h31ef0be2|1|0,physics,magnitude,,entity hitbox size in tiles
 frontend/modules/flashPanel/seedlingSemantics.js|(module)|h77817ece|1|0,physics,magnitude,,entity hitbox size in tiles
 frontend/modules/flashPanel/seedlingSemantics.js|(module)|h90191b8e|1|0,physics,magnitude,,entity hitbox size in tiles
