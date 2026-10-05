@@ -295,3 +295,66 @@ describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
         expect(engine.stats.done).toBe(1);
     });
 });
+
+/**
+ * ⛓ WASM EQUIPS — the engine ships a plan's slot selections (`plan.equipsAt`) as the tape's `equips`, indexes them
+ * by the room's shipped ticks for every later shadow, and shifts them by a frozen continuation's LEAD tick. The
+ * plans here carry an injected selection of the sword's own slot (a no-op on the model: the house arrival's real
+ * plans select nothing); the real BURN plan's two selections are `seedlingDemo/wasmEquips.test.js`.
+ *
+ *   e1 equips dropped (`shippedTape` without `equips`)              -> 'the plan tape carries …' reds
+ *   e2 a continuation's room equips unshifted (offset 0, not the room's shipped ticks) -> '… the room's ticks' reds
+ *   e3 the lead tick not counted (`equipsAt` not shifted in `ship`)  -> '… behind the LEAD tick' reds
+ */
+describe('⛓ WASM EQUIPS — the engine ships the solver\'s slot selections', () => {
+    const SWORD = { hasSword: true };
+    const withEquip = (plan, t) => ({ ...plan, equipsAt: new Map([[t, 0]]), equipItems: new Map([[t, { ...SWORD }]]) });
+    const sword = { game: { items: SWORD, slots: [0] }, live: { 'Progressive Sword': 1 } };
+
+    it('the plan tape carries the plan\'s `equips`; the next goal\'s continuation replays them at the room\'s ticks, and its own land after them', () => {
+        const e = setup({ ...sword, editPlan: (plan, n) => withEquip(plan, n === 0 ? 5 : 2) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        const chestTape = e.game.tapes.find((t) => t.tick_count > 0);
+        expect(chestTape.equips).toEqual([{ t: 5, slot: 0 }]);
+        const chestTicks = chestTape.tick_count;
+        e.engine.walkTo(DOOR);
+        e.runUntil(() => e.engine.status().phase === 'playing');
+        const cont = e.seen[1].request;
+        expect(cont.perTick).toHaveLength(chestTicks);
+        expect([...cont.equips]).toEqual([[5, 0]]);
+        expect(e.game.tapes.at(-1).equips).toEqual([{ t: 2, slot: 0 }]);
+        // While the door plays, the room's selections are indexed by its shipped ticks (the chest's, then the door's).
+        expect(e.engine.room.equips).toEqual([{ t: 5, slot: 0 }, { t: chestTicks + 2, slot: 0 }]);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false], [DOOR.name, true]]);
+    });
+
+    it('a delivery-frozen continuation: the re-solve\'s equips ship behind the LEAD tick (t + 1) and index the room after the frozen prefix', () => {
+        // The first test's freeze (the chest plan holds `up` over 26..30); the delivered sword makes slot 0 selectable.
+        const e = setup({ live: { 'Red Key': 1 }, editPlan: (plan, n) => (n === 1 ? withEquip(plan, 3) : plan) });
+        e.engine.walkTo(CHEST);
+        e.runUntil(() => e.engine.status().phase === 'playing' && e.game.drained >= 24);
+        e.delivery.receive('Progressive Sword');
+        e.delivery.push();
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        const row = e.engine.stats.deliveries[0];
+        expect(row).toMatchObject({ outcome: 'replanned', lead: [['up']] });
+        expect(e.seen[1].request.equips).toBeNull();
+        expect(e.game.tapes.at(-1).equips).toEqual([{ t: 4, slot: 0 }]);
+        expect(e.engine.room.equips).toEqual([{ t: row.tick + 4, slot: 0 }]);
+    });
+
+    it('a slot the game holds in another order is refused BY NAME before the plan ships (Fire first: the game\'s [1, 0])', () => {
+        const e = setup({ game: { items: { hasSword: true, hasFire: true }, slots: [1, 0] },
+            editPlan: (plan) => ({ ...plan, equipsAt: new Map([[5, 1]]), equipItems: new Map([[5, { hasSword: true, hasFire: true }]]) }) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toHaveLength(1);
+        expect(JSON.stringify(e.failures[0])).toMatch(/the plan tape was not shipped — the plan selects slot 1 at tick 5: the model's slots are \[0,1\]/);
+        expect(e.game.tapes.filter((t) => t.tick_count > 0)).toEqual([]);
+    });
+});
