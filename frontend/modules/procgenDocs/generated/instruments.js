@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 58,
+            "count": 60,
             "id": "plan"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 335,
+        "blockStyle": 337,
         "browser": 110,
         "cited": 160,
-        "files": 346,
+        "files": 348,
         "lineStyle": 11,
-        "withDocblock": 346,
-        "withFlags": 264
+        "withDocblock": 348,
+        "withFlags": 266
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8117,6 +8117,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-return-l15.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-return-l15 — ⛓⛓⛓ SEEDLING FIDELITY RETURN (D1): L15 RE-ENTERED FROM L16 ON THE WAY BACK, WITH AND WITHOUT THE FORWARD TRIP'S CLEARS.",
+            "path": "scripts/procgen/plan-seedling-return-l15.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-u10-puncher-dwell.mjs",
             "flags": [
                 {
@@ -8327,6 +8354,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-u9-shield-bump — ⛓⛓⛓ U9-swim: `Player.shieldBump`'s DRIVEN WITNESSES.",
             "path": "scripts/procgen/plan-seedling-u9-shield-bump.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-watcher-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-watcher-witness — ⛓⛓⛓ SEEDLING FIDELITY WATCHER: A SILENT WATCHER ON THE FRONTIER OF A REACH-EXIT IS NOT AN OBSTACLE, AND A SPEAKING ONE IS PASSED BY ITS DIALOGUE.",
+            "path": "scripts/procgen/plan-seedling-watcher-witness.mjs"
         },
         {
             "argvHelpers": [],
