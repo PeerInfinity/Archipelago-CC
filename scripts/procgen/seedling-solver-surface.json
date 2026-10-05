@@ -636,9 +636,9 @@
       "class": "physics",
       "form": "geometry-query",
       "files": {
-        "solverBot.js": 6
+        "solverBot.js": 7
       },
-      "sites": 6,
+      "sites": 7,
       "seen": "both",
       "via": [
         "direct"
@@ -854,9 +854,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 114,
-        "solverBot.js": 193
+        "solverBot.js": 196
       },
-      "sites": 307,
+      "sites": 310,
       "seen": "both",
       "via": [
         "const-alias",
@@ -954,9 +954,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 56,
-        "solverBot.js": 135
+        "solverBot.js": 136
       },
-      "sites": 191,
+      "sites": 192,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2039,9 +2039,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 57,
-        "solverBot.js": 76
+        "solverBot.js": 77
       },
-      "sites": 135,
+      "sites": 136,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2070,9 +2070,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 60,
-        "solverBot.js": 80
+        "solverBot.js": 81
       },
-      "sites": 142,
+      "sites": 143,
       "seen": "both",
       "via": [
         "const-alias",
