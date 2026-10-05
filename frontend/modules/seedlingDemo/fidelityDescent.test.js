@@ -15,7 +15,9 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect } from 'vitest';
 
-import { DESCENT_ARMS, DESCENT_TAPES, descentWorld } from './fidelityDescent.js';
+import {
+    DESCENT_ARMS, DESCENT_TAPES, builtInMap, censusFallsOntoDoors, descentSet, descentWorld,
+} from './fidelityDescent.js';
 import { runTape } from './tapeRunner.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
@@ -100,11 +102,28 @@ describe('D1 — the game\'s rule, clause by clause (GAME)', () => {
     });
 });
 
-describe('the model at the base: the descent\'s door is REFUSED by name (the gap)', () => {
-    it('every arm refuses with the in-flight words', () => {
+describe('D2 — the model: a descent FIRES the live door it crosses (MODEL = GAME)', () => {
+    it('every arm: the model\'s stream is the game\'s, row for row (0 px)', () => {
         for (const [tape, world] of DESCENT_ARMS) {
-            expect(model(tape, world).refused, `${tape}/${world}`)
-                .toMatch(/fired in level \d+ while a pit transport was in flight \(phase "descent"\)/);
+            const m = model(tape, world);
+            expect(m.refused, `${tape}/${world}`).toBeNull();
+            expect(m.ticks, `${tape}/${world}`).toEqual(game(tape, world).ticks);
         }
+    });
+
+    it('THE CENSUS: of every pit that falls (39 pit/ctor pairs, 12 levels), ONLY L110\'s lands under a door', () => {
+        const row = {
+            from: 110, pit: { x: 64, y: 64 }, to: 0, ctor: { x: 256, y: 272 },
+            latched: ['stairs@256,272'],
+            fires: { t: 39, door: 'stairs@256,272', to: 2, arrival: { x: 56, y: 40 } },
+            deactivated: [],
+        };
+        const builtIn = censusFallsOntoDoors(builtInMap(ROOT).levels);
+        expect(builtIn).toEqual({ pitCtors: 39, levelsWithPits: 12, rows: [row], skipped: [] });
+        // the delivered set (no moonrock) is the same census
+        expect(censusFallsOntoDoors(descentSet(ROOT, 'table').records)).toEqual(builtIn);
+        // and the census's descent is the game's: t39 into the descent is the oracle's t66 − t27
+        const b = game('fall', 'builtin');
+        expect(b.transitions[1].t - b.transitions[0].t).toBe(row.fires.t);
     });
 });

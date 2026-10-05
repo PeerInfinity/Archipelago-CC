@@ -109,10 +109,12 @@ describe('the fall from L110 (the delivered set — no repoint)', () => {
         expect(game('fallRockSet', 'delivered').cleared_2_0).toBe(false);
     });
 
-    it('MODEL: refuses the descent\'s teleporter BY NAME — a pre-existing gap, the same on the built-in map', () => {
-        const words = /a teleporter at \(256,272\) fired in level 0 while a pit transport was in flight \(phase "descent"\)/;
-        expect(model('fall', 'delivered').refused).toMatch(words);
-        expect(model('fall', 'builtin').refused).toMatch(words);
+    it('MODEL = GAME (seedling fidelity DESCENT): the descent fires the stairs — built-in, delivered and rock-set alike', () => {
+        for (const [tape, world] of [['fall', 'delivered'], ['fall', 'builtin'], ['fallRockSet', 'builtin'], ['fallRockSet', 'delivered']]) {
+            const m = model(tape, world);
+            expect(m.refused, `${tape}/${world}`).toBeNull();
+            expect(m.ticks, `${tape}/${world}`).toEqual(game(tape, world).ticks);
+        }
     });
 });
 
@@ -122,8 +124,10 @@ describe('⛔ THE STOP — the approved L110 repoint, measured', () => {
         expect(levels(a)).toEqual([[110, 2], [2, 0]]);
         expect(a.final.level).toBe(0);
         expect(a.transitions[1].at).toEqual({ x: 264, y: 264 });
-        expect(model('fall', 'delivered:approved').refused)
-            .toMatch(/a teleporter at \(48,16\) fired in level 2 while a pit transport was in flight/);
+        // seedling fidelity DESCENT: the model chains through L2's stairs as the game does
+        const m = model('fall', 'delivered:approved');
+        expect(m.refused).toBeNull();
+        expect(m.ticks).toEqual(a.ticks);
     });
 
     it('OFF-STAIRS (xOff -64, yOff -32): the fall ends in L2 (64,32), directly — MODEL = GAME', () => {
