@@ -8,10 +8,15 @@
  * one tape → watch. Measure only: nothing tracked changes.
  *
  *   D   the LATCHED DOORS (one composite tape: the walker's step-off ++ the solver's walk back, solved in
- *       the worker): the starter atlas's HOUSE DOOR from (48,64) and its two stairs, S5's five rooms — each
- *       crossed ON PLAN, producer `step-off`; ⛔ a divergence at the walker→solver JOIN is reported as a
- *       STOP (the seam-free proof failing). The closed pockets (L3 bare, L37 lava) fail BY NAME. The four
- *       `entrance_spawn` fallback arrivals (L34 lock, L43/L100 pit, L58 dead door) are NAMED, not fixed.
+ *       the worker): the starter atlas's HOUSE DOOR from (48,64) and its two stairs, S5's two latched
+ *       crossings (L87, L102) — each crossed ON PLAN, producer `step-off`; ⛔ a divergence at the
+ *       walker→solver JOIN is reported as a STOP (the seam-free proof failing). The closed pockets (L3 bare,
+ *       L37 lava) fail BY NAME. ⛓ The rules arc's arrival spawns (2026-10-04) moved seven arrivals OFF their
+ *       doors, so those legs are PLAIN exit legs from the new spawn: ⚖ L101 (96,0), L106 (48,48), L109
+ *       (144,48) cross ON PLAN (producer `solver`). The other four goals still fail BY NAME — the goal, not
+ *       the arrival, is what the solver cannot serve: L43 (144,48) and L100 (288,80) (a door standing ON a
+ *       pit tile: which of trigger and pit edge wins is untranscribed), L34 (128,16) (the door under a
+ *       magical lock), L58 (64,16) (a dead door over a lethal pit).
  *   T   the PIT exits: L48, L83, L84 fallen on plan (`reach-pit`; the fall is the game's crossing).
  *   X   the deterministic RESIDUE legs (§1.2: L28, L30, L45, L88 ×2): each fails BY NAME after 2 plans
  *       (1 forced re-arrival) — an exact repeat (same tick, same game row) — not after 4.
@@ -44,7 +49,7 @@ const exit = (level, tiles, name) => ({ kind: 'exit', level, tiles, name });
 /**
  * The legs, by session. `at` = the arrival (OEL spawn) the host jumps to; `expect` = what the leg must do:
  * `cross` (on plan, out of the room; `producer` the plan's), `closed` (the named closed-pocket refusal),
- * `named` (any named failure — recorded, not fixed), `repeat` (the exact-repeat failure after 2 plans).
+ * `named` (any named failure — an unreachable goal door, recorded, not fixed), `repeat` (the exact-repeat failure after 2 plans).
  */
 export const LEGS = {
     D: [
@@ -52,16 +57,17 @@ export const LEGS = {
         { name: 'L2 stairs_up (seedling_atlas)', at: [2, 48, 16], goal: exit(2, [[3, 1]], 'stairs_up'), expect: 'cross', producer: 'step-off' },
         { name: 'L3 stairs_up (seedling_atlas)', at: [3, 64, 0], goal: exit(3, [[4, 0]], 'stairs_up'), expect: 'cross', producer: 'step-off' },
         { name: 'S5 L87', at: [87, 432, 304], goal: exit(87, [[27, 19]], 'L87 door'), expect: 'cross', producer: 'step-off' },
-        { name: 'S5 L101', at: [101, 96, 16], goal: exit(101, [[6, 1]], 'out_teleporter_104_24'), expect: 'cross', producer: 'step-off' },
         { name: 'S5 L102', at: [102, 224, 96], goal: exit(102, [[14, 6]], 'L102 door'), expect: 'cross', producer: 'step-off' },
-        { name: 'S5 L106', at: [106, 64, 48], goal: exit(106, [[4, 3]], 'L106 door'), expect: 'cross', producer: 'step-off' },
-        { name: 'S5 L109', at: [109, 160, 48], goal: exit(109, [[10, 3]], 'L109 door'), expect: 'cross', producer: 'step-off' },
         { name: 'closed L3 bare', at: [3, 96, 128], goal: exit(3, [[6, 8]], 'out_teleporter_96_128'), expect: 'closed' },
         { name: 'closed L37 lava', at: [37, 576, 144], goal: exit(37, [[36, 9]], 'out_stairsdown_576_144'), expect: 'closed' },
-        { name: 'fallback L34 lock', at: [34, 128, 0], goal: exit(34, [[8, 0]], 'L34 door'), expect: 'named' },
-        { name: 'fallback L43 pit', at: [43, 144, 64], goal: exit(43, [[9, 4]], 'out_teleporter_144_64'), expect: 'named' },
-        { name: 'fallback L58 dead door', at: [58, 80, 16], goal: exit(58, [[5, 1]], 'out_teleporter_80_16'), expect: 'named' },
-        { name: 'fallback L100 pit', at: [100, 288, 96], goal: exit(100, [[18, 6]], 'out_teleporter_288_96'), expect: 'named' },
+        // ⛓ the seven arrivals the rules arc moved off their doors: plain exit legs from the new spawn
+        { name: 'moved L101', at: [101, 96, 0], goal: exit(101, [[6, 1]], 'out_teleporter_104_24'), expect: 'cross', producer: 'solver' },
+        { name: 'moved L106', at: [106, 48, 48], goal: exit(106, [[4, 3]], 'L106 door'), expect: 'cross', producer: 'solver' },
+        { name: 'moved L109', at: [109, 144, 48], goal: exit(109, [[10, 3]], 'L109 door'), expect: 'cross', producer: 'solver' },
+        { name: 'moved L43 pit door', at: [43, 144, 48], goal: exit(43, [[9, 4]], 'out_teleporter_144_64'), expect: 'named' },
+        { name: 'moved L100 pit door', at: [100, 288, 80], goal: exit(100, [[18, 6]], 'out_teleporter_288_96'), expect: 'named' },
+        { name: 'moved L34 lock', at: [34, 128, 16], goal: exit(34, [[8, 0]], 'L34 door'), expect: 'named' },
+        { name: 'moved L58 dead door', at: [58, 64, 16], goal: exit(58, [[5, 1]], 'out_teleporter_80_16'), expect: 'named' },
     ],
     T: [
         { name: 'pit L48', at: [48, 176, 48], goal: exit(48, [[11, 3]], 'out_pit_2_2'), expect: 'cross', producer: 'solver' },
@@ -225,7 +231,7 @@ async function main() {
                         r.end === 'failed' && /no cell next to it can be walked to/.test(r.failed ?? '') && plays.length === 0,
                         String(r.failed));
                 } else if (leg.expect === 'named') {
-                    check(`${SESSION} ${leg.name}: an entrance_spawn fallback arrival — NAMED (a failure by name), not fixed`,
+                    check(`${SESSION} ${leg.name}: the goal door is unreachable from the arrival — NAMED (a failure by name), not fixed`,
                         ['failed', 'refused'].includes(r.end) && typeof (r.failed ?? r.answer.reason) === 'string',
                         String(r.failed ?? r.answer.reason));
                 } else if (leg.expect === 'repeat') {

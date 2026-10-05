@@ -57,25 +57,28 @@ const SETTLED = [WALK_STATES.DONE, WALK_STATES.FAILED];
  * Every committed arrival that boots LATCHED on a door, by `level|x|y` (the
  * arrival's OEL spawn), and what the bot does there. `crosses`: steps off and
  * back on, solver ON and OFF. `closed`: no standable cell rings the door — a
- * named refusal at once. The rest are the ARRIVAL's, not the walk's: the
- * binding's `entrance_spawn` fallback lands on a door tile the game never
- * lands on (`lock`: a magical lock's solid over it, the player cannot move;
- * `pit`: the door stands over a pit, every boot falls; `deactivated`: a door
- * that is not live, refused as "no live teleporter").
+ * named refusal at once. Every one is a GAME landing (the atlas compiler's
+ * `arrivalSpawn`: a door tile is a spawn only where a game link lands on it).
+ * ⛓ The rules arc's arrival-spawns change moved the binding's fallbacks off the
+ * doors the game never lands on: `34|128|0` (lock), `43|144|64` and
+ * `100|288|96` (pit), `58|80|16` (deactivated), and ⚖ L101/L106/L109 — those
+ * three door tiles live on below as STAGED boots.
  */
 const ARRIVALS_ON_A_DOOR = {
     '3|96|128': 'closed',        // L11 → L3: the pocket under breakablerock@96,112 (bare); the round trip below opens it
-    '34|128|0': 'lock',
     '37|576|144': 'closed',      // L97's stairs → L37: ringed by lava
-    '43|144|64': 'pit',
-    '58|80|16': 'deactivated',
     '87|432|304': 'crosses',
-    '100|288|96': 'pit',
-    '101|96|16': 'crosses',
     '102|224|96': 'crosses',
-    '106|64|48': 'crosses',
-    '109|160|48': 'crosses',
 };
+
+/**
+ * STAGED boots on a door tile no committed arrival lands on any more (the ⚖
+ * L101/L106/L109 move, rules arc 2026-10-04: (96,16)→(96,0), (64,48)→(48,48),
+ * (160,48)→(144,48)). Not arrivals — they stay because each is a step-off over
+ * different geometry than the two natural witnesses. A row here that a committed
+ * arrival lands on again belongs in ARRIVALS_ON_A_DOOR (pinned below).
+ */
+const STAGED_ON_A_DOOR = ['101|96|16', '106|64|48', '109|160|48'];
 
 /**
  * One booted world per level. The latch is geometry (`initialLatch`), so any
@@ -162,6 +165,14 @@ describe('S5 — the committed arrivals that land ON a door (derived)', () => {
         expect(ARRIVALS.length).toBeGreaterThan(200);
         expect([...ON_A_DOOR.keys()].sort()).toEqual(Object.keys(ARRIVALS_ON_A_DOOR).sort());
     });
+    it('every STAGED door boot is staged: no committed arrival lands on it, and it does boot latched', () => {
+        const committed = new Set(ARRIVALS.map((a) => a.key));
+        for (const key of STAGED_ON_A_DOOR) {
+            expect(committed.has(key), key).toBe(false);
+            const [level, x, y] = key.split('|').map(Number);
+            expect(bootAt(level, x, y).run.state.latched.size, key).toBe(1);
+        }
+    });
     // ⛓ Swim R4 modelled L40's IceTurret: L40 left this set (it was [40, 112]).
     it('the only level no committed arrival can boot is the model\'s HALT row L112 (the Owl; the swim arc\'s)', () => {
         expect([...HALTED].sort((a, b) => a - b)).toEqual([112]);
@@ -169,10 +180,11 @@ describe('S5 — the committed arrivals that land ON a door (derived)', () => {
 });
 
 describe('S5 — step off and back on: the bot crosses from the arrival', () => {
-    const crossing = Object.entries(ARRIVALS_ON_A_DOOR).filter(([, kind]) => kind === 'crosses').map(([k]) => k);
+    const natural = Object.entries(ARRIVALS_ON_A_DOOR).filter(([, kind]) => kind === 'crosses').map(([k]) => k);
+    const crossing = [...natural, ...STAGED_ON_A_DOOR];
     for (const key of crossing) {
         for (const solver of [false, true]) {
-            it(`${key} → the latched door, solver ${solver ? 'ON' : 'OFF'}`, () => {
+            it(`${key}${STAGED_ON_A_DOOR.includes(key) ? ' (STAGED)' : ''} → the latched door, solver ${solver ? 'ON' : 'OFF'}`, () => {
                 const [level, x, y] = key.split('|').map(Number);
                 const rt = bootAt(level, x, y);
                 const { tp, goal } = latchedDoorGoal(rt);

@@ -74,20 +74,23 @@ function replayRows(staging, solution) {
 }
 
 // The committed atlas arrivals latched on their goal door (the pre-pass's `latched` legs), the house first.
+// ⛓ STAGED: the rules arc's arrival spawns (2026-10-04, ⚖ L101/L106/L109) moved those three arrivals off
+// their doors, so no committed arrival boots there any more (`jsRuntimeArrivalOnDoor.test.js` pins that):
+// they stay as staged boots on the door tile — a composite over different geometry than L87 and L102.
 const HOUSE_DOOR = { goal: { kind: 'exit', level: 86, tiles: [[3, 4]], name: 'door' }, at: [48, 64], to: 0 };
 const CROSSES = [
     HOUSE_DOOR,
-    // S5's five rooms (`jsRuntimeArrivalOnDoor.test.js` 'crosses'), each by its own door tile
+    // S5's two natural crossings (`jsRuntimeArrivalOnDoor.test.js` 'crosses'), each by its own door tile
     { goal: { kind: 'exit', level: 87, tiles: [[27, 19]], name: 'L87 door' }, at: [432, 304], to: 88 },
-    { goal: { kind: 'exit', level: 101, tiles: [[6, 1]], name: 'out_teleporter_104_24' }, at: [96, 16] },
     { goal: { kind: 'exit', level: 102, tiles: [[14, 6]], name: 'L102 door' }, at: [224, 96] },
-    { goal: { kind: 'exit', level: 106, tiles: [[4, 3]], name: 'L106 door' }, at: [64, 48] },
-    { goal: { kind: 'exit', level: 109, tiles: [[10, 3]], name: 'L109 door' }, at: [160, 48] },
+    { goal: { kind: 'exit', level: 101, tiles: [[6, 1]], name: 'out_teleporter_104_24' }, at: [96, 16], staged: true },
+    { goal: { kind: 'exit', level: 106, tiles: [[4, 3]], name: 'L106 door' }, at: [64, 48], staged: true },
+    { goal: { kind: 'exit', level: 109, tiles: [[10, 3]], name: 'L109 door' }, at: [160, 48], staged: true },
 ];
 
 describe('⛓ W4 — a latched door: ONE composite plan from the arrival (walker step-off ++ the solver)', () => {
-    for (const { goal, at, to } of CROSSES) {
-        it(`level ${goal.level} from (${at.join(', ')}): mapped to the door's reach-exit WITH a step-off; the composite crosses`, () => {
+    for (const { goal, at, to, staged } of CROSSES) {
+        it(`level ${goal.level} from (${at.join(', ')})${staged ? ' (STAGED)' : ''}: mapped to the door's reach-exit WITH a step-off; the composite crosses`, () => {
             const staging = arrival(goal.level, ...at);
             expect(latchedOn(createRunForStaging(staging, SOURCE), arrivalSolverGoal(goal, { staging, levelSource: SOURCE,
                 record: RECORDS.get(goal.level) }).stepOff.index)).toBe(true);
