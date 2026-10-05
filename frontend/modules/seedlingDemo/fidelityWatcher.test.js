@@ -67,11 +67,16 @@ describe('fidelity WATCHER — the census lists a watcher with no text as SILENT
 
     it.each(PLACED)('L$level $id: silent iff its text is empty', ({ level, id, text }) => {
         const w = buildLevelWorld(MAP.levels.find((l) => l.level === level), { roles: RELAXED_ROLES });
-        const volume = w.proximityHazards.filter((h) => h.tag === 'watcher');
+        const volume = w.proximityHazards.filter((h) => h.tag === 'watcher' && !h.held);
+        const held = w.proximityHazards.filter((h) => h.tag === 'watcher' && h.held);
         const silent = w.silentHazards.filter((h) => h.id === id);
         if (text === '') {
             expect(volume).toEqual([]);
             expect(silent).toHaveLength(1);
+            // ⛔ The old square is HELD as a planner volume (the committed
+            // plans detour around it; D1's STOP), flagged and kind-named.
+            expect(held).toEqual([expect.objectContaining({ kind: 'held-silent', held: true,
+                rect: expect.objectContaining({ w: 48, h: 48 }) })]);
         } else {
             expect(volume).toHaveLength(1);
             expect(volume[0]).toMatchObject({ kind: 'auto-talk' });
@@ -131,10 +136,16 @@ describe.each(CASES)('fidelity WATCHER — route step $step ($name)', ({ name, t
         const staging = { ...t, equips: [], despawn: [], tick0: null };
         const run = createRunForStaging(staging, SRC);
         expect(run.world.silentHazards.map((h) => h.id)).toEqual([L37_WATCHER.id]);
-        expect(run.world.proximityHazards.filter((h) => h.tag === 'watcher')).toEqual([]);
+        expect(run.world.proximityHazards.filter((h) => h.tag === 'watcher').map((h) => h.kind))
+            .toEqual(['held-silent']);
         const out = solveSegment({ run, goals: [goal], name: `${name}-resolve`, boot: staging.boot });
         expect(out.perTick.length).toBe(t.tick_count);
         expect(run.level).toBe(to);
+        // The held square is the frontier's wall; the `talk` verb's SILENT arm
+        // walks through it at zero cost, and no dialogue opens.
+        expect(out.records.filter((r) => r.strategy === 'talk')).toEqual([
+            expect.objectContaining({ verb: 'talk', target: L37_WATCHER.id, already: 'silent', ticks: 0 })]);
+        expect(run.watcherTalks).toEqual([]);
     });
 
     it('the committed tape crosses the census\'s old square, and the game recorded the crossing', () => {
