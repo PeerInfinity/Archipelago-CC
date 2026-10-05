@@ -14,7 +14,11 @@
  *                 rect clears `playerTouching`, and the way back FIRES — on the
  *                 tick the model names.
  *   SOLVER-<door> (D3) the solver's own `reach-exit` plan from the arrival:
- *                 its step-off, then the crossing.
+ *                 its step-off, then the crossing. ⛓ STEPOFF2: the step-off is
+ *                 the MINIMAL one (one axis held until the box clears the rect,
+ *                 sub-pixel), and three more doors join (`STEPOFF2_DOORS`): L12
+ *                 `teleporter@40,688` and L65 `teleporter@184,64`, which no tile
+ *                 centre rings, and L3's pocket WITH THE SWORD (break, step off).
  *
  * Every arm's game stream is compared with the model's (`runTape`) row for
  * row, positions exact; transitions are derived from the game's tick stream.

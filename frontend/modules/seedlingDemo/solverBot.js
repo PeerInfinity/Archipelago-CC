@@ -2777,6 +2777,80 @@ export function stepOffCellFor(run, index, planOpts) {
     return null;
 }
 
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY STEPOFF2, D1 — **THE MINIMAL STEP-OFF: a sub-pixel
+ * hold along one axis, not a walk to a tile centre.** The game's rule
+ * (STEP-OFF D1, measured on two teleporters and one stairs door): the latch
+ * clears on ONE door update the player box does not overlap the 16x16 rect
+ * (positive-area, so edge-touching is off), and 0.05 px off suffices. So the
+ * cheapest step-off holds ONE direction from the arrival until the post-move
+ * box first clears the rect — the door's next update (the walk back's first
+ * tick) releases the latch.
+ *
+ * Each direction is previewed with the run's own stepper (`previewStepper`)
+ * and `chooseHeld` toward an aim 16 px past the clearing line on that axis —
+ * the same choice the drive makes — for at most `STEP_OFF_MAX_TICKS`. A
+ * direction is REJECTED by name when the box never clears (a wall or the map
+ * edge stops it), when the stepper starts a fall, crosses a door, dies, or
+ * puts the player in water without the conch or lava without the dark suit
+ * (`hazard` names which). Cardinals first; the diagonals only when no
+ * cardinal clears. The danger probe is the solve's own (the caller's).
+ *
+ * Returns every candidate, cheapest first: `{dir, aim, ticks, at}` (`ticks`
+ * holds, `at` the first off position) or `{dir, aim, rejected: why}`.
+ */
+export const STEP_OFF_MAX_TICKS = 60;
+const STEP_OFF_DIRS = Object.freeze([
+    ['up', 0, -1], ['down', 0, 1], ['left', -1, 0], ['right', 1, 0],
+]);
+const STEP_OFF_DIAGONALS = Object.freeze([
+    ['up-left', -1, -1], ['up-right', 1, -1], ['down-left', -1, 1], ['down-right', 1, 1],
+]);
+export function stepOffMinimalFor(run, index, tolerance = DEFAULT_TOLERANCE) {
+    const r = run.world.teleporters[index].rect;
+    const s0 = run.state;
+    // The clearing line on each axis: the centre at which the box's far edge
+    // touches the rect's near edge (`playerBoxAt`'s own geometry).
+    const clearX = (dx) => (dx < 0 ? r.x - (HITBOX.width - HITBOX.originX) : r.right + HITBOX.originX);
+    const clearY = (dy) => (dy < 0 ? r.y - (HITBOX.height - HITBOX.originY) : r.bottom + HITBOX.originY);
+    const off = (st) => !rectsOverlap(playerBoxAt(st.x, st.y), r);
+    const inventory = run.progress('inventory');
+    const tryDir = ([dir, dx, dy]) => {
+        const aim = {
+            x: dx === 0 ? s0.x : clearX(dx) + dx * TILE_SIZE,
+            y: dy === 0 ? s0.y : clearY(dy) + dy * TILE_SIZE,
+        };
+        const step = run.previewStepper();
+        let st = { ...s0 };
+        for (let k = 0; k <= STEP_OFF_MAX_TICKS; k += 1) {
+            if (off(st)) return { dir, aim, ticks: k, at: { x: st.x, y: st.y } };
+            try {
+                st = step(st, chooseHeld(st, aim, tolerance));
+            } catch (e) {
+                if (!(e instanceof PhysicsV2Error)) throw e;
+                return { dir, aim, rejected: `dies: ${e.message.slice(0, 80)}` };
+            }
+            if (st.transition) return { dir, aim, rejected: `crosses to level ${st.transition.to_level}` };
+            if (st.fall) return { dir, aim, rejected: `falls at (${st.x},${st.y})` };
+            // ⚠ Hazard floor without its item (`checkDrowning`: water without
+            // the conch, lava without the dark suit) — the step-off is not
+            // spent drowning, even when eleven ticks would not yet kill.
+            if (st.hazard?.inLava && !inventory?.hasDarkSuit) {
+                return { dir, aim, hazard: 'lava', rejected: `enters lava at (${st.x},${st.y})` };
+            }
+            if (st.hazard?.inWater && !inventory?.canSwim) {
+                return { dir, aim, hazard: 'water', rejected: `enters water at (${st.x},${st.y})` };
+            }
+        }
+        return { dir, aim, rejected: `the box is still on the rect after ${STEP_OFF_MAX_TICKS} ticks `
+            + `(stopped at (${st.x},${st.y}): a wall or the map edge)` };
+    };
+    const byCost = (a, b) => (a.rejected ? 1 : 0) - (b.rejected ? 1 : 0) || (a.ticks ?? 0) - (b.ticks ?? 0);
+    const cardinal = STEP_OFF_DIRS.map(tryDir).sort(byCost);
+    if (cardinal.some((c) => !c.rejected)) return cardinal;
+    return [...STEP_OFF_DIAGONALS.map(tryDir).sort(byCost), ...cardinal];
+}
+
 function solverPlanOpts(run, contacts, extra = {}) {
     return {
         liveBag: run.liveGeometryOpts(),
@@ -13346,18 +13420,169 @@ function solveSegmentUnder({
      *
      * Returns the step-off's record, or null when the door is not latched.
      */
+    let brokeForStepOff = false;
     const stepOffIfLatched = (goal, index, teleporter, whatExit) => {
         if (run.state.latched?.has?.(index) !== true) return null;
         const id = `${teleporter.isStairs ? 'stairs' : 'teleporter'}@${teleporter.x},${teleporter.y}`;
         const contacts = new Set([...senseContacts(run), ...exemptions, ...goalRides]);
+        /**
+         * ⛓⛓⛓ STEPOFF2, D1 — the MINIMAL step-off first: one direction held
+         * until the box clears the rect (`stepOffMinimalFor`), the cheapest
+         * whose transit the danger probe clears (`previewWalk` stopped on the
+         * same "off" test, then `probeSamples`, the solve's own predicate).
+         * The drive holds exactly the preview's keys for exactly its ticks, and
+         * a run that does not end off the rect, or crosses, or falls, fails by
+         * name. The walk back (below, the caller's `walkTo`) is the crossing;
+         * its first tick is the door's update that releases the latch.
+         */
+        const r = teleporter.rect;
+        const offRect = (x, y) => !rectsOverlap(playerBoxAt(x, y), r);
+        const candidates = stepOffMinimalFor(run, index, tolerance);
+        const rejected = [];
+        let chosen = null;
+        for (const c of candidates) {
+            if (c.rejected) { rejected.push({ option: `step-off ${c.dir}`, why: c.rejected }); continue; }
+            const walk = previewWalk(run, [c.aim], tolerance,
+                { strike: null, stopWhen: (sm) => offRect(sm.x, sm.y) });
+            const hit = probeSamples(walk.samples);
+            if (hit) {
+                rejected.push({ option: `step-off ${c.dir}`, why: `danger at (${hit.x},${hit.y}): `
+                    + (hit.sources ?? []).map((s) => `${s.kind}:${s.id ?? '?'}`).join(', ') });
+                continue;
+            }
+            chosen = c;
+            break;
+        }
+        if (chosen) {
+            const at = perTick.length;
+            seeRow({
+                tick: at,
+                saw: saw(),
+                goal: { kind: goal.kind, exit: { x: goal.exit.x, y: goal.exit.y } },
+                obstacle: { kind: 'latched-door', id },
+                strategy: { verb: 'step-off', dir: chosen.dir, ticks: chosen.ticks,
+                    to: { x: chosen.at.x, y: chosen.at.y } },
+                rejected,
+                keys: [],
+            });
+            for (let k = 0; k < chosen.ticks; k += 1) {
+                const held = chooseHeld(run.state, chosen.aim, tolerance);
+                perTick.push(held);
+                const { transition } = run.advance(held);
+                if (transition || run.state.fall) {
+                    refuse(`${whatExit}: the ${chosen.dir} step-off off ${id} ${transition
+                        ? `crossed to level ${transition.to_level}` : 'started a fall'} at tick `
+                        + `${k + 1} — the preview said it would not (a model/preview disagreement).`, {
+                        goal, obstacle: { kind: 'latched-door', id },
+                    });
+                }
+            }
+            if (!offRect(run.state.x, run.state.y)) {
+                refuse(`${whatExit}: the ${chosen.dir} step-off held ${chosen.ticks} tick(s) and the box `
+                    + `is still on ${id} at (${run.state.x},${run.state.y}) — the preview said `
+                    + `(${chosen.at.x},${chosen.at.y}) (a model/preview disagreement).`, {
+                    goal, obstacle: { kind: 'latched-door', id },
+                });
+            }
+            return { door: id, dir: chosen.dir, to: { x: run.state.x, y: run.state.y }, from: at,
+                ticks: perTick.length - at };
+        }
         const cell = stepOffCellFor(run, index, solverPlanOpts(run, contacts, goalPlanExtra));
+        if (cell === null && !brokeForStepOff) {
+            /**
+             * ⛓⛓⛓ STEPOFF2, D3 — **A ROCK IN THE RING IS A STEP-OFF CELL THE
+             * RUN CAN MAKE.** L3's pocket from L11: `breakablerock@96,112`
+             * walls the door's only way off. With a sword the rock breaks from
+             * the door itself (a swing from the arrival reaches it — the
+             * committed `r9-solve-3` breaks it from there), and the step-off is
+             * asked again of the world the break changed. Only a rock whose
+             * box touches the ring, only from the live position (the run is
+             * latched: there is nowhere else to stand), and only when the run
+             * CAN break it — without a weapon `resolveBreakStrategy`'s own
+             * refusal joins the `closed` words and nothing is pressed.
+             */
+            const ring = { x: r.x - TILE_SIZE, y: r.y - TILE_SIZE,
+                right: r.right + TILE_SIZE, bottom: r.bottom + TILE_SIZE };
+            const broken = run.entities('brokenRocks') ?? new Set();
+            const rocks = (run.world.solids ?? [])
+                .filter((so) => so.rockId && !broken.has(so.rockId) && rectsOverlap(so.rect, ring))
+                .sort((a, b) => distanceRectPoint(run.state.x, run.state.y, a.rect)
+                    - distanceRectPoint(run.state.x, run.state.y, b.rect) || (a.rockId < b.rockId ? -1 : 1));
+            for (const rock of rocks) {
+                const resolved = resolveBreakStrategy(run, { id: rock.rockId }, contacts);
+                if (!resolved) continue;
+                if (resolved.held === false) { rejected.push(...resolved.rejected); continue; }
+                if (!swingReaches(run.state, rock)) {
+                    rejected.push({ option: `break ${rock.rockId}`, why: 'a swing from the door does '
+                        + `not reach it (SLASH_REACH ${SLASH_REACH} px), and the latched run has no `
+                        + 'other cell to swing from' });
+                    continue;
+                }
+                seeRow({
+                    tick: perTick.length,
+                    saw: saw(),
+                    goal: { kind: goal.kind, exit: { x: goal.exit.x, y: goal.exit.y } },
+                    obstacle: { kind: 'latched-door', id },
+                    strategy: { verb: 'break', postCondition: 'gone', for: 'step-off' },
+                    rejected: [...rejected],
+                    keys: [],
+                });
+                const rec = STRATEGY_EXECUTORS.break(run, perTick, { ...resolved, stance: null },
+                    { what: `${whatExit} -> break ${rock.rockId} (step-off)` });
+                records.push({ goal: goal.kind, strategy: 'break', ...rec });
+                brokeForStepOff = true;
+                return stepOffIfLatched(goal, index, teleporter, whatExit);
+            }
+        }
         if (cell === null) {
+            /**
+             * ⛓ STEPOFF2, D2 — A DOOR WHOSE ONLY WAY OFF IS HAZARD FLOOR IS NOT
+             * `closed`. When some direction's box clears the rect only across
+             * water (no conch) or lava (no dark suit), the door opens with that
+             * item: `hazard-floor`, by name, with every direction's reason, so
+             * CANCROSS's caller can read the item the crossing needs.
+             */
+            const floors = [...new Set(candidates.filter((c) => c.hazard).map((c) => c.hazard))].sort();
+            if (floors.length > 0) {
+                const need = floors.map((f) => (f === 'water' ? 'water without the conch'
+                    : 'lava without the dark suit')).join('; ');
+                // ⚠ The `closed — …` clause stays word for word: it is still true
+                // without the item, and the JS arc's rows quote it (they re-pin to
+                // `obstacle.kind`, which is the new name).
+                refuse(`${whatExit}: hazard-floor — every way off ${id}'s rect crosses `
+                    + `${floors.join(' or ')} the run cannot stand on (${need}); without that, closed — `
+                    + `the run stands LATCHED on ${id} in level ${run.level} and no standable cell next to `
+                    + 'it can be walked to. The door fires only after one update with the box off its '
+                    + `rect. Directions: ${rejected.map((c) => `${c.option}: ${c.why}`).join('; ')}.`, {
+                    goal, obstacle: { kind: 'hazard-floor', id, floors }, considered: rejected,
+                });
+            }
+            /**
+             * ⛓ STEPOFF2, D2 — AND A RUN THAT STANDS INSIDE A SOLID IS NOT IN A
+             * POCKET. A door under a lock (L66's `bosslock@72,64`, L24's pair)
+             * boots the box inside the lock's solid, and every direction stalls
+             * where it started. The name is the solid, so the opener is the
+             * work order.
+             */
+            const box = playerBoxAt(run.state.x, run.state.y);
+            const inside = (run.world.solids ?? []).filter((so) => so.rect && rectsOverlap(so.rect, box))
+                .map((so) => so.rockId ?? so.id ?? `${so.tag ?? so.cls?.as3 ?? 'solid'}@${so.x ?? so.rect.x},`
+                    + `${so.y ?? so.rect.y}`);
+            if (inside.length > 0) {
+                refuse(`${whatExit}: inside-solid — the run stands LATCHED on ${id} in level ${run.level} `
+                    + `with its box INSIDE ${inside.join(', ')}: no direction moves it (every step-off stalls `
+                    + 'where it started), so the door cannot be stepped off until that solid is gone.', {
+                    goal, obstacle: { kind: 'inside-solid', id, solids: inside }, considered: rejected,
+                });
+            }
             refuse(`${whatExit}: closed — the run stands LATCHED on ${id} in level ${run.level} `
                 + '(`Teleporter.check()` latched it on the arrival frame) and no standable cell '
                 + 'next to it can be walked to. The door fires only on an update the player box '
                 + 'is off its rect and the next one it is back on, so a crossing needs the player '
-                + 'to step off it and back on.', {
-                goal, obstacle: { kind: 'closed', id },
+                + 'to step off it and back on.'
+                + (rejected.length ? ` Considered: ${rejected.map((c) => `${c.option} — `
+                    + `${c.why.split(' — ')[0].slice(0, 120)}`).join('; ')}.` : ''), {
+                goal, obstacle: { kind: 'closed', id }, considered: rejected,
             });
         }
         const at = perTick.length;
@@ -13372,6 +13597,52 @@ function solveSegmentUnder({
         });
         walkTo(goal, cell, { allowTeleporter: index, what: `${whatExit} step-off to (${cell.x},${cell.y})` });
         return { door: id, to: { x: cell.x, y: cell.y }, from: at, ticks: perTick.length - at };
+    };
+
+    /**
+     * ⛓⛓ STEPOFF2, D1 — **THE WAY BACK FROM A MINIMAL STEP-OFF IS STRAIGHT
+     * BACK.** The player stands a fraction of a pixel off the rect, still
+     * moving away; the corridor back is the one the step-off just previewed.
+     * The planner is not asked: its A\* start node is the TILE under a
+     * sub-pixel position, which beside a door is often a wall's or the door's
+     * own (measured: L83's cliffside, L74's frontier). So the walk back is
+     * `chooseHeld` toward the door's centre, previewed first (`previewWalk`,
+     * the danger probe on its samples) and accepted only when the preview
+     * CROSSES within `STEP_OFF_MAX_TICKS`; then driven tick for tick, and the
+     * crossing must be this door's (level and arrival). Null hands the walk
+     * back to the ordinary `walkTo`.
+     */
+    const returnOntoDoor = (goal, index, teleporter, centre, whatExit) => {
+        const walk = previewWalk(run, [centre], tolerance, { strike: null });
+        if (walk.truncated?.kind !== 'crossed' || walk.samples.length > STEP_OFF_MAX_TICKS) return null;
+        if (probeSamples(walk.samples)) return null;
+        seeRow({
+            tick: perTick.length,
+            saw: saw(),
+            goal: { kind: goal.kind, aim: { x: centre.x, y: centre.y } },
+            strategy: { verb: 'walk', waypoints: 1, back: true },
+            path: [{ x: centre.x, y: centre.y }],
+            rejected: [],
+            keys: [],
+        });
+        for (let k = 0; k <= STEP_OFF_MAX_TICKS; k += 1) {
+            const held = run.state.fall ? new Set() : chooseHeld(run.state, centre, tolerance);
+            perTick.push(held);
+            const { transition } = run.advance(held);
+            if (!transition) continue;
+            if (transition.to_level !== teleporter.to || run.state.x !== teleporter.arrival.x
+                || run.state.y !== teleporter.arrival.y) {
+                refuse(`${whatExit}: the walk back onto the door crossed to level ${transition.to_level} `
+                    + `at (${run.state.x},${run.state.y}), not this door's arrival (level ${teleporter.to} `
+                    + `at (${teleporter.arrival.x},${teleporter.arrival.y})).`, {
+                    goal, obstacle: { kind: 'latched-door', id: `teleporter@${teleporter.x},${teleporter.y}` },
+                });
+            }
+            return transition;
+        }
+        refuse(`${whatExit}: the walk back onto the door did not cross within ${STEP_OFF_MAX_TICKS} `
+            + 'ticks — the preview said it would (a model/preview disagreement).', { goal });
+        return null;
     };
 
     // ── the goals, in order ───────────────────────────────────────────
@@ -13502,11 +13773,12 @@ function solveSegmentUnder({
             const whatExit = `solverBot(${name}) reach-exit (${goal.exit.x},${goal.exit.y})`
                 + `->L${teleporter.to}`;
             const stepOff = stepOffIfLatched(goal, index, teleporter, whatExit);
-            const t = walkTo(goal, centre, {
-                allowTeleporter: index,
-                crossTo,
-                what: whatExit,
-            });
+            const t = (stepOff?.dir ? returnOntoDoor(goal, index, teleporter, centre, whatExit) : null)
+                ?? walkTo(goal, centre, {
+                    allowTeleporter: index,
+                    crossTo,
+                    what: whatExit,
+                });
             records.push({ goal: 'reach-exit', to: teleporter.to, t: t.t, ...(stepOff ? { stepOff } : {}) });
             continue;
         }
