@@ -1115,6 +1115,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'crossing\'s last tick is the L12 arrival (40,704), far from the puncher; no hit, '
                 + 'no kill.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity L14 — the swordless crossing the DETOUR rung
+         * found: route D's live L13 → L14 arrival, six bobs, no weapon.
+         */
+        Object.freeze({
+            name: 'l14-swordless-detour', levels: Object.freeze([14]), bobs: 6, ticks: 173,
+            addedBy: 'Seedling fidelity L14 (the DETOUR rung: a longer corridor the bobs cannot close on)',
+            why: 'from (160,64) the corridor bends through (120,40) and (104,24), over the pack, '
+                + 'onto `stairsdown@32,64`; it takes no hit, kills nothing, and crosses on t 173.',
+        }),
     ]),
 
     /**
@@ -1859,6 +1869,23 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
                 + 'question and stays refused unless a room actually needs one.',
             refusesWith: 'no presser in the room arms a lane over the body, or the class '
                 + 'has no modelled kill arm and no ceiling covers it',
+        }),
+        /**
+         * ⛓⛓ SEEDLING FIDELITY L14 — THE LAST RUNG, asked only when KILL refused:
+         * a LONGER corridor bent through via cells, previewed with the chasers
+         * stepped against it (`solverBot.deriveChaserDetour`). L14 swordless.
+         * CONDITIONAL: present only when every danger the probe named is a chaser.
+         */
+        Object.freeze({
+            rung: 'detour',
+            conditional: true,
+            tool: 'a best-first search over corridors bent through at most '
+                + '`DETOUR_RUNG.maxVias` via cells, each leg the planner\'s own, each candidate '
+                + 'previewed with the chasers stepped against it and certified by the corridor '
+                + 'probe\'s own predicate (`probeSamples`)',
+            refusesWith: 'no bent corridor probes clean inside `DETOUR_RUNG.maxPreviews` '
+                + 'previews, with the counts named (the rung is ABSENT, not refused, when the '
+                + 'probe named anything but a chaser)',
         }),
     ]),
 

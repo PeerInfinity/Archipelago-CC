@@ -149,7 +149,8 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity F6: 204 — `f6-l17-reentry`, `f6-l2-reentry`, `f6-l20-reentry`, inert.
         // ⛓ fidelity F7: 206 — `f7-l16-reentry`, `f7-l16-walkin`, inert.
         // ⛓ fidelity BURN: 208 — `burn-l24-reach-exit`, `burn-l44-reach-exit`, inert.
-        expect(rows).toHaveLength(208);
+        // ⛓ fidelity L14: 209 — `l14-swordless-detour`.
+        expect(rows).toHaveLength(209);
         expect(rows.length - parted.length).toBe(207);
     }, SWEEP_TIMEOUT_MS);
 

@@ -1,0 +1,275 @@
+{
+    "tape_version": 11,
+    "game": "seedling",
+    "boot": {
+        "level": 14,
+        "x": 160,
+        "y": 64
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 86,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 338773056,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 438111729
+    },
+    "seam": {
+        "items": {
+            "hasSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "time": 5704,
+        "primary": 0,
+        "secondary": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 173,
+    "inputs": [
+        {
+            "key": "up",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "left",
+            "from": 0,
+            "to": 26
+        },
+        {
+            "key": "down",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "up",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "down",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "up",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "down",
+            "from": 18,
+            "to": 20
+        },
+        {
+            "key": "up",
+            "from": 22,
+            "to": 24
+        },
+        {
+            "key": "right",
+            "from": 26,
+            "to": 27
+        },
+        {
+            "key": "down",
+            "from": 27,
+            "to": 28
+        },
+        {
+            "key": "left",
+            "from": 30,
+            "to": 41
+        },
+        {
+            "key": "up",
+            "from": 30,
+            "to": 41
+        },
+        {
+            "key": "down",
+            "from": 41,
+            "to": 42
+        },
+        {
+            "key": "right",
+            "from": 41,
+            "to": 42
+        },
+        {
+            "key": "left",
+            "from": 42,
+            "to": 43
+        },
+        {
+            "key": "up",
+            "from": 42,
+            "to": 43
+        },
+        {
+            "key": "down",
+            "from": 43,
+            "to": 44
+        },
+        {
+            "key": "right",
+            "from": 43,
+            "to": 44
+        },
+        {
+            "key": "left",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "up",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "right",
+            "from": 45,
+            "to": 46
+        },
+        {
+            "key": "left",
+            "from": 46,
+            "to": 47
+        },
+        {
+            "key": "down",
+            "from": 49,
+            "to": 50
+        },
+        {
+            "key": "left",
+            "from": 54,
+            "to": 65
+        },
+        {
+            "key": "up",
+            "from": 54,
+            "to": 65
+        },
+        {
+            "key": "down",
+            "from": 65,
+            "to": 66
+        },
+        {
+            "key": "right",
+            "from": 65,
+            "to": 66
+        },
+        {
+            "key": "left",
+            "from": 66,
+            "to": 67
+        },
+        {
+            "key": "up",
+            "from": 66,
+            "to": 67
+        },
+        {
+            "key": "down",
+            "from": 67,
+            "to": 68
+        },
+        {
+            "key": "right",
+            "from": 67,
+            "to": 68
+        },
+        {
+            "key": "left",
+            "from": 68,
+            "to": 69
+        },
+        {
+            "key": "up",
+            "from": 68,
+            "to": 70
+        },
+        {
+            "key": "down",
+            "from": 71,
+            "to": 73
+        },
+        {
+            "key": "right",
+            "from": 74,
+            "to": 75
+        },
+        {
+            "key": "left",
+            "from": 78,
+            "to": 131
+        },
+        {
+            "key": "right",
+            "from": 131,
+            "to": 132
+        },
+        {
+            "key": "left",
+            "from": 132,
+            "to": 134
+        },
+        {
+            "key": "right",
+            "from": 135,
+            "to": 137
+        },
+        {
+            "key": "down",
+            "from": 141,
+            "to": 173
+        }
+    ],
+    "name": "l14-swordless-detour",
+    "description": "⛓⛓⛓ SEEDLING FIDELITY L14 — THE SWORDLESS CROSSING, ON THE GAME. A live wasm arrival (route D, L13 → L14 at (160,64), no weapon; `capture-vm-old.json` read 4) solved by `solveSegment` (dashMode none). Every rung up to KILL refuses it — six bobs, no trap, no pit, no sword — and the DETOUR rung bends the corridor through (120,40) → (104,24) over the pack onto `stairsdown@32,64`: 173 ticks, no hit. Authored by scripts/procgen/plan-seedling-l14-swordless.mjs.",
+    "note": ""
+}

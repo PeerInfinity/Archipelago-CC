@@ -161,6 +161,13 @@
       ]
     },
     {
+      "file": "l14-swordless-detour.json",
+      "tickCount": 173,
+      "bootLevel": 14,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "l71-button-lock.json",
       "tickCount": 160,
       "bootLevel": 71,
