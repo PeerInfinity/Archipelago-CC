@@ -394,7 +394,11 @@
     }
   },
   "helpers": {},
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "return_to_menu": true
+    }
+  },
   "canonical_placements": {
     "1": {}
   },

@@ -43,12 +43,16 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // r0c19 -> r0c37 loses its Swim half (its water way now runs past the tree); plain Has(Swim) 178 -> 179.
     // ⛓ RULES patched-set — restamped (0cdaf2c2 -> 78d22cb4): L110's pit CHAINS (its fall fires L0's
     // stairs mid-descent) and now exits to level_2 (3,2), not level_0. Boundary exits only; every count holds.
-    it('52 regions carry a subgraph: 190 sub-regions, 295 internal exits, 218 of them need Progressive Swim', () => {
-        expect(c.atlasId).toBe('seedling-78d22cb4');
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 52, 190, 295, 218]);
+    // ⛓ RULES re-closing locks — restamped (78d22cb4 -> b3ac708a): a grouped lock only a plain Button opens is
+    // entered only from a side that can work the button this visit, so L15/L16/L28/L39/L41/L71 split at theirs:
+    // 52 -> 54 regions with a subgraph, 190 -> 198 sub-regions, 295 -> 304 internal exits. L15's arrival column
+    // reaches its button only by swimming: plain Has(Swim) 179 -> 181, swim 218 -> 220.
+    it('54 regions carry a subgraph: 198 sub-regions, 304 internal exits, 220 of them need Progressive Swim', () => {
+        expect(c.atlasId).toBe('seedling-b3ac708a');
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 54, 198, 304, 220]);
         expect(c.swimLevels).toHaveLength(22);
         expect(c.byRule.slice(0, 2)).toEqual([
-            { rule: 'Has(Progressive Swim)', count: 179 },
+            { rule: 'Has(Progressive Swim)', count: 181 },
             { rule: 'Has(Progressive Swim, 2)', count: 33 },
         ]);
     });

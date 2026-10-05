@@ -336,8 +336,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   rules; the L12 chest moves r0c37 -> r42c29 (behind its tree). The location SET is unchanged.
         // ⛓ RULES patched-set (d43eee56… -> 81742e21): L110's chained pit exits to level_2 (3,2), not level_0 —
         //   one exit pair and one connection; no location moves.
+        // ⛓ RULES re-closing locks (81742e21… -> ec818c86): six levels split at a button-only lock — sub-regions,
+        //   internal exits and two location bindings (L39, L41 totem parts); no name changes.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('81742e21f11b45aa1874fc909f601f53');
+            .toBe('ec818c86c4bdd2e0943e7c5b5f48fe7f');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);

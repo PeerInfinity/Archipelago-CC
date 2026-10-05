@@ -129,7 +129,9 @@ describe('flash_seedling — the atlas install knob (S2 D1)', () => {
         //   L110 pit arrival bind to r8c0, the component the physics model's flood reaches from them.
         // ⛓ RULES burnable-trees: 168 -> 171 — the sub-regions split off along the trees that hold doors:
         //   L12 r42c29, L37 r12c6, L44 r6c4 (L40's r48c54 holds none).
-        expect(entry.zoneCount).toBe(171);
+        // ⛓ RULES re-closing locks: 171 -> 175 — the levels split at a button-only lock add zones with doors
+        //   (L15's L16 arrival column, L16's L18-side pocket, L39's L40-side pocket and one more).
+        expect(entry.zoneCount).toBe(175);
         entry.prepareSphereGrowth({ params: {} });
         expect(entry.rulesJsonBlocks().region_atlas.atlas_id).toBe(SEEDLING_STARTER_ATLAS.atlas_id);
     });

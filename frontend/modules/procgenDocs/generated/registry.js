@@ -36,13 +36,13 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/bounceDemo/bounceDemoLibrary.js"
         },
         {
-            "fields": 32,
+            "fields": 33,
             "id": "flash_seedling",
             "label": "Seedling (region atlas)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingLibrary.js"
         },
         {
-            "fields": 31,
+            "fields": 32,
             "id": "flash_seedling_gen",
             "label": "Seedling (generated room)",
             "registeredBy": "frontend/modules/flashPanel/flashSeedlingGenBuild.js"
@@ -182,6 +182,7 @@ export const REGISTRY = frz({
                 "pipelineConfigFromParams",
                 "pipelineConfigKeys",
                 "recordablePipelineConfig",
+                "restartWarp",
                 "rulesJsonBlocks",
                 "spiralContentConfigKey",
                 "victoryItem",
@@ -6282,6 +6283,95 @@ export const REGISTRY = frz({
             "documentedHow": "bullet",
             "group": "Build-time — driver-facing adapter hooks (bounce, runner, and the maze's panel subset)",
             "name": "renderProcgenParams"
+        },
+        {
+            "carriedBy": [
+                "flash_seedling",
+                "flash_seedling_gen"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": true,
+                    "short": "{cite, label, target}",
+                    "type": "object",
+                    "value": [
+                        "cite",
+                        "label",
+                        "target"
+                    ]
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": true,
+                    "short": "{cite, label, target}",
+                    "type": "object",
+                    "value": [
+                        "cite",
+                        "label",
+                        "target"
+                    ]
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Build-time — content sources (zone-based substrates)",
+            "name": "restartWarp"
         },
         {
             "carriedBy": [

@@ -88,6 +88,8 @@ class SeedlingPlaythroughWorld(RuleWorldMixin, World):
     rule_caching_enabled: ClassVar[bool] = False
     # The source slot's exporter[p].assume_bidirectional_exits, re-exported by the exporter
     assume_bidirectional_exits: ClassVar[bool] = False
+    # The source slot's exporter[p].return_to_menu (returning to the menu is always possible), re-exported by the exporter
+    return_to_menu: ClassVar[bool] = True
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None

@@ -958,6 +958,13 @@
         "name": "level_15__r1c5",
         "exits": [
           {
+            "name": "level_15__r1c5 -> level_15__r1c9",
+            "connected_region": "level_15__r1c9",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
             "name": "level_15__r1c5 -> level_15__r6c8",
             "connected_region": "level_15__r6c8",
             "access_rule": {
@@ -973,10 +980,36 @@
             "access_rule": {
               "rule": "True_"
             }
+          }
+        ],
+        "locations": []
+      },
+      "level_15__r1c9": {
+        "name": "level_15__r1c9",
+        "exits": [
+          {
+            "name": "level_15__r1c9 -> level_15__r1c5",
+            "connected_region": "level_15__r1c5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
           },
           {
-            "name": "level_15__r1c5 -> level_16",
-            "connected_region": "level_16",
+            "name": "level_15__r1c9 -> level_15__r6c8",
+            "connected_region": "level_15__r6c8",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_15__r1c9 -> level_16__r1c1",
+            "connected_region": "level_16__r1c1",
             "access_rule": {
               "rule": "True_"
             }
@@ -990,6 +1023,16 @@
           {
             "name": "level_15__r6c8 -> level_15__r1c5",
             "connected_region": "level_15__r1c5",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_15__r6c8 -> level_15__r1c9",
+            "connected_region": "level_15__r1c9",
             "access_rule": {
               "rule": "Has",
               "args": {
@@ -1015,75 +1058,88 @@
           }
         ]
       },
-      "level_16": {
-        "name": "level_16",
+      "level_16__r1c1": {
+        "name": "level_16__r1c1",
         "exits": [
           {
-            "name": "level_16 -> level_15__r1c5",
-            "connected_region": "level_15__r1c5",
+            "name": "level_16__r1c1 -> level_16__r4c21",
+            "connected_region": "level_16__r4c21",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_16 -> level_17",
+            "name": "level_16__r1c1 -> level_15__r1c9",
+            "connected_region": "level_15__r1c9",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17",
             "connected_region": "level_17",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_16 -> level_18__r1c1",
+            "name": "level_16__r1c1 -> level_17 #2",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #3",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #4",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #5",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #6",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #7",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_16__r1c1 -> level_17 #8",
+            "connected_region": "level_17",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_16__r4c21": {
+        "name": "level_16__r4c21",
+        "exits": [
+          {
+            "name": "level_16__r4c21 -> level_18__r1c1",
             "connected_region": "level_18__r1c1",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_16 -> level_17 #2",
-            "connected_region": "level_17",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_16 -> level_17 #3",
-            "connected_region": "level_17",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_16 -> level_17 #4",
-            "connected_region": "level_17",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_16 -> level_17 #5",
-            "connected_region": "level_17",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_16 -> level_17 #6",
-            "connected_region": "level_17",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_16 -> level_17 #7",
-            "connected_region": "level_17",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_16 -> level_17 #8",
-            "connected_region": "level_17",
             "access_rule": {
               "rule": "True_"
             }
@@ -1095,8 +1151,8 @@
         "name": "level_17",
         "exits": [
           {
-            "name": "level_17 -> level_16",
-            "connected_region": "level_16",
+            "name": "level_17 -> level_16__r1c1",
+            "connected_region": "level_16__r1c1",
             "access_rule": {
               "rule": "True_"
             }
@@ -1136,8 +1192,8 @@
             }
           },
           {
-            "name": "level_18__r1c1 -> level_16",
-            "connected_region": "level_16",
+            "name": "level_18__r1c1 -> level_16__r4c21",
+            "connected_region": "level_16__r4c21",
             "access_rule": {
               "rule": "True_"
             }
@@ -1628,8 +1684,8 @@
             }
           },
           {
-            "name": "level_27 -> level_28__r1c18",
-            "connected_region": "level_28__r1c18",
+            "name": "level_27 -> level_28__r11c4",
+            "connected_region": "level_28__r11c4",
             "access_rule": {
               "rule": "True_"
             }
@@ -1661,15 +1717,28 @@
         "name": "level_28__r1c18",
         "exits": [
           {
-            "name": "level_28__r1c18 -> level_27",
-            "connected_region": "level_27",
+            "name": "level_28__r1c18 -> level_30__r2c10",
+            "connected_region": "level_30__r2c10",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_28__r11c4": {
+        "name": "level_28__r11c4",
+        "exits": [
+          {
+            "name": "level_28__r11c4 -> level_28__r1c18",
+            "connected_region": "level_28__r1c18",
             "access_rule": {
               "rule": "True_"
             }
           },
           {
-            "name": "level_28__r1c18 -> level_30__r2c10",
-            "connected_region": "level_30__r2c10",
+            "name": "level_28__r11c4 -> level_27",
+            "connected_region": "level_27",
             "access_rule": {
               "rule": "True_"
             }
@@ -2334,8 +2403,8 @@
             }
           },
           {
-            "name": "level_38__r0c9 -> level_39",
-            "connected_region": "level_39",
+            "name": "level_38__r0c9 -> level_39__r2c11",
+            "connected_region": "level_39__r2c11",
             "access_rule": {
               "rule": "True_"
             }
@@ -2381,19 +2450,12 @@
         ],
         "locations": []
       },
-      "level_39": {
-        "name": "level_39",
+      "level_39__r0c9": {
+        "name": "level_39__r0c9",
         "exits": [
           {
-            "name": "level_39 -> level_40__r23c29",
+            "name": "level_39__r0c9 -> level_40__r23c29",
             "connected_region": "level_40__r23c29",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_39 -> level_38__r0c9",
-            "connected_region": "level_38__r0c9",
             "access_rule": {
               "rule": "True_"
             }
@@ -2415,6 +2477,26 @@
             "locked": false
           }
         ]
+      },
+      "level_39__r2c11": {
+        "name": "level_39__r2c11",
+        "exits": [
+          {
+            "name": "level_39__r2c11 -> level_39__r0c9",
+            "connected_region": "level_39__r0c9",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_39__r2c11 -> level_38__r0c9",
+            "connected_region": "level_38__r0c9",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
       },
       "level_40__r0c53": {
         "name": "level_40__r0c53",
@@ -2589,8 +2671,8 @@
             }
           },
           {
-            "name": "level_40__r23c29 -> level_39",
-            "connected_region": "level_39",
+            "name": "level_40__r23c29 -> level_39__r0c9",
+            "connected_region": "level_39__r0c9",
             "access_rule": {
               "rule": "True_"
             }
@@ -3030,6 +3112,32 @@
                   "Progressive Sword"
                 ]
               }
+            }
+          },
+          {
+            "name": "level_41__r4c15 -> level_41__r7c15",
+            "connected_region": "level_41__r7c15",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "Progressive Sword"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_41__r7c15": {
+        "name": "level_41__r7c15",
+        "exits": [
+          {
+            "name": "level_41__r7c15 -> level_41__r4c15",
+            "connected_region": "level_41__r4c15",
+            "access_rule": {
+              "rule": "True_"
             }
           }
         ],
@@ -6842,19 +6950,6 @@
         "name": "level_71__r0c6",
         "exits": [
           {
-            "name": "level_71__r0c6 -> level_71__r13c7",
-            "connected_region": "level_71__r13c7",
-            "access_rule": {
-              "rule": "HasAny",
-              "args": {
-                "item_names": [
-                  "Ghost Spear",
-                  "Progressive Sword"
-                ]
-              }
-            }
-          },
-          {
             "name": "level_71__r0c6 -> level_71__r14c12",
             "connected_region": "level_71__r14c12",
             "access_rule": {
@@ -6914,12 +7009,38 @@
           }
         ]
       },
+      "level_71__r11c7": {
+        "name": "level_71__r11c7",
+        "exits": [
+          {
+            "name": "level_71__r11c7 -> level_71__r0c6",
+            "connected_region": "level_71__r0c6",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_71__r11c7 -> level_71__r13c7",
+            "connected_region": "level_71__r13c7",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "Progressive Sword"
+                ]
+              }
+            }
+          }
+        ],
+        "locations": []
+      },
       "level_71__r13c7": {
         "name": "level_71__r13c7",
         "exits": [
           {
-            "name": "level_71__r13c7 -> level_71__r0c6",
-            "connected_region": "level_71__r0c6",
+            "name": "level_71__r13c7 -> level_71__r11c7",
+            "connected_region": "level_71__r11c7",
             "access_rule": {
               "rule": "HasAny",
               "args": {
@@ -10432,7 +10553,8 @@
   },
   "exporter": {
     "1": {
-      "assume_bidirectional_exits": false
+      "assume_bidirectional_exits": false,
+      "return_to_menu": true
     }
   },
   "game_info": {

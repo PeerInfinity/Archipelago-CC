@@ -117,7 +117,8 @@ describe('the sixth fact — `atlas`, decided by (iii)\'s own count', () => {
         }
         // ⛓ RULES logical-links: 250 -> 247, three pockets only a model-sealed True_ row reached are pruned.
         // ⛓ RULES burnable-trees: 247 -> 251, four sub-regions split off along the burnable trees (L12, L37, L40, L44).
-        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(251);
+        // ⛓ RULES re-closing locks: 251 -> 257, six levels split at a lock only a plain Button opens.
+        expect(atlasRoomRegions(rulesOf('seedling_playthrough'))).toHaveLength(257);
         expect(atlasRoomRegions(rulesOf('seedling'))).toHaveLength(0);
         expect(atlasRoomRegions(rulesOf('seedling_generated_room'))).toHaveLength(0);
     });

@@ -167,7 +167,8 @@
   "helpers": {},
   "exporter": {
     "1": {
-      "assume_bidirectional_exits": true
+      "assume_bidirectional_exits": true,
+      "return_to_menu": true
     }
   },
   "canonical_placements": {

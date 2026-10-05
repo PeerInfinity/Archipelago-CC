@@ -892,12 +892,14 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             new URL('../flashPanel/atlases/seedling-playthrough.json', import.meta.url)), 'utf8'));
         expect(stableStringify(derivedFacts(fromXml.atlas)))
             .toBe(stableStringify(derivedFacts(committed)));
-        expect(committed.regions.filter((r) => r.subgraph)).toHaveLength(52);
+        // ⛓ RULES re-closing locks: 52 -> 54 (L16 and L39 split at their button-only locks).
+        expect(committed.regions.filter((r) => r.subgraph)).toHaveLength(54);
         // ⛓ SWIM T4 D4: 285 -> 286, L12's two-way Or(Swim, Red Key) row split by the one-sided locks.
         // ⛓ RULES (A): 286 -> 295, the nine return rows through the OPENED one-sided locks.
         // ⛓ RULES logical-links: 295 -> 289, five model-sealed True_ rows + one Swim row between two pruned pockets.
         // ⛓ RULES burnable-trees: 289 -> 295, the burnable trees' 2x2 footprints split L12/L37/L40/L44.
-        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(295);
+        // ⛓ RULES re-closing locks: 295 -> 304, the crossings through the six button-only locks that split a level.
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(304);
         expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
         const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
             .flatMap((e) => Object.keys(e))));
@@ -907,7 +909,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-78d22cb4');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set restamps
+        expect(committed.atlas_id).toBe('seedling-b3ac708a');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees + patched-set + re-closing-locks restamps
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 
