@@ -1598,6 +1598,34 @@
       "noHazards": []
     },
     {
+      "file": "return-l15-conch.json",
+      "tickCount": 222,
+      "bootLevel": 15,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "return-l15-reentry-unclear.json",
+      "tickCount": 60,
+      "bootLevel": 15,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "return-l15-reentry.json",
+      "tickCount": 60,
+      "bootLevel": 15,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
+      "file": "return-l15-walkin.json",
+      "tickCount": 60,
+      "bootLevel": 16,
+      "tapeVersion": 11,
+      "noHazards": []
+    },
+    {
       "file": "shuffle-stop.json",
       "tickCount": 60,
       "bootLevel": 0,

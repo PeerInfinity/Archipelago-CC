@@ -73,7 +73,8 @@ describe('readEnvelope over the committed Seedling roster', () => {
         // ⛓ fidelity L14: 209 — `l14-swordless-detour`.
         // ⛓ fidelity CANCROSS: 210 — `cancross-l16-sword-none`.
         // ⛓ fidelity DASH: 211 — `dash-l16-sword-all`.
-        expect(names.length).toBe(211);
+        // ⛓ fidelity RETURN: 215 — `return-l15-reentry`, `return-l15-walkin`, `return-l15-reentry-unclear`, `return-l15-conch`.
+        expect(names.length).toBe(215);
         for (const name of names) {
             const env = readEnvelope(rawTape(name));
             expect(Object.keys(env), name).toEqual(ENVELOPE_FIELDS);
