@@ -421,8 +421,16 @@ export function settleSolve(fn) {
         const pending = err?.name === 'PendingDeclaration' ? err.pending ?? null : null;
         if (pending) return { ok: false, kind: 'refusal', declaration: { ...pending, phases: undefined }, message: declarationRefusal(pending, err) };
         // ⛓ SHOULD-STOP — a refusal raised after the pass's deadline tripped carries it (and its ⏱ clause).
-        return { ok: false, kind: 'refusal', message: String(err?.message ?? err), ...(err?.deadline ? { deadline: err.deadline } : {}) };
+        // ⛓ SLOTS CONSUMER (fidelity STEPOFF2) — and the refusal's `obstacle` (`{kind, id, floors?, solids?}`: `closed` /
+        // `hazard-floor` / `inside-solid` …), as plain data, so a consumer reads the NAME rather than the words.
+        return { ok: false, kind: 'refusal', message: String(err?.message ?? err), ...(err?.deadline ? { deadline: err.deadline } : {}),
+            ...(err?.obstacle ? { obstacle: plainObstacle(err.obstacle) } : {}) };
     }
+}
+
+/** A refusal's obstacle as data that crosses a worker boundary (its own fields; nothing it does not carry). */
+function plainObstacle(o) {
+    try { return JSON.parse(JSON.stringify(o)); } catch { return { kind: o?.kind ?? null, id: o?.id ?? null }; }
 }
 
 /**
@@ -503,7 +511,7 @@ export function createRuntimeSolver({
     const inPlace = createInPlaceSolveService({ clock });
     /** session -> Map(perTick index -> slot): the equips the play made on each live session. */
     const playedEquips = new WeakMap();
-    const stats = { solves: 0, refutations: 0, declines: 0, played: 0, lastSolve: null, lastDecline: null,
+    const stats = { solves: 0, refutations: 0, declines: 0, played: 0, lastSolve: null, lastDecline: null, lastDeclineObstacle: null,
         expiries: 0, stale: 0, solving: false, lastWaitMs: null, provisionalPlays: 0 };
 
     const emit = (e) => { try { onEvent(e); } catch { /* a listener's bug is not the solve's */ } };
@@ -526,9 +534,10 @@ export function createRuntimeSolver({
         if (why) emit({ type: 'cancelled', message: `[js runtime] solve cancelled — ${why}` });
     }
 
-    function decline(why) {
+    function decline(why, obstacle = null) {
         stats.declines += 1;
         stats.lastDecline = why;
+        stats.lastDeclineObstacle = obstacle;
         emit({ type: 'declined', message: `[js runtime] the solver declined — ${why}` });
         return { declined: why };
     }
@@ -616,7 +625,7 @@ export function createRuntimeSolver({
         }
         if (!r.ok) {
             if (r.kind === 'divergence') return { failed: r.message };
-            return decline(String(r.message).split('\n')[0]);
+            return decline(String(r.message).split('\n')[0], r.obstacle ?? null);
         }
         const plan0 = r.plan;
         stats.solves += 1;

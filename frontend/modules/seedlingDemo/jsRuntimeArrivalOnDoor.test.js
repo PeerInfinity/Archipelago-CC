@@ -71,7 +71,7 @@ const SETTLED = [WALK_STATES.DONE, WALK_STATES.FAILED];
  */
 const ARRIVALS_ON_A_DOOR = {
     '3|96|128': 'closed',        // L11 → L3: the pocket under breakablerock@96,112 (bare); the round trip below opens it
-    '37|576|144': 'closed',      // L97's stairs → L37: ringed by lava
+    '37|576|144': 'closed',      // L97's stairs → L37: ringed by lava (the solver's NAME: `hazard-floor`, below)
     '87|432|304': 'crosses',
     '102|224|96': 'crosses',
 };
@@ -260,6 +260,12 @@ describe('S5 — step off and back on: the bot crosses from the arrival', () => 
     });
 });
 
+/** What the SOLVER names each closed arrival (`SolverRefusal.obstacle`): a walled pocket, or a floor the item would open. */
+const SOLVER_OBSTACLE = {
+    '3|96|128': { kind: 'closed' },
+    '37|576|144': { kind: 'hazard-floor', floors: ['lava'] },
+};
+
 describe('S5 — a closed pocket fails by NAME, at once (no 1800-tick stall, no solve)', () => {
     // ⛓ STEP-OFF RETIRE — solver ON, the SOLVER is asked first and refuses by its own name
     // (`closed — the run stands LATCHED …`: one decline, no plan); the walker then fails by its own.
@@ -281,6 +287,8 @@ describe('S5 — a closed pocket fails by NAME, at once (no 1800-tick stall, no 
                     expect(rt.playback.reason.startsWith(`${walkerSaid}; the solver declined: `), rt.playback.reason).toBe(true);
                     expect(rt.playback.reason).toMatch(new RegExp(`closed — the run stands LATCHED on (teleporter|stairs)@${tp.x},${tp.y} `
                         + `in level ${level}`));
+                    // ⛓ SLOTS CONSUMER — pinned on the refusal's NAME (fidelity STEPOFF2's `obstacle.kind`).
+                    expect(rt.playback.solverStats.lastDeclineObstacle).toMatchObject(SOLVER_OBSTACLE[key]);
                 } else {
                     expect(rt.playback.reason).toBe(walkerSaid);
                     expect(rt.playback.solverStats.declines).toBe(0);

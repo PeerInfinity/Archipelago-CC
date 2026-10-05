@@ -136,17 +136,20 @@ describe('⛓ STEP-OFF RETIRE — a latched door: the solver\'s OWN plan from th
         expect(dropped).toBeLessThan(p.solution.length - 1);
     });
 
-    it('a CLOSED pocket is the SOLVER\'s named refusal (L3 bare under the rock; L37 ringed by lava)', () => {
-        for (const [goal, at] of [
-            [{ kind: 'exit', level: 3, tiles: [[6, 8]], name: 'out_teleporter_96_128' }, [96, 128]],
-            [{ kind: 'exit', level: 37, tiles: [[36, 9]], name: 'out_stairsdown_576_144' }, [576, 144]],
+    // ⛓ SLOTS CONSUMER — pinned on the refusal's NAME (`obstacle.kind`, fidelity STEPOFF2): L3 bare is `closed`;
+    // L37 is `hazard-floor` (every way off its rect crosses lava without the dark suit). The words keep the
+    // `closed — …` clause (true without the item); the name is what says which.
+    it('a CLOSED pocket is the SOLVER\'s named refusal (L3 bare under the rock: `closed`; L37 ringed by lava: `hazard-floor`)', () => {
+        for (const [goal, at, obstacle] of [
+            [{ kind: 'exit', level: 3, tiles: [[6, 8]], name: 'out_teleporter_96_128' }, [96, 128], { kind: 'closed' }],
+            [{ kind: 'exit', level: 37, tiles: [[36, 9]], name: 'out_stairsdown_576_144' }, [576, 144], { kind: 'hazard-floor', floors: ['lava'] }],
         ]) {
             const staging = arrival(goal.level, ...at);
             expect(latchedAtArrival(goal, staging)).toBe(true);
             const { mapped, request, result } = serve(goal, staging);
             expect(mapped.goal.kind).toBe('reach-exit');
             expect(request.producer).toBeUndefined();
-            expect(result).toMatchObject({ ok: false, kind: 'refusal' });
+            expect(result).toMatchObject({ ok: false, kind: 'refusal', obstacle });
             expect(result.message).toMatch(new RegExp(`closed — the run stands LATCHED on (teleporter|stairs)@\\d+,\\d+ in level ${goal.level} `
                 + '.*no standable cell next to it can be walked to'));
         }
