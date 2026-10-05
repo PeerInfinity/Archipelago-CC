@@ -52,8 +52,15 @@ const TAPE = loadTape(NAME);
 const STAGING = stagingFromTape(TAPE);
 const PERIOD = SPINNER.hammerPeriod;
 const RESIDUE = ((STAGING.seam.time % PERIOD) + PERIOD) % PERIOD;
-/** The chain's L18 residue after F1b's window-5 re-solve (F1b D2: 17 → 42) — the committed one. */
-const CHAIN_RESIDUE = 42;
+/**
+ * The chain's committed L18 residue. F1b's window-5 re-solve moved it 17 → 42 (F1b D2);
+ * ⛓ SEEDLING FIDELITY DASHFLIP moved it 42 → 40: windows 16 and 18 re-derived (−20 + 63 t),
+ * so `r9-solve-18`'s `seam.time` is 9897 → 9940. Measured: the solve at 40 is the committed
+ * window key for key (510 t, the same keys the window had at 42), stalls and all.
+ */
+const CHAIN_RESIDUE = 40;
+/** The residue `f1c-l18-phase42` was cut and game-recorded at: the chain's, F1c to DASH. */
+const WITNESS_RESIDUE = 42;
 /** The committed residue BEFORE F1c re-recorded the window (`seam.time` 10052): no corner forms. */
 const PRE_F1C_RESIDUE = 17;
 /** A residue the rung names rather than solves: a landing's rebound (the sweep's 18–21). */
@@ -138,11 +145,17 @@ function replay(name, persistence = null) {
 
 describe('F1c D1 — the game witness of the chain-residue solve (f1c-l18-phase42, recorded twice)', () => {
     const WITNESS = 'f1c-l18-phase42';
-    it('⛓⛓ the witness IS the chain-residue staging: the committed boot with only the clock moved', () => {
+    /**
+     * ⛓ DASHFLIP: the chain's clock moved under the witness (residue 42 → 40, and the
+     * transported `rng.cosmetic` with it), so the witness is the committed boot at its
+     * own F1c-era residue — the clock and the unmodelled cosmetic stream moved, nothing
+     * else. The walk the two residues solve to is one (the row below).
+     */
+    it('⛓⛓ the witness IS the committed boot at its own residue: only the clock and the cosmetic stream moved', () => {
         const w = stagingFromTape(loadTape(WITNESS));
-        expect(((w.seam.time % PERIOD) + PERIOD) % PERIOD).toBe(CHAIN_RESIDUE);
+        expect(((w.seam.time % PERIOD) + PERIOD) % PERIOD).toBe(WITNESS_RESIDUE);
         expect({ ...w.seam, time: null }).toEqual({ ...STAGING.seam, time: null });
-        expect(w.rng).toEqual(STAGING.rng);
+        expect({ ...w.rng, cosmetic: null }).toEqual({ ...STAGING.rng, cosmetic: null });
         expect(w.boot).toEqual(STAGING.boot);
     });
 
