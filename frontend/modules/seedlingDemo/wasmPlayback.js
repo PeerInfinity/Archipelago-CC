@@ -447,17 +447,32 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 export const SHIPPED_RNG = Object.freeze({ seed: 0, split: true, cosmetic: 0, fp: 0 });
 
 /**
+ * ⛓ WASM EQUIPS — a plan's slot selections (`plan.equipsAt`, plan index →
+ * slot) as the tape v4 `equips` rows `[{t, slot}]`, `t` shifted by `offset`
+ * (the ticks the tape ships before the plan's first: a frozen continuation's
+ * LEAD tick; a room's shipped prefix when the rows index the room).
+ */
+export function tapeEquips(equipsAt, offset = 0) {
+    return [...(equipsAt ?? [])].map(([t, slot]) => ({ t: t + offset, slot })).sort((a, b) => a.t - b.t);
+}
+
+/**
  * The game-visible tape for `staging` + `keys` (key sets, one per tick — the
- * solve's `plan.solution`; `[]` = the zero-tick freeze tape).
+ * solve's `plan.solution`; `[]` = the zero-tick freeze tape) + `equips`
+ * (⛓ WASM EQUIPS: `[{t, slot}]` in THIS tape's ticks — `tapeEquips`; the
+ * solver's slot selections ride on the tape as a field, never as keys).
  *
  * @returns {object} a parsed, game-visible tape (serialise with JSON.stringify)
  */
-export function shippedTape({ staging, keys = [], hold = false, name = 'wasm-playback' }) {
+export function shippedTape({ staging, keys = [], hold = false, name = 'wasm-playback', equips = [] }) {
     if (!staging?.boot) refuse('wasmPlayback: no staging to ship a tape from');
+    const late = equips.filter((e) => e.t >= keys.length);
+    if (late.length) refuse(`wasmPlayback: an equip at tick ${late[0].t} of a ${keys.length}-tick tape never fires`);
     const stripped = {
         ...staging,
         seam: null,
         rng: { ...SHIPPED_RNG },
+        equips: equips.map((e) => ({ t: e.t, slot: e.slot })),
     };
     const perTick = keys.map((k) => (k instanceof Set ? k : new Set(k)));
     const parsed = parseTape(buildStagedTape({ staging: stripped, perTick, name }));
@@ -606,8 +621,12 @@ export function primarySplitRefusal(shipped, solution) {
  */
 export function shadowMismatch(shadowRow, status) {
     if (!shadowRow || !status) return { expected: shadowRow ?? null, got: null };
-    if (shadowRow.level === status.level && shadowRow.x === status.x && shadowRow.y === status.y) return null;
-    return { expected: { level: shadowRow.level, x: shadowRow.x, y: shadowRow.y }, got: { level: status.level, x: status.x, y: status.y } };
+    // ⛓ WASM EQUIPS — the selected slot too, when the shadow carries it (a slot the tapes selected moves no position).
+    const slotKnown = Number.isInteger(shadowRow.primary) && Number.isInteger(status.primary);
+    const slotEqual = !slotKnown || shadowRow.primary === status.primary;
+    if (shadowRow.level === status.level && shadowRow.x === status.x && shadowRow.y === status.y && slotEqual) return null;
+    return { expected: { level: shadowRow.level, x: shadowRow.x, y: shadowRow.y, ...(slotKnown ? { primary: shadowRow.primary } : {}) },
+        got: { level: status.level, x: status.x, y: status.y, ...(slotKnown ? { primary: status.primary } : {}) } };
 }
 
 /**

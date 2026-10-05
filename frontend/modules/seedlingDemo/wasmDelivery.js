@@ -161,8 +161,9 @@ const witness = (run) => `${runDigest(run)}|hits ${hitsOf(run)}`;
  * @param {object} o.items    the game's items after the delivery (`itemsAfterWrites`)
  * @param {object} o.status   `botStatus` NOW (before the write): `items`, `inventory_slots`, `primary`, `secondary`
  * @param {object} o.levelSource
+ * @param {Map<number, number>} [o.equips]  the slot selections those keys shipped with (room tick → slot)
  */
-export function deliveryRefusal({ staging, shipped, items, status, levelSource }) {
+export function deliveryRefusal({ staging, shipped, items, status, levelSource, equips = null }) {
     const no = (clause, why) => ({ clause, why });
     const before = status?.items ?? {};
     const delta = itemDelta(before, items);
@@ -180,6 +181,9 @@ export function deliveryRefusal({ staging, shipped, items, status, levelSource }
     const keys = (shipped ?? []).map((h) => (h instanceof Set ? h : new Set(h)));
     for (let t = 0; t < keys.length; t += 1) {
         try {
+            // ⛓ WASM EQUIPS — a slot the shipped tapes selected (room tick → slot), re-made before its tick.
+            const slot = equips?.get(t);
+            if (slot !== undefined) { withItem.equipNow(slot); without.equipNow(slot); }
             withItem.advance(keys[t]);
             without.advance(keys[t]);
         } catch (err) { return no('prefix', `the shipped prefix does not replay with ${names} staged (tick ${t + 1}): ${String(err?.message ?? err).split('\n')[0]}`); }
@@ -206,6 +210,40 @@ export function deliveryRefusal({ staging, shipped, items, status, levelSource }
     if (post.primary !== pre.primary || post.secondary !== pre.secondary) {
         return no('slot-index', `the delivery moves the selected slots (primary ${pre.primary} → ${post.primary}, secondary `
             + `${pre.secondary} → ${post.secondary}) off the staged ones`);
+    }
+    return null;
+}
+
+/**
+ * ⛓ WASM EQUIPS — null when every slot selection a plan ships lands on the
+ * item the model selected, else the refusal BY NAME (the engine refuses the
+ * tape before shipping it, never discovers it as a divergence). The model's
+ * slot array is `inventorySlotsFor` (a fixed order rebuilt from the items);
+ * the game's is the array it holds NOW with each later item APPENDED
+ * (`slotsAfterDelivery` — measured: `[fire]` + sword is the game's `[1, 0]`,
+ * the model's `[0, 1]`), so an index can name a different item, or one the
+ * game does not hold (`Inventory.getItem` past the end reads 0, the sword).
+ *
+ * @param {object} o
+ * @param {Map<number, number>} o.equipsAt     plan index → slot (`solveFromTape`)
+ * @param {Map<number, object>} [o.equipItems] plan index → the model's inventory at that equip
+ * @param {number[]} o.slots                   the game's `botStatus.inventory_slots` now
+ * @returns {string|null}
+ */
+export function equipSlotRefusal({ equipsAt, equipItems, slots }) {
+    for (const [t, slot] of equipsAt ?? []) {
+        const items = equipItems?.get(t);
+        if (!items) return `the plan selects slot ${slot} at tick ${t} and carries no record of the model's inventory there — the game's slot cannot be checked`;
+        const model = inventorySlotsFor(items);
+        const game = slotsAfterDelivery({ slots: slots ?? [] }, items).slots;
+        if (slot >= game.length) {
+            return `the plan selects slot ${slot} at tick ${t}, and the game will hold ${game.length} slot(s) ${JSON.stringify(game)} `
+                + '— an index past the end reads 0, the sword';
+        }
+        if (game[slot] !== model[slot]) {
+            return `the plan selects slot ${slot} at tick ${t}: the model's slots are ${JSON.stringify(model)} (item ${model[slot]}), the `
+                + `game's ${JSON.stringify(game)} (item ${game[slot]}) — the game appends a late slot, so the index names another item`;
+        }
     }
     return null;
 }

@@ -422,17 +422,22 @@ export function arrivalSolveRequest({ staging, solverGoal, levelSource, records,
  *   back, named. ⛓ STEP-OFF RETIRE: a shadow latched on the goal door is an
  *   ordinary continuation (the solver steps off it from the shadow).
  */
-export function continuationSolveRequest({ staging, shipped, goal, levelSource, records, record, name = 'wasm-continuation' }) {
+export function continuationSolveRequest({ staging, shipped, goal, levelSource, records, record, name = 'wasm-continuation',
+    equips = null }) {
     const perTick = shipped.map((h) => new Set(h));
-    const shadow = replayTape({ staging, perTick, levelSource, scratchPersistence: true });
+    // ⛓ WASM EQUIPS — `equips` (room tick → slot): the slots the shipped tapes selected, re-made at their ticks.
+    const eq = equips && equips.size ? new Map(equips) : null;
+    const shadow = replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq });
     const live = liveOf(shadow);
+    // The held check compares the selected slot too (`wasmPlayback.shadowMismatch`).
+    const shadowRow = { ...live.row, primary: shadow.primary };
     const mapped = arrivalSolverGoal(goal, { staging, levelSource, record,
-        run: replayTape({ staging, perTick, levelSource, scratchPersistence: true }) });
-    if (!mapped.goal) return { shadowRow: live.row, mapped, refusal: `the solver has no goal for ${goal?.name ?? goal?.kind}: ${mapped.walker}` };
+        run: replayTape({ staging, perTick, levelSource, scratchPersistence: true, equips: eq }) });
+    if (!mapped.goal) return { shadowRow, mapped, refusal: `the solver has no goal for ${goal?.name ?? goal?.kind}: ${mapped.walker}` };
     return {
-        shadowRow: live.row,
+        shadowRow,
         mapped,
-        request: { staging, perTick, live, solverGoal: mapped.goal, name, scratchPersistence: true, equips: null, levelSource,
+        request: { staging, perTick, live, solverGoal: mapped.goal, name, scratchPersistence: true, equips: eq, levelSource,
             source: { records } },
     };
 }

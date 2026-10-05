@@ -352,6 +352,9 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
     if (unusable) throw new PassSkipped(`${adds} is not available here: ${unusable}`);
     const expected = [rowOf(shadow)];
     const equipsAt = new Map();
+    // ⛓ WASM EQUIPS — the model's inventory at each equip: a host that ships the equip checks the GAME's slot at
+    // that index holds the same item (`wasmDelivery.equipSlotRefusal`; the game appends a late slot).
+    const equipItems = new Map();
     const run = new Proxy(shadow, {
         get(target, prop) {
             const v = Reflect.get(target, prop);
@@ -366,6 +369,7 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
                 return (slot) => {
                     const out = v.call(target, slot);
                     equipsAt.set(expected.length - 1, slot);
+                    equipItems.set(expected.length - 1, { ...target.inventory });
                     return out;
                 };
             }
@@ -383,7 +387,7 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
             + `${expected.length - 1} time(s) — the expected trajectory cannot be checked`);
     }
     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
-    return { solution, expected, equipsAt, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
+    return { solution, expected, equipsAt, equipItems, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
         // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
         deadline: out.deadline ?? null };
 }

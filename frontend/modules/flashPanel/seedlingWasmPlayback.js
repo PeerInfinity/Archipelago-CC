@@ -101,7 +101,7 @@ import {
     adoptionRefusal, adoptRefusalIsTransient, arrivalHoldBlocker, CEREMONY_QUIET_FRAMES, CEREMONY_WAIT_MS, divergenceAction, divergenceFailure, divergenceRepeatFailure, endsHeld, exactDeclarationRefusal, FALLBACK_POLICY,
     firstDivergence, foldDrain, goalAction, keysHeldAtReset, liveDeclarations, MAX_RECOVERIES, newGameBeginEntry, newGameCeremony,
     primarySplitRefusal, shadowMismatch, talkCircleGuard, talkCirclesAt, TUTORIAL_DISMISS_KEY, TUTORIAL_FADE_FRAMES,
-    shippedTape, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
+    shippedTape, tapeEquips, TAPE_KEY_RELEASES, wasmGoalRefusal, expiryAction, expiryFailure, SOLVE_RETRY_BUDGET_FACTOR,
 } from '../seedlingDemo/wasmPlayback.js';
 import {
     ANYTIME_PASSES, betterAnswer, LOAD_BUDGET_MS, passesAfter, replayTape, SOLVER_BUDGET_MS,
@@ -111,7 +111,7 @@ import { indexLevels, levelSourceFromAtlas } from '../seedlingDemo/atlasSource.j
 import { parsePendingCheck } from './seedlingCheckBinding.js';
 import { mountedRecordsOf, WALK_TAPE_PRODUCER } from '../seedlingDemo/wasmWalkTape.js';
 import {
-    deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, firstTickSlotRefusal, itemDelta, itemsAfterWrites, slotsAfterDelivery,
+    deliveryRefusal, DELIVERY_FALLBACK, DELIVERY_POLICY, equipSlotRefusal, firstTickSlotRefusal, itemDelta, itemsAfterWrites, slotsAfterDelivery,
     stageItems,
 } from '../seedlingDemo/wasmDelivery.js';
 
@@ -134,6 +134,10 @@ export const DELIVERY_POLL_MS = 20;
 
 const J = (s) => { try { return JSON.parse(s); } catch { return null; } };
 const secs = (ms) => `${Math.round(ms / 100) / 10} s`;
+/** ⛓ WASM EQUIPS — `[{t, slot}]` (room ticks) → the Map `replayTape` / `deliveryRefusal` read; null when empty. */
+const equipsMap = (rows) => (rows?.length ? new Map(rows.map((e) => [e.t, e.slot])) : null);
+/** The slot selections a room's shipped ticks made. */
+const roomEquips = (r) => equipsMap(r?.equips);
 
 /**
  * @param {object} deps
@@ -878,10 +882,11 @@ export function createWasmPlayback({
         let heldRow = null;
         try {
             c = continuationSolveRequest({ staging: r.staging, shipped: [...r.shipped, ...lead], goal, levelSource, records, record,
-                name: `wasm-continue-${goal.kind}-${goal.level}` });
+                name: `wasm-continue-${goal.kind}-${goal.level}`, equips: roomEquips(r) });
             if (lead.length) {
-                const before = replayTape({ staging: r.staging, perTick: r.shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true });
-                heldRow = { level: before.level, x: before.state.x, y: before.state.y, deaths: before.playerDeaths.length };
+                const before = replayTape({ staging: r.staging, perTick: r.shipped.map((h) => new Set(h)), levelSource, scratchPersistence: true,
+                    equips: roomEquips(r) });
+                heldRow = { level: before.level, x: before.state.x, y: before.state.y, deaths: before.playerDeaths.length, primary: before.primary };
             }
         } catch (err) {
             contFallback(`the continuation could not be built: ${String(err?.message ?? err).split('\n')[0]}`, 'continuation-error');
@@ -991,7 +996,8 @@ export function createWasmPlayback({
         const f = frozen;
         const g = game();
         const full = [...f.shippedBefore];
-        const refusal = deliveryRefusal({ staging: f.stagingBefore, shipped: full, items: f.items, status: f.statusAt, levelSource });
+        const refusal = deliveryRefusal({ staging: f.stagingBefore, shipped: full, items: f.items, status: f.statusAt, levelSource,
+            equips: equipsMap(f.equipsBefore) });
         if (refusal) {
             log(`[wasm playback] the interrupted plan cannot resume with the delivered item (${refusal.clause}: ${refusal.why})`, 'warn');
             return false;
@@ -1002,6 +1008,7 @@ export function createWasmPlayback({
         if (handle && !handle.settled) handle.cancel();
         handle = null;
         room.shipped = f.shippedBefore;
+        room.equips = f.equipsBefore;
         room.lead = null;
         room.slotLag = null;
         play = f.leg;
@@ -1120,7 +1127,10 @@ export function createWasmPlayback({
         // ⛓ MID-ROOM REPLAN — the lead tick (`solveInRoom`) goes first, its row the held one.
         const lead = play.lead ?? [];
         if (lead.length && !play.leadShipped) {
-            play.plan = { ...play.plan, solution: [...lead.map((h) => new Set(h)), ...play.plan.solution], expected: [play.heldRow, ...play.plan.expected] };
+            const shift = (m) => new Map([...(m ?? [])].map(([t, v]) => [t + lead.length, v]));
+            // ⛓ WASM EQUIPS — the plan's slot selections move with its ticks (the tape's t counts the lead tick).
+            play.plan = { ...play.plan, solution: [...lead.map((h) => new Set(h)), ...play.plan.solution], expected: [play.heldRow, ...play.plan.expected],
+                equipsAt: shift(play.plan.equipsAt), equipItems: shift(play.plan.equipItems) };
             play.leadShipped = true;
         }
         const { plan } = play;
@@ -1135,10 +1145,14 @@ export function createWasmPlayback({
         // ⛓ W8b — adopted inside a talk circle: no X until the plan has left it.
         const talk = room?.talkCircles?.length ? talkCircleGuard({ circles: room.talkCircles, solution: plan.solution, expected: plan.expected }) : null;
         if (talk?.refusal) { fallback(talk.refusal, 'adopt-talk'); return; }
+        // ⛓ WASM EQUIPS — a slot the game cannot select as the model did is refused BY NAME, before anything ships.
+        const slotWhy = equipSlotRefusal({ equipsAt: plan.equipsAt, equipItems: plan.equipItems, slots: st?.inventory_slots ?? [] });
+        if (slotWhy) { fail(`the plan tape was not shipped — ${slotWhy}`); return; }
+        const equips = tapeEquips(plan.equipsAt);
         const hold = holds && endsHeld(goal);
         let tape;
         try {
-            tape = shippedTape({ staging: play.continuation ? liveDeclarations(staging, st) : staging, keys: plan.solution, hold,
+            tape = shippedTape({ staging: play.continuation ? liveDeclarations(staging, st) : staging, keys: plan.solution, hold, equips,
                 name: `wasm-${play.continuation ? 'continue-' : ''}${goal.kind}-${goal.level}` });
         } catch (err) { fail(err.message); return; }
         const decl = exactDeclarationRefusal(tape, st);
@@ -1164,12 +1178,15 @@ export function createWasmPlayback({
         stats.ships += 1;
         play.ticks = plan.solution.length;
         play.hold = hold;
+        play.equips = equips;
         play.progress = foldDrain(null, null);
         play.divergence = null;
         play.lastStatusAt = 0;
         phase = 'playing';
         if (room) {
             room.lead = null;
+            // ⛓ WASM EQUIPS — indexed by the room's shipped ticks, as the shadow replays them.
+            room.equips = [...(room.equips ?? []), ...tapeEquips(plan.equipsAt, room.shipped.length)];
             room.shipped = [...room.shipped, ...plan.solution.map((h) => [...h])];
             room.plans = (room.plans ?? 0) + 1;
             if (talk?.left) room.talkCircles = [];
@@ -1452,13 +1469,15 @@ export function createWasmPlayback({
         const items = predicted(st);
         // `room.shipped` already holds this whole plan (`ship()` appends it): the prefix is what came before it + its first k.
         const prefix = [...room.shipped.slice(0, room.shipped.length - plan.solution.length), ...plan.solution.slice(0, k).map((h) => [...h])];
-        const refusal = deliveryRefusal({ staging: room.staging, shipped: prefix, items, status: st, levelSource });
+        // ⛓ WASM EQUIPS — the selections the prefix made (an equip AT the frozen tick has not fired: the game drained k ticks).
+        const prefixEquips = (room.equips ?? []).filter((e) => e.t < prefix.length);
+        const refusal = deliveryRefusal({ staging: room.staging, shipped: prefix, items, status: st, levelSource, equips: equipsMap(prefixEquips) });
         if (refusal) { try { g.botHold('off'); } catch { /* gone */ } deferDelivery(refusal, 'playing'); return; }
         const heldKeys = keysHeldAtReset({ status: st, solution: plan.solution });
         const leg = play;
         // What a resume needs (`resumeFrozen`): the room as it stood, the interrupted leg, the freeze-time readout.
         frozen = { tick: k, solution: plan.solution, heldKeys, at: t0, leg, items, statusAt: st,
-            stagingBefore: room.staging, shippedBefore: room.shipped };
+            stagingBefore: room.staging, shippedBefore: room.shipped, equipsBefore: room.equips ?? [] };
         const post = slotsAfterDelivery({ slots: st.inventory_slots ?? [], primary: st.primary, secondary: st.secondary }, items);
         const row = { level: room.level, goal: goal?.name ?? goal?.kind, phase: 'playing', tick: k, of: plan.solution.length,
             items: itemDelta(st.items, items), heldKeys, outcome: 'replanning', policy: DELIVERY_POLICY };
@@ -1474,6 +1493,7 @@ export function createWasmPlayback({
         note('an item arrived — the room is frozen while it lands and the plan is redone');
         admit(items, row, (landed) => {
             room.shipped = prefix;
+            room.equips = prefixEquips;
             room.lead = heldKeys.length ? [heldKeys] : null;
             room.staging = stageItems(room.staging, landed.items);
             room.slotLag = { before: st.inventory_slots ?? [], after: post.slots, primary: st.primary, secondary: st.secondary, held: heldKeys };
@@ -1492,7 +1512,7 @@ export function createWasmPlayback({
         const st = status();
         if (!st) { later(); return; }
         const items = predicted(st);
-        const refusal = deliveryRefusal({ staging: room.staging, shipped: room.shipped, items, status: st, levelSource });
+        const refusal = deliveryRefusal({ staging: room.staging, shipped: room.shipped, items, status: st, levelSource, equips: roomEquips(room) });
         const atArrival = room.shipped.length === 0 || (room.adopted && room.shipped.length === 1 && room.shipped[0].length === 0);
         if (refusal && !atArrival) { deferDelivery(refusal, phase); return; }
         const row = { level: room.level, goal: goal?.name ?? goal?.kind ?? null, phase, tick: room.shipped.length, items: itemDelta(st.items, items),
@@ -1600,7 +1620,9 @@ export function createWasmPlayback({
         /** ⛓ WG — the last arrivals' raw reads (`{seam, status, state}`), for a fixture recorder. */
         get arrivalReads() { return arrivalReads.map((a) => structuredClone(a)); },
         /** ⛓ W7 — the held room's recipe (the probe rebuilds the shadow from it); null when none. */
-        get room() { return room ? structuredClone({ level: room.level, staging: room.staging, shipped: room.shipped, spawn: room.spawn }) : null; },
+        get room() {
+            return room ? structuredClone({ level: room.level, staging: room.staging, shipped: room.shipped, equips: room.equips ?? [], spawn: room.spawn }) : null;
+        },
         dispose() { this.stop(); try { service?.dispose?.(); } catch { /* gone */ } },
     };
 }
