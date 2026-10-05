@@ -330,6 +330,20 @@ export function handleUserLocationCheckForLoops(eventData, eventName = 'user:loc
       log('info', `[LoopsModule] Region ${regionName} not discovered, ignoring click`);
       return;
     }
+    // N4b: the region's check rides on the move out of it
+    // (moveIncludesCheck, Noiz2sa) — there is no check or explore action to
+    // queue; queue the move out of the region instead.
+    if (loopStateSingleton.regionMoveIncludesCheck?.(regionName)) {
+      log('info', `[LoopsModule] ${locationName}: the check in ${regionName} is part of its move — nothing queued`);
+      publishClickIgnored({
+        kind: 'location',
+        regionName,
+        expectedRegion: null,
+        reason: 'checkIsPartOfMove',
+        payload: { locationName },
+      });
+      return;
+    }
     const isLocationDiscovered = discoveryStateSingleton.isLocationDiscovered(locationName);
     if (clickToQueueMode === 'rebuildPath') {
       rebuildQueueToLocation(locationName, regionName, isLocationDiscovered);

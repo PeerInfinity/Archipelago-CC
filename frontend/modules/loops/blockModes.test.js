@@ -1471,7 +1471,7 @@ describe('M4 — coarse substrates get an ACTIONS-LESS annotations entry', () =>
 // declared, NO takeLastRecording, and a playback controller shaped like the
 // real runner/bounce PlaybackProxy: walkTo (the M6 bot path) but NO
 // replayActions, by design.
-function registerSummarySubstrate({ regions = ['A'], playClock = false } = {}) {
+function registerSummarySubstrate({ regions = ['A'], playClock = false, moveIncludesCheck = false } = {}) {
   try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
   try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
   try { substrateRegistry.clear?.(); } catch { /* ignore */ }
@@ -1487,6 +1487,7 @@ function registerSummarySubstrate({ regions = ['A'], playClock = false } = {}) {
       manual: true, customQueues: false,
       record: true, playback: true, instant: true, summaryRecording: true,
       ...(playClock ? { playClock: true } : {}),
+      ...(moveIncludesCheck ? { moveIncludesCheck: true } : {}),
     },
     getPlaybackController: () => ({
       walkTo: (...args) => { handles.walkToCalls.push(args); return true; },
@@ -2254,6 +2255,31 @@ describe('M5 — summary Record capture', () => {
 
     expect(saved().summary.costedActions).toEqual([]);
     expect(saved().summary.durationSeconds).toBe(2);
+  });
+
+  it('N4b: a substrate whose check rides on the move keeps it OUT of the rewritten interior (and in the summary)', () => {
+    setUp();
+    registerSummarySubstrate({ moveIncludesCheck: true });
+    expect(loopState.regionMoveIncludesCheck('A')).toBe(true);
+    park();
+    vi.advanceTimersByTime(2000);
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+
+    const interior = gs.getPath().filter((e) => e.sourceRegion === 'A' && e.type !== 'regionMove');
+    expect(interior).toEqual([]);
+    expect(saved().summary.checks).toEqual(['Loc1']);
+    expect(saved().summary.durationSeconds).toBe(2);
+  });
+
+  it('N4b: without moveIncludesCheck the performed check is rewritten into the interior, as before', () => {
+    setUp();
+    expect(loopState.regionMoveIncludesCheck('A')).toBe(false);
+    park();
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    loopState._handleManualWake_regionMove({ targetRegion: 'B', oldRegion: 'A', exitName: 'exit' });
+    const interior = gs.getPath().filter((e) => e.sourceRegion === 'A' && e.type !== 'regionMove');
+    expect(interior.map((e) => e.locationName)).toEqual(['Loc1']);
   });
 
   it('falls back to the queued exit when the move carried no exit name', () => {

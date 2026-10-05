@@ -20,7 +20,7 @@ import discoveryStateSingleton from '../discovery/singleton.js';
 import { centralRegistry } from '../../app/core/centralRegistry.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import {
-  botHonorsInstant, captureShapeOf, offersPlayback, solverKindOf, SOLVER_KINDS,
+  botHonorsInstant, captureShapeOf, moveIncludesCheck, offersPlayback, solverKindOf, SOLVER_KINDS,
 } from '../procgenCore/substratePredicates.js';
 import { blockKeyOf, resolveQueueBlocks, assignRecordingTags } from './blockIdentity.js';
 import {
@@ -1879,7 +1879,13 @@ export class LoopState {
       // is persisted: a coarse block stores only its annotations envelope
       // (its interior IS its recording), while a summary block stores the
       // visit's net RESULT, which the interior cannot express.
-      this._applyCoarseReplacement(region, instance, { actions: this._liveCaptureBuffer.slice() });
+      // N4b: a substrate whose check rides on the move (moveIncludesCheck)
+      // keeps it out of the interior — it is not a queue action there. The
+      // summary below still records it in `checks`.
+      const interior = this.regionMoveIncludesCheck(region)
+        ? this._liveCaptureBuffer.filter((a) => a?.type !== 'locationCheck')
+        : this._liveCaptureBuffer.slice();
+      this._applyCoarseReplacement(region, instance, { actions: interior });
       if (shape === 'summary') {
         this._persistSummaryForBlock(region, instance, departureExitId);
       } else {
@@ -2488,6 +2494,18 @@ export class LoopState {
    */
   regionBotHonorsInstant(region) {
     return botHonorsInstant(this._entryFor(region));
+  }
+
+  /**
+   * Whether a region's location check rides on the MOVE out of it
+   * (`loopSupport.moveIncludesCheck`, Noiz2sa N4b): the check is performed,
+   * gated and recorded as ever, but it is never a queue action of its own —
+   * a Record block's rewritten interior leaves it out, and click-to-queue
+   * does not queue it. Opt-in per substrate; every other substrate is
+   * unchanged.
+   */
+  regionMoveIncludesCheck(region) {
+    return moveIncludesCheck(this._entryFor(region));
   }
 
   /**
