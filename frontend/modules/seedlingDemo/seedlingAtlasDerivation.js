@@ -431,11 +431,14 @@ export function locationsFor(room, overlay = {}, deps = {}) {
  *   the three AUTHORED things §16.3 names. Everything else is derived.
  * @param {{tileSize: number, tileTypeForPlacement: Function,
  *          resolveCondition?: Function, note?: Function, onGuard?: Function,
- *          atlas?: object, namedRooms?: object}} deps
+ *          atlas?: object, namedRooms?: object, pitOutcome?: Function}} deps
  *   `atlas` is the envelope handed to `createEmptyAtlas` (game, name,
  *   description, mapSource, mapDocument). ⛓ `namedRooms` is the SET manifest's
  *   own `named_rooms` (EDITOR v3 E5) — OPTIONAL, and absent for the playthrough
  *   generator, which is what keeps the committed atlas's bytes where they are.
+ *   ⛓ `pitOutcome(room, {to, arrival, tiles})` → `{to, arrival}` | null — where a
+ *   pit group's fall really ENDS (RULES patched-set: a descent that fires a live
+ *   door ends at that door's target). OPTIONAL: absent, the landing is the end.
  * @returns {{atlas: object, dropped: string[], stats: object}} the atlas
  *   document, UNSTAMPED — the caller owns identity, and stamping on a path that
  *   did not stamp before would move ten committed ids (D0a §18.9 hard #3).
@@ -528,17 +531,25 @@ export function deriveAtlas(rooms, overlay = {}, deps = {}) {
             note?.(`L${room.level} pits -> L${pit.to}: NOT WIRED — trap room, never-enter`);
         } else if (pit) {
             for (const g of pit.groups) {
-                const outId = `out_pit_${g.arrival[0]}_${g.arrival[1]}`;
-                const inId = `in_pit_L${room.level}_${g.arrival[0]}_${g.arrival[1]}`;
+                // ⛓ RULES patched-set — a fall whose descent fires a live door ends at THAT door's target,
+                // not on the landing tile: the caller's `pitOutcome` (the generator's descent census) says
+                // where the fall really ends, and the exit goes there. Absent, the landing is the end.
+                const end = deps.pitOutcome?.(room, { to: pit.to, ...g }) ?? { to: pit.to, arrival: g.arrival };
+                if (neverEnter.includes(end.to)) {
+                    note?.(`L${room.level} pit -> L${pit.to} chains to L${end.to}: NOT WIRED — trap room, never-enter`);
+                    continue;
+                }
+                const outId = `out_pit_${end.arrival[0]}_${end.arrival[1]}`;
+                const inId = `in_pit_L${room.level}_${end.arrival[0]}_${end.arrival[1]}`;
                 session.addExit(regionIdFor(room.level), {
                     exit_id: outId, tiles: g.tiles, kind: 'teleporter',
                 });
-                session.addExit(regionIdFor(pit.to), {
-                    exit_id: inId, tiles: [g.arrival], kind: 'teleporter',
+                session.addExit(regionIdFor(end.to), {
+                    exit_id: inId, tiles: [end.arrival], kind: 'teleporter',
                 });
                 session.connect(
                     [regionIdFor(room.level), outId],
-                    [regionIdFor(pit.to), inId],
+                    [regionIdFor(end.to), inId],
                     { one_way: true },
                 );
             }

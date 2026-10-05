@@ -203,8 +203,15 @@ const TIMEOUT_S = Number(argOf('timeout', '120'));
 // 1. THE SOURCES
 // ─────────────────────────────────────────────────────────────────────
 
-const atlas = JSON.parse(readFileSync(
-    join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8'));
+/**
+ * ⛓ RULES patched-set — the survey walks the PLAYTHROUGH, so it reads the DELIVERED set: the extract with
+ * `SEEDLING_SET_PATCHES` applied (the moonrock removed), the same rooms the playthrough's rules derive from
+ * and the delivery hands the player. Its model worlds and its solves run on these records too.
+ */
+const { patchedMapDocument, SEEDLING_SET_PATCHES } = await import(join(MODULE, 'seedlingSetPatches.js'));
+const { levelSourceFromAtlas } = await import(join(MODULE, 'atlasSource.js'));
+const atlas = patchedMapDocument(JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/atlases/seedling-map.json'), 'utf8')));
 const spheres = JSON.parse(readFileSync(
     join(REPO, 'frontend/modules/flashPanel/atlases/seedling-sphere-order.json'), 'utf8'));
 /** ⛓ SWIM U2 D3: the AP item → flash name → property tables the staged grant maps through. */
@@ -284,12 +291,31 @@ const MODEL = THROUGH ? {
  */
 const WORLDS = new Map();
 function worldOf(level) {
-    if (!WORLDS.has(level)) WORLDS.set(level, MODEL.buildLevelWorld(MODEL.atlasLevelSource()(level)));
+    if (!WORLDS.has(level)) WORLDS.set(level, MODEL.buildLevelWorld(levelSourceFromAtlas(atlas)(level)));
     return WORLDS.get(level);
 }
+/**
+ * ⛓ RULES patched-set — **A CHAINED FALL.** When the descent fires a live door (fidelity DESCENT's rule), the
+ * fall ends at that door's target, and the AP export's pit exit names THAT level, not the landing. The model's
+ * own descent (`censusFallsOntoDoors` over the two rooms) must name the same end, or the hop refuses.
+ * `null` when no pit of `from` lands in a room whose descent fires a door to `to`.
+ */
+async function loadChainCensus() {
+    return (await import(join(MODULE, 'fidelityDescent.js'))).censusFallsOntoDoors;
+}
+const CENSUS = THROUGH ? await loadChainCensus() : null;
+function chainOf(from, landing) {
+    const rows = CENSUS([levelsByNo.get(from), levelsByNo.get(landing)]).rows
+        .filter((r) => r.from === from && r.fires);
+    return rows;
+}
+
 function pitEdgeFor(from, to, onlyExitId = null) {
     const world = worldOf(from);
-    if (!world.fallthrough || world.fallthrough.level !== to) return null;
+    if (!world.fallthrough) return null;
+    const chained = world.fallthrough.level !== to
+        ? chainOf(from, world.fallthrough.level).filter((r) => r.fires.to === to) : [];
+    if (world.fallthrough.level !== to && chained.length === 0) return null;
     const exits = [];
     for (const [region, side] of Object.entries(apRules.preset_sidecars?.['1'] ?? {})) {
         if (levelOfRegion(region) !== from) continue;
@@ -312,9 +338,18 @@ function pitEdgeFor(from, to, onlyExitId = null) {
         throw new Error(`the AP export's ${e.exit_id} names tile (${tx},${ty}) in L${from}, `
             + 'which the model does not build as a pit tile — the two sources disagree.');
     }
-    const { ctor } = MODEL.fallDestination(world, {
+    const { ctor: landing } = MODEL.fallDestination(world, {
         x: tile.rect.x + tile.rect.w / 2, y: tile.rect.y + tile.rect.h / 2,
     });
+    const chain = chained.find((r) => r.pit.x === tile.rect.x && r.pit.y === tile.rect.y);
+    if (chained.length && !chain) {
+        throw new Error(`the AP export's ${e.exit_id} chains L${from} -> L${to}, and the model's descent `
+            + `chains no fall from pit tile (${tx},${ty}) there — the two sources disagree.`);
+    }
+    // A chained fall ends on the GROUND at the fired door's target: the arrival is the door's own tile.
+    const ctor = chain
+        ? { x: Math.floor(chain.fires.arrival.x / 16) * 16, y: Math.floor(chain.fires.arrival.y / 16) * 16 }
+        : landing;
     if (ctor.x !== e.target_spawn?.x || ctor.y !== e.target_spawn?.y) {
         throw new Error(`the pit (${tx},${ty}) in L${from} lands at (${ctor.x},${ctor.y}) by `
             + '`fallDestination` and at '
@@ -325,10 +360,14 @@ function pitEdgeFor(from, to, onlyExitId = null) {
         kind: 'pit',
         from,
         to,
-        via: `pit@${tile.rect.x},${tile.rect.y} (${e.exit_id}, tile ${tx},${ty})`,
+        via: `pit@${tile.rect.x},${tile.rect.y} (${e.exit_id}, tile ${tx},${ty})`
+            + (chain ? ` chained via L${chain.to} ${chain.fires.door}` : ''),
         exit: null,
         pit: { tx, ty, x: tile.rect.x, y: tile.rect.y },
+        // ⚠ a chained fall ends as the fired door's own `new Game(to, playerx, playery)` — ON THE GROUND, no
+        // ceiling descent — so its arrival is that door's arrival, keyed as every door arrival is.
         arrival: { x: ctor.x, y: ctor.y },
+        ...(chain ? { chained: { via: `L${chain.to} ${chain.fires.door}`, landing: { level: chain.to, ...chain.ctor } } } : {}),
     };
 }
 
@@ -765,11 +804,14 @@ function buildSteps(visits, legs, id) {
         let arrival = { x: 80, y: 128 };
         let arrivalRefusal = null;
         let arrivalVia = null;
+        let arrivalChain = null;
         if (prev) {
             if (THROUGH) {
                 const { edge: hop, refusal } = hopEdge(prev.level, v.level, prev.exitOut);
                 arrival = hop ? hop.arrival : null;
-                if (hop?.kind === 'pit') arrivalVia = hop.via;
+                // ⛓ a CHAINED fall ends on the ground (the fired door's `new Game`), so it is not a pit landing.
+                if (hop?.kind === 'pit' && !hop.chained) arrivalVia = hop.via;
+                if (hop?.chained) arrivalChain = hop.via;
                 if (!hop) arrivalRefusal = refusal;
             } else {
                 arrival = edgeFor(prev.level, v.level).arrival;
@@ -785,6 +827,7 @@ function buildSteps(visits, legs, id) {
             ...(crossingRefusal ? { crossingRefusal } : {}),
             ...(arrivalRefusal ? { arrivalRefusal } : {}),
             ...(arrivalVia ? { arrivalVia } : {}),
+            ...(arrivalChain ? { arrivalChain } : {}),
         };
     });
 }
@@ -981,7 +1024,6 @@ async function solveOneStep(step) {
         };
     }
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
-    const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
     const { twoPassSolve } = await import(join(MODULE, 'twoPassSolve.js'));
     const { buildStagedTape } = await import(join(MODULE, 'botDriverV1.js'));
     const { createRunForStaging, solveStaging, stagingFromTape } =
@@ -1109,7 +1151,7 @@ async function solveOneStep(step) {
      * back as its own verdict (`NEEDS-GAME-ORACLE`), which is the honest
      * answer: the solver is not what stands in its way.
      */
-    const levelSource = atlasLevelSource();
+    const levelSource = levelSourceFromAtlas(atlas);
     const makeRun = (persistence) =>
         createRunForStaging({ ...staging, persistence }, levelSource);
 
@@ -1416,6 +1458,7 @@ const routeDoc = {
     sources: {
         ap_rules: apRulesPath().slice(REPO.length + 1),
         atlas: 'frontend/modules/flashPanel/atlases/seedling-map.json',
+        set_patches: SEEDLING_SET_PATCHES.map((p) => p.id),
         spheres: 'frontend/modules/flashPanel/atlases/seedling-sphere-order.json',
     },
     legs: route.legs,

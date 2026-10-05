@@ -117,9 +117,12 @@ export async function buildSubRegionPartition() {
     const read = (f) => JSON.parse(fs.readFileSync(path.join(ATLAS_DIR, f), 'utf8'));
     const MAP = read('seedling-map.json');
     const GAME_CONFIG = JSON.parse(fs.readFileSync(path.join(repoRoot, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
-    const levelOf = (id) => MAP.levels.find((l) => l.level === Number(id));
     const { analyzeRegion } = await imp('frontend/modules/procgenPipeline/regionAtlasAnalyzer.js');
     const PT = await imp('scripts/procgen/make-seedling-playthrough-rules.mjs');
+    // ⛓ RULES patched-set — PATCH PER ATLAS. The playthrough derives from the DELIVERED set (the generator's
+    // own `PLAYTHROUGH_MAP`, `SEEDLING_SET_PATCHES` applied); the starter atlas runs the built-in map, so it
+    // reads the extract VANILLA (`MAP`). Each partition re-runs its own atlas's analysis on its own rooms.
+    const ptLevelOf = (id) => PT.PLAYTHROUGH_MAP.levels.find((l) => l.level === Number(id));
     const { analyzeSeedlingRegion } = await imp('frontend/modules/flashPanel/seedlingAtlasAnalysis.js');
     const STARTER = await imp('scripts/procgen/make-seedling-starter-atlas.mjs');
 
@@ -133,7 +136,7 @@ export async function buildSubRegionPartition() {
         atlases: {} };
     const stats = {};
     const p = atlasPartition('seedling-playthrough.json', playthrough, (region) => {
-        const level = levelOf(region.map_ref);
+        const level = ptLevelOf(region.map_ref);
         const a = analyzeRegion(region, PT.playthroughGridFor(level), PT.playthroughAnalyzerOptions);
         return { componentsResult: a.componentsResult, origin: [0, 0], width: level.width, height: level.height };
     });

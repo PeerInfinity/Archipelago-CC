@@ -73,11 +73,25 @@ const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance
 //   now go through ONE `deriveAtlas`.
 const { deriveAtlas, regionIdFor, VICTORY_ITEM } = await imp('frontend/modules/seedlingDemo/seedlingAtlasDerivation.js');
 const { buildLevelWorld, ROLES, maskHitsBox } = await imp('frontend/modules/seedlingDemo/levelWorld.js');
+const { censusFallsOntoDoors } = await imp('frontend/modules/seedlingDemo/fidelityDescent.js');
 const { playerBoxAt } = await imp('frontend/modules/seedlingDemo/playerPhysicsV2.js');
 const { seedlingModelOracles, modelFloodTiles, refuseUnboundMembers, seedlingArrivalSpawn } = await imp('frontend/modules/seedlingDemo/seedlingModelOracles.js');
 const { returnSpawnTable, returnKey } = await imp('frontend/modules/flashPanel/seedlingReturnSpawns.js');
 
-const MAP = JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
+const { patchedMapDocument, SEEDLING_SET_PATCHES } = await imp('frontend/modules/seedlingDemo/seedlingSetPatches.js');
+const { pitChainsFromCensus } = await import('./seedlingPitChains.js');
+
+/**
+ * ⛓⛓ RULES patched-set — **THE PLAYTHROUGH READS THE DELIVERED SET.** `seedling_playthrough` is the one
+ * game that RECEIVES a delivery (`levelSetExporter.vanillaRecordSet` applies `SEEDLING_SET_PATCHES`), so its
+ * rules derive from the same patched rooms the player is handed — ⚖ the user (2026-10-05): the moonrock
+ * event is removed, L110's fall is NOT repointed. The extract on disk stays faithful; the starter atlas and
+ * the atlas arms keep reading it VANILLA (they run the built-in map, Moonrock included).
+ */
+export const VANILLA_MAP = JSON.parse(fs.readFileSync(MAP_FILE, 'utf8'));
+const MAP = patchedMapDocument(VANILLA_MAP);
+/** The map document this generator derives from — the DELIVERED (patched) set. */
+export const PLAYTHROUGH_MAP = MAP;
 const GAME_CONFIG = JSON.parse(fs.readFileSync(
     path.join(repoRoot, 'frontend/modules/flashPanel/games/seedling.json'), 'utf8'));
 const TILE = MAP.tile_size;
@@ -307,6 +321,7 @@ export function playthroughAnalyzerOptionsFor(level) {
  * makes that a difference of ONE variable instead of a second derivation.
  */
 export function derivePlaythroughLayer(rooms = LEVELS) {
+    const { pitOutcome } = pitChainsFor(rooms);
     return deriveAtlas(rooms, {
         locations: R7_GOAL_LEDGER,
         locationGuard: OV.locationGuard,
@@ -317,6 +332,7 @@ export function derivePlaythroughLayer(rooms = LEVELS) {
         resolveCondition: (c) => analyzerOptions.resolveCondition(c),
         note,
         onGuard: (loc, guard) => locationGuards.push(`${loc.name} — ${guard.cite}`),
+        pitOutcome,
         atlas: {
             game: 'seedling',
             name: 'Seedling — the honest playthrough (rules v1)',
@@ -333,6 +349,48 @@ export function derivePlaythroughLayer(rooms = LEVELS) {
     });
 }
 
+/**
+ * ⛓ RULES patched-set — **A FALL ENDS WHERE THE GAME ENDS IT.** The fidelity DESCENT census
+ * (`censusFallsOntoDoors`, the model's own descent) over THESE rooms names every pit whose fall fires a live
+ * door; `seedlingPitChains` turns it into the derivation's `pitOutcome`, so such a pit exits to the door's
+ * target, not the intermediate landing. No hand row. A chain ending on a cell the analyzer grid does not
+ * stand on refuses by name. Memoized per rooms array (the census builds every level's world).
+ */
+const STANDABLE_KINDS = new Set(['open', 'gated', 'directional']);
+const pitChainMemo = new WeakMap();
+export const pitChains = [];
+function pitChainsFor(rooms) {
+    if (pitChainMemo.has(rooms)) return pitChainMemo.get(rooms);
+    const census = censusFallsOntoDoors(rooms);
+    const byId = new Map(rooms.map((r) => [r.level, r]));
+    const out = pitChainsFromCensus(census, {
+        tileSize: TILE,
+        standable: (n, [tx, ty]) => {
+            const room = byId.get(n);
+            if (!room) return `L${n} is not in the set`;
+            const grid = gridFor(room);
+            const kind = grid.cells[ty * grid.width + tx]?.kind;
+            return STANDABLE_KINDS.has(kind) ? true : `the analyzer grid reads it as ${JSON.stringify(kind ?? null)}`;
+        },
+    });
+    const wrapped = {
+        census,
+        pitOutcome: (room, group) => {
+            const end = out.pitOutcome(room, group);
+            if (end) {
+                const c = out.chains.at(-1);
+                pitChains.push(c);
+                note(`${regionIdFor(c.from)}: pit [${c.tiles.map((t) => t.join(',')).join(' ')}] CHAINS — lands in `
+                    + `L${c.landing.level} [${c.landing.tile}], the descent fires ${c.via} at t${c.t}, the fall ends `
+                    + `in L${c.ends.level} [${c.ends.tile}] (fidelityDescent.censusFallsOntoDoors)`);
+            }
+            return end;
+        },
+    };
+    pitChainMemo.set(rooms, wrapped);
+    return wrapped;
+}
+
 export function buildPlaythroughAtlas() {
     notes.length = 0;
     prunedPockets.length = 0;
@@ -345,6 +403,7 @@ export function buildPlaythroughAtlas() {
     sealedDoorsCharged.length = 0;
     arrivalsUncharged.length = 0;
     exitComponents.clear();
+    pitChains.length = 0;
     /**
      * ⛓⛓ THE ATLAS IS DERIVED; ONLY THE OVERLAY IS AUTHORED (plan §16.3, ⚖
      * ruled by the user 2026-08-25). Everything this call produces — one region
@@ -813,6 +872,8 @@ export function provenanceOf(atlasDoc) {
         map_document: path.basename(MAP_FILE),
         map_generator: MAP.generator ?? null,
         map_source: MAP.source ?? null,
+        set_patches: SEEDLING_SET_PATCHES.map((p) => p.id),
+        pit_chains: 'frontend/modules/seedlingDemo/fidelityDescent.js censusFallsOntoDoors',
         semantics: 'frontend/modules/flashPanel/seedlingSemantics.js',
         overlay: 'frontend/modules/flashPanel/seedlingPlaythroughOverlay.js',
         pixel_masks: 'frontend/modules/seedlingDemo/seedlingPixelMasks.js (via levelWorld)',
