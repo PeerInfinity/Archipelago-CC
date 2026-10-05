@@ -360,6 +360,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             // ⛓⛓⛓ Seedling fidelity SLOTS: the same leg four ways, each ending on L12's arrival.
             'slots-l24-fire-first', 'slots-l24-burn-fire-first', 'slots-l24-burn-cut-80', 'slots-l24-burn-cut-110',
             'slots-l24-burn-fencepost',
+            // ⛓⛓⛓ Seedling fidelity PROXIMITY's witnesses (L29 → L22; the L40 turret pair).
+            'prox-l29-key-return',
             // ⛓⛓⛓ Seedling fidelity L14: the swordless crossing, in L14.
             'l14-swordless-detour',
             // ⛓⛓⛓ Seedling fidelity CANCROSS: the oracle's door-built L16 witness.
@@ -407,9 +409,11 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity ROBUST adds two — `robust-l16-sword-idle1` (L16 → L17), `robust-l16-l18-sword-conch` (L16).
         // ⛓ Seedling fidelity SLOTS adds five — `slots-l24-fire-first`, `slots-l24-burn-fire-first`,
         // `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`, `slots-l24-burn-fencepost` (L24 → L12).
-        expect(out.exposed).toBe(59);
+        // ⛓ Seedling fidelity PROXIMITY adds `prox-l29-key-return` (L29 → L22).
+        expect(out.exposed).toBe(60);
         expect(out.tapes).toEqual([
             'burn-l24-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
+            'prox-l29-key-return',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
@@ -560,6 +564,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'slots-l24-burn-cut-80': { tape: {}, levels: [12] },
             'slots-l24-burn-cut-110': { tape: {}, levels: [12] },
             'slots-l24-burn-fencepost': { tape: {}, levels: [12] },
+            'prox-l29-key-return': { tape: {}, levels: [22] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

@@ -114,6 +114,8 @@ import {
     bodyKillRegions, dangerAt, dangerDuringTransit, dangerVolumes, forbiddenByDanger,
 } from './dangerMap.js';
 import { planDash } from './mover.js';
+import { PULSER, pulsePushes, pulserCycle } from './pulser.js';
+import { newPushable } from './pushables.js';
 import { createTraceBuilder } from './decisionTrace.js';
 import {
     STRIKE_PRESS, armIsModelled, createStrikePolicy,
@@ -431,6 +433,20 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
     // A button guarding the frontier is L4's own shape: the room's answer
     // starts with HOLDING it (the hand-authored leg's `hold` mechanic).
     'proximity-hazard:button': 'hold',
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A `ButtonRoom` ON THE FRONTIER IS
+     * PRESSED, NOT AVOIDED.** Its census volume is the 8x6 press rect
+     * (`ButtonRoom.as:32`), and the census priced it a hazard because a press
+     * writes state (`:67-98`). But the write is the PUZZLE: `room == -1` latches
+     * every `Activators` sharing `t` (*"Can't be reset to false!!"*), and the
+     * game punishes nothing — no damage, no freeze, no move. L38's corridor runs
+     * over `buttonroom@144,128`, whose press opens `cover@208,224`, the first link
+     * of the room's chain. So the verb is `hold`, whose "the obstacle IS the
+     * presser" arm (`openerPresserFor`) already derives the stance, the exemption
+     * and the latched wait; the run models the press (`activators.pressedGroups`,
+     * the cross-room write, F6's `bootPress`).
+     */
+    'proximity-hazard:buttonroom': 'hold',
     'proximity-hazard:chest': 'chest',
     /**
      * ⛓⛓⛓ SEEDLING FIDELITY WATCHER — **A SPEAKING WATCHER'S CIRCLE IS PASSED BY
@@ -484,6 +500,14 @@ export const STRATEGY_REFINEMENTS = Object.freeze([
         when: 'the presser is a `button` whose group has NO opener — every responder '
             + '`groupResponders` names is a `FALL_RESPONDERS` rock and there is at least one — '
             + 'so a press only drops a Solid into the corridor (L29, L74): avoid, do not press',
+    }),
+    Object.freeze({
+        from: 'hold',
+        to: 'pulse',
+        when: 'the responder\'s every opener is a momentary `button` and a room `Pulser` '
+            + 'whose group a latching `ButtonRoom` publishes will push a `pushableblockfire` '
+            + 'onto one of them (`pulseWeighFor`) — L38\'s chain: press the pulser\'s '
+            + 'ButtonRoom, and the pulse parks the block on the button',
     }),
     Object.freeze({
         from: 'hold',
@@ -573,6 +597,13 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * `resolveTalkStrategy`.
      */
     talk: execTalk,
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — the first executor whose presser is a
+     * MACHINE's: press the `Pulser`'s latching ButtonRoom (`hold`'s own stance and
+     * runner), then wait while the pulse parks a fire block on the momentary
+     * button the responder answers to. See `resolvePulseStrategy`.
+     */
+    pulse: execPulse,
 });
 
 /**
@@ -1540,6 +1571,12 @@ function refineStrategy(run, strategy, obstacle) {
     if (obstacle?.kind === 'proximity-hazard' && obstacle.tag === 'button'
         && fallTrapPresser(run, obstacle)) return 'skirt';
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — THE PULSE PRESSER. Asked of a RESPONDER
+     * whose openers are all momentary `button`s that a room `Pulser` will park a
+     * fire block on (`pulseWeighFor`); every other responder keeps its row.
+     */
+    if (pulseWeighFor(run, obstacle)) return 'pulse';
+    /**
      * ⚠ ASKED OF THE BUILT WORLD'S OWN ACTIVATOR ROSTER, which carries the
      * group verbatim (`lock@48,112 t=-1` in L5), rather than of the raw level
      * record: the run has the built world and `combat.killLocksIn` wants the
@@ -1615,6 +1652,7 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'talk') return resolveTalkStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'weigh') return resolveWeighStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'skirt') return resolveSkirtStrategy(run, obstacle, contacts);
+    if (strategy === 'pulse') return resolvePulseStrategy(run, obstacle, contacts, blocked);
     if (strategy !== 'hold') return null;
     return resolveHoldStrategy(run, obstacle, contacts, blocked);
 }
@@ -1732,8 +1770,69 @@ function resolveSkirtStrategy(run, obstacle, contacts) {
                     + '0-px lane there',
         });
     }
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **THE WALL IS FOR THE ALIGN, NOT THE
+     * PASS.** Since swim U2 `execSkirt` does not lean: it ALIGNS x exactly at the
+     * stance (`skirtAlignment` sweeps against the wall on the lean side) and then
+     * walks with the vertical key alone, vx 0, so x cannot move. The wall is
+     * therefore needed where the align runs — the stance — and the pass needs only
+     * a lane box that is never blocked. Asked ONLY when the rule above found no
+     * lane, so every skirt it already resolves keeps its stance and its bytes.
+     *
+     * Measured on L29's RETURN (survey step 57): from the north the stance tile is
+     * row 7, `fallrock@112,112`'s own unfallen cell, with no wall either side, so
+     * both lanes were rejected *"no wall to lean on at y=120"* and the room could
+     * be entered but not left. Row 6 is flanked by `dungeonspire@96,80` /
+     * `@128,80`, so the align runs there and the pass crosses row 7 untouched.
+     *
+     * The stance moves at most `SKIRT_STANCE_REACH` tiles further from the
+     * button, and its wall is asked over the ±`SKIRT_STANCE_BAND` px the walk to
+     * it can land in.
+     */
+    for (let k = 2; k <= SKIRT_STANCE_REACH; k += 1) {
+        const farY = centreOf(tx, below ? ty + k : ty - k).y;
+        for (const lane of lanes) {
+            const ys = [];
+            for (let y = Math.min(farY, clearY); y <= Math.max(farY, clearY); y += 1) ys.push(y);
+            const blockedAt = ys.find((y) => geometryAt(lane.x, y));
+            let walled = blockedAt === undefined;
+            for (let y = farY - SKIRT_STANCE_BAND; walled && y <= farY + SKIRT_STANCE_BAND; y += 1) {
+                if (!geometryAt(lane.x + lane.out, y)) walled = false;
+            }
+            if (!walled) continue;
+            return {
+                strategy: 'skirt',
+                target: { x: trap.presser.x, y: trap.presser.y },
+                presser: trap.presser,
+                rocks: trap.rocks,
+                lane: { side: lane.side, x: lane.x, lean: lane.lean, stanceY: farY, clearY, exitY },
+                stance: { x: lane.x, y: farY },
+                approach: 'axis-aligned',
+                rejected: [{
+                    option: 'hold',
+                    why: `${obstacle.id}'s group t=${trap.presser.t} answers only `
+                        + `[${trap.rocks.join(', ')}] — a press opens nothing and DROPS a Solid `
+                        + 'into the room (`FALL_RESPONDERS`), so pressing is a trap: avoid, do '
+                        + 'not press',
+                }, ...rejected, {
+                    option: `the stance ${k - 1} tile(s) nearer`,
+                    why: `no wall beside the ${lane.side} lane there; the align runs ${k} tiles out, `
+                        + 'where the wall is, and the pass is the vertical key alone (vx 0)',
+                }],
+            };
+        }
+    }
     return null;
 }
+
+/**
+ * ⛓ SEEDLING FIDELITY PROXIMITY — how many tiles from the button the skirt's
+ * fallback stance may move (a POLICY bound: one tile beyond the original), and
+ * the px band either side of its centre row the align wall must cover (the walk
+ * to a stance lands within the solver's arrival tolerance, which is under it).
+ */
+const SKIRT_STANCE_REACH = 3;
+const SKIRT_STANCE_BAND = 3;
 
 /**
  * ⛓⛓ SEEDLING SWIM U1, D2 — THE `skirt` EXECUTOR. From the stance (the lane x,
@@ -1826,8 +1925,34 @@ function execSkirt(run, perTick, resolved, ctx) {
             + `moved (${openBefore}|${latchedBefore} -> ${openAfter}|${latchedAfter}) — the `
             + 'skirt published its group.');
     }
+    SKIRTED.set(run, { level: run.level, cameFromBelow: up, rowY: (presser.rect.y + presser.rect.bottom) / 2 });
     return { verb: 'skirt', target: id, lane: lane.side, x: lane.x, from,
         ticks: run.ticksCompleted - from, rocksStanding: [...rocks] };
+}
+
+/**
+ * ⛓ SEEDLING FIDELITY PROXIMITY — the last skirt each run made: its level, the
+ * side the player CAME FROM, and the button row's y. `skirtGridKept` reads it.
+ */
+const SKIRTED = new WeakMap();
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **KEEP THE x GRID WHILE A CROSSING BACK IS
+ * STILL OWED.** True when this run skirted in the level it is in AND one of
+ * `remaining` (the segment's goals from the current one on) aims back on the
+ * side the skirt came from — so the lane will be crossed again, and its one
+ * admissible x is reachable only from the 0.05 grid (see `walkTo`). A segment
+ * that never turns back (L29's key then its northern doors) walks as it always
+ * did.
+ */
+function skirtGridKept(run, remaining) {
+    const sk = SKIRTED.get(run);
+    if (!sk || sk.level !== run.level) return false;
+    return remaining.some((g) => {
+        const aim = g.kind === 'reach-exit' ? g.exit
+            : g.kind === 'collect-placement' ? g.placement : null;
+        return aim && (sk.cameFromBelow ? aim.y > sk.rowY : aim.y < sk.rowY);
+    });
 }
 
 /**
@@ -1837,6 +1962,225 @@ function execSkirt(run, perTick, resolved, ctx) {
  * starts have none within 14; 16 bounds a tile's worth of cheap search.
  */
 const SKIRT_ALIGN_DEPTH = 16;
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — the shut `Cover` sharing a chest's cell,
+ * or `null`. `Cover.update`'s own comment names the shape: *"Anything that can
+ * go underneath a cover can go here"* (`Cover.as:57`), and the one thing it
+ * names is `Chest`. A cover the live run reports open is no prerequisite.
+ */
+export function coverOverChest(run, chest) {
+    const open = run.entities('openActivators') ?? new Set();
+    return (run.world.activators ?? []).find((a) => a.tag === 'cover'
+        && a.x === chest.x && a.y === chest.y && !open.has(a.id)) ?? null;
+}
+
+/** `FP.distanceRectPoint` — the pulser's reach filter (`Pulser.as:90-93`). */
+function pulseRectDistance(px, py, rx, ry, rw, rh) {
+    const dx = px < rx ? rx - px : (px > rx + rw ? px - (rx + rw) : 0);
+    const dy = py < ry ? ry - py : (py > ry + rh ? py - (ry + rh) : 0);
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A RESPONDER WHOSE BUTTON A MACHINE
+ * PRESSES.**
+ *
+ * `{responder, pulser, block, button, publisher, to}` when `obstacle` is a SHUT
+ * responder whose every opener (`world.pressers` sharing its `t`) is a momentary
+ * `button` (`localPublish` null), and some room `Pulser` both (a) is published
+ * by a LATCHING presser (`localPublish(p).value === true`, the `room == -1`
+ * ButtonRoom's *"Can't be reset to false!!"*) and (b) has a live
+ * `pushableblockfire` inside its 22 px reach whose pulse push
+ * (`pulser.pulsePushes`, the run's own transcription of `PushableBlockFire.hit`)
+ * lands it on one of those buttons. `null` otherwise.
+ *
+ * ⛔ WHY THIS IS THE ROOM'S ANSWER AND NOT A HOLD. `Button.update` republishes
+ * every tick (`Button.as:27-39`), so a player standing on the button opens the
+ * responder only while standing there — and in L38 the responder is the
+ * `cover@144,112` over the chest, whose probe line is 48 px east and 63 px north
+ * of `button@80,192`. A `Solid` on the button is the only presser that outlives
+ * the walker (`hitables` ∋ `"Solid"`), and the block's only mover in reach is
+ * the pulser (`PushableBlockFire.moveTypes` = Fire, Pulse).
+ */
+export function pulseWeighFor(run, obstacle) {
+    const row = (run.world.activators ?? []).find((a) => a.id === obstacle?.id);
+    if (!row || !(row.t >= 0)) return null;
+    if ((run.entities('openActivators') ?? new Set()).has(row.id)) return null;
+    const buttons = (run.world.pressers ?? []).filter((p) => p.t === row.t);
+    if (buttons.length === 0 || buttons.some((p) => p.tag !== 'button' || localPublish(p) !== null)) {
+        return null;
+    }
+    const live = run.entities('pushables');
+    if (!live) return null;
+    const tileOf = (x, y) => `${Math.floor(x / TILE_SIZE)},${Math.floor(y / TILE_SIZE)}`;
+    for (const pulser of run.world.pulsers ?? []) {
+        const publishers = (run.world.pressers ?? [])
+            .filter((p) => p.t === pulser.t && localPublish(p)?.value === true)
+            .sort((a, b) => (`${a.tag}@${a.x},${a.y}` < `${b.tag}@${b.x},${b.y}` ? -1 : 1));
+        if (publishers.length === 0) continue;
+        const at = { x: pulser.x + TILE_SIZE / 2, y: pulser.y + TILE_SIZE / 2 };
+        for (const p of run.world.pushables ?? []) {
+            if (p.family !== 'fire') continue;
+            const state = live.get(p.id);
+            if (!state || state.removed) continue;
+            // The run hands out the block's RECT (`run.pushables`), not its
+            // mover state; a block at rest where the rect is is the
+            // transcription's own constructor at that position.
+            const block = newPushable({ ...p, x: state.rect.x, y: state.rect.y });
+            if (pulseRectDistance(at.x, at.y, block.x, block.y, TILE_SIZE, TILE_SIZE)
+                > PULSER.radiusHit) continue;
+            const push = pulsePushes(at, block);
+            if (!push.moved) continue;
+            const to = push.block.target;
+            const button = buttons.find((b) => tileOf(b.x, b.y) === tileOf(to.x, to.y));
+            if (!button) continue;
+            const publisher = publishers[0];
+            return {
+                responder: row,
+                pulser: pulser.id,
+                pulserGroup: pulser.t,
+                block: p.id,
+                button: `${button.tag}@${button.x},${button.y}`,
+                publisher: { tag: publisher.tag, x: publisher.x, y: publisher.y,
+                    id: `${publisher.tag}@${publisher.x},${publisher.y}` },
+                to: { x: to.x, y: to.y },
+            };
+        }
+    }
+    return null;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — RESOLVE a `pulse`: the publisher's `hold`
+ * (its stance, exemption and prerequisite, unchanged) plus a WAIT whose stop is
+ * the responder open in the live run.
+ *
+ * The wait's bound is a claim the run can refute, not a tuning: two whole pulser
+ * cycles (`pulserCycle().totalTicks`, the first may already be under way when
+ * the press lands), the responder's own fade (`opensOnTick`) and `HOLD_SLACK`
+ * for the block's 16 px slide. A group the live run already reports latched
+ * needs no press: the resolution is the wait alone, where the player stands.
+ */
+function resolvePulseStrategy(run, obstacle, contacts, blocked = []) {
+    const pw = pulseWeighFor(run, obstacle);
+    if (!pw) return null;
+    const responder = pw.responder;
+    const wait = {
+        ticks: 2 * pulserCycle().totalTicks
+            + opensOnTick(RESPONDERS[responder.tag]?.fade ?? RESPONDERS.lock.fade) + HOLD_SLACK,
+        until: {
+            why: `${responder.id} is open — ${pw.block} parked on ${pw.button} by ${pw.pulser}`,
+            test: (r) => (r.entities('openActivators') ?? new Set()).has(responder.id),
+        },
+    };
+    const rejected = [{
+        option: `hold ${pw.button}`,
+        why: `${pw.button} is a momentary \`Button\` (\`Button.as:27-39\` republishes every tick), `
+            + `so ${responder.id} would shut the tick the walker left it; ${pw.pulser}'s pulse `
+            + `parks ${pw.block} on it instead, which presses it for ever`,
+    }];
+    const latched = (run.entities('latchedGroups') ?? new Set()).has(pw.pulserGroup);
+    if (latched) {
+        return { strategy: 'pulse', target: null, stance: null, pulse: pw, wait, press: false,
+            rejected: [{ option: `press ${pw.publisher.id}`,
+                why: `group t=${pw.pulserGroup} is already LATCHED in the live run` }, ...rejected] };
+    }
+    /**
+     * ⛓ THE PUBLISHER UNDER ITS OWN COVER (L38's `buttonroom@208,224` under
+     * `cover@208,224`): the stage before the press is that cover's LATCHING
+     * opener (`buttonroom@144,128`, `room == -1`), held as an ordinary `hold`
+     * whose stop is the cover open. The loop then re-raises this order and the
+     * publisher is reachable. A cover whose opener does not latch is not this
+     * arm's; the publisher's own stance derivation then refuses by name.
+     */
+    const open = run.entities('openActivators') ?? new Set();
+    const lid = (run.world.activators ?? []).find((a) => a.tag === 'cover'
+        && a.x === pw.publisher.x && a.y === pw.publisher.y && !open.has(a.id));
+    const lidOpener = lid && !(run.entities('latchedGroups') ?? new Set()).has(lid.t)
+        ? (run.world.pressers ?? []).filter((p) => p.t === lid.t && localPublish(p)?.value === true)
+            .sort((a, b) => (`${a.tag}@${a.x},${a.y}` < `${b.tag}@${b.x},${b.y}` ? -1 : 1))[0]
+        : null;
+    if (lidOpener) {
+        const uncover = resolveHoldStrategy(run,
+            { kind: 'proximity-hazard', tag: lidOpener.tag,
+                id: `${lidOpener.tag}@${lidOpener.x},${lidOpener.y}` },
+            contacts, blocked);
+        if (!uncover || uncover.stance === null) return null;
+        return { ...uncover, strategy: 'pulse', pulse: pw, uncover: lid.id,
+            rejected: [{
+                option: `press ${pw.publisher.id}`,
+                why: `${lid.id} is SHUT over it (a \`Cover\` is \`type = "Solid"\`, `
+                    + `\`Cover.as:32\`); its latching opener `
+                    + `${lidOpener.tag}@${lidOpener.x},${lidOpener.y} is pressed first`,
+            }, ...rejected, ...(uncover.rejected ?? [])] };
+    }
+    const hold = resolveHoldStrategy(run,
+        { kind: 'proximity-hazard', tag: pw.publisher.tag, id: pw.publisher.id },
+        contacts, blocked);
+    if (!hold || hold.stance === null) return null;
+    return { ...hold, strategy: 'pulse', pulse: pw, wait, press: true,
+        rejected: [...rejected, ...(hold.rejected ?? [])] };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — THE `pulse` EXECUTOR: the publisher's press
+ * (`execHold`, the verb's own runner) when the group is not yet latched, then
+ * stand still until the responder is open, inside `resolved.wait.ticks`, or
+ * refuse BY NAME — a wait that runs out is a measurement that the pulse did not
+ * park the block where `pulseWeighFor` predicted.
+ */
+function execPulse(run, perTick, resolved, ctx) {
+    const pw = resolved.pulse;
+    const what = `${ctx.what} (${pw.publisher.id} -> ${pw.pulser} -> ${pw.block} -> ${pw.button})`;
+    const from = run.ticksCompleted;
+    if (resolved.uncover && (run.entities('openActivators') ?? new Set()).has(resolved.uncover)) {
+        // The stance IS the latch's press rect, so the walk onto it pressed it
+        // and the cover's ten-tick fade can finish on the way in: nothing is
+        // left to hold, and `runHold` would refuse a hold that changes nothing.
+        return { verb: 'pulse', stage: 'uncover', target: pw.responder.id, uncovered: resolved.uncover,
+            press: null, openedOnApproach: true, from, ticks: 0 };
+    }
+    if (resolved.uncover) {
+        const uncovered = execHold(run, perTick, resolved, { ...ctx, what: `${what} uncover` });
+        if (!(run.entities('openActivators') ?? new Set()).has(resolved.uncover)) {
+            throw new SolverRefusal(`${what}: pressed ${resolved.target.x},${resolved.target.y} to `
+                + `open ${resolved.uncover} and it is still shut.`,
+            { obstacle: { kind: 'solid', id: resolved.uncover } });
+        }
+        return { verb: 'pulse', stage: 'uncover', target: pw.responder.id, uncovered: resolved.uncover,
+            press: uncovered, from, ticks: run.ticksCompleted - from };
+    }
+    // The same shape one stage on: the walk onto the publisher's press rect
+    // latched the pulser's group, so there is no press left to hold.
+    const pressedOnApproach = resolved.press
+        && (run.entities('latchedGroups') ?? new Set()).has(pw.pulserGroup);
+    const press = resolved.press && !pressedOnApproach
+        ? execHold(run, perTick, resolved, { ...ctx, what }) : null;
+    const NO_KEYS = new Set();
+    let waited = 0;
+    while (!resolved.wait.until.test(run) && waited < resolved.wait.ticks) {
+        perTick.push(NO_KEYS);
+        waited += 1;
+        const { transition } = run.advance(NO_KEYS);
+        if (transition) {
+            throw new SolverRefusal(`${what}: the wait crossed from level ${transition.from_level} `
+                + `to ${transition.to_level} on its tick ${waited}. A wait stands still.`,
+            { obstacle: { kind: 'solid', id: pw.responder.id } });
+        }
+    }
+    if (!resolved.wait.until.test(run)) {
+        const pushes = (run.ledger('pulserPushes') ?? []).filter((x) => x.block === pw.block);
+        throw new SolverRefusal(`${what}: waited the whole bound of ${resolved.wait.ticks} tick(s) `
+            + `and ${pw.responder.id} never opened — ${resolved.wait.until.why} was predicted; the `
+            + `run's pulse pushes of ${pw.block}: ${JSON.stringify(pushes)}.`,
+        { obstacle: { kind: 'solid', id: pw.responder.id } });
+    }
+    return { verb: 'pulse', target: pw.responder.id, publisher: pw.publisher.id, pulser: pw.pulser,
+        block: pw.block, button: pw.button, press, ...(pressedOnApproach ? { pressedOnApproach } : {}),
+        waited, from,
+        ticks: run.ticksCompleted - from };
+}
 
 /**
  * The shortest `{null, 'left', 'right'}` sequence (breadth-first, `null` first)
@@ -2026,6 +2370,33 @@ function resolveChestStrategy(run, obstacle, contacts) {
      * spending a leg on it.
      */
     if (run.entities('openChests')?.has?.(chest.id)) return null;
+    const covered = coverOverChest(run, chest);
+    if (covered) {
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — A CHEST UNDER A SHUT COVER IS THE
+         * COVER'S WORK ORDER FIRST. `Chest.update` opens only `if
+         * (!collide("Solid", x, y))` and a shut `Cover` (`type = "Solid"`,
+         * `Cover.as:32`) shares the chest's cell, so standing on the probe line
+         * opens nothing (measured: L38 steps 103/145, *"NEVER OPENED in 400
+         * ticks"*). And a hold on the cover's own button cannot be the answer:
+         * `Cover.update` resets the moment its group drops with the chest under
+         * it (`:51-66`), so the opener must OUTLIVE the walker. The cover is
+         * resolved through the ordinary selection; the loop re-raises the chest
+         * once it is open.
+         */
+        const sub = { kind: 'solid', tag: covered.tag, id: covered.id };
+        const verb = refineStrategy(run, 'hold', sub);
+        const resolved = verb === 'pulse' ? resolvePulseStrategy(run, sub, contacts, []) : null;
+        if (!resolved) return null;
+        return {
+            ...resolved,
+            rejected: [{
+                option: `chest ${chest.id}`,
+                why: `${covered.id} is SHUT over it — \`Chest.update\`'s gate is `
+                    + '`!collide("Solid", x, y)`, so the cover is the prerequisite, not the stance',
+            }, ...(resolved.rejected ?? [])],
+        };
+    }
     return {
         strategy: 'chest',
         target: chest,
@@ -9133,6 +9504,49 @@ function execKillByPress(run, perTick, resolved, ctx) {
 
 /** Executor: the `collect` verb, bound to live state. */
 function execCollect(run, perTick, resolved, ctx) {
+    /**
+     * ⛓ SEEDLING FIDELITY PROXIMITY — in a level this run has SKIRTED, the
+     * approach keeps the x grid (`walkTo`'s note): `runCollect`'s own approach
+     * is `chooseHeld`'s free diagonal, so the walk at the pickup is taken here
+     * with `holdOneAxis` until the ceremony starts or the ledger grows, and
+     * `runCollect` then finds the collection already under way. Measured on L29
+     * (survey step 57): the free approach left x at 115.53, off the grid the
+     * return lane needs. `ctx.keepGrid` is `skirtGridKept` asked by the goal path;
+     * every other call runs `runCollect` exactly as before.
+     */
+    if (ctx.keepGrid) {
+        const t = resolved.target;
+        const aim = t.rect
+            ? { x: (t.rect.x + t.rect.right) / 2, y: (t.rect.y + t.rect.bottom) / 2 }
+            : { x: t.x, y: t.y };
+        const before = run.ledger('collected').length;
+        const from = perTick.length;
+        let approach = 0;
+        // Arrive (the drive's own 1 px tolerance), then stand: a `special`
+        // pickup is drawn to a STATIONARY player (`Pickup` attraction), and a
+        // bang-bang walk at tolerance 0 never stops on its aim.
+        for (let n = 0; n < ctx.maxTicksPerTarget && !run.progress('inCeremony')
+            && run.ledger('collected').length === before; n += 1) {
+            const arrived = hasArrived(run.state, aim, DEFAULT_TOLERANCE);
+            const held = arrived ? new Set()
+                : holdOneAxis(chooseHeld(run.state, aim, DEFAULT_TOLERANCE), run.state, aim);
+            perTick.push(held);
+            const { transition } = run.advance(held);
+            if (transition) {
+                fail(`${ctx.what}: the axis-aligned approach crossed from level `
+                    + `${transition.from_level} to ${transition.to_level}.`);
+            }
+            approach += 1;
+        }
+        // A pickup whose ceremony is a single frame (`frames` 1) is collected
+        // inside the approach's own tick; `runCollect` would wait for a second
+        // one, so the record is written here, in its shape.
+        if (run.ledger('collected').length === before + 1 && !run.progress('inCeremony')) {
+            const record = run.ledger('collected').at(-1);
+            return { pickup: { tag: t.tag, x: t.x, y: t.y }, item: record.item, level: run.level,
+                approach, ceremony: 0, releases: 0, from, axisAligned: true };
+        }
+    }
     return runCollect(run, perTick, { pickup: { x: resolved.target.x, y: resolved.target.y } },
         ctx.maxTicksPerTarget, ctx.what);
 }
@@ -13099,9 +13513,27 @@ function solveSegmentUnder({
          * the second axis back. Asked only by a resolution that says
          * `approach: 'axis-aligned'` — `skirt`'s, whose lane admits one x.
          */
-        axisAligned = false,
+        axisAligned: axisAlignedAsked = false,
     }) => {
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — **A SKIRTED LANE IS CROSSED TWICE,
+         * SO THE GRID IS KEPT BETWEEN THE CROSSINGS.** The lane admits one x
+         * exactly (L29: 126.000), `execSkirt` aligns by an x-only search, and an
+         * x-only sequence cannot change x's fraction off the walk's 0.05 grid
+         * (swim U2). U2 kept the OUTBOUND approach axis-aligned; but every walk
+         * after the pass — to the key and back — was free to go diagonal, so the
+         * RETURN stance was reached at x = 125.34132982111198 and no sequence of
+         * any depth aligned from there (measured, survey step 57). So while this
+         * run has skirted in the level it is in AND a remaining goal aims back
+         * across the lane (`skirtGridKept`), every walk is axis-aligned too
+         * (re-asked per attempt below). No other walk is touched.
+         */
+        let axisAligned = axisAlignedAsked;
         for (let attempt = 0; ; attempt += 1) {
+            // Re-asked per attempt: a skirt applied by THIS walk's own ladder
+            // turns the rest of it axis-aligned.
+            axisAligned = axisAlignedAsked
+                || skirtGridKept(run, goals.slice(Math.max(0, goals.indexOf(goal))));
             const contacts = contactsOverride
                 ? new Set([...senseContacts(run), ...contactsOverride, ...goalRides])
                 : new Set([...senseContacts(run), ...exemptions, ...goalRides]);
@@ -13976,16 +14408,28 @@ function solveSegmentUnder({
          * cells around the placement, and every one of them is fine.
          */
         for (let guard = 0; ; guard += 1) {
-            const blocker = placementBlocker(run, resolved, contacts);
+            /**
+             * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — a chest under a SHUT `Cover` is
+             * inside a Solid that `placementBlocker` cannot name: the cover shares
+             * the chest's own cell, which is that function's "not its own blocker"
+             * exclusion. Asked here by identity (`coverOverChest`); its only verb is
+             * `pulse` — a hold on the cover's momentary button would shut it again
+             * the tick the walker left for the probe line (`resolveChestStrategy`).
+             */
+            const covered = resolved.strategy === 'chest' ? coverOverChest(run, resolved.target) : null;
+            const blocker = placementBlocker(run, resolved, contacts)
+                ?? (covered ? { kind: 'solid', tag: covered.tag, id: covered.id, covers: true } : null);
             if (!blocker) break;
             if (guard >= MAX_STRATEGIES_PER_GOAL) {
                 refuse(`${what}: cleared ${guard} obstacle(s) and the placement is STILL `
                     + `inside ${blocker.id}.`, { goal, obstacle: blocker });
             }
             const key = blocker.tag ? `${blocker.kind}:${blocker.tag}` : blocker.kind;
-            const strategy = refineStrategy(run,
-                OBSTACLE_STRATEGIES[key] ?? OBSTACLE_STRATEGIES[blocker.kind] ?? null,
-                blocker);
+            const strategy = blocker.covers
+                ? (refineStrategy(run, 'hold', blocker) === 'pulse' ? 'pulse' : null)
+                : refineStrategy(run,
+                    OBSTACLE_STRATEGIES[key] ?? OBSTACLE_STRATEGIES[blocker.kind] ?? null,
+                    blocker);
             const resolvedBlocker = strategy && STRATEGY_EXECUTORS[strategy]
                 ? resolveObstacleStrategy(run, strategy, blocker, contacts,
                     { x: goal.placement.x, y: goal.placement.y }, null, [...refusedOrders])
@@ -14057,6 +14501,9 @@ function solveSegmentUnder({
         }
         const record = exec(run, perTick, resolved, {
             maxTicksPerTarget, economies, dashMode, what, before, walkTo, goal, equip,
+            // ⛓ FIDELITY PROXIMITY: `execCollect`'s grid-keeping approach.
+            ...(skirtGridKept(run, goals.slice(goals.indexOf(goal)))
+                ? { keepGrid: true } : {}),
         });
         records.push({ goal: 'collect-placement', strategy: resolved.strategy, ...record });
         if (perTick.length === verbTick) {
