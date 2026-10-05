@@ -97,7 +97,7 @@ export {
 export { fallDestination, PhysicsV2Error, playerBoxAt, terrainProbeRect } from './playerPhysicsV2.js';
 // presses.js — botDriverV2, solverBot, strikePolicy · seedling 10, physics 5
 export {
-    DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,
+    auditFire, DARK_SWORD_DAMAGE, distanceRectPoint, DOWN, EMPTY_SWORD_WINDOW, LEFT, RIGHT, SLASH_HIT_TICKS, SLASH_REACH,
     slashReachFor, slashRect, SWORD_DAMAGE, swordWindowReplace, swordWindowSchedule, swordWindowStep, UP,
 } from './presses.js';
 // pull.js — solverBot · seedling 2

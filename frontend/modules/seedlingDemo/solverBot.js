@@ -107,7 +107,7 @@ import {
     HITBOX, WALK_SPEED,
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
     chestStanceBand,
-    fireRect, inventorySlotsFor,
+    fireRect, inventorySlotsFor, auditFire,
     pullModelled, pullsDrainingInto,
 } from './solverView.js';
 import {
@@ -403,6 +403,20 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
     'solid:breakablerock': 'break',
     'solid:breakablerockghost': 'break',
     'solid:magicallock': 'kill',
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY BURN — **A BURNABLE TREE IN THE CORRIDOR IS A
+     * CLEARABLE OBSTACLE**, and the rules arc's route survey is why the row
+     * exists: six of its refusals (steps 30, 62, 72, 93, 101, 102 — L44, L24,
+     * L37) read *"Obstacle: solid:burnabletree … No strategy row exists for this
+     * obstacle"*, the largest named-obstacle family past sphere 2.2.
+     *
+     * The model has burned trees since R5 slice 12 (`levelRun.applyFire`'s
+     * `BurnableTree` arm, `burnedTrees`, the persistence write at `goneAt`) and
+     * `botDriverV2.runFire`'s `burns` arm drives it; the only solver caller was
+     * the Bob Boss encounter's burn leg. `burn` is that leg as an obstacle verb
+     * (`resolveBurnStrategy` / `execBurn`), gated on the Fire the game requires.
+     */
+    'solid:burnabletree': 'burn',
     // A button guarding the frontier is L4's own shape: the room's answer
     // starts with HOLDING it (the hand-authored leg's `hold` mechanic).
     'proximity-hazard:button': 'hold',
@@ -524,6 +538,14 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * trigger the obstacle it was selected for. See `resolveSkirtStrategy`.
      */
     skirt: execSkirt,
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY BURN — `break`'s shape with the fire weapon: a
+     * stance from which `Player.fire()`'s 32x32 rect and 16 px radius reach the
+     * tree, an equip of the Fire's slot, `runFire`'s `burns` arm (still solid at
+     * T+10, gone by T+53), and the sword's slot selected again. See
+     * `resolveBurnStrategy`.
+     */
+    burn: execBurn,
 });
 
 /**
@@ -853,21 +875,312 @@ function rectsOverlapInclusive(a, b) {
     return a.x <= b.x + b.w && b.x <= a.x + a.w && a.y <= b.y + b.h && b.y <= a.y + a.h;
 }
 
-/** The nearest walkable tile centre whose `fireRect` reaches `tree`. */
-function burnStanceFor(run, tree) {
-    let best = null;
-    for (let ty = 0; ty < 12; ty += 1) {
-        for (let tx = 0; tx < 12; tx += 1) {
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY BURN — THE BURN STANCE'S CANDIDATES, HOISTED out of
+ * the encounter's `burnStanceFor` so the `burn` obstacle verb and the Bob Boss
+ * burn leg are ONE derivation: every walkable tile centre whose `fireRect`
+ * overlaps `tree`, nearest to the player first.
+ *
+ * ⛔ THE ORDER IS THE OLD LOOP'S EXACTLY. `burnStanceFor` kept the first
+ * STRICTLY nearer cell in its (ty, tx) scan; a stable sort by distance over the
+ * same scan puts that cell first, ties in scan order, so the encounter's stance
+ * (and `r9-solve-32`'s trace) cannot move.
+ *
+ * `tiles` bounds the scan. The encounter keeps its own 12x12 room
+ * (`BOB_ARENA_TILES`); an obstacle verb passes the window around the tree
+ * (`burnWindowTiles`), because L37 is wider and taller than twelve tiles and
+ * its tree stands at y 192 — the old scan's last row.
+ */
+const BOB_ARENA_TILES = Object.freeze({ tx0: 0, tx1: 11, ty0: 0, ty1: 11 });
+
+function burnStanceCandidates(run, tree, tiles = BOB_ARENA_TILES) {
+    const out = [];
+    for (let ty = tiles.ty0; ty <= tiles.ty1; ty += 1) {
+        for (let tx = tiles.tx0; tx <= tiles.tx1; tx += 1) {
             const cx = tx * TILE_SIZE + TILE_SIZE / 2;
             const cy = ty * TILE_SIZE + TILE_SIZE / 2;
             const fr = fireRect(cx, cy);
             if (!rectsOverlapInclusive({ x: fr.x, y: fr.y, w: fr.w, h: fr.h }, tree.rect)) continue;
             if (plannerObstacleAt(run.world, cx, cy, null, solverPlanOpts(run, new Set(), {})) !== null) continue;
-            const d = Math.hypot(cx - run.state.x, cy - run.state.y);
-            if (!best || d < best.d) best = { x: cx, y: cy, d };
+            out.push({ x: cx, y: cy, d: Math.hypot(cx - run.state.x, cy - run.state.y) });
         }
     }
+    return out.sort((a, b) => a.d - b.d);
+}
+
+/** The nearest walkable tile centre whose `fireRect` reaches `tree`. */
+function burnStanceFor(run, tree) {
+    const [best] = burnStanceCandidates(run, tree);
     return best ? { x: best.x, y: best.y } : null;
+}
+
+/**
+ * The tile window from which a 32x32 `fireRect` centred on a tile centre can
+ * overlap `tree.rect`: the tree's own tiles plus the two the rect's 16 px
+ * half-width reaches on every side, clamped at 0.
+ */
+function burnWindowTiles(tree) {
+    const span = (lo, hi) => [Math.max(0, Math.floor(lo / TILE_SIZE) - 2),
+        Math.floor((hi - 1) / TILE_SIZE) + 2];
+    const [tx0, tx1] = span(tree.rect.x, tree.rect.right);
+    const [ty0, ty1] = span(tree.rect.y, tree.rect.bottom);
+    return { tx0, tx1, ty0, ty1 };
+}
+
+/**
+ * What a fire press from `at` sets alight, asked of the TRANSCRIPTION
+ * (`presses.auditFire` — the rect, the 16 px radius cut with its transcribed
+ * `originY`, and `FIRE_ARM_POLICY`) rather than of the rect alone.
+ * `burnStanceFor`'s overlap test admits a corner cell the radius cut refuses,
+ * and the encounter learns that from `runFire`'s effect check; an obstacle
+ * verb asks first.
+ *
+ * @returns `{ trees: [id…], others: [id…] }` — the BurnableTrees the press
+ *   reaches, and every OTHER responder whose fire arm would act (a
+ *   `PushableBlockFire`, a rope, a turret) or refuse. A stance with `others`
+ *   is not a burn stance: `runFire`'s `burns` arm certifies no push, and a
+ *   refused arm throws in `applyFire`.
+ */
+function fireReachFrom(run, at) {
+    const audit = auditFire(run.world, at, { pushables: run.entities('pushables') });
+    const trees = [];
+    const others = [];
+    for (const r of audit.modelled) {
+        if (r.as3 === 'BurnableTree') trees.push(r.treeId ?? r.id);
+        else others.push(r.id);
+    }
+    for (const r of audit.refused) others.push(r.id);
+    return { trees, others };
+}
+
+/**
+ * ⛓⛓ SEEDLING FIDELITY BURN — **THE LEAN.** A tile centre beside a tree is
+ * often OUT of the fire's reach, and the reason is a transcribed quirk, not
+ * the rect: `Player.as:1028` measures the 16 px radius against the tree's box
+ * built with the PLAYER's `originY` (`fireRadiusDistance`), so a 32x32
+ * `centerOO` tree reads 14 px LOWER than it stands. From above, the cell
+ * centre is 19 px from that box (L24's `burnabletree@32,128`, measured); the
+ * player has to stand against the tree's top edge.
+ *
+ * So a candidate whose centre misses is offered once more: hold the one key
+ * toward the tree (only where the cell is beside it on one axis) until the
+ * box stops against the solid, release until at rest, and ask the audit again
+ * from THERE. Previewed with the run's own stepper (`run.previewStepper`), and
+ * re-asked live by the executor before it presses.
+ */
+const BURN_LEAN_MAX = 40;
+const BURN_SETTLE_MAX = 60;
+
+function burnLeanKey(c, tree) {
+    const inX = c.x >= tree.rect.x && c.x <= tree.rect.right;
+    const inY = c.y >= tree.rect.y && c.y <= tree.rect.bottom;
+    if (inX && c.y < tree.rect.y) return 'down';
+    if (inX && c.y > tree.rect.bottom) return 'up';
+    if (inY && c.x < tree.rect.x) return 'right';
+    if (inY && c.x > tree.rect.right) return 'left';
+    return null;
+}
+
+/** Hold `key` until the box stops, then nothing until at rest — on a preview. */
+function previewLean(run, from, key) {
+    const step = run.previewStepper();
+    let p = { ...run.state, x: from.x, y: from.y, vx: 0, vy: 0 };
+    const held = new Set([key]);
+    const NONE = new Set();
+    for (let i = 0; i < BURN_LEAN_MAX; i += 1) {
+        const q = step(p, held);
+        const stopped = q.x === p.x && q.y === p.y;
+        p = q;
+        if (stopped) break;
+    }
+    for (let i = 0; i < BURN_SETTLE_MAX && (p.vx !== 0 || p.vy !== 0); i += 1) p = step(p, NONE);
+    return (p.vx === 0 && p.vy === 0) ? { x: p.x, y: p.y } : null;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY BURN — RESOLVE the `burn` work order: a
+ * `burnabletree` on the frontier of a corridor.
+ *
+ * ⛔ **THE GATE IS THE GAME'S, AND IT IS ASKED BEFORE A STANCE.** Only fire
+ * burns a tree: `BurnableTree.hit(t)` is `if (t == "Fire" && !burn)`, and
+ * `t = "Fire"` comes from `Player.fire()` alone (`genericHit(e, "Fire", …)`,
+ * `Player.as:1032`), which runs while `firing` — set by `useItem` cases 1
+ * (Fire) and 5 (the Fire Wand fusion). A sword, spear or wand swing reaches the
+ * tree and does nothing. So:
+ *   · no Fire and no Fire Wand → refused by name: the tree NEEDS FIRE;
+ *   · the Fire Wand → refused by name: `levelRun.weaponForPress` refuses
+ *     `useItem` case 5 (one press, two windows), so the model cannot fire it.
+ *
+ * ⛔ **THE STANCE IS ASKED OF THE AUDIT** (`fireReachFrom`): the tree is in
+ * what the press would set alight and nothing else responds. Reachability is
+ * `stanceReaches`, the derivation every stance verb uses (with the same lazy
+ * hypothesis), so a tree whose only stance is behind another obstacle is
+ * resolved through that obstacle like any other stance.
+ */
+function resolveBurnStrategy(run, obstacle, contacts, blocked = []) {
+    const tree = (run.world.burnableTrees ?? []).find((t) => t.id === obstacle.id);
+    if (!tree) return null;
+    const inv = run.progress('inventory') ?? {};
+    const refusal = (why) => ({
+        strategy: 'burn', held: false, tree: obstacle.id,
+        rejected: [{ option: `burn ${obstacle.id}`, why }],
+    });
+    if (inv.hasFireWand) {
+        return refusal('the run holds the FIRE WAND fusion, whose slot is `useItem` case 5 '
+            + '(`wanding` AND `firing` on one press). `levelRun.weaponForPress` refuses that case '
+            + 'by name — two windows on one press are not modelled — so the burn this tree needs '
+            + 'cannot be pressed by this model. ⇒ the work order is the case-5 press, not a stance.');
+    }
+    if (!inv.hasFire) {
+        return refusal('this run does not hold FIRE. `BurnableTree.hit(t)` is '
+            + '`if (t == "Fire" && !burn)`, and only `Player.fire()` passes `"Fire"` '
+            + '(`useItem` case 1, the Fire\'s slot) — a sword, spear or wand swing reaches the '
+            + 'tree and does nothing. ⇒ the tree NEEDS FIRE: an item the route has not '
+            + 'collected yet, which no stance or budget can substitute for.');
+    }
+    if ((run.entities('burnedTrees') ?? new Set()).has(tree.id)
+        || run.ledger('treeBurns').some((b) => b.id === tree.id)) {
+        // Burning already: `hit()` is behind `!burn`, so a press does nothing.
+        // The frontier will see it gone at `goneAt`; nothing to resolve.
+        return null;
+    }
+    // What the burn uncovers — declared to `runFire`, whose gone-check would
+    // otherwise read an exit volume under the tree as "something else shares
+    // the cell".
+    const overPit = (run.world.pitTiles ?? []).some((pt) => rectsOverlapInclusive(tree.rect, pt.rect));
+    const overExit = (run.world.teleporters ?? []).some((tp) => rectsOverlapInclusive(tree.rect, tp.rect));
+    const candidates = burnStanceCandidates(run, tree, burnWindowTiles(tree));
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    let unreached = 0;
+    let missed = 0;
+    let crowded = 0;
+    for (const c of candidates) {
+        let reach = fireReachFrom(run, c);
+        let lean = null;
+        if (!reach.trees.includes(tree.id)) {
+            const key = burnLeanKey(c, tree);
+            const leaned = key ? previewLean(run, c, key) : null;
+            const again = leaned ? fireReachFrom(run, leaned) : null;
+            if (!again || !again.trees.includes(tree.id)) { missed += 1; continue; }
+            reach = again;
+            lean = { key, at: leaned };
+        }
+        if (reach.others.length > 0) { crowded += 1; continue; }
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (!reached) { unreached += 1; continue; }
+        // ⛓ The live position may already be the stance (`deriveSwingStance`'s
+        // rule): no approach is owed, and `walkTo` is not asked for a
+        // zero-length corridor.
+        const here = !lean && run.state.x === c.x && run.state.y === c.y;
+        return {
+            strategy: 'burn',
+            postCondition: 'gone',
+            tree: tree.id,
+            burns: reach.trees.map((id) => {
+                const t = run.world.burnableTrees.find((b) => b.id === id);
+                return { x: t.x, y: t.y };
+            }),
+            burnsIds: reach.trees,
+            overPit,
+            overExit,
+            stance: here ? null : { x: c.x, y: c.y },
+            at: lean ? { ...lean.at } : { x: c.x, y: c.y },
+            lean: lean ? lean.key : null,
+            discharged: reached.discharged,
+            rejected: [{
+                option: 'break / hold / shove / kill',
+                why: `${obstacle.id} is a \`BurnableTree\`: a \`Solid\` with no \`tSet\`, no push `
+                    + 'and no death. `hit(t)` acts only on `t == "Fire"`, and `burnEnd -> die()` '
+                    + '(41 ticks after the press) is what removes it.',
+            }, ...hypothesisRejection(reached.discharged)],
+        };
+    }
+    throw new SolverRefusal(`solverBot: no REACHABLE stance for a fire press at ${tree.id} `
+        + `in level ${run.level} — ${candidates.length} walkable cell(s) put \`fireRect\` on the `
+        + `tree; ${missed} were cut by the 16 px radius (from the cell centre and from a lean `
+        + `against the tree), ${crowded} also reached another fire `
+        + `responder, and ${unreached} plan no corridor from (${run.state.x},${run.state.y}). `
+        + '⇒ the tree is on the frontier and the room offers nowhere to stand and burn it.',
+    { obstacle: { kind: 'solid', id: tree.id } });
+}
+
+/**
+ * Executor: the `burn` verb — SETTLE, SELECT THE FIRE, PRESS, WAIT FOR THE
+ * WORLD, SELECT THE OLD SLOT AGAIN.
+ *
+ * ⛔ **THE SLOT IS RESTORED, AND THAT IS NOT TIDINESS.** Every later walk's
+ * strike policy (`strikePolicyFor`) reads the INVENTORY's sword, not the
+ * selected slot, and presses `primary` — with the Fire still selected that
+ * press is a fire press: a different window, a different rect and a press
+ * `levelRun` refuses inside an open window. So the slot the walk arrived with
+ * is selected again once the tree is gone. An equip is a `Bot.as` write to
+ * `Main.primary` (a tape's `equips` field), never a key, and costs no tick.
+ *
+ * The press, the still-solid reading at T+10, the gone reading and the stray
+ * check are `runFire`'s `burns` arm, unchanged — the Bob Boss leg's verb.
+ */
+function execBurn(run, perTick, resolved, ctx) {
+    const refuse = (why) => {
+        throw new SolverRefusal(why, { obstacle: { kind: 'solid', id: resolved.tree } });
+    };
+    if (resolved.held === false) {
+        return refuse(`${ctx.what}: ${resolved.tree} cannot be burned by this run — `
+            + `${resolved.rejected[0].why}`);
+    }
+    if (!ctx.equip) {
+        throw new Error(`${ctx.what}: the burn verb needs the segment's \`equip\` (a slot `
+            + 'selection the tape carries); this caller handed none.');
+    }
+    const from = perTick.length;
+    const NO_KEYS = new Set();
+    const settle = (what) => {
+        for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+            if (i > BURN_SETTLE_MAX) refuse(`${ctx.what}: ${what} never came to rest.`);
+            perTick.push(NO_KEYS);
+            const { transition } = run.advance(NO_KEYS);
+            if (transition) refuse(`${ctx.what}: the run crossed to level ${transition.to_level} `
+                + `while settling after ${what}.`);
+        }
+    };
+    settle('the walk to the burn stance');
+    if (resolved.lean) {
+        // The lean the resolver previewed: hold toward the tree until the box
+        // stops against it, then nothing until at rest.
+        const held = new Set([resolved.lean]);
+        for (let i = 0; i < BURN_LEAN_MAX; i += 1) {
+            const before = { x: run.state.x, y: run.state.y };
+            perTick.push(held);
+            const { transition } = run.advance(held);
+            if (transition) refuse(`${ctx.what}: the lean toward ${resolved.tree} crossed to `
+                + `level ${transition.to_level}.`);
+            if (run.state.x === before.x && run.state.y === before.y) break;
+        }
+        settle('the lean');
+    }
+    const reach = fireReachFrom(run, run.state);
+    if (!reach.trees.includes(resolved.tree) || reach.others.length > 0) {
+        refuse(`${ctx.what}: the walk came to rest at (${run.state.x},${run.state.y}) and a fire `
+            + `press from there reaches [${reach.trees.join(', ')}] and `
+            + `[${reach.others.join(', ')}] — not ${resolved.tree} alone. The stance this verb `
+            + `derived was (${resolved.at.x},${resolved.at.y}); a walk that ends somewhere else `
+            + 'is a corridor finding, not a tree one.');
+    }
+    const prior = run.progress('primary');
+    if (run.progress('primaryWeapon') !== 'fire') {
+        const slot = inventorySlotsFor(run.progress('inventory')).indexOf(1);
+        if (slot < 0) refuse(`${ctx.what}: the inventory has no Fire slot.`);
+        ctx.equip(slot);
+    }
+    const burns = reach.trees.map((id) => {
+        const t = run.world.burnableTrees.find((b) => b.id === id);
+        return { x: t.x, y: t.y };
+    });
+    const rec = runFire(run, perTick, { burns, overPit: resolved.overPit, overExit: resolved.overExit },
+        `${ctx.what} (${resolved.tree})`);
+    if (run.progress('primary') !== prior) ctx.equip(prior);
+    return { verb: 'burn', target: resolved.tree, burned: reach.trees, from,
+        ticks: perTick.length - from, pressTick: rec?.pressTick ?? null,
+        stance: resolved.stance, lean: resolved.lean ?? null, restoredSlot: prior };
 }
 
 /**
@@ -1015,6 +1328,7 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'keylock') return resolveKeylockStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'touch') return resolveTouchStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'break') return resolveBreakStrategy(run, obstacle, contacts, blocked);
+    if (strategy === 'burn') return resolveBurnStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'weigh') return resolveWeighStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'skirt') return resolveSkirtStrategy(run, obstacle, contacts);
     if (strategy !== 'hold') return null;
@@ -12099,6 +12413,9 @@ function solveSegmentUnder({
                      * (§11.7's law, read for a verb that sequences).
                      */
                     walkTo, goal,
+                    // ⛓ Seedling fidelity BURN — a verb may select a slot
+                    // (`burn` selects the Fire's and then the old one again).
+                    equip,
                 });
                 records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
                 // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
@@ -12592,7 +12909,7 @@ function solveSegmentUnder({
             }
             const rec = STRATEGY_EXECUTORS[strategy](run, perTick, resolvedBlocker, {
                 maxTicksPerTarget, economies, dashMode, what: `${what} -> ${strategy}`,
-                before: null, walkTo, goal,
+                before: null, walkTo, goal, equip,
             });
             records.push({ goal: goal.kind, strategy, ...rec });
             for (const c of resolvedBlocker.exempt ?? []) exemptions.add(c);
@@ -12632,7 +12949,7 @@ function solveSegmentUnder({
             });
         }
         const record = exec(run, perTick, resolved, {
-            maxTicksPerTarget, economies, dashMode, what, before, walkTo, goal,
+            maxTicksPerTarget, economies, dashMode, what, before, walkTo, goal, equip,
         });
         records.push({ goal: 'collect-placement', strategy: resolved.strategy, ...record });
         if (perTick.length === verbTick) {
