@@ -353,6 +353,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f1-l5-lock-removal', 'f1-l5-open-lock-bait',
             // ⛓⛓⛓ Seedling fidelity F6 (I01): L17 booted in the chain-end state.
             'f6-l17-reentry',
+            // ⛓⛓⛓ Seedling fidelity L14: the swordless crossing, in L14.
+            'l14-swordless-detour',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -380,9 +382,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity F1 takes it to 43 — `f1-l5-lock-removal` and
         // `f1-l5-open-lock-bait`, in L5.
         // ⛓ Seedling fidelity F6 takes it to 44 — `f6-l17-reentry`, in L17.
-        expect(out.exposed).toBe(44);
+        // ⛓ Seedling fidelity L14 takes it to 45 — `l14-swordless-detour`, in L14.
+        expect(out.exposed).toBe(45);
         expect(out.tapes).toEqual([
-            'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
+            'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'l14-swordless-detour', 'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
@@ -514,6 +517,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f1-l5-lock-removal': { tape: {}, levels: [5, 6] },
             'f1-l5-open-lock-bait': { tape: {}, levels: [5] },
             'f6-l17-reentry': { tape: {}, levels: [17] },
+            'l14-swordless-detour': { tape: {}, levels: [14] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
@@ -1364,10 +1368,11 @@ describe('R8_STRATEGY_EXECUTORS — ⚖ §11.8a as data, and the checks that kee
     it('the ladder is AVOID -> (PULL) -> TIME -> BAIT -> KILL and every rung names its tool', () => {
         // ⛓ R9 slice L16: PULL is the one CONDITIONAL rung (§59.4 D2).
         // ⛓ U15-swim D2: DODGE is the second (a spit-only danger, a stall on the walk).
+        // ⛓ Fidelity L14: DETOUR is the last (a longer corridor, asked after KILL refused).
         expect(R8_STRATEGY_EXECUTORS.ladder.map((r) => r.rung))
-            .toEqual(['avoid', 'dodge', 'pull', 'time', 'bait', 'kill']);
+            .toEqual(['avoid', 'dodge', 'pull', 'time', 'bait', 'kill', 'detour']);
         expect(R8_STRATEGY_EXECUTORS.ladder.filter((r) => r.conditional).map((r) => r.rung))
-            .toEqual(['dodge', 'pull']);
+            .toEqual(['dodge', 'pull', 'detour']);
         for (const r of R8_STRATEGY_EXECUTORS.ladder) {
             expect(r.tool.length).toBeGreaterThan(20);
             expect(r.refusesWith.length).toBeGreaterThan(20);

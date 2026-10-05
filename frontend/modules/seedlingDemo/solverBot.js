@@ -2518,7 +2518,16 @@ export function strikePolicyFor(run, { dashPlan = null,
  * held-set sequences.
  */
 export function previewWalk(run, wps, tolerance = 0,
-    { strike = null, standFor = 0, axisAligned = false, stall = null } = {}) {
+    { strike = null, standFor = 0, axisAligned = false, stall = null,
+        /**
+         * ⛓ SEEDLING FIDELITY L14 — an OPT-IN early stop: `(sample) => boolean`,
+         * asked of each transit sample as it is taken; `true` ends the preview
+         * there with `truncated.kind === 'stopped'`. The DETOUR search previews
+         * hundreds of candidates and needs only each one's FIRST danger, which
+         * on L16 lands ~40 ticks into a ~220-tick walk. `null` (every other
+         * caller) changes nothing.
+         */
+        stopWhen = null } = {}) {
     const startTick = run.ticksCompleted;
     const step = run.previewStepper();
     /**
@@ -2946,6 +2955,11 @@ export function previewWalk(run, wps, tolerance = 0,
                 sample.spits = spitForecast.step(st, { slashing: slashState?.slashing === true });
             }
             samples.push(sample);
+            if (stopWhen && stopWhen(sample)) {
+                truncated = { kind: 'stopped', at: { x: st.x, y: st.y },
+                    why: 'the caller stopped the preview at this sample' };
+                break;
+            }
             // ⛔ `drive`'s own line, including the transport arm: a player in
             // flight presses nothing, and a preview that steered through a
             // fall would schedule ticks the game ignores.
@@ -9945,6 +9959,210 @@ function planWaypointsOrNull(world, from, aim, allowTeleporter, opts) {
 }
 
 /**
+ * ⛓ SEEDLING FIDELITY L14 — THE DETOUR RUNG's bounds. `maxVias` is how many
+ * intermediate cells a candidate corridor may bend through; `maxPreviews` and
+ * `maxPlanned` are the `previewWalk`s and the `planWaypoints` legs the search
+ * may spend before it refuses BY NAME with the counts.
+ *
+ * ⚠ THE TWO WORK BOUNDS ARE CALIBRATED, AND SAY SO: L14's swordless crossing
+ * is found at 253 previews and 397 legs, and the bounds are ~1.2x that. What
+ * they buy is the cost of a FAILING search: L16's pre-sword chaser refusal
+ * spent 45 s at 600 previews (its legs cost ~35 ms each — the string-pull), and
+ * every chaser-only EXHAUSTED climb pays this rung before it refuses.
+ */
+export const DETOUR_RUNG = Object.freeze({ maxVias: 2, maxPreviews: 300, maxPlanned: 500 });
+
+/** A polyline's length, from `from` through every waypoint. */
+function corridorLength(from, wps) {
+    let n = 0;
+    let at = from;
+    for (const w of wps) { n += Math.hypot(w.x - at.x, w.y - at.y); at = w; }
+    return n;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY L14 — **THE DETOUR RUNG: A CORRIDOR BENT THROUGH VIA
+ * CELLS, PREVIEWED WITH THE CHASERS STEPPED AGAINST IT.**
+ *
+ * ⚖ The user, 2026-10-04: *"Make an attempt to find a swordless strategy that
+ * gets through … We should derive the requirements from what the solver can
+ * do."* Every rung below this one asks about ONE corridor — the planner's
+ * shortest — or about a STANCE to wait in. None asks the question a chaser room
+ * with nothing lethal in it actually poses: **is there a LONGER walk the bodies
+ * cannot close on?** A bob chases only inside its 80 px leash and the walk is
+ * faster than it, so a corridor that goes AROUND the pack (along a wall, out of
+ * reach of the bodies it passes) is safe where the straight one is not.
+ *
+ * ⛔ THE SEARCH IS BEST-FIRST OVER VIA SEQUENCES AND EVERY CANDIDATE IS THE
+ * PROBE'S OWN QUESTION. A candidate is `from → v1 [→ v2] → aim`, each leg the
+ * planner's own (`planWaypoints` with the walk's own options), ordered by
+ * planned length plus the straight line home — shortest first, ties by the
+ * vias' y then x, so the corridor chosen is not an artifact of iteration order.
+ * `certify(wps)` is the caller's `previewWalk` + `probeSamples`: the bodies are
+ * stepped against THIS candidate's player, per tick, by the run's own
+ * `chaserForecast` — one danger predicate, not a second reading of it (trap
+ * 567). A prefix already dangerous on the way to its last via is not extended
+ * (every extension walks those ticks first).
+ *
+ * ⛔ IT IS ASKED ONLY WHERE THE LADDER IS EXHAUSTED — after every existing
+ * rung refused — so no corridor a committed solve walks can change.
+ *
+ * Returns `{wps, vias, previews, ticks, length}` or `{wps: null, why}`.
+ *
+ * @param {object} run
+ * @param {object} o
+ * @param {{x:number,y:number}} o.aim
+ * @param {object} o.planOpts  the walk's own `solverPlanOpts`
+ * @param {(wps: object[]) => {hit: object|null, truncated: object|null, ticks: number}} o.certify
+ */
+export function deriveChaserDetour(run, {
+    aim, allowTeleporter = null, planOpts, certify,
+    maxVias = DETOUR_RUNG.maxVias, maxPreviews = DETOUR_RUNG.maxPreviews,
+    maxPlanned = DETOUR_RUNG.maxPlanned,
+}) {
+    const pitch = planOpts.lattice ?? DEFAULT_LATTICE;
+    const from = { x: run.state.x, y: run.state.y };
+    const home = nodeAt(from.x, from.y, pitch);
+    const legs = new Map();
+    let planned = 0;
+    const leg = (a, b, tele) => {
+        const k = `${a.x},${a.y}>${b.x},${b.y}`;
+        if (!legs.has(k)) {
+            planned += 1;
+            legs.set(k, planWaypointsOrNull(run.world, a, b, tele, planOpts));
+        }
+        return legs.get(k);
+    };
+    // The via set: every lattice cell of the room the walk can plan to from here
+    // (`world.width`/`height` are in TILES).
+    const vias = [];
+    const cols = Math.ceil(((run.world.width ?? 0) * TILE_SIZE) / pitch);
+    const rows = Math.ceil(((run.world.height ?? 0) * TILE_SIZE) / pitch);
+    for (let ty = 0; ty < rows; ty += 1) {
+        for (let tx = 0; tx < cols; tx += 1) {
+            if (tx === home.tx && ty === home.ty) continue;
+            const c = nodeCentre(tx, ty, pitch);
+            const wps = leg(from, c, null);
+            if (wps && wps.length > 0) vias.push(c);
+        }
+    }
+    /**
+     * ⛓ THE OPEN SET IS A HEAP AND ITS LEGS ARE PLANNED LAZILY. A node enters
+     * with the straight line to its newest via as its cost — a LOWER bound on
+     * the planned leg — and is planned only when it reaches the top; then it
+     * goes back in at its planned cost. The pop order is the planned-length
+     * order either way (a bound never overtakes the exact cost it bounds); what
+     * it saves is the A* for every extension nobody pops. Measured on L16's
+     * pre-sword refusal: the eager form spent ~55 of its 63 s planning legs.
+     */
+    const order = (a, b) => {
+        if (a.est !== b.est) return a.est - b.est;
+        for (let i = 0; i < Math.min(a.seq.length, b.seq.length); i += 1) {
+            if (a.seq[i].y !== b.seq[i].y) return a.seq[i].y - b.seq[i].y;
+            if (a.seq[i].x !== b.seq[i].x) return a.seq[i].x - b.seq[i].x;
+        }
+        if (a.seq.length !== b.seq.length) return a.seq.length - b.seq.length;
+        return (a.prefix ? 0 : 1) - (b.prefix ? 0 : 1);
+    };
+    const open = [];
+    const heapPush = (n) => {
+        open.push(n);
+        for (let i = open.length - 1; i > 0;) {
+            const up = (i - 1) >> 1;
+            if (order(open[i], open[up]) >= 0) break;
+            [open[i], open[up]] = [open[up], open[i]];
+            i = up;
+        }
+    };
+    const heapPop = () => {
+        const top = open[0];
+        const tail = open.pop();
+        if (open.length > 0) {
+            open[0] = tail;
+            for (let i = 0; ;) {
+                const l = 2 * i + 1;
+                const r = l + 1;
+                let m = i;
+                if (l < open.length && order(open[l], open[m]) < 0) m = l;
+                if (r < open.length && order(open[r], open[m]) < 0) m = r;
+                if (m === i) break;
+                [open[i], open[m]] = [open[m], open[i]];
+                i = m;
+            }
+        }
+        return top;
+    };
+    const toAim = (v) => Math.hypot(aim.x - v.x, aim.y - v.y);
+    // A planned node: `prefix` is its corridor through its last via.
+    const pushPlanned = (seq, prefix) => heapPush({ seq, prefix,
+        est: corridorLength(from, prefix) + toAim(seq[seq.length - 1]) });
+    // A lazy node: its last leg is not planned yet; `est` bounds it from below.
+    const pushLazy = (seq, base, baseLength) => {
+        const a = seq[seq.length - 2];
+        const v = seq[seq.length - 1];
+        heapPush({ seq, prefix: null, base, baseLength,
+            est: baseLength + Math.hypot(v.x - a.x, v.y - a.y) + toAim(v) });
+    };
+    for (const v of vias) pushPlanned([v], leg(from, v, null));
+    let previews = 0;
+    let candidates = 0;
+    let pruned = 0;
+    while (open.length > 0 && previews < maxPreviews && planned < maxPlanned) {
+        const node = heapPop();
+        const last = node.seq[node.seq.length - 1];
+        if (!node.prefix) {
+            const more = leg(node.seq[node.seq.length - 2], last, null);
+            if (more && more.length > 0) pushPlanned(node.seq, [...node.base, ...more]);
+            continue;
+        }
+        const tail = leg(last, aim, allowTeleporter);
+        /**
+         * ⛔ ONE PREVIEW PER CANDIDATE, AND IT ALSO ANSWERS THE PREFIX. A sample
+         * carries the index of the waypoint it walks toward (`wp`), so a danger
+         * met while still walking the prefix's waypoints condemns the prefix and
+         * every extension of it; a danger met after them clears the prefix
+         * (its ticks are the same ticks). Only a candidate with no plannable
+         * tail spends a preview on the prefix alone.
+         */
+        let prefixClear = null;
+        if (tail) {
+            const wps = [...node.prefix, ...tail];
+            candidates += 1;
+            previews += 1;
+            const r = certify(wps);
+            if (!r.hit && (!r.truncated || r.truncated.kind === 'crossed')) {
+                return { wps, vias: node.seq.map((v) => ({ x: v.x, y: v.y })), previews,
+                    candidates, planned, ticks: r.ticks, length: Math.round(corridorLength(from, wps)) };
+            }
+            if (r.hit) prefixClear = r.hitWp >= node.prefix.length;
+        }
+        if (node.seq.length >= maxVias || previews >= maxPreviews) continue;
+        if (prefixClear === null) {
+            previews += 1;
+            const p = certify(node.prefix);
+            prefixClear = !p.hit && !p.truncated;
+        }
+        if (!prefixClear) { pruned += 1; continue; }
+        const baseLength = corridorLength(from, node.prefix);
+        for (const v of vias) {
+            if (v.x === last.x && v.y === last.y) continue;
+            pushLazy([...node.seq, v], node.prefix, baseLength);
+        }
+    }
+    return {
+        wps: null,
+        previews,
+        planned,
+        why: `no corridor bent through at most ${maxVias} via cell(s) of the ${vias.length} `
+            + `the walk can plan to probes clean: ${candidates} candidate corridor(s) previewed `
+            + `with the bodies stepped against each, ${pruned} prefix(es) dangerous before their `
+            + `last via, ${previews} preview(s) of the ${maxPreviews} bound spent and ${planned} `
+            + `leg(s) of the ${maxPlanned} planned`
+            + `${open.length > 0 ? `, ${open.length} candidate(s) left unasked` : ''}.`,
+    };
+}
+
+/**
  * The bodies a previewed walk-and-wait REMOVES, in the order they go.
  *
  * ⛓ Read off the forecast's own roster rather than counted: a body that
@@ -11627,6 +11845,50 @@ export function solveSegment({
             if (!killWhy) killWhy = kill.why;
         }
         rowFor('kill', refused);
+        /**
+         * ── rung 5: DETOUR — a longer corridor the bodies cannot close on ──
+         * (SEEDLING FIDELITY L14, `deriveChaserDetour`). Asked ONLY here, after
+         * every rung above refused, so no committed climb reaches it. Each
+         * candidate is certified exactly as `probeCorridor` certifies a
+         * corridor — the same preview, the same strike policy, the same
+         * predicate — and the corridor it returns is walked by the caller like
+         * AVOID's.
+         *
+         * ⛔ CONDITIONAL, like DODGE and PULL: it exists only when EVERY reason
+         * the probe gave is a `chaser` — a body that comes to the player inside
+         * its leash and stops outside it, which is the whole argument for a
+         * longer walk. A spinner, an arrow or a static volume is not outrun by
+         * walking round it, so in any other climb the rung is ABSENT (no row,
+         * the refusal's words unchanged).
+         */
+        let lastWhy = killWhy;
+        let lastOption = 'kill';
+        if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
+            const detour = deriveChaserDetour(run, {
+                aim, allowTeleporter,
+                planOpts: solverPlanOpts(run, contacts, goalPlanExtra),
+                certify: (wps) => {
+                    // ⛔ `probeSamples` on ONE sample is the probe's own predicate;
+                    // the stop only saves the ticks after the first danger.
+                    const dangerous = (sm) => probeSamples([sm], dangerExcept) !== null;
+                    const walk = previewWalk(run, wps, tolerance, axisAligned
+                        ? { strike: null, axisAligned, stopWhen: dangerous }
+                        : { strike: strikePolicyFor(run, { dashMode }), stopWhen: dangerous });
+                    const hit = probeSamples(walk.samples, dangerExcept);
+                    return { hit, hitWp: hit ? walk.samples.at(-1).wp : null,
+                        truncated: hit ? null : (walk.truncated ?? null), ticks: walk.samples.length };
+                },
+            });
+            const killRefused = { rung: 'kill', why: killWhy };
+            if (detour.wps) {
+                rowFor('detour', killRefused, { vias: detour.vias, previews: detour.previews,
+                    planned: detour.planned, waypoints: detour.wps.length, ticks: detour.ticks });
+                return { wps: detour.wps, escalations };
+            }
+            rowFor('detour', killRefused);
+            lastWhy = detour.why;
+            lastOption = 'detour';
+        }
         refuse(`${what}: the combat ladder is EXHAUSTED. The corridor passes through `
             + `danger at (${hit.x.toFixed(1)},${hit.y.toFixed(1)}) — ${reasonsOf(hit)} — `
             + `and every rung of ⚖ §11.8a's order refused:\n`
@@ -11639,12 +11901,12 @@ export function solveSegment({
              */
             + escalations.slice(1).map((e) => `  ${e.refused.rung}: ${e.refused.why}`)
                 .join('\n')
-            + `\n  ${escalations[escalations.length - 1].rung}: ${killWhy}`, {
+            + `\n  ${escalations[escalations.length - 1].rung}: ${lastWhy}`, {
             goal,
             obstacle: { kind: 'danger', id: hit.sources[0]?.id ?? null },
             considered: escalations.map((e) => ({
                 option: e.rung, why: e.refused?.why ?? 'attempted',
-            })).concat([{ option: 'kill', why: killWhy }]),
+            })).concat([{ option: lastOption, why: lastWhy }]),
         });
         return {};
     };
