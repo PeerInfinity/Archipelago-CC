@@ -150,8 +150,9 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity F7: 206 — `f7-l16-reentry`, `f7-l16-walkin`, inert.
         // ⛓ fidelity BURN: 208 — `burn-l24-reach-exit`, `burn-l44-reach-exit`, inert.
         // ⛓ fidelity L14: 209 — `l14-swordless-detour`, inert.
-        expect(rows).toHaveLength(209);
-        expect(rows.length - parted.length).toBe(208);
+        // ⛓ fidelity CANCROSS: 210 — `cancross-l16-sword-none`, inert.
+        expect(rows).toHaveLength(210);
+        expect(rows.length - parted.length).toBe(209);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {
