@@ -4,7 +4,7 @@
 |---|---|
 | Session | `seedling-fidelity-slots` (Opus, cloud), planner `seedling-fidelity-planning-2`, wave 5 |
 | Start SHA | `f90c4ee` (`origin/main`) |
-| Head | see the last commit on the branch (this report is the last commit) |
+| Head | the last commit on the branch (this report's identity fill) |
 | Harness branch | `claude/inventory-slot-order-dgpk7c` |
 | Commits | `7ed06fa` D1+D2 · `45ccd4d` D3 · `7cae798` D4 + records · this report |
 | Verdicts | **W0 PASS · D1 PASS · D2 PASS · D3 PASS · D4 PASS** (two banked reds and one JS-arc pin, below) |
@@ -156,7 +156,7 @@ I also replayed all six L24 tapes against the live game in compare mode: **145 P
 
 | Row | W0 (`f90c4ee`) | head | movers |
 |---|---|---|---|
-| identity log | `2a0db7c4…` | ⏳ running at this commit — the next commit fills it | — |
+| identity log | `2a0db7c4…` | `5bf10815…`: **every measured row byte-identical** (maze, acceptance, the pairs, the censuses, killgates, levels, generated set, and the six `--check`s `405d9c4b 8e7a43be 33d20889 35456fbc 6cd35fe1 56bb3724`, all exit 0); the ONE differing line is the reference row: the base worktree read "4 differ", the head reads **ALL 7 + 5 MATCH** | **none**: no producer's walk presses through a re-ordered slot, equips on a grant's tick, or enters a burning tree's cell on the boundary update |
 | tapeRunner | 501, `51829dac…` | **511, `0ce82642…`**; the 501 old `(name, status)` pairs are **identical** (`diff` adds 10 lines) | +10: the five new tapes' differential and stepping rows |
 | committed tapes / expectations | — | **none modified** (`git diff f90c4ee --stat -- fixtures/tapes fixtures/expectations` adds files and edits only `index.json`) | none |
 | roster | 222 | **227** | the five `slots-*` |
