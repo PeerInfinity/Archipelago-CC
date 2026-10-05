@@ -128,8 +128,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 43,
-            "count": 86,
+            "browser": 44,
+            "count": 87,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 331,
-        "browser": 108,
-        "cited": 156,
-        "files": 342,
+        "blockStyle": 332,
+        "browser": 109,
+        "cited": 157,
+        "files": 343,
         "lineStyle": 11,
-        "withDocblock": 342,
-        "withFlags": 260
+        "withDocblock": 343,
+        "withFlags": 261
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8460,6 +8460,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-deadframes — how much does the fade cost VARY, and does it care about wall-clock?",
             "path": "scripts/procgen/probe-seedling-deadframes.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only",
+                "record"
+            ],
+            "file": "probe-seedling-descent.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity DESCENT, D1: **A FALL'S DESCENT FIRES THE DOOR IT LANDS ON — ON THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-descent.mjs"
         },
         {
             "argvHelpers": [],
