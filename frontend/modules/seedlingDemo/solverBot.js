@@ -107,7 +107,7 @@ import {
     HITBOX, WALK_SPEED,
     applyFriction, applyInput, DEFAULT_FRICTION, sweepAxis,
     chestStanceBand,
-    fireRect, inventorySlotsFor, auditFire,
+    fireRect, INVENTORY_ITEM_IDS, auditFire,
     pullModelled, pullsDrainingInto,
 } from './solverView.js';
 import {
@@ -863,8 +863,8 @@ function execBobBossEncounter(run, perTick, goal, { what, walkTo, seeRow, saw, r
         const standing = trees.filter((t) => !burned.has(t.id)
             && (run.world.pitTiles ?? []).some((pt) => rectsOverlapInclusive(t.rect, pt.rect)));
         if (standing.length > 0) {
-            const slots = inventorySlotsFor(run.progress('inventory'));
-            const slot = slots.indexOf(1);
+            const slots = run.progress('inventorySlots');
+            const slot = slots.indexOf(INVENTORY_ITEM_IDS.fire);
             if (slot < 0) refuse(`${what}: the inventory has no Fire slot (slots [${slots}]).`, { goal });
             if (run.progress('primaryWeapon') !== 'fire') {
                 // ⛔ ONE TICK AFTER THE FLAG. `Fire.removed()` sets `hasFire` at
@@ -1194,7 +1194,8 @@ function execBurn(run, perTick, resolved, ctx) {
     }
     const prior = run.progress('primary');
     if (run.progress('primaryWeapon') !== 'fire') {
-        const slot = inventorySlotsFor(run.progress('inventory')).indexOf(1);
+        // ⛓ SLOTS: the run's own array (arrival order), never a re-derivation.
+        const slot = run.progress('inventorySlots').indexOf(INVENTORY_ITEM_IDS.fire);
         if (slot < 0) refuse(`${ctx.what}: the inventory has no Fire slot.`);
         ctx.equip(slot);
     }
@@ -13373,6 +13374,44 @@ function solveSegmentUnder({
         walkTo(goal, cell, { allowTeleporter: index, what: `${whatExit} step-off to (${cell.x},${cell.y})` });
         return { door: id, to: { x: cell.x, y: cell.y }, from: at, ticks: perTick.length - at };
     };
+
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY SLOTS — THE SWORD'S SLOT, SELECTED BEFORE ANY
+     * PRESS THE WALKS WILL MAKE.
+     *
+     * Every strike and dash the walks press (`strikePolicyFor`) is a SWORD
+     * press: the policy reads the inventory's sword, and presses `primary`.
+     * `useItem(Main.primary)` reads the SLOT, so a segment that begins with
+     * Fire's slot selected would fire on every one of those presses. Two ways
+     * in, both measured: a slot array in arrival order (Fire received before
+     * the sword is `[1, 0]`, so slot 0 is Fire from the boot), and a cut
+     * inside `execBurn` (a continuation frozen after the Fire's equip and
+     * before the restore). Either way the sword's slot, read off the run's
+     * OWN array, is selected at the segment's first tick. A run holding Fire
+     * and no sword keeps Fire (it has no strike, and its burns need it); any
+     * other selection (the R4 spear, the wand) is left as staged.
+     *
+     * ⛔ ONE IDLE TICK FIRST WHEN THE SWORD ARRIVED ON THIS OBSERVATION. A
+     * grant writes the flag at the top of its tick and the frame's tail
+     * appends the slot, and `Bot.as` checks an equip at the top of the tick
+     * (`drainEquipChecks`): selecting the sword's future slot now DISARMS the
+     * bot (measured: "selected slot 1 but the inventory holds 1 item(s)").
+     * The Fire collect below waits its tick for the same reason.
+     */
+    if (run.progress('primaryWeapon') === 'fire') {
+        const isSword = (id) => id === INVENTORY_ITEM_IDS.sword || id === INVENTORY_ITEM_IDS.ghostsword;
+        const inv = run.progress('inventory') ?? {};
+        if ((inv.hasSword || inv.hasGhostSword) && !run.progress('inventorySlots').some(isSword)) {
+            const NO_KEYS = new Set();
+            perTick.push(NO_KEYS);
+            const { transition } = run.advance(NO_KEYS);
+            if (transition) {
+                refuse(`the idle tick that lets the sword's slot arrive crossed to level ${transition.to_level}.`);
+            }
+        }
+        const swordSlot = run.progress('inventorySlots').findIndex(isSword);
+        if (swordSlot >= 0) equip(swordSlot);
+    }
 
     // ── the goals, in order ───────────────────────────────────────────
     for (const goal of goals) {
