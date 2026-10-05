@@ -83,7 +83,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { argvHelp } from './argvHelp.js';
+import { argvHelp, isEntryPoint } from './argvHelp.js';
 
 argvHelp(import.meta.url);
 
@@ -109,112 +109,121 @@ const WRITERS = [
     ['stringifyRulesJson', (d) => stringifyRulesJson(d)],
     ['JSON.stringify(x, null, 2)', (d) => JSON.stringify(d, null, 2)],
 ];
-
-const mode = process.argv.includes('--write') ? 'write' : process.argv.includes('--check') ? 'check' : null;
-if (!mode) {
-    console.error('usage: migrate-per-player-blocks.mjs --check | --write');
-    process.exit(2);
-}
-
-const isPlain = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
-const files = execFileSync('git', ['ls-files', '-z', 'frontend/presets'], { cwd: ROOT, maxBuffer: 1 << 28 })
-    .toString().split('\0').filter((f) => /\/AP_[^/]*_rules\.json$/.test(f));
-
-/** ⛓ The writer (+ newline rule) that reproduces `text` from `doc`, or null. */
-function writerOf(doc, text) {
-    for (const [name, fn] of WRITERS) {
-        const out = fn(doc);
-        if (out === text) return { name, nl: '', fn };
-        if (`${out}\n` === text) return { name, nl: '\n', fn };
+/**
+ * ⛓ THE MOVE, run only when this file IS the entry point. A bare import (the
+ * `check-procgen-help` IMPORT door, or a test importing the constants above)
+ * must print nothing and exit nothing — before this guard it printed the usage
+ * line to stderr and exited 2.
+ */
+function main() {
+    const mode = process.argv.includes('--write') ? 'write' : process.argv.includes('--check') ? 'check' : null;
+    if (!mode) {
+        console.error('usage: migrate-per-player-blocks.mjs --check | --write');
+        process.exit(2);
     }
-    return null;
-}
 
-const refused = [];
-const unmigrated = [];
-let moved = 0;
-let carriers = 0;
-let tableDropped = 0;
-for (const rel of files) {
-    const path = join(ROOT, rel);
-    const text = readFileSync(path, 'utf8');
-    if (![...KEYS, ...EXPORTER_FLAGS].some((k) => text.includes(`"${k}"`))) {
-        if (TABLE.has(rel) && TABLE.get(rel).length === 0) tableDropped += 1;
-        continue;
-    }
-    const doc = JSON.parse(text);
-    const present = [...KEYS, ...EXPORTER_FLAGS].filter((k) => Object.hasOwn(doc, k));
-    if (present.length === 0) {
-        if (TABLE.has(rel) && TABLE.get(rel).length === 0) tableDropped += 1;
-        continue;
-    }
-    carriers += 1;
-    const slotIds = new Set(Object.keys(isPlain(doc.regions) ? doc.regions : {}));
-    const done = (k) => !EXPORTER_FLAGS.includes(k) && isPlain(doc[k]) && Object.keys(doc[k]).length > 0
-        && Object.keys(doc[k]).every((p) => /^[0-9]+$/.test(p) && slotIds.has(p));
-    const todo = present.filter((k) => !done(k));
-    if (todo.length === 0) continue;
+    const isPlain = (v) => !!v && typeof v === 'object' && !Array.isArray(v);
+    const files = execFileSync('git', ['ls-files', '-z', 'frontend/presets'], { cwd: ROOT, maxBuffer: 1 << 28 })
+        .toString().split('\0').filter((f) => /\/AP_[^/]*_rules\.json$/.test(f));
 
-    let slots = TABLE.get(rel);
-    if (!slots) {
-        const hasSidecarSlots = isPlain(doc.preset_sidecars) && Object.keys(doc.preset_sidecars).length > 0;
-        const from = hasSidecarSlots ? 'preset_sidecars' : 'player_names';
-        const sidecarSlots = Object.keys(isPlain(doc[from]) ? doc[from] : {});
-        if (sidecarSlots.length !== 1) {
-            refused.push(`${rel}: ${sidecarSlots.length} ${from} slots (${sidecarSlots.join(', ') || 'none'}) — `
-                + 'the slot is not derivable and the file is not in the table');
+    /** ⛓ The writer (+ newline rule) that reproduces `text` from `doc`, or null. */
+    function writerOf(doc, text) {
+        for (const [name, fn] of WRITERS) {
+            const out = fn(doc);
+            if (out === text) return { name, nl: '', fn };
+            if (`${out}\n` === text) return { name, nl: '\n', fn };
+        }
+        return null;
+    }
+
+    const refused = [];
+    const unmigrated = [];
+    let moved = 0;
+    let carriers = 0;
+    let tableDropped = 0;
+    for (const rel of files) {
+        const path = join(ROOT, rel);
+        const text = readFileSync(path, 'utf8');
+        if (![...KEYS, ...EXPORTER_FLAGS].some((k) => text.includes(`"${k}"`))) {
+            if (TABLE.has(rel) && TABLE.get(rel).length === 0) tableDropped += 1;
             continue;
         }
-        slots = sidecarSlots;
-    }
-    const flags = todo.filter((k) => EXPORTER_FLAGS.includes(k));
-    if (flags.length && slots.length !== 1) {
-        refused.push(`${rel}: ${flags.join(', ')} at the top level of a document with ${slots.length} slot(s) — `
-            + 'one top-level value cannot be given to one slot');
-        continue;
-    }
-    if (flags.length && !isPlain(doc.exporter)) {
-        refused.push(`${rel}: ${flags.join(', ')} at the top level but no \`exporter\` map to move it into`);
-        continue;
-    }
-    const clash = flags.filter((k) => Object.hasOwn(doc.exporter?.[slots[0]] ?? {}, k));
-    if (clash.length) {
-        refused.push(`${rel}: ${clash.join(', ')} both at the top level and in exporter["${slots[0]}"] — two values`);
-        continue;
-    }
-    const writer = writerOf(doc, text);
-    if (!writer) {
-        refused.push(`${rel}: no known writer reproduces its bytes — the move could not be proved to be the block alone`);
-        continue;
-    }
-    const dest = (k) => (EXPORTER_FLAGS.includes(k) ? `exporter["${slots[0]}"]`
-        : slots.length ? `{${slots.map((p) => `"${p}"`).join(', ')}}` : 'key dropped');
-    unmigrated.push(`${rel} (${todo.map((k) => `${k} → ${dest(k)}`).join(', ')}; ${writer.name}${writer.nl ? ' + \\n' : ''})`);
-    if (mode !== 'write') continue;
-
-    const out = {};
-    for (const [k, v] of Object.entries(doc)) {
-        if (k === 'exporter' && flags.length) {
-            const p = slots[0];
-            out[k] = { ...v, [p]: { ...v[p], ...Object.fromEntries(flags.map((f) => [f, doc[f]])) } };
+        const doc = JSON.parse(text);
+        const present = [...KEYS, ...EXPORTER_FLAGS].filter((k) => Object.hasOwn(doc, k));
+        if (present.length === 0) {
+            if (TABLE.has(rel) && TABLE.get(rel).length === 0) tableDropped += 1;
             continue;
         }
-        if (EXPORTER_FLAGS.includes(k) && todo.includes(k)) continue;
-        if (!todo.includes(k)) { out[k] = v; continue; }
-        if (slots.length === 0) continue;
-        out[k] = Object.fromEntries(slots.map((p) => [p, v]));
+        carriers += 1;
+        const slotIds = new Set(Object.keys(isPlain(doc.regions) ? doc.regions : {}));
+        const done = (k) => !EXPORTER_FLAGS.includes(k) && isPlain(doc[k]) && Object.keys(doc[k]).length > 0
+            && Object.keys(doc[k]).every((p) => /^[0-9]+$/.test(p) && slotIds.has(p));
+        const todo = present.filter((k) => !done(k));
+        if (todo.length === 0) continue;
+
+        let slots = TABLE.get(rel);
+        if (!slots) {
+            const hasSidecarSlots = isPlain(doc.preset_sidecars) && Object.keys(doc.preset_sidecars).length > 0;
+            const from = hasSidecarSlots ? 'preset_sidecars' : 'player_names';
+            const sidecarSlots = Object.keys(isPlain(doc[from]) ? doc[from] : {});
+            if (sidecarSlots.length !== 1) {
+                refused.push(`${rel}: ${sidecarSlots.length} ${from} slots (${sidecarSlots.join(', ') || 'none'}) — `
+                    + 'the slot is not derivable and the file is not in the table');
+                continue;
+            }
+            slots = sidecarSlots;
+        }
+        const flags = todo.filter((k) => EXPORTER_FLAGS.includes(k));
+        if (flags.length && slots.length !== 1) {
+            refused.push(`${rel}: ${flags.join(', ')} at the top level of a document with ${slots.length} slot(s) — `
+                + 'one top-level value cannot be given to one slot');
+            continue;
+        }
+        if (flags.length && !isPlain(doc.exporter)) {
+            refused.push(`${rel}: ${flags.join(', ')} at the top level but no \`exporter\` map to move it into`);
+            continue;
+        }
+        const clash = flags.filter((k) => Object.hasOwn(doc.exporter?.[slots[0]] ?? {}, k));
+        if (clash.length) {
+            refused.push(`${rel}: ${clash.join(', ')} both at the top level and in exporter["${slots[0]}"] — two values`);
+            continue;
+        }
+        const writer = writerOf(doc, text);
+        if (!writer) {
+            refused.push(`${rel}: no known writer reproduces its bytes — the move could not be proved to be the block alone`);
+            continue;
+        }
+        const dest = (k) => (EXPORTER_FLAGS.includes(k) ? `exporter["${slots[0]}"]`
+            : slots.length ? `{${slots.map((p) => `"${p}"`).join(', ')}}` : 'key dropped');
+        unmigrated.push(`${rel} (${todo.map((k) => `${k} → ${dest(k)}`).join(', ')}; ${writer.name}${writer.nl ? ' + \\n' : ''})`);
+        if (mode !== 'write') continue;
+
+        const out = {};
+        for (const [k, v] of Object.entries(doc)) {
+            if (k === 'exporter' && flags.length) {
+                const p = slots[0];
+                out[k] = { ...v, [p]: { ...v[p], ...Object.fromEntries(flags.map((f) => [f, doc[f]])) } };
+                continue;
+            }
+            if (EXPORTER_FLAGS.includes(k) && todo.includes(k)) continue;
+            if (!todo.includes(k)) { out[k] = v; continue; }
+            if (slots.length === 0) continue;
+            out[k] = Object.fromEntries(slots.map((p) => [p, v]));
+        }
+        writeFileSync(path, writer.fn(out) + writer.nl);
+        moved += 1;
     }
-    writeFileSync(path, writer.fn(out) + writer.nl);
-    moved += 1;
+
+    for (const r of refused) console.error(`REFUSED ${r}`);
+    if (mode === 'check') {
+        for (const u of unmigrated) console.log(`UNMIGRATED ${u}`);
+        console.log(`CHECK: ${carriers - unmigrated.length}/${carriers} carrying document(s) per-player, `
+            + `${tableDropped} table file(s) carrying none by the table, ${unmigrated.length} unmigrated, ${refused.length} refused`);
+        process.exit(unmigrated.length || refused.length ? 1 : 0);
+    }
+    for (const u of unmigrated) console.log(`MOVED ${u}`);
+    console.log(`WRITE: ${moved} file(s) moved, ${refused.length} refused`);
+    process.exit(refused.length ? 1 : 0);
 }
 
-for (const r of refused) console.error(`REFUSED ${r}`);
-if (mode === 'check') {
-    for (const u of unmigrated) console.log(`UNMIGRATED ${u}`);
-    console.log(`CHECK: ${carriers - unmigrated.length}/${carriers} carrying document(s) per-player, `
-        + `${tableDropped} table file(s) carrying none by the table, ${unmigrated.length} unmigrated, ${refused.length} refused`);
-    process.exit(unmigrated.length || refused.length ? 1 : 0);
-}
-for (const u of unmigrated) console.log(`MOVED ${u}`);
-console.log(`WRITE: ${moved} file(s) moved, ${refused.length} refused`);
-process.exit(refused.length ? 1 : 0);
+if (isEntryPoint(import.meta.url)) main();
