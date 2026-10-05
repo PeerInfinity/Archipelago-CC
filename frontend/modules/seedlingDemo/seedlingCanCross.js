@@ -96,11 +96,13 @@ export const VERDICTS = Object.freeze(['can', 'cannot', 'undecided', 'model-refu
 /**
  * The default deterministic budget, in `shouldStop` consults.
  *
- * ⚠ CALIBRATED, not derived: the largest count measured over every captured
- * arrival (both captures, both dash modes) and the L14 item table is L71's
- * chest leg with the full kit under `all` (see the CANCROSS report); this is
- * well above it, so no measured `can` or `cannot` reads as `undecided` by
- * default. A caller deriving at scale may pass a smaller one.
+ * ⚠ CALIBRATED, not derived. Measured over 116 calls (every captured arrival in
+ * both captures × both dash modes, and every door of L15/L16/L71 from every
+ * neighbour with nine items × both modes): the largest count is **1,807** (L71
+ * from L75 toward `teleporter@16,304`, nine items, `all`, a `cannot` after
+ * 16 s); swordless L14's DETOUR solve is 492. This is ~2.8× the largest, so no
+ * measured `can` or `cannot` reads as `undecided` by default. A caller deriving
+ * at scale may pass a smaller one.
  */
 export const DEFAULT_CONSULT_BUDGET = 5000;
 
@@ -480,4 +482,39 @@ function witnessOf(staging, perTick, name, levelSource, to, scratchPersistence) 
     const landed = replay.transitions.at(-1)?.to_level ?? null;
     return { tape, replayed: { observations: replay.ticks.length, landed,
         agrees: replay.ticks.length === perTick.length + 1 && (to === null || landed === to) } };
+}
+
+/**
+ * D2's DERIVATION, as a call: every subset of `pool` asked with `canCross`, and
+ * the minimal sets that `can`. NOT a rule — the rules arc emits rules; this is
+ * the question it asks, so its caveats are visible in one place:
+ *
+ *  - a minimal set with an `undecided` or `model-refused` subset BELOW it is not
+ *    proved minimal (`unprovedBelow`), never silently promoted;
+ *  - ⛔ the solver's verdict is NOT monotone in the inventory (measured: L16 →
+ *    `stairsup@352,80` from L15 is `can` with the Sword and `cannot` with the
+ *    Sword and the Conch — swimming widens the planner's corridor onto a
+ *    sandtrap and the ladder exhausts), so `cannot` supersets are reported
+ *    (`nonMonotone`), not inferred away.
+ *
+ * @returns {{rows: Array<{set: string[], verdict: string, why: string}>,
+ *            minimal: string[][], unprovedBelow: object, nonMonotone: string[][], solver: string}}
+ */
+export function deriveMinimalSets({ pool, ...request }) {
+    const subsets = [[]];
+    for (const it of pool) for (const sub of [...subsets]) subsets.push([...sub, it]);
+    subsets.sort((a, b) => a.length - b.length || a.join().localeCompare(b.join()));
+    const rows = subsets.map((set) => {
+        const r = canCross({ ...request, inventory: set, witness: false });
+        return { set, verdict: r.verdict, why: r.verdict === 'can' ? r.why : `${r.cause.kind}: ${r.why.slice(0, 200)}`,
+            consults: r.budget.consults, solver: r.solver.id };
+    });
+    const sub = (a, b) => a.length < b.length && a.every((x) => b.includes(x));
+    const can = rows.filter((r) => r.verdict === 'can').map((r) => r.set);
+    const minimal = can.filter((s) => !can.some((t) => sub(t, s)));
+    const open = rows.filter((r) => r.verdict === 'undecided' || r.verdict === 'model-refused').map((r) => r.set);
+    const unprovedBelow = Object.fromEntries(minimal.map((s) => [s.join('+') || '∅', open.filter((t) => sub(t, s))])
+        .filter(([, v]) => v.length > 0));
+    const nonMonotone = rows.filter((r) => r.verdict === 'cannot' && can.some((t) => sub(t, r.set))).map((r) => r.set);
+    return { rows, minimal, unprovedBelow, nonMonotone, solver: rows[0].solver };
 }
