@@ -13256,6 +13256,94 @@ So `canCross` asks `dashMode: 'none'` by default.
   It is false of the solver. A derivation should report both claims rather than
   let one stand in for the other.
 
+### Seedling fidelity WATCHER — a silent watcher is no obstacle, and a speaking one is passed by talking
+
+Planning-2's wave-4 slice on `fidelity-harvest/wave3` (`b116c69`). ⚖ The user
+chose it on 2026-10-05. After BURN, the route survey's first refusal past
+sphere 2.2 was step 95 (L37), *"Obstacle: proximity-hazard:watcher
+(watcher@104,264) … No strategy row exists for this obstacle"*, and step 101
+burned its tree and stopped at the same watcher. The report is
+`CC/docs/cloud-reports/seedling-fidelity-watcher.md`.
+
+**D1 — the game's rule (measured; three model fixes).** `NPC.talk()` runs
+only `if (p && myText[0].length > 0)` (`NPCs/NPC.as:188`). Ten of the eleven
+placed watchers have `text=""`, so they never talk, freeze or write a tag, and
+`Watcher.hit()` (gated on `text != ""`) ignores the sword. Only L114's speaks.
+The census priced all eleven as 48x48 auto-talk squares. Now:
+
+- `ENTITY_CLASSES.watcher.hazard.speaksFrom: 'text'` lists an empty placement
+  in `world.silentHazards`;
+- the volume is the 24 px DISC, inclusive (`FP.distance <= talkRange` is a
+  Number compare), not its square;
+- a room built with the watcher's tag cleared lists it silent too
+  (`Watcher.update` runs `talk()` only while the tag holds; the `'silence'`
+  response).
+
+The square was not "safe": L114's corridor top is 25.3 px from the watcher,
+inside the square and outside the circle, so a walk booted there counted as
+already in contact, was exempted, walked in, and stalled in a dialogue nobody
+paged (*"not reached within 400 ticks"*). The game witnesses are recorded and
+the model reproduces each one:
+
+- `watcher-l37-reach-l38` (step 95, 316 t) and `watcher-l37-reach-l44`
+  (step 101, 332 t), each crossing the old square;
+- `watcher-l37-silent-lean`, which stands 19 px from the silent watcher and
+  moves on every held tick;
+- `watcher-l114-silent`, through L114's circle with `{114,0}` cleared.
+
+The disc alone frees steps 95/101 (the m1 mutant keeps them solved), and the
+census rule is what makes the ten `silentHazards` true.
+
+**D2 — the `talk` verb (PASS, game-witnessed).**
+`OBSTACLE_STRATEGIES['proximity-hazard:watcher'] = 'talk'` is registered as
+`execTalk`.
+
+- `resolveTalkStrategy` gates on the watcher's STATE, not an item. A tag
+  cleared this visit is a zero-tick walk-through. The stance is a tile centre at
+  least 4 px outside the circle (or the player's own position). The predicted
+  opening box must clear the live Seed (pages 9..19, a soft-lock).
+- `execTalk` approaches with `chooseHeld` until the run reports `talking`,
+  re-asks the Seed, pages on `ceremonyCadenceStep` until the tag clears (ending
+  released), and settles the freeze's kept velocity.
+- `watcher-l114-talk` is recorded on the game, model = game, 395
+  observations: the dialogue opens on t3, 20 pages, `{114,0}` on t355, out to
+  L113 on t394.
+- Mutants: the row removed gives VERB-MISSING, the executor removed gives
+  VERB-SELECTED-NOT-REGISTERED, the resolver nulled gives VERB-APPLY.
+
+**D3 — the survey**, at `b116c69` → the head: **146/116/3 → 148/114/3**.
+
+- Steps 95 and 101 solve.
+- Step 66 (L37, no Fire) moves from VERB-MISSING to ITEM-GATE on the tree
+  behind the watcher.
+- Steps 27, 152 and 164 (L12) and 130 (L37) solve 32–50 ticks sooner: the
+  silent watchers' squares were detours.
+- The new first refusal past 2.2 is **step 96 (L38):
+  `proximity-hazard:buttonroom`**, VERB-MISSING. Step 94 (L12) is still a
+  TIMEOUT. One profile puts ~94% of its planner time in `planWaypoints`'
+  smoother (`controllerPathClear` → `plannerBlockerAt`), ~71% of it under the
+  chaser kill rung's `scanAround` stance scan, and 13% in the
+  `pitTiles`/`lethalTerrainTiles` getters, which re-filter the tile list on
+  every call.
+
+`check-seedling-bot-differential`'s "the Watcher the run did NOT finish
+rebooted nothing" now lets through a level change the model also made. It was
+written for the W-blood control, which never leaves L114, and both L114
+witnesses land one dash hit on the watcher before leaving by the door.
+
+**Trap candidates**, for the catalogue to number:
+
+- an "over-approximation in the safe direction" is unsafe once a contact rule
+  exempts what the walk starts inside: the square made a corridor-top boot
+  "already in contact", and the exemption walked it into the dialogue;
+- one class row, many placements: a hazard decided by a per-placement
+  attribute (`text`) cannot be priced by the class alone, and ten of eleven
+  rows were pricing a mechanism that never runs;
+- talking changes what the sword can do: a watcher's tag gates `talk()` ON
+  and `hit()` OFF, so the dialogue that clears a corridor also arms the bloody
+  branch, and the solver's dash then lands a hit (one, in both L114
+  witnesses).
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

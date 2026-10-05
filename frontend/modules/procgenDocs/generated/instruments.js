@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 58,
+            "count": 59,
             "id": "plan"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 333,
+        "blockStyle": 334,
         "browser": 109,
         "cited": 158,
-        "files": 344,
+        "files": 345,
         "lineStyle": 11,
-        "withDocblock": 344,
-        "withFlags": 262
+        "withDocblock": 345,
+        "withFlags": 263
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8291,6 +8291,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-u9-shield-bump — ⛓⛓⛓ U9-swim: `Player.shieldBump`'s DRIVEN WITNESSES.",
             "path": "scripts/procgen/plan-seedling-u9-shield-bump.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-watcher-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-watcher-witness — ⛓⛓⛓ SEEDLING FIDELITY WATCHER: A SILENT WATCHER ON THE FRONTIER OF A REACH-EXIT IS NOT AN OBSTACLE, AND A SPEAKING ONE IS PASSED BY ITS DIALOGUE.",
+            "path": "scripts/procgen/plan-seedling-watcher-witness.mjs"
         },
         {
             "argvHelpers": [],
