@@ -1,0 +1,227 @@
+{
+    "game": "seedling",
+    "name": "cancross-l16-sword-none",
+    "boot": {
+        "level": 16,
+        "x": 32,
+        "y": 64
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 0,
+        "split": false
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasDarkSword": false,
+            "hasGhostSword": false,
+            "hasShield": false,
+            "hasDarkShield": false,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasFeather": false,
+            "hasSpear": false,
+            "hasDarkSuit": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "primary": 0,
+        "secondary": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0
+    },
+    "tick_count": 206,
+    "inputs": [
+        {
+            "key": "right",
+            "from": 0,
+            "to": 10
+        },
+        {
+            "key": "down",
+            "from": 0,
+            "to": 11
+        },
+        {
+            "key": "primary",
+            "from": 11,
+            "to": 12
+        },
+        {
+            "key": "right",
+            "from": 12,
+            "to": 13
+        },
+        {
+            "key": "left",
+            "from": 13,
+            "to": 14
+        },
+        {
+            "key": "right",
+            "from": 14,
+            "to": 15
+        },
+        {
+            "key": "left",
+            "from": 15,
+            "to": 16
+        },
+        {
+            "key": "right",
+            "from": 16,
+            "to": 17
+        },
+        {
+            "key": "left",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "down",
+            "from": 12,
+            "to": 38
+        },
+        {
+            "key": "up",
+            "from": 38,
+            "to": 39
+        },
+        {
+            "key": "down",
+            "from": 39,
+            "to": 41
+        },
+        {
+            "key": "up",
+            "from": 43,
+            "to": 44
+        },
+        {
+            "key": "primary",
+            "from": 44,
+            "to": 45
+        },
+        {
+            "key": "up",
+            "from": 45,
+            "to": 47
+        },
+        {
+            "key": "down",
+            "from": 48,
+            "to": 50
+        },
+        {
+            "key": "right",
+            "from": 54,
+            "to": 81
+        },
+        {
+            "key": "left",
+            "from": 81,
+            "to": 82
+        },
+        {
+            "key": "up",
+            "from": 84,
+            "to": 150
+        },
+        {
+            "key": "down",
+            "from": 150,
+            "to": 151
+        },
+        {
+            "key": "up",
+            "from": 151,
+            "to": 153
+        },
+        {
+            "key": "down",
+            "from": 155,
+            "to": 157
+        },
+        {
+            "key": "left",
+            "from": 161,
+            "to": 162
+        },
+        {
+            "key": "primary",
+            "from": 162,
+            "to": 163
+        },
+        {
+            "key": "down",
+            "from": 164,
+            "to": 174
+        },
+        {
+            "key": "up",
+            "from": 174,
+            "to": 175
+        },
+        {
+            "key": "down",
+            "from": 175,
+            "to": 176
+        },
+        {
+            "key": "up",
+            "from": 176,
+            "to": 177
+        },
+        {
+            "key": "down",
+            "from": 177,
+            "to": 178
+        },
+        {
+            "key": "up",
+            "from": 180,
+            "to": 181
+        },
+        {
+            "key": "right",
+            "from": 164,
+            "to": 192
+        },
+        {
+            "key": "left",
+            "from": 194,
+            "to": 196
+        },
+        {
+            "key": "down",
+            "from": 200,
+            "to": 206
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓ SEEDLING FIDELITY CANCROSS — a `canCross` witness: level 16 → 17, inventory [sword], arrival the door from level 15 at (32,64) (assumed: persistence, save, rng, beam, rockSet, hitsMax, time, primary, cutscene), dashMode none: 206 ticks, 0 hit(s). Written by scripts/procgen/can-cross-seedling.mjs --witness."
+}

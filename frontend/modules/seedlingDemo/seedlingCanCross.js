@@ -32,6 +32,9 @@
  * rung's `… candidate(s) left unasked`; both are matched on the solver's own
  * fixed words and named as a gap rather than hidden).
  *
+ * `dashMode` defaults to `none` (`CAN_CROSS_DASH_MODE`): on L16 the game refuted
+ * the `all` plan's `can` and reproduced the `none` one (measured, D3).
+ *
  * ── DETERMINISTIC BY DEFAULT ───────────────────────────────────────────────
  *
  * The default budget is a COUNTER of `shouldStop` consults across every
@@ -78,7 +81,7 @@ import { fileURLToPath } from 'node:url';
 import { buildStagedTape } from './botDriverV1.js';
 import { ATLAS_PATH, atlasLevelSource } from './levelSource.js';
 import {
-    DEADLINE_SITES, DEFAULT_DASH_MODE, PendingDeclaration, SolverBotError, SolverRefusal,
+    PendingDeclaration, SolverBotError, SolverRefusal,
     STRIKE_BOUND_EXHAUSTED, assertDashMode, solveSegment,
 } from './solverBot.js';
 import { ITEM_PROPERTIES, PIN_NAMES, parseTape } from './tapeFormat.js';
@@ -105,6 +108,20 @@ export const VERDICTS = Object.freeze(['can', 'cannot', 'undecided', 'model-refu
  * at scale may pass a smaller one.
  */
 export const DEFAULT_CONSULT_BUDGET = 5000;
+
+/**
+ * ⛔ THE ORACLE'S DEFAULT DASH MODE IS `none`, NOT THE SOLVER'S `all`.
+ *
+ * MEASURED ON THE GAME (CANCROSS D3): L16 → L17 with the Sword, `all` plans
+ * 111 t (PULL + one dash window; `5b1f924b52`, the SF report's live L16 plan),
+ * and the game REFUTES it — the player is hit near the arrow-trap row and the
+ * stream parts at tick 104, from the door-built arrival AND from the captured
+ * live one alike. The `none` plan (206 t, `0c36d853aa`) is what the game
+ * reproduces (`cancross-l16-sword-none`). A `can` is a claim about the game, so
+ * the oracle asks the plan family the game has agreed with; `dashMode: 'all'`
+ * stays one argument away for a caller that certifies its witnesses.
+ */
+export const CAN_CROSS_DASH_MODE = 'none';
 
 /** Inventory names → the `seam.items` property each sets (`tapeFormat.ITEM_PROPERTIES`). */
 export const INVENTORY_NAMES = Object.freeze(Object.keys(ITEM_PROPERTIES)
@@ -352,13 +369,13 @@ export const planHash = (perTick) => createHash('md5')
  * @param {string[]} [o.inventory] item names (`INVENTORY_NAMES`); with `arrival.staging`, replaces its items
  * @param {object} [o.arrival]    `{from}` | `{x, y}` | `{staging}` (see the docblock)
  * @param {object|null} [o.budget] `{consults}` (default `DEFAULT_CONSULT_BUDGET`) | `{ms}` | `null` (no hook)
- * @param {string} [o.dashMode]
+ * @param {string} [o.dashMode]  default `CAN_CROSS_DASH_MODE` ('none', measured — see there)
  * @param {boolean} [o.witness]   build + replay the witness tape on `can` (default true)
  */
 export function canCross(o) {
     const {
         level, exit, goal: givenGoal = null, to: givenTo = null, inventory, arrival = null,
-        budget = { consults: DEFAULT_CONSULT_BUDGET }, dashMode = DEFAULT_DASH_MODE,
+        budget = { consults: DEFAULT_CONSULT_BUDGET }, dashMode = CAN_CROSS_DASH_MODE,
         primary, hitsMax, time, persistence, save, rng, cutscene, beam, rockSet,
         levelSource = defaultLevelSource(), name = 'can-cross', witness: wantWitness = true,
         scratchPersistence = true,
@@ -467,7 +484,17 @@ export function canCross(o) {
             + `${out.deadline ? ` — the budget tripped at \`${out.deadline.first}\` and the plan is the one `
                 + 'the remaining search found' : ''}`,
         cause: { kind: 'solved', basis: 'field' } };
-    if (wantWitness) res.witness = witnessOf(staging, out.perTick, name, levelSource, to, scratchPersistence);
+    if (wantWitness) {
+        // ⚠ The solver stamp is NOT in the words: a committed witness would then move on
+        // every solver edit. The stamp rides on the result; the tape says what was asked.
+        const about = `⛓ SEEDLING FIDELITY CANCROSS — a \`canCross\` witness: level ${level} → `
+            + `${to ?? JSON.stringify(goal)}, inventory [${(inventory ?? items).join(', ') || '∅'}], arrival `
+            + `${source === 'door' ? `the door from level ${arrival.from}` : source} at (${spawn.x},${spawn.y})`
+            + `${assumed.length ? ` (assumed: ${assumed.map((a) => a.split(' ')[0]).join(', ')})` : ''}, `
+            + `dashMode ${dashMode}: ${facts.ticks} ticks, ${facts.hits} hit(s). Written by `
+            + 'scripts/procgen/can-cross-seedling.mjs --witness.';
+        res.witness = witnessOf(staging, out.perTick, name, levelSource, to, scratchPersistence, about);
+    }
     return res;
 }
 
@@ -475,8 +502,8 @@ export function canCross(o) {
  * The plan as a committed-format tape body, parsed and replayed through the
  * model: a certifier plays `tape` on the game (`check-seedling-bot-differential`).
  */
-function witnessOf(staging, perTick, name, levelSource, to, scratchPersistence) {
-    const tape = buildStagedTape({ staging, perTick, name });
+function witnessOf(staging, perTick, name, levelSource, to, scratchPersistence, about) {
+    const tape = { ...buildStagedTape({ staging, perTick, name }), description: about };
     const parsed = parseTape(JSON.parse(JSON.stringify(tape)));
     const replay = runTape(parsed, { levelSource, scratchPersistence });
     const landed = replay.transitions.at(-1)?.to_level ?? null;

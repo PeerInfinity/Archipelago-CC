@@ -16,6 +16,7 @@
  *   node scripts/procgen/can-cross-seedling.mjs --level=16 --exit=17 --spawn=32,64 --inventory=sword --dash=none
  *   node scripts/procgen/can-cross-seedling.mjs --level=14 --exit=15 --from=13 --budget=0      # a tiny budget: undecided
  *   node scripts/procgen/can-cross-seedling.mjs --level=14 --exit=15 --from=13 --witness=/tmp/w.json
+ *   node scripts/procgen/can-cross-seedling.mjs --level=16 --exit=17 --from=15 --inventory=sword --name=cancross-l16-sword --witness=frontend/modules/seedlingDemo/fixtures/tapes/cancross-l16-sword.json
  *   node scripts/procgen/can-cross-seedling.mjs --level=14 --exit=15 --from=13 --no-budget --budget-ms=5000
  *   node scripts/procgen/can-cross-seedling.mjs --level=6 --exit=7 --from=5 --time=6138 --persistence=5:0 --primary=0
  *   node scripts/procgen/can-cross-seedling.mjs --level=14 --exit=15 --from=13 --derive=sword,spear,wand --dash=none
@@ -26,6 +27,7 @@
  * `--time=<save.time>`; `--persistence=<level>:<tag>,…`; `--dash=none|full|all`;
  * `--budget=<consults>` (deterministic, default `DEFAULT_CONSULT_BUDGET`) or
  * `--budget-ms=<ms>` (wall clock, marked non-deterministic) or `--no-budget`;
+ * `--name=<tape name>` (the witness's name; default `can-cross`);
  * `--json` (the whole result, the witness tape included); `--witness=<path>`
  * (write the witness tape on `can`); `--derive=a,b,c` (every subset of the pool
  * asked, the minimal `can` sets printed — `deriveMinimalSets`, a demo of the
@@ -76,6 +78,8 @@ export function requestFromArgv(argv) {
         });
     }
     if (dash !== undefined) req.dashMode = dash;
+    const name = opt('--name', argv);
+    if (name !== undefined) req.name = name;
     if (argv.includes('--no-budget')) req.budget = null;
     else if (budgetMs !== undefined) req.budget = { ms: Number(budgetMs) };
     else if (budget !== undefined) req.budget = { consults: Number(budget) };

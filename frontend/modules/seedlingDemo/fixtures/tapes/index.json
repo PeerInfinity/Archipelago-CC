@@ -17,6 +17,13 @@
       "noHazards": []
     },
     {
+      "file": "cancross-l16-sword-none.json",
+      "tickCount": 206,
+      "bootLevel": 16,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "collide-up-rock.json",
       "tickCount": 45,
       "bootLevel": 0,
