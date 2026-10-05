@@ -21,7 +21,7 @@ A **solver** is the per-action agent that drives a substrate to a queued target.
 
 | Solver | Declared by | How it works | Substrates |
 |--------|-------------|--------------|------------|
-| `'walkTo'` | `loopSupport.executeVia: 'solver'` | Loops calls the PlaybackController's `walkTo` and completes the action on the resulting `user:locationCheck` or `gameState:regionChanged`. | jta, omsi, runner, bounce |
+| `'walkTo'` | `loopSupport.executeVia: 'solver'` | Loops calls the PlaybackController's `walkTo` and completes the action on the resulting `user:locationCheck` or `gameState:regionChanged`. | jta, omsi, runner, bounce, noiz2sa |
 | `'delegation'` | `sharing.mana.loopActionDelegation: true`, and the region has `manaEnabled` | The substrate panel walks the action tile by tile, charging natively, and publishes `loops:substrateActionCompleted`. | maze |
 
 `walkTo` wins if an entry declares both. The maze uses delegation because its controller's `walkTo` drives the visualizer, not the charging panel engine.
@@ -73,7 +73,7 @@ From that, each substrate has one of three capture shapes. `captureShapeOf(entry
 |-------|-----------|---------|--------|-----------------|
 | **Coarse** | text adventure | Loops buffers the observed actions and writes them into the block interior | The generic executor runs the block's entries | Loops charges each action its `loop_costs` value |
 | **Fine-grained** | maze, jta, omsi | The substrate recorder captures the whole visit | The substrate replays it (`replayActions`) | The substrate charges natively: the maze per tile (only while `livePlayRegion()` names its region), jta and omsi by mirroring the fork's energy or mana into the pool |
-| **Summary** | runner, bounce | Loops records the net result: drain seconds, performed checks, explicitly costed actions, departure exit | Loops applies the result instantly; the game replays nothing | Loops charges a per-second time drain, plus any action cost the data names explicitly |
+| **Summary** | runner, bounce, noiz2sa | Loops records the net result: drain seconds, performed checks, explicitly costed actions, departure exit | Loops applies the result instantly; the game replays nothing | Loops charges a per-second time drain, plus any action cost the data names explicitly |
 
 For fine-grained substrates the block interior is a *projection*: loops filters the capture down to queue-grade entries. All three record in the shared `actionQueue` vocabulary (`{ actionType, actionId, substrate, loops }`, runs of identical entries compressed through `loops`).
 
@@ -88,18 +88,18 @@ A new queue-grade verb on a coarse substrate is declared in `loopSupport.queueAc
 
 ### Summary substrates
 
-Runner and bounce play in real time, so their action stream is not worth replaying; the pickups and the exit are the outcome. Their recording is a result:
+Runner, bounce and Noiz2sa play in real time, so their action stream is not worth replaying; the pickups and the exit are the outcome. Their recording is a result:
 
 ```
 { actions: [], annotations, departureExitId,
-  summary: { durationSeconds, checks: [...], costedActions: [...] } }
+  summary: { durationSeconds, checks: [...], costedActions: [...], playStats? } }
 ```
 
-`durationSeconds` is required because Playback pricing multiplies it. The block interior is still rewritten to the performed checks for readability, but Playback ignores it.
+`durationSeconds` is required because Playback pricing multiplies it. `playStats` is present when the region's page reported play-clock `stats` (Noiz2sa: `{gameSeconds, score}`): the last report of the visit, kept opaque. Loops reads none of it. The block interior is still rewritten to the performed checks for readability, but Playback ignores it.
 
 **The economy is time.** The per-second drain is the region's `timeDrainPerSecond` from the `loop_costs` data (fallback `defaultTimeDrainPerSecond`, then `DEFAULT_TIME_DRAIN_PER_SECOND` = 1), scaled by region XP. It is charged by `_timeDrainTick` for every second the queue is parked for live play on a summary region, so idle, replaying and paused time cost nothing. Per-action costs apply only where the data names one explicitly; the `defaultRegionCost` / `defaultLocationCost` fallbacks never reach a summary action, or every visit would be charged twice.
 
-**Playback prices at replay time**: recorded seconds times the region's current XP-discounted rate, plus the current price of each costed action, so region-XP growth applies to replays. The game does not take part: loops refires the checks and dispatches the departure itself.
+**Playback prices at replay time**: recorded seconds times the region's current XP-discounted rate, plus the current price of each costed action, so region-XP growth applies to replays. The game does not take part: loops refires the checks and dispatches the departure itself. After the spend it publishes `loops:summaryApplied` `{region, substrate, summary}`, so a substrate that earns from play earns the recorded visit again (Noiz2sa's training: [noiz2sa.md](./noiz2sa.md#the-bots-training)).
 
 Runner and bounce do not declare `requiresLoopMode`: they have no native "out of resource, restart the run" economy.
 
@@ -111,6 +111,7 @@ Some summary games do not advance on every wall-clock second: Noiz2sa waits for 
 - **Loops keeps the last one.** `loopState.notePlayClock` stores `{region, running}` only when the region's substrate declares `playClock`, so a substrate that never opted in (runner, bounce) cannot make its time free.
 - **The gate.** `_timeDrainTick` skips a second in which the drained region's last report is `running: false`: no mana, and no `_summaryDrainSeconds`, so the recorded duration and Playback's price exclude it. Both branches are gated, live play and the Bot, so a bot-driven page reports through the same call (it drives the same input and the same states) and waiting between goals is free the same way.
 - **Fail safe.** No report, a report for another region, or a malformed one leaves the drain charging. A `gameState:regionChanged` to any other region drops the report, so a revisit is charged until the page reports again.
+- **Game time.** A report may carry `stats` (`setPlayClock(running, stats)`). When `stats.gameSeconds` is present (the visit's game seconds so far) the clock is a game-time clock: a tick charges the whole game seconds played since the last charge, whether the clock runs or not, and counts them into the recorded duration. A page that plays at 2× is charged 2 seconds per wall second, so the same play costs the same at any speed. A report that stops the clock settles at once, before the clear or the exit that follows can end the park, so a visit costs `floor(game seconds)`. A counter that goes back (the page configured again) starts a new count. Noiz2sa reports game time for its bot's speed setting ([noiz2sa.md](./noiz2sa.md)).
 
 The channel is the bridge's existing iframe-to-host eventBus relay (`publishEventBus`, as omsi's `substrate:resourceDelta`). The alternative was a loops public function the panel polls each tick (the shape of `livePlayRegion()`/`botSolverRegion()`, which go the other way); a push keeps the drain synchronous and needs no host-side panel code.
 
@@ -156,12 +157,14 @@ A bot is not live play: `livePlayRegion()` returns null while a solver drives, a
 
 jta and omsi both use `walkTo` with `queueActions: ['regionMove']`, so their bots only handle exit walks. They differ across a loop reset: jta's bridge remembers the pending walk (`_pendingWalkExit`), so the park stays up; omsi's walk, driven by the fork's Advanced Automation planner, ends on the teleport and continues through the generic queue restart, the same contract as [a replay bigger than one run](#a-replay-bigger-than-one-run). See [jta.md](./jta.md) and [omsi.md](./omsi.md).
 
+Noiz2sa's bot takes both `locationCheck` and `regionMove` targets: the page's humanlike bot plays the region until its clear, restarting on a hit, then leaves by the target exit. Its proxy's `walkTo` carries the bot's settings as a second argument, which the flash bridge passes to the page. See [noiz2sa.md](./noiz2sa.md#the-bot).
+
 ### Bot economy
 
 A bot costs what live play of the same content costs, by capture shape:
 
 - **Fine-grained (jta, maze, omsi):** nothing is charged on completion. The substrate bills the play natively, so `_completeBotExecutedAction` charges only when the shape is not fine.
-- **Summary (runner, bounce):** priced by time. `_timeDrainTick` charges a bot-driven summary region exactly as it charges a live-play one (the two states are exclusive), and completion costs only what `loop_costs` names explicitly. Both go through `_chargeLiveAction`, so the spend awards region XP like any other.
+- **Summary (runner, bounce, noiz2sa):** priced by time. `_timeDrainTick` charges a bot-driven summary region exactly as it charges a live-play one (the two states are exclusive), and completion costs only what `loop_costs` names explicitly. Both go through `_chargeLiveAction`, so the spend awards region XP like any other.
 
 **Warning:** a solver park runs no frames and does not set `_manualActionEntered`, so neither the frame loop's `_maybeResetForOOM` nor the mana wake notices a depletion. `_timeDrainTick` therefore calls `_maybeResetForOOM()` itself after charging on the bot branch. Any new spend that can fire while a solver drives needs the same check, or the pool runs negative.
 

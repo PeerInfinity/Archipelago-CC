@@ -564,6 +564,11 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "group": "play",
+                    "statement": "The Playback Bot can walk it (replaying a world's solution)",
+                    "text": null
+                },
+                {
+                    "group": "play",
                     "statement": "It brings progression items of its own",
                     "text": "Victory, Noiz2sa Star"
                 },
@@ -596,6 +601,11 @@ export const CAPABILITIES = frz({
                     "group": "loop",
                     "statement": "Instant fast-forward",
                     "text": "always — a replay is already instant"
+                },
+                {
+                    "group": "loop",
+                    "statement": "A Bot block can play it for you",
+                    "text": "the game's own automation walks it"
                 },
                 {
                     "group": "loop",
@@ -1328,12 +1338,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "noiz2sa",
-                    "kind": "no",
+                    "kind": "yes",
                     "text": null,
                     "why": [
                         {
                             "field": "getPlaybackController",
-                            "value": "—"
+                            "value": "fn"
                         },
                         {
                             "field": "playbackScope",
@@ -2745,12 +2755,12 @@ export const CAPABILITIES = frz({
                 },
                 {
                     "id": "noiz2sa",
-                    "kind": "no",
-                    "text": null,
+                    "kind": "yes",
+                    "text": "the game's own automation walks it",
                     "why": [
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "sharing.mana.loopActionDelegation",
@@ -2963,7 +2973,7 @@ export const CAPABILITIES = frz({
                         },
                         {
                             "field": "loopSupport.executeVia",
-                            "value": "—"
+                            "value": "solver"
                         },
                         {
                             "field": "takeLastRecording",

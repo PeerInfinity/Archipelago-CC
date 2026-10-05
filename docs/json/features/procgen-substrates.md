@@ -17,7 +17,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 | | What you can do | Bounce Demo | Flash | Seedling (region atlas) | Seedling (generated room) | JtA | Maze | Noiz2sa | Idle Loops | Runner Demo | Text Adventure |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | P1 | You can play its regions by hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| P2 | The Playback Bot can walk it (replaying a world's solution) | ✓ | ✗ | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ✓ | ✓ | ✗ | ✓ | ✓ | ✓ |
+| P2 | The Playback Bot can walk it (replaying a world's solution) | ✓ | ✗ | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ◐ with the Flash Panel's JS runtime, or its wasm runtime | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | P3 | It draws its own picture on the composite map (else a labelled box) | ✗ | ✗ | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ | ✗ | ✓ |
 | P4 | It brings progression items of its own | ✓ Right arrow, Left arrow, Springs, Jetpacks, Blue platforms, Brown platforms, Victory | ✗ | ✗ | ✓ Progressive Sword, Progressive Shield, Progressive Swim | ✓ 48 items | ✓ Red Key, Green Key, Blue Key, Yellow Key, Purple Key, Orange Key | ✓ Victory, Noiz2sa Star | ✓ Victory | ✓ Double Jump, Blue Platforms, Springs, Glide, Shield, Victory | ✗ |
 | P5 | What the generator may do with it | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit | ✓ locations placed anywhere | ✓ its own map becomes the region graph, locations placed anywhere | ✓ locations placed anywhere | ✓ item-locked gates, exits on the four sides, its own map becomes the region graph, locations placed anywhere, any rule on a location, any rule on an exit |
@@ -32,7 +32,7 @@ The columns here are in id order. In the app, every list of substrates — the p
 | L3 | You can record a visit and replay it | ✓ | ✗ | ✗ | ✗ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
 | L4 | How a replay works | ✓ applies the result instantly | n/a | n/a | n/a | ✓ replays your exact moves | ✓ replays your exact moves | ✓ applies the result instantly | ✓ replays your exact moves | ✓ applies the result instantly | ✓ re-runs the queued actions |
 | L5 | Instant fast-forward | ✓ always — a replay is already instant | ✗ | ✗ | ✗ | ✓ a per-block toggle | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle | ✓ always — a replay is already instant | ✓ a per-block toggle |
-| L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✗ | ✗ | ✗ | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✗ | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✗ |
+| L6 | A Bot block can play it for you | ✓ the game's own automation walks it | ✗ | ✗ | ✗ | ✓ the game's own automation walks it | ✓ the substrate walks it itself | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✓ the game's own automation walks it | ✗ |
 | L7 | The Bot honours Instant | n/a | n/a | n/a | n/a | ✓ | ✗ | n/a | ✓ | n/a | n/a |
 | L8 | You can play it outside loop mode | ✓ | ✓ | ✓ | ✓ | ✗ (note 1) | ✓ | ✓ | ✗ (note 2) | ✓ | ✓ |
 | L9 | It shares the loop-mode mana pool | ✗ | ✗ | ✗ | ✗ | ✓ | ✓ | ✗ | ✓ | ✗ | ✓ |
@@ -228,6 +228,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 ### Noiz2sa
 
 - *Play* — You can play its regions by hand
+- *Play* — The Playback Bot can walk it (replaying a world's solution)
 - *Play* — It brings progression items of its own: Victory, Noiz2sa Star
 - *Play* — What the generator may do with it: locations placed anywhere
 - *Loop mode* — You can play it in loop mode
@@ -235,6 +236,7 @@ What each one lets you do — its ✓ and degree cells from the tables above, in
 - *Loop mode* — You can record a visit and replay it
 - *Loop mode* — How a replay works: applies the result instantly
 - *Loop mode* — Instant fast-forward: always — a replay is already instant
+- *Loop mode* — A Bot block can play it for you: the game's own automation walks it
 - *Loop mode* — You can play it outside loop mode
 - *Generate* — How many ready-made rooms / levels it brings: 3 Noiz2sa segments
 - *Generate* — A world of it can start with an empty inventory

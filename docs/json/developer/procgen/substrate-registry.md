@@ -80,7 +80,7 @@ The composite map is the grid-of-regions canvas in the Procgen Pipeline panel an
 | `loopSupport.playback` | boolean | Recorded visits can be replayed: by `replayActions` on fine-grained substrates, or by the loops executor for coarse ones. |
 | `loopSupport.instant` | boolean | A Playback or Bot block can run in one burst (the per-block Instant toggle; summary substrates declare it without the toggle). For Bot blocks the toggle shows only when `loopState.regionBotHonorsInstant` holds (`instant`, `executeVia: 'solver'` and fine-grained), so wire the Bot before declaring all three. |
 | `loopSupport.summaryRecording` | boolean | Summary capture: Record stores the visit's net result and Playback applies it instantly; regions are priced by time. A real recorder (`takeLastRecording`) wins if both are present. |
-| `loopSupport.playClock` | boolean | The substrate's page reports whether its own clock runs (`substrate:playClock` {region, running}, through `flashSubstrate/bridge.js` `setPlayClock`); a summary region whose last report says stopped is not drained and its seconds are not recorded. Without it, reports are ignored. See [loop-recording.md](./loop-recording.md#the-play-clock). |
+| `loopSupport.playClock` | boolean | The substrate's page reports whether its own clock runs (`substrate:playClock` {region, running[, stats]}, through `flashSubstrate/bridge.js` `setPlayClock`); a summary region whose last report says stopped is not drained and its seconds are not recorded. A report whose `stats` carry `gameSeconds` is charged per game second played instead, and a summary keeps the last `stats` as `playStats`. Without it, reports are ignored. See [loop-recording.md](./loop-recording.md#the-play-clock). |
 | `loopSupport.customQueues` | boolean | The legacy custom-queue dropdown (attach a saved queue as a `customQueue` action). |
 | `loopSupport.requiresLoopMode` | boolean | A loop game whose regions only work in loop mode; loops refuses a user loop-mode disable while one is loaded. See [loop-recording.md](./loop-recording.md#requiresloopmode--loop-game-substrates). |
 | `loopSupport.executeVia` | `'solver'` (optional) | A Bot-mode block drives the substrate's PlaybackController (`walkTo`) and waits for the resulting event. If absent, actions run on the generic timer. |
@@ -257,7 +257,7 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `getPlaybackController` | fn | — | fn | fn | fn | fn | — | fn | fn | fn |
+| `getPlaybackController` | fn | — | fn | fn | fn | fn | fn | fn | fn | fn |
 | `playbackScope` | — | — | 54 chars | 54 chars | — | — | — | — | — | — |
 
 **Action labelling**
@@ -277,9 +277,9 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `loopSupport` | 8 keys | {customQueues, manual, queueActions} | {customQueues, manual, queueActions} | {customQueues, manual, queueActions} | 8 keys | 6 keys | 8 keys | 8 keys | 8 keys | 6 keys |
+| `loopSupport` | 8 keys | {customQueues, manual, queueActions} | {customQueues, manual, queueActions} | {customQueues, manual, queueActions} | 8 keys | 6 keys | 9 keys | 8 keys | 8 keys | 6 keys |
 | `loopSupport.customQueues` | no | no | no | no | no | yes | no | no | no | no |
-| `loopSupport.executeVia` | solver | — | — | — | solver | — | — | solver | solver | — |
+| `loopSupport.executeVia` | solver | — | — | — | solver | — | solver | solver | solver | — |
 | `loopSupport.instant` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes | yes | yes |
 | `loopSupport.playClock` | — | — | — | — | — | — | yes | — | — | — |

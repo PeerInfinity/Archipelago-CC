@@ -262,20 +262,23 @@ describe('the corpus census — printed, then pinned', () => {
          *   339 → 341  BULLETML N3b fix 2 (2026-10-05): flash.md's play-clock row →
          *              loop-recording.md, and noiz2sa.md's play-again line → flash.md
          *              (`doc` 264 → 266).
+         *   341 → 344  BULLETML N4 (2026-10-05): loop-recording.md → noiz2sa.md (§ The
+         *              bot's training from the Playback flow, the play clock's game-time
+         *              bullet, § The bot from the Bot flow) (`doc` 266 → 269).
          */
         expect(by).toEqual({
             'same-doc': 17,
-            doc: 266,
+            doc: 269,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(341);
+        expect(CORPUS.length).toBe(344);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(266);
+        expect(docs).toHaveLength(269);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

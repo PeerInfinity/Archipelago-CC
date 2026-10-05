@@ -273,7 +273,8 @@ describe('⛓ the links the render emits', () => {
         //   330 → 337: bulletml N3's noiz2sa.md (README index row, five sibling links) + its registry annotation.
         //   337 → 339: bulletml N3b's playClock registry row + noiz2sa.md → loop-recording.md § The play clock.
         //   339 → 341: N3b fix 2's flash.md play-clock row + noiz2sa.md's play-again line → flash.md.
-        expect(checked).toBe(341);
+        //   341 → 344: bulletml N4's three loop-recording.md → noiz2sa.md links (training, game time, the bot).
+        expect(checked).toBe(344);
     });
 
     it('tags each link with the kind that produced it', () => {

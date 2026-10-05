@@ -60,7 +60,7 @@ export const REGISTRY = frz({
             "registeredBy": "frontend/modules/mazeRoom/mazeRoomLibrary.js"
         },
         {
-            "fields": 19,
+            "fields": 20,
             "id": "noiz2sa",
             "label": "Noiz2sa",
             "registeredBy": "frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js"
@@ -2893,6 +2893,7 @@ export const REGISTRY = frz({
                 "flash_seedling_gen",
                 "jta",
                 "maze",
+                "noiz2sa",
                 "omsi",
                 "runner",
                 "text_adventure"
@@ -2942,9 +2943,9 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "noiz2sa",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
+                    "present": true,
+                    "short": "fn",
+                    "type": "function",
                     "value": null
                 },
                 {
@@ -4156,10 +4157,11 @@ export const REGISTRY = frz({
                 {
                     "id": "noiz2sa",
                     "present": true,
-                    "short": "8 keys",
+                    "short": "9 keys",
                     "type": "object",
                     "value": [
                         "customQueues",
+                        "executeVia",
                         "instant",
                         "manual",
                         "playClock",
@@ -4313,6 +4315,7 @@ export const REGISTRY = frz({
             "carriedBy": [
                 "bounce",
                 "jta",
+                "noiz2sa",
                 "omsi",
                 "runner"
             ],
@@ -4361,10 +4364,10 @@ export const REGISTRY = frz({
                 },
                 {
                     "id": "noiz2sa",
-                    "present": false,
-                    "short": "—",
-                    "type": "absent",
-                    "value": null
+                    "present": true,
+                    "short": "solver",
+                    "type": "string",
+                    "value": "solver"
                 },
                 {
                     "id": "omsi",
