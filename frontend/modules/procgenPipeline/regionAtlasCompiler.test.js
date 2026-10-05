@@ -823,7 +823,18 @@ describe('assumeBidirectionalExits — declared per player, only when stated', (
 
     it('the committed seedling_playthrough rules declare false (its producer passes it; strand 0)', () => {
         const rules = read('../../presets/seedling_playthrough/AP_1/AP_1_rules.json');
-        expect(rules.exporter).toEqual({ 1: { assume_bidirectional_exits: false } });
+        // ⛓ RETURN TO MENU: and, beside it, return_to_menu (procgenCore/restartWarp.js) — its producer passes both.
+        expect(rules.exporter).toEqual({ 1: { assume_bidirectional_exits: false, return_to_menu: true } });
+    });
+});
+
+describe('returnToMenu — a per-player FLAG, never an edge (procgenCore/restartWarp.js)', () => {
+    it('writes exporter["1"].return_to_menu only when passed, and the graph is the same either way', () => {
+        const plain = compileStarter().rules;
+        const flagged = compileStarter({ returnToMenu: true }).rules;
+        expect(plain.exporter).toEqual({});
+        expect(flagged.exporter).toEqual({ 1: { return_to_menu: true } });
+        expect(flagged.regions).toEqual(plain.regions);
     });
 });
 
@@ -839,9 +850,10 @@ describe('determinism', () => {
         // The gate scripts/procgen/region-atlas-compile.mjs --check enforces on
         // the command line, enforced here too: an atlas edit that is not
         // followed by a recompile fails the suite. The preset is compiled WITH
-        // its sphere log (`--embed-sphere-log`; see 'the opt-in sphere log').
+        // its sphere log (`--embed-sphere-log`; see 'the opt-in sphere log') and, as the CLI compiles a Seedling atlas in
+        // its own substrate, the return_to_menu flag (see 'returnToMenu').
         expect(readFileSync(PRESET_PATH, 'utf8'))
-            .toBe(`${stringifyRulesJson(compileStarter({ embedSphereLog: true }).rules)}\n`);
+            .toBe(`${stringifyRulesJson(compileStarter({ embedSphereLog: true, returnToMenu: true }).rules)}\n`);
     });
 });
 

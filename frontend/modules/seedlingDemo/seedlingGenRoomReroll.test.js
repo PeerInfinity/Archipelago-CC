@@ -515,6 +515,9 @@ describe('G8 — a room the budget cannot seat GROWS (⚖ user 2026-09-26, repla
      * (the slot's). With slot 1's block unwrapped each build still hashes to
      * its previous value (855fb31a / c581247e / aa6355f2 — measured), so the
      * wrap is the whole move.
+     * ⛓ RE-MEASURED at RETURN TO MENU (2026-10-05): a realised flash_seedling_gen declares `restartWarp`, so each
+     * build's exporter["1"] gains `return_to_menu: true`. With that one key deleted, all three hash to their F2
+     * values (ded222c9 / 9556080c / cc038eaa — measured), so the flag is the whole move.
      */
     it.each([
         ['grid 8x6 seed 2', () => GRID(2, 8, 6), 'ded222c9'],
