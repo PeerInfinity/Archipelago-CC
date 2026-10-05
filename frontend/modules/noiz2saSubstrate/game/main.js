@@ -8,11 +8,13 @@
  *
  * The `__swfBridge` contract (flashSubstrate/bridge.js, injected by the host panel):
  *   game side, here:   configure({params: {start, end, seed, exits}, regionId, checkedLocations})
- *   host side, called: sendLocation('clear') on the clear; sendExit(exitName, null) to leave.
+ *   host side, called: sendLocation('clear') on the clear; sendExit(exitName, null) to leave;
+ *                      setPlayClock(running) on every state change (running = the game is stepping).
  * Opened directly in a tab (no host), the page plays the region in its URL: ?start=1:2&end=1:3&seed=1.
  *
  * The game only steps while the player is playing it: a configured region waits for a game key (or a click), and
- * the page pauses when it loses focus (⚖ no offline progress; the host's time drain charges parked time anyway).
+ * the page pauses when it loses focus (⚖ no offline progress). The page reports its clock (`setPlayClock(running)`,
+ * running only while `playing`), so the host's time drain charges played time only.
  * Keys: arrows/WASD move, Z fire, X slow, P pause, 1–9 leave by that exit once cleared.
  *
  * Test surface (not the contract): `window.__noiz2saDebug()` reads the state; `window.__noiz2saTest` drives
@@ -77,6 +79,16 @@ function setState(s) {
     app.lastTime = null; app.acc = 0;
     invalidatePanels();
     showStatus();
+    reportPlayClock();
+}
+
+// The play clock (loopSupport.playClock): the host's time drain charges a region only while its clock runs, and
+// the clock runs only in `playing` — not while the region waits for its first key, is paused, or is cleared and
+// waiting for the player to leave. Whoever drives the input (the keyboard, an injected tape, a bot) the report is
+// the same. Reported on every state change; the bridge drops it when no region is active.
+function reportPlayClock() {
+    if (!app.regionId) return;
+    window.__swfBridge?.setPlayClock?.(app.state === 'playing');
 }
 
 // ── the region ──

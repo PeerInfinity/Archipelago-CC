@@ -40,18 +40,19 @@ Like runner and bounce, the iframe rides `flashSubstrate`'s shared code: the pan
 - The page implements `configure`. It calls `sendLocation('clear')` on the region's clear and `sendExit(exitName, null)` when the player leaves.
 - The exits are closed until the region is cleared on this visit, or its location was already checked.
 - The game steps only while it is being played. A configured region waits for a game key or a click, and the page pauses when it loses focus. Keys: arrows/WASD move, Z fires, X is slow, P pauses, 1–9 leave by that exit.
+- The page reports its play clock (`setPlayClock(running)`) on every state change: running only while `playing`. Waiting for the first key, paused, and cleared-and-waiting-to-leave are all stopped (the game does not step in any of them), and an injected tape that ran out returns the page to waiting.
 - Opened directly in a tab, the page plays the region in its URL: `game/index.html?start=1:2&end=1:3&seed=1`.
 - Test surface (not the contract): `window.__noiz2saDebug()` reads the state, and `window.__noiz2saTest` plays an injected input tape (`play(tape, {speed})`) and leaves by an exit (`leave(name)`).
 
 ## Loop mode
 
-Noiz2sa is a summary substrate (`loopSupport.summaryRecording`) with runner's declarations except the Bot. Record keeps the visit's net result: the drain seconds, the clear check and the departure. Playback applies it instantly, and live play is priced by time through `loopState._timeDrainTick`. A hit costs nothing extra: the time already spent stays spent. There is no `executeVia` and no `getPlaybackController` yet. See [Loop Recording and Block Modes](./loop-recording.md#summary-substrates).
+Noiz2sa is a summary substrate (`loopSupport.summaryRecording`) with runner's declarations except the Bot. Record keeps the visit's net result: the drain seconds, the clear check and the departure. Playback applies it instantly, and live play is priced by time through `loopState._timeDrainTick`. A hit costs nothing extra: the time already spent stays spent. It declares `loopSupport.playClock`, so only time the game plays is charged and recorded: a region waiting for its first key, paused, or cleared and waiting for the player to leave costs nothing (see [the play clock](./loop-recording.md#the-play-clock)). There is no `executeVia` and no `getPlaybackController` yet. See [Loop Recording and Block Modes](./loop-recording.md#summary-substrates).
 
 ## The test preset and the test
 
 `noiz2sa_substrate_test` is the zone table as a world: 1:1, 1:2–1:3 and 1:boss–2:1, all on seed 1, Victory on the last clear and `Noiz2sa Star` (a filler) on the others. It is written by `scripts/test/generate-noiz2sa-substrate-test-preset.mjs` (Pass A of the pipeline, `loop_costs` stamped), so loop mode auto-enables.
 
-The in-app row `noiz2sa-region-loop-visit` (test-substrates, batch `fast`) parks a Record block on the 1:1 region and drives the page by injected input. Idle fire is hit at frame 240 and the region restarts with nothing checked. The game repo's Ace bot's clearing tape (1002 frames) checks the clear. Leaving saves a summary priced by the drain, and instant Playback spends the repriced summary. The unit tests are `noiz2saRegion.test.js` (the rules on a fake engine) and `noiz2saSubstrateLibrary.test.js` (the entry, the payload round trip, the zone table, the committed preset).
+The in-app row `noiz2sa-region-loop-visit` (test-substrates, batch `fast`) parks a Record block on the 1:1 region and drives the page by injected input. Idle fire is hit at frame 240 and the region restarts with nothing checked. Waiting for the first key, and P pressed partway through the clearing tape, each report the clock stopped and drain nothing for 2.5 s (no mana, no recorded second, no frame); P again resumes the tape. The game repo's Ace bot's clearing tape (1002 frames) checks the clear. Leaving saves a summary priced by the drain, and instant Playback spends the repriced summary. The unit tests are `noiz2saRegion.test.js` (the rules on a fake engine) and `noiz2saSubstrateLibrary.test.js` (the entry, the payload round trip, the zone table, the committed preset).
 
 ## Related documentation
 

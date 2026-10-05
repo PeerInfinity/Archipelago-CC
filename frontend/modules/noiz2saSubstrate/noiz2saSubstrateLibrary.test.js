@@ -29,7 +29,7 @@ describe('the registry entry', () => {
     it('is a SUMMARY substrate with runner\'s loop declarations, less the Bot (N4)', () => {
         expect(captureShapeOf(entry)).toBe('summary');
         expect(entry.loopSupport).toMatchObject({
-            manual: true, record: true, playback: true, instant: true, summaryRecording: true,
+            manual: true, record: true, playback: true, instant: true, summaryRecording: true, playClock: true,
         });
         expect(entry.loopSupport.executeVia).toBeUndefined();
         expect(entry.getPlaybackController).toBeUndefined();

@@ -24,6 +24,11 @@
  *     after configure and on every state change — the same cadence as
  *     pollItems. The game stays Archipelago-naive: it only ever sees
  *     booleans, and renders locked goals visibly locked.
+ *   - Play clock (optional): when the game calls
+ *     __swfBridge.setPlayClock(running), relay `substrate:playClock`
+ *     {region, running} to the host eventBus — loops' time drain skips a
+ *     region whose clock is reported stopped (opt-in per substrate via
+ *     loopSupport.playClock).
  *   - Playback bot (optional): when the iframe URL carries a
  *     `playbackControlEvent` query param, subscribe to that event and
  *     execute PlaybackController commands published by the host-side
@@ -224,6 +229,21 @@ function _onSendExit(portalId, side) {
     }, { initialTarget: 'bottom' });
     log('debug', `exit '${portalId}' (side=${side}) -> user:regionMove `
         + `(${_currentRegionId} -> ${exit.targetRegion ?? '?'})`);
+}
+
+/**
+ * The game's play-clock report (optional contract method): whether the
+ * game's own clock is advancing for the active region. Relayed as the
+ * host eventBus event `substrate:playClock` {region, running}; loops'
+ * time drain charges a region whose substrate declares
+ * `loopSupport.playClock` only while its last report says running. A
+ * game that never calls this is drained exactly as before. The report
+ * says nothing about WHO drives the input (player, injected tape, bot).
+ */
+function _onSetPlayClock(running) {
+    if (!_isActive || !_currentRegionId || typeof running !== 'boolean') return;
+    if (!_client) return;
+    _client.publishEventBus('substrate:playClock', { region: _currentRegionId, running });
 }
 
 /**
@@ -476,6 +496,7 @@ async function main() {
     if (!_w.__swfBridge) _w.__swfBridge = {};
     _w.__swfBridge.sendLocation = _onSendLocation;
     _w.__swfBridge.sendExit = _onSendExit;
+    _w.__swfBridge.setPlayClock = _onSetPlayClock;
 
     // Step 3: subscribe to host events.
     _client.subscribeEventBus(LOAD_REGION_EVENT, _handleLoadRegion);

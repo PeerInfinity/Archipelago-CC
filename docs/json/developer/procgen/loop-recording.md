@@ -103,6 +103,17 @@ Runner and bounce play in real time, so their action stream is not worth replayi
 
 Runner and bounce do not declare `requiresLoopMode`: they have no native "out of resource, restart the run" economy.
 
+### The play clock
+
+Some summary games do not advance on every wall-clock second: Noiz2sa waits for a key before a region starts and pauses on blur or P. A substrate that declares `loopSupport.playClock` lets its page say so, and the drain then charges only time the game actually plays.
+
+- **The report.** The page calls `__swfBridge.setPlayClock(running)` on every change of its own state. `flashSubstrate/bridge.js` relays it to the host as the eventBus event `substrate:playClock` `{region, running}`, stamped with the bridge's active region.
+- **Loops keeps the last one.** `loopState.notePlayClock` stores `{region, running}` only when the region's substrate declares `playClock`, so a substrate that never opted in (runner, bounce) cannot make its time free.
+- **The gate.** `_timeDrainTick` skips a second in which the drained region's last report is `running: false`: no mana, and no `_summaryDrainSeconds`, so the recorded duration and Playback's price exclude it. Both branches are gated, live play and the Bot, so a bot-driven page reports through the same call (it drives the same input and the same states) and waiting between goals is free the same way.
+- **Fail safe.** No report, a report for another region, or a malformed one leaves the drain charging. A `gameState:regionChanged` to any other region drops the report, so a revisit is charged until the page reports again.
+
+The channel is the bridge's existing iframe-to-host eventBus relay (`publishEventBus`, as omsi's `substrate:resourceDelta`). The alternative was a loops public function the panel polls each tick (the shape of `livePlayRegion()`/`botSolverRegion()`, which go the other way); a push keeps the drain synchronous and needs no host-side panel code.
+
 ## The Record flow
 
 **Coarse substrates.** While parked on the block, loops observes each gate-allowed `user:locationCheck` and `loop:exploreCompleted` in that region (`observeParkedLiveAction`), charges it, and appends it to `_liveCaptureBuffer`. On a successful exit the buffer becomes the block interior; only annotations go to the store.

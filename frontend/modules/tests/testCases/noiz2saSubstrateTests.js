@@ -10,6 +10,8 @@
  *      from its start: attempt 2, nothing checked;
  *   2. a clearing tape (the game repo's Ace bot on 1:1 seed 1, 1002 frames, via `segment-run.js` runSegment;
  *      `NOIZ2SA_CLEAR_TAPE` below) clears the region → its one location is checked;
+ *      — the play clock (N3b): waiting for the first key, and P pressed partway through the tape, report the clock
+ *        stopped and drain nothing (no mana, no recorded second, no game frame); P again resumes the same tape;
  *   3. the page leaves by the queued exit → the Record block saves a SUMMARY (duration, the check, the
  *      departure), and live play drained the time cost (the `_timeDrainTick` path);
  *   4. back to the start, Playback applies the summary INSTANTLY: it spends the repriced envelope and crosses
@@ -42,6 +44,8 @@ const NOIZ2SA_CLEAR_TAPE = '51x2,19x6,50x8,17x24,49x24,17x8,50x8,16x56,48x8,16x4
     + '19x4,20x4,19x4,20x4,24x8,23x8,56x24,16x16,49x8,56x8,49x16,52x8,22x2,21x14,54x4,20,21x3,19x20,20x22,21x14,'
     + '50x8,23x8,24x16,56x2';
 const SPEED = 8;
+/** how long the row sits on a stopped play clock (unstarted, then paused) — over two drain ticks */
+const PAUSE_MS = 2500;
 
 const currentRegion = () => getGameStateSingleton()?.getCurrentRegion?.() ?? null;
 const currentMana = () => getGameStateSingleton()?.getCurrentMana?.() ?? 0;
@@ -56,6 +60,13 @@ function snapshotHasLocation(snapshot, name) {
 
 const gameWindow = () => document.querySelector('iframe[src*="noiz2saSubstrate/game/index.html"]')?.contentWindow ?? null;
 const debugState = () => gameWindow()?.__noiz2saDebug?.() ?? null;
+/** a real key press on the game page (its own KeyboardEvent, so the page's listeners see an ordinary key) */
+function pressKey(code) {
+    const w = gameWindow();
+    if (!w) return;
+    w.dispatchEvent(new w.KeyboardEvent('keydown', { code, bubbles: true }));
+    w.dispatchEvent(new w.KeyboardEvent('keyup', { code, bubbles: true }));
+}
 
 function resolveBlockFor(region) {
     const { visits } = resolveQueueBlocks(loopStateSingleton.getActionQueue?.() ?? []);
@@ -122,6 +133,16 @@ async function noiz2saRegionLoopVisit(testController) {
             JSON.stringify({ start: { stage: 0, scene: 0 }, end: { stage: 0, scene: 0 }, seed: 1 }), JSON.stringify(d0.span));
         testController.assertEqual('the exits are closed before the clear', false, d0.exitsOpen);
 
+        // ── 2b. the play clock: a region waiting for its first key costs nothing (N3b) ──
+        const clockStopped = await testController.pollForCondition(
+            () => loopStateSingleton._playClock?.region === region && loopStateSingleton._playClock.running === false,
+            'the page reported its clock stopped (waiting for a key)', 5000, 100);
+        testController.reportCondition('the page reported its clock stopped (waiting for a key)', !!clockStopped);
+        const idleMana = currentMana(), idleSeconds = loopStateSingleton._summaryDrainSeconds;
+        await new Promise((r) => setTimeout(r, PAUSE_MS));
+        testController.assertEqual(`${PAUSE_MS} ms waiting for the first key drained nothing and recorded nothing`, true,
+            currentMana() === idleMana && loopStateSingleton._summaryDrainSeconds === idleSeconds);
+
         // ── 3. a hit restarts the region ──
         gameWindow().__noiz2saTest.play(IDLE_FIRE_TAPE, { speed: SPEED });
         const hit = await testController.pollForCondition(
@@ -135,8 +156,30 @@ async function noiz2saRegionLoopVisit(testController) {
         testController.assertEqual('a hit checks nothing', false,
             snapshotHasLocation(testController.stateManager.getSnapshot(), location));
 
-        // ── 4. the clearing tape clears it → the location ──
+        // ── 4. the clearing tape clears it → the location; P pauses it partway, and paused time is free ──
         gameWindow().__noiz2saTest.play(NOIZ2SA_CLEAR_TAPE, { speed: SPEED });
+        const midway = await testController.pollForCondition(
+            () => { const d = debugState(); return d?.state === 'playing' && d.attemptFrames >= 200; },
+            'the clearing tape is under way', 10000, 20);
+        testController.reportCondition('the clearing tape is under way', !!midway);
+        pressKey('KeyP');
+        const paused = await testController.pollForCondition(
+            () => debugState()?.state === 'paused'
+                && loopStateSingleton._playClock?.region === region && loopStateSingleton._playClock.running === false,
+            'P paused the game and the page reported its clock stopped', 5000, 50);
+        testController.reportCondition('P paused the game and the page reported its clock stopped', !!paused);
+        const pausedMana = currentMana(), pausedSeconds = loopStateSingleton._summaryDrainSeconds;
+        const pausedFrames = debugState()?.attemptFrames;
+        await new Promise((r) => setTimeout(r, PAUSE_MS));
+        testController.assertEqual(`${PAUSE_MS} ms paused drained nothing, recorded nothing, stepped nothing`, true,
+            currentMana() === pausedMana && loopStateSingleton._summaryDrainSeconds === pausedSeconds
+            && debugState()?.attemptFrames === pausedFrames);
+        pressKey('KeyP');
+        const resumed = await testController.pollForCondition(
+            () => debugState()?.cleared === true
+                || (debugState()?.state === 'playing' && loopStateSingleton._playClock?.running === true),
+            'P resumed the game and its clock', 5000, 20);
+        testController.reportCondition('P resumed the game and its clock', !!resumed);
         const cleared = await testController.pollForCondition(
             () => debugState()?.cleared === true, 'the injected tape cleared the region', 20000, 100);
         testController.assertEqual('the tape cleared the region in 1002 frames, deathless', true,

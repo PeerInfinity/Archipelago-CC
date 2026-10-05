@@ -197,6 +197,9 @@ export const substrateRegistryEntry = Object.freeze({
         playback: true,
         instant: true,
         summaryRecording: true,
+        // the page reports whether its clock runs (waiting for a key, paused or cleared: not running), and the
+        // time drain charges only running time — flashSubstrate/bridge.js `setPlayClock`, loopState._timeDrainTick
+        playClock: true,
     }),
 
     victoryItem: NOIZ2SA_VICTORY_ITEM_NAME,

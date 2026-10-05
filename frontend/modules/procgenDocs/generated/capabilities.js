@@ -971,9 +971,9 @@ export const CAPABILITIES = frz({
         }
     ],
     "counts": {
-        "fields": 85,
+        "fields": 86,
         "fieldsRead": 38,
-        "fieldsUnread": 44,
+        "fieldsUnread": 45,
         "statements": 29,
         "substrates": 10
     },
@@ -5310,6 +5310,7 @@ export const CAPABILITIES = frz({
         "libraryEntryRefusal",
         "loadRegionEvent",
         "loopSupport.customQueues",
+        "loopSupport.playClock",
         "onContentEdit",
         "pipelineConfigFromParams",
         "pipelineConfigKeys",

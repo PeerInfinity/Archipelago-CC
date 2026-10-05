@@ -271,7 +271,8 @@ describe('⛓ the links the render emits', () => {
         //   327 → 329: solver-walk S1's flash.md § The solver mode → seedling-bot.md + playback-and-debugging.md → it.
         //   329 → 330: solver-walk W2's playback-and-debugging.md → flash.md § Wasm playback.
         //   330 → 337: bulletml N3's noiz2sa.md (README index row, five sibling links) + its registry annotation.
-        expect(checked).toBe(337);
+        //   337 → 339: bulletml N3b's playClock registry row + noiz2sa.md → loop-recording.md § The play clock.
+        expect(checked).toBe(339);
     });
 
     it('tags each link with the kind that produced it', () => {

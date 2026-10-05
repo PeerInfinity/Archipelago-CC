@@ -264,6 +264,13 @@ export class LoopState {
     // duration (slice 3), which excludes pauses for free.
     this._drainIntervalId = null;
     this._summaryDrainSeconds = 0;
+    // N3b: the last PLAY-CLOCK report ({region, running}) from a substrate
+    // that declares `loopSupport.playClock` — its page says whether its own
+    // clock is advancing (a game waiting for a key, or paused, is not). A
+    // stopped clock suspends the drain for that region; no report, or a
+    // report for another region, leaves the drain as it always was. Set by
+    // the `substrate:playClock` event, dropped when the region changes.
+    this._playClock = null;
     // M5: the performed actions of a summary visit that carried an EXPLICIT
     // loop_costs price. Stored with the recording so Playback can re-price
     // them at the current XP level (the duration covers everything else,
@@ -478,6 +485,16 @@ export class LoopState {
       if (data?.active) this.startTimeDrain();
       else this.stopTimeDrain();
     });
+    // N3b: a play-clock substrate's page reports whether its clock runs
+    // (flashSubstrate/bridge.js relays `__swfBridge.setPlayClock`). A region
+    // change drops a report for any other region, so a revisit starts from
+    // "no report" (charged) until the page speaks again.
+    this.eventBus.subscribe('substrate:playClock', (data) => {
+      this.notePlayClock(data?.region, data?.running);
+    });
+    this.eventBus.subscribe('gameState:regionChanged', (data) => {
+      if (this._playClock && this._playClock.region !== data?.newRegion) this._playClock = null;
+    });
     // Loop mode may already be on when dependencies land (a preset with
     // loop_costs auto-enables it before loops finishes wiring).
     if (this._gs()?.isLoopModeActive) this.startTimeDrain();
@@ -516,6 +533,9 @@ export class LoopState {
     const liveRegion = this.livePlayRegion();
     if (liveRegion) {
       if (this._captureShapeForRegion(liveRegion) !== 'summary') return;
+      // N3b: the game says its clock is not running (not started, paused,
+      // cleared) — the second costs nothing and is not recorded.
+      if (this._playClockStopped(liveRegion)) return;
       // Duration is TIME PARKED, independent of what that time cost — a
       // zero-rate region still accrues seconds. Counted BEFORE the charge,
       // because charging can end the park: deductMana fires
@@ -528,6 +548,9 @@ export class LoopState {
     }
     const botRegion = this._botDrainRegion();
     if (!botRegion) return;
+    // The same clock gates a bot: a bot-driven page reports its clock the
+    // same way, so a bot waiting between goals costs what a waiting player does.
+    if (this._playClockStopped(botRegion)) return;
     // No _summaryDrainSeconds increment: that counter is Record-CAPTURE
     // state (it becomes the saved visit's duration), and a Bot block
     // records nothing. It stays owned by the live-play branch above.
@@ -541,6 +564,40 @@ export class LoopState {
     // depletion-retry loop the queue has always had, reached from the only
     // spend that happens while no frame is running.
     this._maybeResetForOOM();
+  }
+
+  /**
+   * Record a PLAY-CLOCK report (N3b): the substrate page playing `region`
+   * says whether its own clock is advancing. Kept only for a region whose
+   * substrate declares `loopSupport.playClock`; anything else is ignored,
+   * so a substrate that never opted in can never make its time free.
+   * The last report wins; `_timeDrainTick` consults it per region.
+   */
+  notePlayClock(region, running) {
+    if (typeof region !== 'string' || !region || typeof running !== 'boolean') return;
+    if (!this._regionReportsPlayClock(region)) return;
+    this._playClock = { region, running };
+  }
+
+  /** Whether a region's substrate opted into play-clock reports (N3b). */
+  _regionReportsPlayClock(region) {
+    const substrateId = this._lookupSubstrateId(region);
+    if (!substrateId) return false;
+    try {
+      return substrateRegistry?.get?.(substrateId)?.loopSupport?.playClock === true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * True only when the region's play clock was REPORTED stopped (N3b). No
+   * report, a report for another region, or a running clock → false, so the
+   * drain fails safe to charging.
+   */
+  _playClockStopped(region) {
+    const clock = this._playClock;
+    return !!clock && clock.region === region && clock.running === false;
   }
 
   /**

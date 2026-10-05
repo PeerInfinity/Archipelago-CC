@@ -135,6 +135,7 @@ export const REGISTRY = frz({
                 "loopSupport.executeVia",
                 "loopSupport.instant",
                 "loopSupport.manual",
+                "loopSupport.playClock",
                 "loopSupport.playback",
                 "loopSupport.queueActions",
                 "loopSupport.record",
@@ -4155,12 +4156,13 @@ export const REGISTRY = frz({
                 {
                     "id": "noiz2sa",
                     "present": true,
-                    "short": "7 keys",
+                    "short": "8 keys",
                     "type": "object",
                     "value": [
                         "customQueues",
                         "instant",
                         "manual",
+                        "playClock",
                         "playback",
                         "queueActions",
                         "record",
@@ -4564,6 +4566,86 @@ export const REGISTRY = frz({
             "documentedHow": "table",
             "group": "Loop mode",
             "name": "loopSupport.manual"
+        },
+        {
+            "carriedBy": [
+                "noiz2sa"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
+            "name": "loopSupport.playClock"
         },
         {
             "carriedBy": [

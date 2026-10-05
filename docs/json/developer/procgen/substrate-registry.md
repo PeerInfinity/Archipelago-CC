@@ -80,6 +80,7 @@ The composite map is the grid-of-regions canvas in the Procgen Pipeline panel an
 | `loopSupport.playback` | boolean | Recorded visits can be replayed: by `replayActions` on fine-grained substrates, or by the loops executor for coarse ones. |
 | `loopSupport.instant` | boolean | A Playback or Bot block can run in one burst (the per-block Instant toggle; summary substrates declare it without the toggle). For Bot blocks the toggle shows only when `loopState.regionBotHonorsInstant` holds (`instant`, `executeVia: 'solver'` and fine-grained), so wire the Bot before declaring all three. |
 | `loopSupport.summaryRecording` | boolean | Summary capture: Record stores the visit's net result and Playback applies it instantly; regions are priced by time. A real recorder (`takeLastRecording`) wins if both are present. |
+| `loopSupport.playClock` | boolean | The substrate's page reports whether its own clock runs (`substrate:playClock` {region, running}, through `flashSubstrate/bridge.js` `setPlayClock`); a summary region whose last report says stopped is not drained and its seconds are not recorded. Without it, reports are ignored. See [loop-recording.md](./loop-recording.md#the-play-clock). |
 | `loopSupport.customQueues` | boolean | The legacy custom-queue dropdown (attach a saved queue as a `customQueue` action). |
 | `loopSupport.requiresLoopMode` | boolean | A loop game whose regions only work in loop mode; loops refuses a user loop-mode disable while one is loaded. See [loop-recording.md](./loop-recording.md#requiresloopmode--loop-game-substrates). |
 | `loopSupport.executeVia` | `'solver'` (optional) | A Bot-mode block drives the substrate's PlaybackController (`walkTo`) and waits for the resulting event. If absent, actions run on the generic timer. |
@@ -222,7 +223,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**10 registered entries · 85 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 86 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -276,11 +277,12 @@ Groups are this document's own § headings, matched to a field by the section th
 
 | Field | `bounce` | `flash` | `flash_seedling` | `flash_seedling_gen` | `jta` | `maze` | `noiz2sa` | `omsi` | `runner` | `text_adventure` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `loopSupport` | 8 keys | {customQueues, manual, queueActions} | {customQueues, manual, queueActions} | {customQueues, manual, queueActions} | 8 keys | 6 keys | 7 keys | 8 keys | 8 keys | 6 keys |
+| `loopSupport` | 8 keys | {customQueues, manual, queueActions} | {customQueues, manual, queueActions} | {customQueues, manual, queueActions} | 8 keys | 6 keys | 8 keys | 8 keys | 8 keys | 6 keys |
 | `loopSupport.customQueues` | no | no | no | no | no | yes | no | no | no | no |
 | `loopSupport.executeVia` | solver | — | — | — | solver | — | — | solver | solver | — |
 | `loopSupport.instant` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.manual` | yes | yes | yes | yes | yes | yes | yes | yes | yes | yes |
+| `loopSupport.playClock` | — | — | — | — | — | — | yes | — | — | — |
 | `loopSupport.playback` | yes | — | — | — | yes | yes | yes | yes | yes | yes |
 | `loopSupport.queueActions` | regionMove, locationCheck | regionMove | regionMove | regionMove | regionMove | regionMove, locationCheck, explore | regionMove, locationCheck | regionMove | regionMove, locationCheck | regionMove, locationCheck, explore |
 | `loopSupport.record` | yes | — | — | — | yes | yes | yes | yes | yes | yes |

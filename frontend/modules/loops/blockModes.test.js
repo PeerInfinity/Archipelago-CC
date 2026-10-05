@@ -1471,7 +1471,7 @@ describe('M4 — coarse substrates get an ACTIONS-LESS annotations entry', () =>
 // declared, NO takeLastRecording, and a playback controller shaped like the
 // real runner/bounce PlaybackProxy: walkTo (the M6 bot path) but NO
 // replayActions, by design.
-function registerSummarySubstrate({ regions = ['A'] } = {}) {
+function registerSummarySubstrate({ regions = ['A'], playClock = false } = {}) {
   try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getRegionInfo'); } catch { /* ignore */ }
   try { centralRegistry.publicFunctions.get('procgenPlayer')?.delete('getWarehouse'); } catch { /* ignore */ }
   try { substrateRegistry.clear?.(); } catch { /* ignore */ }
@@ -1486,6 +1486,7 @@ function registerSummarySubstrate({ regions = ['A'] } = {}) {
       executeVia: 'solver',
       manual: true, customQueues: false,
       record: true, playback: true, instant: true, summaryRecording: true,
+      ...(playClock ? { playClock: true } : {}),
     },
     getPlaybackController: () => ({
       walkTo: (...args) => { handles.walkToCalls.push(args); return true; },
@@ -1769,6 +1770,137 @@ describe('M5 — the summary time drain', () => {
 
     loopState._discardActiveRecording();
     expect(loopState._summaryDrainSeconds).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// N3b — the play clock. A substrate that declares loopSupport.playClock
+// reports (substrate:playClock {region, running}) whether its page's clock
+// advances; a stopped clock suspends the drain and the recorded duration.
+// ---------------------------------------------------------------------------
+
+describe('N3b — the play clock gates the summary drain', () => {
+  let loopState, gs, bus, tick;
+
+  function setUp({ playClock = true, mode = 'record' } = {}) {
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    registerSummarySubstrate({ regions: ['A', 'B'], playClock });
+    const cdm = new CostDataManager();
+    cdm.setCostData({ regions: { A: { timeDrainPerSecond: 3 } }, locations: {} }, 'test');
+    loopState.setCostDataManager(cdm);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, mode);
+    gs.setLoopModeActive(true);
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  const report = (region, running) => bus.publish('substrate:playClock', { region, running }, 'test');
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    loopState?.stopTimeDrain();
+    vi.useRealTimers();
+  });
+
+  it('a running clock is charged and counted', () => {
+    setUp();
+    expect(loopState.livePlayRegion()).toBe('A');
+    report('A', true);
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(before - 6);
+    expect(loopState._summaryDrainSeconds).toBe(2);
+  });
+
+  it('a stopped clock charges nothing and the duration does not grow; running again resumes', () => {
+    setUp();
+    report('A', true);
+    vi.advanceTimersByTime(1000);
+    const before = gs.getCurrentMana();
+    expect(loopState._summaryDrainSeconds).toBe(1);
+
+    report('A', false);
+    vi.advanceTimersByTime(5000);
+    expect(gs.getCurrentMana()).toBe(before);
+    expect(loopState._summaryDrainSeconds).toBe(1);
+
+    report('A', true);
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(before - 6);
+    expect(loopState._summaryDrainSeconds).toBe(3);
+  });
+
+  it('no report at all is charged (fail safe)', () => {
+    setUp();
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(3000);
+    expect(gs.getCurrentMana()).toBe(before - 9);
+    expect(loopState._summaryDrainSeconds).toBe(3);
+  });
+
+  it('a report for another region does not stop this one', () => {
+    setUp();
+    report('B', false);
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(before - 6);
+  });
+
+  it('a region change drops the report, so a revisit is charged until the page speaks again', () => {
+    setUp();
+    report('A', false);
+    expect(loopState._playClock).toEqual({ region: 'A', running: false });
+
+    bus.publish('gameState:regionChanged', { oldRegion: 'A', newRegion: 'B' }, 'test');
+    expect(loopState._playClock).toBeNull();
+
+    // A regionChanged INTO the reported region keeps it (the page's report
+    // may outrun the host's region event).
+    report('A', false);
+    bus.publish('gameState:regionChanged', { oldRegion: 'Menu', newRegion: 'A' }, 'test');
+    expect(loopState._playClock).toEqual({ region: 'A', running: false });
+  });
+
+  it('a substrate that did not opt in cannot stop its drain', () => {
+    setUp({ playClock: false });
+    report('A', false);
+    expect(loopState._playClock).toBeNull();
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(before - 6);
+  });
+
+  it('malformed reports are ignored', () => {
+    setUp();
+    report('A', 'no');
+    report(null, false);
+    expect(loopState._playClock).toBeNull();
+  });
+
+  it('gates a bot-driven region the same way', () => {
+    setUp({ mode: 'bot' });
+    expect(loopState._botExecutedAction).not.toBeNull();
+    expect(loopState.livePlayRegion()).toBeNull();
+    const before = gs.getCurrentMana();
+
+    report('A', false);
+    vi.advanceTimersByTime(3000);
+    expect(gs.getCurrentMana()).toBe(before);
+
+    report('A', true);
+    vi.advanceTimersByTime(1000);
+    expect(gs.getCurrentMana()).toBe(before - 3);
   });
 });
 
