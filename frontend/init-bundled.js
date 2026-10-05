@@ -168,6 +168,7 @@ import './modules/tests/testCases/textAdventureWrapperTests.js';
 import './modules/tests/testCases/flashSubstrateTests.js';
 import './modules/tests/testCases/runnerDemoTests.js';
 import './modules/tests/testCases/runnerBlockModeTests.js';
+import './modules/tests/testCases/noiz2saSubstrateTests.js';
 import './modules/tests/testCases/jtaSubstrateWrapperTests.js';
 import './modules/tests/testCases/omsiSubstrateWrapperTests.js';
 import './modules/tests/testCases/jtaBalanceTests.js';

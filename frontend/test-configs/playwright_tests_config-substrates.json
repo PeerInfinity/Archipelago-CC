@@ -107,6 +107,12 @@
             "category": "Runner block modes"
         },
         {
+            "id": "noiz2sa-region-loop-visit",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N3: the Noiz2sa substrate's one row. Loop mode (the preset carries loop_costs): a Record block on the 1:1 region; injected idle fire is hit at frame 240 and the region restarts with nothing checked; a clearing tape (the game's Ace bot, 1002 frames) checks the clear; leaving saves a summary priced by the live time drain; instant Playback spends the repriced summary. Batch fast: the injected input runs 8 game frames per 16 ms, a few seconds of wall clock."
+        },
+        {
             "id": "runner-bot-block-summary-economy",
             "enabled": true,
             "category": "Runner block modes",
