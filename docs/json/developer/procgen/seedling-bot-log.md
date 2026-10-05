@@ -13433,6 +13433,62 @@ rebuilt closed on every return.
   through the lock, down the stairs) can be unsolvable backward with the same
   inventory. The arrival is on the lock's far side from its opener.
 
+### Seedling fidelity ROBUST — bounds as fields, one idle tick, the Conch
+
+⚖ The user's standard (2026-10-03): the solver handles either state and knows which one it is in, *"I don't want it to
+have to exit and reenter the room in order to solve it."* This slice took the three CANCROSS findings that were the
+solver's own. The report is `CC/docs/cloud-reports/seedling-fidelity-robust.md`.
+
+**D1: bounds as fields.** A search that was cut now says so in a field, not only in its words:
+- `SolverRefusal.bound` (optional; `null` by default) is set by both block-route throws:
+  `{name: MAX_ROUTE_EXPANSIONS | MAX_ROUTE_ORDERS | deadline, site: 'block-route', goal, block, limit, expansions}`.
+- `deriveChaserDetour`'s failure returns `bound`. It is `null` when the open set ran dry (a true "no corridor"). When a
+  candidate was left unasked it is `{name: 'DETOUR_RUNG', hit, previews, maxPreviews, planned, maxPlanned, maxVias,
+  unasked}`.
+- The ladder's failed `detour` trace row carries `previews/planned/bound`, and the refusal's last `considered` row carries
+  `bound`.
+- `seedlingCanCross.classifyError` now reads only fields. No refusal's words changed.
+
+**D2 and D3 were one mechanism.** The corridor probe answers with the corridor's FIRST danger, and the PULL rung
+(`deriveLaneSilencer`) asked only that one:
+- **D2, one idle tick** (L16 + Sword, door from L15). The planner's corridor dips past `bob@48,96`'s home, and the sword
+  knocks the bob back with about 5 px to spare. At the arrival tick, the first danger is `arrowtrap@96,32`'s lane, so
+  PULL solves (206 t). One tick later the bob's phase puts it first on the same corridor, PULL is never asked, and the
+  ladder EXHAUSTS.
+  - **It was the solver's.** The tick-0 plan, started 1 to 10 ticks late, crosses with 0 hits in the model.
+  - Started one tick late, it also crosses on the **game**: recorded, hits 0, and the model reproduces the recording.
+- **D3, the Conch** (L16 → `stairsup@352,80`). Swimming makes the corridor a straight line across the water, and its
+  first danger is `sandtrap@48,32`. AVOID has no corridor while the lanes are armed, so the ladder exhausted on
+  {sword, conch}, a strict superset of the solving {sword}.
+
+**The fix.** When the first danger has no silencer, the PULL rung probes the SAME corridor on past it (the sources
+already met excepted, up to `LATER_LANE_PROBES` = 4) for a lane that has one.
+- It is gated to the sword in the primary slot (the pull is a sword swing) and to a room with a silencer at all. That is
+  L16 alone in the atlas, so every other room's climb cannot change.
+- It stays at rung 1½. The ladder's order is ruled data (`R8_STRATEGY_EXECUTORS.ladder`, `assertEscalationIsOrdered`),
+  so a "late PULL" after KILL would be a new rung.
+
+**Results.**
+- L16 + Sword solves at every idle count asked (0, 1, 2, 3, 5, 8, 13, 21, 34), always with 0 hits.
+- {sword, conch} → L18 is `can` (797 t, 0 hits). So is {sword, conch} + each of the other eight items tried.
+- **Game witnesses**, both recorded and replayed on the game:
+  - `robust-l16-sword-idle1`: `canCross(… idle: 1)`, 220 t;
+  - `robust-l16-l18-sword-conch`: 797 t.
+- `canCross` gained `idle` (n empty ticks before the solve; the JS fresh boot's `rt.tick()`), and its CLI gained
+  `--idle=`.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A rung keyed on the probe's FIRST danger is keyed on its PHASE.** Two dangers on one corridor, and one tick of a
+  chaser's phase, decide which one a conditional rung sees, and with it whether the rung exists. "The corridor crosses
+  X" and "the probe's first hit is X" are different claims.
+- **A non-monotone verdict is a search-order bug until shown otherwise.** CANCROSS read {sword} `can` and
+  {sword, conch} `cannot` as a property of the solver. It was one conditional rung reading one danger. Gaining an item
+  changed which danger came first, not what the room allows.
+- **A trace row merged on its tick can hide the rung that acted.** A PULL decided at tick 0 shares that tick with the
+  nested AVOID climb its stance walk raised, and `canCross`'s `rungs` then reads `['avoid']` for a solve that pulled.
+  Read `records` for what was executed.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
