@@ -32,6 +32,8 @@ argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..');
 const MODULE = join(REPO, 'frontend', 'modules', 'seedlingDemo');
+/** ⚖ the licensed start-block seed of the two F1c witnesses (see where it is written). */
+const F1C_LICENSED_SEED = 463063377;
 const TAPES = join(MODULE, 'fixtures', 'tapes');
 
 const CHECK = process.argv.includes('--check');
@@ -117,6 +119,13 @@ async function main() {
     };
     delete raw.tick0;
     delete raw.note;
+    /**
+     * ⚖ LICENSED (user, 2026-10-04): the two F1c witnesses' start-block `rng.seed`
+     * 1502252165 → 463063377 (the p4f harvest; verified on the game against the committed
+     * oracle, no re-record). The frozen base keeps the F1b segment's seed, so the written
+     * tape takes the licensed one (rng reaches only the Owl, so no walk depends on it).
+     */
+    raw.rng = { ...raw.rng, seed: F1C_LICENSED_SEED };
     const parsed = parseTape(raw);
     const json = `${JSON.stringify({ ...parsed, description, note: '' }, null, 4)}\n`;
     const path = join(TAPES, `${NAME}.json`);

@@ -49,7 +49,6 @@ async function main() {
     const { solveSegment } = await import(join(MODULE, 'solverBot.js'));
     const { indexLevels, levelSourceFromAtlas } = await import(join(MODULE, 'atlasSource.js'));
     const { buildTape } = await import(join(MODULE, 'botDriverV1.js'));
-    const { loadTape } = await import(join(MODULE, 'fixtures', 'index.js'));
     const { parseTape } = await import(join(MODULE, 'tapeFormat.js'));
     const { atlasLevelSource } = await import(join(MODULE, 'levelSource.js'));
 
@@ -104,7 +103,15 @@ async function main() {
         JSON.stringify(run.playerHits.map((h) => h.t)));
 
     // ── the tape: r8-solve-5's staging (the same boot), {5,0} set, the held keys ──
-    const base = loadTape('r8-solve-5');
+    /**
+     * ⛓ THE BASE IS THE SEGMENT AS THIS WITNESS WAS CUT FROM IT (the F1c pattern; the
+     * sibling `plan-seedling-f1-l5-lock` reads the same file). The live
+     * `fixtures/tapes/r8-solve-5.json` has since moved: F1c's D3 re-recorded the chain,
+     * and the p4f harvest re-declared its start-block `rng.seed` (⚖ licensed 2026-10-04,
+     * 1129091 → 705152467). This witness was game-recorded on the old boot, so its rng
+     * and tick0 are the F1b segment's, kept byte for byte in `fixtures/witness-bases/`.
+     */
+    const base = parseTape(readFileSync(join(MODULE, 'fixtures', 'witness-bases', 'r8-solve-5.f1b.json'), 'utf8'));
     const folded = buildTape(held, base.boot, NAME,
         { noclip: false, noDamage: false, noHazards: [], grants: [] });
     const description = '⛓⛓⛓ SEEDLING FIDELITY F1 D2 — L5\'s OPEN-LOCK ARRIVAL, THE SOLVER\'S OWN '
