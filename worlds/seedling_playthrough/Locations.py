@@ -33,7 +33,7 @@ location_table: Dict[str, LocationData] = {
     "Level 010 - Sword": LocationData("level_10", "Level 010 - Sword", 30000000, False),
     "Level 011 - Chest": LocationData("level_11", "Level 011 - Chest", 30000001, False),
     "Level 012 - Witch": LocationData("level_12__r0c19", "Level 012 - Witch", 30000003, False),
-    "Level 012 - Chest": LocationData("level_12__r0c37", "Level 012 - Chest", 30000002, False),
+    "Level 012 - Chest": LocationData("level_12__r42c29", "Level 012 - Chest", 30000002, False),
     "Level 015 - Chest": LocationData("level_15__r6c8", "Level 015 - Chest", 30000004, False),
     "Level 017 - Chest": LocationData("level_17", "Level 017 - Chest", 30000005, False),
     "Level 019 - Boss Key 0": LocationData("level_19__r5c5", "Level 019 - Boss Key 0", 30000006, False),

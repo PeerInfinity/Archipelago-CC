@@ -37,12 +37,16 @@ describe('census-seedling-atlas-doors — the committed playthrough atlas', () =
     // hand rows (L0, L12, L66, L93 x2), and three pockets they alone reached were pruned (L66 r1c2, L93
     // r1c0/r1c13): 189 -> 186 sub-regions, 295 -> 289 internal exits. L93's r1c0 <-> r1c13 Has(Swim) row
     // joined two of those pockets, so swim 217 -> 216, plain Has(Swim) 179 -> 178, and L93 is no swim level.
-    it('52 regions carry a subgraph: 186 sub-regions, 289 internal exits, 216 of them need Progressive Swim', () => {
-        expect(c.atlasId).toBe('seedling-aeb590c4');
-        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 52, 186, 289, 216]);
+    // ⛓ RULES burnable-trees — restamped (aeb590c4 -> 0cdaf2c2): the burnable tree claims its 2x2 hitbox, so
+    // L12 (r42c29), L37 (r12c6), L40 (r48c54) and L44 (r6c4) split along their trees: 186 -> 190 sub-regions,
+    // 289 -> 295 internal exits. Swim 216 -> 218: L12's r0c19 <-> r42c29 Has(Swim) is new (+2) and L12's
+    // r0c19 -> r0c37 loses its Swim half (its water way now runs past the tree); plain Has(Swim) 178 -> 179.
+    it('52 regions carry a subgraph: 190 sub-regions, 295 internal exits, 218 of them need Progressive Swim', () => {
+        expect(c.atlasId).toBe('seedling-0cdaf2c2');
+        expect([c.regions, c.regionsWithSubgraph, c.subRegions, c.internalExits, c.swim]).toEqual([113, 52, 190, 295, 218]);
         expect(c.swimLevels).toHaveLength(22);
         expect(c.byRule.slice(0, 2)).toEqual([
-            { rule: 'Has(Progressive Swim)', count: 178 },
+            { rule: 'Has(Progressive Swim)', count: 179 },
             { rule: 'Has(Progressive Swim, 2)', count: 33 },
         ]);
     });

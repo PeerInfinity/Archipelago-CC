@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-aeb590c4",
+  "atlas_id": "seedling-0cdaf2c2",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "aeb590c4" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "0cdaf2c2" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -287,7 +287,15 @@
           "kind": "teleporter",
           "exit_tiles": [[0,4]],
           "entrance_tile": [0,4],
-          "sub_region": "r0c4"
+          "sub_region": "r0c4",
+          "access_rule": {
+            "rule": "And",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Ghost Sword Fusion" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } },
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } }
+            ]
+          }
         },
         {
           "exit_id": "out_teleporter_64_0",
@@ -714,7 +722,7 @@
           "kind": "teleporter",
           "exit_tiles": [[2,53]],
           "entrance_tile": [2,53],
-          "sub_region": "r0c37",
+          "sub_region": "r42c29",
           "access_rule": {
             "rule": "And",
             "children": [
@@ -860,7 +868,7 @@
           "kind": "teleporter",
           "exit_tiles": [[2,54]],
           "entrance_tile": [2,54],
-          "sub_region": "r0c37"
+          "sub_region": "r42c29"
         },
         {
           "exit_id": "in_L88_96_304",
@@ -889,7 +897,7 @@
           "name": "Level 012 - Chest",
           "tile": [20,51],
           "vanilla_item": "Seal",
-          "sub_region": "r0c37"
+          "sub_region": "r42c29"
         },
         {
           "name": "Level 012 - Witch",
@@ -901,20 +909,14 @@
       ],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r0c19","r0c37","r13c6","r40c4","r44c19"],
+        "sub_regions": ["r0c19","r0c37","r13c6","r40c4","r42c29","r44c19"],
         "internal_exits": [
           {
             "from": "r0c19",
             "to": "r0c37",
             "bidirectional": false,
             "source": "analyzer",
-            "access_rule": {
-              "rule": "Or",
-              "children": [
-                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
-                { "rule": "Has", "args": { "item_name": "Red Key" } }
-              ]
-            }
+            "access_rule": { "rule": "Has", "args": { "item_name": "Red Key" } }
           },
           {
             "from": "r0c19",
@@ -944,6 +946,13 @@
           },
           {
             "from": "r0c19",
+            "to": "r42c29",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Progressive Swim" } }
+          },
+          {
+            "from": "r0c19",
             "to": "r44c19",
             "bidirectional": true,
             "source": "analyzer",
@@ -955,18 +964,19 @@
             "bidirectional": false,
             "source": "analyzer",
             "access_rule": {
-              "rule": "Or",
+              "rule": "And",
               "children": [
-                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
-                {
-                  "rule": "And",
-                  "children": [
-                    { "rule": "Has", "args": { "item_name": "Red Key" } },
-                    { "rule": "CanReachRegion", "args": { "region_name": "level_12__r0c19" } }
-                  ]
-                }
+                { "rule": "Has", "args": { "item_name": "Red Key" } },
+                { "rule": "CanReachRegion", "args": { "region_name": "level_12__r0c19" } }
               ]
             }
+          },
+          {
+            "from": "r0c37",
+            "to": "r42c29",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": { "rule": "Has", "args": { "item_name": "Fire" } }
           },
           {
             "from": "r13c6",
@@ -1660,13 +1670,15 @@
           "exit_id": "out_teleporter_32_144",
           "kind": "teleporter",
           "exit_tiles": [[2,9]],
-          "entrance_tile": [2,9]
+          "entrance_tile": [2,9],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Fire" } }
         },
         {
           "exit_id": "out_teleporter_48_144",
           "kind": "teleporter",
           "exit_tiles": [[3,9]],
-          "entrance_tile": [3,9]
+          "entrance_tile": [3,9],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Fire" } }
         },
         {
           "exit_id": "out_stairsdown_96_96",
@@ -2041,7 +2053,14 @@
           "kind": "teleporter",
           "exit_tiles": [[3,14]],
           "entrance_tile": [3,14],
-          "sub_region": "r2c10"
+          "sub_region": "r2c10",
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+              { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+            ]
+          }
         },
         {
           "exit_id": "in_L31_160_384",
@@ -2242,13 +2261,15 @@
           "exit_id": "out_pit_14_5",
           "kind": "teleporter",
           "exit_tiles": [[4,0]],
-          "entrance_tile": [4,0]
+          "entrance_tile": [4,0],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Fire" } }
         },
         {
           "exit_id": "out_pit_15_5",
           "kind": "teleporter",
           "exit_tiles": [[5,0]],
-          "entrance_tile": [5,0]
+          "entrance_tile": [5,0],
+          "access_rule": { "rule": "Has", "args": { "item_name": "Fire" } }
         }
       ],
       "locations": [
@@ -2313,7 +2334,21 @@
           "exit_id": "out_teleporter_128_0",
           "kind": "teleporter",
           "exit_tiles": [[8,0]],
-          "entrance_tile": [8,0]
+          "entrance_tile": [8,0],
+          "access_rule": {
+            "rule": "Or",
+            "children": [
+              { "rule": "Has", "args": { "item_name": "Wand" } },
+              {
+                "rule": "And",
+                "children": [
+                  { "rule": "Has", "args": { "item_name": "Fire Wand Fusion" } },
+                  { "rule": "Has", "args": { "item_name": "Wand" } },
+                  { "rule": "Has", "args": { "item_name": "Fire" } }
+                ]
+              }
+            ]
+          }
         }
       ],
       "locations": [],
@@ -2379,21 +2414,21 @@
           "kind": "teleporter",
           "exit_tiles": [[2,18]],
           "entrance_tile": [2,18],
-          "sub_region": "r0c18"
+          "sub_region": "r12c6"
         },
         {
           "exit_id": "out_teleporter_0_256",
           "kind": "teleporter",
           "exit_tiles": [[0,16]],
           "entrance_tile": [0,16],
-          "sub_region": "r0c18"
+          "sub_region": "r12c6"
         },
         {
           "exit_id": "out_teleporter_32_304",
           "kind": "teleporter",
           "exit_tiles": [[2,19]],
           "entrance_tile": [2,19],
-          "sub_region": "r0c18"
+          "sub_region": "r12c6"
         },
         {
           "exit_id": "out_teleporter_288_0",
@@ -2428,7 +2463,7 @@
           "kind": "teleporter",
           "exit_tiles": [[1,16]],
           "entrance_tile": [1,16],
-          "sub_region": "r0c18"
+          "sub_region": "r12c6"
         },
         {
           "exit_id": "in_L97_32_16",
@@ -2441,8 +2476,21 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r0c18","r5c33","r9c36"],
+        "sub_regions": ["r0c18","r5c33","r9c36","r12c6"],
         "internal_exits": [
+          {
+            "from": "r0c18",
+            "to": "r12c6",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
+                { "rule": "Has", "args": { "item_name": "Fire" } }
+              ]
+            }
+          },
           {
             "from": "r0c18",
             "to": "r5c33",
@@ -2726,7 +2774,7 @@
       ],
       "annotations": { "rules_source": "mixed" },
       "subgraph": {
-        "sub_regions": ["r0c53","r23c29","r32c36","r36c35","r36c37"],
+        "sub_regions": ["r0c53","r23c29","r32c36","r36c35","r36c37","r48c54"],
         "internal_exits": [
           {
             "from": "r0c53",
@@ -2789,6 +2837,25 @@
           {
             "from": "r23c29",
             "to": "r36c37",
+            "bidirectional": true,
+            "source": "manual",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Fire" } },
+                {
+                  "rule": "Or",
+                  "children": [
+                    { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
+                    { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "from": "r23c29",
+            "to": "r48c54",
             "bidirectional": true,
             "source": "manual",
             "access_rule": {
@@ -3113,7 +3180,7 @@
           "kind": "teleporter",
           "exit_tiles": [[8,8]],
           "entrance_tile": [8,8],
-          "sub_region": "r4c2"
+          "sub_region": "r6c4"
         },
         {
           "exit_id": "out_teleporter_0_80",
@@ -3134,7 +3201,7 @@
           "kind": "teleporter",
           "exit_tiles": [[9,8]],
           "entrance_tile": [9,8],
-          "sub_region": "r4c2"
+          "sub_region": "r6c4"
         },
         {
           "exit_id": "in_L45_112_304",
@@ -3154,11 +3221,37 @@
       "locations": [],
       "annotations": { "rules_source": "analyzer" },
       "subgraph": {
-        "sub_regions": ["r0c4","r4c2"],
+        "sub_regions": ["r0c4","r4c2","r6c4"],
         "internal_exits": [
           {
             "from": "r0c4",
             "to": "r4c2",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
+                { "rule": "Has", "args": { "item_name": "Fire" } }
+              ]
+            }
+          },
+          {
+            "from": "r0c4",
+            "to": "r6c4",
+            "bidirectional": true,
+            "source": "analyzer",
+            "access_rule": {
+              "rule": "Or",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Progressive Swim" } },
+                { "rule": "Has", "args": { "item_name": "Fire" } }
+              ]
+            }
+          },
+          {
+            "from": "r4c2",
+            "to": "r6c4",
             "bidirectional": true,
             "source": "analyzer",
             "access_rule": {

@@ -69,7 +69,7 @@ const AMBIGUOUS = (() => {
 
 describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
     it(`expresses every one of the atlas's ${ATLAS_LOCATIONS.length} locations and `
-        + `${ATLAS_RULES.length - 1} of its ${ATLAS_RULES.length} authored rules, refusing none`, () => {
+        + `${ATLAS_RULES.length - 3} of its ${ATLAS_RULES.length} authored rules, refusing none`, () => {
         const atlasLocations = ATLAS_LOCATIONS;
         const atlasRules = ATLAS_RULES;
 
@@ -77,13 +77,18 @@ describe('⛓⛓ E5 — the lift, and what it put through the adapter', () => {
         expect(LIFT.refused).toEqual([]);
         expect(LIFT.expressed.filter((o) => o.op === 'mark-location'))
             .toHaveLength(atlasLocations.length);
-        // ⚠ FIVE OF THE SIX. The sixth is the `level_12` exit rule pinned to a
-        //   SUB-REGION, and it is in the cannot-express census by name.
+        // ⚠ ALL BUT THREE. The three are exit rules pinned to a SUB-REGION, and
+        //   they are in the cannot-express census by name. ⛓ RULES burnable-trees:
+        //   1 -> 3 — L3's door inside the ghost rock and L30's pit under the rock are
+        //   charged their solid, and both sit in a split level; L12's D7 door moved
+        //   r0c37 -> r42c29 (the tree at 480,640 walls r42c29 off).
         expect(LIFT.expressed.filter((o) => o.op === 'set-access-rule'))
-            .toHaveLength(atlasRules.length - 1);
-        expect(LIFT.cannotRules).toEqual([{
-            region: 'level_12', exit_id: 'out_teleporter_32_848', sub_region: 'r0c37',
-        }]);
+            .toHaveLength(atlasRules.length - 3);
+        expect(LIFT.cannotRules).toEqual([
+            { region: 'level_3', exit_id: 'out_teleporter_0_64', sub_region: 'r0c4' },
+            { region: 'level_12', exit_id: 'out_teleporter_32_848', sub_region: 'r42c29' },
+            { region: 'level_30', exit_id: 'out_pit_3_34', sub_region: 'r2c10' },
+        ]);
     });
 
     /**
@@ -264,8 +269,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
          * moves the document has to come here and say so.
          */
         // ⛓ RULES (B): 8,863 -> 9,819 B — the two LavaBoss arena door rules (L82, L96) lift.
-        expect(Buffer.byteLength(committed, 'utf8')).toBe(9819);
-        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-240110b8');
+        // ⛓ RULES burnable-trees: 9,819 -> 10,737 B — five doors inside an item-gated solid lift
+        //   (L24 x2 and L32's two pits: Fire; L34: a wand).
+        expect(Buffer.byteLength(committed, 'utf8')).toBe(10737);
+        expect(JSON.parse(committed).overlay_id).toBe('seedling-vanilla-overlay-0072e253');
         // ⛔ AND THE SUFFIXES ARE GONE — the artifact, not the producer.
         expect(committed).not.toMatch(/Chest \(L\d/);
     });
@@ -276,7 +283,7 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         expect(Object.values(committed.rooms)
             .reduce((n, r) => n + (r.locations ?? []).length, 0)).toBe(41);
         expect(Object.values(committed.rooms)
-            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(7); // ⛓ RULES (B): +2 arena doors
+            .reduce((n, r) => n + Object.keys(r.rules ?? {}).length, 0)).toBe(12); // ⛓ RULES (B): +2 arena doors; burnable-trees: +5 sealed doors
         // ⛔ EVERY authored name is unique WITHIN ITS ROOM — `mark-location`'s
         //    own law since E6a, asserted on the artifact rather than only on the
         //    fold. ⛓ Across rooms it is NOT unique any more, and the row below
@@ -324,8 +331,11 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         //   and its two doors charged — exits, connections and the hash; no location moves.
         // ⛓ RULES logical-links (5c600bcd… -> 9e791548): the model-sealed True_ rows dropped, three pockets
         //   pruned, L0's stairs bound to r8c0 — internal exits, sub-regions and two exit bindings; no location moves.
+        // ⛓ RULES burnable-trees (9e791548… -> d43eee56): the tree's 2x2 footprint splits L12/L37/L40/L44 and
+        //   eight doors inside an item-gated solid are charged — sub-regions, internal exits, exit bindings and
+        //   rules; the L12 chest moves r0c37 -> r42c29 (behind its tree). The location SET is unchanged.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('9e79154854d7a94ebed363c3c22077ad');
+            .toBe('d43eee56f28c77cf6251f83f783e11b1');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
@@ -366,17 +376,18 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
     };
 
     // ⛓ RULES (B): 332 -> 330 — the LavaBoss arena's two doors (L82 out, L96 in) lift as rules too.
-    it('moves 334 free exits + 0 locations to 330 + 38, and the export stays ALLOWED', () => {
+    // ⛓ RULES burnable-trees: 330 -> 325 — five doors inside an item-gated solid lift as rules (L24 x2, L32 x2, L34).
+    it('moves 334 free exits + 0 locations to 325 + 38, and the export stays ALLOWED', () => {
         const before = freeEdgesOf(reportWith(emptyOverlay()).rules);
         const after = freeEdgesOf(reportWith(LIFT.overlay).rules);
 
         expect(before.filter((e) => e.kind === 'exit')).toHaveLength(334);
         expect(before.filter((e) => e.kind === 'location')).toHaveLength(0);
-        expect(after.filter((e) => e.kind === 'exit')).toHaveLength(330);
+        expect(after.filter((e) => e.kind === 'exit')).toHaveLength(325);
         expect(after.filter((e) => e.kind === 'location')).toHaveLength(38);
 
         /**
-         * ⛓ THE TWO DOORS THAT STOPPED BEING FREE ARE THE TWO LIFTED EXIT
+         * ⛓ THE DOORS THAT STOPPED BEING FREE ARE THE LIFTED EXIT
          * RULES — not two the compiler happened to drop.
          *
          * ⚠ THE NAME IS THE COMPILER'S, NOT THE DERIVATION'S. A free edge is
@@ -388,15 +399,19 @@ describe('⛓⛓ E5 — the REPORT over vanilla + the lifted overlay', () => {
          */
         const gone = before.filter((e) => e.kind === 'exit')
             .filter((e) => !after.some((a) => a.region === e.region && a.name === e.name));
-        expect(gone).toHaveLength(4);
+        expect(gone).toHaveLength(9);
         expect(gone.map((e) => e.name).sort()).toEqual([
-            'level_113 -> level_115', 'level_113 -> level_115 #2', 'level_82 -> level_96', 'level_96 -> level_82',
+            'level_113 -> level_115', 'level_113 -> level_115 #2', 'level_24 -> level_12', 'level_24 -> level_12 #2',
+            'level_32 -> level_30 #2', 'level_32 -> level_30 #3', 'level_34 -> level_12 #2',
+            'level_82 -> level_96', 'level_96 -> level_82',
         ]);
         const ruled = reportWith(LIFT.overlay).atlas.regions
             .flatMap((r) => (r.exits ?? []).filter((e) => e.access_rule)
                 .map((e) => `${r.region_id} ${e.exit_id}`));
         expect(ruled.sort())
             .toEqual(['level_113 out_teleporter_112_0', 'level_113 out_teleporter_128_0',
+                'level_24 out_teleporter_32_144', 'level_24 out_teleporter_48_144',
+                'level_32 out_pit_14_5', 'level_32 out_pit_15_5', 'level_34 out_teleporter_128_0',
                 'level_82 out_teleporter_144_0', 'level_96 out_teleporter_32_64']);
         // …and the three locations that are NOT free are the three the
         //   playthrough guards.

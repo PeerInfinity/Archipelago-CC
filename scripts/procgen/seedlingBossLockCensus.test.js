@@ -37,25 +37,25 @@ describe('SWIM T4 D2 — every bosslock against the committed atlas', () => {
         expect(r.farEntrances).toEqual(['in_L22_96_192']);
         expect(r.verdict).toMatch(/^AGREES/);
     });
-    it('L12\'s red locks keep a reverse row: the WATER, or the key only once the lock is OPEN (another way, and a return)', () => {
+    it('L12\'s red locks keep a reverse row: the key once the lock is OPEN, and the WATER way back past the tree', () => {
         const r = rows.find((x) => x.level === 12 && x.at === '416,240');
         expect(r.verdict).toMatch(/^AGREES/);
         expect(r.returnRows).toEqual(['r0c37->r0c19']);
-        const back = ATLAS.regions.find((g) => g.map_ref === 12).subgraph.internal_exits
-            .find((x) => x.from === 'r0c37' && x.to === 'r0c19');
+        const rows12 = ATLAS.regions.find((g) => g.map_ref === 12).subgraph.internal_exits;
+        const back = rows12.find((x) => x.from === 'r0c37' && x.to === 'r0c19');
+        // ⛓ RULES burnable-trees: the key half stays on the direct row. The WATER half left it: with the
+        //   burnable tree at (480,640) claiming its 2x2 hitbox, the swim back runs r0c37 -> r42c29 past the
+        //   tree (Fire) and then r42c29 -> r0c19 (Swim) — two rows, asserted below.
         expect(back.access_rule).toEqual({
-            rule: 'Or',
+            rule: 'And',
             children: [
-                { rule: 'Has', args: { item_name: 'Progressive Swim' } },
-                {
-                    rule: 'And',
-                    children: [
-                        { rule: 'Has', args: { item_name: 'Red Key' } },
-                        { rule: 'CanReachRegion', args: { region_name: 'level_12__r0c19' } },
-                    ],
-                },
+                { rule: 'Has', args: { item_name: 'Red Key' } },
+                { rule: 'CanReachRegion', args: { region_name: 'level_12__r0c19' } },
             ],
         });
+        const between = (a, b) => rows12.find((x) => (x.from === a && x.to === b) || (x.bidirectional && x.from === b && x.to === a));
+        expect(between('r0c37', 'r42c29').access_rule).toEqual({ rule: 'Has', args: { item_name: 'Fire' } });
+        expect(between('r42c29', 'r0c19').access_rule).toEqual({ rule: 'Has', args: { item_name: 'Progressive Swim' } });
     });
     // ⛓ RULES (A) — every separating lock now has its RETURN row, priced on the
     // probe side having been reached; none is two-way on the key alone.

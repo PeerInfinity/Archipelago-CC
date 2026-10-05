@@ -289,7 +289,14 @@
             "name": "level_3__r0c4 -> level_111",
             "connected_region": "level_111",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAll",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "Ghost Sword Fusion",
+                  "Progressive Sword"
+                ]
+              }
             }
           },
           {
@@ -565,12 +572,9 @@
             "name": "level_12__r0c19 -> level_12__r0c37",
             "connected_region": "level_12__r0c37",
             "access_rule": {
-              "rule": "HasAny",
+              "rule": "Has",
               "args": {
-                "item_names": [
-                  "Progressive Swim",
-                  "Red Key"
-                ]
+                "item_name": "Red Key"
               }
             }
           },
@@ -614,6 +618,16 @@
                   }
                 }
               ]
+            }
+          },
+          {
+            "name": "level_12__r0c19 -> level_12__r42c29",
+            "connected_region": "level_12__r42c29",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
             }
           },
           {
@@ -703,73 +717,36 @@
             "name": "level_12__r0c37 -> level_12__r0c19",
             "connected_region": "level_12__r0c19",
             "access_rule": {
-              "rule": "Or",
-              "children": [
-                {
-                  "rule": "And",
-                  "children": [
-                    {
-                      "rule": "CanReachRegion",
-                      "args": {
-                        "region_name": "level_12__r0c19"
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Red Key"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "rule": "Has",
-                  "args": {
-                    "item_name": "Progressive Swim"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "name": "level_12__r0c37 -> level_83",
-            "connected_region": "level_83",
-            "access_rule": {
               "rule": "And",
               "children": [
                 {
-                  "rule": "Or",
-                  "children": [
-                    {
-                      "rule": "HasAll",
-                      "args": {
-                        "item_names": [
-                          "Fire",
-                          "Fire Wand Fusion",
-                          "Wand"
-                        ]
-                      }
-                    },
-                    {
-                      "rule": "Has",
-                      "args": {
-                        "item_name": "Wand"
-                      }
-                    }
-                  ]
+                  "rule": "CanReachRegion",
+                  "args": {
+                    "region_name": "level_12__r0c19"
+                  }
                 },
                 {
                   "rule": "Has",
                   "args": {
-                    "item_name": "Yellow Key"
+                    "item_name": "Red Key"
                   }
                 }
               ]
             }
           },
           {
-            "name": "level_12__r0c37 -> level_37__r0c18",
-            "connected_region": "level_37__r0c18",
+            "name": "level_12__r0c37 -> level_12__r42c29",
+            "connected_region": "level_12__r42c29",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
+            }
+          },
+          {
+            "name": "level_12__r0c37 -> level_37__r12c6",
+            "connected_region": "level_37__r12c6",
             "access_rule": {
               "rule": "True_"
             }
@@ -782,22 +759,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "Level 012 - Chest",
-            "id": 30000002,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Seal",
-              "player": 1,
-              "advancement": true,
-              "type": "None"
-            },
-            "locked": false
-          }
-        ]
+        "locations": []
       },
       "level_12__r13c6": {
         "name": "level_12__r13c6",
@@ -844,6 +806,83 @@
           }
         ],
         "locations": []
+      },
+      "level_12__r42c29": {
+        "name": "level_12__r42c29",
+        "exits": [
+          {
+            "name": "level_12__r42c29 -> level_12__r0c19",
+            "connected_region": "level_12__r0c19",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Progressive Swim"
+              }
+            }
+          },
+          {
+            "name": "level_12__r42c29 -> level_12__r0c37",
+            "connected_region": "level_12__r0c37",
+            "access_rule": {
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
+            }
+          },
+          {
+            "name": "level_12__r42c29 -> level_83",
+            "connected_region": "level_83",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "Or",
+                  "children": [
+                    {
+                      "rule": "HasAll",
+                      "args": {
+                        "item_names": [
+                          "Fire",
+                          "Fire Wand Fusion",
+                          "Wand"
+                        ]
+                      }
+                    },
+                    {
+                      "rule": "Has",
+                      "args": {
+                        "item_name": "Wand"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Yellow Key"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": [
+          {
+            "name": "Level 012 - Chest",
+            "id": 30000002,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Seal",
+              "player": 1,
+              "advancement": true,
+              "type": "None"
+            },
+            "locked": false
+          }
+        ]
       },
       "level_12__r44c19": {
         "name": "level_12__r44c19",
@@ -1451,14 +1490,20 @@
             "name": "level_24 -> level_12__r40c4",
             "connected_region": "level_12__r40c4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
             }
           },
           {
             "name": "level_24 -> level_12__r40c4 #2",
             "connected_region": "level_12__r40c4",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
             }
           },
           {
@@ -1841,7 +1886,13 @@
             "name": "level_30__r2c10 -> level_31__r5c24",
             "connected_region": "level_31__r5c24",
             "access_rule": {
-              "rule": "True_"
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Ghost Spear",
+                  "Progressive Sword"
+                ]
+              }
             }
           }
         ],
@@ -2019,14 +2070,20 @@
             "name": "level_32 -> level_30__r2c10",
             "connected_region": "level_30__r2c10",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
             }
           },
           {
             "name": "level_32 -> level_30__r2c10 #2",
             "connected_region": "level_30__r2c10",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Has",
+              "args": {
+                "item_name": "Fire"
+              }
             }
           }
         ],
@@ -2080,7 +2137,25 @@
             "name": "level_34 -> level_12__r0c37",
             "connected_region": "level_12__r0c37",
             "access_rule": {
-              "rule": "True_"
+              "rule": "Or",
+              "children": [
+                {
+                  "rule": "HasAll",
+                  "args": {
+                    "item_names": [
+                      "Fire",
+                      "Fire Wand Fusion",
+                      "Wand"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Wand"
+                  }
+                }
+              ]
             }
           }
         ],
@@ -2131,6 +2206,19 @@
         "name": "level_37__r0c18",
         "exits": [
           {
+            "name": "level_37__r0c18 -> level_37__r12c6",
+            "connected_region": "level_37__r12c6",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Fire",
+                  "Progressive Swim"
+                ]
+              }
+            }
+          },
+          {
             "name": "level_37__r0c18 -> level_37__r5c33",
             "connected_region": "level_37__r5c33",
             "access_rule": {
@@ -2138,20 +2226,6 @@
               "args": {
                 "item_name": "Progressive Swim"
               }
-            }
-          },
-          {
-            "name": "level_37__r0c18 -> level_44__r4c2",
-            "connected_region": "level_44__r4c2",
-            "access_rule": {
-              "rule": "True_"
-            }
-          },
-          {
-            "name": "level_37__r0c18 -> level_12__r0c37",
-            "connected_region": "level_12__r0c37",
-            "access_rule": {
-              "rule": "True_"
             }
           },
           {
@@ -2206,6 +2280,39 @@
           {
             "name": "level_37__r9c36 -> level_97",
             "connected_region": "level_97",
+            "access_rule": {
+              "rule": "True_"
+            }
+          }
+        ],
+        "locations": []
+      },
+      "level_37__r12c6": {
+        "name": "level_37__r12c6",
+        "exits": [
+          {
+            "name": "level_37__r12c6 -> level_37__r0c18",
+            "connected_region": "level_37__r0c18",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Fire",
+                  "Progressive Swim"
+                ]
+              }
+            }
+          },
+          {
+            "name": "level_37__r12c6 -> level_44__r6c4",
+            "connected_region": "level_44__r6c4",
+            "access_rule": {
+              "rule": "True_"
+            }
+          },
+          {
+            "name": "level_37__r12c6 -> level_12__r0c37",
+            "connected_region": "level_12__r0c37",
             "access_rule": {
               "rule": "True_"
             }
@@ -2429,6 +2536,30 @@
           {
             "name": "level_40__r23c29 -> level_40__r36c37",
             "connected_region": "level_40__r36c37",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "item_names": [
+                      "Ghost Spear",
+                      "Progressive Sword"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "level_40__r23c29 -> level_40__r48c54",
+            "connected_region": "level_40__r48c54",
             "access_rule": {
               "rule": "And",
               "children": [
@@ -2829,6 +2960,36 @@
         ],
         "locations": []
       },
+      "level_40__r48c54": {
+        "name": "level_40__r48c54",
+        "exits": [
+          {
+            "name": "level_40__r48c54 -> level_40__r23c29",
+            "connected_region": "level_40__r23c29",
+            "access_rule": {
+              "rule": "And",
+              "children": [
+                {
+                  "rule": "HasAny",
+                  "args": {
+                    "item_names": [
+                      "Ghost Spear",
+                      "Progressive Sword"
+                    ]
+                  }
+                },
+                {
+                  "rule": "Has",
+                  "args": {
+                    "item_name": "Fire"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "locations": []
+      },
       "level_41__r4c3": {
         "name": "level_41__r4c3",
         "exits": [
@@ -3043,6 +3204,19 @@
             }
           },
           {
+            "name": "level_44__r0c4 -> level_44__r6c4",
+            "connected_region": "level_44__r6c4",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Fire",
+                  "Progressive Swim"
+                ]
+              }
+            }
+          },
+          {
             "name": "level_44__r0c4 -> level_45__r0c7",
             "connected_region": "level_45__r0c7",
             "access_rule": {
@@ -3069,15 +3243,60 @@
             }
           },
           {
+            "name": "level_44__r4c2 -> level_44__r6c4",
+            "connected_region": "level_44__r6c4",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Fire",
+                  "Progressive Swim"
+                ]
+              }
+            }
+          },
+          {
             "name": "level_44__r4c2 -> level_87__r1c3",
             "connected_region": "level_87__r1c3",
             "access_rule": {
               "rule": "True_"
             }
+          }
+        ],
+        "locations": []
+      },
+      "level_44__r6c4": {
+        "name": "level_44__r6c4",
+        "exits": [
+          {
+            "name": "level_44__r6c4 -> level_44__r0c4",
+            "connected_region": "level_44__r0c4",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Fire",
+                  "Progressive Swim"
+                ]
+              }
+            }
           },
           {
-            "name": "level_44__r4c2 -> level_37__r0c18",
-            "connected_region": "level_37__r0c18",
+            "name": "level_44__r6c4 -> level_44__r4c2",
+            "connected_region": "level_44__r4c2",
+            "access_rule": {
+              "rule": "HasAny",
+              "args": {
+                "item_names": [
+                  "Fire",
+                  "Progressive Swim"
+                ]
+              }
+            }
+          },
+          {
+            "name": "level_44__r6c4 -> level_37__r12c6",
+            "connected_region": "level_37__r12c6",
             "access_rule": {
               "rule": "True_"
             }
@@ -7258,8 +7477,8 @@
         "name": "level_83",
         "exits": [
           {
-            "name": "level_83 -> level_12__r0c37",
-            "connected_region": "level_12__r0c37",
+            "name": "level_83 -> level_12__r42c29",
+            "connected_region": "level_12__r42c29",
             "access_rule": {
               "rule": "True_"
             }

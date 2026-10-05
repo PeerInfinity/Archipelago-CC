@@ -896,7 +896,8 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
         // ⛓ SWIM T4 D4: 285 -> 286, L12's two-way Or(Swim, Red Key) row split by the one-sided locks.
         // ⛓ RULES (A): 286 -> 295, the nine return rows through the OPENED one-sided locks.
         // ⛓ RULES logical-links: 295 -> 289, five model-sealed True_ rows + one Swim row between two pruned pockets.
-        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(289);
+        // ⛓ RULES burnable-trees: 289 -> 295, the burnable trees' 2x2 footprints split L12/L37/L40/L44.
+        expect(committed.regions.flatMap((r) => r.subgraph?.internal_exits ?? [])).toHaveLength(295);
         expect(fromXml.atlas.regions.filter((r) => r.subgraph)).toHaveLength(0);
         const exitKeys = new Set(committed.regions.flatMap((r) => (r.exits ?? [])
             .flatMap((e) => Object.keys(e))));
@@ -906,7 +907,7 @@ describe('the vanilla xml set derives the SAME atlas as the map extract', () => 
             .flatMap((e) => Object.keys(e))));
         expect([...derivedExitKeys].sort()).toEqual(
             ['entrance_tile', 'exit_id', 'exit_tiles', 'kind']);
-        expect(committed.atlas_id).toBe('seedling-aeb590c4');   // ⛓ RULES (A)+(B) + logical-links restamps
+        expect(committed.atlas_id).toBe('seedling-0cdaf2c2');   // ⛓ RULES (A)+(B) + logical-links + burnable-trees restamps
         expect(fromXml.atlas.atlas_id).toBe('seedling');   // D1 §20.6: DELIBERATELY unstamped
     }, 60000);
 

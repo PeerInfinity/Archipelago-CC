@@ -66,6 +66,12 @@
         }
       ]
     },
+    "24": {
+      "rules": {
+        "exit:out_teleporter_32_144": { "rule": "Has", "args": { "item_name": "Fire" } },
+        "exit:out_teleporter_48_144": { "rule": "Has", "args": { "item_name": "Fire" } }
+      }
+    },
     "25": {
       "locations": [
         { "entity": { "type": "chest", "x": 96, "y": 96 }, "name": "Chest", "vanilla_item": "Seal" }
@@ -103,6 +109,26 @@
           "children": [
             { "rule": "Has", "args": { "item_name": "Progressive Sword" } },
             { "rule": "Has", "args": { "item_name": "Ghost Spear" } }
+          ]
+        },
+        "exit:out_pit_14_5": { "rule": "Has", "args": { "item_name": "Fire" } },
+        "exit:out_pit_15_5": { "rule": "Has", "args": { "item_name": "Fire" } }
+      }
+    },
+    "34": {
+      "rules": {
+        "exit:out_teleporter_128_0": {
+          "rule": "Or",
+          "children": [
+            { "rule": "Has", "args": { "item_name": "Wand" } },
+            {
+              "rule": "And",
+              "children": [
+                { "rule": "Has", "args": { "item_name": "Fire Wand Fusion" } },
+                { "rule": "Has", "args": { "item_name": "Wand" } },
+                { "rule": "Has", "args": { "item_name": "Fire" } }
+              ]
+            }
           ]
         }
       }
@@ -396,6 +422,6 @@
       ]
     }
   },
-  "provenance": { "content_hash": "240110b8" },
-  "overlay_id": "seedling-vanilla-overlay-240110b8"
+  "provenance": { "content_hash": "0072e253" },
+  "overlay_id": "seedling-vanilla-overlay-0072e253"
 }
