@@ -124,12 +124,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 56,
+            "count": 58,
             "id": "plan"
         },
         {
-            "browser": 41,
-            "count": 83,
+            "browser": 43,
+            "count": 86,
             "id": "probe"
         },
         {
@@ -214,13 +214,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 326,
-        "browser": 106,
-        "cited": 153,
-        "files": 337,
+        "blockStyle": 331,
+        "browser": 108,
+        "cited": 156,
+        "files": 342,
         "lineStyle": 11,
-        "withDocblock": 337,
-        "withFlags": 256
+        "withDocblock": 342,
+        "withFlags": 260
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -6468,6 +6468,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-burn-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-burn-witness — ⛓⛓⛓ SEEDLING FIDELITY BURN: A BURNABLE TREE ON THE FRONTIER OF A REACH-EXIT, BURNED BY THE SOLVER'S `burn` VERB.",
+            "path": "scripts/procgen/plan-seedling-burn-witness.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-f1-l5-lock.mjs",
             "flags": [
                 {
@@ -6655,6 +6682,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-f7-reentry — ⛓⛓⛓ SEEDLING FIDELITY F7 (D-A): L16 RE-ENTERED WITH ITS ROPE ALREADY PULLED.",
             "path": "scripts/procgen/plan-seedling-f7-reentry.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-l14-swordless.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-l14-swordless — ⛓⛓⛓ SEEDLING FIDELITY L14: THE SWORDLESS CROSSING OF L14, SOLVED BY THE DETOUR RUNG AND HANDED TO THE GAME.",
+            "path": "scripts/procgen/plan-seedling-l14-swordless.mjs"
         },
         {
             "argvHelpers": [],
@@ -8224,6 +8278,35 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-build-cost.mjs"
         },
         {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-burn-write.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity BURN, D1: **WHEN THE BURN'S PERSISTENCE WRITE LANDS, ON THE GAME.** `BurnableTree.hit()` removes nothing; `burnEnd -> die()` removes the tree twenty animation frames later, and `removed()` calls `Game.setPersistence(tag, false)` (`Scenery/BurnableTree.as:39-54`).",
+            "path": "scripts/procgen/probe-seedling-burn-write.mjs"
+        },
+        {
             "argvHelpers": [
                 "arg"
             ],
@@ -8645,6 +8728,26 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "⛔⛔⛔ **RETIRED — PROCGEN ELEMENTS arc 3, slice 4c (2026-08-17).** ⚖ The user retired the three door TEMPLATES into the room-aware ELEMENTS, and this instrument's SUBJECT went with them: its subject is the span-1 corridor form of `wall-gap-spinner-killlock`, retired into the `killgate` ELEMENT (arc-3 §13.2) — which GR…",
             "path": "scripts/procgen/probe-seedling-killlock-span1.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [],
+            "file": "probe-seedling-l14-swordless.mjs",
+            "flags": [],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-l14-swordless — ⛓ SEEDLING FIDELITY L14 D1: IS A 0-HIT SWORDLESS CROSSING OF L14 POSSIBLE AT ALL?",
+            "path": "scripts/procgen/probe-seedling-l14-swordless.mjs"
         },
         {
             "argvHelpers": [],
