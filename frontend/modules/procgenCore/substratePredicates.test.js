@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     CAPTURE_SHAPES, REALISER_KINDS, SOLVER_KINDS,
-    botHonorsInstant, captureShapeOf, moveIncludesCheck, offersPlayback, regionRealiserKind, solverKindOf,
+    botHonorsInstant, captureShapeOf, offersPlayback, regionRealiserKind, solverKindOf,
 } from './substratePredicates.js';
 import * as viaHub from '../apworldEditor/regionRegenerate.js';
 
@@ -97,16 +97,5 @@ describe('botHonorsInstant', () => {
             loopSupport: { instant: true }, sharing: { mana: { loopActionDelegation: true } }, takeLastRecording: fn,
         })).toBe(false);
         expect(botHonorsInstant(null)).toBe(false);
-    });
-});
-
-describe('moveIncludesCheck', () => {
-    it('only an explicit loopSupport.moveIncludesCheck: true', () => {
-        expect(moveIncludesCheck({ loopSupport: { moveIncludesCheck: true } })).toBe(true);
-        expect(moveIncludesCheck({ loopSupport: { moveIncludesCheck: 'yes' } })).toBe(false);
-        expect(moveIncludesCheck({ loopSupport: {} })).toBe(false);
-        expect(moveIncludesCheck({})).toBe(false);
-        expect(moveIncludesCheck(null)).toBe(false);
-        expect(moveIncludesCheck(undefined)).toBe(false);
     });
 });

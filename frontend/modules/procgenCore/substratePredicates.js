@@ -15,7 +15,6 @@
  *                         region's `manaEnabled` half stays there)
  *   `offersPlayback`      the body of `loopState._regionOffersPlayback`
  *   `botHonorsInstant`    `loopState.regionBotHonorsInstant`, on the entry
- *   `moveIncludesCheck`   `loopState.regionMoveIncludesCheck`, on the entry
  *   `generationCostOf`    the entry half of `procgenPipeline/presetRun.js`'s
  *                         `substrateGenerationCost` (which re-exports
  *                         `GENERATION_COST` for its importers)
@@ -112,18 +111,6 @@ export function botHonorsInstant(entry) {
     if (!entry?.loopSupport?.instant) return false;
     if (solverKindOf(entry) !== SOLVER_KINDS.WALK_TO) return false;
     return captureShapeOf(entry) === CAPTURE_SHAPES.FINE;
-}
-
-/**
- * ⛓ Whether the entry's regions fold their location check into the MOVE out of
- * the region (`loopSupport.moveIncludesCheck`, Noiz2sa N4b: leaving a region is
- * playing it to a clear, and the clear is its check): the check is never a queue
- * action of its own, so loops keeps it out of a Record block's rewritten
- * interior and click-to-queue does not queue it. The check itself is still
- * performed, gated and recorded (a summary's `checks`).
- */
-export function moveIncludesCheck(entry) {
-    return entry?.loopSupport?.moveIncludesCheck === true;
 }
 
 /**

@@ -14,7 +14,7 @@
  *
  * Runtime: like runner and bounce, the iframe rides `flashSubstrate`'s shared code — the panel factory and the
  * injected `bridge.js` (the `__swfBridge` contract): the game page (`game/`) implements `configure`, and calls
- * `sendLocation('clear')` on the region's clear and `sendExit(exitName, null)` when the player leaves.
+ * `sendLocation('clear')` when a check run clears and `sendExit(exitName, null)` when a move run clears.
  * `deserializeWorld` is where the payload becomes what that bridge forwards: the bridge hands the game only
  * `params`, so the region (`start`, `end`, `seed`) and the exit list are copied into `params` there.
  *
@@ -24,12 +24,12 @@
  * returns the host module's proxy (injected by `index.js`, null headless), whose walkTo carries the humanlike bot's
  * settings at the trainer's current tracks (`noiz2saTraining.js`).
  *
- * N4b (⚖ 2026-10-05): "In loop mode, clearing the level should be counted as part of the "move" action. In this
- * substrate, there is no explore or check location action." So `queueActions` is the move alone and
- * `moveIncludesCheck` says the region's check rides on it (loops keeps it out of a Record block's interior and
- * click-to-queue never queues it); in loop mode the page opens the exits only after a clear on THIS visit, and the
- * clear performs the queued move (with none queued, the player chooses the exit first). A first ENTRY explores the
- * region fully (`noiz2saFirstEntry.js`).
+ * N4b/N4c (⚖ 2026-10-05): a region has two runs. A MOVE run plays the move span on every visit (cleared before or
+ * not) and its clear performs the move; a CHECK run — its own queue action, the standard `locationCheck` (⚖ "I want
+ * the location check to be a separate action from the move") — plays the CHECK span, twice the move's scenes from the
+ * same start, and its clear checks the location while the player stays in the region. `queueActions` is both; with
+ * nothing queued for the region the page offers the choice list (every exit, and the check until it is checked). A
+ * first ENTRY explores the region fully (`noiz2saFirstEntry.js`).
  *
  * Content source: a fixed zone table (`NOIZ2SA_ZONES`), one region per zone, for the test preset and the
  * shuffled-spiral driver (`zoneCount` / `extractZoneRules`). Pricing and the stat tracks are later slices.
@@ -41,7 +41,7 @@ import {
 } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
-import { parsePosition, regionSpanOf, showSpan } from './noiz2saRegion.js';
+import { checkSpanOf, parsePosition, regionSpanOf, regionSpansOf, showSpan } from './noiz2saRegion.js';
 
 export const NOIZ2SA_SUBSTRATE_ID = 'noiz2sa';
 export const NOIZ2SA_GAME_ID = 'noiz2sa';
@@ -62,9 +62,10 @@ export const NOIZ2SA_LIBRARY_ITEMS = Object.freeze({
 });
 
 /**
- * The zone table: one region per entry, `{start, end}` as a player writes them (STAGE:SCENE, scene 1–9 or
- * boss). Three spans that cover the three shapes a region has: one scene, two scenes, and a boss into the
- * next stage. Every region plays on seed 1. The LAST zone's clear holds Victory.
+ * The zone table: one region per entry, its MOVE span `{start, end}` as a player writes it (STAGE:SCENE, scene 1–9
+ * or boss). Three spans that cover the three shapes a region has: one scene, two scenes, and a boss into the
+ * next stage. Every region plays on seed 1. The LAST zone's clear holds Victory. The check span is derived (N4c,
+ * `checkSpanOf`: twice the move's scenes from the same start).
  */
 export const NOIZ2SA_ZONES = Object.freeze([
     Object.freeze({ start: '1:1', end: '1:1' }),
@@ -73,11 +74,12 @@ export const NOIZ2SA_ZONES = Object.freeze([
 ]);
 const ZONE_SEED = 1;
 
-/** zone i → its region `{start, end, seed}` */
+/** zone i → its region `{move: {start, end}, check: {start, end}, seed}` */
 export function zoneRegion(zoneIdx) {
     const z = NOIZ2SA_ZONES[zoneIdx];
     if (!z) throw new Error(`noiz2sa: no zone ${zoneIdx} (have ${NOIZ2SA_ZONES.length})`);
-    return regionSpanOf({ start: parsePosition(z.start), end: parsePosition(z.end), seed: ZONE_SEED });
+    const { start, end, seed } = regionSpanOf({ start: parsePosition(z.start), end: parsePosition(z.end), seed: ZONE_SEED });
+    return { move: { start, end }, check: checkSpanOf({ start, end }), seed };
 }
 
 /** The region's exits as the game page lists them (its "leave" buttons): from the payload's envelope. */
@@ -91,12 +93,13 @@ export function exitButtonsOf(exits) {
 /**
  * procgenPlayer passes the sidecar's `playable_payload`. Exits become a Map keyed by exit name
  * (procgenPlayer.handleRegionMove calls `world.exits.has(exitName)`). The flash bridge forwards only
- * `params` to the game, so the checked region and the exit list are written there. Throws on a payload whose
- * span is malformed (the warehouse then skips the region, `procgenCore/deserializeRefusal.js`).
+ * `params` to the game, so the checked spans (`move`, `check`: `regionSpansOf`, which reads a pre-N4c payload's
+ * `{start, end}` as the move span and derives an absent check span) and the exit list are written there. Throws on
+ * a payload whose span is malformed (the warehouse then skips the region, `procgenCore/deserializeRefusal.js`).
  */
 function deserializeWorld(payload) {
     const p = payload ?? {};
-    const region = regionSpanOf(p);
+    const region = regionSpansOf(p);
     const exitsArray = Array.isArray(p.exits) ? p.exits : [];
     const exitsMap = new Map();
     for (const e of exitsArray) {
@@ -135,6 +138,14 @@ const POSITION_SCHEMA = Object.freeze({
         scene: Object.freeze({ type: 'integer', minimum: 0 }),
     }),
 });
+const SPAN_SCHEMA = Object.freeze({
+    required: Object.freeze(['start', 'end']),
+    additionalProperties: false,
+    properties: Object.freeze({
+        start: Object.freeze({ type: 'object', ...POSITION_SCHEMA }),
+        end: Object.freeze({ type: 'object', ...POSITION_SCHEMA }),
+    }),
+});
 
 /** The payload, declared (the registry's `sidecarFields` slot; vocabulary in `procgenCore/sidecarFields.js`). */
 export const NOIZ2SA_SIDECAR_FIELDS = Object.freeze({
@@ -144,17 +155,31 @@ export const NOIZ2SA_SIDECAR_FIELDS = Object.freeze({
         type: 'string', required: true, derived: true, enum: Object.freeze([NOIZ2SA_GAME_ID]),
         description: `The game id, a constant ${ZONE_RULES} stamps (the flash bridge forwards it to the page).`,
     }),
-    start: Object.freeze({
+    move: Object.freeze({
         type: 'object', required: true, derived: true,
-        description: `The region's first scene {stage, scene} (stage 0–9 the stages 1–10, 10–13 the endless modes; `
-            + `scene 0–8, 9 the boss), from the zone table by ${ZONE_RULES}. Checked with \`end\` on load `
-            + '(`noiz2saRegion.js` checkSpan); a bad span refuses the region.',
+        description: `The MOVE span {start, end}: what a move out of the region plays, its clear performing the move. `
+            + 'A position is {stage, scene} (stage 0–9 the stages 1–10, 10–13 the endless modes; scene 0–8, 9 the boss); '
+            + 'the end is included, at or after the start, and a boss that is not the end leads into the next stage. '
+            + `From the zone table by ${ZONE_RULES}. Checked on load (\`noiz2saRegion.js\` regionSpansOf); a bad span `
+            + 'refuses the region.',
+        schema: SPAN_SCHEMA,
+    }),
+    check: Object.freeze({
+        type: 'object', required: true, derived: true,
+        description: 'The CHECK span {start, end}: what a check of the region\'s location plays, its clear checking the '
+            + 'location (the player stays). Twice the move span\'s scenes from the same start (`checkSpanOf`), by '
+            + `${ZONE_RULES}; derived from the move span on load when absent.`,
+        schema: SPAN_SCHEMA,
+    }),
+    start: Object.freeze({
+        type: 'object', required: false,
+        description: 'Before N4c: the move span\'s first scene (with `end`). Read as the move span when `move` is '
+            + 'absent (`noiz2saRegion.js` regionSpansOf); no writer emits it now.',
         schema: POSITION_SCHEMA,
     }),
     end: Object.freeze({
-        type: 'object', required: true, derived: true,
-        description: `The region's last scene, included; at or after \`start\`, by ${ZONE_RULES}. A boss that is `
-            + 'not the end leads into the next stage.',
+        type: 'object', required: false,
+        description: 'Before N4c: the move span\'s last scene (with `start`), read as for `start`.',
         schema: POSITION_SCHEMA,
     }),
     seed: Object.freeze({
@@ -204,18 +229,17 @@ export const substrateRegistryEntry = Object.freeze({
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
 
-    // The Bot (N4): the walkTo solver. The page's humanlike bot plays toward the target (the clear, or an exit
-    // after the clear) at the trainer's tracks, restarting on a hit, until the clear or the retry cap.
+    // The Bot (N4): the walkTo solver. The page's humanlike bot plays the target's run (a location: the check run; an
+    // exit: the move run, leaving by it) at the trainer's tracks, restarting on a hit, until the clear or the retry cap.
     getPlaybackController: () => _playbackProxy,
 
     // Loop mode: runner's declarations. `record` + `playback` arm the strict action gate and the live-play time
     // drain; `summaryRecording` makes it a summary substrate; `executeVia: 'solver'` offers the Bot (no Bot ×
     // Instant: a summary bot never honours Instant).
     loopSupport: Object.freeze({
-        // N4b: the move is the only queue action — leaving a region means playing it to a clear (the page's rule in
-        // loop mode), and the clear's check rides on the move (moveIncludesCheck), never a queue action of its own
-        queueActions: Object.freeze(['regionMove']),
-        moveIncludesCheck: true,
+        // N4c: the move (a move run: the move span, its clear performs the move) and the check (a check run: the
+        // check span, its clear checks the location), two queue actions; the Bot block plays both
+        queueActions: Object.freeze(['regionMove', 'locationCheck']),
         executeVia: 'solver',
         manual: true,
         customQueues: false,
@@ -236,10 +260,10 @@ export const substrateRegistryEntry = Object.freeze({
     zoneSourceLabel: 'Noiz2sa segment',
 });
 
-/** what a region plays, for logs and labels: "1:2–1:3 (seed 1)" */
+/** what a region plays, for logs and labels: "1:2–1:3, check 1:2–1:5 (seed 1)" */
 export const describeRegion = (payload) => {
-    const r = regionSpanOf(payload);
-    return `${showSpan(r)} (seed ${r.seed})`;
+    const r = regionSpansOf(payload);
+    return `${showSpan(r.move)}, check ${showSpan(r.check)} (seed ${r.seed})`;
 };
 
 // Side-effect on import: register, so headless scripts and the pipeline resolve the substrate without the

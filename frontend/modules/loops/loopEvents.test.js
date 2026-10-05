@@ -64,8 +64,6 @@ const observeCalls = [];
 // Default: gate out of scope (AP-native region) — the legacy clickToQueue
 // contract applies unchanged.
 let mockGateVerdict = { allowed: true, reason: 'apNative' };
-// N4b: the regions whose check rides on the move (moveIncludesCheck).
-const moveIncludesCheckRegions = new Set();
 vi.mock('./loopStateSingleton.js', () => ({
   default: {
     clearQueue: () => loopStateCalls.push('clearQueue'),
@@ -76,7 +74,6 @@ vi.mock('./loopStateSingleton.js', () => ({
     observeParkedLiveAction: (action) => observeCalls.push(action),
     noteLocationChecked: () => {},
     _handleBotWake_locationCheck: () => {},
-    regionMoveIncludesCheck: (region) => moveIncludesCheckRegions.has(region),
   },
 }));
 
@@ -139,7 +136,6 @@ beforeEach(() => {
   gateCalls.length = 0;
   observeCalls.length = 0;
   mockGateVerdict = { allowed: true, reason: 'apNative' };
-  moveIncludesCheckRegions.clear();
   stateManagerStaticData.regions.clear();
   pathFinderResults.value = null;
   pathState = [];
@@ -612,35 +608,5 @@ describe('loopEvents — M3b strict action gate routing', () => {
       expect(observeCalls).toEqual([]);
       expect(propagationsOf('loop:exploreCompleted')).toHaveLength(1);
     });
-  });
-});
-
-describe('loopEvents — N4b: a region whose check rides on the move (moveIncludesCheck)', () => {
-  for (const mode of ['append', 'rebuildPath']) {
-    it(`clickToQueue ${mode}: a location click queues neither a check nor an explore, with feedback`, () => {
-      bus.publish('loopUI:clickToQueueChanged', { mode });
-      moveIncludesCheckRegions.add('noiz');
-      setQueueEndRegion('noiz');
-      pathFinderResults.value = ['noiz'];
-      for (const discovered of [true, false]) {
-        discoveryState.isLocationDiscovered = () => discovered;
-        handleUserLocationCheckForLoops({ locationName: 'noiz__clear', regionName: 'noiz' });
-      }
-      discoveryState.isLocationDiscovered = () => true;
-
-      expect(gameStateCalls).toEqual([]);
-      expect(loopStateCalls).toEqual([]);
-      const ignored = bus.published.filter((p) => p.name === 'loops:clickIgnored');
-      expect(ignored.map((p) => p.data.reason)).toEqual(['checkIsPartOfMove', 'checkIsPartOfMove']);
-      expect(ignored[0].data).toMatchObject({ kind: 'location', regionName: 'noiz', payload: { locationName: 'noiz__clear' } });
-    });
-  }
-
-  it('any other region keeps queueing its check (append)', () => {
-    bus.publish('loopUI:clickToQueueChanged', { mode: 'append' });
-    moveIncludesCheckRegions.add('noiz');
-    setQueueEndRegion('region_0_0');
-    handleUserLocationCheckForLoops({ locationName: 'My Location', regionName: 'region_0_0' });
-    expect(gameStateCalls).toEqual([{ method: 'addLocationCheck', loc: 'My Location', region: 'region_0_0' }]);
   });
 });

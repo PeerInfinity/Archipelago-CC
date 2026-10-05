@@ -197,13 +197,25 @@
         },
         "playable_payload": {
           "gameId": "noiz2sa",
-          "start": {
-            "stage": 0,
-            "scene": 0
+          "move": {
+            "start": {
+              "stage": 0,
+              "scene": 0
+            },
+            "end": {
+              "stage": 0,
+              "scene": 0
+            }
           },
-          "end": {
-            "stage": 0,
-            "scene": 0
+          "check": {
+            "start": {
+              "stage": 0,
+              "scene": 0
+            },
+            "end": {
+              "stage": 0,
+              "scene": 1
+            }
           },
           "seed": 1,
           "ap_locations": {
@@ -231,13 +243,25 @@
         },
         "playable_payload": {
           "gameId": "noiz2sa",
-          "start": {
-            "stage": 0,
-            "scene": 1
+          "move": {
+            "start": {
+              "stage": 0,
+              "scene": 1
+            },
+            "end": {
+              "stage": 0,
+              "scene": 2
+            }
           },
-          "end": {
-            "stage": 0,
-            "scene": 2
+          "check": {
+            "start": {
+              "stage": 0,
+              "scene": 1
+            },
+            "end": {
+              "stage": 0,
+              "scene": 4
+            }
           },
           "seed": 1,
           "ap_locations": {
@@ -273,13 +297,25 @@
         },
         "playable_payload": {
           "gameId": "noiz2sa",
-          "start": {
-            "stage": 0,
-            "scene": 9
+          "move": {
+            "start": {
+              "stage": 0,
+              "scene": 9
+            },
+            "end": {
+              "stage": 1,
+              "scene": 0
+            }
           },
-          "end": {
-            "stage": 1,
-            "scene": 0
+          "check": {
+            "start": {
+              "stage": 0,
+              "scene": 9
+            },
+            "end": {
+              "stage": 1,
+              "scene": 2
+            }
           },
           "seed": 1,
           "ap_locations": {

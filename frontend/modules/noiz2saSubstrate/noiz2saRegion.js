@@ -81,6 +81,54 @@ export function regionSpanOf(payload) {
     return { start: { stage: start.stage, scene: start.scene }, end: { stage: end.stage, scene: end.scene }, seed };
 }
 
+/** scenes in a stage: 0–8 the ordinary scenes and 9 the boss */
+const SCENES_PER_STAGE = BOSS_SCENE + 1;
+
+/** the number of scenes a span plays, its start and end included (a boss counts as one scene): 2:4–2:5 → 2 */
+export function sceneCount({ start, end }) {
+    checkSpan(start, end);
+    return (end.stage - start.stage) * SCENES_PER_STAGE + end.scene - start.scene + 1;
+}
+
+/**
+ * The position `n` scenes after `pos` (a boss leads into the next stage at scene 0), or the last scene the game
+ * can reach from `pos` when that is sooner: the boss of stage 10 (no next stage), or of the endless mode `pos` is in.
+ */
+export function scenesAfter(pos, n) {
+    const idx = pos.scene + n;
+    const stage = pos.stage + Math.floor(idx / SCENES_PER_STAGE);
+    const lastStage = pos.stage >= STAGE_NUM ? pos.stage : STAGE_NUM - 1;
+    if (stage > lastStage) return { stage: lastStage, scene: BOSS_SCENE };
+    return { stage, scene: idx % SCENES_PER_STAGE };
+}
+
+/**
+ * N4c (⚖ 2026-10-05): the CHECK span of a move span — twice its scenes, from the same start ("we can have the location
+ * check launch a longer set of stages, maybe twice as long as the move action"): 2:4–2:5 → 2:4–2:7, 1:boss–2:1 →
+ * 1:boss–2:3. Cut short at the last scene the game reaches (`scenesAfter`).
+ */
+export function checkSpanOf(move) {
+    const n = sceneCount(move);
+    return { start: { ...move.start }, end: scenesAfter(move.start, 2 * n - 1) };
+}
+
+const spanOf = (s) => ({ start: { stage: s.start.stage, scene: s.start.scene }, end: { stage: s.end.stage, scene: s.end.scene } });
+
+/**
+ * A region payload's two spans, checked (N4c): `{move: {start, end}, check: {start, end}, seed}`. The payload carries
+ * both (`move`, `check`); the pre-N4c shape `{start, end}` is read as the move span, and an absent `check` is derived
+ * from the move (`checkSpanOf`). Throws on a malformed one.
+ */
+export function regionSpansOf(payload) {
+    const p = payload ?? {};
+    const moveIn = p.move ?? { start: p.start, end: p.end };
+    const { start, end, seed } = regionSpanOf({ ...moveIn, seed: p.seed });
+    const move = { start, end };
+    if (!p.check) return { move, check: checkSpanOf(move), seed };
+    checkSpan(p.check.start, p.check.end);
+    return { move, check: spanOf(p.check), seed };
+}
+
 /**
  * One region being played, frame by frame. `engine` = {newGame, stepGame} from the game's noiz2sa-game.js;
  * `patterns` its loaded patterns. The run never ends by itself: after a hit it restarts the region, and after

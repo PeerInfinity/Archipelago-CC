@@ -7,6 +7,7 @@
 import { describe, expect, it } from 'vitest';
 import {
     parsePosition, showPosition, showSpan, checkSpan, regionSpanOf, createRegionRun,
+    sceneCount, scenesAfter, checkSpanOf, regionSpansOf,
     encodeInputs, decodeInputs, BOSS_SCENE, BOSS_CAP, HITBOX, endlessSeedOf,
 } from './noiz2saRegion.js';
 
@@ -64,6 +65,40 @@ describe('positions and spans (segment-run.js parsePosition / showPosition / che
         expect(regionSpanOf({ start: P(0, 0), end: P(0, 0) })).toEqual({ start: P(0, 0), end: P(0, 0), seed: 1 });
         expect(() => regionSpanOf({ start: P(0, 0), end: P(0, 0), seed: 0 })).toThrow(/seed/);
         expect(() => regionSpanOf({ start: P(0, 0) })).toThrow(/end/);
+    });
+});
+
+describe('N4c — the move span and the check span (twice its scenes, from the same start)', () => {
+    const span = (a, b) => ({ start: parsePosition(a), end: parsePosition(b) });
+    it('sceneCount: start and end included, a boss counts as one scene', () => {
+        expect(sceneCount(span('1:1', '1:1'))).toBe(1);
+        expect(sceneCount(span('2:4', '2:5'))).toBe(2);
+        expect(sceneCount(span('1:boss', '2:1'))).toBe(2);
+        expect(sceneCount(span('1:1', '2:1'))).toBe(11);
+    });
+    it('checkSpanOf: twice the scenes from the same start, past a boss into the next stage as a move may', () => {
+        expect(showSpan(checkSpanOf(span('2:4', '2:5')))).toBe('2:4–2:7');
+        expect(showSpan(checkSpanOf(span('1:1', '1:1')))).toBe('1:1–1:2');
+        expect(showSpan(checkSpanOf(span('1:2', '1:3')))).toBe('1:2–1:5');
+        expect(showSpan(checkSpanOf(span('1:boss', '2:1')))).toBe('1:boss–2:3');
+        expect(showSpan(checkSpanOf(span('1:8', '1:9')))).toBe('1:8–2:1');
+        for (const [a, b] of [['2:4', '2:5'], ['1:boss', '2:1'], ['3:7', '4:2']]) {
+            const s = span(a, b);
+            expect(sceneCount(checkSpanOf(s))).toBe(2 * sceneCount(s));
+        }
+    });
+    it('cut short at the last scene the game reaches: stage 10\'s boss, or the endless mode\'s', () => {
+        expect(showSpan(checkSpanOf(span('10:5', '10:9')))).toBe('10:5–10:boss');
+        expect(showSpan(checkSpanOf(span('ENDLESS:3', 'ENDLESS:6')))).toBe('ENDLESS:3–ENDLESS:boss');
+        expect(scenesAfter(parsePosition('10:boss'), 1)).toEqual(parsePosition('10:boss'));
+    });
+    it('regionSpansOf: both spans from the payload; the old {start, end} is the move span; the check derived when absent', () => {
+        const move = span('2:4', '2:5'), check = span('2:4', '2:9');
+        expect(regionSpansOf({ move, check, seed: 3 })).toEqual({ move, check, seed: 3 });
+        expect(regionSpansOf({ move, seed: 3 })).toEqual({ move, check: span('2:4', '2:7'), seed: 3 });
+        expect(regionSpansOf({ ...move })).toEqual({ move, check: span('2:4', '2:7'), seed: 1 });
+        expect(() => regionSpansOf({ move: span('2:5', '2:5'), check: { start: P(1, 4), end: P(1, 0) } })).toThrow(/before its start/);
+        expect(() => regionSpansOf({ check })).toThrow(/segment start/);
     });
 });
 
