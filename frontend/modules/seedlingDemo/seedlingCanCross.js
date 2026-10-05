@@ -420,7 +420,6 @@ export function canCross(o) {
     let goal;
     let to = givenTo;
     let door = null;
-    let stepOff = null;
     if (givenGoal) goal = givenGoal;
     else {
         const ex = exitGoal(levelSource, level, exit);
@@ -429,7 +428,6 @@ export function canCross(o) {
         const mapped = arrivalSolverGoal(ex.ap, { staging, levelSource, record: levelSource(level) });
         if (mapped.walker) bad(mapped.walker);
         goal = mapped.goal;
-        stepOff = mapped.stepOff ?? null;
     }
     const items = Object.entries(staging.seam?.items ?? {}).filter(([, v]) => v).map(([k]) => k);
     const result = {
@@ -459,13 +457,8 @@ export function canCross(o) {
             : { kind: 'consults', limit: budget.consults ?? DEFAULT_CONSULT_BUDGET }),
     consults, deterministic });
 
-    if (stepOff) {
-        return { ...result, verdict: 'undecided', ms: 0, budget: budgetOut(),
-            why: `the arrival stands latched on the exit's own teleporter; the crossing is a step-off `
-                + 'composite (`wasmWalkTape.stepOffSolveFromStaging`), which this oracle does not drive',
-            cause: { kind: 'unsupported', basis: 'field', stepOff } };
-    }
-
+    // ⛓ STEP-OFF RETIRE — an arrival latched on the exit's own door is an ordinary solve: `solveSegment`
+    // steps off it and walks back (fidelity STEP-OFF), so the oracle no longer answers it `undecided`.
     const run = createRunForStaging(staging, levelSource, { scratchPersistence });
     const prefix = [];
     for (let i = 0; i < idle; i += 1) { run.advance(new Set()); prefix.push(new Set()); }

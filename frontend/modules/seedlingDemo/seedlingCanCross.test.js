@@ -40,6 +40,20 @@ const heldOf = (tape) => {
 };
 const ask = (o) => canCross({ level: 14, exit: 15, dashMode: 'none', ...o });
 
+describe('canCross — an arrival LATCHED on the exit\'s own door (⛓ STEP-OFF RETIRE)', () => {
+    // The oracle once answered these `undecided` (W4's walker-prefix composite, which it did not drive).
+    // The solver steps off a latched door itself now (fidelity STEP-OFF), so they are ordinary verdicts.
+    it('L87 standing on its door to L88: can — the solver steps off and back on; L3\'s pocket: cannot, closed by name', () => {
+        const on = canCross({ level: 87, exit: { x: 432, y: 304 }, arrival: { x: 432, y: 304 }, dashMode: 'none' });
+        expect(on.verdict).toBe('can');
+        expect(on.plan).toMatchObject({ landed: 88, deaths: 0 });
+        expect(on.witness.replayed).toMatchObject({ landed: 88, agrees: true });
+        const pocket = canCross({ level: 3, exit: 11, arrival: { from: 11 }, dashMode: 'none', witness: false });
+        expect(pocket.verdict).toBe('cannot');
+        expect(pocket.cause).toMatchObject({ kind: 'refusal', name: 'SolverRefusal', obstacle: { kind: 'closed', id: 'teleporter@96,128' } });
+    });
+});
+
 describe('canCross — one real case per verdict', () => {
     it('can: swordless L14 from the captured arrival, and the witness is the committed tape\'s keys', () => {
         const r = ask({ arrival: { staging: L14() } });
