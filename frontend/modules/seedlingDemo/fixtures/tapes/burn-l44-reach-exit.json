@@ -1,0 +1,426 @@
+{
+    "game": "seedling",
+    "name": "burn-l44-reach-exit",
+    "boot": {
+        "level": 44,
+        "x": 128,
+        "y": 128
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [
+        {
+            "t": 42,
+            "slot": 1
+        },
+        {
+            "t": 96,
+            "slot": 0
+        }
+    ],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1,
+            2
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 212,
+    "inputs": [
+        {
+            "key": "primary",
+            "from": 0,
+            "to": 1
+        },
+        {
+            "key": "left",
+            "from": 0,
+            "to": 3
+        },
+        {
+            "key": "primary",
+            "from": 2,
+            "to": 3
+        },
+        {
+            "key": "right",
+            "from": 3,
+            "to": 4
+        },
+        {
+            "key": "left",
+            "from": 4,
+            "to": 9
+        },
+        {
+            "key": "right",
+            "from": 9,
+            "to": 10
+        },
+        {
+            "key": "primary",
+            "from": 20,
+            "to": 21
+        },
+        {
+            "key": "left",
+            "from": 12,
+            "to": 23
+        },
+        {
+            "key": "up",
+            "from": 12,
+            "to": 23
+        },
+        {
+            "key": "primary",
+            "from": 22,
+            "to": 23
+        },
+        {
+            "key": "right",
+            "from": 23,
+            "to": 24
+        },
+        {
+            "key": "down",
+            "from": 23,
+            "to": 24
+        },
+        {
+            "key": "left",
+            "from": 24,
+            "to": 35
+        },
+        {
+            "key": "up",
+            "from": 24,
+            "to": 35
+        },
+        {
+            "key": "right",
+            "from": 35,
+            "to": 36
+        },
+        {
+            "key": "down",
+            "from": 35,
+            "to": 36
+        },
+        {
+            "key": "left",
+            "from": 36,
+            "to": 37
+        },
+        {
+            "key": "up",
+            "from": 36,
+            "to": 37
+        },
+        {
+            "key": "right",
+            "from": 37,
+            "to": 38
+        },
+        {
+            "key": "down",
+            "from": 39,
+            "to": 40
+        },
+        {
+            "key": "primary",
+            "from": 42,
+            "to": 43
+        },
+        {
+            "key": "primary",
+            "from": 99,
+            "to": 100
+        },
+        {
+            "key": "left",
+            "from": 96,
+            "to": 102
+        },
+        {
+            "key": "primary",
+            "from": 101,
+            "to": 102
+        },
+        {
+            "key": "right",
+            "from": 102,
+            "to": 104
+        },
+        {
+            "key": "left",
+            "from": 104,
+            "to": 106
+        },
+        {
+            "key": "right",
+            "from": 106,
+            "to": 107
+        },
+        {
+            "key": "left",
+            "from": 107,
+            "to": 108
+        },
+        {
+            "key": "primary",
+            "from": 107,
+            "to": 108
+        },
+        {
+            "key": "right",
+            "from": 109,
+            "to": 115
+        },
+        {
+            "key": "left",
+            "from": 115,
+            "to": 116
+        },
+        {
+            "key": "primary",
+            "from": 119,
+            "to": 120
+        },
+        {
+            "key": "primary",
+            "from": 121,
+            "to": 122
+        },
+        {
+            "key": "up",
+            "from": 118,
+            "to": 128
+        },
+        {
+            "key": "primary",
+            "from": 127,
+            "to": 128
+        },
+        {
+            "key": "down",
+            "from": 128,
+            "to": 130
+        },
+        {
+            "key": "up",
+            "from": 130,
+            "to": 135
+        },
+        {
+            "key": "down",
+            "from": 135,
+            "to": 136
+        },
+        {
+            "key": "primary",
+            "from": 142,
+            "to": 143
+        },
+        {
+            "key": "left",
+            "from": 138,
+            "to": 145
+        },
+        {
+            "key": "primary",
+            "from": 144,
+            "to": 145
+        },
+        {
+            "key": "right",
+            "from": 145,
+            "to": 147
+        },
+        {
+            "key": "left",
+            "from": 147,
+            "to": 148
+        },
+        {
+            "key": "right",
+            "from": 148,
+            "to": 149
+        },
+        {
+            "key": "left",
+            "from": 149,
+            "to": 150
+        },
+        {
+            "key": "primary",
+            "from": 162,
+            "to": 163
+        },
+        {
+            "key": "up",
+            "from": 154,
+            "to": 165
+        },
+        {
+            "key": "primary",
+            "from": 164,
+            "to": 165
+        },
+        {
+            "key": "down",
+            "from": 165,
+            "to": 166
+        },
+        {
+            "key": "up",
+            "from": 166,
+            "to": 171
+        },
+        {
+            "key": "primary",
+            "from": 170,
+            "to": 171
+        },
+        {
+            "key": "down",
+            "from": 171,
+            "to": 174
+        },
+        {
+            "key": "up",
+            "from": 174,
+            "to": 175
+        },
+        {
+            "key": "primary",
+            "from": 182,
+            "to": 183
+        },
+        {
+            "key": "right",
+            "from": 179,
+            "to": 185
+        },
+        {
+            "key": "primary",
+            "from": 184,
+            "to": 185
+        },
+        {
+            "key": "left",
+            "from": 185,
+            "to": 187
+        },
+        {
+            "key": "right",
+            "from": 187,
+            "to": 189
+        },
+        {
+            "key": "left",
+            "from": 189,
+            "to": 190
+        },
+        {
+            "key": "right",
+            "from": 190,
+            "to": 192
+        },
+        {
+            "key": "left",
+            "from": 193,
+            "to": 195
+        },
+        {
+            "key": "primary",
+            "from": 202,
+            "to": 203
+        },
+        {
+            "key": "primary",
+            "from": 204,
+            "to": 205
+        },
+        {
+            "key": "up",
+            "from": 199,
+            "to": 212
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY BURN — route step 102 (L44 → L45): `burnabletree@48,64` {tag 0} is the wall between the L37 arrival and `teleporter@64,0`. The solver stands at a tile centre beside it, selects Fire's slot, presses, waits out the burn, selects the sword's slot again and walks out. The survey's staging (`r8-solve-11`'s committed block re-pointed at the atlas arrival, keys [0, 1, 2], items [hasTorch, hasShield, hasFire]). The solver's own plan: 212 t, burn pressed at t42, equips [{\"t\":42,\"slot\":1},{\"t\":96,\"slot\":0}]. Authored by scripts/procgen/plan-seedling-burn-witness.mjs."
+}

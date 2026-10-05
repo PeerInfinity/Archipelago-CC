@@ -4407,7 +4407,12 @@ export function runFire(run, perTick, fire, what) {
             // (`control@64,0`, `fallthrough 30`), so its cell is a PIT once it
             // burns. That is the room's exit, not a stray solid, and a leg
             // DECLARES it (`fire.overPit`); an undeclared pit is still a red.
-            if (after !== null && !(after.kind === 'pit' && fire.overPit === true)) {
+            // ⛓ Seedling fidelity BURN: L24's `burnabletree@32,128` stands ON
+            // `teleporter@32,144`, the room's way to L12 — so its cell is a
+            // TELEPORTER once it burns, the pit's case one exit kind over, and
+            // declared the same way (`fire.overExit`).
+            if (after !== null && !(after.kind === 'pit' && fire.overPit === true)
+                && !(after.kind === 'teleporter' && fire.overExit === true)) {
                 fail(`${what}: ${t.id} reports burned and its cell (${t.cx},${t.cy}) is `
                     + `STILL BLOCKED by ${after.kind}. \`die()\` writes \`type = ""\` AND `
                     + '`FP.world.remove(this)`, so the 2x2 leaves the solids list '

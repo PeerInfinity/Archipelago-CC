@@ -3,6 +3,20 @@
   "dir": "frontend/modules/seedlingDemo/fixtures/tapes",
   "tapes": [
     {
+      "file": "burn-l24-reach-exit.json",
+      "tickCount": 124,
+      "bootLevel": 24,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "burn-l44-reach-exit.json",
+      "tickCount": 212,
+      "bootLevel": 44,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "collide-up-rock.json",
       "tickCount": 45,
       "bootLevel": 0,

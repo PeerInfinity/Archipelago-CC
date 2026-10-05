@@ -355,6 +355,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f6-l17-reentry',
             // ⛓⛓⛓ Seedling fidelity F7 (D-A): L16 re-entered with its rope pulled.
             'f7-l16-reentry', 'f7-l16-walkin',
+            // ⛓⛓⛓ Seedling fidelity BURN: route step 93's plan, ending on L12's arrival.
+            'burn-l24-reach-exit',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -384,9 +386,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity F6 takes it to 44 — `f6-l17-reentry`, in L17.
         // ⛓ Seedling fidelity F7 takes it to 46 — `f7-l16-reentry` (L16) and
         // `f7-l16-walkin` (L17 → L16).
-        expect(out.exposed).toBe(46);
+        // ⛓ Seedling fidelity BURN takes it to 47 — `burn-l24-reach-exit` (L24 → L12).
+        expect(out.exposed).toBe(47);
         expect(out.tapes).toEqual([
-            'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
+            'burn-l24-reach-exit', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
@@ -521,6 +524,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f6-l17-reentry': { tape: {}, levels: [17] },
             'f7-l16-reentry': { tape: {}, levels: [16] },
             'f7-l16-walkin': { tape: {}, levels: [16, 17] },
+            'burn-l24-reach-exit': { tape: {}, levels: [12] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
