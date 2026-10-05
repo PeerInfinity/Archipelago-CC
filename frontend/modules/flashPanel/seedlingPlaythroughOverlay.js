@@ -123,6 +123,64 @@ export function buildCrossLevelOpeners(mapDoc) {
 }
 
 /**
+ * ⛓⛓ RULES re-closing locks — WHICH GROUPED LOCKS THE GAME REBUILDS CLOSED.
+ *
+ * Law 2 above, followed through: `Lock.check()` removes a lock on entry only
+ * when `tag >= 0 && tSet < 0 && !Game.checkPersistence(tag)`, so a GROUPED
+ * lock (tSet >= 0) is rebuilt CLOSED on every entry, whatever its tag says. It
+ * opens only while something re-publishes its group THIS visit:
+ *
+ * - a `ButtonRoom` with `room == -1` re-publishes at every `check()`
+ *   (`ButtonRoom.as:41-44` reads its own tag, then `set activate` walks the
+ *   group, `:80-89`), and a `RopeStart` is removed by its own persistence tag
+ *   (`RopeStart.as:31-46`): LATCHING openers — law 1, a durable gate;
+ * - a plain `Button` publishes `activateAll(this, t, pressed)` only while a
+ *   body sits on it (`Button.as:28-47`), and the lock returns to Solid the
+ *   moment it is released and nothing overlaps it (`Lock.as:activationStep`,
+ *   `returnToNormal`). A HOLDING opener: the opening lasts one visit.
+ *
+ * So a grouped `Lock`/`WandLock`/`GrassLock` whose in-level group holds no
+ * latching opener and at least one holding one RE-CLOSES. Its crossing exists
+ * only from a side where a button can be worked on this visit; an arrival on
+ * the far side meets it closed. `RockLock` is not in the set: its `check()`
+ * honours the tag whatever its tSet (`RockLock.as:31-37`).
+ *
+ * Returns `"<level>:<tset>"` -> `{ latching, holders: [[tx, ty], ...] }`, the
+ * holders as the tiles their buttons stand on.
+ */
+const RECLOSING_LOCK_CLASSES = new Set(['lock', 'wandlock', 'grasslock']);
+const LATCHING_OPENER = (e) => (e.type === 'buttonroom' && Number(e.attrs?.room) === -1) || e.type === 'rope';
+const HOLDING_OPENER = (e) => e.type === 'button';
+
+export function buildGroupOpeners(mapDoc, tileSize = 16) {
+    const out = new Map();
+    for (const level of mapDoc?.levels ?? []) {
+        for (const e of level.entities ?? []) {
+            const latching = LATCHING_OPENER(e);
+            if (!latching && !HOLDING_OPENER(e)) continue;
+            const t = Number(e.attrs?.tset);
+            if (!Number.isInteger(t) || t < 0) continue;
+            const k = `${level.level}:${t}`;
+            if (!out.has(k)) out.set(k, { latching: false, holders: [] });
+            const row = out.get(k);
+            if (latching) row.latching = true;
+            else row.holders.push([Math.floor(e.x / tileSize), Math.floor(e.y / tileSize)]);
+        }
+    }
+    return out;
+}
+
+/** The re-closing ruling's provenance, shared by the overlay row and its tests. */
+export const RECLOSING_LOCK = Object.freeze({
+    cite: 'Puzzlements/Lock.as:check (`tag >= 0 && tSet < 0`) + Lock.as:activationStep (`returnToNormal`) '
+        + '+ Puzzlements/Button.as:28-47 (`activateAll` only while pressed) + Puzzlements/ButtonRoom.as:41-44,80-89',
+    why: 'a GROUPED lock opened only by a plain Button: the game rebuilds it CLOSED on every entry '
+        + '(check() reads persistence only while tSet < 0) and it stays open only while a body holds the '
+        + 'button THIS visit. So it is entered only from a side where a button can be reached freely; '
+        + 'leaving is free (the opener side held it open on the way in).',
+});
+
+/**
  * ⛔⛔⛔ THE GROUPED-LOCK EXCEPTION — a lock whose PRESSER is item-gated.
  *
  * The `tSet >= 0` arm below calls a grouped lock FREE because "its group's
@@ -202,6 +260,16 @@ function lockRuling(entity, ctx) {
         const site = `${ctx?.level}:${entity.type}@${entity.x},${entity.y}`;
         const ruled = GROUPED_LOCK_EXCEPTIONS[site];
         if (ruled) return GATED(ruled.condition, ruled.cite, ruled.why);
+        // ⛓ RULES re-closing locks — see `buildGroupOpeners`. `directional`
+        // with no condition: free to cross, but `buildSeedlingRegionGrid`
+        // (under `directionalLocks`) walls every ENTRY from a side that cannot
+        // reach one of `opensFrom` freely.
+        const group = ctx?.groupOpeners?.get(`${ctx.level}:${tSet}`);
+        if (RECLOSING_LOCK_CLASSES.has(entity.type) && group && !group.latching && group.holders.length > 0) {
+            return {
+                kind: 'directional', opensFrom: group.holders, cite: RECLOSING_LOCK.cite, why: RECLOSING_LOCK.why,
+            };
+        }
         return OPEN(
             'Puzzlements/Button.as:activateAll + Puzzlements/Lock.as:check (the '
             + '`tSet < 0` guard) + Puzzlements/ButtonRoom.as:check',
@@ -803,6 +871,29 @@ export const REFUTATION_LOG = Object.freeze([
             + '+ Dungeon3/9.oel:454 (the lock) + Dungeon3/1.oel:216 (L22\'s teleporter into the '
             + 'pocket) + CC/docs/cloud-reports/seedling-swim-t3.md § D4 '
             + '+ CC/docs/cloud-reports/seedling-swim-t4.md § D2',
+    }),
+    // ⛓ ENTRY 4 (RULES re-closing locks) — entry 2's sign once more: too
+    // PERMISSIVE. Law 2 was read right (a grouped lock's persistence write is
+    // inert) and then followed only halfway: the OPEN ruling it led to treated
+    // the lock as open on EVERY visit, when the game rebuilds it closed on
+    // every entry and only its button, worked this visit, opens it.
+    Object.freeze({
+        row: 'lock@128,48 in L15, ruled OPEN by the general tSet >= 0 arm, so the L16 arrival column '
+            + 'was folded into level_15__r1c5 and level_16 -> level_15 -> level_14 crossed on the Sword alone',
+        refutedBy: 'the fidelity RETURN slice\'s game recordings return-l15-walkin (by the door from L16) and '
+            + 'return-l15-reentry / -unclear (with and without the forward trip\'s clears): all three held at '
+            + 'x 146.5 by the lock, the cleared and uncleared streams byte-identical; return-l15-conch solves '
+            + 'the same arrival by swimming',
+        observed: 'the lock is tSet 0, so `Lock.check()` never removes it, whatever `{15,0}` says; it is rebuilt '
+            + 'CLOSED on every entry, and its only opener (`button@112,32` and the block that holds it) is past '
+            + 'it. The arrival column (x 144..159) is sealed by the lock to the west and by water to the south. '
+            + 'RETIRED by `buildGroupOpeners` + the re-closing pass in `buildSeedlingRegionGrid`: a grouped lock '
+            + 'only a plain Button opens is entered only from a side that reaches that button this visit, '
+            + 'priced at what reaching it costs — here level_15__r1c9 -> level_15__r1c5 is Has(Swim). Its class '
+            + 'is thirteen locks in nine levels; six levels split, no location moves sphere.',
+        cite: 'Puzzlements/Lock.as:39-46 (check) + Lock.as:activationStep + Puzzlements/Button.as:28-47 '
+            + '+ Puzzlements/PushableBlock.as (no persistence) + branch '
+            + 'claude/seedling-fidelity-return-l15-l14-3rcmml @ c96dc77bad (D1) / f1aac13107 (D2, the Conch)',
     }),
 ]);
 

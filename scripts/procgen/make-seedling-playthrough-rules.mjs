@@ -180,6 +180,7 @@ const analyzerOptions = {
 };
 
 const CROSS_LEVEL_OPENERS = OV.buildCrossLevelOpeners(MAP);
+const GROUP_OPENERS = OV.buildGroupOpeners(MAP);
 const entityOverride = (entity, base, level) => {
     if (entity.type === MASK_TAG) {
         return {
@@ -188,7 +189,9 @@ const entityOverride = (entity, base, level) => {
             why: 'the real per-pixel outline, from the model that drives the game byte-exact',
         };
     }
-    return OV.overlayEntitySemantics(entity, base, { level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS });
+    return OV.overlayEntitySemantics(entity, base, {
+        level: level.level, crossLevelOpeners: CROSS_LEVEL_OPENERS, groupOpeners: GROUP_OPENERS,
+    });
 };
 
 // ⛔⛔⛔ THE MASK EXPANSION IS OFF BY DEFAULT, AND THAT IS A MEASUREMENT.
@@ -230,9 +233,34 @@ const MASKS = process.argv.includes('--masks');
 // `--no-directional-locks` rebuilds the two-way v1 rows, for comparison only
 // (its output is not what `--check` compares against).
 const DIRECTIONAL_LOCKS = !process.argv.includes('--no-directional-locks');
-const gridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS } = {}) => SEM.buildSeedlingRegionGrid(
+// ⛓ RULES re-closing locks — where the game can PUT the player in each level:
+// the landing tile of every one-way connection's `to` end in the derived atlas.
+// A re-closing lock lets its far side back only when that side holds none of
+// these (whoever stands there came in through the held lock, this visit).
+// Derived once, `quiet`: the real derivation's notes and guards belong to `main`.
+let arrivalTilesByLevel = null;
+const arrivalTilesFor = (levelNumber) => {
+    if (!arrivalTilesByLevel) {
+        const { atlas } = derivePlaythroughLayer(LEVELS, { quiet: true });
+        const byRegion = new Map(atlas.regions.map((r) => [r.region_id, r]));
+        arrivalTilesByLevel = new Map();
+        for (const { to: [regionId, exitId] } of atlas.vanilla_layout?.connections ?? []) {
+            const region = byRegion.get(regionId);
+            const exit = region?.exits.find((x) => x.exit_id === exitId);
+            if (!exit?.entrance_tile) continue;
+            if (!arrivalTilesByLevel.has(region.map_ref)) arrivalTilesByLevel.set(region.map_ref, []);
+            arrivalTilesByLevel.get(region.map_ref).push(exit.entrance_tile);
+        }
+    }
+    return arrivalTilesByLevel.get(levelNumber) ?? [];
+};
+const gridFor = (level, { directionalLocks = DIRECTIONAL_LOCKS, arrivals = true } = {}) => SEM.buildSeedlingRegionGrid(
     { x: 0, y: 0, w: level.width, h: level.height }, MASKS ? expandPixelMasks(level) : level,
-    { entityOverride, tileOverride: OV.overlayTileSemantics, ...(directionalLocks ? { directionalLocks } : {}) },
+    {
+        entityOverride,
+        tileOverride: OV.overlayTileSemantics,
+        ...(directionalLocks ? { directionalLocks, ...(arrivals ? { arrivalTiles: arrivalTilesFor(level.level) } : {}) } : {}),
+    },
 );
 /** ⛓ SWIM T4 — the analyzer grid this generator builds for one level (the census's read). Additive. */
 export const playthroughGridFor = (level, options) => gridFor(level, options);
@@ -320,8 +348,10 @@ export function playthroughAnalyzerOptionsFor(level) {
  * this function owns and the overlay never touches. Passing the rooms in is what
  * makes that a difference of ONE variable instead of a second derivation.
  */
-export function derivePlaythroughLayer(rooms = LEVELS) {
-    const { pitOutcome } = pitChainsFor(rooms);
+export function derivePlaythroughLayer(rooms = LEVELS, { quiet = false } = {}) {
+    // `quiet` (the re-closing locks' arrival tiles) takes the chains' outcome WITHOUT the notes/records.
+    const { pitOutcome: loud, pure } = pitChainsFor(rooms);
+    const pitOutcome = quiet ? pure : loud;
     return deriveAtlas(rooms, {
         locations: R7_GOAL_LEDGER,
         locationGuard: OV.locationGuard,
@@ -330,8 +360,8 @@ export function derivePlaythroughLayer(rooms = LEVELS) {
         tileSize: TILE,
         tileTypeForPlacement: SEM.tileTypeForPlacement,
         resolveCondition: (c) => analyzerOptions.resolveCondition(c),
-        note,
-        onGuard: (loc, guard) => locationGuards.push(`${loc.name} — ${guard.cite}`),
+        note: quiet ? () => {} : note,
+        onGuard: quiet ? () => {} : (loc, guard) => locationGuards.push(`${loc.name} — ${guard.cite}`),
         pitOutcome,
         atlas: {
             game: 'seedling',
@@ -368,13 +398,16 @@ function pitChainsFor(rooms) {
         standable: (n, [tx, ty]) => {
             const room = byId.get(n);
             if (!room) return `L${n} is not in the set`;
-            const grid = gridFor(room);
+            // Kinds only, which arrival tiles never change — and asking for them would derive the atlas this
+            // census is part of (the re-closing locks' arrivals), a cycle.
+            const grid = gridFor(room, { arrivals: false });
             const kind = grid.cells[ty * grid.width + tx]?.kind;
             return STANDABLE_KINDS.has(kind) ? true : `the analyzer grid reads it as ${JSON.stringify(kind ?? null)}`;
         },
     });
     const wrapped = {
         census,
+        pure: out.pitOutcome,
         pitOutcome: (room, group) => {
             const end = out.pitOutcome(room, group);
             if (end) {

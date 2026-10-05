@@ -4776,6 +4776,16 @@ PASS  chain act2-the-sword: THE ENDING STATE — the chain ends where the headli
   sphere 0.4 **through a wall**. Generation was green and `--check` was
   byte-exact. Fixed by a `GROUPED_LOCK_EXCEPTIONS` row keyed to ONE named
   placement, with the bounded sweep that says it is the only such lock.
+- ⛔ **A grouped lock is not open on every visit** (RULES re-closing locks,
+  2026-10-05). `Lock.check()` removes a lock only while `tSet < 0`, so a
+  grouped lock whose group holds only plain `Button`s is rebuilt CLOSED on
+  every entry; only a `ButtonRoom` (room -1) or a `RopeStart` latches one. The
+  OPEN ruling let L16's arrival into L15 cross to L14 on the Sword, and the
+  game held it at the lock. `buildGroupOpeners` + the re-closing pass in
+  `buildSeedlingRegionGrid` now enter such a lock only from a side that
+  reaches a button this visit, priced at what reaching it costs (L15: Swim).
+  A far side nobody can arrive in keeps its way back, because whoever stands
+  there came through the held lock.
 - ⛔ **A reach search must EXCLUDE ITS OWN MOVER** — a mover left in
   `world.solids` returns 1 cell rather than an error, and R5's L40 refusal was
   exactly that, twice.

@@ -19,6 +19,7 @@ import {
     playthroughAnalyzerOptions,
 } from './make-seedling-playthrough-rules.mjs';
 import { analyzeRegion } from '../../frontend/modules/procgenPipeline/regionAtlasAnalyzer.js';
+import { buildGroupOpeners } from '../../frontend/modules/flashPanel/seedlingPlaythroughOverlay.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -48,10 +49,18 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
         expect(rows.find((e) => e.from === 'r1c6' && e.to === 'r2c13')).toBeTruthy();
     });
 
-    it('no internal exit is left WITHOUT a rule — every True_ the census found was model-blocked', () => {
+    // ⛓ RULES re-closing locks: a ruleless row is now LEGITIMATE in exactly one shape — the free side of a
+    // grouped lock only a plain Button opens (its own crossing, one-way). Every other True_ the census found
+    // was model-blocked, so a ruleless row in a level with no such lock is still a defect.
+    it('no internal exit is left WITHOUT a rule, except through a re-closing lock — every other True_ was model-blocked', () => {
+        const groups = buildGroupOpeners(MAP);
+        const reclosingLevels = new Set(MAP.levels.filter((l) => l.entities.some((e) => ['lock', 'wandlock', 'grasslock'].includes(e.type)
+            && Number(e.attrs?.tset) >= 0 && !groups.get(`${l.level}:${e.attrs.tset}`)?.latching
+            && groups.get(`${l.level}:${e.attrs.tset}`)?.holders.length)).map((l) => `level_${l.level}`));
         const ruleless = atlas.regions.flatMap((r) => (r.subgraph?.internal_exits ?? [])
-            .filter((e) => e.access_rule === undefined).map((e) => `${r.region_id} ${e.from}->${e.to}`));
-        expect(ruleless).toEqual([]);
+            .filter((e) => e.access_rule === undefined).map((e) => ({ region: r.region_id, row: `${e.from}->${e.to}`, oneWay: !e.bidirectional })));
+        expect(ruleless.filter((x) => !reclosingLevels.has(x.region))).toEqual([]);
+        expect(ruleless.every((x) => x.oneWay)).toBe(true);
     });
 
     it('the pockets only a sealed row reached are pruned (L66 r1c2, L93 r1c0 / r1c13)', () => {

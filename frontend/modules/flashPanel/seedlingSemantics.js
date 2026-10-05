@@ -923,6 +923,7 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
     }
 
     const { entityOverride = null } = options;
+    const reclosing = [];
     for (const entity of level?.entities ?? []) {
         if (isLevelPropertyTag(entity.type)) continue;
         const base = entitySemantics(entity);
@@ -938,6 +939,7 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
         for (const [tx, ty] of entitySealedTiles(entity, semantics)) {
             claim(tx - bounds.x, ty - bounds.y, semantics, `entity ${entity.type}`);
         }
+        if (semantics.opensFrom) reclosing.push({ tiles: entitySealedTiles(entity, semantics), opensFrom: semantics.opensFrom });
         for (const [tx, ty] of entityStrandedTiles(entity, semantics)) {
             if (!inside(tx - bounds.x, ty - bounds.y)) continue;
             review.push({
@@ -995,6 +997,120 @@ export function buildSeedlingRegionGrid(bounds, level, options = {}) {
             if (semantics.kind === 'sink') sinks.push({ tile: [x + bounds.x, y + bounds.y], label: semantics.label ?? null });
         }
         cells[i] = cell;
+    }
+
+    // ⛓ RULES re-closing locks — a lock the game rebuilds CLOSED on every
+    // entry (`opensFrom`: the tiles of the buttons that hold it open, this
+    // visit only) is ENTERED from a neighbour only at the price of walking
+    // from that neighbour to one of those buttons without crossing the lock:
+    // a Pareto flood out of the buttons over every cell a step can stand on
+    // (walls, sinks and manual cells stop it; gated cells add their
+    // conditions; a blocked face stops it). A neighbour the flood reaches for
+    // free enters freely, one it reaches only through gates enters on Or over
+    // those condition sets, and one it never reaches is walled. Leaving is
+    // free: whoever came in held it open from the button side.
+    if (directionalLocks) {
+        const { arrivalTiles = null } = options;
+        const arrivals = new Set((arrivalTiles ?? []).map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x)));
+        const OPP = { N: 'S', S: 'N', E: 'W', W: 'E' };
+        const STEPS = [['N', 0, -1], ['E', 1, 0], ['S', 0, 1], ['W', -1, 0]];
+        for (const { tiles, opensFrom } of reclosing) {
+            const lockCells = new Set(tiles.filter(([tx, ty]) => inside(tx - bounds.x, ty - bounds.y))
+                .map(([tx, ty]) => (ty - bounds.y) * width + (tx - bounds.x)));
+            const standable = (i) => !lockCells.has(i) && !['wall', 'sink', 'manual'].includes(cells[i].kind);
+            const byKey = new Map();
+            const keysOf = (conds) => conds.map((c) => {
+                const k = conditionKey(c);
+                byKey.set(k, c);
+                return k;
+            });
+            // labels[i] = Pareto-minimal key sets (sorted arrays) reaching cell i.
+            const labels = new Map();
+            const subset = (a, b) => a.every((k) => b.includes(k));
+            const offer = (i, set) => {
+                const list = labels.get(i) ?? [];
+                if (list.some((have) => subset(have, set))) return false;
+                labels.set(i, [...list.filter((have) => !subset(set, have)), set]);
+                return true;
+            };
+            const queue = [];
+            for (const [tx, ty] of opensFrom) {
+                const x = tx - bounds.x;
+                const y = ty - bounds.y;
+                if (!inside(x, y) || !standable(y * width + x)) continue;
+                const set = [...new Set(keysOf(cells[y * width + x].conditions))].sort();
+                if (offer(y * width + x, set)) queue.push([y * width + x, set]);
+            }
+            while (queue.length) {
+                const [i, set] = queue.shift();
+                if (!(labels.get(i) ?? []).includes(set)) continue;
+                const x = i % width;
+                const y = (i - x) / width;
+                for (const [dir, dx, dy] of STEPS) {
+                    const nx = x + dx;
+                    const ny = y + dy;
+                    const n = ny * width + nx;
+                    if (!inside(nx, ny) || !standable(n)) continue;
+                    const f1 = cells[i].faces?.[dir];
+                    const f2 = cells[n].faces?.[OPP[dir]];
+                    if (f1 === null || f2 === null) continue;
+                    const add = keysOf([...cells[n].conditions, ...(f1 ?? []), ...(f2 ?? [])]);
+                    const next = [...new Set([...set, ...add])].sort();
+                    if (offer(n, next)) queue.push([n, next]);
+                }
+            }
+            // A neighbour no button reaches is let back in only when nobody
+            // can be standing on its side except by having come through this
+            // lock while it was held: the area it reaches (any cell a step can
+            // stand on, gates and all, not through the lock) holds none of the
+            // level's `arrivalTiles`. Without `arrivalTiles` every far side is
+            // assumed to have another way in, and is walled.
+            const farSideHasArrival = (start) => {
+                if (!arrivalTiles) return true;
+                const seen = new Set([start]);
+                const stack = [start];
+                while (stack.length) {
+                    const i = stack.pop();
+                    if (arrivals.has(i)) return true;
+                    const x = i % width;
+                    const y = (i - x) / width;
+                    for (const [, dx, dy] of STEPS) {
+                        const n = (y + dy) * width + (x + dx);
+                        if (!inside(x + dx, y + dy) || seen.has(n)) continue;
+                        // A landing the transcription walls (a door in a solid)
+                        // still puts the player beside it.
+                        if (arrivals.has(n) && !lockCells.has(n)) return true;
+                        if (!standable(n)) continue;
+                        seen.add(n);
+                        stack.push(n);
+                    }
+                }
+                return false;
+            };
+            // A step INTO the lock moving `dir` comes from the neighbour on the
+            // opposite side.
+            for (const li of lockCells) {
+                const x = li % width;
+                const y = (li - x) / width;
+                const cell = cells[li];
+                for (const [dir, dx, dy] of STEPS) {
+                    const nx = x - dx;
+                    const ny = y - dy;
+                    const n = ny * width + nx;
+                    if (inside(nx, ny) && lockCells.has(n)) continue;
+                    const sets = inside(nx, ny) ? labels.get(n) ?? [] : [];
+                    if (sets.some((set) => set.length === 0)) continue;
+                    if (sets.length === 0 && inside(nx, ny) && standable(n) && !farSideHasArrival(n)) continue;
+                    cell.enter ??= {};
+                    if (sets.length === 0) {
+                        cell.enter[dir] = null;
+                        continue;
+                    }
+                    const ways = sets.map((set) => allOf(...set.map((k) => byKey.get(k))));
+                    cell.enter[dir] = [anyOf(...ways)];
+                }
+            }
+        }
     }
 
     return {
