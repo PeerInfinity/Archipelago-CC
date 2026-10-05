@@ -12762,6 +12762,62 @@ wait brings back "applied 4 strategies" (m5).
   presser behind its own lock re-raised the same `hold`, and the bound reported
   "not making progress" with no tick spent.
 
+### Seedling fidelity SF — lazy hypothesis, anytime deadline, bounded refusals
+
+The solver's BUDGET items, measured on the live wasm arrivals the JS arc
+captured (`l16-budget`). ⚖ The user, 2026-10-04: *"first search for solutions
+that don't involve sword dashes, then if it finds a dashless solution, and runs
+out of time while searching the dash options, it falls back on the solution it
+already found. This same pattern might work for other expensive and optional
+strategies."* The JS arc's worker already does that from the OUTSIDE (a
+`dashMode: 'none'` pass, then the full one); this slice is the inside. The
+report is `CC/docs/cloud-reports/seedling-fidelity-sf.md`.
+
+**SF1 — the stance hypothesis is lazy (no solve moved).** All five stance
+derivations (hold, fight, keylock, touch, swing) computed `stanceHypothesis`
+before their first candidate, and a `weigh` activator makes that a
+`deriveWeigh → deriveBlockRoute` search. `stanceReaches` reads it only after a
+candidate's direct plan fails, so it is now a memoised thunk
+(`lazyStanceHypothesis`). The one semantic difference is a THROW the eager call
+could raise and the lazy one skips; instrumented over every solve the slice
+could run, the eager call ran 163 times and threw 0. On L16's live arrival:
+dashless 1.07 s → 0.26 s, full 2.4 s → 1.5 s, every plan and trace identical.
+
+**SF2 — `solveSegment({shouldStop})`, the anytime deadline.** A new optional
+`(site) => boolean`, default `null` (today's search exactly). The CALLER owns
+the clock, so a committed solve, which passes none, cannot depend on load. It
+is consulted per site and latched per site (`DEADLINE_SITES`):
+`sword-dash` (between previews; a trip returns `why: 'deadline'` and the walk
+drives the corridor it had already certified, the same branch as any refused
+scan, so it is lossless), and `stance-hypothesis`, `block-route`,
+`kill-chaser`, which bound a slow scan and CAN turn a solve into a refusal. A
+trip is reported (`out.deadline`, `e.deadline`, a ⏱ clause), never silent.
+Witness (`solverDeadline.test.js`): `r9-solve-2`'s room plans one dash window
+(23 t); a counter tripping anywhere in that scan plays the `dashMode: none`
+keys (47 t) in L0 with no death. On L16's live arrival a trip in the PULL
+rung's walk plays the dashless 206 t plan; a trip in the last walk keeps the
+pull's dash (119 t).
+
+**SF3 — two slow refusals proved before their scans.** (a) A `clear-path`
+block route whose aim a flood cannot reach in the RELAXED room (every pushable
+removed, every breakable rock broken, every activator open) has no route; it
+returns the exhausted shape (`bound: null`) unsearched. S4's L16 pit: 7.4 s →
+0.04 s. (b) The KILL rung's chaser arm without a sword refused on both of its
+branches, so its stance scan is skipped. D's swordless L14: 0.94 s → 0.14 s.
+Both stay refusals; only their words moved, and no test asserted them.
+
+**Trap candidates**, for the catalogue to number:
+
+- an eager value read on one branch: a derivation that computes its fallback
+  before trying the direct answer pays for the fallback on every call, and
+  becomes able to THROW on calls that never needed it;
+- a wall-clock budget inside a deterministic solver: a deadline must be a
+  callback the caller owns, defaulting to none, or a committed solve starts to
+  depend on machine load;
+- "a cut search is not 'no route'", from the other side: a cheap relaxation
+  can prove "there is none" before the search, but its answer must be the
+  EXHAUSTED shape, not a bound, or the caller's control flow changes.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
