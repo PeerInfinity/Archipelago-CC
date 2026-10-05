@@ -13649,6 +13649,59 @@ steps changed and no verdict flipped:
   `ticks: 2419`. It is updated, but its mutant (2,419 restored) stays green: no
   check reads it. An untested typed copy drifts silently.
 
+### Seedling fidelity FRONTIER2 — the frontier reports both routes, and the route-only one is walked
+
+⚖ The user (2026-10-05), on the frontier mismatch: *"Both, report separately."*
+`campaign-frontier.json` had gone stale (`sources`), and re-deriving it gave
+`covered 17`. The cause is `a261ef7fd9`, which made the survey derive one leg
+per sphere-order row, Seal chests included. The chain was recorded on the old
+ROUTE-ONLY route (§12 item 6). The report is
+`CC/docs/cloud-reports/seedling-fidelity-frontier2.md`.
+
+**Two modes (D1).** `survey-seedling-route.mjs --route=full|route-only`. The
+default is `full`, the rules arc's `--through=end`, byte-inert.
+
+`route-only` keeps the rows whose item some AP rule asks for by a single-copy
+`Has` (`surveyRoute.keyItemsOf`). `Seal` is asked only as `@16` and `Totem
+Shard` only as `@5`, and `Light` by no rule. Through 3.1 that is sword → Red
+Key → Shield → Green Key → Fire, the old typed five, now derived.
+
+**Keys alone covered 26, not 30.** AP's `CanReachRegion` is start-anchored.
+From L29 the derivation took L22's teleporter into L30's north pocket and
+crossed `r0c4 → r2c10`, whose rule (RULES (A)'s spelling of a one-way lock) is
+`CanReachRegion(r2c10) ∧ Green Key`. That rule is true because r2c10 is
+reachable from the start via L31. The game opens that lock only for a player
+who went round. So route-only is also WALKED (`deriveLegs({walk})`):
+`CanReachRegion(X)` holds once an earlier leg stood in X. With both, the route
+is the chain's rooms step for step, and 30/30 SOLVE.
+
+**The bound is read off the chain.** `chainBound` takes the sphere row the
+terminal segment ends on. It replaces the typed `through-2.2`, whose label
+`70d9a87c` had moved to L25's Seal chest (the Bob Boss is now 3.1).
+
+**Both reported (D2).** `coverage: {'route-only', full}`. The top level is the
+route-only answer, unchanged in shape:
+
+| mode | through | covered | answer |
+|---|---|---|---|
+| route-only | 3.1 | **30/30** | COMPLETE |
+| full | 3.1 | **17/60** | `r9-solve-16` arrives in L18; route step 18 (L16 → L17, a Seal leg) is where the full route turns aside |
+
+`--check-frontier` checks each block, an identity row plus an answer row, and
+is **8/8 PASS**. `campaignChain.test`'s tail follows the route-only block, and
+a second row pins the full stop as a relation over the artifact. No tape moves.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A sphere label is not an address.** `--through=2.2` was typed in the
+  census and `--grow` while a re-sphering moved the label to a different
+  location. A bound named by label decays the way a typed count does (trap
+  495's shape). Read it off what it bounds.
+- **AP's reachability is not a walk's.** `CanReachRegion` is global. A route
+  derived from it can pass a one-way door from the side the game never opened,
+  and nothing in the derivation reds. Only an alignment against a walked chain
+  showed it.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
