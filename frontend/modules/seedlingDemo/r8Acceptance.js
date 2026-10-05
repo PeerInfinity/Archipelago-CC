@@ -2054,6 +2054,27 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
                 + 'solid at `FIRE_WINDOW.endTick`, gone by `BURN_WAIT_AFTER_PRESS_TICKS`, no '
                 + 'stray burn), with `overPit` / `overExit` declared from the world when the tree '
                 + 'stands on a pit tile or a teleporter']),
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY WATCHER — the `talk` verb: a SPEAKING watcher's
+         * talk circle on the frontier, passed by its own dialogue.
+         */
+        talk: Object.freeze([
+            'the gate: the WATCHER\'S STATE, not an item — with its tag set `keyNeeded` is '
+                + 'false (`Watcher.as:46`) and the dialogue opens on proximity; a tag cleared '
+                + 'when the room was built makes it SILENT in the census (no volume, no order), '
+                + 'and one cleared earlier this visit resolves to a zero-tick walk-through',
+            'the stance: a tile centre `TALK_STANCE_MARGIN` px outside the 24 px circle (so the '
+                + 'walk to it cannot overshoot into the dialogue) and within `TALK_STANCE_REACH`, '
+                + 'free in `plannerObstacleAt`, reachable by `stanceReaches`, or the player\'s own '
+                + 'position when it already qualifies',
+            'the seed: the opening box predicted on the line to the centre must clear the live '
+                + '`Seed` (`watcherSeedBox`, pages 9..19) by the margin, and is re-asked at the '
+                + 'real opening position before a page is paged — a frozen box on it is a soft-lock',
+            'the approach: `chooseHeld` toward the watcher\'s centre until the run reports '
+                + '`talking` (bounded by `TALK_APPROACH_MAX`)',
+            'the pages: `ceremonyCadenceStep` (a one-tick press of X, then its release, at '
+                + '`PRESS_GAP`) until the run reports the tag cleared, ending released; then the '
+                + 'freeze\'s kept velocity settles, and the volume joins the segment\'s exemptions']),
     }),
 
     /**

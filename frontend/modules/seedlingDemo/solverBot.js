@@ -421,6 +421,15 @@ export const OBSTACLE_STRATEGIES = Object.freeze({
     // starts with HOLDING it (the hand-authored leg's `hold` mechanic).
     'proximity-hazard:button': 'hold',
     'proximity-hazard:chest': 'chest',
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY WATCHER — **A SPEAKING WATCHER'S CIRCLE IS PASSED BY
+     * TALKING.** With its tag set the dialogue opens on proximity, freezes the
+     * walk, and ends only when it has been paged; `doneTalking()` clears the tag
+     * and the watcher never speaks again (`resolveTalkStrategy` / `execTalk`). A
+     * SILENT watcher (no text, or its tag cleared when the room was built) is no
+     * volume at all (`levelWorld`'s `speaksFrom`), so it never reaches this row.
+     */
+    'proximity-hazard:watcher': 'talk',
     'pickup': 'collect',
 });
 
@@ -546,6 +555,13 @@ export const STRATEGY_EXECUTORS = Object.freeze({
      * `resolveBurnStrategy`.
      */
     burn: execBurn,
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY WATCHER — the first executor whose whole effect is
+     * a DIALOGUE: approach until the circle opens it, page it on the ceremony
+     * cadence, and the cleared tag silences the watcher. See
+     * `resolveTalkStrategy`.
+     */
+    talk: execTalk,
 });
 
 /**
@@ -1184,6 +1200,193 @@ function execBurn(run, perTick, resolved, ctx) {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY WATCHER — the `talk` verb's bounds. A stance is a tile
+ * centre at least `TALK_STANCE_MARGIN` px OUTSIDE the talk circle (so the walk
+ * to it cannot overshoot into it and open the dialogue mid-drive) and no more
+ * than `TALK_STANCE_REACH` px from the watcher's centre. The approach from it is
+ * bounded by `TALK_APPROACH_MAX` ticks, and the paging by `TALK_PAGE_MAX`.
+ */
+const TALK_STANCE_MARGIN = 4;
+const TALK_STANCE_REACH = 48;
+const TALK_APPROACH_MAX = 60;
+const TALK_PAGE_MAX = 6000;
+const TALK_SETTLE_MAX = 60;
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY WATCHER — RESOLVE the `talk` work order: a SPEAKING
+ * watcher whose talk circle is on the frontier of a corridor.
+ *
+ * ⛔ **THE GAME'S RULE** (`NPCs/NPC.as:185-248`, `NPCs/Watcher.as:62-137`): a
+ * watcher's `keyNeeded` is `!Game.checkPersistence(tag)` (`Watcher.as:46`), so
+ * with its tag still set the dialogue opens on PROXIMITY alone
+ * (`FP.distance(x, y, p.x, p.y) <= 24`, no key), raises `Game.freezeObjects`
+ * from the next frame, and holds the player until every page has been paged
+ * with a release of X (`Input.released(p.keys[6])`). `doneTalking()` then
+ * writes the tag false, and `Watcher.update` runs `talk()` only while the tag
+ * holds, so the watcher never speaks again (the census lists it SILENT once the
+ * clear is built). There is no way PAST the circle except through the
+ * dialogue: the walk is frozen inside it.
+ *
+ * ⛔ **THE GATE IS THE SEED, NOT AN ITEM.** No item opens or skips the dialogue;
+ * the only thing that can go wrong is the live `Seed` the watcher holds out on
+ * pages 9..19 (`Watcher.as:68-74`, `new Seed(x - 18, y - 8, false)`): a frozen
+ * box that touches it collects it, which is a soft-lock (`levelRun` throws). So
+ * the stance is chosen on the side the predicted opening box keeps clear of it,
+ * and `execTalk` re-asks at the real opening position before a page is paged.
+ *
+ * ⚠ **THE TAG IS A REAL WRITE.** L114's `{114,0}` is what `FinalDoor` reads as
+ * `talkedToWatcher` (`Scenery/FinalDoor.as:50`); the verb earns it exactly as
+ * the game does, and the refusal-free path is the only one the game offers.
+ */
+function resolveTalkStrategy(run, obstacle, contacts, blocked = []) {
+    const w = (run.watchers ?? []).find((x) => x.id === obstacle.id);
+    if (!w) return null;
+    const exempt = new Set([...contacts, `proximity-hazard:${obstacle.id}`]);
+    if (w.cleared) {
+        // Talked to already THIS visit: the circle is silent, nothing to drive.
+        return {
+            strategy: 'talk', watcher: w.id, already: 'cleared', stance: null, exempt: [...exempt],
+            rejected: [{ option: `talk ${w.id}`, why: `its tag {${run.level},${w.persistTag}} `
+                + 'is already cleared this visit, so `Watcher.update` runs no `talk()`: the '
+                + 'circle is walked through' }],
+        };
+    }
+    const seed = w.seedBox;
+    // The box the dialogue would freeze, approaching the centre from (cx, cy):
+    // the first point of that line inside the circle.
+    const openingBox = (cx, cy) => {
+        const d = Math.hypot(cx - w.x, cy - w.y);
+        const k = d > 0 ? (d - w.talkRange) / d : 0;
+        return playerBoxAt(cx + (w.x - cx) * k, cy + (w.y - cy) * k);
+    };
+    const seedSafe = (box) => !seed || !rectsOverlap(
+        { x: box.x - TALK_STANCE_MARGIN, y: box.y - TALK_STANCE_MARGIN,
+            right: box.right + TALK_STANCE_MARGIN, bottom: box.bottom + TALK_STANCE_MARGIN }, seed);
+    const here = Math.hypot(run.state.x - w.x, run.state.y - w.y);
+    if (here > w.talkRange && here <= TALK_STANCE_REACH
+        && seedSafe(openingBox(run.state.x, run.state.y))) {
+        return {
+            strategy: 'talk', watcher: w.id, stance: null, at: { x: run.state.x, y: run.state.y },
+            exempt: [...exempt],
+            rejected: [{ option: 'walk around the circle', why: `${w.id} speaks (its tag is `
+                + 'set), and its circle cuts the corridor: the only way past is the dialogue' }],
+        };
+    }
+    const tx0 = Math.max(0, Math.floor((w.x - TALK_STANCE_REACH) / TILE_SIZE));
+    const ty0 = Math.max(0, Math.floor((w.y - TALK_STANCE_REACH) / TILE_SIZE));
+    const tx1 = Math.floor((w.x + TALK_STANCE_REACH) / TILE_SIZE);
+    const ty1 = Math.floor((w.y + TALK_STANCE_REACH) / TILE_SIZE);
+    const candidates = [];
+    for (let ty = ty0; ty <= ty1; ty += 1) {
+        for (let tx = tx0; tx <= tx1; tx += 1) {
+            const cx = tx * TILE_SIZE + TILE_SIZE / 2;
+            const cy = ty * TILE_SIZE + TILE_SIZE / 2;
+            const d = Math.hypot(cx - w.x, cy - w.y);
+            if (d < w.talkRange + TALK_STANCE_MARGIN || d > TALK_STANCE_REACH) continue;
+            if (plannerObstacleAt(run.world, cx, cy, null, solverPlanOpts(run, new Set(), {})) !== null) {
+                continue;
+            }
+            candidates.push({ x: cx, y: cy, d: Math.hypot(cx - run.state.x, cy - run.state.y) });
+        }
+    }
+    candidates.sort((a, b) => a.d - b.d);
+    const hypothesis = lazyStanceHypothesis(run, blocked, contacts);
+    let seeded = 0;
+    let unreached = 0;
+    for (const c of candidates) {
+        if (!seedSafe(openingBox(c.x, c.y))) { seeded += 1; continue; }
+        const reached = stanceReaches(run, { x: c.x, y: c.y }, contacts, hypothesis);
+        if (!reached) { unreached += 1; continue; }
+        return {
+            strategy: 'talk', watcher: w.id, stance: { x: c.x, y: c.y }, at: { x: c.x, y: c.y },
+            exempt: [...exempt], discharged: reached.discharged,
+            rejected: [{ option: 'walk around the circle', why: `${w.id} speaks (its tag is `
+                + 'set), and its circle cuts the corridor: the only way past is the dialogue' },
+            ...hypothesisRejection(reached.discharged)],
+        };
+    }
+    throw new SolverRefusal(`solverBot: no stance to open ${w.id}'s dialogue from in level `
+        + `${run.level} — ${candidates.length} walkable cell(s) lie ${w.talkRange + TALK_STANCE_MARGIN}`
+        + `..${TALK_STANCE_REACH} px from it; ${seeded} would freeze the box against the live Seed `
+        + `the watcher holds out on pages ${WATCHER_SEED_PAGES} (a soft-lock), and ${unreached} plan `
+        + `no corridor from (${run.state.x},${run.state.y}).`,
+    { obstacle: { kind: 'proximity-hazard', id: w.id } });
+}
+
+/** `Watcher.as:22-23`: the pages on which the live Seed is held out. */
+const WATCHER_SEED_PAGES = '9..19';
+
+/**
+ * Executor: the `talk` verb — APPROACH until the dialogue opens, PAGE it with a
+ * release of X on the ceremony cadence until the tag clears, SETTLE.
+ *
+ * ⛔ **EVERY PAGE IS A RELEASE, AND NO PRESS IS CARRIED OUT OF THE FREEZE.** The
+ * dialogue holds the run frozen (`Mobile` updates skip, so the player does not
+ * swing), the closing release `return`s out of `talk()` with the freeze already
+ * lowered, and a press still down on the first live frame would be a swing —
+ * so the cadence must end released (`ceremonyCadenceStep`, the Bob Boss
+ * dialogues' cadence).
+ */
+function execTalk(run, perTick, resolved, ctx) {
+    const from = perTick.length;
+    const refuse = (why) => {
+        throw new SolverRefusal(`${ctx.what}: ${why}`,
+            { obstacle: { kind: 'proximity-hazard', id: resolved.watcher } });
+    };
+    const watcher = () => (run.watchers ?? []).find((x) => x.id === resolved.watcher);
+    const tick = (held, what) => {
+        perTick.push(held);
+        const { transition } = run.advance(held);
+        if (transition) refuse(`the run crossed to level ${transition.to_level} ${what}.`);
+    };
+    if (resolved.already === 'cleared' || watcher()?.cleared) {
+        return { verb: 'talk', target: resolved.watcher, from, ticks: 0, pages: 0, already: 'cleared' };
+    }
+    // ── the approach: toward the centre until the dialogue OPENS ──────────
+    const w0 = watcher();
+    let opened = false;
+    for (let i = 0; i < TALK_APPROACH_MAX && !opened; i += 1) {
+        tick(new Set(chooseHeld(run.state, { x: w0.x, y: w0.y }, 0)), `approaching ${resolved.watcher}`);
+        opened = watcher().talking;
+    }
+    if (!opened) {
+        refuse(`walked toward ${resolved.watcher} for ${TALK_APPROACH_MAX} tick(s) from `
+            + `(${resolved.at.x},${resolved.at.y}) and its dialogue never opened (closest `
+            + `${watcher().distance.toFixed(2)} px; the circle is ${w0.talkRange}).`);
+    }
+    const w1 = watcher();
+    const box = playerBoxAt(run.state.x, run.state.y);
+    if (w1.seedBox && rectsOverlap(box, w1.seedBox)) {
+        refuse(`the dialogue opened with the box at (${run.state.x},${run.state.y}) on the live Seed `
+            + `the watcher holds out on pages ${WATCHER_SEED_PAGES} — collecting it is a soft-lock.`);
+    }
+    const openedAt = perTick.length;
+    // ── the pages ───────────────────────────────────────────────────────
+    let c = CEREMONY_CADENCE_START;
+    while (!watcher().cleared) {
+        if (perTick.length - openedAt > TALK_PAGE_MAX) {
+            refuse(`${resolved.watcher}'s dialogue was still open after ${TALK_PAGE_MAX} tick(s) `
+                + `(page ${watcher().page} of ${watcher().pages}).`);
+        }
+        const step = ceremonyCadenceStep(c);
+        c = step.next;
+        tick(new Set(step.held), `paging ${resolved.watcher}`);
+    }
+    if (c.pressing) refuse(`${resolved.watcher}'s dialogue closed with a press still down.`);
+    const pages = watcher().pages ?? null;
+    // ── the drift: the freeze kept the velocity, so let it decay ──────────
+    const NO_KEYS = new Set();
+    for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
+        if (i > TALK_SETTLE_MAX) refuse(`the walk never came to rest after ${resolved.watcher}'s dialogue.`);
+        tick(NO_KEYS, `settling after ${resolved.watcher}'s dialogue`);
+    }
+    const talk = run.watcherTalks.filter((r) => r.id === resolved.watcher).at(-1);
+    return { verb: 'talk', target: resolved.watcher, from, ticks: perTick.length - from,
+        openedAt, closedAt: talk?.t ?? null, pages: talk?.pages ?? pages, cause: talk?.cause ?? null,
+        flag: talk?.flag ?? null, stance: resolved.stance };
+}
+
+/**
  * ⛓⛓ SEEDLING SWIM U5 — THE `encounter` EXECUTORS, keyed by the item the
  * encounter DROPS (the location is the drop, not a placement).
  *
@@ -1329,6 +1532,7 @@ function resolveObstacleStrategy(run, strategy, obstacle, contacts, aim, allowTe
     if (strategy === 'touch') return resolveTouchStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'break') return resolveBreakStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'burn') return resolveBurnStrategy(run, obstacle, contacts, blocked);
+    if (strategy === 'talk') return resolveTalkStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'weigh') return resolveWeighStrategy(run, obstacle, contacts, blocked);
     if (strategy === 'skirt') return resolveSkirtStrategy(run, obstacle, contacts);
     if (strategy !== 'hold') return null;

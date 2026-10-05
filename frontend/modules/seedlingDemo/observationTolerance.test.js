@@ -102,7 +102,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity L14: 209 — `l14-swordless-detour`.
         // ⛓ fidelity CANCROSS: 210 — `cancross-l16-sword-none`.
         // ⛓ fidelity WATCHER: 214 — `watcher-l37-reach-l38`, `watcher-l37-reach-l44`, `watcher-l37-silent-lean`, `watcher-l114-silent`.
-        expect(names.length).toBe(214);
+        // ⛓ fidelity WATCHER: 215 — `watcher-l114-talk`.
+        expect(names.length).toBe(215);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -147,7 +148,8 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
         // ⛓ fidelity WATCHER: one per tape — 214 with the four D1 witnesses.
-        expect(tally.swapped).toBe(214);
+        // ⛓ fidelity WATCHER: 215 with `watcher-l114-talk`.
+        expect(tally.swapped).toBe(215);
     }, 600_000);
 });
 
