@@ -23,7 +23,7 @@ import { describe, expect, it } from 'vitest';
 import { loadTape } from './fixtures/index.js';
 import { stagingFromTape, createRunForStaging } from './tapeRunner.js';
 import { atlasLevelSource } from './levelSource.js';
-import { SolverRefusal, deriveChaserDetour } from './solverBot.js';
+import { DEFAULT_DASH_MODE, SolverRefusal, deriveChaserDetour } from './solverBot.js';
 import {
     CAN_CROSS_DASH_MODE, CanCrossError, DEFAULT_CONSULT_BUDGET, VERDICTS, buildArrivalStaging, canCross, classifyError,
     deriveMinimalSets, doorArrival, importClosure, solverStamp,
@@ -173,14 +173,37 @@ describe('deriveMinimalSets — the derivation question, with its caveats visibl
 });
 
 describe('the game witness — a door-built arrival\'s `can`, recorded on the game (D3)', () => {
-    it('`cancross-l16-sword-none` IS canCross\'s witness for L16 → L17 with the Sword, byte for byte', () => {
-        expect(CAN_CROSS_DASH_MODE).toBe('none');
+    // ⛓ DASHFLIP: the default returned to the solver's `all`, so this row names `none`.
+    it('`cancross-l16-sword-none` IS canCross\'s `none` witness for L16 → L17 with the Sword, byte for byte', () => {
         const r = canCross({ level: 16, exit: 17, arrival: { from: 15 }, inventory: ['sword'],
-            name: 'cancross-l16-sword-none' });
+            dashMode: 'none', name: 'cancross-l16-sword-none' });
         expect(r.verdict).toBe('can');
         expect(r.plan).toMatchObject({ ticks: 206, landed: 17, hits: 0, rungs: ['pull'] });
         const path = new URL('./fixtures/tapes/cancross-l16-sword-none.json', import.meta.url);
         expect(`${JSON.stringify(r.witness.tape, null, 4)}\n`).toBe(readFileSync(path, 'utf8'));
         expect(r.witness.replayed).toEqual({ observations: 207, landed: 17, agrees: true });
+    });
+
+    /**
+     * ⛓ SEEDLING FIDELITY DASHFLIP — the DEFAULT is the solver's `all` again, and its
+     * L16 → L17 plan is the game-recorded `dash-l16-sword-all` (117 t, PULL, 0 hits;
+     * DASH D2's `--record`), byte for byte but its prose. At the legacy dash window
+     * this plan was the refuted 111 t.
+     */
+    it('the default dash mode is the solver\'s, and its L16 → L17 plan IS `dash-l16-sword-all`, every field but its prose', () => {
+        expect(CAN_CROSS_DASH_MODE).toBe(DEFAULT_DASH_MODE);
+        expect(CAN_CROSS_DASH_MODE).toBe('all');
+        const r = canCross({ level: 16, exit: 17, arrival: { from: 15 }, inventory: ['sword'],
+            name: 'dash-l16-sword-all' });
+        expect(r.verdict).toBe('can');
+        expect(r.plan).toMatchObject({ ticks: 117, hash: '12575cff30', landed: 17, hits: 0, rungs: ['pull'] });
+        // ⚠ Every field but `description`: the DASH slice rewrote that one by hand.
+        const path = new URL('./fixtures/tapes/dash-l16-sword-all.json', import.meta.url);
+        const committed = JSON.parse(readFileSync(path, 'utf8'));
+        const planned = { ...r.witness.tape };
+        delete committed.description;
+        delete planned.description;
+        expect(JSON.stringify(planned, null, 4)).toBe(JSON.stringify(committed, null, 4));
+        expect(r.witness.replayed).toEqual({ observations: 118, landed: 17, agrees: true });
     });
 });

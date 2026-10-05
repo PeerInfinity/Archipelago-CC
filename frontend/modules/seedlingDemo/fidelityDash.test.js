@@ -125,7 +125,7 @@ describe('fidelity DASH D2 — a dash buys FOUR hit tests in the game', () => {
 
     /**
      * ⛓ WHAT THE SOLVER PLANS. At the roster's arm the L16 `all` plan is still CANCROSS's refuted
-     * 111 t one (why `canCross` defaults to `none`); at the game's arm it is the committed witness
+     * 111 t one (why `canCross` defaulted to `none` until DASHFLIP); at the game's arm it is the committed witness
      * `dash-l16-sword-all` (117 t), which the game reproduced (`--record`, 118 observations).
      */
     it('canCross L16 → L17, dashMode all: the refuted plan behind the gate, the witnessed one past it', () => {
