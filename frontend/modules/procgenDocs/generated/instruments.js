@@ -522,6 +522,7 @@ export const INSTRUMENTS = frz({
                 "derive",
                 "exit",
                 "from",
+                "idle",
                 "inventory",
                 "json",
                 "level",
@@ -570,6 +571,12 @@ export const INSTRUMENTS = frz({
                         "opt"
                     ],
                     "name": "from"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "idle"
                 },
                 {
                     "how": [
