@@ -186,7 +186,8 @@ export function foldLifted(adapter, base, ops) {
  * @returns {{overlay, ops, expressed, refused, cannot, stats}}
  */
 export function liftVanillaOverlay() {
-    const { set } = vanillaRecordSet(VANILLA, MAP);
+    // ⚖ MOONROCK: the set editor's vanilla 116 (`{patches: []}`, as `#editLoadVanilla`).
+    const { set } = vanillaRecordSet(VANILLA, MAP, { patches: [] });
     const rooms = set.rooms.map((room, level) => ({ ...room.source.record, level }));
 
     // ── the locations ────────────────────────────────────────────────────

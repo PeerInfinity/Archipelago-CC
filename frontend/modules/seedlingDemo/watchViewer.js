@@ -9488,7 +9488,9 @@ async function runEditor(params, lifetime) {
         const t0 = performance.now();
         let built;
         try {
-            built = vanillaRecordSet(vanillaSet, atlas);
+            // ⚖ MOONROCK: the editor opens the GAME's rooms — the delivery's
+            // record patches (`seedlingSetPatches.js`) are not applied here.
+            built = vanillaRecordSet(vanillaSet, atlas, { patches: [] });
         } catch (e) {
             // The function refuses BY NAME (an unjoinable path, a manifest field
             // that did not survive, an invented one); the page prints its

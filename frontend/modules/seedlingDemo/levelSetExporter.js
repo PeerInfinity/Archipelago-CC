@@ -66,6 +66,7 @@
 import { SEEDLING_TILE_SIZE } from '../flashPanel/seedlingSemantics.js';
 import { stableStringify } from '../procgenCore/contentIdentity.js';
 import { linkGeneratedRooms } from './levelSetExits.js';
+import { SEEDLING_SET_PATCHES, applySetPatches } from './seedlingSetPatches.js';
 import {
     LEVEL_SET_SCHEMA_VERSION,
     NAMED_ROOM_KEYS,
@@ -433,14 +434,32 @@ function commonDirPrefix(paths) {
  * back EMPTY — that is the proof no field was guessed, so a non-empty one is a
  * refusal here rather than a line in a report nobody reads.
  *
+ * ── ⚖ THE DELIVERED SET IS PATCHED HERE, AND ONLY HERE ─────────────────────
+ *
+ * Seedling fidelity MOONROCK (⚖ the user, 2026-10-04): the vanilla DELIVERY
+ * carries `seedlingSetPatches.SEEDLING_SET_PATCHES` (L0 without its
+ * `<moonrock>`), applied to the map's records BEFORE the join. This function is
+ * the single source of that delivery — the AP rewrite, the atlas arm's retag,
+ * `seedlingLevelSetDelivery`, the wasm engine's `deliveredSet`, the JS page's
+ * real-room mount and the vanilla-map playback map all start from it — so the
+ * patch reaches every one of them without a line of their own. The map document
+ * itself is NOT edited (it is the faithful extract), and a reader that must see
+ * the game's own rooms passes `{patches: []}`: that set is byte-identical to the
+ * unpatched one (no `provenance.patches` key is written for an empty list).
+ *
  * @param {object} embedSet  the committed vanilla manifest (116 `embed` rooms)
  * @param {object} mapDoc    the committed map extract (116 records)
+ * @param {object} [options]
+ * @param {ReadonlyArray<object>} [options.patches]  the record patches to apply
+ *   (default `SEEDLING_SET_PATCHES`; `[]` for the unpatched vanilla)
  * @returns {{set: object, report: object}} `report` is `buildLevelSet`'s, plus
- *   `join` (the measured prefixes and the match tally)
+ *   `join` (the measured prefixes and the match tally) and `patches` (the ids
+ *   applied)
  */
-export function vanillaRecordSet(embedSet, mapDoc) {
+export function vanillaRecordSet(embedSet, mapDoc, { patches = SEEDLING_SET_PATCHES } = {}) {
     const rooms = requireArray(embedSet?.rooms, 'the embed set\'s `rooms`');
-    const levels = requireArray(mapDoc?.levels, 'the map document\'s `levels`');
+    const levels = applySetPatches(requireArray(mapDoc?.levels, 'the map document\'s `levels`'), patches);
+    const patchIds = patches.map((p) => p.id);
     const levelRoot = mapDoc?.source?.level_root;
     if (typeof levelRoot !== 'string' || levelRoot === '') {
         fail('levelSetExporter: vanillaRecordSet needs the map document\'s `source.level_root` — '
@@ -534,6 +553,9 @@ export function vanillaRecordSet(embedSet, mapDoc) {
                 generator: mapDoc.generator ?? null,
                 source: mapDoc.source,
             },
+            // ⚖ MOONROCK: which record patches this delivery carries, by id
+            // (`seedlingSetPatches.js` holds their bodies and reasons).
+            ...(patchIds.length > 0 ? { patches: patchIds } : {}),
         },
     });
 
@@ -588,6 +610,8 @@ export function vanillaRecordSet(embedSet, mapDoc) {
                 matched_exact: exact,
                 matched_by_suffix: bySuffix,
             },
+            /** The record patches applied before the join (ids, in order). */
+            patches: patchIds,
         },
     };
 }
