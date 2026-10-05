@@ -341,8 +341,14 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
       getRegionInfo: initializationApi.getModuleFunction?.('procgenPlayer', 'getRegionInfo'),
       retakeStartHop: initializationApi.getModuleFunction?.('procgenPlayer', 'retakeStartHop'),
     }),
-    // ⛓ RESTART — a walk in flight is stopped before the warp (the bot re-plans from the start).
-    stopBotWalks: () => playbackControllers.filter((c) => c?.busy?.() === true).map((c) => c.stop()).length,
+    // ⛓ RESTART — a walk in flight is stopped before the warp (the bot re-plans from the start), and so is a wasm
+    // engine that is idle but still DRIVING: its mid-room delivery gate stays installed (and a tape may stay frozen)
+    // until `stop()`, which releases the hold and lets the held delivery through.
+    stopBotWalks: () => playbackControllers.filter((c) => {
+      if (c?.busy?.() === true) return true;
+      const w = c?.status?.()?.wasm ?? null;
+      return !!(w && (w.driving || w.gate || w.frozen));
+    }).map((c) => c.stop()).length,
   });
   seedlingRegionGlue.start();
 

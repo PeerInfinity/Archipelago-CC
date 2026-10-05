@@ -288,8 +288,11 @@ async function main() {
                 const { getSeedlingRegionGlue } = await import('./modules/flashPanel/index.js');
                 const { substrateRegistry } = await import('./modules/shared/procgen/substrateRegistry.js');
                 const c = substrateRegistry.get('flash_seedling')?.getPlaybackController?.();
+                const w = c?.status?.()?.wasm ?? null;
                 return { status: bot?.getStatus?.() ?? '', region: bot?.getCurrentRegion?.() ?? null,
-                    busy: c?.busy?.() ?? null, glueRegion: getSeedlingRegionGlue()?.binding?.region ?? null };
+                    busy: c?.busy?.() ?? null, glueRegion: getSeedlingRegionGlue()?.binding?.region ?? null,
+                    // ⛓ the wasm engine's mid-room delivery gate / frozen tape (recorded, not asserted)
+                    engine: w ? { phase: w.phase, driving: w.driving, gate: w.gate, frozen: w.frozen } : null };
             });
             const t0 = Date.now();
             // the walk leaves the start and is IN FLIGHT in another room

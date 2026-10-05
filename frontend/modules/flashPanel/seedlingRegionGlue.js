@@ -344,8 +344,10 @@ export class SeedlingRegionGlue {
             this.lastRestart = { taken: false, why: null, start, substrate, at: Date.now() };
             return this.lastRestart;
         }
-        // ⛓ A walk in flight is STOPPED before the warp: its tape belongs to the room it was solving.
-        // The Playback Bot re-plans from the start on the region move that follows.
+        // ⛓ A walk in flight is STOPPED before the warp: its tape belongs to the room it was solving. So is a wasm
+        // engine still driving between goals: `stop()` releases a held room and lifts the mid-room delivery gate,
+        // so nothing the gate held back waits on a room the player has left. The Playback Bot re-plans from the
+        // start on the region move that follows.
         const stopped = this.stopBotWalks();
         const r = procgen?.retakeStartHop?.() ?? { taken: false, why: 'procgenPlayer has no retakeStartHop' };
         if (r.taken) this.stats.restarts += 1;
