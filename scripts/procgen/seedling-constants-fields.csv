@@ -1661,6 +1661,42 @@ frontend/modules/seedlingDemo/enemyDamage.js|createStaticBodyDamage|createStatic
 frontend/modules/seedlingDemo/tapeFormat.js|appendInventorySlots|ha1fb4806|0|0,rule,sentinel,,ghostsword fusion inserts at slot 0
 frontend/modules/seedlingDemo/tapeFormat.js|appendInventorySlots|h43859327|1|0,rule,sentinel,,firewand fusion inserts at slot 1
 frontend/modules/seedlingDemo/tapeFormat.js|remove|h6c45aaa8|0|1,rule,sentinel,,removeItem's primary % 0 is NaN; set primary(int) coerces it to 0
+frontend/modules/seedlingDemo/drill.js|(module)|h6996bd87|8|0,structural,,,TILE / 2 cell centre (Drill.as:24)
+frontend/modules/seedlingDemo/drill.js|(module)|h6db554ad|8|0,structural,,,TILE / 2 cell centre (Drill.as:24)
+frontend/modules/seedlingDemo/drill.js|(module)|h9bdb8695|10|0,physics,magnitude,,setHitbox(10; 10; 5; 5) (Drill.as:37)
+frontend/modules/seedlingDemo/drill.js|(module)|hdfc14961|10|0,physics,magnitude,,setHitbox(10; 10; 5; 5) (Drill.as:37)
+frontend/modules/seedlingDemo/drill.js|(module)|h632b8068|5|0,physics,magnitude,,setHitbox origin (Drill.as:37)
+frontend/modules/seedlingDemo/drill.js|(module)|h25dba1ac|5|0,physics,magnitude,,setHitbox origin (Drill.as:37)
+frontend/modules/seedlingDemo/drill.js|(module)|hca405bf3|48|0,rule,magnitude,Enemies/Drill.as:runRange,hop range
+frontend/modules/seedlingDemo/drill.js|(module)|hcca196b5|16|0,structural,,,Tile.w
+frontend/modules/seedlingDemo/drill.js|(module)|h7911e2d3|3|0,rule,count,Enemies/Enemy.as:hitsMax,inherited
+frontend/modules/seedlingDemo/drill.js|(module)|h6c9e1347|30|0,rule,magnitude,Enemies/Enemy.as:hitsTimerMax,inherited i-frame
+frontend/modules/seedlingDemo/drill.js|(module)|h198fed34|3|0,physics,magnitude,,Enemy.hitPlayer p.hit(this; 3; ...) (Enemy.as:218)
+frontend/modules/seedlingDemo/drill.js|(module)|hfcf9fc77|1|0,rule,count,Enemies/Enemy.as:damage,contact damage
+frontend/modules/seedlingDemo/drill.js|(module)|h4a81fe4d|5|0,rule,magnitude,,sprDrill.add(drill; 5 frames; drillAnimSpeed 20) (Drill.as:27)
+frontend/modules/seedlingDemo/drill.js|(module)|hf0200ec8|20|0,rule,magnitude,,sprDrill.add(drill; 5 frames; drillAnimSpeed 20) (Drill.as:27)
+frontend/modules/seedlingDemo/drill.js|(module)|h5d6cf349|4|0,rule,magnitude,,sprDrill.add(undrill; 4 frames; 20) (Drill.as:28)
+frontend/modules/seedlingDemo/drill.js|(module)|hd544471b|20|0,rule,magnitude,,sprDrill.add(undrill; 4 frames; 20) (Drill.as:28)
+frontend/modules/seedlingDemo/drill.js|(module)|h335b3169|2|0,rule,magnitude,,sprDrill.add(hit; 2 frames; 20; loop) (Drill.as:30)
+frontend/modules/seedlingDemo/drill.js|(module)|hb7a73d4f|20|0,rule,magnitude,,sprDrill.add(hit; 2 frames; 20; loop) (Drill.as:30)
+frontend/modules/seedlingDemo/drill.js|(module)|hb99b86ca|6|0,rule,magnitude,,sprDrill.add(die; 6 frames; 10) (Drill.as:29)
+frontend/modules/seedlingDemo/drill.js|(module)|h104e5c29|10|0,rule,magnitude,,sprDrill.add(die; 6 frames; 10) (Drill.as:29)
+frontend/modules/seedlingDemo/drill.js|newDrill|hbe0ccea2|0|0,structural,,,initial state zero
+frontend/modules/seedlingDemo/drill.js|newDrill|hbe0ccea2|0|1,structural,,,initial state zero
+frontend/modules/seedlingDemo/drill.js|newDrill|hbe0ccea2|0|2,structural,,,initial state zero
+frontend/modules/seedlingDemo/drill.js|stepDrill|h622edb14|0|0,structural,,,hitUpdate decrement (Enemy.as:225)
+frontend/modules/seedlingDemo/drill.js|stepDrill|hf8fbda88|1|0,structural,,,hitUpdate decrement (Enemy.as:225)
+frontend/modules/seedlingDemo/drill.js|stepDrill|hf496ca65|0|0,structural,,,hitsTimer <= 0 gate (Enemy.as:213)
+frontend/modules/seedlingDemo/drill.js|stepDrill|h564fb4ce|0|0,structural,,,hitsTimer > 0 (Drill.as:58)
+frontend/modules/seedlingDemo/drill.js|stepDrill|h1f7c2b56|2|0,structural,,,sign and half tile (Drill.as:84)
+frontend/modules/seedlingDemo/drill.js|stepDrill|hdcd9e3e8|1|0,structural,,,sign and half tile (Drill.as:84)
+frontend/modules/seedlingDemo/drill.js|stepDrill|hdcd9e3e8|-1|0,structural,,,sign and half tile (Drill.as:84)
+frontend/modules/seedlingDemo/drill.js|stepDrill|h9539c975|2|0,structural,,,sign and half tile (Drill.as:88)
+frontend/modules/seedlingDemo/drill.js|stepDrill|ha325a64f|1|0,structural,,,sign and half tile (Drill.as:88)
+frontend/modules/seedlingDemo/drill.js|stepDrill|ha325a64f|-1|0,structural,,,sign and half tile (Drill.as:88)
+frontend/modules/seedlingDemo/drill.js|stepDrill|hdd201702|1|0,structural,,,ledger counter
+frontend/modules/seedlingDemo/drill.js|hitDrill|h55a8f533|1|0,structural,,,Enemy.hit gates (Enemy.as:146)
+frontend/modules/seedlingDemo/drill.js|hitDrill|h0d1d9423|0|0,structural,,,Enemy.hit hits < hitsMax (Enemy.as:152)
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

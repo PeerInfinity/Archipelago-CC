@@ -580,6 +580,7 @@ export function pressRespondersIn(world, rect, {
                 as3: 'Enemy',
                 enemyClass: c.as3,
                 chaserId: id,
+                ...(c.family ? { family: c.family } : {}),
                 // ⛔ THE PLACEMENT, not the live position: `x`/`y` are the
                 // census identity every id and every ledger row is keyed on
                 // (`tag@x,y`), and a caller that rebuilt the key from the live
