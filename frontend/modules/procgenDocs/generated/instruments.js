@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 44,
-            "count": 87,
+            "browser": 45,
+            "count": 88,
             "id": "probe"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 333,
-        "browser": 109,
+        "blockStyle": 334,
+        "browser": 110,
         "cited": 158,
-        "files": 344,
+        "files": 345,
         "lineStyle": 11,
-        "withDocblock": 344,
-        "withFlags": 262
+        "withDocblock": 345,
+        "withFlags": 263
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8508,6 +8508,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ctor-args — THE CONSTRUCTOR ARGUMENT-TABLE AUDIT.",
             "path": "scripts/procgen/probe-seedling-ctor-args.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "out",
+                "tape",
+                "tape-file"
+            ],
+            "file": "probe-seedling-dash-window.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "arrows"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape-file"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity DASH, D1: **HOW MANY HIT TESTS DOES A SWORD PRESS BUY — ASKED OF THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-dash-window.mjs"
         },
         {
             "argvHelpers": [
