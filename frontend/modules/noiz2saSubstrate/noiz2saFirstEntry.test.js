@@ -1,10 +1,10 @@
 /**
- * N4b — a region's first ENTRY explores it fully, and the queued move out of a region (`noiz2saFirstEntry.js`): how
- * many explores a full explore is, the once-per-region entry watcher, and which queued move leaves the region.
+ * N4b — a region's first ENTRY explores it fully, and (N4c) the next queued action of a region (`noiz2saFirstEntry.js`):
+ * how many explores a full explore is, the once-per-region entry watcher, and which queued action comes next.
  */
 import { describe, expect, it } from 'vitest';
 
-import { exploresToFullyExplore, createFirstEntryWatcher, queuedMoveFrom } from './noiz2saFirstEntry.js';
+import { exploresToFullyExplore, createFirstEntryWatcher, queuedNextFrom } from './noiz2saFirstEntry.js';
 
 describe('exploresToFullyExplore', () => {
     it('one explore per location and per exit (each explore discovers one undiscovered item)', () => {
@@ -29,18 +29,30 @@ describe('the first-entry watcher', () => {
     });
 });
 
-describe('queuedMoveFrom', () => {
+describe('queuedNextFrom (N4c)', () => {
     const mv = (s, d, e) => ({ type: 'regionMove', sourceRegion: s, destinationRegion: d, exitUsed: e });
-    const queue = [mv('Menu', 'A', 'm'), { type: 'locationCheck', sourceRegion: 'A' }, mv('A', 'B', 'ab'), mv('B', 'C', 'bc')];
-    it('the next move leaving the region, skipping the move into it', () => {
-        expect(queuedMoveFrom(queue, 0, 'A')).toEqual({ exit: 'ab', target: 'B', index: 2 });
-        expect(queuedMoveFrom(queue, 2, 'A')).toEqual({ exit: 'ab', target: 'B', index: 2 });
-        expect(queuedMoveFrom(queue, 2, 'B')).toEqual({ exit: 'bc', target: 'C', index: 3 });
+    const ck = (r, l = `${r}__clear`) => ({ type: 'locationCheck', sourceRegion: r, locationName: l });
+    const queue = [mv('Menu', 'A', 'm'), ck('A'), mv('A', 'B', 'ab'), mv('B', 'C', 'bc')];
+    it('the region\'s check, or the next move leaving the region, skipping the move into it', () => {
+        expect(queuedNextFrom(queue, 0, 'A')).toEqual({ kind: 'check', locationName: 'A__clear', index: 1 });
+        expect(queuedNextFrom(queue, 2, 'A')).toEqual({ kind: 'move', exit: 'ab', target: 'B', index: 2 });
+        expect(queuedNextFrom(queue, 2, 'B')).toEqual({ kind: 'move', exit: 'bc', target: 'C', index: 3 });
     });
-    it('none when the next move leaves another region, or there is no move left', () => {
-        expect(queuedMoveFrom(queue, 0, 'B')).toBeNull();
-        expect(queuedMoveFrom(queue, 4, 'C')).toBeNull();
-        expect(queuedMoveFrom([], 0, 'A')).toBeNull();
-        expect(queuedMoveFrom(null, 0, 'A')).toBeNull();
+    it('a completed entry, or a check of a checked location, is passed over', () => {
+        const done = [mv('Menu', 'A', 'm'), { ...ck('A'), completed: true }, mv('A', 'B', 'ab')];
+        expect(queuedNextFrom(done, 0, 'A')).toMatchObject({ kind: 'move', exit: 'ab' });
+        expect(queuedNextFrom(queue, 0, 'A', { isChecked: (l) => l === 'A__clear' })).toMatchObject({ kind: 'move', exit: 'ab' });
+    });
+    it('a check that ends the queue is the next action; none after it', () => {
+        const q = [mv('Menu', 'A', 'm'), ck('A')];
+        expect(queuedNextFrom(q, 0, 'A')).toMatchObject({ kind: 'check' });
+        expect(queuedNextFrom(q, 0, 'A', { isChecked: () => true })).toBeNull();
+    });
+    it('none when the next action is another region\'s, or nothing is left', () => {
+        expect(queuedNextFrom(queue, 0, 'B')).toBeNull();
+        expect(queuedNextFrom([ck('B')], 0, 'A')).toBeNull();
+        expect(queuedNextFrom(queue, 4, 'C')).toBeNull();
+        expect(queuedNextFrom([], 0, 'A')).toBeNull();
+        expect(queuedNextFrom(null, 0, 'A')).toBeNull();
     });
 });

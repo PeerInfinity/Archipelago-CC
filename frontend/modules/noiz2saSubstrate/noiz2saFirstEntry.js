@@ -1,6 +1,6 @@
 /**
- * Noiz2sa substrate — a region's FIRST ENTRY explores it fully, and the move the loops queue holds out of a region
- * (slice N4b). Pure: `index.js` wires it.
+ * Noiz2sa substrate — a region's FIRST ENTRY explores it fully (slice N4b), and the next action the loops queue holds
+ * for a region (N4c: a move out of it, or its location check). Pure: `index.js` wires it.
  *
  * ⚖ 2026-10-05 (the coordinating session's brief change, the user's words): "The Noiz2sa regions should count as fully
  * explored when they are first entered, not when they are first cleared." (It replaced "a first clear should have the
@@ -40,17 +40,26 @@ export function createFirstEntryWatcher() {
 }
 
 /**
- * The move the loops queue holds OUT of `region` for the visit the player is on: from the cursor, skipping the
- * move INTO the region (the cursor may still be on it), the next `regionMove`, if it leaves `region`. Anything else
- * (no move, or a move from another region first) is no queued move. `from` is the cursor (0 for a queue that has not
- * started). → `{exit, target, index}` or null.
+ * The NEXT action the loops queue holds for the visit the player is on in `region` (N4c): from the cursor, skipping
+ * the move INTO the region (the cursor may still be on it) and every entry already completed, the first of
+ *  - a `locationCheck` of the region whose location is not checked yet (`isChecked(locationName)`; loops skips a
+ *    checked one too) → `{kind: 'check', locationName, index}`;
+ *  - a `regionMove` out of the region → `{kind: 'move', exit, target, index}`.
+ * A move from another region first, or nothing, is no next action (null): the page offers the choice list. `from` is
+ * the cursor (0 for a queue that has not started). Other entry types are passed over.
  */
-export function queuedMoveFrom(queue, from, region) {
+export function queuedNextFrom(queue, from, region, { isChecked = () => false } = {}) {
     const q = Array.isArray(queue) ? queue : [];
     for (let i = Math.max(0, from | 0); i < q.length; i++) {
         const a = q[i];
-        if (a?.type !== 'regionMove') continue;
-        if (a.sourceRegion === region) return { exit: a.exitUsed ?? null, target: a.destinationRegion ?? null, index: i };
+        if (!a || a.completed) continue;
+        if (a.type === 'locationCheck') {
+            if (a.sourceRegion !== region) return null;
+            if (isChecked(a.locationName)) continue;
+            return { kind: 'check', locationName: a.locationName ?? null, index: i };
+        }
+        if (a.type !== 'regionMove') continue;
+        if (a.sourceRegion === region) return { kind: 'move', exit: a.exitUsed ?? null, target: a.destinationRegion ?? null, index: i };
         if (a.destinationRegion === region) continue;
         return null;
     }

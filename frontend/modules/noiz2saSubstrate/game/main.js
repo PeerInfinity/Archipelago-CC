@@ -7,20 +7,23 @@
  * from its start at once; the clear is the region's one location; after it the player may leave by an exit.
  *
  * The `__swfBridge` contract (flashSubstrate/bridge.js, injected by the host panel):
- *   game side, here:   configure({params: {start, end, seed, exits}, regionId, checkedLocations})
- *   host side, called: sendLocation('clear') on the clear; sendExit(exitName, null) to leave;
+ *   game side, here:   configure({params: {move, check, seed, exits}, regionId, checkedLocations})
+ *   host side, called: sendLocation('clear') when a CHECK run clears; sendExit(exitName, null) when a MOVE run clears;
  *                      setPlayClock(running, {gameSeconds, score}) on every state change and every whole game
  *                      second (running = the game is stepping; the stats are the VISIT's so far, every attempt).
- *   the bot (N4):      botWalkTo(goal, options) — goal {kind: 'pickup', id: 'clear'} (play until the clear) or
- *                      {kind: 'portal', id: exitName} (play until the clear, then leave by it); options = the
+ *   the bot (N4):      botWalkTo(goal, options) — goal {kind: 'pickup', id: 'clear'} (play the check run to its clear)
+ *                      or {kind: 'portal', id: exitName} (play the move run to its clear, leaving by it); options = the
  *                      host's bot settings {knobs, tracks, botSeed, speed, retryCap} (noiz2saTraining.js
  *                      botWalkOptions); botStop() hands the region back.
- *   host state (N4b):  setHostState({loopMode, bot, move}) — whether loop mode is on, the bot's options for this
- *                      visit (the visit's bot seed, the knobs at the CURRENT tracks), and the move the loops queue
- *                      has queued out of the region ({region, exit}, or null); sent on every region load and on every
- *                      change, in any order with configure.
- *                      requestHost({kind: 'chooseExit', exitName}) — no move is queued: the player chose this exit
- *                      (the host queues the move and runs the queue).
+ *   host state (N4b):  setHostState({loopMode, bot, region, next, checked, live}) — whether loop mode is on, the
+ *                      bot's options for this visit (the visit's bot seed, the knobs at the CURRENT tracks), the next
+ *                      action the loops queue holds for the region (`next`: {region, kind: 'move', exit} or {region,
+ *                      kind: 'check'}, or null), whether its location is checked, and whether the queue is parked on
+ *                      the region for live play; sent on every region load and on every change, in any order with
+ *                      configure.
+ *                      requestHost({kind: 'chooseExit', exitName} | {kind: 'chooseCheck'}) — in loop mode, nothing is
+ *                      queued for the region: the player chose from the choice list (the host queues the action and
+ *                      runs the queue).
  * Opened directly in a tab (no host), the page plays the region in its URL: ?start=1:2&end=1:3&seed=1.
  *
  * The game only steps while the player is playing it: a configured region waits for a game key (or a click), and
@@ -32,22 +35,25 @@
  * the region from where it is; a hit restarts the region and the bot plays the next attempt with the next attempt's
  * bot seed (segment-run.js attemptBotSeed), until the clear or `retryCap` failed attempts (0 = no cap). It plays at
  * `speed` game frames per 16 ms. New settings sent for the same goal apply from the next attempt (the speed at once).
- * Keys: arrows/WASD move, Z fire, X slow, P pause, R play the region again from its start, B let the bot play (and
- * take the controls back), 1–9 leave by that exit once the exits are open.
+ * Keys: arrows/WASD move, Z fire, X slow, P pause, R play the run again from its start, B let the bot play (and
+ * take the controls back); in the choice list 1–9 pick that exit and C the check.
  *
- * N4b — in LOOP MODE the move out of a region IS playing it to a clear (⚖ 2026-10-05: "clearing the level should be
- * counted as part of the "move" action"): the exits open only after a clear on THIS visit, cleared before or not, and
- * the clear PERFORMS the queued move (the page leaves by its exit). With no move queued (⚖ "the Noiz2sa panel should
- * display a list of available exits, and when the player chooses one of the exits, that's when the game starts") the
- * region waits in `choosing`: the exit buttons are the choice, and picking one asks the host to queue that move; the
- * game starts when the host reports it queued. Outside loop mode an already-checked region opens its exits at once,
- * and the player leaves by hand, as before. Every visit plays with its own bot
- * seed (the host draws it per region load), reported in the play-clock stats as `botSeed` (so a Record summary
- * carries it); `botFrames` counts the frames the bot played on the visit.
+ * N4b/N4c — TWO RUNS per region. A MOVE run plays the move span on every visit (cleared before or not) and its clear
+ * PERFORMS the move (the page leaves by its exit). A CHECK run (⚖ 2026-10-05: "I want the location check to be a
+ * separate action from the move") plays the check span — twice the move's scenes from the same start — and its clear
+ * checks the location; the player STAYS in the region. A hit restarts the current run's span. Which run plays is the
+ * next queued action for the region (loop mode, the host's `next`) or the player's pick from the CHOICE LIST: with
+ * nothing queued (or outside loop mode, one behaviour everywhere) the region waits in `choosing`, offering every exit
+ * and, until the location is checked, the check. In loop mode a pick asks the host to queue the action as the Loops
+ * panel does, and the run starts when the host reports it queued; outside loop mode the run starts at once (nothing is
+ * queued and nothing drains). After a check run the region goes back to the choice list (now exits only) or to the
+ * next queued action. Every visit plays with its own bot seed (the host draws it per region load), reported in the
+ * play-clock stats as `botSeed` (so a Record summary carries it); `botFrames` counts the frames the bot played on the
+ * visit.
  *
  * Test surface (not the contract): `window.__noiz2saDebug()` reads the state; `window.__noiz2saTest` drives
  * injected input (`play(tape, {speed})` — a run-length tape, see noiz2saRegion.js `encodeInputs`), the step
- * speed, and `leave(exitName)`.
+ * speed, `leave(exitName)`, and the choice list (`choose(exitName)`, `chooseCheck()`).
  */
 import { newGame, stepGame, input } from '../../bulletml-dodge/src/game/noiz2sa-game.js';
 import { loadNoiz2saPatternsWeb } from '../../bulletml-dodge/src/game/patterns-web.js';
@@ -55,7 +61,7 @@ import { draw, FIELD_X, invalidatePanels } from '../../bulletml-dodge/web/draw.j
 import { packBulletML } from '../../bulletml-dodge/src/bulletml.js';
 import { botOptions } from '../../bulletml-dodge/src/game/human.js';
 import { attemptBotSeed } from '../../bulletml-dodge/src/game/segment-run.js';
-import { createRegionRun, regionSpanOf, parsePosition, showSpan, decodeInputs, FPS } from '../noiz2saRegion.js';
+import { createRegionRun, regionSpansOf, parsePosition, showSpan, decodeInputs, FPS } from '../noiz2saRegion.js';
 
 const CLEAR_ID = 'clear';
 const INTERVAL_BASE = 16; // ms per frame (noiz2sa.c)
@@ -68,10 +74,15 @@ const embedded = window !== window.parent;
 const app = {
     patterns: null, loadError: null,
     pending: null,          // a configure that arrived before the patterns
-    regionId: null, span: null, exits: [], alreadyChecked: false,
+    regionId: null, exits: [], alreadyChecked: false,
+    spans: null,            // N4c: the region's {move, check, seed}
+    span: null,             // the current run's span {start, end, seed}
+    runPlayed: false,       // a frame of the current run was stepped (a run nobody played may be swapped for another)
+    runKind: null,          // N4c: the current run — 'move' (its clear performs the move) | 'check' (its clear checks)
+    runExit: null,          // a move run's exit (the queued move's, or the player's pick outside loop mode)
     run: null,
-    state: 'waiting',       // waiting (no region) | choosing (loop mode, no move queued) | ready | playing | paused | cleared
-    clearSent: false, clearedThisVisit: false,
+    state: 'waiting',       // waiting (no region) | choosing (the choice list) | ready | playing | paused | cleared
+    clearSent: false, moveClearedThisVisit: false, checkClearedThisVisit: false,
     tape: null, tapeAt: 0, injected: false, speed: 1,
     effects: [], message: '', lastTime: null, acc: 0,
     // the VISIT so far (every attempt, R included): what the play clock reports and the host trains on
@@ -82,8 +93,12 @@ const app = {
     loopMode: false,        // N4b, from the host: in loop mode the exits open only after a clear on this visit
     hostBot: null,          // N4b, from the host: the bot's options for this visit (seed, knobs at the current tracks)
     botFrames: 0,           // the frames the bot played on this visit
-    move: null,             // N4b, from the host: the queued move out of the region {region, exit}, or null
-    chosenExit: null,       // N4b: the exit the player picked in `choosing` (the game starts when it is queued)
+    next: null,             // N4c, from the host: the next queued action for the region {region, kind, exit?}, or null
+    hostChecked: null,      // N4c, from the host: whether the region's location is checked (null: not said yet)
+    hostLive: false,        // N4c, from the host: the loops queue is parked on the region (a pick's run starts then)
+    chosen: null,           // N4c, loop mode: the pick from the choice list {kind, exitName} (the run starts when queued)
+    runs: [],               // N4c, test surface: this visit's runs so far {kind, exit, span, cleared, clearFrames, sceneEnds}
+    sceneEnds: [],          // the current attempt's scene ends (attempt frames)
 };
 
 // ── keyboard ──
@@ -102,6 +117,7 @@ addEventListener('keydown', (e) => {
     held.add(e.code);
     if (e.repeat) return;
     if (/^Digit[1-9]$/.test(e.code)) { leaveBy(app.exits[Number(e.code.slice(5)) - 1]?.exitName); return; }
+    if (e.code === 'KeyC') { chooseCheck(); return; }
     if (e.code === 'KeyR') { playAgain(); return; }
     if (e.code === 'KeyB') { toggleAssist(); return; }
     if (e.code === 'KeyP') { if (app.state === 'playing') setState('paused'); else if (app.state === 'paused') setState('playing'); return; }
@@ -143,40 +159,119 @@ const visitBotSeed = () => app.hostBot?.botSeed ?? app.bot?.opts.botSeed ?? null
 const visitScore = () => app.scoreFolded + (app.run && !app.run.cleared ? app.run.score : 0);
 
 // ── the region ──
-function startRegion({ regionId, span, exits, alreadyChecked }) {
+function startRegion({ regionId, spans, exits, alreadyChecked }) {
     app.configures++;
-    app.regionId = regionId; app.span = span; app.exits = exits; app.alreadyChecked = alreadyChecked;
+    const prevRegion = app.regionId;
+    app.regionId = regionId; app.spans = spans; app.exits = exits; app.alreadyChecked = alreadyChecked;
     stopBot();
-    app.run = createRegionRun(span, { engine: { newGame, stepGame }, patterns: app.patterns });
-    app.clearSent = false; app.clearedThisVisit = false; app.tape = null; app.injected = false; app.effects = []; app.message = '';
+    app.run = null; app.runKind = null; app.runExit = null; app.span = null; app.runs = [];
+    app.clearSent = false; app.moveClearedThisVisit = false; app.checkClearedThisVisit = false;
+    app.tape = null; app.injected = false; app.effects = []; app.message = '';
     app.visitFrames = 0; app.scoreFolded = 0; app.attemptInputs = []; app.speed = 1; app.botFrames = 0;
-    app.chosenExit = null;
-    setState(needsChoice() ? 'choosing' : 'ready');
+    // a pick from the choice list survives the region configured again (a queue never started starts from its first
+    // move, which enters the region again): the run starts once the host reports the pick queued
+    if (regionId !== prevRegion) app.chosen = null;
+    app.hostChecked = null; app.hostLive = false; // the host's word is per region (setHostState)
+    if (app.next && app.next.region !== regionId) app.next = null;
+    // a region always has a run to draw: the move run until something else is decided
+    prepareRun('move', null);
+    decide();
+}
+
+/**
+ * whether the region's location is checked: the host's word once it gave one (it says again whenever its snapshot
+ * changes), else configure's — or a check run cleared outside loop mode, until the host says
+ */
+const isChecked = () => app.hostChecked ?? app.alreadyChecked;
+/** the next queued action for THIS region (loop mode), or null */
+const hostNext = () => (app.loopMode && app.next && app.next.region === app.regionId ? app.next : null);
+/** the choice list: every exit, and the check until the location is checked (N4c) */
+const choices = () => [
+    ...app.exits.map((e) => ({ kind: 'move', exitName: e.exitName })),
+    ...(app.regionId && !isChecked() ? [{ kind: 'check', exitName: null }] : []),
+];
+
+/**
+ * A new run of the region: `kind` 'move' plays the move span (its clear leaves by `exit`), 'check' the check span (its
+ * clear checks the location). The visit's stats go on; an abandoned attempt's score counts.
+ */
+function prepareRun(kind, exit, { start = false } = {}) {
+    if (app.run && runUntouched()) app.runs.pop(); // a run nobody played is no run of the visit
+    else if (app.run && !app.run.cleared) app.scoreFolded += app.run.score;
+    app.runKind = kind; app.runExit = kind === 'move' ? exit : null; app.runPlayed = false;
+    app.span = { ...app.spans[kind], seed: app.spans.seed };
+    app.run = createRegionRun(app.span, { engine: { newGame, stepGame }, patterns: app.patterns });
+    app.runs.push({ kind, exit: app.runExit, span: app.span, cleared: false, clearFrames: null });
+    app.attemptInputs = []; app.sceneEnds = []; app.clearSent = false; app.tape = null; app.tapeAt = 0; app.injected = false; app.speed = 1;
+    if (kind === 'move') app.moveClearedThisVisit = false;
+    app.message = kind === 'check' ? 'the check: clear it to check the location'
+        : exit ? `the move: its clear leaves by ${exit}` : '';
+    invalidatePanels();
+    setState(start ? 'playing' : 'ready');
     renderExits();
 }
 
-/** the exit of the move queued out of THIS region, or null */
-const queuedExit = () => (app.move && app.move.region === app.regionId ? app.move.exit : null);
-/** loop mode, no move queued, nobody driving: the player picks the exit before the game starts (N4b) */
-const needsChoice = () => app.loopMode && !!app.regionId && !queuedExit() && !app.bot && !app.chosenExit && app.exits.length > 0;
+/** nothing played on the current run yet (a fresh run can be swapped for another) */
+const runUntouched = () => !!app.run && !app.runPlayed;
 
-/** `choosing`: the player picked an exit — the host queues the move; the game starts when it reports it queued */
-function chooseExit(exitName) {
-    if (app.state !== 'choosing' || !app.exits.some((e) => e.exitName === exitName)) return false;
-    app.chosenExit = exitName;
-    app.message = `chosen: leave by ${exitName} — queueing the move`;
+/**
+ * What the region does next when it is free to (choosing, cleared, or a run nobody has played yet): in loop mode the
+ * host's next queued action — its run; nothing queued → the choice list. Outside loop mode the choice list. A run in
+ * progress, or a bot's, is left alone; a queued move's exit is followed even mid-run.
+ */
+function decide() {
+    if (!app.run || app.bot) return;
+    const n = hostNext();
+    if (n?.kind === 'move' && app.runKind === 'move' && !app.run.cleared) app.runExit = n.exit;
+    const free = app.state === 'choosing' || app.state === 'cleared' || (app.state === 'ready' && runUntouched());
+    if (!free) return;
+    if (n) {
+        // the player's pick, now queued: its run starts once the queue is parked on the region (`live`) — a queue never
+        // started starts from its first move, which may enter the region again first
+        const picked = !!app.chosen && app.chosen.kind === n.kind && (n.kind === 'check' || app.chosen.exitName === n.exit);
+        const go = picked && app.hostLive;
+        if (!picked || go) app.chosen = null;
+        if (app.state === 'cleared' && app.runKind === n.kind && n.kind === 'check' && !picked) return; // the clear is still on its way
+        if (app.state === 'cleared' && app.runKind === 'move') return; // the move run leaves (afterClear)
+        if (app.state === 'ready' && app.runKind === n.kind && (n.kind === 'check' || app.runExit === n.exit)) {
+            if (go) { app.message = ''; setState('playing'); renderExits(); }
+            return;
+        }
+        prepareRun(n.kind, n.kind === 'move' ? n.exit : null, { start: go });
+        return;
+    }
+    if (app.state === 'cleared' && app.runKind === 'move') return;
+    if (app.chosen && app.loopMode) return; // waiting for the host to queue the pick
+    if (choices().length === 0) return;
+    if (app.state !== 'choosing') { app.message = app.state === 'cleared' ? app.message : ''; setState('choosing'); }
+    renderExits();
+}
+
+/** the choice list: pick an exit (a move run) or the check (a check run) */
+function choose(kind, exitName) {
+    if (app.state !== 'choosing' || (app.loopMode && app.chosen)) return false;
+    if (!choices().some((c) => c.kind === kind && (kind === 'check' || c.exitName === exitName))) return false;
+    if (!app.loopMode) {
+        // outside loop mode nothing is queued and nothing drains: the run starts at once
+        prepareRun(kind, kind === 'move' ? exitName : null, { start: true });
+        return true;
+    }
+    app.chosen = { kind, exitName: kind === 'move' ? exitName : null };
+    app.message = kind === 'check' ? 'chosen: the check — queueing it' : `chosen: leave by ${exitName} — queueing the move`;
     showStatus();
     renderExits();
-    window.__swfBridge?.requestHost?.({ kind: 'chooseExit', exitName });
+    window.__swfBridge?.requestHost?.(kind === 'check' ? { kind: 'chooseCheck' } : { kind: 'chooseExit', exitName });
     return true;
 }
+const chooseExit = (exitName) => choose('move', exitName);
+const chooseCheck = () => choose('check', null);
 
 function configureNow(config) {
     const params = config?.params ?? {};
-    const span = regionSpanOf(params);
+    const spans = regionSpansOf(params);
     const exits = Array.isArray(params.exits) ? params.exits : [];
     const alreadyChecked = (config?.checkedLocations ?? []).includes(CLEAR_ID);
-    startRegion({ regionId: config?.regionId ?? null, span, exits, alreadyChecked });
+    startRegion({ regionId: config?.regionId ?? null, spans, exits, alreadyChecked });
 }
 
 function leaveBy(exitName) {
@@ -186,78 +281,89 @@ function leaveBy(exitName) {
     if (!exit) return false;
     app.message = `leaving by ${exitName}`;
     showStatus();
-    if (app.state === 'playing') setState('ready'); // the clock's last report before the exit (an already-checked region)
+    if (app.state === 'playing') setState('ready'); // the clock's last report before the exit
     window.__swfBridge?.sendExit?.(exitName, null);
     return true;
 }
 
-// N4b: in loop mode the move out of the region is played to a clear on every visit, so a region cleared before
-// (alreadyChecked) opens its exits at once only outside loop mode.
-const exitsOpen = () => !!app.run && (app.run.cleared || app.clearedThisVisit || (app.alreadyChecked && !app.loopMode));
+// N4b: the move out of the region is played to a clear on every visit — the exits open only after a MOVE run's clear
+// on this visit.
+const exitsOpen = () => !!app.run && app.runKind === 'move' && (app.run.cleared || app.moveClearedThisVisit);
 
 /**
- * R: play the region again from its start, on the same visit. The clear is sent again when it comes — the bridge
- * dispatches it if the host did not accept the first one (e.g. the queue was not parked on the region) and drops
- * it if it did. The exits stay open once the region was cleared on this visit.
+ * R: play the current run again from its start, on the same visit. A check run's clear is sent again when it comes —
+ * the bridge dispatches it if the host did not accept the first one (e.g. the queue was not parked on the region) and
+ * drops it if it did.
  */
 function playAgain() {
-    if (!app.run) return;
+    if (!app.run || app.state === 'choosing') return;
     stopBot();
     if (!app.run.cleared) app.scoreFolded += app.run.score; // the abandoned attempt's score counts
     app.run.restart();
-    app.attemptInputs = [];
+    app.attemptInputs = []; app.sceneEnds = [];
     app.clearSent = false; app.tape = null; app.tapeAt = 0; app.injected = false; app.speed = 1;
-    app.effects = []; app.message = 'playing the region again';
+    app.effects = []; app.message = `playing the ${app.runKind} again`;
     setState('ready');
     renderExits();
+}
+
+function note(text) {
+    const n = document.createElement('span'); n.className = 'note'; n.textContent = text;
+    exitsEl.appendChild(n);
+}
+function button(label, title, disabled, onClick, data) {
+    const b = document.createElement('button');
+    b.textContent = label; b.title = title; b.disabled = disabled;
+    Object.assign(b.dataset, data);
+    b.addEventListener('click', onClick);
+    exitsEl.appendChild(b);
 }
 
 function renderExits() {
     exitsEl.textContent = '';
     if (!app.run) return;
-    if (app.exits.length === 0) {
-        const n = document.createElement('span'); n.className = 'note'; n.textContent = 'this region has no exit';
-        exitsEl.appendChild(n);
+    if (app.state === 'choosing') {
+        const pending = !!app.chosen;
+        note(pending ? 'queueing…' : 'choose: an exit (the clear leaves by it) or the check (its clear checks the location)');
+        app.exits.forEach((e, i) => button(`${i + 1}: go → ${e.targetRegion ?? e.exitName}`, `${e.exitName}${e.side ? ` (side ${e.side})` : ''}`,
+            pending, () => chooseExit(e.exitName), { exit: e.exitName }));
+        if (!isChecked()) button(`C: check the location (${showSpan(app.spans.check)})`, 'a check run: twice the move\'s scenes', pending, () => chooseCheck(), { check: '1' });
         return;
     }
-    const choosing = app.state === 'choosing';
-    if (choosing) {
-        const n = document.createElement('span'); n.className = 'note';
-        n.textContent = app.chosenExit ? 'queueing the move…' : 'no move is queued: choose the exit — the game starts, and the clear leaves by it';
-        exitsEl.appendChild(n);
+    if (app.runKind === 'check') {
+        note(app.state === 'cleared' ? 'checked — the next action' : `the check (${showSpan(app.span)}): its clear checks the location`);
+        return;
     }
-    app.exits.forEach((e, i) => {
-        const b = document.createElement('button');
-        b.textContent = `${i + 1}: ${choosing ? 'go' : 'leave'} → ${e.targetRegion ?? e.exitName}`;
-        b.title = `${e.exitName}${e.side ? ` (side ${e.side})` : ''}`;
-        b.disabled = choosing ? !!app.chosenExit : !exitsOpen();
-        b.dataset.exit = e.exitName;
-        b.addEventListener('click', () => leaveBy(e.exitName));
-        exitsEl.appendChild(b);
-    });
-    if (!choosing && !exitsOpen()) {
-        const n = document.createElement('span'); n.className = 'note';
-        n.textContent = queuedExit() && app.loopMode ? `clear the region: the clear leaves by ${queuedExit()}` : 'clear the region to leave';
-        exitsEl.appendChild(n);
-    }
+    if (app.exits.length === 0) { note('this region has no exit'); return; }
+    app.exits.forEach((e, i) => button(`${i + 1}: leave → ${e.targetRegion ?? e.exitName}`, `${e.exitName}${e.side ? ` (side ${e.side})` : ''}`,
+        !exitsOpen(), () => leaveBy(e.exitName), { exit: e.exitName }));
+    if (!exitsOpen()) note(app.runExit ? `clear the region: the clear leaves by ${app.runExit}` : 'clear the region to leave');
 }
 
 function onCleared() {
-    app.clearedThisVisit = true;
+    const rec = app.runs[app.runs.length - 1];
+    if (rec) { rec.cleared = true; rec.clearFrames = app.run.clearFrames; rec.exit = app.runExit; rec.sceneEnds = app.sceneEnds.slice(); }
     app.scoreFolded += app.run.score;
     setState('cleared');
-    if (!app.clearSent) {
-        app.clearSent = true;
-        window.__swfBridge?.sendLocation?.(CLEAR_ID);
+    if (app.runKind === 'check') {
+        app.checkClearedThisVisit = true;
+        if (!app.clearSent) {
+            app.clearSent = true;
+            window.__swfBridge?.sendLocation?.(CLEAR_ID);
+        }
+        if (!app.loopMode) app.alreadyChecked = true; // checked for real: no gate outside loop mode
+        app.message = 'CHECK CLEAR — the location is checked';
+    } else {
+        app.moveClearedThisVisit = true;
+        app.message = 'REGION CLEAR';
     }
-    app.message = app.alreadyChecked ? 'cleared again' : 'REGION CLEAR';
     renderExits();
 }
 
-/** N4b: in loop mode the clear performs the queued move (a Bot walk leaves by its own portal goal) */
-function performQueuedMove() {
-    const exit = app.loopMode ? queuedExit() : null;
-    if (exit) leaveBy(exit);
+/** after a clear: a move run leaves by its exit (a Bot walk by its own portal goal); a check run goes on to what is next */
+function afterClear() {
+    if (app.runKind === 'move') { if (app.runExit) leaveBy(app.runExit); return; }
+    decide();
 }
 
 /** one game frame; false when the bot's next input has not arrived yet (the page waits, it never guesses) */
@@ -273,8 +379,12 @@ function stepOnce() {
     } else {
         inp = keyboardInput();
     }
-    const scoreBefore = app.run.scoreBefore, g0 = app.run.g;
+    const scoreBefore = app.run.scoreBefore, g0 = app.run.g, sceneBefore = g0.scene;
     const out = app.run.step(inp);
+    app.runPlayed = true;
+    // the attempt frames at which this attempt's scenes ended (the test surface measures a span in frames with it)
+    if (out.hit) app.sceneEnds = [];
+    else if (out.cleared || out.stageChanged || (sceneBefore >= 0 && app.run.g.scene !== sceneBefore)) app.sceneEnds.push(app.run.attemptFrames);
     app.visitFrames++;
     if (app.bot) app.botFrames++;
     app.attemptInputs.push(inp);
@@ -301,7 +411,7 @@ function stepOnce() {
         stopBot();
         onCleared();
         if (bot?.goal.kind === 'portal') leaveBy(bot.goal.id);
-        else performQueuedMove();
+        else afterClear();
     } else if (app.state === 'playing' && app.visitFrames % FPS_FRAMES_PER_REPORT === 0) {
         reportPlayClock();
     }
@@ -347,12 +457,16 @@ function botWalkTo(goal, options) {
     }
     stopBot();
     if (goal.kind === 'portal' && exitsOpen()) return leaveBy(goal.id);
-    if (goal.kind === 'pickup' && app.clearedThisVisit) {
-        // cleared on this visit already: say it again (the bridge drops it if the host has it)
+    if (goal.kind === 'pickup' && app.checkClearedThisVisit) {
+        // the check cleared on this visit already: say it again (the bridge drops it if the host has it)
         window.__swfBridge?.sendLocation?.(CLEAR_ID);
         return true;
     }
-    if (app.run.cleared) playAgain();
+    // N4c: a location goal plays the check run, an exit goal the move run — from where it is when it is that run
+    const kind = goal.kind === 'pickup' ? 'check' : 'move';
+    if (app.runKind !== kind || app.run.cleared || app.state === 'choosing') prepareRun(kind, kind === 'move' ? goal.id : null);
+    else if (kind === 'move') app.runExit = goal.id;
+    app.chosen = null;
     app.tape = null; app.injected = false;
     app.bot = { goal, opts, next: null, id: 0, inputs: [], failed: 0 };
     app.lastBot = { goal, tracks: opts.tracks, speed: opts.speed, retryCap: opts.retryCap, knobs: opts.knobs, botSeed: opts.botSeed, cleared: false, gaveUp: false, attempts: 0, failed: 0 };
@@ -365,8 +479,9 @@ function botWalkTo(goal, options) {
 
 /**
  * B — the bot-assist key (N4b, Manual/Record visits): hands the controls to the bot at the current tracks (the host's
- * options for this visit), which plays toward the clear and stays (the player leaves); B again hands them back (the
- * game pauses until the player's next game key). A Bot block's own walk is the queue's: B leaves it alone.
+ * options for this visit), which plays the current run (move or check) toward its clear, and the clear does what that
+ * run's clear does; B again hands them back (the game pauses until the player's next game key). A Bot block's own walk
+ * is the queue's: B leaves it alone.
  */
 function toggleAssist() {
     if (!app.run || app.state === 'cleared' || app.state === 'waiting' || app.state === 'choosing') return false;
@@ -388,31 +503,26 @@ function toggleAssist() {
     return true;
 }
 
-/** the host's state (N4b): loop mode (the exits' rule) and the bot's options for this visit */
+/** the host's state (N4b/N4c): loop mode, the bot's options for this visit, the next queued action, the checked flag */
 function setHostState(state) {
     if (!state || typeof state !== 'object') return;
-    if (typeof state.loopMode === 'boolean') app.loopMode = state.loopMode;
+    if (typeof state.loopMode === 'boolean') {
+        if (state.loopMode !== app.loopMode) app.chosen = null;
+        app.loopMode = state.loopMode;
+    }
     if (state.bot && typeof state.bot === 'object') {
         app.hostBot = normalizeBotOptions(state.bot);
         // an assisting bot plays its next attempt at the new tracks (a walk gets them from the host's proxy)
         if (app.bot?.goal.kind === 'assist') { app.bot.next = app.hostBot; app.speed = app.hostBot.speed; }
     }
-    if ('move' in state) app.move = state.move && typeof state.move === 'object' ? state.move : null;
-    if (state.refused?.kind === 'chooseExit' && app.chosenExit && app.state === 'choosing') {
-        app.message = `could not queue the move by ${app.chosenExit}: ${state.refused.why ?? 'refused'}`;
-        app.chosenExit = null;
+    if ('next' in state) app.next = state.next && typeof state.next === 'object' ? state.next : null;
+    if (typeof state.checked === 'boolean' && state.region === app.regionId) app.hostChecked = state.checked;
+    if (typeof state.live === 'boolean' && state.region === app.regionId) app.hostLive = state.live;
+    if (state.refused && app.chosen && app.state === 'choosing') {
+        app.message = `could not queue ${app.chosen.kind === 'check' ? 'the check' : `the move by ${app.chosen.exitName}`}: ${state.refused.why ?? 'refused'}`;
+        app.chosen = null;
     }
-    if (app.state === 'choosing' && !needsChoice()) {
-        // a move is queued now (the player's choice, or the Loops panel): a chosen exit starts the game at once
-        const chosen = app.chosenExit && queuedExit() === app.chosenExit;
-        app.message = chosen ? `leaving by ${app.chosenExit} on the clear` : '';
-        app.injected = false; app.speed = 1;
-        setState(chosen ? 'playing' : 'ready');
-    } else if (app.state === 'ready' && needsChoice() && app.run.attemptFrames === 0 && app.visitFrames === 0) {
-        setState('choosing'); // loop mode turned on, or the queued move went away, before play began
-    } else if (app.state === 'cleared') {
-        performQueuedMove(); // a move queued after the clear
-    }
+    decide();
     renderExits();
     reportPlayClock();
 }
@@ -480,11 +590,11 @@ const VIEW = { effects: null, mode: 'play', modeLabel: '', speed: 1, tapeName: '
 function render() {
     const run = app.run;
     VIEW.effects = app.effects;
-    VIEW.modeLabel = app.span ? `REGION ${showSpan(app.span)}` : 'NOIZ2SA';
+    VIEW.modeLabel = app.span ? `${app.runKind === 'check' ? 'CHECK' : 'MOVE'} ${showSpan(app.span)}` : 'NOIZ2SA';
     VIEW.paused = app.state === 'paused';
-    VIEW.banner = app.state === 'choosing' ? (app.chosenExit ? 'queueing the move…' : 'choose an exit (1-9) to start')
+    VIEW.banner = app.state === 'choosing' ? (app.chosen ? 'queueing…' : (isChecked() ? 'choose an exit (1-9)' : 'choose an exit (1-9) or the check (C)'))
         : app.state === 'ready' ? 'press Z or click to start'
-        : app.state === 'cleared' ? 'REGION CLEAR — leave by an exit (R: play again)'
+        : app.state === 'cleared' ? (app.runKind === 'check' ? 'CHECK CLEAR — the location is checked' : 'REGION CLEAR (R: play again)')
             : app.message.startsWith('HIT') && run?.attemptFrames < 90 ? 'HIT — the region restarts' : '';
     draw(ctx, run?.g ?? null, VIEW);
     // the left panel's lower half is the region's own (draw.js puts bot/sound/help text there, unused here)
@@ -493,20 +603,20 @@ function render() {
     const tracks = app.bot?.opts.tracks;
     const lines = run ? [
         `ATTEMPT ${run.attempt}`, `HITS ${run.hits}`, `TIME ${(run.totalFrames / FPS).toFixed(1)}s`,
-        'HITBOX centered', run.cleared ? 'CLEARED' : app.alreadyChecked ? 'cleared before' : '',
+        'HITBOX centered', run.cleared ? 'CLEARED' : isChecked() ? 'location checked' : '',
         app.bot ? `BOT ${app.speed}x` : '',
         tracks ? `TRACKS ${['seeing', 'thinking', 'hands', 'focus', 'panic'].map((k) => tracks[k] ?? 0).join('/')}` : '',
     ] : [app.loadError ? 'load failed' : app.patterns ? 'waiting for a region' : 'loading…'];
     lines.forEach((s, i) => ctx.fillText(s, 14, 216 + i * 18));
     ctx.font = '11px monospace'; ctx.fillStyle = '#567';
-    ['arrows/WASD move', 'Z fire  X slow', 'P pause  R again', 'B bot plays', '1-9 leave (cleared)'].forEach((s, i) => ctx.fillText(s, 14, 384 + i * 16));
+    ['arrows/WASD move', 'Z fire  X slow', 'P pause  R again', 'B bot plays', '1-9 exit  C check'].forEach((s, i) => ctx.fillText(s, 14, 384 + i * 16));
 }
 
 function showStatus() {
     if (app.loadError) { statusEl.textContent = `Noiz2sa — could not load the patterns: ${app.loadError}`; return; }
     if (!app.run) { statusEl.textContent = app.patterns ? 'Noiz2sa — waiting for a region…' : 'Noiz2sa — loading…'; return; }
     const r = app.run;
-    statusEl.textContent = `region ${app.regionId ?? '(standalone)'} — ${showSpan(app.span)}, seed ${app.span.seed} — `
+    statusEl.textContent = `region ${app.regionId ?? '(standalone)'} — ${app.runKind} ${showSpan(app.span)}, seed ${app.span.seed} — `
         + `${app.state}, attempt ${r.attempt}, ${(r.totalFrames / FPS).toFixed(1)}s`
         + (app.message ? ` — ${app.message}` : '');
 }
@@ -526,7 +636,7 @@ const gameSide = {
         stopBot();
         if (app.run) {
             if (!app.run.cleared) app.scoreFolded += app.run.score;
-            app.run.restart(); app.attemptInputs = []; app.clearSent = false; setState('ready'); renderExits();
+            app.run.restart(); app.attemptInputs = []; app.clearSent = false; setState('ready'); renderExits(); decide();
         }
     },
     botWalkTo: (goal, options) => botWalkTo(goal, options),
@@ -553,8 +663,15 @@ window.__noiz2saDebug = () => ({
     cleared: !!app.run?.cleared,
     clearSent: app.clearSent,
     alreadyChecked: app.alreadyChecked,
+    checked: isChecked(),
     exitsOpen: exitsOpen(),
-    clearedThisVisit: app.clearedThisVisit,
+    moveClearedThisVisit: app.moveClearedThisVisit,
+    checkClearedThisVisit: app.checkClearedThisVisit,
+    spans: app.spans,
+    runKind: app.runKind,
+    runExit: app.runExit,
+    runs: app.runs.map((r) => ({ ...r })),
+    choices: app.state === 'choosing' ? choices() : [],
     exits: app.exits.map((e) => e.exitName),
     tapeLeft: app.tape ? app.tape.length - app.tapeAt : 0,
     configures: app.configures,
@@ -566,9 +683,9 @@ window.__noiz2saDebug = () => ({
     loopMode: app.loopMode,
     visitBotSeed: visitBotSeed(),
     botFrames: app.botFrames,
-    move: app.move,
-    queuedExit: queuedExit(),
-    chosenExit: app.chosenExit,
+    next: app.next,
+    hostLive: app.hostLive,
+    chosen: app.chosen,
 });
 window.__noiz2saTest = {
     /** play an injected tape from the current attempt's next frame; `speed` game frames per 16 ms */
@@ -589,6 +706,8 @@ window.__noiz2saTest = {
     assist: () => toggleAssist(),
     /** `choosing`: pick the exit (as the exit button does) */
     choose: (exitName) => chooseExit(exitName),
+    /** `choosing`: pick the check (as the check button does) */
+    chooseCheck: () => chooseCheck(),
 };
 
 // ── boot ──
@@ -600,7 +719,7 @@ loadNoiz2saPatternsWeb(new URL('../../bulletml-dodge/', import.meta.url)).then((
         const q = new URLSearchParams(location.search);
         try {
             const span = { start: parsePosition(q.get('start') ?? '1:1'), end: parsePosition(q.get('end') ?? q.get('start') ?? '1:1'), seed: Number(q.get('seed') ?? 1) };
-            startRegion({ regionId: null, span: regionSpanOf(span), exits: [], alreadyChecked: false });
+            startRegion({ regionId: null, spans: regionSpansOf(span), exits: [], alreadyChecked: false });
         } catch (err) { statusEl.textContent = `Noiz2sa — ${err.message}`; }
     }
     showStatus();
