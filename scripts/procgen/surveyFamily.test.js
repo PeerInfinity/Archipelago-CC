@@ -31,6 +31,15 @@ describe('familyOf — the text arm, unchanged by the extraction', () => {
         expect(familyOf('solverBot(survey-step-30) encounter (64,128)->Fire: no encounter '
             + "executor is registered for a 'Fire' drop in level 32."))
             .toMatch(/^ENCOUNTER-UNMODELLED — the 'Fire' drop's fight/);
+        // ⛓ Seedling fidelity BURN: a registered verb refused for the inventory.
+        expect(familyOf('solverBot(survey-step-62) reach-exit (32,144)->L12 -> burn: '
+            + 'burnabletree@32,128 cannot be burned by this run — this run does not hold FIRE.'))
+            .toBe("ITEM-GATE — the 'burn' verb is registered and burnabletree@32,128 is gated on an "
+                + 'item this run does not hold (or on a press the model refuses); the work order is '
+                + 'the item, not the room');
+        expect(familyOf('solverBot(survey-step-252) reach-exit (144,96)->L102 -> break: '
+            + 'breakablerockghost@224,96 cannot be broken by this run — `BreakableRock.hit(_t)`'))
+            .toMatch(/^ITEM-GATE — the 'break' verb is registered and breakablerockghost@224,96/);
     });
 
     it('⛓ a refusal matching nothing is NAMED as unclassified, never swallowed', () => {

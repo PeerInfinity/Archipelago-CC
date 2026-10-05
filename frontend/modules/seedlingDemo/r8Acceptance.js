@@ -1103,6 +1103,18 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'booted in L17 beside `stairsup@32,48` among its three bobs, it steps onto the stairs '
                 + 'and stands in L16\'s arrival lane among seven; no hit, no kill.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity BURN — route step 93's own plan: L24 holds no
+         * enemy, and the walk's last tick is L12's arrival, where
+         * `puncher@416,256` is the room's chaser.
+         */
+        Object.freeze({
+            name: 'burn-l24-reach-exit', levels: Object.freeze([12]), bobs: 1, ticks: 124,
+            addedBy: 'Seedling fidelity BURN D2 (a burnable tree as a reach-exit obstacle)',
+            why: 'burns `burnabletree@32,128` in L24 and walks onto `teleporter@32,144`; the '
+                + 'crossing\'s last tick is the L12 arrival (40,704), far from the puncher; no hit, '
+                + 'no kill.',
+        }),
     ]),
 
     /**
@@ -1991,6 +2003,30 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
                 + 'remainders',
             'the check: `fallRocksArmedBy` on the live box every tick, and the rocks '
                 + 'standing and the open/latched sets unchanged after the pass']),
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY BURN — the `burn` verb: a `burnabletree` on the
+         * frontier, removed by a fire press. `break`'s shape with the other
+         * weapon, and its effect is the same wall going away 41 updates late.
+         */
+        burn: Object.freeze([
+            'the gate: the INVENTORY — `BurnableTree.hit(t)` acts only on `t == "Fire"`, which '
+                + 'only `Player.fire()` passes (`useItem` case 1). No Fire refuses naming the '
+                + 'item; the Fire Wand (case 5) refuses naming the model gap '
+                + '(`levelRun.weaponForPress`)',
+            'the stance: `burnStanceCandidates` (hoisted from the Bob Boss burn leg) over the '
+                + 'tree\'s tile window, asked of `presses.auditFire` (the 32x32 rect, the 16 px '
+                + 'radius with its transcribed `originY`, `FIRE_ARM_POLICY`): the tree is set '
+                + 'alight and NO other responder acts; reachability by `stanceReaches`',
+            'the lean: where a cell centre is cut by the radius, one key toward the tree until '
+                + 'the box stops against it, previewed on `run.previewStepper` and re-asked live '
+                + 'before the press (L24 above its tree: centre 19 px out, the lean in reach)',
+            'the slot: `inventorySlotsFor(inventory).indexOf(1)` selected through the segment\'s '
+                + '`equip` (a tape `equips` row, no key), and the slot the walk arrived with '
+                + 'selected again once the tree is gone — `strikePolicyFor` presses `primary`',
+            'the press and the wait: `botDriverV2.runFire`\'s `burns` arm unchanged (still '
+                + 'solid at `FIRE_WINDOW.endTick`, gone by `BURN_WAIT_AFTER_PRESS_TICKS`, no '
+                + 'stray burn), with `overPit` / `overExit` declared from the world when the tree '
+                + 'stands on a pit tile or a teleporter']),
     }),
 
     /**

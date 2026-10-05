@@ -61,6 +61,20 @@ export const FAMILY_RULES = [
         + 'edge inside `Game.shake`\'s jiggle (camera.js, "THE SHAKE, AND WHY IT IS A '
         + 'BAND"). Not a missing mechanism: a missing STANCE RULE. The refusal names its '
         + 'own cure — "move the stance away from the screen edge, or wait the shake out"'],
+    /**
+     * ⛓ SEEDLING FIDELITY BURN — A REGISTERED VERB REFUSED FOR THE INVENTORY.
+     * `break` and `burn` resolve an obstacle they cannot act on into an
+     * executor refusal *"-> <verb>: <id> cannot be <broken|burned> by this run —
+     * <why>"* (the run lacks the sword / ghost sword / Fire, or holds the Fire
+     * Wand whose press the model refuses). Asked BEFORE the VERB rows: the
+     * sentence is a work order about an ITEM, which none of them names. Its
+     * witnesses: the route survey's steps 30, 62 and 72 (`burn`, no Fire) and
+     * 252, 257 and 261 (`break`), which read `unclassified` before this row.
+     */
+    [/-> ([a-z]+): (\S+) cannot be [a-z]+ by this run — /,
+        (m) => `ITEM-GATE — the '${m[1]}' verb is registered and ${m[2]} is gated on an item `
+            + 'this run does not hold (or on a press the model refuses); the work order is the '
+            + 'item, not the room'],
     [/Strategy '([a-z]+)' failed to apply/,
         (m) => `VERB-APPLY — the '${m[1]}' strategy IS registered and did not apply here`],
     /**
