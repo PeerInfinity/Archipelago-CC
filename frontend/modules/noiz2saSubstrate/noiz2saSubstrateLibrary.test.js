@@ -13,8 +13,9 @@ import { sidecarFieldsOf, sidecarPayloadErrors, validateSidecarFields } from '..
 import { captureShapeOf } from '../procgenCore/substratePredicates.js';
 import {
     substrateRegistryEntry, NOIZ2SA_ZONES, NOIZ2SA_VICTORY_ITEM_NAME, NOIZ2SA_FILLER_ITEM_NAME,
-    NOIZ2SA_LOAD_REGION_EVENT, NOIZ2SA_IFRAME_ID, zoneRegion, exitButtonsOf, describeRegion,
+    NOIZ2SA_LOAD_REGION_EVENT, NOIZ2SA_IFRAME_ID, zoneRegion, exitButtonsOf, describeRegion, setPlaybackProxy,
 } from './noiz2saSubstrateLibrary.js';
+import { solverKindOf, botHonorsInstant } from '../procgenCore/substratePredicates.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const PRESET = 'frontend/presets/noiz2sa_substrate_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
@@ -26,15 +27,26 @@ describe('the registry entry', () => {
         expect(entry.loadRegionEvent).toBe(NOIZ2SA_LOAD_REGION_EVENT);
         expect(entry.iframeId).toBe(NOIZ2SA_IFRAME_ID);
     });
-    it('is a SUMMARY substrate with runner\'s loop declarations, less the Bot (N4)', () => {
+    it('is a SUMMARY substrate with runner\'s loop declarations, the Bot included (N4)', () => {
         expect(captureShapeOf(entry)).toBe('summary');
         expect(entry.loopSupport).toMatchObject({
             manual: true, record: true, playback: true, instant: true, summaryRecording: true, playClock: true,
+            executeVia: 'solver',
         });
-        expect(entry.loopSupport.executeVia).toBeUndefined();
-        expect(entry.getPlaybackController).toBeUndefined();
         expect(entry.takeLastRecording).toBeUndefined();
         expect(entry.loopSupport.requiresLoopMode).toBeUndefined(); // playable outside loop mode
+    });
+    it('the Bot is the walkTo solver, through the injected proxy (null headless); Bot × Instant stays NO', () => {
+        expect(solverKindOf(entry)).toBe('walkTo');
+        expect(botHonorsInstant(entry)).toBe(false);
+        expect(entry.getPlaybackController()).toBeNull();
+        const proxy = { walkTo() {} };
+        setPlaybackProxy(proxy);
+        try {
+            expect(entry.getPlaybackController()).toBe(proxy);
+        } finally {
+            setPlaybackProxy(null);
+        }
     });
     it('declares a valid payload', () => {
         expect(() => validateSidecarFields(entry.sidecarFields)).not.toThrow();
@@ -55,6 +67,7 @@ describe('payload ↔ world', () => {
         expect(w.params).toEqual({
             start: { stage: 0, scene: 1 }, end: { stage: 0, scene: 2 }, seed: 1,
             exits: [{ exitName: 'exit_S', side: 'S', targetRegion: 'r2' }],
+            walkToExits: 'byName', // the bridge resolves a bot walk to an exit by its name
         });
         expect(w.ap_locations).toEqual({ clear: 'r__clear' });
     });

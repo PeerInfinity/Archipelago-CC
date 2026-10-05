@@ -19,8 +19,10 @@
  * `params`, so the region (`start`, `end`, `seed`) and the exit list are copied into `params` there.
  *
  * Loop mode: a SUMMARY substrate (`summaryRecording`, runner's declarations): Record keeps the visit's net
- * result, Playback applies it instantly, live play is priced by time (`loopState._timeDrainTick`). No Bot yet
- * (the N4 slice), so no `executeVia` and no `getPlaybackController`.
+ * result, Playback applies it instantly, live play is priced by time (`loopState._timeDrainTick`) — per GAME
+ * second, from the page's play-clock stats (N4). The Bot (N4): `executeVia: 'solver'`; `getPlaybackController`
+ * returns the host module's proxy (injected by `index.js`, null headless), whose walkTo carries the humanlike bot's
+ * settings at the trainer's current tracks (`noiz2saTraining.js`).
  *
  * Content source: a fixed zone table (`NOIZ2SA_ZONES`), one region per zone, for the test preset and the
  * shuffled-spiral driver (`zoneCount` / `extractZoneRules`). Pricing and the stat tracks are later slices.
@@ -39,6 +41,8 @@ export const NOIZ2SA_GAME_ID = 'noiz2sa';
 export const NOIZ2SA_PANEL_COMPONENT_TYPE = 'noiz2saSubstratePanel';
 export const NOIZ2SA_LOAD_REGION_EVENT = 'noiz2sa:loadRegion';
 export const NOIZ2SA_IFRAME_ID = 'noiz2saSubstrate';
+/** the bot's commands, host proxy → the in-iframe bridge (the iframe URL names it) */
+export const NOIZ2SA_PLAYBACK_CONTROL_EVENT = 'noiz2sa:playbackControl';
 /** the region's one location: its id in the game (`sendLocation`) and the suffix of its AP name */
 export const NOIZ2SA_CLEAR_LOCATION_ID = 'clear';
 export const NOIZ2SA_VICTORY_ITEM_NAME = 'Victory';
@@ -95,9 +99,15 @@ function deserializeWorld(payload) {
     return {
         ...p,
         exits: exitsMap,
-        params: { ...region, exits: exitButtonsOf(exitsArray) },
+        // walkToExits: the bridge resolves a bot walk to an exit by its name (the exits have no side)
+        params: { ...region, exits: exitButtonsOf(exitsArray), walkToExits: 'byName' },
     };
 }
+
+// The host-side playback controller (`index.js`'s Noiz2saBotProxy), injected on initialize. Headless (scripts,
+// vitest) it stays null and a Bot block cannot engage (loops parks it for live play with a warning).
+let _playbackProxy = null;
+export function setPlaybackProxy(proxy) { _playbackProxy = proxy ?? null; }
 
 /** Inverse for write-to-disk: `params` is derived at load, so it is dropped; exits back to an array. */
 function serializeWorld(world) {
@@ -187,18 +197,25 @@ export const substrateRegistryEntry = Object.freeze({
     regionGeometry: REGION_GEOMETRY.SIDES,
     exitSides: SIDE_AGNOSTIC_EXIT_SIDES,
 
-    // Loop mode: runner's declarations, less the Bot (`executeVia`), which is N4's. `record` + `playback` arm
-    // the strict action gate and the live-play time drain; `summaryRecording` makes it a summary substrate.
+    // The Bot (N4): the walkTo solver. The page's humanlike bot plays toward the target (the clear, or an exit
+    // after the clear) at the trainer's tracks, restarting on a hit, until the clear or the retry cap.
+    getPlaybackController: () => _playbackProxy,
+
+    // Loop mode: runner's declarations. `record` + `playback` arm the strict action gate and the live-play time
+    // drain; `summaryRecording` makes it a summary substrate; `executeVia: 'solver'` offers the Bot (no Bot ×
+    // Instant: a summary bot never honours Instant).
     loopSupport: Object.freeze({
         queueActions: Object.freeze(['regionMove', 'locationCheck']),
+        executeVia: 'solver',
         manual: true,
         customQueues: false,
         record: true,
         playback: true,
         instant: true,
         summaryRecording: true,
-        // the page reports whether its clock runs (waiting for a key, paused or cleared: not running), and the
-        // time drain charges only running time — flashSubstrate/bridge.js `setPlayClock`, loopState._timeDrainTick
+        // the page reports whether its clock runs (waiting for a key, paused or cleared: not running) and the
+        // visit's game seconds, and the time drain charges only the game seconds played — flashSubstrate/bridge.js
+        // `setPlayClock`, loopState._timeDrainTick
         playClock: true,
     }),
 

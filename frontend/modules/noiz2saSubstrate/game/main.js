@@ -9,12 +9,23 @@
  * The `__swfBridge` contract (flashSubstrate/bridge.js, injected by the host panel):
  *   game side, here:   configure({params: {start, end, seed, exits}, regionId, checkedLocations})
  *   host side, called: sendLocation('clear') on the clear; sendExit(exitName, null) to leave;
- *                      setPlayClock(running) on every state change (running = the game is stepping).
+ *                      setPlayClock(running, {gameSeconds, score}) on every state change and every whole game
+ *                      second (running = the game is stepping; the stats are the VISIT's so far, every attempt).
+ *   the bot (N4):      botWalkTo(goal, options) — goal {kind: 'pickup', id: 'clear'} (play until the clear) or
+ *                      {kind: 'portal', id: exitName} (play until the clear, then leave by it); options = the
+ *                      host's bot settings {knobs, tracks, botSeed, speed, retryCap} (noiz2saTraining.js
+ *                      botWalkOptions); botStop() hands the region back.
  * Opened directly in a tab (no host), the page plays the region in its URL: ?start=1:2&end=1:3&seed=1.
  *
  * The game only steps while the player is playing it: a configured region waits for a game key (or a click), and
- * the page pauses when it loses focus (⚖ no offline progress). The page reports its clock (`setPlayClock(running)`,
- * running only while `playing`), so the host's time drain charges played time only.
+ * the page pauses when it loses focus (⚖ no offline progress). The page reports its clock (`setPlayClock(running,
+ * stats)`, running only while `playing`), so the host's time drain charges played time only — per GAME second, from
+ * `stats.gameSeconds`, so the bot's faster speeds cost the same per region.
+ *
+ * The bot (N4, the Bot block): the humanlike bot at the host's current tracks, in a worker (`bot-worker.js`), plays
+ * the region from where it is; a hit restarts the region and the bot plays the next attempt with the next attempt's
+ * bot seed (segment-run.js attemptBotSeed), until the clear or `retryCap` failed attempts (0 = no cap). It plays at
+ * `speed` game frames per 16 ms. New settings sent for the same goal apply from the next attempt (the speed at once).
  * Keys: arrows/WASD move, Z fire, X slow, P pause, R play the region again from its start, 1–9 leave by that exit
  * once cleared.
  *
@@ -25,6 +36,9 @@
 import { newGame, stepGame, input } from '../../bulletml-dodge/src/game/noiz2sa-game.js';
 import { loadNoiz2saPatternsWeb } from '../../bulletml-dodge/src/game/patterns-web.js';
 import { draw, FIELD_X, invalidatePanels } from '../../bulletml-dodge/web/draw.js';
+import { packBulletML } from '../../bulletml-dodge/src/bulletml.js';
+import { botOptions } from '../../bulletml-dodge/src/game/human.js';
+import { attemptBotSeed } from '../../bulletml-dodge/src/game/segment-run.js';
 import { createRegionRun, regionSpanOf, parsePosition, showSpan, decodeInputs, FPS } from '../noiz2saRegion.js';
 
 const CLEAR_ID = 'clear';
@@ -44,6 +58,11 @@ const app = {
     clearSent: false, clearedThisVisit: false,
     tape: null, tapeAt: 0, injected: false, speed: 1,
     effects: [], message: '', lastTime: null, acc: 0,
+    // the VISIT so far (every attempt, R included): what the play clock reports and the host trains on
+    visitFrames: 0, scoreFolded: 0, attemptInputs: [],
+    configures: 0,          // regions configured so far (a test waits for a fresh one)
+    bot: null,              // the bot's walk: {goal, opts, next, id, inputs, failed} (N4)
+    lastBot: null,          // the last walk's settings and outcome, for the test surface
 };
 
 // ── keyboard ──
@@ -64,12 +83,13 @@ addEventListener('keydown', (e) => {
     if (/^Digit[1-9]$/.test(e.code)) { leaveBy(app.exits[Number(e.code.slice(5)) - 1]?.exitName); return; }
     if (e.code === 'KeyR') { playAgain(); return; }
     if (e.code === 'KeyP') { if (app.state === 'playing') setState('paused'); else if (app.state === 'paused') setState('playing'); return; }
+    if (GAME_KEYS.has(e.code) && app.bot && app.state === 'paused') { setState('playing'); return; }
     if (GAME_KEYS.has(e.code) && (app.state === 'ready' || app.state === 'paused')) { app.injected = false; app.speed = 1; setState('playing'); }
 });
 addEventListener('keyup', (e) => held.delete(e.code));
 addEventListener('blur', () => {
     held.clear();
-    if (app.state === 'playing' && !app.injected) setState('paused');
+    if (app.state === 'playing' && !app.injected && !app.bot) setState('paused');
 });
 canvas.addEventListener('click', () => {
     canvas.focus();
@@ -90,14 +110,19 @@ function setState(s) {
 // the same. Reported on every state change; the bridge drops it when no region is active.
 function reportPlayClock() {
     if (!app.regionId) return;
-    window.__swfBridge?.setPlayClock?.(app.state === 'playing');
+    window.__swfBridge?.setPlayClock?.(app.state === 'playing', { gameSeconds: app.visitFrames / FPS, score: visitScore() });
 }
+/** the visit's score: every finished attempt's score from the region's start, plus the current attempt's */
+const visitScore = () => app.scoreFolded + (app.run && !app.run.cleared ? app.run.score : 0);
 
 // ── the region ──
 function startRegion({ regionId, span, exits, alreadyChecked }) {
+    app.configures++;
     app.regionId = regionId; app.span = span; app.exits = exits; app.alreadyChecked = alreadyChecked;
+    stopBot();
     app.run = createRegionRun(span, { engine: { newGame, stepGame }, patterns: app.patterns });
     app.clearSent = false; app.clearedThisVisit = false; app.tape = null; app.injected = false; app.effects = []; app.message = '';
+    app.visitFrames = 0; app.scoreFolded = 0; app.attemptInputs = []; app.speed = 1;
     setState('ready');
     renderExits();
 }
@@ -116,6 +141,7 @@ function leaveBy(exitName) {
     if (!exit) return false;
     app.message = `leaving by ${exitName}`;
     showStatus();
+    if (app.state === 'playing') setState('ready'); // the clock's last report before the exit (an already-checked region)
     window.__swfBridge?.sendExit?.(exitName, null);
     return true;
 }
@@ -129,7 +155,10 @@ const exitsOpen = () => !!app.run && (app.run.cleared || app.clearedThisVisit ||
  */
 function playAgain() {
     if (!app.run) return;
+    stopBot();
+    if (!app.run.cleared) app.scoreFolded += app.run.score; // the abandoned attempt's score counts
     app.run.restart();
+    app.attemptInputs = [];
     app.clearSent = false; app.tape = null; app.tapeAt = 0; app.injected = false; app.speed = 1;
     app.effects = []; app.message = 'playing the region again';
     setState('ready');
@@ -161,6 +190,7 @@ function renderExits() {
 
 function onCleared() {
     app.clearedThisVisit = true;
+    app.scoreFolded += app.run.score;
     setState('cleared');
     if (!app.clearSent) {
         app.clearSent = true;
@@ -170,28 +200,140 @@ function onCleared() {
     renderExits();
 }
 
+/** one game frame; false when the bot's next input has not arrived yet (the page waits, it never guesses) */
 function stepOnce() {
     let inp = 0;
-    if (app.injected) {
+    if (app.bot) {
+        inp = app.bot.inputs[app.run.attemptFrames];
+        if (inp === undefined) return false;
+    } else if (app.injected) {
         // an injected tape that ran out waits for the next one (no idle frames between tapes)
         if (!app.tape || app.tapeAt >= app.tape.length) { app.tape = null; setState('ready'); return; }
         inp = app.tape[app.tapeAt++];
     } else {
         inp = keyboardInput();
     }
+    const scoreBefore = app.run.scoreBefore, g0 = app.run.g;
     const out = app.run.step(inp);
+    app.visitFrames++;
+    app.attemptInputs.push(inp);
     if (out.hit) {
+        app.scoreFolded += scoreBefore + g0.score; // the failed attempt's score, from the region's start
+        app.attemptInputs = [];
         const s = app.run.g.ship; // the new attempt's ship; the explosion goes where the old one was hit
         app.effects.push({ x: lastShip.x, y: lastShip.y, r: 40, life: 40, age: 0, color: '#f66' });
         app.message = `HIT — the region restarts (attempt ${app.run.attempt})`;
         lastShip = { x: s.x >> 8, y: s.y >> 8 };
         // an injected tape belongs to one attempt: after a hit the run waits for the next one
         if (app.injected) { app.tape = null; app.tapeAt = 0; setState('ready'); }
+        if (app.bot) botAttemptFailed();
     } else {
         lastShip = { x: app.run.g.ship.x >> 8, y: app.run.g.ship.y >> 8 };
     }
     if (out.stageChanged) invalidatePanels();
-    if (out.cleared) onCleared();
+    if (out.cleared) {
+        const bot = app.bot;
+        if (bot) {
+            app.lastBot = { ...app.lastBot, cleared: true, attempts: app.run.attempt, failed: bot.failed,
+                frames: app.run.totalFrames, visitSeconds: app.visitFrames / FPS, score: app.scoreFolded + app.run.score };
+        }
+        stopBot();
+        onCleared();
+        if (bot?.goal.kind === 'portal') leaveBy(bot.goal.id);
+    } else if (app.state === 'playing' && app.visitFrames % FPS_FRAMES_PER_REPORT === 0) {
+        reportPlayClock();
+    }
+    return true;
+}
+/** the clock reports while playing: every 62.5 frames is not an integer, so a report every 63 frames (~1 game s) */
+const FPS_FRAMES_PER_REPORT = Math.ceil(FPS);
+
+// ── the bot (N4) ──
+let worker = null;
+function ensureWorker() {
+    if (worker) return worker;
+    worker = new Worker(new URL('./bot-worker.js', import.meta.url), { type: 'module' });
+    worker.onmessage = (e) => {
+        const m = e.data;
+        if (m.type === 'error') { console.error('[noiz2sa-game] bot worker:', m.message); return; }
+        if (m.type !== 'inputs' || !app.bot || m.id !== app.bot.id) return;
+        for (let i = 0; i < m.inputs.length; i++) app.bot.inputs[m.from + i] = m.inputs[i];
+    };
+    worker.postMessage({ type: 'init', patterns: Object.fromEntries(Object.entries(app.patterns).map(([k, l]) => [k, l.map(packBulletML)])) });
+    return worker;
+}
+
+function normalizeBotOptions(o = {}) {
+    const speed = Math.trunc(Number(o.speed));
+    return {
+        knobs: o.knobs && typeof o.knobs === 'object' ? o.knobs : {},
+        tracks: o.tracks ?? null,
+        botSeed: Number.isInteger(o.botSeed) && o.botSeed >= 0 ? o.botSeed : 1,
+        speed: [1, 2, 4].includes(speed) ? speed : 1,
+        retryCap: Number.isInteger(o.retryCap) && o.retryCap > 0 ? o.retryCap : 0,
+    };
+}
+
+/** the bot plays the region toward `goal` (see the header) */
+function botWalkTo(goal, options) {
+    if (!app.run || !goal) return false;
+    const opts = normalizeBotOptions(options);
+    if (app.bot && app.bot.goal.kind === goal.kind && app.bot.goal.id === goal.id) {
+        app.bot.next = opts; // the next attempt plays at the new tracks; the speed changes now
+        app.speed = opts.speed;
+        return true;
+    }
+    stopBot();
+    if (goal.kind === 'portal' && exitsOpen()) return leaveBy(goal.id);
+    if (goal.kind === 'pickup' && app.clearedThisVisit) {
+        // cleared on this visit already: say it again (the bridge drops it if the host has it)
+        window.__swfBridge?.sendLocation?.(CLEAR_ID);
+        return true;
+    }
+    if (app.run.cleared) playAgain();
+    app.tape = null; app.injected = false;
+    app.bot = { goal, opts, next: null, id: 0, inputs: [], failed: 0 };
+    app.lastBot = { goal, tracks: opts.tracks, speed: opts.speed, retryCap: opts.retryCap, knobs: opts.knobs, cleared: false, gaveUp: false, attempts: 0, failed: 0 };
+    app.speed = opts.speed;
+    startBotAttempt();
+    app.message = `the bot plays (${opts.speed}×)`;
+    setState('playing');
+    return true;
+}
+
+let nextWalkId = 1;
+function startBotAttempt() {
+    const bot = app.bot;
+    if (bot.next) { bot.opts = bot.next; bot.next = null; app.speed = bot.opts.speed; app.lastBot.tracks = bot.opts.tracks; }
+    bot.id = nextWalkId++;
+    bot.inputs = [];
+    const { botSeed: _unused, ...opt } = botOptions({ perception: 'observed', knobs: bot.opts.knobs }, { botSeed: bot.opts.botSeed });
+    ensureWorker().postMessage({
+        type: 'start', id: bot.id, span: app.span, inputs: app.attemptInputs.slice(), bot: opt,
+        botSeed: attemptBotSeed(bot.opts.botSeed, app.run.attempt - 1),
+    });
+}
+
+/** a hit while the bot played: the next attempt, or — at the retry cap — the bot gives up and the region waits */
+function botAttemptFailed() {
+    const bot = app.bot;
+    bot.failed++;
+    app.lastBot.failed = bot.failed;
+    if (bot.opts.retryCap > 0 && bot.failed >= bot.opts.retryCap) {
+        app.lastBot.gaveUp = true;
+        stopBot();
+        app.message = `the bot gave up after ${bot.failed} failed attempt${bot.failed === 1 ? '' : 's'}`;
+        setState('ready');
+        return;
+    }
+    startBotAttempt();
+}
+
+function stopBot() {
+    if (!app.bot) return;
+    worker?.postMessage({ type: 'stop', id: app.bot.id });
+    app.bot = null;
+    app.speed = 1;
 }
 let lastShip = { x: 0, y: 0 };
 
@@ -202,14 +344,17 @@ function frame(now) {
         if (app.lastTime === null) app.lastTime = now;
         app.acc += Math.min(now - app.lastTime, INTERVAL_BASE * MAX_FRAMES_PER_TICK);
         app.lastTime = now;
-        let n = 0;
-        while (app.acc >= INTERVAL_BASE && n < MAX_FRAMES_PER_TICK && app.state === 'playing') {
+        let n = 0, waiting = false;
+        while (app.acc >= INTERVAL_BASE && n < MAX_FRAMES_PER_TICK && app.state === 'playing' && !waiting) {
             app.acc -= INTERVAL_BASE;
-            for (let k = 0; k < app.speed && app.state === 'playing'; k++) stepOnce();
+            for (let k = 0; k < app.speed && app.state === 'playing'; k++) if (!stepOnce()) { waiting = true; break; }
             n++;
             for (const e of app.effects) e.age++;
             app.effects = app.effects.filter((e) => e.age < e.life);
         }
+        // waiting for the bot: no backlog builds up (the game never runs ahead to catch up)
+        if (waiting) app.acc = Math.min(app.acc, INTERVAL_BASE);
+        if (app.bot) worker?.postMessage({ type: 'ack', id: app.bot.id, frame: app.run.attemptFrames });
         if (n) showStatus();
     }
     render();
@@ -228,9 +373,12 @@ function render() {
     // the left panel's lower half is the region's own (draw.js puts bot/sound/help text there, unused here)
     ctx.fillStyle = '#05080c'; ctx.fillRect(0, 196, FIELD_X - 1, 480 - 196);
     ctx.textAlign = 'left'; ctx.font = '12px monospace'; ctx.fillStyle = '#7ab';
+    const tracks = app.bot?.opts.tracks;
     const lines = run ? [
         `ATTEMPT ${run.attempt}`, `HITS ${run.hits}`, `TIME ${(run.totalFrames / FPS).toFixed(1)}s`,
         'HITBOX centered', run.cleared ? 'CLEARED' : app.alreadyChecked ? 'cleared before' : '',
+        app.bot ? `BOT ${app.speed}x` : '',
+        tracks ? `TRACKS ${['seeing', 'thinking', 'hands', 'focus', 'panic'].map((k) => tracks[k] ?? 0).join('/')}` : '',
     ] : [app.loadError ? 'load failed' : app.patterns ? 'waiting for a region' : 'loading…'];
     lines.forEach((s, i) => ctx.fillText(s, 14, 216 + i * 18));
     ctx.font = '11px monospace'; ctx.fillStyle = '#567';
@@ -258,7 +406,17 @@ const gameSide = {
         }
     },
     reset() {
-        if (app.run) { app.run.restart(); app.clearSent = false; setState('ready'); renderExits(); }
+        stopBot();
+        if (app.run) {
+            if (!app.run.cleared) app.scoreFolded += app.run.score;
+            app.run.restart(); app.attemptInputs = []; app.clearSent = false; setState('ready'); renderExits();
+        }
+    },
+    botWalkTo: (goal, options) => botWalkTo(goal, options),
+    botStop() {
+        const was = !!app.bot;
+        stopBot();
+        if (was && app.state === 'playing') setState('ready');
     },
 };
 window.__swfBridge = Object.assign(window.__swfBridge ?? {}, gameSide);
@@ -281,12 +439,19 @@ window.__noiz2saDebug = () => ({
     clearedThisVisit: app.clearedThisVisit,
     exits: app.exits.map((e) => e.exitName),
     tapeLeft: app.tape ? app.tape.length - app.tapeAt : 0,
+    configures: app.configures,
+    visitSeconds: app.visitFrames / FPS,
+    visitScore: visitScore(),
+    speed: app.speed,
+    bot: app.bot ? { goal: app.bot.goal, failed: app.bot.failed, tracks: app.bot.opts.tracks } : null,
+    lastBot: app.lastBot,
 });
 window.__noiz2saTest = {
     /** play an injected tape from the current attempt's next frame; `speed` game frames per 16 ms */
     play(tape, { speed = 1 } = {}) {
         if (!app.run) return false;
         app.tape = typeof tape === 'string' ? decodeInputs(tape) : [...tape];
+        stopBot();
         app.tapeAt = 0; app.injected = true; app.speed = Math.max(1, Math.trunc(speed));
         if (app.state !== 'cleared') setState('playing');
         return true;

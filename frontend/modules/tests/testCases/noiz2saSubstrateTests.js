@@ -68,6 +68,9 @@ function pressKey(code) {
     w.dispatchEvent(new w.KeyboardEvent('keyup', { code, bubbles: true }));
 }
 
+/** the host module (dynamic: it registers the substrate on import, which only the substrates mode wants) */
+const trainerModule = () => import('../../noiz2saSubstrate/index.js');
+
 function resolveBlockFor(region) {
     const { visits } = resolveQueueBlocks(loopStateSingleton.getActionQueue?.() ?? []);
     return [...visits].reverse().find((v) => v.name === region) ?? null;
@@ -198,6 +201,7 @@ async function noiz2saRegionLoopVisit(testController) {
         if (!crossed) return testController.getOverallResult();
         await testController.stateManager.pingWorker('after-record', 3000);
 
+        const trainer = (await trainerModule()).getTrainerService();
         const saved = loopStateSingleton._lookupBoundSummary(region, block.instance);
         testController.assertEqual('a summary recording is bound to the block', true, !!saved);
         if (!saved) return testController.getOverallResult();
@@ -207,6 +211,13 @@ async function noiz2saRegionLoopVisit(testController) {
             JSON.stringify(saved.summary.checks ?? []));
         testController.assertEqual('the crossed exit is the recorded departure', exitId, saved.departureExitId);
         testController.assertEqual('a summary carries no replayable actions', 0, (saved.actions ?? []).length);
+        // N4: the visit's play-clock stats ride the summary — every attempt's game seconds (240 + 1002 frames) and
+        // score — so its Playback can earn training points
+        const ps = saved.summary.playStats ?? null;
+        testController.assertEqual('the summary carries the visit\'s playStats: 1242 frames of game time and a score',
+            true, !!ps && Math.abs(ps.gameSeconds - 1242 / 62.5) < 1e-9 && ps.score > 0);
+        testController.assertEqual('the recorded duration is the whole GAME seconds played (N4: charged per game second)',
+            Math.floor(1242 / 62.5), saved.summary.durationSeconds);
         const rate = loopStateSingleton.costDataManager?.getTimeDrainPerSecond?.(region) ?? 1;
         const drained = manaAtPark - currentMana();
         testController.log(`drained ${drained} over ${saved.summary.durationSeconds}s at ${rate}/s`);
@@ -225,6 +236,7 @@ async function noiz2saRegionLoopVisit(testController) {
         if (!back) return testController.getOverallResult();
         loopStateSingleton._resetLoop();
         const expected = loopStateSingleton._priceSummaryReplay(region, saved.summary);
+        const earnedBefore = trainer.trainer.earned;
         let manaAtApply = null;
         const onParked = (d) => { if (d?.summary && manaAtApply === null) manaAtApply = currentMana(); };
         testController.eventBus.subscribe('loopState:manualEntered', onParked);
@@ -235,6 +247,14 @@ async function noiz2saRegionLoopVisit(testController) {
         testController.assertEqual('instant Playback crossed the recorded departure', true, !!recrossed);
         testController.assertEqual('Playback spent exactly the repriced summary', true,
             manaAtApply !== null && Math.abs((manaAtApply - currentMana()) - expected) < 0.001);
+        // ── 7. N4: instant Playback earns the recorded visit's training points (⚖ "Instant playback should still
+        // accumulate resources") ──
+        const { pointsFor } = await import('../../bulletml-dodge/src/game/tracks.js');
+        const want = pointsFor(trainer.trainer.settings, { seconds: ps?.gameSeconds ?? 0, score: ps?.score ?? 0 });
+        const got = trainer.trainer.earned - earnedBefore;
+        testController.log(`Playback earned ${got.toFixed(3)} training points (the summary's playStats: ${want.toFixed(3)})`);
+        testController.assertEqual('instant Playback earned exactly the summary\'s points (its game seconds and score)',
+            true, want > 0 && Math.abs(got - want) < 1e-9);
     } finally {
         gameWindow()?.__noiz2saTest?.release?.();
         gs.noManaDepletionReset = savedNoReset;
@@ -354,6 +374,187 @@ async function noiz2saRefusedClearResent(testController) {
     return testController.getOverallResult();
 }
 
+/**
+ * N4 — the Bot block plays a region at the CURRENT tracks, and the bot trains.
+ *
+ * Twice, each time on a fresh load of the preset (the region's location unchecked) and a FRESH trainer (every track
+ * 0, strategy Even): a Bot block on the 1:1 region hands its regionMove to the walkTo solver, the page's humanlike bot
+ * (the worker) plays at tracks 0/0/0/0/0 and clears the region, the clear is checked and the page leaves by the
+ * queued exit. Measured headless (the game repo's runSegment, tracks 0 = the beginner, bot seed 1): deathless, 1002
+ * frames, score 17330. The first run plays at 1×, the second at 2× (the bot-speed setting); both play the same
+ * frames (the budget is counted, not wall-clock), and both cost the same mana — floor(16.032) game seconds × the
+ * region's rate (the drain is charged per GAME second). After each, the tracks rose (the points of 16.032 s and
+ * 17330 score, spent Even).
+ */
+async function noiz2saBotBlockTrains(testController) {
+    const { getTrainerService } = await trainerModule();
+    const { pointsFor } = await import('../../bulletml-dodge/src/game/tracks.js');
+    const service = getTrainerService();
+    const KEY = 'noiz2sa:trainer:v1';
+    let savedTrainer = null;
+    try { savedTrainer = localStorage.getItem(KEY); } catch { /* none */ }
+    const savedSettings = { botSpeed: service.settings.botSpeed, botRetryCap: service.settings.botRetryCap };
+    const gs = getGameStateSingleton();
+    const savedNoReset = gs.noManaDepletionReset;
+
+    /** one Bot-block visit; `tracks` = a hand-set trainer (strategy By hand), else a fresh one (Even) */
+    async function botVisit(speed, { tracks = null, retryCap = 0 } = {}) {
+        const label = `${speed}×${tracks ? ` tracks ${tracks.seeing}` : ''}${retryCap ? ` cap ${retryCap}` : ''}`;
+        testController.log(`── a Bot block at ${label} on a fresh load ──`);
+        const configuresBefore = debugState()?.configures ?? 0;
+        await testController.loadRulesFromFile(PRESET_RULES_PATH);
+        await testController.stateManager.pingWorker('after-rules-load', 3000);
+        const loopOn = await testController.pollForCondition(
+            () => getGameStateSingleton()?.isLoopModeActive === true, 'loop mode active', 8000, 100);
+        testController.reportCondition(`[${label}] loop mode active`, !!loopOn);
+        if (!loopOn) return null;
+        await testController.pollForCondition(
+            () => loopStateSingleton.getRegionCaptureShape?.(currentRegion()) === 'summary',
+            'the player landed in a Noiz2sa region', 10000, 200);
+        const region = currentRegion();
+        const regionData = testController.stateManager.getStaticData?.()?.regions?.get(region);
+        const location = regionData?.locations?.[0]?.name ?? null;
+        const exit = (regionData?.exits ?? []).find((e) => e.connected_region) ?? null;
+        testController.assertEqual(`[${label}] ${region} has its clear location and an exit`, true, !!(location && exit));
+        if (!location || !exit) return null;
+        const target = exit.connected_region;
+
+        service.reset(tracks ? 'manual' : 'even');
+        if (tracks) { Object.assign(service.trainer.tracks, tracks); service.setStrategy('manual'); }
+        service.applySettings({ botSpeed: speed, botRetryCap: retryCap });
+        gs.noManaDepletionReset = true;
+        gs.updatePath(target, exit.name, region);
+        const block = resolveBlockFor(region);
+        testController.assertEqual(`[${label}] resolved a queue block for ${region}`, true, !!block);
+        if (!block) return null;
+        loopStateSingleton.setBlockMode(region, block.instance, 'bot');
+        gs.refillMana();
+        const xpLevel = loopStateSingleton.getRegionXP(region).level;
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'noiz2saSubstratePanel' });
+        const configured = await testController.pollForCondition(
+            () => { const d = debugState(); return d?.configures > configuresBefore && d.regionId === region && d.state === 'ready'; },
+            `[${label}] the game page is configured with ${region}`, 30000, 200);
+        testController.reportCondition(`[${label}] the game page is configured with ${region}`, !!configured);
+        if (!configured) return null;
+        const manaBefore = currentMana();
+        const t0 = performance.now();
+        loopStateSingleton.startProcessing();
+        const driving = await testController.pollForCondition(
+            () => loopStateSingleton.botSolverRegion?.() === region && debugState()?.bot !== null,
+            `[${label}] the Bot block handed the walk to the page's bot`, 15000, 100);
+        testController.reportCondition(`[${label}] the Bot block handed the walk to the page's bot`, !!driving);
+        if (!driving) {
+            testController.log(`DIAG: page ${JSON.stringify(debugState())}`, 'error');
+            return null;
+        }
+        const crossed = retryCap
+            ? await testController.pollForCondition(() => debugState()?.lastBot?.gaveUp === true,
+                `[${label}] the bot gave up ${region} at the retry cap`, 90000, 100)
+            : await testController.pollForCondition(() => currentRegion() === target,
+                `[${label}] the bot cleared ${region} and left into ${target}`, 90000, 100);
+        const wallSeconds = (performance.now() - t0) / 1000;
+        testController.reportCondition(retryCap ? `[${label}] the bot gave up ${region} at the retry cap`
+            : `[${label}] the bot cleared ${region} and left into ${target}`, !!crossed);
+        const d = debugState();
+        if (!crossed) {
+            testController.log(`DIAG: page ${JSON.stringify(d)}`, 'error');
+            return null;
+        }
+        await testController.stateManager.pingWorker('after-bot', 3000);
+        const out = {
+            region, xpLevel, wallSeconds,
+            tracksPlayed: d?.lastBot?.tracks ?? null, speedPlayed: d?.lastBot?.speed ?? null,
+            cleared: d?.lastBot?.cleared === true, failed: d?.lastBot?.failed ?? null, attempts: d?.lastBot?.attempts ?? null,
+            // read at the clear (the page has since been configured with the next region); at a give-up, the page's
+            frames: retryCap ? d?.frames : d?.lastBot?.frames ?? null,
+            visitSeconds: retryCap ? d?.visitSeconds : d?.lastBot?.visitSeconds ?? null,
+            score: retryCap ? d?.visitScore : d?.lastBot?.score ?? null,
+            pageState: d?.state ?? null, parked: loopStateSingleton.botSolverRegion?.() === region,
+            checked: snapshotHasLocation(testController.stateManager.getSnapshot(), location),
+            spent: manaBefore - currentMana(),
+            rate: loopStateSingleton.costDataManager?.getTimeDrainPerSecond?.(region) ?? 1,
+            tracksAfter: { ...service.trainer.tracks }, earned: service.trainer.earned,
+        };
+        testController.log(`[${label}] ${JSON.stringify(out)}`);
+        loopStateSingleton.stopProcessing?.();
+        return out;
+    }
+
+    try {
+        const runs = [];
+        for (const speed of [1, 2]) {
+            const r = await botVisit(speed);
+            if (!r) return testController.getOverallResult();
+            runs.push(r);
+            const zero = { seeing: 0, thinking: 0, hands: 0, focus: 0, panic: 0 };
+            testController.assertEqual(`[${speed}×] the bot played at the CURRENT tracks (a fresh trainer: 0/0/0/0/0)`,
+                JSON.stringify(zero), JSON.stringify(r.tracksPlayed));
+            testController.assertEqual(`[${speed}×] at the bot-speed setting`, speed, r.speedPlayed);
+            testController.assertEqual(`[${speed}×] cleared deathless in 1002 frames with score 17330 (the headless runSegment)`,
+                true, r.cleared && r.failed === 0 && r.frames === 1002 && r.score === 17330);
+            testController.assertEqual(`[${speed}×] the clear checked the region's location`, true, r.checked);
+            testController.assertEqual(`[${speed}×] the region's XP level was 0 (the drain was not discounted)`, 0, r.xpLevel);
+            testController.assertEqual(`[${speed}×] the visit cost floor(its game seconds) × the rate`,
+                Math.floor(1002 / 62.5) * r.rate, r.spent);
+            const want = pointsFor(service.trainer.settings, { seconds: 1002 / 62.5, score: 17330 });
+            testController.assertEqual(`[${speed}×] the bot earned the visit's training points (16.032 s, 17330 score)`,
+                true, Math.abs(r.earned - want) < 1e-9);
+            testController.assertEqual(`[${speed}×] the tracks rose afterwards (Even)`,
+                JSON.stringify({ seeing: 2, thinking: 2, hands: 2, focus: 1, panic: 1 }), JSON.stringify(r.tracksAfter));
+        }
+        testController.assertEqual('2× cost the same mana as 1× for the same clear', runs[0].spent, runs[1].spent);
+        testController.log(`wall clock: ${runs[0].wallSeconds.toFixed(1)} s at 1×, ${runs[1].wallSeconds.toFixed(1)} s at 2×`);
+        testController.assertEqual('2× took less wall clock than 1×', true, runs[1].wallSeconds < runs[0].wallSeconds);
+
+        // ── retries: at tracks 20 (headless runSegment: hit at 939, 259 and 742 frames, cleared in 1002; the attempts'
+        // scores 14730, 3210, 11700, 15000) — each attempt with its own bot seed, at 4× ──
+        const t20 = { seeing: 20, thinking: 20, hands: 20, focus: 20, panic: 20 };
+        const r3 = await botVisit(4, { tracks: t20 });
+        if (!r3) return testController.getOverallResult();
+        testController.assertEqual('[4× tracks 20] the bot played at the hand-set tracks', JSON.stringify(t20), JSON.stringify(r3.tracksPlayed));
+        testController.assertEqual('[4× tracks 20] three hits, each restarting the region, then the clear on attempt 4 (as headless)',
+            true, r3.cleared && r3.failed === 3 && r3.attempts === 4 && r3.frames === 2942);
+        testController.assertEqual('[4× tracks 20] the visit\'s score counts every attempt from the region\'s start',
+            14730 + 3210 + 11700 + 15000, r3.score);
+        testController.assertEqual('[4× tracks 20] the visit cost floor(2942 frames of game time) × the rate, hits included',
+            Math.floor(2942 / 62.5) * r3.rate, r3.spent);
+        testController.assertEqual('[4× tracks 20] By hand: the points wait unspent, the tracks stay', JSON.stringify(t20),
+            JSON.stringify(r3.tracksAfter));
+        // the retry cap (a setting; default none): after 2 failed attempts the bot gives up and the region waits
+        const r4 = await botVisit(4, { tracks: t20, retryCap: 2 });
+        if (!r4) return testController.getOverallResult();
+        testController.assertEqual('[4× tracks 20 cap 2] the bot gave up after 2 failed attempts (939 + 259 frames)',
+            true, !r4.cleared && r4.failed === 2 && r4.frames === 939 + 259);
+        testController.assertEqual('[4× tracks 20 cap 2] the region waits (its clock stopped); the Bot block stays parked',
+            true, r4.pageState === 'ready' && r4.parked && loopStateSingleton._playClock?.running === false);
+        testController.assertEqual('[4× tracks 20 cap 2] the attempts played were charged', Math.floor(1198 / 62.5) * r4.rate, r4.spent);
+    } finally {
+        loopStateSingleton.stopProcessing?.();
+        gs.noManaDepletionReset = savedNoReset;
+        gs.setLoopModeActive(false);
+        try {
+            if (savedTrainer === null) localStorage.removeItem(KEY); else localStorage.setItem(KEY, savedTrainer);
+        } catch { /* none */ }
+        service.applySettings(savedSettings);
+        service.reload();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'noiz2sa-bot-block-trains',
+    name: 'Noiz2sa: a Bot block clears a region at the current tracks, the tracks rise, and 2× costs what 1× costs',
+    description: 'Twice on a fresh load of noiz2sa_substrate_test and a fresh trainer (tracks 0, Even): a Bot block on '
+        + '1:1 hands its exit to the page\'s humanlike bot (worker), which clears the region deathless in 1002 frames '
+        + '(score 17330, as headless runSegment at tracks 0) and leaves; the clear is checked, the visit costs '
+        + 'floor(16.032) game seconds × the rate, the bot earns the visit\'s points and the tracks rise. Once at 1×, '
+        + 'once at 2× (the bot-speed setting): the same frames and the same mana. Then at tracks 20 and 4×: three '
+        + 'hits and a clear on attempt 4 (as headless), and with a retry cap of 2 the bot gives up and the region waits.',
+    testFunction: restoresSavedQueues(noiz2saBotBlockTrains),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
 registerTest({
     id: 'noiz2sa-refused-clear-resent',
     name: 'Noiz2sa: a clear the gate refused is sent again on the same visit; an accepted one never twice',
@@ -370,9 +571,9 @@ registerTest({
     name: 'Noiz2sa: a region played by injected input — a hit restarts it, the clear checks it, Record → Playback',
     description: 'Loads noiz2sa_substrate_test (loop mode), parks a Record block on its 1:1 region and drives the '
         + 'game page by injected input: idle fire is hit at frame 240 and the region restarts with nothing '
-        + 'checked; a clearing tape clears it and checks its location; leaving saves a summary (duration, check, '
-        + 'departure) priced by the live time drain; then instant Playback spends the repriced summary and '
-        + 'crosses the departure.',
+        + 'checked; a clearing tape clears it and checks its location; leaving saves a summary (duration in whole '
+        + 'game seconds, check, departure, playStats) priced by the live time drain; then instant Playback spends '
+        + 'the repriced summary, crosses the departure and earns the summary\'s training points.',
     testFunction: restoresSavedQueues(noiz2saRegionLoopVisit),
     category: 'noiz2saSubstrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)

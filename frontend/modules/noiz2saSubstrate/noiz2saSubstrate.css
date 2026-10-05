@@ -1,0 +1,24 @@
+/* The training section of the host-side Noiz2sa panel (noiz2saTrainingSection.js), under the iframe. */
+
+.noiz2sa-training {
+    flex-shrink: 0;
+    max-height: 40%;
+    overflow-y: auto;
+    padding: 6px 8px;
+    border-top: 1px solid #345;
+    background: #121a22;
+    color: #cdd6dd;
+    font: 12px system-ui, sans-serif;
+}
+.noiz2sa-training .n2t-head { display: flex; gap: 8px; align-items: baseline; margin-bottom: 4px; }
+.noiz2sa-training .n2t-points { color: #8ab; font-family: monospace; }
+.noiz2sa-training .n2t-track { display: grid; grid-template-columns: 64px 1fr 56px auto; gap: 6px; align-items: center; margin: 2px 0; }
+.noiz2sa-training .n2t-name { text-transform: capitalize; }
+.noiz2sa-training .n2t-bar { height: 8px; background: #0a0d10; border: 1px solid #234; border-radius: 2px; overflow: hidden; }
+.noiz2sa-training .n2t-fill { display: block; height: 100%; background: #4a8; }
+.noiz2sa-training .n2t-pos { font-family: monospace; text-align: right; }
+.noiz2sa-training .n2t-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.noiz2sa-training button, .noiz2sa-training select {
+    font: 11px monospace; background: #0a0d10; color: #dde; border: 1px solid #345; border-radius: 3px; padding: 2px 6px;
+}
+.noiz2sa-training button:disabled { opacity: .45; }

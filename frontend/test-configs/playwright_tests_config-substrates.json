@@ -113,6 +113,12 @@
             "_comment": "bulletml-incremental N3: the Noiz2sa substrate's one row. Loop mode (the preset carries loop_costs): a Record block on the 1:1 region; injected idle fire is hit at frame 240 and the region restarts with nothing checked; a clearing tape (the game's Ace bot, 1002 frames) checks the clear; leaving saves a summary priced by the live time drain; instant Playback spends the repriced summary. Batch fast: the injected input runs 8 game frames per 16 ms, a few seconds of wall clock."
         },
         {
+            "id": "noiz2sa-bot-block-trains",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4: the Noiz2sa Bot block and the bot's training. Twice on a fresh load and a fresh trainer (tracks 0, Even): a Bot block on 1:1 hands its exit to the page's humanlike bot (a worker), which clears the region deathless in 1002 frames, score 17330 (the headless runSegment at tracks 0), and leaves; the clear is checked, the visit costs floor(16.032) game seconds x the rate, the bot earns the visit's points and the tracks rise to 2/2/2/1/1. Once at 1x, once at 2x (the bot-speed setting): the same frames, the same mana. Batch fast: ~16 s + ~8 s of bot play."
+        },
+        {
             "id": "noiz2sa-refused-clear-resent",
             "enabled": true,
             "category": "noiz2saSubstrate",
