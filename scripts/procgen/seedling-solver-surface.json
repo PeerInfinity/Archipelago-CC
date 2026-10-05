@@ -609,9 +609,9 @@
         "botDriverV2.js": 30,
         "dangerMap.js": 9,
         "director.js": 1,
-        "solverBot.js": 61
+        "solverBot.js": 62
       },
-      "sites": 101,
+      "sites": 102,
       "seen": "both",
       "via": [
         "const-alias",
@@ -854,9 +854,9 @@
       "form": "live-state",
       "files": {
         "botDriverV2.js": 114,
-        "solverBot.js": 191
+        "solverBot.js": 193
       },
-      "sites": 305,
+      "sites": 307,
       "seen": "both",
       "via": [
         "const-alias",
@@ -927,9 +927,9 @@
       "form": "event-ledger",
       "files": {
         "botDriverV2.js": 1,
-        "solverBot.js": 3
+        "solverBot.js": 5
       },
-      "sites": 4,
+      "sites": 6,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1798,7 +1798,7 @@
       "surface": "state",
       "name": "fall",
       "module": "frontend/modules/seedlingDemo/playerPhysicsV2.js",
-      "line": 1550,
+      "line": 1558,
       "class": "physics",
       "form": "live-state",
       "files": {
@@ -1910,7 +1910,7 @@
       "surface": "state",
       "name": "swim",
       "module": "frontend/modules/seedlingDemo/playerPhysicsV2.js",
-      "line": 1547,
+      "line": 1555,
       "class": "seedling",
       "form": "live-state",
       "files": {},
@@ -1951,7 +1951,7 @@
       "surface": "state",
       "name": "transition",
       "module": "frontend/modules/seedlingDemo/playerPhysicsV2.js",
-      "line": 1549,
+      "line": 1557,
       "class": "physics",
       "form": "live-state",
       "files": {},
@@ -2039,9 +2039,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 57,
-        "solverBot.js": 75
+        "solverBot.js": 76
       },
-      "sites": 134,
+      "sites": 135,
       "seen": "both",
       "via": [
         "const-alias",
@@ -2070,9 +2070,9 @@
       "files": {
         "botDriverV1.js": 2,
         "botDriverV2.js": 60,
-        "solverBot.js": 79
+        "solverBot.js": 80
       },
-      "sites": 141,
+      "sites": 142,
       "seen": "both",
       "via": [
         "const-alias",

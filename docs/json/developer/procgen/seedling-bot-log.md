@@ -13136,6 +13136,63 @@ the string-pull), L25/L26 ~2–6 s.
   corridors go where no committed walk went, and in L22 the drive stalled on a
   corridor the preview walked clean.
 
+### Seedling fidelity DESCENT — a fall fires the door it lands on
+
+Planning-2's slice on `fidelity-harvest/wave2` `47fb574643`. ⚖ The user,
+2026-10-05: the moonrock event stays disabled and L110's fall is NOT repointed
+(*"No repoint + model fix"*). This slice is the model fix. The report is
+`CC/docs/cloud-reports/seedling-fidelity-descent.md`.
+
+**The rule (D1, measured on the game, p4f headless).** `checkFallingInPit`
+builds `new Game(fallthroughLevel, x, y)` with `setFallFromCeiling`. On the new
+world's first frame the doors' `Teleporter.check()` runs BEFORE
+`Player.check()` (the doors were added after the player, and `addUpdate`
+prepends), so a door under the landing tile is LATCHED at the ctor position.
+`Player.check()` then lifts the player 83 px. The descent is ballistic y only
+and `Player.input()` returns while `fallFromCeiling`. `Teleporter.update` has
+no `fallFromCeiling` guard: the lift releases the latch on the first update,
+and a live door the descending player overlaps FIRES (`new Game(to, playerx,
+playery)`, no ceiling): the run arrives on the ground at the door's target and
+the fall is over. Stairs and teleporters behave alike. A deactivated door
+neither fires nor releases. `probe-seedling-descent.mjs` →
+`fixtures/descent-oracle.json`, six arms:
+- L110's pit on the built-in map: L0 (264,197) at t27, the stairs fire at t66,
+  → L2 (56,40). The delivered set is the same game, frame for frame.
+- `left` held through the fall-out and descent: x frozen at 264, and every
+  observation before the swap is identical.
+- the approved repoint: the descent crosses L2's `stairsup@48,16` from above
+  → L0.
+- **the latch discriminator** (probe world, L2 (48,96)): the landing tile is on
+  `teleporter@48,96` (→ L3), the drop on `stairsup@48,16` (→ L0). The game
+  goes to L0 at t28, one tick after the arrival. Latched at the dropped
+  position, it would have gone to L3 (mutant M2 does exactly that, at t66).
+- the solver's plan (D3).
+
+**The census.** 39 (pit, ctor) pairs over the 12 levels whose pits fall. Only
+one lands under a door: **L110 (64,64) → L0 `stairs@256,272` → L2 (48,32)**,
+fired 39 ticks into the descent. The delivered set's census is identical.
+`fidelityDescent.censusFallsOntoDoors` pins it.
+
+**D2 — the model.** `playerPhysicsV2.step`'s in-flight refusal is now the
+FALL-OUT's only. A door that fires during the descent is the tick's ordinary
+transition, and `levelRun` arrives the run through `arriveIn`. MODEL = GAME,
+stream-identical, on all six descent arms and on every moonrock-oracle fall arm.
+**D3 — the solver.** `reach-pit`'s record gains `chained: {via, ends}` only
+when a door fired in the coast. The goal API is unchanged: ask for the pit,
+read `chained.ends`. From L110's arrival the plan ends in L2 (56,40) at 233 t,
+and the game plays it.
+
+**Trap candidates**, for the catalogue to number:
+
+- a refusal that names a "transport in flight" covers two phases that are
+  different worlds: the fall-out is the OLD Game, the descent is the NEW one's
+  arrival animation. Name the phase the refusal is about;
+- "is the arrival door latched?" has one answer per `check()` ORDER, not per
+  door: the same arrival latches the door under the ctor and not the door under
+  the drop. Build the world that separates them before trusting either;
+- a record field that names where a goal's swap GOES (`to`) is not where the run
+  ENDS. A chain needs its own field, or the caller reads the wrong room.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
