@@ -1046,12 +1046,6 @@ export const ENTITY_CLASSES = Object.freeze({
              * placement SILENT (`silentHazards`), never an avoid volume.
              */
             speaksFrom: 'text',
-            /**
-             * ⛔ The old 48x48 square bounding the circle, HELD as a planner
-             * volume for a SILENT placement only (see `silentHazards`' `held`
-             * push in `buildLevelWorld`): the committed plans detour around it.
-             */
-            heldSquare: { dx: 8 - 24, dy: 8 - 24, w: 48, h: 48, originX: 0, originY: 0 },
         },
     },
     moonrock: {
@@ -4758,32 +4752,15 @@ export function buildLevelWorld(levelRecord, {
                 // not dropped, for the `entry` list's reason: "no hazard here"
                 // and "a hazard class whose placement cannot fire" must not
                 // print the same. See the `watcher` row's `speaksFrom`.
+                // ⛓ WATCHERFLIP: it is NO planner volume either. WATCHER held its
+                // old 48x48 square as one (`kind: 'held-silent'`) for the
+                // committed plans; the hold was released and `r9-solve-12`
+                // re-recorded on the game (2,419 -> 2,364 ticks).
                 silentHazards.push({
                     tag: e.type, x, y, id: `${e.type}@${e.x},${e.y}`,
                     why: `its \`${cls.hazard.speaksFrom}\` attribute is empty, and `
                         + '`NPC.talk()` runs only `if (p && myText[0].length > 0)` '
                         + '(`NPCs/NPC.as:188`)',
-                    held: true,
-                });
-                // ⛔⛔ AND ITS OLD SQUARE IS HELD AS A PLANNER VOLUME, flagged
-                // `held` — NOT because the game prices it (it does not) but
-                // because the committed campaign plans route AROUND it: L12's
-                // `watcher@296,104` square is a detour in `r9-solve-12`, which
-                // re-derives 2,419 -> 2,364 ticks without it, and no re-record
-                // is licensed (fidelity WATCHER, D1 STOP). A held volume only
-                // ever costs a detour; where it is a WALL the frontier names it
-                // and the `talk` verb walks through it at zero cost
-                // (`resolveTalkStrategy`'s silent arm), so no corridor is lost.
-                // Dropping it (and re-recording r9-solve-12) is one deletion here.
-                proximityHazards.push({
-                    cls, tag: e.type, x, y,
-                    kind: 'held-silent',
-                    effect: 'none in the game — a silent watcher; held for the committed plans',
-                    rect: entityRect(cls.hazard.heldSquare, x, y),
-                    disc: null,
-                    line: null,
-                    keyType: null,
-                    held: true,
                 });
             } else if (disposition === 'volume' && cls.hazard.speaksFrom
                 && PERSISTENCE_RESPONSE[e.type] === 'silence'
