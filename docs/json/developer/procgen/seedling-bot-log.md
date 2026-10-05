@@ -13256,6 +13256,57 @@ So `canCross` asks `dashMode: 'none'` by default.
   It is false of the solver. A derivation should report both claims rather than
   let one stand in for the other.
 
+### Seedling fidelity RETURN — L15 → L14 on the way back: a lock rebuilt closed, a button sealed behind it
+
+The JS arc's live walk (route B, Sword) re-entered L15 from L16 and was refused
+`level_15__r1c5 -> level_14` with *"no REACHABLE stance inside
+button@112,32"*. The report is `CC/docs/cloud-reports/seedling-fidelity-return.md`.
+
+**The game's state (D1).** The forward trip clears `{15,0}` (the lock's
+`turnOff()`) and both rocks. `Lock.check()` removes a lock only when
+`tSet < 0` (`Lock.as:39-46`), and `lock@128,48` is tSet 0, so the game rebuilds
+it CLOSED. `PushableBlock` reads no persistence, so the block is back at
+(64,64), and nothing holds the button. Three game recordings, each reproduced by
+the model:
+- `return-l15-reentry` (with the clears);
+- `return-l15-reentry-unclear` (without them);
+- `return-l15-walkin` (by the door from L16).
+
+The cleared and uncleared game streams are byte-identical, both held at x 146.5
+by the lock. **The build was never the gap.**
+
+**The room (D2).** The arrival column (x 144..159) is closed by the lock to the
+west and by Water to the south. Without `canSwim` the water drowns the player
+(`Player.as:1456`). The button and the block both lie past the lock the button
+opens. Without the Conch the crossing does not exist in the game. The refusal
+was right but named wrong: guard (iii)'s *"NO block in this room can reach it"*
+is asked from the walker's side. On the throw path, `deriveHoldStance` now asks
+`sealedBehindWall`: does a stance plan once a guard-(iii) wall is discharged? If
+one does, the refusal says **SEALED BEHIND ITS OWN LOCK** and carries `sealed`
+`{wall, presser, ownOpener, group, from, stance}`. Both states (with and without
+the clears) decline by that name. With the Conch the same arrival solves in
+222 t, and the game reproduces it (`return-l15-conch`, lands in L14, 0 hits).
+
+**The census (D3).** The route survey's re-entries (L0, L2, L3) hold no lock.
+On the live walk's return leg, **L16 from L18** is the same shape:
+`lock@320,112` (tset 1, tag 7) is rebuilt closed, and `button@272,48` is sealed
+behind it. In the atlas, 20 lock-family entities have tSet ≥ 0 and a tag. 7 are
+opened by a ButtonRoom (F6's latch re-presses those at build); the other 13 are
+rebuilt closed on every return.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A cleared tag is not an open lock.** `Lock.check()` reads the tag only for
+  `tSet < 0`. A forward trip's `{L,tag}` on a tSet ≥ 0 lock records that it WAS
+  open when the player left. It says nothing about the next build.
+- **"No block in this room" is asked from where the walker stands.** A
+  reachability claim made by a planner is relative to its start. Read it as a
+  claim about the room and it contradicts the forward trip that solved the same
+  room.
+- **A return can be a one-way door.** A room solved forward (block onto button,
+  through the lock, down the stairs) can be unsolvable backward with the same
+  inventory. The arrival is on the lock's far side from its opener.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

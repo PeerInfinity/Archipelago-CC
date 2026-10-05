@@ -129,7 +129,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 58,
+            "count": 59,
             "id": "plan"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 333,
+        "blockStyle": 334,
         "browser": 109,
         "cited": 158,
-        "files": 344,
+        "files": 345,
         "lineStyle": 11,
-        "withDocblock": 344,
-        "withFlags": 262
+        "withDocblock": 345,
+        "withFlags": 263
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8071,6 +8071,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "⛓⛓⛓ R9 SLICE 12c — **THE SWORD DASH'S RECT, DRIVEN AGAINST A BODY.**",
             "path": "scripts/procgen/plan-seedling-r9-l6-sword-dash-hit.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-return-l15.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-return-l15 — ⛓⛓⛓ SEEDLING FIDELITY RETURN (D1): L15 RE-ENTERED FROM L16 ON THE WAY BACK, WITH AND WITHOUT THE FORWARD TRIP'S CLEARS.",
+            "path": "scripts/procgen/plan-seedling-return-l15.mjs"
         },
         {
             "argvHelpers": [],
