@@ -137,6 +137,7 @@ import * as jtaBalanceModule from './modules/jtaBalance/index.js';
 import * as flashSubstrateModule from './modules/flashSubstrate/index.js';
 import * as bounceDemoModule from './modules/bounceDemo/index.js';
 import * as runnerDemoModule from './modules/runnerDemo/index.js';
+import * as noiz2saSubstrateModule from './modules/noiz2saSubstrate/index.js';
 import * as bounceRegionEditorModule from './modules/bounceRegionEditor/index.js';
 import * as playbackBotModule from './modules/playbackBot/index.js';
 
@@ -266,6 +267,7 @@ const BUNDLED_MODULES = {
   flashSubstrate: flashSubstrateModule,
   bounceDemo: bounceDemoModule,
   runnerDemo: runnerDemoModule,
+  noiz2saSubstrate: noiz2saSubstrateModule,
   bounceRegionEditor: bounceRegionEditorModule,
   playbackBot: playbackBotModule,
 };

@@ -432,6 +432,12 @@ export const DOCS_INDEX = Object.freeze([
         "summary": "The maze substrate (frontend/modules/mazeRoom/, substrate id maze) renders each region as a grid-of-tiles room: the player walks tile by tile, picks up items by stepping onto location tiles, and…"
     },
     {
+        "path": "docs/json/developer/procgen/noiz2sa.md",
+        "title": "Noiz2sa Substrate",
+        "section": "developer/procgen",
+        "summary": "The Noiz2sa substrate (frontend/modules/noiz2saSubstrate/, id noiz2sa) plays Kenta Cho's BulletML shoot-'em-up from the frontend/modules/bulletml-dodge/ submodule (PeerInfinity/bulletml-dodge…"
+    },
+    {
         "path": "docs/json/developer/procgen/omsi.md",
         "title": "Omsi Substrate (Idle Loops)",
         "section": "developer/procgen",
@@ -1346,6 +1352,7 @@ export const HELP_SECTIONS = Object.freeze([
             "docs/json/developer/procgen/loop-recording.md",
             "docs/json/developer/procgen/maze-lab.md",
             "docs/json/developer/procgen/maze.md",
+            "docs/json/developer/procgen/noiz2sa.md",
             "docs/json/developer/procgen/omsi.md",
             "docs/json/developer/procgen/paths-and-obstacles.md",
             "docs/json/developer/procgen/pipeline-presets.md",

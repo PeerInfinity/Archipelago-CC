@@ -300,6 +300,11 @@
             },
             {
               "type": "component",
+              "componentType": "noiz2saSubstratePanel",
+              "title": "Noiz2sa"
+            },
+            {
+              "type": "component",
               "componentType": "procgenPipelinePanel",
               "title": "Procgen Pipeline"
             },

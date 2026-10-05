@@ -22,12 +22,12 @@ const frz = (v) => {
 
 export const DOCS_INDEX = frz({
     "counts": {
-        "docs": 26,
-        "headings": 972,
+        "docs": 27,
+        "headings": 980,
         "indexHeadings": 2,
-        "lines": 23814,
+        "lines": 23877,
         "pages": 4,
-        "words": 287534
+        "words": 288514
     },
     "descriptionRule": "the document's own first paragraph, collapsed onto one line; past 400 characters it is cut to its first sentence.",
     "dir": "docs/json/developer/procgen",
@@ -58,7 +58,7 @@ export const DOCS_INDEX = frz({
             "file": "substrate-registry.md",
             "h1": "Substrate Registry Reference",
             "headings": 22,
-            "lines": 263,
+            "lines": 264,
             "links": [
                 "architecture.md",
                 "concepts.md",
@@ -68,7 +68,7 @@ export const DOCS_INDEX = frz({
                 "stepped-pipeline.md"
             ],
             "path": "docs/json/developer/procgen/substrate-registry.md",
-            "words": 4673
+            "words": 4702
         },
         {
             "description": "A catalogue of every demonstrable feature of the two procgen lab pages: the link that shows it, the command that reproduces it in node, which control to press, and what you are looking at. The catalogue itself is data in `demos.js`; this page says where it lives and how to add to it.",
@@ -439,6 +439,21 @@ export const DOCS_INDEX = frz({
             ],
             "path": "docs/json/developer/procgen/omsi.md",
             "words": 4321
+        },
+        {
+            "description": "The Noiz2sa substrate (`frontend/modules/noiz2saSubstrate/`, id `noiz2sa`) plays Kenta Cho's BulletML shoot-'em-up from the `frontend/modules/bulletml-dodge/` submodule (`PeerInfinity/bulletml-dodge`, `branch = substrate`) in a same-origin iframe, as a summary loop-mode substrate.",
+            "file": "noiz2sa.md",
+            "h1": "Noiz2sa Substrate",
+            "headings": 8,
+            "lines": 62,
+            "links": [
+                "flash.md",
+                "loop-recording.md",
+                "runner.md",
+                "substrate-registry.md"
+            ],
+            "path": "docs/json/developer/procgen/noiz2sa.md",
+            "words": 951
         }
     ],
     "indexIn": "docs/json/developer/procgen/README.md",

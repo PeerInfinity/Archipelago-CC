@@ -288,6 +288,10 @@
       "path": "./modules/runnerDemo/index.js",
       "enabled": true
     },
+    "noiz2saSubstrate": {
+      "path": "./modules/noiz2saSubstrate/index.js",
+      "enabled": true
+    },
     "procgenPipeline": {
       "path": "./modules/procgenPipeline/index.js",
       "enabled": true
@@ -381,6 +385,7 @@
     "flashSubstrate",
     "bounceDemo",
     "runnerDemo",
+    "noiz2saSubstrate",
     "procgenPipeline",
     "bounceRegionEditor",
     "procgenPlayer",

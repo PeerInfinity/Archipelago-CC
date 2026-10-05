@@ -83,6 +83,7 @@ Documented in depth in the [procgen developer docs](../developer/procgen/README.
 - **Flash Substrate** (`flashSubstrate`) — recompiled Flash games as regions. See [Flash Substrate](../developer/procgen/flash.md).
 - [Text Adventure](./textAdventure.md) (`textAdventureSubstrateWrapper`) — the enabled iframe-hosted text-adventure path: regions as prose with clickable exits and locations. [User guide](../user/modules/textAdventure.md) · [Text Adventure Substrate](../developer/procgen/text-adventure.md).
 - **JtA Substrate Wrapper** (`jtaSubstrateWrapper`) — Journey to Ascension as a zone-based substrate. See [JtA Substrate](../developer/procgen/jta.md).
+- **Noiz2sa** (`noiz2saSubstrate`) — the BulletML shoot-'em-up substrate: a region is a segment of a stage. See [Noiz2sa Substrate](../developer/procgen/noiz2sa.md).
 - **Idle Loops Substrate Wrapper** (`omsiSubstrateWrapper`) — Idle Loops (omsi-loops) as a loop-mode substrate. See [Omsi Substrate (Idle Loops)](../developer/procgen/omsi.md).
 - **Maze Game Data Panel** (`mazeGameDataPanel`) — views and edits A-Mazing-Idle game data (points, biome, mazes, saves).
 

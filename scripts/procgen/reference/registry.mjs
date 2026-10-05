@@ -65,8 +65,8 @@ const DOC_DIR = 'docs/json/developer/procgen';
  * ⛓⛓ THE LIBRARY IMPORT ORDER — DECLARED (the library table's order; the
  * columns are in id order whatever this order is).
  *
- * These are the eight files `substrate-registry.md` names on its own "Entry
- * sources" line. ⚠ `flash` registers as a side effect of `bounceDemoLibrary`
+ * These are the files the library table at the end of the matrix region in
+ * `substrate-registry.md` lists. ⚠ `flash` registers as a side effect of `bounceDemoLibrary`
  * (bounce's entry factory builds on the flash one), so `flash` arrives with
  * bounce's library rather than its own — which is a fact about the code, and
  * the table PRINTS which library each id actually arrived with.
@@ -83,6 +83,7 @@ export const REGISTRY_LIBRARIES = Object.freeze([
     'frontend/modules/flashPanel/flashSeedlingGenBuild.js',
     'frontend/modules/jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',
     'frontend/modules/omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js',
+    'frontend/modules/noiz2saSubstrate/noiz2saSubstrateLibrary.js',
 ]);
 
 /** ⛓ THE REGISTRY ITSELF — in the `shared/` submodule, imported read-only. */

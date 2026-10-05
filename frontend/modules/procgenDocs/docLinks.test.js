@@ -254,20 +254,23 @@ describe('the corpus census — printed, then pinned', () => {
          *              flash.md § The solver mode (`doc` 252 → 254).
          *   329 → 330  SEEDLING SOLVER-WALK W2 (2026-10-02): playback-and-debugging.md →
          *              flash.md § Wasm playback (`doc` 254 → 255).
+         *   330 → 337  BULLETML N3 (2026-10-05): noiz2sa.md (its README index row, five
+         *              sibling links) and substrate-registry.md's `noiz2sa` annotation →
+         *              noiz2sa.md (`doc` 255 → 262).
          */
         expect(by).toEqual({
             'same-doc': 17,
-            doc: 255,
+            doc: 262,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(330);
+        expect(CORPUS.length).toBe(337);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(255);
+        expect(docs).toHaveLength(262);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);
