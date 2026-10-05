@@ -35,6 +35,8 @@ export const SKIP_MENU_DEFAULT = true;
 export const MOVE_SOURCE_EXIT = `${MENU_PANEL_MODULE_ID}-exit`;
 export const MOVE_SOURCE_START = `${MENU_PANEL_MODULE_ID}-start`;
 export const MOVE_SOURCE_RESTART = `${MENU_PANEL_MODULE_ID}-restart`;
+/** Published on the event bus after a Restart (`{mode, target, from}`) — `menuPanel/index.js` `restart()`. */
+export const RESTARTED_EVENT = `${MENU_PANEL_MODULE_ID}:restarted`;
 
 /**
  * One exit of a start region, as a button's worth of data.

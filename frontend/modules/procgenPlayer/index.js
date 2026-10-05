@@ -61,6 +61,10 @@ let pendingStartTransition = null;
 // (e.g. the first real region after a synthetic 'Menu'). Cached here
 // so substrate-driven loop resets can teleport directly to it.
 let resolvedStartRegion = null;
+// The start HOP itself (`findStartRegion`'s `{region, sourceRegion,
+// exitName}`), kept past the load: `retakeStartHop` re-publishes it, and a
+// move along it is marked `startHop` on the substrate's loadRegion.
+let startHop = null;
 // Last-broadcast active substrate. Cached so late-mounted substrate
 // panels can query getActiveSubstrate() at mount time — the eventBus
 // has no replay semantics for late subscribers.
@@ -88,7 +92,7 @@ function publishActiveSubstrateChanged(regionId) {
     }
 }
 
-function publishLoadRegion(regionId, arrivedFrom) {
+function publishLoadRegion(regionId, arrivedFrom, marks = null) {
     if (!warehouse || !eventBus?.publish) return false;
     const entry = warehouse.get(regionId);
     if (!entry || !entry.loadRegionEvent) return false;
@@ -96,6 +100,8 @@ function publishLoadRegion(regionId, arrivedFrom) {
         region_id: regionId,
         world: entry.world,
         arrivedFrom,
+        // ⛓ ADDITIVE (`startHop`, `restart`): see handleRegionMove.
+        ...(marks ?? {}),
     });
     publishActiveSubstrateChanged(regionId);
     return true;
@@ -128,6 +134,7 @@ function handleRawJsonLoaded(data) {
         warehouse = null;
         pendingStartTransition = null;
         resolvedStartRegion = null;
+        startHop = null;
         activeSubstrate = null;
         if (eventBus?.publish) {
             eventBus.publish('procgen:activeSubstrateChanged', null);
@@ -144,6 +151,7 @@ function handleRawJsonLoaded(data) {
     // start). A regionMove published before that reset lands would
     // be wiped out. Defer until handleRulesLoaded runs.
     pendingStartTransition = findStartRegion(rulesJson, playerId, warehouse);
+    startHop = pendingStartTransition;
     startDoc = rulesJson;
     startPlayerId = playerId;
     // Cache the resolved start so substrate-driven loop resets can
@@ -188,13 +196,57 @@ function handleRulesLoaded() {
     // the loop-mode action gate and from the loop-mode path-append
     // retirement (loops/loopModeExemptions.js), so the initial hop
     // behaves identically whether or not loop mode auto-enabled first.
-    dispatcher.publish('user:regionMove', {
-        sourceRegion: pendingStartTransition.sourceRegion,
-        targetRegion: pendingStartTransition.region,
-        exitName: pendingStartTransition.exitName,
-        source: 'procgenPlayer-start',
-    }, { initialTarget: 'bottom' });
+    publishStartHop(pendingStartTransition);
     pendingStartTransition = null;
+}
+
+/** The synthesized start hop's `source` (loop-mode exempt — see above). */
+export const START_HOP_SOURCE = 'procgenPlayer-start';
+
+/**
+ * ⛓ THE ONE PUBLISH OF THE START HOP — the load's (above) and a Restart's
+ * (`retakeStartHop`), so the two cannot drift: same source, same exit, same
+ * dispatcher shape. `restart: true` is the only addition a Restart makes.
+ */
+function publishStartHop(hop, { restart = false } = {}) {
+    dispatcher.publish('user:regionMove', {
+        sourceRegion: hop.sourceRegion,
+        targetRegion: hop.region,
+        exitName: hop.exitName,
+        source: START_HOP_SOURCE,
+        ...(restart ? { restart: true } : {}),
+    }, { initialTarget: 'bottom' });
+}
+
+/**
+ * ⛓⛓ **RESTART RE-TAKES THE START HOP** (the Menu panel's Restart on a world
+ * whose start region is a substrate that asks for it — today Seedling's two
+ * entries, decided by flashPanel, which owns those ids). The Menu panel's
+ * Restart lands the player on the DECLARED start (M2, unchanged); where the
+ * load would have skipped that start — the ONE rule, `skipsStart`: the setting
+ * AND exactly one exit — this takes the same hop the load took, so a Restart
+ * ends where a new game begins.
+ *
+ * Refused BY NAME, never guessed: no warehouse; a start that is itself
+ * warehoused (nothing to hop out of); the player not at the declared start
+ * (the reset has not landed); the load would not have skipped it.
+ *
+ * @returns {{taken: boolean, why: string|null, region: string|null}}
+ */
+export function retakeStartHop() {
+    const refuse = (why) => ({ taken: false, why, region: startHop?.region ?? null });
+    if (!warehouse || !startHop) return refuse('no procgen start hop is loaded');
+    if (!startHop.sourceRegion) return refuse('the start region is itself warehoused — there is no hop to re-take');
+    if (!dispatcher?.publish) return refuse('no dispatcher');
+    const here = centralRegistry?.getPublicFunction?.('gameState', 'getCurrentRegion')?.() ?? null;
+    if (here !== startHop.sourceRegion) {
+        return refuse(`the player is at "${here}", not the declared start "${startHop.sourceRegion}"`);
+    }
+    if (!skipsStart(startDoc, startPlayerId, startHop.sourceRegion, isSkipMenuEnabled())) {
+        return refuse('the load does not skip this start (skip off, or more than one exit) — the player stays on the menu');
+    }
+    publishStartHop(startHop, { restart: true });
+    return { taken: true, why: null, region: startHop.region };
 }
 
 function handleRegionMove(data) {
@@ -237,7 +289,15 @@ function handleRegionMove(data) {
         const arrivedFrom = arrivedExitId
             ? { exit_id: arrivedExitId, ...(data?.sourceRegion ? { source_region: data.sourceRegion } : {}) }
             : null;
-        publishLoadRegion(target, arrivedFrom);
+        // ⛓ `startHop`: this move is the declared start → the resolved start
+        // (the load's hop, a Restart's re-take, or the Menu panel's own exit
+        // button with skip off) — the arrival a NEW GAME makes, which a
+        // substrate may place differently from an ordinary door. `restart`:
+        // a Restart re-took it.
+        const isStartHop = !!startHop?.sourceRegion
+            && data?.sourceRegion === startHop.sourceRegion && target === startHop.region;
+        publishLoadRegion(target, arrivedFrom, isStartHop
+            ? { startHop: true, ...(data?.restart === true ? { restart: true } : {}) } : null);
     } else if (warehouse) {
         // Target is a region the warehouse doesn't own (e.g. AP-native
         // Menu, or a non-procgen region). No substrate panel is "the
@@ -281,6 +341,9 @@ export function register(registrationApi) {
             'getResolvedStartRegion',
             () => resolvedStartRegion,
         );
+
+        // ⛓ A Restart's re-take of the load's start hop (see retakeStartHop).
+        registrationApi.registerPublicFunction('procgenPlayer', 'retakeStartHop', retakeStartHop);
 
         // Lightweight per-region metadata lookup. Used by the loops
         // module to decide whether to delegate a queue action to the
@@ -386,6 +449,7 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
         warehouse = null;
         pendingStartTransition = null;
         resolvedStartRegion = null;
+        startHop = null;
         activeSubstrate = null;
         eventBus = null;
         dispatcher = null;
@@ -403,6 +467,7 @@ export function _testOnly_resetModuleState() {
     warehouse = null;
     pendingStartTransition = null;
     resolvedStartRegion = null;
+    startHop = null;
     activeSubstrate = null;
     eventBus = null;
     dispatcher = null;

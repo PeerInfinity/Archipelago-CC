@@ -42,6 +42,7 @@ import {
     MOVE_SOURCE_EXIT,
     MOVE_SOURCE_START,
     MOVE_SOURCE_RESTART,
+    RESTARTED_EVENT,
     describeMenu,
     firstExitOf,
     procgenOwnsStartHop,
@@ -214,6 +215,7 @@ export function restart() {
     if (loopModeActive()) {
         const loopState = centralRegistry?.getPublicFunction?.('loops', 'getLoopState')?.();
         loopState?.restartFromStart?.({ autoStart: false });
+        announceRestart({ mode: 'loop', target: null, from: currentRegion() });
         return { mode: 'loop', target: null };
     }
 
@@ -230,7 +232,23 @@ export function restart() {
             source: MOVE_SOURCE_RESTART,
         });
     }
+    announceRestart({ mode: 'world', target, from });
     return { mode: 'world', target };
+}
+
+/**
+ * ⛓ `menuPanel:restarted` — AFTER the reset move, so a listener sees the player
+ * already at the declared start. A substrate whose game keeps its own position
+ * (Seedling: the game does not move with the AP region) listens here to put
+ * its player back too (flashPanel re-takes the start hop). `{mode, target,
+ * from}`; `mode: 'loop'` is the loops delegation, which moved nobody here.
+ */
+function announceRestart(payload) {
+    try {
+        moduleEventBus?.publish?.(RESTARTED_EVENT, payload);
+    } catch (error) {
+        log('warn', `${RESTARTED_EVENT} listener threw`, error);
+    }
 }
 
 // --- the load handshake -----------------------------------------------------
@@ -304,6 +322,7 @@ export function register(registrationApi) {
     // no throw, no delivery), so the skip-OFF self-activation needs this line
     // as much as it needs the publish call.
     registrationApi.registerEventBusPublisher('ui:activatePanel');
+    registrationApi.registerEventBusPublisher(RESTARTED_EVENT);
 
     registrationApi.registerSettingsSchema({
         type: 'object',

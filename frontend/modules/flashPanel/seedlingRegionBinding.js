@@ -173,6 +173,43 @@ export function resolveArrivalSpawn(world, arrivedFrom, returnSpawns = null) {
 }
 
 /**
+ * ⛓⛓ **WHERE A NEW GAME STARTS — THE ONE ANSWER** (the Menu panel's Restart,
+ * 2026-10-05). `world` is the START region's payload (the region the declared
+ * start's hop enters: `level_0__r8c0`, `overworld_start__r8c0`, …); `set` is
+ * the level set a randomized load DELIVERED, or null.
+ *
+ * Every caller that puts a player at the start asks this, so they cannot drift:
+ *   - the binding's start-hop arrival (`onLoadRegion` with `startHop`) — a new
+ *     game's first teleport, and a Restart's;
+ *   - the randomized load's reset (`seedlingRandomizerWiring`), whose boot
+ *     position is this answer without the set (`set: null`).
+ *
+ * The answer, in order:
+ *   1. a delivered set that names its own start POSITION (the generated arm:
+ *      `summary.startCell`) — the reset sends exactly that, so a new game ends
+ *      there;
+ *   2. otherwise the start region's arrival spawn with no "came from"
+ *      (`resolveArrivalSpawn(world, null, …)`: its FIRST exit's return spawn,
+ *      else its entrance spawn) — where the start hop's arrival teleports, and
+ *      what a level-only set's reset re-sends as its boot position.
+ *
+ * `source` says which answered. null = the region carries no spawn.
+ *
+ * @returns {{level:number, x:number, y:number, source:'set'|'arrival',
+ *   exitId?:string, landing?:string}|null}
+ */
+export function seedlingStartSpawn({ world = null, returnSpawns = null, set = null } = {}) {
+    const start = set?.start ?? null;
+    if (start && Number.isInteger(start.level) && Number.isInteger(start.x) && Number.isInteger(start.y)) {
+        return { level: start.level, x: start.x, y: start.y, source: 'set' };
+    }
+    const arrival = resolveArrivalSpawn(world, null, returnSpawns);
+    if (!arrival) return null;
+    return { level: arrival.level, x: arrival.x, y: arrival.y, source: 'arrival',
+        exitId: arrival.exitId, landing: arrival.landing };
+}
+
+/**
  * ⛓⛓ **THE PRE-SWAP DOOR REPORT** (EDITOR INTEGRATION M1; plan §11.1 A1,
  * §11.2). `Game.pendingExit` is `"<seq>|<fromLevel>|<type>|<x>|<y>|<to>"`,
  * written by `Teleporter.update()` in the frame BEFORE `FP.world = new Game()`
@@ -383,6 +420,37 @@ export class SeedlingRegionBinding {
         /** `from>to` pairs already warned about (a closed link): said once per region load. */
         this.warnedLinks = new Set();
         this.logicalMoves = 0;
+        /**
+         * ⛓ RESTART — the start region (the last `startHop` load's) and the set a randomized load
+         * delivered (`setStartSet`): the two inputs of `seedlingStartSpawn` besides the return spawns.
+         */
+        this.startRegion = null;
+        this.startWorld = null;
+        this.startSet = null;
+        this.arrivedByStartHop = false;
+        this.restarts = 0;
+    }
+
+    /** Where the current region's arrival lands: a start hop's is `seedlingStartSpawn`, any other the door's. */
+    _arrivalSpawn() {
+        return this.arrivedByStartHop
+            ? seedlingStartSpawn({ world: this.world, returnSpawns: this.returnSpawns, set: this.startSet })
+            : resolveArrivalSpawn(this.world, this.arrivedFrom, this.returnSpawns);
+    }
+
+    /** ⛓ RESTART — the level set a randomized load delivered (its `start` may carry a position). */
+    setStartSet(set) {
+        this.startSet = set ?? null;
+    }
+
+    /**
+     * ⛓ RESTART — `seedlingStartSpawn` for the start region this binding was loaded with, or null
+     * (no start hop seen). `set` defaults to the delivered one; the randomized load passes `null` to
+     * ask for its boot position.
+     */
+    startSpawn({ set = this.startSet } = {}) {
+        if (!this.startWorld) return null;
+        return seedlingStartSpawn({ world: this.startWorld, returnSpawns: this.returnSpawns, set });
     }
 
     /** ⛓ LOGICAL LINKS — the host hands over the sub-region map once the rules and the partition are in. */
@@ -459,6 +527,7 @@ export class SeedlingRegionBinding {
         }
         this.region = link.to;
         this.world = this.subRegions.worlds.get(link.to) ?? this.world;
+        this.arrivedByStartHop = false;
         this.arrivedFrom = { exit_id: link.name, source_region: link.from };
         this.pendingLogical.push({ region: link.to, at: this._now() });
         this.warnedLinks.clear();
@@ -503,12 +572,12 @@ export class SeedlingRegionBinding {
     setReturnSpawns(table) {
         this.returnSpawns = table ?? null;
         if (this.pendingSpawn && this.world) {
-            this.pendingSpawn = resolveArrivalSpawn(this.world, this.arrivedFrom, this.returnSpawns);
+            this.pendingSpawn = this._arrivalSpawn();
         }
     }
 
     /** procgen loaded a region into this substrate. */
-    onLoadRegion({ region_id: regionId, world, arrivedFrom } = {}) {
+    onLoadRegion({ region_id: regionId, world, arrivedFrom, startHop = false, restart = false } = {}) {
         /**
          * ⛓ LOGICAL LINKS — the load a logical move caused is NOT an arrival: the player is already
          * standing where they are, and the binding moved itself when it published the move. Swallowed
@@ -520,6 +589,7 @@ export class SeedlingRegionBinding {
             this.pendingLogical.splice(logical, 1);
             this.region = regionId;
             this.world = world ?? this.world;
+            this.arrivedByStartHop = false;
             return [{ type: 'info', message: `[region atlas] "${regionId}" entered by a logical link — no teleport` }];
         }
         this.pendingLogical = [];
@@ -529,7 +599,18 @@ export class SeedlingRegionBinding {
         this.world = world ?? null;
         this.arrivedFrom = arrivedFrom ?? null;
         this.warnedLevels.clear();
-        const spawn = resolveArrivalSpawn(this.world, this.arrivedFrom, this.returnSpawns);
+        /**
+         * ⛓⛓ RESTART — THE START HOP'S ARRIVAL IS A NEW GAME'S (`seedlingStartSpawn`): a new game's first
+         * load and a Restart's re-take are the same hop, so both land where the randomized reset sends a
+         * new game. Any other load arrives through the door it came from.
+         */
+        this.arrivedByStartHop = !!startHop;
+        if (startHop) {
+            this.startRegion = this.region;
+            this.startWorld = this.world;
+            if (restart) this.restarts += 1;
+        }
+        const spawn = this._arrivalSpawn();
         if (!spawn) {
             return [{
                 type: 'warn',
@@ -538,7 +619,10 @@ export class SeedlingRegionBinding {
             }];
         }
         const effects = [];
-        if (this.arrivedFrom?.exit_id && !spawn.matchedArrivedFrom) {
+        if (restart) {
+            effects.push({ type: 'info', message: `[region atlas] Restart: back to the start region "${this.region}" — `
+                + `level ${spawn.level} (${spawn.x}, ${spawn.y}), ${spawn.source === 'set' ? 'the delivered set\'s start' : 'its arrival spawn'}` });
+        } else if (!startHop && this.arrivedFrom?.exit_id && !spawn.matchedArrivedFrom) {
             // Not a defect, and deliberately not loud: it is what the
             // synthesized Menu -> start-region hop looks like (its exit is
             // `GameStart`, which no atlas region declares), and what any move
@@ -598,7 +682,7 @@ export class SeedlingRegionBinding {
         this.pendingArrival = null;
         this.pendingDeparture = null;
         this.pendingBounce = null;
-        this.pendingSpawn = this.world ? resolveArrivalSpawn(this.world, this.arrivedFrom, this.returnSpawns) : null;
+        this.pendingSpawn = this.world ? this._arrivalSpawn() : null;
     }
 
     /**

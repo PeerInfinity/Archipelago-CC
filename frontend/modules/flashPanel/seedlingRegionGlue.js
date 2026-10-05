@@ -45,6 +45,7 @@
 import { FLASH_SEEDLING_SUBSTRATE_ID } from './flashSeedlingLibrary.js';
 import { FLASH_SEEDLING_GEN_SUBSTRATE_ID } from './flashSeedlingGenLibrary.js';
 import { SeedlingRegionBinding } from './seedlingRegionBinding.js';
+import { RESTARTED_EVENT } from '../menuPanel/menuPanelEngine.js';
 
 /** procgenPlayer's own broadcast of "which substrate owns the player now". */
 export const ACTIVE_SUBSTRATE_EVENT = 'procgen:activeSubstrateChanged';
@@ -89,7 +90,7 @@ export class SeedlingRegionGlue {
      *   every door passes, today's behaviour
      */
     constructor({ eventBus, getDispatcher, loadRegionEvent, substrateId, getPanel, now, canPass, isBotWalking,
-        timers } = {}) {
+        timers, getProcgen, stopBotWalks } = {}) {
         this.eventBus = eventBus ?? null;
         this.getDispatcher = getDispatcher ?? (() => null);
         this.loadRegionEvent = loadRegionEvent;
@@ -104,11 +105,19 @@ export class SeedlingRegionGlue {
         this._unsubs = [];
         this._handler = (payload) => this.handleLoadRegion(payload);
         this._activeHandler = (payload) => this.handleActiveSubstrateChanged(payload);
+        this._restartHandler = (payload) => this.handleMenuRestart(payload);
+        /**
+         * ⛓ RESTART — procgenPlayer's public functions (`getResolvedStartRegion`, `getRegionInfo`,
+         * `retakeStartHop`), resolved at CALL time; and the Playback Bot controllers' stop.
+         */
+        this.getProcgen = getProcgen ?? (() => null);
+        this.stopBotWalks = stopBotWalks ?? (() => 0);
+        this.lastRestart = null;
         // Diagnostics — the verify script reads these rather than inferring
         // behaviour from console text.
         this.stats = { loads: 0, teleports: 0, regionMoves: 0, warnings: 0, parks: 0,
             resumes: 0, setDeliveries: 0, locationChecks: 0, itemsFound: 0, doorsLocked: 0, bounces: 0,
-            logicalMoves: 0, positionReads: 0 };
+            logicalMoves: 0, positionReads: 0, restarts: 0 };
         /** ⛓ LOGICAL LINKS — is a Playback Bot walk in flight (its route credits its own links)? */
         this.isBotWalking = isBotWalking ?? (() => false);
         this._timers = timers ?? { setInterval: (fn, ms) => setInterval(fn, ms), clearInterval: (h) => clearInterval(h) };
@@ -198,6 +207,8 @@ export class SeedlingRegionGlue {
          */
         this._unsubs.push(this._subscribe(this.loadRegionEvent, this._handler));
         this._unsubs.push(this._subscribe(ACTIVE_SUBSTRATE_EVENT, this._activeHandler));
+        // ⛓ RESTART — the Menu panel's Restart (see handleMenuRestart).
+        this._unsubs.push(this._subscribe(RESTARTED_EVENT, this._restartHandler));
         this._startPositionWatch();
     }
 
@@ -301,6 +312,50 @@ export class SeedlingRegionGlue {
     _standDownAdapter() {
         this.adapter?.setHostOwnedLocations?.(
             this.checkBinding ? this.checkBinding.hostOwnedLocations() : new Set());
+    }
+
+    /**
+     * ⛓⛓ **RESTART** (⚖ the user, 2026-10-05: *"We already have a menu panel with a button to return to
+     * the start region. We might just need to listen for this and use the existing teleport tool"*).
+     *
+     * The Menu panel's Restart moves the AP player to the DECLARED start (`Menu`), which no substrate
+     * owns, so this binding PARKS and the game — which keeps its own position — stays where the player
+     * was. When the start region the load hops into is OURS (a Seedling room), the same hop is re-taken
+     * (`procgenPlayer.retakeStartHop`, which refuses by name where the load would not have skipped the
+     * menu): its region load is a `startHop` arrival, so the binding teleports to `seedlingStartSpawn`
+     * through the ordinary arrival — the existing `adapter.teleport` / `new Game(level, x, y)` — exactly
+     * where a new game starts. It is a WARP, not a new game: the game's persistence stays as it is.
+     *
+     * `{mode, target, from}` → the decision, kept on `lastRestart` for a gate.
+     */
+    handleMenuRestart(payload) {
+        const decide = (taken, why, extra = {}) => {
+            this.lastRestart = { taken, why, ...extra, at: Date.now() };
+            if (why) this._log(`[region atlas] Restart: the Seedling player was NOT moved — ${why}`);
+            return this.lastRestart;
+        };
+        if (payload?.mode !== 'world') return decide(false, `a ${payload?.mode ?? 'unknown'}-mode restart is not ours`);
+        const procgen = this.getProcgen() ?? null;
+        const start = procgen?.getResolvedStartRegion?.() ?? null;
+        const substrate = start ? (procgen?.getRegionInfo?.(start)?.substrate ?? null) : null;
+        if (!start || !this.substrateIds.has(substrate)) {
+            // Not a defect: the start is a maze (or nothing procgen owns). The binding is parked at the
+            // menu like any excursion, and re-entering a Seedling region teleports as always.
+            this.lastRestart = { taken: false, why: null, start, substrate, at: Date.now() };
+            return this.lastRestart;
+        }
+        // ⛓ A walk in flight is STOPPED before the warp: its tape belongs to the room it was solving.
+        // The Playback Bot re-plans from the start on the region move that follows.
+        const stopped = this.stopBotWalks();
+        const r = procgen?.retakeStartHop?.() ?? { taken: false, why: 'procgenPlayer has no retakeStartHop' };
+        if (r.taken) this.stats.restarts += 1;
+        return decide(r.taken, r.taken ? null : r.why, { start, substrate, stoppedWalks: stopped });
+    }
+
+    /** ⛓ RESTART — the set a randomized load delivered; `seedlingStartSpawn` reads its `start`. */
+    setStartSet(set) {
+        this.binding.setStartSet(set);
+        return this;
     }
 
     handleLoadRegion(payload) {

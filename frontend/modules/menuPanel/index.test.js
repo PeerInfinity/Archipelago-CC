@@ -34,7 +34,7 @@ import {
     setSkipMenuEnabled,
     _testOnly_resetModuleState,
 } from './index.js';
-import { MOVE_SOURCE_EXIT, MOVE_SOURCE_START, MOVE_SOURCE_RESTART } from './menuPanelEngine.js';
+import { MOVE_SOURCE_EXIT, MOVE_SOURCE_START, MOVE_SOURCE_RESTART, RESTARTED_EVENT } from './menuPanelEngine.js';
 
 const PLAIN_RULES = {
     game_name: 'Plain',
@@ -324,5 +324,25 @@ describe('menuPanel module', () => {
         expect(dispatcher.published).toHaveLength(0);
         // The loops reset owns the path in loop mode; this module leaves it alone.
         expect(gameState.getPath()).toHaveLength(1);
+    });
+    /**
+     * ⛓ RESTART on a substrate that keeps its own position (Seedling): the panel ANNOUNCES the restart on
+     * the bus AFTER the reset move, so a listener sees the player already at the declared start.
+     */
+    it('Restart announces menuPanel:restarted after the reset move, in both modes', async () => {
+        await boot({ gameState: freshGameState('Overworld') });
+        const order = [];
+        dispatcher.publish = (eventName, data) => order.push(`dispatch:${data.targetRegion}`);
+        bus.publish = (event, data) => order.push(`bus:${event}:${data.mode}:${data.target}:${data.from}`);
+        restart();
+        expect(order).toEqual(['dispatch:Menu', `bus:${RESTARTED_EVENT}:world:Menu:Overworld`]);
+    });
+
+    it('a loop-mode Restart announces mode "loop" (the loops delegation moved nobody here)', async () => {
+        const loopState = { restartFromStart: () => {} };
+        await boot({ gameState: freshGameState('Overworld'), loopModeActive: true, loopState });
+        restart();
+        expect(bus.published.filter((p) => p.event === RESTARTED_EVENT).map((p) => p.data))
+            .toEqual([{ mode: 'loop', target: null, from: 'Overworld' }]);
     });
 });

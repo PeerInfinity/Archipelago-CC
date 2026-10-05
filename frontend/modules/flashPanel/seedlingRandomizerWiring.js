@@ -619,10 +619,23 @@ async function runSeedlingRandomizerLoadSteps({
      * sidecars may never have made it active), and both readings are reported
      * so a row can say WHICH one answered.
      */
+    /**
+     * ⛓⛓ RESTART (2026-10-05) — **AND BEFORE BOTH, THE ONE START-SPAWN SOURCE.** When the load hopped
+     * into the start region (the binding saw a `startHop` load), the boot position IS the start region's
+     * arrival — `seedlingStartSpawn` with no set, the spawn the binding's arrival already teleported to
+     * (MEASURED (16, 128) on the playthrough, §5.18; the declared report reads the same numbers). Asking
+     * the function rather than reading its echo is what lets a Restart, which asks it WITH the set, land
+     * exactly where this reset puts a new game: `resetTargetFor` sends `set.start` when it carries a
+     * position, else this.
+     */
+    const startArrival = glue?.binding?.startSpawn?.({ set: null }) ?? null;
     const declaredSpawn = glue?.binding?.lastSpawn ?? null;
     const declaredLevel = glue?.binding?.lastLevel ?? null;
     const fromDeclared = Number.isFinite(declaredSpawn?.x) && Number.isFinite(declaredSpawn?.y);
-    const bootPosition = fromDeclared
+    const bootPosition = startArrival
+        ? { x: startArrival.x, y: startArrival.y, level: startArrival.level,
+            source: 'seedlingStartSpawn (the start region\'s arrival)' }
+        : fromDeclared
         ? {
             x: declaredSpawn.x,
             y: declaredSpawn.y,
@@ -713,7 +726,9 @@ async function runSeedlingRandomizerLoadSteps({
     // stand-down: until the rewritten rooms are the ones being played, the
     // property path is still the right owner of every location.
     glue.setCheckBinding(loaded.checkBinding);
-    step('bind');
+    // ⛓ RESTART — the delivered set's `start` is the rest of `seedlingStartSpawn`'s answer.
+    glue.setStartSet?.(loaded.set);
+    step('bind', { startSpawn: glue?.binding?.startSpawn?.() ?? null });
     overlay.hide();
     step('overlay-off');
     log(`[ap placement] ${rooms} randomized room(s) mounted in ${result.chunks} chunk(s); `

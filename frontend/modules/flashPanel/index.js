@@ -335,6 +335,14 @@ export function initialize(moduleId, priorityIndex, initializationApi) {
     }),
     // ⛓ LOGICAL LINKS — no position is read while a Playback Bot walk is in flight (its route credits its links).
     isBotWalking: () => playbackControllers.some((c) => c?.busy?.() === true),
+    // ⛓ RESTART — the Menu panel's Restart re-takes procgenPlayer's start hop when the start is ours.
+    getProcgen: () => ({
+      getResolvedStartRegion: initializationApi.getModuleFunction?.('procgenPlayer', 'getResolvedStartRegion'),
+      getRegionInfo: initializationApi.getModuleFunction?.('procgenPlayer', 'getRegionInfo'),
+      retakeStartHop: initializationApi.getModuleFunction?.('procgenPlayer', 'retakeStartHop'),
+    }),
+    // ⛓ RESTART — a walk in flight is stopped before the warp (the bot re-plans from the start).
+    stopBotWalks: () => playbackControllers.filter((c) => c?.busy?.() === true).map((c) => c.stop()).length,
   });
   seedlingRegionGlue.start();
 
