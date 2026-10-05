@@ -529,6 +529,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f7-l16-walkin': { tape: {}, levels: [16, 17] },
             'burn-l24-reach-exit': { tape: {}, levels: [12] },
             'l14-swordless-detour': { tape: {}, levels: [14] },
+            // ⛓ Seedling fidelity DASH's L16 witness, at its declared room — the mirror rule.
+            'dash-l16-sword-all': { tape: {}, levels: [16] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
