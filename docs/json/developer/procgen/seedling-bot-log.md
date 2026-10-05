@@ -13592,6 +13592,63 @@ witnesses land one dash hit on the watcher before leaving by the door.
   branch, and the solver's dash then lands a hit (one, in both L114
   witnesses).
 
+### Seedling fidelity WATCHERFLIP — the silent squares released
+
+⚖ The user (2026-10-05): *"Yes, with the dash re-record."* WATCHER measured ten
+of the eleven placed watchers silent (`text=""`), but HELD their old 48x48
+squares as planner volumes (`kind: 'held-silent'`), because releasing them
+re-derives `r9-solve-12`. This slice released them and re-recorded that
+segment on the game. The report is
+`CC/docs/cloud-reports/seedling-fidelity-watcherflip.md`.
+
+**The release (D1).** The `held-silent` push in `buildLevelWorld` is deleted,
+with the dead `hazard.heldSquare` row. A silent placement is listed in
+`silentHazards` and is no planner volume at all. A speaking watcher keeps the
+24 px disc and the `talk` verb; the verb's SILENT arm is now a guard no
+frontier reaches. Predicted before the edit, in a scratch worktree, and then
+measured:
+- `r9-campaign --check` showed exactly WATCHER's five failures: `r9-solve-12`'s
+  artifact and trace, the lengths, the sum (10,978 → 10,923), and `r9-solve-21`'s
+  free oracle (−55);
+- `plan-seedling-watcher-witness --check` was byte-identical;
+- 13 test rows were red, exactly those that pinned the held square.
+
+**The re-record (D2).** The campaign producer, headless on p4f, re-derived:
+- `r9-solve-12`: 2,419 → **2,364 t**. The pit crossing moved from t2339 to
+  t2284, and the 80-tick walk-on is unchanged;
+- windows 1–23: byte-identical;
+- windows 25–30 (`r9-solve-21`, `-22`, `-29`, `-31`, `-30`, `-32`): boot only.
+  `seam.time` −55, `rng.cosmetic`, `tick0`, and **`seam.grass_cut` −12** (the
+  new L12 walk cuts 12 fewer grass tiles; the game latches the count). The
+  inputs and the tick counts are identical.
+
+**Recorded on the game:**
+- `--record --only=` the 7 movers: 7 *"THE MODEL REPRODUCES THE RECORDING IT
+  JUST MADE"*. The 6 boot-only expectations came out byte-identical;
+- `derive-seedling-tick0`: the 6 moved boots;
+- the whole-chain differential: **879 PASS, 0 FAIL**, 30/30 live game matches,
+  `endsAt` **10,923**;
+- `solve-seedling-r9-campaign --check` exits 0, and the campaign census moves
+  no chain room;
+- the mutant (the hold restored) gives the five mirror failures.
+
+L18 is window 19, before the move, so its hammer residue (F1c) is unmoved.
+
+**The survey** (`--through=end`): **138 / 97 / 2 at both ends**, with five
+steps changed and no verdict flipped:
+- L12 steps 124 and 136 got shorter (254 → 208, 285 → 249), and L37's step
+  102 too (346 → 314);
+- steps 101 (L12) and 148 (L43) refuse in the same words at a moved point.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A seam is more than the clock.** The boot-only windows carried a
+  `grass_cut` move nobody listed. A walk's side effects that the game latches
+  (grass cut, and so on) ride every later boot as surely as its length does.
+- **A typed copy can be inert.** `r8Acceptance`'s exposure row typed
+  `ticks: 2419`. It is updated, but its mutant (2,419 restored) stays green: no
+  check reads it. An untested typed copy drifts silently.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -14383,7 +14440,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10978 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10923 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -14410,7 +14467,7 @@ its byte-frozen free oracle is compared against.
 | 21 | `r9-solve-20` | L20 → L13 | 560 | `shield@L20` |
 | 22 | `r9-solve-13-v2` | L13 → L0 | 48 | — |
 | 23 | `r9-solve-0-v3` | L0 → L12 | 299 | — |
-| 24 | `r9-solve-12` | L12 → L21 | 2419 | — |
+| 24 | `r9-solve-12` | L12 → L21 | 2364 | — |
 | 25 | `r9-solve-21` | L21 → L22 | 26 | — |
 | 26 | `r9-solve-22` | L22 → L29 | 89 | — |
 | 27 | `r9-solve-29` | L29 → L31 | 379 | `bosskey@L29` |
