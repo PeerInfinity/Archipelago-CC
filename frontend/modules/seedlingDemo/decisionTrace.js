@@ -98,6 +98,8 @@ export const KNOWN_STRATEGY_VERBS = Object.freeze([
     'collect',
     // ⛓ Swim U1, D2: walk PAST a stand-on presser whose press only drops a rock.
     'skirt',
+    // ⛓ Fidelity STEP-OFF, D3: off the door the run stands latched on, before the crossing.
+    'step-off',
     /**
      * ⛓ R9 slice 4: the `break` verb — a sword swing that removes a
      * `BreakableRock` from the world. Listed for `collect`'s own reason (it is
