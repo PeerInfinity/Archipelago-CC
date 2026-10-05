@@ -75,6 +75,19 @@ describe('the survey derivation may Restart only where the flag says so', () => 
         expect(hops[0]).toEqual(['Restart', 'GameStart']);
     });
 
+    // ⛓ fidelity-3's guidance: in the WALKED mode `CanReachRegion(X)` is "an earlier leg stood in X". After a
+    //   Restart the walker stands in GameStart's region (A), never in a place it did not walk.
+    it('walk=true: after a Restart the next leg has STOOD in GameStart\'s region, and nowhere it did not walk', () => {
+        const rules = toyWorld({ flag: true });
+        rules.regions['1'].C = { name: 'C', exits: [], locations: [] };
+        rules.regions['1'].A.exits.push({ name: 'A -> C', connected_region: 'C', access_rule: has('Nope') });
+        const two = [...PICKUPS, { sphere: '0.2', location: 'Key spot', item: 'Key' }];
+        const { legs, legHolds } = deriveLegs({ regions: rules.regions['1'], ruleHolds: makeRuleHolds(rules), start: 'B', pickups: two, restart: true, walk: true });
+        expect(legs.map((l) => l.restart ?? false)).toEqual([true, false]);
+        const reach = (r) => legHolds[1]({ rule: 'CanReachRegion', args: { region_name: r } }, {});
+        expect([reach('A'), reach('B'), reach('C')]).toEqual([true, true, false]);
+    });
+
     it('with it the leg Restarts: B -> Menu -> (GameStart) A, marked `restart`', () => {
         const { legs, hops } = derive(true);
         expect(legs[0]).toMatchObject({ regions: ['B', 'Menu', 'A'], restart: true });
