@@ -137,3 +137,21 @@ describe('fidelity RETURN — D2: the refusal names the seal; the Conch solves',
         expect(r.verdict).toBe('can');
     });
 });
+
+describe('fidelity RETURN — D3: the census of re-entered rooms (model only)', () => {
+    /** The route survey's re-entries (L3, L2, L0: visit 2) carry clears that open no lock: none holds one. */
+    it.each([[0, [1]], [2, [0]], [3, [0]]])('L%i, re-entered by the survey with its clears %j, builds with no activator',
+        (level, cleared) => {
+            const w = buildLevelWorld(SRC(level), { cleared });
+            expect([w.activators, w.pressers]).toEqual([[], []]);
+        });
+    it('L16 from L18 with the chain\'s clears: `lock@320,112` (tset 1, tag 7) is rebuilt closed, and the button is sealed behind it', () => {
+        const persistence = [0, 3, 4, 6, 7].map((tag) => ({ level: 16, tag }));
+        const r = canCross({ level: 16, exit: 15, arrival: { from: 18 }, inventory: ['sword'], persistence,
+            witness: false });
+        expect(r.verdict).toBe('cannot');
+        expect(r.why).toMatch(/SEALED BEHIND ITS OWN LOCK: with lock@320,112 discharged a corridor from \(360,104\)/);
+        expect(buildLevelWorld(SRC(16), { cleared: [0, 3, 4, 6, 7] }).activators.map((a) => a.id))
+            .toEqual(['lock@320,112']);
+    });
+});
