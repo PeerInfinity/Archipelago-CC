@@ -6,7 +6,10 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { deriveLegs, makeRuleHolds, pickupsThrough, regionPath } from './surveyRoute.js';
+import {
+    chainBound, deriveLegs, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath, ROUTE_MODES,
+    routeOnlyRows,
+} from './surveyRoute.js';
 
 const has = (item) => ({ rule: 'Has', args: { item_name: item } });
 const TRUE = { rule: 'True_' };
@@ -111,5 +114,121 @@ describe('makeRuleHolds — CanReachRegion is decided as AP decides it', () => {
             X: { exits: [] },
         }));
         expect(() => odd(TRUE, {})).toThrow(/undecidable over an inventory/);
+    });
+});
+
+/**
+ * ⛓⛓ FRONTIER2 — the two route modes (⚖ user 2026-10-05: "Both, report
+ * separately"). `full` is the legs above; `route-only` keeps the progression
+ * pickups and WALKS them.
+ */
+describe('route-only — the progression pickups, derived, and walked', () => {
+    const hasN = (item, count) => ({ rule: 'Has', args: { item_name: item, count } });
+    // S ─[Sword]► A ─[Seal×2]► Z ; S holds two Seals and a Lamp; A holds the Key
+    const RULES = doc({
+        Menu: { exits: [{ name: 'go', connected_region: 'S', access_rule: TRUE }] },
+        S: {
+            exits: [{ name: 's-a', connected_region: 'A', access_rule: has('Sword') }],
+            locations: [{ name: 'Sword spot' }, { name: 'Seal 1' }, { name: 'Seal 2' }, { name: 'Lamp spot' }],
+        },
+        A: {
+            exits: [{ name: 'a-z', connected_region: 'Z', access_rule: hasN('Seal', 2) }],
+            locations: [{ name: 'Key spot', access_rule: has('Key') }],
+        },
+        Z: { exits: [], locations: [{ name: 'End spot' }] },
+    });
+    const ORDER = [
+        { sphere: '0.1', location: 'Sword spot', item: 'Sword' },
+        { sphere: '0.2', location: 'Seal 1', item: 'Seal' },
+        { sphere: '0.3', location: 'Lamp spot', item: 'Lamp' },
+        { sphere: '1.1', location: 'Key spot', item: 'Key' },
+        { sphere: '1.2', location: 'Seal 2', item: 'Seal' },
+    ];
+
+    it('the modes are named, and full is the first (the default)', () => {
+        expect(ROUTE_MODES).toEqual(['full', 'route-only']);
+    });
+
+    it('a KEY is an item some rule asks for by a single-copy Has — a counted pool is not one', () => {
+        expect([...keyItemsOf(RULES)].sort()).toEqual(['Key', 'Sword']);
+    });
+
+    it('route-only keeps the keys and the bound, and names every row it skips', () => {
+        const { rows, skipped } = routeOnlyRows(ORDER, keyItemsOf(RULES), '1.2');
+        expect(rows.map((r) => r.sphere)).toEqual(['0.1', '1.1', '1.2']);
+        expect(skipped).toEqual([
+            { sphere: '0.2', location: 'Seal 1', item: 'Seal' },
+            { sphere: '0.3', location: 'Lamp spot', item: 'Lamp' },
+        ]);
+        expect(routeOnlyRows(ORDER, keyItemsOf(RULES)).rows.map((r) => r.sphere)).toEqual(['0.1', '1.1']);
+    });
+
+    /**
+     * The one-way lock RULES (A) spells: T ─[CanReachRegion(F) ∧ Key]► F, and F
+     * is reachable from the START another way (S ─► F, behind the Key). AP's
+     * reading lets the route through T's lock from the near side; the WALK
+     * reading does not, because the route never stood in F.
+     */
+    const LOCK = doc({
+        Menu: { exits: [{ name: 'go', connected_region: 'S', access_rule: TRUE }] },
+        S: {
+            exits: [
+                { name: 's-t', connected_region: 'T', access_rule: TRUE },
+                { name: 's-m', connected_region: 'M', access_rule: TRUE },
+            ],
+            locations: [{ name: 'Key spot' }],
+        },
+        M: { exits: [{ name: 'm-n', connected_region: 'N', access_rule: TRUE }] },
+        N: { exits: [{ name: 'n-f', connected_region: 'F', access_rule: has('Key') }] },
+        T: { exits: [{ name: 't-f', connected_region: 'F', access_rule: {
+            rule: 'And', children: [{ rule: 'CanReachRegion', args: { region_name: 'F' } }, has('Key')] } }] },
+        F: { exits: [{ name: 'f-g', connected_region: 'G', access_rule: TRUE }] },
+        G: { exits: [{ name: 'g-s', connected_region: 'S', access_rule: TRUE }], locations: [{ name: 'Gem spot' }] },
+    });
+    const LOCK_ORDER = [
+        { sphere: '0.1', location: 'Key spot', item: 'Key' },
+        { sphere: '1.1', location: 'Gem spot', item: 'Gem' },
+    ];
+    const lockLegs = (walk) => deriveLegs({ regions: LOCK.regions[1], ruleHolds: makeRuleHolds(LOCK),
+        start: 'S', pickups: LOCK_ORDER, spare: [], walk });
+
+    it('AP\'s reading passes the one-way lock from its near side; the WALK goes round', () => {
+        expect(lockLegs(false).legs[1].regions).toEqual(['S', 'T', 'F', 'G']);
+        const walked = lockLegs(true);
+        expect(walked.legs[1].regions).toEqual(['S', 'M', 'N', 'F', 'G']);
+        // the leg's own decider is handed back, so its alternatives ask the same question
+        expect(walked.legHolds).toHaveLength(2);
+        const lock = LOCK.regions[1].T.exits[0].access_rule;
+        expect(walked.legHolds[1](lock, { Key: 1 })).toBe(false);
+        expect(lockLegs(false).legHolds[1](lock, { Key: 1 })).toBe(true);
+    });
+
+    it('once a leg has STOOD in the far side, the lock reads open to the next one', () => {
+        const order = [...LOCK_ORDER, { sphere: '2.1', location: 'Key spot', item: 'Key' }];
+        const legs = deriveLegs({ regions: LOCK.regions[1], ruleHolds: makeRuleHolds(LOCK),
+            start: 'S', pickups: order, spare: [], walk: true });
+        const lock = LOCK.regions[1].T.exits[0].access_rule;
+        expect(legs.legHolds[2](lock, { Key: 1 })).toBe(true);
+    });
+});
+
+describe('chainBound — the frontier\'s bound is read off the chain\'s terminal segment', () => {
+    const ORDER = [
+        { sphere: '0.1', location: 'Level 010 - Sword', item: 'Progressive Sword', level: 10 },
+        { sphere: '3.1', location: 'Level 032 - Bob Boss', item: 'Fire', level: 32 },
+        { sphere: '7.1', location: 'Level 012 - Witch', item: 'Progressive Sword', level: 12 },
+    ];
+
+    it('the terminal segment\'s room and item name the row', () => {
+        expect(chainBound(ORDER, [{ name: 'a', level: 0, to: 32 },
+            { name: 'b', level: 32, to: null, encounter: 'Fire' }])).toBe('3.1');
+        expect(chainBound(ORDER, [{ name: 'c', level: 12, to: null, item: 'Progressive Sword' }])).toBe('7.1');
+    });
+
+    it('a tail that is not terminal, or a row nobody can name, refuses by name', () => {
+        expect(() => chainBound(ORDER, [{ name: 'x', level: 32, to: 30, encounter: 'Fire' }]))
+            .toThrow(/not a terminal segment/);
+        expect(() => chainBound(ORDER, [{ name: 'y', level: 33, to: null, encounter: 'Fire' }]))
+            .toThrow(/0 sphere-order rows grant 'Fire' in L33/);
     });
 });

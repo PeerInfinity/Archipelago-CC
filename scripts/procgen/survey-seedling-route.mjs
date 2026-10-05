@@ -93,6 +93,7 @@
  *   node scripts/procgen/survey-seedling-route.mjs --timeout=600
  *   node scripts/procgen/survey-seedling-route.mjs --through=2.2 --out=<file.json> --only=21,22,…
  *   node scripts/procgen/survey-seedling-route.mjs --through=end --out=<file.json>
+ *   node scripts/procgen/survey-seedling-route.mjs --through=3.1 --route=route-only --out=<file.json>
  *
  * ── `--through=2.2` AND `--out=` (SEEDLING SWIM S2, D5) ────────────────
  *
@@ -125,6 +126,18 @@
  *    Seals, Totem Shards, Health) — such a row is solved WITHOUT them.
  * Each `--through` writes under `…/through-<sphere>/`; the alternative-leg
  * addendum is the default survey's only.
+ *
+ * ── `--route=full|route-only` (FRONTIER2, ⚖ user 2026-10-05 "Both, report
+ *    separately") ──────────────────────────────────────────────────────
+ *
+ * `full` (the default, and what the rules arc's `--through=end` reads) is the
+ * paragraph above: one leg per sphere-order row. `route-only` is ⚖ §12 item
+ * 6's route: only the PROGRESSION pickups, derived (`surveyRoute.routeOnlyRows`
+ * over `keyItemsOf`: an item some AP rule asks for by a single-copy `Has`),
+ * the Seal chests, Totem Shards and the Light skipped and named in
+ * `route.json`'s `routeMode.skipped`. It needs `--through` and writes under
+ * `…/through-<sphere>-route-only/`, so the two modes never share a cache.
+ * The chosen mode is named in `route.json` (`routeMode`).
  */
 
 import { dirname, join, resolve as resolvePath } from 'node:path';
@@ -134,7 +147,10 @@ import { fileURLToPath } from 'node:url';
 
 import { familyOf } from './surveyFamily.js';
 import { deriveStagedGrant } from './surveyGrants.js';
-import { deriveLegs, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath } from './surveyRoute.js';
+import {
+    deriveLegs, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
+    ROUTE_MODES, routeOnlyRows,
+} from './surveyRoute.js';
 
 import { parseDashMode, dashModeNote } from './dashMode.js';
 
@@ -154,7 +170,7 @@ import { parseDashMode, dashModeNote } from './dashMode.js';
  */
 
 import { argvHelp } from './argvHelp.js';
-import { seedlingSurveyDir } from './seedlingSurveyDir.js';
+import { seedlingSurveyDir, throughSurveyDir } from './seedlingSurveyDir.js';
 
 argvHelp(import.meta.url);
 const DASH_MODE = parseDashMode(
@@ -176,6 +192,16 @@ const STEP = argOf('step', null);
 const ONLY = argOf('only', null);
 const THROUGH = argOf('through', null);
 const OUT_FILE = argOf('out', null);
+/** ⛓ FRONTIER2 — which legs: `full` (every sphere row) or `route-only` (the progression pickups). */
+const ROUTE_MODE = argOf('route', 'full');
+if (!ROUTE_MODES.includes(ROUTE_MODE)) {
+    console.error(`ERROR: --route=${ROUTE_MODE} — the route modes are ${ROUTE_MODES.join(' | ')}`);
+    process.exit(2);
+}
+if (ROUTE_MODE !== 'full' && THROUGH === null) {
+    console.error(`ERROR: --route=${ROUTE_MODE} needs --through=<sphere>|end — the default survey is the shield route`);
+    process.exit(2);
+}
 if (THROUGH !== null && STEP === null && !OUT_FILE) {
     console.error(`ERROR: --through=${THROUGH} needs --out=<file.json> — the extended survey never writes survey.json`);
     process.exit(2);
@@ -185,7 +211,7 @@ if (OUT_FILE && THROUGH === null) {
     process.exit(2);
 }
 /** `.cache/seedling-survey/`, or `…/through-<sphere>/` under `--through` (gitignored either way). */
-const OUT_DIR = join(seedlingSurveyDir(REPO), ...(THROUGH !== null ? [`through-${THROUGH}`] : []));
+const OUT_DIR = THROUGH !== null ? throughSurveyDir(REPO, THROUGH, ROUTE_MODE) : seedlingSurveyDir(REPO);
 const DERIVE_ONLY = process.argv.includes('--derive-only');
 /**
  * ⛔ THE TIMEOUT IS A NAMED BOUND, NOT A GENEROUS ONE. Measured on this
@@ -441,9 +467,12 @@ const ruleHolds = makeRuleHolds(apRules);
 
 const levelOfRegion = (name) => Number(name.split('__')[0].split('_')[1]);
 
-/** Shortest region path under a fixed item set; null when there is none. */
-const regionPath = (src, dst, items, banned) =>
-    surveyRegionPath(REGIONS, ruleHolds, src, dst, items, banned);
+/**
+ * Shortest region path under a fixed item set; null when there is none.
+ * `holds` is the rule decider (the leg's own under `--route=route-only`'s walk).
+ */
+const regionPath = (src, dst, items, banned, holds = ruleHolds) =>
+    surveyRegionPath(REGIONS, holds, src, dst, items, banned);
 
 /** A region path projected onto the LEVELS it visits, in order. */
 function levelsOf(path) {
@@ -471,11 +500,11 @@ function levelsOf(path) {
  * the graph, and it does not find an alternative that uses the same rooms
  * in a different order.
  */
-function alternativesFor(src, dst, chosen, items) {
+function alternativesFor(src, dst, chosen, items, holds = ruleHolds) {
     const out = [];
     const seen = new Set([levelsOf(chosen).join(',')]);
     for (const banned of chosen.slice(1, -1)) {
-        const path = regionPath(src, dst, items, new Set([banned]));
+        const path = regionPath(src, dst, items, new Set([banned]), holds);
         if (!path) {
             out.push({ banned, forced: true, levels: null });
             continue;
@@ -528,12 +557,24 @@ function d2EntryProbe() {
  * sixteen rows 0.1 … 2.2 in the order AP collects them — the seals and the
  * Light included, and the Green Key (1.4) before the Shield (2.1).
  */
-const ROUTE_PICKUPS = THROUGH !== null ? (() => {
+const BOUNDED = THROUGH !== null ? (() => {
     try { return pickupsThrough(spheres.order, THROUGH); } catch (e) {
         console.error(`ERROR: ${e.message}`);
         return process.exit(2);
     }
-})() : [
+})() : null;
+/**
+ * ⛓ FRONTIER2 — `--route=route-only`: the bounded rows' PROGRESSION pickups
+ * (`routeOnlyRows`), and the same filter over the rows past the bound, which
+ * are the legs' `spare`. `full` keeps every row, as above.
+ */
+const KEY_ITEMS = ROUTE_MODE === 'route-only' ? keyItemsOf(apRules) : null;
+const ROUTE_ONLY = KEY_ITEMS ? routeOnlyRows(BOUNDED, KEY_ITEMS, THROUGH) : null;
+const SPARE = THROUGH === null ? null : (() => {
+    const past = spheres.order.slice(BOUNDED.length);
+    return KEY_ITEMS ? routeOnlyRows(past, KEY_ITEMS).rows : past;
+})();
+const ROUTE_PICKUPS = THROUGH !== null ? (ROUTE_ONLY ? ROUTE_ONLY.rows : BOUNDED) : [
     { match: /Level 010 - Sword/, item: 'Progressive Sword' },
     { match: /Level 019 - Boss Key 0/, item: 'Red Key' },
     { match: /Level 020 - Shield/, item: 'Progressive Shield' },
@@ -672,12 +713,15 @@ function deriveRoute() {
     //   earliest remaining row it can (named on the leg as `outOfOrder`).
     const derived = deriveLegs({
         regions: REGIONS, ruleHolds, start: startRegion, pickups: ROUTE_PICKUPS,
-        spare: THROUGH !== null ? spheres.order.slice(ROUTE_PICKUPS.length) : null,
+        spare: SPARE,
+        // ⛓ FRONTIER2: the route-only route is WALKED — `CanReachRegion` by where it has stood
+        walk: ROUTE_MODE === 'route-only',
     });
     const legs = derived.legs.map((leg, i) => ({
         ...leg,
         levels: levelsOf(leg.regions),
-        alternatives: alternativesFor(leg.from, leg.to, leg.regions, { ...derived.held[i] }),
+        alternatives: alternativesFor(leg.from, leg.to, leg.regions, { ...derived.held[i] },
+            derived.legHolds[i]),
     }));
 
     // The level visit sequence: the legs concatenated, with each leg's first
@@ -1461,6 +1505,23 @@ const routeDoc = {
         set_patches: SEEDLING_SET_PATCHES.map((p) => p.id),
         spheres: 'frontend/modules/flashPanel/atlases/seedling-sphere-order.json',
     },
+    /**
+     * ⛓ FRONTIER2 — the route's MODE, named in the artifact (under `--through`
+     * only, so the default survey's `route.json` is byte-identical).
+     */
+    ...(THROUGH !== null ? {
+        routeMode: {
+            mode: ROUTE_MODE,
+            through: THROUGH,
+            definition: ROUTE_MODE === 'full'
+                ? 'every sphere-order row up to and including the bound, one leg each'
+                : 'the sphere-order rows up to the bound whose item an AP access rule asks for by a '
+                  + 'single-copy Has (a key), plus the bound row; counted collectibles and items no '
+                  + 'rule asks for are skipped; WALKED: CanReachRegion(X) holds once an earlier leg '
+                  + 'stood in X',
+            ...(ROUTE_ONLY ? { keyItems: [...KEY_ITEMS].sort(), skipped: ROUTE_ONLY.skipped } : {}),
+        },
+    } : {}),
     legs: route.legs,
     steps: route.steps.map((s) => ({
         ...s,
@@ -1650,7 +1711,7 @@ for (const step of [...route.steps, ...addendum]) {
     // eslint-disable-next-line no-await-in-loop
     const res = await new Promise((resolve) => {
         execFile(process.execPath, [fileURLToPath(import.meta.url), `--step=${step.step}`,
-            ...(THROUGH ? [`--through=${THROUGH}`] : [])], {
+            ...(THROUGH ? [`--through=${THROUGH}`, `--route=${ROUTE_MODE}`] : [])], {
             cwd: REPO, timeout: TIMEOUT_S * 1000, maxBuffer: 64 * 1024 * 1024, killSignal: 'SIGKILL',
         }, (err, stdout, stderr) => {
             const marked = String(stdout).split('\n').find((l) => l.startsWith('##SURVEY##'));

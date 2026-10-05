@@ -57,10 +57,110 @@ export function pickupsThrough(order, through) {
 }
 
 /**
+ * ⛓⛓ FRONTIER2 — **THE TWO ROUTE MODES** (⚖ user 2026-10-05: *"Both, report
+ * separately."*).
+ *
+ *  · `full` — every sphere-order row is a leg (`pickupsThrough` as is): the
+ *    Seal chests, the Light, the Totem Shards included. The rules arc's
+ *    `--through=end` reads this, and it stays the default.
+ *  · `route-only` — ⚖ §12 item 6, the user's ROUTE-ONLY correction: only the
+ *    PROGRESSION pickups. The survey before `a261ef7fd9` spelled them as typed
+ *    regexes (sword L10 → Boss Key 0 L19 → shield L20, + L29's key and L32's
+ *    Fire for 2.2); here they are DERIVED: a row is a progression pickup when
+ *    its item is a KEY — one some AP access rule asks for by a single-copy
+ *    `Has` (count 1), so collecting that one row opens something. Skipped, and
+ *    named: counted collectibles (`Seal` ×16, `Totem Shard` ×5 — a rule asks
+ *    only for the whole pool) and items no rule asks for (`Light`, `Health`).
+ *    Over seed 1's order through 3.1 this is exactly the old typed five.
+ *    ⛓ AND IT IS WALKED (`deriveLegs({walk: true})`): `CanReachRegion(X)`
+ *    holds only once the route has STOOD in X — see `makeRuleHolds`' `stood`.
+ */
+export const ROUTE_MODES = Object.freeze(['full', 'route-only']);
+
+/**
+ * The items AP's rules ask for by a single-copy `Has` — the route-only mode's
+ * KEYS. Read off every exit and location rule of the export; nothing typed.
+ *
+ * @returns {Set<string>}
+ */
+export function keyItemsOf(rulesDoc, playerId = '1') {
+    const keys = new Set();
+    const walk = (r) => {
+        if (!r || typeof r !== 'object') return;
+        if (Array.isArray(r)) { r.forEach(walk); return; }
+        if (r.rule === 'Has' && (r.args?.count ?? 1) === 1) keys.add(r.args.item_name);
+        Object.values(r).forEach(walk);
+    };
+    for (const reg of Object.values(rulesDoc.regions[playerId])) {
+        for (const e of reg.exits ?? []) walk(e.access_rule);
+        for (const l of reg.locations ?? []) walk(l.access_rule);
+    }
+    return keys;
+}
+
+/**
+ * The route-only subset of `rows`: the rows whose item is a key
+ * (`keyItemsOf`), in order. `bound` (a sphere label) is kept whatever it
+ * grants — the route ends there because it was asked to.
+ *
+ * @returns {{rows: Array, skipped: Array<{sphere, location, item}>}}
+ */
+export function routeOnlyRows(rows, keyItems, bound = null) {
+    const kept = [];
+    const skipped = [];
+    for (const r of rows) {
+        if (keyItems.has(r.item) || (bound !== null && r.sphere === String(bound))) kept.push(r);
+        else skipped.push({ sphere: r.sphere, location: r.location, item: r.item });
+    }
+    return { rows: kept, skipped };
+}
+
+/**
+ * ⛓⛓ FRONTIER2 — **THE FRONTIER'S BOUND, READ OFF THE CHAIN.** The census
+ * typed `through-2.2` and the label moved under it (`70d9a87c` re-sphered 35
+ * locations: L32's Bob Boss went 2.2 → 3.1, and 2.2 became L25's Seal chest).
+ * The bound is the sphere row the chain's TERMINAL segment ends on — its room
+ * and the item it carries away (`encounter` or `item`). A chain with no
+ * terminal segment has no bound this can name, and it throws by name.
+ *
+ * @param {Array} order the sphere order's rows
+ * @param {Array<{name, level, to, encounter?, item?}>} segments the chain declaration
+ * @returns {string} the sphere label
+ */
+export function chainBound(order, segments) {
+    const tail = segments[segments.length - 1];
+    const item = tail?.encounter ?? tail?.item ?? null;
+    if (!tail || tail.to !== null || item === null) {
+        throw new Error(`chainBound: the chain's tail ${tail?.name ?? '(none)'} is not a terminal `
+            + 'segment that carries an item away — the frontier\'s route bound is read off it, '
+            + 'and there is nothing to read. Name one with --through=<sphere>.');
+    }
+    const hits = order.filter((o) => o.level === tail.level && o.item === item);
+    if (hits.length !== 1) {
+        throw new Error(`chainBound: ${hits.length} sphere-order rows grant '${item}' in L${tail.level} `
+            + `(the tail ${tail.name}) — the bound would be a guess.`);
+    }
+    return hits[0].sphere;
+}
+
+/**
  * The rule decider the BFS uses, over AP's own evaluator.
  *
+ * ⛓⛓ FRONTIER2 — **`stood`, THE WALK'S READING OF `CanReachRegion`.** AP's
+ * meaning is global (above), and RULES (A) spells a one-way lock as
+ * `CanReachRegion(far side) ∧ key` from the near side: open once anybody
+ * COULD have opened it. A playthrough is a walk, and the game opens the lock
+ * only for a player who went round to the far side. Measured at seed 1: from
+ * L29 the AP reading takes L22's teleporter into L30's north pocket and
+ * through the r0c4 → r2c10 lock (the far side is reachable from the START via
+ * L31), a door the route never opened; the walk reading goes L29 → L31 → L30,
+ * which is the room sequence the campaign chain was recorded on. With `stood`
+ * (a Set of region names), `CanReachRegion(X)` is `stood.has(X)`. ⚠ BOUND,
+ * NAMED: `stood` is what EARLIER legs walked; a leg's own BFS does not count
+ * the region it is passing through as stood.
+ *
  * @param {object} rulesDoc the `_rules.json` export
- * @returns {(rule: ?object, items: Object<string, number>) => boolean}
+ * @returns {(rule: ?object, items: Object<string, number>, stood?: Set<string>) => boolean}
  */
 export function makeRuleHolds(rulesDoc, playerId = '1') {
     const model = buildAccessibilityModel(rulesDoc, playerId);
@@ -73,6 +173,14 @@ export function makeRuleHolds(rulesDoc, playerId = '1') {
      */
     const byItems = new Map();
     const verdicts = new WeakMap();
+    /** one id per `stood` Set — the verdict cache is keyed on it (a Set is never mutated once handed in) */
+    const stoodIds = new WeakMap();
+    let nextStoodId = 0;
+    const stoodKey = (stood) => {
+        if (!stood) return '';
+        if (!stoodIds.has(stood)) stoodIds.set(stood, nextStoodId++);
+        return `\u0002${stoodIds.get(stood)}`;
+    };
     const stateFor = (items) => {
         let key = '';
         for (const name of Object.keys(items).sort()) {
@@ -99,20 +207,24 @@ export function makeRuleHolds(rulesDoc, playerId = '1') {
         byItems.set(key, state);
         return state;
     };
-    return function ruleHolds(rule, items) {
+    return function ruleHolds(rule, items, stood = null) {
         if (!rule) return true;
         const state = stateFor(items);
+        const key = state.key + stoodKey(stood);
         let memo = verdicts.get(rule);
         if (!memo) verdicts.set(rule, (memo = new Map()));
-        if (memo.has(state.key)) return memo.get(state.key);
+        if (memo.has(key)) return memo.get(key);
+        const reachable = stood
+            ? (name) => (model.regions.has(name) ? stood.has(name) : undefined)
+            : state.isRegionReachable;
         const verdict = evaluateRuleWithInventory(rule, state.inventory, model.playerId,
-            state.isRegionReachable, model.progressionMapping);
+            reachable, model.progressionMapping);
         if (verdict === undefined) {
             throw new Error(`unknown AP access rule '${rule.rule}' — a rule this evaluator `
                 + 'does not know must never read as SATISFIED, because a route derived through '
                 + 'a door nobody evaluated is a route nobody derived.');
         }
-        memo.set(state.key, verdict);
+        memo.set(key, verdict);
         return verdict;
     };
 }
@@ -200,19 +312,28 @@ export function blockedFrontier(regions, ruleHolds, src, items) {
  * marked `pulledForward`. The route still ends when every row of `pickups` is
  * collected; nothing is typed, and an in-order route is unchanged.
  *
+ * ⛓ FRONTIER2 — **`walk`** (the route-only mode's): each leg decides
+ * `CanReachRegion` by the regions the EARLIER legs stood in (`makeRuleHolds`'
+ * `stood`; the start counts) instead of AP's start-anchored fixed point. Off,
+ * nothing here changes. `legHolds[i]` is the rule decider leg i was walked
+ * with, so a caller asking about that leg (its alternatives) asks the same one.
+ *
  * @returns {{legs: Array<{sphere, goal, item, from, to, itemsHeld, regions}>,
- *            held: Array<Object<string, number>>, hops: Array<string[]>}} the legs
+ *            held: Array<Object<string, number>>, hops: Array<string[]>,
+ *            legHolds: Array<Function>}} the legs
  *          in order, the item COUNTS each was walked with (`itemsHeld` names
  *          them; a second Progressive Sword is a count), and the AP exit NAMES
  *          each leg's hops took (`regionPathHops`); throws by name on a leg AP's rules
  *          give no path for and no remaining row can replace
  */
-export function deriveLegs({ regions, ruleHolds, start, pickups, spare = null }) {
+export function deriveLegs({ regions, ruleHolds: apHolds, start, pickups, spare = null, walk = false }) {
     const items = {};
     const legs = [];
     const held = [];
     const hops = [];
+    const legHolds = [];
     let here = start;
+    let stood = walk ? Object.freeze(new Set([start])) : null;
     const wanted = pickups.slice();
     const extra = (spare ?? []).slice();
     const locationRule = (name) => {
@@ -223,6 +344,8 @@ export function deriveLegs({ regions, ruleHolds, start, pickups, spare = null })
         return null;
     };
     while (wanted.length) {
+        const legStood = stood;
+        const ruleHolds = walk ? (rule, its) => apHolds(rule, its, legStood) : apHolds;
         const pool = spare === null ? [wanted[0]] : [...wanted, ...extra];
         let pick = null;
         let path = null;
@@ -269,10 +392,12 @@ export function deriveLegs({ regions, ruleHolds, start, pickups, spare = null })
         });
         held.push({ ...items });
         hops.push(path.exits);
+        legHolds.push(ruleHolds);
+        if (walk) stood = Object.freeze(new Set([...stood, ...path.path]));
         items[pick.item] = (items[pick.item] ?? 0) + 1;
         here = to;
         if (fromWanted >= 0) wanted.splice(fromWanted, 1);
         else extra.splice(extra.indexOf(pick), 1);
     }
-    return { legs, held, hops };
+    return { legs, held, hops, legHolds };
 }

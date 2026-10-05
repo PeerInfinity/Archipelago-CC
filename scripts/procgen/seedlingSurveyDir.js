@@ -2,7 +2,8 @@
  * Where the Seedling ROUTE SURVEY lives — a REGENERABLE CACHE, never committed.
  *
  * `survey-seedling-route.mjs` writes it (`route.json`, `survey.json`, the step
- * views and PNGs; `--through=2.2` writes the extended pair under `through-2.2/`).
+ * views and PNGs; `--through=<sphere>` writes the extended pair under
+ * `through-<sphere>/`, and `--route=route-only` under `through-<sphere>-route-only/`).
  * `census-seedling-campaign.mjs` and `rerecord-seedling-campaign.mjs --grow`
  * read it. The committed projection of it is
  * `frontend/modules/seedlingDemo/fixtures/campaign-frontier.json`.
@@ -26,4 +27,18 @@ export function seedlingSurveyDir(repo) {
 /** The census's fix list goes beside the survey it was read against. */
 export function seedlingCensusDir(repo) {
     return join(repo, '.cache', 'seedling-census');
+}
+
+/**
+ * ⛓ FRONTIER2 — the directory one `--through=<sphere> --route=<mode>` survey
+ * writes, spelled ONCE: the survey writes it, the census and `--grow` read it.
+ * `full` keeps the name it always had (`through-<sphere>`), so the rules arc's
+ * `--through=end` cache does not move.
+ *
+ * @param {string} repo the repository root
+ * @param {string} through a sphere label, or `end`
+ * @param {'full'|'route-only'} mode
+ */
+export function throughSurveyDir(repo, through, mode = 'full') {
+    return join(seedlingSurveyDir(repo), `through-${through}${mode === 'full' ? '' : `-${mode}`}`);
 }
