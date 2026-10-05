@@ -75,11 +75,13 @@ describe('a link the physics model cannot walk is NOT emitted as True_', () => {
 });
 
 describe('an exit no component reaches binds to the component the model reaches — or is refused by name', () => {
-    it('L0\'s L2 stairs, its L110 pit arrival and its L2 arrival stand in r8c0, beside the start', () => {
+    // ⛓ RULES patched-set: L110's pit no longer ARRIVES in L0 — its descent fires these stairs, so the fall ends in
+    // L2 (`seedlingPatchedSet.test.js`); the L0 landing was never a place to stand.
+    it('L0\'s L2 stairs and its L2 arrival stand in r8c0, beside the start; no L110 pit arrives in L0', () => {
         const at = (id) => regionOf('level_0').exits.find((e) => e.exit_id === id).sub_region;
         expect(at('out_stairsdown_256_272')).toBe('r8c0');
-        expect(at('in_pit_L110_16_17')).toBe('r8c0');
         expect(at('in_L2_48_16')).toBe('r8c0');
+        expect(regionOf('level_0').exits.filter((e) => e.exit_id.startsWith('in_pit_L110'))).toEqual([]);
     });
 
     it('refuses an unbound member of a SPLIT region by name, and passes an unsplit one', () => {

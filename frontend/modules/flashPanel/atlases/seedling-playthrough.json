@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "atlas_id": "seedling-0cdaf2c2",
+  "atlas_id": "seedling-78d22cb4",
   "game": "seedling",
   "name": "Seedling — the honest playthrough (rules v1)",
   "description": "GENERATED — do not edit. One region per level for all 116 levels, sub-regions and their crossing rules computed by the Phase-5a reachability analyzer over seedlingSemantics' transcription, with seedlingPlaythroughOverlay supplying the item rulings the transcription refuses and the physics model's own pixel masks supplying the building outlines. Every link is ONE-WAY, because the game has exactly one transition primitive and it is a one-way jump. Regenerate with scripts/procgen/make-seedling-playthrough-rules.mjs.",
-  "provenance": { "generator": "region-marking-tool", "content_hash": "0cdaf2c2" },
+  "provenance": { "generator": "region-marking-tool", "content_hash": "78d22cb4" },
   "tile_space": { "tile_size": 16, "map_source": "ogmo-extract", "map_document": "seedling-map.json" },
   "regions": [
     {
@@ -124,13 +124,6 @@
           "kind": "teleporter",
           "exit_tiles": [[1,9]],
           "entrance_tile": [1,9],
-          "sub_region": "r8c0"
-        },
-        {
-          "exit_id": "in_pit_L110_16_17",
-          "kind": "teleporter",
-          "exit_tiles": [[16,17]],
-          "entrance_tile": [16,17],
           "sub_region": "r8c0"
         }
       ],
@@ -263,6 +256,12 @@
           "kind": "teleporter",
           "exit_tiles": [[3,5]],
           "entrance_tile": [3,5]
+        },
+        {
+          "exit_id": "in_pit_L110_3_2",
+          "kind": "teleporter",
+          "exit_tiles": [[3,2]],
+          "entrance_tile": [3,2]
         }
       ],
       "locations": [],
@@ -7836,7 +7835,7 @@
           "entrance_tile": [3,7]
         },
         {
-          "exit_id": "out_pit_16_17",
+          "exit_id": "out_pit_3_2",
           "kind": "teleporter",
           "exit_tiles": [[4,4]],
           "entrance_tile": [4,4]
@@ -9676,11 +9675,7 @@
         "to": ["level_101","in_L109_160_48"],
         "one_way": true
       },
-      {
-        "from": ["level_110","out_pit_16_17"],
-        "to": ["level_0","in_pit_L110_16_17"],
-        "one_way": true
-      },
+      { "from": ["level_110","out_pit_3_2"], "to": ["level_2","in_pit_L110_3_2"], "one_way": true },
       {
         "from": ["level_111","out_teleporter_128_48"],
         "to": ["level_112","in_L111_128_48"],

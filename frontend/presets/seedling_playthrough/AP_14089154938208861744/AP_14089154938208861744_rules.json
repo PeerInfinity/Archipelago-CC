@@ -9439,8 +9439,8 @@
         "name": "level_110",
         "exits": [
           {
-            "name": "level_110 -> level_0__r8c0",
-            "connected_region": "level_0__r8c0",
+            "name": "level_110 -> level_2",
+            "connected_region": "level_2",
             "access_rule": {
               "rule": "True_"
             }

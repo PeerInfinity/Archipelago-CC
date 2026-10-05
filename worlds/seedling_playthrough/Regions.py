@@ -807,7 +807,7 @@ def create_regions(multiworld: MultiWorld, player: int) -> None:
     _create_entrance(regions["level_108__r11c8"], regions["level_109"], "level_108__r11c8 -> level_109")
     _create_entrance(regions["level_109"], regions["level_108__r11c8"], "level_109 -> level_108__r11c8")
     _create_entrance(regions["level_109"], regions["level_101__r4c2"], "level_109 -> level_101__r4c2")
-    _create_entrance(regions["level_110"], regions["level_0__r8c0"], "level_110 -> level_0__r8c0")
+    _create_entrance(regions["level_110"], regions["level_2"], "level_110 -> level_2")
     _create_entrance(regions["level_111"], regions["level_112"], "level_111 -> level_112")
     _create_entrance(regions["level_111"], regions["level_3__r0c4"], "level_111 -> level_3__r0c4")
     _create_entrance(regions["level_112"], regions["level_111"], "level_112 -> level_111")

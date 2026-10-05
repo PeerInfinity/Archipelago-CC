@@ -334,8 +334,10 @@ describe('⛔ E5 — the committed fixture is the script\'s own output', () => {
         // ⛓ RULES burnable-trees (9e791548… -> d43eee56): the tree's 2x2 footprint splits L12/L37/L40/L44 and
         //   eight doors inside an item-gated solid are charged — sub-regions, internal exits, exit bindings and
         //   rules; the L12 chest moves r0c37 -> r42c29 (behind its tree). The location SET is unchanged.
+        // ⛓ RULES patched-set (d43eee56… -> 81742e21): L110's chained pit exits to level_2 (3,2), not level_0 —
+        //   one exit pair and one connection; no location moves.
         expect(createHash('md5').update(readFileSync(playthroughPath)).digest('hex'))
-            .toBe('d43eee56f28c77cf6251f83f783e11b1');
+            .toBe('81742e21f11b45aa1874fc909f601f53');
 
         const committed = JSON.parse(readFileSync(fixturePath, 'utf8'));
         const { atlas } = deriveAtlasOf(setRecord(LIFT.set, committed), DEPS);
