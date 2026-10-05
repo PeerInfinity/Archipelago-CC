@@ -15,7 +15,8 @@
  * The game only steps while the player is playing it: a configured region waits for a game key (or a click), and
  * the page pauses when it loses focus (⚖ no offline progress). The page reports its clock (`setPlayClock(running)`,
  * running only while `playing`), so the host's time drain charges played time only.
- * Keys: arrows/WASD move, Z fire, X slow, P pause, 1–9 leave by that exit once cleared.
+ * Keys: arrows/WASD move, Z fire, X slow, P pause, R play the region again from its start, 1–9 leave by that exit
+ * once cleared.
  *
  * Test surface (not the contract): `window.__noiz2saDebug()` reads the state; `window.__noiz2saTest` drives
  * injected input (`play(tape, {speed})` — a run-length tape, see noiz2saRegion.js `encodeInputs`), the step
@@ -40,7 +41,7 @@ const app = {
     regionId: null, span: null, exits: [], alreadyChecked: false,
     run: null,
     state: 'waiting',       // waiting (no region) | ready | playing | paused | cleared
-    clearSent: false,
+    clearSent: false, clearedThisVisit: false,
     tape: null, tapeAt: 0, injected: false, speed: 1,
     effects: [], message: '', lastTime: null, acc: 0,
 };
@@ -61,6 +62,7 @@ addEventListener('keydown', (e) => {
     held.add(e.code);
     if (e.repeat) return;
     if (/^Digit[1-9]$/.test(e.code)) { leaveBy(app.exits[Number(e.code.slice(5)) - 1]?.exitName); return; }
+    if (e.code === 'KeyR') { playAgain(); return; }
     if (e.code === 'KeyP') { if (app.state === 'playing') setState('paused'); else if (app.state === 'paused') setState('playing'); return; }
     if (GAME_KEYS.has(e.code) && (app.state === 'ready' || app.state === 'paused')) { app.injected = false; app.speed = 1; setState('playing'); }
 });
@@ -95,7 +97,7 @@ function reportPlayClock() {
 function startRegion({ regionId, span, exits, alreadyChecked }) {
     app.regionId = regionId; app.span = span; app.exits = exits; app.alreadyChecked = alreadyChecked;
     app.run = createRegionRun(span, { engine: { newGame, stepGame }, patterns: app.patterns });
-    app.clearSent = false; app.tape = null; app.injected = false; app.effects = []; app.message = '';
+    app.clearSent = false; app.clearedThisVisit = false; app.tape = null; app.injected = false; app.effects = []; app.message = '';
     setState('ready');
     renderExits();
 }
@@ -118,7 +120,21 @@ function leaveBy(exitName) {
     return true;
 }
 
-const exitsOpen = () => !!app.run && (app.run.cleared || app.alreadyChecked);
+const exitsOpen = () => !!app.run && (app.run.cleared || app.clearedThisVisit || app.alreadyChecked);
+
+/**
+ * R: play the region again from its start, on the same visit. The clear is sent again when it comes — the bridge
+ * dispatches it if the host did not accept the first one (e.g. the queue was not parked on the region) and drops
+ * it if it did. The exits stay open once the region was cleared on this visit.
+ */
+function playAgain() {
+    if (!app.run) return;
+    app.run.restart();
+    app.clearSent = false; app.tape = null; app.tapeAt = 0; app.injected = false; app.speed = 1;
+    app.effects = []; app.message = 'playing the region again';
+    setState('ready');
+    renderExits();
+}
 
 function renderExits() {
     exitsEl.textContent = '';
@@ -144,6 +160,7 @@ function renderExits() {
 }
 
 function onCleared() {
+    app.clearedThisVisit = true;
     setState('cleared');
     if (!app.clearSent) {
         app.clearSent = true;
@@ -205,7 +222,7 @@ function render() {
     VIEW.modeLabel = app.span ? `REGION ${showSpan(app.span)}` : 'NOIZ2SA';
     VIEW.paused = app.state === 'paused';
     VIEW.banner = app.state === 'ready' ? 'press Z or click to start'
-        : app.state === 'cleared' ? 'REGION CLEAR — leave by an exit'
+        : app.state === 'cleared' ? 'REGION CLEAR — leave by an exit (R: play again)'
             : app.message.startsWith('HIT') && run?.attemptFrames < 90 ? 'HIT — the region restarts' : '';
     draw(ctx, run?.g ?? null, VIEW);
     // the left panel's lower half is the region's own (draw.js puts bot/sound/help text there, unused here)
@@ -217,7 +234,7 @@ function render() {
     ] : [app.loadError ? 'load failed' : app.patterns ? 'waiting for a region' : 'loading…'];
     lines.forEach((s, i) => ctx.fillText(s, 14, 216 + i * 18));
     ctx.font = '11px monospace'; ctx.fillStyle = '#567';
-    ['arrows/WASD move', 'Z fire  X slow', 'P pause', '1-9 leave (cleared)'].forEach((s, i) => ctx.fillText(s, 14, 400 + i * 16));
+    ['arrows/WASD move', 'Z fire  X slow', 'P pause  R again', '1-9 leave (cleared)'].forEach((s, i) => ctx.fillText(s, 14, 400 + i * 16));
 }
 
 function showStatus() {
@@ -261,6 +278,7 @@ window.__noiz2saDebug = () => ({
     clearSent: app.clearSent,
     alreadyChecked: app.alreadyChecked,
     exitsOpen: exitsOpen(),
+    clearedThisVisit: app.clearedThisVisit,
     exits: app.exits.map((e) => e.exitName),
     tapeLeft: app.tape ? app.tape.length - app.tapeAt : 0,
 });
@@ -276,6 +294,8 @@ window.__noiz2saTest = {
     /** back to the keyboard */
     release() { app.injected = false; app.tape = null; app.speed = 1; },
     leave: (exitName) => leaveBy(exitName),
+    /** R: the region again from its start, on the same visit */
+    again: () => playAgain(),
 };
 
 // ── boot ──

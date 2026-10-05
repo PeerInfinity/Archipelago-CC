@@ -62,6 +62,7 @@
 
 import { IframeClient } from '../iframe-base/iframeClient.js';
 import { evaluateRuleAgainstInventory } from '../shared/procgen/library.js';
+import { createLocationReportLedger } from './locationReportLedger.js';
 
 function log(level, ...args) {
     const fn = console[level] || console.log;
@@ -91,9 +92,22 @@ let _currentRegionId = null;
 let _world = null;                          // From deserializeWorld in the substrate registry
 let _isActive = false;                      // True when this substrate is the current region's
 
-// AP location names we've already reported this region, so a repeated
-// sendLocation (or a re-poll) doesn't double-dispatch.
-const _reportedLocationNames = new Set();
+// Which of this region's AP location names may be dispatched: one the
+// host ACCEPTED (its checked snapshot has it) never again, one in flight
+// not twice, and one the host REFUSED (the loop-mode action gate swallowed
+// it) again on the same visit. See locationReportLedger.js.
+const _locationReports = createLocationReportLedger();
+
+/** The host's checked location names, from the relayed snapshot (any of its shapes). */
+function _hostCheckedNames() {
+    const checked = _client?.getStateSnapshot?.()?.checkedLocations;
+    if (checked instanceof Set) return checked;
+    if (Array.isArray(checked)) return new Set(checked);
+    if (checked && typeof checked === 'object') {
+        return new Set(Object.keys(checked).filter((k) => checked[k]));
+    }
+    return new Set();
+}
 
 // ────────────────────────────────────────────────────────────────
 // Capabilities (integration axis — Option B, payload-carried)
@@ -183,10 +197,8 @@ function _onSendLocation(flashName) {
         log('warn', `sendLocation('${flashName}') has no ap_locations mapping — ignored`);
         return;
     }
-    if (_reportedLocationNames.has(locationName)) return;
-    _reportedLocationNames.add(locationName);
-
     if (!_client) return;
+    if (!_locationReports.shouldDispatch(locationName, _hostCheckedNames())) return;
     // stateManager's user:locationCheck handler reads `locationName`.
     _client.publishEventDispatcher('user:locationCheck', {
         locationName,
@@ -418,20 +430,20 @@ function _handleLoadRegion(payload) {
     _isActive = true;
 
     // Locations of THIS region the host already has checked (region
-    // revisits): re-seed the dedupe set with their AP names so a
+    // revisits): seed the ledger with their AP names as accepted so a
     // re-fired objective never double-dispatches, and hand the game
     // their in-game ids so it can mark them collected up front instead
     // of re-offering them.
-    _reportedLocationNames.clear();
-    const checkedNames = new Set(
-        _client?.getStateSnapshot?.()?.checkedLocations ?? []);
+    const checkedNames = _hostCheckedNames();
     const checkedFlashNames = [];
+    const acceptedNames = [];
     for (const [flashName, apName] of Object.entries(world.ap_locations ?? {})) {
         if (checkedNames.has(apName)) {
-            _reportedLocationNames.add(apName);
+            acceptedNames.push(apName);
             checkedFlashNames.push(flashName);
         }
     }
+    _locationReports.reset(acceptedNames);
 
     const b = _bridge();
     if (!b || typeof b.configure !== 'function') {
@@ -512,9 +524,20 @@ async function main() {
     // authored gate rules (a new key may open a locked portal/pickup).
     _client.subscribeEventBus('stateManager:snapshotUpdated', () => {
         if (_isActive) {
+            // An in-flight check the host now has is accepted (never resent).
+            _locationReports.noteHostChecked(_hostCheckedNames());
             _pollItemsIntoGame();
             _pushGateStates();
         }
+    });
+
+    // The loop-mode action gate swallowed a check (e.g. a clear while the
+    // queue is not parked on this region): the host refused it, so the
+    // game's next report of it may be sent again on this visit.
+    _client.subscribeEventBus('loops:clickIgnored', (data) => {
+        if (data?.kind !== 'location') return;
+        const name = data?.payload?.locationName;
+        if (typeof name === 'string') _locationReports.noteRefused(name);
     });
 
     // If we move away from this region, go inactive.

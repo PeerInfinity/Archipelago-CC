@@ -259,20 +259,23 @@ describe('the corpus census — printed, then pinned', () => {
          *              noiz2sa.md (`doc` 255 → 262).
          *   337 → 339  BULLETML N3b (2026-10-05): substrate-registry.md's `playClock` row
          *              and noiz2sa.md → loop-recording.md § The play clock (`doc` 262 → 264).
+         *   339 → 341  BULLETML N3b fix 2 (2026-10-05): flash.md's play-clock row →
+         *              loop-recording.md, and noiz2sa.md's play-again line → flash.md
+         *              (`doc` 264 → 266).
          */
         expect(by).toEqual({
             'same-doc': 17,
-            doc: 264,
+            doc: 266,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(339);
+        expect(CORPUS.length).toBe(341);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {
         const docs = RESOLVED.filter((r) => r.kind === 'doc');
-        expect(docs).toHaveLength(264);
+        expect(docs).toHaveLength(266);
         for (const r of docs) {
             expect(r.href, `${r.doc}: ${r.href}`).toMatch(/^docs\.html\?doc=[A-Za-z0-9%.-]+\.md(#.*)?$/);
             expect(r.href).not.toContain(REPO_URL);

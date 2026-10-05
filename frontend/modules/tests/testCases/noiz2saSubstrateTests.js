@@ -244,6 +244,127 @@ async function noiz2saRegionLoopVisit(testController) {
     return testController.getOverallResult();
 }
 
+/**
+ * N3b fix 2 — a clear the host REFUSED can be sent again on the same visit; one it ACCEPTED never twice.
+ * The bridge (flashSubstrate/bridge.js + locationReportLedger.js) used to mark a location reported before
+ * dispatching it, so a clear the loop-mode action gate swallowed (queue not parked on the region) could not be
+ * sent again until the next loadRegion. Here, on ONE visit (no loadRegion in between): a Record block parks; with
+ * the queue paused the clear is refused by the gate (loops:clickIgnored); unpaused, R plays the region again and
+ * the clear is accepted; R and a third clear → no second dispatch (loops observes exactly one parked check).
+ */
+async function noiz2saRefusedClearResent(testController) {
+    await testController.loadRulesFromFile(PRESET_RULES_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    const loopOn = await testController.pollForCondition(
+        () => getGameStateSingleton()?.isLoopModeActive === true, 'loop mode active', 8000, 100);
+    testController.reportCondition('loop mode active', !!loopOn);
+    if (!loopOn) return testController.getOverallResult();
+    await testController.pollForCondition(
+        () => loopStateSingleton.getRegionCaptureShape?.(currentRegion()) === 'summary',
+        'the player landed in a Noiz2sa region', 10000, 200);
+    const region = currentRegion();
+    const regionData = testController.stateManager.getStaticData?.()?.regions?.get(region);
+    const location = regionData?.locations?.[0]?.name ?? null;
+    const exit = (regionData?.exits ?? []).find((e) => e.connected_region) ?? null;
+    testController.assertEqual(`${region} has its clear location and an exit`, true, !!(location && exit));
+    if (!location || !exit) return testController.getOverallResult();
+
+    const gs = getGameStateSingleton();
+    const savedNoReset = gs.noManaDepletionReset;
+    const refusals = [];
+    const onIgnored = (d) => { if (d?.kind === 'location' && d?.payload?.locationName === location) refusals.push(d.reason); };
+    const realObserve = loopStateSingleton.observeParkedLiveAction;
+    let parkedChecks = 0;
+    loopStateSingleton.observeParkedLiveAction = function (action) {
+        if (action?.type === 'locationCheck' && action?.locationName === location) parkedChecks++;
+        return realObserve.call(this, action);
+    };
+    const clearOnce = async (label) => {
+        gameWindow().__noiz2saTest.play(NOIZ2SA_CLEAR_TAPE, { speed: SPEED });
+        const ok = await testController.pollForCondition(() => debugState()?.cleared === true, label, 20000, 100);
+        testController.reportCondition(label, !!ok);
+        return !!ok;
+    };
+    try {
+        gs.noManaDepletionReset = true;
+        testController.eventBus.subscribe('loops:clickIgnored', onIgnored);
+
+        // ── 1. park a Record block on the region; the page is configured by the park's region move ──
+        gs.updatePath(exit.connected_region, exit.name, region);
+        const block = resolveBlockFor(region);
+        testController.assertEqual(`resolved a queue block for ${region}`, true, !!block);
+        if (!block) return testController.getOverallResult();
+        loopStateSingleton.setBlockMode(region, block.instance, 'record');
+        gs.refillMana();
+        loopStateSingleton.startProcessing();
+        const parked = await testController.pollForCondition(
+            () => loopStateSingleton.livePlayRegion() === region, 'the Record block parked for live play', 15000, 100);
+        testController.reportCondition('the Record block parked for live play', !!parked);
+        if (!parked) return testController.getOverallResult();
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'noiz2saSubstratePanel' });
+        const configured = await testController.pollForCondition(
+            () => { const d = debugState(); return !!(d?.regionId === region && d.state === 'ready'); },
+            `the game page is configured with ${region} and waiting`, 30000, 200);
+        testController.reportCondition(`the game page is configured with ${region} and waiting`, !!configured);
+        if (!configured) return testController.getOverallResult();
+
+        // ── 2. the queue paused on the park: the gate refuses the clear ──
+        // (the flag itself, not setPaused: unpausing through setPaused restarts the queue from its first move,
+        // which re-enters the region — a new visit, which re-arms everything anyway)
+        loopStateSingleton.isPaused = true;
+        testController.assertEqual('paused: the region is not open for live play', null, loopStateSingleton.livePlayRegion());
+        if (!(await clearOnce('first clear (queue paused)'))) return testController.getOverallResult();
+        const refused = await testController.pollForCondition(() => refusals.length === 1,
+            'the action gate refused the first clear (loops:clickIgnored)', 5000, 50);
+        testController.reportCondition(`the action gate refused the first clear (${refusals[0] ?? 'none'})`, !!refused);
+        await testController.stateManager.pingWorker('after-refused', 3000);
+        testController.assertEqual('the refused clear checked nothing', false,
+            snapshotHasLocation(testController.stateManager.getSnapshot(), location));
+
+        // ── 3. unpaused, the same visit: play again, and the clear is sent again ──
+        loopStateSingleton.isPaused = false;
+        testController.assertEqual('the region is open for live play again', region, loopStateSingleton.livePlayRegion());
+        testController.assertEqual('the page is still on the same visit (no new loadRegion)', true,
+            debugState()?.regionId === region && debugState()?.clearedThisVisit === true);
+        gameWindow().__noiz2saTest.again();
+        if (!(await clearOnce('second clear (parked, same visit)'))) return testController.getOverallResult();
+        const checked = await testController.pollForCondition(
+            () => snapshotHasLocation(testController.stateManager.getSnapshot(), location),
+            `${location} checked by the resent clear`, 10000, 100);
+        testController.assertEqual(`the resent clear checked ${location}`, true, !!checked);
+        testController.assertEqual('loops observed exactly one parked check', 1, parkedChecks);
+        testController.assertEqual('the page was not reconfigured meanwhile', true, debugState()?.clearedThisVisit === true);
+
+        // ── 3. an accepted clear is never dispatched twice ──
+        gameWindow().__noiz2saTest.again();
+        if (!(await clearOnce('third clear (already accepted)'))) return testController.getOverallResult();
+        await new Promise((r) => setTimeout(r, 1000));
+        await testController.stateManager.pingWorker('after-third', 3000);
+        testController.assertEqual('the accepted clear was not dispatched again (still one parked check, one refusal)',
+            true, parkedChecks === 1 && refusals.length === 1);
+    } finally {
+        loopStateSingleton.observeParkedLiveAction = realObserve;
+        loopStateSingleton.isPaused = false;
+        testController.eventBus.unsubscribe?.('loops:clickIgnored', onIgnored);
+        gameWindow()?.__noiz2saTest?.release?.();
+        gs.noManaDepletionReset = savedNoReset;
+        gs.setLoopModeActive(false);
+        loopStateSingleton.stopProcessing?.();
+    }
+    return testController.getOverallResult();
+}
+
+registerTest({
+    id: 'noiz2sa-refused-clear-resent',
+    name: 'Noiz2sa: a clear the gate refused is sent again on the same visit; an accepted one never twice',
+    description: 'Loads noiz2sa_substrate_test (loop mode) and parks a Record block on 1:1. With the queue paused the '
+        + 'clearing tape clears it and the action gate refuses the check (loops:clickIgnored); unpaused, on the same '
+        + 'visit, R plays the region again and the second clear checks the location; a third clear dispatches nothing.',
+    testFunction: restoresSavedQueues(noiz2saRefusedClearResent),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
 registerTest({
     id: 'noiz2sa-region-loop-visit',
     name: 'Noiz2sa: a region played by injected input — a hit restarts it, the clear checks it, Record → Playback',

@@ -12,10 +12,13 @@ The game page owns `window.__swfBridge.configure` and `pollItems`. The host inje
 |---|---|
 | Handshake | Completes the iframeAdapter handshake and announces `appReady`. |
 | Configure and items | On the load event, calls `__swfBridge.configure` with the payload; pushes received items through `pollItems` then and on every state change. |
-| Locations | When the game calls `__swfBridge.sendLocation(flashName)`, maps it through the payload's `ap_locations` and dispatches `user:locationCheck`. |
+| Locations | When the game calls `__swfBridge.sendLocation(flashName)`, maps it through the payload's `ap_locations` and dispatches `user:locationCheck`. A check the host accepted is never dispatched twice; one it refused can be sent again on the same visit (below). |
+| Play clock | When the game calls the optional `__swfBridge.setPlayClock(running)`, relays `substrate:playClock` {region, running}; loops' time drain honours it for a substrate that declares `loopSupport.playClock` ([loop-recording.md](./loop-recording.md#the-play-clock)). |
 | Exits | When the game calls `__swfBridge.sendExit(portalId, side)`, resolves the exit from the payload and dispatches `user:regionMove`. |
 | Gates | Evaluates the payload's `gate_rules` against the inventory and pushes booleans through `__swfBridge.setGateStates`. |
 | Playback | With `playbackControlEvent` in the iframe URL, forwards bot targets to the optional `__swfBridge.botWalkTo`. |
+
+**Which checks are sent** (`locationReportLedger.js`, the bridge's testable seam). A name the host's checked-locations snapshot has is ACCEPTED: it is seeded at the load event, refreshed on every snapshot, and never dispatched again. A dispatched name is IN FLIGHT, and a repeat report is dropped while it is. It is re-armed when the host REFUSED it: at once on the loop-mode action gate's `loops:clickIgnored` (kind `location`) for that name, for example a clear made while the queue is not parked on the region; otherwise when the game reports it again after `LOCATION_REPORT_SETTLE_MS` (3 s) and the snapshot still lacks it, which covers a refusal that publishes nothing. Before N3b the bridge marked a name reported before dispatching it, so a refused check stayed unsendable until the next load event.
 
 The load event name comes from the iframe URL's `loadRegionEvent` parameter (default `flash:loadRegion`), so a substrate that reuses the bridge with its own panel ignores other substrates' loads.
 

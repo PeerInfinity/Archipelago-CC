@@ -39,10 +39,11 @@ Like runner and bounce, the iframe rides `flashSubstrate`'s shared code: the pan
 
 - The page implements `configure`. It calls `sendLocation('clear')` on the region's clear and `sendExit(exitName, null)` when the player leaves.
 - The exits are closed until the region is cleared on this visit, or its location was already checked.
-- The game steps only while it is being played. A configured region waits for a game key or a click, and the page pauses when it loses focus. Keys: arrows/WASD move, Z fires, X is slow, P pauses, 1–9 leave by that exit.
+- R plays the region again from its start on the same visit (the exits stay open if it was cleared). The next clear is sent again; the bridge dispatches it only if the host did not accept the earlier one (the action gate refuses a clear made while the queue is not parked on the region). See [Flash Substrate](./flash.md).
+- The game steps only while it is being played. A configured region waits for a game key or a click, and the page pauses when it loses focus. Keys: arrows/WASD move, Z fires, X is slow, P pauses, R plays again, 1–9 leave by that exit.
 - The page reports its play clock (`setPlayClock(running)`) on every state change: running only while `playing`. Waiting for the first key, paused, and cleared-and-waiting-to-leave are all stopped (the game does not step in any of them), and an injected tape that ran out returns the page to waiting.
 - Opened directly in a tab, the page plays the region in its URL: `game/index.html?start=1:2&end=1:3&seed=1`.
-- Test surface (not the contract): `window.__noiz2saDebug()` reads the state, and `window.__noiz2saTest` plays an injected input tape (`play(tape, {speed})`) and leaves by an exit (`leave(name)`).
+- Test surface (not the contract): `window.__noiz2saDebug()` reads the state, and `window.__noiz2saTest` plays an injected input tape (`play(tape, {speed})`), leaves by an exit (`leave(name)`) and plays the region again (`again()`).
 
 ## Loop mode
 
@@ -52,7 +53,7 @@ Noiz2sa is a summary substrate (`loopSupport.summaryRecording`) with runner's de
 
 `noiz2sa_substrate_test` is the zone table as a world: 1:1, 1:2–1:3 and 1:boss–2:1, all on seed 1, Victory on the last clear and `Noiz2sa Star` (a filler) on the others. It is written by `scripts/test/generate-noiz2sa-substrate-test-preset.mjs` (Pass A of the pipeline, `loop_costs` stamped), so loop mode auto-enables.
 
-The in-app row `noiz2sa-region-loop-visit` (test-substrates, batch `fast`) parks a Record block on the 1:1 region and drives the page by injected input. Idle fire is hit at frame 240 and the region restarts with nothing checked. Waiting for the first key, and P pressed partway through the clearing tape, each report the clock stopped and drain nothing for 2.5 s (no mana, no recorded second, no frame); P again resumes the tape. The game repo's Ace bot's clearing tape (1002 frames) checks the clear. Leaving saves a summary priced by the drain, and instant Playback spends the repriced summary. The unit tests are `noiz2saRegion.test.js` (the rules on a fake engine) and `noiz2saSubstrateLibrary.test.js` (the entry, the payload round trip, the zone table, the committed preset).
+The in-app row `noiz2sa-region-loop-visit` (test-substrates, batch `fast`) parks a Record block on the 1:1 region and drives the page by injected input. Idle fire is hit at frame 240 and the region restarts with nothing checked. Waiting for the first key, and P pressed partway through the clearing tape, each report the clock stopped and drain nothing for 2.5 s (no mana, no recorded second, no frame); P again resumes the tape. The game repo's Ace bot's clearing tape (1002 frames) checks the clear. Leaving saves a summary priced by the drain, and instant Playback spends the repriced summary. The row `noiz2sa-refused-clear-resent` (same batch) parks a Record block on 1:1 and clears it with the queue paused, so the gate refuses the check; unpaused, on the same visit, it plays again and clears: the location is checked. A third clear dispatches nothing. The unit tests are `noiz2saRegion.test.js` (the rules on a fake engine) and `noiz2saSubstrateLibrary.test.js` (the entry, the payload round trip, the zone table, the committed preset).
 
 ## Related documentation
 
