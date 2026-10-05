@@ -150,34 +150,81 @@ export const SLASH_ANIM_DASH = 'slashnarrow';
  *   `slash`        frames [0,1,2,3,4]  at `swordSpeed`     30
  *   `slashnarrow`  frames [1,2,3]      at `swordSpeedDash` 20
  *
- * ⚠⚠ THE TWO RATES ARE DIFFERENT AND THE TWO PERIODS ARE THE SAME, WHICH IS
- * A COINCIDENCE OF THE ARITHMETIC AND MUST NOT BE WRITTEN AS A CONSTANT.
- * FlashPunk accumulates `frameRate / assignedFrameRate` per update and steps
- * a frame each time the accumulator passes 1: five frames at 30/30 wrap on
- * the 5th tick, and three frames at 20/30 ALSO wrap on the 5th — the 0.667
- * accumulator lands its three steps on ticks 2, 4 and 5. Change either the
- * frame list or the rate and they part company, so this is DERIVED.
+ * ⛔⛔ SEEDLING FIDELITY DASH — **THE TWO PERIODS ARE NOT THE SAME, AND THE
+ * GAME SAID SO.** This block used to read "five frames at 30/30 wrap on the
+ * 5th tick, and three frames at 20/30 ALSO wrap on the 5th", accumulating
+ * `frameRate / 30` per update. FlashPunk accumulates `_frameRate * FP.elapsed`
+ * (`Spritemap.as:74`), and `FP.elapsed` is the `MAX_ELAPSED` clamp **0.0333**
+ * (`Engine.as:270`), NOT 1/30 — the constant every other animation clock in
+ * this tree already reads (`PROFILE.fpElapsed`: `breakableRocks`, `chasers`,
+ * `burnableTree`, `fireVerb`, `bobBoss`). Under it:
+ *   `slash`        30 × 0.0333 = 0.999 an update — the 1st update steps
+ *                  nothing, so 5 frames wrap on update **6**;
+ *   `slashnarrow`  20 × 0.0333 = 0.666 an update — steps on updates 2, 4, 5,
+ *                  so 3 frames wrap on update **5**.
  *
- * ⛓ AND THE GHOST SWORD IS NOT 5. Its lists are 7 frames at 30 and 4 at 20,
- * both of which wrap on the 7th tick. `levelRun` REFUSES a ghostsword press
- * for an unrelated reason (`genericHit`'s Spear arm), so nothing consumes
- * that number yet — it is derived here rather than assumed to be the sword's.
+ * ⛓ AND THE PRESS TICK IS UPDATE 1. `play(anim, true)` runs in `input()`
+ * (inside `super.update()`), and `sprites()` — the line below it in
+ * `Player.update` — advances the animation on that SAME tick. So the
+ * callback lands `updates − 1` ticks after the press, and `slash()` (above
+ * `super.update()`) tests the rect on each of those ticks: `T+1 …
+ * T+(updates − 1)`. The plain swing is 6 − 1 = **5**, which is why the old
+ * 1/30 arithmetic got it right (5 frames at exactly 1.0 = 5) and why R6 slice
+ * 5's measured five agreed; the dash is 5 − 1 = **4**, and the old arithmetic
+ * said 5.
+ *
+ * ⛓ MEASURED: `Bot.slashTests` (the game's own per-`slash()` counter, in
+ * `botStatus.slash.tests`) on L16's `all` plan (`5b1f924b52`) rises on four
+ * observations after each dash press (t77: obs 79–82; t83: obs 85–88) and on
+ * five after a plain one. The model's fifth dash test — fired 88 — is the one
+ * that pulled `rope@32,16`, so the model silenced the arrow traps one volley
+ * early and the game's t100 volley hit the player at t104
+ * (`seedling-fidelity-dash` report § D1).
+ *
+ * ⛓ AND THE GHOST SWORD. 7 frames at 30 wrap on update 8 (7 ticks), 4 at 20 on
+ * update 7 (6 ticks). `levelRun` REFUSES a ghostsword press for an unrelated
+ * reason (`genericHit`'s Spear arm), so nothing consumes those yet.
+ *
+ * @param {number} frameCount  the animation's frame list length
+ * @param {number} frameRate   `Spritemap.add`'s `frameRate`
+ * @param {number} [elapsed]   `FP.elapsed` — the clamp, `PROFILE.fpElapsed`
+ * @returns {number} the number of `Spritemap.update()` calls, counting the
+ *   press tick's own, on which the looping animation wraps (the callback)
  */
-export function animCompleteTicks(frameCount, frameRate, assignedFrameRate = 30) {
+export function animCompleteUpdates(frameCount, frameRate, elapsed = PROFILE.fpElapsed) {
     let timer = 0;
     let index = 0;
     // The same bound `Spritemap.updateAnimation` has no need of, as a refusal
     // rather than an infinite loop: a rate of 0 never completes.
-    for (let tick = 1; tick <= 1000; tick += 1) {
-        timer += frameRate / assignedFrameRate;
+    for (let update = 1; update <= 1000; update += 1) {
+        timer += frameRate * elapsed;
         while (timer >= 1) {
             timer -= 1;
             index += 1;
-            if (index === frameCount) return tick;
+            if (index === frameCount) return update;
         }
     }
-    return fail(`animCompleteTicks: ${frameCount} frame(s) at ${frameRate}/`
-        + `${assignedFrameRate} does not wrap inside 1000 ticks`);
+    return fail(`animCompleteTicks: ${frameCount} frame(s) at ${frameRate} × ${elapsed} `
+        + 'does not wrap inside 1000 updates');
+}
+
+/**
+ * Ticks from the press to the `complete` callback — `animCompleteUpdates − 1`,
+ * because the press tick's own `sprites()` is the first update. It is also
+ * the number of `slash()` hit tests the press buys (`T+1 … T+n`).
+ */
+export function animCompleteTicks(frameCount, frameRate, elapsed = PROFILE.fpElapsed) {
+    return animCompleteUpdates(frameCount, frameRate, elapsed) - 1;
+}
+
+/**
+ * The arithmetic this block replaced, kept by name because the roster still
+ * runs on it (`DASH_WINDOW_ROSTER_WIDE`): `frameRate / 30` an update, and the
+ * wrap update itself counted as the period. It gives 5 for both swords — right
+ * for the plain swing by a coincidence of the arithmetic, one long for the dash.
+ */
+export function animCompleteTicksLegacy(frameCount, frameRate) {
+    return animCompleteUpdates(frameCount, frameRate, 1 / 30);
 }
 
 /** `Player.as:131-132` — `swordSpeed` and `swordSpeedDash`. */
@@ -185,14 +232,67 @@ export const SWORD_ANIM_RATE = PROFILE.swordAnimRate;
 export const SWORD_ANIM_RATE_DASH = PROFILE.swordAnimRateDash;
 
 /**
- * How many ticks after `play(anim, true)` the `slashEnd` callback fires, per
- * animation — DERIVED from `Player.as:392-393`'s own frame lists and rates.
+ * ⛓ THE GAME'S PERIODS — derived under the `FP.elapsed` clamp: `slash` 5,
+ * `slashnarrow` **4**. Witnessed by `Bot.slashTests` (see above).
  */
-export const SLASH_ANIM_TICKS = Object.freeze({
+export const SLASH_ANIM_TICKS_GAME = Object.freeze({
     [SLASH_ANIM_NORMAL]: animCompleteTicks(5, SWORD_ANIM_RATE),
     [SLASH_ANIM_DASH]: animCompleteTicks(3, SWORD_ANIM_RATE_DASH),
 });
 
+/** The periods the roster was solved under: 5 and 5 (`animCompleteTicksLegacy`). */
+export const SLASH_ANIM_TICKS_LEGACY = Object.freeze({
+    [SLASH_ANIM_NORMAL]: animCompleteTicksLegacy(5, SWORD_ANIM_RATE),
+    [SLASH_ANIM_DASH]: animCompleteTicksLegacy(3, SWORD_ANIM_RATE_DASH),
+});
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY DASH — **THE GAME'S DASH WINDOW, GATED, AND WHY IT IS
+ * OFF.** At `true` the model runs the game's periods (`SLASH_ANIM_TICKS_GAME`):
+ * a dash's `slashEnd` lands four ticks after the press and the press buys four
+ * hit tests. Measured with it on (D2 of the DASH report):
+ *   · the model reproduces the game's stream of CANCROSS's refuted L16 plan
+ *     (`fixtures/refuted/dash-l16-sword-refuted`), hit at t104 included, and
+ *     the game's own `Bot.slashTests` at every tick of it;
+ *   · every committed tape still replays against its recording (tapeRunner
+ *     477/477), and five of the six producers' `--check`s are byte-identical;
+ *   · ⛔ but `solve-seedling-r9-campaign --check` goes red: the solver derives
+ *     `r9-solve-14` in 98 t (committed 118 t) and `r9-solve-16` in 688 t
+ *     (committed 625 t). Those are committed tapes moving, and no re-record is
+ *     licensed — so the flip waits for the slice that re-records those two
+ *     segments, and is that slice's one line.
+ * At `false` (here) the model is the roster's: 5 and 5, byte-identical to the
+ * base, and the L16 `all` plan is still the refuted 111 t one.
+ */
+export const DASH_WINDOW_ROSTER_WIDE = false;
+
+/**
+ * How many ticks after `play(anim, true)` the `slashEnd` callback fires, per
+ * animation — DERIVED from `Player.as:392-393`'s own frame lists and rates.
+ * It is also each swing's hit-test count (`slashHitTicksFor`). ⛓ SEEDLING
+ * FIDELITY DASH: the game's table behind `DASH_WINDOW_ROSTER_WIDE`.
+ */
+export const SLASH_ANIM_TICKS = DASH_WINDOW_ROSTER_WIDE ? SLASH_ANIM_TICKS_GAME : SLASH_ANIM_TICKS_LEGACY;
+
+/**
+ * ⛓ SEEDLING FIDELITY DASH — **THE HIT TESTS A SWING BUYS, PER ANIMATION.**
+ * `slash()` tests the rect on every tick `slashing` is up, and `slashEnd` drops
+ * the flag in `sprites()` BELOW that tick's test — so a press at T tests on
+ * `T+1 … T+SLASH_ANIM_TICKS[anim]`: five for the plain swing (R6 slice 5's
+ * measured `SLASH_HIT_TICKS`, which `presses.js` ASSERTS rather than re-states)
+ * and, in the game, FOUR for a dash. `presses.swordWindowStep` reads it off the
+ * thrust's `anim`. A thrust with no `anim` (a caller that predates it) is the
+ * plain swing.
+ */
+export function slashHitTicksFor(anim) {
+    if (anim === undefined || anim === null) return SLASH_ANIM_TICKS[SLASH_ANIM_NORMAL];
+    const n = SLASH_ANIM_TICKS[anim];
+    if (!Number.isInteger(n)) {
+        fail(`slashHitTicksFor: unknown slash animation ${JSON.stringify(anim)}; know `
+            + `${Object.keys(SLASH_ANIM_TICKS).join(', ')}`);
+    }
+    return n;
+}
 
 /**
  * `Player`'s four slash fields at construction (`Player.as:119-121`, and

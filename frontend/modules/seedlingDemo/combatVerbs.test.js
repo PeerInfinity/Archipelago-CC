@@ -31,6 +31,11 @@ import {
     SLASH_ANIM_NORMAL,
     SLASH_TIMER_MAX,
     animCompleteTicks,
+    animCompleteUpdates,
+    slashHitTicksFor,
+    DASH_WINDOW_ROSTER_WIDE,
+    SLASH_ANIM_TICKS_GAME,
+    SLASH_ANIM_TICKS_LEGACY,
     SLASH_ANIM_TICKS,
     SWORD_ANIM_RATE,
     SWORD_ANIM_RATE_DASH,
@@ -700,31 +705,68 @@ describe('R9 slice 12b: the ANIMATION clock, and the maximum swing rate (⚖ rul
      * `slashEnd` is `sprSlash`'s COMPLETE CALLBACK (`Player.as:41`), not a key
      * release — so the dash's re-arm runs on FlashPunk's frame accumulator.
      */
+    /**
+     * ⛓⛓ SEEDLING FIDELITY DASH — **THE ACCUMULATOR IS `frameRate × FP.elapsed`,
+     * AND `FP.elapsed` IS THE 0.0333 CLAMP.** These rows read 5 and 5 under a
+     * `frameRate / 30` accumulator; the game's own `Bot.slashTests` counter
+     * measured four hit tests per dash (`probe-seedling-dash-window.mjs`, L16).
+     */
     it('wraps a looping animation when its accumulator has stepped every frame', () => {
-        // `slash` — [0,1,2,3,4] at swordSpeed 30, i.e. exactly one frame a tick.
+        // `slash` — [0,1,2,3,4] at swordSpeed 30: 0.999 an update, so update 1
+        // steps nothing and the fifth frame wraps on update 6, five ticks after
+        // the press (whose own `sprites()` is update 1).
+        expect(animCompleteUpdates(5, SWORD_ANIM_RATE)).toBe(6);
         expect(animCompleteTicks(5, SWORD_ANIM_RATE)).toBe(5);
-        // `slashnarrow` — [1,2,3] at swordSpeedDash 20, i.e. 0.667 a tick.
-        expect(animCompleteTicks(3, SWORD_ANIM_RATE_DASH)).toBe(5);
+        // `slashnarrow` — [1,2,3] at swordSpeedDash 20: 0.666 an update, steps on
+        // updates 2, 4 and 5 — four ticks after the press, NOT five.
+        expect(animCompleteUpdates(3, SWORD_ANIM_RATE_DASH)).toBe(5);
+        expect(animCompleteTicks(3, SWORD_ANIM_RATE_DASH)).toBe(4);
     });
 
     /**
-     * ⚠ THE EQUALITY ABOVE IS A COINCIDENCE OF THE ARITHMETIC, and this row is
-     * what stops it being written down as a shared constant: the GHOST sword's
-     * two lists (7 at 30, 4 at 20) also agree with each other and NOT with the
-     * plain sword's. Same shape, different number.
+     * ⛔ AND IT IS THE CLAMP, NOT 1/30: under `frameRate / 30` the plain swing is
+     * exactly 1.0 an update and wraps on update 5 — the arithmetic this block
+     * replaced. A mutant that restores it moves both answers.
+     */
+    it('reads the FP.elapsed clamp, which 1/30 is not', () => {
+        expect(animCompleteUpdates(5, SWORD_ANIM_RATE, 1 / 30)).toBe(5);
+        expect(animCompleteUpdates(5, SWORD_ANIM_RATE, 0.0333)).toBe(6);
+    });
+
+    /**
+     * ⚠ The ghost sword's two lists (7 at 30, 4 at 20) part company too: same
+     * shape, different numbers, so nothing here is a shared constant.
      */
     it('does NOT give the same answer for the ghost sword', () => {
         expect(animCompleteTicks(7, SWORD_ANIM_RATE)).toBe(7);
-        expect(animCompleteTicks(4, SWORD_ANIM_RATE_DASH)).toBe(7);
+        expect(animCompleteTicks(4, SWORD_ANIM_RATE_DASH)).toBe(6);
     });
 
     it('refuses a rate that never wraps rather than looping forever', () => {
         expect(() => animCompleteTicks(3, 0)).toThrow(/does not wrap/);
     });
 
+    /**
+     * ⛓⛓ SEEDLING FIDELITY DASH — the GAME's table is 5 / 4; the ROSTER runs the
+     * legacy 5 / 5 until `DASH_WINDOW_ROSTER_WIDE` flips (it would move
+     * `r9-solve-14` and `r9-solve-16`). Both rows hold at either arm.
+     */
     it('exposes the plain sword\'s two periods by name', () => {
+        expect(SLASH_ANIM_TICKS_GAME).toEqual({ slash: 5, slashnarrow: 4 });
+        expect(SLASH_ANIM_TICKS_LEGACY).toEqual({ slash: 5, slashnarrow: 5 });
+        expect(SLASH_ANIM_TICKS).toBe(DASH_WINDOW_ROSTER_WIDE ? SLASH_ANIM_TICKS_GAME : SLASH_ANIM_TICKS_LEGACY);
         expect(SLASH_ANIM_TICKS.slash).toBe(5);
-        expect(SLASH_ANIM_TICKS.slashnarrow).toBe(5);
+    });
+
+    it('is OFF on the roster: the flip moves committed campaign solves', () => {
+        expect(DASH_WINDOW_ROSTER_WIDE).toBe(false);
+    });
+
+    it('buys five hit tests per swing, and the active table\'s count per dash (`slashHitTicksFor`)', () => {
+        expect(slashHitTicksFor('slash')).toBe(5);
+        expect(slashHitTicksFor('slashnarrow')).toBe(SLASH_ANIM_TICKS.slashnarrow);
+        expect(slashHitTicksFor(undefined)).toBe(5);
+        expect(() => slashHitTicksFor('slashwide')).toThrow(/unknown slash animation/);
     });
 
     /**

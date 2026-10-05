@@ -57,6 +57,7 @@ import {
     rect as makeRect,
 } from './levelWorld.js';
 import { atlasLevelSource } from './levelSource.js';
+import { SLASH_ANIM_TICKS, SLASH_ANIM_TICKS_GAME } from './combatVerbs.js';
 
 describe('the spear rect (Player.as:944-968)', () => {
     it('is 32 long and 5 thick', () => {
@@ -427,6 +428,32 @@ describe('the sword window — one stepper, both sides', () => {
             { weapon: 'spear', direction: RIGHT, pressTick: 1 });
         expect(spear.repeats).toHaveLength(4);
         expect(swordWindowReplace(win).repeats).toHaveLength(0);
+    });
+
+    /**
+     * ⛓⛓ SEEDLING FIDELITY DASH — **A DASH BUYS FOUR, NOT FIVE.** `slashnarrow`
+     * wraps one update sooner than `slash` under the `FP.elapsed` clamp
+     * (`combatVerbs.SLASH_ANIM_TICKS`), and the game's own `Bot.slashTests`
+     * counts four tests per dash press on L16 (`probe-seedling-dash-window.mjs`).
+     * The fifth test the model used to run is the one that pulled `rope@32,16`.
+     */
+    it('⛓⛓ a DASH press (`anim: slashnarrow`) fires on T+1 … T+n, n the active table\'s — four in the game', () => {
+        let win = swordWindowSchedule(EMPTY_SWORD_WINDOW,
+            { ...sword(10), anim: 'slashnarrow' });
+        const fired = [];
+        for (let t = 11; t <= 20; t += 1) {
+            const step = swordWindowStep(win, t);
+            win = step.window;
+            for (const f of step.fires) fired.push(t);
+        }
+        // The active table: four in the game (`SLASH_ANIM_TICKS_GAME`), five on the
+        // roster until `DASH_WINDOW_ROSTER_WIDE` flips.
+        expect(fired).toEqual([11, 12, 13, 14, 15].slice(0, SLASH_ANIM_TICKS.slashnarrow));
+        expect(SLASH_ANIM_TICKS_GAME.slashnarrow).toBe(4);
+        // …and a plain swing with its `anim` named is the measured five.
+        let plain = swordWindowSchedule(EMPTY_SWORD_WINDOW, { ...sword(10), anim: 'slash' });
+        plain = swordWindowStep(plain, 11).window;
+        expect(plain.repeats.map((r) => r.at)).toEqual([12, 13, 14, 15]);
     });
 
     it('⛓ the empty window is a fixed point — stepping it fires nothing and changes '
