@@ -410,6 +410,13 @@ export function createRunForStaging(staging, levelSource, { scratchPersistence =
         // the game builds. `parseTape` normalises a pre-v8 tape to
         // `null`, which is exactly what those tapes mean.
         seam: staging.seam ?? null,
+        // ⛓⛓⛓ SEEDLING FIDELITY SLOTS: and the game's SLOT ARRAY, an
+        // OPTIONAL field no tape carries (`stagingFromTape` does not copy it,
+        // so every replay is a fresh game's `[]`). A staging built from a live
+        // game (`botStatus.inventory_slots`) passes it, because the array is
+        // session state the items alone cannot rebuild: Fire received before
+        // the sword is `[1, 0]` there for good (`levelRun`'s `inventorySlots`).
+        inventorySlots: staging.inventory_slots ?? null,
         // ⚠ The runner consults the SAME census the driver plans with,
         // and `noclip` is what decides it on both sides. A noclip tape
         // asks no collider question, so requiring a blocking

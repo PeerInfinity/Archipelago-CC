@@ -222,7 +222,7 @@ import {
     stepArrowTrap,
 } from './arrowTrap.js';
 import {
-    ITEM_PROPERTIES, ITEM_NAMES, inventorySlotsFor, SAVE_SLOTS,
+    ITEM_PROPERTIES, ITEM_NAMES, SAVE_SLOTS, appendInventorySlots, inventorySlotsRefusal,
     seamFieldsFromBlock,
 } from './tapeFormat.js';
 import { clampFor, spawnFromBoot } from './playerPhysicsV1.js';
@@ -394,6 +394,7 @@ export const PROGRESS_FIELD_NAMES = Object.freeze([
     'frozenTimer',
     'inCeremony',
     'primary',
+    'inventorySlots',
     'saveState',
     'takenPickups',
 ]);
@@ -600,6 +601,21 @@ export function createLevelRun({
      * flag BY CONSTRUCTION rather than by convention.
      */
     scratchPersistence = false,
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY SLOTS — the game's SLOT ARRAY at the boot
+     * (`Inventory.items`, read back as `botStatus.inventory_slots`), or `null`
+     * for a fresh game (an empty array: what a page load holds).
+     *
+     * ⛔ IT IS SESSION STATE, NOT A FUNCTION OF THE ITEMS. `Inventory.items` is
+     * STATIC; only `Main.clearSave` / `freshSaveForLevelSet` empty it, never
+     * `Bot.botStart`, and `addItemsFromSave` only appends. So a room reached
+     * after Fire was granted before the sword holds `[1, 0]`, and `[0, 1]`
+     * (`inventorySlotsFor`'s fresh-game order) would put every X press and
+     * every equip on the other item. The run takes the array as staged, then
+     * grows it exactly as the game does (`appendInventorySlots`) whenever an
+     * item arrives (`slotOrder`).
+     */
+    inventorySlots = null,
 }) {
     if (typeof levelSource !== 'function') {
         throw new TypeError('createLevelRun needs a levelSource (level) => levelRecord');
@@ -642,6 +658,53 @@ export function createLevelRun({
         const declared = seamBoot[`save.${spec.property}`];
         if (declared !== undefined) inventory[spec.property] = declared;
     }
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY SLOTS — `Main.primary` and the SLOT ARRAY it
+     * indexes, as the run's own state (declared here, above the first grant,
+     * because a grant grows the array).
+     *
+     * ⛔ THE ARRAY GROWS WHERE THE GAME GROWS IT. The game runs
+     * `addItemsFromSave` in every frame's TAIL (`Game.update`, after
+     * `super.update()`, while `canInventory()`, the dead frames included), so:
+     *
+     *   · the SEAM's items are written before the boot world exists, and the
+     *     boot's dead frames append them: held at tick 0;
+     *   · a GRANT row is written by `Bot.update` at the TOP of its observation
+     *     (`applyGrantsFor`, then `applyEquipsFor` and `drainEquipChecks`, then
+     *     the tick's key edges), so that frame's equip check and its X press
+     *     read the array WITHOUT it, and its tail appends it
+     *     (`syncSlotsAtTail`). MEASURED (`slots-l24-burn-fire-first`'s first
+     *     recording): Fire held, the sword granted at t0 and slot 1 selected
+     *     at t0 — Bot disarmed, "selected slot 1 but the inventory holds
+     *     1 item(s)";
+     *   · a CEREMONY's item keeps the immediate sync it always had (a residue:
+     *     the game appends it in a later tail; `solverBot`'s Fire collect
+     *     already waits a tick before its equip for that reason).
+     *
+     * A run whose items arrive in the fresh-game order reads byte-identically
+     * to the old derivation except on a grant's own tick; what moves is ORDER
+     * (items written in separate syncs keep their arrival order, where the
+     * derivation re-sorted them) and that one frame.
+     *
+     * The seam's `primary` is written before the boot world exists (`Bot.as`
+     * `botStart`), so the first sync's fusion modulo applies to it, as the
+     * dead frames' `inventory.update` would.
+     */
+    let primary = seamBoot['save.primary'] ?? 0;
+    let slotOrder = [];
+    if (inventorySlots !== null) {
+        const why = inventorySlotsRefusal(inventorySlots, inventory);
+        if (why !== null) throw new Error(`levelRun: the staged ${why}.`);
+        slotOrder = [...inventorySlots];
+    }
+    const syncSlots = () => {
+        const next = appendInventorySlots(slotOrder, inventory, { primary });
+        slotOrder = next.slots;
+        primary = next.primary;
+    };
+    syncSlots();
+    /** `Game.update`'s tail: `inventory.update()` → `addItemsFromSave`, every frame. */
+    const syncSlotsAtTail = () => syncSlots();
     /**
      * ⛓⛓⛓ R8 SLICE 8: `Game.time`, AND THE ROW ABOVE STOPS BEING A LIE.
      *
@@ -4217,6 +4280,10 @@ export function createLevelRun({
         const items = grantsByLevel.get(n);
         grantsByLevel.delete(n);
         for (const item of items) applyItem(inventory, item);
+        // ⛓ SLOTS: NOT synced here. The row lands at the TOP of its
+        // observation's frame, and that frame's tail appends its items
+        // (`syncSlotsAtTail`), in `addItemsFromSave`'s block order, after
+        // whatever arrived earlier.
         const record = { t: ticksCompleted, level: n, items: [...items] };
         firedGrants.push(record);
         return record;
@@ -4473,28 +4540,44 @@ export function createLevelRun({
     // its predecessor had SELECTED, which is not the same as re-pressing for
     // it: an `equips` row is a press at a tick and this is the state before
     // tick 0.
-    let primary = seamBoot['save.primary'] ?? 0;
+    // (`primary` is declared with the slot array, above the first grant.)
     const equipsByTick = new Map(equips.map((e) => [e.t, e.slot]));
     const firedEquips = [];
-    const applyEquipsAt = (t) => {
-        if (!equipsByTick.has(t)) return;
-        const slot = equipsByTick.get(t);
-        // Consumed, exactly as a grant is: `advance` re-asks at the top of
-        // every tick and construction already asked for tick 0.
-        equipsByTick.delete(t);
-        const slots = inventorySlotsFor(inventory);
-        if (slot >= slots.length) {
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY SLOTS — `Bot.drainEquipChecks`, at ITS time: the
+     * top of a tick, right after that tick's equips, against the array the
+     * game holds THEN (before the tail appends a grant made on the same
+     * observation), and deferred while that array is empty (`itemCount <= 0`
+     * returns early), exactly as the game defers it.
+     */
+    const pendingEquipChecks = [];
+    const drainEquipChecks = () => {
+        if (pendingEquipChecks.length === 0 || slotOrder.length === 0) return;
+        for (const { t, slot } of pendingEquipChecks) {
+            if (slot < slotOrder.length) continue;
             throw new Error(
                 `levelRun: the tape equips slot ${slot} at tick ${t}, but the run holds `
-                + `${slots.length} item(s) (slots [${slots.join(', ')}]). `
-                + '`Inventory.getItem` on an out-of-range slot is `undefined`, which '
-                + '`useItem` coerces to 0 — so every press from here on would be a '
-                + 'SWORD SLASH and the game would never say so. Grant or collect the '
-                + 'item before selecting it.',
+                + `${slotOrder.length} item(s) (slots [${slotOrder.join(', ')}]) when \`Bot.as\` checks it `
+                + '(`drainEquipChecks`, the top of a tick: an item granted on that same observation is '
+                + 'appended only in the frame\'s tail). `Inventory.getItem` on an out-of-range slot is '
+                + '`undefined`, which `useItem` coerces to 0, and the bot DISARMS rather than let every '
+                + 'press be a silent sword slash. Grant or collect the item, and let a tick pass, before '
+                + 'selecting it.',
             );
         }
-        primary = slot;
-        firedEquips.push({ t, slot });
+        pendingEquipChecks.length = 0;
+    };
+    const applyEquipsAt = (t) => {
+        if (equipsByTick.has(t)) {
+            const slot = equipsByTick.get(t);
+            // Consumed, exactly as a grant is: `advance` re-asks at the top of
+            // every tick and construction already asked for tick 0.
+            equipsByTick.delete(t);
+            primary = slot;
+            firedEquips.push({ t, slot });
+            pendingEquipChecks.push({ t, slot });
+        }
+        drainEquipChecks();
     };
     applyEquipsAt(0);
     /**
@@ -4625,9 +4708,17 @@ export function createLevelRun({
      * slot returns `undefined`, which the switch does not match.
      */
     const weaponForPress = () => {
-        const slots = inventorySlotsFor(inventory);
+        const slots = slotOrder;
         const item = slots[primary];
-        if (item === undefined) return null;
+        // ⛓⛓⛓ SEEDLING FIDELITY SLOTS: `getItem(i):int` on an index past the
+        // end is `undefined` coerced to 0 — the SWORD's id — so the switch's
+        // case 0 runs `slashing = true`, which `set slashing` gates on
+        // `hasSword || hasGhostSword`. Reachable now that the array is state:
+        // a sword granted on this very observation is not in it yet (its
+        // slot lands in this frame's tail), and the press slashes anyway.
+        if (item === undefined) {
+            return inventory.hasSword || inventory.hasGhostSword ? 'sword' : null;
+        }
         // 0 sword / 4 ghostsword -> slashing; 3 spear -> spearing.
         // ⚠ `set slashing` is guarded on `hasSword || hasGhostSword` and
         // `set spearing` on `hasSpear`, but a slot only EXISTS because the
@@ -11305,6 +11396,8 @@ export function createLevelRun({
                 + '`Game.freezeObjects` — so the press would do nothing at '
                 + 'all. Press outside the freeze.');
         }
+        // ⛓ SLOTS: `Game.update`'s tail runs on a frozen frame too.
+        syncSlotsAtTail();
         ticksCompleted++;
         // ⛓ R8 slice 8: a frozen tick is still one `Game.update()`, and
         // `time += timeRate` sits below the `blackCover` gate, not inside the
@@ -12880,6 +12973,7 @@ export function createLevelRun({
     const frozenTimerNow = () => frozenTimer;
     const inCeremonyNow = () => ceremony !== null;
     const primaryNow = () => primary;
+    const inventorySlotsNow = () => [...slotOrder];
     const saveStateNow = () => ({
                 totem_parts: Array.from(
                     { length: SAVE_SLOTS.totem_parts }, (_, i) => totemParts.has(i)),
@@ -13105,6 +13199,7 @@ export function createLevelRun({
         frozenTimer: frozenTimerNow,
         inCeremony: inCeremonyNow,
         primary: primaryNow,
+        inventorySlots: inventorySlotsNow,
         saveState: saveStateNow,
         takenPickups: takenPickupsNow,
     });
@@ -13240,7 +13335,7 @@ export function createLevelRun({
          * than letting the effect check report the target unmoved.
          */
         get primaryWeapon() { return primaryWeaponNow(); },
-        get inventorySlots() { return inventorySlotsFor(inventory); },
+        get inventorySlots() { return inventorySlotsNow(); },
         /**
          * R4: the facing (`Player.direction`) as of the END of the last
          * completed tick — which is exactly the value a press on the NEXT
@@ -16266,7 +16361,10 @@ export function createLevelRun({
                     // `item: null` is a pickup the fourteen-property mirror
                     // does not track (a boss key, a totem part) — the
                     // ceremony is real, there is just nothing to apply.
-                    if (ceremony.item) applyItem(inventory, ceremony.item);
+                    if (ceremony.item) {
+                        applyItem(inventory, ceremony.item);
+                        syncSlots();
+                    }
                     // ...unless it is a BossKey, whose `removed()` writes
                     // `Player.hasKeySet(keyType, true)` INSTEAD of an item
                     // property and instead of persistence. R4's whole key
@@ -17063,6 +17161,10 @@ export function createLevelRun({
                     next.direction = d.direction;
                 }
             }
+            // ⛓ SLOTS: `Game.update`'s tail — `inventory.update()` appends
+            // what this observation's grant wrote (before the swap below,
+            // whose own grant lands on the NEXT observation).
+            syncSlotsAtTail();
             ticksCompleted++;
             clock.tick();
             // ── ⛓⛓⛓ R5 SLICE 22: `Game.view()`, LAST ────────────────

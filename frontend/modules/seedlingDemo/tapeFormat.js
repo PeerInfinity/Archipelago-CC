@@ -900,32 +900,114 @@ export const INVENTORY_ITEM_IDS = Object.freeze({
 });
 
 /**
- * The slot array for a set of held items, exactly as `addItemsFromSave`
- * builds it.
+ * The slot array for a set of held items on a FRESH game (an empty
+ * `Inventory.items`), exactly as `addItemsFromSave` builds it.
+ *
+ * ⛓⛓⛓ SEEDLING FIDELITY SLOTS — this is ONE case of the game's rule, not the
+ * rule. `Inventory.items` is STATIC and only `Main.clearSave` /
+ * `freshSaveForLevelSet` empty it (`Inventory.clearItems`); `Bot.botStart`
+ * never does. `addItemsFromSave` runs every frame and only ADDS what the
+ * flags imply and the array lacks, so the order is the order items ARRIVED:
+ * Fire granted before the sword is `[1, 0]` for the rest of the session.
+ * A run carries the array as state (`levelRun`'s `slotOrder`, staged by
+ * `inventory_slots`) and grows it through `appendInventorySlots`; this is
+ * that function from `[]`, which is what the game holds after a page load.
  *
  * @param {object} items  an inventory mirror: `{hasSword, hasFire, ...}`
  * @returns {number[]}    the item ids, in slot order
  */
 export function inventorySlotsFor(items) {
-    const slots = [];
-    // `addItemsFromSave`'s three blocks, in its own order. Each fusion arm
-    // is an ELSE of its base arm, which is why a ghostsword suppresses the
-    // sword AND the spear rather than adding beside them.
+    return appendInventorySlots([], items).slots;
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY SLOTS — `Inventory.addItemsFromSave`
+ * (`Inventory.as:291-332`) over the array the game HOLDS NOW, with
+ * `removeItem`'s `Main.primary %= items.length` (`:109-120`).
+ *
+ * The three blocks in the game's own order. Each base arm only appends an id
+ * the array does not hold yet (`hasItem`). Each FUSION arm is an else of its
+ * base arm and fires once (`!hasItem(4)` / `!hasItem(5)`): it removes its
+ * two parts and SPLICES its id at a fixed index (`addItem(4, 0)`,
+ * `addItem(5, 1)`). A flag that went false removes nothing: only the fusions
+ * ever remove.
+ *
+ * ⚠ `removeItem` is transcribed as is: its loop splices without stepping
+ * back (an id held twice would survive once, unreachable through
+ * `addItem`'s own guard), and the modulo runs after the loop, so an emptied
+ * array makes it `% 0`. AS3's `NaN` lands in `set primary(_t:int)`, which
+ * coerces it to 0; the same here.
+ *
+ * @param {number[]} slots  the game's array now (not mutated)
+ * @param {object} items    the item flags now
+ * @param {{primary?: number}} [selected]  `Main.primary` now
+ * @returns {{slots: number[], primary: number}}
+ */
+export function appendInventorySlots(slots, items, { primary = 0 } = {}) {
+    const s = [...(slots ?? [])];
+    let p = primary;
+    const ids = INVENTORY_ITEM_IDS;
+    const has = (id) => s.includes(id);
+    const add = (id, pos = -1) => {
+        if (pos >= 0) s.splice(pos, 0, id);
+        else s.push(id);
+    };
+    const remove = (id) => {
+        for (let i = 0; i < s.length; i += 1) if (s[i] === id) s.splice(i, 1);
+        p = s.length > 0 ? p % s.length : 0;
+    };
     if (!items.hasGhostSword) {
-        if (items.hasSword) slots.push(INVENTORY_ITEM_IDS.sword);
-    } else {
-        slots.splice(0, 0, INVENTORY_ITEM_IDS.ghostsword);
+        if (items.hasSword && !has(ids.sword)) add(ids.sword);
+    } else if (!has(ids.ghostsword)) {
+        remove(ids.sword);
+        remove(ids.spear);
+        add(ids.ghostsword, 0);
     }
     if (!items.hasFireWand) {
-        if (items.hasFire) slots.push(INVENTORY_ITEM_IDS.fire);
-        if (items.hasWand) slots.push(INVENTORY_ITEM_IDS.wand);
-    } else {
-        slots.splice(1, 0, INVENTORY_ITEM_IDS.firewand);
+        if (items.hasFire && !has(ids.fire)) add(ids.fire);
+        if (items.hasWand && !has(ids.wand)) add(ids.wand);
+    } else if (!has(ids.firewand)) {
+        remove(ids.fire);
+        remove(ids.wand);
+        add(ids.firewand, 1);
     }
     if (!items.hasGhostSword) {
-        if (items.hasSpear) slots.push(INVENTORY_ITEM_IDS.spear);
+        if (items.hasSpear && !has(ids.spear)) add(ids.spear);
     }
-    return slots;
+    return { slots: s, primary: p };
+}
+
+/**
+ * ⛓⛓⛓ SEEDLING FIDELITY SLOTS — a STAGED slot array (`inventory_slots`, the
+ * game's `botStatus.inventory_slots`), checked: null when it is one the game
+ * can hold beside `items`, else why not, by name. Every id is an item id
+ * (0..5) held once, and every id's item is held: `addItemsFromSave` never
+ * removes a slot whose flag went false, so such an array is reachable (a
+ * seam that clears a flag), but `useItem` then routes a press through a slot
+ * whose setter is gated on the missing flag, which no model here carries.
+ */
+export function inventorySlotsRefusal(slots, items) {
+    if (!Array.isArray(slots)) return `inventory_slots must be an array of item ids, got ${JSON.stringify(slots)}`;
+    const flag = {
+        [INVENTORY_ITEM_IDS.sword]: 'hasSword', [INVENTORY_ITEM_IDS.fire]: 'hasFire',
+        [INVENTORY_ITEM_IDS.wand]: 'hasWand', [INVENTORY_ITEM_IDS.spear]: 'hasSpear',
+        [INVENTORY_ITEM_IDS.ghostsword]: 'hasGhostSword', [INVENTORY_ITEM_IDS.firewand]: 'hasFireWand',
+    };
+    const seen = new Set();
+    for (const id of slots) {
+        if (!Object.prototype.hasOwnProperty.call(flag, id)) {
+            return `inventory_slots ${JSON.stringify(slots)} names ${JSON.stringify(id)}, which is not an item id `
+                + '(0 sword, 1 fire, 2 wand, 3 spear, 4 ghostsword, 5 firewand)';
+        }
+        if (seen.has(id)) return `inventory_slots ${JSON.stringify(slots)} holds item ${id} twice — \`addItem\` is guarded by \`hasItem\``;
+        seen.add(id);
+        if (items?.[flag[id]] !== true) {
+            return `inventory_slots ${JSON.stringify(slots)} holds item ${id} and the staged items do not hold ${flag[id]}: `
+                + 'the game keeps such a slot (`addItemsFromSave` never removes on a false flag), and a press through it is '
+                + 'gated on the missing flag, which this model does not carry';
+        }
+    }
+    return null;
 }
 
 /**
