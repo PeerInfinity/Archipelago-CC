@@ -32,8 +32,10 @@
  * rung's `… candidate(s) left unasked`; both are matched on the solver's own
  * fixed words and named as a gap rather than hidden).
  *
- * `dashMode` defaults to `none` (`CAN_CROSS_DASH_MODE`): on L16 the game refuted
- * the `all` plan's `can` and reproduced the `none` one (measured, D3).
+ * `dashMode` defaults to the solver's `all` (`CAN_CROSS_DASH_MODE`): it was `none`
+ * after the game refuted L16's `all` plan (CANCROSS D3), and returned to `all` when
+ * DASHFLIP turned the game's dash window on (every `all` plan measured there is a
+ * game-recorded walk).
  *
  * ── DETERMINISTIC BY DEFAULT ───────────────────────────────────────────────
  *
@@ -81,7 +83,7 @@ import { fileURLToPath } from 'node:url';
 import { buildStagedTape } from './botDriverV1.js';
 import { ATLAS_PATH, atlasLevelSource } from './levelSource.js';
 import {
-    PendingDeclaration, SolverBotError, SolverRefusal,
+    DEFAULT_DASH_MODE, PendingDeclaration, SolverBotError, SolverRefusal,
     STRIKE_BOUND_EXHAUSTED, assertDashMode, solveSegment,
 } from './solverBot.js';
 import { ITEM_PROPERTIES, PIN_NAMES, parseTape } from './tapeFormat.js';
@@ -110,18 +112,25 @@ export const VERDICTS = Object.freeze(['can', 'cannot', 'undecided', 'model-refu
 export const DEFAULT_CONSULT_BUDGET = 5000;
 
 /**
- * ⛔ THE ORACLE'S DEFAULT DASH MODE IS `none`, NOT THE SOLVER'S `all`.
+ * ⛓ THE ORACLE'S DEFAULT DASH MODE IS THE SOLVER'S (`solverBot.DEFAULT_DASH_MODE`,
+ * `all`) — again, since SEEDLING FIDELITY DASHFLIP.
  *
- * MEASURED ON THE GAME (CANCROSS D3): L16 → L17 with the Sword, `all` plans
- * 111 t (PULL + one dash window; `5b1f924b52`, the SF report's live L16 plan),
- * and the game REFUTES it — the player is hit near the arrow-trap row and the
- * stream parts at tick 104, from the door-built arrival AND from the captured
- * live one alike. The `none` plan (206 t, `0c36d853aa`) is what the game
- * reproduces (`cancross-l16-sword-none`). A `can` is a claim about the game, so
- * the oracle asks the plan family the game has agreed with; `dashMode: 'all'`
- * stays one argument away for a caller that certifies its witnesses.
+ * WHY IT WAS `none` (CANCROSS D3): L16 → L17 with the Sword, `all` planned 111 t
+ * (`5b1f924b52`) and the game REFUTED it — hit at t104 — while the `none` plan
+ * (206 t, `0c36d853aa`, `cancross-l16-sword-none`) reproduced. The DASH slice
+ * found the cause in the model (a dash buys four hit tests in the game, the model
+ * ran five) and DASHFLIP turned the game's window on.
+ *
+ * WHY IT IS `all` NOW, MEASURED at the flip: L16 → L17 `all` plans 117 t
+ * (`12575cff30`), key for key the game-recorded `dash-l16-sword-all`; and every
+ * other sword door in CANCROSS's fresh-vs-live table (L3 → 2, L2 → 0, L0 → 13,
+ * L13 → 14, L14 → 15, L15 → 16) plans, under `all`, the committed campaign
+ * window's own inputs (`r9-solve-3`, `-2`, `-0`, `-13`, `-14`, `-15`), each
+ * recorded on the game. The `none` plans are game-witnessed only at L16. A
+ * `can` is a claim about the game, so the oracle asks the family with the
+ * game's agreement; `dashMode: 'none'` stays one argument away.
  */
-export const CAN_CROSS_DASH_MODE = 'none';
+export const CAN_CROSS_DASH_MODE = DEFAULT_DASH_MODE;
 
 /** Inventory names → the `seam.items` property each sets (`tapeFormat.ITEM_PROPERTIES`). */
 export const INVENTORY_NAMES = Object.freeze(Object.keys(ITEM_PROPERTIES)
@@ -369,7 +378,7 @@ export const planHash = (perTick) => createHash('md5')
  * @param {string[]} [o.inventory] item names (`INVENTORY_NAMES`); with `arrival.staging`, replaces its items
  * @param {object} [o.arrival]    `{from}` | `{x, y}` | `{staging}` (see the docblock)
  * @param {object|null} [o.budget] `{consults}` (default `DEFAULT_CONSULT_BUDGET`) | `{ms}` | `null` (no hook)
- * @param {string} [o.dashMode]  default `CAN_CROSS_DASH_MODE` ('none', measured — see there)
+ * @param {string} [o.dashMode]  default `CAN_CROSS_DASH_MODE` (the solver's 'all', measured — see there)
  * @param {boolean} [o.witness]   build + replay the witness tape on `can` (default true)
  */
 export function canCross(o) {
