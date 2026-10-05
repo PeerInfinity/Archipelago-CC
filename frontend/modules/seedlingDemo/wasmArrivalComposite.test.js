@@ -1,12 +1,15 @@
 /**
- * wasmArrivalComposite — solver-walk W4: the two ARRIVAL COMPOSITES the wasm
- * runtime gains.
+ * wasmArrivalComposite — solver-walk W4: the ARRIVALS the wasm runtime once
+ * served with a composite, now plain solver plans.
  *
  *   · a PIT exit (S4's arm in `wasmArrival.arrivalSolverGoal`): no teleporter on
  *     the exit's cells → the nearest live pit → `reach-pit`;
- *   · an arrival LATCHED ON its goal door (S5): the worker's `step-off`
- *     producer (`wasmWalkTape.stepOffSolveFromStaging`) — the walker's step-off
- *     ++ the solver's walk back, ONE plan from the arrival.
+ *   · an arrival LATCHED ON its goal door (S5): ⛓ STEP-OFF RETIRE — the door's
+ *     plain `reach-exit`. `solveSegment` steps off the latched door and walks
+ *     back (fidelity STEP-OFF: a `step-off` verb in the plan), ONE plan from the
+ *     arrival; a closed pocket is the solver's own `closed` refusal. W4's
+ *     walker-prefix composite (the worker's `step-off` producer,
+ *     `stepOffSolveFromStaging`) is retired.
  *
  * The arrivals are booted the way the node pre-pass boots them (the JS page's
  * own `new Game(level, x, y)`), at the spawns the committed atlas worlds name.
@@ -15,12 +18,12 @@
  *
  *   m1 no pit arm (`arrivalSolverGoal` maps a pit exit as before)
  *        -> 'a PIT exit maps to reach-pit' + 'the pit plans fall' red (2)
- *   m2 no step-off prefix (the composite solves from the arrival itself)
- *        -> every 'crosses' row red (the solver's walk to where it stands
- *           fires nothing: the plan never leaves the room) — 9 red, the worker row too
- *   m3 expected rows not concatenated (the plan's rows only)
- *        -> 'the composite IS one trajectory' red (expected ≠ the fresh replay), and
- *           every 'crosses' row (expected no longer starts at the arrival) — 7 red
+ *   m2 the composite path back on (W4's latched arm: `arrivalSolverGoal` answers
+ *      `stepOff`, the request names a `step-off` producer)
+ *        -> 9 red (measured, the base's four files restored): every latched
+ *           'crosses' row (6), the closed row, the continuation row, and
+ *           `wasmArrival.test.js`'s latched mapping row (the mapping is no
+ *           longer the door's plain reach-exit)
  *   (m4, the repeat check off, is caught in `wasmPlayback.test.js` and the
  *   engine's `seedlingWasmPlayback.test.js` — 3 red: the policy row, the
  *   engine's exact-repeat row and the WG walker row.)
@@ -32,10 +35,10 @@ import { fileURLToPath } from 'node:url';
 import { Worker as NodeWorker } from 'node:worker_threads';
 
 import { createJsRuntime } from './jsRuntimeCore.js';
-import { arrivalSolveRequest, arrivalSolverGoal, STEP_OFF_PRODUCER } from './wasmArrival.js';
-import { createInPlaceProduceService, stepOffSolveFromStaging, WalkTapeRefusal } from './wasmWalkTape.js';
-import { replayTape } from './jsRuntimeSolver.js';
-import { latchedOn } from './jsRuntimeWalker.js';
+import { arrivalSolveRequest, arrivalSolverGoal, continuationSolveRequest } from './wasmArrival.js';
+import { createInPlaceProduceService } from './wasmWalkTape.js';
+import { createInPlaceSolveService, replayTape } from './jsRuntimeSolver.js';
+import { latchedOn, nearestTeleporterAt } from './jsRuntimeWalker.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { createWorkerSolveService } from './jsRuntimeSolveService.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
@@ -61,7 +64,7 @@ function serve(goal, staging) {
     const mapped = arrivalSolverGoal(goal, { staging, levelSource: SOURCE, record: RECORDS.get(goal.level) });
     if (!mapped.goal) return { mapped };
     const request = arrivalSolveRequest({ staging, solverGoal: mapped.goal, levelSource: SOURCE, records: RECORDS,
-        scratchPersistence: true, stepOffGoal: mapped.stepOff ? goal : null });
+        scratchPersistence: true });
     return { mapped, request, result: createInPlaceProduceService().start(request).result };
 }
 
@@ -73,10 +76,17 @@ function replayRows(staging, solution) {
     return rows;
 }
 
+/** Whether a fresh run at the staging stands latched on the goal's door (the arrival's own latch). */
+function latchedAtArrival(goal, staging) {
+    const run = createRunForStaging(staging, SOURCE);
+    const hit = nearestTeleporterAt(run.world, goal.tiles, run.state);
+    return Boolean(hit) && latchedOn(run, hit.index);
+}
+
 // The committed atlas arrivals latched on their goal door (the pre-pass's `latched` legs), the house first.
 // ⛓ STAGED: the rules arc's arrival spawns (2026-10-04, ⚖ L101/L106/L109) moved those three arrivals off
 // their doors, so no committed arrival boots there any more (`jsRuntimeArrivalOnDoor.test.js` pins that):
-// they stay as staged boots on the door tile — a composite over different geometry than L87 and L102.
+// they stay as staged boots on the door tile — a step-off over different geometry than L87 and L102.
 const HOUSE_DOOR = { goal: { kind: 'exit', level: 86, tiles: [[3, 4]], name: 'door' }, at: [48, 64], to: 0 };
 const CROSSES = [
     HOUSE_DOOR,
@@ -87,24 +97,23 @@ const CROSSES = [
     { goal: { kind: 'exit', level: 106, tiles: [[4, 3]], name: 'L106 door' }, at: [64, 48], staged: true },
     { goal: { kind: 'exit', level: 109, tiles: [[10, 3]], name: 'L109 door' }, at: [160, 48], staged: true },
 ];
+const DOOR_GOAL = { kind: 'reach-exit', exit: { x: 48, y: 64 } };
 
-describe('⛓ W4 — a latched door: ONE composite plan from the arrival (walker step-off ++ the solver)', () => {
+describe('⛓ STEP-OFF RETIRE — a latched door: the solver\'s OWN plan from the arrival (no walker prefix)', () => {
     for (const { goal, at, to, staged } of CROSSES) {
-        it(`level ${goal.level} from (${at.join(', ')})${staged ? ' (STAGED)' : ''}: mapped to the door's reach-exit WITH a step-off; the composite crosses`, () => {
+        it(`level ${goal.level} from (${at.join(', ')})${staged ? ' (STAGED)' : ''}: latched, mapped to the door's plain reach-exit; the solver steps off and crosses`, () => {
             const staging = arrival(goal.level, ...at);
-            expect(latchedOn(createRunForStaging(staging, SOURCE), arrivalSolverGoal(goal, { staging, levelSource: SOURCE,
-                record: RECORDS.get(goal.level) }).stepOff.index)).toBe(true);
+            expect(latchedAtArrival(goal, staging)).toBe(true);
             const { mapped, request, result } = serve(goal, staging);
+            expect(Object.keys(mapped)).toEqual(['goal']);
             expect(mapped.goal.kind).toBe('reach-exit');
-            expect(request).toMatchObject({ producer: STEP_OFF_PRODUCER, goal: { kind: 'exit', level: goal.level }, perTick: [] });
-            expect(result.ok).toBe(true);
+            expect(request.producer).toBeUndefined();
+            expect(request.perTick).toEqual([]);
+            expect(result.ok, result.message).toBe(true);
             const p = result.plan;
-            expect(p.producer).toBe(STEP_OFF_PRODUCER);
+            expect(p.producer).toBeUndefined();
             expect(p.prefixLength).toBe(0); // shipped from the ARRIVAL, not from a held point
-            expect(p.stepOff.ticks).toBeGreaterThan(0);
-            expect(p.stepOff.ticks).toBeLessThan(40);
-            expect(p.join).toBe(p.stepOff.ticks);
-            expect(p.solution.length).toBeGreaterThan(p.stepOff.ticks);
+            expect(p.verbs).toEqual(['step-off', 'walk']);
             expect(p.expected).toHaveLength(p.solution.length + 1);
             expect(p.expected[0]).toEqual(rowOf(createRunForStaging(staging, SOURCE)));
             expect(p.expected.at(-1).level).not.toBe(goal.level); // crossed
@@ -113,56 +122,62 @@ describe('⛓ W4 — a latched door: ONE composite plan from the arrival (walker
         });
     }
 
-    it('the composite IS one trajectory: a fresh run replaying the WHOLE solution stands on expected, row for row (the house door)', () => {
-        const staging = arrival(86, ...HOUSE_DOOR.at);
-        const { result } = serve(HOUSE_DOOR.goal, staging);
-        const p = result.plan;
-        expect(replayRows(staging, p.solution)).toEqual(p.expected);
-        // the join: the walker's last row is the plan's first, ONE row (no duplicate, no gap)
-        expect(p.expected[p.join]).toEqual(p.stepOff.to);
-        expect(p.stepOff.from).toEqual(p.expected[0]);
-        // and the latch dropped exactly at the join (the step-off stops the tick the box is off)
-        const run = replayTape({ staging, perTick: p.solution.slice(0, p.join), levelSource: SOURCE, scratchPersistence: true });
-        expect(latchedOn(run, p.stepOff.index)).toBe(false);
-        const before = replayTape({ staging, perTick: p.solution.slice(0, p.join - 1), levelSource: SOURCE, scratchPersistence: true });
-        expect(latchedOn(before, p.stepOff.index)).toBe(true);
-    });
-
-    it('the composite is the S5 page\'s own: the step-off keys are the walker\'s, the plan the solver\'s walk back (verbs walk)', () => {
+    it('the plan IS one trajectory: a fresh run replaying the WHOLE solution stands on expected, row for row, and the latch drops on the way (the house door)', () => {
         const staging = arrival(86, ...HOUSE_DOOR.at);
         const p = serve(HOUSE_DOOR.goal, staging).result.plan;
-        expect(p.verbs).toEqual(['walk']);
-        // a direct call gives the same plan, key for key
-        const direct = stepOffSolveFromStaging({ staging, levelSource: SOURCE, goal: HOUSE_DOOR.goal,
-            solverGoal: { kind: 'reach-exit', exit: { x: 48, y: 64 } }, name: 'wasm-exit-86' });
-        expect(direct.solution.map((h) => [...h].sort())).toEqual(p.solution.map((h) => [...h].sort()));
+        expect(replayRows(staging, p.solution)).toEqual(p.expected);
+        const run = createRunForStaging(staging, SOURCE, { scratchPersistence: true });
+        let dropped = -1;
+        for (let i = 0; i < p.solution.length && dropped < 0; i += 1) {
+            run.advance(p.solution[i]);
+            if (run.state.latched.size === 0) dropped = i;
+        }
+        expect(dropped).toBeGreaterThanOrEqual(0);
+        expect(dropped).toBeLessThan(p.solution.length - 1);
     });
 
-    it('a CLOSED pocket is refused BY NAME at the mapping, before any solve (L3 bare under the rock; L37 ringed by lava)', () => {
+    it('a CLOSED pocket is the SOLVER\'s named refusal (L3 bare under the rock; L37 ringed by lava)', () => {
         for (const [goal, at] of [
             [{ kind: 'exit', level: 3, tiles: [[6, 8]], name: 'out_teleporter_96_128' }, [96, 128]],
             [{ kind: 'exit', level: 37, tiles: [[36, 9]], name: 'out_stairsdown_576_144' }, [576, 144]],
         ]) {
-            const { mapped, request } = serve(goal, arrival(goal.level, ...at));
-            expect(request).toBeUndefined();
-            expect(mapped.walker).toMatch(new RegExp(`^level ${goal.level}: the arrival stands latched on the teleporter at .* `
-                + 'no cell next to it can be walked to — a crossing needs the player to step off it and back on'));
+            const staging = arrival(goal.level, ...at);
+            expect(latchedAtArrival(goal, staging)).toBe(true);
+            const { mapped, request, result } = serve(goal, staging);
+            expect(mapped.goal.kind).toBe('reach-exit');
+            expect(request.producer).toBeUndefined();
+            expect(result).toMatchObject({ ok: false, kind: 'refusal' });
+            expect(result.message).toMatch(new RegExp(`closed — the run stands LATCHED on (teleporter|stairs)@\\d+,\\d+ in level ${goal.level} `
+                + '.*no standable cell next to it can be walked to'));
         }
     });
 
-    it('an arrival NOT latched maps to a plain solve (no producer); a step-off request for one is refused by name', () => {
+    it('an arrival NOT latched maps to the same plain solve, with no step-off in it', () => {
         const staging = arrival(86, 48, 48);
+        expect(latchedAtArrival(HOUSE_DOOR.goal, staging)).toBe(false);
         const { mapped, request, result } = serve(HOUSE_DOOR.goal, staging);
-        expect(mapped).toEqual({ goal: { kind: 'reach-exit', exit: { x: 48, y: 64 } } });
+        expect(mapped).toEqual({ goal: DOOR_GOAL });
         expect(request.producer).toBeUndefined();
         expect(result.ok).toBe(true);
-        expect(() => stepOffSolveFromStaging({ staging, levelSource: SOURCE, goal: HOUSE_DOOR.goal,
-            solverGoal: mapped.goal })).toThrow(WalkTapeRefusal);
-        expect(() => stepOffSolveFromStaging({ staging, levelSource: SOURCE, goal: HOUSE_DOOR.goal,
-            solverGoal: mapped.goal })).toThrow(/is not latched on the goal door/);
+        expect(result.plan.verbs).toEqual(['walk']);
     });
 
-    it('the S2 WORKER (the real entry over worker_threads) answers `producer: step-off` with the in-place plan, row for row', async () => {
+    it('a CONTINUATION whose shadow stands latched on the goal door is solved (was refused: "a step-off composite starts at an arrival")', () => {
+        const staging = arrival(86, ...HOUSE_DOOR.at);
+        const shipped = [new Set(), new Set()]; // two idle ticks: the shadow still stands on the door, latched
+        const c = continuationSolveRequest({ staging, shipped, goal: HOUSE_DOOR.goal, levelSource: SOURCE, records: RECORDS,
+            record: RECORDS.get(86) });
+        expect(c.refusal).toBeUndefined();
+        expect(c.mapped).toEqual({ goal: DOOR_GOAL });
+        expect(latchedOn(replayTape({ staging, perTick: shipped, levelSource: SOURCE, scratchPersistence: true }), 0)).toBe(true);
+        const r = createInPlaceSolveService().start({ ...c.request }).result;
+        expect(r.ok, r.message).toBe(true);
+        expect(r.plan.prefixLength).toBe(2);
+        expect(r.plan.verbs).toEqual(['step-off', 'walk']);
+        expect(r.plan.expected.at(-1).level).toBe(0);
+    });
+
+    it('the S2 WORKER (the real entry over worker_threads) answers a latched arrival with the in-place plan, row for row', async () => {
         const ENTRY = new URL('./jsRuntimeSolveWorker.js', import.meta.url).href;
         const nodeWorker = () => {
             const w = new NodeWorker(`
@@ -186,7 +201,8 @@ describe('⛓ W4 — a latched door: ONE composite plan from the arrival (walker
             const t0 = Date.now();
             while (!h.settled && Date.now() - t0 < 60000) await new Promise((r) => setTimeout(r, 20));
             expect(h.result.ok).toBe(true);
-            expect(h.result.plan.producer).toBe(STEP_OFF_PRODUCER);
+            expect(h.result.plan.producer).toBeUndefined();
+            expect(h.result.plan.verbs).toEqual(['step-off', 'walk']);
             expect(h.result.plan.expected).toEqual(result.plan.expected);
             expect(h.result.plan.solution.map((s) => [...s].sort())).toEqual(result.plan.solution.map((s) => [...s].sort()));
         } finally { service.dispose(); }

@@ -7,16 +7,17 @@
  * the way the controller builds it) serves ONE exit goal there: forced re-arrival → freeze → worker solve →
  * one tape → watch. Measure only: nothing tracked changes.
  *
- *   D   the LATCHED DOORS (one composite tape: the walker's step-off ++ the solver's walk back, solved in
- *       the worker): the starter atlas's HOUSE DOOR from (48,64) and its two stairs, S5's two latched
- *       crossings (L87, L102) — each crossed ON PLAN, producer `step-off`; ⛔ a divergence at the
- *       walker→solver JOIN is reported as a STOP (the seam-free proof failing). The closed pockets (L3 bare,
- *       L37 lava) fail BY NAME. ⛓ The rules arc's arrival spawns (2026-10-04) moved seven arrivals OFF their
- *       doors, so those legs are PLAIN exit legs from the new spawn: ⚖ L101 (96,0), L106 (48,48), L109
- *       (144,48) cross ON PLAN (producer `solver`). The other four goals still fail BY NAME — the goal, not
- *       the arrival, is what the solver cannot serve: L43 (144,48) and L100 (288,80) (a door standing ON a
- *       pit tile: which of trigger and pit edge wins is untranscribed), L34 (128,16) (the door under a
- *       magical lock), L58 (64,16) (a dead door over a lethal pit).
+ *   D   the LATCHED DOORS (⛓ STEP-OFF RETIRE: ONE solver plan, solved in the worker — `solveSegment` steps
+ *       off the latched door and walks back, a `step-off` verb; W4's walker-prefix composite is retired):
+ *       the starter atlas's HOUSE DOOR from (48,64) and its two stairs, S5's two latched crossings (L87,
+ *       L102) — each crossed ON PLAN, producer `solver`, verbs `step-off, walk`. The closed pockets (L3
+ *       bare, L37 lava) fail BY the SOLVER's NAME (`closed — the run stands LATCHED …`). ⛓ The rules arc's
+ *       arrival spawns (2026-10-04) moved seven arrivals OFF their doors, so those legs are PLAIN exit legs
+ *       from the new spawn: ⚖ L101 (96,0), L106 (48,48), L109 (144,48) cross ON PLAN (producer `solver`, no
+ *       step-off). The other four goals still fail BY NAME — the goal, not the arrival, is what the solver
+ *       cannot serve: L43 (144,48) and L100 (288,80) (a door standing ON a pit tile: which of trigger and pit
+ *       edge wins is untranscribed), L34 (128,16) (the door under a magical lock), L58 (64,16) (a dead door
+ *       over a lethal pit).
  *   T   the PIT exits: L48, L83, L84 fallen on plan (`reach-pit`; the fall is the game's crossing).
  *   X   the deterministic RESIDUE legs (§1.2: L28, L30, L45, L88 ×2): each fails BY NAME after 2 plans
  *       (1 forced re-arrival) — an exact repeat (same tick, same game row) — not after 4.
@@ -48,16 +49,17 @@ argvHelp(import.meta.url);
 const exit = (level, tiles, name) => ({ kind: 'exit', level, tiles, name });
 /**
  * The legs, by session. `at` = the arrival (OEL spawn) the host jumps to; `expect` = what the leg must do:
- * `cross` (on plan, out of the room; `producer` the plan's), `closed` (the named closed-pocket refusal),
+ * `cross` (on plan, out of the room; `producer` the plan's; `stepOff` = the plan steps off a latched door),
+ * `closed` (the solver's named closed-pocket refusal),
  * `named` (any named failure — an unreachable goal door, recorded, not fixed), `repeat` (the exact-repeat failure after 2 plans).
  */
 export const LEGS = {
     D: [
-        { name: 'house door (seedling_atlas)', at: [86, 48, 64], goal: exit(86, [[3, 4]], 'door'), expect: 'cross', producer: 'step-off' },
-        { name: 'L2 stairs_up (seedling_atlas)', at: [2, 48, 16], goal: exit(2, [[3, 1]], 'stairs_up'), expect: 'cross', producer: 'step-off' },
-        { name: 'L3 stairs_up (seedling_atlas)', at: [3, 64, 0], goal: exit(3, [[4, 0]], 'stairs_up'), expect: 'cross', producer: 'step-off' },
-        { name: 'S5 L87', at: [87, 432, 304], goal: exit(87, [[27, 19]], 'L87 door'), expect: 'cross', producer: 'step-off' },
-        { name: 'S5 L102', at: [102, 224, 96], goal: exit(102, [[14, 6]], 'L102 door'), expect: 'cross', producer: 'step-off' },
+        { name: 'house door (seedling_atlas)', at: [86, 48, 64], goal: exit(86, [[3, 4]], 'door'), expect: 'cross', producer: 'solver', stepOff: true },
+        { name: 'L2 stairs_up (seedling_atlas)', at: [2, 48, 16], goal: exit(2, [[3, 1]], 'stairs_up'), expect: 'cross', producer: 'solver', stepOff: true },
+        { name: 'L3 stairs_up (seedling_atlas)', at: [3, 64, 0], goal: exit(3, [[4, 0]], 'stairs_up'), expect: 'cross', producer: 'solver', stepOff: true },
+        { name: 'S5 L87', at: [87, 432, 304], goal: exit(87, [[27, 19]], 'L87 door'), expect: 'cross', producer: 'solver', stepOff: true },
+        { name: 'S5 L102', at: [102, 224, 96], goal: exit(102, [[14, 6]], 'L102 door'), expect: 'cross', producer: 'solver', stepOff: true },
         { name: 'closed L3 bare', at: [3, 96, 128], goal: exit(3, [[6, 8]], 'out_teleporter_96_128'), expect: 'closed' },
         { name: 'closed L37 lava', at: [37, 576, 144], goal: exit(37, [[36, 9]], 'out_stairsdown_576_144'), expect: 'closed' },
         // ⛓ the seven arrivals the rules arc moved off their doors: plain exit legs from the new spawn
@@ -211,24 +213,26 @@ async function main() {
                 const last = r.legs.at(-1) ?? {};
                 console.log(`LEG ${JSON.stringify({ session: SESSION, name: leg.name, expect: leg.expect, end: r.end, failed: r.failed,
                     answer: r.answer, level: r.level, ms: r.ms, arrivedAt: r.arrivedAt, landed, legs: r.legs.map((h) => ({ outcome: h.outcome, producer: h.producer,
-                        stepOff: h.stepOff ?? null, ticks: h.ticks, drained: h.drained, verbs: h.verbs, divergence: h.divergence,
+                        ticks: h.ticks, drained: h.drained, verbs: h.verbs, divergence: h.divergence,
                         recovery: h.recovery, solvedMs: h.solvedMs })) })}`);
                 const dv = r.legs.map((h) => h.divergence).filter(Boolean);
                 check(`${SESSION} ${leg.name}: the engine staged the arrival at (${x}, ${y}) in L${level}`,
                     r.arrivedAt?.level === level && r.arrivedAt.x === x && r.arrivedAt.y === y, JSON.stringify({ landed, arrivedAt: r.arrivedAt }));
-                // ⛔ STOP: a divergence at the walker→solver JOIN of a composite is the seam-free proof failing.
-                const joinHit = r.legs.find((h) => h.divergence && h.stepOff && Math.abs(h.divergence.t - h.stepOff.ticks) <= 1);
-                if (joinHit) console.log(`STOP: a composite diverged at its JOIN (t=${joinHit.divergence.t}, join ${joinHit.stepOff.ticks}): ${JSON.stringify(joinHit.divergence)}`);
                 if (leg.expect === 'cross') {
                     check(`${SESSION} ${leg.name}: crossed ON PLAN out of L${level} (producer ${leg.producer}, 0 divergences, 1 plan)`,
                         r.answer.ok && ['crossed', 'done'].includes(r.end) && r.level !== level && dv.length === 0
                             && plays.length === 1 && (plays[0].producer ?? 'solver') === leg.producer
-                            && (plays[0].drained ?? 0) > (plays[0].stepOff?.ticks ?? 0),
-                        JSON.stringify({ end: r.end, level: r.level, failed: r.failed, legs: plays.map((h) => [h.outcome, h.producer, h.ticks, h.drained, h.stepOff?.ticks]) }));
-                    check(`${SESSION} ${leg.name}: no JOIN divergence`, !joinHit, JSON.stringify(joinHit?.divergence ?? null));
+                            && (plays[0].drained ?? 0) > 0,
+                        JSON.stringify({ end: r.end, level: r.level, failed: r.failed, legs: plays.map((h) => [h.outcome, h.producer, h.ticks, h.drained, h.verbs]) }));
+                    // ⛓ STEP-OFF RETIRE — the step-off is IN the solver's plan (its `step-off` verb), not a walker prefix.
+                    if (leg.stepOff) {
+                        check(`${SESSION} ${leg.name}: the solver's plan steps off the latched door itself (verbs step-off, walk)`,
+                            JSON.stringify(plays[0]?.verbs ?? null) === JSON.stringify(['step-off', 'walk']), JSON.stringify(plays[0]?.verbs ?? null));
+                    }
                 } else if (leg.expect === 'closed') {
-                    check(`${SESSION} ${leg.name}: refused BY NAME as a closed pocket (no cell next to the door can be walked to)`,
-                        r.end === 'failed' && /no cell next to it can be walked to/.test(r.failed ?? '') && plays.length === 0,
+                    check(`${SESSION} ${leg.name}: refused BY the SOLVER's NAME as a closed pocket (closed — latched, no standable cell)`,
+                        r.end === 'failed' && /closed — the run stands LATCHED .*no standable cell next to it can be walked to/.test(r.failed ?? '')
+                            && plays.length === 0,
                         String(r.failed));
                 } else if (leg.expect === 'named') {
                     check(`${SESSION} ${leg.name}: the goal door is unreachable from the arrival — NAMED (a failure by name), not fixed`,

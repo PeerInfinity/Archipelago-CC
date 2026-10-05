@@ -7,8 +7,10 @@
  * boot stands on; `playerPhysicsV2.updateTeleporters` clears it the tick the box
  * is off). A walk to a point the player already stands on is zero-length, so
  * the walker steps OFF to the nearest standable cell clear of every teleporter
- * and back ON; while it is latched the solver mode hands the goal to the walker
- * (`solverGoalFor` → `{walker}`), then solves the walk back.
+ * and back ON. ⛓ STEP-OFF RETIRE — the solver mode no longer hands the latched
+ * phase to the walker: `solverGoalFor` maps the latched door to its plain
+ * `reach-exit`, and `solveSegment` steps off and walks back itself (fidelity
+ * STEP-OFF, a `step-off` verb); the walker steps off only on a tick IT drives.
  *
  * The rows are DERIVED from the committed presets: every Seedling vanilla
  * arrival the region binding resolves (`resolveArrivalSpawn`, the return-spawn
@@ -23,9 +25,12 @@
  *   m2 a step-off candidate need not END on its cell (the planner's snap)
  *        -> 'a CLOSED pocket fails by name' reds (L3 walks to the off-map
  *           (104,152), which the planner snaps back onto the door)
- *   m3 `solverGoalFor` maps a latched exit to the solver
- *        -> the ON rows red (the solver's corridor stalls on the door and
- *           declines: `declines` 0 fails)
+  *   m3 the walker hand-off back on (`solverGoalFor` answers a latched exit
+ *      `{walker}`, S5's arm)
+ *        -> 9 red (measured; the base's walker + solver, or only the solver's
+ *           arm put back): every solver-ON 'crosses' row (5), the L3 round
+ *           trip, both solver-ON closed rows and the mapping row (the walker
+ *           steps off: `stepOffs` 1, the solve is a bare `walk`, no decline)
  *   (an explicit "the step-off box overlaps no teleporter" filter was DEAD:
  *   `isWalkableTile` with no teleporter allowed refuses every teleporter cell —
  *   measured over every door of the map, none differs. The row
@@ -192,18 +197,20 @@ describe('S5 — step off and back on: the bot crosses from the arrival', () => 
                 expect(rt.playback.state, rt.playback.reason).toBe(WALK_STATES.DONE);
                 expect(crossings).toHaveLength(1);
                 expect(crossings[0]).toMatchObject({ from: level, x: tp.x, y: tp.y });
-                expect(rt.playback.stats.stepOffs).toBe(1);
+                // ⛓ STEP-OFF RETIRE — the walker steps off only when IT drives (solver OFF).
+                expect(rt.playback.stats.stepOffs).toBe(solver ? 0 : 1);
                 expect(rt.halted).toBeNull();
                 expect(rt.deaths).toHaveLength(0);
                 // The live run is still its own session's tape replayed.
                 expect(runDigest(replayShadow(rt.session, SRC))).toBe(runDigest(rt.run));
                 const s = rt.playback.solverStats;
                 if (solver) {
-                    // The step-off is the walker's; the walk BACK is the solver's.
+                    // The step-off AND the walk back are the solver's: one plan from the arrival.
                     expect(s.declines).toBe(0);
                     expect(s.refutations).toBe(0);
                     expect(s.solves).toBe(1);
-                    expect(s.lastSolve).toMatchObject({ level, goal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } } });
+                    expect(s.lastSolve).toMatchObject({ level, goal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } },
+                        verbs: ['step-off', 'walk'] });
                     expect(s.played).toBe(s.lastSolve.keys);
                 } else {
                     expect(s.solves).toBe(0);
@@ -242,18 +249,20 @@ describe('S5 — step off and back on: the bot crosses from the arrival', () => 
             const { crossings } = walk(rt, toL11, solver);
             expect(rt.playback.state, rt.playback.reason).toBe(WALK_STATES.DONE);
             expect(crossings.map((c) => [c.from, c.to, c.x, c.y])).toEqual([[3, 11, 96, 128]]);
-            expect(rt.playback.stats.stepOffs).toBe(1);
+            expect(rt.playback.stats.stepOffs).toBe(solver ? 0 : 1);
             expect(rt.deaths).toHaveLength(0);
             expect(runDigest(replayShadow(rt.session, SRC))).toBe(runDigest(rt.run));
             if (solver) {
                 expect(rt.playback.solverStats.solves).toBe(solvesBefore + 1);
-                expect(rt.playback.solverStats.lastSolve).toMatchObject({ level: 3, verbs: ['walk'] });
+                expect(rt.playback.solverStats.lastSolve).toMatchObject({ level: 3, verbs: ['step-off', 'walk'] });
             }
         }
     });
 });
 
 describe('S5 — a closed pocket fails by NAME, at once (no 1800-tick stall, no solve)', () => {
+    // ⛓ STEP-OFF RETIRE — solver ON, the SOLVER is asked first and refuses by its own name
+    // (`closed — the run stands LATCHED …`: one decline, no plan); the walker then fails by its own.
     for (const key of Object.entries(ARRIVALS_ON_A_DOOR).filter(([, k]) => k === 'closed').map(([k]) => k)) {
         for (const solver of [false, true]) {
             it(`${key}, solver ${solver ? 'ON' : 'OFF'}`, () => {
@@ -263,25 +272,33 @@ describe('S5 — a closed pocket fails by NAME, at once (no 1800-tick stall, no 
                 const { ticks } = walk(rt, goal, solver);
                 expect(rt.playback.state).toBe(WALK_STATES.FAILED);
                 expect(ticks).toBeLessThanOrEqual(1);
-                expect(rt.playback.reason).toBe(`level ${level}: the run stands latched on the teleporter at `
+                const walkerSaid = `level ${level}: the run stands latched on the teleporter at `
                     + `(${tp.x}, ${tp.y}) and no cell next to it can be walked to — a crossing needs the player `
-                    + 'to step off it and back on');
+                    + 'to step off it and back on';
                 expect(rt.playback.solverStats.solves).toBe(0);
-                expect(rt.playback.solverStats.declines).toBe(0);
+                if (solver) {
+                    expect(rt.playback.solverStats.declines).toBe(1);
+                    expect(rt.playback.reason.startsWith(`${walkerSaid}; the solver declined: `), rt.playback.reason).toBe(true);
+                    expect(rt.playback.reason).toMatch(new RegExp(`closed — the run stands LATCHED on (teleporter|stairs)@${tp.x},${tp.y} `
+                        + `in level ${level}`));
+                } else {
+                    expect(rt.playback.reason).toBe(walkerSaid);
+                    expect(rt.playback.solverStats.declines).toBe(0);
+                }
             });
         }
     }
 });
 
 describe('S5 — the solver goal mapping', () => {
-    it('an exit resolved as a step-off stays on the walker, named; the same exit off the door maps to reach-exit', () => {
+    it('⛓ STEP-OFF RETIRE — an exit resolved LATCHED (or as the walker\'s step-off) maps to the door\'s reach-exit, as off the door', () => {
         const rt = bootAt(87, 432, 304);
         const { tp } = latchedDoorGoal(rt);
         const index = rt.run.world.teleporters.indexOf(tp);
         const goal = { kind: 'exit', level: 87, tiles: [[27, 19]] };
-        expect(solverGoalFor(goal, { run: rt.run, resolved: { target: { x: 0, y: 0 }, allowTeleporter: index, stepOff: true } }))
-            .toEqual({ walker: 'the run stands latched on the goal teleporter — the walker steps off it first' });
-        expect(solverGoalFor(goal, { run: rt.run, resolved: { allowTeleporter: index } }))
-            .toEqual({ goal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } } });
+        const door = { goal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } } };
+        expect(solverGoalFor(goal, { run: rt.run, resolved: { target: { x: 0, y: 0 }, allowTeleporter: index, latched: {} } })).toEqual(door);
+        expect(solverGoalFor(goal, { run: rt.run, resolved: { target: { x: 0, y: 0 }, allowTeleporter: index, stepOff: true } })).toEqual(door);
+        expect(solverGoalFor(goal, { run: rt.run, resolved: { allowTeleporter: index } })).toEqual(door);
     });
 });

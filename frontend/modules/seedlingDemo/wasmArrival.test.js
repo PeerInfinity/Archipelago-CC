@@ -230,14 +230,11 @@ describe('the solve — a fresh boot at the arrival, no prefix, no play', () => 
         expect(arrivalSolverGoal({ ...DOOR, level: 0 }, { staging, levelSource: SOURCE, record: RECORDS.get(0) }).walker)
             .toMatch(/the goal is in level 0, the arrival in level 86/);
     });
-    it('⛓ S5/W3 → W4: an arrival LATCHED ON the goal door → the door\'s reach-exit WITH a step-off (W3 refused it); one tile off it → a plain solve', () => {
+    it('⛓ S5/W3 → W4 → STEP-OFF RETIRE: an arrival LATCHED ON the goal door maps to the door\'s plain reach-exit (the solver steps off itself), as one tile off it does', () => {
         const { staging } = stage(A);
         const at = (y) => arrivalSolverGoal(DOOR, { staging: { ...staging, boot: { ...staging.boot, y } }, levelSource: SOURCE,
             record: RECORDS.get(HOUSE) });
-        for (const y of [64, 56]) {
-            expect(at(y)).toMatchObject({ goal: { kind: 'reach-exit', exit: { x: 48, y: 64 } }, stepOff: { index: 0 } });
-        }
-        expect(at(48)).toEqual({ goal: { kind: 'reach-exit', exit: { x: 48, y: 64 } } });
+        for (const y of [64, 56, 48]) expect(at(y)).toEqual({ goal: { kind: 'reach-exit', exit: { x: 48, y: 64 } } });
     });
     it('B86: the S2 WORKER (the real entry over worker_threads) answers the in-place plan, key for key', async () => {
         const ENTRY = new URL('./jsRuntimeSolveWorker.js', import.meta.url).href;

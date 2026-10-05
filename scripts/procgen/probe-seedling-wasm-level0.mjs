@@ -185,7 +185,7 @@ async function main() {
                 readBeam: rd.state?.beam, readRockSet: rd.state?.rockSet, ...restage(rd) }));
             console.log(`LEG ${JSON.stringify({ session: SESS, name, end: r.end, failed: r.failed, answer: r.answer, level: r.level,
                 ms: r.ms, staged, beam: r.beam, rockSet: r.rockSet, legs: r.legs.map((h) => ({ outcome: h.outcome, producer: h.producer,
-                    stepOff: h.stepOff ?? null, ticks: h.ticks, drained: h.drained, verbs: h.verbs, divergence: h.divergence,
+                    ticks: h.ticks, drained: h.drained, verbs: h.verbs, divergence: h.divergence,
                     recovery: h.recovery, solvedMs: h.solvedMs })) })}`);
             check(`${SESS} ${name}: nothing of ours left armed or held`, !r.armed && !r.held, JSON.stringify({ armed: r.armed, held: r.held }));
             return { r, plays, staged };

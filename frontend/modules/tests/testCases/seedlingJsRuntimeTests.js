@@ -853,6 +853,8 @@ registerTest({
  * path ("Progressive Sword", removed again at the end), the solver breaks the rock
  * and takes the door to 11, the bot takes 11's door back (landing latched),
  * then steps off onto the rock's cell and back on — the crossing to 11.
+ * ⛓ STEP-OFF RETIRE — the step-off is the SOLVER's (one `step-off, walk` plan
+ * from the arrival, fidelity STEP-OFF); the walker never steps off here.
  */
 const DOOR_ROOM = Object.freeze({ level: 3, enter: { x: 112, y: 48 }, door: { x: 96, y: 128 }, to: 11 });
 
@@ -924,10 +926,11 @@ export async function seedlingJsRuntimeSolverStepsOffTheDoor(tc) {
         const s = rt.playback.solverStats;
         tc.log(`solver ${JSON.stringify({ ...s, lastSolve: s.lastSolve ? { ...s.lastSolve, goal: undefined } : null })}`);
         tc.reportCondition('the walk from the arrival is DONE', crossed);
-        tc.assertEqual('the WALKER stepped off once (the latched phase is not the solver\'s)', 1, rt.playback.stats.stepOffs);
-        tc.assertEqual('the SOLVER walked it back: one more solve, no decline', '1/0',
+        // ⛓ STEP-OFF RETIRE — the solver steps off the latched door itself (fidelity STEP-OFF): no walker hand-off.
+        tc.assertEqual('the WALKER never stepped off (the latched phase is the solver\'s now)', 0, rt.playback.stats.stepOffs);
+        tc.assertEqual('the SOLVER stepped off and walked it back: one more solve, no decline', '1/0',
             `${s.solves - before.solves}/${s.declines - before.declines}`);
-        tc.assertEqual('…a WALK, every planned key played, no refutation', `walk/${s.lastSolve?.keys}/0`,
+        tc.assertEqual('…a STEP-OFF then a WALK, every planned key played, no refutation', `step-off,walk/${s.lastSolve?.keys}/0`,
             `${(s.lastSolve?.verbs ?? []).join(',')}/${s.played - before.played}/${s.refutations - before.refutations}`);
         const exits = reportedExits(win).slice(exitsBefore);
         tc.assertEqual(`the crossing was reported: a pendingExit from level ${DOOR_ROOM.level} at the door to ${DOOR_ROOM.to}`,
@@ -949,7 +952,7 @@ registerTest({
     name: 'Seedling JS runtime: an arrival ON the door steps off and back on (L3 ↔ L11)',
     description: 'With flashPanel.runtime = js and the solver mode ON, on seedling_atlas: with the sword the solver '
         + 'breaks L3\'s rock and takes the door to 11; 11\'s only door lands the player back INSIDE that door '
-        + '(latched — it fires only on an entry). The walker steps off onto the rock\'s cell, the solver walks back on, '
+        + '(latched — it fires only on an entry). The SOLVER steps off onto the rock\'s cell and walks back on (one plan), '
         + 'and the crossing to 11 is reported — 0 HALT, no decline, no error: status.',
     testFunction: seedlingJsRuntimeSolverStepsOffTheDoor,
     category: 'Seedling JS runtime',

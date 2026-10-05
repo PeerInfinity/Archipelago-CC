@@ -442,7 +442,7 @@
             "id": "seedling-js-runtime-solver-steps-off-the-door",
             "enabled": true,
             "category": "Seedling JS runtime",
-            "_comment": "Seedling solver-walk S5. Runtime js + the solver mode ON on seedling_atlas: the vanilla L3 <-> L11 round trip — the solver breaks L3's rock and takes the door to 11, 11's only door lands the player INSIDE L3's door (latched), and the walker steps off onto the rock's cell, the solver walks back on, the crossing to 11 is reported; 0 HALT, no decline."
+            "_comment": "Seedling solver-walk S5. Runtime js + the solver mode ON on seedling_atlas: the vanilla L3 <-> L11 round trip — the solver breaks L3's rock and takes the door to 11, 11's only door lands the player INSIDE L3's door (latched), and the SOLVER steps off onto the rock's cell and walks back on (one step-off,walk plan; STEP-OFF RETIRE: the walker never steps off), the crossing to 11 is reported; 0 HALT, no decline."
         },
         {
             "id": "seedling-js-runtime-solver-budget-falls-back",
