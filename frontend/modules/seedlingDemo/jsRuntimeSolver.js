@@ -268,8 +268,9 @@ export function passNote(plan, { expired = false } = {}) {
  * @param {object} goal      the walker's goal (`{kind, level, …}`)
  * @param {object} ctx
  * @param {object} ctx.run       the live run
- * @param {object} ctx.resolved  the walker's resolution (`{target, allowTeleporter}`; ⛓ S5 `stepOff`
- *   while the run stands latched on the goal's teleporter)
+ * @param {object} ctx.resolved  the walker's resolution (`{target, allowTeleporter}`; ⛓ S5 `latched`
+ *   while the run stands latched on the goal's teleporter — still the door's `reach-exit`: the solver
+ *   steps off a latched door itself, fidelity STEP-OFF)
  * @param {object|null} ctx.placement  the location's entity (`{x, y}`, OEL), real rooms only
  * @param {boolean} ctx.generated  a GENERATED level set is mounted (⛓ §5.18 — a delivered set of real rooms is not)
  */
@@ -285,9 +286,9 @@ export function solverGoalFor(goal, { run, resolved, placement = null, generated
         return { goal: { kind: 'reach-pit', pit: { tx, ty, x: tx * TILE_SIZE, y: ty * TILE_SIZE } } };
     }
     if (goal?.kind === 'exit') {
-        // ⛓ S5 — latched ON the goal's teleporter (an arrival on the door): the solver's walk to a point
-        // it already stands on fires nothing (§1.3 L3 r8c6). The walker steps off; the solve follows.
-        if (resolved?.stepOff) return { walker: 'the run stands latched on the goal teleporter — the walker steps off it first' };
+        // ⛓ S5 → STEP-OFF RETIRE — latched ON the goal's teleporter (an arrival on the door) is the
+        // door's `reach-exit` too: `solveSegment` steps off a latched door and walks back (a `step-off`
+        // verb), or refuses a closed pocket by name (`closed — the run stands LATCHED …`).
         const tp = run?.world?.teleporters?.[resolved?.allowTeleporter];
         if (!tp) return { walker: 'no live teleporter resolved for the exit' };
         return { goal: { kind: 'reach-exit', exit: { x: tp.x, y: tp.y } } };

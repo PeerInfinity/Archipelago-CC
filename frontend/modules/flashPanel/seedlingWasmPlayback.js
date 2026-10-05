@@ -68,10 +68,11 @@
  * arrow-key tutorial it ends with is dismissed by one arrow pair
  * (`awaitCeremony`), and a `freeze` no `botStatus` row shows refuses any
  * adoption (`readState().freezeObjects`).
- * ⛓ W4 — ARRIVAL COMPOSITES. A PIT exit maps to `reach-pit` (the fall is the
- * game's crossing). An arrival LATCHED ON its goal door is solved by the
- * worker's `step-off` producer: the walker's step-off ++ the solver's walk
- * back, ONE plan and ONE tape from the arrival (`wasmWalkTape.stepOffSolveFromStaging`).
+ * ⛓ W4 — A PIT exit maps to `reach-pit` (the fall is the game's crossing).
+ * ⛓ STEP-OFF RETIRE — an arrival LATCHED ON its goal door is a plain solve:
+ * `solveSegment` steps off it and walks back (a `step-off` verb, fidelity
+ * STEP-OFF), ONE plan and ONE tape from the arrival. W4's walker-prefix
+ * composite (the worker's `step-off` producer) is gone.
  *
  * ⛓ WG — GENERATED ROOMS (`flash_seedling_gen`, `generated: true`). The
  * rooms are a MOUNTED level set, so the engine's level source is the set the
@@ -787,7 +788,7 @@ export function createWasmPlayback({
             play = null;
             goal = null;
             enterHeld();
-            const done = { goal: g, producer: leg.plan.producer ?? 'solver', stepOff: leg.plan.stepOff ?? null, ticks: leg.ticks,
+            const done = { goal: g, producer: leg.plan.producer ?? 'solver', ticks: leg.ticks,
                 drained: leg.progress.ticks, verbs: leg.plan.verbs, solvedMs: leg.solvedMs, divergence: leg.divergence, recoveries,
                 end: { level, x: st.x, y: st.y }, expectedEnd: leg.plan.expected.at(-1), heldArrival: level,
                 // ⛓ MID-ROOM REPLAN — an exit leg ended by its held arrival names its continuation like `finish()` does.
@@ -852,7 +853,7 @@ export function createWasmPlayback({
 
     /**
      * ⛓ W7 — solve the goal in the room our tape HOLDS: from the arrival when
-     * nothing was shipped since (W2's solve, W4's step-off composite), else a
+     * nothing was shipped since (W2's solve), else a
      * CONTINUATION (`continuationSolveRequest`: the arrival staging + every key
      * shipped since as S0's prefix), after checking the held game IS the shadow.
      */
@@ -863,9 +864,8 @@ export function createWasmPlayback({
         if (r.shipped.length === 0) {
             const mapped = arrivalSolverGoal(goal, { staging: r.staging, levelSource, record });
             if (!mapped.goal) { fail(`the solver has no goal for ${goal.name ?? goal.kind}: ${mapped.walker}`); return; }
-            // ⛓ W4 — latched on the goal door: the worker's step-off composite (one tape from the arrival).
             const request = arrivalSolveRequest({ staging: r.staging, solverGoal: mapped.goal, levelSource, records,
-                name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true, stepOffGoal: mapped.stepOff ? goal : null });
+                name: `wasm-${goal.kind}-${goal.level}`, scratchPersistence: true });
             startSolve(request, { staging: r.staging, continuation: false });
             return;
         }
@@ -905,7 +905,7 @@ export function createWasmPlayback({
 
     /**
      * ⛓ ANYTIME — how a leg's plan was made, for its history row: the PASS (`dashless` / `full`; null for
-     * the walker / step-off producers), whether a later pass was cut at the budget (`expired`), the held
+     * the walker producer), whether a later pass was cut at the budget (`expired`), the held
      * retries spent, and every budget the solve ran under.
      */
     function solvedBy(p) {
@@ -1070,7 +1070,7 @@ export function createWasmPlayback({
         }
         play.plan = res.plan;
         play.solvedMs = Math.round(t - play.t0);
-        // ⛓ ANYTIME — which pass made the plan (a walker / step-off producer has none).
+        // ⛓ ANYTIME — which pass made the plan (a walker producer has none).
         play.pass = res.plan.pass ?? null;
         if (play.pass) stats.passes[play.pass] = (stats.passes[play.pass] ?? 0) + 1;
         ship();
@@ -1246,7 +1246,7 @@ export function createWasmPlayback({
     }
 
     function finish(st) {
-        const done = { goal, producer: play.plan.producer ?? 'solver', stepOff: play.plan.stepOff ?? null, ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
+        const done = { goal, producer: play.plan.producer ?? 'solver', ticks: play.ticks, drained: play.progress.ticks, verbs: play.plan.verbs,
             solvedMs: play.solvedMs, divergence: play.divergence, recoveries, end: { level: st.level, x: st.x, y: st.y },
             expectedEnd: play.plan.expected.at(-1), continuation: play.continuation ?? false, prefix: play.prefix ?? 0, heldEnd: !!(play.hold && st.held),
             ...solvedBy(play) };
@@ -1556,7 +1556,7 @@ export function createWasmPlayback({
                 }
                 const last = play?.progress?.rows?.at(-1) ?? null;
                 history.push({ goal, outcome: 'stopped', producer: play?.plan ? (play.plan.producer ?? 'solver') : null,
-                    stepOff: play?.plan?.stepOff ?? null, phase, ticks: play?.ticks ?? null,
+                    phase, ticks: play?.ticks ?? null,
                     drained: play?.progress?.ticks ?? null, verbs: play?.plan?.verbs ?? null, solvedMs: play?.solvedMs ?? null,
                     divergence: play?.divergence ?? null, recoveries, lastRow: last, expectedEnd: play?.plan?.expected?.at(-1) ?? null,
                     continuation: play?.continuation ?? false, prefix: play?.prefix ?? 0 });

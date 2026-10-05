@@ -48,7 +48,7 @@
 import { SEAM_BOOT_SPEC, SEAM_PREBUILD_FIELDS, SEAM_SIGNATURE, segmentBootFromLatch } from './r7Acceptance.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { liveOf, replayTape, solverGoalFor } from './jsRuntimeSolver.js';
-import { goalTiles, latchedOn, nearestPitAt, nearestTeleporterAt, stepOffPoint } from './jsRuntimeWalker.js';
+import { goalTiles, nearestPitAt, nearestTeleporterAt } from './jsRuntimeWalker.js';
 import { JS_RUNTIME_PINS, locationEntityOf } from './jsRuntimeCore.js';
 import { ITEM_PROPERTIES, PIN_NAMES } from './tapeFormat.js';
 
@@ -353,18 +353,15 @@ export function arrivalStagingWitness(staging, { seam, status, state }) {
  * mapping (`jsRuntimeSolver.solverGoalFor`, with the walker's teleporter / pit
  * resolution and the core's location entity), not a second one.
  *
- * ⛓ W4 — two arrival composites the JS page serves with its walker:
- *   · a PIT exit (S4): no teleporter on the exit's cells → the nearest live pit
- *     → `reach-pit`. The fall is the game's own crossing (no `pendingExit`).
- *   · an arrival LATCHED ON its goal door (S5): the answer carries
- *     `stepOff: {index, point}` with the door's `reach-exit` — the request is
- *     then the worker's `step-off` producer (`wasmWalkTape.stepOffSolveFromStaging`:
- *     the walker steps off, the solver walks back, ONE tape from the arrival).
- *     A closed pocket (no cell next to the door can be walked to — L3 bare,
- *     L37's lava) is refused BY NAME here, before anything is solved.
+ * ⛓ W4 — a PIT exit (S4): no teleporter on the exit's cells → the nearest
+ * live pit → `reach-pit`. The fall is the game's own crossing (no `pendingExit`).
+ * ⛓ STEP-OFF RETIRE — an arrival LATCHED ON its goal door is the door's plain
+ * `reach-exit`: `solveSegment` steps off it and walks back (a `step-off` verb,
+ * fidelity STEP-OFF), and refuses a closed pocket (L3 bare, L37's lava) by
+ * name (`closed — the run stands LATCHED …`). W4's walker-prefix composite
+ * (the worker's `step-off` producer) is gone.
  *
- * @returns {{goal: object, stepOff?: {index:number, point:{x:number, y:number}}}|{walker: string}}
- *   `walker` = the solver has no goal for it, named
+ * @returns {{goal: object}|{walker: string}}  `walker` = the solver has no goal for it, named
  */
 export function arrivalSolverGoal(goal, { staging, levelSource, record, run: given = null }) {
     if (goal?.level !== staging.boot.level) {
@@ -377,16 +374,6 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record, run: giv
     if (goal.kind === 'exit') {
         const tiles = goalTiles(goal);
         const hit = nearestTeleporterAt(run.world, tiles, run.state);
-        if (hit && latchedOn(run, hit.index)) {
-            const point = stepOffPoint(run, hit.index);
-            if (!point) {
-                return { walker: `level ${goal.level}: the arrival stands latched on the teleporter at `
-                    + `(${hit.teleporter.x}, ${hit.teleporter.y}) and no cell next to it can be walked to `
-                    + '— a crossing needs the player to step off it and back on (a closed pocket, S5)' };
-            }
-            return { goal: { kind: 'reach-exit', exit: { x: hit.teleporter.x, y: hit.teleporter.y } },
-                stepOff: { index: hit.index, point } };
-        }
         if (hit) resolved = { allowTeleporter: hit.index };
         else {
             const pit = nearestPitAt(run.world, tiles, run.state);
@@ -406,7 +393,7 @@ export function arrivalSolverGoal(goal, { staging, levelSource, record, run: giv
  * W1's default (false) is kept for its fixture rows.
  */
 export function arrivalSolveRequest({ staging, solverGoal, levelSource, records, name = 'wasm-arrival-solve',
-    scratchPersistence = false, stepOffGoal = null }) {
+    scratchPersistence = false }) {
     const fresh = createRunForStaging(staging, levelSource);
     return {
         staging,
@@ -418,14 +405,8 @@ export function arrivalSolveRequest({ staging, solverGoal, levelSource, records,
         equips: null,
         levelSource,
         source: { records },
-        // ⛓ W4 — an arrival latched on its goal door: the worker's step-off producer (the
-        // walker's step-off as the solve's `prefix`, one composite plan from the arrival).
-        ...(stepOffGoal ? { producer: STEP_OFF_PRODUCER, goal: { ...stepOffGoal } } : {}),
     };
 }
-
-/** ⛓ W4 — the producer name of a latched-door composite (walker step-off ++ solver plan). */
-export const STEP_OFF_PRODUCER = 'step-off';
 
 /**
  * ⛓ W7 — a CONTINUATION's request (plan `seedling-wasm-solver-plan.md` §2.4):
@@ -437,9 +418,9 @@ export const STEP_OFF_PRODUCER = 'step-off';
  * own replay is asserted against it (`solveFromTape`).
  *
  * @returns {{request?: object, shadowRow: object, mapped: object, refusal?: string}}
- *   `refusal` = no continuation (the goal maps to nothing, or the shadow is
- *   latched on the goal door: a step-off composite starts at an ARRIVAL) — the
- *   engine falls back, named
+ *   `refusal` = no continuation (the goal maps to nothing) — the engine falls
+ *   back, named. ⛓ STEP-OFF RETIRE: a shadow latched on the goal door is an
+ *   ordinary continuation (the solver steps off it from the shadow).
  */
 export function continuationSolveRequest({ staging, shipped, goal, levelSource, records, record, name = 'wasm-continuation' }) {
     const perTick = shipped.map((h) => new Set(h));
@@ -448,10 +429,6 @@ export function continuationSolveRequest({ staging, shipped, goal, levelSource, 
     const mapped = arrivalSolverGoal(goal, { staging, levelSource, record,
         run: replayTape({ staging, perTick, levelSource, scratchPersistence: true }) });
     if (!mapped.goal) return { shadowRow: live.row, mapped, refusal: `the solver has no goal for ${goal?.name ?? goal?.kind}: ${mapped.walker}` };
-    if (mapped.stepOff) {
-        return { shadowRow: live.row, mapped, refusal: 'the held player stands latched on the goal door — a step-off '
-            + 'composite starts at an arrival, not mid-room' };
-    }
     return {
         shadowRow: live.row,
         mapped,

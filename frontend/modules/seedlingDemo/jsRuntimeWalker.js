@@ -51,6 +51,10 @@
  * latched on the goal's teleporter the walk heads for the nearest cell OFF it
  * (`stepOffPoint`), the latch drops the tick the box clears the rect, and the
  * walk turns back and earns the crossing (the maze bot's step-off-and-back).
+ * ⛓ STEP-OFF RETIRE — only on a tick the WALKER drives (the solver mode OFF,
+ * a generated room, or after a decline). With the solver driving, the latched
+ * door is the solver's own `reach-exit` (`solveSegment` steps off itself,
+ * fidelity STEP-OFF), so `resolve` hands the solver the door, not a step-off.
  *
  * ⛓ solver-walk S4 — PIT EXITS. An atlas `out_pit_*` exit's cell is a PIT
  * tile of a level whose `control` block names where its pits fall; with no
@@ -261,28 +265,32 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 return { refused: `level ${goal.level} has no live teleporter or pit on ${tiles.length === 1
                     ? `tile (${tiles[0][0]}, ${tiles[0][1]})` : `any of the tiles ${JSON.stringify(tiles)}`}` };
             }
-            if (latchedOn(run, hit.index)) {
-                // ⛓ S5 — standing latched on the door: step OFF it first (see the header).
-                if (stepOff?.run !== run || stepOff.index !== hit.index) {
-                    const point = stepOffPoint(run, hit.index);
-                    if (!point) {
-                        return { refused: `level ${goal.level}: the run stands latched on the teleporter at `
-                            + `(${hit.teleporter.x}, ${hit.teleporter.y}) and no cell next to it can be walked to `
-                            + '— a crossing needs the player to step off it and back on' };
-                    }
-                    stepOff = { run, index: hit.index, point };
-                    stepOffs += 1;
-                    waypoints = null;
-                    emit('step-off', `stepping off the latched teleporter at (${hit.teleporter.x}, ${hit.teleporter.y}) `
-                        + `to (${point.x}, ${point.y}) — it fires only on an entry`);
-                }
-                // The goal teleporter stays allowed: the step-off route STARTS on it.
-                return { target: stepOff.point, allowTeleporter: hit.index, stepOff: true };
-            }
+            // ⛓ S5 — standing latched on the door: the walker steps off it only when IT drives (`walkerStepOff`).
+            if (latchedOn(run, hit.index)) return { target: tileCentrePoint(hit.tile), allowTeleporter: hit.index, latched: hit };
             if (stepOff) { stepOff = null; waypoints = null; }
             return { target: tileCentrePoint(hit.tile), allowTeleporter: hit.index };
         }
         return { target: tileCentrePoint(goal.tile), allowTeleporter: null };
+    }
+
+    /** ⛓ S5 — the walker's own resolution while latched on the goal door: step OFF it first (see the header). */
+    function walkerStepOff(run, r) {
+        const hit = r.latched;
+        if (stepOff?.run !== run || stepOff.index !== hit.index) {
+            const point = stepOffPoint(run, hit.index);
+            if (!point) {
+                return { refused: `level ${goal.level}: the run stands latched on the teleporter at `
+                    + `(${hit.teleporter.x}, ${hit.teleporter.y}) and no cell next to it can be walked to `
+                    + '— a crossing needs the player to step off it and back on' };
+            }
+            stepOff = { run, index: hit.index, point };
+            stepOffs += 1;
+            waypoints = null;
+            emit('step-off', `stepping off the latched teleporter at (${hit.teleporter.x}, ${hit.teleporter.y}) `
+                + `to (${point.x}, ${point.y}) — it fires only on an entry`);
+        }
+        // The goal teleporter stays allowed: the step-off route STARTS on it.
+        return { target: stepOff.point, allowTeleporter: hit.index, stepOff: true };
     }
 
     function done(run) {
@@ -344,7 +352,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                 return null;
             }
             if (done(run)) { settle(WALK_STATES.DONE, null); return null; }
-            const r = resolve(run);
+            let r = resolve(run);
             if (r.refused) { settle(WALK_STATES.FAILED, r.refused); return null; }
             via = r.pit ? 'pit' : 'door';
             if (state !== WALK_STATES.WALKING) settle(WALK_STATES.WALKING, null);
@@ -352,7 +360,7 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
             if (driven >= giveUpTicks) {
                 settle(WALK_STATES.FAILED, `not reached within ${giveUpTicks} ticks — stalled at `
                     + `(${run.state.x}, ${run.state.y})${planError ? `; the planner said: ${planError}` : ''}`
-                    + `${r.stepOff ? `; still latched on the goal teleporter — stepping off to (${r.target.x}, ${r.target.y}) never got there` : ''}`
+                    + `${r.latched && stepOff ? `; still latched on the goal teleporter — stepping off to (${stepOff.point.x}, ${stepOff.point.y}) never got there` : ''}`
                     + `${declined ? `; the solver declined: ${declined}` : ''}`);
                 return null;
             }
@@ -394,6 +402,14 @@ export function createRuntimeWalker({ apItemOf, locationPointOf = null, isCollec
                         + `${retries > 0 ? ` (after ${retries} retr${retries === 1 ? 'y' : 'ies'})` : ''}`;
                     emit(WALK_STATES.WALKING, reason);
                     emit('solver', reason);
+                }
+            }
+            if (r.latched) {
+                // The walker drives this tick (no solver, no solver goal, or a decline): it steps off itself.
+                r = walkerStepOff(run, r);
+                if (r.refused) {
+                    settle(WALK_STATES.FAILED, `${r.refused}${declined ? `; the solver declined: ${declined}` : ''}`);
+                    return null;
                 }
             }
             driven += 1;

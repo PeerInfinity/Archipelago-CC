@@ -49,12 +49,11 @@
  */
 
 import { createManualSession } from './watchManual.js';
-import { createRuntimeWalker, goalTiles, latchedOn, nearestTeleporterAt, WALK_GIVE_UP_TICKS, WALK_STATES } from './jsRuntimeWalker.js';
+import { createRuntimeWalker, WALK_GIVE_UP_TICKS, WALK_STATES } from './jsRuntimeWalker.js';
 import { apItemsOf, recordOfRoom } from './jsRuntimeCore.js';
 import { assembleLevelSetChunks, planLevelSetChunks } from './levelSetValidator.js';
 import { playerBoxAt } from './playerPhysicsV2.js';
-import { createInPlaceSolveService, liveOf, settleSolve, solveFromTape } from './jsRuntimeSolver.js';
-import { STEP_OFF_PRODUCER } from './wasmArrival.js';
+import { createInPlaceSolveService, settleSolve } from './jsRuntimeSolver.js';
 import { levelSourceFromAtlas } from './atlasSource.js';
 
 /** The producer's name, as the plan and the engine's history carry it. */
@@ -196,122 +195,22 @@ export function walkTapeFromStaging({ staging, levelSource, records, goal, scrat
     };
 }
 
-/** ⛓ W4 — a step-off longer than this is refused (S5's rooms step off in 7–15 ticks). */
-export const STEP_OFF_MAX_TICKS = 240;
-
-const sameRow = (a, b) => a.level === b.level && a.x === b.x && a.y === b.y && a.deaths === b.deaths;
-
-/**
- * ⛓ W4 — **THE LATCHED-DOOR COMPOSITE**: an arrival that stands latched ON
- * its goal door (S5: the teleporter fires only on an entry) becomes ONE plan
- * from the arrival, solved here, in the worker:
- *
- *   1. the J2 walker's S5 step-off (`stepOffPoint`, the page's walker
- *      unchanged) drives a FRESH run from the staging until the latch drops —
- *      those keys are `stepOff`, the run's rows `walkerRows`;
- *   2. `solveFromTape({perTick: stepOff})` (S0's `prefix` admission: the
- *      shadow replay of the step-off is asserted equal to the walker's run)
- *      solves the walk back onto the door;
- *   3. `solution = stepOff ++ plan`, `expected = walkerRows ++ planRows` (the
- *      join row is ONE row: the walker's last = the plan's first, asserted).
- *
- * Shipped as one tape from the arrival, nothing happens mid-room on the game:
- * the seam between the walker and the solver exists only in the model.
- *
- * ⛔ A step-off that fails (a closed pocket — `arrivalSolverGoal` refuses those
- * first), dies, crosses, or runs past `STEP_OFF_MAX_TICKS` throws
- * `WalkTapeRefusal` BY NAME; the solver's own refusal propagates unchanged.
- *
- * @param {object} o  the request (`wasmArrival.arrivalSolveRequest` with `stepOffGoal`):
- *   `staging`, `goal` (the AP exit goal), `solverGoal` (the door's `reach-exit`),
- *   `levelSource`, `name`, `scratchPersistence`
- */
-export function stepOffSolveFromStaging({ staging, levelSource, goal, solverGoal, name = 'wasm-step-off',
-    scratchPersistence = true, maxTicks = STEP_OFF_MAX_TICKS, clock = () => Date.now() }) {
-    const t0 = clock();
-    if (goal?.kind !== 'exit') throw new WalkTapeRefusal(`a step-off serves an exit goal, not ${JSON.stringify(goal)}`);
-    let session;
-    try {
-        session = createManualSession({ levelSource, staging, name: `${name}-step-off`, scratchPersistence });
-    } catch (err) {
-        throw new WalkTapeRefusal(`the model refused to boot level ${goal.level} at the arrival: ${String(err.message).split('\n')[0]}`);
-    }
-    const run = session.run;
-    const hit = nearestTeleporterAt(run.world, goalTiles(goal), run.state);
-    if (!hit || !latchedOn(run, hit.index)) {
-        throw new WalkTapeRefusal(`the arrival in level ${goal.level} is not latched on the goal door ${goal.name ?? ''} — `
-            + 'no step-off to make (the request should have been a plain solve)');
-    }
-    let failure = null;
-    const walker = createRuntimeWalker({
-        apItemOf: () => null, isCollected: () => false,
-        onEvent: (e) => { if (e.state === WALK_STATES.FAILED) failure = e.message ?? 'the walk failed'; },
-    });
-    walker.setGoal(goal);
-    walker.play();
-    const walkerRows = [rowOf(run)];
-    for (let i = 0; latchedOn(run, hit.index); i += 1) {
-        if (i >= maxTicks) {
-            throw new WalkTapeRefusal(`the step-off in level ${goal.level} was still latched on the door after ${maxTicks} ticks`
-                + `${walker.reason ? ` (${walker.reason})` : ''}`);
-        }
-        const walkHeld = walker.heldFor(run);
-        if (walker.state === WALK_STATES.FAILED || walkHeld === null) {
-            throw new WalkTapeRefusal(`the walker could not step off the door in level ${goal.level}: `
-                + `${failure ?? walker.reason ?? `it drove nothing at tick ${i}`}`);
-        }
-        const deaths0 = run.playerDeaths.length;
-        const n0 = run.transitions.length;
-        const { held } = session.heldFor(walkHeld, { autoAdvanceText: true });
-        try {
-            session.step(held);
-        } catch (err) {
-            throw new WalkTapeRefusal(`the model refused at tick ${i} of the step-off in level ${goal.level}: `
-                + `${String(err.message).split('\n')[0]}`);
-        }
-        walkerRows.push(rowOf(run));
-        if (run.playerDeaths.length > deaths0) throw new WalkTapeRefusal(`the step-off in level ${goal.level} died at tick ${i}`);
-        if (run.transitions.length > n0) throw new WalkTapeRefusal(`the step-off in level ${goal.level} left the room at tick ${i}`);
-    }
-    const stepOff = session.perTick.map((h) => new Set(h));
-    const plan = solveFromTape({ staging, perTick: stepOff, live: liveOf(run), levelSource, solverGoal, name,
-        scratchPersistence, equips: null, clock });
-    if (!sameRow(walkerRows.at(-1), plan.expected[0])) {
-        throw new WalkTapeRefusal(`the step-off's last row ${JSON.stringify(walkerRows.at(-1))} is not the solve's first `
-            + `${JSON.stringify(plan.expected[0])} — the composite cannot be one trajectory`);
-    }
-    const n = stepOff.length;
-    return {
-        solution: [...stepOff.map((h) => new Set(h)), ...plan.solution],
-        expected: [...walkerRows.slice(0, -1), ...plan.expected],
-        equipsAt: new Map([...plan.equipsAt].map(([t, slot]) => [t + n, slot])),
-        verbs: plan.verbs,
-        producer: STEP_OFF_PRODUCER,
-        stepOff: { ticks: n, index: hit.index, from: walkerRows[0], to: walkerRows.at(-1) },
-        join: n,
-        replayMs: plan.replayMs,
-        solveMs: clock() - t0,
-        prefixLength: 0,
-    };
-}
-
 /**
  * The in-place twin of the worker's dispatch (node rows, and a page with no
- * Worker): a `producer: 'walker'` request walks here, a `'step-off'` one
- * (⛓ W4) builds the latched-door composite, anything else is
- * `jsRuntimeSolver.createInPlaceSolveService`'s. Settles synchronously.
+ * Worker): a `producer: 'walker'` request walks here, anything else is
+ * `jsRuntimeSolver.createInPlaceSolveService`'s (⛓ STEP-OFF RETIRE: W4's
+ * `'step-off'` composite producer is gone — the solver steps off a latched
+ * door itself). Settles synchronously.
  */
 export function createInPlaceProduceService({ clock = () => Date.now() } = {}) {
     const solve = createInPlaceSolveService({ clock });
     return {
         kind: 'in-place',
         start(request) {
-            if (request.producer !== WALK_TAPE_PRODUCER && request.producer !== STEP_OFF_PRODUCER) return solve.start(request);
+            if (request.producer !== WALK_TAPE_PRODUCER) return solve.start(request);
             const records = request.source?.records ?? null;
             const levelSource = request.levelSource ?? levelSourceFromAtlas(records);
-            const result = settleSolve(() => (request.producer === STEP_OFF_PRODUCER
-                ? stepOffSolveFromStaging({ ...request, levelSource, clock })
-                : walkTapeFromStaging({ ...request, levelSource, records, clock })));
+            const result = settleSolve(() => walkTapeFromStaging({ ...request, levelSource, records, clock }));
             return { settled: true, started: true, result, cancel() {} };
         },
         warm() {},
