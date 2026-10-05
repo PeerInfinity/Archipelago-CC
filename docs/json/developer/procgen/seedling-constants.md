@@ -295,23 +295,23 @@ The region below is rendered by `--write`; do not edit it by hand.
 
 <!-- CENSUS:seedling-constants BEGIN — by scripts/procgen/census-seedling-constants.mjs --write; do not edit; regenerate -->
 
-**58 files, 4968 literals.** Class × position:
+**58 files, 4976 literals.** Class × position:
 
 | class | scalar | table | inline | total |
 |---|---|---|---|---|
 | physics | 5 | 1283 | 351 | 1639 |
-| rule | 6 | 940 | 445 | 1391 |
+| rule | 6 | 945 | 446 | 1397 |
 | cosmetic | 0 | 49 | 14 | 63 |
-| structural | 10 | 312 | 1553 | 1875 |
+| structural | 10 | 312 | 1555 | 1877 |
 | unclassified | 0 | 0 | 0 | 0 |
-| total | 21 | 2584 | 2363 | 4968 |
+| total | 21 | 2589 | 2366 | 4976 |
 
 Class × kind (physics and rule rows only):
 
 | class | magnitude | count | bound | sign | sentinel | derivation | total |
 |---|---|---|---|---|---|---|---|
 | physics | 1376 | 0 | 90 | 118 | 4 | 51 | 1639 |
-| rule | 411 | 121 | 220 | 22 | 528 | 89 | 1391 |
+| rule | 411 | 123 | 220 | 22 | 528 | 93 | 1397 |
 
 Rows whose note starts `REVIEW:`: **103**.
 
@@ -507,7 +507,7 @@ None: a name declared in several files now reads one profile key (the table belo
 
 ### The profile candidates outside the profile
 
-**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **137 small tables** (at most 16 literals) hold at least one (87 with an AS3 reference).
+**11 named scalars** are `physics` or `rule` (11 with an AS3 anchor), and **138 small tables** (at most 16 literals) hold at least one (86 with an AS3 reference).
 
 | name | file | value | class | kind | AS3 |
 |---|---|---|---|---|---|
@@ -635,7 +635,8 @@ None: a name declared in several files now reads one profile key (the table belo
 | `SLASH_SCALE_DASH` | seedlingDemo/combatVerbs.js | 2 | 2 | physics | magnitude |  |
 | `SWORD_DAMAGE` | seedlingDemo/combatVerbs.js | 3 | 3 | rule | magnitude |  |
 | `KILL_PRESS_CADENCE` | seedlingDemo/combatVerbs.js | 1 | 1 | rule | derivation |  |
-| `SLASH_ANIM_TICKS` | seedlingDemo/combatVerbs.js | 2 | 2 | rule | count | Player.as:392-393 |
+| `SLASH_ANIM_TICKS_GAME` | seedlingDemo/combatVerbs.js | 2 | 2 | rule | count |  |
+| `SLASH_ANIM_TICKS_LEGACY` | seedlingDemo/combatVerbs.js | 2 | 2 | rule | count |  |
 | `CHEST` | seedlingDemo/chest.js | 9 | 9 | physics/rule | count/magnitude | Chest.as:openTimerMax Chest.as:m |
 | `SEAL_DRAW` | seedlingDemo/chest.js | 6 | 5 | rule | count/derivation | SealController.as:SEALS |
 | `SEAL_PIECE` | seedlingDemo/sealCeremony.js | 10 | 10 | physics/rule | bound/magnitude | Pickups/Pickup.as:attractDistance Pickups/Pickup.as:motionDampener Pickups/Pickup.as:minAttraction Pickups/Pickup.as:minSpeedToPlayer Pickups/Pickup.as:specialTimerMax Mobile.as:DEFAULT_FRICTION |
