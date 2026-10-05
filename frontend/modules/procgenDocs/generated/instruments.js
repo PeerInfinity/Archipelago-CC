@@ -44,6 +44,11 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
+            "count": 1,
+            "id": "can"
+        },
+        {
+            "browser": 0,
             "count": 16,
             "id": "census"
         },
@@ -214,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 332,
+        "blockStyle": 333,
         "browser": 109,
-        "cited": 157,
-        "files": 343,
+        "cited": 158,
+        "files": 344,
         "lineStyle": 11,
-        "withDocblock": 343,
-        "withFlags": 261
+        "withDocblock": 344,
+        "withFlags": 262
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -497,6 +502,138 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "build-dj-loader-swf.mjs — produce the loader-injected wide Doodle Jump SWF as a FILE, for consumers that need a URL instead of in-memory bytes: the real-DJ renderer's native-Flash tier (NPAPI plugins stream the movie by URL) and the SWFRecomp recompile input (flasharchive/Doodle_Jump_loader/test.swf).",
             "path": "scripts/procgen/build-dj-loader-swf.mjs"
+        },
+        {
+            "argvHelpers": [
+                "name",
+                "opt",
+                "pair"
+            ],
+            "browser": false,
+            "category": "can",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget",
+                "budget-ms",
+                "dash",
+                "derive",
+                "exit",
+                "from",
+                "inventory",
+                "json",
+                "level",
+                "name",
+                "no-budget",
+                "persistence",
+                "primary",
+                "spawn",
+                "time",
+                "witness"
+            ],
+            "file": "can-cross-seedling.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "budget"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "budget-ms"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "dash"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "derive"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "exit"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "inventory"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "level"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "no-budget"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "persistence"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "primary"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "spawn"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "time"
+                },
+                {
+                    "how": [
+                        "opt"
+                    ],
+                    "name": "witness"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "can-cross-seedling — ⛓⛓⛓ SEEDLING FIDELITY CANCROSS: ASK THE SOLVER WHETHER THE BOT CAN CROSS ONE ROOM, FROM AN ARRIVAL, WITH AN INVENTORY.",
+            "path": "scripts/procgen/can-cross-seedling.mjs"
         },
         {
             "argvHelpers": [
