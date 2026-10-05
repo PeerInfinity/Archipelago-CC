@@ -11495,7 +11495,7 @@
                 4
               ],
               "entrance_spawn": {
-                "x": 0,
+                "x": 16,
                 "y": 64
               },
               "exitName": "level_3__r0c4 -> level_111",
@@ -11911,7 +11911,7 @@
               ],
               "entrance_spawn": {
                 "x": 48,
-                "y": 112
+                "y": 96
               },
               "exitName": "level_5__r1c5 -> level_6",
               "targetRegion": "level_6",
@@ -12827,8 +12827,8 @@
                 23
               ],
               "entrance_spawn": {
-                "x": 160,
-                "y": 368
+                "x": 168,
+                "y": 384
               },
               "exitName": "level_12__r0c19 -> level_36",
               "targetRegion": "level_36",
@@ -13127,7 +13127,7 @@
               ],
               "entrance_spawn": {
                 "x": 576,
-                "y": 688
+                "y": 672
               },
               "exitName": "level_12__r0c37 -> level_21",
               "targetRegion": "level_21",
@@ -13308,8 +13308,8 @@
                 43
               ],
               "entrance_spawn": {
-                "x": 32,
-                "y": 688
+                "x": 40,
+                "y": 704
               },
               "exitName": "level_12__r40c4 -> level_24",
               "targetRegion": "level_24",
@@ -13981,7 +13981,7 @@
               ],
               "entrance_spawn": {
                 "x": 192,
-                "y": 48
+                "y": 32
               },
               "exitName": "level_16 -> level_17 #2",
               "targetRegion": "level_17",
@@ -14007,7 +14007,7 @@
               ],
               "entrance_spawn": {
                 "x": 208,
-                "y": 48
+                "y": 32
               },
               "exitName": "level_16 -> level_17 #3",
               "targetRegion": "level_17",
@@ -14033,7 +14033,7 @@
               ],
               "entrance_spawn": {
                 "x": 224,
-                "y": 48
+                "y": 32
               },
               "exitName": "level_16 -> level_17 #4",
               "targetRegion": "level_17",
@@ -14058,7 +14058,7 @@
                 4
               ],
               "entrance_spawn": {
-                "x": 192,
+                "x": 176,
                 "y": 64
               },
               "exitName": "level_16 -> level_17 #5",
@@ -14084,8 +14084,8 @@
                 4
               ],
               "entrance_spawn": {
-                "x": 208,
-                "y": 64
+                "x": 192,
+                "y": 80
               },
               "exitName": "level_16 -> level_17 #6",
               "targetRegion": "level_17",
@@ -14110,7 +14110,7 @@
                 4
               ],
               "entrance_spawn": {
-                "x": 224,
+                "x": 240,
                 "y": 64
               },
               "exitName": "level_16 -> level_17 #7",
@@ -14136,7 +14136,7 @@
                 5
               ],
               "entrance_spawn": {
-                "x": 208,
+                "x": 192,
                 "y": 80
               },
               "exitName": "level_16 -> level_17 #8",
@@ -15481,7 +15481,7 @@
               ],
               "entrance_spawn": {
                 "x": 32,
-                "y": 144
+                "y": 112
               },
               "exitName": "level_24 -> level_12__r40c4",
               "targetRegion": "level_12__r40c4",
@@ -15507,7 +15507,7 @@
               ],
               "entrance_spawn": {
                 "x": 48,
-                "y": 144
+                "y": 112
               },
               "exitName": "level_24 -> level_12__r40c4 #2",
               "targetRegion": "level_12__r40c4",
@@ -15972,8 +15972,8 @@
                 1
               ],
               "entrance_spawn": {
-                "x": 160,
-                "y": 16
+                "x": 168,
+                "y": 32
               },
               "exitName": "level_27 -> level_28__r1c18",
               "targetRegion": "level_28__r1c18",
@@ -16609,7 +16609,7 @@
               ],
               "entrance_spawn": {
                 "x": 48,
-                "y": 224
+                "y": 208
               },
               "exitName": "level_30__r2c10 -> level_31__r5c24",
               "targetRegion": "level_31__r5c24",
@@ -17022,7 +17022,7 @@
               ],
               "entrance_spawn": {
                 "x": 64,
-                "y": 0
+                "y": 32
               },
               "exitName": "level_32 -> level_30__r2c10",
               "targetRegion": "level_30__r2c10",
@@ -17048,7 +17048,7 @@
               ],
               "entrance_spawn": {
                 "x": 80,
-                "y": 0
+                "y": 32
               },
               "exitName": "level_32 -> level_30__r2c10 #2",
               "targetRegion": "level_30__r2c10",
@@ -17202,7 +17202,7 @@
               ],
               "entrance_spawn": {
                 "x": 128,
-                "y": 0
+                "y": 16
               },
               "exitName": "level_34 -> level_12__r0c37",
               "targetRegion": "level_12__r0c37",
@@ -18081,7 +18081,7 @@
               ],
               "entrance_spawn": {
                 "x": 224,
-                "y": 432
+                "y": 416
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #2",
               "targetRegion": "level_43__r8c7",
@@ -18107,7 +18107,7 @@
               ],
               "entrance_spawn": {
                 "x": 240,
-                "y": 432
+                "y": 416
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #3",
               "targetRegion": "level_43__r8c7",
@@ -18133,7 +18133,7 @@
               ],
               "entrance_spawn": {
                 "x": 368,
-                "y": 432
+                "y": 416
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #4",
               "targetRegion": "level_43__r8c7",
@@ -18159,7 +18159,7 @@
               ],
               "entrance_spawn": {
                 "x": 384,
-                "y": 432
+                "y": 416
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #5",
               "targetRegion": "level_43__r8c7",
@@ -18184,7 +18184,7 @@
                 28
               ],
               "entrance_spawn": {
-                "x": 224,
+                "x": 208,
                 "y": 448
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #6",
@@ -18210,7 +18210,7 @@
                 28
               ],
               "entrance_spawn": {
-                "x": 240,
+                "x": 256,
                 "y": 448
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #7",
@@ -18236,7 +18236,7 @@
                 28
               ],
               "entrance_spawn": {
-                "x": 368,
+                "x": 352,
                 "y": 448
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #8",
@@ -18262,7 +18262,7 @@
                 28
               ],
               "entrance_spawn": {
-                "x": 384,
+                "x": 400,
                 "y": 448
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #9",
@@ -18288,7 +18288,7 @@
                 29
               ],
               "entrance_spawn": {
-                "x": 224,
+                "x": 208,
                 "y": 464
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #10",
@@ -18314,7 +18314,7 @@
                 29
               ],
               "entrance_spawn": {
-                "x": 240,
+                "x": 256,
                 "y": 464
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #11",
@@ -18340,7 +18340,7 @@
                 30
               ],
               "entrance_spawn": {
-                "x": 224,
+                "x": 208,
                 "y": 480
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #12",
@@ -18366,7 +18366,7 @@
                 30
               ],
               "entrance_spawn": {
-                "x": 240,
+                "x": 256,
                 "y": 480
               },
               "exitName": "level_40__r23c29 -> level_43__r8c7 #13",
@@ -18609,7 +18609,7 @@
               ],
               "entrance_spawn": {
                 "x": 144,
-                "y": 64
+                "y": 48
               },
               "exitName": "level_43__r3c8 -> level_37__r0c18",
               "targetRegion": "level_37__r0c18",
@@ -19601,8 +19601,8 @@
                 7
               ],
               "entrance_spawn": {
-                "x": 208,
-                "y": 112
+                "x": 216,
+                "y": 128
               },
               "exitName": "level_47__r2c9 -> level_48__r18c7",
               "targetRegion": "level_48__r18c7",
@@ -19777,7 +19777,7 @@
               ],
               "entrance_spawn": {
                 "x": 176,
-                "y": 48
+                "y": 32
               },
               "exitName": "level_48__r2c10 -> level_49",
               "targetRegion": "level_49",
@@ -21149,7 +21149,7 @@
                 1
               ],
               "entrance_spawn": {
-                "x": 80,
+                "x": 64,
                 "y": 16
               },
               "exitName": "level_58__r1c4 -> level_46__r6c24",
@@ -22053,7 +22053,7 @@
               ],
               "entrance_spawn": {
                 "x": 112,
-                "y": 64
+                "y": 80
               },
               "exitName": "level_62 -> level_64",
               "targetRegion": "level_64",
@@ -22894,8 +22894,8 @@
                 4
               ],
               "entrance_spawn": {
-                "x": 176,
-                "y": 64
+                "x": 185,
+                "y": 80
               },
               "exitName": "level_65__r4c13 -> level_68__r3c1",
               "targetRegion": "level_68__r3c1",
@@ -22959,8 +22959,8 @@
                 4
               ],
               "entrance_spawn": {
-                "x": 64,
-                "y": 64
+                "x": 72,
+                "y": 80
               },
               "exitName": "level_66__r5c4 -> level_70",
               "targetRegion": "level_70",
@@ -23568,7 +23568,7 @@
               ],
               "entrance_spawn": {
                 "x": 192,
-                "y": 208
+                "y": 224
               },
               "exitName": "level_71__r14c12 -> level_82",
               "targetRegion": "level_82",
@@ -24987,7 +24987,7 @@
               ],
               "entrance_spawn": {
                 "x": 32,
-                "y": 16
+                "y": 32
               },
               "exitName": "level_83 -> level_84__r2c4",
               "targetRegion": "level_84__r2c4",
@@ -25026,7 +25026,7 @@
               ],
               "entrance_spawn": {
                 "x": 16,
-                "y": 16
+                "y": 0
               },
               "exitName": "level_84__r0c0 -> level_85",
               "targetRegion": "level_85",
@@ -25051,8 +25051,8 @@
                 1
               ],
               "entrance_spawn": {
-                "x": 32,
-                "y": 16
+                "x": 16,
+                "y": 0
               },
               "exitName": "level_84__r0c0 -> level_85 #2",
               "targetRegion": "level_85",
@@ -25078,7 +25078,7 @@
               ],
               "entrance_spawn": {
                 "x": 16,
-                "y": 32
+                "y": 0
               },
               "exitName": "level_84__r0c0 -> level_85 #3",
               "targetRegion": "level_85",
@@ -25142,8 +25142,8 @@
                 1
               ],
               "entrance_spawn": {
-                "x": 48,
-                "y": 16
+                "x": 64,
+                "y": 32
               },
               "exitName": "level_84__r2c4 -> level_85",
               "targetRegion": "level_85",
@@ -25168,7 +25168,7 @@
                 2
               ],
               "entrance_spawn": {
-                "x": 32,
+                "x": 64,
                 "y": 32
               },
               "exitName": "level_84__r2c4 -> level_85 #2",
@@ -25194,7 +25194,7 @@
                 2
               ],
               "entrance_spawn": {
-                "x": 48,
+                "x": 64,
                 "y": 32
               },
               "exitName": "level_84__r2c4 -> level_85 #3",
@@ -25220,8 +25220,8 @@
                 3
               ],
               "entrance_spawn": {
-                "x": 48,
-                "y": 48
+                "x": 64,
+                "y": 32
               },
               "exitName": "level_84__r2c4 -> level_85 #4",
               "targetRegion": "level_85",
@@ -25259,7 +25259,7 @@
                 3
               ],
               "entrance_spawn": {
-                "x": 16,
+                "x": 0,
                 "y": 48
               },
               "exitName": "level_84__r3c0 -> level_85",
@@ -25285,7 +25285,7 @@
                 3
               ],
               "entrance_spawn": {
-                "x": 32,
+                "x": 0,
                 "y": 48
               },
               "exitName": "level_84__r3c0 -> level_85 #2",
@@ -27629,7 +27629,7 @@
                 7
               ],
               "entrance_spawn": {
-                "x": 112,
+                "x": 96,
                 "y": 112
               },
               "exitName": "level_98 -> level_99__r2c7",
@@ -27916,7 +27916,7 @@
               ],
               "entrance_spawn": {
                 "x": 288,
-                "y": 96
+                "y": 80
               },
               "exitName": "level_100__r4c10 -> level_101__r4c2",
               "targetRegion": "level_101__r4c2",
@@ -29272,7 +29272,7 @@
               ],
               "entrance_spawn": {
                 "x": 64,
-                "y": 64
+                "y": 48
               },
               "exitName": "level_110 -> level_0__r8c0",
               "targetRegion": "level_0__r8c0",
@@ -29698,7 +29698,7 @@
               ],
               "entrance_spawn": {
                 "x": 112,
-                "y": 0
+                "y": 32
               },
               "exitName": "level_113 -> level_115__r9c4",
               "targetRegion": "level_115__r9c4",
@@ -29724,7 +29724,7 @@
               ],
               "entrance_spawn": {
                 "x": 128,
-                "y": 0
+                "y": 32
               },
               "exitName": "level_113 -> level_115__r9c4 #2",
               "targetRegion": "level_115__r9c4",
