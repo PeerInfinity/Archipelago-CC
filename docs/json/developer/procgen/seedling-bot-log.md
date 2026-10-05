@@ -13649,6 +13649,67 @@ steps changed and no verdict flipped:
   `ticks: 2419`. It is updated, but its mutant (2,419 restored) stays green: no
   check reads it. An untested typed copy drifts silently.
 
+### Seedling fidelity STEPOFF2 — a sub-pixel step-off, and the doors it cannot open named
+
+Planning-2's wave 5, on `main` `f90c4ee`. ⚖ The user, 2026-10-05: *"The first
+priority is to expand the model to include everything in the game."* The
+report is `CC/docs/cloud-reports/seedling-fidelity-stepoff2.md`.
+
+**D1 — the minimal step-off.** STEP-OFF measured that 0.05 px off the rect for
+one door update re-arms a door, but its solver walked to a ring cell's CENTRE
+(26 t) and tried tile centres only. `stepOffMinimalFor` previews each axis
+with the run's own stepper (`previewStepper`, `chooseHeld` toward an aim past
+the clearing line) until the post-move box first clears the rect; a direction
+that stalls (wall, map edge), falls, crosses, dies or enters water/lava
+without its item is rejected by name; cardinals first, diagonals only when no
+cardinal clears. The solve takes the cheapest the danger probe clears, drives
+exactly its ticks, then walks STRAIGHT BACK onto the door (`returnOntoDoor`,
+previewed and identity-checked): the planner asked from a sub-pixel stance
+starts its A\* on the tile under it, which beside L83's door is cliffside0's.
+The tile-centre ring stays as the fallback. L87's plan is now D1's own game
+arm: 10 ticks up (`nMin`), back, crossing on t13.
+
+**D2 — the opened rooms, and true names.** `census-seedling-stepoff.mjs`
+(every game landing, every committed preset arrival, and `--on-doors` a boot
+on every door): 280 latched rows; BEFORE 225 solve / 48 `closed`, AFTER 232
+solve / 6 `closed`, every BEFORE solve still solving and shorter (24–41 t ->
+11–14 t). L12 `teleporter@40,688` and L65 `teleporter@184,64` (half-tile doors
+no tile centre rings) solve in 12 t. New names: `hazard-floor` (25: every way
+off crosses water without the conch or lava without the dark suit; L37's stairs
+is one — the `closed — …` clause stays, true without the item) and
+`inside-solid` (9: the boot's box is inside a lock/tree/rock — L66
+`bosslock@72,64`, L34 `magicallock@128,0`, L24 `burnabletree@32,128`, …).
+
+**D3 — L3 with the Sword.** A breakable rock touching the door's ring is broken
+from the door when `resolveBreakStrategy` says the run can (`execBreak`), and
+the step-off is asked again: L3's pocket from L11 -> break
+`breakablerock@96,112`, step off up, L11 in 34 t. Bare, it stays `closed`, the
+refused break in `considered`. With the Sword the census closes 3 more (L3,
+L0 `304,176`, L0 `80,96`).
+
+**Game.** `fixtures/stepoff-oracle.json` re-recorded (p4f): the nine D1 arms
+byte-identical; six SOLVER arms (L87, L106, L17 stairs, L12, L65, L3+Sword)
+cross on the model's tick, worst 0 px. SOLVER-L17-stairs' end status counts
+one hit that lands in L16 after the crossing (`arrowtrap@112,32`'s lane at the
+arrival; an idle tail stands t12–17 and is knocked back from t18).
+
+**D4.** No committed tape, expectation or declaration moved (tapeRunner 501
+pairs md5-identical, roster 222). Surface GREEN 198 (site counts only).
+Mutants m3 (no minimal candidate) 18/42, m4 (no break) 5/42, m5 (walk back
+via `walkTo`) 1/42. Instruments +1 (`census-seedling-stepoff.mjs`).
+
+**Trap candidates**, for the catalogue to number:
+
+- the planner's start node is the TILE under the player: a plan from a
+  sub-pixel stance beside a wall starts inside the wall's tile, so a sub-pixel
+  move is driven by the stepper, not planned;
+- a door's ring of tile CENTRES misses every door that straddles two tiles
+  (x 40, x 184): ask positions, not cells;
+- "closed" hid three different facts (a walled pocket, hazard floor, a boot
+  inside a solid); a refusal that names the item or the solid is a work order;
+- a probe's `hits` read after the tape's latch counts the NEXT room's hits:
+  an arm that ends on a crossing is witnessed by its stream, not its status.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

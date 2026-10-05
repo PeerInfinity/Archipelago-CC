@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 17,
+            "count": 18,
             "id": "census"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 339,
+        "blockStyle": 340,
         "browser": 112,
-        "cited": 162,
-        "files": 350,
+        "cited": 163,
+        "files": 351,
         "lineStyle": 11,
-        "withDocblock": 350,
-        "withFlags": 268
+        "withDocblock": 351,
+        "withFlags": 269
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -1460,6 +1460,48 @@ export const INSTRUMENTS = frz({
             "inheritedFlags": [],
             "oneLiner": "census-seedling-solver-surface — engine-prep C1's static census of the Seedling solver's surface: everything the solver family reaches in the simulation.",
             "path": "scripts/procgen/census-seedling-solver-surface.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-stepoff.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "on-doors"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "sword"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-stepoff — **EVERY LATCHED ARRIVAL, SOLVED FOR THE DOOR IT STANDS ON** (Seedling fidelity STEPOFF2, D4).",
+            "path": "scripts/procgen/census-seedling-stepoff.mjs"
         },
         {
             "argvHelpers": [
