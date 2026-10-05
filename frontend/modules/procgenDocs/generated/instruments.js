@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 47,
-            "count": 90,
+            "browser": 48,
+            "count": 91,
             "id": "probe"
         },
         {
@@ -174,7 +174,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 2,
+            "count": 4,
             "id": "seedling"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 339,
-        "browser": 112,
+        "blockStyle": 342,
+        "browser": 113,
         "cited": 162,
-        "files": 350,
+        "files": 353,
         "lineStyle": 11,
-        "withDocblock": 350,
-        "withFlags": 268
+        "withDocblock": 353,
+        "withFlags": 271
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8776,6 +8776,129 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-descent.mjs"
         },
         {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "from",
+                "host",
+                "ids",
+                "legs",
+                "limit",
+                "mode",
+                "out",
+                "page",
+                "page-legs",
+                "producer",
+                "shard",
+                "shard-plan",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-divergence-sweep.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "from"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ids"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "legs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "limit"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "mode"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "page"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "page-legs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "producer"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shard"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "shard-plan"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE LIVE WASM DIVERGENCE SWEEP: every leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) served by the PRODUCTION wasm playback engine on the live `seedling_playthrough` page (default build p4f, headless logic-only, under the box lock), on…",
+            "path": "scripts/procgen/probe-seedling-divergence-sweep.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": true,
             "category": "probe",
@@ -12379,6 +12502,118 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "seedling-atlas-goals — THE ONE PLACE A SEEDLING GOAL COORDINATE COMES FROM.",
             "path": "scripts/procgen/seedling-atlas-goals.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": false,
+            "category": "seedling",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "dump",
+                "ids",
+                "jobs",
+                "legs",
+                "out"
+            ],
+            "file": "seedling-divergence-bare.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "dump"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "ids"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "jobs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "legs"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "one"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "timeout"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE BARE PASS, in node: every leg of `--legs=<jsonl>` (`seedling-divergence-legs.mjs`) asked of the solver with NO inventory, from a JS-runtime arrival staged in the rooms the game plays (the vanilla arm's DELIVERED set, `--dump` of `probe-seedl…",
+            "path": "scripts/procgen/seedling-divergence-bare.mjs"
+        },
+        {
+            "argvHelpers": [
+                "M",
+                "arg"
+            ],
+            "browser": false,
+            "category": "seedling",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "out",
+                "presets"
+            ],
+            "file": "seedling-divergence-legs.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "blocks"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "presets"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Measure-only (the divergence sweep, planner `seedling-js-planning-2`) — THE LEG LIST: every exit and location leg of the committed Seedling atlas worlds + `seedling_playthrough`, from each region's RESOLVED arrivals, with the inventory the AP route holds there.",
+            "path": "scripts/procgen/seedling-divergence-legs.mjs"
         },
         {
             "argvHelpers": [
