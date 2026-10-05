@@ -6,8 +6,8 @@
  * under the box lock; every session on a FRESH page (the wasm game runs out of memory after ~150–170 swaps).
  *
  * MEASURE (`wasmAdoptLab.js`, imported by URL; outside the engine):
- *   H  the house cold start, nobody touches it. Idle readouts (rng stable; the live rng already sits the
- *      build's draws past the begin record, so "rng == begin" is never a clause); adopt; the chest solved from
+ *   H  the house cold start, nobody touches it. Idle readouts (rng stable; ⛓ p4f: the live rng EQUALS the
+ *      begin record — the tapeless build runs the cosmetic split; on p4e it sat 91 draws past); adopt; the chest solved from
  *      the shadow "arrival + N idle ticks" for N ∈ {0, 1, 19, ~elapsed, 2000} → ONE shadow (minus the tick
  *      count) and ONE plan; the plan played ON PLAN.
  *   P  a frame-exact PERSON (a same-world tape: right ×1, idle ×40, left ×1, idle ×40): back on the spawn to
@@ -257,8 +257,11 @@ async function main() {
                 const idle = await L(() => window.__adopt.idleSamples(3000, 600));
                 out(`${S} idle`, idle);
                 check(`${S}: idle in the house the rng takes NO draw`, idle.every((s) => s.rng === idle[0].rng), JSON.stringify(idle.map((s) => s.rng)));
-                check(`${S}: the live rng sits the BUILD's draws past the begin record already at rest (split ${r0.split}) — "rng == begin" can never be a clause`,
-                    r0.rngFromBegin > 0, `LFSR distance ${r0.rngFromBegin}`);
+                // ⛓ p4f (3′b): the tapeless boot runs the COSMETIC split, so the house build's tile draws (91 on
+                // p4e) land on the cosmetic stream and the live gameplay rng EQUALS the begin record at rest.
+                // (`split` below is botStatus's echo of the last tape's flag, false after botReset — not the live one.)
+                check(`${S}: p4f — the live rng EQUALS the begin record at rest (the tapeless build drew only cosmetic; echo split ${r0.split})`,
+                    r0.rngFromBegin === 0, `LFSR distance ${r0.rngFromBegin}`);
                 if (S === 'P') {
                     const pr = await L(async (keys) => {
                         const a = window.__adopt;
@@ -286,7 +289,7 @@ async function main() {
                     check('H: nobody touched it — at spawn, v 0, facing down, no other Mobile, no hits: ALL true', c.atSpawn && c.vZero && c.facingDown && c.noOtherMobiles && c.noHits, JSON.stringify(c));
                 } else {
                     check('P: after the person the brief\'s clauses PASS — back on the spawn to the bit, v 0 (the latch), no rng draw, persistence unchanged',
-                        c.atSpawn && c.vZero && c.noOtherMobiles && c.noHits && ad.readouts.rngFromBegin === 91 && ad.readouts.persistence.length === 0,
+                        c.atSpawn && c.vZero && c.noOtherMobiles && c.noHits && ad.readouts.rngFromBegin === 0 && ad.readouts.persistence.length === 0,
                         JSON.stringify({ c, rngFromBegin: ad.readouts.rngFromBegin }));
                     check('P: …but the player is TURNED: the facing clause (botMobiles\' stand animation) FAILS — the model\'s shadow faces down',
                         c.facingDown === false && /side-stand$/.test(ad.readouts.player.anim ?? '') && ad.shadow1?.direction === 3, JSON.stringify({ anim: ad.readouts.player.anim, shadow: ad.shadow1 }));
