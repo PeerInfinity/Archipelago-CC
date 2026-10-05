@@ -1757,6 +1757,34 @@
       "bootLevel": 0,
       "tapeVersion": 3,
       "noHazards": []
+    },
+    {
+      "file": "watcher-l114-silent.json",
+      "tickCount": 32,
+      "bootLevel": 114,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "watcher-l37-reach-l38.json",
+      "tickCount": 316,
+      "bootLevel": 37,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "watcher-l37-reach-l44.json",
+      "tickCount": 332,
+      "bootLevel": 37,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "watcher-l37-silent-lean.json",
+      "tickCount": 60,
+      "bootLevel": 37,
+      "tapeVersion": 8,
+      "noHazards": []
     }
   ]
 }

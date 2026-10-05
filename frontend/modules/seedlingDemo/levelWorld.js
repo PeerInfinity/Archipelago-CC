@@ -1010,14 +1010,42 @@ export const ENTITY_CLASSES = Object.freeze({
         //
         // The volume is `FP.distance(x, y, p.x, p.y) <= talkRange` with
         // talkRange 24 (`NPC.as:27`), measured from the NPC's own centre,
-        // which for a Watcher is the ctor's half-tile (`NPC.as:47`). A
-        // CIRCLE, bounded here by its square — an over-approximation, which
-        // is the safe direction for an avoid volume.
+        // which for a Watcher is the ctor's half-tile (`NPC.as:47`).
+        //
+        // ⛓⛓⛓ SEEDLING FIDELITY WATCHER: AND IT IS PRICED AS THE CIRCLE, not
+        // its square. The 48x48 square was an over-approximation "in the safe
+        // direction", and it was not safe: L114's corridor is two tiles wide,
+        // its top cell's centre is 25.3 px from the watcher (outside the
+        // circle, inside the square), so a walk booted there was treated as
+        // ALREADY in contact, exempted from the volume, walked into the circle
+        // and stalled in a dialogue nobody paged. `inRange` is a Boolean of a
+        // Number compare, so the disc is INCLUSIVE (`<=`), unlike the
+        // `int`-truncated discs (`r` carries their +1).
         hazard: {
-            dx: 8 - 24, dy: 8 - 24, w: 48, h: 48, originX: 0, originY: 0,
+            point: { dx: 8, dy: 8, r: 24, inclusive: true },
             kind: 'auto-talk',
             effect: 'Game.freezeObjects = true, dismissed only by Input.released(V) '
                 + "during frozen frames — which the bot's tick counter skips",
+            /**
+             * ⛓⛓⛓ SEEDLING FIDELITY WATCHER — **A WATCHER WITH NO TEXT NEVER
+             * TALKS**, so its circle is not a volume at all.
+             *
+             * `NPC.talk()` opens with `if (p && myText[0].length > 0)`
+             * (`NPCs/NPC.as:188`), and `myText` is `prepNewText(_text)`
+             * (`:68`): `addText("")` pushes one empty page. So a placement whose
+             * `text` attribute is empty runs no range test, no `startTalking()`
+             * and no freeze, whatever its tag says; and `Watcher.hit()` is gated
+             * on `text != ""` (`Watcher.as:119`), so the sword does nothing to it
+             * either. TEN of the extract's eleven watchers are such placements
+             * (L12, L32, L37, L43, L57, L69, L82, L89, L94, L103); only L114's
+             * speaks. Pricing all eleven as auto-talk volumes refused route
+             * steps 95 and 101 on L37's `watcher@104,264`, a body the game lets
+             * the player walk through.
+             *
+             * The attribute the dialogue is read from. An empty one makes the
+             * placement SILENT (`silentHazards`), never an avoid volume.
+             */
+            speaksFrom: 'text',
         },
     },
     moonrock: {
@@ -3822,6 +3850,12 @@ export function buildLevelWorld(levelRecord, {
      */
     const entryHazards = [];
     /**
+     * ⛓⛓⛓ SEEDLING FIDELITY WATCHER: placements of a TALKING hazard class
+     * (`hazard.speaksFrom`) whose dialogue attribute is empty, so the game's
+     * `talk()` never runs for them: `{tag, x, y, id, why}`. Ten watchers.
+     */
+    const silentHazards = [];
+    /**
      * ⛓ R6 SLICE 6b: every placed `Watcher`, with the three attributes its
      * dialogue's LENGTH depends on. Eleven in the extract; L114's is the one
      * `{114,0}` hangs off.
@@ -4712,6 +4746,34 @@ export function buildLevelWorld(levelRecord, {
                 entryHazards.push({
                     cls, tag: e.type, x, y, entry: cls.hazard.entry, src: cls.src,
                 });
+            } else if (disposition === 'volume' && cls.hazard.speaksFrom
+                && !(e.attrs?.[cls.hazard.speaksFrom] ?? '')) {
+                // ⛓⛓⛓ FIDELITY WATCHER: a talker placed with no text. Recorded,
+                // not dropped, for the `entry` list's reason: "no hazard here"
+                // and "a hazard class whose placement cannot fire" must not
+                // print the same. See the `watcher` row's `speaksFrom`.
+                silentHazards.push({
+                    tag: e.type, x, y, id: `${e.type}@${e.x},${e.y}`,
+                    why: `its \`${cls.hazard.speaksFrom}\` attribute is empty, and `
+                        + '`NPC.talk()` runs only `if (p && myText[0].length > 0)` '
+                        + '(`NPCs/NPC.as:188`)',
+                });
+            } else if (disposition === 'volume' && cls.hazard.speaksFrom
+                && PERSISTENCE_RESPONSE[e.type] === 'silence'
+                && clearedTags && entityTag >= 0 && clearedTags.has(entityTag)) {
+                // ⛓⛓⛓ FIDELITY WATCHER: the OTHER silent state, the one the
+                // run reaches by play. `Watcher.update` calls `super.update()`
+                // (and so `talk()`) only `if (Game.checkPersistence(tag))`
+                // (`Watcher.as:64-67`), and `doneTalking()` writes that tag
+                // false (`:126-135`), so a watcher talked to on an earlier
+                // visit stands silent on every later one. The build knows the
+                // state from the clears it was handed.
+                silentHazards.push({
+                    tag: e.type, x, y, id: `${e.type}@${e.x},${e.y}`,
+                    why: `its tag {${level},${entityTag}} is cleared, and \`Watcher.update\` `
+                        + 'runs `talk()` only `if (Game.checkPersistence(tag))` '
+                        + '(`NPCs/Watcher.as:64-67`)',
+                });
             } else if (disposition === 'volume') {
                 proximityHazards.push({
                     cls, tag: e.type, x, y,
@@ -4730,6 +4792,7 @@ export function buildLevelWorld(levelRecord, {
                             x: x + cls.hazard.point.dx,
                             y: y + cls.hazard.point.dy,
                             r: cls.hazard.point.r,
+                            ...(cls.hazard.point.inclusive ? { inclusive: true } : {}),
                         }
                         : null,
                     // ⚠ R4: A THIRD SHAPE, and it exists because the second
@@ -5593,6 +5656,7 @@ export function buildLevelWorld(levelRecord, {
         apItems,
         proximityHazards,
         entryHazards,
+        silentHazards,
         watchers,
         /**
          * ⛓ R9 slice 12e‴: `{id, tag, x, y, ex, ey, persistTag, text,
@@ -5827,10 +5891,13 @@ export function buildLevelWorld(levelRecord, {
                     // `dist < range + 1` and `r` already carries the +1.
                     // Needs the player's POSITION; a caller that only has a
                     // box gets it from the box's own origin.
-                    hit = Math.hypot(
+                    const d = Math.hypot(
                         (pos ? pos.x : box.x + HITBOX_ORIGIN_X) - h.disc.x,
                         (pos ? pos.y : box.y + HITBOX_ORIGIN_Y) - h.disc.y,
-                    ) < h.disc.r;
+                    );
+                    // ⛓ FIDELITY WATCHER: `NPC.talk()`'s `<= talkRange` is a
+                    // Number compare, so its disc includes its rim.
+                    hit = h.disc.inclusive ? d <= h.disc.r : d < h.disc.r;
                 } else if (h.line) {
                     // `World.collideLine` at precision 1: does the box
                     // CONTAIN one of the row's integer probes? See the `line`

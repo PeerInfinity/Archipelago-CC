@@ -6,14 +6,9 @@ frontend/modules/seedlingDemo/levelWorld.js|UNMODELLED_REASON|(module),rule,sent
 frontend/modules/seedlingDemo/levelWorld.js|combatCensusOf|combatCensusOf,structural,,,
 frontend/modules/seedlingDemo/levelWorld.js|pickup|pickup,physics,magnitude,,pickup ctor half-tile offset (dx/dy 8) of the pickup hitbox
 frontend/modules/seedlingDemo/levelWorld.js|ENTITY_CLASSES|(module),physics,magnitude,,ctor offset / setHitbox geometry (rect; pixelmask; trigger; pickup args)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|hbc628bea|8|0,rule,derivation,,watcher avoid square: ctor half-tile 8 minus NPC talkRange 24
-frontend/modules/seedlingDemo/levelWorld.js|(module)|hbc628bea|24|0,rule,derivation,NPCs/NPC.as:talkRange,watcher avoid square: ctor half-tile 8 minus NPC talkRange 24
-frontend/modules/seedlingDemo/levelWorld.js|(module)|hb5edf11c|8|0,rule,derivation,,watcher avoid square: ctor half-tile 8 minus NPC talkRange 24
-frontend/modules/seedlingDemo/levelWorld.js|(module)|hb5edf11c|24|0,rule,derivation,NPCs/NPC.as:talkRange,watcher avoid square: ctor half-tile 8 minus NPC talkRange 24
-frontend/modules/seedlingDemo/levelWorld.js|(module)|hb8801894|48|0,rule,derivation,,watcher avoid square side = 2 * NPC talkRange (24)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|h6f412f3d|48|0,rule,derivation,,watcher avoid square side = 2 * NPC talkRange (24)
-frontend/modules/seedlingDemo/levelWorld.js|(module)|h0127b412|0|0,rule,bound,,avoid-volume origin
-frontend/modules/seedlingDemo/levelWorld.js|(module)|h2d93fc96|0|0,rule,bound,,avoid-volume origin
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h486de3ef|8|0,rule,derivation,,watcher talk disc centre: the NPC ctor half-tile (+8)
+frontend/modules/seedlingDemo/levelWorld.js|(module)|hac732560|8|0,rule,derivation,,watcher talk disc centre: the NPC ctor half-tile (+8)
+frontend/modules/seedlingDemo/levelWorld.js|(module)|h3e0021ff|24|0,rule,derivation,NPCs/NPC.as:talkRange,watcher talk disc radius = NPC talkRange 24 (inclusive: FP.distance <= talkRange)
 frontend/modules/seedlingDemo/levelWorld.js|(module)|h7997cd72|0|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
 frontend/modules/seedlingDemo/levelWorld.js|(module)|h7f88596f|0|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
 frontend/modules/seedlingDemo/levelWorld.js|(module)|hcc53e68d|16|0,rule,bound,,proximity-hazard avoid volume; chest cell plus the line row beneath
@@ -87,6 +82,7 @@ frontend/modules/seedlingDemo/levelWorld.js|FORCED_TSET|(module),rule,sentinel,,
 frontend/modules/seedlingDemo/levelWorld.js|FORCED_TAG|(module),rule,sentinel,,forced persistence tags
 frontend/modules/seedlingDemo/levelWorld.js|tagOf|tagOf,rule,sentinel,,absent tag = -1 (none)
 frontend/modules/seedlingDemo/levelWorld.js|clearedAwayByTag|clearedAwayByTag,rule,sentinel,,tag >= 0 tagged; tSet < 0 lock-despawn
+frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h3dbe9ae9|0|0,rule,sentinel,,"keyType default int("""")=0"
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h227be15a|-1|0,rule,sentinel,,ButtonRoom room default -1
 frontend/modules/seedlingDemo/levelWorld.js|outOfBandWritersOnto|outOfBandWritersOnto,rule,sentinel,,a tag -1 write lands one level back (level + 1's writers); tag < 0 is the sentinel
 frontend/modules/seedlingDemo/levelWorld.js|addedTimeKey|addedTimeKey,structural,,,0/1 booleans in a cache key
@@ -107,7 +103,6 @@ frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hca08c4d0|0|0,rule,s
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hd21f290c|0|0,rule,sentinel,,tag >= 0 means tagged
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hd21f290c|0|1,rule,sentinel,,"keyType default int("""")=0"
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hd21f290c|0|2,rule,sentinel,,"totemPart default int("""")=0"
-frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|hb6e5f66f|0|0,rule,sentinel,,"keyType default int("""")=0"
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h0cb35226|1|0,rule,sentinel,,rockType 1 = ghost rock
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h0cb35226|0|2,rule,sentinel,,rockType 0 = normal rock
 frontend/modules/seedlingDemo/levelWorld.js|buildLevelWorld|h8f001616|0|0,rule,sentinel,,tag >= 0 means tagged
