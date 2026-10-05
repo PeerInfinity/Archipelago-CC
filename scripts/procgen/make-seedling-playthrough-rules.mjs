@@ -691,9 +691,34 @@ export const movedArrivalSpawns = [];
 const RETURN_SPAWNS = returnSpawnTable(MAP);
 
 /**
- * ⛓ RULES arrival-spawns — the compiler's `arrivalSpawn` hook for this atlas: the exit's entrance when the
- * physics model can stand there, else the game's own landing beside the door, else the door's approach cell,
- * else a named refusal (`seedlingModelOracles.seedlingArrivalSpawn`). Run after `buildPlaythroughAtlas`, whose
+ * ⚖ (user, 2026-10-04) a door tile is kept as a spawn ONLY where a real game link lands on it: the tiles of a
+ * region's LANDING exits (the `to` end of each one-way connection), from the atlas this run compiles.
+ */
+const landingTiles = new Map();
+let landingTilesAtlas = null;
+export function setPlaythroughLandingAtlas(atlasDoc) {
+    landingTilesAtlas = atlasDoc;
+    landingTiles.clear();
+}
+function landingTilesOf(regionId) {
+    if (!landingTilesAtlas) throw new Error('playthroughArrivalSpawn: setPlaythroughLandingAtlas(doc) first');
+    if (landingTiles.size === 0) {
+        const exitOf = new Map(landingTilesAtlas.regions.flatMap((r) => r.exits.map((e) => [`${r.region_id}|${e.exit_id}`, e])));
+        for (const c of landingTilesAtlas.vanilla_layout?.connections ?? []) {
+            const [region, exitId] = c.to;
+            const e = exitOf.get(`${region}|${exitId}`);
+            if (!e) continue;
+            if (!landingTiles.has(region)) landingTiles.set(region, new Set());
+            landingTiles.get(region).add(`${e.entrance_tile[0]},${e.entrance_tile[1]}`);
+        }
+    }
+    return landingTiles.get(regionId) ?? new Set();
+}
+
+/**
+ * ⛓ RULES arrival-spawns — the compiler's `arrivalSpawn` hook for this atlas: a landing as the game has it; a
+ * door's own tile only where a game link lands on it and the physics model can stand there; else the game's
+ * own landing beside the door, else the door's approach cell, else a named refusal (`seedlingModelOracles.seedlingArrivalSpawn`). Run after `buildPlaythroughAtlas`, whose
  * analysis pass recorded each exit's component.
  */
 export function playthroughArrivalSpawn(region, exit, { entranceSpawn, landing }) {
@@ -701,8 +726,9 @@ export function playthroughArrivalSpawn(region, exit, { entranceSpawn, landing }
     const [tx, ty] = exit.entrance_tile;
     const back = RETURN_SPAWNS.get(returnKey(region.map_ref, tx, ty)) ?? null;
     const inComponent = exitComponents.get(region.region_id)?.get(exit.exit_id) ?? (() => false);
+    const landedOn = landingTilesOf(region.region_id).has(`${tx},${ty}`);
     const spawn = seedlingArrivalSpawn(level, exit, entranceSpawn, {
-        landing, returnSpawn: back, inComponent, tileSize: TILE,
+        landing, landedOn, returnSpawn: back, inComponent, tileSize: TILE,
     });
     if (spawn.via !== 'entrance' && spawn.via !== 'landing') {
         movedArrivalSpawns.push(`${region.region_id}/${exit.exit_id}: (${entranceSpawn.x}, ${entranceSpawn.y}) is `
@@ -749,6 +775,7 @@ function main() {
     if (!result.ok) process.exit(1);
 
     movedArrivalSpawns.length = 0;
+    setPlaythroughLandingAtlas(doc);
     const { rules, report } = compileRegionAtlas(doc, {
         mapDoc: MAP,
         gameName: GAME_NAME,
@@ -794,7 +821,7 @@ function main() {
     );
     console.log(`rules.json — ${report.ap_regions} AP regions, ${report.exits} exits, `
         + `${report.locations ?? s.locations} locations, ${report.unwired_exits?.length ?? 0} unwired exit(s)`);
-    console.log(`${movedArrivalSpawns.length} arrival spawn(s) moved off a cell the model cannot stand on`
+    console.log(`${movedArrivalSpawns.length} departure-door spawn(s) moved off the door tile (no game link lands there, or the model cannot stand there)`
         + `${quiet ? '' : movedArrivalSpawns.map((m) => `\n  ${m}`).join('')}`);
     console.log(`${notes.length} analysis note(s)${quiet ? ' (suppressed; drop --quiet to read them)' : ''}`);
 }

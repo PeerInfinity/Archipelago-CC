@@ -12,6 +12,10 @@
  *
  * ── THE MUTATION LIST (run during development, each row's catcher named) ──
  *
+ *   m2 a standable door tile is kept whether or not a link lands on it
+ *        (`landedOn` ignored)
+ *        -> '⚖ a STANDABLE door tile no link lands on is NOT kept' and the
+ *           committed sweep red (L101/L106/L109 keep their door tiles)
  *   m1 `arrivalStandRefusal` drops the PIT check
  *        -> 3 red: 'a door over a pit', 'takes its approach cell' (L43 keeps
  *           its pit tile) and 'a pit field's INNER pit'. The committed sweep
@@ -28,6 +32,7 @@ import {
     APPROACH_RING_LIMIT, arrivalStandRefusal, seedlingArrivalSpawn,
 } from './seedlingModelOracles.js';
 import { compileRegionAtlas } from '../procgenPipeline/regionAtlasCompiler.js';
+import { returnKey, returnSpawnTable } from '../flashPanel/seedlingReturnSpawns.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '../../..');
 const readJson = (rel) => JSON.parse(readFileSync(join(ROOT, rel), 'utf8'));
@@ -70,10 +75,20 @@ describe('seedlingArrivalSpawn — landing, entrance, return link, approach, ref
         expect(seedlingArrivalSpawn(levelOf(12), exit, px(exit.entrance_tile), { landing: true }))
             .toEqual({ x: 32, y: 864, via: 'landing' });
     });
-    it('a door the model can stand on keeps its tile (L101: S5\'s crossing room is unchanged)', () => {
-        const exit = exitOf(101, 'out_teleporter_104_24');
-        expect(seedlingArrivalSpawn(levelOf(101), exit, px(exit.entrance_tile)))
-            .toEqual({ x: 96, y: 16, via: 'entrance' });
+    it('a door tile is kept ONLY where a game link lands on it (L3\'s pocket door, landed on from L11)', () => {
+        const exit = exitOf(3, 'out_teleporter_96_128');
+        expect(seedlingArrivalSpawn(levelOf(3), exit, px(exit.entrance_tile), { landedOn: true }))
+            .toEqual({ x: 96, y: 128, via: 'entrance' });
+    });
+    it('⚖ a STANDABLE door tile no link lands on is NOT kept (L101/L106/L109 → their approach cells)', () => {
+        for (const [level, id, at] of [[101, 'out_teleporter_104_24', { x: 96, y: 0 }],
+            [106, 'out_teleporter_64_48', { x: 48, y: 48 }], [109, 'out_teleporter_160_48', { x: 144, y: 48 }]]) {
+            const exit = exitOf(level, id);
+            const entrance = px(exit.entrance_tile);
+            expect(arrivalStandRefusal(levelOf(level), entrance.x, entrance.y), id).toBeNull();
+            expect(seedlingArrivalSpawn(levelOf(level), exit, entrance), id)
+                .toEqual({ ...at, via: 'approach', why: 'a door tile no game link lands on' });
+        }
     });
     it('a door in a solid with the game\'s landing beside it takes that landing (L3\'s rock door)', () => {
         const exit = exitOf(3, 'out_teleporter_0_64');
@@ -110,12 +125,23 @@ describe('the committed playthrough sidecars (derived over every exit)', () => {
         .map((s) => s.playable_payload)
         .flatMap((pl) => pl.exits.map((e) => ({ level: pl.level, e })));
 
-    it('every DEPARTURE door\'s spawn is one the model can stand on', () => {
+    it('every DEPARTURE door\'s spawn is the game\'s landing beside it, or a cell the model can stand on that is not a door tile no link lands on', () => {
         // A landing is the arrival end of a one-way connection: no AP exit name.
         const doors = exits.filter(({ e }) => e.exitName !== null);
         expect(doors.length).toBeGreaterThan(300);
-        const bad = doors.map(({ level, e }) => [level, e.exit_id, arrivalStandRefusal(levelOf(level), e.entrance_spawn.x, e.entrance_spawn.y)])
-            .filter(([, , why]) => why !== null);
+        const landedOn = new Set(exits.filter(({ e }) => e.exitName === null)
+            .map(({ level, e }) => `${level}|${e.entrance_tile}`));
+        const back = returnSpawnTable(MAP);
+        const bad = [];
+        for (const { level, e } of doors) {
+            const s = e.entrance_spawn;
+            const game = back.get(returnKey(level, e.entrance_tile[0], e.entrance_tile[1]));
+            if (game && game.x === s.x && game.y === s.y) continue;
+            const why = arrivalStandRefusal(levelOf(level), s.x, s.y);
+            const onOwnDoor = s.x === e.entrance_tile[0] * 16 && s.y === e.entrance_tile[1] * 16;
+            if (why !== null) bad.push([level, e.exit_id, why]);
+            else if (onOwnDoor && !landedOn.has(`${level}|${e.entrance_tile}`)) bad.push([level, e.exit_id, 'door tile, no landing']);
+        }
         expect(bad).toEqual([]);
     });
     it('every LANDING keeps its entrance tile (the game\'s own point)', () => {

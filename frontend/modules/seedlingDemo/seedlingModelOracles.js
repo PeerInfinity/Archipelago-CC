@@ -176,11 +176,13 @@ export const APPROACH_RING_LIMIT = 2;
  * pit's landing arithmetic) and is kept as it is, even where the model has a
  * solid there: the game put it there (L12's magical lock from L83, L113's
  * final door from L115 — the lock is the far side of the door you came
- * through). A DEPARTURE door's entrance is the door tile, which the game never
- * lands anyone on, so in this order: the entrance, when the model can stand
+ * through). A DEPARTURE door's entrance is the door tile, so in this order:
+ * the door tile, ONLY where a game link lands on it (`landedOn`: L3's pocket
+ * door from L11, L87's from L88 — ⚖ user 2026-10-04) and the model can stand
  * there; else the GAME's
  * own arrival at this door (`returnSpawn`, the reverse link's
- * `playerx/playery` — `seedlingReturnSpawns`); else the door's APPROACH cell —
+ * `playerx/playery` — `seedlingReturnSpawns`; trusted as game data, like a
+ * landing); else the door's APPROACH cell —
  * the nearest ring of tiles around the exit (≤ `APPROACH_RING_LIMIT`), nearest the entrance tile first, that the
  * model can stand on and `inComponent` accepts (the generated rooms' rule: the
  * cell you step into the door from). None → REFUSED by name.
@@ -190,17 +192,21 @@ export const APPROACH_RING_LIMIT = 2;
  * @param {{x:number, y:number}} entranceSpawn the exit's `entrance_tile` in pixels
  * @param {object} [opts]
  * @param {boolean} [opts.landing] the exit is a connection's landing end
+ * @param {boolean} [opts.landedOn] a game link lands on this door's tile
  * @param {{x:number, y:number}|null} [opts.returnSpawn]
  * @param {(tile:number[]) => boolean} [opts.inComponent] the approach cell's region test
  * @returns {{x:number, y:number, via:'landing'|'entrance'|'return-link'|'approach', why?:string}}
  */
 export function seedlingArrivalSpawn(level, exit, entranceSpawn, {
-    landing = false, returnSpawn = null, inComponent = () => true, tileSize = TILE_SIZE,
+    landing = false, landedOn = false, returnSpawn = null, inComponent = () => true, tileSize = TILE_SIZE,
 } = {}) {
     if (landing) return { x: entranceSpawn.x, y: entranceSpawn.y, via: 'landing' };
-    const why = arrivalStandRefusal(level, entranceSpawn.x, entranceSpawn.y);
+    const why = arrivalStandRefusal(level, entranceSpawn.x, entranceSpawn.y)
+        ?? (landedOn ? null : 'a door tile no game link lands on');
     if (why === null) return { x: entranceSpawn.x, y: entranceSpawn.y, via: 'entrance' };
-    if (returnSpawn && arrivalStandRefusal(level, returnSpawn.x, returnSpawn.y) === null) {
+    // The reverse link's landing is the game's own point, trusted like a landing (L0's (288,176) stands in a
+    // model solid, as the binding's return table already lands it).
+    if (returnSpawn) {
         return { x: returnSpawn.x, y: returnSpawn.y, via: 'return-link', why };
     }
     // Rings outward from the exit's own tiles (a pit field's inner pit has only pits beside it), nearest the
@@ -228,6 +234,6 @@ export function seedlingArrivalSpawn(level, exit, entranceSpawn, {
     }
     throw new Error(`level ${level.level}: exit "${exit.exit_id}" has no arrival spawn the game could put the player on `
         + `— its entrance (${entranceSpawn.x}, ${entranceSpawn.y}) is ${why}`
-        + `${returnSpawn ? ', the reverse link\'s landing is not standable either' : ', no reverse link lands beside it'}`
+        + ', no reverse link lands beside it'
         + `, and no cell within ${APPROACH_RING_LIMIT} tiles of it is standable in its own component`);
 }
