@@ -39,6 +39,7 @@ import { itemNamesInDocument, undefinedRuleItems } from '../procgenCore/ruleItem
 import { SUBSTRATE_CONFIGS_KEY, recordableConfigsFor } from '../procgenCore/substrateConfigRecord.js';
 import { ROUND_TRIP_RULES, roundTripRulesOf } from '../procgenCore/roundTripRules.js';
 import { extractItemRequirementFromRule } from './ruleRequirements.js';
+import { declareReturnToMenu } from '../procgenCore/restartWarp.js';
 import {
     exceedsCeiling, locationCeilingRefusal, locationDemandOf, sizeForLocations,
 } from '../procgenCore/locationCapacity.js';
@@ -7286,6 +7287,11 @@ export function buildRulesJson(grid, opts = {}) {
             scaffold[key] = { [String(playerId)]: value };
         }
     }
+    // ⛓ RETURN TO MENU (procgenCore/restartWarp.js) — a realised substrate whose runtime's Restart warps the player
+    // to the start declares `restartWarp`, and the slot then says `exporter[p].return_to_menu: true`: returning to
+    // the menu is always possible. A flag, never an edge (⚖ the user, 2026-10-05); a world with no such substrate is
+    // untouched, byte for byte.
+    if (realisedSubstrates.some((id) => substrateRegistry.get(id)?.restartWarp)) declareReturnToMenu(scaffold, playerId);
     scaffold.preset_sidecars = buildPresetSidecars(grid, {
         playerId,
         baseObstacleLib: obstacleLib,

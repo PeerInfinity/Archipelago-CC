@@ -141,6 +141,7 @@ A **content source** supplies existing region content by ordinal: its Nth planne
 | `zoneSourceLabel` | The editor's name for this zone source. If absent, *Zone N*. |
 | `onContentEdit(doc)` | Restamp a hand-edited content document (hash, id suffix, validation); idempotent. A changed id clears downstream steps. See [The Stepped Pipeline](./stepped-pipeline.md#spiral-mode--four-steps). |
 | `rulesJsonBlocks()` | `rules.json` blocks this substrate's runtime reads, merged by `buildRulesJson` (and the APWorld Editor's initialise op) for substrates that realised a region, each under the slot (`{"<p>": block}`, rules F2). A key already present is refused, so one world cannot realise both Seedling entries (both write `flash_panel`). |
+| `restartWarp` | Declared when this substrate's runtime answers the Menu panel's Restart by warping the player to the start region (`procgenCore/restartWarp.js`'s `RESTART_WARP`). If any substrate that realised a region declares it, `buildRulesJson` writes `exporter[p].return_to_menu: true`: returning to the menu is always possible. It is a flag, never an edge (no region gets an exit into `Menu`). `region-atlas-compile.mjs` and the playthrough generator ask the same declaration. Position-aware readers honour it: `census-soft-locks.mjs` lists Restart-only regions as a diagnostic, and the route survey may Restart. Seedling's two entries declare it; a world of maze rooms only does not. |
 | `victoryItem` | The goal item, used as the completion item when the scenario pool has no `is_victory` item. |
 
 A source that feeds a *document* into the pipeline (jta's dataset) declares `emitsSpiralContent: true` and names its config field with `spiralContentConfigKey` (default `datasetDoc`). Only jta is truly pre-built (indices into one game build); bounce and runner generate their zones and store them by value.
@@ -223,7 +224,7 @@ In the running app, the **Substrate Registry** panel (`frontend/modules/substrat
 
 <!-- GENERATED:substrate-capability-matrix BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-**10 registered entries · 86 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
+**10 registered entries · 87 fields · 15 groups · 0 findings.** One column per entry the registry returns, one row per field an entry CARRIES — `substrateRegistry.getAll()` for the columns and `Object.keys(entry)` for the rows, so a field a substrate grows appears here without anybody editing a table.
 
 Column order: `getAll()` returns the entries ordered by id, so the columns are the same in every boot and in the Substrate Registry panel; the order the generator imports the libraries in (the table at the end of this region) does not move them.
 
@@ -329,6 +330,7 @@ Groups are this document's own § headings, matched to a field by the section th
 | `pipelineConfigFromParams` | — | — | fn | — | — | — | — | — | — | — |
 | `pipelineConfigKeys` | — | — | atlasDoc, atlasId | — | 6 items | — | — | 5 items | — | — |
 | `recordablePipelineConfig` | — | — | — | — | fn | — | — | fn | — | — |
+| `restartWarp` | — | — | {cite, label, target} | {cite, label, target} | — | — | — | — | — | — |
 | `rulesJsonBlocks` | — | — | fn | fn | — | — | — | — | — | — |
 | `spiralContentConfigKey` | — | — | — | — | datasetDoc | — | — | — | — | — |
 | `victoryItem` | Victory | — | — | — | Victory | — | Victory | Victory | Victory | — |

@@ -1829,6 +1829,12 @@ class BaseGameExportHandler(
         if assume_bidirectional is not None:
             exporter_settings['assume_bidirectional_exits'] = assume_bidirectional
 
+        # return_to_menu: returning to the menu is always possible (the runtime's Restart warps the player to the
+        # start). Written only when True; absent = false. A world_generator world carries its source slot's value
+        # as the `return_to_menu` class attribute (frontend/modules/procgenCore/restartWarp.js).
+        if world is not None and getattr(type(world), 'return_to_menu', None) is True:
+            exporter_settings['return_to_menu'] = True
+
         # use_resolved_items: When true, eventProcessor uses resolved_items
         # Default is False, so only include when True
         if self.USE_RESOLVED_ITEMS:

@@ -148,9 +148,13 @@ import { fileURLToPath } from 'node:url';
 import { familyOf } from './surveyFamily.js';
 import { deriveStagedGrant } from './surveyGrants.js';
 import {
-    deriveLegs, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
+    RESTART_TARGET, deriveLegs, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
     ROUTE_MODES, routeOnlyRows,
 } from './surveyRoute.js';
+import { seedlingStartSpawn } from '../../frontend/modules/flashPanel/seedlingRegionBinding.js';
+import { returnToMenu } from '../../frontend/modules/procgenCore/restartWarp.js';
+import { returnSpawnTable } from '../../frontend/modules/flashPanel/seedlingReturnSpawns.js';
+import { substrateRegistryEntry as seedlingEntry } from '../../frontend/modules/flashPanel/flashSeedlingLibrary.js';
 
 import { parseDashMode, dashModeNote } from './dashMode.js';
 
@@ -477,12 +481,28 @@ const regionPath = (src, dst, items, banned, holds = ruleHolds) =>
 /** A region path projected onto the LEVELS it visits, in order. */
 function levelsOf(path) {
     const out = [];
+    let restarted = false;
     for (const r of path) {
+        // ⛓ RETURN TO MENU: `Menu` is not a level. A Restart through it starts a NEW visit, even to the level the
+        //   player stood in (a Restart from level 0 is still a warp).
+        if (r === RESTART_TARGET) { restarted = true; continue; }
         const n = levelOfRegion(r);
-        if (out[out.length - 1] !== n) out.push(n);
+        if (restarted || out[out.length - 1] !== n) out.push(n);
+        restarted = false;
     }
     return out;
 }
+
+/**
+ * ⛓ RETURN TO MENU — where a Restart lands: `seedlingStartSpawn` on the start region `Menu -> GameStart` leads to,
+ * the one the binding teleports to (seedlingRestartWarpRules.test.js pins that the two agree).
+ */
+const RESTART_ARRIVAL = (() => {
+    const start = REGIONS[RESTART_TARGET]?.exits?.find((e) => e.name === 'GameStart')?.connected_region;
+    const payload = apRules.preset_sidecars?.['1']?.[start]?.playable_payload;
+    const spawn = payload ? seedlingStartSpawn({ world: seedlingEntry.deserializeWorld(payload), returnSpawns: returnSpawnTable(atlas) }) : null;
+    return spawn ? { level: spawn.level, x: spawn.x, y: spawn.y } : null;
+})();
 
 /**
  * ⛓ THE ALTERNATIVES, AND THE BOUND THEY ARE FOUND UNDER.
@@ -716,6 +736,8 @@ function deriveRoute() {
         spare: SPARE,
         // ⛓ FRONTIER2: the route-only route is WALKED — `CanReachRegion` by where it has stood
         walk: ROUTE_MODE === 'route-only',
+        // ⛓ RETURN TO MENU: a leg may Restart only where the slot declares it (procgenCore/restartWarp.js).
+        restart: returnToMenu(apRules),
     });
     const legs = derived.legs.map((leg, i) => ({
         ...leg,
@@ -736,9 +758,21 @@ function deriveRoute() {
     // ⛓ `rules-route-survey`: each visit's way OUT, as the AP exit the leg's
     //   BFS took (`hopEdge` resolves a crossing by it). One per level change,
     //   in the same order the visits were made — asserted, not assumed.
-    const outs = legs.flatMap((leg, i) => leg.regions.slice(1).flatMap((r, j) =>
-        (levelOfRegion(r) !== levelOfRegion(leg.regions[j])
-            ? [{ region: leg.regions[j], name: derived.hops[i][j] }] : [])));
+    // ⛓ RETURN TO MENU: a hop INTO `Menu` is the visit's way out (a Restart), and the `GameStart` hop after it is
+    //   the warp's landing, not a second crossing.
+    const outs = legs.flatMap((leg, i) => {
+        const out = [];
+        const R = leg.regions;
+        for (let j = 0; j + 1 < R.length; j += 1) {
+            if (R[j + 1] === RESTART_TARGET) {
+                out.push({ region: R[j], name: derived.hops[i][j], restart: true });
+                j += 1;
+            } else if (levelOfRegion(R[j + 1]) !== levelOfRegion(R[j])) {
+                out.push({ region: R[j], name: derived.hops[i][j] });
+            }
+        }
+        return out;
+    });
     if (outs.length !== visits.length - 1) {
         throw new Error(`the route has ${visits.length} visits and ${outs.length} level-changing `
             + 'AP exits — each crossing must be exactly one exit.');
@@ -802,7 +836,8 @@ function buildSteps(visits, legs, id) {
             .filter(Boolean);
         // ⛓ `rules-route-survey`: under `--through` the crossing is the exit AP's
         //   own path took (`hopEdge`), resolved ONCE and used by both halves.
-        const crossing = next && THROUGH ? hopEdge(v.level, next.level, v.exitOut) : null;
+        const restart = Boolean(next && v.exitOut?.restart);
+        const crossing = next && THROUGH && !restart ? hopEdge(v.level, next.level, v.exitOut) : null;
         let edge = null;
         if (next && !THROUGH) {
             try { edge = edgeFor(v.level, next.level); } catch { edge = null; }
@@ -825,7 +860,10 @@ function buildSteps(visits, legs, id) {
         //   map edge) is RECORDED on the step instead of ending the derivation —
         //   the steps after it that are derivable still get surveyed.
         let crossingRefusal = null;
-        if (next) {
+        if (next && restart) {
+            // ⛓ RETURN TO MENU: the way out is the Menu panel's Restart — no door, no goal; the next visit lands at
+            //   the start spawn.
+        } else if (next) {
             if (THROUGH) {
                 // ⛓ SWIM T3 D3 + `rules-route-survey`: the AP exit's own entity,
                 //   else the one `to` entity, else a pit — or a named refusal.
@@ -849,7 +887,10 @@ function buildSteps(visits, legs, id) {
         let arrivalRefusal = null;
         let arrivalVia = null;
         let arrivalChain = null;
-        if (prev) {
+        if (prev?.exitOut?.restart) {
+            arrival = RESTART_ARRIVAL ? { x: RESTART_ARRIVAL.x, y: RESTART_ARRIVAL.y } : null;
+            if (!RESTART_ARRIVAL) arrivalRefusal = 'a Restart lands at seedlingStartSpawn, and the start region has no spawn';
+        } else if (prev) {
             if (THROUGH) {
                 const { edge: hop, refusal } = hopEdge(prev.level, v.level, prev.exitOut);
                 arrival = hop ? hop.arrival : null;
@@ -868,6 +909,7 @@ function buildSteps(visits, legs, id) {
             arrival,
             goals,
             crossesTo: next ? next.level : null,
+            ...(restart ? { restart: true } : {}),
             ...(crossingRefusal ? { crossingRefusal } : {}),
             ...(arrivalRefusal ? { arrivalRefusal } : {}),
             ...(arrivalVia ? { arrivalVia } : {}),

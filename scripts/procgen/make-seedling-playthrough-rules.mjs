@@ -65,6 +65,7 @@ const { analyzeRegion, applyRegionAnalysis } = await imp('frontend/modules/procg
 const { compileRegionAtlas } = await imp('frontend/modules/procgenPipeline/regionAtlasCompiler.js');
 const { stringifyRulesJson } = await imp('frontend/modules/shared/rulesJsonBuilder.js');
 const SEM = await imp('frontend/modules/flashPanel/seedlingSemantics.js');
+const { substrateRegistryEntry: SEEDLING_ENTRY } = await imp('frontend/modules/flashPanel/flashSeedlingLibrary.js');
 const OV = await imp('frontend/modules/flashPanel/seedlingPlaythroughOverlay.js');
 const { R7_GOAL_LEDGER } = await imp('frontend/modules/seedlingDemo/r7Acceptance.js');
 // ⛓ EDITOR v3 slice D0b — the derivation LIFTED out of this script (plan §16.3):
@@ -947,6 +948,9 @@ function main() {
         // edges that do not exist in the game.
         assumeBidirectionalExits: false,
         arrivalSpawn: playthroughArrivalSpawn,
+        // ⛓ RETURN TO MENU (⚖ the user, 2026-10-05): the Menu panel's Restart warps to the start, so returning to
+        // the menu is always possible — a per-player flag, never an edge. Read off the substrate's declaration.
+        returnToMenu: Boolean(SEEDLING_ENTRY.restartWarp),
     });
     const rulesText = stringifyRulesJson(rules);
 

@@ -48,6 +48,7 @@
  *   }
  */
 
+import { RESTART_WARP } from '../procgenCore/restartWarp.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
@@ -790,6 +791,9 @@ export const substrateRegistryEntry = Object.freeze({
     serializeWorld,
     getPlaybackController: () => _playbackController,
     playbackScope: SEEDLING_ATLAS_PLAYBACK_SCOPE,
+    // ⛓ RESTART WARP: the Menu panel's Restart re-takes the start hop and warps the game to seedlingStartSpawn
+    //   (seedlingRegionGlue), so a world with this room declares exporter[p].return_to_menu (procgenCore/restartWarp.js).
+    restartWarp: RESTART_WARP,
 
     /**
      * ⛓⛓⛓ SEEDLING IN THE PIPELINE T1 — **THE CONTENT SOURCE** (see

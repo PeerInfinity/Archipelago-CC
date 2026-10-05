@@ -23,10 +23,14 @@
  * BFS reads it that way.
  */
 
+import { RESTART_WARP } from '../../frontend/modules/procgenCore/restartWarp.js';
 import { buildAccessibilityModel, computeReachableRegions }
     from '../../frontend/modules/shared/procgen/forwardSimulator.js';
 import { evaluateRuleWithInventory, undeterminedRuleKinds }
     from '../../frontend/modules/shared/procgen/library.js';
+
+/** The region a Restart warps to (`procgenCore/restartWarp.js`). */
+export const RESTART_TARGET = RESTART_WARP.target;
 
 /** `"1.10"` → `[1, 10]`; the sphere label's two halves compare as numbers. */
 const labelOf = (s) => String(s).split('.').map(Number);
@@ -318,6 +322,9 @@ export function blockedFrontier(regions, ruleHolds, src, items) {
  * nothing here changes. `legHolds[i]` is the rule decider leg i was walked
  * with, so a caller asking about that leg (its alternatives) asks the same one.
  *
+ * ⛓ RETURN TO MENU — **`restart`** (the slot's `exporter[p].return_to_menu`): a leg with no walk may Restart
+ * (Menu → GameStart's region → walk on), marked `restart`. Never a shortcut: a walk always wins.
+ *
  * @returns {{legs: Array<{sphere, goal, item, from, to, itemsHeld, regions}>,
  *            held: Array<Object<string, number>>, hops: Array<string[]>,
  *            legHolds: Array<Function>}} the legs
@@ -326,7 +333,18 @@ export function blockedFrontier(regions, ruleHolds, src, items) {
  *          each leg's hops took (`regionPathHops`); throws by name on a leg AP's rules
  *          give no path for and no remaining row can replace
  */
-export function deriveLegs({ regions, ruleHolds: apHolds, start, pickups, spare = null, walk = false }) {
+export function deriveLegs({
+    regions, ruleHolds: apHolds, start, pickups, spare = null, walk = false, restart = false,
+}) {
+    // ⛓ RETURN TO MENU: a Restart lands where `Menu -> GameStart` leads — not at `start`, which is only where this
+    //   walk begins — and walks on from there under the LEG's own rule decider (FRONTIER2's `walk` mode included).
+    const menuStart = regions[RESTART_TARGET]?.exits?.find((e) => e.name === 'GameStart')?.connected_region ?? null;
+    const restartPath = (to, holds) => {
+        const onward = menuStart ? regionPathHops(regions, holds, menuStart, to, items) : null;
+        return onward
+            ? { path: [here, RESTART_TARGET, ...onward.path], exits: [RESTART_WARP.label, 'GameStart', ...onward.exits] }
+            : null;
+    };
     const items = {};
     const legs = [];
     const held = [];
@@ -351,7 +369,10 @@ export function deriveLegs({ regions, ruleHolds: apHolds, start, pickups, spare 
         let path = null;
         for (const cand of pool) {
             const to = regionOfLocation(regions, cand.location);
-            const p = regionPathHops(regions, ruleHolds, here, to, items);
+            // ⛓ RETURN TO MENU (`procgenCore/restartWarp.js`): walk if a walk exists. Only where the slot declares
+            //   `return_to_menu`, a place with no way on may Restart — to `Menu`, then `GameStart` to the start, then
+            //   walk. Never a shortcut: a walk always wins.
+            const p = regionPathHops(regions, ruleHolds, here, to, items) ?? (restart ? restartPath(to, ruleHolds) : null);
             if (p && (spare === null || ruleHolds(locationRule(cand.location), items))) {
                 pick = cand;
                 path = p;
@@ -389,6 +410,7 @@ export function deriveLegs({ regions, ruleHolds: apHolds, start, pickups, spare 
                 },
             } : {}),
             ...(fromWanted < 0 ? { pulledForward: true } : {}),
+            ...(path.path.includes(RESTART_TARGET) ? { restart: true } : {}),
         });
         held.push({ ...items });
         hops.push(path.exits);

@@ -53,6 +53,7 @@ import { stringifyRulesJson } from '../../frontend/modules/shared/rulesJsonBuild
 import { seedlingMazeProjectionDeps } from '../../frontend/modules/flashPanel/seedlingAtlasAnalysis.js';
 
 
+import { substrateRegistryEntry as seedlingSubstrateEntry } from '../../frontend/modules/flashPanel/flashSeedlingLibrary.js';
 import { argvHelp } from './argvHelp.js';
 
 argvHelp(import.meta.url);
@@ -62,6 +63,10 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 // entry today; Phase 7 adds RWK here. An unknown game is an error rather than a
 // silently empty projection.
 const MAZE_PROJECTIONS = { seedling: seedlingMazeProjectionDeps };
+// ⛓ RETURN TO MENU — read off the declaration of the substrate that PLAYS the rooms (`restartWarp` on its registry
+// entry), the rule the pipeline engine applies to its realised substrates. The default flavour plays them in the
+// game's own substrate (Seedling's declares it); `--maze` plays them in the maze substrate, which declares none.
+const RESTART_WARPS = { seedling: seedlingSubstrateEntry.restartWarp };
 
 const USAGE = 'usage: node scripts/procgen/region-atlas-compile.mjs <atlas.json> [-o out.json] [--maze] [--game-config PATH] [--game-name NAME] [--seed N] [--embed-sphere-log] [--check] [--quiet] [--allow-invalid]';
 
@@ -133,6 +138,7 @@ try {
         gameName: valueOf('--game-name'),
         seed: seedArg === undefined ? undefined : Number(seedArg),
         embedSphereLog: has('--embed-sphere-log'),
+        ...(!maze && RESTART_WARPS[atlas.game] ? { returnToMenu: true } : {}),
         ...(maze ? { sidecarFlavor: 'maze', mazeProjection } : {}),
     });
 } catch (e) {

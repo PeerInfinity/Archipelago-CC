@@ -82,6 +82,7 @@ import {
     MAZE_SUBSTRATE,
 } from './regionAtlasMazeProjection.js';
 import { generateSphereLog } from '../shared/procgen/forwardSimulator.js';
+import { declareReturnToMenu } from '../procgenCore/restartWarp.js';
 
 // AP id namespaces for compiled atlases. Deliberately clear of the per-game
 // engine-binding namespace — frontend/modules/flashPanel/games/seedling.json
@@ -407,6 +408,8 @@ function deriveIdentifiers(atlas, options) {
  *   exit's `entrance_tile` in pixels). See `arrivalSpawnOf`.
  * @param {boolean} [options.assumeBidirectionalExits] when a boolean, declared as
  *   `exporter["1"].assume_bidirectional_exits`; omitted, the key is not written
+ * @param {boolean} [options.returnToMenu] the rooms' runtime warps the player to the start on a Restart: write
+ *   `exporter["1"].return_to_menu: true` (`procgenCore/restartWarp.js`). Omitted, nothing is written.
  * @param {boolean} [options.embedSphereLog] embed the forward simulator's
  *   `generateSphereLog` walk of the compiled graph as `sphere_log` (default
  *   false — opt-in, so every existing compile stays byte-identical). The same
@@ -640,6 +643,9 @@ export function compileRegionAtlas(atlas, options = {}) {
     if (typeof options.assumeBidirectionalExits === 'boolean') {
         rules.exporter[player] = { ...rules.exporter[player], assume_bidirectional_exits: options.assumeBidirectionalExits };
     }
+    // ⛓ RETURN TO MENU (procgenCore/restartWarp.js): the caller says the rooms' runtime warps to the start on a
+    // Restart, so returning to the menu is always possible. A flag, never an edge (⚖ the user, 2026-10-05).
+    if (options.returnToMenu === true) declareReturnToMenu(rules, '1');
     // ⛓ R7 slice 4: a real GOAL. The scaffold's default is `constant true`,
     // which is right for a partial atlas that is not a game yet and wrong for a
     // whole map: with a trivially-satisfied completion, AP's fill has nothing to

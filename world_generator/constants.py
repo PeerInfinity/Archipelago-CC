@@ -7,6 +7,7 @@ INTERNAL_SETTINGS = frozenset({
     'options',
     'world_directory',
     'assume_bidirectional_exits',
+    'return_to_menu',
     'use_resolved_items',
 })
 

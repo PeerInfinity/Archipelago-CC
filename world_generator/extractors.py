@@ -52,6 +52,9 @@ class GameMetadata:
     # document states none (the frontend auto-detects); the generated world carries a
     # bool back to its export as a class attribute.
     assume_bidirectional_exits: Optional[bool] = None
+    # The slot's exporter[player_id].return_to_menu (rules return-to-menu): True = returning to the menu is always
+    # possible (the runtime's Restart warps to the start); None = the document states none (absent = false).
+    return_to_menu: Optional[bool] = None
     original_world_class_name: Optional[str] = None  # Original class name from exporter (preserved during game name override)
 
 
@@ -327,6 +330,7 @@ def extract_game_metadata(json_data: Dict[str, Any], player_id: str = '1') -> Ga
         option_definitions=option_definitions,
         use_auto_indirect_conditions=exporter_data.get('use_auto_indirect_conditions', False),
         assume_bidirectional_exits=exporter_data.get('assume_bidirectional_exits'),
+        return_to_menu=exporter_data.get('return_to_menu'),
         # Track original world class name from exporter (preserved during game name override)
         original_world_class_name=original_world_class_name,
     )
@@ -1075,6 +1079,7 @@ def extract_world_attributes(json_data: Dict[str, Any], player_id: str = '1') ->
             'option_definitions',
             'world_directory',
             'assume_bidirectional_exits',
+            'return_to_menu',
             'use_resolved_items',
             'use_auto_indirect_conditions',
             'player_name',  # Read-only property on base World class

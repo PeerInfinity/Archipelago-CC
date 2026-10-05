@@ -45,6 +45,7 @@
  * (`FLASH_SEEDLING_GEN_NOT_INSTALLED`).
  */
 
+import { RESTART_WARP } from '../procgenCore/restartWarp.js';
 import { substrateRegistry } from '../shared/procgen/substrateRegistry.js';
 import { createFlashSubstrateEntry } from '../flashSubstrate/flashSubstrateLibrary.js';
 import { REQUIRED_ENVELOPE_FIELD } from '../procgenCore/sidecarFields.js';
@@ -390,6 +391,9 @@ export const substrateRegistryEntry = Object.freeze({
     ...runtime,
     panelComponentType: FLASH_SEEDLING_PANEL_COMPONENT_TYPE,
     loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
+    // ⛓ RESTART WARP: the Menu panel's Restart re-takes the start hop and warps the game to seedlingStartSpawn
+    //   (seedlingRegionGlue), so a world with this room declares exporter[p].return_to_menu (procgenCore/restartWarp.js).
+    restartWarp: RESTART_WARP,
 
     // ── build time: delegated to the installed room module ──
     generateRegionCore: (input) => roomFor('generateRegionCore').generateGenRoom(input),

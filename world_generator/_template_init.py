@@ -1040,6 +1040,14 @@ class _ShopWrapper:
     else:
         assume_bidirectional_exits_section = ''
 
+    # Carry the slot's exporter[p].return_to_menu the same way: the exporter's base handler writes it back.
+    if data.metadata.return_to_menu is True:
+        return_to_menu_section = '''
+    # The source slot's exporter[p].return_to_menu (returning to the menu is always possible), re-exported by the exporter
+    return_to_menu: ClassVar[bool] = True'''
+    else:
+        return_to_menu_section = ''
+
     # Build fill_slot_data content
     # Check if slot_data fields match option names - if so, generate dynamic references
     # NOTE: We only dynamically reference 'randomize_items' since that's the only option
@@ -1184,7 +1192,7 @@ class {world_class}(RuleWorldMixin, World):
     options: {class_name}Options
 {base_id_section}{origin_region_name_section}
     # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
-    rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}{assume_bidirectional_exits_section}
+    rule_caching_enabled: ClassVar[bool] = False{use_auto_indirect_conditions_section}{assume_bidirectional_exits_section}{return_to_menu_section}
 
     item_name_to_id: ClassVar[Dict[str, int]] = {{
         name: data.id for name, data in item_table.items() if data.id is not None
