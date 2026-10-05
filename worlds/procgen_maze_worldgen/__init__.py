@@ -67,6 +67,8 @@ class ProcgenMazeWorld(RuleWorldMixin, World):
 
     # Disable rule caching - requires CollectionState.rule_builder_cache from PR #5048
     rule_caching_enabled: ClassVar[bool] = False
+    # The source slot's exporter[p].assume_bidirectional_exits, re-exported by the exporter
+    assume_bidirectional_exits: ClassVar[bool] = True
 
     item_name_to_id: ClassVar[Dict[str, int]] = {
         name: data.id for name, data in item_table.items() if data.id is not None
