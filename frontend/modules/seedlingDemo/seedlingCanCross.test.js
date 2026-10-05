@@ -7,12 +7,12 @@
  *   cannot         L22 from L25 toward L29, bare: the ladder EXHAUSTED on a static
  *                  wallflyer (not chaser-only, so no DETOUR) — a true refusal
  *   undecided      the same L14 call under a budget of 0 consults (`e.deadline`),
- *                  and the DETOUR rung's own bound words (prose basis, named)
+ *                  and the DETOUR rung's own bound (a field since ROBUST D1)
  *   model-refused  the Ghost Sword on L14: `levelRun` refuses the press arm
  *
  * and D2's derivation over L16 → L18 (`stairsup@352,80`) from L15, pool
  * {sword, conch}: the block-route search's REAL `MAX_ROUTE_ORDERS` bound
- * (`undecided`, prose basis), a minimal set not proved minimal, and the solver
+ * (`undecided`, read off `SolverRefusal.bound`), a minimal set not proved minimal, and the solver
  * NOT monotone in the inventory (the Conch turns the Sword's `can` into `cannot`).
  *
  * ⛔ No clock is read: every budget here is the deterministic consult counter.
@@ -71,21 +71,36 @@ describe('canCross — one real case per verdict', () => {
         expect(r.why).toMatch(/⏱ DEADLINE/);
     });
 
-    it('undecided: the DETOUR rung\'s own bound words classify as a bound (prose basis, the named gap)', () => {
+    it('undecided: the DETOUR rung\'s own bound classifies as a bound, read off the row\'s FIELD', () => {
         const run = createRunForStaging(L14(), SRC, { scratchPersistence: true });
         const d = deriveChaserDetour(run, { aim: { x: 32, y: 64 }, allowTeleporter: null,
             planOpts: { liveBag: run.liveGeometryOpts(), avoidVolumes: true, keys: run.progress('keys'),
                 contacts: new Set(), lattice: 16, inventory: run.progress('inventory'), noHazards: run.noHazards },
             certify: () => ({ hit: { x: 0, y: 0 }, hitWp: 99, truncated: null, ticks: 1 }), maxPreviews: 5 });
         expect(d.wps).toBe(null);
+        expect(d.bound).toMatchObject({ name: 'DETOUR_RUNG', hit: ['maxPreviews'], previews: 5, maxPreviews: 5 });
+        // the words are the solver's, unchanged; the FIELD is what is read
+        expect(d.why).toMatch(/preview\(s\) of the 5 bound spent .* candidate\(s\) left unasked/);
         const e = new SolverRefusal('x: the combat ladder is EXHAUSTED', {
-            considered: [{ option: 'detour', why: 'the kill rung\'s words' }, { option: 'detour', why: d.why }] });
+            considered: [{ option: 'detour', why: 'the kill rung\'s words' },
+                { option: 'detour', why: 'no words to match', bound: d.bound }] });
         expect(classifyError(e)).toMatchObject({ verdict: 'undecided',
-            cause: { kind: 'bound', basis: 'prose', bound: 'DETOUR_RUNG', maxPreviews: 5 } });
-        // the same refusal without the bound arm ("no candidate left") is a true refusal
-        const exhausted = new SolverRefusal('x', { considered: [{ option: 'detour',
-            why: d.why.replace(/, \d+ candidate\(s\) left unasked/, '') }] });
+            cause: { kind: 'bound', basis: 'field', bound: 'DETOUR_RUNG', maxPreviews: 5, previews: 5,
+                unasked: d.bound.unasked } });
+        // the same row with `bound: null` (the open set ran dry) is a true refusal, whatever its words say
+        const exhausted = new SolverRefusal('x', { considered: [{ option: 'detour', why: d.why, bound: null }] });
         expect(classifyError(exhausted).verdict).toBe('cannot');
+    });
+
+    it('undecided: a block-route bound is read off `SolverRefusal.bound`, not the message', () => {
+        const e = new SolverRefusal('no words to match', { bound: { name: 'MAX_ROUTE_EXPANSIONS',
+            site: 'block-route', limit: 2000, expansions: 2001 } });
+        expect(classifyError(e)).toMatchObject({ verdict: 'undecided', cause: { kind: 'bound', basis: 'field',
+            bound: 'MAX_ROUTE_EXPANSIONS', limit: 2000, expansions: 2001, site: 'block-route' } });
+        // the old words without the field are a true refusal now: a caller reads fields
+        const words = new SolverRefusal('solverBot: the block-route search for b@0,0 in level 1 hit '
+            + '`MAX_ROUTE_ORDERS` — …');
+        expect(classifyError(words).verdict).toBe('cannot');
     });
 
     it('model-refused: the Ghost Sword on L14 — the model refuses the press arm, by name', () => {
@@ -165,6 +180,7 @@ describe('deriveMinimalSets — the derivation question, with its caveats visibl
         expect(d.rows.map((r) => [r.set.join('+') || '∅', r.verdict])).toEqual([
             ['∅', 'undecided'], ['conch', 'undecided'], ['sword', 'can'], ['sword+conch', 'cannot']]);
         expect(d.rows[0].why).toMatch(/^bound: .*hit `MAX_ROUTE_ORDERS`/);
+        expect(d.rows[0].cause).toMatchObject({ kind: 'bound', basis: 'field', bound: 'MAX_ROUTE_ORDERS', limit: 8 });
         expect(d.minimal).toEqual([['sword']]);
         expect(d.unprovedBelow).toEqual({ sword: [[]] });
         expect(d.nonMonotone).toEqual([['sword', 'conch']]);

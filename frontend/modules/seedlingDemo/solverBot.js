@@ -237,7 +237,7 @@ export const STRIKE_BOUND_EXHAUSTED = 'STRIKE_BOUND_EXHAUSTED';
 export class SolverRefusal extends Error {
     constructor(message, {
         goal = null, obstacle = null, considered = [], rows = [], perTick = [],
-        pending = null, dangerQueries = [],
+        pending = null, dangerQueries = [], bound = null,
     } = {}) {
         super(message);
         this.name = 'SolverRefusal';
@@ -287,6 +287,17 @@ export class SolverRefusal extends Error {
          * danger"; the readouts say so by name.
          */
         this.dangerQueries = dangerQueries;
+        /**
+         * ⛓⛓ SEEDLING FIDELITY ROBUST, D1 — **A SEARCH THAT WAS CUT SAYS SO IN
+         * A FIELD.** `{name, site, limit, …counts}` when this refusal is a BOUND
+         * ending a search (the block-route search's `MAX_ROUTE_EXPANSIONS` /
+         * `MAX_ROUTE_ORDERS`, or the caller's `deadline` reaching it there),
+         * else `null`. "I could not decide" and "there is none" are different
+         * claims, and a caller (`seedlingCanCross.classifyError`) used to tell
+         * them apart by matching this message's words. The words are unchanged;
+         * the field is what a caller reads.
+         */
+        this.bound = bound;
     }
 }
 
@@ -2345,7 +2356,8 @@ function deriveWeigh(run, onto, contacts, blocked = []) {
                     throw new SolverRefusal(`solverBot: the block-route search for ${row.id} `
                         + `onto (${onto.tx},${onto.ty}) in level ${run.level} hit `
                         + `\`${r.refused.bound}\` — ${r.refused.why}`,
-                    { obstacle: { kind: 'solid', id: row.id } });
+                    { obstacle: { kind: 'solid', id: row.id },
+                        bound: blockRouteBound(r, row, 'press') });
                 }
                 return;
             }
@@ -4366,6 +4378,21 @@ function corridorPlans(world, from, aim, allowTeleporter, opts) {
 export const MAX_ROUTE_ORDERS = 8;
 export const MAX_ROUTE_EXPANSIONS = 2000;
 
+/**
+ * ⛓ SEEDLING FIDELITY ROBUST, D1 — a cut block-route search as the refusal's
+ * `bound` FIELD (`SolverRefusal.bound`): which bound, its limit, and the work
+ * spent. `deadline` has no limit of its own (the caller's hook decided).
+ */
+function blockRouteBound(route, row, goalKind) {
+    const name = route.refused.bound;
+    return {
+        name, site: 'block-route', goal: goalKind, block: row.id,
+        limit: name === 'MAX_ROUTE_EXPANSIONS' ? MAX_ROUTE_EXPANSIONS
+            : name === 'MAX_ROUTE_ORDERS' ? MAX_ROUTE_ORDERS : null,
+        expansions: route.expansions,
+    };
+}
+
 /** `deriveShove`'s own words for the START state's lean rejections. */
 const SHOVE_PHRASE = Object.freeze({
     stance: (dir, stance) => ({
@@ -4963,7 +4990,8 @@ function deriveShove(run, row, aim, allowTeleporter, contacts, blocked = []) {
              */
             throw new SolverRefusal(`solverBot: the block-route search for ${row.id} in `
                 + `level ${run.level} hit \`${route.refused.bound}\` — ${route.refused.why}`,
-            { obstacle: { kind: 'solid', id: row.id } });
+            { obstacle: { kind: 'solid', id: row.id },
+                bound: blockRouteBound(route, row, 'clear-path') });
         }
         return { plan: null, rejected, discharged, refused: route.refused };
     }
@@ -10497,8 +10525,9 @@ export function deriveChaserDetour(run, {
      * each), so a check only inside the loop would still pay it.
      */
     if (deadlineReached('detour')) {
-        return { wps: null, previews: 0, planned: 0, why: 'deadline — the caller\'s anytime '
-            + 'deadline (`shouldStop`) was reached before the DETOUR search, so it was not run' };
+        return { wps: null, previews: 0, planned: 0, bound: { name: 'deadline', site: 'detour' },
+            why: 'deadline — the caller\'s anytime '
+                + 'deadline (`shouldStop`) was reached before the DETOUR search, so it was not run' };
     }
     const pitch = planOpts.lattice ?? DEFAULT_LATTICE;
     const from = { x: run.state.x, y: run.state.y };
@@ -10596,7 +10625,10 @@ export function deriveChaserDetour(run, {
         + `reached in the DETOUR search after ${previews} preview(s) and ${planned} leg(s), so `
         + 'the rest of the search was not run';
     while (open.length > 0 && previews < maxPreviews && planned < maxPlanned) {
-        if (deadlineReached('detour')) return { wps: null, previews, planned, why: deadlineWhy() };
+        if (deadlineReached('detour')) {
+            return { wps: null, previews, planned, bound: { name: 'deadline', site: 'detour' },
+                why: deadlineWhy() };
+        }
         const node = heapPop();
         const last = node.seq[node.seq.length - 1];
         if (!node.prefix) {
@@ -10642,6 +10674,18 @@ export function deriveChaserDetour(run, {
         wps: null,
         previews,
         planned,
+        /**
+         * ⛓ SEEDLING FIDELITY ROBUST, D1 — WHICH BOUND ended the search, as a
+         * field: `null` when the open set ran dry (a true "no corridor"), else
+         * the counts the `why` sentence prints. The loop stops only on an empty
+         * open set or a bound, so a candidate left unasked IS a bound.
+         */
+        bound: open.length === 0 ? null : {
+            name: 'DETOUR_RUNG',
+            hit: [previews >= maxPreviews ? 'maxPreviews' : null,
+                planned >= maxPlanned ? 'maxPlanned' : null].filter(Boolean),
+            previews, maxPreviews, planned, maxPlanned, maxVias, unasked: open.length,
+        },
         why: `no corridor bent through at most ${maxVias} via cell(s) of the ${vias.length} `
             + `the walk can plan to probes clean: ${candidates} candidate corridor(s) previewed `
             + `with the bodies stepped against each, ${pruned} prefix(es) dangerous before their `
@@ -12484,6 +12528,7 @@ function solveSegmentUnder({
          */
         let lastWhy = killWhy;
         let lastOption = 'kill';
+        let lastBound;
         if (hit.sources.length > 0 && hit.sources.every((sx) => sx.kind === 'chaser')) {
             const detour = deriveChaserDetour(run, {
                 aim, allowTeleporter,
@@ -12506,9 +12551,13 @@ function solveSegmentUnder({
                     planned: detour.planned, waypoints: detour.wps.length, ticks: detour.ticks });
                 return { wps: detour.wps, escalations };
             }
-            rowFor('detour', killRefused);
+            // ⛓ ROBUST D1: the failed row carries the search's counts and its
+            // bound (`null` = the open set ran dry) as fields.
+            rowFor('detour', killRefused, { previews: detour.previews, planned: detour.planned,
+                bound: detour.bound ?? null });
             lastWhy = detour.why;
             lastOption = 'detour';
+            lastBound = detour.bound ?? null;
         }
         refuse(`${what}: the combat ladder is EXHAUSTED. The corridor passes through `
             + `danger at (${hit.x.toFixed(1)},${hit.y.toFixed(1)}) — ${reasonsOf(hit)} — `
@@ -12527,7 +12576,8 @@ function solveSegmentUnder({
             obstacle: { kind: 'danger', id: hit.sources[0]?.id ?? null },
             considered: escalations.map((e) => ({
                 option: e.rung, why: e.refused?.why ?? 'attempted',
-            })).concat([{ option: lastOption, why: lastWhy }]),
+            })).concat([{ option: lastOption, why: lastWhy,
+                ...(lastBound !== undefined ? { bound: lastBound } : {}) }]),
         });
         return {};
     };
