@@ -15,6 +15,9 @@
  *                      {kind: 'portal', id: exitName} (play until the clear, then leave by it); options = the
  *                      host's bot settings {knobs, tracks, botSeed, speed, retryCap} (noiz2saTraining.js
  *                      botWalkOptions); botStop() hands the region back.
+ *   host state (N4b):  setHostState({loopMode, bot}) — whether loop mode is on, and the bot's options for this visit
+ *                      (the visit's bot seed, the knobs at the CURRENT tracks); sent on every region load and on
+ *                      every change, in any order with configure.
  * Opened directly in a tab (no host), the page plays the region in its URL: ?start=1:2&end=1:3&seed=1.
  *
  * The game only steps while the player is playing it: a configured region waits for a game key (or a click), and
@@ -26,8 +29,14 @@
  * the region from where it is; a hit restarts the region and the bot plays the next attempt with the next attempt's
  * bot seed (segment-run.js attemptBotSeed), until the clear or `retryCap` failed attempts (0 = no cap). It plays at
  * `speed` game frames per 16 ms. New settings sent for the same goal apply from the next attempt (the speed at once).
- * Keys: arrows/WASD move, Z fire, X slow, P pause, R play the region again from its start, 1–9 leave by that exit
- * once cleared.
+ * Keys: arrows/WASD move, Z fire, X slow, P pause, R play the region again from its start, B let the bot play (and
+ * take the controls back), 1–9 leave by that exit once the exits are open.
+ *
+ * N4b — in LOOP MODE the move out of a region IS playing it to a clear (⚖ 2026-10-05: "clearing the level should be
+ * counted as part of the "move" action"): the exits open only after a clear on THIS visit, cleared before or not.
+ * Outside loop mode an already-checked region opens its exits at once, as before. Every visit plays with its own bot
+ * seed (the host draws it per region load), reported in the play-clock stats as `botSeed` (so a Record summary
+ * carries it); `botFrames` counts the frames the bot played on the visit.
  *
  * Test surface (not the contract): `window.__noiz2saDebug()` reads the state; `window.__noiz2saTest` drives
  * injected input (`play(tape, {speed})` — a run-length tape, see noiz2saRegion.js `encodeInputs`), the step
@@ -61,8 +70,11 @@ const app = {
     // the VISIT so far (every attempt, R included): what the play clock reports and the host trains on
     visitFrames: 0, scoreFolded: 0, attemptInputs: [],
     configures: 0,          // regions configured so far (a test waits for a fresh one)
-    bot: null,              // the bot's walk: {goal, opts, next, id, inputs, failed} (N4)
+    bot: null,              // the bot's walk: {goal, opts, next, id, inputs, failed} (N4); goal kind 'assist' = the B key
     lastBot: null,          // the last walk's settings and outcome, for the test surface
+    loopMode: false,        // N4b, from the host: in loop mode the exits open only after a clear on this visit
+    hostBot: null,          // N4b, from the host: the bot's options for this visit (seed, knobs at the current tracks)
+    botFrames: 0,           // the frames the bot played on this visit
 };
 
 // ── keyboard ──
@@ -82,6 +94,7 @@ addEventListener('keydown', (e) => {
     if (e.repeat) return;
     if (/^Digit[1-9]$/.test(e.code)) { leaveBy(app.exits[Number(e.code.slice(5)) - 1]?.exitName); return; }
     if (e.code === 'KeyR') { playAgain(); return; }
+    if (e.code === 'KeyB') { toggleAssist(); return; }
     if (e.code === 'KeyP') { if (app.state === 'playing') setState('paused'); else if (app.state === 'paused') setState('playing'); return; }
     if (GAME_KEYS.has(e.code) && app.bot && app.state === 'paused') { setState('playing'); return; }
     if (GAME_KEYS.has(e.code) && (app.state === 'ready' || app.state === 'paused')) { app.injected = false; app.speed = 1; setState('playing'); }
@@ -110,8 +123,13 @@ function setState(s) {
 // the same. Reported on every state change; the bridge drops it when no region is active.
 function reportPlayClock() {
     if (!app.regionId) return;
-    window.__swfBridge?.setPlayClock?.(app.state === 'playing', { gameSeconds: app.visitFrames / FPS, score: visitScore() });
+    const stats = { gameSeconds: app.visitFrames / FPS, score: visitScore(), botFrames: app.botFrames };
+    const seed = visitBotSeed();
+    if (seed !== null) stats.botSeed = seed;
+    window.__swfBridge?.setPlayClock?.(app.state === 'playing', stats);
 }
+/** the visit's bot seed (the host draws one per region load), or null before the host said */
+const visitBotSeed = () => app.hostBot?.botSeed ?? app.bot?.opts.botSeed ?? null;
 /** the visit's score: every finished attempt's score from the region's start, plus the current attempt's */
 const visitScore = () => app.scoreFolded + (app.run && !app.run.cleared ? app.run.score : 0);
 
@@ -122,7 +140,7 @@ function startRegion({ regionId, span, exits, alreadyChecked }) {
     stopBot();
     app.run = createRegionRun(span, { engine: { newGame, stepGame }, patterns: app.patterns });
     app.clearSent = false; app.clearedThisVisit = false; app.tape = null; app.injected = false; app.effects = []; app.message = '';
-    app.visitFrames = 0; app.scoreFolded = 0; app.attemptInputs = []; app.speed = 1;
+    app.visitFrames = 0; app.scoreFolded = 0; app.attemptInputs = []; app.speed = 1; app.botFrames = 0;
     setState('ready');
     renderExits();
 }
@@ -146,7 +164,9 @@ function leaveBy(exitName) {
     return true;
 }
 
-const exitsOpen = () => !!app.run && (app.run.cleared || app.clearedThisVisit || app.alreadyChecked);
+// N4b: in loop mode the move out of the region is played to a clear on every visit, so a region cleared before
+// (alreadyChecked) opens its exits at once only outside loop mode.
+const exitsOpen = () => !!app.run && (app.run.cleared || app.clearedThisVisit || (app.alreadyChecked && !app.loopMode));
 
 /**
  * R: play the region again from its start, on the same visit. The clear is sent again when it comes — the bridge
@@ -216,6 +236,7 @@ function stepOnce() {
     const scoreBefore = app.run.scoreBefore, g0 = app.run.g;
     const out = app.run.step(inp);
     app.visitFrames++;
+    if (app.bot) app.botFrames++;
     app.attemptInputs.push(inp);
     if (out.hit) {
         app.scoreFolded += scoreBefore + g0.score; // the failed attempt's score, from the region's start
@@ -268,7 +289,7 @@ function normalizeBotOptions(o = {}) {
     return {
         knobs: o.knobs && typeof o.knobs === 'object' ? o.knobs : {},
         tracks: o.tracks ?? null,
-        botSeed: Number.isInteger(o.botSeed) && o.botSeed >= 0 ? o.botSeed : 1,
+        botSeed: Number.isInteger(o.botSeed) && o.botSeed >= 0 && o.botSeed <= 0xffffffff ? o.botSeed : 1,
         speed: [1, 2, 4].includes(speed) ? speed : 1,
         retryCap: Number.isInteger(o.retryCap) && o.retryCap > 0 ? o.retryCap : 0,
     };
@@ -293,12 +314,50 @@ function botWalkTo(goal, options) {
     if (app.run.cleared) playAgain();
     app.tape = null; app.injected = false;
     app.bot = { goal, opts, next: null, id: 0, inputs: [], failed: 0 };
-    app.lastBot = { goal, tracks: opts.tracks, speed: opts.speed, retryCap: opts.retryCap, knobs: opts.knobs, cleared: false, gaveUp: false, attempts: 0, failed: 0 };
+    app.lastBot = { goal, tracks: opts.tracks, speed: opts.speed, retryCap: opts.retryCap, knobs: opts.knobs, botSeed: opts.botSeed, cleared: false, gaveUp: false, attempts: 0, failed: 0 };
     app.speed = opts.speed;
     startBotAttempt();
     app.message = `the bot plays (${opts.speed}×)`;
     setState('playing');
     return true;
+}
+
+/**
+ * B — the bot-assist key (N4b, Manual/Record visits): hands the controls to the bot at the current tracks (the host's
+ * options for this visit), which plays toward the clear and stays (the player leaves); B again hands them back (the
+ * game pauses until the player's next game key). A Bot block's own walk is the queue's: B leaves it alone.
+ */
+function toggleAssist() {
+    if (!app.run || app.state === 'cleared' || app.state === 'waiting') return false;
+    if (app.bot) {
+        if (app.bot.goal.kind !== 'assist') return false;
+        stopBot();
+        app.message = 'your controls (a game key resumes)';
+        setState('paused');
+        return true;
+    }
+    const opts = normalizeBotOptions(app.hostBot ?? {});
+    app.tape = null; app.injected = false;
+    app.bot = { goal: { kind: 'assist', id: null }, opts, next: null, id: 0, inputs: [], failed: 0 };
+    app.lastBot = { goal: app.bot.goal, tracks: opts.tracks, speed: opts.speed, retryCap: opts.retryCap, knobs: opts.knobs, botSeed: opts.botSeed, cleared: false, gaveUp: false, attempts: 0, failed: 0 };
+    app.speed = opts.speed;
+    startBotAttempt();
+    app.message = `the bot plays for you (${opts.speed}×; B: your controls)`;
+    setState('playing');
+    return true;
+}
+
+/** the host's state (N4b): loop mode (the exits' rule) and the bot's options for this visit */
+function setHostState(state) {
+    if (!state || typeof state !== 'object') return;
+    if (typeof state.loopMode === 'boolean') app.loopMode = state.loopMode;
+    if (state.bot && typeof state.bot === 'object') {
+        app.hostBot = normalizeBotOptions(state.bot);
+        // an assisting bot plays its next attempt at the new tracks (a walk gets them from the host's proxy)
+        if (app.bot?.goal.kind === 'assist') { app.bot.next = app.hostBot; app.speed = app.hostBot.speed; }
+    }
+    renderExits();
+    reportPlayClock();
 }
 
 let nextWalkId = 1;
@@ -382,7 +441,7 @@ function render() {
     ] : [app.loadError ? 'load failed' : app.patterns ? 'waiting for a region' : 'loading…'];
     lines.forEach((s, i) => ctx.fillText(s, 14, 216 + i * 18));
     ctx.font = '11px monospace'; ctx.fillStyle = '#567';
-    ['arrows/WASD move', 'Z fire  X slow', 'P pause  R again', '1-9 leave (cleared)'].forEach((s, i) => ctx.fillText(s, 14, 400 + i * 16));
+    ['arrows/WASD move', 'Z fire  X slow', 'P pause  R again', 'B bot plays', '1-9 leave (cleared)'].forEach((s, i) => ctx.fillText(s, 14, 384 + i * 16));
 }
 
 function showStatus() {
@@ -413,6 +472,7 @@ const gameSide = {
         }
     },
     botWalkTo: (goal, options) => botWalkTo(goal, options),
+    setHostState: (state) => setHostState(state),
     botStop() {
         const was = !!app.bot;
         stopBot();
@@ -445,6 +505,9 @@ window.__noiz2saDebug = () => ({
     speed: app.speed,
     bot: app.bot ? { goal: app.bot.goal, failed: app.bot.failed, tracks: app.bot.opts.tracks } : null,
     lastBot: app.lastBot,
+    loopMode: app.loopMode,
+    visitBotSeed: visitBotSeed(),
+    botFrames: app.botFrames,
 });
 window.__noiz2saTest = {
     /** play an injected tape from the current attempt's next frame; `speed` game frames per 16 ms */
@@ -461,6 +524,8 @@ window.__noiz2saTest = {
     leave: (exitName) => leaveBy(exitName),
     /** R: the region again from its start, on the same visit */
     again: () => playAgain(),
+    /** B: the bot plays for the player, or hands the controls back */
+    assist: () => toggleAssist(),
 };
 
 // ── boot ──

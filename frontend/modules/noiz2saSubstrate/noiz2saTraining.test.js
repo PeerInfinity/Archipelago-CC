@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 import {
     NOIZ2SA_TRAINER_STORAGE_KEY, NOIZ2SA_SETTINGS_DEFAULTS, NOIZ2SA_SETTINGS_SCHEMA, DEFAULT_TRAINING, TRACKS, BOT_SEED,
     normalizeSettings, freshTrainer, restoreTrainer, serializeTrainer, createVisitMeter, playbackVisit,
-    botWalkOptions, createTrainerService,
+    botWalkOptions, createTrainerService, drawBotSeed, BOT_SEED_MAX,
 } from './noiz2saTraining.js';
 import { Noiz2saBotProxy } from './noiz2saBotProxy.js';
 import { trainerKnobs, pointsFor } from '../bulletml-dodge/src/game/tracks.js';
@@ -163,6 +163,30 @@ describe('the bot\'s walk options', () => {
         tr.tracks = Object.fromEntries(TRACKS.map((k) => [k, 100]));
         expect(botWalkOptions(tr, { botSpeed: 2 }).knobs).toEqual(EXPERT_KNOBS);
         expect(botWalkOptions(tr, { botSpeed: 2 }).speed).toBe(2);
+    });
+    it('N4b: a visit\'s own bot seed rides the options (the service\'s too)', () => {
+        expect(botWalkOptions(freshTrainer(), {}, 123456789).botSeed).toBe(123456789);
+        const sv = createTrainerService({ storage: memoryStorage() });
+        expect(sv.botOptions().botSeed).toBe(BOT_SEED);
+        expect(sv.botOptions(42).botSeed).toBe(42);
+    });
+});
+
+describe('N4b — a bot seed per visit (drawBotSeed)', () => {
+    it('an integer in 1..2^32−1 over the whole range of rand, junk included', () => {
+        expect(drawBotSeed(() => 0)).toBe(1);
+        expect(drawBotSeed(() => 0.999999999999)).toBeLessThanOrEqual(BOT_SEED_MAX);
+        expect(drawBotSeed(() => 1)).toBeLessThanOrEqual(BOT_SEED_MAX);
+        expect(drawBotSeed(() => NaN)).toBe(1);
+        expect(drawBotSeed(() => -3)).toBe(1);
+        for (let i = 0; i < 200; i++) {
+            const s = drawBotSeed();
+            expect(Number.isInteger(s) && s >= 1 && s <= BOT_SEED_MAX).toBe(true);
+        }
+    });
+    it('draws differ from visit to visit (Math.random)', () => {
+        const seeds = new Set(Array.from({ length: 50 }, () => drawBotSeed()));
+        expect(seeds.size).toBeGreaterThan(45);
     });
 });
 

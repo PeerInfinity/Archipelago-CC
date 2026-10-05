@@ -17,6 +17,16 @@
  *    region (live play and the Bot block: the visit's game seconds and score) and from every instant Playback of a
  *    Noiz2sa summary (`loops:summaryApplied`, the summary's `playStats`). Only Noiz2sa regions train it (⚖);
  *  - the TRAINING section of this panel (`noiz2saTrainingSection.js`), under the iframe (⚖ 2026-10-05).
+ *
+ * N4b:
+ *  - the HOST STATE for the page (the bridge's `hostState` command → `__swfBridge.setHostState`): loop mode (in loop
+ *    mode the page opens a region's exits only after a clear on this visit: the move IS the clear) and the bot's
+ *    options for this visit, sent on every region load and on every change of loop mode, the tracks or the settings;
+ *  - a BOT SEED PER VISIT (`drawBotSeed`, drawn on every region load), carried by the walk and the host state; the page
+ *    reports it in its play-clock stats, so a Record summary carries it (`playStats.botSeed`). `pinBotSeed(n)` pins it
+ *    (tests: the measured runs are at seed 1);
+ *  - the FIRST CLEAR explores the region fully (`noiz2saFirstClear.js`): as many `loop:exploreCompleted` as it has
+ *    locations and exits, the first time its clear is in the host's checked set.
  */
 
 import { createSubstrateIframePanelClass } from '../flashSubstrate/flashSubstratePanel.js';
@@ -33,8 +43,11 @@ import {
     NOIZ2SA_PLAYBACK_CONTROL_EVENT,
     NOIZ2SA_IFRAME_ID,
 } from './noiz2saSubstrateLibrary.js';
-import { createTrainerService, NOIZ2SA_SETTINGS_SCHEMA, NOIZ2SA_SETTINGS_DEFAULTS } from './noiz2saTraining.js';
+import { createTrainerService, drawBotSeed, NOIZ2SA_SETTINGS_SCHEMA, NOIZ2SA_SETTINGS_DEFAULTS } from './noiz2saTraining.js';
 import { createTrainingSection } from './noiz2saTrainingSection.js';
+import { clearsOf, checkedNamesOf, exploresToFullyExplore, createFirstClearWatcher } from './noiz2saFirstClear.js';
+import { stateManagerProxySingleton as stateManager } from '../stateManager/index.js';
+import { getGameStateSingleton } from '../gameState/singleton.js';
 
 // In an iframe the page plays the region the bridge configures; opened directly in a tab it plays a region
 // from its own URL (?start=1:2&end=1:3&seed=1), for development.
@@ -63,10 +76,63 @@ export function getTrainerService() {
 
 function onTrainerChanged(_tr, { tracksChanged }) {
     for (const s of _sections) s.render();
-    if (tracksChanged) _botProxy?.refresh();
+    if (tracksChanged) { _botProxy?.refresh(); publishHostState(); }
 }
 
 let _botProxy = null;
+
+// ── N4b: the visit's bot seed, and the host state the page plays by ──
+let _visitSeed = drawBotSeed();
+let _pinnedSeed = null;
+/** the bot's options for the current visit (its seed, the knobs at the current tracks) */
+const visitBotOptions = () => getTrainerService().botOptions(_visitSeed);
+/** a new visit: a new bot seed (or the pinned one) */
+function newVisitSeed() {
+    _visitSeed = _pinnedSeed ?? drawBotSeed();
+    return _visitSeed;
+}
+/**
+ * Pin the bot seed of every visit from the next region load on (null: a new one per visit again). Tests pin the
+ * seeds their measurements were taken at; it also makes a recorded visit's seed replayable.
+ */
+export function pinBotSeed(seed) {
+    _pinnedSeed = Number.isInteger(seed) && seed >= 1 && seed <= 0xffffffff ? seed : null;
+    return _pinnedSeed;
+}
+/** the current visit's bot seed */
+export const getVisitBotSeed = () => _visitSeed;
+
+function isLoopModeActive() {
+    try { return getGameStateSingleton()?.getLoopModeActive?.() === true; } catch { return false; }
+}
+let _loopMode = false;
+/** the page's host state: loop mode and the visit's bot options (the bridge hands it to `__swfBridge.setHostState`) */
+function publishHostState() {
+    _eventBus?.publish(NOIZ2SA_PLAYBACK_CONTROL_EVENT, {
+        method: 'hostState', args: [{ loopMode: _loopMode, bot: visitBotOptions() }],
+    }, 'noiz2saSubstrate');
+}
+
+// ── N4b: a first clear explores the region fully ──
+const _firstClears = createFirstClearWatcher();
+function exploreFirstClears(snapshot) {
+    const warehouse = _initApi?.getModuleFunction?.('procgenPlayer', 'getWarehouse')?.() ?? null;
+    const regions = _firstClears.note(clearsOf(warehouse, NOIZ2SA_SUBSTRATE_ID), checkedNamesOf(snapshot));
+    if (!regions.length || !_dispatcher) return;
+    const staticRegions = stateManager?.getStaticData?.()?.regions;
+    for (const region of regions) {
+        const n = exploresToFullyExplore(staticRegions?.get?.(region));
+        // The explores the discovery module answers one by one, as a full explore does elsewhere. `fromLoop`: loops
+        // must not gate or capture them — the clear they follow already passed the action gate, and this
+        // substrate has no explore action to record (⚖ N4b).
+        for (let i = 0; i < n; i++) {
+            _dispatcher.publish('loop:exploreCompleted', {
+                regionName: region, fromLoop: true, source: 'noiz2sa:firstClear',
+            }, { initialTarget: 'bottom' });
+        }
+    }
+}
+let _dispatcher = null;
 
 const BasePanel = createSubstrateIframePanelClass({
     componentType: NOIZ2SA_PANEL_COMPONENT_TYPE,
@@ -111,7 +177,7 @@ async function loadSettings() {
 async function applySettingsFromManager() {
     const before = JSON.stringify(getTrainerService().settings);
     getTrainerService().applySettings(await loadSettings());
-    if (JSON.stringify(getTrainerService().settings) !== before) _botProxy?.refresh();
+    if (JSON.stringify(getTrainerService().settings) !== before) { _botProxy?.refresh(); publishHostState(); }
 }
 
 export const moduleInfo = {
@@ -156,6 +222,8 @@ export function register(registrationApi) {
     // exit) up the dispatcher chain.
     registrationApi.registerDispatcherSender('user:locationCheck', 'bottom', 'first');
     registrationApi.registerDispatcherSender('user:regionMove', 'bottom', 'first');
+    // N4b: a region's first clear explores it fully (noiz2saFirstClear.js).
+    registrationApi.registerDispatcherSender('loop:exploreCompleted', 'bottom');
 
     // procgenPlayer publishes noiz2sa:loadRegion (the entry's loadRegionEvent); the bridge picks it up through
     // the iframeAdapter relay.
@@ -168,6 +236,9 @@ export function register(registrationApi) {
     registrationApi.registerEventBusSubscriberIntent(NOIZ2SA_LOAD_REGION_EVENT);
     registrationApi.registerEventBusSubscriberIntent('substrate:playClock');
     registrationApi.registerEventBusSubscriberIntent('loops:summaryApplied');
+    registrationApi.registerEventBusSubscriberIntent('gameState:loopModeChanged');
+    registrationApi.registerEventBusSubscriberIntent('stateManager:snapshotUpdated');
+    registrationApi.registerEventBusSubscriberIntent('stateManager:rulesLoaded');
 
     if (!substrateRegistry.has(substrateRegistryEntry.id)) {
         substrateRegistry.register(substrateRegistryEntry);
@@ -179,13 +250,14 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     const eventBus = initializationApi.getEventBus();
     if (!eventBus) return;
     _eventBus = eventBus;
+    _dispatcher = initializationApi.getDispatcher?.() ?? null;
     const service = getTrainerService();
 
     // The bot: the proxy the registry entry's getPlaybackController returns (loops' walkTo solver).
     _botProxy = new Noiz2saBotProxy({
         eventBus,
         controlEvent: NOIZ2SA_PLAYBACK_CONTROL_EVENT,
-        botOptions: () => service.botOptions(),
+        botOptions: () => visitBotOptions(),
         isDriving: () => {
             const region = initializationApi.getModuleFunction?.('loops', 'botSolverRegion')?.();
             return !!region && _regions.has(region);
@@ -208,6 +280,10 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
             _regions.add(payload.region_id);
             _lastRegion = payload.region_id;
             for (const s of _sections) s.render();
+            // N4b: a new visit — its own bot seed; the page learns it (and loop mode) from the host state
+            newVisitSeed();
+            _loopMode = isLoopModeActive();
+            publishHostState();
         }
         const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
         if (isFocusLocked?.()) return;
@@ -219,6 +295,16 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
         if (!data?.stats || !_regions.has(data.region)) return;
         service.notePlayClock(data.region, data.stats);
     }, 'noiz2saSubstrate');
+    // N4b: loop mode decides when a region's exits open (the page's rule).
+    eventBus.subscribe('gameState:loopModeChanged', (data) => {
+        _loopMode = data?.active === true;
+        publishHostState();
+    }, 'noiz2saSubstrate');
+    // N4b: a region's first clear explores it fully; a rules load starts over.
+    eventBus.subscribe('stateManager:snapshotUpdated', (data) => {
+        exploreFirstClears(data?.snapshot ?? stateManager?.getLatestStateSnapshot?.());
+    }, 'noiz2saSubstrate');
+    eventBus.subscribe('stateManager:rulesLoaded', () => _firstClears.reset(), 'noiz2saSubstrate');
     // …and an instant Playback of a Noiz2sa summary earns the recorded visit.
     eventBus.subscribe('loops:summaryApplied', (data) => {
         if (data?.substrate !== NOIZ2SA_SUBSTRATE_ID) return;

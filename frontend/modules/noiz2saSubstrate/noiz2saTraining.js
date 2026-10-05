@@ -13,7 +13,9 @@
  *  - `playbackVisit` reads what an instant Playback earns from a summary recording (`summary.playStats`, the visit's
  *    last report — ⚖ "Instant playback should still accumulate resources");
  *  - `botWalkOptions` is what the page's bot plays with: the knobs at the CURRENT tracks (no personality: ⚖ in
- *    incremental mode the personalities are replaced by the spending strategies), the bot seed, the speed, the cap.
+ *    incremental mode the personalities are replaced by the spending strategies), the bot seed, the speed, the cap;
+ *  - `drawBotSeed` draws a visit's bot seed (N4b, ⚖ "a new bot seed per visit"): the host draws one per region load,
+ *    so a region at given tracks plays differently on each visit, and the visit's seed is recorded with it.
  *
  * Only Noiz2sa regions train the bot (⚖): the host module feeds this only from its own regions.
  */
@@ -30,9 +32,18 @@ export const NOIZ2SA_TRAINER_STORAGE_KEY = 'noiz2sa:trainer:v1';
 export const FPS = 62.5;
 /** ⚖ the bot speed setting: 1× the default, 2× and 4× the options */
 export const BOT_SPEEDS = Object.freeze([1, 2, 4]);
-/** the bot's seed for every region (attempt a plays with attemptBotSeed(seed, a)): a region at given tracks always
- *  plays the same, and its retries differ */
+/** the N4 bot seed, now only the default of `botWalkOptions` (N4b: every visit draws its own, `drawBotSeed`); attempt
+ *  a of a visit plays with segment-run.js attemptBotSeed(seed, a), so its retries differ */
 export const BOT_SEED = 1;
+/** the largest bot seed (segment-run.js attemptBotSeed works in uint32) */
+export const BOT_SEED_MAX = 0xffffffff;
+
+/** a visit's bot seed: an integer in 1..BOT_SEED_MAX (`rand` returns [0, 1), Math.random by default) */
+export function drawBotSeed(rand = Math.random) {
+    const r = Number(rand());
+    const u = Number.isFinite(r) ? Math.min(Math.max(r, 0), 1 - Number.EPSILON) : 0;
+    return 1 + Math.floor(u * BOT_SEED_MAX);
+}
 
 /**
  * The module's settings, as the app's settings schema declares them (`moduleSettings.noiz2saSubstrate.*`). The
@@ -169,14 +180,14 @@ export const nextStepCost = (tr, track) => (tr.tracks[track] >= TRACK_MAX ? null
 
 /**
  * The options the page's bot plays a walk with (the second argument of the bridge's botWalkTo): the knobs at the
- * current tracks, the tracks themselves (for the page's display), the bot seed, the speed and the retry cap.
+ * current tracks, the tracks themselves (for the page's display), the visit's bot seed, the speed and the retry cap.
  */
-export function botWalkOptions(tr, settings = {}) {
+export function botWalkOptions(tr, settings = {}, botSeed = BOT_SEED) {
     const n = normalizeSettings(settings);
     return {
         knobs: trainerKnobs(tr),
         tracks: { ...tr.tracks },
-        botSeed: BOT_SEED,
+        botSeed,
         speed: n.botSpeed,
         retryCap: n.botRetryCap,
     };
@@ -233,8 +244,9 @@ export function createTrainerService({ storage = null, settings = {}, onChange =
             s = normalizeSettings({ ...s, ...next });
             mutate(() => applyTrainingSettings(tr, s));
         },
-        /** the bot's options at the current tracks and settings (the bridge's botWalkTo second argument) */
-        botOptions: () => botWalkOptions(tr, s),
+        /** the bot's options at the current tracks and settings, for a visit's bot seed (the bridge's botWalkTo second
+         *  argument, and the page's host state) */
+        botOptions: (botSeed = BOT_SEED) => botWalkOptions(tr, s, botSeed),
         /** a fresh trainer (every track 0, nothing earned); the visit meter forgets its visit too */
         reset(strategy = 'even') { meter.reset(); mutate(() => { tr = freshTrainer(s, strategy); }); },
         /** reread the stored trainer (another tab, or a test restoring one) */

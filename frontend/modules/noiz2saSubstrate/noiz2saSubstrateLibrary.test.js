@@ -15,7 +15,7 @@ import {
     substrateRegistryEntry, NOIZ2SA_ZONES, NOIZ2SA_VICTORY_ITEM_NAME, NOIZ2SA_FILLER_ITEM_NAME,
     NOIZ2SA_LOAD_REGION_EVENT, NOIZ2SA_IFRAME_ID, zoneRegion, exitButtonsOf, describeRegion, setPlaybackProxy,
 } from './noiz2saSubstrateLibrary.js';
-import { solverKindOf, botHonorsInstant } from '../procgenCore/substratePredicates.js';
+import { solverKindOf, botHonorsInstant, moveIncludesCheck } from '../procgenCore/substratePredicates.js';
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const PRESET = 'frontend/presets/noiz2sa_substrate_test/AP_14089154938208861744/AP_14089154938208861744_rules.json';
@@ -35,6 +35,10 @@ describe('the registry entry', () => {
         });
         expect(entry.takeLastRecording).toBeUndefined();
         expect(entry.loopSupport.requiresLoopMode).toBeUndefined(); // playable outside loop mode
+    });
+    it('N4b: the move is the only queue action, and the check rides on it (moveIncludesCheck)', () => {
+        expect(entry.loopSupport.queueActions).toEqual(['regionMove']);
+        expect(moveIncludesCheck(entry)).toBe(true);
     });
     it('the Bot is the walkTo solver, through the injected proxy (null headless); Bot × Instant stays NO', () => {
         expect(solverKindOf(entry)).toBe('walkTo');

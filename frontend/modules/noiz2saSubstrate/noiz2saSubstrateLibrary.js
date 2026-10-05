@@ -24,6 +24,12 @@
  * returns the host module's proxy (injected by `index.js`, null headless), whose walkTo carries the humanlike bot's
  * settings at the trainer's current tracks (`noiz2saTraining.js`).
  *
+ * N4b (⚖ 2026-10-05): "In loop mode, clearing the level should be counted as part of the "move" action. In this
+ * substrate, there is no explore or check location action." So `queueActions` is the move alone and
+ * `moveIncludesCheck` says the region's check rides on it (loops keeps it out of a Record block's interior and
+ * click-to-queue never queues it); the page opens the exits only after a clear on THIS visit in loop mode. A first
+ * clear explores the region fully (`noiz2saFirstClear.js`).
+ *
  * Content source: a fixed zone table (`NOIZ2SA_ZONES`), one region per zone, for the test preset and the
  * shuffled-spiral driver (`zoneCount` / `extractZoneRules`). Pricing and the stat tracks are later slices.
  */
@@ -205,7 +211,10 @@ export const substrateRegistryEntry = Object.freeze({
     // drain; `summaryRecording` makes it a summary substrate; `executeVia: 'solver'` offers the Bot (no Bot ×
     // Instant: a summary bot never honours Instant).
     loopSupport: Object.freeze({
-        queueActions: Object.freeze(['regionMove', 'locationCheck']),
+        // N4b: the move is the only queue action — leaving a region means playing it to a clear (the page's rule in
+        // loop mode), and the clear's check rides on the move (moveIncludesCheck), never a queue action of its own
+        queueActions: Object.freeze(['regionMove']),
+        moveIncludesCheck: true,
         executeVia: 'solver',
         manual: true,
         customQueues: false,
