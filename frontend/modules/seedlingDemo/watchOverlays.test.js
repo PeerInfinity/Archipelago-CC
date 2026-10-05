@@ -1070,9 +1070,13 @@ describe('slice 9 — the WORLD-STATE layer', () => {
         expect(first.engine).toEqual([{ id: 'chest@32,48', effect: 'gone', stillThere: null }]);
     });
 
-    it('⛓ L37\'s burnable tree is GONE at tick 118, at the 2x2 box the level built', () => {
+    it('⛓ L37\'s burnable tree is GONE at tick 119, at the 2x2 box the level built', () => {
         const first = firstChange('r5-l37-burn');
-        expect(first.tick).toBe(118);
+        // 118 → 119 (fidelity SLOTS D4, game-witnessed by
+        // `slots-l24-burn-fencepost`): the update that enters at `goneAt - 1`
+        // is still blocked in the game, so the tree's geometry is asked at
+        // `ticksCompleted`, not `+ 1` — the world-state layer reads it a tick later.
+        expect(first.tick).toBe(119);
         expect(first.level).toBe(37);
         expect(first.got.changes.map((c) => [c.id, c.family, c.effect]))
             .toEqual([['burnabletree@128,192', 'burnedTrees', 'gone']]);

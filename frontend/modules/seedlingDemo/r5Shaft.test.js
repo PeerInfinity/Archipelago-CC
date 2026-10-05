@@ -147,16 +147,27 @@ describe('⛓ the fire press, driven through a real levelRun in L39', () => {
      * a slash on a `PushableBlockFire` is a `moveTypes` miss — silence, in
      * the game and here.
      */
-    const runAt = (tx, ty, opts = {}) => createLevelRun({
-        levelSource: source,
-        boot: { level: LEVEL, x: tx * TILE + TILE / 2 - 8, y: ty * TILE + TILE / 2 - 8 },
-        noclip: false,
-        noDamage: true,
-        grants: [{ level: LEVEL, items: ['sword', 'fire'] }],
-        equips: [{ t: 0, slot: 1 }],
-        roles: ROLES,
-        ...opts,
-    });
+    const runAt = (tx, ty, opts = {}) => {
+        const run = createLevelRun({
+            levelSource: source,
+            boot: { level: LEVEL, x: tx * TILE + TILE / 2 - 8, y: ty * TILE + TILE / 2 - 8 },
+            noclip: false,
+            noDamage: true,
+            grants: [{ level: LEVEL, items: ['sword', 'fire'] }],
+            equips: [{ t: 0, slot: 1 }],
+            roles: ROLES,
+            ...opts,
+        });
+        // ⛓ fidelity SLOTS (game-measured): a grant's slot reaches
+        // `Inventory.items` only in its frame's TAIL, and an equip on an
+        // empty array is deferred. So on tick 0 the slot array is still
+        // empty, the t0 equip has not landed, and a t0 press reads
+        // `getItem` past the end = the sword. One idle tick lets the tail
+        // append [sword, fire] and the deferred equip select Fire's slot;
+        // the press is then the next tick, as a game tape would make it.
+        run.advance(new Set());
+        return run;
+    };
 
     it('pushes the block one tile NORTH, and the ledger stays empty', () => {
         // `pushableblockfire@144,176` is on (9,11); the stance below it is
@@ -240,6 +251,9 @@ describe('⛓ the rope arm — the seventh press arm, built', () => {
             // mixer's wall clock unpinned).
             pins: ['sound'],
         });
+        // ⛓ fidelity SLOTS: one idle tick so the grant's slots reach the
+        // array and the deferred t0 equip selects Fire (see `runAt` above).
+        run.advance(new Set());
         for (let t = 0; t <= FIRE_WINDOW.lastHitTick + 1; t += 1) {
             run.advance(t === 0 ? new Set(['primary']) : new Set());
         }
