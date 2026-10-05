@@ -12818,6 +12818,74 @@ Both stay refusals; only their words moved, and no test asserted them.
   can prove "there is none" before the search, but its answer must be the
   EXHAUSTED shape, not a bound, or the caller's control flow changes.
 
+### Seedling fidelity F7 — latched publishers on re-entry + the apitem clear
+
+Planning-2's first launch, on main `a2d10de28c`. ⚖ The user, 2026-10-03: *"I
+want … the solver to be able to handle either state … I don't want it to have
+to exit and reenter the room in order to solve it."* The Playback Bot's live
+walk on `seedling_playthrough` passed L16 and refused the next leg,
+`level_16 -> level_15__r1c5`: *"the danger map forbids (120,56) —
+arrowLane:arrowtrap@112,32"*. The report is
+`CC/docs/cloud-reports/seedling-fidelity-f7.md`.
+
+**D1 — the census.** Every class with a `check()` override and a tag was read
+for a publish on a new `Game`'s first frame. Two re-publish a group:
+`RopeStart` (`check()` → `hit()` → `set activate`, `:31-49`, `:79-91`) and
+`ButtonRoom` (`_active = !checkPersistence(tag); activate = _active`, F6's
+pressed boot, the same mechanism). `Wand.check()` removes itself with
+`doActions = false`, so its publish never re-runs. A `LightPole` derives its
+own flag in its constructor and broadcasts nothing. A `FallRock` reads its own
+tag in its constructor (`_active = true`, no publish). The rope rooms are L16
+(→ three `shoot = 1` arrow traps), L28 (→ `fallrock@112,240`, tag 1) and L39
+(→ `fallrock@144,624`, tag 10, and `pulser@64,96`).
+
+**D2 — the rope re-publishes at build (PASS, game-witnessed).** The rope solid
+carries `bootPulled`. `levelRun.publishRopeGroup` is ONE body for the in-visit
+pull and the re-entry (`bootPulledRopes`, run by `buildActivatorState` on both
+the lazy first read and the world swap). The build's latch is
+`activators.latchAtBuild`, which F6's pressed ButtonRoom now takes too. A
+cleared rope whose group holds an unfallen FallRock is refused by name: the
+pull writes the rock's tag on the same frame, and a cleared rock tag already
+refuses (`arm`), so no walk of the game reaches it. From the L17 return arrival
+the solver now reaches L15 in 99 t with no death; without `{16,0}` it still
+refuses by the old words. `f7-l16-reentry` (boot at the arrival) and
+`f7-l16-walkin` (L17 → L16 on t7) are game-recorded and reproduced.
+`probe-seedling-f7-reentry`'s controls (no `{16,0}`) leave the witness 6 rows
+after the world's first update in both arms, so an unlatched trap fires on the
+arrival frame. The re-latched trap never fires: **the publish is visible on
+frame 1**, because the `check()` pass runs above every `update()`
+(`Game.as:869-879`). Unlike F6's fade, no one-update credit is needed for a
+`shoot = 1` trap.
+
+**D3 — the apitem take writes its clear (PASS).** `run.takeApItem` banks
+`APItem.removed()`'s write as a pickup's is banked (`earnedClears`, by
+`apitem@x,y`, and `pendingEarnedClears`). The solver's F2 observer calls it on
+the take tick. On `seedling_generated_room` the take is tape t254, earned at
+run t255 (F2's game bracket: `takenAt + 1` ticks clear the slot). The run then
+leaves for L1 and comes back, and L0 builds with no apitem.
+
+**D4.** Mutants: m1 (no re-publish) 8 red, the solve red with the old refusal
+and both witnesses refused in the model by the shake band; m2 (no take write)
+2 red, the revisit sees the item; m3 (`pulledRopes` read ahead of the build)
+1 red. Tape index 204 → **206** (`f7-l16-reentry`, `f7-l16-walkin`).
+Roster pins: `tapeEnvelope` and `observationTolerance` go 204 → 206;
+`dialogueAutoAdvance` 204 → 206 (205 inert); `R8_ENEMY_BRIDGE.exposedAdded`
++2, exposed 44 → 46. Surface GREEN 193 → 194 (`run:takeApItem`). Constants
+PASS 4,965 → 4,966; `pullRope`'s seven targets are re-anchored on
+`publishRopeGroup`, classes unchanged.
+
+**Trap candidates**, for the catalogue to number:
+
+- a cleared tag rebuilds geometry and nothing else: the build honoured the
+  rope's `check()` shrink and missed the setter the same `hit()` calls, so the
+  geometry said "pulled" and the activators said "never pulled";
+- a lazy first read ahead of the state it depends on: `pulledRopes` read before
+  the level's activator state existed reported `[]` for a rope the build had
+  already pulled;
+- a control the model cannot replay is still a control: an arrow hit shakes
+  the camera, and the model refuses a bob inside the shake band, so the
+  control is read against the witness on the game, not against a model stream.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

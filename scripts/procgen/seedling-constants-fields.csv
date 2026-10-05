@@ -136,15 +136,15 @@ frontend/modules/seedlingDemo/levelRun.js|createLevelRun|finishEndingReboot,rule
 frontend/modules/seedlingDemo/levelRun.js|finishEndingReboot|h1bf845bd|2|0,rule,sentinel,,cutscene hold arm 2 = cutscene id 2
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|finishEndingReboot|0,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|weaponForPress,rule,sentinel,,inventory item id
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope,physics,magnitude,,pushable block 16px box and centre origin
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|publishRopeGroup,physics,magnitude,,pushable block 16px box and centre origin
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|-1,rule,sentinel,,-1 = no persistTag
-frontend/modules/seedlingDemo/levelRun.js|pullRope|h71e59768|-1|0,structural,,,
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|publishRopeGroup|h71e59768|-1|0,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|publishRopeGroup|0,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|pullRope|hd471ae06|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|2,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|4,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|5,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
-frontend/modules/seedlingDemo/levelRun.js|createLevelRun|pullRope|1,structural,,,
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|publishRopeGroup|2,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|publishRopeGroup|4,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|publishRopeGroup|5,physics,magnitude,Player.as:normalHitbox,player hitbox Rectangle(2 2 4 5)
+frontend/modules/seedlingDemo/levelRun.js|createLevelRun|publishRopeGroup|1,structural,,,
 frontend/modules/seedlingDemo/levelRun.js|applyFire|ha9f0d85f|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
 frontend/modules/seedlingDemo/levelRun.js|createLevelRun|applyFire|-1,rule,sentinel,,-1 = no persistTag
 frontend/modules/seedlingDemo/levelRun.js|applyThrust|h727dcf9b|0|0,rule,sentinel,,persistTag sign test: <0 means no tag
