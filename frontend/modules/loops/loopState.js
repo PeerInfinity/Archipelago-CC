@@ -54,6 +54,13 @@ import { SKIP_MENU_DEFAULT, skipsStart } from '../menuPanel/menuPanelEngine.js';
  */
 const TIME_DRAIN_INTERVAL_MS = 1000;
 
+/** A play-clock `stats` object reduced to its finite-number fields (N4): it is stored in a recording. */
+function plainNumbers(stats) {
+  const out = {};
+  for (const [k, v] of Object.entries(stats ?? {})) if (Number.isFinite(v)) out[k] = v;
+  return out;
+}
+
 // Helper function for logging with fallback
 function log(level, message, ...data) {
   if (typeof window !== 'undefined' && window.logger) {
@@ -271,6 +278,15 @@ export class LoopState {
     // report for another region, leaves the drain as it always was. Set by
     // the `substrate:playClock` event, dropped when the region changes.
     this._playClock = null;
+    // N4: a GAME-TIME play clock (a report that carries `stats.gameSeconds`)
+    // is charged per whole game second the page played, not per wall second:
+    // this counts the game seconds already charged for {region} on the
+    // current visit. `_lastPlayStats` is the last stats object any play-clock
+    // report carried ({region, stats}); a summary recording keeps it as
+    // `playStats`. Neither is dropped by a region change before the capture
+    // reads it (the departure's own wake persists the summary).
+    this._gameClockCharged = null;
+    this._lastPlayStats = null;
     // M5: the performed actions of a summary visit that carried an EXPLICIT
     // loop_costs price. Stored with the recording so Playback can re-price
     // them at the current XP level (the duration covers everything else,
@@ -490,10 +506,11 @@ export class LoopState {
     // change drops a report for any other region, so a revisit starts from
     // "no report" (charged) until the page speaks again.
     this.eventBus.subscribe('substrate:playClock', (data) => {
-      this.notePlayClock(data?.region, data?.running);
+      this.notePlayClock(data?.region, data?.running, data?.stats);
     });
     this.eventBus.subscribe('gameState:regionChanged', (data) => {
       if (this._playClock && this._playClock.region !== data?.newRegion) this._playClock = null;
+      if (this._gameClockCharged && this._gameClockCharged.region !== data?.newRegion) this._gameClockCharged = null;
     });
     // Loop mode may already be on when dependencies land (a preset with
     // loop_costs auto-enables it before loops finishes wiring).
@@ -534,27 +551,31 @@ export class LoopState {
     if (liveRegion) {
       if (this._captureShapeForRegion(liveRegion) !== 'summary') return;
       // N3b: the game says its clock is not running (not started, paused,
-      // cleared) — the second costs nothing and is not recorded.
-      if (this._playClockStopped(liveRegion)) return;
+      // cleared) — the second costs nothing and is not recorded. N4: a
+      // game-time clock is charged the whole game seconds it played since
+      // the last charge instead (none, while it is stopped).
+      const seconds = this._takeDueDrainSeconds(liveRegion);
+      if (seconds <= 0) return;
       // Duration is TIME PARKED, independent of what that time cost — a
       // zero-rate region still accrues seconds. Counted BEFORE the charge,
       // because charging can end the park: deductMana fires
       // gameState:manaChanged synchronously, whose wake runs the depletion
       // reset (refilling the pool and discarding any in-progress capture).
       // Nothing may be touched after the charge on this path.
-      this._summaryDrainSeconds += 1;
-      this._chargeLiveAction({ type: 'timeDrain', sourceRegion: liveRegion });
+      this._summaryDrainSeconds += seconds;
+      this._chargeLiveAction({ type: 'timeDrain', sourceRegion: liveRegion }, seconds);
       return;
     }
     const botRegion = this._botDrainRegion();
     if (!botRegion) return;
     // The same clock gates a bot: a bot-driven page reports its clock the
     // same way, so a bot waiting between goals costs what a waiting player does.
-    if (this._playClockStopped(botRegion)) return;
+    const seconds = this._takeDueDrainSeconds(botRegion);
+    if (seconds <= 0) return;
     // No _summaryDrainSeconds increment: that counter is Record-CAPTURE
     // state (it becomes the saved visit's duration), and a Bot block
     // records nothing. It stays owned by the live-play branch above.
-    this._chargeLiveAction({ type: 'timeDrain', sourceRegion: botRegion });
+    this._chargeLiveAction({ type: 'timeDrain', sourceRegion: botRegion }, seconds);
     // The one thing that may follow the charge here — and it must. A solver
     // park runs no frames, so the generic timer's _maybeResetForOOM never
     // gets a turn, and _handleManualWake_mana ignores a non-manual park:
@@ -573,10 +594,48 @@ export class LoopState {
    * so a substrate that never opted in can never make its time free.
    * The last report wins; `_timeDrainTick` consults it per region.
    */
-  notePlayClock(region, running) {
+  notePlayClock(region, running, stats = null) {
     if (typeof region !== 'string' || !region || typeof running !== 'boolean') return;
     if (!this._regionReportsPlayClock(region)) return;
-    this._playClock = { region, running };
+    const prev = this._playClock;
+    const gameSeconds = Number.isFinite(stats?.gameSeconds) && stats.gameSeconds >= 0 ? stats.gameSeconds : null;
+    if (gameSeconds === null) {
+      this._playClock = { region, running };
+      return;
+    }
+    this._playClock = { region, running, gameSeconds };
+    this._lastPlayStats = { region, stats: plainNumbers(stats) };
+    // N4: the charged count belongs to one visit — a new region, or a page
+    // counter that went back (the page was configured again), starts it over.
+    const prevSeconds = prev?.region === region && typeof prev.gameSeconds === 'number' ? prev.gameSeconds : 0;
+    if (this._gameClockCharged?.region !== region || gameSeconds < prevSeconds) {
+      this._gameClockCharged = { region, seconds: 0 };
+    }
+    // A clock that stops settles at once: the seconds it played up to the
+    // stop are charged now, before the clear or the exit that usually
+    // follows can end the park (so a visit is charged floor(its game
+    // seconds), whatever the speed and wherever the wall ticks fell).
+    if (!running && this._drainIntervalId !== null) this._timeDrainTick();
+  }
+
+  /**
+   * The seconds a drain tick charges `region` now, marked charged (N4). A
+   * GAME-TIME clock (its last report carried `gameSeconds`): the whole game
+   * seconds played since the last charge, whether it runs or not — a page
+   * playing at 2× is charged 2 a wall second, and the same total for the
+   * same play. Otherwise (N3b): 1, or 0 while the clock is reported stopped.
+   */
+  _takeDueDrainSeconds(region) {
+    const clock = this._playClock;
+    if (clock?.region === region && typeof clock.gameSeconds === 'number') {
+      const charged = this._gameClockCharged?.region === region ? this._gameClockCharged : null;
+      const due = Math.floor(clock.gameSeconds) - (charged?.seconds ?? 0);
+      if (due <= 0) return 0;
+      // marked BEFORE the charge: charging can run the depletion reset
+      this._gameClockCharged = { region, seconds: (charged?.seconds ?? 0) + due };
+      return due;
+    }
+    return this._playClockStopped(region) ? 0 : 1;
   }
 
   /** Whether a region's substrate opted into play-clock reports (N3b). */
@@ -1878,6 +1937,11 @@ export class LoopState {
         .map((a) => a.locationName),
       costedActions: this._summaryCostedActions.slice(),
     };
+    // N4: the last play-clock stats of this region (e.g. Noiz2sa's
+    // {gameSeconds, score}), kept opaque — loops reads none of it; a
+    // substrate that earns from a visit earns the same from its Playback
+    // (`loops:summaryApplied`).
+    if (this._lastPlayStats?.region === region) summary.playStats = { ...this._lastPlayStats.stats };
     saveQueue(rulesHash, {
       regionName: region,
       substrate,
@@ -2053,6 +2117,16 @@ export class LoopState {
 
     this._spendMana(region, this._priceSummaryReplay(region, saved?.summary));
     if (!this._manualActionEntered) return; // depletion reset fired — abort
+
+    // N4: the visit was paid for — a substrate that earns from play (Noiz2sa's
+    // training) earns the recorded visit again ("Instant playback should
+    // still accumulate resources"). Before the checks and the departure,
+    // which end the park.
+    this.eventBus?.publish?.('loops:summaryApplied', {
+      region,
+      substrate: this._lookupSubstrateId(region),
+      summary: saved?.summary ?? null,
+    });
 
     // Refire the recorded checks. Same dispatch as the generic executor:
     // host state is name-keyed and idempotent, and fromLoop marks these as
@@ -2601,8 +2675,8 @@ export class LoopState {
    * mana wake (gameState:manaChanged → _handleManualWake_mana →
    * _resetLoop), which fires synchronously from deductMana.
    */
-  _chargeLiveAction(actionShape) {
-    this._spendMana(actionShape.sourceRegion, this._calculateActionCost(actionShape));
+  _chargeLiveAction(actionShape, times = 1) {
+    this._spendMana(actionShape.sourceRegion, this._calculateActionCost(actionShape) * times);
   }
 
   /**

@@ -465,6 +465,8 @@ export function register(registrationApi) {
   registrationApi.registerEventBusPublisher('loopUI:clickToQueueChanged');
   registrationApi.registerEventBusPublisher('loops:setLoopMode');
   registrationApi.registerEventBusPublisher('loops:clickIgnored');
+  // N4: a summary Playback applied (a substrate that earns from play earns the recorded visit)
+  registrationApi.registerEventBusPublisher('loops:summaryApplied');
   registrationApi.registerEventBusPublisher('loopState:manualEntered');
   registrationApi.registerEventBusPublisher('loopState:manualResumed');
   registrationApi.registerEventBusPublisher('loopState:queuePausedUntilReset');

@@ -1904,6 +1904,180 @@ describe('N3b — the play clock gates the summary drain', () => {
   });
 });
 
+// ---------------------------------------------------------------------------
+// N4 — a GAME-TIME play clock: a report carrying stats.gameSeconds is charged
+// per whole game second the page played, so a page playing at 2× costs the
+// same per region as one at 1× (the Noiz2sa bot speed setting).
+// ---------------------------------------------------------------------------
+
+describe('N4 — the game-time play clock charges per game second', () => {
+  let loopState, gs, bus, tick;
+
+  function setUp({ mode = 'record', rate = 3 } = {}) {
+    ({ loopState, gs, bus } = wire());
+    tick = makeTicker();
+    registerSummarySubstrate({ regions: ['A', 'B'], playClock: true });
+    const cdm = new CostDataManager();
+    cdm.setCostData({ regions: { A: { timeDrainPerSecond: rate } }, locations: {} }, 'test');
+    loopState.setCostDataManager(cdm);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    loopState.setBlockMode('A', 1, mode);
+    gs.setLoopModeActive(true);
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+  }
+
+  const report = (region, running, gameSeconds, extra = {}) =>
+    bus.publish('substrate:playClock', { region, running, stats: { gameSeconds, ...extra } }, 'test');
+
+  /**
+   * A page playing `frames` game frames (62.5/s) at `speed` game frames per 16 ms: it reports at every whole game
+   * second and when it stops; the drain ticks once per wall second. → the mana spent.
+   */
+  function playVisit(frames, speed) {
+    const before = gs.getCurrentMana();
+    report('A', true, 0);
+    let played = 0, wallMs = 0, lastWhole = 0;
+    while (played < frames) {
+      played = Math.min(frames, played + speed);
+      const whole = Math.floor(played / 62.5);
+      if (whole !== lastWhole) { lastWhole = whole; report('A', true, played / 62.5); }
+      wallMs += 16;
+      if (wallMs >= 1000) { wallMs -= 1000; vi.advanceTimersByTime(1000); }
+    }
+    report('A', false, frames / 62.5);
+    return before - gs.getCurrentMana();
+  }
+
+  beforeEach(() => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    vi.useFakeTimers();
+  });
+  afterEach(() => {
+    loopState?.stopTimeDrain();
+    vi.useRealTimers();
+  });
+
+  it('a tick charges the whole game seconds played since the last charge, not one wall second', () => {
+    setUp();
+    report('A', true, 0);
+    const before = gs.getCurrentMana();
+    report('A', true, 2.5); // 2.5 game seconds in one wall second (a page at 2.5×)
+    vi.advanceTimersByTime(1000);
+    expect(gs.getCurrentMana()).toBe(before - 6);
+    expect(loopState._summaryDrainSeconds).toBe(2);
+    // no new whole game second → a tick charges nothing, running or not
+    vi.advanceTimersByTime(3000);
+    expect(gs.getCurrentMana()).toBe(before - 6);
+    report('A', true, 4.1);
+    vi.advanceTimersByTime(1000);
+    expect(gs.getCurrentMana()).toBe(before - 12);
+    expect(loopState._summaryDrainSeconds).toBe(4);
+  });
+
+  it('the same play costs the same mana at 1×, 2× and 4× (floor of its game seconds)', () => {
+    const spent = [1, 2, 4].map((speed) => {
+      setUp();
+      return playVisit(1002, speed); // 16.032 game seconds
+    });
+    expect(spent).toEqual([48, 48, 48]);
+  });
+
+  it('a stopped clock settles at once: what it played is charged without waiting for a tick', () => {
+    setUp();
+    report('A', true, 0);
+    const before = gs.getCurrentMana();
+    report('A', false, 3.9);
+    expect(gs.getCurrentMana()).toBe(before - 9);
+    expect(loopState._summaryDrainSeconds).toBe(3);
+    vi.advanceTimersByTime(5000);
+    expect(gs.getCurrentMana()).toBe(before - 9);
+  });
+
+  it('a page counter that goes back (a new visit) starts the charged count over', () => {
+    setUp();
+    report('A', true, 0);
+    report('A', false, 5.2);
+    const before = gs.getCurrentMana();
+    report('A', true, 0);
+    report('A', false, 2.7);
+    expect(before - gs.getCurrentMana()).toBe(6);
+  });
+
+  it('a Record visit keeps whole game seconds as its duration and the last stats as playStats', () => {
+    setUp();
+    report('A', true, 0, { score: 0 });
+    report('A', true, 7.5, { score: 1200 });
+    vi.advanceTimersByTime(1000);
+    report('A', false, 9.25, { score: 1730, note: 'dropped' });
+    loopState.observeParkedLiveAction({ type: 'locationCheck', locationName: 'Loc1', regionName: 'A' });
+    bus.publish('gameState:regionChanged', { oldRegion: 'A', newRegion: 'B', exitName: 'exit' }, 'test');
+    const entry = getSavedQueueByTag(hashRulesData(RULES_DATA), 'A', 'sum_sub', 'go', 0);
+    expect(entry.summary).toEqual({
+      durationSeconds: 9, checks: ['Loc1'], costedActions: [], playStats: { gameSeconds: 9.25, score: 1730 },
+    });
+  });
+
+  it('charges a bot-driven region per game second too', () => {
+    setUp({ mode: 'bot' });
+    expect(loopState._botExecutedAction).not.toBeNull();
+    const before = gs.getCurrentMana();
+    report('A', true, 0);
+    report('A', true, 4.2); // a bot at 4×
+    vi.advanceTimersByTime(1000);
+    expect(gs.getCurrentMana()).toBe(before - 12);
+    report('A', false, 4.9);
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(before - 12);
+  });
+
+  it('a report without gameSeconds is a wall-clock clock, exactly as before', () => {
+    setUp();
+    bus.publish('substrate:playClock', { region: 'A', running: true, stats: { score: 5 } }, 'test');
+    const before = gs.getCurrentMana();
+    vi.advanceTimersByTime(2000);
+    expect(gs.getCurrentMana()).toBe(before - 6);
+    expect(loopState._playClock).toEqual({ region: 'A', running: true });
+  });
+});
+
+describe('N4 — summary Playback publishes loops:summaryApplied', () => {
+  it('after the spend, with the substrate and the whole summary (playStats included)', () => {
+    resetSavedQueueStore();
+    clearRulesHashCache();
+    const { loopState, gs, bus } = wire();
+    loopState.dispatcher = { publish: () => {}, publishToNextModule: () => {} };
+    const tick = makeTicker();
+    registerSummarySubstrate();
+    const cdm = new CostDataManager();
+    cdm.setCostData({ regions: { A: { timeDrainPerSecond: 2 } }, locations: {} }, 'test');
+    loopState.setCostDataManager(cdm);
+    loopState._cachedRulesData = RULES_DATA;
+    gs.updatePath('A', 'go', 'Menu');
+    gs.addLocationCheck('Loc1', 'A');
+    gs.updatePath('B', 'exit', 'A');
+    gs.setLoopModeActive(true);
+    const summary = { durationSeconds: 4, checks: [], costedActions: [], playStats: { gameSeconds: 4.5, score: 900 } };
+    saveQueue(hashRulesData(RULES_DATA), makeSummaryEntry({ summary }));
+    loopState.setBlockMode('A', 1, 'playback');
+    const seen = [];
+    bus.subscribe('loops:summaryApplied', (d) => seen.push({ ...d, mana: gs.getCurrentMana() }), 'test');
+    const before = gs.getCurrentMana();
+    loopState.currentActionIndex = 1;
+    loopState.currentAction = loopState.getActionQueue()[1];
+    loopState.isProcessing = true;
+    tick(loopState);
+    loopState.stopTimeDrain();
+    expect(seen).toEqual([{ region: 'A', substrate: 'sum_sub', summary, mana: before - 8 }]);
+  });
+});
+
 describe('M5 — explicit-only per-action costs', () => {
   let loopState, gs, tick;
 
