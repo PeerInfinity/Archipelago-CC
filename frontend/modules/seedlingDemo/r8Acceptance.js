@@ -1125,6 +1125,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'from (160,64) the corridor bends through (120,40) and (104,24), over the pack, '
                 + 'onto `stairsdown@32,64`; it takes no hit, kills nothing, and crosses on t 173.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity CANCROSS — the oracle's door-built L16 → L17 witness (Sword,
+         * `dashMode: 'none'`), game-recorded: the room's bobs are the exposure.
+         */
+        Object.freeze({
+            name: 'cancross-l16-sword-none', levels: Object.freeze([16, 17]), bobs: 5, ticks: 206,
+            addedBy: 'Seedling fidelity CANCROSS D3 (a canCross witness, recorded on the game)',
+            why: 'from the L15 door (32,64) it pulls `rope@32,16` and walks onto `stairsdown@112,64` '
+                + 'with no dash, its last tick the L17 arrival; no hit, no kill.',
+        }),
     ]),
 
     /**

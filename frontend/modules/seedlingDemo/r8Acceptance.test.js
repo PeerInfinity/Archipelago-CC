@@ -359,6 +359,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'burn-l24-reach-exit',
             // ⛓⛓⛓ Seedling fidelity L14: the swordless crossing, in L14.
             'l14-swordless-detour',
+            // ⛓⛓⛓ Seedling fidelity CANCROSS: the oracle's door-built L16 witness.
+            'cancross-l16-sword-none',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -390,9 +392,10 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // `f7-l16-walkin` (L17 → L16).
         // ⛓ Seedling fidelity BURN takes it to 47 — `burn-l24-reach-exit` (L24 → L12).
         // ⛓ Seedling fidelity L14 takes it to 48 — `l14-swordless-detour`, in L14.
-        expect(out.exposed).toBe(48);
+        // ⛓ Seedling fidelity CANCROSS takes it to 49 — `cancross-l16-sword-none` (L16 → L17).
+        expect(out.exposed).toBe(49);
         expect(out.tapes).toEqual([
-            'burn-l24-reach-exit', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
+            'burn-l24-reach-exit', 'cancross-l16-sword-none', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
@@ -529,6 +532,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f7-l16-walkin': { tape: {}, levels: [16, 17] },
             'burn-l24-reach-exit': { tape: {}, levels: [12] },
             'l14-swordless-detour': { tape: {}, levels: [14] },
+            'cancross-l16-sword-none': { tape: {}, levels: [16, 17] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
