@@ -26,11 +26,11 @@
  *   `model-refused` the MODEL refused the state (an unmodelled weapon arm, an
  *                   undeclared clock under a spinner …): neither can nor cannot.
  *
- * `cause` says which arm and on what BASIS: `field` (the error's own fields —
- * `e.deadline`, `e.code`, the class) or `prose` (⚠ two bounds exist only in a
- * message today: the block-route search's `hit \`MAX_ROUTE_…\`` and the DETOUR
- * rung's `… candidate(s) left unasked`; both are matched on the solver's own
- * fixed words and named as a gap rather than hidden).
+ * `cause` says which arm and on what BASIS. Every arm is `field` (the error's
+ * own fields — `e.deadline`, `e.code`, `e.bound`, the DETOUR row's `bound`, the
+ * class). ⛓ SEEDLING FIDELITY ROBUST, D1 closed the two `prose` arms CANCROSS
+ * named: the block-route search's `MAX_ROUTE_*` and the DETOUR rung's
+ * preview/leg bounds used to reach a caller only as the solver's words.
  *
  * `dashMode` defaults to the solver's `all` (`CAN_CROSS_DASH_MODE`): it was `none`
  * after the game refuted L16's `all` plan (CANCROSS D3), and returned to `all` when
@@ -288,19 +288,15 @@ export function solverStamp() {
 
 // ── classification ──────────────────────────────────────────────────────────
 
-/** The DETOUR rung's bound arm, in its own fixed words (`deriveChaserDetour`'s `why`). */
-const DETOUR_BOUND_RE = /preview\(s\) of the (\d+) bound spent and (\d+) leg\(s\) of the (\d+) planned, (\d+) candidate\(s\) left unasked/;
-/** The block-route search's bound arm (`hit \`<bound>\``), deadline excluded — that one has a field. */
-const ROUTE_BOUND_RE = /block-route search for \S+ .*?hit `(MAX_ROUTE_EXPANSIONS|MAX_ROUTE_ORDERS)`/s;
 /** JS's own error classes are DEFECTS, never a verdict. */
 const DEFECTS = [TypeError, ReferenceError, RangeError, SyntaxError, EvalError, URIError];
 
 /**
- * An error → `{verdict, cause}`. Fields first; prose only where no field exists.
- * Returns null for a defect (the caller rethrows).
+ * An error → `{verdict, cause}`, read off the error's own FIELDS only (⛓
+ * SEEDLING FIDELITY ROBUST, D1: the two bounds that used to reach a caller only
+ * as prose now carry `bound`). Returns null for a defect (the caller rethrows).
  */
 export function classifyError(e) {
-    const message = String(e?.message ?? e);
     if (DEFECTS.some((C) => e instanceof C)) return null;
     if (e instanceof SolverRefusal) {
         if (e.deadline) {
@@ -310,17 +306,21 @@ export function classifyError(e) {
             return { verdict: 'undecided', cause: { kind: 'pending-declaration', basis: 'field',
                 pending: e.pending ?? null } };
         }
-        const route = message.match(ROUTE_BOUND_RE);
-        if (route) return { verdict: 'undecided', cause: { kind: 'bound', basis: 'prose', bound: route[1] } };
+        // The block-route search's `MAX_ROUTE_EXPANSIONS` / `MAX_ROUTE_ORDERS`
+        // (`SolverRefusal.bound`; its `deadline` arm is `e.deadline`, above).
+        if (e.bound) {
+            return { verdict: 'undecided', cause: { kind: 'bound', basis: 'field', bound: e.bound.name,
+                limit: e.bound.limit ?? null, expansions: e.bound.expansions ?? null, site: e.bound.site } };
+        }
         // ⚠ `considered` pairs each rung with the rung BELOW's reason (the
-        // escalation shape), so the DETOUR rung's own words are the LAST `detour`
-        // row; every `detour` row is read rather than trusting the label.
+        // escalation shape); the DETOUR rung's own row is the one carrying
+        // `bound` (`null`: the open set ran dry, a true refusal).
         const detour = (e.considered ?? []).filter((c) => c.option === 'detour')
-            .map((c) => String(c.why ?? '').match(DETOUR_BOUND_RE)).find(Boolean);
+            .map((c) => c.bound).find(Boolean);
         if (detour) {
-            return { verdict: 'undecided', cause: { kind: 'bound', basis: 'prose', bound: 'DETOUR_RUNG',
-                maxPreviews: Number(detour[1]), planned: Number(detour[2]), maxPlanned: Number(detour[3]),
-                unasked: Number(detour[4]) } };
+            return { verdict: 'undecided', cause: { kind: 'bound', basis: 'field', bound: detour.name,
+                hit: detour.hit, maxPreviews: detour.maxPreviews, previews: detour.previews,
+                planned: detour.planned, maxPlanned: detour.maxPlanned, unasked: detour.unasked } };
         }
         return { verdict: 'cannot', cause: { kind: 'refusal', basis: 'field', name: e.name,
             obstacle: e.obstacle ?? null } };
@@ -533,7 +533,7 @@ function witnessOf(staging, perTick, name, levelSource, to, scratchPersistence, 
  *    sandtrap and the ladder exhausts), so `cannot` supersets are reported
  *    (`nonMonotone`), not inferred away.
  *
- * @returns {{rows: Array<{set: string[], verdict: string, why: string}>,
+ * @returns {{rows: Array<{set: string[], verdict: string, why: string, cause: object}>,
  *            minimal: string[][], unprovedBelow: object, nonMonotone: string[][], solver: string}}
  */
 export function deriveMinimalSets({ pool, ...request }) {
@@ -543,7 +543,7 @@ export function deriveMinimalSets({ pool, ...request }) {
     const rows = subsets.map((set) => {
         const r = canCross({ ...request, inventory: set, witness: false });
         return { set, verdict: r.verdict, why: r.verdict === 'can' ? r.why : `${r.cause.kind}: ${r.why.slice(0, 200)}`,
-            consults: r.budget.consults, solver: r.solver.id };
+            cause: r.cause, consults: r.budget.consults, solver: r.solver.id };
     });
     const sub = (a, b) => a.length < b.length && a.every((x) => b.includes(x));
     const can = rows.filter((r) => r.verdict === 'can').map((r) => r.set);
