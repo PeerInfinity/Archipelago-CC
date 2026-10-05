@@ -149,7 +149,7 @@ describe('the corrected derivation moves the differential on exactly one tape, t
         // ⛓ fidelity F6: 204 — `f6-l17-reentry`, `f6-l2-reentry`, `f6-l20-reentry`, inert.
         // ⛓ fidelity L14: 205 — `l14-swordless-detour`, inert.
         expect(rows).toHaveLength(205);
-        expect(rows.length - parted.length).toBe(203);
+        expect(rows.length - parted.length).toBe(204);
     }, SWEEP_TIMEOUT_MS);
 
     it('⛓ and it is not vacuous — the roster really does collect swords', () => {

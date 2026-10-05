@@ -12762,6 +12762,69 @@ wait brings back "applied 4 strategies" (m5).
   presser behind its own lock re-raised the same `hold`, and the bound reported
   "not making progress" with no tick spent.
 
+### Seedling fidelity L14 — the swordless attempt
+
+⚖ The user, 2026-10-04: *"Make an attempt to find a swordless strategy that
+gets through. If we can't do it in one session, then count L14 as requiring a
+weapon. But we shouldn't hardcode it. We should derive the requirements from
+what the solver can do."* The report is
+`CC/docs/cloud-reports/seedling-fidelity-l14.md`. **Verdict (A): L14 is
+crossed swordless, with no hit, and the game agrees.**
+
+**D1 — a 0-hit crossing exists (measured before building).**
+`probe-seedling-l14-swordless.mjs` plays hand key spans from the captured
+swordless arrival (route D, L14 at (160,64)). Up to the top wall, west along it
+over the whole pack, down the west wall and onto `stairsdown@32,64`: L15 on
+t227, no hit, tightest box gap 5.2 px (`bob@32,32` at the north-west corner).
+The bottom-wall mirror crosses on t237. The planner's straight line is hit on
+t20. No luring and no body-blocking is needed: the walk is faster than a bob
+and a bob only chases inside 80 px, so the corridor only has to go round.
+
+**D2 — the DETOUR rung (PASS, game-witnessed).**
+`solverBot.deriveChaserDetour`, hooked at ONE site: `climbLadder`, after KILL
+refused. It is conditional (like DODGE and PULL): present only when every
+danger the corridor probe named is a `chaser`, so every other EXHAUSTED
+refusal keeps its words. A best-first search over corridors bent through at
+most two via cells; each leg is the planner's own, planned lazily (a heap,
+straight-line lower bounds), shortest planned length first, ties by y then x.
+Each candidate is previewed with the chasers stepped against it and certified
+by `probeSamples`; one preview also answers its prefix (a sample carries its
+waypoint index). `previewWalk` gained an opt-in `stopWhen` (default `null`).
+Bounds `DETOUR_RUNG` {maxVias 2, maxPreviews 300, maxPlanned 500}, calibrated
+at ~1.2x L14's need (253 previews, 397 legs). From the captured arrival: 173 t,
+vias (120,40) → (104,24), no hit, L15. The witness `l14-swordless-detour` was
+recorded on the headless game: the model reproduces all 174 observations.
+With the hook disabled the refusal is byte-identical to the base's (1,819
+characters).
+
+**The derivation's input (from the captured arrival, dashless):** ∅ solves
+(DETOUR, 173 t); Sword solves (AVOID with strikes, 145 t); Spear and Wand solve
+by DETOUR (they are not strikes); Dark Sword alone has no slot and solves as ∅.
+The Fire Wand and the Ghost Sword are model refusals (`levelRun` refuses the
+press), not solver declines. At the base every row but the Sword declined.
+
+**Census.** Captured arrivals (25 reads × both dash modes): only L14 moves.
+Fresh-boot vanilla legs into a chaser room, bare kit (271): 11 ended "EXHAUSTED"
+with chaser-only danger; 4 now solve with no hit (L14 13→15 and 15→13, L22
+25→30 and 30→25); 7 still decline with a `detour:` line. Two of those (L22
+30→21, 30→29) decline differently: the certified corridor STALLED in the drive
+(the preview and the drive part in L22), and the re-plan refused.
+
+**Cost.** A chaser-only climb that ends EXHAUSTED now pays the rung before it
+refuses: L16's pre-sword refusal 0.13 s → ~10–14 s (its legs cost ~35 ms each,
+the string-pull), L25/L26 ~2–6 s.
+
+**Trap candidates**, for the catalogue to number:
+
+- a ladder whose every rung asks about the SHORTEST corridor cannot see a
+  room whose answer is a LONGER one. L14's decline read as "the room needs a
+  weapon" when the room only needed the walk to go round;
+- a calibrated bound is a measurement of the room it was calibrated on; say
+  the room beside the number;
+- a preview that certifies a corridor nobody walked before: the detour's
+  corridors go where no committed walk went, and in L22 the drive stalled on a
+  corridor the preview walked clean.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
