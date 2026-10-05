@@ -10,8 +10,13 @@
  *   D   the LATCHED DOORS (⛓ STEP-OFF RETIRE: ONE solver plan, solved in the worker — `solveSegment` steps
  *       off the latched door and walks back, a `step-off` verb; W4's walker-prefix composite is retired):
  *       the starter atlas's HOUSE DOOR from (48,64) and its two stairs, S5's two latched crossings (L87,
- *       L102) — each crossed ON PLAN, producer `solver`, verbs `step-off, walk`. The closed pockets (L3
- *       bare, L37 lava) fail BY the SOLVER's NAME (`closed — the run stands LATCHED …`). ⛓ The rules arc's
+ *       L102) — each crossed ON PLAN, producer `solver`, verbs `step-off, walk`, and the plan's LENGTH pinned
+ *       (`ticks` ± `PLAN_TICKS_TOLERANCE`): fidelity STEPOFF2's sub-pixel step-off is 12–13 t where the
+ *       cell-centre ring walk was 32–33 t, so a regression to the ring walk goes red. The closed pockets (L3
+ *       bare, L37 lava) fail BY the SOLVER's NAME (`closed — the run stands LATCHED …`; L37's NAME is
+ *       `hazard-floor`, pinned in node by `wasmArrivalComposite.test.js`). L3's pocket WITH the Sword (granted
+ *       last in the session): the solver breaks `breakablerock@96,112` from the door, steps off and crosses to
+ *       L11 — verbs `break, step-off, walk`, a `break` record before the reach-exit one. ⛓ The rules arc's
  *       arrival spawns (2026-10-04) moved seven arrivals OFF their doors, so those legs are PLAIN exit legs
  *       from the new spawn: ⚖ L101 (96,0), L106 (48,48), L109 (144,48) cross ON PLAN (producer `solver`, no
  *       step-off). The other four goals still fail BY NAME — the goal, not the arrival, is what the solver
@@ -27,8 +32,10 @@
  *       leg crosses ON PLAN with the sword's slot selected. (Before the engine shipped equips, the same leg left
  *       the plan at the first tick after the press: the press was a sword slash.)
  *   F   the same leg with Fire granted FIRST: the game appends the sword (`inventory_slots` [1, 0] — acquisition
- *       order, kept across rooms: `Inventory.items` is static), the model derives [0, 1], so every X press and the
- *       plan's slot 1 would act with the other item — refused BY NAME before anything ships.
+ *       order, kept across rooms: `Inventory.items` is static). ⛓ SLOTS CONSUMER: the arrival STAGES that array
+ *       and the solver indexes it, so the leg PLAYS ON PLAN: THREE selections in the game's indices (the sword's
+ *       slot 1 first — Fire's slot 0 is selected — Fire's 0 for the press, the sword's 1 again), the tree burns,
+ *       0 divergences. (Before: `slotOrderRefusal` refused it BY NAME before anything shipped.)
  *
  * Each session is a FRESH page (the wasm game runs out of memory after ~100–140 world swaps, §1.2).
  * ⛓ A host jump that CROSSES into a room the preset binds is re-placed by the region binding at the
@@ -56,6 +63,12 @@ argvHelp(import.meta.url);
 
 const exit = (level, tiles, name) => ({ kind: 'exit', level, tiles, name });
 /**
+ * ± ticks a latched D leg's plan may differ from its pinned `ticks` — the solver's length from the same boot in
+ * node (`arrivalCompositesLegs.test.js` holds the pins to it, exactly). One tick of slack for a live boot a
+ * sub-pixel off the node one; the retired cell-centre ring walk was 32–33 t on these legs (fidelity STEPOFF2).
+ */
+export const PLAN_TICKS_TOLERANCE = 1;
+/**
  * The legs, by session. `at` = the arrival (OEL spawn) the host jumps to; `expect` = what the leg must do:
  * `cross` (on plan, out of the room; `producer` the plan's; `stepOff` = the plan steps off a latched door),
  * `closed` (the solver's named closed-pocket refusal),
@@ -63,13 +76,13 @@ const exit = (level, tiles, name) => ({ kind: 'exit', level, tiles, name });
  */
 export const LEGS = {
     D: [
-        { name: 'house door (seedling_atlas)', at: [86, 48, 64], goal: exit(86, [[3, 4]], 'door'), expect: 'cross', producer: 'solver', stepOff: true },
-        { name: 'L2 stairs_up (seedling_atlas)', at: [2, 48, 16], goal: exit(2, [[3, 1]], 'stairs_up'), expect: 'cross', producer: 'solver', stepOff: true },
-        { name: 'L3 stairs_up (seedling_atlas)', at: [3, 64, 0], goal: exit(3, [[4, 0]], 'stairs_up'), expect: 'cross', producer: 'solver', stepOff: true },
-        { name: 'S5 L87', at: [87, 432, 304], goal: exit(87, [[27, 19]], 'L87 door'), expect: 'cross', producer: 'solver', stepOff: true },
-        { name: 'S5 L102', at: [102, 224, 96], goal: exit(102, [[14, 6]], 'L102 door'), expect: 'cross', producer: 'solver', stepOff: true },
+        { name: 'house door (seedling_atlas)', at: [86, 48, 64], goal: exit(86, [[3, 4]], 'door'), expect: 'cross', producer: 'solver', stepOff: true, ticks: 13 },
+        { name: 'L2 stairs_up (seedling_atlas)', at: [2, 48, 16], goal: exit(2, [[3, 1]], 'stairs_up'), expect: 'cross', producer: 'solver', stepOff: true, ticks: 12 },
+        { name: 'L3 stairs_up (seedling_atlas)', at: [3, 64, 0], goal: exit(3, [[4, 0]], 'stairs_up'), expect: 'cross', producer: 'solver', stepOff: true, ticks: 12 },
+        { name: 'S5 L87', at: [87, 432, 304], goal: exit(87, [[27, 19]], 'L87 door'), expect: 'cross', producer: 'solver', stepOff: true, ticks: 13 },
+        { name: 'S5 L102', at: [102, 224, 96], goal: exit(102, [[14, 6]], 'L102 door'), expect: 'cross', producer: 'solver', stepOff: true, ticks: 12 },
         { name: 'closed L3 bare', at: [3, 96, 128], goal: exit(3, [[6, 8]], 'out_teleporter_96_128'), expect: 'closed' },
-        { name: 'closed L37 lava', at: [37, 576, 144], goal: exit(37, [[36, 9]], 'out_stairsdown_576_144'), expect: 'closed' },
+        { name: 'closed L37 lava', at: [37, 576, 144], goal: exit(37, [[36, 9]], 'out_stairsdown_576_144'), expect: 'closed', words: 'hazard-floor' },
         // ⛓ the seven arrivals the rules arc moved off their doors: plain exit legs from the new spawn
         { name: 'moved L101', at: [101, 96, 0], goal: exit(101, [[6, 1]], 'out_teleporter_104_24'), expect: 'cross', producer: 'solver' },
         { name: 'moved L106', at: [106, 48, 48], goal: exit(106, [[4, 3]], 'L106 door'), expect: 'cross', producer: 'solver' },
@@ -78,6 +91,9 @@ export const LEGS = {
         { name: 'moved L100 pit door', at: [100, 288, 80], goal: exit(100, [[18, 6]], 'out_teleporter_288_96'), expect: 'named' },
         { name: 'moved L34 lock', at: [34, 128, 16], goal: exit(34, [[8, 0]], 'L34 door'), expect: 'named' },
         { name: 'moved L58 dead door', at: [58, 64, 16], goal: exit(58, [[5, 1]], 'out_teleporter_80_16'), expect: 'named' },
+        // ⛓ fidelity STEPOFF2 D3 — LAST in the session: the Sword stays granted for the rest of the page.
+        { name: 'L3 pocket with the Sword', at: [3, 96, 128], goal: exit(3, [[6, 8]], 'out_teleporter_96_128'), expect: 'cross', producer: 'solver',
+            verbs: ['break', 'step-off', 'walk'], grant: ['Progressive Sword'] },
     ],
     T: [
         { name: 'pit L48', at: [48, 176, 48], goal: exit(48, [[11, 3]], 'out_pit_2_2'), expect: 'cross', producer: 'solver' },
@@ -90,7 +106,7 @@ export const LEGS = {
     ],
     F: [
         { name: 'burn L24 → L12 (Fire, then the Sword)', at: [24, 96, 80], goal: exit(24, [[2, 9]], 'out_teleporter_32_144'),
-            expect: 'slot-order', grant: ['Fire', 'Progressive Sword'] },
+            expect: 'burn-order', grant: ['Fire', 'Progressive Sword'] },
     ],
     X: [
         { name: 'residue L28', at: [28, 96, 16], goal: exit(28, [[0, 6]], 'out_teleporter_0_96'), expect: 'repeat' },
@@ -259,6 +275,7 @@ async function main() {
                 const plays = r.legs.filter((h) => h.outcome !== 'failed');
                 const last = r.legs.at(-1) ?? {};
                 if (leg.grant) console.log(`TAPES ${JSON.stringify({ name: leg.name, tapes: r.tapes, primary: r.primary, slots: r.slots })}`);
+                if (leg.ticks !== undefined) console.log(`TICKS ${JSON.stringify({ name: leg.name, pinned: leg.ticks, played: plays[0]?.ticks ?? null })}`);
                 console.log(`LEG ${JSON.stringify({ session: SESSION, name: leg.name, expect: leg.expect, end: r.end, failed: r.failed,
                     answer: r.answer, level: r.level, ms: r.ms, arrivedAt: r.arrivedAt, landed, legs: r.legs.map((h) => ({ outcome: h.outcome, producer: h.producer,
                         ticks: h.ticks, drained: h.drained, verbs: h.verbs, divergence: h.divergence,
@@ -273,14 +290,20 @@ async function main() {
                             && (plays[0].drained ?? 0) > 0,
                         JSON.stringify({ end: r.end, level: r.level, failed: r.failed, legs: plays.map((h) => [h.outcome, h.producer, h.ticks, h.drained, h.verbs]) }));
                     // ⛓ STEP-OFF RETIRE — the step-off is IN the solver's plan (its `step-off` verb), not a walker prefix.
-                    if (leg.stepOff) {
-                        check(`${SESSION} ${leg.name}: the solver's plan steps off the latched door itself (verbs step-off, walk)`,
-                            JSON.stringify(plays[0]?.verbs ?? null) === JSON.stringify(['step-off', 'walk']), JSON.stringify(plays[0]?.verbs ?? null));
+                    if (leg.stepOff || leg.verbs) {
+                        const verbs = leg.verbs ?? ['step-off', 'walk'];
+                        check(`${SESSION} ${leg.name}: the solver's plan steps off the latched door itself (verbs ${verbs.join(', ')})`,
+                            JSON.stringify(plays[0]?.verbs ?? null) === JSON.stringify(verbs), JSON.stringify(plays[0]?.verbs ?? null));
+                    }
+                    // ⛓ fidelity STEPOFF2 — the sub-pixel step-off's length, pinned (the ring walk was 32–33 t).
+                    if (leg.ticks !== undefined) {
+                        check(`${SESSION} ${leg.name}: the plan is ${leg.ticks} ± ${PLAN_TICKS_TOLERANCE} t (a sub-pixel step-off, not a walk to a cell centre)`,
+                            Math.abs((plays[0]?.ticks ?? Infinity) - leg.ticks) <= PLAN_TICKS_TOLERANCE, String(plays[0]?.ticks));
                     }
                 } else if (leg.expect === 'closed') {
                     check(`${SESSION} ${leg.name}: refused BY the SOLVER's NAME as a closed pocket (closed — latched, no standable cell)`,
                         r.end === 'failed' && /closed — the run stands LATCHED .*no standable cell next to it can be walked to/.test(r.failed ?? '')
-                            && plays.length === 0,
+                            && (!leg.words || (r.failed ?? '').includes(leg.words)) && plays.length === 0,
                         String(r.failed));
                 } else if (leg.expect === 'named') {
                     check(`${SESSION} ${leg.name}: the goal door is unreachable from the arrival — NAMED (a failure by name), not fixed`,
@@ -302,12 +325,18 @@ async function main() {
                     check(`${SESSION} ${leg.name}: the tree burned on the game ({24,0} cleared)`,
                         r.cleared.some((c) => c.level === 24 && c.tag === 0), JSON.stringify(r.cleared));
                     check(`${SESSION} ${leg.name}: the sword's slot is selected again (primary 0)`, r.primary === 0, String(r.primary));
-                } else if (leg.expect === 'slot-order') {
+                } else if (leg.expect === 'burn-order') {
+                    // ⛓ SLOTS CONSUMER — the game's [1, 0] staged: the plan indexes it and PLAYS (was refused by name).
+                    const plan = r.tapes.filter((t) => t.ticks > 0);
                     check(`${SESSION} ${leg.name}: the game holds [1, 0] (the sword appended after Fire)`, JSON.stringify(r.slots) === '[1,0]', JSON.stringify(r.slots));
-                    check(`${SESSION} ${leg.name}: refused BY NAME before the plan shipped (the game appends a late slot)`,
-                        r.end === 'failed' && /the plan tape was not shipped — the plan (presses a slot key|selects a slot) at tick \d+, and the game holds its slots in acquisition order \[1,0\] where the model derives \[0,1\]/.test(r.failed ?? '')
-                            && r.tapes.every((t) => t.ticks === 0),
-                        JSON.stringify({ end: r.end, failed: r.failed, tapes: r.tapes }));
+                    check(`${SESSION} ${leg.name}: crossed ON PLAN out of L${level} (0 divergences, 1 plan)`,
+                        r.answer.ok && ['crossed', 'done'].includes(r.end) && r.level !== level && dv.length === 0 && plays.length === 1,
+                        JSON.stringify({ end: r.end, level: r.level, failed: r.failed, legs: plays.map((h) => [h.outcome, h.ticks, h.drained, h.divergence]) }));
+                    check(`${SESSION} ${leg.name}: the plan tape shipped THREE selections in the GAME's indices — the sword (1), Fire (0), the sword (1)`,
+                        plan.length === 1 && JSON.stringify(plan[0].equips?.map((e) => e.slot)) === '[1,0,1]', JSON.stringify(plan));
+                    check(`${SESSION} ${leg.name}: the tree burned on the game ({24,0} cleared)`,
+                        r.cleared.some((c) => c.level === 24 && c.tag === 0), JSON.stringify(r.cleared));
+                    check(`${SESSION} ${leg.name}: the sword's slot is selected again (primary 1)`, r.primary === 1, String(r.primary));
                 }
                 check(`${SESSION} ${leg.name}: nothing of ours left armed or held`, !r.armed && !r.held, JSON.stringify({ armed: r.armed, held: r.held }));
             }
