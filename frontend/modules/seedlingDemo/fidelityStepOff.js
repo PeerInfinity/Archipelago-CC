@@ -31,6 +31,10 @@
 import { ITEM_PROPERTIES, parseTape } from './tapeFormat.js';
 import { JS_RUNTIME_PINS } from './jsRuntimeCore.js';
 import { bootStaging } from './procgenOracle.js';
+import { buildStagedTape } from './botDriverV1.js';
+import { createRunForStaging } from './tapeRunner.js';
+import { solveSegment } from './solverBot.js';
+import { atlasLevelSource } from './levelSource.js';
 
 /** Every boolean item flag false: the JS runtime's fresh boot (`seam.items` holds the booleans only). */
 const BASE_FLAGS = Object.freeze(Object.fromEntries(Object.values(ITEM_PROPERTIES)
@@ -97,7 +101,25 @@ export function stepOffArms() {
 /** A stream as compact rows `[t, level, x, y]` (the oracle's shape). */
 export const compactTicks = (ticks) => ticks.map((o) => [o.t, o.level, o.x, o.y]);
 
-/** D3's arms (the solver's own plans); filled by D3. */
-export function stepOffSolverArms() {
-    return [];
+/**
+ * D3 — the solver's own `reach-exit` from the arrival on each door: the plan's
+ * key sets as a tape (`buildStagedTape`), so the game plays exactly what the
+ * solver chose. `out` carries the solve (its `records[0].stepOff` names the
+ * step-off cell and its ticks).
+ */
+export function stepOffSolverArm(door, levelSource) {
+    const staging = stepOffStagingAt(door.boot);
+    const run = createRunForStaging(staging, levelSource);
+    const out = solveSegment({
+        run, goals: [{ kind: 'reach-exit', exit: { ...door.exit } }],
+        name: `stepoff-solver-${door.door}`, boot: { ...door.boot },
+    });
+    const tape = parseTape(buildStagedTape({ staging, perTick: out.perTick, name: `stepoff-solver-${door.door}` }));
+    return { arm: `SOLVER-${door.door}`, door, n: null, tape, out,
+        expect: { crosses: true, why: 'the solver\'s step-off plan crosses' } };
+}
+
+/** Every D3 arm (one per door). */
+export function stepOffSolverArms(levelSource = atlasLevelSource()) {
+    return STEPOFF_DOORS.map((d) => stepOffSolverArm(d, levelSource));
 }
