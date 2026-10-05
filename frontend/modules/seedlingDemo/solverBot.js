@@ -10972,10 +10972,28 @@ function solveSegmentUnder({
      * it (the prefix included), so a tape of `tick + 1` ticks takes it.
      */
     const apItemsTaken = new Map();
+    /**
+     * ⛓⛓ SEEDLING FIDELITY DASH, D3 — **THE DASHES THIS SEGMENT PRESSED,
+     * COUNTED WHERE THE RUN DECIDES THEM.** A trace row's `strategy.swordDash`
+     * is one walk's PLAN, and only the walk rows that survive `seeRow`'s
+     * same-tick merge carry it — a rung's inner walk (L16's PULL walk to the
+     * rope stance) plans a dash no row records (SF report residue 1). So the
+     * count is read off the run itself, on the same `advance` every executor's
+     * tick passes through: `slashDashed` rises only in `set slashing`'s DASH arm
+     * (`combatVerbs.slashSet`) and falls only on the release, which is at least
+     * four ticks later — so one false→true edge across one advance is exactly
+     * one dash, whoever pressed it. `dashWalks` is the per-walk record (inner
+     * rung walks included): what each walk's planner handed the drive and how
+     * many of the run's dashes that walk's ticks pressed. Neither changes a
+     * decision; both are read by nothing in this module.
+     */
+    let dashesPressed = 0;
+    const dashWalks = [];
     {
         const inner = run;
         let tapeTick = prefix.length;
         const advance = (held) => {
+            const dashedBefore = inner.progress('slashInfo').state.slashDashed === true;
             const items = inner.world?.apItems ?? [];
             const pre = items.length === 0 ? null : {
                 level: inner.level, x: inner.state.x, y: inner.state.y,
@@ -10984,6 +11002,9 @@ function solveSegmentUnder({
                 transitions: inner.transitions.length,
             };
             const out = inner.advance(held);
+            if (!dashedBefore && inner.progress('slashInfo').state.slashDashed === true) {
+                dashesPressed += 1;
+            }
             if (pre) {
                 const open = items.filter((a) => !apItemsTaken.has(`${pre.level}:${a.id}`));
                 const a = apItemTakenOnTick(open, pre, {
@@ -12839,6 +12860,21 @@ function solveSegmentUnder({
             const strike = axisAligned
                 ? null
                 : strikePolicyFor(run, { dashPlan: dash?.plan ?? null, dashMode });
+            // ⛓ D3: the walk's dash record — see `dashWalks`. `pressed` is filled
+            // as the walk's ticks run, so a refuted attempt keeps what it pressed.
+            const dashWalk = dash ? {
+                tick: perTick.length,
+                what,
+                attempt,
+                planned: Boolean(dash.plan),
+                windows: dash.plan ? (dash.windows ?? []).length : 0,
+                ticks: dash.ticks ?? null,
+                saved: dash.saved ?? null,
+                why: dash.why ?? null,
+                pressed: 0,
+            } : null;
+            const pressedAtWalk = dashesPressed;
+            if (dashWalk) dashWalks.push(dashWalk);
             try {
                 for (let wi = 0; wi < wps.length; wi += 1) {
                     const last = wi === wps.length - 1;
@@ -12874,6 +12910,8 @@ function solveSegmentUnder({
                     });
                 }
                 replans += 1;
+            } finally {
+                if (dashWalk) dashWalk.pressed = dashesPressed - pressedAtWalk;
             }
         }
     };
@@ -13344,6 +13382,24 @@ function solveSegmentUnder({
         records,
         /** ⛓ Swim U5: the slot selections this segment made — see `solverEquips`. */
         equips: solverEquips,
+        /**
+         * ⛓⛓ SEEDLING FIDELITY DASH, D3 — **THE EXACT DASH COUNT** (an optional
+         * result field; no caller is required to read it). `count` is the dash
+         * presses this segment's ticks made — `set slashing`'s dash arm, read off
+         * the run (see `dashesPressed`), every walk and verb included. `windows`
+         * is the planned dash windows the planner handed a driven walk, inner
+         * rung walks included; a window can hold more than one press, and a walk
+         * refuted mid-way keeps the presses it made, so `count` is the number to
+         * read and `windows` the plan's own account. `walks` is one row per walk
+         * the planner was asked for, `{tick, what, attempt, planned, windows,
+         * ticks, saved, why, pressed}`. At `dashMode: 'none'` it is
+         * `{count: 0, windows: 0, walks: []}` (the planner is never asked).
+         */
+        dashes: {
+            count: dashesPressed,
+            windows: dashWalks.reduce((n, w) => n + w.windows, 0),
+            walks: dashWalks.map((w) => ({ ...w })),
+        },
         /**
          * ⛓ EDITOR ARC SLICE 9 — beside `trace`, deliberately, and not inside
          * it. A trace row is a DECISION and its `saw.danger` is a summary
