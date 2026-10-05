@@ -1,0 +1,217 @@
+{
+    "tape_version": 11,
+    "game": "seedling",
+    "boot": {
+        "level": 15,
+        "x": 144,
+        "y": 32
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 0,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 2,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 3,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 11,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 12,
+            "tag": 5,
+            "note": ""
+        },
+        {
+            "level": 12,
+            "tag": 10,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 3,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 4,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 6,
+            "note": ""
+        },
+        {
+            "level": 16,
+            "tag": 7,
+            "note": ""
+        },
+        {
+            "level": 17,
+            "tag": 29,
+            "note": ""
+        },
+        {
+            "level": 18,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 19,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 20,
+            "tag": 4,
+            "note": ""
+        },
+        {
+            "level": 30,
+            "tag": 2,
+            "note": ""
+        },
+        {
+            "level": 31,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "despawn": [],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": [
+            0
+        ]
+    },
+    "rng": {
+        "seed": 1134562721,
+        "split": true,
+        "cosmetic": 78750545,
+        "fp": 1093649398
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": false,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": false
+        },
+        "beam": false,
+        "rock_set": true,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 16562,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 523,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick0": null,
+    "hold": false,
+    "tick_count": 60,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 12
+        },
+        {
+            "key": "left",
+            "from": 12,
+            "to": 60
+        }
+    ],
+    "name": "return-l15-reentry-unclear",
+    "description": "⛓⛓⛓ SEEDLING FIDELITY RETURN (D1) — the chain-end staging (`r9-solve-32`'s declarations, minus the three L15 clears) the either-state control: `return-l15-reentry` WITHOUT `{15,0}` `{15,2}` `{15,3}`. The lock is built from its tSet, not its tag, so the stream is the cleared arm's. Authored by scripts/procgen/plan-seedling-return-l15.mjs.",
+    "note": ""
+}
