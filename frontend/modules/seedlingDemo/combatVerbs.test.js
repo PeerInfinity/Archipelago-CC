@@ -747,9 +747,9 @@ describe('R9 slice 12b: the ANIMATION clock, and the maximum swing rate (⚖ rul
     });
 
     /**
-     * ⛓⛓ SEEDLING FIDELITY DASH — the GAME's table is 5 / 4; the ROSTER runs the
-     * legacy 5 / 5 until `DASH_WINDOW_ROSTER_WIDE` flips (it would move
-     * `r9-solve-14` and `r9-solve-16`). Both rows hold at either arm.
+     * ⛓⛓ SEEDLING FIDELITY DASH — the GAME's table is 5 / 4; the ROSTER ran the
+     * legacy 5 / 5 until DASHFLIP turned `DASH_WINDOW_ROSTER_WIDE` on (and
+     * re-recorded `r9-solve-14` and `r9-solve-16`). Both rows hold at either arm.
      */
     it('exposes the plain sword\'s two periods by name', () => {
         expect(SLASH_ANIM_TICKS_GAME).toEqual({ slash: 5, slashnarrow: 4 });
@@ -758,8 +758,9 @@ describe('R9 slice 12b: the ANIMATION clock, and the maximum swing rate (⚖ rul
         expect(SLASH_ANIM_TICKS.slash).toBe(5);
     });
 
-    it('is OFF on the roster: the flip moves committed campaign solves', () => {
-        expect(DASH_WINDOW_ROSTER_WIDE).toBe(false);
+    // ⛓ DASHFLIP: ON, with the two campaign segments it moved re-recorded on the game.
+    it('is ON on the roster: the game\'s dash window, the campaign re-recorded under it', () => {
+        expect(DASH_WINDOW_ROSTER_WIDE).toBe(true);
     });
 
     it('buys five hit tests per swing, and the active table\'s count per dash (`slashHitTicksFor`)', () => {

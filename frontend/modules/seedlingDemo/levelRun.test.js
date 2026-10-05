@@ -20,7 +20,7 @@
 import { describe, expect, it } from 'vitest';
 // ⛓ R9 slice 12c — the chain's own offsets, so the fixture and
 // `combatVerbs.DASH_CHAIN` cannot disagree about what the chain IS.
-import { DASH_CHAIN } from './combatVerbs.js';
+import { DASH_CHAIN, SLASH_ANIM_TICKS } from './combatVerbs.js';
 import { SLASH_HIT_TICKS } from './presses.js';
 const DASH_CHAIN_OFFSETS = [0, ...DASH_CHAIN.at];
 
@@ -2551,11 +2551,17 @@ describe('R9 slice 12c: the slashRepeats REPLACEMENT — one rect per tick, alwa
         const fired = run.presses.map((p) => p.fired).sort((a, b) => a - b);
         expect(new Set(fired).size).toBe(fired.length);
         const gaps = fired.slice(1).map((v, i) => v - fired[i]);
-        // ⚠ A gap of 2 is legal and is the CHAIN's own shape: the swing at
-        // k = 2 ends five ticks later and the next press is at k = 8, so the
-        // one tick between two windows tests nothing. The claim is that no
-        // tick is tested TWICE and no window drops a tick of its own.
-        expect(Math.max(...gaps)).toBeLessThanOrEqual(2);
+        // ⚠ A gap of 3 is legal and is the CHAIN's own shape: the dash at k = 2
+        // tests four ticks (the game's `slashnarrow` window, ON since DASHFLIP;
+        // the legacy five made this gap 2) and the next press is at k = 8, so the
+        // two ticks between two windows test nothing. The claim is that no tick
+        // is tested TWICE and no window drops a tick of its own — every dash
+        // fires exactly T+1 … T+4, measured: [4..9, 12..15, 18..21].
+        expect(Math.max(...gaps)).toBe(3);
+        for (const p of run.slashPresses.filter((q) => q.outcome === 'dash')) {
+            const own = fired.filter((f) => f > p.t && f <= p.t + SLASH_ANIM_TICKS.slashnarrow);
+            expect(own).toHaveLength(SLASH_ANIM_TICKS.slashnarrow);
+        }
     });
 });
 
