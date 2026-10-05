@@ -32,9 +32,12 @@ import { parseTape } from './tapeFormat.js';
 import { createRunForStaging } from './tapeRunner.js';
 import { OBSTACLE_STRATEGIES, STRATEGY_EXECUTORS, solveSegment } from './solverBot.js';
 import { buildStagedTape } from './botDriverV1.js';
+import { runTape } from './tapeRunner.js';
+import { HIT_TO_GONE_TICKS } from './burnableTree.js';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SRC = atlasLevelSource();
+const ORACLE = JSON.parse(readFileSync(join(HERE, 'fixtures', 'burn-write-oracle.json'), 'utf8'));
 const tape = (name) => parseTape(readFileSync(join(HERE, 'fixtures', 'tapes', `${name}.json`), 'utf8'));
 /** The witness's own staging: its boot block, without the equips its solve made. */
 const stagingOf = (t, items = {}) => ({
@@ -97,6 +100,18 @@ describe.each(CASES)('fidelity BURN — route step $step ($name)', ({ name, leve
         const spans = (inputs) => inputs.map((i) => `${i.from}-${i.to}:${i.key}`).sort();
         expect([rebuilt.tick_count, spans(rebuilt.inputs), rebuilt.equips])
             .toEqual([t.tick_count, spans(t.inputs), t.equips]);
+    });
+    it('D1 (game-measured): the write lands on the model\'s `goneAt` update, 41 after the first hit', () => {
+        // `probe-seedling-burn-write.mjs --record`: the witness cut at `goneAt` ticks does NOT carry
+        // the tree's clear on the game, and cut at `goneAt + 1` it does — `removed()` runs in the
+        // update `die()` does, `HIT_TO_GONE_TICKS` after `hit()`.
+        const [burn] = runTape(t, { levelSource: SRC }).treeBurns;
+        const row = ORACLE.tapes.find((r) => r.tape === name);
+        expect([row.tree, row.goneAt, row.burnedAt]).toEqual([tree, burn.goneAt, burn.t]);
+        expect(burn.goneAt - burn.t).toBe(HIT_TO_GONE_TICKS);
+        expect([row.before.cleared, row.write.cleared, row.before.ticks, row.write.ticks])
+            .toEqual([false, true, burn.goneAt, burn.goneAt + 1]);
+        expect(burn.flag).toEqual({ level, tag: row.tag, outOfBand: false });
     });
     it('CONTROL: the same staging WITHOUT Fire refuses by name — the tree needs Fire', () => {
         expect(() => solve(t, goal, { hasFire: false }))
