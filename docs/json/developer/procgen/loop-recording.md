@@ -115,13 +115,23 @@ Some summary games do not advance on every wall-clock second: Noiz2sa waits for 
 
 The channel is the bridge's existing iframe-to-host eventBus relay (`publishEventBus`, as omsi's `substrate:resourceDelta`). The alternative was a loops public function the panel polls each tick (the shape of `livePlayRegion()`/`botSolverRegion()`, which go the other way); a push keeps the drain synchronous and needs no host-side panel code.
 
+### A check that rides on the move
+
+A substrate can declare `loopSupport.moveIncludesCheck` (`loopState.regionMoveIncludesCheck`, `procgenCore/substratePredicates.js` `moveIncludesCheck`): its region's location check is part of the move out of the region, not a queue action. Noiz2sa declares it, with `queueActions: ['regionMove']`: in loop mode its page opens a region's exits only after a clear on that visit, so the move is played to a clear every time ([noiz2sa.md](./noiz2sa.md#loop-mode)).
+
+- The check is still performed, gated and charged like any other live check, and a summary still records it in `checks`, so Playback refires it.
+- A Record block's rewritten interior leaves it out (`_finalizeRecordBlock`): the interior of such a block holds no check.
+- Click-to-queue (`append`, `rebuildPath`) queues neither a check nor an explore for a location in such a region; it publishes `loops:clickIgnored` with reason `checkIsPartOfMove` instead.
+
+Only Noiz2sa declares it. Every other substrate keeps its checks as queue actions.
+
 ## The Record flow
 
 **Coarse substrates.** While parked on the block, loops observes each gate-allowed `user:locationCheck` and `loop:exploreCompleted` in that region (`observeParkedLiveAction`), charges it, and appends it to `_liveCaptureBuffer`. On a successful exit the buffer becomes the block interior; only annotations go to the store.
 
 **Fine-grained substrates.** The substrate recorder never writes the store. It stashes its finished capture in a pull-once slot exposed as the registry entry's `takeLastRecording()`. Loops pulls the stash only when a Record block completes through its expected exit, saves it under the block's tag, and rewrites the interior.
 
-**Summary substrates.** Loops observes live play as for a coarse substrate, and also counts the drain seconds and the explicitly costed actions. On a successful exit these become the `summary`, written to the store even if the visit moved no economy (the duration alone is a real recording). The departure is the exit the player actually crossed, falling back to the queued exit.
+**Summary substrates.** Loops observes live play as for a coarse substrate, and also counts the drain seconds and the explicitly costed actions. On a successful exit these become the `summary`, written to the store even if the visit moved no economy (the duration alone is a real recording). The departure is the exit the player actually crossed, falling back to the queued exit. A `moveIncludesCheck` substrate's interior rewrite leaves its checks out ([a check that rides on the move](#a-check-that-rides-on-the-move)).
 
 **Wrong exit, mana-out or loop reset discards the capture.** Loops clears its buffer and never pulls the stash; the next visit overwrites it.
 
@@ -157,7 +167,7 @@ A bot is not live play: `livePlayRegion()` returns null while a solver drives, a
 
 jta and omsi both use `walkTo` with `queueActions: ['regionMove']`, so their bots only handle exit walks. They differ across a loop reset: jta's bridge remembers the pending walk (`_pendingWalkExit`), so the park stays up; omsi's walk, driven by the fork's Advanced Automation planner, ends on the teleport and continues through the generic queue restart, the same contract as [a replay bigger than one run](#a-replay-bigger-than-one-run). See [jta.md](./jta.md) and [omsi.md](./omsi.md).
 
-Noiz2sa's bot takes both `locationCheck` and `regionMove` targets: the page's humanlike bot plays the region until its clear, restarting on a hit, then leaves by the target exit. Its proxy's `walkTo` carries the bot's settings as a second argument, which the flash bridge passes to the page. See [noiz2sa.md](./noiz2sa.md#the-bot).
+Noiz2sa's bot takes `regionMove` targets only (its check rides on the move, [above](#a-check-that-rides-on-the-move)): the page's humanlike bot plays the region until its clear, restarting on a hit, then leaves by the target exit. In loop mode it plays to a clear on every visit, a region cleared before included. Its proxy's `walkTo` carries the bot's settings as a second argument, which the flash bridge passes to the page. See [noiz2sa.md](./noiz2sa.md#the-bot).
 
 ### Bot economy
 

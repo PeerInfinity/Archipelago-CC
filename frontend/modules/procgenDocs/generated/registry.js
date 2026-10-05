@@ -135,6 +135,7 @@ export const REGISTRY = frz({
                 "loopSupport.executeVia",
                 "loopSupport.instant",
                 "loopSupport.manual",
+                "loopSupport.moveIncludesCheck",
                 "loopSupport.playClock",
                 "loopSupport.playback",
                 "loopSupport.queueActions",
@@ -4157,13 +4158,14 @@ export const REGISTRY = frz({
                 {
                     "id": "noiz2sa",
                     "present": true,
-                    "short": "9 keys",
+                    "short": "10 keys",
                     "type": "object",
                     "value": [
                         "customQueues",
                         "executeVia",
                         "instant",
                         "manual",
+                        "moveIncludesCheck",
                         "playClock",
                         "playback",
                         "queueActions",
@@ -4648,6 +4650,86 @@ export const REGISTRY = frz({
             ],
             "documentedHow": "table",
             "group": "Loop mode",
+            "name": "loopSupport.moveIncludesCheck"
+        },
+        {
+            "carriedBy": [
+                "noiz2sa"
+            ],
+            "cells": [
+                {
+                    "id": "bounce",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "flash_seedling_gen",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "jta",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "maze",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "noiz2sa",
+                    "present": true,
+                    "short": "yes",
+                    "type": "boolean",
+                    "value": true
+                },
+                {
+                    "id": "omsi",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "runner",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                },
+                {
+                    "id": "text_adventure",
+                    "present": false,
+                    "short": "—",
+                    "type": "absent",
+                    "value": null
+                }
+            ],
+            "documentedHow": "table",
+            "group": "Loop mode",
             "name": "loopSupport.playClock"
         },
         {
@@ -4810,11 +4892,10 @@ export const REGISTRY = frz({
                 {
                     "id": "noiz2sa",
                     "present": true,
-                    "short": "regionMove, locationCheck",
+                    "short": "regionMove",
                     "type": "array",
                     "value": [
-                        "regionMove",
-                        "locationCheck"
+                        "regionMove"
                     ]
                 },
                 {
