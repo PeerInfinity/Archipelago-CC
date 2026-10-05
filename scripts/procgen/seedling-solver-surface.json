@@ -712,9 +712,9 @@
       "files": {
         "botDriverV2.js": 29,
         "director.js": 1,
-        "solverBot.js": 39
+        "solverBot.js": 41
       },
-      "sites": 69,
+      "sites": 71,
       "seen": "both",
       "via": [
         "const-alias",
@@ -762,7 +762,7 @@
         },
         "slashInfo": {
           "botDriverV2.js": 3,
-          "solverBot.js": 3
+          "solverBot.js": 5
         },
         "takenPickups": {
           "botDriverV2.js": 1,
@@ -2830,7 +2830,7 @@
       "surface": "import",
       "name": "DASH_CHAIN",
       "module": "frontend/modules/seedlingDemo/combatVerbs.js",
-      "line": 521,
+      "line": 621,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2848,7 +2848,7 @@
       "surface": "import",
       "name": "DASH_DISPLACEMENT",
       "module": "frontend/modules/seedlingDemo/combatVerbs.js",
-      "line": 477,
+      "line": 577,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2886,7 +2886,7 @@
       "surface": "import",
       "name": "ORDINARY_SWING_PERIOD",
       "module": "frontend/modules/seedlingDemo/combatVerbs.js",
-      "line": 575,
+      "line": 675,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2905,7 +2905,7 @@
       "surface": "import",
       "name": "SLASH_ANIM_TICKS",
       "module": "frontend/modules/seedlingDemo/combatVerbs.js",
-      "line": 191,
+      "line": 275,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -2959,7 +2959,7 @@
       "surface": "import",
       "name": "slashPressForecast",
       "module": "frontend/modules/seedlingDemo/combatVerbs.js",
-      "line": 430,
+      "line": 530,
       "class": "seedling",
       "form": "forecast",
       "files": {
@@ -2977,7 +2977,7 @@
       "surface": "import",
       "name": "slashScaleFor",
       "module": "frontend/modules/seedlingDemo/combatVerbs.js",
-      "line": 625,
+      "line": 725,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -2995,7 +2995,7 @@
       "surface": "import",
       "name": "slashSet",
       "module": "frontend/modules/seedlingDemo/combatVerbs.js",
-      "line": 282,
+      "line": 382,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -3013,7 +3013,7 @@
       "surface": "import",
       "name": "slashTimerTick",
       "module": "frontend/modules/seedlingDemo/combatVerbs.js",
-      "line": 389,
+      "line": 489,
       "class": "seedling",
       "form": "stepper",
       "files": {
@@ -3681,7 +3681,7 @@
       "surface": "import",
       "name": "auditFire",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 1271,
+      "line": 1286,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -3699,7 +3699,7 @@
       "surface": "import",
       "name": "DARK_SWORD_DAMAGE",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 74,
+      "line": 76,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3717,7 +3717,7 @@
       "surface": "import",
       "name": "distanceRectPoint",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 358,
+      "line": 373,
       "class": "physics",
       "form": "geometry-query",
       "files": {
@@ -3737,7 +3737,7 @@
       "surface": "import",
       "name": "DOWN",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 273,
+      "line": 288,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -3755,7 +3755,7 @@
       "surface": "import",
       "name": "EMPTY_SWORD_WINDOW",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 177,
+      "line": 190,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3773,7 +3773,7 @@
       "surface": "import",
       "name": "LEFT",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 272,
+      "line": 287,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -3791,7 +3791,7 @@
       "surface": "import",
       "name": "RIGHT",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 270,
+      "line": 285,
       "class": "physics",
       "form": "constant",
       "files": {
@@ -3809,7 +3809,7 @@
       "surface": "import",
       "name": "SLASH_HIT_TICKS",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 142,
+      "line": 144,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3828,7 +3828,7 @@
       "surface": "import",
       "name": "SLASH_REACH",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 77,
+      "line": 79,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3847,7 +3847,7 @@
       "surface": "import",
       "name": "slashReachFor",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 85,
+      "line": 87,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -3866,7 +3866,7 @@
       "surface": "import",
       "name": "slashRect",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 330,
+      "line": 345,
       "class": "seedling",
       "form": "geometry-query",
       "files": {
@@ -3886,7 +3886,7 @@
       "surface": "import",
       "name": "SWORD_DAMAGE",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 73,
+      "line": 75,
       "class": "seedling",
       "form": "constant",
       "files": {
@@ -3904,7 +3904,7 @@
       "surface": "import",
       "name": "swordWindowReplace",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 249,
+      "line": 264,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -3922,7 +3922,7 @@
       "surface": "import",
       "name": "swordWindowSchedule",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 263,
+      "line": 278,
       "class": "seedling",
       "form": "function",
       "files": {
@@ -3940,7 +3940,7 @@
       "surface": "import",
       "name": "swordWindowStep",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 210,
+      "line": 223,
       "class": "seedling",
       "form": "stepper",
       "files": {
@@ -3958,7 +3958,7 @@
       "surface": "import",
       "name": "UP",
       "module": "frontend/modules/seedlingDemo/presses.js",
-      "line": 271,
+      "line": 286,
       "class": "physics",
       "form": "constant",
       "files": {

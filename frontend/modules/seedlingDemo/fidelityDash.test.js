@@ -26,10 +26,11 @@ import {
     DASH_WINDOW_ROSTER_WIDE, SLASH_ANIM_TICKS, SLASH_ANIM_TICKS_GAME,
 } from './combatVerbs.js';
 import { loadTape } from './fixtures/index.js';
-import { canCross } from './seedlingCanCross.js';
+import { buildArrivalStaging, canCross } from './seedlingCanCross.js';
+import { solveSegment } from './solverBot.js';
 import { atlasLevelSource } from './levelSource.js';
 import { diffObservationStreams, parseObservationStream, parseTape } from './tapeFormat.js';
-import { createTapeStepper } from './tapeRunner.js';
+import { createRunForStaging, createTapeStepper } from './tapeRunner.js';
 import { modelTestsByObservation } from '../../../scripts/procgen/probe-seedling-dash-window.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -142,3 +143,55 @@ describe('fidelity DASH D2 — a dash buys FOUR hit tests in the game', () => {
         }
     }, 60_000);
 });
+
+/**
+ * ⛓⛓ fidelity DASH D3 — **`out.dashes`: THE EXACT COUNT, EVERY WALK.** `trace.rows[].strategy
+ * .swordDash` is one walk's plan, and only the walk rows that survive `seeRow`'s same-tick merge
+ * carry it — L16's PULL rung walks to the rope stance with four planned windows and no row says
+ * so (SF report residue 1). The solve result now carries `dashes: {count, windows, walks}`:
+ * `count` read off the run's own `set slashing` dash arm, `walks` one row per walk the planner
+ * was asked for, inner rung walks included. An OPTIONAL field: no caller is required to read it.
+ */
+describe('fidelity DASH D3 — out.dashes', () => {
+    /** `canCross`'s own arrival and goal, solved directly so the result's fields are visible. */
+    const solveL16 = (dashMode) => {
+        const goal = canCross({ level: 16, exit: 17, arrival: { from: 15 }, inventory: ['sword'], dashMode,
+            witness: false }).request.goal;
+        const { staging } = buildArrivalStaging({ level: 16, arrival: { from: 15 }, inventory: ['sword'], levelSource });
+        staging.despawn = [];
+        const run = createRunForStaging(staging, levelSource, { scratchPersistence: true });
+        const out = solveSegment({ run, goals: [{ ...goal }], name: 'can-cross', boot: staging.boot, prefix: [], dashMode });
+        return { out, run, staging };
+    };
+
+    it('L16 all: the count is the run\'s own dashes, and the inner PULL walk\'s windows are in it', () => {
+        const { out, run } = solveL16('all');
+        expect(out.perTick.length).toBe(DASH_WINDOW_ROSTER_WIDE ? 117 : 111);
+        expect(out.dashes.count).toBe(run.dashes.length);
+        expect(out.dashes.count).toBe(11);
+        expect(out.dashes.windows).toBe(5);
+        expect(out.dashes.walks.map((w) => [w.windows, w.pressed])).toEqual([[4, 9], [1, 2]]);
+        expect(out.dashes.walks[0].what).toMatch(/-> pull \(rope@32,16\) stance$/);
+        expect(out.dashes.walks.reduce((n, w) => n + w.pressed, 0)).toBe(out.dashes.count);
+        // ⛔ the under-count the field exists for: the trace's rows carry ONE window
+        const rowWindows = out.trace.rows.reduce((n, r) => n + (r.strategy?.swordDash?.windows?.length ?? 0), 0);
+        expect(rowWindows).toBe(1);
+    }, 60_000);
+
+    it('the committed plan replays with the same dashes (the count is the tape\'s, not the planner\'s)', () => {
+        const { out, staging } = solveL16('all');
+        const tape = DASH_WINDOW_ROSTER_WIDE ? loadTape('dash-l16-sword-all') : refutedTape();
+        let run = null;
+        const st = createTapeStepper(tape, { levelSource, onTick: (t, s2, h, rn) => { run = rn; } });
+        for (let r = st.next(); !r.done; r = st.next()) { /* to the end */ }
+        expect(run.dashes.length).toBe(out.dashes.count);
+        expect(staging.boot).toEqual({ level: 16, x: 32, y: 64 });
+    }, 60_000);
+
+    it('a dashless solve is zero: {count: 0, windows: 0, walks: []}', () => {
+        const { out } = solveL16('none');
+        expect(out.perTick.length).toBe(206);
+        expect(out.dashes).toEqual({ count: 0, windows: 0, walks: [] });
+    }, 60_000);
+});
+
