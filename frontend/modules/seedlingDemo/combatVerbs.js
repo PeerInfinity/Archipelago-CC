@@ -247,24 +247,24 @@ export const SLASH_ANIM_TICKS_LEGACY = Object.freeze({
 });
 
 /**
- * ⛓⛓⛓ SEEDLING FIDELITY DASH — **THE GAME'S DASH WINDOW, GATED, AND WHY IT IS
- * OFF.** At `true` the model runs the game's periods (`SLASH_ANIM_TICKS_GAME`):
- * a dash's `slashEnd` lands four ticks after the press and the press buys four
- * hit tests. Measured with it on (D2 of the DASH report):
+ * ⛓⛓⛓ SEEDLING FIDELITY DASH — **THE GAME'S DASH WINDOW, AND IT IS ON.** At `true`
+ * the model runs the game's periods (`SLASH_ANIM_TICKS_GAME`): a dash's `slashEnd`
+ * lands four ticks after the press and the press buys four hit tests. Measured
+ * with it on (D2 of the DASH report):
  *   · the model reproduces the game's stream of CANCROSS's refuted L16 plan
  *     (`fixtures/refuted/dash-l16-sword-refuted`), hit at t104 included, and
  *     the game's own `Bot.slashTests` at every tick of it;
  *   · every committed tape still replays against its recording (tapeRunner
- *     477/477), and five of the six producers' `--check`s are byte-identical;
- *   · ⛔ but `solve-seedling-r9-campaign --check` goes red: the solver derives
- *     `r9-solve-14` in 98 t (committed 118 t) and `r9-solve-16` in 688 t
- *     (committed 625 t). Those are committed tapes moving, and no re-record is
- *     licensed — so the flip waits for the slice that re-records those two
- *     segments, and is that slice's one line.
- * At `false` (here) the model is the roster's: 5 and 5, byte-identical to the
- * base, and the L16 `all` plan is still the refuted 111 t one.
+ *     479/479), and five of the six producers' `--check`s are byte-identical.
+ * ⛓ SEEDLING FIDELITY DASHFLIP (⚖ user, 2026-10-05: *"Yes: flip + re-record"*)
+ * turned it on and re-recorded the two campaign segments the solver derives
+ * differently under it, both on the game: `r9-solve-14` (118 → 98 t) and
+ * `r9-solve-16` (625 → 688 t; its old walk leaned on the fifth dash test to
+ * pull `rope@32,16` at fired 88). `false` is the roster's pre-DASHFLIP model
+ * (5 and 5, `SLASH_ANIM_TICKS_LEGACY`), kept so the refutation stays
+ * reproducible: at `false` the L16 `all` plan is the refuted 111 t one again.
  */
-export const DASH_WINDOW_ROSTER_WIDE = false;
+export const DASH_WINDOW_ROSTER_WIDE = true;
 
 /**
  * How many ticks after `play(anim, true)` the `slashEnd` callback fires, per
