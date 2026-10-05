@@ -48,15 +48,21 @@ export const RULES_PATH = './presets/seedling_playthrough/AP_1/AP_1_rules.json';
 const L6 = { level: 6, x: 32, y: 16, goal: { kind: 'exit', level: 6, tiles: [[14, 2]], name: 'out_stairsup_224_32' } };
 const L4 = { level: 4, x: 16, y: 16, goal: { kind: 'exit', level: 4, tiles: [[4, 1]], name: 'out_stairsdown_64_16' } };
 const L86 = { level: 86, x: 48, y: 48, goal: { kind: 'location', level: 86, tag: 0, entityType: 'chest', name: 'chest' } };
-/** Session M's rows, in order, on ONE page (the items accumulate: each arrival reads the game as it stands). */
+/**
+ * Session M's rows, in order, on ONE page. ⚠ The items ACCUMULATE (each arrival reads the game as it stands), and
+ * an item changes the plans after it: with the sword in hand L4's plan is a shorter shove whose RE-SOLVE hits
+ * the known L4 residue (`seedling-wasm-solver-plan` §1.3 class, measured: t 12, no key held at the freeze), and
+ * with the kit the house chest opens before tick 30 (a freeze after it finds the goal done). So the shield row
+ * runs before the sword, and the chest freezes early.
+ */
 export const M_ROWS = [
     { tag: 'L6 K=37 resume', ...L6, K: 37, mode: 'resume' },
     { tag: 'L6 K=181 resume', ...L6, K: 181, mode: 'resume' },
     { tag: 'L4 K=97 resume', ...L4, K: 97, mode: 'resume' },
     { tag: 'L4 K=23 idle:12 (the seam a key-pair release broke)', ...L4, K: 23, mode: 'idle:12' },
-    { tag: 'L6 K=113 + Progressive Sword, replan', ...L6, K: 113, item: 'Progressive Sword', itemProp: 'hasSword', mode: 'replan' },
     { tag: 'L4 K=23 + Progressive Shield, replan', ...L4, K: 23, item: 'Progressive Shield', itemProp: 'hasShield', mode: 'replan' },
-    { tag: 'L86 K=30 + Light, replan', ...L86, K: 30, item: 'Light', itemProp: 'hasTorch', mode: 'replan' },
+    { tag: 'L86 K=10 + Light, replan', ...L86, K: 10, item: 'Light', itemProp: 'hasTorch', mode: 'replan' },
+    { tag: 'L6 K=113 + Progressive Sword, replan', ...L6, K: 113, item: 'Progressive Sword', itemProp: 'hasSword', mode: 'replan' },
     { tag: 'L6 at an X press + Health, replan', ...L6, K: 'at:primary', item: 'Health', itemProp: 'hitsMax', mode: 'replan' },
 ];
 
