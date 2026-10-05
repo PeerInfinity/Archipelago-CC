@@ -162,7 +162,7 @@
     "rng": {
         "seed": 1629551709,
         "split": true,
-        "cosmetic": 1007224962,
+        "cosmetic": 1351100268,
         "fp": 466199780
     },
     "seam": {
@@ -186,10 +186,10 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 15468,
+        "time": 15413,
         "primary": 0,
         "secondary": 0,
-        "grass_cut": 516,
+        "grass_cut": 504,
         "cutscene": [
             false,
             false,
@@ -206,11 +206,11 @@
         "rng": {
             "seed": 1301078681,
             "split": true,
-            "cosmetic": 1551179931,
+            "cosmetic": 302627540,
             "fp": 1287809510
         },
         "seam": {
-            "time": 15489
+            "time": 15434
         }
     },
     "tick_count": 379,
