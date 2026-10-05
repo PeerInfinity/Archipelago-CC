@@ -80,6 +80,8 @@ export async function buildCampaignChain() {
         refusal: frontier.refusal ?? null,
         complete: frontier.complete === true,
         why: frontier.why ?? null,
+        // ⛓ FRONTIER2: both route modes' coverage, reported separately (⚖ user 2026-10-05)
+        coverage: Object.values(frontier.coverage ?? {}),
         findings: missing.length
             ? [`${missing.join(', ')}: declared in the chain and NOT on disk`]
             : [],
@@ -116,6 +118,20 @@ export function campaignChainMarkdown(v) {
     } else {
         lines.push('**No frontier is committed**, so what is in front of the chain is '
             + 'unstated — run `census-seedling-campaign.mjs --write-frontier`.');
+    }
+    if ((v.coverage ?? []).length) {
+        lines.push('', '**COVERAGE, BY ROUTE MODE** (`campaign-frontier.json` `coverage`; '
+            + '`route-only` is the route the chain was recorded on):', '');
+        for (const c of v.coverage) {
+            lines.push(`- \`${c.mode}\` through ${c.through}: `
+                + (c.covered === null ? `UNASSERTED — ${c.why}`
+                    : `**${c.covered}/${c.routeSteps ?? '?'}** route steps`
+                    + (c.complete ? ' — COMPLETE'
+                        : c.divergence ? ` — the chain leaves this route at segment ${c.covered + 1}: `
+                            + `\`${c.divergence.segment}\` arrives in L${c.divergence.arrives}, route step `
+                            + `${c.divergence.routeStep} crosses to L${c.divergence.routeCrossesTo}`
+                            : c.nextStep ? ` — next: route step ${c.nextStep.step} (L${c.nextStep.level})` : '')));
+        }
     }
     if (v.findings.length) {
         lines.push('', `⛔ **FINDINGS:** ${v.findings.join('; ')}.`);

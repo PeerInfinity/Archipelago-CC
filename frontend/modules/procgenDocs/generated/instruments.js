@@ -13316,6 +13316,7 @@ export const INSTRUMENTS = frz({
                 "derive-only",
                 "only",
                 "out",
+                "route",
                 "through",
                 "timeout"
             ],
@@ -13344,6 +13345,12 @@ export const INSTRUMENTS = frz({
                         "argOf"
                     ],
                     "name": "out"
+                },
+                {
+                    "how": [
+                        "argOf"
+                    ],
+                    "name": "route"
                 },
                 {
                     "how": [

@@ -72,12 +72,12 @@
 
 import { createHash } from 'node:crypto';
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 
 import { argvHelp } from './argvHelp.js';
-import { seedlingCensusDir, seedlingSurveyDir } from './seedlingSurveyDir.js';
+import { seedlingCensusDir, throughSurveyDir } from './seedlingSurveyDir.js';
 
 argvHelp(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -103,7 +103,8 @@ const WRITE_FRONTIER = process.argv.includes('--write-frontier');
 const CHECK_FRONTIER = process.argv.includes('--check-frontier');
 const OUT_DIR = seedlingCensusDir(REPO);
 /**
- * ⛓ SWIM U13 (⚖ Q40) — THE FRONTIER'S SOURCE IS THE THROUGH-2.2 ROUTE. The
+ * ⛓ SWIM U13 (⚖ Q40) — THE FRONTIER'S SOURCE WAS THE THROUGH-2.2 ROUTE
+ * (superseded by FRONTIER2, next block: the label moved and the route split in two). The
  * chain walks past the shield now, so the route it is aligned against is the
  * extended survey's: `survey-seedling-route.mjs --through=2.2` writes
  * `through-2.2/route.json`, and its rows go to `through-2.2/survey.json` by
@@ -113,7 +114,24 @@ const OUT_DIR = seedlingCensusDir(REPO);
  * Both are a regenerable cache like the default pair (`seedlingSurveyDir.js`),
  * which is why the committed frontier exists.
  */
-const SURVEY_DIR = join(seedlingSurveyDir(REPO), 'through-2.2');
+/**
+ * ⛓⛓ FRONTIER2 (⚖ user 2026-10-05: *"Both, report separately."*) — **TWO
+ * ROUTES, ONE BOUND, AND THE BOUND IS READ OFF THE CHAIN.** `through-2.2` was
+ * typed, and the label moved under it: `70d9a87c` re-sphered L32's Bob Boss
+ * 2.2 → 3.1, so `--through=2.2` stopped at L25's Seal chest. The bound is now
+ * `surveyRoute.chainBound` — the sphere row the chain's terminal segment ends
+ * on — and each route mode is surveyed to it in its own directory:
+ *   node scripts/procgen/survey-seedling-route.mjs --through=<bound> --route=route-only \
+ *       --out=.cache/seedling-survey/through-<bound>-route-only/survey.json --timeout=1500
+ *   node scripts/procgen/survey-seedling-route.mjs --through=<bound> --route=full \
+ *       --out=.cache/seedling-survey/through-<bound>/survey.json --timeout=1500
+ * `route-only` (the progression pickups, walked) is the route the chain was
+ * recorded on, so it is the frontier's TOP-LEVEL answer — the fields every
+ * reader already reads. Both modes are reported in `coverage`.
+ * `throughSurveyDir` (`seedlingSurveyDir.js`) spells the directory once, for
+ * `rerecord-seedling-campaign.mjs` too.
+ */
+const { chainBound } = await import(join(HERE, 'surveyRoute.js'));
 
 /**
  * ⛓⛓⛓ THE SUBJECT, in sphere order (⚖ ruling 14) — **AND IT IS DERIVED NOW.**
@@ -149,6 +167,14 @@ const CHAIN = [...CHOICE.segments];
 /** ⛓ R9 slice L18b — which of the chain's segments is TERMINAL (`to: null`), by name. */
 const { CAMPAIGN_SEGMENTS } = await import(join(MODULE, 'campaignChain.js'));
 const isTerminal = (name) => CAMPAIGN_SEGMENTS.find((s) => s.name === name)?.to === null;
+/** ⛓ FRONTIER2 — the routes' bound: the sphere row the chain's terminal segment ends on. */
+const FRONTIER_BOUND = chainBound(JSON.parse(readFileSync(
+    join(REPO, 'frontend/modules/flashPanel/atlases/seedling-sphere-order.json'), 'utf8')).order,
+CAMPAIGN_SEGMENTS);
+/** ⛓ FRONTIER2 — the route modes the frontier reports, the chain's own route first. */
+const FRONTIER_MODES = Object.freeze(['route-only', 'full']);
+const SURVEY_DIRS = Object.fromEntries(FRONTIER_MODES.map((m) =>
+    [m, throughSurveyDir(REPO, FRONTIER_BOUND, m)]));
 /** ⛓ The detached tail — its OWN chain, continuable only after L14–L16 fall. */
 const TAIL = ['r8-solve-18', 'r8-d2-19', 'r8-d2-20'];
 /**
@@ -422,16 +448,30 @@ function rockExposure({ label, level, from, to, postSword }) {
 // 5. THE ROUTE'S OWN ROWS — read from the survey, or UNASSERTED by name
 // ─────────────────────────────────────────────────────────────────────
 
-function surveyRows() {
-    const routeP = join(SURVEY_DIR, 'route.json');
-    const surveyP = join(SURVEY_DIR, 'survey.json');
+function surveyRows(mode = 'route-only') {
+    const dir = SURVEY_DIRS[mode];
+    const routeP = join(dir, 'route.json');
+    const surveyP = join(dir, 'survey.json');
     if (!existsSync(routeP) || !existsSync(surveyP)) {
         return { available: false, why: `${routeP} / survey.json are not on disk — run `
-            + '`node scripts/procgen/survey-seedling-route.mjs` (or `--derive-only` for the '
-            + 'route alone) first. ⛔ The gap and stop rows are the SURVEY\'s answer and '
-            + 'this script will not invent them.' };
+            + `\`node scripts/procgen/survey-seedling-route.mjs --through=${FRONTIER_BOUND} `
+            + `--route=${mode} --out=${join(dir, 'survey.json').slice(REPO.length + 1)}\` first. `
+            + '⛔ The gap and stop rows are the SURVEY\'s answer and this script will not '
+            + 'invent them.' };
     }
     const route = JSON.parse(readFileSync(routeP, 'utf8'));
+    /**
+     * ⛔ A route.json from another MODE is the wrong route. The directory names
+     * the mode, and the artifact names it too (`routeMode`); a disagreement is a
+     * cache somebody copied, and it is refused rather than aligned against.
+     */
+    if (route.routeMode?.mode !== mode || route.routeMode?.through !== FRONTIER_BOUND) {
+        return { available: false, why: `${routeP} names route mode `
+            + `${JSON.stringify(route.routeMode?.mode ?? null)} through `
+            + `${JSON.stringify(route.routeMode?.through ?? null)}, not '${mode}' through `
+            + `'${FRONTIER_BOUND}' — re-run the survey; this script will not align the chain `
+            + 'against another route.' };
+    }
     const survey = JSON.parse(readFileSync(surveyP, 'utf8'));
     const byStep = new Map(survey.rows.map((r) => [String(r.step), r]));
     return {
@@ -552,12 +592,32 @@ function deriveFrontier(surveyRes) {
     let covered = 0;
     while (covered < arrivals.length && covered < steps.length && aligns(covered)) covered += 1;
     if (covered !== arrivals.length) {
-        return { ...base, lastArrival: null, nextStep: null, refusal: null, covered,
+        /**
+         * ⛓ FRONTIER2 — THE DIVERGENCE IS NAMED, NOT ONLY SENTENCED. The full
+         * route leaves the chain at a step the chain never walks (a Seal chest's
+         * leg), so where the chain stood last, the route step it did not take,
+         * and the segment that went elsewhere are FIELDS. `nextStep` is that
+         * route step — the next room of THIS route — and `refusal` is the
+         * survey's word on it, when it refuses.
+         */
+        const at = steps[covered];
+        const prev = covered > 0 ? steps[covered - 1] : null;
+        return { ...base,
+            lastArrival: prev ? { step: prev.step, level: prev.crossesTo, segment: CHAIN[covered - 1] } : null,
+            nextStep: at ? {
+                step: at.step, level: at.level, visit: at.visit, crossesTo: at.crossesTo,
+                goals: at.goals.map((g) => g.why),
+            } : null,
+            refusal: at?.solved?.refusal
+                ? { family: at.solved.family, text: at.solved.refusal } : null,
+            divergence: { segment: CHAIN[covered], arrives: arrivals[covered],
+                routeStep: at?.step ?? null, routeCrossesTo: at?.crossesTo ?? null },
+            covered,
             why: `the chain's measured arrivals stop prefixing the route at segment `
                 + `${covered + 1} (${CHAIN[covered]} arrives in L${arrivals[covered]}; `
                 + `route step ${steps[covered]?.step} crosses to `
-                + `L${steps[covered]?.crossesTo}). A chain that walks a different route `
-                + 'has no stop this alignment can name.' };
+                + `L${steps[covered]?.crossesTo}). The chain walks a different route from `
+                + 'here, so this route\'s next step is `nextStep` and no refusal stops the chain.' };
     }
     const last = steps[covered - 1];
     /**
@@ -600,8 +660,36 @@ function deriveFrontier(surveyRes) {
     };
 }
 
-const survey = surveyRows();
-const FRONTIER = deriveFrontier(survey);
+const SURVEYS = Object.fromEntries(FRONTIER_MODES.map((m) => [m, surveyRows(m)]));
+const survey = SURVEYS['route-only'];
+/**
+ * ⛓⛓ FRONTIER2 — **BOTH ROUTES, REPORTED SEPARATELY** (⚖ user 2026-10-05).
+ * Each mode's block is `deriveFrontier`'s answer over that mode's survey,
+ * minus the fields the artifact carries once (`chain`, `segments`,
+ * `arrivals`, `sources`), plus what the block IS: its mode, the bound, the
+ * route's step count and the survey directory it was read from.
+ *
+ * ⛔ THE TOP-LEVEL FIELDS ARE THE ROUTE-ONLY BLOCK'S, unchanged in shape: it is
+ * the route the chain was recorded on, so `nextStep`/`lastArrival`/`complete`
+ * keep meaning what `campaignChain.test`, the page, the reference and
+ * `--grow` already read them as.
+ */
+const COVERAGE = Object.fromEntries(FRONTIER_MODES.map((m) => {
+    const answer = { ...deriveFrontier(SURVEYS[m]) };
+    for (const k of ['artifact_version', 'generatedBy', 'chain', 'segments', 'arrivals', 'sources']) {
+        delete answer[k];
+    }
+    return [m, {
+        mode: m,
+        through: FRONTIER_BOUND,
+        // the directory's NAME under the survey cache (`SEEDLING_SURVEY_DIR` may move the cache)
+        survey: basename(SURVEY_DIRS[m]),
+        routeSteps: SURVEYS[m].available ? SURVEYS[m].steps.length : null,
+        complete: false,
+        ...answer,
+    }];
+}));
+const FRONTIER = { ...deriveFrontier(survey), coverage: COVERAGE };
 
 /**
  * ⛔ THE CHECK IS FIELD BY FIELD, AND IT SAYS WHICH FIELDS IT COULD NOT RUN.
@@ -624,6 +712,24 @@ function checkFrontier() {
     cmp('segments', FRONTIER.segments, on.segments);
     cmp('arrivals', FRONTIER.arrivals, on.arrivals);
     cmp('sources', FRONTIER.sources, on.sources);
+    /**
+     * ⛓ FRONTIER2 — each mode's block. Its identity (mode, bound, survey
+     * directory) needs no survey and always runs; its ANSWER is that mode's
+     * survey's, compared whole where the survey is on disk and SKIPPED BY NAME
+     * where it is not.
+     */
+    for (const m of FRONTIER_MODES) {
+        const mine = FRONTIER.coverage[m];
+        const theirs = on.coverage?.[m] ?? null;
+        const pick = (o, keys) => (o ? Object.fromEntries(keys.map((k) => [k, o[k] ?? null])) : null);
+        cmp(`coverage.${m} (identity)`, pick(mine, ['mode', 'through', 'survey']),
+            pick(theirs, ['mode', 'through', 'survey']));
+        if (SURVEYS[m].available) {
+            cmp(`coverage.${m} (answer)`, mine, theirs);
+        } else {
+            console.log(`SKIP  coverage.${m} (answer) — ${SURVEYS[m].why}`);
+        }
+    }
     if (survey.available && FRONTIER.nextStep) {
         cmp('lastArrival', FRONTIER.lastArrival, on.lastArrival);
         cmp('nextStep', FRONTIER.nextStep, on.nextStep);
@@ -674,6 +780,21 @@ say(`THEN: ${GAP_STEPS.length} route steps with NO tape, then the STOP at `
     + (FRONTIER.nextStep ? `step ${FRONTIER.nextStep.step} (L${FRONTIER.nextStep.level}) — `
         + `${FRONTIER.refusal.family.split(' —')[0]}.`
         : `an UNASSERTED step — ${FRONTIER.why}`));
+/**
+ * ⛓ FRONTIER2 — the two route modes' coverage, one line each (⚖ user
+ * 2026-10-05: "Both, report separately").
+ */
+for (const m of FRONTIER_MODES) {
+    const c = FRONTIER.coverage[m];
+    say(`COVERAGE (${m}, through ${c.through}): `
+        + (c.covered === null ? `UNASSERTED — ${c.why}`
+            : `${c.covered}/${c.routeSteps ?? '?'} route steps`
+              + (c.complete ? ' — COMPLETE'
+                  : c.divergence ? ` — the chain leaves this route at segment ${c.covered + 1} `
+                      + `(${c.divergence.segment} arrives in L${c.divergence.arrives}; route step `
+                      + `${c.divergence.routeStep} crosses to L${c.divergence.routeCrossesTo})`
+                      : c.nextStep ? ` — next: step ${c.nextStep.step} (L${c.nextStep.level})` : '')));
+}
 say(`DETACHED TAIL (its own block, its own bound): ${TAIL.join(' → ')}`);
 say('');
 say('BOUNDS, NAMED: the JS tier leaves `rng` and `seam` UNASSERTED at every '
