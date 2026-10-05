@@ -1047,6 +1047,41 @@ function previewLean(run, from, key) {
 function resolveBurnStrategy(run, obstacle, contacts, blocked = []) {
     const tree = (run.world.burnableTrees ?? []).find((t) => t.id === obstacle.id);
     if (!tree) return null;
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY SLOTS (D4a) — A TREE ALREADY ALIGHT IS WAITED OUT.
+     *
+     * `hit()` sets `burn` and `burnEnd -> die()` removes the tree
+     * `HIT_TO_GONE_TICKS` later, so between the two the tree is still a SOLID
+     * on the frontier and `hit()` is behind `!burn` (a second press does
+     * nothing). A walk cut there — a continuation frozen mid-burn, measured at
+     * K=80 of BURN's L24 plan (hit t64, gone t105) — used to resolve to nothing
+     * and refuse "Strategy 'burn' failed to apply". The verb's own last phase is
+     * the answer: wait until the model's `burnedTrees` holds it (its `goneAt`),
+     * then walk on. No Fire is needed to wait, so this is asked first.
+     */
+    if (!(run.entities('burnedTrees') ?? new Set()).has(tree.id)) {
+        const alight = run.ledger('treeBurns').find((b) => b.id === tree.id);
+        if (alight) {
+            return {
+                strategy: 'burn',
+                postCondition: 'gone',
+                tree: tree.id,
+                wait: true,
+                goneAt: alight.goneAt,
+                burns: [],
+                burnsIds: [],
+                stance: null,
+                lean: null,
+                discharged: [],
+                rejected: [{
+                    option: `press Fire at ${tree.id}`,
+                    why: `it is ALIGHT already (hit at t${alight.t}, \`die()\` at t${alight.goneAt}): \`hit()\` `
+                        + 'is behind `!burn`, so a press does nothing. The tree is gone at `goneAt`; '
+                        + 'the verb waits for it.',
+                }],
+            };
+        }
+    }
     const inv = run.progress('inventory') ?? {};
     const refusal = (why) => ({
         strategy: 'burn', held: false, tree: obstacle.id,
@@ -1065,10 +1100,9 @@ function resolveBurnStrategy(run, obstacle, contacts, blocked = []) {
             + 'tree and does nothing. ⇒ the tree NEEDS FIRE: an item the route has not '
             + 'collected yet, which no stance or budget can substitute for.');
     }
-    if ((run.entities('burnedTrees') ?? new Set()).has(tree.id)
-        || run.ledger('treeBurns').some((b) => b.id === tree.id)) {
-        // Burning already: `hit()` is behind `!burn`, so a press does nothing.
-        // The frontier will see it gone at `goneAt`; nothing to resolve.
+    if ((run.entities('burnedTrees') ?? new Set()).has(tree.id)) {
+        // Gone already: nothing to resolve. (Alight but standing is waited
+        // out above.)
         return null;
     }
     // What the burn uncovers — declared to `runFire`, whose gone-check would
@@ -1160,6 +1194,24 @@ function execBurn(run, perTick, resolved, ctx) {
     }
     const from = perTick.length;
     const NO_KEYS = new Set();
+    if (resolved.wait) {
+        // ⛓ SLOTS (D4a): the tree is alight (`resolveBurnStrategy`); idle until it is gone.
+        const bound = Math.max(0, (resolved.goneAt ?? run.ticksCompleted) - run.ticksCompleted) + 2;
+        for (let i = 0; !(run.entities('burnedTrees') ?? new Set()).has(resolved.tree); i += 1) {
+            if (i > bound) {
+                refuse(`${ctx.what}: ${resolved.tree} is alight and still standing ${i} tick(s) later, past its `
+                    + `\`goneAt\` t${resolved.goneAt}.`);
+            }
+            perTick.push(NO_KEYS);
+            const { transition } = run.advance(NO_KEYS);
+            if (transition) {
+                refuse(`${ctx.what}: the run crossed to level ${transition.to_level} while waiting out the burn `
+                    + `of ${resolved.tree}.`);
+            }
+        }
+        return { verb: 'burn', target: resolved.tree, burned: [], waited: perTick.length - from, from,
+            ticks: perTick.length - from, pressTick: null, stance: null, lean: null, restoredSlot: null };
+    }
     const settle = (what) => {
         for (let i = 0; run.state.vx !== 0 || run.state.vy !== 0; i += 1) {
             if (i > BURN_SETTLE_MAX) refuse(`${ctx.what}: ${what} never came to rest.`);

@@ -13649,6 +13649,83 @@ steps changed and no verdict flipped:
   `ticks: 2419`. It is updated, but its mutant (2,419 restored) stays green: no
   check reads it. An untested typed copy drifts silently.
 
+### Seedling fidelity SLOTS — the slot array is session state
+
+Planning-2's wave-5 slice on `main` `f90c4ee`. ⚖ The user, 2026-10-03/05: *"I
+want to extend the model to cover everything in the game"*, and the solver
+should handle either state without clearing the save or re-entering the room.
+The JS arc measured the gap live on p4f (`wasmEquips.test.js`): Fire granted
+before the sword left the game holding `[1, 0]` and the model `[0, 1]`. The
+report is `CC/docs/cloud-reports/seedling-fidelity-slots.md`.
+
+**D1 — the game's rule (measured).** `Inventory.items` is STATIC
+(`Inventory.as:51`). `addItemsFromSave` (`:291-332`) runs in every frame's tail
+(`Game.update`, while `canInventory()`, dead frames included) and only
+APPENDS what the flags imply and the array lacks. Its two fusions remove their
+parts (`removeItem`, `Main.primary %= length`) and splice at a fixed index.
+Only `Main.clearSave` and `freshSaveForLevelSet` empty the array; `Bot.botStart`
+does not. `probe-seedling-slot-order.mjs` (`fixtures/slot-order-oracle.json`)
+measured four arms on the game, model = game:
+- Fire first (seam Fire, the sword granted at L24) is `[1, 0]`;
+- the seam holding both is `[0, 1]`;
+- a second `botStart` on the same page leaves `[1, 0]` alone;
+- `[1, 0, 2]` with primary 2 plus the fire wand is `[0, 5]` with primary 0.
+
+**D2 — the model (PASS, game-witnessed).** The run carries the array as state
+(`slotOrder`), staged by the optional `inventory_slots` (a live game's
+`botStatus.inventory_slots`; no tape carries it, so every replay starts from a
+fresh game's `[]`). `tapeFormat.appendInventorySlots` is the transcription;
+`inventorySlotsFor` is its fresh-game case (the old fixed order, for all 64
+flag sets). A GRANT's item lands in its frame's TAIL: the first recording of
+the D3 witness disarmed the bot (*"equip at tick 0 selected slot 1 but the
+inventory holds 1 item(s)"*). So the equip bound follows
+`Bot.drainEquipChecks` (the top of a tick, deferred while the array is empty).
+`getItem` past the end reads 0, the sword, behind `set slashing`'s guard.
+`progress('inventorySlots')` is new. Witness `slots-l24-fire-first`: one X
+press with slot 0 burns L24's tree because slot 0 is Fire. The fresh-game order
+slashes there and never crosses.
+
+**D3 — the solver (PASS, game-witnessed).** A segment that starts with Fire's
+slot selected while it holds a sword selects the sword's slot (read off the
+run's array) before any press. It waits one idle tick when the sword arrived on
+that observation. The burn's Fire lookups read the run's array too. Witness
+`slots-l24-burn-fire-first` (125 t): the idle tick, then
+`[{1,1},{61,0},{115,1}]`, the vanilla plan's keys with arrival-order indices.
+
+**D4 — BURN's residues (PASS, game-witnessed).**
+- (a) A tree already ALIGHT resolves to `burn` with `wait: true`, and
+  `execBurn` idles until the model's `burnedTrees` holds it. Without this, a
+  continuation frozen mid-burn refused "failed to apply".
+- (b) The D3 rule covers a continuation cut after `execBurn` selected Fire.
+- The first `slots-l24-burn-cut-80` recording REFUTED the model at t105. The
+  game blocks the player against the still-solid tree on the update entering at
+  `goneAt - 1` and lets it through on `goneAt`. `burnedTreeIdsNow` now asks at
+  `ticksCompleted`, where it asked at `+ 1`.
+- Witnesses: `slots-l24-burn-cut-80`, `slots-l24-burn-cut-110`,
+  `slots-l24-burn-fencepost`.
+
+**For the JS arc.** The staged field is `inventory_slots` (snake_case, the
+readout's name), and a solve request whose staging carries it plans by the
+game's order. `wasmEquips.test.js`'s two residue pins flip (K=110: the
+re-solve now selects slot 0 on its first tick; K=80: it solves).
+`seedlingWasmPlaybackDelivery.test.js`'s SLOT LAG row goes red. Its `[0]` with
+primary 1 now presses sword dashes in the model, as on the game, so the gate
+defers the spear with `prefix`. That file is theirs to re-stage.
+
+**Trap candidates**, for the catalogue to number:
+
+- a derived array can hide session state: `inventorySlotsFor` rebuilt the slots
+  from the flags on every read, and agreed with the game for as long as every
+  route collected the sword first;
+- "the flag and the slot say the same thing" is true only when the slot is
+  read after the frame's tail. A grant writes the flag at the top of its tick,
+  so that tick's equip check and its press read the array without the item;
+- an out-of-range index is not a no-op when the read is typed: `getItem(i):int`
+  turns `undefined` into 0, which is the sword's id;
+- a fencepost argued from the engine's update order ("processed by
+  `World.updateLists` at the top of the frame") stood for five slices because
+  every witness waited past it. Only a walk on the boundary tick can measure it.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a

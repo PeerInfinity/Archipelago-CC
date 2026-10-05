@@ -117,7 +117,13 @@ Live in `fixtures/tapes/` today: versions 3 to 11 (no committed tape is at 1, 2 
 ### Persistence clears, equips and save arrays (v3, v4, v6)
 
 - A clear is `{level, tag, note}`. There is no way to set a flag true from a tape, because a crutch that could write either way could forge an ending. A negative tag is refused: entities use -1 for untagged and every reader guards `tag >= 0`, so the clear would do nothing.
-- `equips` is applied right after grants. The slot bound is checked against the mirror by the engine and against the game's `inventory_slots` by the differential. Slot order follows `Inventory.addItemsFromSave` (sword, fire, wand, spear; `inventorySlotsFor`), not item-id order.
+- `equips` is applied right after grants. The slot bound is checked against the mirror by the engine and against the game's `inventory_slots` by the differential.
+- **The slot array is session state** (fidelity SLOTS). `Inventory.items` is static, so the order is the order the items ARRIVED:
+  - `addItemsFromSave` runs in every frame's tail and only appends (sword, fire, wand, spear in one sync; the fusions splice);
+  - only a new game or `freshSaveForLevelSet` empties it, never `botStart`, so Fire received before the sword is `[1, 0]` for the rest of the session;
+  - a fresh page builds the fixed `inventorySlotsFor` order from the seam's items.
+
+  The run carries the array (`levelRun`'s `slotOrder`, `progress('inventorySlots')`), staged by the optional `inventory_slots` (a live game's readout; no tape carries it). A grant's item lands in its frame's tail, so `Bot.as` checks an equip at the top of its tick against the array without it (`drainEquipChecks`, deferred while the array is empty). `getItem` past the end reads 0, the sword.
 - `save` is a boot presentation, not a grant: `Bot.botStart` applies it before the first world is built, because `BossTotemPart.check()` and `BossKey.check()` remove themselves when the player already holds their index. **Warning:** `seal_parts` is an ordered log, not a set of flags. `SealController.getSealPart` writes into the first slot still holding -1, and `hasAllSealParts()` tests only the last slot, so the array's slot is the ordinal and its value is the seal identity.
 
 ### Determinism pins (v5)

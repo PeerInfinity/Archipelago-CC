@@ -473,8 +473,6 @@ frontend/modules/seedlingDemo/tapeFormat.js|HAZARD_STATES|(module),rule,sentinel
 frontend/modules/seedlingDemo/tapeFormat.js|ITEM_PROPERTIES|(module)|3,rule,count,Player.as:hitsMaxDef,
 frontend/modules/seedlingDemo/tapeFormat.js|ITEM_PROPERTIES|(module)|1,rule,magnitude,,hitsMax added per health item
 frontend/modules/seedlingDemo/tapeFormat.js|INVENTORY_ITEM_IDS|(module),rule,sentinel,,item ids Player.useItem switches on
-frontend/modules/seedlingDemo/tapeFormat.js|inventorySlotsFor|h7259ba2b|0|0,rule,sentinel,,ghostsword fusion inserts at slot 0
-frontend/modules/seedlingDemo/tapeFormat.js|inventorySlotsFor|h34f63b9c|1|0,rule,sentinel,,firewand fusion inserts at slot 1
 frontend/modules/seedlingDemo/tapeFormat.js|(module)|h8fae173a|5|0,rule,count,Player.as:totemParts,
 frontend/modules/seedlingDemo/tapeFormat.js|(module)|h71fb0fc3|5|0,rule,count,Player.as:totalKeys,
 frontend/modules/seedlingDemo/tapeFormat.js|(module)|h199ac6dc|16|0,rule,count,SealController.as:SEALS,
@@ -1660,6 +1658,9 @@ frontend/modules/seedlingDemo/wallFlyer.js|hitWallFlyer|hdc3e5462|0|0,rule,bound
 frontend/modules/seedlingDemo/enemyDamage.js|STATIC_ARROW_DEATH|(module)|6,rule,count,,SandTrap die anim frames; endAnim removes the body (F4)
 frontend/modules/seedlingDemo/enemyDamage.js|STATIC_ARROW_DEATH|(module)|10,rule,magnitude,,SandTrap die anim rate (F4)
 frontend/modules/seedlingDemo/enemyDamage.js|createStaticBodyDamage|createStaticBodyDamage,rule,magnitude,,alpha starts at 1 (unread for an anim corpse)
+frontend/modules/seedlingDemo/tapeFormat.js|appendInventorySlots|ha1fb4806|0|0,rule,sentinel,,ghostsword fusion inserts at slot 0
+frontend/modules/seedlingDemo/tapeFormat.js|appendInventorySlots|h43859327|1|0,rule,sentinel,,firewand fusion inserts at slot 1
+frontend/modules/seedlingDemo/tapeFormat.js|remove|h6c45aaa8|0|1,rule,sentinel,,removeItem's primary % 0 is NaN; set primary(int) coerces it to 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h2bab640f|16|0,physics,magnitude,Scenery/Tile.as:w,tile size
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|h9f68d7e1|0|0,physics,magnitude,,headPos.x always 0
 frontend/modules/seedlingDemo/seedlingProfile.js|(module)|hb1551ba9|30|0,rule,count,Game.as:tagsPerLevel,

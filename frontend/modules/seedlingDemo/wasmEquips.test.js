@@ -103,16 +103,23 @@ describe('WASM EQUIPS — a continuation in the held room', () => {
             const rows = playTape(game, shipped);
             expect(rows.slice(1)).toEqual(cont.expected);
             expect(game.level).toBe(12);
-            // After the burn the re-solve just walks: no slot change, so the game crosses with Fire's slot still selected.
-            if (K > 60) expect([cont.equipsAt.size, game.primary]).toEqual([0, 1]);
+            // ⛓ SEEDLING FIDELITY SLOTS (D4b): after the burn the re-solve selects the SWORD's slot on its first tick
+            // (before any press) and walks — it used to cross with Fire's slot still selected (`[0, 1]` here).
+            if (K > 60) expect([[...cont.equipsAt], game.primary]).toEqual([[[0, 0]], 0]);
         });
     }
 
-    it('RESIDUE (the solver\'s, pinned): frozen MID-BURN (K=80, the tree hit at t64, gone at t105) the re-solve declines — the burn verb cannot apply to a burning tree', () => {
+    it('⛓ SEEDLING FIDELITY SLOTS (D4a): frozen MID-BURN (K=80, the tree hit at t64, gone at t105) the re-solve selects the sword\'s slot, WAITS the burn out and crosses (it used to decline: "Strategy \'burn\' failed to apply")', () => {
         const K = 80;
         const c = continuationSolveRequest({ staging: STAGING, shipped: PLAN.solution.slice(0, K + 1).map((h) => [...h]), goal: GOAL,
             levelSource: SRC, records: RECORDS, record: RECORD, equips: new Map([[60, 1]]) });
-        expect(() => solveFromTape(c.request)).toThrow(/Obstacle: solid:burnabletree \(burnabletree@32,128\).*Strategy 'burn' failed to apply/);
+        const cont = solveFromTape(c.request);
+        expect([...cont.equipsAt]).toEqual([[0, 0]]);
+        expect(cont.verbs).toEqual(['burn', 'walk']);
+        expect(cont.expected.at(-1)).toMatchObject({ level: 12, deaths: 0 });
+        // The wait ends on the update the tree is gone (`goneAt` 105): no press, nothing walked into the cell before it.
+        const firstKeys = cont.solution.findIndex((h) => h.size > 0);
+        expect(K + 1 + firstKeys).toBeGreaterThanOrEqual(105);
     });
 
     it('the held check after Fire\'s slot: the shadow WITH the room\'s equips equals the game (slot 1); WITHOUT them it is named', () => {

@@ -4015,12 +4015,20 @@ export function createLevelRun({
         ? null : openBridgeIds(level, ticksCompleted + 1));
     const brokenRockIdsNow = () => (rockStateFor(level).size === 0
         ? null : brokenRockIds(rockStateFor(level), ticksCompleted + 1));
-    // ⚠ `ticksCompleted + 1`, exactly like the rocks': the geometry query
-    // is being made FOR the tick about to run, and a burn that completes on
-    // it has already been processed by `World.updateLists` at the top of
-    // the frame.
+    // ⛓⛓⛓ SEEDLING FIDELITY SLOTS (D4a) — `ticksCompleted`, NOT `+ 1`, and
+    // it is MEASURED. This read `ticksCompleted + 1` "exactly like the rocks'"
+    // on the argument that a burn completing on the tick about to run has
+    // already been processed by `World.updateLists` at the top of the frame.
+    // The game says otherwise: `slots-l24-burn-cut-80` walks into the tree's
+    // cell the moment the model said it was gone, and on the game the update
+    // that ENTERS at `goneAt - 1` (t104, `goneAt` 105) is still blocked while
+    // the one entering at `goneAt` moves freely — the update `die()` runs in
+    // (`burn-write-oracle`: the write lands with the `goneAt + 1`-tick cut).
+    // Every earlier burn witness waited `WAIT_AFTER_PRESS_TICKS` past its
+    // press, so none had walked into the cell on the fencepost. (The rocks'
+    // query keeps its `+ 1`: nothing here measured it.)
     const burnedTreeIdsNow = () => (burnStateFor(level).size === 0
-        ? null : burnedTreeIds(burnStateFor(level), ticksCompleted + 1));
+        ? null : burnedTreeIds(burnStateFor(level), ticksCompleted));
     const pushableRectsNow = () => {
         const st = pushableStateFor(level);
         return st.byId.size === 0 ? null : pushableRects(st);
