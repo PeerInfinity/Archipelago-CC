@@ -157,7 +157,7 @@ A bot is not live play: `livePlayRegion()` returns null while a solver drives, a
 
 jta and omsi both use `walkTo` with `queueActions: ['regionMove']`, so their bots only handle exit walks. They differ across a loop reset: jta's bridge remembers the pending walk (`_pendingWalkExit`), so the park stays up; omsi's walk, driven by the fork's Advanced Automation planner, ends on the teleport and continues through the generic queue restart, the same contract as [a replay bigger than one run](#a-replay-bigger-than-one-run). See [jta.md](./jta.md) and [omsi.md](./omsi.md).
 
-Noiz2sa's bot takes both `locationCheck` and `regionMove` targets, each its own run of the region: a location target plays the check run (the region's check span) to its clear, which checks the location while the player stays; an exit target plays the move run (the move span) to its clear and leaves by the target exit, on every visit, a region cleared before included. A hit restarts the run. Its proxy's `walkTo` carries the bot's settings as a second argument, which the flash bridge passes to the page. See [noiz2sa.md](./noiz2sa.md#the-bot).
+Noiz2sa's bot takes both `locationCheck` and `regionMove` targets, each its own run of the region: a location target plays that location's check run (its own check span) to its clear, which checks it while the player stays; an exit target plays the move run (the move span) to its clear and leaves by the target exit, on every visit, a region cleared before included. A hit restarts the run. Its proxy's `walkTo` carries the bot's settings as a second argument, which the flash bridge passes to the page. See [noiz2sa.md](./noiz2sa.md#the-bot).
 
 ### Bot economy
 

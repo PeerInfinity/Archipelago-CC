@@ -7020,11 +7020,11 @@ export const REGISTRY = frz({
                     "type": "object",
                     "value": [
                         "ap_locations",
-                        "check",
                         "end",
                         "exits",
                         "fogEnabled",
                         "gameId",
+                        "locations",
                         "move",
                         "seed",
                         "start"
