@@ -36,7 +36,7 @@
         ],
         "locations": [
           {
-            "name": "region_0_0__clear",
+            "name": "region_0_0__check1",
             "id": 1000,
             "access_rule": {
               "rule": "True_"
@@ -68,21 +68,7 @@
             }
           }
         ],
-        "locations": [
-          {
-            "name": "region_1_0__clear",
-            "id": 1001,
-            "access_rule": {
-              "rule": "True_"
-            },
-            "item": {
-              "name": "Noiz2sa Star",
-              "player": 1,
-              "advancement": false,
-              "type": "filler"
-            }
-          }
-        ]
+        "locations": []
       },
       "region_1_1": {
         "name": "region_1_1",
@@ -97,7 +83,20 @@
         ],
         "locations": [
           {
-            "name": "region_1_1__clear",
+            "name": "region_1_1__check1",
+            "id": 1001,
+            "access_rule": {
+              "rule": "True_"
+            },
+            "item": {
+              "name": "Noiz2sa Star",
+              "player": 1,
+              "advancement": false,
+              "type": "filler"
+            }
+          },
+          {
+            "name": "region_1_1__check2",
             "id": 1002,
             "access_rule": {
               "rule": "True_"
@@ -175,9 +174,9 @@
   },
   "canonical_placements": {
     "1": {
-      "region_0_0__clear": "Noiz2sa Star",
-      "region_1_0__clear": "Noiz2sa Star",
-      "region_1_1__clear": "Victory"
+      "region_0_0__check1": "Noiz2sa Star",
+      "region_1_1__check1": "Noiz2sa Star",
+      "region_1_1__check2": "Victory"
     }
   },
   "progression_mapping": {
@@ -207,19 +206,24 @@
               "scene": 0
             }
           },
-          "check": {
-            "start": {
-              "stage": 0,
-              "scene": 0
-            },
-            "end": {
-              "stage": 0,
-              "scene": 1
-            }
-          },
           "seed": 1,
+          "locations": [
+            {
+              "id": "check1",
+              "check": {
+                "start": {
+                  "stage": 0,
+                  "scene": 0
+                },
+                "end": {
+                  "stage": 0,
+                  "scene": 1
+                }
+              }
+            }
+          ],
           "ap_locations": {
-            "clear": "region_0_0__clear"
+            "check1": "region_0_0__check1"
           },
           "exits": [
             {
@@ -253,20 +257,9 @@
               "scene": 2
             }
           },
-          "check": {
-            "start": {
-              "stage": 0,
-              "scene": 1
-            },
-            "end": {
-              "stage": 0,
-              "scene": 4
-            }
-          },
           "seed": 1,
-          "ap_locations": {
-            "clear": "region_1_0__clear"
-          },
+          "locations": [],
+          "ap_locations": {},
           "exits": [
             {
               "exit_id": "exit_S",
@@ -307,19 +300,38 @@
               "scene": 0
             }
           },
-          "check": {
-            "start": {
-              "stage": 0,
-              "scene": 9
-            },
-            "end": {
-              "stage": 1,
-              "scene": 2
-            }
-          },
           "seed": 1,
+          "locations": [
+            {
+              "id": "check1",
+              "check": {
+                "start": {
+                  "stage": 0,
+                  "scene": 9
+                },
+                "end": {
+                  "stage": 1,
+                  "scene": 2
+                }
+              }
+            },
+            {
+              "id": "check2",
+              "check": {
+                "start": {
+                  "stage": 1,
+                  "scene": 3
+                },
+                "end": {
+                  "stage": 1,
+                  "scene": 6
+                }
+              }
+            }
+          ],
           "ap_locations": {
-            "clear": "region_1_1__clear"
+            "check1": "region_1_1__check1",
+            "check2": "region_1_1__check2"
           },
           "exits": [
             {
@@ -354,9 +366,9 @@
             "resolved_items": {}
           },
           "new_accessible_locations": [
-            "region_0_0__clear",
-            "region_1_0__clear",
-            "region_1_1__clear"
+            "region_0_0__check1",
+            "region_1_1__check1",
+            "region_1_1__check2"
           ],
           "new_accessible_regions": [
             "Menu",
@@ -384,7 +396,7 @@
           "new_accessible_locations": [],
           "new_accessible_regions": [],
           "sphere_locations": [
-            "region_1_1__clear"
+            "region_1_1__check2"
           ]
         }
       }

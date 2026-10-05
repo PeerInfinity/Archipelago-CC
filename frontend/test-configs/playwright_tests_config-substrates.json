@@ -128,13 +128,19 @@
             "id": "noiz2sa-first-entry-explores",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N4b (b, as changed 2026-10-05: fully explored on FIRST ENTRY, not first clear). The second region is fogged (location and exits undiscovered) and the player is moved into it: on that first entry it reads fully explored (every location and exit discovered, through loop:exploreCompleted), nothing checked. Batch fast: no play."
+            "_comment": "bulletml-incremental N4b (b, as changed 2026-10-05: fully explored on FIRST ENTRY, not first clear). The second region (N4c: no location) is fogged (its exits undiscovered) and the player is moved into it: on that first entry it reads fully explored (every exit discovered, through loop:exploreCompleted), one explore per exit. Batch fast: no play."
         },
         {
             "id": "noiz2sa-choice-list",
             "enabled": true,
             "category": "noiz2saSubstrate",
             "_comment": "bulletml-incremental N4c (b): the choice list. Loop mode, nothing queued on 1:1: the page offers every exit and the check; choosing the check queues a locationCheck, the queue parks a Record block and the check run starts; the bot (B, seed 1, tracks 100 By hand, 4x) clears it, the location is checked and the list offers the exits only; choosing the exit queues the move and its clear performs it (the summary holds the check, departing by the exit). Batch fast: two 4x bot clears."
+        },
+        {
+            "id": "noiz2sa-locations-per-region",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4c correction: zero or more locations per region, none by default, each with its own check span. The preset's 1:1 has one location, 1:2-1:3 none, 1:boss-2:1 two; outside loop mode the row visits each: the choice list is the exits plus one entry per location, and 1:boss-2:1's check2 starts its check run on its own span 2:4-2:7. Batch fast: no clear, a few seconds."
         },
         {
             "id": "noiz2sa-queued-check",

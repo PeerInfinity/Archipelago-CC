@@ -65,9 +65,11 @@ describe('the registry entry', () => {
 describe('payload ↔ world', () => {
     const move = { start: { stage: 0, scene: 1 }, end: { stage: 0, scene: 2 } };
     const check = { start: { stage: 0, scene: 1 }, end: { stage: 0, scene: 4 } };
+    const check2 = { start: { stage: 0, scene: 5 }, end: { stage: 0, scene: 8 } };
+    const locations = [{ id: 'check1', check }, { id: 'check2', check: check2 }];
     const payload = {
-        gameId: 'noiz2sa', move, check, seed: 1,
-        ap_locations: { clear: 'r__clear' },
+        gameId: 'noiz2sa', move, seed: 1, locations,
+        ap_locations: { check1: 'r__check1', check2: 'r__check2' },
         exits: [{ exit_id: 'exit_S', side: 'S', exitName: 'exit_S', targetRegion: 'r2' }],
         fogEnabled: true,
     };
@@ -76,28 +78,34 @@ describe('payload ↔ world', () => {
         expect(w.exits).toBeInstanceOf(Map);
         expect(w.exits.get('exit_S').targetRegion).toBe('r2');
         expect(w.params).toEqual({
-            move, check, seed: 1,
+            move, seed: 1, locations,
             exits: [{ exitName: 'exit_S', side: 'S', targetRegion: 'r2' }],
             walkToExits: 'byName', // the bridge resolves a bot walk to an exit by its name
         });
-        expect(w.ap_locations).toEqual({ clear: 'r__clear' });
+        expect(w.ap_locations).toEqual({ check1: 'r__check1', check2: 'r__check2' });
     });
-    it('N4c: the pre-N4c {start, end} is read as the move span; an absent check span is twice the move\'s scenes', () => {
-        const { move: _m, check: _c, ...rest } = payload;
-        const old = { ...rest, ...move };
-        // `start`/`end` are declared (no UNDECLARED_FIELD); only the fields every writer now emits are missing
-        expect(sidecarPayloadErrors(sidecarFieldsOf(entry), old).map((e) => `${e.code} ${e.field}`))
-            .toEqual(['MISSING_REQUIRED move', 'MISSING_REQUIRED check']);
-        expect(entry.deserializeWorld(old).params).toMatchObject({ move, check, seed: 1 });
-        expect(entry.deserializeWorld({ ...payload, check: undefined }).params.check).toEqual(check);
-        // a stored check span wins over the derived one
+    it('N4c: a region with no locations; each location keeps its own span; the older shapes are read', () => {
+        const none = { ...payload, locations: [], ap_locations: {} };
+        expect(sidecarPayloadErrors(sidecarFieldsOf(entry), none)).toEqual([]);
+        expect(entry.deserializeWorld(none).params.locations).toEqual([]);
+        // a location without its span gets the default one, by its position
+        expect(entry.deserializeWorld({ ...payload, locations: [{ id: 'check1' }, { id: 'check2' }] }).params.locations)
+            .toEqual([{ id: 'check1', check }, { id: 'check2', check: check2 }]);
+        // a stored span wins
         const longer = { start: move.start, end: { stage: 0, scene: 8 } };
-        expect(entry.deserializeWorld({ ...payload, check: longer }).params.check).toEqual(longer);
+        expect(entry.deserializeWorld({ ...payload, locations: [{ id: 'check1', check: longer }] }).params.locations)
+            .toEqual([{ id: 'check1', check: longer }]);
+        // pre-N4c: {start, end} is the move span, one location per ap_locations key
+        const { move: _m, locations: _l, ...rest } = payload;
+        const old = { ...rest, ...move, ap_locations: { clear: 'r__clear' } };
+        expect(sidecarPayloadErrors(sidecarFieldsOf(entry), old).map((e) => `${e.code} ${e.field}`))
+            .toEqual(['MISSING_REQUIRED move', 'MISSING_REQUIRED locations']);
+        expect(entry.deserializeWorld(old).params).toMatchObject({ move, seed: 1, locations: [{ id: 'clear', check }] });
     });
     it('deserializeWorld refuses a malformed span (the warehouse skips the region)', () => {
         expect(() => entry.deserializeWorld({ ...payload, move: { ...move, end: { stage: 0, scene: 0 } } })).toThrow(/before its start/);
         expect(() => entry.deserializeWorld({ ...payload, move: undefined })).toThrow(/segment start/);
-        expect(() => entry.deserializeWorld({ ...payload, check: { ...check, end: { stage: 0, scene: 0 } } })).toThrow(/before its start/);
+        expect(() => entry.deserializeWorld({ ...payload, locations: [{ id: 'check1', check: { ...check, end: { stage: 0, scene: 0 } } }] })).toThrow(/before its start/);
     });
     it('serializeWorld inverts it: params dropped (derived), exits back to the array', () => {
         expect(entry.serializeWorld(entry.deserializeWorld(payload))).toEqual(payload);
@@ -111,15 +119,24 @@ describe('the zone table', () => {
     it('every zone is a valid span on seed 1', () => {
         expect(entry.zoneCount).toBe(NOIZ2SA_ZONES.length);
         const shapes = NOIZ2SA_ZONES.map((_, i) => describeRegion(zoneRegion(i)));
-        expect(shapes).toEqual(['1:1, check 1:1–1:2 (seed 1)', '1:2–1:3, check 1:2–1:5 (seed 1)', '1:boss–2:1, check 1:boss–2:3 (seed 1)']);
+        expect(shapes).toEqual(['1:1, check1 1:1–1:2 (seed 1)', '1:2–1:3, no location (seed 1)',
+            '1:boss–2:1, check1 1:boss–2:3, check2 2:4–2:7 (seed 1)']);
     });
-    it('extractZoneRules: one clear location per region, Victory on the last; the payload is declared', () => {
-        const last = NOIZ2SA_ZONES.length - 1;
-        for (let i = 0; i <= last; i++) {
-            const z = entry.extractZoneRules(i, { region_id: `r${i}` });
-            expect(z.locations).toEqual([{ id: 'clear', item: i === last ? NOIZ2SA_VICTORY_ITEM_NAME : NOIZ2SA_FILLER_ITEM_NAME, position: null }]);
-            expect(z.payload).toEqual({ gameId: 'noiz2sa', ...zoneRegion(i), ap_locations: { clear: `r${i}__clear` } });
-        }
+    it('extractZoneRules: a zone\'s locations (none when it declares none), Victory on the last location; the payload is declared', () => {
+        const ids = (z) => z.locations.map((l) => `${l.id}:${l.item}`);
+        const z = NOIZ2SA_ZONES.map((_, i) => entry.extractZoneRules(i, { region_id: `r${i}` }));
+        expect(z.map(ids)).toEqual([
+            [`check1:${NOIZ2SA_FILLER_ITEM_NAME}`], [],
+            [`check1:${NOIZ2SA_FILLER_ITEM_NAME}`, `check2:${NOIZ2SA_VICTORY_ITEM_NAME}`],
+        ]);
+        z.forEach((zr, i) => {
+            expect(zr.payload).toEqual({
+                gameId: 'noiz2sa', ...zoneRegion(i),
+                ap_locations: Object.fromEntries(zr.locations.map((l) => [l.id, `r${i}__${l.id}`])),
+            });
+            expect(sidecarPayloadErrors(sidecarFieldsOf(entry), { ...zr.payload, exits: [], fogEnabled: true })).toEqual([]);
+        });
+        expect(zoneRegion(1).locations).toEqual([]); // ⚖ none by default: the zone declares none
         expect(entry.libraryItems[NOIZ2SA_VICTORY_ITEM_NAME].is_victory).toBe(true);
     });
 });
@@ -127,11 +144,13 @@ describe('the zone table', () => {
 describe('the committed noiz2sa_substrate_test preset', () => {
     const rules = JSON.parse(readFileSync(join(REPO, PRESET), 'utf8'));
     const sidecars = Object.entries(rules.preset_sidecars['1']);
-    it('N4c: every region carries both spans, the check twice the move\'s scenes', () => {
-        for (const [, sc] of sidecars) {
-            const { move, check } = sc.playable_payload;
-            expect(sceneCount(check)).toBe(2 * sceneCount(move));
-            expect(check.start).toEqual(move.start);
+    it('N4c: one region with one location, one with none, one with two — each location with its own span', () => {
+        expect(sidecars.map(([, sc]) => sc.playable_payload.locations.length)).toEqual([1, 0, 2]);
+        for (const [regionId, sc] of sidecars) {
+            const { move, locations } = sc.playable_payload;
+            expect(rules.regions['1'][regionId].locations.map((l) => l.name)).toEqual(locations.map((l) => `${regionId}__${l.id}`));
+            locations.forEach((l) => expect(sceneCount(l.check)).toBe(2 * sceneCount(move)));
+            if (locations[0]) expect(locations[0].check.start).toEqual(move.start);
         }
     });
     it('has one Noiz2sa region per zone, each payload clean against the declaration', () => {

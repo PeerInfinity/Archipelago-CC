@@ -14,7 +14,7 @@
  *
  * Runtime: like runner and bounce, the iframe rides `flashSubstrate`'s shared code — the panel factory and the
  * injected `bridge.js` (the `__swfBridge` contract): the game page (`game/`) implements `configure`, and calls
- * `sendLocation('clear')` when a check run clears and `sendExit(exitName, null)` when a move run clears.
+ * `sendLocation(<location id>)` when a check run clears and `sendExit(exitName, null)` when a move run clears.
  * `deserializeWorld` is where the payload becomes what that bridge forwards: the bridge hands the game only
  * `params`, so the region (`start`, `end`, `seed`) and the exit list are copied into `params` there.
  *
@@ -24,12 +24,14 @@
  * returns the host module's proxy (injected by `index.js`, null headless), whose walkTo carries the humanlike bot's
  * settings at the trainer's current tracks (`noiz2saTraining.js`).
  *
- * N4b/N4c (⚖ 2026-10-05): a region has two runs. A MOVE run plays the move span on every visit (cleared before or
- * not) and its clear performs the move; a CHECK run — its own queue action, the standard `locationCheck` (⚖ "I want
- * the location check to be a separate action from the move") — plays the CHECK span, twice the move's scenes from the
- * same start, and its clear checks the location while the player stays in the region. `queueActions` is both; with
- * nothing queued for the region the page offers the choice list (every exit, and the check until it is checked). A
- * first ENTRY explores the region fully (`noiz2saFirstEntry.js`).
+ * N4b/N4c (⚖ 2026-10-05): a region has a MOVE run, which plays the move span on every visit (cleared before or not)
+ * and whose clear performs the move, and ZERO OR MORE LOCATIONS (⚖ "I want to keep the ability for Noiz2sa regions to
+ * contain location checks. But I don't want to force them each to have exactly one. And I want them to have none by
+ * default."). Each location's CHECK — its own queue action, the standard `locationCheck` (⚖ "I want the location check
+ * to be a separate action from the move") — plays that location's own check span (by default twice the move's scenes),
+ * and its clear checks the location while the player stays in the region. `queueActions` is both; with nothing queued
+ * for the region the page offers the choice list (every exit, and every unchecked location). A first ENTRY explores
+ * the region fully (`noiz2saFirstEntry.js`).
  *
  * Content source: a fixed zone table (`NOIZ2SA_ZONES`), one region per zone, for the test preset and the
  * shuffled-spiral driver (`zoneCount` / `extractZoneRules`). Pricing and the stat tracks are later slices.
@@ -41,7 +43,7 @@ import {
 } from '../procgenCore/sidecarFields.js';
 import { REGION_GEOMETRY } from '../procgenCore/regionGeometry.js';
 import { SIDE_AGNOSTIC_EXIT_SIDES } from '../procgenCore/exitSides.js';
-import { checkSpanOf, parsePosition, regionSpanOf, regionSpansOf, showSpan } from './noiz2saRegion.js';
+import { defaultCheckSpans, parsePosition, regionSpanOf, regionSpansOf, showSpan } from './noiz2saRegion.js';
 
 export const NOIZ2SA_SUBSTRATE_ID = 'noiz2sa';
 export const NOIZ2SA_GAME_ID = 'noiz2sa';
@@ -50,10 +52,10 @@ export const NOIZ2SA_LOAD_REGION_EVENT = 'noiz2sa:loadRegion';
 export const NOIZ2SA_IFRAME_ID = 'noiz2saSubstrate';
 /** the bot's commands, host proxy → the in-iframe bridge (the iframe URL names it) */
 export const NOIZ2SA_PLAYBACK_CONTROL_EVENT = 'noiz2sa:playbackControl';
-/** the region's one location: its id in the game (`sendLocation`) and the suffix of its AP name */
-export const NOIZ2SA_CLEAR_LOCATION_ID = 'clear';
+/** a region's i-th location (0-based): its id in the game (`sendLocation`) and the suffix of its AP name */
+export const noiz2saLocationId = (i) => `check${i + 1}`;
 export const NOIZ2SA_VICTORY_ITEM_NAME = 'Victory';
-/** what the other regions' clears hold: a filler with no effect (N3 has no items that do anything) */
+/** what the other locations hold: a filler with no effect (N3 has no items that do anything) */
 export const NOIZ2SA_FILLER_ITEM_NAME = 'Noiz2sa Star';
 
 export const NOIZ2SA_LIBRARY_ITEMS = Object.freeze({
@@ -63,23 +65,31 @@ export const NOIZ2SA_LIBRARY_ITEMS = Object.freeze({
 
 /**
  * The zone table: one region per entry, its MOVE span `{start, end}` as a player writes it (STAGE:SCENE, scene 1–9
- * or boss). Three spans that cover the three shapes a region has: one scene, two scenes, and a boss into the
- * next stage. Every region plays on seed 1. The LAST zone's clear holds Victory. The check span is derived (N4c,
- * `checkSpanOf`: twice the move's scenes from the same start).
+ * or boss), and `locations`, how many locations the region has — ABSENT means none (⚖ N4c: "I want them to have none
+ * by default"). Three spans that cover the three shapes a region has: one scene, two scenes, and a boss into the next
+ * stage; and the three location cases: one, none, two. Every region plays on seed 1. The last location of the last
+ * zone that has any holds Victory. A location's check span is its default one (`defaultCheckSpans`: twice the move's
+ * scenes each, the first from the move's start, each next one from the scene after the previous one's end).
  */
 export const NOIZ2SA_ZONES = Object.freeze([
-    Object.freeze({ start: '1:1', end: '1:1' }),
+    Object.freeze({ start: '1:1', end: '1:1', locations: 1 }),
     Object.freeze({ start: '1:2', end: '1:3' }),
-    Object.freeze({ start: '1:boss', end: '2:1' }),
+    Object.freeze({ start: '1:boss', end: '2:1', locations: 2 }),
 ]);
+/** how many locations zone i has (absent: none) */
+const zoneLocationCount = (z) => (Number.isInteger(z?.locations) && z.locations > 0 ? z.locations : 0);
+/** the zone holding Victory: the last zone with a location (-1: none has one) */
+const VICTORY_ZONE = NOIZ2SA_ZONES.map(zoneLocationCount).findLastIndex((n) => n > 0);
 const ZONE_SEED = 1;
 
-/** zone i → its region `{move: {start, end}, check: {start, end}, seed}` */
+/** zone i → its region `{move: {start, end}, seed, locations: [{id, check: {start, end}}]}` */
 export function zoneRegion(zoneIdx) {
     const z = NOIZ2SA_ZONES[zoneIdx];
     if (!z) throw new Error(`noiz2sa: no zone ${zoneIdx} (have ${NOIZ2SA_ZONES.length})`);
     const { start, end, seed } = regionSpanOf({ start: parsePosition(z.start), end: parsePosition(z.end), seed: ZONE_SEED });
-    return { move: { start, end }, check: checkSpanOf({ start, end }), seed };
+    const move = { start, end };
+    const locations = defaultCheckSpans(move, zoneLocationCount(z)).map((check, i) => ({ id: noiz2saLocationId(i), check }));
+    return { move, seed, locations };
 }
 
 /** The region's exits as the game page lists them (its "leave" buttons): from the payload's envelope. */
@@ -93,8 +103,8 @@ export function exitButtonsOf(exits) {
 /**
  * procgenPlayer passes the sidecar's `playable_payload`. Exits become a Map keyed by exit name
  * (procgenPlayer.handleRegionMove calls `world.exits.has(exitName)`). The flash bridge forwards only
- * `params` to the game, so the checked spans (`move`, `check`: `regionSpansOf`, which reads a pre-N4c payload's
- * `{start, end}` as the move span and derives an absent check span) and the exit list are written there. Throws on
+ * `params` to the game, so the checked region (`move`, `seed`, `locations`: `regionSpansOf`, which also reads the
+ * older shapes) and the exit list are written there. Throws on
  * a payload whose span is malformed (the warehouse then skips the region, `procgenCore/deserializeRefusal.js`).
  */
 function deserializeWorld(payload) {
@@ -164,12 +174,22 @@ export const NOIZ2SA_SIDECAR_FIELDS = Object.freeze({
             + 'refuses the region.',
         schema: SPAN_SCHEMA,
     }),
-    check: Object.freeze({
-        type: 'object', required: true, derived: true,
-        description: 'The CHECK span {start, end}: what a check of the region\'s location plays, its clear checking the '
-            + 'location (the player stays). Twice the move span\'s scenes from the same start (`checkSpanOf`), by '
-            + `${ZONE_RULES}; derived from the move span on load when absent.`,
-        schema: SPAN_SCHEMA,
+    locations: Object.freeze({
+        type: 'array', required: true, derived: true,
+        description: 'The region\'s locations, zero or more (⚖ N4c: none by default): `[{id, check: {start, end}}]`. `id` '
+            + 'is the location\'s id in the game (`check1`, `check2`, …; `ap_locations` maps it to its AP name); `check` is '
+            + 'its own CHECK span, what a check of it plays, its clear checking it (the player stays). By default each is '
+            + 'twice the move span\'s scenes, the first from the move\'s start, each next one from the scene after the '
+            + `previous one's end (\`defaultCheckSpans\`), by ${ZONE_RULES}. A location without \`check\` gets its `
+            + 'default span on load; a payload without `locations` has one per `ap_locations` key.',
+        schema: Object.freeze({
+            items: Object.freeze({
+                type: 'object',
+                required: Object.freeze(['id']),
+                additionalProperties: false,
+                properties: Object.freeze({ id: Object.freeze({ type: 'string' }), check: Object.freeze({ type: 'object', ...SPAN_SCHEMA }) }),
+            }),
+        }),
     }),
     start: Object.freeze({
         type: 'object', required: false,
@@ -188,26 +208,27 @@ export const NOIZ2SA_SIDECAR_FIELDS = Object.freeze({
     }),
     ap_locations: Object.freeze({
         type: 'object', required: true, derived: true,
-        description: `\`clear\` → the AP location name \`<region>__clear\`, by ${ZONE_RULES}. The bridge maps the `
-            + 'page\'s `sendLocation(\'clear\')` through it; a mismatch drops the check.',
+        description: `Each location's id → its AP location name \`<region>__<id>\` (empty for a region with none), by `
+            + `${ZONE_RULES}. The bridge maps the page's \`sendLocation(<id>)\` through it; a mismatch drops the check.`,
         schema: Object.freeze({ additionalProperties: Object.freeze({ type: 'string' }) }),
     }),
 });
 
-/** zone i → the zone-locations channel result (`procgenPipelineEngine.synthesizeZoneRegion`) */
+/** zone i → the zone-locations channel result (`procgenPipelineEngine.synthesizeZoneRegion`); a zone with no locations
+ * yields a region with none (still a region: its exits are its AP entrances) */
 function extractZoneRules(zoneIdx, { region_id } = {}) {
     const region = zoneRegion(zoneIdx);
-    const last = zoneIdx === NOIZ2SA_ZONES.length - 1;
+    const n = region.locations.length;
     return {
-        locations: [{
-            id: NOIZ2SA_CLEAR_LOCATION_ID,
-            item: last ? NOIZ2SA_VICTORY_ITEM_NAME : NOIZ2SA_FILLER_ITEM_NAME,
+        locations: region.locations.map((l, i) => ({
+            id: l.id,
+            item: zoneIdx === VICTORY_ZONE && i === n - 1 ? NOIZ2SA_VICTORY_ITEM_NAME : NOIZ2SA_FILLER_ITEM_NAME,
             position: null,
-        }],
+        })),
         payload: {
             gameId: NOIZ2SA_GAME_ID,
             ...region,
-            ap_locations: { [NOIZ2SA_CLEAR_LOCATION_ID]: `${region_id}__${NOIZ2SA_CLEAR_LOCATION_ID}` },
+            ap_locations: Object.fromEntries(region.locations.map((l) => [l.id, `${region_id}__${l.id}`])),
         },
     };
 }
@@ -260,10 +281,11 @@ export const substrateRegistryEntry = Object.freeze({
     zoneSourceLabel: 'Noiz2sa segment',
 });
 
-/** what a region plays, for logs and labels: "1:2–1:3, check 1:2–1:5 (seed 1)" */
+/** what a region plays, for logs and labels: "1:2–1:3, check1 1:2–1:5 (seed 1)", "1:1, no location (seed 1)" */
 export const describeRegion = (payload) => {
     const r = regionSpansOf(payload);
-    return `${showSpan(r.move)}, check ${showSpan(r.check)} (seed ${r.seed})`;
+    const locs = r.locations.length ? r.locations.map((l) => `${l.id} ${showSpan(l.check)}`).join(', ') : 'no location';
+    return `${showSpan(r.move)}, ${locs} (seed ${r.seed})`;
 };
 
 // Side-effect on import: register, so headless scripts and the pipeline resolve the substrate without the

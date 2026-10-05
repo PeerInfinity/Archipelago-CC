@@ -680,7 +680,7 @@ async function noiz2saBotPlaysCheck(testController) {
         loopStateSingleton._resetLoop();
         if (!(await pageConfigured(testController, r.region, before, `${label} visit 2`, mod.getVisitBotSeed))) return;
         testController.assertEqual(`[${label}] visit 2: the page knows the location is checked; the exits stay CLOSED`, true,
-            debugState().checked === true && debugState().exitsOpen === false);
+            JSON.stringify(debugState().checked) === '["check1"]' && debugState().exitsOpen === false);
         gs.refillMana();
         const manaBefore = currentMana(), earnedBefore = service.trainer.earned, unit = unitDrainCost(r.region);
         loopStateSingleton.startProcessing();
@@ -730,9 +730,9 @@ async function noiz2saQueuedCheck(testController) {
         testController.assertEqual(`[${label}] the queued check plays the CHECK run, 1:1–1:2 (the move's 1:1, twice)`,
             JSON.stringify(['check', { start: { stage: 0, scene: 0 }, end: { stage: 0, scene: 1 }, seed: 1 }]),
             JSON.stringify([d0.runKind, d0.span]));
-        testController.assertEqual(`[${label}] the region's spans: move 1:1, check 1:1–1:2`,
-            JSON.stringify({ move: { start: { stage: 0, scene: 0 }, end: { stage: 0, scene: 0 } }, check: { start: { stage: 0, scene: 0 }, end: { stage: 0, scene: 1 } } }),
-            JSON.stringify({ move: d0.spans.move, check: d0.spans.check }));
+        testController.assertEqual(`[${label}] the region: move 1:1, one location check1 with its own span 1:1–1:2`,
+            JSON.stringify({ move: { start: { stage: 0, scene: 0 }, end: { stage: 0, scene: 0 } }, locations: [{ id: 'check1', check: { start: { stage: 0, scene: 0 }, end: { stage: 0, scene: 1 } } }] }),
+            JSON.stringify({ move: d0.spans.move, locations: d0.spans.locations }));
         pressKey('KeyB');
         const cleared = await testController.pollForCondition(() => debugState()?.checkClearedThisVisit === true,
             `[${label}] B: the bot played the check run to its clear`, 120000, 20);
@@ -758,9 +758,10 @@ async function noiz2saQueuedCheck(testController) {
 
 /**
  * N4b (b) — ⚖ "The Noiz2sa regions should count as fully explored when they are first entered, not when they are first
- * cleared." The row fogs the second region (its location and exits undiscovered), then moves the player into it (a
- * reset teleport, so no queue is involved): on that first entry the region reads FULLY EXPLORED — every location and
- * exit discovered (loops' `_isRegionFullyExplored`), the exits through `discovery:exitDiscovered`, as explores do.
+ * cleared." The second region has no location (N4c (d)). The row fogs it (its exits undiscovered), then moves the
+ * player into it (a reset teleport, so no queue is involved): on that first entry the region reads FULLY EXPLORED —
+ * every exit discovered (loops' `_isRegionFullyExplored`), through `discovery:exitDiscovered`, as explores do — and
+ * the first entry sent one explore per exit, none for a location.
  */
 async function noiz2saFirstEntryExplores(testController) {
     return withTrainer(testController, async (mod) => {
@@ -770,9 +771,11 @@ async function noiz2saFirstEntryExplores(testController) {
         const { default: discovery } = await import('../../discovery/singleton.js');
         const staticData = testController.stateManager.getStaticData();
         const next = r.target, nextData = staticData?.regions?.get(next);
-        testController.assertEqual(`[${label}] ${next} is a Noiz2sa region with a location and exits`, true,
-            loopStateSingleton.getRegionCaptureShape?.(next) === 'summary' && (nextData?.locations?.length ?? 0) > 0
+        // N4c (d): the second region has NO location (⚖ none by default): its first entry explores just its exits
+        testController.assertEqual(`[${label}] ${next} is a Noiz2sa region with exits and no location`, true,
+            loopStateSingleton.getRegionCaptureShape?.(next) === 'summary' && (nextData?.locations?.length ?? -1) === 0
             && (nextData?.exits?.length ?? 0) > 0);
+        const sentBefore = mod.getFirstEntryState().exploresSent;
         for (const l of nextData?.locations ?? []) discovery.undiscoverLocation(l.name);
         for (const e of nextData?.exits ?? []) discovery.undiscoverExit(next, e.name);
         testController.assertEqual(`[${label}] fogged: ${next} is not fully explored`, false,
@@ -799,9 +802,8 @@ async function noiz2saFirstEntryExplores(testController) {
         }
         testController.assertEqual(`[${label}] every exit of ${next} discovered through discovery:exitDiscovered`, true,
             (nextData.exits ?? []).every((e) => discovery.isExitDiscovered(next, e.name) && exitsSeen.includes(e.name)));
-        testController.assertEqual(`[${label}] its location discovered, nothing checked`, true,
-            (nextData.locations ?? []).every((l) => discovery.isLocationDiscovered(l.name)
-                && !snapshotHasLocation(testController.stateManager.getSnapshot(), l.name)));
+        testController.assertEqual(`[${label}] the first entry sent one explore per exit, none for a location`,
+            nextData.exits.length, mod.getFirstEntryState().exploresSent - sentBefore);
     });
 }
 
@@ -955,8 +957,8 @@ async function noiz2saChoiceList(testController) {
         if (!choosing) { testController.log(`DIAG: ${JSON.stringify(debugState())}`, 'error'); return; }
         const c0 = debugState().choices;
         testController.assertEqual(`[${label}] it offers every exit and the check`,
-            JSON.stringify([...(r.regionData.exits ?? []).map((e) => ['move', e.name]), ['check', null]]),
-            JSON.stringify(c0.map((c) => [c.kind, c.exitName])));
+            JSON.stringify([...(r.regionData.exits ?? []).map((e) => ['move', e.name]), ['check', 'check1']]),
+            JSON.stringify(c0.map((c) => [c.kind, c.id])));
         pressKey('KeyZ');
         await new Promise((res) => setTimeout(res, 500));
         testController.assertEqual(`[${label}] a game key does not start it; nothing steps`, true,
@@ -1040,8 +1042,8 @@ async function noiz2saChoiceListOutsideLoopMode(testController) {
         testController.reportCondition(`[${label}] loop mode off: the page shows the choice list`, !!choosing);
         if (!choosing) { testController.log(`DIAG: ${JSON.stringify(debugState())} configures since ${before}`, 'error'); return; }
         testController.assertEqual(`[${label}] it offers every exit and the check`,
-            JSON.stringify([...(r.regionData.exits ?? []).map((e) => ['move', e.name]), ['check', null]]),
-            JSON.stringify(debugState().choices.map((c) => [c.kind, c.exitName])));
+            JSON.stringify([...(r.regionData.exits ?? []).map((e) => ['move', e.name]), ['check', 'check1']]),
+            JSON.stringify(debugState().choices.map((c) => [c.kind, c.id])));
         const mana0 = currentMana();
         const requests = [];
         const onRequest = (d) => requests.push(d?.request?.kind);
@@ -1076,6 +1078,83 @@ async function noiz2saChoiceListOutsideLoopMode(testController) {
         }
     });
 }
+
+/**
+ * N4c correction (⚖ "I want to keep the ability for Noiz2sa regions to contain location checks. But I don't want to
+ * force them each to have exactly one. And I want them to have none by default."; each location stores its own check
+ * span). The preset's three regions cover the cases: 1:1 has one location, 1:2–1:3 none, 1:boss–2:1 two. Outside loop
+ * mode (no queue to route), the row visits each: the choice list offers the exits plus one entry per unchecked
+ * location (none for the region with none), and choosing a location starts ITS check run on ITS span — 1:boss–2:1's
+ * check2 plays 2:4–2:7, the default span after check1's 1:boss–2:3.
+ */
+async function noiz2saLocationsPerRegion(testController) {
+    return withTrainer(testController, async (mod, service, gs) => {
+        const label = 'locations per region';
+        const r = await loadStartRegion(testController, label);
+        if (!r) return;
+        loopStateSingleton.stopProcessing?.();
+        gs.setLoopModeActive(false);
+        const staticData = testController.stateManager.getStaticData();
+        const regions = [...staticData.regions.keys()].filter((id) => loopStateSingleton.getRegionCaptureShape?.(id) === 'summary').sort();
+        const counts = Object.fromEntries(regions.map((id) => [id, staticData.regions.get(id).locations?.length ?? 0]));
+        testController.assertEqual(`[${label}] the preset's regions have one, no and two locations`,
+            JSON.stringify({ region_0_0: 1, region_1_0: 0, region_1_1: 2 }), JSON.stringify(counts));
+        const P = (stage, scene) => ({ stage, scene });
+        const expect = {
+            region_0_0: [['check1', { start: P(0, 0), end: P(0, 1) }]],
+            region_1_0: [],
+            region_1_1: [['check1', { start: P(0, 9), end: P(1, 2) }], ['check2', { start: P(1, 3), end: P(1, 6) }]],
+        };
+        let from = r.region;
+        for (const id of ['region_1_0', 'region_1_1', 'region_0_0']) {
+            if (id !== from) {
+                loopStateSingleton.dispatcher.publish('user:regionMove', {
+                    sourceRegion: from, targetRegion: id, fromReset: true, updatePath: false,
+                }, { initialTarget: 'bottom' });
+                from = id;
+            }
+            testController.eventBus.publish('ui:activatePanel', { panelId: 'noiz2saSubstratePanel' });
+            const ready = await testController.pollForCondition(() => {
+                const d = debugState(); return currentRegion() === id && d?.regionId === id && d.state === 'choosing' && d.loopMode === false;
+            }, `[${label}] ${id}: the page shows the choice list`, 30000, 50);
+            testController.reportCondition(`[${label}] ${id}: the page shows the choice list`, !!ready);
+            if (!ready) { testController.log(`DIAG: ${JSON.stringify(debugState())}`, 'error'); return; }
+            const d = debugState();
+            testController.assertEqual(`[${label}] ${id}: its locations, each with its own check span`,
+                JSON.stringify(expect[id].map(([lid, check]) => ({ id: lid, check }))), JSON.stringify(d.spans.locations));
+            const exits = (staticData.regions.get(id).exits ?? []).map((e) => ['move', e.name]);
+            testController.assertEqual(`[${label}] ${id}: the choice list is its exits plus one entry per location`,
+                JSON.stringify([...exits, ...expect[id].map(([lid]) => ['check', lid])]),
+                JSON.stringify(d.choices.map((c) => [c.kind, c.id])));
+        }
+        // a location's check plays ITS span: region_1_1's check2
+        loopStateSingleton.dispatcher.publish('user:regionMove', {
+            sourceRegion: 'region_0_0', targetRegion: 'region_1_1', fromReset: true, updatePath: false,
+        }, { initialTarget: 'bottom' });
+        const there = await testController.pollForCondition(() => {
+            const d = debugState(); return d?.regionId === 'region_1_1' && d.state === 'choosing';
+        }, `[${label}] back in region_1_1`, 30000, 50);
+        testController.reportCondition(`[${label}] back in region_1_1`, !!there);
+        if (!there) return;
+        gameWindow().__noiz2saTest.chooseCheck('check2');
+        const d2 = debugState();
+        testController.assertEqual(`[${label}] choosing check2 starts its check run on its own span 2:4–2:7`,
+            JSON.stringify(['playing', 'check', 'check2', { ...expect.region_1_1[1][1], seed: 1 }]),
+            JSON.stringify([d2.state, d2.runKind, d2.runLoc, d2.span]));
+        pressKey('KeyP');
+    });
+}
+
+registerTest({
+    id: 'noiz2sa-locations-per-region',
+    name: 'Noiz2sa N4c: a region has zero or more locations, each with its own check span, each in the choice list',
+    description: 'The preset\'s 1:1 has one location, 1:2–1:3 none, 1:boss–2:1 two. Outside loop mode the row visits '
+        + 'each: the choice list offers the exits plus one entry per location (none for the region with none), each '
+        + 'location with its own default span; choosing 1:boss–2:1\'s check2 starts its check run on 2:4–2:7.',
+    testFunction: restoresSavedQueues(noiz2saLocationsPerRegion),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
 
 registerTest({
     id: 'noiz2sa-queued-check',
@@ -1126,10 +1205,10 @@ registerTest({
 
 registerTest({
     id: 'noiz2sa-first-entry-explores',
-    name: 'Noiz2sa N4b: a region\'s first entry explores it fully',
-    description: 'Loads noiz2sa_substrate_test, fogs its second region (location and exits undiscovered) and moves the '
-        + 'player into it: on that first entry the region reads fully explored, every exit discovered through '
-        + 'discovery:exitDiscovered, nothing checked.',
+    name: 'Noiz2sa N4b: a region\'s first entry explores it fully (N4c: a region with no location, its exits)',
+    description: 'Loads noiz2sa_substrate_test, fogs its second region (no location; its exits undiscovered) and moves '
+        + 'the player into it: on that first entry the region reads fully explored, every exit discovered through '
+        + 'discovery:exitDiscovered, one explore sent per exit.',
     testFunction: restoresSavedQueues(noiz2saFirstEntryExplores),
     category: 'noiz2saSubstrate',
     enabled: false, // off by default — runs only in the test-substrates mode (full module config)

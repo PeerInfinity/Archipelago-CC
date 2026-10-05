@@ -21,13 +21,13 @@
  * N4b/N4c:
  *  - the HOST STATE for the page (the bridge's `hostState` command → `__swfBridge.setHostState`): loop mode, the bot's
  *    options for this visit, the NEXT action the loops queue holds for the region (`next: {region, kind: 'move',
- *    exit}` — a move run, its clear performs the move — or `{region, kind: 'check'}` — a check run, its clear checks
- *    the location; null: the page offers the choice list), whether the region's location is checked (`checked`: the
- *    choice list hides the check then) and whether the queue is parked on the region (`live`: a pick's run starts
- *    then). Sent on every region load and on every change of loop mode, the tracks, the settings, the queue or the
+ *    exit}` — a move run, its clear performs the move — or `{region, kind: 'check', location}` — that location's check
+ *    run, its clear checks it; null: the page offers the choice list), the ids of the region's checked locations
+ *    (`checked`: the choice list hides those) and whether the queue is parked on the region (`live`: a pick's run
+ *    starts then). Sent on every region load and on every change of loop mode, the tracks, the settings, the queue or the
  *    region's checked state;
  *  - the page's REQUEST (`substrate:hostRequest`, the bridge's `requestHost`): with nothing queued for the region,
- *    the player chose from the choice list — an exit (`chooseExit`) or the check (`chooseCheck`). Queue that action
+ *    the player chose from the choice list — an exit (`chooseExit`) or a location (`chooseCheck`). Queue that action
  *    as the Loops panel does and run the queue, if it can run from here;
  *  - a BOT SEED PER VISIT (`drawBotSeed`, drawn on every region load), carried by the walk and the host state; the page
  *    reports it in its play-clock stats, so a Record summary carries it (`playStats.botSeed`). `pinBotSeed(n)` pins it
@@ -44,7 +44,6 @@ import settingsManager from '../../app/core/settingsManager.js';
 import { STORAGE_KINDS } from '../../app/core/storageKinds.js';
 import {
     substrateRegistryEntry,
-    NOIZ2SA_CLEAR_LOCATION_ID,
     setPlaybackProxy,
     NOIZ2SA_SUBSTRATE_ID,
     NOIZ2SA_PANEL_COMPONENT_TYPE,
@@ -123,8 +122,11 @@ function regionWorld(region) {
     const warehouse = _initApi?.getModuleFunction?.('procgenPlayer', 'getWarehouse')?.() ?? null;
     return warehouse?.get?.(region)?.world ?? warehouse?.regions?.get?.(region)?.world ?? null;
 }
-/** the AP name of the region's one location (its clear), or null */
-const regionLocationName = (region) => regionWorld(region)?.ap_locations?.[NOIZ2SA_CLEAR_LOCATION_ID] ?? null;
+/** the region's locations: [{id, name}] — the id in the game, the AP name (N4c: zero or more) */
+function regionLocations(region) {
+    const map = regionWorld(region)?.ap_locations ?? {};
+    return Object.entries(map).map(([id, name]) => ({ id, name }));
+}
 /** whether the host has the location checked */
 function isLocationChecked(locationName) {
     if (!locationName) return false;
@@ -135,8 +137,14 @@ function queuedNextFor(region) {
     const ls = loopStateSingleton;
     if (!region || !ls?.getActionQueue) return null;
     const started = ls.isProcessing || ls.isPaused || ls._queueCompleted || ls._manualActionEntered;
-    return queuedNextFrom(ls.getActionQueue(), started ? ls.currentActionIndex : 0, region, { isChecked: isLocationChecked });
+    const n = queuedNextFrom(ls.getActionQueue(), started ? ls.currentActionIndex : 0, region, { isChecked: isLocationChecked });
+    if (n?.kind !== 'check') return n;
+    // the page knows a location by its id in the game
+    const loc = regionLocations(region).find((l) => l.name === n.locationName);
+    return loc ? { ...n, location: loc.id } : null;
 }
+/** the ids of the region's checked locations */
+const checkedIds = (region) => regionLocations(region).filter((l) => isLocationChecked(l.name)).map((l) => l.id);
 /** the region the queue ends in: the last queued move's destination, or the player's region when none is queued */
 function queueEndRegion() {
     const queue = loopStateSingleton?.getActionQueue?.() ?? [];
@@ -153,15 +161,15 @@ let _checkedSent = null;
 function publishHostState(extra = {}) {
     const region = hostRegion();
     const n = _loopMode ? queuedNextFor(region) : null;
-    const checked = isLocationChecked(regionLocationName(region));
-    _checkedSent = checked;
+    const checked = checkedIds(region);
+    _checkedSent = JSON.stringify(checked);
     _eventBus?.publish(NOIZ2SA_PLAYBACK_CONTROL_EVENT, {
         method: 'hostState',
         args: [{
             loopMode: _loopMode,
             bot: visitBotOptions(),
             region,
-            next: n ? { region, kind: n.kind, ...(n.kind === 'move' ? { exit: n.exit } : {}) } : null,
+            next: n ? { region, kind: n.kind, ...(n.kind === 'move' ? { exit: n.exit } : { location: n.location }) } : null,
             checked,
             // the queue is parked on the region for live play: a pick from the choice list starts its run then
             live: _loopMode && !!region && loopStateSingleton?.livePlayRegion?.() === region,
@@ -172,8 +180,8 @@ function publishHostState(extra = {}) {
 
 /**
  * The page's request: with nothing queued for the region, the player chose from the choice list (⚖ N4b: "when the
- * player chooses one of the exits, that's when the game starts"; N4c: the check is offered there too, until it is
- * checked). Queue the action as the Loops panel does (gameState `updatePath` for an exit, `addLocationCheck` for the
+ * player chooses one of the exits, that's when the game starts"; N4c: every unchecked location is offered there too).
+ * Queue the action as the Loops panel does (gameState `updatePath` for an exit, `addLocationCheck` for a location's
  * check), then run the queue if it can run from here: a queue parked on the region already waits for it; a queue
  * that ran to its end resumes from the new action; a queue never started starts (the action is its first); a paused
  * queue stays paused (the player resumes it). The new host state starts the game.
@@ -182,7 +190,7 @@ function handleHostRequest(data) {
     const region = data?.region, req = data?.request;
     const kind = req?.kind;
     if (!_regions.has(region) || (kind !== 'chooseExit' && kind !== 'chooseCheck')) return;
-    const refuse = (why) => publishHostState({ refused: { kind, exitName: req.exitName ?? null, why } });
+    const refuse = (why) => publishHostState({ refused: { kind, exitName: req.exitName ?? null, location: req.location ?? null, why } });
     if (!_loopMode) { refuse('loop mode is off'); return; }
     if (region !== currentRegion()) { refuse('the player is not in this region'); return; }
     if (queuedNextFor(region)) { publishHostState(); return; }
@@ -196,11 +204,11 @@ function handleHostRequest(data) {
         if (!exit?.targetRegion || typeof updatePath !== 'function') { refuse(`no exit ${req.exitName} to queue`); return; }
         updatePath(exit.targetRegion, req.exitName, region);
     } else {
-        const locationName = regionLocationName(region);
+        const loc = regionLocations(region).find((l) => l.id === req.location);
         const addLocationCheck = gs('addLocationCheck');
-        if (!locationName || typeof addLocationCheck !== 'function') { refuse('no location to check'); return; }
-        if (isLocationChecked(locationName)) { refuse('the location is already checked'); return; }
-        addLocationCheck(locationName, region);
+        if (!loc || typeof addLocationCheck !== 'function') { refuse(`no location ${req.location} to check`); return; }
+        if (isLocationChecked(loc.name)) { refuse(`${loc.name} is already checked`); return; }
+        addLocationCheck(loc.name, region);
     }
     const ls = loopStateSingleton;
     const queue = ls.getActionQueue();
@@ -220,7 +228,7 @@ function handleHostRequest(data) {
             ls.startProcessing?.(); // never started, and the action is its first: start it
         }
     }
-    if (!queuedNextFor(region)) { refuse(`could not queue ${kind === 'chooseExit' ? `the move by ${req.exitName}` : 'the check'}`); return; }
+    if (!queuedNextFor(region)) { refuse(`could not queue ${kind === 'chooseExit' ? `the move by ${req.exitName}` : `the check of ${req.location}`}`); return; }
     publishHostState();
 }
 
@@ -420,7 +428,7 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     // N4c: the region's location may become checked (the choice list hides the check then) — tell the page.
     eventBus.subscribe('stateManager:snapshotUpdated', () => {
         const region = hostRegion();
-        if (region && isLocationChecked(regionLocationName(region)) !== _checkedSent) publishHostState();
+        if (region && JSON.stringify(checkedIds(region)) !== _checkedSent) publishHostState();
     }, 'noiz2saSubstrate');
     // N4b: the queued action for the region may change — tell the page.
     for (const ev of ['gameState:pathUpdated', 'loopState:queueUpdated', 'loopState:manualEntered',

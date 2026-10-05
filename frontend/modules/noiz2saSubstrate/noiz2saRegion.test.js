@@ -7,7 +7,7 @@
 import { describe, expect, it } from 'vitest';
 import {
     parsePosition, showPosition, showSpan, checkSpan, regionSpanOf, createRegionRun,
-    sceneCount, scenesAfter, checkSpanOf, regionSpansOf,
+    sceneCount, scenesAfter, checkSpanOf, defaultCheckSpans, regionSpansOf,
     encodeInputs, decodeInputs, BOSS_SCENE, BOSS_CAP, HITBOX, endlessSeedOf,
 } from './noiz2saRegion.js';
 
@@ -68,7 +68,7 @@ describe('positions and spans (segment-run.js parsePosition / showPosition / che
     });
 });
 
-describe('N4c — the move span and the check span (twice its scenes, from the same start)', () => {
+describe('N4c — the move span and the locations\' check spans (twice its scenes each)', () => {
     const span = (a, b) => ({ start: parsePosition(a), end: parsePosition(b) });
     it('sceneCount: start and end included, a boss counts as one scene', () => {
         expect(sceneCount(span('1:1', '1:1'))).toBe(1);
@@ -87,18 +87,33 @@ describe('N4c — the move span and the check span (twice its scenes, from the s
             expect(sceneCount(checkSpanOf(s))).toBe(2 * sceneCount(s));
         }
     });
+    it('defaultCheckSpans: each next location starts at the scene after the previous one\'s end', () => {
+        expect(defaultCheckSpans(span('2:4', '2:5'), 3).map(showSpan)).toEqual(['2:4–2:7', '2:8–3:1', '3:2–3:5']);
+        expect(defaultCheckSpans(span('1:boss', '2:1'), 2).map(showSpan)).toEqual(['1:boss–2:3', '2:4–2:7']);
+        expect(defaultCheckSpans(span('1:1', '1:1'), 0)).toEqual([]);
+    });
     it('cut short at the last scene the game reaches: stage 10\'s boss, or the endless mode\'s', () => {
         expect(showSpan(checkSpanOf(span('10:5', '10:9')))).toBe('10:5–10:boss');
         expect(showSpan(checkSpanOf(span('ENDLESS:3', 'ENDLESS:6')))).toBe('ENDLESS:3–ENDLESS:boss');
         expect(scenesAfter(parsePosition('10:boss'), 1)).toEqual(parsePosition('10:boss'));
+        expect(defaultCheckSpans(span('10:7', '10:8'), 2).map(showSpan)).toEqual(['10:7–10:boss', '10:boss']);
     });
-    it('regionSpansOf: both spans from the payload; the old {start, end} is the move span; the check derived when absent', () => {
-        const move = span('2:4', '2:5'), check = span('2:4', '2:9');
-        expect(regionSpansOf({ move, check, seed: 3 })).toEqual({ move, check, seed: 3 });
-        expect(regionSpansOf({ move, seed: 3 })).toEqual({ move, check: span('2:4', '2:7'), seed: 3 });
-        expect(regionSpansOf({ ...move })).toEqual({ move, check: span('2:4', '2:7'), seed: 1 });
-        expect(() => regionSpansOf({ move: span('2:5', '2:5'), check: { start: P(1, 4), end: P(1, 0) } })).toThrow(/before its start/);
-        expect(() => regionSpansOf({ check })).toThrow(/segment start/);
+    it('regionSpansOf: the move span and each location\'s own span; zero locations; the older shapes', () => {
+        const move = span('2:4', '2:5');
+        const mine = span('2:4', '2:9');
+        expect(regionSpansOf({ move, seed: 3, locations: [] })).toEqual({ move, seed: 3, locations: [] });
+        expect(regionSpansOf({ move, seed: 3, locations: [{ id: 'check1', check: mine }, { id: 'check2' }] })).toEqual({
+            move, seed: 3, locations: [{ id: 'check1', check: mine }, { id: 'check2', check: span('2:8', '3:1') }],
+        });
+        // pre-N4c: {start, end} is the move span, a location per ap_locations key
+        expect(regionSpansOf({ ...move, ap_locations: { clear: 'r__clear' } })).toEqual({
+            move, seed: 1, locations: [{ id: 'clear', check: span('2:4', '2:7') }],
+        });
+        expect(regionSpansOf({ ...move })).toEqual({ move, seed: 1, locations: [] });
+        expect(() => regionSpansOf({ move, locations: [{ id: 'a', check: { start: P(1, 4), end: P(1, 0) } }] })).toThrow(/before its start/);
+        expect(() => regionSpansOf({ move, locations: [{ id: 'a' }, { id: 'a' }] })).toThrow(/repeat/);
+        expect(() => regionSpansOf({ move, locations: [{}] })).toThrow(/no id/);
+        expect(() => regionSpansOf({ locations: [] })).toThrow(/segment start/);
     });
 });
 
