@@ -12,8 +12,9 @@
  *
  * and D2's derivation over L16 → L18 (`stairsup@352,80`) from L15, pool
  * {sword, conch}: the block-route search's REAL `MAX_ROUTE_ORDERS` bound
- * (`undecided`, read off `SolverRefusal.bound`), a minimal set not proved minimal, and the solver
- * NOT monotone in the inventory (the Conch turns the Sword's `can` into `cannot`).
+ * (`undecided`, read off `SolverRefusal.bound`), a minimal set not proved
+ * minimal, and — since ROBUST D3 — the Conch no longer turning the Sword's `can`
+ * into `cannot` (the PULL rung probes past the sandtrap to the lane).
  *
  * ⛔ No clock is read: every budget here is the deterministic consult counter.
  */
@@ -174,16 +175,16 @@ describe('canCross — deterministic, and stamped', () => {
 });
 
 describe('deriveMinimalSets — the derivation question, with its caveats visible', () => {
-    it('L16 → L18 from L15 over {sword, conch}: {sword} is minimal but unproved, and {sword, conch} is a NON-MONOTONE cannot', () => {
+    it('L16 → L18 from L15 over {sword, conch}: {sword} is minimal but unproved, and {sword, conch} also CAN (ROBUST D3)', () => {
         const d = deriveMinimalSets({ level: 16, exit: { x: 352, y: 80 }, arrival: { from: 15 }, dashMode: 'none',
             pool: ['sword', 'conch'] });
         expect(d.rows.map((r) => [r.set.join('+') || '∅', r.verdict])).toEqual([
-            ['∅', 'undecided'], ['conch', 'undecided'], ['sword', 'can'], ['sword+conch', 'cannot']]);
+            ['∅', 'undecided'], ['conch', 'undecided'], ['sword', 'can'], ['sword+conch', 'can']]);
         expect(d.rows[0].why).toMatch(/^bound: .*hit `MAX_ROUTE_ORDERS`/);
         expect(d.rows[0].cause).toMatchObject({ kind: 'bound', basis: 'field', bound: 'MAX_ROUTE_ORDERS', limit: 8 });
         expect(d.minimal).toEqual([['sword']]);
         expect(d.unprovedBelow).toEqual({ sword: [[]] });
-        expect(d.nonMonotone).toEqual([['sword', 'conch']]);
+        expect(d.nonMonotone).toEqual([]);
         expect(d.solver).toBe(solverStamp().id);
     }, 120_000);
 });

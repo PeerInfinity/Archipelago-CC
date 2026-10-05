@@ -365,6 +365,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'dash-l16-sword-all',
             // ⛓⛓⛓ Seedling fidelity RETURN: L15 from L16 (walk-in), and the Conch crossing to L14.
             'return-l15-walkin', 'return-l15-conch',
+            // ⛓⛓⛓ Seedling fidelity ROBUST's D2 / D3 witnesses.
+            'robust-l16-sword-idle1', 'robust-l16-l18-sword-conch',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -399,7 +401,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // ⛓ Seedling fidelity CANCROSS takes it to 49 — `cancross-l16-sword-none` (L16 → L17).
         // ⛓ Seedling fidelity RETURN adds two — `return-l15-walkin` (L16 → L15) and `return-l15-conch` (L15 → L14).
         // ⛓ Seedling fidelity DASH's `dash-l16-sword-all` (L16 → L17) makes it 52.
-        expect(out.exposed).toBe(52);
+        // ⛓ Seedling fidelity ROBUST adds two — `robust-l16-sword-idle1` (L16 → L17), `robust-l16-l18-sword-conch` (L16).
+        expect(out.exposed).toBe(54);
         expect(out.tapes).toEqual([
             'burn-l24-reach-exit', 'cancross-l16-sword-none', 'dash-l16-sword-all', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
@@ -408,7 +411,7 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-0-v3',
             'r9-solve-12', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-21',
-            'r9-solve-22', 'return-l15-conch', 'return-l15-walkin', 'u10-puncher-dwell',
+            'r9-solve-22', 'return-l15-conch', 'return-l15-walkin', 'robust-l16-l18-sword-conch', 'robust-l16-sword-idle1', 'u10-puncher-dwell',
             'u10-puncher-dwell-refused', 'u11-dark-shield-bob', 'u11-dark-shield-puncher',
             'u11-facing-knockback', 'u11-facing-puncher',
             'u12-pull-carry', 'u12-pull-cross',
@@ -543,6 +546,8 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'dash-l16-sword-all': { tape: {}, levels: [16, 17] },
             'return-l15-walkin': { tape: {}, levels: [16] },
             'return-l15-conch': { tape: {}, levels: [14] },
+            'robust-l16-sword-idle1': { tape: {}, levels: [16, 17] },
+            'robust-l16-l18-sword-conch': { tape: {}, levels: [16] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });
