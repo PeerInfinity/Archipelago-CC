@@ -233,10 +233,13 @@ jobs:
           : > merged/rows.jsonl
           for i in $(node -p "JSON.parse(process.env.MATRIX).join(' ')"); do
             F="shards/divergence-shard-$i/rows-$i.jsonl"
-            echo "SHARD $i/$SHARDS: $(wc -l < "$F" 2>/dev/null || echo 'NO ROWS') row(s); $(grep -aE '^INFO: page .* booted' "shards/divergence-shard-$i/shard.log" 2>/dev/null | wc -l) page(s) booted"
+            # ⛓ a pattern that matches ONE artifact is extracted straight into `shards/`, no per-artifact folder
+            # (measured: run 37379605352, shards=1, merged 0 rows of 3)
+            [ -f "$F" ] || F="shards/rows-$i.jsonl"
+            echo "SHARD $i/$SHARDS: $(wc -l < "$F" 2>/dev/null || echo 'NO ROWS') row(s); $(grep -aE '^INFO: page .* booted' "$(dirname "$F")/shard.log" 2>/dev/null | wc -l) page(s) booted"
             [ -f "$F" ] && cat "$F" >> merged/rows.jsonl
           done
-          cp shards/divergence-shard-1/delivered-set.json merged/ 2>/dev/null || true
+          cp shards/divergence-shard-1/delivered-set.json merged/ 2>/dev/null || cp shards/delivered-set.json merged/ 2>/dev/null || true
           node - <<'JS' | tee merged/summary.txt
           const fs = require('fs');
           const rows = fs.readFileSync('merged/rows.jsonl', 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
