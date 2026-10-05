@@ -27,8 +27,9 @@
  * N4b (⚖ 2026-10-05): "In loop mode, clearing the level should be counted as part of the "move" action. In this
  * substrate, there is no explore or check location action." So `queueActions` is the move alone and
  * `moveIncludesCheck` says the region's check rides on it (loops keeps it out of a Record block's interior and
- * click-to-queue never queues it); the page opens the exits only after a clear on THIS visit in loop mode. A first
- * clear explores the region fully (`noiz2saFirstClear.js`).
+ * click-to-queue never queues it); in loop mode the page opens the exits only after a clear on THIS visit, and the
+ * clear performs the queued move (with none queued, the player chooses the exit first). A first ENTRY explores the
+ * region fully (`noiz2saFirstEntry.js`).
  *
  * Content source: a fixed zone table (`NOIZ2SA_ZONES`), one region per zone, for the test preset and the
  * shuffled-spiral driver (`zoneCount` / `extractZoneRules`). Pricing and the stat tracks are later slices.

@@ -271,15 +271,17 @@ describe('the corpus census — printed, then pinned', () => {
          *              noiz2sa.md § Loop mode (`doc` 269 → 273); two same-doc links in
          *              loop-recording.md to that section and one in noiz2sa.md to § Loop mode
          *              (`same-doc` 17 → 20).
+         *   351 → 353  BULLETML N4b brief change (2026-10-05): noiz2sa.md's sendExit and
+         *              requestHost lines → its own § Loop mode (`same-doc` 20 → 22).
          */
         expect(by).toEqual({
-            'same-doc': 20,
+            'same-doc': 22,
             doc: 273,
             external: 22,
             repo: 36,
         });
         expect(by.page ?? 0).toBe(0);
-        expect(CORPUS.length).toBe(351);
+        expect(CORPUS.length).toBe(353);
     });
 
     it('sends every sibling `.md` to the VIEWER, never to GitHub', () => {

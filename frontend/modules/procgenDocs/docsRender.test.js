@@ -275,7 +275,8 @@ describe('⛓ the links the render emits', () => {
         //   339 → 341: N3b fix 2's flash.md play-clock row + noiz2sa.md's play-again line → flash.md.
         //   341 → 344: bulletml N4's three loop-recording.md → noiz2sa.md links (training, game time, the bot).
         //   344 → 351: bulletml N4b's moveIncludesCheck / host-state links (four sibling, three same-doc).
-        expect(checked).toBe(351);
+        //   351 → 353: N4b's brief change — two noiz2sa.md links to its own § Loop mode.
+        expect(checked).toBe(353);
     });
 
     it('tags each link with the kind that produced it', () => {
