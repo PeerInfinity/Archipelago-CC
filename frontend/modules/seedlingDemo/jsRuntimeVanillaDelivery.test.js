@@ -213,7 +213,7 @@ describe('§5.18 — WITNESS: seedling_playthrough on the JS runtime, the solver
         expect(rt.halted).toBeNull();
     });
 
-    it('… and walks on, solver-driven, L86 → L0 → L13 → L14; the FIRST refusal is the solver\'s decline at L14 (the chaser bob)', () => {
+    it('… and walks on, solver-driven, L86 → L0 → L13 → L14 → L15 (since the fidelity L14 DETOUR rung the solver crosses L14 swordless; it declined there before)', () => {
         const { rt } = delivered(LOADED.set, START);
         for (const [from, to] of [[0, 86], [86, 0], [0, 13], [13, 14]]) {
             const before = rt.playback.solverStats.solves;
@@ -224,11 +224,15 @@ describe('§5.18 — WITNESS: seedling_playthrough on the JS runtime, the solver
         }
         expect(rt.playback.solverStats).toMatchObject({ declines: 0, refutations: 0 });
         expect(rt.deaths).toEqual([]);
-        // The next door: the solver declines BY NAME (the same decline the wasm runtime's session D met).
-        expect(rt.playback.walkTo(doorGoal(14, 15))).toEqual({ ok: true });
-        rt.playback.play();
-        for (let t = 0; t < 400 && rt.playback.solverStats.declines === 0; t += 1) rt.tick();
-        expect(rt.playback.solverStats.lastDecline).toMatch(/the combat ladder is EXHAUSTED.*chaser:bob/);
+        // The next door: before the fidelity arc's DETOUR rung the solver declined here BY NAME (the combat ladder
+        // exhausted at the chaser bob — the decline the wasm runtime's session D met). Now it crosses, swordless.
+        const before = rt.playback.solverStats.solves;
+        walk(rt, doorGoal(14, 15));
+        expect(rt.playback.state, '14 → 15').toBe(WALK_STATES.DONE);
+        expect(rt.run.level).toBe(15);
+        expect(rt.playback.solverStats.solves).toBe(before + 1);
+        expect(rt.playback.solverStats).toMatchObject({ declines: 0, refutations: 0 });
+        expect(rt.deaths).toEqual([]);
     });
 });
 
