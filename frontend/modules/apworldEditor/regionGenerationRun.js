@@ -153,6 +153,7 @@ export const REGENERATE_WORKER_LIBRARIES = Object.freeze([
     'flashPanel/flashSeedlingGenBuild.js',
     'jtaSubstrateWrapper/jtaSubstrateWrapperLibrary.js',
     'omsiSubstrateWrapper/omsiSubstrateWrapperLibrary.js',
+    'noiz2saSubstrate/noiz2saSubstrateLibrary.js',
 ]);
 
 /** ⛓ The worker file, relative to `frontend/modules/`. The bundler copies it. */
