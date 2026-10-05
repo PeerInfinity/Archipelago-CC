@@ -10778,6 +10778,7 @@ export const INSTRUMENTS = frz({
                 "host",
                 "only",
                 "solver-budget-ms",
+                "solver-upgrade-window-ms",
                 "wait-for-box"
             ],
             "file": "probe-seedling-wasm-logical-links.mjs",
@@ -10805,6 +10806,12 @@ export const INSTRUMENTS = frz({
                         "arg"
                     ],
                     "name": "solver-budget-ms"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "solver-upgrade-window-ms"
                 }
             ],
             "inheritedFlags": [
