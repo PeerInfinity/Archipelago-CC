@@ -193,16 +193,25 @@ describe('the `detour` deadline site — the DETOUR rung is bounded by the same 
         const boot = { level: 14, x: 160, y: 64 };
         const exit = exitToward(14, 15);
         const goals = [{ kind: 'reach-exit', exit: { x: exit.x, y: exit.y } }];
-        let asked = 0;
-        let err = null;
-        try {
-            solveSegment({ run: freshRun(boot), goals, name: 'detour-deadline', boot,
-                shouldStop: (site) => site === 'detour' && ++asked > 3 });
-        } catch (e) { err = e; }
-        expect(err).toBeInstanceOf(SolverRefusal);
-        expect(err.message).toMatch(/DETOUR search after 3 preview\(s\)/);
-        expect(err.message).toMatch(/⏱ DEADLINE/);
-        expect(err.deadline).toMatchObject({ tripped: true, first: 'detour' });
+        const tripAt = (n) => {
+            let asked = 0;
+            try {
+                solveSegment({ run: freshRun(boot), goals, name: 'detour-deadline', boot,
+                    shouldStop: (site) => site === 'detour' && ++asked > n });
+            } catch (e) { return e; }
+            return null;
+        };
+        // the first consult is before the via set is planned: nothing of the search runs
+        const before = tripAt(0);
+        expect(before).toBeInstanceOf(SolverRefusal);
+        expect(before.message).toMatch(/reached before the DETOUR search, so it was not run/);
+        expect(before.message).toMatch(/⏱ DEADLINE/);
+        expect(before.deadline).toMatchObject({ tripped: true, first: 'detour' });
+        // a later consult is before a preview: the rung reports the work it had done
+        const during = tripAt(3);
+        expect(during).toBeInstanceOf(SolverRefusal);
+        expect(during.message).toMatch(/DETOUR search after 2 preview\(s\)/);
+        expect(during.deadline).toMatchObject({ tripped: true, first: 'detour' });
         // a callback that bounds only the OTHER sites leaves the rung, and the solve, untouched
         const run = freshRun(boot);
         solveSegment({ run, goals, name: 'detour-other-sites', boot,

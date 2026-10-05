@@ -10491,6 +10491,15 @@ export function deriveChaserDetour(run, {
     maxVias = DETOUR_RUNG.maxVias, maxPreviews = DETOUR_RUNG.maxPreviews,
     maxPlanned = DETOUR_RUNG.maxPlanned,
 }) {
+    /**
+     * ⛓ the `detour` deadline site, asked FIRST: the via set below plans a leg to
+     * every cell of the room before any preview (~225 plans in L16, at ~35 ms
+     * each), so a check only inside the loop would still pay it.
+     */
+    if (deadlineReached('detour')) {
+        return { wps: null, previews: 0, planned: 0, why: 'deadline — the caller\'s anytime '
+            + 'deadline (`shouldStop`) was reached before the DETOUR search, so it was not run' };
+    }
     const pitch = planOpts.lattice ?? DEFAULT_LATTICE;
     const from = { x: run.state.x, y: run.state.y };
     const home = nodeAt(from.x, from.y, pitch);
