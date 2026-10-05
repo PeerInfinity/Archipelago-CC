@@ -357,9 +357,13 @@ describe('the eight recordings the game refused — RETIRED WITH THE SERIES', ()
      * whose subject has quietly left. Six of the eight differed by `pins`
      * alone, two by `pins`, `rng` and `tick0`.
      */
-    it('⛔ the bank holds ONLY the R8 negative oracle, and the eight are gone', () => {
+    it('⛔ the bank holds ONLY the R8 negative oracle (and fidelity DASH\'s refutation), and the eight are gone', () => {
         const left = readdirSync(REFUTED).filter((f) => f.endsWith('.json')).sort();
-        expect(left).toEqual(['r8-solve-5.expectation.json', 'r8-solve-5.tape.json']);
+        // ⛓ Seedling fidelity DASH: + `dash-l16-sword-refuted`, CANCROSS's L16 `all` plan the
+        // game refuted (a dash's fifth hit test), read by name by `fidelityDash.test.js`.
+        expect(left).toEqual(['dash-l16-sword-refuted.expectation.json', 'dash-l16-sword-refuted.tape.json',
+            'r8-solve-5.expectation.json', 'r8-solve-5.tape.json']);
+        for (const name of REFUSED) expect(left.some((f) => f.startsWith(`${name}.`))).toBe(false);
     });
 
     it('⛓ …and the eight are on the ROSTER, which is what replaces the bank', () => {
