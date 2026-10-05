@@ -197,6 +197,8 @@ import {
     ENEMY_DAMAGE_DEFAULTS, MOBILE_DEATH_FADE, MODELLED_KILL_ARMS, PIT_FADE, STATIC_ARROW_DEATH,
     createStaticBodyDamage, enemyHit, enemyHitUpdate, killLockLedger, removalTicksAfterHit,
 } from './enemyDamage.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
+import { DRILL, drillRect, hitDrill, newDrill, stepDrill, stepDrillGraphic } from './drill.js';
 // ⚠ `SWORD_FORCE` ONLY. `combatVerbs` owns the swing GEOMETRY, which this
 // file does not use — the press rect comes from `presses.slashRect` — but
 // `Player.as:116`'s `swordForce` has one home and this is it.
@@ -1035,6 +1037,7 @@ export function createLevelRun({
         chaserStates.delete(n);
         // ⛓ R2-swim D1: and the wallflyers, built from the same census.
         wallFlyerStates.delete(n);
+        drillStates.delete(n);
         // ⛓ F4: and the static bodies' damage roster, for the same reason.
         staticBodyStates.delete(n);
         // R5 slice 15: the crusher roster is built from the world too. No
@@ -3392,6 +3395,29 @@ export function createLevelRun({
         return wallFlyerStates.get(n);
     };
     /**
+     * ⛓ seedling-fidelity-terrain W3 — THE DRILLS, PER VISIT (`drill.js`, behind
+     * `contactFidelity.CONTACT_FIDELITY.drillLive`). A room is LIVE only when its one census
+     * enemy is one drill: `Drill.solids` adds "Enemy", and with no other enemy
+     * that term meets nothing. Any other room returns an empty map (unchanged).
+     */
+    const drillStates = new Map();
+    const drillEvents = [];
+    const drillStateFor = (n) => {
+        if (!drillStates.has(n)) {
+            const byId = new Map();
+            if (CONTACT_FIDELITY.drillLive) {
+                const enemies = worldFor(n).combat?.enemies ?? [];
+                if (enemies.length === 1 && enemies[0].tag === 'drill') {
+                    const e = enemies[0];
+                    const id = `${e.tag}@${e.x},${e.y}`;
+                    byId.set(id, newDrill({ id, x: e.x, y: e.y }));
+                }
+            }
+            drillStates.set(n, byId);
+        }
+        return drillStates.get(n);
+    };
+    /**
      * ⛓⛓⛓ R8 SLICE 1 — THE BRIDGED CHASERS, PER VISIT.
      *
      * ⚠ PER VISIT, exactly like a spinner and for the stronger version of its
@@ -3781,8 +3807,27 @@ export function createLevelRun({
          */
         if (noclip || noDamage) return null;
         const st = chaserStateFor(level);
-        if (st.size === 0) return null;
         const out = new Map();
+        // ⛓ seedling-fidelity-terrain W2 (`contactFidelity.CONTACT_FIDELITY.wallFlyerSwordHits`):
+        // a wallflyer is `type = "Enemy"`, in `Player.hitables`, and a slash
+        // reaches it through the same `e is Enemy` arm.
+        if (CONTACT_FIDELITY.wallFlyerSwordHits) {
+            for (const w of wallFlyerStateFor(level).values()) {
+                if (w.removed) continue;
+                const at = w.id.slice(w.id.indexOf('@') + 1).split(',').map(Number);
+                out.set(w.id, { tag: 'wallflyer', as3: 'WallFlyer', family: 'wallflyer', x: at[0], y: at[1],
+                    rect: wallFlyerRect(w), removed: false });
+            }
+        }
+        if (CONTACT_FIDELITY.drillLive) {
+            for (const d of drillStateFor(level).values()) {
+                if (d.removed) continue;
+                const at = d.id.slice(d.id.indexOf('@') + 1).split(',').map(Number);
+                out.set(d.id, { tag: 'drill', as3: 'Drill', family: 'drill', x: at[0], y: at[1],
+                    rect: drillRect(d), removed: false });
+            }
+        }
+        if (st.size === 0) return out.size === 0 ? null : out;
         for (const e of (world.combat?.enemies ?? [])) {
             if (!isBridgedChaser(e.tag)) continue;
             const id = `${e.tag}@${e.x},${e.y}`;
@@ -3921,6 +3966,7 @@ export function createLevelRun({
         chaserStates.delete(n);
         // ⛓ R2-swim D1: a wallflyer holds no persistence either.
         wallFlyerStates.delete(n);
+        drillStates.delete(n);
         // ⛓ F4: nor a static body's hits; its DEATH is durable through its tag.
         staticBodyStates.delete(n);
         /**
@@ -5410,7 +5456,9 @@ export function createLevelRun({
          * modelled, and refused with that row's own reason when it does not.
          */
         const enemyClassModelled = (r) => r.as3 === 'Enemy'
-            && MODELLED_KILL_ARMS.includes(r.enemyClass);
+            && (MODELLED_KILL_ARMS.includes(r.enemyClass)
+                || (CONTACT_FIDELITY.wallFlyerSwordHits && r.family === 'wallflyer')
+                || (CONTACT_FIDELITY.drillLive && r.family === 'drill'));
         const refused = audit.live.filter(
             (r) => !MODELLED_PRESS_ARMS.has(r.as3) && !INERT_PRESS_ARMS.has(r.as3)
                 && !enemyClassModelled(r),
@@ -6091,6 +6139,78 @@ export function createLevelRun({
                         hits: w.hits, why: verdict.why,
                     });
                 }
+            } else if (r.as3 === 'Enemy' && r.family === 'drill') {
+                // ⛓ seedling-fidelity-terrain W3: the swing at a drill — `slash()`'s
+                // two gates, then `Enemy.hit` (an empty knockback).
+                const dst = drillStateFor(level);
+                const d = dst.get(r.chaserId);
+                const reach = distanceRectPoint(state.x, state.y, drillRect(d));
+                const blocker = reach > reachLimit ? null : collideLineSolid(state.x, state.y, d.x, d.y);
+                let verdict = { landed: false, killed: false };
+                if (reach <= reachLimit && !blocker) {
+                    verdict = hitDrill(d, {
+                        damage: weapon === 'spear' ? SPEAR_DAMAGE
+                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                        t: weapon === 'spear' ? 'Spear' : 'Sword',
+                        frozen: ceremony !== null,
+                    });
+                    if (verdict.killed) {
+                        throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} KILLS ${d.id} in level `
+                            + `${level}; the drill's die anim and its place in \`totalEnemies()\` are not staged. `
+                            + 'Refused by name (seedling-fidelity-terrain W3).');
+                    }
+                    dst.set(d.id, verdict.d);
+                    if (verdict.landed) drillEvents.push({ t: ticksCompleted, level, id: d.id, kind: 'struck', weapon });
+                }
+                chaserPressHits.push({
+                    t: ticksCompleted, level, id: d.id, tag: 'drill', weapon,
+                    landed: verdict.landed, killed: false, reach,
+                    hits: (verdict.d ?? d).hits, hitsTimer: (verdict.d ?? d).hitsTimer,
+                    why: reach > reachLimit ? `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`
+                        : (blocker ? `collideLine("Solid") meets ${blocker.tag ?? 'a Solid'}` : null),
+                });
+                hits.push({ as3: 'Enemy', id: d.id, landed: verdict.landed, killed: false });
+            } else if (r.as3 === 'Enemy' && r.family === 'wallflyer') {
+                /**
+                 * ── ⛓ seedling-fidelity-terrain W2: THE SWING AT A WALLFLYER ──
+                 * `slash()`'s reach gate and its `collideLine("Solid")` line of
+                 * sight (a WallFlyer is not a Flyer, so no waiver), then
+                 * `Enemy.hit(5, Point(x, y), d, "Sword")` — `hitWallFlyer`.
+                 */
+                const wst = wallFlyerStateFor(level);
+                const w = wst.get(r.chaserId);
+                if (!w) {
+                    throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} reaches `
+                        + `${r.chaserId} in level ${level}, which is not in the run's wallflyer state.`);
+                }
+                const reach = distanceRectPoint(state.x, state.y, wallFlyerRect(w));
+                const blocker = reach > reachLimit ? null : collideLineSolid(state.x, state.y, w.x, w.y);
+                let verdict = { landed: false, killed: false };
+                if (reach <= reachLimit && !blocker) {
+                    verdict = hitWallFlyer(w, {
+                        damage: weapon === 'spear' ? SPEAR_DAMAGE
+                            : (inventory?.hasDarkSword ? DARK_SWORD_DAMAGE : SWORD_DAMAGE),
+                        t: weapon === 'spear' ? 'Spear' : 'Sword',
+                        frozen: ceremony !== null,
+                    });
+                    if (verdict.killed) {
+                        throw new Error(`levelRun: the ${weapon} press at tick ${pressTick} KILLS ${w.id} `
+                            + `in level ${level}. \`WallFlyer.startDeath\` plays "die"; its die anim, its fade and `
+                            + 'its place in `totalEnemies()` are not staged for this class. Refused by name '
+                            + '(seedling-fidelity-terrain W2).');
+                    }
+                    wst.set(w.id, verdict.w);
+                    if (verdict.landed) wallFlyerEvents.push({ t: ticksCompleted, level, id: w.id, kind: 'struck',
+                        weapon, x: w.x, y: w.y, hits: verdict.w.hits });
+                }
+                chaserPressHits.push({
+                    t: ticksCompleted, level, id: w.id, tag: 'wallflyer', weapon,
+                    landed: verdict.landed, killed: false, reach,
+                    hits: (verdict.w ?? w).hits, hitsTimer: (verdict.w ?? w).hitsTimer,
+                    why: reach > reachLimit ? `distanceRectPoint ${reach.toFixed(3)} > ${reachLimit}`
+                        : (blocker ? `collideLine("Solid") meets ${blocker.tag ?? 'a Solid'}` : null),
+                });
+                hits.push({ as3: 'Enemy', id: w.id, landed: verdict.landed, killed: false });
             } else if (r.as3 === 'Enemy') {
                 /**
                  * ── ⛓⛓⛓ R9 SLICE 12: THE SWING AT A CHASER ──────────────
@@ -9459,6 +9579,9 @@ export function createLevelRun({
             // the worst answer available — a silent zero for a body nobody
             // prices — so the refusal is re-raised here with the ROOM's own
             // reason rather than the class's.
+            // ⛓ seedling-fidelity-terrain W3: a LIVE drill is billed by
+            // `stepDrillsNow` at the position it hopped to, not here.
+            if (CONTACT_FIDELITY.drillLive && inst.tag === 'drill' && drillStateFor(level).has(id)) continue;
             if (pricing.kind === 'stepped' && pricing.pricedBy) {
                 /**
                  * ⛓⛓⛓ R8 SLICE 6 — A SPINNER'S PRICER IS A REFUSAL AT THE
@@ -9957,6 +10080,56 @@ export function createLevelRun({
             if (w.destroy && !before.destroy) wallFlyerEvents.push({ t, level, id, kind: 'destroyed',
                 cause: w.deathCause, x: w.x, y: w.y });
             if (w.removed) wallFlyerEvents.push({ t, level, id, kind: 'removed' });
+            if (pendingDeath) return;
+        }
+    }
+
+    /**
+     * ⛓ seedling-fidelity-terrain W3 — ONE TICK OF THE ROOM'S DRILL, in the
+     * wallflyers' slot (both are added to `loadlevel` above the Player, which
+     * updates last; the room holds no other enemy, so their order among the
+     * enemies is immaterial). The contact goes through `applyPlayerHit`; the
+     * dark suit's retaliation is `Enemy.hit(1, …, 1, "Suit")` (an empty
+     * knockback), and a retaliation that kills is refused by name.
+     */
+    function stepDrillsNow() {
+        if (noclip || noDamage) return;
+        const st = drillStateFor(level);
+        if (st.size === 0) return;
+        const base = spinnerCtx();
+        const t = ticksCompleted + 1;
+        for (const [id, before] of st) {
+            if (before.removed) continue;
+            const out = stepDrill(before, {
+                frozen: ceremony !== null,
+                onScreen: (rect) => onScreenNow(rect, `drill ${id}`),
+                playerBox: playerBoxAt(state.x, state.y),
+                player: { x: state.x, y: state.y },
+                lineBlocked: (x0, y0, x1, y1) => !!collideLineSolid(x0, y0, x1, y1),
+                collides: (rect) => base.collides(rect),
+                hitPlayer: (d) => {
+                    let cur = d;
+                    applyPlayerHit({
+                        source: 'drill', id, force: DRILL.contactForce, damage: DRILL.damage,
+                        from: { x: d.x, y: d.y },
+                        retaliate: () => {
+                            const r = hitDrill(cur, { damage: DARK_SUIT_DAMAGE, t: 'Suit', frozen: ceremony !== null });
+                            if (r.killed) {
+                                throw new Error(`levelRun: the dark suit's retaliation KILLS ${id} at tick ${t} in `
+                                    + `level ${level}; the drill's die anim and its place in \`totalEnemies()\` are `
+                                    + 'not staged. Refused by name (seedling-fidelity-terrain W3).');
+                            }
+                            cur = r.d;
+                            return { id, landed: r.landed, hits: cur.hits, hitsTimer: cur.hitsTimer };
+                        },
+                    });
+                    return cur;
+                },
+            });
+            const d = stepDrillGraphic(out.d);
+            st.set(id, d);
+            if (out.contact) drillEvents.push({ t, level, id, kind: 'contact', x: d.x, y: d.y });
+            if (out.hopped) drillEvents.push({ t, level, id, kind: 'hop', x: d.x, y: d.y });
             if (pendingDeath) return;
         }
     }
@@ -13388,6 +13561,14 @@ export function createLevelRun({
          * run made (`launch`, `contact` with its retaliation, `destroyed`,
          * `removed`).
          */
+        /** ⛓ seedling-fidelity-terrain W3: the live drill(s) and their events (`hop`, `contact`, `struck`). */
+        get drills() {
+            return {
+                bodies: noclip ? [] : [...drillStateFor(level).values()].map((d) => ({
+                    ...d, rect: drillRect(d), sprite: d.sprite && { ...d.sprite } })),
+                events: drillEvents.map((e) => ({ ...e })),
+            };
+        },
         get wallFlyers() {
             return {
                 bodies: noclip ? [] : [...wallFlyerStateFor(level).values()].map((w) => ({
@@ -15532,6 +15713,7 @@ export function createLevelRun({
             // ── ⛓⛓⛓ R2-swim D1: THE WALLFLYERS, directly below the spinners
             // (`Game.as:2392` adds them one line above `:2393`'s spinners).
             if (!noclip) stepWallFlyersNow();
+            if (!noclip && CONTACT_FIDELITY.drillLive) stepDrillsNow();
             if (!noclip) stepShieldBossesNow();
             const pushState = pushableStateFor(level);
             if (!noclip && pushState.byId.size > 0) stepPushables(pushState, pushableCtx());

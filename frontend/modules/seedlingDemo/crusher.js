@@ -58,6 +58,7 @@
 
 import { rectsOverlap, TILE_SIZE } from './levelWorld.js';
 import { defineRecord } from './entityRecords.js';
+import { CONTACT_FIDELITY } from './contactFidelity.js';
 
 export class CrusherError extends Error {
     constructor(message) { super(message); this.name = 'CrusherError'; }
@@ -159,8 +160,12 @@ export function collideLineSolid(solids, fromX, fromY, toX, toY) {
     const at = (px, py) => {
         // `collidePoint` is `x >= e.x && y >= e.y && x < e.right && y < e.bottom`
         // on the truncated point.
-        const ix = Math.trunc(px);
-        const iy = Math.trunc(py);
+        // ⛓ seedling-fidelity-terrain W1 (`contactFidelity.CONTACT_FIDELITY.collideLinePointsExact`):
+        // `World.collidePoint(type, pX:Number, pY:Number)` — the sampled point is
+        // NOT truncated; only the four end points are (`collideLine`'s `int`
+        // signature). Equal against integer bounds; not against the player's box.
+        const ix = CONTACT_FIDELITY.collideLinePointsExact ? px : Math.trunc(px);
+        const iy = CONTACT_FIDELITY.collideLinePointsExact ? py : Math.trunc(py);
         for (const s of solids) {
             if (ix >= s.x && iy >= s.y && ix < s.right && iy < s.bottom) return s;
         }
