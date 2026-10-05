@@ -60,7 +60,7 @@
     "rng": {
         "seed": 328376930,
         "split": true,
-        "cosmetic": 100024041,
+        "cosmetic": 628985786,
         "fp": 1924513024
     },
     "seam": {
@@ -84,7 +84,7 @@
         "hits_max": 3,
         "first_use": false,
         "extended": false,
-        "time": 8776,
+        "time": 8756,
         "primary": 0,
         "secondary": 0,
         "grass_cut": 192,
@@ -96,19 +96,19 @@
         ],
         "menu_state": 0,
         "music": {
-            "set": "Enemy Hop",
-            "index": 0
+            "set": "Room",
+            "index": 2
         }
     },
     "tick0": {
         "rng": {
             "seed": 328376930,
             "split": true,
-            "cosmetic": 954659063,
+            "cosmetic": 1647950909,
             "fp": 2039186901
         },
         "seam": {
-            "time": 8797
+            "time": 8777
         }
     },
     "tick_count": 456,
