@@ -467,6 +467,11 @@
       "world_directory": "procgen_maze_worldgen"
     }
   },
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "game_info": {
     "1": {
       "completion_condition": {

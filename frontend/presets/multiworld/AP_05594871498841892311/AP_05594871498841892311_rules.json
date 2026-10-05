@@ -3073,7 +3073,14 @@
       "world_directory": "bounce_worldgen"
     }
   },
-  "exporter": {},
+  "exporter": {
+    "1": {
+      "assume_bidirectional_exits": true
+    },
+    "2": {
+      "assume_bidirectional_exits": true
+    }
+  },
   "game_info": {
     "1": {
       "completion_condition": {
