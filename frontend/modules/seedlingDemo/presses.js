@@ -44,7 +44,9 @@ import { fireHits } from './fireVerb.js';
  * here would agree with that one until somebody edited either, and the copy
  * nobody tests is the one that drifts (⚖ ruling 17).
  */
-import { SLASH_SCALE_DASH, SLASH_SCALE_NORMAL, SLASH_TIMER_MAX } from './combatVerbs.js';
+import {
+    SLASH_ANIM_TICKS, SLASH_SCALE_DASH, SLASH_SCALE_NORMAL, SLASH_TIMER_MAX, slashHitTicksFor,
+} from './combatVerbs.js';
 import { PROFILE } from './seedlingProfile.js';
 
 export class PressError extends Error {
@@ -140,6 +142,17 @@ export { SLASH_TIMER_MAX };
  * slice that reaches a non-idempotent spear arm owes the same fix.
  */
 export const SLASH_HIT_TICKS = PROFILE.slashHitTicks;
+/**
+ * ⛓ SEEDLING FIDELITY DASH: the measured five IS the plain swing's derived
+ * animation length (`combatVerbs.SLASH_ANIM_TICKS.slash`), and a DASH buys
+ * four (`slashnarrow` wraps one update sooner). The window below reads the
+ * thrust's own `anim`; this line is what keeps the measured constant and the
+ * derivation from drifting apart.
+ */
+if (SLASH_ANIM_TICKS.slash !== SLASH_HIT_TICKS) {
+    throw new Error(`presses: SLASH_HIT_TICKS ${SLASH_HIT_TICKS} (measured) is not the plain `
+        + `swing's derived animation length ${SLASH_ANIM_TICKS.slash}`);
+}
 export const SPEAR_HIT_TICKS_UNMODELLED = Object.freeze({
     ticks: Object.freeze([1, 3, 5]),
     why: '`spearDelayMax` is 1, so the test runs on alternate ticks of the same '
@@ -215,7 +228,9 @@ export function swordWindowStep(win, tick) {
         fires.push(pending);
         if (pending.weapon === 'sword') {
             const grown = repeats.slice();
-            for (let i = 1; i < SLASH_HIT_TICKS; i += 1) {
+            // ⛓ SEEDLING FIDELITY DASH: per animation — 5 for a swing, 4 for a dash.
+            const hitTicks = slashHitTicksFor(pending.anim);
+            for (let i = 1; i < hitTicks; i += 1) {
                 grown.push({ ...pending, at: tick + i, repeat: i });
             }
             repeats = grown;
