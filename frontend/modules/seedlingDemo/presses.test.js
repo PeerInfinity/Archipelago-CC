@@ -446,8 +446,8 @@ describe('the sword window — one stepper, both sides', () => {
             win = step.window;
             for (const f of step.fires) fired.push(t);
         }
-        // The active table: four in the game (`SLASH_ANIM_TICKS_GAME`), five on the
-        // roster until `DASH_WINDOW_ROSTER_WIDE` flips.
+        // The active table: four in the game (`SLASH_ANIM_TICKS_GAME`), and on the
+        // roster since DASHFLIP turned `DASH_WINDOW_ROSTER_WIDE` on (five behind it).
         expect(fired).toEqual([11, 12, 13, 14, 15].slice(0, SLASH_ANIM_TICKS.slashnarrow));
         expect(SLASH_ANIM_TICKS_GAME.slashnarrow).toBe(4);
         // …and a plain swing with its `anim` named is the measured five.

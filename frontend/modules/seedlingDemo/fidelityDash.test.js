@@ -11,8 +11,9 @@
  * the game fired at t100 and arrow (100, 52) hit the player at t104.
  *
  * D2 put the game's table behind `combatVerbs.DASH_WINDOW_ROSTER_WIDE`, OFF: at true the
- * solver re-derives two committed campaign segments (`r9-solve-14`, `r9-solve-16`). Every row
- * here holds at BOTH arms, so the flip is one line and these rows say what it buys.
+ * solver re-derives two committed campaign segments (`r9-solve-14`, `r9-solve-16`). DASHFLIP
+ * turned it ON and re-recorded both on the game. Every row here except the gate's own holds
+ * at BOTH arms, so these rows say what the flip bought.
  *
  * The game's answers are `fixtures/dash-window-oracle.json` (every observation sampled) and
  * the refuted tape's recorded stream (`fixtures/refuted/dash-l16-sword-refuted.*`).
@@ -65,10 +66,11 @@ function replay(tape) {
 const isDash = (p) => [p.rect.w, p.rect.h].some((d) => Math.abs(d - 20.8) < 1e-9);
 
 describe('fidelity DASH D2 — a dash buys FOUR hit tests in the game', () => {
-    it('the game\'s table is 5 / 4, and the roster still runs 5 / 5 behind the gate', () => {
+    // ⛓ DASHFLIP: the roster runs the game's table now (was 5 / 5 behind the gate).
+    it('the game\'s table is 5 / 4, and the roster runs it (the gate is ON)', () => {
         expect(SLASH_ANIM_TICKS_GAME).toEqual({ slash: 5, slashnarrow: 4 });
-        expect(DASH_WINDOW_ROSTER_WIDE).toBe(false);
-        expect(SLASH_ANIM_TICKS.slashnarrow).toBe(5);
+        expect(DASH_WINDOW_ROSTER_WIDE).toBe(true);
+        expect(SLASH_ANIM_TICKS.slashnarrow).toBe(4);
     });
 
     /**

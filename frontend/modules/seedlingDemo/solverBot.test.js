@@ -1870,7 +1870,11 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
         for (const row of yielded) expect(row.plannedSkipped.why).toMatch(/NOT CERTIFIED/);
         // ⛓ …and the BODY-GATED arm still refuses every dash it is offered,
         // which is the retirement being non-vacuous on the same fixture.
-        expect(r.policy.dashRefusals).toHaveLength(11);
+        // ⛓ SEEDLING FIDELITY DASHFLIP: 11 -> 22, measured (the reading, not
+        // traced: a dash now ends one tick sooner, the game's four tests, so the
+        // opportunistic arm is offered on more ticks). Every offer is still
+        // refused, and the zero hits above did not move.
+        expect(r.policy.dashRefusals).toHaveLength(22);
         for (const row of r.policy.dashRefusals) {
             expect(row.dashRefused.opportunistic).toBe(true);
         }
@@ -1945,7 +1949,10 @@ describe('R9 slice 12c: the DASH, MODELLED — the oracle steps it and the polic
         const swallowed = policy.trace.filter((r) => r.pressWouldBe === 'swallowed');
         // ⛓ NON-VACUOUS: the branch is reached, and reached often.
         // ⛓ R9 slice 12e″: 64 -> 68, the same re-pricing as the rows above.
-        expect(swallowed.length).toBe(68);
+        // ⛓ SEEDLING FIDELITY DASHFLIP: 68 -> 51, measured (the reading: a dash's
+        // animation is the game's four ticks now, so one tick fewer per dash lies
+        // inside it for a press to be swallowed on).
+        expect(swallowed.length).toBe(51);
         for (const r of swallowed) {
             expect(r.decision).toBe('none');
             expect(r.why).toMatch(/No window opens/);
