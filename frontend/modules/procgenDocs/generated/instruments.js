@@ -8761,6 +8761,61 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/probe-seedling-level-set-transport.mjs"
         },
         {
+            "argvHelpers": [
+                "ONLY",
+                "VARIANTS",
+                "WORLDS",
+                "check"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "only",
+                "record",
+                "variants",
+                "worlds"
+            ],
+            "file": "probe-seedling-moonrock.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "variants"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "worlds"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity MOONROCK, D3: **THE DELIVERED SET'S MOONROCK, ON THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-moonrock.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": true,
             "category": "probe",
