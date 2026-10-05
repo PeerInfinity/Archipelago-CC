@@ -13321,6 +13321,67 @@ pressed at t83 pulls `rope@32,16`. They are `dash-l16-sword-all`,
 - **A rung's inner walk is a walk.** The dash that broke L16 was planned by a
   walk no trace row recorded. Count at the run, not at the rows.
 
+### Seedling fidelity DASHFLIP — the game's dash window, ON
+
+⚖ The user (2026-10-05): *"Yes: flip + re-record."* DASH left the game's dash
+window (four hit tests a dash, `SLASH_ANIM_TICKS_GAME`) behind
+`DASH_WINDOW_ROSTER_WIDE = false` because turning it on moved two committed
+campaign segments. This slice turned it on and re-recorded them. The report is
+`CC/docs/cloud-reports/seedling-fidelity-dashflip.md`.
+
+**The flip (D1).** `DASH_WINDOW_ROSTER_WIDE = true`. The three model rows that
+pinned the legacy five-test window moved to their measured values:
+- `levelRun`'s dash-chain row: the largest gap between fired ticks is 3, not 2
+  (each dash tests `T+1 … T+4`, and the row now asserts that whole);
+- `solverBot`'s L14 planned dash chain: `dashRefusals` 11 → 22, zero hits
+  unmoved;
+- `solverBot`'s swallowed census: 68 → 51.
+
+With the flag back to `false` (the mutant), exactly those three rows and the
+two gate rows go red (5 / 322).
+
+**The re-record (D2).** The campaign producer, headless on p4f, re-derived:
+- `r9-solve-14`: 118 → **98 t**;
+- `r9-solve-16`: 625 → **688 t**. Its old walk pulled `rope@32,16` with the
+  fifth dash test that the game does not run.
+
+Every later window is boot-only: `seam.time` −20 on `r9-solve-15`/`-16` and
++43 from `r9-solve-18` on, `rng.cosmetic`, and `r9-solve-15`'s music latch.
+The walks did not move, `r9-solve-18` included (510 t).
+
+**Recorded on the game:**
+- `--record --only=` the 15 movers: 15 *"THE MODEL REPRODUCES THE RECORDING IT
+  JUST MADE"*. The 13 boot-only expectations came out byte-identical.
+- `derive-seedling-tick0`: the 14 moved boots.
+- The whole-chain differential: **879 PASS, 0 FAIL**, 30/30 live game matches,
+  `endsAt` **10,978**.
+- `solve-seedling-r9-campaign --check` exits 0.
+
+**`canCross` (D3).** `CAN_CROSS_DASH_MODE` is the solver's `all` again. At the
+flip, L16 → L17 `all` is 117 t, the game-recorded `dash-l16-sword-all` key for
+key. Every other sword door in CANCROSS's table plans, under `all`, the
+committed game-recorded campaign window's own inputs. The `none` witness
+(`cancross-l16-sword-none`) is still byte for byte, asked by name.
+
+**What the brief's list missed.** The chain's L18 clock moved +43, which is
+residue 42 → **40** in the hammer's 45-tick period. The walk is the same keys.
+`fidelityF1c` pinned the chain at 42 in two rows, and both now say 40, with the
+witness `f1c-l18-phase42` kept at its own residue.
+
+**Trap candidates**, for the catalogue to number:
+
+- **A boot-only move can move a residue pin.** No walk after window 18 changed
+  and every tape replays, yet a mod-period pin went red. +43 ticks is −2 mod 45.
+  A list of what moves has to include the clock's residues, not only the tapes.
+- **A latch-cache gate's REFUSED count is the machine's, not the tree's.**
+  `check-seedling-producer-boundaries` read 12 VERIFIED / 20 REFUSED at the
+  base and 26 / 6 at the head on the same machine. The 14 more were the latches
+  this slice's producer run had just cached. It is not evidence about the
+  change.
+- **The default an oracle chose for one refutation should be re-asked when the
+  refutation is cured.** `canCross`'s `none` had one reason. After the flip,
+  `all` had seven game-recorded witnesses and `none` had one.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
@@ -14112,7 +14173,7 @@ its byte-frozen free oracle is compared against.
 
 <!-- GENERATED:campaign-chain BEGIN — by scripts/procgen/generate-procgen-reference.mjs; do not edit; regenerate -->
 
-`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10935 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
+`r9-campaign` — **30 segments**, custody, from `new Game(0,80,128)` with an empty save to the **L32** end of the route, **10978 ticks**. Segments 1–4 are PROMOTED (their boots already ARE their predecessors' latches, so this chain gives them a RELATION rather than a rewrite); every later one boots its predecessor's MEASURED latch.
 
 | # | tape | rooms | ticks | earns |
 |---|---|---|---|---|
@@ -14131,9 +14192,9 @@ its byte-frozen free oracle is compared against.
 | 13 | `r9-solve-2` | L2 → L0 | 23 | — |
 | 14 | `r9-solve-0` | L0 → L13 | 145 | — |
 | 15 | `r9-solve-13` | L13 → L14 | 36 | — |
-| 16 | `r9-solve-14` | L14 → L15 | 118 | — |
+| 16 | `r9-solve-14` | L14 → L15 | 98 | — |
 | 17 | `r9-solve-15` | L15 → L16 | 456 | — |
-| 18 | `r9-solve-16` | L16 → L18 | 625 | — |
+| 18 | `r9-solve-16` | L16 → L18 | 688 | — |
 | 19 | `r9-solve-18` | L18 → L19 | 510 | — |
 | 20 | `r9-solve-19` | L19 → L20 | 746 | `bosskey@L19` |
 | 21 | `r9-solve-20` | L20 → L13 | 560 | `shield@L20` |
