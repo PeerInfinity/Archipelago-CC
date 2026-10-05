@@ -2053,15 +2053,27 @@ function checkReadout(name, tape, status, stream, seam) {
                 + 'pickup: if the game did not take it, the cover fade never reached '
                 + '`coverAlpha >= 1` and the ceremony is a different length.');
     } else if (swung.length > 0) {
+        // ⛓⛓⛓ SEEDLING FIDELITY WATCHER: a level change the MODEL also made is a
+        // door, not the seed's reboot. `watcher-l114-talk` lands one sword hit on
+        // the watcher it has just talked to (its tag is cleared, so `hit()` counts)
+        // and then leaves by `teleporter@64,144`, which the model's own stream
+        // carries; only a change the model did not make is a seed the model missed.
+        const modelMade = (t) => (expected.transitions ?? []).some((m) => m.t === t.t
+            && m.from_level === t.from_level && m.to_level === t.to_level);
+        const unexplained = stream.transitions.filter((t) => !modelMade(t));
         check(`${name}: the Watcher the run did NOT finish rebooted nothing`,
-            stream.transitions.length === 0,
+            unexplained.length === 0,
             stream.transitions.length === 0
                 ? `${swung.length} hit(s) landed and the run never left level `
                 + `${swung[0].level} — one short of \`hits > dieFrames.length\``
-                : `${swung.length} hit(s) landed and the game changed level `
-                + `(${stream.transitions.map((t) => `${t.from_level}->${t.to_level}`)
-                    .join(', ')}) — the seed spawned in the game and not in the model, `
-                + 'so the hit counter is a hit out.');
+                : unexplained.length === 0
+                    ? `${swung.length} hit(s) landed; the game's level change(s) `
+                    + `(${stream.transitions.map((t) => `${t.from_level}->${t.to_level}@${t.t}`)
+                        .join(', ')}) are the model's own doors, not a seed's reboot`
+                    : `${swung.length} hit(s) landed and the game changed level `
+                    + `(${unexplained.map((t) => `${t.from_level}->${t.to_level}`)
+                        .join(', ')}) — the seed spawned in the game and not in the model, `
+                    + 'so the hit counter is a hit out.');
     }
 
     return expected;

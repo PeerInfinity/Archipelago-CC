@@ -1374,15 +1374,30 @@ describe('roles: pickups and proximity hazards are AVOID VOLUMES', () => {
             .toMatchObject({ x: 32, y: 48, right: 48, bottom: 66 });
     });
 
-    it('bounds the watcher\'s 24 px talk CIRCLE by its square', () => {
+    it('prices the watcher\'s 24 px talk CIRCLE as the circle', () => {
         // `FP.distance(x, y, p.x, p.y) <= talkRange` from the NPC's own
-        // centre (the ctor half-tile). Level 94's watcher is at oel
-        // (152,128) -> centre (160,136) -> [136,184) x [112,160).
-        const w = relaxed(94);
+        // centre (the ctor half-tile). Level 114's watcher is at oel
+        // (72,72) -> centre (80,80).
+        // ⛓ FIDELITY WATCHER: this row was L94's, bounding the circle by its
+        // 48x48 square, until that watcher was measured SILENT (below) and the
+        // square was measured to put L114's corridor top "in contact" with a
+        // circle it is 25.3 px from. L114's is the extract's only speaking one.
+        const w = relaxed(114);
         expect(w.proximityHazards).toHaveLength(1);
-        expect(w.proximityHazards[0]).toMatchObject({ tag: 'watcher', kind: 'auto-talk' });
-        expect(w.proximityHazards[0].rect)
-            .toMatchObject({ x: 136, y: 112, right: 184, bottom: 160 });
+        expect(w.proximityHazards[0]).toMatchObject({ tag: 'watcher', kind: 'auto-talk', rect: null });
+        expect(w.proximityHazards[0].disc).toEqual({ x: 80, y: 80, r: 24, inclusive: true });
+        expect(w.silentHazards).toEqual([]);
+    });
+
+    it('lists a watcher placed with NO TEXT as silent, never as a volume', () => {
+        // ⛓⛓⛓ FIDELITY WATCHER: `NPC.talk()` runs only
+        // `if (p && myText[0].length > 0)` (`NPCs/NPC.as:188`), so L94's
+        // `watcher@152,128` (text "") never talks: no circle, no freeze.
+        const w = relaxed(94);
+        expect(w.proximityHazards).toEqual([]);
+        expect(w.silentHazards).toEqual([expect.objectContaining({
+            tag: 'watcher', id: 'watcher@152,128', why: expect.stringMatching(/myText\[0\]\.length > 0/),
+        })]);
     });
 
     /**

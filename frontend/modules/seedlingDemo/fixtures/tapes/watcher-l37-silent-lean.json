@@ -1,0 +1,106 @@
+{
+    "game": "seedling",
+    "name": "watcher-l37-silent-lean",
+    "boot": {
+        "level": 37,
+        "x": 104,
+        "y": 240
+    },
+    "noclip": false,
+    "noDamage": false,
+    "noHazards": [],
+    "grants": [],
+    "persistence": [
+        {
+            "level": 5,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 0,
+            "note": ""
+        },
+        {
+            "level": 8,
+            "tag": 1,
+            "note": ""
+        },
+        {
+            "level": 10,
+            "tag": 0,
+            "note": ""
+        }
+    ],
+    "equips": [],
+    "pins": [
+        "sound",
+        "dead_frames"
+    ],
+    "save": {
+        "totem_parts": [],
+        "keys": [
+            0,
+            1
+        ],
+        "seal_parts": []
+    },
+    "rng": {
+        "seed": 418414780,
+        "split": false,
+        "cosmetic": 0,
+        "fp": 1763053598
+    },
+    "seam": {
+        "items": {
+            "hasSword": true,
+            "hasGhostSword": false,
+            "hasShield": true,
+            "hasFire": true,
+            "hasWand": false,
+            "hasFireWand": false,
+            "canSwim": false,
+            "hasSpear": false,
+            "hasDarkShield": false,
+            "hasDarkSuit": false,
+            "hasDarkSword": false,
+            "hasFeather": false,
+            "hasTorch": true
+        },
+        "beam": false,
+        "rock_set": false,
+        "hits_max": 3,
+        "first_use": false,
+        "extended": false,
+        "time": 8586,
+        "primary": 0,
+        "secondary": 0,
+        "grass_cut": 0,
+        "cutscene": [
+            false,
+            false,
+            false,
+            false
+        ],
+        "menu_state": 0,
+        "music": {
+            "set": "Room",
+            "index": 1
+        }
+    },
+    "tick_count": 60,
+    "inputs": [
+        {
+            "key": "down",
+            "from": 0,
+            "to": 20
+        },
+        {
+            "key": "left",
+            "from": 20,
+            "to": 40
+        }
+    ],
+    "tape_version": 8,
+    "description": "⛓⛓⛓ SEEDLING FIDELITY WATCHER — THE DISCRIMINATOR: boots 24 px above the SILENT `watcher@104,264` (in range by `NPC.talk()`'s `<=`), leans `down` against the wall to 19 px, walks out `left` and rests. A speaking watcher would open its dialogue on the first update and freeze the walk; this one never talks. The survey's staging (`r8-solve-11`'s committed block re-pointed at the atlas arrival, keys [0, 1], items [hasTorch, hasShield, hasFire]). Hand-authored keys: 60 t, equips []. Authored by scripts/procgen/plan-seedling-watcher-witness.mjs."
+}
