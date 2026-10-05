@@ -160,9 +160,10 @@ describe('the glue — menuPanel:restarted re-takes the start hop when the start
         const eventBus = { subscribe: (n, fn) => { subs.set(n, fn); return () => subs.delete(n); }, publish: () => {} };
         const retakeStartHop = vi.fn(retake);
         const stops = [];
+        const published = [];
         const glue = new SeedlingRegionGlue({
             eventBus,
-            getDispatcher: () => ({ publish: () => {} }),
+            getDispatcher: () => ({ publish: (name, data) => published.push({ name, data }) }),
             loadRegionEvent: FLASH_SEEDLING_LOAD_REGION_EVENT,
             getProcgen: () => ({
                 getResolvedStartRegion: () => 's',
@@ -172,7 +173,7 @@ describe('the glue — menuPanel:restarted re-takes the start hop when the start
             stopBotWalks: () => { if (busy) stops.push('stop'); return stops.length; },
         });
         glue.start();
-        return { glue, retakeStartHop, stops, restart: (p) => subs.get(RESTARTED_EVENT)(p), subscribed: () => subs.has(RESTARTED_EVENT) };
+        return { glue, retakeStartHop, stops, published, restart: (p) => subs.get(RESTARTED_EVENT)(p), subscribed: () => subs.has(RESTARTED_EVENT) };
     }
 
     it('subscribes at start(), and a world-mode Restart on a Seedling start re-takes the hop', () => {
@@ -182,6 +183,14 @@ describe('the glue — menuPanel:restarted re-takes the start hop when the start
         expect(h.retakeStartHop).toHaveBeenCalledTimes(1);
         expect(h.glue.lastRestart).toMatchObject({ taken: true, start: 's', substrate: FLASH_SEEDLING_SUBSTRATE_ID });
         expect(h.glue.stats.restarts).toBe(1);
+    });
+
+    it('⛔ the glue publishes NOTHING itself on a Restart — no location check, no move (the hop is procgenPlayer\'s)', () => {
+        const h = harness();
+        h.glue.checkBinding = { hostOwnedLocations: () => new Set(['Level 010 - Sword']), onStateReport: () => [] };
+        h.restart({ mode: 'world', target: 'Menu', from: 'level_13' });
+        expect(h.published).toEqual([]);
+        expect(h.glue.stats.locationChecks).toBe(0);
     });
 
     it('the generated entry counts as ours too', () => {
