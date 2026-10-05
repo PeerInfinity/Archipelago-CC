@@ -119,8 +119,12 @@ describe('fidelity RETURN — D2: the refusal names the seal; the Conch solves',
             expect(r.verdict).toBe('cannot');
             expect(r.why).toMatch(/SEALED BEHIND ITS OWN LOCK/);
         }
+        // ⛓ the committed witness is the DASHLESS plan (recorded while canCross defaulted to
+        // `none`); DASHFLIP returned the default to the solver's `all` (193 t here), so this
+        // row asks for `none` by name, as CANCROSS's own L16 witness row does.
         const r = canCross({ level: 15, exit: 14, arrival: { from: 16 }, inventory: ['sword', 'conch'],
-            persistence: CLEARS.map((tag) => ({ level: 15, tag })), name: 'return-l15-conch' });
+            persistence: CLEARS.map((tag) => ({ level: 15, tag })), name: 'return-l15-conch',
+            dashMode: 'none' });
         expect(r.verdict).toBe('can');
         expect(r.plan).toMatchObject({ ticks: 222, landed: 14, hits: 0 });
         const path = join(HERE, 'fixtures', 'tapes', 'return-l15-conch.json');
