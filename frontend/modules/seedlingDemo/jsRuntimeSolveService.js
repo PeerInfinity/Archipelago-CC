@@ -16,7 +16,9 @@
  *                other way); the next `start` builds a fresh one;
  *   `provisional` ⛓ ANYTIME — the best answer of the solver passes that
  *                have landed (`jsRuntimeSolver.betterAnswer`), null until
- *                one did; `answered` how many; `passes` one row each. A
+ *                one did; `answered` how many (⛓ SHOULD-STOP: leading passes
+ *                with a final word — a refusal cut by its deadline is not
+ *                one); `passes` one row each. A
  *                budget expiry plays a provisional PLAN instead of declining.
  *
  * One solve is in flight at a time (the solver keeps one). The room records
@@ -76,9 +78,15 @@ export function createWorkerSolveService({ createWorker = defaultCreateWorker, c
             if (msg.type === 'started') { current.started = true; current.startedAt = clock(); }
             else if (msg.type === 'pass') {
                 // ⛓ ANYTIME — the best answer so far: what an expiry plays (a plan) or says (a refusal).
-                current.answered = msg.index + 1;
+                // ⛓ SHOULD-STOP — `answered` counts the LEADING passes that gave a final word: a refusal
+                // raised after its deadline tripped (the dashless pass bounded at the budget) was cut, not
+                // answered, so a held retry (`passesAfter`) runs that pass again with its larger budget.
+                const cutByDeadline = msg.answer?.ok === false && msg.answer?.deadline;
+                if (current.answered === msg.index && !cutByDeadline) current.answered = msg.index + 1;
                 current.provisional = msg.best ?? null;
-                current.passes.push({ pass: msg.pass, ok: msg.answer?.ok === true, kind: msg.answer?.kind ?? null });
+                const tripped = (msg.answer?.ok ? msg.answer?.plan?.deadline : msg.answer?.deadline)?.first ?? null;
+                current.passes.push({ pass: msg.pass, ok: msg.answer?.ok === true, kind: msg.answer?.kind ?? null,
+                    ...(tripped ? { deadline: tripped } : {}) });
             }
             else if (msg.type === 'result') {
                 const { type, id, ...result } = msg;

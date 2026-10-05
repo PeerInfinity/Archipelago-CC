@@ -180,6 +180,19 @@ export function register(registrationApi) {
           + "and the solver is asked once more with 4× this budget, and only then does the walk stop, "
           + "saying why. Raise it on a busy machine. Read at the start of each solve.",
       },
+      // ⛓ Seedling SHOULD-STOP — the anytime full pass's dash deadline (⚖ the user's "upgrade window"; 0 = today).
+      seedlingSolverUpgradeWindowMs: {
+        type: 'number',
+        default: 0,
+        minimum: 0,
+        label: 'Seedling: solver upgrade window (ms; 0 = the whole budget)',
+        description: "Both runtimes, solver (atlas / vanilla) rooms. The Playback Bot's solver first "
+          + "searches without sword dashes, then with them. Once a plan is in hand, this is how long "
+          + "(from the start of the solve) the second search may keep looking for sword dashes that "
+          + "make the plan shorter; past it, that search stops looking for dashes and finishes, and "
+          + "the shorter of the two plans is played. 0 (the default) gives it the whole solver budget. "
+          + "Read at the start of each solve.",
+      },
     },
   });
 

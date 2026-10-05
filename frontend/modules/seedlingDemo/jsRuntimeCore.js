@@ -280,8 +280,10 @@ export function apItemsOf(record) {
  *   (`jsRuntimeSolveService.createWorkerSolveService`); null (node) solves in
  *   place, as S1 did.
  * @param {number} [opts.solverBudgetMs]  ⛓ S2 — one solve's wall-clock budget
+ * @param {number} [opts.solverUpgradeWindowMs]  ⛓ SHOULD-STOP — the full pass's dash deadline (null = the budget)
  */
-export function createJsRuntime({ onStateChanged = null, log = () => {}, solveService = null, solverBudgetMs = undefined } = {}) {
+export function createJsRuntime({ onStateChanged = null, log = () => {}, solveService = null, solverBudgetMs = undefined,
+    solverUpgradeWindowMs = undefined } = {}) {
     let config = null;
     /** alias -> AS3 class name, from `configure`'s `classes`. */
     let aliases = new Map();
@@ -349,6 +351,7 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
     const solver = createRuntimeSolver({
         solveService,
         ...(solverBudgetMs !== undefined ? { budgetMs: solverBudgetMs } : {}),
+        ...(solverUpgradeWindowMs !== undefined ? { upgradeWindowMs: solverUpgradeWindowMs } : {}),
         getSession: () => session,
         getLevelSource: () => roomSource()?.source ?? null,
         getRecords: () => roomSource()?.records ?? null,
@@ -878,6 +881,12 @@ export function createJsRuntime({ onStateChanged = null, log = () => {}, solveSe
         /** ⛓ S2 — one solve's wall-clock budget, in ms (a test knob; the page reads `?solverBudgetMs=`). */
         get solverBudgetMs() { return solver.budgetMs; },
         setSolverBudgetMs(ms) { solver.budgetMs = Number(ms); },
+        /**
+         * ⛓ SHOULD-STOP — the upgrade window, in ms (`flashPanel.seedlingSolverUpgradeWindowMs`, handed with
+         * every goal; the page reads `?solverUpgradeWindowMs=`): null / non-positive = the whole budget.
+         */
+        get solverUpgradeWindowMs() { return solver.upgradeWindowMs; },
+        setSolverUpgradeWindowMs(ms) { solver.upgradeWindowMs = ms; },
         /** ⛓ S2 — the solve service (the page's worker; null = in place). */
         setSolveService(service) { solver.setSolveService(service); },
         get solveService() { return solver.solveService; },

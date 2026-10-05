@@ -51,6 +51,8 @@ const RUNTIME_SETTING_KEY = 'moduleSettings.flashPanel.runtime';
 const SOLVER_WALK_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverWalk';
 /** ⛓ Seedling solver-walk O3 — the wasm engine's solve budget (read live by the engine at each solve). */
 const WASM_SOLVER_BUDGET_SETTING_KEY = 'moduleSettings.flashPanel.seedlingWasmSolverBudgetMs';
+/** ⛓ Seedling SHOULD-STOP — the solver's upgrade window, both runtimes (read at each solve's start; 0 = the budget). */
+const SOLVER_UPGRADE_WINDOW_SETTING_KEY = 'moduleSettings.flashPanel.seedlingSolverUpgradeWindowMs';
 /**
  * ⛓ Seedling JS J1 — the JS runtime's page, document-relative like WASM_DIR.
  * ⛔ A PATH, never an import: the page's closure is the whole JS model, and a
@@ -182,6 +184,9 @@ export class FlashPanelUI {
       if (data?.key === WASM_SOLVER_BUDGET_SETTING_KEY || data?.key === '*') {
         this._refreshWasmSolverBudget(data.key === '*' ? undefined : data.value);
       }
+      if (data?.key === SOLVER_UPGRADE_WINDOW_SETTING_KEY || data?.key === '*') {
+        this._refreshSolverUpgradeWindow(data.key === '*' ? undefined : data.value);
+      }
       if (data?.key !== RUNTIME_SETTING_KEY && data?.key !== '*') return;
       if (!this.isInitialized) return;
       if (this.componentState.configPath || this.componentState.swfPath
@@ -310,6 +315,9 @@ export class FlashPanelUI {
         // ⛓ O3 — the solve budget knob (null until the setting is read: the engine's own default then).
         solverBudgetMs: this._wasmSolverBudgetMs ?? null,
       } : null,
+      // ⛓ SHOULD-STOP — the upgrade window, both runtimes: undefined until the setting is read, then a
+      // number or null (0 / unset = the whole budget). The JS page gets it with every goal.
+      solverUpgradeWindowMs: this._solverUpgradeWindowMs,
     };
   }
 
@@ -337,6 +345,16 @@ export class FlashPanelUI {
     }
     const n = Number(next);
     this._wasmSolverBudgetMs = next !== null && next !== '' && Number.isFinite(n) && n > 0 ? n : null;
+  }
+
+  /** ⛓ SHOULD-STOP — cache `flashPanel.seedlingSolverUpgradeWindowMs` (null = the whole budget). */
+  async _refreshSolverUpgradeWindow(value) {
+    let next = value;
+    if (next === undefined) {
+      try { next = await settingsManager.getSetting(SOLVER_UPGRADE_WINDOW_SETTING_KEY, null); } catch { return; }
+    }
+    const n = Number(next);
+    this._solverUpgradeWindowMs = next !== null && next !== '' && Number.isFinite(n) && n > 0 ? n : null;
   }
 
   _teardownForReinit() {
@@ -928,6 +946,7 @@ export class FlashPanelUI {
       this._initRuntime = runtime;
       await this._refreshSolverWalk();
       await this._refreshWasmSolverBudget();
+      await this._refreshSolverUpgradeWindow();
       this.transport = 'wasm';
       if (runtime === 'js') {
         // ⛓ Seedling JS J1: the JavaScript model's page, through the SAME

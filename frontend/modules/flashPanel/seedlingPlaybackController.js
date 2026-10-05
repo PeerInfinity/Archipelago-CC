@@ -456,6 +456,8 @@ export class SeedlingPlaybackController {
             getSwapState: () => this._getSurface?.()?.swapState?.() ?? null,
             // ⛓ O3 — the solve budget knob, read live at each solve's start (null = the engine's own).
             getBudgetMs: () => this._getSurface?.()?.wasm?.solverBudgetMs ?? null,
+            // ⛓ SHOULD-STOP — the upgrade window, read live at each solve's start (null = the whole budget).
+            getUpgradeWindowMs: () => this._getSurface?.()?.solverUpgradeWindowMs ?? null,
             log: this._log,
             onNote: (n) => this._relayNote(n),
             onFailed: (reason) => this._fail(this._lastTarget, `the wasm playback failed: ${reason}`),
@@ -574,6 +576,8 @@ export class SeedlingPlaybackController {
         if (r.link) return this._creditLink(r.link, s, target);
         // ⛓ S1 — the solver mode travels with the goal (the page may be newer than the setting's last push).
         page.setSolverWalk?.(s.solverWalk === true);
+        // ⛓ SHOULD-STOP — and the upgrade window, once the panel has read it (a page's own URL knob otherwise).
+        if (s.solverUpgradeWindowMs !== undefined) page.setSolverUpgradeWindowMs?.(s.solverUpgradeWindowMs);
         const answer = page.walkTo(r.goal);
         if (!answer?.ok) return this._refuse(`the JS runtime refused ${JSON.stringify(r.goal)}: ${answer?.reason ?? 'no answer'}`);
         this.lastGoal = r.goal;

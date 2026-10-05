@@ -42,7 +42,9 @@
  * solves run off this thread, so the clock below keeps running (and painting
  * "solving…") while one is in flight, and a solve past its budget is
  * terminated. `?solverBudgetMs=<ms>` on this page's URL sets the budget (a
- * test knob; the default is `SOLVER_BUDGET_MS`). A browser without module
+ * test knob; the default is `SOLVER_BUDGET_MS`); ⛓ SHOULD-STOP
+ * `?solverUpgradeWindowMs=<ms>` the upgrade window (`jsRuntimeSolver.upgradeWindowMs`;
+ * absent = the whole budget). A browser without module
  * workers solves in place, as S1 did — said once on the console.
  */
 
@@ -95,6 +97,7 @@ export function mountJsRuntimePage(win = window) {
         win.console?.warn?.('[js runtime] no Worker in this browser — the solver mode solves on the page thread (S1)');
     }
     const budgetParam = Number(new URL(win.location.href).searchParams.get('solverBudgetMs'));
+    const windowParam = Number(new URL(win.location.href).searchParams.get('solverUpgradeWindowMs'));
     const runtime = createJsRuntime({
         onStateChanged: (name, value) => {
             bridge.stateLog.push({ name, value });
@@ -103,6 +106,7 @@ export function mountJsRuntimePage(win = window) {
         log: (msg) => win.console?.log?.(msg),
         solveService,
         ...(Number.isFinite(budgetParam) && budgetParam > 0 ? { solverBudgetMs: budgetParam } : {}),
+        ...(Number.isFinite(windowParam) && windowParam > 0 ? { solverUpgradeWindowMs: windowParam } : {}),
     });
     Object.assign(bridge.game, runtime.game);
     win.__swfBridge = bridge;

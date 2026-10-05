@@ -32,7 +32,12 @@
  *      budget, resuming at the first unanswered pass; only that retry's
  *      expiry ends the goal, by name (`expiryFailure`, a pass's decline
  *      first). ⛓ O3 the budget is the `flashPanel.seedlingWasmSolverBudgetMs`
- *      knob when set (`getBudgetMs`).
+ *      knob when set (`getBudgetMs`). ⛓ SHOULD-STOP every solver request
+ *      carries its budget and the upgrade window (`getUpgradeWindowMs`,
+ *      `flashPanel.seedlingSolverUpgradeWindowMs`; null = the whole budget):
+ *      the worker bounds the dashless pass at the budget (a slow refusal
+ *      refuses by name) and stops the full pass's dash search at the window
+ *      once a plan is in hand (`jsRuntimeSolver.passShouldStop`).
  *   5. SHIP the plan as ONE tape from the same staging, declarations re-checked
  *      against a fresh `botStatus` (`exactDeclarationRefusal`); `botLoadTape`
  *      keeps the hold, `botStart` releases it and arms on the SAME world.
@@ -140,13 +145,15 @@ const secs = (ms) => `${Math.round(ms / 100) / 10} s`;
  * @param {number} [deps.budgetMs]  one solve's budget (`SOLVER_BUDGET_MS`)
  * @param {() => number|null} [deps.getBudgetMs]  ⛓ O3 — the live knob (`flashPanel.seedlingWasmSolverBudgetMs`),
  *   read at each solve's start; a non-positive / non-finite answer = `budgetMs`
+ * @param {() => number|null} [deps.getUpgradeWindowMs]  ⛓ SHOULD-STOP — the upgrade window
+ *   (`flashPanel.seedlingSolverUpgradeWindowMs`), read at each solve's start; null = the whole budget
  */
 export function createWasmPlayback({
     getGame, getWin = () => null, teleport, getCheckBinding = () => null, getSwapState = null, records, generated = false,
     solveService = null, timers = null,
     now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now()),
     onNote = () => {}, onFailed = () => {}, onDone = () => {}, log = () => {}, budgetMs = SOLVER_BUDGET_MS,
-    getBudgetMs = null,
+    getBudgetMs = null, getUpgradeWindowMs = null,
 }) {
     /** ⛓ O3 — the budget a solve starts with: the knob's live value, else the engine's own. */
     let ownBudget = budgetMs;
@@ -155,6 +162,13 @@ export function createWasmPlayback({
         try { v = getBudgetMs?.() ?? null; } catch { v = null; }
         const n = Number(v);
         return v !== null && Number.isFinite(n) && n > 0 ? n : ownBudget;
+    };
+    /** ⛓ SHOULD-STOP — the upgrade window a solve starts with (null = the whole budget, `upgradeWindowMs`). */
+    const upgradeWindow = () => {
+        let v = null;
+        try { v = getUpgradeWindowMs?.() ?? null; } catch { v = null; }
+        const n = Number(v);
+        return v !== null && Number.isFinite(n) && n > 0 ? n : null;
     };
     const levelSource = levelSourceFromAtlas(records);
     let service = solveService;
@@ -849,14 +863,18 @@ export function createWasmPlayback({
      */
     function solvedBy(p) {
         return { pass: p.pass ?? null, expired: p.expired === true, retries: p.retries ?? 0, budgets: p.budgets ? [...p.budgets] : [],
-            passes: p.plan?.passes ?? null };
+            passes: p.plan?.passes ?? null,
+            // ⛓ SHOULD-STOP — the plan's own pass stopped at its deadline (`{tripped, first, sites}`), else null
+            deadline: p.plan?.deadline ?? null };
     }
 
     function startSolve(request, playInit) {
         stats.solves += 1;
         const budget = baseBudget();
         // ⛓ ANYTIME — a solver request carries its passes (a held retry sends the ones not yet answered).
-        const req = request.producer ? request : { ...request, passes: request.passes ?? ANYTIME_PASSES };
+        // ⛓ SHOULD-STOP — and the deadlines its passes run under (`passShouldStop`).
+        const req = request.producer ? request
+            : { ...request, passes: request.passes ?? ANYTIME_PASSES, budgetMs: budget, upgradeWindowMs: upgradeWindow() };
         play = { ...playInit, t0: now(), request: req, budget, budgets: [budget], retries: 0, best: null };
         handle = svc().start(req);
         phase = 'solving';
@@ -874,11 +892,14 @@ export function createWasmPlayback({
         stats.retries += 1;
         play.retries += 1;
         if (betterAnswer(play.best, cut.provisional)) play.best = cut.provisional;
+        const budget = play.budget * SOLVE_RETRY_BUDGET_FACTOR;
+        // ⛓ SHOULD-STOP — the retry's passes run under the RETRY's budget (a dashless pass cut by its deadline
+        // was not answered: `answered` leaves it in, so it runs again with 4× the time).
         const req = play.request.producer ? play.request
-            : { ...play.request, passes: passesAfter(play.request.passes, cut.answered) };
+            : { ...play.request, passes: passesAfter(play.request.passes, cut.answered), budgetMs: budget };
         if (!req.producer && req.passes.length === 0) return false;
         play.request = req;
-        play.budget *= SOLVE_RETRY_BUDGET_FACTOR;
+        play.budget = budget;
         play.budgets.push(play.budget);
         play.t0 = now();
         handle = svc().start(req);
@@ -1037,7 +1058,9 @@ export function createWasmPlayback({
             if (talk?.left) room.talkCircles = [];
         }
         note(`playing ${play.ticks} ticks (${(plan.verbs ?? []).join(',') || 'walk'}`
-            + `${play.pass ? `; ${play.pass} pass${play.expired ? ', the later pass ran out of budget' : ''}` : ''})`);
+            + `${play.pass ? `; ${play.pass} pass${play.expired ? ', the later pass ran out of budget' : ''}` : ''}`
+            // ⛓ SHOULD-STOP — a pass whose deadline tripped, by name (the site that tripped first)
+            + `${(plan.passes ?? []).filter((r) => r.deadline).map((r) => `; ${r.pass} stopped at its deadline (${r.deadline})`).join('')})`);
         // ⛓ W7 — an exit plan's crossing: hold the arrival it leads to (the glue's redirect landing, if any).
         if (glueQuery && !hold) { arriving = true; startWatch(); }
         schedule(watch, DRAIN_MS);
@@ -1186,6 +1209,8 @@ export function createWasmPlayback({
         liveLevel() { const l = readState().level; return Number.isInteger(l) ? l : null; },
         /** ⛓ O3 — the budget the next solve starts with (the knob's live value, else the engine's own), in ms. */
         get budgetMs() { return baseBudget(); },
+        /** ⛓ SHOULD-STOP — the upgrade window the next solve starts with (null = the whole budget). */
+        get upgradeWindowMs() { return upgradeWindow(); },
         /** ⛓ O3 — the engine's own budget (the twin of the JS page's `setSolverBudgetMs`); the knob, when set, wins. */
         setBudgetMs(ms) { const n = Number(ms); if (Number.isFinite(n) && n > 0) ownBudget = n; },
         /** ⛓ WG — whether this engine stages a mounted generated set. */

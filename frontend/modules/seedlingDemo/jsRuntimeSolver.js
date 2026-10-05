@@ -147,9 +147,56 @@ export const PASS_STRATEGIES = Object.freeze({
  * `full` is `DEFAULT_DASH_MODE` — the one search every solve made before.
  */
 export const ANYTIME_PASSES = Object.freeze([
-    Object.freeze({ pass: 'dashless', dashMode: 'none' }),
-    Object.freeze({ pass: 'full', dashMode: DEFAULT_DASH_MODE, adds: 'sword-dash' }),
+    Object.freeze({ pass: 'dashless', dashMode: 'none', stop: 'all' }),
+    Object.freeze({ pass: 'full', dashMode: DEFAULT_DASH_MODE, adds: 'sword-dash', stop: 'sword-dash' }),
 ]);
+
+/**
+ * ⛓ SHOULD-STOP — the upgrade window a solve gives its later passes, in ms
+ * from the solve's start: a non-positive / non-finite / absent window is the
+ * WHOLE budget (the default — today's behaviour: the full pass searches dashes
+ * until the hard cut), and a window is never longer than the budget it runs
+ * under. ⚖ The window's value is the user's (an "upgrade window"); this is
+ * only the knob (`flashPanel.seedlingSolverUpgradeWindowMs`, the JS page's
+ * `?solverUpgradeWindowMs=`).
+ */
+export function upgradeWindowMs(budgetMs, windowMs = null) {
+    const w = Number(windowMs);
+    return windowMs !== null && Number.isFinite(w) && w > 0 ? Math.min(w, budgetMs) : budgetMs;
+}
+
+/**
+ * ⛓ SHOULD-STOP — one pass's `solveSegment` deadline (`shouldStop`, fidelity
+ * SF2), or null (today's search exactly). Every deadline is measured from the
+ * solve's start (`startedAt`, the worker's own clock) and asked of `clock`:
+ *   `stop: 'all'`        (the dashless pass) every site trips at the BUDGET —
+ *                        LOSSY, so a slow REFUSAL refuses by name (the ⏱
+ *                        clause) instead of overrunning; a solve it would have
+ *                        found past the budget was cut anyway;
+ *   `stop: 'sword-dash'` (the full pass) ONLY the dash site, the one LOSSLESS
+ *                        site (SF: tripping every site makes r8-solve-4 refuse,
+ *                        and B's L15 refuses at block-route), at the UPGRADE
+ *                        WINDOW — and only while a plan is IN HAND: the pass
+ *                        then RETURNS (a partial dash schedule, or dashless)
+ *                        instead of being cut. With no plan in hand the full
+ *                        pass is the only search left: no deadline (today).
+ * No budget (the in-place service) → no deadline at all.
+ */
+export function passShouldStop(p, { startedAt, budgetMs = null, windowMs = null, planInHand = false, clock }) {
+    if (!(Number.isFinite(budgetMs) && budgetMs > 0)) return null;
+    if (p.stop === 'all') {
+        const at = startedAt + budgetMs;
+        return () => clock() >= at;
+    }
+    if (p.stop === 'sword-dash' && planInHand) {
+        const at = startedAt + upgradeWindowMs(budgetMs, windowMs);
+        return (site) => site === 'sword-dash' && clock() >= at;
+    }
+    return null;
+}
+
+/** ⛓ SHOULD-STOP — the deadline a pass's answer tripped (`solveSegment`'s `deadline`), or null. */
+export const deadlineOf = (answer) => (answer?.ok ? answer.plan?.deadline : answer?.deadline) ?? null;
 
 /**
  * ⛓ ANYTIME — does the answer `next` (a later pass) replace `best` (the one in
@@ -180,14 +227,19 @@ export function solveAnytime(request, { passes = ANYTIME_PASSES, onPass = () => 
     let best = null;
     let last = null;
     const rows = [];
+    // ⛓ SHOULD-STOP — the request's budget and upgrade window (absent in place), from this solve's start.
+    const { budgetMs = null, upgradeWindowMs: windowMs = null, ...tape } = request;
+    const startedAt = clock();
     for (let i = 0; i < passes.length; i += 1) {
         const p = passes[i];
         const t0 = clock();
-        const answer = settleSolve(() => solveFromTape({ ...request, clock, dashMode: p.dashMode, adds: p.adds ?? null }));
+        const shouldStop = passShouldStop(p, { startedAt, budgetMs, windowMs, planInHand: best?.ok === true, clock });
+        const answer = settleSolve(() => solveFromTape({ ...tape, clock, dashMode: p.dashMode, adds: p.adds ?? null, shouldStop }));
         answer.pass = p.pass;
         if (answer.ok) answer.plan.pass = p.pass;
+        const tripped = deadlineOf(answer);
         rows.push({ pass: p.pass, ok: answer.ok, kind: answer.kind ?? null, ticks: answer.ok ? answer.plan.solution.length : null,
-            ms: Math.round(clock() - t0) });
+            ms: Math.round(clock() - t0), ...(tripped ? { deadline: tripped.first } : {}) });
         last = answer;
         if (betterAnswer(best, answer)) best = answer;
         try { onPass(answer, best, i); } catch { /* a listener's bug is not the solve's */ }
@@ -205,7 +257,8 @@ export const passesAfter = (passes, answered) => passes.slice(Math.max(0, answer
 /** ⛓ ANYTIME — how a plan's pass reads in a note: `dashless` / `full`, and why when it was not the last word. */
 export function passNote(plan, { expired = false } = {}) {
     if (!plan?.pass) return '';
-    return expired ? `pass ${plan.pass}, the later pass ran out of budget` : `pass ${plan.pass}`;
+    const stopped = (plan.passes ?? []).filter((r) => r.deadline).map((r) => `${r.pass} stopped at its deadline (${r.deadline})`);
+    return [`pass ${plan.pass}`, ...stopped, ...(expired ? ['the later pass ran out of budget'] : [])].join(', ');
 }
 
 /**
@@ -287,7 +340,8 @@ export function replayShadow(session, levelSource, {
  * plan it returns is structured-cloneable (Sets, a Map, plain rows).
  */
 export function solveFromTape({ staging, perTick, live, levelSource, solverGoal, name = 'js-runtime-solve',
-    scratchPersistence = false, equips = null, clock = () => Date.now(), dashMode = DEFAULT_DASH_MODE, adds = null }) {
+    scratchPersistence = false, equips = null, clock = () => Date.now(), dashMode = DEFAULT_DASH_MODE, adds = null,
+    shouldStop = null }) {
     const t0 = clock();
     const shadow = assertShadow(replayTape({ staging, perTick, levelSource, scratchPersistence, equips }), live, perTick.length);
     const replayMs = clock() - t0;
@@ -318,7 +372,8 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
         },
     });
     const t1 = clock();
-    const out = solveSegment({ run, goals: [solverGoal], name, boot: staging.boot, prefix: perTick, dashMode });
+    // ⛓ SHOULD-STOP — the pass's deadline (`passShouldStop`; null = today's search exactly).
+    const out = solveSegment({ run, goals: [solverGoal], name, boot: staging.boot, prefix: perTick, dashMode, shouldStop });
     const solveMs = clock() - t1;
     const solution = out.perTick.slice(perTick.length).map((h) => new Set(h));
     if (solution.length !== expected.length - 1) {
@@ -327,7 +382,9 @@ export function solveFromTape({ staging, perTick, live, levelSource, solverGoal,
             + `${expected.length - 1} time(s) — the expected trajectory cannot be checked`);
     }
     const verbs = [...new Set((out.trace?.rows ?? []).map((r) => r.strategy?.verb).filter(Boolean))].sort();
-    return { solution, expected, equipsAt, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode };
+    return { solution, expected, equipsAt, verbs, replayMs, solveMs, prefixLength: perTick.length, dashMode,
+        // ⛓ SHOULD-STOP — `{tripped, first, sites}` when the pass's deadline tripped (named in the history), else null
+        deadline: out.deadline ?? null };
 }
 
 /**
@@ -358,7 +415,8 @@ export function settleSolve(fn) {
         if (err instanceof PassSkipped) return { ok: false, kind: 'skipped', message: String(err.message) };
         const pending = err?.name === 'PendingDeclaration' ? err.pending ?? null : null;
         if (pending) return { ok: false, kind: 'refusal', declaration: { ...pending, phases: undefined }, message: declarationRefusal(pending, err) };
-        return { ok: false, kind: 'refusal', message: String(err?.message ?? err) };
+        // ⛓ SHOULD-STOP — a refusal raised after the pass's deadline tripped carries it (and its ⏱ clause).
+        return { ok: false, kind: 'refusal', message: String(err?.message ?? err), ...(err?.deadline ? { deadline: err.deadline } : {}) };
     }
 }
 
@@ -398,7 +456,8 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
         start(request) {
             const levelSource = request.levelSource ?? levelSourceFromAtlas(request.source.records);
             // ⛓ ANYTIME — no budget in place: every pass runs, the best answer is the result.
-            const { passes = ANYTIME_PASSES, ...rest } = request;
+            // ⛓ SHOULD-STOP — so no deadline either (`passShouldStop` answers null without a budget).
+            const { passes = ANYTIME_PASSES, budgetMs, upgradeWindowMs: windowMs, ...rest } = request;
             const result = solveAnytime({ ...rest, levelSource, clock }, { passes, clock });
             return { settled: true, started: true, result, cancel() {} };
         },
@@ -416,6 +475,8 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
  * @param {() => Map|null} [deps.getRecords]  ⛓ S2 — that source's records (level → record), what a worker is sent
  * @param {object|null} [deps.solveService]  ⛓ S2 — where steps 2–3 run (`createWorkerSolveService`); null = in place (S1)
  * @param {number} [deps.budgetMs]  ⛓ S2 — one solve's wall-clock budget (`SOLVER_BUDGET_MS`)
+ * @param {number|null} [deps.upgradeWindowMs]  ⛓ SHOULD-STOP — the full pass's dash deadline from the solve's
+ *   start (`upgradeWindowMs`); null = the whole budget (today's behaviour)
  * @param {(goal:object) => ({x:number, y:number}|null)} deps.placementOf  a location's entity (OEL)
  * @param {() => boolean} deps.isGenerated  a GENERATED set is mounted (⛓ §5.18 — not a delivered set of real rooms)
  * @param {(e:object) => void} [deps.onEvent]  `{type, message, …}` per solve / refutation / decline
@@ -423,7 +484,7 @@ export function createInPlaceSolveService({ clock = () => Date.now() } = {}) {
 export function createRuntimeSolver({
     getSession, getLevelSource, getRecords = () => null, placementOf = () => null, isGenerated = () => false,
     onEvent = () => {}, maxRefutations = MAX_REFUTATIONS, clock = () => Date.now(), solveService = null,
-    budgetMs = SOLVER_BUDGET_MS, loadBudgetMs = LOAD_BUDGET_MS,
+    budgetMs = SOLVER_BUDGET_MS, loadBudgetMs = LOAD_BUDGET_MS, upgradeWindowMs: windowMs = null,
 } = {}) {
     let enabled = false;
     let plan = null;
@@ -432,6 +493,7 @@ export function createRuntimeSolver({
     let refutations = 0;
     let lastRefutation = null;
     let budget = budgetMs;
+    let upgradeWindow = windowMs;
     let service = solveService;
     const inPlace = createInPlaceSolveService({ clock });
     /** session -> Map(perTick index -> slot): the equips the play made on each live session. */
@@ -476,6 +538,8 @@ export function createRuntimeSolver({
             // ⛓ S3 — the shadow carries the LIVE run's own persistence mode, never a second answer.
             scratchPersistence: run.scratchPersistence === true,
             equips: playedEquips.get(session) ?? null,
+            // ⛓ SHOULD-STOP — the worker's pass deadlines (the in-place service drops both: no budget there).
+            budgetMs: budget, upgradeWindowMs: upgradeWindow,
         };
         const handle = service
             ? service.start({ ...request, source: { records: getRecords() } })
@@ -582,6 +646,9 @@ export function createRuntimeSolver({
         /** ⛓ S2 — one solve's budget, in ms (a test knob and the page's `?solverBudgetMs=`). */
         get budgetMs() { return budget; },
         set budgetMs(ms) { if (Number.isFinite(ms) && ms > 0) budget = ms; },
+        /** ⛓ SHOULD-STOP — the upgrade window (`upgradeWindowMs`; null / non-positive = the whole budget). */
+        get upgradeWindowMs() { return upgradeWindow; },
+        set upgradeWindowMs(ms) { const n = Number(ms); upgradeWindow = ms !== null && Number.isFinite(n) && n > 0 ? n : null; },
         /** ⛓ S2 — swap the solve service (the page's worker; null = in place). Cancels a solve in flight. */
         setSolveService(next) { cancel(); service = next ?? null; if (enabled) service?.warm?.(); },
         get solveService() { return service; },
