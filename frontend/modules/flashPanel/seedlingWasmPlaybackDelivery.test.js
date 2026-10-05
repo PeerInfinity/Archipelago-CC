@@ -37,7 +37,7 @@ const CHEST = { kind: 'location', level: HOUSE, tag: 0, entityType: 'chest', nam
 const DOOR = { kind: 'exit', level: HOUSE, tiles: [[3, 4]], name: 'exit_S' };
 
 /** The panel's inventory → write mapping, cut down to the items these rows deliver (a key writes nothing). */
-const WRITES = { 'Progressive Sword': 'hasSword', 'Progressive Shield': 'hasShield', Fire: 'hasFire' };
+const WRITES = { 'Progressive Sword': 'hasSword', 'Progressive Shield': 'hasShield', Fire: 'hasFire', 'Ghost Spear': 'hasSpear' };
 const writesOf = (counts) => Object.entries(counts).filter(([n, c]) => c > 0 && WRITES[n]).map(([n]) => ({ property: WRITES[n], value: true }));
 
 function manualTimers() {
@@ -55,7 +55,7 @@ function manualTimers() {
 }
 
 /** A game over the recorded house arrival whose plan tapes drain `chunk` rows per read and stop while frozen. */
-function fakeGame({ chunk = 4, items = {}, slots = [] } = {}) {
+function fakeGame({ chunk = 4, items = {}, slots = [], status = {} } = {}) {
     const baseline = { ...A.seam.beginEntry, 'save.time': A.seam.beginEntry['save.time'] - 100, 'rng.gameplay': 1 };
     const g = {
         be: baseline, held: false, armed: false, finished: false, frozen: false, tape: null, rows: null, drained: 0, tick: 0,
@@ -65,7 +65,7 @@ function fakeGame({ chunk = 4, items = {}, slots = [] } = {}) {
         botSeam() { return JSON.stringify({ beginEntry: g.be, latched: false }); },
         botStatus() {
             const keys = g.armed && g.tape && g.tick >= 1 ? heldAt(g.tape, g.tick - 1) : [];
-            return JSON.stringify({ ...A.status, game_time: g.be['save.time'], items: { ...g.items }, inventory_slots: [...g.slots],
+            return JSON.stringify({ ...A.status, ...status, game_time: g.be['save.time'], items: { ...g.items }, inventory_slots: [...g.slots],
                 ...(g.pos ? { level: g.pos.level, x: g.pos.x, y: g.pos.y } : {}),
                 input: { ...A.status.input, held: keys, t: g.tick - 1 },
                 held: g.held, armed: g.armed, finished: g.finished, frozen: g.frozen, tick: g.tick, error: '' });
@@ -127,7 +127,7 @@ function fakeDelivery(game, live = {}) {
     return d;
 }
 
-function setup({ game: gopts = {}, live = {}, decline = false } = {}) {
+function setup({ game: gopts = {}, live = {}, decline = false, editPlan = null } = {}) {
     const game = fakeGame(gopts);
     const timers = manualTimers();
     const delivery = fakeDelivery(game, live);
@@ -137,6 +137,7 @@ function setup({ game: gopts = {}, live = {}, decline = false } = {}) {
         start(request) {
             const h = inner.start(request);
             if (decline && seen.length > 0) h.result = { ok: false, kind: 'refusal', message: 'declined (the test)' };
+            if (editPlan && h.result.ok) h.result = { ...h.result, plan: editPlan(h.result.plan, seen.length) };
             seen.push({ request, result: h.result });
             if (h.result.ok) game.rows = h.result.plan.expected.map((r, t) => ({ t, level: r.level, x: r.x, y: r.y }));
             return { ...h, startedAt: 0 };
@@ -244,6 +245,23 @@ describe('⛓ MID-ROOM REPLAN — the delivery gate', () => {
         expect(e.failures).toEqual([]);
         expect(e.seen.at(-1).request.staging.seam.items.hasShield).toBe(true);
         expect(e.dones.map((d) => [d.goal.name, d.continuation])).toEqual([[CHEST.name, false], [DOOR.name, true]]);
+    });
+
+    it('the SLOT LAG: a spear delivered into the held room changes slot 1 one frame late — a continuation pressing X there first falls back, named', () => {
+        // Sword held as [0] with primary 1 (past the end: reads 0, the sword); the spear makes it [0, 3] (slot 1 = the spear).
+        const e = setup({ game: { items: { hasSword: true }, slots: [0], status: { primary: 1 } }, live: { 'Progressive Sword': 1 },
+            editPlan: (plan, n) => (n === 1 ? { ...plan, solution: [new Set(['primary', ...plan.solution[0]]), ...plan.solution.slice(1)] } : plan) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.engine.status().phase).toBe('held');
+        e.delivery.receive('Ghost Spear');
+        e.delivery.push();
+        e.timers.run(200);
+        expect(e.engine.stats.deliveries[0]).toMatchObject({ phase: 'held', outcome: 'staged' });
+        e.engine.walkTo(DOOR);
+        e.timers.run(3000);
+        expect(e.engine.stats.fallbacks.map((f) => f.kind)).toContain('delivery-first-tick');
+        expect(e.engine.stats.fallbacks.find((f) => f.kind === 'delivery-first-tick').why).toMatch(/first tick.*0 → 3/);
     });
 
     it('a replan the solver DECLINES while frozen: the interrupted plan RESUMES (the item changes none of its ticks) — no re-entry', () => {
