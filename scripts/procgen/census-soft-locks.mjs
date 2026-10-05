@@ -14,7 +14,7 @@
  *   node scripts/procgen/census-soft-locks.mjs --json=<out.json>
  *   node scripts/procgen/census-soft-locks.mjs --strict
  */
-import { dirname, join } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 
@@ -36,7 +36,7 @@ const rules = JSON.parse(readFileSync(rulesPath, 'utf8'));
 const log = readFileSync(logPath, 'utf8').split('\n').filter((l) => l.trim()).map((l) => JSON.parse(l));
 const census = softLockCensus(rules, sphereInventories(log));
 
-console.log(`soft-lock census — ${rulesPath.slice(REPO.length + 1)}`);
+console.log(`soft-lock census — ${relative(REPO, resolve(rulesPath))}`);
 console.log(`  start ${census.start}; return_to_menu ${census.returnToMenu ? 'DECLARED: the list is RESTART-ONLY (a diagnostic)' : 'absent: the list is SOFT-LOCKS'}`);
 let worst = 0;
 for (const row of census.rows) {
