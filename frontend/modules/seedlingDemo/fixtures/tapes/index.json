@@ -1591,6 +1591,20 @@
       "noHazards": []
     },
     {
+      "file": "robust-l16-l18-sword-conch.json",
+      "tickCount": 797,
+      "bootLevel": 16,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "robust-l16-sword-idle1.json",
+      "tickCount": 220,
+      "bootLevel": 16,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "shuffle-stop.json",
       "tickCount": 60,
       "bootLevel": 0,

@@ -1125,6 +1125,36 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'from (160,64) the corridor bends through (120,40) and (104,24), over the pack, '
                 + 'onto `stairsdown@32,64`; it takes no hit, kills nothing, and crosses on t 173.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity CANCROSS — the door-built canCross witness (L16
+         * from L15, Sword, `none`). Declared here by ROBUST: CANCROSS added the
+         * tape and this table did not learn it (its gate was not in that run).
+         */
+        Object.freeze({
+            name: 'cancross-l16-sword-none', levels: Object.freeze([16, 17]), bobs: 10, ticks: 206,
+            addedBy: 'Seedling fidelity CANCROSS D3 (a door-built canCross witness, recorded on the game)',
+            why: 'from the L15 door (32,64) it pulls `rope@32,16` (silencing the three arrow traps) '
+                + 'and walks to `stairsup` among L16\'s seven bobs; the crossing\'s last tick is L17\'s '
+                + 'arrival among its three. No hit, no kill.',
+        }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity ROBUST — D2's one idle tick and D3's Conch, the
+         * two crossings the PULL rung's later-lane probe made solvable.
+         */
+        Object.freeze({
+            name: 'robust-l16-sword-idle1', levels: Object.freeze([16, 17]), bobs: 10, ticks: 220,
+            addedBy: 'Seedling fidelity ROBUST D2 (one idle tick no longer flips L16)',
+            why: 'one idle tick at the L15 door wakes the bobs; the corridor\'s first danger is '
+                + '`bob@48,96`, the probe finds `arrowtrap@96,32`\'s lane behind it, PULL silences '
+                + 'the lanes, and the walk reaches L17 among its three bobs. No hit, no kill.',
+        }),
+        Object.freeze({
+            name: 'robust-l16-l18-sword-conch', levels: Object.freeze([16]), bobs: 7, ticks: 797,
+            addedBy: 'Seedling fidelity ROBUST D3 (the Conch no longer loses L16 → L18)',
+            why: 'with the Conch the corridor\'s first danger is `sandtrap@48,32`; the probe finds '
+                + 'the lane behind it, PULL silences the lanes, AVOID routes round the trap, and the '
+                + 'weighed walk reaches `stairsup@352,80`. No hit, no kill.',
+        }),
     ]),
 
     /**

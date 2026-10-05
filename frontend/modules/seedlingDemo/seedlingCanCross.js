@@ -371,6 +371,10 @@ export const planHash = (perTick) => createHash('md5')
  * @param {object|null} [o.budget] `{consults}` (default `DEFAULT_CONSULT_BUDGET`) | `{ms}` | `null` (no hook)
  * @param {string} [o.dashMode]  default `CAN_CROSS_DASH_MODE` ('none', measured — see there)
  * @param {boolean} [o.witness]   build + replay the witness tape on `can` (default true)
+ * @param {number} [o.idle]       empty ticks the run spends BEFORE the solve (default 0: the
+ *   arrival tick, the live worker's convention). ⛓ SEEDLING FIDELITY ROBUST, D2: the JS fresh
+ *   boot solves after one (`rt.tick()`), and L16 + Sword once flipped on it. The ticks are the
+ *   plan's prefix, so a witness replays them too.
  */
 export function canCross(o) {
     const {
@@ -378,10 +382,11 @@ export function canCross(o) {
         budget = { consults: DEFAULT_CONSULT_BUDGET }, dashMode = CAN_CROSS_DASH_MODE,
         primary, hitsMax, time, persistence, save, rng, cutscene, beam, rockSet,
         levelSource = defaultLevelSource(), name = 'can-cross', witness: wantWitness = true,
-        scratchPersistence = true,
+        scratchPersistence = true, idle = 0,
     } = o ?? {};
     assertDashMode(dashMode, 'canCross');
     if (!Number.isInteger(level)) bad('`level` must be an integer level number');
+    if (!Number.isInteger(idle) || idle < 0) bad('`idle` must be a non-negative integer tick count');
 
     // ── the arrival ──
     let staging;
@@ -419,7 +424,8 @@ export function canCross(o) {
     }
     const items = Object.entries(staging.seam?.items ?? {}).filter(([, v]) => v).map(([k]) => k);
     const result = {
-        request: { level, exit: exit ?? null, to, goal, dashMode, inventory: inventory ?? null },
+        request: { level, exit: exit ?? null, to, goal, dashMode, inventory: inventory ?? null,
+            ...(idle > 0 ? { idle } : {}) },
         arrival: { source, spawn, assumed, items, primary: staging.seam?.primary ?? 0 },
         solver: { ...solverStamp(), dashMode },
     };
@@ -452,10 +458,12 @@ export function canCross(o) {
     }
 
     const run = createRunForStaging(staging, levelSource, { scratchPersistence });
+    const prefix = [];
+    for (let i = 0; i < idle; i += 1) { run.advance(new Set()); prefix.push(new Set()); }
     const t0 = performance.now();
     let out;
     try {
-        out = solveSegment({ run, goals: [{ ...goal }], name, boot: staging.boot, prefix: [], dashMode,
+        out = solveSegment({ run, goals: [{ ...goal }], name, boot: staging.boot, prefix, dashMode,
             ...(shouldStop ? { shouldStop } : {}) });
     } catch (e) {
         const ms = Math.round(performance.now() - t0);
@@ -490,7 +498,8 @@ export function canCross(o) {
         const about = `⛓ SEEDLING FIDELITY CANCROSS — a \`canCross\` witness: level ${level} → `
             + `${to ?? JSON.stringify(goal)}, inventory [${(inventory ?? items).join(', ') || '∅'}], arrival `
             + `${source === 'door' ? `the door from level ${arrival.from}` : source} at (${spawn.x},${spawn.y})`
-            + `${assumed.length ? ` (assumed: ${assumed.map((a) => a.split(' ')[0]).join(', ')})` : ''}, `
+            + `${assumed.length ? ` (assumed: ${assumed.map((a) => a.split(' ')[0]).join(', ')})` : ''}`
+            + `${idle > 0 ? `, ${idle} idle tick(s) first` : ''}, `
             + `dashMode ${dashMode}: ${facts.ticks} ticks, ${facts.hits} hit(s). Written by `
             + 'scripts/procgen/can-cross-seedling.mjs --witness.';
         res.witness = witnessOf(staging, out.perTick, name, levelSource, to, scratchPersistence, about);
@@ -518,11 +527,12 @@ function witnessOf(staging, perTick, name, levelSource, to, scratchPersistence, 
  *
  *  - a minimal set with an `undecided` or `model-refused` subset BELOW it is not
  *    proved minimal (`unprovedBelow`), never silently promoted;
- *  - ⛔ the solver's verdict is NOT monotone in the inventory (measured: L16 →
- *    `stairsup@352,80` from L15 is `can` with the Sword and `cannot` with the
- *    Sword and the Conch — swimming widens the planner's corridor onto a
- *    sandtrap and the ladder exhausts), so `cannot` supersets are reported
- *    (`nonMonotone`), not inferred away.
+ *  - ⛔ the solver's verdict is not PROVED monotone in the inventory (measured
+ *    at CANCROSS: L16 → `stairsup@352,80` from L15 was `can` with the Sword and
+ *    `cannot` with the Sword and the Conch — swimming put a sandtrap first on
+ *    the corridor and the PULL rung asked only the first danger; ROBUST D3
+ *    fixed that one), so `cannot` supersets are reported (`nonMonotone`), not
+ *    inferred away.
  *
  * @returns {{rows: Array<{set: string[], verdict: string, why: string, cause: object}>,
  *            minimal: string[][], unprovedBelow: object, nonMonotone: string[][], solver: string}}

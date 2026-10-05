@@ -359,6 +359,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'burn-l24-reach-exit',
             // ⛓⛓⛓ Seedling fidelity L14: the swordless crossing, in L14.
             'l14-swordless-detour',
+            // ⛓⛓⛓ Seedling fidelity CANCROSS's witness (declared by ROBUST, which
+            // found it undeclared), and ROBUST's D2 / D3 witnesses.
+            'cancross-l16-sword-none', 'robust-l16-sword-idle1', 'robust-l16-l18-sword-conch',
         ]);
         // ⛓ 13 -> 11 -> 12 -> 13 -> 12 -> 13: `r7-act2-3` and `r7-act2-4` are
         // off the roster, so the measurement cannot find them; slice 12's
@@ -390,16 +393,19 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
         // `f7-l16-walkin` (L17 → L16).
         // ⛓ Seedling fidelity BURN takes it to 47 — `burn-l24-reach-exit` (L24 → L12).
         // ⛓ Seedling fidelity L14 takes it to 48 — `l14-swordless-detour`, in L14.
-        expect(out.exposed).toBe(48);
+        // ⛓ Seedling fidelity ROBUST takes it to 51 — `cancross-l16-sword-none` (L16 → L17,
+        // CANCROSS's, undeclared until now), `robust-l16-sword-idle1` (L16 → L17) and
+        // `robust-l16-l18-sword-conch` (L16).
+        expect(out.exposed).toBe(51);
         expect(out.tapes).toEqual([
-            'burn-l24-reach-exit', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
+            'burn-l24-reach-exit', 'cancross-l16-sword-none', 'f1-l5-lock-removal', 'f1-l5-open-lock-bait', 'f6-l17-reentry', 'f7-l16-reentry', 'f7-l16-walkin', 'l14-swordless-detour',
             'r1-dark-shield-kill', 'r1-dark-suit-bob', 'r1-dark-suit-kill',
             'r2-terrain-killlock', 'r2-wallflyer-contact', 'r2-wallflyer-suit',
             'r4-iceturret-bobs', 'r7-act2-5', 'r7-act2-6', 'r7-act2-full', 'r8-hammer-arm', 'r8-l6-bob-contact',
             'r8-solve-3', 'r8-solve-4', 'r8-solve-5', 'r8-solve-6', 'r9-l6-bob-press',
             'r9-l6-harmless-control', 'r9-l6-harmless-press', 'r9-l6-sword-dash-hit', 'r9-solve-0-v3',
             'r9-solve-12', 'r9-solve-13', 'r9-solve-14', 'r9-solve-15', 'r9-solve-16', 'r9-solve-21',
-            'r9-solve-22', 'u10-puncher-dwell',
+            'r9-solve-22', 'robust-l16-l18-sword-conch', 'robust-l16-sword-idle1', 'u10-puncher-dwell',
             'u10-puncher-dwell-refused', 'u11-dark-shield-bob', 'u11-dark-shield-puncher',
             'u11-facing-knockback', 'u11-facing-puncher',
             'u12-pull-carry', 'u12-pull-cross',
@@ -529,6 +535,9 @@ describe('R8_ENEMY_BRIDGE — the prediction, stated first', () => {
             'f7-l16-walkin': { tape: {}, levels: [16, 17] },
             'burn-l24-reach-exit': { tape: {}, levels: [12] },
             'l14-swordless-detour': { tape: {}, levels: [14] },
+            'cancross-l16-sword-none': { tape: {}, levels: [16, 17] },
+            'robust-l16-sword-idle1': { tape: {}, levels: [16, 17] },
+            'robust-l16-l18-sword-conch': { tape: {}, levels: [16] },
         });
         expect(() => assertBridgeExposureIsMeasured(io)).toThrow(/right name with wrong rooms/);
     });

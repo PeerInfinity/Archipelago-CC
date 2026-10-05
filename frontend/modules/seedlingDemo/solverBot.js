@@ -9759,6 +9759,25 @@ function execBreak(run, perTick, resolved, ctx) {
  * climbs this ladder again — and offering the same rope there would recurse for
  * ever. Skipped, the nested climb escalates past PULL like any other.
  */
+/**
+ * ⛓ SEEDLING FIDELITY ROBUST, D2 — how many dangers past the first the PULL
+ * rung probes a corridor through for a silencable lane. Each is one preview of
+ * the same corridor; L16's corridors meet their lane second.
+ */
+export const LATER_LANE_PROBES = 4;
+
+/**
+ * Does any armed lane in this room have a silencer (`deriveLaneSilencer`'s
+ * (b) and (c), asked of the room rather than of a hit)? The gate that keeps
+ * the later-lane probe out of every room without one.
+ */
+function roomHasLaneSilencer(run) {
+    const ropes = (run.world.solids ?? []).filter((x) => x.ropeId);
+    if (ropes.length === 0) return false;
+    return (run.world.arrowTraps ?? []).some((t) => !arrowTrapFires(t, true)
+        && ropes.some((r) => r.ropeT === t.t));
+}
+
 function deriveLaneSilencer(run, hit, what, pulling = new Set()) {
     const laneIds = new Set((hit?.sources ?? [])
         .filter((x) => x.kind === 'arrowLane').map((x) => x.id));
@@ -11877,7 +11896,46 @@ function solveSegmentUnder({
          * (`R8_STRATEGY_EXECUTORS.ladder` marks it `conditional`, and
          * `assertEscalationIsOrdered` lets an escalation skip only that kind).
          */
-        const silencer = deriveLaneSilencer(run, hit, what, pullingRopes);
+        let silencer = deriveLaneSilencer(run, hit, what, pullingRopes);
+        /**
+         * ⛓⛓⛓ SEEDLING FIDELITY ROBUST, D2 + D3 — **A LANE FURTHER ALONG THE
+         * CORRIDOR IS STILL ON THE CORRIDOR.**
+         *
+         * The probe answers with the corridor's FIRST danger, and this rung
+         * used to ask only that one. Two measured failures on L16 were the
+         * same failure:
+         *  - D2, one idle tick: the planner's corridor from the door from L15
+         *    dips past `bob@48,96`'s home. At the arrival tick the bob's phase
+         *    keeps it 5 px clear and the first danger is `arrowtrap@96,32`'s
+         *    lane (PULL, 206 t). One tick later the same corridor meets the bob
+         *    first, PULL is never asked, and the ladder EXHAUSTS — although
+         *    the tick-0 plan, started one to ten ticks late, still crosses
+         *    with 0 hits in the model — and, one tick late, on the game
+         *    (recorded; the ROBUST report). The refusal was the solver's.
+         *  - D3, the Conch: swimming makes the corridor a straight line across
+         *    the water onto `sandtrap@48,32`, whose first danger is the trap.
+         *    AVOID has no corridor while the lanes are armed, so the ladder
+         *    exhausted on an inventory that is strictly larger than one that
+         *    solves (`{sword}`, PULL).
+         * So: when the first danger has no silencer, the SAME corridor is
+         * probed on past it (the sources already met excepted) for a lane
+         * that does. The latch is the lane's own off switch for the rest of
+         * the visit, and the caller re-plans against the world it leaves.
+         *
+         * ⛔ INERT WHERE IT CANNOT HELP, by construction: asked only with the
+         * sword in the primary slot (the pull this rung derives is a sword
+         * swing; a swordless climb keeps its words) and only in a room with a
+         * silencer at all (`roomHasLaneSilencer`: L16 alone in the atlas).
+         */
+        if (!silencer && corridor && run.progress('primaryWeapon') === 'sword'
+            && roomHasLaneSilencer(run)) {
+            const passed = new Set(dangerExcept ?? []);
+            for (let next = hit, n = 0; next && !silencer && n < LATER_LANE_PROBES; n += 1) {
+                for (const sx of next.sources) passed.add(sx.id);
+                next = probeCorridor(corridor, passed, { axisAligned });
+                if (next) silencer = deriveLaneSilencer(run, next, what, pullingRopes);
+            }
+        }
         if (silencer) {
             const ropeId = silencer.rope.ropeId;
             let pull = null;
