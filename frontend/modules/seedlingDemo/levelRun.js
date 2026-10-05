@@ -136,7 +136,7 @@ import {
     OWL_LEVEL_BUILD_DRAWS, OwlDrawStream, assertOwlStreamPremises, owlTickDraws,
 } from './finalBossRng.js';
 import {
-    createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
+    ICE_TURRET_CONTACT, createIceTurret, hitIceTurret, iceTurretRect, iceTurretSettled, stepIceTurret,
     bumpIceTurret,
 } from './iceTurret.js';
 // ⛓⛓⛓ R5 SLICE 22: the ELEVENTH family, and the first that is created
@@ -9612,6 +9612,8 @@ export function createLevelRun({
                 if (pricing.pricedBy === 'stepSpinnerContactsNow') continue;
                 // ⛓ R2-swim D1: a wallflyer is billed at its live position too.
                 if (pricing.pricedBy === 'stepWallFlyersNow') continue;
+                // ⛓ FIDELITY PROXIMITY: an IceTurret is billed at its live body.
+                if (pricing.pricedBy === 'stepIceTurretsNow') continue;
                 const verdict = chaserRoomVerdict(level);
                 if (verdict.stepped) continue;
                 throw new Error(`levelRun: the player is standing inside ${id} in level `
@@ -10764,11 +10766,48 @@ export function createLevelRun({
                                 + '(R4-swim D2). Refused by name.');
                         }
                     }
+                    // ⛓⛓ SEEDLING FIDELITY PROXIMITY: "Player" joins the turret's
+                    // `solids` only in `death()` (`IceTurret.as:148`, with "Enemy");
+                    // a LIVE turret's sweep passes through the player. Measured on
+                    // the game (`prox-l40-turret-contact`): with the player in its
+                    // body the live turret's y-snap still runs (423.5, not 424), and
+                    // the contact's knockback is aimed from there. Unreachable
+                    // before: standing in a live body threw (the contact refusal).
                     return !!world.collidesSolid(b, { ...opts, turrets: withoutSelf })
-                        || rectsOverlap(b, playerBoxAt(state.x, state.y));
+                        || (t.dead && rectsOverlap(b, playerBoxAt(state.x, state.y)));
                 },
                 terrainAt: (x, y) => world.nearestWalkableTile(x, y)?.t ?? 0,
                 playerOverlaps: (r) => rectsOverlap(r, playerBoxAt(state.x, state.y)),
+                // ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY: the live body's contact
+                // (`CONTACT_STEPPED_PRICED_BY.iceturret`). Before this the census
+                // scan THREW on it, so no committed tape stands in one; and
+                // under `noDamage` / `noclip` nothing is billed (`Player.hit`'s
+                // first line), so every committed stream is byte-identical.
+                hitPlayer: (noclip || noDamage) ? null : (body) => {
+                    applyPlayerHit({
+                        source: 'iceturret',
+                        id,
+                        force: ICE_TURRET_CONTACT.force,
+                        damage: ICE_TURRET_CONTACT.damage,
+                        from: { x: body.x, y: body.y },
+                        // `Player.hit`'s `if (e && hasDarkSuit) e.hit(...)`. A
+                        // retaliation that KILLS stages a corpse this arm does
+                        // not drive, so it is refused by name.
+                        retaliate: () => {
+                            const r = hitIceTurret(body, {
+                                d: DARK_SUIT_DAMAGE, f: DARK_SUIT_FORCE, t: 'Suit',
+                                frozen: ceremony !== null,
+                            });
+                            if (r.killed) {
+                                throw new Error(`levelRun: the dark suit's retaliation KILLS ${id} `
+                                    + `at tick ${ticksCompleted + 1} in level ${level} through its `
+                                    + 'CONTACT — a death this arm does not stage. Refused by name '
+                                    + '(seedling fidelity PROXIMITY).');
+                            }
+                            return { id, landed: r.landed ?? null, hits: body.hits };
+                        },
+                    });
+                },
                 // ⛓⛓⛓ R5 SLICE 22: `FP.world.nearestToEntity("Player", this)`.
                 // The ENTITY point, not the box — `FP.distance(x, y, p.x,
                 // p.y)` is between the two entity points, and the turret's

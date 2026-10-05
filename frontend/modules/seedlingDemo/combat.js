@@ -1345,7 +1345,14 @@ export const CONTACT_STEPPED_PRICED_BY = Object.freeze({
      * zero.
      */
     spinner: 'stepSpinnerContactsNow',
-    iceturret: null,
+    /**
+     * ⛓⛓⛓ SEEDLING FIDELITY PROXIMITY — the live body's `Enemy.hitPlayer` is
+     * billed at the stepped turret (`iceTurret.ICE_TURRET_CONTACT`, the
+     * `hitPlayer` arm of `stepIceTurret`). A turret does not move while alive and
+     * a corpse never bills, so the stepped box IS the census rect until it dies —
+     * the skip is for the corpse, which glides and is "Solid", not "Enemy".
+     */
+    iceturret: 'stepIceTurretsNow',
     bob: 'stepChasersNow',
     // ⛓ U7-swim: the second bridged chaser, billed by the same stepper.
     puncher: 'stepChasersNow',
@@ -1366,8 +1373,10 @@ export const CONTACT_STEPPED_WHY = Object.freeze({
         + 'the clock cannot run (no `pins: ["dead_frames"]`, or a `cutscene[0]` boot) the '
         + 'slice-6 REFUSAL stands in: the union over all 45 phases, the 13 px disc. The '
         + 'census scan skips the placement, which is a cell the body leaves on tick one.',
-    iceturret: 'IceTurret is stepped (and its corpse glides), and nothing prices its '
-        + 'contact either — its threat on this rung is the BLAST, which has its own arm.',
+    iceturret: '⛓ SEEDLING FIDELITY PROXIMITY: IceTurret is stepped (its corpse glides) and '
+        + '`stepIceTurretsNow` bills the LIVE body\'s `Enemy.hitPlayer` — the 32x32 box, force 3, '
+        + 'damage 1, behind `hitsTimer <= 0` and `currentAnim != "dead"` (`IceTurret.as:127-133`). '
+        + 'The census scan skips it so the contact is not billed twice; the BLAST keeps its own arm.',
     bob: '⛓ R8 SLICE 1: `chasers.chaserStep` walks the body every tick and '
         + '`stepChasersNow` calls `applyPlayerHit` from `Enemy.update`\'s own tail, at the '
         + 'position THIS tick left. The census rect is the `.oel` placement and a chaser '

@@ -1160,6 +1160,23 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'no kill.',
         }),
         /**
+         * ⛓⛓⛓ Seedling fidelity PROXIMITY — the two L40 turret witnesses stand in
+         * the turret's corridor; L40's chasers (twelve bobs, two punchers) are
+         * rooms away and none reaches the walk.
+         */
+        Object.freeze({
+            name: 'prox-l40-turret-volley', levels: Object.freeze([40]), bobs: 14, ticks: 120,
+            addedBy: 'Seedling fidelity PROXIMITY D3 (an ice turret\'s range is a volley, not a wall)',
+            why: 'walks down `iceturret@472,400`\'s corridor from (488,464) and rests; one blast '
+                + 'lands on t103 (a freeze and a hit, source `blast`); no chaser hit, no kill.',
+        }),
+        Object.freeze({
+            name: 'prox-l40-turret-contact', levels: Object.freeze([40]), bobs: 14, ticks: 48,
+            addedBy: 'Seedling fidelity PROXIMITY D3 (the live ice turret\'s contact, billed)',
+            why: 'walks down into `iceturret@472,400`\'s 32x32 body from (496,384); the contact '
+                + 'lands on t20 (source `iceturret`); no chaser hit, no kill.',
+        }),
+        /**
          * ⛓⛓⛓ Seedling fidelity L14 — the swordless crossing the DETOUR rung
          * found: route D's live L13 → L14 arrival, six bobs, no weapon.
          */
@@ -2187,6 +2204,13 @@ export const R8_STRATEGY_EXECUTORS = Object.freeze({
             'the wait: until the live run reports the responder open, bounded by two pulser '
                 + 'cycles (`pulserCycle().totalTicks`), the responder\'s fade (`opensOnTick`) and '
                 + '`HOLD_SLACK` — a wait that runs out refuses by name']),
+        /** ⛓⛓⛓ Seedling fidelity PROXIMITY — `solverBot.resolveBraveStrategy`. */
+        brave: Object.freeze([
+            'the turret: the frontier\'s own `proximity-hazard:iceturret` id, joined to '
+                + '`world.iceTurrets`; a corpse in the live run (`run.turrets`) is named as one',
+            'the cost: zero ticks of its own — the exemption of the 129 px range IS the verb, and '
+                + 'the walk the loop then plans pays every volley the run steps (`freeze(15)`, one '
+                + 'damage per blast, the death reboot)']),
     }),
 
     /**
