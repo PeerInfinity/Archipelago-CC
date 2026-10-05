@@ -54,10 +54,10 @@ function playTape(run, tape) {
 }
 const ship = (keys, equips, staging = STAGING) => parseTape(JSON.stringify(shippedTape({ staging, keys, equips, name: 'equips-test' })));
 
-describe('WASM EQUIPS — the BURN plan (route step 93) ships its two slot selections', () => {
+describe(`WASM EQUIPS — the BURN plan (route step 93) ships its ${WITNESS.equips.length} slot selections`, () => {
     it('the solve the engine asks for selects Fire\'s slot on the press and the sword\'s again', () => {
         expect([...PLAN.equipsAt]).toEqual([[60, 1], [114, 0]]);
-        expect(PLAN.solution).toHaveLength(124);
+        expect(PLAN.solution.length).toBe(WITNESS.tick_count); // the committed witness IS this solve
         expect([...PLAN.equipItems.keys()]).toEqual([60, 114]);
         expect(PLAN.equipItems.get(60)).toMatchObject({ hasSword: true, hasFire: true });
     });
