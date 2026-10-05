@@ -1135,6 +1135,16 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
             why: 'from the L15 door (32,64) it pulls `rope@32,16` and walks onto `stairsdown@112,64` '
                 + 'with no dash, its last tick the L17 arrival; no hit, no kill.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity DASH — the L16 → L17 `all` plan the solver derives under the
+         * game's dash window (`combatVerbs.DASH_WINDOW_ROSTER_WIDE` on), game-recorded.
+         */
+        Object.freeze({
+            name: 'dash-l16-sword-all', levels: Object.freeze([16]), bobs: 2, ticks: 117,
+            addedBy: 'Seedling fidelity DASH D2 (a dash buys four hit tests)',
+            why: 'breaks the two rocks, pulls `rope@32,16` and walks onto `stairsdown@112,64` '
+                + 'with eleven dash presses; no hit, no kill.',
+        }),
     ]),
 
     /**
