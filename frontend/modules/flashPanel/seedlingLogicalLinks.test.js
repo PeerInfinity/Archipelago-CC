@@ -246,16 +246,17 @@ describe('a door fired from a SIBLING sub-region (no position read saw the seam)
         expect(moves(effects)).toEqual([]);
         expect(effects.map((e) => e.type)).toEqual(['warn']);
         expect(b.region).toBe('level_0__r8c0');
-        // r8c0's sidecar carries an ARRIVAL row (`in_pit_L110_…`, no target region) whose level no door of L0
-        // leads to (since rules `ce1cba867a` bound the L2 stairs to r8c0, `in_L2_…` has its own door beside it):
-        // that row is not a way out — a warn, never a move to `null` (which would park).
+        // An ARRIVAL row (no target region) whose level no door of its room leads to is not a way out — a warn,
+        // never a move to `null` (which would park). Since the rules arc's patched set (the Moonrock removed, the
+        // L110 fall CHAINED to L2) that row is `level_2`'s own `in_pit_L110_3_2`; no L0 sidecar keeps an orphan
+        // arrival row any more (every one has its door).
         const shut = new SeedlingRegionBinding({ now: () => clock, canPass: () => ({ pass: false, gated: true }) });
         shut.setSubRegions(MAP);
-        shut.onStateReport('level', 0);
-        shut.onLoadRegion({ region_id: 'level_0__r8c0', world: world('level_0__r8c0') });
-        const L0 = Object.keys(SIDECARS).filter((r) => r.startsWith('level_0__'));
-        expect(world('level_0__r8c0').exits.some((e) => e.target_level === 110 && !e.targetRegion)).toBe(true);
-        expect(L0.flatMap((r) => world(r).exits).filter((e) => e.target_level === 110 && e.targetRegion)).toEqual([]);
+        shut.onStateReport('level', 2);
+        shut.onLoadRegion({ region_id: 'level_2', world: world('level_2') });
+        const L2 = Object.keys(SIDECARS).filter((r) => r === 'level_2' || r.startsWith('level_2__'));
+        expect(world('level_2').exits.some((e) => e.target_level === 110 && !e.targetRegion)).toBe(true);
+        expect(L2.flatMap((r) => world(r).exits).filter((e) => e.target_level === 110 && e.targetRegion)).toEqual([]);
         const toPit = shut.onStateReport('level', 110);
         expect(moves(toPit)).toEqual([]);
         expect(toPit.map((e) => e.type)).toEqual(['warn']);
