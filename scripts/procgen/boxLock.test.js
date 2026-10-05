@@ -444,7 +444,8 @@ describe('who takes the box', () => {
          * whose take guards on BOTH reasons: `--no-browser` and the import door;
          * W8 the cold-start adoption probe + witness, `probe-seedling-wasm-adopt.mjs`; fidelity F6
          * its re-entry witness, `probe-seedling-f6-reentry.mjs`; fidelity F7 the L16 rope re-entry
-         * witness, `probe-seedling-f7-reentry.mjs`;
+         * witness, `probe-seedling-f7-reentry.mjs`; fidelity BURN the burn-write bracket,
+         * `probe-seedling-burn-write.mjs`;
          * §5.16 the vanilla arm's map witness, `probe-seedling-wasm-vanilla-map.mjs`;
          * §5.17 the logical sub-region links witness, `probe-seedling-wasm-logical-links.mjs`;
          * seedling-wasm-leak L4 the since-begin witness, `probe-seedling-since-begin.mjs`.)
@@ -464,7 +465,8 @@ describe('who takes the box', () => {
             'probe-seedling-f2-apitem.mjs', 'probe-seedling-f2-boundary.mjs',
             'probe-seedling-wasm-continuation.mjs', 'check-seedling-atlas-maze.mjs',
             'probe-seedling-wasm-adopt.mjs', 'probe-seedling-f6-reentry.mjs', 'probe-seedling-wasm-vanilla-map.mjs', 'probe-seedling-wasm-logical-links.mjs',
-            'probe-seedling-since-begin.mjs', 'probe-seedling-f7-reentry.mjs'];
+            'probe-seedling-since-begin.mjs', 'probe-seedling-f7-reentry.mjs',
+            'probe-seedling-burn-write.mjs'];
         const isGuarded = (f) => {
             const text = readFileSync(join(HERE, f), 'utf8');
             return text.includes('takeBoxLockOrExit(')
