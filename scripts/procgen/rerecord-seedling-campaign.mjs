@@ -138,7 +138,7 @@ import {
     REHEARSAL_PLAN, buildRehearsalTree, readRehearsalMarker,
 } from './rehearsalTree.js';
 import { takeBoxLock } from './boxLock.js';
-import { seedlingSurveyDir } from './seedlingSurveyDir.js';
+import { throughSurveyDir } from './seedlingSurveyDir.js';
 import { driverChannel } from './seedlingDriver.js';
 import { HEADLESS_LOGIC_ONLY_ARGS } from './headlessChromium.js';
 
@@ -1984,9 +1984,19 @@ function report(ctx, s0, s1, s2) {
  *   node scripts/procgen/rerecord-seedling-campaign.mjs --grow --to=S0  # rehearse
  *   node scripts/procgen/rerecord-seedling-campaign.mjs --grow
  */
-// ⛓ Swim U13: the frontier's source, `census-seedling-campaign.mjs`'s own — the
-//   through-2.2 route and its rows (`--through=2.2 --out=…/through-2.2/survey.json`).
-const SURVEY_DIR = join(seedlingSurveyDir(ROOT), 'through-2.2');
+// ⛓ Swim U13: the frontier's source, `census-seedling-campaign.mjs`'s own.
+// ⛓ FRONTIER2: the ROUTE-ONLY route through the frontier's bound — the route the
+//   chain was recorded on and the frontier's top level — read off the artifact
+//   (`coverage['route-only'].through`), so the label is never typed here.
+const surveyDirOf = (frontier) => {
+    const through = frontier.coverage?.['route-only']?.through;
+    if (!through) {
+        growCannotAsk('the committed frontier names no route-only bound (`coverage[\'route-only\']'
+            + '.through`) — it predates the two route modes',
+        'node scripts/procgen/census-seedling-campaign.mjs --write-frontier');
+    }
+    return throughSurveyDir(ROOT, through, 'route-only');
+};
 const FRONTIER_PATH = join(MODULE, 'fixtures/campaign-frontier.json');
 const CHAIN_DECL = join(MODULE, 'campaignChain.js');
 
@@ -2037,6 +2047,7 @@ async function grow(ctx) {
     }
 
     // ── the survey: the frontier's own source, read again ─────────────
+    const SURVEY_DIR = surveyDirOf(frontier);
     const routeP = join(SURVEY_DIR, 'route.json');
     const surveyP = join(SURVEY_DIR, 'survey.json');
     if (!existsSync(routeP) || !existsSync(surveyP)) {

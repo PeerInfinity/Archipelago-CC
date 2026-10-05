@@ -126,6 +126,55 @@ describe('the campaign chain has ONE declaration (R9 slice 12d)', () => {
         expect(frontier.lastArrival.segment).toBe(campaignTail().name);
     });
 
+    /**
+     * ⛓⛓ FRONTIER2 (⚖ user 2026-10-05: "Both, report separately") — the
+     * frontier carries one coverage block per route mode. The tail follows the
+     * ROUTE-ONLY block (the progression pickups, walked: the route the chain was
+     * recorded on), and the top level IS that block's answer.
+     */
+    it('⛓ the tail follows the ROUTE-ONLY frontier — the chain\'s own route, covered whole', () => {
+        const frontier = JSON.parse(readFileSync(
+            join(HERE, 'fixtures', 'campaign-frontier.json'), 'utf8'));
+        const only = frontier.coverage['route-only'];
+        expect(only.mode).toBe('route-only');
+        for (const k of ['covered', 'lastArrival', 'nextStep', 'refusal', 'why']) {
+            expect(only[k]).toEqual(frontier[k]);
+        }
+        expect(only.complete).toBe(frontier.complete === true);
+        expect(campaignNextLevel()).toBe(only.complete ? null : only.nextStep
+            ? only.nextStep.level : only.lastArrival.level);
+        expect(only.covered).toBe(CAMPAIGN_SEGMENT_NAMES.length);
+        expect(only.routeSteps).toBe(only.covered);
+    });
+
+    /**
+     * ⛓⛓ FRONTIER2 — the FULL route (every sphere-order row, the Seal chests
+     * included) is a different route, and the chain leaves it where the first
+     * leg the progression route never takes begins. Pinned as a relation over the
+     * artifact's own fields — the divergence segment is the chain's own, its
+     * arrival is the measured one, and the route step it did not walk is the
+     * very next one — so a re-derived stop moves the pin with it, and a stop
+     * nobody re-derived does not hide inside a literal.
+     */
+    it('⛓ the FULL route\'s stop: the chain leaves it at the segment the full route turns aside', () => {
+        const frontier = JSON.parse(readFileSync(
+            join(HERE, 'fixtures', 'campaign-frontier.json'), 'utf8'));
+        const full = frontier.coverage.full;
+        expect(full.mode).toBe('full');
+        expect(full.through).toBe(frontier.coverage['route-only'].through);
+        expect(full.complete).toBe(false);
+        expect(full.covered).toBeGreaterThan(0);                                 // non-vacuity
+        expect(full.covered).toBeLessThan(frontier.coverage['route-only'].covered);
+        expect(full.routeSteps).toBeGreaterThan(frontier.coverage['route-only'].routeSteps);
+        expect(full.divergence.segment).toBe(CAMPAIGN_SEGMENT_NAMES[full.covered]);
+        expect(full.divergence.arrives).toBe(frontier.arrivals[full.covered]);
+        expect(full.divergence.routeCrossesTo).not.toBe(full.divergence.arrives);
+        expect(full.nextStep.step).toBe(full.covered + 1);
+        expect(full.nextStep.crossesTo).toBe(full.divergence.routeCrossesTo);
+        expect(full.lastArrival.segment).toBe(CAMPAIGN_SEGMENT_NAMES[full.covered - 1]);
+        expect(full.lastArrival.level).toBe(frontier.arrivals[full.covered - 1]);
+    });
+
     it('⛓ the boot levels are the declaration\'s own, deduplicated and sorted', () => {
         // ⛓ U14-swim: + L12, L21, L22 (route steps 24–26 boot there).
         // ⛓ U15-swim: + L29, L30, L31, L32 (route steps 27–30).
@@ -281,6 +330,17 @@ describe('the reference prints a TERMINAL tail and the frontier\'s own sentence'
     it('⛔ with no frontier sentence at all it still says so', () => {
         expect(campaignChainMarkdown(view({ complete: false, why: null })))
             .toContain('No frontier is committed');
+    });
+    it('⛓ FRONTIER2: each route mode\'s coverage is its own line', () => {
+        const md = campaignChainMarkdown(view({ coverage: [
+            { mode: 'route-only', through: '3.1', covered: 2, routeSteps: 2, complete: true },
+            { mode: 'full', through: '3.1', covered: 1, routeSteps: 4, complete: false,
+                divergence: { segment: 'b', arrives: 20, routeStep: 2, routeCrossesTo: 17 } },
+        ] }));
+        expect(md).toContain('- `route-only` through 3.1: **2/2** route steps — COMPLETE');
+        expect(md).toContain('- `full` through 3.1: **1/4** route steps — the chain leaves this route at '
+            + 'segment 2: `b` arrives in L20, route step 2 crosses to L17');
+        expect(campaignChainMarkdown(view({}))).not.toContain('COVERAGE, BY ROUTE MODE');
     });
 });
 
