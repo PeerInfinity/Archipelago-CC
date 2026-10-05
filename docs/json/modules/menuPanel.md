@@ -170,6 +170,8 @@ leaving the player at the start region with the exits showing is the point (⚖ 
 user: *"the way the player resets to the first region when not in loop mode is to
 activate the menu panel and press the button to restart from the first region"*).
 
+⛓ **`menuPanel:restarted`** (`RESTARTED_EVENT`, `{mode, target, from}`) is published after the reset move in both modes (`mode: 'loop'` for the delegation). A substrate whose game keeps its own position listens for it. Seedling's region glue re-takes the load's start hop when the start region is a Seedling room (`procgenPlayer.retakeStartHop`, refused unless `skipsStart` says the load skipped the menu), so the game's player lands where a new game starts. See [Flash › Restart](../developer/procgen/flash.md). The panel's own move is unchanged: Restart still lands on the declared start.
+
 ## Registrations
 
 The two a panel module needs, plus two more this one needs (its title, icon and column come from its own `moduleInfo`):
@@ -179,7 +181,7 @@ The two a panel module needs, plus two more this one needs (its title, icon and 
 | `frontend/module-configs/modules.json` | `moduleDefinitions.menuPanel` + `loadPriority` (after `procgenPlayer`) |
 | `frontend/layout-configs/layout_presets.json` | the `default` preset, beside `loopsPanel` |
 | `frontend/init-bundled.js` | the bundled-mode import + map entry |
-| `register()` | `registerDispatcherSender('user:regionMove', 'bottom', 'first')` and `registerEventBusPublisher('ui:activatePanel')` — the eventBus **drops** a publish from an unregistered publisher (a warn, no delivery), so the skip-OFF self-activation needs both |
+| `register()` | `registerDispatcherSender('user:regionMove', 'bottom', 'first')`, `registerEventBusPublisher('ui:activatePanel')` and `registerEventBusPublisher('menuPanel:restarted')` — the eventBus **drops** a publish from an unregistered publisher (a warn, no delivery), so the skip-OFF self-activation and the restart announcement each need theirs |
 
 The panel class follows the GoldenLayout factory contract: constructor
 `(container, componentState, componentType)`, `getRootElement()`, and **no
@@ -190,7 +192,7 @@ self-append** (the factory appends it).
 | Where | What |
 |-------|------|
 | `menuPanelEngine.test.js` | the derivation, on `alttp` and `adventure` read off disk plus edge documents; `skipsStart` over 0/1/2 exits × skip on/off; `restartTargetOf` = the first declared start |
-| `index.test.js` | the load handshake in either order, the one-publisher hand-off, skip OFF, a many-exit / no-exit start not skipped, the exit press, Restart in both modes (to the declared start even with a resolved start registered) |
+| `index.test.js` | the load handshake in either order, the one-publisher hand-off, skip OFF, a many-exit / no-exit start not skipped, the exit press, Restart in both modes (to the declared start even with a resolved start registered), and `menuPanel:restarted` after the reset move |
 | `procgenPlayer/index.test.js` | the other publisher's side of the setting, and of `skipsStart` (the hop fires iff the rule answers true) |
 | `tests/testCases/apworldEditorTests.js` | (M2, category `apworldEditor` — the panel has no in-app category of its own) `apworld-menu-hub-restart-returns-to-the-declared-start`: `mm3` initialised + Apply → no hop, the panel lists 13 exits, a press moves, Restart → the declared start; `adventure` initialised → the hop fires |
 | `loops/loopState.test.js` (S3) | the loop start follows `skipsStart`: a one-exit start with skip ON → the resolved start; many exits, or skip OFF → the declared start; the loaded slot, not player 1 |

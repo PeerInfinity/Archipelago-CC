@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 46,
-            "count": 89,
+            "browser": 47,
+            "count": 90,
             "id": "probe"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 338,
-        "browser": 111,
-        "cited": 161,
-        "files": 349,
+        "blockStyle": 339,
+        "browser": 112,
+        "cited": 162,
+        "files": 350,
         "lineStyle": 11,
-        "withDocblock": 349,
-        "withFlags": 267
+        "withDocblock": 350,
+        "withFlags": 268
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -10157,6 +10157,56 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-rect-inputs — THE BOUNDED RECT-INPUT SWEEP.",
             "path": "scripts/procgen/probe-seedling-rect-inputs.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/flash.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-restart-warp.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling RESTART (⚖ the user, 2026-10-05: *\"We already have a menu panel with a button to return to the start region.",
+            "path": "scripts/procgen/probe-seedling-restart-warp.mjs"
         },
         {
             "argvHelpers": [],
