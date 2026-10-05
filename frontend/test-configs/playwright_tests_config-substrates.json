@@ -119,6 +119,30 @@
             "_comment": "bulletml-incremental N4: the Noiz2sa Bot block and the bot's training. Twice on a fresh load and a fresh trainer (tracks 0, Even): a Bot block on 1:1 hands its exit to the page's humanlike bot (a worker), which clears the region deathless in 1002 frames, score 17330 (the headless runSegment at tracks 0), and leaves; the clear is checked, the visit costs floor(16.032) game seconds x the rate, the bot earns the visit's points and the tracks rise to 2/2/2/1/1. Once at 1x, once at 2x (the bot-speed setting): the same frames, the same mana. Batch fast: ~16 s + ~8 s of bot play."
         },
         {
+            "id": "noiz2sa-bot-replays-cleared-region",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4b (a): in loop mode the move out of a Noiz2sa region is played to a clear on every visit. A Bot block clears 1:1 (bot seed 1, tracks 0 By hand, 4x) and leaves; back on the region (cleared before) the page keeps its exits closed and the same Bot block plays it again (1002 frames, score 17330), costs floor(16.032) game seconds of drain and trains the bot. Batch fast: two ~4 s bot clears."
+        },
+        {
+            "id": "noiz2sa-first-clear-explores",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4b (b): a first clear explores the region fully. The start region is fogged (location and exits undiscovered); a Record block's injected clear makes it fully explored (every location and exit discovered, through loop:exploreCompleted); the summary's checks hold the clear and the block interior holds no check and no explore. Batch fast: one injected clear at 8 frames per 16 ms."
+        },
+        {
+            "id": "noiz2sa-bot-seed-per-visit",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4b (c): a bot seed per visit. Three Record visits on fresh loads, the bot playing each to a clear (B, tracks 0 By hand, 4x): visits 1 and 2 drew different seeds, each in its summary's playStats.botSeed; visit 3 pinned to visit 1's seed plays it exactly again. Batch fast: three 4x bot clears (a random seed may need retries)."
+        },
+        {
+            "id": "noiz2sa-assist-key",
+            "enabled": true,
+            "category": "noiz2saSubstrate",
+            "_comment": "bulletml-incremental N4b (d): the B key. A Record block on 1:1: B hands the controls to the bot, B hands them back (paused, nothing drains), a game key resumes the player, B again and the bot plays to the clear and stays; the summary's playStats count the bot's frames, the visit cost its game seconds and trained the bot. Batch fast: ~17 s of 1x bot play."
+        },
+        {
             "id": "noiz2sa-refused-clear-resent",
             "enabled": true,
             "category": "noiz2saSubstrate",

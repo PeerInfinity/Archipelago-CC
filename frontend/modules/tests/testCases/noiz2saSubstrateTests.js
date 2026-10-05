@@ -387,7 +387,9 @@ async function noiz2saRefusedClearResent(testController) {
  * 17330 score, spent Even).
  */
 async function noiz2saBotBlockTrains(testController) {
-    const { getTrainerService } = await trainerModule();
+    const { getTrainerService, pinBotSeed } = await trainerModule();
+    // N4b: every visit draws its own bot seed; this row's numbers were measured at bot seed 1
+    pinBotSeed(1);
     const { pointsFor } = await import('../../bulletml-dodge/src/game/tracks.js');
     const service = getTrainerService();
     const KEY = 'noiz2sa:trainer:v1';
@@ -537,9 +539,406 @@ async function noiz2saBotBlockTrains(testController) {
         } catch { /* none */ }
         service.applySettings(savedSettings);
         service.reload();
+        pinBotSeed(null);
     }
     return testController.getOverallResult();
 }
+
+// ─────────────────────────────── N4b ───────────────────────────────
+
+/** a fresh load of the preset, in loop mode → {region, location, exit, target} of the start (1:1) region, or null */
+async function loadStartRegion(testController, label) {
+    await testController.loadRulesFromFile(PRESET_RULES_PATH);
+    await testController.stateManager.pingWorker('after-rules-load', 3000);
+    const loopOn = await testController.pollForCondition(
+        () => getGameStateSingleton()?.isLoopModeActive === true, 'loop mode active', 8000, 100);
+    testController.reportCondition(`[${label}] loop mode active`, !!loopOn);
+    if (!loopOn) return null;
+    await testController.pollForCondition(
+        () => loopStateSingleton.getRegionCaptureShape?.(currentRegion()) === 'summary',
+        'the player landed in a Noiz2sa region', 10000, 200);
+    const region = currentRegion();
+    const regionData = testController.stateManager.getStaticData?.()?.regions?.get(region);
+    const location = regionData?.locations?.[0]?.name ?? null;
+    const exit = (regionData?.exits ?? []).find((e) => e.connected_region) ?? null;
+    testController.assertEqual(`[${label}] ${region} has its clear location and an exit`, true, !!(location && exit));
+    if (!location || !exit) return null;
+    return { region, regionData, location, exit, target: exit.connected_region };
+}
+
+/** queue the move out of the region, set its block's mode → the block, or null */
+function queueBlock(testController, r, mode, label) {
+    getGameStateSingleton().updatePath(r.target, r.exit.name, r.region);
+    const block = resolveBlockFor(r.region);
+    testController.assertEqual(`[${label}] resolved a queue block for ${r.region}`, true, !!block);
+    if (!block) return null;
+    loopStateSingleton.setBlockMode(r.region, block.instance, mode);
+    return block;
+}
+
+/** the page configured with `region` (a configure after `before`), its host state in (loop mode, this visit's seed) */
+async function pageConfigured(testController, region, before, label, visitSeed) {
+    testController.eventBus.publish('ui:activatePanel', { panelId: 'noiz2saSubstratePanel' });
+    const ok = await testController.pollForCondition(() => {
+        const d = debugState();
+        return !!d && d.configures > before && d.regionId === region && d.state === 'ready'
+            && d.loopMode === true && d.visitBotSeed === visitSeed();
+    }, `[${label}] the game page is configured with ${region} and has its host state`, 30000, 100);
+    testController.reportCondition(`[${label}] the game page is configured with ${region} and has its host state`, !!ok);
+    if (!ok) testController.log(`DIAG: page ${JSON.stringify(debugState())}`, 'error');
+    return !!ok;
+}
+
+/** the time-drain price of one game second in `region` now (its rate at its XP level) */
+const unitDrainCost = (region) => loopStateSingleton._calculateActionCost({ type: 'timeDrain', sourceRegion: region });
+
+/** the trainer at tracks 0, By hand (its tracks stay put between visits), the bot at `speed` */
+function handTrainer(service, speed) {
+    service.reset('manual');
+    service.setStrategy('manual');
+    service.applySettings({ botSpeed: speed, botRetryCap: 0 });
+}
+
+/** save + restore the trainer, its settings, the depletion flag and loop mode around a row */
+async function withTrainer(testController, body) {
+    const mod = await trainerModule();
+    const service = mod.getTrainerService();
+    const KEY = 'noiz2sa:trainer:v1';
+    let savedTrainer = null;
+    try { savedTrainer = localStorage.getItem(KEY); } catch { /* none */ }
+    const savedSettings = { botSpeed: service.settings.botSpeed, botRetryCap: service.settings.botRetryCap };
+    const gs = getGameStateSingleton();
+    const savedNoReset = gs.noManaDepletionReset;
+    try {
+        gs.noManaDepletionReset = true;
+        await body(mod, service, gs);
+    } finally {
+        gameWindow()?.__noiz2saTest?.release?.();
+        loopStateSingleton.stopProcessing?.();
+        gs.noManaDepletionReset = savedNoReset;
+        gs.setLoopModeActive(false);
+        try {
+            if (savedTrainer === null) localStorage.removeItem(KEY); else localStorage.setItem(KEY, savedTrainer);
+        } catch { /* none */ }
+        service.applySettings(savedSettings);
+        service.reload();
+        mod.pinBotSeed(null);
+    }
+    return testController.getOverallResult();
+}
+
+/**
+ * N4b (a) — ⚖ "In loop mode, clearing the level should be counted as part of the "move" action." A Bot block on a
+ * region its first visit already CLEARED plays it again: the page keeps the exits closed (loop mode), the bot plays to
+ * a clear before it leaves, the visit costs its game seconds and the bot earns them. Bot seed 1, tracks 0 By hand (so
+ * both visits play the measured 1002 frames, score 17330), 4×.
+ */
+async function noiz2saBotReplaysClearedRegion(testController) {
+    return withTrainer(testController, async (mod, service, gs) => {
+        const label = 'cleared region';
+        const r = await loadStartRegion(testController, label);
+        if (!r) return;
+        handTrainer(service, 4);
+        mod.pinBotSeed(1);
+        const before0 = debugState()?.configures ?? 0;
+        const block = queueBlock(testController, r, 'bot', label);
+        if (!block) return;
+
+        // ── visit 1: the first clear ──
+        gs.refillMana();
+        loopStateSingleton.startProcessing();
+        const first = await testController.pollForCondition(() => currentRegion() === r.target,
+            `[${label}] visit 1: the bot cleared ${r.region} and left into ${r.target}`, 90000, 100);
+        testController.reportCondition(`[${label}] visit 1: the bot cleared ${r.region} and left`, !!first);
+        if (!first) return;
+        await testController.stateManager.pingWorker('after-visit-1', 3000);
+        const checked = await testController.pollForCondition(
+            () => snapshotHasLocation(testController.stateManager.getSnapshot(), r.location), 'checked', 10000, 100);
+        testController.assertEqual(`[${label}] visit 1 checked ${r.location}`, true, !!checked);
+        testController.log(`[${label}] configures since load: ${(debugState()?.configures ?? 0) - before0}`);
+
+        // ── visit 2: back to the region (cleared before); the same Bot block ──
+        const before = debugState()?.configures ?? 0;
+        loopStateSingleton.dispatcher.publish('user:regionMove', {
+            sourceRegion: r.target, targetRegion: r.region, fromReset: true, updatePath: false,
+        }, { initialTarget: 'bottom' });
+        const back = await testController.pollForCondition(() => currentRegion() === r.region,
+            `[${label}] teleported back to ${r.region}`, 10000, 100);
+        testController.reportCondition(`[${label}] teleported back to ${r.region}`, !!back);
+        if (!back) return;
+        loopStateSingleton._resetLoop();
+        if (!(await pageConfigured(testController, r.region, before, `${label} visit 2`, mod.getVisitBotSeed))) return;
+        const d0 = debugState();
+        testController.assertEqual(`[${label}] visit 2: the page knows the region was cleared before`, true, d0.alreadyChecked);
+        testController.assertEqual(`[${label}] visit 2: in loop mode its exits stay CLOSED until a clear on this visit`,
+            false, d0.exitsOpen);
+        gs.refillMana();
+        const manaBefore = currentMana(), earnedBefore = service.trainer.earned, unit = unitDrainCost(r.region);
+        loopStateSingleton.startProcessing();
+        const driving = await testController.pollForCondition(
+            () => loopStateSingleton.botSolverRegion?.() === r.region && debugState()?.bot !== null,
+            `[${label}] visit 2: the Bot block handed the move to the page's bot`, 15000, 50);
+        testController.reportCondition(`[${label}] visit 2: the Bot block handed the move to the page's bot`, !!driving);
+        const left = await testController.pollForCondition(() => currentRegion() === r.target,
+            `[${label}] visit 2: the bot played ${r.region} to a clear and left`, 90000, 100);
+        testController.reportCondition(`[${label}] visit 2: the bot played ${r.region} to a clear and left`, !!left);
+        if (!left) return;
+        const lb = debugState()?.lastBot;
+        testController.log(`[${label}] visit 2: ${JSON.stringify(lb)}`);
+        testController.assertEqual(`[${label}] visit 2: the bot PLAYED the region again (deathless, 1002 frames, score 17330)`,
+            true, lb?.cleared === true && lb.frames === 1002 && lb.score === 17330 && lb.botSeed === 1);
+        const spent = manaBefore - currentMana();
+        testController.assertEqual(`[${label}] visit 2 cost floor(16.032) game seconds of drain`,
+            true, Math.abs(spent - Math.floor(1002 / 62.5) * unit) < 0.001);
+        const { pointsFor } = await import('../../bulletml-dodge/src/game/tracks.js');
+        const want = pointsFor(service.trainer.settings, { seconds: 1002 / 62.5, score: 17330 });
+        testController.assertEqual(`[${label}] visit 2 trained the bot (the visit's points)`, true,
+            Math.abs((service.trainer.earned - earnedBefore) - want) < 1e-9);
+    });
+}
+
+/**
+ * N4b (b) — ⚖ "a first clear should have the effects that fully exploring the region would have in other substrates".
+ * The start region is fully discovered at load, so the row first undiscovers its location and exits (fog). A Record
+ * block parks on it, the clearing tape clears it, and the region reads FULLY EXPLORED (every location and exit
+ * discovered, loops' `_isRegionFullyExplored`). Leaving saves a summary whose `checks` hold the clear, while the
+ * block's rewritten interior holds NO check and no explore (⚖ "there is no explore or check location action").
+ */
+async function noiz2saFirstClearExplores(testController) {
+    return withTrainer(testController, async (mod, service, gs) => {
+        const label = 'first clear';
+        const r = await loadStartRegion(testController, label);
+        if (!r) return;
+        const { default: discovery } = await import('../../discovery/singleton.js');
+        const staticData = testController.stateManager.getStaticData();
+        discovery.undiscoverLocation(r.location);
+        for (const e of r.regionData.exits ?? []) discovery.undiscoverExit(r.region, e.name);
+        testController.assertEqual(`[${label}] fogged: ${r.region} is not fully explored`, false,
+            loopStateSingleton._isRegionFullyExplored(r.region, staticData));
+        const exploresSeen = [];
+        const onExplore = (d) => { if (d?.regionName === r.region) exploresSeen.push(d); };
+
+        const before = debugState()?.configures ?? 0;
+        const block = queueBlock(testController, r, 'record', label);
+        if (!block) return;
+        gs.refillMana();
+        loopStateSingleton.startProcessing();
+        const parked = await testController.pollForCondition(() => loopStateSingleton.livePlayRegion() === r.region,
+            `[${label}] the Record block parked for live play`, 15000, 100);
+        testController.reportCondition(`[${label}] the Record block parked for live play`, !!parked);
+        if (!parked) return;
+        testController.eventBus.publish('ui:activatePanel', { panelId: 'noiz2saSubstratePanel' });
+        const configured = await testController.pollForCondition(() => {
+            const d = debugState(); return d?.regionId === r.region && d.state === 'ready' && d.configures >= before;
+        }, `[${label}] the page is configured`, 30000, 100);
+        testController.reportCondition(`[${label}] the page is configured`, !!configured);
+        if (!configured) return;
+        testController.eventBus.subscribe('discovery:exitDiscovered', onExplore);
+        gameWindow().__noiz2saTest.play(NOIZ2SA_CLEAR_TAPE, { speed: SPEED });
+        const cleared = await testController.pollForCondition(() => debugState()?.cleared === true,
+            `[${label}] the tape cleared the region`, 20000, 100);
+        testController.reportCondition(`[${label}] the tape cleared the region`, !!cleared);
+        const explored = await testController.pollForCondition(
+            () => loopStateSingleton._isRegionFullyExplored(r.region, staticData),
+            `[${label}] the first clear made ${r.region} FULLY EXPLORED`, 10000, 100);
+        testController.eventBus.unsubscribe?.('discovery:exitDiscovered', onExplore);
+        testController.reportCondition(`[${label}] the first clear made ${r.region} FULLY EXPLORED`, !!explored);
+        if (!explored) testController.log(`DIAG: first clears ${JSON.stringify(mod.getFirstClearState())}`, 'error');
+        testController.assertEqual(`[${label}] every exit of ${r.region} is discovered, through discovery:exitDiscovered`,
+            true, (r.regionData.exits ?? []).every((e) => discovery.isExitDiscovered(r.region, e.name))
+                && exploresSeen.length === (r.regionData.exits ?? []).length);
+        testController.assertEqual(`[${label}] the clear location is discovered`, true, discovery.isLocationDiscovered(r.location));
+
+        gameWindow().__noiz2saTest.leave(r.exit.name);
+        const crossed = await testController.pollForCondition(() => currentRegion() === r.target,
+            `[${label}] left into ${r.target}`, 15000, 100);
+        testController.reportCondition(`[${label}] left into ${r.target}`, !!crossed);
+        if (!crossed) return;
+        const saved = loopStateSingleton._lookupBoundSummary(r.region, block.instance);
+        testController.assertEqual(`[${label}] the summary's checks hold the clear`, JSON.stringify([r.location]),
+            JSON.stringify(saved?.summary?.checks ?? null));
+        const interior = loopStateSingleton.getActionQueue().filter((a) => a.sourceRegion === r.region && a.type !== 'regionMove');
+        testController.assertEqual(`[${label}] the block's interior holds no check and no explore (the move is the clear)`,
+            '[]', JSON.stringify(interior.map((a) => a.type)));
+    });
+}
+
+/** a Record visit on a fresh load whose bot (the B key) plays the region to a clear; → the visit's summary, or null */
+async function assistedRecordVisit(testController, mod, gs, label) {
+    const r = await loadStartRegion(testController, label);
+    if (!r) return null;
+    const before = debugState()?.configures ?? 0;
+    const block = queueBlock(testController, r, 'record', label);
+    if (!block) return null;
+    gs.refillMana();
+    loopStateSingleton.startProcessing();
+    const parked = await testController.pollForCondition(() => loopStateSingleton.livePlayRegion() === r.region,
+        `[${label}] the Record block parked`, 15000, 100);
+    testController.reportCondition(`[${label}] the Record block parked`, !!parked);
+    if (!parked || !(await pageConfigured(testController, r.region, before, label, mod.getVisitBotSeed))) return null;
+    const seed = debugState().visitBotSeed;
+    pressKey('KeyB');
+    const cleared = await testController.pollForCondition(() => debugState()?.cleared === true,
+        `[${label}] B: the bot played the region to a clear`, 120000, 100);
+    testController.reportCondition(`[${label}] B: the bot played the region to a clear`, !!cleared);
+    if (!cleared) return null;
+    gameWindow().__noiz2saTest.leave(r.exit.name);
+    const crossed = await testController.pollForCondition(() => currentRegion() === r.target,
+        `[${label}] left into ${r.target}`, 15000, 100);
+    if (!crossed) return null;
+    const saved = loopStateSingleton._lookupBoundSummary(r.region, block.instance);
+    testController.log(`[${label}] seed ${seed}; summary ${JSON.stringify(saved?.summary)}`);
+    loopStateSingleton.stopProcessing?.();
+    return saved ? { seed, summary: saved.summary } : null;
+}
+
+/**
+ * N4b (c) — ⚖ a new bot seed per visit, recorded. Two Record visits on fresh loads, each played to a clear by the bot
+ * (the B key, tracks 0 By hand, 4×): each visit drew its own seed, and each Record summary carries it
+ * (`playStats.botSeed`). A third visit pinned to the FIRST visit's recorded seed plays it exactly again: the same game
+ * seconds and the same score.
+ */
+async function noiz2saBotSeedPerVisit(testController) {
+    return withTrainer(testController, async (mod, service, gs) => {
+        handTrainer(service, 4);
+        mod.pinBotSeed(null);
+        const v1 = await assistedRecordVisit(testController, mod, gs, 'visit 1');
+        if (!v1) return;
+        const v2 = await assistedRecordVisit(testController, mod, gs, 'visit 2');
+        if (!v2) return;
+        testController.assertEqual('each Record summary carries its visit\'s bot seed', true,
+            v1.summary.playStats?.botSeed === v1.seed && v2.summary.playStats?.botSeed === v2.seed);
+        testController.assertEqual('the two visits drew different bot seeds', true, v1.seed !== v2.seed);
+        mod.pinBotSeed(v1.seed);
+        const v3 = await assistedRecordVisit(testController, mod, gs, 'visit 3 (visit 1\'s seed)');
+        if (!v3) return;
+        testController.assertEqual('the recorded seed replays: visit 3 played visit 1 exactly (game seconds, score, bot frames)',
+            JSON.stringify([v1.seed, v1.summary.playStats.gameSeconds, v1.summary.playStats.score, v1.summary.playStats.botFrames]),
+            JSON.stringify([v3.summary.playStats?.botSeed, v3.summary.playStats?.gameSeconds, v3.summary.playStats?.score,
+                v3.summary.playStats?.botFrames]));
+    });
+}
+
+/**
+ * N4b (d) — the bot-assist key. A Record block on 1:1 (bot seed 1, tracks 0 By hand, 1×): B hands the controls to the
+ * bot (the clock runs, the drain charges), B again hands them back (the game pauses, the clock stops, nothing drains),
+ * a game key resumes the player's play, B gives it to the bot again, which plays to the clear and stays (the player
+ * leaves). The summary holds the bot's play (botFrames), the visit cost its game seconds, and the bot trained.
+ */
+async function noiz2saAssistKey(testController) {
+    return withTrainer(testController, async (mod, service, gs) => {
+        const label = 'assist';
+        handTrainer(service, 1);
+        mod.pinBotSeed(1);
+        const r = await loadStartRegion(testController, label);
+        if (!r) return;
+        const before = debugState()?.configures ?? 0;
+        const block = queueBlock(testController, r, 'record', label);
+        if (!block) return;
+        gs.refillMana();
+        loopStateSingleton.startProcessing();
+        const parked = await testController.pollForCondition(() => loopStateSingleton.livePlayRegion() === r.region,
+            `[${label}] the Record block parked`, 15000, 100);
+        testController.reportCondition(`[${label}] the Record block parked`, !!parked);
+        if (!parked || !(await pageConfigured(testController, r.region, before, label, mod.getVisitBotSeed))) return;
+        const manaAtPark = currentMana(), earnedBefore = service.trainer.earned, unit = unitDrainCost(r.region);
+
+        pressKey('KeyB');
+        const botOn = await testController.pollForCondition(() => {
+            const d = debugState();
+            return d?.bot?.goal?.kind === 'assist' && d.state === 'playing' && d.attemptFrames >= 150
+                && loopStateSingleton._playClock?.running === true;
+        }, `[${label}] B: the bot plays for the player, the clock runs`, 15000, 20);
+        testController.reportCondition(`[${label}] B: the bot plays for the player, the clock runs`, !!botOn);
+        pressKey('KeyB');
+        const handedBack = await testController.pollForCondition(() => {
+            const d = debugState();
+            return d?.bot === null && d.state === 'paused' && loopStateSingleton._playClock?.running === false;
+        }, `[${label}] B again: the controls are the player's (paused, the clock stopped)`, 5000, 20);
+        testController.reportCondition(`[${label}] B again: the controls are the player's (paused, the clock stopped)`, !!handedBack);
+        const frames = debugState()?.frames, manaPaused = currentMana();
+        await new Promise((res) => setTimeout(res, 1500));
+        testController.assertEqual(`[${label}] handed back and untouched: nothing stepped, nothing drained`, true,
+            debugState()?.frames === frames && currentMana() === manaPaused);
+        pressKey('KeyZ');
+        const playerPlays = await testController.pollForCondition(() => {
+            const d = debugState(); return d?.state === 'playing' && d.bot === null && d.frames > frames;
+        }, `[${label}] a game key: the player plays`, 5000, 10);
+        testController.reportCondition(`[${label}] a game key: the player plays`, !!playerPlays);
+        pressKey('KeyB');
+        const cleared = await testController.pollForCondition(() => debugState()?.cleared === true,
+            `[${label}] B: the bot played on to the clear`, 120000, 100);
+        testController.reportCondition(`[${label}] B: the bot played on to the clear`, !!cleared);
+        if (!cleared) return;
+        const d = debugState();
+        testController.assertEqual(`[${label}] the bot stays at the clear (the exits open, the player leaves)`, true,
+            d.state === 'cleared' && d.exitsOpen && currentRegion() === r.region);
+        gameWindow().__noiz2saTest.leave(r.exit.name);
+        const crossed = await testController.pollForCondition(() => currentRegion() === r.target,
+            `[${label}] left into ${r.target}`, 15000, 100);
+        testController.reportCondition(`[${label}] left into ${r.target}`, !!crossed);
+        if (!crossed) return;
+        const saved = loopStateSingleton._lookupBoundSummary(r.region, block.instance);
+        const ps = saved?.summary?.playStats ?? null;
+        testController.log(`[${label}] summary ${JSON.stringify(saved?.summary)}`);
+        const totalFrames = Math.round((ps?.gameSeconds ?? 0) * 62.5);
+        testController.assertEqual(`[${label}] the summary holds the bot's play: all but the player's few frames`, true,
+            !!ps && ps.botSeed === 1 && ps.botFrames > 0 && ps.botFrames < totalFrames && totalFrames - ps.botFrames < 120);
+        testController.assertEqual(`[${label}] the visit cost floor(its game seconds) of drain (± one second)`, true,
+            Math.abs((manaAtPark - currentMana()) - Math.floor(ps?.gameSeconds ?? 0) * unit) <= unit + 0.001);
+        const { pointsFor } = await import('../../bulletml-dodge/src/game/tracks.js');
+        const want = pointsFor(service.trainer.settings, { seconds: ps?.gameSeconds ?? 0, score: ps?.score ?? 0 });
+        testController.assertEqual(`[${label}] the visit trained the bot (its points)`, true,
+            want > 0 && Math.abs((service.trainer.earned - earnedBefore) - want) < 1e-6);
+    });
+}
+
+registerTest({
+    id: 'noiz2sa-bot-replays-cleared-region',
+    name: 'Noiz2sa N4b: in loop mode a Bot block on an already-cleared region plays it again, costs mana and trains',
+    description: 'Loads noiz2sa_substrate_test; a Bot block clears 1:1 (bot seed 1, tracks 0 By hand, 4×) and leaves. '
+        + 'Back on the region (cleared before), the page keeps its exits closed, and the same Bot block plays it to a '
+        + 'clear again (1002 frames, score 17330) before leaving: the visit costs floor(16.032) game seconds of drain '
+        + 'and earns its training points.',
+    testFunction: restoresSavedQueues(noiz2saBotReplaysClearedRegion),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+registerTest({
+    id: 'noiz2sa-first-clear-explores',
+    name: 'Noiz2sa N4b: a region\'s first clear explores it fully; the check is no queue action',
+    description: 'Loads noiz2sa_substrate_test and fogs its start region (location and exits undiscovered). A Record '
+        + 'block parks on it and the clearing tape clears it: the region reads fully explored (every exit through '
+        + 'discovery:exitDiscovered). Leaving saves a summary with the clear in checks, and the block interior holds no '
+        + 'check and no explore.',
+    testFunction: restoresSavedQueues(noiz2saFirstClearExplores),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+registerTest({
+    id: 'noiz2sa-bot-seed-per-visit',
+    name: 'Noiz2sa N4b: each visit draws its own bot seed, a Record summary carries it, and the recorded seed replays',
+    description: 'Three Record visits on fresh loads, each played to a clear by the bot (B, tracks 0 By hand, 4×). '
+        + 'Visits 1 and 2 drew different seeds, each in its summary\'s playStats.botSeed; visit 3, pinned to visit 1\'s '
+        + 'recorded seed, plays visit 1 exactly (game seconds, score, bot frames).',
+    testFunction: restoresSavedQueues(noiz2saBotSeedPerVisit),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
+
+registerTest({
+    id: 'noiz2sa-assist-key',
+    name: 'Noiz2sa N4b: B hands the controls to the bot and back; the Record summary holds the bot\'s play',
+    description: 'A Record block on 1:1 (bot seed 1, tracks 0 By hand): B — the bot plays and the clock runs; B — the '
+        + 'player\'s controls, paused, nothing steps or drains; a game key — the player plays; B — the bot plays on to '
+        + 'the clear and stays. Leaving saves a summary whose playStats count the bot\'s frames; the visit cost its game '
+        + 'seconds and trained the bot.',
+    testFunction: restoresSavedQueues(noiz2saAssistKey),
+    category: 'noiz2saSubstrate',
+    enabled: false, // off by default — runs only in the test-substrates mode (full module config)
+});
 
 registerTest({
     id: 'noiz2sa-bot-block-trains',

@@ -17,6 +17,9 @@ describe('clearsOf', () => {
     it('the Noiz2sa regions with a clear location, and only them', () => {
         expect([...clearsOf(warehouse(), 'noiz2sa')]).toEqual([['n1', 'n1__clear'], ['n2', 'n2__clear']]);
     });
+    it('reads procgenPlayer\'s WorldWarehouse (its `regions` Map)', () => {
+        expect([...clearsOf({ regions: warehouse() }, 'noiz2sa').keys()]).toEqual(['n1', 'n2']);
+    });
     it('no warehouse → none', () => {
         expect(clearsOf(null, 'noiz2sa').size).toBe(0);
         expect(clearsOf({}, 'noiz2sa').size).toBe(0);
@@ -41,16 +44,28 @@ describe('exploresToFullyExplore', () => {
 });
 
 describe('the first-clear watcher', () => {
-    it('reports a region the first time its clear is checked, once; a reset starts over', () => {
+    it('reports a region when its clear turns from unchecked to checked, once per turn', () => {
         const w = createFirstClearWatcher();
         const clears = clearsOf(warehouse(), 'noiz2sa');
         expect(w.note(clears, new Set())).toEqual([]);
         expect(w.note(clears, new Set(['n1__clear', 'm1__clear']))).toEqual(['n1']);
         expect(w.note(clears, new Set(['n1__clear']))).toEqual([]);
         expect(w.note(clears, new Set(['n1__clear', 'n2__clear']))).toEqual(['n2']);
-        expect(w.has('n1')).toBe(true);
+        expect(w.explored()).toEqual(['n1', 'n2']);
+    });
+    it('a region first seen already checked is not a first clear (a stale snapshot after a rules load)', () => {
+        const w = createFirstClearWatcher();
+        const clears = clearsOf(warehouse(), 'noiz2sa');
+        expect(w.note(clears, new Set(['n1__clear']))).toEqual([]); // stale: the state before the load
+        expect(w.note(clears, new Set())).toEqual([]);               // the fresh state
+        expect(w.note(clears, new Set(['n1__clear']))).toEqual(['n1']); // the real first clear
+    });
+    it('a reset forgets every region', () => {
+        const w = createFirstClearWatcher();
+        const clears = clearsOf(warehouse(), 'noiz2sa');
+        w.note(clears, new Set());
         w.reset();
-        expect(w.has('n1')).toBe(false);
-        expect(w.note(clears, new Set(['n1__clear', 'n2__clear']))).toEqual(['n1', 'n2']);
+        expect(w.explored()).toEqual([]);
+        expect(w.note(clears, new Set(['n1__clear']))).toEqual([]);
     });
 });

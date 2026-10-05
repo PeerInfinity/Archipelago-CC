@@ -12,15 +12,22 @@
  * queued explores of such a region). So a full explore is as many `loop:exploreCompleted` as the region has locations
  * and exits, and that is what a first clear sends — the same event, the same handler, the same discovery state.
  *
- * The trigger is the host's checked set (`stateManager:snapshotUpdated`): the first snapshot in which a Noiz2sa
- * region's clear is checked, whoever checked it (live play, the Bot, a Playback refire, the locations panel).
+ * The trigger is the host's checked set (`stateManager:snapshotUpdated`): the snapshot in which a Noiz2sa region's
+ * clear turns from unchecked to checked, whoever checked it (live play, the Bot, a Playback refire, the locations
+ * panel). A TRANSITION, not "checked and not seen before": a rules load can be followed by a stale snapshot of the
+ * state before it, which must not count as the new state's first clear. The baseline (each clear's state before any
+ * play) is noted at every rules load and region load, since the clear's own snapshot may be the first one after them.
  */
 
-/** the Noiz2sa regions of a procgenPlayer warehouse (Map region → {substrate, world}) and their clear's AP name */
+/**
+ * The Noiz2sa regions of procgenPlayer's warehouse (a `WorldWarehouse`, whose `regions` is a Map region →
+ * {substrate, world}; a bare Map also reads) and their clear's AP name.
+ */
 export function clearsOf(warehouse, substrateId) {
     const out = new Map();
-    if (!warehouse || typeof warehouse.entries !== 'function') return out;
-    for (const [region, entry] of warehouse.entries()) {
+    const map = warehouse?.regions instanceof Map ? warehouse.regions : warehouse;
+    if (!map || typeof map.entries !== 'function') return out;
+    for (const [region, entry] of map.entries()) {
         if (entry?.substrate !== substrateId) continue;
         const clear = entry?.world?.ap_locations?.clear;
         if (typeof clear === 'string' && clear) out.set(region, clear);
@@ -44,22 +51,27 @@ export function exploresToFullyExplore(regionStatic) {
 }
 
 /**
- * The watcher: `note(clears, checked)` → the regions whose clear is checked for the first time since the last
- * `reset()` (a rules load). Each region is reported once.
+ * The watcher: `note(clears, checked)` → the regions whose clear went from unchecked (in the last snapshot noted) to
+ * checked. A region first seen already checked is not a first clear. `reset()` forgets every region (a rules load).
  */
 export function createFirstClearWatcher() {
-    const done = new Set();
+    const last = new Map(); // region → its clear was checked in the last snapshot noted
+    const explored = new Set();
     return {
         note(clears, checked) {
             const fresh = [];
             for (const [region, clear] of clears) {
-                if (done.has(region) || !checked.has(clear)) continue;
-                done.add(region);
-                fresh.push(region);
+                const now = checked.has(clear);
+                if (now && last.get(region) === false) {
+                    fresh.push(region);
+                    explored.add(region);
+                }
+                last.set(region, now);
             }
             return fresh;
         },
-        reset() { done.clear(); },
-        has: (region) => done.has(region),
+        reset() { last.clear(); explored.clear(); },
+        /** the regions reported since the last reset */
+        explored: () => [...explored],
     };
 }

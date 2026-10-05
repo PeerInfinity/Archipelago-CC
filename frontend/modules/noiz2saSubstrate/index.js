@@ -126,6 +126,7 @@ function exploreFirstClears(snapshot) {
         // must not gate or capture them — the clear they follow already passed the action gate, and this
         // substrate has no explore action to record (⚖ N4b).
         for (let i = 0; i < n; i++) {
+            _exploresSent++;
             _dispatcher.publish('loop:exploreCompleted', {
                 regionName: region, fromLoop: true, source: 'noiz2sa:firstClear',
             }, { initialTarget: 'bottom' });
@@ -133,6 +134,9 @@ function exploreFirstClears(snapshot) {
     }
 }
 let _dispatcher = null;
+let _exploresSent = 0;
+/** test surface: the regions explored by a first clear since the last rules load, and the explores sent */
+export const getFirstClearState = () => ({ explored: _firstClears.explored(), exploresSent: _exploresSent });
 
 const BasePanel = createSubstrateIframePanelClass({
     componentType: NOIZ2SA_PANEL_COMPONENT_TYPE,
@@ -284,6 +288,8 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
             newVisitSeed();
             _loopMode = isLoopModeActive();
             publishHostState();
+            // the first-clear watcher's baseline: the clears' state as the visit starts
+            exploreFirstClears(stateManager?.getLatestStateSnapshot?.());
         }
         const isFocusLocked = initializationApi.getModuleFunction?.('loops', 'isFocusLocked');
         if (isFocusLocked?.()) return;
@@ -304,7 +310,10 @@ export function initialize(_moduleId, _priorityIndex, initializationApi) {
     eventBus.subscribe('stateManager:snapshotUpdated', (data) => {
         exploreFirstClears(data?.snapshot ?? stateManager?.getLatestStateSnapshot?.());
     }, 'noiz2saSubstrate');
-    eventBus.subscribe('stateManager:rulesLoaded', () => _firstClears.reset(), 'noiz2saSubstrate');
+    eventBus.subscribe('stateManager:rulesLoaded', (data) => {
+        _firstClears.reset();
+        exploreFirstClears(data?.snapshot ?? null);
+    }, 'noiz2saSubstrate');
     // …and an instant Playback of a Noiz2sa summary earns the recorded visit.
     eventBus.subscribe('loops:summaryApplied', (data) => {
         if (data?.substrate !== NOIZ2SA_SUBSTRATE_ID) return;
