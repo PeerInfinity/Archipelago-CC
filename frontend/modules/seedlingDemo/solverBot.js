@@ -12986,9 +12986,28 @@ function solveSegmentUnder({
             }, { crossTo, what: `${whatPit}->L${fall.to_level}` });
             goalPlanExtra = {};
             goalRides = new Set();
+            const swapsBefore = run.transitions.length;
             const coast = coastThroughTransport(run, perTick, maxTicksPerTarget,
                 `${whatPit}->L${fall.to_level}`);
-            records.push({ goal: 'reach-pit', to: fall.to_level, t: t.t, coast });
+            /**
+             * ⛓⛓⛓ seedling fidelity DESCENT — A FALL CAN CHAIN. The descent is
+             * the new Game's arrival and fires a live door it crosses
+             * (`Teleporter.update` has no `fallFromCeiling` guard): L110's pit
+             * lands on L0's stairs and the run ENDS in L2. `to` stays the
+             * control's level (where the pit falls); `chained` (present only when
+             * a door fired during the coast, so every other record is
+             * byte-identical) names the swaps and where the run really ended.
+             */
+            const swaps = run.transitions.slice(swapsBefore);
+            records.push({
+                goal: 'reach-pit', to: fall.to_level, t: t.t, coast,
+                ...(swaps.length > 0 ? {
+                    chained: {
+                        via: swaps.map((s) => ({ t: s.t, from_level: s.from_level, to_level: s.to_level })),
+                        ends: { level: run.level, x: run.state.x, y: run.state.y },
+                    },
+                } : {}),
+            });
         };
         if (goal.kind === 'reach-pit') {
             execReachPit(goal, goal);

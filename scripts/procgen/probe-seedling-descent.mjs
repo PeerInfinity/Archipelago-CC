@@ -17,6 +17,9 @@
  *              `latch-probe` (the landing tile on L2's `teleporter@48,96`, the drop
  *              on its `stairsup@48,16`: which one fires says where the arrival
  *              frame's `Teleporter.check()` saw the player)
+ *   SOLVER     (`solver/builtin`, D3) the solver's own plan from L110's arrival
+ *              (48,112) into its pit (`descentSolverArm`): the game must end in
+ *              L2 (56,40) through L0's stairs
  *
  * Each arm reads the drained stream (`{t, x, y, level}` per tick), the transitions
  * DERIVED from its level changes, and `botStatus`. The model replays the same tape
