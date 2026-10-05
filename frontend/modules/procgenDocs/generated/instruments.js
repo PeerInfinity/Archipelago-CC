@@ -49,7 +49,7 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 0,
-            "count": 16,
+            "count": 17,
             "id": "census"
         },
         {
@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 58,
+            "count": 60,
             "id": "plan"
         },
         {
-            "browser": 45,
-            "count": 88,
+            "browser": 46,
+            "count": 89,
             "id": "probe"
         },
         {
@@ -219,13 +219,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 334,
-        "browser": 110,
-        "cited": 159,
-        "files": 345,
+        "blockStyle": 338,
+        "browser": 111,
+        "cited": 161,
+        "files": 349,
         "lineStyle": 11,
-        "withDocblock": 345,
-        "withFlags": 263
+        "withDocblock": 349,
+        "withFlags": 267
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -964,6 +964,35 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "census-seedling-constants — every numeric literal in Seedling's JS simulation, with its reviewed class (engine-prep A1).",
             "path": "scripts/procgen/census-seedling-constants.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "census",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "json"
+            ],
+            "file": "census-seedling-dash-window.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "json"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "census-seedling-dash-window — Seedling fidelity DASH, D4: **WHICH COMMITTED TAPES LEAN ON THE DASH TEST THE GAME DOES NOT RUN?** Model-only; it plays nothing and drives no browser.",
+            "path": "scripts/procgen/census-seedling-dash-window.mjs"
         },
         {
             "argvHelpers": [
@@ -8088,6 +8117,33 @@ export const INSTRUMENTS = frz({
             "documentedFlags": [
                 "check"
             ],
+            "file": "plan-seedling-return-l15.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-return-l15 — ⛓⛓⛓ SEEDLING FIDELITY RETURN (D1): L15 RE-ENTERED FROM L16 ON THE WAY BACK, WITH AND WITHOUT THE FORWARD TRIP'S CLEARS.",
+            "path": "scripts/procgen/plan-seedling-return-l15.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
             "file": "plan-seedling-u10-puncher-dwell.mjs",
             "flags": [
                 {
@@ -8298,6 +8354,33 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "plan-seedling-u9-shield-bump — ⛓⛓⛓ U9-swim: `Player.shieldBump`'s DRIVEN WITNESSES.",
             "path": "scripts/procgen/plan-seedling-u9-shield-bump.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check"
+            ],
+            "file": "plan-seedling-watcher-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-watcher-witness — ⛓⛓⛓ SEEDLING FIDELITY WATCHER: A SILENT WATCHER ON THE FRONTIER OF A REACH-EXIT IS NOT AN OBSTACLE, AND A SPEAKING ONE IS PASSED BY ITS DIALOGUE.",
+            "path": "scripts/procgen/plan-seedling-watcher-witness.mjs"
         },
         {
             "argvHelpers": [],
@@ -8515,6 +8598,57 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-ctor-args — THE CONSTRUCTOR ARGUMENT-TABLE AUDIT.",
             "path": "scripts/procgen/probe-seedling-ctor-args.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "out",
+                "tape",
+                "tape-file"
+            ],
+            "file": "probe-seedling-dash-window.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "arrows"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "out"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "tape-file"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "Seedling fidelity DASH, D1: **HOW MANY HIT TESTS DOES A SWORD PRESS BUY — ASKED OF THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-dash-window.mjs"
         },
         {
             "argvHelpers": [
