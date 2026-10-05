@@ -23,3 +23,7 @@
 	path = vendor/seedling
 	url = https://github.com/PeerInfinity/Seedling.git
 	branch = ap-m1
+[submodule "frontend/modules/bulletml-dodge"]
+	path = frontend/modules/bulletml-dodge
+	url = https://github.com/PeerInfinity/bulletml-dodge.git
+	branch = substrate

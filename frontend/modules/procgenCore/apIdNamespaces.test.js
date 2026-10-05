@@ -35,7 +35,7 @@ const MODULES = join(HERE, '..');
  * not demand this repo account for their literals.
  */
 const SUBMODULES = new Set([
-    'cavernous-ii', 'journey-to-ascension', 'omsi-loops', 'shared', 'textAdventureEngine',
+    'bulletml-dodge', 'cavernous-ii', 'journey-to-ascension', 'omsi-loops', 'shared', 'textAdventureEngine',
 ]);
 
 function* walk(dir) {

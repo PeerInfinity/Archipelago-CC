@@ -83,7 +83,7 @@ When the host is the only reset authority, a bridge must never pin a resource in
 
 ### `shared/` is a git submodule
 
-`frontend/modules/shared/` (the substrate registry, rng and procgen primitives) is one of seven git submodules; `.gitmodules` lists them all. `git log` and `git blame` from the outer repo do not see submodule commits, so run git inside the submodule directory. A change there is committed inside the submodule, then the outer repo's pointer is bumped in a separate commit.
+`frontend/modules/shared/` (the substrate registry, rng and procgen primitives) is one of eight git submodules; `.gitmodules` lists them all. `git log` and `git blame` from the outer repo do not see submodule commits, so run git inside the submodule directory. A change there is committed inside the submodule, then the outer repo's pointer is bumped in a separate commit.
 
 ## Loop mode
 
