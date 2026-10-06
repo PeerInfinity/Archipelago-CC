@@ -142,7 +142,7 @@ export const PASS_STRATEGIES = Object.freeze({
  */
 export const ANYTIME_PASSES = Object.freeze([
     Object.freeze({ pass: 'dashless', dashMode: 'none', stop: 'all' }),
-    Object.freeze({ pass: 'full', dashMode: DEFAULT_DASH_MODE, adds: 'sword-dash', stop: 'sword-dash' }),
+    Object.freeze({ pass: 'full', dashMode: DEFAULT_DASH_MODE, adds: 'sword-dash', stop: 'window' }),
 ]);
 
 /**
@@ -167,8 +167,8 @@ export const ANYTIME_PASSES = Object.freeze([
  * once the attempt has spent this many units (the dashless pass's lossy
  * bound, so a slow refusal refuses by name; the full pass's, which a page
  * once cut by the wall clock). `SOLVER_UPGRADE_WINDOW_WORK` — once a plan is
- * in hand, the full pass's `sword-dash` site (the lossless one) trips at
- * this many units from the attempt's start: "upgrade briefly, then ship".
+ * in hand, EVERY site of the full pass trips at this many units from the
+ * attempt's start: "upgrade briefly, then ship" (⛓ WINDOW WHOLE PASS).
  *
  * ⛓ RECALIBRATED in fine units (slice `seedling-js-recalibrate`, node, the
  * captured B/D arrivals, the divergence sweep's legs and fidelity CHECKPOINTS'
@@ -228,20 +228,26 @@ export function createWorkClock() {
  *                     units — LOSSY (a slow refusal refuses by name, the ⏱
  *                     clause); with a plan in hand nothing a later pass says
  *                     can replace it but a shorter plan (`betterAnswer`);
- *   `stop: 'sword-dash'` (the full pass) with a plan IN HAND, also the dash
- *                     site at the UPGRADE WINDOW — the one LOSSLESS site (SF:
- *                     tripping every site early makes r8-solve-4 refuse), so
- *                     the pass RETURNS a partial dash schedule or dashless.
+ *   `stop: 'window'` (the full pass) with a plan IN HAND, EVERY site at the
+ *                     UPGRADE WINDOW too (⛓ WINDOW WHOLE PASS, ⚖ the user,
+ *                     2026-10-06: *"Yes, stop the whole pass"*). A trip at
+ *                     `sword-dash` still returns a partial dash schedule; a
+ *                     trip anywhere else refuses the pass by name — and a
+ *                     refusal never replaces the plan in hand (`betterAnswer`),
+ *                     so the cut is LOSSLESS for that plan. What it gives up is
+ *                     an upgrade the pass would have found after the window.
+ *                     With NO plan in hand the full pass is the only search:
+ *                     no window, the whole budget (as before).
  * `limit` records which bound tripped first ('window' / 'budget'), for the
  * pass row. No budget (the in-place service) → no deadline at all.
  */
 export function passShouldStop(p, { budgetWork = null, windowWork = null, planInHand = false, work, limit = {} }) {
     if (!(Number.isFinite(budgetWork) && budgetWork > 0)) return null;
-    const windowAt = p.stop === 'sword-dash' && planInHand ? upgradeWindowWork(budgetWork, windowWork) : null;
+    const windowAt = p.stop === 'window' && planInHand ? upgradeWindowWork(budgetWork, windowWork) : null;
     return (site) => {
         const n = work.tick();
         if (n > budgetWork) { limit.first ??= 'budget'; return true; }
-        if (windowAt !== null && site === 'sword-dash' && n > windowAt) { limit.first ??= 'window'; return true; }
+        if (windowAt !== null && n > windowAt) { limit.first ??= 'window'; return true; }
         return false;
     };
 }

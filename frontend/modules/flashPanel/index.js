@@ -189,7 +189,8 @@ export function register(registrationApi) {
           + "stays held and the solver is asked once more with 4× this budget, and only then does the walk stop, "
           + "saying why. Read at the start of each solve.",
       },
-      // ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the anytime full pass's dash deadline in WORK units
+      // ⛓ Seedling SHOULD-STOP → DETERMINISTIC BUDGET — the anytime full pass's deadline in WORK units, with a
+      // plan in hand (⛓ WINDOW WHOLE PASS: the whole pass stops there, not only its dash search)
       // (⚖ the user's "upgrade window", 2026-10-04: "Let's try 1000 ms for now." — carried over as its intent,
       // "upgrade briefly, then ship"). MIGRATION: it replaces `seedlingSolverUpgradeWindowMs` (milliseconds);
       // a value saved under the old key is no longer read. Default `jsRuntimeSolver.SOLVER_UPGRADE_WINDOW_WORK`
@@ -201,10 +202,10 @@ export function register(registrationApi) {
         label: 'Seedling: solver upgrade window (work units; 0 = the whole budget)',
         description: "Both runtimes, solver (atlas / vanilla) rooms. The Playback Bot's solver first "
           + "searches without sword dashes, then with them. Once a plan is in hand, this is how much solver "
-          + "WORK (from the start of the solve) the second search may spend looking for sword dashes that make "
-          + "the plan shorter; past it, that search stops looking for dashes and finishes, and the shorter of the "
-          + "two plans is played. Counted in work, not time, so the choice is the same on every machine. "
-          + "0 gives it the whole solver budget. Read at the start of each solve.",
+          + "WORK (from the start of the solve) the second search may spend looking for a shorter plan with "
+          + "sword dashes; past it, that search stops, and the plan in hand is played unless the second search "
+          + "already finished with a shorter one. Counted in work, not time, so the choice is the same on every "
+          + "machine. 0 gives it the whole solver budget. Read at the start of each solve.",
       },
     },
   });
