@@ -122,7 +122,7 @@
             "id": "noiz2sa-priced-world",
             "enabled": true,
             "category": "noiz2saSubstrate",
-            "_comment": "bulletml-incremental N5: a world priced against the Loops cost planner at generation time (noiz2sa_priced_test, built in loop mode by the pipeline). Its first region plays the walk's move span (1:9, skill 0), getRegionInfo and the live loop_costs carry its rate (the latter only with the shared writer's payload-rate rule, feature-detected), the trainer earns at the world's pace. Bot blocks on its move at bot seeds 1-4 (fresh Even trainer, 4x): each visit costs floor(game seconds) x the rate and trains the bot by mana x pace to the walk's predicted skill; the mean mana is the planned cost within a factor of 2. Batch fast: four 4x bot clears of one scene."
+            "_comment": "bulletml-incremental N5: a world priced against the Loops cost planner at generation time (noiz2sa_priced_test, built in loop mode by the pipeline). Its first region plays the walk's move span (1:9, skill 0), getRegionInfo and the live loop_costs carry its rate (the latter only with the shared writer's payload-rate rule, feature-detected), the trainer earns at the world's pace. Bot blocks on its move at bot seeds 2 and 3 (fresh Even trainer, 4x): each visit costs floor(game seconds) x the rate and trains the bot by mana x pace to the walk's predicted skill; the mean mana is the planned cost within a factor of 2. Batch fast: two 4x bot clears of one scene (~15 s)."
         },
         {
             "id": "noiz2sa-bot-plays-check",

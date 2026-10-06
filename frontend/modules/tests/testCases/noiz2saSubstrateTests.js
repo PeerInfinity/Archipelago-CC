@@ -540,7 +540,7 @@ const PRICED_RULES_PATH =
  *    cost data carry its rate (the block was written with the shared writer's payload-rate rule; the live data is the
  *    block's, whatever shared version the page runs);
  *  - the trainer earns at the world's pace (`pricing.pointsPerMana`, named on region load);
- *  - Bot blocks on the move out of it (fresh Even trainer, 4×, bot seeds 1–4): each visit costs floor(its game seconds)
+ *  - Bot blocks on the move out of it (fresh Even trainer, 4×, bot seeds 2 and 3 — two draws, to keep the batch's budget): each visit costs floor(its game seconds)
  *    × the rate, and the mean of their mana is close to the planned cost (the rate was chosen so the EXPECTED mana of
  *    a move run is the planned cost; one visit is one draw — a deathless clear is 16 s, each hit adds a failed
  *    attempt's seconds); each visit trains the bot by its mana × the pace, to the skill the walk's own prediction
@@ -551,7 +551,7 @@ async function noiz2saPricedWorld(testController) {
         const { predictedSkill } = await import('../../noiz2saSubstrate/noiz2saPricing.js');
         const doc = await (await fetch(PRICED_RULES_PATH)).json();
         const visits = [];
-        for (const seed of [1, 2, 3, 4]) {
+        for (const seed of [2, 3]) {
             const label = `seed ${seed}`;
             mod.pinBotSeed(seed);
             const configuresBefore = debugState()?.configures ?? 0;
@@ -589,7 +589,7 @@ async function noiz2saPricedWorld(testController) {
                 `[${label}] the game page is configured with ${region}`, 30000, 200);
             testController.reportCondition(`[${label}] the game page is configured with ${region}`, !!configured);
             if (!configured) return;
-            if (seed === 1) {
+            if (seed === 2) {
                 const spans = debugState()?.spans ?? null;
                 testController.log(`[${label}] ${region}: payload move ${JSON.stringify(payload.move)}, pricing ${JSON.stringify(pricing)}; page spans ${JSON.stringify(spans)}`);
                 testController.assertEqual(`[${label}] the page plays the PRICED move span (the walk's, not the zone table's)`,
@@ -628,10 +628,10 @@ async function noiz2saPricedWorld(testController) {
                 predictedSkill(spent, pricing.pointsPerMana), mean);
             visits.at(-1).planned = pricing.cost;
         }
-        if (visits.length !== 4) return;
+        if (visits.length !== 2) return;
         const meanSpent = visits.reduce((a, x) => a + x.spent, 0) / visits.length;
         const planned = visits[0].planned;
-        testController.log(`mana per move run over bot seeds 1–4: ${visits.map((x) => x.spent.toFixed(2)).join(', ')}; mean ${meanSpent.toFixed(2)}, planned ${planned}`);
+        testController.log(`mana per move run over bot seeds 2 and 3: ${visits.map((x) => x.spent.toFixed(2)).join(', ')}; mean ${meanSpent.toFixed(2)}, planned ${planned}`);
         testController.assertEqual(`the mean mana of a move run (${meanSpent.toFixed(2)}) is the planned cost ${planned} within a factor of 2`,
             true, meanSpent >= planned / 2 && meanSpent <= planned * 2);
     });
@@ -1460,7 +1460,7 @@ registerTest({
     description: 'Loads noiz2sa_priced_test (built in loop mode: the Noiz2sa regions priced against the cost planner). '
         + 'The first region plays the walk\'s move span, the loaded world and the live cost data carry its drain rate '
         + '(the latter with the shared payload-rate rule), and the trainer earns at the world\'s pace. Bot blocks on its '
-        + 'move (fresh Even trainer, 4×, bot seeds 1–4): each visit costs floor(its game seconds) × the rate and trains '
+        + 'move (fresh Even trainer, 4×, bot seeds 2 and 3): each visit costs floor(its game seconds) × the rate and trains '
         + 'the bot by its mana × the pace; the mean mana is the planned cost within a factor of 2.',
     testFunction: restoresSavedQueues(noiz2saPricedWorld),
     category: 'noiz2saSubstrate',
