@@ -136,6 +136,20 @@
       "noHazards": []
     },
     {
+      "file": "frontier3-l62-door-niche.json",
+      "tickCount": 12,
+      "bootLevel": 62,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
+      "file": "frontier3-l87-pocket.json",
+      "tickCount": 187,
+      "bootLevel": 87,
+      "tapeVersion": 8,
+      "noHazards": []
+    },
+    {
       "file": "grant-sword-room.json",
       "tickCount": 376,
       "bootLevel": 0,

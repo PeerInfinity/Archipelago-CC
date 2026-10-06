@@ -2918,6 +2918,77 @@ function solverPlanOpts(run, contacts, extra = {}) {
 }
 
 /**
+ * ⛓⛓⛓ SEEDLING FIDELITY FRONTIER3 — **THE PLANNER ROUTES THROUGH WHAT THE
+ * PIXEL MASK LETS THROUGH**, at the two places the 16 px lattice said it did
+ * not.
+ *
+ * The geometry was never the problem: `plannerBlockerAt` has tested a
+ * pixelmask PER PIXEL since R2, exactly as `collidesSolid` does. What
+ * over-claimed was WHERE the planner asked:
+ *
+ *  · a reach-exit walked at its trigger's CENTRE. L62's `teleporter@112,64`
+ *    sits in `building6`'s doorway, a 13 px niche whose clear player
+ *    positions are y 74–81: the centre (120,72) is wall, so the goal
+ *    refused before the A\* ran (`exitAimFor`). Measured over every door of
+ *    the delivered set: the ONLY trigger whose centre is inside a mask (the
+ *    other nine blocked centres are solids with verbs or gates).
+ *  · the A\* lattice is the tile grid, so a corridor two tiles wide with a
+ *    half-tile-offset solid in its middle has NO clear node centre although
+ *    the player fits either side of it. L62's pit maze is that corridor:
+ *    `planttorch@120,152` leaves 8 px each side and both lattice centres
+ *    (x 120, x 136) hit it. The 8 px lattice (R2's own pitch, centres at
+ *    x ≡ 4 mod 8) puts nodes at x 116 and x 140 (`FINE_LATTICE`).
+ *
+ * ⛔ BOTH ARE ASKED ONLY WHERE THE OLD ANSWER WAS A REFUSAL, so every plan
+ * that solved before is the plan it was: the aim moves only off a centre a
+ * MASK blocks (which `planTilePath` refused by name), and the fine lattice is
+ * tried only when the frontier found no verb to apply (the refusal path of
+ * `identifyAndSelect`) — and only under its grant (`FINE_LATTICE_ROSTER_WIDE`,
+ * off on `main`: turning a refusal into a solve still moves a census digest).
+ */
+export const FINE_LATTICE = TILE_SIZE / 2;
+
+/**
+ * ⛔ THE FINE-LATTICE RETRY IS OFF ON `main` UNTIL IT IS LICENSED. It moves
+ * one row of the identity block: `census-seedling-enemies`' generated
+ * `lavatrap@corridor` chamber row goes REFUSED → SOLVED (153 t), so the
+ * `ENEMY census default` digest moves (`68466067…` → `d8c2f110…`, measured
+ * with this `true`). No committed tape, expectation or producer `--check`
+ * moves. `solveSegment`'s optional `fineLattice` is the per-call grant (the
+ * witness `frontier3-l87-pocket` is planned with it), the way `economies`
+ * is; flipping this constant is the roster-wide one.
+ */
+export const FINE_LATTICE_ROSTER_WIDE = false;
+
+/**
+ * The point a reach-exit walks at: the trigger's centre, or — when the player
+ * box at the centre hits a PIXELMASK — the nearest integer position whose box
+ * overlaps the trigger and is clear for the planner (ties: lower y, then lower
+ * x). A centre blocked by anything else is returned unchanged: a solid there
+ * is an obstacle with a verb (a lock, a tree, the seal door), and the
+ * frontier must still name it.
+ */
+export function exitAimFor(world, index, opts = {}) {
+    const tp = world.teleporters[index];
+    const centre = { x: tp.rect.x + TILE_SIZE / 2, y: tp.rect.y + TILE_SIZE / 2 };
+    const at = plannerObstacleAt(world, centre.x, centre.y, index, opts);
+    if (!at || at.kind !== 'pixelmask') return centre;
+    let best = null;
+    for (let y = tp.rect.y - TILE_SIZE / 2; y <= tp.rect.bottom + TILE_SIZE / 2; y += 1) {
+        for (let x = tp.rect.x - TILE_SIZE / 2; x <= tp.rect.right + TILE_SIZE / 2; x += 1) {
+            if (!rectsOverlap(playerBoxAt(x, y), tp.rect)) continue;
+            if (plannerObstacleAt(world, x, y, index, opts) !== null) continue;
+            const d = Math.hypot(x - centre.x, y - centre.y);
+            if (best === null || d < best.d
+                || (d === best.d && (y < best.y || (y === best.y && x < best.x)))) {
+                best = { x, y, d };
+            }
+        }
+    }
+    return best ? { x: best.x, y: best.y } : centre;
+}
+
+/**
  * ⛓⛓⛓ R8 SLICE 4 — THE LANES A PLAN UNPUBLISHES BY ITS OWN FIRST STEP.
  *
  * `arrowDanger` prices an ARMED trap's lane at horizon 0 and it is right to
@@ -11379,6 +11450,13 @@ function solveSegmentUnder({
      * default `[]` is the v1 path, refusal and all.
      */
     prefix = [],
+    /**
+     * ⛓ SEEDLING FIDELITY FRONTIER3 — the fine-lattice retry's grant
+     * (`FINE_LATTICE`), defaulted to `FINE_LATTICE_ROSTER_WIDE` (off): a
+     * frontier refusal is asked once more on the 8 px lattice only when this
+     * is true.
+     */
+    fineLattice = FINE_LATTICE_ROSTER_WIDE,
 }) {
     assertDashMode(dashMode, 'solveSegment');
     if (!run || typeof run.advance !== 'function') fail('solveSegment needs a live run');
@@ -11473,6 +11551,8 @@ function solveSegmentUnder({
      */
     let dashesPressed = 0;
     const dashWalks = [];
+    /** ⛓ FRONTIER3 — the walks planned on `FINE_LATTICE` after the frontier refused. */
+    const fineLatticeWalks = [];
     {
         const inner = run;
         let tapeTick = prefix.length;
@@ -12179,7 +12259,10 @@ function solveSegmentUnder({
     /** ⛓ U15-swim D2 — the DODGE rung's stalls this segment (`DODGE_RUNG.maxPerSegment`). */
     let dodgesSpent = 0;
     const climbLadder = ({ goal, aim, contacts, allowTeleporter, what, hit,
-        dangerExcept = null, corridor = null, axisAligned = false }) => {
+        dangerExcept = null, corridor = null, axisAligned = false,
+        // ⛓ FRONTIER3 — the AVOID rung re-plans on the lattice the walk was
+        // planned on (`FINE_LATTICE` only after a frontier refusal).
+        lattice = DEFAULT_LATTICE }) => {
         const escalations = [];
         climbNo += 1;
         const climb = climbNo;
@@ -12237,7 +12320,8 @@ function solveSegmentUnder({
         } else {
             try {
                 avoid = planWaypoints(run.world, run.state, aim, allowTeleporter,
-                    solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: vols }));
+                    solverPlanOpts(run, contacts, { ...goalPlanExtra, extraVolumes: vols,
+                        ...(lattice === DEFAULT_LATTICE ? {} : { lattice }) }));
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
                 refused = { rung: 'avoid', why: `no admissible corridor with the danger map's `
@@ -13117,6 +13201,7 @@ function solveSegmentUnder({
                 : null;
             refuseDanger(run.state.x, run.state.y, goal, what, except);
             let wps;
+            let fine = false;
             try {
                 wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
                     axisAligned
@@ -13124,143 +13209,172 @@ function solveSegmentUnder({
                         : solverPlanOpts(run, contacts, goalPlanExtra));
             } catch (e) {
                 if (!(e instanceof BotDriverV2Error)) throw e;
-                const identified = identifyAndSelect(goal, aim, contacts, e, allowTeleporter);
                 /**
-                 * ⛓⛓⛓ **THE PREREQUISITE IS CONSUMED HERE AND NOWHERE ELSE** —
-                 * PROCGEN ELEMENTS arc 3, slice S1, gap 1.
-                 *
-                 * A resolution may come back saying *"my stance is reachable once
-                 * `<id>` has been discharged"*. This is the ONE place a stance
-                 * becomes a walk, so it is the one place that may answer: the
-                 * order for `<id>` REPLACES this round's plan, is applied by the
-                 * statements below exactly as any frontier order is, and the loop
-                 * then `continue`s — so the original obstacle is RE-IDENTIFIED and
-                 * RE-DERIVED against the world the prerequisite changed, rather
-                 * than against a promise about it.
-                 *
-                 * ⛔ THAT RE-ENTRY IS THE WHOLE REASON THERE IS NO SECOND
-                 * FRONTIER. The bounded `applied` count, the hypothesis ledger,
-                 * the trace row, the shut-before snapshot and the exemption carry
-                 * are all the ones already here; a prerequisite is an ordinary
-                 * order that happened to be named by a derivation instead of by a
-                 * flood.
+                 * ⛓⛓ FRONTIER3 — A FRONTIER WITH NO VERB GETS ONE FINER ASK.
+                 * `identifyAndSelect` refuses when no obstacle on the frontier
+                 * has a strategy that applies. Before that refusal stands, the
+                 * same plan is asked on the 8 px lattice (`FINE_LATTICE`): a
+                 * corridor the tile lattice has no node in can still be one the
+                 * player fits (L62's pit maze around `planttorch@120,152`). A
+                 * plan that solved before never reaches this branch.
                  */
-                const plan = identified.resolved.prerequisite
-                    ? prerequisiteOrder(goal, aim, identified, contacts, allowTeleporter, what)
-                    : identified;
-                /**
-                 * ⛔ THE APPLICATION IS BOUNDED, AND THE BOUND IS NAMED. A
-                 * policy that re-identified for ever would look exactly like
-                 * one that was making progress. Each application must change
-                 * the world (a verb edits it) — so the count is the number of
-                 * DISTINCT obstacles a single goal may be allowed to clear,
-                 * and running it out is a refusal that says which ones it
-                 * cleared.
-                 */
-                if (applied.length >= MAX_STRATEGIES_PER_GOAL) {
-                    refuse(`${what}: applied ${applied.length} strategies for one goal `
-                        + `[${applied.join(', ')}] and the corridor still does not plan. `
-                        + 'A policy that keeps clearing obstacles without a corridor '
-                        + 'appearing is not making progress.', { goal, obstacle: plan.obstacle });
+                let identified = null;
+                try {
+                    identified = identifyAndSelect(goal, aim, contacts, e, allowTeleporter);
+                } catch (refusal) {
+                    if (!fineLattice || !(refusal instanceof SolverRefusal) || axisAligned
+                        || (solverPlanOpts(run, contacts).lattice ?? DEFAULT_LATTICE) <= FINE_LATTICE) {
+                        throw refusal;
+                    }
+                    try {
+                        wps = planWaypoints(run.world, run.state, aim, allowTeleporter,
+                            solverPlanOpts(run, contacts, { ...goalPlanExtra, lattice: FINE_LATTICE }));
+                    } catch (fineError) {
+                        if (!(fineError instanceof BotDriverV2Error)) throw fineError;
+                        throw refusal;
+                    }
+                    fine = true;
+                    fineLatticeWalks.push({ tick: perTick.length, what, aim: { x: aim.x, y: aim.y },
+                        waypoints: wps.length, refused: String(refusal.message).slice(0, 200) });
                 }
-                applied.push(`${plan.strategy}(${plan.obstacle.id})`);
-                if (plan.strategy === 'shove' && plan.resolved.discharged?.length) {
-                    hypothesisLedger.push({
-                        id: plan.obstacle.id, tag: plan.obstacle.tag,
-                        k: plan.resolved.k, discharged: plan.resolved.discharged,
-                    });
-                }
-                const before = perTick.length;
-                seeRow({
-                    tick: before,
-                    saw: saw(),
-                    goal: { kind: goal.kind, aim: { x: aim.x, y: aim.y } },
-                    obstacle: { kind: plan.obstacle.kind, id: plan.obstacle.id },
-                    strategy: {
-                        verb: plan.strategy,
-                        ...(plan.resolved.k !== undefined ? { k: plan.resolved.k } : {}),
-                        ...(plan.resolved.postCondition
-                            ? { postCondition: plan.resolved.postCondition } : {}),
-                        ...(plan.resolved.shove
-                            ? { to: plan.resolved.shove.to, dir: plan.resolved.shove.dir,
-                                destroys: Boolean(plan.resolved.shove.destroys) } : {}),
-                        // ⛓ R9 slice L15 — only when the route has more than one order.
-                        ...(plan.resolved.route?.length > 1
-                            ? { route: plan.resolved.route.length } : {}),
-                    },
-                    rejected: plan.resolved.rejected ?? [],
-                    keys: [],
-                });
-                /**
-                 * ⛔⛔ THE SHUT-BEFORE SNAPSHOT, TAKEN BEFORE THE APPROACH —
-                 * `runChest`'s own law, and the first smoke run of this
-                 * executor measured why it applies to a hold too. The stance
-                 * for a hold is INSIDE the presser's volume, so the walk to
-                 * it presses the button: by the time the verb begins, the
-                 * traps it exists to arm are already armed and its positive
-                 * control ("shut before, open after") reports nothing to
-                 * change. "Shut when the strategy was chosen" is the state a
-                 * correct walk is never in at the stance.
-                 */
-                const beforeStrategy = {
-                    open: run.entities('openActivators'),
-                    armed: run.entities('armedPulsers') ?? new Set(),
-                    trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
+                if (identified) {
                     /**
-                     * ⛓ ⚖ SLICE 10 — AND THE CHEST'S OWN SET, for the same
-                     * reason the other three are here. `runChest`'s positive
-                     * control is *"shut when the verb was chosen"*, and the
-                     * chest stance is ON the probe line — so the walk to it
-                     * is exactly what opens the chest, and a snapshot taken
-                     * at verb start would report an already-open chest and
-                     * fail by name. The goal path has taken this snapshot
-                     * since R8 slice 2 (`const before = … { chests: … }`);
-                     * the frontier path is the second caller and needed the
-                     * same field. ⚠ Inert for every other verb: nothing but
-                     * `runChest` reads `before.chests`.
+                     * ⛓⛓⛓ **THE PREREQUISITE IS CONSUMED HERE AND NOWHERE ELSE** —
+                     * PROCGEN ELEMENTS arc 3, slice S1, gap 1.
+                     *
+                     * A resolution may come back saying *"my stance is reachable once
+                     * `<id>` has been discharged"*. This is the ONE place a stance
+                     * becomes a walk, so it is the one place that may answer: the
+                     * order for `<id>` REPLACES this round's plan, is applied by the
+                     * statements below exactly as any frontier order is, and the loop
+                     * then `continue`s — so the original obstacle is RE-IDENTIFIED and
+                     * RE-DERIVED against the world the prerequisite changed, rather
+                     * than against a promise about it.
+                     *
+                     * ⛔ THAT RE-ENTRY IS THE WHOLE REASON THERE IS NO SECOND
+                     * FRONTIER. The bounded `applied` count, the hypothesis ledger,
+                     * the trace row, the shut-before snapshot and the exemption carry
+                     * are all the ones already here; a prerequisite is an ordinary
+                     * order that happened to be named by a derivation instead of by a
+                     * flood.
                      */
-                    chests: run.entities('openChests'),
-                };
-                // The stance first — planned with whatever exemptions the
-                // strategy's own resolution earned (trap 147: a hold is what
-                // ADDS its presser to the exemptions, so the stance and the
-                // exemption are one decision).
-                if (plan.resolved.stance) {
-                    walkTo(goal, plan.resolved.stance, {
-                        what: `${what} -> ${plan.strategy} stance `
-                            + `(${plan.obstacle.id})`,
-                        contactsOverride: plan.resolved.exempt,
-                        axisAligned: plan.resolved.approach === 'axis-aligned',
-                    });
-                }
-                const record = STRATEGY_EXECUTORS[plan.strategy](run, perTick, plan.resolved, {
-                    maxTicksPerTarget,
-                    economies,
-                    dashMode,
-                    what: `${what} -> ${plan.strategy}`,
-                    before: beforeStrategy,
+                    const plan = identified.resolved.prerequisite
+                        ? prerequisiteOrder(goal, aim, identified, contacts, allowTeleporter, what)
+                        : identified;
                     /**
-                     * ⛓ R8 slice 4 — AN EXECUTOR MAY NEED TO WALK. `kill`'s
-                     * bait/back phases move the player between waits, and
-                     * they must move through the SAME planner, danger probe
-                     * and ladder every other walk uses. Handing the loop's
-                     * own `walkTo` down is what keeps that one implementation
-                     * (§11.7's law, read for a verb that sequences).
+                     * ⛔ THE APPLICATION IS BOUNDED, AND THE BOUND IS NAMED. A
+                     * policy that re-identified for ever would look exactly like
+                     * one that was making progress. Each application must change
+                     * the world (a verb edits it) — so the count is the number of
+                     * DISTINCT obstacles a single goal may be allowed to clear,
+                     * and running it out is a refusal that says which ones it
+                     * cleared.
                      */
-                    walkTo, goal,
-                    // ⛓ Seedling fidelity BURN — a verb may select a slot
-                    // (`burn` selects the Fire's and then the old one again).
-                    equip,
-                });
-                records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
-                // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
-                // player standing in the presser's volume, so every later
-                // plan of this segment carries it — which is what
-                // `senseContacts` would answer anyway at that position, and
-                // is stated rather than left to a coincidence of standing
-                // still.
-                for (const c of plan.resolved.exempt ?? []) exemptions.add(c);
-                continue;
+                    if (applied.length >= MAX_STRATEGIES_PER_GOAL) {
+                        refuse(`${what}: applied ${applied.length} strategies for one goal `
+                            + `[${applied.join(', ')}] and the corridor still does not plan. `
+                            + 'A policy that keeps clearing obstacles without a corridor '
+                            + 'appearing is not making progress.', { goal, obstacle: plan.obstacle });
+                    }
+                    applied.push(`${plan.strategy}(${plan.obstacle.id})`);
+                    if (plan.strategy === 'shove' && plan.resolved.discharged?.length) {
+                        hypothesisLedger.push({
+                            id: plan.obstacle.id, tag: plan.obstacle.tag,
+                            k: plan.resolved.k, discharged: plan.resolved.discharged,
+                        });
+                    }
+                    const before = perTick.length;
+                    seeRow({
+                        tick: before,
+                        saw: saw(),
+                        goal: { kind: goal.kind, aim: { x: aim.x, y: aim.y } },
+                        obstacle: { kind: plan.obstacle.kind, id: plan.obstacle.id },
+                        strategy: {
+                            verb: plan.strategy,
+                            ...(plan.resolved.k !== undefined ? { k: plan.resolved.k } : {}),
+                            ...(plan.resolved.postCondition
+                                ? { postCondition: plan.resolved.postCondition } : {}),
+                            ...(plan.resolved.shove
+                                ? { to: plan.resolved.shove.to, dir: plan.resolved.shove.dir,
+                                    destroys: Boolean(plan.resolved.shove.destroys) } : {}),
+                            // ⛓ R9 slice L15 — only when the route has more than one order.
+                            ...(plan.resolved.route?.length > 1
+                                ? { route: plan.resolved.route.length } : {}),
+                        },
+                        rejected: plan.resolved.rejected ?? [],
+                        keys: [],
+                    });
+                    /**
+                     * ⛔⛔ THE SHUT-BEFORE SNAPSHOT, TAKEN BEFORE THE APPROACH —
+                     * `runChest`'s own law, and the first smoke run of this
+                     * executor measured why it applies to a hold too. The stance
+                     * for a hold is INSIDE the presser's volume, so the walk to
+                     * it presses the button: by the time the verb begins, the
+                     * traps it exists to arm are already armed and its positive
+                     * control ("shut before, open after") reports nothing to
+                     * change. "Shut when the strategy was chosen" is the state a
+                     * correct walk is never in at the stance.
+                     */
+                    const beforeStrategy = {
+                        open: run.entities('openActivators'),
+                        armed: run.entities('armedPulsers') ?? new Set(),
+                        trapsArmed: run.entities('armedArrowTraps') ?? new Set(),
+                        /**
+                         * ⛓ ⚖ SLICE 10 — AND THE CHEST'S OWN SET, for the same
+                         * reason the other three are here. `runChest`'s positive
+                         * control is *"shut when the verb was chosen"*, and the
+                         * chest stance is ON the probe line — so the walk to it
+                         * is exactly what opens the chest, and a snapshot taken
+                         * at verb start would report an already-open chest and
+                         * fail by name. The goal path has taken this snapshot
+                         * since R8 slice 2 (`const before = … { chests: … }`);
+                         * the frontier path is the second caller and needed the
+                         * same field. ⚠ Inert for every other verb: nothing but
+                         * `runChest` reads `before.chests`.
+                         */
+                        chests: run.entities('openChests'),
+                    };
+                    // The stance first — planned with whatever exemptions the
+                    // strategy's own resolution earned (trap 147: a hold is what
+                    // ADDS its presser to the exemptions, so the stance and the
+                    // exemption are one decision).
+                    if (plan.resolved.stance) {
+                        walkTo(goal, plan.resolved.stance, {
+                            what: `${what} -> ${plan.strategy} stance `
+                                + `(${plan.obstacle.id})`,
+                            contactsOverride: plan.resolved.exempt,
+                            axisAligned: plan.resolved.approach === 'axis-aligned',
+                        });
+                    }
+                    const record = STRATEGY_EXECUTORS[plan.strategy](run, perTick, plan.resolved, {
+                        maxTicksPerTarget,
+                        economies,
+                        dashMode,
+                        what: `${what} -> ${plan.strategy}`,
+                        before: beforeStrategy,
+                        /**
+                         * ⛓ R8 slice 4 — AN EXECUTOR MAY NEED TO WALK. `kill`'s
+                         * bait/back phases move the player between waits, and
+                         * they must move through the SAME planner, danger probe
+                         * and ladder every other walk uses. Handing the loop's
+                         * own `walkTo` down is what keeps that one implementation
+                         * (§11.7's law, read for a verb that sequences).
+                         */
+                        walkTo, goal,
+                        // ⛓ Seedling fidelity BURN — a verb may select a slot
+                        // (`burn` selects the Fire's and then the old one again).
+                        equip,
+                    });
+                    records.push({ goal: goal.kind, strategy: plan.strategy, ...record });
+                    // ⛓ THE EXEMPTION SURVIVES THE VERB. A `hold` leaves the
+                    // player standing in the presser's volume, so every later
+                    // plan of this segment carries it — which is what
+                    // `senseContacts` would answer anyway at that position, and
+                    // is stated rather than left to a coincidence of standing
+                    // still.
+                    for (const c of plan.resolved.exempt ?? []) exemptions.add(c);
+                    continue;
+                }
             }
             waypointsPlanned += wps.length;
             /**
@@ -13297,6 +13411,7 @@ function solveSegmentUnder({
                 const climbed = climbLadder({
                     goal, aim, contacts, allowTeleporter, what, hit,
                     dangerExcept: except, corridor: wps, axisAligned,
+                    ...(fine ? { lattice: FINE_LATTICE } : {}),
                 });
                 if (climbed.wps) { wps = climbed.wps; } else { continue; }
             }
@@ -13335,6 +13450,8 @@ function solveSegmentUnder({
                 strategy: {
                     verb: 'walk',
                     waypoints: wps.length,
+                    // ⛓ FRONTIER3 — present only on a fine-lattice walk.
+                    ...(fine ? { lattice: FINE_LATTICE } : {}),
                     /**
                      * ⛓⛓ R9 SLICE 12i — **THE MODE IS ON THE ROW, AND ONLY
                      * WHEN IT IS NOT THE ROSTER'S.** A trace that did not say
@@ -13864,8 +13981,12 @@ function solveSegmentUnder({
             const whatExit = `solverBot(${name}) reach-exit (${goal.exit.x},${goal.exit.y})`
                 + `->L${teleporter.to}`;
             const stepOff = stepOffIfLatched(goal, index, teleporter, whatExit);
+            // ⛓ FRONTIER3: the walk's aim leaves a centre a pixel mask
+            // blocks (`exitAimFor`); the step-off's straight walk back keeps
+            // the centre it was witnessed with.
             const t = (stepOff?.dir ? returnOntoDoor(goal, index, teleporter, centre, whatExit) : null)
-                ?? walkTo(goal, centre, {
+                ?? walkTo(goal, exitAimFor(run.world, index,
+                    solverPlanOpts(run, senseContacts(run), goalPlanExtra)), {
                     allowTeleporter: index,
                     crossTo,
                     what: whatExit,
@@ -14174,5 +14295,12 @@ function solveSegmentUnder({
          * an instrument added to a solver may not do.
          */
         dangerQueries,
+        /**
+         * ⛓ FRONTIER3 — an optional result field, present only when a walk was
+         * planned on `FINE_LATTICE` after the frontier refused: `{tick, what,
+         * aim, waypoints, refused}` per walk (`refused` is the refusal it
+         * replaced, cut to 200 characters).
+         */
+        ...(fineLatticeWalks.length ? { fineLatticeWalks } : {}),
     };
 }
