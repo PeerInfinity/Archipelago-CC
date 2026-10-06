@@ -152,6 +152,7 @@ function engineOver(arrival, opts = {}) {
     const windows = [];
     const notes = [];
     const failures = [];
+    const failExtras = [];
     const dones = [];
     const service = capturingService(game, opts.perturb, opts.editPlan);
     let t = 0;
@@ -166,9 +167,9 @@ function engineOver(arrival, opts = {}) {
         ...(opts.getBudgetWork ? { getBudgetWork: opts.getBudgetWork } : {}),
         ...(opts.getUpgradeWindowWork ? { getUpgradeWindowWork: opts.getUpgradeWindowWork } : {}),
         ...(opts.backstopMs ? { backstopMs: opts.backstopMs } : {}),
-        onNote: (n) => notes.push(n), onFailed: (r) => failures.push(r), onDone: (d) => dones.push(d),
+        onNote: (n) => notes.push(n), onFailed: (r, x) => { failures.push(r); failExtras.push(x ?? null); }, onDone: (d) => dones.push(d),
     });
-    return { engine, game, timers, teleports, windows, notes, failures, dones, service, swap };
+    return { engine, game, timers, teleports, windows, notes, failures, failExtras, dones, service, swap };
 }
 
 describe('the engine serves a goal at an arrival (fake game over the recorded reads, real solve)', () => {
@@ -279,6 +280,38 @@ describe('named refusals and failures', () => {
         expect(e.failures[0]).toMatch(/the solver declined Starting House - Chest in level 86 \(refusal\)/);
         expect(e.game.calls.filter((c) => c === 'botStart')).toHaveLength(1);
         expect(e.game.calls).toContain('botReset');
+    });
+
+    it('⛓ WAVE-6 CONSUMER — a refusal carrying an `obstacle` (`arrival-inside-solid` + `wayOut`) fails WITH it, as data; one without carries none', () => {
+        const OBSTACLE = { kind: 'arrival-inside-solid', id: 'breakablerock@288,176', solids: ['breakablerock@288,176'],
+            at: { level: 0, x: 296, y: 184 }, wayOut: [{ kind: 'restart', via: 'seedlingStartSpawn', why: 'w' },
+                { kind: 'another-route', level: 0, arrivals: [{ from: 2, door: 'stairs@48,16', at: { x: 264, y: 264 } }] }] };
+        for (const obstacle of [OBSTACLE, null]) {
+            const e = engineOver(A);
+            e.service.start = (request) => {
+                e.service.seen.push({ request });
+                const result = { ok: false, kind: 'refusal', pass: 'dashless', message: 'solverBot(x): arrival-inside-solid — …',
+                    ...(obstacle ? { obstacle } : {}),
+                    passes: [{ pass: 'dashless', ok: false, kind: 'refusal', ticks: null }, { pass: 'full', ok: false, kind: 'skipped', ticks: null }] };
+                return { settled: true, started: true, startedAt: 0, result, provisional: result, answered: 1, passes: result.passes, cancel() {} };
+            };
+            e.engine.walkTo(CHEST);
+            runUntil(e, () => e.failures.length > 0, 20000);
+            expect(e.failures[0]).toMatch(/the solver declined Starting House - Chest in level 86 \(refusal\): solverBot\(x\): arrival-inside-solid/);
+            expect(e.failExtras[0]).toEqual(obstacle ? { obstacle } : null);
+            expect(e.engine.stats.history.at(-1).obstacle ?? null).toEqual(obstacle);
+        }
+    });
+
+    it('⛓ WAVE-6 CONSUMER — the plan\'s new optional fields pass through: verbs `pulse`/`brave`, `fineLatticeWalks`, an `axe-dodge` deadline', () => {
+        const e = engineOver(A, { editPlan: (plan) => ({ ...plan, verbs: [...plan.verbs, 'brave', 'pulse'].sort(),
+            fineLatticeWalks: [{ tick: 0, what: 'walk', aim: { x: 1, y: 1 }, waypoints: [], refused: 'r' }],
+            deadline: { tripped: true, first: 'axe-dodge', sites: { 'axe-dodge': 1 } } }) });
+        e.engine.walkTo(CHEST);
+        e.timers.run();
+        expect(e.failures).toEqual([]);
+        expect(e.dones).toHaveLength(1);
+        expect(e.notes.some((n) => /\(brave,chest,pulse,walk; dashless pass\)/.test(n ?? ''))).toBe(true);
     });
 
     it('stop() mid-play releases our tape (botReset) and records the leg as stopped with what drained', () => {

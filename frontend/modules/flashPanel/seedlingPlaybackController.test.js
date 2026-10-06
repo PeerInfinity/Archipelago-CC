@@ -509,3 +509,64 @@ describe('⛓ WG — the GENERATED instance walks under the WASM runtime (the mo
         expect(c.lastRefusal).toMatch(/only on the Seedling JS or wasm runtime .* set Flash Panel → Runtime to 'js' or 'wasm'/);
     });
 });
+
+/**
+ * ⛓ WAVE-6 CONSUMER — a failure that carries the solver's `obstacle` (wasm: the engine's `onFailed` extra; JS: the
+ * page walker's FAILED event) reaches the bot WITH it, and an `arrival-inside-solid` also with its `escape` (the
+ * `wayOut` in AP terms, read off this instance's map `regions`). A failure without one is unchanged.
+ */
+describe('⛓ WAVE-6 CONSUMER — an arrival inside a solid reaches the bot with its way out', () => {
+    // a level-2 region whose stairs@48,16 lands in level 0 (the playthrough's `out_stairsup_48_16`)
+    const L2 = { level: 2, exits: [{ exit_id: 'out_stairsup_48_16', exitName: 'level_2 -> level_0__r8c0',
+        targetRegion: 'level_0__r8c0', target_level: 0 }] };
+    const MAP = { ...ATLAS_MAP, regions: new Map([['region_2_2', HOUSE], ['level_2', L2]]) };
+    const OBSTACLE = { kind: 'arrival-inside-solid', id: 'breakablerock@288,176', solids: ['breakablerock@288,176'],
+        at: { level: 0, x: 296, y: 184 }, wayOut: [{ kind: 'restart', via: 'seedlingStartSpawn', why: 'w' },
+            { kind: 'another-route', level: 0, arrivals: [{ from: 2, door: 'stairs@48,16', at: { x: 264, y: 264 } },
+                { from: 77, door: 'teleporter@1,1', at: { x: 1, y: 1 } }] }] };
+    const ESCAPE = { kind: 'arrival-inside-solid', solids: ['breakablerock@288,176'], at: { level: 0, x: 296, y: 184 },
+        restart: true, arrivals: [{ region: 'level_2', exit: 'level_2 -> level_0__r8c0', landing: 'level_0__r8c0', from: 2,
+            door: 'stairs@48,16' }], unmapped: ['L77 teleporter@1,1'] };
+    const flush = () => new Promise((r) => { setTimeout(r, 0); });
+
+    it('wasm: the engine\'s failure extra → `obstacle` + `escape` on onWalkFailed (and `lastObstacle`)', async () => {
+        const failed = [];
+        let deps = null;
+        const game = { botStatus() {} };
+        const surface = { transport: 'wasm', setting: 'auto', atlas: MAP, region: 'region_2_2',
+            wasm: { getGame: () => game, getWin: () => null, teleport: () => true, mapPath: 'm.json' } };
+        const engine = { walkTo: () => ({ ok: true }), stop() {}, liveLevel: () => 86, status: () => ({ phase: 'idle' }), dispose() {} };
+        const c = new SeedlingPlaybackController({ getSurface: () => surface, substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+            resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, wasm: true, timers: fakeTimers().timers,
+            onWalkFailed: (e) => failed.push(e), loadWasmEngine: async (d) => { deps = d; return engine; } });
+        c.walkTo({ kind: 'location', name: 'Starting House - Chest' });
+        await flush();
+        deps.onFailed('the solver declined x (refusal): arrival-inside-solid', { obstacle: OBSTACLE });
+        expect(failed.at(-1)).toMatchObject({ reason: 'the wasm playback failed: the solver declined x (refusal): arrival-inside-solid',
+            obstacle: OBSTACLE, escape: ESCAPE });
+        expect(c.lastObstacle).toEqual(OBSTACLE);
+        deps.onFailed('the solver declined y');
+        expect(failed.at(-1)).not.toHaveProperty('obstacle');
+        expect(failed.at(-1)).not.toHaveProperty('escape');
+        expect(c.lastObstacle).toBeNull();
+        // another obstacle kind rides along, with no escape
+        deps.onFailed('z', { obstacle: { kind: 'hazard-floor', id: 'f' } });
+        expect(failed.at(-1).obstacle).toEqual({ kind: 'hazard-floor', id: 'f' });
+        expect(failed.at(-1)).not.toHaveProperty('escape');
+    });
+
+    it('JS: the page walker\'s FAILED event carries the obstacle → the same payload', () => {
+        const failed = [];
+        let listener = null;
+        const page = { walkTo: () => ({ ok: true }), setSolverWalk() {}, play() {}, stop() {}, onWalk(fn) { listener = fn; return () => {}; },
+            state: 'walking', reason: null };
+        const surface = { transport: 'js', atlas: MAP, region: 'region_2_2', jsRuntime: { playback: page, run: { level: 86 } } };
+        const c = new SeedlingPlaybackController({ getSurface: () => surface, substrate: SEEDLING_ATLAS_PLAYBACK_SUBSTRATE,
+            resolve: resolveSeedlingAtlasGoal, mapOf: (s) => s.atlas, onWalkFailed: (e) => failed.push(e) });
+        expect(c.walkTo({ kind: 'location', name: 'Starting House - Chest' })).toBe(true);
+        listener({ type: 'failed', state: 'failed', message: 'the solver declined — arrival-inside-solid …', obstacle: OBSTACLE });
+        expect(failed).toHaveLength(1);
+        expect(failed[0]).toMatchObject({ reason: 'the JS runtime\'s walk failed: the solver declined — arrival-inside-solid …',
+            obstacle: OBSTACLE, escape: ESCAPE, target: { kind: 'location', name: 'Starting House - Chest' } });
+    });
+});

@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 
 import { describe, it, expect } from 'vitest';
 
-import { planRoute, preferRoute, isRestartStep, restartTargetFor, ROUTE_TIE_BREAK } from './restartRoute.js';
+import { planRoute, preferRoute, isRestartStep, restartTargetFor, ROUTE_TIE_BREAK, avoidingFindPath } from './restartRoute.js';
 import { declareReturnToMenu } from './restartWarp.js';
 import { startRegionsOf } from './rulesGraph.js';
 import { restartTargetOf } from '../menuPanel/menuPanelEngine.js';
@@ -156,5 +156,57 @@ describe('the committed playthrough at a real sphere — the census\'s RESTART-O
         const walker = Object.keys(rules.regions['1'])
             .find((n) => n !== 'Menu' && n !== census.start && !row.stuck.includes(n) && at(census.start, n));
         expect(planRoute({ from: walker, to: census.start, findPath: at, rules }).kind).toBe('walk');
+    });
+});
+
+/**
+ * ⛓ WAVE-6 CONSUMER — `avoid`: exits whose crossing LANDED INSIDE A SOLID (fidelity ARRIVAL's
+ * `arrival-inside-solid`), each with the refusal's other arrivals as AP exits. Every walk the route asks for
+ * avoids them, by a detour through one of those arrivals; without `avoid` nothing changes.
+ */
+describe('planRoute with `avoid` (an entrance that landed inside a solid)', () => {
+    // Menu -GameStart-> Start; Start -s>12-> L12 -12>P (the landing inside the rock)-> P -P>G-> G;
+    // Start -s>2-> L2 -2>H (another arrival into the level)-> H -H>G-> G; L94 -94>H-> H (a third, unreachable).
+    const G2 = {
+        Menu: [['GameStart', 'Start']],
+        Start: [['s>12', 'L12'], ['s>2', 'L2']],
+        L12: [['12>P', 'P']],
+        P: [['P>G', 'G']],
+        L2: [['2>H', 'H']],
+        H: [['H>G', 'G']],
+        L94: [['94>H', 'H']],
+        G: [],
+    };
+    const fp = finderOver(G2);
+    const AVOID = new Map([['12>P', [{ region: 'L94', exit: '94>H', landing: 'H' }, { region: 'L2', exit: '2>H', landing: 'H' }]]]);
+    const exits = (r) => r.route.steps.map((st) => st.exitUsed);
+
+    it('without `avoid` the walk is findPath\'s own (through the landing)', () => {
+        expect(exits(planRoute({ from: 'Start', to: 'G', findPath: fp, rules: flagged() }))).toEqual([null, 's>12', '12>P', 'P>G']);
+        expect(exits(planRoute({ from: 'Start', to: 'G', findPath: fp, rules: flagged(), avoid: new Map() })))
+            .toEqual([null, 's>12', '12>P', 'P>G']);
+    });
+
+    it('with it: the walk goes by ANOTHER ARRIVAL the refusal named (the reachable one), never the avoided exit', () => {
+        const r = planRoute({ from: 'Start', to: 'G', findPath: fp, rules: flagged(), avoid: AVOID });
+        expect(r.kind).toBe('walk');
+        expect(exits(r)).toEqual([null, 's>2', '2>H', 'H>G']);
+        expect(r.route.length).toBe(3);
+    });
+
+    it('a walk that never crosses the avoided exit is untouched; no clean detour → no walk (then Restart, or the named refusal)', () => {
+        expect(avoidingFindPath(fp, AVOID)('L2', 'G')).toEqual(fp('L2', 'G'));
+        const none = new Map([['12>P', [{ region: 'L94', exit: '94>H', landing: 'H' }]]]);
+        expect(avoidingFindPath(fp, none)('Start', 'G')).toBeNull();
+        expect(planRoute({ from: 'Start', to: 'G', findPath: fp, rules: structuredClone(DOC), avoid: none }))
+            .toEqual({ route: null, kind: null, why: 'no path from Start to G' });
+        // the Restart leg avoids it too: from Menu the only walk crosses the landing again
+        expect(planRoute({ from: 'P', to: 'G', findPath: (a, b) => (a === 'P' ? null : fp(a, b)), rules: flagged(), avoid: none }).why)
+            .toBe('no path from P to G, nor from the restart target Menu');
+    });
+
+    it('a detour through another avoided exit is not a detour', () => {
+        const both = new Map([['12>P', [{ region: 'L2', exit: '2>H', landing: 'H' }]], ['2>H', []]]);
+        expect(avoidingFindPath(fp, both)('Start', 'G')).toBeNull();
     });
 });

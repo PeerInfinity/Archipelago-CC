@@ -1467,3 +1467,141 @@ describe('PlaybackBotUI — the RESTART step (return_to_menu)', () => {
         expect(ref.bot.getRestartPending()).toBeNull();
     });
 });
+
+/**
+ * ⛓ WAVE-6 CONSUMER — a walk that fails because the player's box ARRIVED INSIDE A SOLID (fidelity ARRIVAL's
+ * `arrival-inside-solid`; the controller hands the bot `escape` = the refusal's `wayOut` in AP terms). No walk
+ * leaves a solid: the bot takes the EXISTING Restart step when the refusal offers it and the slot declares
+ * `return_to_menu`, and every later route avoids the entrance that landed inside, going by one of the refusal's
+ * other arrivals. Otherwise a named stop. ⚖ No swing from inside.
+ */
+describe('PlaybackBotUI — an arrival inside a solid escapes by its wayOut', () => {
+    // Menu -GameStart-> Start; Start -toL12-> L12 -inRock-> Pocket -toGoal-> region_g (the short way, through the
+    // rock's landing); Start -toSide-> Side -sideDoor-> Hall -hallA-> HallB -toG-> region_g (the long way in).
+    const ADJ = {
+        Menu: [['GameStart', 'Start']],
+        Start: [['toL12', 'L12'], ['toSide', 'Side']],
+        L12: [['inRock', 'Pocket']],
+        Pocket: [['toGoal', 'region_g']],
+        Side: [['sideDoor', 'Hall']],
+        Hall: [['hallA', 'HallB']],
+        HallB: [['toG', 'region_g']],
+        region_g: [],
+    };
+    const findPathWithExits = (from, to) => {
+        const seen = new Set([from]);
+        const queue = [[{ region: from, exitUsed: null }]];
+        while (queue.length) {
+            const path = queue.shift();
+            const here = path[path.length - 1].region;
+            if (here === to) return { steps: path, length: path.length - 1 };
+            for (const [exit, next] of ADJ[here] ?? []) {
+                if (!seen.has(next)) { seen.add(next); queue.push([...path, { region: next, exitUsed: exit }]); }
+            }
+        }
+        return null;
+    };
+    const staticData = { regions: new Map([['region_g', { locations: [{ name: 'Loc G' }] }]]) };
+    const rulesWith = (flag) => ({ start_regions: { 1: ['Menu'] }, exporter: { 1: flag ? { return_to_menu: true } : {} } });
+    const ESCAPE = Object.freeze({
+        kind: 'arrival-inside-solid', solids: ['breakablerock@288,176'], at: { level: 0, x: 296, y: 184 },
+        restart: true, arrivals: [{ region: 'Side', exit: 'sideDoor', landing: 'Hall', from: 2, door: 'stairs@48,16' }],
+        unmapped: [],
+    });
+    const FAILED = (escape = ESCAPE) => ({
+        substrate: 'flash_seedling', target: { kind: 'exit', name: 'toGoal' },
+        reason: 'the wasm playback failed: the solver declined toGoal in level 0 (refusal): … arrival-inside-solid …',
+        ...(escape ? { escape } : {}),
+    });
+
+    function makeBot({ flag = true } = {}) {
+        const controller = makeFakeController();
+        const calls = [];
+        const ref = {};
+        ref.restart = () => {
+            calls.push(ref.bot.getRestartPending());
+            ref.bot.onRegionMove({ targetRegion: 'Menu' });
+            ref.bot.onRegionMove({ targetRegion: 'Start' });
+            return { mode: 'world', target: 'Menu' };
+        };
+        ref.bot = new PlaybackBotUI({
+            getSphereData: () => [{ sphereIndex: 0, fractionalIndex: 1, locations: ['Loc G'] }],
+            getStaticData: () => staticData,
+            getRulesJson: () => rulesWith(flag),
+            getActiveController: () => controller,
+            pathFinder: { findPathWithExits },
+            restart: () => ref.restart(),
+        });
+        return { bot: ref.bot, controller, calls };
+    }
+    const walkTos = (controller) => controller.calls.filter((c) => c.method === 'walkTo').map((c) => c.args[0].name);
+    /** Walk the short way in: Start → L12 → (inRock) Pocket, as the crossings report them. */
+    async function intoThePocket(t) {
+        t.bot.onRegionMove({ targetRegion: 'Start' });
+        await t.bot.play();
+        t.bot.onRegionMove({ targetRegion: 'L12', exitName: 'toL12' });
+        t.bot.onRegionMove({ targetRegion: 'Pocket', exitName: 'inRock' });
+        expect(walkTos(t.controller)).toEqual(['toL12', 'inRock', 'toGoal']);
+    }
+
+    it('flag ON + a Restart offer: Restart, then route AROUND the entrance that landed inside (another arrival)', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED());
+        expect(t.calls).toEqual([{ from: 'Pocket', target: 'Menu' }]);
+        // from the start the short way would cross `inRock` again: the route goes by the refusal's other arrival
+        expect(walkTos(t.controller).slice(3)).toEqual(['toSide']);
+        expect(t.bot.isActive()).toBe(true);
+        expect(t.bot.getLog().some((l) => /escaping arrival-inside-solid \(breakablerock@288,176 at L0 \(296,184\)\) in Pocket — Restart, then routing around "inRock"/.test(l))).toBe(true);
+        expect(t.bot.getEscapes()).toEqual({ escapes: [{ from: 'Pocket', exit: 'inRock', solids: ['breakablerock@288,176'],
+            at: { level: 0, x: 296, y: 184 } }], avoided: ['inRock'] });
+        t.bot.onRegionMove({ targetRegion: 'Side', exitName: 'toSide' });
+        expect(walkTos(t.controller).at(-1)).toBe('sideDoor');
+    });
+
+    it('flag OFF: a NAMED stop carrying the way out, and no Restart', async () => {
+        const t = makeBot({ flag: false });
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED());
+        expect(t.calls).toEqual([]);
+        expect(t.bot.getStatus()).toMatch(/^error: Pocket: the bot cannot walk to exit "toGoal" — .* — arrival-inside-solid: the player's box in Pocket is inside breakablerock@288,176 and no walk leaves it; the way out is the Menu's Restart, and this slot does not declare return_to_menu; other arrivals: sideDoor$/);
+        expect(t.bot.getEscapes().escapes).toEqual([]);
+    });
+
+    it('no Restart in the wayOut: a named stop (the other arrivals cannot be walked to from inside a solid)', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED({ ...ESCAPE, restart: false }));
+        expect(t.calls).toEqual([]);
+        expect(t.bot.getStatus()).toMatch(/the refusal offers no Restart; other arrivals: sideDoor$/);
+    });
+
+    it('a failure with no escape (no wayOut) is today\'s named status, word for word', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED(null));
+        expect(t.calls).toEqual([]);
+        expect(t.bot.getStatus()).toBe(`error: Pocket: the bot cannot walk to exit "toGoal" — ${FAILED(null).reason}`);
+    });
+
+    it('landing inside AGAIN after an escape is a named stop, never a loop of Restarts', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED());
+        t.bot.onRegionMove({ targetRegion: 'Pocket', exitName: 'inRock' });   // something put it back in the pocket
+        t.bot.onWalkFailed(FAILED());
+        expect(t.calls).toHaveLength(1);
+        expect(t.bot.getStatus()).toMatch(/the route landed inside it again after a Restart/);
+    });
+
+    it('no other arrival and no clean route from the start: Restart, then the route\'s own named refusal', async () => {
+        const t = makeBot();
+        await intoThePocket(t);
+        t.bot.onWalkFailed(FAILED({ ...ESCAPE, arrivals: [] }));
+        expect(t.calls).toHaveLength(1);
+        // the long way exists in this graph, but the refusal names no arrival on it: the detours are the solver's
+        // `wayOut` only (no second graph search), so the avoided route is refused by name
+        expect(t.bot.getStatus()).toBe('error: no path from Start to region_g, nor from the restart target Menu');
+        expect(t.bot.isActive()).toBe(false);
+    });
+});

@@ -11,7 +11,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { createJsRuntime } from './jsRuntimeCore.js';
-import { createRuntimeWalker, teleporterAtTile, WALK_STATES } from './jsRuntimeWalker.js';
+import { createRuntimeWalker, teleporterAtTile, WALK_STATES, ARRIVAL_INSIDE_SOLID } from './jsRuntimeWalker.js';
 import { drive, driveStepHeld, planTilePath, planWaypoints } from './botDriverV2.js';
 import { hasArrived } from './botDriverV1.js';
 import { assembleGeneratedSeedlingSet } from './seedlingGeneratedSet.js';
@@ -179,6 +179,49 @@ describe('jsRuntimeWalker — unit', () => {
         expect(w.heldFor(rt.run)).toBeNull();
         expect(w.state).toBe(WALK_STATES.FAILED);
         expect(w.reason).toMatch(/^not reached within 2 ticks — stalled at/);
+    });
+});
+
+/**
+ * ⛓ WAVE-6 CONSUMER — a decline whose obstacle is fidelity ARRIVAL's `arrival-inside-solid` FAILS the goal at
+ * once, by name, with the obstacle (its `wayOut`) on the event: the box cannot move, so "walking instead" and its
+ * retries would only stall to the give-up clock. Any other decline walks instead, as before.
+ */
+describe('jsRuntimeWalker — an arrival inside a solid', () => {
+    const OBSTACLE = { kind: 'arrival-inside-solid', id: 'breakablerock@288,176', solids: ['breakablerock@288,176'],
+        at: { level: 0, x: 296, y: 184 }, wayOut: [{ kind: 'restart', via: 'seedlingStartSpawn', why: '' }] };
+    const stubSolver = (answer) => ({ enabled: true, budgetWork: 0, keysFor: () => answer, cancel() {}, clear() {} });
+    const walkerWith = (answer, events) => createRuntimeWalker({
+        apItemOf: () => ({ rect: { x: 64, y: 16, right: 72, bottom: 24 } }), isCollected: () => false,
+        onEvent: (e) => events.push(e), solver: stubSolver(answer) });
+
+    it('`arrival-inside-solid`: FAILED on that tick, the obstacle on the failed event, no walk-instead', () => {
+        const events = [];
+        const w = walkerWith({ declined: 'solverBot(x): arrival-inside-solid — …', obstacle: OBSTACLE }, events);
+        const { rt } = started();
+        w.setGoal(AP_GOAL);
+        w.play();
+        expect(w.heldFor(rt.run)).toBeNull();
+        expect(w.state).toBe(WALK_STATES.FAILED);
+        expect(w.reason).toBe('the solver declined — solverBot(x): arrival-inside-solid — …');
+        const failed = events.filter((e) => e.state === WALK_STATES.FAILED);
+        expect(failed).toHaveLength(1);
+        expect(failed[0].obstacle).toEqual(OBSTACLE);
+        expect(w.stats.driven).toBe(0);
+        expect(ARRIVAL_INSIDE_SOLID).toBe(OBSTACLE.kind);
+    });
+
+    it('any other obstacle (or none): the walk walks instead, as before', () => {
+        for (const answer of [{ declined: 'hazard', obstacle: { kind: 'hazard-floor', id: 'x' } }, { declined: 'plain' }]) {
+            const events = [];
+            const w = walkerWith(answer, events);
+            const { rt } = started();
+            w.setGoal(AP_GOAL);
+            w.play();
+            expect(w.heldFor(rt.run)).toBeInstanceOf(Set);
+            expect(w.state).toBe(WALK_STATES.WALKING);
+            expect(events.some((e) => 'obstacle' in e)).toBe(false);
+        }
     });
 });
 

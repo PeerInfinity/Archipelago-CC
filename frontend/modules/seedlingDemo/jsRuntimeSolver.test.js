@@ -29,8 +29,9 @@ import { fileURLToPath } from 'node:url';
 import { createJsRuntime } from './jsRuntimeCore.js';
 import { WALK_STATES } from './jsRuntimeWalker.js';
 import {
-    createRuntimeSolver, MAX_REFUTATIONS, replayShadow, runDigest, ShadowDivergence, solverGoalFor,
+    createRuntimeSolver, MAX_REFUTATIONS, replayShadow, runDigest, ShadowDivergence, solverGoalFor, passNote, budgetCut,
 } from './jsRuntimeSolver.js';
+import { DEADLINE_SITES } from './solverBot.js';
 import { indexLevels, levelSourceFromAtlas } from './atlasSource.js';
 import { returnKey, returnSpawnTable } from '../flashPanel/seedlingReturnSpawns.js';
 
@@ -298,5 +299,45 @@ describe('jsRuntimeSolver — refusal, refutation, instant, and OFF', () => {
         expect(() => replayShadow(rt.session, SRC)).toThrow(ShadowDivergence);
         expect(() => replayShadow(rt.session, SRC)).toThrow(/a page bug, not a solver verdict/);
         expect(runDigest(replayShadow(rt.session, SRC, { equips: new Map([[at, 1]]) }))).toBe(runDigest(rt.run));
+    });
+});
+
+/**
+ * ⛓ WAVE-6 CONSUMER — the JS page at fidelity ARRIVAL's L12 → L0 landing (288,176), the rock unbroken (the
+ * out-of-order arrival): the solver declines with `arrival-inside-solid`, the decline carries its `obstacle`
+ * (`solverStats.lastDeclineObstacle` too), and the walk FAILS at once, by name, with the obstacle on its event —
+ * never "walking instead" from inside a solid to the give-up clock.
+ */
+describe('jsRuntimeSolver — an arrival inside a solid (wave 6) fails the walk at once, with the obstacle', () => {
+    it('L0 (288,176) bare, the back door to L12: declined `arrival-inside-solid`, FAILED on the first ticks', () => {
+        const rt = createJsRuntime();
+        rt.setVanilla(MAP);
+        rt.queueItems([{ invocation: 'new_instance', className: 'Game', args: [0, 288, 176] }]);
+        rt.tick();
+        const failed = [];
+        rt.playback.onWalk((e) => { if (e.state === WALK_STATES.FAILED) failed.push(e); });
+        rt.playback.setSolverWalk(true);
+        // the back door, `teleporter@304,176` (L0's own exit to L12)
+        expect(rt.playback.walkTo({ kind: 'exit', level: 0, tiles: [[19, 11]] })).toEqual({ ok: true });
+        rt.playback.play();
+        const { ticks } = settle(rt, { maxTicks: 60 });
+        expect(rt.playback.state).toBe(WALK_STATES.FAILED);
+        expect(ticks).toBeLessThan(5);
+        expect(failed).toHaveLength(1);
+        expect(failed[0].message).toMatch(/^the solver declined — .*arrival-inside-solid — the run's box at \(296,184\) in level 0 is INSIDE breakablerock@288,176/);
+        expect(failed[0].obstacle).toMatchObject({ kind: 'arrival-inside-solid', id: 'breakablerock@288,176',
+            flags: [{ level: 0, tag: 1 }], at: { level: 0, x: 296, y: 184 } });
+        expect(failed[0].obstacle.wayOut.map((w) => w.kind)).toEqual(['restart', 'another-route']);
+        expect(rt.playback.solverStats.lastDeclineObstacle).toEqual(failed[0].obstacle);
+        expect(rt.run.state).toMatchObject({ x: 296, y: 184 });   // nothing walked
+    });
+});
+
+describe('jsRuntimeSolver — wave 6\'s new deadline site passes through the notes', () => {
+    it('`axe-dodge` (fidelity AXE): a pass stopped there is named in the note; it is no budget cut', () => {
+        expect(DEADLINE_SITES).toContain('axe-dodge');
+        const plan = { pass: 'dashless', passes: [{ pass: 'dashless', ok: true }, { pass: 'full', ok: false, deadline: 'axe-dodge', limit: 'window' }] };
+        expect(passNote(plan)).toBe('pass dashless, full stopped at its deadline (axe-dodge)');
+        expect(budgetCut(plan)).toBe(false);
     });
 });
