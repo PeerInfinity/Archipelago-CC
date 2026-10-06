@@ -8,7 +8,7 @@ Slice `seedling-fidelity-killlock`, planner `seedling-fidelity-planning-3`, wave
 | Harness branch | `claude/killlock-body-tracking-8lamdw` |
 | Head | see the last commit on the branch (this report is committed last) |
 | Verdicts | **D1 PASS · D2 PASS (L60 west, the L98 bodies witnessed; L98 end to end, L60 east, L71, L99 named residue) · D3 PASS (10 → 14 of 35 with the switches ON)** |
-| Byte-inertness | every switch ships **OFF**. OFF: identity block, six producer `--check`s and the 533 tapeRunner pairs are identical to the base. ON: **no committed tape's replay moves** (tapeRunner md5 identical); the identity block ON is in the table below |
+| Byte-inertness | every switch ships **OFF**. OFF: identity block, six producer `--check`s and the 533 tapeRunner pairs are identical to the base. ON: **no committed tape's replay moves** (tapeRunner md5 identical), no producer `--check` moves; **one identity row moves: ENEMY census default** (below) |
 
 ## The one thing to know first
 
@@ -22,8 +22,13 @@ With every switch ON, the game agrees with the model on three recorded arms, at 
 cover both jellyfish rooms and the turret kill. On the turret arm the game **corrected the model**: the dark shield's
 bump hits an IceTurret, which no model code did (K5).
 
-**The user's call:** turn the switches ON, or some of them. ON moves no committed tape. It does move survey rows
-(the D3 table), and possibly identity rows: see the ON column.
+**The user's call:** turn the switches ON, or some of them. ON moves no committed tape and no producer digest. It moves survey rows (the D3 table) and **one identity row, ENEMY
+census default** (`d59f0c97` → `e7f4264c`):
+- the `jellyfish` corridor arm goes REFUSED → **SOLVED 172 t**;
+- `lavarunner`'s chamber arm goes 155 → 231 t (its corridor stays REFUSED);
+- totals: CORRIDOR 5 → 6 solved, CHAMBER-at-control 17 → 16.
+
+Per the DASHFLIP/LINEFLIP precedent this is **listed and stopped**, not acted on.
 
 ## W0 (at `0f952e9a9e`, a clean worktree of the base, its own server on 9441)
 
@@ -35,6 +40,7 @@ bump hits an IceTurret, which no model code did (K5).
 | kind pairs / censuses / levels | in the block | c3 `043e1944` · c6 `f85e7722` · c4 `4aa74add` · ENEMY `d59f0c97` · guard `a6d18d49` · AREA `02b22525` · killgate `01210c82`/`07ce222a`/`30a1e3e7` · levels `e28c1e5d`/`c4841acb` · generated set `OK` | identical |
 | reference | `generate-procgen-reference.mjs --check` | 4 differ (registry, capabilities and their two regions) | after this slice's regeneration: **the same 4**. They need the non-Seedling submodules, which this checkout does not hold; the harvest regenerates them |
 | surface / constants / entities / profile | each `--check` | GREEN 208 · PASS 5,327 · PASS 518 · PASS 138 | **GREEN 209** · **PASS 5,335** · **PASS 526** · PASS 138 (all `--write`n; rows below) |
+| identity block ON | `SEEDLING_KILLLOCK_BODIES=all … identity-block.sh .` | — | log md5 `29b8afd108be2ec1ed2cc239f78f809d`: **only ENEMY census default moves** (`d59f0c97` → `e7f4264c`); every kind-pair/census/level row, the generated set and all six producer `--check`s are identical to OFF |
 | roster | `fixtures/tapes/index.json` | md5 `df76e166414b685b23113394374e9989` | unchanged (no roster tape added) |
 | tapeRunner | `(fullName, status)` sorted | 533, md5 `71bda323e8c6a709fecbfd0734ebf945` | 533, `71bda323…`; **ON: 533, `71bda323…`** |
 | bounded vitest | the set below | **45 files / 1,887 tests green** | **47 files / 1,907 green** (+ `fidelityKillLock` 14, `seedlingEntityWitness` 5, `boxLock` +1 row) |
@@ -237,3 +243,5 @@ legs.
 - `probe-seedling-killlock.mjs` (default, node): **ALL CHECKS PASSED** (16 rows).
 - The D3 table above (OFF/ON), `--through=end --only=<the 35>`.
 - tapeRunner ON = OFF: 533 pairs, `71bda323e8c6a709fecbfd0734ebf945`.
+- Identity block ON: the ENEMY census default row is the one licence-gated mover (`e7f4264c00bfb15d7bad2ec70a24e8ca`
+  ON vs `d59f0c971d6d42e23fdc2c5ae08e9117` OFF).
