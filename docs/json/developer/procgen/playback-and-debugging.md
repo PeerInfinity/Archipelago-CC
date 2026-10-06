@@ -21,6 +21,15 @@ A sphere-log-driven walker that auto-drives substrate panels through a recorded 
 - The region graph's one-step move takes the same step. The path analyzer and `analyzePathToRegion` answer AP reachability from the start and never need it.
 - The live witness is `scripts/procgen/probe-seedling-restart-route.mjs` (a census RESTART-ONLY pocket, W and J; `--flag=off` is the fail-closed row).
 
+**An arrival inside a solid escapes by its way out.** A Seedling arrival can land the player's box INSIDE a solid whose saved flag still holds, such as L12's door into L0 at (288,176) with the rock unbroken (an out-of-order arrival). The solver then refuses before any search, with `obstacle.kind: 'arrival-inside-solid'` and a `wayOut`: the Menu's Restart, plus the level's other arrivals.
+- Both runtimes surface the refusal by name. The wasm engine's failure carries the `obstacle`. The JS page's walker fails the goal at once instead of walking from inside the solid.
+- The Seedling controller translates `wayOut` into the bot's terms (`flashPanel/seedlingArrivalEscape.js`): it keeps the Restart offer and maps each other arrival to the AP exit whose sidecar door it is.
+- When Restart is offered and the slot declares `return_to_menu`, the bot takes the same Restart step as above.
+- The bot also remembers the entrance that landed inside. Every later route avoids it, through one of the refusal's other arrivals (`planRoute`'s `avoid`).
+- Without the flag or a Restart offer, or when the player lands inside again, the bot makes a named stop that says which way out it could not take. ⚖ Nothing acts from inside the solid (no swing from inside).
+- The live witness is `scripts/procgen/probe-seedling-arrival-escape.mjs` (W and J; `--flag=off` is the named stop, and `--expect=refusal` is the control).
+- `scripts/procgen/probe-seedling-restart-held-items.mjs` measures that a Restart keeps the game's items, slot order and keys, and the AP inventory.
+
 When no sphere log is loaded, the bot acts as a plain remote control: it starts the substrate's own clock and leaves target choice to the substrate (the maze visualizer picks the alphabetically-first uncollected item or unvisited exit in the current region).
 
 ## The PlaybackController contract and iframe proxies

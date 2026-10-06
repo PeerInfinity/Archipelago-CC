@@ -133,8 +133,8 @@ export const INSTRUMENTS = frz({
             "id": "plan"
         },
         {
-            "browser": 53,
-            "count": 96,
+            "browser": 55,
+            "count": 98,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 355,
-        "browser": 118,
-        "cited": 171,
-        "files": 367,
+        "blockStyle": 357,
+        "browser": 120,
+        "cited": 173,
+        "files": 369,
         "lineStyle": 12,
-        "withDocblock": 367,
-        "withFlags": 285
+        "withDocblock": 369,
+        "withFlags": 287
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -8650,6 +8650,70 @@ export const INSTRUMENTS = frz({
         },
         {
             "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/playback-and-debugging.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "budget-s",
+                "expect",
+                "flag",
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-arrival-escape.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "budget-s"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "expect"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "flag"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling ARRIVAL INSIDE A SOLID → its WAY OUT (fidelity wave 6 ARRIVAL; ⚖ the user: no swing from inside) — the player enters level 0 through L12's `teleporter@0,80`, whose landing (288,176) is INSIDE `breakablerock@288,176` while its saved flag holds (the out-of-order arrival; the sweep's #2, `arrival-solid-edges.j…",
+            "path": "scripts/procgen/probe-seedling-arrival-escape.mjs"
+        },
+        {
+            "argvHelpers": [
                 "travelOf"
             ],
             "browser": true,
@@ -10699,6 +10763,55 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-rect-inputs — THE BOUNDED RECT-INPUT SWEEP.",
             "path": "scripts/procgen/probe-seedling-rect-inputs.mjs"
+        },
+        {
+            "argvHelpers": [
+                "arg"
+            ],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/playback-and-debugging.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "host",
+                "only",
+                "wait-for-box"
+            ],
+            "file": "probe-seedling-restart-held-items.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "expect-key-delivered"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "host"
+                },
+                {
+                    "how": [
+                        "arg"
+                    ],
+                    "name": "only"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                },
+                {
+                    "from": "boxLock.js",
+                    "name": "wait-for-box"
+                }
+            ],
+            "oneLiner": "Seedling RESTART KEEPS WHAT THE PLAYER HOLDS — the Menu panel's Restart (the warp to `seedlingStartSpawn`, a `new Game(level, x, y)`) changes no held item, no slot ORDER (session state, acquisition order) and no key, in the game's own readouts, gameState's and the AP side's; on the GAME (wasm, default build) and on …",
+            "path": "scripts/procgen/probe-seedling-restart-held-items.mjs"
         },
         {
             "argvHelpers": [
