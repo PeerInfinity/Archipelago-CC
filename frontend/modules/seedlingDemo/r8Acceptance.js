@@ -1241,6 +1241,18 @@ export const R8_ENEMY_BRIDGE = Object.freeze({
                 + 'the lane behind it, PULL silences the lanes, AVOID routes round the trap, and the '
                 + 'weighed walk reaches `stairsup@352,80`. No hit, no kill.',
         }),
+        /**
+         * ⛓⛓⛓ Seedling fidelity STANCE — the keylock CONTROL (the shut lock opened
+         * from its own side) ends on the L53 arrival, where `puncher@…` is the
+         * room's one chaser.
+         */
+        Object.freeze({
+            name: 'stance-l48-keylock-south', levels: Object.freeze([53]), bobs: 1, ticks: 369,
+            addedBy: 'Seedling fidelity STANCE D2 (a bosslock opens only from its own side)',
+            why: 'from the L47 door the `keylock` stance lands on `bosslock@48,144`\'s key line, the '
+                + 'lock opens and the walk leaves by `teleporter@0,112`; the crossing\'s last tick is '
+                + 'the L53 arrival; no hit, no kill.',
+        }),
     ]),
 
     /**
