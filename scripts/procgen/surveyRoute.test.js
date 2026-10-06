@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     chainBound, deriveLegs, eventPrerequisites, eventsBrokenOnPath, gameStateEventsOf, keyItemsOf, makeRuleHolds,
-    pickupsThrough, regionPath, ROUTE_MODES, routeOnlyRows,
+    pickupsThrough, regionPath, ROUTE_MODES, routeOnlyRows, stagedPersistence,
 } from './surveyRoute.js';
 
 const has = (item) => ({ rule: 'Has', args: { item_name: item } });
@@ -365,5 +365,81 @@ describe('obstacle events in the leg walk', () => {
             ['1.1', 'Pocket gem', 'Room>Far>Pocket'],
         ]);
         expect(out.legs[1].event).toMatchObject({ id: 'flag:L0:1', prerequisiteFor: '1.1' });
+    });
+
+    /**
+     * ⛓ RULES survey-staging — the flags each VISIT boots with: the events the walk CLEARED in an earlier visit, in
+     * the runtimes' `{level, tag}` shape. Room and Pocket are level 0, Far level 1, Hub level 2.
+     */
+    const LEVEL = { Room: 0, Pocket: 0, Far: 1, Hub: 2 };
+    const levelOfRegion = (r) => LEVEL[r];
+    const ROCK = { level: 0, tag: 1 };
+    const crossingWalk = (rules, events = gameStateEventsOf(rules.regions[1])) => {
+        rules.regions[1].Far.locations = [{ name: 'Far chest' }];
+        rules.regions[1].Pocket.locations = [{ name: 'Pocket gem' }];
+        return deriveLegs({
+            regions: rules.regions[1], ruleHolds: makeRuleHolds(rules), start: 'Room', events,
+            pickups: [{ sphere: '0.1', location: 'Sword spot', item: 'Sword' },
+                { sphere: '1.1', location: 'Far chest', item: 'Coin' },
+                { sphere: '1.2', location: 'Pocket gem', item: 'Gem' }],
+        });
+    };
+
+    it('a flag cleared CROSSING is staged in every later visit, never in the clearing visit or before', () => {
+        const out = crossingWalk(graph());
+        // visits: Room (leg 0 + leg 1's crossing) | Far (leg 1's end, leg 2's start) | Pocket (leg 2's end)
+        expect(out.credits.map((c) => [c.leg, c.at, c.event.eventId])).toEqual([[1, 0, 'flag:L0:1']]);
+        expect(stagedPersistence({ legs: out.legs, credits: out.credits, levelOfRegion }))
+            .toEqual([[], [ROCK], [ROCK]]);
+    });
+
+    it('an event the walk never cleared is never staged (no events wired: nothing at all)', () => {
+        const rules = graph();
+        // a second saved obstacle in the room, which no leg needs and no hop crosses
+        rules.regions[1].Room.locations.push(ev({ name: 'R flag 4: other rock', event_id: 'flag:L0:4',
+            item: { name: 'R flag 4: other rock' }, across: [], obstacle: { level: 0, tag: 4 } }));
+        const out = crossingWalk(rules);
+        const staged = stagedPersistence({ legs: out.legs, credits: out.credits, levelOfRegion });
+        expect(staged.flat().some((f) => f.tag === 4)).toBe(false);
+        expect(staged).toEqual([[], [ROCK], [ROCK]]);
+        const blind = crossingWalk(graph(), []);
+        expect(blind.credits).toEqual([]);
+        expect(stagedPersistence({ legs: blind.legs, credits: blind.credits, levelOfRegion }).flat()).toEqual([]);
+    });
+
+    it('a GOAL-FIRST leg\'s event is staged from the visit after the one that broke it', () => {
+        const rules = doc({
+            Menu: { exits: [{ name: 'go', connected_region: 'Room', access_rule: TRUE }] },
+            Room: {
+                exits: [{ name: 'room-pocket', connected_region: 'Pocket', access_rule: has('Hammer') },
+                    { name: 'room-far', connected_region: 'Far', access_rule: TRUE }],
+                locations: [ev()],
+            },
+            Pocket: { exits: [], locations: [{ name: 'Pocket gem' }] },
+            Far: {
+                exits: [{ name: 'far-pocket', connected_region: 'Pocket', access_rule: has(EV) },
+                    { name: 'far-room', connected_region: 'Room', access_rule: TRUE }],
+                locations: [{ name: 'Sword spot' }],
+            },
+        });
+        const out = deriveLegs({
+            regions: rules.regions[1], ruleHolds: makeRuleHolds(rules), start: 'Room',
+            pickups: [{ sphere: '0.1', location: 'Sword spot', item: 'Sword' },
+                { sphere: '1.1', location: 'Pocket gem', item: 'Gem' }],
+            events: gameStateEventsOf(rules.regions[1]),
+        });
+        // visits: Room | Far | Room (the goal-first leg breaks the rock here) | Far | Pocket
+        expect(out.credits.map((c) => [c.leg, c.at, c.event.eventId])).toEqual([[1, 1, 'flag:L0:1']]);
+        expect(stagedPersistence({ legs: out.legs, credits: out.credits, levelOfRegion }))
+            .toEqual([[], [], [], [ROCK], [ROCK]]);
+    });
+
+    it('a Restart (Menu) starts a new visit; a cleared event with no obstacle {level, tag} refuses by name', () => {
+        const event = { eventId: 'flag:L0:1', obstacle: ROCK };
+        const legs = [{ regions: ['Room', 'Menu', 'Room'] }];
+        expect(stagedPersistence({ legs, credits: [{ leg: 0, at: 0, event }], levelOfRegion }))
+            .toEqual([[], [ROCK]]);
+        expect(() => stagedPersistence({ legs, credits: [{ leg: 0, at: 0, event: { eventId: 'flag:L0:9' } }],
+            levelOfRegion })).toThrow(/flag:L0:9.*no obstacle \{level, tag\}/);
     });
 });

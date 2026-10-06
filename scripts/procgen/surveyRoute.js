@@ -331,7 +331,9 @@ export function blockedFrontier(regions, ruleHolds, src, items) {
  *          in order, the item COUNTS each was walked with (`itemsHeld` names
  *          them; a second Progressive Sword is a count), and the AP exit NAMES
  *          each leg's hops took (`regionPathHops`); throws by name on a leg AP's rules
- *          give no path for and no remaining row can replace
+ *          give no path for and no remaining row can replace. ⛓ RULES survey-staging: `credits` — every game-state
+ *          event the walk cleared (a crossing at the event's own cost, or a goal-first leg), in order, as
+ *          `{leg, at, event}` (`at` indexes the leg's `regions`); `stagedPersistence` reads it.
  */
 /**
  * ⛓ RULES obstacle-events — the GAME-STATE events of a rules export: `{name, item, region, rule, eventId,
@@ -396,17 +398,67 @@ export function eventPrerequisites({ regions, ruleHolds, here, items, events, ta
  * walking from the room into the door pocket). Not eager: the walk was going there anyway.
  */
 export function eventsBrokenOnPath(regions, path, exits, events, items) {
+    return eventCrossingsOnPath(regions, path, exits, events, items).map((c) => c.event);
+}
+
+/**
+ * `eventsBrokenOnPath`, with WHERE: `at` is the index in `path` of the crossing's endpoint on the event's own side
+ * (`event.region`, in the obstacle's level) — the region the walk stood in when the flag cleared.
+ */
+export function eventCrossingsOnPath(regions, path, exits, events, items) {
     const out = [];
     for (let i = 0; i + 1 < path.length; i += 1) {
         const [a, b] = [path[i], path[i + 1]];
         const exit = (regions[a]?.exits ?? []).find((x) => x.name === exits[i]);
         for (const e of events) {
-            if (items[e.item] > 0 || out.includes(e)) continue;
+            if (items[e.item] > 0 || out.some((c) => c.event === e)) continue;
             const crosses = (a === e.region && e.across.includes(b)) || (b === e.region && e.across.includes(a));
-            if (crosses && JSON.stringify(exit?.access_rule ?? null) === JSON.stringify(e.rule)) out.push(e);
+            if (crosses && JSON.stringify(exit?.access_rule ?? null) === JSON.stringify(e.rule)) {
+                out.push({ event: e, at: a === e.region ? i : i + 1 });
+            }
         }
     }
     return out;
+}
+
+/**
+ * ⛓ RULES survey-staging — **THE FLAGS A STEP BOOTS WITH ARE THE ONES THE WALK CLEARED BEFORE IT** (flags flow
+ * game → AP only). `credits` is `deriveLegs`' own: one row per event the walk cleared, in the order it cleared them,
+ * `{leg, at, event}` — `at` the index in `legs[leg].regions` where the walk stood. The legs are projected onto level
+ * VISITS exactly as the survey does (each leg's first level is the previous leg's last; `Menu` — a Restart — starts
+ * a new visit and is not a level). A flag cleared during visit v is staged in every visit AFTER v, never in v itself
+ * (that visit is the one that clears it) and never before. The entry is the game's `{level, tag}`
+ * (`botStatus.persistence_cleared`'s shape), read off the rules' `obstacle`; an event without one is refused by name.
+ *
+ * @returns {Array<Array<{level:number, tag:number}>>} one cumulative persistence list per visit
+ */
+export function stagedPersistence({ legs, credits, levelOfRegion }) {
+    const visitAt = [];   // visitAt[leg][regionIndex] → global visit index
+    let visits = 0;
+    legs.forEach((leg, i) => {
+        const at = [];
+        let last = null;
+        let restarted = false;
+        leg.regions.forEach((r, j) => {
+            if (r === RESTART_TARGET) { restarted = true; at.push(Math.max(visits - 1, 0)); return; }
+            const n = levelOfRegion(r);
+            const continues = !restarted && (last === null ? (i > 0 && j === 0) : n === last);
+            if (!continues) visits += 1;
+            at.push(visits - 1);
+            last = n;
+            restarted = false;
+        });
+        visitAt.push(at);
+    });
+    const clearedAt = credits.map((c) => {
+        const o = c.event.obstacle;
+        if (!o || !Number.isInteger(o.level) || !Number.isInteger(o.tag)) {
+            throw new Error(`stagedPersistence: the walk cleared ${c.event.eventId ?? c.event.name}, and the rules `
+                + 'name no obstacle {level, tag} for it — a flag the staging cannot spell is never guessed.');
+        }
+        return { visit: visitAt[c.leg][c.at], flag: { level: o.level, tag: o.tag } };
+    });
+    return Array.from({ length: visits }, (_, v) => clearedAt.filter((c) => c.visit < v).map((c) => ({ ...c.flag })));
 }
 
 export function deriveLegs({
@@ -426,6 +478,7 @@ export function deriveLegs({
     const held = [];
     const hops = [];
     const legHolds = [];
+    const credits = [];
     let here = start;
     let stood = walk ? Object.freeze(new Set([start])) : null;
     const wanted = pickups.slice();
@@ -493,7 +546,11 @@ export function deriveLegs({
             hops.push(p.exits);
             legHolds.push(ruleHolds);
             if (walk) stood = Object.freeze(new Set([...stood, ...p.path]));
-            for (const b of eventsBrokenOnPath(regions, p.path, p.exits, events, items)) items[b.item] = 1;
+            for (const c of eventCrossingsOnPath(regions, p.path, p.exits, events, items)) {
+                credits.push({ leg: legs.length - 1, at: c.at, event: c.event });
+                items[c.event.item] = 1;
+            }
+            if (!(items[e.item] > 0)) credits.push({ leg: legs.length - 1, at: p.path.length - 1, event: e });
             items[e.item] = 1;
             here = e.region;
         }
@@ -526,13 +583,16 @@ export function deriveLegs({
         hops.push(path.exits);
         legHolds.push(ruleHolds);
         if (walk) stood = Object.freeze(new Set([...stood, ...path.path]));
-        const broken = eventsBrokenOnPath(regions, path.path, path.exits, events, items);
-        if (broken.length > 0) legs[legs.length - 1].brokeOnTheWay = broken.map((b) => b.eventId ?? b.name);
-        for (const b of broken) items[b.item] = 1;
+        const broken = eventCrossingsOnPath(regions, path.path, path.exits, events, items);
+        if (broken.length > 0) legs[legs.length - 1].brokeOnTheWay = broken.map((c) => c.event.eventId ?? c.event.name);
+        for (const c of broken) {
+            credits.push({ leg: legs.length - 1, at: c.at, event: c.event });
+            items[c.event.item] = 1;
+        }
         items[pick.item] = (items[pick.item] ?? 0) + 1;
         here = to;
         if (fromWanted >= 0) wanted.splice(fromWanted, 1);
         else extra.splice(extra.indexOf(pick), 1);
     }
-    return { legs, held, hops, legHolds };
+    return { legs, held, hops, legHolds, credits };
 }

@@ -148,7 +148,7 @@ import { fileURLToPath } from 'node:url';
 import { familyOf } from './surveyFamily.js';
 import { deriveStagedGrant } from './surveyGrants.js';
 import {
-    RESTART_TARGET, deriveLegs, gameStateEventsOf, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
+    RESTART_TARGET, deriveLegs, gameStateEventsOf, stagedPersistence, keyItemsOf, makeRuleHolds, pickupsThrough, regionPath as surveyRegionPath,
     ROUTE_MODES, routeOnlyRows,
 } from './surveyRoute.js';
 import { seedlingStartSpawn } from '../../frontend/modules/flashPanel/seedlingRegionBinding.js';
@@ -795,7 +795,15 @@ function deriveRoute() {
     }
     outs.forEach((o, k) => { visits[k].exitOut = o; });
 
-    return { legs, visits, steps: buildSteps(visits, legs, (i) => i + 1) };
+    // ⛓ RULES survey-staging: the flags each visit BOOTS with — the events the walk cleared in an EARLIER visit
+    //   (a crossing at the event's own cost, or a goal-first leg), never one it did not (flags flow game → AP only).
+    const persistence = stagedPersistence({ legs: derived.legs, credits: derived.credits, levelOfRegion });
+    if (persistence.length !== visits.length) {
+        throw new Error(`stagedPersistence projected ${persistence.length} visits and the route has `
+            + `${visits.length} — the staging would be handed to the wrong rooms.`);
+    }
+    const steps = buildSteps(visits, legs, (i) => i + 1);
+    return { legs, visits, steps, persistence: new Map(steps.map((s, i) => [String(s.step), persistence[i]])) };
 }
 
 /**
@@ -1196,6 +1204,18 @@ async function solveOneStep(step) {
     const inheritedTimed = (staging.persistence ?? []).filter((r) => r.at !== undefined);
     staging.persistence = (staging.persistence ?? []).filter((r) => r.at === undefined);
     /**
+     * ⛓ RULES survey-staging — **THE WALK'S CLEARED FLAGS ARE STAGED** (`deriveRoute`'s `persistence`), the
+     * runtimes' shape (`{level, tag}`, as `stagingFromWasmArrival` stages `botStatus.persistence_cleared`). Without
+     * it a room the walk had already opened booted SHUT: step 33 (L12 → L0 at (288,176)) landed inside
+     * breakablerock@288,176, which leg 1.2 broke crossing it. A flag the boot block already declares is kept once.
+     * ⚠ The alternative leg's steps (the default survey only) carry none: their visits are not the route's.
+     */
+    for (const flag of route.persistence.get(String(step.step)) ?? []) {
+        if (!staging.persistence.some((r) => r.level === flag.level && r.tag === flag.tag)) {
+            staging.persistence.push({ ...flag });
+        }
+    }
+    /**
      * ⛓ TWO NON-VACUOUS CHECKS ON THE BOOT DERIVATION, and neither is a
      * restatement of what the line above just wrote.
      *
@@ -1586,6 +1606,8 @@ const routeDoc = {
         },
     } : {}),
     legs: route.legs,
+    // ⛓ RULES survey-staging: step → the flags its boot stages (the walk's earlier clears); a step absent stages none
+    stagedFlags: Object.fromEntries([...route.persistence].filter(([, p]) => p.length > 0)),
     steps: route.steps.map((s) => ({
         ...s,
         boot: bootFor(s),
