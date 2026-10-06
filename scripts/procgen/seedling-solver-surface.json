@@ -685,11 +685,11 @@
       "files": {
         "arrivalSolid.js": 1,
         "botDriverV2.js": 30,
-        "dangerMap.js": 11,
+        "dangerMap.js": 12,
         "director.js": 1,
         "solverBot.js": 76
       },
-      "sites": 119,
+      "sites": 120,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1093,9 +1093,9 @@
       "files": {
         "arrivalSolid.js": 2,
         "botDriverV2.js": 56,
-        "solverBot.js": 160
+        "solverBot.js": 162
       },
-      "sites": 218,
+      "sites": 220,
       "seen": "both",
       "via": [
         "const-alias",
@@ -1139,9 +1139,9 @@
       "form": "function",
       "files": {
         "arrivalSolid.js": 1,
-        "dangerMap.js": 8
+        "dangerMap.js": 9
       },
-      "sites": 9,
+      "sites": 10,
       "seen": "both",
       "via": [
         "direct"
@@ -1943,9 +1943,9 @@
       "class": "physics",
       "form": "constant",
       "files": {
-        "solverBot.js": 2
+        "solverBot.js": 4
       },
-      "sites": 2,
+      "sites": 4,
       "seen": "both",
       "via": [
         "const-alias",

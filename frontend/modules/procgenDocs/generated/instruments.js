@@ -129,12 +129,12 @@ export const INSTRUMENTS = frz({
         },
         {
             "browser": 1,
-            "count": 64,
+            "count": 65,
             "id": "plan"
         },
         {
-            "browser": 56,
-            "count": 100,
+            "browser": 57,
+            "count": 101,
             "id": "probe"
         },
         {
@@ -224,13 +224,13 @@ export const INSTRUMENTS = frz({
         }
     ],
     "counts": {
-        "blockStyle": 359,
-        "browser": 121,
-        "cited": 175,
-        "files": 371,
+        "blockStyle": 361,
+        "browser": 122,
+        "cited": 176,
+        "files": 373,
         "lineStyle": 12,
-        "withDocblock": 371,
-        "withFlags": 289
+        "withDocblock": 373,
+        "withFlags": 291
     },
     "dir": "scripts/procgen",
     "docblockRule": "the file's HEADER is everything before its first executable line (blank lines, `#!`, comments and `import`/`export` lines are header), and the docblock is the FIRST comment block in it — a `/** */` block or a run of `//` lines. The one-liner is the first SENTENCE of its first paragraph.",
@@ -7096,6 +7096,42 @@ export const INSTRUMENTS = frz({
             "path": "scripts/procgen/plan-seedling-l14-swordless.mjs"
         },
         {
+            "argvHelpers": [
+                "check"
+            ],
+            "browser": false,
+            "category": "plan",
+            "citedBy": [],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "check",
+                "refuted"
+            ],
+            "file": "plan-seedling-ladder2-witness.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "check"
+                },
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "refuted"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "plan-seedling-ladder2-witness — ⛓⛓⛓ SEEDLING FIDELITY LADDER2: THE SOLVER CROSSES A PLACED GRENADE, A LAVA CHAIN AND A BEAM TOWER, AND THE GAME LETS IT THROUGH.",
+            "path": "scripts/procgen/plan-seedling-ladder2-witness.mjs"
+        },
+        {
             "argvHelpers": [],
             "browser": false,
             "category": "plan",
@@ -9760,6 +9796,42 @@ export const INSTRUMENTS = frz({
             ],
             "oneLiner": "probe-seedling-l67-reach2 — does the spear push a block from TWO tiles away, across a pit?",
             "path": "scripts/procgen/probe-seedling-l67-reach2.mjs"
+        },
+        {
+            "argvHelpers": [],
+            "browser": true,
+            "category": "probe",
+            "citedBy": [
+                "docs/json/developer/procgen/seedling-bot-log.md",
+                "docs/json/developer/procgen/seedling-bot.md"
+            ],
+            "docblockStyle": "block",
+            "documentedFlags": [
+                "record"
+            ],
+            "file": "probe-seedling-ladder2-phase.mjs",
+            "flags": [
+                {
+                    "how": [
+                        "includes"
+                    ],
+                    "name": "model-only"
+                },
+                {
+                    "how": [
+                        "startsWith"
+                    ],
+                    "name": "record"
+                }
+            ],
+            "inheritedFlags": [
+                {
+                    "from": "argvHelp.js",
+                    "name": "help"
+                }
+            ],
+            "oneLiner": "probe-seedling-ladder2-phase — ⛓⛓⛓ SEEDLING FIDELITY LADDER2, D1: **WHEN DO A PLACED GRENADE, A LAVA CHAIN AND A BEAM TOWER HIT A STANDING PLAYER, ASKED OF THE GAME.**",
+            "path": "scripts/procgen/probe-seedling-ladder2-phase.mjs"
         },
         {
             "argvHelpers": [],

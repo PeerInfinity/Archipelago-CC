@@ -110,7 +110,8 @@ describe('exact mode IS diffObservationStreams', () => {
         // ⛓ fidelity AXE: 231 — `axe-l48-reach-l49`, `axe-l61-reach-l62`, `axe-l61-reach-l63`, `axe-l71-reach-l76`.
         // ⛓ fidelity PROXIMITY: +5 (236 with AXE's four) — `prox-l38-chest`, `prox-l38-reach-l39`, `prox-l29-key-return`, `prox-l40-turret-volley`, `prox-l40-turret-contact`.
         // ⛓ fidelity FRONTIER3: +2 (238 with AXE + PROXIMITY) — `frontier3-l62-door-niche`, `frontier3-l87-pocket`.
-        expect(names.length).toBe(238);
+        // ⛓ fidelity LADDER2: +2 (240) — `ladder2-l59-grenade`, `ladder2-l104-beam`.
+        expect(names.length).toBe(240);
         const tally = { recorded: 0, pass: 0, fail: 0, nudged: 0, late: 0, swapped: 0 };
         for (const name of names) {
             const { stream: recorded } = loadExpectation(name);
@@ -155,7 +156,8 @@ describe('exact mode IS diffObservationStreams', () => {
         expect(tally.fail).toBeGreaterThan(0);
         expect(tally.late).toBeGreaterThan(0);
         // ⛓ fidelity AXE: 231 — every recording carries a transition to swap, the four axe witnesses included.
-        expect(tally.swapped).toBe(238);
+        // ⛓ fidelity LADDER2: 240 — both witnesses carry a transition to swap.
+        expect(tally.swapped).toBe(240);
     }, 600_000);
 });
 
