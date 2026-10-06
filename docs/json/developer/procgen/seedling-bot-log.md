@@ -14161,6 +14161,81 @@ planttorch split without it.
 - a door can be standable in a niche its centre is not: a goal point is a
   claim about where the player stands, and a trigger's centre is not one.
 
+### Seedling fidelity CHECKPOINTS — the solver's long silences, timed, and asked where they run
+
+⚖ The user (2026-10-05, via the JS arc): finer `shouldStop` checkpoints inside
+the solver's checkpoint-free phases, chosen over a room-size weight. The JS arc's
+budgets are WORK (one unit = one `shouldStop` call, `SOLVER_BUDGET_WORK` 500),
+so a stretch with no call is a stretch the budget cannot see. The report is
+`CC/docs/cloud-reports/seedling-fidelity-checkpoints.md`.
+
+**Where the silences were (D1).** `probe-solver-hook-gaps.mjs` solves a sweep
+leg bare through the bare pass's request path with a counting hook, times every
+gap between two asks, and attributes it with a sampling profiler (driven from a
+worker thread, so a killed leg still yields its profile). At the base, on this
+box:
+
+| leg | room | longest stretch with no ask | what ran |
+|---|---|---|---|
+| 64 | L6 | 9.9 s, the whole pass (0 asks) | the TIME rung: one `mover.planDash`, 40,000 expansions |
+| 73 | L8 | 22.4 s (99 % of the pass) | the TIME rung again |
+| 173 | L16 | 18.8 s, between DETOUR's asks 1 and 2 | DETOUR's via set: a `planWaypoints` to every cell |
+| 363 | L40 | 229.5 s after DETOUR's first ask | the via set, over thousands of cells |
+| 356 | L40 | 2.8 s, the whole pass (0 asks) | the core walk: plan, probe, drive |
+
+The two candidates the JS arc named were half right. DETOUR's via set is the
+long stretch on L16, L40 and every axe-room leg (5–28 s; `axe-dodge` itself asks
+thousands of times). The stance scan never showed up as a gap. The TIME rung, which
+nobody named, is the whole of L6 and L8. And L40's dashless silence is not an
+optional scan at all: it is the walk.
+
+**The sites (D2), opt-in.** `solveSegment({ shouldStop, fineCheckpoints: true })`
+also asks:
+
+- `time` (new): before the TIME rung's search and every
+  `mover.DEFAULT_CHECK_EVERY` (250) expansions inside it (`findEarliestArrival`
+  takes an optional `shouldStop`). A trip is a NEGATIVE named `deadline`, and
+  the ladder FALLS THROUGH to BAIT.
+- `walk` (new): at each `walkTo` attempt, between its plan and its danger
+  probe, every `WALK_CHECK_TICKS` (32) probe samples, and every 32 ticks the
+  segment drives. A trip REFUSES the segment by name.
+- `detour` (existing), once per via-set cell. A trip refuses the rung with the
+  loop's own trip shape.
+
+Off by default. Every consult-counting caller (the JS arc's budget,
+`seedlingCanCross`'s consult budget, the SF witnesses) hears today's sequence
+exactly until it opts in, so the unit's meaning moves in the same commit as the
+budget calibrated for it.
+
+**After.** The longest stretch, opted in, is 163 ms (L6), 240 ms (L8), 851 ms
+(L16) and 972 ms (L40 dashless), and ≤ 1.0 s on the axe legs. The exception is
+one call this slice does not split, `planWaypoints`: L40 leg 363's corridor
+plan (3.6 s, mostly its string-pull) and its via-set legs (≤ 4.0 s). I ran 25
+legs, bare and with the sword, through both passes, opted in and untripped.
+Every outcome and tick count equals the coarse run's, and the plans and traces
+hash identical to no hook: 74 finished pass rows (L40 leg 363's sword `full`
+pass does not finish in 900 s either way).
+
+⚠ **Not to be wired at today's constants.** Opted in, swordless L14 (the JS
+arc's own budget anchor) asks 624 times, not 492. At `SOLVER_BUDGET_WORK` 500
+its only plan is cut (measured: refused, cut at `detour`), and at the 40-unit
+window L30 and L40 legs lose their dash upgrades (110 → 237 t, 172 → 417 t). The
+work numbers to recalibrate from are in the report (D3).
+
+**Trap candidates**, for the catalogue to number:
+
+- **A budget counted in asks only bounds the work between asks.** The work
+  units were deterministic and right, and still blind to a 230 s stretch: a
+  counter is a bound only where it is consulted.
+- **A search whose first phase exceeds its own bound is doomed before it
+  starts.** DETOUR's via set plans every cell before the loop's
+  `planned < maxPlanned` test; on L40 it plans thousands, so the loop never
+  runs and 229 s buy a refusal the bound had already decided (residue: stop the
+  via set at the bound; it changes refusal words, so it is not in this slice).
+- **The phase you suspect is not the phase that runs.** The stance scan was the
+  candidate; the TIME rung, never named, was the whole of two legs. Measure the
+  silence before you place the ask.
+
 ## R9 — the solver rung, opened from the generator's side (OPEN; 2026-08-20)
 
 ⚖ The user's order: **form controls first**, then **the quick fixes**, then a
